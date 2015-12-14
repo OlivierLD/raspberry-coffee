@@ -1,0 +1,7 @@
+#!/bin/bash
+PI4J_HOME=/home/pi/pi4j.2013/pi4j-distribution/target/distro-contents
+CP=./classes
+CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+JAVA_OPTIONS=""
+# JAVA_OPTIONS="-Dhmc5883l.verbose=true"
+sudo java $JAVA_OPTIONS -cp $CP i2c.sensor.HMC5883L $*

@@ -1,0 +1,15 @@
+#!/bin/bash
+PI4J_HOME=/opt/pi4j
+CP=./build/libs/RasPISamples-1.0.jar
+CP=$CP:../ADC/build/libs/ADC-1.0.jar
+CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+CP=$CP:./lib/jansi-1.9.jar
+#
+echo MCP3008, seven channels
+JAVA_OPTIONS=
+JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dwater.threshold=50"
+JAVA_OPTIONS="$JAVA_OPTIONS -Doil.threshold=20"
+# JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000" 
+echo Running...
+sudo java $JAVA_OPTIONS -cp $CP raspisamples.adc.levelreader.LelandPrototype

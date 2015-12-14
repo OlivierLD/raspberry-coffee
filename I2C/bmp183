@@ -1,0 +1,4 @@
+#!/bin/bash
+CP=./classes
+CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+sudo java -cp $CP spi.sensor.main.SampleBMP183Main

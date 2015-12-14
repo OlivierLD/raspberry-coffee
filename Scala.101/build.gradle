@@ -1,0 +1,38 @@
+apply plugin: 'scala'
+apply plugin: 'maven'
+
+group = 'oliv.pi4j.samples'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url "http://lediouris.net/maven2" }
+    mavenLocal()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.11.6'
+    compile 'com.typesafe.akka:akka-actor_2.11:2.3.11'
+    compile project(':I2C')
+    compile project(':MindWave')
+}
+
+sourceSets {
+    main {
+        scala {
+            srcDir 'src'
+        }
+    }
+}
+
+task interactive(type: JavaExec, dependsOn: classes, description: 'Runs an interactice Scala console app') {
+    main = 'serial.SerialPI4J'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task runHelloActor(type: JavaExec, dependsOn: classes, description: 'Runs the Scala Actors app') {
+    main = 'HelloActor'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}

@@ -1,0 +1,4 @@
+#!/bin/bash
+echo 7 segment display
+CP=./classes:$PI4J_HOME/lib/pi4j-core.jar
+sudo java -cp $CP sevensegdisplay.samples.InteractiveSample

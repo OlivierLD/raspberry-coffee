@@ -1,0 +1,8 @@
+#!/bin/bash
+CP=./classes
+CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+CP=$CP:../../olivsoft/all-libs/nmeaparser.jar
+CP=$CP:../../olivsoft/all-libs/nmeareader.jar
+CP=$CP:../../olivsoft/all-3rd-party/xmlparserv2.jar
+sudo java -cp $CP i2c.sensor.main.SampleBMP180NMEAMain
+

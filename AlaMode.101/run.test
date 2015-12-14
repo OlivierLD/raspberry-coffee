@@ -1,0 +1,17 @@
+#!/bin/bash
+if [ "$PI4J_HOME" = "" ]
+then
+  PI4J_HOME=/opt/pi4j
+fi
+#
+CP=./classes
+CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+#
+JAVA_OPTS=
+JAVA_OPTS="$JAVA_OPTS -Dalamode.debug=true"
+##
+COMMAND="java $JAVA_OPTS -cp $CP alamode101.AlaModeTest $*"
+# COMMAND="java $JAVA_OPTS -cp $CP adc.utils.EscapeSeq"                    
+echo Running $COMMAND
+#
+sudo $COMMAND $*

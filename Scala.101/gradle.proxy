@@ -1,0 +1,1 @@
+../gradlew -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80 build

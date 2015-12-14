@@ -1,0 +1,7 @@
+#!/bin/bash
+JAVA_HOME=/usr/lib/jvm/jdk1.8.0_33
+echo \>\> Now running the class invoking the native lib:
+export LD_LIBRARY_PATH=./C
+# ls -l $LD_LIBRARY_PATH/*.so
+sudo java -Djava.library.path=$LD_LIBRARY_PATH -cp ./classes rangesensor.JNI_HC_SR04
+echo \>\> Done.

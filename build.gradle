@@ -1,0 +1,38 @@
+apply plugin: 'java'
+compileJava.options.encoding = 'ISO-8859-1'
+apply plugin: 'maven'
+
+group = 'oliv.pi4j.samples'
+version = '1.0'
+
+def userprofile = System.getenv()['USERPROFILE'] // On Windows...
+if (userprofile == null) { // Linux ?
+  userprofile = System.getenv()['HOME']
+}
+// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password")
+
+dependencies {
+  compile project(':SevenSegDisplay')
+  compile project(':I2C')
+  compile project(':WeatherStation')
+  compile project(':ADC')
+  compile project(':Arduino.RaspberryPI')
+  compile project(':DAC')
+  compile project(':GPIO.01')
+  compile project(':PhoneKeyboard3x4')
+  compile project(':RangeSensor')
+  compile project(':PIR')
+  compile project(':Relay')
+  compile project(':FONA')
+  compile project(':RasPISamples')
+  compile project(':LelandOilDetector')
+  compile project(':Scala.101')
+  compile project(':Serial.IO')
+  compile project(':MindWave')
+}
+
+repositories {
+  mavenCentral()
+  maven { url "http://lediouris.net/maven2" }
+  mavenLocal()
+}

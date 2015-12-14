@@ -1,0 +1,51 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+def userprofile = System.getenv()['USERPROFILE'] // On Windows...
+if (userprofile == null) { // Linux ?
+  userprofile = System.getenv()['HOME']
+}
+
+group = 'oliv.pi4j.samples'
+version = '1.0'
+
+// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password") 
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src'
+    }
+  }  
+  test {
+    java {
+      srcDir 'tests'
+    }
+  }  
+}
+
+repositories {
+  mavenCentral()
+  maven { url "http://lediouris.net/maven2" }
+  mavenLocal()
+}
+
+dependencies {
+  compile 'com.pi4j:pi4j-core:0.0.5'
+}
+
+task copyResources(type: Copy) {
+  description = 'Copies non-java resources in the output directory before the jar task (png, xml, xsd, ttf, properties, etc)'
+  from 'src'
+  into 'build/classes/main'
+  include '**/*.xml', '**/*.xsd', '**/*.png', '**/*.gif', '**/*.jpg', '**/*.properties', '**/*.ttf', '**/*.html'
+}
+
+jar.dependsOn(copyResources)
+
+task tellMeProxy (description: "Spits out the proxy settings.") << {
+  println "Accessing resources with proxy $proxyHost:$proxyPort"
+  println "UserProfile: " + System.getenv()['USERPROFILE']
+}
+
+// compileJava.dependsOn(tellMeProxy)
