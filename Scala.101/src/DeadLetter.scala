@@ -10,7 +10,10 @@ object DLListener extends App {
 
   class DeadLettersListener extends Actor {
     override def receive: Actor.Receive = {
-      case a => println(s"  >>> $a received in $self")
+      case a =>
+        println(s"  ========================")
+        println(s"  >>> $a received in $self")
+        println(s"  ========================")
     }
   }
 
@@ -23,5 +26,8 @@ object DLListener extends App {
   masterActorSystem.eventStream.subscribe(listener, classOf[DeadLetter])
   masterActorSystem.eventStream.subscribe(listener, classOf[UnhandledMessage])
 
-  masterActorSystem.actorSelection("/unexistingActor") ! "yo"
+  master ! "Et toc!"
+
+  val nonExistantActor = masterActorSystem.actorSelection("/unexistingActor")
+  nonExistantActor ! "Bam!"
 }
