@@ -36,3 +36,9 @@ task runHelloActor(type: JavaExec, dependsOn: classes, description: 'Runs the Sc
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
+
+task runDLListener(type: JavaExec, dependsOn: classes, description: 'Runs the Scala Actors app, with DeadLetter detection') {
+    main = 'DLListener'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
