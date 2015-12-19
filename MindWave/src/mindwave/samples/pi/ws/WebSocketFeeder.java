@@ -107,7 +107,7 @@
   @Override
   public void mindWaveAttention(MindWaveController.Attention att)
   {
-    System.out.println("Attention:" + att.getVal() + "/255");
+    System.out.println("Attention:" + att.getVal() + "/100");
     JSONObject json = new JSONObject();
     json.put("attention", att.getVal());
     webSocketClient.send(json.toString());
@@ -116,7 +116,7 @@
   @Override
   public void mindWaveMeditation(MindWaveController.Meditation med)
   {
-    System.out.println("Meditation:" + med.getVal() + "/255");
+    System.out.println("Meditation:" + med.getVal() + "/100");
     JSONObject json = new JSONObject();
     json.put("meditation", med.getVal());
     webSocketClient.send(json.toString());
@@ -148,7 +148,10 @@
   @Override
   public void mindWaveError(Throwable t)
   {
-    t.printStackTrace();
+    if (verbose)
+      t.printStackTrace();
+    else
+      System.err.println(t.toString());
   }
 
   @Override
@@ -307,8 +310,7 @@
            webSocketClient.close();
            waiter.notify();
          }
-         System.out.println("Released Waiter...");
-         
+         System.out.println("Released Waiter...");         
        }
      });
     
