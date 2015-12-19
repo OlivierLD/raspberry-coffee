@@ -32,26 +32,25 @@ dependencies {
   compile project(':Serial.IO')
 }
 
-task runTest(type: JavaExec, dependsOn: classes, description: 'Runs an interactive Mindwave console app (basic tests)' +
-        '') {
+task runTest(type: JavaExec, dependsOn: classes, description: 'Runs an interactive Mindwave console app (basic tests)') {
     main = 'mindwave.MindWaveController'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
 
-task runOne(type: JavaExec, dependsOn: classes, description: 'Runs ClientOne') {
+task runOne(type: JavaExec, dependsOn: classes, description: 'Runs ClientOne (RPi)') {
     main = 'mindwave.samples.pi.ClientOne'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
 
-task runTwo(type: JavaExec, dependsOn: classes, description: 'Runs ClientTwo') {
+task runTwo(type: JavaExec, dependsOn: classes, description: 'Runs ClientTwo (RPi)') {
     main = 'mindwave.samples.pi.ClientTwo'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
 
-task runWS(type: JavaExec, dependsOn: classes, description: 'Runs the WebSocket feeder') {
+task runWS(type: JavaExec, dependsOn: classes, description: 'Runs the WebSocket feeder (RPi)') {
     main = 'mindwave.samples.pi.ws.WebSocketFeeder'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime

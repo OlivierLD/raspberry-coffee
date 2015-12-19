@@ -78,8 +78,8 @@ public class BlinkDetector
   public void mindWaveStandby(MindWaveController.StbyStatus ss)
   {
     System.out.println("Status:" +
-                       (ss.getStatus() == MindWaveController.STBY_STATUS_STBY? "Stand By":
-                        (ss.getStatus() == MindWaveController.STBY_STATUS_TRYING? "Trying...": "Unknown")));
+                       (ss.getStatus() == MindWaveController.STBY_STATUS_STBY ? "Stand By":
+                         (ss.getStatus() == MindWaveController.STBY_STATUS_TRYING ? "Trying...": "Unknown")));
   }
 
   @Override
