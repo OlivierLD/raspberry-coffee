@@ -1,42 +1,43 @@
 import scala.collection.mutable._
 
 object MapsAndLists {
+  val verbose = "true".equals(System.getProperty("verbose", "false"))
+  object data {
+    val c1 = List("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
+    val c2 = List("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A")
 
-  val verbose = false
+    val site1 = List("A", "b", "C", "D", "1", "2", "3", "W", "X", "Z", "w")
+    val site2 = List("A", "Q", "D", "z", "0", "M", "N", "O", "P", "_", "H", "i", "w")
+    val site3 = List("A", "D", "R", "r", "s", "T", "u", "V", "W", "X", "y", "z", "w")
 
-  var counters = Map.empty[String, MutableList[String]]
+    val cat1 = List("N", "O", "P", "q", "r", "s", "T", "U", "v", "w")
+    val cat2 = List("A", "n", "_", "0", "c", "D", "E", "F", "G", "J")
+  }
 
-  val c1 = MutableList("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
-  val c2 = MutableList("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A")
+  var counters = Map.empty[String, List[String]]
 
-  val site1 = MutableList("A", "b", "C", "D", "1", "2", "3", "W", "X", "Z", "w")
-  val site2 = MutableList("A", "Q", "D", "z", "0", "M", "N", "O", "P", "_", "H", "i", "w")
-  val site3 = MutableList("A", "D", "R", "r", "s", "T", "u", "V", "W", "X", "y", "z", "w")
-
-  val cat1 = MutableList("N", "O", "P", "q", "r", "s", "T", "U", "v", "w")
-  val cat2 = MutableList("A", "n", "_", "0", "c", "D", "E", "F", "G", "J")
-
-  counters += ("COUNTRY:US" -> c1)
-  counters += ("COUNTRY:CA" -> c2)
-  counters += ("SITE:1"     -> site1)
-  counters += ("SITE:2"     -> site2)
-  counters += ("SITE:3"     -> site3)
-  counters += ("CAT:10"     -> cat1)
-  counters += ("CAT:20"     -> cat2)
+  counters += ("COUNTRY:US" -> data.c1)
+  counters += ("COUNTRY:CA" -> data.c2)
+  counters += ("SITE:1" -> data.site1)
+  counters += ("SITE:2" -> data.site2)
+  counters += ("SITE:3" -> data.site3)
+  counters += ("CAT:10" -> data.cat1)
+  counters += ("CAT:20" -> data.cat2)
 
   val groupBy = "COUNTRY, SITE, CAT"
+//val groupBy = "SITE, COUNTRY, CAT"
 
-  var leafCounters   = Map.empty[String, MutableList[Any]]
+  var leafCounters   = Map.empty[String, List[Any]]
   var brokenDownData = Map.empty[String, Any]
 
-  def lpad(str:String, pad:String, len:Int):String = {
+  private def lpad(str:String, pad:String, len:Int):String = {
     var s = str
     while (s.length < len)
       s = pad + s
     s
   }
 
-  def listToString(list:MutableList[String]): String = {
+  private def listToString(list:List[String]): String = {
     var str = ""
     list.foreach(s => {
       str += ((if (str.length > 0) "," else "") + s)
@@ -44,17 +45,17 @@ object MapsAndLists {
     str
   }
 
-  def stringToList(str:String): MutableList[String] = {
+  private def stringToList(str:String): List[String] = {
     val array = str.split(",")
-    var lst = MutableList.empty[String]
+    var lst = List.empty[String]
     array.foreach(s => {
       lst :+= s.trim
     })
     lst
   }
 
-  private def inter(listOne: MutableList[String], listTwo: MutableList[String]): MutableList[String] = {
-    var resultList = MutableList.empty[String]
+  private def inter(listOne: List[String], listTwo: List[String]): List[String] = {
+    var resultList = List.empty[String]
     listOne.foreach( s => {
       if (listTwo.contains(s))
         resultList :+= s
@@ -62,8 +63,8 @@ object MapsAndLists {
     resultList
   }
 
-  private def union(listOne: MutableList[String], listTwo: MutableList[String]): MutableList[String] = {
-    var resultList = MutableList.empty[String]
+  private def union(listOne: List[String], listTwo: List[String]): List[String] = {
+    var resultList = List.empty[String]
     listOne.foreach( s => {
       if (!resultList.contains(s))
         resultList :+= s
@@ -75,12 +76,12 @@ object MapsAndLists {
     resultList
   }
 
-  def buildLeaves(breakDownStep: Array[String], level: Int, counters: Map[String, MutableList[String]], parent: MutableList[String] = MutableList.empty[String]) : Unit = {
+  def buildLeaves(breakDownStep: Array[String], level: Int, counters: Map[String, List[String]], parent: List[String] = List.empty[String]) : Unit = {
     counters.foreach( k => {
       if (k._1.startsWith(breakDownStep(level).trim)) {
         if (level == (breakDownStep.length - 1)) {
           // Leaf. Intersection, from leaf to root
-          var leafList = MutableList.empty[String]
+          var leafList = List.empty[String]
           parent.foreach(p => {
             val parentList = counters(p)
             leafList = if (leafList.isEmpty) parentList else inter(leafList, parentList)
@@ -89,7 +90,7 @@ object MapsAndLists {
           //        println(s"-> ${lpad("", " ", (level * 2))} - Leaf Result for /${parent}/${k._1} = ${leafList}, ${leafList.size} distinct value(s)")
           val coordinates = parent :+ k._1
           //  println(s"Coordinates:${coordinates} => ${leafList}")
-          leafCounters += (listToString(coordinates) -> leafList.asInstanceOf[MutableList[Any]])
+          leafCounters += (listToString(coordinates) -> leafList.asInstanceOf[List[Any]])
         } else {
           // Keep drilling down
           buildLeaves(breakDownStep, level + 1, counters, parent :+ k._1)
@@ -159,7 +160,7 @@ object MapsAndLists {
           } else { // This is a Leaf
             if (verbose)
               println(s" ===========> Leaf Node for ${k}, ${leafList} ====")
-            currMap.asInstanceOf[Map[String, Any]] += (k -> leafList.asInstanceOf[MutableList[Any]])
+            currMap.asInstanceOf[Map[String, Any]] += (k -> leafList.asInstanceOf[List[Any]])
             if (verbose)
               println(s"  ---->> Added a leaf ${k} under ${parentName} in the tree, ${leafList}") // ${breakDownCounters} [parent map ${parentMap}]")
           }
@@ -175,19 +176,19 @@ object MapsAndLists {
         println(s"${lpad("+-", " ", 2 * (level + 1))} Level ${level + 1} => \t${tuple._1}: \t${uList}, ${uList.size} element(s)")
         drillDownCount(tuple._2.asInstanceOf[Map[String, Any]], level + 1)
       } else { // Leaf
-        if (tuple._2.isInstanceOf[MutableList[Any]]) {
-          val idList = tuple._2.asInstanceOf[MutableList[Any]]
+        if (tuple._2.isInstanceOf[List[Any]]) {
+          val idList = tuple._2.asInstanceOf[List[Any]]
           println(s"${lpad("+-", " ", 2 * (level + 1))} Level ${level + 1} => \t${tuple._1}: \t${idList}, ${idList.size} distinct element(s)")
         }
       }
     })
   }
 
-  def unionSubNodes(node:Map[String, Any]):MutableList[String] = {
-    var unionedList = MutableList.empty[String]
+  def unionSubNodes(node:Map[String, Any]):List[String] = {
+    var unionedList = List.empty[String]
     node.foreach( sub => {
-      if (sub._2.isInstanceOf[MutableList[Any]]) { // there we are
-        unionedList = union(unionedList, sub._2.asInstanceOf[MutableList[String]])
+      if (sub._2.isInstanceOf[List[Any]]) { // there we are
+        unionedList = union(unionedList, sub._2.asInstanceOf[List[String]])
       } else {
         val list = unionSubNodes(sub._2.asInstanceOf[Map[String, Any]])
         unionedList = union(unionedList, list)
@@ -197,17 +198,14 @@ object MapsAndLists {
   }
 
   def main(args:Array[String]): Unit = {
-
     buildLeaves(groupBy.split(","), 0, counters) // Closure on leafCounters
     leafCounters.foreach(t => {
       println(s"${t._1} -> ${t._2}")
     })
-
     buildTree                                    // Closure on brokenDownData
     println("======================================")
     println(brokenDownData)
     println("======================================")
-
     drillDownCount(brokenDownData)
   }
 }
