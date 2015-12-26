@@ -1,6 +1,6 @@
 package listener
 
-import i2c.sensor.{BMP180}
+import i2c.sensor.{BMP180, HTU21DF}
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 /*
  * Requires a BMP180, on I2C address 0x77
@@ -29,29 +29,24 @@ class PubSubActor(actorName: String) extends Actor {
   def getName:String = actorName
 
   override def receive: Receive = {
-    case add: AddSubscribers => {
+    case add: AddSubscribers =>
       subscribers ++= add.getSubscribers
-    }
-    case mess: DataMessage => {
-      println(s"  ${actorName} received: ${ mess.getPayload }")
+    case mess: DataMessage =>
+      println(s"  $actorName received: ${ mess.getPayload }")
       // TODO Do what you have to here with the payload
-    }
-    case exit: ExitMsg  => {
+    case exit: ExitMsg  =>
       println("Bye now (from actor " + actorName + ")")
       this.context.stop(self)
-    }
-    case start: StartProducing => {
-
+    case start: StartProducing =>
       val bmp180  = new BMP180
 //    val htu21df = new HTU21DF
-
       println("Starting production")
       var i = 1
       while (keepLooping) {
-        subscribers.foreach(act => {
+        subscribers foreach (act => {
           val temperature = bmp180.readTemperature
-          val pressure    = bmp180.readPressure
-          val mess = "{ \"rnk\":" +  i + ", \"temperature\":" + temperature + ", \"pressure\":" + pressure + " }"
+          val pressure = bmp180.readPressure
+          val mess = "{ \"rnk\":" + i + ", \"temperature\":" + temperature + ", \"pressure\":" + pressure + " }"
       //  println(">>> " + actorName + " sending data to " + act)
           act ! new DataMessage(mess)
         })
@@ -60,7 +55,6 @@ class PubSubActor(actorName: String) extends Actor {
         i += 1
       }
       println("Production stopped")
-    }
     case _ =>
       println(s"Duh? What was that? (from ${ actorName })")
   }
@@ -77,15 +71,15 @@ object Main {
     val subscribers = Array(consumerActor)
     sensorReaderActor ! new AddSubscribers(subscribers)
 
-    sys addShutdownHook({
-      println("\nShutting down")
-      subscribers.foreach(act => {
-        println(s"Sending stop request to ${act}")
-        act ! new ExitMsg
-      })
-      context.shutdown
-      println("If needed, free resources here.") // Free resources here
-    })
+    sys.addShutdownHook({
+          println("\nShutting down")
+          subscribers.foreach(act => {
+            println(s"Sending stop request to $act")
+            act ! new ExitMsg
+          })
+          context.shutdown
+          println("If needed, free resources here.") // Free resources here
+        })
 
     sensorReaderActor ! new StartProducing
   }

@@ -14,8 +14,8 @@ object WaitReleaseSample {
     val f = Future {
       sleep(Random.nextInt(5000))
       completed = true
-      me.synchronized {
-        me.notify
+      me synchronized {
+        me notify
       }
       println("Work is completed")
       42 // Hard coded returned value
@@ -53,14 +53,14 @@ object WaitReleaseSample {
       })
     } else {
       println("Work was NOT completed in time")
-      me.synchronized({
+      me synchronized {
         try {
-          me.wait
+          me wait
         } catch {
           case ex: Exception =>
             ex.printStackTrace
         }
-      })
+      }
     }
   }
 

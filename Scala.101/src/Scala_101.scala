@@ -16,9 +16,8 @@ object Scala_101 {
       println(s"CPU Temperature   :  ${ SystemInfo.getCpuTemperature }\u00baC")
       println(s"Temp:${ temp }\u00baC, Press:${ press } hPa")
     } catch {
-      case ex: Exception => {
+      case ex: Exception =>
         println(ex.toString)
-      }
     }
     try {
       htu21df.begin
@@ -26,9 +25,8 @@ object Scala_101 {
       htu21df.close
       println(s"Humidity:${ hum } %")
     } catch {
-      case ex: Exception => {
+      case ex: Exception =>
         println(ex.toString)
-      }
     }
   }
 }

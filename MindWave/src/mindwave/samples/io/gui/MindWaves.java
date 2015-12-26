@@ -107,8 +107,9 @@ public class MindWaves
     {
       // Message completed
       final byte[] mess = new byte[bufferIdx];
-      for (int i=0; i<bufferIdx; i++)
-        mess[i] = serialBuffer[i];
+      System.arraycopy(mess, 0, serialBuffer, 0, mess.length);
+  //  for (int i=0; i<bufferIdx; i++)
+  //    mess[i] = serialBuffer[i];
       MindWaveContext.getInstance().fireParsing(mess);
       Thread messProcessor = new Thread()
         {

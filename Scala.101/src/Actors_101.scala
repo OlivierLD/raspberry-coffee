@@ -1,7 +1,7 @@
 import akka.actor._
 import akka.pattern.ask
 import akka.util.{Timeout}
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 import scala.language.postfixOps
 

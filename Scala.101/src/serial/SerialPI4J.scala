@@ -25,7 +25,7 @@ class SerialPI4J {
   }
 
   def isSerialOpen: Boolean = {
-    return serial.isOpen
+    serial.isOpen
   }
 
   def closeSerial: Unit = {
@@ -44,7 +44,7 @@ class SerialPI4J {
 
 object utils {
   def isAsciiPrintable (ch: Char): Boolean = {
-    return ch >= 32 && ch < 127
+    (ch >= 32 && ch < 127)
   }
 
   def lpad(s: String, len: Int, `with`: String): String = { // :) Use a reserved word as prm name ...
@@ -72,7 +72,7 @@ object utils {
       val start = l * LINE_LEN
 
       (start to Math.min(start + LINE_LEN, ba.length) - 1).foreach(c => {
-        lineLeft  += (lpad(Integer.toHexString(ba(c).asInstanceOf[Int]).toUpperCase, 2, "0") + " ");
+        lineLeft  += (lpad(Integer.toHexString(ba(c).asInstanceOf[Int]).toUpperCase, 2, "0") + " ")
         lineRight += (if (isAsciiPrintable(str.charAt(c))) str.charAt(c) else ".")
       })
       lineLeft = rpad(lineLeft, 3 * LINE_LEN, " ") + " "
@@ -113,20 +113,20 @@ object SerialPI4J {
         ex.printStackTrace
     }
     println("Adding shutdown hook")
-    sys addShutdownHook({
+    sys addShutdownHook {
       println("Shutdown hook caught.")
-      me.synchronized {
-        me.notify
+      me synchronized {
+        me notify
       }
       println("Closing")
       serial.closeSerial
       println("Bye.")
-    })
+    }
     // Wait here
     me = Thread currentThread
 
-    me.synchronized {
-      me.wait
+    me synchronized {
+      me wait
     }
     System.exit(0)
   }

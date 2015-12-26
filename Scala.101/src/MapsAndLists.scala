@@ -1,4 +1,4 @@
-import scala.collection.mutable._
+import scala.collection.mutable
 
 object MapsAndLists {
   val verbose = "true".equals(System.getProperty("verbose", "false"))
@@ -11,10 +11,10 @@ object MapsAndLists {
     val site3 = List("A", "D", "R", "r", "s", "T", "u", "V", "W", "X", "y", "z", "w")
 
     val cat1 = List("N", "O", "P", "q", "r", "s", "T", "U", "v", "w")
-    val cat2 = List("A", "n", "_", "0", "c", "D", "E", "F", "G", "J")
+    val cat2 = List("A", "n", "_", "0", "c", "D", "E", "F", "G", "J", "*", "$")
   }
 
-  var counters = Map.empty[String, List[String]]
+  var counters = mutable.Map.empty[String, List[String]]
 
   counters += ("COUNTRY:US" -> data.c1)
   counters += ("COUNTRY:CA" -> data.c2)
@@ -27,8 +27,8 @@ object MapsAndLists {
   val groupBy = "COUNTRY, SITE, CAT"
 //val groupBy = "SITE, COUNTRY, CAT"
 
-  var leafCounters   = Map.empty[String, List[Any]]
-  var brokenDownData = Map.empty[String, Any]
+  var leafCounters   = mutable.Map.empty[String, List[Any]]
+  var brokenDownData = mutable.Map.empty[String, Any]
 
   private def lpad(str:String, pad:String, len:Int):String = {
     var s = str
@@ -76,7 +76,7 @@ object MapsAndLists {
     resultList
   }
 
-  def buildLeaves(breakDownStep: Array[String], level: Int, counters: Map[String, List[String]], parent: List[String] = List.empty[String]) : Unit = {
+  def buildLeaves(breakDownStep: Array[String], level: Int, counters: mutable.Map[String, List[String]], parent: List[String] = List.empty[String]) : Unit = {
     counters.foreach( k => {
       if (k._1.startsWith(breakDownStep(level).trim)) {
         if (level == (breakDownStep.length - 1)) {
@@ -99,7 +99,7 @@ object MapsAndLists {
     })
   }
 
-  def buildTree: Unit = {
+  def buildTree(): Unit = {
     leafCounters.foreach( line => {
       val coordinates = stringToList(line._1)
       val leafList    = line._2
@@ -111,34 +111,33 @@ object MapsAndLists {
       coordinates.foreach( k => {
         if (parentName.equals("")) { // Root
           if (verbose)
-            println(s" ======== AT THE ROOT for ${k}")
+            println(s" ======== AT THE ROOT for $k")
           try {
             currMap = parentMap(k)
     //      println(s"    >>>> Found root for ${k}")
           } catch {
-            case ex: NoSuchElementException => {
-              currMap = Map.empty[String, Any]
+            case ex: NoSuchElementException =>
+              currMap = mutable.Map.empty[String, Any]
               brokenDownData += (k -> currMap)
-            }
           }
           parentName = k
           parentMap  = brokenDownData
         } else {
-          if (!k.equals(coordinates(coordinates.length - 1))) { // Intermediate
+          if (!k.equals(coordinates.last)) { // Intermediate
             if (verbose)
-              println(s" ============= Inter Node for ${k} ====")
+              println(s" ============= Inter Node for $k ====")
             currMap = parentMap(parentName)
             var found = false
-            var map:Map[String, Any] = null
-            currMap.asInstanceOf[Map[String, Any]].foreach( occ => {
+            var map:mutable.Map[String, Any] = null
+            currMap.asInstanceOf[mutable.Map[String, Any]].foreach( occ => {
 //            println(s"Looking for ${k} in ${occ}")
               try {
-                val key = occ._1 // .asInstanceOf[Map[String, Any]]
-                if (k.equals(occ._1)) {
+                val key = occ._1
+                if (k.equals(key)) {
                   found = true
-                  map = occ._2.asInstanceOf[Map[String, Any]]
+                  map = occ._2.asInstanceOf[mutable.Map[String, Any]]
                   if (verbose)
-                    println(s"  ==== >>> Break. found ${k} under ${parentName}")
+                    println(s"  ==== >>> Break. found $k under $parentName")
                 }
               } catch {
                 case ex: NoSuchElementException =>
@@ -146,12 +145,12 @@ object MapsAndLists {
               }
             })
             if (!found) {
-              var nextMap = Map.empty[String, Any]
-              currMap.asInstanceOf[Map[String, Any]] += (k -> nextMap)
-              parentMap += (parentName -> currMap.asInstanceOf[Map[String, Any]])
+              val nextMap = mutable.Map.empty[String, Any]
+              currMap.asInstanceOf[mutable.Map[String, Any]] += (k -> nextMap)
+              parentMap += (parentName -> currMap.asInstanceOf[mutable.Map[String, Any]])
               if (verbose)
-                println(s"  ----> Added a ${k} node under ${parentName} tree ${brokenDownData} ")
-              parentMap = currMap.asInstanceOf[Map[String, Any]]
+                println(s"  ----> Added a $k node under $parentName tree $brokenDownData ")
+              parentMap = currMap.asInstanceOf[mutable.Map[String, Any]]
               currMap = nextMap
             } else {
               currMap = map
@@ -159,38 +158,52 @@ object MapsAndLists {
             parentName = k
           } else { // This is a Leaf
             if (verbose)
-              println(s" ===========> Leaf Node for ${k}, ${leafList} ====")
-            currMap.asInstanceOf[Map[String, Any]] += (k -> leafList.asInstanceOf[List[Any]])
+              println(s" ===========> Leaf Node for $k, $leafList ====")
+            currMap.asInstanceOf[mutable.Map[String, Any]] += (k -> leafList.asInstanceOf[List[Any]])
             if (verbose)
-              println(s"  ---->> Added a leaf ${k} under ${parentName} in the tree, ${leafList}") // ${breakDownCounters} [parent map ${parentMap}]")
+              println(s"  ---->> Added a leaf $k under $parentName in the tree, $leafList") // ${breakDownCounters} [parent map ${parentMap}]")
           }
         }
       })
     })
   }
 
-  def drillDownCount(map:Map[String, Any], level:Int = 0): Unit = {
+  def drillDownPrint(map:mutable.Map[String, Any], level:Int = 0): Unit = {
     map.foreach( tuple => {
-      if (tuple._2.isInstanceOf[Map[String, Any]]) {
-        val uList = unionSubNodes(tuple._2.asInstanceOf[Map[String, Any]])
-        println(s"${lpad("+-", " ", 2 * (level + 1))} Level ${level + 1} => \t${tuple._1}: \t${uList}, ${uList.size} element(s)")
-        drillDownCount(tuple._2.asInstanceOf[Map[String, Any]], level + 1)
-      } else { // Leaf
-        if (tuple._2.isInstanceOf[List[Any]]) {
-          val idList = tuple._2.asInstanceOf[List[Any]]
-          println(s"${lpad("+-", " ", 2 * (level + 1))} Level ${level + 1} => \t${tuple._1}: \t${idList}, ${idList.size} distinct element(s)")
-        }
+      tuple._2 match {
+        case node: mutable.Map[String, Any] =>
+          println(s"${lpad("+-", " ", 2 * (level + 1))} Level ${level + 1} => \t${tuple._1}")
+          drillDownPrint(node, level + 1)
+        case leaf:List[Any] => // Leaf
+          println(s"${lpad("+-", " ", 2 * (level + 1))} Level ${level + 1} => \t${tuple._1}: \t$leaf, ${leaf.size} distinct element(s)")
+        case _ =>
+          println("Unexpected type")
       }
     })
   }
 
-  def unionSubNodes(node:Map[String, Any]):List[String] = {
+  def drillDownCount(map:mutable.Map[String, Any], level:Int = 0): Unit = {
+    map.foreach( tuple => {
+      tuple._2 match {
+        case node: mutable.Map[String, Any] =>
+          val uList = unionSubNodes(node)
+          println(s"${lpad("+-", " ", 2 * (level + 1))} Level ${level + 1} => \t${tuple._1}: \t$uList, ${uList.size} element(s)")
+          drillDownCount(node, level + 1)
+        case leaf:List[Any] => // Leaf
+          println(s"${lpad("+-", " ", 2 * (level + 1))} Level ${level + 1} => \t${tuple._1}: \t$leaf, ${leaf.size} distinct element(s)")
+        case _ =>
+          println("Unexpected type")
+      }
+    })
+  }
+
+  def unionSubNodes(node:mutable.Map[String, Any]):List[String] = {
     var unionedList = List.empty[String]
     node.foreach( sub => {
       if (sub._2.isInstanceOf[List[Any]]) { // there we are
         unionedList = union(unionedList, sub._2.asInstanceOf[List[String]])
       } else {
-        val list = unionSubNodes(sub._2.asInstanceOf[Map[String, Any]])
+        val list = unionSubNodes(sub._2.asInstanceOf[mutable.Map[String, Any]])
         unionedList = union(unionedList, list)
       }
     })
@@ -198,14 +211,22 @@ object MapsAndLists {
   }
 
   def main(args:Array[String]): Unit = {
+    println(" -- Original counters --")
+    counters.foreach( map => {
+      println(s"${map._1} => ${map._2}, ${map._2.size} element(s).")
+    })
     buildLeaves(groupBy.split(","), 0, counters) // Closure on leafCounters
+    println("--- buildLeaves - cartesian product, intersections ---")
     leafCounters.foreach(t => {
       println(s"${t._1} -> ${t._2}")
     })
-    buildTree                                    // Closure on brokenDownData
+    buildTree()                                  // Closure on brokenDownData
     println("======================================")
     println(brokenDownData)
+    println("--- formatted ---")
+    drillDownPrint(brokenDownData)
     println("======================================")
+    println(" -- With counts -- (Union) --")
     drillDownCount(brokenDownData)
   }
 }
