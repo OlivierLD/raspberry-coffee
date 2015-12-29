@@ -12,7 +12,7 @@ class SerialPI4J {
     }
   }
   def init(operation: (String) => Unit): Unit = {  // Send a block here
-  val sdl = new SerialDataListener {
+    val sdl = new SerialDataListener {
       override def dataReceived(event: SerialDataEvent): Unit = {
         operation(event.getData)
       }
@@ -48,7 +48,7 @@ object utils {
   }
 
   def lpad(s: String, len: Int, `with`: String): String = { // :) Use a reserved word as prm name ...
-  var str = s
+    var str = s
     while (str.length < len) str = `with` + str
     str
   }
@@ -95,8 +95,6 @@ object SerialPI4J {
 
   /**
    * Also shows how to use a shutdown hook.
-   *
-   * @param args
    */
   def main(args: Array[String]): Unit = {
     println("Starting Serial, hit Ctrl + C to quit.")

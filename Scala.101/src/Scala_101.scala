@@ -14,7 +14,7 @@ object Scala_101 {
       val temp  = bmp180.readTemperature
       val press = bmp180.readPressure / 100
       println(s"CPU Temperature   :  ${ SystemInfo.getCpuTemperature }\u00baC")
-      println(s"Temp:${ temp }\u00baC, Press:${ press } hPa")
+      println(s"Temp:$temp \u00baC, Press:$press hPa")
     } catch {
       case ex: Exception =>
         println(ex.toString)
@@ -23,7 +23,7 @@ object Scala_101 {
       htu21df.begin
       val hum = htu21df.readHumidity
       htu21df.close
-      println(s"Humidity:${ hum } %")
+      println(s"Humidity:$hum %")
     } catch {
       case ex: Exception =>
         println(ex.toString)

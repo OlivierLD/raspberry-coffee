@@ -200,11 +200,12 @@ object MapsAndLists {
   def unionSubNodes(node:mutable.Map[String, Any]):List[String] = {
     var unionedList = List.empty[String]
     node.foreach( sub => {
-      if (sub._2.isInstanceOf[List[Any]]) { // there we are
-        unionedList = union(unionedList, sub._2.asInstanceOf[List[String]])
-      } else {
-        val list = unionSubNodes(sub._2.asInstanceOf[mutable.Map[String, Any]])
-        unionedList = union(unionedList, list)
+      sub._2 match {
+        case sl: List[Any] =>
+          unionedList = union(unionedList, sl.asInstanceOf[List[String]])
+        case _ =>
+          val list = unionSubNodes(sub._2.asInstanceOf[mutable.Map[String, Any]])
+          unionedList = union(unionedList, list)
       }
     })
     unionedList
