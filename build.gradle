@@ -13,6 +13,7 @@ if (userprofile == null) { // Linux ?
 
 dependencies {
   compile project(':SevenSegDisplay')
+  compile project(':AlaMode.101')
   compile project(':I2C')
   compile project(':WeatherStation')
   compile project(':ADC')
@@ -22,6 +23,7 @@ dependencies {
   compile project(':PhoneKeyboard3x4')
   compile project(':RangeSensor')
   compile project(':PIR')
+  compile project(':PI4J.email')
   compile project(':Relay')
   compile project(':FONA')
   compile project(':RasPISamples')
