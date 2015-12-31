@@ -592,8 +592,13 @@ public class FONAManager
         int end = mess.indexOf(CRLF, start + CRLF.length() + 1);
         String content = mess.substring(start, end);
         String[] parsed = content.substring("+COPS: ".length()).split(",");
-        //  System.out.println("Network:" + parsed[2]);
-        this.parent.networkNameResponse(parsed[2]);
+        if (parsed != null && parsed.length > 2)
+        {
+          //  System.out.println("Network:" + parsed[2]);
+          this.parent.networkNameResponse(parsed[2]);
+        }
+        else
+          System.out.println("Invalid Network Name response");
       }
       catch (Exception e)
       {

@@ -63,6 +63,11 @@ public class InteractiveFona implements FONAClient
   private static int messToRead = -1;
   private static FONAManager fona;
   
+  private final static void reprompt()
+  {
+    System.out.print("FONA> ");  
+  }
+  
   public static void main(String args[])
     throws InterruptedException, NumberFormatException
   {
@@ -170,10 +175,10 @@ public class InteractiveFona implements FONAClient
                   }
                   else if ("s".equals(userInput)) // Send SMS
                   {
-                    String sendTo         = userInput("  Send messsage to ?> ");
+                    String sendTo         = userInput("  Send messsage to (like 14153505547) ?> ");
                     if (FONAManager.getVerbose())
                       System.out.println("Sending message to " + sendTo);
-                    String messagePayload = userInput("  Mess Content?     > ");
+                    String messagePayload = userInput("  Mess Content (140 char max)?         > ");
                     fona.sendSMS(sendTo, messagePayload);
                     System.out.println("Sent.");
                   }
@@ -251,12 +256,14 @@ public class InteractiveFona implements FONAClient
   public void networkStatusResponse(NetworkStatus ns)
   {
     System.out.println(ns.label());
+    reprompt();
   }
 
   @Override
   public void smsDeletedResponse(int sms, boolean ok)
   {
     System.out.println("Message #" + sms + " deleted:" + (ok?"OK":"Failed"));
+    reprompt();
   }
   
   @Override
@@ -295,59 +302,69 @@ public class InteractiveFona implements FONAClient
   public void fonaConnected()
   {
     System.out.println("FONA Connected!");
+    
   }
 
   @Override
   public void moduleNameAndRevision(String str)
   {
     System.out.println("Module:" + str);
+    reprompt();
   }
 
   @Override
   public void debugOn()
   {
     System.out.println("Debug ON");
+    reprompt();
   }
 
   @Override
   public void batteryResponse(String percent, String mv)
   {
     System.out.println("Load:" + percent + "%, " + mv + " mV");
+    reprompt();
   }
 
   @Override
   public void signalResponse(String s)
   {
     System.out.println("Signal:" + s + " dB. Must be higher than 5, the higher the better.");
+    reprompt();
   }
 
   @Override
   public void simCardResponse(String s)
   {
     System.out.println("SIM Card # " + s);
+    reprompt();
   }
 
   @Override
   public void networkNameResponse(String s)
   {
     System.out.println("Network:" + s);
+    reprompt();
   }
 
   @Override
   public void numberSMSResponse(int n)
   {
     System.out.println("Number of SMS :" +n);
+    reprompt();
   }
 
   @Override
   public void readSMS(final FONAManager.ReceivedSMS sms)
   {
     System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
+    reprompt();
   }
 
   @Override
   public void someoneCalling()
   {
     System.out.println("Dring dring!");
+    reprompt();
   }
 }
