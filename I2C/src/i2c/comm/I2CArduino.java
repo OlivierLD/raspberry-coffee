@@ -11,7 +11,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /*
- * I2C Comminucation with an Arduino
+ * I2C Communication with an Arduino
+ * Raspberry is the Master, Arduino is the Slave
+ *
  * See the Arduino sketch named RPi_I2C_2.ino
  * 
  * Wiring:
@@ -89,7 +91,7 @@ public class I2CArduino
 
   private static void delay(float d) // d in seconds.
   {
-    try { Thread.sleep((long)d * 1000); } catch (Exception ex) {}
+    try { Thread.sleep((long)(d * 1000)); } catch (Exception ex) {}
   }
   
   public static void main(String[] args)
@@ -164,7 +166,7 @@ public class I2CArduino
       sensor.writeArduino(STRING_RECEIVE);
       System.out.println("STRING_RECEIVE sent to Arduino.");
       delay(1f);
-      String masterMessage = "From the Raspberry PI";
+      String masterMessage = "From the Raspberry PI"; // Hard coded (this is an example)
       byte[] ba = masterMessage.getBytes();
       for (byte b : ba)
       {

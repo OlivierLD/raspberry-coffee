@@ -1,6 +1,7 @@
 /* 
  * Sample. 
- * For I2C comminucation with the Raspberry PI.
+ * For I2C communication with the Raspberry PI.
+ * Arduino is a SLAVE
  * 
  * Wiring:
  * RasPI    Arduino

@@ -1,4 +1,7 @@
-/* Wiring:
+/*
+ * Arduino is a SLAVE
+ *
+ * Wiring:
  * RasPI    Arduino
  * ----------------
  * GND #9   GND

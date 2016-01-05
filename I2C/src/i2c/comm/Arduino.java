@@ -10,7 +10,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /*
- * I2C Comminucation with an Arduino
+ * I2C Communication with an Arduino
+ * Raspberry is the Master, Arduino is the Slave
+ *
  * See the Arduino sketch named RPi_I2C.ino
  * 
  * Wiring:
@@ -79,7 +81,7 @@ public class Arduino
 
   private static void delay(float d) // d in seconds.
   {
-    try { Thread.sleep((long)d * 1000); } catch (Exception ex) {}
+    try { Thread.sleep((long)(d * 1000)); } catch (Exception ex) {}
   }
   
   public static void main(String[] args)

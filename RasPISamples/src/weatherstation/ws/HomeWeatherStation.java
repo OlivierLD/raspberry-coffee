@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import weatherstation.SDLWeather80422;
 
+import weatherstation.http.HTTPServer;
+
 import weatherstation.logger.LoggerInterface;
 
 /**
@@ -94,6 +96,8 @@ public class HomeWeatherStation
          }
        }
      });
+    
+    HTTPServer httpServer = new HTTPServer(); // Created and started
       
     SDLWeather80422 weatherStation = new SDLWeather80422(); // With default parameters.
     weatherStation.setWindMode(SDLWeather80422.SdlMode.SAMPLE, 5);
@@ -157,9 +161,10 @@ public class HomeWeatherStation
        */
       try
       {
+        String message = windObj.toString();
+        httpServer.setData(message);
         if (wsf != null)
-        {
-          String message = windObj.toString();
+        {          
           if ("true".equals(System.getProperty("ws.verbose", "false")))
             System.out.println("-> Sending " + message);
           wsf.pushMessage(message);
