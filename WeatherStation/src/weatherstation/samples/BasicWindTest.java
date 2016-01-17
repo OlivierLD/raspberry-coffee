@@ -47,7 +47,7 @@ public class BasicWindTest
     {
       double ws = weatherStation.currentWindSpeed();
       double wg = weatherStation.getWindGust();
-      float wd = weatherStation.getCurrentWindDirection();
+      float  wd = weatherStation.getCurrentWindDirection();
       double volts = weatherStation.getCurrentWindDirectionVoltage();
       totalRain += weatherStation.getCurrentRainTotal(); // in mm  
       
