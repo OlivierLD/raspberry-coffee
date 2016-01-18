@@ -124,7 +124,7 @@ public class SSD1306
    * @param rst,  | RST Pin.          Default is |RaspiPin.GPIO_05|Pin #18 |GPIO_24    | 24    Reset
    * @param dc,   | DC Pin.           Default is |RaspiPin.GPIO_04|Pin #16 |GPIO_23    | 23    Data Control (?)
    * -------------+------------------------------+----------------+--------=-----------+----
-   * @param w Buffer width (pixles).  Default is 128
+   * @param w Buffer width (pixels).  Default is 128
    * @param h Buffer height (pixels). Default is 32
    */
   public SSD1306(Pin clock, Pin mosi, Pin cs, Pin rst, Pin dc, int w, int h)
@@ -228,10 +228,10 @@ public class SSD1306
   private void reset()
   {
     resetOutput.high();
-    sleep(1);
+    delay(1);
     // Set reset low for 10 milliseconds.
     resetOutput.low();
-    sleep(10);
+    delay(10);
     // Set reset high again.
     resetOutput.high();
   }
@@ -351,7 +351,7 @@ public class SSD1306
     }
   }
 
-  private static void sleep(long ms)
+  private static void delay(long ms)
   {
     try
     {

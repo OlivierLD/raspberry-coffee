@@ -8,7 +8,7 @@ import java.awt.Polygon;
 
 public class ScreenBuffer
 {
-  private final static int WIDTH = 128, HEIGHT = 32; // Default values
+  private final static int WIDTH = 128, HEIGHT = 32; // Default values, SSD1306
   
   public enum Mode
     {

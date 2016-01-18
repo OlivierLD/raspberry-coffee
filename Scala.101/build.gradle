@@ -13,7 +13,7 @@ repositories {
 dependencies {
     compile 'org.scala-lang:scala-library:2.11.6'
     compile 'com.typesafe.akka:akka-actor_2.11:2.3.11'
-    compile project(':I2C')
+    compile project(':I2C.SPI')
     compile project(':MindWave')
 }
 
