@@ -1,4 +1,4 @@
-package spi.oled.utils;
+package spi.lcd.utils;
 
 import java.awt.Color;
 import java.awt.Graphics;

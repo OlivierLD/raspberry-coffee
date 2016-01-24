@@ -3,8 +3,8 @@ package raspisamples;
 import i2c.sensor.HMC5883L;
 import i2c.sensor.MPL115A2;
 
-import spi.oled.SSD1306;
-import spi.oled.ScreenBuffer;
+import spi.lcd.oled.SSD1306;
+import spi.lcd.ScreenBuffer;
 
 import arduino.raspberrypi.SerialReader;
 

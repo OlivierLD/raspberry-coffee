@@ -1,7 +1,5 @@
 #!/bin/bash
 PI4J_HOME=/opt/pi4j
 CP=./classes
-# CP=./build/classes/main
-# CP=./build/libs/I2C-1.0.jar
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-sudo java -cp $CP -Dverbose=true spi.nokia.Nokia5110Sample 
+sudo java -cp $CP -Dverbose=true spi.lcd.nokia.samples.Nokia5110Sample 

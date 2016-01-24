@@ -1,4 +1,4 @@
-package spi.oled.img;
+package spi.lcd.utils.img;
 
 public class Java32x32 implements ImgInterface
 {

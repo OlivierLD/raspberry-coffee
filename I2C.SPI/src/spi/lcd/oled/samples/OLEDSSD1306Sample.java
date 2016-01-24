@@ -1,12 +1,15 @@
-package spi.oled;
+package spi.lcd.oled.samples;
 
-import spi.oled.img.ImgInterface;
-import spi.oled.img.Java32x32;
+import spi.lcd.oled.SSD1306;
+import spi.lcd.utils.img.ImgInterface;
+import spi.lcd.utils.img.Java32x32;
 
 import com.pi4j.io.gpio.RaspiPin;
 
 import java.awt.Point;
 import java.awt.Polygon;
+
+import spi.lcd.ScreenBuffer;
 
 public class OLEDSSD1306Sample
 {

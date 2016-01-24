@@ -1,4 +1,4 @@
-package spi.oled;
+package spi.lcd.oled;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;

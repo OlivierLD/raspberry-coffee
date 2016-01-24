@@ -1,6 +1,7 @@
-package spi.nokia;
+package spi.lcd.nokia.samples;
 
-import spi.oled.ScreenBuffer;
+import spi.lcd.ScreenBuffer;
+import spi.lcd.nokia.Nokia5110;
 
 public class Nokia5110Sample
 {

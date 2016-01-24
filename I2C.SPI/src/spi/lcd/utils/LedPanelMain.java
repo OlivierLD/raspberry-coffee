@@ -1,8 +1,8 @@
-package spi.oled.utils;
+package spi.lcd.utils;
 
-import spi.oled.ScreenBuffer;
-import spi.oled.img.ImgInterface;
-import spi.oled.img.Java32x32;
+import spi.lcd.ScreenBuffer;
+import spi.lcd.utils.img.ImgInterface;
+import spi.lcd.utils.img.Java32x32;
 
 import java.awt.Dimension;
 import java.awt.Point;

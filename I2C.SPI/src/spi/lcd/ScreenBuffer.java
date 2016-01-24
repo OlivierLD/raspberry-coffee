@@ -1,7 +1,7 @@
-package spi.oled;
+package spi.lcd;
 
-import spi.oled.img.ImgInterface;
-import spi.oled.utils.CharacterMatrixes;
+import spi.lcd.utils.img.ImgInterface;
+import spi.lcd.utils.CharacterMatrixes;
 
 import java.awt.Point;
 import java.awt.Polygon;
