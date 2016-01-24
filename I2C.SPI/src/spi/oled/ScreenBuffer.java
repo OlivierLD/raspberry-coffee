@@ -8,7 +8,7 @@ import java.awt.Polygon;
 
 public class ScreenBuffer
 {
-  private final static int WIDTH = 128, HEIGHT = 32; // Default values, SSD1306
+  private final static int WIDTH = 128, HEIGHT = 32; // Default values, for SSD1306
   
   public enum Mode
     {
@@ -16,7 +16,7 @@ public class ScreenBuffer
       BLACK_ON_WHITE
     };
   
-  private int w = 128, 
+  private int w = 128, // Actual values, defaulted to SSD1306
               h =  32;
   // This is the buffer that will be pushed on the device
   private int[] screenBuffer    = null;
@@ -85,9 +85,44 @@ public class ScreenBuffer
    */
   public void text(String txt, int xPx, int yPx)
   {
-    text(txt, xPx, yPx, Mode.WHITE_ON_BLACK);
+    text(txt, xPx, yPx, 1, Mode.WHITE_ON_BLACK, false);
   }
+  
+  public void text(String txt, int xPx, int yPx, int fontFact)
+  {
+    text(txt, xPx, yPx, fontFact, Mode.WHITE_ON_BLACK, false);
+  }
+
   public void text(String txt, int xPx, int yPx, Mode mode)
+  {
+    text(txt, xPx, yPx, 1, mode, false);
+  }
+
+  public void text(String txt, int xPx, int yPx, Mode mode, boolean b)
+  {
+    text(txt, xPx, yPx, 1, mode, b);
+  }
+
+  public void text(String txt, int xPx, int yPx, int fontFact, Mode mode)
+  {
+    text(txt, xPx, yPx, fontFact, mode, false);
+  }
+
+  /**
+   * Equivalent to Graphics.drawString.
+   * Draws a text string on the ScreenBuffer
+   * Text will be truncated as needed, depending on the screen buffer size.
+   * 
+   * @param txt String to display
+   * @param xPx Bottom left X origin in Pixels (top left is 0,0)
+   * @param yPx Bottom left Y origin in Pixels (top left is 0,0)
+   * @param fontFact Font Factor (1 and above), default 1
+   * @param mode Default Mode.WHITE_ON_BLACK
+   * @param rotate if true, rotate 90 degrees counter-clockwise. Default false
+   * 
+   * @see Mode
+   */
+  public void text(String txt, int xPx, int yPx, int fontFact, Mode mode, boolean rotate)
   {
     int xProgress = xPx;
     for (int i=0; i<txt.length(); i++)           // For each character of the string to display
@@ -95,21 +130,37 @@ public class ScreenBuffer
       String c = new String(new char[] { txt.charAt(i) });
       if (CharacterMatrixes.characters.containsKey(c))
       {
-        String[] matrix = CharacterMatrixes.characters.get(c);
-        for (int x=0; x<matrix[0].length(); x++) // Each COLUMN of the matrix
+        String[] matrix = CharacterMatrixes.characters.get(c); // Horizontal pixel lines, top to bottom.
+        // Assume all pixel lines have the same length
+        for (int x=0; x<matrix[0].length(); x++) // Each COLUMN of the character matrix
         {
-          char[] verticalBitmap = new char[CharacterMatrixes.FONT_SIZE];
-          for (int y=0; y<matrix.length; y++)    // Each LINE of the matrix
-            verticalBitmap[y] = matrix[y].charAt(x);
-          // Write in the scren matrix
-       // screenMatrix[line][col]
-          for (int y=0; y<CharacterMatrixes.FONT_SIZE; y++)
+          for (int fact=0; fact<fontFact; fact++)
           {
-            int l = (y + yPx - (CharacterMatrixes.FONT_SIZE - 1));
-            if (l >= 0 && l < this.h && xProgress >= 0 && xProgress < this.w)
-              screenMatrix[l][xProgress] = (mode == Mode.WHITE_ON_BLACK ? verticalBitmap[y] : invert(verticalBitmap[y]));
+            char[] verticalBitmap = new char[fontFact * CharacterMatrixes.FONT_SIZE];
+            int vmY = 0;
+            for (int y=0; y<matrix.length; y++)    // Each LINE of the character matrix
+            {
+              for (int f=0; f<fontFact; f++)
+                verticalBitmap[vmY++] = matrix[y].charAt(x);
+            }
+            // Write the character in the screen matrix
+         // screenMatrix[line][col]
+            for (int y=0; y<(fontFact * CharacterMatrixes.FONT_SIZE); y++) 
+            {
+              int l = (y + yPx - (CharacterMatrixes.FONT_SIZE - 1));
+              if (!rotate) 
+              {
+                if (l >= 0 && l < this.h && xProgress >= 0 && xProgress < this.w)
+                  screenMatrix[l][xProgress] = (mode == Mode.WHITE_ON_BLACK ? verticalBitmap[y] : invert(verticalBitmap[y]));
+              }
+              else // 90 deg counter-clockwise
+              {
+                if (l >= 0 && l < this.w && xProgress >= 0 && xProgress < this.h)
+                  screenMatrix[this.h - xProgress][l] = (mode == Mode.WHITE_ON_BLACK ? verticalBitmap[y] : invert(verticalBitmap[y]));
+              }
+            }
+            xProgress++;
           }
-          xProgress++;
         }
       }
       else
@@ -124,7 +175,7 @@ public class ScreenBuffer
     return (c == ' ' ? 'X' : ' ');
   }
   /**
-   * For debug...
+   * For debug, spits out the screen matrix (char[][]), as it is.
    */
   public void dumpScreen()
   {

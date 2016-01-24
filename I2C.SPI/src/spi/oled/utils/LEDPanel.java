@@ -11,8 +11,8 @@ public class LEDPanel
   private int origin = 0;
   private boolean withGrid = false;
 
-  private final static int NB_LINES =  32;
-  private static int NB_COLS        = 128;
+  private static int NB_LINES =  32;
+  private static int NB_COLS  = 128;
   
   private boolean[][] ledOnOff; // = new boolean[NB_COLS][NB_LINES];
 
@@ -29,11 +29,12 @@ public class LEDPanel
   /** Creates new form LEDPanel */
   public LEDPanel()   
   {
-    this(NB_COLS);
+    this(NB_LINES, NB_COLS);
   }
   
-  public LEDPanel(int nbCols)   
+  public LEDPanel(int nbLines, int nbCols)   
   {
+    NB_LINES = nbLines;
     NB_COLS = nbCols;
     initLeds();
     initComponents();

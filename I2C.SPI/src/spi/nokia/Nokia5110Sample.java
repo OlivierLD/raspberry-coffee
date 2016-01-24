@@ -40,12 +40,29 @@ public class Nokia5110Sample
     for (int i=0; i<8; i++)
     {
       sb.rectangle(1 + (i*2), 1 + (i*2), 83 - (i*2), 47 - (i*2));
-      lcd.setScreenBuffer(sb.getScreenBuffer());          
-      lcd.display();
+//    lcd.setScreenBuffer(sb.getScreenBuffer());          
+//    lcd.display();
   //  try { Thread.sleep(100); } catch (Exception ex) {}
     }
+    lcd.setScreenBuffer(sb.getScreenBuffer());          
+    lcd.display();
     try { Thread.sleep(1000); } catch (Exception ex) {}
 
+    sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+    sb.text("Pi=", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK);
+    sb.text("3.1415926", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+    lcd.setScreenBuffer(sb.getScreenBuffer());
+    lcd.display();
+//  sb.dumpScreen();
+    try { Thread.sleep(5000); } catch (Exception ex) {}
+
+    sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+    sb.text("Pi=", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK, true);
+    sb.text("3.1415926", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK, true);
+    lcd.setScreenBuffer(sb.getScreenBuffer());
+    lcd.display();
+    //  sb.dumpScreen();
+    try { Thread.sleep(5000); } catch (Exception ex) {}
 
     lcd.clear();
     lcd.display();

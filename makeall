@@ -12,7 +12,7 @@ buildProject() {
 }
 echo Building everything...
 buildProject SevenSegDisplay
-buildProject I2C
+buildProject I2C.SPI
 buildProject ADC
 buildProject DAC
 buildProject GPIO.01
