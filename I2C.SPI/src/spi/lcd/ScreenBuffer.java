@@ -9,7 +9,12 @@ import java.awt.Polygon;
 public class ScreenBuffer
 {
   private final static int WIDTH = 128, HEIGHT = 32; // Default values, for SSD1306
-  
+
+  /**
+   * This has been originally designed for the SSD1306, an OLED display
+   * with a black background, with white leds.
+   * This will look inverted on other LCDs, like the Nokia5110...
+   */
   public enum Mode
     {
       WHITE_ON_BLACK,
