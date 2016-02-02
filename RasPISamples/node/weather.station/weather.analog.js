@@ -25,7 +25,7 @@ var initWS = function() {
   // if browser doesn't support WebSocket, just show some notification and exit
   //  if (!window.WebSocket)
   if (!ws) {
-    alert('Sorry, but your browser does not support WebSockets.'); // TODO Fallback
+    alert('Sorry, but your browser does not support WebSockets.'); // TODO? Fallback
     return;
   }
   // open connection

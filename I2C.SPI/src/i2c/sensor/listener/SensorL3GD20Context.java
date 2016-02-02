@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A singleton
+ */
 public class SensorL3GD20Context implements Serializable
 {
   private static SensorL3GD20Context context = null;
