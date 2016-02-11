@@ -104,6 +104,9 @@ public class HomeWeatherStation
         
     while (go)
     {
+      if ("true".equals(System.getProperty("ws.verbose", "false")))
+        System.out.println("-> While go...");
+      
       double ws = weatherStation.currentWindSpeed();      
       double wg = weatherStation.getWindGust();
       float wd  = weatherStation.getCurrentWindDirection();
@@ -144,7 +147,7 @@ public class HomeWeatherStation
           ex.printStackTrace();
         }
       }      
-      float cpuTemp = SystemInfo.getCpuTemperature();
+      float cpuTemp = 0; // SystemInfo.getCpuTemperature();
       windObj.put("cputemp", cpuTemp);
       /*
        * Sample message:
@@ -162,11 +165,13 @@ public class HomeWeatherStation
       try
       {
         String message = windObj.toString();
+        if ("true".equals(System.getProperty("ws.verbose", "false")))
+          System.out.println("-> Wind Message:" + message);
         httpServer.setData(message);
         if (wsf != null)
         {          
           if ("true".equals(System.getProperty("ws.verbose", "false")))
-            System.out.println("-> Sending " + message);
+            System.out.println("-> Sending message (wsf)");
           wsf.pushMessage(message);
           if (logger != null)
           {
@@ -179,6 +184,11 @@ public class HomeWeatherStation
               ex.printStackTrace();
             }
           }
+        }
+        else
+        {
+          if ("true".equals(System.getProperty("ws.verbose", "false")))
+            System.out.println("-> NOT Sending message (wsf)");
         }
       }
       catch (NotYetConnectedException nyce)

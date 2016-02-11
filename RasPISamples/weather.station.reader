@@ -3,16 +3,17 @@
 PI4J_HOME=/opt/pi4j
 CP=./classes
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-CP=$CP:../I2C/classes
+CP=$CP:../I2C.SPI/classes
 CP=$CP:../WeatherStation/classes
 CP=$CP:./lib/java_websocket.jar
 CP=$CP:./lib/json.jar
 #
 JAVA_OPTIONS=
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dws.verbose=true"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=2.0"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dws.verbose=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1.7"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.log=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.MySQLLoggerImpl -Dws.between.logs=600000"
+JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=1044"
 #
 echo Make sure the server is started \(node/weather.server.js\)
 # ADDR=`hostname`
