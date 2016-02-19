@@ -35,6 +35,7 @@ gen/*
 .idea/
 **/rpi/
 *.so
+*.php
 # gradle/
 # gradlew
 
