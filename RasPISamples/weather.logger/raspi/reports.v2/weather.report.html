@@ -380,14 +380,20 @@ var interval;
 var autoRefresh = function() {
   if (document.getElementById("auto-refresh").checked) {
 //  document.getElementById("query").disabled = true;
-    go();
+    go(); // First
+    var now = new Date();
+    document.getElementById("last-refresh").innerHTML = "Refreshed " + now.format("H:i:s");
+    console.log("Auto-refreshed at ", now);
     interval = setInterval(function() {
-      console.log("Auto-refreshed at ", new Date());
+      var now = new Date();
+      document.getElementById("last-refresh").innerHTML = "Refreshed " + now.format("H:i:s");
+      console.log("Auto-refreshed at ", now);
       go();
     }, 10 * 60 * 1000);	 // every 10 minutes
   } else {
     clearInterval(interval);
 //  document.getElementById("query").disabled = false;
+    document.getElementById("last-refresh").innerHTML = "";
   }
 };
 
@@ -605,7 +611,7 @@ var go = function() {
       </tr>
       <tr>
         <td align="left" colspan="5">
-          Your time zone:
+          Time zone:
           <select id="tz" style="direction: ltr; font-family: 'Source Code Pro', 'courier new';">
             <option value="-12">UTC-12</option>
             <option value="-11">UTC-11</option>
@@ -645,6 +651,7 @@ var go = function() {
           </select>
           &nbsp;&nbsp;<small>Click on the graph to update the displays.</small>
           &nbsp;&nbsp;<input type="checkbox" id="auto-refresh" onchange="javascript:autoRefresh();" title="Every 10 minutes">Auto refresh
+          &nbsp;&nbsp;<small style="font-weight: normal;"><span id="last-refresh"></span></small>
         </td>
       </tr>
       <tr>

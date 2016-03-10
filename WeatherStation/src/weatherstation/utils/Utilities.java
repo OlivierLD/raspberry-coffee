@@ -40,7 +40,10 @@ public class Utilities
   {
     return voltageToDegrees(value, defaultWindDir, Voltage.V3_3);
   }
-  
+
+  /*
+   * Returns a value every 22.5 degrees (360 / 16).
+   */
   public static double voltageToDegrees(double value, double defaultWindDir, Voltage v)
   {
     if (fuzzyCompare(3.84 * getAdjustment(v), value))

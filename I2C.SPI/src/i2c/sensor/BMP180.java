@@ -154,8 +154,8 @@ public class BMP180
     }
     else
     {
-      lo = this.readS8(register);
-      hi = this.readU8(register + 1);
+      lo = this.readU8(register);
+      hi = this.readS8(register + 1);
     }
     return (hi << 8) + lo;
   }
