@@ -346,7 +346,8 @@ public class BME280
   {
     // Gets the compensated pressure in pascal
     int adc = readRawPressure();
-    System.out.println("ADC:" + adc + ", tFine:" + tFine);
+    if (verbose)
+      System.out.println("ADC:" + adc + ", tFine:" + tFine);
     float var1 = (tFine / 2.0f) - 64000.0f;
     float var2 = var1 * var1 * (dig_P6 / 32768.0f);
     var2 = var2 + var1 * dig_P5 * 2.0f;
