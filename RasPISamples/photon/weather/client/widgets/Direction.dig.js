@@ -289,10 +289,10 @@ function DirectionDig(cName, dSize, ticks)
 
     context.beginPath();
     context.fillStyle = directionColorConfig.valueColor;
-    context.fillText(text, (canvas.width / 2) - (len / 2), ((radius * .75) + 10));
+    context.fillText(text, (canvas.width / 2) - (len / 2), radius + 10);
     context.lineWidth = 1;
     context.strokeStyle = directionColorConfig.valueOutlineColor;
-    context.strokeText(text, (canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined
+    context.strokeText(text, (canvas.width / 2) - (len / 2), radius + 10); // Outlined
     context.closePath();
 
     // Hand
