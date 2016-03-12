@@ -26,7 +26,8 @@ object Scala_101 {
       println(s"Humidity:$hum %")
     } catch {
       case ex: Exception =>
-        println(ex.toString)
+//    println(ex.toString)
+        ex.printStackTrace
     }
   }
 }

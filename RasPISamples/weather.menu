@@ -22,12 +22,12 @@ do
   if nocase "$a" "N"
   then
     cd node
-    node weather.server.js &
+    nohup node weather.server.js &
     cd ..
     read dummy
   elif nocase "$a" "W"
   then
-    ./weather.station.reader &
+    nohup ./weather.station.reader &
     read dummy
   elif nocase "$a" "K"
   then
@@ -65,4 +65,3 @@ do
     read dummy
   fi
 done
-

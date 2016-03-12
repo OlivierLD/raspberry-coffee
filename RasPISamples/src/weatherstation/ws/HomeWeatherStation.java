@@ -4,6 +4,8 @@ import com.pi4j.system.SystemInfo;
 
 import java.nio.channels.NotYetConnectedException;
 
+import java.text.NumberFormat;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,6 +115,10 @@ public class HomeWeatherStation
       float mwd = getAverageWD(wd);
       double volts = weatherStation.getCurrentWindDirectionVoltage();
       float rain = weatherStation.getCurrentRainTotal();
+      
+      if ("true".equals(System.getProperty("show.rain", "false")))
+        System.out.println(">> Rain : " + NumberFormat.getInstance().format(rain) + " mm");
+      
       JSONObject windObj = new JSONObject();
       windObj.put("dir", wd);
       windObj.put("avgdir", mwd);
