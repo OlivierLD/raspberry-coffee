@@ -4,7 +4,7 @@
     <title>Weather Data, 2010 48th Ave, SF</title>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="stylesheet.css" type="text/css"/>   
+    <link rel="stylesheet" href="stylesheet.css" type="text/css"/>
     <style type="text/css">
       @font-face {
         font-family: "Digi Font";
@@ -46,6 +46,7 @@
     <script type="text/javascript" src="widgets/Thermometer.js"></script>
     <script type="text/javascript" src="widgets/Pluviometer.js"></script>
     <script type="text/javascript" src="widgets/Direction.js"></script>
+    <script type="text/javascript" src="widgets/Direction.dig.js"></script>
   </head>
 
   <body>
@@ -55,10 +56,10 @@
 
     <script src="http://cdn.jsdelivr.net/sparkjs/0.5.10/spark.min.js"></script>
     <script>
-      var token = '5e7e36714a7c4a7a70aea852b16bb43c6a13935c'; 
+      var token = '5e7e36714a7c4a7a70aea852b16bb43c6a13935c';
 
   //  sparkLogin(function(data) {
-  //    console.log(data);        
+  //    console.log(data);
   //  });
 
       spark.on('login', function() {
@@ -85,10 +86,12 @@
             document.getElementById('temp').innerText = weatherData.temp.toFixed(2);
             document.getElementById('press').innerText = weatherData.press / 100;
             document.getElementById('hum').innerText = weatherData.hum.toFixed(1);
+            document.getElementById('dir').innerText = weatherData.dir.toFixed(0);
 
             document.getElementById('rain').innerText = weatherData.rain;
             document.getElementById('wdir').innerText = weatherData.avgdir.toFixed(0);
             document.getElementById('wspeed').innerText = weatherData.speed.toFixed(2);
+            document.getElementById('gust').innerText = weatherData.gust.toFixed(2);
 
             document.getElementById('when').innerText = 'Last Updated: ' + new Date();
 
@@ -97,39 +100,51 @@
             } else {
               displayPRMSL.setValue(weatherData.press / 100);
             }
-           
+
             if (ANIMATE) {
               displayTemp.animate(weatherData.temp);
             } else {
               displayTemp.setValue(weatherData.temp);
             }
-           
+
             if (ANIMATE) {
               displayHum.animate(weatherData.hum);
             } else {
               displayHum.setValue(weatherData.hum);
             }
-           
+
             if (ANIMATE) {
               displayRain.animate(weatherData.rain);
             } else {
               displayRain.setValue(weatherData.rain);
             }
-           
+
             if (ANIMATE) {
               displayTWD.animate(weatherData.avgdir);
             } else {
               displayTWD.setValue(weatherData.avgdir);
             }
-           
+
             if (ANIMATE) {
               displayTWS.animate(weatherData.speed);
             } else {
               displayTWS.setValue(weatherData.speed);
             }
+
+            if (ANIMATE) {
+              displayDir.animate(weatherData.dir);
+            } else {
+              displayDir.setValue(weatherData.dir);
+            }
+
+            if (ANIMATE) {
+              displayGust.animate(weatherData.gust);
+            } else {
+              displayGust.setValue(weatherData.gust);
+            }
           });
       });
-    
+
       spark.login({ accessToken: token });
 
     </script>
@@ -139,14 +154,19 @@
   var ANIMATE = false;
 
 
-  var displayPRMSL, displayTemp, displayTWD, displayTWS, displayHum, displayRain;
- 
+  var displayPRMSL, displayTemp, displayTWD, displayTWS, displayHum, displayRain, displayDir, displayGust;
+
   window.onload = function() {
     displayPRMSL = new AnalogDisplay('prmslCanvas', 100 * displayScale, 1045, 10, 1, true, 50, 985, 0);
     displayTemp  = new Thermometer('tempCanvas', 200);
     displayTWD      = new Direction('twdCanvas', 100 * displayScale, 45, 5, true);
     displayTWS      = new AnalogDisplay('twsCanvas', 100 * displayScale,   65,  10,  1, true, 40);
     displayTWS.setWithMinMax(true);
+
+    displayDir      = new DirectionDig('dirCanvas', 100 * displayScale, 22.5);
+    displayGust     = new AnalogDisplay('gustCanvas', 100 * displayScale,   65,  10,  1, true, 40);
+    displayGust.setWithMinMax(true);
+
     displayHum      = new AnalogDisplay('humCanvas',  100 * displayScale,  100,  10,  1, true, 40);
     displayRain     = new Pluviometer('rainCanvas');
   };
@@ -158,11 +178,11 @@
     // buttons
     document.getElementById('showDisplays1').className = (b1 === true ? 'selectedButton' : 'unselectedButton');
     document.getElementById('showDisplays2').className = (b2 === true ? 'selectedButton' : 'unselectedButton');
-  };  
+  };
 
   var showDisplays = function(tab) {
     setup(tab==1?true:false, tab==2?true:false);
-  };  
+  };
     </script>
     <table width="98%">
       <tr>
@@ -189,27 +209,33 @@
           <td style="margin-top:10px;">Temperature in &deg;C</td>
           <td style="margin-top:10px;">Humidity in %</td>
           <td style="margin-top:10px;">Pressure in hPa</td>
+          <td style="margin-top:10px;">Dir (inst)</td>
         </tr>
         <tr>
           <td><div id="temp" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>  
+                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="hum" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>  
+                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="press" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>  
+                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+          <td><div id="dir" class="digifont"
+                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
         </tr>
         <tr>
           <td style="margin-top:10px;">Rain in mm/h</td>
           <td style="margin-top:10px;">Wind Dir in &deg;</td>
           <td style="margin-top:10px;">Wind Speed in knots</td>
+          <td style="margin-top:10px;">Gusts in knots</td>
         </tr>
         <tr>
           <td><div id="rain" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>  
+                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="wdir" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>  
+                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="wspeed" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>  
+                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+          <td><div id="gust" class="digifont"
+                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
         </tr>
       </table>
     </div>
@@ -219,6 +245,7 @@
           <td align="center">Pressure in hPa</td>
           <td align="center">Air Temp in &deg;C</td>
           <td align="center">Humidity in %</td>
+          <td align="center">Dir (inst)</td>
         </tr>
         <tr>
           <td align="center" valign="top" width="200">
@@ -230,11 +257,15 @@
           <td align="center" valign="top" width="200">
             <canvas id="humCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
           </td>
+          <td align="center" valign="top" width="200">
+            <canvas id="dirCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
+          </td>
         </tr>
         <tr>
           <td align="center">Rain in mm/h</td>
           <td align="center">Wind dir in &deg;C</td>
           <td align="center">Wind speed in knots</td>
+          <td align="center">Gust in knots</td>
         </tr>
         <tr>
           <td align="center" valign="top" width="200">
@@ -246,8 +277,11 @@
           <td align="center" valign="top" width="200">
             <canvas id="twsCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
           </td>
+          <td align="center" valign="top" width="200">
+            <canvas id="gustCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
+          </td>
         </tr>
-      </table>  
+      </table>
     </div>
     <hr>
     <table width="100%">
