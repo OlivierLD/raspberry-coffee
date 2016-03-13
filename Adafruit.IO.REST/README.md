@@ -13,3 +13,18 @@ The class `adafreuit.io.rest.HttpClient` contains a main that pushes data to the
 
 Similarly, the sample named `adafruit.io.sample.Poll` reads the feed, and will exit when its value changes.
  You can change the value from the Adafruit-IO dashboard, and the program will exit.
+
+The classes depend on `json.org` to manage the json objects used as payload. The dependency is mentioned in the
+gradle build file.
+
+To run the classes, use a command line similar to this ones:
+```
+CP=./classes
+CP=./lib/json.jar
+#
+java -cp $CP -Dkey=50c0707070c070302030a01040d020a0a0908050 adafruit.io.rest.HttpClient
+#
+java -cp $CP -Dkey=50c0707070c070302030a01040d020a0a0908050 adafruit.io.sample.Poll
+
+```
+The classpath and the key depend on your own configuration...
