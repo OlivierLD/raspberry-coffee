@@ -257,12 +257,8 @@ function DirectionDig(cName, dSize, ticks)
     context.lineWidth = 1;
     for (i = 0;i < 360 ;i+=ticks)
     {
-//   xFrom = (canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (i / 360)));
-//    yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(2 * Math.PI * (i / 360)));
       xTo = (canvas.width / 2) - ((radius * 0.85) * Math.cos(2 * Math.PI * (i / 360)));
       yTo = (radius + 10) - ((radius * 0.85) * Math.sin(2 * Math.PI * (i / 360)));
-//    context.moveTo(xFrom, yFrom);
-//    context.lineTo(xTo, yTo);
 
       context.beginPath();
       context.arc(xTo, yTo, 5, 0, 2 * Math.PI, false);
@@ -272,10 +268,6 @@ function DirectionDig(cName, dSize, ticks)
       context.strokeStyle = 'black'; // directionColorConfig.knobOutlineColor;
       context.stroke();
     }
-//  context.lineWidth = 3;
-//  context.strokeStyle = directionColorConfig.majorTickColor;
-//  context.stroke();
-//  context.closePath();
 
     // Value
     var dv = displayValue;
@@ -298,14 +290,10 @@ function DirectionDig(cName, dSize, ticks)
     // Hand
     context.beginPath();
     context.lineWidth = 1;
-    for (i = 90;i < 450 ;i+=ticks)
+    for (i = 90;i < 450 ;i+=ticks) // 0 is East. Turns clockwise
     {
-//   xFrom = (canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (i / 360)));
-//    yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(2 * Math.PI * (i / 360)));
       xTo = (canvas.width / 2) - ((radius * 0.85) * Math.cos(2 * Math.PI * (i / 360)));
       yTo = (radius + 10) - ((radius * 0.85) * Math.sin(2 * Math.PI * (i / 360)));
-//    context.moveTo(xFrom, yFrom);
-//    context.lineTo(xTo, yTo);
 
       context.beginPath();
       context.arc(xTo, yTo, 5, 0, 2 * Math.PI, false);
@@ -330,7 +318,6 @@ function DirectionDig(cName, dSize, ticks)
       yTo = (radius + 10) - (insideRadius * Math.sin(2 * Math.PI * ((angle + 90) / 360)));
       context.moveTo(xFrom, yFrom);
       context.lineTo(xTo, yTo);
-
   };
 
   this.setValue = function(val)
