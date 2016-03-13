@@ -18,7 +18,7 @@ import org.json.JSONObject;
 
 public class HttpClient
 {
-  private final static boolean DEBUG = true;
+  private final static boolean DEBUG = false;
 
   @SuppressWarnings("oracle.jdeveloper.java.nested-assignment")
   public static String doGet(String urlStr, Map<String, String> headers) throws Exception
@@ -148,7 +148,7 @@ public class HttpClient
     String key = System.getProperty("key");
     if (key == null)
     {
-      help();
+      HttpClient.help();
       System.exit(1);
     }
     String feedName = "onoff";
