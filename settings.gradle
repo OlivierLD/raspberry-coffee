@@ -1,3 +1,4 @@
+include 'Aafruit.IO.REST'
 include 'ADC'
 include 'AlaMode.101'
 include 'Arduino.RaspberryPI'
