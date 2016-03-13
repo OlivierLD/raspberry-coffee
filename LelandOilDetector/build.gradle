@@ -2,7 +2,11 @@ plugins {
   id 'java'
   id 'maven'
   id 'com.moowork.node' version '0.10'
-  id 'com.github.johnrengelman.shadow' version '1.2.2'
+  id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+shadowJar {
+  zip64 true
 }
 
 def userprofile = System.getenv()['USERPROFILE'] // On Windows...

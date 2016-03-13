@@ -12,6 +12,7 @@ if (userprofile == null) { // Linux ?
 // ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password")
 
 dependencies {
+  compile project(':Adafruit.IO.REST')
   compile project(':SevenSegDisplay')
   compile project(':AlaMode.101')
   compile project(':I2C.SPI')

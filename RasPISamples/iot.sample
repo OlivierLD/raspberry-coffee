@@ -1,0 +1,12 @@
+#!/bin/bash
+PI4J_HOME=/opt/pi4j
+CP=./classes
+CP=$CP:../Adafruit.IO.REST/classes
+CP=$CP:../I2C.SPI/classes
+CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+CP=$CP:./lib/json.jar
+#
+# OPTS=-Dbme280.debug=true
+OPTS=-Dkey=54c2767878ca793f2e3cae1c45d62aa7ae9f8056
+#
+sudo java -cp $CP $OPTS iot.TemperatureRelaySample
