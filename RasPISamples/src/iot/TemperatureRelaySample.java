@@ -24,7 +24,9 @@ import org.json.JSONObject;
  */
 public class TemperatureRelaySample
 {
-  private final static String HEATER_NAME = "onoff";
+  private final static boolean DEBUG = "true".equals(System.getProperty("AIO.debug", "false"));
+
+  private final static String HEATER_NAME      = "onoff";
   private final static String THERMOMETER_NAME = "air-temperature";
   
   private final static String key = System.getProperty("key"); 
@@ -55,29 +57,30 @@ public class TemperatureRelaySample
     gpio.shutdown();
   }
   
-  private static String readHeaterSwitch(String key) throws Exception
+  private String readHeaterSwitch(String key) throws Exception
   {
     String url = "https://io.adafruit.com/api/feeds/" + HEATER_NAME;
     Map<String, String> headers = new HashMap<String, String>(1);
     headers.put("X-AIO-Key", key);
     String content = HttpClient.doGet(url, headers);
-
- // System.out.println("GET\n" + content);
+    if (DEBUG)
+      System.out.println("GET\n" + content);
 
     JSONObject json = new JSONObject(content);
     String lastValue = json.getString("last_value");
- // System.out.println("Feed value:" + lastValue);
+    if (DEBUG)
+      System.out.println("Feed value:" + lastValue);
     return lastValue;
   }
   
-  private static String readTemperature(String key) throws Exception
+  private String readTemperature(String key) throws Exception
   {
     String url = "https://io.adafruit.com/api/feeds/" + THERMOMETER_NAME;
     Map<String, String> headers = new HashMap<String, String>(1);
     headers.put("X-AIO-Key", key);
     String content = HttpClient.doGet(url, headers);
-
- // System.out.println("GET\n" + content);
+    if (DEBUG)
+      System.out.println("GET\n" + content);
 
     JSONObject json = new JSONObject(content);
     String tempValue = json.getString("value");
@@ -85,7 +88,7 @@ public class TemperatureRelaySample
     return tempValue;
   }
   
-  private static void setTemperature(String key, float temperature) throws Exception
+  private void setTemperature(String key, float temperature) throws Exception
   {
     String url = "https://io.adafruit.com/api/feeds/" + THERMOMETER_NAME + "/data";
     Map<String, String> headers = new HashMap<String, String>(1);
@@ -94,7 +97,8 @@ public class TemperatureRelaySample
     value.put("value", Math.round(temperature * 100d) / 100d);
 //  System.out.println("Sending " + value.toString(2));
     int httpCode = HttpClient.doPost(url, headers, value.toString());
-//  System.out.println("POST Ret:" + httpCode);
+    if (DEBUG)
+      System.out.println("POST Ret:" + httpCode);
   }
   
   private boolean working = false;
@@ -192,7 +196,6 @@ public class TemperatureRelaySample
       me.wait();
       System.out.println("\nWait is over");
     }
-    
     System.out.println("Done!");
   }
   

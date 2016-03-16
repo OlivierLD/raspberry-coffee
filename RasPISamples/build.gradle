@@ -40,6 +40,7 @@ dependencies {
   compile project(':Arduino.RaspberryPI')
   compile project(':WeatherStation')
   compile project(':SevenSegDisplay')
+  compile project(':Adafruit.IO.REST')
 }
 
 task copyResources(type: Copy) {

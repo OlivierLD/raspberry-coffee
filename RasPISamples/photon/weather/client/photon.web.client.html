@@ -159,16 +159,16 @@
   window.onload = function() {
     displayPRMSL = new AnalogDisplay('prmslCanvas', 100 * displayScale, 1045, 10, 1, true, 50, 985, 0);
     displayTemp  = new Thermometer('tempCanvas', 200);
-    displayTWD      = new Direction('twdCanvas', 100 * displayScale, 45, 5, true);
-    displayTWS      = new AnalogDisplay('twsCanvas', 100 * displayScale,   65,  10,  1, true, 40);
+    displayTWD   = new Direction('twdCanvas', 100 * displayScale, 45, 5, true);
+    displayTWS   = new AnalogDisplay('twsCanvas', 100 * displayScale,   65,  10,  1, true, 40);
     displayTWS.setWithMinMax(true);
 
-    displayDir      = new DirectionDig('dirCanvas', 100 * displayScale, 22.5);
-    displayGust     = new AnalogDisplay('gustCanvas', 100 * displayScale,   65,  10,  1, true, 40);
+    displayDir   = new DirectionDig('dirCanvas', 100 * displayScale, 22.5);
+    displayGust  = new AnalogDisplay('gustCanvas', 100 * displayScale,   65,  10,  1, true, 40);
     displayGust.setWithMinMax(true);
 
-    displayHum      = new AnalogDisplay('humCanvas',  100 * displayScale,  100,  10,  1, true, 40);
-    displayRain     = new Pluviometer('rainCanvas');
+    displayHum   = new AnalogDisplay('humCanvas',  100 * displayScale,  100,  10,  1, true, 40);
+    displayRain  = new Pluviometer('rainCanvas');
   };
 
   var setup = function(b1, b2) {
@@ -191,8 +191,8 @@
         </td>
         <td valign="top" align="right">
           <textarea id="raw"
-                     cols="50"
-                     lines="5">
+                    cols="50"
+                    lines="5">
           </textarea>
         </td>
       </tr>
@@ -213,13 +213,13 @@
         </tr>
         <tr>
           <td><div id="temp" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+                   style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="hum" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+                   style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="press" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+                   style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="dir" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+                   style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
         </tr>
         <tr>
           <td style="margin-top:10px;">Rain in mm/h</td>
@@ -229,13 +229,13 @@
         </tr>
         <tr>
           <td><div id="rain" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+                    style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="wdir" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+                   style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="wspeed" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+                   style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
           <td><div id="gust" class="digifont"
-                       style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
+                   style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div></td>
         </tr>
       </table>
     </div>
@@ -244,7 +244,7 @@
         <tr>
           <td align="center">Pressure in hPa</td>
           <td align="center">Air Temp in &deg;C</td>
-          <td align="center">Humidity in %</td>
+          <td align="center">Wind dir in &deg;C</td>
           <td align="center">Dir (inst)</td>
         </tr>
         <tr>
@@ -255,7 +255,7 @@
             <canvas id="tempCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
           </td>
           <td align="center" valign="top" width="200">
-            <canvas id="humCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
+            <canvas id="twdCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
           </td>
           <td align="center" valign="top" width="200">
             <canvas id="dirCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
@@ -263,7 +263,7 @@
         </tr>
         <tr>
           <td align="center">Rain in mm/h</td>
-          <td align="center">Wind dir in &deg;C</td>
+          <td align="center">Humidity in %</td>
           <td align="center">Wind speed in knots</td>
           <td align="center">Gust in knots</td>
         </tr>
@@ -272,7 +272,7 @@
             <canvas id="rainCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
           </td>
           <td align="center" valign="top" width="200">
-            <canvas id="twdCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
+            <canvas id="humCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
           </td>
           <td align="center" valign="top" width="200">
             <canvas id="twsCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
