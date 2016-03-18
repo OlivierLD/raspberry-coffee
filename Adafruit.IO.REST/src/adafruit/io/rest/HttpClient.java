@@ -16,6 +16,10 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+/**
+ * Shows how to interact with Adafruit-IO using a REST interface.
+ * See doc at https://io.adafruit.com/api/docs/#!/Feeds/all
+ */
 public class HttpClient
 {
   private final static boolean DEBUG = false;
@@ -142,7 +146,13 @@ public class HttpClient
     
     System.out.println(help);
   }
-  
+
+  /**
+   * Sample. Reads and feeds a toggle button named "onoff", with values "ON" or "OFF".
+   * The Adafruit-IO key is to be provided as a system variable.
+   * @param args unused
+   * @throws Exception
+   */
   public static void main(@SuppressWarnings("unused") String[] args) throws Exception
   {
     String key = System.getProperty("key");
