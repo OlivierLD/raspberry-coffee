@@ -183,17 +183,33 @@ public class HttpClient
 
     System.out.println("Reading temperature");
     feedName = "air-temperature";
-    url = "https://io.adafruit.com/api/feeds/" + feedName + "/data";
+
+    url = "https://io.adafruit.com/api/feeds/" + feedName;
     content = HttpClient.doGet(url, headers);
     System.out.println("Read OK");
     if (DEBUG)
       System.out.println("GET\n" + content);
-    JSONArray data = new JSONArray(content);
-    System.out.println(data.length() + " elements in the feed");
-    for (int i=0; i<data.length(); i++)
+    JSONObject tempData = new JSONObject(content);
+    System.out.println("Last temp:" + tempData.getDouble("last_value") + "\272C");
+
+    try
     {
-      JSONObject js = data.getJSONObject(i);
-      System.out.println("Value:" + js.getDouble("value"));
+      url = "https://io.adafruit.com/api/feeds/" + feedName + "/data";
+      content = HttpClient.doGet(url, headers);
+      System.out.println("Read OK");
+      if (DEBUG)
+        System.out.println("GET\n" + content);
+      JSONArray data = new JSONArray(content);
+      System.out.println(data.length() + " elements in the feed");
+      for (int i=0; i<data.length(); i++)
+      {
+        JSONObject js = data.getJSONObject(i);
+        System.out.println("Value:" + js.getDouble("value") + "\272C at " + js.getString("updated_at"));
+      }
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
     }
   }
 }
