@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -179,5 +180,20 @@ public class HttpClient
     System.out.println("Sending " + off.toString(2));
     int httpCode = HttpClient.doPost(url, headers, off.toString());
     System.out.println("POST Ret:" + httpCode);
+
+    System.out.println("Reading temperature");
+    feedName = "air-temperature";
+    url = "https://io.adafruit.com/api/feeds/" + feedName + "/data";
+    content = HttpClient.doGet(url, headers);
+    System.out.println("Read OK");
+    if (DEBUG)
+      System.out.println("GET\n" + content);
+    JSONArray data = new JSONArray(content);
+    System.out.println(data.length() + " elements in the feed");
+    for (int i=0; i<data.length(); i++)
+    {
+      JSONObject js = data.getJSONObject(i);
+      System.out.println("Value:" + js.getDouble("value"));
+    }
   }
 }
