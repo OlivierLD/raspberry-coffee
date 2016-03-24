@@ -20,7 +20,7 @@ gradle build file.
 To run the classes, use a command line similar to this ones:
 ```
 CP=./classes
-CP=./lib/json.jar
+CP=$CP:./lib/json.jar
 #
 java -cp $CP -Dkey=50c0707070c070302030a01040d020a0a0908050 adafruit.io.rest.HttpClient
 #
