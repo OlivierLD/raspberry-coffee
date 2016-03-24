@@ -77,14 +77,14 @@ Date.prototype.getDayAbbr = function()
 };
 
 // Provide the day of year 1-365
-Date.prototype.getDayOfYear = function() 
+Date.prototype.getDayOfYear = function()
 {
   var onejan = new Date(this.getFullYear(),0,1);
   return Math.ceil((this - onejan) / 86400000);
 };
 
 // Provide the day suffix (st,nd,rd,th)
-Date.prototype.getDaySuffix = function() 
+Date.prototype.getDaySuffix = function()
 {
   var d = this.getDate();
   var sfx = ["th", "st", "nd", "rd"];
@@ -94,7 +94,7 @@ Date.prototype.getDaySuffix = function()
 };
 
 // Provide Week of Year
-Date.prototype.getWeekOfYear = function() 
+Date.prototype.getWeekOfYear = function()
 {
   var onejan = new Date(this.getFullYear(),0,1);
   return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
@@ -121,25 +121,14 @@ Date.prototype.isLeapYear = function()
 };
 
 // Provide Number of Days in a given month
-Date.prototype.getMonthDayCount = function() 
+Date.prototype.getMonthDayCount = function()
 {
-  var month_day_counts = [
-                            31,
-                            this.isLeapYear() ? 29 : 28,
-                            31,
-                            30,
-                            31,
-                            30,
-                            31,
-                            31,
-                            30,
-                            31,
-                            30,
-                            31
-                         ];
+  var month_day_counts = [ 31,
+                           this.isLeapYear() ? 29 : 28,
+                           31,30,31,30,31,31,30,31,30,31 ];
 
   return month_day_counts[this.getMonth()];
-}; 
+};
 
 // format provided date into this.format format
 Date.prototype.format = function(dateFormat)
@@ -164,7 +153,7 @@ Date.prototype.format = function(dateFormat)
   };
 
   // get all date properties ( based on PHP date object functionality )
-  var date_props = 
+  var date_props =
   {
     d: date < 10 ? '0'+date : date,
     D: this.getDayAbbr(),
@@ -201,7 +190,7 @@ Date.prototype.format = function(dateFormat)
     var f = dateFormat[i];
     if (f.match(/[a-zA-Z|_]/g))
       date_string += date_props[f] ? date_props[f] : '';
-    else 
+    else
       date_string += f;
   }
   return date_string;

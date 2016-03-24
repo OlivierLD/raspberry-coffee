@@ -32,8 +32,7 @@ int replyType = 0;
 int readingExpected = 0;
 boolean incomingStringMessage = false;
 
-void setup()
-{
+void setup() {
   Serial.begin(9600);
   Serial.println("We're in");
   
@@ -42,59 +41,43 @@ void setup()
   Wire.onRequest(sendReply);      // Master is reading
 }
 
-void loop()
-{
+void loop() {
 }
 
-void processMessage(int n)
-{
+void processMessage(int n) {
   Serial.print("Process message "); Serial.println(n);
   char ch = Wire.read();
   Serial.print("Read from Wire:"); Serial.println(ch);
-  if (incomingStringMessage)
-  {
-    if (ch != END_OF_MESSAGE)
-    {
+  if (incomingStringMessage) {
+    if (ch != END_OF_MESSAGE) {
       fromMaster[strIdx++] = ch;
-    }
-    else
-    {
+    } else {
       fromMaster[strIdx] = '\0';
       incomingStringMessage = false;
       Serial.print("Received from Master: [");Serial.print(fromMaster);Serial.println("]");
     }
-  }
-  else if (ch == PING)
-  {
+  } else if (ch == PING) {
     Serial.print("Received a ping, sending a pong [");Serial.print(PONG);Serial.println("]");
     replyType = ONE_BYTE;
     readingExpected = PONG;
-  }
-  else if (ch == STRING_REQUEST)
-  {
+  } else if (ch == STRING_REQUEST) {
     Serial.println("Received a String Request.");
     replyType = ONE_STRING;
     strIdx = 0;
     readingExpected = FROM_ARDUINO[strIdx++];
-  }
-  else if (ch == STRING_RECEIVE)
-  {
+  } else if (ch == STRING_RECEIVE) {
     strIdx = 0;
     incomingStringMessage = true;
-  }
-  else
-  {
+  } else {
     Serial.println("... Doing nothing");
   }
 }
 
-void sendReply()
-{
+void sendReply() {
   int reading = readingExpected;
   Serial.print("Replying:"); Serial.println(reading);
   Wire.write(reading);
-  if (replyType == ONE_STRING)
-  {
+  if (replyType == ONE_STRING) {
     if (strIdx > strlen(FROM_ARDUINO))
       readingExpected = END_OF_MESSAGE;
     else

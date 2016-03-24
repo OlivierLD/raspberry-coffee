@@ -4,7 +4,7 @@
  // TODO This config in CSS
  // We wait for the var- custom properties to be implemented in CSS...
  // @see http://www.w3.org/TR/css-variables-1/
- 
+
  /*
   * For now:
   * Themes are applied based on a css class:
@@ -12,11 +12,11 @@
   * {
   *   color: black;
   * }
-  * 
+  *
   * if color is black, analogDisplayColorConfigBlack is applied
   * if color is white, analogDisplayColorConfigWhite is applied, etc
   */
-var analogDisplayColorConfigWhite = 
+var analogDisplayColorConfigWhite =
 {
   bgColor:           'white',
   digitColor:        'black',
@@ -38,7 +38,7 @@ var analogDisplayColorConfigWhite =
   font:              'Arial' /* 'Source Code Pro' */
 };
 
-var analogDisplayColorConfigBlack = 
+var analogDisplayColorConfigBlack =
 {
   bgColor:           'black',
   digitColor:        'cyan',
@@ -66,7 +66,7 @@ function AnalogDisplay(cName,                     // Canvas Name
                        majorTicks,                // default 1
                        minorTicks,                // default 0
                        withDigits,                // default true, boolean
-                       overlapOver180InDegree,    // default 0, beyond horizontal, in degrees, before 0, after 180
+                       overlapOver180InDegree,    // default 0 (will display half circle), beyond horizontal, in degrees, before 0, after 180
                        startValue,                // default 0, In case it is not 0
                        nbDecimal)                 // default 1, nb decimals in the value display
 {
@@ -101,22 +101,22 @@ function AnalogDisplay(cName,                     // Canvas Name
   var withMinMax = false;
   var miniVal =  10000000;
   var maxiVal = -10000000;
-  
+
   var instance = this;
-  
+
 //try { console.log('in the AnalogDisplay constructor for ' + cName + " (" + dSize + ")"); } catch (e) {}
-  
+
   (function(){ drawDisplay(canvasName, displaySize, previousValue); })(); // Invoked automatically
-  
+
   this.setWithMinMax = function(b)
   {
     withMinMax = b;
   };
-  this.setNbDec = function(nb) 
+  this.setNbDec = function(nb)
   {
     nbDec = nb;
   };
-  this.setBorder = function(b) 
+  this.setBorder = function(b)
   {
     withBorder = b;
   };
@@ -125,15 +125,15 @@ function AnalogDisplay(cName,                     // Canvas Name
   {
     drawDisplay(canvasName, displaySize, previousValue);
   };
-  
+
   this.setDisplaySize = function(ds)
   {
     scale = ds / 100;
     displaySize = ds;
     drawDisplay(canvasName, displaySize, previousValue);
   };
-  
-  this.startStop = function (buttonName) 
+
+  this.startStop = function (buttonName)
   {
 //  console.log('StartStop requested on ' + buttonName);
     var button = document.getElementById(buttonName);
@@ -141,7 +141,7 @@ function AnalogDisplay(cName,                     // Canvas Name
     button.value = (running ? "Stop" : "Start");
     if (running)
       this.animate();
-    else 
+    else
     {
       window.clearInterval(intervalID);
       previousValue = valueToDisplay;
@@ -149,7 +149,7 @@ function AnalogDisplay(cName,                     // Canvas Name
   };
 
   this.animate = function()
-  {    
+  {
     var value;
     if (arguments.length === 1)
       value = arguments[0];
@@ -160,7 +160,7 @@ function AnalogDisplay(cName,                     // Canvas Name
     }
     value = Math.max(value, startValue);
     value = Math.min(value, maxValue);
-    
+
     if (withMinMax) {
       miniVal = Math.min(value, miniVal);
       maxiVal = Math.max(value, maxiVal);
@@ -169,20 +169,20 @@ function AnalogDisplay(cName,                     // Canvas Name
   //console.log("Reaching Value :" + value + " from " + previousValue);
     diff = value - previousValue;
     valueToDisplay = previousValue;
-    
+
 //  console.log(canvasName + " going from " + previousValue + " to " + value);
-    
+
 //    if (diff > 0)
 //      incr = 0.01 * maxValue;
-//    else 
+//    else
 //      incr = -0.01 * maxValue;
     incr = diff / 10;
     if (intervalID)
-      window.clearInterval(intervalID);      
+      window.clearInterval(intervalID);
     intervalID = window.setInterval(function () { displayAndIncrement(value); }, 10);
   };
 
-  var displayAndIncrement = function(finalValue) 
+  var displayAndIncrement = function(finalValue)
   {
     //console.log('Tic ' + inc + ', ' + finalValue);
     drawDisplay(canvasName, displaySize, valueToDisplay);
@@ -224,19 +224,19 @@ function AnalogDisplay(cName,                     // Canvas Name
       analogDisplayColorConfig = analogDisplayColorConfigWhite;
 
     var digitColor = analogDisplayColorConfig.digitColor;
-    
+
     var canvas = document.getElementById(displayCanvasName);
     var context = canvas.getContext('2d');
 
     var radius = displayRadius;
-  
+
     // Cleanup
   //context.fillStyle = "#ffffff";
     context.fillStyle = analogDisplayColorConfig.bgColor;
   //context.fillStyle = "transparent";
-    context.fillRect(0, 0, canvas.width, canvas.height);    
+    context.fillRect(0, 0, canvas.width, canvas.height);
   //context.fillStyle = 'rgba(255, 255, 255, 0.0)';
-  //context.fillRect(0, 0, canvas.width, canvas.height);    
+  //context.fillRect(0, 0, canvas.width, canvas.height);
 
     var totalAngle = (Math.PI + (2 * (toRadians(overlapOver180InDegree))));
 
@@ -244,7 +244,7 @@ function AnalogDisplay(cName,                     // Canvas Name
 
     if (withBorder === true)
     {
-  //  context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);      
+  //  context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);
 //    context.arc(canvas.width / 2, radius + 10, radius, Math.PI - toRadians(overlapOver180InDegree), (2 * Math.PI) + toRadians(overlapOver180InDegree), false);
       context.arc(canvas.width / 2, radius + 10, radius, Math.PI - toRadians(overlapOver180InDegree > 0?90:0), (2 * Math.PI) + toRadians(overlapOver180InDegree > 0?90:0), false);
       context.lineWidth = 5;
@@ -259,7 +259,7 @@ function AnalogDisplay(cName,                     // Canvas Name
     }
     else
       context.fillStyle = analogDisplayColorConfig.displayBackgroundGradient.to;
-    
+
     if (analogDisplayColorConfig.withDisplayShadow)
     {
       context.shadowOffsetX = 3;
@@ -272,7 +272,7 @@ function AnalogDisplay(cName,                     // Canvas Name
     context.strokeStyle = analogDisplayColorConfig.outlineColor;
     context.stroke();
     context.closePath();
-    
+
     // Min-max?
     if (withMinMax && miniVal < maxiVal) {
       context.beginPath();
@@ -282,9 +282,9 @@ function AnalogDisplay(cName,                     // Canvas Name
 
       //Center
       context.moveTo(canvas.width / 2, radius + 10);
-      context.arc(canvas.width / 2, radius + 10, radius * 0.75, 
-                  (___minAngle), 
-                  (___maxAngle), 
+      context.arc(canvas.width / 2, radius + 10, radius * 0.75,
+                  (___minAngle),
+                  (___maxAngle),
                   false);
 
 //    context.arc(288, 75, 70, 0, Math.PI, false);
@@ -312,7 +312,7 @@ function AnalogDisplay(cName,                     // Canvas Name
     context.strokeStyle = analogDisplayColorConfig.majorTickColor;
     context.stroke();
     context.closePath();
-  
+
     // Minor Ticks
     if (minorTicks > 0)
     {
@@ -333,7 +333,7 @@ function AnalogDisplay(cName,                     // Canvas Name
       context.stroke();
       context.closePath();
     }
-    
+
     // Numbers
     if (withDigits)
     {
@@ -352,7 +352,7 @@ function AnalogDisplay(cName,                     // Canvas Name
         context.fillText(str, - len / 2, (-(radius * .8) + 10));
         context.lineWidth = 1;
         context.strokeStyle = analogDisplayColorConfig.valueOutlineColor;
-        context.strokeText(str, - len / 2, (-(radius * .8) + 10)); // Outlined  
+        context.strokeText(str, - len / 2, (-(radius * .8) + 10)); // Outlined
         context.restore();
       }
       context.closePath();
@@ -365,15 +365,15 @@ function AnalogDisplay(cName,                     // Canvas Name
     context.font = "bold " + Math.round(scale * 40) + "px " + analogDisplayColorConfig.font; // "bold 40px Arial"
     var metrics = context.measureText(text);
     len = metrics.width;
-  
+
     context.beginPath();
     context.fillStyle = analogDisplayColorConfig.valueColor;
     context.fillText(text, (canvas.width / 2) - (len / 2), ((radius * .75) + 10));
     context.lineWidth = 1;
     context.strokeStyle = analogDisplayColorConfig.valueOutlineColor;
-    context.strokeText(text, (canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined  
+    context.strokeText(text, (canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined
     context.closePath();
-  
+
     // Hand
     context.beginPath();
     if (analogDisplayColorConfig.withHandShadow)
@@ -385,7 +385,7 @@ function AnalogDisplay(cName,                     // Canvas Name
     }
     // Center
     context.moveTo(canvas.width / 2, radius + 10);
-    
+
     var ___currentAngle = (totalAngle * ((displayValue - startValue) / (maxValue - startValue))) - toRadians(overlapOver180InDegree);
     // Left
     x = (canvas.width / 2) - ((radius * 0.05) * Math.cos((___currentAngle - (Math.PI / 2))));
@@ -399,7 +399,7 @@ function AnalogDisplay(cName,                     // Canvas Name
     x = (canvas.width / 2) - ((radius * 0.05) * Math.cos((___currentAngle + (Math.PI / 2))));
     y = (radius + 10) - ((radius * 0.05) * Math.sin((___currentAngle + (Math.PI / 2))));
     context.lineTo(x, y);
-  
+
     context.closePath();
     context.fillStyle = analogDisplayColorConfig.handColor;
     context.fill();
@@ -415,15 +415,15 @@ function AnalogDisplay(cName,                     // Canvas Name
     context.strokeStyle = analogDisplayColorConfig.knobOutlineColor;
     context.stroke();
   };
-  
+
   this.setValue = function(val)
   {
     if (withMinMax) {
       miniVal = Math.min(val, miniVal);
       maxiVal = Math.max(val, maxiVal);
     }
-    drawDisplay(canvasName, displaySize, val);  
-  };  
+    drawDisplay(canvasName, displaySize, val);
+  };
 };
 
 var toDegrees = function(rad)
@@ -435,4 +435,3 @@ var toRadians = function(deg)
 {
   return deg * (Math.PI / 180);
 };
-

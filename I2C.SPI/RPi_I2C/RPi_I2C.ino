@@ -2,11 +2,11 @@
  * Arduino is a SLAVE
  *
  * Wiring:
- * RasPI    Arduino
- * ----------------
- * GND #9   GND
- * SDA #3   SDA (or A4, before Rev3)
- * SLC #5   SLC (or A5, before Rev3)
+ * RasPI  | Arduino
+ * -------+--------
+ * GND #9 | GND
+ * SDA #3 | SDA (or A4, before Rev3)
+ * SLC #5 | SLC (or A5, before Rev3)
  */
 #include <Wire.h>
 
@@ -17,8 +17,7 @@ int analogPin = A0;
 
 boolean ledOn = false;
 
-void setup()
-{
+void setup() {
   Serial.begin(9600);
   Serial.println("We're in");
   
@@ -28,34 +27,27 @@ void setup()
   Wire.onRequest(sendAnalogReading);
 }
 
-void loop()
-{
+void loop() {
 }
 
-void processMessage(int n)
-{
+void processMessage(int n) {
   Serial.print("Process message "); Serial.println(n);
   char ch = Wire.read();
   Serial.print("Read from Wire:"); Serial.println(ch);
-  if (ch == 'l') // Lowercase L
-  {
+  if (ch == 'l') { // Lowercase L
     Serial.println("Toggling LED");
     toggleLED(); 
-  }
-  else
-  {
+  } else {
     Serial.println("... Doing nothing");
   }
 }
 
-void toggleLED()
-{
+void toggleLED() {
   ledOn = ! ledOn;
   digitalWrite(ledPin, ledOn);
 }
 
-void sendAnalogReading()
-{
+void sendAnalogReading() {
   int reading = analogRead(analogPin);
   Serial.print("Analog read:"); Serial.println(reading);
   Wire.write(reading >> 2);
