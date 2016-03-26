@@ -1,17 +1,17 @@
 #include <Wire.h>
 #include <SD.h>
 
-const int WID         =  42;           // I2C Address of the AlaMode
+const int WID         =  42; // I2C Address of the AlaMode, 0x2A
 //const int DS3231_ADDR = 104;
 const int N_DATA_BYTE =  32;
-const int BAUD     = 9600;
-const int CHIPSELECT   = 10;
+const int BAUD        = 9600;
+const int CHIPSELECT  = 10;
 uint8_t data[N_DATA_BYTE];
 uint8_t address;
 
 boolean sd_initialized = false;
 
-void setup(){
+void setup() {
   while (!Serial);
   
   Serial.begin(BAUD);
@@ -35,7 +35,7 @@ const String REF_STRING_02 = "12345678901234567890";
 const String REF_STRING_03 = "This is a small message coming from the Arduino";
 const String REF_STRING_04 = "Call me Darth Wador, if you dare.";
 
-void loop(){
+void loop() {
   // Make sure the Serial Monitor is NOT opened.
   int pos = 0;
   char buffer[64];
@@ -82,10 +82,10 @@ void loop(){
   */
 }
 
-void ALAMODE_onReceive(int n_byte){
+void ALAMODE_onReceive(int n_byte) {
   address = Wire.read();
   int idx = address;
-  while (Wire.available() && (address + idx < N_DATA_BYTE)){
+  while (Wire.available() && (address + idx < N_DATA_BYTE)) {
     data[address + idx] = Wire.read();
     idx++;
   }
@@ -94,9 +94,9 @@ void ALAMODE_onReceive(int n_byte){
   Serial.println(buf);
 }
 
-void ALAMODE_onRequest(){
+void ALAMODE_onRequest() {
   int n_byte = 32;
-  if (N_DATA_BYTE - address < 32){
+  if (N_DATA_BYTE - address < 32) {
     n_byte = N_DATA_BYTE - address;
   }
   Wire.write(data + address, n_byte);
@@ -105,7 +105,7 @@ void ALAMODE_onRequest(){
   Serial.println(buf);
 }
 
-uint8_t test_SD(){
+uint8_t test_SD() {
   uint8_t status = 0; // ALL PASS
   File myFile;
   char *msg = "0123456789";
@@ -138,9 +138,9 @@ uint8_t test_SD(){
         int ii = 0;
         
         while (myFile.available()) {
-  	if(msg[ii++] != myFile.read()){
-  	  status |= 1;
-  	}
+  	      if(msg[ii++] != myFile.read()){
+  	        status |= 1;
+  	      }
         }
         myFile.close();
       }
