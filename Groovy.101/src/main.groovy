@@ -1,2 +1,5 @@
-app = new GroovyApp()
+app = new GroovyBasic()
 app.hello()
+//
+app = new GroovyApp()
+app.sensor()

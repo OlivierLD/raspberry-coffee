@@ -4,8 +4,7 @@ import java.text.NumberFormat
 import java.text.DecimalFormat
 
 class GroovyApp {
-    void hello () {
-        println("Hello Groovy world!")
+    void sensor () {
         println "Now running some RPi stuff"
         try {
             BME280 bme280 = new BME280()
