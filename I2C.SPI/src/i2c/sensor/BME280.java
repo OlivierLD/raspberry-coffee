@@ -134,6 +134,7 @@ public class BME280
     catch (IOException e)
     {
       System.err.println(e.getMessage());
+      throw new RuntimeException(e);
     }
   }
   

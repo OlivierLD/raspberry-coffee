@@ -32,6 +32,7 @@ dependencies {
   compile project(':Scala.101')
   compile project(':Serial.IO')
   compile project(':MindWave')
+  compile project(':Groovy.101')
 }
 
 repositories {
