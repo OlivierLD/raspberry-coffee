@@ -24,7 +24,7 @@ task runScript(type: JavaExec) {
     description 'Run Groovy script'
 
     // Set main property to name of Groovy script class.
-    main = 'main'
+    main = 'mainBasic'
 
     // Set classpath for running the Groovy script.
     classpath = sourceSets.main.runtimeClasspath
@@ -33,4 +33,13 @@ task runScript(type: JavaExec) {
         // Pass command-line argument to script.
         args project.getProperty('custom')
     }
+}
+task runRPiScript(type: JavaExec) {
+    description 'Run Groovy script'
+
+    // Set main property to name of Groovy script class.
+    main = 'mainRPi'
+
+    // Set classpath for running the Groovy script.
+    classpath = sourceSets.main.runtimeClasspath
 }

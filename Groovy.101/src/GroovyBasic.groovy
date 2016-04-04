@@ -1,5 +1,5 @@
 class GroovyBasic {
     void hello() {
-        println("Hello Groovy world!")
+        println("==========\nHello Groovy world!\n==========")
     }
 }

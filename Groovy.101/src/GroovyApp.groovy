@@ -5,13 +5,13 @@ import java.text.DecimalFormat
 
 class GroovyApp {
     void sensor () {
-        println "Now running some RPi stuff"
+        println "==========\nNow running some RPi stuff"
         try {
             BME280 bme280 = new BME280()
             NumberFormat NF = new DecimalFormat("##00.00")
             float press = 0
-            float temp = 0
-            float hum = 0
+            float temp  = 0
+            float hum   = 0
 
             try {
                 temp = bme280.readTemperature()
