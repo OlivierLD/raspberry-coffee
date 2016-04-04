@@ -88,7 +88,7 @@ object SerialPI4J {
   var me:Thread = null
 
   def manageEvent(payload: String): Unit = {
-    // TODO Something interesting here...
+    // TASK Do something interesting here...
     val sa = utils.dualDump(payload)
     sa.foreach(s => println(s))
   }

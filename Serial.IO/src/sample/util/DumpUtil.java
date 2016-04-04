@@ -9,7 +9,11 @@ public class DumpUtil
     byte[] ba = str.getBytes();
     return dualDump(ba);
   }
-  
+
+  /*
+   * Readable + HexASCII code.
+   * @see LINE_LEN member
+   */
   public static String[] dualDump(byte[] ba)
   {
     String[] result = null;

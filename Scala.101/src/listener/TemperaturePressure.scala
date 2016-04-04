@@ -33,7 +33,7 @@ class PubSubActor(actorName: String) extends Actor {
       subscribers ++= add.getSubscribers
     case mess: DataMessage =>
       println(s"  $actorName received: ${ mess.getPayload }")
-      // TODO Do what you have to here with the payload
+      // TASK Do what you have to here with the payload
     case exit: ExitMsg  =>
       println("Bye now (from actor " + actorName + ")")
       this.context.stop(self)
