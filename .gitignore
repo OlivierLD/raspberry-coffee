@@ -38,4 +38,5 @@ gen/*
 *.php
 # gradle/
 # gradlew
+gradle-app.setting
 
