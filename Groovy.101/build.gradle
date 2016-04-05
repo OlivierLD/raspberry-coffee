@@ -1,3 +1,4 @@
+apply plugin: 'java'
 apply plugin: 'groovy'
 
 group = 'oliv.pi4j.samples'
@@ -16,6 +17,9 @@ sourceSets {
     main {
         groovy {
             srcDirs = ['src']
+        }
+        java {
+            srcDirs = ['src/java']
         }
     }
 }
@@ -41,5 +45,11 @@ task runRPiScript(type: JavaExec) {
     main = 'mainRPi'
 
     // Set classpath for running the Groovy script.
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task runJava(type: JavaExec) {
+    description "Run Groovy from Java"
+    main = 'jsr223.ScriptEngineFactories'
     classpath = sourceSets.main.runtimeClasspath
 }
