@@ -10,12 +10,8 @@ import java.util.List;
  */
 public class ScriptEngineFactories
 {
-  private static ScriptEngineFactories instance = null;
-
   public static void main(String[] args)
   {
-    instance = new ScriptEngineFactories();
-
     List<ScriptEngineFactory> factories = new ScriptEngineManager().getEngineFactories();
     System.out.println("=======================");
     for (ScriptEngineFactory factory : factories)
