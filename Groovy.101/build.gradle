@@ -19,7 +19,7 @@ dependencies {
 sourceSets {
     main {
         groovy {
-            srcDirs = ['src']
+            srcDirs = ['src/groovy']
         }
         java {
             srcDirs = ['src/java']
