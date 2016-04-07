@@ -5,8 +5,10 @@ import javax.ws.rs.client.WebTarget
 
 def key = "54c2767878ca793f2e3cae1c45d62aa7ae9f8056"
 for (a in this.args) {
-    println("Received arg: " + a)
-    key = a
+    println("Received script arg: " + a)
+    if (a.startsWith("key:")) { // Reveived a prm like key:XXXX, extract the XXXX
+        key = a.substring("key:".length())
+    }
 }
 Client cl = ClientBuilder.newClient()
 WebTarget target = cl.target("https://io.adafruit.com/api/feeds/onoff")
