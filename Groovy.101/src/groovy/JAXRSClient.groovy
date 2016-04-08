@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 import javax.ws.rs.client.WebTarget
@@ -19,3 +21,11 @@ def resp = target.request()
 println "resp is a ${resp.getClass().getName()}:"
 println resp
 cl.close()
+
+def jsonParser = new JsonSlurper()
+def jsonObj = jsonParser.parseText(resp)
+assert jsonObj instanceof Map
+
+println "Last Value: ${jsonObj.last_value}"
+
+println "Done"
