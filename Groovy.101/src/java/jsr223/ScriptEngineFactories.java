@@ -16,7 +16,7 @@ public class ScriptEngineFactories
     System.out.println("=======================");
     for (ScriptEngineFactory factory : factories)
     {
-      System.out.println("Lang name:" + factory.getLanguageName());
+      System.out.println("Lang name  :" + factory.getLanguageName());
       System.out.println("Engine name:" + factory.getEngineName());
       System.out.println(factory.getNames().toString());
     }
@@ -28,8 +28,8 @@ public class ScriptEngineFactories
     try
     {
       engine.eval("println 'Hello Groovy!'");
-      System.out.println(">>> Executing src/mainBasic.groovy");
-      engine.eval(new FileReader("src/mainBasic.groovy"));
+      System.out.println(">>> Executing src/groovy/mainBasic.groovy");
+      engine.eval(new FileReader("Groovy.101/" + "src/groovy/mainBasic.groovy"));
  //   String output = writer.toString();
  //   System.out.println("Output:[" + output + "]");
     }
@@ -46,12 +46,12 @@ public class ScriptEngineFactories
     try
     {
       // Act as mainBasic.groovy
-      engine.eval(new FileReader("src/GroovyBasic.groovy"));
+      engine.eval(new FileReader("Groovy.101/" + "src/groovy/GroovyBasic.groovy"));
       engine.eval("app = new GroovyBasic()");
       Object app = engine.get("app");
       Invocable invocable = (Invocable)engine;
       System.out.println(">> Invoking hello() method on GroovyBasic object...");
-      invocable.invokeMethod(app, "hello"); // No prm
+      invocable.invokeMethod(app, "hello"); // No prm. prms would be the 3rd arg and after.
       System.out.println("=== Done ===");
     }
     catch (ScriptException se)
@@ -72,7 +72,7 @@ public class ScriptEngineFactories
     engine = new ScriptEngineManager().getEngineByName("javascript");
     try
     {
-      engine.eval("print('Hello Nashorn!');");
+      engine.eval("print('From JS: Hello Nashorn!');");
     }
     catch (ScriptException se)
     {
