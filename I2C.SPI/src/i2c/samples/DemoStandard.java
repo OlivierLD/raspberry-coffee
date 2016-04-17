@@ -1,6 +1,6 @@
 package i2c.samples;
 
-import i2c.servo.PCA9685;
+import i2c.servo.pwm.PCA9685;
 
 /*
  * Standard, all the way, clockwise, counterclockwise

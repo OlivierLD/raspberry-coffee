@@ -1,6 +1,6 @@
 package raspisamples.servo;
 
-import i2c.servo.PCA9685;
+import i2c.servo.pwm.PCA9685;
 
 /*
  * Standard, using I2C and the PCA9685 servo board

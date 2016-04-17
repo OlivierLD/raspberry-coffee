@@ -1,6 +1,6 @@
 package i2c.samples.ws;
 
-import i2c.servo.PCA9685;
+import i2c.servo.pwm.PCA9685;
 
 import java.net.URI;
 import org.java_websocket.client.WebSocketClient;

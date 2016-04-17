@@ -1,4 +1,4 @@
-package i2c.servo;
+package i2c.servo.pwm;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
