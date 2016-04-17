@@ -133,34 +133,34 @@ public class PWM
   public void setPWMFreq(int freq) throws IOException
   {
     // Sets the PWM frequency
-    double prescaleval = 25000000.0; // 25MHz
-    prescaleval /= 4096.0; // 12-bit
-    prescaleval /= (float)freq;
-    prescaleval -= 1.0;
+    double preScaleVal = 25000000.0; // 25MHz
+    preScaleVal /= 4096.0; // 12-bit
+    preScaleVal /= (float)freq;
+    preScaleVal -= 1.0;
     if (verbose)
     {
       System.out.println("Setting PWM frequency to " + freq + " Hz");
-      System.out.println("Estimated pre-scale:" + prescaleval);
+      System.out.println("Estimated pre-scale:" + preScaleVal);
     }
-    double prescale = Math.floor(prescaleval + 0.5);
+    double preScale = Math.floor(preScaleVal + 0.5);
     if (verbose)
-      System.out.println("Final pre-scale: " + prescale);
+      System.out.println("Final pre-scale: " + preScale);
 
-    int oldmode = this.servoDriver.read(MODE1);
-    byte newmode = (byte)((oldmode & 0x7F) | 0x10); // sleep
+    int oldMode = this.servoDriver.read(MODE1);
+    byte newMode = (byte)((oldMode & 0x7F) | 0x10); // sleep
     if (verbose)
     {
-      System.out.printf("13 - Writing 0x%02x to register 0x%02x\n", newmode, MODE1);
-      System.out.printf("14 - Writing 0x%02x to register 0x%02x\n", (byte)(Math.floor(prescale)), PRESCALE);
-      System.out.printf("15 - Writing 0x%02x to register 0x%02x\n", oldmode, MODE1);
+      System.out.printf("13 - Writing 0x%02x to register 0x%02x\n", newMode, MODE1);
+      System.out.printf("14 - Writing 0x%02x to register 0x%02x\n", (byte)(Math.floor(preScale)), PRESCALE);
+      System.out.printf("15 - Writing 0x%02x to register 0x%02x\n", oldMode, MODE1);
     }
-    this.servoDriver.write(MODE1, newmode); // go to sleep
-    this.servoDriver.write(PRESCALE, (byte)(Math.floor(prescale)));
-    this.servoDriver.write(MODE1, (byte)oldmode);
+    this.servoDriver.write(MODE1, newMode); // go to sleep
+    this.servoDriver.write(PRESCALE, (byte)(Math.floor(preScale)));
+    this.servoDriver.write(MODE1, (byte)oldMode);
     delay(5);
     if (verbose)
-      System.out.printf("16 - Writing 0x%02x to register 0x%02x\n", (oldmode | 0x80), MODE1);
-    this.servoDriver.write(MODE1, (byte)(oldmode | 0x80));
+      System.out.printf("16 - Writing 0x%02x to register 0x%02x\n", (oldMode | 0x80), MODE1);
+    this.servoDriver.write(MODE1, (byte)(oldMode | 0x80));
   }    
   /*
   #!/usr/bin/python
