@@ -4,7 +4,7 @@ It uses the [PI4J library](http://pi4j.com).
 
 ---
 This project contains Java code, mostly translated from Python, dedicated to usually *one* board (like BMP180, LSM303, etc).
-More consistant samples can be found in the RasPISamples project, where several components have been assembled together. 
+More consistent samples can be found in the RasPISamples project, where several components have been assembled together.
 Do take a look, it also comes with a readme file.
 
 ---
@@ -15,11 +15,16 @@ it uses the gradle wrapper (`gradlew`).
 `Git` is usually installed on Linux and Mac, but not on Windows. On Windows, you need to install the [`git bash shell`](http://lmgtfy.com/?q=install+git+bash+shell+on+windows), and run in it the commands mentioned in this document.
 
 ---
-To build it, clone this project, make sure the scripts named <code>makeall</code> and <code>gradlew</code> are executable, and execute <code>makeall</code>.
-<pre>
- Prompt> chmod +x makeall gradlew
- Prompt> ./makeall
-</pre>
+To build it, clone this project, make sure the script named `gradlew` is executable, and execute `gradlew`.
+```
+ Prompt> chmod +x gradlew
+ Prompt> ./gradlew build
+```
+_Important_ : If JAVA_HOME is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
+```
+ Prompt> . ./set.gradle.env
+```
+
 <i>Note:</i> If you are behind a firewall, you need a proxy. Mention it in all the files named <code>gradle.propetries</code>, and in <b>all</b> the <code>build.gradle</code> scripts, uncomment the following two lines:
 <pre>
 // ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password") 
