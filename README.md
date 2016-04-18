@@ -8,6 +8,13 @@ More consistant samples can be found in the RasPISamples project, where several 
 Do take a look, it also comes with a readme file.
 
 ---
+_Note:_
+This project uses gradle and git. Gradle will be installed automatically if it is not present on your system,
+it uses the gradle wrapper (`gradlew`).
+
+Git is usually installed on Linux and Mac, but not on Windows. On Windows, you need to install the [`git bash shell`](http://lmgtfy.com/?q=install+git+bash+shell+on+windows), and run in it
+the commands mentioned in this document.
+---
 To build it, clone this project, make sure the scripts named <code>makeall</code> and <code>gradlew</code> are executable, and execute <code>makeall</code>.
 <pre>
  Prompt> chmod +x makeall gradlew
