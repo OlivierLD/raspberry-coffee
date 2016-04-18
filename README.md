@@ -20,7 +20,7 @@ To build it, clone this project, make sure the script named `gradlew` is executa
  Prompt> chmod +x gradlew
  Prompt> ./gradlew build
 ```
-_Important_ : If JAVA_HOME is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
+_Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
 ```
  Prompt> . ./set.gradle.env
 ```
