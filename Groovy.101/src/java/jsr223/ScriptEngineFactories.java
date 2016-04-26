@@ -12,6 +12,8 @@ public class ScriptEngineFactories
 {
   public static void main(String[] args)
   {
+    System.out.println("Your Java version:" + System.getProperty("java.version"));
+
     List<ScriptEngineFactory> factories = new ScriptEngineManager().getEngineFactories();
     System.out.println("=======================");
     for (ScriptEngineFactory factory : factories)
