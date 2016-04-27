@@ -36,8 +36,8 @@ public class DumpUtil
   
   /**
    * Might not work with some encodings...
-   * @param ch
-   * @return
+   * @param ch character to test
+   * @return if printable or not.
    */
   public static boolean isAsciiPrintable(char ch) 
   {
