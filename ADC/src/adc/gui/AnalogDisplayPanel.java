@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.text.DecimalFormat;
+import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -159,16 +160,12 @@ public class AnalogDisplayPanel
       else
         return Font.createFont(Font.TRUETYPE_FONT, fontDef);
     } 
-    catch (FontFormatException e) 
+    catch (FontFormatException | IOException e)
     {
       System.err.println("getting font " + fontName);
+      Logger.getGlobal().finest("Error getting font " + fontName + ", " + e.getMessage());
       e.printStackTrace();
     } 
-    catch (IOException e) 
-    {
-      System.err.println("getting font " + fontName);
-      e.printStackTrace();
-    }
     return null;
   }
   
@@ -338,7 +335,7 @@ public class AnalogDisplayPanel
     g2d.fillOval(center.x - 2, center.y - 2, 4, 4);
     // Equateur celeste
 //  g2d.drawOval(center.x - (radius / 2), center.y - (radius / 2), radius, radius);
-    // Pole abaissé
+    // Pole abaissï¿½
 //  g2d.drawOval(center.x - radius, center.y - radius, 2 * radius, 2 * radius);
     // Horizontal axis
 //  g2d.drawLine(0, center.y, this.getWidth(), center.y);
