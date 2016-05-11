@@ -15,22 +15,19 @@ class GroovyApp {
 
             try {
                 temp = bme280.readTemperature()
-            }
-            catch (ex) {
+            } catch (ex) {
                 println(ex.getMessage())
                 ex.printStackTrace()
             }
             try {
                 press = bme280.readPressure()
-            }
-            catch (ex) {
+            } catch (ex) {
                 println(ex.getMessage())
                 ex.printStackTrace()
             }
             try {
                 hum = bme280.readHumidity()
-            }
-            catch (ex) {
+            } catch (ex) {
                 println(ex.getMessage())
                 ex.printStackTrace()
             }
@@ -42,8 +39,7 @@ class GroovyApp {
             try {
                 println("CPU Temperature   :  " + SystemInfo.getCpuTemperature())
                 println("CPU Core Voltage  :  " + SystemInfo.getCpuVoltage())
-            }
-            catch (all) {
+            } catch (all) {
                 all.printStackTrace()
             }
         } catch (all) {
