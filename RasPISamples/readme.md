@@ -74,14 +74,16 @@ prompt> node robot.server.js
 ![Architecture](./img/Architecture.jpg)
 
 The [Adafruit Motor Hat](https://www.adafruit.com/products/2348) drives the servos, attached on the [Chassis](https://www.adafruit.com/product/2939).
-The code for the Java Motor HAT is in the [I2C.SPI project, package i2c.servo.adafruitmotorhat](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/I2C.SPI/src/i2c/servo/adafruitmotorhat)*[]: 
+The code for the Java Motor HAT is in the [I2C.SPI project, package i2c.servo.adafruitmotorhat](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/I2C.SPI/src/i2c/servo/adafruitmotorhat).
+
+_Note_: The Leap Motion client is mentioned as an example. Its implementation is not finished yet.
 
 The WebSocket server is a `NodeJS` server, with the `websocket` module installed on it.
 ```
  prompt> cd node
  prompt> npm install websocket
 ```
-To start it:
+Again, to start it:
 ```
  prompt> node robot.server.js
 ```
