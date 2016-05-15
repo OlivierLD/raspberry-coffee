@@ -4,6 +4,7 @@
 #### Summary
 - [Home Weather Station](#weatherstation)
 - [Robot on wheels](#robotonwheels)
+- and more... This doc is lagging behind.
 
 ---
 
@@ -68,4 +69,7 @@ To proceed:
 prompt> node robot.server.js
 ```
 - start the robot driver `robot.pilot`
+
+#### Architecture
+![Architecture](./img/Architecture.jpg)
 
