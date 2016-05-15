@@ -1,8 +1,14 @@
-## Some "real" samples involving the components of the other projects ##
+
+## Some "real" samples involving the components of the other projects
+---
+#### Summary
+- [Home Weather Station](#weatherstation)
+- [Robot on wheels](#robotonwheels)
+
 ---
 
-### Home Weather Station ###
-This one uses the <code>SDLWeather80422</code> class, from the <code>WeatherStation</code> project.
+### <a name="weatherstation"></a>Home Weather Station
+This one uses the `SDLWeather80422` class, from the `WeatherStation` project.
 You can
 - Read the data from the station 
 - Simulate the data read from the station
@@ -10,37 +16,41 @@ You can
 Those data can then be rendered in different ways, with a Web Interface.
 They are - for now - using a nodejs server and its WebSocket module, running on the Raspberry Pi.
 
-After installing NodeJS (try [this](http://www.lmgtfy.com/?q=install+node+js+raspberry+pi)) on the Raspberry PI, in the <code>node</code> directory, install the WebSocket module:
-<pre>
+After installing NodeJS (try [this](http://www.lmgtfy.com/?q=install+node+js+raspberry+pi)) on the Raspberry PI, in the `node` directory, install the WebSocket module:
+```
 Prompt> npm install websocket
-</pre>
+```
 
 Then you can start the node server:
-<pre>
+```
 Prompt> node weather.server.js
-</pre>
+```
 
-From another console, then start the process that will read the <code>SDLWeather80422</code>, and feed the WebSocket server:
+From another console, then start the process that will read the `SDLWeather80422`, and feed the WebSocket server:
 
-<pre>
+```
 Prompt> ./weather.station.reader
-</pre>
+```
 
 You can also start a simulator, in case you  are not on the Raspberry PI, and want to make some tests:
-<pre>
+```
 Prompt> ./weather.simulator
-</pre>
+```
 
 Then you can visualize the data in a browser, using a URL like 
-<code>http://raspberrypi:9876/data/weather.station/index.html</code>
+`http://raspberrypi:9876/data/weather.station/index.html`
 
-The analog console can be reached from <code>http://localhost:9876/data/weather.station/analog.html</code>, 
-and it supports query string parameters <code>border</code> and <code>theme</code>.
+The analog console can be reached from `http://localhost:9876/data/weather.station/analog.html`, 
+and it supports query string parameters `border` and `theme`.
 
-<code>border</code> can be <code>Y</code> or <code>N</code>, and <code>theme</code> can be <code>black</code> or <code>white</code>.
+`border` can be `Y` or `N`, and `theme` can be `black` or `white`.
 
-_For example_:<code>http://localhost:9876/data/weather.station/analog.html?border=N&theme=white</code>.
+_For example_:`http://localhost:9876/data/weather.station/analog.html?border=N&theme=white`.
+
+See [here](http://www.lediouris.net/RaspberryPI/WeatherStation/readme.html).
 
 ---
 
-See [here](http://www.lediouris.net/RaspberryPI/WeatherStation/readme.html).
+### <a name="robotonwheels"></a>Robot on wheels
+
+Uses jQuery and WebSockets.
