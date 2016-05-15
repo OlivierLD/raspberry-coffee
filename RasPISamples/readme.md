@@ -54,3 +54,15 @@ See [here](http://www.lediouris.net/RaspberryPI/WeatherStation/readme.html).
 ### <a name="robotonwheels"></a>Robot on wheels
 
 Uses jQuery and WebSockets.
+
+Uses the Adafruit Motor Hat.
+
+See the Java code [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/develop/RasPISamples/src/robot/ws). The
+`node.js` server code is in the `node` directory, see `robot.server.js`.
+
+The Web interface main page is `robot.pilot.html`, served by `node.js` as well.
+
+To proceed:
+- start the `node.js` server, type in the `node` directory `node robot.server.js`.
+- start the robot driver `robot.pilot`
+
