@@ -39,4 +39,4 @@ gen/*
 # gradle/
 # gradlew
 gradle-app.setting
-
+*.zip

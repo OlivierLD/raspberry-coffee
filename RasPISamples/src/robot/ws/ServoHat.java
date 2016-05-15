@@ -64,13 +64,33 @@ public class ServoHat
               try
               {
                 if ("forward".equals(value))
-                  robot.forward(150, 1.0f);
+                {
+                  int speed = (new JSONObject(command)).getInt("speed");
+                  if ("true".equals(System.getProperty("robot.verbose", "false")))
+                    System.out.println(String.format("%s, %d", value, speed));
+                  robot.forward(speed);
+                }
                 else if ("backward".equals(value))
-                  robot.backward(150, 1.0f);
+                {
+                  int speed = (new JSONObject(command)).getInt("speed");
+                  if ("true".equals(System.getProperty("robot.verbose", "false")))
+                    System.out.println(String.format("%s, %d", value, speed));
+                  robot.backward(speed);
+                }
                 else if ("left".equals(value))
-                  robot.left(200, 0.5f);
+                {
+                  int speed = (new JSONObject(command)).getInt("speed");
+                  if ("true".equals(System.getProperty("robot.verbose", "false")))
+                    System.out.println(String.format("%s, %d", value, speed));
+                  robot.left(speed);
+                }
                 else if ("right".equals(value))
-                  robot.right(200, 0.5f);
+                {
+                  int speed = (new JSONObject(command)).getInt("speed");
+                  if ("true".equals(System.getProperty("robot.verbose", "false")))
+                    System.out.println(String.format("%s, %d", value, speed));
+                  robot.right(speed);
+                }
                 else if ("stop".equals(value))
                   robot.stop();
                 else
@@ -107,10 +127,11 @@ public class ServoHat
         @Override
         public void onError( Exception ex )
         {
-          System.out.println("onError");
+          System.err.println("onError");
+          System.err.println(ex.toString());
         }
       };
-      webSocketClient.connect();
+      webSocketClient.connect(); // IMPORTANT! Do not forget that one...
     }
     catch (Exception ex)
     {
@@ -121,10 +142,12 @@ public class ServoHat
   public static void help()
   {
     System.out.println("Requires a WebSocket server to run.");
-    System.out.println("prompt> node robot.server.js");
+    System.out.println("prompt> cd node; node robot.server.js & ");
     System.out.println();
-    System.out.println("System variables: no.robot");
-    System.out.println("                  ws.uri");
+    System.out.println("System variables: no.robot,  set to \"true\" to test the WebSocket part (no robot, not on the RPi), default is \"false\"");
+    System.out.println("                  ws.uri,    default is ws://localhost:9876/");
+    System.out.println("                  test.only, set to \"true\" to test the robot, default is \"false\"");
+    System.out.println("                  robot.verbose, set to \"true\" to see console output, default is \"false\"");
   }
 
   public static void test(ServoHat proto) throws IOException
@@ -177,6 +200,13 @@ public class ServoHat
     proto.getRobot().right(200, 0.5f);
     System.out.println("Backward");
     proto.getRobot().backward(150, 1.0f);
+
+    // Free run
+    System.out.println("Free run");
+    proto.getRobot().forward(200);
+
+    try { Thread.sleep(2500); } catch (InterruptedException ie ) {}
+    proto.getRobot().stop();
 
     System.out.println("That's it!");
   }
