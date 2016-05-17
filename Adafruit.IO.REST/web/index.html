@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Adafruit IO with custom UI</title>
+    <script type="text/javascript" src="jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="theskill.js"></script>
+    <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+    <style type="text/css">
+      .displayCanvas {
+        border: 1px solid #9C9898;
+        opacity:0.9;
+      }
+      .display-scheme
+      {
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Adafruit IO, with jQuery</h2>
+    <small>JQuery, Ajax, JSON...</small>
+    <p>
+      <i>We query the value of a boolean field named <code>onoff</code> every second.</i>
+    </p>
+    <p>
+      Your Adafruit-IO key : <input type="text" id="a-key">
+    </p>
+    <p>
+      Last value: <span id="last-value"></span>
+    </p>
+    <p>
+      <span id="mess"></span>
+    </p>
+  </body>
+</html>

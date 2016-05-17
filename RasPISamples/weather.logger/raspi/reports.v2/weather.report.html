@@ -498,7 +498,7 @@ function clearMarkers() {
 var period, type, graphData, graph;
 
 var getData = function(type, period) {
-  var deferred = $.Deferred(),
+  var deferred = $.Deferred(),  // a jQuery deferred
       url = 'json.data.php?type=' + type + '&period=' + period;
       xhr = new XMLHttpRequest(),
       TIMEOUT = 10000;
