@@ -52,7 +52,7 @@ var setSwitch = function(onOff) {
 
   xhr.onload = function() {
     clearTimeout(requestTimer);
-    if (xhr.status === 200 || xhr.status === 201) {
+    if (xhr.status === 201) {
 //    console.log("Returned status ", xhr.status);
       deferred.resolve(xhr.response);
     } else {
@@ -99,7 +99,7 @@ var setSwitchValue = function(onOff) {
   setData.done(function(value) {
     console.log("Done:", value);
   });
-  setData.fail(function() {
-    console.log("Failed to set the value...");
+  setData.fail(function(error) {
+    console.log("Failed to set the value...", (error !== undefined ? error : ''));
   });
 }
