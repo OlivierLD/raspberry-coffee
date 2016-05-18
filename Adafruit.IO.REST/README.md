@@ -34,7 +34,7 @@ The classpath and the key depend on your own configuration...
 
 ### From JavaScript
 See in the `web` directory, there is an example of the [interaction with a feed](./web/index.html) defined in Adafruit-IO,
-written ujsinf jQuery - because it looks good, and it is easy.
+written using jQuery - because it looks good, and it is easy.
 
 Just like before, all you need is an Adafruit-IO key.
 
