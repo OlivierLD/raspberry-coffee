@@ -1,4 +1,7 @@
 ## REST interface with Adafruit-IO
+
+### From Java
+
 The project contains small classes showing how to communicate with [Adafruit-IO](https://io.adafruit.com) through
 REST services.
 
@@ -28,3 +31,10 @@ java -cp $CP -Dkey=50c0707070c070302030a01040d020a0a0908050 adafruit.io.sample.P
 
 ```
 The classpath and the key depend on your own configuration...
+
+### From JavaScript
+See in the `web` directory, there is an example of the [interaction with a feed](./web/index.html) defined in Adafruit-IO,
+written ujsinf jQuery - because it looks good, and it is easy.
+
+Just like before, all you need is an Adafruit-IO key.
+
