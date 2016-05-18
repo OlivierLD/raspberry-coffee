@@ -2,9 +2,11 @@ $(document).ready(function() {
   setInterval(go, 1000); // Refresh every second.
 });
 
+var FEED_NAME = 'onoff';
+
 var getData = function() {
   var deferred = $.Deferred(),  // a jQuery deferred
-      url = 'https://io.adafruit.com/api/feeds/onoff',
+      url = 'https://io.adafruit.com/api/feeds/' + FEED_NAME,
       xhr = new XMLHttpRequest(),
       TIMEOUT = 10000;
 
@@ -32,7 +34,7 @@ var getData = function() {
 
 var setSwitch = function(onOff) {
   var deferred = $.Deferred(),  // a jQuery deferred
-      url = 'https://io.adafruit.com/api/feeds/onoff/data',
+      url = 'https://io.adafruit.com/api/feeds/' + FEED_NAME + '/data',
       xhr = new XMLHttpRequest(),
       TIMEOUT = 10000;
 
@@ -96,5 +98,8 @@ var setSwitchValue = function(onOff) {
   var setData = setSwitch(onOff);
   setData.done(function(value) {
     console.log("Done:", value);
+  });
+  setData.fail(function() {
+    console.log("Failed to set the value...");
   });
 }
