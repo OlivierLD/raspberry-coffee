@@ -68,6 +68,7 @@ var go = function() {
 
   if (k.trim().length > 0) {
     $("#mess").text('');
+    $("#data").css('display', 'inline');
 
     setTimeout(function() {
       $('body').css('cursor', 'progress');
@@ -90,7 +91,8 @@ var go = function() {
       alert('Data request failed (timeout?), try again later.\n' + (error !== undefined ? error : ''));
     });
   } else {
-    $("#mess").text('Please enter your Adafruit IO key in the field above');
+    $("#mess").text('Please enter your Adafruit-IO key in the field above');
+    $("#data").css('display', 'none');
   }
 };
 
@@ -100,6 +102,6 @@ var setSwitchValue = function(onOff) {
     console.log("Done:", value);
   });
   setData.fail(function(error) {
-    console.log("Failed to set the value...", (error !== undefined ? error : ''));
+    alert("Failed to set the value..." + (error !== undefined ? error : ''));
   });
 }

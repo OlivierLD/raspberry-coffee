@@ -16,7 +16,7 @@
       }
     </style>
   </head>
-  <body>
+  <div>
     <h2>Adafruit IO, with jQuery</h2>
     <small>JQuery, Ajax, JSON...</small>
     <p>
@@ -24,15 +24,20 @@
     </p>
     <p>
       Your Adafruit-IO key : <input type="text" id="a-key">
+      <br/>
+      <small><span id="mess"></span></small>
     </p>
-    <p>
-      Last value: <span id="last-value"></span>
-    </p>
-    <p>
-      <button onclick="setSwitchValue('ON')">Switch ON</button>&nbsp;<button onclick="setSwitchValue('OFF')">Switch OFF</button>
-    </p>
-    <p>
-      <span id="mess"></span>
-    </p>
+    <div id="data" style="display: none;">
+      <p>
+        Last value: <span id="last-value"></span>
+      </p>
+      <hr/>
+      <p>
+        <div><small>Change feed value</small></div>
+        <br/>
+        <button onclick="setSwitchValue('ON')">Switch ON</button>&nbsp;<button onclick="setSwitchValue('OFF')">Switch OFF</button>
+      </p>
+      <hr/>
+    </div>
   </body>
 </html>
