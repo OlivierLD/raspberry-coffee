@@ -30,6 +30,37 @@ var getData = function() {
   return deferred.promise();
 };
 
+var setSwitch = function(onOff) {
+  var deferred = $.Deferred(),  // a jQuery deferred
+      url = 'https://io.adafruit.com/api/feeds/onoff/data',
+      xhr = new XMLHttpRequest(),
+      TIMEOUT = 10000;
+
+  xhr.open('POST', url, true);
+  var key = $("#a-key").val();
+  xhr.setRequestHeader("X-AIO-Key", key);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+
+  xhr.send(JSON.stringify({ "value": onOff }));
+
+  var requestTimer = setTimeout(function() {
+    xhr.abort();
+    deferred.reject();
+  }, TIMEOUT);
+
+  xhr.onload = function() {
+    clearTimeout(requestTimer);
+    if (xhr.status === 200 || xhr.status === 201) {
+//    console.log("Returned status ", xhr.status);
+      deferred.resolve(xhr.response);
+    } else {
+//    console.log("Returned status ", xhr.status);
+      deferred.reject();
+    }
+  };
+  return deferred.promise();
+};
+
 var go = function() {
   var k = $("#a-key").val();
 
@@ -60,3 +91,10 @@ var go = function() {
     $("#mess").text('Please enter your Adafruit IO key in the field above');
   }
 };
+
+var setSwitchValue = function(onOff) {
+  var setData = setSwitch(onOff);
+  setData.done(function(value) {
+    console.log("Done:", value);
+  });
+}
