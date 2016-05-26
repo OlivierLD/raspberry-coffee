@@ -5,6 +5,7 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
 import com.pi4j.system.SystemInfo;
+import i2c.sensor.utils.EndianReaders;
 
 import java.io.IOException;
 
@@ -16,9 +17,7 @@ import java.text.NumberFormat;
  */
 public class BMP180
 {
-  public final static int LITTLE_ENDIAN = 0;
-  public final static int BIG_ENDIAN    = 1;
-  private final static int BMP180_ENDIANNESS = BIG_ENDIAN;
+  private final static EndianReaders.Endianness BMP180_ENDIANNESS = EndianReaders.Endianness.BIG_ENDIAN;
   /*
   Prompt> sudo i2cdetect -y 1
        0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
@@ -70,7 +69,7 @@ public class BMP180
   private int cal_MC  = 0;
   private int cal_MD  = 0;
 
-  private static boolean verbose = false;
+  private static boolean verbose = "true".equals(System.getProperty("bmp180.verbose", "false"));
   
   private I2CBus bus;
   private I2CDevice bmp180;
@@ -105,59 +104,14 @@ public class BMP180
     }
   }
   
-  private int readU8(int reg) throws Exception
-  {
-    // "Read an unsigned byte from the I2C device"
-    int result = 0;
-    try
-    {
-      result = this.bmp180.read(reg);
-      if (verbose)
-        System.out.println("I2C: Device " + BMP180_ADDRESS + " returned " + result + " from reg " + reg);
-    }
-    catch (Exception ex)
-    { ex.printStackTrace(); }
-    return result;
-  }
-  
-  private int readS8(int reg) throws Exception
-  {
-    // "Reads a signed byte from the I2C device"
-    int result = 0;
-    try
-    {
-      result = this.bmp180.read(reg);
-      if (result > 127)
-        result -= 256;
-      if (verbose)
-        System.out.println("I2C: Device " + BMP180_ADDRESS + " returned " + result + " from reg " + reg);
-    }
-    catch (Exception ex)
-    { ex.printStackTrace(); }
-    return result;
-  }
-  
   private int readU16(int register) throws Exception
   {
-    int hi = this.readU8(register);
-    int lo = this.readU8(register + 1);
-    return (BMP180_ENDIANNESS == BIG_ENDIAN) ? (hi << 8) + lo : (lo << 8) + hi; // Big Endian
+    return EndianReaders.readU16(this.bmp180, BMP180_ADDRESS, register, BMP180_ENDIANNESS, verbose);
   }
 
   private int readS16(int register) throws Exception
   {
-    int hi = 0, lo = 0;
-    if (BMP180_ENDIANNESS == BIG_ENDIAN)
-    {
-      hi = this.readS8(register);
-      lo = this.readU8(register + 1);
-    }
-    else
-    {
-      lo = this.readU8(register);
-      hi = this.readS8(register + 1);
-    }
-    return (hi << 8) + lo;
+    return EndianReaders.readS16(this.bmp180, BMP180_ADDRESS, register, BMP180_ENDIANNESS, verbose);
   }
 
   public void readCalibrationData() throws Exception
@@ -217,8 +171,8 @@ public class BMP180
       waitfor(26);
     else
       waitfor(8);
-    int msb = bmp180.read(BMP180_PRESSUREDATA);
-    int lsb = bmp180.read(BMP180_PRESSUREDATA + 1);
+    int msb  = bmp180.read(BMP180_PRESSUREDATA);
+    int lsb  = bmp180.read(BMP180_PRESSUREDATA + 1);
     int xlsb = bmp180.read(BMP180_PRESSUREDATA + 2);
     int raw = ((msb << 16) + (lsb << 8) + xlsb) >> (8 - this.mode);
     if (verbose)
@@ -257,7 +211,7 @@ public class BMP180
     int X1 = 0;
     int X2 = 0;
     int X3 = 0;
-    int p = 0;
+    int p =  0;
     int B4 = 0;
     int B7 = 0;
 
