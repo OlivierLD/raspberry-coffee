@@ -5,6 +5,7 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
 import com.pi4j.system.SystemInfo;
+import i2c.sensor.utils.EndianReaders;
 
 import java.io.IOException;
 
@@ -17,9 +18,7 @@ import java.text.NumberFormat;
  */
 public class BME280
 {
-  public final static int LITTLE_ENDIAN = 0;
-  public final static int BIG_ENDIAN    = 1;
-  private final static int BME280_ENDIANNESS = LITTLE_ENDIAN;
+  private final static EndianReaders.Endianness BME280_ENDIANNESS = EndianReaders.Endianness.LITTLE_ENDIAN;
   /*
   Prompt> sudo i2cdetect -y 1
        0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
@@ -137,94 +136,27 @@ public class BME280
       throw new RuntimeException(e);
     }
   }
-  
-  private int readU8(int reg) throws Exception
+
+  private int readU8(int register) throws Exception
   {
-    // "Read an unsigned byte from the I2C device"
-    int result = 0;
-    try
-    {
-      result = this.bme280.read(reg);
-      if (verbose)
-        System.out.println("I2C: Device " + BME280_I2CADDR + " (0x" + Integer.toHexString(BME280_I2CADDR) + 
-                           ") returned " + result + " (0x" + Integer.toHexString(result) + 
-                           ") from reg " + reg + " (0x" + Integer.toHexString(reg) + ")");
-    }
-    catch (Exception ex)
-    { ex.printStackTrace(); }
-    return result; // & 0xFF;
+    return EndianReaders.readU8(this.bme280, BME280_I2CADDR, register, verbose);
   }
-  
-  private int readS8(int reg) throws Exception
+
+  private int readS8(int register) throws Exception
   {
-    // "Reads a signed byte from the I2C device"
-    int result = 0;
-    try
-    {
-      result = this.bme280.read(reg); // & 0x7F;
-      if (result > 127)
-        result -= 256;
-      if (verbose)
-        System.out.println("I2C: Device " + BME280_I2CADDR + " returned " + result + " from reg " + reg);
-    }
-    catch (Exception ex)
-    { ex.printStackTrace(); }
-    return result; // & 0xFF;
+    return EndianReaders.readS8(this.bme280, BME280_I2CADDR, register, verbose);
   }
-  
+
   private int readU16LE(int register) throws Exception
   {
-    return readU16(register, LITTLE_ENDIAN);
+    return EndianReaders.readU16LE(this.bme280, BME280_I2CADDR, register, verbose);
   }
 
-  private int readU16BE(int register) throws Exception
-  {
-    return readU16(register, BIG_ENDIAN);
-  }
-
-  private int readU16(int register) throws Exception
-  {
-    return readU16(register, BME280_ENDIANNESS);
-  }
-
-  private int readU16(int register, int endianness) throws Exception
-  {
-    int hi = this.readU8(register);
-    int lo = this.readU8(register + 1);
-    return ((endianness == BIG_ENDIAN) ? (hi << 8) + lo : (lo << 8) + hi); // & 0xFFFF;
-  }
-
-  private int readS16(int register) throws Exception
-  {
-    return readS16(register, BME280_ENDIANNESS);
-  }
-  
   private int readS16LE(int register) throws Exception
   {
-    return readS16(register, LITTLE_ENDIAN);
+    return EndianReaders.readS16LE(this.bme280, BME280_I2CADDR, register, verbose);
   }
   
-  private int readS16BE(int register) throws Exception
-  {
-    return readS16(register, BIG_ENDIAN);
-  }
-  
-  private int readS16(int register, int endianness) throws Exception
-  {
-    int hi = 0, lo = 0;
-    if (endianness == BIG_ENDIAN)
-    {
-      hi = this.readS8(register);
-      lo = this.readU8(register + 1);
-    }
-    else
-    {
-      lo = this.readU8(register);
-      hi = this.readS8(register + 1);
-    }
-    return ((hi << 8) + lo); // & 0xFFFF;
-  }
-
   public void readCalibrationData() throws Exception
   {
     // Reads the calibration data from the IC
