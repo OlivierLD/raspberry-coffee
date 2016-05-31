@@ -70,3 +70,9 @@ task runBMP180(type: JavaExec, dependsOn: build, description: "Run the BMP180 De
   classpath sourceSets.main.output.classesDir
 }
 
+task runLedPanel(type: JavaExec, dependsOn: build, description: "Run the LED panel simulator (Swing)") {
+  main = 'spi.lcd.utils.LedPanelMain'
+  classpath project.configurations.default
+  classpath sourceSets.main.output.classesDir
+}
+
