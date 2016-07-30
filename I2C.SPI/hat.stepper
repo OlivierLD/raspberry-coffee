@@ -3,6 +3,7 @@ PI4J_HOME=/opt/pi4j
 CP=./build/classes/main
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 #
-OPTS=-Dbme280.debug=true
+echo Stepper Mortor Demo
 #
-sudo java -cp $CP $OPTS i2c.sensor.BME280
+sudo java -cp $CP $OPTS i2c.samples.motorHAT.StepperDemo
+

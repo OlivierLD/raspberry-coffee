@@ -43,7 +43,7 @@ public class AdafruitMotorHAT
       motors[i++] = new AdafruitDCMotor(this, motor);
     steppers = new AdafruitStepperMotor[2];
     steppers[0] = new AdafruitStepperMotor(this, 1);
-    steppers[0] = new AdafruitStepperMotor(this, 2);
+    steppers[1] = new AdafruitStepperMotor(this, 2);
     pwm = new PWM(addr);
     try
     {
@@ -177,9 +177,14 @@ public class AdafruitMotorHAT
 
   public static class AdafruitStepperMotor
   {
+    public final static int PORT_M1_M2 = 1; // Port #1
+    public final static int PORT_M3_M4 = 2; // Port #2
+
     private AdafruitMotorHAT mc;
     private int MICROSTEPS = 8;
     private int[] MICROSTEP_CURVE = new int[] {0, 50, 98, 142, 180, 212, 236, 250, 255};
+
+    private static int DEFAULT_NB_STEPS = 200; // between 35 & 200
 
     private int PWMA = 8;
     private int AIN2 = 9;
@@ -200,7 +205,7 @@ public class AdafruitMotorHAT
   
     public AdafruitStepperMotor(AdafruitMotorHAT controller, int num)
     {
-      this(controller, num, 200);
+      this(controller, num, DEFAULT_NB_STEPS);
     }
     
     public AdafruitStepperMotor(AdafruitMotorHAT controller, int num, int steps)
