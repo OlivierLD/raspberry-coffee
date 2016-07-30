@@ -5,6 +5,7 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
 import com.pi4j.system.SystemInfo;
+import i2c.sensor.utils.EndianReaders;
 
 import java.io.IOException;
 
@@ -17,9 +18,7 @@ import java.text.NumberFormat;
  */
 public class BME280
 {
-  public final static int LITTLE_ENDIAN = 0;
-  public final static int BIG_ENDIAN    = 1;
-  private final static int BME280_ENDIANNESS = LITTLE_ENDIAN;
+  private final static EndianReaders.Endianness BME280_ENDIANNESS = EndianReaders.Endianness.LITTLE_ENDIAN;
   /*
   Prompt> sudo i2cdetect -y 1
        0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
@@ -137,94 +136,27 @@ public class BME280
       throw new RuntimeException(e);
     }
   }
-  
-  private int readU8(int reg) throws Exception
+
+  private int readU8(int register) throws Exception
   {
-    // "Read an unsigned byte from the I2C device"
-    int result = 0;
-    try
-    {
-      result = this.bme280.read(reg);
-      if (verbose)
-        System.out.println("I2C: Device " + BME280_I2CADDR + " (0x" + Integer.toHexString(BME280_I2CADDR) + 
-                           ") returned " + result + " (0x" + Integer.toHexString(result) + 
-                           ") from reg " + reg + " (0x" + Integer.toHexString(reg) + ")");
-    }
-    catch (Exception ex)
-    { ex.printStackTrace(); }
-    return result; // & 0xFF;
+    return EndianReaders.readU8(this.bme280, BME280_I2CADDR, register, verbose);
   }
-  
-  private int readS8(int reg) throws Exception
+
+  private int readS8(int register) throws Exception
   {
-    // "Reads a signed byte from the I2C device"
-    int result = 0;
-    try
-    {
-      result = this.bme280.read(reg); // & 0x7F;
-      if (result > 127)
-        result -= 256;
-      if (verbose)
-        System.out.println("I2C: Device " + BME280_I2CADDR + " returned " + result + " from reg " + reg);
-    }
-    catch (Exception ex)
-    { ex.printStackTrace(); }
-    return result; // & 0xFF;
+    return EndianReaders.readS8(this.bme280, BME280_I2CADDR, register, verbose);
   }
-  
+
   private int readU16LE(int register) throws Exception
   {
-    return readU16(register, LITTLE_ENDIAN);
+    return EndianReaders.readU16LE(this.bme280, BME280_I2CADDR, register, verbose);
   }
 
-  private int readU16BE(int register) throws Exception
-  {
-    return readU16(register, BIG_ENDIAN);
-  }
-
-  private int readU16(int register) throws Exception
-  {
-    return readU16(register, BME280_ENDIANNESS);
-  }
-
-  private int readU16(int register, int endianness) throws Exception
-  {
-    int hi = this.readU8(register);
-    int lo = this.readU8(register + 1);
-    return ((endianness == BIG_ENDIAN) ? (hi << 8) + lo : (lo << 8) + hi); // & 0xFFFF;
-  }
-
-  private int readS16(int register) throws Exception
-  {
-    return readS16(register, BME280_ENDIANNESS);
-  }
-  
   private int readS16LE(int register) throws Exception
   {
-    return readS16(register, LITTLE_ENDIAN);
+    return EndianReaders.readS16LE(this.bme280, BME280_I2CADDR, register, verbose);
   }
   
-  private int readS16BE(int register) throws Exception
-  {
-    return readS16(register, BIG_ENDIAN);
-  }
-  
-  private int readS16(int register, int endianness) throws Exception
-  {
-    int hi = 0, lo = 0;
-    if (endianness == BIG_ENDIAN)
-    {
-      hi = this.readS8(register);
-      lo = this.readU8(register + 1);
-    }
-    else
-    {
-      lo = this.readU8(register);
-      hi = this.readS8(register + 1);
-    }
-    return ((hi << 8) + lo); // & 0xFFFF;
-  }
-
   public void readCalibrationData() throws Exception
   {
     // Reads the calibration data from the IC
@@ -258,31 +190,36 @@ public class BME280
     if (verbose)
       showCalibrationData();
   }
-        
+
+  private String displayRegister(int reg)
+  {
+    return String.format("0x%s (%d)", lpad(Integer.toHexString(reg & 0xFFFF).toUpperCase(), "0", 4), reg);
+  }
+
   private void showCalibrationData()
   {
     // Displays the calibration values for debugging purposes
     System.out.println("======================");
-    System.out.println("DBG: T1 = " + dig_T1 + " 0x" + lpad(Integer.toHexString(dig_T1).toUpperCase(), "0", 4));
-    System.out.println("DBG: T2 = " + dig_T2 + " 0x" + lpad(Integer.toHexString(dig_T2).toUpperCase(), "0", 4));
-    System.out.println("DBG: T3 = " + dig_T3 + " 0x" + lpad(Integer.toHexString(dig_T3).toUpperCase(), "0", 4));
-    
-    System.out.println("DBG: P1 = " + dig_P1 + " 0x" + lpad(Integer.toHexString(dig_P1).toUpperCase(), "0", 4));
-    System.out.println("DBG: P2 = " + dig_P2 + " 0x" + lpad(Integer.toHexString(dig_P2).toUpperCase(), "0", 4));
-    System.out.println("DBG: P3 = " + dig_P3 + " 0x" + lpad(Integer.toHexString(dig_P3).toUpperCase(), "0", 4));
-    System.out.println("DBG: P4 = " + dig_P4 + " 0x" + lpad(Integer.toHexString(dig_P4).toUpperCase(), "0", 4));
-    System.out.println("DBG: P5 = " + dig_P5 + " 0x" + lpad(Integer.toHexString(dig_P5).toUpperCase(), "0", 4));
-    System.out.println("DBG: P6 = " + dig_P6 + " 0x" + lpad(Integer.toHexString(dig_P6).toUpperCase(), "0", 4));
-    System.out.println("DBG: P7 = " + dig_P7 + " 0x" + lpad(Integer.toHexString(dig_P7).toUpperCase(), "0", 4));
-    System.out.println("DBG: P8 = " + dig_P8 + " 0x" + lpad(Integer.toHexString(dig_P8).toUpperCase(), "0", 4));
-    System.out.println("DBG: P9 = " + dig_P9 + " 0x" + lpad(Integer.toHexString(dig_P9).toUpperCase(), "0", 4));
-    
-    System.out.println("DBG: H1 = " + dig_H1 + " 0x" + lpad(Integer.toHexString(dig_H1).toUpperCase(), "0", 4));
-    System.out.println("DBG: H2 = " + dig_H2 + " 0x" + lpad(Integer.toHexString(dig_H2).toUpperCase(), "0", 4));
-    System.out.println("DBG: H3 = " + dig_H3 + " 0x" + lpad(Integer.toHexString(dig_H3).toUpperCase(), "0", 4));
-    System.out.println("DBG: H4 = " + dig_H4 + " 0x" + lpad(Integer.toHexString(dig_H4).toUpperCase(), "0", 4));
-    System.out.println("DBG: H5 = " + dig_H5 + " 0x" + lpad(Integer.toHexString(dig_H5).toUpperCase(), "0", 4));
-    System.out.println("DBG: H6 = " + dig_H6 + " 0x" + lpad(Integer.toHexString(dig_H6).toUpperCase(), "0", 4));
+    System.out.println("DBG: T1 = " + displayRegister(dig_T1));
+    System.out.println("DBG: T2 = " + displayRegister(dig_T2));
+    System.out.println("DBG: T3 = " + displayRegister(dig_T3));
+    System.out.println("----------------------");
+    System.out.println("DBG: P1 = " + displayRegister(dig_P1));
+    System.out.println("DBG: P2 = " + displayRegister(dig_P2));
+    System.out.println("DBG: P3 = " + displayRegister(dig_P3));
+    System.out.println("DBG: P4 = " + displayRegister(dig_P4));
+    System.out.println("DBG: P5 = " + displayRegister(dig_P5));
+    System.out.println("DBG: P6 = " + displayRegister(dig_P6));
+    System.out.println("DBG: P7 = " + displayRegister(dig_P7));
+    System.out.println("DBG: P8 = " + displayRegister(dig_P8));
+    System.out.println("DBG: P9 = " + displayRegister(dig_P9));
+    System.out.println("----------------------");
+    System.out.println("DBG: H1 = " + displayRegister(dig_H1));
+    System.out.println("DBG: H2 = " + displayRegister(dig_H2));
+    System.out.println("DBG: H3 = " + displayRegister(dig_H3));
+    System.out.println("DBG: H4 = " + displayRegister(dig_H4));
+    System.out.println("DBG: H5 = " + displayRegister(dig_H5));
+    System.out.println("DBG: H6 = " + displayRegister(dig_H6));
     System.out.println("======================");
   }
               
@@ -290,8 +227,12 @@ public class BME280
   {
     // Reads the raw (uncompensated) temperature from the sensor
     int meas = mode;
+    if (verbose)
+      System.out.println(String.format("readRawTemp: 1 - meas=%d", meas));
     bme280.write(BME280_REGISTER_CONTROL_HUM, (byte)meas); // HUM ?
     meas = mode << 5 | mode << 2 | 1;
+    if (verbose)
+      System.out.println(String.format("readRawTemp: 2 - meas=%d", meas));
     bme280.write(BME280_REGISTER_CONTROL, (byte)meas);
     
     double sleepTime = 0.00125 + 0.0023 * (1 << mode);
@@ -303,7 +244,7 @@ public class BME280
     int xlsb = readU8(BME280_REGISTER_TEMP_DATA + 2);
     int raw  = ((msb << 16) | (lsb << 8) | xlsb) >> 4;
     if (verbose)
-      System.out.println("DBG: Raw Temp: " + (raw & 0xFFFF) + ", " + raw);
+      System.out.println("DBG: Raw Temp: " + (raw & 0xFFFF) + ", " + raw + String.format(", msb: 0x%04X lsb: 0x%04X xlsb: 0x%04X", msb, lsb, xlsb));
     return raw;
   }
       

@@ -62,3 +62,17 @@ task runOled(type: JavaExec, dependsOn: build, description: "Run the OLED Demo")
   classpath sourceSets.main.output.classesDir
 }
 
+// Warning: Must be run as root
+task runBMP180(type: JavaExec, dependsOn: build, description: "Run the BMP180 Demo") {
+  main = 'i2c.sensor.BMP180'
+  systemProperty 'bmp180.verbose', 'true'
+  classpath project.configurations.default
+  classpath sourceSets.main.output.classesDir
+}
+
+task runLedPanel(type: JavaExec, dependsOn: build, description: "Run the LED panel simulator (Swing)") {
+  main = 'spi.lcd.utils.LedPanelMain'
+  classpath project.configurations.default
+  classpath sourceSets.main.output.classesDir
+}
+
