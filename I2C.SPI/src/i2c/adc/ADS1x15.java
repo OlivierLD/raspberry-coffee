@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class ADS1x15
 {
-  private static boolean verbose = ("true".equals(System.getProperty("verbose", "false")));
+  private static boolean verbose = ("true".equals(System.getProperty("ads1x.verbose", "false")));
 
   // IC Identifiers
   public enum ICType
