@@ -190,31 +190,36 @@ public class BME280
     if (verbose)
       showCalibrationData();
   }
-        
+
+  private String displayRegister(int reg)
+  {
+    return String.format("0x%s (%d)", lpad(Integer.toHexString(reg & 0xFFFF).toUpperCase(), "0", 4), reg);
+  }
+
   private void showCalibrationData()
   {
     // Displays the calibration values for debugging purposes
     System.out.println("======================");
-    System.out.println("DBG: T1 = " + dig_T1 + " 0x" + lpad(Integer.toHexString(dig_T1).toUpperCase(), "0", 4));
-    System.out.println("DBG: T2 = " + dig_T2 + " 0x" + lpad(Integer.toHexString(dig_T2).toUpperCase(), "0", 4));
-    System.out.println("DBG: T3 = " + dig_T3 + " 0x" + lpad(Integer.toHexString(dig_T3).toUpperCase(), "0", 4));
-    
-    System.out.println("DBG: P1 = " + dig_P1 + " 0x" + lpad(Integer.toHexString(dig_P1).toUpperCase(), "0", 4));
-    System.out.println("DBG: P2 = " + dig_P2 + " 0x" + lpad(Integer.toHexString(dig_P2).toUpperCase(), "0", 4));
-    System.out.println("DBG: P3 = " + dig_P3 + " 0x" + lpad(Integer.toHexString(dig_P3).toUpperCase(), "0", 4));
-    System.out.println("DBG: P4 = " + dig_P4 + " 0x" + lpad(Integer.toHexString(dig_P4).toUpperCase(), "0", 4));
-    System.out.println("DBG: P5 = " + dig_P5 + " 0x" + lpad(Integer.toHexString(dig_P5).toUpperCase(), "0", 4));
-    System.out.println("DBG: P6 = " + dig_P6 + " 0x" + lpad(Integer.toHexString(dig_P6).toUpperCase(), "0", 4));
-    System.out.println("DBG: P7 = " + dig_P7 + " 0x" + lpad(Integer.toHexString(dig_P7).toUpperCase(), "0", 4));
-    System.out.println("DBG: P8 = " + dig_P8 + " 0x" + lpad(Integer.toHexString(dig_P8).toUpperCase(), "0", 4));
-    System.out.println("DBG: P9 = " + dig_P9 + " 0x" + lpad(Integer.toHexString(dig_P9).toUpperCase(), "0", 4));
-    
-    System.out.println("DBG: H1 = " + dig_H1 + " 0x" + lpad(Integer.toHexString(dig_H1).toUpperCase(), "0", 4));
-    System.out.println("DBG: H2 = " + dig_H2 + " 0x" + lpad(Integer.toHexString(dig_H2).toUpperCase(), "0", 4));
-    System.out.println("DBG: H3 = " + dig_H3 + " 0x" + lpad(Integer.toHexString(dig_H3).toUpperCase(), "0", 4));
-    System.out.println("DBG: H4 = " + dig_H4 + " 0x" + lpad(Integer.toHexString(dig_H4).toUpperCase(), "0", 4));
-    System.out.println("DBG: H5 = " + dig_H5 + " 0x" + lpad(Integer.toHexString(dig_H5).toUpperCase(), "0", 4));
-    System.out.println("DBG: H6 = " + dig_H6 + " 0x" + lpad(Integer.toHexString(dig_H6).toUpperCase(), "0", 4));
+    System.out.println("DBG: T1 = " + displayRegister(dig_T1));
+    System.out.println("DBG: T2 = " + displayRegister(dig_T2));
+    System.out.println("DBG: T3 = " + displayRegister(dig_T3));
+    System.out.println("----------------------");
+    System.out.println("DBG: P1 = " + displayRegister(dig_P1));
+    System.out.println("DBG: P2 = " + displayRegister(dig_P2));
+    System.out.println("DBG: P3 = " + displayRegister(dig_P3));
+    System.out.println("DBG: P4 = " + displayRegister(dig_P4));
+    System.out.println("DBG: P5 = " + displayRegister(dig_P5));
+    System.out.println("DBG: P6 = " + displayRegister(dig_P6));
+    System.out.println("DBG: P7 = " + displayRegister(dig_P7));
+    System.out.println("DBG: P8 = " + displayRegister(dig_P8));
+    System.out.println("DBG: P9 = " + displayRegister(dig_P9));
+    System.out.println("----------------------");
+    System.out.println("DBG: H1 = " + displayRegister(dig_H1));
+    System.out.println("DBG: H2 = " + displayRegister(dig_H2));
+    System.out.println("DBG: H3 = " + displayRegister(dig_H3));
+    System.out.println("DBG: H4 = " + displayRegister(dig_H4));
+    System.out.println("DBG: H5 = " + displayRegister(dig_H5));
+    System.out.println("DBG: H6 = " + displayRegister(dig_H6));
     System.out.println("======================");
   }
               
@@ -222,8 +227,12 @@ public class BME280
   {
     // Reads the raw (uncompensated) temperature from the sensor
     int meas = mode;
+    if (verbose)
+      System.out.println(String.format("readRawTemp: 1 - meas=%d", meas));
     bme280.write(BME280_REGISTER_CONTROL_HUM, (byte)meas); // HUM ?
     meas = mode << 5 | mode << 2 | 1;
+    if (verbose)
+      System.out.println(String.format("readRawTemp: 2 - meas=%d", meas));
     bme280.write(BME280_REGISTER_CONTROL, (byte)meas);
     
     double sleepTime = 0.00125 + 0.0023 * (1 << mode);
@@ -235,7 +244,7 @@ public class BME280
     int xlsb = readU8(BME280_REGISTER_TEMP_DATA + 2);
     int raw  = ((msb << 16) | (lsb << 8) | xlsb) >> 4;
     if (verbose)
-      System.out.println("DBG: Raw Temp: " + (raw & 0xFFFF) + ", " + raw);
+      System.out.println("DBG: Raw Temp: " + (raw & 0xFFFF) + ", " + raw + String.format(", msb: 0x%04X lsb: 0x%04X xlsb: 0x%04X", msb, lsb, xlsb));
     return raw;
   }
       
