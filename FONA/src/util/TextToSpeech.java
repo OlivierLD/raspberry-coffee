@@ -16,7 +16,7 @@ public class TextToSpeech {
 			throw new RuntimeException("No speech tool found in this os [" + System.getProperty("os.name") + "]");
 		}
 		try {
-			Runtime.getRuntime().exec(speechTool + " " + text);
+			Runtime.getRuntime().exec(new String[] { speechTool, text });
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
