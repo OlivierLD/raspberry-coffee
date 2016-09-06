@@ -9,6 +9,13 @@ Do take a look, it also comes with a readme file.
 
 ---
 _Note:_
+Java code is compiled into `class` files, that run on a Java Virtual Machine (`JVM`). Java is not the only language that runs a `JVM`, this project also contains some small samples of 
+other JVM-aware languages, invoking and using the features of this project.
+
+Those samples include Scala, Groovy, Kotlin..., and the list is not closed! 
+
+---
+_Note:_
 This project uses `gradle` and `git`. `Gradle` will be installed automatically if it is not present on your system,
 it uses the gradle wrapper (`gradlew`).
 

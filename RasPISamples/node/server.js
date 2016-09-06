@@ -33,7 +33,7 @@ if (typeof String.prototype.endsWith != 'function') {
   };
 }
 
-function handler (req, res) {
+var handler = function(req, res) {
   var respContent = "";
   if (verbose) {
     console.log("Speaking HTTP from " + __dirname);
@@ -117,7 +117,7 @@ function handler (req, res) {
     res.writeHead(404, {'Content-Type': 'text/plain'});
     res.end(); // respContent);
   }
-} // HTTP Handler
+}; // HTTP Handler
 
 
 /**
