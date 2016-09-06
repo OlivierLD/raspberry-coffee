@@ -1,7 +1,7 @@
 ### Quick Java Native Interface (JNI) Sample on the Raspberry PI
 The script named `jni` does all the job. You can run it. Here are below the steps the script is going through:
 
-* First, write the class named `jnisample.HelloWorld.java`. Notice in the code the `System.loadLibrary("HelloWorld");`
+* **_First_**, write the class named `jnisample.HelloWorld.java`. Notice in the code the `System.loadLibrary("HelloWorld");`
 * Compile it
 * Run the `javah` utility on it
 * Implement the native code (`HelloWorld.c`) that includes the generated `.h` file
