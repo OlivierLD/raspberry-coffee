@@ -5,13 +5,12 @@
 # $> brew install kotlin
 #
 # On Linux* :
-# $> curl -s https://get.sdkman.io | bash
-# Next open a new terminal and install Kotlin with:
-# $> sdk install kotlin
+# See instructions at https://kotlinlang.org/docs/tutorials/command-line.html
+# Manual install works just fine.
 #
 echo Kotlin Compile
 # kotlinc ./src/main/kotlin/KotlinSensors.kt -cp ../I2C.SPI/build/classes/main/ -d build/classes
 kotlinc ./src/main/kotlin/KotlinSensors.kt -include-runtime -cp ../I2C.SPI/build/classes/main/ -d build/libs/Sensors.jar
 #
 echo To run: java -jar build/libs/Sensors.jar
-
+#
