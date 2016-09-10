@@ -1,5 +1,13 @@
 ## Kotlin Samples. More to come!
 
+Among others, Kotlin come with tools like `kotlinc` and `kotlinc-jvm`.
+
+See below how to:
+- Compile a Kotlin file
+- Run it
+- Run a Kotlin Script
+- How to use the Kotlin REPL
+
 After installing `kotlinc` as explained [here](https://kotlinlang.org/docs/tutorials/command-line.html),
 from the directory `Kotlin.101/src/main/kotlin`:
 
@@ -17,14 +25,29 @@ CP=../../../../I2C.SPI/build/classes/main/
 CP=$CP:sensors.jar
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 #
-# echo $CP
-#
 sudo java -cp $CP KotlinSensorsKt
 ```
 Execute it:
 ```
 $ ./runSensor 
 Temp:23.418814 ºC, Press:1018.09607 hPa, Hum:64.762695 %
+```
+
+#### Run a Kotlin Script (`.kts`)
+```
+$ kotlinc -script hello.kts
+Hello Kotlin World!
+$
+```
+
+Also:
+```
+$ PI4J_HOME=/opt/pi4j
+$ CP=../../../../I2C.SPI/build/classes/main/
+$ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+$ sudo `which kotlinc` -cp $CP -script sensors.kts
+Temp= 23.80598 ºC
+$ 
 ```
 
 #### REPL

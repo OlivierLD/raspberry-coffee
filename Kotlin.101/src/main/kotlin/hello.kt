@@ -6,10 +6,11 @@
 
 fun main(args: Array<String>) {
     val language = if (args.size == 0) "EN" else args[0]
+    val name     = if (args.size < 2) "" else (" " + args[1])
     println(when (language) {
-        "EN" -> "Hello!"
-        "FR" -> "Salut!"
-        "IT" -> "Ciao!"
-        else -> "Sorry, I can't greet you in $language yet"
+        "EN" -> "Hello${name}!"
+        "FR" -> "Salut${name}!"
+        "IT" -> "Ciao${name}!"
+        else -> "Sorry${name}, I can't greet you in $language yet"
     })
 }
