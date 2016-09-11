@@ -105,7 +105,12 @@ public class ArduinoEchoClient implements SerialIOCallbacks
       sc.initListener();
       
       Thread.sleep(500L);
-      
+      // Wake up!
+      for (int i=0; i<5; i++)
+      {
+        sc.writeData("\n");
+      }
+      Thread.sleep(1000L);
       System.out.println("Writing to the serial port.");
       for (String str : LOREM_IPSUM) {
         sc.writeData(str + "\n");

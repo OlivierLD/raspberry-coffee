@@ -37,7 +37,7 @@ Writing to the serial port.
 		20 2C 74 69 6C 65 20 67 6E 69 63 73 69 70 69 64      ,tile gnicsipid
 		61 20 72 65 75 74 65 74 63 65 73 6E 6F 63 20 2C     a reutetcesnoc ,
 		74 65 6D 61 20 74 69 73 20 72 6F 6C 6F 64 20 6D     tema tis rolod m
-		75 73 70 69 20 6D 0D 0A                             uspi m..
+		75 73 70 69 20 6D 65 72 6F 4C 0D 0A                 uspi meroL..
 	>>> [From Arduino] Received:
 		0A                                                  .
 	>>> [From Arduino] Received:
