@@ -13,6 +13,10 @@ import sample.util.DumpUtil;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 
+/**
+ * Connect an Arduino Uno with its USB cable.
+ * Serial port (COM22 below) may vary.
+ */
 public class ArduinoEchoClient implements SerialIOCallbacks
 {
   @Override
@@ -92,7 +96,7 @@ public class ArduinoEchoClient implements SerialIOCallbacks
     for (String port : ports)
       System.out.println("-> " + port);
     
-    CommPortIdentifier arduinoPort = pm.get("COM22");
+    CommPortIdentifier arduinoPort = pm.get("COM15"); // May vary...
     try 
     {
       sc.connect(arduinoPort, "Arduino");
