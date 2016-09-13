@@ -27,3 +27,13 @@ dependencies {
 //  compile 'com.pi4j:pi4j-core:0.0.5'
     compile 'comm:rxtx:1.0'
 }
+
+task runArduinoSample(type: JavaExec, dependsOn: classes, description: 'Runs the Arduino Serial.IO sample') {
+
+    println ">>> Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable."
+
+    main = 'sample.ArduinoEchoClient'
+    jvmArgs '-Djava.library.path=/usr/lib/jni'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}

@@ -23,11 +23,10 @@ The example send several sentences to the Arduino, the Arduino sends the sentenc
 Raspberry PI, in reverse order. A string like 'arduino' will be sent back as 'oniudra'.
 
 ```
-$ java -cp ... -Djava.library.path=... sample.ArduinoEchoClient
--> COM15
--> COM16
--> COM3
--> COM18
+$ ../gradlew runArduinoSample
+-> /dev/ttyUSB0
+-> /dev/ttyAMA0
+
 Arduino connected: true
 IO Streams initialized
 Writing to the serial port.
