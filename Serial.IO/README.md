@@ -160,3 +160,6 @@ Done.
 
 Process finished with exit code 0
 ```
+
+---
+A GPS with a USB cable would also produce interesting output.
