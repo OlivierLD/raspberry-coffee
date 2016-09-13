@@ -23,7 +23,7 @@ The example send several sentences to the Arduino, the Arduino sends the sentenc
 Raspberry PI, in reverse order. A string like 'arduino' will be sent back as 'oniudra'.
 
 ```
-$ java -cp -Djava.library.path=... sample.ArduinoEchoClient
+$ java -cp ... -Djava.library.path=... sample.ArduinoEchoClient
 -> COM15
 -> COM16
 -> COM3
@@ -160,3 +160,8 @@ Done.
 
 Process finished with exit code 0
 ```
+---
+
+Reading  data from a GPS is interesting too.
+
+---
