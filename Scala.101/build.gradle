@@ -15,6 +15,7 @@ dependencies {
     compile 'com.typesafe.akka:akka-actor_2.11:2.3.11'
     compile project(':I2C.SPI')
     compile project(':MindWave')
+    compile project(':SevenSegDisplay')
 }
 
 sourceSets {
@@ -39,6 +40,12 @@ task runHelloActor(type: JavaExec, dependsOn: classes, description: 'Runs the Sc
 
 task runDLListener(type: JavaExec, dependsOn: classes, description: 'Runs the Scala Actors app, with DeadLetter detection') {
     main = 'DLListener'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task runClock(type: JavaExec, dependsOn: classes, description: 'Runs the SevenSegment Clock, from Scala') {
+    main = 'sevenseg.Clock'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
