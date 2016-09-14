@@ -9,13 +9,13 @@ public class SevenSegment
 {
   private LEDBackPack display = null;
   /*
-   *  The seven segment of each digit are represented by 7 bits on a byte:
+   *  The seven segments of each digit are represented by 7 bits on a byte:
    *
    *               --   0&00000001
    *  0&00100000  |  |  0&00000010
    *               --   0&01000000
    *  0&00010000  |  |  0&00000100
-   *  0&00001000   --.  0&10000000
+   *  0&00001000   --.  0&10000000 <- this is the dot, at the bottom right of each matrix
    */
   public final static byte TOP          = 0&00000001; // 0x01
   public final static byte TOP_RIGHT    = 0&00000010; // 0x02
