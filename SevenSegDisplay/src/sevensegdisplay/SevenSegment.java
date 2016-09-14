@@ -24,23 +24,26 @@ public class SevenSegment
   //  0x74, 0x30, 0x0E, 0x76, 0x06, 0x15, 0x54, 0x5c, /* h i j k l m n o  */
   //  0x73, 0x67, 0x50, 0x6d, 0x78, 0x1c, 0x1c, 0x2A, /* p q r s t u v w  */
   //  0x76, 0x6e, 0x5b, 0x39, 0x80, 0x0F, 0x80, 0x08  /* x y z { | } ~    */
+  
+  public final static byte DOT = (byte)0x80;
+  
   static
   { // FYI, 0x80 is the dot, displayed instead of "undisplayable" characters.
     ALL_CHARS.put(" ",  (byte)0x00);
-    ALL_CHARS.put("!",  (byte)0x80);
-    ALL_CHARS.put("\"", (byte)0x80);
-    ALL_CHARS.put("#",  (byte)0x80);
-    ALL_CHARS.put("$",  (byte)0x80);
-    ALL_CHARS.put("%",  (byte)0x80);
-    ALL_CHARS.put("&",  (byte)0x80);
+    ALL_CHARS.put("!",  DOT);
+    ALL_CHARS.put("\"", DOT);
+    ALL_CHARS.put("#",  DOT);
+    ALL_CHARS.put("$",  DOT);
+    ALL_CHARS.put("%",  DOT);
+    ALL_CHARS.put("&",  DOT);
     ALL_CHARS.put("'",  (byte)0x02);
     ALL_CHARS.put("(",  (byte)0x39);
     ALL_CHARS.put(")",  (byte)0x0f);
-    ALL_CHARS.put("*",  (byte)0x80);
-    ALL_CHARS.put("+",  (byte)0x80);
+    ALL_CHARS.put("*",  DOT);
+    ALL_CHARS.put("+",  DOT);
     ALL_CHARS.put(",",  (byte)0x04);
     ALL_CHARS.put("-",  (byte)0x40);
-    ALL_CHARS.put(".",  (byte)0x80);
+    ALL_CHARS.put(".",  DOT);
     ALL_CHARS.put("0",  (byte)0x3f);
     ALL_CHARS.put("1",  (byte)0x06);
     ALL_CHARS.put("2",  (byte)0x5b);
@@ -51,13 +54,13 @@ public class SevenSegment
     ALL_CHARS.put("7",  (byte)0x07);
     ALL_CHARS.put("8",  (byte)0x7f);
     ALL_CHARS.put("9",  (byte)0x6f);
-    ALL_CHARS.put(":",  (byte)0x80);
-    ALL_CHARS.put(";",  (byte)0x80);
-    ALL_CHARS.put("<",  (byte)0x80);
+    ALL_CHARS.put(":",  DOT);
+    ALL_CHARS.put(";",  DOT);
+    ALL_CHARS.put("<",  DOT);
     ALL_CHARS.put("=",  (byte)0x48);
-    ALL_CHARS.put(">",  (byte)0x80);
+    ALL_CHARS.put(">",  DOT);
     ALL_CHARS.put("?",  (byte)0x27);
-    ALL_CHARS.put("@",  (byte)0x80);
+    ALL_CHARS.put("@",  DOT);
     ALL_CHARS.put("A",  (byte)0x77);
     ALL_CHARS.put("B",  (byte)0x7c);
     ALL_CHARS.put("C",  (byte)0x39);
@@ -85,11 +88,11 @@ public class SevenSegment
     ALL_CHARS.put("Y",  (byte)0x6e);
     ALL_CHARS.put("Z",  (byte)0x5b);
     ALL_CHARS.put("[",  (byte)0x39);
-    ALL_CHARS.put("\\", (byte)0x80);
+    ALL_CHARS.put("\\", DOT);
     ALL_CHARS.put("]",  (byte)0x0f);
-    ALL_CHARS.put("^",  (byte)0x80);
+    ALL_CHARS.put("^",  DOT);
     ALL_CHARS.put("_",  (byte)0x08);
-    ALL_CHARS.put("`",  (byte)0x80);
+    ALL_CHARS.put("`",  DOT);
     ALL_CHARS.put("a",  (byte)0x5f);
     ALL_CHARS.put("b",  (byte)0x7c);
     ALL_CHARS.put("c",  (byte)0x58);
@@ -119,7 +122,7 @@ public class SevenSegment
     ALL_CHARS.put("{",  (byte)0x39);
     ALL_CHARS.put("|",  (byte)0x30);
     ALL_CHARS.put("}",  (byte)0x0f);
-    ALL_CHARS.put("~",  (byte)0x80);                       
+    ALL_CHARS.put("~",  DOT);                       
   }
   
   public SevenSegment()

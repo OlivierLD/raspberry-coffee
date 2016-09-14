@@ -12,7 +12,7 @@ public class OnOffSample
 
     for (int i=0; i<5; i++)
     {
-      // Notice the digit index: 0, 1, 3, 4. 2 is the column ":"
+      // Notice the digit index: 0, 1, 3, 4. Index 2 is the column ":"
       segment.writeDigit(0, 8, true);
       segment.writeDigit(1, 8, true);
       segment.writeDigit(3, 8, true);
