@@ -8,6 +8,31 @@ import java.util.Map;
 public class SevenSegment
 {
   private LEDBackPack display = null;
+  /*
+   *  The seven segment of each digit are represented by 7 bits on a byte:
+   *
+   *               --   0&00000001
+   *  0&00100000  |  |  0&00000010
+   *               --   0&01000000
+   *  0&00010000  |  |  0&00000100
+   *  0&00001000   --.  0&10000000
+   */
+  public final static byte TOP          = 0&00000001; // 0x01
+  public final static byte TOP_RIGHT    = 0&00000010; // 0x02
+  public final static byte BOTTOM_RIGHT = 0&00000100; // 0x04
+  public final static byte BOTTOM       = 0&00001000; // 0x08
+  public final static byte BOTTOM_LEFT  = 0&00010000; // 0x10
+  public final static byte TOP_LEFT     = 0&00100000; // 0x20
+  public final static byte MIDDLE       = 0&01000000; // 0x40
+  public final static byte DOT          = 0&10000000; // 0x80
+
+  /*
+   * Examples:
+   *   8 = TOP | MIDDLE | BOTTOM | TOP_LEFT | TOP_RIGHT | BOTTOM_RIGHT | BOTTOM_LEFT
+   *   7 = TOP | TOP_RIGHT | BOTTOM_RIGHT
+   *   etc.
+   */
+
   private final static int[] digits = { 0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, // 0..9
                                         0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71 };                       // A..F
 
@@ -25,8 +50,7 @@ public class SevenSegment
   //  0x73, 0x67, 0x50, 0x6d, 0x78, 0x1c, 0x1c, 0x2A, /* p q r s t u v w  */
   //  0x76, 0x6e, 0x5b, 0x39, 0x80, 0x0F, 0x80, 0x08  /* x y z { | } ~    */
   
-  public final static byte DOT = (byte)0x80;
-  
+
   static
   { // FYI, 0x80 is the dot, displayed instead of "undisplayable" characters.
     ALL_CHARS.put(" ",  (byte)0x00);
