@@ -5,7 +5,7 @@ To install this package (on Raspberry PI, or more generally on Ubuntu), type
 $> sudo apt-get install librxtx-java
 ```
 This is an possible alternate to the `com.pi4j.io.serial` package (that comes with PI4J).
-Give a bit more flexibility, specially on the callback side.
+Gives a bit more flexibility, specially on the callback side.
 
 It requires:
 * on the runtime command line `-Djava.library.path=/usr/lib/jni`
@@ -23,11 +23,10 @@ The example send several sentences to the Arduino, the Arduino sends the sentenc
 Raspberry PI, in reverse order. A string like 'arduino' will be sent back as 'oniudra'.
 
 ```
-$ java -cp -Djava.library.path=... sample.ArduinoEchoClient
--> COM15
--> COM16
--> COM3
--> COM18
+$ ../gradlew runArduinoSample
+-> /dev/ttyUSB0
+-> /dev/ttyAMA0
+
 Arduino connected: true
 IO Streams initialized
 Writing to the serial port.
@@ -162,4 +161,7 @@ Process finished with exit code 0
 ```
 
 ---
+
 A GPS with a USB cable would also produce interesting output.
+
+---
