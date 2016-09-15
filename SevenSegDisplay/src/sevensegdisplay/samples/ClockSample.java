@@ -35,7 +35,7 @@ public class ClockSample
     while (true)
     {
       Calendar now = GregorianCalendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
-      int hour   = now.get(Calendar.HOUR);
+      int hour   = now.get(Calendar.HOUR_OF_DAY);
       int minute = now.get(Calendar.MINUTE);
       int second = now.get(Calendar.SECOND);
       // Set hours
