@@ -18,7 +18,7 @@ public class CounterSample
       segment.writeDigit(1, (i / 100) % 10); // 100th
       segment.writeDigit(3, (i / 10) % 10);  // 10th
       segment.writeDigit(4, i % 10);         // Ones
-  //  try { Thread.sleep(10L); } catch (InterruptedException ie){}
+      try { Thread.sleep(10L); } catch (InterruptedException ie){}
     }
     long after = System.currentTimeMillis();
     System.out.println("Took " + Long.toString(after - before) + " ms.");

@@ -25,7 +25,7 @@ object Clock {
     // Continually update the time on a 4 char, 7-segment display
     while (true) {
       val now: Calendar = new GregorianCalendar(TimeZone.getTimeZone("America/Los_Angeles"))
-      val hour: Int = now.get(Calendar.HOUR)
+      val hour: Int = now.get(Calendar.HOUR_OF_DAY)
       val minute: Int = now.get(Calendar.MINUTE)
       val second: Int = now.get(Calendar.SECOND)
       // Set hours
