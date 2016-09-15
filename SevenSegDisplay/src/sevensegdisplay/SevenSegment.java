@@ -198,7 +198,7 @@ public class SevenSegment
     if (value > 0xF)
       return;
     // Set the appropriate digit
-    this.display.setBufferRow(charNumber, digits[value] | (dot?0x1 << 7:0x0));
+    this.display.setBufferRow(charNumber, digits[value] | (dot ? 0x01 << 7 : 0x00));
   }
   
   /*
