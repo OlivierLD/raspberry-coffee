@@ -37,10 +37,9 @@ object Clock {
       // Toggle colon
       segment.setColon(second % 2 != 0) // Toggle colon at 1Hz
       // Wait one second
-      try
+      try {
         Thread.sleep(1000L)
-
-      catch {
+      } catch {
         case ie: InterruptedException => {
         }
       }
