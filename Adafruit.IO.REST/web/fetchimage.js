@@ -44,10 +44,12 @@ var refreshImg = function() {
     loopRefresh = false;
     // Reset button label
     $("#button").text('Refresh image');
+    $("#ref-rate").removeAttr('disabled');
   } else {
     var interval = parseInt($("#ref-rate").val());
     if (interval !== undefined && !isNaN(interval) && interval > 0) {
-      $("#button").text('Stop loop');
+      $("#button").text('Stop refreshing');
+      $("#ref-rate").attr('disabled', 'true');
       refreshInt = setInterval(getImageBase64String, 1000 * interval);
       loopRefresh = true;
     } else {
