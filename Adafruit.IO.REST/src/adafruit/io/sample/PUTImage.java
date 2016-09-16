@@ -15,8 +15,9 @@ public class PUTImage
     String url = "https://io.adafruit.com/api/feeds/" + FEED_NAME + "/data";
     Map<String, String> headers = new HashMap<String, String>(1);
     headers.put("X-AIO-Key", key);
-    headers.put("Content-Type", "application/text");
-    int ret = HttpClient.doPost(url, headers, base64);
+    headers.put("Content-Type", "application/json");
+    String imgPayload = "{ \"value\": \"" + base64 + "\" }";
+    int ret = HttpClient.doPost(url, headers, imgPayload);
     if (DEBUG)
       System.out.println("POST: " + ret);
     return ret;

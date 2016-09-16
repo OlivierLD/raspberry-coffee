@@ -5,6 +5,7 @@ $(document).ready(function() {
 var FEED_NAME = 'onoff';
 
 var getData = function() {
+
   var deferred = $.Deferred(),  // a jQuery deferred
       url = 'https://io.adafruit.com/api/feeds/' + FEED_NAME,
       xhr = new XMLHttpRequest(),
@@ -104,4 +105,4 @@ var setSwitchValue = function(onOff) {
   setData.fail(function(error) {
     alert("Failed to set the value..." + (error !== undefined ? error : ''));
   });
-}
+};
