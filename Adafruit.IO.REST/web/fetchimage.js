@@ -70,6 +70,7 @@ var getImageBase64String = function() {
     }, 1);
 
     console.log("Refreshing image");
+    $("#spinner").html("<img src='spinner.gif' width=''24' height='24' style='vertical-align: middle;'>");
 
     // Produce data, the promise
     var fetchData = getData('picture');
@@ -82,11 +83,13 @@ var getImageBase64String = function() {
       clearInterval(int);
       setTimeout(function() {
         $('body').css('cursor', 'auto');
+        $("#spinner").html("");
       }, 1);
     });
 
     // Errors etc
     fetchData.fail(function(error) {
+      $("#spinner").html("");
       alert('Data request failed (timeout?), try again later.\n' + (error !== undefined ? error : ''));
     });
   } else {
