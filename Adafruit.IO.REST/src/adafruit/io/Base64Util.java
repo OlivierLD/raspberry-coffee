@@ -7,9 +7,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-/**
- * Created by Nav on 6/16/2016.
- */
 public class Base64Util
 {
   /**
@@ -57,20 +54,25 @@ public class Base64Util
     return imageString;
   }
 
-  public static void main (String args[]) throws IOException
+  public static void main (String args[])
   {
-
-    String IMG_RADIX = "flower";
-
-    BufferedImage img = ImageIO.read(new File(IMG_RADIX + ".jpg"));
-    BufferedImage newImg;
-    String imgstr;
-    imgstr = encodeToString(img, "jpg");
-    System.out.println(imgstr);
-    FileOutputStream fos = new FileOutputStream("image.txt");
-    fos.write(imgstr.getBytes());
-    fos.close();
-    newImg = decodeToImage(imgstr);
-    ImageIO.write(newImg, "png", new File(IMG_RADIX + ".png"));
+    System.out.println("A test. Reads a jpg, encodes it, decodes into a png.");
+    String IMG_RADIX = "Adafruit.IO.REST" + File.separator + "bonus";
+    try {
+      BufferedImage img = ImageIO.read(new File(IMG_RADIX + ".jpg"));
+      BufferedImage newImg;
+      String imgstr;
+      imgstr = encodeToString(img, "jpg");
+      System.out.println(imgstr);
+      FileOutputStream fos = new FileOutputStream("Adafruit.IO.REST" + File.separator + "image.txt");
+      fos.write(imgstr.getBytes());
+      fos.close();
+      newImg = decodeToImage(imgstr);
+      ImageIO.write(newImg, "png", new File(IMG_RADIX + ".png"));
+    } catch (IOException ioe) {
+      String where = new File(".").getAbsolutePath();
+      System.err.println("From " + where);
+      ioe.printStackTrace();
+    }
   }
 }
