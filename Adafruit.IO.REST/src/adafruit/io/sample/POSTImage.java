@@ -6,17 +6,19 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PUTImage
+public class POSTImage
 {
   private final static boolean DEBUG = true;
   private final static String FEED_NAME = "picture";
 
-  private static int putImage(String key, String base64) throws Exception {
+  private static int postImage(String key, String base64) throws Exception {
     String url = "https://io.adafruit.com/api/feeds/" + FEED_NAME + "/data";
     Map<String, String> headers = new HashMap<String, String>(1);
     headers.put("X-AIO-Key", key);
     headers.put("Content-Type", "application/json");
-    String imgPayload = "{ \"value\": \"" + base64 + "\" }";
+    JSONObject json = new JSONObject();
+    json.put("value", base64);
+    String imgPayload = json.toString();
     int ret = HttpClient.doPost(url, headers, imgPayload);
     if (DEBUG)
       System.out.println("POST: " + ret);
@@ -88,7 +90,7 @@ public class PUTImage
       System.exit(1);
     }
 
-    int val = PUTImage.putImage(key, img);
+    int val = POSTImage.postImage(key, img);
     System.out.println(String.format("Ret Code: %d", val));
     System.out.println("Yo!");
   }
