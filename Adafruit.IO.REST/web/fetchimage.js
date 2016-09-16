@@ -36,6 +36,26 @@ var getData = function(feed) {
   return deferred.promise();
 };
 
+var loopRefresh = false;
+var refreshInt;
+var refreshImg = function() {
+  if (loopRefresh === true && refreshInt !== undefined) {
+    clearInterval(refreshInt);
+    loopRefresh = false;
+    // Reset button label
+    $("#button").text('Refresh image');
+  } else {
+    var interval = parseInt($("#ref-rate").val());
+    if (interval !== undefined && !isNaN(interval) && interval > 0) {
+      $("#button").text('Stop loop');
+      refreshInt = setInterval(getImageBase64String, 1000 * interval);
+      loopRefresh = true;
+    } else {
+      getImageBase64String();
+    }
+  }
+};
+
 var getImageBase64String = function() {
   var k = $("#a-key").val();
 
@@ -46,6 +66,8 @@ var getImageBase64String = function() {
     setTimeout(function() {
       $('body').css('cursor', 'progress');
     }, 1);
+
+    console.log("Refreshing image");
 
     // Produce data, the promise
     var fetchData = getData('picture');
