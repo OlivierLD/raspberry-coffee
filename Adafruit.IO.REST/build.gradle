@@ -1,9 +1,16 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+  id 'java'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+shadowJar {
+  zip64 true
+}
 
 def userprofile = System.getenv()['USERPROFILE'] // On Windows...
 if (userprofile == null) { // Linux ?
-    userprofile = System.getenv()['HOME']
+  userprofile = System.getenv()['HOME']
 }
 
 group = 'oliv.pi4j.samples'
