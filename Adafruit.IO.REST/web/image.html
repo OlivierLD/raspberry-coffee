@@ -19,7 +19,7 @@
     <h2>Adafruit IO, with jQuery</h2>
     <small>JQuery, Ajax, REST, JSON..., a simple example to read a feed, and update its value.</small>
     <p>
-      <i>We query the value of a boolean field named <code>picture</code>.</i>
+      <i>We query the value of a feed named <code>picture</code>.</i>
     </p>
     <p>
       Your Adafruit-IO key : <input type="text" size="40" id="a-key" placeholder="Your Adafruit-IO Key" style="font-family: monospace;">
@@ -27,8 +27,9 @@
       <small><span id="mess"></span></small>
     </p>
     <div id="data" style="display: none;">
+      <hr>
       <button onclick="refreshImg();" id="button">Refresh image</button> every <input type="text" size="10" id="ref-rate" placeholder="Seconds" style="font-family: monospace;"> second(s)
-      &nbsp;&nbsp;<span id="spinner"></span>
+      &nbsp;&nbsp;<span id="spinner" style="width: 24px; height: 24px; display: inline-block; overflow: hidden;"></span>
       <hr>
       <p align="center">
         <img id="img-value" src="">

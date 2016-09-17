@@ -38,3 +38,12 @@ written using jQuery - because it looks good, and it is easy.
 
 Just like before, all you need is an Adafruit-IO key.
 
+### With a camera
+
+Run the following commands:
+```
+ Prompt> sudo ./snap.loop &
+ Prompt> ./snap.REST.IO <your adafruit.io key> 
+```
+
+Then from a browser, reach `image.html`, in the `web` directory.
