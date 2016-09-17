@@ -1,0 +1,6 @@
+#!/bin/bash
+ps -ef | grep snap.loop | grep -v grep | awk '{ print "sudo kill -9 " $2 }' > ksn
+chmod +x ksn
+./ksn
+rm ksn
+
