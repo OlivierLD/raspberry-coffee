@@ -47,3 +47,8 @@ Run the following commands:
 ```
 
 Then from a browser, reach `image.html`, in the `web` directory.
+
+To stop `snap.loop`, type:
+```
+ Prompt> ./kill.loop
+```
