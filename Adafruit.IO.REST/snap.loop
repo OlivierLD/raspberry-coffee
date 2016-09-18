@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# For camera (raspistill) doc, see https://www.raspberrypi.org/documentation/raspbian/applications/camera.md
+#
 while :
 do
   raspistill -rot 0 --width 300 --height 225 --timeout 1 --output snap.jpg --nopreview
