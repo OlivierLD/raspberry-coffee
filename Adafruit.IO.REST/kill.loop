@@ -6,4 +6,3 @@ do
   sudo kill -9 $pid
 done
 rm ksn
-
