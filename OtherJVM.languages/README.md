@@ -37,9 +37,9 @@ This does not look at all like Java, does it?
 
 From a Java file (with a `.java` extension) you get a `.class` file by using the `javac` compiler.
 
-BUt here ius the trick: You can come up with your own language, and if you can write your own compiler that turns your 
+But here is the trick: You can come up with your own language, and if you can write your own compiler that turns your 
 language-specific files into `.class` files supported by the JVM (a library like [ASM](http://asm.ow2.org/) can help you with that), 
-you can then take advantages of the features of the JVM, big ones of them being its portability and interoperability. No need to mention 
+you can then take advantage of the features of the JVM, big ones of them being its portability and interoperability. No need to mention 
 that it can use at runtime `jars` and other `class` files, whatever language they have originally be written in.
 
 That is - in very short - what those JVM-aware languages are doing. 
@@ -74,7 +74,7 @@ from the directory `Kotlin.101/src/main/kotlin`:
 
 #### Compilation
 ```
-$ kotlinc KotlinSensors.kt -cp ../../../../I2C.SPI/build/classes/main/ -include-runtime -d sensors.jar
+$ kotlinc KotlinSensors.kt -cp ../I2C.SPI/build/classes/main/ -include-runtime -d sensors.jar
 ```
 
 #### Execution
@@ -82,7 +82,7 @@ There is a script named `runSensor`:
 ```
 #!/bin/bash
 PI4J_HOME=/opt/pi4j
-CP=../../../../I2C.SPI/build/classes/main/
+CP=../I2C.SPI/build/classes/main/
 CP=$CP:sensors.jar
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 #
@@ -104,7 +104,7 @@ $
 Also:
 ```
 $ PI4J_HOME=/opt/pi4j
-$ CP=../../../../I2C.SPI/build/classes/main/
+$ CP=../I2C.SPI/build/classes/main/
 $ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 $ sudo `which kotlinc` -cp $CP -script sensors.kts
 Temp= 23.80598 ºC
@@ -115,7 +115,7 @@ $
 Kotlin come with a REPL (Read-Execute-Print-Loop), like Scala:
 ```
 $ PI4J_HOME=/opt/pi4j
-$ CP=../../../../I2C.SPI/build/classes/main/
+$ CP=../I2C.SPI/build/classes/main/
 $ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 $ sudo `which kotlinc-jvm` -cp $CP
 Welcome to Kotlin version 1.0.3 (JRE 1.8.0_65-b17)
