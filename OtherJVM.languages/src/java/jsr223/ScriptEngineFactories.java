@@ -13,6 +13,8 @@ public class ScriptEngineFactories
   public static void main(String[] args)
   {
     System.out.println("Your Java version:" + System.getProperty("java.version"));
+    String location = new File(".").getAbsolutePath();
+    System.out.println(String.format("Running from %s", location));
 
     List<ScriptEngineFactory> factories = new ScriptEngineManager().getEngineFactories();
     System.out.println("=======================");
@@ -37,6 +39,7 @@ public class ScriptEngineFactories
     }
     catch (ScriptException se)
     {
+      System.err.println(String.format("From %s:", location));
       se.printStackTrace();
     }
     catch (FileNotFoundException fnfe)
