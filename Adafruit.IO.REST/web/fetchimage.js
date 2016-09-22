@@ -70,16 +70,27 @@ var getImageBase64String = function() {
     }, 1);
 
     console.log("Refreshing image");
-    $("#spinner").html("<img src='spinner.gif' width=''24' height='24' style='vertical-align: middle;'>");
+    $("#spinner").html("<img src='spinner.gif' width='24' height='24' style='vertical-align: middle;'>");
 
+    console.log("Fading Out");
+    $("#img-value").fadeOut("fast"); // Prm: slow, fast, or milliseconds. See http://www.w3schools.com/jquery/eff_fadeout.asp
     // Produce data, the promise
+    var now = new Date().getMilliseconds();
     var fetchData = getData('picture');
     fetchData.done(function(value) {
       //  console.log("Done :" + value); // Raw data
+      var elapsed = new Date().getMilliseconds() - now;
       // Display it...
       var img = JSON.parse(value).last_value;
+      console.log("Image is in (%d ms)", elapsed);
    // <img src=”data:image/png;base64,iVBORw0KGgoAAAANS… (see source for full base64 encoded image) …8bgAAAAASUVORK5CYII=”>
+   // $("#img-value").slideToggle("slow");
+   // $("#img-value").slideUp();
       $("#img-value").attr('src', ("data:image/png;base64," + img));
+   // $("#img-value").slideToggle("slow");
+   // $("#img-value").slideDown();
+      console.log("Fading In");
+      $("#img-value").fadeIn();
       clearInterval(int);
       setTimeout(function() {
         $('body').css('cursor', 'auto');
