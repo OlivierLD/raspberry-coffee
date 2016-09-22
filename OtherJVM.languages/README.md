@@ -2,7 +2,7 @@
 Java runs on the Raspberry PI. Running Java means that there is a Java Virtual Machine (JVM) that can take a `.class` file and execute it.
 A `.class` file contains _byte code_. To see what the _byte code_ looks like, you can use `javap` with its `-c` flag:
 ```
-$> javap -c -cp ./build/classes/main ./build/classes/main/mainRPi.class
+$ javap -c -cp ./build/classes/main ./build/classes/main/mainRPi.class
 Compiled from "mainRPi.groovy"
 public class mainRPi extends groovy.lang.Script {
   public static transient boolean __$stMC;
@@ -59,6 +59,12 @@ Groovy is similar to Scala in the sense that
 
 Those interested will also take a look at the Java part of the project, showing how to invoke scripting languages (Groovy, JavaScript) from Java,
 using the features of the JSR223. Do check it out, it's worth it.
+
+### Read a BME280 from groovy
+From the projcet's root:
+```
+$ ./scripts/groovy/run
+```
 
 ## Kotlin
 Among others, Kotlin come with tools like `kotlinc` and `kotlinc-jvm`.
