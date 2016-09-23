@@ -5,9 +5,7 @@
 # Those archives are built from the root like that:
 #  raspberry-pi4j-samples $ ./gradlew shadowJar
 #
-PI4J_HOME=/opt/pi4j
 CP=./build/libs/Adafruit.IO.REST-1.0-all.jar
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 #
 if [ "$1" = "" ]
 then
