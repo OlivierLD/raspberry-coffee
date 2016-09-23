@@ -61,9 +61,16 @@ Those interested will also take a look at the Java part of the project, showing 
 using the features of the JSR223. Do check it out, it's worth it.
 
 ### Read a BME280 from groovy
-From the projcet's root:
+From the project's root:
 ```
 $ ./scripts/groovy/run
+==========
+Now running some RPi stuff
+Temperature: 20.87 C
+Pressure   : 1017.97 hPa
+Humidity   : 66.91 %
+CPU Temperature   :  47.8
+CPU Core Voltage  :  1.325
 ```
 
 ## Kotlin
@@ -76,32 +83,40 @@ See below how to:
 - How to use the Kotlin REPL
 
 After installing `kotlinc` as explained [here](https://kotlinlang.org/docs/tutorials/command-line.html),
-from the directory `Kotlin.101/src/main/kotlin`:
+from the project's root directory:
 
 #### Compilation
 ```
-$ kotlinc KotlinSensors.kt -cp ../I2C.SPI/build/classes/main/ -include-runtime -d sensors.jar
+$ cd src/kotlin
+$ kotlinc KotlinSensors.kt -cp ../../../I2C.SPI/build/classes/main/ -include-runtime -d sensors.jar
 ```
 
 #### Execution
 There is a script named `runSensor`:
 ```
 #!/bin/bash
+#
+# Reads a sensor from Kotlin
+#
 PI4J_HOME=/opt/pi4j
-CP=../I2C.SPI/build/classes/main/
-CP=$CP:sensors.jar
+CP=../../../../I2C.SPI/build/classes/main/
+CP=$CP:../../src/kotlin/sensors.jar
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+#
+# echo $CP
 #
 sudo java -cp $CP KotlinSensorsKt
 ```
 Execute it:
 ```
+$ cd script/kotlin
 $ ./runSensor 
 Temp:23.418814 ºC, Press:1018.09607 hPa, Hum:64.762695 %
 ```
 
 #### Run a Kotlin Script (`.kts`)
 ```
+$ cd src/kotlin
 $ kotlinc -script hello.kts
 Hello Kotlin World!
 $
@@ -109,8 +124,9 @@ $
 
 Also:
 ```
+$ cd src/kotlin
 $ PI4J_HOME=/opt/pi4j
-$ CP=../I2C.SPI/build/classes/main/
+$ CP=../../../I2C.SPI/build/classes/main/
 $ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 $ sudo `which kotlinc` -cp $CP -script sensors.kts
 Temp= 23.80598 ºC
@@ -120,6 +136,8 @@ $
 #### REPL
 Kotlin come with a REPL (Read-Execute-Print-Loop), like Scala:
 ```
+# From the project's root
+#
 $ PI4J_HOME=/opt/pi4j
 $ CP=../I2C.SPI/build/classes/main/
 $ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
