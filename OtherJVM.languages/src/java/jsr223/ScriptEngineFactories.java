@@ -33,7 +33,7 @@ public class ScriptEngineFactories
     {
       engine.eval("println 'Hello Groovy!'");
       System.out.println(">>> Executing src/groovy/mainBasic.groovy");
-      engine.eval(new FileReader("Groovy.101/" + "src/groovy/mainBasic.groovy"));
+      engine.eval(new FileReader("./" + "src/groovy/mainBasic.groovy"));
  //   String output = writer.toString();
  //   System.out.println("Output:[" + output + "]");
     }
@@ -51,7 +51,7 @@ public class ScriptEngineFactories
     try
     {
       // Act as mainBasic.groovy
-      engine.eval(new FileReader("Groovy.101/" + "src/groovy/GroovyBasic.groovy"));
+      engine.eval(new FileReader("./" + "src/groovy/GroovyBasic.groovy"));
       engine.eval("app = new GroovyBasic()");
       Object app = engine.get("app");
       Invocable invocable = (Invocable)engine;

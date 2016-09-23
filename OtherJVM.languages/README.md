@@ -1,5 +1,13 @@
 # JVM-aware languages
-Java runs on the Raspberry PI. Running Java means that there is a Java Virtual Machine (JVM) that can take a `.class` file and execute it.
+
+### Quick preamble
+Java runs on the Raspberry PI.
+One big asset of Java is its portability, its "write-once-run-everywhere" feature.
+Running Java means that there is a Java Virtual Machine (JVM) that can take a `.class` file and execute it.
+The JVM does not care about the machine or OS a `.class` has been generated (compiled) on, it will just work if it is valid at least somewhere.
+
+Actually, the portability of the code is taken care of by the JVM. Porting the JVM is the responsability of the JVM vendor, not of the author of the code itself.
+
 A `.class` file contains _byte code_. To see what the _byte code_ looks like, you can use `javap` with its `-c` flag:
 ```
 $ javap -c -cp ./build/classes/main ./build/classes/main/mainRPi.class
@@ -40,14 +48,46 @@ From a Java file (with a `.java` extension) you get a `.class` file by using the
 But here is the trick: You can come up with your own language, and if you can write your own compiler that turns your 
 language-specific files into `.class` files supported by the JVM (a library like [ASM](http://asm.ow2.org/) can help you with that), 
 you can then take advantage of the features of the JVM, big ones of them being its portability and interoperability. No need to mention 
-that it can use at runtime `jars` and other `class` files, whatever language they have originally be written in.
+that it can use at runtime `jars` and other `class` files, whatever language they have originally been written in.
+
+Now, not only a given `.class` can be executed across platforms, but also it can come from several different languages. 
 
 That is - in very short - what those JVM-aware languages are doing. 
-We have here snippets of Scala, Groovy, and Kotlin. The list is not closed, by far! 
+We have here snippets of Scala, Groovy, and Kotlin. The list is not closed, by far. Many other such JVM-aware languages exist, and will exist. 
+ 
+### A quick note
+To know how to install those langauges on the Raspberry PI (or wherever you want), use any search engine you like. It's out of the scope of this document ;)
  
 ## Scala 
-Coming...
+Several examples are provided, along with the way to run them:
+```
+$ cd scripts/scala
+$ ./hello
+Compiling
+Now running
+Hello, Scalaspberry world! 
+$
+$ cd ../.. # Back at the project root
+$ ../gradlew runHelloActor
+ ...
+:OtherJVM.languages:classes UP-TO-DATE
+:OtherJVM.languages:runHelloActor
+hello back at you!
+Unexpected String: buenos dias
+Whatever message : Watafok
+Got an un-managed class Bullshit : Bullshit(Moo!)
+>> Result is: Miom Miom Miom Miom 
+
+BUILD SUCCESSFUL
+
+Total time: 4.628 secs
+$
+
+```
+
+
 ### Scala REPL
+Scala comes with a REPL (Read-Execute-Print-Loop). A REPL behaves like an interpreter, and is _very_ convenient.
 
 ## Groovy on Pi
 This is a small Groovy project that shows how to use Java classes written for the `Raspberry PI`
