@@ -21,3 +21,5 @@ include 'Serial.IO'
 include 'SevenSegDisplay'
 include 'system.utils'
 include 'WeatherStation'
+
+include 'OtherJVM.languages'

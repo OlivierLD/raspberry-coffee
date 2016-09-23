@@ -9,7 +9,7 @@ public class RemoveBlankLines {
       System.out.println("Yo!"); // Argh!
     } else {
       String fName = args[0];
-      System.out.println(String.format("Reworking %s", fName));
+      System.out.println(String.format("Reworking %s into new.txt.", fName));
       BufferedReader br = new BufferedReader(new FileReader(fName));
       BufferedWriter bw = new BufferedWriter(new FileWriter("new.txt"));
       String line = "";
@@ -19,7 +19,7 @@ public class RemoveBlankLines {
         if (line == null) {
           keepGoing = false;
         } else {
-          System.out.println(String.format("Length: %d", line.length()));
+     //    System.out.println(String.format("Length: %d", line.length()));
           if (line.length() > 0) {
             bw.write(line + "\n");
           }

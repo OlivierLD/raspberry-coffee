@@ -25,7 +25,8 @@ sourceSets {
 
 dependencies {
 //  compile 'com.pi4j:pi4j-core:0.0.5'
-    compile 'comm:rxtx:1.0'
+//  compile 'comm:rxtx:1.0'
+    compile 'org.rxtx:rxtx:2.1.7'
 }
 
 task runArduinoSample(type: JavaExec, dependsOn: classes, description: 'Runs the Arduino Serial.IO sample') {
