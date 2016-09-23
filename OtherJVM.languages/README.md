@@ -56,7 +56,7 @@ That is - in very short - what those JVM-aware languages are doing.
 We have here snippets of Scala, Groovy, and Kotlin. The list is not closed, by far. Many other such JVM-aware languages exist, and will exist. 
  
 ### A quick note
-To know how to install those langauges on the Raspberry PI (or wherever you want), use any search engine you like. It's out of the scope of this document ;)
+To know how to install those languages on the Raspberry PI (or wherever you want), use any search engine you like. It's out of the scope of this document ;)
  
 ## Scala 
 Several examples are provided, along with the way to run them:
