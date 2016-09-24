@@ -89,8 +89,14 @@ object SerialPI4J {
 
   def manageEvent(payload: String): Unit = {
     // TASK Do something interesting here...
-    val sa = utils.dualDump(payload)
-    sa.foreach(s => println(s))
+    try {
+      val sa = utils.dualDump(payload)
+      sa.foreach(s => println(s))
+    } catch {
+      case ex: Exception =>
+        println(payload)
+
+    }
   }
 
   /**
