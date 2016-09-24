@@ -58,6 +58,55 @@ We have here snippets of Scala, Groovy, and Kotlin. The list is not closed, by f
 ### A quick note
 To know how to install those languages on the Raspberry PI (or wherever you want), use any search engine you like. It's out of the scope of this document ;)
  
+## First
+Before doing what is described below, run a build of the project:
+ ```
+ $ cd OtherJVM.languages
+ $ ../gradlew build
+ :I2C.SPI:compileJava UP-TO-DATE
+ :I2C.SPI:processResources UP-TO-DATE
+ :I2C.SPI:classes UP-TO-DATE
+ :I2C.SPI:copyResources UP-TO-DATE
+ :I2C.SPI:jar UP-TO-DATE
+ :Serial.IO:compileJava UP-TO-DATE
+ :Serial.IO:compileScala UP-TO-DATE
+ :Serial.IO:processResources UP-TO-DATE
+ :Serial.IO:classes UP-TO-DATE
+ :Serial.IO:jar UP-TO-DATE
+ :MindWave:compileJava UP-TO-DATE
+ :MindWave:compileScala UP-TO-DATE
+ :MindWave:processResources UP-TO-DATE
+ :MindWave:classes UP-TO-DATE
+ :MindWave:jar UP-TO-DATE
+ :SevenSegDisplay:compileJava UP-TO-DATE
+ :SevenSegDisplay:processResources UP-TO-DATE
+ :SevenSegDisplay:classes UP-TO-DATE
+ :SevenSegDisplay:copyResources UP-TO-DATE
+ :SevenSegDisplay:jar UP-TO-DATE
+ :OtherJVM.languages:compileKotlin UP-TO-DATE
+ :OtherJVM.languages:compileJava UP-TO-DATE
+ :OtherJVM.languages:compileGroovy UP-TO-DATE
+ :OtherJVM.languages:compileScala UP-TO-DATE
+ :OtherJVM.languages:processResources UP-TO-DATE
+ :OtherJVM.languages:classes UP-TO-DATE
+ :OtherJVM.languages:jar UP-TO-DATE
+ :OtherJVM.languages:assemble UP-TO-DATE
+ :OtherJVM.languages:compileTestKotlin UP-TO-DATE
+ :OtherJVM.languages:compileTestJava UP-TO-DATE
+ :OtherJVM.languages:compileTestGroovy UP-TO-DATE
+ :OtherJVM.languages:compileTestScala UP-TO-DATE
+ :OtherJVM.languages:processTestResources UP-TO-DATE
+ :OtherJVM.languages:testClasses UP-TO-DATE
+ :OtherJVM.languages:test UP-TO-DATE
+ :OtherJVM.languages:check UP-TO-DATE
+ :OtherJVM.languages:build UP-TO-DATE
+ 
+ BUILD SUCCESSFUL
+ 
+ Total time: 32.911 secs
+ $
+ ```
+ 
 ## Scala 
 Several examples are provided, along with the way to run them, from a shell, or from Gradle:
 ```
@@ -167,6 +216,12 @@ Humidity   : 66.91 %
 CPU Temperature   :  47.8
 CPU Core Voltage  :  1.325
 ```
+
+### Groovy Console
+Groovy comes with a graphical console (not exactly a REPL...) that can be launched _from a graphical desktop_ using
+the `groovyConsole` command. You type your commands in the top pane, and then you execute them by hitting the 
+`Execute Groovy Script` button:
+![Groovy console](./RPiDesktop.png)
 
 ## Kotlin
 Among others, Kotlin come with tools like `kotlinc` and `kotlinc-jvm`.
