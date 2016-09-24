@@ -45,7 +45,7 @@ This does not look at all like Java, does it?
 
 From a Java file (with a `.java` extension) you get a `.class` file by using the `javac` compiler.
 
-But here is the trick: You can come up with your own language, and if you can write your own compiler that turns your 
+But here is the trick: you can come up with your own language, and if you can write your own compiler that turns your 
 language-specific files into `.class` files supported by the JVM (a library like [ASM](http://asm.ow2.org/) can help you with that), 
 you can then take advantage of the features of the JVM, big ones of them being its portability and interoperability. No need to mention 
 that it can use at runtime `jars` and other `class` files, whatever language they have originally been written in.
@@ -88,6 +88,16 @@ $
 
 ### Scala REPL
 Scala comes with a REPL (Read-Execute-Print-Loop). A REPL behaves like an interpreter, and is _very_ convenient.
+
+From the project's root:
+```
+$ cd scala.worksheets
+$ scala
+ :load set.cp.sc
+ :load sensor.reader.sc
+
+
+```
 
 ## Groovy on Pi
 This is a small Groovy project that shows how to use Java classes written for the `Raspberry PI`
