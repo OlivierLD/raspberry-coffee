@@ -28,7 +28,7 @@ try {
 try {
   val temp  = bme280.readTemperature
   val press = bme280.readPressure / 100
-  val hum = bme280.readPressure / 100
+  val hum = bme280.readHumidity
   println(s"CPU Temperature   :  ${SystemInfo.getCpuTemperature}\u00baC")
   println(s"Temp:${temp}\u00baC, Press:${press} hPa, Hum:${hum} %")
 } catch {

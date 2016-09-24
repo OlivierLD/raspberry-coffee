@@ -59,7 +59,7 @@ We have here snippets of Scala, Groovy, and Kotlin. The list is not closed, by f
 To know how to install those languages on the Raspberry PI (or wherever you want), use any search engine you like. It's out of the scope of this document ;)
  
 ## Scala 
-Several examples are provided, along with the way to run them:
+Several examples are provided, along with the way to run them, from a shell, or from Gradle:
 ```
 $ cd scripts/scala
 $ ./hello
@@ -89,14 +89,59 @@ $
 ### Scala REPL
 Scala comes with a REPL (Read-Execute-Print-Loop). A REPL behaves like an interpreter, and is _very_ convenient.
 
-From the project's root:
+From the project's root, you can type the scala commands in the Scala REPL:
+```
+ $ cd scala.worksheets
+ $ sudo scala
+Welcome to Scala version 2.11.6 (Java HotSpot(TM) Client VM, Java 1.8.0_101).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> :require /opt/pi4j/lib/pi4j-core.jar
+Added '/opt/pi4j/lib/pi4j-core.jar' to classpath.
+
+scala> :require ../../I2C.SPI/build/libs/I2C.SPI-1.0.jar
+Added '/home/pi/raspberry-pi4j-samples/OtherJVM.languages/scala.worksheets/../../I2C.SPI/build/libs/I2C.SPI-1.0.jar' to classpath.
+
+scala> import com.pi4j.system.SystemInfo
+import com.pi4j.system.SystemInfo
+
+scala> import i2c.sensor.BME280
+import i2c.sensor.BME280
+
+scala> val bme280  = new BME280
+bme280: i2c.sensor.BME280 = i2c.sensor.BME280@1820e51
+
+scala> try {
+     |   val temp  = bme280.readTemperature
+     |   val press = bme280.readPressure / 100
+     |   val hum = bme280.readHumidity
+     |   println(s"CPU Temperature   :  ${SystemInfo.getCpuTemperature}\u00baC")
+     |   println(s"Temp:${temp}\u00baC, Press:${press} hPa, Hum:${hum} %")
+     | } catch {
+     |   case ex: Exception => {
+     |     println(ex.toString)
+     |   }
+     | }
+CPU Temperature   :  49.4ºC
+Temp:19.920628ºC, Press:1021.1498 hPa, Hum:70.61513 %
+
+scala>
+```
+or more easily, just invoke already written scala worksheets with the `:load` REPL command:
 ```
 $ cd scala.worksheets
-$ scala
- :load set.cp.sc
- :load sensor.reader.sc
+$ sudo scala
+Welcome to Scala version 2.11.6 (Java HotSpot(TM) Client VM, Java 1.8.0_101).
+Type in expressions to have them evaluated.
+Type :help for more information.
 
+scala> :load set.cp.sc
+scala> :load sensor.reader.sc
+CPU Temperature   :  49.4ºC
+Temp:19.920628ºC, Press:1021.1498 hPa, Hum:70.61513 %
 
+scala>
 ```
 
 ## Groovy on Pi
