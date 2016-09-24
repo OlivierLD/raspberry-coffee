@@ -116,6 +116,11 @@ Compiling
 Now running
 Hello, Scalaspberry world! 
 $
+$ ./run.scala.280
+Hello, Scala world! Reading sensors.
+CPU Temperature   :  50.5ºC
+Temp:19.920628ºC, Press:1021.1498 hPa, Hum:70.61513 %
+$
 $ cd ../.. # Back at the project root
 $ ../gradlew runHelloActor
  ...
