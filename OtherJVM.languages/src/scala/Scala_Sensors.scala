@@ -5,7 +5,7 @@ import com.pi4j.system.SystemInfo
  *          a HTU21DF, on I2C address 0x40
  * If you see errors about that, check your sensors...
  */
-object Scala_101 {
+object Scala_Sensors {
   def main(args: Array[String]) {
     println("Hello, Scala world! Reading sensors.")
     val bmp180  = new BMP180
