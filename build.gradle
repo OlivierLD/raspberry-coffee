@@ -29,10 +29,9 @@ dependencies {
   compile project(':FONA')
   compile project(':RasPISamples')
   compile project(':LelandOilDetector')
-  compile project(':Scala.101')
+  compile project(':OtherJVM.languages')
   compile project(':Serial.IO')
   compile project(':MindWave')
-  compile project(':Groovy.101')
 }
 
 repositories {

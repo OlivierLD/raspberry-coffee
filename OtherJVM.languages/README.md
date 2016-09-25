@@ -116,6 +116,11 @@ Compiling
 Now running
 Hello, Scalaspberry world! 
 $
+$ ./run.scala.280
+Hello, Scala world! Reading sensors.
+CPU Temperature   :  50.5ºC
+Temp:19.920628ºC, Press:1021.1498 hPa, Hum:70.61513 %
+$
 $ cd ../.. # Back at the project root
 $ ../gradlew runHelloActor
  ...
@@ -215,6 +220,20 @@ Pressure   : 1017.97 hPa
 Humidity   : 66.91 %
 CPU Temperature   :  47.8
 CPU Core Voltage  :  1.325
+```
+
+### Groovy Shell
+This one looks a lot like a REPL.
+```
+$ groovysh
+Groovy Shell (1.8.6, JVM: 1.8.0_65)
+Type 'help' or '\h' for help.
+-------------------------------------------------------------------------------
+groovy:000> println "Hello you!"
+Hello you!
+===> null
+groovy:000> \x
+
 ```
 
 ### Groovy Console

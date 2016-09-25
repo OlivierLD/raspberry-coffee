@@ -1,6 +1,0 @@
-#!/bin/bash
-mkdir classes 2> /dev/null
-echo Compiling
-scalac -verbose -sourcepath src -d classes src/HelloScala.scala
-echo Now running
-scala -verbose -cp classes HelloScala

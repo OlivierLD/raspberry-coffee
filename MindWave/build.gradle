@@ -1,4 +1,4 @@
-apply plugin: 'scala'
+apply plugin: 'java'
 apply plugin: 'maven'
 
 group = 'oliv.pi4j.samples'
