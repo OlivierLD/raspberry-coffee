@@ -105,6 +105,7 @@ public class ArduinoEchoClient implements SerialIOCallbacks
     if (arduinoPort == null)
     {
       System.out.println(String.format("Port %s not found, aborting", serialPortName));
+      System.exit(1);
     }
     try 
     {
