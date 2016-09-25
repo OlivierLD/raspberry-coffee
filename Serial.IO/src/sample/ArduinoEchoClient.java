@@ -93,10 +93,13 @@ public class ArduinoEchoClient implements SerialIOCallbacks
     
     Map<String, CommPortIdentifier> pm = sc.getPortList();
     Set<String> ports = pm.keySet();
+    System.out.println("== Serial Port List ==");
     for (String port : ports)
       System.out.println("-> " + port);
-    
-    CommPortIdentifier arduinoPort = pm.get("COM15"); // May vary...
+    System.out.println("======================");
+
+    String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
+    CommPortIdentifier arduinoPort = pm.get(serialPortName);
     try 
     {
       sc.connect(arduinoPort, "Arduino");
