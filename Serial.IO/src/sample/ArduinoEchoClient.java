@@ -102,6 +102,10 @@ public class ArduinoEchoClient implements SerialIOCallbacks
     String baudRateStr = System.getProperty("baud.rate", "9600");
     System.out.println(String.format("Opening port %s:%s", serialPortName, baudRateStr));
     CommPortIdentifier arduinoPort = pm.get(serialPortName);
+    if (arduinoPort == null)
+    {
+      System.out.println(String.format("Port %s not found, aborting", serialPortName));
+    }
     try 
     {
       sc.connect(arduinoPort, "Arduino", Integer.parseInt(baudRateStr));
