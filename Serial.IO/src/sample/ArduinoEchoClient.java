@@ -99,6 +99,7 @@ public class ArduinoEchoClient implements SerialIOCallbacks
     System.out.println("======================");
 
     String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
+    System.out.println(String.format("Opening port %s", serialPortName));
     CommPortIdentifier arduinoPort = pm.get(serialPortName);
     try 
     {
