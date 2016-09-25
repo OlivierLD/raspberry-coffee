@@ -99,11 +99,12 @@ public class ArduinoEchoClient implements SerialIOCallbacks
     System.out.println("======================");
 
     String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
-    System.out.println(String.format("Opening port %s", serialPortName));
+    String baudRateStr = System.getProperty("baud.rate", "9600");
+    System.out.println(String.format("Opening port %s:%s", serialPortName, baudRateStr));
     CommPortIdentifier arduinoPort = pm.get(serialPortName);
     try 
     {
-      sc.connect(arduinoPort, "Arduino");
+      sc.connect(arduinoPort, "Arduino", Integer.parseInt(baudRateStr));
       boolean b = sc.initIOStream();
       System.out.println("IO Streams " + (b?"":"NOT ") + "initialized");
       sc.initListener();

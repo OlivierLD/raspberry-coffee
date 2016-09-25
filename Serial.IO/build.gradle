@@ -33,7 +33,8 @@ task runArduinoSample(type: JavaExec, dependsOn: classes, description: 'Runs the
     main = 'sample.ArduinoEchoClient'
     jvmArgs '-Djava.library.path=/usr/lib/jni'
     jvmArgs '-Dserial.port=/dev/ttyUSB0'
-//  jvmArgs '-Djava.library.path=/Users/olediouris/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib/mac-10.5'
+    jvmArgs '-Dbaud.rate=9600'
+//  jvmArgs '-Djava.library.path=/Users/olediouris/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib/mac-10.5' // On a Mac
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
