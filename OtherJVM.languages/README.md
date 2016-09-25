@@ -222,6 +222,20 @@ CPU Temperature   :  47.8
 CPU Core Voltage  :  1.325
 ```
 
+### Groovy Shell
+This one looks a lot like a REPL.
+```
+$ groovysh
+Groovy Shell (1.8.6, JVM: 1.8.0_65)
+Type 'help' or '\h' for help.
+-------------------------------------------------------------------------------
+groovy:000> println "Hello you!"
+Hello you!
+===> null
+groovy:000> \x
+
+```
+
 ### Groovy Console
 Groovy comes with a graphical console (not exactly a REPL...) that can be launched _from a graphical desktop_ using
 the `groovyConsole` command. You type your commands in the top pane, and then you execute them by hitting the 

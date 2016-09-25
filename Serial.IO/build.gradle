@@ -1,4 +1,4 @@
-apply plugin: 'scala'
+apply plugin: 'java'
 apply plugin: 'maven'
 
 group = 'oliv.pi4j.samples'
@@ -30,12 +30,13 @@ dependencies {
 }
 
 task runArduinoSample(type: JavaExec, dependsOn: classes, description: 'Runs the Arduino Serial.IO sample') {
-
-    println ">>> Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable."
-
     main = 'sample.ArduinoEchoClient'
     jvmArgs '-Djava.library.path=/usr/lib/jni'
 //  jvmArgs '-Djava.library.path=/Users/olediouris/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib/mac-10.5'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
+}
+
+runArduinoSample.doFirst {
+    println ">>> Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable."
 }

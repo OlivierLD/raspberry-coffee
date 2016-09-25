@@ -14,6 +14,8 @@ other JVM-aware languages, invoking and using the features of this project.
 
 Those samples include Scala, Groovy, Kotlin..., and the list is not closed! 
 
+See in the [OthetJVM.languages](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/OtherJVM.languages) directory.
+
 ---
 _Note:_
 This project uses `gradle` and `git`. `Gradle` will be installed automatically if it is not present on your system,
