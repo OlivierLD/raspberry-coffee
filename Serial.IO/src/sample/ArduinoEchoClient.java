@@ -93,6 +93,10 @@ public class ArduinoEchoClient implements SerialIOCallbacks
     
     Map<String, CommPortIdentifier> pm = sc.getPortList();
     Set<String> ports = pm.keySet();
+    if (ports.size() == 0) {
+      System.out.println("No serial port found.");
+      System.out.println("Did you run as administrator (sudo) ?");
+    }
     System.out.println("== Serial Port List ==");
     for (String port : ports)
       System.out.println("-> " + port);
