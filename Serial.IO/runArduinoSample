@@ -1,0 +1,5 @@
+#!/bin/bash
+CP=./build/libs/Serial.IO-1.0.jar
+CP=$CP:/usr/share/java/RXTXcomm.jar
+sudo java -Djava.library.path=/usr/lib/jni -Dserial.port=/dev/ttyACM0 -Dbaud.rate=9600 -cp $CP sample.ArduinoEchoClient
+
