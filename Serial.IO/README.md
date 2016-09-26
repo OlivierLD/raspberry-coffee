@@ -17,15 +17,17 @@ The example illustrates a Serial communication between the Raspberry PI (or any 
 To proceed:
 - Upload the sketch `ArduinoSerialEvent.ino` on the Arduino Uno
 - Connect the USB cable, between the Arduino and the Raspberry PI
-- Make sure the Serial port names match in the `ArduinoEchoClient.java`.
+- Make sure the Serial port names match in the `ArduinoEchoClient.java` (or use the System variable named `serial.port`)
     
 The example send several sentences to the Arduino, the Arduino sends the sentences back to the
-Raspberry PI, in reverse order. A string like 'arduino' will be sent back as 'oniudra'.
+Raspberry PI, in reverse order. A string like 'arduino' will be sent back as 'oniudra'. 
+The example is reversing the sentences of a `Lorem ipsum` paragraph (look in the code for details).
 
 ```
 $ ../gradlew runArduinoSample
 -> /dev/ttyUSB0
 -> /dev/ttyAMA0
+-> /dev/ttyACM0
 
 Arduino connected: true
 IO Streams initialized
@@ -160,7 +162,13 @@ Done.
 Process finished with exit code 0
 ```
 
----
+On the Raspberry PI, the Serial port needs to be accessed as `root`. In case Gradle cannot do that, you can use the provided script named `runArduionoSample`.
+```
+$ ./runArduinoSample
+```
+The output is the same as above.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 A GPS with a USB cable would also produce interesting output.
 

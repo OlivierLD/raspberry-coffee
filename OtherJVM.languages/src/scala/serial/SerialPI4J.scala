@@ -111,7 +111,7 @@ object SerialPI4J {
     })
     println("Opening")
     try {
-      serial.openSerial("/dev/ttyS0", 9600)
+      serial.openSerial("/dev/ttyS0", 9600) // TODO Those prms as System variables.
     } catch {
       case ex: Exception =>
         ex.printStackTrace
