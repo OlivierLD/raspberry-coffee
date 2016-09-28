@@ -1,0 +1,13 @@
+#!/bin/bash
+rmiregistry &
+#
+HERE=`pwd`
+CP=build/classes:build/libs/compute.jar
+JAVA_OPTS="-Djava.rmi.server.codebase=file:/$HERE/build/libs/compute.jar"
+JAVA_OPTS="$JAVA_OPTS -Djava.rmi.server.hostname=localhost"
+JAVA_OPTS="$JAVA_OPTS -Djava.security.policy=server.policy"
+#
+echo $JAVA_OPTS
+#
+java -cp $CP $JAVA_OPTS engine.ComputeEngine
+

@@ -1,0 +1,4 @@
+#!/bin/bash
+echo Stopping rmiregistry
+kill -9 `ps -ef | grep rmiregistry | grep -v grep | awk '{ print $2 }'`
+

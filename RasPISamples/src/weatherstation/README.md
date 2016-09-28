@@ -1,0 +1,3 @@
+# Weather Station implementation
+
+To come...
