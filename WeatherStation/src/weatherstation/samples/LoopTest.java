@@ -1,16 +1,5 @@
 package weatherstation.samples;
 
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
-
-import java.text.DecimalFormat;
-import java.text.Format;
-
-import weatherstation.SDLWeather80422;
-
-import weatherstation.SDLWeather80422.AdcMode;
-import weatherstation.SDLWeather80422.SdlMode;
-
 public class LoopTest
 {
   private static boolean go = true;
