@@ -4,7 +4,7 @@ To install this package (on Raspberry PI, or more generally on Ubuntu), type
 ```
 $> sudo apt-get install librxtx-java
 ```
-This is an possible alternate to the `com.pi4j.io.serial` package (that comes with PI4J).
+This is an possible alternative to the `com.pi4j.io.serial` package (that comes with PI4J).
 Gives a bit more flexibility, specially on the callback side.
 
 It requires:
@@ -159,6 +159,7 @@ Done.
 
 Process finished with exit code 0
 ```
+If you are running from a Raspberry PI, you need sudo access. Run the scriptnamed `runArduinoSample`  instead.
 
 ---
 
