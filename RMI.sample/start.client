@@ -4,8 +4,8 @@ CP=.
 CP=$CP:./build/libs/compute.jar
 CP=$CP:./build/classes
 #
-COMMAND="java -cp $CP engine.ComputeEngine"
+COMMAND="java -cp $CP client.ComputePi"
 echo Executing $COMMAND
 #
-$COMMAND
+$COMMAND $*
 
