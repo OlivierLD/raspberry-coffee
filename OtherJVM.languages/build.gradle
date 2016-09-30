@@ -2,9 +2,14 @@ buildscript {
     ext.kotlin_version = '1.0.3'
     repositories {
         mavenCentral()
+        maven {
+            url 'http://clojars.org/repo'
+        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'clojuresque:clojuresque:1.7.0'
+        classpath 'org.clojure:clojure:1.5.1'
     }
 }
 
@@ -12,6 +17,7 @@ apply plugin: 'kotlin'
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'scala'
+apply plugin: 'clojure'
 
 
 group = 'oliv.pi4j.samples'
@@ -19,6 +25,7 @@ version = '1.0'
 
 repositories {
     mavenCentral()
+    clojarsRepo()
 }
 
 dependencies {
@@ -30,6 +37,7 @@ dependencies {
     compile 'org.glassfish.jersey.core:jersey-client:2.10'
     compile 'org.scala-lang:scala-library:2.11.6'
     compile 'com.typesafe.akka:akka-actor_2.11:2.3.11'
+    compile 'org.clojure:clojure:1.5.1'
     compile project(':I2C.SPI')
     compile project(':MindWave')
     compile project(':SevenSegDisplay')
@@ -48,6 +56,9 @@ sourceSets {
         }
         kotlin {
             srcDirs = ['src/kotlin']
+        }
+        clojure {
+            srcDirs = ['src/clojure']
         }
     }
 }
