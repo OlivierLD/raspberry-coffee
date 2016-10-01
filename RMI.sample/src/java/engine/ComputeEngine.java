@@ -23,6 +23,7 @@ public class ComputeEngine implements Serializable, Compute {
 
 	@Override
 	public <T> T executeTask(Task<T> t) {
+		System.out.println(">>> Server execution required");
 		return t.execute();
 	}
 
