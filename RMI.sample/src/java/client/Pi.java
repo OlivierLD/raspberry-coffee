@@ -29,6 +29,7 @@ public class Pi implements Task<BigDecimal>, Serializable {
 	 * Calculate pi.
 	 */
 	public BigDecimal execute() {
+		System.out.println("Server Computing PI with " + digits + " decimals");
 		return computePi(digits);
 	}
 
