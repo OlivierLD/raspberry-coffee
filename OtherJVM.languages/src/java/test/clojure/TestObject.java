@@ -16,9 +16,9 @@ public class TestObject {
 		this.age = null;
 	}
 
-	public TestObject(String lastName, String firstname, Long age) {
+	public TestObject(String lastName, String firstName, Long age) {
 		this.lastName = lastName;
-		this.firstName = firstname;
+		this.firstName = firstName;
 		this.age = age;
 	}
 
@@ -30,12 +30,12 @@ public class TestObject {
 		this.lastName = name;
 	}
 
-	public String getFirstname() {
+	public String getFirstName() {
 		return this.firstName;
 	}
 
-	public void setFirstname(String vorname) {
-		this.firstName = vorname;
+	public void setFirstName(String firstname) {
+		this.firstName = firstname;
 	}
 
 	public Long getAge() {
