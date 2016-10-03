@@ -323,3 +323,21 @@ $
 ```
 
 Cool, hey?
+
+## Clojure
+Download and install Clojure as explained at [http://clojure.org/](http://clojure.org/).
+
+### Example
+#### Read a BME280 from Clojure
+
+```
+CLOJURE_HOME=~/clojure-1.8.0
+PI4J_HOME=/opt/pi4j
+CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+CP=$CP:$CLOJURE_HOME/clojure-1.8.0.jar
+CP=$CP:../I2C.SPI//build/libs/I2C.SPI-1.0.jar
+#
+java -cp $CP clojure.main src/clojure/bme280.clj
+...
+
+```
