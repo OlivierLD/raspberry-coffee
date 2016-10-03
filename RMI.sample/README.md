@@ -8,6 +8,10 @@ We present here a very simple example of an RMI implementation **_with no securi
 
 The `rmiregistry` is started from the server code itself, to make things easier.
 
+- The `RemoteInterface` is defined in `compute.Compute`
+- The server is `engine.ComputeEngine`
+- The client is `client.ComputePi`
+
 ### Compile the code
 ```
 $ ./compile
