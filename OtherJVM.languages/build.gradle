@@ -57,9 +57,9 @@ sourceSets {
         kotlin {
             srcDirs = ['src/kotlin']
         }
-//        clojure {
-//            srcDirs = ['src/clojure']
-//        }
+        clojure {
+            srcDirs = ['src/clojure']
+        }
     }
 }
 

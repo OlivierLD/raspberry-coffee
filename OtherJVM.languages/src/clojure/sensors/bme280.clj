@@ -8,5 +8,9 @@
 (defn read-temperature [obj]
   (.readTemperature obj))
 
-(let [bme280 (BME280.)]
-  (println "Temperature:" (read-temperature bme280) "\272"))
+(defn -main
+  "Read a BME280"
+  []
+  (let [bme280 (BME280.)]
+    (println "Temperature:" (read-temperature bme280) "\272")))
+

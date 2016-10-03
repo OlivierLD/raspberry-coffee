@@ -337,7 +337,34 @@ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 CP=$CP:$CLOJURE_HOME/clojure-1.8.0.jar
 CP=$CP:../I2C.SPI//build/libs/I2C.SPI-1.0.jar
 #
-java -cp $CP clojure.main src/clojure/bme280.clj
+java -cp $CP clojure.main --main sensors.bme280
 ...
+
+```
+
+```
+ $ java -cp $CLOJURE_HOME/clojure-1.8.0.jar:./build/classes/main clojure.main --main example.invokejava
+```
+
+
+Or from the Clojure REPL:
+```
+CLOJURE_HOME=~/clojure-1.8.0
+PI4J_HOME=/opt/pi4j
+CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+CP=$CP:$CLOJURE_HOME/clojure-1.8.0.jar
+CP=$CP:../I2C.SPI//build/libs/I2C.SPI-1.0.jar
+#
+java -cp $CP clojure.main 
+
+Clojure 1.8.0
+user=> (ns sensors.bme280
+  (:import i2c.sensor.BME280))
+nil
+sensors.bme280=> (defn read-temperature [obj]
+  (.readTemperature obj))
+nil
+sensors.bme280=> (let [bme280 (BME280.)]
+  (println "Temperature:" (read-temperature bme280) "\272"))
 
 ```
