@@ -21,7 +21,8 @@ task swagger(type: JavaExec, description: "Generate nodejs code for the weather 
     classpath = configurations.runtime
     main = 'io.swagger.codegen.SwaggerCodegen'
     args "generate",
-            "-l", "nodejs-server",
+//          "-l", "nodejs-server",
+            "-l", "clojure",
             "-i", "weather.sensors.yaml",
             "-o", "./generated"
 }

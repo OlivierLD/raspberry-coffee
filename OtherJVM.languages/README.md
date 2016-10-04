@@ -53,7 +53,7 @@ that it can use at runtime `jars` and other `class` files, whatever language the
 Now, not only a given `.class` can be executed across platforms, but also it can come from several different languages. 
 
 That is - in very short - what those JVM-aware languages are doing. 
-We have here snippets of Scala, Groovy, and Kotlin. The list is not closed, by far. Many other such JVM-aware languages exist, and will exist. 
+We have here snippets of Scala, Groovy, Kotlin and Clojure. The list is not closed, by far. Many other such JVM-aware languages exist, and will exist. 
  
 ### A quick note
 To know how to install those languages on the Raspberry PI (or wherever you want), use any search engine you like. It's out of the scope of this document ;)
@@ -365,6 +365,6 @@ sensors.bme280=> (defn read-temperature [obj]
   (.readTemperature obj))
 nil
 sensors.bme280=> (let [bme280 (BME280.)]
-  (println "Temperature:" (read-temperature bme280) "\272"))
+  (println "Temperature:" (read-temperature bme280) "\272C"))
 
 ```

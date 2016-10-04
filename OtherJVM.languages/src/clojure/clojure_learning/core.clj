@@ -6,7 +6,7 @@
                            (+ 1 (list-length (rest x)))))
 
 (defn -main
-  "My first program"
+  "My first Clojure program"
   []
   (println (list-length '(this is a list)) "should be 4"))
 
