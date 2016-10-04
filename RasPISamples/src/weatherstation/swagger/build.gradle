@@ -17,11 +17,19 @@ dependencies {
     compile 'org.ajoberstar:gradle-git:1.1.0'
 }
 
-task swagger(type: JavaExec, description: "Generate nodejs code for the weather station") {
+task swaggerNode(type: JavaExec, description: "Generate nodejs server code for the weather station") {
     classpath = configurations.runtime
     main = 'io.swagger.codegen.SwaggerCodegen'
     args "generate",
-//          "-l", "nodejs-server",
+            "-l", "nodejs-server",
+            "-i", "weather.sensors.yaml",
+            "-o", "./generated"
+}
+
+task swaggerClj(type: JavaExec, description: "Generate Clojure server code for the weather station") {
+    classpath = configurations.runtime
+    main = 'io.swagger.codegen.SwaggerCodegen'
+    args "generate",
             "-l", "clojure",
             "-i", "weather.sensors.yaml",
             "-o", "./generated"
