@@ -50,6 +50,11 @@ language-specific files into `.class` files supported by the JVM (a library like
 you can then take advantage of the features of the JVM, big ones of them being its portability and interoperability. No need to mention 
 that it can use at runtime `jars` and other `class` files, whatever language they have originally been written in.
 
+> This is actually mostly what this project is all about. Most of the sibling projects are written in Java, and they contain the code that
+ allows you to talk to a varity of boards and sensors. Assuming that this code is reachable form whatever runs on a JVM allows you to use your 
+ favorite language - and mindset - to talk to those boards and sensors. It's just about demonstrating the interoperability between those languages.
+ 
+
 Now, not only a given `.class` can be executed across platforms, but also it can come from several different languages. 
 
 That is - in very short - what those JVM-aware languages are doing. 
