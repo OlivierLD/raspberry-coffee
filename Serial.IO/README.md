@@ -161,7 +161,7 @@ Done.
 
 Process finished with exit code 0
 ```
-If you are running from a Raspberry PI, you need sudo access. Run the scriptnamed `runArduinoSample`  instead.
+If you are running from a Raspberry PI, you need sudo access. Run the script named `runArduinoSample` instead.
 
 On the Raspberry PI, the Serial port needs to be accessed as `root`. In case Gradle cannot do that, you can use the provided script named `runArduionoSample`.
 ```
