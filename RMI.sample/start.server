@@ -4,7 +4,9 @@ CP=.
 CP=$CP:./build/libs/compute.jar
 CP=$CP:./build/classes
 #
-COMMAND="java -cp $CP engine.ComputeEngine"
+JAVA_OPTS="-Djava.security.policy=server.policy"
+#
+COMMAND="java -cp $CP $JAVA_OPTS engine.ComputeEngine"
 echo Executing $COMMAND
 #
 $COMMAND
