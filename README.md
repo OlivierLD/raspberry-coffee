@@ -27,7 +27,7 @@ it uses the gradle wrapper (`gradlew`).
 To build it, clone this project, make sure the script named `gradlew` is executable, and execute `gradlew`.
 ```
  Prompt> chmod +x gradlew
- Prompt> ./gradlew build
+ Prompt> ./gradlew --daemon build
 ```
 _Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
 ```
