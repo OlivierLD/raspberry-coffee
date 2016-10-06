@@ -347,8 +347,6 @@ Download and install Clojure as explained at [http://clojure.org/](http://clojur
  $ sudo java -cp $CP clojure.main --main sensors.bme280
  Temperature: 21.573069 ºC
  $
-...
-
 ```
 
 ```
@@ -392,3 +390,4 @@ nil
 sensors.bme280=> [Ctrl+D]
 $
 ```
+Yeah!
