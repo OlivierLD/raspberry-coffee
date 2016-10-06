@@ -119,3 +119,12 @@ task runClock(type: JavaExec, dependsOn: classes, description: 'Runs the SevenSe
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }
+
+// Run like this: gradle repl --console plain --no-daemon
+task repl(type:JavaExec) {
+    description 'Scala REPL'
+    main = "scala.tools.nsc.MainGenericRunner"
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput System.in
+    args '-usejavacp'
+}
