@@ -5,6 +5,7 @@ CP=$CP:./build/libs/compute.jar
 CP=$CP:./build/classes
 #
 JAVA_OPTS="-Djava.security.policy=server.policy"
+JAVA_OPTS="$JAVA_OPTS -Djava.rmi.server.hostname=192.168.1.136"
 #
 COMMAND="java -cp $CP $JAVA_OPTS engine.ComputeEngine"
 echo Executing $COMMAND
