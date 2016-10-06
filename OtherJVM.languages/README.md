@@ -336,19 +336,36 @@ Download and install Clojure as explained at [http://clojure.org/](http://clojur
 #### Read a BME280 from Clojure
 
 ```
-CLOJURE_HOME=~/clojure-1.8.0
-PI4J_HOME=/opt/pi4j
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-CP=$CP:$CLOJURE_HOME/clojure-1.8.0.jar
-CP=$CP:../I2C.SPI//build/libs/I2C.SPI-1.0.jar
-#
-java -cp $CP clojure.main --main sensors.bme280
+ $ cd OtherJVM.languages
+
+ $ CLOJURE_HOME=~/clojure-1.8.0
+ $ PI4J_HOME=/opt/pi4j
+ $ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+ $ CP=$CP:$CLOJURE_HOME/clojure-1.8.0.jar
+ $ CP=$CP:$PWD/../I2C.SPI//build/libs/I2C.SPI-1.0.jar
+ $ cd src/clojure
+ $ sudo java -cp $CP clojure.main --main sensors.bme280
+ Temperature: 21.573069 ºC
+ $
 ...
 
 ```
 
 ```
- $ java -cp $CLOJURE_HOME/clojure-1.8.0.jar:./build/classes/main clojure.main --main example.invokejava
+ $ cd OtherJVM.languages
+ 
+ $ CLOJURE_HOME=~/clojure-1.8.0
+ $ PI4J_HOME=/opt/pi4j
+ $ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+ $ CP=$CP:$CLOJURE_HOME/clojure-1.8.0.jar
+ $ CP=$CP:$PWD/./build/classes/main
+ $ cd src/clojure
+ $
+ $ java -cp $CP clojure.main --main example.invokejava
+ Shmow
+ Joe
+ 25
+ $
 ```
 
 
@@ -358,18 +375,20 @@ CLOJURE_HOME=~/clojure-1.8.0
 PI4J_HOME=/opt/pi4j
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 CP=$CP:$CLOJURE_HOME/clojure-1.8.0.jar
-CP=$CP:../I2C.SPI//build/libs/I2C.SPI-1.0.jar
-#
-java -cp $CP clojure.main 
-
+CP=$CP:$PWD/../I2C.SPI//build/libs/I2C.SPI-1.0.jar
+$ cd src/clojure
+$ sudo java -cp $CP clojure.main
 Clojure 1.8.0
 user=> (ns sensors.bme280
   (:import i2c.sensor.BME280))
 nil
 sensors.bme280=> (defn read-temperature [obj]
   (.readTemperature obj))
-nil
+#'sensors.bme280/read-temperature
 sensors.bme280=> (let [bme280 (BME280.)]
   (println "Temperature:" (read-temperature bme280) "\272C"))
-
+Temperature: 21.608095 ºC
+nil
+sensors.bme280=> [Ctrl+D]
+$
 ```

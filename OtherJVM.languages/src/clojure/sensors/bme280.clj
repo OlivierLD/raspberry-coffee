@@ -12,5 +12,5 @@
   "Read a BME280"
   []
   (let [bme280 (BME280.)]
-    (println "Temperature:" (read-temperature bme280) "\272")))
+    (println "Temperature:" (read-temperature bme280) "\272C")))
 
