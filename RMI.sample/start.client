@@ -4,7 +4,7 @@ CP=.
 CP=$CP:./build/libs/compute.jar
 CP=$CP:./build/classes
 #
-JAVA_OPTS="-Djava.security.policy=client.policy"
+JAVA_OPTS=
 #
 COMMAND="java -cp $CP $JAVA_OPTS client.ComputePi"
 echo Executing $COMMAND
