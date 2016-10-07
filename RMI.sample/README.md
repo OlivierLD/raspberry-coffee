@@ -29,6 +29,7 @@ _Important_: Modify the script named `start.server`, set the variable named `jav
 ```
 JAVA_OPTS="$JAVA_OPTS -Djava.rmi.server.hostname=RPiZero.att.net"
 ```
+An IP address works fine too.
 
 ```
 $ ./start.server &
@@ -38,6 +39,7 @@ Server address : RPiZero/127.0.0.1, port 1099
  
 ### Start the client 
 
+The second parameter to send to the script is the value set above, in `java.rmi.server.hostname`.`
 #### Linux and Mac
 ```
 $ ./start.client RPiZero.att.net 1099 50
