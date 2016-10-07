@@ -37,12 +37,22 @@ Server address : RPiZero/127.0.0.1, port 1099
 ``` 
  
 ### Start the client 
+
+#### Linux and Mac
 ```
 $ ./start.client RPiZero.att.net 1099 50
  Executing java -cp .:./build/libs/compute.jar:./build/classes client.ComputePi
  Looking up [Compute on RPiZero.att.net:1099]
  3.14159265358979323846264338327950288419716939937511
 $
+``` 
+
+#### Windows
+```
+Win> client RPiZero.att.net 1099 50
+ Looking up [Compute on RPiZero.att.net:1099]
+ 3.14159265358979323846264338327950288419716939937511
+Win>
 ``` 
 
 Something showed up in the server console:
