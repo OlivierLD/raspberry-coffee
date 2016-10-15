@@ -5,7 +5,7 @@ CP=$CP:./build/libs/compute.jar
 CP=$CP:./build/classes
 #
 JAVA_OPTS=
-JAVA_OPTS="$JAVA_OPTS -Djava.rmi.server.hostname=RPiZero.att.net"
+JAVA_OPTS="$JAVA_OPTS -Djava.rmi.server.hostname=raspberrypi3.att.net"
 #
 COMMAND="java -cp $CP $JAVA_OPTS engine.ComputeEngine"
 echo Executing $COMMAND
