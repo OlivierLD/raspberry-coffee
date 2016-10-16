@@ -39,7 +39,7 @@ Server address : RPiZero/127.0.0.1, port 1099
  
 ### Start the client 
 
-The second parameter to send to the script is the value set above, in `java.rmi.server.hostname`.`
+The second parameter to send to the script is the value set above, in `java.rmi.server.hostname`.
 #### Linux and Mac
 ```
 $ ./start.client RPiZero.att.net 1099 50

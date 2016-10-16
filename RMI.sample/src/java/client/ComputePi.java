@@ -5,6 +5,10 @@ import java.rmi.registry.Registry;
 import java.math.BigDecimal;
 import compute.Compute;
 
+/**
+ * Class to invoke FROM THE CLIENT
+ * to compute Pi
+ */
 public class ComputePi {
 
 	private static String bindingName = "Compute";
