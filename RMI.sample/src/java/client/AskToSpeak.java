@@ -14,10 +14,17 @@ public class AskToSpeak {
   private static String bindingName = "Compute";
 
   public static void main(String args[]) {
-    if (args.length != 3) {
+    if (args.length < 3) {
       System.out.println("Arguments: [RMI Server Name] [Port] [Text to Speak]");
+      System.out.println(String.format("You have provided %d argument(s)", atgs.length));
+      // Java 7 style
+      for (String s : args) {
+        System.out.println("- " + s);
+      }
+
       System.exit(1);
     }
+
 
     System.out.println("Looking up [" + bindingName + " on " + args[0] + ":" + args[1] + "]");
     try {
