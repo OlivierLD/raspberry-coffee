@@ -6,6 +6,7 @@ CP=$CP:./build/classes
 #
 HOSTNAME=`hostname`
 JAVA_OPTS=
+# JAVA_OPTS="$JAVA_OPTS -verbose"
 JAVA_OPTS="$JAVA_OPTS -Djava.rmi.server.hostname=$HOSTNAME"
 #
 COMMAND="java -cp $CP $JAVA_OPTS engine.ComputeEngine"
