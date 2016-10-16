@@ -62,7 +62,7 @@ task runFONAArduinoPi(type: JavaExec, dependsOn: build, description: "Run the FO
 }
 
 task runFONAJavaPi(type: JavaExec, dependsOn: build, description: "Run the FONA Sample, RPi + Java") {
-    main = 'fona.manager.sample.SampleFona'
+    main = 'fona.manager.sample.InteractiveFona'
     classpath project.configurations.default
     classpath sourceSets.main.output.classesDir
 }
