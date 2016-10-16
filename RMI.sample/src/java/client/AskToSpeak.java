@@ -20,21 +20,23 @@ public class AskToSpeak {
       System.out.println("Arguments: [RMI Server Name] [Port] [Text to Speak]");
       System.out.println(String.format("You have provided %d argument(s)", args.length));
       // Java 7 style
-      for (String s : args) {
-        System.out.println("- " + s);
-      }
+//      for (String s : args) {
+//        System.out.println("- " + s);
+//      }
       // Java 8 style
       Arrays.stream(args).forEach(arg -> System.out.println("- " + arg));
       System.exit(1);
     }
-
+    StringBuffer sb = new StringBuffer();
+    Arrays.stream(args).skip(2).forEach(arg -> sb.append(arg + " "));
+    String tts = sb.toString().trim();
 
     System.out.println("Looking up [" + bindingName + " on " + args[0] + ":" + args[1] + "]");
     try {
       Registry registry = LocateRegistry.getRegistry(args[0], new Integer(args[1])); // Server name, port
       Compute comp = (Compute) registry.lookup(bindingName);   // RMI Name
 
-      Speak task = new Speak(args[2]);
+      Speak task = new Speak(tts);
       boolean spoken = comp.executeTask(task);
       System.out.println("Spoken:" + spoken);
 
