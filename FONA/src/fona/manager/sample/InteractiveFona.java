@@ -10,6 +10,8 @@ import fona.manager.FONAManager.NetworkStatus;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class InteractiveFona implements FONAClient
 {
@@ -71,6 +73,15 @@ public class InteractiveFona implements FONAClient
   public static void main(String args[])
     throws InterruptedException, NumberFormatException
   {
+    // Display current Classpath
+    ClassLoader cl = ClassLoader.getSystemClassLoader();
+
+    URL[] urls = ((URLClassLoader)cl).getURLs();
+
+    for(URL url: urls) {
+      System.out.println(url.getFile());
+    }
+
     InteractiveFona sf = new InteractiveFona();
     fona = new FONAManager(sf);
     
