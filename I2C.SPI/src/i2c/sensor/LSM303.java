@@ -60,7 +60,7 @@ public class LSM303
   private long wait = 1000L;
   private LSM303Listener dataListener = null;
 
-  public LSM303()
+  public LSM303() throws I2CFactory.UnsupportedBusNumberException
   {
     if (verbose)
       System.out.println("Starting sensors reading:");
@@ -222,7 +222,7 @@ public class LSM303
     return (n < 32768 ? n : n - 65536);       // 2's complement signed
   }
                                                     
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     LSM303 sensor = new LSM303();
     sensor.startReading();

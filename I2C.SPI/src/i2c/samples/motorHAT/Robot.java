@@ -1,5 +1,6 @@
 package i2c.samples.motorHAT;
 
+import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.adafruitmotorhat.AdafruitMotorHAT;
 
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class Robot
   private AdafruitMotorHAT.AdafruitDCMotor leftMotor;
   private AdafruitMotorHAT.AdafruitDCMotor rightMotor;
 
-  public Robot()
+  public Robot() throws I2CFactory.UnsupportedBusNumberException
   {
     this.mh = new AdafruitMotorHAT();
     this.leftMotor = mh.getMotor(leftMotorID);

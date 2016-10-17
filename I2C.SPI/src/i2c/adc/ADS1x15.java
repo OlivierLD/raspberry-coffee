@@ -261,19 +261,19 @@ public class ADS1x15
   private ICType adcType;
   private int pga;
     
-  public ADS1x15()
+  public ADS1x15() throws I2CFactory.UnsupportedBusNumberException
   {
     this(ICType.IC_ADS1015);
   }
-  public ADS1x15(int address)
+  public ADS1x15(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     this(ICType.IC_ADS1015, address);
   }
-  public ADS1x15(ICType icType)
+  public ADS1x15(ICType icType) throws I2CFactory.UnsupportedBusNumberException
   {
     this(icType, ADS1x15_ADDRESS);
   }
-  public ADS1x15(ICType icType, int address)
+  public ADS1x15(ICType icType, int address) throws I2CFactory.UnsupportedBusNumberException
   {
     this.adcType = icType;
     

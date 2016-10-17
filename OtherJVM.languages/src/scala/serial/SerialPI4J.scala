@@ -1,6 +1,6 @@
 package serial
 
-import com.pi4j.io.serial.{Serial, SerialDataEvent, SerialDataListener, SerialFactory}
+import com.pi4j.io.serial.{Serial, SerialDataEvent, SerialDataEventListener, SerialFactory}
 
 class SerialPI4J {
   private val serial: Serial = SerialFactory.createInstance
@@ -12,9 +12,9 @@ class SerialPI4J {
     }
   }
   def init(operation: (String) => Unit): Unit = {  // Send a block here
-    val sdl = new SerialDataListener {
+    val sdl = new SerialDataEventListener {
       override def dataReceived(event: SerialDataEvent): Unit = {
-        operation(event.getData)
+        operation(event.getAsciiString)
       }
     }
     serial.addListener(sdl)

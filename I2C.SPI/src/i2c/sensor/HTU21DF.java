@@ -31,12 +31,12 @@ public class HTU21DF
   private I2CBus bus;
   private I2CDevice htu21df;
 
-  public HTU21DF()
+  public HTU21DF() throws I2CFactory.UnsupportedBusNumberException
   {
     this(HTU21DF_ADDRESS);
   }
 
-  public HTU21DF(int address)
+  public HTU21DF(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -181,7 +181,7 @@ public class HTU21DF
     return str;
   }
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final NumberFormat NF = new DecimalFormat("##00.00");
     HTU21DF sensor = new HTU21DF();

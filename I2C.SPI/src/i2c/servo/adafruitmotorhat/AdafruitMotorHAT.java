@@ -1,5 +1,7 @@
 package i2c.servo.adafruitmotorhat;
 
+import com.pi4j.io.i2c.I2CFactory;
+
 import java.io.IOException;
 
 public class AdafruitMotorHAT
@@ -28,12 +30,12 @@ public class AdafruitMotorHAT
   private AdafruitStepperMotor steppers[];
   private PWM pwm;
   
-  public AdafruitMotorHAT()
+  public AdafruitMotorHAT() throws I2CFactory.UnsupportedBusNumberException
   {
     this(HAT_ADDR, DEFAULT_FREQ);
   }
             
-  public AdafruitMotorHAT(int addr, int freq)
+  public AdafruitMotorHAT(int addr, int freq) throws I2CFactory.UnsupportedBusNumberException
   {
     this.i2cAddr = addr;
     this.freq    = freq;

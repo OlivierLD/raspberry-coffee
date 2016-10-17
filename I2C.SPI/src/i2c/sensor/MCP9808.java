@@ -43,12 +43,12 @@ public class MCP9808
   private I2CBus bus;
   private I2CDevice mcp9808;
   
-  public MCP9808()
+  public MCP9808() throws I2CFactory.UnsupportedBusNumberException
   {
     this(MCP9808_I2CADDR_DEFAULT);
   }
   
-  public MCP9808(int address)
+  public MCP9808(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -124,7 +124,7 @@ public class MCP9808
   }
   
   private final static NumberFormat NF = new DecimalFormat("##00.000");
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     System.out.println("MCP9808 Demo");
     MCP9808 sensor = new MCP9808();

@@ -75,12 +75,12 @@ public class BMP180
   private I2CDevice bmp180;
   private int mode = BMP180_STANDARD;
   
-  public BMP180()
+  public BMP180() throws I2CFactory.UnsupportedBusNumberException
   {
     this(BMP180_ADDRESS);
   }
   
-  public BMP180(int address)
+  public BMP180(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -326,7 +326,7 @@ public class BMP180
     try { Thread.sleep(howMuch); } catch (InterruptedException ie) { ie.printStackTrace(); }
   }
   
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final NumberFormat NF = new DecimalFormat("##00.00");
     BMP180 sensor = new BMP180();

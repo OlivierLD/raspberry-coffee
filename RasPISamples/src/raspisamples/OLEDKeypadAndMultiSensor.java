@@ -1,5 +1,7 @@
 package raspisamples;
 
+import com.pi4j.io.i2c.I2CFactory;
+import com.pi4j.io.serial.*;
 import i2c.sensor.HMC5883L;
 import i2c.sensor.MPL115A2;
 
@@ -14,11 +16,7 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
-import com.pi4j.io.serial.Serial;
-import com.pi4j.io.serial.SerialDataEvent;
-import com.pi4j.io.serial.SerialDataListener;
-import com.pi4j.io.serial.SerialFactory;
-import com.pi4j.io.serial.SerialPortException;
+import com.pi4j.io.serial.SerialDataEventListener;
 
 import java.io.IOException;
 
@@ -62,8 +60,7 @@ public class OLEDKeypadAndMultiSensor
   private static int relayThreshold = 50;
   
   // This one overrides the default pins for the OLED
-  @SuppressWarnings("oracle.jdeveloper.java.insufficient-catch-block")
-  public OLEDKeypadAndMultiSensor()
+  public OLEDKeypadAndMultiSensor() throws I2CFactory.UnsupportedBusNumberException
   {
     // Relay
     try 
@@ -184,13 +181,17 @@ public class OLEDKeypadAndMultiSensor
     final Serial serial = SerialFactory.createInstance();
 
     // create and register the serial data listener
-    serial.addListener(new SerialDataListener()
+    serial.addListener(new SerialDataEventListener()
     {
       @Override
       public void dataReceived(SerialDataEvent event)
       {
         // print out the data received to the oled display
-        String payload = event.getData();
+        String payload;
+        try { payload = event.getAsciiString(); }
+        catch (IOException ioe) {
+          throw new RuntimeException(ioe);
+        }
         if (SerialReader.validCheckSum(payload, false))
         {
 //        System.out.print("Arduino said:" + payload);
@@ -250,7 +251,12 @@ public class OLEDKeypadAndMultiSensor
     {
       System.out.println(" ==>> SERIAL SETUP FAILED : " + ex.getMessage());
       return;
-    }    
+    }
+    catch (IOException ioe)
+    {
+      System.out.println(" ==>> SERIAL SETUP FAILED : " + ioe.getMessage());
+      return;
+    }
   }
   
   private static void waitfor(long l)
@@ -395,7 +401,7 @@ public class OLEDKeypadAndMultiSensor
     }
   }
   
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     if (args.length > 0)
     {

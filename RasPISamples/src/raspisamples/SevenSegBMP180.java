@@ -1,5 +1,6 @@
 package raspisamples;
 
+import com.pi4j.io.i2c.I2CFactory;
 import i2c.sensor.BMP180;
 
 import com.pi4j.system.SystemInfo;
@@ -21,7 +22,7 @@ public class SevenSegBMP180
   private static boolean go = true;
   private static long wait = 2000L;
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final NumberFormat NF = new DecimalFormat("##00.00");
     BMP180 sensor = new BMP180();

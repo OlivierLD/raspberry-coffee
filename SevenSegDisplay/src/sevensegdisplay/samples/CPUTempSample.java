@@ -1,5 +1,6 @@
 package sevensegdisplay.samples;
 
+import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.system.SystemInfo;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class CPUTempSample
     go = b;
   }
   
-  public static void main(String[] args) throws IOException, InterruptedException
+  public static void main(String[] args) throws IOException, InterruptedException, I2CFactory.UnsupportedBusNumberException
   {
     SevenSegment segment = new SevenSegment(0x70, true);
     Runtime.getRuntime().addShutdownHook(new Thread()

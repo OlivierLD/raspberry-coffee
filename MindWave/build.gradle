@@ -24,7 +24,7 @@ sourceSets {
 }
 
 dependencies {
-  compile 'com.pi4j:pi4j-core:0.0.5'
+  compile 'com.pi4j:pi4j-core:1.1'
 //compile 'comm:rxtx:1.0'
   compile 'org.fusesource.jansi:jansi:1.11'
   compile 'org.json:json:20141113'

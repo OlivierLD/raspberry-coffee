@@ -1,10 +1,11 @@
 package i2c.adc.samples;
 
+import com.pi4j.io.i2c.I2CFactory;
 import i2c.adc.ADS1x15;
 
 public class DifferentialSample
 {
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final ADS1x15 adc = new ADS1x15(ADS1x15.ICType.IC_ADS1115);
     int gain = 4096;

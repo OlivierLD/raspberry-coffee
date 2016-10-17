@@ -32,12 +32,12 @@ public class PCA9685
   private I2CBus    bus;
   private I2CDevice servoDriver;
     
-  public PCA9685()
+  public PCA9685() throws I2CFactory.UnsupportedBusNumberException
   {
     this(PCA9685_ADDRESS); // 0x40 obtained through sudo i2cdetect -y 1
   }
   
-  public PCA9685(int address)
+  public PCA9685(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -162,7 +162,7 @@ public class PCA9685
    * 1ms pulse   | -90 deg  |FullSpeed backward
    * ------------+----------+------------------
    */
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     int freq = 60;
     if (args.length > 0)

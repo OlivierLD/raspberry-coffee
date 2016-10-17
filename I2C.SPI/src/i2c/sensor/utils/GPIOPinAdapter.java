@@ -9,8 +9,12 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.event.GpioPinListener;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 public class GPIOPinAdapter implements GpioPinDigitalOutput
@@ -73,9 +77,21 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput
   }
 
   @Override
+  public Future<?> pulse(long duration, Callable<Void> callback)
+  {
+    return null;
+  }
+
+  @Override
   public Future<?> pulse(long duration, boolean blocking)
   {
     return pin.pulse(duration, blocking);
+  }
+
+  @Override
+  public Future<?> pulse(long duration, boolean blocking, Callable<Void> callback)
+  {
+    return null;
   }
 
   @Override
@@ -85,9 +101,21 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput
   }
 
   @Override
+  public Future<?> pulse(long duration, PinState pulseState, Callable<Void> callback)
+  {
+    return null;
+  }
+
+  @Override
   public Future<?> pulse(long duration, PinState pulseState, boolean blocking)
   {
     return pin.pulse(duration, pulseState, blocking);
+  }
+
+  @Override
+  public Future<?> pulse(long duration, PinState pulseState, boolean blocking, Callable<Void> callback)
+  {
+    return null;
   }
 
   @Override
@@ -212,6 +240,12 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput
   }
 
   @Override
+  public void export(PinMode mode, PinState defaultState)
+  {
+
+  }
+
+  @Override
   public void unexport()
   {
     pin.unexport();
@@ -257,6 +291,48 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput
   public boolean isPullResistance(PinPullResistance resistance)
   {
     return pin.isPullResistance(resistance);
+  }
+
+  @Override
+  public Collection<GpioPinListener> getListeners()
+  {
+    return null;
+  }
+
+  @Override
+  public void addListener(GpioPinListener... listener)
+  {
+
+  }
+
+  @Override
+  public void addListener(List<? extends GpioPinListener> listeners)
+  {
+
+  }
+
+  @Override
+  public boolean hasListener(GpioPinListener... listener)
+  {
+    return false;
+  }
+
+  @Override
+  public void removeListener(GpioPinListener... listener)
+  {
+
+  }
+
+  @Override
+  public void removeListener(List<? extends GpioPinListener> listeners)
+  {
+
+  }
+
+  @Override
+  public void removeAllListeners()
+  {
+
   }
 
   @Override

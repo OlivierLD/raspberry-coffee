@@ -1,5 +1,6 @@
 package i2c.samples;
 
+import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 
 import java.io.BufferedReader;
@@ -39,7 +40,7 @@ public class Servo002
     return retString;
   }
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     PCA9685 servoBoard = new PCA9685();
     int freq = 60;

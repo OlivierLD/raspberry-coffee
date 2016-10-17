@@ -6,7 +6,7 @@ import com.pi4j.io.i2c.I2CFactory;
 
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialDataEvent;
-import com.pi4j.io.serial.SerialDataListener;
+import com.pi4j.io.serial.SerialDataEventListener;
 import com.pi4j.io.serial.SerialFactory;
 
 import com.pi4j.io.serial.SerialPortException;
@@ -36,12 +36,12 @@ public class AlaModeTest
 
   final private Serial serial = SerialFactory.createInstance();
 
-  public AlaModeTest()
+  public AlaModeTest() throws I2CFactory.UnsupportedBusNumberException
   {
     this(ALAMODE_ADDRESS);
   }
 
-  public AlaModeTest(int address)
+  public AlaModeTest(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -76,7 +76,7 @@ public class AlaModeTest
     throws NumberFormatException
   {
     // create and register the serial data listener
-    serial.addListener(new SerialDataListener()
+    serial.addListener(new SerialDataEventListener()
     {
       private StringBuffer fullMessage = new StringBuffer();
       private final String ACK = "\r\n"; 
@@ -85,7 +85,13 @@ public class AlaModeTest
       public void dataReceived(SerialDataEvent event)
       {
         // print out the data received to the console
-        String payload = event.getData();
+        String payload;
+        try
+        {
+          payload = event.getAsciiString();
+        } catch (IOException ioe) {
+          throw new RuntimeException(ioe);
+        }
         if (verbose)
         {
           System.out.println("\t<<< [Serial] Partial receive :[" + payload + "]");
@@ -133,7 +139,7 @@ public class AlaModeTest
     System.out.println("\tFrom Serial <<< Command [" + mess + "]");
   }
   
-  public void openSerialInput()
+  public void openSerialInput() throws IOException
   {
     String port = System.getProperty("serial.port", "/dev/ttyS0");
     int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
@@ -147,7 +153,7 @@ public class AlaModeTest
     System.out.println("Port is opened.");
   }
   
-  public void closeChannel()
+  public void closeChannel() throws IOException
   {
     if (serial.isOpen())
       serial.close();
@@ -194,7 +200,7 @@ public class AlaModeTest
     System.out.println("[W] Test I2C Write");
   }
 
-  private void sendSerial(String payload)
+  private void sendSerial(String payload) throws IOException
   {
     if (serial.isOpen())
     {
@@ -242,7 +248,7 @@ public class AlaModeTest
     return retString;
   }
   
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     verbose = "true".equals(System.getProperty("alamode.debug", "false"));
     
@@ -288,15 +294,30 @@ public class AlaModeTest
                     {
                       System.out.println("\nAn integer please...");                      
                     }
+                    catch (IOException ioe)
+                    {
+                      System.out.println("Sending to Serial port:" + ioe.toString());
+                    }
                   } else {
                     String mess = userInput("Enter a message > ");
-                    sensor.sendSerial(mess);
+                    try {
+                      sensor.sendSerial(mess);
+                    } catch (IOException ioe) {
+                      ioe.printStackTrace();
+                    }
                   }
                 }
                 else if ("T".equalsIgnoreCase(userInput))
                 {
                   String mess = "SD";
-                  sensor.sendSerial(mess);
+                  try
+                  {
+                    sensor.sendSerial(mess);
+                  }
+                  catch (IOException ioe)
+                  {
+                    ioe.printStackTrace();
+                  }
                 }
                 else if ("R".equalsIgnoreCase(userInput))
                 {
@@ -347,6 +368,10 @@ public class AlaModeTest
     {
       System.out.println(" ==>> Serial Setup failed : " + ex.getMessage());
       return;
+    }
+    catch (IOException ioe)
+    {
+      ioe.printStackTrace();
     }
     sensor.close();
     System.out.println("Bye!");

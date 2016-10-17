@@ -31,12 +31,12 @@ public class Arduino
   private I2CBus bus;
   private I2CDevice arduino;
 
-  public Arduino()
+  public Arduino() throws I2CFactory.UnsupportedBusNumberException
   {
     this(ARDUINO_ADDRESS);
   }
 
-  public Arduino(int address)
+  public Arduino(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -84,7 +84,7 @@ public class Arduino
     try { Thread.sleep((long)(d * 1000)); } catch (Exception ex) {}
   }
   
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final NumberFormat NF = new DecimalFormat("##00.00");
     Arduino sensor = new Arduino();

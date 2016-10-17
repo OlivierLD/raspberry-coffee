@@ -1,5 +1,6 @@
 package raspisamples.servo;
 
+import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 
 /*
@@ -21,15 +22,17 @@ public class StandardServo
   private int servoMax = DEFAULT_SERVO_MAX; 
   private int diff = servoMax - servoMin;
 
-  private PCA9685 servoBoard = new PCA9685();
+  private PCA9685 servoBoard = null;
 
-  public StandardServo(int channel)
+  public StandardServo(int channel) throws I2CFactory.UnsupportedBusNumberException
   {
     this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX);
   }
   
-  public StandardServo(int channel, int servoMin, int servoMax)
+  public StandardServo(int channel, int servoMin, int servoMax) throws I2CFactory.UnsupportedBusNumberException
   {
+    this.servoBoard = new PCA9685();
+
     this.servoMin = servoMin;
     this.servoMax = servoMax;
     this.diff = servoMax - servoMin;

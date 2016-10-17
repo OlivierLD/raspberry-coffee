@@ -46,17 +46,17 @@ public class LEDBackPack
   //                       1st digit, 2nd digit, column, 3rd digit, 4th digit, ?,      ?,      ?     Probably for the 8x8 led matrix
   private int[] buffer = { 0x0000,    0x0000,    0x0000, 0x0000,    0x0000,    0x0000, 0x0000, 0x0000 };
     
-  public LEDBackPack()
+  public LEDBackPack() throws I2CFactory.UnsupportedBusNumberException
   {
     this(LEDBACKPACK_ADDRESS);
   }
   
-  public LEDBackPack(int address)
+  public LEDBackPack(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     this(address, false);
   }
   
-  public LEDBackPack(int address, boolean v)
+  public LEDBackPack(int address, boolean v) throws I2CFactory.UnsupportedBusNumberException
   {
     this.verbose = v;
     try

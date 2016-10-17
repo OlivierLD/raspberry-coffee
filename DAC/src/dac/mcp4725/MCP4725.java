@@ -18,12 +18,12 @@ public class MCP4725
   private I2CBus bus;
   private I2CDevice mcp4725;
   
-  public MCP4725()
+  public MCP4725() throws I2CFactory.UnsupportedBusNumberException
   {
     this(MCP4725_ADDRESS);
   }
   
-  public MCP4725(int address)
+  public MCP4725(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {

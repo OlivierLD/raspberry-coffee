@@ -39,12 +39,12 @@ public class PWM
 
   private boolean verbose = "true".equals(System.getProperty("hat.debug", "false"));
 
-  public PWM()
+  public PWM() throws I2CFactory.UnsupportedBusNumberException
   {
     this(SERVO_ADDRESS);
   }
   
-  public PWM(int address)
+  public PWM(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     this.deviceAddr = address;
     try

@@ -3,6 +3,7 @@
   import com.pi4j.io.serial.Serial;
   import com.pi4j.io.serial.SerialFactory;
 
+  import java.io.IOException;
   import java.net.URI;
 
   import mindwave.MindWaveController;
@@ -163,16 +164,24 @@
   @Override
   public void writeSerial(byte b)
   {
-    serial.write(b);
+    try {
+      serial.write(b);
+    } catch (IOException ioe) {
+      throw new RuntimeException(ioe);
+    }
   }
 
   @Override
   public void flushSerial()
   {
-    serial.flush();
+    try {
+      serial.flush();
+    } catch (IOException ioe) {
+      throw new RuntimeException(ioe);
+    }
   }
 
-  private void closeAll(MindWaveController mwc)
+  private void closeAll(MindWaveController mwc) throws IOException
   {
     mwc.disconnectHeadSet();
     while (mwc.isConnected())
@@ -192,7 +201,7 @@
   private static boolean readSerial = true;
   public static boolean keepReading() { return readSerial; }
   public void stopReading() { readSerial = false; }
-  public void closeSerial() { serial.close(); }
+  public void closeSerial() throws IOException { serial.close(); }
 
   private static WebSocketClient webSocketClient = null;
   
@@ -233,7 +242,7 @@
     }    
   }
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws IOException
   {
     String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");   
     System.out.println("Connecting on " + wsUri);
@@ -258,9 +267,9 @@
         {
           try
           {
-            while (serial.availableBytes() > 0)
+            while (serial.available() > 0)
             {
-              char c = serial.read();
+              char c = (char)0; // TODO Fix that serial.read();
               c &= 0xFF;
               serialBuffer[bufferIdx++] = (byte)c;
               if (bufferIdx == 1 && serialBuffer[0] != MindWaveController.SYNC)
@@ -306,7 +315,13 @@
          synchronized (waiter)
          {
            // Hanging up.
-           c1.closeAll(mwc);
+           try
+           {
+             c1.closeAll(mwc);
+           } catch (IOException ioe)
+           {
+             ioe.printStackTrace();
+           }
            webSocketClient.close();
            waiter.notify();
          }

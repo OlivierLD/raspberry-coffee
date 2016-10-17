@@ -1,5 +1,6 @@
 package i2c.samples.motorHAT;
 
+import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.adafruitmotorhat.AdafruitMotorHAT;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ public class StepperDemo
   private AdafruitMotorHAT mh;
   private AdafruitMotorHAT.AdafruitStepperMotor stepper;
 
-  public StepperDemo()
+  public StepperDemo() throws I2CFactory.UnsupportedBusNumberException
   {
     this.mh = new AdafruitMotorHAT(); // Default addr 0x60
     this.stepper = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);

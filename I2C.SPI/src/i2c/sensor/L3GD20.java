@@ -119,12 +119,12 @@ public class L3GD20
   private double maxZ  = 0;
   private double minZ  = 0;
   
-  public L3GD20()
+  public L3GD20() throws I2CFactory.UnsupportedBusNumberException
   {
     this(L3GD20ADDRESS);
   }
   
-  public L3GD20(int address)
+  public L3GD20(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {

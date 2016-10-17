@@ -1,5 +1,6 @@
 package raspisamples.log.net;
 
+import com.pi4j.io.i2c.I2CFactory;
 import i2c.sensor.BMP180;
 
 import java.text.DecimalFormat;
@@ -73,7 +74,7 @@ public class BMP180Logging
     }
   }
   
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     processPrm(args);
 

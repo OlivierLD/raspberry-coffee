@@ -2,9 +2,11 @@ package arduino.raspberrypi;
 
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialDataEvent;
-import com.pi4j.io.serial.SerialDataListener;
+import com.pi4j.io.serial.SerialDataEventListener;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.SerialPortException;
+
+import java.io.IOException;
 
 /**
  * Reads the Arduino through its serial port.
@@ -184,13 +186,18 @@ public class SerialLevelReader
      });
     
     // create and register the serial data listener
-    serial.addListener(new SerialDataListener()
+    serial.addListener(new SerialDataEventListener()
     {
       @Override
       public void dataReceived(SerialDataEvent event)
       {
         // print out the data received to the console
-        String payload = event.getData();
+        String payload;
+        try {
+          payload = event.getAsciiString();
+        } catch (IOException ioe) {
+          throw new RuntimeException(ioe);
+        }
         if ("true".equals(System.getProperty("verbose", "false")))
           System.out.println("Payload [" + payload + "]");
         
@@ -203,7 +210,11 @@ public class SerialLevelReader
     {
       // open the default serial port provided on the GPIO header
       System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
-      serial.open(port, br);
+      try {
+        serial.open(port, br);
+      } catch (IOException ioe) {
+        throw new RuntimeException(ioe);
+      }
       System.out.println("Port is opened.");
       System.out.println("------------------------------------");
 

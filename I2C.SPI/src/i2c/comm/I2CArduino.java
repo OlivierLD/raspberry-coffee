@@ -41,12 +41,12 @@ public class I2CArduino
   private I2CBus bus;
   private I2CDevice arduino;
 
-  public I2CArduino()
+  public I2CArduino() throws I2CFactory.UnsupportedBusNumberException
   {
     this(ARDUINO_ADDRESS);
   }
 
-  public I2CArduino(int address)
+  public I2CArduino(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -94,7 +94,7 @@ public class I2CArduino
     try { Thread.sleep((long)(d * 1000)); } catch (Exception ex) {}
   }
   
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final NumberFormat NF = new DecimalFormat("##00.00");
     I2CArduino sensor = new I2CArduino();

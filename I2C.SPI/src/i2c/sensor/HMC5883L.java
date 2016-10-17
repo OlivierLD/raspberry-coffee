@@ -31,12 +31,12 @@ public class HMC5883L
   private I2CBus bus;
   private I2CDevice hcm5883l;
   
-  public HMC5883L()
+  public HMC5883L() throws I2CFactory.UnsupportedBusNumberException
   {
     this(HMC5883L_ADDRESS);
   }
 
-  public HMC5883L(int address)
+  public HMC5883L(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -124,7 +124,7 @@ public class HMC5883L
     }
   }
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final NumberFormat NF = new DecimalFormat("##00.00");
     HMC5883L sensor = new HMC5883L();

@@ -54,12 +54,12 @@ public class VCNL4000
   private I2CBus bus;
   private I2CDevice vcnl4000;
   
-  public VCNL4000()
+  public VCNL4000() throws I2CFactory.UnsupportedBusNumberException
   {
     this(VCNL4000_ADDRESS);
   }
   
-  public VCNL4000(int address)
+  public VCNL4000(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -238,7 +238,7 @@ public class VCNL4000
   private static int maxProx    = Integer.MIN_VALUE;
   private static int maxAmbient = Integer.MIN_VALUE;
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     VCNL4000 sensor = new VCNL4000();
     int prox    = 0;

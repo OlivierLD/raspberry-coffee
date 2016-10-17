@@ -6,11 +6,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+import com.pi4j.io.i2c.I2CFactory;
 import sevensegdisplay.SevenSegment;
 
 public class ClockSample
 {
-  public static void main(String[] args) throws IOException
+  public static void main(String[] args) throws IOException, I2CFactory.UnsupportedBusNumberException
   {
     final SevenSegment segment = new SevenSegment(0x70, true);
 

@@ -40,12 +40,12 @@ public class MPL115A2
   private float _mpl115a2_b2  = 0f;
   private float _mpl115a2_c12 = 0f;
 
-  public MPL115A2()
+  public MPL115A2() throws I2CFactory.UnsupportedBusNumberException
   {
     this(MPL115A2_ADDRESS);
   }
 
-  public MPL115A2(int address)
+  public MPL115A2(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -193,7 +193,7 @@ public class MPL115A2
     }
   }
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final NumberFormat NF = new DecimalFormat("##00.00");
     MPL115A2 sensor = new MPL115A2();

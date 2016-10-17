@@ -1,6 +1,7 @@
 package robot.ws;
 
 // import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import com.pi4j.io.i2c.I2CFactory;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
@@ -14,7 +15,7 @@ public class ServoHat
   private Robot robot = null;
   private static Thread me = null;
 
-  public ServoHat()
+  public ServoHat() throws I2CFactory.UnsupportedBusNumberException
   {
     if (!"true".equals(System.getProperty("no.robot", "false")))
       robot = new Robot();
@@ -211,7 +212,7 @@ public class ServoHat
     System.out.println("That's it!");
   }
 
-  public static void main(String args[]) throws IOException
+  public static void main(String args[]) throws IOException, I2CFactory.UnsupportedBusNumberException
   {
     help();
     ServoHat proto = new ServoHat();

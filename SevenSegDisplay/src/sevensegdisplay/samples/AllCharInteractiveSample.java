@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.pi4j.io.i2c.I2CFactory;
 import sevensegdisplay.SevenSegment;
 
 public class AllCharInteractiveSample
@@ -34,10 +35,12 @@ public class AllCharInteractiveSample
     return retString;
   }
 
-  private static SevenSegment segment = new SevenSegment(0x70, true);
+  private static SevenSegment segment = null;
 
-  public static void main(String[] args) throws IOException
+  public static void main(String[] args) throws IOException, I2CFactory.UnsupportedBusNumberException
   {
+    segment = new SevenSegment(0x70, true);
+
     boolean go = true;
     System.out.println("Enter 'quit' to quit...");
     while (go)

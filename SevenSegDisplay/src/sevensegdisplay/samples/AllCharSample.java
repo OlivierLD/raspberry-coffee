@@ -5,14 +5,16 @@ import java.io.IOException;
 
 import java.util.Set;
 
+import com.pi4j.io.i2c.I2CFactory;
 import sevensegdisplay.SevenSegment;
 
 public class AllCharSample
 {
-  private static SevenSegment segment = new SevenSegment(0x70, true);
+  private static SevenSegment segment = null;
   
-  public static void main(String[] args) throws IOException
+  public static void main(String[] args) throws IOException, I2CFactory.UnsupportedBusNumberException
   {
+    segment = new SevenSegment(0x70, true);
 
     String[] displayed = { " ", " ", " ", " " };
     

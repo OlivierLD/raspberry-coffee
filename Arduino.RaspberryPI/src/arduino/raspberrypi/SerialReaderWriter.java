@@ -2,11 +2,12 @@ package arduino.raspberrypi;
 
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialDataEvent;
-import com.pi4j.io.serial.SerialDataListener;
+import com.pi4j.io.serial.SerialDataEventListener;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.SerialPortException;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
@@ -82,13 +83,17 @@ public class SerialReaderWriter
     final Serial serial = SerialFactory.createInstance();
 
     // create and register the serial data listener
-    serial.addListener(new SerialDataListener() // Listens to the Arduino
+    serial.addListener(new SerialDataEventListener() // Listens to the Arduino
     {
       @Override
       public void dataReceived(SerialDataEvent event)
       {
         // print out the data received to the console
-        String payload = event.getData();
+        String payload;
+        try { payload = event.getAsciiString(); }
+        catch (IOException ioe) {
+          throw new RuntimeException(ioe);
+        }
         if (getVerbose())
         {
           if (validCheckSum(payload, false))
@@ -107,7 +112,12 @@ public class SerialReaderWriter
       userInput("");
 
       System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
-      serial.open(port, br);
+      try
+      {
+        serial.open(port, br);
+      } catch (IOException ioe) {
+        throw new RuntimeException(ioe);
+      }
       System.out.println("Port is opened.");
 
       final Thread me = Thread.currentThread();
@@ -137,6 +147,10 @@ public class SerialReaderWriter
                   {
                     ex.printStackTrace();
                   }
+                  catch (IOException ioe)
+                  {
+                    ioe.printStackTrace();
+                  }
                 }
                 else
                 {
@@ -157,7 +171,12 @@ public class SerialReaderWriter
         me.wait();
       }
       System.out.println("Bye!");
-      serial.close();
+      try
+      {
+        serial.close();
+      } catch (IOException ioe) {
+        ioe.printStackTrace();
+      }
     }
     catch (SerialPortException ex)
     {

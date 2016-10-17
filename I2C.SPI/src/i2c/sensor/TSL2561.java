@@ -77,12 +77,12 @@ public class TSL2561
   private I2CBus bus;
   private I2CDevice tsl2561;
 
-  public TSL2561()
+  public TSL2561() throws I2CFactory.UnsupportedBusNumberException
   {
     this(TSL2561_ADDRESS);
   }
 
-  public TSL2561(int address)
+  public TSL2561(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -250,7 +250,7 @@ public class TSL2561
     }
   }
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final NumberFormat NF = new DecimalFormat("##00.00");
     verbose = false;

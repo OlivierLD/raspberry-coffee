@@ -1,5 +1,6 @@
 package weatherstation;
 
+import com.pi4j.io.i2c.I2CFactory;
 import i2c.adc.ADS1x15;
 
 import i2c.sensor.BMP180;
@@ -166,8 +167,12 @@ public class SDLWeather80422
     {
       System.err.println("HTU21DF not available...");
     }
-    
-    this.ads1015 = new ADS1x15(ADC_TYPE);
+
+    try {
+      this.ads1015 = new ADS1x15(ADC_TYPE);
+    } catch (I2CFactory.UnsupportedBusNumberException usbne) {
+      throw new RuntimeException(usbne);
+    }
     this.ADMode = ADMode;
   }
   

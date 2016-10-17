@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 
 import java.io.FileWriter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class ClientTwo implements MindWaveCallbacks,
 //    t.printStackTrace();
   }
 
-  private void closeAll(MindWaveController mwc)
+  private void closeAll(MindWaveController mwc) throws IOException
   {
     mwc.disconnectHeadSet();
     while (mwc.isConnected())
@@ -193,13 +194,21 @@ public class ClientTwo implements MindWaveCallbacks,
   @Override
   public void writeSerial(byte b)
   {
-    serial.write(b);
+    try {
+      serial.write(b);
+    } catch (IOException ioe) {
+      throw new RuntimeException(ioe);
+    }
   }
 
   @Override
   public void flushSerial()
   {
-    serial.flush();
+    try {
+      serial.flush();
+    } catch (IOException ioe) {
+      throw new RuntimeException(ioe);
+    }
   }
   
   private final static Serial serial = SerialFactory.createInstance(); // PI4J Serial manager
@@ -211,9 +220,9 @@ public class ClientTwo implements MindWaveCallbacks,
   private static boolean readSerial = true;
   public static boolean keepReading() { return readSerial; }
   public void stopReading() { readSerial = false; }
-  public void closeSerial() { serial.close(); }
+  public void closeSerial() throws IOException { serial.close(); }
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws IOException
   {
     rawWaves = new ArrayList<Short>();
     
@@ -238,9 +247,9 @@ public class ClientTwo implements MindWaveCallbacks,
         {
           try
           {
-            while (serial.availableBytes() > 0)
+            while (serial.available() > 0)
             {
-              char c = serial.read();
+              char c = (char)0; // serial.read(); TODO Fix that
               c &= 0xFF;
               serialBuffer[bufferIdx++] = (byte)c;
               if (bufferIdx == 1 && serialBuffer[0] != MindWaveController.SYNC)
@@ -286,7 +295,10 @@ public class ClientTwo implements MindWaveCallbacks,
          synchronized (waiter)
          {
            // Hanging up.
-           c2.closeAll(mwc);
+           try { c2.closeAll(mwc); }
+           catch (IOException ioe) {
+             ioe.printStackTrace();
+           }
            dumpRawValues();
            waiter.notify();
          }

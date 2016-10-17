@@ -104,12 +104,12 @@ public class BME280
   private I2CDevice bme280;
   private int mode = BME280_OSAMPLE_8;
   
-  public BME280()
+  public BME280() throws I2CFactory.UnsupportedBusNumberException
   {
     this(BME280_I2CADDR);
   }
   
-  public BME280(int address)
+  public BME280(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
@@ -355,7 +355,7 @@ public class BME280
     return str;
   }
 
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     final NumberFormat NF = new DecimalFormat("##00.00");
     BME280 sensor = new BME280();

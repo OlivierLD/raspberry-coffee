@@ -1,5 +1,7 @@
 package sevensegdisplay;
 
+import com.pi4j.io.i2c.I2CFactory;
+
 import java.io.IOException;
 
 import java.util.HashMap;
@@ -149,15 +151,15 @@ public class SevenSegment
     ALL_CHARS.put("~",  DOT);                       
   }
   
-  public SevenSegment()
+  public SevenSegment() throws I2CFactory.UnsupportedBusNumberException
   {
     display = new LEDBackPack(0x70);
   }
-  public SevenSegment(int addr)
+  public SevenSegment(int addr) throws I2CFactory.UnsupportedBusNumberException
   {
     display = new LEDBackPack(addr, false);
   }
-  public SevenSegment(int addr, boolean b)
+  public SevenSegment(int addr, boolean b) throws I2CFactory.UnsupportedBusNumberException
   {
     display = new LEDBackPack(addr, b);
   }

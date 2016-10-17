@@ -1,5 +1,6 @@
 package dac.sample;
 
+import com.pi4j.io.i2c.I2CFactory;
 import dac.mcp4725.MCP4725;
 
 import java.io.IOException;
@@ -73,7 +74,7 @@ public class DACSample
     1847, 1872, 1897, 1922, 1948, 1973, 1998, 2023  };
 
 
-  public static void main(String[] args)// throws IOException
+  public static void main(String[] args)  throws I2CFactory.UnsupportedBusNumberException
   {
     System.out.println("The output happens on the VOUT terminal of the MCP4725.");
     MCP4725 dac = new MCP4725();

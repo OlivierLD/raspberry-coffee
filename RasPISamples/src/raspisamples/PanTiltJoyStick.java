@@ -1,5 +1,6 @@
 package raspisamples;
 
+import com.pi4j.io.i2c.I2CFactory;
 import raspisamples.adc.JoyStick;
 
 import raspisamples.adc.JoyStickClient;
@@ -16,7 +17,7 @@ public class PanTiltJoyStick
                                ssLR = null;
   private static JoyStick joyStick = null;
   
-  public static void main(String[] args)
+  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     ssUD = new StandardServo(14); // 14 : Address on the board (1..15)
     ssLR = new StandardServo(15); // 15 : Address on the board (1..15)
