@@ -6,6 +6,7 @@ import fona.arduino.FONAClient;
 import fona.arduino.ReadWriteFONA;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class SampleClient
@@ -99,7 +100,7 @@ public class SampleClient
   
   private static Thread wait4ack = null;
   
-  private static void sendAndWait4Ack(ReadWriteFONA fona, String to, String content)
+  private static void sendAndWait4Ack(ReadWriteFONA fona, String to, String content) throws IOException
   {
     fona.sendMess(to, content);
     wait4ack = Thread.currentThread();
@@ -124,7 +125,7 @@ public class SampleClient
    * @param args
    * @throws InterruptedException
    */
-  public static void main(String args[]) throws InterruptedException
+  public static void main(String args[]) throws InterruptedException, IOException
   {      
     if (args.length > 0)
     {
@@ -158,40 +159,42 @@ public class SampleClient
               if ("Q".equalsIgnoreCase(userInput))
                 loop = false;
               else
-              { 
-            //  channel.sendSerial(userInput); // Private
-                if ("?".equals(userInput))
-                  displayMenu();
-                else if ("b".equals(userInput))
-                  fona.requestBatteryState();
-                else if ("a".equals(userInput))
-                  fona.requestADC();
-                else if ("C".equals(userInput))
-                  fona.requestSIMCardNumber();
-                else if ("i".equals(userInput))
-                  fona.requestRSSI();
-                else if ("n".equals(userInput))
-                  fona.requestNetworkStatus();
-                else if ("N".equals(userInput))
-                  fona.requestNumberOfMessage();
-                else if ("r".equals(userInput))
+              {
+                try
                 {
-                  String _smsn = userInput("Mess #:");
-                  fona.readMessNum(Integer.parseInt(_smsn));
+                  //  channel.sendSerial(userInput); // Private
+                  if ("?".equals(userInput))
+                    displayMenu();
+                  else if ("b".equals(userInput))
+                    fona.requestBatteryState();
+                  else if ("a".equals(userInput))
+                    fona.requestADC();
+                  else if ("C".equals(userInput))
+                    fona.requestSIMCardNumber();
+                  else if ("i".equals(userInput))
+                    fona.requestRSSI();
+                  else if ("n".equals(userInput))
+                    fona.requestNetworkStatus();
+                  else if ("N".equals(userInput))
+                    fona.requestNumberOfMessage();
+                  else if ("r".equals(userInput))
+                  {
+                    String _smsn = userInput("Mess #:");
+                    fona.readMessNum(Integer.parseInt(_smsn));
+                  } else if ("d".equals(userInput))
+                  {
+                    String _smsn = userInput("Mess #:");
+                    fona.deleteMessNum(Integer.parseInt(_smsn));
+                  } else if ("s".equals(userInput))
+                  {
+                    String to = userInput("Send to > ");
+                    String payload = userInput("Message content > ");
+                    sendAndWait4Ack(fona, to, payload);
+                  } else
+                    System.out.println("Duh?");
+                } catch (IOException ioe) {
+                  ioe.printStackTrace();
                 }
-                else if ("d".equals(userInput))
-                {
-                  String _smsn = userInput("Mess #:");
-                  fona.deleteMessNum(Integer.parseInt(_smsn));
-                }
-                else if ("s".equals(userInput))
-                {
-                  String to      = userInput("Send to > ");
-                  String payload = userInput("Message content > ");
-                  sendAndWait4Ack(fona, to, payload);
-                }
-                else
-                  System.out.println("Duh?");
               }
             }
             synchronized (me)

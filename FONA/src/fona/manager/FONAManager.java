@@ -2,9 +2,10 @@ package fona.manager;
 
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialDataEvent;
-import com.pi4j.io.serial.SerialDataListener;
+import com.pi4j.io.serial.SerialDataEventListener;
 import com.pi4j.io.serial.SerialFactory;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -99,7 +100,8 @@ public class FONAManager
   private static boolean readSerial = true;
   public boolean keepReading() { return readSerial; }
   public void stopReading() { readSerial = false; }
-  public void closeSerial() { serial.close(); }
+  public void closeSerial() throws IOException
+  { serial.close(); }
   
   private static boolean connectionEstablished = false;
   
@@ -121,9 +123,9 @@ public class FONAManager
           {
             try
             {
-              while (true && serial.availableBytes() > 0)
+              while (true && serial.available() > 0)
               {
-                char c = serial.read();
+                char c = (char)0; // TODO Fix that serial.read();
                 c &= 0xFF;
     
                 if ((c & 0xFF) != 0xFF)
@@ -154,7 +156,7 @@ public class FONAManager
                   fullMessage = new StringBuffer(); // Reset
                 } 
             //  delay(0.02f);
-                if (serial.availableBytes() == 0)
+                if (serial.available() == 0)
                   delay(0.5f);
               }
          //   delay(0.5f);
@@ -176,7 +178,7 @@ public class FONAManager
     if (SERIAL_OPTION.equals(SerialOption.SERIAL_LISTENER_OPTION))
     {
       // create and register the serial data listener
-      final SerialDataListener sdl = new SerialDataListener()
+      final SerialDataEventListener sdl = new SerialDataEventListener()
       {
         private StringBuffer fullMessage = new StringBuffer();
         
@@ -184,7 +186,11 @@ public class FONAManager
         public void dataReceived(SerialDataEvent event)
         {
           // print out the data received to the console
-          String payload = event.getData();
+          String payload = null;
+          try { payload = event.getAsciiString(); }
+          catch (IOException ioe) {
+            ioe.printStackTrace();
+          }
           if (getVerbose())
           {
             try 
@@ -228,7 +234,12 @@ public class FONAManager
             if (getVerbose())
             {
               System.out.println("No ACK, no PROMPT:");
-              System.out.println("\t--> Available bytes:" + serial.availableBytes());
+              try
+              {
+                System.out.println("\t--> Available bytes:" + serial.available());
+              } catch (IOException ioe) {
+                ioe.printStackTrace();
+              }
               try 
               {
                 String[] sa = DumpUtil.dualDump(fullMessage.toString());
@@ -257,7 +268,7 @@ public class FONAManager
     return connectionEstablished;
   }
   
-  public void openSerial(String port, int br)
+  public void openSerial(String port, int br) throws IOException
   {
     serial.open(port, br);
   }
@@ -267,13 +278,13 @@ public class FONAManager
     return serial.isOpen();
   }
   
-  public void dumpToSerial(String str)
+  public void dumpToSerial(String str) throws IOException
   {
     serial.write(str);
     serial.flush();  
   }
   
-  public void readMessNum(int messNum)
+  public void readMessNum(int messNum) throws IOException
   {
     expectingNotification = Thread.currentThread();
     expectedNotification = SET_TO_TEXT;
@@ -313,42 +324,42 @@ public class FONAManager
     sendToFona(readCmd);
   }
 
-  public void requestModuleNameAndRevision()
+  public void requestModuleNameAndRevision() throws IOException
   {
     sendToFona("ATI");
   }
   
-  public void requestDebug()
+  public void requestDebug() throws IOException
   {
     sendToFona("AT+CMEE=2");
   }
   
-  public void requestSimCCID()
+  public void requestSimCCID() throws IOException
   {
     sendToFona("AT+CCID");
   }
   
-  public void requestBatteryLevel()
+  public void requestBatteryLevel() throws IOException
   {
     sendToFona("AT+CBC");
   }
   
-  public void requestNetworkName()
+  public void requestNetworkName() throws IOException
   {
     sendToFona("AT+COPS?");
   }
   
-  public void requestRSSI()
+  public void requestRSSI() throws IOException
   {
     sendToFona("AT+CSQ");
   }
 
-  public void requestNetworkStatus()
+  public void requestNetworkStatus() throws IOException
   {
     sendToFona("AT+CREG?");
   }
   
-  public void requestNumberOfSMS()
+  public void requestNumberOfSMS() throws IOException
   {
     // Wait (notification) then send AT+CPMS?
     expectingNotification = Thread.currentThread();
@@ -371,7 +382,7 @@ public class FONAManager
     sendToFona("AT+CPMS?");    
   }
   
-  public void sendSMS(String to, String content)
+  public void sendSMS(String to, String content) throws IOException
   {
     // Wait (notification) then send AT+CPMS?
     expectingNotification = Thread.currentThread();
@@ -425,7 +436,7 @@ public class FONAManager
 
   private final static NumberFormat MN_FMT = new DecimalFormat("000");
 
-  public void deleteSMS(int messNum)
+  public void deleteSMS(int messNum) throws IOException
   {
     String first = "AT+CMGF=1";
     expectingNotification = Thread.currentThread();
@@ -453,8 +464,8 @@ public class FONAManager
     // TODO Implement
   }
   
-  private static void sendToFona(String payload) { sendToFona(payload, true); }
-  private static void sendToFona(String payload, boolean withCR)
+  private static void sendToFona(String payload) throws IOException { sendToFona(payload, true); }
+  private static void sendToFona(String payload, boolean withCR) throws IOException
   {
     if (serial.isOpen())
     {
@@ -503,7 +514,7 @@ public class FONAManager
     }
   }
 
-  public void tryToConnect()
+  public void tryToConnect() throws IOException
   {
     sendToFona("AT");
   }

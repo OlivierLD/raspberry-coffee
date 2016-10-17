@@ -2,9 +2,10 @@ package fona.arduino;
 
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialDataEvent;
-import com.pi4j.io.serial.SerialDataListener;
+import com.pi4j.io.serial.SerialDataEventListener;
 import com.pi4j.io.serial.SerialFactory;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 /**
@@ -105,7 +106,7 @@ public class ReadWriteFONA
     throws NumberFormatException
   {
     // create and register the serial data listener
-    serial.addListener(new SerialDataListener()
+    serial.addListener(new SerialDataEventListener()
     {
       private StringBuffer fullMessage = new StringBuffer();
       private final String ACK = "\n"; // "\r\n"; 
@@ -114,7 +115,13 @@ public class ReadWriteFONA
       public void dataReceived(SerialDataEvent event)
       {
         // print out the data received to the console
-        String payload = event.getData();
+        String payload = null;
+        try
+        {
+          payload = event.getAsciiString();
+        } catch (IOException ioe) {
+          throw new RuntimeException(ioe);
+        }
         
         fullMessage.append(payload);
         if (fullMessage.toString().endsWith(ACK))
@@ -140,7 +147,7 @@ public class ReadWriteFONA
     });
   }
   
-  public void openSerialInput()
+  public void openSerialInput() throws IOException
   {
     String port = System.getProperty("serial.port", Serial.DEFAULT_COM_PORT);
     int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
@@ -154,60 +161,60 @@ public class ReadWriteFONA
     System.out.println("Port is opened.");
   }
   
-  public void closeChannel()
+  public void closeChannel() throws IOException
   {
     serial.close();
   }
   
-  public void requestBatteryState()
+  public void requestBatteryState() throws IOException
   {
     String mess = "b";
     this.sendSerial(mess);
   }
   
-  public void requestADC()
+  public void requestADC() throws IOException
   {
     String mess = "a";
     this.sendSerial(mess);
   }
   
-  public void requestSIMCardNumber()
+  public void requestSIMCardNumber() throws IOException
   {
     String mess = "C";
     this.sendSerial(mess);
   }
   
-  public void requestRSSI()
+  public void requestRSSI() throws IOException
   {
     String mess = "i";
     this.sendSerial(mess);
   }
   
-  public void requestNetworkStatus()
+  public void requestNetworkStatus() throws IOException
   {
     String mess = "n";
     this.sendSerial(mess);
   }
 
-  public void requestNumberOfMessage()
+  public void requestNumberOfMessage() throws IOException
   {
     String mess = "N";
     this.sendSerial(mess);
   }
 
-  public void readMessNum(int smsn)
+  public void readMessNum(int smsn) throws IOException
   {
     String mess = "r|" + Integer.toString(smsn);
     this.sendSerial(mess);
   }
   
-  public void deleteMessNum(int smsn)
+  public void deleteMessNum(int smsn) throws IOException
   {
     String mess = "d|" + Integer.toString(smsn);
     this.sendSerial(mess);
   }
   
-  public void sendMess(String to, String payload)
+  public void sendMess(String to, String payload) throws IOException
   {
     if (payload.length() > 140)
     {
@@ -218,7 +225,7 @@ public class ReadWriteFONA
     this.sendSerial(mess);
   }
     
-  private void sendSerial(String payload)
+  private void sendSerial(String payload) throws IOException
   {
     if (serial.isOpen())
     {
@@ -285,7 +292,7 @@ public class ReadWriteFONA
     caller.genericFailure(message);
   }
   
-  public void incomingMessageManager(String message)
+  public void incomingMessageManager(String message) throws IOException
   {
     // +CMTI: "SM",3
     System.out.println("Incoming message:" + message);

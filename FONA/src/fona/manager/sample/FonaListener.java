@@ -8,16 +8,14 @@ import fona.manager.FONAManager;
 
 import fona.manager.FONAManager.NetworkStatus;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class FonaListener implements FONAClient
 {
   private static FONAManager fona;
   
   public static void main(String args[])
-    throws InterruptedException, NumberFormatException
+    throws InterruptedException, NumberFormatException, IOException
   {
     FonaListener sf = new FonaListener();
     fona = new FONAManager(sf);
@@ -113,7 +111,10 @@ public class FonaListener implements FONAClient
       {
         public void run()
         {
-          fona.readMessNum(sms);    
+          try { fona.readMessNum(sms); }
+          catch (IOException ioe) {
+            ioe.printStackTrace();
+          }
         }
       };
     readit.start();
@@ -124,7 +125,10 @@ public class FonaListener implements FONAClient
         {
           FONAManager.delay(10f);
           System.out.println("\t\t>>>> Deleting mess #" + sms);
-          fona.deleteSMS(sms);    
+          try { fona.deleteSMS(sms); }
+          catch (IOException ioe) {
+            ioe.printStackTrace();
+          }
         }
       };
     deleteit.start();

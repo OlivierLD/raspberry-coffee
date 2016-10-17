@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.io.IOException;
 
 public class InteractiveFona implements FONAClient
 {
@@ -71,7 +72,7 @@ public class InteractiveFona implements FONAClient
   }
   
   public static void main(String args[])
-    throws InterruptedException, NumberFormatException
+    throws InterruptedException, NumberFormatException, IOException
   {
     // Display current Classpath
     ClassLoader cl = ClassLoader.getSystemClassLoader();
@@ -124,7 +125,10 @@ public class InteractiveFona implements FONAClient
             System.out.println("Establishing connection (can take up to 3 seconds).");
             while (!fona.isConnected())
             {
-              fona.tryToConnect();
+              try { fona.tryToConnect(); }
+              catch (IOException ioe) {
+                throw new RuntimeException(ioe);
+              }
               if (!fona.isConnected())
               {
                 FONAManager.delay(1);
@@ -158,62 +162,63 @@ public class InteractiveFona implements FONAClient
                 if (fona.isSerialOpen())
                 {
                   String cmd = "";
-                  if ("M".equals(userInput)) // Module Name and Revision
-                    fona.requestModuleNameAndRevision();
-                  else if ("D".equals(userInput)) // Debug
-                    fona.requestDebug();
-                  else if ("C".equals(userInput)) // Read SIM CCID
-                    fona.requestSimCCID();
-                  else if ("b".equals(userInput)) // Battery
-                    fona.requestBatteryLevel();
-                  else if ("n".equals(userInput)) // Network Name
-                    fona.requestNetworkName();
-                  else if ("I".equals(userInput)) // Network Status
-                    fona.requestNetworkStatus();
-                  else if ("i".equals(userInput)) // RSSI Signal strength
-                    fona.requestRSSI();
-                  else if ("N".equals(userInput)) // Number of SMS
-                    fona.requestNumberOfSMS();
-                  else if ("r".equals(userInput)) // Read mess num x
+                  try
                   {
-                    if (messToRead == -1)
+                    if ("M".equals(userInput)) // Module Name and Revision
+                      fona.requestModuleNameAndRevision();
+                    else if ("D".equals(userInput)) // Debug
+                      fona.requestDebug();
+                    else if ("C".equals(userInput)) // Read SIM CCID
+                      fona.requestSimCCID();
+                    else if ("b".equals(userInput)) // Battery
+                      fona.requestBatteryLevel();
+                    else if ("n".equals(userInput)) // Network Name
+                      fona.requestNetworkName();
+                    else if ("I".equals(userInput)) // Network Status
+                      fona.requestNetworkStatus();
+                    else if ("i".equals(userInput)) // RSSI Signal strength
+                      fona.requestRSSI();
+                    else if ("N".equals(userInput)) // Number of SMS
+                      fona.requestNumberOfSMS();
+                    else if ("r".equals(userInput)) // Read mess num x
                     {
-                      String str = userInput("  Mess Num?> ");
-                      messToRead = Integer.parseInt(str.trim());
-                    }
-                    fona.readMessNum(messToRead);
-                    messToRead = -1;
-                  }
-                  else if ("s".equals(userInput)) // Send SMS
-                  {
-                    String sendTo         = userInput("  Send messsage to (like 14153505547) ?> ");
-                    if (FONAManager.getVerbose())
-                      System.out.println("Sending message to " + sendTo);
-                    String messagePayload = userInput("  Mess Content (140 char max)?         > ");
-                    fona.sendSMS(sendTo, messagePayload);
-                    System.out.println("Sent.");
-                  }
-                  else if ("R".equals(userInput))  // Read all messages
-                    System.out.println("Not available yet");
-                  else if ("d".equals(userInput))  // Delete message #x
-                  {
-                    String num = userInput("  Delete messsage # ?> ");
-                    int messNum = Integer.parseInt(num);
-                    fona.deleteSMS(messNum);
-                  }
-                  else // Whatever is not implemented... out of sync, whatever.
-                  {
-                    cmd = userInput;
-                    if (FONAManager.getVerbose())
-                      System.out.println("\tWriting [" + cmd + "] to the serial port...");
-                    try
+                      if (messToRead == -1)
+                      {
+                        String str = userInput("  Mess Num?> ");
+                        messToRead = Integer.parseInt(str.trim());
+                      }
+                      fona.readMessNum(messToRead);
+                      messToRead = -1;
+                    } else if ("s".equals(userInput)) // Send SMS
                     {
-                      fona.dumpToSerial(cmd + "\n");
-                    }
-                    catch (IllegalStateException ex)
+                      String sendTo = userInput("  Send messsage to (like 14153505547) ?> ");
+                      if (FONAManager.getVerbose())
+                        System.out.println("Sending message to " + sendTo);
+                      String messagePayload = userInput("  Mess Content (140 char max)?         > ");
+                      fona.sendSMS(sendTo, messagePayload);
+                      System.out.println("Sent.");
+                    } else if ("R".equals(userInput))  // Read all messages
+                      System.out.println("Not available yet");
+                    else if ("d".equals(userInput))  // Delete message #x
                     {
-                      ex.printStackTrace();
+                      String num = userInput("  Delete messsage # ?> ");
+                      int messNum = Integer.parseInt(num);
+                      fona.deleteSMS(messNum);
+                    } else // Whatever is not implemented... out of sync, whatever.
+                    {
+                      cmd = userInput;
+                      if (FONAManager.getVerbose())
+                        System.out.println("\tWriting [" + cmd + "] to the serial port...");
+                      try
+                      {
+                        fona.dumpToSerial(cmd + "\n");
+                      } catch (IllegalStateException ex)
+                      {
+                        ex.printStackTrace();
+                      }
                     }
+                  } catch (IOException ioe) {
+                    ioe.printStackTrace();
                   }
                 }
                 else
@@ -291,7 +296,10 @@ public class InteractiveFona implements FONAClient
         {
           public void run()
           {
-            fona.readMessNum(sms);    
+            try { fona.readMessNum(sms); }
+            catch (IOException ioe) {
+              ioe.printStackTrace();
+            }
           }
         };
       readit.start();
@@ -302,7 +310,10 @@ public class InteractiveFona implements FONAClient
           {
             FONAManager.delay(10f);
             System.out.println("\t\t>>>> Deleting mess #" + sms);
-            fona.deleteSMS(sms);    
+            try { fona.deleteSMS(sms); }
+            catch (IOException ioe) {
+              ioe.printStackTrace();
+            }
           }
         };
       deleteit.start();
