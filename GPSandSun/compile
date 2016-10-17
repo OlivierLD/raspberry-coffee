@@ -3,7 +3,10 @@ JAVAC_OPTIONS="-sourcepath ./src"
 JAVAC_OPTIONS="$JAVAC_OPTIONS -d ./classes"
 echo $JAVAC_OPTIONS
 CP=./classes
-# PI4J_HOME=/home/pi/pi4j/pi4j-distribution/target/distro-contents
+if [ "$PI4J_HOME" = "" ]
+then
+  PI4J_HOME=/opt/pi4j
+fi
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 CP=$CP:./lib/almanactools.jar
 CP=$CP:./lib/geomutil.jar
@@ -15,4 +18,3 @@ COMMAND="javac $JAVAC_OPTIONS ./src/nmea/*.java ./src/readserialport/*.java"
 echo Compiling: $COMMAND
 $COMMAND
 echo Done
-

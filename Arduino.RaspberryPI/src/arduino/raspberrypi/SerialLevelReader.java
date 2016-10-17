@@ -1,8 +1,6 @@
 package arduino.raspberrypi;
 
 import com.pi4j.io.serial.Serial;
-import com.pi4j.io.serial.SerialDataEvent;
-import com.pi4j.io.serial.SerialDataEventListener;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.SerialPortException;
 
@@ -186,11 +184,7 @@ public class SerialLevelReader
      });
     
     // create and register the serial data listener
-    serial.addListener(new SerialDataEventListener()
-    {
-      @Override
-      public void dataReceived(SerialDataEvent event)
-      {
+    serial.addListener(event -> {
         // print out the data received to the console
         String payload;
         try {
@@ -203,8 +197,7 @@ public class SerialLevelReader
         
         appendToStream(payload);
         processStream();
-      }
-    });
+      });
 
     try
     {

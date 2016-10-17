@@ -56,7 +56,7 @@ public class SevenADCChannelsManager
   public SevenADCChannelsManager(final AirWaterOilInterface client) throws Exception
   {
     for (int i=0; i<smoothedChannel.length; i++)
-      smoothedChannel[i] = new ArrayList<Integer>(WINDOW_WIDTH);
+      smoothedChannel[i] = new ArrayList<>(WINDOW_WIDTH);
     
     channel = new ADCObserver.MCP3008_input_channels[] 
     {

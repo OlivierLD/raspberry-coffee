@@ -16,8 +16,6 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
-import com.pi4j.io.serial.SerialDataEventListener;
-
 import java.io.IOException;
 
 import java.text.DecimalFormat;
@@ -181,63 +179,58 @@ public class OLEDKeypadAndMultiSensor
     final Serial serial = SerialFactory.createInstance();
 
     // create and register the serial data listener
-    serial.addListener(new SerialDataEventListener()
-    {
-      @Override
-      public void dataReceived(SerialDataEvent event)
+    serial.addListener(event -> {
+      // print out the data received to the oled display
+      String payload;
+      try { payload = event.getAsciiString(); }
+      catch (IOException ioe) {
+        throw new RuntimeException(ioe);
+      }
+      if (SerialReader.validCheckSum(payload, false))
       {
-        // print out the data received to the oled display
-        String payload;
-        try { payload = event.getAsciiString(); }
-        catch (IOException ioe) {
-          throw new RuntimeException(ioe);
-        }
-        if (SerialReader.validCheckSum(payload, false))
-        {
 //        System.out.print("Arduino said:" + payload);
-          // Payload like $OSMSG,LR,178*65
-          String content = payload.substring(7, payload.indexOf("*"));
-          String[] sa = content.split(",");
-          String strVal = sa[1];
+        // Payload like $OSMSG,LR,178*65
+        String content = payload.substring(7, payload.indexOf("*"));
+        String[] sa = content.split(",");
+        String strVal = sa[1];
 //        System.out.println("Val:" + strVal);
-          displayLR(strVal + "   "); // On the oled
-          
-          int volume = relayThreshold; // Default
-          try { volume = Integer.parseInt(sa[1]); } catch (NumberFormatException nfe) { nfe.printStackTrace(); }
-          System.out.println("Volume:" + volume);
-          // Turn relay on below the threshold
-          if (volume < relayThreshold)
+        displayLR(strVal + "   "); // On the oled
+
+        int volume = relayThreshold; // Default
+        try { volume = Integer.parseInt(sa[1]); } catch (NumberFormatException nfe) { nfe.printStackTrace(); }
+        System.out.println("Volume:" + volume);
+        // Turn relay on below the threshold
+        if (volume < relayThreshold)
+        {
+          String status = rm.getStatus();
+          //  System.out.println("Relay is:" + status);
+          if ("off".equals(status))
           {
-            String status = rm.getStatus();
-        //  System.out.println("Relay is:" + status);
-            if ("off".equals(status))
+            System.out.println("Turning relay on!");
+            try { rm.set("on"); }
+            catch (Exception ex)
             {
-              System.out.println("Turning relay on!");
-              try { rm.set("on"); }
-              catch (Exception ex)
-              {
-                System.err.println(ex.toString());
-              }
-            }
-          }
-          else
-          {
-            String status = rm.getStatus();
-            //  System.out.println("Relay is:" + status);
-            if ("on".equals(status))
-            {
-              System.out.println("Turning relay off!");
-              try { rm.set("off"); }
-              catch (Exception ex)
-              {
-                System.err.println(ex.toString());
-              }
+              System.err.println(ex.toString());
             }
           }
         }
+        else
+        {
+          String status = rm.getStatus();
+          //  System.out.println("Relay is:" + status);
+          if ("on".equals(status))
+          {
+            System.out.println("Turning relay off!");
+            try { rm.set("off"); }
+            catch (Exception ex)
+            {
+              System.err.println(ex.toString());
+            }
+          }
+        }
+      }
 //      else
 //        System.out.println("\tOops! Invalid String [" + payload + "]");
-      }
     });
 
     try
