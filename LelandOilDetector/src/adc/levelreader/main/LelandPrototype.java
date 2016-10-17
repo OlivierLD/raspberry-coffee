@@ -217,11 +217,11 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
                 nb += 1;
                 if (smsProvider != null && nb % 2 == 0)
                 {
-                  smsProvider.requestBatteryState();
+                  try { smsProvider.requestBatteryState(); } catch (IOException ioe) { ioe.printStackTrace(); }
                 }
                 if (smsProvider != null && nb % 2 == 1)
                 {
-                  smsProvider.requestNetworkStatus();
+                  try { smsProvider.requestNetworkStatus(); } catch (IOException ioe) { ioe.printStackTrace(); }
                 }
                 delay(10);
               }
@@ -369,7 +369,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
       if (mess.length() > 140)
         mess = mess.substring(0, 140);
       log(">>> Sending SMS :" + mess);
-      smsProvider.sendMess(to, mess);
+      try { smsProvider.sendMess(to, mess); } catch (IOException ioe) { ioe.printStackTrace(); }
       sendMessWaiter = Thread.currentThread();
       synchronized (sendMessWaiter)
       {
@@ -1011,7 +1011,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
            if (sacm != null)
              sacm.quit();
            if (smsProvider != null)
-             smsProvider.closeChannel();
+             try { smsProvider.closeChannel(); } catch (IOException ioe) { ioe.printStackTrace(); }
            synchronized (me)
            {
              me.notify();
