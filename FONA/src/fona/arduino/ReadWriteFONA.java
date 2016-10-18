@@ -7,6 +7,7 @@ import com.pi4j.io.serial.SerialFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.function.Consumer;
 
 /**
  * Write data, from the Raspberry to the Arduino/FONA, through the serial port.
@@ -43,7 +44,7 @@ public class ReadWriteFONA
   private static Method NUM_MESS_PARSER;
   private static Method MESS_PARSER;
   private static Method ON_SENT_OK;
-  // All methods have the same signature: void function(String).
+  // All methods have the same signature: void function(String). <= Consumer<String>
   static 
   {
     try { GENERIC_FAILURE_PARSER   = ReadWriteFONA.class.getMethod("genericFailureParser",   String.class); } catch (Exception ex) { ex.printStackTrace(); }
@@ -60,6 +61,8 @@ public class ReadWriteFONA
     try { ON_SENT_OK               = ReadWriteFONA.class.getMethod("onSendOK",               String.class); } catch (Exception ex) { ex.printStackTrace(); }
   }
 
+  // TODO Rewrite this one with Consumer<String> instead of the Method
+  // Like this::onSendOK in place of ON_SENT_OK
   public enum ArduinoMessagePrefix
   {
     FONA_OK       (">> FONA READY",          "Good to go",                     READY),
