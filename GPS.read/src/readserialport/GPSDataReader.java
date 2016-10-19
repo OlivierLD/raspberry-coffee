@@ -17,6 +17,7 @@ public class GPSDataReader {
 					throws InterruptedException, NumberFormatException {
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
 		String port = System.getProperty("port.name", Serial.DEFAULT_COM_PORT);
+		boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 		if (args.length > 0) {
 			try {
 				br = Integer.parseInt(args[0]);
@@ -37,8 +38,11 @@ public class GPSDataReader {
 			try {
 				// print out the data received to the console
 				String data = event.getAsciiString();
-				System.out.println("Got Data (" + data.length() + " byte(s))");
-				System.out.println(data);
+				if (verbose)
+				{
+					System.out.println("Got Data (" + data.length() + " byte(s))");
+					System.out.println(data);
+				}
 				if (data.startsWith("$"))
 					System.out.println(data);
 				else {
