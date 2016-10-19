@@ -38,18 +38,13 @@ public class GPSDataReader {
 				// print out the data received to the console
 				String data = event.getAsciiString();
 				System.out.println("Got Data (" + data.length() + " byte(s))");
+				System.out.println(data);
 				if (data.startsWith("$"))
 					System.out.println(data);
 				else {
 					String[] sa = DumpUtil.dualDump(data);
 					for (String str : sa)
 						System.out.println(str);
-
-//					String hexString = "";
-//					char[] ca = data.toCharArray();
-//					for (int i = 0; i < ca.length; i++)
-//						hexString += (lpad(Integer.toHexString(ca[i] & 0xFF), "0", 2) + " ");
-//					System.out.println(hexString);
 				}
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
@@ -96,13 +91,6 @@ public class GPSDataReader {
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
 		}
-	}
-
-	private static String lpad(String str, String with, int len) {
-		String s = str;
-		while (s.length() < len)
-			s = with + s;
-		return s;
 	}
 }
 
