@@ -2,6 +2,7 @@ package readserialport;
 
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialFactory;
+import util.DumpUtil;
 
 import java.io.IOException;
 
@@ -40,11 +41,15 @@ public class GPSDataReader {
 				if (data.startsWith("$"))
 					System.out.println(data);
 				else {
-					String hexString = "";
-					char[] ca = data.toCharArray();
-					for (int i = 0; i < ca.length; i++)
-						hexString += (lpad(Integer.toHexString(ca[i]), "0", 2) + " ");
-					System.out.println(hexString);
+					String[] sa = DumpUtil.dualDump(data);
+					for (String str : sa)
+						System.out.println(str);
+
+//					String hexString = "";
+//					char[] ca = data.toCharArray();
+//					for (int i = 0; i < ca.length; i++)
+//						hexString += (lpad(Integer.toHexString(ca[i] & 0xFF), "0", 2) + " ");
+//					System.out.println(hexString);
 				}
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
