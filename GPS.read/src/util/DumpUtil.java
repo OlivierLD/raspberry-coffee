@@ -15,7 +15,7 @@ public class DumpUtil
       String lineLeft  = "";
       String lineRight = "";
       int start = l * LINE_LEN;
-      for (int c=start; c<Math.min(start + LINE_LEN - 1, ba.length); c++)
+      for (int c=start; c<Math.min(start + LINE_LEN - 1, ba.length - 1); c++)
       {
         lineLeft  += (lpad(Integer.toHexString(ba[c]).toUpperCase(), 2, "0") + " ");
         lineRight += (isAsciiPrintable(str.charAt(c)) ? str.charAt(c) : ".");
