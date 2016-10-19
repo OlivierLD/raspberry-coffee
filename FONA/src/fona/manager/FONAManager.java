@@ -6,6 +6,8 @@ import com.pi4j.io.serial.SerialDataEventListener;
 import com.pi4j.io.serial.SerialFactory;
 
 import java.io.IOException;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -125,6 +127,9 @@ public class FONAManager
             {
               while (true && serial.available() > 0)
               {
+                CharBuffer cb = serial.read(Charset.defaultCharset());
+                fullMessage.append(cb);
+
                 char c = (char)0; // TODO Fix that serial.read();
                 c &= 0xFF;
     

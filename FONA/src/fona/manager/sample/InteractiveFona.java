@@ -235,7 +235,7 @@ public class InteractiveFona implements FONAClient
         };
       userInputThread.start();
       
-      // Debug thread... simulates fon output
+      // Debug thread... simulates fona output
       if (false)
       {
         Thread simulator = new Thread()
