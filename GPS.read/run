@@ -11,6 +11,7 @@ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 JAVA_OPTIONS=
 # Default serial port is /dev/ttyAMA0
 JAVA_OPTIONS="$JAVA_OPTIONS -Dport.name=/dev/ttyUSB0"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=4800"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
 sudo java -cp $CP $JAVA_OPTIONS readserialport.GPSDataReader $*
 
