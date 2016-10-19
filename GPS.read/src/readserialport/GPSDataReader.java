@@ -18,13 +18,6 @@ public class GPSDataReader {
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
 		String port = System.getProperty("port.name", Serial.DEFAULT_COM_PORT);
 		boolean verbose = "true".equals(System.getProperty("verbose", "false"));
-		if (args.length > 0) {
-			try {
-				br = Integer.parseInt(args[0]);
-			} catch (Exception ex) {
-				System.err.println(ex.getMessage());
-			}
-		}
 
 		System.out.println("Serial Communication.");
 		System.out.println(" ... connect using settings: " + Integer.toString(br) + ", N, 8, 1.");
@@ -43,13 +36,9 @@ public class GPSDataReader {
 					System.out.println("Got Data (" + data.length() + " byte(s))");
 					System.out.println(data);
 				}
-				if (data.startsWith("$"))
-					System.out.println(data);
-				else {
-					String[] sa = DumpUtil.dualDump(data);
-					for (String str : sa)
-						System.out.println(str);
-				}
+				String[] sa = DumpUtil.dualDump(data);
+				for (String str : sa)
+					System.out.println(str);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
