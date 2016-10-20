@@ -41,6 +41,31 @@ _Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `
 </pre>
 
 ---
+### Developing **on** the Raspberry PI, or Developing **for** the Raspberry PI ?
+
+To write code, the simplest editor is enough. I have used `vi` for ages, mostly because this was the only one available, but also because it **is** indeed good enough.
+`vi` is available on the Raspberry PI, `nano` too, graphical editors like `gedit`, `geany` are even easier to use, on a grahical desktop.
+
+All the code provided here can be built from Gradle (all gradle scripts are provided), _**on the Raspberry PI**_ itself.
+The Raspberry PI is self sufficient, if this is all you have, nothing is preventing you from accessing **_all_** the features presented here.
+
+But let us be honest, Integrated Development Environments (IDE) are quite cool.
+In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Smaller ones like GreenFoot, BlueJ are also options to consider.
+
+Those two last ones might be able to run on a Raspberry PI, but forget about the others..., they use way too much RAM.
+ The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion 
+ and similar features are here to help.
+ 
+ So, as the Raspberry PI is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry PI.
+ I found it actually faster and more efficient than developing directly on the Raspberry PI.
+ 
+##### Something to keep in mind
+ 
+ Java - and other JVM Languages - implement the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**. In other words, you run the code on the Raspberry PI,
+ but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs). 
+ This is specially useful when the code interacts with sensors and other devices that are not supported from the laptop.
+
+---
 
 ### Raspberry PI, a possible thing of the Internet of things... ###
   * The Raspberry PI is a fully featured Linux computer, which can - as such - connect to the Internet.
