@@ -1,13 +1,6 @@
 #!/bin/bash
 #
-# Running the Serial sample, communication between RPi and Arduino.
-# Needs to be run as root (Gradle may have problemn with that...)
-# Requires the ArduinoSerialEvent.ino (provided) to be running on the Arduino.
-# The baud rate in the Arduino sketch must be the same as the one
-# provided below in the System variabl "baud.rate".
-#
-CP=./build/libs/Serial.IO-1.0.jar
+CP=./build/libs/SerialRxTx-1.0.jar
 CP=$CP:/usr/share/java/RXTXcomm.jar
-echo Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable.
-sudo java -Djava.library.path=/usr/lib/jni -Dserial.port=/dev/ttyACM0 -Dbaud.rate=9600 -cp $CP sample.ArduinoEchoClient
-
+#
+java -Djava.library.path=/usr/lib/jni -Dserial.port=COM17 -Dbaud.rate=115200 -cp $CP sample.SerialEchoClient
