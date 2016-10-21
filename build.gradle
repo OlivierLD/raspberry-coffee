@@ -31,6 +31,7 @@ dependencies {
   compile project(':LelandOilDetector')
   compile project(':OtherJVM.languages')
   compile project(':Serial.IO')
+  compile project(':SerialRxTx')
   compile project(':MindWave')
   compile project(':GPS.read')
 }

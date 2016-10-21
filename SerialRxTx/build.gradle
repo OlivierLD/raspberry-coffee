@@ -1,0 +1,46 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'oliv.pi4j.samples'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url "http://lediouris.net/maven2" }
+    mavenLocal()
+}
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src'
+    }
+  }  
+  test {
+    java {
+      srcDir 'tests'
+    }
+  }  
+}
+
+dependencies {
+//  compile 'com.pi4j:pi4j-core:1.1'
+//  compile 'comm:rxtx:1.0'
+    compile 'org.rxtx:rxtx:2.1.7'
+}
+
+task runSample(type: JavaExec, dependsOn: classes, description: 'Runs the Arduino Serial.IO sample') {
+    main = 'sample.ArduinoEchoClient'
+    jvmArgs '-Djava.library.path=/usr/lib/jni'
+    jvmArgs '-Dserial.port=/dev/ttyACM0'
+    jvmArgs '-Dbaud.rate=9600'
+//  jvmArgs '-Djava.library.path=/Users/olediouris/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib/mac-10.5' // On a Mac
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+runSample.doFirst {
+    println ">>> Make sure you have uploaded the right sketch on the Arduino, and connected it through its USB cable."
+    println ">>> Also make sure you've installed RXTX, and modified the java.library.path accordingly (in this script)"
+    println ">>> If no port is found, try to run the task as root (sudo). The script 'runArduinoSample' can help you with that."
+}
