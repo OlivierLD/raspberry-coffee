@@ -1,8 +1,16 @@
 #!/bin/bash
 #
-RXTX_HOME=~/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib
+# RXTX_HOME=~/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib
+RXTX_HOME=./libs
 #
 CP=./build/libs/SerialRxTx-1.0.jar
+# CP=$CP:/Users/olediouris/.gradle/caches/modules-2/files-2.1//org.rxtx/rxtx/2.1.7/e96c946be1e6537378fd532d2742b523df2725a4/rxtx-2.1.7.jar
 CP=$CP:$RXTX_HOME/RXTXcomm.jar
 #
-java -Djava.library.path=$RXTX_HOME/mac-10.5 -Dserial.port=/dev/tty.usbserial -Dbaud.rate=115200 -cp $CP sample.SerialEchoClient
+JAVA_OPTS=
+JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$RXTX_HOME"
+JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/tty.usbserial"
+JAVA_OPTS="$JAVA_OPTS -Dbaud.rate=115200"
+JAVA_OPTS="$JAVA_OPTS -Dverbose=false"
+# java -Djava.library.path=$RXTX_HOME/mac-10.5 -Dserial.port=/dev/tty.usbserial -Dbaud.rate=115200 -cp $CP sample.SerialEchoClient
+java $JAVA_OPTS -cp $CP sample.SerialEchoClient

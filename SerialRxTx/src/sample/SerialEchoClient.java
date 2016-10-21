@@ -17,6 +17,7 @@ import serial.io.SerialIOCallbacks;
 
 public class SerialEchoClient implements SerialIOCallbacks
 {
+  private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
   @Override
   public void connected(boolean b)
   {
@@ -30,7 +31,7 @@ public class SerialEchoClient implements SerialIOCallbacks
   @Override
   public void onSerialData(byte b)
   {
-    System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
+//  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
     serialBuffer[bufferIdx++] = (byte)(b & 0xFF);
     if (b == 0xA) // \n 
     {
@@ -47,7 +48,7 @@ public class SerialEchoClient implements SerialIOCallbacks
 
   public void serialOutput(byte[] mess)
   {
-    if (true) // verbose...
+    if (verbose) // verbose...
     {
       try
       {
@@ -63,6 +64,14 @@ public class SerialEchoClient implements SerialIOCallbacks
       {
         ex.printStackTrace();
       }
+    }
+    else // Standard nmode, no hex dump.
+    {
+      String str = new String(mess);
+      if (str.endsWith("\r\n")) {
+        str = str.substring(0, str.length() - 2);
+      }
+      System.out.println(str);
     }
   }
 
@@ -126,12 +135,7 @@ public class SerialEchoClient implements SerialIOCallbacks
       sc.initListener();
       
       Thread.sleep(500L);
-      // Wake up!
-//      for (int i=0; i<5; i++)
-//      {
-//        sc.writeData("\n");
-//      }
-//      Thread.sleep(1000L);
+
       System.out.println("Writing to the serial port.");
 
       boolean keepWorking = true;
@@ -139,7 +143,7 @@ public class SerialEchoClient implements SerialIOCallbacks
       {
         String userInput = userInput("$> ");
         System.out.println(String.format("Input [%s]", userInput));
-        if (userInput.equals("exit"))
+        if (userInput.equals("quit"))
         {
           System.out.println("Bye!");
           keepWorking = false;
@@ -156,8 +160,18 @@ public class SerialEchoClient implements SerialIOCallbacks
     {
       ex.printStackTrace();
     }
-    System.out.println("Disconnecting");
-    try {  sc.disconnect(); } catch (IOException ioe) { ioe.printStackTrace(); }
+    System.out.println("Disconnecting...");
+    if (true) {
+      try {
+        sc.disconnect();
+      } catch (IOException ioe) {
+        ioe.printStackTrace();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      } finally {
+        System.out.println("Ooops!");
+      }
+    }
     System.out.println("Done.");
   }
 }
