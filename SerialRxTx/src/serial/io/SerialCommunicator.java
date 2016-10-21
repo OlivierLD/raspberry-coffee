@@ -140,7 +140,6 @@ public class SerialCommunicator
         output.close();
       setConnected(false);
       this.parent.connected(false);
-
     }
     catch (IOException e)
     {

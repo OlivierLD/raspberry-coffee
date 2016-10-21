@@ -29,12 +29,14 @@ dependencies {
     compile 'org.rxtx:rxtx:2.1.7'
 }
 
-task runSample(type: JavaExec, dependsOn: classes, description: 'Runs the Arduino Serial.IO sample') {
-    main = 'sample.ArduinoEchoClient'
-    jvmArgs '-Djava.library.path=/usr/lib/jni'
-    jvmArgs '-Dserial.port=/dev/ttyACM0'
-    jvmArgs '-Dbaud.rate=9600'
-//  jvmArgs '-Djava.library.path=/Users/olediouris/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib/mac-10.5' // On a Mac
+task runSample(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
+    main = 'sample.SerialEchoClient'
+//  jvmArgs '-Djava.library.path=/usr/lib/jni'
+//  jvmArgs '-Dserial.port=/dev/ttyACM0'
+//  jvmArgs '-Dbaud.rate=9600'
+    jvmArgs '-Djava.library.path=~/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib/mac-10.5' // On a Mac
+    jvmArgs '-Dserial.port=/dev/tty.usbserial'
+    jvmArgs '-Dbaud.rate=115200'
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.runtime
 }

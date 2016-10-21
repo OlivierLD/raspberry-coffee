@@ -15,16 +15,12 @@ import sample.util.DumpUtil;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 
-/**
- * Connect an Arduino Uno with its USB cable.
- * Serial port (COM22 below) may vary.
- */
 public class SerialEchoClient implements SerialIOCallbacks
 {
   @Override
   public void connected(boolean b)
   {
-    System.out.println("Arduino connected: " + b);
+    System.out.println("Serial port connected: " + b);
   }
 
   private int lenToRead = 0;
@@ -34,7 +30,7 @@ public class SerialEchoClient implements SerialIOCallbacks
   @Override
   public void onSerialData(byte b)
   {
-//  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
+    System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
     serialBuffer[bufferIdx++] = (byte)(b & 0xFF);
     if (b == 0xA) // \n 
     {
@@ -58,7 +54,7 @@ public class SerialEchoClient implements SerialIOCallbacks
         String[] sa = DumpUtil.dualDump(mess);
         if (sa != null)
         {
-          System.out.println("\t>>> [From Arduino] Received:");              
+          System.out.println("\t>>> [From Serial port] Received:");
           for (String s: sa)
             System.out.println("\t\t"+ s);                
         }
@@ -124,26 +120,28 @@ public class SerialEchoClient implements SerialIOCallbacks
     }
     try 
     {
-      sc.connect(serialPort, "SerailRxTx", Integer.parseInt(baudRateStr));
+      sc.connect(serialPort, "SerialRxTx", Integer.parseInt(baudRateStr));
       boolean b = sc.initIOStream();
       System.out.println("IO Streams " + (b?"":"NOT ") + "initialized");
       sc.initListener();
       
       Thread.sleep(500L);
       // Wake up!
-      for (int i=0; i<5; i++)
-      {
-        sc.writeData("\n");
-      }
-      Thread.sleep(1000L);
+//      for (int i=0; i<5; i++)
+//      {
+//        sc.writeData("\n");
+//      }
+//      Thread.sleep(1000L);
       System.out.println("Writing to the serial port.");
 
       boolean keepWorking = true;
       while (keepWorking)
       {
         String userInput = userInput("$> ");
+        System.out.println(String.format("Input [%s]", userInput));
         if (userInput.equals("exit"))
         {
+          System.out.println("Bye!");
           keepWorking = false;
         }
         else
@@ -152,11 +150,13 @@ public class SerialEchoClient implements SerialIOCallbacks
 //        System.out.println("Data written to the serial port.");
         }
       }
+      System.out.println("Exiting program.");
     }
     catch (Exception ex) 
     {
       ex.printStackTrace();
-    }        
+    }
+    System.out.println("Disconnecting");
     try {  sc.disconnect(); } catch (IOException ioe) { ioe.printStackTrace(); }
     System.out.println("Done.");
   }
