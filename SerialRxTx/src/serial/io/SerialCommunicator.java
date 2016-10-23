@@ -68,6 +68,10 @@ public class SerialCommunicator
   {
     connect(port, userPortName, DEFAULT_BAUD_RATE);
   }
+  public void connect(CommPortIdentifier port, int br) throws PortInUseException, Exception, UnsupportedCommOperationException
+  {
+    connect(port, "", br, DEFAULT_DATABITS, DEFAULT_STOIP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
+  }
   public void connect(CommPortIdentifier port, String userPortName, int br) throws PortInUseException, Exception, UnsupportedCommOperationException
   {
     connect(port, userPortName, br, DEFAULT_DATABITS, DEFAULT_STOIP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
@@ -129,15 +133,29 @@ public class SerialCommunicator
   }
 
   public void disconnect() throws IOException
-  {
+  { // TODO See what's wrong here, on disconnect
     try
     {
-      serialPort.removeEventListener();
-      serialPort.close();
-      if (input != null)
+      if (input != null) {
+        if (verbose) {
+          System.out.println("Closing input");
+        }
         input.close();
-      if (output != null)
+      }
+      if (output != null) {
+        if (verbose) {
+          System.out.println("Closing output");
+        }
         output.close();
+      }
+      if (verbose) {
+        System.out.println("Removing event listener");
+      }
+      serialPort.removeEventListener(); // Causes a JVM crash?
+      if (verbose) {
+        System.out.println("Closing Serial port");
+      }
+      serialPort.close();               // Causes a JVM crash?
       setConnected(false);
       this.parent.connected(false);
     }

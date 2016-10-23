@@ -65,7 +65,7 @@ public class SerialEchoClient implements SerialIOCallbacks
         ex.printStackTrace();
       }
     }
-    else // Standard nmode, no hex dump.
+    else // Standard mode, no hex dump.
     {
       String str = new String(mess);
       if (str.endsWith("\r\n")) {
@@ -101,16 +101,25 @@ public class SerialEchoClient implements SerialIOCallbacks
     return retString;
   }
 
+  /**
+   * Can work with the RPi Serial Console (USB).
+   * Pin #2  5V0 Red                             #1 . . #2
+   * Pin #6  Gnd Black                           #3 . . #4
+   * Pin #8  Tx  White                           #5 . . #6
+   * Pin #10 Rx  Green                           #7 . . #8
+   *                                             #9 . . #10
+   * @param args                              etc   . .
+   */
   public static void main(String[] args)
   {
     final SerialEchoClient mwc = new SerialEchoClient();
     final SerialCommunicator sc = new SerialCommunicator(mwc);
-    sc.setVerbose(false);
+    sc.setVerbose(verbose);
     
     Map<String, CommPortIdentifier> pm = sc.getPortList();
     Set<String> ports = pm.keySet();
     if (ports.size() == 0) {
-      System.out.println("No serial port found.");
+      System.out.println("No serial port was found.");
       System.out.println("Did you run as administrator (sudo) ?");
     }
     System.out.println("== Serial Port List ==");
@@ -120,7 +129,7 @@ public class SerialEchoClient implements SerialIOCallbacks
 
     String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
     String baudRateStr = System.getProperty("baud.rate", "9600");
-    System.out.println(String.format("Opening port %s:%s", serialPortName, baudRateStr));
+    System.out.println(String.format("Opening port %s:%s ...", serialPortName, baudRateStr));
     CommPortIdentifier serialPort = pm.get(serialPortName);
     if (serialPort == null)
     {
@@ -132,6 +141,9 @@ public class SerialEchoClient implements SerialIOCallbacks
       sc.connect(serialPort, "SerialRxTx", Integer.parseInt(baudRateStr));
       boolean b = sc.initIOStream();
       System.out.println("IO Streams " + (b?"":"NOT ") + "initialized");
+      if (verbose) {
+        System.out.println("Verbose: ON");
+      }
       sc.initListener();
       
       Thread.sleep(500L);
