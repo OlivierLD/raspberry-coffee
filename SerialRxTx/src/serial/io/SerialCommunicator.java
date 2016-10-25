@@ -37,7 +37,7 @@ public class SerialCommunicator
   private final static int DEFAULT_FLOW_CTRL_IN  = SerialPort.FLOWCONTROL_NONE; 
   private final static int DEFAULT_FLOW_CTRL_OUT = SerialPort.FLOWCONTROL_NONE;
   private final static int DEFAULT_DATABITS      = SerialPort.DATABITS_8;
-  private final static int DEFAULT_STOIP_BITS    = SerialPort.STOPBITS_1;
+  private final static int DEFAULT_STOP_BITS     = SerialPort.STOPBITS_1;
   private final static int DEFAULT_PARITY        = SerialPort.PARITY_NONE;
 
   public SerialCommunicator(SerialIOCallbacks caller)
@@ -70,11 +70,11 @@ public class SerialCommunicator
   }
   public void connect(CommPortIdentifier port, int br) throws PortInUseException, Exception, UnsupportedCommOperationException
   {
-    connect(port, "", br, DEFAULT_DATABITS, DEFAULT_STOIP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
+    connect(port, "", br, DEFAULT_DATABITS, DEFAULT_STOP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
   }
   public void connect(CommPortIdentifier port, String userPortName, int br) throws PortInUseException, Exception, UnsupportedCommOperationException
   {
-    connect(port, userPortName, br, DEFAULT_DATABITS, DEFAULT_STOIP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
+    connect(port, userPortName, br, DEFAULT_DATABITS, DEFAULT_STOP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
   }
   public void connect(CommPortIdentifier port, String userPortName, int br, int db, int sb, int par, int fIn, int fOut) throws PortInUseException, Exception, UnsupportedCommOperationException
   {
@@ -108,12 +108,13 @@ public class SerialCommunicator
     boolean success = false;
     try
     {
-      input  = serialPort.getInputStream();
-      output = serialPort.getOutputStream();
+      this.input  = serialPort.getInputStream();
+      this.output = serialPort.getOutputStream();
       success = true;
     }
     catch (IOException e)
     {
+      success = false;
       throw e;
     }
     return success;
@@ -123,8 +124,8 @@ public class SerialCommunicator
   {
     try
     {
-      serialPort.addEventListener(this);
-      serialPort.notifyOnDataAvailable(true);
+      this.serialPort.addEventListener(this);
+      this.serialPort.notifyOnDataAvailable(true);
     }
     catch (TooManyListenersException e)
     {
@@ -136,26 +137,26 @@ public class SerialCommunicator
   { // TODO See what's wrong here, on disconnect
     try
     {
-      if (input != null) {
+      if (this.input != null) {
         if (verbose) {
           System.out.println("Closing input");
         }
-        input.close();
+        this.input.close();
       }
-      if (output != null) {
+      if (this.output != null) {
         if (verbose) {
           System.out.println("Closing output");
         }
-        output.close();
+        this.output.close();
       }
       if (verbose) {
         System.out.println("Removing event listener");
       }
-      serialPort.removeEventListener(); // Causes a JVM crash?
+      this.serialPort.removeEventListener(); // Causes a JVM crash?
       if (verbose) {
         System.out.println("Closing Serial port");
       }
-      serialPort.close();               // Causes a JVM crash?
+      this.serialPort.close();               // Causes a JVM crash?
       setConnected(false);
       this.parent.connected(false);
     }
@@ -189,8 +190,21 @@ public class SerialCommunicator
     {
       try
       {
-        byte b = (byte) input.read();
-        this.parent.onSerialData(b);
+        if (false) // TODO an option
+        {
+          byte b = (byte) this.input.read();
+          this.parent.onSerialData(b);
+        }
+        else
+        {
+          byte[] ba = new byte[512];
+          int r = this.input.read(ba);
+          if (verbose)
+          {
+            System.out.println(String.format(">>> Received %d byte(s), for onSerialData(byte[])", r));
+          }
+          this.parent.onSerialData(ba, r);
+        }
       }
       catch (IOException e)
       {
@@ -218,7 +232,7 @@ public class SerialCommunicator
     try
     {
       output.write(b & 0xFF);
-      try { Thread.sleep(10L); } catch (InterruptedException ie) {} // QUESTION: ???
+//    try { Thread.sleep(10L); } catch (InterruptedException ie) {} // QUESTION: ???
 //    output.flush();
     }
     catch (IOException e)

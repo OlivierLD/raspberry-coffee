@@ -26,14 +26,14 @@ public class SerialEchoClient implements SerialIOCallbacks
 
   private int lenToRead = 0;
   private int bufferIdx = 0;
-  private byte[] serialBuffer = new byte[256];
+  private byte[] serialBuffer = new byte[4096]; // byte[256];
 
   @Override
   public void onSerialData(byte b)
   {
-//  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
+    System.out.println("\t\tReceived character [0x" + Integer.toHexString(b & 0xFF) + "]");
     serialBuffer[bufferIdx++] = (byte)(b & 0xFF);
-    if (b == 0xA) // \n 
+    if (b == 0xA) // \n , EOM
     {
       // Message completed
       byte[] mess = new byte[bufferIdx];
@@ -46,18 +46,42 @@ public class SerialEchoClient implements SerialIOCallbacks
     }
   }
 
+  @Override
+  public void onSerialData(byte[] ba, int len)
+  {
+    System.arraycopy(ba, 0, serialBuffer, bufferIdx, len);
+    bufferIdx += len;
+
+    String[] messages = new String(serialBuffer, 0, bufferIdx).split("\n"); // Full lines end with \r\n
+    for (String mess : messages)
+    {
+      serialOutput(mess);
+    }
+    bufferIdx = 0;
+  }
+
+  public void serialOutput(String mess)
+  {
+    serialOutput(mess.getBytes());
+  }
+
   public void serialOutput(byte[] mess)
   {
-    if (verbose) // verbose...
+//  System.out.println(String.format(">>> Got %d bytes", mess.length));
+    if (verbose)
     {
       try
       {
         String[] sa = DumpUtil.dualDump(mess);
         if (sa != null)
         {
-          System.out.println("\t>>> [From Serial port] Received:");
+//        System.out.println("\t>>> [From Serial port] Received:");
           for (String s: sa)
             System.out.println("\t\t"+ s);                
+        }
+        else
+        {
+          System.out.println(String.format("sa is null (mess %d byte(s)]...", mess.length));
         }
       }
       catch (Exception ex)
@@ -67,11 +91,11 @@ public class SerialEchoClient implements SerialIOCallbacks
     }
     else // Standard mode, no hex dump.
     {
-      String str = new String(mess);
-      if (str.endsWith("\r\n")) {
-        str = str.substring(0, str.length() - 2);
-      }
-      System.out.println(str);
+      int offset = 0;
+      while (mess[offset] == 0xA || mess[offset] == 0xD)
+        offset++;
+      String str = new String(mess, offset, mess.length - offset);
+      System.out.print(str.replace('\r', '\n'));
     }
   }
 
@@ -80,7 +104,8 @@ public class SerialEchoClient implements SerialIOCallbacks
   private static String userInput(String prompt)
   {
     String retString = "";
-    System.err.print(prompt);
+    if (prompt != null)
+      System.err.print(prompt);
     try
     {
       retString = stdin.readLine();
@@ -103,6 +128,7 @@ public class SerialEchoClient implements SerialIOCallbacks
 
   /**
    * Can work with the RPi Serial Console (USB).
+   *
    * Pin #2  5V0 Red                             #1 . . #2
    * Pin #6  Gnd Black                           #3 . . #4
    * Pin #8  Tx  White                           #5 . . #6
@@ -153,7 +179,7 @@ public class SerialEchoClient implements SerialIOCallbacks
       boolean keepWorking = true;
       while (keepWorking)
       {
-        String userInput = userInput("$> ");
+        String userInput = userInput(null);
         System.out.println(String.format("Input [%s]", userInput));
         if (userInput.equals("quit"))
         {
@@ -173,7 +199,7 @@ public class SerialEchoClient implements SerialIOCallbacks
       ex.printStackTrace();
     }
     System.out.println("Disconnecting...");
-    if (true) {
+    if (false && sc.isConnected()) {
       try {
         sc.disconnect();
       } catch (IOException ioe) {
