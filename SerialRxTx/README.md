@@ -4,173 +4,103 @@ To install this package (on Raspberry PI, or more generally on Ubuntu), type
 ```
 $> sudo apt-get install librxtx-java
 ```
-This is an possible alternative to the `com.pi4j.io.serial` package (that comes with PI4J).
-Gives a bit more flexibility, specially on the callback side.
 
-It requires:
-* on the runtime command line `-Djava.library.path=/usr/lib/jni`
-* in the classpath `/usr/share/java/RXTXcomm.jar`, to compile or run.
+This is a Java implementation of a Serial client for the `raspi-serial-console`.
 
-### To run the example
-The example illustrates a Serial communication between the Raspberry PI (or any other machine) and an Arduino Uno.
+It can run the same - hopefully - in Windows, Mac, Linux, no need for screen or PuTTY...
 
-To proceed:
-- Upload the sketch `ArduinoSerialEvent.ino` on the Arduino Uno
-- Connect the USB cable, between the Arduino and the Raspberry PI
-- Make sure the Serial port names match in the `SerialEchoClient.java` (or use the System variable named `serial.port`)
-    
-The example send several sentences to the Arduino, the Arduino sends the sentences back to the
-Raspberry PI, in reverse order. A string like 'arduino' will be sent back as 'oniudra'. 
-The example is reversing the sentences of a `Lorem ipsum` paragraph (look in the code for details).
+Next, we'll see how to transfer files (text and binaries).
+ 
+### Examples
+
+#### From a Mac
+
+Script `run.mac` :
+```
+#!/bin/bash
+#
+RXTX_HOME=./libs
+#
+CP=./build/libs/SerialRxTx-1.0.jar
+CP=$CP:$RXTX_HOME/RXTXcomm.jar
+#
+JAVA_OPTS=
+JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$RXTX_HOME"
+JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/tty.usbserial"
+JAVA_OPTS="$JAVA_OPTS -Dbaud.rate=115200"
+JAVA_OPTS="$JAVA_OPTS -Dverbose=false"
+java $JAVA_OPTS -cp $CP sample.SerialEchoClient
+```
 
 ```
-$ ../gradlew runArduinoSample
--> /dev/ttyUSB0
--> /dev/ttyAMA0
--> /dev/ttyACM0
-
-Arduino connected: true
+$> ./run.mac
+== Serial Port List ==
+-> /dev/cu.usbserial
+-> /dev/tty.Bluetooth-Incoming-Port
+-> /dev/tty.usbserial
+-> /dev/cu.Bluetooth-Incoming-Port
+======================
+Opening port /dev/tty.usbserial:115200 ...
+Serial port connected: true
 IO Streams initialized
 Writing to the serial port.
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 2C 74 69 6C 65 20 67 6E 69 63 73 69 70 69 64      ,tile gnicsipid
-		61 20 72 65 75 74 65 74 63 65 73 6E 6F 63 20 2C     a reutetcesnoc ,
-		74 65 6D 61 20 74 69 73 20 72 6F 6C 6F 64 20 6D     tema tis rolod m
-		75 73 70 69 20 6D 65 72 6F 4C 0D 0A                 uspi meroL..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 2E 74 61 70 74 75 6C 6F 76 20 74 61 72 65 20      .taptulov tare 
-		6D 61 75 71 69 6C 61 20 61 6E 67 61 6D 20 65 72     mauqila angam er
-		6F 6C 6F 64 20 74 65 65 72 6F 61 6C 20 74 75 20     olod teeroal tu 
-		74 6E 75 64 69 63 6E 69 74 20 64 6F 6D 73 69 75     tnudicnit domsiu
-		65 20 68 62 69 6E 20 79 6D 6D 75 6E 6F 6E 20 6D     e hbin ymmunon m
-		61 69 64 20 64 65 73 0D 0A                          aid des..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 2E 74 61 75 71 65 73 6E 6F 63 20 6F 64 6F 6D      .tauqesnoc odom
-		6D 6F 63 20 61 65 20 78 65 20 70 69 75 71 69 6C     moc ae xe piuqil
-		61 20 74 75 20 6C 73 69 6E 20 73 69 74 72 6F 62     a tu lsin sitrob
-		6F 6C 20 74 69 70 69 63 73 75 73 20 72 65 70 72     ol tipicsus repr
-		6F 63 6D 61 6C 6C 75 20 6E 6F 69 74 61 74 20 69     ocmallu noitat i
-		63 72 65 78 65 20 64 75 72 74 73 6F 6E 20 73 69     crexe durtson si
-		75 71 20 2C 6D 61 69 6E 65 76 20 6D 69 6E 69 6D     uq ,mainev minim
-		20 64 61 20 6D 69 6E 65 20 69 73 69 77 20 74 55      da mine isiw tU
-		0D 0A                                               ..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 2C 74 61 75 71 65 73 6E 6F 63 20 65 69 74 73      ,tauqesnoc eits
-		65 6C 6F 6D 20 65 73 73 65 20 74 69 6C 65 76 20     elom esse tilev 
-		65 74 61 74 75 70 6C 75 76 20 6E 69 20 74 69 72     etatupluv ni tir
-		65 72 64 6E 65 68 20 6E 69 20 72 6F 6C 6F 64 20     erdneh ni rolod 
-		65 72 75 69 72 69 20 6D 75 65 20 6C 65 76 20 6D     eruiri mue lev m
-		65 74 75 61 20 73 69 75 44 0D 0A                    etua siuD..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 6D 69 73 73 69 6E 67 69 64 20 6F 69 64 6F 20      missingid oido 
-		6F 74 73 75 69 20 74 65 20 6E 61 73 6D 75 63 63     otsui te nasmucc
-		61 20 74 65 20 73 6F 72 65 20 6F 72 65 76 20 74     a te sore orev t
-		61 20 73 69 73 69 6C 69 63 61 66 20 61 6C 6C 75     a sisilicaf allu
-		6E 20 74 61 69 67 75 65 66 20 75 65 20 65 72 6F     n taiguef ue ero
-		6C 6F 64 20 6D 75 6C 6C 69 20 6C 65 76 0D 0A        lod mulli lev..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		2E 69 73 69 6C 69 63 61 66 20 61 6C 6C 75 6E 20     .isilicaf allun 
-		74 69 61 67 75 65 66 20 65 74 20 65 72 6F 6C 6F     tiaguef et erolo
-		64 20 73 69 75 64 20 65 75 67 75 61 20 74 69 6E     d siud eugua tin
-		65 6C 65 64 20 6C 69 72 7A 7A 20 6D 75 74 61 74     eled lirzz mutat
-		70 75 6C 20 74 6E 65 73 65 61 72 70 20 74 69 64     pul tnesearp tid
-		6E 61 6C 62 20 69 75 71 0D 0A                       nalb iuq..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 74 61 72 65 63 61 6C 70 20 6D 69 7A 61 6D 20      tarecalp mizam 
-		64 6F 75 71 20 64 69 20 67 6E 69 6D 6F 64 20 74     douq di gnimod t
-		65 69 64 72 65 70 6D 69 20 6C 69 68 69 6E 20 65     eidrepmi lihin e
-		75 67 6E 6F 63 20 6E 6F 69 74 70 6F 20 64 6E 65     ugnoc noitpo dne
-		66 69 65 6C 65 20 73 69 62 6F 6E 20 61 74 75 6C     fiele sibon atul
-		6F 73 20 6D 75 63 20 72 6F 70 6D 65 74 20 72 65     os muc ropmet re
-		62 69 6C 20 6D 61 4E 0D 0A                          bil maN..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 3B 6D 61 74 69 73 6E 69 20 6D 65 74 61 74 69      ;matisni metati
-		72 61 6C 63 20 74 6E 65 62 61 68 20 6E 6F 6E 20     ralc tnebah non 
-		69 70 79 54 20 2E 6D 75 73 73 61 20 6D 69 73 73     ipyT .mussa miss
-		6F 70 20 72 65 63 61 66 0D 0A                       op recaf..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 2E 6D 65 74 61 74 69 72 61 6C 63 20 6D 75 72      .metatiralc mur
-		6F 65 20 74 69 63 61 66 20 69 75 71 20 73 69 69     oe ticaf iuq sii
-		20 6E 69 20 73 69 74 6E 65 67 65 6C 20 73 75 73      ni sitnegel sus
-		75 20 74 73 65 0D 0A                                u tse..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 2E 73 75 69 70 65 61 73 20 74 6E 75 67 65 6C      .suipeas tnugel
-		20 69 69 20 64 6F 75 71 20 73 75 69 6C 20 65 6D      ii douq suil em
-		20 65 72 65 67 65 6C 20 73 65 72 6F 74 63 65 6C      eregel serotcel
-		20 74 6E 75 72 65 76 61 72 74 73 6E 6F 6D 65 64      tnurevartsnomed
-		20 73 65 6E 6F 69 74 61 67 69 74 73 65 76 6E 49      senoitagitsevnI
-		0D 0A                                               ..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 2E 6D 75 72 6F 74 63 65 6C 20 6D 75 69 64 75      .murotcel muidu
-		74 65 75 73 6E 6F 63 20 6D 65 6E 6F 69 74 61 74     teusnoc menoitat
-		75 6D 20 72 75 74 69 75 71 65 73 20 69 75 71 20     um rutiuqes iuq 
-		2C 73 75 63 69 6D 61 6E 79 64 20 73 75 73 73 65     ,sucimanyd susse
-		63 6F 72 70 20 6D 61 69 74 65 20 74 73 65 20 73     corp maite tse s
-		61 74 69 72 61 6C 43 0D 0A                          atiralC..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 2C 6D 61 72 61 6C 63 20 6D 75 72 61 70 20 73      ,maralc murap s
-		75 6D 61 74 75 70 20 63 6E 75 6E 20 6D 61 75 71     umatup cnun mauq
-		20 2C 61 63 69 68 74 6F 67 20 61 72 65 74 74 69      ,acihtog aretti
-		6C 20 6D 61 75 71 20 65 72 61 74 6F 6E 20 74 73     l mauq eraton ts
-		65 20 6D 75 72 69 4D 0D 0A                          e muriM..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		20 2E 61 6D 69 63 65 64 20 61 74 6E 69 75 71 20      .amiced atniuq 
-		74 65 20 61 6D 69 63 65 64 20 61 74 72 61 75 71     te amiced atrauq
-		20 61 6C 75 63 61 65 73 20 72 65 70 20 73 69 74      alucaes rep sit
-		61 74 69 6E 61 6D 75 68 20 73 61 6D 72 6F 66 20     atinamuh samrof 
-		6D 75 72 61 72 65 74 74 69 6C 20 74 69 72 65 75     murarettil tireu
-		73 6F 70 65 74 6E 61 0D 0A                          sopetna..
-	>>> [From Arduino] Received:
-		0A                                                  .
-	>>> [From Arduino] Received:
-		2E 6D 75 72 75 74 75 66 20 6E 69 20 73 65 6E 6D     .murutuf ni senm
-		65 6C 6C 6F 73 20 74 6E 61 69 66 20 2C 69 72 61     ellos tnaif ,ira
-		6C 63 20 6D 75 72 61 70 20 72 75 74 6E 65 64 69     lc murap rutnedi
-		76 20 73 69 62 6F 6E 20 63 6E 75 6E 20 69 75 71     v sibon cnun iuq
-		20 2C 69 70 79 74 20 6F 64 6F 6D 20 6D 65 64 6F      ,ipyt odom medo
-		45 0D 0A                                            E..
-Data written to the serial port.
-Arduino connected: false
-Done.
 
-Process finished with exit code 0
+pi@RPiZero:~$ ll
+total 97640
+  1887     4 drwxr-xr-x 23 pi   pi       4096 Oct 21 22:58 .
+    16     4 drwxr-xr-x  3 root root     4096 Nov 21  2015 ..
+ 80552     0 -rw-r--r--  1 pi   pi          0 Nov 21  2015 .asoundrc
+ 74920    36 -rw-------  1 pi   pi      36459 Oct 21 22:58 .bash_history
+  2294     4 -rw-r--r--  1 pi   pi        220 Nov 21  2015 .bash_logout
+  2296     4 -rw-r--r--  1 pi   pi       3535 Dec 10  2015 .bashrc
+ 81461     4 drwxr-xr-x  9 pi   pi       4096 Dec  8  2015 .cache
+  1888     4 drwxr-xr-x 12 pi   pi       4096 Dec 13  2015 .config
+ 81459     4 drwx------  3 pi   pi       4096 Nov 21  2015 .dbus
+  1891     4 drwxr-xr-x  2 pi   pi       4096 Dec 13  2015 Desktop
+  1892     4 drwxr-xr-x  5 pi   pi       4096 Nov 21  2015 Documents
+ 81452     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 Downloads
+ 74477     4 -rw-r--r--  1 pi   pi         56 Oct  7 01:18 .gitconfig
+261577     4 drwxr-xr-x  5 pi   pi       4096 Oct 20 00:37 .gradle
+ 81470     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 .gstreamer-0.10
+  1889     4 drwxr-xr-x  3 pi   pi       4096 Nov 21  2015 .local
+265996     4 drwxr-xr-x  3 pi   pi       4096 Dec 10  2015 .m2
+ 81455     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 Music
+268609     4 drwxr-xr-x  5 pi   pi       4096 Aug 16 02:14 node.pi
+ 81456     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 Pictures
+  2297     4 -rw-r--r--  1 pi   pi        675 Nov 21  2015 .profile
+ 81454     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 Public
+  1893     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 python_games
+265890     4 drwxr-xr-x 41 pi   pi       4096 Oct 21 18:36 raspberry-pi4j-samples
+ 81020     8 -rw-r--r--  1 pi   pi       5576 Oct 21 16:43 README.test.md
+ 74553  1024 -rw-r--r--  1 root root  1048204 Sep 13  2014 sbt-0.13.6.deb
+ 74509 96444 -rw-r--r--  1 root root 98756608 Oct 23  2014 scala-2.11.4.deb
+ 67808     4 -rw-r--r--  1 pi   pi         12 Dec 10  2015 .scala_history
+ 81453     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 Templates
+  1890     4 drwxr-xr-x  3 pi   pi       4096 Nov 21  2015 .themes
+267515     4 drwx------  4 pi   pi       4096 Dec 13  2015 .thumbnails
+ 81457     4 drwxr-xr-x  2 pi   pi       4096 Nov 21  2015 Videos
+266475     4 drwxr-xr-x  2 pi   pi       4096 Dec 12  2015 work
+ 81023     4 -rw-------  1 pi   pi         58 Oct 21 20:25 .wpa_cli_history
+ 80533     4 -rw-------  1 pi   pi        108 Oct 21 22:58 .Xauthority
+  1790     4 -rw-------  1 pi   pi        353 Oct 21 22:58 .xsession-errors
+ 11389     4 -rw-------  1 pi   pi        353 Oct 21 22:51 .xsession-errors.old
+pi@RPiZero:~$ 
 ```
-If you are running from a Raspberry PI, you need sudo access. Run the script named `runArduinoSample` instead.
 
-On the Raspberry PI, the Serial port needs to be accessed as `root`. In case Gradle cannot do that, you can use the provided script named `runArduionoSample`.
+### From Windows
+
+Script `run.bat`
 ```
-$ ./runArduinoSample
+@echo off
+@setlocal
+::
+set RXTX_HOME=C:\OlivWork\git\oliv-soft-project-builder\olivsoft\release\all-3rd-party\rxtx.distrib
+::
+set CP=.\build\libs\SerialRxTx-1.0.jar
+set CP=%CP%;%RXTX_HOME%\RXTXcomm.jar
+::
+java -Djava.library.path=%RXTX_HOME%\win64 -Dserial.port=COM17 -Dbaud.rate=115200 -cp %CP% sample.SerialEchoClient
+@endlocal
 ```
-The output is the same as above.
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-A GPS with a USB cable would also produce interesting output.
-
----
+etc

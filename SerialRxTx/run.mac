@@ -4,7 +4,6 @@
 RXTX_HOME=./libs
 #
 CP=./build/libs/SerialRxTx-1.0.jar
-# CP=$CP:/Users/olediouris/.gradle/caches/modules-2/files-2.1//org.rxtx/rxtx/2.1.7/e96c946be1e6537378fd532d2742b523df2725a4/rxtx-2.1.7.jar
 CP=$CP:$RXTX_HOME/RXTXcomm.jar
 #
 JAVA_OPTS=

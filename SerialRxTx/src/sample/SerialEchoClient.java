@@ -24,7 +24,6 @@ public class SerialEchoClient implements SerialIOCallbacks
     System.out.println("Serial port connected: " + b);
   }
 
-  private int lenToRead = 0;
   private int bufferIdx = 0;
   private byte[] serialBuffer = new byte[4096]; // byte[256];
 
@@ -37,11 +36,9 @@ public class SerialEchoClient implements SerialIOCallbacks
     {
       // Message completed
       byte[] mess = new byte[bufferIdx];
-      for (int i=0; i<bufferIdx; i++)
-        mess[i] = serialBuffer[i];
+      System.arraycopy(serialBuffer, 0, mess, 0, bufferIdx);
       serialOutput(mess);
       // Reset
-      lenToRead = 0;
       bufferIdx = 0;
     }
   }
@@ -67,7 +64,6 @@ public class SerialEchoClient implements SerialIOCallbacks
 
   public void serialOutput(byte[] mess)
   {
-//  System.out.println(String.format(">>> Got %d bytes", mess.length));
     if (verbose)
     {
       try
@@ -89,14 +85,12 @@ public class SerialEchoClient implements SerialIOCallbacks
         ex.printStackTrace();
       }
     }
-    else // Standard mode, no hex dump.
-    {
-      int offset = 0;
-      while (mess[offset] == 0xA || mess[offset] == 0xD)
-        offset++;
-      String str = new String(mess, offset, mess.length - offset);
-      System.out.print(str.replace('\r', '\n'));
-    }
+
+    int offset = 0;
+    while (mess[offset] == 0xA || mess[offset] == 0xD)
+      offset++;
+    String str = new String(mess, offset, mess.length - offset);
+    System.out.print(str.replace('\r', '\n'));
   }
 
   private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
@@ -113,10 +107,9 @@ public class SerialEchoClient implements SerialIOCallbacks
     catch(Exception e)
     {
       System.out.println(e);
-      String s;
       try
       {
-        s = userInput("<Oooch/>");
+        userInput("<Oooch/>");
       }
       catch(Exception exception)
       {
@@ -180,7 +173,7 @@ public class SerialEchoClient implements SerialIOCallbacks
       while (keepWorking)
       {
         String userInput = userInput(null);
-        System.out.println(String.format("Input [%s]", userInput));
+//      System.out.println(String.format("Input [%s]", userInput));
         if (userInput.equals("quit"))
         {
           System.out.println("Bye!");
