@@ -13,7 +13,7 @@ Next, we'll see how to transfer files (text and binaries).
  
 ### Examples
 The most important is to set the `java.library.path` to its right value. `RXTXcomm.jar` uses Java Native Interface (`JNI`), to invoke 
-some ntive library(ies). The `java.library.path` tells Java where to look.
+some native library(ies). The `java.library.path` tells Java where to look.
 
 Moreover, the library in the directory pointed to by `java.library.path` and `RXTXcomm.jar` must match. If this is not the case,
 you get a warning like this when launching the scripts:
@@ -56,12 +56,13 @@ $> ./run.mac
    Opening port /dev/tty.usbserial:115200 ...
    Serial port connected: true
    IO Streams initialized
-   Writing to the serial port.
-   pi
-   pi
    
+   Raspbian GNU/Linux 8 RPiZero ttyAMA0
+   RPiZero login: pi
+   pi
+
    Password: pi
-   Last login: Sat Oct 22 17:25:30 UTC 2016 on ttyAMA0
+   Last login: Sat Oct 22 19:04:14 UTC 2016 on ttyAMA0
    Linux RPiZero 4.1.13+ #826 PREEMPT Fri Nov 13 20:13:22 GMT 2015 armv6l
    The programs included with the Debian GNU/Linux system are free software;
    the exact distribution terms for each program are described in the

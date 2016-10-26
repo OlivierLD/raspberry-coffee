@@ -135,6 +135,7 @@ public class SerialCommunicator
 
   public void disconnect() throws IOException
   { // TODO See what's wrong here, on disconnect
+    System.exit(0);
     try
     {
       if (this.input != null) {
@@ -157,13 +158,13 @@ public class SerialCommunicator
         System.out.println("Closing Serial port");
       }
       this.serialPort.close();               // Causes a JVM crash?
-      setConnected(false);
-      this.parent.connected(false);
     }
     catch (IOException e)
     {
       throw e;
     }
+    setConnected(false);
+    this.parent.connected(false);
   }
 
   public final boolean isConnected()

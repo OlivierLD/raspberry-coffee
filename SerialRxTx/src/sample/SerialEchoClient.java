@@ -227,7 +227,7 @@ public class SerialEchoClient implements SerialIOCallbacks
       ex.printStackTrace();
     }
     System.out.println("Disconnecting...");
-    if (false && sc.isConnected()) {
+    if (/*false &&*/ sc.isConnected()) {
       try {
         sc.disconnect();
       } catch (IOException ioe) {
