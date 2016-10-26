@@ -184,8 +184,8 @@ public class SerialCommunicator
   @Override
   public void serialEvent(SerialPortEvent evt)
   {
-    if (verbose)
-      System.out.println("serialEvent");
+//    if (verbose)
+//      System.out.println("serialEvent");
     if (evt.getEventType() == SerialPortEvent.DATA_AVAILABLE)
     {
       try
@@ -215,13 +215,13 @@ public class SerialCommunicator
   
   public void writeData(String s) throws IOException
   {
-    writeData(s.getBytes());
+    this.writeData(s.getBytes());
   }
   
   public void writeData(byte[] ba) throws IOException
   {
     for (byte b: ba)
-      writeData(b);
+      this.writeData(b);
   }
 
   public void writeData(byte b) throws IOException
@@ -231,7 +231,7 @@ public class SerialCommunicator
 
     try
     {
-      output.write(b & 0xFF);
+      this.output.write(b & 0xFF);
 //    try { Thread.sleep(10L); } catch (InterruptedException ie) {} // QUESTION: ???
 //    output.flush();
     }

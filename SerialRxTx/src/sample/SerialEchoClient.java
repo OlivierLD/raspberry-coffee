@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Map;
 
 import java.util.Set;
@@ -25,12 +26,21 @@ public class SerialEchoClient implements SerialIOCallbacks
   }
 
   private int bufferIdx = 0;
-  private byte[] serialBuffer = new byte[4096]; // byte[256];
+  private final static int BUFFER_SIZE = 4096;
+  private byte[] serialBuffer = new byte[BUFFER_SIZE];
+
+  private void resetSerialBuffer()
+  {
+    for (int i=0; i<serialBuffer.length; i++)
+    {
+      serialBuffer[i] = 0x0;
+    }
+  }
 
   @Override
   public void onSerialData(byte b)
   {
-    System.out.println("\t\tReceived character [0x" + Integer.toHexString(b & 0xFF) + "]");
+//  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b & 0xFF) + "]");
     serialBuffer[bufferIdx++] = (byte)(b & 0xFF);
     if (b == 0xA) // \n , EOM
     {
@@ -40,21 +50,45 @@ public class SerialEchoClient implements SerialIOCallbacks
       serialOutput(mess);
       // Reset
       bufferIdx = 0;
+      resetSerialBuffer();
     }
   }
 
   @Override
   public void onSerialData(byte[] ba, int len)
   {
+    if (this.verbose) {
+      System.out.println("== onSerialData ==========================");
+      System.out.println(String.format("%d: %s", len, DumpUtil.dumpHexMess(new String(ba, 0, len).getBytes())));
+      System.out.println(String.format("Also [%s]", new String(ba, 0, len)));
+    }
     System.arraycopy(ba, 0, serialBuffer, bufferIdx, len);
     bufferIdx += len;
 
-    String[] messages = new String(serialBuffer, 0, bufferIdx).split("\n"); // Full lines end with \r\n
-    for (String mess : messages)
-    {
-      serialOutput(mess);
+    if (bufferIdx > 0) {
+      String newMess = new String(serialBuffer, 0, bufferIdx);
+      String[] messages = newMess.split("\n"); // Full lines end with \r\n
+      if (this.verbose) {
+        System.out.println(String.format("== onSerialData, just received %d bytes (now %d bytes), %d message(s):", len, newMess.length(), messages.length));
+        System.out.println(DumpUtil.dumpHexMess(newMess.getBytes()));
+        System.out.println("====================================");
+      }
+      Arrays.stream(messages).filter(str -> str.length() > 0 && str.charAt(0) != 0xD).forEach(mess -> {
+        if (this.verbose) {
+          System.out.println("\tMess len:" + mess.length());
+          String[] sa = DumpUtil.dualDump(mess);
+          if (sa != null) {
+            Arrays.stream(sa).forEach(str -> System.out.println("\t" + str));
+          }
+        }
+        serialOutput(mess);
+      });
+    }
+    if (this.verbose) {
+      System.out.println("...Reseting.");
     }
     bufferIdx = 0;
+    resetSerialBuffer();
   }
 
   public void serialOutput(String mess)
@@ -87,10 +121,11 @@ public class SerialEchoClient implements SerialIOCallbacks
     }
 
     int offset = 0;
-    while (mess[offset] == 0xA || mess[offset] == 0xD)
+    while (mess[offset] == 0xA || mess[offset] == 0xD) // Skip leading CR & NL
       offset++;
     String str = new String(mess, offset, mess.length - offset);
     System.out.print(str.replace('\r', '\n'));
+    System.out.flush();
   }
 
   private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
@@ -127,7 +162,7 @@ public class SerialEchoClient implements SerialIOCallbacks
    * Pin #8  Tx  White                           #5 . . #6
    * Pin #10 Rx  Green                           #7 . . #8
    *                                             #9 . . #10
-   * @param args                              etc   . .
+   * @param args                            etc #11 . . #12
    */
   public static void main(String[] args)
   {
@@ -157,6 +192,7 @@ public class SerialEchoClient implements SerialIOCallbacks
     }
     try 
     {
+      mwc.resetSerialBuffer();
       sc.connect(serialPort, "SerialRxTx", Integer.parseInt(baudRateStr));
       boolean b = sc.initIOStream();
       System.out.println("IO Streams " + (b?"":"NOT ") + "initialized");
@@ -165,7 +201,7 @@ public class SerialEchoClient implements SerialIOCallbacks
       }
       sc.initListener();
       
-      Thread.sleep(500L);
+//    Thread.sleep(500L);
 
       System.out.println("Writing to the serial port.");
 
@@ -173,7 +209,6 @@ public class SerialEchoClient implements SerialIOCallbacks
       while (keepWorking)
       {
         String userInput = userInput(null);
-//      System.out.println(String.format("Input [%s]", userInput));
         if (userInput.equals("quit"))
         {
           System.out.println("Bye!");
