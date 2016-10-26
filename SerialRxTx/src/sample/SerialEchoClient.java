@@ -3,6 +3,8 @@ package sample;
 import gnu.io.CommPortIdentifier;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 import java.io.InputStreamReader;
@@ -209,10 +211,39 @@ public class SerialEchoClient implements SerialIOCallbacks
       while (keepWorking)
       {
         String userInput = userInput(null);
-        if (userInput.equals("quit"))
+        if (userInput.equals("help"))
+        {
+          System.out.println("Special Commands:");
+          System.out.println("=================");
+          System.out.println("quit to exit this shell (note: does not exit the session on the remote board)");
+          System.out.println("[Return] to connect (to get the 'login' prompt)");
+          System.out.println("tx [fileName] to transfer from host (this one) to remote (the board accessed serially)");
+        }
+        else if (userInput.equals("quit"))
         {
           System.out.println("Bye!");
           keepWorking = false;
+        }
+        else if (userInput.startsWith("tx "))
+        {
+          String fileName = userInput.substring("tx ".length());
+          System.out.println("Transferring " + fileName);
+          FileReader fr = new FileReader(new File(fileName));
+          char[] buf = new char[256];
+          int read = 0;
+          while (read != -1)
+          {
+            read = fr.read(buf);
+            if (read != -1)
+            {
+              for (int i=0; i<read; i++)
+              {
+                String command = "echo -n -e \\\\x" + Integer.toHexString(buf[i]) + " >> " + fileName;
+                sc.writeData(command + "\n");
+              }
+            }
+          }
+          fr.close();
         }
         else
         {
@@ -227,7 +258,7 @@ public class SerialEchoClient implements SerialIOCallbacks
       ex.printStackTrace();
     }
     System.out.println("Disconnecting...");
-    if (/*false &&*/ sc.isConnected()) {
+    if (sc.isConnected()) {
       try {
         sc.disconnect();
       } catch (IOException ioe) {

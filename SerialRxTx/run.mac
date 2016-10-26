@@ -13,7 +13,7 @@ JAVA_OPTS="$JAVA_OPTS -Dbaud.rate=115200"
 JAVA_OPTS="$JAVA_OPTS -Dverbose=false"
 # java -Djava.library.path=$RXTX_HOME/mac-10.5 -Dserial.port=/dev/tty.usbserial -Dbaud.rate=115200 -cp $CP sample.SerialEchoClient
 #
-echo Hit return to log in
-echo Enter [quit] to exit
+echo Enter [help] for help
+echo =====================
 #
 java $JAVA_OPTS -cp $CP sample.SerialEchoClient

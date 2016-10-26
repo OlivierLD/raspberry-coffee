@@ -134,8 +134,9 @@ public class SerialCommunicator
   }
 
   public void disconnect() throws IOException
-  { // TODO See what's wrong here, on disconnect
+  {
     System.exit(0);
+    // TODO See what's wrong here, on disconnect
     try
     {
       if (this.input != null) {
