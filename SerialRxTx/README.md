@@ -1,4 +1,4 @@
-## Lib RxTx, Serial communication.
+## Lib RxTx, Serial communication with raspi-serial-console.
 This involves the classes located in the package `gnu.io`.
 To install this package (on Raspberry PI, or more generally on Ubuntu), type
 ```
