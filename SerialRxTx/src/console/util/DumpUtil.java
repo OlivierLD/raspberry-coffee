@@ -1,4 +1,4 @@
-package sample.util;
+package console.util;
 
 public class DumpUtil
 {

@@ -3,4 +3,4 @@
 CP=./build/libs/SerialRxTx-1.0.jar
 CP=$CP:/usr/share/java/RXTXcomm.jar
 #
-java -Djava.library.path=/usr/lib/jni -Dserial.port=COM17 -Dbaud.rate=115200 -cp $CP sample.SerialEchoClient
+java -Djava.library.path=/usr/lib/jni -Dserial.port=COM17 -Dbaud.rate=115200 -cp $CP console.SerialEchoClient
