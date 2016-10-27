@@ -156,6 +156,67 @@ public class SerialEchoClient implements SerialIOCallbacks
     return retString;
   }
 
+  private static void displayHelp()
+  {
+    System.out.println("Special Commands:");
+    System.out.println("=================");
+    System.out.println("\\quit to exit this shell (note: does not exit the session on the remote board)");
+    System.out.println("[Return] to connect (to get the 'login' prompt)");
+    System.out.println("\\tx [fileName] to transfer from host (this one) to remote (the board accessed serially)");
+    System.out.println("\\help to display the help.");
+  }
+
+  private static void transfer(String pattern, SerialCommunicator sc) throws IOException
+  {
+    transfer(pattern, sc, null);
+  }
+  private static void transfer(String pattern, SerialCommunicator sc, String prefix) throws IOException
+  {
+    String fileName = (prefix != null ? prefix + File.separator : "") + pattern;
+    System.out.println(String.format("Processing %s", fileName));
+
+    File f = new File(fileName);
+    if (f.isFile() && f.exists()) {
+      System.out.println("Transferring " + fileName);
+      // Remove first...
+      sc.writeData("rm " + fileName.replace(File.separatorChar, '/') + " > /dev/null 2>&1 \n");
+
+      FileReader fr = new FileReader(f);
+      char[] buf = new char[256];
+      int read = 0;
+      while (read != -1) {
+        read = fr.read(buf);
+        if (read != -1) {
+          for (int i = 0; i < read; i++) {
+            String command = "echo -n -e \\\\x" + Integer.toHexString(buf[i]) + " >> " + fileName.replace(File.separatorChar, '/');
+            sc.writeData(command + "\n");
+          }
+        }
+      }
+      fr.close();
+    }
+    else if (f.isDirectory() && f.exists())
+    {
+      System.out.println("Directory " + fileName);
+
+      sc.writeData("mkdir " + fileName.replace(File.separatorChar, '/') + " > /dev/null 2>&1 \n");
+//    sc.writeData("cd " + pattern + "\n");
+      String[] sub = f.list();
+      Arrays.stream(sub).forEach(file -> {
+        try {
+          transfer(file, sc, fileName);
+        } catch (IOException ioe) {
+          ioe.printStackTrace();
+        }
+      });
+    }
+    else // Pattern?
+    {
+      System.out.println(String.format("Regex %s", pattern));
+
+    }
+  }
+
   /**
    * Can work with the RPi Serial Console (USB).
    *
@@ -203,7 +264,9 @@ public class SerialEchoClient implements SerialIOCallbacks
       }
       sc.initListener();
       
-//    Thread.sleep(500L);
+      System.out.println("==========================");
+      displayHelp();
+      System.out.println("==========================");
 
       System.out.println("Writing to the serial port.");
 
@@ -211,40 +274,21 @@ public class SerialEchoClient implements SerialIOCallbacks
       while (keepWorking)
       {
         String userInput = userInput(null);
-        if (userInput.equals("help"))
+        if (userInput.trim().equals("\\help") || (userInput.length() >= 2 && "\\help".startsWith(userInput))) // type just \h, \he ..., etc
         {
-          System.out.println("Special Commands:");
-          System.out.println("=================");
-          System.out.println("quit to exit this shell (note: does not exit the session on the remote board)");
-          System.out.println("[Return] to connect (to get the 'login' prompt)");
-          System.out.println("tx [fileName] to transfer from host (this one) to remote (the board accessed serially)");
+          displayHelp();
         }
-        else if (userInput.equals("quit"))
+        else if (userInput.trim().equals("\\quit") || (userInput.length() >= 2 && "\\quit".startsWith(userInput)))
         {
           System.out.println("Bye!");
           keepWorking = false;
         }
-        else if (userInput.startsWith("tx "))
+        else if (userInput.startsWith("\\tx "))
         {
-          String fileName = userInput.substring("tx ".length());
-          System.out.println("Transferring " + fileName);
-          FileReader fr = new FileReader(new File(fileName));
-          char[] buf = new char[256];
-          int read = 0;
-          while (read != -1)
-          {
-            read = fr.read(buf);
-            if (read != -1)
-            {
-              for (int i=0; i<read; i++)
-              {
-                String command = "echo -n -e \\\\x" + Integer.toHexString(buf[i]) + " >> " + fileName;
-                sc.writeData(command + "\n");
-              }
-            }
-          }
-          fr.close();
+          String fileName = userInput.substring("\\tx ".length());
+          transfer(fileName, sc);
         }
+        // TODO \rx file, \cd dir, \dir
         else
         {
           sc.writeData(userInput + "\n");
