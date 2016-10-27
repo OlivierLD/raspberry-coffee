@@ -39,7 +39,7 @@ JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$RXTX_HOME"
 JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/tty.usbserial"
 JAVA_OPTS="$JAVA_OPTS -Dbaud.rate=115200"
 JAVA_OPTS="$JAVA_OPTS -Dverbose=false"
-java $JAVA_OPTS -cp $CP sample.SerialEchoClient
+java $JAVA_OPTS -cp $CP console.SerialEchoClient
 ```
 
 ```
@@ -123,7 +123,7 @@ set RXTX_HOME=C:\OlivWork\git\oliv-soft-project-builder\olivsoft\release\all-3rd
 set CP=.\build\libs\SerialRxTx-1.0.jar
 set CP=%CP%;%RXTX_HOME%\RXTXcomm.jar
 ::
-java -Djava.library.path=%RXTX_HOME%/win64 -Dserial.port=COM17 -Dbaud.rate=115200 -cp %CP% sample.SerialEchoClient
+java -Djava.library.path=%RXTX_HOME%/win64 -Dserial.port=COM17 -Dbaud.rate=115200 -cp %CP% console.SerialEchoClient
 @endlocal
 ```
 
