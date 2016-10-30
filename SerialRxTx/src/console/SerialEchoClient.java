@@ -193,11 +193,11 @@ public class SerialEchoClient implements SerialIOCallbacks {
 	/**
 	 * Can work with the RPi Serial Console (USB).
 	 * <p>
-	 * Pin #2  5V0 Red                             #1 . . #2
+	 * Pin #2  5V0 Red                             #1 . . #2   - Red
 	 * Pin #6  Gnd Black                           #3 . . #4
-	 * Pin #8  Tx  White                           #5 . . #6
-	 * Pin #10 Rx  Green                           #7 . . #8
-	 *                                             #9 . . #10
+	 * Pin #8  Tx  White                           #5 . . #6   - Black
+	 * Pin #10 Rx  Green                           #7 . . #8   - White
+	 *                                             #9 . . #10  - Green
 	 * @param args                            etc #11 . . #12
 	 */
 	public static void main(String[] args) {
