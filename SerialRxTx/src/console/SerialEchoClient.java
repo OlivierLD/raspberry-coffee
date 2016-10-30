@@ -13,6 +13,7 @@ import java.util.Map;
 
 import java.util.Set;
 
+
 import console.util.DumpUtil;
 
 import serial.io.SerialCommunicator;
@@ -138,10 +139,10 @@ public class SerialEchoClient implements SerialIOCallbacks {
 	private static void displayHelp() {
 		System.out.println("Special Commands:");
 		System.out.println("=================");
-		System.out.println("\\quit to exit this shell (note: does not exit the session on the remote board)");
+		System.out.println("\\q[uit] to exit this shell (note: does not exit the session on the remote board)");
 		System.out.println("[Return] to connect (to get the 'login' prompt)");
 		System.out.println("\\tx [fileName] to transfer from host (this one) to remote (the board accessed serially)");
-		System.out.println("\\help to display the help.");
+		System.out.println("\\h[elp] to display the help.");
 	}
 
 	private static void transfer(String pattern, SerialCommunicator sc) throws IOException {
@@ -243,10 +244,10 @@ public class SerialEchoClient implements SerialIOCallbacks {
 			boolean keepWorking = true;
 			while (keepWorking) {
 				String userInput = userInput(null);
-				if (userInput.trim().equals("\\help") || (userInput.length() >= 2 && "\\help".startsWith(userInput))) // type just \h, \he ..., etc
+				if (userInput.trim().equals("\\help") || (userInput.length() >= 2 && "\\help".startsWith(userInput.trim()))) // type just \h, \he ..., etc
 				{
 					displayHelp();
-				} else if (userInput.trim().equals("\\quit") || (userInput.length() >= 2 && "\\quit".startsWith(userInput))) {
+				} else if (userInput.trim().equals("\\quit") || (userInput.length() >= 2 && "\\quit".startsWith(userInput.trim()))) {
 					System.out.println("Bye!");
 					keepWorking = false;
 				} else if (userInput.startsWith("\\tx ")) {
