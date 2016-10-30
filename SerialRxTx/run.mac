@@ -12,6 +12,6 @@ JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/tty.usbserial"
 JAVA_OPTS="$JAVA_OPTS -Dbaud.rate=115200"
 JAVA_OPTS="$JAVA_OPTS -Dverbose=false"
 #
-# java -Djava.library.path=$RXTX_HOME/mac-10.5 -Dserial.port=/dev/tty.usbserial -Dbaud.rate=115200 -cp $CP console.SerialEchoClient
+# java -Djava.library.path=$RXTX_HOME/mac-10.5 -Dserial.port=/dev/tty.usbserial -Dbaud.rate=115200 -cp $CP console.SerialConsoleCLI
 #
-java $JAVA_OPTS -cp $CP console.SerialEchoClient
+java $JAVA_OPTS -cp $CP console.SerialConsoleCLI

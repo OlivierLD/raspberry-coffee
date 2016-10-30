@@ -19,7 +19,7 @@ import console.util.DumpUtil;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 
-public class SerialEchoClient implements SerialIOCallbacks {
+public class SerialConsoleCLI implements SerialIOCallbacks {
 	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 
 	@Override
@@ -202,7 +202,7 @@ public class SerialEchoClient implements SerialIOCallbacks {
 	 * @param args                            etc #11 . . #12
 	 */
 	public static void main(String[] args) {
-		final SerialEchoClient mwc = new SerialEchoClient();
+		final SerialConsoleCLI mwc = new SerialConsoleCLI();
 		final SerialCommunicator sc = new SerialCommunicator(mwc);
 		sc.setVerbose(verbose);
 
@@ -212,6 +212,7 @@ public class SerialEchoClient implements SerialIOCallbacks {
 			System.out.println("No serial port was found.");
 			System.out.println("Did you run as administrator (sudo) ?");
 		}
+		// Bonus
 		System.out.println("== Serial Port List ==");
 		for (String port : ports)
 			System.out.println("-> " + port);
@@ -240,6 +241,9 @@ public class SerialEchoClient implements SerialIOCallbacks {
 			System.out.println("==========================");
 
 			System.out.println("Writing to the serial port.");
+
+			// First CR: Show the 'login' prompt if needed
+			sc.writeData("\n");
 
 			boolean keepWorking = true;
 			while (keepWorking) {
