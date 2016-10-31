@@ -1,4 +1,4 @@
-## Cross-Platform Serial communication with raspi-serial-console.
+## Cross-Platform Serial communication with `raspi-serial-console`.
 This involves the `RxTx` classes located in the package `gnu.io`.
 To install this package (on Raspberry PI, or more generally on Ubuntu), type
 ```
