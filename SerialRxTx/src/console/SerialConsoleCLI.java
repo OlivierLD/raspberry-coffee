@@ -39,7 +39,6 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 
 	@Override
 	public void onSerialData(byte b) {
-//  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b & 0xFF) + "]");
 		serialBuffer[bufferIdx++] = (byte) (b & 0xFF);
 		if (b == 0xA) // \n , EOM
 		{
@@ -74,10 +73,7 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 			Arrays.stream(messages).filter(str -> str.length() > 0 && str.charAt(0) != 0xD).forEach(mess -> {
 				if (this.verbose) {
 					System.out.println("\tMess len:" + mess.length());
-					String[] sa = DumpUtil.dualDump(mess);
-					if (sa != null) {
-						Arrays.stream(sa).forEach(str -> System.out.println("\t" + str));
-					}
+					DumpUtil.displayDualDump(mess);
 				}
 				serialOutput(mess);
 			});
@@ -95,18 +91,7 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 
 	public void serialOutput(byte[] mess) {
 		if (verbose) {
-			try {
-				String[] sa = DumpUtil.dualDump(mess);
-				if (sa != null) {
-//        System.out.println("\t>>> [From Serial port] Received:");
-					for (String s : sa)
-						System.out.println("\t\t" + s);
-				} else {
-					System.out.println(String.format("sa is null (mess %d byte(s)]...", mess.length));
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+			DumpUtil.displayDualDump(mess);
 		}
 
 		int offset = 0;
@@ -140,7 +125,6 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 		System.out.println("Special Commands:");
 		System.out.println("=================");
 		System.out.println("\\q[uit] to exit this shell (note: does not exit the session on the remote board)");
-		System.out.println("[Return] to connect (to get the 'login' prompt)");
 		System.out.println("\\tx [fileName] to transfer from host (this one) to remote (the board accessed serially)");
 		System.out.println("\\h[elp] to display the help.");
 	}
@@ -176,7 +160,6 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 			System.out.println("Directory " + fileName);
 
 			sc.writeData("mkdir " + fileName.replace(File.separatorChar, '/') + " > /dev/null 2>&1 \n");
-//    sc.writeData("cd " + pattern + "\n");
 			String[] sub = f.list();
 			Arrays.stream(sub).forEach(file -> {
 				try {
@@ -261,7 +244,6 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 				// TODO \rx file, \cd dir, \dir
 				else {
 					sc.writeData(userInput + "\n");
-//        System.out.println("Data written to the serial port.");
 				}
 			}
 			System.out.println("Exiting program.");

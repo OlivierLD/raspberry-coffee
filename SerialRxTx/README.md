@@ -19,8 +19,8 @@ Moreover, the library in the directory pointed to by `java.library.path` and `RX
 you get a warning like this when launching the scripts:
  ```
  WARNING:  RXTX Version mismatch
- 	Jar version = RXTX-2.2pre1
- 	native lib Version = RXTX-2.2pre2
+        Jar version = RXTX-2.2pre1
+        native lib Version = RXTX-2.2pre2
  ```
 
 #### From a Mac
@@ -45,8 +45,8 @@ java $JAVA_OPTS -cp $CP console.SerialConsoleCLI
 ```
 $> ./run.mac
    WARNING:  RXTX Version mismatch
-   	Jar version = RXTX-2.2pre1
-   	native lib Version = RXTX-2.2pre2
+           Jar version = RXTX-2.2pre1
+           native lib Version = RXTX-2.2pre2
    == Serial Port List ==
    -> /dev/cu.usbserial
    -> /dev/tty.Bluetooth-Incoming-Port

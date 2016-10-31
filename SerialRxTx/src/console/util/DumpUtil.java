@@ -1,9 +1,29 @@
 package console.util;
 
+import java.io.PrintStream;
+import java.util.Arrays;
+
 public class DumpUtil
 {
   private final static int LINE_LEN = 16;
-  
+
+  public static void displayDualDump(byte[] ba) {
+    displayDualDump(ba, null);
+  }
+  public static void displayDualDump(String str) {
+    displayDualDump(str, null);
+  }
+  public static void displayDualDump(String str, PrintStream ps) {
+    displayDualDump(str.getBytes(), ps);
+  }
+  public static void displayDualDump(byte[] ba, PrintStream ps) {
+    PrintStream out = (ps != null ? ps : System.out);
+    String[] sa = DumpUtil.dualDump(ba);
+    if (sa != null) {
+      Arrays.stream(sa).forEach(str -> out.println("\t" + str));
+    }
+  }
+
   public static String[] dualDump(String str)
   {
     byte[] ba = str.getBytes();
