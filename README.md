@@ -43,7 +43,7 @@ _Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `
 ---
 ### Developing **on** the Raspberry PI, or Developing **for** the Raspberry PI ?
 
-To write code, the simplest editor is enough. I have used `vi` for ages, mostly because this was the only one available, but also because it **is** indeed good enough.
+To write code, the simplest editor is enough. I have used `vi` for ages, mostly because this was the only one available, but also because it _**is**_ indeed good enough.
 `vi` is available on the Raspberry PI, `nano` too, graphical editors like `gedit`, `geany` are even easier to use, on a grahical desktop.
 
 All the code provided here can be built from Gradle (all gradle scripts are provided), _**on the Raspberry PI**_ itself.
