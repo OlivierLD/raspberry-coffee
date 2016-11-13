@@ -15,6 +15,8 @@ import java.util.Set;
  */
 public class GPSReader implements SerialIOCallbacks
 {
+  private boolean verbose = "true".equals(System.getProperty("verbose", "false"));
+  
   @Override
   public void connected(boolean b)
   {
@@ -45,7 +47,7 @@ public class GPSReader implements SerialIOCallbacks
 
   public void serialOutput(byte[] mess)
   {
-    if (true) // verbose...
+    if (verbose) // verbose...
     {
       try
       {
@@ -61,6 +63,10 @@ public class GPSReader implements SerialIOCallbacks
       {
         ex.printStackTrace();
       }
+    }
+    else
+    {
+      System.out.print(new String(mess));
     }
   }
 
@@ -101,6 +107,7 @@ public class GPSReader implements SerialIOCallbacks
           synchronized (thread)
           {
             thread.notify();
+	    Thread.sleep(1000L);
           }
         }
         catch (Exception ex)
@@ -121,7 +128,7 @@ public class GPSReader implements SerialIOCallbacks
         try
         {
           thread.wait();
-          System.out.println("Notified.");
+          System.out.println("\nNotified.");
         }
         catch (InterruptedException ie)
         {
