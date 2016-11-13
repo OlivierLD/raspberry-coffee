@@ -1,19 +1,22 @@
 ## Cross-Platform Serial communication with `raspi-serial-console`.
+This is a Java implementation of a Serial client for the `raspi-serial-console`.
+
 This involves the `RxTx` classes located in the package `gnu.io`.
+
 To install this package (on Raspberry PI, or more generally on Ubuntu), type
 ```
 $> sudo apt-get install librxtx-java
 ```
 
-This is a Java implementation of a Serial client for the `raspi-serial-console`.
+For other Operating Systems, just use your favorite search engine.
 
-It can run the same - hopefully - in Windows, Mac, Linux, no need for screen or PuTTY...
+It runs the same - hopefully - on Windows, Mac, Linux, no need for `screen` or `PuTTY`...
 
 Next, we'll see how to transfer files (text and binaries).
  
 ### Examples
-The most important is to set the `java.library.path` to its right value. `RXTXcomm.jar` uses Java Native Interface (`JNI`), to invoke 
-some native library(ies). The `java.library.path` tells Java where to look.
+The most important is probably to set the `java.library.path` to its right value. `RXTXcomm.jar` uses Java Native Interface (`JNI`), to invoke 
+some native library(ies). The `java.library.path` tells Java where to look for them.
 
 Moreover, the library in the directory pointed to by `java.library.path` and `RXTXcomm.jar` must match. If this is not the case,
 you get a warning like this when launching the scripts:
@@ -22,6 +25,9 @@ you get a warning like this when launching the scripts:
         Jar version = RXTX-2.2pre1
         native lib Version = RXTX-2.2pre2
  ```
+
+If those values are set, and if you get a privilege related error message when accessing your serial port, it probably comes 
+from a severe mismatch between your system libraries and the veriosn of `RXTXcomm.jar`.
 
 #### From a Mac
 
