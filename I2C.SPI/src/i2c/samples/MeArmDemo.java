@@ -5,6 +5,7 @@ import i2c.servo.pwm.PCA9685;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import client.SpeechTools;
 
 /*
  * Standard, all the way, clockwise, counterclockwise
@@ -72,16 +73,17 @@ public class MeArmDemo
       // 130 Open, 400 closed
       move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Open it
       System.out.println("Give ne something to grab.");
-      userInput("Hit return when I can catch it");
+      SpeechTools.speak("Give me something to grab, hit return when I can catch it.");
+      userInput("Hit return when I can catch it.");
       move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
       System.out.println("Thank you!");
+      SpeechTools.speak("Thank you!");
 
       // Turn left and drop it.
       move(servoBoard, BOTTOM_SERVO_CHANNEL, 410, 670, 10, 50); // Turn left
       move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Drop it
-      move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
       move(servoBoard, BOTTOM_SERVO_CHANNEL, 670, 410, 10, 50); // Come back
-
+      move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
     } finally {
       // Stop the servos
       servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 0);

@@ -34,6 +34,7 @@ dependencies {
   compile project(':SerialRxTx')
   compile project(':MindWave')
   compile project(':GPS.read')
+  compile project(':RMI.sample')
 }
 
 repositories {
