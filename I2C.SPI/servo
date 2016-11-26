@@ -2,4 +2,3 @@
 CP=./classes
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 sudo java -cp $CP i2c.servo.pwm.PCA9685 $*
-

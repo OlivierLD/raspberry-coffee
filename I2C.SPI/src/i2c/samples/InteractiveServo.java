@@ -53,19 +53,12 @@ public class InteractiveServo
       throw new IllegalArgumentException("Freq only between 40 and 1000.");
     
     servoBoard.setPWMFreq(freq); // Set frequency in Hz
-    
-    final int CONTINUOUS_SERVO_CHANNEL = 14;
-    final int STANDARD_SERVO_CHANNEL   = 15;
-    
-    int servo = STANDARD_SERVO_CHANNEL;
-    
-    String sServo = userInput("Servo: Continuous [C], Standard [S] > ");
-    if ("C".equalsIgnoreCase(sServo))
-      servo = CONTINUOUS_SERVO_CHANNEL;
-    else if ("S".equalsIgnoreCase(sServo))
-      servo = STANDARD_SERVO_CHANNEL;
-    else
-      System.out.println("Only C or S... Defaulting to Standard.");
+
+    String servoChannel = System.getProperty("servo.channel", "0");
+
+    final int SERVO_CHANNEL = Integer.parseInt(servoChannel);
+
+    int servo = SERVO_CHANNEL;
     
     boolean keepGoing = true;
     System.out.println("Enter 'quit' to exit.");
