@@ -77,22 +77,32 @@ public class MeArmDemo
 
       // Open and close the claw
       // 130 Open, 400 closed
+      System.out.println("Opening the claw");
       move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Open it
       System.out.println("Give me something to grab.");
       client.SpeechTools.speak("Hey, give me something to grab, hit return when I can catch it.");
       userInput("Hit return when I can catch it.");
+      System.out.println("Closing the claw");
       move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
       System.out.println("Thank you!");
       client.SpeechTools.speak("Thank you!");
 
       // Turn left and drop it.
+      System.out.println("Turning left");
       move(servoBoard, BOTTOM_SERVO_CHANNEL, 410, 670, 10, 50); // Turn left
+      System.out.println("Reaching ahead");
       move(servoBoard, RIGHT_SERVO_CHANNEL, 430, 600, 10, 50); // Move ahead
+      System.out.println("Higher");
       move(servoBoard, LEFT_SERVO_CHANNEL, 230, 350, 10, 50); // Move up
+      System.out.println("Dropping");
       move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Drop it
+      System.out.println("Backwards");
       move(servoBoard, RIGHT_SERVO_CHANNEL, 600, 430, 10, 50); // Move back
+      System.out.println("Re-centering");
       move(servoBoard, BOTTOM_SERVO_CHANNEL, 670, 410, 10, 50); // Come back
+      System.out.println("Down");
       move(servoBoard, LEFT_SERVO_CHANNEL, 350, 230, 10, 50); // Move down
+      System.out.println("Closing");
       move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
     } finally {
       // Stop the servos
