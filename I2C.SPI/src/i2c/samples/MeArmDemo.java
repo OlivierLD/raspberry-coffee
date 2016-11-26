@@ -51,10 +51,10 @@ public class MeArmDemo
     int freq = 60;
     servoBoard.setPWMFreq(freq); // Set frequency in Hz
     
-    final int LEFT_SERVO_CHANNEL   = 0; // Range 350 (all the way up) 135 (all the way down)
-    final int CLAW_SERVO_CHANNEL   = 1; // Range 130 (open) 400 (closed)
-    final int BOTTOM_SERVO_CHANNEL = 2; // 130 (all the way right) 675 (all the way left). Center at ~410
-    final int RIGHT_SERVO_CHANNEL  = 4; // 130 (too far back, limit to 300) 675 (all the way ahead), right at ~430
+    final int LEFT_SERVO_CHANNEL   = 0; // Up and down. Range 350 (all the way up) 135 (all the way down), Centered at ~230
+    final int CLAW_SERVO_CHANNEL   = 1; // Open and close. Range 130 (open) 400 (closed)
+    final int BOTTOM_SERVO_CHANNEL = 2; // Right and Left. 130 (all the way right) 675 (all the way left). Center at ~410
+    final int RIGHT_SERVO_CHANNEL  = 4; // BAck and forth. 130 (too far back, limit to 300) 675 (all the way ahead), right at ~430
 
     // Test the 4 servos.
     try {
@@ -72,7 +72,7 @@ public class MeArmDemo
       servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 430);
       servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 0);
       // Middle
-      servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 200);
+      servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 230);
       servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 0);
 
       // Open and close the claw
@@ -88,11 +88,11 @@ public class MeArmDemo
       // Turn left and drop it.
       move(servoBoard, BOTTOM_SERVO_CHANNEL, 410, 670, 10, 50); // Turn left
       move(servoBoard, RIGHT_SERVO_CHANNEL, 430, 600, 10, 50); // Move ahead
-      move(servoBoard, LEFT_SERVO_CHANNEL, 200, 350, 10, 50); // Move up
+      move(servoBoard, LEFT_SERVO_CHANNEL, 230, 350, 10, 50); // Move up
       move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Drop it
       move(servoBoard, RIGHT_SERVO_CHANNEL, 600, 430, 10, 50); // Move back
       move(servoBoard, BOTTOM_SERVO_CHANNEL, 670, 410, 10, 50); // Come back
-      move(servoBoard, LEFT_SERVO_CHANNEL, 350, 200, 10, 50); // Move down
+      move(servoBoard, LEFT_SERVO_CHANNEL, 350, 230, 10, 50); // Move down
       move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
     } finally {
       // Stop the servos
