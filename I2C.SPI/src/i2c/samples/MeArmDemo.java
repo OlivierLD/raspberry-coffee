@@ -30,56 +30,88 @@ public class MeArmDemo
     int servoMax = 615; 
     int diff = servoMax - servoMin;
     System.out.println("Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
-    
-    try
-    {
-      servoBoard.setPWM(servoChannel, 0, 0);   // Stop the standard one
-      waitfor(2000);
-      System.out.println("Let's go, 1 by 1");
-      for (int i=servoMin; i<=servoMax; i++)
-      {
-        System.out.println("i=" + i + ", " + (-90f + (((float)(i - servoMin) / (float)diff) * 180f)));
-        servoBoard.setPWM(servoChannel, 0, i);
-        waitfor(10);
-      } 
-      for (int i=servoMax; i>=servoMin; i--)
-      {
-        System.out.println("i=" + i + ", " + (-90f + (((float)(i - servoMin) / (float)diff) * 180f)));
-        servoBoard.setPWM(servoChannel, 0, i);
-        waitfor(10);
-      } 
-      servoBoard.setPWM(servoChannel, 0, 0);   // Stop the standard one
-      waitfor(2000);
-      System.out.println("Let's go, 1 deg by 1 deg");
-      for (int i=servoMin; i<=servoMax; i+=(diff / 180))
-      {
-        System.out.println("i=" + i + ", " + Math.round(-90f + (((float)(i - servoMin) / (float)diff) * 180f)));
-        servoBoard.setPWM(servoChannel, 0, i);
-        waitfor(10);
-      } 
-      for (int i=servoMax; i>=servoMin; i-=(diff / 180))
-      {
-        System.out.println("i=" + i + ", " + Math.round(-90f + (((float)(i - servoMin) / (float)diff) * 180f)));
-        servoBoard.setPWM(servoChannel, 0, i);
-        waitfor(10);
-      } 
-      servoBoard.setPWM(servoChannel, 0, 0);   // Stop the standard one
-      waitfor(2000);
-      
-      float[] degValues = { -10, 0, -90, 45, -30, 90, 10, 20, 30, 40, 50, 60, 70, 80, 90, 0 };
-      for (float f : degValues)
-      {
-        int pwm = degreeToPWM(servoMin, servoMax, f);
-        System.out.println(f + " degrees (" + pwm + ")");
-        servoBoard.setPWM(servoChannel, 0, pwm);
-        waitfor(1500);
+
+    if (false) {
+      try {
+        servoBoard.setPWM(servoChannel, 0, 0);   // Stop the standard one
+        waitfor(2000);
+        System.out.println("Let's go, 1 by 1");
+        for (int i = servoMin; i <= servoMax; i++) {
+          System.out.println("i=" + i + ", " + (-90f + (((float) (i - servoMin) / (float) diff) * 180f)));
+          servoBoard.setPWM(servoChannel, 0, i);
+          waitfor(10);
+        }
+        for (int i = servoMax; i >= servoMin; i--) {
+          System.out.println("i=" + i + ", " + (-90f + (((float) (i - servoMin) / (float) diff) * 180f)));
+          servoBoard.setPWM(servoChannel, 0, i);
+          waitfor(10);
+        }
+        servoBoard.setPWM(servoChannel, 0, 0);   // Stop the standard one
+        waitfor(2000);
+        System.out.println("Let's go, 1 deg by 1 deg");
+        for (int i = servoMin; i <= servoMax; i += (diff / 180)) {
+          System.out.println("i=" + i + ", " + Math.round(-90f + (((float) (i - servoMin) / (float) diff) * 180f)));
+          servoBoard.setPWM(servoChannel, 0, i);
+          waitfor(10);
+        }
+        for (int i = servoMax; i >= servoMin; i -= (diff / 180)) {
+          System.out.println("i=" + i + ", " + Math.round(-90f + (((float) (i - servoMin) / (float) diff) * 180f)));
+          servoBoard.setPWM(servoChannel, 0, i);
+          waitfor(10);
+        }
+        servoBoard.setPWM(servoChannel, 0, 0);   // Stop the standard one
+        waitfor(2000);
+
+        float[] degValues = {-10, 0, -90, 45, -30, 90, 10, 20, 30, 40, 50, 60, 70, 80, 90, 0};
+        for (float f : degValues) {
+          int pwm = degreeToPWM(servoMin, servoMax, f);
+          System.out.println(f + " degrees (" + pwm + ")");
+          servoBoard.setPWM(servoChannel, 0, pwm);
+          waitfor(1500);
+        }
+      } finally {
+        servoBoard.setPWM(servoChannel, 0, 0);   // Stop the standard one
       }
+
+      System.out.println("Done.");
     }
-    finally
-    {
-      servoBoard.setPWM(servoChannel, 0, 0);   // Stop the standard one
+
+    // Test the 4 servos.
+    try {
+      // Stop the servos
+      servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 0);
+      servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 0);
+      servoBoard.setPWM(CLAW_SERVO_CHANNEL, 0, 0);
+      servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 0);
+      waitfor(1000);
+
+      System.out.println("LEFT: Let's go, 1 by 1");
+      for (int i = 0; i <= 10; i++) {
+        int pwm = degreeToPWM(servoMin, servoMax, i);
+        System.out.println("i=" + i + ", pwm=" + pwm);
+        servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, pwm);
+        waitfor(10);
+      }
+      for (int i = 10; i >= -10; i--) {
+        int pwm = degreeToPWM(servoMin, servoMax, i);
+        System.out.println("i=" + i + ", pwm=" + pwm);
+        servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, pwm);
+        waitfor(10);
+      }
+      for (int i = -10; i <= 0; i++) {
+        int pwm = degreeToPWM(servoMin, servoMax, i);
+        System.out.println("i=" + i + ", pwm=" + pwm);
+        servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, pwm);
+        waitfor(10);
+      }
+
+    } finally {
+      // Stop the servos
+      servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 0);
+      servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 0);
+      servoBoard.setPWM(CLAW_SERVO_CHANNEL, 0, 0);
+      servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 0);
     }
-    
     System.out.println("Done.");
   }
   
