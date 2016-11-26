@@ -13,6 +13,9 @@ public class MeArmDemo
     try { Thread.sleep(howMuch); } catch (InterruptedException ie) { ie.printStackTrace(); }
   }
 
+  private static int servoMin = 122;
+  private static int servoMax = 615;
+
   public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {
     PCA9685 servoBoard = new PCA9685();
@@ -26,8 +29,6 @@ public class MeArmDemo
 
 
     int servoChannel = BOTTOM_SERVO_CHANNEL;
-    int servoMin = 122; 
-    int servoMax = 615; 
     int diff = servoMax - servoMin;
     System.out.println("Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
 
@@ -85,25 +86,10 @@ public class MeArmDemo
       servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 0);
       waitfor(1000);
 
-      System.out.println("LEFT: Let's go, 1 by 1");
-      for (int i = 0; i <= 10; i++) {
-        int pwm = degreeToPWM(servoMin, servoMax, i);
-        System.out.println("i=" + i + ", pwm=" + pwm);
-        servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, pwm);
-        waitfor(10);
-      }
-      for (int i = 10; i >= -10; i--) {
-        int pwm = degreeToPWM(servoMin, servoMax, i);
-        System.out.println("i=" + i + ", pwm=" + pwm);
-        servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, pwm);
-        waitfor(10);
-      }
-      for (int i = -10; i <= 0; i++) {
-        int pwm = degreeToPWM(servoMin, servoMax, i);
-        System.out.println("i=" + i + ", pwm=" + pwm);
-        servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, pwm);
-        waitfor(10);
-      }
+      move(servoBoard, "LEFT", -10, 10, LEFT_SERVO_CHANNEL, 100);
+      move(servoBoard, "RIGHT", -10, 10, RIGHT_SERVO_CHANNEL, 100);
+      move(servoBoard, "BOTTOM", -10, 10, BOTTOM_SERVO_CHANNEL, 100);
+      move(servoBoard, "CLAW", -10, 10, CLAW_SERVO_CHANNEL, 100);
 
     } finally {
       // Stop the servos
@@ -114,7 +100,28 @@ public class MeArmDemo
     }
     System.out.println("Done.");
   }
-  
+
+  private static void move(PCA9685 servoBoard, String name, int min, int max, int channel, int wait) {
+    System.out.println(String.format("%s: Let's go, 1 by 1", name));
+    for (int i = 0; i <= max; i++) {
+      int pwm = degreeToPWM(servoMin, servoMax, i);
+      System.out.println("i=" + i + ", pwm=" + pwm);
+      servoBoard.setPWM(channel, 0, pwm);
+      waitfor(wait);
+    }
+    for (int i = max; i >= min; i--) {
+      int pwm = degreeToPWM(servoMin, servoMax, i);
+      System.out.println("i=" + i + ", pwm=" + pwm);
+      servoBoard.setPWM(channel, 0, pwm);
+      waitfor(wait);
+    }
+    for (int i = min; i <= 0; i++) {
+      int pwm = degreeToPWM(servoMin, servoMax, i);
+      System.out.println("i=" + i + ", pwm=" + pwm);
+      servoBoard.setPWM(channel, 0, pwm);
+      waitfor(wait);
+    }
+  }
   /*
    * deg in [-90..90]
    */
