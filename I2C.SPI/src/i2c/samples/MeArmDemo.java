@@ -71,6 +71,9 @@ public class MeArmDemo
       // Stand up
       servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 430);
       servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 0);
+      // Middle
+      servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 200);
+      servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 0);
 
       // Open and close the claw
       // 130 Open, 400 closed
@@ -84,11 +87,12 @@ public class MeArmDemo
 
       // Turn left and drop it.
       move(servoBoard, BOTTOM_SERVO_CHANNEL, 410, 670, 10, 50); // Turn left
-      move(servoBoard, BOTTOM_SERVO_CHANNEL, 410, 670, 10, 50); // Turn left
       move(servoBoard, RIGHT_SERVO_CHANNEL, 430, 600, 10, 50); // Move ahead
+      move(servoBoard, LEFT_SERVO_CHANNEL, 200, 350, 10, 50); // Move up
       move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Drop it
       move(servoBoard, RIGHT_SERVO_CHANNEL, 600, 430, 10, 50); // Move back
       move(servoBoard, BOTTOM_SERVO_CHANNEL, 670, 410, 10, 50); // Come back
+      move(servoBoard, LEFT_SERVO_CHANNEL, 350, 200, 10, 50); // Move down
       move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
     } finally {
       // Stop the servos
