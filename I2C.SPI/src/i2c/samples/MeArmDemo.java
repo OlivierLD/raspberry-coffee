@@ -3,11 +3,39 @@ package i2c.samples;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 /*
  * Standard, all the way, clockwise, counterclockwise
  */
 public class MeArmDemo
 {
+  private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+  public static String userInput(String prompt)
+  {
+    String retString = "";
+    System.err.print(prompt);
+    try
+    {
+      retString = stdin.readLine();
+    }
+    catch(Exception e)
+    {
+      System.out.println(e);
+      String s;
+      try
+      {
+        s = userInput("<Oooch/>");
+      }
+      catch(Exception exception)
+      {
+        exception.printStackTrace();
+      }
+    }
+    return retString;
+  }
+
   private static void waitfor(long howMuch)
   {
     try { Thread.sleep(howMuch); } catch (InterruptedException ie) { ie.printStackTrace(); }
@@ -25,7 +53,7 @@ public class MeArmDemo
     
     final int LEFT_SERVO_CHANNEL   = 0; // Range 350 (all the way up) 135 (all the way down)
     final int CLAW_SERVO_CHANNEL   = 1; // Range 130 (open) 400 (closed)
-    final int BOTTOM_SERVO_CHANNEL = 2; // 130 (all the way right) 675 (all the way left)
+    final int BOTTOM_SERVO_CHANNEL = 2; // 130 (all the way right) 675 (all the way left). Center at ~410
     final int RIGHT_SERVO_CHANNEL  = 4; // 130 (too far back, limit to 300) 675 (all the way ahead)
 
     // Test the 4 servos.
@@ -37,11 +65,22 @@ public class MeArmDemo
       servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 0);
       waitfor(1000);
 
+      // Center the arm
+      servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 410);
+      servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 0);
       // Open and close the claw
       // 130 Open, 400 closed
-      move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 100);
-      waitfor(1000);
-      move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 100);
+      move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Open it
+      System.out.println("Give ne something to grab.");
+      userInput("Hit return when I can catch it");
+      move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
+      System.out.println("Thank you!");
+
+      // Turn left and drop it.
+      move(servoBoard, BOTTOM_SERVO_CHANNEL, 410, 670, 10, 50); // Turn left
+      move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Drop it
+      move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
+      move(servoBoard, BOTTOM_SERVO_CHANNEL, 670, 410, 10, 50); // Come back
 
     } finally {
       // Stop the servos
