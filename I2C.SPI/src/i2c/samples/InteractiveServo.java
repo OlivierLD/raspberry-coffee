@@ -54,12 +54,22 @@ public class InteractiveServo
     
     servoBoard.setPWMFreq(freq); // Set frequency in Hz
 
-    String servoChannel = System.getProperty("servo.channel", "0");
-
-    final int SERVO_CHANNEL = Integer.parseInt(servoChannel);
-
-    int servo = SERVO_CHANNEL;
-    
+    String servoChannel = userInput("Servo Channel (0-15) : ");
+    int servo = 0;
+    try 
+    {
+	  servo = Integer.parseInt(servoChannel);
+	  if (servo < 0 || servo > 15)
+	  {
+	    System.out.println("Must be between 0 and 15, exiting");
+	    System.exit(1);
+	  }
+	}
+	catch (Exception ex) 
+	{
+	  ex.printStackTrace();
+	  System.exit(1);
+	}
     boolean keepGoing = true;
     System.out.println("Enter 'quit' to exit.");
     while (keepGoing)
