@@ -75,8 +75,8 @@ public class MeArmDemo
       // Open and close the claw
       // 130 Open, 400 closed
       move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Open it
-      System.out.println("Give ne something to grab.");
-      client.SpeechTools.speak("Give me something to grab, hit return when I can catch it.");
+      System.out.println("Give me something to grab.");
+      client.SpeechTools.speak("Hey, give me something to grab, hit return when I can catch it.");
       userInput("Hit return when I can catch it.");
       move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
       System.out.println("Thank you!");
