@@ -56,6 +56,7 @@ public class MeArmDemo
     final int BOTTOM_SERVO_CHANNEL = 2; // Right and Left. 130 (all the way right) 675 (all the way left). Center at ~410
     final int RIGHT_SERVO_CHANNEL  = 4; // BAck and forth. 130 (too far back, limit to 300) 675 (all the way ahead), right at ~430
 
+    final int WAIT = 25;
     // Test the 4 servos.
     try {
       // Stop the servos
@@ -68,42 +69,54 @@ public class MeArmDemo
       // Center the arm
       servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 410);
       servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 0);
+      waitfor(250);
       // Stand up
       servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 430);
       servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 0);
+      waitfor(250);
       // Middle
       servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 230);
       servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 0);
-
+      waitfor(250);
       // Open and close the claw
       // 130 Open, 400 closed
       System.out.println("Opening the claw");
-      move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Open it
+      move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, WAIT); // Open it
+      waitfor(250);
       System.out.println("Give me something to grab.");
       client.SpeechTools.speak("Hey, give me something to grab, hit return when I can catch it.");
       userInput("Hit return when I can catch it.");
       System.out.println("Closing the claw");
-      move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
+      move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, WAIT); // Close it
+      waitfor(250);
       System.out.println("Thank you!");
       client.SpeechTools.speak("Thank you!");
 
       // Turn left and drop it.
       System.out.println("Turning left");
-      move(servoBoard, BOTTOM_SERVO_CHANNEL, 410, 670, 10, 50); // Turn left
+      move(servoBoard, BOTTOM_SERVO_CHANNEL, 410, 670, 10, WAIT); // Turn left
+      waitfor(500);
       System.out.println("Reaching ahead");
-      move(servoBoard, RIGHT_SERVO_CHANNEL, 430, 600, 10, 50); // Move ahead
+      move(servoBoard, RIGHT_SERVO_CHANNEL, 430, 550, 10, WAIT); // Move ahead
+      waitfor(500);
       System.out.println("Higher");
-      move(servoBoard, LEFT_SERVO_CHANNEL, 230, 350, 10, 50); // Move up
+      move(servoBoard, LEFT_SERVO_CHANNEL, 230, 350, 10, WAIT); // Move up
+      waitfor(500);
       System.out.println("Dropping");
-      move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, 50); // Drop it
-      System.out.println("Backwards");
-      move(servoBoard, RIGHT_SERVO_CHANNEL, 600, 430, 10, 50); // Move back
-      System.out.println("Re-centering");
-      move(servoBoard, BOTTOM_SERVO_CHANNEL, 670, 410, 10, 50); // Come back
+      move(servoBoard, CLAW_SERVO_CHANNEL, 400, 130, 10, WAIT); // Drop it
+      waitfor(500);
       System.out.println("Down");
-      move(servoBoard, LEFT_SERVO_CHANNEL, 350, 230, 10, 50); // Move down
+      move(servoBoard, LEFT_SERVO_CHANNEL, 350, 230, 10, WAIT); // Move down
+      waitfor(500);
+      System.out.println("Backwards");
+      move(servoBoard, RIGHT_SERVO_CHANNEL, 550, 430, 10, WAIT); // Move back
+      waitfor(500);
+      System.out.println("Re-centering");
+      move(servoBoard, BOTTOM_SERVO_CHANNEL, 670, 410, 10, WAIT); // Come back
+      waitfor(500);
       System.out.println("Closing");
-      move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, 50); // Close it
+      move(servoBoard, CLAW_SERVO_CHANNEL, 130, 400, 10, WAIT); // Close it
+      waitfor(500);
     } finally {
       // Stop the servos
       servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 0);
