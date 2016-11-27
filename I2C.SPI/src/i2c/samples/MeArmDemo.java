@@ -54,15 +54,15 @@ public class MeArmDemo
     final int LEFT_SERVO_CHANNEL   = 0; // Up and down. Range 350 (all the way up) 135 (all the way down), Centered at ~230
     final int CLAW_SERVO_CHANNEL   = 1; // Open and close. Range 130 (open) 400 (closed)
     final int BOTTOM_SERVO_CHANNEL = 2; // Right and Left. 130 (all the way right) 675 (all the way left). Center at ~410
-    final int RIGHT_SERVO_CHANNEL  = 4; // BAck and forth. 130 (too far back, limit to 300) 675 (all the way ahead), right at ~430
+    final int RIGHT_SERVO_CHANNEL  = 4; // Back and forth. 130 (too far back, limit to 300) 675 (all the way ahead), right at ~430
 
     final int WAIT = 25;
     // Test the 4 servos.
     try {
       // Stop the servos
-      servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 0);
-      servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 0);
-      servoBoard.setPWM(CLAW_SERVO_CHANNEL, 0, 0);
+      servoBoard.setPWM(LEFT_SERVO_CHANNEL,   0, 0);
+      servoBoard.setPWM(RIGHT_SERVO_CHANNEL,  0, 0);
+      servoBoard.setPWM(CLAW_SERVO_CHANNEL,   0, 0);
       servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 0);
       waitfor(1000);
 
@@ -119,9 +119,9 @@ public class MeArmDemo
       waitfor(500);
     } finally {
       // Stop the servos
-      servoBoard.setPWM(LEFT_SERVO_CHANNEL, 0, 0);
-      servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 0);
-      servoBoard.setPWM(CLAW_SERVO_CHANNEL, 0, 0);
+      servoBoard.setPWM(LEFT_SERVO_CHANNEL,   0, 0);
+      servoBoard.setPWM(RIGHT_SERVO_CHANNEL,  0, 0);
+      servoBoard.setPWM(CLAW_SERVO_CHANNEL,   0, 0);
       servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 0);
     }
     System.out.println("Done.");
@@ -130,7 +130,7 @@ public class MeArmDemo
   private static void move(PCA9685 servoBoard, int channel, int from, int to, int step, int wait) {
     servoBoard.setPWM(channel, 0, 0);
     int inc = step * (from < to ? 1 : -1);
-    for (int i = from; i != to; i+=inc) {
+    for (int i = from; (from < to && i <= to) || (to < from && i >= to); i+=inc) {
       servoBoard.setPWM(channel, 0, i);
       waitfor(wait);
     }
