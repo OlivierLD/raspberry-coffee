@@ -5,6 +5,9 @@ import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
 import samples.reader.CustomSerialReader;
 
+/**
+ * Read NMEA Data from a Serial port
+ */
 public class CustomSerialClient extends NMEAClient
 {
   public CustomSerialClient(String s, String[] sa)

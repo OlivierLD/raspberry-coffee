@@ -6,6 +6,9 @@ import nmea.api.NMEAListener;
 import samples.reader.CustomSerialReader;
 import samples.reader.CustomTCPReader;
 
+/**
+ * REad NMEA Data from a TCP server
+ */
 public class CustomTCPClient extends NMEAClient
 {
   public CustomTCPClient(String s, String[] sa)
@@ -15,16 +18,16 @@ public class CustomTCPClient extends NMEAClient
   
   public void dataDetectedEvent(NMEAEvent e)
   {
-    System.out.println("Received:" + e.getContent());
+    System.out.println("Received from TCP :" + e.getContent());
   }
 
   private static CustomTCPClient customClient = null;
   
   public static void main(String[] args)
   {
-    System.out.println("CustomSerialClient invoked with " + args.length + " Parameter(s).");
+    System.out.println("CustomTCPClient invoked with " + args.length + " Parameter(s).");
     for (String s : args)
-      System.out.println("CustomSerialClient prm:" + s);
+      System.out.println("CustomTCPClient prm:" + s);
     
     String prefix = null; // "GP";
     String[] array = null; // {"GVS", "GLL", "RME", "GSA", "RMC"};

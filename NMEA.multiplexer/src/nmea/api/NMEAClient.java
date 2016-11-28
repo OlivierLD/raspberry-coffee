@@ -20,7 +20,7 @@ import java.util.List;
  *     String[] array = {"HDM", "GLL", "XTE", "MWV", "VHW"};
  *     CustomSerialClient customClient = new CustomSerialClient(prefix, array); // Extends NMEAReader
  *     customClient.initClient();
- *     customClient.setReader(new CustomReader(customClient.getListeners()));
+ *     customClient.setReader(new CustomXXReader(customClient.getListeners()));
  *     customClient.startWorking();
  *   }
  * }
