@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'oliv.pi4j.samples'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url "http://lediouris.net/maven2" }
+    mavenLocal()
+}
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src'
+    }
+  }  
+  test {
+    java {
+      srcDir 'tests'
+    }
+  }  
+}
+
+dependencies {
+    compile 'com.pi4j:pi4j-core:1.1'
+    compile 'org.rxtx:rxtx:2.1.7'
+}

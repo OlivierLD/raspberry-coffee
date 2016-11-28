@@ -22,3 +22,4 @@ include 'WeatherStation'
 include 'OtherJVM.languages'
 include 'GPS.read'
 include "RMI.sample"
+include "NMEA.multiplexer"
