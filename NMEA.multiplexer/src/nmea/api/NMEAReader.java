@@ -39,7 +39,7 @@ public abstract class NMEAReader extends Thread
   /**
    * The one that tells the Controller to start working
    * 
-   * @see ocss.nmea.api.NMEAParser
+   * @see nmea.api.NMEAParser
    */
   protected void fireDataRead(NMEAEvent e)
   {
@@ -85,7 +85,7 @@ public abstract class NMEAReader extends Thread
 
   public void run()
   {
-    if ("true".equals(System.getProperty("verbose", "false"))) // ocss.nmea.api.NMEAReader
+    if ("true".equals(System.getProperty("verbose", "false"))) // nmea.api.NMEAReader
       System.out.println(this.getClass().getName() + ":Reader Running");
     try { read(); }
     catch (Exception ex)

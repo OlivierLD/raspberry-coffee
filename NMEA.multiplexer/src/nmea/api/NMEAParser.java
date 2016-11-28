@@ -7,10 +7,10 @@ import java.util.List;
  * A Controller.
  * This class is final, and can be used as it is.
  *
- * @see ocss.nmea.api.NMEAReader
- * @see ocss.nmea.api.NMEAClient
- * @see ocss.nmea.api.NMEAEvent
- * @see ocss.nmea.api.NMEAException
+ * @see nmea.api.NMEAReader
+ * @see nmea.api.NMEAClient
+ * @see nmea.api.NMEAEvent
+ * @see nmea.api.NMEAException
  *
  * @version 1.0
  * @author Olivier Le Diouris
@@ -46,7 +46,7 @@ public final class NMEAParser extends Thread
         {
 //        System.out.println("Receieved Data:" + e.getContent());
           nmeaStream += e.getContent();
-          // TODO Broadcast that
+          // TODO Broadcast that ?
           
           // Send to parser
           String s = "";

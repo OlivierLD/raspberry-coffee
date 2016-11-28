@@ -8,3 +8,7 @@ Any input (File, Serial, TCP, UDP, RMI, WebSocket...), any output (File, Serial,
 - TCP Reader / Writer
 - UDP Reader / Writer
 - WebSocket client
+
+
+## Open questions
+- Do we need a parser here? If it is just about multiplexing, then probably not.
