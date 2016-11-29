@@ -16,6 +16,13 @@ Any input (File, Serial, TCP, UDP, WebSocket...), any output (File, Serial, TCP,
 
 ## Open Issues
 - UDP client
+- Parameter for the baud rate (Serial port).
 
 ## TODO
 - verbose options
+- distinctions  between 
+  - reader and client
+  - producer (ie from sensors and transducers), computer (calculate data from other ones: current, true wind)
+  - broadcaster?
+
+- Externalize data (properties file).

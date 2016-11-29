@@ -115,8 +115,11 @@ public abstract class NMEAClient
 
   public void stopDataRead()
   {
-    for (NMEAListener l : this.getListeners())
+    for (NMEAListener l : this.getListeners()) {
       l.stopReading(new NMEAEvent(this));
+    }
+    // Remove listeners?
+    removeAllListeners();
   }
 
   /**
@@ -139,5 +142,11 @@ public abstract class NMEAClient
   public synchronized void removeNMEAListener(NMEAListener l)
   {
     NMEAListeners.remove(l);
+  }
+
+  public synchronized void removeAllListeners() {
+    while (NMEAListeners.size() > 0) {
+      NMEAListeners.remove(0);
+    }
   }
 }
