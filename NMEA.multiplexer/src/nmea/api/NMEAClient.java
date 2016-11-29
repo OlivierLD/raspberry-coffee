@@ -52,7 +52,14 @@ public abstract class NMEAClient
     setDevicePrefix(prefix);
     setSentenceArray(sentence);
   }
-  
+
+  protected Multiplexer parent;
+
+  public void setMultiplexer(Multiplexer multiplexer)
+  {
+    this.parent = multiplexer;
+  }
+
   public void initClient()
   {
     this.addNMEAListener(new NMEAListener()
@@ -104,6 +111,12 @@ public abstract class NMEAClient
       synchronized (this.reader) { this.reader.start(); }
       synchronized (this.parser) { this.parser.start(); }
     }
+  }
+
+  public void stopDataRead()
+  {
+    for (NMEAListener l : this.getListeners())
+      l.stopReading(new NMEAEvent(this));
   }
 
   /**

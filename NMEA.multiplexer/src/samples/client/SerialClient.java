@@ -2,25 +2,30 @@ package samples.client;
 
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmea.api.NMEAListener;
-import samples.reader.CustomSerialReader;
+import samples.reader.SerialReader;
 
 /**
  * Read NMEA Data from a Serial port
  */
-public class CustomSerialClient extends NMEAClient
+public class SerialClient extends NMEAClient
 {
-  public CustomSerialClient(String s, String[] sa)
+  public SerialClient(String s, String[] sa)
   {
     super(s, sa);
   }
-  
+
+  @Override
   public void dataDetectedEvent(NMEAEvent e)
   {
-    System.out.println("Received:" + e.getContent());
+    if ("true".equals(System.getProperty("data.verbose", "false")))
+      System.out.println("Received:" + e.getContent());
+    if (parent != null)
+    {
+      parent.onData(e.getContent());
+    }
   }
 
-  private static CustomSerialClient customClient = null;
+  private static SerialClient nmeaClient = null;
   
   public static void main(String[] args)
   {
@@ -36,28 +41,19 @@ public class CustomSerialClient extends NMEAClient
 //  String[] array = {"HDM", "GLL", "XTE", "MWV", "VHW"};
     String prefix = "GP";
     String[] array = {"GVS", "GLL", "RME", "GSA", "RMC"};
-    customClient = new CustomSerialClient(prefix, array);
+    nmeaClient = new SerialClient(prefix, array);
       
     Runtime.getRuntime().addShutdownHook(new Thread() 
       {
         public void run() 
         {
           System.out.println ("Shutting down nicely.");
-          customClient.stopDataRead();
+          nmeaClient.stopDataRead();
         }
       });    
-    customClient.setEOS("\n"); // TASK Sure?
-    customClient.initClient();
-    customClient.setReader(new CustomSerialReader(customClient.getListeners(), commPort));
-    customClient.startWorking();
-  }
-
-  private void stopDataRead()
-  {
-    if (customClient != null)
-    {
-      for (NMEAListener l : customClient.getListeners())
-        l.stopReading(new NMEAEvent(this));
-    }
+    nmeaClient.setEOS("\n"); // TASK Sure?
+    nmeaClient.initClient();
+    nmeaClient.setReader(new SerialReader(nmeaClient.getListeners(), commPort));
+    nmeaClient.startWorking();
   }
 }

@@ -18,23 +18,23 @@ import java.util.List;
 /**
  * Works with SailMail rebroadcast
  */
-public class CustomTCPReader extends NMEAReader
+public class TCPReader extends NMEAReader
 {
   private int tcpport     = 80;
   private String hostName = "localhost";
 
-  public CustomTCPReader(List<NMEAListener> al)
+  public TCPReader(List<NMEAListener> al)
   {
     super(al);
   }
 
-  public CustomTCPReader(List<NMEAListener> al, int tcp)
+  public TCPReader(List<NMEAListener> al, int tcp)
   {
     super(al);
     tcpport = tcp;
   }
 
-  public CustomTCPReader(List<NMEAListener> al, String host, int tcp)
+  public TCPReader(List<NMEAListener> al, String host, int tcp)
   {
     super(al);
     hostName = host;
@@ -42,11 +42,13 @@ public class CustomTCPReader extends NMEAReader
   }
 
   private Socket skt = null;
-  
+
+  @Override
   public void read()
   {
-    boolean verbose = "true".equals((System.getProperty("verbose", "false")));
-    System.out.println("From " + getClass().getName() + " Reading TCP Port " + tcpport + " on " + hostName);
+    boolean verbose = "true".equals((System.getProperty("tcp.verbose", "false")));
+    if (verbose)
+      System.out.println("From " + getClass().getName() + " Reading TCP Port " + tcpport + " on " + hostName);
     super.enableReading();
     try
     {
@@ -182,7 +184,7 @@ public class CustomTCPReader extends NMEAReader
       boolean keepTrying = true;
       while (keepTrying)
       {
-        CustomTCPReader ctcpr = new CustomTCPReader(ll, host, port);
+        TCPReader ctcpr = new TCPReader(ll, host, port);
         System.out.println(new Date().toString() + ": New " + ctcpr.getClass().getName() + " created.");
 
         try { ctcpr.read(); }

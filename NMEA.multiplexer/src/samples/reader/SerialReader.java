@@ -19,28 +19,28 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.TooManyListenersException;
 
-public class CustomSerialReader 
+public class SerialReader
      extends NMEAReader 
   implements SerialPortEventListener,
 				CommPortOwnershipListener
 {
   String comPort = "/dev/ttyUSB0"; // "COM1";
   
-  public CustomSerialReader()
+  public SerialReader()
   {
   }
   
-  public CustomSerialReader(String com)
+  public SerialReader(String com)
   {
     comPort = com;
   }
   
-  public CustomSerialReader(List<NMEAListener> al)
+  public SerialReader(List<NMEAListener> al)
   {
     super(al);
   }
 
-  public CustomSerialReader(List<NMEAListener> al, String com)
+  public SerialReader(List<NMEAListener> al, String com)
   {
     super(al);
     comPort = com;
@@ -48,6 +48,7 @@ public class CustomSerialReader
 
   InputStream theInput = null;
 
+  @Override
   public void read()
   {
     if (System.getProperty("verbose", "false").equals("true")) System.out.println("From " + this.getClass().getName() + " Reading Serial Port " + comPort);
@@ -139,6 +140,7 @@ public class CustomSerialReader
     System.out.println("Port is open...");
   }
 
+  @Override
   public void serialEvent(SerialPortEvent serialPortEvent)
   {
     switch (serialPortEvent.getEventType())
@@ -190,6 +192,7 @@ public class CustomSerialReader
     }
   }
 
+  @Override
   public void ownershipChange(int type)
   {
     if (type == CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED)
@@ -202,7 +205,7 @@ public class CustomSerialReader
   
   public static void main(String[] args)
   {
-    new CustomSerialReader().read();
+    new SerialReader().read();
   }
   
 }

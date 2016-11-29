@@ -10,16 +10,17 @@ import java.util.List;
 /**
  * A Simulator, taking its inputs from a file
  */
-public class CustomFileReader extends NMEAReader
+public class FileReader extends NMEAReader
 {
   String dataFileName = null;
-  public CustomFileReader(List<NMEAListener> al, String fName)
+  public FileReader(List<NMEAListener> al, String fName)
   {
     super(al);
     System.out.println("There are " + al.size() + " listener(s)");
     this.dataFileName = fName;
   }
-  
+
+  @Override
   public void read()
   {
     // Simulation

@@ -2,12 +2,12 @@ package samples.client;
 
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmea.api.NMEAListener;
-import samples.reader.CustomFileReader;
+import samples.reader.FileReader;
 import servers.TCPWriter;
 
 /**
  * Read a file containing logged data and rebroadcast them on TCP
+ * This one is not called from a multiplexer.
  */
 public class CustomDataFileToTCPClient extends NMEAClient
 {
@@ -58,16 +58,7 @@ public class CustomDataFileToTCPClient extends NMEAClient
 
     customClient.setEOS("\n"); // TASK Sure?
     customClient.initClient();
-    customClient.setReader(new CustomFileReader(customClient.getListeners(), dataFile));
+    customClient.setReader(new FileReader(customClient.getListeners(), dataFile));
     customClient.startWorking();
-  }
-
-  private void stopDataRead()
-  {
-    if (customClient != null)
-    {
-      for (NMEAListener l : customClient.getListeners())
-        l.stopReading(new NMEAEvent(this));
-    }
   }
 }

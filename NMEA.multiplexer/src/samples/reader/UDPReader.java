@@ -12,24 +12,24 @@ import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.List;
 
-public class CustomUDPReader extends NMEAReader
+public class UDPReader extends NMEAReader
 {
   private int udpport  = 8001;
   private long timeout = 5000L; // Default value
   private String host = "localhost";
 
-  public CustomUDPReader(List<NMEAListener> al)
+  public UDPReader(List<NMEAListener> al)
   {
     super(al);
   }
 
-  public CustomUDPReader(List<NMEAListener> al, int udp)
+  public UDPReader(List<NMEAListener> al, int udp)
   {
     super(al);
     udpport = udp;
   }
 
-  public CustomUDPReader(List<NMEAListener> al, String host, int udp)
+  public UDPReader(List<NMEAListener> al, String host, int udp)
   {
     super(al);
     udpport = udp;
@@ -39,8 +39,9 @@ public class CustomUDPReader extends NMEAReader
   private InetAddress     group  = null;
   private DatagramSocket dsocket = null;
   
-  private boolean verbose = System.getProperty("verbose", "false").equals("true");
+  private boolean verbose = System.getProperty("udp.verbose", "false").equals("true");
 
+  @Override
   public void read()
   {
     System.out.println("From " + getClass().getName() + " Reading UDP Port " + udpport);
@@ -48,7 +49,8 @@ public class CustomUDPReader extends NMEAReader
     try
     {
       InetAddress address = InetAddress.getByName(host);
-      System.out.println("INFO:" + host + " (" + address.toString() + ")" + " is" + (address.isMulticastAddress() ? "" : " NOT") + " a multicast address");
+      if (verbose)
+        System.out.println("INFO:" + host + " (" + address.toString() + ")" + " is" + (address.isMulticastAddress() ? "" : " NOT") + " a multicast address");
 
       if (address.isMulticastAddress())
       {

@@ -2,26 +2,30 @@ package samples.client;
 
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmea.api.NMEAListener;
-import samples.reader.CustomFileReader;
-import samples.reader.CustomSerialReader;
+import samples.reader.FileReader;
 
 /**
  * Read a file containing logged data
  */
-public class CustomDataFileClient extends NMEAClient
+public class DataFileClient extends NMEAClient
 {
-  public CustomDataFileClient(String s, String[] sa)
+  public DataFileClient(String s, String[] sa)
   {
     super(s, sa);
   }
-  
+
+  @Override
   public void dataDetectedEvent(NMEAEvent e)
   {
-    System.out.println("Received:" + e.getContent());
+    if ("true".equals(System.getProperty("data.verbose", "false")))
+      System.out.println("Received:" + e.getContent());
+    if (parent != null)
+    {
+      parent.onData(e.getContent());
+    }
   }
 
-  private static CustomDataFileClient customClient = null;
+  private static DataFileClient nmeaClient = null;
   
   public static void main(String[] args)
   {
@@ -35,29 +39,20 @@ public class CustomDataFileClient extends NMEAClient
     
     String prefix = null; // "*";
     String[] array = null; // {"GVS", "GLL", "RME", "GSA", "RMC"};
-    customClient = new CustomDataFileClient(prefix, array);
+    nmeaClient = new DataFileClient(prefix, array);
       
     Runtime.getRuntime().addShutdownHook(new Thread() 
       {
         public void run() 
         {
           System.out.println ("Shutting down nicely.");
-          customClient.stopDataRead();
+          nmeaClient.stopDataRead();
         }
       });
 
-    customClient.setEOS("\n"); // TASK Sure?
-    customClient.initClient();
-    customClient.setReader(new CustomFileReader(customClient.getListeners(), dataFile));
-    customClient.startWorking();
-  }
-
-  private void stopDataRead()
-  {
-    if (customClient != null)
-    {
-      for (NMEAListener l : customClient.getListeners())
-        l.stopReading(new NMEAEvent(this));
-    }
+    nmeaClient.setEOS("\n"); // TASK Sure?
+    nmeaClient.initClient();
+    nmeaClient.setReader(new FileReader(nmeaClient.getListeners(), dataFile));
+    nmeaClient.startWorking();
   }
 }
