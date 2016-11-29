@@ -24,15 +24,17 @@ public class SerialReader
   implements SerialPortEventListener,
 				CommPortOwnershipListener
 {
-  String comPort = "/dev/ttyUSB0"; // "COM1";
+  private String comPort = "/dev/ttyUSB0"; // "COM1";
+  private int br = 4800;
   
   public SerialReader()
   {
   }
   
-  public SerialReader(String com)
+  public SerialReader(String com, int br)
   {
-    comPort = com;
+    this.comPort = com;
+    this.br = br;
   }
   
   public SerialReader(List<NMEAListener> al)
@@ -40,13 +42,14 @@ public class SerialReader
     super(al);
   }
 
-  public SerialReader(List<NMEAListener> al, String com)
+  public SerialReader(List<NMEAListener> al, String com, int br)
   {
     super(al);
-    comPort = com;
+    this.comPort = com;
+    this.br = br;
   }
 
-  InputStream theInput = null;
+  private InputStream theInput = null;
 
   @Override
   public void read()
@@ -114,8 +117,8 @@ public class SerialReader
       }
       try
       {
-        // Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations.
-        sp.setSerialPortParams(4800, // TODO A parameter for the baud rate!
+        // Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations (BR 4800).
+        sp.setSerialPortParams(this.br,
                                SerialPort.DATABITS_8,
                                SerialPort.STOPBITS_1,
                                SerialPort.PARITY_NONE);

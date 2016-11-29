@@ -9,6 +9,10 @@ import samples.reader.TCPReader;
  */
 public class TCPClient extends NMEAClient
 {
+  public TCPClient()
+  {
+    this(null, null);
+  }
   public TCPClient(String s, String[] sa)
   {
     super(s, sa);
@@ -17,7 +21,7 @@ public class TCPClient extends NMEAClient
   @Override
   public void dataDetectedEvent(NMEAEvent e)
   {
-    if ("true".equals(System.getProperty("data.verbose", "false")))
+    if ("true".equals(System.getProperty("tcp.data.verbose", "false")))
       System.out.println("Received from TCP :" + e.getContent());
     if (parent != null)
     {
@@ -35,9 +39,7 @@ public class TCPClient extends NMEAClient
 
     String serverName = "192.168.1.1";
     
-    String prefix = null; // "GP";
-    String[] array = null; // {"GVS", "GLL", "RME", "GSA", "RMC"};
-    nmeaClient = new TCPClient(prefix, array);
+    nmeaClient = new TCPClient();
       
     Runtime.getRuntime().addShutdownHook(new Thread() 
       {

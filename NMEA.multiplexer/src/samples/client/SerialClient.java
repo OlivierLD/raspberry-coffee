@@ -9,6 +9,10 @@ import samples.reader.SerialReader;
  */
 public class SerialClient extends NMEAClient
 {
+  public SerialClient()
+  {
+    this(null, null);
+  }
   public SerialClient(String s, String[] sa)
   {
     super(s, sa);
@@ -17,8 +21,8 @@ public class SerialClient extends NMEAClient
   @Override
   public void dataDetectedEvent(NMEAEvent e)
   {
-    if ("true".equals(System.getProperty("data.verbose", "false")))
-      System.out.println("Received:" + e.getContent());
+    if ("true".equals(System.getProperty("serial.data.verbose", "false")))
+      System.out.println("Received from Serial:" + e.getContent());
     if (parent != null)
     {
       parent.onData(e.getContent());
@@ -38,11 +42,7 @@ public class SerialClient extends NMEAClient
     if (args.length > 0)
       commPort = args[0];
     
-//  String prefix = "II";
-//  String[] array = {"HDM", "GLL", "XTE", "MWV", "VHW"};
-    String prefix = null; // "GP";
-    String[] array = null; // {"GVS", "GLL", "RME", "GSA", "RMC"};
-    nmeaClient = new SerialClient(prefix, array);
+    nmeaClient = new SerialClient();
       
     Runtime.getRuntime().addShutdownHook(new Thread() 
       {
@@ -54,7 +54,7 @@ public class SerialClient extends NMEAClient
       });    
     nmeaClient.setEOS("\n"); // TASK Sure?
     nmeaClient.initClient();
-    nmeaClient.setReader(new SerialReader(nmeaClient.getListeners(), commPort));
+    nmeaClient.setReader(new SerialReader(nmeaClient.getListeners(), commPort, 4800));
     nmeaClient.startWorking();
   }
 }

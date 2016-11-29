@@ -13,6 +13,10 @@ public class CustomDataFileToTCPClient extends NMEAClient
 {
   private TCPWriter tcpWriter = null;
 
+  public CustomDataFileToTCPClient()
+  {
+    this(null, null);
+  }
   public CustomDataFileToTCPClient(String s, String[] sa)
   {
     super(s, sa);
@@ -43,9 +47,7 @@ public class CustomDataFileToTCPClient extends NMEAClient
     if (args.length > 0)
       dataFile = args[0];
     
-    String prefix = null; // "*";
-    String[] array = null; // {"GVS", "GLL", "RME", "GSA", "RMC"};
-    customClient = new CustomDataFileToTCPClient(prefix, array);
+    customClient = new CustomDataFileToTCPClient();
       
     Runtime.getRuntime().addShutdownHook(new Thread() 
       {

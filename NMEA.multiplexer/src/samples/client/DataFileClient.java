@@ -9,6 +9,10 @@ import samples.reader.FileReader;
  */
 public class DataFileClient extends NMEAClient
 {
+  public DataFileClient()
+  {
+    this(null, null);
+  }
   public DataFileClient(String s, String[] sa)
   {
     super(s, sa);
@@ -17,8 +21,8 @@ public class DataFileClient extends NMEAClient
   @Override
   public void dataDetectedEvent(NMEAEvent e)
   {
-    if ("true".equals(System.getProperty("data.verbose", "false")))
-      System.out.println("Received:" + e.getContent());
+    if ("true".equals(System.getProperty("file.data.verbose", "false")))
+      System.out.println("Received from File:" + e.getContent());
     if (parent != null)
     {
       parent.onData(e.getContent());
@@ -37,9 +41,7 @@ public class DataFileClient extends NMEAClient
     if (args.length > 0)
       dataFile = args[0];
     
-    String prefix = null; // "*";
-    String[] array = null; // {"GVS", "GLL", "RME", "GSA", "RMC"};
-    nmeaClient = new DataFileClient(prefix, array);
+    nmeaClient = new DataFileClient();
       
     Runtime.getRuntime().addShutdownHook(new Thread() 
       {

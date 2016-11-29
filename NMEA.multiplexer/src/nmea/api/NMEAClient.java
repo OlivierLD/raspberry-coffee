@@ -37,8 +37,7 @@ public abstract class NMEAClient
   
   public NMEAClient()
   {
-    setDevicePrefix(null);
-    setSentenceArray(null);
+    this(null, null);
   }
   
   /**
