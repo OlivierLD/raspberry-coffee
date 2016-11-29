@@ -33,14 +33,15 @@ public class SerialClient extends NMEAClient
     for (String s : args)
       System.out.println("CustomSerialClient prm:" + s);
     
-    String commPort = "/dev/ttyUSB0"; // "COM1";
+//  String commPort = "/dev/ttyUSB0"; // "COM1";
+    String commPort = "/dev/tty.usbserial"; // Mac
     if (args.length > 0)
       commPort = args[0];
     
 //  String prefix = "II";
 //  String[] array = {"HDM", "GLL", "XTE", "MWV", "VHW"};
-    String prefix = "GP";
-    String[] array = {"GVS", "GLL", "RME", "GSA", "RMC"};
+    String prefix = null; // "GP";
+    String[] array = null; // {"GVS", "GLL", "RME", "GSA", "RMC"};
     nmeaClient = new SerialClient(prefix, array);
       
     Runtime.getRuntime().addShutdownHook(new Thread() 

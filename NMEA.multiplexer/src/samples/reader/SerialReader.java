@@ -115,7 +115,7 @@ public class SerialReader
       try
       {
         // Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations.
-        sp.setSerialPortParams(4800,
+        sp.setSerialPortParams(4800, // TODO A parameter for the baud rate!
                                SerialPort.DATABITS_8,
                                SerialPort.STOPBITS_1,
                                SerialPort.PARITY_NONE);

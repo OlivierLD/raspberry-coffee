@@ -33,7 +33,7 @@ public class NMEAMultiplexer implements Multiplexer
 		{
 			public void run()
 			{
-				System.out.println ("Shutting down nicely.");
+				System.out.println ("Shutting down multiplexer nicely.");
 				tcpClient.stopDataRead();
 				fileClient.stopDataRead();
 			}
