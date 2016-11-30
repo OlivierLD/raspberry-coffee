@@ -11,6 +11,7 @@ import samples.reader.TCPReader;
 import servers.DataFileWriter;
 import servers.Forwarder;
 import servers.TCPWriter;
+import servers.WebSocketWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,6 +106,15 @@ public class GenericNMEAMultiplexer implements Multiplexer
 						try {
 							Forwarder fileForwarder = new DataFileWriter(fName);
 							nmeaDataForwarders.add(fileForwarder);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+						break;
+					case "ws":
+						String wsUri = muxProps.getProperty(String.format("forward.%s.wsuri", MUX_IDX_FMT.format(fwdIdx)));
+						try {
+							Forwarder wsForwarder = new WebSocketWriter(wsUri);
+							nmeaDataForwarders.add(wsForwarder);
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
