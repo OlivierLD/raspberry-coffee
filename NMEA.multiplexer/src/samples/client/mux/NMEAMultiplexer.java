@@ -9,6 +9,9 @@ import samples.reader.FileReader;
 import samples.reader.SerialReader;
 import samples.reader.TCPReader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NMEAMultiplexer implements Multiplexer
 {
 	@Override
@@ -20,7 +23,7 @@ public class NMEAMultiplexer implements Multiplexer
 	private NMEAClient fileClient;
 	private NMEAClient serialClient;
 
-	private static String serverName = "192.168.1.1";
+	private static String tcpServerName = "192.168.1.1";
 	private static int tcpPort = 7001;
 	private static String dataFile = "./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea";
 	// like "/dev/tty.usbserial"on Mac, "COMx" on Windows, "/dev/ttyUSB0" on Linux
@@ -29,14 +32,9 @@ public class NMEAMultiplexer implements Multiplexer
 
 	public NMEAMultiplexer()
 	{
-		tcpClient = new TCPClient();
-		tcpClient.setMultiplexer(this);
-
-		fileClient = new DataFileClient();
-		fileClient.setMultiplexer(this);
-
-		serialClient = new SerialClient();
-		serialClient.setMultiplexer(this);
+		tcpClient = new TCPClient(this);
+		fileClient = new DataFileClient(this);
+		serialClient = new SerialClient(this);
 
 		Runtime.getRuntime().addShutdownHook(new Thread()
 		{
@@ -50,7 +48,7 @@ public class NMEAMultiplexer implements Multiplexer
 		});
 		tcpClient.setEOS("\n");
 		tcpClient.initClient();
-		tcpClient.setReader(new TCPReader(tcpClient.getListeners(), serverName, tcpPort));
+		tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpServerName, tcpPort));
 
 		fileClient.setEOS("\n");
 		fileClient.initClient();

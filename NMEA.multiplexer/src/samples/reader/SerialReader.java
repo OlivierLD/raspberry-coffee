@@ -54,7 +54,6 @@ public class SerialReader
   @Override
   public void read()
   {
-    if (System.getProperty("verbose", "false").equals("true")) System.out.println("From " + this.getClass().getName() + " Reading Serial Port " + comPort);
     super.enableReading();
     // Opening Serial port
     Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();

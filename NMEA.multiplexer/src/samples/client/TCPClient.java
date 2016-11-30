@@ -1,5 +1,6 @@
 package samples.client;
 
+import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
 import samples.reader.TCPReader;
@@ -11,8 +12,9 @@ public class TCPClient extends NMEAClient
 {
   public TCPClient()
   {
-    this(null, null);
+    super();
   }
+  public TCPClient(Multiplexer mux) { super(mux); }
   public TCPClient(String s, String[] sa)
   {
     super(s, sa);
@@ -23,9 +25,9 @@ public class TCPClient extends NMEAClient
   {
     if ("true".equals(System.getProperty("tcp.data.verbose", "false")))
       System.out.println("Received from TCP :" + e.getContent());
-    if (parent != null)
+    if (multiplexer != null)
     {
-      parent.onData(e.getContent());
+      multiplexer.onData(e.getContent());
     }
   }
 

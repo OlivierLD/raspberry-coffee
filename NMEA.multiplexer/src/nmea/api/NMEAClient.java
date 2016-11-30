@@ -37,7 +37,7 @@ public abstract class NMEAClient
   
   public NMEAClient()
   {
-    this(null, null);
+    this(null, null, null);
   }
   
   /**
@@ -48,15 +48,33 @@ public abstract class NMEAClient
   public NMEAClient(String prefix,
                     String[] sentence)
   {
-    setDevicePrefix(prefix);
-    setSentenceArray(sentence);
+    this(prefix, sentence, null);
   }
 
-  protected Multiplexer parent;
+  public NMEAClient(Multiplexer multiplexer)
+  {
+    this(null, null, multiplexer);
+  }
+
+  public NMEAClient(String prefix,
+                    String[] sentence,
+                    Multiplexer multiplexer)
+  {
+    this.setDevicePrefix(prefix);
+    this.setSentenceArray(sentence);
+    this.setMultiplexer(multiplexer);
+  }
+
+  protected Multiplexer multiplexer;
 
   public void setMultiplexer(Multiplexer multiplexer)
   {
-    this.parent = multiplexer;
+    this.multiplexer = multiplexer;
+  }
+
+  public Multiplexer getMutiplexer()
+  {
+    return this.multiplexer;
   }
 
   public void initClient()

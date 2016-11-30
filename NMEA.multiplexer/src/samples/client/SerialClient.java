@@ -1,5 +1,6 @@
 package samples.client;
 
+import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
 import samples.reader.SerialReader;
@@ -11,7 +12,11 @@ public class SerialClient extends NMEAClient
 {
   public SerialClient()
   {
-    this(null, null);
+    super();
+  }
+  public SerialClient(Multiplexer mux)
+  {
+    super(mux);
   }
   public SerialClient(String s, String[] sa)
   {
@@ -23,9 +28,9 @@ public class SerialClient extends NMEAClient
   {
     if ("true".equals(System.getProperty("serial.data.verbose", "false")))
       System.out.println("Received from Serial:" + e.getContent());
-    if (parent != null)
+    if (multiplexer != null)
     {
-      parent.onData(e.getContent());
+      multiplexer.onData(e.getContent());
     }
   }
 

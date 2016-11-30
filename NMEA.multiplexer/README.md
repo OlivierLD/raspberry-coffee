@@ -25,4 +25,4 @@ Any input (File, Serial, TCP, UDP, WebSocket...), any output (File, Serial, TCP,
   - producer (ie from sensors and transducers), computer (calculate data from other ones: current, true wind)
   - broadcaster?
 
-- Externalize data (properties file).
+- Externalize data (properties file). Ok.

@@ -1,5 +1,6 @@
 package samples.client;
 
+import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
 import samples.reader.FileReader;
@@ -11,11 +12,15 @@ public class DataFileClient extends NMEAClient
 {
   public DataFileClient()
   {
-    this(null, null);
+    super(null, null, null);
+  }
+  public DataFileClient(Multiplexer mux)
+  {
+    super(mux);
   }
   public DataFileClient(String s, String[] sa)
   {
-    super(s, sa);
+    super(s, sa, null);
   }
 
   @Override
@@ -23,9 +28,9 @@ public class DataFileClient extends NMEAClient
   {
     if ("true".equals(System.getProperty("file.data.verbose", "false")))
       System.out.println("Received from File:" + e.getContent());
-    if (parent != null)
+    if (multiplexer != null)
     {
-      parent.onData(e.getContent());
+      multiplexer.onData(e.getContent());
     }
   }
 

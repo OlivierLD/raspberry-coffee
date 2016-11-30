@@ -46,9 +46,6 @@ public class TCPReader extends NMEAReader
   @Override
   public void read()
   {
-    boolean verbose = "true".equals((System.getProperty("tcp.verbose", "false")));
-    if (verbose)
-      System.out.println("From " + getClass().getName() + " Reading TCP Port " + tcpport + " on " + hostName);
     super.enableReading();
     try
     {
@@ -71,13 +68,8 @@ public class TCPReader extends NMEAReader
         }
         else
         {
-          if (verbose)
-          {
-            System.out.println("# Read " + bytesRead + " characters");
-            System.out.println("# " + (new Date()).toString());
-          }
           int nn = bytesRead;
-          for(int i = 0; i < Math.min(buffer.length, bytesRead); i++)
+          for (int i = 0; i < Math.min(buffer.length, bytesRead); i++)
           {
             if(buffer[i] != 0)
               continue;
