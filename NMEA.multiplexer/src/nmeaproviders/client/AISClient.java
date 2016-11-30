@@ -1,4 +1,4 @@
-package samples.client;
+package nmeaproviders.client;
 
 import nmea.ais.AISParser;
 

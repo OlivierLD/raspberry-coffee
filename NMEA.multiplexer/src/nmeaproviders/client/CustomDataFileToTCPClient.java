@@ -1,8 +1,8 @@
-package samples.client;
+package nmeaproviders.client;
 
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import samples.reader.FileReader;
+import nmeaproviders.reader.FileReader;
 import servers.TCPWriter;
 
 /**

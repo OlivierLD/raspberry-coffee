@@ -25,4 +25,31 @@ Any input (File, Serial, TCP, UDP, WebSocket...), any output (File, Serial, TCP,
   - producer (ie from sensors and transducers), computer (calculate data from other ones: current, true wind)
   - broadcaster?
 
-- Externalize data (properties file). Ok.
+### To see it at work
+See the class `nmeaproviders.client.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
+See it to understand its content (should be clear enough).
+
+To compile and build:
+```
+ $> ../gradlew shadowJar
+```
+To run it, modify `mux.sh` to fit your environment, and run
+```
+ $> ./mux.sh
+```
+
+#### WebSockets
+WebSocket protocol is supported, in input, and in output.
+If needed, you can start your own local WebSocket server, running on `nodejs`.
+To install it (once):
+```
+ $> npm install
+```
+Then, to run it,
+```
+ $> node wsnmea.js
+```
+or
+```
+ $> npm start
+```

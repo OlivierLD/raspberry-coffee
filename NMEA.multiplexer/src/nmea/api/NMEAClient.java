@@ -137,6 +137,12 @@ public abstract class NMEAClient
     }
     // Remove listeners?
     removeAllListeners();
+
+    try {
+      this.getReader().closeReader();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
   }
 
   /**

@@ -11,6 +11,7 @@ import java.net.URI;
 public class WebSocketWriter implements Forwarder
 {
 	private WebSocketClient wsClient = null;
+	private boolean isConnected = false;
 	/**
 	 *
 	 * @param serverURL like ws://hostname:port/
@@ -26,6 +27,7 @@ public class WebSocketWriter implements Forwarder
 				public void onOpen(ServerHandshake serverHandshake)
 				{
 					System.out.println("WS On Open");
+					isConnected = true;
 				}
 
 				@Override
@@ -38,6 +40,7 @@ public class WebSocketWriter implements Forwarder
 				public void onClose(int i, String string, boolean b)
 				{
 					System.out.println("WS On Close");
+					isConnected = false;
 				}
 
 				@Override
@@ -60,7 +63,7 @@ public class WebSocketWriter implements Forwarder
 	{
 		try {
 			String mess = new String(message);
-			if (!mess.isEmpty()) {
+			if (!mess.isEmpty() && isConnected) {
 				this.wsClient.send(mess);
 			}
 		} catch (Exception ex) {

@@ -1,4 +1,4 @@
-package samples.reader;
+package nmeaproviders.reader;
 
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
@@ -131,6 +131,7 @@ public class UDPReader extends NMEAReader
     }
   }
 
+  @Override
   public void closeReader() throws Exception
   {
 //  System.out.println("(" + this.getClass().getName() + ") Stop Reading UDP Port");

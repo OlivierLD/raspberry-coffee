@@ -1,9 +1,9 @@
-package samples.client;
+package nmeaproviders.client;
 
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import samples.reader.TCPReader;
+import nmeaproviders.reader.TCPReader;
 
 /**
  * Read NMEA Data from a TCP server

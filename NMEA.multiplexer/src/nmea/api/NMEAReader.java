@@ -17,6 +17,7 @@ public abstract class NMEAReader extends Thread
   private List<NMEAListener> NMEAListeners = null; // new ArrayList(2);
 
   protected boolean goRead = true;
+  private NMEAReader instance = this;
     
   public NMEAReader()
   {
@@ -30,7 +31,7 @@ public abstract class NMEAReader extends Thread
       {
         public void stopReading(NMEAEvent e)
         {
-          System.out.println("Stopping reading");
+          System.out.println(instance.getClass().getName() + ": Stop reading");
           goRead = false;
         }
       });
@@ -82,6 +83,7 @@ public abstract class NMEAReader extends Thread
    * like a Serial Port for example.
    */
   public abstract void read() throws Exception;
+  public abstract void closeReader() throws Exception;
 
   public void run()
   {

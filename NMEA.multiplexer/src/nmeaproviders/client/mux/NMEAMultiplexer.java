@@ -1,16 +1,13 @@
-package samples.client.mux;
+package nmeaproviders.client.mux;
 
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
-import samples.client.DataFileClient;
-import samples.client.SerialClient;
-import samples.client.TCPClient;
-import samples.reader.FileReader;
-import samples.reader.SerialReader;
-import samples.reader.TCPReader;
-
-import java.util.ArrayList;
-import java.util.List;
+import nmeaproviders.client.DataFileClient;
+import nmeaproviders.client.SerialClient;
+import nmeaproviders.client.TCPClient;
+import nmeaproviders.reader.FileReader;
+import nmeaproviders.reader.SerialReader;
+import nmeaproviders.reader.TCPReader;
 
 public class NMEAMultiplexer implements Multiplexer
 {

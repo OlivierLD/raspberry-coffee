@@ -1,4 +1,4 @@
-package samples.reader;
+package nmeaproviders.reader;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
@@ -26,6 +26,7 @@ public class SerialReader
 {
   private String comPort = "/dev/ttyUSB0"; // "COM1";
   private int br = 4800;
+  private SerialPort serialPort;
   
   public SerialReader()
   {
@@ -94,30 +95,30 @@ public class SerialReader
       System.out.println("This is an unknown port:" + portType);
     if (portType == CommPortIdentifier.PORT_SERIAL)
     {
-      SerialPort sp = (SerialPort)thePort;
+      this.serialPort = (SerialPort)thePort;
       try
-      { sp.addEventListener(this); }
+      { this.serialPort.addEventListener(this); }
       catch (TooManyListenersException tmle)
       {
-        sp.close();
+        this.serialPort.close();
         System.err.println(tmle.getMessage());
         return;
       }
-      sp.notifyOnDataAvailable(true);
+      this.serialPort.notifyOnDataAvailable(true);
       try 
       {
-        sp.enableReceiveTimeout(30);
+        this.serialPort.enableReceiveTimeout(30);
       } 
       catch (UnsupportedCommOperationException ucoe)
       {
-        sp.close();
+        this.serialPort.close();
         System.err.println(ucoe.getMessage());
         return;
       }
       try
       {
         // Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations (BR 4800).
-        sp.setSerialPortParams(this.br,
+        this.serialPort.setSerialPortParams(this.br,
                                SerialPort.DATABITS_8,
                                SerialPort.STOPBITS_1,
                                SerialPort.PARITY_NONE);
@@ -129,8 +130,8 @@ public class SerialReader
       }
       try
       {
-        sp.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-        theInput = sp.getInputStream();
+        this.serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
+        theInput = this.serialPort.getInputStream();
         System.out.println("Reading serial port...");
       }
       catch (Exception e)
@@ -140,6 +141,13 @@ public class SerialReader
     }
     // Reading on Serial Port
     System.out.println("Port is open...");
+  }
+
+  @Override
+  public void closeReader() throws Exception {
+    if (this.serialPort != null) {
+      this.serialPort.close();
+    }
   }
 
   @Override

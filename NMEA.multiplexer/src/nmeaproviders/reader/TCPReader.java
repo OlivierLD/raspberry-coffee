@@ -1,4 +1,4 @@
-package samples.reader;
+package nmeaproviders.reader;
 
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
@@ -130,6 +130,7 @@ public class TCPReader extends NMEAReader
     }
   }
 
+  @Override
   public void closeReader() throws Exception
   {
 //  System.out.println("(" + this.getClass().getName() + ") Stop Reading TCP Port");

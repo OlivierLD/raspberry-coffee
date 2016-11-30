@@ -1,9 +1,9 @@
-package samples.client;
+package nmeaproviders.client;
 
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import samples.reader.SerialReader;
+import nmeaproviders.reader.SerialReader;
 
 /**
  * Read NMEA Data from a Serial port
