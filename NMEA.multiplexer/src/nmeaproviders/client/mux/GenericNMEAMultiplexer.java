@@ -192,8 +192,11 @@ public class GenericNMEAMultiplexer implements Multiplexer
 	}
 
 	public static void main(String... args) {
+
+		String propertiesFile = System.getProperty("mux.properties", "nmea.mux.properties");
+
 		Properties definitions = new Properties();
-		File propFile = new File("nmea.mux.properties");
+		File propFile = new File(propertiesFile);
 		if (!propFile.exists())
 		{
 			throw new RuntimeException("File nmea.mux.properties not found");
