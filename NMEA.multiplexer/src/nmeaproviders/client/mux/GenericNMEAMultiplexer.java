@@ -10,6 +10,7 @@ import nmeaproviders.reader.FileReader;
 import nmeaproviders.reader.SerialReader;
 import nmeaproviders.reader.TCPReader;
 import nmeaproviders.reader.WebSocketReader;
+import servers.ConsoleWriter;
 import servers.DataFileWriter;
 import servers.Forwarder;
 import servers.TCPWriter;
@@ -30,7 +31,9 @@ public class GenericNMEAMultiplexer implements Multiplexer
 
 	@Override
 	public synchronized void onData(String mess) {
-		System.out.println(">> From MUX: " + mess);
+		if ("true".equals(System.getProperty("mux.data.verbose", "false"))) {
+			System.out.println(">> From MUX: " + mess);
+		}
 		nmeaDataForwarders.stream()
 						.forEach(fwd -> {
 							try {
@@ -147,6 +150,14 @@ public class GenericNMEAMultiplexer implements Multiplexer
 						try {
 							Forwarder wsForwarder = new WebSocketWriter(wsUri);
 							nmeaDataForwarders.add(wsForwarder);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+						break;
+					case "console":
+						try {
+							Forwarder consoleForwarder = new ConsoleWriter();
+							nmeaDataForwarders.add(consoleForwarder);
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
