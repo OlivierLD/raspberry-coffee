@@ -5,7 +5,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-public class UDPWriter
+public class UDPWriter implements Forwarder
 {
 	private int udpPort         = 8001;
 	private InetAddress address = null;
@@ -33,6 +33,7 @@ public class UDPWriter
 		}
 	}
 
+	@Override
 	public void write(byte[] message)
 	{
 		try
@@ -62,5 +63,11 @@ public class UDPWriter
 				ex.printStackTrace();
 		}
 	}
+
+	@Override
+	public void close() {
+
+	}
+
 }
 

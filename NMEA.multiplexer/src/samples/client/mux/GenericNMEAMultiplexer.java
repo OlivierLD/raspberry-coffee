@@ -8,6 +8,7 @@ import samples.client.TCPClient;
 import samples.reader.FileReader;
 import samples.reader.SerialReader;
 import samples.reader.TCPReader;
+import servers.Forwarder;
 import servers.TCPWriter;
 
 import java.io.File;
@@ -20,16 +21,14 @@ import java.util.Properties;
 
 public class GenericNMEAMultiplexer implements Multiplexer
 {
-	private List<NMEAClient> nmeaDataProviders = new ArrayList<>();
-
-	private TCPWriter tcpWriter = null;
+	private List<NMEAClient> nmeaDataProviders  = new ArrayList<>();
+	private List<Forwarder>  nmeaDataForwarders = new ArrayList<>();
 
 	@Override
 	public synchronized void onData(String mess) {
 		System.out.println(">> From MUX: " + mess);
-		if (tcpWriter != null) {
-			tcpWriter.write(mess.getBytes()); // Re-broadcasting on TCP
-		}
+		nmeaDataForwarders.stream()
+						.forEach(fwd -> fwd.write(mess.getBytes()));
 	}
 
 	private final static NumberFormat MUX_IDX_FMT = new DecimalFormat("00");
@@ -83,11 +82,30 @@ public class GenericNMEAMultiplexer implements Multiplexer
 			}
 			muxIdx++;
 		}
-
-		try {
-			tcpWriter = new TCPWriter(7002); // TODO prm!!
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		thereIsMore = true;
+		int fwdIdx = 1;
+		while (thereIsMore) {
+			String typeProp = String.format("forward.%s.type", MUX_IDX_FMT.format(fwdIdx));
+			String type = muxProps.getProperty(typeProp);
+			if (type == null) {
+				thereIsMore = false;
+			} else {
+				switch (type) {
+					case "tcp":
+						String tcpPort   = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+						try {
+							Forwarder tcpForwarder = new TCPWriter(Integer.parseInt(tcpPort));
+							nmeaDataForwarders.add(tcpForwarder);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+						break;
+					default:
+						System.out.println("Not supported yet");
+						break;
+				}
+			}
+			fwdIdx++;
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread()
@@ -97,8 +115,10 @@ public class GenericNMEAMultiplexer implements Multiplexer
 				System.out.println ("Shutting down multiplexer nicely.");
 				nmeaDataProviders.stream()
 								.forEach(client -> client.stopDataRead());
-			}
-		});
+				nmeaDataForwarders.stream()
+								.forEach(fwd -> fwd.close());
+				}
+			});
 
 		nmeaDataProviders.stream()
 						.forEach(client -> client.startWorking());

@@ -8,7 +8,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TCPWriter
+public class TCPWriter implements Forwarder
 {
 	private TCPWriter instance = this;
 	private List<Socket> clientSocketlist = new ArrayList<Socket>(1);
@@ -37,6 +37,7 @@ public class TCPWriter
 		this.clientSocketlist.add(skt);
 	}
 
+	@Override
 	public void write(byte[] message)
 	{
 		synchronized (clientSocketlist)
@@ -85,10 +86,15 @@ public class TCPWriter
 		return s;
 	}
 
-	public void close() throws Exception
+	@Override
+	public void close()
 	{
-		for (Socket tcpSocket : clientSocketlist)
-			tcpSocket.close();
+		try {
+			for (Socket tcpSocket : clientSocketlist)
+				tcpSocket.close();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	public static void main_(String[] args)
