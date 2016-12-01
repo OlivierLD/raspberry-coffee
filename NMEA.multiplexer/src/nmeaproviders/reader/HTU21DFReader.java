@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Reads data from an HTU21DF sensor.
- * Humidity.
+ * Humidity and Temperature.
  */
 public class HTU21DFReader extends NMEAReader {
 

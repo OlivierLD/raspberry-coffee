@@ -111,7 +111,7 @@ public class GenericNMEAMultiplexer implements Multiplexer
 							e.printStackTrace();
 						}
 						break;
-					case "htu21df":
+					case "htu21df": // Humidity & Temperature sensor
 						try {
 							NMEAClient htu21dfClient = new HTU21DFClient(this);
 							htu21dfClient.initClient();

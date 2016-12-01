@@ -58,7 +58,7 @@ public class CustomDataFileToTCPClient extends NMEAClient
         }
       });
 
-    customClient.setEOS("\n"); // TASK Sure?
+//  customClient.setEOS("\n"); // TASK Sure?
     customClient.initClient();
     customClient.setReader(new FileReader(customClient.getListeners(), dataFile));
     customClient.startWorking();

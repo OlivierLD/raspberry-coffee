@@ -1,22 +1,14 @@
-// http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
-"use strict";
-/*
+"use strict";  // http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
+/**
  * WebSocket server for NMEA
  * Static requests must be prefixed with /data/, like in http://machine:9876/data/console.html
+ *
+ * When a string is received, it is re-broadcasted to all the connected WS clients.
+ *
  */
 
 // Optional. You will see this name in eg. 'ps' or 'top' command
 process.title = 'node-nmea';
-
-// Port where we'll run the websocket server on
-var port = 9876;
-
-// websocket AND http servers
-var webSocketServer = require('websocket').server;
-var http = require('http');
-var fs = require('fs');
-
-var verbose = false;
 
 if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str) {
@@ -30,7 +22,30 @@ if (typeof String.prototype.endsWith != 'function') {
     };
 }
 
-function handler (req, res) {
+console.log('To stop: Ctrl-C, or enter "quit" + [return] here in the console');
+console.log("Usage: node " + __filename + " -verbose -port:XXXX");
+
+// Port where we'll run the websocket server on
+var port = 9876;
+var verbose = false;
+
+if (process.argv.length > 2) {
+    for (var i=2; i<process.argv.length; i++) {
+        if (process.argv[i] === "-verbose") {
+            verbose = true;
+        } else if (process.argv[i].startsWith("-port:")) {
+            port = parseInt(process.argv[i].substr("-port:".length));
+        }
+    }
+}
+
+
+// websocket AND http servers
+var webSocketServer = require('websocket').server;
+var http = require('http');
+var fs = require('fs');
+
+var handler = function(req, res) {
     var respContent = "";
     if (verbose === true) {
         console.log("Speaking HTTP from " + __dirname);
@@ -112,7 +127,7 @@ function handler (req, res) {
         res.writeHead(404, {'Content-Type': 'text/plain'});
         res.end(); // respContent);
     }
-} // HTTP Handler
+}; // HTTP Handler
 
 
 /**
@@ -136,7 +151,7 @@ var server = http.createServer(handler);
 
 server.listen(port, function() {
     console.log((new Date()) + " Server is listening on port " + port);
-    console.log("Connect to [http://localhost:9876/data/web/wsconsole.html]");
+    console.log("Connect to [http://localhost:" + port + "/data/web/wsconsole.html]");
 });
 
 /**
@@ -175,7 +190,6 @@ wsServer.on('request', function(request) {
 
     // user disconnected
     connection.on('close', function(code) {
-        // Close
         console.log((new Date()) + ' Connection closed.');
         var nb = clients.length;
         for (var i=0; i<clients.length; i++) {
@@ -189,3 +203,19 @@ wsServer.on('request', function(request) {
         }
     });
 });
+
+process.on('SIGINT', done); // Ctrl C
+process.stdin.resume();
+process.stdin.setEncoding('utf8');
+
+process.stdin.on('data', function (text) {
+    // console.log('received data:', util.inspect(text));
+    if (text.startsWith('quit')) {
+        done();
+    }
+});
+
+function done() {
+    console.log("\nBye now!");
+    process.exit();
+};

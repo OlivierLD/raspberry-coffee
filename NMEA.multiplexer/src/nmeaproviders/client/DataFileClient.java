@@ -57,7 +57,7 @@ public class DataFileClient extends NMEAClient
         }
       });
 
-    nmeaClient.setEOS("\n"); // TASK Sure?
+//  nmeaClient.setEOS("\n"); // TASK Sure?
     nmeaClient.initClient();
     nmeaClient.setReader(new FileReader(nmeaClient.getListeners(), dataFile));
     nmeaClient.startWorking();

@@ -54,7 +54,7 @@ public class HTU21DFClient extends NMEAClient
         }
       });
 
-    nmeaClient.setEOS("\n"); // TASK Sure?
+//  nmeaClient.setEOS("\n"); // TASK Sure?
     nmeaClient.initClient();
     nmeaClient.setReader(new HTU21DFReader(nmeaClient.getListeners()));
     nmeaClient.startWorking();
