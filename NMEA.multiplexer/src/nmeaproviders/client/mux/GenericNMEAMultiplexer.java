@@ -3,10 +3,12 @@ package nmeaproviders.client.mux;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmeaproviders.client.DataFileClient;
+import nmeaproviders.client.HTU21DFClient;
 import nmeaproviders.client.SerialClient;
 import nmeaproviders.client.TCPClient;
 import nmeaproviders.client.WebSocketClient;
 import nmeaproviders.reader.FileReader;
+import nmeaproviders.reader.HTU21DFReader;
 import nmeaproviders.reader.SerialReader;
 import nmeaproviders.reader.TCPReader;
 import nmeaproviders.reader.WebSocketReader;
@@ -80,7 +82,6 @@ public class GenericNMEAMultiplexer implements Multiplexer
 							String tcpPort   = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
 							String tcpServer = muxProps.getProperty(String.format("mux.%s.server", MUX_IDX_FMT.format(muxIdx)));
 							NMEAClient tcpClient = new TCPClient(this);
-//					  tcpClient.setEOS("\n");
 							tcpClient.initClient();
 							tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpServer, Integer.parseInt(tcpPort)));
 							nmeaDataProviders.add(tcpClient);
@@ -92,7 +93,6 @@ public class GenericNMEAMultiplexer implements Multiplexer
 						try {
 							String filename = muxProps.getProperty(String.format("mux.%s.filename", MUX_IDX_FMT.format(muxIdx)));
 							NMEAClient fileClient = new DataFileClient(this);
-//					  fileClient.setEOS("\n");
 							fileClient.initClient();
 							fileClient.setReader(new FileReader(fileClient.getListeners(), filename));
 							nmeaDataProviders.add(fileClient);
@@ -104,12 +104,23 @@ public class GenericNMEAMultiplexer implements Multiplexer
 						try {
 							String wsUri = muxProps.getProperty(String.format("mux.%s.wsuri", MUX_IDX_FMT.format(muxIdx)));
 							NMEAClient wsClient = new WebSocketClient(this);
-//					  wsClient.setEOS("\n");
 							wsClient.initClient();
 							wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsUri));
 							nmeaDataProviders.add(wsClient);
 						} catch (Exception e) {
 							e.printStackTrace();
+						}
+						break;
+					case "htu21df":
+						try {
+							NMEAClient htu21dfClient = new HTU21DFClient(this);
+							htu21dfClient.initClient();
+							htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
+							nmeaDataProviders.add(htu21dfClient);
+						} catch (Exception e) {
+							e.printStackTrace();
+						} catch (Error err) {
+							err.printStackTrace();
 						}
 						break;
 					default:
