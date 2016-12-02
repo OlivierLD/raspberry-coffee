@@ -2,11 +2,13 @@ package nmeaproviders.client.mux;
 
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
+import nmeaproviders.client.BME280Client;
 import nmeaproviders.client.DataFileClient;
 import nmeaproviders.client.HTU21DFClient;
 import nmeaproviders.client.SerialClient;
 import nmeaproviders.client.TCPClient;
 import nmeaproviders.client.WebSocketClient;
+import nmeaproviders.reader.BME280Reader;
 import nmeaproviders.reader.FileReader;
 import nmeaproviders.reader.HTU21DFReader;
 import nmeaproviders.reader.SerialReader;
@@ -124,6 +126,17 @@ public class GenericNMEAMultiplexer implements Multiplexer
 						}
 						break;
 					case "bme280": // Humidity, Temperature, Pressure
+						try {
+							NMEAClient bme280Client = new BME280Client(this);
+							bme280Client.initClient();
+							bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
+							nmeaDataProviders.add(bme280Client);
+						} catch (Exception e) {
+							e.printStackTrace();
+						} catch (Error err) {
+							err.printStackTrace();
+						}
+						break;
 					case "bmp180": // Temperature, Pressure
 					case "lsm303": // 3D magnetometer
 					case "batt":   // Battery Voltage
