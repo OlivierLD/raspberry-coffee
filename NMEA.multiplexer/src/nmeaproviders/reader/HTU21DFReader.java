@@ -4,6 +4,7 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.sensor.HTU21DF;
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
+import nmea.api.NMEAParser;
 import nmea.api.NMEAReader;
 import nmea.parser.StringGenerator;
 
@@ -44,6 +45,7 @@ public class HTU21DFReader extends NMEAReader {
                 new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
                         temperature,
                         "HTU21DF")); // Celcius, temperature
+        nmeaXDR += NMEAParser.getEOS();
         fireDataRead(new NMEAEvent(this, nmeaXDR));
       } catch (Exception e) {
         e.printStackTrace();
