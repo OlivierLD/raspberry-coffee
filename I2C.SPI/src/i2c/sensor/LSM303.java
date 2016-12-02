@@ -170,6 +170,9 @@ public class LSM303
       float heading = (float)Math.toDegrees(Math.atan2(magY, magX));
       while (heading < 0)
         heading += 360f;
+      float pitch = (float)Math.toDegrees(Math.atan2(magX, magZ)); // TODO -180, 180
+      float roll  = (float)Math.toDegrees(Math.atan2(magY, magZ)); // TODO -180, 180
+
 
       // Bonus : CPU Temperature
       float cpuTemp = Float.MIN_VALUE;
@@ -198,7 +201,9 @@ public class LSM303
                            ") mag (X: " + magX + 
                                 ", Y: " + magY + 
                                 ", Z: " + magZ + 
-                                ", heading: " + Z_FMT.format(heading) + ")" + 
+                                ", heading: " + Z_FMT.format(heading) +
+                                ", pitch: " + Z_FMT.format(pitch) +
+                                ", roll: " + Z_FMT.format(roll) + ")" +
                            (cpuTemp != Float.MIN_VALUE?" Cpu Temp:" + cpuTemp:"") + 
                            (cpuVoltage != Float.MIN_VALUE?" Cpu Volt:" + cpuVoltage:""));
       }

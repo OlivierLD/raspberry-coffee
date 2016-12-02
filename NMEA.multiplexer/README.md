@@ -20,7 +20,14 @@ Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any o
 ## TODO
 - verbose options
 - computer (calculate data from other ones: current, true wind)
-- Gyroscope interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR)
+- 3D compas (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
+
+```
+Once you get the X, Y and Z accelerations into floats you just need some trig to calculate Pitch and Roll (in radians):
+
+pitch = atan (x / sqrt(y^2 + z^2));  
+roll = atan (y / sqrt(z^2 + z^2));
+```
 
 ```
 Currently, OpenCPN recognizes the following transducers:

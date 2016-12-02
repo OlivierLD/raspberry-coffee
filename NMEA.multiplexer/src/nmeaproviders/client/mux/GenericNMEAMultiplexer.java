@@ -123,6 +123,10 @@ public class GenericNMEAMultiplexer implements Multiplexer
 							err.printStackTrace();
 						}
 						break;
+					case "bme280": // Humidity, Temperature, Pressure
+					case "bmp180": // Temperature, Pressure
+					case "lsm303": // 3D magnetometer
+					case "batt":   // Battery Voltage
 					default:
 						throw new RuntimeException(String.format("mux type [%s] not supported yet.", type));
 				}

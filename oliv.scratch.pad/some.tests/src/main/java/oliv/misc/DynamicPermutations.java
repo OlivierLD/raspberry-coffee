@@ -1,14 +1,19 @@
 package oliv.misc;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class DynamicPermutations {
 
 	private static String[] listOfN = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" }; // No duplicates
 	private static int nbPerm = 0;
+
+	private static Map<String, Integer> permMap = new HashMap<>();
 
 	private static void generate(int permSize) {
 		int limit = listOfN.length - (permSize - 1);
@@ -33,8 +38,19 @@ public class DynamicPermutations {
 			List<List<Integer>> perms = generatePerm(idx);
 			perms.stream().forEach(list -> {
 				nbPerm++;
-				System.out.println("  -> permuted: " + list.stream().map(i -> listOfN[i]).collect(Collectors.joining(",")));
+				String perm = list.stream().map(i -> listOfN[i]).collect(Collectors.joining(","));
+				putAndCount(permMap, perm);
+				System.out.println("  -> permuted: " + perm);
 			});
+		}
+	}
+
+	private static void putAndCount(Map<String, Integer> map, String element) {
+		Integer counter = map.get(element);
+		if (counter == null) {
+			map.put(element, 1);
+		} else {
+			map.put(element, counter + 1);
 		}
 	}
 
@@ -62,6 +78,10 @@ public class DynamicPermutations {
 		for (int i=2; i<=listOfN.length; i++) {
 			generate(i);
 		}
-		System.out.println(String.format("%d permutations.", nbPerm));
+		System.out.println(String.format("%s permutations.", NumberFormat.getInstance().format(nbPerm)));
+		System.out.println(String.format("Map has %s entries.", NumberFormat.getInstance().format(permMap.size())));
+
+		long moreThanOne = permMap.keySet().stream().filter(key -> permMap.get(key) > 1).count();
+		System.out.println("More than 1: " + moreThanOne);
 	}
 }
