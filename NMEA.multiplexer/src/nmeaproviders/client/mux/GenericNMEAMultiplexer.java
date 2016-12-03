@@ -1,5 +1,6 @@
 package nmeaproviders.client.mux;
 
+import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
 import http.HTTPServerInterface;
 import nmea.api.Multiplexer;
@@ -18,6 +19,8 @@ import nmeaproviders.reader.RandomReader;
 import nmeaproviders.reader.SerialReader;
 import nmeaproviders.reader.TCPReader;
 import nmeaproviders.reader.WebSocketReader;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import servers.ConsoleWriter;
 import servers.DataFileWriter;
 import servers.Forwarder;
@@ -29,7 +32,11 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface
@@ -41,8 +48,42 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface
 
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200); // Default
+
+		if (request.getVerb().equals("GET")) {
+			if (request.getPath().equals("/serial-port-list")) {
+				response = new HTTPServer.Response(request.getProtocol(), 200);
+
+				List<String> portList = getSerialPortList();
+				String[] portArray = portList.toArray(new String[portList.size()]);
+				JSONObject json = new JSONObject();
+				JSONArray list = new JSONArray(portArray);
+				json.put("serial-port-list", list);
+
+				String content = json.toString();
+
+				Map<String, String> responseHeaders = new HashMap<>();
+				responseHeaders.put("Content-Type", "application/json");
+				responseHeaders.put("Content-Length", String.valueOf(content.length()));
+				responseHeaders.put("Access-Control-Allow-Origin", "*");
+				response.setHeaders(responseHeaders);
+				response.setPayload(content.getBytes());
+			}
+		}
+
 		return response;
+	}
+
+	private static List<String> getSerialPortList() {
+		List<String> portList = new ArrayList<>();
+		// Opening Serial port
+		Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
+		while (enumeration.hasMoreElements())
+		{
+			CommPortIdentifier cpi = (CommPortIdentifier)enumeration.nextElement();
+			portList.add(cpi.getName());
+		}
+		return portList;
 	}
 
 	@Override
