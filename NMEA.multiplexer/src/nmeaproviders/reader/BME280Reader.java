@@ -42,10 +42,11 @@ public class BME280Reader extends NMEAReader {
                         "BME280"), // %, Humidity
                 new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
                         temperature,
-                        "BME280"), // %, Humidity
+                        "BME280"), // Celcius, Temperature
                 new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
                         pressure,
                         "BME280")); // Pascal, pressure
+        System.out.println("XDR:"+ nmeaXDR);                        
         fireDataRead(new NMEAEvent(this, nmeaXDR));
       } catch (Exception e) {
         e.printStackTrace();
@@ -56,10 +57,7 @@ public class BME280Reader extends NMEAReader {
         ie.printStackTrace();
       }
     }
-    try {
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    System.out.println("bme280: Cant read.");
   }
 
   @Override
