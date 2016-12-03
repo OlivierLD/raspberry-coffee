@@ -4,6 +4,7 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.sensor.BME280;
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
+import nmea.api.NMEAParser;
 import nmea.api.NMEAReader;
 import nmea.parser.StringGenerator;
 
@@ -46,7 +47,7 @@ public class BME280Reader extends NMEAReader {
                 new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
                         pressure,
                         "BME280")); // Pascal, pressure
-        System.out.println("XDR:"+ nmeaXDR);                        
+        nmeaXDR += NMEAParser.getEOS();
         fireDataRead(new NMEAEvent(this, nmeaXDR));
       } catch (Exception e) {
         e.printStackTrace();
@@ -57,7 +58,6 @@ public class BME280Reader extends NMEAReader {
         ie.printStackTrace();
       }
     }
-    System.out.println("bme280: Cant read.");
   }
 
   @Override

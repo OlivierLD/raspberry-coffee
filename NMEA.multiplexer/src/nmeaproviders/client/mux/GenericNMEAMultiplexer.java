@@ -5,12 +5,14 @@ import nmea.api.NMEAClient;
 import nmeaproviders.client.BME280Client;
 import nmeaproviders.client.DataFileClient;
 import nmeaproviders.client.HTU21DFClient;
+import nmeaproviders.client.RandomClient;
 import nmeaproviders.client.SerialClient;
 import nmeaproviders.client.TCPClient;
 import nmeaproviders.client.WebSocketClient;
 import nmeaproviders.reader.BME280Reader;
 import nmeaproviders.reader.FileReader;
 import nmeaproviders.reader.HTU21DFReader;
+import nmeaproviders.reader.RandomReader;
 import nmeaproviders.reader.SerialReader;
 import nmeaproviders.reader.TCPReader;
 import nmeaproviders.reader.WebSocketReader;
@@ -125,6 +127,18 @@ public class GenericNMEAMultiplexer implements Multiplexer
 							err.printStackTrace();
 						}
 						break;
+					case "rnd": // Random generator, for debugging
+						try {
+							NMEAClient rndClient = new RandomClient(this);
+							rndClient.initClient();
+							rndClient.setReader(new RandomReader(rndClient.getListeners()));
+							nmeaDataProviders.add(rndClient);
+						} catch (Exception e) {
+							e.printStackTrace();
+						} catch (Error err) {
+							err.printStackTrace();
+						}
+						break;
 					case "bme280": // Humidity, Temperature, Pressure
 						try {
 							NMEAClient bme280Client = new BME280Client(this);
@@ -139,7 +153,7 @@ public class GenericNMEAMultiplexer implements Multiplexer
 						break;
 					case "bmp180": // Temperature, Pressure
 					case "lsm303": // 3D magnetometer
-					case "batt":   // Battery Voltage
+					case "batt":   // Battery Voltage, use XDR
 					default:
 						throw new RuntimeException(String.format("mux type [%s] not supported yet.", type));
 				}
