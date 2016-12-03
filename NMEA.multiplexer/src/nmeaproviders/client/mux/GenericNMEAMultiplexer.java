@@ -1,5 +1,7 @@
 package nmeaproviders.client.mux;
 
+import http.HTTPServer;
+import http.HTTPServerInterface;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmeaproviders.client.BME280Client;
@@ -30,10 +32,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class GenericNMEAMultiplexer implements Multiplexer
+public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface
 {
+	private HTTPServer adminServer = null;
+
 	private List<NMEAClient> nmeaDataProviders  = new ArrayList<>();
 	private List<Forwarder>  nmeaDataForwarders = new ArrayList<>();
+
+	@Override
+	public HTTPServer.Response onRequest(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		return response;
+	}
 
 	@Override
 	public synchronized void onData(String mess) {
@@ -220,8 +230,11 @@ public class GenericNMEAMultiplexer implements Multiplexer
 								.forEach(client -> client.stopDataRead());
 				nmeaDataForwarders.stream()
 								.forEach(fwd -> fwd.close());
+				if (adminServer != null) {
+					adminServer.stopRunning();
 				}
-			});
+			}
+		});
 
 		nmeaDataProviders.stream()
 						.forEach(client -> {
@@ -233,6 +246,13 @@ public class GenericNMEAMultiplexer implements Multiplexer
 						});
 	}
 
+	public void startAdminServer(int port) {
+		try {
+			this.adminServer = new HTTPServer(port, this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public static void main(String... args) {
 
 		String propertiesFile = System.getProperty("mux.properties", "nmea.mux.properties");
@@ -255,6 +275,8 @@ public class GenericNMEAMultiplexer implements Multiplexer
 			}
 		}
 
-    new GenericNMEAMultiplexer(definitions);
+		GenericNMEAMultiplexer mux = new GenericNMEAMultiplexer(definitions);
+		mux.startAdminServer(9999);
 	}
+
 }

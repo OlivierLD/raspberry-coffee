@@ -136,7 +136,7 @@ public class StringGenerator
     
     public String toString()
     {
-      return this.transducerName + ", " + this.getTypeNunit() + ", " +this.getTypeNunit().type() + ", " + Double.toString(this.getValue()) + " " + this.getTypeNunit().unit();
+      return this.transducerName + ", " + this.getTypeNunit() + ", " + this.getTypeNunit().type() + ", " + Double.toString(this.getValue()) + " " + this.getTypeNunit().unit();
     }
   }
   
@@ -161,8 +161,8 @@ public class StringGenerator
     else
       xdr += (Double.toString(first.getValue()) + ",");
     xdr += (first.getTypeNunit().unit() + ",");
- // xdr += (first.getTransducerName());
-    xdr += (Integer.toString(nbDevice++));
+    xdr += (first.getTransducerName());
+ // xdr += (Integer.toString(nbDevice++));
     
     for (XDRElement e : next)
     {
@@ -184,8 +184,8 @@ public class StringGenerator
       else
         xdr += (Double.toString(e.getValue()) + ",");
       xdr += (e.getTypeNunit().unit() + ",");
-//    xdr += (e.getTransducerName());
-      xdr += (Integer.toString(nbDevice++));
+      xdr += (e.getTransducerName());
+//    xdr += (Integer.toString(nbDevice++));
 
     }
     // Checksum
