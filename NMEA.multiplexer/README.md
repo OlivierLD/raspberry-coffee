@@ -208,3 +208,7 @@ identical to the elements returned by `GET /forwarder-list`.
 ```
 
 We'll provide later a Web UI to implament thsi REST interface.
+
+For now, any REST client (nodejs, postman, ... does the job.
+
+---

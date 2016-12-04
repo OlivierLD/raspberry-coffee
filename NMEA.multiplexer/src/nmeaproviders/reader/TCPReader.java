@@ -46,6 +46,9 @@ public class TCPReader extends NMEAReader
   public int getPort() {
     return this.tcpport;
   }
+  public String getHostname() {
+    return this.hostName;
+  }
 
   @Override
   public void read()

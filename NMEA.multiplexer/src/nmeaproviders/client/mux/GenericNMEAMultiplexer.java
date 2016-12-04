@@ -61,7 +61,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					List<String> portList = getSerialPortList();
 					Object[] portArray = portList.toArray(new Object[portList.size()]);
 					String content = new Gson().toJson(portArray).toString();
-					generteHappyResponseHeaders(response, content.length());
+					generateHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
 				}
 				// GET /channel-list
@@ -74,7 +74,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									.toArray(new Object[channelList.size()]);
 
 					String content = new Gson().toJson(channelArray);
-					generteHappyResponseHeaders(response, content.length());
+					generateHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
 				}
 				// GET /forwarder-list
@@ -87,7 +87,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									.toArray(new Object[forwarderList.size()]);
 
 					String content = new Gson().toJson(forwarderArray);
-					generteHappyResponseHeaders(response, content.length());
+					generateHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
 				} else {
 					response = new HTTPServer.Response(request.getProtocol(), 404); // Default, not found
@@ -132,10 +132,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						Gson gson = new GsonBuilder().create();
 						if (request.getContent() != null) {
 							StringReader stringReader = new StringReader(new String(request.getContent()));
-							WebSocketWriter.WSBean tcpBean = gson.fromJson(stringReader, WebSocketWriter.WSBean.class);
+							WebSocketWriter.WSBean wsBean = gson.fromJson(stringReader, WebSocketWriter.WSBean.class);
 							Optional<Forwarder> opFwd = nmeaDataForwarders.stream()
 											.filter(fwd -> fwd instanceof WebSocketWriter &&
-															((WebSocketWriter)fwd).getWsUri().equals(tcpBean.getWsUri()))
+															((WebSocketWriter)fwd).getWsUri().equals(wsBean.getWsUri()))
 											.findFirst();
 							response = removeForwarderIfPresent(request, opFwd);
 						} else {
@@ -147,9 +147,69 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				// DELETE /channels/:type. Details in the payload
 				else if (deletePathElem != null && deletePathElem.length >= 3 && deletePathElem[1].equals("channels")) {
-					// Not implemented
-					response = new HTTPServer.Response(request.getProtocol(), 404); // Not implemented
-
+				  if (deletePathElem[2].equals("file")) {                   // file
+					  Gson gson = new GsonBuilder().create();
+					  if (request.getContent() != null) {
+						  StringReader stringReader = new StringReader(new String(request.getContent()));
+						  DataFileClient.DataFileBean dataFileBean = gson.fromJson(stringReader, DataFileClient.DataFileBean.class);
+						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+										  .filter(channel -> channel instanceof DataFileClient &&
+														  ((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(dataFileBean.getFile()))
+										  .findFirst();
+						  response = removeChannelIfPresent(request, opFwd);
+					  }
+				  } else if (deletePathElem[2].equals("serial")) {        // serial
+					  Gson gson = new GsonBuilder().create();
+					  if (request.getContent() != null) {
+						  StringReader stringReader = new StringReader(new String(request.getContent()));
+						  SerialClient.SerialBean serialBean = gson.fromJson(stringReader, SerialClient.SerialBean.class);
+						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+										  .filter(channel -> channel instanceof SerialClient &&
+														  ((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialBean.getPort())) // No need for BaudRate
+										  .findFirst();
+						  response = removeChannelIfPresent(request, opFwd);
+					  }
+				  } else if (deletePathElem[2].equals("tcp")) {           // tcp
+					  Gson gson = new GsonBuilder().create();
+					  if (request.getContent() != null) {
+						  StringReader stringReader = new StringReader(new String(request.getContent()));
+						  TCPClient.TCPBean tcpBean = gson.fromJson(stringReader, TCPClient.TCPBean.class);
+						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+										  .filter(channel -> channel instanceof SerialClient &&
+														  ((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpBean.getPort())
+										  .findFirst();
+						  response = removeChannelIfPresent(request, opFwd);
+					  }
+				  } else if (deletePathElem[2].equals("ws")) {            // ws
+					  Gson gson = new GsonBuilder().create();
+					  if (request.getContent() != null) {
+						  StringReader stringReader = new StringReader(new String(request.getContent()));
+						  WebSocketClient.WSBean wsBean = gson.fromJson(stringReader, WebSocketClient.WSBean.class);
+						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+										  .filter(channel -> channel instanceof WebSocketClient &&
+														  ((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsBean.getWsUri()))
+										  .findFirst();
+						  response = removeChannelIfPresent(request, opFwd);
+					  }
+				  } else if (deletePathElem[2].equals("bme280")) {        // bme280
+					  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+									  .filter(channel -> channel instanceof BME280Client)
+									  .findFirst();
+					  response = removeChannelIfPresent(request, opFwd);
+				  } else if (deletePathElem[2].equals("htu21df")) {       // htu21df
+					  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+									  .filter(channel -> channel instanceof HTU21DFClient)
+									  .findFirst();
+					  response = removeChannelIfPresent(request, opFwd);
+				  } else if (deletePathElem[2].equals("rnd")) {           // rnd
+					  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+									  .filter(channel -> channel instanceof RandomClient)
+									  .findFirst();
+					  response = removeChannelIfPresent(request, opFwd);
+				  } else {
+					  // Not implemented
+					  response = new HTTPServer.Response(request.getProtocol(), 404); // Not implemented
+				  }
 				}
 				break;
 			case "POST": // POST channel, forwarder
@@ -167,7 +227,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								nmeaDataForwarders.add(consoleForwarder);
 								response = new HTTPServer.Response(request.getProtocol(), 200);
 								String content = new Gson().toJson(consoleForwarder.getBean());
-								generteHappyResponseHeaders(response, content.length());
+								generateHappyResponseHeaders(response, content.length());
 								response.setPayload(content.getBytes());
 							} catch (Exception ex) {
 								response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
@@ -191,7 +251,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									nmeaDataForwarders.add(tcpForwarder);
 									response = new HTTPServer.Response(request.getProtocol(), 200);
 									String content = new Gson().toJson(tcpForwarder.getBean());
-									generteHappyResponseHeaders(response, content.length());
+									generateHappyResponseHeaders(response, content.length());
 									response.setPayload(content.getBytes());
 								} catch (Exception ex) {
 									response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
@@ -218,7 +278,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									nmeaDataForwarders.add(fileForwarder);
 									response = new HTTPServer.Response(request.getProtocol(), 200);
 									String content = new Gson().toJson(fileForwarder.getBean());
-									generteHappyResponseHeaders(response, content.length());
+									generateHappyResponseHeaders(response, content.length());
 									response.setPayload(content.getBytes());
 								} catch (Exception e) {
 									response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
@@ -242,7 +302,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									nmeaDataForwarders.add(wsForwarder);
 									response = new HTTPServer.Response(request.getProtocol(), 200);
 									String content = new Gson().toJson(wsForwarder.getBean());
-									generteHappyResponseHeaders(response, content.length());
+									generateHappyResponseHeaders(response, content.length());
 									response.setPayload(content.getBytes());
 								} catch (Exception ex) {
 									response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
@@ -259,7 +319,202 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				// POST /channels/:type
 				else if (postPathElem != null && postPathElem.length >= 3 && postPathElem[1].equals("channels")) {
-					response = new HTTPServer.Response(request.getProtocol(), 404); // Default, Not implemented
+					if (postPathElem[2].equals("tcp")) {                                                               // tcp
+						if (request.getContent() != null && request.getContent().length > 0) {
+							TCPClient.TCPBean json = new Gson().fromJson(new String(request.getContent()), TCPClient.TCPBean.class);
+							// Check if not there yet.
+							Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+											.filter(channel -> channel instanceof SerialClient &&
+															((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == json.getPort() &&
+															((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getHostname().equals(json.getHostname()))
+											.findFirst();
+							if (!opFwd.isPresent()) {
+								try {
+									NMEAClient tcpClient = new TCPClient(this);
+									tcpClient.initClient();
+									tcpClient.setReader(new TCPReader(tcpClient.getListeners(), json.getHostname(), json.getPort()));
+									nmeaDataProviders.add(tcpClient);
+									tcpClient.startWorking();
+									response = new HTTPServer.Response(request.getProtocol(), 200);
+									String content = new Gson().toJson(tcpClient.getBean());
+									generateHappyResponseHeaders(response, content.length());
+									response.setPayload(content.getBytes());
+								} catch (Exception ex) {
+									response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+									ex.printStackTrace();
+								}
+							} else {
+								// Already there
+								response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+							}
+						} else {
+							response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+						}
+					} else if (postPathElem[2].equals("serial")) {                                                           // serial
+							if (request.getContent() != null && request.getContent().length > 0) {
+								SerialClient.SerialBean json = new Gson().fromJson(new String(request.getContent()), SerialClient.SerialBean.class);
+								// Check if not there yet.
+								Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+												.filter(channel -> channel instanceof SerialClient &&
+																((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(json.getPort()))
+												.findFirst();
+								if (!opFwd.isPresent()) {
+									try {
+										NMEAClient serialClient = new SerialClient(this);
+										serialClient.initClient();
+										serialClient.setReader(new SerialReader(serialClient.getListeners(), json.getPort(), json.getBr()));
+										nmeaDataProviders.add(serialClient);
+										serialClient.startWorking();
+										response = new HTTPServer.Response(request.getProtocol(), 200);
+										String content = new Gson().toJson(serialClient.getBean());
+										generateHappyResponseHeaders(response, content.length());
+										response.setPayload(content.getBytes());
+									} catch (Exception ex) {
+										response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+										ex.printStackTrace();
+									}
+								} else {
+									// Already there
+									response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+								}
+							} else {
+								response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+							}
+					} else if (postPathElem[2].equals("ws")) {                                                               // ws
+						if (request.getContent() != null && request.getContent().length > 0) {
+							WebSocketClient.WSBean json = new Gson().fromJson(new String(request.getContent()), WebSocketClient.WSBean.class);
+							// Check if not there yet.
+							Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+											.filter(channel -> channel instanceof SerialClient &&
+															((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(json.getWsUri()))
+											.findFirst();
+							if (!opFwd.isPresent()) {
+								try {
+									NMEAClient wsClient = new WebSocketClient(this);
+									wsClient.initClient();
+									wsClient.setReader(new WebSocketReader(wsClient.getListeners(), json.getWsUri()));
+									nmeaDataProviders.add(wsClient);
+									wsClient.startWorking();
+									response = new HTTPServer.Response(request.getProtocol(), 200);
+									String content = new Gson().toJson(wsClient.getBean());
+									generateHappyResponseHeaders(response, content.length());
+									response.setPayload(content.getBytes());
+								} catch (Exception ex) {
+									response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+									ex.printStackTrace();
+								}
+							} else {
+								// Already there
+								response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+							}
+						} else {
+							response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+						}
+					} else if (postPathElem[2].equals("file")) {                                                             // data file
+						if (request.getContent() != null && request.getContent().length > 0) {
+							DataFileClient.DataFileBean json = new Gson().fromJson(new String(request.getContent()), DataFileClient.DataFileBean.class);
+							// Check if not there yet.
+							Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+											.filter(channel -> channel instanceof DataFileClient &&
+															((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(json.getFile()))
+											.findFirst();
+							if (!opFwd.isPresent()) {
+								try {
+									NMEAClient fileClient = new DataFileClient(this);
+									fileClient.initClient();
+									fileClient.setReader(new DataFileReader(fileClient.getListeners(), json.getFile()));
+									nmeaDataProviders.add(fileClient);
+									fileClient.startWorking();
+									response = new HTTPServer.Response(request.getProtocol(), 200);
+									String content = new Gson().toJson(fileClient.getBean());
+									generateHappyResponseHeaders(response, content.length());
+									response.setPayload(content.getBytes());
+								} catch (Exception ex) {
+									response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+									ex.printStackTrace();
+								}
+							} else {
+								// Already there
+								response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+							}
+						} else {
+							response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+						}
+					} else if (postPathElem[2].equals("bme280")) {                                                           // bme280
+						// Check if not there yet.
+						Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+										.filter(channel -> channel instanceof BME280Client)
+										.findFirst();
+						if (!opFwd.isPresent()) {
+							try {
+								NMEAClient bme280Client = new BME280Client(this);
+								bme280Client.initClient();
+								bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
+								nmeaDataProviders.add(bme280Client);
+								bme280Client.startWorking();
+								response = new HTTPServer.Response(request.getProtocol(), 200);
+								String content = new Gson().toJson(bme280Client.getBean());
+								generateHappyResponseHeaders(response, content.length());
+								response.setPayload(content.getBytes());
+							} catch (Exception ex) {
+								response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+								ex.printStackTrace();
+							}
+						} else {
+							// Already there
+							response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+						}
+					} else if (postPathElem[2].equals("htu21df")) {                                                          // htu21df
+						// Check if not there yet.
+						Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+										.filter(channel -> channel instanceof HTU21DFClient)
+										.findFirst();
+						if (!opFwd.isPresent()) {
+							try {
+								NMEAClient htu21dfClient = new HTU21DFClient(this);
+								htu21dfClient.initClient();
+								htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
+								nmeaDataProviders.add(htu21dfClient);
+								htu21dfClient.startWorking();
+								response = new HTTPServer.Response(request.getProtocol(), 200);
+								String content = new Gson().toJson(htu21dfClient.getBean());
+								generateHappyResponseHeaders(response, content.length());
+								response.setPayload(content.getBytes());
+							} catch (Exception ex) {
+								response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+								ex.printStackTrace();
+							}
+						} else {
+							// Already there
+							response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+						}
+					} else if (postPathElem[2].equals("rnd")) {                                                              // rnd
+						// Check if not there yet.
+						Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+										.filter(channel -> channel instanceof RandomClient)
+										.findFirst();
+						if (!opFwd.isPresent()) {
+							try {
+								NMEAClient rndClient = new RandomClient(this);
+								rndClient.initClient();
+								rndClient.setReader(new RandomReader(rndClient.getListeners()));
+								nmeaDataProviders.add(rndClient);
+								rndClient.startWorking();
+								response = new HTTPServer.Response(request.getProtocol(), 200);
+								String content = new Gson().toJson(rndClient.getBean());
+								generateHappyResponseHeaders(response, content.length());
+								response.setPayload(content.getBytes());
+							} catch (Exception ex) {
+								response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+								ex.printStackTrace();
+							}
+						} else {
+							// Already there
+							response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+						}
+					} else {
+						response = new HTTPServer.Response(request.getProtocol(), 404); // Default, Not implemented
+					}
 				}
 				break;
 			default:
@@ -268,7 +523,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		return response;
 	}
 
-	private void generteHappyResponseHeaders(HTTPServer.Response response, int contentLength) {
+	private void generateHappyResponseHeaders(HTTPServer.Response response, int contentLength) {
 		Map<String, String> responseHeaders = new HashMap<>();
 		responseHeaders.put("Content-Type", "application/json");
 		responseHeaders.put("Content-Length", String.valueOf(contentLength));
@@ -282,6 +537,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			Forwarder forwarder = opFwd.get();
 			forwarder.close();
 			nmeaDataForwarders.remove(forwarder);
+			response = new HTTPServer.Response(request.getProtocol(), 204);
+		} else {
+			response = new HTTPServer.Response(request.getProtocol(), 404);
+		}
+		return response;
+	}
+
+	private HTTPServer.Response removeChannelIfPresent(HTTPServer.Request request, Optional<NMEAClient> nmeaClient) {
+		HTTPServer.Response response;
+		if (nmeaClient.isPresent()) {
+			NMEAClient client = nmeaClient.get();
+			client.stopDataRead();
+			nmeaDataProviders.remove(client);
 			response = new HTTPServer.Response(request.getProtocol(), 204);
 		} else {
 			response = new HTTPServer.Response(request.getProtocol(), 404);
