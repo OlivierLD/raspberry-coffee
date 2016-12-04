@@ -54,8 +54,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 400); // Default, not found
 		switch (request.getVerb()) {
 			case "GET":
-				// GET /serial-port-list
-				if (request.getPath().equals("/serial-port-list")) {
+				// GET /serial-ports
+				if (request.getPath().equals("/serial-ports")) {
 					response = new HTTPServer.Response(request.getProtocol(), 200);
 
 					List<String> portList = getSerialPortList();
@@ -64,8 +64,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					generateHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
 				}
-				// GET /channel-list
-				else if (request.getPath().equals("/channel-list")) {
+				// GET /channels
+				else if (request.getPath().equals("/channels")) {
 					response = new HTTPServer.Response(request.getProtocol(), 200);
 
 					List<Object> channelList = getInputChannelList();
@@ -77,8 +77,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					generateHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
 				}
-				// GET /forwarder-list
-				else if (request.getPath().equals("/forwarder-list")) {
+				// GET /forwarders
+				else if (request.getPath().equals("/forwarders")) {
 					response = new HTTPServer.Response(request.getProtocol(), 200);
 
 					List<Object> forwarderList = getForwarderList();
