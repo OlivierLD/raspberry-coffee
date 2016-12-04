@@ -87,7 +87,7 @@ http.port=9999
 ### Supported end-points (for now)
 
 ```
- GET /serial-port-list
+ GET /serial-ports
 ```
 returns a payload as:
 ```
@@ -96,9 +96,10 @@ returns a payload as:
   "/dev/cu.Bluetooth-Incoming-Port"
 ]
 ```
+The list of _available_ serial ports.
 
 ``` 
- GET /channel-list
+ GET /channels
 ```
 returns a payload like
 ```
@@ -117,7 +118,7 @@ returns a payload like
 ```
 
 ``` 
- GET /forwarder-list
+ GET /forwarders
 ```
 returns a payload like
 ```
@@ -146,7 +147,7 @@ returns a payload like
     "type": "file"
 }
 ```
-identical to the elements returned by `GET /forwarder-list`.
+identical to the elements returned by `GET /forwarders`.
 - `console`. requires no body.
 - `tcp`. requires a body like 
 ```text
@@ -156,7 +157,7 @@ identical to the elements returned by `GET /forwarder-list`.
      "type": "tcp"
 }
 ```
-identical to the elements returned by `GET /forwarder-list`.
+identical to the elements returned by `GET /forwarders`.
 - `ws`. requires a body like 
 ```text
 {
@@ -165,7 +166,7 @@ identical to the elements returned by `GET /forwarder-list`.
    "type": "ws"
 }
 ```
-identical to the elements returned by `GET /forwarder-list`.
+identical to the elements returned by `GET /forwarders`.
 
 ``` 
  DELETE /channels/:type
@@ -182,7 +183,7 @@ identical to the elements returned by `GET /forwarder-list`.
     "type": "file"
 }
 ```
-identical to the elements returned by `GET /forwarder-list`.
+identical to the elements returned by `GET /forwarders`.
 - `console`. requires no body.
 - `tcp`. requires a body like 
 ```text
@@ -192,7 +193,7 @@ identical to the elements returned by `GET /forwarder-list`.
      "type": "tcp"
 }
 ```
-identical to the elements returned by `GET /forwarder-list`.
+identical to the elements returned by `GET /forwarders`.
 - `ws`. requires a body like 
 ```text
 {
@@ -201,14 +202,14 @@ identical to the elements returned by `GET /forwarder-list`.
    "type": "ws"
 }
 ```
-identical to the elements returned by `GET /forwarder-list`.
+identical to the elements returned by `GET /forwarders`.
 
 ``` 
  POST /channels/:type 
 ```
 
-We'll provide later a Web UI to implament thsi REST interface.
+We'll provide later a Web UI to implement this REST interface.
 
-For now, any REST client (nodejs, postman, ... does the job.
+For now, any REST client (NodeJS, Postman, your own code, ...) does the job.
 
 ---
