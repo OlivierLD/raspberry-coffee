@@ -71,3 +71,140 @@ or
 ```
  $> npm start
 ```
+
+## REST Admin Interface
+The properties files like `nmea.mux.proeprties` defines the configuration at startup.
+
+You can remotely manage the input channels and the re-broadcasting ones through a REST interface.
+The soft includes a dedicated HTTP Server. The http port is driven by a propety (in `nmea.mux.properties`).
+Same if you want the HTTP server to be started or not.
+```
+with.http.server=yes
+http.port=9999
+
+```
+
+### Supported end-points (for now)
+
+```
+ GET /serial-port-list
+```
+returns a payload as:
+```
+[
+  "/dev/tty.Bluetooth-Incoming-Port",
+  "/dev/cu.Bluetooth-Incoming-Port"
+]
+```
+
+``` 
+ GET /channel-list
+```
+returns a payload like
+```
+[
+  {
+    "cls": "nmeaproviders.client.SerialClient",
+    "type": "serial",
+    "port": "/dev/ttyUSB0",
+    "br": 4800
+  },
+  {
+    "cls": "nmeaproviders.client.BME280Client",
+    "type": "bme280"
+  }
+]
+```
+
+``` 
+ GET /forwarder-list
+```
+returns a payload like
+```
+[
+  {
+    "cls": "servers.TCPWriter",
+    "port": 7001,
+    "type": "tcp"
+  },
+  {
+    "cls": "servers.ConsoleWriter",
+    "type": "console"
+  }
+]
+```
+
+```text 
+ DELETE /forwarders/:type
+```
+`type` is one of
+- `file`. requires a body like 
+ ```text
+{ 
+    "cls": "servers.DataFileWriter",
+    "log": "./data.nmea",
+    "type": "file"
+}
+```
+identical to the elements returned by `GET /forwarder-list`.
+- `console`. requires no body.
+- `tcp`. requires a body like 
+```text
+{
+     "cls": "servers.TCPWriter",
+     "port": 7002,
+     "type": "tcp"
+}
+```
+identical to the elements returned by `GET /forwarder-list`.
+- `ws`. requires a body like 
+```text
+{
+   "cls": "servers.WebSocketWriter",
+   "wsUri": "ws://localhost:9876/",
+   "type": "ws"
+}
+```
+identical to the elements returned by `GET /forwarder-list`.
+
+``` 
+ DELETE /channels/:type
+```
+``` 
+ POST /forwarders/:type
+```
+`type` is one of
+- `file`. requires a body like 
+ ```text
+{ 
+    "cls": "servers.DataFileWriter",
+    "log": "./data.nmea",
+    "type": "file"
+}
+```
+identical to the elements returned by `GET /forwarder-list`.
+- `console`. requires no body.
+- `tcp`. requires a body like 
+```text
+{
+     "cls": "servers.TCPWriter",
+     "port": 7002,
+     "type": "tcp"
+}
+```
+identical to the elements returned by `GET /forwarder-list`.
+- `ws`. requires a body like 
+```text
+{
+   "cls": "servers.WebSocketWriter",
+   "wsUri": "ws://localhost:9876/",
+   "type": "ws"
+}
+```
+identical to the elements returned by `GET /forwarder-list`.
+
+``` 
+ POST /channels/:type 
+```
+
+We'll provide later a Web UI to implament thsi REST interface.

@@ -59,11 +59,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					response = new HTTPServer.Response(request.getProtocol(), 200);
 
 					List<String> portList = getSerialPortList();
-					String[] portArray = portList.toArray(new String[portList.size()]);
-					Gson json = new Gson();
-					json.toJson(portArray);
-
-					String content = json.toString();
+					Object[] portArray = portList.toArray(new Object[portList.size()]);
+					String content = new Gson().toJson(portArray).toString();
 					generteHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
 				}
@@ -148,7 +145,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						response = new HTTPServer.Response(request.getProtocol(), 404); // Not implemented
 					}
 				}
-				// DELETE /channels/type. Details in the payload
+				// DELETE /channels/:type. Details in the payload
 				else if (deletePathElem != null && deletePathElem.length >= 3 && deletePathElem[1].equals("channels")) {
 					// Not implemented
 					response = new HTTPServer.Response(request.getProtocol(), 404); // Not implemented
