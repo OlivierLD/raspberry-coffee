@@ -36,14 +36,20 @@ public class TCPClient extends NMEAClient {
 		String cls;
 		String type = "tcp";
 		int port;
+		String hostname;
 
 		public TCPBean(TCPClient instance) {
 			cls = instance.getClass().getName();
 			port = ((TCPReader) instance.getReader()).getPort();
+			hostname = ((TCPReader) instance.getReader()).getHostname();
 		}
 
 		public int getPort() {
 			return port;
+		}
+
+		public String getHostname() {
+			return this.hostname;
 		}
 	}
 
