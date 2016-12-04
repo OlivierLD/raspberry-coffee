@@ -172,9 +172,9 @@ identical to the elements returned by `GET /forwarders`.
  DELETE /channels/:type
 ```
 ``` 
- POST /forwarders/:type
+ POST /forwarders
 ```
-`type` is one of
+with payloads like:
 - `file`. requires a body like 
  ```text
 { 
@@ -184,7 +184,13 @@ identical to the elements returned by `GET /forwarders`.
 }
 ```
 identical to the elements returned by `GET /forwarders`.
-- `console`. requires no body.
+- `console`. requires a body like 
+```text
+{ 
+     "cls": "servers.ConsoleWriter",
+     "type": "console"
+}
+```
 - `tcp`. requires a body like 
 ```text
 {
@@ -205,7 +211,7 @@ identical to the elements returned by `GET /forwarders`.
 identical to the elements returned by `GET /forwarders`.
 
 ``` 
- POST /channels/:type 
+ POST /channels
 ```
 
 We'll provide later a Web UI to implement this REST interface.

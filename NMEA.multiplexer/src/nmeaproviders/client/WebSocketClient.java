@@ -32,7 +32,7 @@ public class WebSocketClient extends NMEAClient {
 
 	private static WebSocketClient nmeaClient = null;
 
-	public static class WSBean {
+	public static class WSBean implements ClientBean {
 		String cls;
 		String type = "ws";
 		String wsUri;
@@ -41,6 +41,9 @@ public class WebSocketClient extends NMEAClient {
 			cls = instance.getClass().getName();
 			wsUri = ((WebSocketReader) instance.getReader()).getWsUri();
 		}
+
+		@Override
+		public String getType() { return this.type; }
 
 		public String getWsUri() {
 			return wsUri;

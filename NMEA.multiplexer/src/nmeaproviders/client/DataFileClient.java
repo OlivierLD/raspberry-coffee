@@ -32,7 +32,7 @@ public class DataFileClient extends NMEAClient {
 
 	private static DataFileClient nmeaClient = null;
 
-	public static class DataFileBean {
+	public static class DataFileBean implements ClientBean {
 		String cls;
 		String file;
 		String type = "file";
@@ -41,6 +41,8 @@ public class DataFileClient extends NMEAClient {
 			cls = instance.getClass().getName();
 			file = ((DataFileReader) instance.getReader()).getFileNme();
 		}
+		@Override
+		public String getType() { return this.type; }
 
 		public String getFile() {
 			return file;
