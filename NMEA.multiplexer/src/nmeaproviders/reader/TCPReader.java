@@ -43,6 +43,10 @@ public class TCPReader extends NMEAReader
 
   private Socket skt = null;
 
+  public int getPort() {
+    return this.tcpport;
+  }
+
   @Override
   public void read()
   {

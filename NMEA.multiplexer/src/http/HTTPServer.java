@@ -17,20 +17,18 @@ import http.utils.DumpUtil;
 
 /**
  * Used for the REST interface of the Multiplexer
- *
+ * <p>
  * Get the list of the multiplexed channels,
  * Get the list of the forwarders
  * Add channel, forwarder
  * Delete channel, forwarder
- *
+ * <p>
  * GET, POST, DELETE - no PUT, no PATCH (for now)
  */
-public class HTTPServer
-{
+public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
 
-	public static class Request
-	{
+	public static class Request {
 		public final static List<String> VERBS = Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH");
 
 		private String verb;
@@ -39,10 +37,10 @@ public class HTTPServer
 		private byte[] content;
 		private Map<String, String> headers;
 
-		public Request() {}
+		public Request() {
+		}
 
-		public Request(String verb, String path, String protocol)
-		{
+		public Request(String verb, String path, String protocol) {
 			this.verb = verb;
 			this.path = path;
 			this.protocol = protocol;
@@ -77,17 +75,18 @@ public class HTTPServer
 		}
 	}
 
-	public static class Response
-	{
+	public static class Response {
 		private int status;
 		private String protocol;
 
-		public Response() {}
-		public Response(String protocol, int status)
-		{
+		public Response() {
+		}
+
+		public Response(String protocol, int status) {
 			this.protocol = protocol;
 			this.status = status;
 		}
+
 		public int getStatus() {
 			return status;
 		}
@@ -137,39 +136,31 @@ public class HTTPServer
 
 	private static int defaultPort = 9999;
 
-	public HTTPServer() throws Exception
-	{
+	public HTTPServer() throws Exception {
 		this(defaultPort, null);
 	}
 
-	public HTTPServer(int port) throws Exception
-	{
+	public HTTPServer(int port) throws Exception {
 		this(port, null);
 	}
 
-	public HTTPServer(HTTPServerInterface requestManager) throws Exception
-	{
+	public HTTPServer(HTTPServerInterface requestManager) throws Exception {
 		this(defaultPort, requestManager);
 	}
 
-	public HTTPServer(int port, HTTPServerInterface requestManager) throws Exception
-	{
+	public HTTPServer(int port, HTTPServerInterface requestManager) throws Exception {
 		this.requestManager = requestManager;
 		// Infinite loop, waiting for requests
-		Thread httpListenerThread = new Thread("HTTPListener")
-		{
-			public void run()
-			{
-				try
-				{
+		Thread httpListenerThread = new Thread("HTTPListener") {
+			public void run() {
+				try {
 					boolean okToStop = false;
 					ServerSocket ss = new ServerSocket(port);
 					System.out.println("Port " + port + " opened successfully.");
-					while (isRunning())
-					{
+					while (isRunning()) {
 						Socket client = ss.accept();
 //					BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-						InputStreamReader in  = new InputStreamReader(client.getInputStream());
+						InputStreamReader in = new InputStreamReader(client.getInputStream());
 						PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
 						Request request = null;
 						String line = "";
@@ -268,12 +259,10 @@ public class HTTPServer
 						if (payload != null && request != null) {
 							request.setContent(payload.getBytes());
 						}
-						if (verbose)
-						{
+						if (verbose) {
 							System.out.println(">>> End of HTTP Request <<<");
 						}
-						if (request != null)
-						{
+						if (request != null) {
 							String path = request.getPath();
 
 							if ("/exit".equals(path)) {
@@ -307,9 +296,7 @@ public class HTTPServer
 									sendResponse(response, out);
 								}
 							}
-						}
-						else
-						{
+						} else {
 							System.out.println("What?");
 							System.out.println(String.format("line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
 						}
@@ -321,21 +308,15 @@ public class HTTPServer
 							stopRunning();
 					}
 					ss.close();
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
 					System.err.println(">>> Port " + port + ", " + e.toString() + " >>>");
 					e.printStackTrace();
 					System.err.println("<<< Port " + port + " <<<");
-				}
-				finally
-				{
+				} finally {
 					if (verbose)
 						System.out.println("HTTP Server is done.");
-					if (waiter != null)
-					{
-						synchronized (waiter)
-						{
+					if (waiter != null) {
+						synchronized (waiter) {
 							waiter.notify();
 						}
 					}
@@ -345,8 +326,7 @@ public class HTTPServer
 		httpListenerThread.start();
 	}
 
-	private void sendResponse(Response response, PrintWriter out)
-	{
+	private void sendResponse(Response response, PrintWriter out) {
 		out.print(String.format("%s %d \r\n", response.getProtocol(), response.getStatus()));
 		if (response.getHeaders() != null) {
 			response.getHeaders().keySet().stream().forEach(k -> out.print(String.format("%s: %s\r\n", k, response.getHeaders().get(k))));
@@ -358,18 +338,18 @@ public class HTTPServer
 	}
 
 	private static Thread waiter = null;
+
 	//  For dev tests
-	public static void main(String[] args) throws Exception
-	{
+	public static void main(String[] args) throws Exception {
 		//System.setProperty("http.port", "9999");
 		new HTTPServer(9999);
-		waiter = new Thread("HTTPWaiter")
-		{
-			public void run()
-			{
-				synchronized(this)
-				{
-					try {  this.wait(); } catch (Exception ex) {}
+		waiter = new Thread("HTTPWaiter") {
+			public void run() {
+				synchronized (this) {
+					try {
+						this.wait();
+					} catch (Exception ex) {
+					}
 				}
 			}
 		};

@@ -9,95 +9,86 @@ import javax.swing.text.Utilities;
  * Examples are given for a file containing the data - that can be used as a simulator,
  * and for a Serial Port, that can be used for the real world.
  *
- * @version 1.0
  * @author Olivier Le Diouris
+ * @version 1.0
  */
-public abstract class NMEAReader extends Thread
-{
-  private List<NMEAListener> NMEAListeners = null; // new ArrayList(2);
+public abstract class NMEAReader extends Thread {
+	private List<NMEAListener> NMEAListeners = null; // new ArrayList(2);
 
-  protected boolean goRead = true;
-  private NMEAReader instance = this;
-    
-  public NMEAReader()
-  {
-  }
-  
-  public NMEAReader(List<NMEAListener> al)
-  {
-    if (System.getProperty("verbose", "false").equals("true")) System.out.println(this.getClass().getName() + ":Creating reader");
-    NMEAListeners = al;
-    this.addNMEAListener(new NMEAListener()
-      {
-        public void stopReading(NMEAEvent e)
-        {
-          System.out.println(instance.getClass().getName() + ": Stop reading");
-          goRead = false;
-        }
-      });
-  }
+	protected boolean goRead = true;
+	private NMEAReader instance = this;
 
-  /**
-   * The one that tells the Controller to start working
-   * 
-   * @see nmea.api.NMEAParser
-   */
-  protected void fireDataRead(NMEAEvent e)
-  {
-    for (int i=0; i<NMEAListeners.size(); i++)
-    {
-      NMEAListener l = NMEAListeners.get(i);
-      l.dataRead(e);
-    }
-  }
+	public NMEAReader() {
+	}
 
-  protected void fireStopReading(NMEAEvent e)
-  {
-    for (int i=0; i<NMEAListeners.size(); i++)
-    {
-      NMEAListener l = NMEAListeners.get(i);
-      l.stopReading(e);
-    }
-  }
+	public NMEAReader(List<NMEAListener> al) {
+		if (System.getProperty("verbose", "false").equals("true"))
+			System.out.println(this.getClass().getName() + ":Creating reader");
+		NMEAListeners = al;
+		this.addNMEAListener(new NMEAListener() {
+			public void stopReading(NMEAEvent e) {
+				System.out.println(instance.getClass().getName() + ": Stop reading");
+				goRead = false;
+			}
+		});
+	}
 
-  public synchronized void addNMEAListener(NMEAListener l)
-  {
-    if (!NMEAListeners.contains(l))
-    {
-      NMEAListeners.add(l);
-    }
-  }
+	/**
+	 * The one that tells the Controller to start working
+	 *
+	 * @see nmea.api.NMEAParser
+	 */
+	protected void fireDataRead(NMEAEvent e) {
+		for (int i = 0; i < NMEAListeners.size(); i++) {
+			NMEAListener l = NMEAListeners.get(i);
+			l.dataRead(e);
+		}
+	}
 
-  public synchronized void removeNMEAListener(NMEAListener l)
-  {
-    NMEAListeners.remove(l);
-  }
+	protected void fireStopReading(NMEAEvent e) {
+		for (int i = 0; i < NMEAListeners.size(); i++) {
+			NMEAListener l = NMEAListeners.get(i);
+			l.stopReading(e);
+		}
+	}
 
-  public boolean canRead()
-  { return goRead; }
+	public synchronized void addNMEAListener(NMEAListener l) {
+		if (!NMEAListeners.contains(l)) {
+			NMEAListeners.add(l);
+		}
+	}
 
-  public void enableReading()
-  { this.goRead = true; }
-  /**
-   * Customize, overwrite this class to get plugged on the right datasource
-   * like a Serial Port for example.
-   */
-  public abstract void read() throws Exception;
-  public abstract void closeReader() throws Exception;
+	public synchronized void removeNMEAListener(NMEAListener l) {
+		NMEAListeners.remove(l);
+	}
 
-  public void run()
-  {
-    if ("true".equals(System.getProperty("verbose", "false"))) // nmea.api.NMEAReader
-      System.out.println(this.getClass().getName() + ":Reader Running");
-    try { read(); }
-    catch (Exception ex)
-    {
-      for (int i=0; i<NMEAListeners.size(); i++)
-      {
-        NMEAListener l = NMEAListeners.get(i);
-        l.fireError(ex);
-      }      
-      throw new RuntimeException(ex);
-    }
-  }
+	public boolean canRead() {
+		return goRead;
+	}
+
+	public void enableReading() {
+		this.goRead = true;
+	}
+
+	/**
+	 * Customize, overwrite this class to get plugged on the right datasource
+	 * like a Serial Port for example.
+	 */
+	public abstract void read() throws Exception;
+
+	public abstract void closeReader() throws Exception;
+
+	public void run() {
+		if ("true".equals(System.getProperty("verbose", "false"))) // nmea.api.NMEAReader
+			System.out.println(this.getClass().getName() + ":Reader Running");
+		try {
+			read();
+		} catch (Exception ex) {
+			for (int i = 0; i < NMEAListeners.size(); i++) {
+				NMEAListener l = NMEAListeners.get(i);
+				l.fireError(ex);
+			}
+			throw new RuntimeException(ex);
+		}
+	}
 }

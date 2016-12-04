@@ -20,202 +20,174 @@ import java.util.List;
 import java.util.TooManyListenersException;
 
 public class SerialReader
-     extends NMEAReader 
-  implements SerialPortEventListener,
-				CommPortOwnershipListener
-{
-  private String comPort = "/dev/ttyUSB0"; // "COM1";
-  private int br = 4800;
-  private SerialPort serialPort;
-  
-  public SerialReader()
-  {
-  }
-  
-  public SerialReader(String com, int br)
-  {
-    this.comPort = com;
-    this.br = br;
-  }
-  
-  public SerialReader(List<NMEAListener> al)
-  {
-    super(al);
-  }
+				extends NMEAReader
+				implements SerialPortEventListener,
+				CommPortOwnershipListener {
+	private String comPort = "/dev/ttyUSB0"; // "COM1";
+	private int br = 4800;
+	private SerialPort serialPort;
 
-  public SerialReader(List<NMEAListener> al, String com, int br)
-  {
-    super(al);
-    this.comPort = com;
-    this.br = br;
-  }
+	public SerialReader() {
+	}
 
-  private InputStream theInput = null;
+	public SerialReader(String com, int br) {
+		this.comPort = com;
+		this.br = br;
+	}
 
-  @Override
-  public void read()
-  {
-    super.enableReading();
-    // Opening Serial port
-    Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
-    int nbp = 0;
-    while (enumeration.hasMoreElements())
-    {
-      CommPortIdentifier cpi = (CommPortIdentifier)enumeration.nextElement();
-      System.out.println("Port:" + cpi.getName());
-      nbp++;
-    }
-    System.out.println("Found " + nbp + " port(s)");
-    
-    CommPortIdentifier com = null;
-    try { com = CommPortIdentifier.getPortIdentifier(comPort); }
-    catch (NoSuchPortException nspe)
-    {
-      System.err.println("No Such Port");
-      nspe.printStackTrace();
-      return;
-    }
-    CommPort thePort = null;
-    try 
-    { 
-      com.addPortOwnershipListener(this);
-      thePort = com.open("NMEAPort", 10000); 
-    }
-    catch (PortInUseException piue)
-    {
-      System.err.println("Port In Use");
-      return;
-    }
-    int portType = com.getPortType();
-    if (portType == CommPortIdentifier.PORT_PARALLEL)
-      System.out.println("This is a parallel port");
-    else if (portType == CommPortIdentifier.PORT_SERIAL)
-      System.out.println("This is a serial port");
-    else
-      System.out.println("This is an unknown port:" + portType);
-    if (portType == CommPortIdentifier.PORT_SERIAL)
-    {
-      this.serialPort = (SerialPort)thePort;
-      try
-      { this.serialPort.addEventListener(this); }
-      catch (TooManyListenersException tmle)
-      {
-        this.serialPort.close();
-        System.err.println(tmle.getMessage());
-        return;
-      }
-      this.serialPort.notifyOnDataAvailable(true);
-      try 
-      {
-        this.serialPort.enableReceiveTimeout(30);
-      } 
-      catch (UnsupportedCommOperationException ucoe)
-      {
-        this.serialPort.close();
-        System.err.println(ucoe.getMessage());
-        return;
-      }
-      try
-      {
-        // Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations (BR 4800).
-        this.serialPort.setSerialPortParams(this.br,
-                               SerialPort.DATABITS_8,
-                               SerialPort.STOPBITS_1,
-                               SerialPort.PARITY_NONE);
-      }
-      catch (UnsupportedCommOperationException ucoe)
-      {
-        System.err.println("Unsupported Comm Operation");
-        return;
-      }
-      try
-      {
-        this.serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-        theInput = this.serialPort.getInputStream();
-        System.out.println("Reading serial port...");
-      }
-      catch (Exception e)
-      {
-        e.printStackTrace();
-      }
-    }
-    // Reading on Serial Port
-    System.out.println("Port is open...");
-  }
+	public SerialReader(List<NMEAListener> al) {
+		super(al);
+	}
 
-  @Override
-  public void closeReader() throws Exception {
-    if (this.serialPort != null) {
-      this.serialPort.close();
-    }
-  }
+	public SerialReader(List<NMEAListener> al, String com, int br) {
+		super(al);
+		this.comPort = com;
+		this.br = br;
+	}
 
-  @Override
-  public void serialEvent(SerialPortEvent serialPortEvent)
-  {
-    switch (serialPortEvent.getEventType())
-    {
-      case SerialPortEvent.DATA_AVAILABLE:
-        if (canRead())
-        {
-          try
-          {
-            StringBuffer inputBuffer = new StringBuffer();
-            int newData = 0;
-            while (newData != -1)
-            {
-              try
-              {
-                if (theInput != null)
-                {
-                  newData = theInput.read();
-                  if (newData == -1)
-                    break;
-                  inputBuffer.append((char) newData);
-                }
-              }
-              catch (IOException ex)
-              {
-                System.err.println(ex);
-                return;
-              }
-            }
-            String s = new String(inputBuffer);
-            // Display the read string
-            boolean justDump = false;
-            if (justDump)
-              System.out.println(":: [" + s + "] ::");
-            else
-              super.fireDataRead(new NMEAEvent(this, s));
-          }
-          catch (Exception ex)
-          {
-            ex.printStackTrace();                  
-          }
-        }
+	public int getBr() {
+		return this.br;
+	}
+
+	public String getPort() {
+		return this.comPort;
+	}
+
+	private InputStream theInput = null;
+
+	@Override
+	public void read() {
+		super.enableReading();
+		// Opening Serial port
+		Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
+		int nbp = 0;
+		while (enumeration.hasMoreElements()) {
+			CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
+			System.out.println("Port:" + cpi.getName());
+			nbp++;
+		}
+		System.out.println("Found " + nbp + " port(s)");
+
+		CommPortIdentifier com = null;
+		try {
+			com = CommPortIdentifier.getPortIdentifier(comPort);
+		} catch (NoSuchPortException nspe) {
+			System.err.println("No Such Port");
+			nspe.printStackTrace();
+			return;
+		}
+		CommPort thePort = null;
+		try {
+			com.addPortOwnershipListener(this);
+			thePort = com.open("NMEAPort", 10000);
+		} catch (PortInUseException piue) {
+			System.err.println("Port In Use");
+			return;
+		}
+		int portType = com.getPortType();
+		if (portType == CommPortIdentifier.PORT_PARALLEL)
+			System.out.println("This is a parallel port");
+		else if (portType == CommPortIdentifier.PORT_SERIAL)
+			System.out.println("This is a serial port");
+		else
+			System.out.println("This is an unknown port:" + portType);
+		if (portType == CommPortIdentifier.PORT_SERIAL) {
+			this.serialPort = (SerialPort) thePort;
+			try {
+				this.serialPort.addEventListener(this);
+			} catch (TooManyListenersException tmle) {
+				this.serialPort.close();
+				System.err.println(tmle.getMessage());
+				return;
+			}
+			this.serialPort.notifyOnDataAvailable(true);
+			try {
+				this.serialPort.enableReceiveTimeout(30);
+			} catch (UnsupportedCommOperationException ucoe) {
+				this.serialPort.close();
+				System.err.println(ucoe.getMessage());
+				return;
+			}
+			try {
+				// Settings for B&G Hydra, TackTick, NKE, most of the NMEA Stations (BR 4800).
+				this.serialPort.setSerialPortParams(this.br,
+								SerialPort.DATABITS_8,
+								SerialPort.STOPBITS_1,
+								SerialPort.PARITY_NONE);
+			} catch (UnsupportedCommOperationException ucoe) {
+				System.err.println("Unsupported Comm Operation");
+				return;
+			}
+			try {
+				this.serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
+				theInput = this.serialPort.getInputStream();
+				System.out.println("Reading serial port...");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		// Reading on Serial Port
+		System.out.println("Port is open...");
+	}
+
+	@Override
+	public void closeReader() throws Exception {
+		if (this.serialPort != null) {
+			this.serialPort.close();
+		}
+	}
+
+	@Override
+	public void serialEvent(SerialPortEvent serialPortEvent) {
+		switch (serialPortEvent.getEventType()) {
+			case SerialPortEvent.DATA_AVAILABLE:
+				if (canRead()) {
+					try {
+						StringBuffer inputBuffer = new StringBuffer();
+						int newData = 0;
+						while (newData != -1) {
+							try {
+								if (theInput != null) {
+									newData = theInput.read();
+									if (newData == -1)
+										break;
+									inputBuffer.append((char) newData);
+								}
+							} catch (IOException ex) {
+								System.err.println(ex);
+								return;
+							}
+						}
+						String s = new String(inputBuffer);
+						// Display the read string
+						boolean justDump = false;
+						if (justDump)
+							System.out.println(":: [" + s + "] ::");
+						else
+							super.fireDataRead(new NMEAEvent(this, s));
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
 //      else
 //      {
 //        System.out.println("Stop Reading serial port.");
 //      }
-      default:
-        break;
-    }
-  }
+			default:
+				break;
+		}
+	}
 
-  @Override
-  public void ownershipChange(int type)
-  {
-    if (type == CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED)
-    {
-      System.out.println("PORT_OWNERSHIP_REQUESTED");
-    }
-    else
-      System.out.println("ownership changed:" + type);
-  }
-  
-  public static void main(String[] args)
-  {
-    new SerialReader().read();
-  }
-  
+	@Override
+	public void ownershipChange(int type) {
+		if (type == CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED) {
+			System.out.println("PORT_OWNERSHIP_REQUESTED");
+		} else
+			System.out.println("ownership changed:" + type);
+	}
+
+	public static void main(String[] args) {
+		new SerialReader().read();
+	}
+
 }
