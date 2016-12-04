@@ -108,9 +108,9 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			case "DELETE": // DELETE channel, forwarder
-				String[] pathElem = request.getPath().split("/");
-				if (pathElem != null && pathElem.length >= 3 && pathElem[1].equals("forwarders")) {
-					if (pathElem[2].equals("servers.ConsoleWriter")) { // TODO Tweak that
+				String[] deletePathElem = request.getPath().split("/");
+				if (deletePathElem != null && deletePathElem.length >= 3 && deletePathElem[1].equals("forwarders")) {
+					if (deletePathElem[2].equals("servers.ConsoleWriter")) { // TODO Tweak that
 						Optional<Forwarder> opFwd = nmeaDataForwarders.stream().filter(fwd -> fwd instanceof ConsoleWriter).findFirst();
 						if (opFwd.isPresent()) {
 							Forwarder forwarder = opFwd.get();
@@ -124,6 +124,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			case "POST": // POST channel, forwarder
+				String[] postPathElem = request.getPath().split("/");
+				if (request.getContent() != null) {
+					String content = new String(request.getContent());
+					Object json = new Gson().fromJson(content, Object.class);
+					System.out.println();
+				} else {
+					// No content...
+				}
 				break;
 			default:
 				break;
