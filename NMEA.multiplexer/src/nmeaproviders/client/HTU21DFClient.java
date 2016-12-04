@@ -32,13 +32,15 @@ public class HTU21DFClient extends NMEAClient {
 
 	private static HTU21DFClient nmeaClient = null;
 
-	private static class HTU21DFBean {
+	private static class HTU21DFBean implements ClientBean {
 		String cls;
 		String type = "hut21df";
 
 		public HTU21DFBean(HTU21DFClient instance) {
 			cls = instance.getClass().getName();
 		}
+		@Override
+		public String getType() { return this.type; }
 	}
 
 	@Override
