@@ -3,7 +3,7 @@ package nmeaproviders.client;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmeaproviders.reader.FileReader;
+import nmeaproviders.reader.DataFileReader;
 
 /**
  * Read a file containing logged data
@@ -32,13 +32,18 @@ public class DataFileClient extends NMEAClient {
 
 	private static DataFileClient nmeaClient = null;
 
-	private static class DataFileBean {
+	public static class DataFileBean {
 		String cls;
 		String file;
+		String type = "file";
 
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();
-			file = ((FileReader) instance.getReader()).getFileNme();
+			file = ((DataFileReader) instance.getReader()).getFileNme();
+		}
+
+		public String getFile() {
+			return file;
 		}
 	}
 
@@ -67,7 +72,7 @@ public class DataFileClient extends NMEAClient {
 
 //  nmeaClient.setEOS("\n"); // TASK Sure?
 		nmeaClient.initClient();
-		nmeaClient.setReader(new FileReader(nmeaClient.getListeners(), dataFile));
+		nmeaClient.setReader(new DataFileReader(nmeaClient.getListeners(), dataFile));
 		nmeaClient.startWorking();
 	}
 }

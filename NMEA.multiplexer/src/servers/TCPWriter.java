@@ -30,6 +30,10 @@ public class TCPWriter implements Forwarder {
 		}
 	}
 
+	public int getTcpPort() {
+		return this.tcpPort;
+	}
+
 	protected void setSocket(Socket skt) {
 		this.clientSocketlist.add(skt);
 	}
@@ -132,9 +136,14 @@ public class TCPWriter implements Forwarder {
 		}
 	}
 
-	private static class TCPBean {
+	public static class TCPBean {
 		String cls;
 		int port;
+		String type = "tcp";
+
+		public int getPort() {
+			return port;
+		}
 
 		public TCPBean(TCPWriter instance) {
 			cls = instance.getClass().getName();

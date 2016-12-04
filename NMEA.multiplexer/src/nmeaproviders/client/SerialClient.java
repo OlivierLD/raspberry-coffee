@@ -32,8 +32,9 @@ public class SerialClient extends NMEAClient {
 
 	private static SerialClient nmeaClient = null;
 
-	private static class SerialBean {
+	public static class SerialBean {
 		String cls;
+		String type = "serial";
 		String port;
 		int br;
 
@@ -41,6 +42,14 @@ public class SerialClient extends NMEAClient {
 			cls = instance.getClass().getName();
 			port = ((SerialReader) instance.getReader()).getPort();
 			br = ((SerialReader) instance.getReader()).getBr();
+		}
+
+		public String getPort() {
+			return port;
+		}
+
+		public int getBr() {
+			return br;
 		}
 	}
 

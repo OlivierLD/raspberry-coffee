@@ -34,6 +34,7 @@ public class RandomClient extends NMEAClient {
 
 	private static class RandomBean {
 		String cls;
+		String type = "rnd";
 
 		public RandomBean(RandomClient instance) {
 			cls = instance.getClass().getName();

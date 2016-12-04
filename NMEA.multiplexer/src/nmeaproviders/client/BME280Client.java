@@ -37,8 +37,9 @@ public class BME280Client extends NMEAClient
 
   private static BME280Client nmeaClient = null;
 
-  private static class BME280Bean {
+  public static class BME280Bean {
     String cls;
+    String type = "bme280";
 
     public BME280Bean(BME280Client instance) {
       cls = instance.getClass().getName();

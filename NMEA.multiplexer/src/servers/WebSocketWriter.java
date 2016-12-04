@@ -50,6 +50,10 @@ public class WebSocketWriter implements Forwarder {
 		}
 	}
 
+	public String getWsUri() {
+		return this.wsUri;
+	}
+
 	@Override
 	public void write(byte[] message) {
 		try {
@@ -71,13 +75,18 @@ public class WebSocketWriter implements Forwarder {
 		}
 	}
 
-	private static class WSBean {
+	public static class WSBean {
 		String cls;
 		String wsUri;
+		String type = "ws";
 
 		public WSBean(WebSocketWriter instance) {
 			cls = instance.getClass().getName();
 			wsUri = instance.wsUri;
+		}
+
+		public String getWsUri() {
+			return wsUri;
 		}
 	}
 

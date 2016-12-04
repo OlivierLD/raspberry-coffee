@@ -3,7 +3,6 @@ package nmeaproviders.client;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmeaproviders.reader.FileReader;
 import nmeaproviders.reader.HTU21DFReader;
 
 /**
@@ -35,6 +34,7 @@ public class HTU21DFClient extends NMEAClient {
 
 	private static class HTU21DFBean {
 		String cls;
+		String type = "hut21df";
 
 		public HTU21DFBean(HTU21DFClient instance) {
 			cls = instance.getClass().getName();

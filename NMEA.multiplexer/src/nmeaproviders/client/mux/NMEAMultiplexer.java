@@ -5,7 +5,7 @@ import nmea.api.NMEAClient;
 import nmeaproviders.client.DataFileClient;
 import nmeaproviders.client.SerialClient;
 import nmeaproviders.client.TCPClient;
-import nmeaproviders.reader.FileReader;
+import nmeaproviders.reader.DataFileReader;
 import nmeaproviders.reader.SerialReader;
 import nmeaproviders.reader.TCPReader;
 
@@ -45,7 +45,7 @@ public class NMEAMultiplexer implements Multiplexer {
 
 		fileClient.setEOS("\n");
 		fileClient.initClient();
-		fileClient.setReader(new FileReader(fileClient.getListeners(), dataFile));
+		fileClient.setReader(new DataFileReader(fileClient.getListeners(), dataFile));
 
 		serialClient.setEOS("\n");
 		serialClient.initClient();

@@ -32,13 +32,18 @@ public class WebSocketClient extends NMEAClient {
 
 	private static WebSocketClient nmeaClient = null;
 
-	private static class WSBean {
+	public static class WSBean {
 		String cls;
+		String type = "ws";
 		String wsUri;
 
 		public WSBean(WebSocketClient instance) {
 			cls = instance.getClass().getName();
 			wsUri = ((WebSocketReader) instance.getReader()).getWsUri();
+		}
+
+		public String getWsUri() {
+			return wsUri;
 		}
 	}
 

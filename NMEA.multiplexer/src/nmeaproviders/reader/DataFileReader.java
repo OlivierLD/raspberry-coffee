@@ -11,11 +11,11 @@ import java.util.List;
 /**
  * A Simulator, taking its inputs from a file
  */
-public class FileReader extends NMEAReader {
+public class DataFileReader extends NMEAReader {
 	private String dataFileName = null;
 	private FileInputStream fis;
 
-	public FileReader(List<NMEAListener> al, String fName) {
+	public DataFileReader(List<NMEAListener> al, String fName) {
 		super(al);
 		System.out.println("There are " + al.size() + " listener(s)");
 		this.dataFileName = fName;

@@ -32,13 +32,18 @@ public class TCPClient extends NMEAClient {
 
 	private static TCPClient nmeaClient = null;
 
-	private static class TCPBean {
+	public static class TCPBean {
 		String cls;
+		String type = "tcp";
 		int port;
 
 		public TCPBean(TCPClient instance) {
 			cls = instance.getClass().getName();
 			port = ((TCPReader) instance.getReader()).getPort();
+		}
+
+		public int getPort() {
+			return port;
 		}
 	}
 

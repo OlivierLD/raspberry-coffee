@@ -2,7 +2,7 @@ package nmeaproviders.client;
 
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmeaproviders.reader.FileReader;
+import nmeaproviders.reader.DataFileReader;
 import servers.TCPWriter;
 
 /**
@@ -59,7 +59,7 @@ public class CustomDataFileToTCPClient extends NMEAClient {
 
 //  customClient.setEOS("\n"); // TASK Sure?
 		customClient.initClient();
-		customClient.setReader(new FileReader(customClient.getListeners(), dataFile));
+		customClient.setReader(new DataFileReader(customClient.getListeners(), dataFile));
 		customClient.startWorking();
 	}
 }
