@@ -26,150 +26,157 @@ import java.util.List;
  * }
  * </pre>
  */
-public abstract class NMEAClient 
-{
-  private List<NMEAListener> NMEAListeners = new ArrayList<NMEAListener>(2);
-  private NMEAParser parser;
-  private NMEAReader reader;
-  private String devicePrefix = "";
-  private String[] sentenceArray = null;
-  private String NMEA_EOS = null;
-  
-  public NMEAClient()
-  {
-    this(null, null, null);
-  }
-  
-  /**
-   * Create the client
-   * @param prefix the Device Identifier
-   * @param sentence the String Array containing the NMEA sentence identifiers to read
-   */
-  public NMEAClient(String prefix,
-                    String[] sentence)
-  {
-    this(prefix, sentence, null);
-  }
+public abstract class NMEAClient {
+	private List<NMEAListener> NMEAListeners = new ArrayList<NMEAListener>(2);
+	private NMEAParser parser;
+	private NMEAReader reader;
+	private String devicePrefix = "";
+	private String[] sentenceArray = null;
+	private String NMEA_EOS = null;
 
-  public NMEAClient(Multiplexer multiplexer)
-  {
-    this(null, null, multiplexer);
-  }
+	public NMEAClient() {
+		this(null, null, null);
+	}
 
-  public NMEAClient(String prefix,
-                    String[] sentence,
-                    Multiplexer multiplexer)
-  {
-    this.setDevicePrefix(prefix);
-    this.setSentenceArray(sentence);
-    this.setMultiplexer(multiplexer);
-  }
+	/**
+	 * Create the client
+	 *
+	 * @param prefix   the Device Identifier
+	 * @param sentence the String Array containing the NMEA sentence identifiers to read
+	 */
+	public NMEAClient(String prefix,
+	                  String[] sentence) {
+		this(prefix, sentence, null);
+	}
 
-  protected Multiplexer multiplexer;
+	public NMEAClient(Multiplexer multiplexer) {
+		this(null, null, multiplexer);
+	}
 
-  public void setMultiplexer(Multiplexer multiplexer)
-  {
-    this.multiplexer = multiplexer;
-  }
+	public NMEAClient(String prefix,
+	                  String[] sentence,
+	                  Multiplexer multiplexer) {
+		this.setDevicePrefix(prefix);
+		this.setSentenceArray(sentence);
+		this.setMultiplexer(multiplexer);
+	}
 
-  public Multiplexer getMutiplexer()
-  {
-    return this.multiplexer;
-  }
+	protected Multiplexer multiplexer;
 
-  public void initClient()
-  {
-    this.addNMEAListener(new NMEAListener()
-      {
-        public void dataDetected(NMEAEvent e)
-        {
-          dataDetectedEvent(e); 
-        }
-      });
-    parser = new NMEAParser(NMEAListeners);
-    parser.setNmeaPrefix(this.getDevicePrefix());
-    parser.setNmeaSentence(this.getSentenceArray());
-    if (NMEA_EOS != null)
-      parser.setEOS(NMEA_EOS);      
-  }
+	public void setMultiplexer(Multiplexer multiplexer) {
+		this.multiplexer = multiplexer;
+	}
 
-  public void setDevicePrefix(String s)
-  { this.devicePrefix = s; }
-  public String getDevicePrefix()
-  { return this.devicePrefix; }
+	public Multiplexer getMutiplexer() {
+		return this.multiplexer;
+	}
 
-  public void setSentenceArray(String[] sa)
-  { this.sentenceArray = sa; }
-  public String[] getSentenceArray()
-  { return this.sentenceArray; }
-  
-  public void setEOS(String str)
-  { NMEA_EOS = str; }
-  public String getEOS()
-  { return (parser != null)?parser.getEOS():NMEA_EOS; }
-  
-  public void setParser(NMEAParser p)
-  { this.parser = p; }
-  public NMEAParser getParser()
-  { return this.parser; }
+	public void initClient() {
+		this.addNMEAListener(new NMEAListener() {
+			public void dataDetected(NMEAEvent e) {
+				dataDetectedEvent(e);
+			}
+		});
+		parser = new NMEAParser(NMEAListeners);
+		parser.setNmeaPrefix(this.getDevicePrefix());
+		parser.setNmeaSentence(this.getSentenceArray());
+		if (NMEA_EOS != null)
+			parser.setEOS(NMEA_EOS);
+	}
 
-  public void setReader(NMEAReader r)
-  { this.reader = r; }
-  public NMEAReader getReader()
-  { return this.reader; }
+	public void setDevicePrefix(String s) {
+		this.devicePrefix = s;
+	}
 
-  public List<NMEAListener> getListeners()
-  {  return this.NMEAListeners; }
-  
-  public void startWorking()
-  {
-    synchronized (this)
-    {
-      synchronized (this.reader) { this.reader.start(); }
-      synchronized (this.parser) { this.parser.start(); }
-    }
-  }
+	public String getDevicePrefix() {
+		return this.devicePrefix;
+	}
 
-  public void stopDataRead()
-  {
-    for (NMEAListener l : this.getListeners()) {
-      l.stopReading(new NMEAEvent(this));
-    }
-    // Remove listeners?
-    removeAllListeners();
+	public void setSentenceArray(String[] sa) {
+		this.sentenceArray = sa;
+	}
 
-    try {
-      this.getReader().closeReader();
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }
+	public String[] getSentenceArray() {
+		return this.sentenceArray;
+	}
 
-  /**
-   * This one must be overwritten to customize the behavior of the client,
-   * like the destination of the data.
-   */
-  public abstract void dataDetectedEvent(NMEAEvent e);
+	public void setEOS(String str) {
+		NMEA_EOS = str;
+	}
+
+	public String getEOS() {
+		return (parser != null) ? parser.getEOS() : NMEA_EOS;
+	}
+
+	public void setParser(NMEAParser p) {
+		this.parser = p;
+	}
+
+	public NMEAParser getParser() {
+		return this.parser;
+	}
+
+	public void setReader(NMEAReader r) {
+		this.reader = r;
+	}
+
+	public NMEAReader getReader() {
+		return this.reader;
+	}
+
+	public List<NMEAListener> getListeners() {
+		return this.NMEAListeners;
+	}
+
+	public void startWorking() {
+		synchronized (this) {
+			synchronized (this.reader) {
+				this.reader.start();
+			}
+			synchronized (this.parser) {
+				this.parser.start();
+			}
+		}
+	}
+
+	public void stopDataRead() {
+		for (NMEAListener l : this.getListeners()) {
+			l.stopReading(new NMEAEvent(this));
+		}
+		// Remove listeners?
+		removeAllListeners();
+
+		try {
+			this.getReader().closeReader();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	/**
+	 * This one must be overwritten to customize the behavior of the client,
+	 * like the destination of the data.
+	 */
+	public abstract void dataDetectedEvent(NMEAEvent e);
 //  {
 //    System.out.println("Client received [" + e.getContent() + "] (length:" + parser.getNmeaStream().length() + ")");
 //  }
-  
-  public synchronized void addNMEAListener(NMEAListener l)
-  {
-    if (!NMEAListeners.contains(l))
-    {
-      NMEAListeners.add(l);
-    }
-  }
 
-  public synchronized void removeNMEAListener(NMEAListener l)
-  {
-    NMEAListeners.remove(l);
-  }
+	public synchronized void addNMEAListener(NMEAListener l) {
+		if (!NMEAListeners.contains(l)) {
+			NMEAListeners.add(l);
+		}
+	}
 
-  public synchronized void removeAllListeners() {
-    while (NMEAListeners.size() > 0) {
-      NMEAListeners.remove(0);
-    }
-  }
+	public synchronized void removeNMEAListener(NMEAListener l) {
+		NMEAListeners.remove(l);
+	}
+
+	public synchronized void removeAllListeners() {
+		while (NMEAListeners.size() > 0) {
+			NMEAListeners.remove(0);
+		}
+	}
+
+	public abstract Object getBean();
 }

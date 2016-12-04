@@ -9,8 +9,7 @@ import nmeaproviders.reader.FileReader;
 import nmeaproviders.reader.SerialReader;
 import nmeaproviders.reader.TCPReader;
 
-public class NMEAMultiplexer implements Multiplexer
-{
+public class NMEAMultiplexer implements Multiplexer {
 	@Override
 	public synchronized void onData(String mess) {
 		System.out.println(">> From MUX:" + mess);
@@ -27,17 +26,14 @@ public class NMEAMultiplexer implements Multiplexer
 	private static String serialPort = "/dev/tty.usbserial";
 	private static int serialBaudRate = 4800;
 
-	public NMEAMultiplexer()
-	{
+	public NMEAMultiplexer() {
 		tcpClient = new TCPClient(this);
 		fileClient = new DataFileClient(this);
 		serialClient = new SerialClient(this);
 
-		Runtime.getRuntime().addShutdownHook(new Thread()
-		{
-			public void run()
-			{
-				System.out.println ("Shutting down multiplexer nicely.");
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				System.out.println("Shutting down multiplexer nicely.");
 				tcpClient.stopDataRead();
 				fileClient.stopDataRead();
 				serialClient.stopDataRead();
@@ -61,6 +57,6 @@ public class NMEAMultiplexer implements Multiplexer
 	}
 
 	public static void main(String... args) {
-    new NMEAMultiplexer();
+		new NMEAMultiplexer();
 	}
 }

@@ -8,59 +8,50 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 
-public class WebSocketWriter implements Forwarder
-{
+public class WebSocketWriter implements Forwarder {
 	private WebSocketClient wsClient = null;
 	private boolean isConnected = false;
+	private String wsUri;
+
 	/**
-	 *
 	 * @param serverURL like ws://hostname:port/
 	 * @throws Exception
 	 */
-	public WebSocketWriter(String serverURL) throws Exception
-	{
-		try
-		{
-			wsClient = new WebSocketClient(new URI(serverURL))
-			{
+	public WebSocketWriter(String serverURL) throws Exception {
+		this.wsUri = serverURL;
+		try {
+			wsClient = new WebSocketClient(new URI(serverURL)) {
 				@Override
-				public void onOpen(ServerHandshake serverHandshake)
-				{
+				public void onOpen(ServerHandshake serverHandshake) {
 					System.out.println("WS On Open");
 					isConnected = true;
 				}
 
 				@Override
-				public void onMessage(String string)
-				{
+				public void onMessage(String string) {
 //        System.out.println("WS On Message");
 				}
 
 				@Override
-				public void onClose(int i, String string, boolean b)
-				{
+				public void onClose(int i, String string, boolean b) {
 					System.out.println("WS On Close");
 					isConnected = false;
 				}
 
 				@Override
-				public void onError(Exception exception)
-				{
+				public void onError(Exception exception) {
 					System.out.println("WS On Error");
 					exception.printStackTrace();
 				}
 			};
 			wsClient.connect();
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
 	@Override
-	public void write(byte[] message)
-	{
+	public void write(byte[] message) {
 		try {
 			String mess = new String(message);
 			if (!mess.isEmpty() && isConnected) {
@@ -72,12 +63,26 @@ public class WebSocketWriter implements Forwarder
 	}
 
 	@Override
-	public void close()
-	{
+	public void close() {
 		try {
 			this.wsClient.close();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+
+	private static class WSBean {
+		String cls;
+		String wsUri;
+
+		public WSBean(WebSocketWriter instance) {
+			cls = instance.getClass().getName();
+			wsUri = instance.wsUri;
+		}
+	}
+
+	@Override
+	public Object getBean() {
+		return new WSBean(this);
 	}
 }

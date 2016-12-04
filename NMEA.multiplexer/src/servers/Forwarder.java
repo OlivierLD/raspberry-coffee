@@ -1,7 +1,9 @@
 package servers;
 
-public interface Forwarder
-{
+public interface Forwarder {
 	void write(byte[] mess);
+
 	void close();
+
+	Object getBean();
 }

@@ -36,7 +36,20 @@ public class BME280Client extends NMEAClient
   }
 
   private static BME280Client nmeaClient = null;
-  
+
+  private static class BME280Bean {
+    String cls;
+
+    public BME280Bean(BME280Client instance) {
+      cls = instance.getClass().getName();
+    }
+  }
+
+  @Override
+  public Object getBean() {
+    return new BME280Bean(this);
+  }
+
   public static void main(String[] args)
   {
     System.out.println("BME280Client invoked with " + args.length + " Parameter(s).");

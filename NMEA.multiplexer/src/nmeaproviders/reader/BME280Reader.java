@@ -16,51 +16,51 @@ import java.util.List;
  */
 public class BME280Reader extends NMEAReader {
 
-  private BME280 bme280;
+	private BME280 bme280;
 
-  public BME280Reader(List<NMEAListener> al) {
-    super(al);
-    try {
-      this.bme280 = new BME280();
-    } catch (I2CFactory.UnsupportedBusNumberException e) {
-      e.printStackTrace();
-    }
-  }
+	public BME280Reader(List<NMEAListener> al) {
+		super(al);
+		try {
+			this.bme280 = new BME280();
+		} catch (I2CFactory.UnsupportedBusNumberException e) {
+			e.printStackTrace();
+		}
+	}
 
-  @Override
-  public void read() {
-    super.enableReading();
-    while (this.canRead()) {
-      // Read data every 1 second
-      try {
-        float humidity = bme280.readHumidity();
-        float temperature = bme280.readTemperature();
-        float pressure = bme280.readPressure();
-        // Generate NMEA String
-        String nmeaXDR = StringGenerator.generateXDR("RP", // TODO Make this a external parameter
-                new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
-                        humidity,
-                        "BME280"), // %, Humidity
-                new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
-                        temperature,
-                        "BME280"), // Celcius, Temperature
-                new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
-                        pressure,
-                        "BME280")); // Pascal, pressure
-        nmeaXDR += NMEAParser.getEOS();
-        fireDataRead(new NMEAEvent(this, nmeaXDR));
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-      try {
-        Thread.sleep(1000L); // TODO Make this a parameter
-      } catch (InterruptedException ie) {
-        ie.printStackTrace();
-      }
-    }
-  }
+	@Override
+	public void read() {
+		super.enableReading();
+		while (this.canRead()) {
+			// Read data every 1 second
+			try {
+				float humidity = bme280.readHumidity();
+				float temperature = bme280.readTemperature();
+				float pressure = bme280.readPressure();
+				// Generate NMEA String
+				String nmeaXDR = StringGenerator.generateXDR("RP", // TODO Make this a external parameter
+								new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
+												humidity,
+												"BME280"), // %, Humidity
+								new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
+												temperature,
+												"BME280"), // Celcius, Temperature
+								new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
+												pressure,
+												"BME280")); // Pascal, pressure
+				nmeaXDR += NMEAParser.getEOS();
+				fireDataRead(new NMEAEvent(this, nmeaXDR));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				Thread.sleep(1000L); // TODO Make this a parameter
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+			}
+		}
+	}
 
-  @Override
-  public void closeReader() throws Exception {
-  }
+	@Override
+	public void closeReader() throws Exception {
+	}
 }

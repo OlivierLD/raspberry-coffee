@@ -13,64 +13,59 @@ import java.util.List;
 /**
  * A Simulator, taking its inputs from a file
  */
-public class WebSocketReader extends NMEAReader
-{
-  private WebSocketClient wsClient = null;
-  private WebSocketReader instance = this;
+public class WebSocketReader extends NMEAReader {
+	private WebSocketClient wsClient = null;
+	private WebSocketReader instance = this;
+	private String wsUri;
 
-  public WebSocketReader(List<NMEAListener> al, String wsUri)
-  {
-    super(al);
-    try
-    {
-      this.wsClient = new WebSocketClient(new URI(wsUri))
-      {
-        @Override
-        public void onOpen(ServerHandshake serverHandshake)
-        {
-          System.out.println("WS On Open");
-        }
+	public WebSocketReader(List<NMEAListener> al, String wsUri) {
+		super(al);
+		this.wsUri = wsUri;
+		try {
+			this.wsClient = new WebSocketClient(new URI(wsUri)) {
+				@Override
+				public void onOpen(ServerHandshake serverHandshake) {
+					System.out.println("WS On Open");
+				}
 
-        @Override
-        public void onMessage(String mess)
-        {
+				@Override
+				public void onMessage(String mess) {
 //        System.out.println("WS On Message");
-          String s = mess + NMEAParser.getEOS();
-          NMEAEvent n = new NMEAEvent(this, s);
-          instance.fireDataRead(n);
-        }
+					String s = mess + NMEAParser.getEOS();
+					NMEAEvent n = new NMEAEvent(this, s);
+					instance.fireDataRead(n);
+				}
 
-        @Override
-        public void onClose(int i, String string, boolean b)
-        {
-          System.out.println("WS On Close");
-        }
+				@Override
+				public void onClose(int i, String string, boolean b) {
+					System.out.println("WS On Close");
+				}
 
-        @Override
-        public void onError(Exception exception)
-        {
-          System.out.println("WS On Error");
-          exception.printStackTrace();
-        }
-      };
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-    }
-  }
+				@Override
+				public void onError(Exception exception) {
+					System.out.println("WS On Error");
+					exception.printStackTrace();
+				}
+			};
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
-  @Override
-  public void read()
-  {
-    super.enableReading();
-    this.wsClient.connect();
-  }
+	@Override
+	public void read() {
+		super.enableReading();
+		this.wsClient.connect();
+	}
 
-  @Override
-  public void closeReader() throws Exception {
-    if (this.wsClient != null) {
-      this.wsClient.close();
-    }
-  }
+	public String getWsUri() {
+		return this.wsUri;
+	}
+
+	@Override
+	public void closeReader() throws Exception {
+		if (this.wsClient != null) {
+			this.wsClient.close();
+		}
+	}
 }
