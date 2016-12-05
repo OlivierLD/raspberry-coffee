@@ -49,6 +49,20 @@ public class BME280Reader extends NMEAReader {
 												"BME280")); // Pascal, pressure
 				nmeaXDR += NMEAParser.getEOS();
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
+
+				String nmeaMDA = StringGenerator.generateMDA("RP",
+								pressure / 100,
+								temperature,
+								-Double.MAX_VALUE,
+								humidity,
+								-Double.MAX_VALUE,
+								-Double.MAX_VALUE,
+								-Double.MAX_VALUE,
+								-Double.MAX_VALUE,
+								-Double.MAX_VALUE);
+				nmeaMDA += NMEAParser.getEOS();
+				fireDataRead(new NMEAEvent(this, nmeaMDA));
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
