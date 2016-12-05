@@ -214,7 +214,8 @@ identical to the elements returned by `GET /forwarders`.
  POST /channels
 ```
 
-There is a Web UI to deal with this REST Api.
+There is a Web UI using the REST resources above.
+
 On the HTTP Port, use a url like `http://machine-name:9999/web/admin.html`,
 where `machine-name` is the name of the machine where the multiplexer is running, and `9999` is the port defined in the properties.
 

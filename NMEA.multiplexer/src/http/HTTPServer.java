@@ -26,6 +26,15 @@ import http.utils.DumpUtil;
  * Delete channel, forwarder
  * <p>
  * GET, POST, DELETE - no PUT, no PATCH (for now)
+ * <br>
+ * Also serves as a regular HTTP server for static documents (in the /web directory).
+ * <br>
+ * Has two static resources:
+ * <ul>
+ *   <li>/exit</li>
+ *   <li>/test</li>
+ * </ul>
+ *
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
@@ -338,7 +347,7 @@ public class HTTPServer {
 		httpListenerThread.start();
 	}
 
-	private static String getContentType(String f) {
+	private static String getContentType(String f) { // TODO add more types
 		String contentType = "text/plain";
 		if (f.endsWith(".html"))
 			contentType = "text/html";
