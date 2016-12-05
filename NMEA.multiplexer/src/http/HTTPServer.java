@@ -1,5 +1,7 @@
 package http;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -290,6 +292,17 @@ public class HTTPServer {
 								response.setHeaders(responseHeaders);
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
+							} else if (path.startsWith("/web/")) { // Assume this is static content
+								Response response = new Response(request.getProtocol(), 200);
+								String content = readStaticContent("." + path);
+								Map<String, String> responseHeaders = new HashMap<>();
+								responseHeaders.put("Content-Type", getContentType(path));
+								responseHeaders.put("Content-Length", String.valueOf(content.length()));
+								responseHeaders.put("Access-Control-Allow-Origin", "*");
+								response.setHeaders(responseHeaders);
+								response.setPayload(content.getBytes());
+								sendResponse(response, out);
+
 							} else {
 								if (requestManager != null) {
 									Response response = requestManager.onRequest(request);
@@ -324,6 +337,34 @@ public class HTTPServer {
 			}
 		};
 		httpListenerThread.start();
+	}
+
+	private static String getContentType(String f) {
+		String contentType = "text/plain";
+		if (f.endsWith(".html"))
+			contentType = "text/html";
+		else if (f.endsWith(".js"))
+			contentType = "text/javascript";
+		else if (f.endsWith(".css"))
+			contentType = "text/css";
+		return contentType;
+	}
+
+	private String readStaticContent(String path) {
+		String content = null;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(path));
+			String line = "";
+			StringBuffer sb = new StringBuffer();
+			while ((line = br.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			br.close();
+			content = sb.toString();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		return content;
 	}
 
 	private void sendResponse(Response response, PrintWriter out) {

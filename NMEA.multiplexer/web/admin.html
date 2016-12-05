@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NMEA Multiplexer Admin</title>
+    <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="js/restskill.js"></script>
+    <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+    <script type="text/javascript">
+        var channelSelectManager = function() {
+            var x = document.getElementById("channel-select").value;
+            manageChannelSelection(x);
+        };
+
+        var forwardSelectManager = function() {
+            var x = document.getElementById("forwarder-select").value;
+            manageForwardSelection(x);
+        };
+
+        var manageChannelSelection = function(selected) {
+            switch (selected) {
+                case 'serial':
+                    $("#channel-serial").css('display', 'inline');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'none');
+                    break;
+                case 'tcp':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'inline');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'none');
+                    break;
+                case 'file':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'inline');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'none');
+                    break;
+                case 'ws':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'inline');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'none');
+                    break;
+                case 'rnd':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'inline');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'none');
+                    break;
+                case 'bme280':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bme280").css('display', 'inline');
+                    $("#channel-htu21df").css('display', 'none');
+                    break;
+                case 'htu21df':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'inline');
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        var manageForwardSelection = function(selected) {
+            switch (selected) {
+                case 'tcp':
+                    $("#forward-tcp").css('display', 'inline');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'none');
+                    break;
+                case 'file':
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-file").css('display', 'inline');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'none');
+                    break;
+                case 'ws':
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'inline');
+                    $("#forward-console").css('display', 'none');
+                    break;
+                case 'console':
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'inline');
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        var requestChannelCreation = function() {
+            var x = document.getElementById("channel-select").value;
+            switch (x) {
+                case 'serial':
+                    var portName = $("#serial-port").val();
+                    var br = document.getElementById("baud-rate").value;
+                    createChannel({
+                        type: 'serial',
+                        port: portName,
+                        br: br
+                    });
+                    break;
+                case 'tcp':
+                    var port = $("#tcp-port").val();
+                    var server = $("#tcp-server").val();
+                    createChannel({
+                        type: 'tcp',
+                        port: port,
+                        hostname: server
+                    });
+                    break;
+                case 'file':
+                    var logfile = $("#data-file").val();
+                    createChannel({
+                        type: 'file',
+                        file: logfile
+                    });
+                    break;
+                case 'ws':
+                    var uri = $("#wsuri").val();
+                    createChannel({
+                        type: 'ws',
+                        wsUri: uri
+                    });
+                    break;
+                case 'rnd':
+                    createChannel({
+                        type: 'rnd'
+                    });
+                    break;
+                case 'bme280':
+                    createChannel({
+                        type: 'bme280'
+                    });
+                    break;
+                case 'htu21df':
+                    createChannel({
+                        type: 'htu21df'
+                    });
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        var requestForwardCreation = function() {
+            var x = document.getElementById("forwarder-select").value;
+            switch (x) {
+                case 'tcp':
+                    var port = $("#fwd-tcp-port").val();
+                    createForwarder({
+                        type: 'tcp',
+                        port: port
+                    });
+                    break;
+                case 'file':
+                    var logfile = $("#fwd-data-file").val();
+                    createForwarder({
+                        type: 'file',
+                        file: logfile
+                    });
+                    break;
+                case 'ws':
+                    var uri = $("#fwd-wsuri").val();
+                    createForwarder({
+                        type: 'ws',
+                        wsUri: uri
+                    });
+                    break;
+                case 'console':
+                    createForwarder({
+                        type: 'console'
+                    });
+                    break;
+                default:
+                    break;
+            }
+        };
+    </script>
+  </head>
+  <body>
+    <h2>NMEA Multiplexer Admin</h2>
+    <small>JQuery, Ajax, REST, JSON..., Multiplexer Admin.</small>
+
+    <p>
+      <button onclick="serialPortList();">Fetch Serial Ports list</button>
+      <button onclick="channelList();">Fetch Channels list</button>
+      <button onclick="forwarderList();">Fetch Forwarders list</button>
+
+      <div id="lists" style="padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 80px;"></div>
+    </p>
+    <p>
+      <button onclick="showAddChannel();">Add a Channel</button>&nbsp;<button onclick="showAddForwarder();">Add a Forwarder</button>
+      <div id="add-channel" style="display: none;">
+        <h4>Add a Channel</h4>
+        <table>
+          <tr>
+            <td valign="top">
+              <select id="channel-select" onchange="channelSelectManager();">
+                <option value="serial">Serial</option>
+                <option value="tcp">TCP</option>
+                <option value="file">Data File</option>
+                <option value="ws">Web Socket</option>
+                <option value="rnd">Random</option>
+                <option value="bme280">BME280</option>
+                <option value="htu21df">HTU21DF</option>
+              </select>
+            </td>
+            <td valign="top">
+              <div id="channel-serial" style="display: inline;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="serial-port" type="text" placeholder="Serial Port Name" size="20"></td>
+                  </tr>
+                  <tr>
+                    <td>Baud Rate</td>
+                    <td>
+                      <select id="baud-rate">
+                        <option value="1200">1200</option>
+                        <option value="2400">2400</option>
+                        <option value="4800">4800</option>
+                        <option value="9600">9600</option>
+                        <option value="19200">19200</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-tcp" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Server</td>
+                    <td><input id="tcp-server" type="text" placeholder="Server Name" size="20"></td>
+                  </tr>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="tcp-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-file" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Data File</td>
+                    <td><input id="data-file" type="text" placeholder="Log File" size="30"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-ws" style="display: none;">
+                <table>
+                  <tr>
+                    <td>WebSocket URI</td>
+                    <td><input id="wsuri" type="text" placeholder="ws://machine-name:9876/" size="30"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-rnd" style="display: none;">
+                <i>No Parameters</i>
+              </div>
+              <div id="channel-bme280" style="display: none;">
+                <i>No Parameters</i>
+              </div>
+              <div id="channel-htu21df" style="display: none;">
+                <i>No Parameters</i>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <button onclick="requestChannelCreation();">Create</button>
+      </div>
+      <div id="add-forwarder" style="display: none;">
+        <h4>Add a forwarder</h4>
+        <table>
+          <tr>
+            <td valign="top">
+              <select id="forwarder-select" onchange="forwardSelectManager();">
+                <option value="tcp">TCP</option>
+                <option value="file">Data File</option>
+                <option value="ws">Web Socket</option>
+                <option value="console">Console</option>
+              </select>
+            </td>
+            <td valign="top">
+              <div id="forward-tcp" style="display: inline;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="fwd-tcp-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-file" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Data File</td>
+                    <td><input id="fwd-data-file" type="text" placeholder="Log File" size="30"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-ws" style="display: none;">
+                <table>
+                  <tr>
+                    <td>WebSocket URI</td>
+                    <td><input id="fwd-wsuri" type="text" placeholder="ws://machine-name:9876/" size="30"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-console" style="display: none;">
+                <i>No Parameters</i>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <button onclick="requestForwardCreation();">Create</button>
+      </div>
+    </p>
+    <hr/>
+    <address>Oliv fecit, AD 2016.</address>
+  </body>
+</html>
