@@ -215,7 +215,7 @@ identical to the elements returned by `GET /forwarders`.
 ```
 
 There is a Web UI to deal with this REST Api.
-On the HTTP POrt, use a url like `http://machine-name:9999/web/admin.html`,
+On the HTTP Port, use a url like `http://machine-name:9999/web/admin.html`,
 where `machine-name` is the name of the machine where the multiplexer is running, and `9999` is the port defined in the properties.
 
 ![Admin Web UI](./AdminSnapshot.png "Admin GUI")
