@@ -37,20 +37,21 @@ public class BME280Reader extends NMEAReader {
 				float temperature = bme280.readTemperature();
 				float pressure = bme280.readPressure();
 				// Generate NMEA String
+				int deviceIdx = 0; // Instead of "BME280"...
 				String nmeaXDR = StringGenerator.generateXDR("RP", // TODO Make this a external parameter
 								new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
 												humidity,
-												"BME280"), // %, Humidity
+												String.valueOf(deviceIdx++)), // %, Humidity
 								new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
 												temperature,
-												"BME280"), // Celcius, Temperature
+												String.valueOf(deviceIdx++)), // Celcius, Temperature
 								new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
 												pressure,
-												"BME280")); // Pascal, pressure
+												String.valueOf(deviceIdx++))); // Pascal, pressure
 				nmeaXDR += NMEAParser.getEOS();
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
 
-				String nmeaMDA = StringGenerator.generateMDA("RP",
+				String nmeaMDA = StringGenerator.generateMDA("RP", // TODO Make this a external parameter
 								pressure / 100,
 								temperature,
 								-Double.MAX_VALUE,
