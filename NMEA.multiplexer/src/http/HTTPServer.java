@@ -292,7 +292,7 @@ public class HTTPServer {
 								response.setHeaders(responseHeaders);
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
-							} else if (path.startsWith("/web/")) { // Assume this is static content
+							} else if (path.startsWith("/web/")) {                                    // Assume this is static content. TODO Tweak that.
 								Response response = new Response(request.getProtocol(), 200);
 								String content = readStaticContent("." + path);
 								Map<String, String> responseHeaders = new HashMap<>();
@@ -302,14 +302,13 @@ public class HTTPServer {
 								response.setHeaders(responseHeaders);
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
-
 							} else {
 								if (requestManager != null) {
-									Response response = requestManager.onRequest(request);
+									Response response = requestManager.onRequest(request); // REST Request, most likely.
 									sendResponse(response, out);
 								}
 							}
-						} else {
+						} else { // TODO See when this happens...
 							System.out.println("What?");
 							System.out.println(String.format("line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
 						}

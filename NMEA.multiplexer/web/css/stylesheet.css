@@ -67,10 +67,11 @@ p
   font-weight: normal; 
   font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
 }
-td 
+td, th
 { 
-  font-size: 10pt; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-size: 10pt;
+  font-weight: normal;
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular
 }
 small 
 { 

@@ -211,36 +211,38 @@ var channelList = function() {
     getData.done(function(value) {
         console.log("Done:", value);
         var json = JSON.parse(value);
-        var html = "<ul>";
+        var html = "<h5>Reads from</h5>" +
+            "<table>";
+        html += "<tr><th>Type</th><th>Parameters</th></tr>"
         for (var i=0; i<json.length; i++) {
           var type = json[i].type;
           switch (type) {
               case 'file':
-                html += ("<li><b>file</b>: " + json[i].file + " <small><a href='' onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                html += ("<tr><td><b>file</b></td><td>" + json[i].file + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                 break;
               case 'serial':
-                  html += ("<li><b>serial</b>: " + json[i].port + ":" + json[i].br + " <small><a href='' onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                  html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'tcp':
-                  html += ("<li><b>tcp</b>: Port " + json[i].port + " <small><a href='' onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                  html += ("<tr><td><b>tcp</b></td><td> Port " + json[i].port + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'ws':
-                  html += ("<li><b>ws</b>: " + json[i].wsUri + " <small><a href='' onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                  html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'rnd':
-                  html += ("<li><b>rnd</b> <small><a href='' onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                  html += ("<tr><td><b>rnd</b></td><td></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'bme280':
-                  html += ("<li><b>bme280</b> <small><a href='' onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                  html += ("<tr><td><b>bme280</b></td><td></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'htu21df':
-                  html += ("<li><b>htu21df</b> <small><a href='' onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                  html += ("<tr><td><b>htu21df</b></td><td></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               default:
                 break;
           }
         }
-        html += "</ul>";
+        html += "</table>";
         $("#lists").html(html);
     });
     getData.fail(function(error) {
@@ -253,30 +255,32 @@ var forwarderList = function() {
     getData.done(function(value) {
         console.log("Done:", value);
         var json = JSON.parse(value);
-        var html = "<ul>";
+        var html = "<h5>Writes to</h5>" +
+            "<table>";
+        html += "<tr><th>Type</th><th>Parameters</th></tr>"
         for (var i=0; i<json.length; i++) {
             var type = json[i].type;
             switch (type) {
                 case 'file':
-                    html += ("<li><b>file</b>: " + json[i].log + " <small><a href='' onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                    html += ("<tr><td><b>file</b></td><td>" + json[i].log + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'serial':
-                    html += ("<li><b>serial</b>: " + json[i].port + ":" + json[i].br + " <small><a href='' onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                    html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'tcp':
-                    html += ("<li><b>tcp</b>: Port " + json[i].port + " <small><a href='' onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                    html += ("<tr><td><b>tcp</b></td><td>Port " + json[i].port + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'ws':
-                    html += ("<li><b>ws</b>: " + json[i].wsUri + " <small><a href='' onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                    html += ("<tr><td><b>ws</b></td><td>" + json[i].wsUri + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'console':
-                    html += ("<li><b>console</b> <small><a href='' onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>Delete</a></small></li>");
+                    html += ("<tr><td><b>console</b></td><td></td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 default:
                     break;
             }
         }
-        html += "</ul>";
+        html += "</table>";
         $("#lists").html(html);
     });
     getData.fail(function(error) {
@@ -308,6 +312,7 @@ var removeChannel = function(channel) {
     var deleteData = deleteChannel(channel);
     deleteData.done(function(value) {
         console.log("Done:", value);
+        channelList(); // refetch
     });
     deleteData.fail(function(error) {
         alert("Failed to delete channel..." + (error !== undefined ? error : ''));
@@ -318,6 +323,7 @@ var removeForwarder = function(channel) {
     var deleteData = deleteForwarder(channel);
     deleteData.done(function(value) {
         console.log("Done:", value);
+        forwarderList(); // refetch
     });
     deleteData.fail(function(error) {
         alert("Failed to delete channel..." + (error !== undefined ? error : ''));
