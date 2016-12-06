@@ -18,7 +18,6 @@ Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any o
 - UDP client
 
 ## TODO
-- verbose options
 - computer (calculate data from other ones: current, true wind)
 - 3D compas (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
 
@@ -42,6 +41,48 @@ rolling        | "A" angle       |-180..0 L         0..180 R       | "D" degrees
 water temp     | "C" temperature |   2 decimals                    | "C" celsius     | "ENV_WATER_T"
 -----------------------------------------------------------------------------------------------------
 ```
+### Some definitions
+At the center of the picture, there is the Multiplexer (aka MUX).
+
+The MUX _reads_ from `channels` and _writes_ to `forwarders`.
+
+A _channel_ is an NMEA data provider, a _forwarder_ is an NMEA data producer.
+
+In addition, we can have _sensors_. A _sensor_ is reading data from a transducer, and produces NMEA sentences read by the Mux. In other words, a _sensor_ is talking to the Multiplexer,
+and can be seen as a _channel_.
+
+Also, a _computer_ is using NMEA data collected by the Multiplexer to produce other NMEA Data that will be broadcasted by the _forwarders_.
+For example, True Wind computed with Apparent Wind data and the GPS data.
+
+Finally, we have _tranformers_, that transform NMEA data into another format, and then behace like a a regular _forwarder_ to provide them to whoever is interested.
+ A _transformer_ is also a _forwarder_.
+
+##### Examples
+Channels:
+- **Serial** reads NMEA data from a Serial Port  
+- **TCP** reads NMEA data from a TCP server
+- **WebSocket** reads NMEA data from a WebSocket server (this is a WebSocket client)
+- **File** reads NMEA data from a log file
+- etc
+
+Forwarders:
+- **Serial** writes NMEA data to a Serial Port (not implemented yet)
+- **TCP** writes NMEA data to a TCP port
+- **WebSocket** writes NMEA data to a WebSocket server (this is _also_ a WebSocket client)
+- **File** write NMEA data to a log file
+- etc
+
+Sensors:
+- **BME280** reads raw data from a BME280 sensor (Temperature, Pressure, Humidity), and produces `XDR` and `MDA` NMEA Sentences.
+- **LSM303** reads raw data from a LSM303 sensor (3D magnetometer), and produces `XDR` NMEA Sentences.
+
+Computers:
+- **True Wind** computer (produces `MDA`, `MWD` data)
+- **Current** computer (produces `VDR` data)
+
+Transformers:
+- **GPSD** data
+- **Custom** data
 
 ### To see it at work
 See the class `nmeaproviders.client.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
