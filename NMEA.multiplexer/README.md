@@ -51,10 +51,10 @@ A _channel_ is an NMEA data provider, a _forwarder_ is an NMEA data producer.
 In addition, we can have _sensors_. A _sensor_ is reading data from a transducer, and produces NMEA sentences read by the Mux. In other words, a _sensor_ is talking to the Multiplexer,
 and can be seen as a _channel_.
 
-Also, a _computer_ is using NMEA data collected by the Multiplexer to produce other NMEA Data that will be broadcasted by the _forwarders_.
+Also, a _computer_ is using NMEA data collected by the Multiplexer to produce other NMEA data that will be broadcasted by the _forwarders_.
 For example, True Wind computed with Apparent Wind data and the GPS data.
 
-Finally, we have _tranformers_, that transform NMEA data into another format, and then behace like a a regular _forwarder_ to provide them to whoever is interested.
+Finally, we have _tranformers_, that transform NMEA data into another format, and then behave like a a regular _forwarder_ to provide them to whoever is interested.
  A _transformer_ is also a _forwarder_.
 
 ##### Examples
@@ -247,6 +247,26 @@ identical to the elements returned by `GET /forwarders`.
 
 ``` 
  POST /channels
+```
+
+```java
+public abstract class Wind implements Serializable
+{
+  public double speed = 0.0;
+  public int    angle = 0;
+
+  public Wind(int a,
+              double s)
+  {
+    this.speed = s;
+    this.angle = a;
+  }
+  
+  public String toString()
+  {
+    return Double.toString(speed) + " kts, " + Integer.toString(angle) + " deg.";
+  }
+}
 ```
 
 There is a Web UI using the REST resources above.
