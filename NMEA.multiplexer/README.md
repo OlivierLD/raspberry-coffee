@@ -140,9 +140,8 @@ returns a payload like
 ```
 `type` is one of
 - `file`. requires a body like 
- ```text
+ ```
 { 
-    "cls": "servers.DataFileWriter",
     "log": "./data.nmea",
     "type": "file"
 }
@@ -150,18 +149,16 @@ returns a payload like
 identical to the elements returned by `GET /forwarders`.
 - `console`. requires no body.
 - `tcp`. requires a body like 
-```text
+```
 {
-     "cls": "servers.TCPWriter",
      "port": 7002,
      "type": "tcp"
 }
 ```
 identical to the elements returned by `GET /forwarders`.
 - `ws`. requires a body like 
-```text
+```
 {
-   "cls": "servers.WebSocketWriter",
    "wsUri": "ws://localhost:9876/",
    "type": "ws"
 }
@@ -171,39 +168,36 @@ identical to the elements returned by `GET /forwarders`.
 ``` 
  DELETE /channels/:type
 ```
+
 ``` 
  POST /forwarders
 ```
 with payloads like:
 - `file`. requires a body like 
- ```text
+ ```
 { 
-    "cls": "servers.DataFileWriter",
     "log": "./data.nmea",
     "type": "file"
 }
 ```
 identical to the elements returned by `GET /forwarders`.
 - `console`. requires a body like 
-```text
+```
 { 
-     "cls": "servers.ConsoleWriter",
      "type": "console"
 }
 ```
 - `tcp`. requires a body like 
-```text
+```
 {
-     "cls": "servers.TCPWriter",
      "port": 7002,
      "type": "tcp"
 }
 ```
 identical to the elements returned by `GET /forwarders`.
 - `ws`. requires a body like 
-```text
+```
 {
-   "cls": "servers.WebSocketWriter",
    "wsUri": "ws://localhost:9876/",
    "type": "ws"
 }

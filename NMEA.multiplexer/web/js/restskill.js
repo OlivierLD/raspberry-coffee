@@ -224,7 +224,7 @@ var channelList = function() {
                   html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'tcp':
-                  html += ("<tr><td><b>tcp</b></td><td> Port " + json[i].port + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>tcp</b></td><td>" + json[i].hostname + ":" + json[i].port + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'ws':
                   html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
@@ -292,6 +292,7 @@ var createChannel = function(channel) {
   var postData = addChannel(channel);
     postData.done(function(value) {
         console.log("Done:", value);
+        channelList(); // refetch
     });
     postData.fail(function(error) {
         alert("Failed to create channel..." + (error !== undefined ? error : ''));
@@ -302,6 +303,7 @@ var createForwarder = function(channel) {
     var postData = addForwarder(channel);
     postData.done(function(value) {
         console.log("Done:", value);
+        forwarderList(); // refetch
     });
     postData.fail(function(error) {
         alert("Failed to create channel..." + (error !== undefined ? error : ''));
