@@ -35,6 +35,10 @@ import http.utils.DumpUtil;
  *   <li>/test</li>
  * </ul>
  *
+ * Query parameter 'verbose' will turn verbose on or off.
+ * To turn it on: give verbose no value, or 'on', 'true', 'yes' (non case sensitive).
+ * To turn it off: any othe value.
+ *
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
@@ -48,12 +52,25 @@ public class HTTPServer {
 		private byte[] content;
 		private Map<String, String> headers;
 
+		private Map<String, String> queryStringParameters;
+
 		public Request() {
 		}
 
 		public Request(String verb, String path, String protocol) {
 			this.verb = verb;
-			this.path = path;
+			String[] pathAndQuesryString = path.split("\\?");
+			this.path = pathAndQuesryString[0];
+			if (pathAndQuesryString.length > 1) {
+				String[] nvPairs = pathAndQuesryString[1].split("&");
+				Arrays.asList(nvPairs).stream().forEach(nv -> {
+					if (queryStringParameters == null) {
+						queryStringParameters = new HashMap<>();
+					}
+					String[] nameValue = nv.split("=");
+					queryStringParameters.put(nameValue[0], (nameValue.length > 1 ? nameValue[1] : null));
+				});
+			}
 			this.protocol = protocol;
 		}
 
@@ -79,6 +96,10 @@ public class HTTPServer {
 
 		public Map<String, String> getHeaders() {
 			return headers;
+		}
+
+		public Map<String, String> getQueryStringParameters() {
+			return queryStringParameters;
 		}
 
 		public void setHeaders(Map<String, String> headers) {
@@ -175,9 +196,7 @@ public class HTTPServer {
 						PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
 						Request request = null;
 						String line = "";
-
 						boolean top = true;
-
 						Map<String, String> headers = new HashMap<>();
 //					while ((line = in.readLine()) != null)
 						int read = 0;
@@ -193,7 +212,6 @@ public class HTTPServer {
 								try {
 									Thread.sleep(100L);
 								} catch (InterruptedException ie) {
-
 								}
 								top = false;
 							}
@@ -276,6 +294,11 @@ public class HTTPServer {
 						if (request != null) {
 							String path = request.getPath();
 
+							if (request.getQueryStringParameters() != null && request.getQueryStringParameters().keySet().contains("verbose")) {
+								String verb = request.getQueryStringParameters().get("verbose");
+								verbose = (verb == null || verb.toUpperCase().equals("YES") || verb.toUpperCase().equals("TRUE") || verb.toUpperCase().equals("ON"));
+							}
+
 							if ("/exit".equals(path)) {
 								System.out.println("Received an exit signal");
 								Response response = new Response(request.getProtocol(), 200);
@@ -317,9 +340,12 @@ public class HTTPServer {
 									sendResponse(response, out);
 								}
 							}
-						} else { // TODO See when this happens...
-							System.out.println("What?");
-							System.out.println(String.format("line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
+						} else {
+							if (line != null && line.length() != 0) {
+								System.out.println(">>>>>>>>>> What?"); // TODO See when/why this happens...
+								System.out.println(">>>>>>>>>> Last line was [" + line + "]");
+								System.out.println(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
+							}
 						}
 						out.flush();
 						out.close();

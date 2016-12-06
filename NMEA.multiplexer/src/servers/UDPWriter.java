@@ -54,6 +54,7 @@ public class UDPWriter implements Forwarder {
 
 	@Override
 	public void close() {
+		System.out.println("- Stop writing to " + this.getClass().getName());
 	}
 
 	public static class UDPBean {

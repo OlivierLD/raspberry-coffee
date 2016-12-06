@@ -31,6 +31,7 @@ public class DataFileWriter implements Forwarder {
 
 	@Override
 	public void close() {
+		System.out.println("- Stop writing to " + this.getClass().getName());
 		try {
 			this.dataFile.close();
 		} catch (Exception ex) {
