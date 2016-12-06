@@ -249,26 +249,6 @@ identical to the elements returned by `GET /forwarders`.
  POST /channels
 ```
 
-```java
-public abstract class Wind implements Serializable
-{
-  public double speed = 0.0;
-  public int    angle = 0;
-
-  public Wind(int a,
-              double s)
-  {
-    this.speed = s;
-    this.angle = a;
-  }
-  
-  public String toString()
-  {
-    return Double.toString(speed) + " kts, " + Integer.toString(angle) + " deg.";
-  }
-}
-```
-
 There is a Web UI using the REST resources above.
 
 On the HTTP Port, use a url like `http://machine-name:9999/web/admin.html`,
