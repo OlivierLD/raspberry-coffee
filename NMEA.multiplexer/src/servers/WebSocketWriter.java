@@ -68,6 +68,7 @@ public class WebSocketWriter implements Forwarder {
 
 	@Override
 	public void close() {
+		System.out.println("- Stop writing to " + this.getClass().getName());
 		try {
 			this.wsClient.close();
 		} catch (Exception ex) {

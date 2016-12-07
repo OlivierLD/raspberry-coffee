@@ -77,6 +77,7 @@ public class TCPWriter implements Forwarder {
 
 	@Override
 	public void close() {
+		System.out.println("- Stop writing to " + this.getClass().getName());
 		try {
 			for (Socket tcpSocket : clientSocketlist)
 				tcpSocket.close();

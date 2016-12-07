@@ -27,7 +27,7 @@ public abstract class NMEAReader extends Thread {
 		NMEAListeners = al;
 		this.addNMEAListener(new NMEAListener() {
 			public void stopReading(NMEAEvent e) {
-				System.out.println(instance.getClass().getName() + ": Stop reading");
+				System.out.println("- Stop reading " + instance.getClass().getName());
 				goRead = false;
 			}
 		});

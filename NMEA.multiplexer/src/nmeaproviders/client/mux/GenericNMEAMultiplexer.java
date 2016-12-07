@@ -49,6 +49,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 	// TODO Operation List
 
+	/**
+	 * Implements the management of the REST requests.
+	 *
+	 * @param request
+	 * @return
+	 */
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 400); // Default, not found

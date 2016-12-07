@@ -14,7 +14,7 @@ public class ConsoleWriter implements Forwarder {
 
 	@Override
 	public void close() {
-		System.out.println("Bye!");
+		System.out.println("- Stop writing to the console. (" + this.getClass().getName() + ")");
 	}
 
 	private static class ConsoleBean {
