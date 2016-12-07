@@ -34,6 +34,8 @@ public abstract class NMEAClient {
 	private String[] sentenceArray = null;
 	private String NMEA_EOS = null;
 
+	protected boolean verbose = false;
+
 	public NMEAClient() {
 		this(null, null, null);
 	}
@@ -158,9 +160,6 @@ public abstract class NMEAClient {
 	 * like the destination of the data.
 	 */
 	public abstract void dataDetectedEvent(NMEAEvent e);
-//  {
-//    System.out.println("Client received [" + e.getContent() + "] (length:" + parser.getNmeaStream().length() + ")");
-//  }
 
 	public synchronized void addNMEAListener(NMEAListener l) {
 		if (!NMEAListeners.contains(l)) {
@@ -179,4 +178,6 @@ public abstract class NMEAClient {
 	}
 
 	public abstract Object getBean();
+	public abstract boolean isVerbose();
+	public abstract void setVerbose(boolean b);
 }

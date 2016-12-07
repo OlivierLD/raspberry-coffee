@@ -11,19 +11,22 @@ import nmeaproviders.reader.HTU21DFReader;
 public class HTU21DFClient extends NMEAClient {
 	public HTU21DFClient() {
 		super(null, null, null);
+		this.verbose = "true".equals(System.getProperty("htu21df.data.verbose", "false"));
 	}
 
 	public HTU21DFClient(Multiplexer mux) {
 		super(mux);
+		this.verbose = "true".equals(System.getProperty("htu21df.data.verbose", "false"));
 	}
 
 	public HTU21DFClient(String s, String[] sa) {
 		super(s, sa, null);
+		this.verbose = "true".equals(System.getProperty("htu21df.data.verbose", "false"));
 	}
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if ("true".equals(System.getProperty("htu21df.data.verbose", "false")))
+		if (verbose)
 			System.out.println("Received from HTU21DF:" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
@@ -39,8 +42,11 @@ public class HTU21DFClient extends NMEAClient {
 		public HTU21DFBean(HTU21DFClient instance) {
 			cls = instance.getClass().getName();
 		}
+
 		@Override
-		public String getType() { return this.type; }
+		public String getType() {
+			return this.type;
+		}
 	}
 
 	@Override
@@ -66,5 +72,15 @@ public class HTU21DFClient extends NMEAClient {
 		nmeaClient.initClient();
 		nmeaClient.setReader(new HTU21DFReader(nmeaClient.getListeners()));
 		nmeaClient.startWorking();
+	}
+
+	@Override
+	public boolean isVerbose() {
+		return this.verbose;
+	}
+
+	@Override
+	public void setVerbose(boolean b) {
+		this.verbose = b;
 	}
 }

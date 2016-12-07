@@ -532,6 +532,9 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					}
 				}
 				break;
+			case "PUT": // Update on channels: verbose on/off
+				break;
+			case "PATCH":
 			default:
 				break;
 		}

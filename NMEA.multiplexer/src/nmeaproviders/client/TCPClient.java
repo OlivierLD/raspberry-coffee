@@ -11,19 +11,22 @@ import nmeaproviders.reader.TCPReader;
 public class TCPClient extends NMEAClient {
 	public TCPClient() {
 		super();
+		this.verbose = "true".equals(System.getProperty("tcp.data.verbose", "false"));
 	}
 
 	public TCPClient(Multiplexer mux) {
 		super(mux);
+		this.verbose = "true".equals(System.getProperty("tcp.data.verbose", "false"));
 	}
 
 	public TCPClient(String s, String[] sa) {
 		super(s, sa);
+		this.verbose = "true".equals(System.getProperty("tcp.data.verbose", "false"));
 	}
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if ("true".equals(System.getProperty("tcp.data.verbose", "false")))
+		if (verbose)
 			System.out.println("Received from TCP :" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
@@ -45,7 +48,9 @@ public class TCPClient extends NMEAClient {
 		}
 
 		@Override
-		public String getType() { return this.type; }
+		public String getType() {
+			return this.type;
+		}
 
 		public int getPort() {
 			return port;
@@ -80,5 +85,15 @@ public class TCPClient extends NMEAClient {
 		nmeaClient.initClient();
 		nmeaClient.setReader(new TCPReader(nmeaClient.getListeners(), serverName, 7001));
 		nmeaClient.startWorking();
+	}
+
+	@Override
+	public boolean isVerbose() {
+		return this.verbose;
+	}
+
+	@Override
+	public void setVerbose(boolean b) {
+		this.verbose = b;
 	}
 }

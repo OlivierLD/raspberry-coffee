@@ -62,4 +62,14 @@ public class CustomDataFileToTCPClient extends NMEAClient {
 		customClient.setReader(new DataFileReader(customClient.getListeners(), dataFile));
 		customClient.startWorking();
 	}
+
+	@Override
+	public boolean isVerbose() {
+		return this.verbose;
+	}
+
+	@Override
+	public void setVerbose(boolean b) {
+		this.verbose = b;
+	}
 }
