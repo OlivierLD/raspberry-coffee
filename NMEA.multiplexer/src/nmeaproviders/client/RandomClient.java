@@ -35,17 +35,24 @@ public class RandomClient extends NMEAClient {
 
 	private static RandomClient nmeaClient = null;
 
-	private static class RandomBean implements ClientBean {
+	public static class RandomBean implements ClientBean {
 		String cls;
 		String type = "rnd";
+		boolean verbose;
 
 		public RandomBean(RandomClient instance) {
 			cls = instance.getClass().getName();
+			verbose = instance.isVerbose();
 		}
 
 		@Override
 		public String getType() {
 			return this.type;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
 		}
 	}
 

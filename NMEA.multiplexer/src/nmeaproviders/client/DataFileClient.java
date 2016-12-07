@@ -27,7 +27,7 @@ public class DataFileClient extends NMEAClient {
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
 		if (verbose)
-			System.out.println("Received from File:" + e.getContent());
+			System.out.println(">> DataFileClient >> Received from File:" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}
@@ -39,10 +39,12 @@ public class DataFileClient extends NMEAClient {
 		String cls;
 		String file;
 		String type = "file";
+		boolean verbose;
 
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();
 			file = ((DataFileReader) instance.getReader()).getFileNme();
+			verbose = instance.isVerbose();
 		}
 
 		@Override
@@ -52,6 +54,11 @@ public class DataFileClient extends NMEAClient {
 
 		public String getFile() {
 			return file;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
 		}
 	}
 

@@ -40,11 +40,13 @@ public class TCPClient extends NMEAClient {
 		String type = "tcp";
 		int port;
 		String hostname;
+		boolean verbose;
 
 		public TCPBean(TCPClient instance) {
 			cls = instance.getClass().getName();
 			port = ((TCPReader) instance.getReader()).getPort();
 			hostname = ((TCPReader) instance.getReader()).getHostname();
+			verbose = instance.isVerbose();
 		}
 
 		@Override
@@ -58,6 +60,11 @@ public class TCPClient extends NMEAClient {
 
 		public String getHostname() {
 			return this.hostname;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
 		}
 	}
 

@@ -40,11 +40,13 @@ public class SerialClient extends NMEAClient {
 		String type = "serial";
 		String port;
 		int br;
+		boolean verbose;
 
 		public SerialBean(SerialClient instance) {
 			cls = instance.getClass().getName();
 			port = ((SerialReader) instance.getReader()).getPort();
 			br = ((SerialReader) instance.getReader()).getBr();
+			verbose = instance.isVerbose();
 		}
 
 		@Override
@@ -58,6 +60,11 @@ public class SerialClient extends NMEAClient {
 
 		public int getBr() {
 			return br;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
 		}
 	}
 

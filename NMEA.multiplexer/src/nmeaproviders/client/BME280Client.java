@@ -39,14 +39,21 @@ public class BME280Client extends NMEAClient {
 	public static class BME280Bean implements ClientBean {
 		String cls;
 		String type = "bme280";
+		boolean verbose;
 
 		public BME280Bean(BME280Client instance) {
 			cls = instance.getClass().getName();
+			verbose = instance.isVerbose();
 		}
 
 		@Override
 		public String getType() {
 			return this.type;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
 		}
 	}
 

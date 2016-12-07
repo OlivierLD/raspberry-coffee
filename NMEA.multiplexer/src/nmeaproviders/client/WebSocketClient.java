@@ -39,14 +39,21 @@ public class WebSocketClient extends NMEAClient {
 		String cls;
 		String type = "ws";
 		String wsUri;
+		boolean verbose;
 
 		public WSBean(WebSocketClient instance) {
 			cls = instance.getClass().getName();
 			wsUri = ((WebSocketReader) instance.getReader()).getWsUri();
+			verbose = instance.isVerbose();
 		}
 
 		@Override
 		public String getType() { return this.type; }
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
+		}
 
 		public String getWsUri() {
 			return wsUri;
