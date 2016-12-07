@@ -42,20 +42,37 @@ public class TCPWriter implements Forwarder {
 	public void write(byte[] message) {
 		synchronized (clientSocketlist) {
 			List<Socket> toRemove = new ArrayList<Socket>();
-			for (Socket tcpSocket : clientSocketlist) {
-				try {
-					DataOutputStream out = null;
-					if (out == null)
-						out = new DataOutputStream(tcpSocket.getOutputStream());
-					out.write(message);
-					out.flush();
-				} catch (SocketException se) {
-					toRemove.add(tcpSocket);
-				} catch (Exception ex) {
-					System.err.println("TCPWriter.write:" + ex.getLocalizedMessage());
-					ex.printStackTrace();
+			clientSocketlist.stream().forEach(tcpSocket -> {
+				synchronized (tcpSocket) {
+					try {
+						DataOutputStream out = null;
+						if (out == null)
+							out = new DataOutputStream(tcpSocket.getOutputStream());
+						out.write(message);
+						out.flush();
+					} catch (SocketException se) {
+						toRemove.add(tcpSocket);
+					} catch (Exception ex) {
+						System.err.println("TCPWriter.write:" + ex.getLocalizedMessage());
+						ex.printStackTrace();
+					}
 				}
-			}
+			});
+
+//			for (Socket tcpSocket : clientSocketlist) {
+//				try {
+//					DataOutputStream out = null;
+//					if (out == null)
+//						out = new DataOutputStream(tcpSocket.getOutputStream());
+//					out.write(message);
+//					out.flush();
+//				} catch (SocketException se) {
+//					toRemove.add(tcpSocket);
+//				} catch (Exception ex) {
+//					System.err.println("TCPWriter.write:" + ex.getLocalizedMessage());
+//					ex.printStackTrace();
+//				}
+//			}
 			if (toRemove.size() > 0) {
 				for (Socket skt : toRemove) {
 					this.clientSocketlist.remove(skt);
