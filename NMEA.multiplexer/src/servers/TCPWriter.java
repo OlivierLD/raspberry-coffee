@@ -40,24 +40,23 @@ public class TCPWriter implements Forwarder {
 
 	@Override
 	public void write(byte[] message) {
-		synchronized (clientSocketlist) {
-			List<Socket> toRemove = new ArrayList<Socket>();
-			clientSocketlist.stream().forEach(tcpSocket -> {
-				synchronized (tcpSocket) {
-					try {
-						DataOutputStream out = null;
-						if (out == null)
-							out = new DataOutputStream(tcpSocket.getOutputStream());
-						out.write(message);
-						out.flush();
-					} catch (SocketException se) {
-						toRemove.add(tcpSocket);
-					} catch (Exception ex) {
-						System.err.println("TCPWriter.write:" + ex.getLocalizedMessage());
-						ex.printStackTrace();
-					}
+		List<Socket> toRemove = new ArrayList<Socket>();
+		clientSocketlist.stream().forEach(tcpSocket -> {
+			synchronized (tcpSocket) {
+				try {
+					DataOutputStream out = null;
+					if (out == null)
+						out = new DataOutputStream(tcpSocket.getOutputStream());
+					out.write(message);
+					out.flush();
+				} catch (SocketException se) {
+					toRemove.add(tcpSocket);
+				} catch (Exception ex) {
+					System.err.println("TCPWriter.write:" + ex.getLocalizedMessage());
+					ex.printStackTrace();
 				}
-			});
+			}
+		});
 
 //			for (Socket tcpSocket : clientSocketlist) {
 //				try {
@@ -73,10 +72,9 @@ public class TCPWriter implements Forwarder {
 //					ex.printStackTrace();
 //				}
 //			}
-			if (toRemove.size() > 0) {
-				for (Socket skt : toRemove) {
-					this.clientSocketlist.remove(skt);
-				}
+		if (toRemove.size() > 0) {
+			synchronized (clientSocketlist) {
+				toRemove.stream().forEach(this.clientSocketlist::remove);
 			}
 		}
 	}
