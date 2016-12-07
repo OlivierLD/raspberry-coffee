@@ -64,6 +64,13 @@ public class BME280Reader extends NMEAReader {
 				nmeaMDA += NMEAParser.getEOS();
 				fireDataRead(new NMEAEvent(this, nmeaMDA));
 
+				String nmeaMTA = StringGenerator.generateMTA("RP", temperature);
+				nmeaMTA += NMEAParser.getEOS();
+				fireDataRead(new NMEAEvent(this, nmeaMTA));
+
+				String nmeaMMB = StringGenerator.generateMMB("RP", pressure / 100);
+				nmeaMMB += NMEAParser.getEOS();
+				fireDataRead(new NMEAEvent(this, nmeaMMB));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
