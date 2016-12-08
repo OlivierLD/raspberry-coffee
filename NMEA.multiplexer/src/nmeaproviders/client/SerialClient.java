@@ -10,20 +10,25 @@ import nmeaproviders.reader.SerialReader;
  */
 public class SerialClient extends NMEAClient {
 	public SerialClient() {
-		super();
+		this(null, null, null);
 	}
 
 	public SerialClient(Multiplexer mux) {
-		super(mux);
+		this(null, null, mux);
 	}
 
 	public SerialClient(String s, String[] sa) {
-		super(s, sa);
+		this(s, sa, null);
+	}
+
+	public SerialClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
+		this.verbose = "true".equals(System.getProperty("serial.data.verbose", "false"));
 	}
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if ("true".equals(System.getProperty("serial.data.verbose", "false")))
+		if (verbose)
 			System.out.println("Received from Serial:" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
@@ -37,15 +42,19 @@ public class SerialClient extends NMEAClient {
 		String type = "serial";
 		String port;
 		int br;
+		boolean verbose;
 
 		public SerialBean(SerialClient instance) {
 			cls = instance.getClass().getName();
 			port = ((SerialReader) instance.getReader()).getPort();
 			br = ((SerialReader) instance.getReader()).getBr();
+			verbose = instance.isVerbose();
 		}
 
 		@Override
-		public String getType() { return this.type; }
+		public String getType() {
+			return this.type;
+		}
 
 		public String getPort() {
 			return port;
@@ -53,6 +62,11 @@ public class SerialClient extends NMEAClient {
 
 		public int getBr() {
 			return br;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
 		}
 	}
 

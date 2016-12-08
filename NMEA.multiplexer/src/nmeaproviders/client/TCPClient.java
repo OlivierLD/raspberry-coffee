@@ -10,20 +10,25 @@ import nmeaproviders.reader.TCPReader;
  */
 public class TCPClient extends NMEAClient {
 	public TCPClient() {
-		super();
+		this(null, null, null);
 	}
 
 	public TCPClient(Multiplexer mux) {
-		super(mux);
+		this(null, null, mux);
 	}
 
 	public TCPClient(String s, String[] sa) {
-		super(s, sa);
+		this(s, sa, null);
 	}
 
-	@Override
+	public TCPClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
+		this.verbose = "true".equals(System.getProperty("tcp.data.verbose", "false"));
+	}
+
+		@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if ("true".equals(System.getProperty("tcp.data.verbose", "false")))
+		if (verbose)
 			System.out.println("Received from TCP :" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
@@ -37,15 +42,19 @@ public class TCPClient extends NMEAClient {
 		String type = "tcp";
 		int port;
 		String hostname;
+		boolean verbose;
 
 		public TCPBean(TCPClient instance) {
 			cls = instance.getClass().getName();
 			port = ((TCPReader) instance.getReader()).getPort();
 			hostname = ((TCPReader) instance.getReader()).getHostname();
+			verbose = instance.isVerbose();
 		}
 
 		@Override
-		public String getType() { return this.type; }
+		public String getType() {
+			return this.type;
+		}
 
 		public int getPort() {
 			return port;
@@ -53,6 +62,11 @@ public class TCPClient extends NMEAClient {
 
 		public String getHostname() {
 			return this.hostname;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
 		}
 	}
 

@@ -10,20 +10,25 @@ import nmeaproviders.reader.HTU21DFReader;
  */
 public class HTU21DFClient extends NMEAClient {
 	public HTU21DFClient() {
-		super(null, null, null);
+		this(null, null, null);
 	}
 
 	public HTU21DFClient(Multiplexer mux) {
-		super(mux);
+		this(null, null, mux);
 	}
 
 	public HTU21DFClient(String s, String[] sa) {
-		super(s, sa, null);
+		this(s, sa, null);
+	}
+
+	public HTU21DFClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
+		this.verbose = "true".equals(System.getProperty("htu21df.data.verbose", "false"));
 	}
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if ("true".equals(System.getProperty("htu21df.data.verbose", "false")))
+		if (verbose)
 			System.out.println("Received from HTU21DF:" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
@@ -32,15 +37,25 @@ public class HTU21DFClient extends NMEAClient {
 
 	private static HTU21DFClient nmeaClient = null;
 
-	private static class HTU21DFBean implements ClientBean {
+	public static class HTU21DFBean implements ClientBean {
 		String cls;
 		String type = "hut21df";
+		boolean verbose;
 
 		public HTU21DFBean(HTU21DFClient instance) {
 			cls = instance.getClass().getName();
+			verbose = instance.isVerbose();
 		}
+
 		@Override
-		public String getType() { return this.type; }
+		public String getType() {
+			return this.type;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
+		}
 	}
 
 	@Override

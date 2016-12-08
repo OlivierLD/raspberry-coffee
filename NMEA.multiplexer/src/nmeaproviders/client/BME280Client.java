@@ -9,70 +9,78 @@ import nmeaproviders.reader.HTU21DFReader;
 /**
  * Read a file containing logged data
  */
-public class BME280Client extends NMEAClient
-{
-  public BME280Client()
-  {
-    super(null, null, null);
-  }
-  public BME280Client(Multiplexer mux)
-  {
-    super(mux);
-  }
-  public BME280Client(String s, String[] sa)
-  {
-    super(s, sa, null);
-  }
+public class BME280Client extends NMEAClient {
+	public BME280Client() {
+		this(null, null, null);
+	}
 
-  @Override
-  public void dataDetectedEvent(NMEAEvent e)
-  {
-    if ("true".equals(System.getProperty("bme280.data.verbose", "false")))
-      System.out.println("Received from BME280:" + e.getContent());
-    if (multiplexer != null)
-    {
-      multiplexer.onData(e.getContent());
-    }
-  }
+	public BME280Client(Multiplexer mux) {
+		this(null, null, mux);
+	}
 
-  private static BME280Client nmeaClient = null;
+	public BME280Client(String s, String[] sa) {
+		this(s, sa, null);
+	}
 
-  public static class BME280Bean implements ClientBean {
-    String cls;
-    String type = "bme280";
+	public BME280Client(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
+		this.verbose = ("true".equals(System.getProperty("bme280.data.verbose", "false")));
+	}
 
-    public BME280Bean(BME280Client instance) {
-      cls = instance.getClass().getName();
-    }
-    @Override
-    public String getType() { return this.type; }
-  }
+		@Override
+	public void dataDetectedEvent(NMEAEvent e) {
+		if (verbose)
+			System.out.println("Received from BME280:" + e.getContent());
+		if (multiplexer != null) {
+			multiplexer.onData(e.getContent());
+		}
+	}
 
-  @Override
-  public Object getBean() {
-    return new BME280Bean(this);
-  }
+	private static BME280Client nmeaClient = null;
 
-  public static void main(String[] args)
-  {
-    System.out.println("BME280Client invoked with " + args.length + " Parameter(s).");
-    for (String s : args)
-      System.out.println("BME280Client prm:" + s);
+	public static class BME280Bean implements ClientBean {
+		String cls;
+		String type = "bme280";
+		boolean verbose;
 
-    nmeaClient = new BME280Client();
-      
-    Runtime.getRuntime().addShutdownHook(new Thread() 
-      {
-        public void run() 
-        {
-          System.out.println ("Shutting down nicely.");
-          nmeaClient.stopDataRead();
-        }
-      });
+		public BME280Bean(BME280Client instance) {
+			cls = instance.getClass().getName();
+			verbose = instance.isVerbose();
+		}
+
+		@Override
+		public String getType() {
+			return this.type;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
+		}
+	}
+
+	@Override
+	public Object getBean() {
+		return new BME280Bean(this);
+	}
+
+	public static void main(String[] args) {
+		System.out.println("BME280Client invoked with " + args.length + " Parameter(s).");
+		for (String s : args)
+			System.out.println("BME280Client prm:" + s);
+
+		nmeaClient = new BME280Client();
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				System.out.println("Shutting down nicely.");
+				nmeaClient.stopDataRead();
+			}
+		});
 
 //  nmeaClient.setEOS("\n"); // TASK Sure?
-    nmeaClient.initClient();
-    nmeaClient.setReader(new BME280Reader(nmeaClient.getListeners()));
-    nmeaClient.startWorking();
-  }
+		nmeaClient.initClient();
+		nmeaClient.setReader(new BME280Reader(nmeaClient.getListeners()));
+		nmeaClient.startWorking();
+	}
 }

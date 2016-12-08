@@ -10,20 +10,25 @@ import nmeaproviders.reader.WebSocketReader;
  */
 public class WebSocketClient extends NMEAClient {
 	public WebSocketClient() {
-		super();
+		this(null, null, null);
 	}
 
 	public WebSocketClient(Multiplexer mux) {
-		super(mux);
+		this(null, null, mux);
 	}
 
 	public WebSocketClient(String s, String[] sa) {
-		super(s, sa);
+		this(s, sa, null);
+	}
+
+	public WebSocketClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
+		this.verbose = "true".equals(System.getProperty("ws.data.verbose", "false"));
 	}
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if ("true".equals(System.getProperty("ws.data.verbose", "false")))
+		if (verbose)
 			System.out.println("Received from WebSocket :" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
@@ -36,14 +41,21 @@ public class WebSocketClient extends NMEAClient {
 		String cls;
 		String type = "ws";
 		String wsUri;
+		boolean verbose;
 
 		public WSBean(WebSocketClient instance) {
 			cls = instance.getClass().getName();
 			wsUri = ((WebSocketReader) instance.getReader()).getWsUri();
+			verbose = instance.isVerbose();
 		}
 
 		@Override
 		public String getType() { return this.type; }
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
+		}
 
 		public String getWsUri() {
 			return wsUri;

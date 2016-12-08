@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Works with SailMail rebroadcast
+ * TCP reader
  */
 public class TCPReader extends NMEAReader
 {
@@ -94,7 +94,6 @@ public class TCPReader extends NMEAReader
           super.fireDataRead(n);
         }
       }
-
       System.out.println("Stop Reading TCP port.");
       theInput.close();
     }

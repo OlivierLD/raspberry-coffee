@@ -10,21 +10,26 @@ import nmeaproviders.reader.DataFileReader;
  */
 public class DataFileClient extends NMEAClient {
 	public DataFileClient() {
-		super(null, null, null);
+		this(null, null, null);
 	}
 
 	public DataFileClient(Multiplexer mux) {
-		super(mux);
+		this(null, null, mux);
 	}
 
 	public DataFileClient(String s, String[] sa) {
-		super(s, sa, null);
+		this(s, sa, null);
+	}
+
+	public DataFileClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
+		this.verbose = "true".equals(System.getProperty("file.data.verbose", "false"));
 	}
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if ("true".equals(System.getProperty("file.data.verbose", "false")))
-			System.out.println("Received from File:" + e.getContent());
+		if (verbose)
+			System.out.println(">> DataFileClient >> Received from File:" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}
@@ -36,16 +41,26 @@ public class DataFileClient extends NMEAClient {
 		String cls;
 		String file;
 		String type = "file";
+		boolean verbose;
 
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();
 			file = ((DataFileReader) instance.getReader()).getFileNme();
+			verbose = instance.isVerbose();
 		}
+
 		@Override
-		public String getType() { return this.type; }
+		public String getType() {
+			return this.type;
+		}
 
 		public String getFile() {
 			return file;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
 		}
 	}
 

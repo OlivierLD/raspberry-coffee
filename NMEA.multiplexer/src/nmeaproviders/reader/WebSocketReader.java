@@ -11,7 +11,7 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * A Simulator, taking its inputs from a file
+ * WebSocket reader
  */
 public class WebSocketReader extends NMEAReader {
 	private WebSocketClient wsClient = null;

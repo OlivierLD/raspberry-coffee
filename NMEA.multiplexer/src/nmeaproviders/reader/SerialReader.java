@@ -59,20 +59,21 @@ public class SerialReader
 	public void read() {
 		super.enableReading();
 		// Opening Serial port
-		Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
-		int nbp = 0;
-		while (enumeration.hasMoreElements()) {
-			CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
-			System.out.println("Port:" + cpi.getName());
-			nbp++;
+		if (verbose) {
+			Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
+			int nbp = 0;
+			while (enumeration.hasMoreElements()) {
+				CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
+				System.out.println("Port:" + cpi.getName());
+				nbp++;
+			}
+			System.out.println("Found " + nbp + " port(s)");
 		}
-		System.out.println("Found " + nbp + " port(s)");
-
 		CommPortIdentifier com = null;
 		try {
 			com = CommPortIdentifier.getPortIdentifier(comPort);
 		} catch (NoSuchPortException nspe) {
-			System.err.println("No Such Port");
+			System.err.println(comPort + ": No Such Port");
 			nspe.printStackTrace();
 			return;
 		}
@@ -127,7 +128,7 @@ public class SerialReader
 			}
 		}
 		// Reading on Serial Port
-		System.out.println("Port is open...");
+		System.out.println(String.format("%s:Port is open...", comPort));
 	}
 
 	@Override
@@ -189,5 +190,4 @@ public class SerialReader
 	public static void main(String[] args) {
 		new SerialReader().read();
 	}
-
 }

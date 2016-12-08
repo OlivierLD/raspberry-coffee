@@ -10,20 +10,25 @@ import nmeaproviders.reader.RandomReader;
  */
 public class RandomClient extends NMEAClient {
 	public RandomClient() {
-		super(null, null, null);
+		this(null, null, null);
 	}
 
 	public RandomClient(Multiplexer mux) {
-		super(mux);
+		this(null, null, mux);
 	}
 
 	public RandomClient(String s, String[] sa) {
-		super(s, sa, null);
+		this(s, sa, null);
+	}
+
+	public RandomClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
+		this.verbose = "true".equals(System.getProperty("rnd.data.verbose", "false"));
 	}
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if ("true".equals(System.getProperty("rnd.data.verbose", "false")))
+		if (verbose)
 			System.out.println("Received from RND:" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
@@ -32,15 +37,25 @@ public class RandomClient extends NMEAClient {
 
 	private static RandomClient nmeaClient = null;
 
-	private static class RandomBean implements ClientBean {
+	public static class RandomBean implements ClientBean {
 		String cls;
 		String type = "rnd";
+		boolean verbose;
 
 		public RandomBean(RandomClient instance) {
 			cls = instance.getClass().getName();
+			verbose = instance.isVerbose();
 		}
+
 		@Override
-		public String getType() { return this.type; }
+		public String getType() {
+			return this.type;
+		}
+
+		@Override
+		public boolean getVerbose() {
+			return this.verbose;
+		}
 	}
 
 	@Override

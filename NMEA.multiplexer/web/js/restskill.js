@@ -135,6 +135,33 @@ var addChannel = function(channel) {
   return deferred.promise();
 };
 
+var updateChannel = function(channel) {
+    var deferred = $.Deferred(),  // a jQuery deferred
+        url = '/channels',
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = 10000;
+
+    xhr.open('PUT', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.send(JSON.stringify(channel));
+
+    var requestTimer = setTimeout(function() {
+        xhr.abort();
+        deferred.reject();
+    }, TIMEOUT);
+
+    xhr.onload = function() {
+        clearTimeout(requestTimer);
+        if (xhr.status === 200) {
+            deferred.resolve(xhr.response);
+        } else {
+            deferred.reject();
+        }
+    };
+    return deferred.promise();
+};
+
 var deleteForwarder = function(channel) {
     var deferred = $.Deferred(),  // a jQuery deferred
         url = '/forwarders/' + channel.type,
@@ -213,30 +240,30 @@ var channelList = function() {
         var json = JSON.parse(value);
         var html = "<h5>Reads from</h5>" +
             "<table>";
-        html += "<tr><th>Type</th><th>Parameters</th></tr>"
+        html += "<tr><th>Type</th><th>Parameters</th><th>verb.</th></tr>"
         for (var i=0; i<json.length; i++) {
           var type = json[i].type;
           switch (type) {
               case 'file':
-                html += ("<tr><td><b>file</b></td><td>" + json[i].file + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                html += ("<tr><td><b>file</b></td><td>" + json[i].file + "</td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                 break;
               case 'serial':
-                  html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'tcp':
-                  html += ("<tr><td><b>tcp</b></td><td>" + json[i].hostname + ":" + json[i].port + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>tcp</b></td><td>" + json[i].hostname + ":" + json[i].port + "</td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'ws':
-                  html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri + "</td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri + "</td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'rnd':
-                  html += ("<tr><td><b>rnd</b></td><td></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>rnd</b></td><td></td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'bme280':
-                  html += ("<tr><td><b>bme280</b></td><td></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>bme280</b></td><td></td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'htu21df':
-                  html += ("<tr><td><b>htu21df</b></td><td></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>htu21df</b></td><td></td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               default:
                 break;
@@ -257,7 +284,7 @@ var forwarderList = function() {
         var json = JSON.parse(value);
         var html = "<h5>Writes to</h5>" +
             "<table>";
-        html += "<tr><th>Type</th><th>Parameters</th></tr>"
+        html += "<tr><th>Type</th><th>Parameters</th></th></tr>"
         for (var i=0; i<json.length; i++) {
             var type = json[i].type;
             switch (type) {
@@ -330,6 +357,24 @@ var removeForwarder = function(channel) {
     deleteData.fail(function(error) {
         alert("Failed to delete channel..." + (error !== undefined ? error : ''));
     });
+};
+
+var changeChannel = function(channel) {
+    var putData = updateChannel(channel);
+    putData.done(function(value) {
+        console.log("Done:", value);
+        channelList(); // refetch
+    });
+    putData.fail(function(error) {
+        alert("Failed to update channel..." + (error !== undefined ? error : ''));
+    });
+};
+
+var manageChannelVerbose = function(cb, channel) {
+    console.log('Clicked checkbox on', channel, ' checked:', cb.checked);
+    // PUT on the channel.
+    channel.verbose = cb.checked;
+    changeChannel(channel);
 };
 
 var showAddChannel = function() {

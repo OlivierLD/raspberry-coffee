@@ -18,11 +18,23 @@ public abstract class NMEAReader extends Thread {
 	protected boolean goRead = true;
 	private NMEAReader instance = this;
 
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
+
+	protected boolean verbose = false;
+
 	public NMEAReader() {
+		this(null, false);
 	}
 
 	public NMEAReader(List<NMEAListener> al) {
-		if (System.getProperty("verbose", "false").equals("true"))
+		this(al, false);
+	}
+
+	public NMEAReader(List<NMEAListener> al, boolean verbose) {
+		this.verbose = verbose;
+		if (verbose)
 			System.out.println(this.getClass().getName() + ":Creating reader");
 		NMEAListeners = al;
 		this.addNMEAListener(new NMEAListener() {
@@ -79,7 +91,7 @@ public abstract class NMEAReader extends Thread {
 	public abstract void closeReader() throws Exception;
 
 	public void run() {
-		if ("true".equals(System.getProperty("verbose", "false"))) // nmea.api.NMEAReader
+		if (verbose) // nmea.api.NMEAReader
 			System.out.println(this.getClass().getName() + ":Reader Running");
 		try {
 			read();
