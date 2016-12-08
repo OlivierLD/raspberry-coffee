@@ -20,6 +20,8 @@ public abstract class NMEAReader extends Thread {
 
 	public void setVerbose(boolean verbose) {
 		this.verbose = verbose;
+		if (verbose && NMEAListeners != null)
+			System.out.println(this.getClass().getName() + ": There are " + this.NMEAListeners.size() + " listener(s)");
 	}
 
 	protected boolean verbose = false;
