@@ -10,17 +10,19 @@ import nmeaproviders.reader.DataFileReader;
  */
 public class DataFileClient extends NMEAClient {
 	public DataFileClient() {
-		super(null, null, null);
-		this.verbose = "true".equals(System.getProperty("file.data.verbose", "false"));
+		this(null, null, null);
 	}
 
 	public DataFileClient(Multiplexer mux) {
-		super(mux);
-		this.verbose = "true".equals(System.getProperty("file.data.verbose", "false"));
+		this(null, null, mux);
 	}
 
 	public DataFileClient(String s, String[] sa) {
-		super(s, sa, null);
+		this(s, sa, null);
+	}
+
+	public DataFileClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("file.data.verbose", "false"));
 	}
 
@@ -89,15 +91,5 @@ public class DataFileClient extends NMEAClient {
 		nmeaClient.initClient();
 		nmeaClient.setReader(new DataFileReader(nmeaClient.getListeners(), dataFile));
 		nmeaClient.startWorking();
-	}
-
-	@Override
-	public boolean isVerbose() {
-		return this.verbose;
-	}
-
-	@Override
-	public void setVerbose(boolean b) {
-		this.verbose = b;
 	}
 }

@@ -67,9 +67,4 @@ public class CustomDataFileToTCPClient extends NMEAClient {
 	public boolean isVerbose() {
 		return this.verbose;
 	}
-
-	@Override
-	public void setVerbose(boolean b) {
-		this.verbose = b;
-	}
 }

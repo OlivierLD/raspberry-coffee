@@ -178,6 +178,15 @@ public abstract class NMEAClient {
 	}
 
 	public abstract Object getBean();
-	public abstract boolean isVerbose();
-	public abstract void setVerbose(boolean b);
+
+	public boolean isVerbose() {
+		return this.verbose;
+	}
+
+	public void setVerbose(boolean b) {
+		this.verbose = b;
+		if (this.getReader() != null) {
+			this.getReader().setVerbose(b);
+		}
+	}
 }

@@ -44,8 +44,8 @@ import java.util.stream.Collectors;
 public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface {
 	private HTTPServer adminServer = null;
 
-	private List<NMEAClient> nmeaDataProviders = new ArrayList<>();
-	private List<Forwarder> nmeaDataForwarders = new ArrayList<>();
+	private List<NMEAClient> nmeaDataProviders  = new ArrayList<>();
+	private List<Forwarder>  nmeaDataForwarders = new ArrayList<>();
 
 	// TODO Operation List
 
@@ -549,7 +549,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						// Check existence
 						if (request.getContent() != null && request.getContent().length > 0) {
 							SerialClient.SerialBean json = new Gson().fromJson(new String(request.getContent()), SerialClient.SerialBean.class);
-							// Check if not there yet.
 							Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 											.filter(channel -> channel instanceof SerialClient &&
 															((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(json.getPort()))
@@ -561,6 +560,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								SerialClient serialClient = (SerialClient) opClient.get();
 								serialClient.setVerbose(json.getVerbose());
 								String content = new Gson().toJson(serialClient.getBean());
+								generateHappyResponseHeaders(response, content.length());
 								response.setPayload(content.getBytes());
 							}
 						}
@@ -568,7 +568,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						// Check existence
 						if (request.getContent() != null && request.getContent().length > 0) {
 							DataFileClient.DataFileBean json = new Gson().fromJson(new String(request.getContent()), DataFileClient.DataFileBean.class);
-							// Check if not there yet.
 							Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 											.filter(channel -> channel instanceof DataFileClient &&
 															((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(json.getFile()))
@@ -580,6 +579,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								DataFileClient dataFileClient = (DataFileClient) opClient.get();
 								dataFileClient.setVerbose(json.getVerbose());
 								String content = new Gson().toJson(dataFileClient.getBean());
+								generateHappyResponseHeaders(response, content.length());
 								response.setPayload(content.getBytes());
 							}
 						}
@@ -587,7 +587,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						// Check existence
 						if (request.getContent() != null && request.getContent().length > 0) {
 							TCPClient.TCPBean json = new Gson().fromJson(new String(request.getContent()), TCPClient.TCPBean.class);
-							// Check if not there yet.
 							Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 											.filter(channel -> channel instanceof TCPClient &&
 															((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getHostname().equals(json.getHostname()) &&
@@ -600,6 +599,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								TCPClient tcpClient = (TCPClient) opClient.get();
 								tcpClient.setVerbose(json.getVerbose());
 								String content = new Gson().toJson(tcpClient.getBean());
+								generateHappyResponseHeaders(response, content.length());
 								response.setPayload(content.getBytes());
 							}
 						}
@@ -607,7 +607,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						// Check existence
 						if (request.getContent() != null && request.getContent().length > 0) {
 							WebSocketClient.WSBean json = new Gson().fromJson(new String(request.getContent()), WebSocketClient.WSBean.class);
-							// Check if not there yet.
 							Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 											.filter(channel -> channel instanceof WebSocketClient &&
 															((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(json.getWsUri()))
@@ -619,6 +618,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								WebSocketClient webSocketClient = (WebSocketClient) opClient.get();
 								webSocketClient.setVerbose(json.getVerbose());
 								String content = new Gson().toJson(webSocketClient.getBean());
+								generateHappyResponseHeaders(response, content.length());
 								response.setPayload(content.getBytes());
 							}
 						}
@@ -626,7 +626,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						// Check existence
 						if (request.getContent() != null && request.getContent().length > 0) {
 							BME280Client.BME280Bean json = new Gson().fromJson(new String(request.getContent()), BME280Client.BME280Bean.class);
-							// Check if not there yet.
 							Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 											.filter(channel -> channel instanceof BME280Client)
 											.findFirst();
@@ -637,6 +636,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								BME280Client bme280Client = (BME280Client) opClient.get();
 								bme280Client.setVerbose(json.getVerbose());
 								String content = new Gson().toJson(bme280Client.getBean());
+								generateHappyResponseHeaders(response, content.length());
 								response.setPayload(content.getBytes());
 							}
 						}
@@ -644,7 +644,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						// Check existence
 						if (request.getContent() != null && request.getContent().length > 0) {
 							HTU21DFClient.HTU21DFBean json = new Gson().fromJson(new String(request.getContent()), HTU21DFClient.HTU21DFBean.class);
-							// Check if not there yet.
 							Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 											.filter(channel -> channel instanceof HTU21DFClient)
 											.findFirst();
@@ -655,6 +654,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								HTU21DFClient htu21DFClient = (HTU21DFClient) opClient.get();
 								htu21DFClient.setVerbose(json.getVerbose());
 								String content = new Gson().toJson(htu21DFClient.getBean());
+								generateHappyResponseHeaders(response, content.length());
 								response.setPayload(content.getBytes());
 							}
 						}
@@ -662,7 +662,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						// Check existence
 						if (request.getContent() != null && request.getContent().length > 0) {
 							RandomClient.RandomBean json = new Gson().fromJson(new String(request.getContent()), RandomClient.RandomBean.class);
-							// Check if not there yet.
 							Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 											.filter(channel -> channel instanceof RandomClient)
 											.findFirst();
@@ -673,10 +672,13 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								RandomClient randomClient = (RandomClient) opClient.get();
 								randomClient.setVerbose(json.getVerbose());
 								String content = new Gson().toJson(randomClient.getBean());
+								generateHappyResponseHeaders(response, content.length());
 								response.setPayload(content.getBytes());
 							}
 						}
 					}
+				} else if (postPathElem != null && postPathElem.length >= 2 && postPathElem[1].equals("forwarders")) {
+
 				}
 				break;
 			case "PATCH":

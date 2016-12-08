@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * A Simulator, taking its inputs from a file
+ * Taking its inputs from a file
  */
 public class DataFileReader extends NMEAReader {
 	private String dataFileName = null;
@@ -17,7 +17,8 @@ public class DataFileReader extends NMEAReader {
 
 	public DataFileReader(List<NMEAListener> al, String fName) {
 		super(al);
-		System.out.println("There are " + al.size() + " listener(s)");
+		if (verbose)
+		  System.out.println(this.getClass().getName() + ": There are " + al.size() + " listener(s)");
 		this.dataFileName = fName;
 	}
 
@@ -38,7 +39,7 @@ public class DataFileReader extends NMEAReader {
 //      System.out.println("Read " + l);
 				if (l != -1 && dim > 0) {
 					String nmeaContent = new String(ba);
-					if ("true".equals(System.getProperty("verbose", "false")))
+					if (verbose)
 						System.out.println("Spitting out [" + nmeaContent + "]");
 					fireDataRead(new NMEAEvent(this, nmeaContent));
 					try {
@@ -46,7 +47,8 @@ public class DataFileReader extends NMEAReader {
 					} catch (Exception ignore) {
 					}
 				} else {
-					System.out.println("===== Reseting Reader =====");
+					if (verbose)
+						System.out.println("===== Reseting Reader =====");
 					this.fis.close();
 					this.fis = new FileInputStream(this.dataFileName); // reopen
 				}

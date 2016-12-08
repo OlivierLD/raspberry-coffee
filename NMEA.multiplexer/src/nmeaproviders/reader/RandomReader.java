@@ -9,7 +9,7 @@ import nmea.parser.StringParsers;
 import java.util.List;
 
 /**
- * Generates randowm crap.
+ * Generates random crap.
  * For debugging.
  */
 public class RandomReader extends NMEAReader {

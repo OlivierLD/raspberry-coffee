@@ -10,17 +10,19 @@ import nmeaproviders.reader.SerialReader;
  */
 public class SerialClient extends NMEAClient {
 	public SerialClient() {
-		super();
-		this.verbose = "true".equals(System.getProperty("serial.data.verbose", "false"));
+		this(null, null, null);
 	}
 
 	public SerialClient(Multiplexer mux) {
-		super(mux);
-		this.verbose = "true".equals(System.getProperty("serial.data.verbose", "false"));
+		this(null, null, mux);
 	}
 
 	public SerialClient(String s, String[] sa) {
-		super(s, sa);
+		this(s, sa, null);
+	}
+
+	public SerialClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("serial.data.verbose", "false"));
 	}
 
@@ -95,15 +97,5 @@ public class SerialClient extends NMEAClient {
 		nmeaClient.initClient();
 		nmeaClient.setReader(new SerialReader(nmeaClient.getListeners(), commPort, 4800));
 		nmeaClient.startWorking();
-	}
-
-	@Override
-	public boolean isVerbose() {
-		return this.verbose;
-	}
-
-	@Override
-	public void setVerbose(boolean b) {
-		this.verbose = b;
 	}
 }

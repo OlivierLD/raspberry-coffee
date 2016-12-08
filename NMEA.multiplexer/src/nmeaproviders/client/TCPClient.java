@@ -10,21 +10,23 @@ import nmeaproviders.reader.TCPReader;
  */
 public class TCPClient extends NMEAClient {
 	public TCPClient() {
-		super();
-		this.verbose = "true".equals(System.getProperty("tcp.data.verbose", "false"));
+		this(null, null, null);
 	}
 
 	public TCPClient(Multiplexer mux) {
-		super(mux);
-		this.verbose = "true".equals(System.getProperty("tcp.data.verbose", "false"));
+		this(null, null, mux);
 	}
 
 	public TCPClient(String s, String[] sa) {
-		super(s, sa);
+		this(s, sa, null);
+	}
+
+	public TCPClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("tcp.data.verbose", "false"));
 	}
 
-	@Override
+		@Override
 	public void dataDetectedEvent(NMEAEvent e) {
 		if (verbose)
 			System.out.println("Received from TCP :" + e.getContent());
@@ -92,15 +94,5 @@ public class TCPClient extends NMEAClient {
 		nmeaClient.initClient();
 		nmeaClient.setReader(new TCPReader(nmeaClient.getListeners(), serverName, 7001));
 		nmeaClient.startWorking();
-	}
-
-	@Override
-	public boolean isVerbose() {
-		return this.verbose;
-	}
-
-	@Override
-	public void setVerbose(boolean b) {
-		this.verbose = b;
 	}
 }

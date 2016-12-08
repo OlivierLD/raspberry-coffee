@@ -10,17 +10,19 @@ import nmeaproviders.reader.RandomReader;
  */
 public class RandomClient extends NMEAClient {
 	public RandomClient() {
-		super(null, null, null);
-		this.verbose = "true".equals(System.getProperty("rnd.data.verbose", "false"));
+		this(null, null, null);
 	}
 
 	public RandomClient(Multiplexer mux) {
-		super(mux);
-		this.verbose = "true".equals(System.getProperty("rnd.data.verbose", "false"));
+		this(null, null, mux);
 	}
 
 	public RandomClient(String s, String[] sa) {
-		super(s, sa, null);
+		this(s, sa, null);
+	}
+
+	public RandomClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("rnd.data.verbose", "false"));
 	}
 
@@ -78,16 +80,5 @@ public class RandomClient extends NMEAClient {
 		nmeaClient.initClient();
 		nmeaClient.setReader(new RandomReader(nmeaClient.getListeners()));
 		nmeaClient.startWorking();
-	}
-
-
-	@Override
-	public boolean isVerbose() {
-		return this.verbose;
-	}
-
-	@Override
-	public void setVerbose(boolean b) {
-		this.verbose = b;
 	}
 }

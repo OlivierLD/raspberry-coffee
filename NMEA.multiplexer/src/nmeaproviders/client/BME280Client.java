@@ -11,21 +11,23 @@ import nmeaproviders.reader.HTU21DFReader;
  */
 public class BME280Client extends NMEAClient {
 	public BME280Client() {
-		super(null, null, null);
-		this.verbose = ("true".equals(System.getProperty("bme280.data.verbose", "false")));
+		this(null, null, null);
 	}
 
 	public BME280Client(Multiplexer mux) {
-		super(mux);
-		this.verbose = ("true".equals(System.getProperty("bme280.data.verbose", "false")));
+		this(null, null, mux);
 	}
 
 	public BME280Client(String s, String[] sa) {
-		super(s, sa, null);
+		this(s, sa, null);
+	}
+
+	public BME280Client(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
 		this.verbose = ("true".equals(System.getProperty("bme280.data.verbose", "false")));
 	}
 
-	@Override
+		@Override
 	public void dataDetectedEvent(NMEAEvent e) {
 		if (verbose)
 			System.out.println("Received from BME280:" + e.getContent());
@@ -80,15 +82,5 @@ public class BME280Client extends NMEAClient {
 		nmeaClient.initClient();
 		nmeaClient.setReader(new BME280Reader(nmeaClient.getListeners()));
 		nmeaClient.startWorking();
-	}
-
-	@Override
-	public boolean isVerbose() {
-		return this.verbose;
-	}
-
-	@Override
-	public void setVerbose(boolean b) {
-		this.verbose = b;
 	}
 }

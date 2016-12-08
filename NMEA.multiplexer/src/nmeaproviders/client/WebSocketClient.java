@@ -10,17 +10,19 @@ import nmeaproviders.reader.WebSocketReader;
  */
 public class WebSocketClient extends NMEAClient {
 	public WebSocketClient() {
-		super();
-		this.verbose = "true".equals(System.getProperty("ws.data.verbose", "false"));
+		this(null, null, null);
 	}
 
 	public WebSocketClient(Multiplexer mux) {
-		super(mux);
-		this.verbose = "true".equals(System.getProperty("ws.data.verbose", "false"));
+		this(null, null, mux);
 	}
 
 	public WebSocketClient(String s, String[] sa) {
-		super(s, sa);
+		this(s, sa, null);
+	}
+
+	public WebSocketClient(String s, String[] sa, Multiplexer mux) {
+		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("ws.data.verbose", "false"));
 	}
 
@@ -80,15 +82,5 @@ public class WebSocketClient extends NMEAClient {
 		nmeaClient.initClient();
 		nmeaClient.setReader(new WebSocketReader(nmeaClient.getListeners(), serverUri));
 		nmeaClient.startWorking();
-	}
-
-	@Override
-	public boolean isVerbose() {
-		return this.verbose;
-	}
-
-	@Override
-	public void setVerbose(boolean b) {
-		this.verbose = b;
 	}
 }
