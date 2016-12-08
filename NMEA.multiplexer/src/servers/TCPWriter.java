@@ -110,7 +110,6 @@ public class TCPWriter implements Forwarder {
 				}
 			}
 		} catch (Exception e) {
-			// TODO: Add catch code
 			e.printStackTrace();
 		}
 	}
@@ -144,6 +143,7 @@ public class TCPWriter implements Forwarder {
 		String cls;
 		int port;
 		String type = "tcp";
+		int nbClients = 0;
 
 		public int getPort() {
 			return port;
@@ -152,6 +152,7 @@ public class TCPWriter implements Forwarder {
 		public TCPBean(TCPWriter instance) {
 			cls = instance.getClass().getName();
 			port = instance.tcpPort;
+			nbClients = instance.getNbClients();
 		}
 	}
 
