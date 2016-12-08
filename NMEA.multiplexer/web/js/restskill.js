@@ -162,6 +162,33 @@ var updateChannel = function(channel) {
     return deferred.promise();
 };
 
+var updateMuxVerbose = function(value) {
+    var deferred = $.Deferred(),  // a jQuery deferred
+        url = '/mux/verbose/' + value,
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = 10000;
+
+    xhr.open('PUT', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.send(); // No payload
+
+    var requestTimer = setTimeout(function() {
+        xhr.abort();
+        deferred.reject();
+    }, TIMEOUT);
+
+    xhr.onload = function() {
+        clearTimeout(requestTimer);
+        if (xhr.status === 200) {
+            deferred.resolve(xhr.response);
+        } else {
+            deferred.reject();
+        }
+    };
+    return deferred.promise();
+};
+
 var deleteForwarder = function(channel) {
     var deferred = $.Deferred(),  // a jQuery deferred
         url = '/forwarders/' + channel.type,
@@ -375,6 +402,16 @@ var manageChannelVerbose = function(cb, channel) {
     // PUT on the channel.
     channel.verbose = cb.checked;
     changeChannel(channel);
+};
+
+var manageMuxVerbose = function(cb) {
+    var updateMux = updateMuxVerbose(cb.checked ? 'on' : 'off');
+    updateMux.done(function(value) {
+        console.log("Done:", value);
+    });
+    updateMux.fail(function(error) {
+        alert("Failed to update multiplexer..." + (error !== undefined ? error : ''));
+    });
 };
 
 var showAddChannel = function() {

@@ -210,11 +210,11 @@
   <body>
     <h2>NMEA Multiplexer Admin</h2>
     <small>JQuery, Ajax, REST, JSON..., Multiplexer Admin.</small>
-
     <p>
       <button onclick="serialPortList();">Fetch Serial Ports list</button>
       <button onclick="channelList();">Fetch Channels list</button>
       <button onclick="forwarderList();">Fetch Forwarders list</button>
+      <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
 
       <div id="lists" style="padding:2px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height:200px;"></div>
     </p>
