@@ -181,7 +181,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						  StringReader stringReader = new StringReader(new String(request.getContent()));
 						  TCPClient.TCPBean tcpBean = gson.fromJson(stringReader, TCPClient.TCPBean.class);
 						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
-										  .filter(channel -> channel instanceof SerialClient &&
+										  .filter(channel -> channel instanceof TCPClient &&
 														  ((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpBean.getPort())
 										  .findFirst();
 						  response = removeChannelIfPresent(request, opFwd);
@@ -693,6 +693,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			case "PATCH":
 			default:
 				break;
+		}
+		if (this.verbose) {
+			System.out.println("Request :\n" + request.toString());
+			System.out.println("Response :\n" + response.toString());
 		}
 		return response;
 	}

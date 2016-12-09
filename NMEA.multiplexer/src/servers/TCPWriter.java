@@ -42,7 +42,7 @@ public class TCPWriter implements Forwarder {
 	public void write(byte[] message) {
 		List<Socket> toRemove = new ArrayList<Socket>();
 		synchronized( clientSocketlist) {
-			clientSocketlist.stream().forEach(tcpSocket -> {
+			clientSocketlist.stream().forEach(tcpSocket -> { // TODO Synchronize the stream?
 				synchronized (tcpSocket) {
 					try {
 						DataOutputStream out = null;

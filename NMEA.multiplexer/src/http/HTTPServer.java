@@ -105,11 +105,31 @@ public class HTTPServer {
 		public void setHeaders(Map<String, String> headers) {
 			this.headers = headers;
 		}
+
+		@Override
+		public String toString() {
+			final StringBuffer string = new StringBuffer();
+			string.append(this.verb + " " + this.path + " " + this.protocol);
+
+			if (this.headers != null) {
+				this.headers.keySet().stream()
+								.forEach(k -> {
+									string.append("\n" + k + ":" + this.headers.get(k));
+								});
+			}
+			if (this.content != null) {
+				string.append("\n\n" + new String(this.content));
+			}
+
+			return string.toString();
+		}
 	}
 
 	public static class Response {
 		private int status;
 		private String protocol;
+		private Map<String, String> headers;
+		private byte[] payload;
 
 		public Response() {
 		}
@@ -151,8 +171,23 @@ public class HTTPServer {
 			this.payload = payload;
 		}
 
-		private Map<String, String> headers;
-		private byte[] payload;
+		@Override
+		public String toString() {
+			final StringBuffer string = new StringBuffer();
+			string.append(this.status + " " + this.protocol);
+
+			if (this.headers != null) {
+				this.headers.keySet().stream()
+								.forEach(k -> {
+									string.append("\n" + k + ":" + this.headers.get(k));
+								});
+			}
+			if (this.payload != null) {
+				string.append("\n\n" + new String(this.payload));
+			}
+
+			return string.toString();
+		}
 	}
 
 	public boolean isRunning() {
