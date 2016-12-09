@@ -678,7 +678,16 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						}
 					}
 				} else if (postPathElem != null && postPathElem.length >= 2 && postPathElem[1].equals("forwarders")) {
+					// Anything to update here?
 
+				} else if (postPathElem != null && postPathElem.length >= 4 && postPathElem[1].equals("mux") && postPathElem[2].equals("verbose")) {
+					// PUT /mux/verbose/:val where val is 'on' or 'off', no payload.
+					boolean newValue = "on".equals(postPathElem[3]);
+					this.verbose = newValue;
+					response = new HTTPServer.Response(request.getProtocol(), 200);
+					String content = "";
+					generateHappyResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
 				}
 				break;
 			case "PATCH":
@@ -744,7 +753,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 	@Override
 	public synchronized void onData(String mess) {
-		if ("true".equals(System.getProperty("mux.data.verbose", "false"))) {
+		if (verbose) {
 			System.out.println(">> From MUX: " + mess);
 		}
 		nmeaDataForwarders.stream()
@@ -758,8 +767,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	}
 
 	private final static NumberFormat MUX_IDX_FMT = new DecimalFormat("00");
+	private boolean verbose = false;
 
 	public GenericNMEAMultiplexer(Properties muxProps) {
+		verbose = "true".equals(System.getProperty("mux.data.verbose", "false"));
 		int muxIdx = 1;
 		boolean thereIsMore = true;
 		while (thereIsMore) {
