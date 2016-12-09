@@ -9,31 +9,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class SolarDate implements Serializable
-{
-  private Date date = null;
-  private static SimpleDateFormat FMT = new SimpleDateFormat("EEE, yyyy MMM dd HH:mm:ss");
-  static 
-  {
-    FMT.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-  }
+public class SolarDate implements Serializable {
+	private Date date = null;
+	private static SimpleDateFormat FMT = new SimpleDateFormat("EEE, yyyy MMM dd HH:mm:ss");
 
-  public SolarDate()
-  {
-  }
+	static {
+		FMT.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+	}
 
-  public SolarDate(Date date)
-  {
-    this.date = date;
-  }
+	public SolarDate() {
+	}
 
-  public Date getValue()
-  {
-    return this.date;
-  }
+	public SolarDate(Date date) {
+		this.date = date;
+	}
 
-  public String toString()
-  {
-    return FMT.format(this.date);
-  }
+	public Date getValue() {
+		return this.date;
+	}
+
+	public String toString() {
+		return FMT.format(this.date);
+	}
 }

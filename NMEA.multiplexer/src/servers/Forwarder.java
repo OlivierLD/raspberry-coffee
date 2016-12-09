@@ -1,7 +1,7 @@
 package servers;
 
 public interface Forwarder {
-	void write(byte[] mess);
+	void write(byte[] mess); // Receives data
 
 	void close();
 

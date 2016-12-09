@@ -4,20 +4,16 @@ import nmea.utils.WindUtils;
 
 
 public class TrueWindSpeed
-  extends Speed
-{
-  public TrueWindSpeed(double d)
-  {
-    super(d);
-  }
+				extends Speed {
+	public TrueWindSpeed(double d) {
+		super(d);
+	}
 
-  public TrueWindSpeed()
-  {
-    super();
-  }
+	public TrueWindSpeed() {
+		super();
+	}
 
-  public String toString()
-  {
-    return super.toString() + " (" + WindUtils.getBeaufort(this.speed) + " Beaufort)";
-  }
+	public String toString() {
+		return super.toString() + " (" + WindUtils.getBeaufort(this.speed) + " Beaufort)";
+	}
 }

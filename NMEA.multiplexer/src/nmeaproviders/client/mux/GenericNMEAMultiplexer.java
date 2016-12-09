@@ -2,6 +2,8 @@ package nmeaproviders.client.mux;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import computers.Computer;
+import computers.TrueWindComputer;
 import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
 import http.HTTPServerInterface;
@@ -46,6 +48,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 	private List<NMEAClient> nmeaDataProviders  = new ArrayList<>();
 	private List<Forwarder>  nmeaDataForwarders = new ArrayList<>();
+	private List<Computer>   nmeaDataComputers  = new ArrayList<>();
 
 	// TODO Operation List
 
@@ -762,6 +765,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		if (verbose) {
 			System.out.println(">> From MUX: " + mess);
 		}
+		// Computers
+		nmeaDataComputers.stream()
+						.forEach(computer -> {
+							computer.write(mess.getBytes());
+						});
+		// Forwarders
 		nmeaDataForwarders.stream()
 						.forEach(fwd -> {
 							try {
@@ -932,6 +941,9 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			fwdIdx++;
 		}
 
+		// For tests for now
+		nmeaDataComputers.add(new TrueWindComputer(this));
+
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				System.out.println("Shutting down multiplexer nicely.");
@@ -939,6 +951,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.forEach(client -> client.stopDataRead());
 				nmeaDataForwarders.stream()
 								.forEach(fwd -> fwd.close());
+				nmeaDataComputers.stream()
+								.forEach(comp -> comp.close());
 				if (adminServer != null) {
 					adminServer.stopRunning();
 				}
