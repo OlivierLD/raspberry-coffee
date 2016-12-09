@@ -695,8 +695,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				break;
 		}
 		if (this.verbose) {
+			System.out.println("======================================");
 			System.out.println("Request :\n" + request.toString());
 			System.out.println("Response :\n" + response.toString());
+			System.out.println("======================================");
 		}
 		return response;
 	}
