@@ -776,9 +776,11 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	private boolean verbose = false;
 
 	public GenericNMEAMultiplexer(Properties muxProps) {
-		verbose = "true".equals(System.getProperty("mux.data.verbose", "false"));
+		// Read initial config from the properties file.
+		verbose = "true".equals(System.getProperty("mux.data.verbose", "false")); // Initial verbose.
 		int muxIdx = 1;
 		boolean thereIsMore = true;
+		// 1 - Input channels
 		while (thereIsMore) {
 			String typeProp = String.format("mux.%s.type", MUX_IDX_FMT.format(muxIdx));
 			String type = muxProps.getProperty(typeProp);
@@ -880,6 +882,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		}
 		thereIsMore = true;
 		int fwdIdx = 1;
+		// 2 - Output channels
 		while (thereIsMore) {
 			String typeProp = String.format("forward.%s.type", MUX_IDX_FMT.format(fwdIdx));
 			String type = muxProps.getProperty(typeProp);
@@ -967,7 +970,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		Properties definitions = new Properties();
 		File propFile = new File(propertiesFile);
 		if (!propFile.exists()) {
-			throw new RuntimeException("File nmea.mux.properties not found");
+			throw new RuntimeException(String.format("File [%s] not found", propertiesFile));
 		} else {
 			try {
 				definitions.load(new java.io.FileReader(propFile));
@@ -984,5 +987,4 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			mux.startAdminServer(Integer.parseInt(definitions.getProperty("http.port", "9999")));
 		}
 	}
-
 }
