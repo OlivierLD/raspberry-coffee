@@ -681,7 +681,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					// Anything to update here?
 
 				} else if (postPathElem != null && postPathElem.length >= 4 && postPathElem[1].equals("mux") && postPathElem[2].equals("verbose")) {
-					// PUT /mux/verbose/[on|off], no payload.
+					// PUT /mux/verbose/:val where val is 'on' or 'off', no payload.
 					boolean newValue = "on".equals(postPathElem[3]);
 					this.verbose = newValue;
 					response = new HTTPServer.Response(request.getProtocol(), 200);
