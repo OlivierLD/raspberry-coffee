@@ -158,60 +158,60 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					  if (request.getContent() != null) {
 						  StringReader stringReader = new StringReader(new String(request.getContent()));
 						  DataFileClient.DataFileBean dataFileBean = gson.fromJson(stringReader, DataFileClient.DataFileBean.class);
-						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+						  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 										  .filter(channel -> channel instanceof DataFileClient &&
 														  ((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(dataFileBean.getFile()))
 										  .findFirst();
-						  response = removeChannelIfPresent(request, opFwd);
+						  response = removeChannelIfPresent(request, opClient);
 					  }
 				  } else if (deletePathElem[2].equals("serial")) {        // serial
 					  Gson gson = new GsonBuilder().create();
 					  if (request.getContent() != null) {
 						  StringReader stringReader = new StringReader(new String(request.getContent()));
 						  SerialClient.SerialBean serialBean = gson.fromJson(stringReader, SerialClient.SerialBean.class);
-						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+						  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 										  .filter(channel -> channel instanceof SerialClient &&
 														  ((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialBean.getPort())) // No need for BaudRate
 										  .findFirst();
-						  response = removeChannelIfPresent(request, opFwd);
+						  response = removeChannelIfPresent(request, opClient);
 					  }
 				  } else if (deletePathElem[2].equals("tcp")) {           // tcp
 					  Gson gson = new GsonBuilder().create();
 					  if (request.getContent() != null) {
 						  StringReader stringReader = new StringReader(new String(request.getContent()));
 						  TCPClient.TCPBean tcpBean = gson.fromJson(stringReader, TCPClient.TCPBean.class);
-						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+						  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 										  .filter(channel -> channel instanceof TCPClient &&
 														  ((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpBean.getPort())
 										  .findFirst();
-						  response = removeChannelIfPresent(request, opFwd);
+						  response = removeChannelIfPresent(request, opClient);
 					  }
 				  } else if (deletePathElem[2].equals("ws")) {            // ws
 					  Gson gson = new GsonBuilder().create();
 					  if (request.getContent() != null) {
 						  StringReader stringReader = new StringReader(new String(request.getContent()));
 						  WebSocketClient.WSBean wsBean = gson.fromJson(stringReader, WebSocketClient.WSBean.class);
-						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+						  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 										  .filter(channel -> channel instanceof WebSocketClient &&
 														  ((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsBean.getWsUri()))
 										  .findFirst();
-						  response = removeChannelIfPresent(request, opFwd);
+						  response = removeChannelIfPresent(request, opClient);
 					  }
 				  } else if (deletePathElem[2].equals("bme280")) {        // bme280
-					  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+					  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 									  .filter(channel -> channel instanceof BME280Client)
 									  .findFirst();
-					  response = removeChannelIfPresent(request, opFwd);
+					  response = removeChannelIfPresent(request, opClient);
 				  } else if (deletePathElem[2].equals("htu21df")) {       // htu21df
-					  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+					  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 									  .filter(channel -> channel instanceof HTU21DFClient)
 									  .findFirst();
-					  response = removeChannelIfPresent(request, opFwd);
+					  response = removeChannelIfPresent(request, opClient);
 				  } else if (deletePathElem[2].equals("rnd")) {           // rnd
-					  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+					  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 									  .filter(channel -> channel instanceof RandomClient)
 									  .findFirst();
-					  response = removeChannelIfPresent(request, opFwd);
+					  response = removeChannelIfPresent(request, opClient);
 				  } else {
 					  // Not implemented
 					  response = new HTTPServer.Response(request.getProtocol(), 404); // Not implemented
