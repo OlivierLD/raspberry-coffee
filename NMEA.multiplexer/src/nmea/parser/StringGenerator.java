@@ -299,8 +299,8 @@ public class StringGenerator {
 	 */
 	public static String generateVDR(String devicePrefix, double speed, double dirT, double dirM) {
 		String vdr = devicePrefix + "VDR,";
-		vdr += (SPEED_FMT.format(dirT) + ",T,");
-		vdr += (SPEED_FMT.format(dirM) + ",M,");
+		vdr += (SPEED_FMT.format((dirT == Double.MAX_VALUE) ? 0 : dirT) + ",T,");
+		vdr += (SPEED_FMT.format((dirM == Double.MAX_VALUE) ? 0 : dirM) + ",M,");
 		vdr += (SPEED_FMT.format(speed) + ",N");
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(vdr);
