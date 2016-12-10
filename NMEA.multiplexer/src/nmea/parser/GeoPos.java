@@ -8,6 +8,10 @@ public class GeoPos implements Serializable {
 	public double lat = 0.0;
 	public double lng = 0.0;
 
+	private final static 		DecimalFormat DF_22 = new DecimalFormat("00.00");
+	private final static 		DecimalFormat DF_2  = new DecimalFormat("00");
+	private final static 		DecimalFormat DF_3  = new DecimalFormat("000");
+
 	public GeoPos(double l,
 	              double g) {
 		this.lat = l;
@@ -27,10 +31,7 @@ public class GeoPos implements Serializable {
 		String sgn = (degree >= 0) ? "N" : "S";
 		double minutes = Math.abs(lat - degree);
 		double hexMin = 100.0 * minutes * (6.0 / 10.0);
-		DecimalFormat df = new DecimalFormat("00.00");
-		String strMinutes = df.format(hexMin);
-		df = new DecimalFormat("00");
-		return sgn + "  " + df.format((long) Math.abs(degree)) + "�" + strMinutes + "'";
+		return sgn + "  " + DF_2.format((long) Math.abs(degree)) + "\u00b0" + DF_22.format(hexMin) + "'";
 	}
 
 	public String getLngInDegMinDec() {
@@ -38,10 +39,7 @@ public class GeoPos implements Serializable {
 		String sgn = (degree >= 0) ? "E" : "W";
 		double minutes = Math.abs(lng - degree);
 		double hexMin = 100.0 * minutes * (6.0 / 10.0);
-		DecimalFormat df = new DecimalFormat("00.00");
-		String strMinutes = df.format(hexMin);
-		df = new DecimalFormat("000");
-		return sgn + " " + df.format((long) Math.abs(degree)) + "�" + strMinutes + "'";
+		return sgn + " " + DF_3.format((long) Math.abs(degree)) + "\u00b0" + DF_22.format(hexMin) + "'";
 	}
 
 	public static GeoPos init() {

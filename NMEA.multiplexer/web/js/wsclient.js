@@ -27,7 +27,16 @@ var connection;
     // most important part - incoming messages
     connection.onmessage = function (message) {
 //      console.log('onmessage:' + message);
-        displayMessage('NMEA String: ' + message.data);
+        if (filters.value.length > 0) {
+            var elements = filters.value.split(",");
+            elements.forEach(function(filter) {
+               if (message.data.indexOf(filter.trim()) > 0) {
+                   displayMessage(message.data);
+               }
+            });
+        } else {
+            displayMessage('NMEA String: ' + message.data);
+        }
     };
 
     /**
