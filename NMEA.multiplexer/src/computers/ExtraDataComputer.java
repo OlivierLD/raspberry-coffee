@@ -49,7 +49,7 @@ public class ExtraDataComputer extends Computer {
 
 	String GENERATED_STRINGS_PREFIX = "OS"; // TODO Prm
 	LongTimeCurrentCalculator longTimeCurrentCalculator = null;
-	private boolean verbose = true;
+	private boolean verbose = false;
 
 	private final List<String> requiredStrings = Arrays.asList(new String[]{"RMC", "VHW", "VTG", "HDG", "HDM", "HDT", "MWV", "VWR"});
 
