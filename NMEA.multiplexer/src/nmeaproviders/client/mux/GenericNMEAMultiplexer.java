@@ -941,7 +941,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			}
 			fwdIdx++;
 		}
-		// Init cache?
+		// Init cache (for Computers)?
 		if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
 			try {
 				String deviationFile = muxProps.getProperty("deviation.file.name", "zero-deviation.csv");
@@ -953,13 +953,13 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				double defaultDeclination = Double.parseDouble(muxProps.getProperty("default.declination", "0"));
 				int damping = Integer.parseInt(muxProps.getProperty("damping", "1"));
 				ApplicationContext.getInstance().initCache(deviationFile, maxLeeway, bspFactor, awsFactor, awaOffset, hdgOffset, defaultDeclination, damping);
+
+				// Computers
+				nmeaDataComputers.add(new TrueWindComputer(this)); // For tests for now
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}
-
-		// Computers
-		nmeaDataComputers.add(new TrueWindComputer(this)); // For tests for now
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
