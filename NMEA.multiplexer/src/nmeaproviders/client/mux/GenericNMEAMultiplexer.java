@@ -2,6 +2,9 @@ package nmeaproviders.client.mux;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import computers.Computer;
+import computers.TrueWindComputer;
+import context.ApplicationContext;
 import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
 import http.HTTPServerInterface;
@@ -46,6 +49,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 	private List<NMEAClient> nmeaDataProviders  = new ArrayList<>();
 	private List<Forwarder>  nmeaDataForwarders = new ArrayList<>();
+	private List<Computer>   nmeaDataComputers  = new ArrayList<>();
 
 	// TODO Operation List
 
@@ -158,60 +162,60 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					  if (request.getContent() != null) {
 						  StringReader stringReader = new StringReader(new String(request.getContent()));
 						  DataFileClient.DataFileBean dataFileBean = gson.fromJson(stringReader, DataFileClient.DataFileBean.class);
-						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+						  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 										  .filter(channel -> channel instanceof DataFileClient &&
 														  ((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(dataFileBean.getFile()))
 										  .findFirst();
-						  response = removeChannelIfPresent(request, opFwd);
+						  response = removeChannelIfPresent(request, opClient);
 					  }
 				  } else if (deletePathElem[2].equals("serial")) {        // serial
 					  Gson gson = new GsonBuilder().create();
 					  if (request.getContent() != null) {
 						  StringReader stringReader = new StringReader(new String(request.getContent()));
 						  SerialClient.SerialBean serialBean = gson.fromJson(stringReader, SerialClient.SerialBean.class);
-						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+						  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 										  .filter(channel -> channel instanceof SerialClient &&
 														  ((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialBean.getPort())) // No need for BaudRate
 										  .findFirst();
-						  response = removeChannelIfPresent(request, opFwd);
+						  response = removeChannelIfPresent(request, opClient);
 					  }
 				  } else if (deletePathElem[2].equals("tcp")) {           // tcp
 					  Gson gson = new GsonBuilder().create();
 					  if (request.getContent() != null) {
 						  StringReader stringReader = new StringReader(new String(request.getContent()));
 						  TCPClient.TCPBean tcpBean = gson.fromJson(stringReader, TCPClient.TCPBean.class);
-						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+						  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 										  .filter(channel -> channel instanceof TCPClient &&
 														  ((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpBean.getPort())
 										  .findFirst();
-						  response = removeChannelIfPresent(request, opFwd);
+						  response = removeChannelIfPresent(request, opClient);
 					  }
 				  } else if (deletePathElem[2].equals("ws")) {            // ws
 					  Gson gson = new GsonBuilder().create();
 					  if (request.getContent() != null) {
 						  StringReader stringReader = new StringReader(new String(request.getContent()));
 						  WebSocketClient.WSBean wsBean = gson.fromJson(stringReader, WebSocketClient.WSBean.class);
-						  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+						  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 										  .filter(channel -> channel instanceof WebSocketClient &&
 														  ((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsBean.getWsUri()))
 										  .findFirst();
-						  response = removeChannelIfPresent(request, opFwd);
+						  response = removeChannelIfPresent(request, opClient);
 					  }
 				  } else if (deletePathElem[2].equals("bme280")) {        // bme280
-					  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+					  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 									  .filter(channel -> channel instanceof BME280Client)
 									  .findFirst();
-					  response = removeChannelIfPresent(request, opFwd);
+					  response = removeChannelIfPresent(request, opClient);
 				  } else if (deletePathElem[2].equals("htu21df")) {       // htu21df
-					  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+					  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 									  .filter(channel -> channel instanceof HTU21DFClient)
 									  .findFirst();
-					  response = removeChannelIfPresent(request, opFwd);
+					  response = removeChannelIfPresent(request, opClient);
 				  } else if (deletePathElem[2].equals("rnd")) {           // rnd
-					  Optional<NMEAClient> opFwd = nmeaDataProviders.stream()
+					  Optional<NMEAClient> opClient = nmeaDataProviders.stream()
 									  .filter(channel -> channel instanceof RandomClient)
 									  .findFirst();
-					  response = removeChannelIfPresent(request, opFwd);
+					  response = removeChannelIfPresent(request, opClient);
 				  } else {
 					  // Not implemented
 					  response = new HTTPServer.Response(request.getProtocol(), 404); // Not implemented
@@ -762,6 +766,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		if (verbose) {
 			System.out.println(">> From MUX: " + mess);
 		}
+		// Computers
+		nmeaDataComputers.stream()
+						.forEach(computer -> {
+							computer.write(mess.getBytes());
+						});
+		// Forwarders
 		nmeaDataForwarders.stream()
 						.forEach(fwd -> {
 							try {
@@ -776,9 +786,11 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	private boolean verbose = false;
 
 	public GenericNMEAMultiplexer(Properties muxProps) {
-		verbose = "true".equals(System.getProperty("mux.data.verbose", "false"));
+		// Read initial config from the properties file.
+		verbose = "true".equals(System.getProperty("mux.data.verbose", "false")); // Initial verbose.
 		int muxIdx = 1;
 		boolean thereIsMore = true;
+		// 1 - Input channels
 		while (thereIsMore) {
 			String typeProp = String.format("mux.%s.type", MUX_IDX_FMT.format(muxIdx));
 			String type = muxProps.getProperty(typeProp);
@@ -880,6 +892,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		}
 		thereIsMore = true;
 		int fwdIdx = 1;
+		// 2 - Output channels
 		while (thereIsMore) {
 			String typeProp = String.format("forward.%s.type", MUX_IDX_FMT.format(fwdIdx));
 			String type = muxProps.getProperty(typeProp);
@@ -928,6 +941,25 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			}
 			fwdIdx++;
 		}
+		// Init cache?
+		if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
+			try {
+				String deviationFile = muxProps.getProperty("deviation.file.name", "zero-deviation.csv");
+				double maxLeeway = Double.parseDouble(muxProps.getProperty("max.leeway", "0"));
+				double bspFactor = Double.parseDouble(muxProps.getProperty("bsp.factor", "1"));
+				double awsFactor = Double.parseDouble(muxProps.getProperty("aws.factor", "1"));
+				double awaOffset = Double.parseDouble(muxProps.getProperty("awa.offset", "0"));
+				double hdgOffset = Double.parseDouble(muxProps.getProperty("hdg.offset", "0"));
+				double defaultDeclination = Double.parseDouble(muxProps.getProperty("default.declination", "0"));
+				int damping = Integer.parseInt(muxProps.getProperty("damping", "1"));
+				ApplicationContext.getInstance().initCache(deviationFile, maxLeeway, bspFactor, awsFactor, awaOffset, hdgOffset, defaultDeclination, damping);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		// Computers
+		nmeaDataComputers.add(new TrueWindComputer(this)); // For tests for now
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
@@ -936,6 +968,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.forEach(client -> client.stopDataRead());
 				nmeaDataForwarders.stream()
 								.forEach(fwd -> fwd.close());
+				nmeaDataComputers.stream()
+								.forEach(comp -> comp.close());
 				if (adminServer != null) {
 					adminServer.stopRunning();
 				}
@@ -967,7 +1001,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		Properties definitions = new Properties();
 		File propFile = new File(propertiesFile);
 		if (!propFile.exists()) {
-			throw new RuntimeException("File nmea.mux.properties not found");
+			throw new RuntimeException(String.format("File [%s] not found", propertiesFile));
 		} else {
 			try {
 				definitions.load(new java.io.FileReader(propFile));
@@ -984,5 +1018,4 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			mux.startAdminServer(Integer.parseInt(definitions.getProperty("http.port", "9999")));
 		}
 	}
-
 }

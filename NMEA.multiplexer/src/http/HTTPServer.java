@@ -243,7 +243,7 @@ public class HTTPServer {
 						if (verbose)
 							System.out.println(">>> Top of the loop <<<");
 						while (keepReading) {
-							if (top) { // Ugly :(
+							if (top) { // Ugly!! :(
 								try {
 									Thread.sleep(100L);
 								} catch (InterruptedException ie) {

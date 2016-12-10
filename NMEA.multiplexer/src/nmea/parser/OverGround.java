@@ -2,43 +2,35 @@ package nmea.parser;
 
 import java.io.Serializable;
 
-public class OverGround implements Serializable
-{
-  double speed;
-  int    course;
-  
-  public OverGround()
-  {
-  }
+public class OverGround implements Serializable {
+	double speed;
+	int course;
 
-  public OverGround(double s, int c)
-  {
-    speed = s;
-    course = c;
-  }
+	public OverGround() {
+	}
 
-  public void setSpeed(double speed)
-  {
-    this.speed = speed;
-  }
+	public OverGround(double s, int c) {
+		speed = s;
+		course = c;
+	}
 
-  public double getSpeed()
-  {
-    return speed;
-  }
+	public void setSpeed(double speed) {
+		this.speed = speed;
+	}
 
-  public void setCourse(int course)
-  {
-    this.course = course;
-  }
+	public double getSpeed() {
+		return speed;
+	}
 
-  public int getCourse()
-  {
-    return course;
-  }
-  
-  public String toString()
-  {
-    return Double.toString(speed) + " kts, " + Integer.toString(course) + "T";
-  }
+	public void setCourse(int course) {
+		this.course = course;
+	}
+
+	public int getCourse() {
+		return course;
+	}
+
+	public String toString() {
+		return Double.toString(speed) + " kts, " + Integer.toString(course) + "T";
+	}
 }

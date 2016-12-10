@@ -7,95 +7,80 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class RMC implements Serializable
-{
-  private GeoPos gp = null;
-  private double sog = 0D;
-  private double cog = 0D;
-  
-  private Date rmcDate = null;
-  private Date rmcTime = null;
-  private double declination = -Double.MAX_VALUE;
+public class RMC implements Serializable {
+	private GeoPos gp = null;
+	private double sog = 0D;
+	private double cog = 0D;
 
-  private final static SimpleDateFormat SDF = new SimpleDateFormat("E dd-MMM-yyyy HH:mm:ss.SS");
-  static
-  {
-    SDF.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-  }
-  
-  public RMC()
-  {
-  }
+	private Date rmcDate = null;
+	private Date rmcTime = null;
+	private double declination = -Double.MAX_VALUE;
 
-  public void setGp(GeoPos gp)
-  {
-    this.gp = gp;
-  }
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("E dd-MMM-yyyy HH:mm:ss.SS");
 
-  public GeoPos getGp()
-  {
-    return gp;
-  }
+	static {
+		SDF.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+	}
 
-  public void setSog(double sog)
-  {
-    this.sog = sog;
-  }
+	public RMC() {
+	}
 
-  public double getSog()
-  {
-    return sog;
-  }
+	public void setGp(GeoPos gp) {
+		this.gp = gp;
+	}
 
-  public void setCog(double cog)
-  {
-    this.cog = cog;
-  }
+	public GeoPos getGp() {
+		return gp;
+	}
 
-  public double getCog()
-  {
-    return cog;
-  }
-  
-  public String toString()
-  {
-    String str = "";
-    str = gp.toString() + ", " + "SOG:" + sog + ", COG:" + cog;
-    if (rmcDate != null)
-      str += (" " + SDF.format(rmcDate) + " ");
-    if (declination != -Double.MAX_VALUE)
-      str += ("D:" + Double.toString(declination));
-    
-    return str;
-  }
+	public void setSog(double sog) {
+		this.sog = sog;
+	}
 
-  public void setRmcDate(Date rmcDate)
-  {
-    this.rmcDate = rmcDate;
-  }
+	public double getSog() {
+		return sog;
+	}
 
-  public Date getRmcDate()
-  {
-    return rmcDate;
-  }
+	public void setCog(double cog) {
+		this.cog = cog;
+	}
 
-  public void setDeclination(double declination)
-  {
-    this.declination = declination;
-  }
+	public double getCog() {
+		return cog;
+	}
 
-  public double getDeclination()
-  {
-    return declination;
-  }
+	public String toString() {
+		String str = "";
+		str = gp.toString() + ", " + "SOG:" + sog + ", COG:" + cog;
+		if (rmcDate != null)
+			str += (" " + SDF.format(rmcDate) + " ");
+		if (declination != -Double.MAX_VALUE)
+			str += ("D:" + Double.toString(declination));
 
-  public void setRmcTime(Date rmcTime)
-  {
-    this.rmcTime = rmcTime;
-  }
+		return str;
+	}
 
-  public Date getRmcTime()
-  {
-    return rmcTime;
-  }
+	public void setRmcDate(Date rmcDate) {
+		this.rmcDate = rmcDate;
+	}
+
+	public Date getRmcDate() {
+		return rmcDate;
+	}
+
+	public void setDeclination(double declination) {
+		this.declination = declination;
+	}
+
+	public double getDeclination() {
+		return declination;
+	}
+
+	public void setRmcTime(Date rmcTime) {
+		this.rmcTime = rmcTime;
+	}
+
+	public Date getRmcTime() {
+		return rmcTime;
+	}
 }
