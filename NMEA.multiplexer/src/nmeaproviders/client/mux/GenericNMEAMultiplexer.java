@@ -3,7 +3,7 @@ package nmeaproviders.client.mux;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import computers.Computer;
-import computers.TrueWindComputer;
+import computers.ExtraDataComputer;
 import context.ApplicationContext;
 import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
@@ -955,7 +955,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				ApplicationContext.getInstance().initCache(deviationFile, maxLeeway, bspFactor, awsFactor, awaOffset, hdgOffset, defaultDeclination, damping);
 
 				// Computers
-				nmeaDataComputers.add(new TrueWindComputer(this)); // For tests for now
+				nmeaDataComputers.add(new ExtraDataComputer(this)); // For tests for now
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

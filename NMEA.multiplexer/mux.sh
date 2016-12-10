@@ -14,7 +14,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Drnd.data.verbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.2.properties"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.properties"
 #
 CP=./build/libs/NMEA.multiplexer-1.0-all.jar
 CP=$CP:./libs/RXTXcomm.jar          # for Mac

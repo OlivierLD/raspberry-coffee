@@ -205,10 +205,10 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 				}
 			} else {
 				ret = super.get(key);
-				if (ret == null) {
-					long age = System.currentTimeMillis() - started;
-					ret = new Long(age);
-				}
+//				if (ret == null) {
+//					long age = System.currentTimeMillis() - started;
+//					ret = new Long(age);
+//				}
 			}
 		} catch (ConcurrentModificationException cme) {
 			System.err.println("Conflict for key [" + key + "] -> " + cme.toString());

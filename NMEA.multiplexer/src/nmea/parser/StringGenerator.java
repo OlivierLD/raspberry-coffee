@@ -301,7 +301,7 @@ public class StringGenerator {
 		String vdr = devicePrefix + "VDR,";
 		vdr += (SPEED_FMT.format((dirT == Double.MAX_VALUE) ? 0 : dirT) + ",T,");
 		vdr += (SPEED_FMT.format((dirM == Double.MAX_VALUE) ? 0 : dirM) + ",M,");
-		vdr += (SPEED_FMT.format(speed) + ",N");
+		vdr += ((Double.isNaN(speed) ? "" : SPEED_FMT.format(speed)) + ",N");
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(vdr);
 		vdr += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));

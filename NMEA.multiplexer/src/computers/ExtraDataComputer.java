@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Extra Data Computer. True Wind and Current.
+ *
  * True Wind calculation requires:
  * <table border='1'>
  * <tr><td>GPS: COG & SOG, Declination</td><td>RMC, VTG, HDM</td></tr>
@@ -43,14 +45,19 @@ import java.util.Set;
  * <br>
  * See {@link ApplicationContext} and {@link NMEADataCache}
  */
-public class TrueWindComputer extends Computer {
+public class ExtraDataComputer extends Computer {
 
-	String GENERATED_STRINGS_PREFIX = "OS";
+	String GENERATED_STRINGS_PREFIX = "OS"; // TODO Prm
+	LongTimeCurrentCalculator longTimeCurrentCalculator = null;
+	private boolean verbose = true;
 
-	private final List<String> requiredStrings = Arrays.asList(new String[]{"RMC", "VTG", "HDG", "HDM", "HDT", "MWV", "VWR"});
+	private final List<String> requiredStrings = Arrays.asList(new String[]{"RMC", "VHW", "VTG", "HDG", "HDM", "HDT", "MWV", "VWR"});
 
-	public TrueWindComputer(Multiplexer mux) {
+	public ExtraDataComputer(Multiplexer mux) {
 		super(mux);
+
+		this.longTimeCurrentCalculator = new LongTimeCurrentCalculator();
+		this.longTimeCurrentCalculator.start();
 	}
 
 	/**
@@ -64,7 +71,7 @@ public class TrueWindComputer extends Computer {
 		if (StringParsers.validCheckSum(sentence)) {
 			String sentenceID = StringParsers.getSentenceID(sentence);
 			if (!GENERATED_STRINGS_PREFIX.equals(StringParsers.getDeviceID(sentence)) && requiredStrings.contains(sentenceID)) { // The process
-	//		System.out.println(">>> TrueWind computer using " + sentence);
+				//		System.out.println(">>> TrueWind computer using " + sentence);
 				NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 				switch (sentenceID) {
 					case "RMC":
@@ -110,6 +117,16 @@ public class TrueWindComputer extends Computer {
 							map.put(NMEADataCache.COG, new Angle360(overGround.getCourse()));
 							map.put(NMEADataCache.SOG, new Speed(overGround.getSpeed()));
 							cache.putAll(map);
+						}
+						break;
+					case "VHW":
+						double[] vhw = StringParsers.parseVHW(sentence);
+						if (vhw == null)
+							return;
+						double bsp = vhw[StringParsers.BSP_in_VHW];
+				//	double hdm = vhw[StringParsers.HDM_in_VHW];
+						if (bsp != -Double.MAX_VALUE) {
+							cache.put(NMEADataCache.BSP, new Speed(bsp));
 						}
 						break;
 					case "HDG":
@@ -206,8 +223,7 @@ public class TrueWindComputer extends Computer {
 						//    System.out.println("1 - Nb entry(ies) in Calculated Current Map:" + keys.size());
 						for (Long l : keys) {
 							int tbl = (int) (l / (60 * 1000));
-							if (tbl > currentTimeBuffer) // Take the bigger one.
-							{
+							if (tbl > currentTimeBuffer) { // Take the bigger one.
 								currentTimeBuffer = tbl;
 								csp = currentMap.get(l).getSpeed().getValue();
 								cdr = (int) Math.round(currentMap.get(l).getDirection().getValue());
@@ -229,10 +245,14 @@ public class TrueWindComputer extends Computer {
 				this.produce(nmeaMWV);
 				this.produce(nmeaVWT);
 				this.produce(nmeaMWD);
-		//	if (csp != 0 && cdr != 0) {
+
+				if (csp != 0 && !Double.isNaN(csp) && cdr != 0) {
+					if (verbose) {
+						System.out.println(String.format(">>>                                     Current Speed %f, dir %d", csp, cdr));
+					}
 					String nmeaVDR = StringGenerator.generateVDR(GENERATED_STRINGS_PREFIX, csp, cdr, cdr - decl);
 					this.produce(nmeaVDR);
-		//	}
+				}
 			}
 		}
 	}
@@ -240,6 +260,9 @@ public class TrueWindComputer extends Computer {
 	@Override
 	public void close() {
 		System.out.println("- Stop Computing True Wind, " + this.getClass().getName());
+		if (this.longTimeCurrentCalculator != null) {
+			this.longTimeCurrentCalculator.stop();
+		}
 	}
 
 	@Override
