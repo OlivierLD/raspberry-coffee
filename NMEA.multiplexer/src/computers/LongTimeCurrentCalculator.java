@@ -257,7 +257,7 @@ public class LongTimeCurrentCalculator {
 	}
 
 	public void stop() {
-		System.out.println(this.getClass().getName() + " is terminating (" + System.currentTimeMillis() + ")");
+		System.out.println("    " + this.getClass().getName() + " is terminating (at epoch " + System.currentTimeMillis() + ")");
 		keepWatching = false;
 		synchronized (watcher) {
 			watcher.notify();

@@ -588,19 +588,20 @@ var manageMuxVerbose = function(cb) {
 };
 
 var showAddChannel = function() {
-    $("#add-forwarder").css('display', 'none');
-    $("#add-channel").css('display', 'inline');
-    $("#add-computer").css('display', 'none');
+    showDivs(true, false, false);
 };
 
 var showAddForwarder = function() {
-    $("#add-forwarder").css('display', 'inline');
-    $("#add-channel").css('display', 'none');
-    $("#add-computer").css('display', 'none');
+    showDivs(false, true, false);
 };
 
 var showAddComputer = function() {
-    $("#add-forwarder").css('display', 'none');
-    $("#add-channel").css('display', 'none');
-    $("#add-computer").css('display', 'inline');
+    showDivs(false, false, true);
+};
+
+var showDivs = function(channels, forwarders, computers) {
+    $("#add-channel").css('display', (channels == true ? 'inline' : 'none'));
+    $("#add-forwarder").css('display', (forwarders == true ? 'inline' : 'none'));
+    $("#add-computer").css('display', (computers == true ? 'inline' : 'none'));
+
 };
