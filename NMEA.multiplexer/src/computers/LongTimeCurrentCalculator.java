@@ -18,7 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 public class LongTimeCurrentCalculator {
-	private final static boolean DEBUG = "true".equals(System.getProperty("current.verbose", "false"));
+	private boolean verbose = false;
+	// buffer.length in milliseconds
+	public final static long DEFAULT_BUFFER_LENGTH = 600000L;
+	private long bufferLength = Long.parseLong(System.getProperty("buffer.length", String.valueOf(DEFAULT_BUFFER_LENGTH))); // Default 10 minutes TODO Parameterize
 
 	private Thread watcher = null;
 	private boolean keepWatching = true;
@@ -35,14 +38,36 @@ public class LongTimeCurrentCalculator {
 	private GreatCirclePoint[] groundData = null;
 	private GreatCirclePoint[] drData = null;
 
-	// buffer.length in milliseconds
-	private long bufferLength = Long.parseLong(System.getProperty("buffer.length", "600000")); // Default 10 minutes TODO Parameterize
-
 	public LongTimeCurrentCalculator() {
-		super();
+		this(DEFAULT_BUFFER_LENGTH);
+	}
+
+	public LongTimeCurrentCalculator(long bufferLength) {
+		this.bufferLength = bufferLength;
+	}
+
+	public boolean isVerbose() {
+		return verbose;
+	}
+
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
+
+	public long getBufferLength() {
+		return bufferLength;
+	}
+
+	/**
+	 * et the time buffer length, in ms.
+	 * @param bufferLength in ms.
+	 */
+	public void setBufferLength(long bufferLength) {
+		this.bufferLength = bufferLength;
 	}
 
 	public void start() {
+
 		System.out.println("Method 'start':" + this.getClass().getName() + " is starting...");
 		final long _betweenLoops = betweenLoops;
 		watcher = new Thread("CurrentCalculatorWatcher") {
@@ -55,7 +80,7 @@ public class LongTimeCurrentCalculator {
 					waitTime = BETWEEN_LOOPS;
 					NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 					if (cache != null) {
-						if (DEBUG)
+						if (verbose)
 							System.out.println("There is a cache...");
 						try {
 							//    synchronized (cache)
@@ -64,8 +89,8 @@ public class LongTimeCurrentCalculator {
 								Object ot = /*(UTCDate)*/cache.get(NMEADataCache.GPS_DATE_TIME);
 								if (ot == null) {
 									ot = /*(UTCTime)*/cache.get(NMEADataCache.GPS_TIME);
-									if (DEBUG) System.out.println("Time from NMEADataCache.GPS_TIME");
-								} else if (DEBUG)
+									if (verbose) System.out.println("Time from NMEADataCache.GPS_TIME");
+								} else if (verbose)
 									System.out.println("Time from NMEADataCache.GPS_DATE_TIME");
 
 								UTCHolder utcDate = null;
@@ -175,17 +200,17 @@ public class LongTimeCurrentCalculator {
 											else
 												keepGoing = false;
 										}
-										if (DEBUG)
+										if (verbose)
 											System.out.println("Inserting Current: on:" + bufferLength + " ms, " + speed + " kts, dir:" + dir);
 
 										((Map<Long, NMEADataCache.CurrentDefinition>) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.CALCULATED_CURRENT)).put(bufferLength, new NMEADataCache.CurrentDefinition(bufferLength, new Speed(speed), new Angle360(dir)));
 
-										if (DEBUG) {
+										if (verbose) {
 											Map<Long, NMEADataCache.CurrentDefinition> map = (Map<Long, NMEADataCache.CurrentDefinition>) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.CALCULATED_CURRENT);
 											System.out.println("Calculated Current Map:" + map.size() + " entry(ies)");
 										}
 									}
-								} else if (DEBUG) {
+								} else if (verbose) {
 									//  if (!utcDate.isNull() && (timeBuffer.size() == 0 || (timeBuffer.size() > 0 && (timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() < utcDate.getValue().getTime()))))
 									System.out.println("utcDate is " + (utcDate == null || utcDate.isNull() ? "" : "not ") + "null");
 									System.out.println("timeBuffer.size() = " + timeBuffer.size());
@@ -205,7 +230,7 @@ public class LongTimeCurrentCalculator {
 					} else
 						System.out.println("... No cache yet");
 					synchronized (this) {
-						if (DEBUG)
+						if (verbose)
 							System.out.println("  ...User exit going to wait, at " + new Date().toString() + " (will wait for " + (waitTime / 1000) + " s)");
 						try {
 							wait(waitTime);

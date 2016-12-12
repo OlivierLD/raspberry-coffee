@@ -81,6 +81,32 @@ var getForwarders = function() {
     return deferred.promise();
 };
 
+var getComputers = function() {
+    var deferred = $.Deferred(),  // a jQuery deferred
+        url = '/computers',
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = 10000;
+
+    xhr.open('GET', url, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send();
+
+    var requestTimer = setTimeout(function() {
+        xhr.abort();
+        deferred.reject();
+    }, TIMEOUT);
+
+    xhr.onload = function() {
+        clearTimeout(requestTimer);
+        if (xhr.status === 200) {
+            deferred.resolve(xhr.response);
+        } else {
+            deferred.reject();
+        }
+    };
+    return deferred.promise();
+};
+
 var addForwarder = function(channel) {
     var deferred = $.Deferred(),  // a jQuery deferred
         url = '/forwarders',
@@ -135,6 +161,33 @@ var addChannel = function(channel) {
   return deferred.promise();
 };
 
+var addComputer = function(computer) {
+    var deferred = $.Deferred(),  // a jQuery deferred
+        url = '/computers',
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = 10000;
+
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.send(JSON.stringify(computer));
+
+    var requestTimer = setTimeout(function() {
+        xhr.abort();
+        deferred.reject();
+    }, TIMEOUT);
+
+    xhr.onload = function() {
+        clearTimeout(requestTimer);
+        if (xhr.status === 200) {
+            deferred.resolve(xhr.response);
+        } else {
+            deferred.reject();
+        }
+    };
+    return deferred.promise();
+};
+
 var updateChannel = function(channel) {
     var deferred = $.Deferred(),  // a jQuery deferred
         url = '/channels',
@@ -145,6 +198,33 @@ var updateChannel = function(channel) {
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.send(JSON.stringify(channel));
+
+    var requestTimer = setTimeout(function() {
+        xhr.abort();
+        deferred.reject();
+    }, TIMEOUT);
+
+    xhr.onload = function() {
+        clearTimeout(requestTimer);
+        if (xhr.status === 200) {
+            deferred.resolve(xhr.response);
+        } else {
+            deferred.reject();
+        }
+    };
+    return deferred.promise();
+};
+
+var updateComputer = function(computer) {
+    var deferred = $.Deferred(),  // a jQuery deferred
+        url = '/computers',
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = 10000;
+
+    xhr.open('PUT', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.send(JSON.stringify(computer));
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
@@ -199,6 +279,33 @@ var deleteForwarder = function(channel) {
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.send(JSON.stringify(channel));
+
+    var requestTimer = setTimeout(function() {
+        xhr.abort();
+        deferred.reject();
+    }, TIMEOUT);
+
+    xhr.onload = function() {
+        clearTimeout(requestTimer);
+        if (xhr.status === 204) {
+            deferred.resolve(xhr.response);
+        } else {
+            deferred.reject();
+        }
+    };
+    return deferred.promise();
+};
+
+var deleteComputer = function(computer) {
+    var deferred = $.Deferred(),  // a jQuery deferred
+        url = '/computers/' + computer.type,
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = 10000;
+
+    xhr.open('DELETE', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.send(JSON.stringify(computer));
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
@@ -342,6 +449,32 @@ var forwarderList = function() {
     });
 };
 
+var computerList = function() {
+    var getData = getComputers();
+    getData.done(function(value) {
+        console.log("Done:", value);
+        var json = JSON.parse(value);
+        var html = "<h5>Computes and writes</h5>" +
+            "<table>";
+        html += "<tr><th>Type</th><th>Parameters</th><th>verb.</th></tr>"
+        for (var i=0; i<json.length; i++) {
+            var type = json[i].type;
+            switch (type) {
+                case 'tw-current':
+                    html += ("<tr><td valign='top'><b>tw-current</b></td><td valign='top'>Prefix: " + json[i].prefix + "<br>Timebuffer length:" + json[i].timeBufferLength + " ms.</td><td valign='top'><input type='checkbox' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    break;
+                default:
+                    break;
+            }
+        }
+        html += "</table>";
+        $("#lists").html(html);
+    });
+    getData.fail(function(error) {
+        alert("Failed to set the value..." + (error !== undefined ? error : ''));
+    });
+};
+
 var createChannel = function(channel) {
   var postData = addChannel(channel);
     postData.done(function(value) {
@@ -358,6 +491,17 @@ var createForwarder = function(channel) {
     postData.done(function(value) {
         console.log("Done:", value);
         forwarderList(); // refetch
+    });
+    postData.fail(function(error) {
+        alert("Failed to create channel..." + (error !== undefined ? error : ''));
+    });
+};
+
+var createComputer = function(computer) {
+    var postData = addComputer(computer);
+    postData.done(function(value) {
+        console.log("Done:", value);
+        computerList(); // refetch
     });
     postData.fail(function(error) {
         alert("Failed to create channel..." + (error !== undefined ? error : ''));
@@ -386,6 +530,17 @@ var removeForwarder = function(channel) {
     });
 };
 
+var removeComputer = function(computer) {
+    var deleteData = deleteComputer(computer);
+    deleteData.done(function(value) {
+        console.log("Done:", value);
+        computerList(); // refetch
+    });
+    deleteData.fail(function(error) {
+        alert("Failed to delete computer..." + (error !== undefined ? error : ''));
+    });
+};
+
 var changeChannel = function(channel) {
     var putData = updateChannel(channel);
     putData.done(function(value) {
@@ -397,11 +552,29 @@ var changeChannel = function(channel) {
     });
 };
 
+var changeComputer = function(computer) {
+    var putData = updateComputer(computer);
+    putData.done(function(value) {
+        console.log("Done:", value);
+        computerList(); // refetch
+    });
+    putData.fail(function(error) {
+        alert("Failed to update computer..." + (error !== undefined ? error : ''));
+    });
+};
+
 var manageChannelVerbose = function(cb, channel) {
     console.log('Clicked checkbox on', channel, ' checked:', cb.checked);
     // PUT on the channel.
     channel.verbose = cb.checked;
     changeChannel(channel);
+};
+
+var manageComputerVerbose = function(cb, computer) {
+    console.log('Clicked checkbox on', computer, ' checked:', cb.checked);
+    // PUT on the channel.
+    computer.verbose = cb.checked;
+    changeComputer(computer);
 };
 
 var manageMuxVerbose = function(cb) {
@@ -417,9 +590,17 @@ var manageMuxVerbose = function(cb) {
 var showAddChannel = function() {
     $("#add-forwarder").css('display', 'none');
     $("#add-channel").css('display', 'inline');
+    $("#add-computer").css('display', 'none');
 };
 
 var showAddForwarder = function() {
     $("#add-forwarder").css('display', 'inline');
     $("#add-channel").css('display', 'none');
+    $("#add-computer").css('display', 'none');
+};
+
+var showAddComputer = function() {
+    $("#add-forwarder").css('display', 'none');
+    $("#add-channel").css('display', 'none');
+    $("#add-computer").css('display', 'inline');
 };
