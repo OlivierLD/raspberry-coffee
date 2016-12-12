@@ -74,9 +74,9 @@ public class WebSocketWriter implements Forwarder {
 	}
 
 	public static class WSBean {
-		String cls;
-		String wsUri;
-		String type = "ws";
+		private String cls;
+		private String wsUri;
+		private String type = "ws";
 
 		public WSBean(WebSocketWriter instance) {
 			cls = instance.getClass().getName();

@@ -25,9 +25,8 @@ public class ComputePi {
 			Compute comp = (Compute) registry.lookup(bindingName);   // RMI Name
 
 			Pi task = new Pi(Integer.parseInt(args[2]));             // Precision
-			BigDecimal pi = comp.executeTask(task);
+			BigDecimal pi = comp.executeTask(task);                  // Invoke the task on the server.
 			System.out.println(pi);
-
 		} catch (Exception e) {
 			System.err.println("ComputePi exception:");
 			e.printStackTrace();

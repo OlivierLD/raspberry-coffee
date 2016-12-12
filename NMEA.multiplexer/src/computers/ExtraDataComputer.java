@@ -89,7 +89,8 @@ public class ExtraDataComputer extends Computer {
 		String sentence = new String(mess);
 		if (StringParsers.validCheckSum(sentence)) {
 			String sentenceID = StringParsers.getSentenceID(sentence);
-			if (!generatedStringsPrefix.equals(StringParsers.getDeviceID(sentence)) && requiredStrings.contains(sentenceID)) { // The process
+			if (!generatedStringsPrefix.equals(StringParsers.getDeviceID(sentence)) && // To prevent re-computing of computed data.
+							requiredStrings.contains(sentenceID)) { // The process
 				if (this.verbose) {
 					System.out.println(">>> TrueWind computer using " + sentence);
 				}
@@ -293,12 +294,12 @@ public class ExtraDataComputer extends Computer {
 	}
 
 	public static class ComputerBean {
-		String cls;
-		String type = "tw-current";
-		long timeBufferLength = 600000;
-		int cacheSize = 0;
-		boolean verbose = false;
-		String prefix = "OS";
+		private String cls;
+		private String type = "tw-current";
+		private long timeBufferLength = 600000;
+		private int cacheSize = 0;
+		private boolean verbose = false;
+		private String prefix = "OS";
 
 		public int getCacheSize() {
 			return this.cacheSize;

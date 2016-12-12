@@ -18,8 +18,8 @@ public class ConsoleWriter implements Forwarder {
 	}
 
 	private static class ConsoleBean {
-		String cls;
-		String type = "console";
+		private String cls;
+		private String type = "console";
 
 		public ConsoleBean(ConsoleWriter instance) {
 			cls = instance.getClass().getName();

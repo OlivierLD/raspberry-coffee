@@ -17,6 +17,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Does the current - speed and direction - over a given period of time, rather than
+ * on an instant triangulation.
+ * That turns out to be way more accurate.
+ *
+ * It requires GPS Data, Apparent Wind Data, Heading, Deviation and Deviation.
+ * There is a section dedicated to those details at http://www.lediouris.net/RaspberryPI/_Articles/readme.html.
+ */
 public class LongTimeCurrentCalculator {
 	private boolean verbose = false;
 	// buffer.length in milliseconds

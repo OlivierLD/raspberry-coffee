@@ -140,10 +140,10 @@ public class TCPWriter implements Forwarder {
 	}
 
 	public static class TCPBean {
-		String cls;
-		int port;
-		String type = "tcp";
-		int nbClients = 0;
+		private String cls;
+		private int port;
+		private String type = "tcp";
+		private int nbClients = 0;
 
 		public int getPort() {
 			return port;

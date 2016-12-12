@@ -43,9 +43,9 @@ public class DataFileWriter implements Forwarder {
 		return this.log;
 	}
 	public static class DataFileBean {
-		String cls;
-		String log;
-		String type = "file";
+		private String cls;
+		private String log;
+		private String type = "file";
 
 		public DataFileBean(DataFileWriter instance) {
 			cls = instance.getClass().getName();

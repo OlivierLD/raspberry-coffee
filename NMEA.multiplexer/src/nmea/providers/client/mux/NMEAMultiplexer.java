@@ -9,6 +9,10 @@ import nmea.providers.reader.DataFileReader;
 import nmea.providers.reader.SerialReader;
 import nmea.providers.reader.TCPReader;
 
+/**
+ * Just a sample, for validation of the concept.
+ * Use {@link GenericNMEAMultiplexer} instead (for production).
+ */
 public class NMEAMultiplexer implements Multiplexer {
 	@Override
 	public synchronized void onData(String mess) {
