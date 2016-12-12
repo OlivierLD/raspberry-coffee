@@ -11,8 +11,6 @@ public class ApplicationContext {
 	NMEADataCache dataCache = null;
 
 	private ApplicationContext() {
-
-		dataCache = new NMEADataCache();
 	}
 
 	public NMEADataCache getDataCache() {
@@ -26,6 +24,9 @@ public class ApplicationContext {
 	}
 
 	public void initCache(String deviationFileName, double maxLeeway, double bspFactor, double awsFactor, double awaOffset, double hdgOffset, double defaultDeclination, int damping) {
+
+		dataCache = new NMEADataCache();
+
 		List<double[]> deviationCurve = NMEAUtils.loadDeviationCurve(deviationFileName);
 		dataCache.put(NMEADataCache.DEVIATION_FILE, deviationFileName);
 		dataCache.put(NMEADataCache.DEVIATION_DATA, deviationCurve);

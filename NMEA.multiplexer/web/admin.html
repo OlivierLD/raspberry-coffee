@@ -16,6 +16,11 @@
             manageForwardSelection(x);
         };
 
+        var computerSelectManager = function() {
+            var x = document.getElementById("computer-select").value;
+            manageComputerSelection(x);
+        };
+
         var manageChannelSelection = function(selected) {
             switch (selected) {
                 case 'serial':
@@ -117,6 +122,16 @@
             }
         };
 
+        var manageComputerSelection = function(selected) {
+            switch (selected) {
+                case 'tw-current':
+                    $("#computer-twc").css('display', 'inline');
+                    break;
+                default:
+                    break;
+            }
+        };
+
         var requestChannelCreation = function() {
             var x = document.getElementById("channel-select").value;
             switch (x) {
@@ -205,6 +220,23 @@
                     break;
             }
         };
+
+        var requestComputerCreation = function() {
+            var x = document.getElementById("computer-select").value;
+            switch (x) {
+                case 'tw-current':
+                    var prefix = $("#cptr-twc-prefix").val();
+                    var tbl = $("#cptr-twc-tbl").val();
+                    createComputer({
+                        type: 'tw-current',
+                        prefix: prefix,
+                        timeBufferLength: tbl
+                    });
+                    break;
+                default:
+                    break;
+            }
+        };
     </script>
   </head>
   <body>
@@ -214,12 +246,15 @@
       <button onclick="serialPortList();">Fetch Serial Ports list</button>
       <button onclick="channelList();">Fetch Channels list</button>
       <button onclick="forwarderList();">Fetch Forwarders list</button>
+      <button onclick="computerList();">Fetch Computers list</button>
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
 
       <div id="lists" style="padding:2px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height:200px;"></div>
     </p>
     <p>
-      <button onclick="showAddChannel();">Add a Channel</button>&nbsp;<button onclick="showAddForwarder();">Add a Forwarder</button>
+      <button onclick="showAddChannel();">Add a Channel</button>&nbsp;
+      <button onclick="showAddForwarder();">Add a Forwarder</button>&nbsp;
+      <button onclick="showAddComputer();">Add a Computer</button>
       <div id="add-channel" style="display: none;">
         <h4>Add a Channel</h4>
         <table>
@@ -344,6 +379,33 @@
         </table>
         <button onclick="requestForwardCreation();">Add</button>
       </div>
+      <div id="add-computer" style="display: none;">
+        <h4>Add a computer</h4>
+        <table>
+          <tr>
+            <td valign="top">
+              <select id="computer-select" onchange="forwardSelectManager();">
+                <option value="tw-current">True Wind and Current</option>
+              </select>
+            </td>
+            <td valign="top">
+              <div id="computer-twc" style="display: inline;">
+                <table>
+                  <tr>
+                    <td>Prefix</td>
+                    <td><input id="cptr-twc-prefix" type="text" placeholder="OS" size="5"></td>
+                  </tr>
+                  <tr>
+                    <td>Time Buffer Length</td>
+                    <td><input id="cptr-twc-tbl" type="text" placeholder="600000" size="10"></td>
+                  </tr>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <button onclick="requestComputerCreation();">Add</button>
+    </div>
     </p>
     <hr/>
     <address>Oliv fecit, AD 2016.</address>

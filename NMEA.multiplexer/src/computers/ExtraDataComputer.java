@@ -47,19 +47,38 @@ import java.util.Set;
  */
 public class ExtraDataComputer extends Computer {
 
-	String GENERATED_STRINGS_PREFIX = "OS"; // TODO Prm
-	LongTimeCurrentCalculator longTimeCurrentCalculator = null;
-	private boolean verbose = false;
+	private final static String DEFAULT_PREFIX = "OS"; // OlivSoft
+
+	private String generatedStringsPrefix = DEFAULT_PREFIX;
+	private LongTimeCurrentCalculator longTimeCurrentCalculator = null;
 
 	private final List<String> requiredStrings = Arrays.asList(new String[]{"RMC", "VHW", "VTG", "HDG", "HDM", "HDT", "MWV", "VWR"});
 
 	public ExtraDataComputer(Multiplexer mux) {
-		super(mux);
+	  this(mux, DEFAULT_PREFIX, LongTimeCurrentCalculator.DEFAULT_BUFFER_LENGTH);
+	}
 
-		this.longTimeCurrentCalculator = new LongTimeCurrentCalculator();
+	public void setPrefix(String prefix) {
+		this.generatedStringsPrefix = prefix;
+	}
+
+	public ExtraDataComputer(Multiplexer mux, String prefix, long tbl) {
+		super(mux);
+		if (prefix == null || prefix.length() != 2) {
+			throw new RuntimeException("Prefix must exist, and be exactky 2 character long.");
+		}
+		this.generatedStringsPrefix = prefix;
+		this.longTimeCurrentCalculator = new LongTimeCurrentCalculator(tbl);
+		this.longTimeCurrentCalculator.setVerbose(this.verbose);
 		this.longTimeCurrentCalculator.start();
 	}
 
+	public void setTimeBufferLength(long tbl) {
+		if (verbose) {
+			System.out.println(String.format("Settinh time buffer length to %d", tbl));
+		}
+		this.longTimeCurrentCalculator.setBufferLength(tbl);
+	}
 	/**
 	 * Receives the data, and potentially produces new ones.
 	 *
@@ -70,8 +89,10 @@ public class ExtraDataComputer extends Computer {
 		String sentence = new String(mess);
 		if (StringParsers.validCheckSum(sentence)) {
 			String sentenceID = StringParsers.getSentenceID(sentence);
-			if (!GENERATED_STRINGS_PREFIX.equals(StringParsers.getDeviceID(sentence)) && requiredStrings.contains(sentenceID)) { // The process
-				//		System.out.println(">>> TrueWind computer using " + sentence);
+			if (!generatedStringsPrefix.equals(StringParsers.getDeviceID(sentence)) && requiredStrings.contains(sentenceID)) { // The process
+				if (this.verbose) {
+					System.out.println(">>> TrueWind computer using " + sentence);
+				}
 				NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 				switch (sentenceID) {
 					case "RMC":
@@ -236,11 +257,11 @@ public class ExtraDataComputer extends Computer {
 				}
 				//  System.out.println("From TrueWindSentenceInsertion, TWS:" + tws);
 
-				String nmeaVWT = StringGenerator.gerenateVWT(GENERATED_STRINGS_PREFIX, tws, twa);
-				String nmeaMWV = StringGenerator.generateMWV(GENERATED_STRINGS_PREFIX, tws,
+				String nmeaVWT = StringGenerator.gerenateVWT(generatedStringsPrefix, tws, twa);
+				String nmeaMWV = StringGenerator.generateMWV(generatedStringsPrefix, tws,
 								(int) Math.round(twa),
 								StringParsers.TRUE_WIND);
-				String nmeaMWD = StringGenerator.generateMWD(GENERATED_STRINGS_PREFIX, twd, tws, decl);
+				String nmeaMWD = StringGenerator.generateMWD(generatedStringsPrefix, twd, tws, decl);
 
 				this.produce(nmeaMWV);
 				this.produce(nmeaVWT);
@@ -250,11 +271,17 @@ public class ExtraDataComputer extends Computer {
 					if (verbose) {
 						System.out.println(String.format(">>>                                     Current Speed %f, dir %d", csp, cdr));
 					}
-					String nmeaVDR = StringGenerator.generateVDR(GENERATED_STRINGS_PREFIX, csp, cdr, cdr - decl);
+					String nmeaVDR = StringGenerator.generateVDR(generatedStringsPrefix, csp, cdr, cdr - decl);
 					this.produce(nmeaVDR);
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setVerbose(boolean verbose) {
+		super.setVerbose(verbose);
+		this.longTimeCurrentCalculator.setVerbose(verbose);
 	}
 
 	@Override
@@ -265,8 +292,41 @@ public class ExtraDataComputer extends Computer {
 		}
 	}
 
+	public static class ComputerBean {
+		String cls;
+		String type = "tw-current";
+		long timeBufferLength = 600000;
+		int cacheSize = 0;
+		boolean verbose = false;
+		String prefix = "OS";
+
+		public int getCacheSize() {
+			return this.cacheSize;
+		}
+
+		public long getTimeBufferLength() {
+			return timeBufferLength;
+		}
+
+		public String getPrefix() {
+			return prefix;
+		}
+
+		public boolean isVerbose() {
+			return verbose;
+		}
+
+		public ComputerBean(ExtraDataComputer instance) {
+			this.cls = instance.getClass().getName();
+			this.cacheSize = ApplicationContext.getInstance().getDataCache().size();
+			this.verbose = instance.isVerbose();
+			this.timeBufferLength = instance.longTimeCurrentCalculator.getBufferLength();
+			this.prefix = instance.generatedStringsPrefix;
+		}
+	}
+
 	@Override
 	public Object getBean() {
-		return null;
+		return new ComputerBean(this);
 	}
 }
