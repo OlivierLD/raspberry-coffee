@@ -73,15 +73,15 @@ To run it, modify `mux.sh` to fit your environment, and run
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
 To install it (once):
-```
+```bash
  $> npm install
 ```
 Then, to run it,
-```
+```bash
  $> node wsnmea.js
 ```
 or
-```
+```bash
  $> npm start
 ```
 
@@ -91,7 +91,7 @@ The properties files like `nmea.mux.proeprties` defines the configuration at sta
 You can remotely manage the input channels and the re-broadcasting ones through a REST interface.
 The soft includes a dedicated HTTP Server. The http port is driven by a propety (in `nmea.mux.properties`).
 Same if you want the HTTP server to be started or not.
-```
+```properties
 with.http.server=yes
 http.port=9999
 
@@ -115,7 +115,7 @@ The list of _available_ serial ports.
  GET /channels
 ```
 returns a payload like
-```
+```json
 [
   {
     "cls": "nmeaproviders.client.SerialClient",
@@ -134,7 +134,7 @@ returns a payload like
  GET /forwarders
 ```
 returns a payload like
-```
+```json
 [
   {
     "cls": "servers.TCPWriter",
@@ -153,7 +153,7 @@ returns a payload like
 ```
 `type` is one of
 - `file`. requires a body like 
- ```
+ ```json
 { 
     "log": "./data.nmea",
     "type": "file"
@@ -162,7 +162,7 @@ returns a payload like
 identical to the elements returned by `GET /forwarders`.
 - `console`. requires no body.
 - `tcp`. requires a body like 
-```
+```json
 {
      "port": 7002,
      "type": "tcp"
@@ -170,7 +170,7 @@ identical to the elements returned by `GET /forwarders`.
 ```
 identical to the elements returned by `GET /forwarders`.
 - `ws`. requires a body like 
-```
+```json
 {
    "wsUri": "ws://localhost:9876/",
    "type": "ws"
@@ -187,7 +187,7 @@ identical to the elements returned by `GET /forwarders`.
 ```
 with payloads like:
 - `file`. requires a body like 
- ```
+ ```json
 { 
     "log": "./data.nmea",
     "type": "file"
@@ -195,13 +195,13 @@ with payloads like:
 ```
 identical to the elements returned by `GET /forwarders`.
 - `console`. requires a body like 
-```
+```json
 { 
      "type": "console"
 }
 ```
 - `tcp`. requires a body like 
-```
+```json
 {
      "port": 7002,
      "type": "tcp"
@@ -209,7 +209,7 @@ identical to the elements returned by `GET /forwarders`.
 ```
 identical to the elements returned by `GET /forwarders`.
 - `ws`. requires a body like 
-```
+```json
 {
    "wsUri": "ws://localhost:9876/",
    "type": "ws"
