@@ -561,30 +561,35 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					}
 				} else if (postPathElem != null && postPathElem.length >= 2 && postPathElem[1].equals("computers")) {
 					if (type.equals("tw-current")) {
-						if (request.getContent() != null && request.getContent().length > 0) {
-							ExtraDataComputer.ComputerBean json = new Gson().fromJson(new String(request.getContent()), ExtraDataComputer.ComputerBean.class);
-							// Check if not there yet.
-							Optional<Computer> opComputer = nmeaDataComputers.stream()
-											.filter(channel -> channel instanceof ExtraDataComputer)
-											.findFirst();
-							if (!opComputer.isPresent()) {
-								try {
-									Computer twsCurrentComputer = new ExtraDataComputer(this, json.getPrefix(), json.getTimeBufferLength());
-									nmeaDataComputers.add(twsCurrentComputer);
-									response = new HTTPServer.Response(request.getProtocol(), 200);
-									String content = new Gson().toJson(twsCurrentComputer.getBean());
-									generateHappyResponseHeaders(response, content.length());
-									response.setPayload(content.getBytes());
-								} catch (Exception ex) {
+						if (ApplicationContext.getInstance().getDataCache() == null) {
+							System.err.println(">>> Cannot add a computer: No Cache initailized. See the properties file. <<<");
+							response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+						} else {
+							if (request.getContent() != null && request.getContent().length > 0) {
+								ExtraDataComputer.ComputerBean json = new Gson().fromJson(new String(request.getContent()), ExtraDataComputer.ComputerBean.class);
+								// Check if not there yet.
+								Optional<Computer> opComputer = nmeaDataComputers.stream()
+												.filter(channel -> channel instanceof ExtraDataComputer)
+												.findFirst();
+								if (!opComputer.isPresent()) {
+									try {
+										Computer twsCurrentComputer = new ExtraDataComputer(this, json.getPrefix(), json.getTimeBufferLength());
+										nmeaDataComputers.add(twsCurrentComputer);
+										response = new HTTPServer.Response(request.getProtocol(), 200);
+										String content = new Gson().toJson(twsCurrentComputer.getBean());
+										generateHappyResponseHeaders(response, content.length());
+										response.setPayload(content.getBytes());
+									} catch (Exception ex) {
+										response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
+										ex.printStackTrace();
+									}
+								} else {
+									// Already there
 									response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
-									ex.printStackTrace();
 								}
 							} else {
-								// Already there
 								response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
 							}
-						} else {
-							response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
 						}
 					}
 				}
@@ -1032,7 +1037,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			}
 			fwdIdx++;
 		}
-		// Init cache (for Computers)?
+		// Init cache (for Computers).
 		if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
 			try {
 				String deviationFile = muxProps.getProperty("deviation.file.name", "zero-deviation.csv");
