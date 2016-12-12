@@ -1,6 +1,4 @@
 $(document).ready(function() {
-
-
 });
 
 var getSerialPorts = function() {
@@ -600,8 +598,7 @@ var showAddComputer = function() {
 };
 
 var showDivs = function(channels, forwarders, computers) {
-    $("#add-channel").css('display', (channels == true ? 'inline' : 'none'));
-    $("#add-forwarder").css('display', (forwarders == true ? 'inline' : 'none'));
-    $("#add-computer").css('display', (computers == true ? 'inline' : 'none'));
-
+    $("#add-channel").css('display', (channels === true ? 'inline' : 'none'));
+    $("#add-forwarder").css('display', (forwarders === true ? 'inline' : 'none'));
+    $("#add-computer").css('display', (computers === true ? 'inline' : 'none'));
 };

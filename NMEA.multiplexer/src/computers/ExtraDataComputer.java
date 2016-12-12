@@ -36,7 +36,7 @@ import java.util.Set;
  * <tr><td>TRUE Heading</td><td>VHW, HDT, HDM</td></tr>
  * <tr><td>Leeway</td><td></td></tr>
  * </table>
- * Also take care of possible corrections:
+ * Also takes care of possible corrections:
  * <ul>
  * <li>BSP Coeff</li>
  * <li>AWS coeff, AWA offset</li>
@@ -75,7 +75,7 @@ public class ExtraDataComputer extends Computer {
 
 	public void setTimeBufferLength(long tbl) {
 		if (verbose) {
-			System.out.println(String.format("Settinh time buffer length to %d", tbl));
+			System.out.println(String.format("Setting time buffer length to %d", tbl));
 		}
 		this.longTimeCurrentCalculator.setBufferLength(tbl);
 	}
@@ -296,7 +296,7 @@ public class ExtraDataComputer extends Computer {
 	public static class ComputerBean {
 		private String cls;
 		private String type = "tw-current";
-		private long timeBufferLength = 600000;
+		private long timeBufferLength = 600000; // Default is 10 minutes.
 		private int cacheSize = 0;
 		private boolean verbose = false;
 		private String prefix = "OS";
