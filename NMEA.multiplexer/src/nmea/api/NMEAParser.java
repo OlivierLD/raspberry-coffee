@@ -1,5 +1,7 @@
 package nmea.api;
 
+import http.utils.DumpUtil;
+
 import java.util.List;
 
 
@@ -22,7 +24,7 @@ public final class NMEAParser extends Thread {
 	private final static long MAX_STREAM_SIZE = 2048;
 	public final static String STANDARD_NMEA_EOS = new String(new char[]{0x0A, 0x0D}); // "\r\n";
 
-	private final static String SPLIT_NMEA_SENTENCE_AT = "\n";
+	public final static String NMEA_SENTENCE_SEPARATOR = "\n";
 
 	private List<NMEAListener> NMEAListeners = null; // new ArrayList(2);
 
@@ -67,11 +69,11 @@ public final class NMEAParser extends Thread {
 	}
 
 //	public void setEOS(String str) {
-//		SPLIT_NMEA_SENTENCE_AT = str;
+//		NMEA_SENTENCE_SEPARATOR = str;
 //	}
 
 //	public static String getEOS() {
-//		return SPLIT_NMEA_SENTENCE_AT;
+//		return NMEA_SENTENCE_SEPARATOR;
 //	}
 
 	public String[] getNmeaSentence() {
@@ -94,9 +96,12 @@ public final class NMEAParser extends Thread {
 		String ret = null;
 		try {
 			if (interesting()) {
-				int end = nmeaStream.indexOf(SPLIT_NMEA_SENTENCE_AT);
+				// DEBUG
+//			System.out.println("=== NMEAParser ===");
+//			DumpUtil.displayDualDump(nmeaStream);
+				int end = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 				ret = nmeaStream.substring(0, end);
-				nmeaStream = nmeaStream.substring(end + SPLIT_NMEA_SENTENCE_AT.length());
+				nmeaStream = nmeaStream.substring(end + NMEA_SENTENCE_SEPARATOR.length());
 			} else {
 				if (nmeaStream.length() > MAX_STREAM_SIZE)
 					nmeaStream = ""; // Reset to avoid OutOfMemoryException
@@ -115,14 +120,14 @@ public final class NMEAParser extends Thread {
 
 //  int beginIdx = nmeaStream.indexOf("$" + this.nmeaPrefix);
 		int beginIdx = nmeaStream.indexOf("$");
-		int endIdx = nmeaStream.indexOf(SPLIT_NMEA_SENTENCE_AT);
+		int endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 
 		if (beginIdx == -1 && endIdx == -1)
 			return false; // No beginning, no end !
 
 		if (endIdx > -1 && endIdx < beginIdx) // Seek the beginning of a sentence
 		{
-			nmeaStream = nmeaStream.substring(endIdx + SPLIT_NMEA_SENTENCE_AT.length());
+			nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
 //    beginIdx = nmeaStream.indexOf("$" + this.nmeaPrefix);
 			beginIdx = nmeaStream.indexOf("$");
 		}
@@ -135,7 +140,7 @@ public final class NMEAParser extends Thread {
 					// The stream should here begin with $XX
 					if (nmeaStream.length() > 6) // "$" + prefix + XXX
 					{
-						endIdx = nmeaStream.indexOf(SPLIT_NMEA_SENTENCE_AT);
+						endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 						if (endIdx > -1) {
 							if (nmeaSentence != null) {
 								for (int i = 0; i < this.nmeaSentence.length; i++) {
@@ -157,7 +162,7 @@ public final class NMEAParser extends Thread {
 //              System.out.println("Taking everything!");
 								return true; // Take all
 							}
-							nmeaStream = nmeaStream.substring(endIdx + SPLIT_NMEA_SENTENCE_AT.length());
+							nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
 						} else
 							return false; // unfinished sentence
 					} else

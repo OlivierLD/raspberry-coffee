@@ -11,6 +11,7 @@ import http.HTTPServerInterface;
 import http.utils.DumpUtil;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
+import nmea.api.NMEAParser;
 import nmea.providers.client.BME280Client;
 import nmea.providers.client.DataFileClient;
 import nmea.providers.client.HTU21DFClient;
@@ -873,7 +874,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		nmeaDataForwarders.stream()
 						.forEach(fwd -> {
 							try {
-								fwd.write(mess.getBytes());
+								fwd.write((mess.trim() + NMEAParser.STANDARD_NMEA_EOS).getBytes());
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

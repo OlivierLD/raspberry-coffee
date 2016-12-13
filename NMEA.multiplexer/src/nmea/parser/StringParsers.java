@@ -2118,6 +2118,10 @@ public class StringParsers {
 		System.out.println("Dew point:" + (mda.dewC == null ? "null" : "not null"));
 		System.out.println("Water T:" + ((mda.waterT == null) ? "null" : mda.waterT) + " Rel Hum:" + ((mda.relHum == null) ? "null" : mda.relHum));
 
+		str = "$CCMWV,194.0,T,018.5,N,A*3B\r\n";
+		valid = validCheckSum(str);
+		System.out.println("MWV Chain is " + (valid ? "" : "not ") + "valid");
+
 		System.out.println(String.format("Device ID: %s ", getDeviceID(str)));
 		System.out.println(String.format("Sentence ID: %s ", getSentenceID(str)));
 	}
