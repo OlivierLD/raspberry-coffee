@@ -47,6 +47,8 @@ Forwarders:
 Sensors:
 - **BME280** reads raw data from a BME280 sensor (Temperature, Pressure, Humidity), and produces `XDR` and `MDA` NMEA Sentences.
 - **LSM303** reads raw data from a LSM303 sensor (3D magnetometer), and produces `XDR` NMEA Sentences.
+![I2C Wiring](./i2c.png "Sample I2C Wiring for BME280 & LSM303")
+
 
 Computers:
 - **True Wind** computer (produces `MDA`, `MWD` data)
