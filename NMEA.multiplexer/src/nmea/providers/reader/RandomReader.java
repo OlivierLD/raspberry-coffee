@@ -25,7 +25,7 @@ public class RandomReader extends NMEAReader {
 			// Read data every 1 second
 			try {
 				// Generate NMEA String
-				String customString = generateSentence("AA", "RND", Double.toString(Math.random())) + NMEAParser.getEOS();
+				String customString = generateSentence("AA", "RND", Double.toString(Math.random())) + NMEAParser.STANDARD_NMEA_EOS;
 				fireDataRead(new NMEAEvent(this, customString));
 			} catch (Exception e) {
 				e.printStackTrace();

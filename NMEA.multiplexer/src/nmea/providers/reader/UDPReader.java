@@ -82,8 +82,8 @@ public class UDPReader extends NMEAReader {
 					if (s.endsWith(NMEAParser.STANDARD_NMEA_EOS))
 						s = s.substring(0, s.length() - NMEAParser.STANDARD_NMEA_EOS.length());
 				}
-				if (!s.endsWith(NMEAParser.getEOS()))
-					s += NMEAParser.getEOS();
+				if (!s.endsWith(NMEAParser.STANDARD_NMEA_EOS))
+					s += NMEAParser.STANDARD_NMEA_EOS;
 				NMEAEvent n = new NMEAEvent(this, s);
 				super.fireDataRead(n);
 			}

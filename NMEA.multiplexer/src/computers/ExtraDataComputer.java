@@ -3,6 +3,7 @@ package computers;
 import context.ApplicationContext;
 import context.NMEADataCache;
 import nmea.api.Multiplexer;
+import nmea.api.NMEAParser;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle360;
@@ -264,16 +265,16 @@ public class ExtraDataComputer extends Computer {
 								StringParsers.TRUE_WIND);
 				String nmeaMWD = StringGenerator.generateMWD(generatedStringsPrefix, twd, tws, decl);
 
-				this.produce(nmeaMWV);
-				this.produce(nmeaVWT);
-				this.produce(nmeaMWD);
+				this.produce(nmeaMWV + NMEAParser.STANDARD_NMEA_EOS);
+				this.produce(nmeaVWT + NMEAParser.STANDARD_NMEA_EOS);
+				this.produce(nmeaMWD + NMEAParser.STANDARD_NMEA_EOS);
 
 				if (csp != 0 && !Double.isNaN(csp) && cdr != 0) {
 					if (verbose) {
 						System.out.println(String.format(">>>                                     Current Speed %f, dir %d", csp, cdr));
 					}
 					String nmeaVDR = StringGenerator.generateVDR(generatedStringsPrefix, csp, cdr, cdr - decl);
-					this.produce(nmeaVDR);
+					this.produce(nmeaVDR + NMEAParser.STANDARD_NMEA_EOS);
 				}
 			}
 		}

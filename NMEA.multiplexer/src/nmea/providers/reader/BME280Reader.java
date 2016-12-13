@@ -48,7 +48,7 @@ public class BME280Reader extends NMEAReader {
 								new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
 												pressure,
 												String.valueOf(deviceIdx++))); // Pascal, pressure
-				nmeaXDR += NMEAParser.getEOS();
+				nmeaXDR += NMEAParser.STANDARD_NMEA_EOS;
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
 
 				String nmeaMDA = StringGenerator.generateMDA("RP", // TODO Make this a external parameter
@@ -61,15 +61,15 @@ public class BME280Reader extends NMEAReader {
 								-Double.MAX_VALUE,
 								-Double.MAX_VALUE,
 								-Double.MAX_VALUE);
-				nmeaMDA += NMEAParser.getEOS();
+				nmeaMDA += NMEAParser.STANDARD_NMEA_EOS;
 				fireDataRead(new NMEAEvent(this, nmeaMDA));
 
 				String nmeaMTA = StringGenerator.generateMTA("RP", temperature);
-				nmeaMTA += NMEAParser.getEOS();
+				nmeaMTA += NMEAParser.STANDARD_NMEA_EOS;
 				fireDataRead(new NMEAEvent(this, nmeaMTA));
 
 				String nmeaMMB = StringGenerator.generateMMB("RP", pressure / 100);
-				nmeaMMB += NMEAParser.getEOS();
+				nmeaMMB += NMEAParser.STANDARD_NMEA_EOS;
 				fireDataRead(new NMEAEvent(this, nmeaMMB));
 			} catch (Exception e) {
 				e.printStackTrace();

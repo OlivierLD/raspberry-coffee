@@ -8,6 +8,7 @@ import context.ApplicationContext;
 import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
 import http.HTTPServerInterface;
+import http.utils.DumpUtil;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.providers.client.BME280Client;
@@ -861,6 +862,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	public synchronized void onData(String mess) {
 		if (verbose) {
 			System.out.println(">> From MUX: " + mess);
+			DumpUtil.displayDualDump(mess);
 		}
 		// Computers
 		nmeaDataComputers.stream()

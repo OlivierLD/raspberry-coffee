@@ -43,7 +43,7 @@ public class HTU21DFReader extends NMEAReader {
                 new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
                         temperature,
                         "HTU21DF")); // Celcius, temperature
-        nmeaXDR += NMEAParser.getEOS();
+        nmeaXDR += NMEAParser.STANDARD_NMEA_EOS;
         fireDataRead(new NMEAEvent(this, nmeaXDR));
       } catch (Exception e) {
         e.printStackTrace();

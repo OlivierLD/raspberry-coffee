@@ -88,7 +88,7 @@ public class TCPReader extends NMEAReader
           for(int i = 0; i < nn; i++)
             toPrint[i] = buffer[i];
   
-          s = new String(toPrint) + NMEAParser.getEOS();
+          s = new String(toPrint) + NMEAParser.STANDARD_NMEA_EOS;
   //      System.out.println("TCP:" + s);
           NMEAEvent n = new NMEAEvent(this, s);
           super.fireDataRead(n);
