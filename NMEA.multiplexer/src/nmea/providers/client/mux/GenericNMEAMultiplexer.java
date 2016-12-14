@@ -63,7 +63,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	 */
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 400); // Default, not found
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 501); // Default, Not implemented
 		switch (request.getVerb()) {
 			case "GET":
 				// GET /serial-ports
@@ -114,8 +114,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						String content = new Gson().toJson(forwarderArray);
 						generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
-				} else {
-					response = new HTTPServer.Response(request.getProtocol(), 404); // Default, not found
 				}
 				break;
 			case "DELETE": // DELETE channels, forwarders, computers
@@ -167,7 +165,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 							response = new HTTPServer.Response(request.getProtocol(), 400); // Bad request (no payload)
 						}
 					} else if (deletePathElem[2].equals("udp")) {                   // udp
-						response = new HTTPServer.Response(request.getProtocol(), 404); // Not implemented
+						response = new HTTPServer.Response(request.getProtocol(), 501); // Not implemented
 					}
 				}
 				// DELETE /channels/:type. Details in the payload
@@ -233,7 +231,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					  response = removeChannelIfPresent(request, opClient);
 				  } else {
 					  // Not implemented
-					  response = new HTTPServer.Response(request.getProtocol(), 404); // Not implemented
+					  response = new HTTPServer.Response(request.getProtocol(), 501); // Not implemented
 				  }
 				}
 				// DELETE /computers/:type. No need for the payload
@@ -559,7 +557,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 							response = new HTTPServer.Response(request.getProtocol(), 400); // Default, Bad Request
 						}
 					} else {
-						response = new HTTPServer.Response(request.getProtocol(), 404); // Default, Not implemented
+						response = new HTTPServer.Response(request.getProtocol(), 501); // Default, Not implemented
 					}
 				} else if (postPathElem != null && postPathElem.length >= 2 && postPathElem[1].equals("computers")) {
 					if (type.equals("tw-current")) {
