@@ -2,8 +2,6 @@ package nmea.api;
 
 import java.util.List;
 
-import javax.swing.text.Utilities;
-
 /**
  * A Model. This is an abstract class to extend to implement your own data-source.
  * Examples are given for a file containing the data - that can be used as a simulator,
