@@ -79,11 +79,11 @@ public class UDPReader extends NMEAReader {
 				s = new String(buffer, 0, packet.getLength());
 				// For simulation from file:
 				if (System.getProperty("os.name").toUpperCase().contains("LINUX")) {
-					if (s.endsWith(NMEAParser.STANDARD_NMEA_EOS))
-						s = s.substring(0, s.length() - NMEAParser.STANDARD_NMEA_EOS.length());
+					if (s.endsWith(NMEAParser.NMEA_SENTENCE_SEPARATOR))
+						s = s.substring(0, s.length() - NMEAParser.NMEA_SENTENCE_SEPARATOR.length());
 				}
-				if (!s.endsWith(NMEAParser.getEOS()))
-					s += NMEAParser.getEOS();
+				if (!s.endsWith(NMEAParser.NMEA_SENTENCE_SEPARATOR))
+					s += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				NMEAEvent n = new NMEAEvent(this, s);
 				super.fireDataRead(n);
 			}

@@ -38,9 +38,9 @@ public class HTU21DFClient extends NMEAClient {
 	private static HTU21DFClient nmeaClient = null;
 
 	public static class HTU21DFBean implements ClientBean {
-		String cls;
-		String type = "hut21df";
-		boolean verbose;
+		private String cls;
+		private String type = "hut21df";
+		private boolean verbose;
 
 		public HTU21DFBean(HTU21DFClient instance) {
 			cls = instance.getClass().getName();
@@ -77,7 +77,7 @@ public class HTU21DFClient extends NMEAClient {
 			}
 		});
 
-//  nmeaClient.setEOS("\n"); // TASK Sure?
+//  nmeaClient.setEOS("\n");
 		nmeaClient.initClient();
 		nmeaClient.setReader(new HTU21DFReader(nmeaClient.getListeners()));
 		nmeaClient.startWorking();

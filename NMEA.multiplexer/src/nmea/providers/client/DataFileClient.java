@@ -38,10 +38,10 @@ public class DataFileClient extends NMEAClient {
 	private static DataFileClient nmeaClient = null;
 
 	public static class DataFileBean implements ClientBean {
-		String cls;
-		String file;
-		String type = "file";
-		boolean verbose;
+		private String cls;
+		private String file;
+		private String type = "file";
+		private boolean verbose;
 
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();

@@ -8,8 +8,10 @@ import context.ApplicationContext;
 import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
 import http.HTTPServerInterface;
+import http.utils.DumpUtil;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
+import nmea.api.NMEAParser;
 import nmea.providers.client.BME280Client;
 import nmea.providers.client.DataFileClient;
 import nmea.providers.client.HTU21DFClient;
@@ -743,7 +745,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					// Anything to update here?
 
 				} else if (putPathElem != null && putPathElem.length >= 2 && putPathElem[1].equals("computers")) {
-					if (type.equals("tw-current")) {
+					if (type.equals("tw-current")) { // TODO UI for this one (verbose OK, but needs prefix and timeBufferLength).
 						// Check existence
 						if (request.getContent() != null && request.getContent().length > 0) {
 							ExtraDataComputer.ComputerBean json = new Gson().fromJson(new String(request.getContent()), ExtraDataComputer.ComputerBean.class);
@@ -861,6 +863,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	public synchronized void onData(String mess) {
 		if (verbose) {
 			System.out.println(">> From MUX: " + mess);
+			DumpUtil.displayDualDump(mess);
 		}
 		// Computers
 		nmeaDataComputers.stream()
@@ -871,7 +874,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		nmeaDataForwarders.stream()
 						.forEach(fwd -> {
 							try {
-								fwd.write(mess.getBytes());
+								fwd.write((mess.trim() + NMEAParser.STANDARD_NMEA_EOS).getBytes());
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

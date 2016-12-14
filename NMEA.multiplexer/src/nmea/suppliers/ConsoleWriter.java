@@ -8,7 +8,7 @@ public class ConsoleWriter implements Forwarder {
 	public void write(byte[] message) {
 		String mess = new String(message);
 		if (!mess.isEmpty()) {
-			System.out.println(mess);
+			System.out.println(mess.trim());
 		}
 	}
 
@@ -18,8 +18,8 @@ public class ConsoleWriter implements Forwarder {
 	}
 
 	private static class ConsoleBean {
-		String cls;
-		String type = "console";
+		private String cls;
+		private String type = "console";
 
 		public ConsoleBean(ConsoleWriter instance) {
 			cls = instance.getClass().getName();

@@ -3,6 +3,7 @@ package computers;
 import context.ApplicationContext;
 import context.NMEADataCache;
 import nmea.api.Multiplexer;
+import nmea.api.NMEAParser;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle360;
@@ -36,7 +37,7 @@ import java.util.Set;
  * <tr><td>TRUE Heading</td><td>VHW, HDT, HDM</td></tr>
  * <tr><td>Leeway</td><td></td></tr>
  * </table>
- * Also take care of possible corrections:
+ * Also takes care of possible corrections:
  * <ul>
  * <li>BSP Coeff</li>
  * <li>AWS coeff, AWA offset</li>
@@ -75,7 +76,7 @@ public class ExtraDataComputer extends Computer {
 
 	public void setTimeBufferLength(long tbl) {
 		if (verbose) {
-			System.out.println(String.format("Settinh time buffer length to %d", tbl));
+			System.out.println(String.format("Setting time buffer length to %d", tbl));
 		}
 		this.longTimeCurrentCalculator.setBufferLength(tbl);
 	}
@@ -89,7 +90,8 @@ public class ExtraDataComputer extends Computer {
 		String sentence = new String(mess);
 		if (StringParsers.validCheckSum(sentence)) {
 			String sentenceID = StringParsers.getSentenceID(sentence);
-			if (!generatedStringsPrefix.equals(StringParsers.getDeviceID(sentence)) && requiredStrings.contains(sentenceID)) { // The process
+			if (!generatedStringsPrefix.equals(StringParsers.getDeviceID(sentence)) && // To prevent re-computing of computed data.
+							requiredStrings.contains(sentenceID)) { // The process
 				if (this.verbose) {
 					System.out.println(">>> TrueWind computer using " + sentence);
 				}
@@ -263,16 +265,16 @@ public class ExtraDataComputer extends Computer {
 								StringParsers.TRUE_WIND);
 				String nmeaMWD = StringGenerator.generateMWD(generatedStringsPrefix, twd, tws, decl);
 
-				this.produce(nmeaMWV);
-				this.produce(nmeaVWT);
-				this.produce(nmeaMWD);
+				this.produce(nmeaMWV + NMEAParser.STANDARD_NMEA_EOS);
+				this.produce(nmeaVWT + NMEAParser.STANDARD_NMEA_EOS);
+				this.produce(nmeaMWD + NMEAParser.STANDARD_NMEA_EOS);
 
 				if (csp != 0 && !Double.isNaN(csp) && cdr != 0) {
 					if (verbose) {
 						System.out.println(String.format(">>>                                     Current Speed %f, dir %d", csp, cdr));
 					}
 					String nmeaVDR = StringGenerator.generateVDR(generatedStringsPrefix, csp, cdr, cdr - decl);
-					this.produce(nmeaVDR);
+					this.produce(nmeaVDR + NMEAParser.STANDARD_NMEA_EOS);
 				}
 			}
 		}
@@ -293,12 +295,12 @@ public class ExtraDataComputer extends Computer {
 	}
 
 	public static class ComputerBean {
-		String cls;
-		String type = "tw-current";
-		long timeBufferLength = 600000;
-		int cacheSize = 0;
-		boolean verbose = false;
-		String prefix = "OS";
+		private String cls;
+		private String type = "tw-current";
+		private long timeBufferLength = 600000; // Default is 10 minutes.
+		private int cacheSize = 0;
+		private boolean verbose = false;
+		private String prefix = "OS";
 
 		public int getCacheSize() {
 			return this.cacheSize;

@@ -58,9 +58,9 @@ public class UDPWriter implements Forwarder {
 	}
 
 	public static class UDPBean {
-		String cls;
-		int port;
-		String type = "udp";
+		private String cls;
+		private int port;
+		private String type = "udp";
 
 		public UDPBean(UDPWriter instance) {
 			cls = instance.getClass().getName();

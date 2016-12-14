@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 public class NMEADataCache extends HashMap<String, Object> implements Serializable {
+
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
 
 	public static final String SOG = "SOG";
@@ -71,17 +72,7 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 	public static final String DEFAULT_DECLINATION = "Default Declination";
 	public static final String DAMPING = "Damping";
 
-	public static final String POLAR_FILE_NAME = "Polar File name";
-	public static final String POLAR_FACTOR = "Polar Factor";
-
 	public static final String TIME_RUNNING = "Time Running";
-
-	public static final String DISPLAY_WEB_WT = "Display Web Water Temp";
-	public static final String DISPLAY_WEB_AT = "Display Web Air Temp";
-	public static final String DISPLAY_WEB_GDT = "Display Web GPSDateTime";
-	public static final String DISPLAY_WEB_PRMSL = "Display Web PRMSL";
-	public static final String DISPLAY_WEB_HUM = "Display Web HUM";
-	public static final String DISPLAY_WEB_VOLT = "Display Web Volt";
 
 	// Damping ArrayList's
 	private int dampingSize = 1;

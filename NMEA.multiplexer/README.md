@@ -2,43 +2,13 @@
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
 
 ### Includes
-- NMEA Parser
+- NMEA Strings Parser
 - NMEA Strings generator
 - Serial port Reader / Writer
 - TCP Reader / Writer
 - UDP Reader / Writer
 - WebSocket client (read/write)
 
-## Open questions
-- RMI protocol?
-
-## Open Issues
-- UDP client
-
-## TODO
-- 3D compas (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
-- Serial Forwarder
-
-```
-Once you get the X, Y and Z accelerations into floats you just need some trig to calculate Pitch and Roll (in radians):
-
-pitch = atan (x / sqrt(y^2 + z^2));  
-roll = atan (y / sqrt(z^2 + z^2));
-```
-
-```
-Currently, OpenCPN recognizes the following transducers:
-
-------------------------------------------------------------------------------------------------------
-Measured Value | Transducer Type | Measured Data                   | Unit of measure | Transducer Name
-------------------------------------------------------------------------------------------------------
-barometric     | "P" pressure    | 0.8..1.1 or 800..1100           | "B" bar         | "Barometer"
-air temperature| "C" temperature |   2 decimals                    | "C" celsius     | "TempAir" or "ENV_OUTAIR_T"
-pitch          | "A" angle       |-180..0 nose down 0..180 nose up | "D" degrees     | "PTCH"
-rolling        | "A" angle       |-180..0 L         0..180 R       | "D" degrees     | "ROLL"
-water temp     | "C" temperature |   2 decimals                    | "C" celsius     | "ENV_WATER_T"
------------------------------------------------------------------------------------------------------
-```
 ### Some definitions
 At the center of the picture, there is the Multiplexer (aka MUX).
 
@@ -77,6 +47,8 @@ Forwarders:
 Sensors:
 - **BME280** reads raw data from a BME280 sensor (Temperature, Pressure, Humidity), and produces `XDR` and `MDA` NMEA Sentences.
 - **LSM303** reads raw data from a LSM303 sensor (3D magnetometer), and produces `XDR` NMEA Sentences.
+![I2C Wiring](./i2c.png "Sample I2C Wiring for BME280 & LSM303")
+
 
 Computers:
 - **True Wind** computer (produces `MDA`, `MWD` data)
@@ -103,15 +75,15 @@ To run it, modify `mux.sh` to fit your environment, and run
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
 To install it (once):
-```
+```bash
  $> npm install
 ```
 Then, to run it,
-```
+```bash
  $> node wsnmea.js
 ```
 or
-```
+```bash
  $> npm start
 ```
 
@@ -121,7 +93,7 @@ The properties files like `nmea.mux.proeprties` defines the configuration at sta
 You can remotely manage the input channels and the re-broadcasting ones through a REST interface.
 The soft includes a dedicated HTTP Server. The http port is driven by a propety (in `nmea.mux.properties`).
 Same if you want the HTTP server to be started or not.
-```
+```properties
 with.http.server=yes
 http.port=9999
 
@@ -145,7 +117,7 @@ The list of _available_ serial ports.
  GET /channels
 ```
 returns a payload like
-```
+```json
 [
   {
     "cls": "nmeaproviders.client.SerialClient",
@@ -164,7 +136,7 @@ returns a payload like
  GET /forwarders
 ```
 returns a payload like
-```
+```json
 [
   {
     "cls": "servers.TCPWriter",
@@ -183,7 +155,7 @@ returns a payload like
 ```
 `type` is one of
 - `file`. requires a body like 
- ```
+ ```json
 { 
     "log": "./data.nmea",
     "type": "file"
@@ -192,7 +164,7 @@ returns a payload like
 identical to the elements returned by `GET /forwarders`.
 - `console`. requires no body.
 - `tcp`. requires a body like 
-```
+```json
 {
      "port": 7002,
      "type": "tcp"
@@ -200,7 +172,7 @@ identical to the elements returned by `GET /forwarders`.
 ```
 identical to the elements returned by `GET /forwarders`.
 - `ws`. requires a body like 
-```
+```json
 {
    "wsUri": "ws://localhost:9876/",
    "type": "ws"
@@ -217,7 +189,7 @@ identical to the elements returned by `GET /forwarders`.
 ```
 with payloads like:
 - `file`. requires a body like 
- ```
+ ```json
 { 
     "log": "./data.nmea",
     "type": "file"
@@ -225,13 +197,13 @@ with payloads like:
 ```
 identical to the elements returned by `GET /forwarders`.
 - `console`. requires a body like 
-```
+```json
 { 
      "type": "console"
 }
 ```
 - `tcp`. requires a body like 
-```
+```json
 {
      "port": 7002,
      "type": "tcp"
@@ -239,7 +211,7 @@ identical to the elements returned by `GET /forwarders`.
 ```
 identical to the elements returned by `GET /forwarders`.
 - `ws`. requires a body like 
-```
+```json
 {
    "wsUri": "ws://localhost:9876/",
    "type": "ws"
@@ -259,5 +231,37 @@ where `machine-name` is the name of the machine where the multiplexer is running
 ![Admin Web UI](./AdminSnapshot.png "Admin GUI")
 
 And any REST client (NodeJS, Postman, your own code, ...) does the job.
+
+## Open questions
+- RMI protocol?
+
+## Open Issues
+- UDP client
+
+## TODO
+- 3D compas (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
+- Serial Forwarder
+- Externalize all definitions, for dynamic configuration (ie 'add your own computer, channel, forwarder', etc).
+
+```
+Once you get the X, Y and Z accelerations into floats you just need some trig to calculate Pitch and Roll (in radians):
+
+pitch = atan (x / sqrt(y^2 + z^2));  
+roll = atan (y / sqrt(z^2 + z^2));
+```
+
+```
+Currently, OpenCPN recognizes the following transducers:
+
+------------------------------------------------------------------------------------------------------
+Measured Value | Transducer Type | Measured Data                   | Unit of measure | Transducer Name
+------------------------------------------------------------------------------------------------------
+barometric     | "P" pressure    | 0.8..1.1 or 800..1100           | "B" bar         | "Barometer"
+air temperature| "C" temperature |   2 decimals                    | "C" celsius     | "TempAir" or "ENV_OUTAIR_T"
+pitch          | "A" angle       |-180..0 nose down 0..180 nose up | "D" degrees     | "PTCH"
+rolling        | "A" angle       |-180..0 L         0..180 R       | "D" degrees     | "ROLL"
+water temp     | "C" temperature |   2 decimals                    | "C" celsius     | "ENV_WATER_T"
+-----------------------------------------------------------------------------------------------------
+```
 
 ---

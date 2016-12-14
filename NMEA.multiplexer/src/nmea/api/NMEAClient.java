@@ -32,7 +32,7 @@ public abstract class NMEAClient {
 	private NMEAReader reader;
 	private String devicePrefix = "";
 	private String[] sentenceArray = null;
-	private String NMEA_EOS = null;
+//private String NMEA_EOS = null;
 
 	protected boolean verbose = false;
 
@@ -82,8 +82,8 @@ public abstract class NMEAClient {
 		parser = new NMEAParser(NMEAListeners);
 		parser.setNmeaPrefix(this.getDevicePrefix());
 		parser.setNmeaSentence(this.getSentenceArray());
-		if (NMEA_EOS != null)
-			parser.setEOS(NMEA_EOS);
+//		if (NMEA_EOS != null)
+//			parser.setEOS(NMEA_EOS);
 	}
 
 	public void setDevicePrefix(String s) {
@@ -102,13 +102,13 @@ public abstract class NMEAClient {
 		return this.sentenceArray;
 	}
 
-	public void setEOS(String str) {
-		NMEA_EOS = str;
-	}
+//	public void setEOS(String str) {
+//		NMEA_EOS = str;
+//	}
 
-	public String getEOS() {
-		return (parser != null) ? parser.getEOS() : NMEA_EOS;
-	}
+//	public String getEOS() {
+//		return (parser != null) ? parser.getEOS() : NMEA_EOS;
+//	}
 
 	public void setParser(NMEAParser p) {
 		this.parser = p;

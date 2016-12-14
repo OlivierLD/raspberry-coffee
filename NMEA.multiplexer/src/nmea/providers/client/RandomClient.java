@@ -38,9 +38,9 @@ public class RandomClient extends NMEAClient {
 	private static RandomClient nmeaClient = null;
 
 	public static class RandomBean implements ClientBean {
-		String cls;
-		String type = "rnd";
-		boolean verbose;
+		private String cls;
+		private String type = "rnd";
+		private boolean verbose;
 
 		public RandomBean(RandomClient instance) {
 			cls = instance.getClass().getName();
