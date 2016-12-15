@@ -5,6 +5,26 @@
     <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
     <script type="text/javascript" src="js/restskill.js"></script>
     <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+    <style>
+      .selectedButton {
+        padding:5px;
+        border-top-right-radius: 10px;
+        border:1px solid #CCC;
+        margin-top:10px;
+        border-bottom: none;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .unselectedButton {
+        padding:5px;
+        border-top-right-radius: 10px;
+        border:1px solid #CCC;
+        margin-top:10px;
+        border-bottom: none;
+        font-size: 12px;
+        font-weight: normal;
+      }
+    </style>
     <script type="text/javascript">
         var channelSelectManager = function() {
             var x = document.getElementById("channel-select").value;
@@ -138,6 +158,10 @@
                 case 'serial':
                     var portName = $("#serial-port").val();
                     var br = document.getElementById("baud-rate").value;
+                    if (portName.trim().length === 0 || br.trim().length === 0) {
+                        alert('Both port name and baud rate are required');
+                        return;
+                    }
                     createChannel({
                         type: 'serial',
                         port: portName,
@@ -147,6 +171,10 @@
                 case 'tcp':
                     var port = $("#tcp-port").val();
                     var server = $("#tcp-server").val();
+                    if (port.trim().length === 0 || server.trim().length === 0) {
+                        alert('Both port and server name are required');
+                        return;
+                    }
                     createChannel({
                         type: 'tcp',
                         port: port,
@@ -155,6 +183,10 @@
                     break;
                 case 'file':
                     var logfile = $("#data-file").val();
+                    if (logfile.trim().length === 0) {
+                        alert('Log file name required');
+                        return;
+                    }
                     createChannel({
                         type: 'file',
                         file: logfile
@@ -162,6 +194,10 @@
                     break;
                 case 'ws':
                     var uri = $("#wsuri").val();
+                    if (uir.trim().length === 0) {
+                        alert('WebSocket URI is required');
+                        return;
+                    }
                     createChannel({
                         type: 'ws',
                         wsUri: uri
@@ -192,6 +228,10 @@
             switch (x) {
                 case 'tcp':
                     var port = $("#fwd-tcp-port").val();
+                    if (port.trim().length === 0) {
+                        alert('Port is required');
+                        return;
+                    }
                     createForwarder({
                         type: 'tcp',
                         port: port
@@ -199,6 +239,10 @@
                     break;
                 case 'file':
                     var logfile = $("#fwd-data-file").val();
+                    if (logfile.trim().length === 0) {
+                        alert('Log file name is required');
+                        return;
+                    }
                     createForwarder({
                         type: 'file',
                         file: logfile
@@ -206,6 +250,10 @@
                     break;
                 case 'ws':
                     var uri = $("#fwd-wsuri").val();
+                    if (uri.trim().length === 0) {
+                        alert('WebSocket URI is required');
+                        return;
+                    }
                     createForwarder({
                         type: 'ws',
                         wsUri: uri
@@ -227,11 +275,38 @@
                 case 'tw-current':
                     var prefix = $("#cptr-twc-prefix").val();
                     var tbl = $("#cptr-twc-tbl").val();
+                    if (prefix.trim().length === 0 || tbl.trim().length === 0) {
+                        alert('Prefix and TimeBuffer length are required');
+                        return;
+                    }
                     createComputer({
                         type: 'tw-current',
                         prefix: prefix,
                         timeBufferLength: tbl
                     });
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        var manageClick = function(div) {
+            document.getElementById('showPorts').className = (div.id === 'showPorts' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showChannels').className = (div.id === 'showChannels' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showForwarders').className = (div.id === 'showForwarders' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showComputers').className = (div.id === 'showComputers' ? 'selectedButton' : 'unselectedButton');
+            switch (div.id) {
+                case 'showPorts':
+                    serialPortList();
+                    break;
+                case 'showChannels':
+                    channelList();
+                    break;
+                case 'showForwarders':
+                    forwarderList();
+                    break;
+                case 'showComputers':
+                    computerList();
                     break;
                 default:
                     break;
@@ -243,13 +318,16 @@
     <h2>NMEA Multiplexer Admin</h2>
     <small>JQuery, Ajax, REST, JSON..., Multiplexer Admin.</small>
     <p>
-      <button onclick="serialPortList();">Fetch Serial Ports list</button>
-      <button onclick="channelList();">Fetch Channels list</button>
-      <button onclick="forwarderList();">Fetch Forwarders list</button>
-      <button onclick="computerList();">Fetch Computers list</button>
+    <div style="margin-bottom: 0px;">
+      <span id="showPorts"  onclick="manageClick(this);"  class="selectedButton" style="margin-left: 5px; cursor: pointer;">Fetch Serial Ports list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showChannels" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Channels list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showForwarders" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Forwarders list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="refresh_icon.png" width="10" height="12"/></span>
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
+    </div>
 
-      <div id="lists" style="padding:2px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height:200px;"></div>
+
+    <div id="lists" style="padding: 1px; border-radius: 5px; overflow-y: scroll; border: 1px solid #CCC; height: 200px;"></div>
     </p>
     <p>
       <button onclick="showAddChannel();">Add a Channel</button>&nbsp;

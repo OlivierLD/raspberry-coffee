@@ -1,15 +1,15 @@
 package http;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -226,9 +226,8 @@ public class HTTPServer {
 					System.out.println("Port " + port + " opened successfully.");
 					while (isRunning()) {
 						Socket client = ss.accept();
-//					BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 						InputStreamReader in = new InputStreamReader(client.getInputStream());
-						PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
+						OutputStream out = client.getOutputStream();
 						Request request = null;
 						String line = "";
 						boolean top = true;
@@ -361,13 +360,20 @@ public class HTTPServer {
 								sendResponse(response, out);
 							} else if (path.startsWith("/web/")) {                                    // Assume this is static content. TODO Tweak that.
 								Response response = new Response(request.getProtocol(), 200);
-								String content = readStaticContent("." + path);
+								File f = new File("." + path);
+								if (!f.exists()) {
+									response = new Response(request.getProtocol(), 404); // Not Found
+								}
+								ByteArrayOutputStream baos = new ByteArrayOutputStream();
+								Files.copy(f.toPath(), baos);
+								baos.close();
+								byte[] content = baos.toByteArray();
 								Map<String, String> responseHeaders = new HashMap<>();
 								responseHeaders.put("Content-Type", getContentType(path));
-								responseHeaders.put("Content-Length", String.valueOf(content.length()));
+								responseHeaders.put("Content-Length", String.valueOf(content.length)); //()));
 								responseHeaders.put("Access-Control-Allow-Origin", "*");
 								response.setHeaders(responseHeaders);
-								response.setPayload(content.getBytes());
+								response.setPayload(content);
 								sendResponse(response, out);
 							} else {
 								if (requestManager != null) {
@@ -408,7 +414,12 @@ public class HTTPServer {
 		httpListenerThread.start();
 	}
 
-	private static String getContentType(String f) { // TODO add more types
+	/**
+	 * Full mime-type list at https://www.sitepoint.com/web-foundations/mime-types-complete-list/
+	 * @param f
+	 * @return
+	 */
+	private static String getContentType(String f) { // TODO add more types, as requested
 		String contentType = "text/plain";
 		if (f.endsWith(".html"))
 			contentType = "text/html";
@@ -416,34 +427,38 @@ public class HTTPServer {
 			contentType = "text/javascript";
 		else if (f.endsWith(".css"))
 			contentType = "text/css";
+		else if (f.endsWith(".xml"))
+			contentType = "text/xml";
+		else if (f.endsWith(".ico"))
+			contentType = "iimage/x-icon";
+		else if (f.endsWith(".png"))
+			contentType = "image/png";
+		else if (f.endsWith(".gif"))
+			contentType = "image/gif";
+		else if (f.endsWith(".jpg") || f.endsWith(".jpeg"))
+			contentType = "image/jpeg";
 		return contentType;
 	}
 
-	private String readStaticContent(String path) {
-		String content = null;
+	private void sendResponse(Response response, OutputStream os) {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(path));
-			String line = "";
-			StringBuffer sb = new StringBuffer();
-			while ((line = br.readLine()) != null) {
-				sb.append(line + "\n");
+			os.write(String.format("%s %d \r\n", response.getProtocol(), response.getStatus()).getBytes());
+			if (response.getHeaders() != null) {
+				response.getHeaders().keySet().stream().forEach(k -> {
+					try {
+						os.write(String.format("%s: %s\r\n", k, response.getHeaders().get(k)).getBytes());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
 			}
-			br.close();
-			content = sb.toString();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-		return content;
-	}
-
-	private void sendResponse(Response response, PrintWriter out) {
-		out.print(String.format("%s %d \r\n", response.getProtocol(), response.getStatus()));
-		if (response.getHeaders() != null) {
-			response.getHeaders().keySet().stream().forEach(k -> out.print(String.format("%s: %s\r\n", k, response.getHeaders().get(k))));
-		}
-		out.print("\r\n"); // End Of Header
-		if (response.getPayload() != null) {
-			out.println(new String(response.getPayload()));
+			os.write("\r\n".getBytes()); // End Of Header
+			if (response.getPayload() != null) {
+				os.write(response.getPayload());
+				os.flush();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

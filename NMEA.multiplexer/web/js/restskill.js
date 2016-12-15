@@ -353,7 +353,8 @@ var serialPortList = function() {
   getData.done(function(value) {
     console.log("Done:", value);
     var json = JSON.parse(value);
-    var html = "<ul>";
+    var html = "<h5>Available Serial Ports</h5>"
+        html += "<ul>";
     for (var i=0; i<json.length; i++) {
       html += ("<li>" + json[i] + "</li>");
     }
@@ -484,14 +485,14 @@ var createChannel = function(channel) {
     });
 };
 
-var createForwarder = function(channel) {
-    var postData = addForwarder(channel);
+var createForwarder = function(forwarder) {
+    var postData = addForwarder(forwarder);
     postData.done(function(value) {
         console.log("Done:", value);
         forwarderList(); // refetch
     });
     postData.fail(function(error) {
-        alert("Failed to create channel..." + (error !== undefined ? error : ''));
+        alert("Failed to create forwarder..." + (error !== undefined ? error : ''));
     });
 };
 
@@ -502,7 +503,7 @@ var createComputer = function(computer) {
         computerList(); // refetch
     });
     postData.fail(function(error) {
-        alert("Failed to create channel..." + (error !== undefined ? error : ''));
+        alert("Failed to create computer..." + (error !== undefined ? error : ''));
     });
 };
 
