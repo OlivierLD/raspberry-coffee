@@ -24,6 +24,15 @@
         font-size: 12px;
         font-weight: normal;
       }
+      .addbox {
+        padding: 1px;
+        border-radius: 5px;
+        border: 1px solid #CCC;
+        width: auto;
+        height: auto;
+        margin: 80px auto 0px auto;
+        overflow: auto;
+      }
     </style>
     <script type="text/javascript">
         var channelSelectManager = function() {
@@ -325,8 +334,6 @@
       <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="refresh_icon.png" width="10" height="12"/></span>
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
     </div>
-
-
     <div id="lists" style="padding: 1px; border-radius: 5px; overflow-y: scroll; border: 1px solid #CCC; height: 200px;"></div>
     </p>
     <p>
@@ -409,7 +416,6 @@
             </td>
           </tr>
         </table>
-
         <button onclick="requestChannelCreation();">Add</button>
       </div>
       <div id="add-forwarder" style="display: none;">

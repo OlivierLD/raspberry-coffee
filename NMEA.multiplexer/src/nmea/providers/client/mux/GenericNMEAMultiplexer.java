@@ -58,6 +58,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	/**
 	 * Implements the management of the REST requests.
 	 *
+	 * TODO Do it with Function<Request, Response>
+	 *
 	 * @param request
 	 * @return
 	 */
