@@ -18,27 +18,31 @@ import java.util.Map;
 import http.utils.DumpUtil;
 
 /**
- * Used for the REST interface of the Multiplexer
+ * Used for the REST interface of the Multiplexer.
  * <p>
  * Get the list of the multiplexed channels,
  * Get the list of the forwarders
  * Add channel, forwarder
  * Delete channel, forwarder
  * <p>
- * GET, POST, DELETE - no PUT, no PATCH (for now)
+ * GET, POST, DELETE, PUT, no PATCH (for now)
  * <br>
  * Also serves as a regular HTTP server for static documents (in the /web directory).
  * <br>
  * Has two static resources:
  * <ul>
- *   <li>/exit</li>
- *   <li>/test</li>
+ *   <li><code>/exit</code> to exit the HTTP server (cannot be restarted).</li>
+ *   <li><code>/test</code> to test the HTTP server availability</li>
  * </ul>
  *
  * Query parameter 'verbose' will turn verbose on or off.
  * To turn it on: give verbose no value, or 'on', 'true', 'yes' (non case sensitive).
- * To turn it off: any othe value.
- *
+ * To turn it off: any other value.
+ * <br>
+ *   Example: http://localhost:9999/web/admin.html?verbose=on
+ * <em>
+ *   Warning: This is a very lightweight HTTP server. It is not supposed to scale!!
+ * </em>
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
@@ -51,6 +55,7 @@ public class HTTPServer {
 		private String protocol;
 		private byte[] content;
 		private Map<String, String> headers;
+		private String requestPattern;
 
 		private Map<String, String> queryStringParameters;
 
@@ -104,6 +109,14 @@ public class HTTPServer {
 
 		public void setHeaders(Map<String, String> headers) {
 			this.headers = headers;
+		}
+
+		public String getRequestPattern() {
+			return requestPattern;
+		}
+
+		public void setRequestPattern(String requestPattern) {
+			this.requestPattern = requestPattern;
 		}
 
 		@Override
@@ -337,11 +350,7 @@ public class HTTPServer {
 								System.out.println("Received an exit signal");
 								Response response = new Response(request.getProtocol(), 200);
 								String content = "Exiting";
-								Map<String, String> responseHeaders = new HashMap<>();
-								responseHeaders.put("Content-Type", "plain/text");
-								responseHeaders.put("Content-Length", String.valueOf(content.length()));
-								responseHeaders.put("Access-Control-Allow-Origin", "*");
-								response.setHeaders(responseHeaders);
+								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
 								okToStop = true;
@@ -351,11 +360,7 @@ public class HTTPServer {
 								if (request.getContent() != null && request.getContent().length > 0) {
 									content += String.format("\nYour payload was [%s]", new String(request.getContent()));
 								}
-								Map<String, String> responseHeaders = new HashMap<>();
-								responseHeaders.put("Content-Type", "plain/text");
-								responseHeaders.put("Content-Length", String.valueOf(content.length()));
-								responseHeaders.put("Access-Control-Allow-Origin", "*");
-								response.setHeaders(responseHeaders);
+								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
 							} else if (path.startsWith("/web/")) {                                    // Assume this is static content. TODO Tweak that.
@@ -368,11 +373,7 @@ public class HTTPServer {
 								Files.copy(f.toPath(), baos);
 								baos.close();
 								byte[] content = baos.toByteArray();
-								Map<String, String> responseHeaders = new HashMap<>();
-								responseHeaders.put("Content-Type", getContentType(path));
-								responseHeaders.put("Content-Length", String.valueOf(content.length)); //()));
-								responseHeaders.put("Access-Control-Allow-Origin", "*");
-								response.setHeaders(responseHeaders);
+								RESTProcessorUtil.generateHappyResponseHeaders(response, getContentType(path), content.length);
 								response.setPayload(content);
 								sendResponse(response, out);
 							} else {

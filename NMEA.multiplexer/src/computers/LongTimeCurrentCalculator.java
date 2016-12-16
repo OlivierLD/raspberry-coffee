@@ -75,8 +75,7 @@ public class LongTimeCurrentCalculator {
 	}
 
 	public void start() {
-
-		System.out.println("Method 'start':" + this.getClass().getName() + " is starting...");
+		System.out.println(this.getClass().getName() + " is starting...");
 		final long _betweenLoops = betweenLoops;
 		watcher = new Thread("CurrentCalculatorWatcher") {
 			private final long BETWEEN_LOOPS = _betweenLoops;
