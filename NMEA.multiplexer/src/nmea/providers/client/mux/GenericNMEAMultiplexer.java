@@ -8,6 +8,7 @@ import context.ApplicationContext;
 import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
 import http.HTTPServerInterface;
+import http.RESTProcessor;
 import http.utils.DumpUtil;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
@@ -66,6 +67,9 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 501); // Default, Not implemented
+
+		response = RESTProcessor.processRequest(request, response);
+
 		switch (request.getVerb()) {
 			case "GET":
 				// GET /serial-ports
