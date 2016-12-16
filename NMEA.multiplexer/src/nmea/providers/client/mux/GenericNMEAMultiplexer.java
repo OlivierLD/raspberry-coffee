@@ -39,12 +39,14 @@ import java.io.StringReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface {
@@ -54,7 +56,102 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	private List<Forwarder>  nmeaDataForwarders = new ArrayList<>();
 	private List<Computer>   nmeaDataComputers  = new ArrayList<>();
 
-	// TODO Operation List
+	private static class Operation {
+		String verb;
+		String path;
+		String description;
+		Function<HTTPServer.Request, HTTPServer.Response> fn;
+
+		public Operation(String verb, String path, Function<HTTPServer.Request, HTTPServer.Response> fn, String description) {
+			this.verb = verb;
+			this.path = path;
+			this.description = description;
+			this.fn = fn;
+		}
+
+		public String getVerb() {
+			return verb;
+		}
+
+		public String getPath() {
+			return path;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public Function<HTTPServer.Request, HTTPServer.Response> getFn() {
+			return fn;
+		}
+	}
+
+	List<Operation> operations = Arrays.asList(
+		new Operation(
+						"GET",
+						"/oplist",
+						RESTProcessor::defaultREST, // TODO Make sure it matches the oplist.
+						"List of all available operations."),
+		new Operation(
+						"GET",
+						"/serial-ports",
+						this::getSerialPorts,
+						"Get the list of the available serial ports."),
+		new Operation(
+						"GET",
+						"/channels",
+						this::getChannels,
+						"Get the list of the input channels"),
+
+		new Operation("POST",   "/one/{x}/two/{y}", RESTProcessor::defaultREST, ""),
+		new Operation ("PUT",    "/one/{x}/two/{y}", RESTProcessor::defaultREST, ""),
+		new Operation  ("DELETE", "/first/{prm}",     RESTProcessor::defaultREST, ""));
+
+	public HTTPServer.Response processRequest(HTTPServer.Request request, HTTPServer.Response defaultResponse) {
+		Optional<Operation> opOp = operations
+						.stream()
+						.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessor.pathMatches(op.getPath(), request.getPath()))
+						.findFirst();
+		if (opOp.isPresent()) {
+			Operation op = opOp.get();
+			HTTPServer.Response processed = op.getFn().apply(request);
+			return processed;
+		}
+		return defaultResponse;
+	}
+
+	private  HTTPServer.Response getSerialPorts(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+
+		List<String> portList = getSerialPortList();
+		Object[] portArray = portList.toArray(new Object[portList.size()]);
+		String content = new Gson().toJson(portArray).toString();
+		RESTProcessor.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response getChannels(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+
+		List<Object> channelList = getInputChannelList();
+		Object[] channelArray = channelList.stream()
+						.collect(Collectors.toList())
+						.toArray(new Object[channelList.size()]);
+
+		String content = new Gson().toJson(channelArray);
+		generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response emptyOperation(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+
+		return response;
+	}
 
 	/**
 	 * Implements the management of the REST requests.
@@ -68,7 +165,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	public HTTPServer.Response onRequest(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 501); // Default, Not implemented
 
-		response = RESTProcessor.processRequest(request, response);
+		response = processRequest(request, response);
 
 		switch (request.getVerb()) {
 			case "GET":
