@@ -1,7 +1,9 @@
-package nmea.suppliers.rmi.client;
+package samples.rmi.client;
 
-import nmea.suppliers.rmi.RMIServer;
+import nmea.suppliers.rmi.ServerInterface;
+import nmea.suppliers.rmi.clientoperations.LastString;
 
+import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -10,8 +12,9 @@ import java.rmi.registry.Registry;
  */
 public class SampleRMIClient {
 
-	private static String bindingName = "RMI-NMEA";
+	private static String bindingName = "RMIServer";
 
+	// For the MUX: olediouris-mbp/10.10.226.181, port 1099, name RMI-NMEA
 	public static void main(String args[]) {
 		String name;
 		String port;
@@ -25,10 +28,14 @@ public class SampleRMIClient {
 			port = args[1];
 		}
 
+		bindingName = "RMI-NMEA";
+
 		System.out.println("Looking up [" + bindingName + " on " + name + ":" + port + "]");
 		try {
 			Registry registry = LocateRegistry.getRegistry(name, new Integer(port)); // Server name, port
-			RMIServer comp = (RMIServer) registry.lookup(bindingName);   // RMI Name
+			Remote remote = registry.lookup(bindingName);
+			System.out.println("Remote is a " + remote.getClass().getName());
+			ServerInterface comp = (ServerInterface) registry.lookup(bindingName);   // RMI Name
 
 			LastString task = new LastString();
 			String last = comp.executeTask(task);

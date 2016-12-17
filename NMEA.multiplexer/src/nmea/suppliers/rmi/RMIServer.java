@@ -1,6 +1,7 @@
 package nmea.suppliers.rmi;
 
 import nmea.suppliers.Forwarder;
+import nmea.suppliers.rmi.clientoperations.LastString;
 
 import java.net.InetAddress;
 import java.rmi.RemoteException;
@@ -41,12 +42,15 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		return this.registryPort;
 	}
 
+	private String lastString = "";
+
 	/** Receives a message from the MUX
 	 *
 	 * @param message NMEA String
 	 */
 	@Override
 	public void write(byte[] message) {
+		this.lastString = new String(message);
 	}
 
 	private String formatByteHexa(byte b) {
@@ -63,7 +67,10 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 
 	@Override
 	public <T> T executeTask(Task<T> t) throws RemoteException {
-		System.out.println("Server task requested.");
+		System.out.println(String.format(">> Server task [%s] requested.", t.getClass().getName()));
+		if (t instanceof LastString) {
+			((LastString)t).setLastString(this.lastString);
+		}
 		return t.execute();
 	}
 
@@ -90,4 +97,10 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	public Object getBean() {
 		return new RMIBean(this);
 	}
+
+	// For standalone tests
+	public static void main(String[] args) throws RemoteException {
+		RMIServer server = new RMIServer(2099);
+	}
+
 }
