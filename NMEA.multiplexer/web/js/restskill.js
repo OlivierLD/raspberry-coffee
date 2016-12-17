@@ -242,7 +242,7 @@ var updateComputer = function(computer) {
 
 var updateMuxVerbose = function(value) {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/mux/verbose/' + value,
+        url = '/mux-verbose/' + value,
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 

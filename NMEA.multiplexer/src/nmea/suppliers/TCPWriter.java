@@ -1,6 +1,5 @@
 package nmea.suppliers;
 
-import javax.swing.*;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,10 +21,6 @@ public class TCPWriter implements Forwarder {
 			SocketThread socketThread = new SocketThread(this);
 			socketThread.start();
 		} catch (Exception ex) {
-			try {
-				JOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "TCP Writer", JOptionPane.ERROR_MESSAGE);
-			} catch (Exception ex2) {
-			}
 			throw ex;
 		}
 	}

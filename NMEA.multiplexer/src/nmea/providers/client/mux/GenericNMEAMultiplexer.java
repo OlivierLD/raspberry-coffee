@@ -32,6 +32,7 @@ import nmea.suppliers.DataFileWriter;
 import nmea.suppliers.Forwarder;
 import nmea.suppliers.TCPWriter;
 import nmea.suppliers.WebSocketWriter;
+import nmea.suppliers.rmi.RMIServer;
 
 import java.io.File;
 import java.io.IOException;
@@ -1083,10 +1084,11 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	@Override
 	public synchronized void onData(String mess) {
 		if (verbose) {
-			System.out.println(">> From MUX: " + mess);
+			System.out.println("==== From MUX: " + mess);
 			DumpUtil.displayDualDump(mess);
+			System.out.println("==== End Mux =============");
 		}
-		// Computers
+		// Computers. Must go first, as a computer may refeed the present onData method.
 		nmeaDataComputers.stream()
 						.forEach(computer -> {
 							computer.write(mess.getBytes());
@@ -1266,6 +1268,21 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						try {
 							Forwarder consoleForwarder = new ConsoleWriter();
 							nmeaDataForwarders.add(consoleForwarder);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+						break;
+					case "rmi":
+						String rmiPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+						String rmiName = muxProps.getProperty(String.format("forward.%s.name", MUX_IDX_FMT.format(fwdIdx)));
+						try {
+							Forwarder rmiServerForwarder;
+							if (rmiName != null && rmiName.trim().length() > 0) {
+								rmiServerForwarder = new RMIServer(Integer.parseInt(rmiPort), rmiName);
+							} else {
+								rmiServerForwarder = new RMIServer(Integer.parseInt(rmiPort));
+							}
+							nmeaDataForwarders.add(rmiServerForwarder);
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
