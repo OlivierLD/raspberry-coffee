@@ -232,9 +232,6 @@ where `machine-name` is the name of the machine where the multiplexer is running
 
 And any REST client (NodeJS, Postman, your own code, ...) does the job.
 
-## Open questions
-- RMI protocol?
-
 ## Open Issues
 - UDP client
 
