@@ -96,4 +96,12 @@ public class RESTProcessorUtil {
 		responseHeaders.put("Access-Control-Allow-Origin", "*");
 		response.setHeaders(responseHeaders);
 	}
+
+	public static class ErrorMessage {
+		private String message;
+
+		public ErrorMessage(String mess) {
+			this.message = mess;
+		}
+	}
 }

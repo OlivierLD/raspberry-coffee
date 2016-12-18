@@ -13,7 +13,7 @@ var getSerialPorts = function() {
 
   var requestTimer = setTimeout(function() {
     xhr.abort();
-    deferred.reject();
+    deferred.reject(408, { message: 'Timeout'});
   }, TIMEOUT);
 
   xhr.onload = function() {
@@ -21,7 +21,7 @@ var getSerialPorts = function() {
     if (xhr.status === 200) {
       deferred.resolve(xhr.response);
     } else {
-      deferred.reject();
+      deferred.reject(xhr.status, xhr.response);
     }
   };
   return deferred.promise();
@@ -39,7 +39,7 @@ var getChannels = function() {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -47,7 +47,7 @@ var getChannels = function() {
         if (xhr.status === 200) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -65,7 +65,7 @@ var getForwarders = function() {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -73,7 +73,7 @@ var getForwarders = function() {
         if (xhr.status === 200) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -91,7 +91,7 @@ var getComputers = function() {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -99,7 +99,7 @@ var getComputers = function() {
         if (xhr.status === 200) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -118,7 +118,7 @@ var addForwarder = function(channel) {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -126,7 +126,7 @@ var addForwarder = function(channel) {
         if (xhr.status === 200) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -145,7 +145,7 @@ var addChannel = function(channel) {
 
   var requestTimer = setTimeout(function() {
     xhr.abort();
-    deferred.reject();
+    deferred.reject(408, { message: 'Timeout'});
   }, TIMEOUT);
 
   xhr.onload = function() {
@@ -153,7 +153,7 @@ var addChannel = function(channel) {
     if (xhr.status === 200) {
       deferred.resolve(xhr.response);
     } else {
-      deferred.reject();
+      deferred.reject(xhr.status, xhr.response);
     }
   };
   return deferred.promise();
@@ -172,7 +172,7 @@ var addComputer = function(computer) {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -180,7 +180,7 @@ var addComputer = function(computer) {
         if (xhr.status === 200) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -199,7 +199,7 @@ var updateChannel = function(channel) {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -207,7 +207,7 @@ var updateChannel = function(channel) {
         if (xhr.status === 200) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -226,7 +226,7 @@ var updateComputer = function(computer) {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -234,7 +234,7 @@ var updateComputer = function(computer) {
         if (xhr.status === 200) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -253,7 +253,7 @@ var updateMuxVerbose = function(value) {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -261,7 +261,7 @@ var updateMuxVerbose = function(value) {
         if (xhr.status === 200) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -280,7 +280,7 @@ var deleteForwarder = function(forwarder) {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -288,7 +288,7 @@ var deleteForwarder = function(forwarder) {
         if (xhr.status === 204) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -307,7 +307,7 @@ var deleteComputer = function(computer) {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -315,7 +315,7 @@ var deleteComputer = function(computer) {
         if (xhr.status === 204) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -334,7 +334,7 @@ var deleteChannel = function(channel) {
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
-        deferred.reject();
+        deferred.reject(408, { message: 'Timeout'});
     }, TIMEOUT);
 
     xhr.onload = function() {
@@ -342,7 +342,7 @@ var deleteChannel = function(channel) {
         if (xhr.status === 204) {
             deferred.resolve(xhr.response);
         } else {
-            deferred.reject();
+            deferred.reject(xhr.status, xhr.response);
         }
     };
     return deferred.promise();
@@ -361,8 +361,15 @@ var serialPortList = function() {
     html += "</ul>";
     $("#lists").html(html);
   });
-  getData.fail(function(error) {
-    alert("Failed to set the value..." + (error !== undefined ? error : ''));
+  getData.fail(function(error, errmess) {
+      var message;
+      if (errmess !== undefined) {
+          var mess = JSON.parse(errmess);
+          if (mess.message !== undefined) {
+              message = mess.message;
+          }
+      }
+      alert("Failed to get serial ports list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
   });
 };
 
@@ -405,8 +412,15 @@ var channelList = function() {
         html += "</table>";
         $("#lists").html(html);
     });
-    getData.fail(function(error) {
-        alert("Failed to set the value..." + (error !== undefined ? error : ''));
+    getDatafail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to get channels list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -450,8 +464,15 @@ var forwarderList = function() {
         html += "</table>";
         $("#lists").html(html);
     });
-    getData.fail(function(error) {
-        alert("Failed to set the value..." + (error !== undefined ? error : ''));
+    getDatafail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to get forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -476,8 +497,15 @@ var computerList = function() {
         html += "</table>";
         $("#lists").html(html);
     });
-    getData.fail(function(error) {
-        alert("Failed to set the value..." + (error !== undefined ? error : ''));
+    getDatafail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to get computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -487,8 +515,15 @@ var createChannel = function(channel) {
         console.log("Done:", value);
         channelList(); // refetch
     });
-    postData.fail(function(error) {
-        alert("Failed to create channel..." + (error !== undefined ? error : ''));
+    postData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to create channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -498,8 +533,15 @@ var createForwarder = function(forwarder) {
         console.log("Done:", value);
         forwarderList(); // refetch
     });
-    postData.fail(function(error) {
-        alert("Failed to create forwarder..." + (error !== undefined ? error : ''));
+    postData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to create forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -509,8 +551,15 @@ var createComputer = function(computer) {
         console.log("Done:", value);
         computerList(); // refetch
     });
-    postData.fail(function(error) {
-        alert("Failed to create computer..." + (error !== undefined ? error : ''));
+    postData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to create computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -520,8 +569,15 @@ var removeChannel = function(channel) {
         console.log("Done:", value);
         channelList(); // refetch
     });
-    deleteData.fail(function(error) {
-        alert("Failed to delete channel..." + (error !== undefined ? error : ''));
+    deleteDatafail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to delete channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -531,8 +587,15 @@ var removeForwarder = function(channel) {
         console.log("Done:", value);
         forwarderList(); // refetch
     });
-    deleteData.fail(function(error) {
-        alert("Failed to delete channel..." + (error !== undefined ? error : ''));
+    deleteDatafail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to delete forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -542,8 +605,15 @@ var removeComputer = function(computer) {
         console.log("Done:", value);
         computerList(); // refetch
     });
-    deleteData.fail(function(error) {
-        alert("Failed to delete computer..." + (error !== undefined ? error : ''));
+    deleteDatafail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to delete computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -553,8 +623,15 @@ var changeChannel = function(channel) {
         console.log("Done:", value);
         channelList(); // refetch
     });
-    putData.fail(function(error) {
-        alert("Failed to update channel..." + (error !== undefined ? error : ''));
+    putDatafail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to update channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -564,8 +641,15 @@ var changeComputer = function(computer) {
         console.log("Done:", value);
         computerList(); // refetch
     });
-    putData.fail(function(error) {
-        alert("Failed to update computer..." + (error !== undefined ? error : ''));
+    putDatafail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to update computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -588,8 +672,15 @@ var manageMuxVerbose = function(cb) {
     updateMux.done(function(value) {
         console.log("Done:", value);
     });
-    updateMux.fail(function(error) {
-        alert("Failed to update multiplexer..." + (error !== undefined ? error : ''));
+    updateMuxfail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to update multiplexer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
