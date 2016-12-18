@@ -139,6 +139,14 @@ public class HTTPServer {
 	}
 
 	public static class Response {
+
+		public final static int STATUS_OK = 200;
+		public final static int NOT_IMPLEMENTED = 501;
+		public final static int NO_CONTENT = 204;
+		public final static int BAD_REQUEST = 400;
+		public final static int NOT_FOUND = 404;
+		public final static int TIMEOUT = 408;
+
 		private int status;
 		private String protocol;
 		private Map<String, String> headers;

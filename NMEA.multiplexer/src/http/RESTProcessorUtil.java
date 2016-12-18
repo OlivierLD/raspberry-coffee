@@ -1,5 +1,7 @@
 package http;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -95,6 +97,12 @@ public class RESTProcessorUtil {
 		responseHeaders.put("Content-Length", String.valueOf(contentLength));
 		responseHeaders.put("Access-Control-Allow-Origin", "*");
 		response.setHeaders(responseHeaders);
+	}
+
+	public static void addErrorMessageToResponse(HTTPServer.Response response, String errMess) {
+		String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(errMess)).toString();
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
 	}
 
 	public static class ErrorMessage {

@@ -185,7 +185,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	}
 
 	private HTTPServer.Response getSerialPorts(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
 		List<String> portList = getSerialPortList();
 		Object[] portArray = portList.toArray(new Object[portList.size()]);
@@ -197,7 +197,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	}
 
 	private HTTPServer.Response getChannels(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
 		List<Object> channelList = getInputChannelList();
 		Object[] channelArray = channelList.stream()
@@ -212,7 +212,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	}
 
 	private HTTPServer.Response getForwarders(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		List<Object> forwarderList = getForwarderList();
 		Object[] forwarderArray = forwarderList.stream()
 						.collect(Collectors.toList())
@@ -226,7 +226,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	}
 
 	private HTTPServer.Response getComputers(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		List<Object> computerList = getComputerList();
 		Object[] forwarderArray = computerList.stream()
 						.collect(Collectors.toList())
@@ -264,11 +264,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 										.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
 					break;
 				case "tcp":
@@ -282,11 +279,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 										.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
 					break;
 				case "rmi":
@@ -300,11 +294,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 										.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
 					break;
 				case "ws":
@@ -318,25 +309,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 										.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
 					break;
 				case "udp":
-					response.setStatus(501); // Not implemented
+					response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED); 
 					break;
 				default:
 					break;
 			}
 		} else {
-			response.setStatus(400); // Bad request
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing path parameter")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter");
 		}
 		return response;
 	}
@@ -344,7 +329,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	private HTTPServer.Response deleteChannel(HTTPServer.Request request) {
 		Optional<NMEAClient> opClient = null;
 		Gson gson = null;
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 204);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NO_CONTENT);
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		if (prmValues.size() == 1) {
 			String id = prmValues.get(0);
@@ -360,11 +345,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 										.findFirst();
 						response = removeChannelIfPresent(request, opClient);
 					} else {
-						response.setStatus(400);
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
 					break;
 				case "serial":
@@ -378,11 +360,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 										.findFirst();
 						response = removeChannelIfPresent(request, opClient);
 					} else {
-						response.setStatus(400);
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
 					break;
 				case "tcp":
@@ -396,11 +375,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 										.findFirst();
 						response = removeChannelIfPresent(request, opClient);
 					} else {
-						response.setStatus(400);
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
 					break;
 				case "ws":
@@ -414,11 +390,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 										.findFirst();
 						response = removeChannelIfPresent(request, opClient);
 					} else {
-						response.setStatus(400);
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
 					break;
 				case "bme280":
@@ -440,15 +413,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					response = removeChannelIfPresent(request, opClient);
 					break;
 				default:
-					response.setStatus(501);
+					response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
 					break;
 			}
 		} else {
-			response.setStatus(400); // Bad request
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing path parameter")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter");
 		}
 		return response;
 	}
@@ -456,7 +426,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	private HTTPServer.Response deleteComputer(HTTPServer.Request request) {
 		Optional<Computer> opComputer = null;
 		Gson gson = null;
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 204);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NO_CONTENT);
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		if (prmValues.size() == 1) {
 			String id = prmValues.get(0);
@@ -469,36 +439,27 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 										.findFirst();
 						response = removeComputerIfPresent(request, opComputer);
 					} else {
-						response.setStatus(400);
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("'tw-current' not found")).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "'tw-current' was not found");
 					}
 					break;
 				default:
 					break;
 			}
 		} else {
-			response.setStatus(400); // Bad request
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing path parameter")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter");
 		}
 		return response;
 	}
 
 	private HTTPServer.Response postForwarder(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		Optional<Forwarder> opFwd = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
-			response.setStatus(400); // No Content
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 			return response;
 		} else {
 			Object bean = new GsonBuilder().create().fromJson(new String(request.getContent()), Object.class);
@@ -516,25 +477,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					try {
 						Forwarder consoleForwarder = new ConsoleWriter();
 						nmeaDataForwarders.add(consoleForwarder);
-						response = new HTTPServer.Response(request.getProtocol(), 200);
+						response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 						String content = new Gson().toJson(consoleForwarder.getBean());
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("'console' already exists.")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "'console' already exists");
 				}
 				break;
 			case "tcp":
@@ -552,20 +507,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'tcp' already exists.")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'tcp' already exists");
 				}
 				break;
 			case "rmi":
@@ -583,20 +532,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'rmi' already exists.")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "thi s'rmi' already exists");
 				}
 				break;
 			case "file":
@@ -614,19 +557,13 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'file' already exists.")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'file' alreacy exists");
 				}
 				break;
 			case "ws":
@@ -644,43 +581,31 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'ws' already exists.")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'ws' already exists");
 				}
 				break;
 			default:
-				response.setStatus(501); // Not implemented
-				// Add message payload
-				String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("'" + type + "' not implemented.")).toString();
-				RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-				response.setPayload(content.getBytes());
+				response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED); 
+				RESTProcessorUtil.addErrorMessageToResponse(response, "'" + type + "' not implemented");
 				break;
 		}
 		return response;
 	}
 
 	private HTTPServer.Response postChannel(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		Optional<NMEAClient> opClient = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
-			response.setStatus(400); // No Content
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 			return response;
 		} else {
 			Object bean = new GsonBuilder().create().fromJson(new String(request.getContent()), Object.class);
@@ -707,20 +632,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'tcp' already exists")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "ths 'tcp' already exists");
 				}
 				break;
 			case "serial":
@@ -740,20 +659,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'serial' already exists")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'serial' already exists");
 				}
 				break;
 			case "ws":
@@ -774,20 +687,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'ws' already exists")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'ws' already exists");
 				}
 				break;
 			case "file":
@@ -808,20 +715,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'file' already exists")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'file' already exists");
 				}
 				break;
 			case "bme280":
@@ -839,20 +740,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'bme280' already exists")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'bme280' already exists");
 				}
 				break;
 			case "htu21df":
@@ -870,20 +765,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'htu21df' already exists")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'htu21df' already exists");
 				}
 				break;
 			case "rnd":
@@ -901,39 +790,30 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'rnd' already exists")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'rnd' already exists");
 				}
 				break;
 			default:
-				response.setStatus(501); // Not implemented
+				response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
 				break;
 		}
 		return response;
 	}
 
 	private HTTPServer.Response postComputer(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		Optional<Computer> opComputer = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
-			response.setStatus(400); // No Content
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 			return response;
 		} else {
 			Object bean = new GsonBuilder().create().fromJson(new String(request.getContent()), Object.class);
@@ -956,39 +836,30 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
-						response.setStatus(400); 
-						// Add message payload
-						String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage(ex.toString())).toString();
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
 					}
 				} else {
 					// Already there
-					response.setStatus(400); 
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'computer' already exists")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'computer' already exists");
 				}
 				break;
 			default:
-				response.setStatus(501); // Not implemented
+				response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED); 
 				break;
 		}
 		return response;
 	}
 
 	private HTTPServer.Response putChannel(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		Optional<NMEAClient> opClient = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
-			response.setStatus(400); // No Content
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 			return response;
 		} else {
 			Object bean = new GsonBuilder().create().fromJson(new String(request.getContent()), Object.class);
@@ -1004,11 +875,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 												((SerialClient.SerialBean) ((SerialClient) channel).getBean()).getPort().equals(serialJson.getPort()))
 								.findFirst();
 				if (!opClient.isPresent()) {
-					response.setStatus(404); // Not found
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'serial' was not found")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.NOT_FOUND); 
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'serial' was not found");
 				} else { // Then update
 					SerialClient serialClient = (SerialClient) opClient.get();
 					serialClient.setVerbose(serialJson.getVerbose());
@@ -1024,11 +892,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 												((DataFileClient.DataFileBean) ((DataFileClient) channel).getBean()).getFile().equals(fileJson.getFile()))
 								.findFirst();
 				if (!opClient.isPresent()) {
-					response.setStatus(404); // Not found
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'file' was not found")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.NOT_FOUND); 
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'file' was not found");
 				} else { // Then update
 					DataFileClient dataFileClient = (DataFileClient) opClient.get();
 					dataFileClient.setVerbose(fileJson.getVerbose());
@@ -1045,11 +910,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 												((TCPClient.TCPBean) ((TCPClient) channel).getBean()).getPort() == tcpJson.getPort())
 								.findFirst();
 				if (!opClient.isPresent()) {
-					response.setStatus(404); // Not found
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'tcp' was not found")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.NOT_FOUND); 
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'tcp' was not found");
 				} else { // Then update
 					TCPClient tcpClient = (TCPClient) opClient.get();
 					tcpClient.setVerbose(tcpJson.getVerbose());
@@ -1065,11 +927,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 												((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsJson.getWsUri()))
 								.findFirst();
 				if (!opClient.isPresent()) {
-					response.setStatus(404); // Not found
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'ws' was not found")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.NOT_FOUND); 
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'ws' was not found");
 				} else { // Then update
 					WebSocketClient webSocketClient = (WebSocketClient) opClient.get();
 					webSocketClient.setVerbose(wsJson.getVerbose());
@@ -1084,11 +943,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.filter(channel -> channel instanceof BME280Client)
 								.findFirst();
 				if (!opClient.isPresent()) {
-					response.setStatus(404); // Not found
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'bme280' was not found")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.NOT_FOUND); 
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'bme280' was not found");
 				} else { // Then update
 					BME280Client bme280Client = (BME280Client) opClient.get();
 					bme280Client.setVerbose(bme280Json.getVerbose());
@@ -1103,11 +959,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.filter(channel -> channel instanceof HTU21DFClient)
 								.findFirst();
 				if (!opClient.isPresent()) {
-					response.setStatus(404); // Not found
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'htu21df' was not found")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.NOT_FOUND); 
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'htu21df' was not found");
 				} else { // Then update
 					HTU21DFClient htu21DFClient = (HTU21DFClient) opClient.get();
 					htu21DFClient.setVerbose(htu21dfJson.getVerbose());
@@ -1122,11 +975,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.filter(channel -> channel instanceof RandomClient)
 								.findFirst();
 				if (!opClient.isPresent()) {
-					response.setStatus(404); // Not found
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("this 'rnd' was not found")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.NOT_FOUND); 
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'rnd' was not found");
 				} else { // Then update
 					RandomClient randomClient = (RandomClient) opClient.get();
 					randomClient.setVerbose(rndJson.getVerbose());
@@ -1136,22 +986,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			default:
-				response.setStatus(501); // Not implemented
+				response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED); 
 				break;
 		}
 		return response;
 	}
 
 	private HTTPServer.Response putForwarder(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		Optional<NMEAClient> opClient = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
-			response.setStatus(400); // No Content
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 			return response;
 		} else {
 			Object bean = new GsonBuilder().create().fromJson(new String(request.getContent()), Object.class);
@@ -1161,22 +1008,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		}
 		switch (type) {
 			default:
-				response.setStatus(501); // Not implemented
+				response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED); 
 				break;
 		}
 		return response;
 	}
 
 	private HTTPServer.Response putComputer(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		Optional<Computer> opComputer = null;
 		String type = "";
 		if (request.getContent() == null || request.getContent().length == 0) {
-			response.setStatus(400); // No Content
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing payload")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST); 
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 			return response;
 		} else {
 			Object bean = new GsonBuilder().create().fromJson(new String(request.getContent()), Object.class);
@@ -1191,11 +1035,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.filter(cptr -> cptr instanceof ExtraDataComputer)
 								.findFirst();
 				if (!opComputer.isPresent()) {
-					response.setStatus(404); // Not found
-					// Add message payload
-					String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("'tw-current' not found")).toString();
-					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					response.setStatus(HTTPServer.Response.NOT_FOUND); 
+					RESTProcessorUtil.addErrorMessageToResponse(response, "'tw-current' not found");
 				} else { // Then update
 					ExtraDataComputer computer = (ExtraDataComputer) opComputer.get();
 					computer.setVerbose(twJson.isVerbose());
@@ -1207,21 +1048,18 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			default:
-				response.setStatus(501); // Not implemented
+				response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED); 
 				break;
 		}
 		return response;
 	}
 
 	private HTTPServer.Response putMuxVerbose(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		if (prmValues.size() != 1) {
-			response.setStatus(400);
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("missing path parameter")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response.setStatus(HTTPServer.Response.BAD_REQUEST);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter");
 			return response;
 		}
 		boolean newValue = "on".equals(prmValues.get(0));
@@ -1234,7 +1072,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	}
 
 	private HTTPServer.Response getOperationList(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		List<Object> channelList = getInputChannelList();
 		Operation[] channelArray = operations.stream()
 						.collect(Collectors.toList())
@@ -1246,7 +1084,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	}
 
 	private HTTPServer.Response emptyOperation(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 200);
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
 		return response;
 	}
@@ -1260,7 +1098,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	 */
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 501); // Default, Not implemented
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_IMPLEMENTED);
 		response = processRequest(request, response);
 		if (this.verbose) {
 			System.out.println("======================================");
@@ -1277,13 +1115,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			Forwarder forwarder = opFwd.get();
 			forwarder.close();
 			nmeaDataForwarders.remove(forwarder);
-			response = new HTTPServer.Response(request.getProtocol(), 204);
+			response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NO_CONTENT);
 		} else {
-			response = new HTTPServer.Response(request.getProtocol(), 404);
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("forwarder not found")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_FOUND);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "forwarder not found");
 		}
 		return response;
 	}
@@ -1294,13 +1129,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			NMEAClient client = nmeaClient.get();
 			client.stopDataRead();
 			nmeaDataProviders.remove(client);
-			response = new HTTPServer.Response(request.getProtocol(), 204);
+			response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NO_CONTENT);
 		} else {
-			response = new HTTPServer.Response(request.getProtocol(), 404);
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("channel not found")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_FOUND);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "channel not found");
 		}
 		return response;
 	}
@@ -1311,13 +1143,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			Computer computer = nmeaComputer.get();
 			computer.close();
 			nmeaDataComputers.remove(computer);
-			response = new HTTPServer.Response(request.getProtocol(), 204);
+			response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NO_CONTENT);
 		} else {
-			response = new HTTPServer.Response(request.getProtocol(), 404);
-			// Add message payload
-			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("computer not found")).toString();
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
-			response.setPayload(content.getBytes());
+			response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_FOUND);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "computer not found");
 		}
 		return response;
 	}
