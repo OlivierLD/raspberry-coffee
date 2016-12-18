@@ -22,5 +22,5 @@ CP=$CP:./libs/RXTXcomm.jar          # for Mac
 #CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
 # use sudo on Raspberry PI
-java $JAVA_OPTIONS -cp $CP nmea.providers.client.mux.GenericNMEAMultiplexer
+java $JAVA_OPTIONS -cp $CP nmea.mux.GenericNMEAMultiplexer
 #

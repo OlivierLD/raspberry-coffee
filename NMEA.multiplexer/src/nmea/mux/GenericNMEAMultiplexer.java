@@ -504,7 +504,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				RMIServer.RMIBean rmiJson = new Gson().fromJson(new String(request.getContent()), RMIServer.RMIBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof TCPWriter &&
+								.filter(fwd -> fwd instanceof RMIServer &&
 												((RMIServer) fwd).getRegistryPort() == rmiJson.getPort())
 								.findFirst();
 				if (!opFwd.isPresent()) {
