@@ -105,6 +105,9 @@ public class RESTProcessorUtil {
 		response.setPayload(content.getBytes());
 	}
 
+	/**
+	 * Used along with HTTP Error codes to contain a more significant message.
+	 */
 	public static class ErrorMessage {
 		private String message;
 

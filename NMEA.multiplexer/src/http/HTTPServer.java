@@ -140,12 +140,12 @@ public class HTTPServer {
 
 	public static class Response {
 
-		public final static int STATUS_OK = 200;
+		public final static int STATUS_OK       = 200;
 		public final static int NOT_IMPLEMENTED = 501;
-		public final static int NO_CONTENT = 204;
-		public final static int BAD_REQUEST = 400;
-		public final static int NOT_FOUND = 404;
-		public final static int TIMEOUT = 408;
+		public final static int NO_CONTENT      = 204;
+		public final static int BAD_REQUEST     = 400;
+		public final static int NOT_FOUND       = 404;
+		public final static int TIMEOUT         = 408;
 
 		private int status;
 		private String protocol;
@@ -194,20 +194,20 @@ public class HTTPServer {
 
 		@Override
 		public String toString() {
-			final StringBuffer string = new StringBuffer();
-			string.append(this.status + " " + this.protocol);
+			final StringBuffer sb = new StringBuffer();
+			sb.append(this.status + " " + this.protocol);
 
 			if (this.headers != null) {
 				this.headers.keySet().stream()
 								.forEach(k -> {
-									string.append("\n" + k + ":" + this.headers.get(k));
+									sb.append("\n" + k + ":" + this.headers.get(k));
 								});
 			}
 			if (this.payload != null) {
-				string.append("\n\n" + new String(this.payload));
+				sb.append("\n\n" + new String(this.payload));
 			}
 
-			return string.toString();
+			return sb.toString();
 		}
 	}
 
@@ -263,7 +263,7 @@ public class HTTPServer {
 						if (verbose)
 							System.out.println(">>> Top of the loop <<<");
 						while (keepReading) {
-							if (top) { // Ugly!! :(
+							if (top) { // Ugly!! Argh! :(
 								try {
 									Thread.sleep(100L);
 								} catch (InterruptedException ie) {
@@ -356,14 +356,14 @@ public class HTTPServer {
 
 							if ("/exit".equals(path)) {
 								System.out.println("Received an exit signal");
-								Response response = new Response(request.getProtocol(), 200);
+								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String content = "Exiting";
 								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
 								okToStop = true;
 							} else if ("/test".equals(path)) {
-								Response response = new Response(request.getProtocol(), 200);
+								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String content = "Test is OK";
 								if (request.getContent() != null && request.getContent().length > 0) {
 									content += String.format("\nYour payload was [%s]", new String(request.getContent()));
@@ -372,10 +372,10 @@ public class HTTPServer {
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
 							} else if (path.startsWith("/web/")) {                                    // Assume this is static content. TODO Tweak that.
-								Response response = new Response(request.getProtocol(), 200);
+								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								File f = new File("." + path);
 								if (!f.exists()) {
-									response = new Response(request.getProtocol(), 404); // Not Found
+									response = new Response(request.getProtocol(), Response.NOT_FOUND);
 								}
 								ByteArrayOutputStream baos = new ByteArrayOutputStream();
 								Files.copy(f.toPath(), baos);

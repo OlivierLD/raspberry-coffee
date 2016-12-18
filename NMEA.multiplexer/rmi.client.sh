@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Classes needed for the client:
+# The classes needed for the client are very few:
 #
 # nmea/forwarders/rmi/clientoperations/LastString.class (and the list of the other classes to invoke if needed).
 # nmea/forwarders/rmi/ServerInterface.class
@@ -10,7 +10,7 @@
 # samples/rmi/client/SampleRMIClient.class
 #
 # Those classes are in build/lib/NMEA.multiplexer-1.0.jar (../gradlew --daemon build), but this jar
-# can be shrinked.
+# can be shrunk.
 #
 CP=./build/libs/NMEA.multiplexer-1.0.jar
 #

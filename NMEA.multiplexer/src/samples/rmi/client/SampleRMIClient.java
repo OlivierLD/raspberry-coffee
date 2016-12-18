@@ -28,7 +28,7 @@ public class SampleRMIClient {
 			port = args[1];
 		}
 
-		bindingName = "RMI-OLIV";
+		bindingName = "RMI-NMEA";
 
 		System.out.println("Looking up [" + bindingName + " on " + name + ":" + port + "]");
 		try {
