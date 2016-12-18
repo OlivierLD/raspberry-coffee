@@ -101,6 +101,14 @@ http.port=9999
 
 ### Supported end-points (for now)
 
+#### List of operations
+A full list of the available REST services is available at 
+```
+ GET /oplist
+```
+![Operations List](./OpList.png "OpList")
+
+
 ```
  GET /serial-ports
 ```
