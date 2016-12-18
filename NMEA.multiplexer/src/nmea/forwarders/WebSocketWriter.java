@@ -1,4 +1,4 @@
-package nmea.suppliers;
+package nmea.forwarders;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;

@@ -1,4 +1,4 @@
-package nmea.suppliers.rmi;
+package nmea.forwarders.rmi;
 
 public interface Task<T> {
 	T execute();

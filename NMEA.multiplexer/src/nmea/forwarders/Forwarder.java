@@ -1,4 +1,4 @@
-package nmea.suppliers;
+package nmea.forwarders;
 
 public interface Forwarder {
 	void write(byte[] mess); // Receives data

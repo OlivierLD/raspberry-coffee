@@ -1,4 +1,4 @@
-package nmea.providers.client.mux;
+package nmea.mux;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,12 +27,12 @@ import nmea.providers.reader.RandomReader;
 import nmea.providers.reader.SerialReader;
 import nmea.providers.reader.TCPReader;
 import nmea.providers.reader.WebSocketReader;
-import nmea.suppliers.ConsoleWriter;
-import nmea.suppliers.DataFileWriter;
-import nmea.suppliers.Forwarder;
-import nmea.suppliers.TCPWriter;
-import nmea.suppliers.WebSocketWriter;
-import nmea.suppliers.rmi.RMIServer;
+import nmea.forwarders.ConsoleWriter;
+import nmea.forwarders.DataFileWriter;
+import nmea.forwarders.Forwarder;
+import nmea.forwarders.TCPWriter;
+import nmea.forwarders.WebSocketWriter;
+import nmea.forwarders.rmi.RMIServer;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -282,6 +281,20 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						response.setStatus(400); // Bad request (no payload)
 					}
 					break;
+				case "rmi":
+					gson = new GsonBuilder().create();
+					if (request.getContent() != null) {
+						StringReader stringReader = new StringReader(new String(request.getContent()));
+						RMIServer.RMIBean rmiBean = gson.fromJson(stringReader, RMIServer.RMIBean.class);
+						opFwd = nmeaDataForwarders.stream()
+										.filter(fwd -> fwd instanceof RMIServer &&
+														((RMIServer) fwd).getRegistryPort() == rmiBean.getPort())
+										.findFirst();
+						response = removeForwarderIfPresent(request, opFwd);
+					} else {
+						response.setStatus(400); // Bad request (no payload)
+					}
+					break;
 				case "ws":
 					gson = new GsonBuilder().create();
 					if (request.getContent() != null) {
@@ -476,6 +489,29 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						Forwarder tcpForwarder = new TCPWriter(tcpJson.getPort());
 						nmeaDataForwarders.add(tcpForwarder);
 						String content = new Gson().toJson(tcpForwarder.getBean());
+						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+					} catch (Exception ex) {
+						response.setStatus(400); // Default, Bad Request
+						ex.printStackTrace();
+					}
+				} else {
+					// Already there
+					response.setStatus(400); // Default, Bad Request
+				}
+				break;
+			case "rmi":
+				RMIServer.RMIBean rmiJson = new Gson().fromJson(new String(request.getContent()), RMIServer.RMIBean.class);
+				// Check if not there yet.
+				opFwd = nmeaDataForwarders.stream()
+								.filter(fwd -> fwd instanceof TCPWriter &&
+												((RMIServer) fwd).getRegistryPort() == rmiJson.getPort())
+								.findFirst();
+				if (!opFwd.isPresent()) {
+					try {
+						Forwarder rmiForwarder = new RMIServer(rmiJson.getPort(), rmiJson.getBindingName());
+						nmeaDataForwarders.add(rmiForwarder);
+						String content = new Gson().toJson(rmiForwarder.getBean());
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {

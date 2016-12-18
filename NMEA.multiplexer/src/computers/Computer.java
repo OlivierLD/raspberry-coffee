@@ -1,7 +1,7 @@
 package computers;
 
 import nmea.api.Multiplexer;
-import nmea.suppliers.Forwarder;
+import nmea.forwarders.Forwarder;
 
 public abstract class Computer implements Forwarder {
 

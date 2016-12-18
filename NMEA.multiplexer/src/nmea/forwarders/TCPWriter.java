@@ -1,4 +1,4 @@
-package nmea.suppliers;
+package nmea.forwarders;
 
 import java.io.DataOutputStream;
 import java.net.ServerSocket;

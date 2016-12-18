@@ -124,24 +124,35 @@
             switch (selected) {
                 case 'tcp':
                     $("#forward-tcp").css('display', 'inline');
+                    $("#forward-rmi").css('display', 'none');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'none');
+                    break;
+                case 'rmi':
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'inline');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'file':
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'inline');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'ws':
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'inline');
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'console':
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'inline');
@@ -244,6 +255,23 @@
                     createForwarder({
                         type: 'tcp',
                         port: port
+                    });
+                    break;
+                case 'rmi':
+                    var port = $("#fwd-rmi-port").val();
+                    if (port.trim().length === 0) {
+                        alert('Port is required');
+                        return;
+                    }
+                    var name = $("#fwd-rmi-binding-name").val();
+                    if (name.trim().length === 0) {
+                        alert('Name is required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'rmi',
+                        port: port,
+                        bindingName: name
                     });
                     break;
                 case 'file':
@@ -425,6 +453,7 @@
             <td valign="top">
               <select id="forwarder-select" onchange="forwardSelectManager();">
                 <option value="tcp">TCP</option>
+                <option value="rmi">RMI</option>
                 <option value="file">Data File</option>
                 <option value="ws">Web Socket</option>
                 <option value="console">Console</option>
@@ -436,6 +465,18 @@
                   <tr>
                     <td>Port</td>
                     <td><input id="fwd-tcp-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-rmi" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="fwd-rmi-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                  <tr>
+                    <td>Binding Name</td>
+                    <td><input id="fwd-rmi-binding-name" type="text" placeholder="Binding Name" size="20"></td>
                   </tr>
                 </table>
               </div>

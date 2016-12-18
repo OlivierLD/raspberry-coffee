@@ -267,16 +267,16 @@ var updateMuxVerbose = function(value) {
     return deferred.promise();
 };
 
-var deleteForwarder = function(channel) {
+var deleteForwarder = function(forwarder) {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/forwarders/' + channel.type,
+        url = '/forwarders/' + forwarder.type,
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 
     xhr.open('DELETE', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
-    xhr.send(JSON.stringify(channel));
+    xhr.send(JSON.stringify(forwarder));
 
     var requestTimer = setTimeout(function() {
         xhr.abort();
@@ -432,6 +432,13 @@ var forwarderList = function() {
                     break;
                 case 'ws':
                     html += ("<tr><td><b>ws</b></td><td>" + json[i].wsUri + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    break;
+                case 'rmi':
+                    html += ("<tr><td valign='top'><b>rmi</b></td><td valign='top'>" +
+                    "Port: " + json[i].port + "<br>" +
+                    "Name: " + json[i].bindingName + "<br>" +
+                    "Address: " + json[i].serverAddress +
+                    "</td><td valign='top'><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'console':
                     html += ("<tr><td><b>console</b></td><td></td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");

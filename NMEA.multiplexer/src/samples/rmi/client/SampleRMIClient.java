@@ -1,7 +1,7 @@
 package samples.rmi.client;
 
-import nmea.suppliers.rmi.ServerInterface;
-import nmea.suppliers.rmi.clientoperations.LastString;
+import nmea.forwarders.rmi.ServerInterface;
+import nmea.forwarders.rmi.clientoperations.LastString;
 
 import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
@@ -28,7 +28,7 @@ public class SampleRMIClient {
 			port = args[1];
 		}
 
-		bindingName = "RMI-NMEA";
+		bindingName = "RMI-OLIV";
 
 		System.out.println("Looking up [" + bindingName + " on " + name + ":" + port + "]");
 		try {

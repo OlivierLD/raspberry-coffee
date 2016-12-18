@@ -1,4 +1,4 @@
-package nmea.providers.client.mux;
+package nmea.mux;
 
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;

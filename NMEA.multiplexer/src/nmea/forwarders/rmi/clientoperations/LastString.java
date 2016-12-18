@@ -1,6 +1,6 @@
-package nmea.suppliers.rmi.clientoperations;
+package nmea.forwarders.rmi.clientoperations;
 
-import nmea.suppliers.rmi.Task;
+import nmea.forwarders.rmi.Task;
 
 import java.io.Serializable;
 

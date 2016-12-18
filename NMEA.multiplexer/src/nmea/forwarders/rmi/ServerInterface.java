@@ -1,4 +1,4 @@
-package nmea.suppliers.rmi;
+package nmea.forwarders.rmi;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

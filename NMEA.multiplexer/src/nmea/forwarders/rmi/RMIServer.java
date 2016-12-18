@@ -1,9 +1,10 @@
-package nmea.suppliers.rmi;
+package nmea.forwarders.rmi;
 
-import nmea.suppliers.Forwarder;
-import nmea.suppliers.rmi.clientoperations.LastString;
+import nmea.forwarders.Forwarder;
+import nmea.forwarders.rmi.clientoperations.LastString;
 
 import java.net.InetAddress;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -16,6 +17,8 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	private int registryPort      = 1099;
 	private String serverAddress = "";
 	private String bindingName = DEFAULT_NAME;
+
+	private boolean verbose = false;
 
 	public RMIServer(int port) throws RemoteException {
 		this(port, DEFAULT_NAME);
@@ -41,10 +44,18 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	public int getRegistryPort() {
 		return this.registryPort;
 	}
+	public boolean isVerbose() {
+		return verbose;
+	}
+
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
 
 	private String lastString = "";
 
-	/** Receives a message from the MUX
+	/**
+	 * Receives a message from the MUX
 	 *
 	 * @param message NMEA String
 	 */
@@ -63,6 +74,15 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	@Override
 	public void close() {
 		System.out.println("- Stop writing to " + this.getClass().getName());
+		try {
+			this.registry.unbind(this.bindingName);
+			UnicastRemoteObject.unexportObject(this, true);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+		System.out.println("   RMI server shutdown.");
 	}
 
 	@Override
@@ -82,7 +102,10 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		private String serverAddress;
 
 		public int getPort() {
-			return port;
+			return this.port;
+		}
+		public String getBindingName() {
+			return this.bindingName;
 		}
 
 		public RMIBean(RMIServer instance) {
@@ -100,7 +123,6 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 
 	// For standalone tests
 	public static void main(String[] args) throws RemoteException {
-		RMIServer server = new RMIServer(2099);
+		RMIServer server = new RMIServer(1099);
 	}
-
 }
