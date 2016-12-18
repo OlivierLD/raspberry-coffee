@@ -1280,6 +1280,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			response = new HTTPServer.Response(request.getProtocol(), 204);
 		} else {
 			response = new HTTPServer.Response(request.getProtocol(), 404);
+			// Add message payload
+			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("forwarder not found")).toString();
+			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
 		}
 		return response;
 	}
@@ -1293,6 +1297,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			response = new HTTPServer.Response(request.getProtocol(), 204);
 		} else {
 			response = new HTTPServer.Response(request.getProtocol(), 404);
+			// Add message payload
+			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("channel not found")).toString();
+			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
 		}
 		return response;
 	}
@@ -1306,6 +1314,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			response = new HTTPServer.Response(request.getProtocol(), 204);
 		} else {
 			response = new HTTPServer.Response(request.getProtocol(), 404);
+			// Add message payload
+			String content = new Gson().toJson(new RESTProcessorUtil.ErrorMessage("computer not found")).toString();
+			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
 		}
 		return response;
 	}
