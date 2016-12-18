@@ -58,6 +58,11 @@ Transformers:
 - **GPSD** data
 - **Custom** data
 
+#### Note
+There is an **rmi** forwarder. This is a work in progress, but it works.
+It is feeding an RMI server that can then be accessed by an RMI client.
+See an example of such a client in `samples.rmi.client.SampleRMIClient`.
+
 ### To see it at work
 See the class `nmeaproviders.client.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
 See it to understand its content (should be clear enough).
@@ -70,11 +75,6 @@ To run it, modify `mux.sh` to fit your environment, and run
 ```
  $> ./mux.sh
 ```
-#### Note
-There is an **rmi** forwarder. This is a work in progress, but it works.
-It is feeding an RMI server that can then be accessed by an RMI client.
-See an example of such a client in `samples.rmi.client.SampleRMIClient`.
-
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
