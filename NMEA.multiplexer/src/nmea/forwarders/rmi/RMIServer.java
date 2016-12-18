@@ -32,10 +32,10 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		} catch(Exception e) {
 			throw new RemoteException("Can't get inet address.");
 		}
-		System.out.println(String.format("RMI Server Created. Server address : %s, port %d, name %s", serverAddress, registryPort, bindingName));
 		try{
 			registry = LocateRegistry.createRegistry(registryPort);
 			registry.rebind(bindingName, this);
+			System.out.println(String.format("RMI Server Created. Server address : %s, port %d, name %s", serverAddress, registryPort, bindingName));
 		} catch (RemoteException e) {
 			throw e;
 		}
