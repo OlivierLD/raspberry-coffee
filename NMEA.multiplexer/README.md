@@ -70,6 +70,10 @@ To run it, modify `mux.sh` to fit your environment, and run
 ```
  $> ./mux.sh
 ```
+#### Note
+There is an **rmi** forwarder. This is a work in progress, but it works.
+It is feeding an RMI server that can then be accessed by an RMI client.
+See an example of such a client in `samples.rmi.client.SampleRMIClient`.
 
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.

@@ -1464,6 +1464,11 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		}
 	}
 
+	/**
+	 * Start the Multiplexer from here.
+	 *
+	 * @param args
+	 */
 	public static void main(String... args) {
 
 		String propertiesFile = System.getProperty("mux.properties", "nmea.mux.properties");
