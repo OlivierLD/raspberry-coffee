@@ -59,6 +59,7 @@ Transformers:
 - **Custom** data
 
 ![Overall Overview](./overview.png "Overview")
+There is no Transformer on the picture above
 
 #### Note
 There is an **rmi** forwarder. This is a work in progress, but it works.
