@@ -20,6 +20,7 @@ import nmea.parser.Speed;
 import nmea.parser.StringGenerator;
 import nmea.parser.StringParsers;
 import nmea.parser.Temperature;
+import nmea.parser.TrueWind;
 import nmea.parser.UTC;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
@@ -354,10 +355,23 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 					}
 					break;
 				case "MWD": // Wind Speed and Direction
-					// TODO Implement
+					Wind mwdWind = StringParsers.parseMWD(nmeaSentence);
+					if (mwdWind != null && mwdWind instanceof TrueWind) {
+						this.put(TWS, new Speed(mwdWind.speed));
+						this.put(TWD, new Angle360(mwdWind.angle));
+					}
 					break;
 				case "VWT": // True Wind Speed and Angle (deprecated, use MWV)
-					// TODO Implement
+					Wind trueWind = StringParsers.parseVWT(nmeaSentence);
+					if (trueWind != null) {
+						this.put(TWS, new Speed(trueWind.speed));
+						this.put(TWA, new Angle180(trueWind.angle));
+						Angle360 trueHeading = (Angle360)this.get(HDG_TRUE);
+						if (trueHeading != null) {
+							double twd = trueHeading.getValue() + trueWind.angle;
+							System.out.println("TWD: " + twd); // TODO Implement put(TWD, new Angle360(twd))
+						}
+					}
 					break;
 				case "BAT":     // Battery Voltage. Not Standard, from the Raspberry PI. There is an XDR Voltage...
 					float volt = StringParsers.parseBAT(nmeaSentence);
@@ -476,7 +490,7 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 			dampingMap.get(k).clear();
 	}
 
-	public static class CurrentDefinition {
+	public static class CurrentDefinition implements Serializable {
 		private long bufferLength; // in ms
 		private Speed speed;
 
