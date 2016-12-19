@@ -2,9 +2,13 @@ package nmea.mux;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.internal.LinkedTreeMap;
 import computers.Computer;
 import computers.ExtraDataComputer;
 import context.ApplicationContext;
+import context.NMEADataCache;
 import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
 import http.HTTPServerInterface;
@@ -168,7 +172,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"PUT",
 									"/mux-verbose/{pos}",
 									this::putMuxVerbose,
-									"Update Multiplexer verbose"));
+									"Update Multiplexer verbose"),
+					new Operation(
+									"GET",
+									"/cache",
+									this::getCache,
+									"GEt ALL the data in the cache"));
 
 	public HTTPServer.Response processRequest(HTTPServer.Request request, HTTPServer.Response defaultResponse) {
 		Optional<Operation> opOp = operations
@@ -1065,6 +1074,21 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		boolean newValue = "on".equals(prmValues.get(0));
 		this.verbose = newValue;
 		String content = "";
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response getCache(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+
+		JsonElement jsonElement = new Gson().toJsonTree(cache);
+		((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
+
+		String content = jsonElement.toString();
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 

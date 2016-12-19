@@ -4,6 +4,7 @@ import context.NMEADataCache;
 import nmea.forwarders.rmi.ServerInterface;
 import nmea.forwarders.rmi.clientoperations.BoatPosition;
 import nmea.forwarders.rmi.clientoperations.CalculatedCurrent;
+import nmea.forwarders.rmi.clientoperations.InstantCurrent;
 import nmea.forwarders.rmi.clientoperations.LastString;
 import nmea.forwarders.rmi.clientoperations.NMEACache;
 import nmea.forwarders.rmi.clientoperations.TrueWind;
@@ -81,7 +82,8 @@ public class SampleRMIClient {
 
 			TrueWind trueWind = new TrueWind();
 			CalculatedCurrent calculatedCurrent = new CalculatedCurrent();
-
+			InstantCurrent instantCurrent = new InstantCurrent();
+			// Instant: CSP & CDR
 			for (int i=0; i<50; i++) {
 				before = System.currentTimeMillis();
 				nmea.parser.TrueWind tw = comp.executeTask(trueWind);
@@ -89,9 +91,11 @@ public class SampleRMIClient {
 				System.out.println(String.format("TrueWind execution took %s ms.", NumberFormat.getInstance().format(after - before)));
 				System.out.println(String.format("TW is %f knots, from %d", tw.speed, tw.angle));
 
-				Current current = comp.executeTask(calculatedCurrent);
+				Current calc = comp.executeTask(calculatedCurrent);
+				Current inst = comp.executeTask(instantCurrent);
 
-				System.out.println(String.format("Instant Current    %f knots, dir %d", current.speed, (int)Math.round(current.angle)));
+				System.out.println(String.format("Instant Current    %f knots, dir %d", inst.speed, (int)Math.round(inst.angle)));
+				System.out.println(String.format("Calculated Current %f knots, dir %d", calc.speed, (int)Math.round(calc.angle)));
 
 				try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
 			}
