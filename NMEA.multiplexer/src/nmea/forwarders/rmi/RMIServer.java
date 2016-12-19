@@ -1,5 +1,6 @@
 package nmea.forwarders.rmi;
 
+import context.ApplicationContext;
 import nmea.forwarders.Forwarder;
 import nmea.forwarders.rmi.clientoperations.LastString;
 
@@ -15,15 +16,21 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	private static final String DEFAULT_NAME = "RMIServer";
 	private Registry registry     = null;
 	private int registryPort      = 1099;
-	private String serverAddress = "";
-	private String bindingName = DEFAULT_NAME;
+	private String serverAddress  = "";
+	private String bindingName    = DEFAULT_NAME;
 
 	private boolean verbose = false;
 
 	public RMIServer(int port) throws RemoteException {
 		this(port, DEFAULT_NAME);
 	}
+
 	public RMIServer(int port, String bindingName) throws RemoteException {
+		// Make sure the cache has been initialized.
+		if (ApplicationContext.getInstance().getDataCache() == null) {
+			throw new RuntimeException("Init the Cache first. See the properties file used at started."); // Oops
+		}
+
 		this.registryPort = port;
 		this.bindingName = bindingName;
 
@@ -62,6 +69,8 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	@Override
 	public void write(byte[] message) {
 		this.lastString = new String(message);
+		// Feed the cache here
+		ApplicationContext.getInstance().getDataCache().parseAndFeed(new String(message));
 	}
 
 	private String formatByteHexa(byte b) {
@@ -82,7 +91,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		} catch (NotBoundException e) {
 			e.printStackTrace();
 		}
-		System.out.println("   RMI server shutdown.");
+		System.out.println(" >> RMI server shutdown.");
 	}
 
 	@Override
@@ -109,10 +118,10 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		}
 
 		public RMIBean(RMIServer instance) {
-			cls = instance.getClass().getName();
-			port = instance.registryPort;
-			bindingName = instance.bindingName;
-			serverAddress = instance.serverAddress;
+			this.cls = instance.getClass().getName();
+			this.port = instance.registryPort;
+			this.bindingName = instance.bindingName;
+			this.serverAddress = instance.serverAddress;
 		}
 	}
 

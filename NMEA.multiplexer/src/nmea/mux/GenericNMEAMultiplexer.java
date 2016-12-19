@@ -1320,6 +1320,24 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			}
 			muxIdx++;
 		}
+
+		// Data Cache
+		if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
+			try {
+				String deviationFile = muxProps.getProperty("deviation.file.name", "zero-deviation.csv");
+				double maxLeeway = Double.parseDouble(muxProps.getProperty("max.leeway", "0"));
+				double bspFactor = Double.parseDouble(muxProps.getProperty("bsp.factor", "1"));
+				double awsFactor = Double.parseDouble(muxProps.getProperty("aws.factor", "1"));
+				double awaOffset = Double.parseDouble(muxProps.getProperty("awa.offset", "0"));
+				double hdgOffset = Double.parseDouble(muxProps.getProperty("hdg.offset", "0"));
+				double defaultDeclination = Double.parseDouble(muxProps.getProperty("default.declination", "0"));
+				int damping = Integer.parseInt(muxProps.getProperty("damping", "1"));
+				ApplicationContext.getInstance().initCache(deviationFile, maxLeeway, bspFactor, awsFactor, awaOffset, hdgOffset, defaultDeclination, damping);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
 		thereIsMore = true;
 		int fwdIdx = 1;
 		// 2 - Output channels
@@ -1389,16 +1407,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		// Init cache (for Computers).
 		if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
 			try {
-				String deviationFile = muxProps.getProperty("deviation.file.name", "zero-deviation.csv");
-				double maxLeeway = Double.parseDouble(muxProps.getProperty("max.leeway", "0"));
-				double bspFactor = Double.parseDouble(muxProps.getProperty("bsp.factor", "1"));
-				double awsFactor = Double.parseDouble(muxProps.getProperty("aws.factor", "1"));
-				double awaOffset = Double.parseDouble(muxProps.getProperty("awa.offset", "0"));
-				double hdgOffset = Double.parseDouble(muxProps.getProperty("hdg.offset", "0"));
-				double defaultDeclination = Double.parseDouble(muxProps.getProperty("default.declination", "0"));
-				int damping = Integer.parseInt(muxProps.getProperty("damping", "1"));
-				ApplicationContext.getInstance().initCache(deviationFile, maxLeeway, bspFactor, awsFactor, awaOffset, hdgOffset, defaultDeclination, damping);
-
 				// If there is a cache, then let's see what computers to start.
 				thereIsMore = true;
 				int cptrIdx = 1;

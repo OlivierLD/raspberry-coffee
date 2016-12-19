@@ -23,7 +23,14 @@ public class ApplicationContext {
 		return applicationContext;
 	}
 
-	public void initCache(String deviationFileName, double maxLeeway, double bspFactor, double awsFactor, double awaOffset, double hdgOffset, double defaultDeclination, int damping) {
+	public void initCache(String deviationFileName,
+	                      double maxLeeway,
+	                      double bspFactor,
+	                      double awsFactor,
+	                      double awaOffset,
+	                      double hdgOffset,
+	                      double defaultDeclination,
+	                      int damping) {
 
 		dataCache = new NMEADataCache();
 

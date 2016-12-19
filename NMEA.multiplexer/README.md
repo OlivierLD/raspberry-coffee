@@ -59,7 +59,7 @@ Transformers:
 - **Custom** data
 
 ![Overall Overview](./overview.png "Overview")
-There is no Transformer on the picture above
+_There is no Transformer on the picture above_
 
 #### Note
 There is an **rmi** forwarder. This is a work in progress, but it works.
@@ -98,13 +98,15 @@ or
 The properties files like `nmea.mux.proeprties` defines the configuration at startup.
 
 You can remotely manage the input channels and the re-broadcasting ones through a REST interface.
-The soft includes a dedicated HTTP Server. The http port is driven by a propety (in `nmea.mux.properties`).
+The soft includes a dedicated HTTP Server. The http port is driven by a property (in `nmea.mux.properties`).
 Same if you want the HTTP server to be started or not.
 ```properties
 with.http.server=yes
 http.port=9999
 
 ```
+This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
+It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
 ### Supported end-points (for now)
 
@@ -115,7 +117,7 @@ A full list of the available REST services is available at
 ```
 ![Operations List](./OpList.png "OpList")
 
-
+##### Examples
 ```
  GET /serial-ports
 ```
