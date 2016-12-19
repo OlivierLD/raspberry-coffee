@@ -3,9 +3,11 @@ package samples.rmi.client;
 import context.NMEADataCache;
 import nmea.forwarders.rmi.ServerInterface;
 import nmea.forwarders.rmi.clientoperations.BoatPosition;
+import nmea.forwarders.rmi.clientoperations.CalculatedCurrent;
 import nmea.forwarders.rmi.clientoperations.LastString;
 import nmea.forwarders.rmi.clientoperations.NMEACache;
 import nmea.forwarders.rmi.clientoperations.TrueWind;
+import nmea.parser.Current;
 import nmea.parser.GeoPos;
 
 import java.rmi.Remote;
@@ -78,12 +80,19 @@ public class SampleRMIClient {
 			try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
 
 			TrueWind trueWind = new TrueWind();
+			CalculatedCurrent calculatedCurrent = new CalculatedCurrent();
+
 			for (int i=0; i<50; i++) {
 				before = System.currentTimeMillis();
 				nmea.parser.TrueWind tw = comp.executeTask(trueWind);
 				after = System.currentTimeMillis();
 				System.out.println(String.format("TrueWind execution took %s ms.", NumberFormat.getInstance().format(after - before)));
 				System.out.println(String.format("TW is %f knots, from %d", tw.speed, tw.angle));
+
+				Current current = comp.executeTask(calculatedCurrent);
+
+				System.out.println(String.format("Instant Current    %f knots, dir %d", current.speed, (int)Math.round(current.angle)));
+
 				try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
 			}
 
