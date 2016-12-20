@@ -70,7 +70,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	public void write(byte[] message) {
 		this.lastString = new String(message);
 		// Feed the cache here
-		ApplicationContext.getInstance().getDataCache().parseAndFeed(new String(message));
+		ApplicationContext.getInstance().getDataCache().parseAndFeed(new String(message)); // TODO CHeck if this is not redundant with the MUX.
 	}
 
 	private String formatByteHexa(byte b) {

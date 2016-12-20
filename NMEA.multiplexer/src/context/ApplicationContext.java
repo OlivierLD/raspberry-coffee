@@ -23,14 +23,14 @@ public class ApplicationContext {
 		return applicationContext;
 	}
 
-	public void initCache(String deviationFileName,
-	                      double maxLeeway,
-	                      double bspFactor,
-	                      double awsFactor,
-	                      double awaOffset,
-	                      double hdgOffset,
-	                      double defaultDeclination,
-	                      int damping) {
+	public void initCache(String deviationFileName, // Default "zero-deviation.csv"
+	                      double maxLeeway,         // Default 0
+	                      double bspFactor,         // Default 1
+	                      double awsFactor,         // Default 1
+	                      double awaOffset,         // Default 0
+	                      double hdgOffset,         // Default 0
+	                      double defaultDeclination,// Default 0
+	                      int damping) {            // Default 1
 
 		dataCache = new NMEADataCache();
 
