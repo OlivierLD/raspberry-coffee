@@ -16,23 +16,24 @@ import http.utils.DumpUtil;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAParser;
-import nmea.providers.client.BME280Client;
-import nmea.providers.client.DataFileClient;
-import nmea.providers.client.HTU21DFClient;
-import nmea.providers.client.RandomClient;
-import nmea.providers.client.SerialClient;
-import nmea.providers.client.TCPClient;
-import nmea.providers.client.WebSocketClient;
-import nmea.providers.reader.BME280Reader;
-import nmea.providers.reader.DataFileReader;
-import nmea.providers.reader.HTU21DFReader;
-import nmea.providers.reader.RandomReader;
-import nmea.providers.reader.SerialReader;
-import nmea.providers.reader.TCPReader;
-import nmea.providers.reader.WebSocketReader;
+import nmea.consumers.client.BME280Client;
+import nmea.consumers.client.DataFileClient;
+import nmea.consumers.client.HTU21DFClient;
+import nmea.consumers.client.RandomClient;
+import nmea.consumers.client.SerialClient;
+import nmea.consumers.client.TCPClient;
+import nmea.consumers.client.WebSocketClient;
+import nmea.consumers.reader.BME280Reader;
+import nmea.consumers.reader.DataFileReader;
+import nmea.consumers.reader.HTU21DFReader;
+import nmea.consumers.reader.RandomReader;
+import nmea.consumers.reader.SerialReader;
+import nmea.consumers.reader.TCPReader;
+import nmea.consumers.reader.WebSocketReader;
 import nmea.forwarders.ConsoleWriter;
 import nmea.forwarders.DataFileWriter;
 import nmea.forwarders.Forwarder;
+import nmea.forwarders.SerialWriter;
 import nmea.forwarders.TCPWriter;
 import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
@@ -260,6 +261,21 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									.filter(fwd -> fwd instanceof ConsoleWriter)
 									.findFirst();
 					response = removeForwarderIfPresent(request, opFwd);
+					break;
+				case "serial":
+					gson = new GsonBuilder().create();
+					if (request.getContent() != null) {
+						StringReader stringReader = new StringReader(new String(request.getContent()));
+						SerialWriter.SerialBean serialBean = gson.fromJson(stringReader, SerialWriter.SerialBean.class);
+						opFwd = nmeaDataForwarders.stream()
+										.filter(fwd -> fwd instanceof SerialWriter &&
+														((SerialWriter) fwd).getPort().equals(serialBean.getPort()))
+										.findFirst();
+						response = removeForwarderIfPresent(request, opFwd);
+					} else {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
+					}
 					break;
 				case "file":
 					gson = new GsonBuilder().create();
@@ -498,6 +514,31 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					// Already there
 					response.setStatus(HTTPServer.Response.BAD_REQUEST);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "'console' already exists");
+				}
+				break;
+			case "serial":
+				SerialWriter.SerialBean serialJson = new Gson().fromJson(new String(request.getContent()), SerialWriter.SerialBean.class);
+				// Check if not there yet.
+				opFwd = nmeaDataForwarders.stream()
+								.filter(fwd -> fwd instanceof SerialWriter &&
+												((SerialWriter) fwd).getPort() == serialJson.getPort())
+								.findFirst();
+				if (!opFwd.isPresent()) {
+					try {
+						Forwarder serialForwarder = new SerialWriter(serialJson.getPort(), serialJson.getBR());
+						nmeaDataForwarders.add(serialForwarder);
+						String content = new Gson().toJson(serialForwarder.getBean());
+						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+					} catch (Exception ex) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+						ex.printStackTrace();
+					}
+				} else {
+					// Already there
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'serial' already exists");
 				}
 				break;
 			case "tcp":
@@ -1375,6 +1416,16 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				thereIsMore = false;
 			} else {
 				switch (type) {
+					case "serial":
+						String serialPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+						int baudrate = Integer.parseInt(muxProps.getProperty(String.format("forward.%s.baudrate", MUX_IDX_FMT.format(fwdIdx))));
+						try {
+							Forwarder serialForwarder = new SerialWriter(serialPort, baudrate);
+							nmeaDataForwarders.add(serialForwarder);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+						break;
 					case "tcp":
 						String tcpPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
 						try {

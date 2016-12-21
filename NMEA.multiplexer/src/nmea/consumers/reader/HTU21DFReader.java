@@ -1,4 +1,4 @@
-package nmea.providers.reader;
+package nmea.consumers.reader;
 
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.sensor.HTU21DF;

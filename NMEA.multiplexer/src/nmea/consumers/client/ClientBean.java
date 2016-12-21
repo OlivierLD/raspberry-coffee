@@ -1,4 +1,4 @@
-package nmea.providers.client;
+package nmea.consumers.client;
 
 public interface ClientBean {
 	String getType();

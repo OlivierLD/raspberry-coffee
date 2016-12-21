@@ -2,12 +2,12 @@ package nmea.mux;
 
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
-import nmea.providers.client.DataFileClient;
-import nmea.providers.client.SerialClient;
-import nmea.providers.client.TCPClient;
-import nmea.providers.reader.DataFileReader;
-import nmea.providers.reader.SerialReader;
-import nmea.providers.reader.TCPReader;
+import nmea.consumers.client.DataFileClient;
+import nmea.consumers.client.SerialClient;
+import nmea.consumers.client.TCPClient;
+import nmea.consumers.reader.DataFileReader;
+import nmea.consumers.reader.SerialReader;
+import nmea.consumers.reader.TCPReader;
 
 /**
  * Just a sample, for validation of the concept.

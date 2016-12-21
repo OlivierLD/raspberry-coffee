@@ -152,8 +152,12 @@ public class NMEACache implements Task<NMEADataCache>, Serializable {
    "NMEA":"$IIMTW,+26.5,C*39\n\r"
 }
 		 */
-		String content = new Gson().toJson(cache).toString(); // For tests
-		System.out.println(content);
+		try {
+			String content = new Gson().toJson(cache).toString(); // For tests
+			System.out.println(content);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		return cache;
 	}
 }

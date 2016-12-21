@@ -1,9 +1,9 @@
-package nmea.providers.client;
+package nmea.consumers.client;
 
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmea.providers.reader.RandomReader;
+import nmea.consumers.reader.RandomReader;
 
 /**
  * Read a file containing logged data

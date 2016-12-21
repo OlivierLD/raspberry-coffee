@@ -18,10 +18,6 @@ public class LastString implements Task<String>, Serializable {
 	public LastString() {
 	}
 
-	public void setLastString(String str) {
-		this.lastString = str;
-	}
-
 	public String execute() {
 		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 		if (cache != null) {

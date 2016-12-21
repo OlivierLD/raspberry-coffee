@@ -1,4 +1,4 @@
-package nmea.providers.reader;
+package nmea.consumers.reader;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
@@ -134,6 +134,7 @@ public class SerialReader
 	@Override
 	public void closeReader() throws Exception {
 		if (this.serialPort != null) {
+			theInput.close();
 			this.serialPort.close();
 		}
 	}

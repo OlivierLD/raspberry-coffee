@@ -54,7 +54,7 @@ Computers:
 - **True Wind** computer (produces `MDA`, `MWD` data)
 - **Current** computer (produces `VDR` data)
 
-Transformers:
+Transformers (incubating):
 - **GPSD** data
 - **Custom** data
 
@@ -254,7 +254,6 @@ And any REST client (NodeJS, Postman, your own code, ...) does the job.
 
 ## TODO
 - 3D compas (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
-- Serial Forwarder
 - Externalize all definitions, for dynamic configuration (ie 'add your own computer, channel, forwarder', etc).
 
 ```

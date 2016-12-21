@@ -1,48 +1,48 @@
-package nmea.providers.client;
+package nmea.consumers.client;
 
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmea.providers.reader.BME280Reader;
+import nmea.consumers.reader.HTU21DFReader;
 
 /**
  * Read a file containing logged data
  */
-public class BME280Client extends NMEAClient {
-	public BME280Client() {
+public class HTU21DFClient extends NMEAClient {
+	public HTU21DFClient() {
 		this(null, null, null);
 	}
 
-	public BME280Client(Multiplexer mux) {
+	public HTU21DFClient(Multiplexer mux) {
 		this(null, null, mux);
 	}
 
-	public BME280Client(String s, String[] sa) {
+	public HTU21DFClient(String s, String[] sa) {
 		this(s, sa, null);
 	}
 
-	public BME280Client(String s, String[] sa, Multiplexer mux) {
+	public HTU21DFClient(String s, String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
-		this.verbose = ("true".equals(System.getProperty("bme280.data.verbose", "false")));
+		this.verbose = "true".equals(System.getProperty("htu21df.data.verbose", "false"));
 	}
 
-		@Override
+	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
 		if (verbose)
-			System.out.println("Received from BME280:" + e.getContent());
+			System.out.println("Received from HTU21DF:" + e.getContent());
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}
 	}
 
-	private static BME280Client nmeaClient = null;
+	private static HTU21DFClient nmeaClient = null;
 
-	public static class BME280Bean implements ClientBean {
+	public static class HTU21DFBean implements ClientBean {
 		private String cls;
-		private String type = "bme280";
+		private String type = "hut21df";
 		private boolean verbose;
 
-		public BME280Bean(BME280Client instance) {
+		public HTU21DFBean(HTU21DFClient instance) {
 			cls = instance.getClass().getName();
 			verbose = instance.isVerbose();
 		}
@@ -60,15 +60,15 @@ public class BME280Client extends NMEAClient {
 
 	@Override
 	public Object getBean() {
-		return new BME280Bean(this);
+		return new HTU21DFBean(this);
 	}
 
 	public static void main(String[] args) {
-		System.out.println("BME280Client invoked with " + args.length + " Parameter(s).");
+		System.out.println("HTU21DFClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
-			System.out.println("BME280Client prm:" + s);
+			System.out.println("HTU21DFClient prm:" + s);
 
-		nmeaClient = new BME280Client();
+		nmeaClient = new HTU21DFClient();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
@@ -77,9 +77,9 @@ public class BME280Client extends NMEAClient {
 			}
 		});
 
-//  nmeaClient.setEOS("\n"); // TASK Sure?
+//  nmeaClient.setEOS("\n");
 		nmeaClient.initClient();
-		nmeaClient.setReader(new BME280Reader(nmeaClient.getListeners()));
+		nmeaClient.setReader(new HTU21DFReader(nmeaClient.getListeners()));
 		nmeaClient.startWorking();
 	}
 }

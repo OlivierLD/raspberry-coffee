@@ -59,8 +59,6 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		this.verbose = verbose;
 	}
 
-	private String lastString = "";
-
 	/**
 	 * Receives a message from the MUX
 	 *
@@ -68,7 +66,6 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	 */
 	@Override
 	public void write(byte[] message) {
-		this.lastString = new String(message);
 		// Feed the cache here
 		ApplicationContext.getInstance().getDataCache().parseAndFeed(new String(message)); // TODO CHeck if this is not redundant with the MUX.
 	}
@@ -97,9 +94,6 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	@Override
 	public <T> T executeTask(Task<T> t) throws RemoteException {
 		System.out.println(String.format(">> Server task [%s] requested.", t.getClass().getName()));
-		if (t instanceof LastString) {
-			((LastString)t).setLastString(this.lastString);
-		}
 		return t.execute();
 	}
 

@@ -1,9 +1,9 @@
-package nmea.providers.client;
+package nmea.consumers.client;
 
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmea.providers.reader.WebSocketReader;
+import nmea.consumers.reader.WebSocketReader;
 
 /**
  * Read NMEA Data from a WebSocket server

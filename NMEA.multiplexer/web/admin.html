@@ -122,7 +122,16 @@
 
         var manageForwardSelection = function(selected) {
             switch (selected) {
+                case 'serial':
+                    $("#forward-serial").css('display', 'inline');
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'none');
+                    break;
                 case 'tcp':
+                    $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'inline');
                     $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
@@ -130,6 +139,7 @@
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'rmi':
+                    $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
                     $("#forward-rmi").css('display', 'inline');
                     $("#forward-file").css('display', 'none');
@@ -137,6 +147,7 @@
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'file':
+                    $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
                     $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'inline');
@@ -144,6 +155,7 @@
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'ws':
+                    $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
                     $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
@@ -151,6 +163,7 @@
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'console':
+                    $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
                     $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
@@ -246,6 +259,19 @@
         var requestForwardCreation = function() {
             var x = document.getElementById("forwarder-select").value;
             switch (x) {
+                case 'serial':
+                    var portName = $("#serial-port-fwd").val();
+                    var br = document.getElementById("baud-rate-fwd").value;
+                    if (portName.trim().length === 0 || br.trim().length === 0) {
+                        alert('Both port name and baud rate are required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'serial',
+                        port: portName,
+                        br: br
+                    });
+                    break;
                 case 'tcp':
                     var port = $("#fwd-tcp-port").val();
                     if (port.trim().length === 0) {
@@ -388,7 +414,7 @@
                 <table>
                   <tr>
                     <td>Port</td>
-                    <td><input id="serial-port" type="text" placeholder="Serial Port Name" size="20"></td>
+                    <td><input id="serial-port" type="text" placeholder="Serial Port Name" size="30"></td>
                   </tr>
                   <tr>
                     <td>Baud Rate</td>
@@ -452,6 +478,7 @@
           <tr>
             <td valign="top">
               <select id="forwarder-select" onchange="forwardSelectManager();">
+                <option value="serial">Serial</option>
                 <option value="tcp">TCP</option>
                 <option value="rmi">RMI</option>
                 <option value="file">Data File</option>
@@ -460,7 +487,27 @@
               </select>
             </td>
             <td valign="top">
-              <div id="forward-tcp" style="display: inline;">
+              <div id="forward-serial" style="display: inline;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="serial-port-fwd" type="text" placeholder="Serial Port Name" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Baud Rate</td>
+                    <td>
+                      <select id="baud-rate-fwd">
+                        <option value="1200">1200</option>
+                        <option value="2400">2400</option>
+                        <option value="4800">4800</option>
+                        <option value="9600">9600</option>
+                        <option value="19200">19200</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-tcp" style="display: none;">
                 <table>
                   <tr>
                     <td>Port</td>

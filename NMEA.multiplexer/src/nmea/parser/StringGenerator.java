@@ -20,7 +20,9 @@ public class StringGenerator {
 	private final static NumberFormat PRMSL_FMT_2 = new DecimalFormat("##0");
 	private final static NumberFormat PERCENT_FMT = new DecimalFormat("##0.0");
 	private final static NumberFormat DIR_FMT = new DecimalFormat("##0");
+	private final static NumberFormat DIR_FMT_1 = new DecimalFormat("##0.0");
 	private final static NumberFormat SPEED_FMT = new DecimalFormat("#0.0");
+	private final static NumberFormat SPEED_FMT_2 = new DecimalFormat("#0.00");
 
 	private final static NumberFormat PRMSL_FMT_MDA = new DecimalFormat("##0.000");
 
@@ -301,9 +303,9 @@ public class StringGenerator {
 	 */
 	public static String generateVDR(String devicePrefix, double speed, double dirT, double dirM) {
 		String vdr = devicePrefix + "VDR,";
-		vdr += (SPEED_FMT.format((dirT == Double.MAX_VALUE) ? 0 : dirT) + ",T,");
-		vdr += (SPEED_FMT.format((dirM == Double.MAX_VALUE) ? 0 : dirM) + ",M,");
-		vdr += ((Double.isNaN(speed) ? "" : SPEED_FMT.format(speed)) + ",N");
+		vdr += (DIR_FMT_1.format((dirT == Double.MAX_VALUE) ? 0 : dirT) + ",T,");
+		vdr += (DIR_FMT_1.format((dirM == Double.MAX_VALUE) ? 0 : dirM) + ",M,");
+		vdr += ((Double.isNaN(speed) ? "" : SPEED_FMT_2.format(speed)) + ",N"); // TODO Make sure that is OK (2 decimals).
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(vdr);
 		vdr += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));

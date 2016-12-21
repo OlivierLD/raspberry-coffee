@@ -1,4 +1,4 @@
-package nmea.providers.reader;
+package nmea.consumers.reader;
 
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
