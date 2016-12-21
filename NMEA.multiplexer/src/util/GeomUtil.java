@@ -1,5 +1,7 @@
 package util;
 
+import nmea.utils.NMEAUtils;
+
 import java.text.DecimalFormat;
 
 public final class GeomUtil {
@@ -192,10 +194,10 @@ public final class GeomUtil {
 					s = "-" + s;
 					break;
 				case NS:
-					s = (signPosition == TRAILING_SIGN ? s + "S" : "S " + lpad(s, " ", (output == HTML) ? 13 : 9));
+					s = (signPosition == TRAILING_SIGN ? s + "S" : "S " + NMEAUtils.lpad(s, (output == HTML) ? 13 : 9));
 					break;
 				case EW:
-					s = (signPosition == TRAILING_SIGN ? s + "W" : "W " + lpad(s, " ", (output == HTML) ? 14 : 10));
+					s = (signPosition == TRAILING_SIGN ? s + "W" : "W " + NMEAUtils.lpad(s, (output == HTML) ? 14 : 10));
 					break;
 			}
 		} else {
@@ -204,28 +206,14 @@ public final class GeomUtil {
 					s = " " + s;
 					break;
 				case NS:
-					s = (signPosition == TRAILING_SIGN ? s + "N" : "N " + lpad(s, " ", (output == HTML) ? 13 : 9));
+					s = (signPosition == TRAILING_SIGN ? s + "N" : "N " + NMEAUtils.lpad(s, (output == HTML) ? 13 : 9));
 					break;
 				case EW:
-					s = (signPosition == TRAILING_SIGN ? s + "E" : "E " + lpad(s, " ", (output == HTML) ? 14 : 10));
+					s = (signPosition == TRAILING_SIGN ? s + "E" : "E " + NMEAUtils.lpad(s, (output == HTML) ? 14 : 10));
 					break;
 			}
 		}
 		return s;
-	}
-
-	protected final static String lpad(String s, String p, int l) {
-		String str = s;
-		while (str.length() < l)
-			str = p + str;
-		return str;
-	}
-
-	protected final static String rpad(String s, String p, int l) {
-		String str = s;
-		while (str.length() < l)
-			str += p;
-		return str;
 	}
 
 	public static String angle2Hour(double angle) {

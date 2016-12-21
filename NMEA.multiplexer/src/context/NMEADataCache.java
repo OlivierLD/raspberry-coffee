@@ -25,6 +25,7 @@ import nmea.parser.UTC;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
 import nmea.parser.Wind;
+import nmea.utils.NMEAUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -520,14 +521,7 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 		std += Long.toString(age);
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(std);
-		std += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		std += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 		return "$" + std;
-	}
-
-	private static String lpad(String s, String with, int len) {
-		String str = s;
-		while (str.length() < len)
-			str = with + str;
-		return str;
 	}
 }

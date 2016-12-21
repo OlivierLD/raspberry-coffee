@@ -5,6 +5,7 @@ import nmea.api.NMEAListener;
 import nmea.api.NMEAParser;
 import nmea.api.NMEAReader;
 import nmea.parser.StringParsers;
+import nmea.utils.NMEAUtils;
 
 import java.util.List;
 
@@ -43,15 +44,8 @@ public class RandomReader extends NMEAReader {
 		String custom = devicePrefix + id + "," + value;
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(custom);
-		custom += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		custom += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 		return "$" + custom;
-	}
-
-	private static String lpad(String str, String with, int len) {
-		String s = str;
-		while (s.length() < len)
-			s = with + s;
-		return s;
 	}
 
 	@Override

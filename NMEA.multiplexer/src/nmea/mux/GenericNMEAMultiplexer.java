@@ -186,7 +186,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		if (opOp.isPresent()) {
 			Operation op = opOp.get();
 			request.setRequestPattern(op.getPath()); // To get the prms later on.
-			HTTPServer.Response processed = op.getFn().apply(request);
+			HTTPServer.Response processed = op.getFn().apply(request); // Execute here.
 			return processed;
 		}
 		return defaultResponse;
@@ -1122,7 +1122,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_IMPLEMENTED);
-		response = processRequest(request, response);
+		response = processRequest(request, response); // All the skill is here.
 		if (this.verbose) {
 			System.out.println("======================================");
 			System.out.println("Request :\n" + request.toString());
@@ -1456,6 +1456,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								}
 								break;
 							default:
+								System.err.println(String.format("Computer type [%s] not supported.", type));
 								break;
 						}
 					}

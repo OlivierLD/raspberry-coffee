@@ -1,5 +1,7 @@
 package http.utils;
 
+import nmea.utils.NMEAUtils;
+
 import java.io.PrintStream;
 import java.util.Arrays;
 
@@ -44,10 +46,10 @@ public class DumpUtil {
 			String lineRight = "";
 			int start = l * LINE_LEN;
 			for (int c = start; c < Math.min(start + LINE_LEN, ba.length); c++) {
-				lineLeft += (lpad(Integer.toHexString(ba[c] & 0xFF).toUpperCase(), 2, "0") + " ");
+				lineLeft += (NMEAUtils.lpad(Integer.toHexString(ba[c] & 0xFF).toUpperCase(), 2, "0") + " ");
 				lineRight += (isAsciiPrintable((char) ba[c]) ? (char) ba[c] : ".");
 			}
-			lineLeft = rpad(lineLeft, 3 * LINE_LEN, " ");
+			lineLeft = NMEAUtils.rpad(lineLeft, 3 * LINE_LEN, " ");
 			result[l] = lineLeft + "    " + lineRight;
 		}
 
@@ -57,7 +59,7 @@ public class DumpUtil {
 	public static String dumpHexMess(byte[] mess) {
 		String line = "";
 		for (int i = 0; i < mess.length; i++)
-			line += (lpad(Integer.toHexString(mess[i] & 0xFF).toUpperCase(), 2, "0") + " ");
+			line += (NMEAUtils.lpad(Integer.toHexString(mess[i] & 0xFF).toUpperCase(), 2, "0") + " ");
 		return line.trim();
 	}
 
@@ -71,15 +73,4 @@ public class DumpUtil {
 		return ch >= 32 && ch < 127;
 	}
 
-	public static String lpad(String s, int len, String with) {
-		while (s.length() < len)
-			s = with + s;
-		return s;
-	}
-
-	public static String rpad(String s, int len, String with) {
-		while (s.length() < len)
-			s += with;
-		return s;
-	}
 }
