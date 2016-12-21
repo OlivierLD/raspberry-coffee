@@ -53,7 +53,17 @@ var connection;
 
 var displayMessage = function(mess) {
     var messList = statusFld.innerHTML;
-    messList = (((messList !== undefined && messList.length) > 0 ? messList + '<br>' : '') + mess);
+    if (messList !== undefined) {
+        var lines = messList.split('<br>');
+        while (lines.length > 10) { // Limit number of messages to 10.
+            lines.shift();
+        }
+        messList = '';
+        for (var i=0; i<lines.length; i++) {
+            messList += (lines[i] + '<br>');
+        }
+    }
+    messList = (((messList !== undefined && messList.length) > 0 ? messList + (messList.endsWith('<br>') ? '' : '<br>') : '') + mess);
     statusFld.innerHTML = messList;
     statusFld.scrollTop = statusFld.scrollHeight; // Scroll down
 };

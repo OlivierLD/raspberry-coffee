@@ -1,4 +1,4 @@
-package nmea.suppliers;
+package nmea.forwarders;
 
 public class ConsoleWriter implements Forwarder {
 	public ConsoleWriter() throws Exception {

@@ -1,5 +1,6 @@
 package client;
 
+import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.math.BigDecimal;
@@ -22,7 +23,9 @@ public class ComputePi {
 		System.out.println("Looking up [" + bindingName + " on " + args[0] + ":" + args[1] + "]");
 		try {
 			Registry registry = LocateRegistry.getRegistry(args[0], new Integer(args[1])); // Server name, port
-			Compute comp = (Compute) registry.lookup(bindingName);   // RMI Name
+			Remote remote = registry.lookup(bindingName);   // RMI Name
+			System.out.println(String.format("Remote is a %s", remote.getClass().getName()));
+			Compute comp = (Compute) remote;
 
 			Pi task = new Pi(Integer.parseInt(args[2]));             // Precision
 			BigDecimal pi = comp.executeTask(task);                  // Invoke the task on the server.

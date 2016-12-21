@@ -1,15 +1,15 @@
 package http;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,27 +18,31 @@ import java.util.Map;
 import http.utils.DumpUtil;
 
 /**
- * Used for the REST interface of the Multiplexer
+ * Used for the REST interface of the Multiplexer.
  * <p>
  * Get the list of the multiplexed channels,
  * Get the list of the forwarders
  * Add channel, forwarder
  * Delete channel, forwarder
  * <p>
- * GET, POST, DELETE - no PUT, no PATCH (for now)
+ * GET, POST, DELETE, PUT, no PATCH (for now)
  * <br>
  * Also serves as a regular HTTP server for static documents (in the /web directory).
  * <br>
  * Has two static resources:
  * <ul>
- *   <li>/exit</li>
- *   <li>/test</li>
+ *   <li><code>/exit</code> to exit the HTTP server (cannot be restarted).</li>
+ *   <li><code>/test</code> to test the HTTP server availability</li>
  * </ul>
  *
  * Query parameter 'verbose' will turn verbose on or off.
  * To turn it on: give verbose no value, or 'on', 'true', 'yes' (non case sensitive).
- * To turn it off: any othe value.
- *
+ * To turn it off: any other value.
+ * <br>
+ *   Example: http://localhost:9999/web/admin.html?verbose=on
+ * <em>
+ *   Warning: This is a very lightweight HTTP server. It is not supposed to scale!!
+ * </em>
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
@@ -51,6 +55,7 @@ public class HTTPServer {
 		private String protocol;
 		private byte[] content;
 		private Map<String, String> headers;
+		private String requestPattern;
 
 		private Map<String, String> queryStringParameters;
 
@@ -106,6 +111,14 @@ public class HTTPServer {
 			this.headers = headers;
 		}
 
+		public String getRequestPattern() {
+			return requestPattern;
+		}
+
+		public void setRequestPattern(String requestPattern) {
+			this.requestPattern = requestPattern;
+		}
+
 		@Override
 		public String toString() {
 			final StringBuffer string = new StringBuffer();
@@ -126,6 +139,14 @@ public class HTTPServer {
 	}
 
 	public static class Response {
+
+		public final static int STATUS_OK       = 200;
+		public final static int NOT_IMPLEMENTED = 501;
+		public final static int NO_CONTENT      = 204;
+		public final static int BAD_REQUEST     = 400;
+		public final static int NOT_FOUND       = 404;
+		public final static int TIMEOUT         = 408;
+
 		private int status;
 		private String protocol;
 		private Map<String, String> headers;
@@ -173,20 +194,20 @@ public class HTTPServer {
 
 		@Override
 		public String toString() {
-			final StringBuffer string = new StringBuffer();
-			string.append(this.status + " " + this.protocol);
+			final StringBuffer sb = new StringBuffer();
+			sb.append(this.status + " " + this.protocol);
 
 			if (this.headers != null) {
 				this.headers.keySet().stream()
 								.forEach(k -> {
-									string.append("\n" + k + ":" + this.headers.get(k));
+									sb.append("\n" + k + ":" + this.headers.get(k));
 								});
 			}
 			if (this.payload != null) {
-				string.append("\n\n" + new String(this.payload));
+				sb.append("\n\n" + new String(this.payload));
 			}
 
-			return string.toString();
+			return sb.toString();
 		}
 	}
 
@@ -226,9 +247,8 @@ public class HTTPServer {
 					System.out.println("Port " + port + " opened successfully.");
 					while (isRunning()) {
 						Socket client = ss.accept();
-//					BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 						InputStreamReader in = new InputStreamReader(client.getInputStream());
-						PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
+						OutputStream out = client.getOutputStream();
 						Request request = null;
 						String line = "";
 						boolean top = true;
@@ -243,7 +263,7 @@ public class HTTPServer {
 						if (verbose)
 							System.out.println(">>> Top of the loop <<<");
 						while (keepReading) {
-							if (top) { // Ugly!! :(
+							if (top) { // Ugly!! Argh! :(
 								try {
 									Thread.sleep(100L);
 								} catch (InterruptedException ie) {
@@ -336,38 +356,33 @@ public class HTTPServer {
 
 							if ("/exit".equals(path)) {
 								System.out.println("Received an exit signal");
-								Response response = new Response(request.getProtocol(), 200);
+								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String content = "Exiting";
-								Map<String, String> responseHeaders = new HashMap<>();
-								responseHeaders.put("Content-Type", "plain/text");
-								responseHeaders.put("Content-Length", String.valueOf(content.length()));
-								responseHeaders.put("Access-Control-Allow-Origin", "*");
-								response.setHeaders(responseHeaders);
+								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
 								okToStop = true;
 							} else if ("/test".equals(path)) {
-								Response response = new Response(request.getProtocol(), 200);
+								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String content = "Test is OK";
 								if (request.getContent() != null && request.getContent().length > 0) {
 									content += String.format("\nYour payload was [%s]", new String(request.getContent()));
 								}
-								Map<String, String> responseHeaders = new HashMap<>();
-								responseHeaders.put("Content-Type", "plain/text");
-								responseHeaders.put("Content-Length", String.valueOf(content.length()));
-								responseHeaders.put("Access-Control-Allow-Origin", "*");
-								response.setHeaders(responseHeaders);
+								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
 							} else if (path.startsWith("/web/")) {                                    // Assume this is static content. TODO Tweak that.
-								Response response = new Response(request.getProtocol(), 200);
-								String content = readStaticContent("." + path);
-								Map<String, String> responseHeaders = new HashMap<>();
-								responseHeaders.put("Content-Type", getContentType(path));
-								responseHeaders.put("Content-Length", String.valueOf(content.length()));
-								responseHeaders.put("Access-Control-Allow-Origin", "*");
-								response.setHeaders(responseHeaders);
-								response.setPayload(content.getBytes());
+								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+								File f = new File("." + path);
+								if (!f.exists()) {
+									response = new Response(request.getProtocol(), Response.NOT_FOUND);
+								}
+								ByteArrayOutputStream baos = new ByteArrayOutputStream();
+								Files.copy(f.toPath(), baos);
+								baos.close();
+								byte[] content = baos.toByteArray();
+								RESTProcessorUtil.generateHappyResponseHeaders(response, getContentType(path), content.length);
+								response.setPayload(content);
 								sendResponse(response, out);
 							} else {
 								if (requestManager != null) {
@@ -408,7 +423,12 @@ public class HTTPServer {
 		httpListenerThread.start();
 	}
 
-	private static String getContentType(String f) { // TODO add more types
+	/**
+	 * Full mime-type list at https://www.sitepoint.com/web-foundations/mime-types-complete-list/
+	 * @param f
+	 * @return
+	 */
+	private static String getContentType(String f) { // TODO add more types, as requested
 		String contentType = "text/plain";
 		if (f.endsWith(".html"))
 			contentType = "text/html";
@@ -416,34 +436,38 @@ public class HTTPServer {
 			contentType = "text/javascript";
 		else if (f.endsWith(".css"))
 			contentType = "text/css";
+		else if (f.endsWith(".xml"))
+			contentType = "text/xml";
+		else if (f.endsWith(".ico"))
+			contentType = "iimage/x-icon";
+		else if (f.endsWith(".png"))
+			contentType = "image/png";
+		else if (f.endsWith(".gif"))
+			contentType = "image/gif";
+		else if (f.endsWith(".jpg") || f.endsWith(".jpeg"))
+			contentType = "image/jpeg";
 		return contentType;
 	}
 
-	private String readStaticContent(String path) {
-		String content = null;
+	private void sendResponse(Response response, OutputStream os) {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(path));
-			String line = "";
-			StringBuffer sb = new StringBuffer();
-			while ((line = br.readLine()) != null) {
-				sb.append(line + "\n");
+			os.write(String.format("%s %d \r\n", response.getProtocol(), response.getStatus()).getBytes());
+			if (response.getHeaders() != null) {
+				response.getHeaders().keySet().stream().forEach(k -> {
+					try {
+						os.write(String.format("%s: %s\r\n", k, response.getHeaders().get(k)).getBytes());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
 			}
-			br.close();
-			content = sb.toString();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
-		}
-		return content;
-	}
-
-	private void sendResponse(Response response, PrintWriter out) {
-		out.print(String.format("%s %d \r\n", response.getProtocol(), response.getStatus()));
-		if (response.getHeaders() != null) {
-			response.getHeaders().keySet().stream().forEach(k -> out.print(String.format("%s: %s\r\n", k, response.getHeaders().get(k))));
-		}
-		out.print("\r\n"); // End Of Header
-		if (response.getPayload() != null) {
-			out.println(new String(response.getPayload()));
+			os.write("\r\n".getBytes()); // End Of Header
+			if (response.getPayload() != null) {
+				os.write(response.getPayload());
+				os.flush();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

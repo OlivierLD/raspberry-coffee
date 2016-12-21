@@ -30,12 +30,15 @@ import java.util.Set;
 /**
  * Extra Data Computer. True Wind and Current.
  *
+ * The NMEADataCache must have been initalized.
+ * See {@link ApplicationContext#initCache(String, double, double, double, double, double, double, int)}.
+ * <br>
  * True Wind calculation requires:
  * <table border='1'>
  * <tr><td>GPS: COG & SOG, Declination</td><td>RMC, VTG, HDM</td></tr>
  * <tr><td>AWS, AWA</td><td>MWV, VWR</td></tr>
  * <tr><td>TRUE Heading</td><td>VHW, HDT, HDM</td></tr>
- * <tr><td>Leeway</td><td></td></tr>
+ * <tr><td>Leeway</td><td><i>Estimated</i></td></tr>
  * </table>
  * Also takes care of possible corrections:
  * <ul>
@@ -66,7 +69,7 @@ public class ExtraDataComputer extends Computer {
 	public ExtraDataComputer(Multiplexer mux, String prefix, long tbl) {
 		super(mux);
 		if (prefix == null || prefix.length() != 2) {
-			throw new RuntimeException("Prefix must exist, and be exactky 2 character long.");
+			throw new RuntimeException("Prefix must exist, and be exactly 2 character long.");
 		}
 		this.generatedStringsPrefix = prefix;
 		this.longTimeCurrentCalculator = new LongTimeCurrentCalculator(tbl);
@@ -242,8 +245,8 @@ public class ExtraDataComputer extends Computer {
 						Map<Long, NMEADataCache.CurrentDefinition> currentMap =
 										((Map<Long, NMEADataCache.CurrentDefinition>) cache.get(NMEADataCache.CALCULATED_CURRENT));
 						Set<Long> keys = currentMap.keySet();
-						//  if (keys.size() != 1)
-						//    System.out.println("1 - Nb entry(ies) in Calculated Current Map:" + keys.size());
+					  if (this.verbose && keys.size() != 1)
+					    System.out.println("1 - Nb entry(ies) in Calculated Current Map:" + keys.size());
 						for (Long l : keys) {
 							int tbl = (int) (l / (60 * 1000));
 							if (tbl > currentTimeBuffer) { // Take the bigger one.

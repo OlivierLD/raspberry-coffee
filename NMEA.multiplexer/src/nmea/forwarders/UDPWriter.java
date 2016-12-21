@@ -1,4 +1,4 @@
-package nmea.suppliers;
+package nmea.forwarders;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;

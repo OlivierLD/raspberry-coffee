@@ -58,8 +58,16 @@ Transformers:
 - **GPSD** data
 - **Custom** data
 
+![Overall Overview](./overview.png "Overview")
+_There is no Transformer on the picture above_
+
+#### Note
+There is an **rmi** forwarder. This is a work in progress, but it works.
+It is feeding an RMI server that can then be accessed by an RMI client.
+See an example of such a client in `samples.rmi.client.SampleRMIClient`.
+
 ### To see it at work
-See the class `nmeaproviders.client.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
+See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
 See it to understand its content (should be clear enough).
 
 To compile and build:
@@ -70,7 +78,6 @@ To run it, modify `mux.sh` to fit your environment, and run
 ```
  $> ./mux.sh
 ```
-
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
@@ -91,16 +98,26 @@ or
 The properties files like `nmea.mux.proeprties` defines the configuration at startup.
 
 You can remotely manage the input channels and the re-broadcasting ones through a REST interface.
-The soft includes a dedicated HTTP Server. The http port is driven by a propety (in `nmea.mux.properties`).
+The soft includes a dedicated HTTP Server. The http port is driven by a property (in `nmea.mux.properties`).
 Same if you want the HTTP server to be started or not.
 ```properties
 with.http.server=yes
 http.port=9999
 
 ```
+This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
+It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
 ### Supported end-points (for now)
 
+#### List of operations
+A full list of the available REST services is available at 
+```
+ GET /oplist
+```
+![Operations List](./OpList.png "OpList")
+
+##### Examples
 ```
  GET /serial-ports
 ```
@@ -231,9 +248,6 @@ where `machine-name` is the name of the machine where the multiplexer is running
 ![Admin Web UI](./AdminSnapshot.png "Admin GUI")
 
 And any REST client (NodeJS, Postman, your own code, ...) does the job.
-
-## Open questions
-- RMI protocol?
 
 ## Open Issues
 - UDP client
