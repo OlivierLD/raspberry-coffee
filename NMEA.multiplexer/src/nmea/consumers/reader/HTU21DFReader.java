@@ -17,6 +17,8 @@ import java.util.List;
 public class HTU21DFReader extends NMEAReader {
 
   private HTU21DF htu21df;
+  private static final String DEVICE_PREFIX = "RP"; // TODO: Make it an external parameter.
+  private static final long BETWEEN_LOOPS = 1000L; // TODO: Make it an external parameter.
 
   public HTU21DFReader(List<NMEAListener> al) {
     super(al);
@@ -36,7 +38,7 @@ public class HTU21DFReader extends NMEAReader {
         float humidity = htu21df.readHumidity();
         float temperature = htu21df.readTemperature();
         // Generate NMEA String
-        String nmeaXDR = StringGenerator.generateXDR("RP", // TODO Make this a external parameter
+        String nmeaXDR = StringGenerator.generateXDR(DEVICE_PREFIX,
                 new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
                         humidity,
                         "HTU21DF"), // %, Humidity
@@ -49,7 +51,7 @@ public class HTU21DFReader extends NMEAReader {
         e.printStackTrace();
       }
       try {
-        Thread.sleep(1000L); // TODO Make this a parameter
+        Thread.sleep(BETWEEN_LOOPS);
       } catch (InterruptedException ie) {
         ie.printStackTrace();
       }

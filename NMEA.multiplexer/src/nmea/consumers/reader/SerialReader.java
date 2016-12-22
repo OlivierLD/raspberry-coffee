@@ -21,8 +21,7 @@ import java.util.TooManyListenersException;
 
 public class SerialReader
 				extends NMEAReader
-				implements SerialPortEventListener,
-				CommPortOwnershipListener {
+				implements SerialPortEventListener, CommPortOwnershipListener {
 	private String comPort = "/dev/ttyUSB0"; // "COM1";
 	private int br = 4800;
 	private SerialPort serialPort;

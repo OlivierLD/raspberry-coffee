@@ -11,12 +11,14 @@ import nmea.parser.StringGenerator;
 import java.util.List;
 
 /**
- * Reads data from an HTU21DF sensor.
- * Humidity and Temperature.
+ * Reads data from an BME280 sensor.
+ * Pressure, Humidity and Temperature.
  */
 public class BME280Reader extends NMEAReader {
 
 	private BME280 bme280;
+	private static final String DEVICE_PREFIX = "RP"; // TODO: Make it an external parameter.
+	private static final long BETWEEN_LOOPS = 1000L; // TODO: Make it an external parameter.
 
 	public BME280Reader(List<NMEAListener> al) {
 		super(al);
@@ -38,7 +40,7 @@ public class BME280Reader extends NMEAReader {
 				float pressure = bme280.readPressure();
 				// Generate NMEA String
 				int deviceIdx = 0; // Instead of "BME280"...
-				String nmeaXDR = StringGenerator.generateXDR("RP", // TODO Make this a external parameter
+				String nmeaXDR = StringGenerator.generateXDR(DEVICE_PREFIX,
 								new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
 												humidity,
 												String.valueOf(deviceIdx++)), // %, Humidity
@@ -51,7 +53,7 @@ public class BME280Reader extends NMEAReader {
 				nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
 
-				String nmeaMDA = StringGenerator.generateMDA("RP", // TODO Make this a external parameter
+				String nmeaMDA = StringGenerator.generateMDA(DEVICE_PREFIX,
 								pressure / 100,
 								temperature,
 								-Double.MAX_VALUE,
@@ -64,18 +66,18 @@ public class BME280Reader extends NMEAReader {
 				nmeaMDA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaMDA));
 
-				String nmeaMTA = StringGenerator.generateMTA("RP", temperature);
+				String nmeaMTA = StringGenerator.generateMTA(DEVICE_PREFIX, temperature);
 				nmeaMTA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaMTA));
 
-				String nmeaMMB = StringGenerator.generateMMB("RP", pressure / 100);
+				String nmeaMMB = StringGenerator.generateMMB(DEVICE_PREFIX, pressure / 100);
 				nmeaMMB += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaMMB));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			try {
-				Thread.sleep(1000L); // TODO Make this a parameter
+				Thread.sleep(BETWEEN_LOOPS);
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 			}

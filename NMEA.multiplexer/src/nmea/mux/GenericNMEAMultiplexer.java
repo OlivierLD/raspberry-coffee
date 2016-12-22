@@ -1274,7 +1274,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	 */
 	public GenericNMEAMultiplexer(Properties muxProps) {
 
-		// Check duplicates if operation list. Barfs if duplicate is found.
+		// Check duplicates in operation list. Barfs if duplicate is found.
 		for (int i = 0; i < operations.size(); i++) {
 			for (int j = i + 1; j < operations.size(); j++) {
 				if (operations.get(i).getVerb().equals(operations.get(j).getVerb()) &&
