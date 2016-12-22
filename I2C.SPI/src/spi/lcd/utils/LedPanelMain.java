@@ -36,11 +36,11 @@ public class LedPanelMain
   private static int nbCols = -1;
 
   // SSD1306
-  //private final static int NB_LINES =  32;
-  //private final static int NB_COLS  = 128;
+  private final static int NB_LINES =  32;
+  private final static int NB_COLS  = 128;
   // Nokia
-  private final static int NB_LINES = 48;
-  private final static int NB_COLS  = 84;
+//  private final static int NB_LINES = 48;
+//  private final static int NB_COLS  = 84;
 
   private final static int BUFFER_SIZE = (NB_COLS * NB_LINES) / 8;
   

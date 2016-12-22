@@ -120,7 +120,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Get the list of the output channels"),
 					new Operation(
 									"GET",
-									"/nmea/computers",
+									"/computers",
 									this::getComputers,
 									"Get the list of the nmea.computers"),
 					new Operation(
@@ -135,7 +135,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Delete an input channel"),
 					new Operation(
 									"DELETE",
-									"/nmea/computers/{id}",
+									"/computers/{id}",
 									this::deleteComputer,
 									"Delete a computer"),
 					new Operation(
@@ -150,7 +150,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Creates an input channel"),
 					new Operation(
 									"POST",
-									"/nmea/computers",
+									"/computers",
 									this::postComputer,
 									"Creates computer"),
 					new Operation(
@@ -165,7 +165,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Update forwarder"),
 					new Operation(
 									"PUT",
-									"/nmea/computers",
+									"/computers",
 									this::putComputer,
 									"Update computer"),
 					new Operation(
@@ -177,7 +177,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"GET",
 									"/cache",
 									this::getCache,
-									"GEt ALL the data in the cache"));
+									"Get ALL the data in the cache"));
 
 	public HTTPServer.Response processRequest(HTTPServer.Request request, HTTPServer.Response defaultResponse) {
 		Optional<Operation> opOp = operations

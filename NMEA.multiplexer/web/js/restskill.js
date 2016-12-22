@@ -81,7 +81,7 @@ var getForwarders = function() {
 
 var getComputers = function() {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/nmea.computers',
+        url = '/computers',
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 
@@ -161,7 +161,7 @@ var addChannel = function(channel) {
 
 var addComputer = function(computer) {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/nmea.computers',
+        url = '/computers',
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 
@@ -215,7 +215,7 @@ var updateChannel = function(channel) {
 
 var updateComputer = function(computer) {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/nmea.computers',
+        url = '/computers',
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 
@@ -296,7 +296,7 @@ var deleteForwarder = function(forwarder) {
 
 var deleteComputer = function(computer) {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/nmea.computers/' + computer.type,
+        url = '/computers/' + computer.type,
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 
@@ -412,7 +412,7 @@ var channelList = function() {
         html += "</table>";
         $("#lists").html(html);
     });
-    getDatafail(function(error, errmess) {
+    getData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             var mess = JSON.parse(errmess);
@@ -464,7 +464,7 @@ var forwarderList = function() {
         html += "</table>";
         $("#lists").html(html);
     });
-    getDatafail(function(error, errmess) {
+    getData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             var mess = JSON.parse(errmess);
@@ -497,7 +497,7 @@ var computerList = function() {
         html += "</table>";
         $("#lists").html(html);
     });
-    getDatafail(function(error, errmess) {
+    getData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             var mess = JSON.parse(errmess);
@@ -569,7 +569,7 @@ var removeChannel = function(channel) {
         console.log("Done:", value);
         channelList(); // refetch
     });
-    deleteDatafail(function(error, errmess) {
+    deleteData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             var mess = JSON.parse(errmess);
@@ -587,7 +587,7 @@ var removeForwarder = function(channel) {
         console.log("Done:", value);
         forwarderList(); // refetch
     });
-    deleteDatafail(function(error, errmess) {
+    deleteData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             var mess = JSON.parse(errmess);
@@ -605,7 +605,7 @@ var removeComputer = function(computer) {
         console.log("Done:", value);
         computerList(); // refetch
     });
-    deleteDatafail(function(error, errmess) {
+    deleteData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             var mess = JSON.parse(errmess);
@@ -623,7 +623,7 @@ var changeChannel = function(channel) {
         console.log("Done:", value);
         channelList(); // refetch
     });
-    putDatafail(function(error, errmess) {
+    putData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             var mess = JSON.parse(errmess);
@@ -641,7 +641,7 @@ var changeComputer = function(computer) {
         console.log("Done:", value);
         computerList(); // refetch
     });
-    putDatafail(function(error, errmess) {
+    putData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             var mess = JSON.parse(errmess);
