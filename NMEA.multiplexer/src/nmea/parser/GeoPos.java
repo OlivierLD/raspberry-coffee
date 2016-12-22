@@ -45,4 +45,40 @@ public class GeoPos implements Serializable {
 	public static GeoPos init() {
 		return new GeoPos(0d, 0d);
 	}
+
+	/**
+	 * see http://en.wikipedia.org/wiki/Maidenhead_Locator_System
+	 */
+	public static String gridSquare(double lat, double lng)
+	{
+		String gridSquare = "";
+
+		lng += 180;
+		lat +=  90;
+		String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		//                 0         1         2
+		//                 01234567890123456789012345. Useless beyond X
+		int first = (int) (lng / 20d);
+		gridSquare += alphabet.charAt(first);
+		int second = (int) (lat / 10d);
+		gridSquare += alphabet.charAt(second);
+
+		int third = (int)((lng % 20) / 2);
+		gridSquare += Integer.toString(third);
+		int fourth = (int)((lat % 10));
+		gridSquare += Integer.toString(fourth);
+
+		double d = lng - ((int)(lng / 2) * 2);
+		int fifth = (int)(d * 12);
+		gridSquare += alphabet.toLowerCase().charAt(fifth);
+		double e = lat - (int)lat;
+		int sixth = (int)(e * 24);
+		gridSquare += alphabet.toLowerCase().charAt(sixth);
+
+		return gridSquare;
+	}
+
+	public String gridSquare() {
+		return gridSquare(this.lat, this.lng);
+	}
 }

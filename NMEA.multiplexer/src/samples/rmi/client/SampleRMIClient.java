@@ -66,7 +66,7 @@ public class SampleRMIClient {
 			Object position = cache.get(NMEADataCache.POSITION);
 			System.out.println("Position is a " + position.getClass().getName());
 			if (position instanceof GeoPos) {
-				System.out.println(String.format("Position is %s", ((GeoPos)position).toString()));
+				System.out.println(String.format("Position is %s (Grid Square %s)", ((GeoPos)position).toString(), ((GeoPos)position).gridSquare()));
 			}
 
 			try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
