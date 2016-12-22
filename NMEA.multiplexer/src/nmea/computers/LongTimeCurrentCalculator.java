@@ -1,4 +1,4 @@
-package computers;
+package nmea.computers;
 
 import context.ApplicationContext;
 import context.NMEADataCache;
@@ -29,7 +29,7 @@ public class LongTimeCurrentCalculator {
 	private boolean verbose = false;
 	// buffer.length in milliseconds
 	public final static long DEFAULT_BUFFER_LENGTH = 600000L;
-	private long bufferLength = Long.parseLong(System.getProperty("buffer.length", String.valueOf(DEFAULT_BUFFER_LENGTH))); // Default 10 minutes TODO Parameterize
+	private long bufferLength = Long.parseLong(System.getProperty("buffer.length", String.valueOf(DEFAULT_BUFFER_LENGTH))); // Default 10 minutes
 
 	private Thread watcher = null;
 	private boolean keepWatching = true;

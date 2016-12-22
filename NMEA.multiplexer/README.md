@@ -22,8 +22,8 @@ and can be seen as a _channel_.
 Also, a _computer_ is using NMEA data collected by the Multiplexer to produce other NMEA data that will be broadcasted by the _forwarders_.
 For example, True Wind computed with Apparent Wind data and the GPS data.
 
-_Note_: to compute the required data, we have a cache, where the data required by the computers are pushed.
-This cache is initialized before starting the computers, with parameters contained in the 
+_Note_: to compute the required data, we have a cache, where the data required by the nmea.computers are pushed.
+This cache is initialized before starting the nmea.computers, with parameters contained in the 
 properties file used at startup.
 
 Finally, we have _tranformers_, that transform NMEA data into another format, and then behave like a a regular _forwarder_ to provide them to whoever is interested.
@@ -105,7 +105,7 @@ with.http.server=yes
 http.port=9999
 
 ```
-This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
+This HTTP Server is designed and written to run on small nmea.computers (like the Raspberry PI Zero).
 It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
 ### Supported end-points (for now)

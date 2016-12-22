@@ -1,4 +1,4 @@
-package computers;
+package nmea.computers;
 
 import nmea.api.Multiplexer;
 import nmea.forwarders.Forwarder;

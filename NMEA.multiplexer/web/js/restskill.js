@@ -81,7 +81,7 @@ var getForwarders = function() {
 
 var getComputers = function() {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/computers',
+        url = '/nmea.computers',
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 
@@ -161,7 +161,7 @@ var addChannel = function(channel) {
 
 var addComputer = function(computer) {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/computers',
+        url = '/nmea.computers',
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 
@@ -215,7 +215,7 @@ var updateChannel = function(channel) {
 
 var updateComputer = function(computer) {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/computers',
+        url = '/nmea.computers',
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 
@@ -296,7 +296,7 @@ var deleteForwarder = function(forwarder) {
 
 var deleteComputer = function(computer) {
     var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/computers/' + computer.type,
+        url = '/nmea.computers/' + computer.type,
         xhr = new XMLHttpRequest(),
         TIMEOUT = 10000;
 
@@ -505,7 +505,7 @@ var computerList = function() {
                 message = mess.message;
             }
         }
-        alert("Failed to get computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        alert("Failed to get nmea.computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 

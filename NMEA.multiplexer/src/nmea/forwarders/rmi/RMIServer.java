@@ -2,7 +2,6 @@ package nmea.forwarders.rmi;
 
 import context.ApplicationContext;
 import nmea.forwarders.Forwarder;
-import nmea.forwarders.rmi.clientoperations.LastString;
 
 import java.net.InetAddress;
 import java.rmi.NotBoundException;
@@ -67,7 +66,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	@Override
 	public void write(byte[] message) {
 		// Feed the cache here
-		ApplicationContext.getInstance().getDataCache().parseAndFeed(new String(message)); // TODO CHeck if this is not redundant with the MUX.
+//	ApplicationContext.getInstance().getDataCache().parseAndFeed(new String(message)); // Redundant with the MUX.
 	}
 
 	private String formatByteHexa(byte b) {

@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import computers.Computer;
-import computers.ExtraDataComputer;
+import nmea.computers.Computer;
+import nmea.computers.ExtraDataComputer;
 import context.ApplicationContext;
 import context.NMEADataCache;
 import gnu.io.CommPortIdentifier;
@@ -120,9 +120,9 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Get the list of the output channels"),
 					new Operation(
 									"GET",
-									"/computers",
+									"/nmea/computers",
 									this::getComputers,
-									"Get the list of the computers"),
+									"Get the list of the nmea.computers"),
 					new Operation(
 									"DELETE",
 									"/forwarders/{id}",
@@ -135,7 +135,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Delete an input channel"),
 					new Operation(
 									"DELETE",
-									"/computers/{id}",
+									"/nmea/computers/{id}",
 									this::deleteComputer,
 									"Delete a computer"),
 					new Operation(
@@ -150,7 +150,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Creates an input channel"),
 					new Operation(
 									"POST",
-									"/computers",
+									"/nmea/computers",
 									this::postComputer,
 									"Creates computer"),
 					new Operation(
@@ -165,7 +165,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Update forwarder"),
 					new Operation(
 									"PUT",
-									"/computers",
+									"/nmea/computers",
 									this::putComputer,
 									"Update computer"),
 					new Operation(
@@ -1485,7 +1485,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		// Init cache (for Computers).
 		if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
 			try {
-				// If there is a cache, then let's see what computers to start.
+				// If there is a cache, then let's see what nmea.computers to start.
 				thereIsMore = true;
 				int cptrIdx = 1;
 				// 3 - Computers
