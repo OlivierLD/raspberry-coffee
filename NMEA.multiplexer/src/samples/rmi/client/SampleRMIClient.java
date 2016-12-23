@@ -17,7 +17,7 @@ import java.rmi.registry.Registry;
 import java.text.NumberFormat;
 
 /**
- * An example of the way to invoke the RMI server
+ * An example of the way to invoke operations on the RMI server
  */
 public class SampleRMIClient {
 

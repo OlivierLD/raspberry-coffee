@@ -225,7 +225,7 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 					break;
 				case "MWV": // Apparent Wind Speed and Direction
 					Wind wind = StringParsers.parseMWV(nmeaSentence);
-					if (wind != null && wind instanceof ApparentWind) { // TODO TrueWind not used for now
+					if (wind != null && wind instanceof ApparentWind) { // TODO: TrueWind not used for now
 						this.put(AWS, new Speed(wind.speed));
 						int awa = wind.angle;
 						if (awa > 180)
@@ -331,10 +331,10 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 						this.put(NMEADataCache.BARO_PRESS, new Pressure(mda.pressBar * 1000));
 					if (mda.relHum != null)
 						this.put(NMEADataCache.RELATIVE_HUMIDITY, mda.relHum);
-					// TODO More MDA data...
+					// TODO: More MDA data...
 					break;
 				case "XTE": // Cross Track Error
-					// TODO Implement
+					// TODO: Implement
 					break;
 				case "XDR": // Transducer measurement
 					List<StringGenerator.XDRElement> xdr = StringParsers.parseXDR(nmeaSentence);
@@ -370,7 +370,7 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 						Angle360 trueHeading = (Angle360)this.get(HDG_TRUE);
 						if (trueHeading != null) {
 							double twd = trueHeading.getValue() + trueWind.angle;
-							System.out.println("TWD: " + twd); // TODO Implement put(TWD, new Angle360(twd))
+							System.out.println("TWD: " + twd); // TODO: Implement put(TWD, new Angle360(twd))
 						}
 					}
 					break;
@@ -387,7 +387,9 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 					}
 					break;
 				default:
-					System.out.println(String.format("NMEA Sentence [%s] not managed by parseAndFeed.", id));
+					if (System.getProperty("verbose", "false").equals("true")) {
+						System.out.println(String.format("NMEA Sentence [%s] not managed by parseAndFeed.", id));
+					}
 					break;
 			}
 		}

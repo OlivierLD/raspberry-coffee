@@ -122,7 +122,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"GET",
 									"/computers",
 									this::getComputers,
-									"Get the list of the nmea.computers"),
+									"Get the list of the computers"),
 					new Operation(
 									"DELETE",
 									"/forwarders/{id}",
@@ -1485,7 +1485,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		// Init cache (for Computers).
 		if ("true".equals(muxProps.getProperty("init.cache", "false"))) {
 			try {
-				// If there is a cache, then let's see what nmea.computers to start.
+				// If there is a cache, then let's see what computers to start.
 				thereIsMore = true;
 				int cptrIdx = 1;
 				// 3 - Computers
