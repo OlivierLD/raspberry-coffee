@@ -12,6 +12,7 @@ import util.MercatorUtil;
 import util.greatcircle.GreatCirclePoint;
 import util.greatcircle.GreatCircle;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.Map;
 public class LongTimeCurrentCalculator {
 	private boolean verbose = false;
 	// buffer.length in milliseconds
-	public final static long DEFAULT_BUFFER_LENGTH = 600000L;
+	public final static long DEFAULT_BUFFER_LENGTH = 600000L; // Milli Seconds
 	private long bufferLength = Long.parseLong(System.getProperty("buffer.length", String.valueOf(DEFAULT_BUFFER_LENGTH))); // Default 10 minutes
 
 	private Thread watcher = null;
@@ -90,9 +91,8 @@ public class LongTimeCurrentCalculator {
 						if (verbose)
 							System.out.println("There is a cache...");
 						try {
-							//    synchronized (cache)
+				//    synchronized (cache)
 							{
-								//            long time       = new Date().getTime();
 								Object ot = /*(UTCDate)*/cache.get(NMEADataCache.GPS_DATE_TIME);
 								if (ot == null) {
 									ot = /*(UTCTime)*/cache.get(NMEADataCache.GPS_TIME);
@@ -124,7 +124,7 @@ public class LongTimeCurrentCalculator {
 												utcDate.getValue() != null &&
 												((timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - utcDate.getValue().getTime()) > 1000)) {
 									// Buffer Reset
-									//    System.out.println("== Reseting data buffers: last date in buffer=[" + SDF2.format(timeBuffer.get(timeBuffer.size() - 1).getValue()) + "] > current Date=[" + SDF2.format(utcDate.getValue()) + "]");
+						//    System.out.println("== Reseting data buffers: last date in buffer=[" + SDF2.format(timeBuffer.get(timeBuffer.size() - 1).getValue()) + "] > current Date=[" + SDF2.format(utcDate.getValue()) + "]");
 									resetDataBuffers();
 								}
 
@@ -246,7 +246,7 @@ public class LongTimeCurrentCalculator {
 						System.out.println("... No cache yet");
 					synchronized (this) {
 						if (verbose)
-							System.out.println("  ...User exit going to wait, at " + new Date().toString() + " (will wait for " + (waitTime / 1000) + " s)");
+							System.out.println("  ...LongTimeCurrentCalculator going to wait, at " + new Date().toString() + " (will wait for " + (waitTime / 1000) + " s)");
 						try {
 							wait(waitTime);
 						} catch (InterruptedException ie) {
@@ -272,7 +272,7 @@ public class LongTimeCurrentCalculator {
 	}
 
 	public void stop() {
-		System.out.println("    " + this.getClass().getName() + " is terminating (at epoch " + System.currentTimeMillis() + ")");
+		System.out.println("    " + this.getClass().getName() + "(" + NumberFormat.getInstance().format(this.bufferLength) + " ms) is terminating (at epoch " + System.currentTimeMillis() + ")");
 		keepWatching = false;
 		synchronized (watcher) {
 			watcher.notify();
