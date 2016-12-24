@@ -20,12 +20,14 @@ import nmea.parser.UTCTime;
 import nmea.parser.Wind;
 import nmea.utils.NMEAUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Extra Data Computer. True Wind and Current.
@@ -54,7 +56,7 @@ public class ExtraDataComputer extends Computer {
 	private final static String DEFAULT_PREFIX = "OS"; // OlivSoft
 
 	private String generatedStringsPrefix = DEFAULT_PREFIX;
-	private LongTimeCurrentCalculator longTimeCurrentCalculator = null;
+	private List<LongTimeCurrentCalculator> longTimeCurrentCalculator = new ArrayList<>();
 
 	private final List<String> requiredStrings = Arrays.asList(new String[]{"RMC", "VHW", "VTG", "HDG", "HDM", "HDT", "MWV", "VWR"});
 
@@ -66,23 +68,20 @@ public class ExtraDataComputer extends Computer {
 		this.generatedStringsPrefix = prefix;
 	}
 
-	public ExtraDataComputer(Multiplexer mux, String prefix, long tbl) {
+	public ExtraDataComputer(Multiplexer mux, String prefix, Long... tbl) {
 		super(mux);
 		if (prefix == null || prefix.length() != 2) {
-			throw new RuntimeException("Prefix must exist, and be exactly 2 character long.");
+			throw new RuntimeException("Prefix must exist, and be EXACTLY 2 character long.");
 		}
 		this.generatedStringsPrefix = prefix;
-		this.longTimeCurrentCalculator = new LongTimeCurrentCalculator(tbl);
-		this.longTimeCurrentCalculator.setVerbose(this.verbose);
-		this.longTimeCurrentCalculator.start();
+		for (long bl : tbl) {
+			LongTimeCurrentCalculator ltcc = new LongTimeCurrentCalculator(bl);
+			ltcc.setVerbose(this.verbose);
+			ltcc.start();
+			this.longTimeCurrentCalculator.add(ltcc);
+		}
 	}
 
-	public void setTimeBufferLength(long tbl) {
-		if (verbose) {
-			System.out.println(String.format("Setting time buffer length to %d", tbl));
-		}
-		this.longTimeCurrentCalculator.setBufferLength(tbl);
-	}
 	/**
 	 * Receives the data, and potentially produces new ones.
 	 *
@@ -286,21 +285,21 @@ public class ExtraDataComputer extends Computer {
 	@Override
 	public void setVerbose(boolean verbose) {
 		super.setVerbose(verbose);
-		this.longTimeCurrentCalculator.setVerbose(verbose);
+		this.longTimeCurrentCalculator.stream().forEach(ltcc -> ltcc.setVerbose(verbose));
 	}
 
 	@Override
 	public void close() {
 		System.out.println("- Stop Computing True Wind, " + this.getClass().getName());
 		if (this.longTimeCurrentCalculator != null) {
-			this.longTimeCurrentCalculator.stop();
+			this.longTimeCurrentCalculator.stream().forEach(ltcc -> ltcc.stop());
 		}
 	}
 
 	public static class ComputerBean {
 		private String cls;
 		private String type = "tw-current";
-		private long timeBufferLength = 600000; // Default is 10 minutes.
+		private String timeBufferLength = "600000"; // Default is 10 minutes.
 		private int cacheSize = 0;
 		private boolean verbose = false;
 		private String prefix = "OS";
@@ -309,7 +308,7 @@ public class ExtraDataComputer extends Computer {
 			return this.cacheSize;
 		}
 
-		public long getTimeBufferLength() {
+		public String getTimeBufferLength() {
 			return timeBufferLength;
 		}
 
@@ -325,7 +324,10 @@ public class ExtraDataComputer extends Computer {
 			this.cls = instance.getClass().getName();
 			this.cacheSize = ApplicationContext.getInstance().getDataCache().size();
 			this.verbose = instance.isVerbose();
-			this.timeBufferLength = instance.longTimeCurrentCalculator.getBufferLength();
+			this.timeBufferLength = instance.longTimeCurrentCalculator
+							.stream()
+							.map(ltcc -> String.valueOf(ltcc.getBufferLength()))
+							.collect(Collectors.joining(", "));
 			this.prefix = instance.generatedStringsPrefix;
 		}
 	}

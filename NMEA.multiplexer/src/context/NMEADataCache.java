@@ -496,6 +496,11 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 	public static class CurrentDefinition implements Serializable {
 		private long bufferLength; // in ms
 		private Speed speed;
+		private Angle360 direction;
+		private int nbPoints = 0;
+		private String oldest = "";
+		private String latest = "";
+		private long len = 0L; // Len in ms
 
 		public long getBufferLength() {
 			return bufferLength;
@@ -509,12 +514,15 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 			return direction;
 		}
 
-		private Angle360 direction;
 
-		public CurrentDefinition(long bl, Speed sp, Angle360 dir) {
+		public CurrentDefinition(long bl, Speed sp, Angle360 dir, int nbp, String old, String last, long len) {
 			this.bufferLength = bl;
 			this.speed = sp;
 			this.direction = dir;
+			this.nbPoints = nbp;
+			this.oldest = old;
+			this.latest = last;
+			this.len = len;
 		}
 	}
 

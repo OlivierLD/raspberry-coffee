@@ -210,7 +210,15 @@ public class LongTimeCurrentCalculator {
 										if (verbose)
 											System.out.println("Inserting Current: on:" + bufferLength + " ms, " + speed + " kts, dir:" + dir);
 
-										((Map<Long, NMEADataCache.CurrentDefinition>) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.CALCULATED_CURRENT)).put(bufferLength, new NMEADataCache.CurrentDefinition(bufferLength, new Speed(speed), new Angle360(dir)));
+										((Map<Long, NMEADataCache.CurrentDefinition>) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.CALCULATED_CURRENT)).put(bufferLength,
+														new NMEADataCache.CurrentDefinition(
+																		bufferLength,
+																		new Speed(speed),
+																		new Angle360(dir),
+																		timeBuffer.size(),
+																		timeBuffer.get(0).toString(),
+																		timeBuffer.get(timeBuffer.size() - 1).toString(),
+																		timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - timeBuffer.get(0).getValue().getTime()));
 
 										if (verbose) {
 											Map<Long, NMEADataCache.CurrentDefinition> map = (Map<Long, NMEADataCache.CurrentDefinition>) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.CALCULATED_CURRENT);

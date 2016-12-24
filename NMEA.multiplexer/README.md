@@ -242,6 +242,8 @@ identical to the elements returned by `GET /forwarders`.
 
 There is a Web UI using the REST resources above.
 
+_Note_: This Web UI is to be considered  as an example of the way to access the resources. Nothing more.
+
 On the HTTP Port, use a url like `http://machine-name:9999/web/admin.html`,
 where `machine-name` is the name of the machine where the multiplexer is running, and `9999` is the port defined in the properties.
 
@@ -253,7 +255,7 @@ And any REST client (NodeJS, Postman, your own code, ...) does the job.
 - UDP client
 
 ## TODO
-- 3D compas (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
+- 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
 - Externalize all definitions, for dynamic configuration (ie 'add your own computer, channel, forwarder', etc).
 
 ```

@@ -879,9 +879,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.findFirst();
 				if (!opComputer.isPresent()) {
 					try {
-						Computer twsCurrentComputer = new ExtraDataComputer(this, twJson.getPrefix(), twJson.getTimeBufferLength());
-						nmeaDataComputers.add(twsCurrentComputer);
-						String content = new Gson().toJson(twsCurrentComputer.getBean());
+						String[] timeBuffers = twJson.getTimeBufferLength().split(",");
+						List<Long> timeBufferLengths  = Arrays.asList(timeBuffers).stream().map(tbl -> Long.parseLong(tbl.trim())).collect(Collectors.toList());
+						// Check duplicates
+						for (int i=0; i<timeBufferLengths.size() - 1; i++) {
+							for (int j=i+1; j< timeBufferLengths.size(); j++) {
+								if (timeBufferLengths.get(i).equals(timeBufferLengths.get(j))) {
+									throw new RuntimeException(String.format("Duplicates in time buffer lengths: %d ms.", timeBufferLengths.get(i)));
+								}
+							}
+						}
+						Computer twCurrentComputer = new ExtraDataComputer(this, twJson.getPrefix(), timeBufferLengths.toArray(new Long[timeBufferLengths.size()]));
+						nmeaDataComputers.add(twCurrentComputer);
+						String content = new Gson().toJson(twCurrentComputer.getBean());
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {
@@ -1090,7 +1100,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					ExtraDataComputer computer = (ExtraDataComputer) opComputer.get();
 					computer.setVerbose(twJson.isVerbose());
 					computer.setPrefix(twJson.getPrefix());
-					computer.setTimeBufferLength(twJson.getTimeBufferLength());
 					String content = new Gson().toJson(computer.getBean());
 					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
@@ -1498,9 +1507,18 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						switch (type) {
 							case "tw-current":
 								String prefix = muxProps.getProperty(String.format("computer.%s.prefix", MUX_IDX_FMT.format(cptrIdx)), "OS");
-								long timeBufferLength = Long.parseLong(muxProps.getProperty(String.format("computer.%s.time.buffer.length", MUX_IDX_FMT.format(cptrIdx)), "600000"));
+								String[] timeBuffers = muxProps.getProperty(String.format("computer.%s.time.buffer.length", MUX_IDX_FMT.format(cptrIdx)), "600000").split(",");
+								List<Long> timeBufferLengths  = Arrays.asList(timeBuffers).stream().map(tbl -> Long.parseLong(tbl.trim())).collect(Collectors.toList());
+								// Check duplicates
+								for (int i=0; i<timeBufferLengths.size() - 1; i++) {
+									for (int j=i+1; j< timeBufferLengths.size(); j++) {
+										if (timeBufferLengths.get(i).equals(timeBufferLengths.get(j))) {
+											throw new RuntimeException(String.format("Duplicates in time buffer lengths: %d ms.", timeBufferLengths.get(i)));
+										}
+									}
+								}
 								try {
-									Computer twCurrentComputer = new ExtraDataComputer(this, prefix, timeBufferLength);
+									Computer twCurrentComputer = new ExtraDataComputer(this, prefix, timeBufferLengths.toArray(new Long[timeBufferLengths.size()]));
 									nmeaDataComputers.add(twCurrentComputer);
 								} catch (Exception ex) {
 									ex.printStackTrace();
