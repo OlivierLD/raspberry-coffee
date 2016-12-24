@@ -74,8 +74,8 @@ public class ExtraDataComputer extends Computer {
 			throw new RuntimeException("Prefix must exist, and be EXACTLY 2 character long.");
 		}
 		this.generatedStringsPrefix = prefix;
-		for (long bl : tbl) {
-			LongTimeCurrentCalculator ltcc = new LongTimeCurrentCalculator(bl);
+		for (long bl : tbl) { // in seconds here.
+			LongTimeCurrentCalculator ltcc = new LongTimeCurrentCalculator(bl * 1000); // In ms here.
 			ltcc.setVerbose(this.verbose);
 			ltcc.start();
 			this.longTimeCurrentCalculator.add(ltcc);
