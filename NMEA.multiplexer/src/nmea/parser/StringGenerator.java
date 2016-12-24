@@ -1,5 +1,7 @@
 package nmea.parser;
 
+import nmea.utils.NMEAUtils;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -18,7 +20,9 @@ public class StringGenerator {
 	private final static NumberFormat PRMSL_FMT_2 = new DecimalFormat("##0");
 	private final static NumberFormat PERCENT_FMT = new DecimalFormat("##0.0");
 	private final static NumberFormat DIR_FMT = new DecimalFormat("##0");
+	private final static NumberFormat DIR_FMT_1 = new DecimalFormat("##0.0");
 	private final static NumberFormat SPEED_FMT = new DecimalFormat("#0.0");
+	private final static NumberFormat SPEED_FMT_2 = new DecimalFormat("#0.00");
 
 	private final static NumberFormat PRMSL_FMT_MDA = new DecimalFormat("##0.000");
 
@@ -187,7 +191,7 @@ public class StringGenerator {
 		}
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(xdr);
-		xdr += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		xdr += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + xdr;
 	}
@@ -260,7 +264,7 @@ public class StringGenerator {
 			mda += ",,,";
 
 		int cs = StringParsers.calculateCheckSum(mda);
-		mda += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		mda += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + mda;
 	}
@@ -275,7 +279,7 @@ public class StringGenerator {
 		mmb += (PRMSL_FMT.format(mbPressure / 1000) + ",B");     // Bars. 1 mb = 1 hPa
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(mmb);
-		mmb += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		mmb += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + mmb;
 	}
@@ -289,7 +293,7 @@ public class StringGenerator {
 		mta += (TEMP_FMT.format(temperature) + ",C");
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(mta);
-		mta += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		mta += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + mta;
 	}
@@ -299,12 +303,12 @@ public class StringGenerator {
 	 */
 	public static String generateVDR(String devicePrefix, double speed, double dirT, double dirM) {
 		String vdr = devicePrefix + "VDR,";
-		vdr += (SPEED_FMT.format((dirT == Double.MAX_VALUE) ? 0 : dirT) + ",T,");
-		vdr += (SPEED_FMT.format((dirM == Double.MAX_VALUE) ? 0 : dirM) + ",M,");
-		vdr += ((Double.isNaN(speed) ? "" : SPEED_FMT.format(speed)) + ",N");
+		vdr += (DIR_FMT_1.format((dirT == Double.MAX_VALUE) ? 0 : dirT) + ",T,");
+		vdr += (DIR_FMT_1.format((dirM == Double.MAX_VALUE) ? 0 : dirM) + ",M,");
+		vdr += ((Double.isNaN(speed) ? "" : SPEED_FMT_2.format(speed)) + ",N"); // TODO Make sure that is OK (2 decimals).
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(vdr);
-		vdr += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		vdr += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + vdr;
 	}
@@ -335,7 +339,7 @@ public class StringGenerator {
 		mwd += ((Double.MAX_VALUE == Math.abs(knts) ? "" : SPEED_FMT.format(knts * KNOTS_TO_MS)) + ",M");
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(mwd);
-		mwd += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		mwd += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + mwd;
 	}
@@ -366,7 +370,7 @@ public class StringGenerator {
 		else rmc += "E";
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(rmc);
-		rmc += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		rmc += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + rmc;
 	}
@@ -383,7 +387,7 @@ public class StringGenerator {
 		mwv += ((Double.MAX_VALUE == Math.abs(ws) ? "" : OG_FMT.format(ws)) + ",N,A");
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(mwv);
-		mwv += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		mwv += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + mwv;
 	}
@@ -396,7 +400,7 @@ public class StringGenerator {
 		vwt += ((Double.MAX_VALUE == Math.abs(tws) ? "" : SPEED_FMT.format(tws * KNOTS_TO_KMH)) + ",K");
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(vwt);
-		vwt += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		vwt += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + vwt;
 	}
@@ -407,7 +411,7 @@ public class StringGenerator {
 		vhw += (MIN_FMT.format(bsp) + ",N,,");
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(vhw);
-		vhw += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		vhw += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + vhw;
 	}
@@ -417,16 +421,9 @@ public class StringGenerator {
 		hdm += (LONG_DEG_FMT.format(cc) + ",M");
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(hdm);
-		hdm += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		hdm += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 
 		return "$" + hdm;
-	}
-
-	private static String lpad(String s, String pad, int len) {
-		String padded = s;
-		while (padded.length() < len)
-			padded = pad + padded;
-		return padded;
 	}
 
 	public static void main(String[] args) {

@@ -662,6 +662,36 @@ public class StringParsers {
 		return aw;
 	}
 
+	public static Wind parseMWD(String data) {
+			/* $WIMWD,<1>,<2>,<3>,<4>,<5>,<6>,<7>,<8>*hh
+	     *
+	     * NMEA 0183 standard Wind Direction and Speed, with respect to north.
+	     *
+	     * <1> Wind direction, 0.0 to 359.9 degrees True, to the nearest 0.1 degree
+	     * <2> T = True
+	     * <3> Wind direction, 0.0 to 359.9 degrees Magnetic, to the nearest 0.1 degree
+	     * <4> M = Magnetic
+	     * <5> Wind speed, knots, to the nearest 0.1 knot.
+	     * <6> N = Knots
+	     * <7> Wind speed, meters/second, to the nearest 0.1 m/s.
+	     * <8> M = Meters/second
+	     */
+		Wind tw = null;
+		if (validCheckSum(data)) {
+			String[] part = data.split(",");
+			double dir = 0;
+			double speed = 0;
+			if ("T".equals(part[2])) {
+				dir = Double.parseDouble(part[1]);
+			}
+			if ("N".equals(part[6])) {
+				speed = Double.parseDouble(part[5]);
+			}
+			tw = new TrueWind((int)Math.round(dir), speed);
+		}
+		return tw;
+	}
+
 	/*
 	 * $--VWT,x.x,a,x.x,N,x.x,M,x.x,K*hh<CR><LF>
 	 *        |     |     |     |

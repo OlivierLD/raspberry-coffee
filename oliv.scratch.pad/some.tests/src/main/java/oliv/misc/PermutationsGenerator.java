@@ -171,7 +171,7 @@ public class PermutationsGenerator {
 //	}
 
 	public static void main(String... args) {
-		List<List<List<Integer>>> allPermutations = generateAllPermutations(8, 8, GenerationOption.GENERATE_IN_MEMORY_LIST);
+		List<List<List<Integer>>> allPermutations = generateAllPermutations(3, 3, GenerationOption.GENERATE_IN_MEMORY_LIST);
 		final AtomicInteger upTo = new AtomicInteger(2);
 		allPermutations.stream().forEach(one -> {
 			System.out.println(String.format("=== Up to %d elements ===", upTo.getAndIncrement()));

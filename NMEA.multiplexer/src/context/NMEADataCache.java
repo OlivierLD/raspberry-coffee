@@ -1,24 +1,49 @@
 package context;
 
 import nmea.parser.Angle;
+import nmea.parser.Angle180;
+import nmea.parser.Angle180EW;
 import nmea.parser.Angle360;
+import nmea.parser.ApparentWind;
+import nmea.parser.Current;
+import nmea.parser.Depth;
+import nmea.parser.Distance;
+import nmea.parser.GeoPos;
 import nmea.parser.NMEADoubleValueHolder;
+import nmea.parser.OverGround;
+import nmea.parser.Pressure;
+import nmea.parser.RMB;
+import nmea.parser.RMC;
+import nmea.parser.SVData;
+import nmea.parser.SolarDate;
 import nmea.parser.Speed;
+import nmea.parser.StringGenerator;
 import nmea.parser.StringParsers;
+import nmea.parser.Temperature;
+import nmea.parser.TrueWind;
+import nmea.parser.UTC;
+import nmea.parser.UTCDate;
+import nmea.parser.UTCTime;
+import nmea.parser.Wind;
+import nmea.utils.NMEAUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import static nmea.utils.NMEAUtils.longitudeToTime;
 
 public class NMEADataCache extends HashMap<String, Object> implements Serializable {
 
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
 
 	public static final String SOG = "SOG";
-	public static final String POSITION = "Boat Position";
+	public static final String POSITION = "Position";
 	public static final String GPS_DATE_TIME = "GPS Date & Time";
 	public static final String GPS_TIME = "GPS Time";
 	public static final String GPS_SOLAR_TIME = "Solar Time";
@@ -54,7 +79,6 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 	public static final String S2STEER = "Steer";
 	public static final String LEEWAY = "Leeway";
 	public static final String CMG = "CMG";
-	public static final String PERF = "Performance";
 	public static final String SAT_IN_VIEW = "Satellites in view";
 
 	public static final String BATTERY = "Battery Voltage";
@@ -122,6 +146,253 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 				ald.remove(0);
 		}
 		return o;
+	}
+
+	public void parseAndFeed(String nmeaSentence) {
+		if (StringParsers.validCheckSum(nmeaSentence)) {
+
+			this.put(LAST_NMEA_SENTENCE, nmeaSentence);
+
+			String id = StringParsers.getSentenceID(nmeaSentence);
+			switch (id) {
+				case "RMC":
+					RMC rmc = StringParsers.parseRMC(nmeaSentence);
+					if (rmc != null) {
+						this.put(POSITION, rmc.getGp());
+						this.put(COG, new Angle360(rmc.getCog()));
+						this.put(SOG, new Speed(rmc.getSog()));
+						this.put(DECLINATION, new Angle180EW(rmc.getDeclination()));
+						if (rmc.getRmcDate() != null) {
+							this.put(GPS_DATE_TIME, new UTCDate(rmc.getRmcDate()));
+						}
+						if (rmc.getRmcTime() != null) {
+							this.put(GPS_TIME, new UTCTime(rmc.getRmcTime()));
+						}
+						if ((rmc.getRmcDate() != null || rmc.getRmcTime() != null) && rmc.getGp() != null)
+						{
+							long solarTime = -1L;
+							if (rmc.getRmcDate() != null)
+								solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
+							else
+								solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
+							Date solarDate = new Date(solarTime);
+							this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+						}
+					}
+					break;
+				case "ZDA":
+					UTC utc = StringParsers.parseZDA(nmeaSentence);
+					if (utc != null) {
+						this.put(GPS_DATE_TIME, new UTCDate(utc.getDate()));
+						this.put(GPS_TIME, new UTCTime(utc.getDate()));
+
+						GeoPos pos = (GeoPos)this.get(POSITION);
+						if (pos != null) {
+							long solarTime = utc.getDate().getTime() + longitudeToTime(pos.lng);
+							Date solarDate = new Date(solarTime);
+							this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+						}
+					}
+					break;
+				case "VHW": // Water Speed and Heading
+					double[] vhw = StringParsers.parseVHW(nmeaSentence);
+					if (vhw == null)
+						return;
+					double bsp = vhw[StringParsers.BSP_in_VHW];
+					double hdm = vhw[StringParsers.HDM_in_VHW];
+					if (bsp != -Double.MAX_VALUE) {
+						this.put(BSP, new Speed(bsp));
+					}
+					this.put(HDG_COMPASS, new Angle360(hdm /* - dec */));
+					break;
+				case "VLW": // Log
+					double[] d = StringParsers.parseVLW(nmeaSentence);
+					HashMap<String, Object> map = new HashMap<String, Object>(2);
+					this.put(LOG      , new Distance(d[StringParsers.LOG_in_VLW]));
+					this.put(DAILY_LOG, new Distance(d[StringParsers.DAILYLOG_in_VLW]));
+					break;
+				case "MTW": // Water Temperature
+					double wt = StringParsers.parseMTW(nmeaSentence);
+					this.put(WATER_TEMP, new Temperature(wt));
+					break;
+				case "MTA": // Air Temperature
+					double at = StringParsers.parseMTA(nmeaSentence);
+					this.put(AIR_TEMP, new Temperature(at));
+					break;
+				case "MMB": // Barometric Pressure
+					double p = StringParsers.parseMMB(nmeaSentence); // in mb
+					this.put(BARO_PRESS, new Pressure(p));
+					break;
+				case "MWV": // Apparent Wind Speed and Direction
+					Wind wind = StringParsers.parseMWV(nmeaSentence);
+					if (wind != null && wind instanceof ApparentWind) { // TODO: TrueWind not used for now
+						this.put(AWS, new Speed(wind.speed));
+						int awa = wind.angle;
+						if (awa > 180)
+							awa -= 360;
+						this.put(AWA, new Angle180(awa));
+					}
+					break;
+				case "VDR":
+					Current current = StringParsers.parseVDR(nmeaSentence);
+					this.put(NMEADataCache.VDR_CURRENT, current);
+					break;
+				case "VWR": // Apparent Wind Speed and Direction (2)
+					Wind aWind = StringParsers.parseVWR(nmeaSentence);
+					if (aWind != null) {
+						this.put(AWS, new Speed(aWind.speed));
+						int awa = aWind.angle;
+						if (awa > 180)
+							awa -= 360;
+						this.put(AWA, new Angle180(awa));
+					}
+					break;
+				case "VTG": // Speed and Course over Ground
+					OverGround og = StringParsers.parseVTG(nmeaSentence);
+					if (og != null) {
+						this.put(COG, new Angle360(og.getCourse()));
+						this.put(SOG, new Speed(og.getSpeed()));
+					}
+					break;
+				case "GLL": // Lat & Long, UTC (No date, just time)
+						Object[] obj = StringParsers.parseGLL(nmeaSentence);
+						if (obj != null) {
+							GeoPos pos = (GeoPos)obj[StringParsers.GP_in_GLL];
+							if (pos != null) {
+								this.put(POSITION, pos);
+							}
+							Date date = (Date)obj[StringParsers.DATE_in_GLL];
+							if (date != null) {
+								this.put(GPS_TIME, new UTCTime(date));
+								long solarTime = date.getTime() + longitudeToTime(pos.lng);
+								Date solarDate = new Date(solarTime);
+								this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+							}
+						}
+					break;
+				case "HDM": // Heading, magnetic
+					int hdg = StringParsers.parseHDM(nmeaSentence);
+					this.put(HDG_COMPASS, new Angle360(hdg));
+					break;
+				case "HDT": // Heading, true
+					this.put(NMEADataCache.HDG_TRUE, new Angle360(StringParsers.parseHDT(nmeaSentence)));
+					break;
+				case "HDG": // Heading
+					double[] hdgData = StringParsers.parseHDG(nmeaSentence);
+					int heading = (int)hdgData[StringParsers.HDG_in_HDG];
+					double dev = hdgData[StringParsers.DEV_in_HDG];
+					double var = hdgData[StringParsers.VAR_in_HDG];
+					if (dev == -Double.MAX_VALUE && var == -Double.MAX_VALUE) {
+						this.put(HDG_COMPASS, new Angle360(heading));
+					} else {
+						double dec = 0d;
+						if (dev != -Double.MAX_VALUE)
+							dec = dev;
+						else
+							dec = var;
+						this.put(DECLINATION, new Angle180EW(dec));
+						this.put(HDG_COMPASS, new Angle360(heading /* - dec */));
+					}
+					break;
+				case "RMB":
+					RMB rmb = StringParsers.parseRMB(nmeaSentence);
+					if (rmb != null) {
+						this.put(XTE,     new Distance(rmb.getXte()));
+						this.put(WP_POS,  rmb.getDest());
+						this.put(FROM_WP, rmb.getOwpid());
+						this.put(TO_WP,   rmb.getDwpid());
+						this.put(D2WP,    new Distance(rmb.getRtd()));
+						this.put(B2WP,    new Angle360(rmb.getBtd()));
+						this.put(S2WP,    new Speed(rmb.getDcv()));
+						this.put(S2STEER, rmb.getDts());
+					}
+					break;
+				case "DBT": // Depth
+					float fb = StringParsers.parseDBT(nmeaSentence, StringParsers.DEPTH_IN_METERS);
+					this.put(DBT, new Depth(fb));
+					break;
+				case "DPT": // Depth
+					float fp = StringParsers.parseDPT(nmeaSentence, StringParsers.DEPTH_IN_METERS);
+					this.put(DBT, new Depth(fp));
+					break;
+				case "GSV": // Satellites in view
+					Map<Integer, SVData> satmap = StringParsers.parseGSV(nmeaSentence);
+					if (satmap != null) {
+						this.put(SAT_IN_VIEW, satmap);
+					}
+					break;
+				case "MDA": // Meteorological composite (Humidity, among others)
+					StringParsers.MDA mda = StringParsers.parseMDA(nmeaSentence);
+					if (mda.airT != null)
+						this.put(NMEADataCache.AIR_TEMP, new Temperature(mda.airT));
+					if (mda.waterT != null)
+						this.put(NMEADataCache.WATER_TEMP, new Temperature(mda.waterT));
+					if (mda.pressBar != null)
+						this.put(NMEADataCache.BARO_PRESS, new Pressure(mda.pressBar * 1000));
+					if (mda.relHum != null)
+						this.put(NMEADataCache.RELATIVE_HUMIDITY, mda.relHum);
+					// TODO: More MDA data...
+					break;
+				case "XTE": // Cross Track Error
+					// TODO: Implement
+					break;
+				case "XDR": // Transducer measurement
+					List<StringGenerator.XDRElement> xdr = StringParsers.parseXDR(nmeaSentence);
+					if (xdr != null) {
+						for (StringGenerator.XDRElement xe : xdr) {
+							StringGenerator.XDRTypes type = xe.getTypeNunit();
+							double val = xe.getValue();
+							if (type.equals(StringGenerator.XDRTypes.HUMIDITY)) {
+								this.put(RELATIVE_HUMIDITY, val);
+							} else if (type.equals(StringGenerator.XDRTypes.PRESSURE_B)) {
+								this.put(BARO_PRESS, new Pressure(val * 1000));
+							} else if (type.equals(StringGenerator.XDRTypes.VOLTAGE)) {
+								this.put(BATTERY, new Float(val));
+							} else {
+								if ("true".equals(System.getProperty("verbose", "false")))
+									System.out.println("Unmanaged XDR Type:" + type.toString());
+							}
+						}
+					}
+					break;
+				case "MWD": // Wind Speed and Direction
+					Wind mwdWind = StringParsers.parseMWD(nmeaSentence);
+					if (mwdWind != null && mwdWind instanceof TrueWind) {
+						this.put(TWS, new Speed(mwdWind.speed));
+						this.put(TWD, new Angle360(mwdWind.angle));
+					}
+					break;
+				case "VWT": // True Wind Speed and Angle (deprecated, use MWV)
+					Wind trueWind = StringParsers.parseVWT(nmeaSentence);
+					if (trueWind != null) {
+						this.put(TWS, new Speed(trueWind.speed));
+						this.put(TWA, new Angle180(trueWind.angle));
+						Angle360 trueHeading = (Angle360)this.get(HDG_TRUE);
+						if (trueHeading != null) {
+							double twd = trueHeading.getValue() + trueWind.angle;
+							System.out.println("TWD: " + twd); // TODO: Implement put(TWD, new Angle360(twd))
+						}
+					}
+					break;
+				case "BAT":     // Battery Voltage. Not Standard, from the Raspberry PI. There is an XDR Voltage...
+					float volt = StringParsers.parseBAT(nmeaSentence);
+					if (volt > -1) {
+						this.put(BATTERY, new Float(volt));
+					}
+					break;
+				case "STD":     // Cache age. Not Standard. From Original cache
+					long age = StringParsers.parseSTD(nmeaSentence);
+					if (age > -1) {
+						this.put(TIME_RUNNING, new Long(age));
+					}
+					break;
+				default:
+					if (System.getProperty("verbose", "false").equals("true")) {
+						System.out.println(String.format("NMEA Sentence [%s] not managed by parseAndFeed.", id));
+					}
+					break;
+			}
+		}
 	}
 
 	// For debug
@@ -222,9 +493,14 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 			dampingMap.get(k).clear();
 	}
 
-	public static class CurrentDefinition {
+	public static class CurrentDefinition implements Serializable {
 		private long bufferLength; // in ms
 		private Speed speed;
+		private Angle360 direction;
+		private int nbPoints = 0;
+		private String oldest = "";
+		private String latest = "";
+		private long len = 0L; // Len in ms
 
 		public long getBufferLength() {
 			return bufferLength;
@@ -238,28 +514,24 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 			return direction;
 		}
 
-		private Angle360 direction;
 
-		public CurrentDefinition(long bl, Speed sp, Angle360 dir) {
+		public CurrentDefinition(long bl, Speed sp, Angle360 dir, int nbp, String old, String last, long len) {
 			this.bufferLength = bl;
 			this.speed = sp;
 			this.direction = dir;
+			this.nbPoints = nbp;
+			this.oldest = old;
+			this.latest = last;
+			this.len = len;
 		}
 	}
 
 	private static String generateCacheAge(String devicePrefix, long age) {
-		String std = devicePrefix + "STD,";
+		String std = devicePrefix + "STD,"; // StarTeD
 		std += Long.toString(age);
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(std);
-		std += ("*" + lpad(Integer.toString(cs, 16).toUpperCase(), "0", 2));
+		std += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 		return "$" + std;
-	}
-
-	private static String lpad(String s, String with, int len) {
-		String str = s;
-		while (str.length() < len)
-			str = with + str;
-		return str;
 	}
 }

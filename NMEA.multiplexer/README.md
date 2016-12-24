@@ -22,8 +22,8 @@ and can be seen as a _channel_.
 Also, a _computer_ is using NMEA data collected by the Multiplexer to produce other NMEA data that will be broadcasted by the _forwarders_.
 For example, True Wind computed with Apparent Wind data and the GPS data.
 
-_Note_: to compute the required data, we have a cache, where the data required by the computers are pushed.
-This cache is initialized before starting the computers, with parameters contained in the 
+_Note_: to compute the required data, we have a cache, where the data required by the nmea.computers are pushed.
+This cache is initialized before starting the nmea.computers, with parameters contained in the 
 properties file used at startup.
 
 Finally, we have _tranformers_, that transform NMEA data into another format, and then behave like a a regular _forwarder_ to provide them to whoever is interested.
@@ -54,12 +54,20 @@ Computers:
 - **True Wind** computer (produces `MDA`, `MWD` data)
 - **Current** computer (produces `VDR` data)
 
-Transformers:
+Transformers (incubating):
 - **GPSD** data
 - **Custom** data
 
+![Overall Overview](./overview.png "Overview")
+_There is no Transformer on the picture above_
+
+#### Note
+There is an **rmi** forwarder. This is a work in progress, but it works.
+It is feeding an RMI server that can then be accessed by an RMI client.
+See an example of such a client in `samples.rmi.client.SampleRMIClient`.
+
 ### To see it at work
-See the class `nmeaproviders.client.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
+See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
 See it to understand its content (should be clear enough).
 
 To compile and build:
@@ -70,7 +78,6 @@ To run it, modify `mux.sh` to fit your environment, and run
 ```
  $> ./mux.sh
 ```
-
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
@@ -91,16 +98,26 @@ or
 The properties files like `nmea.mux.proeprties` defines the configuration at startup.
 
 You can remotely manage the input channels and the re-broadcasting ones through a REST interface.
-The soft includes a dedicated HTTP Server. The http port is driven by a propety (in `nmea.mux.properties`).
+The soft includes a dedicated HTTP Server. The http port is driven by a property (in `nmea.mux.properties`).
 Same if you want the HTTP server to be started or not.
 ```properties
 with.http.server=yes
 http.port=9999
 
 ```
+This HTTP Server is designed and written to run on small nmea.computers (like the Raspberry PI Zero).
+It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
 ### Supported end-points (for now)
 
+#### List of operations
+A full list of the available REST services is available at 
+```
+ GET /oplist
+```
+![Operations List](./OpList.png "OpList")
+
+##### Examples
 ```
  GET /serial-ports
 ```
@@ -225,6 +242,8 @@ identical to the elements returned by `GET /forwarders`.
 
 There is a Web UI using the REST resources above.
 
+_Note_: This Web UI is to be considered  as an example of the way to access the resources. Nothing more.
+
 On the HTTP Port, use a url like `http://machine-name:9999/web/admin.html`,
 where `machine-name` is the name of the machine where the multiplexer is running, and `9999` is the port defined in the properties.
 
@@ -232,15 +251,11 @@ where `machine-name` is the name of the machine where the multiplexer is running
 
 And any REST client (NodeJS, Postman, your own code, ...) does the job.
 
-## Open questions
-- RMI protocol?
-
 ## Open Issues
 - UDP client
 
 ## TODO
-- 3D compas (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
-- Serial Forwarder
+- 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
 - Externalize all definitions, for dynamic configuration (ie 'add your own computer, channel, forwarder', etc).
 
 ```

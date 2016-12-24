@@ -5,6 +5,35 @@
     <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
     <script type="text/javascript" src="js/restskill.js"></script>
     <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+    <style>
+      .selectedButton {
+        padding:5px;
+        border-top-right-radius: 10px;
+        border:1px solid #CCC;
+        margin-top:10px;
+        border-bottom: none;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .unselectedButton {
+        padding:5px;
+        border-top-right-radius: 10px;
+        border:1px solid #CCC;
+        margin-top:10px;
+        border-bottom: none;
+        font-size: 12px;
+        font-weight: normal;
+      }
+      .addbox {
+        padding: 1px;
+        border-radius: 5px;
+        border: 1px solid #CCC;
+        width: auto;
+        height: auto;
+        margin: 80px auto 0px auto;
+        overflow: auto;
+      }
+    </style>
     <script type="text/javascript">
         var channelSelectManager = function() {
             var x = document.getElementById("channel-select").value;
@@ -93,26 +122,50 @@
 
         var manageForwardSelection = function(selected) {
             switch (selected) {
+                case 'serial':
+                    $("#forward-serial").css('display', 'inline');
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'none');
+                    break;
                 case 'tcp':
+                    $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'inline');
+                    $("#forward-rmi").css('display', 'none');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'none');
+                    break;
+                case 'rmi':
+                    $("#forward-serial").css('display', 'none');
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'inline');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'file':
+                    $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'inline');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'ws':
+                    $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'inline');
                     $("#forward-console").css('display', 'none');
                     break;
                 case 'console':
+                    $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'inline');
@@ -138,6 +191,10 @@
                 case 'serial':
                     var portName = $("#serial-port").val();
                     var br = document.getElementById("baud-rate").value;
+                    if (portName.trim().length === 0 || br.trim().length === 0) {
+                        alert('Both port name and baud rate are required');
+                        return;
+                    }
                     createChannel({
                         type: 'serial',
                         port: portName,
@@ -147,6 +204,10 @@
                 case 'tcp':
                     var port = $("#tcp-port").val();
                     var server = $("#tcp-server").val();
+                    if (port.trim().length === 0 || server.trim().length === 0) {
+                        alert('Both port and server name are required');
+                        return;
+                    }
                     createChannel({
                         type: 'tcp',
                         port: port,
@@ -155,6 +216,10 @@
                     break;
                 case 'file':
                     var logfile = $("#data-file").val();
+                    if (logfile.trim().length === 0) {
+                        alert('Log file name required');
+                        return;
+                    }
                     createChannel({
                         type: 'file',
                         file: logfile
@@ -162,6 +227,10 @@
                     break;
                 case 'ws':
                     var uri = $("#wsuri").val();
+                    if (uir.trim().length === 0) {
+                        alert('WebSocket URI is required');
+                        return;
+                    }
                     createChannel({
                         type: 'ws',
                         wsUri: uri
@@ -190,15 +259,53 @@
         var requestForwardCreation = function() {
             var x = document.getElementById("forwarder-select").value;
             switch (x) {
+                case 'serial':
+                    var portName = $("#serial-port-fwd").val();
+                    var br = document.getElementById("baud-rate-fwd").value;
+                    if (portName.trim().length === 0 || br.trim().length === 0) {
+                        alert('Both port name and baud rate are required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'serial',
+                        port: portName,
+                        br: br
+                    });
+                    break;
                 case 'tcp':
                     var port = $("#fwd-tcp-port").val();
+                    if (port.trim().length === 0) {
+                        alert('Port is required');
+                        return;
+                    }
                     createForwarder({
                         type: 'tcp',
                         port: port
                     });
                     break;
+                case 'rmi':
+                    var port = $("#fwd-rmi-port").val();
+                    if (port.trim().length === 0) {
+                        alert('Port is required');
+                        return;
+                    }
+                    var name = $("#fwd-rmi-binding-name").val();
+                    if (name.trim().length === 0) {
+                        alert('Name is required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'rmi',
+                        port: port,
+                        bindingName: name
+                    });
+                    break;
                 case 'file':
                     var logfile = $("#fwd-data-file").val();
+                    if (logfile.trim().length === 0) {
+                        alert('Log file name is required');
+                        return;
+                    }
                     createForwarder({
                         type: 'file',
                         file: logfile
@@ -206,6 +313,10 @@
                     break;
                 case 'ws':
                     var uri = $("#fwd-wsuri").val();
+                    if (uri.trim().length === 0) {
+                        alert('WebSocket URI is required');
+                        return;
+                    }
                     createForwarder({
                         type: 'ws',
                         wsUri: uri
@@ -227,11 +338,38 @@
                 case 'tw-current':
                     var prefix = $("#cptr-twc-prefix").val();
                     var tbl = $("#cptr-twc-tbl").val();
+                    if (prefix.trim().length === 0 || tbl.trim().length === 0) {
+                        alert('Prefix and TimeBuffer length are required');
+                        return;
+                    }
                     createComputer({
                         type: 'tw-current',
                         prefix: prefix,
                         timeBufferLength: tbl
                     });
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        var manageClick = function(div) {
+            document.getElementById('showPorts').className = (div.id === 'showPorts' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showChannels').className = (div.id === 'showChannels' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showForwarders').className = (div.id === 'showForwarders' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showComputers').className = (div.id === 'showComputers' ? 'selectedButton' : 'unselectedButton');
+            switch (div.id) {
+                case 'showPorts':
+                    serialPortList();
+                    break;
+                case 'showChannels':
+                    channelList();
+                    break;
+                case 'showForwarders':
+                    forwarderList();
+                    break;
+                case 'showComputers':
+                    computerList();
                     break;
                 default:
                     break;
@@ -243,13 +381,14 @@
     <h2>NMEA Multiplexer Admin</h2>
     <small>JQuery, Ajax, REST, JSON..., Multiplexer Admin.</small>
     <p>
-      <button onclick="serialPortList();">Fetch Serial Ports list</button>
-      <button onclick="channelList();">Fetch Channels list</button>
-      <button onclick="forwarderList();">Fetch Forwarders list</button>
-      <button onclick="computerList();">Fetch Computers list</button>
+    <div style="margin-bottom: 0px;">
+      <span id="showPorts"  onclick="manageClick(this);"  class="selectedButton" style="margin-left: 5px; cursor: pointer;">Fetch Serial Ports list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showChannels" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Channels list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showForwarders" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Forwarders list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="refresh_icon.png" width="10" height="12"/></span>
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
-
-      <div id="lists" style="padding:2px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height:200px;"></div>
+    </div>
+    <div id="lists" style="padding: 1px; border-radius: 5px; overflow-y: auto; border: 1px solid #CCC; height: 150px;"></div>
     </p>
     <p>
       <button onclick="showAddChannel();">Add a Channel</button>&nbsp;
@@ -275,7 +414,7 @@
                 <table>
                   <tr>
                     <td>Port</td>
-                    <td><input id="serial-port" type="text" placeholder="Serial Port Name" size="20"></td>
+                    <td><input id="serial-port" type="text" placeholder="Serial Port Name" size="30"></td>
                   </tr>
                   <tr>
                     <td>Baud Rate</td>
@@ -331,7 +470,6 @@
             </td>
           </tr>
         </table>
-
         <button onclick="requestChannelCreation();">Add</button>
       </div>
       <div id="add-forwarder" style="display: none;">
@@ -340,18 +478,52 @@
           <tr>
             <td valign="top">
               <select id="forwarder-select" onchange="forwardSelectManager();">
+                <option value="serial">Serial</option>
                 <option value="tcp">TCP</option>
+                <option value="rmi">RMI</option>
                 <option value="file">Data File</option>
                 <option value="ws">Web Socket</option>
                 <option value="console">Console</option>
               </select>
             </td>
             <td valign="top">
-              <div id="forward-tcp" style="display: inline;">
+              <div id="forward-serial" style="display: inline;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="serial-port-fwd" type="text" placeholder="Serial Port Name" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Baud Rate</td>
+                    <td>
+                      <select id="baud-rate-fwd">
+                        <option value="1200">1200</option>
+                        <option value="2400">2400</option>
+                        <option value="4800">4800</option>
+                        <option value="9600">9600</option>
+                        <option value="19200">19200</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-tcp" style="display: none;">
                 <table>
                   <tr>
                     <td>Port</td>
                     <td><input id="fwd-tcp-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-rmi" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="fwd-rmi-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                  <tr>
+                    <td>Binding Name</td>
+                    <td><input id="fwd-rmi-binding-name" type="text" placeholder="Binding Name" size="20"></td>
                   </tr>
                 </table>
               </div>
@@ -397,7 +569,7 @@
                   </tr>
                   <tr>
                     <td>Time Buffer Length</td>
-                    <td><input id="cptr-twc-tbl" type="text" placeholder="600000" size="10"></td>
+                    <td><input id="cptr-twc-tbl" type="text" placeholder="600000, 1200000" size="30"></td>
                   </tr>
                 </table>
               </div>

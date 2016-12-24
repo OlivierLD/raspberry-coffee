@@ -1,0 +1,205 @@
+package nmea.consumers.reader;
+
+import nmea.api.NMEAEvent;
+import nmea.api.NMEAListener;
+import nmea.api.NMEAParser;
+import nmea.api.NMEAReader;
+
+import java.io.InputStream;
+import java.net.BindException;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * TCP reader
+ */
+public class TCPReader extends NMEAReader
+{
+  private int tcpport     = 80;
+  private String hostName = "localhost";
+
+  public TCPReader(List<NMEAListener> al)
+  {
+    super(al);
+  }
+
+  public TCPReader(List<NMEAListener> al, int tcp)
+  {
+    super(al);
+    tcpport = tcp;
+  }
+
+  public TCPReader(List<NMEAListener> al, String host, int tcp)
+  {
+    super(al);
+    hostName = host;
+    tcpport = tcp;
+  }
+
+  private Socket skt = null;
+
+  public int getPort() {
+    return this.tcpport;
+  }
+  public String getHostname() {
+    return this.hostName;
+  }
+
+  @Override
+  public void read()
+  {
+    super.enableReading();
+    try
+    {
+      InetAddress address = InetAddress.getByName(hostName);
+//    System.out.println("INFO:" + hostName + " (" + address.toString() + ")" + " is" + (address.isMulticastAddress() ? "" : " NOT") + " a multicast address");
+      skt = new Socket(address, tcpport);
+      
+      InputStream theInput = skt.getInputStream();
+      byte buffer[] = new byte[4096];
+      String s;
+      int nbReadTest = 0;
+      while (canRead())
+      {
+        int bytesRead = theInput.read(buffer);
+        if (bytesRead == -1)
+        {
+          System.out.println("Nothing to read...");
+          if (nbReadTest++ > 10)
+            break;
+        }
+        else
+        {
+          int nn = bytesRead;
+          for (int i = 0; i < Math.min(buffer.length, bytesRead); i++)
+          {
+            if(buffer[i] != 0)
+              continue;
+            nn = i;
+            break;
+          }
+  
+          byte toPrint[] = new byte[nn];
+          for(int i = 0; i < nn; i++)
+            toPrint[i] = buffer[i];
+  
+          s = new String(toPrint) + NMEAParser.NMEA_SENTENCE_SEPARATOR;
+  //      System.out.println("TCP:" + s);
+          NMEAEvent n = new NMEAEvent(this, s);
+          super.fireDataRead(n);
+        }
+      }
+      System.out.println("Stop Reading TCP port.");
+      theInput.close();
+    }
+    catch (BindException be)
+    {
+      System.err.println("From " + this.getClass().getName() + ", " + hostName + ":" + tcpport);
+      be.printStackTrace();   
+      manageError(be);
+    }
+    catch (final SocketException se)
+    {
+//    se.printStackTrace();
+      if (se.getMessage().indexOf("Connection refused") > -1)
+        System.out.println("Refused (1)");
+      else if (se.getMessage().indexOf("Connection reset") > -1)
+        System.out.println("Reset (2)");
+      else
+      {
+        boolean tryAgain = false;
+        if (se instanceof ConnectException && "Connection timed out: connect".equals(se.getMessage()))
+          tryAgain = true;
+        else if (se instanceof ConnectException && "Network is unreachable: connect".equals(se.getMessage())) 
+          tryAgain = true;
+        else if (se instanceof ConnectException) // Et hop!
+        {
+          tryAgain = false;
+          System.err.println("TCP :" + se.getMessage());
+        }
+        else 
+        {
+          tryAgain = false;
+          System.err.println("TCP Socket:" + se.getMessage());
+        }
+      }
+    }
+    catch(Exception e)
+    {
+//    e.printStackTrace();
+      manageError(e);
+    }
+  }
+
+  @Override
+  public void closeReader() throws Exception
+  {
+//  System.out.println("(" + this.getClass().getName() + ") Stop Reading TCP Port");
+    try
+    {
+      if (skt != null)
+      {
+        this.goRead = false;
+        skt.close();
+        skt = null;
+      }
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
+  }
+
+  public void manageError(Throwable t)
+  {
+    throw new RuntimeException(t);
+  }
+
+  public void setTimeout(long timeout)
+  { /* Not used for TCP */  }
+  
+  public static void main(String[] args)
+  {
+    String host = "192.168.1.1";
+    int port = 7001; // 2947
+    try
+    {
+      List<NMEAListener> ll = new ArrayList<NMEAListener>();
+      NMEAListener nl = new NMEAListener()
+      {
+        @Override
+        public void dataRead(NMEAEvent nmeaEvent)
+        {
+          System.out.println(nmeaEvent.getContent()); // TODO Send to the GUI?
+        }
+      };
+      ll.add(nl);
+      
+      boolean keepTrying = true;
+      while (keepTrying)
+      {
+        TCPReader ctcpr = new TCPReader(ll, host, port);
+        System.out.println(new Date().toString() + ": New " + ctcpr.getClass().getName() + " created.");
+
+        try { ctcpr.read(); }
+        catch (Exception ex)
+        {
+          System.err.println("TCP Reader:" + ex.getMessage());
+          ctcpr.closeReader();
+          long howMuch = 1000L;
+          System.out.println("Will try to reconnect in " + Long.toString(howMuch) + "ms.");
+          try { Thread.sleep(howMuch); } catch (InterruptedException ie) {}
+        }
+      }
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+}
