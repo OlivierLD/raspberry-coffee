@@ -34,14 +34,14 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		this.bindingName = bindingName;
 
 		try {
-			serverAddress = (InetAddress.getLocalHost()).toString();
+			this.serverAddress = (InetAddress.getLocalHost()).toString();
 		} catch(Exception e) {
 			throw new RemoteException("Can't get inet address.");
 		}
 		try{
 			registry = LocateRegistry.createRegistry(registryPort);
 			registry.rebind(bindingName, this);
-			System.out.println(String.format("RMI Server Created. Server address : %s, port %d, name %s", serverAddress, registryPort, bindingName));
+			System.out.println(String.format("RMI Server Created. Server address : %s, port %d, name %s", this.serverAddress, this.registryPort, this.bindingName));
 		} catch (RemoteException e) {
 			throw e;
 		}

@@ -588,7 +588,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				} else {
 					// Already there
 					response.setStatus(HTTPServer.Response.BAD_REQUEST);
-					RESTProcessorUtil.addErrorMessageToResponse(response, "thi s'rmi' already exists");
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'rmi' already exists");
 				}
 				break;
 			case "file":

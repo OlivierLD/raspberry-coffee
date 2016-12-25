@@ -208,7 +208,7 @@ public class LongTimeCurrentCalculator {
 												keepGoing = false;
 										}
 										if (verbose)
-											System.out.println("Inserting Current: on:" + bufferLength + " ms, " + speed + " kts, dir:" + dir);
+											System.out.println("Inserting Current: on:" + NumberFormat.getInstance().format(bufferLength) + " ms, " + speed + " kts, dir:" + dir);
 
 										((Map<Long, NMEADataCache.CurrentDefinition>) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.CALCULATED_CURRENT)).put(bufferLength,
 														new NMEADataCache.CurrentDefinition(
