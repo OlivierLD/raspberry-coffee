@@ -254,6 +254,12 @@ And any REST client (NodeJS, Postman, your own code, ...) does the job.
 ## Open Issues
 - UDP client
 
+## Demos
+![GPS Demo](./gps.demo.png "GPS Demo")
+Plug a GPS on the Serial Port, start the multiplexer, and launch [http://localhost:9999/web/gps.demo.html](http://localhost:9999/web/gps.demo.html) in a browser.
+This is pinging the `/cache` REST service every second.
+
+
 ## TODO
 - 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
 - Externalize all definitions, for dynamic configuration (ie 'add your own computer, channel, forwarder', etc).
