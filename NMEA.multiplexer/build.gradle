@@ -4,6 +4,8 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 
+apply plugin: 'scala'
+
 group = 'oliv.pi4j.samples'
 version = '1.0'
 
@@ -14,16 +16,19 @@ repositories {
 }
 
 sourceSets {
-  main {
-    java {
-      srcDir 'src'
+    main {
+        java {
+            srcDirs = ['src/java']
+        }
+        scala {
+            srcDirs = ['src/scala']
+        }
     }
-  }  
-  test {
-    java {
-      srcDir 'tests'
+    test {
+        java {
+            srcDir 'tests/java'
+        }
     }
-  }  
 }
 
 dependencies {
