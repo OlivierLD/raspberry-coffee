@@ -94,8 +94,8 @@ public class SampleRMIClient {
 				Current calc = comp.executeTask(calculatedCurrent);
 				Current inst = comp.executeTask(instantCurrent);
 
-				System.out.println(String.format("Instant Current    %f knots, dir %d", inst.speed, (int)Math.round(inst.angle)));
-				System.out.println(String.format("Calculated Current %f knots, dir %d", calc.speed, (int)Math.round(calc.angle)));
+				System.out.println(String.format("Instant Current    %f knots, dir %d", inst.speed, inst.angle));
+				System.out.println(String.format("Calculated Current %f knots, dir %d", calc.speed, calc.angle));
 
 				try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
 			}

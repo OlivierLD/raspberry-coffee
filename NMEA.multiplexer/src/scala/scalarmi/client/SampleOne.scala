@@ -83,8 +83,8 @@ object SampleOne {
         println(s"TW is ${tw.speed} knots, from ${tw.angle}")
         val calc = comp.executeTask(calculatedCurrent)
         val inst = comp.executeTask(instantCurrent)
-        println(s"Instant Current    ${inst.speed} knots, dir ${inst.angle.round.toInt}")
-        println(s"Calculated Current ${calc.speed} knots, dir ${calc.angle.round.toInt}")
+        println(s"Instant Current    ${inst.speed} knots, dir ${inst.angle}")
+        println(s"Calculated Current ${calc.speed} knots, dir ${calc.angle}")
         try {
           Thread.sleep(1000L)
         } catch {
