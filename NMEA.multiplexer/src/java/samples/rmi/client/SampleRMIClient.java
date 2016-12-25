@@ -30,7 +30,7 @@ public class SampleRMIClient {
 
 		if (args.length != 2) {
 			System.out.println("Arguments: [RMI Server Name] [Port]");
-			name = "olediouris-mbp.att.net"; // "raspberrypi3.att.net";
+			name = "192.168.1.177"; // "olediouris-mbp.att.net"; // "raspberrypi3.att.net";
 			port = "1099";
 		} else {
 			name = args[0];
