@@ -69,11 +69,15 @@ public class SerialWriter implements Forwarder {
 
 	@Override
 	public void write(byte[] message) {
-		try {
-			out.write((new String(message) + "\r\n").getBytes());
-			out.flush();
-		} catch (IOException ioe) {
-			throw new RuntimeException(ioe);
+		if (this.out != null) {
+			try {
+				this.out.write((new String(message) + "\r\n").getBytes());
+				this.out.flush();
+			} catch (IOException ioe) {
+				throw new RuntimeException(ioe);
+			}
+		} else {
+			System.err.println("Serial Output is not opened.");
 		}
 	}
 
@@ -81,7 +85,8 @@ public class SerialWriter implements Forwarder {
 	public void close() {
 		System.out.println("- Stop writing to " + this.getClass().getName());
 		try {
-			this.out.close();
+			if (this.out != null)
+			  this.out.close();
 			this.serialPort.close();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
