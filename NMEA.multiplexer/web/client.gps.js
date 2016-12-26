@@ -57,12 +57,18 @@ var onMessage = function (json) {
     $("#raw-json").text(JSON.stringify(json, null, 2));
 
     if (json.Position !== undefined) {
+        clear("mapCanvas");
+        drawWorldMap("mapCanvas");
         plotPositionOnChart({lat: json.Position.lat, lng: json.Position.lng});
     }
     document.getElementById("fixdate").innerHTML = json["GPS Date & Time"].date;
     nmeaID.innerHTML = '<b>' + json.NMEA + '</b>';
     if (json["Satellites in view"] !== undefined) {
         generateSatelliteData(json["Satellites in view"]);
+        // Satellites on the chart
+        if (json.Position !== undefined) {
+            plotSatellitesOnChart({lat: json.Position.lat, lng: json.Position.lng}, json["Satellites in view"]);
+        }
     }
     if (json.COG !== undefined) {
         rose.setValue(Math.round(json.COG.angle));
@@ -91,6 +97,31 @@ var generateSatelliteData = function(sd) {
     }
     html += "</table>";
     satData.innerHTML = html;
+};
+
+var deadReckoning = function(from, dist, route) {
+  var deltaL = toRadians(dist / 60) * Math.cos(toRadians(route));
+  var l2 = from.lat + toDegrees(deltaL);
+  var deltaG = toRadians(dist / (60 * Math.cos(toRadians(from.lat + l2) / 2))) * Math.sin(toRadians(route)); // 2009-mar-10
+  var g2 = from.lng + toDegrees(deltaG);
+  while (g2 > 180) {
+    g2 = 360 - g2;
+  }
+  while (g2 < -180) {
+    g2 += 360;
+  }
+  return { lat: l2, lng: g2 };
+};
+
+var plotSatellitesOnChart = function(pos, sd) {
+    if (sd !== undefined) {
+        for (var sat in sd) {
+            var satellite = sd[sat];
+            var satellitePosition = deadReckoning(pos, (90 - satellite.elevation) * 60, satellite.azimuth);
+        //  console.log("Plotting sat " + satellite.svID + " at " + JSON.stringify(satellitePosition));
+            plotSatelliteOnChart(satellitePosition, satellite.svID);
+        }
+    }
 };
 
 var getSNRColor = function(snr) {

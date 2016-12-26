@@ -45,6 +45,10 @@
         var canvas = "mapCanvas";
         plotPosToCanvas(canvas, val.lat, val.lng, label);
       };
+
+      var plotSatelliteOnChart = function(position, label) {
+          plotPosToCanvas("mapCanvas", position.lat, position.lng, label);
+      };
     </script>
   </head>
   <body>

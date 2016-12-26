@@ -17,7 +17,7 @@ public final class GeomUtil {
 	public static final int LEADING_SIGN = 0;
 	public static final int TRAILING_SIGN = 1;
 
-	public final static String DEGREE_SYMBOL = "�";
+	public final static String DEGREE_SYMBOL = "\u00b0";
 
 	public static class PolyAngle {
 
@@ -91,9 +91,9 @@ public final class GeomUtil {
 	public static double sexToDec(String fullString) throws RuntimeException {
 		try {
 			String sgn = fullString.substring(0, 1);
-			int degSignIndex = fullString.indexOf("�");
+			int degSignIndex = fullString.indexOf(DEGREE_SYMBOL);
 			if (degSignIndex < 0)
-				degSignIndex = fullString.indexOf("�");
+				degSignIndex = fullString.indexOf(DEGREE_SYMBOL);
 			String degrees = fullString.substring(2, degSignIndex);
 			String minutes = "";
 			String seconds = "";
