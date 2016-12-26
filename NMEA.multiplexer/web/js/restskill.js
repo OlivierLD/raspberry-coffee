@@ -672,7 +672,7 @@ var manageMuxVerbose = function(cb) {
     updateMux.done(function(value) {
         console.log("Done:", value);
     });
-    updateMuxfail(function(error, errmess) {
+    updateMux.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
             var mess = JSON.parse(errmess);
