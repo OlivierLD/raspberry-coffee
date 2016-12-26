@@ -259,6 +259,9 @@ And any REST client (NodeJS, Postman, your own code, ...) does the job.
 Plug a GPS on the Serial Port, start the multiplexer, and launch [http://localhost:9999/web/gps.demo.html](http://localhost:9999/web/gps.demo.html) in a browser.
 This is pinging the `/cache` REST service every second.
 
+Satellites are displayed on the chart, and on the right pane.
+When available, Speed Over Ground and Course Over Ground are displayed too. 
+
 
 ## TODO
 - 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
