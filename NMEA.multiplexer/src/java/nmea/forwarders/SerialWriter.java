@@ -76,8 +76,8 @@ public class SerialWriter implements Forwarder {
 			} catch (IOException ioe) {
 				throw new RuntimeException(ioe);
 			}
-		} else {
-			System.err.println("Serial Output is not opened.");
+//	} else {
+//		System.err.println("Serial Output is not opened.");
 		}
 	}
 
