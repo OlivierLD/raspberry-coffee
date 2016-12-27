@@ -14,6 +14,13 @@ It runs the same - hopefully - on Windows, Mac, Linux, no need for `screen` or `
 
 Next, we'll see how to transfer files (text and binaries).
  
+### Enable / disable the serial console.
+The serial-console must have been enabled for this to work.
+```bash
+ $> sudo raspi-config
+``` 
+Go to **“8.Advance Function menu”**, then **“A8.Serial”** and select **“No”** to disable shell terminal on the serial port.
+ 
 ### Examples
 The most important is probably to set the `java.library.path` to its right value. `RXTXcomm.jar` uses Java Native Interface (`JNI`), to invoke 
 some native library(ies). The `java.library.path` tells Java where to look for them.
