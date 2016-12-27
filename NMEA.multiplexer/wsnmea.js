@@ -177,7 +177,10 @@ wsServer.on('request', function(request) {
 
     // user sent some message
     connection.on('message', function(message) {
+        if (verbose) {
         //  console.log("On Message:" + JSON.stringify(message));
+            console.log("On Message:", message);
+        }
         if (message.type === 'utf8') {
             // accept only text
       //    console.log((new Date()) + ' Received Message: ' + message.utf8Data);

@@ -37,6 +37,7 @@ import nmea.forwarders.SerialWriter;
 import nmea.forwarders.TCPWriter;
 import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
+import nmea.forwarders.WebSocketProcessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -330,6 +331,21 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						opFwd = nmeaDataForwarders.stream()
 										.filter(fwd -> fwd instanceof WebSocketWriter &&
 														((WebSocketWriter) fwd).getWsUri().equals(wsBean.getWsUri()))
+										.findFirst();
+						response = removeForwarderIfPresent(request, opFwd);
+					} else {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
+					}
+					break;
+				case "wsp":
+					gson = new GsonBuilder().create();
+					if (request.getContent() != null) {
+						StringReader stringReader = new StringReader(new String(request.getContent()));
+						WebSocketProcessor.WSBean wsBean = gson.fromJson(stringReader, WebSocketProcessor.WSBean.class);
+						opFwd = nmeaDataForwarders.stream()
+										.filter(fwd -> fwd instanceof WebSocketProcessor &&
+														((WebSocketProcessor) fwd).getWsUri().equals(wsBean.getWsUri()))
 										.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
@@ -638,6 +654,31 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					// Already there
 					response.setStatus(HTTPServer.Response.BAD_REQUEST);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'ws' already exists");
+				}
+				break;
+			case "wsp":
+				WebSocketProcessor.WSBean wspJson = new Gson().fromJson(new String(request.getContent()), WebSocketProcessor.WSBean.class);
+				// Check if not there yet.
+				opFwd = nmeaDataForwarders.stream()
+								.filter(fwd -> fwd instanceof WebSocketProcessor &&
+												((WebSocketProcessor) fwd).getWsUri() == wspJson.getWsUri())
+								.findFirst();
+				if (!opFwd.isPresent()) {
+					try {
+						Forwarder wspForwarder = new WebSocketProcessor(wspJson.getWsUri());
+						nmeaDataForwarders.add(wspForwarder);
+						String content = new Gson().toJson(wspForwarder.getBean());
+						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+					} catch (Exception ex) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+						ex.printStackTrace();
+					}
+				} else {
+					// Already there
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'wsp' already exists");
 				}
 				break;
 			default:
@@ -1417,7 +1458,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 		thereIsMore = true;
 		int fwdIdx = 1;
-		// 2 - Output channels
+		// 2 - Output channels, aka forwarders
 		while (thereIsMore) {
 			String typeProp = String.format("forward.%s.type", MUX_IDX_FMT.format(fwdIdx));
 			String type = muxProps.getProperty(typeProp);
@@ -1457,6 +1498,15 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						String wsUri = muxProps.getProperty(String.format("forward.%s.wsuri", MUX_IDX_FMT.format(fwdIdx)));
 						try {
 							Forwarder wsForwarder = new WebSocketWriter(wsUri);
+							nmeaDataForwarders.add(wsForwarder);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+						break;
+					case "wsp":
+						String wspUri = muxProps.getProperty(String.format("forward.%s.wsuri", MUX_IDX_FMT.format(fwdIdx)));
+						try {
+							Forwarder wsForwarder = new WebSocketProcessor(wspUri);
 							nmeaDataForwarders.add(wsForwarder);
 						} catch (Exception ex) {
 							ex.printStackTrace();
