@@ -388,7 +388,7 @@
       <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="refresh_icon.png" width="10" height="12"/></span>
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
     </div>
-    <div id="lists" style="padding: 1px; border-radius: 5px; overflow-y: auto; border: 1px solid #CCC; height: 150px;"></div>
+    <div id="lists" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
     </p>
     <p>
       <button onclick="showAddChannel();">Add a Channel</button>&nbsp;
@@ -396,7 +396,7 @@
       <button onclick="showAddComputer();">Add a Computer</button>
       <div id="add-channel" style="display: none;">
         <h4>Add a Channel</h4>
-        <table>
+        <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
           <tr>
             <td valign="top">
               <select id="channel-select" onchange="channelSelectManager();">
@@ -474,7 +474,7 @@
       </div>
       <div id="add-forwarder" style="display: none;">
         <h4>Add a forwarder</h4>
-        <table>
+        <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
           <tr>
             <td valign="top">
               <select id="forwarder-select" onchange="forwardSelectManager();">
@@ -553,7 +553,7 @@
       </div>
       <div id="add-computer" style="display: none;">
         <h4>Add a computer</h4>
-        <table>
+        <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
           <tr>
             <td valign="top">
               <select id="computer-select" onchange="forwardSelectManager();">

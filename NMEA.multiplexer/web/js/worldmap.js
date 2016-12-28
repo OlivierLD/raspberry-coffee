@@ -125,7 +125,7 @@ var drawWorldMap = function(canvasName) {
 var plotPosToCanvas = function(canvasName, lat, lng, label, color) {
   var canvas = document.getElementById(canvasName); 
   var pt = posToCanvas(canvas, lat, lng);
-  plotPoint(canvasName, pt, "red");
+  plotPoint(canvasName, pt, (color !== undefined ? color : "red"));
   if (label !== undefined) {
     try {
       var context = canvas.getContext('2d');

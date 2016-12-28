@@ -1,6 +1,8 @@
 # NMEA Multiplexer
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
 
+Designed to run on very small boards, like a Raspberry PI Zero, and with no Internet access.
+
 ### Includes
 - NMEA Strings Parser
 - NMEA Strings generator
@@ -22,16 +24,18 @@ and can be seen as a _channel_.
 Also, a _computer_ is using NMEA data collected by the Multiplexer to produce other NMEA data that will be broadcasted by the _forwarders_.
 For example, True Wind computed with Apparent Wind data and the GPS data.
 
-_Note_: to compute the required data, we have a cache, where the data required by the nmea.computers are pushed.
-This cache is initialized before starting the nmea.computers, with parameters contained in the 
+_Note_: to compute the required data, we have a **cache**, where the data required _by_ the computers are pushed.
+This cache is initialized before starting the computers, with parameters contained in the
 properties file used at startup.
 
-Finally, we have _tranformers_, that transform NMEA data into another format, and then behave like a a regular _forwarder_ to provide them to whoever is interested.
- A _transformer_ is also a _forwarder_.
+This cache is necessary to perform damping and smoothing operations - among others.
+
+Finally, we have _tranformers_, that transform NMEA data into another (proprietary) format, and then behave like a a regular _forwarder_ to provide them to whoever is interested.
+ A _transformer_ is also a _forwarder_. See below examples of `transformers`.
 
 ##### Examples
 Channels:
-- **Serial** reads NMEA data from a Serial Port  
+- **Serial** reads NMEA data from a Serial Port
 - **TCP** reads NMEA data from a TCP server
 - **WebSocket** reads NMEA data from a WebSocket server (this is a WebSocket client)
 - **File** reads NMEA data from a log file
@@ -58,6 +62,17 @@ Transformers (incubating):
 - **GPSD** data
 - **Custom** data
 
+##### A word about the Current Computer
+A basic approach to compute the current would be to do it by instant triangulation, figuring the Course Made Good (CMG)
+and comparing it with the GPS Data (Course and Speed Over Ground).
+A better approach turned out to compute the current over a given period of time.
+For example, you can perform this calculation by comparing the position you should be at with the CMG only (i.e. as if there was no current)
+ and the one given by the GPS, over periods like 30 seconds, 1 minute, 10 minutes, etc, using a smoothing of the Boat Speed (BSP) and the CMG.
+ The cache is designed to manage several such computations in parallel, they are discriminated by the lenght of their time-buffer (30 seconds, 5 minutes, etc).
+The accuracy of such a computations is _much higher_ than the instant triangulation.
+See [this article](http://www.lediouris.net/RaspberryPI/_Articles/readme.html) for details.
+
+#### Overview
 ![Overall Overview](./overview.png "Overview")
 _There is no Transformer on the picture above_
 
@@ -78,6 +93,64 @@ To run it, modify `mux.sh` to fit your environment, and run
 ```
  $> ./mux.sh
 ```
+
+##### About transformers
+There is an example of a `transformer` in `WebSocketProcessor.java`. As you would see, it is just implementing the `Forwarder` interface,
+and this is where it fits in the picture above.
+A `Transformer` is just reworking the data before forwarding them as a regular `forwarder` would.
+
+The example in `WebSocketProcessor.java` is transforming the NMEA Data in the format expected by a Pebble (this is a smart watch) application.
+See it [here](https://github.com/OlivierLD/pebble/tree/master/NMEA.app). Data are expected as a json object, over WebSocket.
+The expected data look like:
+```json
+{
+    "gpstime": 1290377346000,
+    "gpsdatetime": 1290377346000,
+    "wp": "RANGI   ",
+    "d2wp": 561.6,
+    "b2wp": 230,
+    "xte": 3.0,
+    "lat": -9.1102,
+    "lng": -140.21108333333333,
+    "gpssolardate": 1290343695340,
+    "log": 3013.0,
+    "daylog": 12.4,
+    "cog": 218,
+    "sog": 7.2,
+    "awa": -121,
+    "aws": 17.8,
+    "dbt": 1.7000000476837158,
+    "hdg": 220,
+    "bsp": 6.6,
+    "wtemp": 26.5,
+    "atemp": 0.0,
+    "D": 10.0,
+    "d": -0.9830777902388692,
+    "W": 9.01692220976113,
+    "leeway": 0.0,
+    "cmg": 229,
+    "tws": 21.4,
+    "twa": -139,
+    "twd": 89,
+    "cdr": 149,
+    "csp": 0.29,
+    "prmsl": 0.0,
+    "hum": 0.0
+}
+```
+The `transformer` reads the data from the cache and generates such an object. Then it is sent to a WebSocket server.
+###### To run this transformer example
+Start the websocket server, on a port of your choice:
+```bash
+ $> node wsnmea.js -port:1234
+```
+Define your transformer in the `properties` file:
+```properties
+forward.07.type=wsp
+forward.07.wsuri=ws://localhost:1234/
+```
+Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/pebble/tree/master/NMEA.app) (WebSocket URI), and you are good to go.
+
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
@@ -105,7 +178,7 @@ with.http.server=yes
 http.port=9999
 
 ```
-This HTTP Server is designed and written to run on small nmea.computers (like the Raspberry PI Zero).
+This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
 It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
 ### Supported end-points (for now)

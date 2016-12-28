@@ -27,7 +27,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	public RMIServer(int port, String bindingName) throws RemoteException {
 		// Make sure the cache has been initialized.
 		if (ApplicationContext.getInstance().getDataCache() == null) {
-			throw new RuntimeException("Init the Cache first. See the properties file used at started."); // Oops
+			throw new RuntimeException("Init the Cache first. See the properties file used at startup."); // Oops
 		}
 
 		this.registryPort = port;
