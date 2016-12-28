@@ -18,8 +18,7 @@ object SampleOne {
     println("Hello Scala!")
 
     val bindingName = "RMI-NMEA"
-    val name = "raspberrypi3.att.net"
-    // "olediouris-mbp" // "10.10.226.181";
+    val name = "olediouris-mbp" // "raspberrypi3.att.net" // "10.10.226.181";
     val port = "1099"
     println(s"Looking up $bindingName on $name:$port ...")
 
@@ -94,10 +93,11 @@ object SampleOne {
       })
     } catch {
       case e: Exception => {
-        System.err.println("Compute exception:")
+        Console.err.println("Compute exception:")
         e.printStackTrace()
       }
     }
+    println("Done!")
   }
 }
 

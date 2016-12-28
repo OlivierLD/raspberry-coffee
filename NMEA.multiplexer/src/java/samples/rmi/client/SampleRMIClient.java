@@ -30,7 +30,7 @@ public class SampleRMIClient {
 
 		if (args.length != 2) {
 			System.out.println("Arguments: [RMI Server Name] [Port]");
-			name = "192.168.1.177"; // "olediouris-mbp.att.net"; // "raspberrypi3.att.net";
+			name = "olediouris-mbp"; // "raspberrypi3.att.net";
 			port = "1099";
 		} else {
 			name = args[0];
@@ -60,13 +60,20 @@ public class SampleRMIClient {
 
 			NMEACache cacheTask = new NMEACache();
 			before = System.currentTimeMillis();
-			NMEADataCache cache = comp.executeTask(cacheTask);
+			NMEADataCache cache = null;
+			try {
+				cache = comp.executeTask(cacheTask);;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			after = System.currentTimeMillis();
 			System.out.println(String.format("NMEACache execution took %s ms.", NumberFormat.getInstance().format(after - before)));
-			Object position = cache.get(NMEADataCache.POSITION);
-			System.out.println("Position is a " + position.getClass().getName());
-			if (position instanceof GeoPos) {
-				System.out.println(String.format("Position is %s (Grid Square %s)", ((GeoPos)position).toString(), ((GeoPos)position).gridSquare()));
+			if (cache != null) {
+				Object position = cache.get(NMEADataCache.POSITION);
+				System.out.println("Position is a " + position.getClass().getName());
+				if (position instanceof GeoPos) {
+					System.out.println(String.format("Position is %s (Grid Square %s)", ((GeoPos) position).toString(), ((GeoPos) position).gridSquare()));
+				}
 			}
 
 			try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
@@ -86,23 +93,48 @@ public class SampleRMIClient {
 			// Instant: CSP & CDR
 			for (int i=0; i<50; i++) {
 				before = System.currentTimeMillis();
-				nmea.parser.TrueWind tw = comp.executeTask(trueWind);
-				after = System.currentTimeMillis();
-				System.out.println(String.format("TrueWind execution took %s ms.", NumberFormat.getInstance().format(after - before)));
-				System.out.println(String.format("TW is %f knots, from %d", tw.speed, tw.angle));
+				try {
+					nmea.parser.TrueWind tw = comp.executeTask(trueWind);
+					after = System.currentTimeMillis();
+					System.out.println(String.format("TrueWind execution took %s ms.", NumberFormat.getInstance().format(after - before)));
+					System.out.println(String.format("TW is %f knots, from %d", tw.speed, tw.angle));
+				} catch (Exception ex) {
+					System.err.println("Ooops! TW:" + ex.toString());
+				}
+				try {
+					Current calc = comp.executeTask(calculatedCurrent);
+					Current inst = comp.executeTask(instantCurrent);
 
-				Current calc = comp.executeTask(calculatedCurrent);
-				Current inst = comp.executeTask(instantCurrent);
-
-				System.out.println(String.format("Instant Current    %f knots, dir %d", inst.speed, inst.angle));
-				System.out.println(String.format("Calculated Current %f knots, dir %d", calc.speed, calc.angle));
-
+					System.out.println(String.format("Instant Current    %f knots, dir %d", inst.speed, inst.angle));
+					System.out.println(String.format("Calculated Current %f knots, dir %d", calc.speed, calc.angle));
+				} catch (Exception ex) {
+					System.err.println("Ooops! Current:" + ex.toString());
+				}
 				try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
+			}
+			// Finish with the whole cache
+			before = System.currentTimeMillis();
+			cache = null;
+			try {
+				cache = comp.executeTask(cacheTask);;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			after = System.currentTimeMillis();
+			System.out.println(String.format("NMEACache execution took %s ms.", NumberFormat.getInstance().format(after - before)));
+			if (cache != null) {
+				Object position = cache.get(NMEADataCache.POSITION);
+				System.out.println("Position is a " + position.getClass().getName());
+				if (position instanceof GeoPos) {
+					System.out.println(String.format("Position is %s (Grid Square %s)", ((GeoPos) position).toString(), ((GeoPos) position).gridSquare()));
+				}
 			}
 
 		} catch (Exception e) {
 			System.err.println("Compute exception:");
 			e.printStackTrace();
 		}
+
+		System.out.println("Done.");
 	}
 }

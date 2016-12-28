@@ -119,7 +119,7 @@ var plotSatellitesOnChart = function(pos, sd) {
             var satellite = sd[sat];
             var satellitePosition = deadReckoning(pos, (90 - satellite.elevation) * 60, satellite.azimuth);
         //  console.log("Plotting sat " + satellite.svID + " at " + JSON.stringify(satellitePosition));
-            plotSatelliteOnChart(satellitePosition, satellite.svID);
+            plotSatelliteOnChart(satellitePosition, satellite.svID, getSNRColor(satellite.snr));
         }
     }
 };

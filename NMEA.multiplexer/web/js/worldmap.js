@@ -122,14 +122,14 @@ var drawWorldMap = function(canvasName) {
 //console.log("Operation completed in " + (end - start) + " ms.");
 };
 
-var plotPosToCanvas = function(canvasName, lat, lng, label) {
+var plotPosToCanvas = function(canvasName, lat, lng, label, color) {
   var canvas = document.getElementById(canvasName); 
   var pt = posToCanvas(canvas, lat, lng);
   plotPoint(canvasName, pt, "red");
   if (label !== undefined) {
     try {
       var context = canvas.getContext('2d');
-      context.fillStyle = "red";
+      context.fillStyle = (color !== undefined ? color : "red");
       context.fillText(label, Math.round(pt.x) + 3, Math.round(pt.y) - 3);
     } catch (err) { // Firefox has some glitches here
       if (console.log !== undefined) {
