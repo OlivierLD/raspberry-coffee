@@ -23,7 +23,9 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 
 /**
+ * This is an example of a transformer.
  * To be used with other apps, like the pebble one.
+ * The transformer turns the content of the NMEA Cache into the expected format.
  *
  * See https://github.com/OlivierLD/pebble/tree/master/NMEA.app
  */
@@ -91,7 +93,7 @@ public class WebSocketProcessor implements Forwarder {
 	public WebSocketProcessor(String serverURL) throws Exception {
 		// Make sure the cache has been initialized.
 		if (ApplicationContext.getInstance().getDataCache() == null) {
-			throw new RuntimeException("Init the Cache first. See the properties file used at started."); // Oops
+			throw new RuntimeException("Init the Cache first. See the properties file used at startup."); // Oops
 		}
 
 		this.wsUri = serverURL;
