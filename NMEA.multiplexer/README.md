@@ -166,7 +166,7 @@ with.http.server=yes
 http.port=9999
 
 ```
-This HTTP Server is designed and written to run on small nmea.computers (like the Raspberry PI Zero).
+This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
 It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
 ### Supported end-points (for now)
