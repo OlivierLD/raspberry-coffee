@@ -3,11 +3,16 @@ package nmea.forwarders;
 import com.google.gson.Gson;
 import context.ApplicationContext;
 import context.NMEADataCache;
+import nmea.parser.Speed;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 
+/**
+ * To be used with other apps, like the pebble one.
+ *
+ */
 public class WebSocketProcessor implements Forwarder {
 	private WebSocketClient wsClient = null;
 	private boolean isConnected = false;
@@ -102,12 +107,16 @@ public class WebSocketProcessor implements Forwarder {
 					NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 					// Populate bean
 					CacheBean bean = new CacheBean();
-
-					bean.atemp = 18.0;
-					bean.bsp = 8.97;
+					if (cache != null) {
+						Object bsp = cache.get(NMEADataCache.BSP);
+						if (bsp != null) {
+							bean.bsp = ((Speed)bsp).getValue();
+						}
+						// TODO: All the others...
+					}
 
 					String content = new Gson().toJson(bean);
-					write(content.getBytes());
+					broadcast(content.getBytes());
 
 					try { Thread.sleep(1000L); } catch (Exception ex) {}
 				}
@@ -121,8 +130,7 @@ public class WebSocketProcessor implements Forwarder {
 		return this.wsUri;
 	}
 
-	@Override
-	public void write(byte[] message) {
+	public void broadcast(byte[] message) {
 		try {
 			String mess = new String(message);
 			if (!mess.isEmpty() && isConnected) {
@@ -131,6 +139,10 @@ public class WebSocketProcessor implements Forwarder {
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+
+	@Override
+	public void write(byte[] message) {
 	}
 
 	@Override
