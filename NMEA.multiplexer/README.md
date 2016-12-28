@@ -58,6 +58,7 @@ Transformers (incubating):
 - **GPSD** data
 - **Custom** data
 
+#### Overview
 ![Overall Overview](./overview.png "Overview")
 _There is no Transformer on the picture above_
 
@@ -79,7 +80,7 @@ To run it, modify `mux.sh` to fit your environment, and run
  $> ./mux.sh
 ```
 
-###### About transformers
+##### About transformers
 There is an example of a `transformer` in `WebSocketProcessor.java`. As you would see, it is just implementing the `Forwarder` interface,
 and this is where it fits in the picture below.
 A `Transformer` is just reworking the data before forwarding them as a regular `forwarder` would.
