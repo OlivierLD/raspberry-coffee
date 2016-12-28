@@ -19,7 +19,7 @@ The serial-console must have been enabled for this to work.
 ```bash
  $> sudo raspi-config
 ``` 
-Go to **“8.Advance Function menu”**, then **“A8.Serial”** and select **“No”** to disable shell terminal on the serial port.
+Go to **“9 Advanced Function menu”**, then **“A8.Serial”** and select **“No”** to disable shell terminal on the serial port.
  
 ### Examples
 The most important is probably to set the `java.library.path` to its right value. `RXTXcomm.jar` uses Java Native Interface (`JNI`), to invoke 
