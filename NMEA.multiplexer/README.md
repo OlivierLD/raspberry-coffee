@@ -58,6 +58,66 @@ Transformers (incubating):
 - **GPSD** data
 - **Custom** data
 
+###### About transformers
+There is an example of a `transformer` in `WebSocketProcessor.java`. As you would see, it is just implementing the `Forwarder` interface,
+and this is where it fits in the picture below.
+A `Transformer` is just reworking the data before forwarding them as a regular `forwarder` would.
+
+The example in `WebSocketProcessor.java` is transforming the NMEA Data in the format expected by a Pebble (this is a smart watch) application.
+See it [here](https://github.com/OlivierLD/pebble/tree/master/NMEA.app). Data are expected as a json object, over WebSocket.
+The expectd data look like:
+```json
+{
+  "wtemp": 26.5,
+  "gpstime": 1290377286000,
+  "gpstimefmt": "14:08:06 UTC",
+  "d2wp": 561.7,
+  "cog": 223,
+  "leeway": 0,
+  "csp": 0.79,
+  "bsp": 6.83,
+  "lat": -9.10875,
+  "lng": -140.20975,
+  "pos": "S  09°06.53 / W 140°12.59",
+  "b2wp": 230,
+  "xte": 3,
+  "gpsdatetime": 1290377286000,
+  "gpsdatetimefmt": "21 Nov 2010 14:08:06 UTC",
+  "D": 10,
+  "aws": 14.6,
+  "cdr": 140,
+  "towp": "RANGI   ",
+  "tws": 18.96,
+  "dbt": 1.6,
+  "log": 3013,
+  "awa": -126,
+  "hdg": 229,
+  "cmg": 227,
+  "twd": 85,
+  "prmsl": 0,
+  "d": -1,
+  "twa": -143,
+  "daylog": 12.3,
+  "sog": 6.91,
+  "gpssolardate": 1290343635660,
+  "vmgwind": -5.11,
+  "vmgwp": 6.85
+}
+```
+The `transformer` reads the data from the cache and generates such an object. Then it is sent to a WebSocket server.
+###### To run this transfoemre example
+Start the websocket server, on a port of your choice:
+```bash
+ $> node wsnmea.js -port:1234
+```
+Define your transformer in the `properties` file:
+```properties
+forward.07.type=wsp
+forward.07.wsuri=ws://localhost:1234/
+```
+Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/pebble/tree/master/NMEA.app) (WebSocket URI), and you are good to go.
+
+
 ![Overall Overview](./overview.png "Overview")
 _There is no Transformer on the picture above_
 

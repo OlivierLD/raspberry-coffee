@@ -12,6 +12,7 @@ import java.net.URI;
 /**
  * To be used with other apps, like the pebble one.
  *
+ * See https://github.com/OlivierLD/pebble/tree/master/NMEA.app
  */
 public class WebSocketProcessor implements Forwarder {
 	private WebSocketClient wsClient = null;
