@@ -58,6 +58,27 @@ Transformers (incubating):
 - **GPSD** data
 - **Custom** data
 
+![Overall Overview](./overview.png "Overview")
+_There is no Transformer on the picture above_
+
+#### Note
+There is an **rmi** forwarder. This is a work in progress, but it works.
+It is feeding an RMI server that can then be accessed by an RMI client.
+See an example of such a client in `samples.rmi.client.SampleRMIClient`.
+
+### To see it at work
+See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
+See it to understand its content (should be clear enough).
+
+To compile and build:
+```
+ $> ../gradlew shadowJar
+```
+To run it, modify `mux.sh` to fit your environment, and run
+```
+ $> ./mux.sh
+```
+
 ###### About transformers
 There is an example of a `transformer` in `WebSocketProcessor.java`. As you would see, it is just implementing the `Forwarder` interface,
 and this is where it fits in the picture below.
@@ -65,7 +86,7 @@ A `Transformer` is just reworking the data before forwarding them as a regular `
 
 The example in `WebSocketProcessor.java` is transforming the NMEA Data in the format expected by a Pebble (this is a smart watch) application.
 See it [here](https://github.com/OlivierLD/pebble/tree/master/NMEA.app). Data are expected as a json object, over WebSocket.
-The expectd data look like:
+The expected data look like:
 ```json
 {
   "wtemp": 26.5,
@@ -105,7 +126,7 @@ The expectd data look like:
 }
 ```
 The `transformer` reads the data from the cache and generates such an object. Then it is sent to a WebSocket server.
-###### To run this transfoemre example
+###### To run this transformer example
 Start the websocket server, on a port of your choice:
 ```bash
  $> node wsnmea.js -port:1234
@@ -117,27 +138,6 @@ forward.07.wsuri=ws://localhost:1234/
 ```
 Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/pebble/tree/master/NMEA.app) (WebSocket URI), and you are good to go.
 
-
-![Overall Overview](./overview.png "Overview")
-_There is no Transformer on the picture above_
-
-#### Note
-There is an **rmi** forwarder. This is a work in progress, but it works.
-It is feeding an RMI server that can then be accessed by an RMI client.
-See an example of such a client in `samples.rmi.client.SampleRMIClient`.
-
-### To see it at work
-See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
-See it to understand its content (should be clear enough).
-
-To compile and build:
-```
- $> ../gradlew shadowJar
-```
-To run it, modify `mux.sh` to fit your environment, and run
-```
- $> ./mux.sh
-```
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
