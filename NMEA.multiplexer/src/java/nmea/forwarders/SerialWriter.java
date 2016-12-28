@@ -71,13 +71,16 @@ public class SerialWriter implements Forwarder {
 	public void write(byte[] message) {
 		if (this.out != null) {
 			try {
+				if ("true".equals(System.getProperty("serial.verbose", "false"))) {
+					System.out.println(String.format("Writing to %s:%d [%s]", this.comPort, this.br, new String(message)));
+				}
 				this.out.write((new String(message) + "\r\n").getBytes());
 				this.out.flush();
 			} catch (IOException ioe) {
 				throw new RuntimeException(ioe);
 			}
-//	} else {
-//		System.err.println("Serial Output is not opened.");
+		} else if ("true".equals(System.getProperty("serial.verbose", "false"))) {
+			System.err.println("Serial Output is not opened.");
 		}
 	}
 
