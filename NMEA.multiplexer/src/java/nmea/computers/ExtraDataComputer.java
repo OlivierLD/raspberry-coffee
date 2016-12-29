@@ -296,6 +296,10 @@ public class ExtraDataComputer extends Computer {
 		}
 	}
 
+	public void resetCurrentComputers() {
+		this.longTimeCurrentCalculator.stream().forEach(ltcc -> ltcc.resetBuffers());
+	}
+
 	public static class ComputerBean {
 		private String cls;
 		private String type = "tw-current";

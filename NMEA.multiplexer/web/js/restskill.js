@@ -267,6 +267,33 @@ var updateMuxVerbose = function(value) {
     return deferred.promise();
 };
 
+var resetDataCache = function() {
+    var deferred = $.Deferred(),  // a jQuery deferred
+        url = '/cache',
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = 10000;
+
+    xhr.open('DELETE', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.send(); // No payload
+
+    var requestTimer = setTimeout(function() {
+        xhr.abort();
+        deferred.reject(408, { message: 'Timeout'});
+    }, TIMEOUT);
+
+    xhr.onload = function() {
+        clearTimeout(requestTimer);
+        if (xhr.status === 200) {
+            deferred.resolve(xhr.response);
+        } else {
+            deferred.reject(xhr.status, xhr.response);
+        }
+    };
+    return deferred.promise();
+};
+
 var deleteForwarder = function(forwarder) {
     var deferred = $.Deferred(),  // a jQuery deferred
         url = '/forwarders/' + forwarder.type,
@@ -681,6 +708,23 @@ var manageMuxVerbose = function(cb) {
             }
         }
         alert("Failed to update multiplexer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
+};
+
+var resetCache = function() {
+    var reset = resetDataCache();
+    reset.done(function(value) {
+        console.log("Done:", value);
+    });
+    reset.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to reset data cache..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 

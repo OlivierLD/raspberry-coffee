@@ -111,7 +111,7 @@ var drawWorldMap = function(canvasName) {
       context.lineWidth = 1;
       context.strokeStyle = 'black';
       context.stroke();
-      context.fillStyle = "cyan";
+      context.fillStyle = "goldenrod";
       context.fill();
       context.closePath();
     }
