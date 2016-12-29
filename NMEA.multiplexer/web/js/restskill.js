@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    // Nothing.
 });
 
 var getSerialPorts = function() {
