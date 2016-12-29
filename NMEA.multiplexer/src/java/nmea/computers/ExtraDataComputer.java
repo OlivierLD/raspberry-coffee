@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Extra Data Computer. True Wind and Current.
  *
- * The NMEADataCache must have been initalized.
+ * The NMEADataCache must have been initialized.
  * See {@link ApplicationContext#initCache(String, double, double, double, double, double, double, int)}.
  * <br>
  * True Wind calculation requires:
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * <tr><td>GPS: COG & SOG, Declination</td><td>RMC, VTG, HDM</td></tr>
  * <tr><td>AWS, AWA</td><td>MWV, VWR</td></tr>
  * <tr><td>TRUE Heading</td><td>VHW, HDT, HDM</td></tr>
- * <tr><td>Leeway</td><td><i>Estimated</i></td></tr>
+ * <tr><td>Leeway</td><td><i>Estimated</i> (initialization parameter)</td></tr>
  * </table>
  * Also takes care of possible corrections:
  * <ul>
