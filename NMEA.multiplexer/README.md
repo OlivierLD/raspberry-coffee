@@ -174,7 +174,7 @@ Make sure you have configured the Pebble application [as required](https://githu
       <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.02.png" alt="Choose the channel">
     </td>
     <td>
-      Srcoll...
+      Scroll...
       <br/>
       <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.03.png" alt="Channel list">
     </td>
