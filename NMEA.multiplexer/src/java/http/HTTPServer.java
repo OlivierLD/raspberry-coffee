@@ -391,7 +391,15 @@ public class HTTPServer {
 								}
 							}
 						} else {
-							if (line != null && line.length() != 0) {
+							if (payload != null && payload.length() > 0 && payload.startsWith("?WATCH=")) { // GPSd ?
+								System.out.println(String.format(">>>>>>>> GPSd: [%s]", payload)); // This is the first embryo of a GPSd implementation...
+								// ?WATCH=, ?POLL;, ?DEVICE
+								String json = payload.substring("?WATCH=".length());
+
+								String responsePayload = "{\"class\":\"SKY\",\"device\":\"/dev/pts/1\",\"time\":\"2005-07-08T11:28:07.114Z\",\"xdop\":1.55,\"hdop\":1.24,\"pdop\":1.99,\"satellites\":[{\"PRN\":23,\"el\":6,\"az\":84,\"ss\":0,\"used\":false},{\"PRN\":28,\"el\":7,\"az\":160,\"ss\":0,\"used\":false},{\"PRN\":8,\"el\":66,\"az\":189,\"ss\":44,\"used\":true},{\"PRN\":29,\"el\":13,\"az\":273,\"ss\":0,\"used\":false},{\"PRN\":10,\"el\":51,\"az\":304,\"ss\":29,\"used\":true},{\"PRN\":4,\"el\":15,\"az\":199,\"ss\":36,\"used\":true},{\"PRN\":2,\"el\":34,\"az\":241,\"ss\":43,\"used\":true},{\"PRN\":27,\"el\":71,\"az\":76,\"ss\":43,\"used\":true}]}";
+								out.write(responsePayload.getBytes());
+
+							} else if (line != null && line.length() != 0) {
 								System.out.println(">>>>>>>>>> What?"); // TODO See when/why this happens...
 								System.out.println(">>>>>>>>>> Last line was [" + line + "]");
 								System.out.println(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
