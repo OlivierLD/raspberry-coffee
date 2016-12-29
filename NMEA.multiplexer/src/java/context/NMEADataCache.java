@@ -108,6 +108,7 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 					AWA_OFFSET,
 					HDG_OFFSET,
 					MAX_LEEWAY,
+					DEFAULT_DECLINATION,
 					DEVIATION_FILE,
 					DEVIATION_DATA,
 					DAMPING,
