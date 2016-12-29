@@ -90,8 +90,10 @@ It is feeding an RMI server that can then be accessed by an RMI client.
 See an example of such a client in `samples.rmi.client.SampleRMIClient`.
 
 ### To see it at work
-See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
+See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to.
 See it to understand its content (should be clear enough).
+
+Those settings can be modified once the mux is started, throught the REST API.
 
 To compile and build:
 ```
@@ -176,8 +178,6 @@ Make sure you have configured the Pebble application [as required](https://githu
       <br/>
       <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.03.png" alt="Channel list">
     </td>
-  </tr>
-  <tr>
     <td>
       Choose...
       <br/>
