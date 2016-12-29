@@ -151,7 +151,38 @@ forward.07.wsuri=ws://localhost:1234/
 ```
 Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/pebble/tree/master/NMEA.app) (WebSocket URI), and you are good to go.
 
-![TWD](https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.05.png "TWD displayed on the Pebble")
+<table>
+  <tr>
+    <td>
+      Application list
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.01.png" alt="Start here">
+    </td>
+    <td>
+      Press select to start
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.02.png" alt="Choose the channel">
+    </td>
+    <td>
+      Srcoll...
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.03.png" alt="Channel list">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Choose...
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.04.png" alt="Hit select">
+    </td>
+    <td>
+      Displayed!
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.05.png" alt="Display">
+    </td>
+  </tr>
+</table>
+
 
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.
