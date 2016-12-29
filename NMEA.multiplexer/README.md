@@ -88,7 +88,7 @@ See it to understand its content (should be clear enough).
 
 To compile and build:
 ```
- $> ../gradlew shadowJar
+ $> ../gradlew --daemon shadowJar
 ```
 To run it, modify `mux.sh` to fit your environment, and run
 ```
@@ -215,7 +215,7 @@ http.port=9999
 This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
 It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
-### Supported end-points (for now)
+### Supported end-points
 
 #### List of operations
 A full list of the available REST services is available at 
@@ -225,6 +225,10 @@ A full list of the available REST services is available at
 ![Operations List](./OpList.png "OpList")
 
 ##### Examples
+All the end points and operations are defined in `nmea.mux.GenericNMEAMultiplexer.java`. See the `List<Operation>` named `operations`.
+
+
+
 ```
  GET /serial-ports
 ```
