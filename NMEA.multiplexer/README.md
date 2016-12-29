@@ -3,6 +3,13 @@ Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any o
 
 Designed to run on very small boards, like a Raspberry PI Zero, and with no Internet access.
 
+The operations on the Serial port require `libRxTx`. This is included in the gradle dependencies.
+To be able to use it outside gradle, run (on Linux/Debian/Raspberry PI):
+```bash
+ sudo apt-get install librxtx-java
+```
+See how this is used and referred to in `mux.sh`.
+
 ### Includes
 - NMEA Strings Parser
 - NMEA Strings generator
