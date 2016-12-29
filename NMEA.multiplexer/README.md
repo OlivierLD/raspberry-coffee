@@ -74,7 +74,8 @@ See [this article](http://www.lediouris.net/RaspberryPI/_Articles/readme.html) f
 
 #### Overview
 ![Overall Overview](./overview.png "Overview")
-_There is no Transformer on the picture above_
+
+_Note: There is no Transformer on the picture above_
 
 #### Note
 There is an **rmi** forwarder. This is a work in progress, but it works.
