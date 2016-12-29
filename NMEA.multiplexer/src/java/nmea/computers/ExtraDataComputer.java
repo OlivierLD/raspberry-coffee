@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Extra Data Computer. True Wind and Current.
  *
- * The NMEADataCache must have been initalized.
+ * The NMEADataCache must have been initialized.
  * See {@link ApplicationContext#initCache(String, double, double, double, double, double, double, int)}.
  * <br>
  * True Wind calculation requires:
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * <tr><td>GPS: COG & SOG, Declination</td><td>RMC, VTG, HDM</td></tr>
  * <tr><td>AWS, AWA</td><td>MWV, VWR</td></tr>
  * <tr><td>TRUE Heading</td><td>VHW, HDT, HDM</td></tr>
- * <tr><td>Leeway</td><td><i>Estimated</i></td></tr>
+ * <tr><td>Leeway</td><td><i>Estimated</i> (initialization parameter)</td></tr>
  * </table>
  * Also takes care of possible corrections:
  * <ul>
@@ -296,11 +296,16 @@ public class ExtraDataComputer extends Computer {
 		}
 	}
 
+	public void resetCurrentComputers() {
+		this.longTimeCurrentCalculator.stream().forEach(ltcc -> ltcc.resetBuffers());
+	}
+
 	public static class ComputerBean {
 		private String cls;
 		private String type = "tw-current";
 		private String timeBufferLength = "600000"; // Default is 10 minutes.
 		private int cacheSize = 0;
+		private String tbSize = "";
 		private boolean verbose = false;
 		private String prefix = "OS";
 
@@ -327,6 +332,10 @@ public class ExtraDataComputer extends Computer {
 			this.timeBufferLength = instance.longTimeCurrentCalculator
 							.stream()
 							.map(ltcc -> String.valueOf(ltcc.getBufferLength()))
+							.collect(Collectors.joining(", "));
+			this.tbSize = instance.longTimeCurrentCalculator
+							.stream()
+							.map(ltcc -> String.valueOf(ltcc.getBufferSize()))
 							.collect(Collectors.joining(", "));
 			this.prefix = instance.generatedStringsPrefix;
 		}

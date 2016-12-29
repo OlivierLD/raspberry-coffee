@@ -3,6 +3,13 @@ Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any o
 
 Designed to run on very small boards, like a Raspberry PI Zero, and with no Internet access.
 
+The operations on the Serial port require `libRxTx`. This is included in the gradle dependencies.
+To be able to use it outside gradle, run (on Linux/Debian/Raspberry PI):
+```bash
+ sudo apt-get install librxtx-java
+```
+See how this is used and referred to in `mux.sh`.
+
 ### Includes
 - NMEA Strings Parser
 - NMEA Strings generator
@@ -74,7 +81,8 @@ See [this article](http://www.lediouris.net/RaspberryPI/_Articles/readme.html) f
 
 #### Overview
 ![Overall Overview](./overview.png "Overview")
-_There is no Transformer on the picture above_
+
+_Note: There is no Transformer on the picture above_
 
 #### Note
 There is an **rmi** forwarder. This is a work in progress, but it works.
@@ -82,12 +90,14 @@ It is feeding an RMI server that can then be accessed by an RMI client.
 See an example of such a client in `samples.rmi.client.SampleRMIClient`.
 
 ### To see it at work
-See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to. 
+See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to.
 See it to understand its content (should be clear enough).
+
+Those settings can be modified once the mux is started, throught the REST API.
 
 To compile and build:
 ```
- $> ../gradlew shadowJar
+ $> ../gradlew --daemon shadowJar
 ```
 To run it, modify `mux.sh` to fit your environment, and run
 ```
@@ -151,6 +161,37 @@ forward.07.wsuri=ws://localhost:1234/
 ```
 Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/pebble/tree/master/NMEA.app) (WebSocket URI), and you are good to go.
 
+<table>
+  <tr>
+    <td>
+      Application list
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.01.png" alt="Start here">
+    </td>
+    <td>
+      Press select to start
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.02.png" alt="Choose the channel">
+    </td>
+    <td>
+      Scroll...
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.03.png" alt="Channel list">
+    </td>
+    <td>
+      Choose...
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.04.png" alt="Hit select">
+    </td>
+    <td>
+      Displayed!
+      <br/>
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.05.png" alt="Display">
+    </td>
+  </tr>
+</table>
+
+
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
@@ -181,7 +222,7 @@ http.port=9999
 This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
 It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
-### Supported end-points (for now)
+### Supported end-points
 
 #### List of operations
 A full list of the available REST services is available at 
@@ -191,6 +232,10 @@ A full list of the available REST services is available at
 ![Operations List](./OpList.png "OpList")
 
 ##### Examples
+All the end points and operations are defined in `nmea.mux.GenericNMEAMultiplexer.java`. See the `List<Operation>` named `operations`.
+
+
+
 ```
  GET /serial-ports
 ```

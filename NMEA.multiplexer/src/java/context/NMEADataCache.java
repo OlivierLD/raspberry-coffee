@@ -29,6 +29,7 @@ import nmea.utils.NMEAUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashMap;
@@ -101,6 +102,17 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 	// Damping ArrayList's
 	private int dampingSize = 1;
 
+	private static List<String> NOT_TO_RESET = Arrays.asList(
+					BSP_FACTOR,
+					AWS_FACTOR,
+					AWA_OFFSET,
+					HDG_OFFSET,
+					MAX_LEEWAY,
+					DEVIATION_FILE,
+					DEVIATION_DATA,
+					DAMPING,
+					CALCULATED_CURRENT);
+
 	private transient HashMap<String, List<Object>> dampingMap = new HashMap<String, List<Object>>();
 
 	private long started = 0L;
@@ -115,7 +127,10 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 			System.out.println("| Instantiating an NMEADataCache. |");
 			System.out.println("+=================================+");
 		}
+		init();
+	}
 
+	private void init() {
 		dampingMap.put(BSP, new ArrayList<Object>());
 		dampingMap.put(HDG_TRUE, new ArrayList<Object>());
 		dampingMap.put(AWA, new ArrayList<Object>());
@@ -131,6 +146,20 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 
 		// Initialization
 		this.put(CALCULATED_CURRENT, new HashMap<Long, CurrentDefinition>());
+	}
+
+	public void reset() {
+//	synchronized (this) {
+			this.keySet()
+							.stream()
+							.filter(k -> !NOT_TO_RESET.contains(k))
+							.forEach(k -> this.put(k, null));
+			Map<Long, NMEADataCache.CurrentDefinition> currentMap = (Map<Long, NMEADataCache.CurrentDefinition>)this.get(NMEADataCache.CALCULATED_CURRENT);
+			if (currentMap != null) {
+				currentMap.keySet().stream().forEach(tbl -> currentMap.put(tbl, null));
+			}
+			init();
+//	}
 	}
 
 	@Override

@@ -178,7 +178,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"GET",
 									"/cache",
 									this::getCache,
-									"Get ALL the data in the cache"));
+									"Get ALL the data in the cache"),
+					new Operation(
+									"DELETE",
+									"/cache",
+									this::resetCache,
+									"Reset the cache"));
 
 	public HTTPServer.Response processRequest(HTTPServer.Request request, HTTPServer.Response defaultResponse) {
 		Optional<Operation> opOp = operations
@@ -1175,12 +1180,30 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 
-		JsonElement jsonElement = new Gson().toJsonTree(cache);
-		((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
-
-		String content = jsonElement.toString();
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(cache);
+			((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
+		} catch (Exception ex) {
+			System.err.println("getCache:" + ex.toString());
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response resetCache(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NO_CONTENT);
+
+		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+		cache.reset();
+		// Also reset computers
+		nmeaDataComputers.stream()
+						.filter(channel -> channel instanceof ExtraDataComputer)
+						.forEach(extraDataComputer -> ((ExtraDataComputer)extraDataComputer).resetCurrentComputers());
+		RESTProcessorUtil.generateHappyResponseHeaders(response, 0);
 
 		return response;
 	}

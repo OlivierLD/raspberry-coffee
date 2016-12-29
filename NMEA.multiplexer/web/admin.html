@@ -33,6 +33,12 @@
         margin: 80px auto 0px auto;
         overflow: auto;
       }
+
+      th, td {
+         border: 1px solid #CCC;
+         border-radius: 5px;
+         padding: 3px;
+      }
     </style>
     <script type="text/javascript">
         var channelSelectManager = function() {
@@ -386,6 +392,7 @@
       <span id="showChannels" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Channels list <img src="refresh_icon.png" width="10" height="12"/></span>
       <span id="showForwarders" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Forwarders list <img src="refresh_icon.png" width="10" height="12"/></span>
       <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <button onclick="resetCache();" style="margin-bottom: 3px;">Reset Cache</button>
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
     </div>
     <div id="lists" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
@@ -395,7 +402,8 @@
       <button onclick="showAddForwarder();">Add a Forwarder</button>&nbsp;
       <button onclick="showAddComputer();">Add a Computer</button>
       <div id="add-channel" style="display: none;">
-        <h4>Add a Channel</h4>
+        <hr/>
+        <h4>Add an input Channel</h4>
         <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
           <tr>
             <td valign="top">
@@ -473,6 +481,7 @@
         <button onclick="requestChannelCreation();">Add</button>
       </div>
       <div id="add-forwarder" style="display: none;">
+        <hr/>
         <h4>Add a forwarder</h4>
         <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
           <tr>
@@ -552,6 +561,7 @@
         <button onclick="requestForwardCreation();">Add</button>
       </div>
       <div id="add-computer" style="display: none;">
+        <hr/>
         <h4>Add a computer</h4>
         <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
           <tr>
@@ -569,7 +579,7 @@
                   </tr>
                   <tr>
                     <td>Time Buffer Length</td>
-                    <td><input id="cptr-twc-tbl" type="text" placeholder="600000, 1200000" size="30"></td>
+                    <td><input id="cptr-twc-tbl" type="text" placeholder="60, 120, 300" size="30"> in seconds.</td>
                   </tr>
                 </table>
               </div>

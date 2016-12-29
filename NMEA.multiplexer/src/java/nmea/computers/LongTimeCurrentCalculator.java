@@ -67,12 +67,25 @@ public class LongTimeCurrentCalculator {
 		return bufferLength;
 	}
 
+	public int getBufferSize() {
+		return timeCurrent.size();
+	}
+
 	/**
 	 * et the time buffer length, in ms.
 	 * @param bufferLength in ms.
 	 */
 	public void setBufferLength(long bufferLength) {
 		this.bufferLength = bufferLength;
+	}
+
+	public void resetBuffers() {
+		timeCurrent = new ArrayList<>();
+		timeBuffer = new ArrayList<>();
+		positionBuffer = new ArrayList<>();
+		cmgBuffer = new ArrayList<>();
+		hdgBuffer = new ArrayList<>();
+		bspBuffer = new ArrayList<>();
 	}
 
 	public void start() {

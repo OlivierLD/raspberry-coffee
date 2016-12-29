@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    // Nothing.
 });
 
 var getSerialPorts = function() {
@@ -267,6 +268,33 @@ var updateMuxVerbose = function(value) {
     return deferred.promise();
 };
 
+var resetDataCache = function() {
+    var deferred = $.Deferred(),  // a jQuery deferred
+        url = '/cache',
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = 10000;
+
+    xhr.open('DELETE', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+
+    xhr.send(); // No payload
+
+    var requestTimer = setTimeout(function() {
+        xhr.abort();
+        deferred.reject(408, { message: 'Timeout'});
+    }, TIMEOUT);
+
+    xhr.onload = function() {
+        clearTimeout(requestTimer);
+        if (xhr.status === 200) {
+            deferred.resolve(xhr.response);
+        } else {
+            deferred.reject(xhr.status, xhr.response);
+        }
+    };
+    return deferred.promise();
+};
+
 var deleteForwarder = function(forwarder) {
     var deferred = $.Deferred(),  // a jQuery deferred
         url = '/forwarders/' + forwarder.type,
@@ -385,25 +413,25 @@ var channelList = function() {
           var type = json[i].type;
           switch (type) {
               case 'file':
-                html += ("<tr><td><b>file</b></td><td>" + json[i].file + "</td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                html += ("<tr><td><b>file</b></td><td>" + json[i].file + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                 break;
               case 'serial':
-                  html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'tcp':
-                  html += ("<tr><td><b>tcp</b></td><td>" + json[i].hostname + ":" + json[i].port + "</td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>tcp</b></td><td>" + json[i].hostname + ":" + json[i].port + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'ws':
-                  html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri + "</td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'rnd':
-                  html += ("<tr><td><b>rnd</b></td><td></td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>rnd</b></td><td></td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'bme280':
-                  html += ("<tr><td><b>bme280</b></td><td></td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>bme280</b></td><td></td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               case 'htu21df':
-                  html += ("<tr><td><b>htu21df</b></td><td></td><td><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                  html += ("<tr><td><b>htu21df</b></td><td></td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               default:
                 break;
@@ -488,7 +516,7 @@ var computerList = function() {
             var type = json[i].type;
             switch (type) {
                 case 'tw-current':
-                    html += ("<tr><td valign='top'><b>tw-current</b></td><td valign='top'>Prefix: " + json[i].prefix + "<br>Timebuffer length: " + json[i].timeBufferLength.toLocaleString() + " ms.</td><td valign='top'><input type='checkbox' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td valign='top'><b>tw-current</b></td><td valign='top'>Prefix: " + json[i].prefix + "<br>Timebuffer length: " + json[i].timeBufferLength.toLocaleString() + " ms.</td><td valign='top' align='center'><input type='checkbox' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 default:
                     break;
@@ -684,19 +712,50 @@ var manageMuxVerbose = function(cb) {
     });
 };
 
+var resetCache = function() {
+    var reset = resetDataCache();
+    reset.done(function(value) {
+        console.log("Done:", value);
+    });
+    reset.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            var mess = JSON.parse(errmess);
+            if (mess.message !== undefined) {
+                message = mess.message;
+            }
+        }
+        alert("Failed to reset data cache..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
+};
+
+var addChannelVisible = false;
+var addForwarderVisible = false;
+var addComputerVisible = false;
+
 var showAddChannel = function() {
-    showDivs(true, false, false);
+    addChannelVisible = !addChannelVisible;
+    addForwarderVisible = false;
+    addComputerVisible = false;
+    showDivs(addChannelVisible, addForwarderVisible, addComputerVisible);
 };
 
 var showAddForwarder = function() {
-    showDivs(false, true, false);
+    addChannelVisible = false;
+    addForwarderVisible = !addForwarderVisible;
+    addComputerVisible = false;
+    showDivs(addChannelVisible, addForwarderVisible, addComputerVisible);
 };
 
 var showAddComputer = function() {
-    showDivs(false, false, true);
+    addChannelVisible = false;
+    addForwarderVisible = false;
+    addComputerVisible = !addComputerVisible;
+    showDivs(addChannelVisible, addForwarderVisible, addComputerVisible);
 };
 
 var showDivs = function(channels, forwarders, computers) {
+//  console.log("Displaying divs: channels " + (channels === true ? 'X' : 'O') + " forwarders " + (forwarders === true ? 'X' : 'O') + " computers " + (computers === true ? 'X' : 'O'));
     $("#add-channel").css('display', (channels === true ? 'inline' : 'none'));
     $("#add-forwarder").css('display', (forwarders === true ? 'inline' : 'none'));
     $("#add-computer").css('display', (computers === true ? 'inline' : 'none'));
