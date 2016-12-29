@@ -151,6 +151,8 @@ forward.07.wsuri=ws://localhost:1234/
 ```
 Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/pebble/tree/master/NMEA.app) (WebSocket URI), and you are good to go.
 
+![TWD displayed on the Pebble](https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.05.png "TWD")
+
 #### WebSockets
 WebSocket protocol is supported, in input, and in output.
 If needed, you can start your own local WebSocket server, running on `nodejs`.
