@@ -61,8 +61,16 @@ var onMessage = function (json) {
         drawWorldMap("mapCanvas");
         plotPositionOnChart({lat: json.Position.lat, lng: json.Position.lng});
     }
-    document.getElementById("fixdate").innerHTML = json["GPS Date & Time"].date;
-    nmeaID.innerHTML = '<b>' + json.NMEA + '</b>';
+    try {
+        document.getElementById("fixdate").innerHTML = json["GPS Date & Time"].date;
+    } catch (err) {
+        console.log("Err", err);
+    }
+    try {
+        nmeaID.innerHTML = '<b>' + json.NMEA + '</b>';
+    } catch (err) {
+        console.log("Err", err);
+    }
     if (json["Satellites in view"] !== undefined) {
         generateSatelliteData(json["Satellites in view"]);
         // Satellites on the chart
