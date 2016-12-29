@@ -728,19 +728,33 @@ var resetCache = function() {
     });
 };
 
+var addChannelVisible = false;
+var addForwarderVisible = false;
+var addComputerVisible = false;
+
 var showAddChannel = function() {
-    showDivs(true, false, false);
+    addChannelVisible = !addChannelVisible;
+    addForwarderVisible = false;
+    addComputerVisible = false;
+    showDivs(addChannelVisible, addForwarderVisible, addComputerVisible);
 };
 
 var showAddForwarder = function() {
-    showDivs(false, true, false);
+    addChannelVisible = false;
+    addForwarderVisible = !addForwarderVisible;
+    addComputerVisible = false;
+    showDivs(addChannelVisible, addForwarderVisible, addComputerVisible);
 };
 
 var showAddComputer = function() {
-    showDivs(false, false, true);
+    addChannelVisible = false;
+    addForwarderVisible = false;
+    addComputerVisible = !addComputerVisible;
+    showDivs(addChannelVisible, addForwarderVisible, addComputerVisible);
 };
 
 var showDivs = function(channels, forwarders, computers) {
+//  console.log("Displaying divs: channels " + (channels === true ? 'X' : 'O') + " forwarders " + (forwarders === true ? 'X' : 'O') + " computers " + (computers === true ? 'X' : 'O'));
     $("#add-channel").css('display', (channels === true ? 'inline' : 'none'));
     $("#add-forwarder").css('display', (forwarders === true ? 'inline' : 'none'));
     $("#add-computer").css('display', (computers === true ? 'inline' : 'none'));
