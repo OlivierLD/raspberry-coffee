@@ -67,6 +67,10 @@ public class LongTimeCurrentCalculator {
 		return bufferLength;
 	}
 
+	public int getBufferSize() {
+		return timeCurrent.size();
+	}
+
 	/**
 	 * et the time buffer length, in ms.
 	 * @param bufferLength in ms.

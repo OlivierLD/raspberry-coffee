@@ -305,6 +305,7 @@ public class ExtraDataComputer extends Computer {
 		private String type = "tw-current";
 		private String timeBufferLength = "600000"; // Default is 10 minutes.
 		private int cacheSize = 0;
+		private String tbSize = "";
 		private boolean verbose = false;
 		private String prefix = "OS";
 
@@ -331,6 +332,10 @@ public class ExtraDataComputer extends Computer {
 			this.timeBufferLength = instance.longTimeCurrentCalculator
 							.stream()
 							.map(ltcc -> String.valueOf(ltcc.getBufferLength()))
+							.collect(Collectors.joining(", "));
+			this.tbSize = instance.longTimeCurrentCalculator
+							.stream()
+							.map(ltcc -> String.valueOf(ltcc.getBufferSize()))
 							.collect(Collectors.joining(", "));
 			this.prefix = instance.generatedStringsPrefix;
 		}
