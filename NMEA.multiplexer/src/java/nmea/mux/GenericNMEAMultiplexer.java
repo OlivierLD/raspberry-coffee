@@ -40,6 +40,7 @@ import nmea.forwarders.rmi.RMIServer;
 import nmea.forwarders.WebSocketProcessor;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.text.DecimalFormat;
@@ -1695,7 +1696,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			throw new RuntimeException(String.format("File [%s] not found", propertiesFile));
 		} else {
 			try {
-				definitions.load(new java.io.FileReader(propFile));
+				definitions.load(new FileReader(propFile));
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
