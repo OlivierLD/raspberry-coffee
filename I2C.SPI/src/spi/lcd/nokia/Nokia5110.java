@@ -10,8 +10,8 @@ import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Spi;
 
 /**
- * @see https://learn.adafruit.com/nokia-5110-3310-monochrome-lcd?view=all
- * @see https://learn.adafruit.com/nokia-5110-3310-lcd-python-library?view=all
+ * see https://learn.adafruit.com/nokia-5110-3310-monochrome-lcd?view=all
+ * see https://learn.adafruit.com/nokia-5110-3310-lcd-python-library?view=all
  */
 public class Nokia5110
 {

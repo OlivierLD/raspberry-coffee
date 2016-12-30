@@ -53,7 +53,7 @@ public class WebSocketReader extends NMEAReader {
 	}
 
 	@Override
-	public void read() {
+	public void startReader() {
 		super.enableReading();
 		this.wsClient.connect();
 	}

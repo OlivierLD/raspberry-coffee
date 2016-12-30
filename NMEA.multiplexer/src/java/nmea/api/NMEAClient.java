@@ -5,26 +5,32 @@ import java.util.List;
 
 /**
  * A View. Must be extended to be used from the client.
- * The typical sequence would look like this:
+ * The typical sequence (standalone instance) would look like this:
  * <pre>
- * public class CustomSerialClient extends NMEAClient
- * {
- *   public CustomSerialClient(String s, String[] sa)
- *   {
+ * public class CustomSerialClient extends NMEAClient {
+ *   public CustomSerialClient(String s, String[] sa) {
  *     super(s, sa);
  *   }
  *
- *   public static void main(String[] args)
- *   {
+ *   public static void main(String... args) {
  *     String prefix = "II";
  *     String[] array = {"HDM", "GLL", "XTE", "MWV", "VHW"};
- *     CustomSerialClient customClient = new CustomSerialClient(prefix, array); // Extends NMEAReader
+ *     CustomSerialClient customClient = new CustomSerialClient(prefix, array);
  *     customClient.initClient();
+ *      // CustomXXReader extends NMEAReader
  *     customClient.setReader(new CustomXXReader(customClient.getListeners()));
  *     customClient.startWorking();
  *   }
  * }
  * </pre>
+ *
+ * This is the job of the NMEAClient to create NMEAListeners, and NMEAReader (to which you provide the NMEAListeners) as in the snippet above.
+ * The NMEAClient receives the NMEA Sentences he's interested in through its abstract {@link #dataDetectedEvent(NMEAEvent)} method.
+ *
+ * This <i>abstract</i> class takes care of instantiating its {@link NMEAParser}. This way, the actual client
+ * extending this abstract class does not need to do it.
+ *
+ * In the overwhelming majority of the cases, an NMEAClient will be created along with its NMEAReader companion.
  */
 public abstract class NMEAClient {
 	private List<NMEAListener> NMEAListeners = new ArrayList<NMEAListener>(2);
@@ -32,7 +38,6 @@ public abstract class NMEAClient {
 	private NMEAReader reader;
 	private String devicePrefix = "";
 	private String[] sentenceArray = null;
-//private String NMEA_EOS = null;
 
 	protected boolean verbose = false;
 
@@ -43,7 +48,7 @@ public abstract class NMEAClient {
 	/**
 	 * Create the client
 	 *
-	 * @param prefix   the Device Identifier
+	 * @param prefix   the Device Identifier. Can be null
 	 * @param sentence the String Array containing the NMEA sentence identifiers to read
 	 */
 	public NMEAClient(String prefix,
@@ -82,8 +87,6 @@ public abstract class NMEAClient {
 		parser = new NMEAParser(NMEAListeners);
 		parser.setNmeaPrefix(this.getDevicePrefix());
 		parser.setNmeaSentence(this.getSentenceArray());
-//		if (NMEA_EOS != null)
-//			parser.setEOS(NMEA_EOS);
 	}
 
 	public void setDevicePrefix(String s) {
@@ -101,14 +104,6 @@ public abstract class NMEAClient {
 	public String[] getSentenceArray() {
 		return this.sentenceArray;
 	}
-
-//	public void setEOS(String str) {
-//		NMEA_EOS = str;
-//	}
-
-//	public String getEOS() {
-//		return (parser != null) ? parser.getEOS() : NMEA_EOS;
-//	}
 
 	public void setParser(NMEAParser p) {
 		this.parser = p;
@@ -142,10 +137,8 @@ public abstract class NMEAClient {
 	}
 
 	public void stopDataRead() {
-		for (NMEAListener l : this.getListeners()) {
-			l.stopReading(new NMEAEvent(this));
-		}
-		// Remove listeners?
+		this.getListeners().stream().forEach(listener -> listener.stopReading(new NMEAEvent(this)));
+		// Remove listeners
 		removeAllListeners();
 
 		try {

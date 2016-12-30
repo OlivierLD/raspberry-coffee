@@ -4,8 +4,14 @@ import java.util.List;
 
 /**
  * A Model. This is an abstract class to extend to implement your own data-source.
+ *
  * Examples are given for a file containing the data - that can be used as a simulator,
  * and for a Serial Port, that can be used for the real world.
+ *
+ * The NMEAReader reads the actual NMEA stream. It is invoked by the NMEAClient, that also has
+ * an NMEAParser that makes sense of the NMEA Sentences it is being sent to process.
+ *
+ * The abstract {@link #startReader()} method is here to do the actual reading.
  *
  * @author Olivier Le Diouris
  * @version 1.0
@@ -51,17 +57,11 @@ public abstract class NMEAReader extends Thread {
 	 * @see nmea.api.NMEAParser
 	 */
 	protected void fireDataRead(NMEAEvent e) {
-		for (int i = 0; i < NMEAListeners.size(); i++) {
-			NMEAListener l = NMEAListeners.get(i);
-			l.dataRead(e);
-		}
+		this.NMEAListeners.stream().forEach(listener -> listener.dataRead(e));
 	}
 
 	protected void fireStopReading(NMEAEvent e) {
-		for (int i = 0; i < NMEAListeners.size(); i++) {
-			NMEAListener l = NMEAListeners.get(i);
-			l.stopReading(e);
-		}
+		this.NMEAListeners.stream().forEach(listener -> listener.stopReading(e));
 	}
 
 	public synchronized void addNMEAListener(NMEAListener l) {
@@ -85,21 +85,20 @@ public abstract class NMEAReader extends Thread {
 	/**
 	 * Customize, overwrite this class to get plugged on the right datasource
 	 * like a Serial Port for example.
+	 *
+	 * Use the {@link #canRead()} method to know if you can keep reading.
 	 */
-	public abstract void read() throws Exception;
+	public abstract void startReader() throws Exception;
 
 	public abstract void closeReader() throws Exception;
 
 	public void run() {
-		if (verbose) // nmea.api.NMEAReader
+		if (verbose)
 			System.out.println(this.getClass().getName() + ":Reader Running");
 		try {
-			read();
+			startReader();
 		} catch (Exception ex) {
-			for (int i = 0; i < NMEAListeners.size(); i++) {
-				NMEAListener l = NMEAListeners.get(i);
-				l.fireError(ex);
-			}
+			this.NMEAListeners.stream().forEach(listener -> listener.fireError(ex));
 			throw new RuntimeException(ex);
 		}
 	}

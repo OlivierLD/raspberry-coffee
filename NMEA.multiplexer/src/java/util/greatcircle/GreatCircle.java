@@ -383,10 +383,10 @@ public final class GreatCircle {
 	}
 
 	/**
-	 * @param from  GeopPoint, L & G in Radians
+	 * @param from  GeopPoint, L &amp; G in Radians
 	 * @param dist  distance in nm
 	 * @param route route in degrees
-	 * @return DR Position, L & G in Radians
+	 * @return DR Position, L &amp; G in Radians
 	 */
 	public static GreatCirclePoint dr(GreatCirclePoint from, double dist, double route) {
 		double deltaL = Math.toRadians(dist / 60D) * Math.cos(Math.toRadians(route));
