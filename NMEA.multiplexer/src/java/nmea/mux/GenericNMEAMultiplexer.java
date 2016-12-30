@@ -156,17 +156,17 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Creates computer"),
 					new Operation(
 									"PUT",
-									"/channels",
+									"/channels/{id}",
 									this::putChannel,
 									"Update channel"),
 					new Operation(
 									"PUT",
-									"/forwarders",
+									"/forwarders/{id}",
 									this::putForwarder,
 									"Update forwarder"),
 					new Operation(
 									"PUT",
-									"/computers",
+									"/computers/{id}",
 									this::putComputer,
 									"Update computer"),
 					new Operation(
@@ -971,6 +971,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			if (bean instanceof Map) {
 				type = ((Map<String, String>) bean).get("type");
 			}
+			List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+			if (prmValues.size() == 1) {
+				String id = prmValues.get(0);
+				if (!type.equals(id)) {
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, String.format("path and payload do not match. path:[%s], payload[%s]", id, type));
+					return response;
+				}
+			} else {
+				response.setStatus(HTTPServer.Response.BAD_REQUEST);
+				RESTProcessorUtil.addErrorMessageToResponse(response, "required path parameter was not found");
+				return response;
+			}
 		}
 		switch (type) {
 			case "serial":
@@ -1110,6 +1123,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			if (bean instanceof Map) {
 				type = ((Map<String, String>) bean).get("type");
 			}
+			List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+			if (prmValues.size() == 1) {
+				String id = prmValues.get(0);
+				if (!type.equals(id)) {
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, String.format("path and payload do not match. path:[%s], payload[%s]", id, type));
+					return response;
+				}
+			} else {
+				response.setStatus(HTTPServer.Response.BAD_REQUEST);
+				RESTProcessorUtil.addErrorMessageToResponse(response, "required path parameter was not found");
+				return response;
+			}
 		}
 		switch (type) {
 			default:
@@ -1131,6 +1157,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			Object bean = new GsonBuilder().create().fromJson(new String(request.getContent()), Object.class);
 			if (bean instanceof Map) {
 				type = ((Map<String, String>) bean).get("type");
+			}
+			List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+			if (prmValues.size() == 1) {
+				String id = prmValues.get(0);
+				if (!type.equals(id)) {
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, String.format("path and payload do not match. path:[%s], payload[%s]", id, type));
+					return response;
+				}
+			} else {
+				response.setStatus(HTTPServer.Response.BAD_REQUEST);
+				RESTProcessorUtil.addErrorMessageToResponse(response, "required path parameter was not found");
+				return response;
 			}
 		}
 		switch (type) {

@@ -2,378 +2,91 @@ $(document).ready(function() {
     // Nothing.
 });
 
-var getSerialPorts = function() {
-  var deferred = $.Deferred(),  // a jQuery deferred
-      url = '/serial-ports',
-      xhr = new XMLHttpRequest(),
-      TIMEOUT = 10000;
+var getDeferred = function(url, timeout, verb, happyCode, data) {
+    var deferred = $.Deferred(),  // a jQuery deferred
+        url = url,
+        xhr = new XMLHttpRequest(),
+        TIMEOUT = timeout;
 
-  xhr.open('GET', url, true);
-  xhr.setRequestHeader("Content-type", "application/json");
-  xhr.send();
-
-  var requestTimer = setTimeout(function() {
-    xhr.abort();
-    deferred.reject(408, { message: 'Timeout'});
-  }, TIMEOUT);
-
-  xhr.onload = function() {
-    clearTimeout(requestTimer);
-    if (xhr.status === 200) {
-      deferred.resolve(xhr.response);
+    xhr.open(verb, url, true);
+    xhr.setRequestHeader("Content-type", "application/json");
+    if (data === undefined) {
+        xhr.send();
     } else {
-      deferred.reject(xhr.status, xhr.response);
+        xhr.send(JSON.stringify(data));
     }
-  };
-  return deferred.promise();
+
+    var requestTimer = setTimeout(function() {
+        xhr.abort();
+        deferred.reject(408, { message: 'Timeout'});
+    }, TIMEOUT);
+
+    xhr.onload = function() {
+        clearTimeout(requestTimer);
+        if (xhr.status === happyCode) {
+            deferred.resolve(xhr.response);
+        } else {
+            deferred.reject(xhr.status, xhr.response);
+        }
+    };
+    return deferred.promise();
+
+}
+
+var getSerialPorts = function() {
+    return getDeferred('/serial-ports', 10000, 'GET', 200);
 };
 
 var getChannels = function() {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/channels',
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send();
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/channels', 10000, 'GET', 200);
 };
 
 var getForwarders = function() {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/forwarders',
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send();
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/forwarders', 10000, 'GET', 200);
 };
 
 var getComputers = function() {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/computers',
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('GET', url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send();
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/computers', 10000, 'GET', 200);
 };
 
-var addForwarder = function(channel) {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/forwarders',
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.send(JSON.stringify(channel));
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+var addForwarder = function(forwarder) {
+    return getDeferred('/forwarders', 10000, 'POST', 200, forwarder);
 };
 
 var addChannel = function(channel) {
-  var deferred = $.Deferred(),  // a jQuery deferred
-      url = '/channels',
-      xhr = new XMLHttpRequest(),
-      TIMEOUT = 10000;
-
-  xhr.open('POST', url, true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-
-  xhr.send(JSON.stringify(channel));
-
-  var requestTimer = setTimeout(function() {
-    xhr.abort();
-    deferred.reject(408, { message: 'Timeout'});
-  }, TIMEOUT);
-
-  xhr.onload = function() {
-    clearTimeout(requestTimer);
-    if (xhr.status === 200) {
-      deferred.resolve(xhr.response);
-    } else {
-      deferred.reject(xhr.status, xhr.response);
-    }
-  };
-  return deferred.promise();
+    return getDeferred('/channels', 10000, 'POST', 200, channel);
 };
 
 var addComputer = function(computer) {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/computers',
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.send(JSON.stringify(computer));
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/computers', 10000, 'POST', 200, computer);
 };
 
 var updateChannel = function(channel) {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/channels',
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('PUT', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.send(JSON.stringify(channel));
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/channels/' + channel.type, 10000, 'PUT', 200, channel);
 };
 
 var updateComputer = function(computer) {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/computers',
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('PUT', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.send(JSON.stringify(computer));
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/computers/' + computer.type, 10000, 'PUT', 200, computer);
 };
 
 var updateMuxVerbose = function(value) {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/mux-verbose/' + value,
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('PUT', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.send(); // No payload
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/mux-verbose/' + value, 10000, 'PUT', 200);
 };
 
 var resetDataCache = function() {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/cache',
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('DELETE', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.send(); // No payload
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 200) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/cache', 10000, 'DELETE', 204);
 };
 
 var deleteForwarder = function(forwarder) {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/forwarders/' + forwarder.type,
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('DELETE', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.send(JSON.stringify(forwarder));
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 204) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/forwarders/' + forwarder.type, 10000, 'DELETE', 204, forwarder);
 };
 
 var deleteComputer = function(computer) {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/computers/' + computer.type,
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('DELETE', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.send(JSON.stringify(computer));
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 204) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/computers/' + computer.type, 10000, 'DELETE', 204, computer);
 };
 
 var deleteChannel = function(channel) {
-    var deferred = $.Deferred(),  // a jQuery deferred
-        url = '/channels/' + channel.type,
-        xhr = new XMLHttpRequest(),
-        TIMEOUT = 10000;
-
-    xhr.open('DELETE', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.send(JSON.stringify(channel));
-
-    var requestTimer = setTimeout(function() {
-        xhr.abort();
-        deferred.reject(408, { message: 'Timeout'});
-    }, TIMEOUT);
-
-    xhr.onload = function() {
-        clearTimeout(requestTimer);
-        if (xhr.status === 204) {
-            deferred.resolve(xhr.response);
-        } else {
-            deferred.reject(xhr.status, xhr.response);
-        }
-    };
-    return deferred.promise();
+    return getDeferred('/channels/' + channel.type, 10000, 'DELETE', 204, channel);
 };
 
 var serialPortList = function() {
