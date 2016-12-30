@@ -6,7 +6,7 @@ import nmea.api.NMEAEvent;
 import nmea.consumers.reader.HTU21DFReader;
 
 /**
- * Read a file containing logged data
+ * Reads a HTU21DF sensor, and produces a valid NMEA sentence.
  */
 public class HTU21DFClient extends NMEAClient {
 	public HTU21DFClient() {

@@ -6,7 +6,7 @@ import nmea.api.NMEAEvent;
 import nmea.consumers.reader.BME280Reader;
 
 /**
- * Read a file containing logged data
+ * Reads a BME280 sensor, and produces a valid NMEA sentence.
  */
 public class BME280Client extends NMEAClient {
 	public BME280Client() {
