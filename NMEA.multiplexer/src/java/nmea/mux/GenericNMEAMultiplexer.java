@@ -976,7 +976,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				String id = prmValues.get(0);
 				if (!type.equals(id)) {
 					response.setStatus(HTTPServer.Response.BAD_REQUEST);
-					RESTProcessorUtil.addErrorMessageToResponse(response, String.format("path and payload do not match. path:[%s], payload[%s]", id, type));
+					RESTProcessorUtil.addErrorMessageToResponse(response, String.format("path and payload do not match. path:[%s], payload:[%s]", id, type));
 					return response;
 				}
 			} else {
@@ -1128,7 +1128,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				String id = prmValues.get(0);
 				if (!type.equals(id)) {
 					response.setStatus(HTTPServer.Response.BAD_REQUEST);
-					RESTProcessorUtil.addErrorMessageToResponse(response, String.format("path and payload do not match. path:[%s], payload[%s]", id, type));
+					RESTProcessorUtil.addErrorMessageToResponse(response, String.format("path and payload do not match. path:[%s], payload:[%s]", id, type));
 					return response;
 				}
 			} else {
