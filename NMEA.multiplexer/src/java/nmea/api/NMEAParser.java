@@ -22,7 +22,7 @@ public final class NMEAParser extends Thread {
 
 	private String nmeaStream = "";
 	private final static long MAX_STREAM_SIZE = 2048;
-	public final static String STANDARD_NMEA_EOS = new String(new char[]{0x0A, 0x0D}); // "\r\n";
+	public final static String STANDARD_NMEA_EOS = new String(new char[]{0x0D, 0x0A}); // "\r\n";
 
 	public final static String NMEA_SENTENCE_SEPARATOR = "\n";
 
