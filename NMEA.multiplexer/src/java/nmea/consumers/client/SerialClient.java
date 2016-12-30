@@ -96,7 +96,6 @@ public class SerialClient extends NMEAClient {
 				nmeaClient.stopDataRead();
 			}
 		});
-//  nmeaClient.setEOS("\n"); // TASK Sure?
 		nmeaClient.initClient();
 		nmeaClient.setReader(new SerialReader(nmeaClient.getListeners(), commPort, 4800));
 		nmeaClient.startWorking();

@@ -72,14 +72,6 @@ public final class NMEAParser extends Thread {
 		this.nmeaPrefix = s;
 	}
 
-//	public void setEOS(String str) {
-//		NMEA_SENTENCE_SEPARATOR = str;
-//	}
-
-//	public static String getEOS() {
-//		return NMEA_SENTENCE_SEPARATOR;
-//	}
-
 	public String[] getNmeaSentence() {
 		return this.nmeaSentence;
 	}

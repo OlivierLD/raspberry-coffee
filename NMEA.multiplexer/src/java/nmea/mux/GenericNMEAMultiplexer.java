@@ -1374,7 +1374,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 							String serialPort = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
 							String br = muxProps.getProperty(String.format("mux.%s.baudrate", MUX_IDX_FMT.format(muxIdx)));
 							NMEAClient serialClient = new SerialClient(this);
-//					  serialClient.setEOS("\n");
 							serialClient.initClient();
 							serialClient.setReader(new SerialReader(serialClient.getListeners(), serialPort, Integer.parseInt(br)));
 							nmeaDataClients.add(serialClient);

@@ -77,7 +77,6 @@ public class BME280Client extends NMEAClient {
 			}
 		});
 
-//  nmeaClient.setEOS("\n"); // TASK Sure?
 		nmeaClient.initClient();
 		nmeaClient.setReader(new BME280Reader(nmeaClient.getListeners()));
 		nmeaClient.startWorking();
