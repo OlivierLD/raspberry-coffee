@@ -37,11 +37,13 @@ var connection;
                     var _filter = filter.substr(1);
                     if (!(message.data.indexOf(_filter.trim()) > 0)) {
                         dontDisplay = true;
+                        console.log(filter + " => Do NOT display " + message.data);
                         break;
                     }
                 } else {
                     if (message.data.indexOf(filter.trim()) > 0) {
                         doDisplay = true;
+                        console.log(filter + " => DO display " + message.data);
                         break;
                     }
                 }
@@ -50,7 +52,7 @@ var connection;
                 displayMessage(message.data);
             }
         } else {
-            displayMessage('NMEA String: ' + message.data);
+            displayMessage('Unfiltered: ' + message.data);
         }
     };
 
