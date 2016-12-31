@@ -29,7 +29,7 @@ var connection;
 //      console.log('onmessage:' + message);
         if (filters.value.length > 0) {
             var elements = filters.value.split(",");
-            var doDisplay = false;
+            var doDisplay = true;
             var dontDisplay = false;
             for (var i=0; i<elements.length; i++) {
                 var filter = elements[i];
@@ -42,8 +42,9 @@ var connection;
                         }
                     }
                 } else {
-                    if (!doDisplay && message.data.indexOf(filter.trim()) > 0) {
-                        doDisplay = true;
+                    if (doDisplay && !message.data.indexOf(filter.trim()) > 0) {
+                        doDisplay = false;
+                        console.log(filter + " => Do NOT display " + message.data);
                     }
                 }
             }
