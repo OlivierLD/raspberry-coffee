@@ -35,10 +35,12 @@ var connection;
                 var filter = elements[i];
                 if (filter.startsWith('~')) { // Negation, like ~RMC : Don't display RMC
                     var _filter = filter.substr(1);
-                    if (!(message.data.indexOf(_filter.trim()) > 0)) {
-                        dontDisplay = true;
-                        console.log(filter + " (" + _filter.trim() + ") => Do NOT display " + message.data);
-                        break;
+                    if (_filter.trim().length > 0) {
+                        if (!(message.data.indexOf(_filter.trim()) > 0)) {
+                            dontDisplay = true;
+                            console.log(filter + " (" + _filter.trim() + ") => Do NOT display " + message.data);
+                            break;
+                        }
                     }
                 } else {
                     if (message.data.indexOf(filter.trim()) > 0) {
