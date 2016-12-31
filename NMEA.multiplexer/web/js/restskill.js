@@ -94,12 +94,16 @@ var serialPortList = function() {
   getData.done(function(value) {
     console.log("Done:", value);
     var json = JSON.parse(value);
-    var html = "<h5>Available Serial Ports</h5>"
-        html += "<ul>";
-    for (var i=0; i<json.length; i++) {
-      html += ("<li>" + json[i] + "</li>");
+    var html = "<h5>Available Serial Ports</h5>";
+    if (json.length > 0) {
+        html += "<table>";
+        json.forEach(function(line, idx) {
+            html += ("<tr><td>" + line + "</td></tr>");
+        });
+        html += "</table>";
+    } else {
+        html += "<i>No Serial Port available</i>";
     }
-    html += "</ul>";
     $("#lists").html(html);
   });
   getData.fail(function(error, errmess) {
