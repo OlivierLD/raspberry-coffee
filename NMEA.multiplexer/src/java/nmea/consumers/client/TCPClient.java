@@ -90,7 +90,6 @@ public class TCPClient extends NMEAClient {
 				nmeaClient.stopDataRead();
 			}
 		});
-//  nmeaClient.setEOS("\n"); // TASK Sure?
 		nmeaClient.initClient();
 		nmeaClient.setReader(new TCPReader(nmeaClient.getListeners(), serverName, 7001));
 		nmeaClient.startWorking();

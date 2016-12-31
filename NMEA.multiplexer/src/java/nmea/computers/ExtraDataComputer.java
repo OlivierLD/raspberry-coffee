@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
  * See {@link ApplicationContext#initCache(String, double, double, double, double, double, double, int)}.
  * <br>
  * True Wind calculation requires:
- * <table border='1'>
- * <tr><td>GPS: COG & SOG, Declination</td><td>RMC, VTG, HDM</td></tr>
+ * <table border='1' summary="Required data">
+ * <tr><td>GPS: COG &amp; SOG, Declination</td><td>RMC, VTG, HDM</td></tr>
  * <tr><td>AWS, AWA</td><td>MWV, VWR</td></tr>
  * <tr><td>TRUE Heading</td><td>VHW, HDT, HDM</td></tr>
  * <tr><td>Leeway</td><td><i>Estimated</i> (initialization parameter)</td></tr>

@@ -20,7 +20,7 @@ public class RandomReader extends NMEAReader {
 	}
 
 	@Override
-	public void read() {
+	public void startReader() {
 		super.enableReading();
 		while (this.canRead()) {
 			// Read data every 1 second

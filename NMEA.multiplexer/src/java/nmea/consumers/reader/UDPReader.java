@@ -36,7 +36,7 @@ public class UDPReader extends NMEAReader {
 	private DatagramSocket dsocket = null;
 
 	@Override
-	public void read() {
+	public void startReader() {
 		System.out.println("From " + getClass().getName() + " Reading UDP Port " + udpport);
 		super.enableReading();
 		try {

@@ -458,8 +458,7 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 						if (false && key.equals(TWD))
 							System.out.print(((NMEADoubleValueHolder) v).getDoubleValue() + ";");
 
-						if (v instanceof Angle) // Angle360 || v instanceof Angle180 || v instanceof Angle180EW || v instanceof Angle180LR)
-						{
+						if (v instanceof Angle) { // Angle360 || v instanceof Angle180 || v instanceof Angle180EW || v instanceof Angle180LR)
 							double val = ((NMEADoubleValueHolder) v).getDoubleValue();
 							sumCos += (Math.cos(Math.toRadians(val)));
 							sumSin += (Math.sin(Math.toRadians(val)));
@@ -469,8 +468,7 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 						System.out.println("What'zat:" + v.getClass().getName());
 				}
 				try {
-					if (ald.size() != 0) // Average here
-					{
+					if (ald.size() != 0) { // Average here
 						sum /= ald.size();
 						sumCos /= ald.size();
 						sumSin /= ald.size();
@@ -480,8 +478,7 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 							ret = new Double(sum);
 						} else {
 							ret = Class.forName(cl.getName()).newInstance();
-							if (ret instanceof Angle) // Angle360 || ret instanceof Angle180 || ret instanceof Angle180EW || ret instanceof Angle180LR)
-							{
+							if (ret instanceof Angle) { // Angle360 || ret instanceof Angle180 || ret instanceof Angle180EW || ret instanceof Angle180LR)
 								double a = Math.toDegrees(Math.acos(sumCos));
 								if (sumSin < 0)
 									a = 360d - a;

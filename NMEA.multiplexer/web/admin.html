@@ -131,6 +131,7 @@
                 case 'serial':
                     $("#forward-serial").css('display', 'inline');
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-gpsd").css('display', 'none');
                     $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
@@ -139,6 +140,16 @@
                 case 'tcp':
                     $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'inline');
+                    $("#forward-gpsd").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'none');
+                    break;
+                case 'gpsd':
+                    $("#forward-serial").css('display', 'none');
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-gpsd").css('display', 'inline');
                     $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
@@ -147,6 +158,7 @@
                 case 'rmi':
                     $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-gpsd").css('display', 'none');
                     $("#forward-rmi").css('display', 'inline');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
@@ -155,6 +167,7 @@
                 case 'file':
                     $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-gpsd").css('display', 'none');
                     $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'inline');
                     $("#forward-ws").css('display', 'none');
@@ -163,6 +176,7 @@
                 case 'ws':
                     $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-gpsd").css('display', 'none');
                     $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'inline');
@@ -171,6 +185,7 @@
                 case 'console':
                     $("#forward-serial").css('display', 'none');
                     $("#forward-tcp").css('display', 'none');
+                    $("#forward-gpsd").css('display', 'none');
                     $("#forward-rmi").css('display', 'none');
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
@@ -286,6 +301,17 @@
                     }
                     createForwarder({
                         type: 'tcp',
+                        port: port
+                    });
+                    break;
+                case 'gpsd':
+                    var port = $("#fwd-gpsd-port").val();
+                    if (port.trim().length === 0) {
+                        alert('Port is required');
+                        return;
+                    }
+                    createForwarder({
+                        type: 'gpsd',
                         port: port
                     });
                     break;
@@ -489,6 +515,7 @@
               <select id="forwarder-select" onchange="forwardSelectManager();">
                 <option value="serial">Serial</option>
                 <option value="tcp">TCP</option>
+                <option value="gpsd">GPSd</option>
                 <option value="rmi">RMI</option>
                 <option value="file">Data File</option>
                 <option value="ws">Web Socket</option>
@@ -521,6 +548,14 @@
                   <tr>
                     <td>Port</td>
                     <td><input id="fwd-tcp-port" type="text" placeholder="Port" size="10"></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="forward-gpsd" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Port</td>
+                    <td><input id="fwd-gpsd-port" type="text" placeholder="Port, like 2947" size="10"></td>
                   </tr>
                 </table>
               </div>

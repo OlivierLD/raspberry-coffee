@@ -55,7 +55,7 @@ public class SerialReader
 	private InputStream theInput = null;
 
 	@Override
-	public void read() {
+	public void startReader() {
 		super.enableReading();
 		// Opening Serial port
 		if (verbose) {
@@ -160,7 +160,7 @@ public class SerialReader
 							}
 						}
 						String s = new String(inputBuffer);
-						// Display the read string
+						// Display the startReader string
 						boolean justDump = false;
 						if (justDump)
 							System.out.println(":: [" + s + "] ::");
@@ -169,11 +169,10 @@ public class SerialReader
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-				}
-//      else
-//      {
+//			} else {
 //        System.out.println("Stop Reading serial port.");
-//      }
+        }
+        break;
 			default:
 				break;
 		}
@@ -188,6 +187,6 @@ public class SerialReader
 	}
 
 	public static void main(String[] args) {
-		new SerialReader().read();
+		new SerialReader().startReader();
 	}
 }

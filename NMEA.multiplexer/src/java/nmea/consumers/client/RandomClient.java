@@ -6,7 +6,7 @@ import nmea.api.NMEAEvent;
 import nmea.consumers.reader.RandomReader;
 
 /**
- * Read a file containing logged data
+ * Generates random numbers, in a valid NMEA Sentence.
  */
 public class RandomClient extends NMEAClient {
 	public RandomClient() {

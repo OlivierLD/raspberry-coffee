@@ -9,6 +9,12 @@ import java.util.List;
  * A Controller.
  * This class is final, and can be used as it is.
  *
+ * Its job is to detect potential sentences in the NMEA stream of characters.
+ * When a sentence (to be validated) is detected, it broadcasts an NMEAEvent
+ * to all the registered NMEAListeners, see the {@link #fireDataDetected(NMEAEvent)} method.
+ *
+ * The NMEAListeners to register are sent to the constructor. They can also be added later on.
+ *
  * @author Olivier Le Diouris
  * @version 1.0
  * @see nmea.api.NMEAReader
@@ -31,7 +37,7 @@ public final class NMEAParser extends Thread {
 	NMEAParser instance = null;
 
 	/**
-	 * @param al The ArrayList of the Listeners instanciated by the NMEAClient
+	 * @param al The ArrayList of the Listeners instantiated by the NMEAClient
 	 */
 
 	public NMEAParser(List<NMEAListener> al) {
@@ -43,8 +49,6 @@ public final class NMEAParser extends Thread {
 			public void dataRead(NMEAEvent e) {
 //        System.out.println("Receieved Data:" + e.getContent());
 				nmeaStream += e.getContent();
-				// TODO Broadcast that ?
-
 				// Send to parser
 				String s = "";
 				try {
@@ -67,14 +71,6 @@ public final class NMEAParser extends Thread {
 	public void setNmeaPrefix(String s) {
 		this.nmeaPrefix = s;
 	}
-
-//	public void setEOS(String str) {
-//		NMEA_SENTENCE_SEPARATOR = str;
-//	}
-
-//	public static String getEOS() {
-//		return NMEA_SENTENCE_SEPARATOR;
-//	}
 
 	public String[] getNmeaSentence() {
 		return this.nmeaSentence;
@@ -113,6 +109,11 @@ public final class NMEAParser extends Thread {
 		return ret;
 	}
 
+	/**
+	 * Detects a potentially valid NMEA Sentence
+	 * @return tgrue if a potential sentence is detected.
+	 * @throws NMEAException
+	 */
 	private boolean interesting()
 					throws NMEAException {
 //    if (nmeaPrefix == null || nmeaPrefix.length() == 0)
@@ -125,8 +126,7 @@ public final class NMEAParser extends Thread {
 		if (beginIdx == -1 && endIdx == -1)
 			return false; // No beginning, no end !
 
-		if (endIdx > -1 && endIdx < beginIdx) // Seek the beginning of a sentence
-		{
+		if (endIdx > -1 && endIdx < beginIdx) { // Seek the beginning of a sentence
 			nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
 //    beginIdx = nmeaStream.indexOf("$" + this.nmeaPrefix);
 			beginIdx = nmeaStream.indexOf("$");
@@ -138,8 +138,7 @@ public final class NMEAParser extends Thread {
 			while (true) {
 				try {
 					// The stream should here begin with $XX
-					if (nmeaStream.length() > 6) // "$" + prefix + XXX
-					{
+					if (nmeaStream.length() > 6) { // "$" + prefix + XXX
 						endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 						if (endIdx > -1) {
 							if (nmeaSentence != null) {
@@ -177,15 +176,12 @@ public final class NMEAParser extends Thread {
 	}
 
 	protected void fireDataDetected(NMEAEvent e) {
-		for (int i = 0; i < NMEAListeners.size(); i++) {
-			NMEAListener l = /*(NMEAListener)*/NMEAListeners.get(i);
-			l.dataDetected(e);
-		}
+		this.NMEAListeners.stream().forEach(listener -> listener.dataDetected(e));
 	}
 
 	public synchronized void addNMEAListener(NMEAListener l) {
-		if (!NMEAListeners.contains(l)) {
-			NMEAListeners.add(l);
+		if (!this.NMEAListeners.contains(l)) {
+			this.NMEAListeners.add(l);
 		}
 	}
 

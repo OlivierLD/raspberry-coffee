@@ -5,18 +5,18 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-public class UDPWriter implements Forwarder {
+public class UDPServer implements Forwarder {
 	private int udpPort = 8001;
 	private InetAddress address = null;
 
 	private final static String DEFAULT_HOST = "127.0.0.1"; // "230.0.0.1"
 	private String hostName = DEFAULT_HOST;
 
-	public UDPWriter(int port) throws Exception {
+	public UDPServer(int port) throws Exception {
 		this(port, DEFAULT_HOST);
 	}
 
-	public UDPWriter(int port, String host) throws Exception {
+	public UDPServer(int port, String host) throws Exception {
 		this.hostName = host;
 		this.udpPort = port;
 		try {
@@ -62,7 +62,7 @@ public class UDPWriter implements Forwarder {
 		private int port;
 		private String type = "udp";
 
-		public UDPBean(UDPWriter instance) {
+		public UDPBean(UDPServer instance) {
 			cls = instance.getClass().getName();
 			port = instance.udpPort;
 		}

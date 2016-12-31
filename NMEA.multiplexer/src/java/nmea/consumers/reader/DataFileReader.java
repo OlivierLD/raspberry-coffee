@@ -27,7 +27,7 @@ public class DataFileReader extends NMEAReader {
 	}
 
 	@Override
-	public void read() {
+	public void startReader() {
 		super.enableReading();
 		try {
 			this.fis = new FileInputStream(this.dataFileName);
