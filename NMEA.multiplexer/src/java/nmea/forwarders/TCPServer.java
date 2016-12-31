@@ -7,14 +7,14 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TCPWriter implements Forwarder {
-	private TCPWriter instance = this;
+public class TCPServer implements Forwarder {
+	private TCPServer instance = this;
 	private List<Socket> clientSocketlist = new ArrayList<Socket>(1);
 
 	private int tcpPort = 7001;
 	private ServerSocket serverSocket = null;
 
-	public TCPWriter(int port) throws Exception {
+	public TCPServer(int port) throws Exception {
 		this.tcpPort = port;
 
 		try {
@@ -89,7 +89,7 @@ public class TCPWriter implements Forwarder {
 		String gpsd = "?WATCH={...};";
 		String wpl = "$GPWPL,3739.856,N,12222.812,W,OPMRNA*59";
 		try {
-			TCPWriter tcpw = new TCPWriter(2947); // 2947
+			TCPServer tcpw = new TCPServer(2947); // 2947
 //    TCPWriter tcpw = new TCPWriter(7001);
 //    TCPWriter tcpw = new TCPWriter(7001, "theketch-lap.mshome.net");
 			for (int i = 0; i < 50; i++) {
@@ -111,10 +111,10 @@ public class TCPWriter implements Forwarder {
 	}
 
 	private class SocketThread extends Thread {
-		private TCPWriter parent = null;
+		private TCPServer parent = null;
 
-		public SocketThread(TCPWriter parent) {
-			super("TCPWriter");
+		public SocketThread(TCPServer parent) {
+			super("TCPServer");
 			this.parent = parent;
 		}
 
@@ -145,7 +145,7 @@ public class TCPWriter implements Forwarder {
 			return port;
 		}
 
-		public TCPBean(TCPWriter instance) {
+		public TCPBean(TCPServer instance) {
 			cls = instance.getClass().getName();
 			port = instance.tcpPort;
 			nbClients = instance.getNbClients();

@@ -33,8 +33,9 @@ import nmea.consumers.reader.WebSocketReader;
 import nmea.forwarders.ConsoleWriter;
 import nmea.forwarders.DataFileWriter;
 import nmea.forwarders.Forwarder;
+import nmea.forwarders.GPSdServer;
 import nmea.forwarders.SerialWriter;
-import nmea.forwarders.TCPWriter;
+import nmea.forwarders.TCPServer;
 import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
 import nmea.forwarders.WebSocketProcessor;
@@ -303,10 +304,25 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					gson = new GsonBuilder().create();
 					if (request.getContent() != null) {
 						StringReader stringReader = new StringReader(new String(request.getContent()));
-						TCPWriter.TCPBean tcpBean = gson.fromJson(stringReader, TCPWriter.TCPBean.class);
+						TCPServer.TCPBean tcpBean = gson.fromJson(stringReader, TCPServer.TCPBean.class);
 						opFwd = nmeaDataForwarders.stream()
-										.filter(fwd -> fwd instanceof TCPWriter &&
-														((TCPWriter) fwd).getTcpPort() == tcpBean.getPort())
+										.filter(fwd -> fwd instanceof TCPServer &&
+														((TCPServer) fwd).getTcpPort() == tcpBean.getPort())
+										.findFirst();
+						response = removeForwarderIfPresent(request, opFwd);
+					} else {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
+					}
+					break;
+				case "gpsd":
+					gson = new GsonBuilder().create();
+					if (request.getContent() != null) {
+						StringReader stringReader = new StringReader(new String(request.getContent()));
+						GPSdServer.GPSdBean gpsdBean = gson.fromJson(stringReader, GPSdServer.GPSdBean.class);
+						opFwd = nmeaDataForwarders.stream()
+										.filter(fwd -> fwd instanceof GPSdServer &&
+														((GPSdServer) fwd).getTcpPort() == gpsdBean.getPort())
 										.findFirst();
 						response = removeForwarderIfPresent(request, opFwd);
 					} else {
@@ -564,15 +580,15 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			case "tcp":
-				TCPWriter.TCPBean tcpJson = new Gson().fromJson(new String(request.getContent()), TCPWriter.TCPBean.class);
+				TCPServer.TCPBean tcpJson = new Gson().fromJson(new String(request.getContent()), TCPServer.TCPBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof TCPWriter &&
-												((TCPWriter) fwd).getTcpPort() == tcpJson.getPort())
+								.filter(fwd -> fwd instanceof TCPServer &&
+												((TCPServer) fwd).getTcpPort() == tcpJson.getPort())
 								.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
-						Forwarder tcpForwarder = new TCPWriter(tcpJson.getPort());
+						Forwarder tcpForwarder = new TCPServer(tcpJson.getPort());
 						nmeaDataForwarders.add(tcpForwarder);
 						String content = new Gson().toJson(tcpForwarder.getBean());
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
@@ -586,6 +602,31 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					// Already there
 					response.setStatus(HTTPServer.Response.BAD_REQUEST);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'tcp' already exists");
+				}
+				break;
+			case "gpsd":
+				GPSdServer.GPSdBean gpsdJson = new Gson().fromJson(new String(request.getContent()), GPSdServer.GPSdBean.class);
+				// Check if not there yet.
+				opFwd = nmeaDataForwarders.stream()
+								.filter(fwd -> fwd instanceof TCPServer &&
+												((GPSdServer) fwd).getTcpPort() == gpsdJson.getPort())
+								.findFirst();
+				if (!opFwd.isPresent()) {
+					try {
+						Forwarder gpsdForwarder = new GPSdServer(gpsdJson.getPort());
+						nmeaDataForwarders.add(gpsdForwarder);
+						String content = new Gson().toJson(gpsdForwarder.getBean());
+						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+					} catch (Exception ex) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+						ex.printStackTrace();
+					}
+				} else {
+					// Already there
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'gpsd' already exists");
 				}
 				break;
 			case "rmi":
@@ -1541,8 +1582,17 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					case "tcp":
 						String tcpPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
 						try {
-							Forwarder tcpForwarder = new TCPWriter(Integer.parseInt(tcpPort));
+							Forwarder tcpForwarder = new TCPServer(Integer.parseInt(tcpPort));
 							nmeaDataForwarders.add(tcpForwarder);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+						break;
+					case "gpsd":
+						String gpsdPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+						try {
+							Forwarder gpsdForwarder = new GPSdServer(Integer.parseInt(gpsdPort));
+							nmeaDataForwarders.add(gpsdForwarder);
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
