@@ -34,15 +34,15 @@ var connection;
             for (var i=0; i<elements.length; i++) {
                 var filter = elements[i].trim();
                 if (filter.startsWith('~')) { // Negation, like ~RMC : Don't display RMC
-                    var _filter = filter.substr(1);
+                    var _filter = filter.substr(1).trim();
                     if (_filter.trim().length > 0) {
-                        if (!dontDisplay && message.data.indexOf(_filter.trim()) > 0) {
+                        if (!dontDisplay && message.data.indexOf(_filter) > 0) {
                             dontDisplay = true;
                             console.log(filter + " (" + _filter.trim() + ") => Do NOT display " + message.data);
                         }
                     }
                 } else {
-                    if (doDisplay && !message.data.indexOf(filter) > 0) {
+                    if (doDisplay && !(message.data.indexOf(filter) > 0)) {
                         doDisplay = false;
                         console.log(filter + " => Do NOT display " + message.data);
                     }
