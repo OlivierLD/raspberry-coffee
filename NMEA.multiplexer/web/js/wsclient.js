@@ -32,7 +32,7 @@ var connection;
             var doDisplay = true;
             var dontDisplay = false;
             for (var i=0; i<elements.length; i++) {
-                var filter = elements[i];
+                var filter = elements[i].trim();
                 if (filter.startsWith('~')) { // Negation, like ~RMC : Don't display RMC
                     var _filter = filter.substr(1);
                     if (_filter.trim().length > 0) {
@@ -42,7 +42,7 @@ var connection;
                         }
                     }
                 } else {
-                    if (doDisplay && !message.data.indexOf(filter.trim()) > 0) {
+                    if (doDisplay && !message.data.indexOf(filter) > 0) {
                         doDisplay = false;
                         console.log(filter + " => Do NOT display " + message.data);
                     }
