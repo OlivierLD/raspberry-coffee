@@ -30,7 +30,12 @@ var connection;
         if (filters.value.length > 0) {
             var elements = filters.value.split(",");
             elements.forEach(function(filter) {
-               if (message.data.indexOf(filter.trim()) > 0) {
+               if (filter.startsWith('~')) { // Negation, like ~RMC : Don't display RMC
+                   var _filter = filter.substr(1);
+                   if (!(message.data.indexOf(_filter.trim()) > 0)) {
+                       displayMessage(message.data);
+                   }
+               } else  if (message.data.indexOf(filter.trim()) > 0) {
                    displayMessage(message.data);
                }
             });

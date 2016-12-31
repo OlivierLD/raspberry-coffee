@@ -608,7 +608,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				GPSdServer.GPSdBean gpsdJson = new Gson().fromJson(new String(request.getContent()), GPSdServer.GPSdBean.class);
 				// Check if not there yet.
 				opFwd = nmeaDataForwarders.stream()
-								.filter(fwd -> fwd instanceof TCPServer &&
+								.filter(fwd -> fwd instanceof GPSdServer &&
 												((GPSdServer) fwd).getTcpPort() == gpsdJson.getPort())
 								.findFirst();
 				if (!opFwd.isPresent()) {
