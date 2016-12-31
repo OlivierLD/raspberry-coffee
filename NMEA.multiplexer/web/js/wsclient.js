@@ -29,16 +29,26 @@ var connection;
 //      console.log('onmessage:' + message);
         if (filters.value.length > 0) {
             var elements = filters.value.split(",");
-            elements.forEach(function(filter) {
-               if (filter.startsWith('~')) { // Negation, like ~RMC : Don't display RMC
-                   var _filter = filter.substr(1);
-                   if (!(message.data.indexOf(_filter.trim()) > 0)) {
-                       displayMessage(message.data);
-                   }
-               } else  if (message.data.indexOf(filter.trim()) > 0) {
-                   displayMessage(message.data);
-               }
-            });
+            var doDisplay = false;
+            var dontDisplay = false;
+            for (var i=0; i<elements.length; i++) {
+                var filter = elemenets[i];
+                if (filter.startsWith('~')) { // Negation, like ~RMC : Don't display RMC
+                    var _filter = filter.substr(1);
+                    if (!(message.data.indexOf(_filter.trim()) > 0)) {
+                        dontDisplay = true;
+                        break;
+                    }
+                } else {
+                    if (message.data.indexOf(filter.trim()) > 0) {
+                        doDisplay = true;
+                        break;
+                    }
+                }
+            }
+            if (doDisplay && !dontDisplay) {
+                displayMessage(message.data);
+            }
         } else {
             displayMessage('NMEA String: ' + message.data);
         }
