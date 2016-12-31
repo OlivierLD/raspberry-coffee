@@ -37,7 +37,7 @@ var connection;
                     var _filter = filter.substr(1);
                     if (!(message.data.indexOf(_filter.trim()) > 0)) {
                         dontDisplay = true;
-                        console.log(filter + " => Do NOT display " + message.data);
+                        console.log(filter + " (" + _filter.trim() + ") => Do NOT display " + message.data);
                         break;
                     }
                 } else {
