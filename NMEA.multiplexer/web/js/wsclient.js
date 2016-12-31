@@ -44,7 +44,6 @@ var connection;
                 } else {
                     if (!doDisplay && message.data.indexOf(filter.trim()) > 0) {
                         doDisplay = true;
-                        break;
                     }
                 }
             }
