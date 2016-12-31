@@ -28,23 +28,25 @@ var connection;
     connection.onmessage = function (message) {
 //      console.log('onmessage:' + message);
         if (filters.value.length > 0) {
-            var elements = filters.value.split(",");
+            var filterElements = filters.value.split(",");
             var doDisplay = false;
             var dontDisplay = false;
-            for (var i=0; i<elements.length; i++) {
-                var filter = elements[i].trim();
+            for (var i=0; i<filterElements.length; i++) {
+                var filter = filterElements[i].trim();
                 if (filter.startsWith('~')) { // Negation, like ~RMC : Don't display RMC
                     var _filter = filter.substr(1).trim();
                     if (_filter.trim().length > 0) {
                         if (!dontDisplay && message.data.indexOf(_filter) > 0) {
                             dontDisplay = true;
-                            console.log(filter + " (" + _filter.trim() + ") => Do NOT display " + message.data);
+//                          console.log(filter + " (" + _filter.trim() + ") => Do NOT display " + message.data);
+                        } else {
+                            doDisplay = true;
                         }
                     }
                 } else {
                     if (!doDisplay && (message.data.indexOf(filter) > 0)) {
                         doDisplay = true;
-                        console.log(filter + " => Do NOT display " + message.data);
+//                      console.log(filter + " => Do NOT display " + message.data);
                     }
                 }
             }
