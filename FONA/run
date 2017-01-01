@@ -8,6 +8,7 @@ CP=./build/libs/FONA-1.0.jar
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 #
 JAVA_OPTIONS=
+JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=4800"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.port=/dev/ttyUSB0"
 #

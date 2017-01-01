@@ -85,7 +85,12 @@ public class InteractiveFona implements FONAClient
 
     InteractiveFona sf = new InteractiveFona();
     fona = new FONAManager(sf);
-    
+
+    String verbose = System.getProperty("verbose");
+    if (verbose != null && "true".equals(verbose)) {
+      fona.setVerbose(true);
+    }
+
     String port = System.getProperty("serial.port", Serial.DEFAULT_COM_PORT);
     int br      = Integer.parseInt(System.getProperty("baud.rate", "9600"));
     if (args.length > 0)
