@@ -41,7 +41,7 @@ public class FONAManager
     SERIAL_LISTENER_OPTION,
     SERIAL_READER_OPTION   
   }
-  public final static SerialOption SERIAL_OPTION = SerialOption.SERIAL_LISTENER_OPTION; 
+  public final static SerialOption SERIAL_OPTION = SerialOption.SERIAL_READER_OPTION; // SERIAL_LISTENER_OPTION;
   
   public enum NetworkStatus
   {
