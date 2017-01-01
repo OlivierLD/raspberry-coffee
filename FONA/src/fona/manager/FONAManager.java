@@ -41,7 +41,7 @@ public class FONAManager
     SERIAL_LISTENER_OPTION,
     SERIAL_READER_OPTION   
   }
-  public final static SerialOption SERIAL_OPTION = SerialOption.SERIAL_READER_OPTION; // SERIAL_LISTENER_OPTION;
+  public final static SerialOption SERIAL_OPTION = SerialOption.SERIAL_LISTENER_OPTION;
   
   public enum NetworkStatus
   {
@@ -127,23 +127,23 @@ public class FONAManager
             {
               while (true && serial.available() > 0)
               {
-                System.out.println("... available");
                 CharBuffer cb = serial.read(Charset.defaultCharset());
                 fullMessage.append(cb);
 
                 String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
                 if (sa0 != null)
                 {
-                  System.out.println("\t<<< [FONA] Receivedv(top)...");
+                  System.out.println("\t<<< [FONA] Received (top)...");
                   for (String s: sa0)
                     System.out.println("\t\t"+ s);
                 }
 
-                char c = (char)0; // TODO Fix that serial.read();
-                c &= 0xFF;
-    
-                if ((c & 0xFF) != 0xFF)
-                  fullMessage.append(c);
+//                char c = (char)serial.read();
+//                c &= 0xFF;
+//
+//                if ((c & 0xFF) != 0xFF)
+//                  fullMessage.append(c);
+
                 if (fullMessage.toString().endsWith(FONAManager.ACK) || fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT))
                 {
                   String mess = fullMessage.toString(); // Send the full message. Parsed later.
@@ -173,7 +173,6 @@ public class FONAManager
                 if (serial.available() == 0)
                   delay(0.5f);
               }
-              System.out.println("... while end.");
          //   delay(0.5f);
             }
             catch (IllegalStateException ise)
@@ -200,6 +199,7 @@ public class FONAManager
         @Override
         public void dataReceived(SerialDataEvent event)
         {
+          System.out.println(">>>> dataReceived");
           // print out the data received to the console
           String payload = null;
           try { payload = event.getAsciiString(); }
