@@ -127,8 +127,17 @@ public class FONAManager
             {
               while (true && serial.available() > 0)
               {
+                System.out.println("... available");
                 CharBuffer cb = serial.read(Charset.defaultCharset());
                 fullMessage.append(cb);
+
+                String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
+                if (sa0 != null)
+                {
+                  System.out.println("\t<<< [FONA] Receivedv(top)...");
+                  for (String s: sa0)
+                    System.out.println("\t\t"+ s);
+                }
 
                 char c = (char)0; // TODO Fix that serial.read();
                 c &= 0xFF;
@@ -164,6 +173,7 @@ public class FONAManager
                 if (serial.available() == 0)
                   delay(0.5f);
               }
+              System.out.println("... while end.");
          //   delay(0.5f);
             }
             catch (IllegalStateException ise)
