@@ -28,7 +28,7 @@ var connection;
     connection.onmessage = function (message) {
 //      console.log('onmessage:' + message);
         if (filters.value.length > 0) {
-            var pattern = new RegExp(filters.value, "g");
+            var pattern = new RegExp(filters.value, /g/);
             if (message.data.match(pattern)) {
                 displayMessage(message.data);
             }
