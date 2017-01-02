@@ -42,7 +42,7 @@ import util.DumpUtil;
  *
  * IMPORTANT NOTE:
  * ===============
- * In case you dont want - or cannot - use the URAT port (/dev/ttyAMA0) it is easy to
+ * In case you dont want - or cannot - use the UART port (/dev/ttyAMA0) it is easy to
  * use another port - like a USB slot. You just need a USB cable like the
  * one at https://www.adafruit.com/products/954.
  *

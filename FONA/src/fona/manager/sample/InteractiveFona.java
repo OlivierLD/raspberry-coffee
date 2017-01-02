@@ -176,7 +176,7 @@ public class InteractiveFona implements FONAClient {
 										messToRead = -1;
 									} else if ("s".equals(userInput)) // Send SMS
 									{
-										System.out.println("> Note: Enter [Retgurn] at the prompt to cancel the 'send SMS' operation <");
+										System.out.println("> Note: Enter [Return] at the prompt to cancel the 'send SMS' operation <");
 										String sendTo = userInput("  Send messsage to (like 14153505547) ?> ");
 										if (sendTo.trim().length() > 0) {
 											if (FONAManager.getVerbose())
