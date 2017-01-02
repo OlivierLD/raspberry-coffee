@@ -130,7 +130,7 @@ public class InteractiveFona implements FONAClient
             System.out.println("Establishing connection (can take up to 3 seconds).");
             while (!fona.isConnected())
             {
-              System.out.println(">>>> Trying to connect...");
+//            System.out.println(">>>> Trying to connect...");
               try { fona.tryToConnect(); }
               catch (IOException ioe) {
                 throw new RuntimeException(ioe);
