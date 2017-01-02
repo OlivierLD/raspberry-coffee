@@ -21,7 +21,7 @@ import util.DumpUtil;
 
 /**
  * Important: Makes sure you've run
- * Prompt> rpi-serial-console disable
+ * Prompt> rpi-serial-console disable (or its equivalent)
  * and re-booted.
  * =====================================
  * Wiring:
@@ -39,6 +39,18 @@ import util.DumpUtil;
  * ----------------
  * <p>
  * See https://learn.adafruit.com/adafruit-fona-mini-gsm-gprs-cellular-phone-module?view=all
+ *
+ * IMPORTANT NOTE:
+ * ===============
+ * In case you dont want - or cannot - use the URAT port (/dev/ttyAMA0) it is easy to
+ * use another port - like a USB slot. You just need a USB cacble like the
+ * one at https://www.adafruit.com/products/954.
+ *
+ * Hook-up the green wire of the USB cable on the FONA Rx, and
+ * hook-up the white wire of the USB cable on the FONA Tx.
+ *
+ * You can as well use the VIn and the GND of the USB cable.
+ * This would be another project, a FONA on its own board, with a USB Cable attached to it ;)
  */
 public class FONAManager {
 	public enum SerialOption {
@@ -201,7 +213,6 @@ public class FONAManager {
 
 				@Override
 				public void dataReceived(SerialDataEvent event) {
-					System.out.println(">>>> dataReceived");
 					// print out the data received to the console
 					String payload = null;
 					try {
