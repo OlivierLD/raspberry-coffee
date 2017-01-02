@@ -176,16 +176,20 @@ public class InteractiveFona implements FONAClient {
 										messToRead = -1;
 									} else if ("s".equals(userInput)) // Send SMS
 									{
-										System.out.println("> Note: Enter 'q' at any time to cancel the send SMS operation <");
+										System.out.println("> Note: Enter [Retgurn] at the prompt to cancel the 'send SMS' operation <");
 										String sendTo = userInput("  Send messsage to (like 14153505547) ?> ");
-										if (!"Q".equalsIgnoreCase(sendTo)) {
+										if (sendTo.trim().length() > 0) {
 											if (FONAManager.getVerbose())
 												System.out.println("Sending message to " + sendTo);
 											String messagePayload = userInput("  Mess Content (140 char max)?         > ");
-											if (!"Q".equalsIgnoreCase(messagePayload)) {
+											if (messagePayload.trim().length() > 0) {
 												fona.sendSMS(sendTo, messagePayload);
 												System.out.println("Sent.");
+											} else {
+												System.out.println("... Canceled.");
 											}
+										} else {
+											System.out.println("... Canceled.");
 										}
 									} else if ("R".equals(userInput))  // Read all messages
 										System.out.println("Operation ot available yet...");
