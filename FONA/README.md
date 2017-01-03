@@ -39,6 +39,18 @@ provided by an Arduino are required in the FONA context.
 See an example of a client in `fona.manager.sample.InteractiveFona.java`. It requires the client
 to implement the `fona.manager.FONAClient` interface, mostly for the callbacks.
 
+### What Serial port, UART or another one?
+ To use `/dev/ttyAMA0`, you need to disable the Serial Shell (from `raspi-config`).
+ In case you dont want - or cannot - use the UART port (`/dev/ttyAMA0`) it is easy to
+ use another port - like a USB slot. You just need a USB cable like the
+ one at https://www.adafruit.com/products/954.
+
+ - Hook-up the green wire of the USB cable on the FONA Rx
+ - Hook-up the white wire of the USB cable on the FONA Tx
+
+ You can as well use the Vin and the GND of the USB cable.
+ This would be another project, a FONA on its own board, with a USB Cable attached to it ;)
+
 ## Implement your own FONA application
 See in `FonaListener.java`, this is an example/skeleton of what you need to expect SMS and reply
 something the caller expects.
