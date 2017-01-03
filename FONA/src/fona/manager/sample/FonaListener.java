@@ -159,12 +159,13 @@ public class FonaListener implements FONAClient {
 	public void readSMS(FONAManager.ReceivedSMS sms) {
 		System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
 		// TODO: This is where you would parse the message and take the appropriate action.
-		String mess = "Message from " + sms.getFrom() + ", " + sms.getContent();
+//	String mess = "Message from " + sms.getFrom() + ", " + sms.getContent();
+		String mess = sms.getContent();
 		TextToSpeech.speak(mess);
 	}
 
 	@Override
 	public void someoneCalling() {
-		System.out.println("Dring dring!");
+		System.out.println("Dring dring! Pouet pouet pouet!");
 	}
 }
