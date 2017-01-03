@@ -11,12 +11,11 @@ will result in an output like `"ABCDEFGHIJKLMNOP"` on the receiver's end.
 I've not been able to find why, but this is a fact.
 
 Waiting 1 millisecond between each character sent to the Serial port seems to address the issue:
-```
+```java
 private final static float BETWEEN_SENT_CHAR = 0.001F; // 1 ms
 ...
 String payload = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-for (int i=0; i<payload.length(); i++)
-{
+for (int i=0; i<payload.length(); i++) {
   serial.write(payload.charAt(i));
   delay(BETWEEN_SENT_CHAR);
 }
@@ -40,5 +39,18 @@ provided by an Arduino are required in the FONA context.
 See an example of a client in `fona.manager.sample.InteractiveFona.java`. It requires the client
 to implement the `fona.manager.FONAClient` interface, mostly for the callbacks.
 
-
-
+## Implement your own FONA application
+See in `FonaListener.java`, this is an example/skeleton of what you need to expect SMS and reply
+something the caller expects.
+This example just speaks out the message it received.
+For this example, you need to have installed `espeak`.
+ ```bash
+  sudo apt-get install espeak
+ ```
+To implement your own code, see the method
+```java
+ @Override
+ public void readSMS(FONAManager.ReceivedSMS sms) {
+   ...
+ }
+```
