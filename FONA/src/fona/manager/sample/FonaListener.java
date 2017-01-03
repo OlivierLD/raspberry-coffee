@@ -35,8 +35,6 @@ public class FonaListener implements FONAClient {
 		System.out.println(" ... connect using port " + port + " : " + Integer.toString(br)); // +  ", N, 8, 1.");
 		System.out.println(" ... data received on serial port should be displayed below.");
 
-		// create an instance of the serial communications class
-		// final Serial serial = SerialFactory.createInstance();
 		try {
 			System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
 			fona.openSerial(port, br);
@@ -51,13 +49,10 @@ public class FonaListener implements FONAClient {
 			System.out.println("Connection established.");
 
 			final Thread me = Thread.currentThread();
+
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				public void run() {
-					// Cleanup
 					System.out.println();
-//           fona.stopReading();
-//           fona.closeSerial();
-
 					synchronized (me) {
 						me.notify();
 					}
@@ -72,7 +67,7 @@ public class FonaListener implements FONAClient {
 			fona.stopReading();
 			fona.closeSerial();
 		} catch (SerialPortException ex) {
-			System.out.println(" ==>> SERIAL SETUP FAILED : " + ex.getMessage());
+			System.out.println(" ==>> SERIAL SETUP FAILED : " + ex.getMessage() + " <<== ");
 			return;
 		}
 		System.exit(0);
@@ -162,6 +157,26 @@ public class FonaListener implements FONAClient {
 //	String mess = "Message from " + sms.getFrom() + ", " + sms.getContent();
 		String mess = sms.getContent();
 		TextToSpeech.speak(mess);
+		// Echo to sender
+		sendResponse("You just said: " + sms.getContent(), sms.getFrom());
+	}
+
+	/**
+	 * Use this method to send an SMS.
+	 * @param messContent Message content
+	 * @param sendTo Message destination
+	 */
+	public void sendResponse(final String messContent, final String sendTo) {
+		Thread senderThread = new Thread() {
+			public void run() {
+				try {
+					fona.sendSMS(sendTo, messContent);
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+		};
+		senderThread.start();
 	}
 
 	@Override

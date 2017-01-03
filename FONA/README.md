@@ -69,4 +69,4 @@ To implement your own code, see the method
  }
 ```
 
-Also see `/Users/olediouris/repos/oliv-soft-project-builder/olivsoft/navigation-desktop-user-exits/src/olivsoftdesktopuserexits/FONAUserExit.java`, for remote monitoring using FONA.
+Also see [here](https://github.com/OlivierLD/navigation-desktop-user-exits/blob/master/src/olivsoftdesktopuserexits/FONAUserExit.java), for remote monitoring using FONA.
