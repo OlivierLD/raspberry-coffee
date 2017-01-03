@@ -48,6 +48,8 @@ to implement the `fona.manager.FONAClient` interface, mostly for the callbacks.
  - Hook-up the green wire of the USB cable on the FONA Rx
  - Hook-up the white wire of the USB cable on the FONA Tx
 
+ You end-up with a serial port like `/dev/ttyUSB*`.
+
  You can as well use the Vin and the GND of the USB cable.
  This would be another project, a FONA on its own board, with a USB Cable attached to it ;)
 
