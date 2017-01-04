@@ -332,7 +332,7 @@ public class MeArmScriptDemo {
 
 		// 2 - Execute the script
 
-//  initContext();
+	  initContext();
 
 		scriptReader = new BufferedReader(new FileReader(scriptName));
 		line = "";
