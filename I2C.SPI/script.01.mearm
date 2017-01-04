@@ -19,6 +19,21 @@ WAIT:250
 SET_PWM:LEFT, 0, 230
 SET_PWM:LEFT, 0, 0
 WAIT:250
+#
+PRINT: "Prelude... Turning left right and back left."
+WAIT: 1000
+PRINT: "Turning left"
+MOVE: BOTTOM, 410, 510, 10, 25
+# WAIT:500
+PRINT: "Turning Right"
+MOVE: BOTTOM, 510, 310, 10, 25
+# WAIT:500
+PRINT: "Turning Left again"
+MOVE: BOTTOM, 310, 410, 10, 25
+WAIT:1000
+#
+PRINT: "Now going to work..."
+#
 # Open and close the claw
 # 130 Open, 400 closed
 PRINT: "Opening the claw"
