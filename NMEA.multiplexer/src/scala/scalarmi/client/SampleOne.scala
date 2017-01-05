@@ -12,9 +12,9 @@ import nmea.parser.GeoPos
 import java.rmi.registry.LocateRegistry
 import java.text.NumberFormat
 
-object SampleOne {
+object SampleOne extends App {
 
-  def main(args: Array[String]): Unit = {
+//def main(args: Array[String]): Unit = {
     println("Hello Scala!")
 
     val bindingName = "RMI-NMEA"
@@ -44,18 +44,24 @@ object SampleOne {
         case ie: InterruptedException => {
         }
       }
-      val cacheTask = new NMEACache
-      before = System.currentTimeMillis
-      val cache = comp.executeTask(cacheTask)
-      after = System.currentTimeMillis
-      println(s"NMEACache execution took ${NumberFormat.getInstance.format(after - before)} ms.")
-      val position = cache.get(NMEADataCache.POSITION)
-      println(s"Position is a ${position.getClass.getName}")
-      if (position.isInstanceOf[GeoPos]) println(s"Position is ${position.asInstanceOf[GeoPos].toString} (Grid Square ${position.asInstanceOf[GeoPos].gridSquare})")
       try {
-        Thread.sleep(1000L)
+        val cacheTask = new NMEACache
+        before = System.currentTimeMillis
+        val cache = comp.executeTask(cacheTask)
+        after = System.currentTimeMillis
+        println(s"NMEACache execution took ${NumberFormat.getInstance.format(after - before)} ms.")
+        val position = cache.get(NMEADataCache.POSITION)
+        println(s"Position is a ${position.getClass.getName}")
+        if (position.isInstanceOf[GeoPos]) println(s"Position is ${position.asInstanceOf[GeoPos].toString} (Grid Square ${position.asInstanceOf[GeoPos].gridSquare})")
+        try {
+          Thread.sleep(1000L)
+        } catch {
+          case ie: InterruptedException => {
+          }
+        }
       } catch {
-        case ie: InterruptedException => {
+        case e: Exception => {
+          println(s"Oops, getting full cache: ${e.toString}")
         }
       }
       val boatPositionTask = new BoatPosition
@@ -74,7 +80,7 @@ object SampleOne {
       val calculatedCurrent = new CalculatedCurrent
       val instantCurrent = new InstantCurrent
       // Instant: CSP & CDR
-      (1 to 50).foreach((idx: Int) => {
+      (1 to 30).foreach((idx: Int) => {
         before = System.currentTimeMillis
         val tw = comp.executeTask(trueWind)
         after = System.currentTimeMillis
@@ -98,6 +104,6 @@ object SampleOne {
       }
     }
     println("Done!")
-  }
+//}
 }
 
