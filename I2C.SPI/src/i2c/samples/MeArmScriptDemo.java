@@ -15,6 +15,7 @@ import java.util.function.Consumer;
  * Standard, all the way, clockwise, counterclockwise.
  *
  * This class refers to a script to know what to do.
+ * See the {@link #main} method.
  */
 public class MeArmScriptDemo {
 	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
@@ -113,6 +114,10 @@ public class MeArmScriptDemo {
 		}
 	}
 
+	/**
+	 * Warning No comma "," in the message!!
+	 * @param cmd
+	 */
 	private static void servoPrint(CommandWithArgs cmd) {
 		if (!cmd.command.equals("PRINT")) {
 			System.err.println(String.format("Unexpected command [%s] in servoPrint.", cmd.command));

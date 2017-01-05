@@ -42,7 +42,7 @@ import util.DumpUtil;
  *
  * IMPORTANT NOTE:
  * ===============
- * In case you dont want - or cannot - use the UART port (/dev/ttyAMA0) it is easy to
+ * In case you do not want - or cannot - use the UART port (/dev/ttyAMA0) it is easy to
  * use another port - like a USB slot. You just need a USB cable like the
  * one at https://www.adafruit.com/products/954.
  *
@@ -112,7 +112,7 @@ public class FONAManager {
 	private static String expectedNotification = "";
 	private static Thread expectingNotification = null;
 
-	public final static String CLTR_Z = "\032";           // 0x1A; // 26, 032
+	public final static String CLTR_Z = "\032";           // 26, 0x1A, 032
 	public final static String ACK = CRLF + "OK" + CRLF;  // QUESTION specially when entering a message.
 	private final static float BETWEEN_SENT_CHAR = 0.001F;
 

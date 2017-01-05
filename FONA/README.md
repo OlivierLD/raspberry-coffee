@@ -41,6 +41,9 @@ to implement the `fona.manager.FONAClient` interface, mostly for the callbacks.
 
 ### What Serial port, UART or another one?
  To use `/dev/ttyAMA0`, you need to disable the Serial Shell (from `raspi-config`).
+
+![FONA using UART](./FONA.png "UART")
+
  In case you dont want - or cannot - use the UART port (`/dev/ttyAMA0`) it is easy to
  use another port - like a USB slot. You just need a USB cable like the
  one at https://www.adafruit.com/products/954.
@@ -49,6 +52,8 @@ to implement the `fona.manager.FONAClient` interface, mostly for the callbacks.
  - Hook-up the white wire of the USB cable on the FONA Tx
 
 You end-up with a serial port like `/dev/ttyUSB*`.
+
+![FONA using USB Port](./FONA.USB.png "USB")
 
 You can as well use the Vin and the GND of the USB cable.
 This would be another project, a FONA on its own board, with a USB Cable attached to it ;)
