@@ -72,8 +72,8 @@ Computers:
 - **True Wind** computer (produces `MDA`, `MWD` data)
 - **Current** computer (produces `VDR` data)
 
-Transformers (incubating):
-- **GPSD** data
+Transformers:
+- **GPSD** data (See [this](https://hocus-blogus.blogspot.com/2016/12/nmea-multiplexer-opencpn-gpsd.html))
 - **Custom** data
 
 ##### A word about the Current Computer
