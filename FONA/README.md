@@ -44,7 +44,7 @@ to implement the `fona.manager.FONAClient` interface, mostly for the callbacks.
 
 ![FONA using UART](./FONA.png "UART")
 
- In case you dont want - or cannot - use the UART port (`/dev/ttyAMA0`) it is easy to
+ In case you do not want to - or cannot - use the UART port (`/dev/ttyAMA0`) it is easy to
  use another port - like a USB slot. You just need a USB cable like the
  one at https://www.adafruit.com/products/954.
 
