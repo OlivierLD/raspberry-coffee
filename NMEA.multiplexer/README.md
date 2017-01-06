@@ -414,3 +414,11 @@ water temp     | "C" temperature |   2 decimals                    | "C" celsius
 ```
 
 ---
+
+### JVM Monitoring
+![Overview](./JConsole.01.png "Overview")
+Overview
+
+![The advantage of naming the threads](./JConsole.02.png "Thread view")
+Thread view, with thread names
+
