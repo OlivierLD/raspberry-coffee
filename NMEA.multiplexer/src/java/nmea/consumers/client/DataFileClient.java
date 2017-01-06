@@ -80,7 +80,7 @@ public class DataFileClient extends NMEAClient {
 
 		nmeaClient = new DataFileClient();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("DataFileClient shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down nicely.");
 				nmeaClient.stopDataRead();

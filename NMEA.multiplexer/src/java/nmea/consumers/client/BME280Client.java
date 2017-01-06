@@ -70,7 +70,7 @@ public class BME280Client extends NMEAClient {
 
 		nmeaClient = new BME280Client();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("BME280Client shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down nicely.");
 				nmeaClient.stopDataRead();

@@ -1698,7 +1698,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			}
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("Multiplexer shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down multiplexer nicely.");
 				nmeaDataClients.stream()

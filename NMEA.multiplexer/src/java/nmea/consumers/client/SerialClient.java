@@ -90,7 +90,7 @@ public class SerialClient extends NMEAClient {
 
 		nmeaClient = new SerialClient();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("SerialClient shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down nicely.");
 				nmeaClient.stopDataRead();

@@ -70,7 +70,7 @@ public class RandomClient extends NMEAClient {
 
 		nmeaClient = new RandomClient();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("RandomClient shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down nicely.");
 				nmeaClient.stopDataRead();

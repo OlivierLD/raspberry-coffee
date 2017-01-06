@@ -70,7 +70,7 @@ public class HTU21DFClient extends NMEAClient {
 
 		nmeaClient = new HTU21DFClient();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("HTU21DFClient shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down nicely.");
 				nmeaClient.stopDataRead();

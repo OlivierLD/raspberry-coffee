@@ -72,7 +72,7 @@ public class WebSocketClient extends NMEAClient {
 
 		nmeaClient = new WebSocketClient();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("WebSoketClient shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down nicely.");
 				nmeaClient.stopDataRead();

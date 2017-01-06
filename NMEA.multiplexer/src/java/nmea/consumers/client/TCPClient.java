@@ -84,7 +84,7 @@ public class TCPClient extends NMEAClient {
 
 		nmeaClient = new TCPClient();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("TCPClient shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down nicely.");
 				nmeaClient.stopDataRead();

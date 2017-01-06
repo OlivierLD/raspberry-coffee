@@ -127,7 +127,7 @@ public class WebSocketProcessor implements Forwarder {
 			ex.printStackTrace();
 		}
 
-		Thread cacheThread = new Thread() {
+		Thread cacheThread = new Thread("WebSocketProcessor CacheThread") {
 			public void run() {
 				while (keepWorking) {
 					NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
