@@ -17,11 +17,11 @@ public class RandomClient extends NMEAClient {
 		this(null, null, mux);
 	}
 
-	public RandomClient(String s, String[] sa) {
+	public RandomClient(String[] s, String[] sa) {
 		this(s, sa, null);
 	}
 
-	public RandomClient(String s, String[] sa, Multiplexer mux) {
+	public RandomClient(String[] s, String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("rnd.data.verbose", "false"));
 	}
@@ -40,11 +40,15 @@ public class RandomClient extends NMEAClient {
 	public static class RandomBean implements ClientBean {
 		private String cls;
 		private String type = "rnd";
+		private String[] deviceFilters;
+		private String[] sentenceFilters;
 		private boolean verbose;
 
 		public RandomBean(RandomClient instance) {
 			cls = instance.getClass().getName();
 			verbose = instance.isVerbose();
+			deviceFilters = instance.getDevicePrefix();
+			sentenceFilters = instance.getSentenceArray();
 		}
 
 		@Override
@@ -56,6 +60,12 @@ public class RandomClient extends NMEAClient {
 		public boolean getVerbose() {
 			return this.verbose;
 		}
+
+		@Override
+		public String[] getDeviceFilters() { return this.deviceFilters; };
+
+		@Override
+		public String[] getSentenceFilters() { return this.sentenceFilters; };
 	}
 
 	@Override

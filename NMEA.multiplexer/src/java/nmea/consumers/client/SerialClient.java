@@ -17,11 +17,11 @@ public class SerialClient extends NMEAClient {
 		this(null, null, mux);
 	}
 
-	public SerialClient(String s, String[] sa) {
+	public SerialClient(String s[], String[] sa) {
 		this(s, sa, null);
 	}
 
-	public SerialClient(String s, String[] sa, Multiplexer mux) {
+	public SerialClient(String s[], String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("serial.data.verbose", "false"));
 	}
@@ -42,6 +42,8 @@ public class SerialClient extends NMEAClient {
 		private String type = "serial";
 		private String port;
 		private int br;
+		private String[] deviceFilters;
+		private String[] sentenceFilters;
 		private boolean verbose;
 
 		public SerialBean(SerialClient instance) {
@@ -49,6 +51,8 @@ public class SerialClient extends NMEAClient {
 			port = ((SerialReader) instance.getReader()).getPort();
 			br = ((SerialReader) instance.getReader()).getBr();
 			verbose = instance.isVerbose();
+			deviceFilters = instance.getDevicePrefix();
+			sentenceFilters = instance.getSentenceArray();
 		}
 
 		@Override
@@ -68,6 +72,12 @@ public class SerialClient extends NMEAClient {
 		public boolean getVerbose() {
 			return this.verbose;
 		}
+
+		@Override
+		public String[] getDeviceFilters() { return this.deviceFilters; };
+
+		@Override
+		public String[] getSentenceFilters() { return this.sentenceFilters; };
 	}
 
 	@Override

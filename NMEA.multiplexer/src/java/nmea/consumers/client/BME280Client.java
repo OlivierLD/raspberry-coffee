@@ -17,11 +17,11 @@ public class BME280Client extends NMEAClient {
 		this(null, null, mux);
 	}
 
-	public BME280Client(String s, String[] sa) {
+	public BME280Client(String s[], String[] sa) {
 		this(s, sa, null);
 	}
 
-	public BME280Client(String s, String[] sa, Multiplexer mux) {
+	public BME280Client(String s[], String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
 		this.verbose = ("true".equals(System.getProperty("bme280.data.verbose", "false")));
 	}
@@ -41,10 +41,14 @@ public class BME280Client extends NMEAClient {
 		private String cls;
 		private String type = "bme280";
 		private boolean verbose;
+		private String[] deviceFilters;
+		private String[] sentenceFilters;
 
 		public BME280Bean(BME280Client instance) {
 			cls = instance.getClass().getName();
 			verbose = instance.isVerbose();
+			deviceFilters = instance.getDevicePrefix();
+			sentenceFilters = instance.getSentenceArray();
 		}
 
 		@Override
@@ -56,6 +60,12 @@ public class BME280Client extends NMEAClient {
 		public boolean getVerbose() {
 			return this.verbose;
 		}
+
+		@Override
+		public String[] getDeviceFilters() { return this.deviceFilters; };
+
+		@Override
+		public String[] getSentenceFilters() { return this.sentenceFilters; };
 	}
 
 	@Override

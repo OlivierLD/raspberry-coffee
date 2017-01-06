@@ -17,11 +17,11 @@ public class DataFileClient extends NMEAClient {
 		this(null, null, mux);
 	}
 
-	public DataFileClient(String s, String[] sa) {
+	public DataFileClient(String[] s, String[] sa) {
 		this(s, sa, null);
 	}
 
-	public DataFileClient(String s, String[] sa, Multiplexer mux) {
+	public DataFileClient(String[] s, String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("file.data.verbose", "false"));
 	}
@@ -41,12 +41,16 @@ public class DataFileClient extends NMEAClient {
 		private String cls;
 		private String file;
 		private String type = "file";
+		private String[] deviceFilters;
+		private String[] sentenceFilters;
 		private boolean verbose;
 
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();
 			file = ((DataFileReader) instance.getReader()).getFileNme();
 			verbose = instance.isVerbose();
+			deviceFilters = instance.getDevicePrefix();
+			sentenceFilters = instance.getSentenceArray();
 		}
 
 		@Override
@@ -62,6 +66,12 @@ public class DataFileClient extends NMEAClient {
 		public boolean getVerbose() {
 			return this.verbose;
 		}
+
+		@Override
+		public String[] getDeviceFilters() { return this.deviceFilters; };
+
+		@Override
+		public String[] getSentenceFilters() { return this.sentenceFilters; };
 	}
 
 	@Override
@@ -70,15 +80,15 @@ public class DataFileClient extends NMEAClient {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("CustomDataFileClient invoked with " + args.length + " Parameter(s).");
+		System.out.println("DataFileClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
-			System.out.println("CustomDataFileClient prm:" + s);
+			System.out.println("DataFileClient prm:" + s);
 
 		String dataFile = "./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea";
 		if (args.length > 0)
 			dataFile = args[0];
 
-		nmeaClient = new DataFileClient();
+		nmeaClient = new DataFileClient(null, new String[] { "RMC", "GLL" }, null);
 
 		Runtime.getRuntime().addShutdownHook(new Thread("DataFileClient shutdown hook") {
 			public void run() {

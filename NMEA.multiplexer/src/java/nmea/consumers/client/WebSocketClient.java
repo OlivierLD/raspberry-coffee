@@ -17,11 +17,11 @@ public class WebSocketClient extends NMEAClient {
 		this(null, null, mux);
 	}
 
-	public WebSocketClient(String s, String[] sa) {
+	public WebSocketClient(String[] s, String[] sa) {
 		this(s, sa, null);
 	}
 
-	public WebSocketClient(String s, String[] sa, Multiplexer mux) {
+	public WebSocketClient(String[] s, String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("ws.data.verbose", "false"));
 	}
@@ -41,12 +41,16 @@ public class WebSocketClient extends NMEAClient {
 		private String cls;
 		private String type = "ws";
 		private String wsUri;
+		private String[] deviceFilters;
+		private String[] sentenceFilters;
 		private boolean verbose;
 
 		public WSBean(WebSocketClient instance) {
 			cls = instance.getClass().getName();
 			wsUri = ((WebSocketReader) instance.getReader()).getWsUri();
 			verbose = instance.isVerbose();
+			deviceFilters = instance.getDevicePrefix();
+			sentenceFilters = instance.getSentenceArray();
 		}
 
 		@Override
@@ -60,6 +64,12 @@ public class WebSocketClient extends NMEAClient {
 		public String getWsUri() {
 			return wsUri;
 		}
+
+		@Override
+		public String[] getDeviceFilters() { return this.deviceFilters; };
+
+		@Override
+		public String[] getSentenceFilters() { return this.sentenceFilters; };
 	}
 
 	@Override

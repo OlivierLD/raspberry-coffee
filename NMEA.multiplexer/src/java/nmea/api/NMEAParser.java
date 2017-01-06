@@ -1,6 +1,7 @@
 package nmea.api;
 
 import http.utils.DumpUtil;
+import nmea.parser.StringParsers;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
  * @see nmea.api.NMEAException
  */
 public final class NMEAParser extends Thread {
-	protected String nmeaPrefix = "";
+	protected String[] nmeaPrefix = null;
 	private String[] nmeaSentence = null;
 
 	private String nmeaStream = "";
@@ -54,8 +55,41 @@ public final class NMEAParser extends Thread {
 				try {
 					while (s != null) {
 						s = instance.detectSentence();
-						if (s != null)
-							instance.fireDataDetected(new NMEAEvent(this, s));
+						if (s != null && s.length() > 6 && s.startsWith("$")) { // Potentially valid
+							// TODO ? RegExp on the full sentence
+							boolean broadcast = true;
+							if (nmeaPrefix != null) {
+								for (String device : nmeaPrefix) {
+									if (device.trim().length() > 0 &&
+													( (!device.startsWith("~") && !device.equals(StringParsers.getDeviceID(s))) ||
+																	device.startsWith("~") && device.substring(1).equals(StringParsers.getDeviceID(s)))) {
+										broadcast = false;
+										break;
+									}
+								}
+							}
+							if (broadcast && nmeaSentence != null) {
+								String thisId = StringParsers.getSentenceID(s);
+								for (String prefix : nmeaSentence) {
+									if (prefix.startsWith("~") && thisId.equals(prefix.substring(1))) {
+										broadcast = false;
+										break;
+									}
+								}
+								if (broadcast) {
+									broadcast = false;
+									for (String prefix : nmeaSentence) {
+										if (!prefix.startsWith("~") && thisId.equals(prefix)) {
+											broadcast = true;
+											break;
+										}
+									}
+								}
+							}
+							if (broadcast) {
+								instance.fireDataDetected(new NMEAEvent(this, s));
+							}
+						}
 					}
 				} catch (NMEAException ne) {
 					ne.printStackTrace();
@@ -64,11 +98,11 @@ public final class NMEAParser extends Thread {
 		});
 	}
 
-	public String getNmeaPrefix() {
+	public String[] getNmeaPrefix() {
 		return this.nmeaPrefix;
 	}
 
-	public void setNmeaPrefix(String s) {
+	public void setNmeaPrefix(String[] s) {
 		this.nmeaPrefix = s;
 	}
 
@@ -141,27 +175,28 @@ public final class NMEAParser extends Thread {
 					if (nmeaStream.length() > 6) { // "$" + prefix + XXX
 						endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 						if (endIdx > -1) {
-							if (nmeaSentence != null) {
-								for (int i = 0; i < this.nmeaSentence.length; i++) {
-									//  System.out.println("Checking [" + nmeaSentence[i] + "] against [" + nmeaStream + "]");
-									// Fully qualified sentence
-									if (nmeaSentence[i].length() == 5 && nmeaStream.startsWith("$" + nmeaSentence[i])) {
-										return true;
-									}
-									// Specific prefix
-									else if (!("*".equals(nmeaPrefix.trim())) && nmeaStream.startsWith("$" + nmeaPrefix + nmeaSentence[i])) {
-										return true;
-									}
-									// Any prefix
-									else if ("*".equals(nmeaPrefix.trim()) && nmeaStream.startsWith("$") && nmeaStream.substring(3).startsWith(nmeaSentence[i])) {
-										return true;
-									}
-								}
-							} else {
-//              System.out.println("Taking everything!");
+//							if (nmeaSentence != null) {
+//								for (int i = 0; i < this.nmeaSentence.length; i++) {
+//									//  System.out.println("Checking [" + nmeaSentence[i] + "] against [" + nmeaStream + "]");
+//									// Fully qualified sentence
+//									if (nmeaSentence[i].length() == 5 && nmeaStream.startsWith("$" + nmeaSentence[i])) {
+//										return true;
+//									}
+//									// Specific prefix
+//									else if (!("*".equals(nmeaPrefix.trim())) && nmeaStream.startsWith("$" + nmeaPrefix + nmeaSentence[i])) {
+//										return true;
+//									}
+//									// Any prefix
+//									else if ("*".equals(nmeaPrefix.trim()) && nmeaStream.startsWith("$") && nmeaStream.substring(3).startsWith(nmeaSentence[i])) {
+//										return true;
+//									}
+//									nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
+//								}
+//							} else {
+//							System.out.println("Taking everything!");
 								return true; // Take all
-							}
-							nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
+//							}
+//					  nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
 						} else
 							return false; // unfinished sentence
 					} else

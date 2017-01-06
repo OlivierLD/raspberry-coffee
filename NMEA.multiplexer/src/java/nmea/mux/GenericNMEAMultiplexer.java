@@ -760,7 +760,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient tcpClient = new TCPClient(this);
+						NMEAClient tcpClient = new TCPClient(tcpJson.getDeviceFilters(), tcpJson.getSentenceFilters(), this);
 						tcpClient.initClient();
 						tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpJson.getHostname(), tcpJson.getPort()));
 						nmeaDataClients.add(tcpClient);
@@ -787,7 +787,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient serialClient = new SerialClient(this);
+						NMEAClient serialClient = new SerialClient(serialJson.getDeviceFilters(), serialJson.getSentenceFilters(),this);
 						serialClient.initClient();
 						serialClient.setReader(new SerialReader(serialClient.getListeners(), serialJson.getPort(), serialJson.getBr()));
 						nmeaDataClients.add(serialClient);
@@ -810,12 +810,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				WebSocketClient.WSBean wsJson = new Gson().fromJson(new String(request.getContent()), WebSocketClient.WSBean.class);
 				// Check if not there yet.
 				opClient = nmeaDataClients.stream()
-								.filter(channel -> channel instanceof SerialClient &&
+								.filter(channel -> channel instanceof WebSocketClient &&
 												((WebSocketClient.WSBean) ((WebSocketClient) channel).getBean()).getWsUri().equals(wsJson.getWsUri()))
 								.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient wsClient = new WebSocketClient(this);
+						NMEAClient wsClient = new WebSocketClient(wsJson.getDeviceFilters(), wsJson.getSentenceFilters(),this);
 						wsClient.initClient();
 						wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsJson.getWsUri()));
 						nmeaDataClients.add(wsClient);
@@ -843,7 +843,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient fileClient = new DataFileClient(this);
+						NMEAClient fileClient = new DataFileClient(fileJson.getDeviceFilters(), fileJson.getSentenceFilters(),this);
 						fileClient.initClient();
 						fileClient.setReader(new DataFileReader(fileClient.getListeners(), fileJson.getFile()));
 						nmeaDataClients.add(fileClient);
@@ -863,12 +863,13 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			case "bme280":
+				BME280Client.BME280Bean bme280Json = new Gson().fromJson(new String(request.getContent()), BME280Client.BME280Bean.class);
 				opClient = nmeaDataClients.stream()
 								.filter(channel -> channel instanceof BME280Client)
 								.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient bme280Client = new BME280Client(this);
+						NMEAClient bme280Client = new BME280Client(bme280Json.getDeviceFilters(), bme280Json.getSentenceFilters(),this);
 						bme280Client.initClient();
 						bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
 						nmeaDataClients.add(bme280Client);
@@ -888,12 +889,13 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			case "htu21df":
+				HTU21DFClient.HTU21DFBean htu21dfJson = new Gson().fromJson(new String(request.getContent()), HTU21DFClient.HTU21DFBean.class);
 				opClient = nmeaDataClients.stream()
 								.filter(channel -> channel instanceof HTU21DFClient)
 								.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient htu21dfClient = new HTU21DFClient(this);
+						NMEAClient htu21dfClient = new HTU21DFClient(htu21dfJson.getDeviceFilters(), htu21dfJson.getSentenceFilters(),this);
 						htu21dfClient.initClient();
 						htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
 						nmeaDataClients.add(htu21dfClient);
@@ -913,12 +915,13 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			case "rnd":
+				RandomClient.RandomBean rndJson = new Gson().fromJson(new String(request.getContent()), RandomClient.RandomBean.class);
 				opClient = nmeaDataClients.stream()
 								.filter(channel -> channel instanceof RandomClient)
 								.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient rndClient = new RandomClient(this);
+						NMEAClient rndClient = new RandomClient(rndJson.getDeviceFilters(), rndJson.getSentenceFilters(),this);
 						rndClient.initClient();
 						rndClient.setReader(new RandomReader(rndClient.getListeners()));
 						nmeaDataClients.add(rndClient);
@@ -1449,12 +1452,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			if (type == null) {
 				thereIsMore = false;
 			} else {
+				String deviceFilters = "";
+				String sentenceFilters = "";
 				switch (type) {
 					case "serial":
 						try {
 							String serialPort = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
 							String br = muxProps.getProperty(String.format("mux.%s.baudrate", MUX_IDX_FMT.format(muxIdx)));
-							NMEAClient serialClient = new SerialClient(this);
+							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							NMEAClient serialClient = new SerialClient(
+											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+											this);
 							serialClient.initClient();
 							serialClient.setReader(new SerialReader(serialClient.getListeners(), serialPort, Integer.parseInt(br)));
 							nmeaDataClients.add(serialClient);
@@ -1466,7 +1476,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						try {
 							String tcpPort = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
 							String tcpServer = muxProps.getProperty(String.format("mux.%s.server", MUX_IDX_FMT.format(muxIdx)));
-							NMEAClient tcpClient = new TCPClient(this);
+							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							NMEAClient tcpClient = new TCPClient(
+											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+											this);
 							tcpClient.initClient();
 							tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpServer, Integer.parseInt(tcpPort)));
 							nmeaDataClients.add(tcpClient);
@@ -1477,7 +1492,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					case "file":
 						try {
 							String filename = muxProps.getProperty(String.format("mux.%s.filename", MUX_IDX_FMT.format(muxIdx)));
-							NMEAClient fileClient = new DataFileClient(this);
+							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							NMEAClient fileClient = new DataFileClient(
+											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+											this);
 							fileClient.initClient();
 							fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename));
 							nmeaDataClients.add(fileClient);
@@ -1488,7 +1508,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					case "ws":
 						try {
 							String wsUri = muxProps.getProperty(String.format("mux.%s.wsuri", MUX_IDX_FMT.format(muxIdx)));
-							NMEAClient wsClient = new WebSocketClient(this);
+							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							NMEAClient wsClient = new WebSocketClient(
+											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+											this);
 							wsClient.initClient();
 							wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsUri));
 							nmeaDataClients.add(wsClient);
@@ -1498,7 +1523,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						break;
 					case "htu21df": // Humidity & Temperature sensor
 						try {
-							NMEAClient htu21dfClient = new HTU21DFClient(this);
+							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							NMEAClient htu21dfClient = new HTU21DFClient(
+											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+											this);
 							htu21dfClient.initClient();
 							htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
 							nmeaDataClients.add(htu21dfClient);
@@ -1510,7 +1540,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						break;
 					case "rnd": // Random generator, for debugging
 						try {
-							NMEAClient rndClient = new RandomClient(this);
+							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							NMEAClient rndClient = new RandomClient(
+											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+											this);
 							rndClient.initClient();
 							rndClient.setReader(new RandomReader(rndClient.getListeners()));
 							nmeaDataClients.add(rndClient);
@@ -1522,7 +1557,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						break;
 					case "bme280": // Humidity, Temperature, Pressure
 						try {
-							NMEAClient bme280Client = new BME280Client(this);
+							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							NMEAClient bme280Client = new BME280Client(
+											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+											this);
 							bme280Client.initClient();
 							bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
 							nmeaDataClients.add(bme280Client);
