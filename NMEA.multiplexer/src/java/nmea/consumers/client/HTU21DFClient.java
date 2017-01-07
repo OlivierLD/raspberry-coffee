@@ -3,6 +3,7 @@ package nmea.consumers.client;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
+import nmea.api.NMEAReader;
 import nmea.consumers.reader.HTU21DFReader;
 
 /**
@@ -26,6 +27,22 @@ public class HTU21DFClient extends NMEAClient {
 		this.verbose = "true".equals(System.getProperty("htu21df.data.verbose", "false"));
 	}
 
+	public String getSpecificDevicePrefix() {
+		String dp = "";
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof HTU21DFReader) {
+			dp = ((HTU21DFReader)reader).getDevicePrefix();
+		}
+		return dp;
+	}
+
+	public void setSpecificDevicePrefix(String dp) {
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof HTU21DFReader) {
+			((HTU21DFReader)reader).setDevicePrefix(dp);
+		}
+	}
+
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
 		if (verbose)
@@ -42,11 +59,13 @@ public class HTU21DFClient extends NMEAClient {
 		private String type = "hut21df";
 		private String[] deviceFilters;
 		private String[] sentenceFilters;
+		private String devicePrefix;
 		private boolean verbose;
 
 		public HTU21DFBean(HTU21DFClient instance) {
 			cls = instance.getClass().getName();
 			verbose = instance.isVerbose();
+			devicePrefix = instance.getSpecificDevicePrefix();
 			deviceFilters = instance.getDevicePrefix();
 			sentenceFilters = instance.getSentenceArray();
 		}
@@ -66,6 +85,8 @@ public class HTU21DFClient extends NMEAClient {
 
 		@Override
 		public String[] getSentenceFilters() { return this.sentenceFilters; };
+
+		public String getDevicePrefix() { return this.devicePrefix; }
 	}
 
 	@Override

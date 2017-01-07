@@ -296,8 +296,10 @@
                 case 'htu21df':
                     var dFilters = $("#htu21df-dev-filters").val().split(",");
                     var sFilters = $("#htu21df-sentence-filters").val().split(",");
+                    var dPrefix = $('#htu21df-dev-prefix').val();
                     createChannel({
                         type: 'htu21df',
+                        devicePrefix: dPrefix,
                         deviceFilters: dFilters,
                         sentenceFilters: sFilters
                     });
@@ -596,6 +598,10 @@
               </div>
               <div id="channel-htu21df" style="display: none;">
                 <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="htu21df-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="RP"></td>
+                  </tr>
                   <tr>
                     <td>Device filter(s)</td>
                     <td><input id="htu21df-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>

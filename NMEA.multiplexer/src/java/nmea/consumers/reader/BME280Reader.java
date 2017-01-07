@@ -20,7 +20,7 @@ public class BME280Reader extends NMEAReader {
 	private static final String DEFAULT_DEVICE_PREFIX = "RP";
 	private String devicePrefix = DEFAULT_DEVICE_PREFIX;
 
-	private static final long BETWEEN_LOOPS = 1000L; // TODO: Make it an external parameter.
+	private static final long BETWEEN_LOOPS = 1000L; // TODO: Make it an external parameter?
 
 	public BME280Reader(List<NMEAListener> al) {
 		super(al);
@@ -32,7 +32,7 @@ public class BME280Reader extends NMEAReader {
 	}
 
 	public String getDevicePrefix() {
-		return devicePrefix;
+		return this.devicePrefix;
 	}
 
 	public void setDevicePrefix(String devicePrefix) {

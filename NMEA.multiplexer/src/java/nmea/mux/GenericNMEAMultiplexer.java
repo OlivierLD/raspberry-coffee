@@ -906,6 +906,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						NMEAClient htu21dfClient = new HTU21DFClient(htu21dfJson.getDeviceFilters(), htu21dfJson.getSentenceFilters(),this);
 						htu21dfClient.initClient();
 						htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
+						// To do BEFORE startWorking and AFTER setReader
+						if (htu21dfJson.getDevicePrefix() != null) {
+							if (htu21dfJson.getDevicePrefix().trim().length() != 2) {
+								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", htu21dfJson.getDevicePrefix().trim()));
+							} else {
+								((HTU21DFClient)htu21dfClient).setSpecificDevicePrefix(htu21dfJson.getDevicePrefix().trim());
+							}
+						}
 						nmeaDataClients.add(htu21dfClient);
 						htu21dfClient.startWorking();
 						String content = new Gson().toJson(htu21dfClient.getBean());
@@ -1533,12 +1541,21 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						try {
 							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							String htu21dfDevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
 							NMEAClient htu21dfClient = new HTU21DFClient(
 											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 											this);
 							htu21dfClient.initClient();
 							htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
+							// Important: after the setReader
+							if (htu21dfDevicePrefix.trim().length() > 0) {
+								if (htu21dfDevicePrefix.trim().length() == 2) {
+									((HTU21DFClient)htu21dfClient).setSpecificDevicePrefix(htu21dfDevicePrefix.trim());
+								} else {
+									throw new RuntimeException(String.format("Bad prefix [%s] for HTU21DF. Must be 2 character long, exactly.", htu21dfDevicePrefix.trim()));
+								}
+							}
 							nmeaDataClients.add(htu21dfClient);
 						} catch (Exception e) {
 							e.printStackTrace();
