@@ -13,6 +13,7 @@ public class DataFileWriter implements Forwarder {
 		try {
 			this.dataFile = new BufferedWriter(new FileWriter(fName));
 		} catch (Exception ex) {
+			System.err.println(String.format("When creating [%s]", fName));
 			throw ex;
 		}
 	}
