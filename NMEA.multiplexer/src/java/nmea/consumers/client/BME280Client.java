@@ -3,6 +3,7 @@ package nmea.consumers.client;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
+import nmea.api.NMEAReader;
 import nmea.consumers.reader.BME280Reader;
 
 /**
@@ -26,7 +27,23 @@ public class BME280Client extends NMEAClient {
 		this.verbose = ("true".equals(System.getProperty("bme280.data.verbose", "false")));
 	}
 
-		@Override
+	public String getSpecificDevicePrefix() {
+		String dp = "";
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof BME280Reader) {
+			dp = ((BME280Reader)reader).getDevicePrefix();
+		}
+		return dp;
+	}
+
+	public void setSpecificDevicePrefix(String dp) {
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof BME280Reader) {
+			((BME280Reader)reader).setDevicePrefix(dp);
+		}
+	}
+
+	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
 		if (verbose)
 			System.out.println("Received from BME280:" + e.getContent());
@@ -43,12 +60,14 @@ public class BME280Client extends NMEAClient {
 		private boolean verbose;
 		private String[] deviceFilters;
 		private String[] sentenceFilters;
+		private String devicePrefix;
 
 		public BME280Bean(BME280Client instance) {
 			cls = instance.getClass().getName();
 			verbose = instance.isVerbose();
 			deviceFilters = instance.getDevicePrefix();
 			sentenceFilters = instance.getSentenceArray();
+			devicePrefix = instance.getSpecificDevicePrefix();
 		}
 
 		@Override

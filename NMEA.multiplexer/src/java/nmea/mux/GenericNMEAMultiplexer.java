@@ -1559,12 +1559,21 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						try {
 							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+							String bme280DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
 							NMEAClient bme280Client = new BME280Client(
 											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 											this);
 							bme280Client.initClient();
 							bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
+							// Important: after the setReader
+							if (bme280DevicePrefix.trim().length() > 0) {
+								if (bme280DevicePrefix.trim().length() == 2) {
+									((BME280Client)bme280Client).setSpecificDevicePrefix(bme280DevicePrefix.trim());
+								} else {
+									throw new RuntimeException(String.format("Bad prefix [%s] for BME280. Must be 2 character long, exactly.", bme280DevicePrefix.trim()));
+								}
+							}
 							nmeaDataClients.add(bme280Client);
 						} catch (Exception e) {
 							e.printStackTrace();
