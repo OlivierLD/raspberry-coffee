@@ -41,6 +41,7 @@ public class BME280Reader extends NMEAReader {
 
 	@Override
 	public void startReader() {
+		System.out.println(String.format(">> Starting reader [%s]", this.getClass().getName()));
 		super.enableReading();
 		while (this.canRead()) {
 			// Read data every 1 second
