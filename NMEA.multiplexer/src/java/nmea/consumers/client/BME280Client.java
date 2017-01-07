@@ -81,10 +81,12 @@ public class BME280Client extends NMEAClient {
 		}
 
 		@Override
-		public String[] getDeviceFilters() { return this.deviceFilters; };
+		public String[] getDeviceFilters() { return this.deviceFilters; }
 
 		@Override
-		public String[] getSentenceFilters() { return this.sentenceFilters; };
+		public String[] getSentenceFilters() { return this.sentenceFilters; }
+
+		public String getDevicePrefix() { return this.devicePrefix; }
 	}
 
 	@Override

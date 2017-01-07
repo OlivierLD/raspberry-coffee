@@ -285,8 +285,10 @@
                 case 'bme280':
                     var dFilters = $("#bme280-dev-filters").val().split(",");
                     var sFilters = $("#bme280-sentence-filters").val().split(",");
+                    var dPrefix = $('#bme280-dev-prefix').val();
                     createChannel({
                         type: 'bme280',
+                        devicePRefix: dPrefix,
                         deviceFilters: dFilters,
                         sentenceFilters: sFilters
                     });
@@ -576,6 +578,10 @@
               </div>
               <div id="channel-bme280" style="display: none;">
                 <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="bme280-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="RP"></td>
+                  </tr>
                   <tr>
                     <td>Device filter(s)</td>
                     <td><input id="bme280-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>

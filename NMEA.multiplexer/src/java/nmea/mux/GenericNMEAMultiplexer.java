@@ -872,6 +872,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						NMEAClient bme280Client = new BME280Client(bme280Json.getDeviceFilters(), bme280Json.getSentenceFilters(),this);
 						bme280Client.initClient();
 						bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
+						// To do BEFORE startWorking and AFTER setReader
+						if (bme280Json.getDevicePrefix() != null) {
+							if (bme280Json.getDevicePrefix().trim().length() != 2) {
+								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", bme280Json.getDevicePrefix().trim()));
+							} else {
+								((BME280Client)bme280Client).setSpecificDevicePrefix(bme280Json.getDevicePrefix().trim());
+							}
+						}
 						nmeaDataClients.add(bme280Client);
 						bme280Client.startWorking();
 						String content = new Gson().toJson(bme280Client.getBean());
