@@ -3,6 +3,7 @@ package nmea.api;
 import http.utils.DumpUtil;
 import nmea.parser.StringParsers;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -56,7 +57,7 @@ public final class NMEAParser extends Thread {
 					while (s != null) {
 						s = instance.detectSentence();
 						if (s != null && s.length() > 6 && s.startsWith("$")) { // Potentially valid
-							// TODO ? RegExp on the full sentence
+							// TODO ? RegExp on the full sentence. Maybe not too user friendly...
 							boolean broadcast = true;
 							if (nmeaPrefix != null) {
 								for (String device : nmeaPrefix) {
@@ -68,6 +69,7 @@ public final class NMEAParser extends Thread {
 									}
 								}
 							}
+							// Negative filters
 							if (broadcast && nmeaSentence != null) {
 								String thisId = StringParsers.getSentenceID(s);
 								for (String prefix : nmeaSentence) {
@@ -76,7 +78,8 @@ public final class NMEAParser extends Thread {
 										break;
 									}
 								}
-								if (broadcast) {
+								// Positive filters
+								if (broadcast && Arrays.stream(nmeaSentence).filter(id -> !id.startsWith("~")).count() > 0) {
 									broadcast = false;
 									for (String prefix : nmeaSentence) {
 										if (!prefix.startsWith("~") && thisId.equals(prefix)) {
@@ -98,19 +101,19 @@ public final class NMEAParser extends Thread {
 		});
 	}
 
-	public String[] getNmeaPrefix() {
+	public String[] getDeviceFilters() {
 		return this.nmeaPrefix;
 	}
 
-	public void setNmeaPrefix(String[] s) {
+	public void setDeviceFilters(String[] s) {
 		this.nmeaPrefix = s;
 	}
 
-	public String[] getNmeaSentence() {
+	public String[] getSentenceFilters() {
 		return this.nmeaSentence;
 	}
 
-	public void setNmeaSentence(String[] sa) {
+	public void setSentenceFilters(String[] sa) {
 		this.nmeaSentence = sa;
 	}
 

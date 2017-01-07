@@ -1,7 +1,5 @@
 package nmea.api;
 
-import nmea.parser.StringParsers;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,8 +100,8 @@ public abstract class NMEAClient {
 			}
 		});
 		parser = new NMEAParser(NMEAListeners);
-		parser.setNmeaPrefix(this.getDevicePrefix());
-		parser.setNmeaSentence(this.getSentenceArray());
+		parser.setDeviceFilters(this.getDevicePrefix());
+		parser.setSentenceFilters(this.getSentenceArray());
 	}
 
 	public void setDevicePrefix(String[] s) {
