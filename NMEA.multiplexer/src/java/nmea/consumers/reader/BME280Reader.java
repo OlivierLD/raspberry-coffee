@@ -62,6 +62,9 @@ public class BME280Reader extends NMEAReader {
 												pressure,
 												String.valueOf(deviceIdx++))); // Pascal, pressure
 				nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+
+				System.out.println(String.format(" >>> Producing [%s]", nmeaXDR));
+
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
 
 				String nmeaMDA = StringGenerator.generateMDA(devicePrefix,
@@ -75,6 +78,9 @@ public class BME280Reader extends NMEAReader {
 								-Double.MAX_VALUE,
 								-Double.MAX_VALUE);
 				nmeaMDA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+
+				System.out.println(String.format(" >>> Producing [%s]", nmeaMDA));
+
 				fireDataRead(new NMEAEvent(this, nmeaMDA));
 
 				String nmeaMTA = StringGenerator.generateMTA(devicePrefix, temperature);
@@ -83,6 +89,9 @@ public class BME280Reader extends NMEAReader {
 
 				String nmeaMMB = StringGenerator.generateMMB(devicePrefix, pressure / 100);
 				nmeaMMB += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+
+				System.out.println(String.format(" >>> Producing [%s]", nmeaMMB));
+
 				fireDataRead(new NMEAEvent(this, nmeaMMB));
 			} catch (Exception e) {
 				e.printStackTrace();

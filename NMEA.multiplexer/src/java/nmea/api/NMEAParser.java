@@ -92,6 +92,8 @@ public final class NMEAParser extends Thread {
 							}
 							if (broadcast) {
 								instance.fireDataDetected(new NMEAEvent(this, s));
+							} else {
+								System.out.println(String.format("  >>> Rejecting [%s] <<< ", s));
 							}
 						}
 					}
