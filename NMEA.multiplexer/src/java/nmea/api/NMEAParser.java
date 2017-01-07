@@ -109,7 +109,11 @@ public final class NMEAParser extends Thread {
 	}
 
 	public void setDeviceFilters(String[] s) {
-		this.nmeaPrefix = s;
+		if (s != null && s.length == 1 && s[0].trim().length() == 0) {
+			this.nmeaPrefix = null;
+		} else {
+			this.nmeaPrefix = s;
+		}
 	}
 
 	public String[] getSentenceFilters() {
@@ -117,7 +121,11 @@ public final class NMEAParser extends Thread {
 	}
 
 	public void setSentenceFilters(String[] sa) {
-		this.nmeaSentence = sa;
+		if (sa != null && sa.length == 1 && sa[0].trim().length() == 0) {
+			this.nmeaSentence = null;
+		} else {
+			this.nmeaSentence = sa;
+		}
 	}
 
 	public String getNmeaStream() {
