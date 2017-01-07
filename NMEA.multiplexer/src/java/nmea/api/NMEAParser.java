@@ -73,16 +73,17 @@ public final class NMEAParser extends Thread {
 							if (broadcast && nmeaSentence != null) {
 								String thisId = StringParsers.getSentenceID(s);
 								for (String prefix : nmeaSentence) {
-									if (prefix.startsWith("~") && thisId.equals(prefix.substring(1))) {
+									if (prefix.trim().startsWith("~") && thisId.equals(prefix.trim().substring(1))) {
 										broadcast = false;
 										break;
 									}
 								}
 								// Positive filters
-								if (broadcast && Arrays.stream(nmeaSentence).filter(id -> !id.startsWith("~")).count() > 0) {
+								long pos = Arrays.stream(nmeaSentence).filter(id -> !id.trim().startsWith("~")).count();
+								if (broadcast && pos > 0) {
 									broadcast = false;
 									for (String prefix : nmeaSentence) {
-										if (!prefix.startsWith("~") && thisId.equals(prefix)) {
+										if (!prefix.trim().startsWith("~") && thisId.equals(prefix.trim())) {
 											broadcast = true;
 											break;
 										}
