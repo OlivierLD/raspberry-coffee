@@ -111,6 +111,19 @@ To run it, modify `mux.sh` to fit your environment, and run
  $> ./mux.sh
 ```
 
+##### Filtering
+The Channels - aka Consumers - support sentence filtering.
+Filtering can be applied on Device ID, and on Sentence ID. Filters can be positive or negative.
+
+Positive filters are linked with and <b>or</b>, Negative ones with an <b>and</b>.
+
+A (sentence) filter like `"HDM", "GLL", "~RMC", "~XDR"` would mean
+```
+( HDM or GLL) and (not RMC and not XDR)
+```
+It is the user's responsibility not to have contradiction in the filters, like `[ "GLL", "~GLL" ]`,
+no verification is done in this area.
+
 ##### About transformers
 There is an example of a `transformer` in `WebSocketProcessor.java`. As you would see, it is just implementing the `Forwarder` interface,
 and this is where it fits in the picture above.
