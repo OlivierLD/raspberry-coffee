@@ -42,7 +42,7 @@ public class BME280Reader extends NMEAReader {
 	@Override
 	public void startReader() {
 		super.enableReading();
-		System.out.println(String.format(">> Starting reader [%s]. Enabled:%s", this.getClass().getName(), this.canRead()));
+		System.out.println(String.format(">> Starting reader [%s] (%s). Enabled:%s", this.getClass().getName(), this.devicePrefix, this.canRead()));
 		while (this.canRead()) {
 			// Read data every 1 second
 			try {
@@ -93,6 +93,7 @@ public class BME280Reader extends NMEAReader {
 				ie.printStackTrace();
 			}
 		}
+		System.out.println(String.format(">>> %s done reading. Bye.", this.getClass().getName()));
 	}
 
 	@Override
