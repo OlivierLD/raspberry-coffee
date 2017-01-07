@@ -8,7 +8,8 @@ import java.util.List;
 
 
 /**
- * A Controller.
+ * A Controller. Common to everyone, final class.
+ *
  * This class is final, and can be used as it is.
  *
  * Its job is to detect potential sentences in the NMEA stream of characters.
@@ -93,7 +94,9 @@ public final class NMEAParser extends Thread {
 							if (broadcast) {
 								instance.fireDataDetected(new NMEAEvent(this, s));
 							} else {
-								System.out.println(String.format("  >>> Rejecting [%s] <<< ", s));
+								if ("true".equals(System.getProperty("nmea.parser.verbose","false"))) {
+									System.out.println(String.format("  >>> Rejecting [%s] <<< ", s.trim()));
+								}
 							}
 						}
 					}
