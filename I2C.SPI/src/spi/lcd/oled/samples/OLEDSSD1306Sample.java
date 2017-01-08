@@ -416,6 +416,7 @@ public class OLEDSSD1306Sample {
 			Thread.sleep(1000);
 		} catch (Exception ex) {
 		}
+		sb.clear();
 		oled.clear(); // Blank screen
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
