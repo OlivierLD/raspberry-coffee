@@ -4,8 +4,6 @@ import spi.lcd.oled.SSD1306;
 import spi.lcd.utils.img.ImgInterface;
 import spi.lcd.utils.img.Java32x32;
 
-import com.pi4j.io.gpio.RaspiPin;
-
 import java.awt.Point;
 import java.awt.Polygon;
 
@@ -411,6 +409,14 @@ public class OLEDSSD1306Sample {
 		oled.clear();
 		sb.text("Bye-bye!", 36, 20);
 
+		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+		oled.display();
+
+		try {
+			Thread.sleep(1000);
+		} catch (Exception ex) {
+		}
+		oled.clear(); // Blank screen
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 
