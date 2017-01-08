@@ -257,7 +257,7 @@ public class SSD1306Processor implements Forwarder {
 
 	private void display(String message) {
 		try {
-			sb.text(message, 36, 20, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(message, 36, 20, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 		} catch (Exception ex) {
