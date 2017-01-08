@@ -1,6 +1,7 @@
 package spi.lcd.utils;
 
 import spi.lcd.ScreenBuffer;
+import spi.lcd.oled.SSD1306;
 import spi.lcd.utils.img.ImgInterface;
 import spi.lcd.utils.img.Java32x32;
 
@@ -180,11 +181,21 @@ public class LedPanelMain
         sb.text("ScreenBuffer",      2,  9, ScreenBuffer.Mode.BLACK_ON_WHITE);
         sb.text(NB_COLS + " x " + NB_LINES + " for LCD", 2, 19, ScreenBuffer.Mode.BLACK_ON_WHITE);
         sb.text("I speak Java!",     2, 29, ScreenBuffer.Mode.BLACK_ON_WHITE);
+
         lcd.setBuffer(sb.getScreenBuffer());
+
         lcd.display();
  //     sb.dumpScreen();
-        try { Thread.sleep(2000); } catch (Exception ex) {}
-        
+        try { Thread.sleep(5000); } catch (Exception ex) {}
+
+        int[] mirror = SSD1306.mirror(sb.getScreenBuffer(), NB_COLS, NB_LINES);
+
+        lcd.setBuffer(mirror);
+
+        lcd.display();
+ //     sb.dumpScreen();
+        try { Thread.sleep(5000); } catch (Exception ex) {}
+
         // Bigger
         sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
         sb.text("Pi = ", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
