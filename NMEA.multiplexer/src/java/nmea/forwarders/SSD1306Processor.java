@@ -244,8 +244,7 @@ public class SSD1306Processor implements Forwarder {
 						}
 					}
 					// Transformer's specific job.
-					String message = "TWD:" + bean.twd + "\u00b0 ";
-					display(message);
+					display(bean.twd);
 
 					try { Thread.sleep(1000L); } catch (Exception ex) {}
 				}
@@ -255,12 +254,28 @@ public class SSD1306Processor implements Forwarder {
 		cacheThread.start();
 	}
 
-	private void display(String message) {
+	private void display(int twd) {
+
+		int centerX = 80, centerY = 16, radius = 15;
+
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(message, 20, 20, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text("TWD ", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(String.valueOf(twd) + "\u00b0", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK); // With a useless degree symbol (for tests).
+
+			// Circle
+			sb.circle(centerX, centerY, radius);
+
+			// Hand
+			int toX = centerX - (int) Math.round(radius * Math.sin(Math.toRadians(180 + twd)));
+			int toY = centerY + (int) Math.round(radius * Math.cos(Math.toRadians(180 + twd)));
+			sb.line(centerX, centerY, toX, toY);
+
+			// Display
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
+
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
