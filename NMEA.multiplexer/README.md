@@ -440,3 +440,6 @@ There is a forwarder sample `SSD1306Processor` that uses an oled display to show
 ![oled](./oled.jpg "OLED Display")
 The OLED display in connected to the Raspberry PI using an SPI interface.
 
+As it is an example, this one can just be set in the properties file used at startup.
+It can be visualized from the WebUI, but not managed (added, removed, etc).
+
