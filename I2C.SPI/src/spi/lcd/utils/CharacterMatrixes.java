@@ -77,6 +77,17 @@ public class CharacterMatrixes
                                        "       ",
                                        "       " } );
 
+    characters.put("°", new String[] { "     ",
+                                       " XXX ",
+                                       " X X ",
+                                       " XXX ",
+                                       "     ",
+                                       "     ",
+                                       "     ",
+                                       "     ",
+                                       "     ",
+                                       "     " } );
+
     characters.put("-", new String[] { "      ",
                                        "      ",
                                        "      ",

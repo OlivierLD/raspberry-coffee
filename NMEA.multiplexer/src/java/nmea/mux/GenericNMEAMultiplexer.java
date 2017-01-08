@@ -34,6 +34,7 @@ import nmea.forwarders.ConsoleWriter;
 import nmea.forwarders.DataFileWriter;
 import nmea.forwarders.Forwarder;
 import nmea.forwarders.GPSdServer;
+import nmea.forwarders.SSD1306Processor;
 import nmea.forwarders.SerialWriter;
 import nmea.forwarders.TCPServer;
 import nmea.forwarders.WebSocketWriter;
@@ -1702,6 +1703,14 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						try {
 							Forwarder consoleForwarder = new ConsoleWriter();
 							nmeaDataForwarders.add(consoleForwarder);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+						break;
+					case "oled":
+						try {
+							Forwarder oledForwarder = new SSD1306Processor();
+							nmeaDataForwarders.add(oledForwarder);
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}

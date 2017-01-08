@@ -19,22 +19,20 @@ import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import spi.lcd.ScreenBuffer;
+import spi.lcd.oled.SSD1306;
 
 import java.net.URI;
 
 /**
  * This is an example of a <b>transformer</b>.
  * <br>
- * To be used with other apps, like the pebble one.
- * The transformer turns the content of the NMEA Cache into the expected format.
+ * To be used with other apps.
+ * This transformer displays the BSP & TWS on an OLED display (SSD1306)
  * <br>
- * See https://github.com/OlivierLD/pebble/tree/master/NMEA.app
+ * See http://www.lediouris.net/RaspberryPI/SSD1306/readme.html
  */
-public class WebSocketProcessor implements Forwarder {
-	private WebSocketClient wsClient = null;
-	private boolean isConnected = false;
-	private String wsUri;
-
+public class SSD1306Processor implements Forwarder {
 	private boolean keepWorking = true;
 
 	private static class CacheBean {
@@ -87,48 +85,34 @@ public class WebSocketProcessor implements Forwarder {
 		private double hum;
 	}
 
+	private int WIDTH = 128;
+	private int HEIGHT = 32;
+
+	private SSD1306 oled;
+	private ScreenBuffer sb;
+
+	private boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
+
 	/**
-	 * @param serverURL like ws://hostname:port/
 	 * @throws Exception
 	 */
-	public WebSocketProcessor(String serverURL) throws Exception {
+	public SSD1306Processor() throws Exception {
 		// Make sure the cache has been initialized.
 		if (ApplicationContext.getInstance().getDataCache() == null) {
 			throw new RuntimeException("Init the Cache first. See the properties file used at startup."); // Oops
 		}
 
-		this.wsUri = serverURL;
-		try {
-			wsClient = new WebSocketClient(new URI(serverURL)) {
-				@Override
-				public void onOpen(ServerHandshake serverHandshake) {
-					System.out.println("WS On Open");
-					isConnected = true;
-				}
+		oled = new SSD1306(); // Default pins (look in the SSD1306 code)
+		// Override the default pins        Clock             MOSI              CS                RST               DC
+//  oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16);
 
-				@Override
-				public void onMessage(String string) {
-//        System.out.println("WS On Message");
-				}
+		oled.begin();
+		oled.clear();
 
-				@Override
-				public void onClose(int i, String string, boolean b) {
-					System.out.println("WS On Close");
-					isConnected = false;
-				}
+		sb = new ScreenBuffer(WIDTH, HEIGHT);
+		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-				@Override
-				public void onError(Exception exception) {
-					System.out.println("WS On Error");
-					exception.printStackTrace();
-				}
-			};
-			wsClient.connect();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
-		Thread cacheThread = new Thread("WebSocketProcessor CacheThread") {
+		Thread cacheThread = new Thread("SSD1306Processor CacheThread") {
 			public void run() {
 				while (keepWorking) {
 					NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
@@ -259,8 +243,9 @@ public class WebSocketProcessor implements Forwarder {
 							bean.hum = (Double)hum;
 						}
 					}
-					String content = new Gson().toJson(bean);
-					broadcast(content.getBytes());
+					// Transformer's specific job.
+					String message = "TWD:" + bean.twd + "°";
+					display(message);
 
 					try { Thread.sleep(1000L); } catch (Exception ex) {}
 				}
@@ -270,16 +255,11 @@ public class WebSocketProcessor implements Forwarder {
 		cacheThread.start();
 	}
 
-	public String getWsUri() {
-		return this.wsUri;
-	}
-
-	public void broadcast(byte[] message) {
+	private void display(String message) {
 		try {
-			String mess = new String(message);
-			if (!mess.isEmpty() && isConnected) {
-				this.wsClient.send(mess);
-			}
+			sb.text(message, 36, 20, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -296,30 +276,28 @@ public class WebSocketProcessor implements Forwarder {
 			// Stop Cache thread
 			keepWorking = false;
 			try { Thread.sleep(2000L); } catch (Exception ex) {}
-			// Close WS Client
-			this.wsClient.close();
+			sb.clear();
+			oled.clear(); // Blank screen
+			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
+
+			oled.shutdown();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	public static class WSBean {
+	public static class OLEDBean {
 		private String cls;
-		private String wsUri;
-		private String type = "wsp";
+		private String type = "oled";
 
-		public WSBean(WebSocketProcessor instance) {
+		public OLEDBean(SSD1306Processor instance) {
 			cls = instance.getClass().getName();
-			wsUri = instance.wsUri;
-		}
-
-		public String getWsUri() {
-			return wsUri;
 		}
 	}
 
 	@Override
 	public Object getBean() {
-		return new WSBean(this);
+		return new OLEDBean(this);
 	}
 }
