@@ -4,4 +4,8 @@ PI4J_HOME=/opt/pi4j
 # CP=./build/classes/main
 CP=./build/libs/I2C.SPI-1.0.jar
 CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-sudo java -cp $CP -Dverbose=true spi.lcd.oled.samples.OLEDSSD1306Sample
+#
+JAVA_OPTIONS=
+JAVA_OPTIONS=-Dmirror.screen=true
+#
+sudo java $JAVA_OPTIONS -cp $CP -Dverbose=true spi.lcd.oled.samples.OLEDSSD1306Sample
