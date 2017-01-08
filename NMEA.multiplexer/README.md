@@ -435,3 +435,8 @@ Overview
 ![The advantage of naming the threads](./JConsole.02.png "Thread view")
 Thread view, with thread names
 
+#### More samples
+There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
+![oled](./oled.jpg "OLED Display")
+The OLED display in connected to the Raspberry PI using an SPI interface.
+
