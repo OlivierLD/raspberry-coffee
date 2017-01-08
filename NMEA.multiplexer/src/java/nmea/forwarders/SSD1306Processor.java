@@ -1,6 +1,5 @@
 package nmea.forwarders;
 
-import com.google.gson.Gson;
 import context.ApplicationContext;
 import context.NMEADataCache;
 import nmea.parser.Angle180;
@@ -17,20 +16,21 @@ import nmea.parser.Speed;
 import nmea.parser.Temperature;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 import spi.lcd.ScreenBuffer;
 import spi.lcd.oled.SSD1306;
-
-import java.net.URI;
 
 /**
  * This is an example of a <b>transformer</b>.
  * <br>
  * To be used with other apps.
- * This transformer displays the BSP & TWS on an OLED display (SSD1306)
+ * This transformer displays the TWD on an OLED display (SSD1306)
  * <br>
  * See http://www.lediouris.net/RaspberryPI/SSD1306/readme.html
+ *
+ * <br>
+ * This is JUST an example. As such, it can be set only from the properties file
+ * used at startup. It - for now - cannot be managed from the Web UI.
+ * The REST api is not aware of it.
  */
 public class SSD1306Processor implements Forwarder {
 	private boolean keepWorking = true;
@@ -103,7 +103,7 @@ public class SSD1306Processor implements Forwarder {
 		}
 
 		oled = new SSD1306(); // Default pins (look in the SSD1306 code)
-		// Override the default pins        Clock             MOSI              CS                RST               DC
+		// Override the default pin:  Clock              MOSI                CS               RST                DC
 //  oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16);
 
 		oled.begin();
