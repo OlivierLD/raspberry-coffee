@@ -438,7 +438,12 @@ Thread view, with thread names
 #### More samples
 There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
 ![oled](./oled.jpg "OLED Display")
+
+![oled](./oled.2.jpg "OLED Display")
+
 The OLED display in connected to the Raspberry PI using an SPI interface.
+
+The SSD1306 display is quite small. In the pictures above, there is a Fresnel lens in front of it.
 
 As it is an example, this one can just be set in the properties file used at startup.
 It can be visualized from the WebUI, but not managed (added, removed, etc).
