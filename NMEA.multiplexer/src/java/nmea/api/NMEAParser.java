@@ -192,30 +192,10 @@ public final class NMEAParser extends Thread {
 					if (nmeaStream.length() > 6) { // "$" + prefix + XXX
 						endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 						if (endIdx > -1) {
-//							if (nmeaSentence != null) {
-//								for (int i = 0; i < this.nmeaSentence.length; i++) {
-//									//  System.out.println("Checking [" + nmeaSentence[i] + "] against [" + nmeaStream + "]");
-//									// Fully qualified sentence
-//									if (nmeaSentence[i].length() == 5 && nmeaStream.startsWith("$" + nmeaSentence[i])) {
-//										return true;
-//									}
-//									// Specific prefix
-//									else if (!("*".equals(nmeaPrefix.trim())) && nmeaStream.startsWith("$" + nmeaPrefix + nmeaSentence[i])) {
-//										return true;
-//									}
-//									// Any prefix
-//									else if ("*".equals(nmeaPrefix.trim()) && nmeaStream.startsWith("$") && nmeaStream.substring(3).startsWith(nmeaSentence[i])) {
-//										return true;
-//									}
-//									nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
-//								}
-//							} else {
-//							System.out.println("Taking everything!");
-								return true; // Take all
-//							}
-//					  nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
-						} else
+							return true; // Take all
+						} else {
 							return false; // unfinished sentence
+						}
 					} else
 						return false; // Not long enough - Not even sentence ID
 				} catch (Exception e) {
