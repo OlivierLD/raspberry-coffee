@@ -199,7 +199,7 @@ public class LedPanelMain
         // Bigger
         sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
         sb.text("Pi = ", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-        sb.text("3.1415926°", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK); // With a useless degree symbol (for tests).
+        sb.text("3.1415926\u00b0", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK); // With a useless degree symbol (for tests).
         lcd.setBuffer(sb.getScreenBuffer());
         lcd.display();
    //   sb.dumpScreen();

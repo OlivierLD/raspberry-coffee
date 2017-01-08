@@ -244,7 +244,7 @@ public class SSD1306Processor implements Forwarder {
 						}
 					}
 					// Transformer's specific job.
-					String message = "TWD:" + bean.twd + "°";
+					String message = "TWD:" + bean.twd + "\u00b0 ";
 					display(message);
 
 					try { Thread.sleep(1000L); } catch (Exception ex) {}

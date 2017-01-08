@@ -77,7 +77,7 @@ public class CharacterMatrixes
                                        "       ",
                                        "       " } );
 
-    characters.put("°", new String[] { "     ",
+    characters.put("\u00b0", new String[] { "     ",
                                        " XXX ",
                                        " X X ",
                                        " XXX ",
