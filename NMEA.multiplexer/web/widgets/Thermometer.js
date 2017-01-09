@@ -61,6 +61,10 @@ function Thermometer(cName, dSize, minValue, maxValue, majorTicks, minorTicks) {
         drawDisplay(canvasName, displaySize, previousValue);
     })(); // Invoked automatically
 
+    this.repaint = function() {
+        drawDisplay(canvasName, displaySize, previousValue);
+    };
+
     this.setDisplaySize = function (ds) {
         displaySize = ds;
         drawDisplay(canvasName, displaySize, previousValue);

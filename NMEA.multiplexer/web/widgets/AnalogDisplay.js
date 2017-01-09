@@ -105,6 +105,10 @@ function AnalogDisplay(cName,                     // Canvas Name
 
   (function(){ drawDisplay(canvasName, displaySize, previousValue); })(); // Invoked automatically
 
+  this.repaint = function() {
+      drawDisplay(canvasName, displaySize, previousValue);
+  };
+
   this.setWithMinMax = function(b) {
     withMinMax = b;
   };

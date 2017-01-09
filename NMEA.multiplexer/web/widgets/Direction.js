@@ -27,14 +27,14 @@ var directionColorConfigWhite =
 var directionColorConfigBlack =
     {
         bgColor: 'black',
-        digitColor: 'white', // 'cyan',
+        digitColor: 'cyan',
         withGradient: true,
         displayBackgroundGradient: {from: 'DarkGrey', to: 'black'},
         shadowColor: 'black',
         outlineColor: 'DarkGrey',
-        majorTickColor: 'white',
-        minorTickColor: 'white',
-        valueColor: 'white',
+        majorTickColor: 'red',
+        minorTickColor: 'red',
+        valueColor: 'red',
         valueOutlineColor: 'black',
         valueNbDecimal: 0,
         handColor: 'rgba(255, 0, 0, 0.4)', // 'rgba(0, 0, 100, 0.25)',

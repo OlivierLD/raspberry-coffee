@@ -17,7 +17,6 @@ var init = function () {
 
     displayHDG = new Direction('hdgCanvas', 100, 45, 5, true);
     displayTWD = new Direction('twdCanvas', 100, 45, 5, true);
-//displayTWD      = new Direction('twdCanvas', 100, 1060,  10,  1, false, 60, 960);
     displayTWS = new AnalogDisplay('twsCanvas', 100, 50, 10, 1, true, 40);
     thermometer = new Thermometer('tmpCanvas', 200);
     athermometer = new Thermometer('atmpCanvas', 200);
@@ -49,9 +48,6 @@ var init = function () {
     displayCurrent = new CurrentDisplay('currentDisplayCanvas', 80, 45, 5);
     twdEvolution = new TWDEvolution('twdEvolutionCanvas');
     twsEvolution = new TWSEvolution('twsEvolutionCanvas');
-
-//initWS();   // WebSocket
-//initAjax(); // AJAX
 };
 
 var changeBorder = function (b) {
@@ -60,7 +56,9 @@ var changeBorder = function (b) {
     displayTWD.setBorder(b);
     displayTWS.setBorder(b);
     displayBaro.setBorder(b);
+    displayBaro.repaint();
     displayHum.setBorder(b);
+    displayHum.repaint();
     displayAW.setBorder(b);
     displayCurrent.setBorder(b);
 };

@@ -66,26 +66,26 @@ var onMessage = function (json) {
                 'lng': longitude
             });
         } catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "position");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "position");
         }
         // Displays
         try {
             var bsp = json.BSP.speed;
             events.publish('bsp', bsp);
         } catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "boat speed");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "boat speed");
         }
         try {
             var log = json.Log.distance;
             events.publish('log', log);
         } catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "log (" + err + ")");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "log (" + err + ")");
         }
         try {
             var gpsDate = json["GPS Date & Time"].date;
             events.publish('gps-time', gpsDate);
         } catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "GPS Date (" + err + ")");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
         }
 
         try {
@@ -93,28 +93,28 @@ var onMessage = function (json) {
             events.publish('hdg', hdg);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "heading");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "heading");
         }
         try {
             var twd = json.TWD.angle;
             events.publish('twd', twd);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "TWD");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWD");
         }
         try {
             var twa = json.TWA.angle;
             events.publish('twa', twa);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "TWA");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWA");
         }
         try {
             var tws = json.TWS.speed;
             events.publish('tws', tws);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "TWS");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "TWS");
         }
 
         try {
@@ -122,7 +122,7 @@ var onMessage = function (json) {
             events.publish('wt', waterTemp);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "water temperature");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "water temperature");
         }
 
         try {
@@ -130,7 +130,7 @@ var onMessage = function (json) {
             events.publish('at', airTemp);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "air temperature");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "air temperature");
         }
         // Battery_Voltage, Relative_Humidity, Barometric_Pressure
         try {
@@ -140,7 +140,7 @@ var onMessage = function (json) {
             }
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "PRMSL");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "PRMSL");
         }
         try {
             var hum = json["Relative Humidity"];
@@ -149,28 +149,28 @@ var onMessage = function (json) {
             }
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "Relative_Humidity");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Relative_Humidity");
         }
         try {
             var aws = json.AWS.speed;
             events.publish('aws', aws);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "AWS");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "AWS");
         }
         try {
             var awa = json.AWA.angle;
             events.publish('awa', awa);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "AWA");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "AWA");
         }
         try {
             var cdr = json.CDR.angle;
             events.publish('cdr', cdr);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "CDR");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CDR");
         }
 
         try {
@@ -178,35 +178,35 @@ var onMessage = function (json) {
             events.publish('cog', cog);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "COG");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "COG");
         }
         try {
             var cmg = json.CMG.angle;
             events.publish('cmg', cmg);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "CMG");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CMG");
         }
         try {
             var leeway = json.Leeway.angle;
             events.publish('leeway', leeway);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "Leeway");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "Leeway");
         }
         try {
             var csp = json.CSP.speed;
             events.publish('csp', csp);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "CSP");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CSP");
         }
         try {
             var sog = json.SOG.speed;
             events.publish('sog', sog);
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "SOG");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "SOG");
         }
         // to-wp, vmg-wind, vmg-wp, b2wp
         try {
@@ -228,7 +228,7 @@ var onMessage = function (json) {
 
         }
         catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "VMG");
+            errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "VMG");
         }
 
         if (errMess !== undefined)
