@@ -99,6 +99,9 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 
 	public static final String TIME_RUNNING = "Time Running";
 
+	public static final String VMG_ON_WIND = "VMG on Wind";
+	public static final String VMG_ON_WP = "VMG to Waypoint";
+
 	// Damping ArrayList's
 	private int dampingSize = 1;
 
@@ -560,5 +563,41 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 		int cs = StringParsers.calculateCheckSum(std);
 		std += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 		return "$" + std;
+	}
+
+	public static void calculateVMGs(NMEADataCache cache) {
+		double vmg = 0d;
+		try {
+			double sog = (((Speed) cache.get(NMEADataCache.SOG)).getValue());
+			double cog = ((Angle360) cache.get(NMEADataCache.COG)).getValue();
+			double twd = (((Angle360) cache.get(NMEADataCache.TWD)).getValue());
+			double twa = twd - cog;
+			if (sog > 0) // Try with GPS Data first
+				vmg = sog * Math.cos(Math.toRadians(twa));
+			else {
+				twa = ((Angle180) cache.get(NMEADataCache.TWA)).getValue();
+				double bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
+				if (bsp > 0)
+					vmg = bsp * Math.cos(Math.toRadians(twa));
+			}
+			cache.put(VMG_ON_WIND, vmg);
+
+			if (cache.get(NMEADataCache.TO_WP) != null && cache.get(NMEADataCache.TO_WP).toString().trim().length() > 0) {
+				double b2wp = ((Angle360) cache.get(NMEADataCache.B2WP)).getValue();
+				sog = (((Speed) cache.get(NMEADataCache.SOG)).getValue());
+				cog = ((Angle360) cache.get(NMEADataCache.COG)).getValue();
+				if (sog > 0) {
+					double angle = b2wp - cog;
+					vmg = sog * Math.cos(Math.toRadians(angle));
+				} else {
+					double angle = b2wp - ((Angle360) cache.get(NMEADataCache.HDG_TRUE)).getValue();
+					double bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
+					vmg = bsp * Math.cos(Math.toRadians(angle));
+				}
+				cache.put(VMG_ON_WP, vmg);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

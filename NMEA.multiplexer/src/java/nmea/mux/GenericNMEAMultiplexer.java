@@ -1283,6 +1283,9 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 		JsonElement jsonElement = null;
 		try {
+			// Calculate VMG(s)
+			NMEADataCache.calculateVMGs(cache);
+
 			jsonElement = new Gson().toJsonTree(cache);
 			((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
 		} catch (Exception ex) {

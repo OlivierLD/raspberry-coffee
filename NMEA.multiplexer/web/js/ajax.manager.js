@@ -222,8 +222,8 @@ var onMessage = function (json) {
 
         try {
             events.publish('vmg', {
-                'onwind': parseFloat(doc.getElementsByTagName("vmg-wind")[0].childNodes[0].nodeValue),
-                'onwp': parseFloat(doc.getElementsByTagName("vmg-wp")[0].childNodes[0].nodeValue)
+                'onwind': json["VMG on Wind"],
+                'onwp': json["VMG to Waypoint"]
             });
 
         }
