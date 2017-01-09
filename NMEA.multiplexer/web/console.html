@@ -490,11 +490,8 @@
           </td>
         </tr>        
         <tr>
-          <td align="center"><div id="display-gdt-title" style="display: none;">GPS Date / Time</div></td>
-          <td align="center"><div id="display-prmsl-title" style="display: none;">Barometer in hPa</div></td>
-          <td align="center"><div id="display-hum-title" style="display: none;">Rel. Humidity in %</div></td>
-          <td align="center"></td>
-          <td align="center"></td>
+          <td align="center"><div id="display-gdt-title" style="display: inline;">GPS Date / Time</div></td>
+          <td align="center" colspan="3"></td>
         </tr>
         <tr>
           <td align="center" valign="top">
@@ -504,11 +501,17 @@
               <canvas id="timeCanvas" width="192" height="40" title="GPS Time"></canvas>
             </div>
           </td>
-          <td align="center" valign="top" rowspan="1">
-            <div id="display-prmsl-div" style="display: inline;"><canvas id="baroCanvas" width="240" height="220" title="Atmospheric Pressure in hPa"></canvas></div>
-          </td>
-          <td align="center" valign="top" rowspan="1">
-            <div id="display-hum-div" style="display: inline;"><canvas id="humCanvas" width="240" height="220" title="Relative Humidity in %"></canvas></div>
+          <td align="center" valign="top" colspan="3">
+            <table border="0">
+              <tr>
+                <td align="center"><div id="display-prmsl-title" style="display: inline;">Barometer in hPa</div></td>
+                <td align="center"><div id="display-hum-title" style="display: inline;">Rel. Humidity in %</div></td>
+              </tr>
+              <tr>
+                <td align="center"><div id="display-prmsl-div" style="display: inline;"><canvas id="baroCanvas" width="240" height="220" title="Atmospheric Pressure in hPa"></canvas></div></td>
+                <td align="center"><div id="display-hum-div" style="display: inline;"><canvas id="humCanvas" width="240" height="220" title="Relative Humidity in %"></canvas></div></td>
+              </tr>
+            </table>
           </td>
         </tr>
       </table>   
