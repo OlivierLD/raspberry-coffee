@@ -447,4 +447,3 @@ The SSD1306 display is quite small. In the pictures above, there is a Fresnel le
 
 As it is an example, this one can just be set in the properties file used at startup.
 It can be visualized from the WebUI, but not managed (added, removed, etc).
-
