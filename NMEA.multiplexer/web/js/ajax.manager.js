@@ -134,15 +134,6 @@ var onMessage = function (json) {
         }
         // Battery_Voltage, Relative_Humidity, Barometric_Pressure
         try {
-            var voltage = parseFloat(doc.getElementsByTagName("Battery_Voltage")[0].childNodes[0].nodeValue);
-            if (voltage > 0) {
-                events.publish('volt', voltage);
-            }
-        }
-        catch (err) {
-            errMess += ((errMess.length > 0 ? ", " : "Problem with ") + "Battery_Voltage");
-        }
-        try {
             var baro = json["Barometric Pressure"].pressure;
             if (baro != 0) {
                 events.publish('prmsl', baro);

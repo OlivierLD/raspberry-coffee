@@ -172,10 +172,6 @@
       document.getElementById("display-hum-div").style.display = (val === true ? 'inline' : 'none');
       document.getElementById("display-hum-title").style.display = (val === true ? 'inline' : 'none');
     });
-    events.subscribe('show-hide-volt', function(val) {
-      document.getElementById("display-volt-div").style.display = (val === true ? 'inline' : 'none');
-      document.getElementById("display-volt-title").style.display = (val === true ? 'inline' : 'none');
-    });
     /**
      * The following subscriptions make the distinction between Ajax & WebSockets
      * (See the initAjax & initWS methods)
@@ -371,9 +367,6 @@
     // Humidity
     document.getElementById('humCanvas').width = 240 * (Math.min(ww, totalWidth) / totalWidth);
     document.getElementById('humCanvas').height = 220 * (Math.min(ww, totalWidth) / totalWidth);
-    // Voltage
-    document.getElementById('voltCanvas').width = 240 * (Math.min(ww, totalWidth) / totalWidth);
-    document.getElementById('voltCanvas').height = 220 * (Math.min(ww, totalWidth) / totalWidth);
 
     // Jumbos
     var jumboCanvasList = ['jumboBSPCanvas', 'jumboTWDCanvas', 'jumboHDGCanvas', 'jumboLWYCanvas',
@@ -500,7 +493,6 @@
           <td align="center"><div id="display-gdt-title" style="display: none;">GPS Date / Time</div></td>
           <td align="center"><div id="display-prmsl-title" style="display: none;">Barometer in hPa</div></td>
           <td align="center"><div id="display-hum-title" style="display: none;">Rel. Humidity in %</div></td>
-          <td align="center"><div id="display-volt-title" style="display: none;">Battery Voltage</div></td>
           <td align="center"></td>
           <td align="center"></td>
         </tr>
@@ -513,13 +505,10 @@
             </div>
           </td>
           <td align="center" valign="top" rowspan="1">
-            <div id="display-prmsl-div" style="display: none;"><canvas id="baroCanvas" width="240" height="220" title="Atmospheric Pressure in hPa"></canvas></div>
+            <div id="display-prmsl-div" style="display: inline;"><canvas id="baroCanvas" width="240" height="220" title="Atmospheric Pressure in hPa"></canvas></div>
           </td>
           <td align="center" valign="top" rowspan="1">
-            <div id="display-hum-div" style="display: none;"><canvas id="humCanvas" width="240" height="220" title="Relative Humidity in %"></canvas></div>
-          </td>
-          <td align="center" valign="top" rowspan="1">
-            <div id="display-volt-div" style="display: none;"><canvas id="voltCanvas" width="240" height="220" title="Battery Voltage, in V"></canvas></div>
+            <div id="display-hum-div" style="display: inline;"><canvas id="humCanvas" width="240" height="220" title="Relative Humidity in %"></canvas></div>
           </td>
         </tr>
       </table>   

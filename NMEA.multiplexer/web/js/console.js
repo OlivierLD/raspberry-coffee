@@ -2,7 +2,7 @@
  * @author Olivier Le Diouris
  */
 var displayBSP, displayLog, displayTWD, displayTWS, thermometer, athermometer, displayHDG, rose,
-    displayBaro, displayHum, displayVolt, displayDate, displayTime, displayOverview, displayOverview,
+    displayBaro, displayHum, displayDate, displayTime, displayOverview, displayOverview,
     jumboBSP, jumboHDG, jumboTWD, jumboLWY, jumboAWA, jumboTWA, jumboAWS, jumboTWS, jumboCOG, jumboCDR, jumboSOG, jumboCSP, jumboVMG,
     displayAW, displayCurrent,
     twdEvolution, twsEvolution;
@@ -26,7 +26,6 @@ var init = function () {
     displayTime = new TimeDisplay('timeCanvas', 60);
     displayBaro = new AnalogDisplay('baroCanvas', 100, 1040, 10, 1, true, 40, 980);
     displayHum = new AnalogDisplay('humCanvas', 100, 100, 10, 1, true, 40);
-    displayVolt = new AnalogDisplay('voltCanvas', 100, 16, 1, 0.25, true, 40, 8);
 
     displayOverview = new BoatOverview('overviewCanvas');
 
@@ -62,7 +61,6 @@ var changeBorder = function (b) {
     displayTWS.setBorder(b);
     displayBaro.setBorder(b);
     displayHum.setBorder(b);
-    displayVolt.setBorder(b);
     displayAW.setBorder(b);
     displayCurrent.setBorder(b);
 };
@@ -80,7 +78,6 @@ var resizeDisplays = function (width) {
         rose.setDisplaySize(400 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
         displayBaro.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
         displayHum.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
-        displayVolt.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
         displayOverview.drawGraph();
         twdEvolution.drawGraph();
         twsEvolution.drawGraph();
