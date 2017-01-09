@@ -183,9 +183,8 @@
     events.subscribe('pos', function(val) {
       var label = "Your position";
       // Plot the station on the map
-      var mapFrame = document.getElementById("map-frame");
       var canvas = "mapCanvas";
-      mapFrame.contentWindow.plotPosToCanvas(canvas, val.lat, val.lng, label);
+      plotPosToCanvas(canvas, val.lat, val.lng, label);
     });
     events.subscribe('bsp', function(val) {
 //    displayBSP.animate(bsp);
@@ -328,11 +327,6 @@
       displayOverview.setVMG(vmg);
       jumboVMG.setValue(vmg);
     });
-    events.subscribe('perf', function(val) {
-      var perf = val.toFixed(2);
-      displayPRF.setValue(val);
-      displayOverview.setPerf(perf);
-    });
   };
   
   var displayErr = function(err) {
@@ -352,14 +346,10 @@
     var totalWidth = TOTAL_WIDTH; // in console.js
     
     // Canvases & iFrame
-    document.getElementById('map-frame').height = wh * 0.6;
     document.getElementById('overviewCanvas').height = wh * 0.8;
     // BSP
     document.getElementById('bspCanvas').width = 240 * (Math.min(ww, totalWidth) / totalWidth);
     document.getElementById('bspCanvas').height = 120 * (Math.min(ww, totalWidth) / totalWidth);
-    // Perf 
-    document.getElementById('prfCanvas').width = 240 * (Math.min(ww, totalWidth) / totalWidth);
-    document.getElementById('prfCanvas').height = 120 * (Math.min(ww, totalWidth) / totalWidth);
     // HDG
     document.getElementById('hdgCanvas').width = 240 * (Math.min(ww, totalWidth) / totalWidth);
     document.getElementById('hdgCanvas').height = 220 * (Math.min(ww, totalWidth) / totalWidth);
@@ -481,11 +471,6 @@
               <tr>
                 <td align="center" valign="top">
                   <canvas id="logCanvas" width="120" height="40" title="Log"></canvas>
-                </td>
-              </tr>
-              <tr>
-                <td align="center" valign="top">
-                  <canvas id="prfCanvas" width="240" height="120" title="Performance in %"></canvas>
                 </td>
               </tr>
             </table>

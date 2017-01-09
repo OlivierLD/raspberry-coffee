@@ -1,7 +1,7 @@
 /*
  * @author Olivier Le Diouris
  */
-var displayBSP, displayLog, displayPRF, displayTWD, displayTWS, thermometer, athermometer, displayHDG, rose, 
+var displayBSP, displayLog, displayTWD, displayTWS, thermometer, athermometer, displayHDG, rose,
     displayBaro, displayHum, displayVolt, displayDate, displayTime, displayOverview, displayOverview,
     jumboBSP, jumboHDG, jumboTWD, jumboLWY, jumboAWA, jumboTWA, jumboAWS, jumboTWS, jumboCOG, jumboCDR, jumboSOG, jumboCSP, jumboVMG,
     displayAW, displayCurrent,
@@ -14,8 +14,7 @@ var editing = false;
 var init = function() {
   displayBSP      = new AnalogDisplay('bspCanvas', 100,   15,  5,  1);
   displayLog      = new NumericDisplay('logCanvas', 60, 5);
-  displayPRF      = new AnalogDisplay('prfCanvas', 100,   200,  25,  5, false);
-  displayPRF.setNbDec(1);
+
   displayHDG      = new Direction('hdgCanvas', 100, 45, 5, true);
   displayTWD      = new Direction('twdCanvas', 100, 45, 5, true);
 //displayTWD      = new Direction('twdCanvas', 100, 1060,  10,  1, false, 60, 960);
@@ -58,7 +57,6 @@ var init = function() {
 
 var changeBorder = function(b) {
   displayBSP.setBorder(b);
-  displayPRF.setBorder(b);
   displayHDG.setBorder(b);
   displayTWD.setBorder(b);
   displayTWS.setBorder(b);
@@ -74,8 +72,7 @@ var TOTAL_WIDTH = 1200;
 var resizeDisplays = function(width) {
   if (displayBSP !== undefined && displayTWS !== undefined) { // TODO Other displays
     displayBSP.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
-    displayPRF.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH)); 
-    displayTWS.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH)); 
+    displayTWS.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH));
     displayHDG.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH)); 
     displayTWD.setDisplaySize(100 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH)); 
     thermometer.setDisplaySize(200 * (Math.min(width, TOTAL_WIDTH) / TOTAL_WIDTH)); 
