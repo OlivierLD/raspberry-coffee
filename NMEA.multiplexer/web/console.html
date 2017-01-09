@@ -153,26 +153,6 @@
       cb.checked = (border === 'Y');
     }
     // Subscribers here
-    events.subscribe('show-hide-wt', function(val) {
-      document.getElementById("display-wt-div").style.display = (val === true ? 'inline' : 'none');
-      document.getElementById("display-wt-title").style.display = (val === true ? 'inline' : 'none');
-    });
-    events.subscribe('show-hide-at', function(val) {
-      document.getElementById("display-at-div").style.display = (val === true ? 'inline' : 'none');
-      document.getElementById("display-at-title").style.display = (val === true ? 'inline' : 'none');
-    });
-    events.subscribe('show-hide-gdt', function(val) {
-      document.getElementById("display-gdt-div").style.display = (val === true ? 'inline' : 'none');
-      document.getElementById("display-gdt-title").style.display = (val === true ? 'inline' : 'none');
-    });
-    events.subscribe('show-hide-prmsl', function(val) {
-      document.getElementById("display-prmsl-div").style.display = (val === true ? 'inline' : 'none');
-      document.getElementById("display-prmsl-title").style.display = (val === true ? 'inline' : 'none');
-    });
-    events.subscribe('show-hide-hum', function(val) {
-      document.getElementById("display-hum-div").style.display = (val === true ? 'inline' : 'none');
-      document.getElementById("display-hum-title").style.display = (val === true ? 'inline' : 'none');
-    });
     /**
      * The following subscriptions make the distinction between Ajax & WebSockets
      * (See the initAjax & initWS methods)
@@ -181,6 +161,8 @@
       var label = "Your position";
       // Plot the station on the map
       var canvas = "mapCanvas";
+      clear(canvas);
+      drawWorldMap(canvas);
       plotPosToCanvas(canvas, val.lat, val.lng, label);
     });
     events.subscribe('bsp', function(val) {
@@ -628,8 +610,6 @@
       <p align="center">
         <canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
       </p>
-      <input type="button" value="Reload Map" onClick="reloadMap();"/>
-      <div id="elapsed" style="font-size: 10pt; font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular"></div>
     </div>
     <div id="twd-evolution" style="display: none;">
       <p align="center">
