@@ -447,3 +447,9 @@ The SSD1306 display is quite small. In the pictures above, there is a Fresnel le
 
 As it is an example, this one can just be set in the properties file used at startup.
 It can be visualized from the WebUI, but not managed (added, removed, etc).
+
+#### Web Console
+There is a Web Console, accessible to any device able to run a Web browser (smart phone, tablet, laptop, etc).
+
+![page 2](./full.console.01.png "Second page")
+![page 3](./full.console.02.png "Third page")
