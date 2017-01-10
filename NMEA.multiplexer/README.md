@@ -451,5 +451,7 @@ It can be visualized from the WebUI, but not managed (added, removed, etc).
 #### Web Console
 There is a Web Console, accessible to any device able to run a Web browser (smart phone, tablet, laptop, etc).
 
-![page 2](./full.console.01.png "Second page")
-![page 3](./full.console.02.png "Third page")
+![page 1](./full.console.01.png "First page")
+![page 2](./full.console.02.png "Second page")
+![page 3](./full.console.03.png "Third page")
+![page 4](./full.console.04.png "Fourth page")
