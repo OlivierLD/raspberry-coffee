@@ -1641,100 +1641,115 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		int fwdIdx = 1;
 		// 2 - Output channels, aka forwarders
 		while (thereIsMore) {
-			String typeProp = String.format("forward.%s.type", MUX_IDX_FMT.format(fwdIdx));
-			String type = muxProps.getProperty(typeProp);
-			if (type == null) {
-				thereIsMore = false;
+			String classProp = String.format("forward.%s.cls", MUX_IDX_FMT.format(fwdIdx));
+			String cls = muxProps.getProperty(classProp);
+			if (cls != null) { // Dynamic loading
+				try {
+					Object dynamic = Class.forName(cls).newInstance();
+					if (dynamic instanceof Forwarder) {
+						nmeaDataForwarders.add((Forwarder)dynamic);
+					} else {
+						throw new RuntimeException(String.format("Expected a Forwarder, found a [%s]", dynamic.getClass().getName()));
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			} else {
-				switch (type) {
-					case "serial":
-						String serialPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
-						int baudrate = Integer.parseInt(muxProps.getProperty(String.format("forward.%s.baudrate", MUX_IDX_FMT.format(fwdIdx))));
-						try {
-							Forwarder serialForwarder = new SerialWriter(serialPort, baudrate);
-							nmeaDataForwarders.add(serialForwarder);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						break;
-					case "tcp":
-						String tcpPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
-						try {
-							Forwarder tcpForwarder = new TCPServer(Integer.parseInt(tcpPort));
-							nmeaDataForwarders.add(tcpForwarder);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						break;
-					case "gpsd":
-						String gpsdPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
-						try {
-							Forwarder gpsdForwarder = new GPSdServer(Integer.parseInt(gpsdPort));
-							nmeaDataForwarders.add(gpsdForwarder);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						break;
-					case "file":
-						String fName = muxProps.getProperty(String.format("forward.%s.filename", MUX_IDX_FMT.format(fwdIdx)));
-						try {
-							Forwarder fileForwarder = new DataFileWriter(fName);
-							nmeaDataForwarders.add(fileForwarder);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						break;
-					case "ws":
-						String wsUri = muxProps.getProperty(String.format("forward.%s.wsuri", MUX_IDX_FMT.format(fwdIdx)));
-						try {
-							Forwarder wsForwarder = new WebSocketWriter(wsUri);
-							nmeaDataForwarders.add(wsForwarder);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						break;
-					case "wsp":
-						String wspUri = muxProps.getProperty(String.format("forward.%s.wsuri", MUX_IDX_FMT.format(fwdIdx)));
-						try {
-							Forwarder wsForwarder = new WebSocketProcessor(wspUri);
-							nmeaDataForwarders.add(wsForwarder);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						break;
-					case "console":
-						try {
-							Forwarder consoleForwarder = new ConsoleWriter();
-							nmeaDataForwarders.add(consoleForwarder);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						break;
-					case "oled":
-						try {
-							Forwarder oledForwarder = new SSD1306Processor();
-							nmeaDataForwarders.add(oledForwarder);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						break;
-					case "rmi":
-						String rmiPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
-						String rmiName = muxProps.getProperty(String.format("forward.%s.name", MUX_IDX_FMT.format(fwdIdx)));
-						try {
-							Forwarder rmiServerForwarder;
-							if (rmiName != null && rmiName.trim().length() > 0) {
-								rmiServerForwarder = new RMIServer(Integer.parseInt(rmiPort), rmiName);
-							} else {
-								rmiServerForwarder = new RMIServer(Integer.parseInt(rmiPort));
+				String typeProp = String.format("forward.%s.type", MUX_IDX_FMT.format(fwdIdx));
+				String type = muxProps.getProperty(typeProp);
+				if (type == null) {
+					thereIsMore = false;
+				} else {
+					switch (type) {
+						case "serial":
+							String serialPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+							int baudrate = Integer.parseInt(muxProps.getProperty(String.format("forward.%s.baudrate", MUX_IDX_FMT.format(fwdIdx))));
+							try {
+								Forwarder serialForwarder = new SerialWriter(serialPort, baudrate);
+								nmeaDataForwarders.add(serialForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
 							}
-							nmeaDataForwarders.add(rmiServerForwarder);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-						break;
-					default:
-						throw new RuntimeException(String.format("forward type [%s] not supported yet.", type));
+							break;
+						case "tcp":
+							String tcpPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+							try {
+								Forwarder tcpForwarder = new TCPServer(Integer.parseInt(tcpPort));
+								nmeaDataForwarders.add(tcpForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+							break;
+						case "gpsd":
+							String gpsdPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+							try {
+								Forwarder gpsdForwarder = new GPSdServer(Integer.parseInt(gpsdPort));
+								nmeaDataForwarders.add(gpsdForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+							break;
+						case "file":
+							String fName = muxProps.getProperty(String.format("forward.%s.filename", MUX_IDX_FMT.format(fwdIdx)));
+							try {
+								Forwarder fileForwarder = new DataFileWriter(fName);
+								nmeaDataForwarders.add(fileForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+							break;
+						case "ws":
+							String wsUri = muxProps.getProperty(String.format("forward.%s.wsuri", MUX_IDX_FMT.format(fwdIdx)));
+							try {
+								Forwarder wsForwarder = new WebSocketWriter(wsUri);
+								nmeaDataForwarders.add(wsForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+							break;
+						case "wsp":
+							String wspUri = muxProps.getProperty(String.format("forward.%s.wsuri", MUX_IDX_FMT.format(fwdIdx)));
+							try {
+								Forwarder wsForwarder = new WebSocketProcessor(wspUri);
+								nmeaDataForwarders.add(wsForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+							break;
+						case "console":
+							try {
+								Forwarder consoleForwarder = new ConsoleWriter();
+								nmeaDataForwarders.add(consoleForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+							break;
+						case "oled":
+							try {
+								Forwarder oledForwarder = new SSD1306Processor();
+								nmeaDataForwarders.add(oledForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+							break;
+						case "rmi":
+							String rmiPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+							String rmiName = muxProps.getProperty(String.format("forward.%s.name", MUX_IDX_FMT.format(fwdIdx)));
+							try {
+								Forwarder rmiServerForwarder;
+								if (rmiName != null && rmiName.trim().length() > 0) {
+									rmiServerForwarder = new RMIServer(Integer.parseInt(rmiPort), rmiName);
+								} else {
+									rmiServerForwarder = new RMIServer(Integer.parseInt(rmiPort));
+								}
+								nmeaDataForwarders.add(rmiServerForwarder);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+							break;
+						default:
+							throw new RuntimeException(String.format("forward type [%s] not supported yet.", type));
+					}
 				}
 			}
 			fwdIdx++;

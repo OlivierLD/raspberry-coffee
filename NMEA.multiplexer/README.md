@@ -456,7 +456,7 @@ It can be accessed from `http://[machine:port]/web/console.html`.
 Again, this is just an example, feel free to tweak it your way.
 
 ![page 1](./full.console.01.png "First page")
-In the picture above, ll the data come from the NMEA station, except the air temperature, pressure and humidity, that come from sensors.
+In the picture above, all the data come from the NMEA station, except the air temperature, pressure and humidity, that come from sensors.
 ![page 2](./full.console.02.png "Second page")
 ![page 3](./full.console.03.png "Third page")
 ![page 4](./full.console.04.png "Fourth page")
