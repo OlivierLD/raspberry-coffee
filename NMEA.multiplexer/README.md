@@ -394,7 +394,7 @@ You have the possibility to dynamically load Channels, Forwarders and Computers.
 
 For now just Forwarders are supported.
 
-To load a class, mention its name in the property file, like for example:
+To load a class, mention its name in the properties file used at startup, like for example:
 ```properties
 #
 # Dynamic loading sample
