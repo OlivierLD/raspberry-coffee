@@ -389,6 +389,27 @@ where `machine-name` is the name of the machine where the multiplexer is running
 
 And any REST client (NodeJS, Postman, your own code, ...) does the job.
 
+## Dynamic loading
+You have the possibility to dynamically load Channels, Forwarders and Computers.
+
+For now just Forwarders are supported.
+
+To load a class, mention its name in the property file, like for example:
+```properties
+#
+# Dynamic loading sample
+#
+forward.03.cls=nmea.forwarders.ProcessorSkeleton
+#
+```
+This `ProcessorSkeleton` is part of the project, it is provided as an example you can start from to develop your own forwarders.
+
+_Note_: Dynamically loaded classes cannot be managed from the REST admin interface. Thay cannot be added, nor removed.
+The only way to load them is through the propertiues file used at startup.
+They will show up in the admin interface, but as an indication only:
+![Admin Web UI](./dynamic.png "Admin GUI")
+Notice the line that says `skeleton`.
+
 ## Open Issues
 - UDP client
 
