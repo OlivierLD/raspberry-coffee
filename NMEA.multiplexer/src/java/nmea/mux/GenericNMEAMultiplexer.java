@@ -1467,154 +1467,169 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		boolean thereIsMore = true;
 		// 1 - Input channels
 		while (thereIsMore) {
-			String typeProp = String.format("mux.%s.type", MUX_IDX_FMT.format(muxIdx));
-			String type = muxProps.getProperty(typeProp);
-			if (type == null) {
-				thereIsMore = false;
+			String classProp = String.format("mux.%s.cls", MUX_IDX_FMT.format(muxIdx)); // TODO: Properties file for the parameters?
+			String cls = muxProps.getProperty(classProp);
+			if (cls != null) { // Dynamic loading
+				try {
+					Object dynamic = Class.forName(cls).newInstance();
+					if (dynamic instanceof NMEAClient) {
+						nmeaDataClients.add((NMEAClient)dynamic);
+					} else {
+						throw new RuntimeException(String.format("Expected an NMEAClient, found a [%s]", dynamic.getClass().getName()));
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			} else {
-				String deviceFilters = "";
-				String sentenceFilters = "";
-				switch (type) {
-					case "serial":
-						try {
-							String serialPort = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
-							String br = muxProps.getProperty(String.format("mux.%s.baudrate", MUX_IDX_FMT.format(muxIdx)));
-							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							NMEAClient serialClient = new SerialClient(
-											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
-											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-											this);
-							serialClient.initClient();
-							serialClient.setReader(new SerialReader(serialClient.getListeners(), serialPort, Integer.parseInt(br)));
-							nmeaDataClients.add(serialClient);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-					case "tcp":
-						try {
-							String tcpPort = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
-							String tcpServer = muxProps.getProperty(String.format("mux.%s.server", MUX_IDX_FMT.format(muxIdx)));
-							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							NMEAClient tcpClient = new TCPClient(
-											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
-											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-											this);
-							tcpClient.initClient();
-							tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpServer, Integer.parseInt(tcpPort)));
-							nmeaDataClients.add(tcpClient);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-					case "file":
-						try {
-							String filename = muxProps.getProperty(String.format("mux.%s.filename", MUX_IDX_FMT.format(muxIdx)));
-							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							NMEAClient fileClient = new DataFileClient(
-											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
-											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-											this);
-							fileClient.initClient();
-							fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename));
-							nmeaDataClients.add(fileClient);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-					case "ws":
-						try {
-							String wsUri = muxProps.getProperty(String.format("mux.%s.wsuri", MUX_IDX_FMT.format(muxIdx)));
-							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							NMEAClient wsClient = new WebSocketClient(
-											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
-											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-											this);
-							wsClient.initClient();
-							wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsUri));
-							nmeaDataClients.add(wsClient);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-					case "htu21df": // Humidity & Temperature sensor
-						try {
-							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							String htu21dfDevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
-							NMEAClient htu21dfClient = new HTU21DFClient(
-											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
-											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-											this);
-							htu21dfClient.initClient();
-							htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
-							// Important: after the setReader
-							if (htu21dfDevicePrefix.trim().length() > 0) {
-								if (htu21dfDevicePrefix.trim().length() == 2) {
-									((HTU21DFClient)htu21dfClient).setSpecificDevicePrefix(htu21dfDevicePrefix.trim());
-								} else {
-									throw new RuntimeException(String.format("Bad prefix [%s] for HTU21DF. Must be 2 character long, exactly.", htu21dfDevicePrefix.trim()));
-								}
+				String typeProp = String.format("mux.%s.type", MUX_IDX_FMT.format(muxIdx));
+				String type = muxProps.getProperty(typeProp);
+				if (type == null) {
+					thereIsMore = false;
+				} else {
+					String deviceFilters = "";
+					String sentenceFilters = "";
+					switch (type) {
+						case "serial":
+							try {
+								String serialPort = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
+								String br = muxProps.getProperty(String.format("mux.%s.baudrate", MUX_IDX_FMT.format(muxIdx)));
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient serialClient = new SerialClient(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												this);
+								serialClient.initClient();
+								serialClient.setReader(new SerialReader(serialClient.getListeners(), serialPort, Integer.parseInt(br)));
+								nmeaDataClients.add(serialClient);
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
-							nmeaDataClients.add(htu21dfClient);
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (Error err) {
-							err.printStackTrace();
-						}
-						break;
-					case "rnd": // Random generator, for debugging
-						try {
-							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							NMEAClient rndClient = new RandomClient(
-											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
-											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-											this);
-							rndClient.initClient();
-							rndClient.setReader(new RandomReader(rndClient.getListeners()));
-							nmeaDataClients.add(rndClient);
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (Error err) {
-							err.printStackTrace();
-						}
-						break;
-					case "bme280": // Humidity, Temperature, Pressure
-						try {
-							deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-							String bme280DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
-							NMEAClient bme280Client = new BME280Client(
-											deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
-											sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-											this);
-							bme280Client.initClient();
-							bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
-							// Important: after the setReader
-							if (bme280DevicePrefix.trim().length() > 0) {
-								if (bme280DevicePrefix.trim().length() == 2) {
-									((BME280Client)bme280Client).setSpecificDevicePrefix(bme280DevicePrefix.trim());
-								} else {
-									throw new RuntimeException(String.format("Bad prefix [%s] for BME280. Must be 2 character long, exactly.", bme280DevicePrefix.trim()));
-								}
+							break;
+						case "tcp":
+							try {
+								String tcpPort = muxProps.getProperty(String.format("mux.%s.port", MUX_IDX_FMT.format(muxIdx)));
+								String tcpServer = muxProps.getProperty(String.format("mux.%s.server", MUX_IDX_FMT.format(muxIdx)));
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient tcpClient = new TCPClient(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												this);
+								tcpClient.initClient();
+								tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpServer, Integer.parseInt(tcpPort)));
+								nmeaDataClients.add(tcpClient);
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
-							nmeaDataClients.add(bme280Client);
-						} catch (Exception e) {
-							e.printStackTrace();
-						} catch (Error err) {
-							err.printStackTrace();
-						}
-						break;
-					case "bmp180": // Temperature, Pressure
-					case "lsm303": // 3D magnetometer
-					case "batt":   // Battery Voltage, use XDR
-					default:
-						throw new RuntimeException(String.format("mux type [%s] not supported yet.", type));
+							break;
+						case "file":
+							try {
+								String filename = muxProps.getProperty(String.format("mux.%s.filename", MUX_IDX_FMT.format(muxIdx)));
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient fileClient = new DataFileClient(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												this);
+								fileClient.initClient();
+								fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename));
+								nmeaDataClients.add(fileClient);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							break;
+						case "ws":
+							try {
+								String wsUri = muxProps.getProperty(String.format("mux.%s.wsuri", MUX_IDX_FMT.format(muxIdx)));
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient wsClient = new WebSocketClient(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												this);
+								wsClient.initClient();
+								wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsUri));
+								nmeaDataClients.add(wsClient);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							break;
+						case "htu21df": // Humidity & Temperature sensor
+							try {
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								String htu21dfDevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient htu21dfClient = new HTU21DFClient(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												this);
+								htu21dfClient.initClient();
+								htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
+								// Important: after the setReader
+								if (htu21dfDevicePrefix.trim().length() > 0) {
+									if (htu21dfDevicePrefix.trim().length() == 2) {
+										((HTU21DFClient) htu21dfClient).setSpecificDevicePrefix(htu21dfDevicePrefix.trim());
+									} else {
+										throw new RuntimeException(String.format("Bad prefix [%s] for HTU21DF. Must be 2 character long, exactly.", htu21dfDevicePrefix.trim()));
+									}
+								}
+								nmeaDataClients.add(htu21dfClient);
+							} catch (Exception e) {
+								e.printStackTrace();
+							} catch (Error err) {
+								err.printStackTrace();
+							}
+							break;
+						case "rnd": // Random generator, for debugging
+							try {
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient rndClient = new RandomClient(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												this);
+								rndClient.initClient();
+								rndClient.setReader(new RandomReader(rndClient.getListeners()));
+								nmeaDataClients.add(rndClient);
+							} catch (Exception e) {
+								e.printStackTrace();
+							} catch (Error err) {
+								err.printStackTrace();
+							}
+							break;
+						case "bme280": // Humidity, Temperature, Pressure
+							try {
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								String bme280DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient bme280Client = new BME280Client(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												this);
+								bme280Client.initClient();
+								bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
+								// Important: after the setReader
+								if (bme280DevicePrefix.trim().length() > 0) {
+									if (bme280DevicePrefix.trim().length() == 2) {
+										((BME280Client) bme280Client).setSpecificDevicePrefix(bme280DevicePrefix.trim());
+									} else {
+										throw new RuntimeException(String.format("Bad prefix [%s] for BME280. Must be 2 character long, exactly.", bme280DevicePrefix.trim()));
+									}
+								}
+								nmeaDataClients.add(bme280Client);
+							} catch (Exception e) {
+								e.printStackTrace();
+							} catch (Error err) {
+								err.printStackTrace();
+							}
+							break;
+						case "bmp180": // Temperature, Pressure
+						case "lsm303": // 3D magnetometer
+						case "batt":   // Battery Voltage, use XDR
+						default:
+							throw new RuntimeException(String.format("mux type [%s] not supported yet.", type));
+					}
 				}
 			}
 			muxIdx++;
