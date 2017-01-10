@@ -133,10 +133,9 @@
       initWS();
       flavor = 'WebSocket';
     } else {
-      initAjax();
+      initAjax(); // Default
     }
     document.getElementById("console-type").innerHTML = 'The HTML5 ' + flavor + ' Console.';
-//  console.log("Evaluating window size");
     resizeComponents();
     var theme = getQSPrm('theme');
     if (theme !== undefined) {

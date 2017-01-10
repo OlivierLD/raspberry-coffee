@@ -249,8 +249,8 @@
                         alert('Log file name required');
                         return;
                     }
-                    var dFilters = $("#file-dev-filters").val().split(",");
-                    var sFilters = $("#file-sentence-filters").val().split(",");
+                    var dFilters = $("#data-dev-filters").val().split(",");
+                    var sFilters = $("#data-sentence-filters").val().split(",");
                     createChannel({
                         type: 'file',
                         file: logfile,
