@@ -392,8 +392,6 @@ And any REST client (NodeJS, Postman, your own code, ...) does the job.
 ## Dynamic loading
 You have the possibility to dynamically load Channels, Forwarders and Computers.
 
-For now just Channels and Forwarders are supported.
-
 To load a class, mention its name in the properties file used at startup, like for example:
 ```properties
 #

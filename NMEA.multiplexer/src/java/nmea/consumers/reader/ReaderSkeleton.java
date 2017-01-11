@@ -31,7 +31,7 @@ public class ReaderSkeleton extends NMEAReader {
 				e.printStackTrace();
 			}
 			try {
-				Thread.sleep(1000L); // TODO Make this a parameter
+				Thread.sleep(1000L);
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 			}
