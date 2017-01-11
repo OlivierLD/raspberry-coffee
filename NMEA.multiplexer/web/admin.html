@@ -66,6 +66,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'tcp':
                     $("#channel-serial").css('display', 'none');
@@ -75,6 +76,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'file':
                     $("#channel-serial").css('display', 'none');
@@ -84,6 +86,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'ws':
                     $("#channel-serial").css('display', 'none');
@@ -93,6 +96,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'rnd':
                     $("#channel-serial").css('display', 'none');
@@ -102,6 +106,7 @@
                     $("#channel-rnd").css('display', 'inline');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'bme280':
                     $("#channel-serial").css('display', 'none');
@@ -111,6 +116,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'inline');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'htu21df':
                     $("#channel-serial").css('display', 'none');
@@ -120,6 +126,17 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'inline');
+                    $("#channel-custom").css('display', 'none');
+                    break;
+                case 'custom':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'inline');
                     break;
                 default:
                     break;
@@ -304,6 +321,17 @@
                         sentenceFilters: sFilters
                     });
                     break;
+                case 'custom':
+                    var clientClass = $("#ch-custom-class").val();
+                    var readerClass = $("#ch-custom-reader").val();
+                    var propfile = $('#ch-custom-prop-file').val();
+                    createChannel({
+                        type: 'custom',
+                        clientClass: clientClass,
+                        readerClass: readerClass,
+                        propFile: propfile
+                    });
+                    break;
                 default:
                     break;
             }
@@ -473,6 +501,7 @@
                 <option value="rnd">Random</option>
                 <option value="bme280">BME280</option>
                 <option value="htu21df">HTU21DF</option>
+                <option value="custom">Custom</option>
               </select>
             </td>
             <td valign="top">
@@ -611,6 +640,22 @@
                     <td>Sentence filter(s)</td>
                     <td><input id="htu21df-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
                     <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-custom" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Client Class</td>
+                    <td><input id="ch-custom-class" type="text" placeholder="Client Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Reader Class</td>
+                    <td><input id="ch-custom-reader" type="text" placeholder="Reader Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Properties file</td>
+                    <td><input id="ch-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
                   </tr>
                 </table>
               </div>

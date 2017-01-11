@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import nmea.api.NMEAListener;
 import nmea.api.NMEAReader;
 import nmea.computers.Computer;
 import nmea.computers.ExtraDataComputer;
@@ -958,6 +957,80 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					// Already there
 					response.setStatus(HTTPServer.Response.BAD_REQUEST); 
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'rnd' already exists");
+				}
+				break;
+			case "custom":
+				String payload = new String(request.getContent());
+				Object custom = new Gson().fromJson(payload, Object.class);
+				if (custom instanceof Map) {
+					Map<String, String> map = (Map<String, String>)custom;
+					String clientClass = map.get("clientClass").trim();
+					String readerClass = map.get("readerClass").trim();
+					String propFile = map.get("propFile");
+					// Make sure client and reader are not null
+					if (clientClass == null || clientClass.length() == 0 || readerClass == null || readerClass.length() == 0) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Require at least both class and reader name.");
+						return response;
+					}
+					// Check Existence
+					opClient = nmeaDataClients.stream()
+								.filter(channel -> channel.getClass().getName().equals(clientClass))
+								.findFirst();
+					if (!opClient.isPresent()) {
+						try {
+							// Create
+							Object dynamic = Class.forName(clientClass).getDeclaredConstructor(Multiplexer.class).newInstance(this);
+							if (dynamic instanceof NMEAClient) {
+								NMEAClient nmeaClient = (NMEAClient)dynamic;
+
+								if (propFile != null && propFile.trim().length() > 0) {
+									try {
+										Properties properties = new Properties();
+										properties.load(new FileReader(propFile));
+										nmeaClient.setProperties(properties);
+									} catch (Exception ex) {
+										// Send message
+										response.setStatus(HTTPServer.Response.BAD_REQUEST);
+										RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+										ex.printStackTrace();
+									}
+								}
+								nmeaClient.initClient();
+								NMEAReader reader = null;
+								try {
+									// Cannot invoke declared constructor with a generic type... :(
+									reader = (NMEAReader)Class.forName(readerClass).getDeclaredConstructor(List.class).newInstance(nmeaClient.getListeners());
+								} catch (Exception ex) {
+									response.setStatus(HTTPServer.Response.BAD_REQUEST);
+									RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+									ex.printStackTrace();
+								}
+								if (reader != null) {
+									nmeaClient.setReader(reader);
+								}
+								nmeaDataClients.add(nmeaClient);
+								nmeaClient.startWorking();
+								String content = new Gson().toJson(nmeaClient.getBean());
+								RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+								response.setPayload(content.getBytes());
+							} else {
+								// Wrong class
+								response.setStatus(HTTPServer.Response.BAD_REQUEST);
+								RESTProcessorUtil.addErrorMessageToResponse(response, String.format("Expected an NMEAClient, found a [%s] instead.", dynamic.getClass().getName()));
+							}
+						} catch (Exception ex) {
+							response.setStatus(HTTPServer.Response.BAD_REQUEST);
+							RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+							ex.printStackTrace();
+						}
+					} else {
+						// Already there
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "this 'custom' channel already exists");
+					}
+				} else {
+					// Unknown object, not a Map...
 				}
 				break;
 			default:
