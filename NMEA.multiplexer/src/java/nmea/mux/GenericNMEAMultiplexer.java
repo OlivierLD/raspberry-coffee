@@ -382,6 +382,16 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED); 
 					break;
 				default:
+					if (request.getContent() != null) {
+						StringReader stringReader = new StringReader(new String(request.getContent()));
+						Map<String, String> custom = (Map<String, String>)new Gson().fromJson(stringReader, Object.class);
+						opFwd = nmeaDataForwarders.stream()
+										.filter(fwd -> fwd.getClass().getName().equals(custom.get("cls")))
+										.findFirst();
+						response = removeForwarderIfPresent(request, opFwd);
+					} else {
+						response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
+					}
 					break;
 			}
 		} else {
@@ -509,7 +519,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					gson = new GsonBuilder().create();
 					if (request.getContent() != null) {  // Really? Need that?
 						opComputer = nmeaDataComputers.stream()
-										.filter(channel -> channel instanceof ExtraDataComputer)
+										.filter(cptr -> cptr instanceof ExtraDataComputer)
 										.findFirst();
 						response = removeComputerIfPresent(request, opComputer);
 					} else {
@@ -518,6 +528,16 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					}
 					break;
 				default:
+					if (request.getContent() != null) {
+						StringReader stringReader = new StringReader(new String(request.getContent()));
+						Map<String, String> custom = (Map<String, String>)new Gson().fromJson(stringReader, Object.class);
+						opComputer = nmeaDataComputers.stream()
+										.filter(cptr -> cptr.getClass().getName().equals(custom.get("cls")))
+										.findFirst();
+						response = removeComputerIfPresent(request, opComputer);
+					} else {
+						response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
+					}
 					break;
 			}
 		} else {
@@ -738,6 +758,65 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					// Already there
 					response.setStatus(HTTPServer.Response.BAD_REQUEST);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'wsp' already exists");
+				}
+				break;
+			case "custom":
+				String payload = new String(request.getContent());
+				Object custom = new Gson().fromJson(payload, Object.class);
+				if (custom instanceof Map) {
+					Map<String, String> map = (Map<String, String>)custom;
+					String forwarderClass = map.get("forwarderClass").trim();
+					String propFile = map.get("propFile");
+					// Make sure client and reader are not null
+					if (forwarderClass == null || forwarderClass.length() == 0) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Require at least class name.");
+						return response;
+					}
+					// Check Existence
+					opFwd = nmeaDataForwarders.stream()
+									.filter(fwd -> fwd.getClass().getName().equals(forwarderClass))
+									.findFirst();
+					if (!opFwd.isPresent()) {
+						try {
+							// Create
+							Object dynamic = Class.forName(forwarderClass).newInstance();
+							if (dynamic instanceof Forwarder) {
+								Forwarder forwarder = (Forwarder)dynamic;
+
+								if (propFile != null && propFile.trim().length() > 0) {
+									try {
+										Properties properties = new Properties();
+										properties.load(new FileReader(propFile));
+										forwarder.setProperties(properties);
+									} catch (Exception ex) {
+										// Send message
+										response.setStatus(HTTPServer.Response.BAD_REQUEST);
+										RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+										ex.printStackTrace();
+									}
+								}
+								nmeaDataForwarders.add(forwarder);
+								String content = new Gson().toJson(forwarder.getBean());
+								RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+								response.setPayload(content.getBytes());
+							} else {
+								// Wrong class
+								response.setStatus(HTTPServer.Response.BAD_REQUEST);
+								RESTProcessorUtil.addErrorMessageToResponse(response, String.format("Expected a Forwarder, found a [%s] instead.", dynamic.getClass().getName()));
+							}
+						} catch (Exception ex) {
+							response.setStatus(HTTPServer.Response.BAD_REQUEST);
+							RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+							ex.printStackTrace();
+						}
+					} else {
+						// Already there
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "this 'custom' channel already exists");
+					}
+				} else {
+					// Unknown object, not a Map...
 				}
 				break;
 			default:
@@ -1096,6 +1175,65 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					// Already there
 					response.setStatus(HTTPServer.Response.BAD_REQUEST);
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'computer' already exists");
+				}
+				break;
+			case "custom":
+				String payload = new String(request.getContent());
+				Object custom = new Gson().fromJson(payload, Object.class);
+				if (custom instanceof Map) {
+					Map<String, String> map = (Map<String, String>)custom;
+					String computerClass = map.get("computerClass").trim();
+					String propFile = map.get("propFile");
+					// Make sure client and reader are not null
+					if (computerClass == null || computerClass.length() == 0) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Require at least class name.");
+						return response;
+					}
+					// Check Existence
+					opComputer = nmeaDataComputers.stream()
+									.filter(fwd -> fwd.getClass().getName().equals(computerClass))
+									.findFirst();
+					if (!opComputer.isPresent()) {
+						try {
+							// Create
+							Object dynamic = Class.forName(computerClass).getDeclaredConstructor(Multiplexer.class).newInstance(this);
+							if (dynamic instanceof Computer) {
+								Computer computer = (Computer)dynamic;
+
+								if (propFile != null && propFile.trim().length() > 0) {
+									try {
+										Properties properties = new Properties();
+										properties.load(new FileReader(propFile));
+										computer.setProperties(properties);
+									} catch (Exception ex) {
+										// Send message
+										response.setStatus(HTTPServer.Response.BAD_REQUEST);
+										RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+										ex.printStackTrace();
+									}
+								}
+								nmeaDataComputers.add(computer);
+								String content = new Gson().toJson(computer.getBean());
+								RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+								response.setPayload(content.getBytes());
+							} else {
+								// Wrong class
+								response.setStatus(HTTPServer.Response.BAD_REQUEST);
+								RESTProcessorUtil.addErrorMessageToResponse(response, String.format("Expected a Computer, found a [%s] instead.", dynamic.getClass().getName()));
+							}
+						} catch (Exception ex) {
+							response.setStatus(HTTPServer.Response.BAD_REQUEST);
+							RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+							ex.printStackTrace();
+						}
+					} else {
+						// Already there
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "this 'custom' channel already exists");
+					}
+				} else {
+					// Unknown object, not a Map...
 				}
 				break;
 			default:

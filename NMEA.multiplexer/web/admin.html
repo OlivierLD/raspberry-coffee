@@ -153,6 +153,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'tcp':
                     $("#forward-serial").css('display', 'none');
@@ -162,6 +163,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'gpsd':
                     $("#forward-serial").css('display', 'none');
@@ -171,6 +173,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'rmi':
                     $("#forward-serial").css('display', 'none');
@@ -180,6 +183,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'file':
                     $("#forward-serial").css('display', 'none');
@@ -189,6 +193,7 @@
                     $("#forward-file").css('display', 'inline');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'ws':
                     $("#forward-serial").css('display', 'none');
@@ -198,6 +203,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'inline');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'console':
                     $("#forward-serial").css('display', 'none');
@@ -207,6 +213,17 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'inline');
+                    $("#forward-custom").css('display', 'none');
+                    break;
+                case 'custom':
+                    $("#forward-serial").css('display', 'none');
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-gpsd").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'inline');
                     break;
                 default:
                     break;
@@ -217,6 +234,11 @@
             switch (selected) {
                 case 'tw-current':
                     $("#computer-twc").css('display', 'inline');
+                    $("#computer-custom").css('display', 'none');
+                    break;
+                case 'custom':
+                    $("#computer-twc").css('display', 'none');
+                    $("#computer-custom").css('display', 'inline');
                     break;
                 default:
                     break;
@@ -419,6 +441,15 @@
                         type: 'console'
                     });
                     break;
+                case 'custom':
+                    var forwarderClass = $("#fwd-custom-class").val();
+                    var propfile = $('#fwd-custom-prop-file').val();
+                    createForwarder({
+                        type: 'custom',
+                        forwarderClass: forwarderClass,
+                        propFile: propfile
+                    });
+                    break;
                 default:
                     break;
             }
@@ -438,6 +469,15 @@
                         type: 'tw-current',
                         prefix: prefix,
                         timeBufferLength: tbl
+                    });
+                    break;
+                case 'custom':
+                    var computerClass = $("#cptr-custom-class").val();
+                    var propfile = $('#cptr-custom-prop-file').val();
+                    createComputer({
+                        type: 'custom',
+                        computerClass: computerClass,
+                        propFile: propfile
                     });
                     break;
                 default:
@@ -678,6 +718,7 @@
                 <option value="file">Data File</option>
                 <option value="ws">Web Socket</option>
                 <option value="console">Console</option>
+                <option value="custom">Custom</option>
               </select>
             </td>
             <td valign="top">
@@ -748,6 +789,18 @@
               <div id="forward-console" style="display: none;">
                 <i>No Parameters</i>
               </div>
+              <div id="forward-custom" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Forwarder Class</td>
+                    <td><input id="fwd-custom-class" type="text" placeholder="Forwarder Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Properties file</td>
+                    <td><input id="fwd-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
+                  </tr>
+                </table>
+              </div>
             </td>
           </tr>
         </table>
@@ -759,8 +812,9 @@
         <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
           <tr>
             <td valign="top">
-              <select id="computer-select" onchange="forwardSelectManager();">
+              <select id="computer-select" onchange="computerSelectManager();">
                 <option value="tw-current">True Wind and Current</option>
+                <option value="custom">Custom</option>
               </select>
             </td>
             <td valign="top">
@@ -773,6 +827,18 @@
                   <tr>
                     <td>Time Buffer Length</td>
                     <td><input id="cptr-twc-tbl" type="text" placeholder="60, 120, 300" size="30"> in seconds.</td>
+                  </tr>
+                </table>
+              </div>
+              <div id="computer-custom" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Computer Class</td>
+                    <td><input id="cptr-custom-class" type="text" placeholder="Computer Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Properties file</td>
+                    <td><input id="cptr-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
                   </tr>
                 </table>
               </div>
