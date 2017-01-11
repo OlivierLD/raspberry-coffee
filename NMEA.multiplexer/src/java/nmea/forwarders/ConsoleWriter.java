@@ -1,5 +1,7 @@
 package nmea.forwarders;
 
+import java.util.Properties;
+
 public class ConsoleWriter implements Forwarder {
 	public ConsoleWriter() throws Exception {
 	}
@@ -29,5 +31,9 @@ public class ConsoleWriter implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new ConsoleBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

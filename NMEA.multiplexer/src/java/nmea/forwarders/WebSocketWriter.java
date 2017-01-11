@@ -4,6 +4,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.Properties;
 
 public class WebSocketWriter implements Forwarder {
 	private WebSocketClient wsClient = null;
@@ -91,5 +92,9 @@ public class WebSocketWriter implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new WSBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

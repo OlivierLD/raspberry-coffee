@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import nmea.api.NMEAListener;
+import nmea.api.NMEAReader;
 import nmea.computers.Computer;
 import nmea.computers.ExtraDataComputer;
 import context.ApplicationContext;
@@ -34,7 +36,6 @@ import nmea.forwarders.ConsoleWriter;
 import nmea.forwarders.DataFileWriter;
 import nmea.forwarders.Forwarder;
 import nmea.forwarders.GPSdServer;
-import nmea.forwarders.SSD1306Processor;
 import nmea.forwarders.SerialWriter;
 import nmea.forwarders.TCPServer;
 import nmea.forwarders.WebSocketWriter;
@@ -97,6 +98,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	/**
 	 * Define all the REST operations to be managed
 	 * by the HTTP server.
+	 * <p>
+	 * Frame path parameters with curly braces.
 	 * <p>
 	 * See {@link #processRequest(HTTPServer.Request, HTTPServer.Response)}
 	 * See {@link HTTPServer}
@@ -1467,13 +1470,38 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		boolean thereIsMore = true;
 		// 1 - Input channels
 		while (thereIsMore) {
-			String classProp = String.format("mux.%s.cls", MUX_IDX_FMT.format(muxIdx)); // TODO: Properties file for the parameters?
+			String classProp = String.format("mux.%s.cls", MUX_IDX_FMT.format(muxIdx));
 			String cls = muxProps.getProperty(classProp);
 			if (cls != null) { // Dynamic loading
 				try {
-					Object dynamic = Class.forName(cls).newInstance();
+					Object dynamic = Class.forName(cls).getDeclaredConstructor(Multiplexer.class).newInstance(this);
 					if (dynamic instanceof NMEAClient) {
-						nmeaDataClients.add((NMEAClient)dynamic);
+						NMEAClient nmeaClient = (NMEAClient)dynamic;
+						String propProp = String.format("mux.%s.properties", MUX_IDX_FMT.format(muxIdx));
+						String propFileName = muxProps.getProperty(propProp);
+						if (propFileName != null) {
+							try {
+								Properties properties = new Properties();
+								properties.load(new FileReader(propFileName));
+								nmeaClient.setProperties(properties);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+						nmeaClient.initClient();
+						NMEAReader reader = null;
+						try {
+							String readerProp = String.format("mux.%s.reader", MUX_IDX_FMT.format(muxIdx));
+							String readerClass = muxProps.getProperty(readerProp);
+							// Cannot invoke declared constructor with a generic type... :(
+							reader = (NMEAReader)Class.forName(readerClass).getDeclaredConstructor(List.class).newInstance(nmeaClient.getListeners());
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+						if (reader != null) {
+							nmeaClient.setReader(reader);
+						}
+						nmeaDataClients.add(nmeaClient);
 					} else {
 						throw new RuntimeException(String.format("Expected an NMEAClient, found a [%s]", dynamic.getClass().getName()));
 					}
@@ -1662,7 +1690,19 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				try {
 					Object dynamic = Class.forName(cls).newInstance();
 					if (dynamic instanceof Forwarder) {
-						nmeaDataForwarders.add((Forwarder)dynamic);
+						Forwarder forwarder = (Forwarder)dynamic;
+						String propProp = String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx));
+						String propFileName = muxProps.getProperty(propProp);
+						if (propFileName != null) {
+							try {
+								Properties properties = new Properties();
+								properties.load(new FileReader(propFileName));
+								forwarder.setProperties(properties);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+						nmeaDataForwarders.add(forwarder);
 					} else {
 						throw new RuntimeException(String.format("Expected a Forwarder, found a [%s]", dynamic.getClass().getName()));
 					}
@@ -1739,14 +1779,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 								ex.printStackTrace();
 							}
 							break;
-						case "oled":
-							try {
-								Forwarder oledForwarder = new SSD1306Processor();
-								nmeaDataForwarders.add(oledForwarder);
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-							break;
 						case "rmi":
 							String rmiPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
 							String rmiName = muxProps.getProperty(String.format("forward.%s.name", MUX_IDX_FMT.format(fwdIdx)));
@@ -1777,34 +1809,61 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				int cptrIdx = 1;
 				// 3 - Computers
 				while (thereIsMore) {
-					String typeProp = String.format("computer.%s.type", MUX_IDX_FMT.format(cptrIdx));
-					String type = muxProps.getProperty(typeProp);
-					if (type == null) {
-						thereIsMore = false;
-					} else {
-						switch (type) {
-							case "tw-current":
-								String prefix = muxProps.getProperty(String.format("computer.%s.prefix", MUX_IDX_FMT.format(cptrIdx)), "OS");
-								String[] timeBuffers = muxProps.getProperty(String.format("computer.%s.time.buffer.length", MUX_IDX_FMT.format(cptrIdx)), "600000").split(",");
-								List<Long> timeBufferLengths  = Arrays.asList(timeBuffers).stream().map(tbl -> Long.parseLong(tbl.trim())).collect(Collectors.toList());
-								// Check duplicates
-								for (int i=0; i<timeBufferLengths.size() - 1; i++) {
-									for (int j=i+1; j< timeBufferLengths.size(); j++) {
-										if (timeBufferLengths.get(i).equals(timeBufferLengths.get(j))) {
-											throw new RuntimeException(String.format("Duplicates in time buffer lengths: %d ms.", timeBufferLengths.get(i)));
-										}
+					String classProp = String.format("computer.%s.cls", MUX_IDX_FMT.format(cptrIdx));
+					String cls = muxProps.getProperty(classProp);
+					if (cls != null) { // Dynamic loading
+						try {
+							Object dynamic = Class.forName(cls).getDeclaredConstructor(Multiplexer.class).newInstance(this);
+							if (dynamic instanceof Computer) {
+								Computer computer = (Computer)dynamic;
+								String propProp = String.format("computer.%s.properties", MUX_IDX_FMT.format(cptrIdx));
+								String propFileName = muxProps.getProperty(propProp);
+								if (propFileName != null) {
+									try {
+										Properties properties = new Properties();
+										properties.load(new FileReader(propFileName));
+										computer.setProperties(properties);
+									} catch (Exception ex) {
+										ex.printStackTrace();
 									}
 								}
-								try {
-									Computer twCurrentComputer = new ExtraDataComputer(this, prefix, timeBufferLengths.toArray(new Long[timeBufferLengths.size()]));
-									nmeaDataComputers.add(twCurrentComputer);
-								} catch (Exception ex) {
-									ex.printStackTrace();
-								}
-								break;
-							default:
-								System.err.println(String.format("Computer type [%s] not supported.", type));
-								break;
+								nmeaDataComputers.add(computer);
+							} else {
+								throw new RuntimeException(String.format("Expected a Computer, found a [%s]", dynamic.getClass().getName()));
+							}
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					} else {
+						String typeProp = String.format("computer.%s.type", MUX_IDX_FMT.format(cptrIdx));
+						String type = muxProps.getProperty(typeProp);
+						if (type == null) {
+							thereIsMore = false;
+						} else {
+							switch (type) {
+								case "tw-current":
+									String prefix = muxProps.getProperty(String.format("computer.%s.prefix", MUX_IDX_FMT.format(cptrIdx)), "OS");
+									String[] timeBuffers = muxProps.getProperty(String.format("computer.%s.time.buffer.length", MUX_IDX_FMT.format(cptrIdx)), "600000").split(",");
+									List<Long> timeBufferLengths = Arrays.asList(timeBuffers).stream().map(tbl -> Long.parseLong(tbl.trim())).collect(Collectors.toList());
+									// Check duplicates
+									for (int i = 0; i < timeBufferLengths.size() - 1; i++) {
+										for (int j = i + 1; j < timeBufferLengths.size(); j++) {
+											if (timeBufferLengths.get(i).equals(timeBufferLengths.get(j))) {
+												throw new RuntimeException(String.format("Duplicates in time buffer lengths: %d ms.", timeBufferLengths.get(i)));
+											}
+										}
+									}
+									try {
+										Computer twCurrentComputer = new ExtraDataComputer(this, prefix, timeBufferLengths.toArray(new Long[timeBufferLengths.size()]));
+										nmeaDataComputers.add(twCurrentComputer);
+									} catch (Exception ex) {
+										ex.printStackTrace();
+									}
+									break;
+								default:
+									System.err.println(String.format("Computer type [%s] not supported.", type));
+									break;
+							}
 						}
 					}
 					cptrIdx++;
@@ -1850,7 +1909,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	/**
 	 * Start the Multiplexer from here.
 	 *
-	 * @param args
+	 * @param args unused.
 	 */
 	public static void main(String... args) {
 
@@ -1872,7 +1931,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 		// with.http.server=yes
 		// http.port=9999
-		if ("yes".equals(definitions.getProperty("with.http.server", "false"))) {
+		if ("yes".equals(definitions.getProperty("with.http.server", "no"))) {
 			mux.startAdminServer(Integer.parseInt(definitions.getProperty("http.port", "9999")));
 		}
 	}

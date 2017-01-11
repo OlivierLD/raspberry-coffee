@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class TCPServer implements Forwarder {
 	private TCPServer instance = this;
@@ -155,5 +156,9 @@ public class TCPServer implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new TCPBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

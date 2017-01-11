@@ -22,7 +22,7 @@ public class ReaderSkeleton extends NMEAReader {
 	public void startReader() {
 		super.enableReading();
 		while (this.canRead()) {
-			// Read data every 1 second
+			// Read/Generate data every 1 second
 			try {
 				// Generate NMEA String
 				String customString = generateSentence("SK", "XXX", Double.toString(Math.random())) + NMEAParser.NMEA_SENTENCE_SEPARATOR;

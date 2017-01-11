@@ -21,6 +21,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.Properties;
 
 /**
  * This is an example of a <b>transformer</b>.
@@ -321,5 +322,9 @@ public class WebSocketProcessor implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new WSBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

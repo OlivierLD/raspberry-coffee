@@ -19,6 +19,8 @@ import nmea.parser.UTCTime;
 import spi.lcd.ScreenBuffer;
 import spi.lcd.oled.SSD1306;
 
+import java.util.Properties;
+
 /**
  * This is an example of a <b>transformer</b>.
  * <br>
@@ -315,5 +317,9 @@ public class SSD1306Processor implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new OLEDBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

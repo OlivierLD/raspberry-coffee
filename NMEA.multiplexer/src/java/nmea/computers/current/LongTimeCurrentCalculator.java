@@ -1,4 +1,4 @@
-package nmea.computers;
+package nmea.computers.current;
 
 import context.ApplicationContext;
 import context.NMEADataCache;

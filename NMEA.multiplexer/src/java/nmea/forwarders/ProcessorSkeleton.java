@@ -3,6 +3,8 @@ package nmea.forwarders;
 import context.ApplicationContext;
 import context.NMEADataCache;
 
+import java.util.Properties;
+
 /**
  * This is a skeleton for a {@link Forwarder}, or for a Transformer
  * <br>
@@ -36,7 +38,7 @@ public class ProcessorSkeleton implements Forwarder {
 				}
 			}
 		};
-
+		cacheThread.start();
 	}
 
 	@Override
@@ -69,5 +71,9 @@ public class ProcessorSkeleton implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new SkeletonBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

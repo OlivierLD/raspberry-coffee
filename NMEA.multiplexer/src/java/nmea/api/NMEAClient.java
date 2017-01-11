@@ -2,6 +2,7 @@ package nmea.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * A View. Must be extended to be used from the client.
@@ -54,6 +55,8 @@ public abstract class NMEAClient {
 	private String[] devicePrefix = null;
 	private String[] sentenceArray = null;
 
+	protected Properties props = null;
+
 	protected boolean verbose = false;
 
 	public NMEAClient() {
@@ -102,6 +105,10 @@ public abstract class NMEAClient {
 		parser = new NMEAParser(NMEAListeners);
 		parser.setDeviceFilters(this.getDevicePrefix());
 		parser.setSentenceFilters(this.getSentenceArray());
+	}
+
+	public void setProperties(Properties props) {
+		this.props = props;
 	}
 
 	public void setDevicePrefix(String[] s) {

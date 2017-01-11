@@ -4,6 +4,7 @@ import context.ApplicationContext;
 import context.NMEADataCache;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAParser;
+import nmea.computers.current.LongTimeCurrentCalculator;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle360;
@@ -93,7 +94,7 @@ public class ExtraDataComputer extends Computer {
 		if (StringParsers.validCheckSum(sentence)) {
 			String sentenceID = StringParsers.getSentenceID(sentence);
 			if (!generatedStringsPrefix.equals(StringParsers.getDeviceID(sentence)) && // To prevent re-computing of computed data.
-							requiredStrings.contains(sentenceID)) { // The process
+							requiredStrings.contains(sentenceID)) { // Then process
 				if (this.verbose) {
 					System.out.println(">>> TrueWind computer using " + sentence);
 				}

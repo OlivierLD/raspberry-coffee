@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Properties;
 
 public class RMIServer extends UnicastRemoteObject implements ServerInterface, Forwarder {
 
@@ -121,6 +122,10 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	@Override
 	public Object getBean() {
 		return new RMIBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 
 	// For standalone tests

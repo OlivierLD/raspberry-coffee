@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.util.Properties;
 
 public class UDPServer implements Forwarder {
 	private int udpPort = 8001;
@@ -77,5 +78,8 @@ public class UDPServer implements Forwarder {
 		return new UDPBean(this);
 	}
 
+	@Override
+	public void setProperties(Properties props) {
+	}
 }
 

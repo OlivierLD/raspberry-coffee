@@ -212,7 +212,7 @@ var forwarderList = function() {
                     html += ("<tr><td><b>console</b></td><td></td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 default:
-                    html += ("<tr><td><b>" + type + "</b></td><td></td><td></td></tr>");
+                    html += ("<tr><td><b>" + type + "</b></td><td>" + json[i].cls + "</td><td></td></tr>");
                     break;
             }
         }
