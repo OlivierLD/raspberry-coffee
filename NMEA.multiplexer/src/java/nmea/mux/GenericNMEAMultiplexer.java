@@ -478,7 +478,16 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					response = removeChannelIfPresent(request, opClient);
 					break;
 				default:
-					response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
+					if (request.getContent() != null) {
+						StringReader stringReader = new StringReader(new String(request.getContent()));
+						Map<String, String> custom = (Map<String, String>)new Gson().fromJson(stringReader, Object.class);
+						opClient = nmeaDataClients.stream()
+										.filter(channel -> channel.getClass().getName().equals(custom.get("cls")))
+										.findFirst();
+						response = removeChannelIfPresent(request, opClient);
+					} else {
+						response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
+					}
 					break;
 			}
 		} else {

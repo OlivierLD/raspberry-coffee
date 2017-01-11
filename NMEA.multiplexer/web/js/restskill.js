@@ -110,9 +110,10 @@ var serialPortList = function() {
   getData.fail(function(error, errmess) {
       var message;
       if (errmess !== undefined) {
-          var mess = JSON.parse(errmess);
-          if (mess.message !== undefined) {
-              message = mess.message;
+          if (errmess.message !== undefined) {
+              message = errmess.message;
+          } else {
+              message = errmess;
           }
       }
       alert("Failed to get serial ports list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -167,9 +168,10 @@ var channelList = function() {
     getData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to get channels list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -223,9 +225,10 @@ var forwarderList = function() {
     getData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to get forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -257,9 +260,10 @@ var computerList = function() {
     getData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to get nmea.computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -274,7 +278,7 @@ var createChannel = function(channel) {
     });
     postData.fail(function(error, errmess) {
         var message;
-        if (errmess !== undefined) { // TODO Check if this is a JSON object...
+        if (errmess !== undefined) {
             if (errmess.message !== undefined) {
                 message = errmess.message;
             } else {
@@ -294,9 +298,10 @@ var createForwarder = function(forwarder) {
     postData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to create forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -312,9 +317,10 @@ var createComputer = function(computer) {
     postData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to create computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -330,9 +336,10 @@ var removeChannel = function(channel) {
     deleteData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to delete channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -348,9 +355,10 @@ var removeForwarder = function(channel) {
     deleteData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to delete forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -366,9 +374,10 @@ var removeComputer = function(computer) {
     deleteData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to delete computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -384,9 +393,10 @@ var changeChannel = function(channel) {
     putData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to update channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -402,9 +412,10 @@ var changeComputer = function(computer) {
     putData.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to update computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -433,9 +444,10 @@ var manageMuxVerbose = function(cb) {
     updateMux.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to update multiplexer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
@@ -450,9 +462,10 @@ var resetCache = function() {
     reset.fail(function(error, errmess) {
         var message;
         if (errmess !== undefined) {
-            var mess = JSON.parse(errmess);
-            if (mess.message !== undefined) {
-                message = mess.message;
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
             }
         }
         alert("Failed to reset data cache..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
