@@ -2,6 +2,10 @@ $(document).ready(function() {
     // Nothing.
 });
 
+var errManager = {
+  display: alert
+};
+
 var getDeferred = function(url, timeout, verb, happyCode, data) {
     var deferred = $.Deferred(),  // a jQuery deferred
         url = url,
@@ -116,7 +120,7 @@ var serialPortList = function() {
               message = errmess;
           }
       }
-      alert("Failed to get serial ports list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+      errManager.display("Failed to get serial ports list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
   });
 };
 
@@ -158,7 +162,7 @@ var channelList = function() {
                   html += ("<tr><td><b>htu21df</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                   break;
               default:
-                html += ("<tr><td><b><i>" + type + "</i></b></td><td>" + json[i].cls + "</td><td></td><td></td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                html += ("<tr><td><b><i>" + type + "</i></b></td><td>" + json[i].cls + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                 break;
           }
         }
@@ -174,7 +178,7 @@ var channelList = function() {
                 message = errmess;
             }
         }
-        alert("Failed to get channels list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to get channels list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -231,7 +235,7 @@ var forwarderList = function() {
                 message = errmess;
             }
         }
-        alert("Failed to get forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to get forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -266,7 +270,7 @@ var computerList = function() {
                 message = errmess;
             }
         }
-        alert("Failed to get nmea.computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -285,7 +289,7 @@ var createChannel = function(channel) {
                 message = errmess;
             }
         }
-        alert("Failed to create channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to create channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -304,7 +308,7 @@ var createForwarder = function(forwarder) {
                 message = errmess;
             }
         }
-        alert("Failed to create forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to create forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -323,7 +327,7 @@ var createComputer = function(computer) {
                 message = errmess;
             }
         }
-        alert("Failed to create computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to create computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -342,7 +346,7 @@ var removeChannel = function(channel) {
                 message = errmess;
             }
         }
-        alert("Failed to delete channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to delete channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -361,7 +365,7 @@ var removeForwarder = function(channel) {
                 message = errmess;
             }
         }
-        alert("Failed to delete forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to delete forwarder..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -380,7 +384,7 @@ var removeComputer = function(computer) {
                 message = errmess;
             }
         }
-        alert("Failed to delete computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to delete computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -399,7 +403,7 @@ var changeChannel = function(channel) {
                 message = errmess;
             }
         }
-        alert("Failed to update channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to update channel..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -418,7 +422,7 @@ var changeComputer = function(computer) {
                 message = errmess;
             }
         }
-        alert("Failed to update computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to update computer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -450,7 +454,7 @@ var manageMuxVerbose = function(cb) {
                 message = errmess;
             }
         }
-        alert("Failed to update multiplexer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to update multiplexer..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
@@ -468,7 +472,7 @@ var resetCache = function() {
                 message = errmess;
             }
         }
-        alert("Failed to reset data cache..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        errManager.display("Failed to reset data cache..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 

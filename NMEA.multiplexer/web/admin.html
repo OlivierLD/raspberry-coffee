@@ -41,6 +41,20 @@
       }
     </style>
     <script type="text/javascript">
+
+        var errorHandler = function(mess) {
+          var messZone = document.getElementById("err-mess");
+          messZone.innerText = mess;
+          setTimeout(function() {
+              messZone.innerText = "";
+          }, 10000);
+        };
+
+        // Executed at startup
+        (function () {
+            errManager.display = errorHandler; // in restskill.js
+        })();
+
         var channelSelectManager = function() {
             var x = document.getElementById("channel-select").value;
             manageChannelSelection(x);
@@ -347,11 +361,15 @@
                     var clientClass = $("#ch-custom-class").val();
                     var readerClass = $("#ch-custom-reader").val();
                     var propfile = $('#ch-custom-prop-file').val();
+                    var dFilters = $("#ch-custom-dev-filters").val().split(",");
+                    var sFilters = $("#ch-custom-sentence-filters").val().split(",");
                     createChannel({
                         type: 'custom',
                         clientClass: clientClass,
                         readerClass: readerClass,
-                        propFile: propfile
+                        propFile: propfile,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
                     });
                     break;
                 default:
@@ -697,6 +715,16 @@
                     <td>Properties file</td>
                     <td><input id="ch-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
                   </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="ch-custom-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="ch-custom-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
                 </table>
               </div>
             </td>
@@ -847,7 +875,7 @@
         </table>
         <button onclick="requestComputerCreation();">Add</button>
     </div>
-    </p>
+    <div id="err-mess" style="color: red;"></div>
     <hr/>
     <address>Oliv fecit, AD 2016.</address>
   </body>

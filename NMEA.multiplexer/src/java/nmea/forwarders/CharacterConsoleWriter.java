@@ -22,10 +22,7 @@ public class CharacterConsoleWriter implements Forwarder {
 
 	@Override
 	public void write(byte[] message) {
-//		String mess = new String(message);
-//		if (!mess.isEmpty()) {
-//			System.out.println(mess.trim());
-//		}
+		// Do nothing here. The cache is read by a Thread.
 	}
 
 	@Override

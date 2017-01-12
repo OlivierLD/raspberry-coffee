@@ -1051,10 +1051,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				String payload = new String(request.getContent());
 				Object custom = new Gson().fromJson(payload, Object.class);
 				if (custom instanceof Map) {
-					Map<String, String> map = (Map<String, String>)custom;
-					String clientClass = map.get("clientClass").trim();
-					String readerClass = map.get("readerClass").trim();
-					String propFile = map.get("propFile");
+					Map<String, Object> map = (Map<String, Object>)custom;
+					String clientClass = ((String)map.get("clientClass")).trim();
+					String readerClass = ((String)map.get("readerClass")).trim();
+					String propFile = (String)map.get("propFile");
+					List<String> deviceFilters = (List<String>)map.get("deviceFilters");
+					List<String> sentenceFilters = (List<String>)map.get("sentenceFilters");
 					// Make sure client and reader are not null
 					if (clientClass == null || clientClass.length() == 0 || readerClass == null || readerClass.length() == 0) {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
@@ -1068,7 +1070,21 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					if (!opClient.isPresent()) {
 						try {
 							// Create
-							Object dynamic = Class.forName(clientClass).getDeclaredConstructor(Multiplexer.class).newInstance(this);
+							String[] devFilters = null;
+							String[] senFilters = null;
+							if (deviceFilters != null && deviceFilters.size() > 0 && deviceFilters.get(0).length() > 0) {
+								List<String> devList = deviceFilters.stream().map(df -> df.trim()).collect(Collectors.toList());
+								devFilters = new String[devList.size()];
+								devFilters = devList.toArray(devFilters);
+							}
+							if (sentenceFilters != null && sentenceFilters.size() > 0 && sentenceFilters.get(0).length() > 0) {
+								List<String> senList = sentenceFilters.stream().map(df -> df.trim()).collect(Collectors.toList());
+								senFilters = new String[senList.size()];
+								senFilters = senList.toArray(senFilters);
+							}
+							Object dynamic = Class.forName(clientClass)
+											.getDeclaredConstructor(String[].class, String[].class, Multiplexer.class)
+											.newInstance(devFilters, senFilters, this);
 							if (dynamic instanceof NMEAClient) {
 								NMEAClient nmeaClient = (NMEAClient)dynamic;
 
@@ -1729,8 +1745,17 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			String cls = muxProps.getProperty(classProp);
 			if (cls != null) { // Dynamic loading
 				try {
-					// TODO Devices and Sentences filters.
-					Object dynamic = Class.forName(cls).getDeclaredConstructor(Multiplexer.class).newInstance(this);
+					// Devices and Sentences filters.
+					String deviceFilters = "";
+					String sentenceFilters = "";
+					deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+					sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+					Object dynamic = Class.forName(cls)
+									.getDeclaredConstructor(String[].class, String[].class, Multiplexer.class)
+									.newInstance(
+													deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+													sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+													this);
 					if (dynamic instanceof NMEAClient) {
 						NMEAClient nmeaClient = (NMEAClient)dynamic;
 						String propProp = String.format("mux.%s.properties", MUX_IDX_FMT.format(muxIdx));

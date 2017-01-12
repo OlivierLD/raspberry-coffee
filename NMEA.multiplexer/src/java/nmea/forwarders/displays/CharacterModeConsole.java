@@ -83,7 +83,7 @@ public class CharacterModeConsole {
 		suffixes.put("TBF", new AssociatedData("m", DF_4));  // Time buffer (in minutes) for current calculation
 		suffixes.put("XTE", new AssociatedData("nm", DF_22));
 		suffixes.put("PRF", new AssociatedData("%", DF_31)); // Performance
-		suffixes.put("HUM", new AssociatedData("%", DF_31)); // Performance
+		suffixes.put("HUM", new AssociatedData("%", DF_31)); // Humidity
 	}
 
 	private static Map<String, Integer> nonNumericData = new HashMap<String, Integer>();
