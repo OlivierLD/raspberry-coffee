@@ -402,9 +402,10 @@ forward.03.cls=nmea.forwarders.ProcessorSkeleton
 ```
 This `ProcessorSkeleton` is part of the project, it is provided as an example you can start from to develop your own forwarders.
 
-_Note_: Dynamically loaded classes cannot be managed from the REST admin interface. Thay cannot be added, nor removed.
-The only way to load them is through the propertiues file used at startup.
-They will show up in the admin interface, but as an indication only:
+_Note_: Dynamically loaded classes can also be managed from the REST admin interface.
+Use the `Custom` label when creating them.
+
+They will show up in the admin interface, with their id in _italic_.
 ![Admin Web UI](./dynamic.png "Admin GUI")
 Notice the line that says `skeleton`.
 
