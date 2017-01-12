@@ -1729,6 +1729,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			String cls = muxProps.getProperty(classProp);
 			if (cls != null) { // Dynamic loading
 				try {
+					// TODO Devices and Sentences filters.
 					Object dynamic = Class.forName(cls).getDeclaredConstructor(Multiplexer.class).newInstance(this);
 					if (dynamic instanceof NMEAClient) {
 						NMEAClient nmeaClient = (NMEAClient)dynamic;

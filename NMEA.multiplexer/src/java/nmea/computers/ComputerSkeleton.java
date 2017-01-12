@@ -58,11 +58,6 @@ public class ComputerSkeleton extends Computer {
 	}
 
 	@Override
-	public void setVerbose(boolean verbose) {
-		super.setVerbose(verbose);
-	}
-
-	@Override
 	public void close() {
 		System.out.println("- Stop Computing True Wind, " + this.getClass().getName());
 	}
