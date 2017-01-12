@@ -67,12 +67,14 @@ public class ComputerSkeleton extends Computer {
 		System.out.println("- Stop Computing True Wind, " + this.getClass().getName());
 	}
 
-	public static class ComputerSkeletonBean {
+	public static class ComputerSkeletonBean { // TODO: implement a trait
 		private String cls;
 		private String type = "skeleton";
+		private boolean verbose;
 
 		public ComputerSkeletonBean(ComputerSkeleton instance) {
 			this.cls = instance.getClass().getName();
+			this.verbose = instance.isVerbose();
 		}
 	}
 

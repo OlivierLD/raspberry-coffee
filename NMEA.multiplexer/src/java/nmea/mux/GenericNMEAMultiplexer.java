@@ -1389,7 +1389,22 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			default:
-				response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED); 
+				Map<String, Object> custom = (Map<String, Object>)new Gson().fromJson(new String(request.getContent()), Object.class);
+				opClient = nmeaDataClients.stream()
+								.filter(cptr -> cptr.getClass().getName().equals(custom.get("cls")))
+								.findFirst();
+				if (!opClient.isPresent()) {
+					response.setStatus(HTTPServer.Response.NOT_FOUND);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "'custom' not found");
+				} else { // Then update
+					NMEAClient nmeaClient = opClient.get();
+					boolean verbose = ((Boolean)custom.get("verbose")).booleanValue();
+					nmeaClient.setVerbose(verbose);
+					String content = new Gson().toJson(nmeaClient.getBean());
+					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+				}
+//			response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
 				break;
 		}
 		return response;
@@ -1476,7 +1491,22 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				}
 				break;
 			default:
-				response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED); 
+				Map<String, Object> custom = (Map<String, Object>)new Gson().fromJson(new String(request.getContent()), Object.class);
+				opComputer = nmeaDataComputers.stream()
+								.filter(cptr -> cptr.getClass().getName().equals(custom.get("cls")))
+								.findFirst();
+				if (!opComputer.isPresent()) {
+					response.setStatus(HTTPServer.Response.NOT_FOUND);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "'custom' not found");
+				} else { // Then update
+					Computer computer = opComputer.get();
+					boolean verbose = ((Boolean)custom.get("verbose")).booleanValue();
+					computer.setVerbose(verbose);
+					String content = new Gson().toJson(computer.getBean());
+					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+				}
+//			response.setStatus(HTTPServer.Response.NOT_IMPLEMENTED);
 				break;
 		}
 		return response;
@@ -1547,6 +1577,11 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		return response;
 	}
 
+	/**
+	 * Use this as a temporary placeholder when creating a new operation.
+	 * @param request
+	 * @return
+	 */
 	private HTTPServer.Response emptyOperation(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
