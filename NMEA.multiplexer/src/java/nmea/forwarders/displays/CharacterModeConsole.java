@@ -753,6 +753,10 @@ public class CharacterModeConsole {
 		return str;
 	}
 
+	public void quit() {
+		AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
+		AnsiConsole.systemUninstall();
+	}
 
 	// Properties test
 	public static void main(String[] args) throws Exception {

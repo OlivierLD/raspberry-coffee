@@ -51,7 +51,9 @@ public class CharacterConsoleWriter implements Forwarder {
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
-		// TODO Shutdown ANSI console?
+		if (cmConsole != null) {
+			cmConsole.quit();
+		}
 	}
 
 	private static class ConsoleBean {
