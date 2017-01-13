@@ -117,11 +117,6 @@ public class CharacterModeConsole {
 //    System.setOut(new PrintStream(new FileOutputStream("out.txt", true)));
 //    System.setErr(new PrintStream(new FileOutputStream("err.txt", true)));
 			loggingStarted = new Date();
-//			DesktopContext.getInstance().addApplicationListener(new DesktopEventListener() {
-//				public void resetConsole() {
-//					first.setValue(true);
-//				}
-//			});
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
