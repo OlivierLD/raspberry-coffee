@@ -40,6 +40,7 @@ import nmea.forwarders.TCPServer;
 import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
 import nmea.forwarders.WebSocketProcessor;
+import nmea.utils.NMEAUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -1553,7 +1554,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		JsonElement jsonElement = null;
 		try {
 			// Calculate VMG(s)
-			NMEADataCache.calculateVMGs(cache);
+			NMEAUtils.calculateVMGs(cache);
 
 			jsonElement = new Gson().toJsonTree(cache);
 			((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.

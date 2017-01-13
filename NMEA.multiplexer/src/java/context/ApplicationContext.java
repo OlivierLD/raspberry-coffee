@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ApplicationContext {
 
-	private static ApplicationContext applicationContext = null;
+	private static ApplicationContext instance = null;
 	NMEADataCache dataCache = null;
 
 	private ApplicationContext() {
@@ -18,9 +18,10 @@ public class ApplicationContext {
 	}
 
 	public static synchronized ApplicationContext getInstance() {
-		if (applicationContext == null)
-			applicationContext = new ApplicationContext();
-		return applicationContext;
+		if (instance == null) {
+			instance = new ApplicationContext();
+		}
+		return instance;
 	}
 
 	public void initCache(String deviationFileName, // Default "zero-deviation.csv"

@@ -467,8 +467,7 @@ The OLED display in connected to the Raspberry PI using an SPI interface.
 
 The SSD1306 display is quite small. In the pictures above, there is a Fresnel lens in front of it.
 
-As it is an example, this one can just be set in the properties file used at startup.
-It can be visualized from the WebUI, but not managed (added, removed, etc).
+As it is an example, it is a dynamically loaded `forwarder`.
 
 #### Web Console
 There is a Web Console, accessible to any device able to run a Web browser (smart phone, tablet, laptop, etc).
