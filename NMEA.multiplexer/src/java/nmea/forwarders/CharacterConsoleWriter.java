@@ -21,6 +21,8 @@ import java.util.Properties;
  *   </tr>
  * </table>
  *
+ * The console actually starts when its properties are set.
+ * See the {@link #setProperties(Properties)} method.
  */
 public class CharacterConsoleWriter implements Forwarder {
 

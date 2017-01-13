@@ -71,8 +71,6 @@ public class CharacterModeConsole {
 		suffixes.put("COG", new AssociatedData("t", DF_3));
 		suffixes.put("CDR", new AssociatedData("t", DF_3)); // Current Direction
 		suffixes.put("TWD", new AssociatedData("t", DF_3));
-//  suffixes.put("POS", new AssociatedData("",   null)); // Special Display (String).
-		suffixes.put("BAT", new AssociatedData("V", DF_22));
 		suffixes.put("MWT", new AssociatedData("C", DF_31)); // Water Temp
 		suffixes.put("MTA", new AssociatedData("C", DF_31)); // Air Temp
 		suffixes.put("MMB", new AssociatedData("mb", DF_4));  // Pressure at Sea Level
@@ -82,7 +80,6 @@ public class CharacterModeConsole {
 		suffixes.put("CCD", new AssociatedData("t", DF_3));  // Current Direction
 		suffixes.put("TBF", new AssociatedData("m", DF_4));  // Time buffer (in minutes) for current calculation
 		suffixes.put("XTE", new AssociatedData("nm", DF_22));
-		suffixes.put("PRF", new AssociatedData("%", DF_31)); // Performance
 		suffixes.put("HUM", new AssociatedData("%", DF_31)); // Humidity
 	}
 
@@ -93,7 +90,6 @@ public class CharacterModeConsole {
 		nonNumericData.put("GDT", 32); // GPS Date & Time
 		nonNumericData.put("SLT", 32); // Solar Time
 		nonNumericData.put("NWP", 10); // Next Way point
-		nonNumericData.put("STD", 32); // Started (logging)
 	}
 
 	private static Map<String, String> colorMap = new HashMap<String, String>();
@@ -209,47 +205,20 @@ public class CharacterModeConsole {
 							value = "-";
 							//   e.printStackTrace();
 						}
-					} else if ("STD".equals(s)) {
-						boolean withRMC = false;
-						if (withRMC) {
-							if (!startedUpdatedWithRMC) {
-								UTCDate utcDate = (UTCDate) ndc.get(NMEADataCache.GPS_DATE_TIME, true);
-								if (utcDate != null) {
-									loggingStarted = utcDate.getValue();
-									startedUpdatedWithRMC = true;
-								}
-							}
-							//    value = loggingStarted.toString();
-							UTCDate utcDate = (UTCDate) ndc.get(NMEADataCache.GPS_DATE_TIME, true);
-							if (utcDate != null) {
-								long delta = utcDate.getValue().getTime() - loggingStarted.getTime();
-								value = readableTime(delta, true); // Elapsed since the beginning
-							} else
-								value = NMEAUtils.lpad(SDF.format(loggingStarted), 24, " ");
-						} else {
-							try {
-								long delta = ((Long) ndc.get(NMEADataCache.TIME_RUNNING, true)).longValue();
-								delta = 1000 * (delta / 1000);
-								value = readableTime(delta, true); // Elapsed since the beginning
-							} catch (Exception e) {
-								value = "-";
-								// e.printStackTrace();
-							}
+					} else {
+						try {
+							value =
+											NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " "); // + " ";
+						} catch (Exception e) {
+							value = "-";
+							// e.printStackTrace();
 						}
 					}
-				} else {
-					try {
-						value =
-										NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " "); // + " ";
-					} catch (Exception e) {
-						value = "-";
-						// e.printStackTrace();
-					}
 				}
+				String plot = plotOneValue(1 + ((col - 1) * cellSize), row + 1, value, colorMap.get(cd.getFgData()), colorMap.get(cd.getBgData()));
+				AnsiConsole.out.println(plot);
+//      try { Thread.sleep(10); } catch (Exception ex) {}
 			}
-			String plot = plotOneValue(1 + ((col - 1) * cellSize), row + 1, value, colorMap.get(cd.getFgData()), colorMap.get(cd.getBgData()));
-			AnsiConsole.out.println(plot);
-//    try { Thread.sleep(10); } catch (Exception ex) {}
 		}
 	}
 
@@ -341,26 +310,16 @@ public class CharacterModeConsole {
 			} catch (Exception ignore) {
 			}
 		} else if ("HUM".equals(key)) {
-//			try {
-//				value = ((Double) NMEAContext.getInstance().getCache().get(NMEADataCache.RELATIVE_HUMIDITY)).doubleValue();
-//			} catch (Exception ignore) {
-//				value = 0d;
-//			}
+			try {
+				value = ((Double) ndc.get(NMEADataCache.RELATIVE_HUMIDITY)).doubleValue();
+			} catch (Exception ignore) {
+				value = 0d;
+			}
 		} else if ("DBT".equals(key)) {
 			try {
 				value = ((Depth) ndc.get(NMEADataCache.DBT)).getValue();
 			} catch (Exception ignore) {
 			}
-		} else if ("BAT".equals(key)) {
-			try {
-				value = ((Float) ndc.get(NMEADataCache.BATTERY)).floatValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("PRF".equals(key)) {
-//			try {
-//				value = 100.0 * ((Double) ndc.get(NMEADataCache.PERF)).doubleValue();
-//			} catch (Exception ignore) {
-//			}
 		} else if ("CCS".equals(key)) {
 			try {
 				Current current = (Current) ndc.get(NMEADataCache.VDR_CURRENT);
