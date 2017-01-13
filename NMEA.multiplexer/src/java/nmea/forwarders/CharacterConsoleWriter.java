@@ -6,6 +6,22 @@ import nmea.forwarders.displays.CharacterModeConsole;
 
 import java.util.Properties;
 
+/**
+ * This is a <i>Custom</i> forwarder.
+ *
+ * Requires:
+ * <table border='1'>
+ *   <tr>
+ *     <td>Forwarder Class</td>
+ *     <td>nmea.forwarders.CharacterConsoleWriter</td>
+ *   </tr>
+ *   <tr>
+ *     <td>Properties file</td>
+ *     <td>char.console.properties</td>
+ *   </tr>
+ * </table>
+ *
+ */
 public class CharacterConsoleWriter implements Forwarder {
 
 	private Properties consoleProps;
