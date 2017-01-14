@@ -170,7 +170,6 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		String ipPattern = "(?:(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-5])\\.){3}(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-\u200C\u200B5])(?:[:]\\d+)?";
 		Pattern pattern = Pattern.compile(ipPattern);
 
-
 		System.out.println("Your Host addr: " + InetAddress.getLocalHost().getHostAddress());  // often returns "127.0.0.1"
 		Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
 		for (; n.hasMoreElements(); ) {

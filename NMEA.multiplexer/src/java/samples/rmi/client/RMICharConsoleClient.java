@@ -30,7 +30,7 @@ public class RMICharConsoleClient {
 
 		if (args.length != 2) {
 			System.out.println("Arguments: [RMI Server Name] [Port]");
-			name = "rpi-touchscreen.att.net"; // "olediouris-mbp"; // "raspberrypi3.att.net";
+			name = "localhost"; // "rpi-touchscreen.att.net"; // "192.168.1.142"; // "rpi-touchscreen.att.net"; // "olediouris-mbp"; // "raspberrypi3.att.net";
 			port = "1099";
 		} else {
 			name = args[0];
@@ -41,7 +41,7 @@ public class RMICharConsoleClient {
 
 		System.out.println("Looking up [" + bindingName + " on " + name + ":" + port + "]");
 		try {
-//		System.setProperty("java.rmi.server.hostname", name);
+			System.setProperty("java.rmi.server.hostname", name);
 			long before = System.currentTimeMillis();
 			Registry registry = LocateRegistry.getRegistry(name, new Integer(port)); // Server name, port
 			Remote remote = registry.lookup(bindingName);
@@ -64,25 +64,6 @@ public class RMICharConsoleClient {
 
 			NMEADataCache cache = null;
 
-			try {
-				cache = comp.executeTask(cacheTask);;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			after = System.currentTimeMillis();
-			System.out.println(String.format("NMEACache execution took %s ms.", NumberFormat.getInstance().format(after - before)));
-			if (cache != null) {
-				Object position = cache.get(NMEADataCache.POSITION);
-				System.out.println("Position is a " + position.getClass().getName());
-				if (position instanceof GeoPos) {
-					System.out.println(String.format("Position is %s (Grid Square %s)", ((GeoPos) position).toString(), ((GeoPos) position).gridSquare()));
-				}
-			}
-
-
-			// Finish with the whole cache
-			before = System.currentTimeMillis();
-			cache = null;
 			try {
 				cache = comp.executeTask(cacheTask);;
 			} catch (Exception e) {
