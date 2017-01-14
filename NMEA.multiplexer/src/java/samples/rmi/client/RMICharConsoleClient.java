@@ -30,7 +30,7 @@ public class RMICharConsoleClient {
 
 		if (args.length != 2) {
 			System.out.println("Arguments: [RMI Server Name] [Port]");
-			name = "olediouris-mbp"; // "raspberrypi3.att.net";
+			name = "rpi-touchscreen.att.net"; // "olediouris-mbp"; // "raspberrypi3.att.net";
 			port = "1099";
 		} else {
 			name = args[0];
@@ -41,11 +41,12 @@ public class RMICharConsoleClient {
 
 		System.out.println("Looking up [" + bindingName + " on " + name + ":" + port + "]");
 		try {
+//		System.setProperty("java.rmi.server.hostname", name);
 			long before = System.currentTimeMillis();
 			Registry registry = LocateRegistry.getRegistry(name, new Integer(port)); // Server name, port
 			Remote remote = registry.lookup(bindingName);
-			System.out.println("Remote is a " + remote.getClass().getName());
-			ServerInterface comp = (ServerInterface) registry.lookup(bindingName);   // RMI Name
+//		System.out.println("Remote is a " + remote.getClass().getName());
+			ServerInterface comp = (ServerInterface)remote; // registry.lookup(bindingName);   // RMI Name
 			long after = System.currentTimeMillis();
 			System.out.println(String.format("Lookup took %s ms.", NumberFormat.getInstance().format(after - before)));
 
@@ -62,7 +63,6 @@ public class RMICharConsoleClient {
 			before = System.currentTimeMillis();
 
 			NMEADataCache cache = null;
-
 
 			try {
 				cache = comp.executeTask(cacheTask);;

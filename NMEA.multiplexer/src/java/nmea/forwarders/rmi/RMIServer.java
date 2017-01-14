@@ -35,7 +35,9 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		this.bindingName = bindingName;
 
 		try {
-			this.serverAddress = (InetAddress.getLocalHost()).toString();
+//		this.serverAddress = (InetAddress.getLocalHost()).toString();
+			this.serverAddress = InetAddress.getLocalHost().getHostAddress();
+			System.setProperty("java.rmi.server.hostname", this.serverAddress);
 		} catch(Exception e) {
 			throw new RemoteException("Can't get inet address.");
 		}

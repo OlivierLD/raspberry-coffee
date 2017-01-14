@@ -45,7 +45,7 @@ public class SampleRMIClient {
 			Registry registry = LocateRegistry.getRegistry(name, new Integer(port)); // Server name, port
 			Remote remote = registry.lookup(bindingName);
 			System.out.println("Remote is a " + remote.getClass().getName());
-			ServerInterface comp = (ServerInterface) registry.lookup(bindingName);   // RMI Name
+			ServerInterface comp = (ServerInterface) remote; // registry.lookup(bindingName);   // RMI Name
 			long after = System.currentTimeMillis();
 			System.out.println(String.format("Lookup took %s ms.", NumberFormat.getInstance().format(after - before)));
 
