@@ -30,7 +30,7 @@ public class RMICharConsoleClient {
 
 		if (args.length != 2) {
 			System.out.println("Arguments: [RMI Server Name] [Port]");
-			name = "localhost"; // "rpi-touchscreen.att.net"; // "192.168.1.142"; // "rpi-touchscreen.att.net"; // "olediouris-mbp"; // "raspberrypi3.att.net";
+			name = "raspberrypi3.att.net"; // "rpi-touchscreen.att.net"; // "192.168.1.142"; // "olediouris-mbp"; // "raspberrypi3.att.net";
 			port = "1099";
 		} else {
 			name = args[0];
