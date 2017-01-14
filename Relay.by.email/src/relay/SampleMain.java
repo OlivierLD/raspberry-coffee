@@ -17,7 +17,7 @@ public class SampleMain
 
   /**
    * Invoked like:
-   *   java pi4j.email.SampleMain [-verbose] -send:google -receive:yahoo
+   *   java relay.SampleMain [-verbose] -send:google -receive:yahoo
    *   
    * This will send emails using google, and receive using yahoo.
    * Do check the file email.properties for the different values associated with email servers.
@@ -28,12 +28,8 @@ public class SampleMain
    */
   public static void main(String[] args)  
   {
-//  String provider = "yahoo";
-    String providerSend = "oracle";
-//  String provider = "oracle";
-//  provider = "yahoo";
-    String providerReceive = "oracle";
-//  provider = "oracle";
+    String providerSend = "yahoo";
+    String providerReceive = "google";
 
     for (int i=0; i<args.length; i++)
     {
@@ -49,7 +45,7 @@ public class SampleMain
       else if ("-help".equals(args[i]))
       {
         System.out.println("Usage:");
-        System.out.println("  java pi4j.email.SampleMain -verbose -send:google -receive:yahoo -help");
+        System.out.println("  java relay.SampleMain -verbose -send:google -receive:yahoo -help");
         System.exit(0);
       }
     }

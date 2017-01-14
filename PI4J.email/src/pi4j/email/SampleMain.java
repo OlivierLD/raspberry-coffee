@@ -25,12 +25,8 @@ public class SampleMain
    */
   public static void main(String[] args)  
   {
-//  String provider = "yahoo";
-    String providerSend = "oracle";
-//  String provider = "oracle";
-//  provider = "yahoo";
-    String providerReceive = "oracle";
-//  provider = "oracle";
+    String providerSend = "yahoo";
+    String providerReceive = "google";
 
     for (int i=0; i<args.length; i++)
     {
@@ -58,14 +54,13 @@ public class SampleMain
         {
           try
           {
-            for (int i=0; i<10; i++)
+            for (int i=0; i<1; i++)
             {
               System.out.println("Sending...");
               sender.send(new String[] { "olivier@lediouris.net", 
                                          "webmaster@lediouris.net", 
                                          "olivier.lediouris@gmail.com", 
-                                         "olivier_le_diouris@yahoo.com",
-                                         "olivier.lediouris@oracle.com" }, 
+                                         "olivier_le_diouris@yahoo.com" },
                           "PI Request", 
                           "{ operation: 'see-attached-" + Integer.toString(i + 1) + "' }",
                           "P8150115.JPG");
@@ -76,8 +71,7 @@ public class SampleMain
             sender.send(new String[] { "olivier@lediouris.net", 
                                        "webmaster@lediouris.net", 
                                        "olivier.lediouris@gmail.com", 
-                                       "olivier_le_diouris@yahoo.com",
-                                       "olivier.lediouris@oracle.com" }, 
+                                       "olivier_le_diouris@yahoo.com" },
                         "PI Request", 
                         "{ operation: 'exit' }");
             System.out.println("Bye.");
@@ -97,7 +91,7 @@ public class SampleMain
     EmailReceiver receiver = new EmailReceiver(providerReceive); // For Google, pop must be explicitely enabled at the account level
     try
     {
-      boolean keepLooping = true;
+      boolean keepLooping = false; // true;
       while (keepLooping)
       {
         List<String> received = receiver.receive();
