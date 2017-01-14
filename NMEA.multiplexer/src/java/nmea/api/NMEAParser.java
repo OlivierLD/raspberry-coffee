@@ -1,12 +1,15 @@
 package nmea.api;
 
 import http.utils.DumpUtil;
+import nmea.parser.StringParsers;
 
+import java.util.Arrays;
 import java.util.List;
 
 
 /**
- * A Controller.
+ * A Controller. Common to everyone, final class.
+ *
  * This class is final, and can be used as it is.
  *
  * Its job is to detect potential sentences in the NMEA stream of characters.
@@ -23,7 +26,7 @@ import java.util.List;
  * @see nmea.api.NMEAException
  */
 public final class NMEAParser extends Thread {
-	protected String nmeaPrefix = "";
+	protected String[] nmeaPrefix = null;
 	private String[] nmeaSentence = null;
 
 	private String nmeaStream = "";
@@ -54,8 +57,48 @@ public final class NMEAParser extends Thread {
 				try {
 					while (s != null) {
 						s = instance.detectSentence();
-						if (s != null)
-							instance.fireDataDetected(new NMEAEvent(this, s));
+						if (s != null && s.length() > 6 && s.startsWith("$")) { // Potentially valid
+							// TODO ? RegExp on the full sentence. Maybe not too user friendly...
+							boolean broadcast = true;
+							if (nmeaPrefix != null) {
+								for (String device : nmeaPrefix) {
+									if (device.trim().length() > 0 &&
+													( (!device.startsWith("~") && !device.equals(StringParsers.getDeviceID(s))) ||
+																	device.startsWith("~") && device.substring(1).equals(StringParsers.getDeviceID(s)))) {
+										broadcast = false;
+										break;
+									}
+								}
+							}
+							// Negative filters
+							if (broadcast && nmeaSentence != null) {
+								String thisId = StringParsers.getSentenceID(s);
+								for (String prefix : nmeaSentence) {
+									if (prefix.trim().startsWith("~") && thisId.equals(prefix.trim().substring(1))) {
+										broadcast = false;
+										break;
+									}
+								}
+								// Positive filters
+								long pos = Arrays.stream(nmeaSentence).filter(id -> !id.trim().startsWith("~")).count();
+								if (broadcast && pos > 0) {
+									broadcast = false;
+									for (String prefix : nmeaSentence) {
+										if (!prefix.trim().startsWith("~") && thisId.equals(prefix.trim())) {
+											broadcast = true;
+											break;
+										}
+									}
+								}
+							}
+							if (broadcast) {
+								instance.fireDataDetected(new NMEAEvent(this, s));
+							} else {
+								if ("true".equals(System.getProperty("nmea.parser.verbose","false"))) {
+									System.out.println(String.format("  >>> Rejecting [%s] <<< ", s.trim()));
+								}
+							}
+						}
 					}
 				} catch (NMEAException ne) {
 					ne.printStackTrace();
@@ -64,20 +107,28 @@ public final class NMEAParser extends Thread {
 		});
 	}
 
-	public String getNmeaPrefix() {
+	public String[] getDeviceFilters() {
 		return this.nmeaPrefix;
 	}
 
-	public void setNmeaPrefix(String s) {
-		this.nmeaPrefix = s;
+	public void setDeviceFilters(String[] s) {
+		if (s != null && s.length == 1 && s[0].trim().length() == 0) {
+			this.nmeaPrefix = null;
+		} else {
+			this.nmeaPrefix = s;
+		}
 	}
 
-	public String[] getNmeaSentence() {
+	public String[] getSentenceFilters() {
 		return this.nmeaSentence;
 	}
 
-	public void setNmeaSentence(String[] sa) {
-		this.nmeaSentence = sa;
+	public void setSentenceFilters(String[] sa) {
+		if (sa != null && sa.length == 1 && sa[0].trim().length() == 0) {
+			this.nmeaSentence = null;
+		} else {
+			this.nmeaSentence = sa;
+		}
 	}
 
 	public String getNmeaStream() {
@@ -141,29 +192,10 @@ public final class NMEAParser extends Thread {
 					if (nmeaStream.length() > 6) { // "$" + prefix + XXX
 						endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 						if (endIdx > -1) {
-							if (nmeaSentence != null) {
-								for (int i = 0; i < this.nmeaSentence.length; i++) {
-									//  System.out.println("Checking [" + nmeaSentence[i] + "] against [" + nmeaStream + "]");
-									// Fully qualified sentence
-									if (nmeaSentence[i].length() == 5 && nmeaStream.startsWith("$" + nmeaSentence[i])) {
-										return true;
-									}
-									// Specific prefix
-									else if (!("*".equals(nmeaPrefix.trim())) && nmeaStream.startsWith("$" + nmeaPrefix + nmeaSentence[i])) {
-										return true;
-									}
-									// Any prefix
-									else if ("*".equals(nmeaPrefix.trim()) && nmeaStream.startsWith("$") && nmeaStream.substring(3).startsWith(nmeaSentence[i])) {
-										return true;
-									}
-								}
-							} else {
-//              System.out.println("Taking everything!");
-								return true; // Take all
-							}
-							nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
-						} else
+							return true; // Take all
+						} else {
 							return false; // unfinished sentence
+						}
 					} else
 						return false; // Not long enough - Not even sentence ID
 				} catch (Exception e) {

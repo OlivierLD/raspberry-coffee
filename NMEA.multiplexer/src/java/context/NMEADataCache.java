@@ -39,7 +39,9 @@ import java.util.Set;
 
 import static nmea.utils.NMEAUtils.longitudeToTime;
 
-public class NMEADataCache extends HashMap<String, Object> implements Serializable {
+public class NMEADataCache
+				extends HashMap<String, Object>
+				implements Serializable {
 
 	public static final String LAST_NMEA_SENTENCE = "NMEA";
 
@@ -99,10 +101,13 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 
 	public static final String TIME_RUNNING = "Time Running";
 
-	// Damping ArrayList's
-	private int dampingSize = 1;
+	public static final String VMG_ON_WIND = "VMG on Wind";
+	public static final String VMG_ON_WP = "VMG to Waypoint";
 
-	private static List<String> NOT_TO_RESET = Arrays.asList(
+	// Damping ArrayList's
+	private transient int dampingSize = 1;
+
+	private transient static List<String> NOT_TO_RESET = Arrays.asList(
 					BSP_FACTOR,
 					AWS_FACTOR,
 					AWA_OFFSET,
@@ -116,9 +121,9 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 
 	private transient HashMap<String, List<Object>> dampingMap = new HashMap<String, List<Object>>();
 
-	private long started = 0L;
+	private transient long started = 0L;
 
-	private NMEADataCache instance = this;
+	private transient NMEADataCache instance = this;
 
 	public NMEADataCache() {
 		super();
@@ -425,9 +430,6 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 		}
 	}
 
-	// For debug
-	double prevTWD = 0d;
-
 	/**
 	 * @param key
 	 * @return Damped Data, by default
@@ -551,14 +553,5 @@ public class NMEADataCache extends HashMap<String, Object> implements Serializab
 			this.latest = last;
 			this.len = len;
 		}
-	}
-
-	private static String generateCacheAge(String devicePrefix, long age) {
-		String std = devicePrefix + "STD,"; // StarTeD
-		std += Long.toString(age);
-		// Checksum
-		int cs = StringParsers.calculateCheckSum(std);
-		std += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
-		return "$" + std;
 	}
 }

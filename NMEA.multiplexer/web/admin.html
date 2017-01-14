@@ -41,6 +41,20 @@
       }
     </style>
     <script type="text/javascript">
+
+        var errorHandler = function(mess) {
+          var messZone = document.getElementById("err-mess");
+          messZone.innerText = mess;
+          setTimeout(function() {
+              messZone.innerText = "";
+          }, 10000);
+        };
+
+        // Executed at startup
+        (function () {
+            errManager.display = errorHandler; // in restskill.js
+        })();
+
         var channelSelectManager = function() {
             var x = document.getElementById("channel-select").value;
             manageChannelSelection(x);
@@ -66,6 +80,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'tcp':
                     $("#channel-serial").css('display', 'none');
@@ -75,6 +90,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'file':
                     $("#channel-serial").css('display', 'none');
@@ -84,6 +100,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'ws':
                     $("#channel-serial").css('display', 'none');
@@ -93,6 +110,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'rnd':
                     $("#channel-serial").css('display', 'none');
@@ -102,6 +120,7 @@
                     $("#channel-rnd").css('display', 'inline');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'bme280':
                     $("#channel-serial").css('display', 'none');
@@ -111,6 +130,7 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'inline');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
                     break;
                 case 'htu21df':
                     $("#channel-serial").css('display', 'none');
@@ -120,6 +140,17 @@
                     $("#channel-rnd").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'inline');
+                    $("#channel-custom").css('display', 'none');
+                    break;
+                case 'custom':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'inline');
                     break;
                 default:
                     break;
@@ -136,6 +167,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'tcp':
                     $("#forward-serial").css('display', 'none');
@@ -145,6 +177,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'gpsd':
                     $("#forward-serial").css('display', 'none');
@@ -154,6 +187,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'rmi':
                     $("#forward-serial").css('display', 'none');
@@ -163,6 +197,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'file':
                     $("#forward-serial").css('display', 'none');
@@ -172,6 +207,7 @@
                     $("#forward-file").css('display', 'inline');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'ws':
                     $("#forward-serial").css('display', 'none');
@@ -181,6 +217,7 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'inline');
                     $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'none');
                     break;
                 case 'console':
                     $("#forward-serial").css('display', 'none');
@@ -190,6 +227,17 @@
                     $("#forward-file").css('display', 'none');
                     $("#forward-ws").css('display', 'none');
                     $("#forward-console").css('display', 'inline');
+                    $("#forward-custom").css('display', 'none');
+                    break;
+                case 'custom':
+                    $("#forward-serial").css('display', 'none');
+                    $("#forward-tcp").css('display', 'none');
+                    $("#forward-gpsd").css('display', 'none');
+                    $("#forward-rmi").css('display', 'none');
+                    $("#forward-file").css('display', 'none');
+                    $("#forward-ws").css('display', 'none');
+                    $("#forward-console").css('display', 'none');
+                    $("#forward-custom").css('display', 'inline');
                     break;
                 default:
                     break;
@@ -200,6 +248,11 @@
             switch (selected) {
                 case 'tw-current':
                     $("#computer-twc").css('display', 'inline');
+                    $("#computer-custom").css('display', 'none');
+                    break;
+                case 'custom':
+                    $("#computer-twc").css('display', 'none');
+                    $("#computer-custom").css('display', 'inline');
                     break;
                 default:
                     break;
@@ -216,10 +269,14 @@
                         alert('Both port name and baud rate are required');
                         return;
                     }
+                    var dFilters = $("#serial-dev-filters").val().split(",");
+                    var sFilters = $("#serial-sentence-filters").val().split(",");
                     createChannel({
                         type: 'serial',
                         port: portName,
-                        br: br
+                        br: br,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
                     });
                     break;
                 case 'tcp':
@@ -229,10 +286,14 @@
                         alert('Both port and server name are required');
                         return;
                     }
+                    var dFilters = $("#tcp-dev-filters").val().split(",");
+                    var sFilters = $("#tcp-sentence-filters").val().split(",");
                     createChannel({
                         type: 'tcp',
                         port: port,
-                        hostname: server
+                        hostname: server,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
                     });
                     break;
                 case 'file':
@@ -241,9 +302,13 @@
                         alert('Log file name required');
                         return;
                     }
+                    var dFilters = $("#data-dev-filters").val().split(",");
+                    var sFilters = $("#data-sentence-filters").val().split(",");
                     createChannel({
                         type: 'file',
-                        file: logfile
+                        file: logfile,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
                     });
                     break;
                 case 'ws':
@@ -252,24 +317,59 @@
                         alert('WebSocket URI is required');
                         return;
                     }
+                    var dFilters = $("#ws-dev-filters").val().split(",");
+                    var sFilters = $("#ws-sentence-filters").val().split(",");
                     createChannel({
                         type: 'ws',
-                        wsUri: uri
+                        wsUri: uri,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
                     });
                     break;
                 case 'rnd':
+                    var dFilters = $("#rnd-dev-filters").val().split(",");
+                    var sFilters = $("#rnd-sentence-filters").val().split(",");
                     createChannel({
-                        type: 'rnd'
+                        type: 'rnd',
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
                     });
                     break;
                 case 'bme280':
+                    var dFilters = $("#bme280-dev-filters").val().split(",");
+                    var sFilters = $("#bme280-sentence-filters").val().split(",");
+                    var dPrefix = $('#bme280-dev-prefix').val();
                     createChannel({
-                        type: 'bme280'
+                        type: 'bme280',
+                        devicePrefix: dPrefix,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
                     });
                     break;
                 case 'htu21df':
+                    var dFilters = $("#htu21df-dev-filters").val().split(",");
+                    var sFilters = $("#htu21df-sentence-filters").val().split(",");
+                    var dPrefix = $('#htu21df-dev-prefix').val();
                     createChannel({
-                        type: 'htu21df'
+                        type: 'htu21df',
+                        devicePrefix: dPrefix,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'custom':
+                    var clientClass = $("#ch-custom-class").val();
+                    var readerClass = $("#ch-custom-reader").val();
+                    var propfile = $('#ch-custom-prop-file').val();
+                    var dFilters = $("#ch-custom-dev-filters").val().split(",");
+                    var sFilters = $("#ch-custom-sentence-filters").val().split(",");
+                    createChannel({
+                        type: 'custom',
+                        clientClass: clientClass,
+                        readerClass: readerClass,
+                        propFile: propfile,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
                     });
                     break;
                 default:
@@ -340,7 +440,7 @@
                     }
                     createForwarder({
                         type: 'file',
-                        file: logfile
+                        log: logfile
                     });
                     break;
                 case 'ws':
@@ -357,6 +457,15 @@
                 case 'console':
                     createForwarder({
                         type: 'console'
+                    });
+                    break;
+                case 'custom':
+                    var forwarderClass = $("#fwd-custom-class").val();
+                    var propfile = $('#fwd-custom-prop-file').val();
+                    createForwarder({
+                        type: 'custom',
+                        forwarderClass: forwarderClass,
+                        propFile: propfile
                     });
                     break;
                 default:
@@ -378,6 +487,15 @@
                         type: 'tw-current',
                         prefix: prefix,
                         timeBufferLength: tbl
+                    });
+                    break;
+                case 'custom':
+                    var computerClass = $("#cptr-custom-class").val();
+                    var propfile = $('#cptr-custom-prop-file').val();
+                    createComputer({
+                        type: 'custom',
+                        computerClass: computerClass,
+                        propFile: propfile
                     });
                     break;
                 default:
@@ -441,6 +559,7 @@
                 <option value="rnd">Random</option>
                 <option value="bme280">BME280</option>
                 <option value="htu21df">HTU21DF</option>
+                <option value="custom">Custom</option>
               </select>
             </td>
             <td valign="top">
@@ -462,6 +581,16 @@
                       </select>
                     </td>
                   </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="serial-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="serial-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
                 </table>
               </div>
               <div id="channel-tcp" style="display: none;">
@@ -474,6 +603,16 @@
                     <td>Port</td>
                     <td><input id="tcp-port" type="text" placeholder="Port" size="10"></td>
                   </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="tcp-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="tcp-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
                 </table>
               </div>
               <div id="channel-file" style="display: none;">
@@ -481,6 +620,16 @@
                   <tr>
                     <td>Data File</td>
                     <td><input id="data-file" type="text" placeholder="Log File" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="data-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="data-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
                   </tr>
                 </table>
               </div>
@@ -490,16 +639,93 @@
                     <td>WebSocket URI</td>
                     <td><input id="wsuri" type="text" placeholder="ws://machine-name:9876/" size="30"></td>
                   </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="ws-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="ws-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
                 </table>
               </div>
               <div id="channel-rnd" style="display: none;">
-                <i>No Parameters</i>
+                <table>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="rnd-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="rnd-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
               </div>
               <div id="channel-bme280" style="display: none;">
-                <i>No Parameters</i>
+                <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="bme280-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="RP"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="bme280-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="bme280-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
               </div>
               <div id="channel-htu21df" style="display: none;">
-                <i>No Parameters</i>
+                <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="htu21df-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="RP"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="htu21df-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="htu21df-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-custom" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Client Class</td>
+                    <td><input id="ch-custom-class" type="text" placeholder="Client Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Reader Class</td>
+                    <td><input id="ch-custom-reader" type="text" placeholder="Reader Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Properties file</td>
+                    <td><input id="ch-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="ch-custom-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="ch-custom-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
               </div>
             </td>
           </tr>
@@ -520,6 +746,7 @@
                 <option value="file">Data File</option>
                 <option value="ws">Web Socket</option>
                 <option value="console">Console</option>
+                <option value="custom">Custom</option>
               </select>
             </td>
             <td valign="top">
@@ -590,6 +817,18 @@
               <div id="forward-console" style="display: none;">
                 <i>No Parameters</i>
               </div>
+              <div id="forward-custom" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Forwarder Class</td>
+                    <td><input id="fwd-custom-class" type="text" placeholder="Forwarder Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Properties file</td>
+                    <td><input id="fwd-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
+                  </tr>
+                </table>
+              </div>
             </td>
           </tr>
         </table>
@@ -601,8 +840,9 @@
         <table style="padding: 5px; border-radius: 5px; border: 1px solid #CCC; margin-bottom: 5px;">
           <tr>
             <td valign="top">
-              <select id="computer-select" onchange="forwardSelectManager();">
+              <select id="computer-select" onchange="computerSelectManager();">
                 <option value="tw-current">True Wind and Current</option>
+                <option value="custom">Custom</option>
               </select>
             </td>
             <td valign="top">
@@ -614,7 +854,19 @@
                   </tr>
                   <tr>
                     <td>Time Buffer Length</td>
-                    <td><input id="cptr-twc-tbl" type="text" placeholder="60, 120, 300" size="30"> in seconds.</td>
+                    <td><input id="cptr-twc-tbl" type="text" placeholder="60, 120, 300" size="30"> in <i>seconds</i>.</td>
+                  </tr>
+                </table>
+              </div>
+              <div id="computer-custom" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Computer Class</td>
+                    <td><input id="cptr-custom-class" type="text" placeholder="Computer Class" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Properties file</td>
+                    <td><input id="cptr-custom-prop-file" type="text" placeholder="Properties file name" size="30"></td>
                   </tr>
                 </table>
               </div>
@@ -623,7 +875,7 @@
         </table>
         <button onclick="requestComputerCreation();">Add</button>
     </div>
-    </p>
+    <div id="err-mess" style="color: red;"></div>
     <hr/>
     <address>Oliv fecit, AD 2016.</address>
   </body>

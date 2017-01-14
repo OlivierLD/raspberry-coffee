@@ -17,11 +17,11 @@ public class TCPClient extends NMEAClient {
 		this(null, null, mux);
 	}
 
-	public TCPClient(String s, String[] sa) {
+	public TCPClient(String[] s, String[] sa) {
 		this(s, sa, null);
 	}
 
-	public TCPClient(String s, String[] sa, Multiplexer mux) {
+	public TCPClient(String[] s, String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
 		this.verbose = "true".equals(System.getProperty("tcp.data.verbose", "false"));
 	}
@@ -42,6 +42,8 @@ public class TCPClient extends NMEAClient {
 		private String type = "tcp";
 		private int port;
 		private String hostname;
+		private String[] deviceFilters;
+		private String[] sentenceFilters;
 		private boolean verbose;
 
 		public TCPBean(TCPClient instance) {
@@ -49,6 +51,8 @@ public class TCPClient extends NMEAClient {
 			port = ((TCPReader) instance.getReader()).getPort();
 			hostname = ((TCPReader) instance.getReader()).getHostname();
 			verbose = instance.isVerbose();
+			deviceFilters = instance.getDevicePrefix();
+			sentenceFilters = instance.getSentenceArray();
 		}
 
 		@Override
@@ -68,6 +72,12 @@ public class TCPClient extends NMEAClient {
 		public boolean getVerbose() {
 			return this.verbose;
 		}
+
+		@Override
+		public String[] getDeviceFilters() { return this.deviceFilters; };
+
+		@Override
+		public String[] getSentenceFilters() { return this.sentenceFilters; };
 	}
 
 	@Override
@@ -84,7 +94,7 @@ public class TCPClient extends NMEAClient {
 
 		nmeaClient = new TCPClient();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("TCPClient shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down nicely.");
 				nmeaClient.stopDataRead();

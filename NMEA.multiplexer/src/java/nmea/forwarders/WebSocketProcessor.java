@@ -21,12 +21,14 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.Properties;
 
 /**
- * This is an example of a transformer.
+ * This is an example of a <b>transformer</b>.
+ * <br>
  * To be used with other apps, like the pebble one.
  * The transformer turns the content of the NMEA Cache into the expected format.
- *
+ * <br>
  * See https://github.com/OlivierLD/pebble/tree/master/NMEA.app
  */
 public class WebSocketProcessor implements Forwarder {
@@ -127,7 +129,7 @@ public class WebSocketProcessor implements Forwarder {
 			ex.printStackTrace();
 		}
 
-		Thread cacheThread = new Thread() {
+		Thread cacheThread = new Thread("WebSocketProcessor CacheThread") {
 			public void run() {
 				while (keepWorking) {
 					NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
@@ -320,5 +322,9 @@ public class WebSocketProcessor implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new WSBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

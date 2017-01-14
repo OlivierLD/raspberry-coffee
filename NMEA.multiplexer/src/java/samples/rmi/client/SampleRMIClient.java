@@ -45,7 +45,7 @@ public class SampleRMIClient {
 			Registry registry = LocateRegistry.getRegistry(name, new Integer(port)); // Server name, port
 			Remote remote = registry.lookup(bindingName);
 			System.out.println("Remote is a " + remote.getClass().getName());
-			ServerInterface comp = (ServerInterface) registry.lookup(bindingName);   // RMI Name
+			ServerInterface comp = (ServerInterface) remote; // registry.lookup(bindingName);
 			long after = System.currentTimeMillis();
 			System.out.println(String.format("Lookup took %s ms.", NumberFormat.getInstance().format(after - before)));
 
@@ -83,7 +83,7 @@ public class SampleRMIClient {
 			GeoPos boatGeoPos = comp.executeTask(boatPositionTask);
 			after = System.currentTimeMillis();
 			System.out.println(String.format("BoatPosition execution took %s ms.", NumberFormat.getInstance().format(after - before)));
-			System.out.println(String.format("Position is %s", boatGeoPos.toString()));
+			System.out.println(String.format("Position is %s (Grid Square %s)", boatGeoPos.toString(), boatGeoPos.gridSquare()));
 
 			try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
 
@@ -91,7 +91,7 @@ public class SampleRMIClient {
 			CalculatedCurrent calculatedCurrent = new CalculatedCurrent();
 			InstantCurrent instantCurrent = new InstantCurrent();
 			// Instant: CSP & CDR
-			for (int i=0; i<50; i++) {
+			for (int i=0; i<5; i++) {
 				before = System.currentTimeMillis();
 				try {
 					nmea.parser.TrueWind tw = comp.executeTask(trueWind);

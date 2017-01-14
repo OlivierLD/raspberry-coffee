@@ -14,6 +14,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class GPSdServer implements Forwarder {
 	private GPSdServer instance = this;
@@ -225,5 +226,9 @@ public class GPSdServer implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new GPSdBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

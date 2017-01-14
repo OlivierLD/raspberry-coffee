@@ -2,44 +2,44 @@
  * @author Olivier Le Diouris
  */
 var spAnalogDisplayColorConfigWhite = {
-    bgColor:           'white',
-    digitColor:        'black',
-    withGradient:      true,
-    displayBackgroundGradient: { from: 'LightGrey', to: 'white' },
+    bgColor: 'white',
+    digitColor: 'black',
+    withGradient: true,
+    displayBackgroundGradient: {from: 'LightGrey', to: 'white'},
     withDisplayShadow: true,
-    shadowColor:       'rgba(0, 0, 0, 0.75)',
-    outlineColor:      'DarkGrey',
-    majorTickColor:    'black',
-    minorTickColor:    'black',
-    valueColor:        'grey',
+    shadowColor: 'rgba(0, 0, 0, 0.75)',
+    outlineColor: 'DarkGrey',
+    majorTickColor: 'black',
+    minorTickColor: 'black',
+    valueColor: 'grey',
     valueOutlineColor: 'black',
-    valueNbDecimal:    1,
-    handColor:         'red', // 'rgba(0, 0, 100, 0.25)',
-    handOutlineColor:  'black',
-    withHandShadow:    true,
-    knobColor:         'DarkGrey',
-    knobOutlineColor:  'black',
-    font:              'Arial' /* 'Source Code Pro' */
+    valueNbDecimal: 1,
+    handColor: 'red', // 'rgba(0, 0, 100, 0.25)',
+    handOutlineColor: 'black',
+    withHandShadow: true,
+    knobColor: 'DarkGrey',
+    knobOutlineColor: 'black',
+    font: 'Arial' /* 'Source Code Pro' */
 };
 
 var spAnalogDisplayColorConfigBlack = {
-    bgColor:           'black',
-    digitColor:        'white', // 'cyan',
-    withGradient:      true,
-    displayBackgroundGradient: { from: 'DarkGrey', to: 'black' },
-    shadowColor:       'black',
-    outlineColor:      'DarkGrey',
-    majorTickColor:    'white',
-    minorTickColor:    'white',
-    valueColor:        'white',
+    bgColor: 'black',
+    digitColor: 'white', // 'cyan',
+    withGradient: true,
+    displayBackgroundGradient: {from: 'DarkGrey', to: 'black'},
+    shadowColor: 'black',
+    outlineColor: 'DarkGrey',
+    majorTickColor: 'white',
+    minorTickColor: 'white',
+    valueColor: 'white',
     valueOutlineColor: 'black',
-    valueNbDecimal:    1,
-    handColor:         'rgba(255, 0, 0, 0.4)', // 'rgba(0, 0, 100, 0.25)',
-    handOutlineColor:  'red', // 'blue',
-    withHandShadow:    true,
-    knobColor:         '#8ED6FF', // Kind of blue
-    knobOutlineColor:  'blue',
-    font:              'Arial'
+    valueNbDecimal: 1,
+    handColor: 'rgba(255, 0, 0, 0.4)', // 'rgba(0, 0, 100, 0.25)',
+    handOutlineColor: 'red', // 'blue',
+    withHandShadow: true,
+    knobColor: '#8ED6FF', // Kind of blue
+    knobOutlineColor: 'blue',
+    font: 'Arial'
 };
 var analogDisplayColorConfig = spAnalogDisplayColorConfigBlack; // analogDisplayColorConfigBlack; // White is the default
 
@@ -55,17 +55,19 @@ function SatellitesPlotter(cName,                     // Canvas Name
 
     var satellites = [];
 
-    (function(){ drawDisplay(canvasName, displaySize); })(); // Invoked automatically
+    (function () {
+        drawDisplay(canvasName, displaySize);
+    })(); // Invoked automatically
 
-    this.setBorder = function(b) {
+    this.setBorder = function (b) {
         withBorder = b;
     };
 
-    this.repaint = function() {
+    this.repaint = function () {
         drawDisplay(canvasName, displaySize);
     };
 
-    this.setDisplaySize = function(ds) {
+    this.setDisplaySize = function (ds) {
         scale = ds / 100;
         displaySize = ds;
         drawDisplay(canvasName, displaySize);
@@ -75,7 +77,9 @@ function SatellitesPlotter(cName,                     // Canvas Name
         var sheets = typeof sheet !== 'undefined' ? [sheet] : document.styleSheets;
         for (var i = 0, l = sheets.length; i < l; i++) {
             var sheet = sheets[i];
-            if (!sheet.cssRules) { continue; }
+            if (!sheet.cssRules) {
+                continue;
+            }
             for (var j = 0, k = sheet.cssRules.length; j < k; j++) {
                 var rule = sheet.cssRules[j];
                 if (rule.selectorText && rule.selectorText.split(',').indexOf(selector) !== -1) {
@@ -87,7 +91,7 @@ function SatellitesPlotter(cName,                     // Canvas Name
     };
 
     function drawDisplay(displayCanvasName, displayRadius) {
-        
+
         var schemeColor = getStyleRuleValue('color', '.display-scheme');
         if (schemeColor === 'black')
             analogDisplayColorConfig = analogDisplayColorConfigBlack;
@@ -95,8 +99,10 @@ function SatellitesPlotter(cName,                     // Canvas Name
             analogDisplayColorConfig = analogDisplayColorConfigWhite;
 
         var canvas = document.getElementById(displayCanvasName);
-        var center = { x: canvas.width / 2,
-                       y: (canvas.height / 2) - 10 };
+        var center = {
+            x: canvas.width / 2,
+            y: (canvas.height / 2) - 10
+        };
 
         var context = canvas.getContext('2d');
 
@@ -128,10 +134,10 @@ function SatellitesPlotter(cName,                     // Canvas Name
         if (analogDisplayColorConfig.withDisplayShadow) {
             context.shadowOffsetX = 3;
             context.shadowOffsetY = 3;
-            context.shadowBlur  = 3;
+            context.shadowBlur = 3;
             context.shadowColor = analogDisplayColorConfig.shadowColor;
         }
-        context.lineJoin    = "round";
+        context.lineJoin = "round";
         context.fill();
         context.strokeStyle = analogDisplayColorConfig.outlineColor;
         context.stroke();
@@ -173,8 +179,10 @@ function SatellitesPlotter(cName,                     // Canvas Name
                 context.fillStyle = getSNRColor(satellites[satNum].snr);
 //              var satCircleRadius = radius * (Math.cos(toRadians(demoSat[i].el)));
                 var satCircleRadius = radius * ((90 - satellites[satNum].elevation) / 90);
-                var centerSat = { x: center.x + (satCircleRadius * Math.sin(toRadians(satellites[satNum].azimuth))),
-                    y: center.y  - (satCircleRadius * Math.cos(toRadians(satellites[satNum].azimuth))) };
+                var centerSat = {
+                    x: center.x + (satCircleRadius * Math.sin(toRadians(satellites[satNum].azimuth))),
+                    y: center.y - (satCircleRadius * Math.cos(toRadians(satellites[satNum].azimuth)))
+                };
                 context.arc(centerSat.x, centerSat.y, SAT_RADIUS, 0, 2 * Math.PI, false);
 
                 var text = satellites[satNum].svID;
@@ -191,21 +199,21 @@ function SatellitesPlotter(cName,                     // Canvas Name
         }
     };
 
-    this.setSatellites = function(sat) {
+    this.setSatellites = function (sat) {
         satellites = sat;
         drawDisplay(canvasName, displaySize);
     };
 };
 
-var toDegrees = function(rad) {
+var toDegrees = function (rad) {
     return rad * (180 / Math.PI);
 };
 
-var toRadians = function(deg) {
+var toRadians = function (deg) {
     return deg * (Math.PI / 180);
 };
 
-var getSNRColor = function(snr) {
+var getSNRColor = function (snr) {
     var c = 'lightGray';
     if (snr !== undefined && snr !== null) {
         if (snr > 0) {

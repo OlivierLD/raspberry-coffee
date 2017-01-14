@@ -72,8 +72,8 @@ Computers:
 - **True Wind** computer (produces `MDA`, `MWD` data)
 - **Current** computer (produces `VDR` data)
 
-Transformers (incubating):
-- **GPSD** data
+Transformers:
+- **GPSD** data (See [this](https://hocus-blogus.blogspot.com/2016/12/nmea-multiplexer-opencpn-gpsd.html))
 - **Custom** data
 
 ##### A word about the Current Computer
@@ -110,6 +110,19 @@ To run it, modify `mux.sh` to fit your environment, and run
 ```
  $> ./mux.sh
 ```
+
+##### Filtering
+The Channels - aka Consumers - support sentence filtering.
+Filtering can be applied on Device ID, and on Sentence ID. Filters can be positive or negative.
+
+Positive filters are linked with and <b>or</b>, Negative ones with an <b>and</b>.
+
+A (sentence) filter like `"HDM", "GLL", "~RMC", "~XDR"` would mean
+```
+( HDM or GLL) and (not RMC and not XDR)
+```
+It is the user's responsibility not to have contradiction in the filters, like `[ "GLL", "~GLL" ]`,
+no verification is done in this area.
 
 ##### About transformers
 There is an example of a `transformer` in `WebSocketProcessor.java`. As you would see, it is just implementing the `Forwarder` interface,
@@ -376,6 +389,26 @@ where `machine-name` is the name of the machine where the multiplexer is running
 
 And any REST client (NodeJS, Postman, your own code, ...) does the job.
 
+## Dynamic loading
+You have the possibility to dynamically load Channels, Forwarders and Computers.
+
+To load a class, mention its name in the properties file used at startup, like for example:
+```properties
+#
+# Dynamic loading sample
+#
+forward.03.cls=nmea.forwarders.ProcessorSkeleton
+#
+```
+This `ProcessorSkeleton` is part of the project, it is provided as an example you can start from to develop your own forwarders.
+
+_Note_: Dynamically loaded classes can also be managed from the REST admin interface.
+Use the `Custom` label when creating them.
+
+They will show up in the admin interface, with their id in _italic_.
+![Admin Web UI](./dynamic.png "Admin GUI")
+Notice the line that says `skeleton`.
+
 ## Open Issues
 - UDP client
 
@@ -414,3 +447,37 @@ water temp     | "C" temperature |   2 decimals                    | "C" celsius
 ```
 
 ---
+
+### JVM Monitoring
+![Overview](./JConsole.01.png "Overview")
+Overview
+
+![The advantage of naming the threads](./JConsole.02.png "Thread view")
+Thread view, with thread names
+
+# Examples!!
+
+#### Small external display
+There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
+![oled](./oled.jpg "OLED Display")
+
+![oled](./oled.2.jpg "OLED Display")
+
+The OLED display in connected to the Raspberry PI using an SPI interface.
+
+The SSD1306 display is quite small. In the pictures above, there is a Fresnel lens in front of it.
+
+As it is an example, it is a dynamically loaded `forwarder`.
+
+#### Web Console
+There is a Web Console, accessible to any device able to run a Web browser (smart phone, tablet, laptop, etc).
+It can be accessed from `http://[machine:port]/web/console.html`.
+Again, this is just an example, feel free to tweak it your way.
+
+![page 1](./full.console.01.png "First page")
+In the picture above, all the data come from the NMEA station, except the air temperature, pressure and humidity, that come from sensors.
+![page 2](./full.console.02.png "Second page")
+![page 3](./full.console.03.png "Third page")
+![page 4](./full.console.04.png "Fourth page")
+
+##### And more to come...

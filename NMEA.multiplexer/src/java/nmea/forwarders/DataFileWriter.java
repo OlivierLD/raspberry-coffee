@@ -3,6 +3,7 @@ package nmea.forwarders;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Properties;
 
 public class DataFileWriter implements Forwarder {
 	private BufferedWriter dataFile;
@@ -13,6 +14,7 @@ public class DataFileWriter implements Forwarder {
 		try {
 			this.dataFile = new BufferedWriter(new FileWriter(fName));
 		} catch (Exception ex) {
+			System.err.println(String.format("When creating [%s]", fName));
 			throw ex;
 		}
 	}
@@ -60,5 +62,9 @@ public class DataFileWriter implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new DataFileBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

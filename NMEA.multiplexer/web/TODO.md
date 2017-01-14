@@ -1,0 +1,3 @@
+- Schemes (night and day). Done.
+- QR Codes
+- VMG ? Ok.

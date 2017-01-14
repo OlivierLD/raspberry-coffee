@@ -35,7 +35,7 @@ public class NMEAMultiplexer implements Multiplexer {
 		fileClient = new DataFileClient(this);
 		serialClient = new SerialClient(this);
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("SampleMUX shutdown hook") {
 			public void run() {
 				System.out.println("Shutting down multiplexer nicely.");
 				tcpClient.stopDataRead();

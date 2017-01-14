@@ -17,8 +17,10 @@ import java.util.List;
 public class BME280Reader extends NMEAReader {
 
 	private BME280 bme280;
-	private static final String DEVICE_PREFIX = "RP"; // TODO: Make it an external parameter.
-	private static final long BETWEEN_LOOPS = 1000L; // TODO: Make it an external parameter.
+	private static final String DEFAULT_DEVICE_PREFIX = "RP";
+	private String devicePrefix = DEFAULT_DEVICE_PREFIX;
+
+	private static final long BETWEEN_LOOPS = 1000L; // TODO: Make it an external parameter?
 
 	public BME280Reader(List<NMEAListener> al) {
 		super(al);
@@ -29,9 +31,18 @@ public class BME280Reader extends NMEAReader {
 		}
 	}
 
+	public String getDevicePrefix() {
+		return this.devicePrefix;
+	}
+
+	public void setDevicePrefix(String devicePrefix) {
+		this.devicePrefix = devicePrefix;
+	}
+
 	@Override
 	public void startReader() {
 		super.enableReading();
+		System.out.println(String.format(">> Starting reader [%s] (%s). Enabled:%s", this.getClass().getName(), this.devicePrefix, this.canRead()));
 		while (this.canRead()) {
 			// Read data every 1 second
 			try {
@@ -40,7 +51,7 @@ public class BME280Reader extends NMEAReader {
 				float pressure = bme280.readPressure();
 				// Generate NMEA String
 				int deviceIdx = 0; // Instead of "BME280"...
-				String nmeaXDR = StringGenerator.generateXDR(DEVICE_PREFIX,
+				String nmeaXDR = StringGenerator.generateXDR(devicePrefix,
 								new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
 												humidity,
 												String.valueOf(deviceIdx++)), // %, Humidity
@@ -53,7 +64,7 @@ public class BME280Reader extends NMEAReader {
 				nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
 
-				String nmeaMDA = StringGenerator.generateMDA(DEVICE_PREFIX,
+				String nmeaMDA = StringGenerator.generateMDA(devicePrefix,
 								pressure / 100,
 								temperature,
 								-Double.MAX_VALUE,
@@ -66,11 +77,11 @@ public class BME280Reader extends NMEAReader {
 				nmeaMDA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaMDA));
 
-				String nmeaMTA = StringGenerator.generateMTA(DEVICE_PREFIX, temperature);
+				String nmeaMTA = StringGenerator.generateMTA(devicePrefix, temperature);
 				nmeaMTA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaMTA));
 
-				String nmeaMMB = StringGenerator.generateMMB(DEVICE_PREFIX, pressure / 100);
+				String nmeaMMB = StringGenerator.generateMMB(devicePrefix, pressure / 100);
 				nmeaMMB += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaMMB));
 			} catch (Exception e) {
@@ -82,6 +93,7 @@ public class BME280Reader extends NMEAReader {
 				ie.printStackTrace();
 			}
 		}
+		System.out.println(String.format(">>> %s done reading. Bye.", this.getClass().getName()));
 	}
 
 	@Override

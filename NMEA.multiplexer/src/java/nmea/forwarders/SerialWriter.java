@@ -9,6 +9,7 @@ import gnu.io.UnsupportedCommOperationException;
 import java.io.OutputStream;
 
 import java.io.IOException;
+import java.util.Properties;
 
 public class SerialWriter implements Forwarder {
 	private String comPort = "/dev/ttyUSB1"; // "COM1";
@@ -124,5 +125,9 @@ public class SerialWriter implements Forwarder {
 	@Override
 	public Object getBean() {
 		return new SerialBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
 	}
 }

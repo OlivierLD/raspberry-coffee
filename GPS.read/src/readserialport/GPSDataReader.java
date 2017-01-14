@@ -1,7 +1,13 @@
 package readserialport;
 
+import com.pi4j.io.serial.Baud;
+import com.pi4j.io.serial.DataBits;
+import com.pi4j.io.serial.FlowControl;
+import com.pi4j.io.serial.Parity;
 import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialFactory;
+import com.pi4j.io.serial.StopBits;
 import util.DumpUtil;
 
 import java.io.IOException;
@@ -13,6 +19,29 @@ import java.io.IOException;
  * Uses the Serial communication packages from PI4J
  */
 public class GPSDataReader {
+
+	private static Baud getBaudRate(int br) {
+		Baud baud = null;
+		for (Baud b : Baud.values()) {
+			if (b.getValue() == br) {
+				baud = b;
+				break;
+			}
+		}
+		return baud;
+	}
+
+	public static void openSerial(Serial serial, String port, int br) throws IOException {
+		SerialConfig config = new SerialConfig();
+		config.device(port)
+						.baud(getBaudRate(br))
+						.dataBits(DataBits._8)
+						.parity(Parity.NONE)
+						.stopBits(StopBits._1)
+						.flowControl(FlowControl.NONE);
+		serial.open(config);
+	}
+
 	public static void main(String args[])
 					throws InterruptedException, NumberFormatException {
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
@@ -31,8 +60,7 @@ public class GPSDataReader {
 			try {
 				// print out the data received to the console
 				String data = event.getAsciiString();
-				if (verbose)
-				{
+				if (verbose) {
 					System.out.println("Got Data (" + data.length() + " byte(s))");
 					System.out.println(data);
 				}
@@ -66,7 +94,8 @@ public class GPSDataReader {
 			System.out.println("Opening port [" + port + "]");
 			boolean open = false;
 			while (!open) {
-				serial.open(port, br);
+				//	serial.open(port, br);
+				openSerial(serial, port, br);
 				open = serial.isOpen();
 				System.out.println("Port is " + (open ? "" : "NOT ") + "opened.");
 				if (!open)

@@ -2,6 +2,7 @@ package nmea.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * A View. Must be extended to be used from the client.
@@ -13,7 +14,7 @@ import java.util.List;
  *   }
  *
  *   public static void main(String... args) {
- *     String prefix = "II";
+ *     String[] prefix = { "II" };
  *     String[] array = {"HDM", "GLL", "XTE", "MWV", "VHW"};
  *     CustomSerialClient customClient = new CustomSerialClient(prefix, array);
  *     customClient.initClient();
@@ -24,20 +25,37 @@ import java.util.List;
  * }
  * </pre>
  *
+ * <dl>
+ *   <dt>Note:</dt>
+ *   <dd>
+ *     Prefixes and Sentence IDs can be negated with <b>~</b>.
+ *     <br>
+ *     Positive filters are linked with and <b>or</b>, Negative ones with an <b>and</b>.
+ *     <br>
+ *     A filter like "HDM", "GLL", "~RMC", "~XDR" would mean
+ *     ( HDM or GLL) and (not RMC and not XDR).
+ *     <br>
+ *     It is the user's responsibility not to have contradiction in the filters, like [ "GLL", "~GLL" ],
+ *     no verification is done in this area.
+ *   </dd>
+ * </dl>
+ * <br>
  * This is the job of the NMEAClient to create NMEAListeners, and NMEAReader (to which you provide the NMEAListeners) as in the snippet above.
  * The NMEAClient receives the NMEA Sentences he's interested in through its abstract {@link #dataDetectedEvent(NMEAEvent)} method.
- *
+ * <br>
  * This <i>abstract</i> class takes care of instantiating its {@link NMEAParser}. This way, the actual client
  * extending this abstract class does not need to do it.
- *
+ * <br>
  * In the overwhelming majority of the cases, an NMEAClient will be created along with its NMEAReader companion.
  */
 public abstract class NMEAClient {
 	private List<NMEAListener> NMEAListeners = new ArrayList<NMEAListener>(2);
 	private NMEAParser parser;
 	private NMEAReader reader;
-	private String devicePrefix = "";
+	private String[] devicePrefix = null;
 	private String[] sentenceArray = null;
+
+	protected Properties props = null;
 
 	protected boolean verbose = false;
 
@@ -48,10 +66,10 @@ public abstract class NMEAClient {
 	/**
 	 * Create the client
 	 *
-	 * @param prefix   the Device Identifier. Can be null
-	 * @param sentence the String Array containing the NMEA sentence identifiers to read
+	 * @param prefix   the Device Identifier. Can be null. '~' negates the condition, like below.
+	 * @param sentence the String Array containing the NMEA sentence identifiers to read (or not). If the identifier begins with '~', then the =sentence is dropped if the identifier matches.
 	 */
-	public NMEAClient(String prefix,
+	public NMEAClient(String[] prefix,
 	                  String[] sentence) {
 		this(prefix, sentence, null);
 	}
@@ -60,7 +78,7 @@ public abstract class NMEAClient {
 		this(null, null, multiplexer);
 	}
 
-	public NMEAClient(String prefix,
+	public NMEAClient(String[] prefix,
 	                  String[] sentence,
 	                  Multiplexer multiplexer) {
 		this.setDevicePrefix(prefix);
@@ -85,15 +103,19 @@ public abstract class NMEAClient {
 			}
 		});
 		parser = new NMEAParser(NMEAListeners);
-		parser.setNmeaPrefix(this.getDevicePrefix());
-		parser.setNmeaSentence(this.getSentenceArray());
+		parser.setDeviceFilters(this.getDevicePrefix());
+		parser.setSentenceFilters(this.getSentenceArray());
 	}
 
-	public void setDevicePrefix(String s) {
+	public void setProperties(Properties props) {
+		this.props = props;
+	}
+
+	public void setDevicePrefix(String[] s) {
 		this.devicePrefix = s;
 	}
 
-	public String getDevicePrefix() {
+	public String[] getDevicePrefix() {
 		return this.devicePrefix;
 	}
 
