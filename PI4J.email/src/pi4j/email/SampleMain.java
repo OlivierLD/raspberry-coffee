@@ -54,7 +54,7 @@ public class SampleMain
         {
           try
           {
-            for (int i=0; i<1; i++)
+            for (int i=0; i<5; i++)
             {
               System.out.println("Sending...");
               sender.send(new String[] { "olivier@lediouris.net", 
@@ -91,7 +91,7 @@ public class SampleMain
     EmailReceiver receiver = new EmailReceiver(providerReceive); // For Google, pop must be explicitely enabled at the account level
     try
     {
-      boolean keepLooping = false; // true;
+      boolean keepLooping = true;
       while (keepLooping)
       {
         List<String> received = receiver.receive();
