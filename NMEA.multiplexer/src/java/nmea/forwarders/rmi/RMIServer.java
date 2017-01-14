@@ -4,11 +4,13 @@ import context.ApplicationContext;
 import nmea.forwarders.Forwarder;
 
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Enumeration;
 import java.util.Properties;
 
 public class RMIServer extends UnicastRemoteObject implements ServerInterface, Forwarder {
@@ -36,7 +38,26 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 
 		try {
 //		this.serverAddress = (InetAddress.getLocalHost()).toString();
-			this.serverAddress = InetAddress.getLocalHost().getHostAddress();
+			String address = "";
+			Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
+			while (n.hasMoreElements()) {
+				NetworkInterface e = n.nextElement();
+
+				Enumeration<InetAddress> a = e.getInetAddresses();
+				while (a.hasMoreElements()) {
+					InetAddress addr = a.nextElement();
+					String hostAddress = addr.getHostAddress();
+					if (!"127.0.0.1".equals(hostAddress)) {
+						address = hostAddress;
+						break;
+					}
+				}
+				if (address.trim().length() > 0) {
+					break;
+				}
+			}
+
+			this.serverAddress = address; // InetAddress.getLocalHost().getHostAddress();
 			System.setProperty("java.rmi.server.hostname", this.serverAddress);
 		} catch(Exception e) {
 			throw new RemoteException("Can't get inet address.");
