@@ -12,6 +12,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RMIServer extends UnicastRemoteObject implements ServerInterface, Forwarder {
 
@@ -22,6 +24,8 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	private String bindingName    = DEFAULT_NAME;
 
 	private boolean verbose = false;
+
+	private final static String ipPattern = "(?:(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-5])\\.){3}(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-\u200C\u200B5])(?:[:]\\d+)?";
 
 	public RMIServer(int port) throws RemoteException {
 		this(port, DEFAULT_NAME);
@@ -36,6 +40,8 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 		this.registryPort = port;
 		this.bindingName = bindingName;
 
+		Pattern pattern = Pattern.compile(ipPattern);
+
 		try {
 //		this.serverAddress = (InetAddress.getLocalHost()).toString();
 			String address = "";
@@ -48,8 +54,11 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 					InetAddress addr = a.nextElement();
 					String hostAddress = addr.getHostAddress();
 					if (!"127.0.0.1".equals(hostAddress)) {
-						address = hostAddress;
-						break;
+						Matcher matcher = pattern.matcher(hostAddress);
+						if (matcher.matches()) {
+							address = hostAddress;
+							break;
+						}
 					}
 				}
 				if (address.trim().length() > 0) {
@@ -152,7 +161,28 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	}
 
 	// For standalone tests
-	public static void main(String[] args) throws RemoteException {
+	public static void main_(String[] args) throws RemoteException {
 		RMIServer server = new RMIServer(1099);
+	}
+
+	public static void main(String... args) throws Exception {
+
+		String ipPattern = "(?:(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-5])\\.){3}(?:1\\d?\\d|[1-9]?\\d|2[0-4]\\d|25[0-\u200C\u200B5])(?:[:]\\d+)?";
+		Pattern pattern = Pattern.compile(ipPattern);
+
+
+		System.out.println("Your Host addr: " + InetAddress.getLocalHost().getHostAddress());  // often returns "127.0.0.1"
+		Enumeration<NetworkInterface> n = NetworkInterface.getNetworkInterfaces();
+		for (; n.hasMoreElements(); ) {
+			NetworkInterface e = n.nextElement();
+
+			Enumeration<InetAddress> a = e.getInetAddresses();
+			for (; a.hasMoreElements(); ) {
+				InetAddress addr = a.nextElement();
+				System.out.println("  " + addr.getHostAddress());
+				Matcher matcher = pattern.matcher(addr.getHostAddress());
+				System.out.println("    Matches:" + matcher.matches());
+			}
+		}
 	}
 }
