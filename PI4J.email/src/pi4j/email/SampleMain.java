@@ -63,7 +63,7 @@ public class SampleMain
                                          "olivier_le_diouris@yahoo.com" },
                           "PI Request", 
                           "{ operation: 'see-attached-" + Integer.toString(i + 1) + "' }",
-                          "P8150115.JPG");
+                          "snap.jpg");
               System.out.println("Sent.");
               Thread.sleep(60000L); // 1 minute
             }
