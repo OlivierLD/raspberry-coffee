@@ -48,10 +48,6 @@ public class ADCReader {
 
 		final long BETWEEN_LOOPS = 24 * HOUR;
 
-		ADCReader adcReader = new ADCReader();
-		BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch());
-		batteryMonitor.setProcessor(adcReader::consumer);
-
 		String providerSend = "yahoo"; // Default
 		String sendTo = "";
 		String[] dest = null;
@@ -75,6 +71,16 @@ public class ADCReader {
 			throw new RuntimeException("No destination email. Use the help.");
 		}
 
+		ADCReader adcReader = new ADCReader();
+		if (verbose) {
+			System.out.println("Creating BatteryMonitor...");
+		}
+		BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch());
+		if (verbose) {
+			System.out.println("Creating BatteryMonitor: done");
+		}
+		batteryMonitor.setProcessor(adcReader::consumer);
+
 		final String[] destEmail = dest;
 		final EmailSender sender = new EmailSender(providerSend);
 		final Thread senderThread = new Thread() {
@@ -97,6 +103,9 @@ public class ADCReader {
 				System.out.println("SenderThread exiting.");
 			}
 		};
+		if (verbose) {
+			System.out.println("Staring sender thread");
+		}
 		senderThread.start();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
