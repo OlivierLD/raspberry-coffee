@@ -79,12 +79,12 @@ public class SampleMain {
 		if (args.length > 1)
 			providerSend = args[1];
 
-		EmailReceiver receiver = new EmailReceiver(providerReceive); // For Google, pop must be explicitely enabled at the account level
+		EmailReceiver receiver = new EmailReceiver(providerReceive); // For Google, pop must be explicitly enabled at the account level
 		try {
 			boolean keepLooping = true;
 			while (keepLooping) {
 				List<String> received = receiver.receive();
-				if (verbose || received.size() > 0)
+		//	if (verbose || received.size() > 0)
 					System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
 				for (String s : received) {
 					//      System.out.println(s);

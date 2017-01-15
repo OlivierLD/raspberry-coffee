@@ -12,7 +12,7 @@ This is a quick example, in order to present the way to use it in other projects
 ### Run the example
 This shows how to send emails, and how to _listen_ to emails, expecting a special one to stop the program.
 
-The example provided here assume that you have enabled the camera on the Raspberry PI,
+The example provided here assumes that you have enabled the camera on the Raspberry PI,
 and started the script named `motion.sh` as follow:
 ```bash
  sudo ./motion.sh &

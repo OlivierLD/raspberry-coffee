@@ -1,16 +1,13 @@
-apply plugin: 'java'
-compileJava.options.encoding = 'ISO-8859-1'
-apply plugin: 'maven'
-
-def userprofile = System.getenv()['USERPROFILE'] // On Windows...
-if (userprofile == null) { // Linux ?
-  userprofile = System.getenv()['HOME']
+plugins {
+  id 'java'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
+
+compileJava.options.encoding = 'ISO-8859-1'
 
 group = 'oliv.pi4j.samples'
 version = '1.0'
-
-// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password") 
 
 sourceSets {
   main {
@@ -46,9 +43,6 @@ task copyResources(type: Copy) {
 
 jar.dependsOn(copyResources)
 
-task tellMeProxy (description: "Spits out the proxy settings.") << {
-  println "Accessing resources with proxy $proxyHost:$proxyPort"
-  println "UserProfile: " + System.getenv()['USERPROFILE']
+shadowJar {
+  zip64 true
 }
-
-// compileJava.dependsOn(tellMeProxy)
