@@ -61,7 +61,7 @@ public class ADCReader {
 		final long MINUTE = 60 * SECOND;
 		final long HOUR = 60 * MINUTE;
 
-		final long BETWEEN_LOOPS = 1 * MINUTE; //24 * HOUR;
+		long betweenLoops = 24 * HOUR; // 1 * MINUTE, etc...
 
 		String providerSend = "yahoo"; // Default
 		String sendTo = "";
@@ -71,25 +71,50 @@ public class ADCReader {
 			if ("-verbose".equals(args[i])) {
 				verbose = true;
 				System.setProperty("verbose", "true");
-			} else if (args[i].startsWith("-send:"))
+			} else if (args[i].startsWith("-send:")) {
 				providerSend = args[i].substring("-send:".length());
-			else if (args[i].startsWith("-sendto:")) {
+			} else if (args[i].startsWith("-loop:")) {
+				String loop = args[i].substring("-loop:".length());
+				if (loop.endsWith("h")) {
+					long multiplier = HOUR;
+					try {
+						String val = loop.substring(0, loop.length() - 1);
+						betweenLoops = multiplier * Integer.parseInt(val);
+					} catch (NumberFormatException nfe) {
+						System.err.println(nfe.toString());
+						System.err.println("Using 24h (default)");
+					}
+				} else if (loop.endsWith("m")) {
+					long multiplier = MINUTE;
+					try {
+						String val = loop.substring(0, loop.length() - 1);
+						betweenLoops = multiplier * Integer.parseInt(val);
+					} catch (NumberFormatException nfe) {
+						System.err.println(nfe.toString());
+						System.err.println("Using 24h (default)");
+					}
+				} else {
+					System.out.println("Unrecognized loop value. Must end with 'h' or 'm'.");
+					System.out.println("24h is 24 hours");
+					System.out.println("10m is 10 minutes");
+					System.out.println("Using 24h (default)");
+				}
+			} else if (args[i].startsWith("-sendto:")) {
 				sendTo = args[i].substring("-sendto:".length());
 				dest = sendTo.split(",");
 			} else if ("-help".equals(args[i])) {
 				System.out.println("Usage:");
-				System.out.println("  java samples.ADCReader -verbose -send:google sendto:me@home.net,you@yourplace.biz -help");
+				System.out.println("  java samples.ADCReader -verbose -send:google sendto:me@home.net,you@yourplace.biz -loop:24h -help");
 				System.exit(0);
 			}
 		}
 		if (dest == null || dest.length == 0 || dest[0].trim().length() == 0) {
-			throw new RuntimeException("No destination email. Use the help.");
+			throw new RuntimeException("No destination email. Use the help (option -help).");
 		}
 
 		ADCReader adcReader = new ADCReader();
 
-		Thread batteryThread = new Thread() {
-			public void run() {
+		Thread batteryThread = new Thread(() -> {
 				try {
 					if (verbose) {
 						System.out.println("Creating BatteryMonitor...");
@@ -102,10 +127,10 @@ public class ADCReader {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-			}
-		};
+			});
 		batteryThread.start();
 
+		final long BETWEEN_LOOPS = betweenLoops;
 		final String[] destEmail = dest;
 		final EmailSender sender = new EmailSender(providerSend);
 		final Thread senderThread = new Thread() {
@@ -140,8 +165,7 @@ public class ADCReader {
 		}
 		senderThread.start();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				adcReader.stop();
 				synchronized (senderThread) {
 					senderThread.notify();
@@ -150,7 +174,6 @@ public class ADCReader {
 					adcReader.getBatteryMonitor().stop();
 				}
 				System.out.println("Bye now");
-			}
-		});
+			}));
 	}
 }
