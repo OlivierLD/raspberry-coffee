@@ -36,7 +36,7 @@ The program is finally sending an `exit` email, that terminates the program.
 
 ### Another example, remote battery monitoring
 This project intends to monitor a battery in a remote place (like a boat, an RV, etc) that has a network
-connectionn though.
+connection though.
 
 You need a small device like the one below:
 ![Battery PCB](./BatteryMonitor.jpg "The battery monitor")
@@ -54,6 +54,6 @@ It will constantly read the battery's voltage, and sent an email every 24 hours,
  At Sun Jan 15 11:29:45 PST 2017, voltage was 13.40 Volts.
 ```
 
-If the battery to monitor is in a location without a network access, the maybe the FONA option is to be considered.
+If the battery to monitor is in a location without a network access, then maybe the FONA option is to be considered.
 See the `FONA` directory.
 
