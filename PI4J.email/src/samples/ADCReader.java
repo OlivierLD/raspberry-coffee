@@ -26,7 +26,12 @@ public class ADCReader {
 	private boolean keepGoing = true;
 
 	public void consumer(BatteryMonitor.ADCData adcData) {
-		this.voltage = adcData.getVoltage();
+		this.voltage = adcData.getVoltage();if (verbose) {
+			System.out.println(String.format("From ADC Observer: volume %d, value %d, voltage %f",
+							adcData.getVolume(),
+							adcData.getNewValue(),
+							adcData.getVoltage()));
+		}
 	}
 
 	public float getVoltage() {
@@ -126,7 +131,7 @@ public class ADCReader {
 			}
 		};
 		if (verbose) {
-			System.out.println("Staring sender thread");
+			System.out.println("Starting sender thread");
 		}
 		senderThread.start();
 
