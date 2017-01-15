@@ -61,7 +61,7 @@ public class ADCReader {
 		final long MINUTE = 60 * SECOND;
 		final long HOUR = 60 * MINUTE;
 
-		final long BETWEEN_LOOPS = 24 * HOUR;
+		final long BETWEEN_LOOPS = 1 * MINUTE; //24 * HOUR;
 
 		String providerSend = "yahoo"; // Default
 		String sendTo = "";
@@ -91,8 +91,14 @@ public class ADCReader {
 		Thread batteryThread = new Thread() {
 			public void run() {
 				try {
+					if (verbose) {
+						System.out.println("Creating BatteryMonitor...");
+					}
 					BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch(), adcReader::consumer);
 					adcReader.setBatteryMonitor(batteryMonitor);
+					if (verbose) {
+						System.out.println("Creating BatteryMonitor: done");
+					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -100,12 +106,6 @@ public class ADCReader {
 		};
 		batteryThread.start();
 
-		if (verbose) {
-			System.out.println("Creating BatteryMonitor...");
-		}
-		if (verbose) {
-			System.out.println("Creating BatteryMonitor: done");
-		}
 		final String[] destEmail = dest;
 		final EmailSender sender = new EmailSender(providerSend);
 		final Thread senderThread = new Thread() {
@@ -115,7 +115,7 @@ public class ADCReader {
 						System.out.println("Sending...");
 						String content = "At " + new Date().toString() +
 										", voltage was " +
-										VOLT_FMT.format(adcReader.getVoltage()) + " V.";
+										VOLT_FMT.format(adcReader.getVoltage()) + " Volts.";
 						sender.send(destEmail,
 										"PiVolt",
 										content);
@@ -130,6 +130,11 @@ public class ADCReader {
 				System.out.println("SenderThread exiting.");
 			}
 		};
+		// Wait for the battery monitor to read something...
+		try {
+			Thread.sleep(5000);
+		} catch (Exception ex) {
+		}
 		if (verbose) {
 			System.out.println("Starting sender thread");
 		}
