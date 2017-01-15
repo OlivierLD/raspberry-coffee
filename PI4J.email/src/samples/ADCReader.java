@@ -110,12 +110,14 @@ public class ADCReader {
 						System.out.println("Sending...");
 						String content = "At " + new Date().toString() +
 										", voltage was " +
-										VOLT_FMT.format(adcReader.getVoltage() + " V.");
+										VOLT_FMT.format(adcReader.getVoltage()) + " V.";
 						sender.send(destEmail,
 										"PiVolt",
 										content);
 						System.out.println("Sent.");
-						this.wait(BETWEEN_LOOPS);
+						synchronized (this) {
+							this.wait(BETWEEN_LOOPS);
+						}
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -131,7 +133,9 @@ public class ADCReader {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				adcReader.stop();
-				senderThread.notify();
+				synchronized (senderThread) {
+					senderThread.notify();
+				}
 				if (adcReader.getBatteryMonitor() != null) {
 					adcReader.getBatteryMonitor().stop();
 				}
