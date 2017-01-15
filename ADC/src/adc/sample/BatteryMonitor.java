@@ -84,6 +84,9 @@ public class BatteryMonitor {
 	}
 
 	public BatteryMonitor(int ch) throws Exception {
+		this(ch, null);
+	}
+	public BatteryMonitor(int ch, Consumer<ADCData> processor) throws Exception {
 		channel = findChannel(ch);
 
 		if (tuning) {
@@ -104,6 +107,10 @@ public class BatteryMonitor {
 		System.out.println("Value range: ADC=0 => V=" + b + ", ADC=1023 => V=" + ((a * 1023) + b));
 		obs = new ADCObserver(channel); // Note: We could instantiate more than one observer (on several channels).
 		bw = new BufferedWriter(new FileWriter(logFileName));
+
+		if (processor != null) {
+			this.setProcessor(processor);
+		}
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
 			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {

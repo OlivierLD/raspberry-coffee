@@ -12,6 +12,16 @@ public class ADCReader {
 	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 	private final static NumberFormat VOLT_FMT = new DecimalFormat("#00.00");
 
+	private BatteryMonitor batteryMonitor = null;
+
+	public BatteryMonitor getBatteryMonitor() {
+		return batteryMonitor;
+	}
+
+	public void setBatteryMonitor(BatteryMonitor batteryMonitor) {
+		this.batteryMonitor = batteryMonitor;
+	}
+
 	private float voltage = 0f;
 	private boolean keepGoing = true;
 
@@ -72,15 +82,25 @@ public class ADCReader {
 		}
 
 		ADCReader adcReader = new ADCReader();
+
+		Thread batteryThread = new Thread() {
+			public void run() {
+				try {
+					BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch(), adcReader::consumer);
+					adcReader.setBatteryMonitor(batteryMonitor);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		};
+		batteryThread.start();
+
 		if (verbose) {
 			System.out.println("Creating BatteryMonitor...");
 		}
-		BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch());
 		if (verbose) {
 			System.out.println("Creating BatteryMonitor: done");
 		}
-		batteryMonitor.setProcessor(adcReader::consumer);
-
 		final String[] destEmail = dest;
 		final EmailSender sender = new EmailSender(providerSend);
 		final Thread senderThread = new Thread() {
@@ -112,6 +132,9 @@ public class ADCReader {
 			public void run() {
 				adcReader.stop();
 				senderThread.notify();
+				if (adcReader.getBatteryMonitor() != null) {
+					adcReader.getBatteryMonitor().stop();
+				}
 				System.out.println("Bye now");
 			}
 		});
