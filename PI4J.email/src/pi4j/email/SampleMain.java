@@ -19,7 +19,10 @@ public class SampleMain {
 	 * Do check the file email.properties for the different values associated with email servers.
 	 * <p>
 	 * NO GPIO INTERACTION in this one.
-	 *
+	 * <p>
+	 *   It sends (with an EmailSender) X emails - with a picture (snap.jpg) attached to it, and then an 'exit' email.
+	 *   The program stops when the 'exit' email is received by the EmailReceiver.
+	 * </p>
 	 * @param args See above
 	 */
 	public static void main(String[] args) {
@@ -41,21 +44,20 @@ public class SampleMain {
 				dest = sendTo.split(",");
 			} else if ("-help".equals(args[i])) {
 				System.out.println("Usage:");
-				System.out.println("  java pi4j.email.SampleMain -verbose -send:google -receive:yahoo sendto:me@home.net,you@yourplace.biz -help");
+				System.out.println("  java pi4j.email.SampleMain -verbose -send:google -receive:yahoo - sendto:me@home.net,you@yourplace.biz -help");
 				System.exit(0);
 			}
 		}
 		if (dest == null || dest.length == 0 || dest[0].trim().length() == 0) {
-			throw new RuntimeException("No destination email. Use the help.");
+			throw new RuntimeException("No destination email. Use the help (-help).");
 		}
 
 		final String[] destEmail = dest;
 		final EmailSender sender = new EmailSender(providerSend);
-		Thread senderThread = new Thread() {
-			public void run() {
+		Thread senderThread = new Thread(() -> {
 				try {
-					for (int i = 0; i < 5; i++) {
-						System.out.println("Sending...");
+					for (int i = 0; i < 3; i++) {
+						System.out.println(String.format("Sending (%d)...", (i+1)));
 						sender.send(destEmail,
 										"PI Request",
 										"{ operation: 'see-attached-" + Integer.toString(i + 1) + "' }",
@@ -63,31 +65,28 @@ public class SampleMain {
 						System.out.println("Sent.");
 						Thread.sleep(60000L); // 1 minute
 					}
-					System.out.println("Exiting...");
+					System.out.println("Exiting (sending 'exit' email)...");
 					sender.send(destEmail,
 									"PI Request",
 									"{ operation: 'exit' }");
-					System.out.println("Bye.");
+					System.out.println("Sender. Bye.");
 				} catch (Exception ex) {
+					System.err.println("Sender thread:");
 					ex.printStackTrace();
 				}
-
-			}
-		};
+		});
 		senderThread.start(); // Bombarding
 
-		if (args.length > 1)
-			providerSend = args[1];
-
 		EmailReceiver receiver = new EmailReceiver(providerReceive); // For Google, pop must be explicitly enabled at the account level
-		try {
-			boolean keepLooping = true;
-			while (keepLooping) {
+		boolean keepLooping = true;
+		while (keepLooping) {
+			try {
+				System.out.println("Waiting on receive.");
 				List<String> received = receiver.receive();
-		//	if (verbose || received.size() > 0)
-					System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
+				//	if (verbose || received.size() > 0)
+				System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
 				for (String s : received) {
-					//      System.out.println(s);
+					System.out.println("Received:\n" + s);
 					String operation = "";
 					try {
 						JSONObject json = new JSONObject(s);
@@ -109,10 +108,16 @@ public class SampleMain {
 						}
 					}
 				}
+			} catch (Exception ex) {
+				System.err.println("Receiver loop:");
+				ex.printStackTrace();
+				try {
+					Thread.sleep(1000L);
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				}
 			}
-			System.out.println("Done.");
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
+		System.out.println("Receiver. Done.");
 	}
 }

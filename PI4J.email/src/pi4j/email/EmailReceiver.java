@@ -213,9 +213,16 @@ public class EmailReceiver {
 
 			folder.open(Folder.READ_WRITE);
 			if (verbose) System.out.println("Connected... filtering, please wait.");
-			SearchTerm st = new AndTerm(new SearchTerm[]{new OrTerm(buildSearchTerm(sendEmailsTo)),
-							new SubjectTerm(acceptSubject),
-							new FlagTerm(new Flags(Flags.Flag.SEEN), false)});
+//			SearchTerm st = new AndTerm(new SearchTerm[]{new OrTerm(buildSearchTerm(sendEmailsTo)),
+//							new SubjectTerm(acceptSubject),
+//							new FlagTerm(new Flags(Flags.Flag.SEEN), false)});
+
+//			SearchTerm st = new AndTerm(new SubjectTerm(acceptSubject),
+//							new FlagTerm(new Flags(Flags.Flag.SEEN), false));
+
+			SearchTerm st = new AndTerm(new FlagTerm(new Flags(Flags.Flag.SEEN), false),
+							new FlagTerm(new Flags(Flags.Flag.DELETED), false));
+
 			// st = new SubjectTerm("PI Request");
 			Message msgs[] = folder.search(st);
 //    Message msgs[] = folder.getMessages();
@@ -231,9 +238,10 @@ public class EmailReceiver {
 					} catch (Exception exception) {
 						exception.printStackTrace();
 					}
-//        System.out.println("Message from [" + sender + "], subject [" + subject + "], content [" + mess.getContent().toString().trim() + "]");
-
-					if (true) {
+					String subject = mess.getSubject();
+					if (true && subject.equals(acceptSubject)) { // Could not have the SubjectTerm to works properly...
+						if (verbose)
+						  System.out.println("Message from [" + sender + "], subject [" + subject + "], content [" + mess.getContent().toString().trim() + "]");
 						if (!mess.isSet(javax.mail.Flags.Flag.SEEN) &&
 										!mess.isSet(javax.mail.Flags.Flag.DELETED)) {
 							String txtMess = printMessage(mess, dir);

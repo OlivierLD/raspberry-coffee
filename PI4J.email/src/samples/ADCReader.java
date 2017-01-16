@@ -104,7 +104,7 @@ public class ADCReader {
 				dest = sendTo.split(",");
 			} else if ("-help".equals(args[i])) {
 				System.out.println("Usage:");
-				System.out.println("  java samples.ADCReader -verbose -send:google sendto:me@home.net,you@yourplace.biz -loop:24h -help");
+				System.out.println("  java samples.ADCReader -verbose -send:google -sendto:me@home.net,you@yourplace.biz -loop:24h -help");
 				System.exit(0);
 			}
 		}
