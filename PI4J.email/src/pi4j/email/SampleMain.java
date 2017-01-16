@@ -107,7 +107,7 @@ public class SampleMain {
 						//  break;
 					} else if ("read-loud".equals(operation)) {
 						if (json != null) {
-							String content = json.getString("operation");
+							String content = json.getString("content");
 							if (content != null) {
 								utils.TextToSpeech.speak(content);
 							} else {
