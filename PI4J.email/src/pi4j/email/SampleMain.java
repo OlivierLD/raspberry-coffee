@@ -56,6 +56,11 @@ public class SampleMain {
 		final EmailSender sender = new EmailSender(providerSend);
 		Thread senderThread = new Thread(() -> {
 				try {
+					System.out.println("Preamble.");
+					sender.send(destEmail,
+									"PI Request",
+									"{ operation: 'read-loud', content: 'I am reading emails, be prepared.' }",
+									"snap.jpg");
 					for (int i = 0; i < 3; i++) {
 						System.out.println(String.format("Sending (%d)...", (i+1)));
 						sender.send(destEmail,
@@ -87,9 +92,10 @@ public class SampleMain {
 				System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
 				for (String s : received) {
 					System.out.println("Received:\n" + s);
+					JSONObject json = null;
 					String operation = "";
 					try {
-						JSONObject json = new JSONObject(s);
+						json = new JSONObject(s);
 						operation = json.getString("operation");
 					} catch (Exception ex) {
 						System.err.println(ex.getMessage());
@@ -99,6 +105,18 @@ public class SampleMain {
 						keepLooping = false;
 						System.out.println("Will exit next batch.");
 						//  break;
+					} else if ("read-loud".equals(operation)) {
+						if (json != null) {
+							String content = json.getString("operation");
+							if (content != null) {
+								utils.TextToSpeech.speak(content);
+							} else {
+								utils.TextToSpeech.speak("I do not know what to read.");
+							}
+						} else {
+							utils.TextToSpeech.speak("Oops");
+						}
+
 					} else {
 						System.out.println("Operation: [" + operation + "], sent for processing.");
 						try {
