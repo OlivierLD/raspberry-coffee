@@ -11,6 +11,7 @@ public class SampleMain {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
 	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 
+	private static String nbEmails = System.getProperty("nb.emails", "3");
 	/**
 	 * Invoked like:
 	 * java pi4j.email.SampleMain [-verbose] -send:google -receive:yahoo
@@ -20,12 +21,22 @@ public class SampleMain {
 	 * <p>
 	 * NO GPIO INTERACTION in this one.
 	 * <p>
-	 *   It sends (with an EmailSender) X emails - with a picture (snap.jpg) attached to it, and then an 'exit' email.
+	 *   It sends (with an EmailSender) X emails (see -Dnb.emails, 3 by default) - with a picture (snap.jpg) attached to it, and then an 'exit' email.
 	 *   The program stops when the 'exit' email is received by the EmailReceiver.
 	 * </p>
 	 * @param args See above
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	throws Exception {
+
+		int nbEmailsToSend = 3;
+		try {
+			nbEmailsToSend = Integer.parseInt(nbEmails);
+		} catch (NumberFormatException nfe) {
+			System.err.println("Using 3 by default");
+			nfe.printStackTrace();
+		}
+
 		String providerSend = "yahoo"; // Default
 		String providerReceive = "google"; // Default
 		String sendTo = "";
@@ -53,6 +64,7 @@ public class SampleMain {
 		}
 
 		final String[] destEmail = dest;
+		final int emails = nbEmailsToSend;
 		final EmailSender sender = new EmailSender(providerSend);
 		Thread senderThread = new Thread(() -> {
 				try {
@@ -61,7 +73,7 @@ public class SampleMain {
 									"PI Request",
 									"{ operation: 'read-loud', content: 'I am reading emails, be prepared.' }",
 									"snap.jpg");
-					for (int i = 0; i < 3; i++) {
+					for (int i = 0; i < emails; i++) {
 						System.out.println(String.format("Sending (%d)...", (i+1)));
 						sender.send(destEmail,
 										"PI Request",
