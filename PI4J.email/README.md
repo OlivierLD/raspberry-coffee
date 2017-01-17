@@ -42,7 +42,7 @@ To install `espeak` on the Raspberry PI:
 
 ### Another example, remote battery monitoring
 This project intends to monitor a battery in a remote place (like a boat, an RV, etc) that has a network
-connection though.
+connection access though.
 
 You need a small device like the one below:
 ![Battery PCB](./BatteryMonitor.jpg "The battery monitor")
