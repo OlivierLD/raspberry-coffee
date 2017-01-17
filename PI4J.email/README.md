@@ -32,7 +32,13 @@ Then you can run the command
 This will send several emails to the `google` account (as defined in your `email.properties`), and listen to the emails in the `yahoo` account.
 The sent emails will have the `snap.jpg` attached to it.
 
-The program is finally sending an `exit` email, that terminates the program.
+The program is finally sending an `exit` email, that terminates the program, managed by the `EmailReceiver`.
+The first email is a `read-loud` one, that will be read out loud if you have installed `espeak` and connected a loudspeaker on the Raspberry PI.
+
+To install `espeak` on the Raspberry PI:
+```
+ $ sudo apt-get install espeak
+```
 
 ### Another example, remote battery monitoring
 This project intends to monitor a battery in a remote place (like a boat, an RV, etc) that has a network
