@@ -464,6 +464,9 @@ public class StringGenerator {
 						new XDRElement(XDRTypes.HUMIDITY, 65.5, "HTU21DF"));
 		System.out.println("Generated XDR:" + xdr);
 
+		xdr = generateXDR("XX", new XDRElement(XDRTypes.VOLTAGE, 12.34, "TRINKET"));
+		System.out.println("Generated XDR:" + xdr);
+
 		System.out.println("Generating MDA...");
 		String mda = generateMDA("II", 1013.25, // PRMSL
 						25,    // AIR TEMP
