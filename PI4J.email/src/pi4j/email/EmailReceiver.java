@@ -42,8 +42,6 @@ public class EmailReceiver {
 	private static String replyto;
 	private static boolean smtpauth;
 
-	private static String sendEmailsTo;
-	private static String acceptEmailsFrom;
 	private static String acceptSubject;
 	private static String ackSubject;
 
@@ -64,8 +62,6 @@ public class EmailReceiver {
 		EmailReceiver.replyto = "";
 		EmailReceiver.smtpauth = false;
 
-		EmailReceiver.sendEmailsTo = "";
-		EmailReceiver.acceptEmailsFrom = "";
 		EmailReceiver.acceptSubject = "";
 		EmailReceiver.ackSubject = "";
 
@@ -78,8 +74,6 @@ public class EmailReceiver {
 			System.out.println("email.properies file problem...");
 			throw new RuntimeException("File not found:email.properies");
 		}
-		EmailReceiver.sendEmailsTo = props.getProperty("pi.send.emails.to");
-		EmailReceiver.acceptEmailsFrom = props.getProperty("pi.accept.emails.from");
 		EmailReceiver.acceptSubject = props.getProperty("pi.email.subject");
 		EmailReceiver.ackSubject = props.getProperty("pi.ack.subject");
 

@@ -1,5 +1,4 @@
 pi.accept.emails.from=olivier.lediouris@gmail.com, olivier.lediouris@yahoo.com, olivier@lediouris.net
-pi.send.emails.to=olivier.lediouris@gmail.com, olivier.lediouris@yahoo.com, olivier@lediouris.net
 pi.email.subject=PI Request
 pi.ack.subject=PI Robot Ack
 pi.event.subject=PI Event
