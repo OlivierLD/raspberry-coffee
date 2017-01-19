@@ -33,7 +33,7 @@ if you have an email account, then sending the battery voltage by email could be
 that it is not a _real time_ communication, there is always a delay between the moment when an email
 is sent and the moment when it is received.
 
-It can go both ways though. The Raspberry PI can send emails, and receive some.
+It can go both ways though. The Raspberry PI can send emails, and receive some (by polling the INBOX).
 As long as the _received_ email complies with a given format, it can be parsed and then managed accordingly.
 
 ##### Pros
@@ -68,7 +68,16 @@ More soon.
 - Slow
 
 ### WebSocket
-Very cool technology
+WebSocket is a very cool technology, based on TCP. Obviously available on the server side of the world, but also
+implemented with HTML5, and available fro browsers supporting ity, in JavaScript.
+Can be seen as a publish/subscribe mechanism.
+
+In our case, we would have:
+- The Raspberry PI publishing events to a WebSocket server
+- All the clients having subscribed to those events would be notified
+
+It obviously requires a WebSocket Server.
+ NodeJS can be one.
 
 ##### Pros
 - Easy
@@ -80,7 +89,17 @@ Very cool technology
 - Requires a WebSocket server
 
 ### IoT
+Now we 've talked about the WebSocket approach above, the Internet Of Things (IoT) one
+flows naturally.
 
+It also requires a server - which we will call an IoT server - where events will be published,
+from the Raspberry PI in our case. Then whatever client understanding the protocol(s) available on
+the server can read those event, and get the corresponding data.
+More and more IoT servers support the MQTT protocol.
+`Mosquitto` runs fine on the Raspberry PI, lokk [here](http://hackaday.com/2016/05/09/minimal-mqtt-building-a-broker/) to see how.
+
+Several IoT servers are free to access, like [Adafruit.IO](https://io.adafruit.com/). You
+just need to create your free account, and remember your Token.
 
 ##### Pros
 - Can be free
