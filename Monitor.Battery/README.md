@@ -57,7 +57,7 @@ If you do not have Internet coverage in your location, you could use a device li
 ### Outernet ?
 [Outernet](https://outernet.is/) might also be something to consider, if you are _really_ out of reach of any kind of network (at sea, far in the desert, etc).
 
-More soon.
+More soon abouyt that one...
 
 ##### Pros
 - Available everywhere on Earth.

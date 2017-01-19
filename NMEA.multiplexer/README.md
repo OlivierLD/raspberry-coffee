@@ -124,6 +124,10 @@ A (sentence) filter like `"HDM", "GLL", "~RMC", "~XDR"` would mean
 It is the user's responsibility not to have contradiction in the filters, like `[ "GLL", "~GLL" ]`,
 no verification is done in this area.
 
+_Note_:
+This is just providing the possibility to negate an expression. Convenient, but limited. The best would probably be to use regular expressions (RegExp).
+Big drawback though: for the majority of the users, the RegExp syntax could be complex, too complex, or even scary...
+
 ##### About transformers
 There is an example of a `transformer` in `WebSocketProcessor.java`. As you would see, it is just implementing the `Forwarder` interface,
 and this is where it fits in the picture above.
