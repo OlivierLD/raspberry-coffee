@@ -146,3 +146,53 @@ not as elegant.
 - Requires Internet Network connection
 - Request/Response protocol
 
+#### Example with Adafruit.IO
+You need an Adafruit-IO account (free).
+Using mine, I've created a feed named `onoff`, looking as follow on the [Adafruit-IO web site](http://io.adafruit.com):
+![OnOff feed](./onoff.png "OnOff feed")
+
+You will need two things to go further:
+- Your Adafruit.IO `username`
+- Your Adafruit.IO `key`
+
+The classes of the project must abviously have been compiled, and archived:
+```bash
+ ../gradlew --daemon clean shadowJar
+```
+Then you can run the Publisher part, providing you `username` and `key`:
+```bash
+ ./aio.publish olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
+```
+Everytime you hit [Return], you should see the switch toggling. Hit `Q` to terminate the program.
+```bash
+ ./aio.publish olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
+ Usage:
+ ./aio.publish [AIO Username] [AIO Key]
+ like ./aio.publish olivierld abc8736hgfd78638620ngs
+ Connected to tcp://io.adafruit.com:1883 as olivierld-pub.
+ Hit return to toggle the switch, Q to exit.
+ Hit [Return]
+ Published data. Topic: olivierld/feeds/onoff  Message: ON
+ Hit [Return]
+ Published data. Topic: olivierld/feeds/onoff  Message: OFF
+ Hit [Return]
+ Published data. Topic: olivierld/feeds/onoff  Message: ON
+ Hit [Return] q
+
+ Client disconnected.
+ Bye.
+```
+
+You can also write your own Subscriber, reacting to any modification of the feed, just
+like the Web UI did:
+```bash
+ ./aio.subscribe olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
+ Subscriber is now listening to olivierld/feeds/onoff
+ Message arrived. Topic: olivierld/feeds/onoff Message: ON
+ Message arrived. Topic: olivierld/feeds/onoff Message: OFF
+ Message arrived. Topic: olivierld/feeds/onoff Message: ON
+
+ [Ctrl+C]
+ Client disconnected.
+ Bye.
+```
