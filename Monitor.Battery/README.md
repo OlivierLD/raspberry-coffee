@@ -90,16 +90,22 @@ It obviously requires a WebSocket Server.
 
 ### IoT
 Now we 've talked about the WebSocket approach above, the Internet Of Things (IoT) one
-flows naturally.
+flows naturally. MQTT implements a pure publish/subscribe dialog, very easy to deal with (even easier than WebSocket).
+
+There [here](http://www.hivemq.com/) a lot of good readings about MQTT.
 
 It also requires a server - which we will call an IoT server - where events will be published,
 from the Raspberry PI in our case. Then whatever client understanding the protocol(s) available on
 the server can read those event, and get the corresponding data.
-More and more IoT servers support the MQTT protocol.
-`Mosquitto` runs fine on the Raspberry PI, lokk [here](http://hackaday.com/2016/05/09/minimal-mqtt-building-a-broker/) to see how.
+More and more IoT servers support the MQTT protocol (Message Queuing Telemetry Transport).
+`Mosquitto` runs fine on the Raspberry PI, look [here](http://hackaday.com/2016/05/09/minimal-mqtt-building-a-broker/) to see how to install it.
 
 Several IoT servers are free to access, like [Adafruit.IO](https://io.adafruit.com/). You
 just need to create your free account, and remember your Token.
+`AdafruitIO` supports MQTT and also provides a neat REST interface.
+
+To access MQTT from Java, I use [paho](http://www.eclipse.org/paho/), as you can see in the `dependencies`
+section of the `build.gradle` file of this project.
 
 ##### Pros
 - Can be free
@@ -107,3 +113,4 @@ just need to create your free account, and remember your Token.
 
 ##### Cons
 - Requires Internet Network connection
+- MQTT is not directly supported in a browser
