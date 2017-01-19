@@ -218,6 +218,6 @@ You can set the switch value using REST:
  Bye.
 
 ```
-The switch toggle just like with MQTT.
+The switch toggles just like with MQTT.
 
 Interestingly, the MQTT subscriber mentioned above (`aio.subscribe`) also works when the switch has been fed with REST.
