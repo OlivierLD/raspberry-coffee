@@ -72,6 +72,14 @@ WebSocket is a very cool technology, based on TCP. Obviously available on the se
 implemented with HTML5, and available fro browsers supporting ity, in JavaScript.
 Can be seen as a publish/subscribe mechanism.
 
+In a protocol like HTTP for example, you need to submit a request to get a response.
+**For example**: you want to know at what time a given plane is going to land.
+You go to the airline's web site, you navigate to the 'Flight status' page, and
+you probably find your information. In case the flight status changes, you need to _refresh_ your page
+to see it. With a publish/subscribe protocol (like WebSocket), you would subscribe to an
+event like `flight-status-update`, and whenever such an update happens on the server side, the
+correspondinbg message would be sent to your browser, without you having to request it.
+
 In our case, we would have:
 - The Raspberry PI publishing events to a WebSocket server
 - All the clients having subscribed to those events would be notified
@@ -83,12 +91,15 @@ It obviously requires a WebSocket Server.
 - Easy
 - Real time
 - Supported on clients and servers.
+- Great for clients, notified without having to request a message to it.
 
 ##### Cons
 - Requires Internet Network connection
 - Requires a WebSocket server
 
-### IoT
+### IoT (Internet Of Things)
+
+#### Using MQTT
 Now we 've talked about the WebSocket approach above, the Internet Of Things (IoT) one
 flows naturally. MQTT implements a pure publish/subscribe dialog, very easy to deal with (even easier than WebSocket).
 
@@ -96,7 +107,7 @@ There [here](http://www.hivemq.com/) a lot of good readings about MQTT.
 
 It also requires a server - which we will call an IoT server - where events will be published,
 from the Raspberry PI in our case. Then whatever client understanding the protocol(s) available on
-the server can read those event, and get the corresponding data.
+the server can read those events, and get the corresponding data.
 More and more IoT servers support the MQTT protocol (Message Queuing Telemetry Transport).
 `Mosquitto` runs fine on the Raspberry PI, look [here](http://hackaday.com/2016/05/09/minimal-mqtt-building-a-broker/) to see how to install it.
 
@@ -110,7 +121,11 @@ section of the `build.gradle` file of this project.
 ##### Pros
 - Can be free
 - Flexible
+- Pub/Sub
 
 ##### Cons
 - Requires Internet Network connection
 - MQTT is not directly supported in a browser
+
+#### Using REST
+...

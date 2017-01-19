@@ -8,6 +8,7 @@ import org.eclipse.paho.client.mqttv3.MqttTopic;
 
 /**
  * Use paho MQTT client to connect on Adafruit-IO
+ * Paho doc at https://www.eclipse.org/paho/files/javadoc/index.html?org/eclipse/paho/client/mqttv3/
  */
 public class AIOPublisher {
 
@@ -16,7 +17,7 @@ public class AIOPublisher {
 
 	public static final String BROKER_URL = "tcp://io.adafruit.com:1883";
 
-	public static final String TOPIC_ON_OFF = "/feeds/onoff"; // Concat with userName in front
+	public static final String TOPIC_ON_OFF = "/feeds/onoff"; // Concat with userName in front before using.
 
 	private MqttClient client;
 
@@ -84,11 +85,12 @@ public class AIOPublisher {
 			if (publisher.client != null && publisher.client.isConnected()) {
 				try {
 					publisher.client.disconnect();
-					System.out.println("Client disconnected.");
+					System.out.println("\nClient disconnected.");
 				} catch (MqttException e) {
 					e.printStackTrace();
 				}
 			}
+			System.out.println("Bye.");
 		}));
 
 		publisher.start();

@@ -7,6 +7,9 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
+/**
+ * Paho doc at https://www.eclipse.org/paho/files/javadoc/index.html?org/eclipse/paho/client/mqttv3/
+ */
 public class Publisher {
 
 	public static final String BROKER_URL = "tcp://192.168.1.136:1883"; // tcp://broker.mqttdashboard.com:1883";
@@ -38,7 +41,7 @@ public class Publisher {
 		try {
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setCleanSession(false);
-			options.setWill(client.getTopic("home/LWT"), "I'm gone :(".getBytes(), 0, false);
+			options.setWill(client.getTopic("home/LWT"), "I'm gone :(".getBytes(), 0, false); // LWT: Last Will and Testament
 
 			client.connect(options);
 
