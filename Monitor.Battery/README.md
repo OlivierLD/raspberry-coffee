@@ -149,6 +149,7 @@ not as elegant.
 #### Example with Adafruit.IO
 You need an Adafruit-IO account (free).
 Using mine, I've created a feed named `onoff`, looking as follow on the [Adafruit-IO web site](http://io.adafruit.com):
+
 ![OnOff feed](./onoff.png "OnOff feed")
 
 You will need two things to go further:
