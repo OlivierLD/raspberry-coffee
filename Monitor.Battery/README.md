@@ -164,7 +164,7 @@ Then you can run the Publisher part, providing you `username` and `key`:
 ```bash
  ./aio.publish olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
 ```
-Everytime you hit [Return], you should see the switch toggling. Hit `Q` to terminate the program.
+Everytime you hit `[Return]`, you should see the switch toggling. Hit `Q` to terminate the program.
 ```bash
  ./aio.publish olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
  Usage:
