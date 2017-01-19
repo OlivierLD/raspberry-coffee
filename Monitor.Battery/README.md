@@ -128,4 +128,21 @@ section of the `build.gradle` file of this project.
 - MQTT is not directly supported in a browser
 
 #### Using REST
-...
+REST stands for Representational State Transfer. Has recently gained a lot of popularity.
+Built on top of the HTTP Protocol, and as such also available from a browser.
+But for the same reason, it is a Request/Response based protocol.
+
+It makes no difference when you publish en event, but it would make one for a client expecting it.
+In the case of WebSocket or MQTT, the client would be notified by the server. In the case of REST, the client would need
+to _request_ a _response_ to get it. Polling the server is still possible, but certainly
+not as elegant.
+
+
+##### Pros
+- Can be free
+- Many libraries available.
+
+##### Cons
+- Requires Internet Network connection
+- Request/Response protocol
+
