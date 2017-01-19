@@ -160,6 +160,8 @@ The classes of the project must abviously have been compiled, and archived:
 ```bash
  ../gradlew --daemon clean shadowJar
 ```
+
+##### Using MQTT
 Then you can run the Publisher part, providing you `username` and `key`:
 ```bash
  ./aio.publish olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
@@ -197,3 +199,25 @@ like the Web UI did:
  Client disconnected.
  Bye.
 ```
+
+##### Using REST
+You can set the switch value using REST:
+```bash
+ ./aio.post 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
+ Usage:
+ ./aio.post [AIO Key]
+ like ./aio.post abc8736hgfd78638620ngs
+ Hit return to toggle the switch, Q to exit.
+ Hit [Return]
+ Sending {"value": "ON"}
+ POST Ret:201
+ Hit [Return]
+ Sending {"value": "OFF"}
+ POST Ret:201
+ Hit [Return] q
+ Bye.
+
+```
+The switch toggle just like with MQTT.
+
+Interestingly, the MQTT subscriber mentioned above (`aio.subscribe`) also works when the switch has been fed with REST.

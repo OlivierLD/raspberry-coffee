@@ -7,6 +7,6 @@ then
   CP=./build/libs/Monitor.Battery-1.0-all.jar
   java -Daio.user.name=$1 -Daio.key=$2 -cp $CP mqtt.pub.AIOPublisher
 else
-  echo Please provide the 2 expected parameters.
+  echo Please provide the expected 2 parameters.
 fi
 #
