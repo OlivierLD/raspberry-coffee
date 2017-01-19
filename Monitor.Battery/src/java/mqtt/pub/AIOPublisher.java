@@ -6,6 +6,9 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 /**
  * Use paho MQTT client to connect on Adafruit-IO
  * Paho doc at https://www.eclipse.org/paho/files/javadoc/index.html?org/eclipse/paho/client/mqttv3/
@@ -16,10 +19,33 @@ public class AIOPublisher {
 	private String key = "";
 
 	public static final String BROKER_URL = "tcp://io.adafruit.com:1883";
-
 	public static final String TOPIC_ON_OFF = "/feeds/onoff"; // Concat with userName in front before using.
 
 	private MqttClient client;
+
+	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+	/**
+	 * Prompt the user for input, from stdin. Completed on [Return]
+	 * @param prompt The prompt
+	 * @return the user's input.
+	 */
+	public static String userInput(String prompt) {
+		String retString = "";
+		System.out.print(prompt);
+		try {
+			retString = stdin.readLine();
+		} catch (Exception e) {
+			System.out.println(e);
+			String s;
+			try {
+				s = userInput("<Oooch/>");
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
+		}
+		return retString;
+	}
 
 	public AIOPublisher() {
 
@@ -30,7 +56,7 @@ public class AIOPublisher {
 			throw new RuntimeException("Require both username and key as System variables (-Daio.user.name and -Daio.key)");
 		}
 
-		String clientId = userName;
+		String clientId = userName + "-pub";
 		try {
 			client = new MqttClient(BROKER_URL, clientId);
 			System.out.println(String.format("Connected to %s as %s.", BROKER_URL, clientId));
@@ -51,19 +77,34 @@ public class AIOPublisher {
 
 			client.connect(options);
 
-			//Publish data forever
-			while (true) {
-				if (client.isConnected()) {
-					publish();
+			System.out.println("Hit return to toggle the switch, Q to exit.");
+			boolean go = true;
+			while (go) {
+				String str = userInput("Hit [Return] ");
+				if ("Q".equalsIgnoreCase(str)) {
+					go = false;
+					if (this.client != null && this.client.isConnected()) {
+						try {
+							this.client.disconnect();
+							System.out.println("\nClient disconnected.");
+						} catch (MqttException e) {
+							e.printStackTrace();
+						}
+					}
+					System.out.println("Bye.");
+
 				} else {
-					System.out.println("... Not connected.");
+					if (client.isConnected()) {
+						publish();
+					} else {
+						System.out.println("... Not connected.");
+					}
 				}
-				Thread.sleep(2000);
 			}
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(1);
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -90,7 +131,7 @@ public class AIOPublisher {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Bye.");
+			System.out.println("Bye...");
 		}));
 
 		publisher.start();

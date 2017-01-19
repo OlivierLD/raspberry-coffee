@@ -13,11 +13,8 @@ public class Subscriber {
 	private MqttClient mqttClient;
 
 	public Subscriber() {
-
 		try {
 			mqttClient = new MqttClient(BROKER_URL, clientId);
-
-
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -26,16 +23,12 @@ public class Subscriber {
 
 	public void start() {
 		try {
-
 			mqttClient.setCallback(new SubscribeCallback());
 			mqttClient.connect();
-
 			//Subscribe to all subtopics of home
 			final String topic = "home/#";
 			mqttClient.subscribe(topic);
-
-			System.out.println("Subscriber is now listening to "+topic);
-
+			System.out.println("Subscriber is now listening to " + topic);
 		} catch (MqttException e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -46,5 +39,4 @@ public class Subscriber {
 		final Subscriber subscriber = new Subscriber();
 		subscriber.start();
 	}
-
 }

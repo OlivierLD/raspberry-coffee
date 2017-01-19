@@ -69,7 +69,7 @@ More soon abouyt that one...
 
 ### WebSocket
 WebSocket is a very cool technology, based on TCP. Obviously available on the server side of the world, but also
-implemented with HTML5, and available fro browsers supporting ity, in JavaScript.
+implemented with HTML5, and available from browsers supporting it, in JavaScript.
 Can be seen as a publish/subscribe mechanism.
 
 In a protocol like HTTP for example, you need to submit a request to get a response.
