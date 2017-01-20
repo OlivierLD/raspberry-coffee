@@ -7,15 +7,23 @@ import com.pi4j.io.serial.SerialPortException;
 import fona.manager.FONAClient;
 import fona.manager.FONAManager;
 import fona.manager.FONAManager.NetworkStatus;
-import util.TextToSpeech;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
+/**
+ * Listens for incoming call (See {@link FONAManager}
+ * Receives data from the BatteryMonitor (See {@link BatteryMonitor})
+ *
+ * When a request-for-voltage (V? or v?) call is received, the voltage is returned.
+ */
 public class FonaListener implements FONAClient {
 	private static boolean verbose = false;
 	private static FONAManager fona;
 
 	private BatteryMonitor batteryMonitor = null;
+	private final static NumberFormat VOLT_FMT = new DecimalFormat("#00.00");
 
 	public BatteryMonitor getBatteryMonitor() {
 		return batteryMonitor;
@@ -45,6 +53,9 @@ public class FonaListener implements FONAClient {
 
 	public static void main(String args[])
 					throws InterruptedException, NumberFormatException, IOException {
+
+		verbose = "true".equals(System.getProperty("verbose", "false"));
+
 		FonaListener fonaListener = new FonaListener();
 		Thread batteryThread = new Thread(() -> {
 			try {
@@ -192,13 +203,14 @@ public class FonaListener implements FONAClient {
 	@Override
 	public void readSMS(FONAManager.ReceivedSMS sms) {
 		System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
-		// TODO: This is where you would parse the message and take the appropriate action.
-		// TODO: Call getVoltage here and retrurn the value to the caller if the incoming message required it.
-//	String mess = "Message from " + sms.getFrom() + ", " + sms.getContent();
 		String mess = sms.getContent();
-		TextToSpeech.speak(mess);
-		// Echo to sender
-		sendResponse("You just said: " + sms.getContent(), sms.getFrom());
+		if ("V?".equalsIgnoreCase(mess)) {
+			String response = String.format("Voltage is %s.", VOLT_FMT.format(getVoltage()));
+			sendResponse(response, sms.getFrom());
+		} else {
+			// Echo to sender
+			sendResponse("You just said: " + sms.getContent(), sms.getFrom());
+		}
 	}
 
 	/**
