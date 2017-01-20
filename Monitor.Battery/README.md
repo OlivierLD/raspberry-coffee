@@ -166,7 +166,8 @@ not as elegant.
 You need an Adafruit-IO account (free).
 Using mine, I've created a feed named `onoff`, looking as follow on the [Adafruit-IO web site](http://io.adafruit.com):
 
-![OnOff feed](./onoff.png "OnOff feed")
+<!--![OnOff feed](./onoff.png "OnOff feed") -->
+<img src='./onoff.png' alt='OnOff feed' title='OnOff feed' width='267' height='143'>
 
 You will need two things to go further:
 - Your Adafruit.IO `username`
@@ -241,5 +242,4 @@ Interestingly, the MQTT subscriber mentioned above (`aio.subscribe`) also works 
 #### IoT for Real
 Just like we said before, a feed named `battery-pi` has been created on Adafruit.IO:
 
-![Battery feed](./battery-feed.png "Battery feed")
-
+<img src='./battery-feed.png' alt='Battery feed' title='Battery feed' width='432' height='426'>

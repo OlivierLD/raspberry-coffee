@@ -26,7 +26,8 @@ public class ADCReader {
 	private boolean keepGoing = true;
 
 	public void consumer(BatteryMonitor.ADCData adcData) {
-		this.voltage = adcData.getVoltage();if (verbose) {
+		this.voltage = adcData.getVoltage();
+		if (verbose) {
 			System.out.println(String.format("From ADC Observer: volume %d, value %d, voltage %f",
 							adcData.getVolume(),
 							adcData.getNewValue(),
@@ -48,9 +49,9 @@ public class ADCReader {
 
 	/**
 	 * Invoked like:
-	 * java samples.ADCReader [-verbose] -send:google -sendto:me@home.net
+	 * java samples.ADCReader [-verbose] -send:google -sendto:me@home.net -loop:6h
 	 *
-	 * TODO Put all prms in the properties file.
+	 * TODO Put all prms in the properties file?
 	 *
 	 * @param args use -help
 	 */
