@@ -14,7 +14,7 @@
  This is where we have several options, which we discuss below.
 
 ### The battery monitoring trinket
-![The hardware](./12-volts.monitor_bb.png "The Hardware")
+![The hardware](./BatteryMonitor.png "The Hardware")
 How to build and connect.
 
 #### NMEA?
@@ -36,6 +36,17 @@ is sent and the moment when it is received.
 It can go both ways though. The Raspberry PI can send emails, and receive some (by polling the INBOX).
 As long as the _received_ email complies with a given format, it can be parsed and then managed accordingly.
 
+#### Example
+ You need clone the file named `email.properties.sample` into `email.properties`, and modify it with the details of the email account(s)
+ you want to use.
+
+ Then use for example
+```bash
+ ./email.voltage -verbose -send:google -sendto:me@home.net,you@yourplace.biz
+```
+
+All you need to add to the diagram above is a network connection.
+
 ##### Pros
 - Free
 - Easy
@@ -45,7 +56,10 @@ As long as the _received_ email complies with a given format, it can be parsed a
 - Not real-time, delayed.
 
 ### By SMS
-If you do not have Internet coverage in your location, you could use a device like a `FONA` tio reach out to a cell-phone network
+If you do not have Internet coverage in your location, you could use a device like a `FONA` to reach out to a cell-phone network.
+The FONA requires a SIM Card.
+
+![With a FONA](./battery-fona.png "With a FONA")
 
 ##### Pros
 - Can be available where Internet is not
@@ -223,3 +237,9 @@ You can set the switch value using REST:
 The switch toggles just like with MQTT.
 
 Interestingly, the MQTT subscriber mentioned above (`aio.subscribe`) also works when the switch has been fed with REST.
+
+#### IoT for Real
+Just like we said before, a feed named `battery-pi` has been created on Adafruit.IO:
+
+![Battery feed](./battery-feed.png "Battery feed")
+

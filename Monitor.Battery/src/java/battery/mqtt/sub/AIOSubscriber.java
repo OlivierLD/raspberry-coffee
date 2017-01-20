@@ -10,7 +10,7 @@ public class AIOSubscriber {
 	private String key = "";
 
 	public static final String BROKER_URL = "tcp://io.adafruit.com:1883";
-	public static final String TOPIC_ON_OFF = "/feeds/onoff"; // Concat with userName in front before using.
+	public static final String TOPIC_BATTERY = "/feeds/battery-pi"; // Concat with userName in front before using.
 
 	private MqttClient client;
 
@@ -34,14 +34,14 @@ public class AIOSubscriber {
 
 	public void start() {
 		try {
-			client.setCallback(new OnOffSubscribeCallback());
+			client.setCallback(new BatterySubscribeCallback());
 			MqttConnectOptions options = new MqttConnectOptions();
 //		options.setCleanSession(false);
 			options.setUserName(this.userName);
 			options.setPassword(this.key.toCharArray());
 			client.connect(options);
 			//Subscribe to all subtopics of home
-			final String topic = this.userName + TOPIC_ON_OFF;
+			final String topic = this.userName + TOPIC_BATTERY;
 			client.subscribe(topic);
 			System.out.println("Subscriber is now listening to " + topic);
 		} catch (MqttException e) {

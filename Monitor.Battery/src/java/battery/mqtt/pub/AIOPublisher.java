@@ -19,7 +19,7 @@ public class AIOPublisher {
 	private String key = "";
 
 	public static final String BROKER_URL = "tcp://io.adafruit.com:1883";
-	public static final String TOPIC_ON_OFF = "/feeds/onoff"; // Concat with userName in front before using.
+	public static final String TOPIC_BATTERY = "/feeds/battery-pi"; // Concat with userName in front before using.
 
 	private MqttClient client;
 
@@ -77,7 +77,7 @@ public class AIOPublisher {
 
 			client.connect(options);
 
-			System.out.println("Hit return to toggle the switch, Q to exit.");
+			System.out.println("Enter battery voltage, or Q to exit.");
 			boolean go = true;
 			while (go) {
 				String str = userInput("Hit [Return] ");
@@ -95,7 +95,12 @@ public class AIOPublisher {
 
 				} else {
 					if (client.isConnected()) {
-						publish();
+						try {
+							float voltage = Float.parseFloat(str);
+							publish(voltage);
+						} catch (NumberFormatException nfe) {
+							nfe.printStackTrace();
+						}
 					} else {
 						System.out.println("... Not connected.");
 					}
@@ -109,14 +114,11 @@ public class AIOPublisher {
 		}
 	}
 
-	private boolean onOff = true;
-
-	private void publish() throws MqttException {
-		final MqttTopic onOffTopic = client.getTopic(this.userName + TOPIC_ON_OFF);
-		final String pos = onOff ? "ON" : "OFF";
-		onOffTopic.publish(new MqttMessage(pos.getBytes()));
-		System.out.println("Published data. Topic: " + onOffTopic.getName() + "  Message: " + pos);
-		onOff = !onOff;
+	private void publish(float voltage) throws MqttException {
+		final MqttTopic onOffTopic = client.getTopic(this.userName + TOPIC_BATTERY);
+		final String val = String.valueOf(voltage);
+		onOffTopic.publish(new MqttMessage(val.getBytes()));
+		System.out.println("Published data. Topic: " + onOffTopic.getName() + "  Message: " + val);
 	}
 
 	public static void main(String... args) {

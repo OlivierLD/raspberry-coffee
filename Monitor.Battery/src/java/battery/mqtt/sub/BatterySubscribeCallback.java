@@ -4,7 +4,7 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-public class OnOffSubscribeCallback implements MqttCallback {
+public class BatterySubscribeCallback implements MqttCallback {
 
 	@Override
 	public void connectionLost(Throwable cause) {
@@ -18,6 +18,6 @@ public class OnOffSubscribeCallback implements MqttCallback {
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken token) {
-		System.out.println(">> Ok");
+		System.out.println(">> Delivered Ok");
 	}
 }
