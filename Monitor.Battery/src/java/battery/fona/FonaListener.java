@@ -34,7 +34,6 @@ public class FonaListener implements FONAClient {
 	}
 
 	private float voltage = 0f;
-	private boolean keepGoing = true;
 
 	public void consumer(BatteryMonitor.ADCData adcData) {
 		this.voltage = adcData.getVoltage();

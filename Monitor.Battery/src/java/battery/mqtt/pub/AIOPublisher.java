@@ -1,5 +1,7 @@
 package battery.mqtt.pub;
 
+import adc.ADCObserver;
+import adc.sample.BatteryMonitor;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -8,6 +10,8 @@ import org.eclipse.paho.client.mqttv3.MqttTopic;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * Use paho MQTT client to connect on Adafruit-IO
@@ -18,33 +22,48 @@ public class AIOPublisher {
 	private String userName = "";
 	private String key = "";
 
+	private static boolean verbose = false;
+	private static long betweenLoops = 1000L;
+
 	public static final String BROKER_URL = "tcp://io.adafruit.com:1883";
 	public static final String TOPIC_BATTERY = "/feeds/battery-pi"; // Concat with userName in front before using.
 
 	private MqttClient client;
 
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+	private BatteryMonitor batteryMonitor = null;
+	private final static NumberFormat VOLT_FMT = new DecimalFormat("#00.00");
 
-	/**
-	 * Prompt the user for input, from stdin. Completed on [Return]
-	 * @param prompt The prompt
-	 * @return the user's input.
-	 */
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.out.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
+	public BatteryMonitor getBatteryMonitor() {
+		return batteryMonitor;
+	}
+
+	public void setBatteryMonitor(BatteryMonitor batteryMonitor) {
+		this.batteryMonitor = batteryMonitor;
+	}
+
+	private float voltage = 0f;
+	private boolean keepGoing = true;
+
+	private boolean keepGoing() {
+		return this.keepGoing;
+	}
+	private void stop() {
+		this.keepGoing = false;
+	}
+
+	public void consumer(BatteryMonitor.ADCData adcData) {
+		this.voltage = adcData.getVoltage();
+		if (verbose) {
+			System.out.println(
+							String.format("From ADC Observer: volume %d, value %d, voltage %f",
+											adcData.getVolume(),
+											adcData.getNewValue(),
+											adcData.getVoltage()));
 		}
-		return retString;
+	}
+
+	public float getVoltage() {
+		return this.voltage;
 	}
 
 	public AIOPublisher() {
@@ -68,7 +87,7 @@ public class AIOPublisher {
 	}
 
 	private void start() {
-
+		this.keepGoing = true;
 		try {
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setCleanSession(false);
@@ -77,33 +96,20 @@ public class AIOPublisher {
 
 			client.connect(options);
 
-			System.out.println("Enter battery voltage, or Q to exit.");
-			boolean go = true;
-			while (go) {
-				String str = userInput("Hit [Return] ");
-				if ("Q".equalsIgnoreCase(str)) {
-					go = false;
-					if (this.client != null && this.client.isConnected()) {
-						try {
-							this.client.disconnect();
-							System.out.println("\nClient disconnected.");
-						} catch (MqttException e) {
-							e.printStackTrace();
-						}
+			while (keepGoing()) {
+				if (client.isConnected()) {
+					try {
+						float voltage = getVoltage();
+						publish(voltage);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
 					}
-					System.out.println("Bye.");
-
 				} else {
-					if (client.isConnected()) {
-						try {
-							float voltage = Float.parseFloat(str);
-							publish(voltage);
-						} catch (NumberFormatException nfe) {
-							nfe.printStackTrace();
-						}
-					} else {
-						System.out.println("... Not connected.");
-					}
+					System.out.println("... Not connected.");
+				}
+				try {
+					Thread.sleep(betweenLoops);
+				} catch (InterruptedException ie) {
 				}
 			}
 		} catch (MqttException e) {
@@ -122,9 +128,32 @@ public class AIOPublisher {
 	}
 
 	public static void main(String... args) {
+
+		verbose = "true".equals(System.getProperty("verbose", "false"));
+
 		final AIOPublisher publisher = new AIOPublisher();
+		Thread batteryThread = new Thread(() -> {
+			try {
+				if (verbose) {
+					System.out.println("Creating BatteryMonitor...");
+				}
+				BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch(), publisher::consumer);
+				publisher.setBatteryMonitor(batteryMonitor);
+				if (verbose) {
+					System.out.println("Creating BatteryMonitor: done");
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		});
+		batteryThread.start();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			publisher.stop();
+			try { // Wiat for the loop in start() to stop.
+				Thread.sleep(Math.round(betweenLoops * 1.25));
+			} catch (InterruptedException ex) {
+			}
 			if (publisher.client != null && publisher.client.isConnected()) {
 				try {
 					publisher.client.disconnect();
@@ -135,7 +164,6 @@ public class AIOPublisher {
 			}
 			System.out.println("Bye...");
 		}));
-
 		publisher.start();
 	}
 }
