@@ -1,7 +1,7 @@
 # How to remotely monitor...
 
 ## A Battery
- This is an example intending to demonstrate how to publish information  gathered from the Raspberry PI.
+ This is an _functioning_ example intending to demonstrate how to publish information  gathered from the Raspberry PI.
  The information here is the tension (aka voltage) of a battery.
  The battery can be in a remote place, and from wherever you are, you want to make sure its level does not
  drop below a given threshold.
@@ -100,6 +100,8 @@ In our case, we would have:
 
 It obviously requires a WebSocket Server.
  NodeJS can be one.
+
+ Could be very convenient for a Local Area Network (LAN), like between devices within the same home for example.
 
 ##### Pros
 - Easy
@@ -243,3 +245,16 @@ Interestingly, the MQTT subscriber mentioned above (`aio.subscribe`) also works 
 Just like we said before, a feed named `battery-pi` has been created on Adafruit.IO:
 
 <img src='./battery-feed.png' alt='Battery feed' title='Battery feed' width='432' height='426'>
+
+For all the samples below, you do not need a FONA. Just a connection to the Internet (Wireless or Ethernet).
+
+###### MQTT
+```bash
+ ./aio.battery.publish olivierld 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
+```
+
+###### REST
+```bash
+ ./aio.battery.post 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
+```
+
