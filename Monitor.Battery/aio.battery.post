@@ -5,7 +5,7 @@ echo like $0 abc8736hgfd78638620ngs
 if [ $# -eq 1 ]
 then
   CP=./build/libs/Monitor.Battery-1.0-all.jar
-  java -Daio.key=$1 -cp $CP sample.rest.PostSwitch
+  java -Daio.key=$1 -cp $CP battery.sample.rest.PostVoltage
 else
   echo Please provide the expected parameter.
 fi

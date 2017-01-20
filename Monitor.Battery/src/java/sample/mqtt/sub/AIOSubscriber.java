@@ -1,4 +1,4 @@
-package mqtt.sub;
+package sample.mqtt.sub;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;

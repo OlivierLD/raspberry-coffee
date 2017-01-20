@@ -126,6 +126,7 @@ section of the `build.gradle` file of this project.
 ##### Cons
 - Requires Internet Network connection
 - MQTT is not directly supported in a browser
+- Needs a reliable connection.
 
 #### Using REST
 REST stands for Representational State Transfer. Has recently gained a lot of popularity.
@@ -141,6 +142,7 @@ not as elegant.
 ##### Pros
 - Can be free
 - Many libraries available.
+- Connection needs to be establish only when used.
 
 ##### Cons
 - Requires Internet Network connection

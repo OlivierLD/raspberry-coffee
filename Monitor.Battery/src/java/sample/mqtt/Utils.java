@@ -1,4 +1,4 @@
-package mqtt;
+package sample.mqtt;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;

@@ -1,6 +1,6 @@
-package mqtt.pub;
+package sample.mqtt.pub;
 
-import mqtt.Utils;
+import sample.mqtt.Utils;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;

@@ -1,4 +1,4 @@
-package mqtt.sub;
+package battery.mqtt.sub;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;

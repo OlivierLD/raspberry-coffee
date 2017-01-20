@@ -1,4 +1,4 @@
-package rest;
+package battery.rest;
 
 import adafruit.io.rest.HttpClient;
 import org.json.JSONObject;
@@ -8,11 +8,11 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PostSwitch {
+public class PostVoltage {
 
 	private static String key = "";
 
-	private String ONOFF_FEED = "onoff";
+	private String BATTERY_FEED = "battery-pi";
 	private boolean DEBUG = true;
 
 	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
@@ -39,44 +39,44 @@ public class PostSwitch {
 		return retString;
 	}
 
-	public void setSwitch(String key, String switchPos) throws Exception {
-		String url = "https://io.adafruit.com/api/feeds/" + ONOFF_FEED + "/data";
+	public void setSwitch(String key, float voltage) throws Exception {
+		String url = "https://io.adafruit.com/api/feeds/" + BATTERY_FEED + "/data";
 		Map<String, String> headers = new HashMap<String, String>(1);
 		headers.put("X-AIO-Key", key);
 		JSONObject value = new JSONObject();
-		value.put("value", switchPos);
+		value.put("value", voltage);
 	  System.out.println("Sending " + value.toString(2));
 		int httpCode = HttpClient.doPost(url, headers, value.toString());
 		if (DEBUG)
 			System.out.println("POST Ret:" + httpCode);
 	}
 
-	public PostSwitch() {
+	public PostVoltage() {
 	}
 
 	public static void main(String... args) {
 
-		PostSwitch.key = System.getProperty("aio.key", "").trim();
+		PostVoltage.key = System.getProperty("aio.key", "").trim();
 
-		if (PostSwitch.key.trim().isEmpty()) {
+		if (PostVoltage.key.trim().isEmpty()) {
 			throw new RuntimeException("Require the key as System variables (-Daio.key)");
 		}
 
 		boolean switchPos = true;
 
 		try {
-			PostSwitch postSwitch = new PostSwitch();
+			PostVoltage postVoltage = new PostVoltage();
 
 			System.out.println("Hit return to toggle the switch, Q to exit.");
 			boolean go = true;
 			while (go) {
-				String str = userInput("Hit [Return] ");
+				String str = userInput("Voltage > ");
 				if ("Q".equalsIgnoreCase(str)) {
 					go = false;
 					System.out.println("Bye.");
 				} else {
-					String data = switchPos ? "ON" : "OFF";
-					postSwitch.setSwitch(PostSwitch.key, data);
+					float data = Float.parseFloat(str);
+					postVoltage.setSwitch(PostVoltage.key, data);
 					switchPos = !switchPos;
 				}
 			}
