@@ -89,7 +89,7 @@ public class InteractiveFona implements FONAClient {
 		}
 
 		System.out.println("Serial Communication.");
-		System.out.println(" ... connect using port " + port + " : " + Integer.toString(br)); // +  ", N, 8, 1.");
+		System.out.println(" ... connect using port " + port + ":" + Integer.toString(br)); // +  ", N, 8, 1.");
 		System.out.println(" ... data received on serial port should be displayed below.");
 
 		// create an instance of the serial communications class

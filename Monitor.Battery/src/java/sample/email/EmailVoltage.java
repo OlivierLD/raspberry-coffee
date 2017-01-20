@@ -1,4 +1,4 @@
-package battery.email;
+package sample.email;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -49,7 +49,7 @@ public class EmailVoltage {
 				dest = sendTo.split(",");
 			} else if ("-help".equals(args[i])) {
 				System.out.println("Usage:");
-				System.out.println("  java battery.email.EmailVoltage -verbose -send:google -sendto:me@home.net,you@yourplace.biz -help");
+				System.out.println("  java sample.email.EmailVoltage -verbose -send:google -sendto:me@home.net,you@yourplace.biz -help");
 				System.exit(0);
 			}
 		}

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 #
 CP=./build/libs/Monitor.Battery-1.0-all.jar
-java -cp $CP sample.fona.InteractiveFona
+OPT=
+OPT="$OPT -Dserial.port=/dev/ttyUSB1"
+OPT="$OPT -Dbaud.rate=9600"
+java -cp $CP $OPT sample.fona.InteractiveFona
 #

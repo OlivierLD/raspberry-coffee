@@ -1,5 +1,7 @@
-package sample.fona;
+package battery.fona;
 
+import adc.ADCObserver;
+import adc.sample.BatteryMonitor;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialPortException;
 import fona.manager.FONAClient;
@@ -10,12 +12,57 @@ import util.TextToSpeech;
 import java.io.IOException;
 
 public class FonaListener implements FONAClient {
+	private static boolean verbose = false;
 	private static FONAManager fona;
+
+	private BatteryMonitor batteryMonitor = null;
+
+	public BatteryMonitor getBatteryMonitor() {
+		return batteryMonitor;
+	}
+
+	public void setBatteryMonitor(BatteryMonitor batteryMonitor) {
+		this.batteryMonitor = batteryMonitor;
+	}
+
+	private float voltage = 0f;
+	private boolean keepGoing = true;
+
+	public void consumer(BatteryMonitor.ADCData adcData) {
+		this.voltage = adcData.getVoltage();
+		if (verbose) {
+			System.out.println(
+							String.format("From ADC Observer: volume %d, value %d, voltage %f",
+											adcData.getVolume(),
+											adcData.getNewValue(),
+											adcData.getVoltage()));
+		}
+	}
+
+	public float getVoltage() {
+		return this.voltage;
+	}
 
 	public static void main(String args[])
 					throws InterruptedException, NumberFormatException, IOException {
-		FonaListener sf = new FonaListener();
-		fona = new FONAManager(sf);
+		FonaListener fonaListener = new FonaListener();
+		Thread batteryThread = new Thread(() -> {
+			try {
+				if (verbose) {
+					System.out.println("Creating BatteryMonitor...");
+				}
+				BatteryMonitor batteryMonitor = new BatteryMonitor(ADCObserver.MCP3008_input_channels.CH0.ch(), fonaListener::consumer);
+				fonaListener.setBatteryMonitor(batteryMonitor);
+				if (verbose) {
+					System.out.println("Creating BatteryMonitor: done");
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		});
+		batteryThread.start();
+
+		fona = new FONAManager(fonaListener);
 
 		FONAManager.setVerbose(false);
 
@@ -30,7 +77,7 @@ public class FonaListener implements FONAClient {
 		}
 
 		System.out.println("Serial Communication.");
-		System.out.println(" ... connect using port " + port + " : " + Integer.toString(br)); // +  ", N, 8, 1.");
+		System.out.println(" ... connect using port " + port + ":" + Integer.toString(br)); // +  ", N, 8, 1.");
 		System.out.println(" ... data received on serial port should be displayed below.");
 
 		try {
@@ -48,15 +95,13 @@ public class FonaListener implements FONAClient {
 
 			final Thread me = Thread.currentThread();
 
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				public void run() {
-					System.out.println();
-					synchronized (me) {
-						me.notify();
-					}
-					System.out.println("Program stopped by user's request.");
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				System.out.println();
+				synchronized (me) {
+					me.notify();
 				}
-			});
+				System.out.println("Program stopped by user's request.");
+			}));
 
 			synchronized (me) {
 				me.wait();
@@ -83,28 +128,24 @@ public class FonaListener implements FONAClient {
 
 	@Override
 	public void recievedSMS(final int sms) {
-		Thread readit = new Thread() {
-			public void run() {
-				try {
-					fona.readMessNum(sms);
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
+		Thread readit = new Thread(() -> {
+			try {
+				fona.readMessNum(sms);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
-		};
+		});
 		readit.start();
 
-		Thread deleteit = new Thread() {
-			public void run() {
-				FONAManager.delay(10f);
-				System.out.println("\t\t>>>> Deleting mess #" + sms);
-				try {
-					fona.deleteSMS(sms);
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
+		Thread deleteit = new Thread(() -> {
+			FONAManager.delay(10f);
+			System.out.println("\t\t>>>> Deleting mess #" + sms);
+			try {
+				fona.deleteSMS(sms);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
-		};
+		});
 		deleteit.start();
 	}
 
@@ -152,6 +193,7 @@ public class FonaListener implements FONAClient {
 	public void readSMS(FONAManager.ReceivedSMS sms) {
 		System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
 		// TODO: This is where you would parse the message and take the appropriate action.
+		// TODO: Call getVoltage here and retrurn the value to the caller if the incoming message required it.
 //	String mess = "Message from " + sms.getFrom() + ", " + sms.getContent();
 		String mess = sms.getContent();
 		TextToSpeech.speak(mess);
@@ -165,15 +207,13 @@ public class FonaListener implements FONAClient {
 	 * @param sendTo Message destination
 	 */
 	public void sendResponse(final String messContent, final String sendTo) {
-		Thread senderThread = new Thread() {
-			public void run() {
-				try {
-					fona.sendSMS(sendTo, messContent);
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
+		Thread senderThread = new Thread(() -> {
+			try {
+				fona.sendSMS(sendTo, messContent);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
-		};
+		});
 		senderThread.start();
 	}
 
