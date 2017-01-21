@@ -16,7 +16,6 @@ import java.util.Properties;
  */
 public class MQTTPublisher implements Forwarder {
 	private MqttClient mqttClient = null;
-	private boolean isConnected = false;
 	private String brokerURL;
 
 	private Properties props;
@@ -76,8 +75,8 @@ public class MQTTPublisher implements Forwarder {
 
 		try {
 			String mess = new String(message);
-			System.out.println(">>> " + mess);
-			if (!mess.isEmpty() && isConnected) {
+			System.out.println("MQTT >>> " + mess);
+			if (!mess.isEmpty()) {
 				if (true) {
 					publishTemperature(12.34F);
 				}

@@ -5,7 +5,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class Subscriber {
 
-	public static final String BROKER_URL = "tcp://192.168.1.136:1883"; 
+	public static final String BROKER_URL = "tcp://192.168.1.136:1883";
 
 	//We have to generate a unique Client id.
 	String clientId = "nmea-sub";
@@ -25,7 +25,7 @@ public class Subscriber {
 			mqttClient.setCallback(new SubscribeCallback());
 			mqttClient.connect();
 			//Subscribe to all subtopics of home
-			final String topic = "nmea/#";
+			final String topic = "nmea/#"; // temperature";
 			mqttClient.subscribe(topic);
 			System.out.println("Subscriber is now listening to " + topic);
 		} catch (MqttException e) {
