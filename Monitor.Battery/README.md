@@ -40,12 +40,14 @@ As long as the _received_ email complies with a given format, it can be parsed a
  You need clone the file named `email.properties.sample` into `email.properties`, and modify it with the details of the email account(s)
  you want to use.
 
+All you need to add to the diagram above is a network connection.
+
  Then use for example
 ```bash
- ./email.voltage -verbose -send:google -sendto:me@home.net,you@yourplace.biz
+ ./email.battery -verbose -send:google -sendto:me@home.net,you@yourplace.biz -loop:6h
 ```
-
-All you need to add to the diagram above is a network connection.
+You will receive an email, in this case every 6 hours, containing the expected battery tension.
+![Email](./email.png "Email")
 
 ##### Pros
 - Free
@@ -68,10 +70,58 @@ The FONA requires a SIM Card.
 - Not Free
 - Not real-time, delayed.
 
+###### At work
+From a terminal, start `./battery.fona`
+```bash
+$ ./battery.fona
+Creating BatteryMonitor...
+Serial Communication.
+ ... connect using port /dev/ttyUSB1:9600
+ ... data received on serial port should be displayed below.
+Opening port [/dev/ttyUSB1:9600]
+Value range: ADC=0 => V=0.0, ADC=1023 => V=15.0
+Port is opened.
+Establishing connection (can take up to 3 seconds).
+From ADC Observer: volume 89, value 915, voltage 13.416422
+FONA Connected!
+Connection established.
+From ADC Observer: volume 86, value 883, voltage 12.947214
+From ADC Observer: volume 84, value 867, voltage 12.712610
+...
+From ADC Observer: volume 81, value 838, voltage 12.287390
+From ADC Observer: volume 83, value 857, voltage 12.565983
+From ADC Observer: volume 86, value 884, voltage 12.961877
+Received mess #8
+From ADC Observer: volume 83, value 851, voltage 12.478005
+From +14157455209, 2 char : V?
+From ADC Observer: volume 89, value 913, voltage 13.387096
+...
+From ADC Observer: volume 86, value 883, voltage 12.947214
+From ADC Observer: volume 82, value 840, voltage 12.316715
+		>>>> Deleting mess #8
+From ADC Observer: volume 86, value 887, voltage 13.005865
+Message #8 deleted:OK
+From ADC Observer: volume 83, value 855, voltage 12.536657
+From ADC Observer: volume 87, value 891, voltage 13.064516
+^C
+Program stopped by user's request.
+Bye!
+$
+```
+
+From your phone, send a message like `V?` (not case sensitive) to the FONA.
+It will reply with the expected tension.
+
+Notice in the console above when the request is received, and when the response is sent.
+
+<!-- ![SMS dialog](./sms.screenshot.png "SMS dialog") -->
+<img src='./sms.screenshot.png' alt='SMS dialog' title='SMS dialog' width='240' height='400'>
+
+
 ### Outernet ?
 [Outernet](https://outernet.is/) might also be something to consider, if you are _really_ out of reach of any kind of network (at sea, far in the desert, etc).
 
-More soon abouyt that one...
+More soon about that one...
 
 ##### Pros
 - Available everywhere on Earth.
@@ -166,6 +216,10 @@ not as elegant.
 - Requires Internet Network connection
 - Request/Response protocol
 
+##### Note
+Again, MQTT requires a persistent connection.
+REST is connetced _only_ when an exchange happens.
+
 #### Example with Adafruit.IO
 You need an Adafruit-IO account (free).
 Using mine, I've created a feed named `onoff`, looking as follow on the [Adafruit-IO web site](http://io.adafruit.com):
@@ -255,8 +309,9 @@ For all the samples below, you do not need a FONA. Just a connection to the Inte
  ./aio.battery.publish olivierld 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
 ```
 
+You would see the widget above reacting as the tension is read from the Raspberry PI.
 ###### REST
 ```bash
  ./aio.battery.post 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
 ```
-
+The widget reacts every time you hit return.
