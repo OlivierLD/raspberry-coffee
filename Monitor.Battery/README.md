@@ -120,7 +120,7 @@ $
 ```
 
 From your phone, send a message like `V?` (not case sensitive) to the FONA.
-It will reply with the expected tension.
+It will reply with the expected tension, as shown below.
 
 Notice in the console above when the request is received, and when the response is sent (before deleting the incoming message).
 
@@ -173,18 +173,20 @@ It obviously requires a WebSocket Server.
 - Requires Internet Network connection
 - Requires a WebSocket server
 
+... more to come here.
+
 ### IoT (Internet Of Things)
 
 #### Using MQTT
 Now we 've talked about the WebSocket approach above, the Internet Of Things (IoT) one
-flows naturally. MQTT implements a pure publish/subscribe dialog, very easy to deal with (even easier than WebSocket).
+flows naturally. MQTT (Message Queuing Telemetry Transport) implements a pure publish/subscribe dialog, very easy to deal with (even easier than WebSocket).
 
 There [here](http://www.hivemq.com/) a lot of good readings about MQTT.
 
 It also requires a server - which we will call an IoT server - where events will be published,
 from the Raspberry PI in our case. Then whatever client understanding the protocol(s) available on
 the server can read those events, and get the corresponding data.
-More and more IoT servers support the MQTT protocol (Message Queuing Telemetry Transport).
+More and more IoT servers support the MQTT protocol.
 `Mosquitto` runs fine on the Raspberry PI, look [here](http://hackaday.com/2016/05/09/minimal-mqtt-building-a-broker/) to see how to install it.
 
 Several IoT servers are free to access, like [Adafruit.IO](https://io.adafruit.com/). You
