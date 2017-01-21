@@ -138,6 +138,9 @@ public class FonaListener implements FONAClient {
 
 	@Override
 	public void recievedSMS(final int sms) {
+		if (verbose) {
+			System.out.println("Received mess #" + sms);
+		}
 		Thread readit = new Thread(() -> {
 			try {
 				fona.readMessNum(sms);
@@ -201,7 +204,9 @@ public class FonaListener implements FONAClient {
 
 	@Override
 	public void readSMS(FONAManager.ReceivedSMS sms) {
-		System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
+		if (verbose) {
+			System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
+		}
 		String mess = sms.getContent();
 		if ("V?".equalsIgnoreCase(mess)) {
 			String response = String.format("Voltage is %s.", VOLT_FMT.format(getVoltage()));
