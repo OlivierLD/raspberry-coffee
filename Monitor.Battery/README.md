@@ -1,7 +1,7 @@
 # How to remotely monitor...
 
-## A Battery
- This is an _functioning_ example intending to demonstrate how to publish information  gathered from the Raspberry PI.
+## ...A Battery
+ This is an _functioning_ example intending to demonstrate how to publish information gathered from the Raspberry PI.
  The information here is the tension (aka voltage) of a battery.
  The battery can be in a remote place, and from wherever you are, you want to make sure its level does not
  drop below a given threshold.
@@ -315,3 +315,7 @@ You would see the widget above reacting as the tension is read from the Raspberr
  ./aio.battery.post 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
 ```
 The widget reacts every time you hit return.
+
+### Next?
+There is a lot more to do with the options and features described above, specially in the User Interface area.
+But this is setting the ground for your imagination...
