@@ -170,7 +170,6 @@ It obviously requires a WebSocket Server.
 - Great for clients, notified without having to request a message to get it.
 
 ##### Cons
-- Requires Internet Network connection
 - Requires a WebSocket server
 
 ... more to come here.
