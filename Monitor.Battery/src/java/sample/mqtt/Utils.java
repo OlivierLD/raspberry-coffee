@@ -4,10 +4,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collections;
 import java.util.Random;
+
 public class Utils {
 
 	private static final Random random = new Random();
-
 
 	public static String getMacAddress() {
 		String result = "";
