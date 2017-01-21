@@ -1,11 +1,13 @@
 # How to remotely monitor...
 
 ## ...A Battery
- This is an _functioning_ example intending to demonstrate how to publish information gathered from the Raspberry PI.
+ This is a _functioning_ example intending to demonstrate how to publish information gathered from the Raspberry PI.
  The information here is the tension (aka voltage) of a battery.
  The battery can be in a remote place, and from wherever you are, you want to make sure its level does not
  drop below a given threshold.
 
+ All the code - mentioned below and contained in this project - can be run for real.
+ 
 ##### Read the tension
  As the Raspberry PI's GPIO pins are all digital ones, to read the battery's tension, you need an Analog to Digital Converter (ADC).
  As you can see in the Fritzing diagram below, we will use here an MCP3008. It is cheap, and good enough for our purpose.
