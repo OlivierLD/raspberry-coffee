@@ -30,6 +30,13 @@ Battery Voltage can be described by a sentence like
 Many NMEA parsers are available. NMEA could be an option to consider, in case the
 management of the output of the trinket above was to be automated.
 
+## Before you run the commands
+After cloning the git repo, to run everything this document is about, all you need is to compile and archive the code:
+```bash
+ ../gradlew clean shadowJar
+```
+You're good.
+
 ### By email
 If there is Internet access in the location where the trinket is, and
 if you have an email account, then sending the battery voltage by email could be an option, keeping in mind
@@ -115,7 +122,7 @@ $
 From your phone, send a message like `V?` (not case sensitive) to the FONA.
 It will reply with the expected tension.
 
-Notice in the console above when the request is received, and when the response is sent.
+Notice in the console above when the request is received, and when the response is sent (before deleting the incoming message).
 
 <!-- ![SMS dialog](./sms.screenshot.png "SMS dialog") -->
 <img src='./sms.screenshot.png' alt='SMS dialog' title='SMS dialog' width='240' height='400'>
@@ -233,11 +240,6 @@ Using mine, I've created a feed named `onoff`, looking as follow on the [Adafrui
 You will need two things to go further:
 - Your Adafruit.IO `username`
 - Your Adafruit.IO `key`
-
-The classes of the project must abviously have been compiled, and archived:
-```bash
- ../gradlew --daemon clean shadowJar
-```
 
 ##### Using MQTT
 Then you can run the Publisher part, providing your `username` and `key`:
