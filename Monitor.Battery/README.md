@@ -167,7 +167,7 @@ It obviously requires a WebSocket Server.
 - Easy
 - Real time
 - Supported on clients and servers.
-- Great for clients, notified without having to request a message to it.
+- Great for clients, notified without having to request a message to get it.
 
 ##### Cons
 - Requires Internet Network connection
