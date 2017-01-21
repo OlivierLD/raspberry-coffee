@@ -76,6 +76,7 @@ public class MQTTPublisher implements Forwarder {
 
 		try {
 			String mess = new String(message);
+			System.out.println(">>> " + mess);
 			if (!mess.isEmpty() && isConnected) {
 				if (true) {
 					publishTemperature(12.34F);
