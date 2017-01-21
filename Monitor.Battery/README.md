@@ -134,6 +134,8 @@ just need to create your free account, and remember your Token.
 To access MQTT from Java, I use [paho](http://www.eclipse.org/paho/), as you can see in the `dependencies`
 section of the `build.gradle` file of this project.
 
+An MQTT server like `Mosquitto` is also perfectly suited for a LAN configuration.
+
 ##### Pros
 - Can be free
 - Flexible
