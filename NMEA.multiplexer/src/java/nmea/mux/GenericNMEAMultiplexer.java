@@ -780,7 +780,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									.findFirst();
 					if (!opFwd.isPresent()) {
 						try {
-							// Create
+							// Create dynamic forwarder
 							Object dynamic = Class.forName(forwarderClass).newInstance();
 							if (dynamic instanceof Forwarder) {
 								Forwarder forwarder = (Forwarder)dynamic;

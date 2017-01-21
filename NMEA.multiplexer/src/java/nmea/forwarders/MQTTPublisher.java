@@ -13,20 +13,34 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Properties;
 
+/**
+ * For dynamic loading
+ */
 public class MQTTPublisher implements Forwarder {
 	private MqttClient mqttClient = null;
 	private boolean isConnected = false;
 	private String brokerURL;
 
+	private Properties props;
+
 	private final static NumberFormat TEMP_FMT = new DecimalFormat("##0.00");
 	public static final String TOPIC_TEMPERATURE = "nmea/temperature";
 
 
-	/**
-	 * @param brokerURL like tcp://hostname:port
-	 * @throws Exception
+	public MQTTPublisher() throws Exception {
+	}
+
+	/*
+	 * brokerURL like tcp://hostname:port
 	 */
-	public MQTTPublisher(String brokerURL) throws Exception {
+	private void init() {
+		if (props == null) {
+			throw new RuntimeException("Need props!");
+		}
+		String brokerURL = props.getProperty("broker.url");
+		if (brokerURL == null) {
+			throw new RuntimeException("No broker.url found in the props...");
+		}
 		this.brokerURL = brokerURL;
 		try {
 			MqttConnectOptions options = new MqttConnectOptions();
@@ -47,6 +61,11 @@ public class MQTTPublisher implements Forwarder {
 
 	@Override
 	public void write(byte[] message) {
+
+		if (mqttClient == null) {
+			init();
+		}
+
 		try {
 			String mess = new String(message);
 			if (!mess.isEmpty() && isConnected) {
@@ -99,5 +118,6 @@ public class MQTTPublisher implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		this.props = props;
 	}
 }
