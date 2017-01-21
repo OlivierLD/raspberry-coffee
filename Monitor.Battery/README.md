@@ -7,7 +7,7 @@
  drop below a given threshold.
 
  All the code - mentioned below and contained in this project - can be run for real.
- 
+
 ##### Read the tension
  As the Raspberry PI's GPIO pins are all digital ones, to read the battery's tension, you need an Analog to Digital Converter (ADC).
  As you can see in the Fritzing diagram below, we will use here an MCP3008. It is cheap, and good enough for our purpose.
@@ -16,8 +16,9 @@
  This is where we have several options, which we discuss below.
 
 ### The battery monitoring trinket
+How to build and connect:
+
 ![The hardware](./BatteryMonitor.png "The Hardware")
-How to build and connect.
 
 #### NMEA?
 NMEA stands for National Marine Electronics Association. It is one of the oldest IT standards.
@@ -220,7 +221,7 @@ not as elegant.
 
 ##### Note
 Again, MQTT requires a persistent connection.
-REST is connetced _only_ when an exchange happens.
+REST is connected _only_ when an exchange happens.
 
 #### Example with Adafruit.IO
 You need an Adafruit-IO account (free).
@@ -239,11 +240,11 @@ The classes of the project must abviously have been compiled, and archived:
 ```
 
 ##### Using MQTT
-Then you can run the Publisher part, providing you `username` and `key`:
+Then you can run the Publisher part, providing your `username` and `key`:
 ```bash
  ./aio.publish olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
 ```
-Everytime you hit `[Return]`, you should see the switch toggling. Hit `Q` to terminate the program.
+Everytime you hit `[Return]`, you should see the switch toggling in the web page. Hit `Q` to terminate the program.
 ```bash
  ./aio.publish olivierld 54xxx7678yyy93f2ezzzc45d62aaaae9f8056
  Usage:
