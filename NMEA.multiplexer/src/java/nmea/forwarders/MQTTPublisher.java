@@ -5,8 +5,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.text.DecimalFormat;
@@ -33,7 +31,7 @@ public class MQTTPublisher implements Forwarder {
 	/*
 	 * brokerURL like tcp://hostname:port
 	 */
-	private void init() {
+	private void init() throws Exception {
 		if (props == null) {
 			throw new RuntimeException("Need props!");
 		}
@@ -42,16 +40,22 @@ public class MQTTPublisher implements Forwarder {
 			throw new RuntimeException("No broker.url found in the props...");
 		}
 		this.brokerURL = brokerURL;
+
+		try {
+
+			mqttClient = new MqttClient(this.brokerURL, "nmea-pub");
+
+		} catch (MqttException e) {
+			throw e;
+		}
+
 		try {
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setCleanSession(false);
 //		options.setWill(client.getTopic("home/LWT"), "I'm gone :(".getBytes(), 0, false); // LWT: Last Will and Testament
 			mqttClient.connect(options);
-		} catch (MqttException e) {
-			e.printStackTrace();
-			System.exit(1);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 
@@ -63,7 +67,11 @@ public class MQTTPublisher implements Forwarder {
 	public void write(byte[] message) {
 
 		if (mqttClient == null) {
-			init();
+			try {
+				init();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 
 		try {
