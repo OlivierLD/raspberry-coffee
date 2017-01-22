@@ -30,12 +30,13 @@ Battery Voltage can be described by a sentence like
 Many NMEA parsers are available. NMEA could be an option to consider, in case the
 management of the output of the trinket above was to be automated.
 
-## Before you run the commands
+## Before you run anything
 After cloning the git repo, to run everything this document is about, all you need is to compile and archive the code:
 ```bash
  ../gradlew clean shadowJar
 ```
-You're good.
+This requires Java 8.
+If no error or wacky message shows up, you're good.
 
 ### By email
 If there is Internet access in the location where the trinket is, and
