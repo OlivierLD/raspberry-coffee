@@ -1,12 +1,14 @@
 package nmea.forwarders;
 
+import nmea.parser.GeoPos;
+import nmea.parser.RMC;
+import nmea.parser.StringParsers;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
-import java.net.URI;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Properties;
@@ -21,8 +23,9 @@ public class MQTTPublisher implements Forwarder {
 	private Properties props;
 
 	private final static NumberFormat TEMP_FMT = new DecimalFormat("##0.00");
-	public static final String TOPIC_TEMPERATURE = "nmea/temperature";
-
+	public static final String TOPIC_AIR_TEMPERATURE = "nmea/airTemperature";
+	public static final String TOPIC_WATER_TEMPERATURE = "nmea/waterTemperature";
+	public static final String TOPIC_POSITION = "nmea/position";
 
 	public MQTTPublisher() throws Exception {
 	}
@@ -51,7 +54,7 @@ public class MQTTPublisher implements Forwarder {
 		try {
 			MqttConnectOptions options = new MqttConnectOptions();
 			options.setCleanSession(false);
-//		options.setWill(client.getTopic("home/LWT"), "I'm gone :(".getBytes(), 0, false); // LWT: Last Will and Testament
+			options.setWill(mqttClient.getTopic("nmea/LWT"), "I'm gone.".getBytes(), 0, false); // LWT: Last Will and Testament
 			mqttClient.connect(options);
 		} catch (Exception e) {
 			throw e;
@@ -75,10 +78,23 @@ public class MQTTPublisher implements Forwarder {
 
 		try {
 			String mess = new String(message);
-			System.out.println("MQTT >>> " + mess);
 			if (!mess.isEmpty()) {
-				if (true) {
-					publishTemperature(12.34F);
+				String sentenceId = StringParsers.getSentenceID(mess);
+				switch (sentenceId) {
+					case "MTA":
+						double airTemp = StringParsers.parseMTA(mess);
+						publishAirTemperature(airTemp);
+						break;
+					case "MTW":
+						double waterTemp = StringParsers.parseMTW(mess);
+						publishWaterTemperature(waterTemp);
+						break;
+					case "RMC":
+						RMC rmc = StringParsers.parseRMC(mess);
+						publishPosition(rmc.getGp());
+						break;
+					default: // TODO: etc...
+						break;
 				}
 			}
 		} catch (Exception ex) {
@@ -86,13 +102,26 @@ public class MQTTPublisher implements Forwarder {
 		}
 	}
 
-	private void publishTemperature(float temp) throws MqttException {
-		final MqttTopic temperatureTopic = mqttClient.getTopic(TOPIC_TEMPERATURE);
+	private void publishAirTemperature(double temp) throws MqttException {
+		final MqttTopic temperatureTopic = mqttClient.getTopic(TOPIC_AIR_TEMPERATURE);
 		final String temperature = String.format("%s°C", TEMP_FMT.format(temp));
 		temperatureTopic.publish(new MqttMessage(temperature.getBytes()));
 		System.out.println("Published data. Topic: " + temperatureTopic.getName() + "  Message: " + temperature);
 	}
 
+	private void publishWaterTemperature(double temp) throws MqttException {
+		final MqttTopic temperatureTopic = mqttClient.getTopic(TOPIC_WATER_TEMPERATURE);
+		final String temperature = String.format("%s°C", TEMP_FMT.format(temp));
+		temperatureTopic.publish(new MqttMessage(temperature.getBytes()));
+		System.out.println("Published data. Topic: " + temperatureTopic.getName() + "  Message: " + temperature);
+	}
+
+	private void publishPosition(GeoPos pos) throws MqttException {
+		final MqttTopic temperatureTopic = mqttClient.getTopic(TOPIC_POSITION);
+		final String temperature = String.format("%s", pos.toString());
+		temperatureTopic.publish(new MqttMessage(temperature.getBytes()));
+		System.out.println("Published data. Topic: " + temperatureTopic.getName() + "  Message: " + temperature);
+	}
 
 	@Override
 	public void close() {
