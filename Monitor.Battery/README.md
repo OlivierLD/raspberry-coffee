@@ -180,7 +180,7 @@ It obviously requires a WebSocket Server.
 Now we 've talked about the WebSocket approach above, the Internet Of Things (IoT) one
 flows naturally. MQTT (Message Queuing Telemetry Transport) implements a pure publish/subscribe dialog, very easy to deal with (even easier than WebSocket).
 
-There [here](http://www.hivemq.com/) a lot of good readings about MQTT.
+There is [here](http://www.hivemq.com/) a lot of good readings about MQTT.
 
 It also requires a server - which we will call an IoT server - where events will be published,
 from the Raspberry PI in our case. Then whatever client understanding the protocol(s) available on
