@@ -15,6 +15,7 @@ import java.util.Properties;
 
 /**
  * For dynamic loading
+ * Requires a file like mqtt.properties to provide the broker url.
  */
 public class MQTTPublisher implements Forwarder {
 	private MqttClient mqttClient = null;

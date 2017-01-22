@@ -119,7 +119,7 @@ Positive filters are linked with and <b>or</b>, Negative ones with an <b>and</b>
 
 A (sentence) filter like `"HDM", "GLL", "~RMC", "~XDR"` would mean
 ```
-( HDM or GLL) and (not RMC and not XDR)
+(HDM or GLL) and (not RMC and not XDR)
 ```
 It is the user's responsibility not to have contradiction in the filters, like `[ "GLL", "~GLL" ]`,
 no verification is done in this area.
@@ -412,6 +412,11 @@ Use the `Custom` label when creating them.
 They will show up in the admin interface, with their id in _italic_.
 ![Admin Web UI](./dynamic.png "Admin GUI")
 Notice the line that says `skeleton`.
+
+Among the forwarders available in this project some are to be dynamically loaded.
+ - SSD1306Processor
+ - MQTTPublisher (a cool one, for IoT)
+ - etc... list keeps growing.
 
 ## Open Issues
 - UDP client
