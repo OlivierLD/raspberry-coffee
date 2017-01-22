@@ -77,7 +77,7 @@ The FONA requires a SIM Card.
 - Can be available where Internet is not
 
 ##### Cons
-- Not Free
+- Not Free (you need a SIM Card)
 - Not real-time, delayed.
 
 ###### At work
