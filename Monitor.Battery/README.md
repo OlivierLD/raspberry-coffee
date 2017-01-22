@@ -152,7 +152,7 @@ You go to the airline's web site, you navigate to the 'Flight status' page, and
 you probably find your information. In case the flight status changes, you need to _refresh_ your page
 to see it. With a publish/subscribe protocol (like WebSocket), you would subscribe to an
 event like `flight-status-update`, and whenever such an update happens on the server side, the
-correspondinbg message would be sent to your browser, without you having to request it.
+corresponding message would be sent to your browser, without you having to request it.
 
 In our case, we would have:
 - The Raspberry PI publishing events to a WebSocket server
