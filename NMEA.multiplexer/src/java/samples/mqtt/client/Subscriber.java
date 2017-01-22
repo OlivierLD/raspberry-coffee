@@ -5,9 +5,8 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 
 public class Subscriber {
 
-	public static final String BROKER_URL = "tcp://192.168.1.136:1883";
+	public static final String BROKER_URL = "tcp://192.168.1.136:1883"; // Mosquitto Server
 
-	//We have to generate a unique Client id.
 	String clientId = "nmea-sub";
 	private MqttClient mqttClient;
 
@@ -37,5 +36,13 @@ public class Subscriber {
 	public static void main(String... args) {
 		final Subscriber subscriber = new Subscriber();
 		subscriber.start();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			try {
+				System.out.println("Bye.");
+				subscriber.mqttClient.disconnect();
+			} catch (MqttException e) {
+				e.printStackTrace();
+			}
+		}));
 	}
 }
