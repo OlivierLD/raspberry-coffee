@@ -1,6 +1,8 @@
 # How to remotely monitor...
 
 ## ...A Battery
+ Options and possibilities to transmit data
+
  This is a _functioning_ example intending to demonstrate how to publish information gathered from the Raspberry PI.
  The information here is the tension (aka voltage) of a battery.
  The battery can be in a remote place, and from wherever you are, you want to make sure its level does not
