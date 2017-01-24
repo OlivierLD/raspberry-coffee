@@ -4,8 +4,6 @@ import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
 
-import java.io.FileOutputStream;
-
 import java.net.URI;
 
 import org.java_websocket.client.WebSocketClient;

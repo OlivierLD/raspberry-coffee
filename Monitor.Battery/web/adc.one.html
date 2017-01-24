@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>ADC / WebSockets</title>
+        <script type="text/javascript" src="widgets/AnalogDisplay.js"></script>
+        <style>
+        * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
+        p { line-height:18px; }
+        </style>
+
+        <script type="text/javascript">
+        var displayValue;
+        var statusFld;
+        
+        window.onload = function() {
+          displayValue = new AnalogDisplay('valueCanvas', 100, 15, 1, 0.1, true, 40);
+          statusFld = document.getElementById("status");
+        };
+        </script>
+    </head>
+    <body>
+      <table width="100%">
+        <tr>
+          <td valign="top"><h2>ADC on WebSocket</h2></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top">
+            <canvas id="valueCanvas" width="240" height="220" title="Tension value"></canvas>
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+            <div id="status" style="padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 80px;"></div>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" align="right"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
+        </tr>
+      </table>
+      <hr>
+      <script src="./client.adc.js"></script>
+    </body>
+</html>

@@ -23,8 +23,12 @@ CP=./build/libs/NMEA.multiplexer-1.0-all.jar
 # CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
 # For JFR
-JFR_FLAGS="-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=10m,filename=nmea.jfr"
+JFR_FLAGS=
+# JFR_FLAGS="-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=10m,filename=nmea.jfr"
+# For remote debugging
+REMOTE_DEBUG_FLAGS=
+# REMOTE_DEBUG_FLAGS="$REMOTE_DEBUG_FLAGS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
 #
 # use sudo on Raspberry PI
-java $JAVA_OPTIONS $JFR_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+java $JAVA_OPTIONS $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 #

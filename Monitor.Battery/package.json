@@ -1,20 +1,21 @@
 {
-  "name": "node-nmea",
+  "name": "node-battery",
   "version": "0.0.1",
-  "description": "NMEA WebSocket on nodejs",
+  "description": "Battery Monitoring on nodejs",
   "keywords": [
     "RaspberryPI",
     "WebSocket",
-    "NMEA"
+    "Battery",
+    "Monitoring"
   ],
   "license": "MIT",
   "dependencies": {
     "websocket": "^1.0.23"
   },
-  "main": "wsnmea.js",
+  "main": "wsbattery.js",
   "devDependencies": {},
   "scripts": {
-    "start": "node wsnmea.js"
+    "start": "node wsbattery.js"
   },
   "repository": {
     "type": "git",
