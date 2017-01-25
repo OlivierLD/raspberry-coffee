@@ -3,6 +3,7 @@ package battery.ws;
 import adc.ADCObserver;
 import adc.sample.BatteryMonitor;
 
+import java.nio.channels.NotYetConnectedException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -109,7 +110,11 @@ public class WSPublisher {
 	}
 
 	private void publish(float voltage) {
-		webSocketClient.send(VOLT_FMT.format(voltage));
+		try {
+			webSocketClient.send(VOLT_FMT.format(voltage));
+		} catch (NotYetConnectedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String... args) {
