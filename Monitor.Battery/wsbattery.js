@@ -57,7 +57,17 @@ var handler = function(req, res) {
         console.log("Search: [" + prms.search + "]");
         console.log("-------------------------------");
     }
-    if (req.url.startsWith("/web/")) { // Static resource
+    if (req.url === "/favicon.ico") {
+        fs.readFile(__dirname + '/web/favicon.ico',
+            function (err, data) {
+                if (err) {
+                    res.writeHead(500);
+                    return res.end('Error loading ' + resource);
+                }
+                res.writeHead(200, {'Content-Type': "image/ico"});
+                res.end(data, 'binary');
+            });
+    } else if (req.url.startsWith("/web/")) { // Static resource
         var resource = req.url.substring("/web/".length);
         if (resource.indexOf("?") > -1) {
             resource = resource.substring(0, resource.indexOf("?"));
@@ -101,7 +111,7 @@ var handler = function(req, res) {
                     res.end(data.toString().replace('$PORT$', port.toString())); // Replace $PORT$ with the actual port value.
                 }
             });
-    } else if (req.url == "/") {
+    } else if (req.url === "/") {
         if (req.method === "POST") {
             var data = "";
             console.log("---- Headers ----");
