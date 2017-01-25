@@ -166,6 +166,31 @@ It obviously requires a WebSocket Server.
 
  Could be very convenient for a Local Area Network (LAN), like between devices within the same home for example.
 
+###### To run it on your LAN
+You need to have installed NodeJS on the Raspberry PI (Google it if needed, you'll find how).
+ First time installation:
+```bash
+ npm install
+ ```
+
+Then, start the server:
+```bash
+ npm start
+```
+or
+```bash
+ node wsbattery.js
+```
+
+After that you start the script named `ws.publish.battery`
+```bash
+ ./ws.publish.battery
+```
+and from a browser, go to `http://localhost:9876/web/adc.one.html`.
+If you access the page remotely, replace `localhost` with the address of the Raspberry PI.
+
+![WebSockets](./ws.battery.png "WebSocket")
+
 ##### Pros
 - Easy
 - Real time
@@ -174,8 +199,6 @@ It obviously requires a WebSocket Server.
 
 ##### Cons
 - Requires a WebSocket server
-
-... more to come here.
 
 ### IoT (Internet Of Things)
 
@@ -219,7 +242,6 @@ It makes no difference when you publish en event, but it would make one for a cl
 In the case of WebSocket or MQTT, the client would be notified by the server. In the case of REST, the client would need
 to _request_ a _response_ to get it. Polling the server is still possible, but certainly
 not as elegant.
-
 
 ##### Pros
 - Can be free

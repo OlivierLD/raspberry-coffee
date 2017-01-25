@@ -113,7 +113,7 @@ public class WSPublisher {
 	private void publish(float voltage) {
 		try {
 			webSocketClient.send(VOLT_FMT.format(voltage));
-			if (verbose || true) {
+			if (verbose) {
 				System.out.println(String.format("Message sent:%f, %s", voltage, VOLT_FMT.format(voltage)));
 			}
 		} catch (/* NotYetConnected */ Exception e) {
