@@ -168,6 +168,7 @@ It obviously requires a WebSocket Server.
 
 ###### To run it on your LAN
 You need to have installed NodeJS on the Raspberry PI (Google it if needed, you'll find how).
+
  First time installation (local WebSocket server):
 ```bash
  npm install
