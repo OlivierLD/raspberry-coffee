@@ -60,7 +60,7 @@ public class WSPublisher {
 
 	private void initWebSocketConnection(String serverURI) {
 		try {
-			webSocketClient = new WebSocketClient(new URI(serverURI), (Draft) null) {
+			webSocketClient = new WebSocketClient(new URI(serverURI)) {
 				@Override
 				public void onOpen(ServerHandshake serverHandshake) {
 					// TODO Implement this method
