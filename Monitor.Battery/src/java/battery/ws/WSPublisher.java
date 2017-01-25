@@ -127,7 +127,6 @@ public class WSPublisher {
 		verbose = "true".equals(System.getProperty("verbose", "false"));
 
 		final WSPublisher publisher = new WSPublisher();
-		publisher.start();
 		Thread batteryThread = new Thread(() -> {
 			try {
 				if (verbose) {
