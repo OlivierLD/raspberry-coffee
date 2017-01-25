@@ -65,6 +65,7 @@ public class WSPublisher {
 				@Override
 				public void onOpen(ServerHandshake serverHandshake) {
 					// TODO Implement this method
+					System.out.println("Connected");
 				}
 
 				@Override
@@ -112,12 +113,17 @@ public class WSPublisher {
 	private void publish(float voltage) {
 		try {
 			webSocketClient.send(VOLT_FMT.format(voltage));
-		} catch (NotYetConnectedException e) {
-			e.printStackTrace();
+			if (verbose || true) {
+				System.out.println(String.format("Message sent:%f, %s", voltage, VOLT_FMT.format(voltage)));
+			}
+		} catch (/* NotYetConnected */ Exception e) {
+			System.err.println("Ooops:" + e.toString());
+//			e.printStackTrace();
 		}
 	}
 
 	public static void main(String... args) {
+		System.out.println("Battery Monitoring!");
 		verbose = "true".equals(System.getProperty("verbose", "false"));
 
 		final WSPublisher publisher = new WSPublisher();
