@@ -187,11 +187,13 @@ After that you start the script named `ws.publish.battery`
 ```bash
  ./ws.publish.battery
 ```
-and from a browser, go to `http://localhost:9876/web/adc.one.html`.
+and from a browser, go to `http://localhost:9876/web/adc.one.html`. NodeJS is hosting both the WebSocket server and an http server.
 If you access the page remotely, replace `localhost` with the address of the Raspberry PI.
 
 <!-- ![WebSockets](./ws.battery.png "WebSocket") -->
 <img src="./ws.battery.png" alt="WebSocket" title="WebSocket" width="493" height="444">
+
+Every second, the WebSocket server pushes a message to the connected client(s). The display above is updated accordingly.
 
 ##### Pros
 - Easy
