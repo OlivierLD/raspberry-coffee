@@ -1,10 +1,9 @@
 "use strict";  // http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
 /**
- * WebSocket server for NMEA
- * Static requests must be prefixed with /data/, like in http://machine:9876/data/console.html
+ * WebSocket server for Battery Monitoring sample
+ * Static requests must be prefixed with /web/, like in http://machine:9876/web/console.html
  *
  * When a string is received, it is re-broadcasted to all the connected WS clients.
- *
  */
 
 // Optional. You will see this name in eg. 'ps' or 'top' command
