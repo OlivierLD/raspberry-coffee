@@ -190,7 +190,7 @@ and from a browser, go to `http://localhost:9876/web/adc.one.html`.
 If you access the page remotely, replace `localhost` with the address of the Raspberry PI.
 
 <!-- ![WebSockets](./ws.battery.png "WebSocket") -->
-<img src="./ws.battery.png" alt="WebSocket" title="WebSocket">
+<img src="./ws.battery.png" alt="WebSocket" title="WebSocket" width="493" height="444">
 
 ##### Pros
 - Easy
