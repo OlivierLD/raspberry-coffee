@@ -409,7 +409,7 @@ AIS Message type 2:
 	}
 
 	public static void main(String[] args) throws Exception {
-		String dataFileName = "data/nmea.ais.nmea"; // "nmea.dump.txt" , "nmea.ais.txt"
+		String dataFileName = "sample.data/nais400-merrimac.log";
 		if (args.length > 0)
 			dataFileName = args[0];
 
