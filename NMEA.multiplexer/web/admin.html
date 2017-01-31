@@ -52,7 +52,7 @@
 
         // Executed at startup
         (function () {
-            errManager.display = errorHandler; // in restskill.js
+            errManager.display = errorHandler; // in resskill.js
         })();
 
         var channelSelectManager = function() {
@@ -68,6 +68,13 @@
         var computerSelectManager = function() {
             var x = document.getElementById("computer-select").value;
             manageComputerSelection(x);
+        };
+
+        var showRESTData = false;
+        var showHideRESTData = function() {
+            showRESTData = !showRESTData;
+            $("#raw-data").css('display', showRESTData ? 'inline' : 'none');
+            $("#show-hide-raw-data").text(showRESTData ? "- Hide REST Data" : "+ Show REST Data");
         };
 
         var manageChannelSelection = function(selected) {
@@ -540,6 +547,8 @@
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
     </div>
     <div id="lists" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
+    <div id="show-hide-raw-data" onclick="showHideRESTData();" style="cursor: pointer; margin-top: 5px;">+ Show REST Data</div>
+    <div id="raw-data" style="display: none; padding: 1px; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
     </p>
     <p>
       <button onclick="showAddChannel();">Add a Channel</button>&nbsp;

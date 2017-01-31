@@ -177,7 +177,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"Update computer"),
 					new Operation(
 									"PUT",
-									"/mux-verbose/{pos}",
+									"/mux-verbose/{state}",
 									this::putMuxVerbose,
 									"Update Multiplexer verbose"),
 					new Operation(

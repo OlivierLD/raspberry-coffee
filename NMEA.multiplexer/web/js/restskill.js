@@ -6,6 +6,8 @@ var errManager = {
   display: alert
 };
 
+var RESTPayload = {};
+
 var getDeferred = function(url, timeout, verb, happyCode, data) {
     var deferred = $.Deferred(),  // a jQuery deferred
         url = url,
@@ -99,6 +101,7 @@ var serialPortList = function() {
   getData.done(function(value) {
     console.log("Done:", value);
     var json = JSON.parse(value);
+    setRESTPayload(json);
     var html = "<h5>Available Serial Ports</h5>";
     if (json.length > 0) {
         html += "<table>";
@@ -129,11 +132,24 @@ var buildList = function(arr) {
     return str;
 };
 
+var setRESTPayload = function(payload) {
+  RESTPayload = payload;
+  if (showRESTData) {
+      displayRawData();
+  }
+};
+
+var displayRawData = function() {
+    var stringified = JSON.stringify(RESTPayload, null, 2);
+    $("#raw-data").html('<pre>' + stringified + '</pre>');
+};
+
 var channelList = function() {
     var getData = getChannels();
     getData.done(function(value) {
         console.log("Done:", value);
         var json = JSON.parse(value);
+        setRESTPayload(json);
         var html = "<h5>Reads from</h5>" +
             "<table>";
         html += "<tr><th>Type</th><th>Parameters</th><th>Device filters</th><th>Sentence filters</th><th>verb.</th></tr>"
@@ -187,6 +203,7 @@ var forwarderList = function() {
     getData.done(function(value) {
         console.log("Done:", value);
         var json = JSON.parse(value);
+        setRESTPayload(json);
         var html = "<h5>Writes to</h5>" +
             "<table>";
         html += "<tr><th>Type</th><th>Parameters</th></th></tr>"
@@ -244,6 +261,7 @@ var computerList = function() {
     getData.done(function(value) {
         console.log("Done:", value);
         var json = JSON.parse(value);
+        setRESTPayload(json);
         var html = "<h5>Computes and writes</h5>" +
             "<table>";
         html += "<tr><th>Type</th><th>Parameters</th><th>verb.</th></tr>"
@@ -278,6 +296,7 @@ var createChannel = function(channel) {
   var postData = addChannel(channel);
     postData.done(function(value) {
         console.log("Done:", value);
+        setRESTPayload(value);
         channelList(); // refetch
     });
     postData.fail(function(error, errmess) {
@@ -296,6 +315,7 @@ var createChannel = function(channel) {
 var createForwarder = function(forwarder) {
     var postData = addForwarder(forwarder);
     postData.done(function(value) {
+        setRESTPayload(value);
         console.log("Done:", value);
         forwarderList(); // refetch
     });
@@ -315,6 +335,7 @@ var createForwarder = function(forwarder) {
 var createComputer = function(computer) {
     var postData = addComputer(computer);
     postData.done(function(value) {
+        setRESTPayload(value);
         console.log("Done:", value);
         computerList(); // refetch
     });
@@ -334,6 +355,7 @@ var createComputer = function(computer) {
 var removeChannel = function(channel) {
     var deleteData = deleteChannel(channel);
     deleteData.done(function(value) {
+        setRESTPayload(value);
         console.log("Done:", value);
         channelList(); // refetch
     });
@@ -353,6 +375,7 @@ var removeChannel = function(channel) {
 var removeForwarder = function(channel) {
     var deleteData = deleteForwarder(channel);
     deleteData.done(function(value) {
+        setRESTPayload(value);
         console.log("Done:", value);
         forwarderList(); // refetch
     });
@@ -372,6 +395,7 @@ var removeForwarder = function(channel) {
 var removeComputer = function(computer) {
     var deleteData = deleteComputer(computer);
     deleteData.done(function(value) {
+        setRESTPayload(value);
         console.log("Done:", value);
         computerList(); // refetch
     });
@@ -391,6 +415,7 @@ var removeComputer = function(computer) {
 var changeChannel = function(channel) {
     var putData = updateChannel(channel);
     putData.done(function(value) {
+        setRESTPayload(value);
         console.log("Done:", value);
         channelList(); // refetch
     });
@@ -410,6 +435,7 @@ var changeChannel = function(channel) {
 var changeComputer = function(computer) {
     var putData = updateComputer(computer);
     putData.done(function(value) {
+        setRESTPayload(value);
         console.log("Done:", value);
         computerList(); // refetch
     });
@@ -443,6 +469,7 @@ var manageComputerVerbose = function(cb, computer) {
 var manageMuxVerbose = function(cb) {
     var updateMux = updateMuxVerbose(cb.checked ? 'on' : 'off');
     updateMux.done(function(value) {
+        RESTPayload = value;
         console.log("Done:", value);
     });
     updateMux.fail(function(error, errmess) {
@@ -461,6 +488,7 @@ var manageMuxVerbose = function(cb) {
 var resetCache = function() {
     var reset = resetDataCache();
     reset.done(function(value) {
+        RESTPayload = value;
         console.log("Done:", value);
     });
     reset.fail(function(error, errmess) {
