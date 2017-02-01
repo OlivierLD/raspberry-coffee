@@ -73,7 +73,7 @@
         var showRESTData = false;
         var showHideRESTData = function() {
             showRESTData = !showRESTData;
-            $("#raw-data").css('display', showRESTData ? 'inline' : 'none');
+            $("#raw-data-div").css('display', showRESTData ? 'block' : 'none');
             $("#show-hide-raw-data").text(showRESTData ? "- Hide REST Data" : "+ Show REST Data");
         };
 
@@ -548,7 +548,10 @@
     </div>
     <div id="lists" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
     <div id="show-hide-raw-data" onclick="showHideRESTData();" style="cursor: pointer; margin-top: 5px;">+ Show REST Data</div>
-    <div id="raw-data" style="display: none; padding: 1px; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
+    <div id="raw-data-div" style="display: none;">
+      <div id="raw-data" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
+      <button onclick="clearRESTData();">Clear</button>
+    </div>
     </p>
     <p>
       <button onclick="showAddChannel();">Add a Channel</button>&nbsp;

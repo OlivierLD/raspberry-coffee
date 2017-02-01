@@ -7,6 +7,7 @@ var errManager = {
 };
 
 var RESTPayload = {};
+var storedHistory = "";
 
 var getDeferred = function(url, timeout, verb, happyCode, data) {
     var deferred = $.Deferred(),  // a jQuery deferred
@@ -141,7 +142,15 @@ var setRESTPayload = function(payload) {
 
 var displayRawData = function() {
     var stringified = JSON.stringify(RESTPayload, null, 2);
-    $("#raw-data").html('<pre>' + stringified + '</pre>');
+    storedHistory += ((storedHistory.length > 0 ? "\n" : "") + stringified);
+    $("#raw-data").html('<pre>' + storedHistory + '</pre>');
+    $("#raw-data").scrollTop($("#raw-data")[0].scrollHeight);
+};
+
+var clearRESTData = function() {
+    RESTPayload = {};
+    storedHistory  = "";
+    $("#raw-data").html("");
 };
 
 var channelList = function() {
