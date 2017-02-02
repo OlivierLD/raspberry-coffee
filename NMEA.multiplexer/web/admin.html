@@ -74,7 +74,7 @@
         var showHideRESTData = function() {
             showRESTData = !showRESTData;
             $("#raw-data-div").css('display', showRESTData ? 'block' : 'none');
-            $("#show-hide-raw-data").html(showRESTData ? "<small>&nbsp;<img src='pandown.gif'> Hide REST Data</small>" : "<small>&nbsp;<img src='panright.gif'> Show REST Data</small>");
+            $("#show-hide-raw-data").html(showRESTData ? "<small>&nbsp;<img src='pandown.gif'> Hide REST Traffic</small>" : "<small>&nbsp;<img src='panright.gif'> Show REST Traffic</small>");
         };
 
         var manageChannelSelection = function(selected) {
@@ -547,7 +547,7 @@
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
     </div>
     <div id="lists" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
-    <div id="show-hide-raw-data" onclick="showHideRESTData();" style="cursor: pointer; margin-top: 5px;"><small>&nbsp;<img src='panright.gif'> Show REST Data</small></div>
+    <div id="show-hide-raw-data" onclick="showHideRESTData();" style="cursor: pointer; margin-top: 5px;"><small>&nbsp;<img src='panright.gif'> Show REST Traffic</small></div>
     <div id="raw-data-div" style="display: none;">
       <table width="100%">
         <tr>
