@@ -1,5 +1,4 @@
-body
-{
+body {
   color : blue;
   font-weight: normal;
   font-size: 10pt;
@@ -7,8 +6,7 @@ body
   background-position: top left;
   background-repeat: repeat;
 }
-h1
-{
+h1 {
   color: silver;
   font-style: italic;
   font-size: 26pt;
@@ -17,8 +15,7 @@ h1
   padding-bottom: 1pt;
   padding-top: 1pt;
 }
-h2
-{
+h2 {
   color: silver;
   font-size: 12pt;
   font-family: Verdana, Arial, Helvetica, Geneva;
@@ -26,8 +23,7 @@ h2
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
-h3
-{
+h3 {
   color: silver;
   font-style: italic;
   font-weight: bold;
@@ -37,8 +33,7 @@ h3
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
-h4
-{
+h4 {
   color: silver;
   font-style: italic;
   font-weight: bold;
@@ -48,8 +43,7 @@ h4
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
-h5
-{
+h5 {
   color: silver;
   font-style: normal;
   font-weight: bold;
@@ -59,8 +53,7 @@ h5
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
-h6
-{
+h6 {
   font-style: italic;
   font-weight: normal;
   font-size: 10pt;
@@ -69,67 +62,59 @@ h6
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
-li
-{
+li {
   font-weight: normal;
   font-size: 10pt;
   font-family: Verdana, Helvetica, Geneva;
 }
-dt
-{
+dt {
   font-size: 10pt;
   font-weight: bold;
   font-family: Verdana, Arial, Helvetica, Geneva;
 }
-dd
-{
+dd {
   font-size: 10pt;
   font-weight: normal;
   font-family: Verdana, Arial, Helvetica, Geneva;
 }
-p
-{
+p {
   font-size: 10pt;
   font-weight: normal;
   font-family: Verdana, Helvetica, Geneva;
 }
-td
-{
+td {
   font-size: 10pt;
   font-family: Arial, Helvetica, Geneva;
 }
-small
-{
+small {
   font-size: 8pt;
   font-family: Verdana, Arial, Helvetica, Geneva;
 }
-blockquote
-{
+blockquote {
   font-style: italic;
   font-size: 10pt;
   font-family: Verdana, Arial, Helvetica, Geneva;
 }
-em
-{
+em {
   font-size: 10pt;
   font-style: italic;
   font-weight: bold;
   font-family: Verdana, Arial, Helvetica, Geneva
 }
-pre
-{
+pre {
   margin-top: 0px;
   font-size: 9pt;
   font-family: "Source Code Pro", "Courier New", Helvetica, Geneva;
 /*background-color: #d3d3d3;*/
 }
-address
-{
+address {
   font-size: 8pt;
   font-family: Verdana, Arial, Helvetica, Geneva;
 }
-.red
-{
+img {
+  vertical-align: middle;
+}
+.red {
   color:red;
 }
 a:link { color : #0000A0}
