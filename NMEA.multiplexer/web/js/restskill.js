@@ -8,12 +8,20 @@ var errManager = {
 
 var RESTPayload = {};
 var storedHistory = "";
+var storedHistoryOut = "";
 
 var getDeferred = function(url, timeout, verb, happyCode, data) {
     var deferred = $.Deferred(),  // a jQuery deferred
         url = url,
         xhr = new XMLHttpRequest(),
         TIMEOUT = timeout;
+
+    var req = verb + " " + url;
+    if (data !== undefined) {
+        req += ("\n" + JSON.stringify(data, null, 2));
+    }
+    storedHistoryOut += ((storedHistoryOut.length > 0 ? "\n" : "") + req);
+    displayRawDataOut();
 
     xhr.open(verb, url, true);
     xhr.setRequestHeader("Content-type", "application/json");
@@ -147,10 +155,20 @@ var displayRawData = function() {
     $("#raw-data").scrollTop($("#raw-data")[0].scrollHeight);
 };
 
+var displayRawDataOut = function() {
+    $("#raw-data-out").html('<pre>' + storedHistoryOut + '</pre>');
+    $("#raw-data-out").scrollTop($("#raw-data")[0].scrollHeight);
+};
+
 var clearRESTData = function() {
     RESTPayload = {};
     storedHistory  = "";
     $("#raw-data").html("");
+};
+
+var clearRESTOutData = function() {
+    storedHistoryOut  = "";
+    $("#raw-data-out").html("");
 };
 
 var channelList = function() {
