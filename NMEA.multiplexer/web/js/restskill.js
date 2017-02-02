@@ -157,7 +157,7 @@ var displayRawData = function() {
 
 var displayRawDataOut = function() {
     $("#raw-data-out").html('<pre>' + storedHistoryOut + '</pre>');
-    $("#raw-data-out").scrollTop($("#raw-data")[0].scrollHeight);
+    $("#raw-data-out").scrollTop($("#raw-data-out")[0].scrollHeight);
 };
 
 var clearRESTData = function() {
