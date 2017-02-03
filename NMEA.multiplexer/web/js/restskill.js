@@ -9,6 +9,7 @@ var errManager = {
 var RESTPayload = {};
 var storedHistory = "";
 var storedHistoryOut = "";
+var storedElapsed = "";
 
 var getDeferred = function(url, timeout, verb, happyCode, data) {
     var deferred = $.Deferred(),  // a jQuery deferred
@@ -106,11 +107,13 @@ var deleteChannel = function(channel) {
 };
 
 var serialPortList = function() {
+  var before = new Date().getTime();
   var getData = getSerialPorts();
   getData.done(function(value) {
-    console.log("Done:", value);
+    var after = new Date().getTime();
+    console.log("Done in " + (after - before) + " ms :", value);
     var json = JSON.parse(value);
-    setRESTPayload(json);
+    setRESTPayload(json, (after - before));
     var html = "<h5>Available Serial Ports</h5>";
     if (json.length > 0) {
         html += "<table>";
@@ -141,18 +144,27 @@ var buildList = function(arr) {
     return str;
 };
 
-var setRESTPayload = function(payload) {
+var setRESTPayload = function(payload, elapsed) {
   RESTPayload = payload;
-  if (showRESTData) {
-      displayRawData();
+  if (true || showRESTData) { // Show anyways
+      displayRawData(elapsed);
   }
 };
 
-var displayRawData = function() {
+var displayRawData = function(elapsed) {
     var stringified = JSON.stringify(RESTPayload, null, 2);
     storedHistory += ((storedHistory.length > 0 ? "\n" : "") + stringified);
-    $("#raw-data").html('<pre>' + storedHistory + '</pre>');
+    var content = '<pre>' + storedHistory + '</pre>';
+    var elapsedContent = "\n";
+    if (elapsed !== undefined) {
+        elapsedContent = ('in ' + elapsed + " ms.\n");
+    }
+    $("#raw-data").html(content);
     $("#raw-data").scrollTop($("#raw-data")[0].scrollHeight);
+
+    storedElapsed += elapsedContent;
+    $("#rest-elapsed").html('<pre>' + storedElapsed + "</pre>");
+    $("#rest-elapsed").scrollTop($("#rest-elapsed")[0].scrollHeight);
 };
 
 var displayRawDataOut = function() {
@@ -168,15 +180,19 @@ var clearRESTData = function() {
 
 var clearRESTOutData = function() {
     storedHistoryOut  = "";
+    storedElapsed = "";
     $("#raw-data-out").html("");
+    $("#rest-elapsed").html("");
 };
 
 var channelList = function() {
+    var before = new Date().getTime();
     var getData = getChannels();
     getData.done(function(value) {
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
         var json = JSON.parse(value);
-        setRESTPayload(json);
+        setRESTPayload(json, (after - before));
         var html = "<h5>Reads from</h5>" +
             "<table>";
         html += "<tr><th>Type</th><th>Parameters</th><th>Device filters</th><th>Sentence filters</th><th>verb.</th></tr>"
@@ -226,11 +242,13 @@ var channelList = function() {
 };
 
 var forwarderList = function() {
+    var before = new Date().getTime();
     var getData = getForwarders();
     getData.done(function(value) {
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
         var json = JSON.parse(value);
-        setRESTPayload(json);
+        setRESTPayload(json, (after - before));
         var html = "<h5>Writes to</h5>" +
             "<table>";
         html += "<tr><th>Type</th><th>Parameters</th></th></tr>"
@@ -284,11 +302,13 @@ var forwarderList = function() {
 };
 
 var computerList = function() {
+    var before = new Date().getTime();
     var getData = getComputers();
     getData.done(function(value) {
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
         var json = JSON.parse(value);
-        setRESTPayload(json);
+        setRESTPayload(json, (after - before));
         var html = "<h5>Computes and writes</h5>" +
             "<table>";
         html += "<tr><th>Type</th><th>Parameters</th><th>verb.</th></tr>"
@@ -320,10 +340,12 @@ var computerList = function() {
 };
 
 var createChannel = function(channel) {
-  var postData = addChannel(channel);
+    var before = new Date().getTime();
+    var postData = addChannel(channel);
     postData.done(function(value) {
-        console.log("Done:", value);
-        setRESTPayload(value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
         channelList(); // refetch
     });
     postData.fail(function(error, errmess) {
@@ -340,10 +362,12 @@ var createChannel = function(channel) {
 };
 
 var createForwarder = function(forwarder) {
+    var before = new Date().getTime();
     var postData = addForwarder(forwarder);
     postData.done(function(value) {
-        setRESTPayload(value);
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
         forwarderList(); // refetch
     });
     postData.fail(function(error, errmess) {
@@ -360,10 +384,12 @@ var createForwarder = function(forwarder) {
 };
 
 var createComputer = function(computer) {
+    var before = new Date().getTime();
     var postData = addComputer(computer);
     postData.done(function(value) {
-        setRESTPayload(value);
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
         computerList(); // refetch
     });
     postData.fail(function(error, errmess) {
@@ -380,10 +406,12 @@ var createComputer = function(computer) {
 };
 
 var removeChannel = function(channel) {
+    var before = new Date().getTime();
     var deleteData = deleteChannel(channel);
     deleteData.done(function(value) {
-        setRESTPayload(value);
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
         channelList(); // refetch
     });
     deleteData.fail(function(error, errmess) {
@@ -400,10 +428,12 @@ var removeChannel = function(channel) {
 };
 
 var removeForwarder = function(channel) {
+    var before = new Date().getTime();
     var deleteData = deleteForwarder(channel);
     deleteData.done(function(value) {
-        setRESTPayload(value);
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
         forwarderList(); // refetch
     });
     deleteData.fail(function(error, errmess) {
@@ -420,10 +450,12 @@ var removeForwarder = function(channel) {
 };
 
 var removeComputer = function(computer) {
+    var before = new Date().getTime();
     var deleteData = deleteComputer(computer);
     deleteData.done(function(value) {
-        setRESTPayload(value);
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
         computerList(); // refetch
     });
     deleteData.fail(function(error, errmess) {
@@ -440,10 +472,12 @@ var removeComputer = function(computer) {
 };
 
 var changeChannel = function(channel) {
+    var before = new Date().getTime();
     var putData = updateChannel(channel);
     putData.done(function(value) {
-        setRESTPayload(value);
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
         channelList(); // refetch
     });
     putData.fail(function(error, errmess) {
@@ -460,10 +494,12 @@ var changeChannel = function(channel) {
 };
 
 var changeComputer = function(computer) {
+    var before = new Date().getTime();
     var putData = updateComputer(computer);
     putData.done(function(value) {
-        setRESTPayload(value);
-        console.log("Done:", value);
+        var after = new Date().getTime();
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
         computerList(); // refetch
     });
     putData.fail(function(error, errmess) {
@@ -494,10 +530,13 @@ var manageComputerVerbose = function(cb, computer) {
 };
 
 var manageMuxVerbose = function(cb) {
+    var before = new Date().getTime();
     var updateMux = updateMuxVerbose(cb.checked ? 'on' : 'off');
     updateMux.done(function(value) {
+        var after = new Date().getTime();
         RESTPayload = value;
-        console.log("Done:", value);
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
     });
     updateMux.fail(function(error, errmess) {
         var message;
@@ -513,10 +552,13 @@ var manageMuxVerbose = function(cb) {
 };
 
 var resetCache = function() {
+    var before = new Date().getTime();
     var reset = resetDataCache();
     reset.done(function(value) {
+        var after = new Date().getTime();
         RESTPayload = value;
-        console.log("Done:", value);
+        console.log("Done in " + (after - before) + " ms :", value);
+        setRESTPayload(value, (after - before));
     });
     reset.fail(function(error, errmess) {
         var message;
