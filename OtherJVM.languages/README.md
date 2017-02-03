@@ -391,3 +391,37 @@ sensors.bme280=> [Ctrl+D]
 $
 ```
 Yeah!
+
+### JSR223
+This JSR 223 specifies how to run scripts from Java.
+Those script can be written using JavaScript, Groovy.
+
+A simple example is provided in `jsr223.ScriptEngineFactories.java`, which can be run:
+```
+Your Java version:1.8.0_92
+Running from /.../raspberry-pi4j-samples/OtherJVM.languages/.
+=======================
+Lang name  :Groovy
+Engine name:Groovy Scripting Engine
+[groovy, Groovy]
+Lang name  :ECMAScript
+Engine name:Oracle Nashorn
+[nashorn, Nashorn, js, JS, JavaScript, javascript, ECMAScript, ecmascript]
+=======================
+Act 1: Groovy.
+Hello Groovy!
+>>> Executing src/groovy/mainBasic.groovy
+==========
+Hello Groovy world!
+==========
+>> Invoking hello() method on GroovyBasic object...
+==========
+Hello Groovy world!
+==========
+=== Done ===
+Act 2: JavaScript.
+From JS: Hello Nashorn!
+Bye.
+
+```
+... more to come.

@@ -42,6 +42,10 @@
     </style>
     <script type="text/javascript">
 
+        /**
+         * Displays the errors in a non-modal way.
+         * @param mess
+         */
         var errorHandler = function(mess) {
           var messZone = document.getElementById("err-mess");
           messZone.innerText = mess;
@@ -52,7 +56,7 @@
 
         // Executed at startup
         (function () {
-            errManager.display = errorHandler; // in resskill.js
+            errManager.display = errorHandler; // in restskill.js
         })();
 
         var channelSelectManager = function() {
