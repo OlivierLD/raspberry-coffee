@@ -258,8 +258,6 @@ A full list of the available REST services is available at
 ##### Examples
 All the end points and operations are defined in `nmea.mux.GenericNMEAMultiplexer.java`. See the `List<Operation>` named `operations`.
 
-
-
 ```
  GET /serial-ports
 ```
@@ -420,7 +418,10 @@ Notice the line that says `skeleton`.
 Among the forwarders available in this project some are to be dynamically loaded.
  - SSD1306Processor
  - MQTTPublisher (a cool one, for IoT)
+ - Character Console
  - etc... list keeps growing.
+
+![Character Console](./char.console.png "Character Console")
 
 _Warning_: for now, you _cannot_ load more than one dynamically loaded forwarder, consumer or computer of the same class. They are identified by their class name, you cannot have more than one object
 with a given class name in the lists. For example, if you have an `MQTTPublisher` that uses a broker URL like `tcp://192.168.1.136:1883`, you might very well want to

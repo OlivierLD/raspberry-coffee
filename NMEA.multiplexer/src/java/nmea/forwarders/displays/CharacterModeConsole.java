@@ -214,6 +214,9 @@ public class CharacterModeConsole {
 							// e.printStackTrace();
 						}
 					}
+				} else {
+					// TODO Other values
+			//	System.out.println("Displaying " + s);
 				}
 				String plot = plotOneValue(1 + ((col - 1) * cellSize), row + 1, value, colorMap.get(cd.getFgData()), colorMap.get(cd.getBgData()));
 				AnsiConsole.out.println(plot);
