@@ -393,6 +393,10 @@ where `machine-name` is the name of the machine where the multiplexer is running
 
 And any REST client (NodeJS, Postman, your own code, ...) does the job.
 
+![With REST traffic](./AdminSnapshot.02.png "With REST traffic")
+
+You can also visualize the REST traffic if needed; `In` on the left, `Out` on the right.
+
 ## Dynamic loading
 You have the possibility to dynamically load Channels, Forwarders and Computers.
 
