@@ -174,45 +174,50 @@ public class CharacterModeConsole {
 
 			synchronized (ndc) {
 				if (nonNumericData.containsKey(s)) {
-					// TODO a switch
-					if ("POS".equals(s)) {
-						try {
-							value = NMEAUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.NO_DEG, GeomUtil.NS), 12, " ") +
-											NMEAUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lng, GeomUtil.NO_DEG, GeomUtil.EW), 12, " ");
-						} catch (Exception ex) {
-							value = "-";
-							//  ex.printStackTrace();
-						}
-					} else if ("GDT".equals(s)) {
-						try {
-							UTCDate utcDate = (UTCDate) ndc.get(NMEADataCache.GPS_DATE_TIME, true);
-							value = NMEAUtils.lpad(SDF.format(utcDate.getValue()), 24, " ");
-						} catch (Exception e) {
-							value = "-";
-							//  e.printStackTrace();
-						}
-					} else if ("SLT".equals(s)) {
-						try {
-							SolarDate solarDate = (SolarDate) ndc.get(NMEADataCache.GPS_SOLAR_TIME, true);
-							value = NMEAUtils.lpad(SOLAR_DATE_FORMAT.format(solarDate.getValue()), 24, " ");
-						} catch (Exception e) {
-							value = "-";
-							//   e.printStackTrace();
-						}
-					} else if ("NWP".equals(s)) {
-						try {
-							value = (String) ndc.get(NMEADataCache.TO_WP, true);
-						} catch (Exception e) {
-							value = "-";
-							//   e.printStackTrace();
-						}
-					} else {
-						try {
-							value = NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " "); // + " ";
-						} catch (Exception e) {
-							value = "-";
-							// e.printStackTrace();
-						}
+					switch (s) {
+						case "POS":
+							try {
+								value = NMEAUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.NO_DEG, GeomUtil.NS), 12, " ") +
+												NMEAUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lng, GeomUtil.NO_DEG, GeomUtil.EW), 12, " ");
+							} catch (Exception ex) {
+								value = "-";
+								//  ex.printStackTrace();
+							}
+							break;
+						case "GDT":
+							try {
+								UTCDate utcDate = (UTCDate) ndc.get(NMEADataCache.GPS_DATE_TIME, true);
+								value = NMEAUtils.lpad(SDF.format(utcDate.getValue()), 24, " ");
+							} catch (Exception e) {
+								value = "-";
+								//  e.printStackTrace();
+							}
+							break;
+						case "SLT":
+							try {
+								SolarDate solarDate = (SolarDate) ndc.get(NMEADataCache.GPS_SOLAR_TIME, true);
+								value = NMEAUtils.lpad(SOLAR_DATE_FORMAT.format(solarDate.getValue()), 24, " ");
+							} catch (Exception e) {
+								value = "-";
+								//   e.printStackTrace();
+							}
+							break;
+						case "NWP":
+							try {
+								value = (String) ndc.get(NMEADataCache.TO_WP, true);
+							} catch (Exception e) {
+								value = "-";
+								//   e.printStackTrace();
+							}
+							break;
+						default:
+							try {
+								value = NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " "); // + " ";
+							} catch (Exception e) {
+								value = "-";
+								// e.printStackTrace();
+							}
+							break;
 					}
 				} else {
 					value = NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " ");
