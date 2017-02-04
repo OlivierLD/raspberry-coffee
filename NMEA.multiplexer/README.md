@@ -438,34 +438,6 @@ This is pinging the `/cache` REST service every second.
 Satellites are displayed on the chart, and on the right pane.
 When available, Speed Over Ground and Course Over Ground are displayed too. 
 
-
-## TODO
-- 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
-- Externalize all definitions, for dynamic configuration (ie 'add your own computer, channel, forwarder', etc).
-
-```
-Once you get the X, Y and Z accelerations into floats you just need some trig to calculate Pitch and Roll (in radians):
-
-pitch = atan (x / sqrt(y^2 + z^2));  
-roll = atan (y / sqrt(z^2 + z^2));
-```
-
-```
-Currently, OpenCPN recognizes the following transducers:
-
-------------------------------------------------------------------------------------------------------
-Measured Value | Transducer Type | Measured Data                   | Unit of measure | Transducer Name
-------------------------------------------------------------------------------------------------------
-barometric     | "P" pressure    | 0.8..1.1 or 800..1100           | "B" bar         | "Barometer"
-air temperature| "C" temperature |   2 decimals                    | "C" celsius     | "TempAir" or "ENV_OUTAIR_T"
-pitch          | "A" angle       |-180..0 nose down 0..180 nose up | "D" degrees     | "PTCH"
-rolling        | "A" angle       |-180..0 L         0..180 R       | "D" degrees     | "ROLL"
-water temp     | "C" temperature |   2 decimals                    | "C" celsius     | "ENV_WATER_T"
------------------------------------------------------------------------------------------------------
-```
-
----
-
 ### JVM Monitoring
 ![Overview](./JConsole.01.png "Overview")
 Overview
@@ -502,3 +474,29 @@ In the picture above, all the data come from the NMEA station, except the air te
 
 ### TODO...
 [Todo next](./web/TODO.md "What's next")
+
+- 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
+- Externalize all definitions, for dynamic configuration (ie 'add your own computer, channel, forwarder', etc).
+
+```
+Once you get the X, Y and Z accelerations into floats you just need some trig to calculate Pitch and Roll (in radians):
+
+pitch = atan (x / sqrt(y^2 + z^2));
+roll = atan (y / sqrt(z^2 + z^2));
+```
+
+```
+Currently, OpenCPN recognizes the following transducers:
+
+------------------------------------------------------------------------------------------------------
+Measured Value | Transducer Type | Measured Data                   | Unit of measure | Transducer Name
+------------------------------------------------------------------------------------------------------
+barometric     | "P" pressure    | 0.8..1.1 or 800..1100           | "B" bar         | "Barometer"
+air temperature| "C" temperature |   2 decimals                    | "C" celsius     | "TempAir" or "ENV_OUTAIR_T"
+pitch          | "A" angle       |-180..0 nose down 0..180 nose up | "D" degrees     | "PTCH"
+rolling        | "A" angle       |-180..0 L         0..180 R       | "D" degrees     | "ROLL"
+water temp     | "C" temperature |   2 decimals                    | "C" celsius     | "ENV_WATER_T"
+-----------------------------------------------------------------------------------------------------
+```
+
+---
