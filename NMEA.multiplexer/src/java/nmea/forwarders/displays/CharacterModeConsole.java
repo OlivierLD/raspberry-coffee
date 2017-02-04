@@ -174,6 +174,7 @@ public class CharacterModeConsole {
 
 			synchronized (ndc) {
 				if (nonNumericData.containsKey(s)) {
+					// TODO a switch
 					if ("POS".equals(s)) {
 						try {
 							value = NMEAUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.NO_DEG, GeomUtil.NS), 12, " ") +
@@ -207,16 +208,14 @@ public class CharacterModeConsole {
 						}
 					} else {
 						try {
-							value =
-											NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " "); // + " ";
+							value = NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " "); // + " ";
 						} catch (Exception e) {
 							value = "-";
 							// e.printStackTrace();
 						}
 					}
 				} else {
-					// TODO Other values
-			//	System.out.println("Displaying " + s);
+					value = NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " ");
 				}
 				String plot = plotOneValue(1 + ((col - 1) * cellSize), row + 1, value, colorMap.get(cd.getFgData()), colorMap.get(cd.getBgData()));
 				AnsiConsole.out.println(plot);
