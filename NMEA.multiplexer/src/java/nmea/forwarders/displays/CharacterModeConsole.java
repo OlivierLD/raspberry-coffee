@@ -175,7 +175,7 @@ public class CharacterModeConsole {
 			synchronized (ndc) {
 				if (nonNumericData.containsKey(s)) {
 					switch (s) {
-						case "POS":
+						case "POS": // POSition
 							try {
 								value = NMEAUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.NO_DEG, GeomUtil.NS), 12, " ") +
 												NMEAUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lng, GeomUtil.NO_DEG, GeomUtil.EW), 12, " ");
@@ -184,7 +184,7 @@ public class CharacterModeConsole {
 								//  ex.printStackTrace();
 							}
 							break;
-						case "GDT":
+						case "GDT": // GPS Date Time
 							try {
 								UTCDate utcDate = (UTCDate) ndc.get(NMEADataCache.GPS_DATE_TIME, true);
 								value = NMEAUtils.lpad(SDF.format(utcDate.getValue()), 24, " ");
@@ -193,7 +193,7 @@ public class CharacterModeConsole {
 								//  e.printStackTrace();
 							}
 							break;
-						case "SLT":
+						case "SLT": // SoLar Time
 							try {
 								SolarDate solarDate = (SolarDate) ndc.get(NMEADataCache.GPS_SOLAR_TIME, true);
 								value = NMEAUtils.lpad(SOLAR_DATE_FORMAT.format(solarDate.getValue()), 24, " ");
@@ -202,7 +202,7 @@ public class CharacterModeConsole {
 								//   e.printStackTrace();
 							}
 							break;
-						case "NWP":
+						case "NWP": // Next Way Point
 							try {
 								value = (String) ndc.get(NMEADataCache.TO_WP, true);
 							} catch (Exception e) {
@@ -210,7 +210,7 @@ public class CharacterModeConsole {
 								//   e.printStackTrace();
 							}
 							break;
-						default:
+						default: // Un-managed...
 							try {
 								value = NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " "); // + " ";
 							} catch (Exception e) {
@@ -231,150 +231,176 @@ public class CharacterModeConsole {
 
 	private double getValueFromCache(String key, NMEADataCache ndc) {
 		double value = 0;
-		if ("BSP".equals(key)) {
-			try {
-				value = ((Speed) ndc.get(NMEADataCache.BSP)).getValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("HDG".equals(key)) {
-			try {
-				value = ((int) ((Angle360) ndc.get(NMEADataCache.HDG_TRUE, true)).getDoubleValue()) % 360;
-			} catch (Exception ex) {
-			}
-		} else if ("TWD".equals(key)) {
-			try {
-				value = ((int) ((Angle360) ndc.get(NMEADataCache.TWD, true)).getDoubleValue()) % 360;
-			} catch (Exception ex) {
-			}
-		} else if ("AWS".equals(key)) {
-			try {
-				value = ((Speed) ndc.get(NMEADataCache.AWS, true)).getDoubleValue();
-			} catch (Exception ex) {
-			}
-		} else if ("AWA".equals(key)) {
-			try {
-				value = (int) ((Angle180) ndc.get(NMEADataCache.AWA, true)).getDoubleValue();
-			} catch (Exception ex) {
-			}
-		} else if ("TWS".equals(key)) {
-			try {
-				value = ((Speed) ndc.get(NMEADataCache.TWS, true)).getDoubleValue();
-			} catch (Exception ex) {
-			}
-		} else if ("COG".equals(key)) {
-			try {
-				value = ((Angle360) ndc.get(NMEADataCache.COG)).getValue();
-			} catch (Exception ex) {
-			}
-		} else if ("SOG".equals(key)) {
-			try {
-				value = ((Speed) ndc.get(NMEADataCache.SOG)).getValue();
-			} catch (Exception ex) {
-			}
-		} else if ("TWA".equals(key)) {
-			try {
-				value = ((Angle180) ndc.get(NMEADataCache.TWA)).getValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("CDR".equals(key)) {
-			try {
-				value = ((Angle360) ndc.get(NMEADataCache.CDR)).getValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("CSP".equals(key)) {
-			try {
-				value = ((Speed) ndc.get(NMEADataCache.CSP)).getValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("LAT".equals(key)) {
-			try {
-				value = ((GeoPos) ndc.get(NMEADataCache.POSITION)).lat;
-			} catch (Exception ignore) {
-			}
-		} else if ("LNG".equals(key)) {
-			try {
-				value = ((GeoPos) ndc.get(NMEADataCache.POSITION)).lng;
-			} catch (Exception ignore) {
-			}
-		} else if ("LOG".equals(key)) {
-			try {
-				value = ((Distance) ndc.get(NMEADataCache.LOG)).getValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("MWT".equals(key)) {
-			try {
-				value = ((Temperature) ndc.get(NMEADataCache.WATER_TEMP)).getValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("MTA".equals(key)) {
-			try {
-				value = ((Temperature) ndc.get(NMEADataCache.AIR_TEMP)).getValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("MMB".equals(key)) {
-			try {
-				value = ((Pressure) ndc.get(NMEADataCache.BARO_PRESS)).getValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("HUM".equals(key)) {
-			try {
-				value = ((Double) ndc.get(NMEADataCache.RELATIVE_HUMIDITY)).doubleValue();
-			} catch (Exception ignore) {
-				value = 0d;
-			}
-		} else if ("DBT".equals(key)) {
-			try {
-				value = ((Depth) ndc.get(NMEADataCache.DBT)).getValue();
-			} catch (Exception ignore) {
-			}
-		} else if ("CCS".equals(key)) {
-			try {
-				Current current = (Current) ndc.get(NMEADataCache.VDR_CURRENT);
-				if (current == null) {
+		switch (key) {
+			case "BSP":
+				try {
+					value = ((Speed) ndc.get(NMEADataCache.BSP)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "HDG":
+				try {
+					value = ((int) ((Angle360) ndc.get(NMEADataCache.HDG_TRUE, true)).getDoubleValue()) % 360;
+				} catch (Exception ex) {
+				}
+				break;
+			case "TWD":
+				try {
+					value = ((int) ((Angle360) ndc.get(NMEADataCache.TWD, true)).getDoubleValue()) % 360;
+				} catch (Exception ex) {
+				}
+				break;
+			case "AWS":
+				try {
+					value = ((Speed) ndc.get(NMEADataCache.AWS, true)).getDoubleValue();
+				} catch (Exception ex) {
+				}
+				break;
+			case "AWA":
+				try {
+					value = (int) ((Angle180) ndc.get(NMEADataCache.AWA, true)).getDoubleValue();
+				} catch (Exception ex) {
+				}
+				break;
+			case "TWS":
+				try {
+					value = ((Speed) ndc.get(NMEADataCache.TWS, true)).getDoubleValue();
+				} catch (Exception ex) {
+				}
+				break;
+			case "COG":
+				try {
+					value = ((Angle360) ndc.get(NMEADataCache.COG)).getValue();
+				} catch (Exception ex) {
+				}
+				break;
+			case "SOG":
+				try {
+					value = ((Speed) ndc.get(NMEADataCache.SOG)).getValue();
+				} catch (Exception ex) {
+				}
+				break;
+			case "TWA":
+				try {
+					value = ((Angle180) ndc.get(NMEADataCache.TWA)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "CDR":
+				try {
+					value = ((Angle360) ndc.get(NMEADataCache.CDR)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "CSP":
+				try {
+					value = ((Speed) ndc.get(NMEADataCache.CSP)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "LAT":
+				try {
+					value = ((GeoPos) ndc.get(NMEADataCache.POSITION)).lat;
+				} catch (Exception ignore) {
+				}
+				break;
+			case "LNG":
+				try {
+					value = ((GeoPos) ndc.get(NMEADataCache.POSITION)).lng;
+				} catch (Exception ignore) {
+				}
+				break;
+			case "LOG":
+				try {
+					value = ((Distance) ndc.get(NMEADataCache.LOG)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "MWT":
+				try {
+					value = ((Temperature) ndc.get(NMEADataCache.WATER_TEMP)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "MTA":
+				try {
+					value = ((Temperature) ndc.get(NMEADataCache.AIR_TEMP)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "MMB":
+				try {
+					value = ((Pressure) ndc.get(NMEADataCache.BARO_PRESS)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "HUM":
+				try {
+					value = ((Double) ndc.get(NMEADataCache.RELATIVE_HUMIDITY)).doubleValue();
+				} catch (Exception ignore) {
+					value = 0d;
+				}
+				break;
+			case "DBT":
+				try {
+					value = ((Depth) ndc.get(NMEADataCache.DBT)).getValue();
+				} catch (Exception ignore) {
+				}
+				break;
+			case "CCS":
+				try {
+					Current current = (Current) ndc.get(NMEADataCache.VDR_CURRENT);
+					if (current == null) {
+						Map<Long, NMEADataCache.CurrentDefinition> currentMap =
+										((Map<Long, NMEADataCache.CurrentDefinition>) ndc.get(NMEADataCache.CALCULATED_CURRENT));  //.put(bufferLength, new NMEADataCache.CurrentDefinition(bufferLength, new Speed(speed), new Angle360(dir)));
+						Set<Long> keys = currentMap.keySet();
+						if (keys.size() != 1 && DEBUG)
+							System.err.println("CCS: Nb entry(ies) in Calculated Current Map:" + keys.size());
+						for (Long l : keys)
+							value = currentMap.get(l).getSpeed().getValue();
+					} else {
+						value = current.speed;
+					}
+				} catch (Exception ignore) {
+				}
+				break;
+			case "CCD":
+				try {
+					Current current = (Current) ndc.get(NMEADataCache.VDR_CURRENT);
+					if (current == null) {
+						Map<Long, NMEADataCache.CurrentDefinition> currentMap =
+										((Map<Long, NMEADataCache.CurrentDefinition>) ndc.get(NMEADataCache.CALCULATED_CURRENT));  //.put(bufferLength, new NMEADataCache.CurrentDefinition(bufferLength, new Speed(speed), new Angle360(dir)));
+						Set<Long> keys = currentMap.keySet();
+						if (keys.size() != 1 && DEBUG)
+							System.err.println("CCD: Nb entry(ies) in Calculated Current Map:" + keys.size());
+						for (Long l : keys)
+							value = currentMap.get(l).getDirection().getValue();
+					} else {
+						value = current.angle;
+					}
+				} catch (Exception ignore) {
+				}
+				break;
+			case "TBF":
+				try {
 					Map<Long, NMEADataCache.CurrentDefinition> currentMap =
 									((Map<Long, NMEADataCache.CurrentDefinition>) ndc.get(NMEADataCache.CALCULATED_CURRENT));  //.put(bufferLength, new NMEADataCache.CurrentDefinition(bufferLength, new Speed(speed), new Angle360(dir)));
 					Set<Long> keys = currentMap.keySet();
 					if (keys.size() != 1 && DEBUG)
-						System.err.println("CCS: Nb entry(ies) in Calculated Current Map:" + keys.size());
+						System.err.println("TBF: Nb entry(ies) in Calculated Current Map:" + keys.size());
 					for (Long l : keys)
-						value = currentMap.get(l).getSpeed().getValue();
-				} else {
-					value = current.speed;
+						value = l / (60 * 1000);
+				} catch (Exception ignore) {
 				}
-			} catch (Exception ignore) {
-			}
-		} else if ("CCD".equals(key)) {
-			try {
-				Current current = (Current) ndc.get(NMEADataCache.VDR_CURRENT);
-				if (current == null) {
-					Map<Long, NMEADataCache.CurrentDefinition> currentMap =
-									((Map<Long, NMEADataCache.CurrentDefinition>) ndc.get(NMEADataCache.CALCULATED_CURRENT));  //.put(bufferLength, new NMEADataCache.CurrentDefinition(bufferLength, new Speed(speed), new Angle360(dir)));
-					Set<Long> keys = currentMap.keySet();
-					if (keys.size() != 1 && DEBUG)
-						System.err.println("CCD: Nb entry(ies) in Calculated Current Map:" + keys.size());
-					for (Long l : keys)
-						value = currentMap.get(l).getDirection().getValue();
-				} else {
-					value = current.angle;
+				break;
+			case "XTE":
+				try {
+					value = ((Distance) ndc.get(NMEADataCache.XTE)).getValue();
+				} catch (Exception ignore) {
 				}
-			} catch (Exception ignore) {
-			}
-		} else if ("TBF".equals(key)) {
-			try {
-				Map<Long, NMEADataCache.CurrentDefinition> currentMap =
-								((Map<Long, NMEADataCache.CurrentDefinition>) ndc.get(NMEADataCache.CALCULATED_CURRENT));  //.put(bufferLength, new NMEADataCache.CurrentDefinition(bufferLength, new Speed(speed), new Angle360(dir)));
-				Set<Long> keys = currentMap.keySet();
-				if (keys.size() != 1 && DEBUG)
-					System.err.println("TBF: Nb entry(ies) in Calculated Current Map:" + keys.size());
-				for (Long l : keys)
-					value = l / (60 * 1000);
-			} catch (Exception ignore) {
-			}
-		} else if ("XTE".equals(key)) {
-			try {
-				value = ((Distance) ndc.get(NMEADataCache.XTE)).getValue();
-			} catch (Exception ignore) {
-			}
+				break;
+			default:
+				break;
 		}
 		return value;
 	}

@@ -22,7 +22,7 @@ public class DataFileWriter implements Forwarder {
 	@Override
 	public void write(byte[] message) {
 		try {
-			String mess = new String(message);
+			String mess = new String(message).trim(); // trim removes \r\n
 			if (!mess.isEmpty()) {
 				this.dataFile.write(mess + '\n');
 			}
