@@ -52,3 +52,6 @@ To stop `snap.loop`, type:
 ```
  Prompt> ./kill.loop
 ```
+
+#### More
+You might be interested in [this document](../Monitor.Battery/README.md) too, on the same topic, with more options.
