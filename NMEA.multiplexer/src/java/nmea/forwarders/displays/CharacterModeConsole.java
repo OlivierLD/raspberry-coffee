@@ -28,6 +28,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fusesource.jansi.AnsiConsole;
 import context.NMEADataCache;
@@ -54,42 +55,47 @@ public class CharacterModeConsole {
 
 	private Date loggingStarted = null;
 	private boolean startedUpdatedWithRMC = false;
-	private final SuperBool first = new SuperBool(true);
+	private final AtomicBoolean first = new AtomicBoolean(true);
 
 	private static Map<String, AssociatedData> suffixes = new HashMap<String, AssociatedData>();
 
+	/**
+	 * Associate the data mentioned in char.console.proterirs with a unit and an edit mask (Format).
+	 * If new values are to be displayed, they should be added here, and in {@link #getValueFromCache(String, NMEADataCache)}
+	 */
 	static {
-		suffixes.put("BSP", new AssociatedData("kt", DF_22));
-		suffixes.put("HDG", new AssociatedData("t", DF_3));
-		suffixes.put("AWS", new AssociatedData("kt", DF_22));
-		suffixes.put("SOG", new AssociatedData("kt", DF_22));
-		suffixes.put("TWS", new AssociatedData("kt", DF_22));
+		suffixes.put("BSP", new AssociatedData("kt", DF_22)); // BoatSpeed
+		suffixes.put("HDG", new AssociatedData("t", DF_3));   // Heading (true)
+		suffixes.put("AWS", new AssociatedData("kt", DF_22)); // Apparent Wind Speed
+		suffixes.put("SOG", new AssociatedData("kt", DF_22)); // Speed Over Ground
+		suffixes.put("TWS", new AssociatedData("kt", DF_22)); // True Wind Speed
 		suffixes.put("CSP", new AssociatedData("kt", DF_22)); // Current Speed
-		suffixes.put("AWA", new AssociatedData("", DF_3));
-		suffixes.put("TWA", new AssociatedData("", DF_3));
-		suffixes.put("HDG", new AssociatedData("t", DF_3));
-		suffixes.put("COG", new AssociatedData("t", DF_3));
-		suffixes.put("CDR", new AssociatedData("t", DF_3)); // Current Direction
-		suffixes.put("TWD", new AssociatedData("t", DF_3));
-		suffixes.put("MWT", new AssociatedData("C", DF_31)); // Water Temp
-		suffixes.put("MTA", new AssociatedData("C", DF_31)); // Air Temp
+		suffixes.put("AWA", new AssociatedData("", DF_3));    // Apparent Wind Angle
+		suffixes.put("TWA", new AssociatedData("", DF_3));    // True Wind Angle
+		suffixes.put("COG", new AssociatedData("t", DF_3));   // Course Over Ground
+		suffixes.put("CDR", new AssociatedData("t", DF_3));   // Current Direction
+		suffixes.put("TWD", new AssociatedData("t", DF_3));   // True Wind Direction
+		suffixes.put("MWT", new AssociatedData("C", DF_31));  // Water Temp
+		suffixes.put("MTA", new AssociatedData("C", DF_31));  // Air Temp
 		suffixes.put("MMB", new AssociatedData("mb", DF_4));  // Pressure at Sea Level
-		suffixes.put("DBT", new AssociatedData("m", DF_31)); // Depth
+		suffixes.put("DBT", new AssociatedData("m", DF_31));  // Depth
 		suffixes.put("LOG", new AssociatedData("nm", DF_4));  // Log
 		suffixes.put("CCS", new AssociatedData("kt", DF_22)); // Current Speed
-		suffixes.put("CCD", new AssociatedData("t", DF_3));  // Current Direction
-		suffixes.put("TBF", new AssociatedData("m", DF_4));  // Time buffer (in minutes) for current calculation
-		suffixes.put("XTE", new AssociatedData("nm", DF_22));
-		suffixes.put("HUM", new AssociatedData("%", DF_31)); // Humidity
+		suffixes.put("CCD", new AssociatedData("t", DF_3));   // Current Direction
+		suffixes.put("TBF", new AssociatedData("m", DF_4));   // Time buffer (in minutes) for current calculation
+		suffixes.put("XTE", new AssociatedData("nm", DF_22)); // Cross Track Error
+		suffixes.put("HUM", new AssociatedData("%", DF_31));  // Humidity
 	}
 
-	private static Map<String, Integer> nonNumericData = new HashMap<String, Integer>();
+	private static Map<String, Integer> nonNumericData = new HashMap<String, Integer>(); // Key, str length.
 
 	static {
-		nonNumericData.put("POS", 24);
+		nonNumericData.put("POS", 24); // Geographical Position
 		nonNumericData.put("GDT", 32); // GPS Date & Time
 		nonNumericData.put("SLT", 32); // Solar Time
 		nonNumericData.put("NWP", 10); // Next Way point
+		nonNumericData.put("LAT", 12); // Latitude
+		nonNumericData.put("LNG", 12); // Longitude
 	}
 
 	private static Map<String, String> colorMap = new HashMap<String, String>();
@@ -117,6 +123,7 @@ public class CharacterModeConsole {
 			ex.printStackTrace();
 		}
 		// Start refresh thread, every 1 minutes by default
+		// Clears and reset the screen.
 		if ("yes".equals(System.getProperty("console.refresh", "yes"))) {
 			final int interval = 1;
 			Thread refresher = new Thread("Char Console Reader") {
@@ -126,7 +133,7 @@ public class CharacterModeConsole {
 							Thread.sleep(interval * 60 * 1000L);
 						} catch (Exception ex) {
 						}
-						first.setValue(true);
+						first.set(true);
 					}
 				}
 			};
@@ -151,14 +158,14 @@ public class CharacterModeConsole {
 		} catch (Exception ex) {
 		} // Not nice, I know...
 
-		first.setValue(true);
+		first.set(true);
 		// The small touchscreen (320x240) in 8x8 resolution has 40 columns per line of text, in 6x12, 54 columns.
 	}
 
 	public void displayData(NMEADataCache ndc, Properties props) {
-		if (first.isTrue()) {
+		if (first.get()) {
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
-			first.setValue(false);
+			first.set(false);
 			try {
 				initConsole(props);
 			} catch (Exception ex) {
@@ -639,22 +646,6 @@ public class CharacterModeConsole {
 
 		public String getTitleBackground() {
 			return titleBackground;
-		}
-	}
-
-	private static class SuperBool {
-		private boolean b;
-
-		public SuperBool(boolean b) {
-			this.b = b;
-		}
-
-		public void setValue(boolean b) {
-			this.b = b;
-		}
-
-		public boolean isTrue() {
-			return this.b;
 		}
 	}
 
