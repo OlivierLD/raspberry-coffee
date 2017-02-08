@@ -7,6 +7,32 @@
         <style>
         * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
         p { line-height:18px; }
+
+        /*
+         * See getColorConfig, in AnalogDisplay.js
+         * The following definition is optional, it overrides the default values.
+         */
+        .analogdisplay {
+            --face-color: white;
+            --digit-color: green;
+            --with-gradient: true;
+            --bg-gradient-from: LightGrey;
+            --bg-gradient-to: white;
+            --display-shadow: true;
+            --shadow-color: rgba(0, 0, 0, 0.75);
+            --outline-color: DarkGrey;
+            --major-tick-color: black;
+            --minor-tick-color: black;
+            --value-color: grey;
+            --value-outline-color: black;
+            --value-nb-decimal: 1;
+            --hand-color: rgba(255, 0, 0, 0.4);
+            --hand-outline-color: black;
+            --with-hand-shadow: true;
+            --knob-color: DarkGrey;
+            --knob-outline-color: black;
+            --font: Arial;
+        }
         </style>
 
         <script type="text/javascript">

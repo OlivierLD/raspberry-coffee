@@ -1,21 +1,33 @@
 /*
  * @author Olivier Le Diouris
  */
- // TODO This config in CSS
- // We wait for the var- custom properties to be implemented in CSS...
- // @see http://www.w3.org/TR/css-variables-1/
-
- /*
-  * For now:
-  * Themes are applied based on a css class:
-  * .display-scheme
-  * {
-  *   color: black;
-  * }
-  *
-  * if color is black, analogDisplayColorConfigBlack is applied
-  * if color is white, analogDisplayColorConfigWhite is applied, etc
-  */
+/*
+ * See custom properties in CSS.
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+ * Relies on a rule named .analogdisplay, like that:
+ *
+  .analogdisplay {
+    --face-color: white;
+    --digit-color: green;
+    --with-gradient: true;
+    --bg-gradient-from: LightGrey;
+    --bg-gradient-to: white;
+    --display-shadow: true;
+    --shadow-color: rgba(0, 0, 0, 0.75);
+    --outline-color: DarkGrey;
+    --major-tick-color: black;
+    --minor-tick-color: black;
+    --value-color: grey;
+    --value-outline-color: black;
+    --value-nb-decimal: 1;
+    --hand-color: rgba(255, 0, 0, 0.4);
+    --hand-outline-color: black;
+    --with-hand-shadow: true;
+    --knob-color: DarkGrey;
+    --knob-outline-color: black;
+    --font: Arial;
+  }
+ */
 var analogDisplayColorConfigWhite = {
   bgColor:           'white',
   digitColor:        'black',
@@ -58,6 +70,93 @@ var analogDisplayColorConfigBlack = {
 };
 var analogDisplayColorConfig = analogDisplayColorConfigWhite; // analogDisplayColorConfigBlack; // White is the default
 
+/*
+ document.styleSheets[0].cssRules[2].selectorText returns ".analogdisplay"
+ document.styleSheets[0].cssRules[2].cssText returns ".analogdisplay { --hand-color: red;  --face-color: white; }"
+ document.styleSheets[0].cssRules[2].style.cssText returns "--hand-color: red; --face-color: white;"
+ */
+var getColorConfig = function() {
+  // Recurse from the top down, on styleSheets and cssRules
+  var colorConfig = analogDisplayColorConfig;
+  for (var s=0; s<document.styleSheets.length; s++) {
+    for (var r=0; r<document.styleSheets[s].cssRules.length; r++) {
+      if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
+        var cssText = document.styleSheets[s].cssRules[r].style.cssText;
+        var cssTextElems = cssText.split(";");
+        cssTextElems.forEach(function(elem) {
+          if (elem.trim().length > 0) {
+              var keyValPair = elem.split(":");
+              var key = keyValPair[0].trim();
+              var value = keyValPair[1].trim();
+              switch (key) {
+                  case '--face-color':
+                    colorConfig.bgColor = value;
+                    break;
+                  case '--digit-color':
+                      colorConfig.digitColor = value;
+                      break;
+                  case '--with-gradient':
+                      colorConfig.withGradient = (value === 'true');
+                      break;
+                  case '--bg-gradient-from':
+                      colorConfig.displayBackgroundGradient.from = value;
+                      break;
+                  case '--bg-gradient-to':
+                      colorConfig.displayBackgroundGradient.to = value;
+                      break;
+                  case '--display-shadow':
+                      colorConfig.withDisplayShadow = (value === 'true');
+                      break;
+                  case '--shadow-color':
+                      colorConfig.shadowColor = value;
+                      break;
+                  case '--outline-color':
+                      colorConfig.outlineColor = value;
+                      break;
+                  case '--major-tick-color':
+                      colorConfig.majorTickColor = value;
+                      break;
+                  case '--minor-tick-color':
+                      colorConfig.minorTickColor = value;
+                      break;
+                  case '--value-color':
+                      colorConfig.valueColor = value;
+                      break;
+                  case '--value-outline-color':
+                      colorConfig.valueOutlineColor = value;
+                      break;
+                  case '--value-nb-decimal':
+                      colorConfig.valueNbDecimal = parseInt(value);
+                      break;
+                  case '--hand-color':
+                      colorConfig.handColor = value;
+                      break;
+                  case '--hand-outline-color':
+                      colorConfig.handOutlineColor = value;
+                      break;
+                  case '--with-hand-shadow':
+                      colorConfig.withHandShadow = (value === 'true');
+                      break;
+                  case '--knob-color':
+                      colorConfig.knobColor = value;
+                      break;
+                  case '--knob-outline-color':
+                      colorConfig.knobOutlineColor = value;
+                      break;
+                  case '--font':
+                      colorConfig.font = value;
+                      break;
+                  default:
+                    break;
+              }
+          }
+        });
+      }
+    }
+  }
+  return colorConfig;
+};
+
 function AnalogDisplay(cName,                     // Canvas Name
                        dSize,                     // Display radius
                        maxValue,                  // default 10
@@ -67,6 +166,9 @@ function AnalogDisplay(cName,                     // Canvas Name
                        overlapOver180InDegree,    // default 0 (will display half circle), beyond horizontal, in degrees, before 0, after 180
                        startValue,                // default 0, In case it is not 0
                        nbDecimal) {               // default 1, nb decimals in the value display
+
+  analogDisplayColorConfig =  getColorConfig();
+
   if (maxValue === undefined)
     maxValue = 10;
   if (majorTicks === undefined)
@@ -210,7 +312,12 @@ function AnalogDisplay(cName,                     // Canvas Name
     } else if (schemeColor === 'white') {
       analogDisplayColorConfig = analogDisplayColorConfigWhite;
     }
-    var digitColor = analogDisplayColorConfig.digitColor;
+    // TODO Remove the above when ready
+    analogDisplayColorConfig =  getColorConfig();
+
+
+
+      var digitColor = analogDisplayColorConfig.digitColor;
 
     var canvas = document.getElementById(displayCanvasName);
     var context = canvas.getContext('2d');
