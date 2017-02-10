@@ -14,6 +14,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import http.utils.DumpUtil;
 
@@ -46,6 +49,16 @@ import http.utils.DumpUtil;
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // HTTPServer.class.getName());
+	static {
+		LOGGER.setLevel(Level.INFO);
+		try {
+			FileHandler fh = new FileHandler("./httpserver.log");
+			LOGGER.addHandler(fh);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static class Request {
 		public final static List<String> VERBS = Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH");
@@ -412,9 +425,9 @@ public class HTTPServer {
 					}
 					ss.close();
 				} catch (Exception e) {
-					System.err.println(">>> Port " + port + ", " + e.toString() + " >>>");
+					LOGGER.severe(String.format(">>> Port %d, %s >>>", port, e.toString()));
 					e.printStackTrace();
-					System.err.println("<<< Port " + port + " <<<");
+					LOGGER.severe(String.format("<<< Port %d <<<", port));
 				} finally {
 					if (verbose)
 						System.out.println("HTTP Server is done.");

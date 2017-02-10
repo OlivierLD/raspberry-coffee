@@ -70,13 +70,15 @@ var analogDisplayColorConfigBlack = {
 };
 var analogDisplayColorConfig = analogDisplayColorConfigWhite; // analogDisplayColorConfigBlack; // White is the default
 
-/*
- document.styleSheets[0].cssRules[2].selectorText returns ".analogdisplay"
- document.styleSheets[0].cssRules[2].cssText returns ".analogdisplay { --hand-color: red;  --face-color: white; }"
- document.styleSheets[0].cssRules[2].style.cssText returns "--hand-color: red; --face-color: white;"
+/**
+ * Recurse from the top down, on styleSheets and cssRules
+ *
+ * document.styleSheets[0].cssRules[2].selectorText returns ".analogdisplay"
+ * document.styleSheets[0].cssRules[2].cssText returns ".analogdisplay { --hand-color: red;  --face-color: white; }"
+ * document.styleSheets[0].cssRules[2].style.cssText returns "--hand-color: red; --face-color: white;"
  */
 var getColorConfig = function() {
-  // Recurse from the top down, on styleSheets and cssRules
+  //
   var colorConfig = analogDisplayColorConfig;
   for (var s=0; s<document.styleSheets.length; s++) {
     for (var r=0; r<document.styleSheets[s].cssRules.length; r++) {
@@ -305,19 +307,8 @@ function AnalogDisplay(cName,                     // Canvas Name
   };
 
   function drawDisplay(displayCanvasName, displayRadius, displayValue) {
-    var schemeColor = getStyleRuleValue('color', '.display-scheme');
-//  console.log(">>> DEBUG >>> color:" + schemeColor);
-    if (schemeColor === 'black') {
-      analogDisplayColorConfig = analogDisplayColorConfigBlack;
-    } else if (schemeColor === 'white') {
-      analogDisplayColorConfig = analogDisplayColorConfigWhite;
-    }
-    // TODO Remove the above when ready
     analogDisplayColorConfig =  getColorConfig();
-
-
-
-      var digitColor = analogDisplayColorConfig.digitColor;
+    var digitColor = analogDisplayColorConfig.digitColor;
 
     var canvas = document.getElementById(displayCanvasName);
     var context = canvas.getContext('2d');
@@ -388,8 +379,7 @@ function AnalogDisplay(cName,                     // Canvas Name
 
     // Major Ticks
     context.beginPath();
-    for (i = 0;i <= (maxValue - startValue) ;i+=majorTicks)
-    {
+    for (var i = 0;i <= (maxValue - startValue) ;i+=majorTicks) {
       var currentAngle = (totalAngle * (i / (maxValue - startValue))) - toRadians(overlapOver180InDegree);
       xFrom = (canvas.width / 2) - ((radius * 0.95) * Math.cos(currentAngle));
       yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(currentAngle));
@@ -404,11 +394,9 @@ function AnalogDisplay(cName,                     // Canvas Name
     context.closePath();
 
     // Minor Ticks
-    if (minorTicks > 0)
-    {
+    if (minorTicks > 0) {
       context.beginPath();
-      for (i = 0;i <= (maxValue - startValue) ;i+=minorTicks)
-      {
+      for (var i = 0;i <= (maxValue - startValue) ;i+=minorTicks) {
         var _currentAngle = (totalAngle * (i / (maxValue - startValue))) - toRadians(overlapOver180InDegree);
 
         xFrom = (canvas.width / 2) - ((radius * 0.95) * Math.cos(_currentAngle));
