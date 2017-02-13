@@ -84,7 +84,7 @@ A basic approach to compute the current would be to do it by instant triangulati
 and comparing it with the GPS Data (Course and Speed Over Ground).
 A better approach turned out to compute the current over a given period of time.
 For example, you can perform this calculation by comparing the position you should be at with the CMG only (i.e. as if there was no current)
- and the one given by the GPS, over periods like 30 seconds, 1 minute, 10 minutes, etc, using a smoothing of the Boat Speed (BSP) and the CMG.
+ and the one given by the GPS, over periods like 30 seconds, 1 minute, 10 minutesFSupporte, etc, using a smoothing of the Boat Speed (BSP) and the CMG.
  The cache is designed to manage several such computations in parallel, they are discriminated by the lenght of their time-buffer (30 seconds, 5 minutes, etc).
 The accuracy of such a computations is _much higher_ than the instant triangulation.
 See [this article](http://www.lediouris.net/RaspberryPI/_Articles/readme.html) for details.
@@ -244,12 +244,11 @@ Same if you want the HTTP server to be started or not.
 ```properties
 with.http.server=yes
 http.port=9999
-
 ```
 This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
 It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
-### Supported end-points
+### Supported REST end-points
 
 #### List of operations
 A full list of the available REST services is available at 

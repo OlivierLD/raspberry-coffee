@@ -12,6 +12,7 @@ var storedHistoryOut = "";
 var storedElapsed = "";
 
 var getDeferred = function(url, timeout, verb, happyCode, data) {
+    document.body.style.cursor = 'wait';
     var deferred = $.Deferred(),  // a jQuery deferred
         url = url,
         xhr = new XMLHttpRequest(),
@@ -111,6 +112,7 @@ var serialPortList = function() {
   var getData = getSerialPorts();
   getData.done(function(value) {
     var after = new Date().getTime();
+    document.body.style.cursor = 'default';
     console.log("Done in " + (after - before) + " ms :", value);
     var json = JSON.parse(value);
     setRESTPayload(json, (after - before));
@@ -127,6 +129,7 @@ var serialPortList = function() {
     $("#lists").html(html);
   });
   getData.fail(function(error, errmess) {
+      document.body.style.cursor = 'default';
       var message;
       if (errmess !== undefined) {
           if (errmess.message !== undefined) {
@@ -190,6 +193,7 @@ var channelList = function() {
     var getData = getChannels();
     getData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         var json = JSON.parse(value);
         setRESTPayload(json, (after - before));
@@ -229,6 +233,7 @@ var channelList = function() {
         $("#lists").html(html);
     });
     getData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -246,6 +251,7 @@ var forwarderList = function() {
     var getData = getForwarders();
     getData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         var json = JSON.parse(value);
         setRESTPayload(json, (after - before));
@@ -289,6 +295,7 @@ var forwarderList = function() {
         $("#lists").html(html);
     });
     getData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -306,6 +313,7 @@ var computerList = function() {
     var getData = getComputers();
     getData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         var json = JSON.parse(value);
         setRESTPayload(json, (after - before));
@@ -327,6 +335,7 @@ var computerList = function() {
         $("#lists").html(html);
     });
     getData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -344,11 +353,13 @@ var createChannel = function(channel) {
     var postData = addChannel(channel);
     postData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
         channelList(); // refetch
     });
     postData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -366,11 +377,13 @@ var createForwarder = function(forwarder) {
     var postData = addForwarder(forwarder);
     postData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
         forwarderList(); // refetch
     });
     postData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -388,11 +401,13 @@ var createComputer = function(computer) {
     var postData = addComputer(computer);
     postData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
         computerList(); // refetch
     });
     postData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -410,11 +425,13 @@ var removeChannel = function(channel) {
     var deleteData = deleteChannel(channel);
     deleteData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
         channelList(); // refetch
     });
     deleteData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -432,11 +449,13 @@ var removeForwarder = function(channel) {
     var deleteData = deleteForwarder(channel);
     deleteData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
         forwarderList(); // refetch
     });
     deleteData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -454,11 +473,13 @@ var removeComputer = function(computer) {
     var deleteData = deleteComputer(computer);
     deleteData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
         computerList(); // refetch
     });
     deleteData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -476,11 +497,13 @@ var changeChannel = function(channel) {
     var putData = updateChannel(channel);
     putData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
         channelList(); // refetch
     });
     putData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -498,11 +521,13 @@ var changeComputer = function(computer) {
     var putData = updateComputer(computer);
     putData.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
         computerList(); // refetch
     });
     putData.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -534,11 +559,13 @@ var manageMuxVerbose = function(cb) {
     var updateMux = updateMuxVerbose(cb.checked ? 'on' : 'off');
     updateMux.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         RESTPayload = value;
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
     });
     updateMux.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
@@ -556,11 +583,13 @@ var resetCache = function() {
     var reset = resetDataCache();
     reset.done(function(value) {
         var after = new Date().getTime();
+        document.body.style.cursor = 'default';
         RESTPayload = value;
         console.log("Done in " + (after - before) + " ms :", value);
         setRESTPayload(value, (after - before));
     });
     reset.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
         var message;
         if (errmess !== undefined) {
             if (errmess.message !== undefined) {
