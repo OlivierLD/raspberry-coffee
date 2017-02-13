@@ -3,11 +3,10 @@ function Graph(cName,       // Canvas Name
                cHeight,     // Canvas height
                graphData,   // x,y tuple array
                callback,    // Callback on mouseclick
-               unit,
-               withWindDir) {
+               unit) {
   var instance = this;
-  var xScale = 0, yScale = 0;
-  var minx = 0, miny = 0, maxx = 0, maxy= 0;
+  var xScale, yScale;
+  var minx, miny, maxx, maxy;
   var context;
   
   var unit = unit;
@@ -24,8 +23,8 @@ function Graph(cName,       // Canvas Name
 //    console.log("Mouse: x=" + x + ", y=" + y);
       
       var idx = Math.round(x / xScale);
-      if (idx < JSONParser.nmeaData.length) {
-        if (callback !== undefined) {
+      if (idx < graphData.length) {
+        if (callback !== undefined && callback !== null) {
           callback(idx);
         }
         lastClicked = idx;
@@ -41,30 +40,18 @@ function Graph(cName,       // Canvas Name
       x = coords.x;
       y = coords.y;
 //    console.log("Mouse: x=" + x + ", y=" + y);
-      
-      var idx = Math.round(x / xScale);
-      if (idx < JSONParser.nmeaData.length) {
+
+      var idx = xScale !== 0 ? Math.round(x / xScale) : 0;
+      if (idx < graphData.length) {
         var str = [];
         try { 
-          str.push(JSONParser.nmeaData[idx].getNMEATws() + "kt @ " + JSONParser.nmeaData[idx].getNMEATwd() + "\272");
-          str.push("P:" + JSONParser.nmeaData[idx].getNMEAPrmsl() + " hPa");
-          if (document.getElementById("utc-display").checked)
-            str.push(new Date(JSONParser.nmeaData[idx].getNMEADate()).format("d-M-Y H:i") + " UT");
-          else
-            str.push(reformatDate(JSONParser.nmeaData[idx].getNMEADate(), "d-M-Y H:i"));
-          str.push("Temp: " + JSONParser.nmeaData[idx].getNMEATemp() + "\272C");
-          str.push("Hum: "  + JSONParser.nmeaData[idx].getNMEAHum() + " %");
-          str.push("Rain: " + JSONParser.nmeaData[idx].getNMEARain() + " mm");
-          str.push("CPU: "  + JSONParser.nmeaData[idx].getNMEACpu() + "\272C");
+          str.push("Pos:" + idx);
   //      console.log("Bubble:" + str);
         } catch (err) { console.log(JSON.stringify(err)); }
         
   //    context.fillStyle = '#000';
   //    context.fillRect(0, 0, w, h);
         instance.drawGraph(cName, graphData, lastClicked);
-        if (withWindDir) {
-          instance.drawWind(JSONParser.nmeaData);
-        }
         var tooltipW = 120, nblines = str.length;
         context.fillStyle = "rgba(250, 250, 210, .7)"; 
 //      context.fillStyle = 'yellow';
@@ -149,7 +136,7 @@ function Graph(cName,       // Canvas Name
     var mini = Math.floor(this.minY(data));
     var maxi = Math.ceil(this.maxY(data));
     var gridXStep = Math.round((maxi - mini) / 3);
-    var gridYStep = Math.round(JSONParser.nmeaData.length / 10);
+    var gridYStep = Math.round(data.length / 10);
     
     // Sort the tuples (on X, time)
     data.sort(sortTupleX);
@@ -224,10 +211,6 @@ function Graph(cName,       // Canvas Name
       context.rotate(-Math.PI / 2);
       context.font = "bold 10px Arial"; 
       context.fillStyle = 'black';
-      if (document.getElementById("utc-display").checked)
-        str = new Date(JSONParser.nmeaData[i].getNMEADate()).format("d-M H:i") + " UT";
-      else
-        str = reformatDate(JSONParser.nmeaData[i].getNMEADate(), "d-M H:i");
       len = context.measureText(str).width;
       context.fillText(str, 2, -1); //i * xScale, cHeight - (len));
       context.restore();            
@@ -257,27 +240,28 @@ function Graph(cName,       // Canvas Name
     
     if (document.getElementById("smooth-data").checked) { // Smoothed data
       data = smoothData;
-      
-      context.beginPath();
-      context.lineWidth = 3;
-      context.strokeStyle = 'red';
-  
-      previousPoint = data[0];
-      context.moveTo((data[0].getX() - minx) * xScale, cHeight - (data[0].getY() - miny) * yScale);
-      for (var i=1; i<data.length; i++) {
-//      context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
-        context.lineTo((data[i].getX() - minx) * xScale, cHeight - (data[i].getY() - miny) * yScale);
-//      context.stroke();
-        previousPoint = data[i];
-      }
-      // Close the shape, bottom
-      context.lineTo(context.canvas.width, context.canvas.height);
-      context.lineTo(0, context.canvas.height);
+      if (data !== undefined && data.length > 0) {
 
-      context.closePath();
-      context.stroke();
-      context.fillStyle = 'rgba(255, 0, 0, 0.35)';
-      context.fill();
+            context.beginPath();
+            context.lineWidth = 3;
+            context.strokeStyle = 'red';
+            previousPoint = data[0];
+            context.moveTo((data[0].getX() - minx) * xScale, cHeight - (data[0].getY() - miny) * yScale);
+            for (var i = 1; i < data.length; i++) {
+//      context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
+                context.lineTo((data[i].getX() - minx) * xScale, cHeight - (data[i].getY() - miny) * yScale);
+//      context.stroke();
+                previousPoint = data[i];
+            }
+            // Close the shape, bottom
+            context.lineTo(context.canvas.width, context.canvas.height);
+            context.lineTo(0, context.canvas.height);
+
+            context.closePath();
+            context.stroke();
+            context.fillStyle = 'rgba(255, 0, 0, 0.35)';
+            context.fill();
+        }
     }
     
     if (idx !== undefined) {
@@ -289,39 +273,10 @@ function Graph(cName,       // Canvas Name
       context.stroke();
       context.closePath();
     }
-
-    if (withWindDir) {
-      this.drawWind(JSONParser.nmeaData);
-    }
   };
   
-  var ARROW_LEN = 20;
-  
-  this.drawWind = function(nmea) {    
-    if (nmea !== undefined) {
-      for (var i=0; i<nmea.length; i+=2)  {
-        var wd = parseFloat(nmea[i].getNMEATwd() + 180);
-        while (wd > 360)
-          wd -= 360;
-        var twd = toRadians(wd); 
-        context.beginPath();
-        var x = i * (cWidth / nmea.length);
-        var y = cHeight / 2;
-        var dX = ARROW_LEN * Math.sin(twd);
-        var dY = - ARROW_LEN * Math.cos(twd);
-        // create a new line object
-        var line = new Line(x, y, x + dX, y + dY);
-        // draw the line
-        line.draw(context);
-//      line.drawWithArrowhead(context);
-//      line.drawWithWindFeathers(context, parseFloat(nmea[i].getNMEATws()));
-        context.closePath();
-      }
-    }
-  };
-
   (function() {
-    if (graphData !== undefined && graphData.length > 0) {
+    if (graphData.length > 0) {
         minx = instance.minX(graphData);
         miny = instance.minY(graphData);
         maxx = instance.maxX(graphData);
@@ -329,13 +284,17 @@ function Graph(cName,       // Canvas Name
 
 //   console.log("MinX:" + minx + ", MaxX:" + maxx + ", MinY:" + miny + ", MaxY:" + maxy);
 
-        xScale = cWidth / (maxx - minx);   // was Math.floor(canvas.getBoundingClientRect().width)
-        yScale = cHeight / (maxy - miny);  // was canvas.getBoundingClientRect().height
+        if (maxx !== minx) {
+            xScale = cWidth / (maxx - minx);   // was Math.floor(canvas.getBoundingClientRect().width)
+        }
+        if (maxy !== miny) {
+            yScale = cHeight / (maxy - miny);  // was canvas.getBoundingClientRect().height
+        }
 
-//  console.log("xScale:" + xScale + ", yScale:" + yScale);
+//   console.log("xScale:" + xScale + ", yScale:" + yScale);
     }
     instance.drawGraph(cName, graphData);
-   })(); // Invoked automatically when new is invoked.  
+  })(); // Invoked automatically when new is invoked.
 };
 
 function Tuple(_x, _y) {

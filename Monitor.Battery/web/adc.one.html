@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>ADC / WebSockets</title>
         <script type="text/javascript" src="widgets/AnalogDisplay.js"></script>
+        <script type="text/javascript" src="widgets/Graph.js"></script>
         <style>
         * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
         p { line-height:18px; }
@@ -38,30 +39,43 @@
         <script type="text/javascript">
         var displayValue;
         var statusFld;
-        
+        var graph;
+
+        var graphBatteryData = [];
+//      graphBatteryData.push(new Tuple(0, 1));
+//      graphBatteryData.push(new Tuple(1, 2));
+
         window.onload = function() {
           displayValue = new AnalogDisplay('valueCanvas', 100, 15, 1, 0.1, true, 40);
           statusFld = document.getElementById("status");
+          graph = new Graph("graphCanvas", 400, 200, graphBatteryData, null, "V");
         };
         </script>
     </head>
     <body>
       <table width="100%">
         <tr>
-          <td valign="top"><h2>ADC on WebSocket</h2></td>
+          <td valign="top" colspan="2"><h2>ADC on WebSocket</h2></td>
         </tr>
         <tr>
           <td align="center" valign="top">
             <canvas id="valueCanvas" width="240" height="220" title="Tension value"></canvas>
           </td>
+          <td>
+            <input type="checkbox" id="raw-data">Raw
+            &nbsp;<input type="checkbox" id="smooth-data" checked="true">Smoothed
+            &nbsp;<input type="checkbox" id="tooltip" checked="true">Tooltip
+            <br>
+            <canvas id="graphCanvas" width="600" height="220" title="Tension Histopry"></canvas>
+          </td>
         </tr>
         <tr>
-          <td align="left">
+          <td align="left" colspan="2">
             <div id="status" style="padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 80px;"></div>
           </td>
         </tr>
         <tr>
-          <td valign="top" align="right"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
+          <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
         </tr>
       </table>
       <hr>

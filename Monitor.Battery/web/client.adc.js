@@ -32,6 +32,8 @@ var connection;
       var str = JSON.parse(message.data);
       var volt = parseFloat(str);
       displayValue.animate(volt);
+      graphBatteryData.push(new Tuple(graphBatteryData.length, volt));
+      graph.drawGraph("graphCanvas", graphBatteryData, graphBatteryData.length);
     } catch (e) {
       displayMessage('This doesn\'t look like a valid value: ' + message.data);
       return;
@@ -51,10 +53,12 @@ var connection;
 })();
 
 var displayMessage = function(mess) {
-  var messList = statusFld.innerHTML;
-  messList = (((messList !== undefined && messList.length) > 0 ? messList + '<br>' : '') + mess);
-  statusFld.innerHTML = messList;
-  statusFld.scrollTop = statusFld.scrollHeight; // Scroll down
+  if (statusFld !== undefined) {
+      var messList = statusFld.innerHTML;
+      messList = (((messList !== undefined && messList.length) > 0 ? messList + '<br>' : '') + mess);
+      statusFld.innerHTML = messList;
+      statusFld.scrollTop = statusFld.scrollHeight; // Scroll down
+  }
 };
 
 var resetStatus = function() {
