@@ -228,7 +228,7 @@ function done() {
 };
 
 var simulate = function() {
-    var fakedVolt = Math.random() * 15;
+    var fakedVolt = 10 + (Math.random() * 4);
     console.log("Faking ", fakedVolt);
     for (var i=0; i < clients.length; i++) {
         clients[i].sendUTF(fakedVolt.toFixed(2)); // Just re-broadcast.

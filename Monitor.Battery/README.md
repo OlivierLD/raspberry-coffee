@@ -191,7 +191,7 @@ and from a browser, go to `http://localhost:9876/web/adc.one.html`. NodeJS is ho
 If you access the page remotely, replace `localhost` with the address of the Raspberry PI.
 
 <!-- ![WebSockets](./ws.battery.png "WebSocket") -->
-<img src="./ws.battery.png" alt="WebSocket" title="WebSocket" width="493" height="444">
+<img src="./ws.battery.png" alt="WebSocket" title="WebSocket" width="876" height="507">
 
 Every second, the WebSocket server pushes a message to the connected client(s). The display above is updated accordingly.
 
