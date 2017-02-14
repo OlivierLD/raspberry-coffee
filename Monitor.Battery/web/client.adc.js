@@ -1,6 +1,7 @@
 "use strict";
 
 var connection;
+var graphMaxLen = 60;
 
 (function () {
   var ws = window.WebSocket || window.MozWebSocket;
@@ -33,7 +34,13 @@ var connection;
       var volt = parseFloat(str);
       displayValue.animate(volt);
       graphBatteryData.push(new Tuple(graphBatteryData.length, volt));
-      graph.drawGraph("graphCanvas", graphBatteryData); // , graphBatteryData.length);
+      if (graphMaxLen !== undefined && graphBatteryData.length > graphMaxLen) {
+        while (graphBatteryData.length > graphMaxLen) {
+            graphBatteryData.splice(0, 1);
+        }
+      }
+
+      graph.drawGraph("graphCanvas", graphBatteryData); //, graphBatteryData.length);
     } catch (e) {
       displayMessage('This doesn\'t look like a valid value: ' + message.data);
       return;

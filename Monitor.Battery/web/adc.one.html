@@ -42,33 +42,9 @@
         var graph;
 
         var graphBatteryData = [];
-        var i = 0;
-        graphBatteryData.push(new Tuple(i++, 10.0));
-        graphBatteryData.push(new Tuple(i++, 12.1));
-        graphBatteryData.push(new Tuple(i++, 10.2));
-        graphBatteryData.push(new Tuple(i++, 12.3));
-        graphBatteryData.push(new Tuple(i++, 12.4));
-        graphBatteryData.push(new Tuple(i++, 12.3));
-        graphBatteryData.push(new Tuple(i++, 12.4));
-        graphBatteryData.push(new Tuple(i++, 12.5));
-        graphBatteryData.push(new Tuple(i++, 12.6));
-        graphBatteryData.push(new Tuple(i++, 12.8));
-        graphBatteryData.push(new Tuple(i++, 12.7));
-        graphBatteryData.push(new Tuple(i++, 12.9));
-        graphBatteryData.push(new Tuple(i++, 12.8));
-        graphBatteryData.push(new Tuple(i++, 12.7));
-        graphBatteryData.push(new Tuple(i++, 12.6));
-        graphBatteryData.push(new Tuple(i++, 12.3));
-        graphBatteryData.push(new Tuple(i++, 12.2));
-        graphBatteryData.push(new Tuple(i++, 13.9));
-        graphBatteryData.push(new Tuple(i++, 12.7));
-        graphBatteryData.push(new Tuple(i++, 12.7));
-        graphBatteryData.push(new Tuple(i++, 12.9));
-        graphBatteryData.push(new Tuple(i++, 12.8));
-        graphBatteryData.push(new Tuple(i++, 12.5));
-        graphBatteryData.push(new Tuple(i++, 12.6));
-        graphBatteryData.push(new Tuple(i++, 12.4));
-        graphBatteryData.push(new Tuple(i++, 12.2));
+        for (var i=0; i<20; i++) {
+            graphBatteryData.push(new Tuple(i++, 0.0));
+        }
 
         window.onload = function() {
           displayValue = new AnalogDisplay('valueCanvas', 100, 15, 1, 0.1, true, 40);

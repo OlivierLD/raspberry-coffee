@@ -1,4 +1,7 @@
 "use strict";  // http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
+
+var simulation = true; // Set to false for real measurement.
+
 /**
  * WebSocket server for Battery Monitoring sample
  * Static requests must be prefixed with /web/, like in http://machine:9876/web/console.html
@@ -223,3 +226,15 @@ function done() {
     console.log("\nBye now!");
     process.exit();
 };
+
+var simulate = function() {
+    var fakedVolt = Math.random() * 15;
+    console.log("Faking ", fakedVolt);
+    for (var i=0; i < clients.length; i++) {
+        clients[i].sendUTF(fakedVolt.toFixed(2)); // Just re-broadcast.
+    }
+};
+
+if (simulation) {
+    setInterval(simulate, 1000);
+}

@@ -126,6 +126,8 @@ function Graph(cName,       // Canvas Name
   };
   
   this.drawGraph = function(displayCanvasName, data, idx) {
+    init(data);
+
     context = canvas.getContext('2d');
     
     var _idxX;
@@ -277,25 +279,28 @@ function Graph(cName,       // Canvas Name
       context.closePath();
     }
   };
-  
+
+  var init = function(dataArray) {
+      if (dataArray.length > 0) {
+          minx = instance.minX(dataArray);
+          miny = 0; // instance.minY(graphData);
+          maxx = instance.maxX(dataArray);
+          maxy = 15; // instance.maxY(graphData);
+
+//        console.log("MinX:" + minx + ", MaxX:" + maxx + ", MinY:" + miny + ", MaxY:" + maxy);
+
+          if (maxx !== minx) {
+              xScale = cWidth / (maxx - minx);   // was Math.floor(canvas.getBoundingClientRect().width)
+          }
+          if (maxy !== miny) {
+              yScale = cHeight / (maxy - miny);  // was canvas.getBoundingClientRect().height
+          }
+//        console.log("xScale:" + xScale + ", yScale:" + yScale);
+      }
+  };
+
   (function() {
-    if (graphData.length > 0) {
-        minx = instance.minX(graphData);
-        miny = 0; // instance.minY(graphData);
-        maxx = instance.maxX(graphData);
-        maxy = 15; // instance.maxY(graphData);
-
-//   console.log("MinX:" + minx + ", MaxX:" + maxx + ", MinY:" + miny + ", MaxY:" + maxy);
-
-        if (maxx !== minx) {
-            xScale = cWidth / (maxx - minx);   // was Math.floor(canvas.getBoundingClientRect().width)
-        }
-        if (maxy !== miny) {
-            yScale = cHeight / (maxy - miny);  // was canvas.getBoundingClientRect().height
-        }
-
-//   console.log("xScale:" + xScale + ", yScale:" + yScale);
-    }
+    init(graphData);
     instance.drawGraph(cName, graphData);
   })(); // Invoked automatically when new is invoked.
 };
