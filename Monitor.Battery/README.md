@@ -130,7 +130,7 @@ Notice in the console above when the request is received, and when the response 
 <!-- ![SMS dialog](./sms.screenshot.png "SMS dialog") -->
 <img src='./sms.screenshot.png' alt='SMS dialog' title='SMS dialog' width='240' height='400'>
 
-
+<!--
 ### Outernet ?
 [Outernet](https://outernet.is/) might also be something to consider, if you are _really_ out of reach of any kind of network (at sea, far in the desert, etc).
 
@@ -143,6 +143,7 @@ More soon about that one...
 - Requires extra hardware
 - Not real-time, delayed.
 - Slow
+-->
 
 ### WebSocket
 WebSocket is a very cool technology, based on TCP. Obviously available on the server side of the world, but also
