@@ -14,8 +14,8 @@ public class Publisher {
 
 	public static final String BROKER_URL = "tcp://192.168.1.136:1883"; // tcp://broker.mqttdashboard.com:1883";
 
-	public static final String TOPIC_BRIGHTNESS = "home/brightness";
-	public static final String TOPIC_TEMPERATURE = "home/temperature";
+	public static final String BRIGHTNESS_TOPIC = "home/brightness";
+	public static final String TEMPERATURE_TOPIC = "home/temperature";
 
 	private MqttClient client;
 
@@ -65,7 +65,7 @@ public class Publisher {
 	}
 
 	private void publishTemperature() throws MqttException {
-		final MqttTopic temperatureTopic = client.getTopic(TOPIC_TEMPERATURE);
+		final MqttTopic temperatureTopic = client.getTopic(TEMPERATURE_TOPIC);
 
 		final int temperatureNumber = Utils.createRandomNumberBetween(20, 30);
 		final String temperature = temperatureNumber + "°C";
@@ -76,7 +76,7 @@ public class Publisher {
 	}
 
 	private void publishBrightness() throws MqttException {
-		final MqttTopic brightnessTopic = client.getTopic(TOPIC_BRIGHTNESS);
+		final MqttTopic brightnessTopic = client.getTopic(BRIGHTNESS_TOPIC);
 
 		final int brightnessNumber = Utils.createRandomNumberBetween(0, 100);
 		final String brigthness = brightnessNumber + "%";

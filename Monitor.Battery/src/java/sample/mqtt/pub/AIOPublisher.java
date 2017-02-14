@@ -19,7 +19,7 @@ public class AIOPublisher {
 	private String key = "";
 
 	public static final String BROKER_URL = "tcp://io.adafruit.com:1883";
-	public static final String TOPIC_ON_OFF = "/feeds/onoff"; // Concat with userName in front before using.
+	public static final String ON_OFF_TOPIC = "/feeds/onoff"; // Concat with userName in front before using.
 
 	private MqttClient client;
 
@@ -112,7 +112,7 @@ public class AIOPublisher {
 	private boolean onOff = true;
 
 	private void publish() throws MqttException {
-		final MqttTopic onOffTopic = client.getTopic(this.userName + TOPIC_ON_OFF);
+		final MqttTopic onOffTopic = client.getTopic(this.userName + ON_OFF_TOPIC);
 		final String pos = onOff ? "ON" : "OFF";
 		onOffTopic.publish(new MqttMessage(pos.getBytes()));
 		System.out.println("Published data. Topic: " + onOffTopic.getName() + "  Message: " + pos);

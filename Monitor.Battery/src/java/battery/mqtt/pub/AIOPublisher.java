@@ -8,13 +8,11 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
- * Use paho MQTT client to connect on Adafruit-IO
+ * Uses paho MQTT client to connect on Adafruit-IO
  * Paho doc at https://www.eclipse.org/paho/files/javadoc/index.html?org/eclipse/paho/client/mqttv3/
  */
 public class AIOPublisher {
@@ -26,7 +24,7 @@ public class AIOPublisher {
 	private static long betweenLoops = 1000L;
 
 	public static final String BROKER_URL = "tcp://io.adafruit.com:1883";
-	public static final String TOPIC_BATTERY = "/feeds/battery-pi"; // Concat with userName in front before using.
+	public static final String BATTERY_TOPIC = "/feeds/battery-pi"; // Concat with userName in front before using.
 
 	private MqttClient client;
 
@@ -121,7 +119,7 @@ public class AIOPublisher {
 	}
 
 	private void publish(float voltage) throws MqttException {
-		final MqttTopic onOffTopic = client.getTopic(this.userName + TOPIC_BATTERY);
+		final MqttTopic onOffTopic = client.getTopic(this.userName + BATTERY_TOPIC);
 		final String val = String.valueOf(voltage);
 		onOffTopic.publish(new MqttMessage(val.getBytes()));
 		System.out.println("Published data. Topic: " + onOffTopic.getName() + "  Message: " + val);
@@ -150,7 +148,7 @@ public class AIOPublisher {
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			publisher.stop();
-			try { // Wiat for the loop in start() to stop.
+			try { // Wait for the loop in start() to stop.
 				Thread.sleep(Math.round(betweenLoops * 1.25));
 			} catch (InterruptedException ex) {
 			}
