@@ -137,8 +137,7 @@ function Graph(cName,       // Canvas Name
     return max;
   };
   
-  this.drawGraph = function(displayCanvasName, data, idx)
-  {
+  this.drawGraph = function(displayCanvasName, data, idx) {
     context = canvas.getContext('2d');
     
     var _idxX;
@@ -148,9 +147,9 @@ function Graph(cName,       // Canvas Name
     
     var mini = Math.floor(this.minY(data));
     var maxi = Math.ceil(this.maxY(data));
-    var gridXStep = Math.round((maxi - mini) / 3);
-    var gridYStep = Math.round(JSONParser.nmeaData.length / 10);
-    
+    var gridXStep = Math.round(JSONParser.nmeaData.length / 10);
+    var gridYStep = Math.round((maxi - mini) / 3);
+
     // Sort the tuples (on X, time)
     data.sort(sortTupleX);
     
@@ -191,7 +190,7 @@ function Graph(cName,       // Canvas Name
       context.fillRect(0, 0, context.canvas.width, context.canvas.height);
     }
     // Horizontal grid (TWS)
-    for (var i=Math.round(mini); gridXStep>0 && i<maxi; i+=gridXStep) {
+    for (var i=Math.round(mini); gridYStep>0 && i<maxi; i+=gridYStep) {
       context.beginPath();
       context.lineWidth = 1;
       context.strokeStyle = 'gray';
@@ -210,7 +209,7 @@ function Graph(cName,       // Canvas Name
     }
     
     // Vertical grid (Time)
-    for (var i=gridYStep; i<data.length; i+=gridYStep) {
+    for (var i=gridXStep; i<data.length; i+=gridXStep) {
       context.beginPath();
       context.lineWidth = 1;
       context.strokeStyle = 'gray';

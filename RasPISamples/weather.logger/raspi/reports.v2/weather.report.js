@@ -28,8 +28,7 @@
       ]
  */
  
-var JSONParser =
-{
+var JSONParser = {
   nmeaData : [],
   position : {},
 
@@ -48,15 +47,13 @@ var JSONParser =
     }, {..} ]
   */
   
-  parse : function(wsJSONContent, cb, cb2)
-  {
+  parse : function(wsJSONContent, cb, cb2) {
     JSONParser.nmeaData  = [];
     var linkList = "";
     // For timestamps like 2015-07-05 23:58:41
     var regExp     = new RegExp("(\\d{4})-(\\d{2})-(\\d{2})\\s(\\d{2}):(\\d{2}):(\\d{2})");  
     
-    for (var i=0; i<wsJSONContent.length; i++)
-    {
+    for (var i=0; i<wsJSONContent.length; i++) {
       var date  = wsJSONContent[i].time;
       var d = null;
       var matches = regExp.exec(date);
@@ -83,8 +80,7 @@ var JSONParser =
   }
 };
 
-var NMEAData = function(date, prmsl, tws, twd, rain, atemp, hum, cpu)
-{
+var NMEAData = function(date, prmsl, tws, twd, rain, atemp, hum, cpu) {
   var nmeaDate = date;
   var nmeaPrmsl = prmsl;
   var nmeaTws = tws;
@@ -94,27 +90,19 @@ var NMEAData = function(date, prmsl, tws, twd, rain, atemp, hum, cpu)
   var nmeaHum = hum;
   var nmeaCpu = cpu;
   
-  this.getNMEADate = function()
-  { return nmeaDate; };
+  this.getNMEADate = function() { return nmeaDate; };
   
-  this.getNMEAPrmsl = function()
-  { return nmeaPrmsl; };
+  this.getNMEAPrmsl = function() { return nmeaPrmsl; };
   
-  this.getNMEATws = function()
-  { return nmeaTws; };
+  this.getNMEATws = function() { return nmeaTws; };
   
-  this.getNMEATwd = function()
-  { return nmeaTwd; };
+  this.getNMEATwd = function() { return nmeaTwd; };
   
-  this.getNMEARain = function()
-  { return nmeaRain; };
+  this.getNMEARain = function() { return nmeaRain; };
   
-  this.getNMEATemp = function()
-  { return nmeaTemp; };
+  this.getNMEATemp = function() { return nmeaTemp; };
   
-  this.getNMEAHum = function()
-  { return nmeaHum; };
+  this.getNMEAHum = function() { return nmeaHum; };
   
-  this.getNMEACpu = function()
-  { return nmeaCpu; };
+  this.getNMEACpu = function() { return nmeaCpu; };
 };
