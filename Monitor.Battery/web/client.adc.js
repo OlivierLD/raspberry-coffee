@@ -1,7 +1,7 @@
 "use strict";
 
 var connection;
-var graphMaxLen = 60;
+var GRAPH_MAX_LEN = 60;
 
 (function () {
   var ws = window.WebSocket || window.MozWebSocket;
@@ -27,19 +27,19 @@ var graphMaxLen = 60;
 
   // most important part - incoming messages
   connection.onmessage = function (message) {
-    console.log('onmessage:' + message);
+//  console.log('onmessage:' + message);
     // try to parse JSON message. 
     try {
       var str = JSON.parse(message.data);
       var volt = parseFloat(str);
       displayValue.animate(volt);
       graphBatteryData.push(new Tuple(graphBatteryData.length, volt));
-      if (graphMaxLen !== undefined && graphBatteryData.length > graphMaxLen) {
-        while (graphBatteryData.length > graphMaxLen) {
+      if (GRAPH_MAX_LEN !== undefined && graphBatteryData.length > GRAPH_MAX_LEN) {
+        while (graphBatteryData.length > GRAPH_MAX_LEN) {
             graphBatteryData.splice(0, 1);
         }
+  //    displayMessage('Trimming graph data (' + graphBatteryData.length + ') ' + arrayToString(graphBatteryData));
       }
-
       graph.drawGraph("graphCanvas", graphBatteryData); //, graphBatteryData.length);
     } catch (e) {
       displayMessage('This doesn\'t look like a valid value: ' + message.data);
@@ -58,6 +58,14 @@ var graphMaxLen = 60;
     }
   }, 3000); // Ping
 })();
+
+var arrayToString = function(ar) {
+  var str = "";
+  for (var i=0; i<ar.length; i++) {
+    str += ((str.length > 0 ? ", " : "") + ar[i].getY());
+  }
+  return str;
+};
 
 var displayMessage = function(mess) {
   if (statusFld !== undefined) {
