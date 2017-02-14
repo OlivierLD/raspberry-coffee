@@ -26,14 +26,14 @@ var connection;
 
   // most important part - incoming messages
   connection.onmessage = function (message) {
- // console.log('onmessage:' + message);
+    console.log('onmessage:' + message);
     // try to parse JSON message. 
     try {
       var str = JSON.parse(message.data);
       var volt = parseFloat(str);
       displayValue.animate(volt);
       graphBatteryData.push(new Tuple(graphBatteryData.length, volt));
-      graph.drawGraph("graphCanvas", graphBatteryData, graphBatteryData.length);
+      graph.drawGraph("graphCanvas", graphBatteryData); // , graphBatteryData.length);
     } catch (e) {
       displayMessage('This doesn\'t look like a valid value: ' + message.data);
       return;

@@ -46,13 +46,14 @@ function Graph(cName,       // Canvas Name
         var str = [];
         try { 
           str.push("Pos:" + idx);
+          str.push(graphData[idx].getY() + " Volts");
   //      console.log("Bubble:" + str);
         } catch (err) { console.log(JSON.stringify(err)); }
         
   //    context.fillStyle = '#000';
   //    context.fillRect(0, 0, w, h);
         instance.drawGraph(cName, graphData, lastClicked);
-        var tooltipW = 120, nblines = str.length;
+        var tooltipW = 80, nblines = str.length;
         context.fillStyle = "rgba(250, 250, 210, .7)"; 
 //      context.fillStyle = 'yellow';
         var fontSize = 10;
@@ -124,8 +125,7 @@ function Graph(cName,       // Canvas Name
     return max;
   };
   
-  this.drawGraph = function(displayCanvasName, data, idx)
-  {
+  this.drawGraph = function(displayCanvasName, data, idx) {
     context = canvas.getContext('2d');
     
     var _idxX;
@@ -133,33 +133,35 @@ function Graph(cName,       // Canvas Name
       _idxX = idx * xScale;
     }
     
-    var mini = Math.floor(this.minY(data));
-    var maxi = Math.ceil(this.maxY(data));
-    var gridXStep = Math.round((maxi - mini) / 3);
-    var gridYStep = Math.round(data.length / 10);
-    
+    var mini = 0; // Math.floor(this.minY(data));
+    var maxi = 15.5; // Math.ceil(this.maxY(data));
+    var gridXStep = Math.round(data.length / 10);
+    var gridYStep = Math.round((maxi - mini) / 5);
+
     // Sort the tuples (on X, time)
     data.sort(sortTupleX);
     
     var smoothData = data;
     var _smoothData = [];
     var smoothWidth = 20;
-    for (var i=0; i<smoothData.length; i++) {
-      var yAccu = 0;
-      for (var acc=i-(smoothWidth / 2); acc<i+(smoothWidth/2); acc++) {
-        var y;
-        if (acc < 0) {
-          y = smoothData[0].getY();
-        } else if (acc > (smoothData.length - 1)){
-          y = smoothData[smoothData.length - 1].getY();
-        } else {
-          y = smoothData[acc].getY();
-        }
-        yAccu += y;
-      }
-      yAccu = yAccu / smoothWidth;
-      _smoothData.push(new Tuple(smoothData[i].getX(), yAccu));
+    if (smoothData.length >= smoothWidth) {
+        for (var i = 0; i < smoothData.length; i++) {
+            var yAccu = 0;
+            for (var acc = i - (smoothWidth / 2); acc < i + (smoothWidth / 2); acc++) {
+                var y;
+                if (acc < 0) {
+                    y = smoothData[0].getY();
+                } else if (acc > (smoothData.length - 1)) {
+                    y = smoothData[smoothData.length - 1].getY();
+                } else {
+                    y = smoothData[acc].getY();
+                }
+                yAccu += y;
+            }
+            yAccu = yAccu / smoothWidth;
+            _smoothData.push(new Tuple(smoothData[i].getX(), yAccu));
 //    console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].getY() + " becomes " + yAccu);
+        }
     }
     // Clear
     context.fillStyle = "white";
@@ -177,8 +179,8 @@ function Graph(cName,       // Canvas Name
       context.fillStyle = grV;
       context.fillRect(0, 0, context.canvas.width, context.canvas.height);
     }
-    // Horizontal grid (TWS)
-    for (var i=Math.round(mini); gridXStep>0 && i<maxi; i+=gridXStep) {
+    // Horizontal grid (Volts)
+    for (var i=Math.round(mini); gridYStep>0 && i<maxi; i+=gridYStep) {
       context.beginPath();
       context.lineWidth = 1;
       context.strokeStyle = 'gray';
@@ -189,15 +191,15 @@ function Graph(cName,       // Canvas Name
       context.save();
       context.font = "bold 10px Arial"; 
       context.fillStyle = 'black';
-      str = i.toString() + " " + unit;
-      len = context.measureText(str).width;
+      var str = i.toString() + " " + unit;
+      var len = context.measureText(str).width;
       context.fillText(str, cWidth - (len + 2), cHeight - ((i - mini) * yScale) - 2);
       context.restore();            
       context.closePath();
     }
     
-    // Vertical grid (Time)
-    for (var i=gridYStep; i<data.length; i+=gridYStep) {
+    // Vertical grid (index)
+    for (var i=gridXStep; i<data.length; i+=gridXStep) {
       context.beginPath();
       context.lineWidth = 1;
       context.strokeStyle = 'gray';
@@ -211,7 +213,8 @@ function Graph(cName,       // Canvas Name
       context.rotate(-Math.PI / 2);
       context.font = "bold 10px Arial"; 
       context.fillStyle = 'black';
-      len = context.measureText(str).width;
+      var str = i.toString();
+      var len = context.measureText(str).width;
       context.fillText(str, 2, -1); //i * xScale, cHeight - (len));
       context.restore();            
       context.closePath();
@@ -248,9 +251,9 @@ function Graph(cName,       // Canvas Name
             previousPoint = data[0];
             context.moveTo((data[0].getX() - minx) * xScale, cHeight - (data[0].getY() - miny) * yScale);
             for (var i = 1; i < data.length; i++) {
-//      context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
+//              context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
                 context.lineTo((data[i].getX() - minx) * xScale, cHeight - (data[i].getY() - miny) * yScale);
-//      context.stroke();
+//              context.stroke();
                 previousPoint = data[i];
             }
             // Close the shape, bottom
@@ -278,9 +281,9 @@ function Graph(cName,       // Canvas Name
   (function() {
     if (graphData.length > 0) {
         minx = instance.minX(graphData);
-        miny = instance.minY(graphData);
+        miny = 0; // instance.minY(graphData);
         maxx = instance.maxX(graphData);
-        maxy = instance.maxY(graphData);
+        maxy = 15; // instance.maxY(graphData);
 
 //   console.log("MinX:" + minx + ", MaxX:" + maxx + ", MinY:" + miny + ", MaxY:" + maxy);
 
