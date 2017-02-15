@@ -395,7 +395,7 @@ And any REST client (NodeJS, Postman, your own code, ...) does the job.
 
 ![With REST traffic](./AdminSnapshot.02.png "With REST traffic")
 
-You can also visualize the REST traffic if needed; `In` on the left, `Out` on the right.
+You can also visualize the REST traffic if needed; `In (server to client)` on the left, `Out (client to server)` on the right.
 
 ## Dynamic loading
 You have the possibility to dynamically load Channels, Forwarders and Computers.
