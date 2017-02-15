@@ -1,116 +1,98 @@
-body 
-{ 
-  color : blue; 
+body {
+  color: blue;
   font-weight: normal; 
   font-size: 10pt; 
   font-family: Verdana, Helvetica, Geneva, Swiss, SunSans-Regular; 
   background-position: top left; 
-  background-repeat: repeat 
+  background-repeat: repeat;
 }
-h1 
-{ 
+h1 {
   color: silver; 
   font-style: italic; 
   font-size: 26pt; 
   font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular; 
-  padding-left: 5pt 
+  padding-left: 5pt;
 }
-h2 
-{ 
+h2 {
   color: silver; 
   font-size: 12pt; 
-  font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-h3 
-{ 
+h3 {
   font-style: italic; 
   font-weight: bold; 
   font-size: 11pt; 
   font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular; 
 }
-h4 
-{ 
+h4 {
   font-style: italic; 
   font-weight: bold; 
   font-size: 10pt; 
   font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular; 
 }
-h5 
-{ 
+h5 {
   font-style: normal; 
   font-weight: bold; 
   font-size: 10pt; 
   font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular; 
 }
-h6 
-{ 
+h6 {
   font-style: italic; 
   font-weight: normal; 
   font-size: 10pt; 
   font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular; 
 }
-li 
-{ 
+li {
   font-size: 10pt; 
   font-weight: normal; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-dt 
-{ 
+dt {
   font-size: 10pt; 
   font-weight: bold; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-dd 
-{ 
+dd {
   font-size: 10pt; 
   font-weight: normal; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-p 
-{ 
+p {
   font-size: 10pt; 
   font-weight: normal; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-td 
-{ 
+td {
   font-size: 10pt; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-small 
-{ 
+small {
   font-size: 8pt; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-blockquote
-{ 
+blockquote {
   font-style: italic; 
   font-size: 10pt; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-em 
-{ 
+em {
   font-size: 10pt; 
   font-style: italic; 
   font-weight: bold; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-pre 
-{ 
+pre {
   font-size: 9pt; 
   font-family: Courier New, Helvetica, Geneva, Swiss, SunSans-Regular; 
-  background-color:lightGray;
+  background-color: lightGray;
 }
-address 
-{ 
+address {
   font-size: 8pt; 
-  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular 
+  font-family: Arial, Helvetica, Geneva, Swiss, SunSans-Regular;
 }
-.red
-{
-  color:red;
+.red {
+  color: red;
 }
-a:link { color : #0000A0} 
+a:link { color: #0000A0}
 a:active { color: #8080FF} 
-a:visited { color : #8080FF}
+a:visited { color: #8080FF}

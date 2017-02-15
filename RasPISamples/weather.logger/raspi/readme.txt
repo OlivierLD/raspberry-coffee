@@ -3,7 +3,7 @@ Use from Postman:
 
 GET http://donpedro.lediouris.net/php/raspi?board=OlivsRasPI&temp=19
 
-Return a JSON Obj:
+Returns a JSON Obj:
 {    
   { 'board': 'MyPI' },   
   { 

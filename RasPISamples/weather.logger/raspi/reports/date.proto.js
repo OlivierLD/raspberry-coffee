@@ -5,8 +5,7 @@
 // Date formatting
 
 // Provide month names
-Date.prototype.getMonthName = function()
-{
+Date.prototype.getMonthName = function() {
   var month_names = [
                       'January',
                       'February',
@@ -21,13 +20,11 @@ Date.prototype.getMonthName = function()
                       'November',
                       'December'
                   ];
-
   return month_names[this.getMonth()];
 };
 
 // Provide month abbreviation
-Date.prototype.getMonthAbbr = function()
-{
+Date.prototype.getMonthAbbr = function() {
   var month_abbrs = [
                       'Jan',
                       'Feb',
@@ -47,8 +44,7 @@ Date.prototype.getMonthAbbr = function()
 };
 
 // Provide full day of week name
-Date.prototype.getDayFull = function()
-{
+Date.prototype.getDayFull = function() {
   var days_full = [
                     'Sunday',
                     'Monday',
@@ -62,8 +58,7 @@ Date.prototype.getDayFull = function()
 };
 
 // Provide full day of week name
-Date.prototype.getDayAbbr = function()
-{
+Date.prototype.getDayAbbr = function() {
   var days_abbr = [
                     'Sun',
                     'Mon',
@@ -77,15 +72,13 @@ Date.prototype.getDayAbbr = function()
 };
 
 // Provide the day of year 1-365
-Date.prototype.getDayOfYear = function() 
-{
+Date.prototype.getDayOfYear = function() {
   var onejan = new Date(this.getFullYear(),0,1);
   return Math.ceil((this - onejan) / 86400000);
 };
 
 // Provide the day suffix (st,nd,rd,th)
-Date.prototype.getDaySuffix = function() 
-{
+Date.prototype.getDaySuffix = function() {
   var d = this.getDate();
   var sfx = ["th", "st", "nd", "rd"];
   var val = d % 100;
@@ -94,35 +87,34 @@ Date.prototype.getDaySuffix = function()
 };
 
 // Provide Week of Year
-Date.prototype.getWeekOfYear = function() 
-{
+Date.prototype.getWeekOfYear = function() {
   var onejan = new Date(this.getFullYear(),0,1);
   return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
 };
 
 // Provide if it is a leap year or not
-Date.prototype.isLeapYear = function()
-{
+Date.prototype.isLeapYear = function() {
   var yr = this.getFullYear();
-  if ((parseInt(yr) % 4) === 0)
-  {
-    if (parseInt(yr) % 100 === 0)
-    {
-      if (parseInt(yr) % 400 !== 0)
-        return false;
-      if (parseInt(yr) % 400 === 0)
+  if ((parseInt(yr) % 4) === 0) {
+    if (parseInt(yr) % 100 === 0) {
+      if (parseInt(yr) % 400 !== 0) {
+          return false;
+      }
+      if (parseInt(yr) % 400 === 0) {
+          return true;
+      }
+    }
+    if (parseInt(yr) % 100 !== 0) {
         return true;
     }
-    if (parseInt(yr) % 100 !== 0)
-      return true;
   }
-  if ((parseInt(yr) % 4) !== 0)
-    return false;
+  if ((parseInt(yr) % 4) !== 0) {
+      return false;
+  }
 };
 
 // Provide Number of Days in a given month
-Date.prototype.getMonthDayCount = function() 
-{
+Date.prototype.getMonthDayCount = function() {
   var month_day_counts = [
                             31,
                             this.isLeapYear() ? 29 : 28,
@@ -142,8 +134,7 @@ Date.prototype.getMonthDayCount = function()
 }; 
 
 // format provided date into this.format format
-Date.prototype.format = function(dateFormat)
-{
+Date.prototype.format = function(dateFormat) {
   // break apart format string into array of characters
   dateFormat = dateFormat.split("");
 
@@ -155,17 +146,16 @@ Date.prototype.format = function(dateFormat)
       milli = this.getTime() % 1000,
       tzOffset = - (this.getTimezoneOffset() / 60);
 
-  var lpad = function(s, w, len)
-  {
+  var lpad = function(s, w, len) {
     var str = s;
-    while (str.length < len)
-      str = w + str;
+    while (str.length < len) {
+        str = w + str;
+    }
     return str;
   };
 
   // get all date properties ( based on PHP date object functionality )
-  var date_props = 
-  {
+  var date_props = {
     d: date < 10 ? '0'+date : date,
     D: this.getDayAbbr(),
     j: this.getDate(),
@@ -196,13 +186,13 @@ Date.prototype.format = function(dateFormat)
 
   // loop through format array of characters and add matching data else add the format character (:,/, etc.)
   var date_string = "";
-  for (var i=0; i<dateFormat.length; i++)
-  {
+  for (var i=0; i<dateFormat.length; i++) {
     var f = dateFormat[i];
-    if (f.match(/[a-zA-Z|_]/g))
-      date_string += date_props[f] ? date_props[f] : '';
-    else 
-      date_string += f;
+    if (f.match(/[a-zA-Z|_]/g)) {
+        date_string += date_props[f] ? date_props[f] : '';
+    } else {
+        date_string += f;
+    }
   }
   return date_string;
 };

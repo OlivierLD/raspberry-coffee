@@ -1,5 +1,5 @@
 var parseSQLDate = function(strDate) {
-	var date;
+  var date;
   var re = new RegExp("(\\d{4})-(\\d{2})-(\\d{2})\\s(\\d{2}):(\\d{2}):(\\d{2})");
   var match = strDate.match(re);
   if (match.length === 7) {
@@ -14,15 +14,14 @@ var parseSQLDate = function(strDate) {
   return date;
 };
 
-var reformatDate = function(utcDate, fmt)
-{
-  if (fmt === undefined)
-    fmt = "D d-M-Y H:i";
+var reformatDate = function(utcDate, fmt) {
+  if (fmt === undefined) {
+      fmt = "D d-M-Y H:i";
+  }
   // 07-03 00:00
   var dateRegExpr = new RegExp("(\\d{2})-(\\d{2})\\s(\\d{2}):(\\d{2})");
   var matches = dateRegExpr.exec(utcDate);
-  if (matches !== null)
-  {
+  if (matches !== null) {
     var month   = matches[1];
     var day     = matches[2];
     var hours   = matches[3];
