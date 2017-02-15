@@ -41,7 +41,7 @@ $sql = "DELETE FROM `weather_data` WHERE `log_time` < STR_TO_DATE('$day-$month-$
 $mess = "Deleted with [$sql]";
 if (!mysql_query($sql)) {
   $mess = mysql_error();
-  die('Insert in DB problem: ' . $mess . '<br><a href="idform.html">Back</a>');
+  die('Delete from DB problem: ' . $mess . '<br><a href="idform.html">Back</a>');
 }
 
 //mysql_close();
