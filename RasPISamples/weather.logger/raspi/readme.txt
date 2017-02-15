@@ -15,3 +15,8 @@ Returns a JSON Obj:
 Reports:
 ========
 http://donpedro.lediouris.net/php/raspi/reports/datatypes.php
+
+=================================
+ TODO
+=================================
+Baro curve, like with a barograph.
