@@ -1,8 +1,7 @@
 #!/bin/bash
 #
-CP=./classes
-CP=$CP:./lib/java_websocket.jar
-CP=$CP:./lib/json.jar
+CP=
+CP=$CP:./build/libs/RasPISamples-1.0-all.jar
 #
 JAVA_OPTS=
 # JAVA_OPTS="$JAVA_OPTS -Ddata.logger=weatherstation.logger.DummyLogger"
