@@ -1,4 +1,7 @@
 <?php
+/*
+ * Query the WEATHER_DATA table, according to the received parameters.
+ */
 
 header('Content-type: application/json;charset=UTF-8');
 
@@ -53,7 +56,7 @@ if ($type == 'WIND') {
 } else if ($type == 'ALL') {
   $sql .= ('cputemp, FORMAT(wdir, 0) as wdir, FORMAT(wgust, 2) as wgust, FORMAT(wspeed, 2) as wspeed, rain, press / 100 as press, atemp, hum');
 }
-
+// All the data we are interested in are in WEATHER_DATA.
 $sql .=   ' FROM weather_data';
 if ($period != '' && $period != 'ALL') {
   $nbs = 3600 * 24; 
