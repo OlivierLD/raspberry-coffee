@@ -4,7 +4,8 @@ function Graph(cName,       // Canvas Name
                graphData,   // x,y tuple array
                callback,    // Callback on mouseclick
                unit,
-               withWindDir) {
+               withWindDir,
+               dataType) {
   var instance = this;
   var xScale = 0, yScale = 0;
   var minx = 0, miny = 0, maxx = 0, maxy= 0;
@@ -12,6 +13,8 @@ function Graph(cName,       // Canvas Name
   
   var unit = unit;
   var lastClicked;
+
+  this.dType = dataType;
 
   var canvas = document.getElementById(cName);
   canvas.addEventListener('click', function(evt) {
@@ -44,7 +47,7 @@ function Graph(cName,       // Canvas Name
       
       var idx = Math.round(x / xScale);
       if (idx < JSONParser.nmeaData.length) {
-        var str = [];
+        var str = []; // Will contain the lines to display in the tooltip.
         try { 
           str.push(JSONParser.nmeaData[idx].getNMEATws() + "kt @ " + JSONParser.nmeaData[idx].getNMEATwd() + "\272");
           str.push("P:" + JSONParser.nmeaData[idx].getNMEAPrmsl() + " hPa");
@@ -61,7 +64,7 @@ function Graph(cName,       // Canvas Name
         
   //    context.fillStyle = '#000';
   //    context.fillRect(0, 0, w, h);
-        instance.drawGraph(cName, graphData, lastClicked);
+        instance.drawGraph(cName, graphData, lastClicked, instance.dType);
         if (withWindDir) {
           instance.drawWind(JSONParser.nmeaData);
         }
@@ -137,18 +140,34 @@ function Graph(cName,       // Canvas Name
     return max;
   };
   
-  this.drawGraph = function(displayCanvasName, data, idx) {
+  this.drawGraph = function(displayCanvasName, data, idx, dataType) {
     context = canvas.getContext('2d');
-    
+
+    this.dType = dataType;
+    init(data);
+    switch (this.dType) {
+        case "PRESS":
+          miny =  970;
+          maxy = 1040;
+          break;
+        case "HUM":
+          miny =   0;
+          maxy = 100;
+          break;
+        default:
+          break;
+    }
+    scale();
+
     var _idxX;
     if (idx !== undefined) {
       _idxX = idx * xScale;
     }
     
-    var mini = Math.floor(this.minY(data));
-    var maxi = Math.ceil(this.maxY(data));
+    var mini = miny; // (this.dType === "PRESS" ?  970 : Math.floor(this.minY(data)));
+    var maxi = maxy; // (this.dType === "PRESS" ? 1040 : Math.ceil(this.maxY(data)));
     var gridXStep = Math.round(JSONParser.nmeaData.length / 10);
-    var gridYStep = Math.round((maxi - mini) / 3);
+    var gridYStep = (this.dType === "PRESS" ? 10 : Math.round((maxi - mini) / 5));
 
     // Sort the tuples (on X, time)
     data.sort(sortTupleX);
@@ -179,28 +198,30 @@ function Graph(cName,       // Canvas Name
 
     smoothData = _smoothData;
     if (false) {
-      context.fillStyle = "LightGray";
+      context.fillStyle = "white";
       context.fillRect(0, 0, canvas.width, canvas.height);    
     } else {
       var grV = context.createLinearGradient(0, 0, 0, context.canvas.height);
-      grV.addColorStop(0, 'rgba(0,0,0,0)');
-      grV.addColorStop(1, 'cyan'); // "LightGray"); // '#000');
+      grV.addColorStop(0, this.dType === "PRESS" ? 'white' : 'rgba(0,0,0,0)');
+      grV.addColorStop(1, this.dType === "PRESS" ?  "LightGray" : 'cyan'); // "LightGray"); // '#000');
 
       context.fillStyle = grV;
       context.fillRect(0, 0, context.canvas.width, context.canvas.height);
     }
-    // Horizontal grid (TWS)
+    // Horizontal grid (TWS or so)
+    var gridColor = (this.dType === "PRESS" ? 'DarkOrange' : 'gray');
+    var letterColor = (this.dType === "PRESS" ? 'DarkOrange' : 'black');
     for (var i=Math.round(mini); gridYStep>0 && i<maxi; i+=gridYStep) {
       context.beginPath();
       context.lineWidth = 1;
-      context.strokeStyle = 'gray';
+      context.strokeStyle = gridColor;
       context.moveTo(0, cHeight - (i - mini) * yScale);
       context.lineTo(cWidth, cHeight - (i - mini) * yScale);
       context.stroke();
 
       context.save();
       context.font = "bold 10px Arial"; 
-      context.fillStyle = 'black';
+      context.fillStyle = letterColor;
       str = i.toString() + " " + unit;
       len = context.measureText(str).width;
       context.fillText(str, cWidth - (len + 2), cHeight - ((i - mini) * yScale) - 2);
@@ -212,7 +233,7 @@ function Graph(cName,       // Canvas Name
     for (var i=gridXStep; i<data.length; i+=gridXStep) {
       context.beginPath();
       context.lineWidth = 1;
-      context.strokeStyle = 'gray';
+      context.strokeStyle = gridColor;
       context.moveTo(i * xScale, 0);
       context.lineTo(i * xScale, cHeight);
       context.stroke();
@@ -222,7 +243,7 @@ function Graph(cName,       // Canvas Name
       context.translate(i * xScale, canvas.height);
       context.rotate(-Math.PI / 2);
       context.font = "bold 10px Arial"; 
-      context.fillStyle = 'black';
+      context.fillStyle = letterColor;
       if (document.getElementById("utc-display").checked)
         str = new Date(JSONParser.nmeaData[i].getNMEADate()).format("d-M H:i") + " UT";
       else
@@ -259,24 +280,27 @@ function Graph(cName,       // Canvas Name
       
       context.beginPath();
       context.lineWidth = 3;
-      context.strokeStyle = 'red';
+      context.strokeStyle = (this.dType === "PRESS" ? 'indigo' : 'red');
   
       previousPoint = data[0];
       context.moveTo((data[0].getX() - minx) * xScale, cHeight - (data[0].getY() - miny) * yScale);
       for (var i=1; i<data.length; i++) {
-//      context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
+//      context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - mini) * yScale);
         context.lineTo((data[i].getX() - minx) * xScale, cHeight - (data[i].getY() - miny) * yScale);
 //      context.stroke();
         previousPoint = data[i];
       }
-      // Close the shape, bottom
-      context.lineTo(context.canvas.width, context.canvas.height);
-      context.lineTo(0, context.canvas.height);
-
-      context.closePath();
+      if (this.dType !== "PRESS") {
+          // Close the shape, bottom
+          context.lineTo(context.canvas.width, context.canvas.height);
+          context.lineTo(0, context.canvas.height);
+          context.closePath();
+      }
       context.stroke();
-      context.fillStyle = 'rgba(255, 0, 0, 0.35)';
-      context.fill();
+      if (this.dType !== "PRESS") {
+          context.fillStyle = 'rgba(255, 0, 0, 0.35)';
+          context.fill();
+      }
     }
     
     if (idx !== undefined) {
@@ -319,18 +343,23 @@ function Graph(cName,       // Canvas Name
     }
   };
 
+  var init = function(graphData) {
+    minx = instance.minX(graphData);
+    miny = instance.minY(graphData);
+    maxx = instance.maxX(graphData);
+    maxy = instance.maxY(graphData);
+  };
+
+  var scale = function() {
+      xScale = cWidth / (maxx - minx);   // was Math.floor(canvas.getBoundingClientRect().width)
+      yScale = cHeight / (maxy - miny);  // was canvas.getBoundingClientRect().height
+  };
+
   (function() {
     if (graphData !== undefined && graphData.length > 0) {
-        minx = instance.minX(graphData);
-        miny = instance.minY(graphData);
-        maxx = instance.maxX(graphData);
-        maxy = instance.maxY(graphData);
-
+        init(graphData);
 //   console.log("MinX:" + minx + ", MaxX:" + maxx + ", MinY:" + miny + ", MaxY:" + maxy);
-
-        xScale = cWidth / (maxx - minx);   // was Math.floor(canvas.getBoundingClientRect().width)
-        yScale = cHeight / (maxy - miny);  // was canvas.getBoundingClientRect().height
-
+        scale();
 //  console.log("xScale:" + xScale + ", yScale:" + yScale);
     }
     instance.drawGraph(cName, graphData);

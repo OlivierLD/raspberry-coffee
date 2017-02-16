@@ -157,6 +157,7 @@ var displayScale = 0.75;
 
 var displayTWD, displayTWS, displayPRMSL, displayRain, displayTemp, graph, map;
 var withTWD = true;
+var dataType = "";
  
 window.onload = function() {
   displayTWD   = new Direction('twdCanvas', 100 * displayScale, 45, 5, true);
@@ -197,7 +198,7 @@ var updateOnClick = function(idx, tws, twd, prmsl, temp, rain) {
   var txtDate = JSONParser.nmeaData[idx].getNMEADate();
 //console.log("Date is : " + reformatDate(txtDate));
   var utc = document.getElementById("tz");   
-  document.getElementById("recno").innerHTML = "Record #<b style='color:red;'>" + (idx + 1) + "</b> of " + JSONParser.nmeaData.length + ", " +  reformatDate(txtDate) + " " + utc.options[utc.selectedIndex].text;
+  document.getElementById("recno").innerHTML = "Record #<b style='color: red;'>" + (idx + 1) + "</b> of " + JSONParser.nmeaData.length + ", " +  reformatDate(txtDate) + " " + utc.options[utc.selectedIndex].text;
 
   var wd = twd;
   if (ANIMATE) {
@@ -234,7 +235,7 @@ var updateOnClick = function(idx, tws, twd, prmsl, temp, rain) {
     displayRain.setValue(prate);
   }
    
-  graph.drawGraph("graphCanvas", graphdata, idx, withTWD);
+  graph.drawGraph("graphCanvas", graphdata, idx, dataType);
 
   clearMarkers();
   if (windArrow !== undefined) {
@@ -403,11 +404,8 @@ var displayData = function() {
     graphdata = []; // TWS
   //rainData = []; // rain
     var type = $("#data-type").val();
-    if (type === "WIND") {
-      withTWD = true;
-    } else {
-      withTWD = false;
-    }
+    withTWD = (type === "WIND");
+    dataType = type;
 
     console.log("Type: [" + type + "]");
     var unit = "kt";
@@ -433,7 +431,7 @@ var displayData = function() {
       }
     }
     var w = document.getElementById("graphCanvas").width;
-    graph = new Graph("graphCanvas", w, 200, graphdata, mouseMoveOnGraphCallback, unit, withTWD);
+    graph = new Graph("graphCanvas", w, 200, graphdata, mouseMoveOnGraphCallback, unit, withTWD, dataType);
     var min = graph.minY(graphdata);
     var max = graph.maxY(graphdata);
     var fromDate = nmeaData[0].getNMEADate();
