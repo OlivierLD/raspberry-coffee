@@ -378,7 +378,7 @@ function Tuple(_x, _y) {
   this.getY = function() { return y; };
 };
 
-function sortTupleX(t1, t2) {
+var sortTupleX = function(t1, t2) {
   if (t1.getX() < t2.getX()) {
     return -1;
   }

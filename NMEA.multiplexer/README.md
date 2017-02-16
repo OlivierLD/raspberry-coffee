@@ -68,7 +68,7 @@ Forwarders:
 Sensors:
 - **BME280** reads raw data from a BME280 sensor (Temperature, Pressure, Humidity), and produces `XDR` and `MDA` NMEA Sentences.
 - **LSM303** reads raw data from a LSM303 sensor (3D magnetometer), and produces `XDR` NMEA Sentences.
-![I2C Wiring](./i2c.png "Sample I2C Wiring for BME280 & LSM303")
+![I2C Wiring](./docimages/i2c.png "Sample I2C Wiring for BME280 & LSM303")
 
 
 Computers:
@@ -90,7 +90,7 @@ The accuracy of such a computations is _much higher_ than the instant triangulat
 See [this article](http://www.lediouris.net/RaspberryPI/_Articles/readme.html) for details.
 
 #### Overview
-![Overall Overview](./overview.png "Overview")
+![Overall Overview](./docimages/overview.png "Overview")
 
 _Note: There is no Transformer on the picture above_
 
@@ -255,7 +255,7 @@ A full list of the available REST services is available at
 ```
  GET /oplist
 ```
-![Operations List](./OpList.png "OpList")
+![Operations List](./docimages/OpList.png "OpList")
 
 ##### Examples
 All the end points and operations are defined in `nmea.mux.GenericNMEAMultiplexer.java`. See the `List<Operation>` named `operations`.
@@ -389,11 +389,11 @@ _Note_: This Web UI is to be considered  as an example of the way to access the 
 On the HTTP Port, use a url like `http://machine-name:9999/web/admin.html`,
 where `machine-name` is the name of the machine where the multiplexer is running, and `9999` is the port defined in the properties.
 
-![Admin Web UI](./AdminSnapshot.png "Admin GUI")
+![Admin Web UI](./docimages/AdminSnapshot.png "Admin GUI")
 
 And any REST client (NodeJS, Postman, your own code, ...) does the job.
 
-![With REST traffic](./AdminSnapshot.02.png "With REST traffic")
+![With REST traffic](./docimages/AdminSnapshot.02.png "With REST traffic")
 
 You can also visualize the REST traffic if needed; `In (server to client)` on the left, `Out (client to server)` on the right.
 
@@ -414,7 +414,7 @@ _Note_: Dynamically loaded classes can also be managed from the REST admin inter
 Use the `Custom` label when creating them.
 
 They will show up in the admin interface, with their id in _italic_.
-![Admin Web UI](./dynamic.png "Admin GUI")
+![Admin Web UI](./docimages/dynamic.png "Admin GUI")
 Notice the line that says `skeleton`.
 
 Among the forwarders available in this project some are to be dynamically loaded.
@@ -423,7 +423,7 @@ Among the forwarders available in this project some are to be dynamically loaded
  - Character Console
  - etc... list keeps growing.
 
-![Character Console](./char.console.png "Character Console")
+![Character Console](./docimages/char.console.png "Character Console")
 
 _Warning_: for now, you _cannot_ load more than one dynamically loaded forwarder, consumer or computer of the same class. They are identified by their class name, you cannot have more than one object
 with a given class name in the lists. For example, if you have an `MQTTPublisher` that uses a broker URL like `tcp://192.168.1.136:1883`, you might very well want to
@@ -433,7 +433,7 @@ have another one, using a broker URL like `tcp://io.adafruit.com:1883`. Currentl
 - UDP client
 
 ## Demos
-![GPS Demo](./gps.demo.png "GPS Demo")
+![GPS Demo](./docimages/gps.demo.png "GPS Demo")
 Plug a GPS on the Serial Port, start the multiplexer, and launch [http://localhost:9999/web/gps.demo.html](http://localhost:9999/web/gps.demo.html) in a browser.
 This is pinging the `/cache` REST service every second.
 
@@ -441,19 +441,19 @@ Satellites are displayed on the chart, and on the right pane.
 When available, Speed Over Ground and Course Over Ground are displayed too. 
 
 ### JVM Monitoring
-![Overview](./JConsole.01.png "Overview")
+![Overview](./docimages/JConsole.01.png "Overview")
 Overview
 
-![The advantage of naming the threads](./JConsole.02.png "Thread view")
+![The advantage of naming the threads](./docimages/JConsole.02.png "Thread view")
 Thread view, with thread names
 
 # Examples!!
 
 #### Small external display
 There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
-![oled](./oled.jpg "OLED Display")
+![oled](./docimages/oled.jpg "OLED Display")
 
-![oled](./oled.2.jpg "OLED Display")
+![oled](./docimages/oled.2.jpg "OLED Display")
 
 The OLED display in connected to the Raspberry PI using an SPI interface.
 
@@ -466,11 +466,11 @@ There is a Web Console, accessible to any device able to run a Web browser (smar
 It can be accessed from `http://[machine:port]/web/console.html`.
 Again, this is just an example, feel free to tweak it your way.
 
-![page 1](./full.console.01.png "First page")
+![page 1](./docimages/full.console.01.png "First page")
 In the picture above, all the data come from the NMEA station, except the air temperature, pressure and humidity, that come from sensors.
-![page 2](./full.console.02.png "Second page")
-![page 3](./full.console.03.png "Third page")
-![page 4](./full.console.04.png "Fourth page")
+![page 2](./docimages/full.console.02.png "Second page")
+![page 3](./docimages/full.console.03.png "Third page")
+![page 4](./docimages/full.console.04.png "Fourth page")
 
 ##### And more to come...
 
