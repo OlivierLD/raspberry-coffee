@@ -85,7 +85,7 @@ and comparing it with the GPS Data (Course and Speed Over Ground).
 A better approach turned out to compute the current over a given period of time.
 For example, you can perform this calculation by comparing the position you should be at with the CMG only (i.e. as if there was no current)
  and the one given by the GPS, over periods like 30 seconds, 1 minute, 10 minutesFSupporte, etc, using a smoothing of the Boat Speed (BSP) and the CMG.
- The cache is designed to manage several such computations in parallel, they are discriminated by the lenght of their time-buffer (30 seconds, 5 minutes, etc).
+ The cache is designed to manage several such computations in parallel, they are discriminated by the length of their time-buffer (30 seconds, 5 minutes, etc).
 The accuracy of such a computations is _much higher_ than the instant triangulation.
 See [this article](http://www.lediouris.net/RaspberryPI/_Articles/readme.html) for details.
 
