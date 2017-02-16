@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -271,7 +270,7 @@ public class HTTPServer {
 						StringBuffer sb = new StringBuffer();
 						boolean keepReading = true;
 						if (verbose)
-							System.out.println(">>> Top of the loop <<<");
+							LOGGER.info(">>> Top of the loop <<<");
 						while (keepReading) {
 							if (top) { // Ugly!! Argh! :(
 								try {
@@ -285,7 +284,7 @@ public class HTTPServer {
 									read = in.read();
 								} else {
 									if (verbose)
-										System.out.println(">>> End of InputStream <<<");
+										LOGGER.info(">>> End of InputStream <<<");
 									read = -1;
 								}
 							} catch (IOException ioe) {
@@ -332,7 +331,7 @@ public class HTTPServer {
 												String[] requestElements = line.split(" ");
 												request = new Request(requestElements[0], requestElements[1], requestElements[2]);
 												if (verbose) {
-													System.out.println(">>> New request: " + line + " <<<");
+													LOGGER.info(">>> New request: " + line + " <<<");
 												}
 											}
 										}
@@ -354,7 +353,7 @@ public class HTTPServer {
 							request.setContent(payload.getBytes());
 						}
 						if (verbose) {
-							System.out.println(">>> End of HTTP Request <<<");
+							LOGGER.info(">>> End of HTTP Request <<<");
 						}
 						if (request != null) {
 							String path = request.getPath();
@@ -408,9 +407,9 @@ public class HTTPServer {
 								out.write(responsePayload.getBytes());
 								out.flush();
 							} else if (line != null && line.length() != 0) {
-								System.out.println(">>>>>>>>>> What?"); // TODO See when/why this happens...
-								System.out.println(">>>>>>>>>> Last line was [" + line + "]");
-								System.out.println(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
+								LOGGER.warning(">>>>>>>>>> What?"); // TODO See when/why this happens...
+								LOGGER.warning(">>>>>>>>>> Last line was [" + line + "]");
+								LOGGER.warning(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
 							}
 						}
 						out.flush();
@@ -423,11 +422,11 @@ public class HTTPServer {
 					ss.close();
 				} catch (Exception e) {
 					LOGGER.severe(String.format(">>> Port %d, %s >>>", port, e.toString()));
-					e.printStackTrace();
+					LOGGER.log(Level.SEVERE, e.getMessage(), e);
 					LOGGER.severe(String.format("<<< Port %d <<<", port));
 				} finally {
 					if (verbose)
-						System.out.println("HTTP Server is done.");
+						LOGGER.info("HTTP Server is done.");
 					if (waiter != null) {
 						synchronized (waiter) {
 							waiter.notify();
