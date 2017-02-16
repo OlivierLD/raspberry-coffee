@@ -1,3 +1,7 @@
+/*
+  * Nice color picker at https://www.w3schools.com/colors/colors_names.asp
+ */
+
 function Graph(cName,       // Canvas Name
                cWidth,      // Canvas width
                cHeight,     // Canvas height
@@ -203,7 +207,7 @@ function Graph(cName,       // Canvas Name
     } else {
       var grV = context.createLinearGradient(0, 0, 0, context.canvas.height);
       grV.addColorStop(0, this.dType === "PRESS" ? 'white' : 'rgba(0,0,0,0)');
-      grV.addColorStop(1, this.dType === "PRESS" ?  "LightGray" : 'cyan'); // "LightGray"); // '#000');
+      grV.addColorStop(1, this.dType === "PRESS" ?  "GhostWhite" : 'cyan'); // "LightGray"); // '#000');
 
       context.fillStyle = grV;
       context.fillRect(0, 0, context.canvas.width, context.canvas.height);
