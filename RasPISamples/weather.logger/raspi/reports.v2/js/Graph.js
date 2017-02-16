@@ -212,9 +212,22 @@ function Graph(cName,       // Canvas Name
       context.fillStyle = grV;
       context.fillRect(0, 0, context.canvas.width, context.canvas.height);
     }
-    // Horizontal grid (TWS or so)
+    // Horizontal grid (TWS, Hum, Press, Temp, or so)
     var gridColor = (this.dType === "PRESS" ? 'DarkOrange' : 'gray');
     var letterColor = (this.dType === "PRESS" ? 'DarkOrange' : 'black');
+
+    if (this.dType === "PRESS") { // intermediate grids.
+        for (var i=Math.round(mini); i<maxi; i+=1) {
+            context.beginPath();
+            context.lineWidth = 0.1;
+            context.strokeStyle = gridColor;
+            context.moveTo(0, cHeight - (i - mini) * yScale);
+            context.lineTo(cWidth, cHeight - (i - mini) * yScale);
+            context.stroke();
+            context.closePath();
+        }
+    }
+
     for (var i=Math.round(mini); gridYStep>0 && i<maxi; i+=gridYStep) {
       context.beginPath();
       context.lineWidth = 1;
