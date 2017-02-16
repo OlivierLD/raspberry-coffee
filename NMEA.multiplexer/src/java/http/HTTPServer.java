@@ -46,18 +46,15 @@ import http.utils.DumpUtil;
  * <em>
  *   Warning: This is a very lightweight HTTP server. It is not supposed to scale!!
  * </em>
+ *
+ * Logging can be done. See -Djava.util.logging.config.file=[path]/logging.properties
+ * See https://docs.oracle.com/cd/E23549_01/doc.1111/e14568/handler.htm
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // HTTPServer.class.getName());
 	static {
 		LOGGER.setLevel(Level.INFO);
-		try {
-			FileHandler fh = new FileHandler("./httpserver.log");
-			LOGGER.addHandler(fh);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public static class Request {
