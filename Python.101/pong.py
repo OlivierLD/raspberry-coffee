@@ -1,6 +1,6 @@
 #
 # pygame => PYTHONPATH
-# /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/py2app/recipes/pygame.py
+# /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/py2app/recipes
 #
 import pygame, sys
 from pygame.locals import *
