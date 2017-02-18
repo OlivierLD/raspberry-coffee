@@ -179,8 +179,10 @@ var parseSentence = function (data) {
                                 break;
                             case "RMC":
                                 fullContext.date = new Date(auto.epoch);
-                                fullContext.latitude = auto.pos.lat;
-                                fullContext.longitude = auto.pos.lon;
+                                fullContext.gpstime = auto.epoch;
+                                fullContext.gpsdatetime = auto.epoch;
+                                fullContext.lat = auto.pos.lat;
+                                fullContext.lng = auto.pos.lon;
                                 fullContext.cog = auto.cog;
                                 fullContext.sog = auto.sog;
                                 break;
@@ -191,30 +193,30 @@ var parseSentence = function (data) {
                                 fullContext.altitude = auto.antenna.altitude;
                                 break;
                             case "DPT":
-                                fullContext.depth = auto.depth;
+                                fullContext.dbt = auto.depth;
                                 break;
                             case "GLL":
-                                fullContext.latitude = auto.latitude;
-                                fullContext.longitude = auto.longitude;
+                                fullContext.lat = auto.latitude;
+                                fullContext.lng = auto.longitude;
                                 break;
                             case "VWT":
                                 fullContext.twa = auto.wind.dir
                                 fullContext.tws = auto.wind.speed.knots;
                                 break;
                             case "VHW":
-                                fullContext.truehdg = auto.heading.true;
+                                fullContext.thdg = auto.heading.true;
                                 fullContext.bsp = auto.speed.knots;
                                 break;
                             case "MTW":
-                                fullContext.waterTemperature = auto.temp;
+                                fullContext.wtemp = auto.temp;
                                 break;
                             case "VDR":
-                                fullContext.currentdir = auto.current.dir.true;
-                                fullContext.currentspeed = auto.current.speed.knots;
+                                fullContext.cdr = auto.current.dir.true;
+                                fullContext.csp = auto.current.speed.knots;
                                 break;
                             case "HDG":
                                 fullContext.hdg = auto.hdg;
-                                fullContext.dec = auto.dec;
+                                fullContext.D = auto.dec;
                                 break;
                             case "MWV":
                                 fullContext.awa = auto.wind.dir;
@@ -226,8 +228,9 @@ var parseSentence = function (data) {
                                 break;
                             case "RMB":
                                 fullContext.xte = auto.crosstack.error;
-                                fullContext.nextwp = auto.waypoints.destination.id;
-                                fullContext.dist2wp = auto.range;
+                                fullContext.wp = auto.waypoints.destination.id;
+                                fullContext.d2wp = auto.range;
+                                fullContext.b2wp = auto.bearing;
                                 break;
                             case "VWR":
                                 fullContext.awa = auto.wind.dir;
@@ -235,6 +238,7 @@ var parseSentence = function (data) {
                                 break;
                             case "VLW":
                                 fullContext.log = auto.total;
+                                fullContext.daylog = auto.sincereset;
                                 break;
                             default:
                                 console.log("[" + auto.type.trim() + "] to be managed");
