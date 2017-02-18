@@ -21,23 +21,10 @@
     "y": 404,
     "wires": [
       [
-        "99574dd6.f93a7",
-        "98a3c2ff.3c50a"
+        "98a3c2ff.3c50a",
+        "f86f093.d8e1bf8"
       ]
     ]
-  },
-  {
-    "id": "99574dd6.f93a7",
-    "type": "file",
-    "z": "b8509f41.85d1d",
-    "name": "TCP to File",
-    "filename": "/Users/olediouris/repos/raspberry-pi4j-samples/NMEA.multiplexer/tcp.nr.log",
-    "appendNewline": true,
-    "createDir": false,
-    "overwriteFile": "false",
-    "x": 574.5,
-    "y": 340,
-    "wires": []
   },
   {
     "id": "98a3c2ff.3c50a",
@@ -48,6 +35,18 @@
     "client": "25a12e54.29d472",
     "x": 580.5,
     "y": 481,
+    "wires": []
+  },
+  {
+    "id": "f86f093.d8e1bf8",
+    "type": "debug",
+    "z": "b8509f41.85d1d",
+    "name": "",
+    "active": true,
+    "console": "false",
+    "complete": "payload",
+    "x": 460.5,
+    "y": 271,
     "wires": []
   },
   {
