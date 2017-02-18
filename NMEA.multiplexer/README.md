@@ -235,6 +235,88 @@ or
  $> npm start
 ```
 
+##### An alternative, `node-red`.
+There is a possibility to use [Node Red](http://nodered.org/) as a forwarder as well, that is a cool one.
+You can create a node-red flow that ingests a TCP port, and spits out data on a WebSocket one.
+
+![Node Red](./docimages/nodered.png "Node Red flow")
+
+Below is the flow to import in Node Red.
+```json
+[
+    {
+        "id": "b8509f41.85d1d",
+        "type": "tab",
+        "label": "TCP to WS"
+    },
+    {
+        "id": "a3a98edb.2cafd",
+        "type": "tcp in",
+        "z": "b8509f41.85d1d",
+        "name": "TCP-Listener",
+        "server": "client",
+        "host": "localhost",
+        "port": "7002",
+        "datamode": "stream",
+        "datatype": "utf8",
+        "newline": "",
+        "topic": "",
+        "base64": false,
+        "x": 246,
+        "y": 404,
+        "wires": [
+            [
+                "99574dd6.f93a7",
+                "98a3c2ff.3c50a"
+            ]
+        ]
+    },
+    {
+        "id": "99574dd6.f93a7",
+        "type": "file",
+        "z": "b8509f41.85d1d",
+        "name": "TCP to File",
+        "filename": "/Users/olediouris/repos/raspberry-pi4j-samples/NMEA.multiplexer/tcp.nr.log",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "false",
+        "x": 574.5,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "98a3c2ff.3c50a",
+        "type": "websocket out",
+        "z": "b8509f41.85d1d",
+        "name": "For Pebble",
+        "server": "",
+        "client": "25a12e54.29d472",
+        "x": 580.5,
+        "y": 481,
+        "wires": []
+    },
+    {
+        "id": "25a12e54.29d472",
+        "type": "websocket-client",
+        "z": "",
+        "path": "ws://localhost:9876",
+        "wholemsg": "false"
+    }
+]
+```
+
+###### To run it
+- Start the Mux (`$> ./mux.sh`)
+    - Make sure there is a TCP Forwarder (port 7002)
+- Start the node script `wsnmea.parser.js`.
+```bash
+ node wsnmea.parser.js
+```
+- Start `node-red` and run the flow mentioned above.
+
+Once everything runs, you can reach [http://localhost:9876/data/web/wsconsole.html](http://localhost:9876/data/web/wsconsole.html)
+to see the data as they come through.
+
 ## REST Admin Interface
 The properties files like `nmea.mux.proeprties` defines the configuration at startup.
 
