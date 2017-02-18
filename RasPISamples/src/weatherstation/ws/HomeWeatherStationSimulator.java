@@ -53,9 +53,9 @@ public class HomeWeatherStationSimulator {
 			float mwd = HomeWeatherStation.getAverageWD(wd);
 			double volts = generateRandomValue(voltage, 3, 0, 65);
 			float temp = (float) generateRandomValue(temperature, 2, -10, 50);
-			float press = (float) generateRandomValue(pressure, 1, 98000, 105000);
-			float hum = (float) generateRandomValue(humidity, 0.1, 0, 100);
-			float rain = (float) generateRandomValue(rainamount, 0.01, 0, 3);
+			float press = (float) generateRandomValue(pressure, 100, 98000, 105000);
+			float hum = (float) generateRandomValue(humidity, 5, 0, 100);
+			float rain = (float) generateRandomValue(rainamount, 1, 0, 3);
 			JSONObject windObj = new JSONObject();
 			windObj.put("dir", wd);
 			windObj.put("avgdir", mwd);

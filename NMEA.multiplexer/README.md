@@ -235,6 +235,32 @@ or
  $> npm start
 ```
 
+##### An alternative, `node-red`.
+There is a possibility to use [Node Red](http://nodered.org/) as a forwarder as well, that is a cool one.
+You can create a node-red flow that ingests data from a TCP port, and spits them out on a WebSocket one.
+
+![Node Red](./docimages/nodered.png "Node Red flow")
+
+[Here](./nodered.json) is the flow to import in Node Red.
+
+###### To run it
+- Start the Mux (`$> ./mux.sh`)
+    - Make sure there is a TCP Forwarder (port 7002)
+- Start the node script `wsnmea.parser.js`.
+```bash
+ node wsnmea.parser.js
+```
+- Start `node-red` and run the flow mentioned above.
+
+![nodeRED](./docimages/nodered.arch.png "NodeRED in the picture")
+
+- The Multiplexer reads the NMEA data and _forwards_ them on a TCP Channel.
+- NodeRED listens to the TCP port, and _forwards_ the payloads to a WebSocket server
+- The WebSocket server transforms the data it receives into the expected format, and broadcasts them to all the connected cliengs (Pebbles in this case).
+
+Once everything runs, you can reach [http://localhost:9876/data/web/wsconsole.html](http://localhost:9876/data/web/wsconsole.html)
+to see the data as they come through.
+
 ## REST Admin Interface
 The properties files like `nmea.mux.proeprties` defines the configuration at startup.
 
