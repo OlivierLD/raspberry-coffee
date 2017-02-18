@@ -1,7 +1,7 @@
 "use strict";
 
 var connection;
-var GRAPH_MAX_LEN = 60;
+var GRAPH_MAX_LEN = 600;
 
 (function () {
   var ws = window.WebSocket || window.MozWebSocket;

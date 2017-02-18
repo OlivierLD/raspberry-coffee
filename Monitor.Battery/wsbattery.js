@@ -1,6 +1,6 @@
 "use strict";  // http://ejohn.org/blog/ecmascript-5-strict-mode-json-and-more/
 
-var simulation = true; // Set to false for real measurement.
+var simulation = false; // set to false for real measurement.
 
 /**
  * WebSocket server for Battery Monitoring sample
