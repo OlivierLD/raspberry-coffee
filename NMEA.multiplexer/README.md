@@ -237,7 +237,7 @@ or
 
 ##### An alternative, `node-red`.
 There is a possibility to use [Node Red](http://nodered.org/) as a forwarder as well, that is a cool one.
-You can create a node-red flow that ingests a TCP port, and spits out data on a WebSocket one.
+You can create a node-red flow that ingests data from a TCP port, and spits them out on a WebSocket one.
 
 ![Node Red](./docimages/nodered.png "Node Red flow")
 
