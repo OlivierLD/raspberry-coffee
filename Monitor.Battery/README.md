@@ -353,7 +353,7 @@ You would see the widget above reacting as the tension is read from the Raspberr
 The widget reacts every time you hit return.
 
 #### Bridging the gap between MQTT and WebSocket
-- MQTT is supported by most of - if not all - the IoT server you can reach,
+- MQTT is supported by most of - if not all - the IoT servers you can reach,
  but it is _not_ directly supported by the browsers.
 - WebSocket is supported by the modern browsers, but most of the IoT servers you can reach do not provide this protocol.
 
