@@ -358,7 +358,7 @@ The widget reacts every time you hit return.
 - WebSocket is supported by the modern browsers, but most of the IoT servers you can reach do not provide this protocol.
 
 So, to access tha data provided by an MQTT server from a browser, we need some process that would broadcast the MQTT data over WebSocket.
-[NodeRED](http://nodered.org) provides this possibility.
+[NodeRED](http://nodered.org) provides such possibility, easily.
 ![NodeRED](./nodered.png "NodeRED at work")
 
 One input node reads the Adafruit-IO MQTT topic, and forwards it to a local WebSocket server (running on node too),

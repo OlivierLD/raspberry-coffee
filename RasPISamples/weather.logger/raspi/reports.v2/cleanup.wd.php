@@ -25,18 +25,23 @@ function getPrm($name) {
 $year  = getPrm('YEAR');
 $month = getPrm('MONTH');
 $day   = getPrm('DAY');
+$hour  = getPrm('HOUR');
+$min   = getPrm('MIN');
+$sec   = getPrm('SEC');
+
+$pswd  = getPrm('PSWD');
 
 // App logic
 
 $username="oliv";
-$password="xxxx";
+$password=$pswd;
 $database="sensors";
 
 $link = mysql_connect("mysql", $username, $password);
 //$link = mysql_connect("localhost", $username, $password);
 @mysql_select_db($database) or die("Unable to select database $database");
 
-$sql = "DELETE FROM `weather_data` WHERE `log_time` < STR_TO_DATE('$day-$month-$year', '%d-%m-%Y')";
+$sql = "DELETE FROM `weather_data` WHERE `log_time` < STR_TO_DATE('$day-$month-$year $hour:$min:$sec', '%d-%m-%Y %h:%i:%s')";
 
 $mess = "Deleted with [$sql]";
 if (!mysql_query($sql)) {
