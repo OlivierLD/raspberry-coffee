@@ -1,6 +1,6 @@
-# How to remotely monitor...
+# Case Study
 
-## ...A Battery
+## How to remotely monitor a 12 Volt Battery
  Options and possibilities to transmit data
 
  This is a _functioning_ example intending to demonstrate how to publish information gathered from the Raspberry PI.
