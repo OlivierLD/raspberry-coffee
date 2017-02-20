@@ -359,14 +359,14 @@ The widget reacts every time you hit return.
 
 So, to access tha data provided by an MQTT server from a browser, we need some process that would broadcast the MQTT data over WebSocket.
 [NodeRED](http://nodered.org) provides such possibility, easily.
-![NodeRED](./nodered.png "NodeRED at work")
+![NodeRED](./nodered.png "Node-RED at work")
 
 One input node reads the Adafruit-IO MQTT topic, and forwards it to a local WebSocket server (running on node too),
 started with `node wsbattery.js`, and that is it. The page [http://localhost:9876/web/adc.one.html](http://localhost:9876/web/adc.one.html) is available:
 
 <img src="./ws.battery.png" alt="WebSocket" title="WebSocket" width="876" height="507">
 
-[Here](./nodered.flow.json) is the flow you need to import in NodeRED.
+[Here](./nodered.flow.json) is the flow you need to import in Node-RED.
 
 You need to modify the MQTT Node to enter your own credentials.
 - Server: `io.adafruit.com:1883`
@@ -377,4 +377,4 @@ You need to modify the MQTT Node to enter your own credentials.
 
 ### Next?
 There is a lot more to do with the options and features described above, specially in the User Interface area.
-But this is setting the ground for your imagination...
+Your imagination is the limit...
