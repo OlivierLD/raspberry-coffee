@@ -4,11 +4,11 @@
  Options and possibilities to transmit data
 
  We'll explore several possibilities:
- - [EMail](#email)
- - [SMS](#sms)
- - [WebSocket](#ws)
- - [MQTT](#mqtt)
- - [REST](#rest)
+ - [EMail](#by-email)
+ - [SMS](#by-sms)
+ - [WebSocket](#websocket)
+ - [MQTT](#using-mqtt)
+ - [REST](#using-rest)
 
  This is a _functioning_ example intending to demonstrate how to publish information gathered from the Raspberry PI.
  The information here is the tension (aka voltage) of a battery.
@@ -47,7 +47,7 @@ After cloning the git repo, to run everything this document is about, all you ne
 This requires Java 8.
 If no error or wacky message shows up, you're good.
 
-### <a name="email">By email</a>
+### By email
 If there is Internet access in the location where the trinket is, and
 if you have an email account, then sending the battery voltage by email could be an option, keeping in mind
 that it is not a _real time_ communication, there is always a delay between the moment when an email
@@ -77,7 +77,7 @@ You will receive an email, in this case every 6 hours, containing the expected b
 - Requires Internet Network connection
 - Not real-time, delayed.
 
-### <a name="sms">By SMS</a>
+### By SMS
 If you do not have Internet coverage in your location, you could use a device like a `FONA` to reach out to a cell-phone network.
 The FONA requires a SIM Card.
 
@@ -152,7 +152,7 @@ More soon about that one...
 - Slow
 -->
 
-### <a name="ws">WebSocket</a>
+### WebSocket
 WebSocket is a very cool technology, based on TCP. Obviously available on the server side of the world, but also
 implemented with HTML5, and available from browsers supporting it, in JavaScript.
 Can be seen as a publish/subscribe mechanism.
@@ -214,7 +214,7 @@ Every second, the WebSocket server pushes a message to the connected client(s). 
 
 ### IoT (Internet Of Things)
 
-#### <a name="mqtt">Using MQTT</a>
+#### Using MQTT
 Now we 've talked about the WebSocket approach above, the Internet Of Things (IoT) one
 flows naturally. MQTT (Message Queuing Telemetry Transport) implements a pure publish/subscribe dialog, very easy to deal with (even easier than WebSocket).
 
@@ -245,7 +245,7 @@ An MQTT server like `Mosquitto` is also perfectly suited for a LAN configuration
 - MQTT is not directly supported in a browser
 - Needs a reliable connection.
 
-#### <a name="rest">Using REST</a>
+#### Using REST
 REST stands for Representational State Transfer. Has recently gained a lot of popularity.
 Built on top of the HTTP Protocol, and as such also available from a browser.
 But for the same reason, it is a Request/Response based protocol.
