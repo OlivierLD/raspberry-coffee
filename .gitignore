@@ -13,7 +13,7 @@
 *.csv
 *.ods
 *.py
-*.png
+# *.png
 *.iml
 gen/
 classes/
