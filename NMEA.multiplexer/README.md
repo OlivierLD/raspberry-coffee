@@ -193,27 +193,27 @@ Make sure you have configured the Pebble application [as required](https://githu
     <td>
       Application list
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.01.png" alt="Start here">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.01.png" alt="Start here">
     </td>
     <td>
       Press select to start
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.02.png" alt="Choose the channel">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.02.png" alt="Choose the channel">
     </td>
     <td>
       Scroll...
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.03.png" alt="Channel list">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.03.png" alt="Channel list">
     </td>
     <td>
       Choose...
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.04.png" alt="Hit select">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.04.png" alt="Hit select">
     </td>
     <td>
       Displayed!
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.05.png" alt="Display">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.05.png" alt="Display">
     </td>
   </tr>
 </table>
