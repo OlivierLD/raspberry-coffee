@@ -250,7 +250,7 @@ You can create a Node-RED flow that ingests data from a TCP port, and spits them
 ```bash
  node wsnmea.parser.js
 ```
-- Start `Node-rRED` and run the flow mentioned above.
+- Start `Node-RED` and run the flow mentioned above.
 
 ![Node-RED](./docimages/nodered.arch.png "Node-RED in the picture")
 
