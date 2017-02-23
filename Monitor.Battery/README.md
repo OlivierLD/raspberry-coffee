@@ -1,7 +1,14 @@
-# How to remotely monitor...
+# Case Study
 
-## ...A Battery
+## How to remotely monitor a 12 Volt Battery
  Options and possibilities to transmit data
+
+ We'll explore several possibilities:
+ - [EMail](#by-email)
+ - [SMS](#by-sms)
+ - [WebSocket](#websocket)
+ - [MQTT](#using-mqtt)
+ - [REST](#using-rest)
 
  This is a _functioning_ example intending to demonstrate how to publish information gathered from the Raspberry PI.
  The information here is the tension (aka voltage) of a battery.
@@ -352,6 +359,29 @@ You would see the widget above reacting as the tension is read from the Raspberr
 ```
 The widget reacts every time you hit return.
 
+#### Bridging the gap between MQTT and WebSocket
+- MQTT is supported by most of - if not all - the IoT servers you can reach,
+ but it is _not_ directly supported by the browsers.
+- WebSocket is supported by the modern browsers, but most of the IoT servers you can reach do not provide this protocol.
+
+So, to access tha data provided by an MQTT server from a browser, we need some process that would broadcast the MQTT data over WebSocket.
+[Node-RED](http://nodered.org) provides such possibility, easily.
+![Node-RED](./nodered.png "Node-RED at work")
+
+One input node reads the Adafruit-IO MQTT topic, and forwards it to a local WebSocket server (running on node too),
+started with `node wsbattery.js`, and that is it. The page [http://localhost:9876/web/adc.one.html](http://localhost:9876/web/adc.one.html) is available:
+
+<img src="./ws.battery.png" alt="WebSocket" title="WebSocket" width="876" height="507">
+
+[Here](./nodered.flow.json) is the flow you need to import in Node-RED.
+
+You need to modify the MQTT Node to enter your own credentials.
+- Server: `io.adafruit.com:1883`
+  - In the Connection tab, leave the `Client ID` blank
+  - In the Security tab, enter your Adafruit-IO username and password.
+- Topic: `olivierld/feeds/battery-pi` Make sure your user-name preceeds the feed name.
+
+
 ### Next?
 There is a lot more to do with the options and features described above, specially in the User Interface area.
-But this is setting the ground for your imagination...
+Your imagination is the limit...

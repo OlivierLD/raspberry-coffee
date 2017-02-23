@@ -1702,19 +1702,23 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			ApplicationContext.getInstance().getDataCache().parseAndFeed(mess);
 		}
 		// Computers. Must go first, as a computer may refeed the present onData method.
-		nmeaDataComputers.stream()
-						.forEach(computer -> {
-							computer.write(mess.getBytes());
-						});
+		synchronized (nmeaDataComputers) {
+			nmeaDataComputers.stream()
+							.forEach(computer -> {
+								computer.write(mess.getBytes());
+							});
+		}
 		// Forwarders
-		nmeaDataForwarders.stream()
-						.forEach(fwd -> {
-							try {
-								fwd.write((mess.trim() + NMEAParser.STANDARD_NMEA_EOS).getBytes());
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						});
+		synchronized (nmeaDataForwarders) {
+			nmeaDataForwarders.stream()
+							.forEach(fwd -> {
+								try {
+									fwd.write((mess.trim() + NMEAParser.STANDARD_NMEA_EOS).getBytes());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							});
+		}
 	}
 
 	private final static NumberFormat MUX_IDX_FMT = new DecimalFormat("00");

@@ -193,27 +193,27 @@ Make sure you have configured the Pebble application [as required](https://githu
     <td>
       Application list
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.01.png" alt="Start here">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.01.png" alt="Start here">
     </td>
     <td>
       Press select to start
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.02.png" alt="Choose the channel">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.02.png" alt="Choose the channel">
     </td>
     <td>
       Scroll...
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.03.png" alt="Channel list">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.03.png" alt="Channel list">
     </td>
     <td>
       Choose...
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.04.png" alt="Hit select">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.04.png" alt="Hit select">
     </td>
     <td>
       Displayed!
       <br/>
-      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA.app/screenshot.05.png" alt="Display">
+      <img src="https://github.com/OlivierLD/pebble/blob/master/NMEA/screenshot.05.png" alt="Display">
     </td>
   </tr>
 </table>
@@ -235,13 +235,13 @@ or
  $> npm start
 ```
 
-##### An alternative, `node-red`.
-There is a possibility to use [Node Red](http://nodered.org/) as a forwarder as well, that is a cool one.
-You can create a node-red flow that ingests data from a TCP port, and spits them out on a WebSocket one.
+##### An alternative, `Node-RED`.
+There is a possibility to use [Node-RED](http://nodered.org/) as a forwarder as well, that is a cool one.
+You can create a Node-RED flow that ingests data from a TCP port, and spits them out on a WebSocket one.
 
-![Node Red](./docimages/nodered.png "Node Red flow")
+![Node-RED](./docimages/nodered.png "Node-RED flow")
 
-[Here](./nodered.json) is the flow to import in Node Red.
+[Here](./nodered.json) is the flow to import in Node-RED.
 
 ###### To run it
 - Start the Mux (`$> ./mux.sh`)
@@ -250,12 +250,12 @@ You can create a node-red flow that ingests data from a TCP port, and spits them
 ```bash
  node wsnmea.parser.js
 ```
-- Start `node-red` and run the flow mentioned above.
+- Start `Node-RED` and run the flow mentioned above.
 
-![nodeRED](./docimages/nodered.arch.png "NodeRED in the picture")
+![Node-RED](./docimages/nodered.arch.png "Node-RED in the picture")
 
 - The Multiplexer reads the NMEA data and _forwards_ them on a TCP Channel.
-- NodeRED listens to the TCP port, and _forwards_ the payloads to a WebSocket server
+- Node-RED listens to the TCP port, and _forwards_ the payloads to a WebSocket server
 - The WebSocket server transforms the data it receives into the expected format, and broadcasts them to all the connected cliengs (Pebbles in this case).
 
 Once everything runs, you can reach [http://localhost:9876/data/web/wsconsole.html](http://localhost:9876/data/web/wsconsole.html)
