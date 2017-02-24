@@ -47,19 +47,19 @@
 
       // Plot position on the chart
       var plotPositionOnChart = function(val) {
-        var pos = new google.maps.LatLng(val.lat, val.lng);
+        var pos = // new google.maps.LatLng(val.lat, val.lng);
+          new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180);
         lastLatlng = pos;
 
-        if (posMarker === undefined) {
-            posMarker = new google.maps.Marker({
-                position: pos,
-                map: map,
-                title: 'GPS Position'
-            });
-            posMarker.addListener('click', onMarkerClick);
-        } else {
-            posMarker.position = pos;
+        if (posMarker !== undefined) {
+            posMarker.setMap(null);
         }
+        posMarker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            title: 'GPS Position'
+        });
+        posMarker.addListener('click', onMarkerClick);
         track.push(pos);
 //      track.push(new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180));
         if (polyline !== undefined) {
