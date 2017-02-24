@@ -1559,7 +1559,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			jsonElement = new Gson().toJsonTree(cache);
 			((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
 		} catch (Exception ex) {
-			System.err.println("getCache:" + ex.toString());
+			System.err.println("Managed >>> getCache:" + ex.toString());
 		}
 		String content = jsonElement != null ? jsonElement.toString() : "";
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());

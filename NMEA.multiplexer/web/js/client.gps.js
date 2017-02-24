@@ -37,7 +37,7 @@ var getNMEAData = function() {
 var fetch = function() {
     var getData = getNMEAData();
     getData.done(function(value) {
-        console.log("Done:", value);
+    //  console.log("Done:", value);
         var json = JSON.parse(value);
         onMessage(json);
     });
@@ -57,8 +57,12 @@ var onMessage = function (json) {
     $("#raw-json").text(JSON.stringify(json, null, 2));
 
     if (json.Position !== undefined) {
-        clear("mapCanvas");
-        drawWorldMap("mapCanvas");
+        try {
+            clear("mapCanvas");
+            drawWorldMap("mapCanvas");
+        } catch (absorb) {
+
+        }
         plotPositionOnChart({lat: json.Position.lat, lng: json.Position.lng});
     }
     try {
@@ -152,6 +156,23 @@ var getSNRColor = function(snr) {
         }
     }
     return c;
+};
+
+var decToSex = function (val, ns_ew) {
+    var absVal = Math.abs(val);
+    var intValue = Math.floor(absVal);
+    var dec = absVal - intValue;
+    var i = intValue;
+    dec *= 60;
+//  var s = i + "°" + dec.toFixed(2) + "'";
+    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+
+    if (val < 0) {
+        s += (ns_ew === 'NS' ? 'S' : 'W');
+    } else {
+        s += (ns_ew === 'NS' ? 'N' : 'E');
+    }
+    return s;
 };
 
 var displayMessage = function(mess) {
