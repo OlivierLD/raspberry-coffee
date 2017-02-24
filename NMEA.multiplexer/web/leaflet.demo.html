@@ -54,8 +54,6 @@
 
       // Plot position on the chart
       var plotPositionOnChart = function(val) {
-        var label = "GPS position";
-        // Plot the station on the map
         var pos = [val.lat, val.lng];
         leafletMap.setView(pos);
         if (posMarker === undefined) {
@@ -70,17 +68,14 @@
         } else {
             polyline.setLatLngs(track);
         }
-
-//      var canvas = "mapCanvas";
-//      plotPosToCanvas(canvas, val.lat, val.lng, label);
       };
 
-      var plotSatelliteOnChart = function(position, label, color) {
-          plotPosToCanvas("mapCanvas", position.lat, position.lng, label, color);
+      var plotSatelliteOnChart = function(position, label, color) { // Don't plot.
       };
 
       var onMarkerClick = function(event) {
-          var mess = 'L: ' + decToSex(event.latlng.lat, 'NS') + "<br>" +
+          var mess = '<b>GPS Position</b><br>' +
+                     'L: ' + decToSex(event.latlng.lat, 'NS') + "<br>" +
                      'G: ' + decToSex(event.latlng.lng, 'EW');
           var popup = L.popup()
               .setLatLng(event.latlng)
