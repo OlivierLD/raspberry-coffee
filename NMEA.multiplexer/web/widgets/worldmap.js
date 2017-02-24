@@ -1,10 +1,11 @@
 var clear = function(canvasName) {
   var canvas = document.getElementById(canvasName);
-  var context = canvas.getContext('2d');
-
-  // Cleanup
-  context.fillStyle = "rgba(0, 0, 100, 10.0)";
-  context.fillRect(0, 0, canvas.width, canvas.height);      
+  if (canvas !== undefined) {
+      var context = canvas.getContext('2d');
+      // Cleanup
+      context.fillStyle = "rgba(0, 0, 100, 10.0)";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+  }
 };
 
 var fromPt, toPt;
