@@ -47,8 +47,8 @@
 
       // Plot position on the chart
       var plotPositionOnChart = function(val) {
-        var pos = // new google.maps.LatLng(val.lat, val.lng);
-          new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180);
+        var pos = new google.maps.LatLng(val.lat, val.lng);
+      //  new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180);
         lastLatlng = pos;
 
         if (posMarker !== undefined) {
