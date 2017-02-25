@@ -19,7 +19,7 @@ function initialize() {
     // MapTypeId.TERRAIN
     map = new google.maps.Map(document.getElementById('map-canvas'), {
         center: homePos,
-        zoom: 4,
+        zoom: 2,
         mapTypeId: google.maps.MapTypeId.HYBRID,
         mapTypeControlOptions: {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
