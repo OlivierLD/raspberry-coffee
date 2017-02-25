@@ -37,7 +37,7 @@ var getNMEAData = function() {
 var fetch = function() {
     var getData = getNMEAData();
     getData.done(function(value) {
-        console.log("Done:", value);
+    //  console.log("Done:", value);
         var json = JSON.parse(value);
         onMessage(json);
     });
