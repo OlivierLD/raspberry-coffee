@@ -468,11 +468,11 @@ This is pinging the `/cache` REST service every second.
 Satellites are displayed on the chart, and on the right pane.
 When available, Speed Over Ground and Course Over Ground are displayed too. 
 
-With Google Maps (requires an Iternet connection):
+With Google Maps (requires an Internet connection):
 ![GPS Demo, google maps](./docimages/googlemaps.png "GPS Demo with Google Maps")
 
-With [LeafletJS](http://leafletjs.com) (requires an Iternet connection):
-![GPS Demo, LeafletJS](./docimages/leaflet.png "GPS Demo with LEafletJS")
+With [LeafletJS](http://leafletjs.com) (requires an Internet connection):
+![GPS Demo, LeafletJS](./docimages/leaflet.png "GPS Demo with LeafletJS")
 
 
 ### JVM Monitoring
