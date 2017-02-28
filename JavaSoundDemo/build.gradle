@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'scala'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+group = 'oliv.pi4j.samples'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url "http://lediouris.net/maven2" }
+    mavenLocal()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/java']
+        }
+        scala {
+            srcDirs = ['src/scala']
+        }
+    }
+    test {
+        java {
+            srcDir 'tests/java'
+        }
+    }
+}
+
+dependencies {
+}
+
+shadowJar {
+    zip64 true
+}
+
+task runSample(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
+    main = 'javasounddemo.JavaSound'
+//  jvmArgs '-Djava.library.path=/usr/lib/jni'
+//  jvmArgs '-Dserial.port=/dev/ttyACM0'
+//  jvmArgs '-Dbaud.rate=9600'
+    workingDir "."
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+runSample.doFirst {
+    println ">>> Run like this: gradlew runSample --console plain --no-daemon"
+}

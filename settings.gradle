@@ -24,3 +24,4 @@ include 'GPS.read'
 include "RMI.sample"
 include "NMEA.multiplexer"
 include "Monitor.Battery"
+include "JavaSoundDemo"
