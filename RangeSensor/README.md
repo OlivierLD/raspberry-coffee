@@ -9,4 +9,6 @@ This device needs the nano-second precision, which is provided - but not garante
 
 Interesting.
 
+#### Wiring
+
 ![Wiring](./HC-SR04_bb.png)
