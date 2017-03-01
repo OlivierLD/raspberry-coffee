@@ -24,6 +24,11 @@ public class First {
 			Thread.sleep(10);
 			mc[5].noteOff(i);
 		}
+		for (int i=119; i>=0; i--) {
+			mc[5].noteOn(i, 600);
+			Thread.sleep(20);
+			mc[5].noteOff(i);
+		}
 		Thread.sleep(1000);
 	}
 }
