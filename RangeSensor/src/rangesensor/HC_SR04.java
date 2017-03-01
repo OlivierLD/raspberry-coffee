@@ -13,7 +13,7 @@ import java.text.DecimalFormat;
 import java.text.Format;
 
 /**
- * @see https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
+ * See https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
  * 
  */
 public class HC_SR04
@@ -21,9 +21,9 @@ public class HC_SR04
   private final static Format DF22 = new DecimalFormat("#0.00");
   private final static Format DF_N = new DecimalFormat("#.##########################");
 
-  private final static double SOUND_SPEED = 34029;  // 34300;         // in cm, 340.29 m/s
+  private final static double SOUND_SPEED = 34029;       // in cm, 340.29 m/s
   private final static double DIST_FACT   = SOUND_SPEED / 2; // round trip
-  private final static int MIN_DIST = 3; // en cm
+  private final static int MIN_DIST = 3; // in cm
   
   private static boolean verbose = false;
   private final static long BILLION      = (long)10E9;

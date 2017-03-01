@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 import java.text.Format;
 
 /**
- * @see https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
+ * See https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
  * 
  * This version is multi-threaded.
  * This allows the management of a signal that does not come back.
