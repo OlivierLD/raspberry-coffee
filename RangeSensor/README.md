@@ -8,3 +8,5 @@ The class `JNI_HC_SR04.java` invokes a C implementation, and is accurate.
 This device needs the nano-second precision, which is provided - but not garanteed - by Java.
 
 Interesting.
+
+![Wiring](./HC-SR04_bb.png)
