@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'scala'
     id 'maven'
     id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
@@ -19,9 +18,6 @@ sourceSets {
         java {
             srcDirs = ['src/java']
         }
-        scala {
-            srcDirs = ['src/scala']
-        }
     }
     test {
         java {
@@ -37,7 +33,35 @@ shadowJar {
     zip64 true
 }
 
-task runSample(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
+task runJuke(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
+    main = 'javasounddemo.Juke'
+    workingDir "."
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task runCapturePlayback(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
+    main = 'javasounddemo.CapturePlayback'
+    workingDir "."
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task runMidiSynth(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
+    main = 'javasounddemo.MidiSynth'
+    workingDir "."
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task runGroove(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
+    main = 'javasounddemo.Groove'
+    workingDir "."
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+task runSamples(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
     main = 'javasounddemo.JavaSound'
 //  jvmArgs '-Djava.library.path=/usr/lib/jni'
 //  jvmArgs '-Dserial.port=/dev/ttyACM0'
@@ -47,6 +71,6 @@ task runSample(type: JavaExec, dependsOn: classes, description: 'Runs the sample
     classpath configurations.runtime
 }
 
-runSample.doFirst {
-    println ">>> Run like this: gradlew runSample --console plain --no-daemon"
+runSamples.doFirst {
+    println ">>> Run like this: gradlew runSamples --console plain --no-daemon"
 }

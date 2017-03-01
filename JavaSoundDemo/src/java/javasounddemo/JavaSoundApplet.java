@@ -32,35 +32,35 @@ package javasounddemo;
 import javax.swing.JApplet;
 
 /**
- * A demo that shows JavaSound features. 
- *
+ * A demo that shows JavaSound features.
+ * <p>
  * Parameters that can be used in the JavaSound.html file inside
  * the applet tag to customize demo runs :
- *            <param name="dir" value="audioDirectory">
+ * <param name="dir" value="audioDirectory">
  *
- * @(#)JavaSoundApplet.java	1.2	00/01/31
- * @author Brian Lichtenwalter 
+ * @author Brian Lichtenwalter
+ * @(#)JavaSoundApplet.java 1.2  00/01/31
  */
 public class JavaSoundApplet extends JApplet {
 
-    static JavaSoundApplet applet;
-    private JavaSound demo;
+	static JavaSoundApplet applet;
+	private JavaSound demo;
 
-    public void init() {
-        applet = this;
-        String media = "./audio";
-        String param = null;
-        if ((param = getParameter("dir")) != null) {
-            media = param;
-        } 
-        getContentPane().add("Center", demo = new JavaSound(media));
-    }
+	public void init() {
+		applet = this;
+		String media = "./audio";
+		String param = null;
+		if ((param = getParameter("dir")) != null) {
+			media = param;
+		}
+		getContentPane().add("Center", demo = new JavaSound(media));
+	}
 
-    public void start() {
-        demo.open();
-    }
+	public void start() {
+		demo.open();
+	}
 
-    public void stop() {
-        demo.close();
-    }
+	public void stop() {
+		demo.close();
+	}
 }
