@@ -1,26 +1,40 @@
 package rangesensor;
 
-public class JNI_HC_SR04
-{
+/**
+ * Uses WiringPI, bridged with javah.
+ * The pure Java implementation (see {@link HC_SR04}) seems to have problems
+ * with the nano seconds required here.
+ */
+public class JNI_HC_SR04 {
+
   public native void init();
-  public native void init(int trigPin, int echoPin); // Uses the WiringPi numbers.
+  /*
+  Default pins, in the C code:
+
+#define GPIO23     4
+#define GPIO24     5
+
+using namespace std;
+
+static int trigger = GPIO23;
+static int echo    = GPIO24;
+   */
+  public native void init(int trigPin, int echoPin); // Uses the WiringPi numbers. See default above.
   public native double readRange();
 
-  public static void main(String[] args) 
-  {
+  public static void main(String[] args) {
     JNI_HC_SR04 jni = new JNI_HC_SR04();
-    jni.init();
+    jni.init(); // With default prms. See above.
+    System.out.println("Initialized. Get closer than 5cm to stop.");
     boolean go = true;
-    while (go)
-    {
-      double range = jni.readRange();
-      System.out.println("Distance is " + (range * 100) + " cm");
-      go = (range * 100 > 5);
+    while (go) {
+      double range = jni.readRange(); // in meters.
+      System.out.println(String.format("Distance is %.2f cm.", (range * 100)));
+      go = (range * 100 > 5); // Stops when range is less than 5 cm.
     }
-    System.out.println("Java is done.");
+    System.out.println("Java is done, bye now.");
   }
-  static 
-  {
+  static {
     System.loadLibrary("OlivHCSR04");
   }
 }
