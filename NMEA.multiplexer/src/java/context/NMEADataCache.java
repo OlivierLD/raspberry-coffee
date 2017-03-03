@@ -196,9 +196,9 @@ public class NMEADataCache
 					List<Object> gga = StringParsers.parseGGA(nmeaSentence);
 					GeoPos ggaPos = (GeoPos)gga.get(StringParsers.GGA_POS_IDX);
 					this.put(POSITION, ggaPos);
-					UTCDate ggaDate = (UTCDate)gga.get(StringParsers.GGA_UTC_IDX);
+					UTC ggaDate = (UTC)gga.get(StringParsers.GGA_UTC_IDX);
 					if (ggaDate != null) {
-						this.put(GPS_DATE_TIME, ggaDate);
+						this.put(GPS_DATE_TIME, new UTCDate(ggaDate.getDate()));
 					}
 			//	int ggaNbSat = (Integer)gga.get(StringParsers.GGA_NBSAT_IDX);
 					double ggaAlt = (Double)gga.get(StringParsers.GGA_ALT_IDX);

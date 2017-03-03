@@ -31,8 +31,7 @@
   port    = matches[4];
 //query   = matches[5];
 
-  var resetStatus = function()
-  {
+  var resetStatus = function() {
     statusFld.innerHTML = "";
   };
       </script>    
@@ -43,32 +42,29 @@
    */
   var statusFld, promptFld;
 
-  window.onload = function()
-  {
+  window.onload = function() {
     statusFld  = document.getElementById('status');
     promptFld  = document.getElementById('prompt');
 
-    try
-    {
+    try {
       var wsURI = "ws" + secured + "://" + machine + ":" + port + URI_SUFFIX;
       ws = new WebSocket(wsURI);
-    }
-    catch (err)
-    {
+    } catch (err) {
       var mess = 'WebSocket creation error:';
-      if (err.message !== undefined)
-        mess += err.message;
-      else
-        mess += JSON.stringify(err);
+      if (err.message !== undefined) {
+          mess += err.message;
+      } else {
+          mess += JSON.stringify(err);
+      }
       connectionStatus = "<font color='red'>Enable to connect.</font>";
-      if (statusFld !== undefined)
-        statusFld.innerHTML = mess;
-      else
-        alert(mess);
+      if (statusFld !== undefined) {
+          statusFld.innerHTML = mess;
+      } else {
+          alert(mess);
+      }
     }
     init(); // in app.js
   };
-  
     </script>
   </head>
   <body>
