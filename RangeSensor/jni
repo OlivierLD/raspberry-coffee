@@ -1,5 +1,13 @@
 #!/bin/bash
-JAVA_HOME=/usr/lib/jvm/jdk1.8.0_33
+# JAVA_HOME=/usr/lib/jvm/jdk1.8.0_33
+JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt
+echo JavaH compilation, then run
+echo Uses WiringPI
+if [ ! -d ./classes ]
+then
+  mkdir classes
+fi
+#
 echo \>\> Compiling
 javac -source 1.7 -target 1.7 -sourcepath ./src -d ./classes -classpath ./classes -g ./src/rangesensor/JNI_HC_SR04.java 
 echo \>\> Running javah
