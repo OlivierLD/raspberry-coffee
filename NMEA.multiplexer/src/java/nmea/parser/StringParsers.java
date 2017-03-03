@@ -354,6 +354,11 @@ public class StringParsers {
 		return str.trim();
 	}
 
+	public static final int GGA_UTC_IDX = 0;
+	public static final int GGA_POS_IDX = 1;
+	public static final int GGA_NBSAT_IDX = 2;
+	public static final int GGA_ALT_IDX = 3;
+
 	public static List<Object> parseGGA(String data) {
 		final int KEY_POS = 0;
 		final int UTC_POS = 1;

@@ -104,6 +104,8 @@ public class NMEADataCache
 	public static final String VMG_ON_WIND = "VMG on Wind";
 	public static final String VMG_ON_WP = "VMG to Waypoint";
 
+	public static final String ALTITUDE = "Altitude";
+
 	// Damping ArrayList's
 	private transient int dampingSize = 1;
 
@@ -190,6 +192,18 @@ public class NMEADataCache
 
 			String id = StringParsers.getSentenceID(nmeaSentence);
 			switch (id) {
+				case "GGA":
+					List<Object> gga = StringParsers.parseGGA(nmeaSentence);
+					GeoPos ggaPos = (GeoPos)gga.get(StringParsers.GGA_POS_IDX);
+					this.put(POSITION, ggaPos);
+					UTCDate ggaDate = (UTCDate)gga.get(StringParsers.GGA_UTC_IDX);
+					if (ggaDate != null) {
+						this.put(GPS_DATE_TIME, ggaDate);
+					}
+			//	int ggaNbSat = (Integer)gga.get(StringParsers.GGA_NBSAT_IDX);
+					double ggaAlt = (Double)gga.get(StringParsers.GGA_ALT_IDX);
+					this.put(ALTITUDE, ggaAlt);
+					break;
 				case "RMC":
 					RMC rmc = StringParsers.parseRMC(nmeaSentence);
 					if (rmc != null) {
