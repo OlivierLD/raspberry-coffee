@@ -1,5 +1,7 @@
 package context;
 
+import java.util.logging.Level;
+import nmea.mux.context.Context;
 import nmea.parser.Angle;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
@@ -505,8 +507,7 @@ public class NMEADataCache
 					} else
 						ret = super.get(key);
 				} catch (Exception ex) {
-					System.err.println("For key:" + key);
-					ex.printStackTrace();
+					Context.getInstance().getLogger().log(Level.INFO, String.format("For key", key), ex);
 				}
 			} else {
 				ret = super.get(key);
@@ -516,7 +517,7 @@ public class NMEADataCache
 //				}
 			}
 		} catch (ConcurrentModificationException cme) {
-			System.err.println("Conflict for key [" + key + "] -> " + cme.toString());
+			Context.getInstance().getLogger().log(Level.INFO, String.format("Conflict for key [%s]", key), cme);
 		}
 		return ret;
 	}

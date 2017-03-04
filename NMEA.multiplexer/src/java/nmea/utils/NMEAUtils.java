@@ -15,6 +15,8 @@ import java.util.Set;
 
 import context.ApplicationContext;
 import context.NMEADataCache;
+import java.util.logging.Level;
+import nmea.mux.context.Context;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle180LR;
@@ -691,8 +693,7 @@ public class NMEAUtils {
 				cache.put(NMEADataCache.VMG_ON_WP, vmg);
 			}
 		} catch (Exception ex) {
-			// TODO Java Logging
-			ex.printStackTrace();
+			Context.getInstance().getLogger().log(Level.WARNING, ex.getMessage(), ex);
 		}
 	}
 

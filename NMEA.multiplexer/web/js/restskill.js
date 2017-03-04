@@ -148,7 +148,7 @@ var buildList = function(arr) {
 };
 
 var setRESTPayload = function(payload, elapsed) {
-  RESTPayload = payload;
+  RESTPayload = (typeof payload === 'string' ? JSON.parse(payload) : payload);
   if (true || showRESTData) { // Show anyways
       displayRawData(elapsed);
   }
