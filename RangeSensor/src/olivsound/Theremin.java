@@ -30,6 +30,8 @@ static int echo    = GPIO24;
 
   public static void main(String[] args) throws Exception {
 
+    System.out.println("Theremin, initializing the sound part...");
+
     Synthesizer synth = MidiSystem.getSynthesizer();
     synth.open();
 
@@ -38,6 +40,7 @@ static int echo    = GPIO24;
 
     synth.loadInstrument(instr[90]);
 
+    System.out.println("Sound initialized, now initializing the range sensor");
     Theremin jni_hc_sr04 = new Theremin();
     jni_hc_sr04.init(); // With default prms. See above.
     System.out.println("Initialized. Get closer than 5cm to stop.");
