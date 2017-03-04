@@ -63,8 +63,10 @@ static int echo    = GPIO24;
       go = (range * 100 > 5); // Stops when range is less than 5 cm.
       if (go) {
         int note = (int)(Math.round(((range * 100) / 55) * 100)) + 20; // Range notes[20, 120], distance[5, 60]
-	      System.out.println(String.format("Playing note %d", note));
-	      mc[5].noteOn(note, 600);
+        note = Math.min(note, 120);
+        note = Math.max(note, 20);
+	    System.out.println(String.format("Playing note %d", note));
+	    mc[5].noteOn(note, 600);
         Thread.sleep(50);
         mc[5].noteOff(note);
       }
