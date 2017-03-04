@@ -665,10 +665,14 @@ public class NMEAUtils {
 			if (sog > 0) // Try with GPS Data first
 				vmg = sog * Math.cos(Math.toRadians(twa));
 			else {
-				twa = ((Angle180) cache.get(NMEADataCache.TWA)).getValue();
-				double bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
-				if (bsp > 0)
-					vmg = bsp * Math.cos(Math.toRadians(twa));
+				try {
+					twa = ((Angle180) cache.get(NMEADataCache.TWA)).getValue();
+					double bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
+					if (bsp > 0)
+						vmg = bsp * Math.cos(Math.toRadians(twa));
+				} catch (Exception e) {
+					vmg = 0;
+				}
 			}
 			cache.put(NMEADataCache.VMG_ON_WIND, vmg);
 
@@ -687,6 +691,7 @@ public class NMEAUtils {
 				cache.put(NMEADataCache.VMG_ON_WP, vmg);
 			}
 		} catch (Exception ex) {
+			// TODO Java Logging
 			ex.printStackTrace();
 		}
 	}
