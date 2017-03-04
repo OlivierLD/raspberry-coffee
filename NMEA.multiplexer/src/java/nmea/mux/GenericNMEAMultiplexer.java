@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.util.logging.Level;
 import nmea.api.NMEAReader;
 import nmea.computers.Computer;
 import nmea.computers.ExtraDataComputer;
@@ -40,6 +41,7 @@ import nmea.forwarders.TCPServer;
 import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
 import nmea.forwarders.WebSocketProcessor;
+import nmea.mux.context.Context;
 import nmea.utils.NMEAUtils;
 
 import java.io.File;
@@ -1559,7 +1561,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			jsonElement = new Gson().toJsonTree(cache);
 			((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
 		} catch (Exception ex) {
-			System.err.println("Managed >>> getCache:" + ex.toString());
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
 		}
 		String content = jsonElement != null ? jsonElement.toString() : "";
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
