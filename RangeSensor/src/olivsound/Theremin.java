@@ -41,12 +41,12 @@ static int echo    = GPIO24;
 
     synth.loadInstrument(instr[90]);
     // Scale: 0 to 120
-    for (int i=0; i<120; i++) {
+    for (int i=20; i<120; i++) {
       mc[5].noteOn(i, 600);
       Thread.sleep(10);
       mc[5].noteOff(i);
     }
-    for (int i=119; i>=0; i--) {
+    for (int i=119; i>=20; i--) {
       mc[5].noteOn(i, 600);
       Thread.sleep(20);
       mc[5].noteOff(i);
@@ -65,7 +65,7 @@ static int echo    = GPIO24;
         int note = (int)(Math.round(((range * 100) / 55) * 100)) + 20; // Range notes[20, 120], distance[5, 60]
 	      System.out.println(String.format("Playing note %d", note));
 	      mc[5].noteOn(note, 600);
-        Thread.sleep(10);
+        Thread.sleep(50);
         mc[5].noteOff(note);
       }
     }

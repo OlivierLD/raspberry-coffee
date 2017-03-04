@@ -66,7 +66,7 @@ double readRange()
   // Initialize the sensor's trigger pin to low. If we don't pause
   // after setting it to low, sometimes the sensor doesn't work right.
   digitalWrite(trigger, LOW);
-  delay(500); // .5 seconds
+  delay(100); // 500 = .5 seconds
 
   // Triggering the sensor for 10 microseconds will cause it to send out
   // 8 ultrasonic (40Khz) bursts and listen for the echos.
