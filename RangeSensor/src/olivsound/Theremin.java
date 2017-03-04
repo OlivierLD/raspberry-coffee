@@ -5,6 +5,7 @@ import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Synthesizer;
 import rangesensor.HC_SR04;
+import rangesensor.JNI_HC_SR04;
 
 /**
  * Uses WiringPI, bridged with javah.
@@ -37,8 +38,19 @@ static int echo    = GPIO24;
     Instrument[] instr = synth.getDefaultSoundbank().getInstruments();
 
     synth.loadInstrument(instr[90]);
+    // Scale: 0 to 120
+    for (int i=0; i<120; i++) {
+      mc[5].noteOn(i, 600);
+      Thread.sleep(10);
+      mc[5].noteOff(i);
+    }
+    for (int i=119; i>=0; i--) {
+      mc[5].noteOn(i, 600);
+      Thread.sleep(20);
+      mc[5].noteOff(i);
+    }
 
-    Theremin jni_hc_sr04 = new Theremin();
+	  JNI_HC_SR04 jni_hc_sr04 = new JNI_HC_SR04();
     jni_hc_sr04.init(); // With default prms. See above.
     System.out.println("Initialized. Get closer than 5cm to stop.");
     boolean go = true;
@@ -55,7 +67,8 @@ static int echo    = GPIO24;
     }
     System.out.println("Java is done, bye now.");
   }
-  static {
-    System.loadLibrary("OlivHCSR04");
-  }
+
+//  static {
+//    System.loadLibrary("OlivHCSR04");
+//  }
 }
