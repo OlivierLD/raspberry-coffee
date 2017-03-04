@@ -2,7 +2,7 @@ package rangesensor;
 
 /**
  * Uses WiringPI, bridged with javah.
- * The pure Java implementation (see {@link HC_SR04}) seems to have problems
+ * The pure Java implementation (see {@link HC_SR04}.java) seems to have problems
  * with the nano seconds required here.
  */
 public class JNI_HC_SR04 {
@@ -23,12 +23,12 @@ static int echo    = GPIO24;
   public native double readRange();
 
   public static void main(String[] args) {
-    JNI_HC_SR04 jni = new JNI_HC_SR04();
-    jni.init(); // With default prms. See above.
+    JNI_HC_SR04 jni_hc_sr04 = new JNI_HC_SR04();
+    jni_hc_sr04.init(); // With default prms. See above.
     System.out.println("Initialized. Get closer than 5cm to stop.");
     boolean go = true;
     while (go) {
-      double range = jni.readRange(); // in meters.
+      double range = jni_hc_sr04.readRange(); // in meters.
       System.out.println(String.format("Distance is %.2f cm.", (range * 100)));
       go = (range * 100 > 5); // Stops when range is less than 5 cm.
     }

@@ -14,11 +14,11 @@
 
 using namespace std;
 
-//static int trigger = GPIO23;
-//static int echo    = GPIO24;
+static int trigger = GPIO23;
+static int echo    = GPIO24;
 
-static int trigger = GPIO22;
-static int echo    = GPIO27;
+//static int trigger = GPIO22;
+//static int echo    = GPIO27;
 
 static volatile long startTimeUsec;
 static volatile long endTimeUsec;

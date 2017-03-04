@@ -13,3 +13,7 @@ Interesting.
 #### Wiring
 
 ![Wiring](./HC-SR04_bb.png)
+
+Make sure the pins you use match the code.
+
+You can run the pure C version, see in the `C` directory, the script `c.compile` will prduce the executable.

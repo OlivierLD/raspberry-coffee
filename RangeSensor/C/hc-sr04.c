@@ -22,6 +22,10 @@ void recordPulseLength (void) {
 /**
  * Uses the HC SR04 ultrasonic sensor to measure distance. The HC SR04
  * provides 2cm to 400cm range measurement.
+ *
+ * WARNING: This is a standalone version.
+ *          This is NOT the one used from Java
+ *          See WiringPI_HC_SR04
  */
 int main()
 {
