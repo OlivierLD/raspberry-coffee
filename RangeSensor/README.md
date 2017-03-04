@@ -17,3 +17,8 @@ Interesting.
 Make sure the pins you use match the code.
 
 You can run the pure C version, see in the `C` directory, the script `c.compile` will prduce the executable.
+
+### JNI quick guide
+Look into [This project](../JNISample/README.md).
+
+---
