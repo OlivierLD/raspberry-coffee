@@ -148,7 +148,15 @@ var buildList = function(arr) {
 };
 
 var setRESTPayload = function(payload, elapsed) {
-  RESTPayload = (typeof payload === 'string' ? JSON.parse(payload) : payload);
+  if (typeof payload === 'string') {
+      if (payload.length > 0) {
+          RESTPayload = JSON.parse(payload);
+      } else {
+          RESTPayload = {};
+      }
+  } else {
+      RESTPayload = payload;
+  }
   if (true || showRESTData) { // Show anyways
       displayRawData(elapsed);
   }

@@ -1541,7 +1541,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		}
 		boolean newValue = "on".equals(prmValues.get(0));
 		this.verbose = newValue;
-		String content = "";
+		JsonElement jsonElement = new Gson().toJsonTree(newValue);
+		String content = jsonElement.toString();
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
