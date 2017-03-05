@@ -60,6 +60,12 @@ import java.util.Properties;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * NMEA Multiplexer.<br>
+ * Also contains the definition of the REST operations for admin purpose.<br>
+ * See {@link HTTPServerInterface} and {@link HTTPServer}.<br>
+ * Also see below the definition of <code>List&lt;Operation&gt; operations</code>.
+ */
 public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface {
 	private HTTPServer adminServer = null;
 
@@ -1587,7 +1593,6 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 	private HTTPServer.Response getOperationList(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		List<Object> channelList = getInputChannelList();
 		Operation[] channelArray = operations.stream()
 						.collect(Collectors.toList())
 						.toArray(new Operation[operations.size()]);
