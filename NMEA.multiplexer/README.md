@@ -75,6 +75,11 @@ Computers:
 - **True Wind** computer (produces `MDA`, `MWD` data)
 - **Current** computer (produces `VDR` data)
 
+_Important_: Computers require the cache to be initialized. This is set in the properties file:
+```properties
+ init.cache=true
+```
+
 Transformers:
 - **GPSD** data (See [this](https://hocus-blogus.blogspot.com/2016/12/nmea-multiplexer-opencpn-gpsd.html))
 - **Custom** data

@@ -61,7 +61,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * NMEA Multiplexer.<br>
+ * <b>NMEA Multiplexer.</b><br>
  * Also contains the definition of the REST operations for admin purpose.<br>
  * See {@link HTTPServerInterface} and {@link HTTPServer}.<br>
  * Also see below the definition of <code>List&lt;Operation&gt; operations</code>.
