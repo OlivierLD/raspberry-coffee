@@ -51,6 +51,10 @@ var getDeferred = function(url, timeout, verb, happyCode, data) {
 
 }
 
+var getVolume = function() {
+    return getDeferred('/nmea-volume', 10000, 'GET', 200);
+};
+
 var getSerialPorts = function() {
     return getDeferred('/serial-ports', 10000, 'GET', 200);
 };
@@ -105,6 +109,31 @@ var deleteComputer = function(computer) {
 
 var deleteChannel = function(channel) {
     return getDeferred('/channels/' + channel.type, 10000, 'DELETE', 204, channel);
+};
+
+var dataVolume = function() {
+  // No REST traffic for this one.
+    var getData = getVolume();
+    getData.done(function(value) {
+        var json = JSON.parse(value); // Like { "nmea-bytes": 13469, "started": 1489004962194 }
+        var currentTime = new Date().getTime();
+        var elapsed = currentTime - json.started;
+        var volume = json["nmea-bytes"];
+        var flow = Math.round(volume / (elapsed / 1000));
+        $("#flow").text(flow + " bytes/sec.");
+    });
+    getData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager.display("Failed to get the flow status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
+
 };
 
 var serialPortList = function() {

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.util.HashMap;
 import java.util.logging.Level;
 import nmea.api.NMEAReader;
 import nmea.computers.Computer;
@@ -197,7 +198,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 									"DELETE",
 									"/cache",
 									this::resetCache,
-									"Reset the cache"));
+									"Reset the cache"),
+					new Operation(
+									"GET",
+									"/nmea-volume",
+									this::getNMEAVolumeStatus,
+									"Get the time elapsed and the NMEA volume managed so far"));
 
 	public HTTPServer.Response processRequest(HTTPServer.Request request, HTTPServer.Response defaultResponse) {
 		Optional<Operation> opOp = operations
@@ -1591,6 +1597,26 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		return response;
 	}
 
+	private HTTPServer.Response getNMEAVolumeStatus(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		Map<String, Long> map = new HashMap<>(2);
+		map.put("started", Context.getInstance().getStartTime());
+		map.put("nmea-bytes", Context.getInstance().getManagedBytes());
+
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(map);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
 	private HTTPServer.Response getOperationList(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		Operation[] channelArray = operations.stream()
@@ -1700,6 +1726,9 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 	@Override
 	public synchronized void onData(String mess) {
+		// To measure the flow (in bytes per time)
+    Context.getInstance().addManagedBytes(mess.length());
+
 		if (verbose) {
 			System.out.println("==== From MUX: " + mess);
 			DumpUtil.displayDualDump(mess);
@@ -1737,6 +1766,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	 * @param muxProps Initial config. See {@link #main(String...)} method.
 	 */
 	public GenericNMEAMultiplexer(Properties muxProps) {
+
+		Context.getInstance().setStartTime(System.currentTimeMillis());
 
 		// Check duplicates in operation list. Barfs if duplicate is found.
 		for (int i = 0; i < operations.size(); i++) {

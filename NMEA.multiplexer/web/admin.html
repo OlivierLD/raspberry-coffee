@@ -536,10 +536,20 @@
                     break;
             }
         };
+
+        window.onload = function() {
+          var interv = setInterval(dataVolume, 1000);
+        };
     </script>
   </head>
   <body>
-    <h2>NMEA Multiplexer Admin</h2>
+  <table width="100%">
+    <tr>
+      <td><h2>NMEA Multiplexer Admin</h2></td>
+      <td align="right">Flow <span id="flow"></span></td>
+    </tr>
+  </table>
+
     <small>JQuery, Ajax, REST, JSON..., Multiplexer Admin.</small>
     <p>
     <div style="margin-bottom: 0px;">
