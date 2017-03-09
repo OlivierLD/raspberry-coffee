@@ -11,20 +11,26 @@ var storedHistory = "";
 var storedHistoryOut = "";
 var storedElapsed = "";
 
-var getDeferred = function(url, timeout, verb, happyCode, data) {
-    document.body.style.cursor = 'wait';
+var getDeferred = function(url, timeout, verb, happyCode, data, show) {
+    if (!show) {
+        show = true;
+    }
+    if (show === true) {
+        document.body.style.cursor = 'wait';
+    }
     var deferred = $.Deferred(),  // a jQuery deferred
         url = url,
         xhr = new XMLHttpRequest(),
         TIMEOUT = timeout;
 
     var req = verb + " " + url;
-    if (data !== undefined) {
+    if (data !== undefined && data !== null) {
         req += ("\n" + JSON.stringify(data, null, 2));
     }
-    storedHistoryOut += ((storedHistoryOut.length > 0 ? "\n" : "") + req);
-    displayRawDataOut();
-
+    if (show === true) {
+        storedHistoryOut += ((storedHistoryOut.length > 0 ? "\n" : "") + req);
+        displayRawDataOut();
+    }
     xhr.open(verb, url, true);
     xhr.setRequestHeader("Content-type", "application/json");
     if (data === undefined) {
@@ -52,7 +58,7 @@ var getDeferred = function(url, timeout, verb, happyCode, data) {
 }
 
 var getVolume = function() {
-    return getDeferred('/nmea-volume', 10000, 'GET', 200);
+    return getDeferred('/nmea-volume', 10000, 'GET', 200, null, false);
 };
 
 var getSerialPorts = function() {
