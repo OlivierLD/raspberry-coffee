@@ -12,7 +12,7 @@ var storedHistoryOut = "";
 var storedElapsed = "";
 
 var getDeferred = function(url, timeout, verb, happyCode, data, show) {
-    if (!show) {
+    if (show === undefined) {
         show = true;
     }
     if (show === true) {
