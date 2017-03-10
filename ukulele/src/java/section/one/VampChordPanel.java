@@ -114,7 +114,7 @@ public class VampChordPanel
 		this.scrollPane = new JScrollPane(this.table);
 		this.scrollPane.setPreferredSize(new Dimension(120, 280));
 		setLayout(new BorderLayout());
-		add(this.scrollPane, "Center");
+		add(this.scrollPane, BorderLayout.CENTER);
 
 
 		for (int i = 0; i < NB_COLUMNS; i++) {
@@ -178,9 +178,3 @@ public class VampChordPanel
 		}
 	}
 }
-
-
-/* Location:              /Users/olediouris/Downloads/appletjar.jar!/section/one/VampChordPanel.class
- * Java compiler version: 6 (50.0)
- * JD-Core Version:       0.7.1
- */

@@ -10,7 +10,7 @@ public class Chord {
 		this.finger = finger;
 	}
 
-	public String getTtitle() {
+	public String getTitle() {
 		return this.title;
 	}
 
@@ -19,7 +19,7 @@ public class Chord {
 	}
 
 	public String toString() {
-		String s = getTtitle() + " (";
+		String s = getTitle() + " (";
 		for (int i = 0; i < getFinger().length; i++) {
 			s = s + (getFinger()[i] == -1 ? "X" : Integer.toString(getFinger()[i])) + " ";
 		}

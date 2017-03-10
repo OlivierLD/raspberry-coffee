@@ -73,11 +73,9 @@ public class ThreeChordPanel
 		setSize(new Dimension(295, 140));
 		setPreferredSize(new Dimension(295, 140));
 		setLayout(this.gridBagLayout1);
-		add(this.chordPanelI, new GridBagConstraints(0, 0, 1, 1, 0.0D, 0.0D, 17, 1, new Insets(0, 0, 0, 0), 0, 0));
-
-		add(this.chordPanelIV, new GridBagConstraints(1, 0, 1, 1, 0.0D, 0.0D, 10, 1, new Insets(0, 0, 0, 0), 0, 0));
-
-		add(this.chordPanelV, new GridBagConstraints(2, 0, 1, 1, 0.0D, 0.0D, 13, 1, new Insets(0, 0, 0, 0), 0, 0));
+		add(this.chordPanelI, new GridBagConstraints(0, 0, 1, 1, 0.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		add(this.chordPanelIV, new GridBagConstraints(1, 0, 1, 1, 0.0D, 0.0D, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+		add(this.chordPanelV, new GridBagConstraints(2, 0, 1, 1, 0.0D, 0.0D, GridBagConstraints.EAST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 	}
 
 

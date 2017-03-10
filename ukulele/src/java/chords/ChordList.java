@@ -1038,7 +1038,7 @@ public class ChordList {
 	public static List<Chord> findChord(String chordName) {
 		List<Chord> list = new ArrayList();
 		for (Chord c : CHORDS) {
-			if (chordName.equalsIgnoreCase(c.getTtitle())) {
+			if (chordName.equalsIgnoreCase(c.getTitle())) {
 				list.add(c);
 			}
 		}
@@ -1049,7 +1049,7 @@ public class ChordList {
 			}
 			String newName = (String) EQUIVALENCES.get(chordTone) + chordName.substring(chordTone.length());
 			for (Chord c : CHORDS) {
-				if (newName.equalsIgnoreCase(c.getTtitle())) {
+				if (newName.equalsIgnoreCase(c.getTitle())) {
 					list.add(c.clone(chordName));
 				}
 			}

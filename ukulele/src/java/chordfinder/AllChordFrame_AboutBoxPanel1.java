@@ -34,9 +34,9 @@ public class AllChordFrame_AboutBoxPanel1
 		this.labelAuthor.setText("Olivier LeDiouris");
 		this.labelCopyright.setText("Copyright OlivSoft, 2012");
 		this.labelCompany.setText("OlivSoft strikes again");
-		add(this.labelTitle, new GridBagConstraints(0, 0, 1, 1, 0.0D, 0.0D, 17, 0, new Insets(5, 15, 0, 15), 0, 0));
-		add(this.labelAuthor, new GridBagConstraints(0, 1, 1, 1, 0.0D, 0.0D, 17, 0, new Insets(0, 15, 0, 15), 0, 0));
-		add(this.labelCopyright, new GridBagConstraints(0, 2, 1, 1, 0.0D, 0.0D, 17, 0, new Insets(0, 15, 0, 15), 0, 0));
-		add(this.labelCompany, new GridBagConstraints(0, 3, 1, 1, 0.0D, 0.0D, 17, 0, new Insets(0, 15, 5, 15), 0, 0));
+		add(this.labelTitle, new GridBagConstraints(0, 0, 1, 1, 0.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 15, 0, 15), 0, 0));
+		add(this.labelAuthor, new GridBagConstraints(0, 1, 1, 1, 0.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 15, 0, 15), 0, 0));
+		add(this.labelCopyright, new GridBagConstraints(0, 2, 1, 1, 0.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 15, 0, 15), 0, 0));
+		add(this.labelCompany, new GridBagConstraints(0, 3, 1, 1, 0.0D, 0.0D, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 15, 5, 15), 0, 0));
 	}
 }

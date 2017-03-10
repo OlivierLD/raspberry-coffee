@@ -113,7 +113,7 @@ public class PrincipalChordPanel
 		this.scrollPane = new JScrollPane(this.table);
 		this.scrollPane.setPreferredSize(new Dimension(120, 280));
 		setLayout(new BorderLayout());
-		add(this.scrollPane, "Center");
+		add(this.scrollPane, BorderLayout.CENTER);
 
 
 		for (int i = 0; i < NB_COLUMNS; i++) {

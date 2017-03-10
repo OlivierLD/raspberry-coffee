@@ -8,13 +8,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -23,12 +21,10 @@ import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
-import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.text.AttributedString;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +42,7 @@ public class ChordPanel
 	public static final int A_B_C_OPTION = 0;
 
 	public static final int DO_RE_MI_OPTION = 1;
-	private static int userOption = 0;
+	private static int userOption = A_B_C_OPTION;
 
 	private static Font musicFont = null;
 
@@ -65,7 +61,7 @@ public class ChordPanel
 	public static final int DISPLAY_MODE = 1;
 
 	public static final int IDENTIFIER_MODE = 2;
-	private int chordMode = 1;
+	private int chordMode = DISPLAY_MODE;
 
 	public ChordPanel() {
 		this(null);
@@ -96,20 +92,20 @@ public class ChordPanel
 
 			public void mouseClicked(MouseEvent e) {
 
-				if (ChordPanel.this.chordMode == 2) {
+				if (ChordPanel.this.chordMode == IDENTIFIER_MODE) {
 
 					int h = ChordPanel.this.getHeight();
 					int w = ChordPanel.this.getWidth();
 
-					int totalWidth = 30;
-					int totalHeight = ChordPanel.this.nbFrets * 14 + 3;
+					int totalWidth = (BETWEEN_STRINGS - 1) * BETWEEN_STRINGS;
+					int totalHeight = ChordPanel.this.nbFrets * FRET_WIDTH + TOP_THICKNESS;
 
 					int xOrig = w / 2 - totalWidth / 2;
 					int yOrig = h / 2 - totalHeight / 2;
 
 					int stringNum = 0;
-					for (int i = 0; i < 4; i++) {
-						int x = xOrig + i * 10;
+					for (int i = 0; i < NUMBER_OF_STRINGS; i++) {
+						int x = xOrig + i * BETWEEN_STRINGS;
 						if (Math.abs(x - e.getX()) < 3) {
 							stringNum = i + 1;
 							break;
@@ -117,8 +113,8 @@ public class ChordPanel
 					}
 					int fretNum = 0;
 					for (int i = 0; (stringNum > 0) && (i < ChordPanel.this.nbFrets + 1); i++) {
-						int yUp = yOrig + i * 14;
-						int yDown = yOrig + (i + 1) * 14;
+						int yUp = yOrig + i * FRET_WIDTH;
+						int yDown = yOrig + (i + 1) * FRET_WIDTH;
 						if ((e.getY() > yUp) && (e.getY() < yDown)) {
 							fretNum = i + 1;
 							System.out.println("String # " + stringNum + ", fret " + fretNum);
@@ -156,7 +152,7 @@ public class ChordPanel
 		AppContext.getInstance().addAppListener(new AppListener() {
 
 			public void setUserLanguage(String lng) {
-				ChordPanel.setUserOption("FR".equals(lng) ? 1 : 0);
+				ChordPanel.setUserOption("FR".equals(lng) ? ChordPanel.DO_RE_MI_OPTION : ChordPanel.A_B_C_OPTION);
 			}
 		});
 	}
@@ -165,13 +161,13 @@ public class ChordPanel
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		musicFont = musicFont.deriveFont(1, 30.0F);
+		musicFont = musicFont.deriveFont(Font.BOLD, 30.0F);
 
 		int h = getHeight();
 		int w = getWidth();
 
 		int totalWidth = 30;
-		int totalHeight = this.nbFrets * 14 + 3;
+		int totalHeight = this.nbFrets * FRET_WIDTH + TOP_THICKNESS;
 
 		g.setColor(Color.white);
 		g.fillRect(0, 0, w, h);
@@ -188,10 +184,9 @@ public class ChordPanel
 
 
 		if (this.chord != null) {
-			String title = this.chord.getTtitle();
+			String title = this.chord.getTitle();
 
-
-			if (userOption == 1) {
+			if (userOption == DO_RE_MI_OPTION) {
 				String noteName = title.substring(0, 1);
 
 				for (int i = 0; i < ENGLISH_NOTE_NAMES.length; i++) {
@@ -293,12 +288,12 @@ public class ChordPanel
 				LineBreakMeasurer lbm = new LineBreakMeasurer(astr.getIterator(), frc);
 				int len = (int) lbm.nextLayout(getWidth()).getAdvance();
 
-				g2d.drawString(astr.getIterator(), w / 2 - len / 2, yOrig - 7);
+				g2d.drawString(astr.getIterator(), w / 2 - len / 2, yOrig - (FRET_WIDTH / 2));
 			}
 		}
 
-		for (int i = 0; i < 4; i++) {
-			int x = xOrig + i * 10;
+		for (int i = 0; i < NUMBER_OF_STRINGS; i++) {
+			int x = xOrig + i * BETWEEN_STRINGS;
 			g.drawLine(x, yOrig, x, yOrig + totalHeight);
 		}
 
@@ -306,15 +301,15 @@ public class ChordPanel
 		if (this.chord != null) {
 			int lowestFinger = ChordUtil.findLowestFinger(this.chord)[0];
 			int highestFinger = ChordUtil.findLowestFinger(this.chord)[1];
-			if ((lowestFinger > 1) && ((lowestFinger > 3) || (highestFinger - lowestFinger >= 3))) {
+			if ((lowestFinger > 1) && ((lowestFinger > TOP_THICKNESS) || (highestFinger - lowestFinger >= TOP_THICKNESS))) {
 				fretBase = lowestFinger;
 			}
 		}
 
 		for (int i = 0; i < this.nbFrets + 1; i++) {
-			int y = yOrig + i * 14;
+			int y = yOrig + i * FRET_WIDTH;
 			if ((i == 0) && (fretBase == 0)) {
-				g.fillRect(xOrig, y - 3, totalWidth + 1, 3);
+				g.fillRect(xOrig, y - TOP_THICKNESS, totalWidth + 1, TOP_THICKNESS);
 			} else
 				g.drawLine(xOrig, y, xOrig + totalWidth, y);
 		}
@@ -322,13 +317,13 @@ public class ChordPanel
 
 			if (fretBase != 0) {
 				g.setFont(f);
-				g.drawString(Integer.toString(fretBase), xOrig + 40, yOrig + f.getSize() / 2 + 7);
+				g.drawString(Integer.toString(fretBase), xOrig + 40, yOrig + f.getSize() / 2 + (FRET_WIDTH / 2));
 			}
 
 			for (int i = 0; i < this.chord.getFinger().length; i++) {
 				if (this.chord.getFinger()[i] == -1) {
-					int x = xOrig + i * 10;
-					int y = yOrig + 7;
+					int x = xOrig + i * BETWEEN_STRINGS;
+					int y = yOrig + (FRET_WIDTH / 2);
 
 					String nope = "X";
 
@@ -339,9 +334,9 @@ public class ChordPanel
 					g.setFont(currFont);
 				}
 				if (this.chord.getFinger()[i] > 0) {
-					int x = xOrig + i * 10;
-					int y = yOrig + (this.chord.getFinger()[i] - (fretBase == 0 ? 0 : fretBase - 1) - 1) * 14 + 7;
-					g.fillOval(x - 4, y - 4, 8, 8);
+					int x = xOrig + i * BETWEEN_STRINGS;
+					int y = yOrig + (this.chord.getFinger()[i] - (fretBase == 0 ? 0 : fretBase - 1) - 1) * FRET_WIDTH + (FRET_WIDTH / 2);
+					g.fillOval(x - (FINGER_RADIUS / 2), y - (FINGER_RADIUS / 2), FINGER_RADIUS, FINGER_RADIUS);
 				}
 			}
 		}

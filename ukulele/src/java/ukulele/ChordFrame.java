@@ -47,18 +47,13 @@ public class ChordFrame
 					} catch (Exception ignore) {
 					}
 					i++;
-
-
 				}
-
-
 			}
 
 
 		};
 		setChord(null);
 	}
-
 
 	private void jbInit()
 					throws Exception {
@@ -89,7 +84,7 @@ public class ChordFrame
 			}
 		});
 		this.chordPanel.setSize(110, 180);
-		getContentPane().add(this.chordPanel, "Center");
+		getContentPane().add(this.chordPanel, BorderLayout.CENTER);
 		this.bottomPanel.add(this.backButton, null);
 		this.bottomPanel.add(this.forwardButton, null);
 		getContentPane().add(this.bottomPanel, "South");

@@ -68,7 +68,7 @@ public class ChordFrame
 		this.menuBar.add(this.menuHelp);
 		setLayout(this.borderLayout);
 
-		add(this.tabbedPane, "Center");
+		add(this.tabbedPane, BorderLayout.CENTER);
 		this.tabbedPane.add("Keys", this.keyChordPanel);
 		this.tabbedPane.add("Vamp Chords", this.vampChordPanel);
 		this.tabbedPane.add("Principal Chords", this.principalChordPanel);

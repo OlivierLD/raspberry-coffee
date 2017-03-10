@@ -18,6 +18,7 @@ import java.util.logging.Level;
 
 import http.utils.DumpUtil;
 import nmea.mux.context.Context;
+import nmea.utils.HTTPClient;
 
 /**
  * Used for the REST interface of the Multiplexer.
@@ -33,24 +34,26 @@ import nmea.mux.context.Context;
  * <br>
  * Has two static resources:
  * <ul>
- *   <li><code>/exit</code> to exit the HTTP server (cannot be restarted).</li>
- *   <li><code>/test</code> to test the HTTP server availability</li>
+ * <li><code>/exit</code> to exit the HTTP server (cannot be restarted).</li>
+ * <li><code>/test</code> to test the HTTP server availability</li>
  * </ul>
- *
+ * <p>
  * Query parameter 'verbose' will turn verbose on or off.
  * To turn it on: give verbose no value, or 'on', 'true', 'yes' (non case sensitive).
  * To turn it off: any other value.
  * <br>
- *   Example: http://localhost:9999/web/admin.html?verbose=on
+ * Example: http://localhost:9999/web/admin.html?verbose=on
  * <em>
- *   Warning: This is a very lightweight HTTP server. It is not supposed to scale!!
+ * Warning: This is a very lightweight HTTP server. It is not supposed to scale!!
  * </em>
- *
+ * <p>
  * Logging can be done. See -Djava.util.logging.config.file=[path]/logging.properties
  * See https://docs.oracle.com/cd/E23549_01/doc.1111/e14568/handler.htm
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
+
+	private Thread httpListenerThread;
 
 	public static class Request {
 		public final static List<String> VERBS = Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH");
@@ -145,12 +148,12 @@ public class HTTPServer {
 
 	public static class Response {
 
-		public final static int STATUS_OK       = 200;
+		public final static int STATUS_OK = 200;
 		public final static int NOT_IMPLEMENTED = 501;
-		public final static int NO_CONTENT      = 204;
-		public final static int BAD_REQUEST     = 400;
-		public final static int NOT_FOUND       = 404;
-		public final static int TIMEOUT         = 408;
+		public final static int NO_CONTENT = 204;
+		public final static int BAD_REQUEST = 400;
+		public final static int NOT_FOUND = 404;
+		public final static int TIMEOUT = 408;
 
 		private int status;
 		private String protocol;
@@ -221,6 +224,9 @@ public class HTTPServer {
 	}
 
 	public void stopRunning() {
+		if (verbose) {
+			Context.getInstance().getLogger().info("Stop nicely requested");
+		}
 		this.keepRunning = false;
 	}
 
@@ -244,14 +250,16 @@ public class HTTPServer {
 	public HTTPServer(int port, HTTPServerInterface requestManager) throws Exception {
 		this.requestManager = requestManager;
 		// Infinite loop, waiting for requests
-		Thread httpListenerThread = new Thread("HTTPListener") {
+		httpListenerThread = new Thread("HTTPListener") {
 			public void run() {
 				try {
 					boolean okToStop = false;
 					ServerSocket ss = new ServerSocket(port);
-					System.out.println("Port " + port + " opened successfully.");
+					if (verbose) {
+						Context.getInstance().getLogger().info("Port " + port + " opened successfully.");
+					}
 					while (isRunning()) {
-						Socket client = ss.accept();
+						Socket client = ss.accept(); // Blocking read
 						InputStreamReader in = new InputStreamReader(client.getInputStream());
 						OutputStream out = client.getOutputStream();
 						Request request = null;
@@ -428,14 +436,37 @@ public class HTTPServer {
 							waiter.notify();
 						}
 					}
+					System.out.println("Bye from HTTP");
 				}
 			}
 		};
+
+		// Intercept Ctrl+C
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("Ctrl+C intercepted.");
+			// Send /exit
+			try {
+				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", port));
+				System.out.println("Exiting -> " + returned);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				Thread.sleep(1000L);
+			} catch (InterruptedException ie) {
+			}
+			System.out.println("Dead.");
+		}));
 		httpListenerThread.start();
+	}
+
+	public Thread getHttpListenerThread() {
+		return this.httpListenerThread;
 	}
 
 	/**
 	 * Full mime-type list at https://www.sitepoint.com/web-foundations/mime-types-complete-list/
+	 *
 	 * @param f
 	 * @return
 	 */
@@ -487,17 +518,24 @@ public class HTTPServer {
 	//  For dev tests
 	public static void main(String[] args) throws Exception {
 		//System.setProperty("http.port", "9999");
-		new HTTPServer(9999);
-		waiter = new Thread("HTTPWaiter") {
-			public void run() {
-				synchronized (this) {
-					try {
-						this.wait();
-					} catch (Exception ex) {
+		HTTPServer httpServer = new HTTPServer(9999);
+		System.out.println("Started");
+
+		if (false) {
+			waiter = new Thread("HTTPWaiter") {
+				public void run() {
+					synchronized (this) {
+						try {
+							this.wait();
+						} catch (Exception ex) {
+						}
 					}
 				}
-			}
-		};
-		waiter.start();
+			};
+			waiter.start();
+		} else {
+			httpServer.getHttpListenerThread().join();
+			System.out.println("Done (with test)");
+		}
 	}
 }

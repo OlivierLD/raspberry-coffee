@@ -18,6 +18,7 @@ import section.one.PrincipalChordPanel;
 import section.one.TonalRegionChordPanel;
 import section.one.VampChordPanel;
 import ukulele.ChordPanel;
+import static ukulele.ChordPanel.IDENTIFIER_MODE;
 
 
 public class ChordAppletTwo
@@ -41,7 +42,7 @@ public class ChordAppletTwo
 		this.tabbedPane.add("Vamp Chords", this.vampChordPanel);
 		this.tabbedPane.add("Principal Chords", this.principalChordPanel);
 		this.tabbedPane.add("Tonal Regions Chart", this.tonalChordPanel);
-		this.chordIdentifierPanel.setChordMode(2);
+		this.chordIdentifierPanel.setChordMode(IDENTIFIER_MODE);
 		this.tabbedPane.add("Chord Identifier", this.chordIdentifierPanel);
 	}
 

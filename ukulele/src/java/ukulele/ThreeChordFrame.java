@@ -64,7 +64,7 @@ public class ThreeChordFrame
 			}
 		});
 		this.threeChordPanel.setSize(110, 180);
-		getContentPane().add(this.threeChordPanel, "Center");
+		getContentPane().add(this.threeChordPanel, BorderLayout.CENTER);
 		this.bottomPanel.add(this.backButton, null);
 		this.bottomPanel.add(this.forwardButton, null);
 		getContentPane().add(this.bottomPanel, "South");

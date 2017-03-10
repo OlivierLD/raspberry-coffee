@@ -1,7 +1,6 @@
 package chordfinder;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,7 +56,7 @@ public class AllChordFrame
 		this.menuHelp.add(this.menuHelpAbout);
 		this.menuBar.add(this.menuHelp);
 		setLayout(this.borderLayout);
-		add(this.tablePane, "Center");
+		add(this.tablePane, BorderLayout.CENTER);
 	}
 
 	void fileExit_ActionPerformed(ActionEvent e) {

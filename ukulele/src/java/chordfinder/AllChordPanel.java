@@ -15,7 +15,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import ukulele.Chord;
 import ukulele.ChordPanel;
@@ -24,7 +23,7 @@ public class AllChordPanel
 				extends JPanel {
 	private static final int NB_COLUMNS = 28;
 	private static final int MAX_ROW = 36;
-	private transient Object[][] data = new Object[0][28];
+	private transient Object[][] data = new Object[0][NB_COLUMNS];
 
 	private transient TableModel dataModel;
 	private JTable table;
@@ -42,10 +41,10 @@ public class AllChordPanel
 					throws Exception {
 		initTable();
 
-		this.data = new Chord[36][28];
+		this.data = new Chord[MAX_ROW][NB_COLUMNS];
 
-		for (int row = 0; row < 36; row++) {
-			for (int col = 0; col < 28; col++) {
+		for (int row = 0; row < MAX_ROW; row++) {
+			for (int col = 0; col < NB_COLUMNS; col++) {
 				this.data[row][col] = null;
 			}
 		}
@@ -54,11 +53,11 @@ public class AllChordPanel
 		for (Chord chord : ChordList.getChords()) {
 			this.data[row][column] = chord;
 			column++;
-			if (column >= 28) {
+			if (column >= NB_COLUMNS) {
 				column = 0;
 				row++;
 			}
-			if (row >= 36) {
+			if (row >= MAX_ROW) {
 				break;
 			}
 		}
@@ -70,7 +69,7 @@ public class AllChordPanel
 		this.dataModel = new AbstractTableModel() {
 
 			public int getColumnCount() {
-				return 28;
+				return NB_COLUMNS;
 			}
 
 			public int getRowCount() {
@@ -103,10 +102,10 @@ public class AllChordPanel
 		this.scrollPane = new JScrollPane(this.table);
 		this.scrollPane.setPreferredSize(new Dimension(120, 280));
 		setLayout(new BorderLayout());
-		add(this.scrollPane, "Center");
+		add(this.scrollPane, BorderLayout.CENTER);
 
 
-		for (int i = 0; i < 28; i++) {
+		for (int i = 0; i < NB_COLUMNS; i++) {
 			TableColumn tc = this.table.getColumnModel().getColumn(i);
 			tc.setCellRenderer(new ChordTableCellRenderer());
 			tc.setCellEditor(new ChordTableCellEditor());
