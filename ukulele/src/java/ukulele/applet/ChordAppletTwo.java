@@ -2,11 +2,15 @@ package ukulele.applet;
 
 import chordfinder.UkuleleChordFinder;
 import ctx.AppContext;
+import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JApplet;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import section.one.KeyChordPanel;
@@ -16,68 +20,68 @@ import section.one.VampChordPanel;
 import ukulele.ChordPanel;
 
 
-
-
-
-
-
-
 public class ChordAppletTwo
-  extends JApplet
-{
-  private BorderLayout borderLayout1 = new BorderLayout();
+				extends JApplet {
+	private BorderLayout borderLayout1 = new BorderLayout();
 
-  private JPanel keyChordPanel = new KeyChordPanel();
-  private JPanel vampChordPanel = new VampChordPanel();
-  private JPanel principalChordPanel = new PrincipalChordPanel();
-  private JPanel tonalChordPanel = new TonalRegionChordPanel();
-  private ChordPanel chordIdentifierPanel = new ChordPanel();
+	private JPanel keyChordPanel = new KeyChordPanel();
+	private JPanel vampChordPanel = new VampChordPanel();
+	private JPanel principalChordPanel = new PrincipalChordPanel();
+	private JPanel tonalChordPanel = new TonalRegionChordPanel();
+	private ChordPanel chordIdentifierPanel = new ChordPanel();
 
-  private JTabbedPane tabbedPane = new JTabbedPane();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 
+	private void jbInit()
+					throws Exception {
+		getContentPane().setLayout(this.borderLayout1);
+		setSize(new Dimension(820, 525));
+		getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
+		this.tabbedPane.add("Keys", this.keyChordPanel);
+		this.tabbedPane.add("Vamp Chords", this.vampChordPanel);
+		this.tabbedPane.add("Principal Chords", this.principalChordPanel);
+		this.tabbedPane.add("Tonal Regions Chart", this.tonalChordPanel);
+		this.chordIdentifierPanel.setChordMode(2);
+		this.tabbedPane.add("Chord Identifier", this.chordIdentifierPanel);
+	}
 
+	public void init() {
+		String lang;
+		try {
+			lang = getParameter("lang");
+		} catch (Exception ex) {
+			lang = "EN";
+		}
+		AppContext.getInstance().fireUserLanguage(lang);
+		try {
+			jbInit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	private void jButton1_actionPerformed(ActionEvent e) {
+		UkuleleChordFinder.main(null);
+	}
 
+	public static void main(String... args) {
+		System.out.println("You can also run section.one.KeyChordFinder");
+		JFrame frame = new JFrame("Main for Applet");
+		frame.setSize(820, 525);
 
-  private void jbInit()
-    throws Exception
-  {
-    getContentPane().setLayout(this.borderLayout1);
-    setSize(new Dimension(820, 525));
-    getContentPane().add(this.tabbedPane, "Center");
-    this.tabbedPane.add("Keys", this.keyChordPanel);
-    this.tabbedPane.add("Vamp Chords", this.vampChordPanel);
-    this.tabbedPane.add("Principal Chords", this.principalChordPanel);
-    this.tabbedPane.add("Tonal Regions Chart", this.tonalChordPanel);
-    this.chordIdentifierPanel.setChordMode(2);
-    this.tabbedPane.add("Chord Identifier", this.chordIdentifierPanel);
-  }
+		final Applet applet = new ChordAppletTwo();
 
-  public void init()
-  {
-    String lang = getParameter("lang");
-    AppContext.getInstance().fireUserLanguage(lang);
-    try
-    {
-      jbInit();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
+		frame.getContentPane().add(applet);
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				applet.stop();
+				applet.destroy();
+				System.exit(0);
+			}
+		});
 
-
-
-
-
-
-
-
-
-
-  private void jButton1_actionPerformed(ActionEvent e)
-  {
-    UkuleleChordFinder.main(null);
-  }
+		frame.setVisible(true);
+		applet.init();
+		applet.start();
+	}
 }

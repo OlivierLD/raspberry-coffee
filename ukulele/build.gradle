@@ -55,6 +55,16 @@ chordFinder.doFirst {
     println ">>> Run like this: gradlew chordFinder --console plain --no-daemon"
 }
 
+task keyChordFinder(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
+    main = 'section.one.KeyChordFinder'
+    classpath sourceSets.main.runtimeClasspath
+    classpath configurations.runtime
+}
+
+keyChordFinder.doFirst {
+    println ">>> Run like this: gradlew keyChordFinder --console plain --no-daemon"
+}
+
 shadowJar {
     zip64 true
 }

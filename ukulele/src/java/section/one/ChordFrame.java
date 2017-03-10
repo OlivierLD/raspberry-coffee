@@ -15,67 +15,67 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 public class ChordFrame
-  extends JFrame
-{
-  private BorderLayout borderLayout = new BorderLayout();
-  private JPanel keyChordPanel = new KeyChordPanel();
-  private JPanel vampChordPanel = new VampChordPanel();
-  private JPanel principalChordPanel = new PrincipalChordPanel();
-  private JPanel tonalChordPanel = new TonalRegionChordPanel();
+				extends JFrame {
+	private BorderLayout borderLayout = new BorderLayout();
+	private JPanel keyChordPanel = new KeyChordPanel();
+	private JPanel vampChordPanel = new VampChordPanel();
+	private JPanel principalChordPanel = new PrincipalChordPanel();
+	private JPanel tonalChordPanel = new TonalRegionChordPanel();
 
-  private JTabbedPane tabbedPane = new JTabbedPane();
+	private JTabbedPane tabbedPane = new JTabbedPane();
 
-  private JMenuBar menuBar = new JMenuBar();
-  private JMenu menuFile = new JMenu();
-  private JMenuItem menuFileExit = new JMenuItem();
-  private JMenu menuHelp = new JMenu();
-  private JMenuItem menuHelpAbout = new JMenuItem();
+	private JMenuBar menuBar = new JMenuBar();
+	private JMenu menuFile = new JMenu();
+	private JMenuItem menuFileExit = new JMenuItem();
+	private JMenu menuHelp = new JMenu();
+	private JMenuItem menuHelpAbout = new JMenuItem();
 
-  public ChordFrame()
-  {
-    try
-    {
-      jbInit();
-    }
-    catch (Exception e)
-    {
-      e.printStackTrace();
-    }
-  }
+	public ChordFrame() {
+		try {
+			jbInit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-  private void jbInit()
-    throws Exception
-  {
-    setJMenuBar(this.menuBar);
-    getContentPane().setLayout(null);
-    setSize(new Dimension(614, 688));
-    setTitle("Ukulele Chord Finder - Tuned G C E A");
-    this.menuFile.setText("File");
-    this.menuFileExit.setText("Exit");
-    this.menuFileExit.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent ae) { ChordFrame.this.fileExit_ActionPerformed(ae); } });
-    this.menuHelp.setText("Help");
-    this.menuHelpAbout.setText("About");
-    this.menuHelpAbout.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent ae) { ChordFrame.this.helpAbout_ActionPerformed(ae); } });
-    this.menuFile.add(this.menuFileExit);
-    this.menuBar.add(this.menuFile);
-    this.menuHelp.add(this.menuHelpAbout);
-    this.menuBar.add(this.menuHelp);
-    setLayout(this.borderLayout);
+	private void jbInit()
+					throws Exception {
+		setJMenuBar(this.menuBar);
+		getContentPane().setLayout(null);
+		setSize(new Dimension(614, 688));
+		setTitle("Ukulele Chord Finder - Tuned G C E A");
+		this.menuFile.setText("File");
+		this.menuFileExit.setText("Exit");
+		this.menuFileExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				ChordFrame.this.fileExit_ActionPerformed(ae);
+			}
+		});
+		this.menuHelp.setText("Help");
+		this.menuHelpAbout.setText("About");
+		this.menuHelpAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				ChordFrame.this.helpAbout_ActionPerformed(ae);
+			}
+		});
+		this.menuFile.add(this.menuFileExit);
+		this.menuBar.add(this.menuFile);
+		this.menuHelp.add(this.menuHelpAbout);
+		this.menuBar.add(this.menuHelp);
+		setLayout(this.borderLayout);
 
-    add(this.tabbedPane, "Center");
-    this.tabbedPane.add("Keys", this.keyChordPanel);
-    this.tabbedPane.add("Vamp Chords", this.vampChordPanel);
-    this.tabbedPane.add("Principal Chords", this.principalChordPanel);
-    this.tabbedPane.add("Tonal Regions Chart", this.tonalChordPanel);
-  }
+		add(this.tabbedPane, "Center");
+		this.tabbedPane.add("Keys", this.keyChordPanel);
+		this.tabbedPane.add("Vamp Chords", this.vampChordPanel);
+		this.tabbedPane.add("Principal Chords", this.principalChordPanel);
+		this.tabbedPane.add("Tonal Regions Chart", this.tonalChordPanel);
+	}
 
-  void fileExit_ActionPerformed(ActionEvent e)
-  {
-    System.exit(0);
-  }
+	void fileExit_ActionPerformed(ActionEvent e) {
+		System.exit(0);
+	}
 
-  void helpAbout_ActionPerformed(ActionEvent e)
-  {
-    JOptionPane.showMessageDialog(this, new AllChordFrame_AboutBoxPanel1(), "About", -1);
-  }
+	void helpAbout_ActionPerformed(ActionEvent e) {
+		JOptionPane.showMessageDialog(this, new AllChordFrame_AboutBoxPanel1(), "About", -1);
+	}
 }
