@@ -59,8 +59,8 @@ public class ChordPanel
 	private int[] chordToIdentify = {0, 0, 0, 0};
 
 	public static final int DISPLAY_MODE = 1;
-
 	public static final int IDENTIFIER_MODE = 2;
+
 	private int chordMode = DISPLAY_MODE;
 
 	public ChordPanel() {
@@ -84,7 +84,6 @@ public class ChordPanel
 		return this.chord;
 	}
 
-
 	private void init() {
 		musicFont = getMusicFont();
 
@@ -97,7 +96,7 @@ public class ChordPanel
 					int h = ChordPanel.this.getHeight();
 					int w = ChordPanel.this.getWidth();
 
-					int totalWidth = (BETWEEN_STRINGS - 1) * BETWEEN_STRINGS;
+					int totalWidth = (NUMBER_OF_STRINGS - 1) * BETWEEN_STRINGS;
 					int totalHeight = ChordPanel.this.nbFrets * FRET_WIDTH + TOP_THICKNESS;
 
 					int xOrig = w / 2 - totalWidth / 2;

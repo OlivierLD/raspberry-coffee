@@ -4,7 +4,6 @@ import chordfinder.UkuleleChordFinder;
 import ctx.AppContext;
 import java.applet.Applet;
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
