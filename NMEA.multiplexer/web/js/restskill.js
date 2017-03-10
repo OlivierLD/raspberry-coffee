@@ -11,7 +11,13 @@ var storedHistory = "";
 var storedHistoryOut = "";
 var storedElapsed = "";
 
-var getDeferred = function(url, timeout, verb, happyCode, data, show) {
+var getDeferred = function(
+    url,                          // full api path
+    timeout,                      // After that, fail.
+    verb,                         // GET, PUT, DELETE, POST, etc
+    happyCode,                    // if met, resolve, otherwise fail.
+    data,                         // payload, when needed (PUT, POST...)
+    show) {                       // Show the traffic true|false
     if (show === undefined) {
         show = true;
     }
@@ -54,67 +60,68 @@ var getDeferred = function(url, timeout, verb, happyCode, data, show) {
         }
     };
     return deferred.promise();
+};
 
-}
+var DEFAULT_TIMEOUT = 10000;
 
 var getVolume = function() {
-    return getDeferred('/nmea-volume', 10000, 'GET', 200, null, false);
+    return getDeferred('/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getSerialPorts = function() {
-    return getDeferred('/serial-ports', 10000, 'GET', 200);
+    return getDeferred('/serial-ports', DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 var getChannels = function() {
-    return getDeferred('/channels', 10000, 'GET', 200);
+    return getDeferred('/channels', DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 var getForwarders = function() {
-    return getDeferred('/forwarders', 10000, 'GET', 200);
+    return getDeferred('/forwarders', DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 var getComputers = function() {
-    return getDeferred('/computers', 10000, 'GET', 200);
+    return getDeferred('/computers', DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 var addForwarder = function(forwarder) {
-    return getDeferred('/forwarders', 10000, 'POST', 200, forwarder);
+    return getDeferred('/forwarders', DEFAULT_TIMEOUT, 'POST', 200, forwarder);
 };
 
 var addChannel = function(channel) {
-    return getDeferred('/channels', 10000, 'POST', 200, channel);
+    return getDeferred('/channels', DEFAULT_TIMEOUT, 'POST', 200, channel);
 };
 
 var addComputer = function(computer) {
-    return getDeferred('/computers', 10000, 'POST', 200, computer);
+    return getDeferred('/computers', DEFAULT_TIMEOUT, 'POST', 200, computer);
 };
 
 var updateChannel = function(channel) {
-    return getDeferred('/channels/' + channel.type, 10000, 'PUT', 200, channel);
+    return getDeferred('/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 200, channel);
 };
 
 var updateComputer = function(computer) {
-    return getDeferred('/computers/' + computer.type, 10000, 'PUT', 200, computer);
+    return getDeferred('/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 200, computer);
 };
 
 var updateMuxVerbose = function(value) {
-    return getDeferred('/mux-verbose/' + value, 10000, 'PUT', 200);
+    return getDeferred('/mux-verbose/' + value, DEFAULT_TIMEOUT, 'PUT', 200);
 };
 
 var resetDataCache = function() {
-    return getDeferred('/cache', 10000, 'DELETE', 204);
+    return getDeferred('/cache', DEFAULT_TIMEOUT, 'DELETE', 204);
 };
 
 var deleteForwarder = function(forwarder) {
-    return getDeferred('/forwarders/' + forwarder.type, 10000, 'DELETE', 204, forwarder);
+    return getDeferred('/forwarders/' + forwarder.type, DEFAULT_TIMEOUT, 'DELETE', 204, forwarder);
 };
 
 var deleteComputer = function(computer) {
-    return getDeferred('/computers/' + computer.type, 10000, 'DELETE', 204, computer);
+    return getDeferred('/computers/' + computer.type, DEFAULT_TIMEOUT, 'DELETE', 204, computer);
 };
 
 var deleteChannel = function(channel) {
-    return getDeferred('/channels/' + channel.type, 10000, 'DELETE', 204, channel);
+    return getDeferred('/channels/' + channel.type, DEFAULT_TIMEOUT, 'DELETE', 204, channel);
 };
 
 var dataVolume = function() {
