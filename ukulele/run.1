@@ -1,4 +1,6 @@
 #!/bin/bash
 CP=./build/libs/ukulele-1.0-all.jar
-java -cp $CP chordfinder.UkuleleChordFinder
+OPT=
+OPT="$OPT -Dlang=FR"
+java -cp $CP $OPT chordfinder.UkuleleChordFinder
 

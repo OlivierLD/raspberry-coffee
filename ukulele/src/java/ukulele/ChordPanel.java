@@ -40,9 +40,8 @@ public class ChordPanel
 	private static final String[] FRENCH_NOTE_NAMES = {"La", "Si", "Do", "Ré", "Mi", "Fa", "Sol"};
 
 	public static final int A_B_C_OPTION = 0;
-
 	public static final int DO_RE_MI_OPTION = 1;
-	private static int userOption = A_B_C_OPTION;
+	private static int userLangOption = A_B_C_OPTION;
 
 	private static Font musicFont = null;
 
@@ -151,9 +150,14 @@ public class ChordPanel
 		AppContext.getInstance().addAppListener(new AppListener() {
 
 			public void setUserLanguage(String lng) {
-				ChordPanel.setUserOption("FR".equals(lng) ? ChordPanel.DO_RE_MI_OPTION : ChordPanel.A_B_C_OPTION);
+				setUserLangOption("FR".equals(lng) ? DO_RE_MI_OPTION : A_B_C_OPTION);
+				repaint();
 			}
 		});
+
+		String lang = System.getProperty("lang", "EN");
+		AppContext.getInstance().fireUserLanguage(lang);
+
 	}
 
 	public void paintComponent(Graphics g) {
@@ -185,7 +189,7 @@ public class ChordPanel
 		if (this.chord != null) {
 			String title = this.chord.getTitle();
 
-			if (userOption == DO_RE_MI_OPTION) {
+			if (userLangOption == DO_RE_MI_OPTION) {
 				String noteName = title.substring(0, 1);
 
 				for (int i = 0; i < ENGLISH_NOTE_NAMES.length; i++) {
@@ -417,8 +421,8 @@ public class ChordPanel
 		init();
 	}
 
-	public static void setUserOption(int userOption) {
-		userOption = userOption;
+	public static void setUserLangOption(int ulo) {
+		userLangOption = ulo;
 	}
 
 	public void setChordMode(int chordMode) {

@@ -1,9 +1,11 @@
 package section.one;
 
+import ctx.AppContext;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 
 public class KeyChordFinder {
@@ -18,7 +20,7 @@ public class KeyChordFinder {
 			frameSize.width = screenSize.width;
 		}
 		frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-		frame.setDefaultCloseOperation(3);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
 
