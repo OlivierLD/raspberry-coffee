@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import ukulele.ChordPanel;
 
 public class ChordFrame
 				extends JFrame {
@@ -21,6 +22,9 @@ public class ChordFrame
 	private JPanel vampChordPanel = new VampChordPanel();
 	private JPanel principalChordPanel = new PrincipalChordPanel();
 	private JPanel tonalChordPanel = new TonalRegionChordPanel();
+
+	private ChordPanel chordIdentifierPanel = new ChordPanel();
+
 
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -69,6 +73,7 @@ public class ChordFrame
 		this.tabbedPane.add("Vamp Chords", this.vampChordPanel);
 		this.tabbedPane.add("Principal Chords", this.principalChordPanel);
 		this.tabbedPane.add("Tonal Regions Chart", this.tonalChordPanel);
+		this.tabbedPane.add("Chord Identifier", this.chordIdentifierPanel);
 	}
 
 	void fileExit_ActionPerformed(ActionEvent e) {
