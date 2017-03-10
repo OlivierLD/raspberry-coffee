@@ -18,7 +18,7 @@ import java.util.logging.Level;
 
 import http.utils.DumpUtil;
 import nmea.mux.context.Context;
-import nmea.utils.HTTPClient;
+import http.utils.HTTPClient;
 
 /**
  * Used for the REST interface of the Multiplexer.

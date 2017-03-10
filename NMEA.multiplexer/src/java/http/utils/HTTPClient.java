@@ -1,4 +1,4 @@
-package nmea.utils;
+package http.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,6 +6,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * Very limited HTTP Client, just suitable for what is
+ * required - so far - in this project.
+ */
 public class HTTPClient {
 	public static String getContent(String url) throws Exception {
 		String ret = null;
