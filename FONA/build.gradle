@@ -27,12 +27,12 @@ sourceSets {
 
 repositories {
     mavenCentral()
-    maven { url "http://lediouris.net/maven2" }
     mavenLocal()
 }
 
 dependencies {
     compile 'com.pi4j:pi4j-core:1.1'
+    compile 'org.rxtx:rxtx:2.1.7'
 }
 
 task copyResources(type: Copy) {

@@ -9,7 +9,6 @@ version = '1.0'
 
 repositories {
     mavenCentral()
-    maven { url "http://lediouris.net/maven2" }
 //  maven { url "https://mvnrepository.com/artifact" }
     maven { url "http://clojars.org/repo" }
     mavenLocal()
@@ -23,16 +22,16 @@ sourceSets {
     }
     test {
         java {
-            srcDir 'tests/java'
+            srcDirs = ['tests/java']
         }
     }
 }
 
 dependencies {
     // https://mvnrepository.com/artifact/jfugue/jfugue
- // compile group: 'jfugue', name: 'jfugue', version: '4.0.3'
  // compile 'jfugue:jfugue:4.0.3'
     compile 'org.clojars.jmeeks:jfugue:4.0.3'
+ // compile 'org:jfugue:5.0.5'
 }
 
 task copyResources(type: Copy) {

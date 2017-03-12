@@ -10,8 +10,8 @@ version = '1.0'
 
 repositories {
     mavenCentral()
-    maven { url "http://lediouris.net/maven2" }
     mavenLocal()
+    maven { url "http://lediouris.net/maven2" }
 }
 
 sourceSets {
@@ -38,7 +38,7 @@ dependencies {
     compile 'org.java-websocket:Java-WebSocket:1.3.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'jansi:ansi:1.9'
-    compile project(':I2C.SPI') // TODO Isolate in a separate project...
+    compile project(':I2C.SPI') // TODO Isolate in a separate project... Needed for the I2C Channels (aka Consumers).
 }
 
 shadowJar {

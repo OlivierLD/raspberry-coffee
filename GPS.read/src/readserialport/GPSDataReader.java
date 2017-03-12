@@ -13,7 +13,7 @@ import util.DumpUtil;
 import java.io.IOException;
 
 /**
- * Just reads the GPS data.
+ * Just reads the GPS data, with PI4J (no need for libRxTx here).
  * No parsing, just raw data.
  * <p>
  * Uses the Serial communication packages from PI4J

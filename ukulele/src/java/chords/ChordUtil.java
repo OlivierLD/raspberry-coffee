@@ -1,5 +1,6 @@
 package chords;
 
+//import org.jfugue.player.Player;
 import org.jfugue.Player;
 import ukulele.Chord;
 
@@ -99,6 +100,7 @@ public class ChordUtil {
 		String str = generateMusicString(chord);
 		System.out.println(chord.toString() + " -> [" + str + "]");
 		player.play(str);
+		// 4.0.3 and earlier
 		player.close();
 	}
 }
