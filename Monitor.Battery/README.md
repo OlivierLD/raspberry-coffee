@@ -30,7 +30,7 @@ How to build and connect:
 ![The hardware](./BatteryMonitor.png "The Hardware")
 
 #### NMEA?
-NMEA stands for National Marine Electronics Association. It is one of the oldest IT standards.
+NMEA stands for **N**ational **M**arine **E**lectronics **A**ssociation (National means American, US). It is one of the oldest IT standards.
 
 Battery Voltage can be described by a sentence like
 ```
