@@ -103,3 +103,7 @@ The `JSON` message look like this
 }
 ```
 See the code for details.
+
+### Reflex Game
+Hit the button when the light goes on, and see how long it took you to react.
+![Wiring](./reflex.game_bb.png)
