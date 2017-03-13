@@ -1,5 +1,7 @@
 package breadboard.game;
 
+import pushbutton.PushButtonObserver;
+
 /**
  * This shows how to hide the complexity of the GameMaster
  * Just implement the onButtonPressed method, and you're good.

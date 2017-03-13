@@ -1,4 +1,4 @@
-package breadboard.game;
+package pushbutton;
 
 public interface PushButtonObserver
 {

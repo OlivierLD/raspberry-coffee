@@ -104,6 +104,22 @@ The `JSON` message look like this
 ```
 See the code for details.
 
+### One push button
+![Wiring](./one.push.button_bb.png)
+
+Run
+```bash
+ $> ../gradlew clean shadowJar
+```
+Then just run the script named `pushbutton`.
+
+
 ### Reflex Game
 Hit the button when the light goes on, and see how long it took you to react.
 ![Wiring](./reflex.game_bb.png)
+
+Run
+```bash
+ $> ../gradlew clean shadowJar
+```
+Then just run the script named `reflex`.

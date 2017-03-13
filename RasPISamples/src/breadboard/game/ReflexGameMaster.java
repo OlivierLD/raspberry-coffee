@@ -3,6 +3,7 @@ package breadboard.game;
 import com.pi4j.io.gpio.*;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+import pushbutton.PushButtonObserver;
 
 /**
  * Implements the nuts and bolts of the reflex game.
@@ -28,7 +29,7 @@ public class ReflexGameMaster
   public ReflexGameMaster(PushButtonObserver obs)
   {
     if (obs == null)
-      throw new IllegalArgumentException("Obvserser cannot be null");
+      throw new IllegalArgumentException("Observer cannot be null");
     this.pbo = obs;
   }
 
