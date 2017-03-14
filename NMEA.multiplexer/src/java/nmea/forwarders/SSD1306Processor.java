@@ -2,6 +2,8 @@ package nmea.forwarders;
 
 import context.ApplicationContext;
 import context.NMEADataCache;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import nmea.forwarders.pushbutton.PushButtonMaster;
 import nmea.forwarders.pushbutton.PushButtonObserver;
 import nmea.parser.Angle180;
@@ -22,6 +24,7 @@ import spi.lcd.ScreenBuffer;
 import spi.lcd.oled.SSD1306;
 
 import java.util.Properties;
+import util.GeomUtil;
 
 /**
  * This is an example of a <b>transformer</b>.
@@ -114,6 +117,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 	private final static int DBT_OPTION = 12;
 	private final static int HUM_OPTION = 13;
 	private final static int CUR_OPTION = 14;
+	private final static int PRS_OPTION = 15;
 
 	private final static int[] OPTION_ARRAY = {
 					TWD_OPTION,
@@ -130,7 +134,8 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 					POS_OPTION,
 					DBT_OPTION,
 					HUM_OPTION,
-					CUR_OPTION
+					CUR_OPTION,
+					PRS_OPTION
 	};
 
 	private static int currentOption = TWD_OPTION;
@@ -141,7 +146,6 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 		if (currentOption >= OPTION_ARRAY.length) {
 			currentOption = 0;
 		}
-//	stateOption(); // TODO Do it
 	}
 
 	/**
@@ -301,24 +305,54 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 					// Transformer's specific job.
 					switch (currentOption) {
 						case TWD_OPTION:
-							displayTWD(bean.twd);
+							displayAngleAndValue("TWD ", bean.twd);
 							break;
 						case BSP_OPTION:
+							displaySpeed("BSP ", bean.bsp);
+							break;
 						case TWS_OPTION:
+							displaySpeed("TWS ", bean.bsp);
+							break;
 						case TWA_OPTION:
+							displayAngleAndValue("TWA ", bean.twa);
+							break;
 						case AWA_OPTION:
+							displayAngleAndValue("AWA ", bean.awa);
+							break;
 						case AWS_OPTION:
+							displaySpeed("AWS ", bean.bsp);
+							break;
 						case ATP_OPTION:
+							displayTemp("AIR ", bean.atemp);
+							break;
 						case WTP_OPTION:
+							displayTemp("WAT ", bean.wtemp);
+							break;
 						case COG_OPTION:
+							displayAngleAndValue("COG ", bean.cog);
+							break;
 						case SOG_OPTION:
+							displaySpeed("SOG ", bean.bsp);
+							break;
 						case HDG_OPTION:
-						case POS_OPTION:
+							displayAngleAndValue("HDG ", bean.hdg);
+							break;
 						case DBT_OPTION:
+							displayValue("DBT ", " m", bean.dbt);
+							break;
 						case HUM_OPTION:
+							displayValue("HUM ", " %", bean.hum);
+							break;
 						case CUR_OPTION:
+							displayCurrent(bean.cdr, bean.csp);
+							break;
+						case POS_OPTION:
+							displayPos(bean.lat, bean.lng);
+							break;
+						case PRS_OPTION:
+							displayPRMSL(bean.prmsl);
+							break;
 						default:
-							displayTWD(bean.twd);
 							break;
 					}
 
@@ -330,23 +364,100 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 		cacheThread.start();
 	}
 
-	private void displayTWD(int twd) {
-
+	private void displayAngleAndValue(String label, int value) {
 		int centerX = 80, centerY = 16, radius = 15;
-
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-			sb.text("TWD ", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(String.valueOf(twd) + "\u00b0", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK); // With a useless degree symbol (for tests).
+			sb.text(label, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(String.valueOf(value) + "\u00b0", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Circle
 			sb.circle(centerX, centerY, radius);
 
 			// Hand
-			int toX = centerX - (int) Math.round(radius * Math.sin(Math.toRadians(180 + twd)));
-			int toY = centerY + (int) Math.round(radius * Math.cos(Math.toRadians(180 + twd)));
+			int toX = centerX - (int) Math.round(radius * Math.sin(Math.toRadians(180 + value)));
+			int toY = centerY + (int) Math.round(radius * Math.cos(Math.toRadians(180 + value)));
 			sb.line(centerX, centerY, toX, toY);
+
+			// Display
+			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private final static NumberFormat _22 = new DecimalFormat("00.00");
+	private final static NumberFormat _X1 = new DecimalFormat("#0.0");
+
+	private void displayValue(String label, String unit, double value) {
+		try {
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text(label, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(_22.format(value) + unit, 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			// Display
+			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private void displaySpeed(String label, double value) {
+		displayValue(label, " kts", value);
+	}
+
+	private void displayTemp(String label, double value) {
+		displayValue(label, "\u00b0C", value);
+	}
+
+	private void displayPos(double lat, double lng) {
+		String latitude = GeomUtil.decToSex(lat, GeomUtil.NO_DEG, GeomUtil.NS, GeomUtil.TRAILING_SIGN).replaceFirst(" ", "\u00b0");
+		String longitude = GeomUtil.decToSex(lng, GeomUtil.NO_DEG, GeomUtil.EW, GeomUtil.TRAILING_SIGN).replaceFirst(" ", "\u00b0");
+		try {
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text(latitude, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(longitude, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			// Display
+			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private void displayCurrent(int dir, double speed) {
+		String direction = "DIR " + String.valueOf(dir) + "\u00b0";
+		String speedStr = "SPEED " + _22.format(speed) + " kts";
+		try {
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text(direction, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(speedStr, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			// Display
+			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private void displayPRMSL(double value) {
+		try {
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+			sb.text("PRMSL ", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(_X1.format(value) + " mb", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());

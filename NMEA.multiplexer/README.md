@@ -501,6 +501,8 @@ The SSD1306 display is quite small. In the pictures above, there is a Fresnel le
 
 ![Wiring](./ssd1306_bb.png)
 
+The push button is used to scroll through the data available to display (True Wind Direction, Boat Speed, etc).
+
 As it is an example, it is a dynamically loaded `forwarder`.
 
 #### Web Console
