@@ -499,6 +499,8 @@ The OLED display in connected to the Raspberry PI using an SPI interface.
 
 The SSD1306 display is quite small. In the pictures above, there is a Fresnel lens in front of it.
 
+![Wiring](./ssd1306_bb.png)
+
 As it is an example, it is a dynamically loaded `forwarder`.
 
 #### Web Console
