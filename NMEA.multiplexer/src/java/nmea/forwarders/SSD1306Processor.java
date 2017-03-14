@@ -2,6 +2,8 @@ package nmea.forwarders;
 
 import context.ApplicationContext;
 import context.NMEADataCache;
+import nmea.forwarders.pushbutton.PushButtonMaster;
+import nmea.forwarders.pushbutton.PushButtonObserver;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle180LR;
@@ -25,7 +27,7 @@ import java.util.Properties;
  * This is an example of a <b>transformer</b>.
  * <br>
  * To be used with other apps.
- * This transformer displays the TWD on an OLED display (SSD1306)
+ * This transformer displays the TWD on an OLED displayTWD (SSD1306)
  * <br>
  * See http://www.lediouris.net/RaspberryPI/SSD1306/readme.html
  *
@@ -34,7 +36,7 @@ import java.util.Properties;
  * used at startup. It - for now - cannot be managed from the Web UI.
  * The REST api is not aware of it.
  */
-public class SSD1306Processor implements Forwarder {
+public class SSD1306Processor implements Forwarder, PushButtonObserver {
 	private boolean keepWorking = true;
 
 	private static class CacheBean {
@@ -95,6 +97,53 @@ public class SSD1306Processor implements Forwarder {
 
 	private boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
 
+	private static PushButtonMaster pbm = null;
+
+	private final static int TWD_OPTION =  0;
+	private final static int BSP_OPTION =  1;
+	private final static int TWS_OPTION =  2;
+	private final static int TWA_OPTION =  3;
+	private final static int AWA_OPTION =  4;
+	private final static int AWS_OPTION =  5;
+	private final static int ATP_OPTION =  6;
+	private final static int WTP_OPTION =  7;
+	private final static int COG_OPTION =  8;
+	private final static int SOG_OPTION =  9;
+	private final static int HDG_OPTION = 10;
+	private final static int POS_OPTION = 11;
+	private final static int DBT_OPTION = 12;
+	private final static int HUM_OPTION = 13;
+	private final static int CUR_OPTION = 14;
+
+	private final static int[] OPTION_ARRAY = {
+					TWD_OPTION,
+					BSP_OPTION,
+					TWS_OPTION,
+					TWA_OPTION,
+					AWA_OPTION,
+					AWS_OPTION,
+					ATP_OPTION,
+					WTP_OPTION,
+					COG_OPTION,
+					SOG_OPTION,
+					HDG_OPTION,
+					POS_OPTION,
+					DBT_OPTION,
+					HUM_OPTION,
+					CUR_OPTION
+	};
+
+	private static int currentOption = TWD_OPTION;
+
+	@Override
+	public void onButtonPressed() {
+		currentOption++;
+		if (currentOption >= OPTION_ARRAY.length) {
+			currentOption = 0;
+		}
+//	stateOption(); // TODO Do it
+	}
+
 	/**
 	 * @throws Exception
 	 */
@@ -113,6 +162,10 @@ public class SSD1306Processor implements Forwarder {
 
 		sb = new ScreenBuffer(WIDTH, HEIGHT);
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+		PushButtonObserver instance = this;
+		pbm = new PushButtonMaster(instance);
+		pbm.initCtx();                  // Initialize Push button
 
 		Thread cacheThread = new Thread("SSD1306Processor CacheThread") {
 			public void run() {
@@ -246,7 +299,28 @@ public class SSD1306Processor implements Forwarder {
 						}
 					}
 					// Transformer's specific job.
-					display(bean.twd);
+					switch (currentOption) {
+						case TWD_OPTION:
+							displayTWD(bean.twd);
+							break;
+						case BSP_OPTION:
+						case TWS_OPTION:
+						case TWA_OPTION:
+						case AWA_OPTION:
+						case AWS_OPTION:
+						case ATP_OPTION:
+						case WTP_OPTION:
+						case COG_OPTION:
+						case SOG_OPTION:
+						case HDG_OPTION:
+						case POS_OPTION:
+						case DBT_OPTION:
+						case HUM_OPTION:
+						case CUR_OPTION:
+						default:
+							displayTWD(bean.twd);
+							break;
+					}
 
 					try { Thread.sleep(1000L); } catch (Exception ex) {}
 				}
@@ -256,7 +330,7 @@ public class SSD1306Processor implements Forwarder {
 		cacheThread.start();
 	}
 
-	private void display(int twd) {
+	private void displayTWD(int twd) {
 
 		int centerX = 80, centerY = 16, radius = 15;
 
@@ -300,6 +374,9 @@ public class SSD1306Processor implements Forwarder {
 			oled.display();
 
 			oled.shutdown();
+
+			pbm.freeResources();
+
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
