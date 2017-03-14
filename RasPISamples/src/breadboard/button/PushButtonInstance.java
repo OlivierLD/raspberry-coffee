@@ -22,11 +22,12 @@ public class PushButtonInstance implements PushButtonObserver {
 	};
 
 	public static void main(String[] args) {
-		System.out.println("Enter Q (followed by [Return]) inthe console to quit.");
+		System.out.println("Enter Q (followed by [Return]) in the console to quit.");
 		PushButtonInstance instance = new PushButtonInstance();
 		rgm = new PushButtonMaster(instance);
 		rgm.initCtx();                  // Initialize
 //  rgm.initCtx(RaspiPin.GPIO_01);  // Can override default pin
+		System.out.println("Ready!");
 		stateOption();
 		// while keep working...
 		boolean keepWorking = true;
@@ -58,13 +59,7 @@ public class PushButtonInstance implements PushButtonObserver {
 		try {
 			retString = stdin.readLine();
 		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
+			e.printStackTrace();
 		}
 		return retString;
 	}

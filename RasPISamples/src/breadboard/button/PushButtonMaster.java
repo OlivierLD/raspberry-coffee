@@ -26,8 +26,9 @@ public class PushButtonMaster {
 	private PushButtonObserver pbo = null;
 
 	public PushButtonMaster(PushButtonObserver obs) {
-		if (obs == null)
+		if (obs == null) {
 			throw new IllegalArgumentException("Observer cannot be null");
+		}
 		this.pbo = obs;
 	}
 
