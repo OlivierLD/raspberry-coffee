@@ -508,6 +508,7 @@ The push button is used to scroll through the data available to display (True Wi
 ![Position](./docimages/opt.position.jpg)
 
 ...etc. There are like 14 data options (for now).
+**Warning**: Do look in the code, to make sure the pin used by the push button is the right one...
 
 As it is an example, it is a dynamically loaded `forwarder`.
 
