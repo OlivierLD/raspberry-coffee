@@ -327,7 +327,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 							displayTemp("AIR ", bean.atemp);
 							break;
 						case WTP_OPTION:
-							displayTemp("WAT ", bean.wtemp);
+							displayTemp("WATER ", bean.wtemp);
 							break;
 						case COG_OPTION:
 							displayAngleAndValue("COG ", bean.cog);
@@ -423,8 +423,9 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-			sb.text(latitude, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(longitude, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text("POSITION", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(latitude, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(longitude, 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
@@ -436,8 +437,8 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 	}
 
 	private void displayCurrent(int dir, double speed) {
-		String direction = "DIR " + String.valueOf(dir) + "\u00b0";
-		String speedStr = "SPEED " + _22.format(speed) + " kts";
+		String direction = "CURRENT DIR " + String.valueOf(dir) + "\u00b0";
+		String speedStr = "CURRENT SPEED " + _22.format(speed) + " kts";
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
