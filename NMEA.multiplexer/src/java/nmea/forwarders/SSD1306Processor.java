@@ -1,5 +1,6 @@
 package nmea.forwarders;
 
+import com.pi4j.io.gpio.RaspiPin;
 import context.ApplicationContext;
 import context.NMEADataCache;
 import java.text.DecimalFormat;
@@ -120,25 +121,25 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 	private final static int PRS_OPTION = 15;
 
 	private final static int[] OPTION_ARRAY = {
-					TWD_OPTION,
-					BSP_OPTION,
-					TWS_OPTION,
-					TWA_OPTION,
-					AWA_OPTION,
-					AWS_OPTION,
-					ATP_OPTION,
-					WTP_OPTION,
-					COG_OPTION,
-					SOG_OPTION,
-					HDG_OPTION,
-					POS_OPTION,
-					DBT_OPTION,
-					HUM_OPTION,
-					CUR_OPTION,
-					PRS_OPTION
+					TWD_OPTION, // True Wind Direction
+					BSP_OPTION, // Boat Speed
+					TWS_OPTION, // True Wind Speed
+					TWA_OPTION, // True Wind Angle
+					AWA_OPTION, // Apparent Wind Angle
+					AWS_OPTION, // Apparent Wind Speed
+					ATP_OPTION, // Air Temperature
+					WTP_OPTION, // Water Temperature
+					COG_OPTION, // Course Over Ground
+					SOG_OPTION, // Speed Over Ground
+					HDG_OPTION, // Heading
+					POS_OPTION, // Position
+					DBT_OPTION, // Depth Below Transducer
+					HUM_OPTION, // Relative Humidity
+					CUR_OPTION, // Current. Speed and Direction
+					PRS_OPTION  // Atmospheric Pressure (PRMSL).
 	};
 
-	private static int currentOption = TWD_OPTION;
+	private int currentOption = TWD_OPTION;
 
 	@Override
 	public void onButtonPressed() {
@@ -169,7 +170,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 
 		PushButtonObserver instance = this;
 		pbm = new PushButtonMaster(instance);
-		pbm.initCtx();                  // Initialize Push button
+		pbm.initCtx(RaspiPin.GPIO_02); // (); Initialize Push button. Possibly takes the pushbutton pin as parameter.
 
 		Thread cacheThread = new Thread("SSD1306Processor CacheThread") {
 			public void run() {

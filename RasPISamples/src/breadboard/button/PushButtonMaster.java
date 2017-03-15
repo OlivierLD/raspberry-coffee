@@ -33,7 +33,7 @@ public class PushButtonMaster {
 	}
 
 	public void initCtx() {
-		initCtx(RaspiPin.GPIO_01);
+		initCtx(RaspiPin.GPIO_02);
 	}
 
 	public void initCtx(Pin buttonPin) {
