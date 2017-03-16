@@ -529,9 +529,10 @@ In the picture above, all the data come from the NMEA station, except the air te
 [Todo next](./web/TODO.md "What's next")
 
 - _Example_: A Forwarder with a distinction on the **origin** of the data, based on the device ID.
-   - A thermometer inside (BMP180 or BME180), forwarding on TCP
-   - A thermometer outside (BMP180 or BME180), forwarding on TCP
+   - A thermometer inside (BMP180 or BME180), forwarding on TCP, device ID set to `01`
+   - A thermometer outside (BMP180 or BME180), forwarding on TCP, device ID set to `02`
    - A MUX reading the 2 TCP streams, and displaying (like with an HTML Interface) the right data in the right place, even if the Sentence IDs of the two streams are identical.
+![2 Raspberry PI Zero](./Two.RPi.Zero_bb.png "Two thermometers")
 
 - 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
 ```
