@@ -27,9 +27,6 @@ public class BMP180Reader extends NMEAReader {
 			this.bmp180 = new BMP180();
 		} catch (I2CFactory.UnsupportedBusNumberException e) {
 			e.printStackTrace();
-		} catch (UnsatisfiedLinkError ule) {
-			System.err.println("You are not on a Raspberry PI, are you?");
-			throw ule;
 		}
 	}
 

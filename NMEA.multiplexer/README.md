@@ -310,13 +310,13 @@ returns a payload like
 ```json
 [
   {
-    "cls": "nmeaproviders.client.SerialClient",
+    "cls": "consumers.client.SerialClient",
     "type": "serial",
     "port": "/dev/ttyUSB0",
     "br": 4800
   },
   {
-    "cls": "nmeaproviders.client.BME280Client",
+    "cls": "consumers.client.BME280Client",
     "type": "bme280"
   }
 ]
@@ -329,12 +329,12 @@ returns a payload like
 ```json
 [
   {
-    "cls": "servers.TCPWriter",
+    "cls": "forwarders.TCPWriter",
     "port": 7001,
     "type": "tcp"
   },
   {
-    "cls": "servers.ConsoleWriter",
+    "cls": "forwarders.ConsoleWriter",
     "type": "console"
   }
 ]

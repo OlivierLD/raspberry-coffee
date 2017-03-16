@@ -10,7 +10,7 @@ public class ConsoleWriter implements Forwarder {
 	public void write(byte[] message) {
 		String mess = new String(message);
 		if (!mess.isEmpty()) {
-			System.out.println(mess.trim());
+			System.out.println(mess.trim()); // That is what this Forwarder does.
 		}
 	}
 

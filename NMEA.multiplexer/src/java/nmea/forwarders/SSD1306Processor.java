@@ -472,6 +472,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 
 	@Override
 	public void write(byte[] message) {
+		// Nothing is done here. It is replaced by the Thread in the constructor.
 	}
 
 	@Override
