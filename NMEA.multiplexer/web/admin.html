@@ -89,6 +89,7 @@
                     $("#channel-file").css('display', 'none');
                     $("#channel-ws").css('display', 'none');
                     $("#channel-rnd").css('display', 'none');
+                    $("#channel-bmp180").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
@@ -99,6 +100,7 @@
                     $("#channel-file").css('display', 'none');
                     $("#channel-ws").css('display', 'none');
                     $("#channel-rnd").css('display', 'none');
+                    $("#channel-bmp180").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
@@ -109,6 +111,7 @@
                     $("#channel-file").css('display', 'inline');
                     $("#channel-ws").css('display', 'none');
                     $("#channel-rnd").css('display', 'none');
+                    $("#channel-bmp180").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
@@ -119,6 +122,7 @@
                     $("#channel-file").css('display', 'none');
                     $("#channel-ws").css('display', 'inline');
                     $("#channel-rnd").css('display', 'none');
+                    $("#channel-bmp180").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
@@ -129,6 +133,18 @@
                     $("#channel-file").css('display', 'none');
                     $("#channel-ws").css('display', 'none');
                     $("#channel-rnd").css('display', 'inline');
+                    $("#channel-bmp180").css('display', 'none');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
+                    break;
+                case 'bmp180':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bmp180").css('display', 'inline');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
@@ -139,6 +155,7 @@
                     $("#channel-file").css('display', 'none');
                     $("#channel-ws").css('display', 'none');
                     $("#channel-rnd").css('display', 'none');
+                    $("#channel-bmp180").css('display', 'none');
                     $("#channel-bme280").css('display', 'inline');
                     $("#channel-htu21df").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
@@ -149,6 +166,7 @@
                     $("#channel-file").css('display', 'none');
                     $("#channel-ws").css('display', 'none');
                     $("#channel-rnd").css('display', 'none');
+                    $("#channel-bmp180").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'inline');
                     $("#channel-custom").css('display', 'none');
@@ -159,6 +177,7 @@
                     $("#channel-file").css('display', 'none');
                     $("#channel-ws").css('display', 'none');
                     $("#channel-rnd").css('display', 'none');
+                    $("#channel-bmp180").css('display', 'none');
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
                     $("#channel-custom").css('display', 'inline');
@@ -342,6 +361,17 @@
                     var sFilters = $("#rnd-sentence-filters").val().split(",");
                     createChannel({
                         type: 'rnd',
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'bmp180':
+                    var dFilters = $("#bmp180-dev-filters").val().split(",");
+                    var sFilters = $("#bmp180-sentence-filters").val().split(",");
+                    var dPrefix = $('#bmp180-dev-prefix').val();
+                    createChannel({
+                        type: 'bmp180',
+                        devicePrefix: dPrefix,
                         deviceFilters: dFilters,
                         sentenceFilters: sFilters
                     });
@@ -602,6 +632,7 @@
                 <option value="file">Data File</option>
                 <option value="ws">Web Socket</option>
                 <option value="rnd">Random</option>
+                <option value="bmp180">BMP180</option>
                 <option value="bme280">BME280</option>
                 <option value="htu21df">HTU21DF</option>
                 <option value="custom">Custom</option>
@@ -706,6 +737,24 @@
                   <tr>
                     <td>Sentence filter(s)</td>
                     <td><input id="rnd-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-bmp180" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="bmp180-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="RP"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="bmp180-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="bmp180-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
                     <td><small>Negate with <b>~</b></small></td>
                   </tr>
                 </table>

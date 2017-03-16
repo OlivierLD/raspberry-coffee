@@ -20,6 +20,7 @@ import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAParser;
 import nmea.consumers.client.BME280Client;
+import nmea.consumers.client.BMP180Client;
 import nmea.consumers.client.DataFileClient;
 import nmea.consumers.client.HTU21DFClient;
 import nmea.consumers.client.RandomClient;
@@ -27,6 +28,7 @@ import nmea.consumers.client.SerialClient;
 import nmea.consumers.client.TCPClient;
 import nmea.consumers.client.WebSocketClient;
 import nmea.consumers.reader.BME280Reader;
+import nmea.consumers.reader.BMP180Reader;
 import nmea.consumers.reader.DataFileReader;
 import nmea.consumers.reader.HTU21DFReader;
 import nmea.consumers.reader.RandomReader;
@@ -483,6 +485,12 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
 						RESTProcessorUtil.addErrorMessageToResponse(response, "missing payload");
 					}
+					break;
+				case "bmp180":
+					opClient = nmeaDataClients.stream()
+									.filter(channel -> channel instanceof BMP180Client)
+									.findFirst();
+					response = removeChannelIfPresent(request, opClient);
 					break;
 				case "bme280":
 					opClient = nmeaDataClients.stream()
@@ -968,6 +976,44 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'file' already exists");
 				}
 				break;
+			case "bmp180":
+				BMP180Client.BMP180Bean bmp180Json = new Gson().fromJson(new String(request.getContent()), BMP180Client.BMP180Bean.class);
+				opClient = nmeaDataClients.stream()
+								.filter(channel -> channel instanceof BMP180Client)
+								.findFirst();
+				if (!opClient.isPresent()) {
+					try {
+						NMEAClient bmp180Client = new BMP180Client(bmp180Json.getDeviceFilters(), bmp180Json.getSentenceFilters(),this);
+						bmp180Client.initClient();
+						bmp180Client.setReader(new BMP180Reader(bmp180Client.getListeners()));
+						// To do BEFORE startWorking and AFTER setReader
+						if (bmp180Json.getDevicePrefix() != null) {
+							if (bmp180Json.getDevicePrefix().trim().length() != 2) {
+								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", bmp180Json.getDevicePrefix().trim()));
+							} else {
+								((BMP180Client)bmp180Client).setSpecificDevicePrefix(bmp180Json.getDevicePrefix().trim());
+							}
+						}
+						nmeaDataClients.add(bmp180Client);
+						bmp180Client.startWorking();
+						String content = new Gson().toJson(bmp180Client.getBean());
+						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+					} catch (Exception ex) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+						ex.printStackTrace();
+					} catch (Error error) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						error.printStackTrace();
+					}
+				} else {
+					// Already there
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'bmp180' already exists");
+				}
+				break;
 			case "bme280":
 				BME280Client.BME280Bean bme280Json = new Gson().fromJson(new String(request.getContent()), BME280Client.BME280Bean.class);
 				opClient = nmeaDataClients.stream()
@@ -995,6 +1041,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
 						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
+					} catch (Error error) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						error.printStackTrace();
 					}
 				} else {
 					// Already there
@@ -1029,6 +1079,10 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
 						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
 						ex.printStackTrace();
+					} catch (Error error) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						error.printStackTrace();
 					}
 				} else {
 					// Already there
@@ -1367,6 +1421,22 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 					WebSocketClient webSocketClient = (WebSocketClient) opClient.get();
 					webSocketClient.setVerbose(wsJson.getVerbose());
 					String content = new Gson().toJson(webSocketClient.getBean());
+					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+				}
+				break;
+			case "bmp180":
+				BMP180Client.BMP180Bean bmp180Json = new Gson().fromJson(new String(request.getContent()), BMP180Client.BMP180Bean.class);
+				opClient = nmeaDataClients.stream()
+								.filter(channel -> channel instanceof BMP180Client)
+								.findFirst();
+				if (!opClient.isPresent()) {
+					response.setStatus(HTTPServer.Response.NOT_FOUND);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'bmp180' was not found");
+				} else { // Then update
+					BMP180Client bmp180Client = (BMP180Client) opClient.get();
+					bmp180Client.setVerbose(bmp180Json.getVerbose());
+					String content = new Gson().toJson(bmp180Client.getBean());
 					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
 				}
@@ -1978,6 +2048,31 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 							}
 							break;
 						case "bmp180": // Temperature, Pressure
+							try {
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								String bmp180DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient bmp180Client = new BMP180Client(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												this);
+								bmp180Client.initClient();
+								bmp180Client.setReader(new BMP180Reader(bmp180Client.getListeners()));
+								// Important: after the setReader
+								if (bmp180DevicePrefix.trim().length() > 0) {
+									if (bmp180DevicePrefix.trim().length() == 2) {
+										((BMP180Client) bmp180Client).setSpecificDevicePrefix(bmp180DevicePrefix.trim());
+									} else {
+										throw new RuntimeException(String.format("Bad prefix [%s] for BMP180. Must be 2 character long, exactly.", bmp180DevicePrefix.trim()));
+									}
+								}
+								nmeaDataClients.add(bmp180Client);
+							} catch (Exception e) {
+								e.printStackTrace();
+							} catch (Error err) {
+								err.printStackTrace();
+							}
+							break;
 						case "lsm303": // 3D magnetometer
 						case "batt":   // Battery Voltage, use XDR
 						default:
