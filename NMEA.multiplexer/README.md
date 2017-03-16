@@ -528,12 +528,12 @@ In the picture above, all the data come from the NMEA station, except the air te
 ### TODO...
 [Todo next](./web/TODO.md "What's next")
 
-- 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
 - _Example_: A Forwarder with a distinction on the **origin** of the data, based on the device ID.
    - A thermometer inside (BMP180 or BME180), forwarding on TCP
    - A thermometer outside (BMP180 or BME180), forwarding on TCP
    - A MUX reading the 2 TCP streams, and displaying (like with an HTML Interface) the right data in the right place, even if the Sentence IDs of the two streams are identical.
 
+- 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
 ```
 Once you get the X, Y and Z accelerations into floats you just need some trig to calculate Pitch and Roll (in radians):
 
