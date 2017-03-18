@@ -41,8 +41,8 @@ public final class GreatCirclePoint
 	/**
 	 * In nautical miles
 	 *
-	 * @param target
-	 * @return
+	 * @param target the point to aim to.
+	 * @return the distance, in nm.
 	 */
 	public double orthoDistanceBetween(GreatCirclePoint target) {
 		GreatCircle gc = new GreatCircle();
@@ -54,10 +54,10 @@ public final class GreatCirclePoint
 	}
 
 	/**
-	 * In nautical miles
+	 * In nautical degrees
 	 *
-	 * @param target
-	 * @return
+	 * @param target the point to aim to.
+	 * @return the distance, in degrees.
 	 */
 	public double gcDistanceBetween(GreatCirclePoint target) {
 		double d = GreatCircle.getGCDistanceInDegrees(this, target);
@@ -67,8 +67,8 @@ public final class GreatCirclePoint
 	/**
 	 * In nautical miles
 	 *
-	 * @param target
-	 * @return
+	 * @param target the point to aim to.
+	 * @return the distance, in nm.
 	 */
 	public double loxoDistanceBetween(GreatCirclePoint target) {
 		GreatCircle gc = new GreatCircle();

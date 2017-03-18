@@ -11,14 +11,14 @@ import java.util.EventObject;
 public class NMEAEvent extends EventObject {
 	private String content = "";
 
-	/**
+	/*
 	 * To be used for the stop statement
 	 */
 	public NMEAEvent(Object source) {
 		super(source);
 	}
 
-	/**
+	/*
 	 * To be used for the DataRead and DataDetected events
 	 */
 	public NMEAEvent(Object source, String s) {
@@ -26,7 +26,7 @@ public class NMEAEvent extends EventObject {
 		content = s;
 	}
 
-	/**
+	/*
 	 * Once DataRead or DataDetected has been trapped, use this method to
 	 * get the concerned data String.
 	 *

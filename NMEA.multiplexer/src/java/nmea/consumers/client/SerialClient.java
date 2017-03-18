@@ -85,7 +85,7 @@ public class SerialClient extends NMEAClient {
 		return new SerialBean(this);
 	}
 
-	/**
+	/*
 	 * For tests.
 	 */
 	public static void main(String[] args) {

@@ -86,7 +86,7 @@ public class ExtraDataComputer extends Computer {
 	/**
 	 * Receives the data, and potentially produces new ones.
 	 *
-	 * @param mess
+	 * @param mess The message to write
 	 */
 	@Override
 	public void write(byte[] mess) {

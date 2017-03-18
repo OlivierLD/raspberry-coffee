@@ -176,7 +176,7 @@ public class StringParsers {
 	}
 
 	/**
-	 * @param data
+	 * @param data the one to parse
 	 * @return Pressure in Mb / hPa
 	 */
 	public static double parseMMB(String data) {
@@ -1441,8 +1441,8 @@ public class StringParsers {
 	/**
 	 * For GSV, returns the message number, and the total number of messages to expect.
 	 *
-	 * @param gsvString
-	 * @return
+	 * @param gsvString the stgring to parse
+	 * @return teh expected int array
 	 */
 	public static int[] getMessNum(String gsvString) {
 		int mn = -1;
@@ -1685,7 +1685,7 @@ public class StringParsers {
 		return f;
 	}
 
-	/**
+	/*
 	 * Parses strings like "2006-05-05T17:35:48.000" + "Z" or UTC Offset like "-10:00"
 	 * 01234567890123456789012
 	 * 1         2         3

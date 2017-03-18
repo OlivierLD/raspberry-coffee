@@ -170,7 +170,7 @@ public abstract class NMEAClient {
 		}
 	}
 
-	/**
+	/*
 	 * This one must be overwritten to customize the behavior of the client,
 	 * like the destination of the data.
 	 */

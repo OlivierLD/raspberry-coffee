@@ -21,7 +21,7 @@ import java.util.Properties;
 public class ProcessorSkeleton implements Forwarder {
 	private boolean keepWorking = true;
 
-	/**
+	/*
 	 * @throws Exception
 	 */
 	public ProcessorSkeleton() throws Exception {

@@ -66,8 +66,8 @@ public class DumpUtil {
 	/**
 	 * Might not work with some encodings...
 	 *
-	 * @param ch
-	 * @return
+	 * @param ch The character to test
+	 * @return true when printable.
 	 */
 	public static boolean isAsciiPrintable(char ch) {
 		return ch >= 32 && ch < 127;

@@ -28,7 +28,7 @@ public final class GreatCircle {
 	/**
 	 * Coordinates in radians
 	 *
-	 * @param p
+	 * @param p the position to start from
 	 */
 	public static void setStart(GreatCirclePoint p) {
 		start = p;
@@ -42,7 +42,7 @@ public final class GreatCircle {
 	/**
 	 * Coordinates in radians
 	 *
-	 * @param p
+	 * @param p the arrival position
 	 */
 	public static void setArrival(GreatCirclePoint p) {
 		arrival = p;
@@ -244,7 +244,7 @@ public final class GreatCircle {
 			rv -= (2 * Math.PI);
 	}
 
-	/**
+	/*
 	 * Points coordinates in Radians
 	 */
 	public static double calculateRhumLineDistance(GreatCirclePoint f, GreatCirclePoint t) {
@@ -306,7 +306,7 @@ public final class GreatCircle {
 		return _dLoxo;
 	}
 
-	/**
+	/*
 	 * Rhumbline aka loxodrome
 	 * Points coordinates in Radians
 	 * returned value in radians

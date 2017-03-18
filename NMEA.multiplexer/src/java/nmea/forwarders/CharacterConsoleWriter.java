@@ -11,6 +11,7 @@ import java.util.Properties;
  *
  * Requires:
  * <table border='1'>
+ *   <caption>Description</caption>
  *   <tr>
  *     <td>Forwarder Class</td>
  *     <td>nmea.forwarders.CharacterConsoleWriter</td>

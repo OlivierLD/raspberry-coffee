@@ -447,7 +447,7 @@ public class NMEADataCache
 	}
 
 	/**
-	 * @param key
+	 * @param key identifies the data to get
 	 * @return Damped Data, by default
 	 */
 	@Override

@@ -13,8 +13,8 @@ public class RESTProcessorUtil {
 	 * Check path identity, even if they contains prms.
 	 * Ex: /one/{one}/two/{two} and /one/{a}/two/{b} are identical
 	 *
-	 * @param one
-	 * @param two
+	 * @param one path to compare with two
+	 * @param two path to compare with one
 	 * @return true if paths match.
 	 */
 	public static boolean pathsAreIndentical(String one, String two) {
@@ -85,7 +85,7 @@ public class RESTProcessorUtil {
 		return returned;
 	}
 
-	/*** Utility(ies) ***/
+	/* Utility(ies) */
 
 	public static void generateHappyResponseHeaders(HTTPServer.Response response, int contentLength) {
 		generateHappyResponseHeaders(response, "application/json", contentLength);

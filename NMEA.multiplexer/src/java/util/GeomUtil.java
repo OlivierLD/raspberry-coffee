@@ -85,8 +85,8 @@ public final class GeomUtil {
 
 	/**
 	 * @param fullString like [N 37�55.49], or [N 37�55'12.49"]
-	 * @return
-	 * @throws RuntimeException
+	 * @return The expected string
+	 * @throws RuntimeException when failing
 	 */
 	public static double sexToDec(String fullString) throws RuntimeException {
 		try {
@@ -319,7 +319,7 @@ public final class GeomUtil {
 		return prefix + " " + Integer.toString(Math.abs(i));
 	}
 
-	/**
+	/*
 	 * See http://en.wikipedia.org/wiki/Maidenhead_Locator_System
 	 */
 	public static String gridSquare(double lat, double lng) {

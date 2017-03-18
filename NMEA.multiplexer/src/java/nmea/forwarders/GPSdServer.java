@@ -42,7 +42,7 @@ public class GPSdServer implements Forwarder {
 		this.clientSocketlist.add(skt);
 	}
 
-	/**
+	/*
 	 * Message from the mux
 	 * @param message
 	 */

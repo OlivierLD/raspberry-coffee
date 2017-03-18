@@ -149,7 +149,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 		}
 	}
 
-	/**
+	/*
 	 * @throws Exception
 	 */
 	public SSD1306Processor() throws Exception {

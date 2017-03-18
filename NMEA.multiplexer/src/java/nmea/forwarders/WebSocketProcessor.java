@@ -88,7 +88,7 @@ public class WebSocketProcessor implements Forwarder {
 		private double hum;
 	}
 
-	/**
+	/*
 	 * @param serverURL like ws://hostname:port/
 	 * @throws Exception
 	 */

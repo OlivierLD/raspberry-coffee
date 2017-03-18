@@ -134,7 +134,7 @@ public class GeoPos implements Serializable {
 
 	/**
 	 * Just for tests
-	 * @param args
+	 * @param args not used.
 	 */
 	public static void main(String... args) {
 		double lat = sexToDec("24", "03.76");

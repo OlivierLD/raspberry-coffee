@@ -21,7 +21,7 @@ public class NMEACache implements Task<NMEADataCache>, Serializable {
 	public NMEACache() {
 	}
 
-	/**
+	/*
 		Example of NMEADataCache, in Json.
 {
  "Damping":30,

@@ -51,7 +51,7 @@ public abstract class NMEAReader extends Thread {
 		});
 	}
 
-	/**
+	/*
 	 * The one that tells the Controller to start working
 	 *
 	 * @see nmea.api.NMEAParser
@@ -87,6 +87,7 @@ public abstract class NMEAReader extends Thread {
 	 * like a Serial Port for example.
 	 *
 	 * Use the {@link #canRead()} method to know if you can keep reading.
+	 * @throws Exception when something goes wrong
 	 */
 	public abstract void startReader() throws Exception;
 

@@ -75,7 +75,7 @@ public class NMEAUtils {
 		return s;
 	}
 
-	/**
+	/*
 	 * Calculated Data
 	 * <p>
 	 * TWS, TWA, TWD

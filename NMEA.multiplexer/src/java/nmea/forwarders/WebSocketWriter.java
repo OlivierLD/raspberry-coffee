@@ -13,7 +13,7 @@ public class WebSocketWriter implements Forwarder {
 
 	/**
 	 * @param serverURL like ws://hostname:port/
-	 * @throws Exception
+	 * @throws Exception when it fails
 	 */
 	public WebSocketWriter(String serverURL) throws Exception {
 		this.wsUri = serverURL;

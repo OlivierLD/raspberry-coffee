@@ -8,7 +8,7 @@ import nmea.consumers.reader.HTU21DFReader;
 
 /**
  * Reads a HTU21DF sensor, and produces a valid NMEA sentence.
- * Temperature & Humidity
+ * Temperature &amp; Humidity
  */
 public class HTU21DFClient extends NMEAClient {
 	public HTU21DFClient() {
