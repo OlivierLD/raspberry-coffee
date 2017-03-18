@@ -1,7 +1,7 @@
 # NMEA Multiplexer
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
 
-Designed to run on very small boards, like a Raspberry PI Zero, and with no Internet access.
+Designed to run on very small boards, like a Raspberry PI Zero, and with _no_ Internet access.
 
 The operations on the Serial port require `libRxTx`. This is included in the gradle dependencies.
 To be able to use it outside gradle, run (on Linux/Debian/Raspberry PI):
@@ -10,6 +10,11 @@ To be able to use it outside gradle, run (on Linux/Debian/Raspberry PI):
 ```
 See how this is used and referred to in `mux.sh`.
 
+---
+
+For the impatient: go [here](#see-it-at-work) to get started now. The others will keep reading.
+
+-----------------
 ### Includes
 - NMEA Strings Parser
 - NMEA Strings generator
@@ -104,7 +109,7 @@ There is an **rmi** forwarder. This is a work in progress, but it works.
 It is feeding an RMI server that can then be accessed by an RMI client.
 See an example of such a client in `samples.rmi.client.SampleRMIClient`.
 
-### To see it at work
+### To see it at work (aka Get Started)
 See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to.
 See it to understand its content (should be clear enough).
 
