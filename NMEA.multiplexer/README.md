@@ -12,7 +12,7 @@ See how this is used and referred to in `mux.sh`.
 
 ---
 
-For the impatient: go [here](#see-it-at-work) to get started now. The others will keep reading.
+For the impatient: go [here](#to-see-it-at-work-aka-get-started) to get started now. The others will keep reading.
 
 -----------------
 ### Includes
