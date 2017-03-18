@@ -11,11 +11,13 @@ All the demos can be started from the page at [http://localhost:9999/web/index.h
 ---
 
 Plug a GPS on the Serial Port, start the multiplexer, and launch [http://localhost:9999/web/gps.demo.html](http://localhost:9999/web/gps.demo.html) in a browser.
-This is pinging the `/cache` REST service every second.
+This is pinging (AJAX) the `/cache` REST service every second.
 ![GPS Demo](./docimages/gps.demo.png "GPS Demo")
 
 Satellites are displayed on the chart, and on the right pane.
 When available, Speed Over Ground and Course Over Ground are displayed too.
+
+_This one does **not** require an Internet connection_.
 
 ---
 
