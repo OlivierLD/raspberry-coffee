@@ -57,6 +57,13 @@ import nmea.forwarders.rmi.RMIServer;
 import nmea.mux.context.Context;
 import nmea.utils.NMEAUtils;
 
+/**
+ * This class defines the REST operations supported by the HTTP Server.
+ * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
+ * <br>
+ * The Multiplexer will use the {@link #processRequest(Request, Response)} method of this class to
+ * have the required requests processed.
+ */
 public class RESTImplementation {
 
 	private List<NMEAClient> nmeaDataClients;
@@ -215,6 +222,13 @@ public class RESTImplementation {
 									this::getNMEAVolumeStatus,
 									"Get the time elapsed and the NMEA volume managed so far"));
 
+	/**
+	 * This is the method to invoke to have a REST request processed as defined above.
+	 *
+	 * @param request as it comes from the client
+	 * @param defaultResponse with the expected 'happy' code.
+	 * @return the actual result.
+	 */
 	public HTTPServer.Response processRequest(HTTPServer.Request request, HTTPServer.Response defaultResponse) {
 		Optional<Operation> opOp = operations
 						.stream()

@@ -39,10 +39,34 @@ import nmea.forwarders.WebSocketProcessor;
 import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
 
-public class Initializer {
+/**
+ * Initialize the configuration of the Multiplexer, at startup,
+ * with the properties read from the file system., through one
+ * package-private method named <code>{@link #setup}</code>.
+ * <br>
+ * Initializes:
+ * <ul>
+ *   <li>NMEA Channels</li>
+ *   <li>NMEA Forwarders</li>
+ *   <li>NMEA Computers</li>
+ * </ul>
+ * All those objects can be also managed later on, through the REST Admin Interface
+ * (see {@link RESTImplementation}).
+ */
+public class MuxInitializer {
 
 	private final static NumberFormat MUX_IDX_FMT = new DecimalFormat("00");
 
+	/**
+	 * This is the method to call to initialize the {@link Multiplexer}.
+	 * The 3 <code>List</code>s must have been created in it, as they will be populated here.
+s	 *
+	 * @param muxProps The properties to get the data from. See <a href="../../../../README.md">here</a> for more details.
+	 * @param nmeaDataClients List of the input channels
+	 * @param nmeaDataForwarders List of the output channels
+	 * @param nmeaDataComputers List of the data computers
+	 * @param mux the Multuplexer instance to initialize
+	 */
 	static void setup(Properties muxProps,
 	                  List<NMEAClient> nmeaDataClients,
 	                  List<Forwarder> nmeaDataForwarders,

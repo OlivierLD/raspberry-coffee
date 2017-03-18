@@ -34,7 +34,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	private RESTImplementation restImplementation;
 
 	/**
-	 * Implements the management of the REST requests.
+	 * Implements the management of the REST requests (see {@link RESTImplementation})
 	 * Dedicated Admin Server.
 	 *
 	 * @param request the parsed request.
@@ -105,7 +105,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		// Read initial config from the properties file. See the main method.
 		verbose = "true".equals(System.getProperty("mux.data.verbose", "false")); // Initial verbose.
 		restImplementation = new RESTImplementation(nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
-		Initializer.setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
+		MuxInitializer.setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
 
 		Runtime.getRuntime().addShutdownHook(new Thread("Multiplexer shutdown hook") {
 			public void run() {
