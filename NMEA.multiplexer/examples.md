@@ -4,9 +4,9 @@
 
 ----
 
-- Small external OLED display
-- Web Console
-- Next...
+- [Small external OLED display](#small-external-display)
+- [Web Console](#web-console)
+- [Next](#todo)...
 
 #### Small external display
 There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
