@@ -47,7 +47,7 @@ public class Initializer {
 	                  List<NMEAClient> nmeaDataClients,
 	                  List<Forwarder> nmeaDataForwarders,
 	                  List<Computer> nmeaDataComputers,
-	                  Multiplexer parent) {
+	                  Multiplexer mux) {
 		int muxIdx = 1;
 		boolean thereIsMore = true;
 		// 1 - Input channels
@@ -66,7 +66,7 @@ public class Initializer {
 									.newInstance(
 													deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 													sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-													parent);
+													mux);
 					if (dynamic instanceof NMEAClient) {
 						NMEAClient nmeaClient = (NMEAClient)dynamic;
 						String propProp = String.format("mux.%s.properties", MUX_IDX_FMT.format(muxIdx));
@@ -118,7 +118,7 @@ public class Initializer {
 								NMEAClient serialClient = new SerialClient(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-												parent);
+												mux);
 								serialClient.initClient();
 								serialClient.setReader(new SerialReader(serialClient.getListeners(), serialPort, Integer.parseInt(br)));
 								nmeaDataClients.add(serialClient);
@@ -135,7 +135,7 @@ public class Initializer {
 								NMEAClient tcpClient = new TCPClient(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-												parent);
+												mux);
 								tcpClient.initClient();
 								tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpServer, Integer.parseInt(tcpPort)));
 								nmeaDataClients.add(tcpClient);
@@ -151,7 +151,7 @@ public class Initializer {
 								NMEAClient fileClient = new DataFileClient(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-												parent);
+												mux);
 								fileClient.initClient();
 								fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename));
 								nmeaDataClients.add(fileClient);
@@ -167,7 +167,7 @@ public class Initializer {
 								NMEAClient wsClient = new WebSocketClient(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-												parent);
+												mux);
 								wsClient.initClient();
 								wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsUri));
 								nmeaDataClients.add(wsClient);
@@ -183,7 +183,7 @@ public class Initializer {
 								NMEAClient htu21dfClient = new HTU21DFClient(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-												parent);
+												mux);
 								htu21dfClient.initClient();
 								htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
 								// Important: after the setReader
@@ -208,7 +208,7 @@ public class Initializer {
 								NMEAClient rndClient = new RandomClient(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-												parent);
+												mux);
 								rndClient.initClient();
 								rndClient.setReader(new RandomReader(rndClient.getListeners()));
 								nmeaDataClients.add(rndClient);
@@ -226,7 +226,7 @@ public class Initializer {
 								NMEAClient bme280Client = new BME280Client(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-												parent);
+												mux);
 								bme280Client.initClient();
 								bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
 								// Important: after the setReader
@@ -252,7 +252,7 @@ public class Initializer {
 								NMEAClient bmp180Client = new BMP180Client(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
-												parent);
+												mux);
 								bmp180Client.initClient();
 								bmp180Client.setReader(new BMP180Reader(bmp180Client.getListeners()));
 								// Important: after the setReader
@@ -430,7 +430,7 @@ public class Initializer {
 					String cls = muxProps.getProperty(classProp);
 					if (cls != null) { // Dynamic loading
 						try {
-							Object dynamic = Class.forName(cls).getDeclaredConstructor(Multiplexer.class).newInstance(parent);
+							Object dynamic = Class.forName(cls).getDeclaredConstructor(Multiplexer.class).newInstance(mux);
 							if (dynamic instanceof Computer) {
 								Computer computer = (Computer)dynamic;
 								String propProp = String.format("computer.%s.properties", MUX_IDX_FMT.format(cptrIdx));
@@ -471,7 +471,7 @@ public class Initializer {
 										}
 									}
 									try {
-										Computer twCurrentComputer = new ExtraDataComputer(parent, prefix, timeBufferLengths.toArray(new Long[timeBufferLengths.size()]));
+										Computer twCurrentComputer = new ExtraDataComputer(mux, prefix, timeBufferLengths.toArray(new Long[timeBufferLengths.size()]));
 										nmeaDataComputers.add(twCurrentComputer);
 									} catch (Exception ex) {
 										ex.printStackTrace();

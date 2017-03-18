@@ -19,6 +19,10 @@ public class NMEAMultiplexer implements Multiplexer {
 		System.out.println(">> From MUX:" + mess);
 	}
 
+	@Override
+	public void setVerbose(boolean b) {
+	}
+
 	private NMEAClient tcpClient;
 	private NMEAClient fileClient;
 	private NMEAClient serialClient;
