@@ -42,16 +42,124 @@ In the picture above, all the data come from the NMEA station, except the air te
 ![page 3](./docimages/full.console.03.png "Third page")
 ![page 4](./docimages/full.console.04.png "Fourth page")
 
-##### And more to come...
-
-### TODO...
-[Todo next](./web/TODO.md "What's next")
-
 - _Example_: A Forwarder with a distinction on the **origin** of the data, based on the device ID.
    - A thermometer inside (BMP180 or BME180), forwarding on TCP, device ID set to `01`
    - A thermometer outside (BMP180 or BME180), forwarding on TCP, device ID set to `02`
    - A MUX reading the 2 TCP streams, and displaying (like with an HTML Interface) the right data in the right place, even if the Sentence IDs of the two streams are identical.
 ![2 Raspberry PI Zero](./Two.RPi.Zero_bb.png "Two thermometers")
+
+##### On the first Raspberry PI
+Let's say its IP address is `192.168.1.166`.
+We have a BMP180, and an HTU21-DF.
+
+Its properties file looks like this:
+```properties
+#
+# MUX definition.
+#
+# HTTP server, and just BMP180 & HTU21DF
+#
+with.http.server=yes
+http.port=9999
+#
+mux.01.type=bmp180
+mux.01.device.prefix=01
+#
+mux.02.type=htu21df
+mux.02.device.prefix=01
+#
+# Forwarders
+#
+forward.01.type=tcp
+forward.01.port=7001
+#
+```
+
+##### On the seoc nd Raspberry PI
+Let's say its IP address is `192.168.1.136`.
+We have a BME280.
+
+Its properties file looks like this:
+```properties
+#
+#  MUX definition.
+#
+with.http.server=yes
+http.port=9999
+#
+# All indexes must begin with 01, and be consecutive.
+# A sequence like 01, 02, 04 will stop after 02.
+# Such indexes apply to channels, forwarders, and computers.
+#
+# Channels (input)
+#
+mux.01.type=bme280
+mux.01.device.prefix=02
+#
+# Forwarders
+#
+forward.01.type=tcp
+forward.01.port=7001
+#
+```
+
+##### On a third machine, Raspberry PI, or not.
+We read the two TCP streams from the machines above.
+Its properties file looks like
+```properties
+#
+#  MUX definition.
+#
+with.http.server=yes
+http.port=9999
+#
+#
+# Reads 2 Raspberry PIs:
+# First one  reads a BMP180 and an HTU21DF, forwarded on TCP port 7001.
+# Second one reads a BME280, forwarded on its port 7001 too.
+#
+mux.01.type=tcp
+mux.01.port=7001
+mux.01.server=192.168.1.166
+#
+mux.02.type=tcp
+mux.02.port=7001
+mux.02.server=192.168.1.136
+#
+# Forwarders
+#
+forward.01.type=tcp
+forward.01.port=7001
+#
+forward.02.type=console
+#
+#
+# Dynamic
+#
+forward.03.cls=nmea.forwarders.InOutDataWriter
+#
+#
+##############################################################
+#
+# Cache parameters. Taken in account only if init.cache=true
+#
+init.cache=true
+#
+##############################################################
+#
+# No computers
+#
+```
+
+For details on the way it works, look at the code in `nmea.forwarders.InOutDataWriter.java`.
+This one in adding custom entries in the cache...
+
+Then you can reach the page at [http://localhost:9999/web/examples/in.out.html]().
+![In and Out](./docimages/in.out.png "In and Out")
+##### And more to come...
+
+### TODO...
+[Todo next](./web/TODO.md "What's next")
 
 - 3D compass (LSM303) interface, see http://opencpn.org/ocpn/Basic_data-connections_nmea-sentences (XDR), and http://forum.arduino.cc/index.php?topic=91268.0
 ```
