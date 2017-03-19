@@ -6,6 +6,7 @@
 
 - [Small external OLED display](#small-external-display)
 - [Web Console](#web-console)
+- [Distinction on the device ID](#inside-and-outside)
 - [Next](#todo)...
 
 #### Small external display
