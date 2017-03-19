@@ -57,7 +57,7 @@ public class HTU21DFClient extends NMEAClient {
 
 	public static class HTU21DFBean implements ClientBean {
 		private String cls;
-		private String type = "hut21df";
+		private String type = "htu21df";
 		private String[] deviceFilters;
 		private String[] sentenceFilters;
 		private String devicePrefix;

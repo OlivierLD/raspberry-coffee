@@ -60,12 +60,12 @@ public class MuxInitializer {
 	/**
 	 * This is the method to call to initialize the {@link Multiplexer}.
 	 * The 3 <code>List</code>s must have been created in it, as they will be populated here.
-s	 *
+	 *
 	 * @param muxProps The properties to get the data from. See <a href="../../../../README.md">here</a> for more details.
 	 * @param nmeaDataClients List of the input channels
 	 * @param nmeaDataForwarders List of the output channels
 	 * @param nmeaDataComputers List of the data computers
-	 * @param mux the Multuplexer instance to initialize
+	 * @param mux the Multiplexer instance to initialize
 	 */
 	static void setup(Properties muxProps,
 	                  List<NMEAClient> nmeaDataClients,
