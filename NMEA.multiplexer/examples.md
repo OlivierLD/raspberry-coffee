@@ -79,7 +79,7 @@ forward.01.port=7001
 #
 ```
 
-##### On the seoc nd Raspberry PI
+##### On the second Raspberry PI
 Let's say its IP address is `192.168.1.136`.
 We have a BME280.
 
