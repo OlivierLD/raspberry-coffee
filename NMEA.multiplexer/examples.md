@@ -42,7 +42,10 @@ In the picture above, all the data come from the NMEA station, except the air te
 ![page 3](./docimages/full.console.03.png "Third page")
 ![page 4](./docimages/full.console.04.png "Fourth page")
 
-- _Example_: A Forwarder with a distinction on the **origin** of the data, based on the device ID.
+#### Inside and Outside
+This example involves 2 (or 3) machines.
+
+- A Forwarder with a distinction on the **origin** of the data, based on the device ID.
    - A thermometer inside (BMP180 or BME180), forwarding on TCP, device ID set to `01`
    - A thermometer outside (BMP180 or BME180), forwarding on TCP, device ID set to `02`
    - A MUX reading the 2 TCP streams, and displaying (like with an HTML Interface) the right data in the right place, even if the Sentence IDs of the two streams are identical.
@@ -50,14 +53,14 @@ In the picture above, all the data come from the NMEA station, except the air te
 
 ##### On the first Raspberry PI
 Let's say its IP address is `192.168.1.166`.
-We have a BMP180, and an HTU21-DF.
+We have a BMP180, and an HTU21D-F.
 
 Its properties file looks like this:
 ```properties
 #
 # MUX definition.
 #
-# HTTP server, and just BMP180 & HTU21DF
+# HTTP server, and just BMP180 & HTU21D-F
 #
 with.http.server=yes
 http.port=9999
@@ -86,10 +89,6 @@ Its properties file looks like this:
 #
 with.http.server=yes
 http.port=9999
-#
-# All indexes must begin with 01, and be consecutive.
-# A sequence like 01, 02, 04 will stop after 02.
-# Such indexes apply to channels, forwarders, and computers.
 #
 # Channels (input)
 #
@@ -156,6 +155,10 @@ This one in adding custom entries in the cache...
 
 Then you can reach the page at [http://localhost:9999/web/examples/in.out.html]().
 ![In and Out](./docimages/in.out.png "In and Out")
+
+This page in pinging the cache every second, and extracts the custom entries from it to display the
+inside and outside conditions, even if they are represented by the same NMEA sentence ID; the distinction is made on the device ID.
+
 ##### And more to come...
 
 ### TODO...
