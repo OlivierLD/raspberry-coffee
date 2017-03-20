@@ -1,11 +1,9 @@
 package nmea.forwarders;
 
 import context.ApplicationContext;
-import context.NMEADataCache;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-import nmea.forwarders.displays.CharacterModeConsole;
 import nmea.parser.StringGenerator.XDRElement;
 import nmea.parser.StringGenerator.XDRTypes;
 import nmea.parser.StringParsers;
