@@ -57,22 +57,37 @@
             return str;
         };
 
+        var blinkHeader = function(divName) {
+            var elmt = document.getElementById(divName);
+            if (elmt !== undefined) {
+                var original = elmt.style.backgroundColor;
+                elmt.style.backgroundColor = 'green';
+                setTimeout(function() {
+                    elmt.style.backgroundColor = original;
+                }, 100);
+            }
+        };
+
         var onMessage = function (json) {
 
             if (json["x.inside.temp"] !== undefined) {
                 displayInsideTemp.setValue(json["x.inside.temp"]);
+                blinkHeader('in-tmp-head');
             }
             if (json["x.outside.temp"] !== undefined) {
                 displayOutsideTemp.setValue(json["x.outside.temp"]);
+                blinkHeader('out-tmp-head');
             }
             if (json["Barometric Pressure"] !== undefined) {
                 displayPRMSL.setValue(json["Barometric Pressure"]["pressure"]);
             }
             if (json["x.inside.hum"] !== undefined) {
                 displayInsideHum.setValue(json["x.inside.hum"]);
+                blinkHeader('in-hum-head');
             }
             if (json["x.outside.hum"] !== undefined) {
                 displayOutsideHum.setValue(json["x.outside.hum"]);
+                blinkHeader('out-hum-head');
             }
         };
 
@@ -166,10 +181,10 @@
           <td align="center" colspan="2">Outside</td>
         </tr>
         <tr>
-          <td align="center">Humidity in %</td>
-          <td align="center">Temp in &deg;C</td>
-          <td align="center">Hmudity in %</td>
-          <td align="center">Temp in &deg;C</td>
+          <td align="center"><div id="in-hum-head">Humidity in %</div></td>
+          <td align="center"><div id="in-tmp-head">Temp in &deg;C</div></td>
+          <td align="center"><div id="out-hum-head">Humidity in %</div></td>
+          <td align="center"><div id="out-tmp-head">Temp in &deg;C</div></td>
           <td align="center">Pressure in hPa</td>
         </tr>
         <tr>
@@ -180,6 +195,11 @@
           <td align="center"><canvas id="baroCanvas" width="240" height="220" title="Atmospheric Pressure in hPa"></canvas></td>
         </tr>
       </table>
+    </div>
+    <div>
+      <a href="http://192.168.1.166:9999/web/admin.html" target="First">Admin, RPi One</a>
+      <br>
+      <a href="http://192.168.1.136:9999/web/admin.html" target="Second">Admin, RPi Two</a>
     </div>
     <hr>
     <div id="err-mess"></div>

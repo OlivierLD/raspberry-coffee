@@ -113,7 +113,6 @@ Its properties file looks like
 with.http.server=yes
 http.port=9999
 #
-#
 # Reads 2 Raspberry PIs:
 # First one  reads a BMP180 and an HTU21DF, forwarded on TCP port 7001.
 # Second one reads a BME280, forwarded on its port 7001 too.
@@ -132,7 +131,6 @@ forward.01.type=tcp
 forward.01.port=7001
 #
 forward.02.type=console
-#
 #
 # Dynamic
 #
