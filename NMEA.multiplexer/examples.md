@@ -19,7 +19,7 @@ The OLED display in connected to the Raspberry PI using an SPI interface.
 
 The SSD1306 display is quite small. In the pictures above, there is a Fresnel lens in front of it.
 
-![Wiring](./ssd1306_bb.png)
+![Wiring](./docimages/ssd1306_bb.png)
 
 The push button is used to scroll through the data available to display (True Wind Direction, Boat Speed, etc).
 
@@ -50,7 +50,7 @@ This example involves 2 (or 3) machines.
    - A thermometer inside (BMP180 or BME180), forwarding on TCP, device ID set to `01`
    - A thermometer outside (BMP180 or BME180), forwarding on TCP, device ID set to `02`
    - A MUX reading the 2 TCP streams, and displaying (like with an HTML Interface) the right data in the right place, even if the Sentence IDs of the two streams are identical.
-![2 Raspberry PI Zero](./Two.RPi.Zero_bb.png "Two thermometers")
+![2 Raspberry PI Zero](./docimages/Two.RPi.Zero_bb.png "Two thermometers")
 
 ##### On the first Raspberry PI
 Let's say its IP address is `192.168.1.166`.

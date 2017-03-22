@@ -10,6 +10,8 @@ import nmea.parser.StringParsers;
 
 /**
  * This is a <i>Custom</i> forwarder.
+ * It intends to gather data from 2 different machines (2 RPi with sensors).
+ * The sentences have the same Sentence ID, and different Device IDs.
  *
  * Requires:
  * <table border='1'>
