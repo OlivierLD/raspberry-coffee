@@ -63,7 +63,7 @@ public class DumpUtil {
 				lineLeft += (NMEAUtils.lpad(Integer.toHexString(ba[c] & 0xFF).toUpperCase(), 2, "0") + " ");
 				lineRight += (isAsciiPrintable((char) ba[c]) ? (char) ba[c] : ".");
 			}
-			lineLeft = NMEAUtils.rpad(lineLeft, (3 * LINE_LEN) + 7, " ");
+			lineLeft = NMEAUtils.rpad(lineLeft, (3 * LINE_LEN) + 5, " ");
 			result[l + 2] = lineLeft + " |  " + lineRight;
 		}
 		return result;
