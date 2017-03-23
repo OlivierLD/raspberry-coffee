@@ -251,7 +251,7 @@ You can create a Node-RED flow that ingests data from a TCP port, and spits them
 
 ![Node-RED](./docimages/nodered.png "Node-RED flow")
 
-[Here](./nodered.json) is the flow to import in Node-RED.
+[Here](./node-red/nodered.json) is the flow to import in Node-RED.
 
 ###### To run it
 - Start the Mux (`$> ./mux.sh`)

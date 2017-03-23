@@ -38,21 +38,34 @@ public class DumpUtil {
 	 * @see LINE_LEN member
 	 */
 	public static String[] dualDump(byte[] ba) {
-		String[] result = null;
 		int dim = ba.length / LINE_LEN;
-		result = new String[dim + 1];
+		String[] result = new String[dim + 3]; // 2 first lines are labels
+		String first = "     ";
+		for (int i=0; i<LINE_LEN; i++) {
+			first += (NMEAUtils.lpad(Integer.toHexString(i & 0xFF).toUpperCase(), 2, "x") + " ");
+		}
+		result[0] = first;
+		String second = "---+-";
+		for (int i=0; i<LINE_LEN; i++) {
+			second += "---";
+		}
+		second += "-+--";
+		for (int i=0; i<LINE_LEN; i++) {
+			second += "-";
+		}
+		result[1] = second;
+
 		for (int l = 0; l < (dim + 1); l++) {
-			String lineLeft = "";
+			String lineLeft = (NMEAUtils.lpad(Integer.toHexString(l & 0xFF).toUpperCase(), 2, "0") + " | ");
 			String lineRight = "";
 			int start = l * LINE_LEN;
 			for (int c = start; c < Math.min(start + LINE_LEN, ba.length); c++) {
 				lineLeft += (NMEAUtils.lpad(Integer.toHexString(ba[c] & 0xFF).toUpperCase(), 2, "0") + " ");
 				lineRight += (isAsciiPrintable((char) ba[c]) ? (char) ba[c] : ".");
 			}
-			lineLeft = NMEAUtils.rpad(lineLeft, 3 * LINE_LEN, " ");
-			result[l] = lineLeft + "    " + lineRight;
+			lineLeft = NMEAUtils.rpad(lineLeft, (3 * LINE_LEN) + 7, " ");
+			result[l + 2] = lineLeft + " |  " + lineRight;
 		}
-
 		return result;
 	}
 
@@ -73,4 +86,11 @@ public class DumpUtil {
 		return ch >= 32 && ch < 127;
 	}
 
+	public static void main(String... args) {
+		String forTests = "$GPGSA,A,3,07,17,30,11,28,13,01,19,,,,,2.3,1.4,1.9*3D";
+		String[] dd = dualDump(forTests);
+		for (String l : dd) {
+			System.out.println(l);
+		}
+	}
 }
