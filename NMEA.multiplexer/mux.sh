@@ -16,7 +16,8 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.rpi.demo.properties"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.5.properties"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.7.properties"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.5.properties"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.in.out.properties"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
 #
@@ -34,5 +35,5 @@ REMOTE_DEBUG_FLAGS=
 LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # use sudo on Raspberry PI
-java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 #
