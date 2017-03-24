@@ -15,8 +15,8 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.rpi.demo.properties"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.7.properties"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.rpi.demo.properties"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.7.properties"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.5.properties"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=nmea.mux.in.out.properties"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
