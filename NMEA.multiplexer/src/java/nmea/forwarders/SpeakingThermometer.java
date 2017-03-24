@@ -6,7 +6,7 @@ import util.TextToSpeech;
 
 /**
  * This is a {@link Forwarder}, speaking the air temperature
- * when it changes of more than one Celcius.
+ * when it changes of more than one degree Celcius.
  * <br>
  * It can be loaded dynamically. As such, it can be set only from the properties file
  * used at startup. It - for now - cannot be managed from the Web UI.
@@ -38,7 +38,7 @@ public class SpeakingThermometer implements Forwarder {
 				double airTemp = StringParsers.parseMTA(str);
 				if (Math.abs(airTemp - previousTemp) >= 1.0) {
 					previousTemp = airTemp;
-					TextToSpeech.speak(String.format("Temperature is now %.2f degrees Celcius.", airTemp));
+					TextToSpeech.speak(String.format("Temperature is now %.1f degrees Celcius.", airTemp));
 				}
 			}
 		}
