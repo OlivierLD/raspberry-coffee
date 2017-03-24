@@ -315,7 +315,7 @@ var forwarderList = function() {
             var type = json[i].type;
             switch (type) {
                 case 'file':
-                    html += ("<tr><td><b>file</b></td><td>" + json[i].log + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>file</b></td><td>" + json[i].log + " (append:" + json[i].append + ")</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'serial':
                     html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");

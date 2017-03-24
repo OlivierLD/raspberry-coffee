@@ -747,7 +747,7 @@ public class RESTImplementation {
 								.findFirst();
 				if (!opFwd.isPresent()) {
 					try {
-						Forwarder fileForwarder = new DataFileWriter(fileJson.getLog());
+						Forwarder fileForwarder = new DataFileWriter(fileJson.getLog(), fileJson.append());
 						nmeaDataForwarders.add(fileForwarder);
 						String content = new Gson().toJson(fileForwarder.getBean());
 						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());

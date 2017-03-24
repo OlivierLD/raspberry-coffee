@@ -8,11 +8,16 @@ import java.util.Properties;
 public class DataFileWriter implements Forwarder {
 	private BufferedWriter dataFile;
 	private String log;
+	private boolean append = false;
 
 	public DataFileWriter(String fName) throws Exception {
+		this(fName, false);
+	}
+	public DataFileWriter(String fName, boolean append) throws Exception {
 		this.log = fName;
+		this.append = append;
 		try {
-			this.dataFile = new BufferedWriter(new FileWriter(fName));
+			this.dataFile = new BufferedWriter(new FileWriter(fName, append));
 		} catch (Exception ex) {
 			System.err.println(String.format("When creating [%s]", fName));
 			throw ex;
@@ -47,16 +52,19 @@ public class DataFileWriter implements Forwarder {
 	public static class DataFileBean {
 		private String cls;
 		private String log;
+		private boolean append;
 		private String type = "file";
 
 		public DataFileBean(DataFileWriter instance) {
 			cls = instance.getClass().getName();
 			log = instance.log;
+			append = instance.append;
 		}
 
 		public String getLog() {
 			return log;
 		}
+		public boolean append() { return append; }
 	}
 
 	@Override
