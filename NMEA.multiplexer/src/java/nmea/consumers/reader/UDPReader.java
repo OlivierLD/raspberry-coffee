@@ -35,6 +35,14 @@ public class UDPReader extends NMEAReader {
 	private InetAddress group = null;
 	private DatagramSocket dsocket = null;
 
+	public int getPort() {
+		return this.udpport;
+	}
+
+	public String getHostname() {
+		return this.host;
+	}
+
 	@Override
 	public void startReader() {
 		System.out.println("From " + getClass().getName() + " Reading UDP Port " + udpport);
@@ -45,9 +53,9 @@ public class UDPReader extends NMEAReader {
 				dsocket = new MulticastSocket(udpport);
 				((MulticastSocket) dsocket).joinGroup(address);
 				group = address;
-			} else
+			} else {
 				dsocket = new DatagramSocket(udpport, address);
-
+			}
 
 			byte buffer[] = new byte[4096];
 			String s;
@@ -161,7 +169,7 @@ public class UDPReader extends NMEAReader {
 				}
 			} catch (SocketException se) {
 				// Socket closed?
-				if (!"socket closed".equals(se.getMessage()))
+				if (!"Socket closed".equals(se.getMessage()))
 					System.out.println(">>>>> " + this.getClass().getName() + ":" + se.getMessage());
 			} catch (Exception ex) {
 				ex.printStackTrace();
