@@ -40,7 +40,7 @@ The MUX _reads_ from `channels` and _writes_ to `forwarders`.
 
 A _channel_ is an NMEA data provider, a _forwarder_ is an NMEA data producer.
 
-<table border="1">
+<table border="1" style="color: blue;">
 <tr>
 <td>
 Just to insist: A <i>channel</i> is an NMEA data provider. This means that it produces (pure) NMEA Sentences!!
