@@ -40,6 +40,16 @@ The MUX _reads_ from `channels` and _writes_ to `forwarders`.
 
 A _channel_ is an NMEA data provider, a _forwarder_ is an NMEA data producer.
 
+<table border="1">
+<tr>
+<td>
+Just to insist: A <i>channel</i> is an NMEA data provider. This means that it produces (pure) NMEA Sentences!!
+This is <i>pure</i> NMEA. Nothing fancy like a JSON Object or whatever object representing the same data in another format.
+NMEA is already a well known and well defined format.
+</td>
+</tr>
+</table>
+
 In addition, we can have _sensors_. A _sensor_ is reading data from a transducer, and produces NMEA sentences read by the Mux. In other words, a _sensor_ is talking to the Multiplexer,
 and can be seen as a _channel_.
 
