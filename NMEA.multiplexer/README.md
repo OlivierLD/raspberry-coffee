@@ -83,7 +83,7 @@ Forwarders:
 Sensors:
 - **BME280** reads raw data from a BME280 sensor (Temperature, Pressure, Humidity), and produces `XDR` and `MDA` NMEA Sentences.
 - **BMP180** reads raw data from a BMP180 sensor (Temperature, Pressure), and produces `XDR` and `MDA` NMEA Sentences.
-- **HTU21d-F** reads raw data from a HTU21D-F sensor (Temperature, Humidity), and produces `XDR` NMEA Sentences.
+- **HTU21D-F** reads raw data from a HTU21D-F sensor (Temperature, Humidity), and produces `XDR` NMEA Sentences.
 - **LSM303** reads raw data from a LSM303 sensor (3D magnetometer), and produces `XDR` NMEA Sentences.
 ![I2C Wiring](./docimages/i2c.png "Sample I2C Wiring for BME280 & LSM303")
 
