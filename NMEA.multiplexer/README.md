@@ -481,6 +481,7 @@ have another one, using a broker URL like `tcp://io.adafruit.com:1883`. Currentl
 
 ## Open Issues
 - UDP client
+  - Needs some cleanup...
 
 ## Demos
 
@@ -498,5 +499,9 @@ Thread view, with thread names
 ## Examples!!
 
 They are [here](./examples.md).
+
+## Case Studies
+- [NMEA Multiplexer on a Raspberry PI Zero W](./casestudy.md). Compared with Node-RED.
+
 
 -------------------------------
