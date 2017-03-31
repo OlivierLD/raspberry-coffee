@@ -35,6 +35,7 @@ To enable the replay of NMEA log file, we've created an extra node, available [h
 To make sure we have equivalent features in both cases (Java & Node-RED), we also need an implementation in Node-RED of the features of
 the BME280. More details about that soon.
 
+_Work in Progress..._
 
 ---
 _March 2017_

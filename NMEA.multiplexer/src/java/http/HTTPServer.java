@@ -273,8 +273,9 @@ public class HTTPServer {
 						boolean inPayload = false;
 						StringBuffer sb = new StringBuffer();
 						boolean keepReading = true;
-						if (verbose)
+						if (verbose) {
 							Context.getInstance().getLogger().info(">>> Top of the loop <<<");
+						}
 						while (keepReading) {
 							if (top) { // Ugly!! Argh! :(
 								try {
@@ -320,7 +321,7 @@ public class HTTPServer {
 								if (!inPayload) {
 									if (lineAvailable) {
 										if (verbose) {
-//							    System.out.println("HTTP Request line : " + line);
+//							      System.out.println("HTTP Request line : " + line);
 											DumpUtil.displayDualDump(line);
 											System.out.println(); // Blank between lines
 										}
@@ -361,12 +362,10 @@ public class HTTPServer {
 						}
 						if (request != null) {
 							String path = request.getPath();
-
 							if (request.getQueryStringParameters() != null && request.getQueryStringParameters().keySet().contains("verbose")) {
 								String verb = request.getQueryStringParameters().get("verbose");
 								verbose = (verb == null || verb.toUpperCase().equals("YES") || verb.toUpperCase().equals("TRUE") || verb.toUpperCase().equals("ON"));
 							}
-
 							if ("/exit".equals(path)) {
 								System.out.println("Received an exit signal");
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
