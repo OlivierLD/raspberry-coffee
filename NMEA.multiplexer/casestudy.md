@@ -146,7 +146,7 @@ return processed;
  $> sudo chown pi /dev/ttyUSB1
 ```
 
-  Then define a Srial input node as follow:
+  Then define a Serial input node as follow:
 
   ![Serial node](./node-red/08.png)
 
