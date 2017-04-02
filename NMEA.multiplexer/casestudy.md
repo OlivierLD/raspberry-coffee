@@ -145,11 +145,9 @@ return processed;
 ```bash
  $> sudo chown pi /dev/ttyUSB1
 ```
-
   Then define a Serial input node as follow:
 
   ![Serial node](./node-red/08.png)
-
 
 - Add TCP Output
   We also add a TCP output node, defined like this:
@@ -164,8 +162,8 @@ return processed;
 
   ![New Flow](./node-red/07.png)
 
-The function `NMEA Parser` has been modified like this:
-```javacsript
+  The function `NMEA Parser` has been modified like this:
+```javascript
 /*
  * Invoke the NMEA Parser mentioned in the Global settings.
  */
