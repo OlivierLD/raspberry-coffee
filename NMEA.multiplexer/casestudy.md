@@ -30,7 +30,7 @@ Among others:
 
 Node-RED is based on NodeJS, itself based on V8, the Google Chrome's OpenSource JavaScript engine.
 As such, NodeJS - and thus Node-RED - is programmable in JavaScript.
-For those wondering, Java & Javascript are as related to each other than Ham & Hamburger (said _John Resig_).
+For those wondering, Java & Javascript are as related to each other as Ham & Hamburger (said _John Resig_).
 
 To enable the replay of NMEA log file, we've created an extra node, available [here](https://github.com/OlivierLD/node.pi/tree/master/node-red).
 > Reading a file in a synchronous way from JavaScript is not as trivial as it would sound.
