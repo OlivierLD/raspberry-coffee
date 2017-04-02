@@ -147,11 +147,13 @@ return processed;
 ```
 
   Then define a Srial input node as follow:
+
   ![Serial node](./node-red/08.png)
 
 
 - Add TCP Output
   We also add a TCP output node, defined like this:
+
   ![TCP](./node-red/09.png)
 
   We have also added a second output to the function, notice below the final `return` statement.
@@ -246,7 +248,7 @@ The memory and resource footprint seem to be smaller in the Java case, which is 
 Node-RED being way more generic.
 
 #### Conclusion?
-I like both. Even if I have written the Java implementation myself, Node-RED also has some very coll features out-of-the-box.
+I like both. Even if I have written the Java implementation myself, Node-RED also has some very cool features out-of-the-box.
 
 ---
 _March, April 2017_
