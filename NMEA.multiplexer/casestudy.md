@@ -242,7 +242,7 @@ The Java implementation allows several `properties` file to be written, and chos
 be dynamically modified, even if already running.
 That is a bit less flexible with Node-RED.
 
-The memory and resource footprint seem to be smaller in the Java case, which is not un-expectd, as the Java implementation is dedicated to this Multiplexer,
+The memory and resource footprint seem to be smaller in the Java case, which is not unexpected, as the Java implementation is dedicated to this Multiplexer,
 Node-RED being way more generic.
 
 #### Conclusion?
