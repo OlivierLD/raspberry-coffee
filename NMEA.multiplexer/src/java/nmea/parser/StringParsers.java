@@ -18,14 +18,12 @@ import util.GeomUtil;
 public class StringParsers {
   /* 
    * Generic form is
-   * $<talker ID><sentence ID,>[parameter 1],[parameter 2],...[<*checksum>]<CR><LF>
+   * $<talker ID><sentence ID,>[parameter 1],[parameter 2],...[<*checksum>]<CR><LF> (\r\n)
    * 
    * TASK Implement the following:
    * 
    * MDW Surface Wind, direction and velocity
-   * VDR Set and Drift
    * VPW Device measured velocity parallel true wind
-   * VWT True Wind relative bearing and velocity -> Complete
    * ZLZ Time of Day
    */
 

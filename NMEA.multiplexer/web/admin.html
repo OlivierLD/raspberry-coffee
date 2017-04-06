@@ -551,6 +551,7 @@
             document.getElementById('showChannels').className = (div.id === 'showChannels' ? 'selectedButton' : 'unselectedButton');
             document.getElementById('showForwarders').className = (div.id === 'showForwarders' ? 'selectedButton' : 'unselectedButton');
             document.getElementById('showComputers').className = (div.id === 'showComputers' ? 'selectedButton' : 'unselectedButton');
+            document.getElementById('showDiagram').className = (div.id === 'showDiagram' ? 'selectedButton' : 'unselectedButton');
             switch (div.id) {
                 case 'showPorts':
                     serialPortList();
@@ -563,6 +564,9 @@
                     break;
                 case 'showComputers':
                     computerList();
+                    break;
+                case 'showDiagram':
+                    generateDiagram();
                     break;
                 default:
                     break;
@@ -589,6 +593,7 @@
       <span id="showChannels" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Channels list <img src="refresh_icon.png" width="10" height="12"/></span>
       <span id="showForwarders" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Forwarders list <img src="refresh_icon.png" width="10" height="12"/></span>
       <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showDiagram" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Diagram (<i>WiP</i>) <img src="refresh_icon.png" width="10" height="12"/></span>
       <button onclick="resetCache();" style="margin-bottom: 3px;">Reset Cache</button>
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
     </div>

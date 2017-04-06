@@ -33,27 +33,42 @@ public class DumpUtil {
 		return dualDump(ba);
 	}
 
+	private static String separator() {
+		String sep = "---+-";
+		for (int i=0; i<LINE_LEN; i++) {
+			sep += "---";
+		}
+		sep += "-+--";
+		for (int i=0; i<LINE_LEN; i++) {
+			sep += "-";
+		}
+		return sep;
+	}
+
 	/*
 	 * Readable + HexASCII code.
 	 * @see LINE_LEN member
 	 */
 	public static String[] dualDump(byte[] ba) {
+
+		if (ba == null || ba.length == 0) {
+			return new String[0];
+		}
+
 		int dim = ba.length / LINE_LEN;
-		String[] result = new String[dim + 3]; // 2 first lines are labels
-		String first = "     ";
+		String[] result = new String[dim + 5]; // 2 first lines are labels
+
+		int lineIdx = 0;
+		result[lineIdx++] = separator();
+
+		String first = "   | ";
 		for (int i=0; i<LINE_LEN; i++) {
 			first += (NMEAUtils.lpad(Integer.toHexString(i & 0xFF).toUpperCase(), 2, "x") + " ");
 		}
-		result[0] = first;
-		String second = "---+-";
-		for (int i=0; i<LINE_LEN; i++) {
-			second += "---";
-		}
-		second += "-+--";
-		for (int i=0; i<LINE_LEN; i++) {
-			second += "-";
-		}
-		result[1] = second;
+		first += " |";
+		result[lineIdx++] = first;
+
+		result[lineIdx++] = separator();
 
 		for (int l = 0; l < (dim + 1); l++) {
 			String lineLeft = (NMEAUtils.lpad(Integer.toHexString(l & 0xFF).toUpperCase(), 2, "0") + " | ");
@@ -64,8 +79,10 @@ public class DumpUtil {
 				lineRight += (isAsciiPrintable((char) ba[c]) ? (char) ba[c] : ".");
 			}
 			lineLeft = NMEAUtils.rpad(lineLeft, (3 * LINE_LEN) + 5, " ");
-			result[l + 2] = lineLeft + " |  " + lineRight;
+			result[lineIdx++] /*[l + 3]*/ = lineLeft + " |  " + lineRight;
 		}
+		result[lineIdx++] = separator();
+
 		return result;
 	}
 
