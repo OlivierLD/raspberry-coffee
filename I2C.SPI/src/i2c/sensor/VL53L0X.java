@@ -124,9 +124,9 @@ public class VL53L0X {
 			System.out.println(sb.toString().trim());
 		}
 
-		int ambientCount =  ((data[7] & 0xFF) << 8) | (data[6] & 0xFF); // TODO Check endianness
-		int signalCount =  ((data[9] & 0xFF) << 8) | (data[8] & 0xFF); // TODO Check endianness
-		int distance =  ((data[11] & 0xFF) << 8) | (data[10] & 0xFF); // TODO Check endianness
+		int ambientCount =  ((data[6] & 0xFF) << 8) | (data[7] & 0xFF); // TODO Check endianness
+		int signalCount =  ((data[8] & 0xFF) << 8) | (data[9] & 0xFF); // TODO Check endianness
+		int distance =  ((data[10] & 0xFF) << 8) | (data[11] & 0xFF); // TODO Check endianness
 		int deviceRangeStatusInternal = ((data[0] & 0x78) >> 3);
 
 		return new VL53L0XData(ambientCount, signalCount, deviceRangeStatusInternal, distance);
