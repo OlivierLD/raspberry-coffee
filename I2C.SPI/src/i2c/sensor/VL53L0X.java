@@ -6,14 +6,12 @@ import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import i2c.sensor.utils.EndianReaders;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /*
  * I2C Time of Flight distance sensor, 30 to 1000 mm.
  * https://www.adafruit.com/products/3317
+ *
+ * Basic implementation
  */
 public class VL53L0X {
 	public final static int VL53L0X_I2CADDR = 0x29;
@@ -54,7 +52,6 @@ public class VL53L0X {
 			if (verbose) {
 				System.out.println("Connected to device. OK.");
 			}
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -82,7 +79,6 @@ public class VL53L0X {
 
 	public void startRanging(int mode) throws Exception {
 		if (mode >= VL53L0X_GOOD_ACCURACY_MODE && mode <= VL53L0X_HIGH_SPEED_MODE) {
-
 			this.vl53l0x.write(VL53L0X_REG_SYSRANGE_START, (byte)0x01);
 			// Waiting for the device to be ready
 			final int NB_TRY = 100; // 1 sec max
@@ -124,9 +120,9 @@ public class VL53L0X {
 			System.out.println(sb.toString().trim());
 		}
 
-		int ambientCount =  ((data[6] & 0xFF) << 8) | (data[7] & 0xFF); // TODO Check endianness
-		int signalCount =  ((data[8] & 0xFF) << 8) | (data[9] & 0xFF); // TODO Check endianness
-		int distance =  ((data[10] & 0xFF) << 8) | (data[11] & 0xFF); // TODO Check endianness
+		int ambientCount = ((data[6] & 0xFF) << 8) | (data[7] & 0xFF);
+		int signalCount = ((data[8] & 0xFF) << 8) | (data[9] & 0xFF);
+		int distance = ((data[10] & 0xFF) << 8) | (data[11] & 0xFF);
 		int deviceRangeStatusInternal = ((data[0] & 0x78) >> 3);
 
 		return new VL53L0XData(ambientCount, signalCount, deviceRangeStatusInternal, distance);
@@ -176,7 +172,6 @@ public class VL53L0X {
 	public static void main(String... args) {
 
 //		int[] spam = new int[] { 0x00, 0x01, 0x03, 0x02 };
-//
 //		System.out.println(Arrays.stream(spam)
 //						.boxed()
 //						.map(b -> String.format("0x%02X", b))
@@ -185,12 +180,13 @@ public class VL53L0X {
 		try {
 			VL53L0X vl53l0x = new VL53L0X();
 			System.out.println(String.format("Revision %d, device ID %d ", vl53l0x.getRevision(), vl53l0x.getDeviceID()));
-
+			System.out.println();
 			vl53l0x.startRanging(VL53L0X.VL53L0X_BETTER_ACCURACY_MODE);
-			for (int i=0; i<10; i++) {
+			int howMany = 1000;
+			for (int i=0; i<howMany; i++) {
 				int distance = vl53l0x.getDistance();
-				System.out.println(String.format("Distance:%d", distance));
-				if (i < 9) {
+				System.out.println(String.format("Distance:%d mm", distance));
+				if (i < (howMany - 2)) {
 					try {
 						Thread.sleep(10); // 10ms
 					} catch (InterruptedException ie) {
