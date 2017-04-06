@@ -1,6 +1,13 @@
-apply plugin: 'java'
-compileJava.options.encoding = 'ISO-8859-1'
-apply plugin: 'maven'
+plugins {
+  id 'java'
+  id 'scala'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+//apply plugin: 'java'
+//compileJava.options.encoding = 'ISO-8859-1'
+//apply plugin: 'maven'
 
 def userprofile = System.getenv()['USERPROFILE'] // On Windows...
 if (userprofile == null) { // Linux ?
@@ -75,3 +82,6 @@ task runLedPanel(type: JavaExec, dependsOn: build, description: "Run the LED pan
   classpath sourceSets.main.output.classesDir
 }
 
+shadowJar {
+  zip64 true
+}
