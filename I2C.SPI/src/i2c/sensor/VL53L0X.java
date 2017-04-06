@@ -189,7 +189,7 @@ public class VL53L0X {
 			vl53l0x.startRanging(VL53L0X.VL53L0X_BETTER_ACCURACY_MODE);
 			for (int i=0; i<10; i++) {
 				int distance = vl53l0x.getDistance();
-				System.out.println(String.format("Distance:%f", distance));
+				System.out.println(String.format("Distance:%d", distance));
 				if (i < 9) {
 					try {
 						Thread.sleep(10); // 10ms
