@@ -403,8 +403,16 @@ var computerList = function() {
 
 
 var buildTable = function (channels, forwarders) {
-    var html = "<table width='100%'><tr><th width='40%'>Pulled in</th><th width='20%'></th><th width='40%'>Pushed out</th></tr><tr><td valign='middle' align='center'>" + channels + "</td><td valign='middle' align='center'>MUX</td><td valign='middle' align='center'>" + forwarders + "</td></table>";
+    var html = "<table width='100%'><tr><th width='45%'>Pulled in</th><th width='10%'></th><th width='45%'>Pushed out</th></tr><tr><td valign='middle' align='center'>" + channels + "</td><td valign='middle' align='center'><b><i>MUX</i></b></td><td valign='middle' align='center'>" + forwarders + "</td></table>";
     return html;
+};
+
+var valueOrText = function(value, ifEmpty) {
+    if (value === undefined || value === null || value.trim().length === 0) {
+        return "<span style='color: lightgrey;'>" + ifEmpty + "</span>";
+    } else {
+        return value;
+    }
 };
 
 var generateDiagram = function () {
@@ -425,31 +433,57 @@ var generateDiagram = function () {
             var type = json[i].type;
             switch (type) {
                 case 'file':
-                    html += ("<tr><td><b>file</b></td><td>" + json[i].file + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>file</b></td><td>" + json[i].file +
+                    "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+                    "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Sentence Filter') +
+                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'serial':
-                    html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br +
+                    "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+                    "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'tcp':
-                    html += ("<tr><td><b>tcp</b></td><td>" + json[i].hostname + ":" + json[i].port + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>tcp</b></td><td>" + json[i].hostname + ":" + json[i].port +
+                    "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+                    "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'ws':
-                    html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri +
+                    "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+                    "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'rnd':
-                    html += ("<tr><td><b>rnd</b></td><td></td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>rnd</b></td><td></td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+                    "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'bmp180':
-                    html += ("<tr><td><b>bmp180</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>bmp180</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
+                    "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+                    "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'bme280':
-                    html += ("<tr><td><b>bme280</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>bme280</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
+                    "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+                    "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'htu21df':
-                    html += ("<tr><td><b>htu21df</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>htu21df</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
+                    "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+                    "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 default:
-                    html += ("<tr><td><b><i>" + type + "</i></b></td><td>" + json[i].cls + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b><i>" + type + "</i></b></td><td>" + json[i].cls +
+                    "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
+                    "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
             }
         }
@@ -511,7 +545,7 @@ var generateDiagram = function () {
                     "</td><td valign='top'><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'console':
-                    html += ("<tr><td><b>console</b></td><td></td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td><b>console</b></td><td>" + valueOrText('', 'No parameter') + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 default:
                     html += ("<tr><td><b><i>" + type + "</i></b></td><td>" + json[i].cls + "</td><td><button onclick='removeForwarder(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
