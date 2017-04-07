@@ -169,6 +169,8 @@ var serialPortList = function() {
         html += "<i>No Serial Port available</i>";
     }
     $("#lists").html(html);
+    $("#diagram").css('display', 'none');
+    $("#lists").css('display', 'block');
   });
   getData.fail(function(error, errmess) {
       document.body.style.cursor = 'default';
@@ -284,6 +286,8 @@ var channelList = function() {
         }
         html += "</table>";
         $("#lists").html(html);
+        $("#diagram").css('display', 'none');
+        $("#lists").css('display', 'block');
     });
     getData.fail(function(error, errmess) {
         document.body.style.cursor = 'default';
@@ -346,6 +350,8 @@ var forwarderList = function() {
         }
         html += "</table>";
         $("#lists").html(html);
+        $("#diagram").css('display', 'none');
+        $("#lists").css('display', 'block');
     });
     getData.fail(function(error, errmess) {
         document.body.style.cursor = 'default';
@@ -386,6 +392,8 @@ var computerList = function() {
         }
         html += "</table>";
         $("#lists").html(html);
+        $("#diagram").css('display', 'none');
+        $("#lists").css('display', 'block');
     });
     getData.fail(function(error, errmess) {
         document.body.style.cursor = 'default';
@@ -402,8 +410,14 @@ var computerList = function() {
 };
 
 
-var buildTable = function (channels, forwarders) {
-    var html = "<table width='100%'><tr><th width='45%'>Pulled in</th><th width='10%'></th><th width='45%'>Pushed out</th></tr><tr><td valign='middle' align='center'>" + channels + "</td><td valign='middle' align='center'><b><i>MUX</i></b></td><td valign='middle' align='center'>" + forwarders + "</td></table>";
+var buildTable = function (channels, forwarders, computers) {
+    var html = "<table width='100%'>" +
+        "<tr><th width='45%'>Pulled in</th><th width='10%'></th><th width='45%'>Pushed out</th></tr>" +
+        "<tr><td valign='middle' align='center' rowspan='2'>" + channels + "</td>" +
+        "<td valign='middle' align='center' rowspan='2'><b><i>MUX</i></b></td>" +
+        "<td valign='middle' align='center'>" + forwarders + "</td></tr>" +
+        "<tr><td valign='middle' align='center'><b>" + computers + "</b></td></tr>" +
+        "</table>";
     return html;
 };
 
@@ -420,6 +434,7 @@ var generateDiagram = function () {
     var nbPromises = 0;
     var channelTable = "";
     var forwarderTable = "";
+    var computerTable = "";
 
     var getChannelPromise = getChannels();
     getChannelPromise.done(function(value) {
@@ -436,62 +451,64 @@ var generateDiagram = function () {
                     html += ("<tr><td><b>file</b></td><td>" + json[i].file +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Sentence Filter') +
-                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    "</td><td align='center'><input type='checkbox' title='verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'serial':
                     html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    "</td><td align='center'><input type='checkbox' title='verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'tcp':
                     html += ("<tr><td><b>tcp</b></td><td>" + json[i].hostname + ":" + json[i].port +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    "</td><td align='center'><input type='checkbox' title='verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'ws':
                     html += ("<tr><td><b>ws</b></td><td> " + json[i].wsUri +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    "</td><td align='center'><input type='checkbox' title='verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'rnd':
                     html += ("<tr><td><b>rnd</b></td><td></td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    "</td><td align='center'><input type='checkbox' title='verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'bmp180':
                     html += ("<tr><td><b>bmp180</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    "</td><td align='center'><input type='checkbox' title='verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'bme280':
                     html += ("<tr><td><b>bme280</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    "</td><td align='center'><input type='checkbox' title='verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 case 'htu21df':
                     html += ("<tr><td><b>htu21df</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    "</td><td align='center'><input type='checkbox' title='verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 default:
                     html += ("<tr><td><b><i>" + type + "</i></b></td><td>" + json[i].cls +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-                    "</td><td align='center'><input type='checkbox' title='Verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    "</td><td align='center'><input type='checkbox' title='verbose' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
             }
         }
         html += "</table>";
         channelTable = html;
         nbPromises += 1;
-        if (nbPromises === 2) {
-            $("#lists").html(buildTable(channelTable, forwarderTable));
+        if (nbPromises === 3) {
+            $("#diagram").html(buildTable(channelTable, forwarderTable, computerTable));
+            $("#diagram").css('display', 'block');
+            $("#lists").css('display', 'none');
         }
     });
     getChannelPromise.fail(function(error, errmess) {
@@ -503,10 +520,15 @@ var generateDiagram = function () {
             } else {
                 message = errmess;
             }
+        } else {
+            message = 'Failed to get the channels';
         }
+        channelTable = message;
         nbPromises += 1;
-        if (nbPromises === 2) {
-            $("#lists").html(buildTable(channelTable, forwarderTable));
+        if (nbPromises === 3) {
+            $("#diagram").html(buildTable(channelTable, forwarderTable, computerTable));
+            $("#diagram").css('display', 'block');
+            $("#lists").css('display', 'none');
         }
         errManager.display("Failed to get channels list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
@@ -555,8 +577,10 @@ var generateDiagram = function () {
         html += "</table>";
         forwarderTable = html;
         nbPromises += 1;
-        if (nbPromises === 2) {
-            $("#lists").html(buildTable(channelTable, forwarderTable));
+        if (nbPromises === 3) {
+            $("#diagram").html(buildTable(channelTable, forwarderTable, computerTable));
+            $("#diagram").css('display', 'block');
+            $("#lists").css('display', 'none');
         }
     });
     getForwarderPromise.fail(function(error, errmess) {
@@ -568,12 +592,65 @@ var generateDiagram = function () {
             } else {
                 message = errmess;
             }
+        } else {
+            message = 'Failed to get the Forwarders';
         }
+        forwarderTable = message;
         nbPromises += 1;
-        if (nbPromises === 2) {
-            $("#lists").html(buildTable(channelTable, forwarderTable));
+        if (nbPromises === 3) {
+            $("#diagram").html(buildTable(channelTable, forwarderTable, computerTable));
+            $("#diagram").css('display', 'block');
+            $("#lists").css('display', 'none');
         }
         errManager.display("Failed to get forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
+
+    var getComputerPromise = getComputers();
+    getComputerPromise.done(function(value) {
+        var before = new Date().getTime();
+        var after = new Date().getTime();
+        document.body.style.cursor = 'default';
+        var json = JSON.parse(value);
+        setRESTPayload(json, (after - before));
+        var html = "<table>";
+        for (var i=0; i<json.length; i++) {
+            var type = json[i].type;
+            switch (type) {
+                case 'tw-current':
+                    html += ("<tr><td valign='top'><b>tw-current</b></td><td valign='top'>Prefix: " + json[i].prefix + "<br>Timebuffer length: " + json[i].timeBufferLength.toLocaleString() + " ms.</td><td valign='top' align='center'><input type='checkbox' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    break;
+                default:
+                    html += ("<tr><td valign='top'><b><i>" + type + "</i></b></td><td valign='top'>" + json[i].cls + "</td><td valign='top' align='center'><input type='checkbox' title='verbose' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    break;
+            }
+        }
+        html += "</table>";
+        computerTable = html;
+        nbPromises += 1;
+        if (nbPromises === 3) {
+            $("#diagram").html(buildTable(channelTable, forwarderTable, computerTable));
+            $("#diagram").css('display', 'block');
+            $("#lists").css('display', 'none');
+        }
+    });
+    getComputerPromise.fail(function(error, errmess) {
+        document.body.style.cursor = 'default';
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        computerTable = message;
+        nbPromises += 1;
+        if (nbPromises === 3) {
+            $("#diagram").html(buildTable(channelTable, forwarderTable, computerTable));
+            $("#diagram").css('display', 'block');
+            $("#lists").css('display', 'none');
+        }
+        errManager.display("Failed to get nmea.computers list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 
