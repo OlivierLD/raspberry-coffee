@@ -3,6 +3,7 @@
  */
 /*
  * See custom properties in CSS.
+ * =============================
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/--*
  * Relies on a rule named .analogdisplay, like that:
  *
