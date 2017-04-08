@@ -434,7 +434,8 @@ identical to the elements returned by `GET /forwarders`.
 
 There is a Web UI using the REST resources above.
 
-_Note_: This Web UI is to be considered  as an example of the way to access the resources. Nothing more.
+_Note_: This Web UI is to be considered  as an **example** of the way to access the resources. Nothing more. Best case scenario, a
+UI Developer might find it cute...
 
 On the HTTP Port, use a url like `http://machine-name:9999/web/admin.html`,
 where `machine-name` is the name of the machine where the multiplexer is running, and `9999` is the port defined in the properties.
@@ -447,6 +448,9 @@ And any REST client (NodeJS, Postman, your own code, ...) does the job.
 
 You can also visualize the REST traffic if needed; `In (server to client)` on the left, `Out (client to server)` on the right.
 
+![With graph](./docimages/with.graph.png "With Traffic Graph")
+
+Click on the Flow value (top-right) to show/hide the graph.
 ## Dynamic loading
 You have the possibility to dynamically load Channels, Forwarders and Computers.
 
