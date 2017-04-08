@@ -295,8 +295,8 @@ Same if you want the HTTP server to be started or not.
 with.http.server=yes
 http.port=9999
 ```
-This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
-It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
+> This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
+> It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
 ### Supported REST end-points
 
@@ -434,8 +434,8 @@ identical to the elements returned by `GET /forwarders`.
 
 There is a Web UI using the REST resources above.
 
-_Note_: This Web UI is to be considered  as an **example** of the way to access the resources. Nothing more. Best case scenario, a
-UI Developer might find it cute...
+> _Note_: This Web UI is to be considered  as an **example** of the way to access the resources. Nothing more. Best case scenario, a
+> UI Developer might find it cute...
 
 On the HTTP Port, use a url like `http://machine-name:9999/web/admin.html`,
 where `machine-name` is the name of the machine where the multiplexer is running, and `9999` is the port defined in the properties.
@@ -451,6 +451,12 @@ You can also visualize the REST traffic if needed; `In (server to client)` on th
 ![With graph](./docimages/with.graph.png "With Traffic Graph")
 
 Click on the Flow value (top-right) to show/hide the graph.
+
+> The cool thing in this context is that whatever complex the rendering (what the user sees) looks like, the complexity
+> belongs to the renderer (i.e. the client, the web browser in this case). The server is only responsible for providing the _raw_ data
+> the graph is based on; and typically here, providing the data is certainly not the most complex part, pinging the server does the job...
+> As a matter of fact, a small board like a Raspberry PI Zero can **_totally_** assume it, without noticing.
+
 ## Dynamic loading
 You have the possibility to dynamically load Channels, Forwarders and Computers.
 
@@ -464,8 +470,8 @@ forward.03.cls=nmea.forwarders.ProcessorSkeleton
 ```
 This `ProcessorSkeleton` is part of the project, it is provided as an example you can start from to develop your own forwarders.
 
-_Note_: Dynamically loaded classes can also be managed from the REST admin interface.
-Use the `Custom` label when creating them.
+> _Note_: Dynamically loaded classes can also be managed from the REST admin interface.
+> Use the `Custom` label when creating them.
 
 They will show up in the admin interface, with their id in _italic_.
 ![Admin Web UI](./docimages/dynamic.png "Admin GUI")
