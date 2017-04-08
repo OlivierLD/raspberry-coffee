@@ -124,6 +124,21 @@ var deleteChannel = function(channel) {
     return getDeferred('/channels/' + channel.type, DEFAULT_TIMEOUT, 'DELETE', 204, channel);
 };
 
+var pushData = function(flow) {
+    if (false && flowData.length < (INIT_SIZE - 1)) {
+        flowData.splice(0, 1);
+        flowData.push(new Tuple(flowData.length, flow));
+    } else {
+        flowData.push(new Tuple(flowData.length, flow));
+    }
+    $("#flow").text(flow + " bytes/sec.");
+    if (GRAPH_MAX_LEN !== undefined && flowData.length > GRAPH_MAX_LEN) {
+        while (flowData.length > GRAPH_MAX_LEN) {
+            flowData.splice(0, 1);
+        }
+    }
+};
+
 var dataVolume = function() {
   // No REST traffic for this one.
     var getData = getVolume();
@@ -133,7 +148,7 @@ var dataVolume = function() {
         var elapsed = currentTime - json.started;
         var volume = json["nmea-bytes"];
         var flow = Math.round(volume / (elapsed / 1000));
-        $("#flow").text(flow + " bytes/sec.");
+        pushData(flow);
     });
     getData.fail(function(error, errmess) {
         var message;
@@ -145,6 +160,7 @@ var dataVolume = function() {
             }
         }
         errManager.display("Failed to get the flow status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        pushData(0);
     });
 
 };
