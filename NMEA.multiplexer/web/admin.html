@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<!--
+ | This is an example illustrating the way to use the
+ | REST API provided to administer the NMEA Multiplexer
+ | Provided "as is".
+ | The main goal is to have something LIGHT!
+ | It needs to runfine, even on small boards like the Raspberry PI Zero,
+ | and for now, it does.
+ |
+ | Also see restskill.js.
+ +-->
 <html>
   <head>
     <title>NMEA Multiplexer Admin</title>
@@ -593,11 +603,12 @@
       <span id="showChannels" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Channels list <img src="refresh_icon.png" width="10" height="12"/></span>
       <span id="showForwarders" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Forwarders list <img src="refresh_icon.png" width="10" height="12"/></span>
       <span id="showComputers" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Fetch Computers list <img src="refresh_icon.png" width="10" height="12"/></span>
-      <span id="showDiagram" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Diagram (<i>WiP</i>) <img src="refresh_icon.png" width="10" height="12"/></span>
+      <span id="showDiagram" onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Full view <img src="refresh_icon.png" width="10" height="12"/></span>
       <button onclick="resetCache();" style="margin-bottom: 3px;">Reset Cache</button>
       <input type='checkbox' onchange='manageMuxVerbose(this);'> Multiplexer verbose
     </div>
     <div id="lists" style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 200px; overflow-y: scroll;"></div>
+    <div id="diagram" style="display: none; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px;"></div>
     <div id="show-hide-raw-data" onclick="showHideRESTData();" style="cursor: pointer; margin-top: 5px;"><small>&nbsp;<img src='panright.gif'> Show REST Traffic</small></div>
     <div id="raw-data-div" style="display: none;">
       <table width="100%" border="0">
