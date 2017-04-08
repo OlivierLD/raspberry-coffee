@@ -383,10 +383,10 @@ var computerList = function() {
             var type = json[i].type;
             switch (type) {
                 case 'tw-current':
-                    html += ("<tr><td valign='top'><b>tw-current</b></td><td valign='top'>Prefix: " + json[i].prefix + "<br>Timebuffer length: " + json[i].timeBufferLength.toLocaleString() + " ms.</td><td valign='top' align='center'><input type='checkbox' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td valign='top'><b>tw-current</b></td><td valign='top'>Prefix: " + json[i].prefix + "<br>Timebuffer length: " + json[i].timeBufferLength.toLocaleString() + " ms.</td><td valign='top' align='center'><input type='checkbox' title='verbose' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 default:
-                    html += ("<tr><td valign='top'><b><i>" + type + "</i></b></td><td valign='top'>" + json[i].cls + "</td><td valign='top' align='center'><input type='checkbox' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td valign='top'><b><i>" + type + "</i></b></td><td valign='top'>" + json[i].cls + "</td><td valign='top' align='center'><input type='checkbox' title='verbose' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
             }
         }
@@ -413,10 +413,10 @@ var computerList = function() {
 var buildTable = function (channels, forwarders, computers) {
     var html = "<table width='100%'>" +
         "<tr><th width='45%'>Pulled in</th><th width='10%'></th><th width='45%'>Pushed out</th></tr>" +
-        "<tr><td valign='middle' align='center' rowspan='2'>" + channels + "</td>" +
+        "<tr><td valign='middle' align='center' rowspan='2' title='Channels'>" + channels + "</td>" +
         "<td valign='middle' align='center' rowspan='2'><b><i>MUX</i></b></td>" +
-        "<td valign='middle' align='center'>" + forwarders + "</td></tr>" +
-        "<tr><td valign='middle' align='center'><b>" + computers + "</b></td></tr>" +
+        "<td valign='middle' align='center' title='Forwarders'>" + forwarders + "</td></tr>" +
+        "<tr><td valign='middle' align='center' title='Computers'>" + computers + "</td></tr>" +
         "</table>";
     return html;
 };
@@ -523,7 +523,7 @@ var generateDiagram = function () {
         } else {
             message = 'Failed to get the channels';
         }
-        channelTable = message;
+        channelTable = "<span style='color: red;'>" + message + "</span>";
         nbPromises += 1;
         if (nbPromises === 3) {
             $("#diagram").html(buildTable(channelTable, forwarderTable, computerTable));
@@ -595,7 +595,7 @@ var generateDiagram = function () {
         } else {
             message = 'Failed to get the Forwarders';
         }
-        forwarderTable = message;
+        forwarderTable = "<span style='color: red;'>" + message + "</span>";
         nbPromises += 1;
         if (nbPromises === 3) {
             $("#diagram").html(buildTable(channelTable, forwarderTable, computerTable));
@@ -617,7 +617,7 @@ var generateDiagram = function () {
             var type = json[i].type;
             switch (type) {
                 case 'tw-current':
-                    html += ("<tr><td valign='top'><b>tw-current</b></td><td valign='top'>Prefix: " + json[i].prefix + "<br>Timebuffer length: " + json[i].timeBufferLength.toLocaleString() + " ms.</td><td valign='top' align='center'><input type='checkbox' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                    html += ("<tr><td valign='top'><b>tw-current</b></td><td valign='top'>Prefix: " + json[i].prefix + "<br>Timebuffer length: " + json[i].timeBufferLength.toLocaleString() + " ms.</td><td valign='top' align='center'><input type='checkbox' title='verbose' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                     break;
                 default:
                     html += ("<tr><td valign='top'><b><i>" + type + "</i></b></td><td valign='top'>" + json[i].cls + "</td><td valign='top' align='center'><input type='checkbox' title='verbose' onchange='manageComputerVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose === true ? " checked" : "") + "></td><td valign='top'><button onclick='removeComputer(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
@@ -643,7 +643,7 @@ var generateDiagram = function () {
                 message = errmess;
             }
         }
-        computerTable = message;
+        computerTable = "<span style='color: red;'>" + message + "</span>";
         nbPromises += 1;
         if (nbPromises === 3) {
             $("#diagram").html(buildTable(channelTable, forwarderTable, computerTable));
