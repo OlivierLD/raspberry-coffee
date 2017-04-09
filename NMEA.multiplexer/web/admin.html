@@ -56,6 +56,34 @@
         height: 100px;
       }
 
+      .graphdisplay {
+
+        --tooltip-color: rgba(250, 250, 210, .7);
+        --tooltip-text-color: black;
+        --with-bg-gradient: true;
+        --bg-gradient-from: rgba(0,0,0,0);
+        --bg-gradient-to: cyan;
+
+        --bg-color: LightGray; /* used if --with-bg-gradient: false */
+
+        --horizontal-grid-color: gray;
+        --horizontal-grid-text-color: black;
+        --vertical-grid-color: gray;
+        --vertical-grid-text-color: black;
+
+        --raw-data-line-color: green;
+        --fill-raw-data: true;
+        --raw-data-fill-color: rgba(0, 255, 0, 0.35); /* used if --fill-raw-data: true */
+
+        --smooth-data-line-color: red;
+        --fill-smooth-data: true;
+        --smooth-data-fill-color: rgba(0, 255, 0, 0.35); /* used if --fill-smooth-data: true */
+
+        --clicked-index-color: orange;
+
+        --font: Arial;
+      }
+
     </style>
     <script type="text/javascript">
 
@@ -592,26 +620,36 @@
 
         var flowGraph; // The graph itself.
         var flowData = [];
-        var GRAPH_MAX_LEN = 300;
+        var GRAPH_MAX_LEN = 300; // 60 = 1 minute
+
+        var idx2plot;
+
+        var graphCallback = function(idx) {
+            console.log("Click on pos " + idx + ", flow " + flowData[idx].getY());
+            idx2plot = idx;
+        };
+
         window.onload = function() {
           // Available when canvas is visible
 //        var canvasWidth = document.getElementById("flowCanvas").getContext('2d').canvas.clientWidth;
 //        console.log("Canvas Width:" + canvasWidth);
-          flowGraph = new Graph("flowCanvas", flowData, null, "b/s");
+          flowGraph = new Graph("flowCanvas", flowData, graphCallback, "b/s");
 
           var interv = setInterval(function() {
               dataVolume();
-              flowGraph.drawGraph("flowCanvas", flowData); //, flowData.length);
+              flowGraph.drawGraph("flowCanvas", flowData, idx2plot);
           }, 1000);
         };
 
         var graphVisible = false;
         var showHideGraph = function() {
-            if (flowData.length > 10) {
+            if (flowData.length >= 10) {
                 graphVisible = !graphVisible;
                 $("#graphdiv").css('display', graphVisible ? 'block' : 'none');
             } else {
-                alert("Not enough data to show on the graph... Please wait!");
+                alert("Not enough data to show on the graph... \n" +
+                      "Need at least 10 data points, just got " + flowData.length + "\n" +
+                      "Please wait!");
             }
         };
 
