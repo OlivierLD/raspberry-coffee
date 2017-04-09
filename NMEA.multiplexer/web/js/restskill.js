@@ -141,6 +141,7 @@ var pushData = function(flow) {
 
 var dataVolume = function() {
   // No REST traffic for this one.
+    $('#flow').css('cursor', 'progress');
     var getData = getVolume();
     getData.done(function(value) {
         var json = JSON.parse(value); // Like { "nmea-bytes": 13469, "started": 1489004962194 }
@@ -149,6 +150,7 @@ var dataVolume = function() {
         var volume = json["nmea-bytes"];
         var flow = Math.round(volume / (elapsed / 1000));
         pushData(flow);
+        $('#flow').css('cursor', 'auto');
     });
     getData.fail(function(error, errmess) {
         var message;
@@ -161,6 +163,7 @@ var dataVolume = function() {
         }
         errManager.display("Failed to get the flow status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
         pushData(0);
+        $('#flow').css('cursor', 'auto');
     });
 
 };
