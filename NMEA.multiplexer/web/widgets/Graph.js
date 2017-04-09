@@ -1,9 +1,158 @@
+/*
+ * @author Olivier Le Diouris
+ */
+/*
+ * See custom properties in CSS.
+ * =============================
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+ * Relies on a rule named .graphdisplay, like that:
+ *
+ .graphdisplay {
+
+ --tooltip-color: rgba(250, 250, 210, .7);
+ --tooltip-text-color: black;
+ --with-bg-gradient: true;
+ --bg-gradient-from: rgba(0,0,0,0);
+ --bg-gradient-to: cyan;
+
+ --bg-color: LightGray;
+
+ --horizontal-grid-color: gray;
+ --horizontal-grid-text-color: black;
+ --vertical-grid-color: gray;
+ --vertical-grid-text-color: black;
+
+ --raw-data-line-color: green;
+ --fill-raw-data: true;
+ --raw-data-fill-color: rgba(0, 255, 0, 0.35);
+
+ --smooth-data-line-color: red;
+ --fill-smooth-data: true;
+ --smooth-data-fill-color: rgba(0, 255, 0, 0.35);
+
+ --clicked-index-color: orange;
+
+ --font: Arial;
+ }
+ */
+
+/**
+ * Recurse from the top down, on styleSheets and cssRules
+ *
+ * document.styleSheets[0].cssRules[2].selectorText returns ".analogdisplay"
+ * document.styleSheets[0].cssRules[2].cssText returns ".analogdisplay { --hand-color: red;  --face-color: white; }"
+ * document.styleSheets[0].cssRules[2].style.cssText returns "--hand-color: red; --face-color: white;"
+ */
+var getColorConfig = function() {
+    //
+    var colorConfig = defaultGraphColorConfig;
+    for (var s=0; s<document.styleSheets.length; s++) {
+        for (var r=0; r<document.styleSheets[s].cssRules.length; r++) {
+            if (document.styleSheets[s].cssRules[r].selectorText === '.graphdisplay') {
+                var cssText = document.styleSheets[s].cssRules[r].style.cssText;
+                var cssTextElems = cssText.split(";");
+                cssTextElems.forEach(function(elem) {
+                    if (elem.trim().length > 0) {
+                        var keyValPair = elem.split(":");
+                        var key = keyValPair[0].trim();
+                        var value = keyValPair[1].trim();
+                        switch (key) {
+                            case '--tooltip-color':
+                                colorConfig.tooltipColor = value;
+                                break;
+                            case '--tooltip-text-color':
+                                colorConfig.tooltipTextColor = value;
+                                break;
+                            case '--with-bg-gradient':
+                                colorConfig.withBGGradient = (value === 'true');
+                                break;
+                            case '--bg-gradient-from':
+                                colorConfig.bgGradientFrom = value;
+                                break;
+                            case '--bg-gradient-to':
+                                colorConfig.bgGradientTo = value;
+                                break;
+                            case '--bg-color':
+                                colorConfig.bgColorNoGradient = value;
+                                break;
+                            case '--horizontal-grid-color':
+                                colorConfig.horizontalGridColor = value;
+                                break;
+                            case '--horizontal-grid-text-color':
+                                colorConfig.horizontalGridTextColor = value;
+                                break;
+                            case '--vertical-grid-color':
+                                colorConfig.verticalGridColor = value;
+                                break;
+                            case '--vertical-grid-text-color':
+                                colorConfig.verticalGridTextColor = value;
+                                break;
+                            case '--raw-data-line-color':
+                                colorConfig.rawDataLineColor = value;
+                                break;
+                            case '--fill-raw-data':
+                                colorConfig.fillRawData = (value === 'true');
+                                break;
+                            case '--raw-data-fill-color':
+                                colorConfig.rawDataFillColor = value;
+                                break;
+                            case '--smooth-data-line-color':
+                                colorConfig.smoothDataLineColor = value;
+                                break;
+                            case '--fill-smooth-data':
+                                colorConfig.fillSmoothData = (value === 'true');
+                                break;
+                            case '--smooth-data-fill-color':
+                                colorConfig.smoothDataFillColor = value;
+                                break;
+                            case '--clicked-index-color':
+                                colorConfig.clickedIndexColor = value;
+                                break;
+                            case '--font':
+                                colorConfig.font = value;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+            }
+        }
+    }
+    return colorConfig;
+};
+
+var defaultGraphColorConfig = {
+    tooltipColor: "rgba(250, 250, 210, .7)",
+    tooltipTextColor: "black",
+    withBGGradient: true,
+    bgGradientFrom: 'rgba(0,0,0,0)',
+    bgGradientTo: 'cyan',
+    bgColorNoGradient: "LightGray",
+    horizontalGridColor: "gray",
+    horizontalGridTextColor: "black",
+    verticalGridColor: "gray",
+    verticalGridTextColor: "black",
+    rawDataLineColor: "green",
+    fillRawData: true,
+    rawDataFillColor: "rgba(0, 255, 0, 0.35)",
+    smoothDataLineColor: "red",
+    fillSmoothData: true,
+    smoothDataFillColor: "rgba(255, 0, 0, 0.35)",
+    clickedIndexColor: 'orange',
+    font: 'Arial'
+};
+var graphColorConfig = defaultGraphColorConfig;
+
 function Graph(cName,       // Canvas Name
                graphData,   // x,y tuple array
                callback,    // Callback on mouseclick
                unit) {
 
   var instance = this;
+
+  graphColorConfig = getColorConfig();
+
   var xScale, yScale;
   var minx, miny, maxx, maxy;
   var context;
@@ -11,9 +160,13 @@ function Graph(cName,       // Canvas Name
   var unit = unit;
   var lastClicked;
 
+  var withRawData = true;
   var withTooltip = false;
   var withSmoothing = false;
 
+  this.setRawData = function(rd) {
+    withRawData = rd;
+  };
   this.setTooltip = function(tt) {
     withTooltip = tt;
   };
@@ -64,7 +217,7 @@ function Graph(cName,       // Canvas Name
   //    context.fillRect(0, 0, w, h);
         instance.drawGraph(cName, graphData, lastClicked);
         var tooltipW = 80, nblines = str.length;
-        context.fillStyle = "rgba(250, 250, 210, .7)"; 
+        context.fillStyle = graphColorConfig.tooltipColor;
 //      context.fillStyle = 'yellow';
         var fontSize = 10;
         var x_offset = 10, y_offset = 10;
@@ -76,7 +229,7 @@ function Graph(cName,       // Canvas Name
           y_offset = -(10 + 6 + (nblines * fontSize));
         }
         context.fillRect(x + x_offset, y + y_offset, tooltipW, 6 + (nblines * fontSize)); // Background
-        context.fillStyle = 'black';
+        context.fillStyle = graphColorConfig.tooltipTextColor;
         context.font = /*'bold ' +*/ fontSize + 'px verdana';
         for (var i=0; i<str.length; i++) {
           context.fillText(str[i], x + x_offset + 5, y + y_offset + (3 + (fontSize * (i + 1)))); //, 60); 
@@ -209,13 +362,13 @@ function Graph(cName,       // Canvas Name
     context.fillRect(0, 0, width, height);
 
     smoothData = _smoothData;
-    if (false) {
-      context.fillStyle = "LightGray";
+    if (graphColorConfig.withBGGradient === false) {
+      context.fillStyle = graphColorConfig.bgColorNoGradient;
       context.fillRect(0, 0, width, height);
     } else {
       var grV = context.createLinearGradient(0, 0, 0, height);
-      grV.addColorStop(0, 'rgba(0,0,0,0)');
-      grV.addColorStop(1, 'cyan'); // "LightGray"); // '#000');
+      grV.addColorStop(0, graphColorConfig.bgGradientFrom);
+      grV.addColorStop(1, graphColorConfig.bgGradientTo);
 
       context.fillStyle = grV;
       context.fillRect(0, 0, width, height);
@@ -224,14 +377,14 @@ function Graph(cName,       // Canvas Name
     for (var i=Math.round(miny); gridYStep>0 && i<maxy; i+=gridYStep) {
       context.beginPath();
       context.lineWidth = 1;
-      context.strokeStyle = 'gray';
+      context.strokeStyle = graphColorConfig.horizontalGridColor;
       context.moveTo(0, height - (i - miny) * yScale);
       context.lineTo(width, height - (i - miny) * yScale);
       context.stroke();
 
       context.save();
-      context.font = "bold 10px Arial"; 
-      context.fillStyle = 'black';
+      context.font = "bold 10px " + graphColorConfig.font;
+      context.fillStyle = graphColorConfig.horizontalGridTextColor;
       var str = i.toString() + " " + unit;
       var len = context.measureText(str).width;
       context.fillText(str, width - (len + 2), height - ((i - miny) * yScale) - 2);
@@ -243,7 +396,7 @@ function Graph(cName,       // Canvas Name
     for (var i=gridXStep; i<data.length; i+=gridXStep) {
       context.beginPath();
       context.lineWidth = 1;
-      context.strokeStyle = 'gray';
+      context.strokeStyle = graphColorConfig.verticalGridColor;
       context.moveTo(i * xScale, 0);
       context.lineTo(i * xScale, height);
       context.stroke();
@@ -252,8 +405,8 @@ function Graph(cName,       // Canvas Name
       context.save(); 
       context.translate(i * xScale, height);
       context.rotate(-Math.PI / 2);
-      context.font = "bold 10px Arial"; 
-      context.fillStyle = 'black';
+      context.font = "bold 10px " + graphColorConfig.font;
+      context.fillStyle = graphColorConfig.verticalGridTextColor;
       var str = i.toString();
       var len = context.measureText(str).width;
       context.fillText(str, 2, -1); //i * xScale, cHeight - (len));
@@ -261,10 +414,10 @@ function Graph(cName,       // Canvas Name
       context.closePath();
     }
 
-    if (data.length > 0) { // } document.getElementById("raw-data").checked) { // Raw data. TODO A class method
+    if (withRawData && data.length > 0) {
       context.beginPath();
       context.lineWidth = 1;
-      context.strokeStyle = 'green';
+      context.strokeStyle = graphColorConfig.rawDataLineColor;
   
       var previousPoint = data[0];
       context.moveTo((0 - minx) * xScale, height - (data[0].getY() - miny) * yScale);
@@ -277,9 +430,11 @@ function Graph(cName,       // Canvas Name
       context.lineTo(width, height);
       context.lineTo(0, height);
       context.closePath();
-      context.stroke(); 
-      context.fillStyle = 'rgba(0, 255, 0, 0.35)';
-      context.fill();
+      context.stroke();
+      if (graphColorConfig.fillRawData === true) {
+          context.fillStyle = graphColorConfig.rawDataFillColor;
+          context.fill();
+      }
     }
     
     if (withSmoothing) {
@@ -288,7 +443,7 @@ function Graph(cName,       // Canvas Name
 
             context.beginPath();
             context.lineWidth = 3;
-            context.strokeStyle = 'red';
+            context.strokeStyle = graphColorConfig.smoothDataLineColor;
             previousPoint = data[0];
             context.moveTo((0 - minx) * xScale, height - (data[0].getY() - miny) * yScale);
             for (var i = 1; i < data.length; i++) {
@@ -303,15 +458,17 @@ function Graph(cName,       // Canvas Name
 
             context.closePath();
             context.stroke();
-            context.fillStyle = 'rgba(255, 0, 0, 0.35)';
-            context.fill();
+            if (graphColorConfig.fillSmoothData === true) {
+                context.fillStyle = graphColorConfig.smoothDataFillColor;
+                context.fill();
+            }
         }
     }
     
     if (idx !== undefined) {
       context.beginPath();
       context.lineWidth = 1;
-      context.strokeStyle = 'green';
+      context.strokeStyle = graphColorConfig.clickedIndexColor;
       context.moveTo(_idxX, 0);
       context.lineTo(_idxX, height);
       context.stroke();
