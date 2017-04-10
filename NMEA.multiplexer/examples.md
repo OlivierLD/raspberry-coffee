@@ -158,6 +158,8 @@ Then you can reach the page at [http://localhost:9999/web/examples/in.out.html](
 This page in pinging the cache every second, and extracts the custom entries from it to display the
 inside and outside conditions, even if they are represented by the same NMEA sentence ID; the distinction is made on the device ID.
 
+![Diagram](./docimages/3-mux.png)
+
 ##### And more to come...
 
 ### TODO...
