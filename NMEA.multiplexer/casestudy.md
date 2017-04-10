@@ -248,6 +248,15 @@ Node-RED being way more generic.
 #### Conclusion?
 I like both. Even if I have written the Java implementation myself, Node-RED also has some very cool features out-of-the-box.
 
+One thing I find important though: In the case of the Java Multiplexer, whatever comes in or goes out is a _pure_ `NMEA` String (except when transforming them for a specific client, of course).
+I'm a bit reluctant to come up with a specific shape for those objects. Whatever archaic it can look like, `NMEA` is a well defined standard that is well understood and documented.
+
+Lingos like `GPSd` or `SignalK` have good reasons to exist, but you have to comply to yet another way to read their data if you want to see what's in there...
+
+I'd rather stick to `NMEA`.
+
+Note that even if it is happy with `json`, Node-RED has no problem dealing with `NMEA` Strings.
+
 ---
 _March, April 2017_
 
