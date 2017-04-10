@@ -491,11 +491,11 @@ have another one, using a broker URL like `tcp://io.adafruit.com:1883`. Currentl
 
 ## A note on the build
 As you must have seen, we use `Gradle` here, along with the `ShadowJar` plugin. This plugin gathers **all** the dependencies, and puts them
-  all together in a sin gle `jar` file (named a fat-jar). This makes your life considerably easier,
+  all together in a single `jar` file (named a fat-jar). This makes your life considerably easier,
   just put the jar named `build/libs/NMEA.multiplexer-1.0-all.jar` in your classpath (see for example in the `mux.sh`), and you have everything you need in there.
 
   This `fat-jar` is currently (Apr-2017) a bit more than 7 Mb big. In some cases, you might want to trim the jar down, to make it smaller. If you do not need the classes that can be dynamically loaded,
-  if you are not interested in the I<small><sup>2</sup></small>C sensors, etc, you ciuld very well prune those projects, the resulting jar
+  if you are not interested in the I<small><sup>2</sup></small>C sensors, etc, you could very well prune those projects, the resulting jar
   can be substantially smaller. To do so for yourself, refer to the [Gradle documentation](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwiXufPqx5rTAhXKjVQKHf2QBi0QFggaMAA&url=https%3A%2F%2Fgradle.org%2Fdocs&usg=AFQjCNFkgIMSDYmyaVIV4OYlAyeNXPOJdA&sig2=y-NBJymPfGVgEOf_WE8QLw&bvm=bv.152174688,d.cGw).
 
 ## Open Issues
