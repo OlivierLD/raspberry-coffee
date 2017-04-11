@@ -160,6 +160,8 @@ inside and outside conditions, even if they are represented by the same NMEA sen
 
 ![Diagram](./docimages/3-mux.png)
 
+_Note_: The Web-UI is actually just pinging the Cache. The `MUX-3` is the only one that requires `init.cache=true`.
+
 ##### And more to come...
 
 ### TODO...
