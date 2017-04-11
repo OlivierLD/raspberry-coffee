@@ -246,6 +246,22 @@ That is a bit less flexible with Node-RED.
 The memory and resource footprint seem to be smaller in the Java case, which is not unexpected, as the Java implementation is dedicated to this Multiplexer,
 Node-RED being way more generic.
 
+###### Installation
+ One `jar-file` for the Java version (requires `Java`), a couple of `npm` commands for Node-RED (requires `NodeJS`).
+
+###### Debugging Capabilities
+ The Java version has all the debugging features that come with Java. Node-RED does not have much.
+
+###### Ease of Configuration
+ The Web UI of Node-RED is an asset. As it is now, the Java version requires more typing.
+
+###### Sustainability
+ Node-RED is a product, with a development team behind it...
+
+###### Resources footprint
+ For equivalent features at runtime, the Java version has a quite smaller memory and CPU footprint.
+
+
 #### Conclusion?
 I like both. Even if I have written the Java implementation myself, Node-RED also has some very cool features out-of-the-box.
 
@@ -257,20 +273,6 @@ Lingos like `GPSd` or `SignalK` have good reasons to exist, but you have to comp
 I'd rather stick to `NMEA`.
 
 Note that even if it is happy with `json`, Node-RED has no problem dealing with `NMEA` Strings.
-
-
-###### Debugging Capabilities
- The Java version has all the debugging  features that comes with Java. Node-RED does not have much.
-
-###### Ease of Configuration
- The graphical UI of Node-RED is an asset. As it is now, the Java version requires more typing.
-
-###### Sustainability
- Node-RED is a product, with a devlopment team behind it...
-
-###### Resources footprint
- For equivalent features at runtime, the Java version has a quite smaller memory and CPU footprint, which is expected,
- as it is dedicated only to what it does.
 
 ---
 _March, April 2017_
