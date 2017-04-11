@@ -1,4 +1,5 @@
 # Raspberry PI Zero W
+## Java Custom NMEA Multiplexer, or Node-RED ?
 
 The Raspberry PI Zero W is a small single-board computer that
 - Runs Linux (Pixel, a clone of Jessie)
@@ -256,6 +257,20 @@ Lingos like `GPSd` or `SignalK` have good reasons to exist, but you have to comp
 I'd rather stick to `NMEA`.
 
 Note that even if it is happy with `json`, Node-RED has no problem dealing with `NMEA` Strings.
+
+
+###### Debugging Capabilities
+ The Java version has all the debugging  features that comes with Java. Node-RED does not have much.
+
+###### Ease of Configuration
+ The graphical UI of Node-RED is an asset. As it is now, the Java version requires more typing.
+
+###### Sustainability
+ Node-RED is a product, with a devlopment team behind it...
+
+###### Resources footprint
+ For equivalent features at runtime, the Java version has a quite smaller memory and CPU footprint, which is expected,
+ as it is dedicated only to what it does.
 
 ---
 _March, April 2017_
