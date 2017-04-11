@@ -23,8 +23,6 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=./libs"       # for Mac
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
-#
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 #
 CP=./build/libs/NMEA.multiplexer-1.0-all.jar
