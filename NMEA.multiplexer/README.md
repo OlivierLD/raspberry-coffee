@@ -452,6 +452,8 @@ You can also visualize the REST traffic if needed; `In (server to client)` on th
 
 Click on the Flow value (top-right) to show/hide the graph.
 
+_Note_: Don't be alarmed by the colors of the graph, they all rely on their own `css` class, named `.graphdisplay`.
+
 > The cool thing in this context is that whatever complex the rendering (what the user sees) looks like, the complexity
 > belongs to the renderer (i.e. the client, the web browser in this case). The server is only responsible for providing the _raw_ data
 > the graph is based on; and typically here, providing the data is certainly not the most complex part, pinging the server does the job...
