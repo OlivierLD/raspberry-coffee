@@ -2,7 +2,7 @@
 
 Scala comes with a REPL (Read Evaluate Print Loop). It can be seen as a Scala console...
 
-It executes the Scala command you enter from the keybord, dynamically, without having to compiule or anything.
+It executes the Scala command you enter from the keybord, dynamically, without having to compile or anything.
 You type, it runs.
 
 For example, you setup the following components:
@@ -12,7 +12,7 @@ For example, you setup the following components:
 And from a Terminal running on the Raspberry PI, you can drive the leds plugged on the breadboard.
 
 ```bash
-$> scala
+$> [sudo] scala
 Welcome to Scala 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_92).
 Type in expressions for evaluation. Or try :help.
 

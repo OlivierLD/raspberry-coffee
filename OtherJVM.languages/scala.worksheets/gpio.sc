@@ -1,7 +1,7 @@
-/*
- * Manual interaction with GPIO pins.
- * To be started in the Scala REPL.
- */
+//
+// Manual interaction with GPIO pins.
+// To be started in the Scala REPL.
+//
 
 // Load the PI4J resources
 :require /opt/pi4j/lib/pi4j-core.jar
