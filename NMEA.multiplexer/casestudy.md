@@ -274,6 +274,8 @@ I'd rather stick to `NMEA`.
 
 Note that even if it is happy with `json`, Node-RED has no problem dealing with `NMEA` Strings.
 
+Another cool thing is that the Java NMEA Multiplexer and Node-RED can seamlessly co-exist.
+
 ---
 _March, April 2017_
 
