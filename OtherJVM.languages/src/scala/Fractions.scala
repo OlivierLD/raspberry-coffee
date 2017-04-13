@@ -21,6 +21,6 @@ object Fractions {
       else
         n2 -= n1
     }
-    (t1/ n1, t2 / n1)
+    (t1 / n1, t2 / n1)
   }
 }
