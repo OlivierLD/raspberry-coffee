@@ -44,7 +44,6 @@
  * document.styleSheets[0].cssRules[2].style.cssText returns "--hand-color: red; --face-color: white;"
  */
 var getColorConfig = function() {
-    //
     var colorConfig = defaultGraphColorConfig;
     for (var s=0; s<document.styleSheets.length; s++) {
         for (var r=0; r<document.styleSheets[s].cssRules.length; r++) {
@@ -147,7 +146,7 @@ var graphColorConfig = defaultGraphColorConfig;
 function Graph(cName,       // Canvas Name
                graphData,   // x,y tuple array
                callback,    // Callback on mouseclick
-               unit) {
+               unit) {      // Unit label, for display
 
   var instance = this;
 
@@ -314,11 +313,12 @@ function Graph(cName,       // Canvas Name
     var width = context.canvas.clientWidth;
     var height = context.canvas.clientHeight;
 
-    if (width === 0 || height === 0) {
+    if (width === 0 || height === 0) { // Not visible
         return;
     }
     this.init(data);
 
+    // Set the canvas size from its container.
     canvas.width = width;
     canvas.height = height;
 

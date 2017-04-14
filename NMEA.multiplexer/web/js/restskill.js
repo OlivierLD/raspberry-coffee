@@ -428,7 +428,6 @@ var computerList = function() {
     });
 };
 
-
 var buildTable = function (channels, forwarders, computers) {
     var html = "<table width='100%'>" +
         "<tr><th width='45%'>Pulled in</th><th width='10%'></th><th width='45%'>Pushed out</th></tr>" +
