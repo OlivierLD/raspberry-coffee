@@ -46,7 +46,7 @@ public class SystemUtil {
 		return result;
 	}
 
-	private static void printSystem(SquareMatrix squareMatrix, double[] constants) {
+	public static void printSystem(SquareMatrix squareMatrix, double[] constants) {
 		String unknowns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		int dimension = squareMatrix.getDimension();
 		for (int row=0; row<dimension; row++) {
