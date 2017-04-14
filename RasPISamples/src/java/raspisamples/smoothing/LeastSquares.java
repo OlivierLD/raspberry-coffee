@@ -6,7 +6,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import raspisamples.matrix.SquareMatrix;
 import raspisamples.matrix.SystemUtil;
 
@@ -110,6 +112,22 @@ public class LeastSquares {
 		double[] result = SystemUtil.solveSystem(squareMatrix, constants);
 		for (int i=0; i<result.length; i++) {
 			System.out.println(String.format("%f", result[i]));
+		}
+		// Nicer (Java 8)
+		System.out.println();
+		AtomicInteger integer = new AtomicInteger(0);
+		Arrays.stream(result)
+						.boxed()
+						.map(coef -> new IndexedCoeff(integer.incrementAndGet(), coef))
+						.forEach(ic -> System.out.println(String.format("Deg %d -> %f", (dimension - ic.idx), ic.coef)));
+	}
+
+	private static class IndexedCoeff {
+		int idx;
+		double coef;
+		public IndexedCoeff(int idx, double coef) {
+			this.idx = idx;
+			this.coef = coef;
 		}
 	}
 }
