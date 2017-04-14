@@ -12,13 +12,24 @@ For example, you setup the following components:
 And from a Terminal running on the Raspberry PI, you can drive the leds plugged on the breadboard.
 
 ```bash
-$> [sudo] scala
+$> sudo scala
 Welcome to Scala 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_92).
 Type in expressions for evaluation. Or try :help.
 
 scala> :load gpio.sc
-
-... Here you see for yourself ;)
+Added '/opt/pi4j/lib/pi4j-core.jar' to classpath.
+import com.pi4j.io.gpio._
+warning: there was one feature warning; re-run with -feature for details
+gpio: com.pi4j.io.gpio.GpioController = com.pi4j.io.gpio.impl.GpioControllerImpl@9f73a2
+pin00: com.pi4j.io.gpio.GpioPinDigitalOutput = "RedLed" <GPIO 0>
+pin02: com.pi4j.io.gpio.GpioPinDigitalOutput = "GreenLed" <GPIO 2>
+Blinking red fast...
+Blinking green fast...
+Blinking red & green fast...
+res19: java.util.concurrent.Future[_] = null
+res20: java.util.concurrent.Future[_] = null
+res22: java.util.concurrent.Future[_] = java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask@a70627
+res24: java.util.concurrent.Future[_] = java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask@1e59f28
 
 scala> :quit
 $>
