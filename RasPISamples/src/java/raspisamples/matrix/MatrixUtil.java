@@ -19,8 +19,9 @@ public final class MatrixUtil {
 	public static SquareMatrix comatrix(SquareMatrix m) {
 		SquareMatrix co = new SquareMatrix(m.getDimension());
 		for (int r = 0; r < m.getDimension(); r++) {
-			for (int c = 0; c < m.getDimension(); c++)
+			for (int c = 0; c < m.getDimension(); c++) {
 				co.setElementAt(r, c, determin(minor(m, r, c)) * Math.pow((-1), (r + c + 2)));  // r+c+2 = (r+1) + (c+1)...
+			}
 		}
 		return co;
 	}
@@ -30,8 +31,9 @@ public final class MatrixUtil {
 		// Replace line with columns.
 		int r, c;
 		for (r = 0; r < m.getDimension(); r++) {
-			for (c = 0; c < m.getDimension(); c++)
+			for (c = 0; c < m.getDimension(); c++) {
 				t.setElementAt(r, c, m.getElementAt(c, r));
+			}
 		}
 		return t;
 	}
@@ -41,8 +43,9 @@ public final class MatrixUtil {
 		int r, c;
 
 		for (r = 0; r < m.getDimension(); r++) {
-			for (c = 0; c < m.getDimension(); c++)
+			for (c = 0; c < m.getDimension(); c++) {
 				res.setElementAt(r, c, m.getElementAt(r, c) * n);
+			}
 		}
 		return res;
 	}
@@ -50,16 +53,13 @@ public final class MatrixUtil {
 	public static double determin(SquareMatrix m) {
 		double v = 0.0;
 
-		if (m.getDimension() == 1)
+		if (m.getDimension() == 1) {
 			v = m.getElementAt(0, 0);
-		else {
-			v = 0.0;
-			double minDet;
+		} else {
 			// C : column in Major
-			for (int C = 0; C < m.getDimension(); C++)  // Walk thru first line
-			{
+			for (int C = 0; C < m.getDimension(); C++) { // Walk thru first line
 				// Minor's determinant
-				minDet = determin(minor(m, 0, C));
+				double minDet = determin(minor(m, 0, C));
 				v += (m.getElementAt(0, C) * minDet * Math.pow((-1.0), C + 1 + 1)); // line C, column 1
 			}
 		}

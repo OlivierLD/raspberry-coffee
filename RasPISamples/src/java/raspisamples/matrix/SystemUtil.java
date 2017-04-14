@@ -37,7 +37,7 @@ public class SystemUtil {
 
 		SquareMatrix inv = MatrixUtil.invert(m);
 
-		// Square * Column
+		// Lines * Column
 		for (int row = 0; row < m.getDimension(); row++) {
 			result[row] = 0.0;
 			for (int col = 0; col < m.getDimension(); col++)

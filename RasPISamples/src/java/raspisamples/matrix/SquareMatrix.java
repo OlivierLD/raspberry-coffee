@@ -4,9 +4,6 @@ public final class SquareMatrix {
 	private int dimension;
 	private double[][] matrixElements;
 
-	public SquareMatrix() {
-	}
-
 	public SquareMatrix(int dim) {
 		this(dim, false);
 	}
@@ -37,11 +34,6 @@ public final class SquareMatrix {
 			for (int c = 0; c < dim; c++)
 				matrixElements[l][c] = elements[(l * dim) + c];
 		}
-	}
-
-	public void setDimension(int dim) {
-		this.dimension = dim;
-		matrixElements = new double[dim][dim];
 	}
 
 	public int getDimension() {
