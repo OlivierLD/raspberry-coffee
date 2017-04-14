@@ -104,4 +104,4 @@ Several projects are featured here:
 
 ---
 
-All the doc - with more details than here - can be reached from [this page](http://www.lediouris.net/RaspberryPI/index.html).
+All the doc - with more details than here - can be reached from [this page](http://raspberrypi.lediouris.net/).
