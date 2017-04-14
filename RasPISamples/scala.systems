@@ -1,0 +1,6 @@
+#!/bin/bash
+echo make sure you\'ve run
+echo   ../gradlew --daemon clean shadowJar
+echo
+scala -cp build/libs/RasPISamples-1.0-all.jar systems.SystemUtils
+#
