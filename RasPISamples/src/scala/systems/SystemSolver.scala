@@ -175,7 +175,7 @@ object SystemUtils {
     result
   }
 
-  private def printSystem(squareMatrix: SquareMatrix, constants: Array[Double]) = {
+  def printSystem(squareMatrix: SquareMatrix, constants: Array[Double]) = {
     val unknowns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     val dimension = squareMatrix.getDimension
     for (row:Int <- 0 until dimension) {

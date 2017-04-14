@@ -50,9 +50,11 @@ public class LeastSquares {
 //		double y = f(10, -0.0061, 0.0029, 4.6);
 //		System.out.println(String.format("F(%f)=%f", 10f, y));
 
-		BufferedWriter bw = new BufferedWriter(new FileWriter("cloud.csv"));
-		cloudGenerator(bw, 0, 50, 0.01, 5, 1,-0.0061, 0.0029, 4.6);
-		bw.close();
+		if (false) { // Turn to true to re-generate data
+			BufferedWriter bw = new BufferedWriter(new FileWriter("cloud.csv"));
+			cloudGenerator(bw, 0, 50, 0.01, 5, 1, -0.0061, 0.0029, 4.6);
+			bw.close();
+		}
 
 		List<Tuple> data = new ArrayList<>();
 		BufferedReader br = new BufferedReader(new FileReader("cloud.csv"));
@@ -73,7 +75,7 @@ public class LeastSquares {
 		int requiredDegree = 2;
 		int dimension = requiredDegree + 1;
 		double[] sumXArray = new double[(requiredDegree * 2) + 1]; // Will fill the matrix
-		double[] sumY       = new double[requiredDegree + 1];
+		double[] sumY      = new double[requiredDegree + 1];
 		// Init
 		for (int i=0; i<((requiredDegree * 2) + 1); i++)
 			sumXArray[i] = 0.0;
