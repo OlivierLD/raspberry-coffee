@@ -258,7 +258,7 @@ function Graph(cName,       // Canvas Name
   this.minX = function(data) {
     var min = Number.MAX_VALUE;
     for (var i=0; i<data.length; i++) {
-      min = Math.min(min, data[i].getX());
+      min = Math.min(min, (data[i].getX !== undefined ? data[i].getX() : data[i].x));
     }
     return min;
   };
@@ -266,7 +266,7 @@ function Graph(cName,       // Canvas Name
   this.minY = function(data) {
     var min = Number.MAX_VALUE;
     for (var i=0; i<data.length; i++) {
-      min = Math.min(min, data[i].getY());
+      min = Math.min(min, (data[i].getY !== undefined ? data[i].getY() : data[i].y));
     }
     return min;
   };
@@ -274,7 +274,7 @@ function Graph(cName,       // Canvas Name
   this.maxX = function(data) {
     var max = Number.MIN_VALUE;
     for (var i=0; i<data.length; i++) {
-      max = Math.max(max, data[i].getX());
+      max = Math.max(max, (data[i].getX !== undefined ? data[i].getX() : data[i].x));
     }
     return max;
   };
@@ -282,7 +282,7 @@ function Graph(cName,       // Canvas Name
   this.maxY = function(data) {
     var max = Number.MIN_VALUE;
     for (var i=0; i<data.length; i++) {
-      max = Math.max(max, data[i].getY());
+      max = Math.max(max, (data[i].getY !== undefined ? data[i].getY() : data[i].y));
     }
     return max;
   };
@@ -300,6 +300,110 @@ function Graph(cName,       // Canvas Name
           }
       }
       return { mini: mini, maxi: maxi };
+  };
+
+  var f = function(x, coeffs) {
+      var value = 0;
+      var maxDegree = coeffs.length - 1;
+      for (var deg=0; deg<coeffs.length; deg++) {
+          value += (coeffs[deg] * Math.pow(x, maxDegree - deg));
+      }
+      return value;
+  };
+
+  this.drawPoints = function(displayCanvasName, data, coeffs) {
+      if (data.length < 1) {
+          return; // No data
+      }
+
+      context = canvas.getContext('2d');
+
+      var width = context.canvas.clientWidth;
+      var height = context.canvas.clientHeight;
+
+      if (width === 0 || height === 0) { // Not visible
+          return;
+      }
+      this.init(data, true);
+
+      // Set the canvas size from its container.
+      canvas.width = width;
+      canvas.height = height;
+
+      document.getElementById(displayCanvasName).title = data.length + " elements, X:[" + minx + ", " + maxx + "] Y:[" + miny + ", " + maxy + "]";
+      var gridXStep = (maxx - minx) < 5 ? 1 : Math.round((maxx - minx) / 5);
+      var gridYStep = (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
+
+      // Clear
+      context.fillStyle = "white";
+      context.fillRect(0, 0, width, height);
+      // Horizontal grid (Data Unit)
+      for (var i=Math.round(miny); gridYStep>0 && i<maxy; i+=gridYStep) {
+          context.beginPath();
+          context.lineWidth = 1;
+          context.strokeStyle = graphColorConfig.horizontalGridColor;
+          context.moveTo(0, height - (i - miny) * yScale);
+          context.lineTo(width, height - (i - miny) * yScale);
+          context.stroke();
+
+          context.save();
+          context.font = "bold 10px " + graphColorConfig.font;
+          context.fillStyle = graphColorConfig.horizontalGridTextColor;
+          var str = i.toString();
+          var len = context.measureText(str).width;
+          context.fillText(str, width - (len + 2), height - ((i - miny) * yScale) - 2);
+          context.restore();
+          context.closePath();
+      }
+
+      // Vertical grid (index)
+//    for (var i=gridXStep; i<data.length; i+=gridXStep) {
+      for (var i=Math.round(minx); gridXStep>0 && i<maxx; i+=gridXStep) {
+          context.beginPath();
+          context.lineWidth = 1;
+          context.strokeStyle = graphColorConfig.verticalGridColor;
+          context.moveTo(i * xScale, 0);
+          context.lineTo(i * xScale, height);
+          context.stroke();
+
+          // Rotate the whole context, and then write on it (that's why we need the translate)
+          context.save();
+          context.translate(i * xScale, height);
+          context.rotate(-Math.PI / 2);
+          context.font = "bold 10px " + graphColorConfig.font;
+          context.fillStyle = graphColorConfig.verticalGridTextColor;
+          var str = i.toString();
+          var len = context.measureText(str).width;
+          context.fillText(str, 2, -1); //i * xScale, cHeight - (len));
+          context.restore();
+          context.closePath();
+      }
+
+      // Plot points here
+      context.fillStyle = '#ff0000';
+      for (var i=0; i<data.length; i++) {
+//        console.log("Plotting x:" + data[i].x + ", y:" + data[i].y + " to " + (data[i].x - minx) * xScale + ":" + (height - (data[i].y - miny) * yScale));
+          context.fillRect((data[i].x - minx) * xScale, height - (data[i].y - miny) * yScale, 1, 1);
+      }
+
+      if (coeffs !== undefined) {
+          context.beginPath();
+          context.lineWidth = 3;
+          context.strokeStyle = 'blue'; // graphColorConfig.smoothDataLineColor;
+          var previousPoint;
+          var stepX = (maxx - minx) / 1000;
+          for (var x = minx; x < maxx; x+=stepX) {
+              var y = f(x, coeffs);
+              if (previousPoint === undefined) {
+                  context.moveTo((x - minx) * xScale, height - ((y - miny) * yScale));
+              } else {
+                  context.lineTo((x - minx) * xScale, height - ((y - miny) * yScale));
+              }
+              previousPoint = { x: x, y: y };
+          }
+//        context.closePath();
+          context.stroke();
+      }
   };
 
   this.drawGraph = function(displayCanvasName, data, idx) {
@@ -327,7 +431,7 @@ function Graph(cName,       // Canvas Name
       _idxX = idx * xScale;
     }
 
-    document.getElementById(displayCanvasName).title = data.length + " elements, [" + miny + ", " + maxy + "]";
+    document.getElementById(displayCanvasName).title = data.length + " elements, X:[" + minx + ", " + maxx + "] Y:[" + miny + ", " + maxy + "]";
 
     var gridXStep = Math.round(data.length / 10);
     var gridYStep = (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
@@ -427,11 +531,9 @@ function Graph(cName,       // Canvas Name
     //  context.stroke();
         previousPoint = data[i];
       }
-      if (graphColorConfig.fillRawData === true) {
-          context.lineTo(width, height);
-          context.lineTo(0, height);
-          context.closePath();
-      }
+      context.lineTo(width, height);
+      context.lineTo(0, height);
+      context.closePath();
       context.stroke();
       if (graphColorConfig.fillRawData === true) {
           context.fillStyle = graphColorConfig.rawDataFillColor;
@@ -454,12 +556,11 @@ function Graph(cName,       // Canvas Name
 //              context.stroke();
                 previousPoint = data[i];
             }
-            if (graphColorConfig.fillSmoothData === true) {
-                // Close the shape, bottom
-                context.lineTo(width, height);
-                context.lineTo(0, height);
-                context.closePath();
-            }
+            // Close the shape, bottom
+            context.lineTo(width, height);
+            context.lineTo(0, height);
+
+            context.closePath();
             context.stroke();
             if (graphColorConfig.fillSmoothData === true) {
                 context.fillStyle = graphColorConfig.smoothDataFillColor;
@@ -479,15 +580,20 @@ function Graph(cName,       // Canvas Name
     }
   };
 
-  this.init = function(dataArray) {
+  this.init = function(dataArray, points) {
       if (dataArray.length > 0) {
           var minMax = this.getMinMax(dataArray);
           miny = minMax.mini;
           maxy = minMax.maxi;
 
-          minx = 0; // instance.minX(dataArray);
-          maxx = dataArray.length - 1; //instance.maxX(dataArray);
+          if (points === true) {
+              minx = Math.floor(this.minX(dataArray));
+              maxx = Math.ceil(this.maxX(dataArray));
 
+          } else {
+            minx = 0; // instance.minX(dataArray);
+            maxx = dataArray.length - 1; //instance.maxX(dataArray);
+          }
           if (maxx !== minx) {
               xScale = canvas.getContext('2d').canvas.clientWidth / (maxx - minx);
           }

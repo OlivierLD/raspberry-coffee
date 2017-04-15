@@ -40,6 +40,28 @@ public class LeastSquares {
 		}
 	}
 
+	public static void csvToJson(String csvName, String jsonName) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(csvName));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(jsonName));
+		String line = "";
+		bw.write("[\n");
+		boolean go = true;
+		while (go) {
+			line = br.readLine();
+			if (line == null) {
+				go = false;
+			} else {
+				String[] tuple = line.split(";");
+				String jSonLine = String.format("{ \"x\": %f, \"y\": %f },\n", Double.parseDouble(tuple[0]), Double.parseDouble(tuple[1]));
+				bw.write(jSonLine);
+			}
+		}
+		bw.write("]\n");
+		bw.close();
+		br.close();
+
+	}
+
 	static class Tuple {
 		double x, y;
 		public Tuple(double x, double y) {
@@ -56,6 +78,10 @@ public class LeastSquares {
 			BufferedWriter bw = new BufferedWriter(new FileWriter("cloud.csv"));
 			cloudGenerator(bw, 0, 50, 0.01, 5, 1, -0.0061, 0.0029, 4.6);
 			bw.close();
+		}
+
+		if (true) {
+			csvToJson("cloud.csv", "cloud.json");
 		}
 
 		List<Tuple> data = new ArrayList<>();
