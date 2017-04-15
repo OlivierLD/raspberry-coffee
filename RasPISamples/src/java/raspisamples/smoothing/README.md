@@ -39,6 +39,7 @@ That means:
 * used the polynomail coefficients [-0.0061, 0.0029, 4.6].
 
 The data are generated in a file named `cloud.csv`, it can be opened as a spreadsheet.
+Turn the boolen to `true` for this to happen...
 
 The method `csvToJson` can turn those data into a `json` object.
 
