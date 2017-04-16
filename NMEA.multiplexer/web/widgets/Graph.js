@@ -46,7 +46,7 @@
 var getColorConfig = function() {
     var colorConfig = defaultGraphColorConfig;
     for (var s=0; s<document.styleSheets.length; s++) {
-        for (var r=0; r<document.styleSheets[s].cssRules.length; r++) {
+        for (var r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
             if (document.styleSheets[s].cssRules[r].selectorText === '.graphdisplay') {
                 var cssText = document.styleSheets[s].cssRules[r].style.cssText;
                 var cssTextElems = cssText.split(";");
