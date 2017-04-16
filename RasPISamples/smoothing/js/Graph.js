@@ -403,6 +403,26 @@ function Graph(cName,       // Canvas Name
           }
 //        context.closePath();
           context.stroke();
+
+          context.font = "bold 14px Arial";
+          context.fillStyle = 'black';
+          var str = "Equation goes here";
+          var progressX = 10;
+          var degree = coeffs.length - 1;
+          for (var c=0; c<coeffs.length; c++) {
+              context.font = "bold 14px Arial";
+              str = ((c === 0 ? " " : (coeffs[c] >= 0 ? " + " : " ")) + coeffs[c] + ((degree - c > 0) ? " x" : ""));
+              var len = context.measureText(str).width;
+              context.fillText(str, progressX, 12);
+              progressX += len;
+              if (degree - c > 1) {
+                  context.font = "bold 8px Arial";
+                  str = (degree - c).toString();
+                  len = context.measureText(str).width;
+                  context.fillText(str, progressX, 8);
+                  progressX += len;
+              }
+          }
       }
   };
 
