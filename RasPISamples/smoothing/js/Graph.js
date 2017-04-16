@@ -357,18 +357,17 @@ function Graph(cName,       // Canvas Name
       }
 
       // Vertical grid (index)
-//    for (var i=gridXStep; i<data.length; i+=gridXStep) {
       for (var i=Math.round(minx); gridXStep>0 && i<maxx; i+=gridXStep) {
           context.beginPath();
           context.lineWidth = 1;
           context.strokeStyle = graphColorConfig.verticalGridColor;
-          context.moveTo(i * xScale, 0);
-          context.lineTo(i * xScale, height);
+          context.moveTo((i - minx) * xScale, 0);
+          context.lineTo((i - minx) * xScale, height);
           context.stroke();
 
           // Rotate the whole context, and then write on it (that's why we need the translate)
           context.save();
-          context.translate(i * xScale, height);
+          context.translate((i - minx) * xScale, height);
           context.rotate(-Math.PI / 2);
           context.font = "bold 10px " + graphColorConfig.font;
           context.fillStyle = graphColorConfig.verticalGridTextColor;
