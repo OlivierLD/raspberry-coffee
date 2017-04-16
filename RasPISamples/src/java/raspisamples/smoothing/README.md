@@ -48,9 +48,7 @@ Now run the class
 $> java -cp build/libs/RasPISamples-1.0-all.jar raspisamples.smoothing.LeastSquares
 ...
 
--0.006028
-0.001358
-4.481926
+[ -0.006028, 0.001358, 4.481926 ]
 
 Deg 2 -> -0.006028
 Deg 1 -> 0.001358
