@@ -89,11 +89,18 @@
             var pointTextData = document.getElementById("jsondata").value;
             var coeffTextData = document.getElementById("coeffdata").value;
             if (pointTextData.length > 0) {
-                graphData = JSON.parse(pointTextData);
-                var coeffData;
                 try {
-                    coeffData = JSON.parse(coeffTextData);
+                    graphData = JSON.parse(pointTextData);
                 } catch (err) {
+                    alert("Invalid JSON (points):\n" + err);
+                }
+                var coeffData;
+                if (coeffTextData.length > 0) {
+                    try {
+                        coeffData = JSON.parse(coeffTextData);
+                    } catch (err) {
+                        alert("Invalid JSON (coeffs):\n" + err);
+                    }
                 }
                 dataGraph.drawPoints("dataCanvas", graphData, coeffData);
             }
@@ -104,19 +111,24 @@
   <body>
     <table width="100%">
       <tr>
-        <td colspan="1"><h2>Smoothing</h2></td>
+        <td colspan="2"><h2>Smoothing</h2></td>
       </tr>
       <tr>
-        <td valign="top" align="left">
-          <textarea id="jsondata" style="margin: 2px; height: 50px; width: 365px;" placeholder="JSON Point data go here"></textarea>
-          <textarea id="coeffdata" style="margin: 2px; height: 50px; width: 365px;" placeholder="Coeeficient array goes here"></textarea>
-          <br/>
+        <td valign="top" align="center" width="50%">
+          <textarea id="jsondata" style="margin: 2px; height: 50px; width: 98%;" placeholder="JSON Point data go here"></textarea>
+        </td>
+        <td valign="top" align="center" width="50%">
+          <textarea id="coeffdata" style="margin: 2px; height: 50px; width: 98%;" placeholder="Coeeficient array goes here"></textarea>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
           <small>Paste your JSON data &uarr; in the box above, and click </small>
           <button onclick="goDrawing();">Display</button>
         </td>
       </tr>
       <tr>
-        <td align="center" colspan="1">
+        <td align="center" colspan="2">
           <canvas id="dataCanvas" height="500" title="Points and curves"></canvas>
         </td>
       </tr>

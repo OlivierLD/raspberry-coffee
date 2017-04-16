@@ -34,7 +34,7 @@ That means:
 * from abscise 0
 * to abscise 50
 * with a step of 0.01
-* with a tolerance of 5 (in y)
+* with a tolerance of 5 (on y)
 * iterate 1 time
 * used the polynomail coefficients [-0.0061, 0.0029, 4.6].
 

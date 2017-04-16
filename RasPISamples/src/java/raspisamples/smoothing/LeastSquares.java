@@ -27,10 +27,16 @@ public class LeastSquares {
 		return result;
 	}
 
-	public static void cloudGenerator(BufferedWriter bw, double fromX, double toX, double step, double yTolerance, int iterations, double... coeffs) {
-		for (int i=0; i<iterations; i++) {
+	public static void cloudGenerator(BufferedWriter bw, double fromX, double toX, double step, double yTolerance, double... coeffs) {
+		cloudGenerator(bw, fromX, toX, step, new double[] { yTolerance }, coeffs);
+	}
+	public static void cloudGenerator(BufferedWriter bw, double fromX, double toX, double step, double[] yTolerance, double... coeffs) {
+		double miny = Double.MAX_VALUE, maxy = -Double.MAX_VALUE;
+		for (int i=0; i<yTolerance.length; i++) {
 			for (double x=fromX; x<=toX; x+=step) {
-				double y = f(x, coeffs) + (yTolerance * ((2 * Math.random()) - 1));
+				double y = f(x, coeffs) + ((yTolerance[i]) * ((2 * Math.random()) - 1));
+				miny = Math.min(miny, y);
+				maxy = Math.max(maxy, y);
 				try {
 					bw.write(String.format("%f;%f\n", x, y));
 				} catch (IOException e) {
@@ -38,25 +44,27 @@ public class LeastSquares {
 				}
 			}
 		}
+		System.out.println(String.format("Y in [%f, %f]", miny, maxy));
 	}
 
 	public static void csvToJson(String csvName, String jsonName) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(csvName));
 		BufferedWriter bw = new BufferedWriter(new FileWriter(jsonName));
 		String line = "";
-		bw.write("[\n");
-		boolean go = true;
+		bw.write("[");
+		boolean go = true, first = true;
 		while (go) {
 			line = br.readLine();
 			if (line == null) {
 				go = false;
 			} else {
 				String[] tuple = line.split(";");
-				String jSonLine = String.format("{ \"x\": %f, \"y\": %f },\n", Double.parseDouble(tuple[0]), Double.parseDouble(tuple[1]));
+				String jSonLine = String.format("%s{ \"x\": %f, \"y\": %f }", (first ? "" : ", "), Double.parseDouble(tuple[0]), Double.parseDouble(tuple[1]));
 				bw.write(jSonLine);
+				first = false;
 			}
 		}
-		bw.write("]\n");
+		bw.write("]");
 		bw.close();
 		br.close();
 
@@ -74,9 +82,11 @@ public class LeastSquares {
 //		double y = f(10, -0.0061, 0.0029, 4.6);
 //		System.out.println(String.format("F(%f)=%f", 10f, y));
 
-		if (false) { // Turn to true to re-generate data
+		final int REQUIRED_SMOOTHING_DEGREE = 3;
+
+		if (true) { // Turn to true to re-generate data
 			BufferedWriter bw = new BufferedWriter(new FileWriter("cloud.csv"));
-			cloudGenerator(bw, 0, 50, 0.01, 5, 1, -0.0061, 0.0029, 4.6);
+			cloudGenerator(bw, -8, 8, 0.01, new double[] {3, 4, 5, 6, 9}, 0.01, -0.04, 0.2, 1);
 			bw.close();
 		}
 
@@ -100,35 +110,34 @@ public class LeastSquares {
 		br.close();
 
 		// Data is a list of Tuples
-		int requiredDegree = 2;
-		int dimension = requiredDegree + 1;
-		double[] sumXArray = new double[(requiredDegree * 2) + 1]; // Will fill the matrix
-		double[] sumY      = new double[requiredDegree + 1];
+		int dimension = REQUIRED_SMOOTHING_DEGREE + 1;
+		double[] sumXArray = new double[(REQUIRED_SMOOTHING_DEGREE * 2) + 1]; // Will fill the matrix
+		double[] sumY      = new double[REQUIRED_SMOOTHING_DEGREE + 1];
 		// Init
-		for (int i=0; i<((requiredDegree * 2) + 1); i++)
+		for (int i=0; i<((REQUIRED_SMOOTHING_DEGREE * 2) + 1); i++)
 			sumXArray[i] = 0.0;
-		for (int i=0; i<(requiredDegree + 1); i++)
+		for (int i=0; i<(REQUIRED_SMOOTHING_DEGREE + 1); i++)
 			sumY[i] = 0.0;
 
 		data.stream().forEach(tuple -> {
-			for (int i=0; i<((requiredDegree * 2) + 1); i++)
+			for (int i=0; i<((REQUIRED_SMOOTHING_DEGREE * 2) + 1); i++)
 				sumXArray[i] += Math.pow(tuple.x, i);
-			for (int i=0; i<(requiredDegree + 1); i++)
+			for (int i=0; i<(REQUIRED_SMOOTHING_DEGREE + 1); i++)
 				sumY[i] += (tuple.y * Math.pow(tuple.x, i));
 		});
 
 		SquareMatrix squareMatrix = new SquareMatrix(dimension);
 		for (int row=0; row<dimension; row++) {
 			for (int col=0; col<dimension; col++) {
-				int powerRnk = (requiredDegree - row) + (requiredDegree - col);
+				int powerRnk = (REQUIRED_SMOOTHING_DEGREE - row) + (REQUIRED_SMOOTHING_DEGREE - col);
 				System.out.println("[" + row + "," + col + ":" + (powerRnk) + "] = " + sumXArray[powerRnk]);
 				squareMatrix.setElementAt(row, col, sumXArray[powerRnk]);
 			}
 		}
 		double[] constants = new double[dimension];
 		for (int i=0; i<dimension; i++) {
-			constants[i] = sumY[requiredDegree - i];
-			System.out.println("[" + (requiredDegree - i) + "] = " + constants[i]);
+			constants[i] = sumY[REQUIRED_SMOOTHING_DEGREE - i];
+			System.out.println("[" + (REQUIRED_SMOOTHING_DEGREE - i) + "] = " + constants[i]);
 		}
 
 		System.out.println("Resolving:");
@@ -136,9 +145,12 @@ public class LeastSquares {
 		System.out.println();
 
 		double[] result = SystemUtil.solveSystem(squareMatrix, constants);
+		String out = "[ ";
 		for (int i=0; i<result.length; i++) {
-			System.out.println(String.format("%f", result[i]));
+			out += String.format("%s%f", (i > 0 ? ", " : ""), result[i]);
 		}
+		out += " ]";
+		System.out.println(out);
 		// Nicer (Java 8)
 		System.out.println();
 		AtomicInteger integer = new AtomicInteger(0);

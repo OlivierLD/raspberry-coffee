@@ -28,7 +28,9 @@ object LeastSquares {
       var go = true
       while (go) {
         line = br readLine()
-        if (line == null) go = false else {
+        if (line == null) {
+          go = false
+        } else {
           var tuple = line split ";"
           data :+= (tuple(0).toDouble, tuple(1).toDouble)
         }
@@ -67,7 +69,7 @@ object LeastSquares {
       for (row <- 0 until dimension) {
         for (col <- 0 until dimension) {
           var powerRnk = (requiredDegree - row) + (requiredDegree - col)
-          squareMatrix.setElementAt(sumXArray(powerRnk), row, col)
+          squareMatrix setElementAt(sumXArray(powerRnk), row, col)
         }
       }
       var constants = Array.ofDim[Double](dimension)
@@ -76,10 +78,10 @@ object LeastSquares {
       }
 
       println("Resolving:")
-      SystemUtils.printSystem(squareMatrix, constants)
+      SystemUtils printSystem(squareMatrix, constants)
       println("")
 
-      var result = SystemUtils.solveSystem(squareMatrix, constants)
+      var result = SystemUtils solveSystem(squareMatrix, constants)
       result.foreach(coef =>
         println(s"${coef}")
       )
