@@ -36,7 +36,7 @@ That means:
 * with a step of 0.01
 * with a tolerance of 5 (on y)
 * iterate 1 time
-* used the polynomail coefficients [-0.0061, 0.0029, 4.6].
+* used the polynomial coefficients [-0.0061, 0.0029, 4.6].
 
 The data are generated in a file named `cloud.csv`, it can be opened as a spreadsheet.
 Turn the boolen to `true` for this to happen...
