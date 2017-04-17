@@ -15,7 +15,7 @@ To make it work:
 ```java
 	if (false) { // Turn to true to re-generate data
 		BufferedWriter bw = new BufferedWriter(new FileWriter("cloud.csv"));
-		cloudGenerator(bw, 0, 50, 0.01, 5, 1, -0.0061, 0.0029, 4.6);
+		cloudGenerator(bw, -8, 8, 0.01, new double[] {3, 4, 5, 6, 9}, 0.01, -0.04, 0.2, 1);
 		bw.close();
 	}
 
@@ -26,17 +26,16 @@ To make it work:
 
 The `cloudGenerator` is invoked as follow:
 ```java
-cloudGenerator(bw, 0, 50, 0.01, 5, 1, -0.0061, 0.0029, 4.6);
+cloudGenerator(bw, -8, 8, 0.01, new double[] {3, 4, 5, 6, 9}, 0.01, -0.04, 0.2, 1);
 ```
 That means:
 
 * generate a cloud of point
-* from abscise 0
-* to abscise 50
+* from abscise -8
+* to abscise 8
 * with a step of 0.01
-* with a tolerance of 5 (on y)
-* iterate 1 time
-* used the polynomial coefficients [-0.0061, 0.0029, 4.6].
+* with a tolerance of 3, then 4, 5, 6, and 9 (on y). That makes 5 iterations
+* use the polynomial coefficients [0.01, -0.04, 0.2, 1].
 
 The data are generated in a file named `cloud.csv`, it can be opened as a spreadsheet.
 Turn the boolen to `true` for this to happen...
@@ -48,17 +47,18 @@ Now run the class
 $> java -cp build/libs/RasPISamples-1.0-all.jar raspisamples.smoothing.LeastSquares
 ...
 
-[ -0.006028, 0.001358, 4.481926 ]
+[ 0.009981, -0.041813, 0.208513, 1.085674 ]
 
-Deg 2 -> -0.006028
-Deg 1 -> 0.001358
-Deg 0 -> 4.481926
+Deg 3 -> 0.009981
+Deg 2 -> -0.041813
+Deg 1 -> 0.208513
+Deg 0 -> 1.085674
 $>
 ```
 
 See the calculated coefficients (you required a degree 2 for the polynomial), put them in a `json` array:
 ```json
-[ -0.006028, 0.001358, 4.481926 ]
+[ 0.009981, -0.041813, 0.208513, 1.085674 ]
 ```
 Now, load the web page (available in this project) `smoothing/smoothing.html` in your browser,
 paste the content of `cloud.json` in the box on the top left, paste the coefficient array in the box on the right,
