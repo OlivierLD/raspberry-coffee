@@ -30,11 +30,11 @@ cloudGenerator(bw, -8, 8, 0.01, new double[] {3, 4, 5, 6, 9}, 0.01, -0.04, 0.2, 
 ```
 That means:
 
-* generate a cloud of point
-* from abscise -8
-* to abscise 8
+* generate a cloud of points
+* from abscissa -8
+* to abscissa 8
 * with a step of 0.01
-* with a tolerance of 3, then 4, 5, 6, and 9 (on y). That makes 5 iterations
+* with a tolerance of 3, then 4, 5, 6, and 9 (on `y`, up and down). That makes 5 iterations
 * use the polynomial coefficients [0.01, -0.04, 0.2, 1].
 
 The data are generated in a file named `cloud.csv`, it can be opened as a spreadsheet.
