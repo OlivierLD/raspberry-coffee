@@ -68,22 +68,15 @@
 
         var dataGraph; // The graph itself.
         var graphData = [];
-        var GRAPH_MAX_LEN = 300; // 60 = 1 minute
+//      var GRAPH_MAX_LEN = 300; // 60 = 1 minute
 
         window.onload = function() {
           dataGraph = new Graph("dataCanvas", graphData, null, null);
+          dataGraph.setSprayPoints(true);
           dataGraph.setBoundaries(-10, 10, -10, 10);
-            dataGraph.drawPoints("dataCanvas", graphData);
+          dataGraph.drawPoints("dataCanvas", graphData);
         };
 
-        /**
-         * jsondata: an array of tuples like
-         * [
-         *   { x: 123, y: 456 },
-         *   { x: 321, y: 654 },
-         *   ...
-         * ]
-         */
         var goDrawing = function() {
                 var degreeStr = document.getElementById("degree").value;
                 try {
@@ -113,17 +106,16 @@
       </tr>
       <tr>
         <td valign="top" align="left" valign="top">
-          Required Degree : <input id="degree" type="text" style="text-align: right;" placeholder="Degree" size="5">
+          Required Degree : <input id="degree" type="text" style="text-align: right;" placeholder="Degree" size="6">
           <br>
-          <input type="checkbox" id="with-spray" onchange="setSpray(this);">Spray points
+          <input type="checkbox" id="with-spray" onchange="setSpray(this);" checked>Spray points
           <!--br>
           <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">With tooltip -->
         </td>
       </tr>
       <tr>
         <td colspan="1">
-          <small>Spray points below, and click </small>
-          <button onclick="goDrawing();">Display</button>
+          <small>Spray points on the canvas below, and click </small><button onclick="goDrawing();">Display</button>
         </td>
       </tr>
       <tr>

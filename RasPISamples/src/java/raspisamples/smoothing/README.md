@@ -66,3 +66,9 @@ and click the `Display` button:
 ![Smoothing](../../../../smoothing.png)
 
 ---
+
+There is also a pure `JavaScript` implementation that allows you to spray the points on the canvas, and then calculate the smoothed curve.
+Just load `smoothing/smoothing.spray.html` in your browser.
+![Spraying](../../../../smoothing.02.png)
+
+---
