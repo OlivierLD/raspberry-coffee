@@ -154,6 +154,8 @@ function Graph(cName,       // Canvas Name
 
   var xScale, yScale;
   var minx, miny, maxx, maxy;
+  var requiredMinX, requiredMaxX, requiredMinY, requiredMaxY;
+
   var context;
 
   var unit = unit;
@@ -163,6 +165,9 @@ function Graph(cName,       // Canvas Name
   var withTooltip = false;
   var withSmoothing = false;
 
+  var withSprayPoints = false;
+  var spraying = false;
+
   this.setRawData = function(rd) {
     withRawData = rd;
   };
@@ -171,6 +176,26 @@ function Graph(cName,       // Canvas Name
   };
   this.setSmoothing = function(sm) {
       withSmoothing = sm;
+  };
+
+  this.setSprayPoints = function(sp) {
+      withSprayPoints = sp;
+  };
+
+  this.setBoundaries = function(minX, maxX, minY, maxY) {
+    minx = minX;
+    maxx = maxX;
+    miny = minY;
+    maxy = maxY;
+    requiredMinX = minX;
+    requiredMaxX = maxX;
+    requiredMinY = minY;
+    requiredMaxY = maxY;
+    setScales();
+  };
+
+  this.getData = function() {
+    return graphData;
   };
 
   var canvas = document.getElementById(cName);
@@ -191,9 +216,50 @@ function Graph(cName,       // Canvas Name
         }
         lastClicked = idx;
       }
-  }, 0);
+  });
+
+  canvas.addEventListener('mousedown', function(evt) {
+    if (withSprayPoints === true) {
+        console.log('Start spraying');
+        spraying = true;
+    }
+  });
+
+  canvas.addEventListener('mouseup', function(evt) {
+      if (withSprayPoints === true && spraying === true) {
+          console.log('Stop spraying');
+          spraying = false;
+      }
+  });
 
   canvas.addEventListener('mousemove', function(evt) {
+     if (withSprayPoints === true && spraying === true) {
+         var x = evt.pageX - canvas.offsetLeft;
+         var y = evt.pageY - canvas.offsetTop;
+
+         var coords = relativeMouseCoords(evt, canvas);
+         x = coords.x;
+         y = coords.y; // - 30; // TODO Find where this 30 comes from...
+
+//       console.log("Spraying at x=" + x + ", " + (minx + (x / xScale)) + ", y=" + y + ", " + (maxy - (y / yScale)) + ", xScale:" + xScale + ", yScale:" + yScale);
+         var centerX = (minx + (x / xScale));
+         var centerY = (maxy - (y / yScale));
+
+         var nbPointsInSpray = 30;
+         var sprayRadius = .25;
+         for (var i=0; i<nbPointsInSpray; i++) {
+             var direction = Math.random() * 360;
+             var radius = sprayRadius * Math.random();
+
+             var difX = radius * Math.cos(direction/180*Math.PI);
+             var difY = radius * Math.sin(direction/180*Math.PI);
+             graphData.push({ "x": centerX + difX, "y": centerY + difY });
+         }
+         graphData.push({ "x": centerX, "y": centerY });
+
+         instance.drawPoints(cName, graphData);
+     }
+
     if (withTooltip === true) {
       var x = evt.pageX - canvas.offsetLeft;
       var y = evt.pageY - canvas.offsetTop;
@@ -235,7 +301,7 @@ function Graph(cName,       // Canvas Name
         }
       }
     }
-  }, 0);
+  });
   
   var relativeMouseCoords = function (event, element) {
     var totalOffsetX = 0;
@@ -244,9 +310,9 @@ function Graph(cName,       // Canvas Name
     var canvasY = 0;
     var currentElement = element;
 
-    do {
-      totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-      totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+      do {
+          totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+          totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
     } while (currentElement = currentElement.offsetParent)
 
     canvasX = event.pageX - totalOffsetX;
@@ -312,10 +378,6 @@ function Graph(cName,       // Canvas Name
   };
 
   this.drawPoints = function(displayCanvasName, data, coeffs) {
-      if (data.length < 1) {
-          return; // No data
-      }
-
       context = canvas.getContext('2d');
 
       var width = context.canvas.clientWidth;
@@ -324,58 +386,66 @@ function Graph(cName,       // Canvas Name
       if (width === 0 || height === 0) { // Not visible
           return;
       }
-      this.init(data, true);
-
-      // Set the canvas size from its container.
-      canvas.width = width;
-      canvas.height = height;
-
-      document.getElementById(displayCanvasName).title = data.length + " elements, X:[" + minx + ", " + maxx + "] Y:[" + miny + ", " + maxy + "]";
-      var gridXStep = (maxx - minx) < 5 ? 1 : Math.round((maxx - minx) / 5);
-      var gridYStep = (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
-
-      // Clear
-      context.fillStyle = "white";
-      context.fillRect(0, 0, width, height);
-      // Horizontal grid (Data Unit)
-      for (var i=Math.round(miny); gridYStep>0 && i<maxy; i+=gridYStep) {
-          context.beginPath();
-          context.lineWidth = 1;
-          context.strokeStyle = graphColorConfig.horizontalGridColor;
-          context.moveTo(0, height - (i - miny) * yScale);
-          context.lineTo(width, height - (i - miny) * yScale);
-          context.stroke();
-
-          context.save();
-          context.font = "bold 10px " + graphColorConfig.font;
-          context.fillStyle = graphColorConfig.horizontalGridTextColor;
-          var str = i.toString();
-          var len = context.measureText(str).width;
-          context.fillText(str, width - (len + 2), height - ((i - miny) * yScale) - 2);
-          context.restore();
-          context.closePath();
+      if (data.length > 0) {
+          this.init(data, true);
       }
 
-      // Vertical grid (index)
-      for (var i=Math.round(minx); gridXStep>0 && i<maxx; i+=gridXStep) {
-          context.beginPath();
-          context.lineWidth = 1;
-          context.strokeStyle = graphColorConfig.verticalGridColor;
-          context.moveTo((i - minx) * xScale, 0);
-          context.lineTo((i - minx) * xScale, height);
-          context.stroke();
+      if (minx !== undefined && maxx !== undefined && miny !== undefined && maxy !== undefined) {
+          // Set the canvas size from its container.
+          canvas.width = width;
+          canvas.height = height;
 
-          // Rotate the whole context, and then write on it (that's why we need the translate)
-          context.save();
-          context.translate((i - minx) * xScale, height);
-          context.rotate(-Math.PI / 2);
-          context.font = "bold 10px " + graphColorConfig.font;
-          context.fillStyle = graphColorConfig.verticalGridTextColor;
-          var str = i.toString();
-          var len = context.measureText(str).width;
-          context.fillText(str, 2, -1); //i * xScale, cHeight - (len));
-          context.restore();
-          context.closePath();
+          document.getElementById(displayCanvasName).title = data.length + " elements, X:[" + minx + ", " + maxx + "] Y:[" + miny + ", " + maxy + "]";
+          var gridXStep = (maxx - minx) < 5 ? 1 : Math.round((maxx - minx) / 5);
+          var gridYStep = (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
+
+          // Clear
+          context.fillStyle = "white";
+          context.fillRect(0, 0, width, height);
+          // Horizontal grid (Data Unit)
+          for (var i = Math.round(miny); gridYStep > 0 && i < maxy; i += gridYStep) {
+              context.beginPath();
+              context.lineWidth = 1;
+              context.strokeStyle = graphColorConfig.horizontalGridColor;
+              context.moveTo(0, height - (i - miny) * yScale);
+              context.lineTo(width, height - (i - miny) * yScale);
+              context.stroke();
+
+              context.save();
+              context.font = "bold 10px " + graphColorConfig.font;
+              context.fillStyle = graphColorConfig.horizontalGridTextColor;
+              var str = i.toString();
+              var len = context.measureText(str).width;
+              context.fillText(str, width - (len + 2), height - ((i - miny) * yScale) - 2);
+              context.restore();
+              context.closePath();
+          }
+
+          // Vertical grid (index)
+          for (var i = Math.round(minx); gridXStep > 0 && i < maxx; i += gridXStep) {
+              context.beginPath();
+              context.lineWidth = 1;
+              context.strokeStyle = graphColorConfig.verticalGridColor;
+              context.moveTo((i - minx) * xScale, 0);
+              context.lineTo((i - minx) * xScale, height);
+              context.stroke();
+
+              // Rotate the whole context, and then write on it (that's why we need the translate)
+              context.save();
+              context.translate((i - minx) * xScale, height);
+              context.rotate(-Math.PI / 2);
+              context.font = "bold 10px " + graphColorConfig.font;
+              context.fillStyle = graphColorConfig.verticalGridTextColor;
+              var str = i.toString();
+              var len = context.measureText(str).width;
+              context.fillText(str, 2, -1); //i * xScale, cHeight - (len));
+              context.restore();
+              context.closePath();
+          }
+      }
+
+      if (data.length < 1) {
+          return; // No data
       }
 
       // Plot points here
@@ -599,26 +669,47 @@ function Graph(cName,       // Canvas Name
     }
   };
 
+  var setScales = function () {
+      if (maxx !== minx) {
+          xScale = canvas.getContext('2d').canvas.clientWidth / (maxx - minx);
+      }
+      if (maxy !== miny) {
+          yScale = canvas.getContext('2d').canvas.clientHeight / (maxy - miny);
+      }
+  };
+
   this.init = function(dataArray, points) {
       if (dataArray.length > 0) {
           var minMax = this.getMinMax(dataArray);
-          miny = minMax.mini;
-          maxy = minMax.maxi;
+
+          if (requiredMinX !== undefined &&
+              requiredMaxX !== undefined &&
+              requiredMinY !== undefined &&
+              requiredMaxY !== undefined) {
+              miny = Math.min(requiredMinY, minMax.mini);
+              maxy = Math.max(requiredMaxY, minMax.maxi);
+          } else {
+              miny = minMax.mini;
+              maxy = minMax.maxi;
+          }
 
           if (points === true) {
-              minx = Math.floor(this.minX(dataArray));
-              maxx = Math.ceil(this.maxX(dataArray));
+              if (requiredMinX !== undefined &&
+                  requiredMaxX !== undefined &&
+                  requiredMinY !== undefined &&
+                  requiredMaxY !== undefined) {
+                  minx = Math.min(requiredMinX, Math.floor(this.minX(dataArray)));
+                  maxx = Math.max(requiredMaxX, Math.ceil(this.maxX(dataArray)));
+              } else {
+                  minx = Math.floor(this.minX(dataArray));
+                  maxx = Math.ceil(this.maxX(dataArray));
+              }
 
           } else {
             minx = 0; // instance.minX(dataArray);
             maxx = dataArray.length - 1; //instance.maxX(dataArray);
           }
-          if (maxx !== minx) {
-              xScale = canvas.getContext('2d').canvas.clientWidth / (maxx - minx);
-          }
-          if (maxy !== miny) {
-              yScale = canvas.getContext('2d').canvas.clientHeight / (maxy - miny);
-          }
+          setScales();
       }
   };
 
