@@ -20,13 +20,13 @@ public final class MatrixUtil {
 		SquareMatrix co = new SquareMatrix(m.getDimension());
 		for (int r = 0; r < m.getDimension(); r++) {
 			for (int c = 0; c < m.getDimension(); c++) {
-				co.setElementAt(r, c, determin(minor(m, r, c)) * Math.pow((-1), (r + c + 2)));  // r+c+2 = (r+1) + (c+1)...
+				co.setElementAt(r, c, determinant(minor(m, r, c)) * Math.pow((-1), (r + c + 2)));  // r+c+2 = (r+1) + (c+1)...
 			}
 		}
 		return co;
 	}
 
-	public static SquareMatrix transpose(SquareMatrix m) {
+	public static SquareMatrix transposed(SquareMatrix m) {
 		SquareMatrix t = new SquareMatrix(m.getDimension());
 		// Replace line with columns.
 		int r, c;
@@ -50,7 +50,7 @@ public final class MatrixUtil {
 		return res;
 	}
 
-	public static double determin(SquareMatrix m) {
+	public static double determinant(SquareMatrix m) {
 		double v = 0.0;
 
 		if (m.getDimension() == 1) {
@@ -59,7 +59,7 @@ public final class MatrixUtil {
 			// C : column in Major
 			for (int C = 0; C < m.getDimension(); C++) { // Walk thru first line
 				// Minor's determinant
-				double minDet = determin(minor(m, 0, C));
+				double minDet = determinant(minor(m, 0, C));
 				v += (m.getElementAt(0, C) * minDet * Math.pow((-1.0), C + 1 + 1)); // line C, column 1
 			}
 		}
@@ -68,6 +68,6 @@ public final class MatrixUtil {
 
 	public static SquareMatrix invert(SquareMatrix m) {
 //  return Transposed(Multiply(Comatrix(m), (1.0/Determin(m))));
-		return multiply(transpose(comatrix(m)), (1.0 / determin(m)));
+		return multiply(transposed(comatrix(m)), (1.0 / determinant(m)));
 	}
 }
