@@ -1,4 +1,9 @@
-
+/**
+ * Utilities for system resolution, least squares, etc.
+ *
+ * @param dim
+ * @constructor
+ */
 function SquareMatrix(dim) {
     var dimension = dim;
     var matrixElements = [];
