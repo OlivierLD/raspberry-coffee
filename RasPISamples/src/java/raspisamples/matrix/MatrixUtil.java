@@ -67,7 +67,6 @@ public final class MatrixUtil {
 	}
 
 	public static SquareMatrix invert(SquareMatrix m) {
-//  return Transposed(Multiply(Comatrix(m), (1.0/Determin(m))));
 		return multiply(transposed(comatrix(m)), (1.0 / determinant(m)));
 	}
 }

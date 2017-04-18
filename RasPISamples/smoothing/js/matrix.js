@@ -95,7 +95,6 @@ var determinant = function(m) {
 };
 
 var invert = function(m) {
-//  return Transposed(Multiply(Comatrix(m), (1.0/Determin(m))));
     return multiply(transposed(comatrix(m)), (1.0 / determinant(m)));
 };
 
@@ -143,45 +142,155 @@ var printSystem = function(squareMatrix, constants) {
     }
 }
 
-/**
- * An example
- */
-var squareMatrix = new SquareMatrix(3);
+var f = function(x, coeffs) {
+    var result = 0.0;
+    for (var deg=0; deg<coeffs.length; deg++) {
+        result += (coeffs[deg] * Math.pow(x, coeffs.length - (deg + 1)));
+    }
+    return result;
+};
 
-/*
- Resolution of:
- 12x    +  13y +    14z = 234
- 1.345x - 654y + 0.001z = 98.87
- 23.09x + 5.3y - 12.34z = 9.876
- */
-squareMatrix.setElementAt(0, 0, 12);
-squareMatrix.setElementAt(0, 1, 13);
-squareMatrix.setElementAt(0, 2, 14);
+// Least Squares
+var leastSquares = function(requiredDegree, data) {
+    var dimension = requiredDegree + 1;
+    var sumXArray = [];
+    var sumY = [];
+// Init
+    for (var i = 0; i < ((requiredDegree * 2) + 1); i++) {
+        sumXArray.push(0.0);
+    }
+    for (var i = 0; i < (requiredDegree + 1); i++) {
+        sumY.push(0.0);
+    }
 
-squareMatrix.setElementAt(1, 0, 1.345);
-squareMatrix.setElementAt(1, 1, -654);
-squareMatrix.setElementAt(1, 2, 0.001);
+    for (var t = 0; t < data.length; t++) {
+        for (var i = 0; i < ((requiredDegree * 2) + 1); i++) {
+            sumXArray[i] += Math.pow(data[t].x, i);
+        }
+        for (var i = 0; i < (requiredDegree + 1); i++) {
+            sumY[i] += (data[t].y * Math.pow(data[t].x, i));
+        }
+    }
 
-squareMatrix.setElementAt(2, 0, 23.09);
-squareMatrix.setElementAt(2, 1, 5.3);
-squareMatrix.setElementAt(2, 2, -12.34);
+    var squareMatrix = new SquareMatrix(dimension);
+    for (var row = 0; row < dimension; row++) {
+        for (var col = 0; col < dimension; col++) {
+            var powerRnk = (requiredDegree - row) + (requiredDegree - col);
+            console.log("[" + row + "," + col + ":" + (powerRnk) + "] = " + sumXArray[powerRnk]);
+            squareMatrix.setElementAt(row, col, sumXArray[powerRnk]);
+        }
+    }
+    var constants = []; // new double[dimension];
+    for (var i = 0; i < dimension; i++) {
+        constants.push(sumY[requiredDegree - i]);
+        console.log("[" + (requiredDegree - i) + "] = " + constants[i]);
+    }
 
-var constants = [234, 98.87, 9.876];
+//  console.log("Resolving:");
+//  printSystem(squareMatrix, constants);
 
-console.log("Solving:");
-printSystem(squareMatrix, constants);
+    var result = solveSystem(squareMatrix, constants);
+    return result;
+};
 
-var result = solveSystem(squareMatrix, constants);
 
-console.log("x = %d", result[0]);
-console.log("y = %d", result[1]);
-console.log("z = %d", result[2]);
-console.log();
-// Proof:
-var X = (squareMatrix.getElementAt(0, 0) * result[0]) + (squareMatrix.getElementAt(0, 1) * result[1]) + (squareMatrix.getElementAt(0, 2) * result[2]);
-console.log("Proof X: %d", X);
-var Y = (squareMatrix.getElementAt(1, 0) * result[0]) + (squareMatrix.getElementAt(1, 1) * result[1]) + (squareMatrix.getElementAt(1, 2) * result[2]);
-console.log("Proof Y: %d", Y);
-var Z = (squareMatrix.getElementAt(2, 0) * result[0]) + (squareMatrix.getElementAt(2, 1) * result[1]) + (squareMatrix.getElementAt(2, 2) * result[2]);
-console.log("Proof Z: %d", Z);
+if (false) {
+    /**
+     * An example
+     */
+    var squareMatrix = new SquareMatrix(3);
 
+    /*
+     Resolution of:
+     12x    +  13y +    14z = 234
+     1.345x - 654y + 0.001z = 98.87
+     23.09x + 5.3y - 12.34z = 9.876
+     */
+    squareMatrix.setElementAt(0, 0, 12);
+    squareMatrix.setElementAt(0, 1, 13);
+    squareMatrix.setElementAt(0, 2, 14);
+
+    squareMatrix.setElementAt(1, 0, 1.345);
+    squareMatrix.setElementAt(1, 1, -654);
+    squareMatrix.setElementAt(1, 2, 0.001);
+
+    squareMatrix.setElementAt(2, 0, 23.09);
+    squareMatrix.setElementAt(2, 1, 5.3);
+    squareMatrix.setElementAt(2, 2, -12.34);
+
+    var constants = [234, 98.87, 9.876];
+
+    console.log("Solving:");
+    printSystem(squareMatrix, constants);
+
+    var result = solveSystem(squareMatrix, constants);
+
+    console.log("x = %d", result[0]);
+    console.log("y = %d", result[1]);
+    console.log("z = %d", result[2]);
+    console.log();
+    // Proof:
+    var X = (squareMatrix.getElementAt(0, 0) * result[0]) + (squareMatrix.getElementAt(0, 1) * result[1]) + (squareMatrix.getElementAt(0, 2) * result[2]);
+    console.log("Proof X: %d", X);
+    var Y = (squareMatrix.getElementAt(1, 0) * result[0]) + (squareMatrix.getElementAt(1, 1) * result[1]) + (squareMatrix.getElementAt(1, 2) * result[2]);
+    console.log("Proof Y: %d", Y);
+    var Z = (squareMatrix.getElementAt(2, 0) * result[0]) + (squareMatrix.getElementAt(2, 1) * result[1]) + (squareMatrix.getElementAt(2, 2) * result[2]);
+    console.log("Proof Z: %d", Z);
+}
+
+if (false) { // Example
+    var REQUIRED_SMOOTHING_DEGREE = 3;
+// Cloud of points here:
+    var data = [{"x": -8.000000, "y": -6.719560}, {"x": -7.990000, "y": -7.827249}, {
+        "x": -7.980000,
+        "y": -9.274245
+    }, {"x": -7.970000, "y": -8.640282}, {"x": -7.960000, "y": -7.339933}, {
+        "x": -7.950000,
+        "y": -6.246416
+    }, {"x": -7.940000, "y": -9.084759}, {"x": -7.930000, "y": -9.104593}, {
+        "x": -7.920000,
+        "y": -6.523360
+    }, {"x": -7.910000, "y": -5.865572}, {"x": -7.900000, "y": -8.498517}, {
+        "x": -7.890000,
+        "y": -5.992720
+    }, {"x": -7.880000, "y": -10.100942}, {"x": -7.870000, "y": -9.724057}, {
+        "x": -7.860000,
+        "y": -5.722992
+    }, {"x": -7.850000, "y": -5.135082}, {"x": -7.840000, "y": -9.872333}, {
+        "x": -7.830000,
+        "y": -7.163344
+    }, {"x": -7.820000, "y": -9.230664}, {"x": -7.810000, "y": -7.397149}, {
+        "x": -7.800000,
+        "y": -7.310588
+    }, {"x": -7.790000, "y": -9.620354}, {"x": -7.780000, "y": -6.301957}, {
+        "x": -7.770000,
+        "y": -7.982450
+    }, {"x": -7.760000, "y": -7.450044}, {"x": -7.750000, "y": -10.198594}, {
+        "x": -7.740000,
+        "y": -7.495622
+    }, {"x": -7.730000, "y": -10.380142}, {"x": -7.720000, "y": -4.536389}, {
+        "x": -7.710000,
+        "y": -9.485454
+    }, {"x": -7.700000, "y": -9.126708}, {"x": -7.690000, "y": -8.528006}, {
+        "x": -7.680000,
+        "y": -5.785669
+    }, {"x": -7.670000, "y": -9.679696}, {"x": -7.660000, "y": -6.381080}, {
+        "x": -7.650000,
+        "y": -5.388684
+    }, {"x": -7.640000, "y": -4.429049}, {"x": -7.630000, "y": -5.251344}, {
+        "x": -7.620000,
+        "y": -5.306796
+    }, {"x": -7.610000, "y": -8.326423}, {"x": -7.600000, "y": -10.112724}, {
+        "x": -7.590000,
+        "y": -5.076918
+    }, {"x": -7.580000, "y": -6.596441}, {"x": -7.570000, "y": -9.423550}];
+
+    var result = leastSquares(REQUIRED_SMOOTHING_DEGREE, data);
+
+    var out = "[ ";
+    for (var i = 0; i < result.length; i++) {
+        out += ((i > 0 ? ", " : "") + result[i]);
+    }
+    out += " ]";
+    console.log(out);
+}
