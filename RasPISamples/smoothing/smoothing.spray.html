@@ -79,13 +79,22 @@
 
         var goDrawing = function() {
                 var degreeStr = document.getElementById("degree").value;
-                try {
-                    var degree = parseInt(degreeStr);
-                    var graphData = dataGraph.getData();
-                    var coeffData = leastSquares(degree, graphData);
-                    dataGraph.drawPoints("dataCanvas", graphData, coeffData);
-                } catch (err) {
-                    alert(err);
+                if (degreeStr.trim().length === 0) {
+                   alert("Please provide the degree of the polynomial to find (as a positive integer)");
+                } else {
+                    try {
+                        var degree = parseInt(degreeStr);
+                        if (degree < 1) {
+                            alert("Degree must be a positive integer");
+
+                        } else {
+                            var graphData = dataGraph.getData();
+                            var coeffData = leastSquares(degree, graphData);
+                            dataGraph.drawPoints("dataCanvas", graphData, coeffData);
+                        }
+                    } catch (err) {
+                        alert(err);
+                    }
                 }
         };
 

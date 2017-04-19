@@ -221,6 +221,7 @@ function Graph(cName,       // Canvas Name
   canvas.addEventListener('mousedown', function(evt) {
     if (withSprayPoints === true) {
         console.log('Start spraying');
+        canvas.style.cursor = 'crosshair';
         spraying = true;
     }
   });
@@ -228,6 +229,7 @@ function Graph(cName,       // Canvas Name
   canvas.addEventListener('mouseup', function(evt) {
       if (withSprayPoints === true && spraying === true) {
           console.log('Stop spraying');
+          canvas.style.cursor = 'default';
           spraying = false;
       }
   });
