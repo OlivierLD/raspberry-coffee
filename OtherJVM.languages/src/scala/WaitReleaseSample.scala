@@ -30,12 +30,12 @@ object WaitReleaseSample {
     var i = 0
     while (i < 10 && !completed) {
       println(s"Wait loop # ${i + 1}")
-      me.synchronized({
+      me synchronized({
         try {
-          me.wait(500)
+          me wait(500)
         } catch {
           case ex: Exception =>
-            ex.printStackTrace
+            ex printStackTrace
         }
       })
       i += 1
@@ -43,12 +43,12 @@ object WaitReleaseSample {
     println("Loop bottom")
     if (completed) {
       println("Work is completed in time")
-      me.synchronized({
+      me synchronized({
         try {
-          me.wait(1000) // Just to finish the printouts
+          me wait(1000) // Just to finish the printouts
         } catch {
           case ex: Exception =>
-            ex.printStackTrace
+            ex printStackTrace
         }
       })
     } else {
@@ -58,11 +58,11 @@ object WaitReleaseSample {
           me wait
         } catch {
           case ex: Exception =>
-            ex.printStackTrace
+            ex printStackTrace
         }
       }
     }
   }
 
-  def sleep(duration: Long) { Thread.sleep(duration) }
+  def sleep(duration: Long) { Thread sleep(duration) }
 }

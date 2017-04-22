@@ -14,6 +14,8 @@ import java.text.NumberFormat
 
 object SampleOne extends App {
 
+  val ONE_SEC = 1000L
+
 //def main(args: Array[String]): Unit = {
     println("Hello Scala!")
 
@@ -39,7 +41,7 @@ object SampleOne extends App {
       println(s"LastString execution took ${NumberFormat.getInstance.format(after - before)} ms.")
       println(last)
       try {
-        Thread.sleep(1000L)
+        Thread sleep(ONE_SEC)
       } catch {
         case ie: InterruptedException => {
         }
@@ -54,7 +56,7 @@ object SampleOne extends App {
         println(s"Position is a ${position.getClass.getName}")
         if (position.isInstanceOf[GeoPos]) println(s"Position is ${position.asInstanceOf[GeoPos].toString} (Grid Square ${position.asInstanceOf[GeoPos].gridSquare})")
         try {
-          Thread.sleep(1000L)
+          Thread sleep(ONE_SEC)
         } catch {
           case ie: InterruptedException => {
           }
@@ -71,7 +73,7 @@ object SampleOne extends App {
       println(s"BoatPosition execution took ${NumberFormat.getInstance.format(after - before)} ms.")
       println(s"Position is ${boatGeoPos.toString}")
       try {
-        Thread.sleep(1000L)
+        Thread sleep(ONE_SEC)
       } catch {
         case ie: InterruptedException => {
         }
@@ -91,7 +93,7 @@ object SampleOne extends App {
         println(s"Instant Current    ${inst.speed} knots, dir ${inst.angle}")
         println(s"Calculated Current ${calc.speed} knots, dir ${calc.angle}")
         try {
-          Thread.sleep(1000L)
+          Thread sleep(ONE_SEC)
         } catch {
           case ie: InterruptedException => {
           }

@@ -489,7 +489,8 @@ Among the forwarders available in this project some are to be dynamically loaded
 
 _Warning_: for now, you _cannot_ load more than one dynamically loaded forwarder, consumer or computer of the same class. They are identified by their class name, you cannot have more than one object
 with a given class name in the lists. For example, if you have an `MQTTPublisher` that uses a broker URL like `tcp://192.168.1.136:1883`, you might very well want to
-have another one, using a broker URL like `tcp://io.adafruit.com:1883`. Currently, this is **not** possible.
+have _another one_, using a broker URL like `tcp://io.adafruit.com:1883`. Currently, this is **not** possible.
+> This should not be too much of a problem though, specially if you use all this on a boat, you probably do not need in Internet connection. A small LAN would do the job in this case.
 
 ## A note on the build
 As you must have seen, we use `Gradle` here, along with the `ShadowJar` plugin. This plugin gathers **all** the dependencies, and puts them
