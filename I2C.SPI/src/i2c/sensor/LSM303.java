@@ -215,12 +215,13 @@ public class LSM303 {
 
 			float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way...
 			while (heading < 0) heading += 360f;
-			float pitch = - (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
-			pitch += 180f; // -180 +180
+			float pitch = (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
+			pitch += 180f; // -180 +180 Nose up +, nose down -
 			float roll = - (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
-			roll += 180f; // -180 +180
+			roll += 180f; // -180 +180 Right +, Left -
 
 			if (dataListener != null) {
+				// Use the values as you want
 				dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, pitch, roll);
 			} else {
 //				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %f, Z: %f => heading: %s, pitch: %s, roll: %s)",
@@ -234,8 +235,6 @@ public class LSM303 {
 								Z_FMT.format(pitch),
 								Z_FMT.format(roll)));
 			}
-			//Use the values as you want
-			// ...
 			try {
 				Thread.sleep(this.wait);
 			} catch (InterruptedException ie) {
@@ -259,9 +258,9 @@ public class LSM303 {
 		verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 		LSM303 sensor = new LSM303();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("\nBye.");
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("\nBye.");
+			synchronized (sensor) {
 				sensor.setKeepReading(false);
 				try {
 					Thread.sleep(sensor.wait);
@@ -269,7 +268,7 @@ public class LSM303 {
 					System.err.println(ie.getMessage());
 				}
 			}
-		});
+		}));
 		sensor.startReading();
 	}
 }
