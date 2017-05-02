@@ -53,44 +53,19 @@ public class LSM303 {
 	public final static int LSM303_MAGGAIN_5_6 = 0xC0; // +/- 5.6
 	public final static int LSM303_MAGGAIN_8_1 = 0xE0; // +/- 8.1
 
-	private final static float _lsm303Accel_MG_LSB = 0.001F;   // 1, 2, 4 or 12 mg per lsb
+	private final static float _lsm303Accel_MG_LSB = 0.001F; // 1, 2, 4 or 12 mg per lsb
 	private static float _lsm303Mag_Gauss_LSB_XY = 1100.0F;  // Varies with gain
-	private static float _lsm303Mag_Gauss_LSB_Z = 980.0F;   // Varies with gain
+	private static float _lsm303Mag_Gauss_LSB_Z = 980.0F;    // Varies with gain
 
-	private float SENSORS_GRAVITY_EARTH = (9.80665F);
-	/**
-	 * < Earth's gravity in m/s^2
-	 */
-	private float SENSORS_GRAVITY_MOON = (1.6F);
-	/**
-	 * < The moon's gravity in m/s^2
-	 */
-	private float SENSORS_GRAVITY_SUN = (275.0F);
-	/**
-	 * < The sun's gravity in m/s^2
-	 */
-	private float SENSORS_GRAVITY_STANDARD = (SENSORS_GRAVITY_EARTH);
-	private float SENSORS_MAGFIELD_EARTH_MAX = (60.0F);
-	/**
-	 * < Maximum magnetic field on Earth's surface
-	 */
-	private float SENSORS_MAGFIELD_EARTH_MIN = (30.0F);
-	/**
-	 * < Minimum magnetic field on Earth's surface
-	 */
-	private float SENSORS_PRESSURE_SEALEVELHPA = (1013.25F);
-	/**
-	 * < Average sea level pressure is 1013.25 hPa
-	 */
-	private float SENSORS_DPS_TO_RADS = (0.017453293F);
-	/**
-	 * < Degrees/s to rad/s multiplier
-	 */
-	private float SENSORS_GAUSS_TO_MICROTESLA = (100);
-	/**
-	 * < Gauss to micro-Tesla multiplier
-	 */
-
+	private float SENSORS_GRAVITY_EARTH = 9.80665f;        // < Earth's gravity in m/s^2
+	private float SENSORS_GRAVITY_MOON = 1.6f;             // < The moon's gravity in m/s^2
+	private float SENSORS_GRAVITY_SUN = 275.0f;            // < The sun's gravity in m/s^2
+	private float SENSORS_GRAVITY_STANDARD = SENSORS_GRAVITY_EARTH;
+	private float SENSORS_MAGFIELD_EARTH_MAX = 60.0f;      // < Maximum magnetic field on Earth's surface
+	private float SENSORS_MAGFIELD_EARTH_MIN = 30.0f;      // < Minimum magnetic field on Earth's surface
+	private float SENSORS_PRESSURE_SEALEVELHPA = 1013.25f; // < Average sea level pressure is 1013.25 hPa
+	private float SENSORS_DPS_TO_RADS = 0.017453293f;      // < Degrees/s to rad/s multiplier
+	private float SENSORS_GAUSS_TO_MICROTESLA = 100;       // < Gauss to micro-Tesla multiplier
 
 	private I2CBus bus;
 	private I2CDevice accelerometer, magnetometer;
@@ -241,9 +216,9 @@ public class LSM303 {
 			float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way...
 			while (heading < 0) heading += 360f;
 			float pitch = - (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
-	//	pitch -= 180f; // -180 +180
+			pitch += 180f; // -180 +180
 			float roll = - (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
-	//	roll -= 180f; // -180 +180
+			roll += 180f; // -180 +180
 
 			if (dataListener != null) {
 				dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, pitch, roll);
@@ -281,8 +256,20 @@ public class LSM303 {
 	}
 
 	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
-
+		verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 		LSM303 sensor = new LSM303();
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				System.out.println("\nBye.");
+				sensor.setKeepReading(false);
+				try {
+					Thread.sleep(sensor.wait);
+				} catch (InterruptedException ie) {
+					System.err.println(ie.getMessage());
+				}
+			}
+		});
 		sensor.startReading();
 	}
 }
