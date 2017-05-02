@@ -95,9 +95,9 @@ public class HMC5883L {
 			double roll = Math.atan2(magneticY, magneticZ);
  */
 		if (verbose) {
-			System.out.println(String.format("Heading:", Math.toDegrees(Math.atan2(yOut, xOut))));
-			System.out.println(String.format("Pitch:", Math.toDegrees(Math.atan2(xOut, zOut))));
-			System.out.println(String.format("Roll:", Math.toDegrees(Math.atan2(yOut, zOut))));
+			System.out.println(String.format("Heading: %f", Math.toDegrees(Math.atan2(yOut, xOut))));
+			System.out.println(String.format("Pitch: %f", Math.toDegrees(Math.atan2(xOut, zOut))));
+			System.out.println(String.format("Roll: %f", Math.toDegrees(Math.atan2(yOut, zOut))));
 		}
 
 		heading = Math.atan2(yOut, xOut);
