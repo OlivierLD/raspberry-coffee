@@ -8,54 +8,43 @@ import java.util.List;
 /**
  * A singleton
  */
-public class SensorLSM303Context implements Serializable
-{
-  private static SensorLSM303Context context = null;
-  private transient List<LSM303Listener> sensorReaderListeners = null;
-  
-  private SensorLSM303Context()
-  {
-    sensorReaderListeners = new ArrayList<LSM303Listener>();
-  }
-  
-  public static synchronized SensorLSM303Context getInstance()
-  {
-    if (context == null)
-      context = new SensorLSM303Context();    
-    return context;
-  }
+public class SensorLSM303Context implements Serializable {
+	private static SensorLSM303Context context = null;
+	private transient List<LSM303Listener> sensorReaderListeners = null;
 
-  public List<LSM303Listener> getReaderListeners()
-  {
-    return sensorReaderListeners;
-  }    
+	private SensorLSM303Context() {
+		sensorReaderListeners = new ArrayList<>();
+	}
 
-  public synchronized void addReaderListener(LSM303Listener l)
-  {
-    if (!sensorReaderListeners.contains(l))
-    {
-      sensorReaderListeners.add(l);
-    }
-  }
+	public static synchronized SensorLSM303Context getInstance() {
+		if (context == null)
+			context = new SensorLSM303Context();
+		return context;
+	}
 
-  public synchronized void removeReaderListener(L3GD20Listener l)
-  {
-    sensorReaderListeners.remove(l);
-  }
+	public List<LSM303Listener> getReaderListeners() {
+		return sensorReaderListeners;
+	}
 
-  public void fireDataDetected(int accX, int accY, int accZ, int magX, int magY, int magZ, float heading)
-  {
-    for (LSM303Listener l : sensorReaderListeners)
-    {
-      l.dataDetected(accX, accY, accZ, magX, magY, magZ, heading);
-    }
-  }
+	public synchronized void addReaderListener(LSM303Listener l) {
+		if (!sensorReaderListeners.contains(l)) {
+			sensorReaderListeners.add(l);
+		}
+	}
 
-  public void fireClose()
-  {
-    for (LSM303Listener l : sensorReaderListeners)
-    {
-      l.close();
-    }
-  }
+	public synchronized void removeReaderListener(L3GD20Listener l) {
+		sensorReaderListeners.remove(l);
+	}
+
+	public void fireDataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
+		for (LSM303Listener l : sensorReaderListeners) {
+			l.dataDetected(accX, accY, accZ, magX, magY, magZ, heading, pitch, roll);
+		}
+	}
+
+	public void fireClose() {
+		for (LSM303Listener l : sensorReaderListeners) {
+			l.close();
+		}
+	}
 }
