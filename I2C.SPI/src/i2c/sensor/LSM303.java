@@ -196,7 +196,6 @@ public class LSM303 {
 			int accelY = accel12(accelData, 2);
 			int accelZ = accel12(accelData, 4);
 
-
 			// Reading magnetometer measurements.
 			r = magnetometer.read(LSM303_REGISTER_MAG_OUT_X_H_M, magData, 0, 6);
 			if (r != 6) {
@@ -207,7 +206,7 @@ public class LSM303 {
 			int magY = mag16(magData, 2);
 			int magZ = mag16(magData, 4);
 
-			float magneticX = (float)magX /  _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+			float magneticX = (float)magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 			float magneticY = (float)magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 			float magneticZ = (float)magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
 
@@ -221,13 +220,16 @@ public class LSM303 {
 			if (dataListener != null) {
 				dataListener.dataDetected(accelX, accelY, accelZ, magX, magY, magZ, heading);
 			} else {
-				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %F, Z: %f => heading: %s, pitch: %s, roll: %s)",
+				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %f, Z: %f => heading: %s, pitch: %s, roll: %s)",
 								((float)accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD),
 								((float)accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD),
 								((float)accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD),
 								magneticX,
 								magneticY,
-								magneticZ, Z_FMT.format(heading), Z_FMT.format(pitch), Z_FMT.format(roll)));
+								magneticZ,
+								Z_FMT.format(heading),
+								Z_FMT.format(pitch),
+								Z_FMT.format(roll)));
 			}
 			//Use the values as you want
 			// ...
