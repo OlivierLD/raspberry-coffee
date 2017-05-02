@@ -102,7 +102,6 @@ public class LSM303 {
 	private long wait = 1000L;
 	private LSM303Listener dataListener = null;
 
-
 	private void setMagGain(int gain) throws IOException {
 		magnetometer.write(LSM303_REGISTER_MAG_CRB_REG_M, (byte) gain);
 
@@ -240,10 +239,10 @@ public class LSM303 {
 			float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
 
 			float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way...
-	//	while (heading < 0) heading += 360f;
-			float pitch = (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
+			while (heading < 0) heading += 360f;
+			float pitch = - (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
 	//	pitch -= 180f; // -180 +180
-			float roll = (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
+			float roll = - (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
 	//	roll -= 180f; // -180 +180
 
 			if (dataListener != null) {
@@ -255,7 +254,7 @@ public class LSM303 {
 //								Z_FMT.format(heading),
 //								Z_FMT.format(pitch),
 //								Z_FMT.format(roll)));
-				System.out.println(String.format("heading: %s, pitch: %s, roll: %s",
+				System.out.println(String.format("heading: %s (true), pitch: %s, roll: %s",
 								Z_FMT.format(heading),
 								Z_FMT.format(pitch),
 								Z_FMT.format(roll)));
@@ -282,6 +281,7 @@ public class LSM303 {
 	}
 
 	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+
 		LSM303 sensor = new LSM303();
 		sensor.startReading();
 	}
