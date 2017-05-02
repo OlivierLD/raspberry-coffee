@@ -1,6 +1,6 @@
 #!/bin/bash
 CP=./build/libs/I2C.SPI-1.0-all.jar
 # CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-set JAVA_OPTS="-Dlsm303.verbose=true"
+JAVA_OPTS="-Dlsm303.verbose=true"
 sudo java $JAVA_OPTS -cp $CP i2c.sensor.LSM303
 

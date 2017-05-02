@@ -217,10 +217,10 @@ public class LSM303 {
 			while (heading < 0) heading += 360f;
 			float pitch = (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
 			pitch += 180f; // -180 +180 Nose up +, nose down -
-			if (pitch > 180) pitch = 360 - pitch;
+			if (pitch > 180) pitch -= 360;
 			float roll = - (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
 			roll += 180f; // -180 +180 Right +, Left -
-			if (roll > 180) roll = 360 - roll;
+			if (roll > 180) roll -= 360;
 
 			if (dataListener != null) {
 				// Use the values as you want
