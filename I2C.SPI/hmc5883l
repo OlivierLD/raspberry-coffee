@@ -3,4 +3,4 @@ CP=./build/libs/I2C.SPI-1.0-all.jar
 # CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 JAVA_OPTIONS=""
 JAVA_OPTIONS="-Dhmc5883l.verbose=true"
-sudo java $JAVA_OPTIONS -cp $CP i2c.sensor.HMC5883L $*
+sudo java $JAVA_OPTIONS -cp $CP i2c.sensor.HMC5883L
