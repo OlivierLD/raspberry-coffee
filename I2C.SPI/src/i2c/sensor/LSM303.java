@@ -33,7 +33,7 @@ public class LSM303 {
    */
 	// Those 2 next addresses are returned by "sudo i2cdetect -y 1", see above.
 	public final static int LSM303_ADDRESS_ACCEL = (0x32 >> 1); // 0011001x, 0x19
-	public final static int LSM303_ADDRESS_MAG = (0x3C >> 1); // 0011110x, 0x1E
+	public final static int LSM303_ADDRESS_MAG = (0x3C >> 1);   // 0011110x, 0x1E
 	// Default    Type
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG1_A = 0x20; // 00000111   rw
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG4_A = 0x23; // 00000000   rw
@@ -51,15 +51,67 @@ public class LSM303 {
 	public final static int LSM303_MAGGAIN_5_6 = 0xC0; // +/- 5.6
 	public final static int LSM303_MAGGAIN_8_1 = 0xE0; // +/- 8.1
 
+	private final static float _lsm303Accel_MG_LSB     = 0.001F;   // 1, 2, 4 or 12 mg per lsb
+	private static float _lsm303Mag_Gauss_LSB_XY = 1100.0F;  // Varies with gain
+	private static float _lsm303Mag_Gauss_LSB_Z  = 980.0F;   // Varies with gain
+
+	private float SENSORS_GRAVITY_EARTH            =(9.80665F);              /**< Earth's gravity in m/s^2 */
+	private float SENSORS_GRAVITY_MOON             =(1.6F);                  /**< The moon's gravity in m/s^2 */
+	private float SENSORS_GRAVITY_SUN              =(275.0F);                /**< The sun's gravity in m/s^2 */
+	private float SENSORS_GRAVITY_STANDARD         =(SENSORS_GRAVITY_EARTH);
+	private float SENSORS_MAGFIELD_EARTH_MAX       =(60.0F);                 /**< Maximum magnetic field on Earth's surface */
+	private float SENSORS_MAGFIELD_EARTH_MIN       =(30.0F);                 /**< Minimum magnetic field on Earth's surface */
+	private float SENSORS_PRESSURE_SEALEVELHPA     =(1013.25F);              /**< Average sea level pressure is 1013.25 hPa */
+	private float SENSORS_DPS_TO_RADS              =(0.017453293F);          /**< Degrees/s to rad/s multiplier */
+	private float SENSORS_GAUSS_TO_MICROTESLA      =(100);                   /**< Gauss to micro-Tesla multiplier */
+
+
 	private I2CBus bus;
 	private I2CDevice accelerometer, magnetometer;
 	private byte[] accelData, magData;
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
-	private static boolean verbose = false;
+	private static boolean verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 
 	private long wait = 1000L;
 	private LSM303Listener dataListener = null;
+
+
+	private void setMagGain(int gain) throws IOException {
+		magnetometer.write(LSM303_REGISTER_MAG_CRB_REG_M, (byte) gain);
+
+		switch(gain)
+		{
+			case LSM303_MAGGAIN_1_3:
+				_lsm303Mag_Gauss_LSB_XY = 1100;
+				_lsm303Mag_Gauss_LSB_Z  = 980;
+				break;
+			case LSM303_MAGGAIN_1_9:
+				_lsm303Mag_Gauss_LSB_XY = 855;
+				_lsm303Mag_Gauss_LSB_Z  = 760;
+				break;
+			case LSM303_MAGGAIN_2_5:
+				_lsm303Mag_Gauss_LSB_XY = 670;
+				_lsm303Mag_Gauss_LSB_Z  = 600;
+				break;
+			case LSM303_MAGGAIN_4_0:
+				_lsm303Mag_Gauss_LSB_XY = 450;
+				_lsm303Mag_Gauss_LSB_Z  = 400;
+				break;
+			case LSM303_MAGGAIN_4_7:
+				_lsm303Mag_Gauss_LSB_XY = 400;
+				_lsm303Mag_Gauss_LSB_Z  = 355;
+				break;
+			case LSM303_MAGGAIN_5_6:
+				_lsm303Mag_Gauss_LSB_XY = 330;
+				_lsm303Mag_Gauss_LSB_Z  = 295;
+				break;
+			case LSM303_MAGGAIN_8_1:
+				_lsm303Mag_Gauss_LSB_XY = 230;
+				_lsm303Mag_Gauss_LSB_Z  = 205;
+				break;
+		}
+	}
 
 	public LSM303() throws I2CFactory.UnsupportedBusNumberException {
 		if (verbose) {
@@ -88,8 +140,9 @@ public class LSM303 {
 
 			// Enable magnetometer
 			magnetometer.write(LSM303_REGISTER_MAG_MR_REG_M, (byte) 0x00);
+
 			int gain = LSM303_MAGGAIN_1_3;
-			magnetometer.write(LSM303_REGISTER_MAG_CRB_REG_M, (byte) gain);
+			setMagGain(gain);
 			if (verbose)
 				System.out.println("Magnetometer OK.");
 
@@ -143,6 +196,7 @@ public class LSM303 {
 			int accelY = accel12(accelData, 2);
 			int accelZ = accel12(accelData, 4);
 
+
 			// Reading magnetometer measurements.
 			r = magnetometer.read(LSM303_REGISTER_MAG_OUT_X_H_M, magData, 0, 6);
 			if (r != 6) {
@@ -153,18 +207,27 @@ public class LSM303 {
 			int magY = mag16(magData, 2);
 			int magZ = mag16(magData, 4);
 
-			float heading = (float) Math.toDegrees(Math.atan2(magY, magX));
+			float magneticX = (float)magX /  _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+			float magneticY = (float)magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+			float magneticZ = (float)magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
+
+			float heading = (float) Math.toDegrees(Math.atan2(magneticY, magneticX));
 			while (heading < 0) heading += 360f;
-			float pitch = (float) Math.toDegrees(Math.atan2(magX, magZ));
+			float pitch = (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
 			pitch -= 180f; // -180 +180
-			float roll = (float) Math.toDegrees(Math.atan2(magY, magZ));
+			float roll = (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
 			roll -= 180f; // -180 +180
 
 			if (dataListener != null) {
 				dataListener.dataDetected(accelX, accelY, accelZ, magX, magY, magZ, heading);
 			} else {
 				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %F, Z: %f => heading: %s, pitch: %s, roll: %s)",
-								accelX, accelY, accelZ, magX, magY, magZ, Z_FMT.format(heading), Z_FMT.format(pitch), Z_FMT.format(roll)));
+								((float)accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD),
+								((float)accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD),
+								((float)accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD),
+								magneticX,
+								magneticY,
+								magneticZ, Z_FMT.format(heading), Z_FMT.format(pitch), Z_FMT.format(roll)));
 			}
 			//Use the values as you want
 			// ...
