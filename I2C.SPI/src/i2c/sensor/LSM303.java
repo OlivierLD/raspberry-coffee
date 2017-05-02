@@ -16,6 +16,8 @@ import java.text.NumberFormat;
 /*
  * Accelerometer + Magnetometer
  * (Compass & Gyro)
+ *
+ * Warning: The board must be standing on its side!!! Not laying down.
  */
 public class LSM303 {
 	// Minimal constants carried over from Arduino library
@@ -237,12 +239,12 @@ public class LSM303 {
 			float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 			float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
 
-			float heading = (float) Math.toDegrees(Math.atan2(magneticY, magneticX));
-			while (heading < 0) heading += 360f;
+			float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way...
+	//	while (heading < 0) heading += 360f;
 			float pitch = (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
-			pitch -= 180f; // -180 +180
+	//	pitch -= 180f; // -180 +180
 			float roll = (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
-			roll -= 180f; // -180 +180
+	//	roll -= 180f; // -180 +180
 
 			if (dataListener != null) {
 				dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, pitch, roll);
