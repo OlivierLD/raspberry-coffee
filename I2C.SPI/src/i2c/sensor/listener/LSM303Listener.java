@@ -4,6 +4,6 @@ import java.util.EventListener;
 
 public abstract class LSM303Listener implements EventListener
 {
-  public void dataDetected(int accX, int accY, int accZ, int magX, int magY, int magZ, float heading) {}
+  public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {}
   public void close() {}
 }
