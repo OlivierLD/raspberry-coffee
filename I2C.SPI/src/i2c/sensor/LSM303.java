@@ -17,7 +17,7 @@ import java.text.NumberFormat;
  * Accelerometer + Magnetometer
  * (Compass & Gyro)
  *
- * Warning: The board must be standing on its side!!! Not laying down.
+ * Warning/Question: The board must be standing on its side!!! Not laying down.
  */
 public class LSM303 {
 	// Minimal constants carried over from Arduino library

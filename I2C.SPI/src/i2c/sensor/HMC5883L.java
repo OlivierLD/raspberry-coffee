@@ -89,6 +89,16 @@ public class HMC5883L {
 			System.out.println("yOut:" + yOut);
 			System.out.println("zOut:" + zOut);
 		}
+/*
+			double heading = Math.atan2(magneticY, magneticX)
+			double pitch = Math.atan2(magneticX, magneticZ);
+			double roll = Math.atan2(magneticY, magneticZ);
+ */
+		if (verbose) {
+			System.out.println(String.format("Heading:", Math.toDegrees(Math.atan2(yOut, xOut))));
+			System.out.println(String.format("Pitch:", Math.toDegrees(Math.atan2(xOut, zOut))));
+			System.out.println(String.format("Roll:", Math.toDegrees(Math.atan2(yOut, zOut))));
+		}
 
 		heading = Math.atan2(yOut, xOut);
 		if (heading < 0)
@@ -112,32 +122,34 @@ public class HMC5883L {
 		}
 	}
 
+	private static boolean go = true;
+	private static void setGo(boolean b) {
+		go = b;
+	}
+
 	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		HMC5883L sensor = new HMC5883L();
 		double hdg = 0;
 
-		int nbLoop = 1; // Default
-		try {
-			if (args.length > 0)
-				nbLoop = Integer.parseInt(args[0]);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			synchronized (sensor) {
+				setGo(false);
+				sensor.close();
+				waitfor(1000);
+			}
+		}));
 
-		for (int i = 0; i < nbLoop; i++) {
+		while (go) {
 			try {
 				hdg = sensor.readHeading();
 			} catch (Exception ex) {
 				System.err.println(ex.getMessage());
 				ex.printStackTrace();
 			}
-			System.out.println(Integer.toString(i + 1) + "/" + Integer.toString(nbLoop) + ", heading: " + NF.format(Math.toDegrees(hdg)) + " deg.");
-
-			if (i < (nbLoop - 1))
-				waitfor(1000);
+			System.out.println("Heading: " + NF.format(Math.toDegrees(hdg)) + " deg.");
+			waitfor(500);
 		}
 		System.out.println("Bye.");
-		sensor.close();
 	}
 }
