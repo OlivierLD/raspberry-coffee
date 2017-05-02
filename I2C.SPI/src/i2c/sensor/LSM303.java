@@ -154,38 +154,17 @@ public class LSM303 {
 			int magZ = mag16(magData, 4);
 
 			float heading = (float) Math.toDegrees(Math.atan2(magY, magX));
-			while (heading < 0)
-				heading += 360f;
-			float pitch = (float) Math.toDegrees(Math.atan2(magX, magZ)); // TODO -180, 180
-			float roll = (float) Math.toDegrees(Math.atan2(magY, magZ)); // TODO -180, 180
+			while (heading < 0) heading += 360f;
+			float pitch = (float) Math.toDegrees(Math.atan2(magX, magZ));
+			pitch -= 180f; // -180 +180
+			float roll = (float) Math.toDegrees(Math.atan2(magY, magZ));
+			roll -= 180f; // -180 +180
 
-
-			// Bonus : CPU Temperature
-			float cpuTemp = Float.MIN_VALUE;
-			float cpuVoltage = Float.MIN_VALUE;
-			try {
-				cpuTemp = SystemInfo.getCpuTemperature();
-				cpuVoltage = SystemInfo.getCpuVoltage();
-			} catch (InterruptedException ie) {
-				ie.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			if (dataListener != null)
+			if (dataListener != null) {
 				dataListener.dataDetected(accelX, accelY, accelZ, magX, magY, magZ, heading);
-			else {
-				System.out.println("accel (X: " + accelX +
-								", Y: " + accelY +
-								", Z: " + accelZ +
-								") mag (X: " + magX +
-								", Y: " + magY +
-								", Z: " + magZ +
-								", heading: " + Z_FMT.format(heading) +
-								", pitch: " + Z_FMT.format(pitch) +
-								", roll: " + Z_FMT.format(roll) + ")" +
-								(cpuTemp != Float.MIN_VALUE ? " Cpu Temp:" + cpuTemp : "") +
-								(cpuVoltage != Float.MIN_VALUE ? " Cpu Volt:" + cpuVoltage : ""));
+			} else {
+				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %F, Z: %f => heading: %s, pitch: %s, roll: %s)",
+								accelX, accelY, accelZ, magX, magY, magZ, Z_FMT.format(heading), Z_FMT.format(pitch), Z_FMT.format(roll)));
 			}
 			//Use the values as you want
 			// ...
@@ -199,14 +178,13 @@ public class LSM303 {
 
 	private static int accel12(byte[] list, int idx) {
 		int n = (list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8); // Low, high bytes
-		if (n > 32767)
-			n -= 65536;                           // 2's complement signed
+		if (n > 32767) n -= 65536;              // 2's complement signed
 		return n >> 4;                          // 12-bit resolution
 	}
 
 	private static int mag16(byte[] list, int idx) {
 		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF);   // High, low bytes
-		return (n < 32768 ? n : n - 65536);       // 2's complement signed
+		return (n < 32768 ? n : n - 65536);                           // 2's complement signed
 	}
 
 	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
