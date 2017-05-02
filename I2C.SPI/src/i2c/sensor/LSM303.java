@@ -217,8 +217,10 @@ public class LSM303 {
 			while (heading < 0) heading += 360f;
 			float pitch = (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
 			pitch += 180f; // -180 +180 Nose up +, nose down -
+			if (pitch > 180) pitch = 360 - pitch;
 			float roll = - (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
 			roll += 180f; // -180 +180 Right +, Left -
+			if (roll > 180) roll = 360 - roll;
 
 			if (dataListener != null) {
 				// Use the values as you want
@@ -254,8 +256,9 @@ public class LSM303 {
 		return (n < 32768 ? n : n - 65536);                           // 2's complement signed
 	}
 
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
+		System.out.println("Verbose: " + verbose);
 		LSM303 sensor = new LSM303();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
