@@ -1,7 +1,5 @@
 #!/bin/bash
-PI4J_HOME=/opt/pi4j
-CP=./build/libs/I2C.SPI-1.0.jar
-# CP=$CP:../RMI.sample/build/libs/RMI.sample-1.0.jar
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+CP=./build/libs/I2C.SPI-1.0-all.jar
+# CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 JAVA_OPTIONS=-Dscript.name=script.01.mearm
 sudo java -cp $CP $JAVA_OPTIONS i2c.samples.MeArmScriptDemo $*
