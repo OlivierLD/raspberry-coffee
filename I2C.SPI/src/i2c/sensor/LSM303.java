@@ -199,6 +199,10 @@ public class LSM303 {
 			int accelY = accel12(accelData, 2);
 			int accelZ = accel12(accelData, 4);
 
+			if (verbose) {
+				System.out.println(String.format("RawAcc XYZ %d %d %d", accelX, accelY, accelZ));
+			}
+
 			float accX = (float) accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 			float accY = (float) accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 			float accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
@@ -216,6 +220,10 @@ public class LSM303 {
 			int magX = mag16(magData, 0);
 			int magY = mag16(magData, 2);
 			int magZ = mag16(magData, 4);
+
+			if (verbose) {
+				System.out.println(String.format("RawMag XYZ %d %d %d", magX, magY, magZ));
+			}
 
 			float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 			float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
