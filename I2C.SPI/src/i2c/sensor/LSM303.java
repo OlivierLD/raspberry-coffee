@@ -187,10 +187,13 @@ public class LSM303 {
 			accelData = new byte[6];
 			magData = new byte[6];
 
-			int r = accelerometer.read(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80, accelData, 0, 6);
+			accelerometer.write((byte)(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80));
+
+			int r = accelerometer.read(LSM303_ADDRESS_ACCEL, accelData, 0, 6);
 			if (r != 6) {
 				System.out.println("Error reading accel data, < 6 bytes");
 			}
+			// raw data
 			int accelX = accel12(accelData, 0);
 			int accelY = accel12(accelData, 2);
 			int accelZ = accel12(accelData, 4);
@@ -200,11 +203,13 @@ public class LSM303 {
 			float accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
 			// Reading magnetometer measurements.
-			r = magnetometer.read(LSM303_REGISTER_MAG_OUT_X_H_M, magData, 0, 6);
+			magnetometer.write((byte)LSM303_REGISTER_MAG_OUT_X_H_M);
+
+			r = magnetometer.read(LSM303_ADDRESS_MAG, magData, 0, 6);
 			if (r != 6) {
 				System.out.println("Error reading mag data, < 6 bytes");
 			}
-
+			// raw data
 			int magX = mag16(magData, 0);
 			int magY = mag16(magData, 2);
 			int magZ = mag16(magData, 4);
@@ -223,7 +228,7 @@ public class LSM303 {
 			if (roll > 180) roll -= 360;
 
 			if (dataListener != null) {
-				// Use the values as you want
+				// Use the values as you want here.
 				dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, pitch, roll);
 			} else {
 //				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %f, Z: %f => heading: %s, pitch: %s, roll: %s)",

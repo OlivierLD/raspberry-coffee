@@ -89,11 +89,10 @@ public class HMC5883L {
 			System.out.println("yOut:" + yOut);
 			System.out.println("zOut:" + zOut);
 		}
-/*
-			double heading = Math.atan2(magneticY, magneticX)
+/*		double heading = Math.atan2(magneticY, magneticX)
 			double pitch = Math.atan2(magneticX, magneticZ);
-			double roll = Math.atan2(magneticY, magneticZ);
- */
+			double roll = Math.atan2(magneticY, magneticZ); */
+
 		if (verbose) {
 			System.out.println(String.format("Heading: %f", Math.toDegrees(Math.atan2(yOut, xOut))));
 			System.out.println(String.format("Pitch: %f", Math.toDegrees(Math.atan2(xOut, zOut))));
