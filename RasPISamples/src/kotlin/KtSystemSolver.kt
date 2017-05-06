@@ -50,7 +50,7 @@ object MatrixUtils {
         } else {
             for (col in 0..(matrix.dimension - 1)) { // col: column in the major
                 var minorDeterminant = determinant(minor(matrix, 0, col))
-                det += (matrix.get(0, col) * minorDeterminant * Math.pow(-1.0, col+2.0))
+                det += (matrix.get(0, col) * minorDeterminant * Math.pow(-1.toDouble(), (col+2).toDouble()))
             }
         }
         return det
@@ -60,7 +60,7 @@ object MatrixUtils {
         var comatrix = SquareMatrix(matrix.dimension)
         for (line in 0..(matrix.dimension - 1)) {
             for (column in 0..(matrix.dimension - 1)) {
-                comatrix.set(line, column, determinant(minor(matrix, line, column)) * Math.pow(-1.0, line + column + 2.0))
+                comatrix.set(line, column, determinant(minor(matrix, line, column)) * Math.pow(-1.toDouble(), (line + column + 2).toDouble()))
             }
         }
         return comatrix
@@ -109,7 +109,7 @@ object SystemUtils {
 
         var inverted = MatrixUtils.invert(matrix)
         for (line in 0..(matrix.dimension - 1)) {
-            result[line] = 0.0
+//          result[line] = 0.0
             for (col in (0..(matrix.dimension - 1))) {
                 result[line] += (inverted.get(line, col) * constants[col])
             }
@@ -150,16 +150,14 @@ fun main(args: Array<String>) {
     println("Determinant: ${MatrixUtils.determinant(MatrixUtils.minor(matrix, 2, 2))}")
 
     println("--- System resolution ---")
-    matrix.set(doubleArrayOf(12.0, 13.0, 14.0, 1.345, -654.0, 0.001, 23.09, 5.3, -12.34))
-    val constants = doubleArrayOf(234.0 , 98.87 , 9.876)
+    matrix.set(doubleArrayOf(12.toDouble(), 13.toDouble(), 14.toDouble(), 1.345, -654.toDouble(), 0.001, 23.09, 5.3, -12.34))
+    val constants = doubleArrayOf(234.toDouble() , 98.87 , 9.876)
     val before = System.nanoTime()
     val result = SystemUtils.solveSystem(matrix, constants)
     val after = System.nanoTime()
     println("Resolved in ${  java.text.NumberFormat.getNumberInstance().format(after - before) } nano sec.")
     SystemUtils.printSystem(matrix, constants)
 
-    println("A = ${result[0]}")
-    println("B = ${result[1]}")
-    println("C = ${result[2]}")
-
+    val unknowns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
+    result.forEachIndexed( { index, d -> println("${unknowns[index]} = ${d}") } )
 }
