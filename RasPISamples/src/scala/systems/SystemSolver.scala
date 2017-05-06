@@ -207,8 +207,8 @@ object SystemUtils {
     println(s"Resolved in ${  java.text.NumberFormat.getNumberInstance().format(after - before) } nano sec.")
     printSystem(sqMat, constants)
 
-    println(s"x = ${result(0)}")
-    println(s"y = ${result(1)}")
-    println(s"z = ${result(2)}")
+    println(s"A = ${result(0)}")
+    println(s"B = ${result(1)}")
+    println(s"C = ${result(2)}")
   }
 }

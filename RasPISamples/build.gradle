@@ -1,6 +1,17 @@
+buildscript {
+  ext.kotlin_version = '1.1.2'
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
 plugins {
   id 'java'
   id 'scala'
+  id "org.jetbrains.kotlin.jvm" version "1.1.2"
   id 'maven'
   id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
@@ -9,7 +20,8 @@ shadowJar {
   zip64 true
 }
 
-def userprofile = System.getenv()['USERPROFILE'] // On Windows...
+def userprofile = System.getenv()['USERPROFILE'] // On Windows...--daemon tasks
+
 if (userprofile == null) { // Linux ?
   userprofile = System.getenv()['HOME']
 }
@@ -27,6 +39,9 @@ sourceSets {
     scala {
       srcDir 'src/scala'
     }
+    kotlin {
+      srcDir 'src/kotlin'
+    }
   }
   test {
     java {
@@ -41,6 +56,7 @@ repositories {
 }
 
 dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   compile 'com.pi4j:pi4j-core:1.1'
   compile 'org.fusesource.jansi:jansi:1.11'
   compile 'org.json:json:20141113'

@@ -19,7 +19,6 @@ apply plugin: 'groovy'
 apply plugin: 'scala'
 apply plugin: 'clojure'
 
-
 group = 'oliv.pi4j.samples'
 version = '1.0'
 
