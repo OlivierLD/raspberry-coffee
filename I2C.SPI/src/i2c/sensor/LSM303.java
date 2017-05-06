@@ -190,7 +190,7 @@ public class LSM303 {
 			accelData = new byte[6];
 			magData = new byte[6];
 
-	//	accelerometer.write((byte)(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80));
+			accelerometer.write(new byte[] { (byte)(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80) });
 
 			int readFromAcc = (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80);
 			int r = accelerometer.read(readFromAcc, accelData, 0, 6);
@@ -211,7 +211,7 @@ public class LSM303 {
 			float accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
 			// Request magnetometer measurements.
-	//	magnetometer.write((byte)LSM303_REGISTER_MAG_OUT_X_H_M);
+			magnetometer.write(new byte[] { (byte)LSM303_REGISTER_MAG_OUT_X_H_M });
 
 			int readFromMag = LSM303_REGISTER_MAG_OUT_X_H_M;
 			// Reading magnetometer measurements.
