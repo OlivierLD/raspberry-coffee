@@ -1,8 +1,26 @@
 package systemsKt
 
+/**
+ * This is an example, illustrating the basics of Kotlin.
+ *
+ * System resolution.
+ *
+ * Featured:
+ * - Constructor override
+ * - Recursion
+ * - Enums
+ * - Casts
+ * - Loops
+ * - Unicode characters
+ * - ...
+ */
 class SquareMatrix(dim: Int) {
     val dimension = dim
     val elements = Array(dim, { DoubleArray(dim) })
+
+    constructor(dim: Int, elements: DoubleArray): this(dim) {
+        this.set(elements)
+    }
 
     fun get(row: Int, col: Int): Double {
         return elements[row][col]
@@ -87,7 +105,11 @@ object MatrixUtils {
     }
 
     fun invert(matrix: SquareMatrix): SquareMatrix {
-        return multiply(transposed(comatrix(matrix)), 1.0 / determinant(matrix))
+        val det = determinant(matrix)
+        if (det == 0.0) {
+            throw RuntimeException("Determinant is null")
+        }
+        return multiply(transposed(comatrix(matrix)), 1.0 / det)
     }
 
     fun display(matrix: SquareMatrix) {
@@ -118,17 +140,26 @@ object SystemUtils {
     }
 
     fun printSystem(matrix: SquareMatrix, constants: DoubleArray) {
-        val unknowns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
+        val unknowns = unknowns.GREEK_LOWS.charArray
         for (line in 0..(matrix.dimension - 1)) {
             var str = ""
             for (col in (0..(matrix.dimension - 1))) {
-                str += "${if (str.trim().length > 0) " + " else ""}(${matrix.get(line, col)} x ${unknowns[col]})"
+                str += "${if (str.trim().length > 0) " + " else ""}(${matrix.get(line, col)} . ${unknowns[col]})"
             }
             str += " = ${constants[line]}"
             println(str)
         }
     }
 }
+
+enum class unknowns(val charArray:CharArray) {
+    LATIN_CAPS("ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()),
+    LATIN_LOWS("abcdefghijklmnopqrstuvwxyz".toCharArray()),
+    GREEK_CAPS("\u0391\u0392\u0393\u0394\u0395\u0396\u0397\u0398\u0399\u039A\u039B\u039C\u039D\u039E\u039F\u03A0\u03A1\u03A2\u03A3\u03A4\u03A5\u03A6\u03A7\u03A8\u03A9".toCharArray()),
+    GREEK_LOWS("\u03b1\u03b2\u03b3\u03b4\u03b5\u03b6\u03b7\u03b8\u03b9\u03ba\u03bb\u03bc\u03bd\u03be\u03bf\u03c0\u03c1\u03c2\u03c3\u03c4\u03c5\u03c6\u03c7\u03c8\u03c9".toCharArray())
+}
+
+val MICRO_SYMBOL = unknowns.GREEK_LOWS.charArray[11]
 
 // Just a test
 fun main(args: Array<String>) {
@@ -149,15 +180,27 @@ fun main(args: Array<String>) {
     println()
     println("Determinant: ${MatrixUtils.determinant(MatrixUtils.minor(matrix, 2, 2))}")
 
+    val smallMatrix = SquareMatrix(2, doubleArrayOf(1.0, 1.0, 1.0, 1.0))
+    MatrixUtils.display(smallMatrix)
+    println("Determinant: ${MatrixUtils.determinant(smallMatrix)}")
+    println("--- System resolution ---")
+    try {
+        val constants = doubleArrayOf(1.0, 1.0)
+        SystemUtils.printSystem(smallMatrix, constants)
+        SystemUtils.solveSystem(smallMatrix, constants)
+    } catch (ex: Exception) {
+        println(">>> No solution -> ${ex.toString()}")
+    }
+
     println("--- System resolution ---")
     matrix.set(doubleArrayOf(12.toDouble(), 13.toDouble(), 14.toDouble(), 1.345, -654.toDouble(), 0.001, 23.09, 5.3, -12.34))
     val constants = doubleArrayOf(234.toDouble() , 98.87 , 9.876)
     val before = System.nanoTime()
     val result = SystemUtils.solveSystem(matrix, constants)
     val after = System.nanoTime()
-    println("Resolved in ${  java.text.NumberFormat.getNumberInstance().format(after - before) } nano sec.")
+    println("Resolved in ${ java.text.NumberFormat.getNumberInstance().format(after - before) } nano sec (${java.text.NumberFormat.getNumberInstance().format((after - before) / 1000)} ${MICRO_SYMBOL}s).")
     SystemUtils.printSystem(matrix, constants)
 
-    val unknowns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
+    val unknowns = unknowns.GREEK_LOWS.charArray
     result.forEachIndexed( { index, d -> println("${unknowns[index]} = ${d}") } )
 }
