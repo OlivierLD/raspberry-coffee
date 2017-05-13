@@ -4,7 +4,10 @@ import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
 
-/* A two-channel listener */
+/**
+ * A two-channel listener
+ * An example, for inspiration.
+ */
 public class JoyStick
 {
   private static ADCObserver.MCP3008_input_channels channel[] = null;

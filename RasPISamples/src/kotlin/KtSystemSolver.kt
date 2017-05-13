@@ -163,7 +163,7 @@ val MICRO_SYMBOL = unknowns.GREEK_LOWS.charArray[11]
 
 // Just a test
 fun main(args: Array<String>) {
-    println("Matrix tests")
+    println("-- Matrix tests, in Kotlin --")
     var matrix = SquareMatrix(3)
     matrix.set(0, 0, 1.0)
     matrix.set(0, 1, 2.0)

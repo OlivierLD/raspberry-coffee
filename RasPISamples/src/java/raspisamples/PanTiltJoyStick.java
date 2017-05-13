@@ -7,7 +7,11 @@ import raspisamples.adc.JoyStickClient;
 
 import raspisamples.servo.StandardServo;
 
-/*
+/**
+ * +------------------------------+
+ * | JoyStick + MCP3008 + PCA9685 |
+ * +------------------------------+
+ *
  * Joystick read with ADC (MCP3008)
  * 2 Servos (UP/LR)
  */
