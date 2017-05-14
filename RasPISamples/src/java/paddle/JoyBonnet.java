@@ -2,12 +2,12 @@ package paddle;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.adc.ADS1x15;
 import i2c.adc.ADS1x15.Channels;
 import java.util.function.Consumer;
+import paddle.buttons.PushButtonInstance;
 
 /**
  * Adafruit JoyBonnet for the Raspberry PI
@@ -15,25 +15,6 @@ import java.util.function.Consumer;
  */
 public class JoyBonnet {
 	final static GpioController gpio = GpioFactory.getInstance();
-
-	public enum AdcMode {
-		SDL_MODE_INTERNAL_AD,
-		SDL_MODE_I2C_ADS1015
-	}
-
-	// sample mode means return immediately.
-	// The wind speed is averaged at sampleTime or when you ask, whichever is longer.
-	// Delay mode means to wait for sampleTime and the average after that time.
-	public enum SdlMode {
-		SAMPLE,
-		DELAY
-	}
-
-	private AdcMode ADMode = AdcMode.SDL_MODE_I2C_ADS1015;
-
-	private int sampleTime = 5;
-	private SdlMode selectedMode = SdlMode.SAMPLE;
-	private long startSampleTime = 0L;
 
 	private ADS1x15 ads1015 = null;
 	private final static ADS1x15.ICType ADC_TYPE = ADS1x15.ICType.IC_ADS1015;
@@ -73,17 +54,12 @@ public class JoyBonnet {
 //		1003:     e.KEY_RIGHT,    # Analog right
 //	}
 
-	public void init(AdcMode ADMode) {
+	public void init() {
 		try {
 			this.ads1015 = new ADS1x15(ADC_TYPE);
 		} catch (I2CFactory.UnsupportedBusNumberException usbne) {
 			throw new RuntimeException(usbne);
 		}
-		this.ADMode = ADMode;
-	}
-
-	public JoyBonnet() {
-		init(AdcMode.SDL_MODE_I2C_ADS1015);
 	}
 
 	public void shutdown() {
@@ -92,16 +68,11 @@ public class JoyBonnet {
 
 	private double getChannelVoltage(Channels channel) {
 		double voltage = 0f;
-		if (this.ADMode == AdcMode.SDL_MODE_I2C_ADS1015) {
-			float value = ads1015.readADCSingleEnded(channel,
-							this.gain,
-							this.sps);
-//    System.out.println("Voltage Value:" + value);
-			voltage = value / 1000f;
-		} else {
-			// user internal A/D converter
-			voltage = 0.0f;
-		}
+		float value = ads1015.readADCSingleEnded(channel,
+						this.gain,
+						this.sps);
+//  System.out.println("Voltage Value:" + value);
+		voltage = value / 1000f;
 		return voltage;
 	}
 
