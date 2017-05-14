@@ -26,159 +26,139 @@ import java.text.NumberFormat;
  * This illustrates a more elaborated dialog between master and slave.
  * 
  */
-public class I2CArduino
-{
-  public final static int ARDUINO_ADDRESS = 0x04; // See RPi_I2C_2.ino
-  private static boolean verbose = "true".equals(System.getProperty("arduino.verbose", "false"));
-  
-  private final static byte END_OF_MESSAGE = (byte) 0x00;
-  private final static byte STRING_REQUEST = (byte) 0x10; // Master wants a string message
-  private final static byte STRING_RECEIVE = (byte) 0x11; // Master will send a string message
+public class I2CArduino {
+	public final static int ARDUINO_ADDRESS = 0x04; // See RPi_I2C_2.ino
+	private static boolean verbose = "true".equals(System.getProperty("arduino.verbose", "false"));
 
-  private final static byte PING           = (byte) 0x20; // Master ping
-  private final static byte PONG           = (byte) 0x21; // Slave pong
+	private final static byte END_OF_MESSAGE = (byte) 0x00;
+	private final static byte STRING_REQUEST = (byte) 0x10; // Master wants a string message
+	private final static byte STRING_RECEIVE = (byte) 0x11; // Master will send a string message
 
-  private I2CBus bus;
-  private I2CDevice arduino;
+	private final static byte PING = (byte) 0x20; // Master ping
+	private final static byte PONG = (byte) 0x21; // Slave pong
 
-  public I2CArduino() throws I2CFactory.UnsupportedBusNumberException
-  {
-    this(ARDUINO_ADDRESS);
-  }
+	private I2CBus bus;
+	private I2CDevice arduino;
 
-  public I2CArduino(int address) throws I2CFactory.UnsupportedBusNumberException
-  {
-    try
-    {
-      // Get i2c bus
-      bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
-      if (verbose)
-        System.out.println("Connected to bus. OK.");
+	public I2CArduino() throws I2CFactory.UnsupportedBusNumberException {
+		this(ARDUINO_ADDRESS);
+	}
 
-      // Get device itself
-      arduino = bus.getDevice(address);
-      if (verbose)
-        System.out.println("Connected to device. OK.");
-    }
-    catch (IOException e)
-    {
-      System.err.println(e.getMessage());
-    }
-  }
+	public I2CArduino(int address) throws I2CFactory.UnsupportedBusNumberException {
+		try {
+			// Get i2c bus
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
+			if (verbose)
+				System.out.println("Connected to bus. OK.");
 
-  public void close()
-  {
-    try { this.bus.close(); }
-    catch (IOException ioe) { ioe.printStackTrace(); }    
-  }
+			// Get device itself
+			arduino = bus.getDevice(address);
+			if (verbose)
+				System.out.println("Connected to device. OK.");
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		}
+	}
 
-  /*
-   * methods readArduino, writeArduino
-   * This where the communication protocol would be implemented.
-   */
-  public int readArduino()
-    throws Exception
-  {
-    int r  = arduino.read();
-    return r;
-  }
+	public void close() {
+		try {
+			this.bus.close();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 
-  public void writeArduino(byte b)
-    throws Exception
-  {
-    arduino.write(b);
-  }
+	/*
+	 * methods readArduino, writeArduino
+	 * This where the communication protocol would be implemented.
+	 */
+	public int readArduino()
+					throws Exception {
+		int r = arduino.read();
+		return r;
+	}
 
-  private static void delay(float d) // d in seconds.
-  {
-    try { Thread.sleep((long)(d * 1000)); } catch (Exception ex) {}
-  }
-  
-  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
-  {
-    final NumberFormat NF = new DecimalFormat("##00.00");
-    I2CArduino sensor = new I2CArduino();
-    int read = 0;
-    System.out.println("Arduino Connected");
+	public void writeArduino(byte b)
+					throws Exception {
+		arduino.write(b);
+	}
 
-    try
-    {
-      System.out.println("First read");
-      read = sensor.readArduino();
-      System.out.println("Read: " + NF.format(read));
-    }
-    catch (Exception e)
-    {
-      System.err.println("First read:");
-      e.printStackTrace();
-    }
-    delay(1);
+	private static void delay(float d) // d in seconds.
+	{
+		try {
+			Thread.sleep((long) (d * 1000));
+		} catch (Exception ex) {
+		}
+	}
 
-    for (int i=0; i<5; i++)
-    {
-      try
-      {
-        System.out.println("Sending PING");
-        sensor.writeArduino(PING);
-        System.out.println("Expecting PONG");
-        delay(1f);
-        read = sensor.readArduino();
-        if (((byte)read) == PONG)
-          System.out.println("Pong OK");
-        else
-          System.out.println("Unexpected reply to ping:" + Integer.toHexString(((byte)read) & 0xFF));
-      }
-      catch (Exception ex)
-      {
-        System.err.println(ex.getMessage());
-        ex.printStackTrace();
-      }
-      delay(1f);
-    }
-    
-    System.out.println("=== Receiving a message ===");
-    try
-    {
-      sensor.writeArduino(STRING_REQUEST);
-      System.out.println("STRING_REQUEST sent to Arduino.");
-      delay(1f);
-      StringBuffer sb = new StringBuffer();
-      int r = -1;
-      while (r != END_OF_MESSAGE)
-      {
-        r = sensor.readArduino();
-        if (r != END_OF_MESSAGE)
-        {
-          delay(1f);
-          sb.append((char)r);
-        }
-      }
-      System.out.println("Received the following String message : [" + sb.toString() + "]");
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-    }
-    delay(1);
-    System.out.println("=== Sending a message ===");
-    try
-    {
-      sensor.writeArduino(STRING_RECEIVE);
-      System.out.println("STRING_RECEIVE sent to Arduino.");
-      delay(1f);
-      String masterMessage = "From the Raspberry PI"; // Hard coded (this is an example)
-      byte[] ba = masterMessage.getBytes();
-      for (byte b : ba)
-      {
-        sensor.writeArduino(b);
-        delay(1f);
-      }
-      sensor.writeArduino(END_OF_MESSAGE);
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-    }
-    System.out.println("Bye!");
-  }
+	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+		final NumberFormat NF = new DecimalFormat("##00.00");
+		I2CArduino sensor = new I2CArduino();
+		int read = 0;
+		System.out.println("Arduino Connected");
+
+		try {
+			System.out.println("First read");
+			read = sensor.readArduino();
+			System.out.println("Read: " + NF.format(read));
+		} catch (Exception e) {
+			System.err.println("First read:");
+			e.printStackTrace();
+		}
+		delay(1);
+
+		for (int i = 0; i < 5; i++) {
+			try {
+				System.out.println("Sending PING");
+				sensor.writeArduino(PING);
+				System.out.println("Expecting PONG");
+				delay(1f);
+				read = sensor.readArduino();
+				if (((byte) read) == PONG)
+					System.out.println("Pong OK");
+				else
+					System.out.println("Unexpected reply to ping:" + Integer.toHexString(((byte) read) & 0xFF));
+			} catch (Exception ex) {
+				System.err.println(ex.getMessage());
+				ex.printStackTrace();
+			}
+			delay(1f);
+		}
+
+		System.out.println("=== Receiving a message ===");
+		try {
+			sensor.writeArduino(STRING_REQUEST);
+			System.out.println("STRING_REQUEST sent to Arduino.");
+			delay(1f);
+			StringBuffer sb = new StringBuffer();
+			int r = -1;
+			while (r != END_OF_MESSAGE) {
+				r = sensor.readArduino();
+				if (r != END_OF_MESSAGE) {
+					delay(1f);
+					sb.append((char) r);
+				}
+			}
+			System.out.println("Received the following String message : [" + sb.toString() + "]");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		delay(1);
+		System.out.println("=== Sending a message ===");
+		try {
+			sensor.writeArduino(STRING_RECEIVE);
+			System.out.println("STRING_RECEIVE sent to Arduino.");
+			delay(1f);
+			String masterMessage = "From the Raspberry PI"; // Hard coded (this is an example)
+			byte[] ba = masterMessage.getBytes();
+			for (byte b : ba) {
+				sensor.writeArduino(b);
+				delay(1f);
+			}
+			sensor.writeArduino(END_OF_MESSAGE);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println("Bye!");
+	}
 }
