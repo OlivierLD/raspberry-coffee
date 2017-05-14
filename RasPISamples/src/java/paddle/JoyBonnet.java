@@ -94,7 +94,7 @@ public class JoyBonnet {
 		if (this.ADMode == AdcMode.SDL_MODE_I2C_ADS1015) {
 			float value = ads1015.readADCSingleEnded(ADS1x15.Channels.CHANNEL_1,
 							this.gain,
-							this.sps); // AIN1 wired to wind vane on WeatherPiArduino
+							this.sps);
 //    System.out.println("Voltage Value:" + value);
 			voltage = value / 1000f;
 		} else {
@@ -132,7 +132,7 @@ public class JoyBonnet {
 		while (keepReading) {
 			try {
 				read = joyBonnet.getChannel1Voltage();
-				if (read != voltage) {
+				if (Math.abs(read - voltage) > 0.01) {
 					System.out.println(String.format("%d: %f", System.currentTimeMillis(), read));
 					voltage = read;
 				}
