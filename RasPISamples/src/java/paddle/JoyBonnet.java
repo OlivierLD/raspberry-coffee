@@ -37,6 +37,8 @@ public class JoyBonnet {
 	private int gain = 6144;
 	private int sps = 250;
 
+	// TODO Listen to the buttons (8 buttons)
+
 	private final static int BUTTON_A = 12;
 	private final static int BUTTON_B = 6;
 	private final static int BUTTON_X = 16;
@@ -115,7 +117,7 @@ public class JoyBonnet {
 			}
 		}));
 		while (keepReading) {
-			System.out.println(String.format("%d", joyBonnet.getChannel1Voltage()));
+			System.out.println(String.format("%f", joyBonnet.getChannel1Voltage()));
 		}
 		System.out.println("Done reading.");
 	}
