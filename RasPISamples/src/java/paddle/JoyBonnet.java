@@ -119,7 +119,7 @@ public class JoyBonnet {
 	}
 
 
-	static class ButtonEvent {
+	public static class ButtonEvent {
 
 	}
 

@@ -9,7 +9,6 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import pushbutton.PushButtonObserver;
 
 public class PushButtonMaster {
-	private GpioController gpio;
 	private GpioPinDigitalInput button = null;
 
 	private PushButtonObserver pbo = null;
@@ -26,7 +25,6 @@ public class PushButtonMaster {
 	}
 
 	public void initCtx(GpioController gpio, Pin buttonPin) {
-		this.gpio = gpio;
 		// provision gpio pin #01 as an output pin and turn it off
 		button = gpio.provisionDigitalInputPin(buttonPin, PinPullResistance.PULL_DOWN);
 		button.addListener((GpioPinListenerDigital) event -> {

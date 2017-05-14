@@ -2,7 +2,6 @@ package paddle;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
 import java.util.function.Consumer;
 import paddle.JoyBonnet.ButtonEvent;
 import pushbutton.PushButtonObserver;
@@ -15,13 +14,13 @@ import pushbutton.PushButtonObserver;
  */
 public class PushButtonInstance implements PushButtonObserver {
 
-	private static PushButtonMaster rgm = null;
+	private static PushButtonMaster buttonMaster = null;
 	private Consumer<ButtonEvent> eventConsumer;
 
 	public PushButtonInstance(GpioController gpio, Pin pin, Consumer<ButtonEvent> eventConsumer) {
-		rgm = new PushButtonMaster(this);
+		buttonMaster = new PushButtonMaster(this);
 		this.eventConsumer = eventConsumer;
-		rgm.initCtx(gpio, pin);  // Can override default pin
+		buttonMaster.initCtx(gpio, pin);  // Can override default pin
 	}
 
 	@Override
