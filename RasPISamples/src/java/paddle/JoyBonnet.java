@@ -6,6 +6,7 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.adc.ADS1x15;
+import i2c.adc.ADS1x15.Channels;
 import java.util.function.Consumer;
 
 /**
@@ -89,10 +90,10 @@ public class JoyBonnet {
 		gpio.shutdown();
 	}
 
-	public double getChannel1Voltage() {
+	private double getChannelVoltage(Channels channel) {
 		double voltage = 0f;
 		if (this.ADMode == AdcMode.SDL_MODE_I2C_ADS1015) {
-			float value = ads1015.readADCSingleEnded(ADS1x15.Channels.CHANNEL_1,
+			float value = ads1015.readADCSingleEnded(channel,
 							this.gain,
 							this.sps);
 //    System.out.println("Voltage Value:" + value);
@@ -102,6 +103,19 @@ public class JoyBonnet {
 			voltage = 0.0f;
 		}
 		return voltage;
+	}
+
+	public double getChannel0Voltage() {
+		return getChannelVoltage(ADS1x15.Channels.CHANNEL_0);
+	}
+	public double getChannel1Voltage() {
+		return getChannelVoltage(ADS1x15.Channels.CHANNEL_1);
+	}
+	public double getChannel2Voltage() {
+		return getChannelVoltage(ADS1x15.Channels.CHANNEL_2);
+	}
+	public double getChannel3Voltage() {
+		return getChannelVoltage(ADS1x15.Channels.CHANNEL_3);
 	}
 
 
@@ -127,20 +141,39 @@ public class JoyBonnet {
 				System.out.println("Bye");
 			}
 		}));
-		double voltage = 0d;
-		double read = 0.0;
+		double[] voltage = {0d, 0d, 0d, 0d};
+		double[] read = {0.0, 0.0, 0.0, 0.0};
 		while (keepReading) {
-			try {
-				read = joyBonnet.getChannel1Voltage();
-				if (Math.abs(read - voltage) > 0.01) {
-					System.out.println(String.format("%d: %f", System.currentTimeMillis(), read));
-					voltage = read;
+			for (int i=0; i<4; i++) {
+				try {
+					double value = 0.d;
+					switch (i) {
+						case 0:
+							value = joyBonnet.getChannel0Voltage();
+							break;
+						case 1:
+							value = joyBonnet.getChannel1Voltage();
+							break;
+						case 2:
+							value = joyBonnet.getChannel2Voltage();
+							break;
+						case 3:
+							value = joyBonnet.getChannel3Voltage();
+							break;
+						default:
+							break;
+					}
+					read[i] = value;
+					if (Math.abs(read[i] - voltage[i]) > 0.01) {
+						System.out.println(String.format("Channel %d: %d: %f", i, System.currentTimeMillis(), read));
+						voltage[i] = read[i];
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 			try { Thread.sleep(10); } catch (Exception ex) {}
 		}
-		System.out.println("Done reading.");
+		System.out.println("\nDone reading.");
 	}
 }
