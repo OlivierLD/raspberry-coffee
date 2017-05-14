@@ -127,7 +127,7 @@ object MatrixUtils {
 object SystemUtils {
     fun solveSystem(matrix: SquareMatrix, constants: DoubleArray): DoubleArray {
         var result = DoubleArray(matrix.dimension)
-        result.forEachIndexed { index, d -> result[index] = 0.0 }
+        result.forEachIndexed { index, _ -> result[index] = 0.0 }
 
         var inverted = MatrixUtils.invert(matrix)
         for (line in 0..(matrix.dimension - 1)) {
