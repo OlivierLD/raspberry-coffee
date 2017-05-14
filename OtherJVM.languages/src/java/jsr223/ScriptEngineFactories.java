@@ -66,28 +66,31 @@ public class ScriptEngineFactories {
 			se.printStackTrace();
 		}
 
+		System.out.println("========");
 		try {
 			ScriptEngineManager factory = new ScriptEngineManager();
 			engine = factory.getEngineByName("nashorn");
 			String jsCode =
-							"function hi() {\n" +
-							"  var a = 'PROSPER'.toLowerCase();\n" +
-							"  middle();\n" +
-							"  print('Live long and ' + a)" +
-							"}\n " +
-							"function middle() {\n" +
-							"  var b = 1; " +
-							"  for (var i=0, max = 5; i<max;i++){\n" +
-							"    b++;\n" +
-							"  }\n " +
-							"  print('>> b = ' + b);" +
-							"}" +
+							"var hi = function() {" + "\n" +
+							"  var a = 'PROSPER'.toLowerCase();" + "\n" +
+							"  middle();" + "\n" +
+							"  print('Live long and ' + a)" + "\n" +
+							"}; " + "\n" +
+							"var middle = function() {" + "\n" +
+							"  var b = 1; " + "\n" +
+							"  for (var i=0, max = 5; i<max; i++) {" + "\n" +
+							"    b++;" + "\n" +
+							"  }" + "\n" +
+							"  print('>> b = ' + b + '.');" + "\n" +
+							"};" + "\n" +
 							"hi();";
+			System.out.println(String.format("Executing:\n%s", jsCode));
 			engine.eval(jsCode);
 		} catch (ScriptException se) {
 			se.printStackTrace();
 		}
 
+		System.out.println("========");
 		try {
 			ScriptEngineManager factory = new ScriptEngineManager();
 			engine = factory.getEngineByName("nashorn");
