@@ -4,6 +4,7 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.exception.UnsupportedPinPullResistanceException;
 import paddle.buttons.PushButtonInstance;
 
 /**
@@ -62,7 +63,9 @@ public class PushButtonTester {
 		for (int i=0; i<pins.length; i++) {
 			try {
 				final int idx = i;
-				new PushButtonInstance(gpio, pins[i], String.format("Button %d", i), (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%d) %s", idx, event.toString())));
+				new PushButtonInstance(gpio, pins[i], String.format("Button %d", i), (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%d) %s", idx, event.getPayload())));
+			} catch (UnsupportedPinPullResistanceException uppre) {
+				System.err.println("Unappropriate pin:" + pins[i]);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
