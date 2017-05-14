@@ -115,7 +115,7 @@ public class JoyBonnet {
 	}
 	public static void main(String... args) {
 
-		Consumer<ButtonEvent> buttonAConsumer = (event) -> System.out.println("Recevied button event " + event.toString());
+		Consumer<ButtonEvent> buttonAConsumer = (event) -> System.out.println(">>>>>>>>>>>>>>  Received button event (A) " + event.toString());
 		PushButtonInstance buttonA = new PushButtonInstance(gpio, RaspiPin.GPIO_12, buttonAConsumer);
 
 		JoyBonnet joyBonnet = new JoyBonnet();
@@ -123,16 +123,23 @@ public class JoyBonnet {
 			synchronized(joyBonnet) {
 				joyBonnet.shutdown();
 				stopReading();
+				try { Thread.sleep(20); } catch (Exception ex) {}
 				System.out.println("Bye");
 			}
 		}));
 		double voltage = 0d;
+		double read = 0.0;
 		while (keepReading) {
-			double read = joyBonnet.getChannel1Voltage();
-			if (read != voltage) {
-				System.out.println(String.format("%f", read));
-				voltage = read;
+			try {
+				read = joyBonnet.getChannel1Voltage();
+				if (read != voltage) {
+					System.out.println(String.format("%d: %f", System.currentTimeMillis(), read));
+					voltage = read;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+			try { Thread.sleep(10); } catch (Exception ex) {}
 		}
 		System.out.println("Done reading.");
 	}
