@@ -15,9 +15,16 @@ import pushbutton.PushButtonObserver;
 public class PushButtonInstance implements PushButtonObserver {
 
 	private static PushButtonMaster buttonMaster = null;
+	private String name = "ButtonName";
 	private Consumer<ButtonEvent> eventConsumer;
 
 	public PushButtonInstance(GpioController gpio, Pin pin, Consumer<ButtonEvent> eventConsumer) {
+		this(gpio, pin, null, eventConsumer);
+	}
+	public PushButtonInstance(GpioController gpio, Pin pin, String name, Consumer<ButtonEvent> eventConsumer) {
+		if (name != null) {
+			this.name = name;
+		}
 		buttonMaster = new PushButtonMaster(this);
 		this.eventConsumer = eventConsumer;
 		buttonMaster.initCtx(gpio, pin);  // Can override default pin
@@ -25,7 +32,7 @@ public class PushButtonInstance implements PushButtonObserver {
 
 	@Override
 	public void onButtonPressed() {
-		this.eventConsumer.accept(new ButtonEvent());
+		this.eventConsumer.accept(new ButtonEvent(String.format("Button [%s] down", this.name)));
 	}
 
 }

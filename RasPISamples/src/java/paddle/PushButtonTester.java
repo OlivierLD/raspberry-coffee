@@ -62,7 +62,7 @@ public class PushButtonTester {
 		for (int i=0; i<pins.length; i++) {
 			try {
 				final int idx = i;
-				new PushButtonInstance(gpio, pins[i], (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%d) %s", idx, event.toString())));
+				new PushButtonInstance(gpio, pins[i], String.format("Button %d", i), (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%d) %s", idx, event.toString())));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

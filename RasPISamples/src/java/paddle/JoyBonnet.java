@@ -91,7 +91,13 @@ public class JoyBonnet {
 
 
 	public static class ButtonEvent {
-
+		private String payload;
+		public ButtonEvent(String payload) {
+			this.payload = payload;
+		}
+		public String getPayload() {
+			return this.payload;
+		}
 	}
 
 	private static boolean keepReading = true;
