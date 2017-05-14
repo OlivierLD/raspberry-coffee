@@ -3,15 +3,17 @@ package paddle;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.adc.ADS1x15;
+import java.util.function.Consumer;
 
 /**
  * Adafruit JoyBonnet for the Raspberry PI
  * https://www.adafruit.com/product/3464
  */
 public class JoyBonnet {
-	final GpioController gpio = GpioFactory.getInstance();
+	final static GpioController gpio = GpioFactory.getInstance();
 
 	public enum AdcMode {
 		SDL_MODE_INTERNAL_AD,
@@ -103,11 +105,19 @@ public class JoyBonnet {
 	}
 
 
+	static class ButtonEvent {
+
+	}
+
 	private static boolean keepReading = true;
 	private static void stopReading() {
 		keepReading = false;
 	}
 	public static void main(String... args) {
+
+		Consumer<ButtonEvent> buttonAConsumer = (event) -> System.out.println("Recevied button event " + event.toString());
+		PushButtonInstance buttonA = new PushButtonInstance(gpio, RaspiPin.GPIO_12, buttonAConsumer);
+
 		JoyBonnet joyBonnet = new JoyBonnet();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			synchronized(joyBonnet) {
@@ -116,8 +126,13 @@ public class JoyBonnet {
 				System.out.println("Bye");
 			}
 		}));
+		double voltage = 0d;
 		while (keepReading) {
-			System.out.println(String.format("%f", joyBonnet.getChannel1Voltage()));
+			double read = joyBonnet.getChannel1Voltage();
+			if (read != voltage) {
+				System.out.println(String.format("%f", read));
+				voltage = read;
+			}
 		}
 		System.out.println("Done reading.");
 	}
