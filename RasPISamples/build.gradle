@@ -1,5 +1,6 @@
 buildscript {
-  ext.kotlin_version = '1.1.2'
+    ext.kotlin_version = '1.1.2-3'
+    ext.kotlin_version = '1.1.2'
   repositories {
     mavenCentral()
   }
@@ -7,6 +8,7 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
+//apply plugin: 'kotlin'
 
 plugins {
   id 'java'
@@ -69,6 +71,7 @@ dependencies {
   compile project(':WeatherStation')
   compile project(':SevenSegDisplay')
   compile project(':Adafruit.IO.REST')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }
 
 task copyResources(type: Copy) {

@@ -108,8 +108,7 @@ public class JoyBonnet {
 	}
 	public static void main(String... args) {
 
-		Consumer<ButtonEvent> buttonAConsumer = (event) -> System.out.println(">>>>>>>>>>>>>>  Received button event (A) " + event.toString());
-		PushButtonInstance buttonA = new PushButtonInstance(gpio, RaspiPin.GPIO_12, buttonAConsumer);
+		PushButtonInstance buttonA = new PushButtonInstance(gpio, RaspiPin.GPIO_12, "Button A", (event) -> System.out.println(">>>>>>>>>>>>>>  Received button event (A) " + event.toString()));
 
 		JoyBonnet joyBonnet = new JoyBonnet();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {

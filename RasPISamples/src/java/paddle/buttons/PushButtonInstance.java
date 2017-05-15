@@ -3,7 +3,7 @@ package paddle.buttons;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.Pin;
 import java.util.function.Consumer;
-import paddle.JoyBonnet.ButtonEvent;
+import paddle.buttons.PushButtonInstance.ButtonEvent.EventType;
 import pushbutton.PushButtonObserver;
 
 /**
@@ -32,11 +32,31 @@ public class PushButtonInstance implements PushButtonObserver {
 
 	@Override
 	public void onButtonPressed() {
-		this.eventConsumer.accept(new ButtonEvent(String.format("Button [%s] down", this.name)));
+		this.eventConsumer.accept(new ButtonEvent(EventType.PUSHED, String.format("Button [%s] down", this.name)));
 	}
 
 	@Override
 	public void onButtonReleased() {
-		this.eventConsumer.accept(new ButtonEvent(String.format("Button [%s] released", this.name)));
+		this.eventConsumer.accept(new ButtonEvent(EventType.RELEASED, String.format("Button [%s] released", this.name)));
+	}
+
+	public static class ButtonEvent {
+		private String payload;
+		private EventType type;
+
+		public enum EventType {
+			PUSHED,
+			RELEASED
+		};
+		public ButtonEvent(EventType eventType, String payload) {
+			this.type = eventType;
+			this.payload = payload;
+		}
+		public String getPayload() {
+			return this.payload;
+		}
+		public EventType getEventType() {
+			return this.type;
+		}
 	}
 }
