@@ -51,6 +51,10 @@ public class PushButtonInstance implements PushButtonObserver {
 		stateOption();
 	}
 
+	@Override
+	public void onButtonReleased() {
+	}
+
 	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 
 	private static String userInput(String prompt) {
