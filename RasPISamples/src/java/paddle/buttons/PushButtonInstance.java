@@ -35,4 +35,8 @@ public class PushButtonInstance implements PushButtonObserver {
 		this.eventConsumer.accept(new ButtonEvent(String.format("Button [%s] down", this.name)));
 	}
 
+	@Override
+	public void onButtonReleased() {
+		this.eventConsumer.accept(new ButtonEvent(String.format("Button [%s] released", this.name)));
+	}
 }

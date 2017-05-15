@@ -28,8 +28,11 @@ public class PushButtonMaster {
 		// provision gpio pin #01 as an output pin and turn it off
 		button = gpio.provisionDigitalInputPin(buttonPin, PinPullResistance.PULL_DOWN);
 		button.addListener((GpioPinListenerDigital) event -> {
-			if (event.getState().isHigh())
+			if (event.getState().isHigh()) {
 				pbo.onButtonPressed();
+			} else if (event.getState().isLow()) {
+				pbo.onButtonReleased();
+			}
 		});
 	}
 }

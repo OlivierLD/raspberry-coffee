@@ -34,7 +34,7 @@ public class PanTiltWebSocketClient {
 			}
 		}
 		initWebSocketConnectionAndSend(wsUri, yaw);
-	  /*
+		/*
     boolean sent = false;
     try { Thread.sleep(500L); } catch (Exception e) {}
     JSONObject mess = new JSONObject();

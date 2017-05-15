@@ -65,7 +65,7 @@ public class PushButtonTester {
 				final int idx = i;
 				new PushButtonInstance(gpio, pins[i], String.format("Button %d", i), (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%d) %s", idx, event.getPayload())));
 			} catch (UnsupportedPinPullResistanceException uppre) {
-				System.err.println("Unappropriate pin:" + pins[i]);
+				System.err.println("Un-appropriate pin:" + pins[i]);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
