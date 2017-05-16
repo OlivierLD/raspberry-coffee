@@ -68,7 +68,7 @@ public class ForMeArm {
 			} finally {
 //		ss1.stop();
 //		ss2.stop();
-				System.out.println("Bye");
+				System.out.println("\nBye JoyStick");
 			}
 		});
 		joystickThread.start();
@@ -95,7 +95,7 @@ public class ForMeArm {
 					Thread.sleep(20);
 				} catch (Exception ex) {
 				}
-				System.out.println("Bye");
+				System.out.println("Bye main thread");
 			}
 		}));
 		System.out.println("Ready...");
