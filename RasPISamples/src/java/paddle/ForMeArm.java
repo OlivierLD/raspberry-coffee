@@ -78,7 +78,7 @@ public class ForMeArm {
 			up        = new PushButtonInstance(gpio, RaspiPin.GPIO_00 /* #11 */, "UP",    (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
 			down      = new PushButtonInstance(gpio, RaspiPin.GPIO_02 /* #13 */, "DOWN",  (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
 			openClaw  = new PushButtonInstance(gpio, RaspiPin.GPIO_03 /* #15 */, "OPEN",  (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
- 			closeClaw = new PushButtonInstance(gpio, RaspiPin.GPIO_07 /*  #7 */, "CLOSE", (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
+ 			closeClaw = new PushButtonInstance(gpio, RaspiPin.GPIO_21 /* #29 */, "CLOSE", (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
 		} catch (UnsupportedPinPullResistanceException uppre) {
 			System.err.println("Un-appropriate pin: ");
 			uppre.printStackTrace();
