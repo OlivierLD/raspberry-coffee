@@ -39,7 +39,7 @@ public class ForMeArm {
 			public void setUD(int v) { // 0..100
 				float angle = (float) (v - 50) * (9f / 5f);
 				System.out.println(String.format("UD Angle: %f", angle));
-	//	  ss1.setAngle(angle); // -90..+90
+				//	  ss1.setAngle(angle); // -90..+90
 			}
 
 			@Override
@@ -50,15 +50,19 @@ public class ForMeArm {
 			}
 		};
 
-		try {
-			new JoyStick(jsc);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
+		Thread joystickThread = new Thread(() -> {
+			try {
+				new JoyStick(jsc, false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
 //		ss1.stop();
 //		ss2.stop();
-			System.out.println("Bye");
-		}
+				System.out.println("Bye");
+			}
+		});
+		joystickThread.start();
+		System.out.println("Joystick thread started");
 
 		try {
 			up        = new PushButtonInstance(gpio, RaspiPin.GPIO_00, "UP",    (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
@@ -93,5 +97,6 @@ public class ForMeArm {
 			}
 		}
 		System.out.println("\nDone reading buttons.");
+		gpio.shutdown();
 	}
 }

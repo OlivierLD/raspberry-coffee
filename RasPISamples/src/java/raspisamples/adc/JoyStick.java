@@ -16,6 +16,9 @@ public class JoyStick {
 	private int prevUDValue = 0, prevLRValue = 0;
 
 	public JoyStick(JoyStickClient jsc) throws Exception {
+		this(jsc, true);
+	}
+	public JoyStick(JoyStickClient jsc, boolean withHook) throws Exception {
 		System.out.println(">> Channel MCP3008 #0: Up-Down");
 		System.out.println(">> Channel MCP3008 #1: Left-Right");
 
@@ -42,10 +45,11 @@ public class JoyStick {
 			}
 		});
 		obs.start();
-
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			if (obs != null)
-				obs.stop();
-		}));
+		if (withHook) {
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				if (obs != null)
+					obs.stop();
+			}));
+		}
 	}
 }
