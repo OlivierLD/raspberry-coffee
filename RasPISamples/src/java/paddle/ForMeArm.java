@@ -50,6 +50,16 @@ public class ForMeArm {
 			}
 		};
 
+		/*
+		 * MCP3008 uses (by default) pins:
+		 * #1  - 3.3V
+		 * #6  - GND
+		 * #12 - GPIO_18, RaspiPin.GPIO_01
+		 * #16 - GPIO_23, RaspiPin.GPIO_04
+		 * #18 - GPIO_24, RaspiPin.GPIO_05
+		 * #22 - GPIO_25, RaspiPin.GPIO_06
+		 *
+		 */
 		Thread joystickThread = new Thread(() -> {
 			try {
 				new JoyStick(jsc, false);
@@ -65,10 +75,10 @@ public class ForMeArm {
 		System.out.println("Joystick thread started");
 
 		try {
-			up        = new PushButtonInstance(gpio, RaspiPin.GPIO_00, "UP",    (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
-			down      = new PushButtonInstance(gpio, RaspiPin.GPIO_01, "DOWN",  (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
-			openClaw  = new PushButtonInstance(gpio, RaspiPin.GPIO_02, "OPEN",  (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
- 			closeClaw = new PushButtonInstance(gpio, RaspiPin.GPIO_03, "CLOSE", (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
+			up        = new PushButtonInstance(gpio, RaspiPin.GPIO_00 /* #11 */, "UP",    (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
+			down      = new PushButtonInstance(gpio, RaspiPin.GPIO_02 /* #13 */, "DOWN",  (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
+			openClaw  = new PushButtonInstance(gpio, RaspiPin.GPIO_03 /* #15 */, "OPEN",  (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
+ 			closeClaw = new PushButtonInstance(gpio, RaspiPin.GPIO_07 /*  #7 */, "CLOSE", (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
 		} catch (UnsupportedPinPullResistanceException uppre) {
 			System.err.println("Un-appropriate pin: ");
 			uppre.printStackTrace();
