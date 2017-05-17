@@ -12,7 +12,7 @@
 *.log.csv
 *.csv
 *.ods
-*.py
+# *.py
 # *.png
 *.iml
 gen/
