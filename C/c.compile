@@ -1,0 +1,3 @@
+#!/bin/bash
+gcc -lm -o SatelliteFinder SatelliteFinder.c
+
