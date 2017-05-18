@@ -70,7 +70,7 @@ Result aim(Satellite target, double fromLDegrees, double fromGDegrees) {
 #define LAT_PRM "-lat:"
 #define LNG_PRM "-lng:"
 
-const char * toHexStr(double val, char type) {
+char * toHexStr(double val, char type) {
   char sgn = (val < 0) ? (type == 'L' ? 'S' : 'W') : (type == 'L' ? 'N' : 'E');
   int deg = (int) fabs(val);
   double min = fabs((val - (val > 0 ? deg : -deg)) * 60);
@@ -113,7 +113,11 @@ int main(int argc, char **argv) {
 
   const Satellite satellites[] = { one, two, three, four };
 
-  fprintf(stdout, "Finding the right satellite from %s / %s...\n", toHexStr(lat, 'L'), toHexStr(lng, 'G'));
+  char * fmtLat = toHexStr(lat, 'L');
+  char * fmtLng = toHexStr(lng, 'G');
+  fprintf(stdout, "Finding the right satellite from %s / %s...\n", fmtLat, fmtLng);
+  free(fmtLat);
+  free(fmtLng);
   int i;
 //  for (i=0; i<4; i++) {
 //    fprintf(stdout, "%s\n", satellites[i].name);
