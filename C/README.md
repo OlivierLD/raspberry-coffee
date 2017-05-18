@@ -1,10 +1,10 @@
 ## Some utilities...
-#### Not really JVM related, but usefull
+#### Not really JVM related (as you can guess by the 'C'...), but usefull
 
-### SatelliteFinder
+### SatelliteFinder, find your best geo-stationary satellite
 For Outernet, helps you to find the satellite to aim for, and where it is in the sky.
 
-The Raspberry Pi and the C.H.I.P. have a similar processors, what is compiled on the Raspberry PI runs on the C.H.I.P.
+The Raspberry PI and the C.H.I.P. have a similar processors, what is compiled on the Raspberry PI runs on the C.H.I.P.
 
 ##### From the Raspberry PI
 Compile the C code:
@@ -53,7 +53,7 @@ use I-4 F3 Americas: El 39.08°, Z 142.82° (true), Tilt -28.54°
 
 That's it!
 
-You could send your earth position as parameterif you wish:
+You could send your earth position as parameter if you wish:
 ```bash
 [Skylark][outernet@outernet:~]$ ./SatelliteFinder -lat:45.10 -lng:3.45
 Checking -lat:45.10... Using Lat [45.10]
