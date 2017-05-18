@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <float.h>
+#include <string.h>
 
 #define PI 3.14159265
 #define R1 (1 + 35786 / 6378.16)
@@ -66,23 +67,57 @@ Result aim(Satellite target, double fromLDegrees, double fromGDegrees) {
   return result;
 }
 
-int main(void) {
-  Satellite one   = { "I-4 F1 Asia-Pacific", 143.5 };
-  Satellite two   = { "I-4 F2 EMEA (Europe, Middle East and Africa)", 63.0 };
-  Satellite three = { "I-4 F3 Americas", -97.6 };
-  Satellite four  = { "Alphasat", 24.9 };
+#define LAT_PRM "-lat:"
+#define LNG_PRM "-lng:"
 
-  Satellite satellites[] = { one, two, three, four };
+const char * toHexStr(double val, char type) {
+  char sgn = (val < 0) ? (type == 'L' ? 'S' : 'W') : (type == 'L' ? 'N' : 'E');
+  int deg = (int) fabs(val);
+  double min = fabs((val - (val > 0 ? deg : -deg)) * 60);
+  char *str = (char *) malloc(sizeof(char) * 48);
+  memset(str, 0, 48);
+  sprintf(str, "%d°%.02f %c", deg, min, sgn);
+//fprintf(stdout, ">>>  %s\n", str);
+  return str;
+}
 
-  fprintf(stdout, "Finding the right satellite...\n") ;
+int main(int argc, char **argv) {
+// 2010 48th Ave, SF
+  double lat = 37.7489;
+  double lng = -122.5070;
+
+//fprintf(stdout, "Received %d arguments\n", argc);
+  int arg;
+  for (arg=1; arg<argc; arg++) {
+    char * argument = argv[arg];
+    fprintf(stdout, "Checking %s... ", argument);
+    if (strncmp(LAT_PRM, argument, strlen(LAT_PRM)) == 0) {
+      char latPrm[30];
+      strcpy(latPrm, &argument[strlen(LAT_PRM)]);
+      fprintf(stdout, "Using Lat [%s]\n", latPrm);
+      lat = atof(latPrm);
+    } else if (strncmp(LNG_PRM, argument, strlen(LNG_PRM)) == 0) {
+      char lngPrm[30];
+      strcpy(lngPrm, &argument[strlen(LNG_PRM)]);
+      fprintf(stdout, "Using Lng [%s]\n", lngPrm);
+      lng = atof(lngPrm);
+    } else {
+      fprintf(stdout, "Ignored [%s]\n", argument);
+    }
+  }
+
+  const Satellite one   = { "I-4 F1 Asia-Pacific", 143.5 };
+  const Satellite two   = { "I-4 F2 EMEA (Europe, Middle East and Africa)", 63.0 };
+  const Satellite three = { "I-4 F3 Americas", -97.6 };
+  const Satellite four  = { "Alphasat", 24.9 };
+
+  const Satellite satellites[] = { one, two, three, four };
+
+  fprintf(stdout, "Finding the right satellite from %s / %s...\n", toHexStr(lat, 'L'), toHexStr(lng, 'G'));
   int i;
 //  for (i=0; i<4; i++) {
 //    fprintf(stdout, "%s\n", satellites[i].name);
 //  }
-
-// 2010 48th Ave, SF
-  double lat = 37.7489;
-  double lng = -122.5070;
 
   Satellite toUse;
   Result finalResult;

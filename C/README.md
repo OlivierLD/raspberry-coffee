@@ -45,13 +45,23 @@ total 13
      0 -rw-r--r--    1 outernet outernet        32 Jan  1 00:00 README
     12 -rwx------    1 outernet outernet      8780 Jan  5 06:32 SatelliteFinder
 [Skylark][outernet@outernet:~]$ ./SatelliteFinder
-Finding the right satellite...
+Finding the right satellite from 37°44.93 N / 122°30.42 W...
 
 use I-4 F3 Americas: El 39.08°, Z 142.82° (true), Tilt -28.54°
 [Skylark][outernet@outernet:~]$
 ```
 
 That's it!
-You could accept your earth position as paameter, to make it more flexible...
+
+You could send your earth position as parameterif you wish:
+```bash
+[Skylark][outernet@outernet:~]$ ./SatelliteFinder -lat:45.10 -lng:3.45
+Checking -lat:45.10... Using Lat [45.10]
+Checking -lng:3.45... Using Lng [3.45]
+Finding the right satellite from 45°6.00 N / 3°27.00 E...
+
+use Alphasat: El 33.85°, Z 150.98° (true), Tilt -20.02°
+[Skylark][outernet@outernet:~]$
+```
 
 ----------
