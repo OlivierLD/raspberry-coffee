@@ -4,6 +4,10 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.exception.UnsupportedPinPullResistanceException;
+import com.pi4j.io.i2c.I2CFactory;
+import i2c.samples.mearm.MeArmPilot;
+import java.io.IOException;
+import java.util.Arrays;
 import paddle.buttons.PushButtonInstance;
 import raspisamples.adc.JoyStick;
 import raspisamples.adc.JoyStickClient;
@@ -32,7 +36,22 @@ public class ForMeArm {
 
 	private final static GpioController gpio = GpioFactory.getInstance();
 
-	public static void main(String... args) {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException,
+					IOException {
+
+		MeArmPilot.initContext();
+
+		String[] initCommands = {
+			"SET_PWM:LEFT,   0, 0",
+			"SET_PWM:RIGHT,  0, 0",
+			"SET_PWM:CLAW,   0, 0",
+			"SET_PWM:BOTTOM, 0, 0",
+			"WAIT:1000"
+		};
+		Arrays.stream(initCommands).forEach(cmd -> {
+			MeArmPilot.validateCommand(cmd, -1);
+			MeArmPilot.executeCommand(cmd, -1);
+		});
 
 		JoyStickClient jsc = new JoyStickClient() {
 			@Override
@@ -40,6 +59,9 @@ public class ForMeArm {
 				float angle = (float) (v - 50) * (9f / 5f);
 				System.out.println(String.format("V: %d, UD Angle: %f", v, angle));
 				//	  ss1.setAngle(angle); // -90..+90
+				// Build the command here
+
+
 			}
 
 			@Override
@@ -90,6 +112,19 @@ public class ForMeArm {
 		Thread waiter = Thread.currentThread();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			synchronized (waiter) {
+
+				// Stop servos
+				String[] stopCommands = {
+					"SET_PWM:LEFT,   0, 0",
+					"SET_PWM:RIGHT,  0, 0",
+					"SET_PWM:CLAW,   0, 0",
+					"SET_PWM:BOTTOM, 0, 0"
+				};
+				Arrays.stream(stopCommands).forEach(cmd -> {
+					MeArmPilot.validateCommand(cmd, -1);
+					MeArmPilot.executeCommand(cmd, -1);
+				});
+
 				waiter.notify();
 				try {
 					Thread.sleep(20);
