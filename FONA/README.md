@@ -55,8 +55,13 @@ You end-up with a serial port like `/dev/ttyUSB*`.
 
 ![FONA using USB Port](./FONA.USB.png "USB")
 
-You can as well use the Vin and the GND of the USB cable.
+You can as well use the Vin and the GND of the USB cable, it works fine.
 This would be another project, a FONA on its own board, with a USB Cable attached to it ;)
+
+> Important: Make sure you've disabled the Serial Console interface in `raspi-config`. The FONA requires access to the Serial port.
+
+> If the FONA's network led (red) is not blinking, you might have to hold down the FONA's reset button for ~2 seconds.
+
 
 ## Implement your own FONA application
 See in `FonaListener.java`, this is an example/skeleton of what you need to expect SMS and reply

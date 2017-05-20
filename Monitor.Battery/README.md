@@ -81,6 +81,10 @@ You will receive an email, in this case every 6 hours, containing the expected b
 If you do not have Internet coverage in your location, you could use a device like a `FONA` to reach out to a cell-phone network.
 The FONA requires a SIM Card.
 
+> Important: Make sure you've disabled the Serial Console interface in `raspi-config`. The FONA requires access to the Serial port.
+
+> If the network led (red) is not blinking, you might have to hold down the FONA's reset button for ~2 seconds.
+
 ![With a FONA](./battery-fona.png "With a FONA")
 
 ##### Pros

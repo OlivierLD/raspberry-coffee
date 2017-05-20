@@ -169,7 +169,7 @@ public class ForMeArm {
 					"SET_PWM:CLAW,   0, 0",
 					"SET_PWM:BOTTOM, 0, 0"
 				};
-				System.out.println("Stopping servos.");
+				System.out.println("\nStopping servos.");
 				Arrays.stream(stopCommands).forEach(cmd -> {
 					MeArmPilot.validateCommand(cmd, -1);
 					MeArmPilot.executeCommand(cmd, -1);
