@@ -46,8 +46,22 @@ public class ForMeArm {
 			"SET_PWM:RIGHT,  0, 0",
 			"SET_PWM:CLAW,   0, 0",
 			"SET_PWM:BOTTOM, 0, 0",
-			"WAIT:1000"
+			"WAIT:1000",
+			"#",
+			"# Center the arm",
+			"SET_PWM:BOTTOM, 0, 410",
+			"SET_PWM:BOTTOM, 0, 0",
+			"WAIT:250",
+			"# Stand up",
+			"SET_PWM:RIGHT, 0, 430",
+			"SET_PWM:RIGHT, 0, 0",
+			"WAIT:250",
+			"# Middle",
+			"SET_PWM:LEFT, 0, 230",
+			"SET_PWM:LEFT, 0, 0",
+			"WAIT:250"
 		};
+		System.out.println("Initializing servos.");
 		Arrays.stream(initCommands).forEach(cmd -> {
 			MeArmPilot.validateCommand(cmd, -1);
 			MeArmPilot.executeCommand(cmd, -1);
@@ -55,13 +69,30 @@ public class ForMeArm {
 
 		JoyStickClient jsc = new JoyStickClient() {
 			@Override
-			public void setUD(int v) { // 0..100
+			public void setUD(int v) { // 0..100. 50 in the middle
 				float angle = (float) (v - 50) * (9f / 5f);
 				System.out.println(String.format("V: %d, UD Angle: %f", v, angle));
 				//	  ss1.setAngle(angle); // -90..+90
 				// Build the command here
-
-
+				if (v > 50) { // Forward
+					String[] forward = {
+						"PRINT: \"Reaching ahead\"",
+						"MOVE: RIGHT, 430, 550, 10, 25"
+					};
+					Arrays.stream(forward).forEach(cmd -> {
+						MeArmPilot.validateCommand(cmd, -1);
+						MeArmPilot.executeCommand(cmd, -1);
+					});
+				} else if (v < 50) { // Backward
+					String[] backward = {
+									"PRINT: \"Backwards\"",
+									"MOVE: RIGHT, 550, 430, 10, 25"
+					};
+					Arrays.stream(backward).forEach(cmd -> {
+						MeArmPilot.validateCommand(cmd, -1);
+						MeArmPilot.executeCommand(cmd, -1);
+					});
+				}
 			}
 
 			@Override
@@ -69,6 +100,25 @@ public class ForMeArm {
 				float angle = (float) (v - 50) * (9f / 5f);
 				System.out.println(String.format("V: %d, LR Angle: %f", v, angle));
 //		  ss2.setAngle(angle); // -90..+90
+				if (v > 50) { // Right
+					String[] turnRight = {
+									"PRINT: \"Turning Right\"",
+									"MOVE: BOTTOM, 510, 310, 10, 25"
+					};
+					Arrays.stream(turnRight).forEach(cmd -> {
+						MeArmPilot.validateCommand(cmd, -1);
+						MeArmPilot.executeCommand(cmd, -1);
+					});
+				} else if (v < 50) { // Left
+					String[] turnLeft = {
+									"PRINT: \"Turning Left\"",
+									"MOVE: BOTTOM, 410, 510, 10, 25"
+					};
+					Arrays.stream(turnLeft).forEach(cmd -> {
+						MeArmPilot.validateCommand(cmd, -1);
+						MeArmPilot.executeCommand(cmd, -1);
+					});
+				}
 			}
 		};
 
@@ -120,6 +170,7 @@ public class ForMeArm {
 					"SET_PWM:CLAW,   0, 0",
 					"SET_PWM:BOTTOM, 0, 0"
 				};
+				System.out.println("Stopping servos.");
 				Arrays.stream(stopCommands).forEach(cmd -> {
 					MeArmPilot.validateCommand(cmd, -1);
 					MeArmPilot.executeCommand(cmd, -1);
