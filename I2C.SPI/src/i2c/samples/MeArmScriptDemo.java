@@ -11,8 +11,10 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-/*
+/**
  * Standard, all the way, clockwise, counterclockwise.
+ *
+ * Uses a PCA9685 (I2C) to drive a MeArm
  *
  * This class refers to a script to know what to do.
  * See the {@link #main} method.
@@ -22,6 +24,7 @@ public class MeArmScriptDemo {
 
 	/**
 	 * Prompt the user for input, from stdin. Completed on [Return]
+	 *
 	 * @param prompt The prompt
 	 * @return the user's input.
 	 */
@@ -43,7 +46,6 @@ public class MeArmScriptDemo {
 	}
 
 	/**
-	 *
 	 * @param howMuch in ms.
 	 */
 	private static void waitfor(long howMuch) {
@@ -116,6 +118,7 @@ public class MeArmScriptDemo {
 
 	/**
 	 * Warning No comma "," in the message!!
+	 *
 	 * @param cmd
 	 */
 	private static void servoPrint(CommandWithArgs cmd) {
@@ -281,12 +284,11 @@ public class MeArmScriptDemo {
 	}
 
 	/**
-	 *
 	 * @param channel Channel #
-	 * @param from From position
-	 * @param to To position
-	 * @param step nb steps from From to To
-	 * @param wait nb ms between each step.
+	 * @param from    From position
+	 * @param to      To position
+	 * @param step    nb steps from From to To
+	 * @param wait    nb ms between each step.
 	 */
 	private static void move(int channel, int from, int to, int step, int wait) {
 		servoBoard.setPWM(channel, 0, 0);
@@ -303,9 +305,10 @@ public class MeArmScriptDemo {
 	 * <pre>
 	 *   -Dscript.name=script.01.mearm
 	 * </pre>
+	 *
 	 * @param args None required.
 	 * @throws I2CFactory.UnsupportedBusNumberException when I2C bus is not found (if you're not on a Raspberry PI)
-	 * @throws IOException when the script cannot be read, for example. File not found or so.
+	 * @throws IOException                              when the script cannot be read, for example. File not found or so.
 	 */
 	public static void main(String[] args)
 					throws I2CFactory.UnsupportedBusNumberException,
@@ -337,7 +340,7 @@ public class MeArmScriptDemo {
 
 		// 2 - Execute the script
 
-	  initContext();
+		initContext();
 
 		scriptReader = new BufferedReader(new FileReader(scriptName));
 		line = "";

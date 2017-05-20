@@ -4,7 +4,7 @@ object MatrixUtils {
 
   /**
     * The minor of matrix M, col C, row R is
-    * M without column C, and withoiut row R
+    * M without column C, and without row R
     * @param matrix Original matrix to get the minor of
     * @param row the row to exclude
     * @param col the column to exclude

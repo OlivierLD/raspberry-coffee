@@ -14,6 +14,7 @@ import paddle.buttons.PushButtonInstance;
  * https://www.adafruit.com/product/3464
  *
  * This is a work in progress... Far from completed.
+ * Et ce truc m'emmerde.
  */
 public class JoyBonnet {
 	final static GpioController gpio = GpioFactory.getInstance();

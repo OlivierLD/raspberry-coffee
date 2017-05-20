@@ -125,7 +125,7 @@ int main(int argc, char **argv) {
 
   Satellite toUse;
   Result finalResult;
-  double maxAlt = -DBL_MAX; //  Double.MAX_VALUE;
+  double maxAlt = -DBL_MAX;
   for (i=0; i<4; i++) {
     Result result = aim(satellites[i], lat, lng);
 //  fprintf(stdout, "-> %s: Z: %f° (true), el: %f°, tilt: %f°\n", satellites[i].name, result.zDegrees, result.elevDegrees, result.tilt);
@@ -136,7 +136,6 @@ int main(int argc, char **argv) {
     }
   }
   fprintf(stdout, "\nuse %s: El %.02f°, Z %.02f° (true), Tilt %.02f°\n", toUse.name, finalResult.elevDegrees, finalResult.zDegrees, finalResult.tilt);
-
   return 0;
 }
 
