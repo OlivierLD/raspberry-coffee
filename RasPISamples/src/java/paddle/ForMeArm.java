@@ -38,14 +38,14 @@ public class ForMeArm {
 			@Override
 			public void setUD(int v) { // 0..100
 				float angle = (float) (v - 50) * (9f / 5f);
-				System.out.println(String.format("UD Angle: %f", angle));
+				System.out.println(String.format("V: %d, UD Angle: %f", v, angle));
 				//	  ss1.setAngle(angle); // -90..+90
 			}
 
 			@Override
 			public void setLR(int v) { // 0..100
 				float angle = (float) (v - 50) * (9f / 5f);
-				System.out.println(String.format("LR Angle: %f", angle));
+				System.out.println(String.format("V: %d, LR Angle: %f", v, angle));
 //		  ss2.setAngle(angle); // -90..+90
 			}
 		};
