@@ -11,28 +11,25 @@ import java.util.Arrays;
 import paddle.buttons.PushButtonInstance;
 import raspisamples.adc.JoyStick;
 import raspisamples.adc.JoyStickClient;
+import raspisamples.adc.TwoJoyStick;
+import raspisamples.adc.TwoJoyStickClient;
 
 /**
- * A joystick, and 4 buttons.
+ * Two joysticks.
  *
- * Joystick:
+ * Joystick 1:
  * - Move forward
  * - Move backward
  * - Turn right
  * - Turn left
  *
- * 4 Buttons:
+ * Joystick 2:
  * - Up
  * - Down
  * - Open claw
  * - Close claw
  */
 public class ForMeArm {
-
-	private static PushButtonInstance up        = null;
-	private static PushButtonInstance down      = null;
-	private static PushButtonInstance openClaw  = null;
-	private static PushButtonInstance closeClaw = null;
 
 	private final static GpioController gpio = GpioFactory.getInstance();
 
@@ -66,9 +63,9 @@ public class ForMeArm {
 			MeArmPilot.executeCommand(cmd, -1);
 		});
 
-		JoyStickClient jsc = new JoyStickClient() {
+		TwoJoyStickClient jsc = new TwoJoyStickClient() {
 			@Override
-			public void setUD(int v) { // 0..100. 50 in the middle
+			public void setUD1(int v) { // 0..100. 50 in the middle
 				float angle = (float) (v - 50) * (9f / 5f);
 				System.out.println(String.format("V: %d, UD Angle: %f", v, angle));
 				//	  ss1.setAngle(angle); // -90..+90
@@ -95,7 +92,7 @@ public class ForMeArm {
 			}
 
 			@Override
-			public void setLR(int v) { // 0..100
+			public void setLR1(int v) { // 0..100
 				float angle = (float) (v - 50) * (9f / 5f);
 				System.out.println(String.format("V: %d, LR Angle: %f", v, angle));
 //		  ss2.setAngle(angle); // -90..+90
@@ -119,6 +116,59 @@ public class ForMeArm {
 					});
 				}
 			}
+
+			@Override
+			public void setUD2(int v) { // 0..100. 50 in the middle
+				float angle = (float) (v - 50) * (9f / 5f);
+				System.out.println(String.format("V: %d, UD Angle: %f", v, angle));
+				//	  ss1.setAngle(angle); // -90..+90
+				// Build the command here
+				if (v > 50) { // Higher
+					String[] higher = {
+									"PRINT: \"Higher\"",
+									"MOVE: LEFT, 230, 350, 10, 25"
+					};
+					Arrays.stream(higher).forEach(cmd -> {
+						MeArmPilot.validateCommand(cmd, -1);
+						MeArmPilot.executeCommand(cmd, -1);
+					});
+				} else if (v < 50) { // Lower
+					String[] lower = {
+									"PRINT: \"Lower\"",
+									"MOVE: LEFT, 350, 230, 10, 25"
+					};
+					Arrays.stream(lower).forEach(cmd -> {
+						MeArmPilot.validateCommand(cmd, -1);
+						MeArmPilot.executeCommand(cmd, -1);
+					});
+				}
+			}
+
+			@Override
+			public void setLR2(int v) { // 0..100
+				float angle = (float) (v - 50) * (9f / 5f);
+				System.out.println(String.format("V: %d, LR Angle: %f", v, angle));
+//		  ss2.setAngle(angle); // -90..+90
+				if (v > 50) { // Open
+					String[] openClaw = {
+									"PRINT: \"Opening the claw\"",
+									"MOVE: CLAW, 400, 130, 10, 25"
+					};
+					Arrays.stream(openClaw).forEach(cmd -> {
+						MeArmPilot.validateCommand(cmd, -1);
+						MeArmPilot.executeCommand(cmd, -1);
+					});
+				} else if (v < 50) { // Close TODO
+					String[] closeClaw = {
+									"PRINT: \"Closing the claw\"",
+									"MOVE: CLAW, 130, 400, 10, 25"
+					};
+					Arrays.stream(closeClaw).forEach(cmd -> {
+						MeArmPilot.validateCommand(cmd, -1);
+						MeArmPilot.executeCommand(cmd, -1);
+					});
+				}
+			}
 		};
 
 		/*
@@ -133,29 +183,17 @@ public class ForMeArm {
 		 */
 		Thread joystickThread = new Thread(() -> {
 			try {
-				new JoyStick(jsc, false);
+				new TwoJoyStick(jsc, false);
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
 //		ss1.stop();
 //		ss2.stop();
-				System.out.println("\nBye JoyStick");
+				System.out.println("\nBye JoySticks");
 			}
 		});
 		joystickThread.start();
 		System.out.println("Joystick thread started");
-
-		try {
-			up        = new PushButtonInstance(gpio, RaspiPin.GPIO_00 /* #11 */, "UP",    (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
-			down      = new PushButtonInstance(gpio, RaspiPin.GPIO_02 /* #13 */, "DOWN",  (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
-			openClaw  = new PushButtonInstance(gpio, RaspiPin.GPIO_03 /* #15 */, "OPEN",  (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
- 			closeClaw = new PushButtonInstance(gpio, RaspiPin.GPIO_21 /* #29 */, "CLOSE", (event) -> System.out.println(String.format(">>>>>>>>>>>>>>  Received button event (%s) %s", event.getEventType().toString(), event.getPayload())));
-		} catch (UnsupportedPinPullResistanceException uppre) {
-			System.err.println("Un-appropriate pin: ");
-			uppre.printStackTrace();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 
 		// Now wait for Ctrl+C
 		Thread waiter = Thread.currentThread();
