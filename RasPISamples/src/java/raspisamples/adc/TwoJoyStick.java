@@ -10,7 +10,7 @@ import adc.ADCObserver;
  */
 public class TwoJoyStick {
 	private static ADCObserver.MCP3008_input_channels channel[] = null;
-	private final int[] channelValues = new int[]{0, 0}; // (0..100)
+	private final int[] channelValues = new int[]{0, 0, 0, 0}; // (0..100)
 
 	private TwoJoyStickClient joyStickClient = null;
 	private int prevUD1Value = 0, prevLR1Value = 0, prevUD2Value = 0, prevLR2Value = 0;
@@ -38,8 +38,10 @@ public class TwoJoyStick {
 			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
 				int ch = inputChannel.ch();
 				int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
-				if ("true".equals(System.getProperty("joystick.verbose", "false")))
+				if ("true".equals(System.getProperty("joystick.verbose", "false"))) {
 					System.out.println("\tServo channel:" + ch + ", value " + newValue + ", vol. " + volume + " %.");
+					System.out.println(String.format("\tPrev values: %d, %d, %d, ^%d", prevUD1Value, prevLR1Value, prevUD2Value, prevLR2Value));
+				}
 
 				channelValues[ch] = volume;
 				if (ch == channel[0].ch() && volume != prevUD1Value)
