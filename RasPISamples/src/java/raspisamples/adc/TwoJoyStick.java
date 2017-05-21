@@ -36,22 +36,30 @@ public class TwoJoyStick {
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
 			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
-				int ch = inputChannel.ch();
+				int ch = getChannelIndex(channel, inputChannel.ch());
 				int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 				if ("true".equals(System.getProperty("joystick.verbose", "false"))) {
 					System.out.println("\tServo channel:" + ch + ", value " + newValue + ", vol. " + volume + " %.");
-					System.out.println(String.format("\tPrev values: %d, %d, %d, ^%d", prevUD1Value, prevLR1Value, prevUD2Value, prevLR2Value));
+					System.out.println(String.format("\tPrev values: %d, %d, %d, %d", prevUD1Value, prevLR1Value, prevUD2Value, prevLR2Value));
 				}
 
 				channelValues[ch] = volume;
-				if (ch == channel[0].ch() && volume != prevUD1Value)
+				if (ch == 0 && volume != prevUD1Value) {
 					joyStickClient.setUD1(volume);
-				if (ch == channel[1].ch() && volume != prevLR1Value)
+					prevUD1Value = volume;
+				}
+				if (ch == 1 && volume != prevLR1Value) {
 					joyStickClient.setLR1(volume);
-				if (ch == channel[2].ch() && volume != prevUD2Value)
+					prevLR1Value = volume;
+				}
+				if (ch == 2 && volume != prevUD2Value) {
 					joyStickClient.setUD2(volume);
-				if (ch == channel[3].ch() && volume != prevLR2Value)
+					prevUD2Value = volume;
+				}
+				if (ch == 3 && volume != prevLR2Value) {
 					joyStickClient.setLR2(volume);
+					prevLR2Value = volume;
+				}
 			}
 		});
 		obs.start();
@@ -61,5 +69,16 @@ public class TwoJoyStick {
 					obs.stop();
 			}));
 		}
+	}
+
+	private static int getChannelIndex(ADCObserver.MCP3008_input_channels[] channelArray, int channel) {
+		int idx = -1;
+		for (int i=0; i<channelArray.length; i++) {
+			if (channelArray[i].ch() == channel) {
+				idx = i;
+				break;
+			}
+		}
+		return idx;
 	}
 }

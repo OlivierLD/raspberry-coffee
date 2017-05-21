@@ -33,6 +33,76 @@ public class ForMeArm {
 
 	private final static GpioController gpio = GpioFactory.getInstance();
 
+	/*
+	 * Left & right
+	 * BOTTOM: 510  410  310
+	 *         |    |    |
+	 *         |    |    Right
+	 *         |    Center
+	 *         Left
+	 *
+	 * Open & close
+	 * CLAW: 400  130
+	 *       |    |
+	 *       |    Open
+	 *       Closed
+	 *
+	 * Up & Down
+	 * LEFT: 230  350
+	 *       |    |
+	 *       |    High
+	 *       Low
+	 *
+	 * Forward and Backward
+	 * RIGHT: 550  430
+	 *        |    |
+	 *        |    Backward
+	 *        Forward
+	 *
+	 */
+
+	enum ServoRange {
+		BOTTOM("BOTTOM", 310, 510, 410), // Left, Right, Middle
+		CLAW("CLAW", 130, 400),          // Open, Closed
+		LEFT("LEFT", 230, 350, 290),     // Low, High, Middle
+		RIGHT("RIGHT", 430, 550, 490);   // Backward, Forward, Middle
+
+		private final String servoName;
+		private final int from;
+		private final int to;
+		private final int middle;
+
+		ServoRange(String servoName, int from, int to) {
+			this(servoName, from, to, -1);
+		}
+		ServoRange(String servoName, int from, int to, int middle) {
+			this.servoName = servoName;
+			this.from = from;
+			this.to = to;
+			this.middle = middle;
+		}
+		public String servoName() { return this.servoName; }
+		public int from() { return this.from; }
+		public int to() { return this.to; }
+		public int middle() { return this.middle; }
+	}
+
+	private static int currentClawPos         = ServoRange.CLAW.to(); // Closed
+	private static int currentLeftRightPos    = ServoRange.BOTTOM.middle(); // Center
+	private static int currentUpDownPos       = ServoRange.LEFT.middle(); // Center
+	private static int currentBackAndForthPos = ServoRange.RIGHT.middle(); // Middle
+
+	private static void executeCommandList(String[] commands) {
+		Arrays.stream(commands).forEach(cmd -> {
+			MeArmPilot.validateCommand(cmd, -1);
+			if ("true".equals(System.getProperty("mearm.pilot", "false"))) {
+				MeArmPilot.executeCommand(cmd, -1);
+			} else {
+				System.out.println(cmd);
+			}
+		});
+	}
+
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException,
 					IOException {
 
@@ -49,124 +119,131 @@ public class ForMeArm {
 			"SET_PWM:BOTTOM, 0, 0",
 			"WAIT:250",
 //		"# Stand up",
-			"SET_PWM:RIGHT, 0, 430",
+			"SET_PWM:RIGHT, 0, 290",
 			"SET_PWM:RIGHT, 0, 0",
 			"WAIT:250",
 //		"# Middle",
-			"SET_PWM:LEFT, 0, 230",
+			"SET_PWM:LEFT, 0, 490",
 			"SET_PWM:LEFT, 0, 0",
 			"WAIT:250"
 		};
 		System.out.println("Initializing servos.");
-		Arrays.stream(initCommands).forEach(cmd -> {
-			MeArmPilot.validateCommand(cmd, -1);
-			MeArmPilot.executeCommand(cmd, -1);
-		});
+		executeCommandList(initCommands);
 
 		TwoJoyStickClient jsc = new TwoJoyStickClient() {
 			@Override
 			public void setUD1(int v) { // 0..100. 50 in the middle
-				float angle = (float) (v - 50) * (9f / 5f);
-				System.out.println(String.format("V: %d, UD Angle: %f", v, angle));
-				//	  ss1.setAngle(angle); // -90..+90
+				System.out.println(String.format("UD1 V: %d", v));
 				// Build the command here
-				if (v > 50) { // Forward
+				if (v >= 50) { // Forward
+					int goForwardAmplitude = ServoRange.RIGHT.to() - ServoRange.RIGHT.middle();
+					int servoRange = v - 50;
+					int forwardPos = ServoRange.RIGHT.to() - (int)Math.round(((float)servoRange / 50f) * (float)goForwardAmplitude);
+//				System.out.println(String.format(">> Calculated: V:%d, Pos:%d", v, clawPos));
 					String[] forward = {
-						"PRINT: \"Reaching ahead\"",
-						"MOVE: RIGHT, 430, 550, 10, 25"
+									"PRINT: \"Forward\"",
+									String.format("MOVE: RIGHT, %d, %d, 10, 25", currentBackAndForthPos, forwardPos)
 					};
-					Arrays.stream(forward).forEach(cmd -> {
-						MeArmPilot.validateCommand(cmd, -1);
-						MeArmPilot.executeCommand(cmd, -1);
-					});
+					executeCommandList(forward);
+					currentBackAndForthPos = forwardPos;
 				} else if (v < 50) { // Backward
-					String[] backward = {
-									"PRINT: \"Backwards\"",
-									"MOVE: RIGHT, 550, 430, 10, 25"
+
+					int goBackwardAmplitude = ServoRange.RIGHT.middle() - ServoRange.RIGHT.from();
+					int servoRange = 50 - v;
+					int backwardPos = ServoRange.RIGHT.middle() - (int)Math.round(((float)servoRange / 50f) * (float)goBackwardAmplitude);
+//				System.out.println(String.format(">> Calculated Backward: V:%d, Pos:%d", v, backwardPos));
+					String[] lower = {
+									"PRINT: \"Backward\"",
+									String.format("MOVE: RIGHT, %d, %d, 10, 25", currentBackAndForthPos, backwardPos)
 					};
-					Arrays.stream(backward).forEach(cmd -> {
-						MeArmPilot.validateCommand(cmd, -1);
-						MeArmPilot.executeCommand(cmd, -1);
-					});
+					executeCommandList(lower);
+					currentBackAndForthPos = backwardPos;
 				}
 			}
 
 			@Override
 			public void setLR1(int v) { // 0..100
-				float angle = (float) (v - 50) * (9f / 5f);
-				System.out.println(String.format("V: %d, LR Angle: %f", v, angle));
-//		  ss2.setAngle(angle); // -90..+90
-				if (v > 50) { // Right
+				System.out.println(String.format("LR1 V: %d", v));
+				if (v >= 50) { // Right
+					int goRightAmplitude = ServoRange.BOTTOM.to() - ServoRange.BOTTOM.middle();
+					int servoRange = v - 50;
+					int rightPos = ServoRange.BOTTOM.to() - (int)Math.round(((float)servoRange / 50f) * (float)goRightAmplitude);
+//				System.out.println(String.format(">> Calculated: V:%d, Pos:%d", v, clawPos));
 					String[] turnRight = {
 									"PRINT: \"Turning Right\"",
-									"MOVE: BOTTOM, 510, 310, 10, 25"
+									String.format("MOVE: BOTTOM, %d, %d, 10, 25", currentLeftRightPos, rightPos)
 					};
-					Arrays.stream(turnRight).forEach(cmd -> {
-						MeArmPilot.validateCommand(cmd, -1);
-						MeArmPilot.executeCommand(cmd, -1);
-					});
+					executeCommandList(turnRight);
+					currentLeftRightPos = rightPos;
 				} else if (v < 50) { // Left
+
+					int goLeftAmplitude = ServoRange.BOTTOM.middle() - ServoRange.BOTTOM.from();
+					int servoRange = v - 50;
+					int leftPos = ServoRange.BOTTOM.middle() - (int)Math.round(((float)servoRange / 50f) * (float)goLeftAmplitude);
+//				System.out.println(String.format(">> Calculated: V:%d, Pos:%d", v, clawPos));
 					String[] turnLeft = {
 									"PRINT: \"Turning Left\"",
-									"MOVE: BOTTOM, 410, 510, 10, 25"
+									String.format("MOVE: BOTTOM, %d, %d, 10, 25", currentLeftRightPos, leftPos)
 					};
-					Arrays.stream(turnLeft).forEach(cmd -> {
-						MeArmPilot.validateCommand(cmd, -1);
-						MeArmPilot.executeCommand(cmd, -1);
-					});
+					executeCommandList(turnLeft);
+					currentLeftRightPos = leftPos;
 				}
 			}
 
 			@Override
 			public void setUD2(int v) { // 0..100. 50 in the middle
-				float angle = (float) (v - 50) * (9f / 5f);
-				System.out.println(String.format("V: %d, UD Angle: %f", v, angle));
-				//	  ss1.setAngle(angle); // -90..+90
+				System.out.println(String.format("UD2 V: %d", v));
 				// Build the command here
-				if (v > 50) { // Higher
+				if (v >= 50) { // Higher
+					int goHighAmplitude = ServoRange.LEFT.to() - ServoRange.LEFT.middle();
+					int servoRange = v - 50;
+					int highPos = ServoRange.LEFT.to() - (int)Math.round(((float)servoRange / 50f) * (float)goHighAmplitude);
+//				System.out.println(String.format(">> Calculated: V:%d, Pos:%d", v, clawPos));
 					String[] higher = {
 									"PRINT: \"Higher\"",
-									"MOVE: LEFT, 230, 350, 10, 25"
+									String.format("MOVE: LEFT, %d, %d, 10, 25", currentUpDownPos, highPos)
 					};
-					Arrays.stream(higher).forEach(cmd -> {
-						MeArmPilot.validateCommand(cmd, -1);
-						MeArmPilot.executeCommand(cmd, -1);
-					});
+					executeCommandList(higher);
+					currentUpDownPos = highPos;
 				} else if (v < 50) { // Lower
+					int goLowAmplitude = ServoRange.LEFT.middle() - ServoRange.LEFT.from();
+					int servoRange = 50 - v;
+					int lowPos = ServoRange.LEFT.middle() - (int)Math.round(((float)servoRange / 50f) * (float)goLowAmplitude);
+//				System.out.println(String.format(">> Calculated: V:%d, Pos:%d", v, clawPos));
 					String[] lower = {
 									"PRINT: \"Lower\"",
-									"MOVE: LEFT, 350, 230, 10, 25"
+									String.format("MOVE: LEFT, %d, %d, 10, 25", currentUpDownPos, lowPos)
 					};
-					Arrays.stream(lower).forEach(cmd -> {
-						MeArmPilot.validateCommand(cmd, -1);
-						MeArmPilot.executeCommand(cmd, -1);
-					});
+					executeCommandList(lower);
+					currentUpDownPos = lowPos;
 				}
 			}
 
 			@Override
 			public void setLR2(int v) { // 0..100
-				float angle = (float) (v - 50) * (9f / 5f);
-				System.out.println(String.format("V: %d, LR Angle: %f", v, angle));
-//		  ss2.setAngle(angle); // -90..+90
-				if (v > 50) { // Open
+				System.out.println(String.format("LR2 V: %d", v));
+				if (v >= 50) { // Open
+					// Close 400, Open 130
+					int clawAmplitude = ServoRange.CLAW.to() - ServoRange.CLAW.from();
+					int servoRange = v - 50;
+					int clawPos = ServoRange.CLAW.to() - (int)Math.round(((float)servoRange / 50f) * (float)clawAmplitude);
+//				System.out.println(String.format(">> Calculated: V:%d, Pos:%d", v, clawPos));
 					String[] openClaw = {
-									"PRINT: \"Opening the claw\"",
-									"MOVE: CLAW, 400, 130, 10, 25"
+									"PRINT: \"Moving the claw\"",
+									String.format("MOVE: CLAW, %d, %d, 10, 25", currentClawPos, clawPos)
 					};
-					Arrays.stream(openClaw).forEach(cmd -> {
-						MeArmPilot.validateCommand(cmd, -1);
-						MeArmPilot.executeCommand(cmd, -1);
-					});
-				} else if (v < 50) { // Close TODO
-					String[] closeClaw = {
-									"PRINT: \"Closing the claw\"",
-									"MOVE: CLAW, 130, 400, 10, 25"
-					};
-					Arrays.stream(closeClaw).forEach(cmd -> {
-						MeArmPilot.validateCommand(cmd, -1);
-						MeArmPilot.executeCommand(cmd, -1);
-					});
+					executeCommandList(openClaw);
+					currentClawPos = clawPos;
+				} else if (v < 50) { // Close
+					System.out.println("Not used.");
+//					String[] closeClaw = {
+//									"PRINT: \"Closing the claw\"",
+//									"MOVE: CLAW, 130, 400, 10, 25"
+//					};
+//					Arrays.stream(closeClaw).forEach(cmd -> {
+//						MeArmPilot.validateCommand(cmd, -1);
+//						MeArmPilot.executeCommand(cmd, -1);
+//					});
 				}
 			}
 		};
@@ -187,8 +264,6 @@ public class ForMeArm {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-//		ss1.stop();
-//		ss2.stop();
 				System.out.println("\nBye JoySticks");
 			}
 		});
@@ -199,7 +274,6 @@ public class ForMeArm {
 		Thread waiter = Thread.currentThread();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			synchronized (waiter) {
-
 				// Stop servos
 				String[] stopCommands = {
 					"SET_PWM:LEFT,   0, 0",
@@ -208,10 +282,7 @@ public class ForMeArm {
 					"SET_PWM:BOTTOM, 0, 0"
 				};
 				System.out.println("\nStopping servos.");
-				Arrays.stream(stopCommands).forEach(cmd -> {
-					MeArmPilot.validateCommand(cmd, -1);
-					MeArmPilot.executeCommand(cmd, -1);
-				});
+				executeCommandList(stopCommands);
 
 				waiter.notify();
 				try {
@@ -229,7 +300,7 @@ public class ForMeArm {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("\nDone reading buttons.");
+		System.out.println("\nDone reading joysticks.");
 		gpio.shutdown();
 	}
 }

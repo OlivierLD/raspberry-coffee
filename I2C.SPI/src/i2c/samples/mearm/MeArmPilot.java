@@ -130,6 +130,12 @@ public class MeArmPilot {
 		}
 	}
 
+	/**
+	 * Syntax WAIT:1000
+	 *             |
+	 *             In ms
+	 * @param cmd
+	 */
 	private static void servoWait(CommandWithArgs cmd) {
 		if (!cmd.command.equals("WAIT")) {
 			System.err.println(String.format("Unexpected command [%s] in servoWait.", cmd.command));
@@ -158,6 +164,14 @@ public class MeArmPilot {
 		}
 	}
 
+	/**
+	 * Syntax SET_PWM:BOTTOM, 0, 0
+	 *                |       |  |
+	 *                |       |  Off
+	 *                |       On
+	 *                Servo ID
+	 * @param cmd
+	 */
 	private static void servoSetPwm(CommandWithArgs cmd) {
 		if (!cmd.command.equals("SET_PWM")) {
 			System.err.println(String.format("Unexpected command [%s] in servoSetPwm.", cmd.command));
@@ -183,6 +197,16 @@ public class MeArmPilot {
 		}
 	}
 
+	/**
+	 * Syntax MOVE: LEFT, 350, 230, 10, 25
+	 *              |     |    |    |   |
+	 *              |     |    |    |   Wait (between each step)
+	 *              |     |    |    Nb steps from 'from' to 'to'
+	 *              |     |    To
+	 *              |     From
+	 *              Servo ID
+	 * @param cmd
+	 */
 	private static void servoMove(CommandWithArgs cmd) {
 		if (!cmd.command.equals("MOVE")) {
 			System.err.println(String.format("Unexpected command [%s] in servoMove.", cmd.command));
