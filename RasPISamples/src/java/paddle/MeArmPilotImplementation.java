@@ -254,7 +254,7 @@ public class MeArmPilotImplementation {
 		MeArmPilotImplementation meArm = new MeArmPilotImplementation();
 		MeArmPilotImplementation.init();
 
-		// Open the claw
+		// Open and close the claw
 		boolean ok = true;
 		while (ok) {
 			while (meArm.openClaw() == 0) {
@@ -269,6 +269,31 @@ public class MeArmPilotImplementation {
 			}
 			ok = false;
 		}
+
+		// Move right and left
+		ok = true;
+		while (ok) {
+			while (meArm.turnRight() == 0) {
+				try { Thread.sleep(10); } catch (Exception whatever) {}
+			}
+			ok = false;
+		}
+		ok = true;
+		while (ok) {
+			while (meArm.turnLeft() == 0) {
+				try { Thread.sleep(10); } catch (Exception whatever) {}
+			}
+			ok = false;
+		}
+		// Back in the middle
+		ok = true;
+		while (ok && currentLeftRightPos != ServoRange.BOTTOM.middle()) {
+			while (meArm.turnRight() == 0) {
+				try { Thread.sleep(10); } catch (Exception whatever) {}
+			}
+			ok = false;
+		}
+
 		MeArmPilotImplementation.shutdown();
 		System.out.println("Yo!");
 	}
