@@ -4,10 +4,9 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
+import i2c.samples.mearm.MeArmPilot;
 import java.io.IOException;
 import java.util.Arrays;
-import raspisamples.adc.TwoJoyStick;
-import raspisamples.adc.TwoJoyStickClient;
 
 /**
  * Commands:
@@ -19,8 +18,12 @@ import raspisamples.adc.TwoJoyStickClient;
  * - Down
  * - Open claw
  * - Close claw
+ *
+ * This class is an abstraction, that could be used to drive the MeArm,
+ * whatever the instructions are received from (joystick, WebSockets, push-buttons, etc).
+ *
  */
-public class MeArmPilot {
+public class MeArmPilotImplementation {
 
 	private final static GpioController gpio = GpioFactory.getInstance();
 
@@ -78,6 +81,7 @@ public class MeArmPilot {
 		public int middle() { return this.middle; }
 	}
 
+	// Original settings.
 	private static int currentClawPos         = ServoRange.CLAW.to(); // Closed
 	private static int currentLeftRightPos    = ServoRange.BOTTOM.middle(); // Center
 	private static int currentUpDownPos       = ServoRange.LEFT.middle(); // Center
@@ -97,7 +101,7 @@ public class MeArmPilot {
 	public static void init() throws I2CFactory.UnsupportedBusNumberException,
 					IOException {
 
-		i2c.samples.mearm.MeArmPilot.initContext();
+		MeArmPilot.initContext();
 
 		String[] initCommands = {
 			"SET_PWM:LEFT,   0, 0",
@@ -133,58 +137,122 @@ public class MeArmPilot {
 		executeCommandList(stopCommands);
 		gpio.shutdown();
 	}
-	public void moveForward() {
 
+	public int moveForward() {
+		int backForthPos = currentBackAndForthPos + 10;
+		if (backForthPos > ServoRange.RIGHT.to()) {
+			return -1;
+		}
+		String[] moveForward = {
+						"PRINT: \"Moving forward\"",
+						String.format("MOVE: RIGHT, %d, %d, 1, 25", currentBackAndForthPos, backForthPos)
+		};
+		executeCommandList(moveForward);
+		currentBackAndForthPos = backForthPos;
+		return 0;
 	}
-	public void moveBackward() {
-
+	public int moveBackward() {
+		int backForthPos = currentBackAndForthPos - 10;
+		if (backForthPos < ServoRange.RIGHT.from()) {
+			return -1;
+		}
+		String[] moveBackward = {
+						"PRINT: \"Moving backward\"",
+						String.format("MOVE: RIGHT, %d, %d, 1, 25", currentBackAndForthPos, backForthPos)
+		};
+		executeCommandList(moveBackward);
+		currentBackAndForthPos = backForthPos;
+		return 0;
 	}
-	public void moveUp() {
-
+	public int moveUp() {
+		int upDownPos = currentUpDownPos + 10;
+		if (upDownPos > ServoRange.LEFT.to()) {
+			return -1;
+		}
+		String[] moveUp = {
+						"PRINT: \"Moving up\"",
+						String.format("MOVE: LEFT, %d, %d, 1, 25", currentUpDownPos, upDownPos)
+		};
+		executeCommandList(moveUp);
+		currentUpDownPos = upDownPos;
+		return 0;
 	}
-	public void moveDown() {
-
+	public int moveDown() {
+		int upDownPos = currentUpDownPos - 10;
+		if (upDownPos < ServoRange.LEFT.from()) {
+			return -1;
+		}
+		String[] moveDown = {
+						"PRINT: \"Moving down\"",
+						String.format("MOVE: LEFT, %d, %d, 1, 25", currentUpDownPos, upDownPos)
+		};
+		executeCommandList(moveDown);
+		currentUpDownPos = upDownPos;
+		return 0;
 	}
-	public void turnRight() {
-
+	public int turnRight() {
+		int leftRightPos = currentLeftRightPos + 10;
+		if (leftRightPos > ServoRange.BOTTOM.to()) {
+			return -1;
+		}
+		String[] turnRight = {
+						"PRINT: \"Moving right\"",
+						String.format("MOVE: BOTTOM, %d, %d, 1, 25", currentLeftRightPos, leftRightPos)
+		};
+		executeCommandList(turnRight);
+		currentLeftRightPos = leftRightPos;
+		return 0;
 	}
-	public void turnLeft() {
-
+	public int turnLeft() {
+		int leftRightPos = currentLeftRightPos - 10;
+		if (leftRightPos < ServoRange.BOTTOM.from()) {
+			return -1;
+		}
+		String[] turnLeft = {
+						"PRINT: \"Moving left\"",
+						String.format("MOVE: BOTTOM, %d, %d, 1, 25", currentLeftRightPos, leftRightPos)
+		};
+		executeCommandList(turnLeft);
+		currentLeftRightPos = leftRightPos;
+		return 0;
 	}
-	public int openClaw() {
-		// Close 400, Open 130
-		int clawPos = currentClawPos - 1;
+	public int openClaw() { // TODO Speed factor, += ?
+		int clawPos = currentClawPos - 10;
 		if (clawPos < ServoRange.CLAW.from()) {
 			return -1;
 		}
-
 		String[] openClaw = {
 						"PRINT: \"Opening the claw\"",
-						String.format("MOVE: CLAW, %d, %d, 10, 25", currentClawPos, clawPos)
+						String.format("MOVE: CLAW, %d, %d, 1, 25", currentClawPos, clawPos)
 		};
 		executeCommandList(openClaw);
 		currentClawPos = clawPos;
 		return 0;
 	}
 	public int closeClaw() {
-		// Close 400, Open 130
-		int clawPos = currentClawPos + 1;
+		int clawPos = currentClawPos + 10;
 		if (clawPos > ServoRange.CLAW.to()) {
 			return -1;
 		}
-
 		String[] closeClaw = {
 						"PRINT: \"Closing the claw\"",
-						String.format("MOVE: CLAW, %d, %d, 10, 25", currentClawPos, clawPos)
+						String.format("MOVE: CLAW, %d, %d, 1, 25", currentClawPos, clawPos)
 		};
 		executeCommandList(closeClaw);
 		currentClawPos = clawPos;
 		return 0;
 	}
 
+	/**
+	 * For tests.
+	 *
+	 * @param args unused
+	 * @throws IOException
+	 * @throws UnsupportedBusNumberException
+	 */
 	public static void main(String... args) throws IOException, UnsupportedBusNumberException {
-		MeArmPilot meArm = new MeArmPilot();
-		MeArmPilot.init();
+		MeArmPilotImplementation meArm = new MeArmPilotImplementation();
+		MeArmPilotImplementation.init();
 
 		// Open the claw
 		boolean ok = true;
@@ -201,7 +269,7 @@ public class MeArmPilot {
 			}
 			ok = false;
 		}
-		MeArmPilot.shutdown();
+		MeArmPilotImplementation.shutdown();
 		System.out.println("Yo!");
 	}
 }
