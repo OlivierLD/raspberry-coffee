@@ -57,9 +57,9 @@ public class MeArmPilotImplementation {
 
 	enum ServoRange {
 		BOTTOM("BOTTOM", 310, 510, 410), // Left, Right, Middle
-		CLAW("CLAW", 130, 400),          // Open, Closed
-		LEFT("LEFT", 230, 350, 290),     // Low, High, Middle
-		RIGHT("RIGHT", 430, 550, 490);   // Backward, Forward, Middle
+		CLAW("CLAW",     130, 400),      // Open, Closed
+		LEFT("LEFT",     230, 350, 290), // Low, High, Middle
+		RIGHT("RIGHT",   430, 550, 490); // Backward, Forward, Middle
 
 		private final String servoName;
 		private final int from;
@@ -145,7 +145,7 @@ public class MeArmPilotImplementation {
 		}
 		String[] moveForward = {
 						"PRINT: \"Moving forward\"",
-						String.format("MOVE: RIGHT, %d, %d, 1, 25", currentBackAndForthPos, backForthPos)
+						String.format("MOVE: %s, %d, %d, 1, 25", ServoRange.RIGHT.servoName(), currentBackAndForthPos, backForthPos)
 		};
 		executeCommandList(moveForward);
 		currentBackAndForthPos = backForthPos;
@@ -158,7 +158,7 @@ public class MeArmPilotImplementation {
 		}
 		String[] moveBackward = {
 						"PRINT: \"Moving backward\"",
-						String.format("MOVE: RIGHT, %d, %d, 1, 25", currentBackAndForthPos, backForthPos)
+						String.format("MOVE: %s, %d, %d, 1, 25", ServoRange.RIGHT.servoName(), currentBackAndForthPos, backForthPos)
 		};
 		executeCommandList(moveBackward);
 		currentBackAndForthPos = backForthPos;
@@ -171,7 +171,7 @@ public class MeArmPilotImplementation {
 		}
 		String[] moveUp = {
 						"PRINT: \"Moving up\"",
-						String.format("MOVE: LEFT, %d, %d, 1, 25", currentUpDownPos, upDownPos)
+						String.format("MOVE: %s, %d, %d, 1, 25", ServoRange.LEFT.servoName(), currentUpDownPos, upDownPos)
 		};
 		executeCommandList(moveUp);
 		currentUpDownPos = upDownPos;
@@ -184,7 +184,7 @@ public class MeArmPilotImplementation {
 		}
 		String[] moveDown = {
 						"PRINT: \"Moving down\"",
-						String.format("MOVE: LEFT, %d, %d, 1, 25", currentUpDownPos, upDownPos)
+						String.format("MOVE: %s, %d, %d, 1, 25", ServoRange.LEFT.servoName(), currentUpDownPos, upDownPos)
 		};
 		executeCommandList(moveDown);
 		currentUpDownPos = upDownPos;
@@ -197,7 +197,7 @@ public class MeArmPilotImplementation {
 		}
 		String[] turnRight = {
 						"PRINT: \"Moving right\"",
-						String.format("MOVE: BOTTOM, %d, %d, 1, 25", currentLeftRightPos, leftRightPos)
+						String.format("MOVE: %s, %d, %d, 1, 25", ServoRange.BOTTOM.servoName(), currentLeftRightPos, leftRightPos)
 		};
 		executeCommandList(turnRight);
 		currentLeftRightPos = leftRightPos;
@@ -210,7 +210,7 @@ public class MeArmPilotImplementation {
 		}
 		String[] turnLeft = {
 						"PRINT: \"Moving left\"",
-						String.format("MOVE: BOTTOM, %d, %d, 1, 25", currentLeftRightPos, leftRightPos)
+						String.format("MOVE: %s, %d, %d, 1, 25", ServoRange.BOTTOM.servoName(), currentLeftRightPos, leftRightPos)
 		};
 		executeCommandList(turnLeft);
 		currentLeftRightPos = leftRightPos;
@@ -223,7 +223,7 @@ public class MeArmPilotImplementation {
 		}
 		String[] openClaw = {
 						"PRINT: \"Opening the claw\"",
-						String.format("MOVE: CLAW, %d, %d, 1, 25", currentClawPos, clawPos)
+						String.format("MOVE: %s, %d, %d, 1, 25", ServoRange.CLAW.servoName(), currentClawPos, clawPos)
 		};
 		executeCommandList(openClaw);
 		currentClawPos = clawPos;
@@ -236,7 +236,7 @@ public class MeArmPilotImplementation {
 		}
 		String[] closeClaw = {
 						"PRINT: \"Closing the claw\"",
-						String.format("MOVE: CLAW, %d, %d, 1, 25", currentClawPos, clawPos)
+						String.format("MOVE: %s, %d, %d, 1, 25", ServoRange.CLAW.servoName(), currentClawPos, clawPos)
 		};
 		executeCommandList(closeClaw);
 		currentClawPos = clawPos;
