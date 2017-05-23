@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Raspberry Robot / WebSockets</title>
+    <style>
+  * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
+  p { line-height:18px; }
+    </style>
+    <script type="text/javascript" src="jquery/jquery-2.2.3.min.js"></script>
+    <script type="text/javascript" src="jquery-ui-1.12.0-rc.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="jquery-ui-1.12.0-rc.2/jquery-ui.min.css">
+    <script type="text/javascript" src="qrcodejs/qrcode.js"></script>
+    <script type="text/javascript">
+  var response = {};
+  var statusFld;
+
+  window.onload = function() {
+    statusFld = document.getElementById("status");
+  };
+
+  $(document).ready(function() {
+    $("#up").mousedown(function() {
+      sendMessage(JSON.stringify({
+        "command": "forward",
+        "speed": $("#slider").slider("value")
+      })); 
+    });
+    $("#down").mousedown(function() {
+      sendMessage(JSON.stringify({
+        "command": "backward",
+        "speed": $("#slider").slider("value")
+      })); 
+    });
+    $("#right").mousedown(function() {
+      sendMessage(JSON.stringify({
+        "command": "right",
+        "speed": $("#slider").slider("value")
+      })); 
+    });
+    $("#left").mousedown(function() {
+      sendMessage(JSON.stringify({
+        "command": "left",
+        "speed": $("#slider").slider("value")
+      })); 
+    });
+    $("#up").mouseup(function() {
+      sendMessage(JSON.stringify({"command": "stop"}));
+    });
+    $("#down").mouseup(function() {
+      sendMessage(JSON.stringify({"command": "stop"}));
+    });
+    $("#right").mouseup(function() {
+      sendMessage(JSON.stringify({"command": "stop"}));
+    });
+    $("#left").mouseup(function() {
+      sendMessage(JSON.stringify({"command": "stop"}));
+    });
+
+    $(function() {
+      $("#slider").slider({
+        range: "max",
+        min: 0,
+        max: 255,
+        value: 100,
+        slide: function(event, ui) {
+          $("#speed").val(ui.value);
+        }
+      });
+      $("#speed").val($("#slider").slider("value"));
+    });
+  });
+
+  var closeRobot = function() {
+    sendMessage(JSON.stringify({"command":"close"}));
+  };
+
+  var qrCodeVisible = false;
+  var qrCode = function() {
+    qrCodeVisible = !qrCodeVisible;
+    document.getElementById("qrcode").style.display = (qrCodeVisible ? "inline" : "none");
+  };
+    </script>
+  </head>
+  <body>
+    <div style="margin: 10px;">
+      <table style="margin: auto; width: 90%;" border="0">
+        <tr>
+          <td valign="top"><h2>Robot pilot, JQuery, WebSockets</h2></td>
+          <td align="right"><a href="" onclick="javascript:qrCode(); return false;" title="Show hide QR code"><small>QR Code</small></a></td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">
+            <div id="qrcode" style="width:250px; height:250px; margin-top:15px; display: none;"></div>
+            <script type="text/javascript">
+
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+  width:  250,
+  height: 250
+});
+
+var makeCode = function() {
+  console.log("Location:", document.location.href);
+  qrcode.makeCode(document.location.href);
+};
+
+makeCode();
+            </script>
+          </td>
+        </tr>
+        <tr>
+          <td align="left" colspan="2">
+            <div id="status" style="padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 80px;">
+              <!--i>Status will go here when needed...</i-->
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
+        </tr>
+        <tr>
+          <td align="center" colspan="2">
+            <table>
+              <tr>
+                <td></td><td><button id="up" title="Forward" style="width: 50px; height: 50px;">&#8593;</button></td><td></td>
+              </tr>
+              <tr>
+                <td><button id="left" title="Left"  style="width: 50px; height: 50px;">&#8592;</button></td>
+                <td><!--button id="reset" title="Reset" style="width: 50px; height: 50px;">stop</button--></td>
+                <td><button id="right" title="Right" style="width: 50px; height: 50px;">&#8594;</button></td>
+              </tr>
+              <tr>
+                <td></td><td><button id="down" title="Backward" style="width: 50px; height: 50px;">&#8595;</button></td><td></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <p>
+              <label for="speed">Robot Speed:</label>
+              <input type="text" id="speed" readonly style="border:0; color:#f6931f; font-weight:bold;">
+            </p>
+            <div id="slider"></div>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:closeRobot(); return false;" title="Turn the robot off"><small>Close</small></a></td>
+        </tr>
+      </table>
+    </div>
+    <hr>
+    <script src="./robot.client.js"></script>
+    <address>Oliv fecit, AD 2016</address>
+  </body>
+</html>
