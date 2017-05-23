@@ -62,23 +62,43 @@ public class MeArmWebSocket {
 								if ("forward".equals(value)) {
 									int speed = (new JSONObject(command)).getInt("speed");
 									if ("true".equals(System.getProperty("robot.verbose", "false")))
-										System.out.println(String.format("%s, %d", value, speed));
+										System.out.println(String.format("Forward %s, %d", value, speed));
 									robot.moveForward();
 								} else if ("backward".equals(value)) {
 									int speed = (new JSONObject(command)).getInt("speed");
 									if ("true".equals(System.getProperty("robot.verbose", "false")))
-										System.out.println(String.format("%s, %d", value, speed));
+										System.out.println(String.format("Backward %s, %d", value, speed));
 									robot.moveBackward();
 								} else if ("left".equals(value)) {
 									int speed = (new JSONObject(command)).getInt("speed");
 									if ("true".equals(System.getProperty("robot.verbose", "false")))
-										System.out.println(String.format("%s, %d", value, speed));
+										System.out.println(String.format("Left %s, %d", value, speed));
 									robot.turnLeft();
 								} else if ("right".equals(value)) {
 									int speed = (new JSONObject(command)).getInt("speed");
 									if ("true".equals(System.getProperty("robot.verbose", "false")))
-										System.out.println(String.format("%s, %d", value, speed));
+										System.out.println(String.format("Right %s, %d", value, speed));
 									robot.turnRight();
+								} else if ("up".equals(value)) {
+									int speed = (new JSONObject(command)).getInt("speed");
+									if ("true".equals(System.getProperty("robot.verbose", "false")))
+										System.out.println(String.format("Up %s, %d", value, speed));
+									robot.moveUp();
+								} else if ("down".equals(value)) {
+									int speed = (new JSONObject(command)).getInt("speed");
+									if ("true".equals(System.getProperty("robot.verbose", "false")))
+										System.out.println(String.format("Down %s, %d", value, speed));
+									robot.moveDown();
+								} else if ("open".equals(value)) {
+									int speed = (new JSONObject(command)).getInt("speed");
+									if ("true".equals(System.getProperty("robot.verbose", "false")))
+										System.out.println(String.format("Open %s, %d", value, speed));
+									robot.openClaw();
+								} else if ("close".equals(value)) {
+									int speed = (new JSONObject(command)).getInt("speed");
+									if ("true".equals(System.getProperty("robot.verbose", "false")))
+										System.out.println(String.format("Close %s, %d", value, speed));
+									robot.closeClaw();
 								} else if ("stop".equals(value))
 									MeArmPilotImplementation.shutdown();
 								else
