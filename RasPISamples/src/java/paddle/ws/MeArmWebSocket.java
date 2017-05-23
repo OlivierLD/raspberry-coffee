@@ -51,10 +51,8 @@ public class MeArmWebSocket {
 					String value = (new JSONObject(command)).getString("command");
 					//  System.out.println("    . Mess content:[" + ((JSONObject)json.get("data")).get("text") + "]");
 					System.out.println("Command Value:" + value);
-					if ("close".equals(value)) {
+					if ("stop".equals(value)) {
 						bye();
-						if (robot != null)
-							MeArmPilotImplementation.shutdown();
 					} else {
 						// Drive the robot here
 						if (robot != null) {
