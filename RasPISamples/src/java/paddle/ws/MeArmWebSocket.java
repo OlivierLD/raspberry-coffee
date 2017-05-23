@@ -34,6 +34,7 @@ public class MeArmWebSocket {
 		if (webSocketClient != null) {
 			webSocketClient.close();
 		}
+		MeArmPilotImplementation.shutdown();
 	}
 
 	private void initWebSocketConnection(String serverURI) {
@@ -182,13 +183,14 @@ public class MeArmWebSocket {
 			Thread.sleep(2500);
 		} catch (InterruptedException ie) {
 		}
-
 		System.out.println("That's it!");
 	}
 
 	public static void main(String args[]) throws IOException, I2CFactory.UnsupportedBusNumberException {
 		help();
 		MeArmWebSocket proto = new MeArmWebSocket();
+		MeArmPilotImplementation.init();
+
 		if ("true".equals(System.getProperty("test.only", "false"))) {
 			test(proto);
 		} else {

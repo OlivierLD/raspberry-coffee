@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -20,13 +21,13 @@
   };
 
   $(document).ready(function() {
-    $("#up").mousedown(function() {
+    $("#forward").mousedown(function() {
       sendMessage(JSON.stringify({
         "command": "forward",
         "speed": $("#slider").slider("value")
       })); 
     });
-    $("#down").mousedown(function() {
+    $("#backward").mousedown(function() {
       sendMessage(JSON.stringify({
         "command": "backward",
         "speed": $("#slider").slider("value")
@@ -44,17 +45,55 @@
         "speed": $("#slider").slider("value")
       })); 
     });
+
+    $("#up").mousedown(function() {
+        sendMessage(JSON.stringify({
+            "command": "up",
+            "speed": $("#slider").slider("value")
+        }));
+    });
+    $("#down").mousedown(function() {
+        sendMessage(JSON.stringify({
+            "command": "down",
+            "speed": $("#slider").slider("value")
+        }));
+    });
+    $("#open").mousedown(function() {
+        sendMessage(JSON.stringify({
+            "command": "open",
+            "speed": $("#slider").slider("value")
+        }));
+    });
+    $("#close").mousedown(function() {
+        sendMessage(JSON.stringify({
+            "command": "close",
+            "speed": $("#slider").slider("value")
+        }));
+    });
+
     $("#up").mouseup(function() {
-      sendMessage(JSON.stringify({"command": "stop"}));
+      // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#down").mouseup(function() {
-      sendMessage(JSON.stringify({"command": "stop"}));
+      // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#right").mouseup(function() {
-      sendMessage(JSON.stringify({"command": "stop"}));
+      // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#left").mouseup(function() {
-      sendMessage(JSON.stringify({"command": "stop"}));
+      // sendMessage(JSON.stringify({"command": "stop"}));
+    });
+    $("#forward").mouseup(function() {
+        // sendMessage(JSON.stringify({"command": "stop"}));
+    });
+    $("#backward").mouseup(function() {
+        // sendMessage(JSON.stringify({"command": "stop"}));
+    });
+    $("#open").mouseup(function() {
+        // sendMessage(JSON.stringify({"command": "stop"}));
+    });
+    $("#close").mouseup(function() {
+        // sendMessage(JSON.stringify({"command": "stop"}));
     });
 
     $(function() {
@@ -119,10 +158,10 @@ makeCode();
           <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
         </tr>
         <tr>
-          <td align="center" colspan="2">
+          <td align="center" colspan="1">
             <table>
               <tr>
-                <td></td><td><button id="up" title="Forward" style="width: 50px; height: 50px;">&#8593;</button></td><td></td>
+                <td></td><td><button id="forward" title="Forward" style="width: 50px; height: 50px;">&#8593;</button></td><td></td>
               </tr>
               <tr>
                 <td><button id="left" title="Left"  style="width: 50px; height: 50px;">&#8592;</button></td>
@@ -130,7 +169,22 @@ makeCode();
                 <td><button id="right" title="Right" style="width: 50px; height: 50px;">&#8594;</button></td>
               </tr>
               <tr>
-                <td></td><td><button id="down" title="Backward" style="width: 50px; height: 50px;">&#8595;</button></td><td></td>
+                <td></td><td><button id="backward" title="Backward" style="width: 50px; height: 50px;">&#8595;</button></td><td></td>
+              </tr>
+            </table>
+          </td>
+          <td align="center" colspan="1">
+            <table>
+              <tr>
+                <td></td><td><button id="up" title="Up" style="width: 50px; height: 50px;">&#8593;</button></td><td></td>
+              </tr>
+              <tr>
+                <td><button id="close" title="Close"  style="width: 50px; height: 50px;">&#8592;</button></td>
+                <td><!--button id="reset" title="Reset" style="width: 50px; height: 50px;">stop</button--></td>
+                <td><button id="open" title="Open" style="width: 50px; height: 50px;">&#8594;</button></td>
+              </tr>
+              <tr>
+                <td></td><td><button id="down" title="Down" style="width: 50px; height: 50px;">&#8595;</button></td><td></td>
               </tr>
             </table>
           </td>
