@@ -3,8 +3,9 @@
 CP=./build/libs/RasPISamples-1.0-all.jar
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dtest.only=true"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dno.robot=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dmearm.pilot=true"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dtest.only=true"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dno.robot=true"
 #
 echo Make sure the server is started \(node mearm.server.js\)
 # ADDR=`hostname`
