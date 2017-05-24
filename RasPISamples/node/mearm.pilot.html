@@ -99,7 +99,7 @@
     $(function() {
       $("#slider").slider({
         range: "max",
-        min: 0,
+        min: 1,
         max: 20,
         value: 10,
         slide: function(event, ui) {
@@ -161,30 +161,30 @@ makeCode();
           <td align="center" colspan="1">
             <table>
               <tr>
-                <td></td><td><button id="forward" title="Forward" style="width: 50px; height: 50px;">&#8593;</button></td><td></td>
+                <td></td><td align="center"><small>forward</small><br/><button id="forward" title="Forward" style="width: 50px; height: 50px;">&#8593;</brbutton></td><td></td>
               </tr>
               <tr>
-                <td><button id="left" title="Left"  style="width: 50px; height: 50px;">&#8592;</button></td>
+                <td valign="middle"><small>left</small>&nbsp;<button id="left" title="Left"  style="width: 50px; height: 50px;">&#8592;</button></td>
                 <td><!--button id="reset" title="Reset" style="width: 50px; height: 50px;">stop</button--></td>
-                <td><button id="right" title="Right" style="width: 50px; height: 50px;">&#8594;</button></td>
+                <td valign="middle"><button id="right" title="Right" style="width: 50px; height: 50px;">&#8594;</button>&nbsp;<small>right</small></td>
               </tr>
               <tr>
-                <td></td><td><button id="backward" title="Backward" style="width: 50px; height: 50px;">&#8595;</button></td><td></td>
+                <td></td><td align="center"><button id="backward" title="Backward" style="width: 50px; height: 50px;">&#8595;</button><br/><small>backward</small></td><td></td>
               </tr>
             </table>
           </td>
           <td align="center" colspan="1">
             <table>
               <tr>
-                <td></td><td><button id="up" title="Up" style="width: 50px; height: 50px;">&#8593;</button></td><td></td>
+                <td></td><td align="center"><small>up</small><br/><button id="up" title="Up" style="width: 50px; height: 50px;">&#8593;</button></td><td></td>
               </tr>
               <tr>
-                <td><button id="close" title="Close"  style="width: 50px; height: 50px;">&#8592;</button></td>
+                <td valign="middle"><small>close</small>&nbsp;<button id="close" title="Close"  style="width: 50px; height: 50px;">&#8592;</button></td>
                 <td><!--button id="reset" title="Reset" style="width: 50px; height: 50px;">stop</button--></td>
-                <td><button id="open" title="Open" style="width: 50px; height: 50px;">&#8594;</button></td>
+                <td valign="middle"><button id="open" title="Open" style="width: 50px; height: 50px;">&#8594;</button>&nbsp;<small>open</small></td>
               </tr>
               <tr>
-                <td></td><td><button id="down" title="Down" style="width: 50px; height: 50px;">&#8595;</button></td><td></td>
+                <td></td><td align="center"><button id="down" title="Down" style="width: 50px; height: 50px;">&#8595;</button><br/><small>down</small></td><td></td>
               </tr>
             </table>
           </td>
