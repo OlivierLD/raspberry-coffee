@@ -507,7 +507,9 @@ As you must have seen, we use `Gradle` here, along with the `ShadowJar` plugin. 
 
 ## Remote access
 Remote access is not a problem on any Raspberry PI, `ssh` does the trick. It can even be done from phone or other small devices. For example, several `ssh` clients are available on Android:
+
 ![SSH Console](./docimages/android.ssh.png "SSH Console")
+
 In this kind of case, it could be a good idea to have scripts with small names... See `go` and `killmux`, for examples.
 
 ## Demos
