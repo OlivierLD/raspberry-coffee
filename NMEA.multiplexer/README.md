@@ -512,6 +512,8 @@ Remote access is not a problem on any Raspberry PI, `ssh` does the trick. It can
 
 In this kind of case, it could be a good idea to have scripts with small names... See `go` and `killmux`, for examples.
 
+The Raspberry PI can also be an hotspot, you connect to its network to be able to access the data. All the info you need to do so are available <a href="http://lmgtfy.com/?q=hostapd+raspberry+pi" target="Google">on Internet</a>.
+
 ## Demos
 
 Follow [this link](./demos.md).
