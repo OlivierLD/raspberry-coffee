@@ -58,6 +58,9 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		// To measure the flow (in bytes per time)
     Context.getInstance().addManagedBytes(mess.length());
 
+		// Last sentence (inbound)
+		Context.getInstance().setLastDataSentence(mess);
+
 		if (verbose) {
 			System.out.println("==== From MUX: " + mess);
 			DumpUtil.displayDualDump(mess);

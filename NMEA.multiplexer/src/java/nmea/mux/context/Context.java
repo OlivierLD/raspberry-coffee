@@ -15,6 +15,9 @@ public class Context {
 	private long startTime = 0L;
 	private long managedBytes = 0L;
 
+	private String lastDataSentence = "";
+	private long lastSentenceTimestamp = 0L;
+
 	private static Context instance;
 
 	public synchronized static Context getInstance() {
@@ -44,4 +47,22 @@ public class Context {
 		this.managedBytes += managedBytes;
 	}
 
+	public void setLastDataSentence(String sentence) {
+		this.lastDataSentence = sentence;
+		this.lastSentenceTimestamp = System.currentTimeMillis();
+	}
+	public StringAndTimeStamp getLastDataSentence() {
+		return new StringAndTimeStamp(this.lastDataSentence, this.lastSentenceTimestamp);
+	}
+
+	public static class StringAndTimeStamp {
+		String str;
+		long timestamp;
+		public StringAndTimeStamp(String str, long ts) {
+			this.str = str;
+			this.timestamp = ts;
+		}
+		public String getString() { return this.str; }
+		public long getTimestamp() { return this.timestamp; }
+	}
 }

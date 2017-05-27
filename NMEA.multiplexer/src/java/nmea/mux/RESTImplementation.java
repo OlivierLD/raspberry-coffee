@@ -55,10 +55,12 @@ import nmea.forwarders.WebSocketProcessor;
 import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
 import nmea.mux.context.Context;
+import nmea.mux.context.Context.StringAndTimeStamp;
 import nmea.utils.NMEAUtils;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
+ *
  * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
  * <br>
  * The Multiplexer will use the {@link #processRequest(Request, Response)} method of this class to
@@ -220,7 +222,12 @@ public class RESTImplementation {
 									"GET",
 									"/nmea-volume",
 									this::getNMEAVolumeStatus,
-									"Get the time elapsed and the NMEA volume managed so far"));
+									"Get the time elapsed and the NMEA volume managed so far"),
+					new Operation(
+									"GET",
+									"/last-sentence",
+									this::getLastNMEASentence,
+									"Get the last inbound sentence"));
 
 	/**
 	 * This is the method to invoke to have a REST request processed as defined above.
@@ -1712,7 +1719,28 @@ public class RESTImplementation {
 		try {
 			jsonElement = new Gson().toJsonTree(map);
 		} catch (Exception ex) {
-			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getNMEAVolumeStatus", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response getLastNMEASentence(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		Map<String, Object> map = new HashMap<>(2);
+		StringAndTimeStamp lastData = Context.getInstance().getLastDataSentence();
+		map.put("timestamp", lastData.getTimestamp());
+		map.put("last-data", lastData.getString());
+
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(map);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getLastNMEASentence", ex);
 		}
 		String content = jsonElement != null ? jsonElement.toString() : "";
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());

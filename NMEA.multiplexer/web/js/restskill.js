@@ -68,6 +68,10 @@ var getVolume = function() {
     return getDeferred('/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+var getLastSentence = function() {
+    return getDeferred('/last-sentence', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var getSerialPorts = function() {
     return getDeferred('/serial-ports', DEFAULT_TIMEOUT, 'GET', 200);
 };
@@ -166,6 +170,41 @@ var dataVolume = function() {
         $('#flow').css('cursor', 'auto');
     });
 
+};
+
+var storedNMEA = "";
+var stackNMEAData = function(sentenceToAdd) {
+    storedNMEA += ((storedNMEA.length > 0 ? "\n" : "") + sentenceToAdd); // TODO Limit the size...
+    var content = '<pre>' + storedNMEA + '</pre>';
+    $("#inbound-data-div").html(content);
+    $("#inbound-data-div").scrollTop($("#inbound-data-div")[0].scrollHeight);
+};
+
+var lastTimeStamp = 0;
+var getLastNMEASentence = function() {
+    // No REST traffic for this one.
+    var getData = getLastSentence();
+    getData.done(function(value) {
+        var json = JSON.parse(value); // Like { "nmea-bytes": 13469, "started": 1489004962194 }
+        var lastString = json["last-data"];
+        var timestamp = json["timestamp"];
+        if (timestamp > lastTimeStamp) {
+            stackNMEAData(lastString);
+            lastTimeStamp = timestamp;
+//          console.log(lastString)
+        }
+    });
+    getData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager.display("Failed to get the last NMEA Data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
 };
 
 var serialPortList = function() {
