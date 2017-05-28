@@ -88,6 +88,12 @@ public class MeArmPilotImplementation {
 	private static int currentUpDownPos       = ServoRange.LEFT.middle();   // Center
 	private static int currentBackAndForthPos = ServoRange.RIGHT.middle();  // Middle
 
+	private String status() {
+		String status = "";
+		status = String.format("Claw: %d, Back n' Forth: %d, Up-Down: %d, Left Right: %d", currentClawPos, currentBackAndForthPos, currentUpDownPos, currentLeftRightPos);
+		return status;
+	}
+
 	private static void executeCommandList(String[] commands) {
 		Arrays.stream(commands).forEach(cmd -> {
 			i2c.samples.mearm.MeArmPilot.validateCommand(cmd, -1);
@@ -143,6 +149,9 @@ public class MeArmPilotImplementation {
 		return moveForward(10, 1);
 	}
 	public int moveForward(int inc, int steps) {
+		if ("true".equals(System.getProperty("mearm.verbose", "false"))) {
+			System.out.println(status());
+		}
 		int backForthPos = currentBackAndForthPos + inc;
 		if (backForthPos > ServoRange.RIGHT.to()) {
 			return -1;
@@ -159,6 +168,9 @@ public class MeArmPilotImplementation {
 		return moveBackward(10, 1);
 	}
 	public int moveBackward(int inc, int steps) {
+		if ("true".equals(System.getProperty("mearm.verbose", "false"))) {
+			System.out.println(status());
+		}
 		int backForthPos = currentBackAndForthPos - inc;
 		if (backForthPos < ServoRange.RIGHT.from()) {
 			return -1;
@@ -175,6 +187,9 @@ public class MeArmPilotImplementation {
 		return moveUp(10, 1);
 	}
 	public int moveUp(int inc, int steps) {
+		if ("true".equals(System.getProperty("mearm.verbose", "false"))) {
+			System.out.println(status());
+		}
 		int upDownPos = currentUpDownPos + inc;
 		if (upDownPos > ServoRange.LEFT.to()) {
 			return -1;
@@ -191,6 +206,9 @@ public class MeArmPilotImplementation {
 		return moveDown(10, 1);
 	}
 	public int moveDown(int inc, int steps) {
+		if ("true".equals(System.getProperty("mearm.verbose", "false"))) {
+			System.out.println(status());
+		}
 		int upDownPos = currentUpDownPos - inc;
 		if (upDownPos < ServoRange.LEFT.from()) {
 			return -1;
@@ -207,6 +225,9 @@ public class MeArmPilotImplementation {
 		return turnRight(10, 1);
 	}
 	public int turnRight(int inc, int steps) {
+		if ("true".equals(System.getProperty("mearm.verbose", "false"))) {
+			System.out.println(status());
+		}
 		int leftRightPos = currentLeftRightPos + inc;
 		if (leftRightPos > ServoRange.BOTTOM.to()) {
 			return -1;
@@ -223,6 +244,9 @@ public class MeArmPilotImplementation {
 		return turnLeft(10, 1);
 	}
 	public int turnLeft(int inc, int steps) {
+		if ("true".equals(System.getProperty("mearm.verbose", "false"))) {
+			System.out.println(status());
+		}
 		int leftRightPos = currentLeftRightPos - inc;
 		if (leftRightPos < ServoRange.BOTTOM.from()) {
 			return -1;
@@ -239,6 +263,9 @@ public class MeArmPilotImplementation {
 		return openClaw(10, 1);
 	}
 	public int openClaw(int inc, int steps) {
+		if ("true".equals(System.getProperty("mearm.verbose", "false"))) {
+			System.out.println(status());
+		}
 		int clawPos = currentClawPos - inc;
 		if (clawPos < ServoRange.CLAW.from()) {
 			return -1;
@@ -255,6 +282,9 @@ public class MeArmPilotImplementation {
 		return closeClaw(10, 1);
 	}
 	public int closeClaw(int inc, int steps) {
+		if ("true".equals(System.getProperty("mearm.verbose", "false"))) {
+			System.out.println(status());
+		}
 		int clawPos = currentClawPos + inc;
 		if (clawPos > ServoRange.CLAW.to()) {
 			return -1;
