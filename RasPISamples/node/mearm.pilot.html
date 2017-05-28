@@ -58,40 +58,56 @@
     });
     $("#right").mousedown(function() {
       right = true;
-      while (right) {
+      var mr = function() {
           sendMessage(JSON.stringify({
               "command": "right",
               "speed": $("#slider").slider("value")
           }));
-      }
+          if (right) {
+              setTimeout(mr, 500);
+          }
+      };
+      mr();
     });
     $("#left").mousedown(function() {
       left = true;
-      while (left) {
+      var ml = function() {
           sendMessage(JSON.stringify({
               "command": "left",
               "speed": $("#slider").slider("value")
           }));
-      }
+          if (left) {
+              setTimeout(ml, 500);
+          }
+      };
+      ml;
     });
 
     $("#up").mousedown(function() {
         up = true;
-        while (true) {
+        var mu = function() {
             sendMessage(JSON.stringify({
                 "command": "up",
                 "speed": $("#slider").slider("value")
             }));
-        }
+            if (up) {
+                setTimeout(mu, 500);
+            }
+        };
+        mu();
     });
     $("#down").mousedown(function() {
         down = true;
-        while (down) {
+        var md = function() {
             sendMessage(JSON.stringify({
                 "command": "down",
                 "speed": $("#slider").slider("value")
             }));
-        }
+            if (down) {
+                setTimeout(md, 500);
+            }
+        };
+        md();
     });
     $("#open").mousedown(function() {
         open = true;
