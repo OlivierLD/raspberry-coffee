@@ -32,21 +32,29 @@
   $(document).ready(function() {
     $("#forward").mousedown(function() {
       forward = true;
-      while (forward) {
+      var mf = function() {
           sendMessage(JSON.stringify({
               "command": "forward",
               "speed": $("#slider").slider("value")
           }));
-      }
+          if (forward) {
+            setTimeout(mf, 500);
+          }
+      };
+      mf();
     });
     $("#backward").mousedown(function() {
       backward = true;
-      while (backward) {
+      var mb = function() {
           sendMessage(JSON.stringify({
               "command": "backward",
               "speed": $("#slider").slider("value")
           }));
-      }
+          if (backward) {
+              setTimeout(mb, 500);
+          }
+      };
+      mb();
     });
     $("#right").mousedown(function() {
       right = true;
