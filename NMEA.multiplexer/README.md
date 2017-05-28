@@ -516,7 +516,12 @@ The Raspberry PI can also be an hotspot, you connect to its network to be able t
 
 `scp` and other such tools are also conveniently available.
 
-Along the ame lines - even if a bit disproportionate - `VNC` works just fine, even on the Raspberry PI Zero (see below)
+This can prove to be particularly convenient whan you want to log data away from a stable Internet connection (in your car, in a plane, on a boat, etc).
+ You start the Raspberry PI, with a hotspot generating its own network.
+ Then you can connect on that network, and you can drive the Multiplexer application (start, stop, monitor, etc).
+
+
+Along the same lines - even if it can sound a bit disproportionate - `VNC` works just fine, even on the Raspberry PI Zero (see below)
 
 ![VNC Viewer](./docimages/vnc.png "VNC Viewer")
 
