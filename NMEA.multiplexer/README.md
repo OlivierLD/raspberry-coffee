@@ -516,6 +516,12 @@ The Raspberry PI can also be an hotspot, you connect to its network to be able t
 
 `scp` and other such tools are also conveniently available.
 
+Along the ame lines - even if a bit disproportionate - `VNC` works just fine, even on the Raspberry PI Zero (see below)
+
+![VNC Viewer](./docimages/vnc.png "VNC Viewer")
+
+This is Jessie/Pixel running on a Raspberry PI Zero.
+
 ## Demos
 
 Follow [this link](./demos.md).
