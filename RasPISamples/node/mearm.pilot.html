@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <title>Raspberry Robot / WebSockets</title>
+    <link rel="icon" type="image/png" href="ws.png">
     <style>
   * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
   p { line-height:18px; }
@@ -20,12 +20,23 @@
     statusFld = document.getElementById("status");
   };
 
+  var forward = false,
+      backward = false,
+      left = false,
+      right = false,
+      up = false,
+      down = false,
+      open = false,
+      close = false;
   $(document).ready(function() {
     $("#forward").mousedown(function() {
-      sendMessage(JSON.stringify({
-        "command": "forward",
-        "speed": $("#slider").slider("value")
-      })); 
+      forward = true;
+      while (forward) {
+          sendMessage(JSON.stringify({
+              "command": "forward",
+              "speed": $("#slider").slider("value")
+          }));
+      }
     });
     $("#backward").mousedown(function() {
       sendMessage(JSON.stringify({
@@ -84,6 +95,7 @@
       // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#forward").mouseup(function() {
+        forward = false;
         // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#backward").mouseup(function() {
