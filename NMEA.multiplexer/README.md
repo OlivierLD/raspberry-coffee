@@ -516,7 +516,7 @@ The Raspberry PI can also be an hotspot, you connect to its network to be able t
 
 `scp` and other such tools are also conveniently available.
 
-This can prove to be particularly convenient whan you want to log data away from a stable Internet connection (in your car, in a plane, on a boat, etc).
+This can prove to be particularly convenient when you want to log data away from a stable Internet connection (in your car, in a plane, on a boat, etc).
  You start the Raspberry PI, with a hotspot generating its own network.
  Then you can connect on that network, and you can drive the Multiplexer application (start, stop, monitor, etc).
 
