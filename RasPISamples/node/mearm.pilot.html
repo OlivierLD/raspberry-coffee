@@ -28,6 +28,7 @@
       down = false,
       open = false,
       close = false;
+
   $(document).ready(function() {
     $("#forward").mousedown(function() {
       forward = true;
@@ -39,72 +40,100 @@
       }
     });
     $("#backward").mousedown(function() {
-      sendMessage(JSON.stringify({
-        "command": "backward",
-        "speed": $("#slider").slider("value")
-      })); 
+      backward = true;
+      while (backward) {
+          sendMessage(JSON.stringify({
+              "command": "backward",
+              "speed": $("#slider").slider("value")
+          }));
+      }
     });
     $("#right").mousedown(function() {
-      sendMessage(JSON.stringify({
-        "command": "right",
-        "speed": $("#slider").slider("value")
-      })); 
+      right = true;
+      while (right) {
+          sendMessage(JSON.stringify({
+              "command": "right",
+              "speed": $("#slider").slider("value")
+          }));
+      }
     });
     $("#left").mousedown(function() {
-      sendMessage(JSON.stringify({
-        "command": "left",
-        "speed": $("#slider").slider("value")
-      })); 
+      left = true;
+      while (left) {
+          sendMessage(JSON.stringify({
+              "command": "left",
+              "speed": $("#slider").slider("value")
+          }));
+      }
     });
 
     $("#up").mousedown(function() {
-        sendMessage(JSON.stringify({
-            "command": "up",
-            "speed": $("#slider").slider("value")
-        }));
+        up = true;
+        while (true) {
+            sendMessage(JSON.stringify({
+                "command": "up",
+                "speed": $("#slider").slider("value")
+            }));
+        }
     });
     $("#down").mousedown(function() {
-        sendMessage(JSON.stringify({
-            "command": "down",
-            "speed": $("#slider").slider("value")
-        }));
+        down = true;
+        while (down) {
+            sendMessage(JSON.stringify({
+                "command": "down",
+                "speed": $("#slider").slider("value")
+            }));
+        }
     });
     $("#open").mousedown(function() {
-        sendMessage(JSON.stringify({
-            "command": "open",
-            "speed": $("#slider").slider("value")
-        }));
+        open = true;
+        while (open) {
+            sendMessage(JSON.stringify({
+                "command": "open",
+                "speed": $("#slider").slider("value")
+            }));
+        }
     });
     $("#close").mousedown(function() {
-        sendMessage(JSON.stringify({
-            "command": "close",
-            "speed": $("#slider").slider("value")
-        }));
+        close = true;
+        while (close) {
+            sendMessage(JSON.stringify({
+                "command": "close",
+                "speed": $("#slider").slider("value")
+            }));
+        }
     });
 
     $("#up").mouseup(function() {
-      // sendMessage(JSON.stringify({"command": "stop"}));
+        up = false;
+        // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#down").mouseup(function() {
-      // sendMessage(JSON.stringify({"command": "stop"}));
+        down = false;
+        // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#right").mouseup(function() {
-      // sendMessage(JSON.stringify({"command": "stop"}));
+        right = false;
+        // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#left").mouseup(function() {
-      // sendMessage(JSON.stringify({"command": "stop"}));
+        left = false;
+        // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#forward").mouseup(function() {
         forward = false;
         // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#backward").mouseup(function() {
+        backward = false;
         // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#open").mouseup(function() {
+        open = false;
         // sendMessage(JSON.stringify({"command": "stop"}));
     });
     $("#close").mouseup(function() {
+        close = false;
         // sendMessage(JSON.stringify({"command": "stop"}));
     });
 
