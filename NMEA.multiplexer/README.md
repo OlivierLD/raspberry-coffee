@@ -539,7 +539,7 @@ This worked for a while, then after an `apt-get upgrade`, it stopped working, so
 
 A much better approach seems to be to have 2 WiFi adpaters. The Rasberry PI 3 and the Zero W already have one embedded, I just added another one, the small USB WiFi dongle I used to use
 on the other Raspberry PIs.
-This on becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
+This one becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
 
 ```
 # interfaces(5) file used by ifup(8) and ifdown(8)
@@ -568,7 +568,7 @@ iface wlan1 inet dhcp
 wpa-ssid "ATT856"
 wpa-psk "<your network passphrase>"
 ```
-See the 4 lines t the bottom of the file, that's it!
+See the 4 lines at the bottom of the file, that's it!
 
 Now, when the `wlan1` is plugged in, this Raspberry PI is a WiFi hotspot, *_and_* has Internet access.
 
