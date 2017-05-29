@@ -512,7 +512,7 @@ Remote access is not a problem on any Raspberry PI, `ssh` does the trick. It can
 
 In this kind of case, it could be a good idea to have scripts with small names... See `go` and `killmux`, for examples.
 
-The Raspberry PI can also be an hotspot, you connect to its network to be able to access the data. All the info you need to do so are available <a href="http://lmgtfy.com/?q=hostapd+raspberry+pi" target="Google">on Internet</a>.
+The Raspberry PI can also be an hotspot, you connect to its network to be able to access the data. there is a good tutorial for that on the <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">Adafruit website</a>.
 
 `scp` and other such tools are also conveniently available.
 
@@ -526,6 +526,51 @@ Along the same lines - even if it can sound a bit disproportionate - `VNC` works
 ![VNC Viewer](./docimages/vnc.png "VNC Viewer")
 
 This is Jessie/Pixel running on a Raspberry PI Zero.
+
+#### Note: Access point _and_ Internet access
+To enable `hostapd` to have you Raspberry PI acting as a WiFi hotspot, as we said, you can follow
+<a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those instructions</a> from the Adafruit website.
+
+The thing is that when the Raspberry PI becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
+`git pull origin master`, etc, that can rapidely become quite frustrating.
+
+In the past, I had written a couple of scripts to exchange the various configuration files (`hostapd.conf`, `wpa_supplicant.conf`, `/etc/network/interfaces`, etc).
+This worked for a while, then after an `apt-get upgrade`, it stopped working, some config files had changed... Bummer.
+
+A much better approach seems to be to have 2 WiFi adpaters. The Rasberry PI 3 and the Zero W already have one embedded, I just added another one, the small USB WiFi dongle I used to use
+on the other RAspberry Pis.
+This on becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
+
+```
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+auto lo
+iface lo inet loopback
+
+iface eth0 inet manual
+
+allow-hotplug wlan0
+iface wlan0 inet static
+  address 192.168.42.1
+  netmask 255.255.255.0
+
+#iface wlan0 inet manual
+#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+allow-hotplug wlan1
+iface wlan1 inet dhcp
+wpa-ssid "ATT856"
+wpa-psk "<your network passphrase>"
+```
+See the 4 lines t the bottom of the file, that's it!
+
+Now, when the `wlan1` is plugged in, this Raspberry PI is a WiFi hotspot, *_and_* has Internet access.
 
 ## Demos
 
