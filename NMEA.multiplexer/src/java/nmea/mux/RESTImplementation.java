@@ -227,7 +227,7 @@ public class RESTImplementation {
 									"GET",
 									"/last-sentence",
 									this::getLastNMEASentence,
-									"Get the last inbound sentence"));
+									"Get the last available inbound sentence"));
 
 	/**
 	 * This is the method to invoke to have a REST request processed as defined above.
