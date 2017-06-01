@@ -7,6 +7,7 @@
 - [Small external OLED display](#small-external-display)
 - [Web Console](#web-console)
 - [Distinction on the device ID](#inside-and-outside)
+- [Driving and Logging](#driving-and-logging)
 - [Next](#todo)...
 
 #### Small external display
@@ -162,6 +163,45 @@ inside and outside conditions, even if they are represented by the same NMEA sen
 
 _Note_: The Web-UI is actually just pinging (using Ajax) the Cache. The `MUX-3` is the only one that requires `init.cache=true`.
 In other words, the `MUX-3` just feeds the cache, and the `Web-UI` reads it. Those two can technically ignore each other.
+
+#### Driving and Logging
+This is a small exercise, logging GPS Data when driving from San Francisco to Palo-Alto.
+
+The Multiplexer runs on a Raspberry PI Zero W, with a cheap GPS connected on it. It logs data in a file.
+Several options are available to power the Raspberry PI (battery bank, USB cable on a cigarette lighter adapter, etc). I've used a battery bank here.
+The Raspberry PI generates its own WiFi hotspot (with `hostapd`), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
+the Multiplexer, also to shutdown the Raspberry PI.
+
+The properties files used with `mux.sh` just looks like this:
+```
+#
+# MUX definition.
+#
+# All indexes must begin with 01, and be consecutive.
+#
+# GPS Logging
+#
+with.http.server=yes
+http.port=9999
+#
+# Channels
+#
+mux.01.type=serial
+mux.01.port=/dev/ttyUSB0
+mux.01.baudrate=4800
+#
+# Forwarders
+#
+forward.01.type=file
+forward.01.filename=./data.nmea
+forward.01.append=true
+#
+```
+It reads the GPS on serial port `/dev/ttyUSB0` and logs the data in `./data.nmea`.
+
+The data file can then be replayed. The Web UI hasbeen reqorked a bit, the speed scale is not the same as on boat (and it is mph, not knots).
+
+![Driving](./docimages/driving.png "Driving")
 
 ##### And more to come...
 
