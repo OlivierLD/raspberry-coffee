@@ -1,0 +1,71 @@
+package nmea.forwarders;
+
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
+import java.util.Properties;
+import nmea.parser.StringParsers;
+
+/**
+ * This is a {@link Forwarder}, blinking a led everytime a message is received.
+ * <br>
+ * It can be loaded dynamically. As such, it can be set only from the properties file
+ * used at startup. It - for now - cannot be managed from the Web UI.
+ * The REST api is not aware of it.
+ * <br>
+ * To load it, use the properties file at startup:
+ * <pre>
+ *   forward.XX.cls=nmea.forwarders.LedBlinker
+ * </pre>
+ * A jar containing this class and its dependencies must be available in the classpath.
+ */
+public class LedBlinker implements Forwarder {
+
+	final GpioController gpio;
+	final GpioPinDigitalOutput pin;
+	/*
+	 * @throws Exception
+	 */
+	public LedBlinker() throws Exception {
+		gpio = GpioFactory.getInstance();
+		pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "BlinkLED", PinState.LOW);
+	}
+
+	@Override
+	public void write(byte[] message) {
+		String str = new String(message);
+//	System.out.println(">>>> Mess:" + str);
+		if (StringParsers.validCheckSum(str)) {
+			// OK
+			pin.pulse(5, true); // set second argument to 'true' use a blocking call
+		} else {
+			// Not OK
+		}
+	}
+
+	@Override
+	public void close() {
+		System.out.println("- Stop blinking with " + this.getClass().getName());
+		gpio.shutdown();
+	}
+
+	public static class LedBlinkerBean {
+		private String cls;
+		private String type = "led-blinker";
+
+		public LedBlinkerBean(LedBlinker instance) {
+			cls = instance.getClass().getName();
+		}
+	}
+
+	@Override
+	public Object getBean() {
+		return new LedBlinkerBean(this);
+	}
+
+	@Override
+	public void setProperties(Properties props) {
+	}
+}
