@@ -206,7 +206,7 @@ forward.01.append=true
 ```
 It reads the GPS on serial port `/dev/ttyUSB0` and logs the data in `./data.nmea`.
 
-The data file can then be replayed. The Web UI hasbeen reqorked a bit, the speed scale is not the same as on boat (and it is mph, not knots).
+The data file can then be replayed. The Web UI has been reworked a bit, the speed scale is not the same as on boat (and it is mph, not knots).
 
 ![Driving](./docimages/driving.png "Driving")
 
