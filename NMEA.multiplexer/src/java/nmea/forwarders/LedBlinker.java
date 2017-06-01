@@ -20,17 +20,27 @@ import nmea.parser.StringParsers;
  *   forward.XX.cls=nmea.forwarders.LedBlinker
  * </pre>
  * A jar containing this class and its dependencies must be available in the classpath.
+ *
+ * Wiring:
+ * - led + (long leg) on RPi GPIO_01 (pin #12) with a 220 Ohm resistor
+ * - led - (short leg) on RPi GND (pin #6)
  */
 public class LedBlinker implements Forwarder {
 
-	final GpioController gpio;
-	final GpioPinDigitalOutput pin;
+	private GpioController gpio;
+	private GpioPinDigitalOutput pin;
 	/*
 	 * @throws Exception
 	 */
 	public LedBlinker() throws Exception {
-		gpio = GpioFactory.getInstance();
-		pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "BlinkLED", PinState.LOW);
+		try {
+			gpio = GpioFactory.getInstance();
+			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "BlinkLED", PinState.LOW);
+		} catch (Throwable t) {
+			gpio = null;
+			pin = null;
+			throw new RuntimeException(t);
+		}
 	}
 
 	@Override
@@ -39,7 +49,9 @@ public class LedBlinker implements Forwarder {
 //	System.out.println(">>>> Mess:" + str);
 		if (StringParsers.validCheckSum(str)) {
 			// OK
-			pin.pulse(5, true); // set second argument to 'true' use a blocking call
+			if (pin != null) {
+				pin.pulse(5, true); // set second argument to 'true' use a blocking call
+			}
 		} else {
 			// Not OK
 		}
@@ -48,7 +60,9 @@ public class LedBlinker implements Forwarder {
 	@Override
 	public void close() {
 		System.out.println("- Stop blinking with " + this.getClass().getName());
-		gpio.shutdown();
+		if (gpio != null) {
+			gpio.shutdown();
+		}
 	}
 
 	public static class LedBlinkerBean {
