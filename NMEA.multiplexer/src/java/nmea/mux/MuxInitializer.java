@@ -145,6 +145,7 @@ public class MuxInitializer {
 												mux);
 								serialClient.initClient();
 								serialClient.setReader(new SerialReader(serialClient.getListeners(), serialPort, Integer.parseInt(br)));
+								serialClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(serialClient);
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -162,6 +163,7 @@ public class MuxInitializer {
 												mux);
 								tcpClient.initClient();
 								tcpClient.setReader(new TCPReader(tcpClient.getListeners(), tcpServer, Integer.parseInt(tcpPort)));
+								tcpClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(tcpClient);
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -174,7 +176,7 @@ public class MuxInitializer {
 								try {
 									betweenRec = Long.parseLong(muxProps.getProperty(String.format("mux.%s.between-records", MUX_IDX_FMT.format(muxIdx)), "500"));
 								} catch (NumberFormatException nfe) {
-									betweenRec = 500;
+									betweenRec = 500; // Default value
 								}
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
@@ -184,7 +186,7 @@ public class MuxInitializer {
 												mux);
 								fileClient.initClient();
 								fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename, betweenRec));
-								fileClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false"))); // TODO Same for others
+								fileClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(fileClient);
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -201,6 +203,7 @@ public class MuxInitializer {
 												mux);
 								wsClient.initClient();
 								wsClient.setReader(new WebSocketReader(wsClient.getListeners(), wsUri));
+								wsClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(wsClient);
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -217,6 +220,7 @@ public class MuxInitializer {
 												mux);
 								htu21dfClient.initClient();
 								htu21dfClient.setReader(new HTU21DFReader(htu21dfClient.getListeners()));
+								htu21dfClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (htu21dfDevicePrefix.trim().length() > 0) {
 									if (htu21dfDevicePrefix.trim().length() == 2) {
@@ -242,6 +246,7 @@ public class MuxInitializer {
 												mux);
 								rndClient.initClient();
 								rndClient.setReader(new RandomReader(rndClient.getListeners()));
+								rndClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(rndClient);
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -260,6 +265,7 @@ public class MuxInitializer {
 												mux);
 								bme280Client.initClient();
 								bme280Client.setReader(new BME280Reader(bme280Client.getListeners()));
+								bme280Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (bme280DevicePrefix.trim().length() > 0) {
 									if (bme280DevicePrefix.trim().length() == 2) {
@@ -286,6 +292,7 @@ public class MuxInitializer {
 												mux);
 								bmp180Client.initClient();
 								bmp180Client.setReader(new BMP180Reader(bmp180Client.getListeners()));
+								bmp180Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
 								if (bmp180DevicePrefix.trim().length() > 0) {
 									if (bmp180DevicePrefix.trim().length() == 2) {
