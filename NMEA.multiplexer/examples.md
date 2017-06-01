@@ -167,8 +167,10 @@ In other words, the `MUX-3` just feeds the cache, and the `Web-UI` reads it. Tho
 #### Driving and Logging
 This is a small exercise, logging GPS Data when driving from San Francisco to Palo-Alto.
 
-The Multiplexer runs on a Raspberry PI Zero W, with a cheap GPS connected on it. It logs data in a file.
-Several options are available to power the Raspberry PI (battery bank, USB cable on a cigarette lighter adapter, etc). I've used a battery bank here.
+The Multiplexer runs on a Raspberry PI Zero W, with a cheap GPS (USB GPS, less than $20 - June 2017) connected on it. It logs data in a file.
+Many options are available to power the Raspberry PI on the go (Lipo batteries, battery bank, USB cable on a cigarette lighter adapter, etc). I've used a battery bank here.
+The Raspberry PI, its battery bank and the GPS were in a plastic box, next to the driver's seat.
+
 The Raspberry PI generates its own WiFi hotspot (with `hostapd`, see [here](./README.md#note-access-point-and-internet-access)), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
 the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details).
 
