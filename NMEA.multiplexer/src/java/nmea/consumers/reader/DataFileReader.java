@@ -55,7 +55,7 @@ public class DataFileReader extends NMEAReader {
 						ignore.printStackTrace();
 					}
 				} else {
-					if (true || verbose) {
+					if (verbose) {
 						System.out.println(String.format("Read:%d, Dim:%d (size: %f)", l, dim, size));
 						System.out.println("===== Reseting Reader =====");
 					}
