@@ -33,7 +33,7 @@ var onMessage = function (json) {
         rose.setValue(Math.round(json.COG.angle));
     }
     if (json.SOG !== undefined) {
-        displayBSP.setValue(json.SOG.speed * (1.609 / 1.852)); // Apply coeff for speed. Knots to mph
+        displayBSP.setValue(json.SOG.speed * (1.852 / 1.609)); // Apply coeff for speed. Knots to mph
     }
 };
 

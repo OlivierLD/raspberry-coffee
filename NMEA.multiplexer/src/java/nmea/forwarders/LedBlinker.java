@@ -22,7 +22,7 @@ import nmea.parser.StringParsers;
  * A jar containing this class and its dependencies must be available in the classpath.
  *
  * Wiring:
- * - led + (long leg) on RPi GPIO_01 (pin #12) with a 220 Ohm resistor
+ * - led + (long leg) on RPi GPIO_01 (pin #12) with a 220 Ohms resistor
  * - led - (short leg) on RPi GND (pin #6)
  */
 public class LedBlinker implements Forwarder {
