@@ -169,8 +169,8 @@ This is a small exercise, logging GPS Data when driving from San Francisco to Pa
 
 The Multiplexer runs on a Raspberry PI Zero W, with a cheap GPS connected on it. It logs data in a file.
 Several options are available to power the Raspberry PI (battery bank, USB cable on a cigarette lighter adapter, etc). I've used a battery bank here.
-The Raspberry PI generates its own WiFi hotspot (with `hostapd`), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
-the Multiplexer, also to shutdown the Raspberry PI.
+The Raspberry PI generates its own WiFi hotspot (with `hostapd`, see [here](./README.md#note-access-point-and-internet-access)), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
+the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details).
 
 The properties files used with `mux.sh` just looks like this:
 ```
