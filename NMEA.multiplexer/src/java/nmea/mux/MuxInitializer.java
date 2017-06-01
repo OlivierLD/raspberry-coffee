@@ -170,6 +170,12 @@ public class MuxInitializer {
 						case "file":
 							try {
 								String filename = muxProps.getProperty(String.format("mux.%s.filename", MUX_IDX_FMT.format(muxIdx)));
+								long betweenRec = 500;
+								try {
+									betweenRec = Long.parseLong(muxProps.getProperty(String.format("mux.%s.between-records", MUX_IDX_FMT.format(muxIdx)), "500"));
+								} catch (NumberFormatException nfe) {
+									betweenRec = 500;
+								}
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								NMEAClient fileClient = new DataFileClient(
@@ -177,7 +183,7 @@ public class MuxInitializer {
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								fileClient.initClient();
-								fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename));
+								fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename, betweenRec));
 								nmeaDataClients.add(fileClient);
 							} catch (Exception e) {
 								e.printStackTrace();

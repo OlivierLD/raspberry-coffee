@@ -10,7 +10,8 @@ import nmea.consumers.reader.SerialReader;
 import nmea.consumers.reader.TCPReader;
 
 /**
- * Just a sample, for validation of the concept.
+ * Just a SAMPLE, for validation of the concept.
+ *
  * Use {@link GenericNMEAMultiplexer} instead (for production).
  */
 public class NMEAMultiplexer implements Multiplexer {

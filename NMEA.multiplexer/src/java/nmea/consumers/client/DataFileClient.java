@@ -40,6 +40,7 @@ public class DataFileClient extends NMEAClient {
 	public static class DataFileBean implements ClientBean {
 		private String cls;
 		private String file;
+		private long pause;
 		private String type = "file";
 		private String[] deviceFilters;
 		private String[] sentenceFilters;
@@ -48,6 +49,7 @@ public class DataFileClient extends NMEAClient {
 		public DataFileBean(DataFileClient instance) {
 			cls = instance.getClass().getName();
 			file = ((DataFileReader) instance.getReader()).getFileNme();
+			pause = ((DataFileReader) instance.getReader()).getBetweenRecord();
 			verbose = instance.isVerbose();
 			deviceFilters = instance.getDevicePrefix();
 			sentenceFilters = instance.getSentenceArray();

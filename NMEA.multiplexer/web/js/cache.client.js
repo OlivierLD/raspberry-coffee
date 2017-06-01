@@ -1,8 +1,12 @@
 "use strict";
 
-var cacheClient = function(dataManager) {
+var cacheClient = function(dataManager, bp) {
 
     var onMessage = dataManager; // Client function
+    var betweenPing = 1000;
+    if (bp !== undefined) {
+        betweenPing = bp;
+    }
 
     var getNMEAData = function () {
         var deferred = $.Deferred(),  // a jQuery deferred
@@ -35,7 +39,7 @@ var cacheClient = function(dataManager) {
         // Long poll
         setInterval(function () {
             fetch();
-        }, 1000);
+        }, betweenPing);
     })();
 
     var fetch = function () {
