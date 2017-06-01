@@ -394,11 +394,19 @@
                         alert('Log file name required');
                         return;
                     }
+                    var pause = $("#data-between-reads").val().trim();
+                    var betweenReads;
+                    try {
+                        betweenReads = parseInt(pause);
+                    } catch (error) {
+                        betweenReads = 500;
+                    }
                     var dFilters = $("#data-dev-filters").val().split(",");
                     var sFilters = $("#data-sentence-filters").val().split(",");
                     createChannel({
                         type: 'file',
                         file: logfile,
+                        pause: betweenReads,
                         deviceFilters: dFilters,
                         sentenceFilters: sFilters
                     });
@@ -835,6 +843,10 @@
                   <tr>
                     <td>Data File</td>
                     <td><input id="data-file" type="text" placeholder="Log File" size="30"></td>
+                  </tr>
+                  <tr>
+                    <td>Between reads</td>
+                    <td><input id="data-between-reads" type="text" placeholder="500 ms" size="30"></td>
                   </tr>
                   <tr>
                     <td>Device filter(s)</td>

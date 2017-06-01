@@ -314,7 +314,7 @@ var channelList = function() {
           var type = json[i].type;
           switch (type) {
               case 'file':
-                html += ("<tr><td><b>file</b></td><td>" + json[i].file + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
+                html += ("<tr><td><b>file</b></td><td>" + json[i].file + ", " + json[i].pause + " ms between reads" + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
                 break;
               case 'serial':
                   html += ("<tr><td><b>serial</b></td><td>" + json[i].port + ":" + json[i].br + "</td><td>" + buildList(json[i].deviceFilters) + "</td><td>" + buildList(json[i].sentenceFilters) + "</td><td align='center'><input type='checkbox' onchange='manageChannelVerbose(this, " + JSON.stringify(json[i]) + ");'" + (json[i].verbose ? " checked" : "") + "></td><td><button onclick='removeChannel(" + JSON.stringify(json[i]) + ");'>remove</button></td></tr>");
@@ -505,7 +505,7 @@ var generateDiagram = function () {
             var type = json[i].type;
             switch (type) {
                 case 'file':
-                    html += ("<tr><td><b>file</b></td><td>" + json[i].file +
+                    html += ("<tr><td><b>file</b></td><td>" + json[i].file + " (" + json[i].pause + " ms between reads)" +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Sentence Filter') +
                     "</td></tr>");

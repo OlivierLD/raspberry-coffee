@@ -63,6 +63,9 @@ public class DataFileClient extends NMEAClient {
 		public String getFile() {
 			return file;
 		}
+		public long getPause() {
+			return pause;
+		}
 
 		@Override
 		public boolean getVerbose() {

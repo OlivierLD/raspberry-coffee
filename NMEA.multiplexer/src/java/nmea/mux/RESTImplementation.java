@@ -996,7 +996,7 @@ public class RESTImplementation {
 					try {
 						NMEAClient fileClient = new DataFileClient(fileJson.getDeviceFilters(), fileJson.getSentenceFilters(),this.mux);
 						fileClient.initClient();
-						fileClient.setReader(new DataFileReader(fileClient.getListeners(), fileJson.getFile()));
+						fileClient.setReader(new DataFileReader(fileClient.getListeners(), fileJson.getFile(), fileJson.getPause()));
 						nmeaDataClients.add(fileClient);
 						fileClient.startWorking();
 						String content = new Gson().toJson(fileClient.getBean());
