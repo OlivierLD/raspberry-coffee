@@ -169,7 +169,12 @@ This is a small exercise, logging GPS Data when driving from San Francisco to Pa
 
 The Multiplexer runs on a Raspberry PI Zero W, with a cheap GPS (USB GPS, less than $20 - June 2017) connected on it. It logs data in a file.
 Many options are available to power the Raspberry PI on the go (Lipo batteries, battery bank, USB cable on a cigarette lighter adapter, etc). I've used a battery bank here.
+
+![Connections](./docimages/gps.battery.bank.jpg "Connections")
+
 The Raspberry PI, its battery bank and the GPS were sitting in a plastic box, next to the driver's seat.
+
+![In a box](./docimages/in.a.box.jpg "In a box")
 
 The Raspberry PI generates its own WiFi hotspot (with `hostapd`, see [here](./README.md#note-access-point-and-internet-access)), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
 the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details).
