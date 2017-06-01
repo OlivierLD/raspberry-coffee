@@ -173,7 +173,7 @@ The Raspberry PI generates its own WiFi hotspot (with `hostapd`, see [here](./RE
 the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details).
 
 The properties files used with `mux.sh` just looks like this:
-```
+```properties
 #
 # MUX definition.
 #
