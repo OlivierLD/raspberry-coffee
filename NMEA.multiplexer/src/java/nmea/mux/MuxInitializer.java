@@ -184,6 +184,7 @@ public class MuxInitializer {
 												mux);
 								fileClient.initClient();
 								fileClient.setReader(new DataFileReader(fileClient.getListeners(), filename, betweenRec));
+								fileClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false"))); // TODO Same for others
 								nmeaDataClients.add(fileClient);
 							} catch (Exception e) {
 								e.printStackTrace();
