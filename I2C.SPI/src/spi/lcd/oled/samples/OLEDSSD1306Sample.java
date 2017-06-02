@@ -345,7 +345,7 @@ public class OLEDSSD1306Sample {
 		} catch (Exception ex) {
 		}
 
-		// A curve (porgressing)
+		// A curve (progressing)
 		sb.clear();
 		// Axis
 		sb.line(0, 16, 128, 16);
