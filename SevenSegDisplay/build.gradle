@@ -28,10 +28,12 @@ sourceSets {
 repositories {
   mavenCentral()
   mavenLocal()
+  maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
 dependencies {
-  compile     'com.pi4j:pi4j-core:1.1'
+//compile     'com.pi4j:pi4j-core:1.1'
+  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
 }
 
 task copyResources(type: Copy) {

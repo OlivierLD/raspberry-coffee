@@ -55,11 +55,13 @@ sourceSets {
 repositories {
   mavenCentral()
   mavenLocal()
+  maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
 dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  compile 'com.pi4j:pi4j-core:1.1'
+//compile 'com.pi4j:pi4j-core:1.1'
+  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
   compile 'org.fusesource.jansi:jansi:1.11'
   compile 'org.json:json:20141113'
   compile 'org.scala-lang:scala-library:2.11.6'

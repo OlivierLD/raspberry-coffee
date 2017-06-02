@@ -25,6 +25,7 @@ version = '1.0'
 repositories {
     mavenCentral()
     clojarsRepo()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
 dependencies {
