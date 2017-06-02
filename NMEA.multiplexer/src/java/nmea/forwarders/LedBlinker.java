@@ -35,7 +35,7 @@ public class LedBlinker implements Forwarder {
 	public LedBlinker() throws Exception {
 		try {
 			gpio = GpioFactory.getInstance();
-			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "BlinkLED", PinState.LOW);
+			pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "BlinkingLED", PinState.LOW);
 		} catch (Throwable t) {
 			gpio = null;
 			pin = null;
