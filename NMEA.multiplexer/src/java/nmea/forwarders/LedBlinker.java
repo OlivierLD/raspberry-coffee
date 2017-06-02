@@ -50,7 +50,7 @@ public class LedBlinker implements Forwarder {
 		if (StringParsers.validCheckSum(str)) {
 			// OK
 			if (pin != null) {
-				pin.pulse(5, true); // set second argument to 'true' use a blocking call
+				pin.pulse(1, true); // set second argument to 'true' use a blocking call
 			}
 		} else {
 			// Not OK

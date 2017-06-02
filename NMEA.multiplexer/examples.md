@@ -210,6 +210,11 @@ The data file can then be replayed. The Web UI has been reworked a bit, the spee
 
 ![Driving](./docimages/driving.png "Driving")
 
+With a bonus: a led that blinks everytime a _valid_ NMEA sentence is received!
+![Blink](./docimages/blink.jpg "Blink")
+
+See how `LedBlinker` is referred to in `nmea.mux.gps.log.properties`.
+
 ##### And more to come...
 
 ### TODO...
