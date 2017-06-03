@@ -478,6 +478,17 @@
                         sentenceFilters: sFilters
                     });
                     break;
+                case 'lsm303':
+                    var dFilters = $("#lsm303-dev-filters").val().split(",");
+                    var sFilters = $("#lsm303-sentence-filters").val().split(",");
+                    var dPrefix = $('#lsm303-dev-prefix').val();
+                    createChannel({
+                        type: 'lsm303',
+                        devicePrefix: dPrefix,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
                 case 'htu21df':
                     var dFilters = $("#htu21df-dev-filters").val().split(",");
                     var sFilters = $("#htu21df-sentence-filters").val().split(",");
