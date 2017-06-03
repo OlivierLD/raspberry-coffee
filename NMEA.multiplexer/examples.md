@@ -217,6 +217,7 @@ See how `LedBlinker` is referred to in `nmea.mux.gps.log.properties`.
 
 ##### And more to come...
 
+<!--
 ### TODO...
 [Todo next](./web/TODO.md "What's next")
 
@@ -241,4 +242,4 @@ rolling        | "A" angle       |-180..0 L         0..180 R       | "D" degrees
 water temp     | "C" temperature |   2 decimals                    | "C" celsius     | "ENV_WATER_T"
 -----------------------------------------------------------------------------------------------------
 ```
-
+-->

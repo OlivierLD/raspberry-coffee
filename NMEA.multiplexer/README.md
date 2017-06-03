@@ -86,7 +86,7 @@ Sensors:
 - **BME280** reads raw data from a BME280 sensor (Temperature, Pressure, Humidity), and produces `XDR` and `MDA` NMEA Sentences.
 - **BMP180** reads raw data from a BMP180 sensor (Temperature, Pressure), and produces `XDR` and `MDA` NMEA Sentences.
 - **HTU21D-F** reads raw data from a HTU21D-F sensor (Temperature, Humidity), and produces `XDR` NMEA Sentences.
-- **LSM303** reads raw data from a LSM303 sensor (3D magnetometer), and produces `XDR` NMEA Sentences.
+- **LSM303** reads raw data from a LSM303 sensor (3D magnetometer), and produces `XDR` NMEA Sentences for pitch and roll.
 ![I2C Wiring](./docimages/i2c.png "Sample I2C Wiring for BME280 & LSM303")
 
 
@@ -491,6 +491,16 @@ _Warning_: for now, you _cannot_ load more than one dynamically loaded forwarder
 with a given class name in the lists. For example, if you have an `MQTTPublisher` that uses a broker URL like `tcp://192.168.1.136:1883`, you might very well want to
 have _another one_, using a broker URL like `tcp://io.adafruit.com:1883`. Currently, this is **not** possible.
 > This should not be too much of a problem though, specially if you use all this on a boat, you probably do not need in Internet connection. A small LAN would do the job in this case.
+
+### Compatibility with other softwares
+Whatever software understands NMEA is happy with all this. For example, OpenCPN:
+
+![OpenCPN](./docimages/opencpn.png "OPenCPN")
+
+In the screenshot above:
+- The atmospheric pressure and air temperature come from a BME280 (~ $20)
+- The True Wind is calculated by a `Computer` (as well as the current, not displayed here)
+- Heel and Pitch come from an LSM303 (~ $15)
 
 ## A note on the build
 As you must have seen, we use `Gradle` here, along with the `ShadowJar` plugin. This plugin gathers **all** the dependencies, and puts them
