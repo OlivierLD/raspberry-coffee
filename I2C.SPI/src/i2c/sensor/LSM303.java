@@ -77,6 +77,9 @@ public class LSM303 {
 	private static boolean verboseAcc = "true".equals(System.getProperty("lsm303.verbose.acc", "false"));
 	private static boolean verboseMag = "true".equals(System.getProperty("lsm303.verbose.mag", "false"));
 
+
+	private double pitch = 0D, roll = 0D;
+
 	private long wait = 1000L;
 	private LSM303Listener dataListener = null;
 
@@ -174,6 +177,20 @@ public class LSM303 {
 		new Thread(task).start();
 	}
 
+	private void setPitch(double pitch) {
+		this.pitch = pitch;
+	}
+	private void setRoll(double roll) {
+		this.roll = roll;
+	}
+
+	public double getPitch() {
+		return this.pitch;
+	}
+	public double getRoll() {
+		return  this.roll;
+	}
+
 	public void setWait(long wait) {
 		this.wait = wait;
 	}
@@ -210,6 +227,22 @@ public class LSM303 {
 			float accY = (float) accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 			float accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
+			double pitchDegrees = Math.toDegrees(Math.atan(accX / Math.sqrt((accY * accY) + (accZ * accZ))));
+			double rollDegrees  = Math.toDegrees(Math.atan(accY / Math.sqrt((accX * accX) + (accZ * accZ))));
+
+			setPitch(pitchDegrees);
+			setRoll(rollDegrees);
+
+			if (verboseAcc) {
+				System.out.println("Pitch & Roll with Accelerometer:");
+				System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accX, accY, accZ));
+				/*
+					pitch = atan (x / sqrt(y^2 + z^2));
+					roll  = atan (y / sqrt(x^2 + z^2));
+				 */
+				System.out.println(String.format("\tPitch:%f, Roll:%f", pitchDegrees, rollDegrees));
+			}
+
 			// Request magnetometer measurements.
 			magnetometer.write(new byte[] { (byte)LSM303_REGISTER_MAG_OUT_X_H_M });
 
@@ -243,18 +276,21 @@ public class LSM303 {
 
 			if (dataListener != null) {
 				// Use the values as you want here.
-				dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, pitch, roll);
+//		dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, pitch, roll);
+				dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, (float)pitchDegrees, (float)rollDegrees);
 			} else {
+				if (verboseMag) {
 //				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %f, Z: %f => heading: %s, pitch: %s, roll: %s)",
 //								accX, accY, accZ,
 //								magneticX, magneticY, magneticZ,
 //								Z_FMT.format(heading),
 //								Z_FMT.format(pitch),
 //								Z_FMT.format(roll)));
-				System.out.println(String.format("heading: %s (true), pitch: %s, roll: %s",
-								Z_FMT.format(heading),
-								Z_FMT.format(pitch),
-								Z_FMT.format(roll)));
+					System.out.println(String.format("heading: %s (true), pitch: %s, roll: %s",
+									Z_FMT.format(heading),
+									Z_FMT.format(pitch),
+									Z_FMT.format(roll)));
+				}
 			}
 			try {
 				Thread.sleep(this.wait);

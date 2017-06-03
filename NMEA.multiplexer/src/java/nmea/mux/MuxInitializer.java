@@ -17,6 +17,7 @@ import nmea.consumers.client.BME280Client;
 import nmea.consumers.client.BMP180Client;
 import nmea.consumers.client.DataFileClient;
 import nmea.consumers.client.HTU21DFClient;
+import nmea.consumers.client.LSM303Client;
 import nmea.consumers.client.RandomClient;
 import nmea.consumers.client.SerialClient;
 import nmea.consumers.client.TCPClient;
@@ -25,6 +26,7 @@ import nmea.consumers.reader.BME280Reader;
 import nmea.consumers.reader.BMP180Reader;
 import nmea.consumers.reader.DataFileReader;
 import nmea.consumers.reader.HTU21DFReader;
+import nmea.consumers.reader.LSM303Reader;
 import nmea.consumers.reader.RandomReader;
 import nmea.consumers.reader.SerialReader;
 import nmea.consumers.reader.TCPReader;
@@ -254,6 +256,33 @@ public class MuxInitializer {
 								err.printStackTrace();
 							}
 							break;
+						case "lsm303": // Pitch & Roll
+							try {
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								String lsm303DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient lsm303Client = new LSM303Client(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												mux);
+								lsm303Client.initClient();
+								lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));
+								lsm303Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
+								// Important: after the setReader
+								if (lsm303DevicePrefix.trim().length() > 0) {
+									if (lsm303DevicePrefix.trim().length() == 2) {
+										((LSM303Client) lsm303Client).setSpecificDevicePrefix(lsm303DevicePrefix.trim());
+									} else {
+										throw new RuntimeException(String.format("Bad prefix [%s] for LSM303. Must be 2 character long, exactly.", lsm303DevicePrefix.trim()));
+									}
+								}
+								nmeaDataClients.add(lsm303Client);
+							} catch (Exception e) {
+								e.printStackTrace();
+							} catch (Error err) {
+								err.printStackTrace();
+							}
+							break;
 						case "bme280": // Humidity, Temperature, Pressure
 							try {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
@@ -308,7 +337,6 @@ public class MuxInitializer {
 								err.printStackTrace();
 							}
 							break;
-						case "lsm303": // 3D magnetometer
 						case "batt":   // Battery Voltage, use XDR
 						default:
 							throw new RuntimeException(String.format("mux type [%s] not supported yet.", type));

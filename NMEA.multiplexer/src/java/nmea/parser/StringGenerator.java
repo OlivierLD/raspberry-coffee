@@ -23,6 +23,8 @@ public class StringGenerator {
 	private final static NumberFormat DIR_FMT_1 = new DecimalFormat("##0.0");
 	private final static NumberFormat SPEED_FMT = new DecimalFormat("#0.0");
 	private final static NumberFormat SPEED_FMT_2 = new DecimalFormat("#0.00");
+	private final static NumberFormat ANGLE_FMT = new DecimalFormat("##0");
+
 
 	private final static NumberFormat PRMSL_FMT_MDA = new DecimalFormat("##0.000");
 
@@ -156,6 +158,8 @@ public class StringGenerator {
 			nf = TEMP_FMT;
 		if (first.getTypeNunit().equals(XDRTypes.HUMIDITY))
 			nf = PERCENT_FMT;
+		if (first.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT))
+			nf = ANGLE_FMT;
 		// TODO More formats...
 //  System.out.println("XDR Format for [" + first.getTypeNunit() + "] is " + (nf == null?"":"not ") + "null");
 		if (nf != null)
@@ -177,6 +181,8 @@ public class StringGenerator {
 				nf = TEMP_FMT;
 			if (first.getTypeNunit().equals(XDRTypes.HUMIDITY))
 				nf = PERCENT_FMT;
+			if (first.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT))
+				nf = ANGLE_FMT;
 			// TODO More formats...
 			xdr += ("," + e.getTypeNunit().type() + ",");
 //    System.out.println("XDR Format for [" + e.getTypeNunit() + "] is " + (nf == null?"":"not ") + "null");

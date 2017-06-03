@@ -21,6 +21,8 @@ import java.awt.Stroke;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,8 @@ public class AccelerometerDisplayPanel
 	private List<Float> magYList = new ArrayList<>();
 	private List<Float> magZList = new ArrayList<>();
 	private List<Float> headingList = new ArrayList<>();
+
+	private float headingDegrees = 0f, pitchDegrees = 0f, rollDegrees = 0f;
 
 	private float minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE;
 	private float minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
@@ -121,6 +125,10 @@ public class AccelerometerDisplayPanel
 								headingList.remove(0);
 							}
 						}
+						headingDegrees = heading;
+						pitchDegrees   = pitch;
+						rollDegrees    = roll;
+
 						repaint();
 					}
 
@@ -140,6 +148,8 @@ public class AccelerometerDisplayPanel
 		sensorListener.start();
 	}
 
+	private final static NumberFormat Z_FMT = new DecimalFormat("000");
+
 	@Override
 	protected void paintComponent(Graphics gr) {
 		super.paintComponent(gr);
@@ -147,6 +157,9 @@ public class AccelerometerDisplayPanel
 		Graphics2D g2d = (Graphics2D) gr;
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		String str = String.format("Heading: %s\272, Pitch: %s\272, Roll: %s\272", Z_FMT.format(headingDegrees), Z_FMT.format(pitchDegrees), Z_FMT.format(rollDegrees));
+
 //  origStroke = g2d.getStroke();
 //  g2d.setStroke(origStroke);
 //  System.out.println("X data:" + accXList.size() + " point(s) min:" + minX + ", max:" + maxX);
@@ -164,6 +177,8 @@ public class AccelerometerDisplayPanel
 		synchronized (accZList) {
 			drawData(2, gr, accZList, minZ, maxZ);
 		}
+		gr.setColor(Color.black);
+		gr.drawString(str, 10, 20);
 	}
 
 	private void drawData(int idx, Graphics gr, List<Float> data, float min, float max) {

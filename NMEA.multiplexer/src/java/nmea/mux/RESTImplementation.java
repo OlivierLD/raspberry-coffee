@@ -33,6 +33,7 @@ import nmea.consumers.client.BME280Client;
 import nmea.consumers.client.BMP180Client;
 import nmea.consumers.client.DataFileClient;
 import nmea.consumers.client.HTU21DFClient;
+import nmea.consumers.client.LSM303Client;
 import nmea.consumers.client.RandomClient;
 import nmea.consumers.client.SerialClient;
 import nmea.consumers.client.TCPClient;
@@ -41,6 +42,7 @@ import nmea.consumers.reader.BME280Reader;
 import nmea.consumers.reader.BMP180Reader;
 import nmea.consumers.reader.DataFileReader;
 import nmea.consumers.reader.HTU21DFReader;
+import nmea.consumers.reader.LSM303Reader;
 import nmea.consumers.reader.RandomReader;
 import nmea.consumers.reader.SerialReader;
 import nmea.consumers.reader.TCPReader;
@@ -529,6 +531,12 @@ public class RESTImplementation {
 				case "bme280":
 					opClient = nmeaDataClients.stream()
 									.filter(channel -> channel instanceof BME280Client)
+									.findFirst();
+					response = removeChannelIfPresent(request, opClient);
+					break;
+				case "lsm303":
+					opClient = nmeaDataClients.stream()
+									.filter(channel -> channel instanceof LSM303Client)
 									.findFirst();
 					response = removeChannelIfPresent(request, opClient);
 					break;
@@ -1051,6 +1059,44 @@ public class RESTImplementation {
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'bmp180' already exists");
 				}
 				break;
+			case "lsm303":
+				LSM303Client.LSM303Bean lsm303Json = new Gson().fromJson(new String(request.getContent()), LSM303Client.LSM303Bean.class);
+				opClient = nmeaDataClients.stream()
+								.filter(channel -> channel instanceof LSM303Client)
+								.findFirst();
+				if (!opClient.isPresent()) {
+					try {
+						NMEAClient lsm303Client = new LSM303Client(lsm303Json.getDeviceFilters(), lsm303Json.getSentenceFilters(),this.mux);
+						lsm303Client.initClient();
+						lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));
+						// To do BEFORE startWorking and AFTER setReader
+						if (lsm303Json.getDevicePrefix() != null) {
+							if (lsm303Json.getDevicePrefix().trim().length() != 2) {
+								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", lsm303Json.getDevicePrefix().trim()));
+							} else {
+								((LSM303Client)lsm303Client).setSpecificDevicePrefix(lsm303Json.getDevicePrefix().trim());
+							}
+						}
+						nmeaDataClients.add(lsm303Client);
+						lsm303Client.startWorking();
+						String content = new Gson().toJson(lsm303Client.getBean());
+						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+					} catch (Exception ex) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+						ex.printStackTrace();
+					} catch (Error error) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						error.printStackTrace();
+					}
+				} else {
+					// Already there
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'lsm303' already exists");
+				}
+				break;
 			case "bme280":
 				BME280Client.BME280Bean bme280Json = new Gson().fromJson(new String(request.getContent()), BME280Client.BME280Bean.class);
 				opClient = nmeaDataClients.stream()
@@ -1492,6 +1538,22 @@ public class RESTImplementation {
 					BME280Client bme280Client = (BME280Client) opClient.get();
 					bme280Client.setVerbose(bme280Json.getVerbose());
 					String content = new Gson().toJson(bme280Client.getBean());
+					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+				}
+				break;
+			case "lsm303":
+				LSM303Client.LSM303Bean lsm303Json = new Gson().fromJson(new String(request.getContent()), LSM303Client.LSM303Bean.class);
+				opClient = nmeaDataClients.stream()
+								.filter(channel -> channel instanceof LSM303Client)
+								.findFirst();
+				if (!opClient.isPresent()) {
+					response.setStatus(HTTPServer.Response.NOT_FOUND);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'lsm303' was not found");
+				} else { // Then update
+					LSM303Client lsm303Client = (LSM303Client) opClient.get();
+					lsm303Client.setVerbose(lsm303Json.getVerbose());
+					String content = new Gson().toJson(lsm303Client.getBean());
 					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
 				}
