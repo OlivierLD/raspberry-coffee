@@ -36,7 +36,8 @@ var connection;
     document.getElementById('Y').innerHTML = payload.pitch.toFixed(0);
     document.getElementById('Z').innerHTML = payload.roll.toFixed(0);
 
-    sendToCube(payload.heading.toFixed(0) - h, payload.pitch.toFixed(0) - p, payload.roll.toFixed(0) - r);
+    sendToCube(payload.heading.toFixed(0), payload.pitch.toFixed(0), payload.roll.toFixed(0));
+//  sendToCube(payload.heading.toFixed(0) - h, payload.pitch.toFixed(0) - p, payload.roll.toFixed(0) - r);
 
     h = payload.heading.toFixed(0);
     p = payload.pitch.toFixed(0);
