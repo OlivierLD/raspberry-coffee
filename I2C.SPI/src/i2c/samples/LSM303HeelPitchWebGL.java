@@ -60,7 +60,7 @@ public class LSM303HeelPitchWebGL {
 				try {
 					webSocketClient.send(String.format("{ \"heading\": %f, \"pitch\": %f, \"roll\": %f }", heading, pitch, roll));
 					if (verbose) {
-						System.out.println(String.format("Pitch:%d, Roll:%f", pitch, roll));
+						System.out.println(String.format("Pitch:%f, Roll:%f", pitch, roll));
 					}
 				} catch (/* NotYetConnected */ Exception e) {
 					System.err.println("Ooops:" + e.toString());
