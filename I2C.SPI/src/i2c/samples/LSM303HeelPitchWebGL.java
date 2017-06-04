@@ -7,6 +7,7 @@ import i2c.sensor.listener.SensorLSM303Context;
 import java.net.URI;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONObject;
 
 /**
  * Reads the LSM303 sensor, and feeds a WebSocket server
@@ -58,7 +59,11 @@ public class LSM303HeelPitchWebGL {
 		LSM303Listener dataListener = new LSM303Listener() {
 			public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
 				try {
-					webSocketClient.send(String.format("{ 'heading': %f, 'pitch': %f, 'roll': %f }", heading, pitch, roll));
+					JSONObject json = new JSONObject();
+					json.put("heading", heading);
+					json.put("pitch", pitch);
+					json.put("roll", roll);
+					webSocketClient.send(json.toString());
 					if (verbose) {
 						System.out.println(String.format("Pitch:%f, Roll:%f", pitch, roll));
 					}
