@@ -505,7 +505,7 @@ In the screenshot above:
 - Data are re-broadcasted on TCP
 
 All the data can be logged, and replayed. Replayed data can be displayed just like above, in OpenCPN or any NMEA-savvy software.
-The screenshot above has been taken during one of those relays (that explains the disparity between air and water temperature...)
+The screenshot above has been taken during one of those replays (that explains the disparity between air and water temperature...)
 
 Some (good and open source) softwares
 - [OpenCPN](https://opencpn.org/)
