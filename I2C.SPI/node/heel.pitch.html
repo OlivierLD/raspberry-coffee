@@ -143,6 +143,10 @@
       return this * Math.PI / 180;
     };
 
+    var toRad = function(deg) {
+        return deg * Math.PI / 180;
+    };
+
     function rotateZ(m, angle) {
       var c = Math.cos(angle);
       var s = Math.sin(angle);
@@ -187,9 +191,13 @@
 
     /*================= Drawing ===========================*/
     var move = function (x, y, z) {
-      rotateZ(mov_matrix, z.toRad());
-      rotateY(mov_matrix, y.toRad());
-      rotateX(mov_matrix, x.toRad());
+//      rotateZ(mov_matrix, z.toRad());
+//      rotateY(mov_matrix, y.toRad());
+//      rotateX(mov_matrix, x.toRad());
+
+        rotateZ(mov_matrix, toRad(z));
+        rotateY(mov_matrix, toRad(y));
+        rotateX(mov_matrix, toRad(x));
 
       gl.enable(gl.DEPTH_TEST);
       gl.depthFunc(gl.LEQUAL);
