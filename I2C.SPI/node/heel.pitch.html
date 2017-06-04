@@ -216,7 +216,10 @@
 
     var data2deg = 1; //(180 / 300) / 50; // divided by 10. smoother...
     var sendToCube = function(x, y, z) {
-      move(x, y, z);
+      move(x - prevX, y - prevY, z - prevZ);
+      prevX = x;
+      prevY = y;
+      prevZ = z;
 //      move((prevX + x) * data2deg, (prevY + y) * data2deg, (prevZ + z) * data2deg);
 //      prevX += x;
 //      prevY += y;
