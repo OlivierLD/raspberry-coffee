@@ -212,7 +212,8 @@
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
       gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
     };
-    move(20, 45, 0); // Start position
+//  move(20, 45, 0); // Start position
+    move(0, 0, 0); // Start position
 
     var data2deg = 1; //(180 / 300) / 50; // divided by 10. smoother...
     var sendToCube = function(x, y, z) {
