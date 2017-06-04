@@ -28,10 +28,10 @@ var connection;
 
   connection.onmessage = function (message) {
     console.log('onmessage:', message.data);
-    var mess = JSON.parse(message.data);
-    document.getElementById('X').innerHTML = mess.x.toFixed(0);
-    document.getElementById('Y').innerHTML = mess.y.toFixed(0);
-    document.getElementById('Z').innerHTML = mess.z.toFixed(0);
+    var mess =  JSON.parse((message.data.text).replace(/&quot;/g, '"'));
+    document.getElementById('X').innerHTML = mess.heading.toFixed(0);
+    document.getElementById('Y').innerHTML = mess.pitch.toFixed(0);
+    document.getElementById('Z').innerHTML = mess.roll.toFixed(0);
     sendToCube(mess.x, mess.y, mess.z);
   };
 
