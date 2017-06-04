@@ -26,6 +26,8 @@ var connection;
     displayMessage('Sorry, but there is some problem with your connection or the server is down.');
   };
 
+  var h = 0, p = 0, r = 0;
+
   connection.onmessage = function (message) {
     console.log('onmessage:', message.data);
     var mess = JSON.parse(message.data);
@@ -33,7 +35,12 @@ var connection;
     document.getElementById('X').innerHTML = payload.heading.toFixed(0);
     document.getElementById('Y').innerHTML = payload.pitch.toFixed(0);
     document.getElementById('Z').innerHTML = payload.roll.toFixed(0);
-    sendToCube(0 /*payload.heading*/, payload.pitch, payload.roll);
+
+    sendToCube(payload.heading - h, payload.pitch - p, payload.roll - r);
+
+    h = payload.heading;
+    p = payload.pitch;
+    r = payload.roll;
   };
 
   /**
