@@ -33,7 +33,7 @@ var connection;
     document.getElementById('X').innerHTML = payload.heading.toFixed(0);
     document.getElementById('Y').innerHTML = payload.pitch.toFixed(0);
     document.getElementById('Z').innerHTML = payload.roll.toFixed(0);
-    sendToCube(payload.heading, payload.pitch, payload.roll);
+    sendToCube(0 /*payload.heading*/, payload.pitch, payload.roll);
   };
 
   /**
