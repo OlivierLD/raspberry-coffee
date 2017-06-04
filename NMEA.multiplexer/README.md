@@ -500,10 +500,16 @@ Whatever software understands NMEA is happy with all this. For example, OpenCPN:
 
 In the screenshot above:
 - The atmospheric pressure and air temperature come from a BME280 (~ $20)
-- The True Wind is calculated by a `Computer` (as well as the current, not displayed here)
+- The True Wind is calculated by a `Computer` (as well as the current, not displayed here, but available)
 - Heel and Pitch come from an LSM303 (~ $15)
+- Data are re-broadcasted on TCP
 
 All the data can be logged, and replayed. Replayed data can be displayed just like above, in OpenCPN or any NMEA-savvy software.
+The screenshot above has been taken during one of those relays (that explains the disparity between air and water temperature...)
+
+Some (good and open source) softwares
+- [OpenCPN](https://opencpn.org/)
+- [SeaWi](http://www.seawimarine.net/)
 
 ## A note on the build
 As you must have seen, we use `Gradle` here, along with the `ShadowJar` plugin. This plugin gathers **all** the dependencies, and puts them

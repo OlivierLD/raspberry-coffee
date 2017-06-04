@@ -261,23 +261,24 @@ public class LSM303 {
 				System.out.println(String.format("RawMag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF));
 			}
 
-			float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-			float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-			float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
-
-			float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way...
+//			float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//			float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//			float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
+//			float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way...
+			float heading = - (float) Math.toDegrees(Math.atan2((double)magY, (double)magX)); // Trigo way...
 			while (heading < 0) heading += 360f;
-			float pitch = (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
-			pitch += 180f; // -180 +180 Nose up +, nose down -
-			if (pitch > 180) pitch -= 360;
-			float roll = - (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
-			roll += 180f; // -180 +180 Right +, Left -
-			if (roll > 180) roll -= 360;
+//			float pitch = (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
+//			pitch += 180f; // -180 +180 Nose up +, nose down -
+//			if (pitch > 180) pitch -= 360;
+//			float roll = - (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
+//			roll += 180f; // -180 +180 Right +, Left -
+//			if (roll > 180) roll -= 360;
 
 			if (dataListener != null) {
 				// Use the values as you want here.
-//		dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, pitch, roll);
-				dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, (float)pitchDegrees, (float)rollDegrees);
+//  		dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, pitch, roll);
+//			dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, (float)pitchDegrees, (float)rollDegrees);
+				dataListener.dataDetected(accX, accY, accZ, magX, magY, magZ, heading, (float)pitchDegrees, (float)rollDegrees);
 			} else {
 				if (verboseMag) {
 //				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %f, Z: %f => heading: %s, pitch: %s, roll: %s)",
@@ -286,7 +287,7 @@ public class LSM303 {
 //								Z_FMT.format(heading),
 //								Z_FMT.format(pitch),
 //								Z_FMT.format(roll)));
-					System.out.println(String.format("heading: %s (true), pitch: %s, roll: %s",
+					System.out.println(String.format("heading: %s (mag), pitch: %s, roll: %s",
 									Z_FMT.format(heading),
 									Z_FMT.format(pitch),
 									Z_FMT.format(roll)));
