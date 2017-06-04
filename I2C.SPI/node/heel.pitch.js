@@ -32,9 +32,9 @@ var connection;
     console.log('onmessage:', message.data);
     var mess = JSON.parse(message.data);
     var payload = JSON.parse(mess.data.text.replace(/&quot;/g, '"'));
-    document.getElementById('X').innerHTML = payload.heading.toFixed(0);
-    document.getElementById('Y').innerHTML = payload.pitch.toFixed(0);
-    document.getElementById('Z').innerHTML = payload.roll.toFixed(0);
+    document.getElementById('X').innerHTML = payload.pitch.toFixed(0);
+    document.getElementById('Y').innerHTML = payload.roll.toFixed(0);
+    document.getElementById('Z').innerHTML = payload.heading.toFixed(0);
 
     sendToCube(payload.pitch.toFixed(0), payload.roll.toFixed(0), 0 /*payload.heading.toFixed(0)*/);
 
