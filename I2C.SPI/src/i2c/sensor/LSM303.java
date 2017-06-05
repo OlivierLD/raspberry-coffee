@@ -6,8 +6,6 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
-import com.pi4j.system.SystemInfo;
-
 import java.io.IOException;
 
 import java.text.DecimalFormat;
@@ -15,9 +13,6 @@ import java.text.NumberFormat;
 
 /*
  * Accelerometer + Magnetometer
- * (Compass & Gyro)
- *
- * Warning/Question: The board must be standing on its side!!! Not laying down.
  */
 public class LSM303 {
 	// Minimal constants carried over from Arduino library
@@ -227,19 +222,19 @@ public class LSM303 {
 			float accY = (float) accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 			float accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
+			/*
+				pitch = atan (x / sqrt(y^2 + z^2));
+				roll  = atan (y / sqrt(x^2 + z^2));
+			 */
 			double pitchDegrees = Math.toDegrees(Math.atan(accX / Math.sqrt((accY * accY) + (accZ * accZ))));
 			double rollDegrees  = Math.toDegrees(Math.atan(accY / Math.sqrt((accX * accX) + (accZ * accZ))));
 
-			setPitch(pitchDegrees);
-			setRoll(rollDegrees);
+			setPitch(pitchDegrees); // TODO make sure the range is [-180..180]
+			setRoll(rollDegrees);   // TODO make sure the range is [-180..180]
 
 			if (verboseAcc) {
 				System.out.println("Pitch & Roll with Accelerometer:");
 				System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accX, accY, accZ));
-				/*
-					pitch = atan (x / sqrt(y^2 + z^2));
-					roll  = atan (y / sqrt(x^2 + z^2));
-				 */
 				System.out.println(String.format("\tPitch:%f, Roll:%f", pitchDegrees, rollDegrees));
 			}
 
@@ -264,15 +259,9 @@ public class LSM303 {
 //			float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //			float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //			float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
-//			float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way...
+//		float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way... Same as below (the ratio remains the same).
 			float heading = - (float) Math.toDegrees(Math.atan2((double)magY, (double)magX)); // Trigo way...
 			while (heading < 0) heading += 360f;
-//			float pitch = (float) Math.toDegrees(Math.atan2(magneticX, magneticZ));
-//			pitch += 180f; // -180 +180 Nose up +, nose down -
-//			if (pitch > 180) pitch -= 360;
-//			float roll = - (float) Math.toDegrees(Math.atan2(magneticY, magneticZ));
-//			roll += 180f; // -180 +180 Right +, Left -
-//			if (roll > 180) roll -= 360;
 
 			if (dataListener != null) {
 				// Use the values as you want here.
@@ -312,6 +301,13 @@ public class LSM303 {
 		return (n < 32768 ? n : n - 65536);                           // 2's complement signed
 	}
 
+	/**
+	 * This is for tests.
+	 * Keep reading until Ctrl+C is entered.
+	 *
+	 * @param args
+	 * @throws I2CFactory.UnsupportedBusNumberException
+	 */
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 		System.out.println("Verbose: " + verbose);

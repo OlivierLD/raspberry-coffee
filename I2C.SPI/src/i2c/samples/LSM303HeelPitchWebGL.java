@@ -23,23 +23,23 @@ public class LSM303HeelPitchWebGL {
 			webSocketClient = new WebSocketClient(new URI(serverURI)) {
 				@Override
 				public void onOpen(ServerHandshake serverHandshake) {
-					// TODO Implement this method
+					// TODO Implement this method when needed
 					System.out.println("Connected");
 				}
 
 				@Override
 				public void onMessage(String string) {
-					// TODO Implement this method
+					// TODO Implement this method when needed
 				}
 
 				@Override
 				public void onClose(int i, String string, boolean b) {
-					// TODO Implement this method
+					// TODO Implement this method when needed
 				}
 
 				@Override
 				public void onError(Exception exception) {
-					// TODO Implement this method
+					// TODO Implement this method when needed
 				}
 			};
 		} catch (Exception ex) {
@@ -69,7 +69,7 @@ public class LSM303HeelPitchWebGL {
 					}
 				} catch (/* NotYetConnected */ Exception e) {
 					System.err.println("Ooops:" + e.toString());
-//			e.printStackTrace();
+//			  e.printStackTrace();
 				}
 			}
 		};
