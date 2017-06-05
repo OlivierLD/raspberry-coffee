@@ -15,9 +15,9 @@
         <td style="width: 100px; text-align: center;">Heading</td>
       </tr>
       <tr>
-        <td style="width: 100; text-align: center;"><div id="X"></div></td>
-        <td style="width: 100; text-align: center;"><div id="Y"></div></td>
-        <td style="width: 100; text-align: center;"><div id="Z"></div></td>
+        <td style="width: 100px; text-align: center;"><div id="X"></div></td>
+        <td style="width: 100px; text-align: center;"><div id="Y"></div></td>
+        <td style="width: 100px; text-align: center;"><div id="Z"></div></td>
       </tr>
     </table>
     <canvas width="400" height="400" id="CubeCanvas"></canvas>
@@ -30,12 +30,12 @@
 
     /*============ Defining and storing the geometry =========*/
     var vertices = [
-      -1, -1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1,
-      -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1,
-      -1, -1, -1, -1, 1, -1, -1, 1, 1, -1, -1, 1,
-      1, -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1,
-      -1, -1, -1, -1, -1, 1, 1, -1, 1, 1, -1, -1,
-      -1, 1, -1, -1, 1, 1, 1, 1, 1, 1, 1, -1,
+      -1, -1, -1,  1, -1, -1,  1,  1, -1, -1,  1, -1,
+      -1, -1,  1,  1, -1,  1,  1,  1,  1, -1,  1,  1,
+      -1, -1, -1, -1,  1, -1, -1,  1,  1, -1, -1,  1,
+       1, -1, -1,  1,  1, -1,  1,  1,  1,  1, -1,  1,
+      -1, -1, -1, -1, -1,  1,  1, -1,  1,  1, -1, -1,
+      -1,  1, -1, -1,  1,  1,  1,  1,  1,  1,  1, -1,
     ];
 
     var colors = [
@@ -48,8 +48,8 @@
     ];
 
     var indices = [
-      0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7,
-      8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15,
+       0,  1,  2,  0,  2,  3,  4,  5,  6,  4,  6,  7,
+       8,  9, 10,  8, 10, 11, 12, 13, 14, 12, 14, 15,
       16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23
     ];
 
