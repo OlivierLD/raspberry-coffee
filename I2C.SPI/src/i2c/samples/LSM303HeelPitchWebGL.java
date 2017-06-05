@@ -10,8 +10,12 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
 
 /**
- * Reads the LSM303 sensor, and feeds a WebSocket server
- * A WegGL UI listens to the WS event, and displays a cube accordingly.
+ * Reads the LSM303 sensor, and feeds a WebSocket server with heading, pitch and roll.
+ * A WegGL UI listens to the WS event, and displays a cube rotated accordingly.
+ * <br>
+ * The Web UI is in the <code>node</code> directory, named <code>heel.pitch.html</code>.
+ * <br>
+ * Start it from the script named <code>heelpitch</code>.
  */
 public class LSM303HeelPitchWebGL {
 
