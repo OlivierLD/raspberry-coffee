@@ -312,7 +312,7 @@ public class LSM303 {
 	private static void dumpBytes(byte[] ba, int len) {
 		String str = String.format("%d bytes: ", len);
 		for (int i=0; i<len; i++) {
-			str += (Integer.toHexString(ba[i]) + " ").toUpperCase();
+			str += (Integer.toHexString(ba[i] & 0xFF) + " ").toUpperCase();
 		}
 		System.out.println(str);
 	}
