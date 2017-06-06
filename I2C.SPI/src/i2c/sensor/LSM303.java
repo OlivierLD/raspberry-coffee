@@ -256,7 +256,7 @@ public class LSM303 {
 			} else if (verboseMag) {
 				dumpBytes(magData, 6);
 			}
-			// Mag raw data. Warning!! Order is X, Z, Y
+			// Mag raw data. !!! Warning !!! Order here is X, Z, Y
 			int magX = mag16(magData, 0);
 			int magZ = mag16(magData, 2);
 			int magY = mag16(magData, 4);
@@ -264,8 +264,8 @@ public class LSM303 {
 //			float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //			float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //			float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
-//		float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way... Same as below (the ratio remains the same).
-			float heading = - (float) Math.toDegrees(Math.atan2((double)magY, (double)magX)); // Trigo way... TODO Check the sign
+//		float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Same as below (the ratio remains the same).
+			float heading = (float) Math.toDegrees(Math.atan2((double)magY, (double)magX));
 			while (heading < 0) heading += 360f;
 
 			if (verboseMag) {
