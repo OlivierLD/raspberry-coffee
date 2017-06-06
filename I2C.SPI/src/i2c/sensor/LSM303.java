@@ -245,7 +245,8 @@ public class LSM303 {
 			}
 
 			// Request magnetometer measurements.
-			magnetometer.write(new byte[] { (byte)LSM303_REGISTER_MAG_OUT_X_H_M });
+//		magnetometer.write(new byte[] { (byte)LSM303_REGISTER_MAG_OUT_X_H_M });
+			magnetometer.write((byte)LSM303_REGISTER_MAG_OUT_X_H_M);
 
 			int readFromMag = LSM303_REGISTER_MAG_OUT_X_H_M; // TODO Check if not LSM303_ADDRESS_MAG
 			// Reading magnetometer measurements.
