@@ -312,9 +312,17 @@ public class LSM303 {
 	private static void dumpBytes(byte[] ba, int len) {
 		String str = String.format("%d bytes: ", len);
 		for (int i=0; i<len; i++) {
-			str += (Integer.toHexString(ba[i] & 0xFF) + " ").toUpperCase();
+			str += lpad((Integer.toHexString(ba[i] & 0xFF) + " ").toUpperCase(), 2, "0");
 		}
 		System.out.println(str);
+	}
+
+	private static String lpad(String str, int len, String with) {
+		String s = str;
+		while (s.length() < len) {
+			s = with + s;
+		}
+		return s;
 	}
 	/**
 	 * This is for tests.
