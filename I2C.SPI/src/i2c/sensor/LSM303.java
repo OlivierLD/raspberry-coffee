@@ -140,7 +140,7 @@ public class LSM303 {
        */
 			// Enable accelerometer
 			accelerometer.write(LSM303_REGISTER_ACCEL_CTRL_REG1_A, (byte) 0x27); // 00100111
-			accelerometer.write(LSM303_REGISTER_ACCEL_CTRL_REG4_A, (byte) 0x00);
+			accelerometer.write(LSM303_REGISTER_ACCEL_CTRL_REG4_A, (byte) 0x00); // Low Res. For Hi Res, write 0b00001000
 			if (verbose)
 				System.out.println("Accelerometer OK.");
 
@@ -256,10 +256,10 @@ public class LSM303 {
 			} else if (verboseMag) {
 				dumpBytes(magData, 6);
 			}
-			// Mag raw data
+			// Mag raw data. Warning!! Order is X, Z, Y
 			int magX = mag16(magData, 0);
-			int magY = mag16(magData, 2);
-			int magZ = mag16(magData, 4);
+			int magZ = mag16(magData, 2);
+			int magY = mag16(magData, 4);
 
 //			float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //			float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
