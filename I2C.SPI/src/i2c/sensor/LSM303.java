@@ -13,6 +13,12 @@ import java.text.NumberFormat;
 
 /*
  * Accelerometer + Magnetometer
+ *
+ * A bit of note about the device:
+ *
+ * "The accelerometer allows you to measure acceleration or direction towards the center or the earth, and the magnetometer measure magnetic force, which is useful to detect magnetic north."
+ * In other words, the accelerometer measures the gravity, it is not to be considered as a gyroscope...
+ *
  */
 public class LSM303 {
 	// Minimal constants carried over from Arduino library
@@ -83,32 +89,32 @@ public class LSM303 {
 
 		switch (gain) {
 			case LSM303_MAGGAIN_1_3:
-				_lsm303Mag_Gauss_LSB_XY = 1100;
-				_lsm303Mag_Gauss_LSB_Z = 980;
+				_lsm303Mag_Gauss_LSB_XY = 1100F;
+				_lsm303Mag_Gauss_LSB_Z = 980F;
 				break;
 			case LSM303_MAGGAIN_1_9:
-				_lsm303Mag_Gauss_LSB_XY = 855;
-				_lsm303Mag_Gauss_LSB_Z = 760;
+				_lsm303Mag_Gauss_LSB_XY = 855F;
+				_lsm303Mag_Gauss_LSB_Z = 760F;
 				break;
 			case LSM303_MAGGAIN_2_5:
-				_lsm303Mag_Gauss_LSB_XY = 670;
-				_lsm303Mag_Gauss_LSB_Z = 600;
+				_lsm303Mag_Gauss_LSB_XY = 670F;
+				_lsm303Mag_Gauss_LSB_Z = 600F;
 				break;
 			case LSM303_MAGGAIN_4_0:
-				_lsm303Mag_Gauss_LSB_XY = 450;
-				_lsm303Mag_Gauss_LSB_Z = 400;
+				_lsm303Mag_Gauss_LSB_XY = 450F;
+				_lsm303Mag_Gauss_LSB_Z = 400F;
 				break;
 			case LSM303_MAGGAIN_4_7:
-				_lsm303Mag_Gauss_LSB_XY = 400;
-				_lsm303Mag_Gauss_LSB_Z = 355;
+				_lsm303Mag_Gauss_LSB_XY = 400F;
+				_lsm303Mag_Gauss_LSB_Z = 355F;
 				break;
 			case LSM303_MAGGAIN_5_6:
-				_lsm303Mag_Gauss_LSB_XY = 330;
-				_lsm303Mag_Gauss_LSB_Z = 295;
+				_lsm303Mag_Gauss_LSB_XY = 330F;
+				_lsm303Mag_Gauss_LSB_Z = 295F;
 				break;
 			case LSM303_MAGGAIN_8_1:
-				_lsm303Mag_Gauss_LSB_XY = 230;
-				_lsm303Mag_Gauss_LSB_Z = 205;
+				_lsm303Mag_Gauss_LSB_XY = 230F;
+				_lsm303Mag_Gauss_LSB_Z = 205F;
 				break;
 		}
 	}
@@ -204,18 +210,18 @@ public class LSM303 {
 
 			accelerometer.write(new byte[] { (byte)(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80) });
 
-			int readFromAcc = (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80);
-			int r = accelerometer.read(readFromAcc, accelData, 0, 6);
+			int readFromAcc = (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80); // TODO Check if not LSM303_ADDRESS_MAG
+			int r = accelerometer.read(readFromAcc, accelData, 0, 6); // TODO Try without first parameter
 			if (r != 6) {
 				System.out.println("Error reading accel data, < 6 bytes");
 			}
-			// raw data
+			// raw Acc data
 			int accelX = accel12(accelData, 0);
 			int accelY = accel12(accelData, 2);
 			int accelZ = accel12(accelData, 4);
 
 			if (verboseAcc) {
-				System.out.println(String.format("RawAcc XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", accelX, accelY, accelZ, accelX & 0xFFFF, accelY & 0xFFFF, accelZ & 0xFFFF));
+				System.out.println(String.format("Raw(int)Acc XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", accelX, accelY, accelZ, accelX & 0xFFFF, accelY & 0xFFFF, accelZ & 0xFFFF));
 			}
 
 			float accX = (float) accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
@@ -241,27 +247,27 @@ public class LSM303 {
 			// Request magnetometer measurements.
 			magnetometer.write(new byte[] { (byte)LSM303_REGISTER_MAG_OUT_X_H_M });
 
-			int readFromMag = LSM303_REGISTER_MAG_OUT_X_H_M;
+			int readFromMag = LSM303_REGISTER_MAG_OUT_X_H_M; // TODO Check if not LSM303_ADDRESS_MAG
 			// Reading magnetometer measurements.
-			r = magnetometer.read(readFromMag, magData, 0, 6);
+			r = magnetometer.read(readFromMag, magData, 0, 6); // TODO Try without first parameter
 			if (r != 6) {
 				System.out.println("Error reading mag data, < 6 bytes");
 			}
-			// raw data
+			// Mag raw data
 			int magX = mag16(magData, 0);
 			int magY = mag16(magData, 2);
 			int magZ = mag16(magData, 4);
-
-			if (verboseMag) {
-				System.out.println(String.format("RawMag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF));
-			}
 
 //			float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //			float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //			float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
 //		float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Trigo way... Same as below (the ratio remains the same).
-			float heading = - (float) Math.toDegrees(Math.atan2((double)magY, (double)magX)); // Trigo way...
+			float heading = - (float) Math.toDegrees(Math.atan2((double)magY, (double)magX)); // Trigo way... TODO Check the sign
 			while (heading < 0) heading += 360f;
+
+			if (verboseMag) {
+				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
+			}
 
 			if (dataListener != null) {
 				// Use the values as you want here.
