@@ -252,6 +252,8 @@ public class LSM303 {
 			r = magnetometer.read(/*readFromMag,*/ magData, 0, 6); // TODO Try without first parameter
 			if (r != 6) {
 				System.out.println("Error reading mag data, < 6 bytes");
+			} else if (verboseMag) {
+				dumpBytes(magData, 6);
 			}
 			// Mag raw data
 			int magX = mag16(magData, 0);
@@ -307,6 +309,13 @@ public class LSM303 {
 		return (n < 32768 ? n : n - 65536);                           // 2's complement signed
 	}
 
+	private static void dumpBytes(byte[] ba, int len) {
+		String str = String.format("%d bytes: ", len);
+		for (int i=0; i<len; i++) {
+			str += (Integer.toHexString(ba[i]) + " ").toUpperCase();
+		}
+		System.out.println(str);
+	}
 	/**
 	 * This is for tests.
 	 * Keep reading until Ctrl+C is entered.
