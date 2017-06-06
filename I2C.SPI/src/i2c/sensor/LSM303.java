@@ -211,7 +211,7 @@ public class LSM303 {
 			accelerometer.write(new byte[] { (byte)(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80) });
 
 			int readFromAcc = (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80); // TODO Check if not LSM303_ADDRESS_MAG
-			int r = accelerometer.read(readFromAcc, accelData, 0, 6); // TODO Try without first parameter
+			int r = accelerometer.read(/*readFromAcc,*/ accelData, 0, 6); // TODO Try without first parameter
 			if (r != 6) {
 				System.out.println("Error reading accel data, < 6 bytes");
 			}
@@ -249,7 +249,7 @@ public class LSM303 {
 
 			int readFromMag = LSM303_REGISTER_MAG_OUT_X_H_M; // TODO Check if not LSM303_ADDRESS_MAG
 			// Reading magnetometer measurements.
-			r = magnetometer.read(readFromMag, magData, 0, 6); // TODO Try without first parameter
+			r = magnetometer.read(/*readFromMag,*/ magData, 0, 6); // TODO Try without first parameter
 			if (r != 6) {
 				System.out.println("Error reading mag data, < 6 bytes");
 			}
@@ -275,7 +275,7 @@ public class LSM303 {
 //			dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, (float)pitchDegrees, (float)rollDegrees);
 				dataListener.dataDetected(accX, accY, accZ, magX, magY, magZ, heading, (float)pitchDegrees, (float)rollDegrees);
 			} else {
-				if (verboseMag) {
+				if (verbose) {
 //				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %f, Z: %f => heading: %s, pitch: %s, roll: %s)",
 //								accX, accY, accZ,
 //								magneticX, magneticY, magneticZ,
