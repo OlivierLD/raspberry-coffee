@@ -77,14 +77,14 @@
             'varying vec3 vColor;' +
 
             'void main(void) { ' +  //pre-built function
-            'gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);' +
-            'vColor = color;' +
+            '  gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1.);' +
+            '  vColor = color;' +
             '}';
 
     var fragCode = 'precision mediump float;' +
             'varying vec3 vColor;' +
             'void main(void) {' +
-            'gl_FragColor = vec4(vColor, 1.);' +
+            '  gl_FragColor = vec4(vColor, 1.);' +
             '}';
 
     var vertShader = gl.createShader(gl.VERTEX_SHADER);
@@ -136,7 +136,7 @@
     var view_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
     // translating z
-    view_matrix[14] = view_matrix[14] - 6; //zoom
+    view_matrix[14] = view_matrix[14] - 4; // zoom 4. Bigger number, smaller figure.
 
     /*==================== Rotation ====================*/
     Number.prototype.toRad = function() {
