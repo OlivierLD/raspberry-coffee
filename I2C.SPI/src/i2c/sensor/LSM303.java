@@ -17,13 +17,15 @@ import java.text.NumberFormat;
  * A bit of note about the device:
  * <br>
  * "The accelerometer allows you to measure acceleration or direction towards the center or the earth, and the magnetometer measure magnetic force, which is useful to detect magnetic north."
- * In other words, the accelerometer measures the gravity, it is not to be considered as a gyroscope...'
+ * <br>
+ * In other words, the accelerometer measures the gravity, it is <i>not</i> to be considered as a gyroscope...
  * <br>
  * Also, another funny one:
  * <ul>
  *   <li>The data read from the accelerometer are read in the order X, Y, Z</li>
- *   <li>The data read from the magnetometer are read in the order X, <b>Z</b>, Y</li>
+ *   <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, <span style='color: red;'>Y</span></li>
  * </ul>
+ * It took me a while to figure it out...
  */
 public class LSM303 {
 	// Minimal constants carried over from Arduino library
