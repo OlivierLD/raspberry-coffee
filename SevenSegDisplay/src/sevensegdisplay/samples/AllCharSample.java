@@ -26,14 +26,14 @@ public class AllCharSample
       fullDisplay(displayed);
       try { Thread.sleep(500L); } catch (InterruptedException ie){}
     }
-    try { Thread.sleep(3000L); } catch (InterruptedException ie){}
+    try { Thread.sleep(3_000L); } catch (InterruptedException ie){}
     
     for (int i=0; i<4; i++)
     {
       fullDisplay(new String[] { "C", "A", "F", "E" });
-      try { Thread.sleep(1000L); } catch (InterruptedException ie){}
+      try { Thread.sleep(1_000L); } catch (InterruptedException ie){}
       fullDisplay(new String[] { "B", "A", "B", "E" });
-      try { Thread.sleep(1000L); } catch (InterruptedException ie){}
+      try { Thread.sleep(1_000L); } catch (InterruptedException ie){}
     }
     segment.clear();
   }

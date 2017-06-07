@@ -29,7 +29,7 @@ public class PanTiltJoyStick {
 		ssUD.setAngle(0f);
 		ssLR.setAngle(0f);
 
-		StandardServo.waitfor(2000);
+		StandardServo.waitfor(2_000);
 
 		JoyStickClient jsc = new JoyStickClient() {
 			@Override

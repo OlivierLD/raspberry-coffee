@@ -50,7 +50,7 @@ public class CharacterConsoleWriter implements Forwarder {
 		try {
 			// Stop Cache thread
 			keepWorking = false;
-			try { Thread.sleep(2000L); } catch (Exception ex) {}
+			try { Thread.sleep(2_000L); } catch (Exception ex) {}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -86,7 +86,7 @@ public class CharacterConsoleWriter implements Forwarder {
 					while (keepWorking) { // Ping the cache every second.
 						NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 						cmConsole.displayData(cache, consoleProps);
-						try { Thread.sleep(1000L); } catch (Exception ex) {}
+						try { Thread.sleep(1_000L); } catch (Exception ex) {}
 					}
 				}
 			};

@@ -77,20 +77,20 @@ public class LogAnalysis
         try
         {
           Date logDate  = SDF.parse(data[0]);
-          logDate = new Date(logDate.getTime() + (hourOffset * 3600 * 1000)); // TODO Make sure the gap is not too big (like > 1 day)
+          logDate = new Date(logDate.getTime() + (hourOffset * 3_600_000)); // TODO Make sure the gap is not too big (like > 1 day)
           int adc       = Integer.parseInt(data[1]);
           int volume    = Integer.parseInt(data[2]);
           float voltage = Float.parseFloat(data[3]) * voltageCoeff; 
           if (withSmoothing && previousDate != -1)
           { 
             // Smooth...
-            long deltaT = (logDate.getTime() - previousDate) / 1000; // in seconds
+            long deltaT = (logDate.getTime() - previousDate) / 1_000; // in seconds
             int deltaADC = (adc - prevAdc);
             int deltaVolume = (volume - prevVolume);
             float deltaVolt = (voltage - prevVoltage);
             for (int i=0; i<deltaT; i++)
             {
-              Date smoothDate  = new Date(previousDate + (i * 1000));
+              Date smoothDate  = new Date(previousDate + (i * 1_000));
               int smoothADC    = prevAdc + (int)((double)deltaADC * ((double)i / (double)deltaT));
               int smoothVolume = prevVolume + (int)((double)deltaVolume * ((double)i / (double)deltaT));
               float smoothVolt = prevVoltage + (float)((double)deltaVolt * ((double)i / (double)deltaT));
@@ -156,9 +156,9 @@ public class LogAnalysis
     }
     else
     {
-      System.out.println("From  [" + minDate + "] to [" + maxDate + "] (" + Long.toString((maxDate.getTime() - minDate.getTime()) / 1000) + " s)");
+      System.out.println("From  [" + minDate + "] to [" + maxDate + "] (" + Long.toString((maxDate.getTime() - minDate.getTime()) / 1_000) + " s)");
       System.out.println("Volts [" + minVolt + ", " + maxVolt + "]");
-      System.out.println("Smallest interval:" + (smallestTimeInterval / 1000) + " s.");
+      System.out.println("Smallest interval:" + (smallestTimeInterval / 1_000) + " s.");
       System.out.println("LogData has " + logdata.size() + " element(s)");
       frame.setLogData(logdata);
     }

@@ -53,7 +53,7 @@ public class HomeWeatherStationSimulator {
 			float mwd = HomeWeatherStation.getAverageWD(wd);
 			double volts = generateRandomValue(voltage, 3, 0, 65);
 			float temp = (float) generateRandomValue(temperature, 2, -10, 50);
-			float press = (float) generateRandomValue(pressure, 100, 98000, 105000);
+			float press = (float) generateRandomValue(pressure, 100, 98_000, 105_000);
 			float hum = (float) generateRandomValue(humidity, 5, 0, 100);
 			float rain = (float) generateRandomValue(rainamount, 1, 0, 3);
 			JSONObject windObj = new JSONObject();
@@ -106,7 +106,7 @@ public class HomeWeatherStationSimulator {
 
 			try {
 				synchronized (coreThread) {
-					coreThread.wait(1000L);
+					coreThread.wait(1_000L);
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();

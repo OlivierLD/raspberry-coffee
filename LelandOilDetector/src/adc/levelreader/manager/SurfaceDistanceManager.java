@@ -27,7 +27,7 @@ public class SurfaceDistanceManager
           {
             double dist = rangeSensor.readRange();
             caller.setSurfaceDistance(dist);
-            try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
+            try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
           }
         }
       };

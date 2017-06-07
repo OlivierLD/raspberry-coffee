@@ -58,7 +58,7 @@ public class ADCReader {
 	public static void main(String[] args)
 	throws Exception {
 
-		final long SECOND = 1000L;
+		final long SECOND = 1_000L;
 		final long MINUTE = 60 * SECOND;
 		final long HOUR = 60 * MINUTE;
 
@@ -158,7 +158,7 @@ public class ADCReader {
 		};
 		// Wait for the battery monitor to read something...
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(5_000);
 		} catch (Exception ex) {
 		}
 		if (verbose) {

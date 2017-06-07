@@ -184,7 +184,7 @@ public class AlaModeTest
 
   private static void delay(float d) // d in seconds.
   {
-    try { Thread.sleep((long)d * 1000); } catch (Exception ex) {}
+    try { Thread.sleep((long)d * 1_000); } catch (Exception ex) {}
   }
 
   private static void displayMenu()

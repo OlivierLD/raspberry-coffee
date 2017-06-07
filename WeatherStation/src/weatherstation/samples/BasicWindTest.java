@@ -87,7 +87,7 @@ public class BasicWindTest
       { 
         synchronized (coreThread)
         {
-          coreThread.wait(1000L); 
+          coreThread.wait(1_000L);
         }
       } 
       catch (Exception ex) { ex.printStackTrace(); }

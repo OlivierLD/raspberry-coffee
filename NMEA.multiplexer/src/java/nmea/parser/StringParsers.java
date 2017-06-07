@@ -190,7 +190,7 @@ public class StringParsers {
 		String sa[] = data.substring(0, data.indexOf("*")).split(",");
 		try {
 			d = Double.parseDouble(sa[3]);
-			d *= 1000d;
+			d *= 1_000d;
 		} catch (NumberFormatException nfe) {
 		}
 		return d;
@@ -423,9 +423,9 @@ public class StringParsers {
 		}
 
 //  System.out.println("UTC:" + utc + ", lat:" + lat + ", lng:" + lng + ", nbsat:" + nbsat); 
-		int h = (int) (utc / 10000);
-		int m = (int) ((utc - (h * 10000)) / 100);
-		float sec = (float) (utc - ((h * 10000) + (m * 100)));
+		int h = (int) (utc / 10_000);
+		int m = (int) ((utc - (h * 10_000)) / 100);
+		float sec = (float) (utc - ((h * 10_000) + (m * 100)));
 //  System.out.println(h + ":" + m + ":" + sec);
 
 //  System.out.println(new GeoPos(lat, lng).toString());
@@ -982,8 +982,8 @@ public class StringParsers {
 					try {
 						utc = parseNMEADouble(dateStr);
 					} catch (Exception ex) { /*System.out.println("dateStr in StringParsers.parseGLL"); */ }
-					int h = (int) (utc / 10000);
-					int mn = (int) ((utc - (10000 * h)) / 100);
+					int h = (int) (utc / 10_000);
+					int mn = (int) ((utc - (10_000 * h)) / 100);
 					float sec = (float) (utc % 100f);
 					Calendar local = new GregorianCalendar();
 					local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
@@ -1290,8 +1290,8 @@ public class StringParsers {
 					} catch (Exception ex) {
 						System.out.println("data[1] in StringParsers.parseRMC");
 					}
-					int h = (int) (utc / 10000);
-					int m = (int) ((utc - (10000 * h)) / 100);
+					int h = (int) (utc / 10_000);
+					int m = (int) ((utc - (10_000 * h)) / 100);
 					float sec = (float) (utc % 100f);
 
 //        System.out.println("Data[1]:" + data[1] + ", h:" + h + ", m:" + m + ", s:" + sec);
@@ -1321,7 +1321,7 @@ public class StringParsers {
 						if (y > 50)
 							y += 1900;
 						else
-							y += 2000;
+							y += 2_000;
 						local.set(Calendar.DATE, d);
 						local.set(Calendar.MONTH, mo);
 						local.set(Calendar.YEAR, y);
@@ -1750,7 +1750,7 @@ public class StringParsers {
 		} catch (NumberFormatException nfe) {
 			throw new RuntimeException("durationToDate, for [" + duration + "] : " + nfe.getMessage());
 		}
-		return calendar.getTimeInMillis() - (long) (utcOffset * (3600 * 1000));
+		return calendar.getTimeInMillis() - (long) (utcOffset * (3_600_000));
 	}
 
 	public static String durationToExcel(String duration)
@@ -2147,7 +2147,7 @@ public class StringParsers {
 		valid = validCheckSum(str);
 		System.out.println("MDA Chain is " + (valid ? "" : "not ") + "valid");
 		MDA mda = parseMDA(str);
-		System.out.println("PAtm:" + (mda.pressBar * 1000) + " mb, Air:" + mda.airT);
+		System.out.println("PAtm:" + (mda.pressBar * 1_000) + " mb, Air:" + mda.airT);
 		System.out.println("Dew point:" + (mda.dewC == null ? "null" : "not null"));
 		System.out.println("Water T:" + ((mda.waterT == null) ? "null" : mda.waterT) + " Rel Hum:" + ((mda.relHum == null) ? "null" : mda.relHum));
 

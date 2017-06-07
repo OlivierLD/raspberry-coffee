@@ -102,7 +102,7 @@ public class SunServoNMEAReader extends NMEAClient
         if (rmc != null && rmc.getRmcDate() != null && rmc.getGp() != null)
         {
           if ((prevDateTime == -1L || prevPosition == null) ||
-              (prevDateTime != (rmc.getRmcDate().getTime() / 1000) || !rmc.getGp().equals(prevPosition)))
+              (prevDateTime != (rmc.getRmcDate().getTime() / 1_000) || !rmc.getGp().equals(prevPosition)))
           {
             Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
             current.setTime(rmc.getRmcDate());
@@ -187,7 +187,7 @@ public class SunServoNMEAReader extends NMEAClient
             }
           }
           prevPosition = rmc.getGp();
-          prevDateTime = (rmc.getRmcDate().getTime() / 1000);
+          prevDateTime = (rmc.getRmcDate().getTime() / 1_000);
         }
         else
         {
@@ -236,7 +236,7 @@ public class SunServoNMEAReader extends NMEAClient
         int off = (int)(servoMin + (((double)(angle + 90) / 180d) * (servoMax - servoMin)));
         System.out.println("setPWM(" + STANDARD_SERVO_CHANNEL + ", " + on + ", " + off + ");");
         servoBoard.setPWM(STANDARD_SERVO_CHANNEL, on, off);
-        // TODO Vers le pole abaissé.
+        // TODO Vers le pole abaissï¿½.
         String dummy = userInput("Orient the arrow SOUTH (true S, with no W), and hit return when ready.");        
       }
     }

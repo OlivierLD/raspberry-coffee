@@ -22,7 +22,7 @@ public class LSM303Reader extends NMEAReader {
 	private static final String DEFAULT_DEVICE_PREFIX = "RP";
 	private String devicePrefix = DEFAULT_DEVICE_PREFIX;
 
-	private static final long BETWEEN_LOOPS = 1000L; // TODO: Make it an external parameter?
+	private static final long BETWEEN_LOOPS = 1_000L; // TODO: Make it an external parameter?
 
 	public LSM303Reader(List<NMEAListener> al) {
 		super(al);

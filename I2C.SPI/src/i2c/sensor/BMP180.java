@@ -239,7 +239,7 @@ public class BMP180 {
 			System.out.println("DBG: True Temperature = " + (((B5 + 8) >> 4) / 10.0) + " C");
 		}
 		// Pressure Calculations
-		B6 = B5 - 4000;
+		B6 = B5 - 4_000;
 		X1 = (this.cal_B2 * (B6 * B6) >> 12) >> 11;
 		X2 = (this.cal_AC2 * B6) >> 11;
 		X3 = X1 + X2;
@@ -255,7 +255,7 @@ public class BMP180 {
 		X2 = (this.cal_B1 * ((B6 * B6) >> 12)) >> 16;
 		X3 = ((X1 + X2) + 2) >> 2;
 		B4 = (this.cal_AC4 * (X3 + 32768)) >> 15;
-		B7 = (UP - B3) * (50000 >> this.mode);
+		B7 = (UP - B3) * (50_000 >> this.mode);
 		if (verbose) {
 			System.out.println("DBG: X1 = " + X1);
 			System.out.println("DBG: X2 = " + X2);

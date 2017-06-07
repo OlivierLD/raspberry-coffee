@@ -60,7 +60,7 @@ public class OLEDScreenAndKeypad
     display("Bye-bye");
     System.out.println("Bye");
     kbc.shutdown();
-    try { Thread.sleep(1000L); } catch (Exception ex) {}
+    try { Thread.sleep(1_000L); } catch (Exception ex) {}
     clear();
     oled.shutdown();
   }

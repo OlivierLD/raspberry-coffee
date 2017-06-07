@@ -22,7 +22,7 @@ public class PanTilt {
 		ssUD.setAngle(0f);
 		ssLR.setAngle(0f);
 
-		StandardServo.waitfor(2000);
+		StandardServo.waitfor(2_000);
 
 		InputStream in = System.in;
 		boolean go = true;
@@ -61,7 +61,7 @@ public class PanTilt {
 		// Reset to 0,0 before shutting down.
 		ssUD.setAngle(0f);
 		ssLR.setAngle(0f);
-		StandardServo.waitfor(2000);
+		StandardServo.waitfor(2_000);
 		ssUD.stop();
 		ssLR.stop();
 		System.out.println("Bye");

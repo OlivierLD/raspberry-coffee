@@ -29,7 +29,7 @@ import raspisamples.util.HTTPClient;
 public class MySQLLoggerImpl implements LoggerInterface
 {
   private long lastLogged = 0L; // Time of the last logging
-  private static final long MINIMUM_BETWEEN_LOGS = 5000L; // A System variable, in ms.
+  private static final long MINIMUM_BETWEEN_LOGS = 5_000L; // A System variable, in ms.
   private final static NumberFormat DOUBLE_FMT = new DecimalFormat("#0.000");
   private final static String REST_URL = "http://donpedro.lediouris.net/php/raspi/insert.wd.php"; // A System.variable
 

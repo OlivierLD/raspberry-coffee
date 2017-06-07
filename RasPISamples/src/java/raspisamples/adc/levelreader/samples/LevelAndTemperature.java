@@ -237,7 +237,7 @@ public class LevelAndTemperature implements LevelListenerInterface
              me.notify();
            }
            System.out.println("Program stopped by user's request.");
-           try { Thread.sleep(1000L); } catch (Exception ex) {} // Wait a bit for everything to shutdown cleanly...
+           try { Thread.sleep(1_000L); } catch (Exception ex) {} // Wait a bit for everything to shutdown cleanly...
          }
        });
     synchronized (me)

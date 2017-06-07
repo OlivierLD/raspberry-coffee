@@ -23,7 +23,7 @@ public class BlinkDetector
              SerialCommunicatorInterface
 {
   private List<Short> wave = new ArrayList<Short>();
-  private final static int WIDTH = 1000;
+  private final static int WIDTH = 1_000;
   private final static int SMOOTH_WIDTH = 50;
 
   @Override

@@ -21,7 +21,7 @@ public class CollisionTester {
 	private final static int MIN_STR_LENGTH =  10;
 	private final static int MAX_STR_LENGTH = 100;
 
-	private final static long MILLION = 1000000L;
+	private final static long MILLION = 1_000_000L;
 
 	private final static long NB_ETAG_GEN = 1 * MILLION;
 

@@ -130,15 +130,15 @@ public class SevenADCChannelsManager
        //    System.out.println("Channel " + ch + ", Material:" + material + ", volume:" + volume + " (smmoth:" + val + ")");
              // Start after a while
              long now = System.currentTimeMillis();
-             if ((now - started) > (START_AFTER * 1000))
+             if ((now - started) > (START_AFTER * 1_000))
              {
-               client.setStarted((now - started) > ((START_AFTER + 5) * 1000)); // After 5 more secs...
+               client.setStarted((now - started) > ((START_AFTER + 5) * 1_000)); // After 5 more secs...
                client.setTypeOfChannel(ch, material, val); //volume); // send the smoothed value, and material.
              }
              else
              {
                AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1));
-               AnsiConsole.out.println("Will start in " + (START_AFTER - ((int)(now - started)/ 1000)) + " s (" + WATER_THRESHOLD + /*", " + OIL_THRESHOLD + */ ")             ");               
+               AnsiConsole.out.println("Will start in " + (START_AFTER - ((int)(now - started)/ 1_000)) + " s (" + WATER_THRESHOLD + /*", " + OIL_THRESHOLD + */ ")             ");
              }
              
 //           int maxLevel = 0;

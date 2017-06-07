@@ -394,7 +394,7 @@ public class AdafruitMotorHAT
       for (int s=0; s<steps; s++)
       {
         latestStep = this.oneStep(direction, stepStyle);
-        delay((long)(sPerS * 1000));
+        delay((long)(sPerS * 1_000));
       }
       if (stepStyle == Style.MICROSTEP)
       {
@@ -403,7 +403,7 @@ public class AdafruitMotorHAT
         while (latestStep != 0 && latestStep != this.MICROSTEPS)
         {
           latestStep = this.oneStep(direction, stepStyle);
-          delay((long)(sPerS * 1000));
+          delay((long)(sPerS * 1_000));
         }
       }
     }

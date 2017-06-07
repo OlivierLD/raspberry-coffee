@@ -30,13 +30,13 @@ public class GPIO08led
 
     System.out.println("Down an Up");
     // Down
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     for (int i=0; i<ledArray.length; i++)
     {
       ledArray[i].toggle();
       Thread.sleep(100);
     } 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     // Up
     for (int i=0; i<ledArray.length; i++)
     {
@@ -46,13 +46,13 @@ public class GPIO08led
     
     System.out.println("One only");
     // Down
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     for (int i=0; i<ledArray.length; i++)
     {
       oneOnly(ledArray, ledArray[i]);
       Thread.sleep(100);
     } 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     // Up
     for (int i=0; i<ledArray.length; i++)
     {
@@ -61,9 +61,9 @@ public class GPIO08led
     } 
     
     System.out.println("Messy...");
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     // Big mess
-    for (int i=0; i<1000; i++)
+    for (int i=0; i<1_000; i++)
     {
       int idx = (int)(Math.random() * 8);
       ledArray[idx].toggle();
@@ -86,7 +86,7 @@ public class GPIO08led
     } 
     
     System.out.println("Done.");
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     // Everything off
     for (int i=0; i<ledArray.length; i++)
       ledArray[i].low();

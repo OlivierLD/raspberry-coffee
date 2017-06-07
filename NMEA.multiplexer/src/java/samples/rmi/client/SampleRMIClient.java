@@ -56,7 +56,7 @@ public class SampleRMIClient {
 			System.out.println(String.format("LastString execution took %s ms.", NumberFormat.getInstance().format(after - before)));
 			System.out.println(last);
 
-			try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
+			try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
 
 			NMEACache cacheTask = new NMEACache();
 			before = System.currentTimeMillis();
@@ -76,7 +76,7 @@ public class SampleRMIClient {
 				}
 			}
 
-			try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
+			try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
 
 			BoatPosition boatPositionTask = new BoatPosition();
 			before = System.currentTimeMillis();
@@ -85,7 +85,7 @@ public class SampleRMIClient {
 			System.out.println(String.format("BoatPosition execution took %s ms.", NumberFormat.getInstance().format(after - before)));
 			System.out.println(String.format("Position is %s (Grid Square %s)", boatGeoPos.toString(), boatGeoPos.gridSquare()));
 
-			try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
+			try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
 
 			TrueWind trueWind = new TrueWind();
 			CalculatedCurrent calculatedCurrent = new CalculatedCurrent();
@@ -110,7 +110,7 @@ public class SampleRMIClient {
 				} catch (Exception ex) {
 					System.err.println("Ooops! Current:" + ex.toString());
 				}
-				try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
+				try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
 			}
 			// Finish with the whole cache
 			before = System.currentTimeMillis();

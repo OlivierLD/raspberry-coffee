@@ -101,11 +101,11 @@ public class TCS34725
   static
   { //                                Microseconds                              
     INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_2_4MS,  2400L);   // 2.4ms - 1 cycle    - Max Count: 1024
-    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_24MS,  24000L);   // 24ms  - 10 cycles  - Max Count: 10240
-    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_50MS,  50000L);   // 50ms  - 20 cycles  - Max Count: 20480
-    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_101MS, 101000L);   // 101ms - 42 cycles  - Max Count: 43008
-    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_154MS, 154000L);   // 154ms - 64 cycles  - Max Count: 65535
-    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_700MS, 700000L);   // 700ms - 256 cycles - Max Count: 65535
+    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_24MS,  24_000L);   // 24ms  - 10 cycles  - Max Count: 10240
+    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_50MS,  50_000L);   // 50ms  - 20 cycles  - Max Count: 20480
+    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_101MS, 101_000L);   // 101ms - 42 cycles  - Max Count: 43008
+    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_154MS, 154_000L);   // 154ms - 64 cycles  - Max Count: 65535
+    INTEGRATION_TIME_DELAY.put(TCS34725_INTEGRATIONTIME_700MS, 700_000L);   // 700ms - 256 cycles - Max Count: 65535
   }
 
   private static boolean verbose = false;
@@ -220,7 +220,7 @@ public class TCS34725
     int b = this.readU16(TCS34725_BDATAL);
     int g = this.readU16(TCS34725_GDATAL);
     int c = this.readU16(TCS34725_CDATAL);
-    waitfor((long)(INTEGRATION_TIME_DELAY.get(this.integrationTime) / 1000L));
+    waitfor((long)(INTEGRATION_TIME_DELAY.get(this.integrationTime) / 1_000L));
     return new TCSColor(r, b, g, c);
   }
   
@@ -356,7 +356,7 @@ public class TCS34725
     { 
       System.out.println(".. Setting interrupt");
       sensor.setInterrupt(false);
-      waitfor(1000L);
+      waitfor(1_000L);
       System.out.println(".. Getting raw data");
       TCS34725.TCSColor rgb = sensor.getRawData();
       System.out.println(".. Calculating");
@@ -367,7 +367,7 @@ public class TCS34725
       System.out.printf("Luminosity: %d lux%n", lux);
       
       sensor.setInterrupt(true);
-      waitfor(1000L);
+      waitfor(1_000L);
       sensor.disable();
     } 
     catch (Exception ex) 

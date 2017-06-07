@@ -120,7 +120,7 @@ public class Robot {
 
 	public static void delay(float sec) {
 		try {
-			Thread.sleep((long) (sec * 1000));
+			Thread.sleep((long) (sec * 1_000));
 		} catch (InterruptedException ie) {
 			// Absorb
 		}

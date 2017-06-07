@@ -117,7 +117,7 @@ public class LevelSimulator implements LevelListenerInterface
             try 
             { 
               synchronized (this)
-              { wait(2000L); }
+              { wait(2_000L); }
             } catch (InterruptedException ie) { System.out.println("Simulator interrupted"); }
           }
           System.out.println("Done simulating");
@@ -144,7 +144,7 @@ public class LevelSimulator implements LevelListenerInterface
              me.notify();
            }
            System.out.println("Program stopped by user's request.");
-           try { Thread.sleep(1000L); } catch (Exception ex) {} // Wait a bit for everything to shutdown cleanly...
+           try { Thread.sleep(1_000L); } catch (Exception ex) {} // Wait a bit for everything to shutdown cleanly...
          }
        });
     synchronized (me)

@@ -59,7 +59,7 @@ public class PCA9685 {
 	 */
 	public void setPWMFreq(int freq) {
 		this.freq = freq;
-		float preScaleVal = 25000000.0f; // 25MHz
+		float preScaleVal = 25_000_000.0f; // 25MHz
 		preScaleVal /= 4096.0;           // 4096: 12-bit
 		preScaleVal /= freq;
 		preScaleVal -= 1.0;
@@ -125,10 +125,10 @@ public class PCA9685 {
 	 * @param pulseMS in ms.
 	 */
 	public void setServoPulse(int channel, float pulseMS) {
-		double pulseLength = 1000000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
+		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
 		pulseLength /= this.freq;  // 40..1000 Hz
 		pulseLength /= 4096;       // 12 bits of resolution
-		int pulse = (int) (pulseMS * 1000);
+		int pulse = (int) (pulseMS * 1_000);
 		pulse /= pulseLength;
 		if (verbose)
 			System.out.println(pulseLength + " us per bit, pulse:" + pulse);
@@ -159,7 +159,7 @@ public class PCA9685 {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMin);
-			waitfor(1000);
+			waitfor(1_000);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMax);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMax);
 			waitfor(1000);
@@ -219,10 +219,10 @@ public class PCA9685 {
 	}
 
 	public static void main__(String[] args) {
-		double pulseLength = 1000000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
+		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
 		pulseLength /= 250;  // 40..1000 Hz
 		pulseLength /= 4096; // 12 bits of resolution
-		int pulse = (int) (1.5 * 1000);
+		int pulse = (int) (1.5 * 1_000);
 		pulse /= pulseLength;
 		if (verbose)
 			System.out.println(pulseLength + " us per bit, pulse:" + pulse);

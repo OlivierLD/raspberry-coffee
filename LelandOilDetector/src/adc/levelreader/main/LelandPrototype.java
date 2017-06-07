@@ -374,7 +374,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
       {
         try 
         {
-          sendMessWaiter.wait(5000L);
+          sendMessWaiter.wait(5_000L);
         }
         catch (InterruptedException ie)
         {
@@ -953,7 +953,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
         while (!fonaReady)
         {
           System.out.println("Waiting for the FONA device to come up...");
-          try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
+          try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
         }
         fona.requestBatteryState();
         fona.requestNetworkStatus();
@@ -1063,7 +1063,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
    */
   private static void delay(float sec)
   {
-    try { Thread.sleep(Math.round(1000 * sec)); } catch (InterruptedException ie) {}
+    try { Thread.sleep(Math.round(1_000 * sec)); } catch (InterruptedException ie) {}
   }
   
   public static class WaitForCleanThread extends Thread
@@ -1083,7 +1083,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
       {
         delay(10); // in seconds
         if (!currentStatus.equals(ProcessStatus.ALL_OK) && 
-            (System.currentTimeMillis() - started) > (cleaningDelay * 1000)) // Expired
+            (System.currentTimeMillis() - started) > (cleaningDelay * 1_000)) // Expired
         {
           // Next status level.
           log("Your cleaning delay (" + cleaningDelay + ") has expired. Going to the next level");

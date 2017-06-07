@@ -33,7 +33,7 @@ public class RemoteControlActivity extends Activity
    * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
    * user interaction before hiding the system UI.
    */
-  private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+  private static final int AUTO_HIDE_DELAY_MILLIS = 3_000;
 
   /**
    * If set, will toggle the system UI visibility upon interaction. Otherwise,

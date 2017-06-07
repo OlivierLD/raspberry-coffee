@@ -20,7 +20,7 @@ import sevensegdisplay.SevenSegment;
 public class SevenSegBMP180
 {
   private static boolean go = true;
-  private static long wait = 2000L;
+  private static long wait = 2_000L;
 
   public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
   {

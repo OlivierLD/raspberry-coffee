@@ -182,7 +182,7 @@ public class VL53L0X {
 			System.out.println(String.format("Revision %d, device ID %d ", vl53l0x.getRevision(), vl53l0x.getDeviceID()));
 			System.out.println();
 			vl53l0x.startRanging(VL53L0X.VL53L0X_BETTER_ACCURACY_MODE);
-			int howMany = 1000;
+			int howMany = 1_000;
 			for (int i=0; i<howMany; i++) {
 				int distance = vl53l0x.getDistance();
 				System.out.println(String.format("Distance:%d mm", distance));

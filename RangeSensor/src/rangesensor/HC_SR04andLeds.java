@@ -19,7 +19,7 @@ import java.text.Format;
 public class HC_SR04andLeds
 {
   private final static Format DF22 = new DecimalFormat("#0.00");
-  private final static double SOUND_SPEED = 34300;           // in cm, 343 m/s
+  private final static double SOUND_SPEED = 34_300;          // in cm, 343 m/s
   private final static double DIST_FACT   = SOUND_SPEED / 2; // round trip
   private final static int MIN_DIST       = 5;
   
@@ -61,7 +61,7 @@ public class HC_SR04andLeds
     });
     
     System.out.println("Waiting for the sensor to be ready (2s)...");
-    Thread.sleep(2000L);
+    Thread.sleep(2_000L);
     Thread mainThread = Thread.currentThread();
 
     boolean go = true;
@@ -107,7 +107,7 @@ public class HC_SR04andLeds
 //        double pulseDuration = (end - start) / 1000000000d; // in seconds
           double pulseDuration = (end - start) / 10E9; // in seconds
           double distance = pulseDuration * DIST_FACT;
-          if (distance < 1000) // Less than 10 meters
+          if (distance < 1_000) // Less than 10 meters
             System.out.println("Distance: " + DF22.format(distance) + " cm."); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
           if (distance > 0 && distance < MIN_DIST)
             go = false;
@@ -131,7 +131,7 @@ public class HC_SR04andLeds
         else
         {
           System.out.println("Hiccup!");
-      //  try { Thread.sleep(2000L); } catch (Exception ex) {}
+      //  try { Thread.sleep(2_000L); } catch (Exception ex) {}
         }
       }
     }
@@ -165,7 +165,7 @@ public class HC_SR04andLeds
       trigPin.high();
       // 10 microsec (10000 ns) to trigger the module  (8 ultrasound bursts at 40 kHz) 
       // https://www.dropbox.com/s/615w1321sg9epjj/hc-sr04-ultrasound-timing-diagram.png
-      try { Thread.sleep(0, 10000); } catch (Exception ex) { ex.printStackTrace(); } 
+      try { Thread.sleep(0, 10_000); } catch (Exception ex) { ex.printStackTrace(); }
       trigPin.low();
       
       // Wait for the signal to return

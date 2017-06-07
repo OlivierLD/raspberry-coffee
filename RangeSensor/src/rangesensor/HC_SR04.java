@@ -27,7 +27,7 @@ public class HC_SR04
   
   private static boolean verbose = false;
   private final static long BILLION      = (long)10E9;
-  private final static int TEN_MICRO_SEC = 10 * 1000; // In Nano secs
+  private final static int TEN_MICRO_SEC = 10_000; // In Nano secs
   
   public static void main(String[] args)
     throws InterruptedException
@@ -54,7 +54,7 @@ public class HC_SR04
     });
     
     System.out.println(">>> Waiting for the sensor to be ready (2s)...");
-    Thread.sleep(2000);
+    Thread.sleep(2_000);
 
     boolean go = true;
     System.out.println("Looping until the distance is less than " + MIN_DIST + " cm");
@@ -88,7 +88,7 @@ public class HC_SR04
         double pulseDuration = (double)(end - start) / (double)BILLION; // in seconds
 //      System.out.println("Duration:" + (end - start) + " nanoS"); // DF_N.format(pulseDuration));
         double distance = pulseDuration * DIST_FACT;
-        if (distance < 1000) // Less than 10 meters
+        if (distance < 1_000) // Less than 10 meters
           System.out.println("Distance: " + DF22.format(distance) + " cm. (" + distance + "), Duration:" + (end - start) + " nanoS"); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
         else
           System.out.println("   >>> Too far:" + DF22.format(distance) + " cm.");
@@ -98,7 +98,7 @@ public class HC_SR04
         {
           if (distance < 0 && verbose)
             System.out.println("Dist:" + distance + ", start:" + start + ", end:" + end);
-          try { Thread.sleep(1000L); } catch (Exception ex) {}
+          try { Thread.sleep(1_000L); } catch (Exception ex) {}
         }
       }
       else

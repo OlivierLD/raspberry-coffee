@@ -132,8 +132,8 @@ AIS Message type 2:
 			String binStr = binString.substring(a.from(), a.to());
 			int intValue = Integer.parseInt(binStr, 2);
 			if (a.equals(AISData.LATITUDE) || a.equals(AISData.LONGITUDE)) {
-				if ((a.equals(AISData.LATITUDE) && intValue != (91 * 600000) && intValue > (90 * 600000)) ||
-								(a.equals(AISData.LONGITUDE) && intValue != (181 * 600000) && intValue > (180 * 600000))) {
+				if ((a.equals(AISData.LATITUDE) && intValue != (91 * 600_000) && intValue > (90 * 600_000)) ||
+								(a.equals(AISData.LONGITUDE) && intValue != (181 * 600_000) && intValue > (180 * 600_000))) {
 					intValue = -Integer.parseInt(neg(binStr), 2);
 				}
 			} else if (a.equals(AISData.ROT)) {
@@ -280,7 +280,7 @@ AIS Message type 2:
 		}
 
 		public void setLongitude(int longitude) {
-			this.longitude = (longitude / 600000f);
+			this.longitude = (longitude / 600_000f);
 		}
 
 		public float getLongitude() {
@@ -288,7 +288,7 @@ AIS Message type 2:
 		}
 
 		public void setLatitude(int latitude) {
-			this.latitude = (latitude / 600000f);
+			this.latitude = (latitude / 600_000f);
 		}
 
 		public float getLatitude() {

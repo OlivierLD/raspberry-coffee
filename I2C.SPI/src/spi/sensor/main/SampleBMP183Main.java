@@ -19,7 +19,7 @@ public class SampleBMP183Main
       double press = bmp183.measurePressure();
       System.out.println("Temperature: " + T_FMT.format(temp) + "\272C");
       System.out.println("Pressure   : " + P_FMT.format(press / 100.0) + " hPa");
-      try { Thread.sleep(1000); } catch (Exception ex) {}
+      try { Thread.sleep(1_000); } catch (Exception ex) {}
     }
     BMP183.shutdownBMP183();
     System.out.println("Bye");

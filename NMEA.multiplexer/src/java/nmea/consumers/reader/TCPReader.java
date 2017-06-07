@@ -160,7 +160,7 @@ public class TCPReader extends NMEAReader {
 				} catch (Exception ex) {
 					System.err.println("TCP Reader:" + ex.getMessage());
 					ctcpr.closeReader();
-					long howMuch = 1000L;
+					long howMuch = 1_000L;
 					System.out.println("Will try to reconnect in " + Long.toString(howMuch) + "ms.");
 					try {
 						Thread.sleep(howMuch);

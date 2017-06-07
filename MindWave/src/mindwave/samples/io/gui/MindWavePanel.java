@@ -140,7 +140,7 @@ public class MindWavePanel
             {
               System.out.println("Blinking!!");
               setBlinkLabel("Blink!");
-              try { Thread.sleep(1000L); } catch (Exception ex) {}
+              try { Thread.sleep(1_000L); } catch (Exception ex) {}
               setBlinkLabel("");
             }
           };

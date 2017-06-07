@@ -76,7 +76,7 @@ public class ExtraDataComputer extends Computer {
 		}
 		this.generatedStringsPrefix = prefix;
 		for (long bl : tbl) { // in seconds here.
-			LongTimeCurrentCalculator ltcc = new LongTimeCurrentCalculator(bl * 1000); // In ms here.
+			LongTimeCurrentCalculator ltcc = new LongTimeCurrentCalculator(bl * 1_000); // In ms here.
 			ltcc.setVerbose(this.verbose);
 			ltcc.start();
 			this.longTimeCurrentCalculator.add(ltcc);
@@ -248,7 +248,7 @@ public class ExtraDataComputer extends Computer {
 					  if (this.verbose && keys.size() != 1)
 					    System.out.println("1 - Nb entry(ies) in Calculated Current Map:" + keys.size());
 						for (Long l : keys) {
-							int tbl = (int) (l / (60 * 1000));
+							int tbl = (int) (l / (60_000));
 							if (tbl > currentTimeBuffer) { // Take the bigger one.
 								currentTimeBuffer = tbl;
 								csp = currentMap.get(l).getSpeed().getValue();

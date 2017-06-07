@@ -136,7 +136,7 @@ public class PIControllerMain implements RaspberryPIEventListener
               System.out.println("Turning relay off");
               piController.switchRelay(false);
             }
-            try { Thread.sleep(1000L); } catch (InterruptedException ie) { ie.printStackTrace(); }
+            try { Thread.sleep(1_000L); } catch (InterruptedException ie) { ie.printStackTrace(); }
           }
         }
       }

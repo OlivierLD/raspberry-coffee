@@ -42,7 +42,7 @@ public class CPUTempSample
       segment.writeDigit(3, three);
       segment.writeDigit(4, four);
 //    System.out.println("Temp:" + cpuTemp);
-      try { Thread.sleep(1000L); } catch (InterruptedException ie){}
+      try { Thread.sleep(1_000L); } catch (InterruptedException ie){}
     }
     segment.clear();
   }

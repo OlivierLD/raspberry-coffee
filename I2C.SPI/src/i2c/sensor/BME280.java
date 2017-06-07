@@ -226,7 +226,7 @@ public class BME280 {
 		double sleepTime = 0.00125 + 0.0023 * (1 << mode);
 		sleepTime = sleepTime + 0.0023 * (1 << mode) + 0.000575;
 		sleepTime = sleepTime + 0.0023 * (1 << mode) + 0.000575;
-		waitfor((long) (sleepTime * 1000L));
+		waitfor((long) (sleepTime * 1_000L));
 		int msb = readU8(BME280_REGISTER_TEMP_DATA);
 		int lsb = readU8(BME280_REGISTER_TEMP_DATA + 1);
 		int xlsb = readU8(BME280_REGISTER_TEMP_DATA + 2);

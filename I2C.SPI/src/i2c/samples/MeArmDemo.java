@@ -61,7 +61,7 @@ public class MeArmDemo {
 			servoBoard.setPWM(RIGHT_SERVO_CHANNEL, 0, 0);
 			servoBoard.setPWM(CLAW_SERVO_CHANNEL, 0, 0);
 			servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 0);
-			waitfor(1000);
+			waitfor(1_000);
 
 			// Center the arm
 			servoBoard.setPWM(BOTTOM_SERVO_CHANNEL, 0, 410);

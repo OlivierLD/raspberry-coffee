@@ -25,7 +25,9 @@ import java.text.NumberFormat;
  *   <li>The data read from the accelerometer are read in the order X, Y, Z</li>
  *   <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, <span style='color: red;'>Y</span></li>
  * </ul>
- * It took me a while to figure it out...
+ * And they both have different endianness.
+ * <br>
+ * It took me a while to figure this all out...
  */
 public class LSM303 {
 	// Minimal constants carried over from Arduino library
@@ -88,7 +90,7 @@ public class LSM303 {
 
 	private double pitch = 0D, roll = 0D;
 
-	private long wait = 1000L;
+	private long wait = 1_000L;
 	private LSM303Listener dataListener = null;
 
 	private void setMagGain(int gain) throws IOException {

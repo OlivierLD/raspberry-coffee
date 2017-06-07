@@ -76,7 +76,7 @@ public class Arduino {
 	private static void delay(float d) // d in seconds.
 	{
 		try {
-			Thread.sleep((long) (d * 1000));
+			Thread.sleep((long) (d * 1_000));
 		} catch (Exception ex) {
 		}
 	}

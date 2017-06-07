@@ -53,7 +53,7 @@ public class OLEDSSD1306Sample {
 		oled.display();
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(2_000);
 		} catch (Exception ex) {
 		}
 		// Blinking
@@ -152,7 +152,7 @@ public class OLEDSSD1306Sample {
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 
@@ -160,7 +160,7 @@ public class OLEDSSD1306Sample {
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 
@@ -168,7 +168,7 @@ public class OLEDSSD1306Sample {
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 
@@ -176,7 +176,7 @@ public class OLEDSSD1306Sample {
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 
@@ -184,7 +184,7 @@ public class OLEDSSD1306Sample {
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 
@@ -194,7 +194,7 @@ public class OLEDSSD1306Sample {
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 
@@ -202,7 +202,7 @@ public class OLEDSSD1306Sample {
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 
@@ -214,7 +214,7 @@ public class OLEDSSD1306Sample {
 			//  try { Thread.sleep(100); } catch (Exception ex) {}
 		}
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 
@@ -225,7 +225,7 @@ public class OLEDSSD1306Sample {
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 
@@ -391,7 +391,7 @@ public class OLEDSSD1306Sample {
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(1_000);
 		} catch (Exception ex) {
 		}
 

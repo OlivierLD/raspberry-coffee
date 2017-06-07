@@ -34,7 +34,7 @@ public class ProcessorSkeleton implements Forwarder {
 			public void run() {
 				while (keepWorking) { // Ping the cache every second.
 					NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
-					try { Thread.sleep(1000L); } catch (Exception ex) {}
+					try { Thread.sleep(1_000L); } catch (Exception ex) {}
 				}
 			}
 		};
@@ -52,7 +52,7 @@ public class ProcessorSkeleton implements Forwarder {
 		try {
 			// Stop Cache thread
 			keepWorking = false;
-			try { Thread.sleep(2000L); } catch (Exception ex) {}
+			try { Thread.sleep(2_000L); } catch (Exception ex) {}
 			// TODO: Shutdown whatever has to be shut down here.
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);

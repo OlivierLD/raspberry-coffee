@@ -135,7 +135,7 @@ public class HMC5883L {
 			synchronized (sensor) {
 				setGo(false);
 				sensor.close();
-				waitfor(1000);
+				waitfor(1_000);
 			}
 		}));
 

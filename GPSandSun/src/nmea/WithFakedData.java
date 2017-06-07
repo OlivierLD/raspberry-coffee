@@ -59,7 +59,7 @@ public class WithFakedData
             if (rmc.getRmcDate() != null && rmc.getGp() != null)
             {
               if ((prevDateTime == -1L || prevPosition == null) ||
-                  (prevDateTime != (rmc.getRmcDate().getTime() / 1000) || !rmc.getGp().equals(prevPosition)))
+                  (prevDateTime != (rmc.getRmcDate().getTime() / 1_000) || !rmc.getGp().equals(prevPosition)))
               {
                 nbDisplay++;
                 Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
@@ -81,7 +81,7 @@ public class WithFakedData
                 System.out.println(current.getTime().toString() + ", He:" + DFH.format(he)+ ", Z:" + DFZ.format(z));
               }
               prevPosition = rmc.getGp();
-              prevDateTime = (rmc.getRmcDate().getTime() / 1000);
+              prevDateTime = (rmc.getRmcDate().getTime() / 1_000);
             }
           }
         }

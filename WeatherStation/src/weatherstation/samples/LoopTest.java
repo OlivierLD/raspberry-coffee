@@ -28,7 +28,7 @@ public class LoopTest
       { 
         synchronized (coreThread)
         {
-          coreThread.wait(5000L); 
+          coreThread.wait(5_000L);
         }
       } 
       catch (Exception ex) { ex.printStackTrace(); }

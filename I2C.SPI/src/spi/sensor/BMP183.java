@@ -99,7 +99,7 @@ public class BMP183
   private double B5 = 0d, B6 = 0d;
   private int UT = 0, UP = 0; // Uncompensated Temp & Press
   
-  private final static float DELAY = 1f / 1000.0f; // SCK frequency 1 MHz ( 1/1000 ms)
+  private final static float DELAY = 1f / 1_000.0f; // SCK frequency 1 MHz ( 1/1000 ms)
   
   public BMP183() throws Exception
   {
@@ -314,7 +314,7 @@ public class BMP183
 
   private double calculatePressure()
   {
-    this.B6 = this.B5 - 4000;
+    this.B6 = this.B5 - 4_000;
     double x1 = (this.cal_B2 * (this.B6 * this.B6 / Math.pow(2, 12))) / Math.pow(2, 11);
     double x2 = this.cal_AC2 * this.B6 / Math.pow(2, 11);
     double x3 = x1 + x2;
@@ -323,7 +323,7 @@ public class BMP183
     x2 = (this.cal_B1 * (this.B6 * this.B6 / Math.pow(2, 12))) / Math.pow(2, 16);
     x3 = ((x1 + x2) + 2) / Math.pow(2, 2);
     double b4 = (this.cal_AC4 * ((int)x3 + 32768) / Math.pow(2, 15));
-    double b7 = (this.UP - (int)b3) * (50000 >> BMP183_CMD.OVERSAMPLE_3);
+    double b7 = (this.UP - (int)b3) * (50_000 >> BMP183_CMD.OVERSAMPLE_3);
     double p = ((b7 * 2) / b4);
     x1 = (p / Math.pow(2, 8)) * (p / Math.pow(2, 8));
     x1 = (x1 * 3038) / Math.pow(2, 16);

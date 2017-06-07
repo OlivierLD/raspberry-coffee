@@ -80,7 +80,7 @@ public class POSTSnapshot
         ioe.printStackTrace();
       }
       try {
-        Thread.sleep(10 * 1000);
+        Thread.sleep(10_000);
       } catch (InterruptedException ie) {
         ie.printStackTrace();
       }

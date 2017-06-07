@@ -263,7 +263,7 @@ public class WebSocketProcessor implements Forwarder {
 					String content = new Gson().toJson(bean);
 					broadcast(content.getBytes());
 
-					try { Thread.sleep(1000L); } catch (Exception ex) {}
+					try { Thread.sleep(1_000L); } catch (Exception ex) {}
 				}
 				System.out.println("Cache thread completed.");
 			}
@@ -296,7 +296,7 @@ public class WebSocketProcessor implements Forwarder {
 		try {
 			// Stop Cache thread
 			keepWorking = false;
-			try { Thread.sleep(2000L); } catch (Exception ex) {}
+			try { Thread.sleep(2_000L); } catch (Exception ex) {}
 			// Close WS Client
 			this.wsClient.close();
 		} catch (Exception ex) {

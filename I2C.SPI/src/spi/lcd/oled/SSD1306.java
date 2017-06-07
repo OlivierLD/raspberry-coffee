@@ -58,7 +58,7 @@ public class SSD1306 {
 
 	private int width = 128,
 					height = 32;
-	private int clockHertz = 8000000; // 8 MHz
+	private int clockHertz = 8_000_000; // 8 MHz
 	private int vccstate = 0;
 	private int pages = 0;
 	private int[] buffer = null;

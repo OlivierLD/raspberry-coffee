@@ -357,7 +357,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 							break;
 					}
 
-					try { Thread.sleep(1000L); } catch (Exception ex) {}
+					try { Thread.sleep(1_000L); } catch (Exception ex) {}
 				}
 				System.out.println("Cache thread completed.");
 			}
@@ -481,7 +481,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 		try {
 			// Stop Cache thread
 			keepWorking = false;
-			try { Thread.sleep(2000L); } catch (Exception ex) {}
+			try { Thread.sleep(2_000L); } catch (Exception ex) {}
 			sb.clear();
 			oled.clear(); // Blank screen
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());

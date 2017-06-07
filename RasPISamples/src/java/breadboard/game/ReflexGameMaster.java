@@ -18,7 +18,7 @@ public class ReflexGameMaster
 {
   private static long startedAt = 0L;
   private static Thread waiter = null;
-  private final static long MAX_WAIT_TIME = 10000L; // 10 sec max.
+  private final static long MAX_WAIT_TIME = 10_000L; // 10 sec max.
 
   private final GpioController gpio = GpioFactory.getInstance();
   private GpioPinDigitalOutput led   = null;

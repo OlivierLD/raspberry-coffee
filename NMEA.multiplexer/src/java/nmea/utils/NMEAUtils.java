@@ -52,7 +52,7 @@ public class NMEAUtils {
 	}
 
 	public static long longitudeToTime(double longitude) {
-		long offset = (long) (longitude * 3600000L / 15L);
+		long offset = (long) (longitude * 3_600_000L / 15L);
 		return offset;
 	}
 

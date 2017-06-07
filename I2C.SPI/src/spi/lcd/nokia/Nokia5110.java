@@ -45,7 +45,7 @@ public class Nokia5110
   private final static int SPI_DEVICE = Spi.CHANNEL_0; // 0
 
   private static GpioController gpio;
-  private int clockHertz = 4000000; // 4 MHz
+  private int clockHertz = 4_000_000; // 4 MHz
 
   private static GpioPinDigitalOutput mosiOutput       = null;
   private static GpioPinDigitalOutput clockOutput      = null;

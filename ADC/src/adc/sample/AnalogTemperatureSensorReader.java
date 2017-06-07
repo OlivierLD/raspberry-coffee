@@ -80,7 +80,7 @@ public class AnalogTemperatureSensorReader
              obs.stop(this);
              synchronized (this)
              {
-               try { this.wait(1000L); } catch (Exception ex) { ex.printStackTrace(); }
+               try { this.wait(1_000L); } catch (Exception ex) { ex.printStackTrace(); }
                long after = System.currentTimeMillis();
                System.out.println("Bye now. (" + Long.toString(after - before) + "ms)");
              }

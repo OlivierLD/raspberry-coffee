@@ -108,7 +108,7 @@ public class SDLWeather80422
             {
               long currentTime = Utilities.currentTimeMicros() - lastWindTime;
               lastWindTime = Utilities.currentTimeMicros();
-              if (currentTime > 1000) // debounce
+              if (currentTime > 1_000) // debounce
               {
                 currentWindCount += 1;
                 if (currentTime < shortestWindTime)
@@ -231,12 +231,12 @@ public class SDLWeather80422
   
   public double getCurrentWindSpeedWhenSampling()
   {
-    double compareValue = this.sampleTime * 1000000;
+    double compareValue = this.sampleTime * 1_000_000;
     if ((Utilities.currentTimeMicros() - this.startSampleTime) >= compareValue)
     {                
       // sample time exceeded, calculate currentWindSpeed
       long timeSpan = (Utilities.currentTimeMicros() - this.startSampleTime);
-      this.currentWindSpeed = (float)((this.currentWindCount)/(float)timeSpan) * WIND_FACTOR * wsCoeff * 1000000.0;
+      this.currentWindSpeed = (float)((this.currentWindCount)/(float)timeSpan) * WIND_FACTOR * wsCoeff * 1_000_000.0;
       /*
       System.out.printf("SDL_CWS = %f, shortestWindTime = %d, CWCount=%d TPS=%f\n", 
                         this.currentWindSpeed,
@@ -258,7 +258,7 @@ public class SDLWeather80422
     {
       // km/h * 1000 msec
       this.currentWindCount = 0;
-      try { Thread.sleep(Math.round(this.sampleTime * 1000L)); } catch (Exception ex) { ex.printStackTrace(); }
+      try { Thread.sleep(Math.round(this.sampleTime * 1_000L)); } catch (Exception ex) { ex.printStackTrace(); }
       this.currentWindSpeed = ((float)(this.currentWindCount)/(float)(this.sampleTime)) * WIND_FACTOR * wsCoeff;
     }
     return this.currentWindSpeed;
@@ -273,7 +273,7 @@ public class SDLWeather80422
   {
     long latestTime = this.shortestWindTime;
     this.shortestWindTime = Long.MAX_VALUE;
-    double time = latestTime / 1000000d;  // in microseconds
+    double time = latestTime / 1_000_000d;  // in microseconds
 //  System.out.println("WindGust: Latest:" + latestTime + ", time:" + time);
     if (time == 0d)
       return 0;

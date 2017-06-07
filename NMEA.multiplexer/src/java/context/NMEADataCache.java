@@ -379,7 +379,7 @@ public class NMEADataCache
 					if (mda.waterT != null)
 						this.put(NMEADataCache.WATER_TEMP, new Temperature(mda.waterT));
 					if (mda.pressBar != null)
-						this.put(NMEADataCache.BARO_PRESS, new Pressure(mda.pressBar * 1000));
+						this.put(NMEADataCache.BARO_PRESS, new Pressure(mda.pressBar * 1_000));
 					if (mda.relHum != null)
 						this.put(NMEADataCache.RELATIVE_HUMIDITY, mda.relHum);
 					// TODO: More MDA data...
@@ -396,7 +396,7 @@ public class NMEADataCache
 							if (type.equals(StringGenerator.XDRTypes.HUMIDITY)) {
 								this.put(RELATIVE_HUMIDITY, val);
 							} else if (type.equals(StringGenerator.XDRTypes.PRESSURE_B)) {
-								this.put(BARO_PRESS, new Pressure(val * 1000));
+								this.put(BARO_PRESS, new Pressure(val * 1_000));
 							} else if (type.equals(StringGenerator.XDRTypes.VOLTAGE)) {
 								this.put(BATTERY, new Float(val));
 							} else {

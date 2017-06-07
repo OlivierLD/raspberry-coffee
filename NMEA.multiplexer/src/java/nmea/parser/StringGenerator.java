@@ -231,7 +231,7 @@ public class StringGenerator {
 		String mda = devicePrefix + "MDA,";
 		if (pressureInhPa != -Double.MAX_VALUE) {
 			mda += (PRMSL_FMT_MDA.format(pressureInhPa / Pressure.HPA_TO_INHG) + ",I,");
-			mda += (PRMSL_FMT_MDA.format(pressureInhPa / 1000) + ",B,");
+			mda += (PRMSL_FMT_MDA.format(pressureInhPa / 1_000) + ",B,");
 		} else {
 			mda += ",,,,";
 		}
@@ -282,7 +282,7 @@ public class StringGenerator {
 	{
 		String mmb = devicePrefix + "MMB,";
 		mmb += (PRMSL_FMT.format(mbPressure / 33.8600) + ",I,"); // Inches of Hg
-		mmb += (PRMSL_FMT.format(mbPressure / 1000) + ",B");     // Bars. 1 mb = 1 hPa
+		mmb += (PRMSL_FMT.format(mbPressure / 1_000) + ",B");     // Bars. 1 mb = 1 hPa
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(mmb);
 		mmb += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));

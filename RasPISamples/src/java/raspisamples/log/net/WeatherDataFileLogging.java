@@ -24,7 +24,7 @@ import raspisamples.util.HTTPClient;
  */
 public class WeatherDataFileLogging
 {
-  private static long waitTime  = 10000L;
+  private static long waitTime  = 10_000L;
 
   private final static String WAIT_PRM  = "-wait";
   private final static String FILE_PRM  = "-file";
@@ -52,7 +52,7 @@ public class WeatherDataFileLogging
       {
         try
         {
-          waitTime = 1000L * Integer.parseInt(args[i + 1]);
+          waitTime = 1_000L * Integer.parseInt(args[i + 1]);
         }
         catch (Exception ex) 
         {
@@ -71,7 +71,7 @@ public class WeatherDataFileLogging
         System.out.println("  <time-in-sec> is the amount of seconds between logs (default is 10)");
         System.out.println();
         System.out.println("Logging data in [" + logFileName + "]");
-        System.out.println("Logging data every " + Long.toString(waitTime / 1000) + " s");
+        System.out.println("Logging data every " + Long.toString(waitTime / 1_000) + " s");
         System.exit(0);
       }
     }
@@ -81,7 +81,7 @@ public class WeatherDataFileLogging
   {
     processPrm(args);
 
-    System.out.println("Logging data in [" + logFileName + "], every " + Long.toString(waitTime / 1000) + " s.");
+    System.out.println("Logging data in [" + logFileName + "], every " + Long.toString(waitTime / 1_000) + " s.");
     final BufferedWriter log = new BufferedWriter(new FileWriter(logFileName));
     final NumberFormat NF = new DecimalFormat("##00.00");
     BMP180 bmpSensor = null;

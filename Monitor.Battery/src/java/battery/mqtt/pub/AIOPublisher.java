@@ -21,7 +21,7 @@ public class AIOPublisher {
 	private String key = "";
 
 	private static boolean verbose = false;
-	private static long betweenLoops = 1000L;
+	private static long betweenLoops = 1_000L;
 
 	public static final String BROKER_URL = "tcp://io.adafruit.com:1883";
 	public static final String BATTERY_TOPIC = "/feeds/battery-pi"; // Concat with userName in front before using.
