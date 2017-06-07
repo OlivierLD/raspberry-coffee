@@ -14,8 +14,9 @@ import java.text.NumberFormat;
 /**
  * LSM303: Accelerometer + Magnetometer
  * <br>
- * A bit of note about the device:
+ * Code adapted from the Adafruit Arduino libraries and https://github.com/adafruit/Adafruit_Python_LSM303
  * <br>
+ * <h4>A bit of note about the device:</h4>
  * "The accelerometer allows you to measure acceleration or direction towards the center or the earth, and the magnetometer measure magnetic force, which is useful to detect magnetic north."
  * <br>
  * In other words, the accelerometer measures the gravity, it is <i>not</i> to be considered as a gyroscope...
@@ -23,14 +24,13 @@ import java.text.NumberFormat;
  * Also, another funny one:
  * <ul>
  *   <li>The data read from the accelerometer are read in the order X, Y, Z</li>
- *   <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, <span style='color: red;'>Y</span></li>
+ *   <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, Y, funny isn't it?</li>
  * </ul>
  * And they both have different endianness.
  * <br>
  * It took me a while to figure this all out...
  */
 public class LSM303 {
-	// Minimal constants carried over from Arduino library
 	/*
 	Prompt> sudo i2cdetect -y 1
        0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
@@ -49,10 +49,10 @@ public class LSM303 {
 	// Default    Type
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG1_A = 0x20; // 00000111   rw
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG4_A = 0x23; // 00000000   rw
-	public final static int LSM303_REGISTER_ACCEL_OUT_X_L_A = 0x28;
-	public final static int LSM303_REGISTER_MAG_CRB_REG_M = 0x01;
-	public final static int LSM303_REGISTER_MAG_MR_REG_M = 0x02;
-	public final static int LSM303_REGISTER_MAG_OUT_X_H_M = 0x03;
+	public final static int LSM303_REGISTER_ACCEL_OUT_X_L_A   = 0x28;
+	public final static int LSM303_REGISTER_MAG_CRB_REG_M     = 0x01;
+	public final static int LSM303_REGISTER_MAG_MR_REG_M      = 0x02;
+	public final static int LSM303_REGISTER_MAG_OUT_X_H_M     = 0x03;
 
 	// Gain settings for setMagGain()
 	public final static int LSM303_MAGGAIN_1_3 = 0x20; // +/- 1.3
@@ -65,7 +65,7 @@ public class LSM303 {
 
 	private final static float _lsm303Accel_MG_LSB = 0.001F; // 1, 2, 4 or 12 mg per lsb
 	private static float _lsm303Mag_Gauss_LSB_XY = 1100.0F;  // Varies with gain
-	private static float _lsm303Mag_Gauss_LSB_Z = 980.0F;    // Varies with gain
+	private static float _lsm303Mag_Gauss_LSB_Z  =  980.0F;  // Varies with gain
 
 	private float SENSORS_GRAVITY_EARTH = 9.80665f;        // < Earth's gravity in m/s^2
 	private float SENSORS_GRAVITY_MOON = 1.6f;             // < The moon's gravity in m/s^2
@@ -134,7 +134,7 @@ public class LSM303 {
 		}
 		try {
 			// Get i2c bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
 			if (verbose)
 				System.out.println("Connected to bus. OK.");
 
@@ -149,7 +149,7 @@ public class LSM303 {
        */
 			// Enable accelerometer
 			accelerometer.write(LSM303_REGISTER_ACCEL_CTRL_REG1_A, (byte) 0x27); // 00100111
-			accelerometer.write(LSM303_REGISTER_ACCEL_CTRL_REG4_A, (byte) 0x00); // Low Res. For Hi Res, write 0b00001000
+			accelerometer.write(LSM303_REGISTER_ACCEL_CTRL_REG4_A, (byte) 0x00); // Low Res. For Hi Res, write 0b00001000, 0x08
 			if (verbose)
 				System.out.println("Accelerometer OK.");
 
@@ -219,8 +219,7 @@ public class LSM303 {
 
 			accelerometer.write(new byte[] { (byte)(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80) });
 
-			int readFromAcc = (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80); // TODO Check if not LSM303_ADDRESS_MAG
-			int r = accelerometer.read(/*readFromAcc,*/ accelData, 0, 6); // TODO Try without first parameter
+			int r = accelerometer.read(accelData, 0, 6);
 			if (r != 6) {
 				System.out.println("Error reading accel data, < 6 bytes");
 			}
@@ -256,10 +255,8 @@ public class LSM303 {
 			// Request magnetometer measurements.
 //		magnetometer.write(new byte[] { (byte)LSM303_REGISTER_MAG_OUT_X_H_M });
 			magnetometer.write((byte)LSM303_REGISTER_MAG_OUT_X_H_M);
-
-			int readFromMag = LSM303_REGISTER_MAG_OUT_X_H_M; // TODO Check if not LSM303_ADDRESS_MAG
 			// Reading magnetometer measurements.
-			r = magnetometer.read(/*readFromMag,*/ magData, 0, 6); // TODO Try without first parameter
+			r = magnetometer.read(magData, 0, 6);
 			if (r != 6) {
 				System.out.println("Error reading mag data, < 6 bytes");
 			} else if (verboseMag) {
@@ -267,12 +264,12 @@ public class LSM303 {
 			}
 			// Mag raw data. !!! Warning !!! Order here is X, Z, Y
 			int magX = mag16(magData, 0);
-			int magZ = mag16(magData, 2);
-			int magY = mag16(magData, 4);
+			int magZ = mag16(magData, 2); // Yes, Z
+			int magY = mag16(magData, 4); // Then Y
 
-//			float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//			float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//			float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
+//		float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//		float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//		float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
 //		float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Same as below (the ratio remains the same).
 			float heading = (float) Math.toDegrees(Math.atan2((double)magY, (double)magX));
 			while (heading < 0) heading += 360f;
@@ -283,17 +280,9 @@ public class LSM303 {
 
 			if (dataListener != null) {
 				// Use the values as you want here.
-//  		dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, pitch, roll);
-//			dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, (float)pitchDegrees, (float)rollDegrees);
 				dataListener.dataDetected(accX, accY, accZ, magX, magY, magZ, heading, (float)pitchDegrees, (float)rollDegrees);
 			} else {
 				if (verbose) {
-//				System.out.println(String.format("accel (X: %f, Y: %f, Z: %f) mag (X: %f, Y: %f, Z: %f => heading: %s, pitch: %s, roll: %s)",
-//								accX, accY, accZ,
-//								magneticX, magneticY, magneticZ,
-//								Z_FMT.format(heading),
-//								Z_FMT.format(pitch),
-//								Z_FMT.format(roll)));
 					System.out.println(String.format("heading: %s (mag), pitch: %s, roll: %s",
 									Z_FMT.format(heading),
 									Z_FMT.format(pitch),
@@ -336,7 +325,7 @@ public class LSM303 {
 	}
 	/**
 	 * This is for tests.
-	 * Keep reading until Ctrl+C is entered.
+	 * Keep reading until Ctrl+C is received.
 	 *
 	 * @param args
 	 * @throws I2CFactory.UnsupportedBusNumberException
