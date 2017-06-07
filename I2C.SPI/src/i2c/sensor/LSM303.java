@@ -11,14 +11,19 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-/*
- * Accelerometer + Magnetometer
- *
+/**
+ * LSM303: Accelerometer + Magnetometer
+ * <br>
  * A bit of note about the device:
- *
+ * <br>
  * "The accelerometer allows you to measure acceleration or direction towards the center or the earth, and the magnetometer measure magnetic force, which is useful to detect magnetic north."
- * In other words, the accelerometer measures the gravity, it is not to be considered as a gyroscope...
- *
+ * In other words, the accelerometer measures the gravity, it is not to be considered as a gyroscope...'
+ * <br>
+ * Also, another funny one:
+ * <ul>
+ *   <li>The data read from the accelerometer are read in the order X, Y, Z</li>
+ *   <li>The data read from the magnetometer are read in the order X, <b>Z</b>, Y</li>
+ * </ul>
  */
 public class LSM303 {
 	// Minimal constants carried over from Arduino library
