@@ -83,6 +83,7 @@ public class LSM303 {
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
 	private static boolean verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
+	private static boolean verboseRaw = "true".equals(System.getProperty("lsm303.verbose.raw", "false"));
 
 	private static boolean verboseAcc = "true".equals(System.getProperty("lsm303.verbose.acc", "false"));
 	private static boolean verboseMag = "true".equals(System.getProperty("lsm303.verbose.mag", "false"));
@@ -276,6 +277,10 @@ public class LSM303 {
 
 			if (verboseMag) {
 				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
+			}
+
+			if (verboseRaw) {
+				System.out.println(String.format("RawAcc (XYZ) (%d, %d, %d) RawMag (XYZ) (%d, %d, %d)", accelX, accelY, accelZ, magX, magY, magZ));
 			}
 
 			if (dataListener != null) {
