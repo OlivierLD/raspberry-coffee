@@ -280,7 +280,7 @@ public class LSM303 {
 			}
 
 			if (verboseRaw) {
-				System.out.println(String.format("RawAcc (XYZ) (%d, %d, %d) RawMag (XYZ) (%d, %d, %d)", accelX, accelY, accelZ, magX, magY, magZ));
+				System.out.println(String.format("RawAcc (XYZ) (%d, %d, %d)\tRawMag (XYZ) (%d, %d, %d)", accelX, accelY, accelZ, magX, magY, magZ));
 			}
 
 			if (dataListener != null) {
