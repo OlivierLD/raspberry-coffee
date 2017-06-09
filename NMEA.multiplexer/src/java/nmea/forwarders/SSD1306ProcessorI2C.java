@@ -163,9 +163,21 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	 * @throws Exception
 	 */
 	public SSD1306ProcessorI2C() throws Exception {
-		// Make sure the cache has been initialized.
-		if (ApplicationContext.getInstance().getDataCache() == null) {
-			throw new RuntimeException("Init the Cache first. See the properties file used at startup."); // Oops
+
+		int nbTry = 0;
+		boolean ok = false;
+		while (!ok) {
+			// Make sure the cache has been initialized.
+			if (ApplicationContext.getInstance().getDataCache() == null) {
+				if (nbTry < 10) {
+					try { Thread.sleep(1000L); } catch (Exception ex) {}
+					nbTry++;
+				} else {
+					throw new RuntimeException("Init the Cache first. See the properties file used at startup."); // Oops
+				}
+			} else {
+				ok = true;
+			}
 		}
 		try {
 			oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C Config
