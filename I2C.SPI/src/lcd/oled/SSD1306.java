@@ -137,8 +137,8 @@ public class SSD1306 {
 		initSSD1306(w, h);
 	}
 
-	public SSD1306(int i2cAddr) throws I2CFactory.UnsupportedBusNumberException {
-		try {
+	public SSD1306(int i2cAddr) throws I2CFactory.UnsupportedBusNumberException, IOException {
+//	try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
 			if (verbose)
@@ -152,9 +152,9 @@ public class SSD1306 {
 
 			initSSD1306(this.width, this.height); // 128x32, hard coded for now.
 
-		} catch (IOException e) {
-			System.err.println(e.getMessage());
-		}
+//		} catch (IOException e) {
+//			System.err.println(e.getMessage());
+//		}
 	}
 
 	private void initSSD1306(int w, int h) {

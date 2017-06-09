@@ -247,8 +247,8 @@ public class LedPanelMain2
       }
     }
 
-    LedPanelMain2 ib = new LedPanelMain2();
-    ib.setVisible(true);
-    ib.doYourJob();
+    LedPanelMain2 lp = new LedPanelMain2();
+    lp.setVisible(true);
+    lp.doYourJob();
   }
 }

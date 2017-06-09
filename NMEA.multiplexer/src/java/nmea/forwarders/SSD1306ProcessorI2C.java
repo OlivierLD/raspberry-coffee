@@ -5,8 +5,12 @@ import context.ApplicationContext;
 import context.NMEADataCache;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Properties;
+import lcd.ScreenBuffer;
+import lcd.oled.SSD1306;
 import nmea.forwarders.pushbutton.PushButtonMaster;
 import nmea.forwarders.pushbutton.PushButtonObserver;
+import nmea.forwarders.substitute.SwingLedPanel;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle180LR;
@@ -21,17 +25,13 @@ import nmea.parser.Speed;
 import nmea.parser.Temperature;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
-import lcd.ScreenBuffer;
-import lcd.oled.SSD1306;
-
-import java.util.Properties;
 import util.GeomUtil;
 
 /**
  * This is an example of a <b>transformer</b>.
  * <br>
  * To be used with other apps.
- * This transformer displays the TWD on an OLED display (SSD1306)
+ * This transformer displays the TWD on an OLED display (SSD1306), in its I2C version
  * <br>
  * See http://raspberrypi.lediouris.net/SSD1306/readme.html
  *
@@ -39,8 +39,10 @@ import util.GeomUtil;
  * This is JUST an example. As such, it can be set only from the properties file
  * used at startup. It - for now - cannot be managed from the Web UI.
  * The REST api is not aware of it.
+ *
+ * It auto-scrolls across available vlues.
  */
-public class SSD1306Processor implements Forwarder, PushButtonObserver {
+public class SSD1306ProcessorI2C implements Forwarder {
 	private boolean keepWorking = true;
 
 	private static class CacheBean {
@@ -98,10 +100,9 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 
 	private SSD1306 oled;
 	private ScreenBuffer sb;
+	private SwingLedPanel substitute;
 
 	private boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
-
-	private static PushButtonMaster pbm = null;
 
 	private final static int TWD_OPTION =  0;
 	private final static int BSP_OPTION =  1;
@@ -141,7 +142,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 
 	private int currentOption = TWD_OPTION;
 
-	@Override
+	// TODO Use it to scroll across data
 	public void onButtonPressed() {
 		currentOption++;
 		if (currentOption >= OPTION_ARRAY.length) {
@@ -152,25 +153,35 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 	/*
 	 * @throws Exception
 	 */
-	public SSD1306Processor() throws Exception {
+	public SSD1306ProcessorI2C() throws Exception {
 		// Make sure the cache has been initialized.
 		if (ApplicationContext.getInstance().getDataCache() == null) {
 			throw new RuntimeException("Init the Cache first. See the properties file used at startup."); // Oops
 		}
+		try {
+			oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C Config
 
-		oled = new SSD1306(); // Default pins (look in the SSD1306 code)
-		// Override the default pin:  Clock              MOSI                CS               RST                DC
-//  oled = new SSD1306(RaspiPin.GPIO_12, RaspiPin.GPIO_13, RaspiPin.GPIO_14, RaspiPin.GPIO_15, RaspiPin.GPIO_16);
-
-		oled.begin();
-		oled.clear();
-
+			oled.begin();
+			oled.clear();
+		} catch (Throwable error) {
+			// Not on a RPi? Try JPanel.
+			oled = null;
+			System.out.println("Displaying substitute Swing Led Panel");
+			substitute = new SwingLedPanel();
+			substitute.setVisible(true);
+		}
 		sb = new ScreenBuffer(WIDTH, HEIGHT);
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-		PushButtonObserver instance = this;
-		pbm = new PushButtonMaster(instance);
-		pbm.initCtx(RaspiPin.GPIO_02); // (); Initialize Push button. Possibly takes the pushbutton pin as parameter.
+		Thread scrollThread = new Thread("ScrollThread") {
+			public void run() {
+				while (keepWorking) {
+					try { Thread.sleep(2_000L); } catch (Exception ignore) {}
+					onButtonPressed();
+				}
+			}
+		};
+		scrollThread.start();
 
 		Thread cacheThread = new Thread("SSD1306Processor CacheThread") {
 			public void run() {
@@ -382,8 +393,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.line(centerX, centerY, toX, toY);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
+			display();
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -401,9 +411,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.text(_22.format(value) + unit, 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-
+			display();
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -428,8 +436,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.text(longitude, 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
+			display();
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -446,8 +453,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.text(speedStr, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
+			display();
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -462,8 +468,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.text(_X1.format(value) + " mb", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
+			display();
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
@@ -483,31 +488,41 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			keepWorking = false;
 			try { Thread.sleep(2_000L); } catch (Exception ex) {}
 			sb.clear();
-			oled.clear(); // Blank screen
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-
-			oled.shutdown();
-
-			pbm.freeResources();
-
+			if (oled != null) {
+				oled.clear(); // Blank screen
+				oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+				oled.display();
+				oled.shutdown();
+			} else {
+				substitute.setVisible(false);
+			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	public static class OLEDBean {
-		private String cls;
-		private String type = "oled";
+	private void display() {
+		if (oled != null) {
+			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
+		} else {
+			substitute.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			substitute.display();
+		}
+	}
 
-		public OLEDBean(SSD1306Processor instance) {
+	public static class OLEDI2CBean {
+		private String cls;
+		private String type = "oled-i2c";
+
+		public OLEDI2CBean(SSD1306ProcessorI2C instance) {
 			cls = instance.getClass().getName();
 		}
 	}
 
 	@Override
 	public Object getBean() {
-		return new OLEDBean(this);
+		return new OLEDI2CBean(this);
 	}
 
 	@Override

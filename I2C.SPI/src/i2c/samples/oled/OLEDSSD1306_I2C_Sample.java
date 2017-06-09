@@ -3,6 +3,7 @@ package i2c.samples.oled;
 import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.io.IOException;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import lcd.utils.img.ImgInterface;
@@ -13,7 +14,7 @@ import lcd.utils.img.Java32x32;
  */
 public class OLEDSSD1306_I2C_Sample {
 	@SuppressWarnings("oracle.jdeveloper.java.insufficient-catch-block")
-	public static void main(String[] args) throws UnsupportedBusNumberException {
+	public static void main(String[] args) throws UnsupportedBusNumberException, IOException {
 		if ("true".equals(System.getProperty("verbose", "false")))
 			System.out.println("Starting...");
 		SSD1306 oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C interface
