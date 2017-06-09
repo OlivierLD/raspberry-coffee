@@ -33,6 +33,14 @@ The push button is used to scroll through the data available to display (True Wi
 
 As it is an example, it is a dynamically loaded `forwarder`.
 
+#### Small display "On Top"
+Same as above, but attached on top of the Raspberry PI. Using here the I<small><sup>2</sup></small>C interface.
+
+ Another interesting feature: In case you want to run - for tests for example - somewhere else than on the Raspberry PI, then the OLED Display would not work.
+  In this case, it is automatically substituted to a Swing panel:
+
+  ![Substituted Swing Led Panel](./docimages/substitute.png)
+
 #### Web Console
 There is a Web Console, accessible to any device able to run a Web browser (smart phone, tablet, laptop, etc).
 It can be accessed from `http://[machine:port]/web/console.html`.
