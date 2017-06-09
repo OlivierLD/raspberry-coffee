@@ -142,7 +142,9 @@ public class SSD1306ProcessorI2C implements Forwarder {
 
 	private int currentOption = TWD_OPTION;
 
-	// TODO Use it to scroll across data
+	private long scrollWait = 5_000L;
+
+	// Use it to scroll across data
 	public void onButtonPressed() {
 		currentOption++;
 		if (currentOption >= OPTION_ARRAY.length) {
@@ -160,7 +162,6 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		}
 		try {
 			oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C Config
-
 			oled.begin();
 			oled.clear();
 		} catch (Throwable error) {
@@ -176,7 +177,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		Thread scrollThread = new Thread("ScrollThread") {
 			public void run() {
 				while (keepWorking) {
-					try { Thread.sleep(2_000L); } catch (Exception ignore) {}
+					try { Thread.sleep(scrollWait); } catch (Exception ignore) {}
 					onButtonPressed();
 				}
 			}
@@ -527,5 +528,11 @@ public class SSD1306ProcessorI2C implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		String betweenLoops = props.getProperty("display.time", "5");
+		try {
+			scrollWait = Long.parseLong(betweenLoops) * 1000L;
+		} catch (NumberFormatException nfe) {
+			System.err.println("Using default value for display wait time");
+		}
 	}
 }
