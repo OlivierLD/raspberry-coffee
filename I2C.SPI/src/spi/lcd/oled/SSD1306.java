@@ -16,6 +16,8 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.wiringpi.Spi;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * SSD1306, small OLED screen. SPI. 128x32
@@ -236,7 +238,11 @@ public class SSD1306 {
 	 * if deassert_ss is True the SS line be put back high.
 	 */
 	private void write(int[] data) {
-		write(data, true, true);
+		if (bus == null) {
+			write(data, true, true);
+		} else {
+			ssd1306.write(0x0, );
+		}
 	}
 
 	private final int MASK = 0x80; // MSBFIRST, 0x80 = 0&10000000
@@ -272,8 +278,14 @@ public class SSD1306 {
 			dcOutput.low();
 //    try { spiDevice.write((byte)c); }
 //    catch (IOException ioe) { ioe.printStackTrace(); }
+			this.write(new int[]{c});
+		} else {
+			try {
+				this.ssd1306.write(0x00, (byte) c);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
-		this.write(new int[]{c});
 	}
 
 	private void reset() {
@@ -294,8 +306,14 @@ public class SSD1306 {
 			dcOutput.high();
 //    try { spiDevice.write((byte)c); }
 //    catch (IOException ioe) { ioe.printStackTrace(); }
+			this.write(new int[]{c});
+		} else {
+			try {
+				this.ssd1306.write(0x40, (byte) c);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
-		this.write(new int[]{c});
 	}
 
 	/**
@@ -373,10 +391,23 @@ public class SSD1306 {
 		this.command(SSD1306_PAGEADDR);
 		this.command(0); // Page start address. (0 = reset)
 		this.command(this.pages - 1); // Page end address.
-		// Write buffer data.
-		//   Set DC high for data.
-		dcOutput.high();
-		this.write(this.buffer);
+
+		if (dcOutput != null) {
+			// Write buffer data.
+			//   Set DC high for data.
+			dcOutput.high();
+			this.write(this.buffer);
+		} else {
+			try {
+				byte[] bb = new byte[this.buffer.length];
+				for (int i=0; i<bb.length; i++) {
+					bb[i] = (byte)this.buffer[i];
+				}
+				this.ssd1306.write(bb);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 
 	/**
