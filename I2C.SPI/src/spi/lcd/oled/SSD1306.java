@@ -241,7 +241,15 @@ public class SSD1306 {
 		if (bus == null) {
 			write(data, true, true);
 		} else {
-			ssd1306.write(0x0, );
+			byte[] bb = new byte[data.length];
+			for (int i=0; i<bb.length; i++) {
+				bb[i] = (byte)data[i];
+			}
+			try {
+				ssd1306.write(0x0, bb);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 
