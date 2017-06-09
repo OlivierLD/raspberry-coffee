@@ -268,9 +268,11 @@ public class SSD1306 {
 	}
 
 	private void command(int c) {
-		dcOutput.low();
-//  try { spiDevice.write((byte)c); }
-//  catch (IOException ioe) { ioe.printStackTrace(); }
+		if (dcOutput != null) {
+			dcOutput.low();
+//    try { spiDevice.write((byte)c); }
+//    catch (IOException ioe) { ioe.printStackTrace(); }
+		}
 		this.write(new int[]{c});
 	}
 
