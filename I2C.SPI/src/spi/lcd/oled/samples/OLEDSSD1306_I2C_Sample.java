@@ -95,20 +95,20 @@ public class OLEDSSD1306_I2C_Sample {
 		sb.clear();
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		// Marquee
-		if ("true".equals(System.getProperty("verbose", "false")))
-			System.out.println("Marquee...");
-		for (int i = 0; i < 128; i++) {
-			oled.clear();
-			sb.image(img, 0 - i, 0);
-			sb.text("I speak Java!.......", 36 - i, 20);
-
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			oled.display();
-//    try { Thread.sleep(250); } catch (Exception ex) {}
-		}
-
 		if (false) {
+			// Marquee
+			if ("true".equals(System.getProperty("verbose", "false")))
+				System.out.println("Marquee...");
+			for (int i = 0; i < 128; i++) {
+				oled.clear();
+				sb.image(img, 0 - i, 0);
+				sb.text("I speak Java!.......", 36 - i, 20);
+
+				oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+				oled.display();
+//    try { Thread.sleep(250); } catch (Exception ex) {}
+			}
+
 			// Circles
 			if ("true".equals(System.getProperty("verbose", "false")))
 				System.out.println("Geometric shapes...");
