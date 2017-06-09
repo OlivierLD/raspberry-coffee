@@ -156,7 +156,7 @@ public class SSD1306 {
 			if (verbose)
 				System.out.println("Connected to devices. OK.");
 
-			initSSD1306(128, 32); // 128x32, hard coded for now.
+			initSSD1306(this.width, this.height); // 128x32, hard coded for now.
 
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
@@ -411,7 +411,7 @@ public class SSD1306 {
 				for (int i=0; i<bb.length; i++) {
 					bb[i] = (byte)this.buffer[i];
 				}
-				this.ssd1306.write(bb);
+				this.ssd1306.write(0x40, bb);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
