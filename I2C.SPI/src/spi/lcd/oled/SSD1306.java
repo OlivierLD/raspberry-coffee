@@ -275,20 +275,24 @@ public class SSD1306 {
 	}
 
 	private void reset() {
-		resetOutput.high();
-		delay(1);
-		// Set reset low for 10 milliseconds.
-		resetOutput.low();
-		delay(10);
-		// Set reset high again.
-		resetOutput.high();
+		if (resetOutput != null) {
+			resetOutput.high();
+			delay(1);
+			// Set reset low for 10 milliseconds.
+			resetOutput.low();
+			delay(10);
+			// Set reset high again.
+			resetOutput.high();
+		}
 	}
 
 	public void data(int c) {
-		// SPI write.
-		dcOutput.high();
-//  try { spiDevice.write((byte)c); }
-//  catch (IOException ioe) { ioe.printStackTrace(); }
+		if (dcOutput != null) {
+			// SPI write.
+			dcOutput.high();
+//    try { spiDevice.write((byte)c); }
+//    catch (IOException ioe) { ioe.printStackTrace(); }
+		}
 		this.write(new int[]{c});
 	}
 
