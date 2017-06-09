@@ -323,60 +323,61 @@ public class SSD1306ProcessorI2C implements Forwarder {
 						}
 					}
 					// Transformer's specific job.
-					int toDisplay = optionList.get(currentOption);
-					switch (toDisplay) {
-						case TWD_OPTION:
-							displayAngleAndValue("TWD ", bean.twd);
-							break;
-						case BSP_OPTION:
-							displaySpeed("BSP ", bean.bsp);
-							break;
-						case TWS_OPTION:
-							displaySpeed("TWS ", bean.bsp);
-							break;
-						case TWA_OPTION:
-							displayAngleAndValue("TWA ", bean.twa);
-							break;
-						case AWA_OPTION:
-							displayAngleAndValue("AWA ", bean.awa);
-							break;
-						case AWS_OPTION:
-							displaySpeed("AWS ", bean.bsp);
-							break;
-						case ATP_OPTION:
-							displayTemp("AIR ", bean.atemp);
-							break;
-						case WTP_OPTION:
-							displayTemp("WATER ", bean.wtemp);
-							break;
-						case COG_OPTION:
-							displayAngleAndValue("COG ", bean.cog);
-							break;
-						case SOG_OPTION:
-							displaySpeed("SOG ", bean.bsp);
-							break;
-						case HDG_OPTION:
-							displayAngleAndValue("HDG ", bean.hdg);
-							break;
-						case DBT_OPTION:
-							displayValue("DBT ", " m", bean.dbt);
-							break;
-						case HUM_OPTION:
-							displayValue("HUM ", " %", bean.hum);
-							break;
-						case CUR_OPTION:
-							displayCurrent(bean.cdr, bean.csp);
-							break;
-						case POS_OPTION:
-							displayPos(bean.lat, bean.lng);
-							break;
-						case PRS_OPTION:
-							displayPRMSL(bean.prmsl);
-							break;
-						default:
-							break;
+					if (!optionList.isEmpty()) {
+						int toDisplay = optionList.get(currentOption);
+						switch (toDisplay) {
+							case TWD_OPTION:
+								displayAngleAndValue("TWD ", bean.twd);
+								break;
+							case BSP_OPTION:
+								displaySpeed("BSP ", bean.bsp);
+								break;
+							case TWS_OPTION:
+								displaySpeed("TWS ", bean.bsp);
+								break;
+							case TWA_OPTION:
+								displayAngleAndValue("TWA ", bean.twa);
+								break;
+							case AWA_OPTION:
+								displayAngleAndValue("AWA ", bean.awa);
+								break;
+							case AWS_OPTION:
+								displaySpeed("AWS ", bean.bsp);
+								break;
+							case ATP_OPTION:
+								displayTemp("AIR ", bean.atemp);
+								break;
+							case WTP_OPTION:
+								displayTemp("WATER ", bean.wtemp);
+								break;
+							case COG_OPTION:
+								displayAngleAndValue("COG ", bean.cog);
+								break;
+							case SOG_OPTION:
+								displaySpeed("SOG ", bean.bsp);
+								break;
+							case HDG_OPTION:
+								displayAngleAndValue("HDG ", bean.hdg);
+								break;
+							case DBT_OPTION:
+								displayValue("DBT ", " m", bean.dbt);
+								break;
+							case HUM_OPTION:
+								displayValue("HUM ", " %", bean.hum);
+								break;
+							case CUR_OPTION:
+								displayCurrent(bean.cdr, bean.csp);
+								break;
+							case POS_OPTION:
+								displayPos(bean.lat, bean.lng);
+								break;
+							case PRS_OPTION:
+								displayPRMSL(bean.prmsl);
+								break;
+							default:
+								break;
+						}
 					}
-
 					try { Thread.sleep(1_000L); } catch (Exception ex) {}
 				}
 				System.out.println("Cache thread completed.");
