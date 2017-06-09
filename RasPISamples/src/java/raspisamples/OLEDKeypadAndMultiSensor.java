@@ -5,8 +5,8 @@ import com.pi4j.io.serial.*;
 import i2c.sensor.HMC5883L;
 import i2c.sensor.MPL115A2;
 
-import spi.lcd.oled.SSD1306;
-import spi.lcd.ScreenBuffer;
+import lcd.oled.SSD1306;
+import lcd.ScreenBuffer;
 
 import arduino.raspberrypi.SerialReader;
 

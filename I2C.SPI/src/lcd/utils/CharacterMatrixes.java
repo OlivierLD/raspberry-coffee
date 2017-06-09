@@ -1,4 +1,4 @@
-package spi.lcd.utils;
+package lcd.utils;
 
 import java.util.HashMap;
 import java.util.Map;

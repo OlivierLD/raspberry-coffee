@@ -21,8 +21,8 @@ import nmea.parser.Speed;
 import nmea.parser.Temperature;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
-import spi.lcd.ScreenBuffer;
-import spi.lcd.oled.SSD1306;
+import lcd.ScreenBuffer;
+import lcd.oled.SSD1306;
 
 import java.util.Properties;
 import util.GeomUtil;

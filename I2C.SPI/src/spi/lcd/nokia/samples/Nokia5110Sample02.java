@@ -3,7 +3,7 @@ package spi.lcd.nokia.samples;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import spi.lcd.ScreenBuffer;
+import lcd.ScreenBuffer;
 import spi.lcd.nokia.Nokia5110;
 
 public class Nokia5110Sample02

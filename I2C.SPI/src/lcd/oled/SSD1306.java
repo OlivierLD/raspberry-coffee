@@ -1,4 +1,4 @@
-package spi.lcd.oled;
+package lcd.oled;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -7,20 +7,14 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
-// import com.pi4j.io.spi.SpiChannel;
-// import com.pi4j.io.spi.SpiDevice;
-// import com.pi4j.io.spi.impl.SpiDeviceImpl;
-
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.wiringpi.Spi;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 /**
- * SSD1306, small OLED screen. SPI. 128x32
+ * SSD1306, small OLED screen. SPI and I2C. 128x32
  */
 public class SSD1306 {
 	public final static int SSD1306_I2C_ADDRESS = 0x3C; // 011110+SA0+RW - 0x3C or 0x3D

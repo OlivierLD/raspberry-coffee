@@ -1,7 +1,7 @@
 package raspisamples;
 
-import spi.lcd.oled.SSD1306;
-import spi.lcd.ScreenBuffer;
+import lcd.oled.SSD1306;
+import lcd.ScreenBuffer;
 import com.pi4j.io.gpio.RaspiPin;
 import phonekeyboard3x4.KeyboardController;
 

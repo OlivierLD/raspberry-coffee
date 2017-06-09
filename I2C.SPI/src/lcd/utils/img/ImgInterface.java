@@ -1,4 +1,4 @@
-package spi.lcd.utils.img;
+package lcd.utils.img;
 
 public interface ImgInterface
 {
