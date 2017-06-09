@@ -1,15 +1,15 @@
 package nmea.forwarders;
 
-import com.pi4j.io.gpio.RaspiPin;
 import context.ApplicationContext;
 import context.NMEADataCache;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
-import nmea.forwarders.pushbutton.PushButtonMaster;
-import nmea.forwarders.pushbutton.PushButtonObserver;
 import nmea.forwarders.substitute.SwingLedPanel;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
@@ -121,24 +121,25 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	private final static int CUR_OPTION = 14;
 	private final static int PRS_OPTION = 15;
 
-	private final static int[] OPTION_ARRAY = {
-					TWD_OPTION, // True Wind Direction
-					BSP_OPTION, // Boat Speed
-					TWS_OPTION, // True Wind Speed
-					TWA_OPTION, // True Wind Angle
-					AWA_OPTION, // Apparent Wind Angle
-					AWS_OPTION, // Apparent Wind Speed
-					ATP_OPTION, // Air Temperature
-					WTP_OPTION, // Water Temperature
-					COG_OPTION, // Course Over Ground
-					SOG_OPTION, // Speed Over Ground
-					HDG_OPTION, // Heading
-					POS_OPTION, // Position
-					DBT_OPTION, // Depth Below Transducer
-					HUM_OPTION, // Relative Humidity
-					CUR_OPTION, // Current. Speed and Direction
-					PRS_OPTION  // Atmospheric Pressure (PRMSL).
-	};
+	private static List<Integer> optionList = new ArrayList<>();
+//	{
+//					TWD_OPTION, // True Wind Direction
+//					BSP_OPTION, // Boat Speed
+//					TWS_OPTION, // True Wind Speed
+//					TWA_OPTION, // True Wind Angle
+//					AWA_OPTION, // Apparent Wind Angle
+//					AWS_OPTION, // Apparent Wind Speed
+//					ATP_OPTION, // Air Temperature
+//					WTP_OPTION, // Water Temperature
+//					COG_OPTION, // Course Over Ground
+//					SOG_OPTION, // Speed Over Ground
+//					HDG_OPTION, // Heading
+//					POS_OPTION, // Position
+//					DBT_OPTION, // Depth Below Transducer
+//					HUM_OPTION, // Relative Humidity
+//					CUR_OPTION, // Current. Speed and Direction
+//					PRS_OPTION  // Atmospheric Pressure (PRMSL).
+//	};
 
 	private int currentOption = TWD_OPTION;
 
@@ -147,7 +148,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	// Use it to scroll across data
 	public void onButtonPressed() {
 		currentOption++;
-		if (currentOption >= OPTION_ARRAY.length) {
+		if (currentOption >= optionList.size()) {
 			currentOption = 0;
 		}
 	}
@@ -316,7 +317,8 @@ public class SSD1306ProcessorI2C implements Forwarder {
 						}
 					}
 					// Transformer's specific job.
-					switch (currentOption) {
+					int toDisplay = optionList.get(currentOption);
+					switch (toDisplay) {
 						case TWD_OPTION:
 							displayAngleAndValue("TWD ", bean.twd);
 							break;
@@ -533,6 +535,67 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			scrollWait = Long.parseLong(betweenLoops) * 1000L;
 		} catch (NumberFormatException nfe) {
 			System.err.println("Using default value for display wait time");
+		}
+		// Data to display on the small screen
+		String csv = props.getProperty("to.display", "");
+		if (csv.trim().length() > 0) {
+			Arrays.stream(csv.trim().split(",")).forEach(id -> {
+				switch (id) {
+					case "POS": // Position
+						optionList.add(POS_OPTION);
+						break;
+					case "SOG": // KMH, MPH Speed in knots, km/h or mph
+						optionList.add(SOG_OPTION);
+					case "KMH": // KMH, MPH Speed in knots, km/h or mph
+						optionList.add(SOG_OPTION);
+					case "MPH": // KMH, MPH Speed in knots, km/h or mph
+						optionList.add(SOG_OPTION);
+					case "COG": // Course Over Ground
+						optionList.add(COG_OPTION);
+						break;
+					case "HDG": // Heading
+						optionList.add(HDG_OPTION);
+						break;
+					case "TWD": // True Wind Direction
+						optionList.add(TWD_OPTION);
+						break;
+					case "TWS": // - True Wind Speed
+						optionList.add(TWS_OPTION);
+						break;
+					case "TWA": // - True Wind Angle
+						optionList.add(TWA_OPTION);
+						break;
+					case "AWS": // - Apparent Wind Speed
+						optionList.add(AWS_OPTION);
+						break;
+					case "AWA": // - Apparent Wind Angle
+						optionList.add(AWA_OPTION);
+						break;
+					case "WTP": // - Water Temperature
+						optionList.add(WTP_OPTION);
+						break;
+					case "ATP": // - Air Temperature
+						optionList.add(ATP_OPTION);
+						break;
+					case "PML": // - Pressure at Mean Sea Level
+						optionList.add(PRS_OPTION);
+						break;
+					case "HUM": // - Humidity
+						optionList.add(HUM_OPTION);
+						break;
+					case "DBT": // - Depth
+						optionList.add(DBT_OPTION);
+						break;
+					case "CUR": // - Current. Speed and Direction
+						optionList.add(CUR_OPTION);
+						break;
+					case "PCH": // Pitch
+					case "ROL": // Roll
+					default:
+						System.out.println(String.format("[%s] not implemented yet.", id));
+						break;
+				}
+			});
 		}
 	}
 }
