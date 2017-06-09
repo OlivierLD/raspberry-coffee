@@ -141,9 +141,15 @@ public class SSD1306ProcessorI2C implements Forwarder {
 //					PRS_OPTION  // Atmospheric Pressure (PRMSL).
 //	};
 
-	private int currentOption = TWD_OPTION;
+	private int currentOption = 0;
 
 	private long scrollWait = 5_000L;
+
+	enum SpeedUnit {
+		KNOTS, KMH, MPH
+	};
+
+	SpeedUnit speedUnit = SpeedUnit.KNOTS;
 
 	// Use it to scroll across data
 	public void onButtonPressed() {
@@ -421,7 +427,21 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	}
 
 	private void displaySpeed(String label, double value) {
-		displayValue(label, " kts", value);
+		String unit = " kts";
+		double speedFactor = 1D;
+		switch (speedUnit) {
+			case KMH:
+				unit = " km/h";
+				speedFactor = 1.852;
+				break;
+			case MPH:
+				unit = " mph";
+				speedFactor = 1.151;
+			case KNOTS:
+			default:
+				break;
+		}
+		displayValue(label, unit, value * speedFactor);
 	}
 
 	private void displayTemp(String label, double value) {
@@ -546,10 +566,16 @@ public class SSD1306ProcessorI2C implements Forwarder {
 						break;
 					case "SOG": // KMH, MPH Speed in knots, km/h or mph
 						optionList.add(SOG_OPTION);
+						speedUnit = SpeedUnit.KNOTS;
+						break;
 					case "KMH": // KMH, MPH Speed in knots, km/h or mph
 						optionList.add(SOG_OPTION);
+						speedUnit = SpeedUnit.KMH;
+						break;
 					case "MPH": // KMH, MPH Speed in knots, km/h or mph
 						optionList.add(SOG_OPTION);
+						speedUnit = SpeedUnit.MPH;
+						break;
 					case "COG": // Course Over Ground
 						optionList.add(COG_OPTION);
 						break;
