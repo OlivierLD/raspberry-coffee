@@ -11,7 +11,11 @@ import com.pi4j.io.gpio.RaspiPin;
 // import com.pi4j.io.spi.SpiDevice;
 // import com.pi4j.io.spi.impl.SpiDeviceImpl;
 
+import com.pi4j.io.i2c.I2CBus;
+import com.pi4j.io.i2c.I2CDevice;
+import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.wiringpi.Spi;
+import java.io.IOException;
 
 /**
  * SSD1306, small OLED screen. SPI. 128x32
@@ -57,7 +61,7 @@ public class SSD1306 {
 	private final static int SPI_DEVICE = Spi.CHANNEL_0; // 0
 
 	private int width = 128,
-					height = 32;
+							height = 32;
 	private int clockHertz = 8_000_000; // 8 MHz
 	private int vccstate = 0;
 	private int pages = 0;
@@ -79,6 +83,11 @@ public class SSD1306 {
 	private static GpioPinDigitalOutput chipSelectOutput = null;
 	private static GpioPinDigitalOutput resetOutput = null;
 	private static GpioPinDigitalOutput dcOutput = null;
+
+	private I2CBus bus;
+	private I2CDevice ssd1306;
+
+	private boolean verbose = "true".equals(System.getProperty("ssd1306.verbose", "false"));
 
 	public SSD1306() {
 		initSSD1306(this.width, this.height);
@@ -132,6 +141,26 @@ public class SSD1306 {
 		initSSD1306(w, h);
 	}
 
+	public SSD1306(int i2cAddr) throws I2CFactory.UnsupportedBusNumberException {
+		try {
+			// Get i2c bus
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
+			if (verbose)
+				System.out.println("Connected to bus. OK.");
+
+			// Get device itself
+			ssd1306 = bus.getDevice(i2cAddr);
+
+			if (verbose)
+				System.out.println("Connected to devices. OK.");
+
+			initSSD1306(128, 32); // 128x32, hard coded for now.
+
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
 	private void initSSD1306(int w, int h) {
 		this.width = w;
 		this.height = h;
@@ -139,23 +168,33 @@ public class SSD1306 {
 		this.buffer = new int[this.width * this.pages];
 		clear();
 
-		int fd = Spi.wiringPiSPISetup(SPI_DEVICE, clockHertz);
-		if (fd < 0) {
-			System.err.println("SPI Setup failed");
-			System.exit(1);
+		if (bus == null) { // SPI
+			int fd = Spi.wiringPiSPISetup(SPI_DEVICE, clockHertz);
+			if (fd < 0) {
+				System.err.println("SPI Setup failed");
+				System.exit(1);
+			}
+
+			gpio = GpioFactory.getInstance();
+
+			mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
+			clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
+			chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.HIGH);
+			resetOutput = gpio.provisionDigitalOutputPin(spiRst, "RST", PinState.LOW);
+			dcOutput = gpio.provisionDigitalOutputPin(spiDc, "DC", PinState.LOW);
 		}
-
-		gpio = GpioFactory.getInstance();
-
-		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
-		clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
-		chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.HIGH);
-		resetOutput = gpio.provisionDigitalOutputPin(spiRst, "RST", PinState.LOW);
-		dcOutput = gpio.provisionDigitalOutputPin(spiDc, "DC", PinState.LOW);
 	}
 
 	public void shutdown() {
-		gpio.shutdown();
+		if (bus == null) {
+			gpio.shutdown();
+		} else {
+			try {
+				bus.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 
 	public void setBuffer(int[] buffer) {
