@@ -5,10 +5,10 @@
 ----
 
 - [Small external OLED display](#small-external-display)
+[ [Small DOT - Display On Top](#small-display-on-top)
 - [Web Console](#web-console)
 - [Distinction on the device ID](#inside-and-outside)
 - [Driving and Logging](#driving-and-logging)
-- [Next](#todo)...
 
 #### Small external display
 There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
@@ -34,11 +34,11 @@ The push button is used to scroll through the data available to display (True Wi
 As it is an example, it is a dynamically loaded `forwarder`.
 
 #### Small display "On Top"
-Same as above, but attached on top of the Raspberry PI. Using here the I<small><sup>2</sup></small>C interface.
+Same as above (SSD1306), but attached on top of the Raspberry PI. Using here the I<small><sup>2</sup></small>C interface.
 
   ![Small Screen](./docimages/small.screen.jpg)
 
- Another interesting feature: In case you want to run - for tests for example - somewhere else than on the Raspberry PI, then the OLED Display would not work.
+ _Another interesting feature_: In case you want to run - for tests for example - somewhere else than on the Raspberry PI, then the OLED Display would not work.
   In this case, it is automatically substituted to a Swing panel:
 
   ![Substituted Swing Led Panel](./docimages/substitute.png)
@@ -187,7 +187,7 @@ The Raspberry PI, its battery bank and the GPS were sitting in a plastic box, ne
 ![In a box](./docimages/in.a.box.jpg "In a box")
 
 The Raspberry PI generates its own WiFi hotspot (with `hostapd`, see [here](./README.md#note-access-point-and-internet-access)), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
-the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details).
+the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details). Even the admin web console works fine in thsi configuration.
 
 The properties files used with `mux.sh` just looks like this:
 ```properties
