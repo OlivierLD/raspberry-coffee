@@ -30,7 +30,7 @@ public class SerialCommunicator
 
 	private boolean isConnected = false;
 
-	private final static int TIMEOUT = 2000;
+	private final static int TIMEOUT = 2_000;
 
 	private final static int DEFAULT_BAUD_RATE = 9600;
 	private final static int DEFAULT_FLOW_CTRL_IN = SerialPort.FLOWCONTROL_NONE;

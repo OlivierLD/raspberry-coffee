@@ -69,7 +69,7 @@ public class SampleMain
                           "{ operation: 'see-attached-" + Integer.toString(i + 1) + "' }",
                           "P8150115.JPG");
               System.out.println("Sent.");
-              Thread.sleep(60000L); // 1 minute
+              Thread.sleep(60_000L); // 1 minute
             }
             System.out.println("Exiting...");
             sender.send(new String[] { "olivier@lediouris.net", 
@@ -125,7 +125,7 @@ public class SampleMain
           else
           {
             System.out.println("Operation: [" + operation + "], sent for processing.");
-            try { Thread.sleep(1000L); } catch (InterruptedException ie) { ie.printStackTrace(); }
+            try { Thread.sleep(1_000L); } catch (InterruptedException ie) { ie.printStackTrace(); }
           }
         }
       }

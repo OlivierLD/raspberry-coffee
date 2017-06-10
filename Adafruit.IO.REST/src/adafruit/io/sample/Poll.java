@@ -43,7 +43,7 @@ public class Poll
     while (same)
     {
       System.out.print(".");
-      try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
+      try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
       String newVal = Poll.getOnOffValue(key);
       same = newVal.equals(val);
     }    

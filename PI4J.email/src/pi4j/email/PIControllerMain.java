@@ -88,7 +88,7 @@ public class PIControllerMain implements RaspberryPIEventListener {
 							piController.switchYellow(false);
 						}
 						try {
-							Thread.sleep(1000L);
+							Thread.sleep(1_000L);
 						} catch (InterruptedException ie) {
 							ie.printStackTrace();
 						}

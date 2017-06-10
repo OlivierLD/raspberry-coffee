@@ -22,7 +22,7 @@ public class BMP180Logging
   private final static String PRESSURE    = "PRESSURE";
 
   private static String boardID = "OlivRPi1";
-  private static long waitTime  = 10000L;
+  private static long waitTime  = 10_000L;
   private static String sessionID = "XX";
   static 
   {
@@ -50,7 +50,7 @@ public class BMP180Logging
       {
         try
         {
-          waitTime = 1000L * Integer.parseInt(args[i + 1]);
+          waitTime = 1_000L * Integer.parseInt(args[i + 1]);
         }
         catch (Exception ex) 
         {
@@ -68,7 +68,7 @@ public class BMP180Logging
         System.out.println("  <time-in-sec> is the amount of seconds between logs (default is 10)");
         System.out.println();
         System.out.println("Logging data for board [" + boardID + "]");
-        System.out.println("Logging data every " + Long.toString(waitTime / 1000) + " s. Session ID:" + sessionID);
+        System.out.println("Logging data every " + Long.toString(waitTime / 1_000) + " s. Session ID:" + sessionID);
         System.exit(0);
       }
     }
@@ -78,7 +78,7 @@ public class BMP180Logging
   {
     processPrm(args);
 
-    System.out.println("Logging data for [" + boardID + "], every " + Long.toString(waitTime / 1000) + " s.");
+    System.out.println("Logging data for [" + boardID + "], every " + Long.toString(waitTime / 1_000) + " s.");
     
     final NumberFormat NF = new DecimalFormat("##00.00");
     BMP180 sensor = new BMP180();
@@ -127,7 +127,7 @@ public class BMP180Logging
         String response = HTTPClient.getContent(url);
         JSONObject json = new JSONObject(response);
         System.out.println("Returned\n" + json.toString(2));
-        try { Thread.sleep(1000); } catch (Exception ex) { ex.printStackTrace(); } // To avoid duplicate PK
+        try { Thread.sleep(1_000); } catch (Exception ex) { ex.printStackTrace(); } // To avoid duplicate PK
         url = LOGGER_URL + "?board=" + boardID + "&session=" + sessionID + "&sensor=" + SENSOR_ID + "&type=" + PRESSURE + "&data=" + NF.format(press / 100);
         response = HTTPClient.getContent(url);
         json = new JSONObject(response);

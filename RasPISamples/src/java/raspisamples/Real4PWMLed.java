@@ -24,7 +24,7 @@ public class Real4PWMLed
     final PWMPin pin03 = new PWMPin(RaspiPin.GPIO_03, "LED-Four",  PinState.HIGH);
     System.out.println("Ready...");
 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
 
     pin00.emitPWM(0);
     pin01.emitPWM(0);
@@ -189,7 +189,7 @@ public class Real4PWMLed
     pin02.stopPWM();
     pin03.stopPWM();
     
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     // Last blink
     System.out.println("Bye-bye");
     pin00.low();

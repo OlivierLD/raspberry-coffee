@@ -236,7 +236,7 @@ public class MPL115A2
       System.out.println("Temperature: " + NF.format(temp) + " C");
       System.out.println("Pressure   : " + NF.format(press * 10) + " hPa");
       
-      waitfor(1000);
+      waitfor(1_000);
     }
     sensor.close(); 
   }

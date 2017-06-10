@@ -32,7 +32,7 @@ public class RandomReader extends NMEAReader {
 				e.printStackTrace();
 			}
 			try {
-				Thread.sleep(1000L); // TODO Make this a parameter
+				Thread.sleep(1_000L); // TODO Make this a parameter
 			} catch (InterruptedException ie) {
 				ie.printStackTrace();
 			}

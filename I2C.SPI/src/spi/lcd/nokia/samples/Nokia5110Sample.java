@@ -1,6 +1,6 @@
 package spi.lcd.nokia.samples;
 
-import spi.lcd.ScreenBuffer;
+import lcd.ScreenBuffer;
 import spi.lcd.nokia.Nokia5110;
 
 public class Nokia5110Sample
@@ -20,7 +20,7 @@ public class Nokia5110Sample
     System.out.println("Displaying...");
     lcd.display();
     System.out.println("Displayed");
-    try { Thread.sleep(5000L); } catch (Exception ex) { ex.printStackTrace(); }
+    try { Thread.sleep(5_000L); } catch (Exception ex) { ex.printStackTrace(); }
     
     ScreenBuffer sb = new ScreenBuffer(84, 48);
     sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
@@ -28,14 +28,14 @@ public class Nokia5110Sample
     sb.text("I speak Java!", 5, 30, ScreenBuffer.Mode.BLACK_ON_WHITE);
     lcd.setScreenBuffer(sb.getScreenBuffer());
     lcd.display();
-    try { Thread.sleep(2000); } catch (Exception ex) {}
+    try { Thread.sleep(2_000); } catch (Exception ex) {}
 
     sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
     sb.text("Hello Nokia!",  5, 20, ScreenBuffer.Mode.WHITE_ON_BLACK);
     sb.text("I speak Java!", 5, 30, ScreenBuffer.Mode.WHITE_ON_BLACK);
     lcd.setScreenBuffer(sb.getScreenBuffer());
     lcd.display();
-    try { Thread.sleep(2000); } catch (Exception ex) {}
+    try { Thread.sleep(2_000); } catch (Exception ex) {}
 
     sb.clear();
     for (int i=0; i<8; i++)
@@ -47,7 +47,7 @@ public class Nokia5110Sample
     }
     lcd.setScreenBuffer(sb.getScreenBuffer());          
     lcd.display();
-    try { Thread.sleep(1000); } catch (Exception ex) {}
+    try { Thread.sleep(1_000); } catch (Exception ex) {}
 
     sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
     sb.text("Pi=", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK);
@@ -55,7 +55,7 @@ public class Nokia5110Sample
     lcd.setScreenBuffer(sb.getScreenBuffer());
     lcd.display();
 //  sb.dumpScreen();
-    try { Thread.sleep(5000); } catch (Exception ex) {}
+    try { Thread.sleep(5_000); } catch (Exception ex) {}
 
     sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
     sb.text("Pi=", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK, true);
@@ -63,7 +63,7 @@ public class Nokia5110Sample
     lcd.setScreenBuffer(sb.getScreenBuffer());
     lcd.display();
     //  sb.dumpScreen();
-    try { Thread.sleep(5000); } catch (Exception ex) {}
+    try { Thread.sleep(5_000); } catch (Exception ex) {}
 
     lcd.clear();
     lcd.display();

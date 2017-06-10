@@ -451,7 +451,7 @@ public class HTTPServer {
 				e.printStackTrace();
 			}
 			try {
-				Thread.sleep(1000L);
+				Thread.sleep(1_000L);
 			} catch (InterruptedException ie) {
 			}
 			System.out.println("Dead.");

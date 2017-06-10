@@ -79,7 +79,7 @@ public class StandaloneHTTPServer
         {
           try
           {
-            synchronized(this) { wait(1000L); }
+            synchronized(this) { wait(1_000L); }
           }
           catch (InterruptedException ie)
           {
@@ -116,7 +116,7 @@ public class StandaloneHTTPServer
               keepWorking(false);
               dummyThread.notify();
             }
-            try { Thread.sleep(1000L); } // Just give it some time to stop...
+            try { Thread.sleep(1_000L); } // Just give it some time to stop...
             catch (InterruptedException ie) {}
             System.exit(0);
           }

@@ -43,7 +43,7 @@ public class ChordFrame
 					ChordFrame.this.imgIndex = i;
 					ChordFrame.this.setChord(ChordList.getChords()[i]);
 					try {
-						Thread.sleep(1000L);
+						Thread.sleep(1_000L);
 					} catch (Exception ignore) {
 					}
 					i++;

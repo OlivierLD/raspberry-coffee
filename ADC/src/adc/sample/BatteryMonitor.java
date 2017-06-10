@@ -116,7 +116,7 @@ public class BatteryMonitor {
 			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
 				if (inputChannel.equals(channel)) {
 					long now = System.currentTimeMillis();
-					if (calib || Math.abs(now - lastLogTimeStamp) > 1000) {
+					if (calib || Math.abs(now - lastLogTimeStamp) > 1_000) {
 						int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 						if (Math.abs(volume - lastVolumeLogged) > 1) // 1 %
 						{

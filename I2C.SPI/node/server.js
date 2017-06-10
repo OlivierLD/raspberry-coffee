@@ -167,6 +167,8 @@ server.listen(port, function()
 {
     console.log((new Date()) + " Server is listening on port " + port);
     console.log("Connect to [http://localhost:9876/data/display.html]");
+    console.log("Connect to [http://localhost:9876/data/heel.pitch.html]");
+    console.log("etc...");
 });
  
 /**

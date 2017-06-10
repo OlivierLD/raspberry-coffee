@@ -5,8 +5,8 @@ import com.pi4j.io.serial.*;
 import i2c.sensor.HMC5883L;
 import i2c.sensor.MPL115A2;
 
-import spi.lcd.oled.SSD1306;
-import spi.lcd.ScreenBuffer;
+import lcd.oled.SSD1306;
+import lcd.ScreenBuffer;
 
 import arduino.raspberrypi.SerialReader;
 
@@ -113,7 +113,7 @@ public class OLEDKeypadAndMultiSensor {
 			ioe.printStackTrace();
 		}
 		// Wait...
-		waitfor(2000);
+		waitfor(2_000);
 
 		// Start sensor threads
 		Thread ptThread = new Thread() {
@@ -325,7 +325,7 @@ public class OLEDKeypadAndMultiSensor {
 		System.out.println("...Bye");
 		kbc.shutdown();
 		keepReading = false;
-		waitfor(1000); // Wait for the threads to end properly
+		waitfor(1_000); // Wait for the threads to end properly
 
 		// Final cleanup.
 		clear();

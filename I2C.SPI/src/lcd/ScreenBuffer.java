@@ -1,7 +1,7 @@
-package spi.lcd;
+package lcd;
 
-import spi.lcd.utils.img.ImgInterface;
-import spi.lcd.utils.CharacterMatrixes;
+import lcd.utils.img.ImgInterface;
+import lcd.utils.CharacterMatrixes;
 
 import java.awt.Point;
 import java.awt.Polygon;
@@ -20,7 +20,7 @@ public class ScreenBuffer {
 	}
 
 	private int w = 128, // Actual values, defaulted to SSD1306
-					h = 32;
+							h = 32;
 	// This is the buffer that will be pushed on the device
 	private int[] screenBuffer = null;
 	// This represents the led array (128x32). 'X' means on, ' ' means off.

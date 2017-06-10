@@ -24,7 +24,7 @@ public class MindWaveCurve
   extends JPanel
 {
   private List<Short> wave = new ArrayList<Short>();
-  private final static int WIDTH = 1000;
+  private final static int WIDTH = 1_000;
   
   protected transient Stroke dotted  = new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1f, new float[] {10f}, 0f);
   protected transient Stroke dotted2 = new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1f, new float[] {5f}, 0f);

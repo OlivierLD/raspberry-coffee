@@ -29,12 +29,12 @@ import java.util.Map;
 public class LongTimeCurrentCalculator {
 	private boolean verbose = false;
 	// buffer.length in milliseconds
-	public final static long DEFAULT_BUFFER_LENGTH = 600000L; // Milli Seconds
+	public final static long DEFAULT_BUFFER_LENGTH = 600_000L; // Milli Seconds
 	private long bufferLength = Long.parseLong(System.getProperty("buffer.length", String.valueOf(DEFAULT_BUFFER_LENGTH))); // Default 10 minutes
 
 	private Thread watcher = null;
 	private boolean keepWatching = true;
-	private long betweenLoops = 1000L; // 1 sec
+	private long betweenLoops = 1_000L; // 1 sec
 
 	// Time, Position, CMG, BSP.
 	private List<TimeCurrent> timeCurrent = new ArrayList<>();
@@ -135,7 +135,7 @@ public class LongTimeCurrentCalculator {
 												utcDate != null &&
 												!utcDate.isNull() &&
 												utcDate.getValue() != null &&
-												((timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - utcDate.getValue().getTime()) > 1000)) {
+												((timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - utcDate.getValue().getTime()) > 1_000)) {
 									// Buffer Reset
 						//    System.out.println("== Reseting data buffers: last date in buffer=[" + SDF2.format(timeBuffer.get(timeBuffer.size() - 1).getValue()) + "] > current Date=[" + SDF2.format(utcDate.getValue()) + "]");
 									resetDataBuffers();
@@ -189,7 +189,7 @@ public class LongTimeCurrentCalculator {
 												double bspeed = bspBuffer.get(i).getDoubleValue();
 												//                    System.out.println("-- TimeInterval:" + timeInterval + ", bsp:" + bspeed);
 												if (bspeed > 0) {
-													double dist = bspeed * ((double) timeInterval / (double) 3600000L); // in minutes (miles)
+													double dist = bspeed * ((double) timeInterval / (double) 3_600_000L); // in minutes (miles)
 													double rv = cmgBuffer.get(i - 1).getValue();
 													//                      System.out.println("** In " + timeInterval + " ms, at " + bspeed + " kts, from " + drPos.toString() + " dist:" + dist + ", hdg:" + hdg + "... ");
 													if (dist > 0) {
@@ -207,7 +207,7 @@ public class LongTimeCurrentCalculator {
 														Math.toRadians(groundData[groundData.length - 1].getG()));
 										double dist = GreatCircle.calculateRhumLineDistance(geoFrom, geoTo);
 										double dir = Math.toDegrees(GreatCircle.calculateRhumLineRoute(geoFrom, geoTo));
-										double hourRatio = (double) (timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - timeBuffer.get(0).getValue().getTime()) / (double) 3600000L;
+										double hourRatio = (double) (timeBuffer.get(timeBuffer.size() - 1).getValue().getTime() - timeBuffer.get(0).getValue().getTime()) / (double) 3_600_000L;
 										double speed = dist / hourRatio;
 										timeCurrent.add(new TimeCurrent(timeBuffer.get(timeBuffer.size() - 1).getValue().getTime(), speed, dir));
 										// trim current buffer
@@ -259,7 +259,7 @@ public class LongTimeCurrentCalculator {
 						System.out.println("... No cache yet");
 					synchronized (this) {
 						if (verbose)
-							System.out.println("  ...LongTimeCurrentCalculator going to wait, at " + new Date().toString() + " (will wait for " + (waitTime / 1000) + " s)");
+							System.out.println("  ...LongTimeCurrentCalculator going to wait, at " + new Date().toString() + " (will wait for " + (waitTime / 1_000) + " s)");
 						try {
 							wait(waitTime);
 						} catch (InterruptedException ie) {

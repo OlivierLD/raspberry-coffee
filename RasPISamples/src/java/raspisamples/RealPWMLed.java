@@ -50,7 +50,7 @@ public class RealPWMLed
     System.out.println("PWM, glowing up and down");
     // PWM
     pin.emitPWM(0);
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     for (int vol=0; vol<100; vol++)
     {
       pin.adjustPWMVolume(vol);
@@ -85,7 +85,7 @@ public class RealPWMLed
     }
     pin.stopPWM();
     
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     // Last blink
     System.out.println("Bye-bye");
     pin.low();

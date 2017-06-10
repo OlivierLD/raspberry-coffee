@@ -79,7 +79,7 @@ public class SerialReader
 		CommPort thePort = null;
 		try {
 			com.addPortOwnershipListener(this);
-			thePort = com.open("NMEAPort", 10000);
+			thePort = com.open("NMEAPort", 10_000);
 		} catch (PortInUseException piue) {
 			System.err.println("Port In Use");
 			return;

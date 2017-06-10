@@ -16,7 +16,7 @@ import org.java_websocket.handshake.ServerHandshake;
 public class WSPublisher {
 
 	private static boolean verbose = false;
-	private static long betweenLoops = 1000L;
+	private static long betweenLoops = 1_000L;
 
 	private WebSocketClient webSocketClient = null;
 

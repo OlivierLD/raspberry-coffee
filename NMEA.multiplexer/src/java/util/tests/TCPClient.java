@@ -121,7 +121,7 @@ public class TCPClient {
 					try {
 						System.out.println("Timeout on TCP. Will Re-try to connect in 1s");
 						closeReader();
-						Thread.sleep(1000L);
+						Thread.sleep(1_000L);
 						System.out.println("Re-trying now. (from " + this.getClass().getName() + ")");
 						read();
 					} catch (Exception ex) {
@@ -177,7 +177,7 @@ public class TCPClient {
 					ex.printStackTrace();
 
 					tcpClient.closeReader();
-					long howMuch = 1000L;
+					long howMuch = 1_000L;
 					System.out.println("Will try to reconnect in " + Long.toString(howMuch) + "ms.");
 					try {
 						Thread.sleep(howMuch);

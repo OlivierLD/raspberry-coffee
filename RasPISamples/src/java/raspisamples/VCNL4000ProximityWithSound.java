@@ -16,7 +16,7 @@ public class VCNL4000ProximityWithSound {
 	private final static int MIN_AMBIENT = 0;
 	private final static int MAX_AMBIENT = 5500;
 
-	public final static float SAMPLE_RATE = 8000f;
+	public final static float SAMPLE_RATE = 8_000f;
 
 	public static void tone(int hz, int msecs) throws LineUnavailableException {
 		tone(hz, msecs, 1.0);

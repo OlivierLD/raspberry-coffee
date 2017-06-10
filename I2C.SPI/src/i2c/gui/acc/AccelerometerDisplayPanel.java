@@ -85,43 +85,43 @@ public class AccelerometerDisplayPanel
 						minZ = Math.min(minZ, accX);
 						synchronized (accXList) {
 							accXList.add(accX);
-							while (accXList.size() > 1000) {
+							while (accXList.size() > 1_000) {
 								accXList.remove(0);
 							}
 						}
 						synchronized (accYList) {
 							accYList.add(accY);
-							while (accYList.size() > 1000) {
+							while (accYList.size() > 1_000) {
 								accYList.remove(0);
 							}
 						}
 						synchronized (accZList) {
 							accZList.add(accZ);
-							while (accZList.size() > 1000) {
+							while (accZList.size() > 1_000) {
 								accZList.remove(0);
 							}
 						}
 						synchronized (magXList) {
 							magXList.add(magX);
-							while (magXList.size() > 1000) {
+							while (magXList.size() > 1_000) {
 								magXList.remove(0);
 							}
 						}
 						synchronized (magYList) {
 							magYList.add(magY);
-							while (magYList.size() > 1000) {
+							while (magYList.size() > 1_000) {
 								magYList.remove(0);
 							}
 						}
 						synchronized (magZList) {
 							magZList.add(magZ);
-							while (magZList.size() > 1000) {
+							while (magZList.size() > 1_000) {
 								magZList.remove(0);
 							}
 						}
 						synchronized (headingList) {
 							headingList.add(heading);
-							while (headingList.size() > 1000) {
+							while (headingList.size() > 1_000) {
 								headingList.remove(0);
 							}
 						}

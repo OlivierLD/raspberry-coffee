@@ -14,7 +14,7 @@ public class SampleTCS34725Main
   
   public static void main(String[] args) throws Exception
   {
-    int colorThreshold = 4000;
+    int colorThreshold = 4_000;
     if (args.length > 0)
       try { colorThreshold = Integer.parseInt(args[0]); } catch (NumberFormatException nfe) { System.err.println(nfe.toString()); }
     final TCS34725 sensor = new TCS34725(TCS34725.TCS34725_INTEGRATIONTIME_50MS, TCS34725.TCS34725_GAIN_4X);

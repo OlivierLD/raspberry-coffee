@@ -61,7 +61,7 @@ public class PWM3ColorLed
             pin01.stopPWM();
             pin02.stopPWM();
             
-            Thread.sleep(1000);
+            Thread.sleep(1_000);
             // Last blink
             System.out.println("Bye-bye");
             pin00.low();
@@ -80,7 +80,7 @@ public class PWM3ColorLed
       });
     
 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
 
     pin00.emitPWM(0);
     pin01.emitPWM(0);

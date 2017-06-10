@@ -150,7 +150,7 @@ public class ADCObserverSimulator
           while (true)
           {
             simulateADCRead();
-            try { Thread.sleep(1000); } catch (InterruptedException ie) {}
+            try { Thread.sleep(1_000); } catch (InterruptedException ie) {}
           }
         }
       };

@@ -49,10 +49,10 @@ public class HttpClient {
 
 			while ((nBytes = is.read(aByte, 0, 1)) != -1) {
 				content = appendByte(content, aByte[0]);
-				if (content.length > (nbLoop * 1000)) {
+				if (content.length > (nbLoop * 1_000)) {
 					long now = System.currentTimeMillis();
 					long delta = now - started;
-					double rate = (double) content.length / ((double) delta / 1000D);
+					double rate = (double) content.length / ((double) delta / 1_000D);
 					if (DEBUG)
 						System.out.println("Downloading at " + rate + " bytes per second.");
 					nbLoop++;

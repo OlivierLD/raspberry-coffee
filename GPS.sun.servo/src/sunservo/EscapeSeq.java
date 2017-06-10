@@ -119,7 +119,7 @@ public class EscapeSeq
       AnsiConsole.out.println(ansiLocate(0, 5) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
       AnsiConsole.out.println(ansiLocate(0, 5) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLUE)   + ANSI_BOLD + str5 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT);      
       
-      try { Thread.sleep(1000L); } catch (Exception ex) {}
+      try { Thread.sleep(1_000L); } catch (Exception ex) {}
     }
     
     System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
@@ -157,7 +157,7 @@ public class EscapeSeq
     for (String line : SOME_TEXT)
     {
       System.out.print(ANSI_HEAD + line);
-      try { Thread.sleep(1000); } catch (Exception ex) {}
+      try { Thread.sleep(1_000); } catch (Exception ex) {}
     }
     System.out.println();
     

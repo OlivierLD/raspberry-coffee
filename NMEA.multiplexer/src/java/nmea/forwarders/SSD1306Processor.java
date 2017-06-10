@@ -21,8 +21,8 @@ import nmea.parser.Speed;
 import nmea.parser.Temperature;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
-import spi.lcd.ScreenBuffer;
-import spi.lcd.oled.SSD1306;
+import lcd.ScreenBuffer;
+import lcd.oled.SSD1306;
 
 import java.util.Properties;
 import util.GeomUtil;
@@ -31,9 +31,9 @@ import util.GeomUtil;
  * This is an example of a <b>transformer</b>.
  * <br>
  * To be used with other apps.
- * This transformer displays the TWD on an OLED displayTWD (SSD1306)
+ * This transformer displays the TWD on an OLED display (SSD1306)
  * <br>
- * See http://www.lediouris.net/RaspberryPI/SSD1306/readme.html
+ * See http://raspberrypi.lediouris.net/SSD1306/readme.html
  *
  * <br>
  * This is JUST an example. As such, it can be set only from the properties file
@@ -357,7 +357,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 							break;
 					}
 
-					try { Thread.sleep(1000L); } catch (Exception ex) {}
+					try { Thread.sleep(1_000L); } catch (Exception ex) {}
 				}
 				System.out.println("Cache thread completed.");
 			}
@@ -481,7 +481,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 		try {
 			// Stop Cache thread
 			keepWorking = false;
-			try { Thread.sleep(2000L); } catch (Exception ex) {}
+			try { Thread.sleep(2_000L); } catch (Exception ex) {}
 			sb.clear();
 			oled.clear(); // Blank screen
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());

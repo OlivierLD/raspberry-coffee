@@ -108,7 +108,7 @@ public class SampleClient
     {
       try
       {
-        wait4ack.wait(5000L);
+        wait4ack.wait(5_000L);
       }
       catch (InterruptedException ie)
       {

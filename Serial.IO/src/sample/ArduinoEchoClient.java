@@ -124,7 +124,7 @@ public class ArduinoEchoClient implements SerialIOCallbacks
       {
         sc.writeData("\n");
       }
-      Thread.sleep(1000L);
+      Thread.sleep(1_000L);
       System.out.println("Writing to the serial port.");
       for (String str : LOREM_IPSUM) {
         sc.writeData(str + "\n");
@@ -137,7 +137,7 @@ public class ArduinoEchoClient implements SerialIOCallbacks
       ex.printStackTrace();
     }        
 
-    try { Thread.sleep(10000L); }
+    try { Thread.sleep(10_000L); }
     catch (InterruptedException ie) 
     {
       ie.printStackTrace();

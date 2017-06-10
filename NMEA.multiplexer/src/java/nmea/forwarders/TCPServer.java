@@ -101,7 +101,7 @@ public class TCPServer implements Forwarder {
 					System.err.println(ex.getLocalizedMessage());
 				}
 				try {
-					Thread.sleep(1000L);
+					Thread.sleep(1_000L);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

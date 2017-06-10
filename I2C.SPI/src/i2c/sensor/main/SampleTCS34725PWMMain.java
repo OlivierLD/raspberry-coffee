@@ -15,7 +15,7 @@ public class SampleTCS34725PWMMain
   
   public static void main(String[] args) throws Exception
   {
-    int colorThreshold = 4000;
+    int colorThreshold = 4_000;
     if (args.length > 0)
       try { colorThreshold = Integer.parseInt(args[0]); } catch (NumberFormatException nfe) { System.err.println(nfe.toString()); }
     final TCS34725 sensor = new TCS34725(TCS34725.TCS34725_INTEGRATIONTIME_50MS, TCS34725.TCS34725_GAIN_4X);
@@ -27,7 +27,7 @@ public class SampleTCS34725PWMMain
     final PWMPin redPin   = new PWMPin(RaspiPin.GPIO_02, "red",   PinState.LOW);
 
 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
 
     greenPin.emitPWM(0);
     bluePin.emitPWM(0);

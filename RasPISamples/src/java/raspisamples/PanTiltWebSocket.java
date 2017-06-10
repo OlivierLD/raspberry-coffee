@@ -40,7 +40,7 @@ public class PanTiltWebSocket {
 			}
 		});
 
-		StandardServo.waitfor(2000);
+		StandardServo.waitfor(2_000);
 
 		String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
 		initWebSocketConnection(wsUri);
@@ -109,7 +109,7 @@ public class PanTiltWebSocket {
 		// Reset to 0,0 before shutting down.
 		ssUD.setAngle(0f);
 		ssLR.setAngle(0f);
-		StandardServo.waitfor(2000);
+		StandardServo.waitfor(2_000);
 		ssUD.stop();
 		ssLR.stop();
 		System.out.println("Bye");

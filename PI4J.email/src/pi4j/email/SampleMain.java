@@ -80,7 +80,7 @@ public class SampleMain {
 										"{ operation: 'see-attached-" + Integer.toString(i + 1) + "' }",
 										"snap.jpg");
 						System.out.println("Sent.");
-						Thread.sleep(60000L); // 1 minute
+						Thread.sleep(60_000L); // 1 minute
 					}
 					System.out.println("Exiting (sending 'exit' email)...");
 					sender.send(destEmail,
@@ -132,7 +132,7 @@ public class SampleMain {
 					} else {
 						System.out.println("Operation: [" + operation + "], sent for processing.");
 						try {
-							Thread.sleep(1000L);
+							Thread.sleep(1_000L);
 						} catch (InterruptedException ie) {
 							ie.printStackTrace();
 						}
@@ -142,7 +142,7 @@ public class SampleMain {
 				System.err.println("Receiver loop:");
 				ex.printStackTrace();
 				try {
-					Thread.sleep(1000L);
+					Thread.sleep(1_000L);
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}

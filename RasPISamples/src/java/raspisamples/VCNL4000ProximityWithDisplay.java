@@ -50,9 +50,9 @@ public class VCNL4000ProximityWithDisplay
       int amb = /* 100 - */ Math.min((int)Math.round(100f * ((float)ambient / (float)(MAX_AMBIENT - MIN_AMBIENT))), 100); 
       System.out.println("Ambient:" + ambient + ", Proximity: " + prox + ", " + amb);
       // Notice the digit index: 0, 1, 3, 4. 2 is the column ":"
-      int one   = amb / 1000;
-      int two   = (amb - (one * 1000)) / 100;
-      int three = (amb - (one * 1000) - (two * 100)) / 10;
+      int one   = amb / 1_000;
+      int two   = (amb - (one * 1_000)) / 100;
+      int three = (amb - (one * 1_000) - (two * 100)) / 10;
       int four  = amb % 10;
       
 //    System.out.println("  --> " + proxPercent + " : " + one + " " + two + "." + three + " " + four);

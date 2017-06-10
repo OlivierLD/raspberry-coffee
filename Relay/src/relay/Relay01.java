@@ -28,22 +28,22 @@ public class Relay01
     final GpioPinDigitalOutput pin18 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Relay2", PinState.HIGH);
     System.out.println("--> GPIO state should be: OFF, and it is ");
 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
 
     pin17.low();
     System.out.println("--> pin 17 should be: ON, and it is " + (pin17.isHigh()?"OFF":"ON"));
 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
 
     pin17.high();
     System.out.println("--> pin 17 should be: OFF");
 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
 
     pin18.low();
     System.out.println("--> pin 18 should be: ON");
 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
 
     pin18.high();
     System.out.println("--> pin 18 should be: OFF");

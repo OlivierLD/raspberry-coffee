@@ -249,7 +249,7 @@ public class CapturePlayback extends JPanel implements ActionListener, ControlCo
 				audioInputStream = AudioSystem.getAudioInputStream(file);
 				playB.setEnabled(true);
 				fileName = file.getName();
-				long milliseconds = (long) ((audioInputStream.getFrameLength() * 1000) / audioInputStream.getFormat().getFrameRate());
+				long milliseconds = (long) ((audioInputStream.getFrameLength() * 1_000) / audioInputStream.getFormat().getFrameRate());
 				duration = milliseconds / 1000.0;
 				auB.setEnabled(true);
 				aiffB.setEnabled(true);
@@ -524,7 +524,7 @@ public class CapturePlayback extends JPanel implements ActionListener, ControlCo
 			ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
 			audioInputStream = new AudioInputStream(bais, format, audioBytes.length / frameSizeInBytes);
 
-			long milliseconds = (long) ((audioInputStream.getFrameLength() * 1000) / format.getFrameRate());
+			long milliseconds = (long) ((audioInputStream.getFrameLength() * 1_000) / format.getFrameRate());
 			duration = milliseconds / 1000.0;
 
 			try {
@@ -661,15 +661,15 @@ public class CapturePlayback extends JPanel implements ActionListener, ControlCo
 				unsignB.doClick();
 			}
 			float rate = format.getFrameRate();
-			if (rate == 8000) {
+			if (rate == 8_000) {
 				rate8B.doClick();
-			} else if (rate == 11025) {
+			} else if (rate == 11_025) {
 				rate11B.doClick();
-			} else if (rate == 16000) {
+			} else if (rate == 16_000) {
 				rate16B.doClick();
-			} else if (rate == 22050) {
+			} else if (rate == 22_050) {
 				rate22B.doClick();
-			} else if (rate == 44100) {
+			} else if (rate == 44_100) {
 				rate44B.doClick();
 			}
 			switch (format.getSampleSizeInBits()) {
@@ -864,11 +864,11 @@ public class CapturePlayback extends JPanel implements ActionListener, ControlCo
 			while (thread != null) {
 				if ((playback.line != null) && (playback.line.isOpen())) {
 
-					long milliseconds = (long) (playback.line.getMicrosecondPosition() / 1000);
+					long milliseconds = (long) (playback.line.getMicrosecondPosition() / 1_000);
 					seconds = milliseconds / 1000.0;
 				} else if ((capture.line != null) && (capture.line.isActive())) {
 
-					long milliseconds = (long) (capture.line.getMicrosecondPosition() / 1000);
+					long milliseconds = (long) (capture.line.getMicrosecondPosition() / 1_000);
 					seconds = milliseconds / 1000.0;
 				}
 

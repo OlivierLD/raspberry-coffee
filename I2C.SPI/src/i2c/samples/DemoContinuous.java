@@ -29,7 +29,7 @@ public class DemoContinuous
     int servoStopsAt = 375;
     
     servoBoard.setPWM(servo, 0, 0);   // Stop the servo
-    waitfor(2000);
+    waitfor(2_000);
     System.out.println("Let's go");
     
     for (int i=servoStopsAt; i<=servoMax; i++)
@@ -39,7 +39,7 @@ public class DemoContinuous
       waitfor(500);
     } 
     System.out.println("Servo Max");
-    waitfor(1000);
+    waitfor(1_000);
     for (int i=servoMax; i>=servoMin; i--)
     {
       System.out.println("i=" + i);
@@ -47,14 +47,14 @@ public class DemoContinuous
       waitfor(500);
     } 
     System.out.println("Servo Min");
-    waitfor(1000);
+    waitfor(1_000);
     for (int i=servoMin; i<=servoStopsAt; i++)
     {
       System.out.println("i=" + i);
       servoBoard.setPWM(servo, 0, i);
       waitfor(500);
     } 
-    waitfor(2000);
+    waitfor(2_000);
     servoBoard.setPWM(servo, 0, 0);   // Stop the servo
     System.out.println("Done.");
   }

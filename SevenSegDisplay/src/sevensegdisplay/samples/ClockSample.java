@@ -48,7 +48,7 @@ public class ClockSample
       // Toggle colon
       segment.setColon(second % 2 != 0);         // Toggle colon at 1Hz
       // Wait one second
-      try { Thread.sleep(1000L); } catch (InterruptedException ie){}
+      try { Thread.sleep(1_000L); } catch (InterruptedException ie){}
     }
   }
 }

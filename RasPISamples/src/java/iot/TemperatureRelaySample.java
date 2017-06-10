@@ -142,7 +142,7 @@ public class TemperatureRelaySample
             System.err.println(ex.getMessage()); 
             ex.printStackTrace();
           }
-          delay(1000L);
+          delay(1_000L);
         }
         System.out.println("\nTemperature thread completed");
       }
@@ -165,7 +165,7 @@ public class TemperatureRelaySample
             System.err.println(ex.getMessage()); 
             ex.printStackTrace();
           }
-          delay(1000L);
+          delay(1_000L);
         }
         System.out.println("\nSwitch thread completed");
       }
@@ -178,7 +178,7 @@ public class TemperatureRelaySample
       public void run()
       {
         trs.setWorking(false);
-        delay(3000L);
+        delay(3_000L);
         trs.shutdownRelay(); 
         synchronized (me)
         {

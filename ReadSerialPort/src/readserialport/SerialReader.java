@@ -87,7 +87,7 @@ public class SerialReader
           System.out.println("Not open yet...");
         }
         // wait 1 second before continuing
-        Thread.sleep(1000);
+        Thread.sleep(1_000);
       }
     }
     catch (SerialPortException ex)

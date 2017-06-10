@@ -130,7 +130,7 @@ public class CharacterModeConsole {
 				public void run() {
 					while (true) {
 						try {
-							Thread.sleep(interval * 60 * 1000L);
+							Thread.sleep(interval * 60 * 1_000L);
 						} catch (Exception ex) {
 						}
 						first.set(true);
@@ -154,7 +154,7 @@ public class CharacterModeConsole {
 		}
 
 		try {
-			Thread.sleep(1000L);
+			Thread.sleep(1_000L);
 		} catch (Exception ex) {
 		} // Not nice, I know...
 
@@ -396,7 +396,7 @@ public class CharacterModeConsole {
 					if (keys.size() != 1 && DEBUG)
 						System.err.println("TBF: Nb entry(ies) in Calculated Current Map:" + keys.size());
 					for (Long l : keys)
-						value = l / (60 * 1000);
+						value = l / (60_000);
 				} catch (Exception ignore) {
 				}
 				break;
@@ -730,7 +730,7 @@ public class CharacterModeConsole {
 //  if (amount > SECOND || str.length() > 0)
 		{
 			int second = (int) (amount / SECOND);
-			str += (second + ((amount % 1000) != 0 ? "." + (amount % 1000) : "") + (small ? " s " : " second(s) "));
+			str += (second + ((amount % 1_000) != 0 ? "." + (amount % 1_000) : "") + (small ? " s " : " second(s) "));
 			amount -= (second * SECOND);
 		}
 		return str;
@@ -827,7 +827,7 @@ public class CharacterModeConsole {
 //    System.out.println(dataLine);
 		}
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(2_000);
 		} catch (Exception ex) {
 		}
 
@@ -849,7 +849,7 @@ public class CharacterModeConsole {
 				//    try { Thread.sleep(100); } catch (Exception ex) {}
 			}
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(1_000);
 			} catch (Exception ex) {
 			}
 			i++;

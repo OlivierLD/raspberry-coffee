@@ -49,7 +49,7 @@ public class InteractiveServo
       System.err.println("Defaulting freq to 60");
       nfe.printStackTrace();
     }
-    if (freq < 40 || freq > 1000)
+    if (freq < 40 || freq > 1_000)
       throw new IllegalArgumentException("Freq only between 40 and 1000.");
     
     servoBoard.setPWMFreq(freq); // Set frequency in Hz

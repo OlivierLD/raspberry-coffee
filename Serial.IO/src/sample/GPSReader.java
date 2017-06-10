@@ -107,7 +107,7 @@ public class GPSReader implements SerialIOCallbacks
           synchronized (thread)
           {
             thread.notify();
-	    Thread.sleep(1000L);
+	    Thread.sleep(1_000L);
           }
         }
         catch (Exception ex)

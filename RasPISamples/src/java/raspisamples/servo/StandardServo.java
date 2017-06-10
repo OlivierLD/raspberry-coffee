@@ -96,7 +96,7 @@ public class StandardServo
     try
     {
       ss.stop();
-      waitfor(2000);
+      waitfor(2_000);
       System.out.println("Let's go, 1 by 1 (" + ss.servoMin + " to " + ss.servoMax + ")");
       for (int i=ss.servoMin; i<=ss.servoMax; i++)
       {
@@ -111,7 +111,7 @@ public class StandardServo
         waitfor(10);
       } 
       ss.stop();
-      waitfor(2000);
+      waitfor(2_000);
       System.out.println("Let's go, 1 deg by 1 deg");
       for (int i=ss.servoMin; i<=ss.servoMax; i+=(ss.diff / 180))
       {
@@ -126,7 +126,7 @@ public class StandardServo
         waitfor(10);
       } 
       ss.stop();
-      waitfor(2000);
+      waitfor(2_000);
       
       float[] degValues = { -10, 0, -90, 45, -30, 90, 10, 20, 30, 40, 50, 60, 70, 80, 90, 0 };
       for (float f : degValues)

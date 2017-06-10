@@ -562,7 +562,7 @@ public class MindWaveController
 
   public final static void delay(float delay)
   {
-    try { Thread.sleep(Math.round(delay * 1000L)); } catch (InterruptedException ie) {}
+    try { Thread.sleep(Math.round(delay * 1_000L)); } catch (InterruptedException ie) {}
   }
   /*
    * For tests.

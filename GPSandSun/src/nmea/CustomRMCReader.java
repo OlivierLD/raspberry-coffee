@@ -55,7 +55,7 @@ public class CustomNMEAReader extends NMEAClient
         if (rmc != null && rmc.getRmcDate() != null && rmc.getGp() != null)
         {
           if ((prevDateTime == -1L || prevPosition == null) ||
-              (prevDateTime != (rmc.getRmcDate().getTime() / 1000) || !rmc.getGp().equals(prevPosition)))
+              (prevDateTime != (rmc.getRmcDate().getTime() / 1_000) || !rmc.getGp().equals(prevPosition)))
           {
             Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
             current.setTime(rmc.getRmcDate());
@@ -76,7 +76,7 @@ public class CustomNMEAReader extends NMEAClient
             System.out.println(current.getTime().toString() + ", He:" + DFH.format(he)+ ", Z:" + DFZ.format(z) + " (" + rmc.getGp().toString() + ")");
           }
           prevPosition = rmc.getGp();
-          prevDateTime = (rmc.getRmcDate().getTime() / 1000);
+          prevDateTime = (rmc.getRmcDate().getTime() / 1_000);
         }
         else
         {

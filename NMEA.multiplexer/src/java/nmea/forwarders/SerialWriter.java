@@ -32,7 +32,7 @@ public class SerialWriter implements Forwarder {
 		}
 		CommPort thePort = null;
 		try {
-			thePort = com.open("NMEAPort", 10000);
+			thePort = com.open("NMEAPort", 10_000);
 		} catch (PortInUseException piue) {
 			System.err.println("Port In Use");
 			return;

@@ -5,10 +5,10 @@
 ----
 
 - [Small external OLED display](#small-external-display)
+- [Small DOT - Display On Top](#small-display-on-top)
 - [Web Console](#web-console)
 - [Distinction on the device ID](#inside-and-outside)
 - [Driving and Logging](#driving-and-logging)
-- [Next](#todo)...
 
 #### Small external display
 There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
@@ -33,6 +33,16 @@ The push button is used to scroll through the data available to display (True Wi
 
 As it is an example, it is a dynamically loaded `forwarder`.
 
+#### Small display "On Top"
+Same as above (SSD1306), but attached on top of the Raspberry PI. Using here the I<small><sup>2</sup></small>C interface.
+
+  ![Small Screen](./docimages/small.screen.jpg)
+
+ _Another interesting feature_: In case you want to run - for tests for example - somewhere else than on the Raspberry PI, then the OLED Display would not work.
+  In this case, it is automatically substituted to a Swing panel:
+
+  ![Substituted Swing Led Panel](./docimages/substitute.png)
+
 #### Web Console
 There is a Web Console, accessible to any device able to run a Web browser (smart phone, tablet, laptop, etc).
 It can be accessed from `http://[machine:port]/web/console.html`.
@@ -48,8 +58,8 @@ In the picture above, all the data come from the NMEA station, except the air te
 This example involves 2 (or 3) machines.
 
 - A Forwarder with a distinction on the **origin** of the data, based on the device ID.
-   - A thermometer inside (BMP180 or BME180), forwarding on TCP, device ID set to `01`
-   - A thermometer outside (BMP180 or BME180), forwarding on TCP, device ID set to `02`
+   - A thermometer inside (BMP180 or BME280), forwarding on TCP, device ID set to `01`
+   - A thermometer outside (BMP180 or BME280), forwarding on TCP, device ID set to `02`
    - A MUX reading the 2 TCP streams, and displaying (like with an HTML Interface) the right data in the right place, even if the Sentence IDs of the two streams are identical.
 ![2 Raspberry PI Zero](./docimages/Two.RPi.Zero_bb.png "Two thermometers")
 
@@ -177,7 +187,7 @@ The Raspberry PI, its battery bank and the GPS were sitting in a plastic box, ne
 ![In a box](./docimages/in.a.box.jpg "In a box")
 
 The Raspberry PI generates its own WiFi hotspot (with `hostapd`, see [here](./README.md#note-access-point-and-internet-access)), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
-the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details).
+the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details). Even the admin web console works fine in thsi configuration.
 
 The properties files used with `mux.sh` just looks like this:
 ```properties
@@ -217,6 +227,7 @@ See how `LedBlinker` is referred to in `nmea.mux.gps.log.properties`.
 
 ##### And more to come...
 
+<!--
 ### TODO...
 [Todo next](./web/TODO.md "What's next")
 
@@ -241,4 +252,4 @@ rolling        | "A" angle       |-180..0 L         0..180 R       | "D" degrees
 water temp     | "C" temperature |   2 decimals                    | "C" celsius     | "ENV_WATER_T"
 -----------------------------------------------------------------------------------------------------
 ```
-
+-->

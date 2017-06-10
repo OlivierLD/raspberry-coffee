@@ -82,7 +82,7 @@ public class LogAnalysisPanel
     {
       // Smooth Voltage
       Map<Date, Float> smoothVoltage = new HashMap<Date, Float>();
-      final int SMOOTH_WIDTH = 1000;
+      final int SMOOTH_WIDTH = 1_000;
       SortedSet<Date> keys = new TreeSet<Date>(logdata.keySet());
       if (withSmoothing)
       {

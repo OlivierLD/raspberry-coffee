@@ -87,6 +87,6 @@ public class Utilities
   public static long currentTimeMicros()
   {
     long milli = System.currentTimeMillis();
-    return milli * 1000;
+    return milli * 1_000;
   }
 }

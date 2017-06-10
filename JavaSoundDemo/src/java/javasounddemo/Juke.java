@@ -326,9 +326,9 @@ public class Juke extends JPanel implements Runnable, LineListener, MetaEventLis
 	public double getDuration() {
 		double duration = 0.0;
 		if (currentSound instanceof Sequence) {
-			duration = ((Sequence) currentSound).getMicrosecondLength() / 1000000.0;
+			duration = ((Sequence) currentSound).getMicrosecondLength() / 1_000_000.0;
 		} else if (currentSound instanceof BufferedInputStream) {
-			duration = sequencer.getMicrosecondLength() / 1000000.0;
+			duration = sequencer.getMicrosecondLength() / 1_000_000.0;
 		} else if (currentSound instanceof Clip) {
 			Clip clip = (Clip) currentSound;
 			duration = clip.getBufferSize() /
@@ -345,7 +345,7 @@ public class Juke extends JPanel implements Runnable, LineListener, MetaEventLis
 			seconds = clip.getFramePosition() / clip.getFormat().getFrameRate();
 		} else if ((currentSound instanceof Sequence) || (currentSound instanceof BufferedInputStream)) {
 			try {
-				seconds = sequencer.getMicrosecondPosition() / 1000000.0;
+				seconds = sequencer.getMicrosecondPosition() / 1_000_000.0;
 			} catch (IllegalStateException e) {
 				System.out.println("TEMP: IllegalStateException " +
 								"on sequencer.getMicrosecondPosition(): " + e);
@@ -538,10 +538,10 @@ public class Juke extends JPanel implements Runnable, LineListener, MetaEventLis
 					((Clip) currentSound).setFramePosition(value);
 				} else if (currentSound instanceof Sequence) {
 					long dur = ((Sequence) currentSound).getMicrosecondLength();
-					sequencer.setMicrosecondPosition(value * 1000);
+					sequencer.setMicrosecondPosition(value * 1_000);
 				} else if (currentSound instanceof BufferedInputStream) {
 					long dur = sequencer.getMicrosecondLength();
-					sequencer.setMicrosecondPosition(value * 1000);
+					sequencer.setMicrosecondPosition(value * 1_000);
 				}
 				playbackMonitor.repaint();
 				return;

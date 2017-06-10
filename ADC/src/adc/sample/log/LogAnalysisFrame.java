@@ -51,7 +51,7 @@ public class LogAnalysisFrame
   {
     this.setJMenuBar(menuBar);
     this.getContentPane().setLayout(new BorderLayout());
-    this.setSize(new Dimension(1000, 275));
+    this.setSize(new Dimension(1_000, 275));
     this.setTitle("Battery Data");
     menuFile.setText("File");
     menuFileExit.setText("Exit");
@@ -59,7 +59,7 @@ public class LogAnalysisFrame
     menuFile.add( menuFileExit );
     menuBar.add( menuFile );
     
-    displayPanel.setPreferredSize(new Dimension(1400, 275));
+    displayPanel.setPreferredSize(new Dimension(1_400, 275));
     jScrollPane = new JScrollPane(displayPanel);
 //  this.getContentPane().add(displayPanel, BorderLayout.CENTER);
     this.getContentPane().add(jScrollPane, BorderLayout.CENTER);

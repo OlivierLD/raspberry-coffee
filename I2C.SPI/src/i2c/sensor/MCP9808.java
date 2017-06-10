@@ -150,7 +150,7 @@ public class MCP9808
         System.exit(1);
       }
       System.out.println("Temperature: " + NF.format(temp) + " C");
-      waitfor(1000);
+      waitfor(1_000);
     }
     // Bonus : CPU Temperature
     try

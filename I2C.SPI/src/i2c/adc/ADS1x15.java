@@ -379,7 +379,7 @@ public class ADS1x15 {
 		// Wait for the ADC conversion to complete
 		// The minimum delay depends on the sps: delay >= 1/sps
 		// We add 0.1ms to be sure
-		double delay = ((1000 / sps) + 0.1);
+		double delay = ((1_000 / sps) + 0.1);
 		delay(delay);
 
 		// Read the conversion results
@@ -470,7 +470,7 @@ public class ADS1x15 {
 		// Wait for the ADC conversion to complete
 		// The minimum delay depends on the sps: delay >= 1/sps
 		// We add 0.1ms to be sure
-		double delay = ((1000 / sps) + 0.1);
+		double delay = ((1_000 / sps) + 0.1);
 		delay(delay);
 
 		// Read the conversion results
@@ -624,7 +624,7 @@ public class ADS1x15 {
 		// Wait for the ADC conversion to complete
 		// The minimum delay depends on the sps: delay >= 1/sps
 		// We add 0.5ms to be sure
-		double delay = ((1000 / sps) + 0.5);
+		double delay = ((1_000 / sps) + 0.5);
 		delay(delay);
 
 		// Read the conversion results
@@ -724,7 +724,7 @@ public class ADS1x15 {
 		// Wait for the ADC conversion to complete
 		// The minimum delay depends on the sps: delay >= 1/sps
 		// We add 0.5ms to be sure
-		double delay = ((1000 / sps) + 0.5);
+		double delay = ((1_000 / sps) + 0.5);
 		delay(delay);
 
 		// Read the conversion results

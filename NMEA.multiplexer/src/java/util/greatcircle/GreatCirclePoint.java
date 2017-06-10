@@ -116,21 +116,21 @@ public final class GreatCirclePoint
 
 		long before = System.currentTimeMillis();
 		double d = 0D;
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 10_000; i++)
 			d = p1.loxoDistanceBetween(p2);
 		long after = System.currentTimeMillis();
 		System.out.println("10000 Loxo :" + Long.toString(after - before) + " ms.");
 
 		before = System.currentTimeMillis();
 		d = 0D;
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 10_000; i++)
 			d = p1.orthoDistanceBetween(p2);
 		after = System.currentTimeMillis();
 		System.out.println("10000 Ortho:" + Long.toString(after - before) + " ms.");
 
 		before = System.currentTimeMillis();
 		d = 0D;
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 10_000; i++)
 			d = p1.gcDistanceBetween(p2);
 		after = System.currentTimeMillis();
 		System.out.println("10000 GC   :" + Long.toString(after - before) + " ms.");

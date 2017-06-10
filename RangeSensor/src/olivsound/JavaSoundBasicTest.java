@@ -30,7 +30,7 @@ public class JavaSoundBasicTest {
 			Thread.sleep(20);
 			mc[5].noteOff(i);
 		}
-		Thread.sleep(1000);
+		Thread.sleep(1_000);
 	}
 }
 

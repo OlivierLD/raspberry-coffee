@@ -1,9 +1,6 @@
-package spi.lcd.utils;
+package lcd.utils;
 
-import spi.lcd.ScreenBuffer;
-import spi.lcd.oled.SSD1306;
-import spi.lcd.utils.img.ImgInterface;
-import spi.lcd.utils.img.Java32x32;
+import lcd.ScreenBuffer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +40,7 @@ public class LedPanelMain2
   public LedPanelMain2()
   {
     initComponents();
-    this.setSize(new Dimension(1000, 300));
+    this.setSize(new Dimension(1_000, 300));
   }
 
   /**
@@ -56,7 +53,7 @@ public class LedPanelMain2
 
     ledPanel.setWithGrid(false);
 
-    setPreferredSize(new Dimension(1000, 600));
+    setPreferredSize(new Dimension(1_000, 600));
     setTitle("LCD Screen Buffer");
     addWindowListener(new java.awt.event.WindowAdapter()
     {
@@ -198,7 +195,7 @@ public class LedPanelMain2
           lcd.setBuffer(sb.getScreenBuffer());
           lcd.display();
           try {
-            Thread.sleep(1000);
+            Thread.sleep(1_000);
           } catch (Exception ex) {
           }
         }
@@ -250,8 +247,8 @@ public class LedPanelMain2
       }
     }
 
-    LedPanelMain2 ib = new LedPanelMain2();
-    ib.setVisible(true);
-    ib.doYourJob();
+    LedPanelMain2 lp = new LedPanelMain2();
+    lp.setVisible(true);
+    lp.doYourJob();
   }
 }

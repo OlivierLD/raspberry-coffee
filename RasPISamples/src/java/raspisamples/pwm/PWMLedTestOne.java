@@ -21,7 +21,7 @@ public class PWMLedTestOne
     final GpioPinDigitalOutput pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "OneLED", PinState.HIGH);
     System.out.println("--> GPIO state should be: ON");
 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
 
     // turn off gpio pin #01
     pin.low();
@@ -29,33 +29,33 @@ public class PWMLedTestOne
 
     if (false)
     {
-      Thread.sleep(1000);
+      Thread.sleep(1_000);
   
       // toggle the current state of gpio pin #01 (should turn on)
       pin.toggle();
       System.out.println("--> GPIO state should be: ON");
   
-      Thread.sleep(1000);
+      Thread.sleep(1_000);
   
       // toggle the current state of gpio pin #01  (should turn off)
       pin.toggle();
       System.out.println("--> GPIO state should be: OFF");
   
-      Thread.sleep(2000);
+      Thread.sleep(2_000);
   
       // turn on gpio pin #01 for 1 second and then off
       System.out.println("--> GPIO state should be: ON for only 1 second");
-      pin.pulse(1000, true); // set second argument to 'true' use a blocking call
+      pin.pulse(1_000, true); // set second argument to 'true' use a blocking call
   
       pin.low();
       long before = System.currentTimeMillis();
-      for (int i=0; i<10000; i++)
+      for (int i=0; i<10_000; i++)
       {
         pin.high();
         pin.low();
       }
       long after = System.currentTimeMillis();
-      System.out.println("10000 switches took " + Long.toString(after - before) + " ms.");
+      System.out.println("10,000 switches took " + Long.toString(after - before) + " ms.");
     }
     
     System.out.println("PWM!!!");

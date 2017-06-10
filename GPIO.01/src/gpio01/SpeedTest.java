@@ -22,7 +22,7 @@ public class SpeedTest
     final GpioPinDigitalOutput pin02 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "Two",   PinState.LOW);
     final GpioPinDigitalOutput pin03 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "Three", PinState.LOW);
 
-    Thread.sleep(1000);
+    Thread.sleep(1_000);
     long before = System.currentTimeMillis();
     pin01.toggle();
     long after = System.currentTimeMillis();

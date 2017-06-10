@@ -524,7 +524,7 @@ public class Utilities
   {
     long amount = elapsed;
     String str = "";
-    final long SECOND = 1000L;
+    final long SECOND = 1_000L;
     final long MINUTE = 60 * SECOND;
     final long HOUR   = 60 * MINUTE;
     final long DAY    = 24 * HOUR;
@@ -557,7 +557,7 @@ public class Utilities
 //  if (amount > SECOND || str.length() > 0)
     {
       int second = (int)(amount / SECOND);
-      str += (second + ((amount % 1000) != 0 ? "." + (amount % 1000) : "") + (small?" s ":" second(s) "));
+      str += (second + ((amount % 1_000) != 0 ? "." + (amount % 1_000) : "") + (small?" s ":" second(s) "));
       amount -= (second * SECOND);
     }
     return str;

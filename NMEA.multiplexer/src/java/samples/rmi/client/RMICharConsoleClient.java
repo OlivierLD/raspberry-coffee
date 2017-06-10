@@ -57,7 +57,7 @@ public class RMICharConsoleClient {
 			System.out.println(String.format("LastString execution took %s ms.", NumberFormat.getInstance().format(after - before)));
 			System.out.println(last);
 
-			try { Thread.sleep(1000L); } catch (InterruptedException ie) {}
+			try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
 
 			NMEACache cacheTask = new NMEACache();
 			before = System.currentTimeMillis();
