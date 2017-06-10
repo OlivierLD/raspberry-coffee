@@ -146,7 +146,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	private long scrollWait = 5_000L;
 
 	enum SpeedUnit {
-		KNOTS, KMH, MPH
+		KNOTS, KMH, MPH, MS
 	};
 
 	SpeedUnit speedUnit = SpeedUnit.KNOTS;
@@ -450,6 +450,9 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			case MPH:
 				unit = " mph";
 				speedFactor = 1.151;
+			case MS:
+				unit = " m/s";
+				speedFactor = 0.514444;
 			case KNOTS:
 			default:
 				break;
@@ -588,6 +591,10 @@ public class SSD1306ProcessorI2C implements Forwarder {
 					case "MPH": // KMH, MPH Speed in knots, km/h or mph
 						optionList.add(SOG_OPTION);
 						speedUnit = SpeedUnit.MPH;
+						break;
+					case "MS": // KMH, MPH Speed in knots, km/h or mph
+						optionList.add(SOG_OPTION);
+						speedUnit = SpeedUnit.MS;
 						break;
 					case "COG": // Course Over Ground
 						optionList.add(COG_OPTION);
