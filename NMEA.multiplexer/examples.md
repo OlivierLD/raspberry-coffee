@@ -36,6 +36,8 @@ As it is an example, it is a dynamically loaded `forwarder`.
 #### Small display "On Top"
 Same as above, but attached on top of the Raspberry PI. Using here the I<small><sup>2</sup></small>C interface.
 
+  ![Small Screen](./docimages/small.screen.png)
+
  Another interesting feature: In case you want to run - for tests for example - somewhere else than on the Raspberry PI, then the OLED Display would not work.
   In this case, it is automatically substituted to a Swing panel:
 
