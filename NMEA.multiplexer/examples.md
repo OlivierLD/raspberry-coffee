@@ -5,7 +5,7 @@
 ----
 
 - [Small external OLED display](#small-external-display)
-[ [Small DOT - Display On Top](#small-display-on-top)
+- [Small DOT - Display On Top](#small-display-on-top)
 - [Web Console](#web-console)
 - [Distinction on the device ID](#inside-and-outside)
 - [Driving and Logging](#driving-and-logging)
