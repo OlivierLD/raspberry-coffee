@@ -43,6 +43,7 @@
         rose = new CompassRose('roseCanvas', 400, 50);
         displayBSP = // new AnalogDisplay('bspCanvas', 100,   100,  10,  5);
                      new AnalogDisplay('bspCanvas', 100, 100, 10, 5, true, 40);
+        displayBSP.setWithMinMax(true);
         satellitesPlotter = new SatellitesPlotter("satCanvas", 100); // 100 is the radius.
     //  plotPositionOnChart({ lat: 0, lng: 0 }); // Default
       };
