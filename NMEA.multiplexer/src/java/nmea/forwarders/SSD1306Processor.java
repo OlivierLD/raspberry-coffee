@@ -312,7 +312,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 							displaySpeed("BSP ", bean.bsp);
 							break;
 						case TWS_OPTION:
-							displaySpeed("TWS ", bean.bsp);
+							displaySpeed("TWS ", bean.tws);
 							break;
 						case TWA_OPTION:
 							displayAngleAndValue("TWA ", bean.twa);
@@ -321,7 +321,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 							displayAngleAndValue("AWA ", bean.awa);
 							break;
 						case AWS_OPTION:
-							displaySpeed("AWS ", bean.bsp);
+							displaySpeed("AWS ", bean.aws);
 							break;
 						case ATP_OPTION:
 							displayTemp("AIR ", bean.atemp);
@@ -333,7 +333,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 							displayAngleAndValue("COG ", bean.cog);
 							break;
 						case SOG_OPTION:
-							displaySpeed("SOG ", bean.bsp);
+							displaySpeed("SOG ", bean.sog);
 							break;
 						case HDG_OPTION:
 							displayAngleAndValue("HDG ", bean.hdg);
