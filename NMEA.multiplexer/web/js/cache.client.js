@@ -16,7 +16,11 @@ var cacheClient = function(dataManager, bp) {
 
         xhr.open('GET', url, true);
         xhr.setRequestHeader("Content-type", "application/json");
-        xhr.send();
+        try {
+            xhr.send();
+        } catch (err) {
+            throw err;
+        }
 
         var requestTimer = setTimeout(function () {
             xhr.abort();
@@ -52,12 +56,16 @@ var cacheClient = function(dataManager, bp) {
         getData.fail(function (error, errmess) {
             var message;
             if (errmess !== undefined) {
-                var mess = JSON.parse(errmess);
-                if (mess.message !== undefined) {
-                    message = mess.message;
+                try {
+                    var mess = JSON.parse(errmess);
+                    if (mess.message !== undefined) {
+                        message = mess.message;
+                    }
+                } catch (err) {
+                //  console.log(errmess);
                 }
             }
-            alert("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+            console.log("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
         });
     };
 

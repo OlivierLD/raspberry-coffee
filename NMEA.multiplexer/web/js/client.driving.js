@@ -140,4 +140,4 @@ var setConnectionStatus = function(ok) {
   }
 };
 
-var cacheClient = new cacheClient(onMessage, 100); // 2nd prm: between pings
+var cacheClient = new cacheClient(onMessage, 222); // 2nd prm: between pings
