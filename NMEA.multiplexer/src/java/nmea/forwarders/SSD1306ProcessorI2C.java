@@ -345,7 +345,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 								displaySpeed("BSP ", bean.bsp);
 								break;
 							case TWS_OPTION:
-								displaySpeed("TWS ", bean.bsp);
+								displaySpeed("TWS ", bean.tws);
 								break;
 							case TWA_OPTION:
 								displayAngleAndValue("TWA ", bean.twa);
@@ -354,7 +354,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 								displayAngleAndValue("AWA ", bean.awa);
 								break;
 							case AWS_OPTION:
-								displaySpeed("AWS ", bean.bsp);
+								displaySpeed("AWS ", bean.aws);
 								break;
 							case ATP_OPTION:
 								displayTemp("AIR ", bean.atemp);
@@ -366,7 +366,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 								displayAngleAndValue("COG ", bean.cog);
 								break;
 							case SOG_OPTION:
-								displaySpeed("SOG ", bean.bsp);
+								displaySpeed("SOG ", bean.sog);
 								break;
 							case HDG_OPTION:
 								displayAngleAndValue("HDG ", bean.hdg);
@@ -450,9 +450,11 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			case MPH:
 				unit = " mph";
 				speedFactor = 1.151;
+				break;
 			case MS:
 				unit = " m/s";
 				speedFactor = 0.514444;
+				break;
 			case KNOTS:
 			default:
 				break;
@@ -530,7 +532,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			if (oled != null) {
 				oled.clear(); // Blank screen
 				oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				oled.display();
+				oled.display(); // Display blank screen
 				oled.shutdown();
 			} else {
 				substitute.setVisible(false);
@@ -579,6 +581,10 @@ public class SSD1306ProcessorI2C implements Forwarder {
 				switch (id) {
 					case "POS": // Position
 						optionList.add(POS_OPTION);
+						break;
+					case "BSP":
+						optionList.add(BSP_OPTION);
+						speedUnit = SpeedUnit.KNOTS;
 						break;
 					case "SOG": // KMH, MPH Speed in knots, km/h or mph
 						optionList.add(SOG_OPTION);
