@@ -137,11 +137,11 @@ public class PCA9685 {
 
 	/*
 	 * Servo       | Standard |   Continuous
-	 * ------------+----------+------------------
+	 * ------------+----------+-------------------
 	 * 1.5ms pulse |   0 deg  |     Stop
-	 * 2ms pulse   |  90 deg  |FullSpeed forward
-	 * 1ms pulse   | -90 deg  |FullSpeed backward
-	 * ------------+----------+------------------
+	 * 2ms pulse   |  90 deg  | FullSpeed forward
+	 * 1ms pulse   | -90 deg  | FullSpeed backward
+	 * ------------+----------+-------------------
 	 */
 	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
 		int freq = 60;

@@ -41,10 +41,31 @@
         nmeaID = document.getElementById("id");
 
         rose = new CompassRose('roseCanvas', 400, 50);
+
+        var max = 100;
+        var bigTick = 10;
+        var smallTick = 5;
+        if (getQueryParameterByName('type') === 'walk') {
+            max = 15;
+            bigTick = 5;
+            smallTick = 1;
+        }
+
         displayBSP = // new AnalogDisplay('bspCanvas', 100,   100,  10,  5);
-                     new AnalogDisplay('bspCanvas', 100, 100, 10, 5, true, 40);
+                     new AnalogDisplay('bspCanvas', 100, max, bigTick, smallTick, true, 40);
+        displayBSP.setWithMinMax(true);
         satellitesPlotter = new SatellitesPlotter("satCanvas", 100); // 100 is the radius.
     //  plotPositionOnChart({ lat: 0, lng: 0 }); // Default
+      };
+
+      var getQueryParameterByName = function(name, url) {
+          if (!url) url = window.location.href;
+          name = name.replace(/[\[\]]/g, "\\$&");
+          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+              results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, " "));
       };
 
       // Plot position on the chart
