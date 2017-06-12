@@ -1,6 +1,7 @@
 /*
  * Compile with
  * gcc -l wiringPi -o pwm01C pwm01.c
+ * run with sudo.
  ***********************************************************************
  * Oliv proudly did it.
  */
@@ -20,7 +21,10 @@ int main (void) {
    pwmWrite(18, 150);
    delay(1000);
    pwmWrite(18, 200);
-   fprintf(stdout, "Done\nll
-   ./pwm    ");
+   delay(1000);
+   pwmWrite(18, 2000);
+   delay(1000);
+   pwmWrite(18, 200);
+   fprintf(stdout, "Done\n");
    return 0;
 }
