@@ -129,6 +129,7 @@ public class OrientationDetector {
 			}
 			System.out.println("Timer done.");
 		});
+		System.out.println("Starting the timer loop");
 		timeThread.start();
 	}
 }
