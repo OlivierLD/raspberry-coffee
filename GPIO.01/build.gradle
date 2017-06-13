@@ -1,10 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-def userprofile = System.getenv()['USERPROFILE'] // On Windows...
-if (userprofile == null) { // Linux ?
-  userprofile = System.getenv()['HOME']
-}
+//def userprofile = System.getenv()['USERPROFILE'] // On Windows...
+//if (userprofile == null) { // Linux ?
+//  userprofile = System.getenv()['HOME']
+//}
 
 group = 'oliv.pi4j.samples'
 version = '1.0'
@@ -44,9 +44,9 @@ task copyResources(type: Copy) {
 
 jar.dependsOn(copyResources)
 
-task tellMeProxy (description: "Spits out the proxy settings.") << {
-  println "Accessing resources with proxy $proxyHost:$proxyPort"
-  println "UserProfile: " + System.getenv()['USERPROFILE']
-}
+//task tellMeProxy (description: "Spits out the proxy settings.") << {
+//  println "Accessing resources with proxy $proxyHost:$proxyPort"
+//  println "UserProfile: " + System.getenv()['USERPROFILE']
+//}
 
 // compileJava.dependsOn(tellMeProxy)

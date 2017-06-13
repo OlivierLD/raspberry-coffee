@@ -1,6 +1,7 @@
 package sunservo;
 
-import i2c.servo.PCA9685;
+import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
+import i2c.servo.pwm.PCA9685;
 
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
@@ -16,15 +17,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import nmea.CustomNMEASerialReader;
 
-import ocss.nmea.api.NMEAClient;
-import ocss.nmea.api.NMEAEvent;
-import ocss.nmea.api.NMEAListener;
-import ocss.nmea.parser.GeoPos;
-import ocss.nmea.parser.RMC;
-import ocss.nmea.parser.StringParsers;
-
+import nmea.api.NMEAClient;
+import nmea.api.NMEAEvent;
+import nmea.api.NMEAListener;
+import nmea.consumers.reader.SerialReader;
+import nmea.parser.GeoPos;
+import nmea.parser.RMC;
+import nmea.parser.StringParsers;
 import org.fusesource.jansi.AnsiConsole;
 
 public class SunServoNMEAReader extends NMEAClient
@@ -83,6 +83,11 @@ public class SunServoNMEAReader extends NMEAClient
   {
 //  System.out.println("Received:" + e.getContent());
     manageData(e.getContent().trim());
+  }
+
+  @Override
+  public Object getBean() {
+    return null;
   }
 
   private static SunServoNMEAReader customClient = null;  
@@ -236,7 +241,7 @@ public class SunServoNMEAReader extends NMEAClient
         int off = (int)(servoMin + (((double)(angle + 90) / 180d) * (servoMax - servoMin)));
         System.out.println("setPWM(" + STANDARD_SERVO_CHANNEL + ", " + on + ", " + off + ");");
         servoBoard.setPWM(STANDARD_SERVO_CHANNEL, on, off);
-        // TODO Vers le pole abaiss�.
+        // TODO Vers le pole abaissé.
         String dummy = userInput("Orient the arrow SOUTH (true S, with no W), and hit return when ready.");        
       }
     }
@@ -247,8 +252,7 @@ public class SunServoNMEAReader extends NMEAClient
   
   }
   
-  public static void main(String[] args)
-  {
+  public static void main(String[] args) throws UnsupportedBusNumberException {
     System.setProperty("deltaT", System.getProperty("deltaT", "67.2810")); // 2014-Jan-01
     /*
      * Serial port possibly overriden by -Dserial.port
@@ -284,11 +288,11 @@ public class SunServoNMEAReader extends NMEAClient
         }
       });    
     customClient.initClient();
-    customClient.setReader(new CustomNMEASerialReader(customClient.getListeners(), br));
+    customClient.setReader(new SerialReader(customClient.getListeners(), "<com port goes here>",  br));
     customClient.startWorking(); // Feignasse!
   }
 
-  private void stopDataRead()
+  public void stopDataRead()
   {
     if (customClient != null)
     {

@@ -1,5 +1,5 @@
 ## Pure PWM
-The idea here is to use only GPIO to drive a servo.
+The idea here is to use only GPIO to drive a servo. Extra board like the PCA9685 would not be required.
 
 So far..., there is a problem
 
