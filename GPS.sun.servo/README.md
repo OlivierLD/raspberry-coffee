@@ -21,7 +21,7 @@ Then the build of this project should work:
 ```
 You can test the Almanac behavior by running
 ```bash
- ./run.test
+ $ ./run.test
  -- Sun Jan 01 00:00:00 PST 2017, Mean:23.43708019254589, True:23.434571047530458, Aries GHA:221.1648583732534
     Polaris D:89.33854067501603, Z:177.55048918730466
     Sun Decl:-22.971192378129572
