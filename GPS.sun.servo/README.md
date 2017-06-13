@@ -1,5 +1,12 @@
-## WIP
-Requires resource from other projects:
+## Servos and Sun
+
+The idea is to build a device with 2 standard servos and an LSM303 to orient a solar panel so it faces the Sun whenever possible (ie during the day).
+
+For a given position (provided, or read from a GPS), the position of the Sun is calculated, and then its altitude and azimuth.
+The LSM303 gives the direction (magnetic heading) and inclination (on the Y axis) of the solar panel.
+The servos are triggered when necessary, for the data returned by the LSM303 and the calcuklated azimuth and elevation to match.
+
+Requires resources from other projects:
 
 Check out this one: https://github.com/OlivierLD/oliv-soft-project-builder
 
@@ -33,4 +40,5 @@ You can test the Almanac behavior by running
     Sun Decl:-22.786581536003055
  -- Wed Jan 04 00:00:00 PST 2017, Mean:23.437079124440857, True:23.434603645974125, Aries GHA:224.12178723691673
 ...
+ From 37°44.93'N / 122°30.42'W, at 19:23:55 UTC, He:72.44º, Z:142.37º (true)
 ```
