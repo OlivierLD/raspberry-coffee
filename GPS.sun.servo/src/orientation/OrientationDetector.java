@@ -75,10 +75,8 @@ public class OrientationDetector {
 			orientationListener = new LSM303Listener() {
 				@Override
 				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
-					super.dataDetected(accX, accY, accZ, magX, magY, magZ, heading, pitch, roll);
-					// TODO Implement
 					System.out.println(String.format("Heading %01f, Pitch %.01f", heading, pitch));
-					// Compare with He and Z
+					// Compare pitch and heading with He and Z
 					// Pitch = 0 => He = 90. Pitch = -90 => He = 0
 					double pitchDiff = (he - 90D) - pitch;
 					if (pitchDiff > 1) {
@@ -86,6 +84,7 @@ public class OrientationDetector {
 					} else if (pitchDiff < -1) {
 						System.out.println("Lower!!");
 					}
+					// Todo heading
 				}
 
 				@Override
