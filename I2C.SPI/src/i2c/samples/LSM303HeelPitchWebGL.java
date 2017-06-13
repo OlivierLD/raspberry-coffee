@@ -4,6 +4,7 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.sensor.LSM303;
 import i2c.sensor.listener.LSM303Listener;
 import i2c.sensor.listener.SensorLSM303Context;
+import java.io.IOException;
 import java.net.URI;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -51,7 +52,7 @@ public class LSM303HeelPitchWebGL {
 		}
 	}
 
-	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
 
 		String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
 		initWebSocketConnection(wsUri);
