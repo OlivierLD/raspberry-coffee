@@ -129,11 +129,11 @@ public class LSM303 {
 		}
 	}
 
-	public LSM303() throws I2CFactory.UnsupportedBusNumberException {
+	public LSM303() throws I2CFactory.UnsupportedBusNumberException, IOException {
 		if (verbose) {
 			System.out.println("Starting sensors reading:");
 		}
-		try {
+//		try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
 			if (verbose)
@@ -163,9 +163,9 @@ public class LSM303 {
 				System.out.println("Magnetometer OK.");
 
 			startReading();
-		} catch (IOException e) {
-			System.err.println(e.getMessage());
-		}
+//		} catch (IOException e) {
+//			System.err.println(e.getMessage());
+//		}
 	}
 
 	public void setDataListener(LSM303Listener dataListener) {
@@ -334,7 +334,7 @@ public class LSM303 {
 	 * @param args
 	 * @throws I2CFactory.UnsupportedBusNumberException
 	 */
-	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 		System.out.println("Verbose: " + verbose);
 		LSM303 sensor = new LSM303();
