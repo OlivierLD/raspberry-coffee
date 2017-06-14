@@ -3,8 +3,8 @@
 The idea is to build a device with 2 standard servos and an LSM303 to orient a solar panel so it faces the Sun whenever possible (ie during the day).
 
 For a given position (provided, or read from a GPS), the position of the Sun is calculated, and then its altitude and azimuth.
-The LSM303 gives the direction (magnetic heading) and inclination (on the Y axis) of the solar panel.
-The servos are triggered when necessary, for the data returned by the LSM303 and the calcuklated azimuth and elevation to match.
+The LSM303 gives the direction (magnetic heading) and inclination (on the Y axis) of the solar panel to which it is attached.
+The servos are triggered when necessary, for the data returned by the LSM303 and the calculated azimuth and elevation to match.
 
 Requires resources from other projects:
 

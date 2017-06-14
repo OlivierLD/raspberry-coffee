@@ -13,14 +13,15 @@ import user.util.GeomUtil;
  *
  * latitude -Dlatitude=37.7489
  * longitude -Dlongitude=-122.5070
+ * declination -Ddeclination=14
+ * tolerance -Dtolerance=5
  *
  * or GPS... (later).
- *
- * TODO: Declination
  */
 public class OrientationDetector {
 
-	private static double declination = 14D; /// TODO System variable
+	private static double declination = 14D; // E+, W-
+	private static int targetWindow = 5;
 
 	private static double latitude = 0D;
 	private static double longitude = 0D;
@@ -67,10 +68,33 @@ public class OrientationDetector {
 				System.exit(1);
 			}
 		}
+		String strDec = System.getProperty("declination");
+		if (strDec != null) {
+			try {
+				declination = Double.parseDouble(strDec);
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+				System.exit(1);
+			}
+		}
+		String strTol = System.getProperty("tolerance", "5");
+		if (strTol != null) {
+			try {
+				targetWindow = Integer.parseInt(strTol);
+				if (targetWindow < 1) {
+					throw new IllegalArgumentException("Tolerance must be an int, greater than 1");
+				}
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+				System.exit(1);
+			}
+		}
 
-		System.out.println(String.format("Position %s / %s",
+		System.out.println(String.format("Position %s / %s, Mag Decl. %.01f, tolerance %d\272 each way.",
 						GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
-						GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW)));
+						GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
+						declination,
+						targetWindow));
 
 		final LSM303 sensor;
 		final LSM303Listener orientationListener;
@@ -80,26 +104,29 @@ public class OrientationDetector {
 			orientationListener = new LSM303Listener() {
 				@Override
 				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
-					System.out.println(String.format("Heading %01f, Pitch %.01f", heading, pitch));
 					if (dayTime) {
 						// Compare pitch and heading with He and Z
 						// Pitch = 0 => He = 90. Pitch = -90 => He = 0
+						String pitchMessage = "Pitch OK";
 						double pitchDiff = (he - 90D) - pitch;
-						if (pitchDiff > 1) {
-							System.out.println("Higher!!");
-						} else if (pitchDiff < -1) {
-							System.out.println("Lower!!");
+						if (pitchDiff > targetWindow) {
+							pitchMessage = "Aim Higher!!";
+						} else if (pitchDiff < -targetWindow) {
+							pitchMessage = "Aim Lower!!";
 						}
 						// Heading
 						double headingDiff = z - (heading + declination);
 						if (headingDiff < -180) {
 							headingDiff += 360D;
 						}
-						if (headingDiff > 1) {
-							System.out.println("Turn right.");
-						} else if (headingDiff < -1) {
-							System.out.println("Turn left.");
+						String headingMessage = "Heading OK";
+						if (headingDiff > targetWindow) {
+							headingMessage = "Turn right";
+						} else if (headingDiff < -targetWindow) {
+							headingMessage = "Turn left";
 						}
+						System.out.println(String.format("Board orientation: Heading %.01f, Pitch %.01f, Sun Z: %.01f, Alt: %.01f, %s, %s", heading, pitch, z, he, headingMessage, pitchMessage));
+						// TODO Drive servos accordingly.
 					} else {
 						System.out.println("Snoring...");
 					}
