@@ -17,9 +17,9 @@ Then you need to do those things to `install` the nautical almanac components in
 ```bash
  $ cd olivsoft
  $ cd javanauticalalmanac
- $ ../gradlew clean build install
+ $ ../../gradlew clean build install
  $ cd ../geomutils
- $ ../gradlew clean build install
+ $ ../../gradlew clean build install
 ```
 
 Then the build of this project should work:
