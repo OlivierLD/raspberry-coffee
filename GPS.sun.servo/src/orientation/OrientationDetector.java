@@ -14,9 +14,13 @@ import user.util.GeomUtil;
  * latitude -Dlatitude=37.7489
  * longitude -Dlongitude=-122.5070
  *
- * or GPS...
+ * or GPS... (later).
+ *
+ * TODO: Declination
  */
 public class OrientationDetector {
+
+	private static double declination = 14D; /// TODO System variable
 
 	private static double latitude = 0D;
 	private static double longitude = 0D;
@@ -24,6 +28,7 @@ public class OrientationDetector {
 	private static boolean keepWorking = true;
 
 	private static double he = 0D, z = 0D;
+	private static boolean dayTime = true;
 
 	private static void getSunData(double lat, double lng) {
 		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
@@ -76,15 +81,28 @@ public class OrientationDetector {
 				@Override
 				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
 					System.out.println(String.format("Heading %01f, Pitch %.01f", heading, pitch));
-					// Compare pitch and heading with He and Z
-					// Pitch = 0 => He = 90. Pitch = -90 => He = 0
-					double pitchDiff = (he - 90D) - pitch;
-					if (pitchDiff > 1) {
-						System.out.println("Higher!!");
-					} else if (pitchDiff < -1) {
-						System.out.println("Lower!!");
+					if (dayTime) {
+						// Compare pitch and heading with He and Z
+						// Pitch = 0 => He = 90. Pitch = -90 => He = 0
+						double pitchDiff = (he - 90D) - pitch;
+						if (pitchDiff > 1) {
+							System.out.println("Higher!!");
+						} else if (pitchDiff < -1) {
+							System.out.println("Lower!!");
+						}
+						// Heading
+						double headingDiff = z - (heading + declination);
+						if (headingDiff < -180) {
+							headingDiff += 360D;
+						}
+						if (headingDiff > 1) {
+							System.out.println("Turn right.");
+						} else if (headingDiff < -1) {
+							System.out.println("Turn left.");
+						}
+					} else {
+						System.out.println("Snoring...");
 					}
-					// Todo heading
 				}
 
 				@Override
@@ -112,7 +130,7 @@ public class OrientationDetector {
 			sensor.startReading();
 
 		} catch (Throwable ex) {
-			System.err.println(">>> OrientationDetector... <<<");
+			System.err.println(">>> OrientationDetector... <<< BAM!");
 			ex.printStackTrace();
 //		System.exit(1);
 		}
@@ -120,11 +138,17 @@ public class OrientationDetector {
 		Thread timeThread = new Thread(() -> {
 			while (keepWorking) {
 				getSunData(latitude, longitude);
-				System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
-								GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
-								GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
-								he,
-								z));
+				if (he > 0) {
+					dayTime = true;
+					System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
+									GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
+									GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
+									he,
+									z));
+				} else {
+					dayTime = false;
+					System.out.println("Fait nuit...");
+				}
 				try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			}
 			System.out.println("Timer done.");
