@@ -90,9 +90,11 @@ public class OrientationDetector {
 			}
 		}
 
-		System.out.println(String.format("Position %s / %s",
+		System.out.println(String.format("Position %s / %s, Mag Decl. %.01f, tolerance %d\272 each way.",
 						GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
-						GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW)));
+						GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
+						declination,
+						targetWindow));
 
 		final LSM303 sensor;
 		final LSM303Listener orientationListener;
