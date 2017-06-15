@@ -31,6 +31,9 @@ public class OrientationDetector {
 	private static double he = 0D, z = 0D;
 	private static boolean dayTime = true;
 
+	private static boolean orientationVerbose = false;
+	private static boolean astroVerbose = false;
+
 	private static void getSunData(double lat, double lng) {
 		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
 		AstroComputer.setDateTime(current.get(Calendar.YEAR),
@@ -50,6 +53,10 @@ public class OrientationDetector {
 	}
 
 	public static void main(String... args) {
+
+		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
+		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
+
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {
 			try {
@@ -90,11 +97,13 @@ public class OrientationDetector {
 			}
 		}
 
+		System.out.println("----------------------------------------------");
 		System.out.println(String.format("Position %s / %s, Mag Decl. %.01f, tolerance %d\272 each way.",
 						GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
 						declination,
 						targetWindow));
+		System.out.println("----------------------------------------------");
 
 		final LSM303 sensor;
 		final LSM303Listener orientationListener;
@@ -125,7 +134,9 @@ public class OrientationDetector {
 						} else if (headingDiff < -targetWindow) {
 							headingMessage = "Turn left";
 						}
-						System.out.println(String.format("Board orientation: Heading %.01f, Pitch %.01f, Sun Z: %.01f, Alt: %.01f, %s, %s", heading, pitch, z, he, headingMessage, pitchMessage));
+						if (orientationVerbose) {
+							System.out.println(String.format("Board orientation: Heading %.01f, Pitch %.01f, Sun Z: %.01f, Alt: %.01f, %s, %s", heading, pitch, z, he, headingMessage, pitchMessage));
+						}
 						// TODO Drive servos accordingly.
 					} else {
 						System.out.println("Snoring...");
@@ -167,11 +178,13 @@ public class OrientationDetector {
 				getSunData(latitude, longitude);
 				if (he > 0) {
 					dayTime = true;
-					System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
-									GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
-									GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
-									he,
-									z));
+					if (astroVerbose) {
+						System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
+										GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
+										GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
+										he,
+										z));
+					}
 				} else {
 					dayTime = false;
 					System.out.println("Fait nuit...");

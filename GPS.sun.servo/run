@@ -1,5 +1,6 @@
 #!/bin/bash
 CP=./build/libs/GPS.sun.servo-1.0-all.jar
 JAVA_OPTS=
-JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070"
+JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070 -Declination=14 -Dtolerance=5"
+JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true -Dastro.verbose=false"
 sudo java -cp $CP $JAVA_OPTS orientation.OrientationDetector
