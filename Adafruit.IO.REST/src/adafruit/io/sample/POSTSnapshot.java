@@ -24,66 +24,65 @@ import static adafruit.io.Base64Util.encodeToString;
  * The code below reads the image at snap.jpg, and posts it on Adafruit.IO
  * See in the <code>web</code> directory, <code>image.html</code> for how to read it.
  */
-public class POSTSnapshot
-{
-  private final static boolean DEBUG = true;
-  private final static String FEED_NAME = "picture";
+public class POSTSnapshot {
+	private final static boolean DEBUG = true;
+	private final static String FEED_NAME = "picture";
 
-  private static int postImage(String key, String base64) throws Exception {
-    String url = "https://io.adafruit.com/api/feeds/" + FEED_NAME + "/data";
-    Map<String, String> headers = new HashMap<String, String>(2);
-    headers.put("X-AIO-Key", key);
-    headers.put("Content-Type", "application/json");
-    JSONObject json = new JSONObject();
-    json.put("value", base64);
-    String imgPayload = json.toString();
-    int ret = HttpClient.doPost(url, headers, imgPayload);
-    if (DEBUG)
-      System.out.println("POST: " + ret);
-    return ret;
-  }
+	private static int postImage(String key, String base64) throws Exception {
+		String url = "https://io.adafruit.com/api/feeds/" + FEED_NAME + "/data";
+		Map<String, String> headers = new HashMap<String, String>(2);
+		headers.put("X-AIO-Key", key);
+		headers.put("Content-Type", "application/json");
+		JSONObject json = new JSONObject();
+		json.put("value", base64);
+		String imgPayload = json.toString();
+		int ret = HttpClient.doPost(url, headers, imgPayload);
+		if (DEBUG)
+			System.out.println("POST: " + ret);
+		return ret;
+	}
 
-  private static String IMG_PATH = "./snap.jpg";
-  private static boolean keepLooping = true;
+	private static String IMG_PATH = "./snap.jpg";
+	private static boolean keepLooping = true;
 
-  private static void setLoop(boolean b) {
-    keepLooping = b;
-  }
+	private static void setLoop(boolean b) {
+		keepLooping = b;
+	}
 
-  private static boolean getLoop() {
-    return keepLooping;
-  }
+	private static boolean getLoop() {
+		return keepLooping;
+	}
 
-  public static void main(@SuppressWarnings("unused") String[] args) throws Exception {
-    String key = System.getProperty("key");
-    if (key == null) {
-      System.out.println("... Provide a key (see doc).");
-      System.exit(1);
-    }
-    System.out.println("Ctrl + C to stop.");
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      public void run() {
-        setLoop(false);
-      }
-    });
+	public static void main(@SuppressWarnings("unused") String[] args) throws Exception {
+		String key = System.getProperty("key");
+		if (key == null) {
+			System.out.println("... Provide a key (see doc).");
+			System.exit(1);
+		}
+		System.out.println("Ctrl + C to stop.");
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				setLoop(false);
+			}
+		});
 
-    while (getLoop()) {
-      try {
-        BufferedImage img = ImageIO.read(new File(IMG_PATH));
-        String imgstr = encodeToString(img, "jpg");
-        System.out.println(imgstr);
-        int val = POSTSnapshot.postImage(key, imgstr);
-        System.out.println(String.format("Ret Code: %d", val));
-      } catch (IOException ioe) {
-        String where = new File(".").getAbsolutePath();
-        System.err.println("From " + where);
-        ioe.printStackTrace();
-      }
-      try {
-        Thread.sleep(10_000);
-      } catch (InterruptedException ie) {
-        ie.printStackTrace();
-      }
-    }
-  }
+		while (getLoop()) {
+			try {
+				BufferedImage img = ImageIO.read(new File(IMG_PATH));
+				String imgstr = encodeToString(img, "jpg");
+				System.out.println(imgstr);
+				int val = POSTSnapshot.postImage(key, imgstr);
+				System.out.println(String.format("Ret Code: %d", val));
+			} catch (IOException ioe) {
+				String where = new File(".").getAbsolutePath();
+				System.err.println("From " + where);
+				ioe.printStackTrace();
+			}
+			try {
+				Thread.sleep(10_000);
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+			}
+		}
+	}
 }
