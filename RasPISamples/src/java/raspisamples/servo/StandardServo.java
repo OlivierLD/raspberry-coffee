@@ -102,12 +102,13 @@ public class StandardServo {
 			}
 			ss.stop();
 			waitfor(2_000);
-			System.out.println("Let's go, 1 deg by 1 deg");
+			System.out.println("Let's go, 1 deg by 1 deg, forward");
 			for (int i = ss.servoMin; i <= ss.servoMax; i += (ss.diff / 180)) {
 				System.out.println("i=" + i + ", " + Math.round(-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
 				ss.setPWM(i);
 				waitfor(10);
 			}
+			System.out.println("... backward");
 			for (int i = ss.servoMax; i >= ss.servoMin; i -= (ss.diff / 180)) {
 				System.out.println("i=" + i + ", " + Math.round(-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
 				ss.setPWM(i);
@@ -116,6 +117,7 @@ public class StandardServo {
 			ss.stop();
 			waitfor(2_000);
 
+			System.out.println("More randomly:");
 			float[] degValues = {-10, 0, -90, 45, -30, 90, 10, 20, 30, 40, 50, 60, 70, 80, 90, 0};
 			for (float f : degValues) {
 				System.out.println("In degrees:" + f);

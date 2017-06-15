@@ -57,14 +57,18 @@ public class HMC5883L {
 		byte high = (byte) (hcm5883l.read(reg) & 0xFF);
 		byte low = (byte) (hcm5883l.read(reg + 1) & 0xFF);
 
-		w = (short) (((high << 8) + low) & 0xFFFF); // Little endian
+		w = (short) ((((high & 0xFF) << 8) | (low & 0xFF)) & 0xFFFF); // Little endian
 
 		if (w >= 0x8000)
 			w = (short) -((0xFFFF - w) + 1);
 
-		if (verbose)
-			System.out.println("ReadWord: 0x" + Integer.toHexString(w).toUpperCase() + ", dec:" + w);
-
+		if (verbose) {
+			System.out.println(String.format("ReadWord: 0x%s << 8 | 0x%s => 0x%s, dec: %d",
+							Integer.toHexString(high & 0xFF).toUpperCase(),
+							Integer.toHexString(low & 0xFF).toUpperCase(),
+							Integer.toHexString(w).toUpperCase(),
+							w));
+		}
 		return w;
 	}
 
@@ -89,14 +93,11 @@ public class HMC5883L {
 			System.out.println("yOut:" + yOut);
 			System.out.println("zOut:" + zOut);
 		}
-/*		double heading = Math.atan2(magneticY, magneticX)
-			double pitch = Math.atan2(magneticX, magneticZ);
-			double roll = Math.atan2(magneticY, magneticZ); */
 
 		if (verbose) {
 			System.out.println(String.format("Heading: %f", Math.toDegrees(Math.atan2(yOut, xOut))));
-			System.out.println(String.format("Pitch: %f", Math.toDegrees(Math.atan2(xOut, zOut))));
-			System.out.println(String.format("Roll: %f", Math.toDegrees(Math.atan2(yOut, zOut))));
+			System.out.println(String.format("Pitch  : %f", Math.toDegrees(Math.atan2(yOut, zOut))));
+			System.out.println(String.format("Roll   : %f", Math.toDegrees(Math.atan2(xOut, zOut))));
 		}
 
 		heading = Math.atan2(yOut, xOut);
@@ -113,7 +114,7 @@ public class HMC5883L {
 		}
 	}
 
-	protected static void waitfor(long howMuch) {
+	protected static void delay(long howMuch) {
 		try {
 			Thread.sleep(howMuch);
 		} catch (InterruptedException ie) {
@@ -135,7 +136,7 @@ public class HMC5883L {
 			synchronized (sensor) {
 				setGo(false);
 				sensor.close();
-				waitfor(1_000);
+				delay(1_000);
 			}
 		}));
 
@@ -146,8 +147,8 @@ public class HMC5883L {
 				System.err.println(ex.getMessage());
 				ex.printStackTrace();
 			}
-			System.out.println("Heading: " + NF.format(Math.toDegrees(hdg)) + " deg.");
-			waitfor(500);
+			System.out.println(String.format("%d >> Heading: %s deg.", System.currentTimeMillis(), NF.format(Math.toDegrees(hdg))));
+			delay(500);
 		}
 		System.out.println("Bye.");
 	}
