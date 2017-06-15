@@ -1,4 +1,12 @@
 # NMEA Multiplexer
+
+NMEA channels management, in and out.
+
+-------------------------------------
+
+[NMEA](http://nmea.org) (National Marine Electronics Association) is one of the oldest IT standards, defining how sensor data should be conveyed.
+
+--------
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
 
 Designed to run on very small boards, like a Raspberry PI Zero, and with _no_ Internet access.
