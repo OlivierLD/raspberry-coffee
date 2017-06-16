@@ -58,8 +58,7 @@ public class InteractiveServo {
 		servoBoard.setPWM(servo, 0, pwm);
 	}
 
-	public void stop() // Set to 0
-	{
+	public void stop() { // Set to 0
 		servoBoard.setPWM(servo, 0, 0);
 	}
 
