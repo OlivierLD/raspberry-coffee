@@ -68,7 +68,9 @@ public class ElevationSimulator {
 	public ElevationSimulator(int channel) {
 		try {
 			System.out.println("Driving Servo on Channel " + channel);
+			this.servo = channel;
 			this.servoBoard = new PCA9685();
+			this.servoBoard.setPWMFreq(freq); // Set frequency in Hz
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
