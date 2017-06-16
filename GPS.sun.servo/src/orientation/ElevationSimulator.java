@@ -78,6 +78,7 @@ public class ElevationSimulator {
 		}
 		final ElevationSimulator instance = this;
 		Thread timeThread = new Thread(() -> {
+			int previous = 0;
 			while (keepWorking) {
 				getSunData(latitude, longitude);
 				if (he > 0) {
@@ -89,10 +90,19 @@ public class ElevationSimulator {
 										he,
 										z));
 					}
-					instance.setAngle((float)Math.round(he));
+					int angle = (int)Math.round(90 - he);
+					if (angle != previous) {
+						instance.setAngle((float) angle);
+						previous = angle;
+					}
 				} else {
 					dayTime = false;
 					System.out.println("Fait nuit...");
+					int angle = 0;
+					if (angle != previous) {
+						instance.setAngle((float) angle);
+						previous = angle;
+					}
 				}
 				try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			}
