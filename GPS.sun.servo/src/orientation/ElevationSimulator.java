@@ -89,7 +89,7 @@ public class ElevationSimulator {
 										he,
 										z));
 					}
-					instance.setAngle((float)he);
+					instance.setAngle((float)Math.round(he));
 				} else {
 					dayTime = false;
 					System.out.println("Fait nuit...");
