@@ -9,8 +9,8 @@ NMEA channels management, in and out.
 --------
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
 
-Designed to run on very small boards, like a Raspberry PI Zero, and with _no_ Internet access.
-> Warning: It is not designed to scale as an enterperise server!
+Designed to run on _very small_ boards, like a Raspberry PI Zero, and with possibly _no_ Internet access.
+> Warning: It is not designed to scale as an enterprise server!
 
 The operations on the Serial port require `libRxTx`. This is included in the gradle dependencies.
 To be able to use it outside gradle, run (on Linux/Debian/Raspberry PI):
