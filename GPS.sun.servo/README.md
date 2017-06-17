@@ -42,3 +42,7 @@ You can test the Almanac behavior by running
 ...
  From 37°44.93'N / 122°30.42'W, at 19:23:55 UTC, He:72.44º, Z:142.37º (true)
 ```
+
+### Issues
+The LSM303 returns both magnetic and gravity data.
+There seems to be a problem with the heading when pitch and/or roll are not equal to zero (ie when the board is not lying flat).

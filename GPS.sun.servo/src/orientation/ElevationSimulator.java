@@ -119,10 +119,6 @@ public class ElevationSimulator {
 		servoBoard.setPWM(servo, 0, pwm);
 	}
 
-	public void setPWM(int pwm) {
-		servoBoard.setPWM(servo, 0, pwm);
-	}
-
 	public void stop() { // Set to 0
 		servoBoard.setPWM(servo, 0, 0);
 	}
@@ -197,6 +193,12 @@ public class ElevationSimulator {
 						targetWindow));
 		System.out.println("----------------------------------------------");
 
-		new ElevationSimulator(channel);
+		final ElevationSimulator instance = new ElevationSimulator(channel);
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			instance.setAngle(0f);
+			keepWorking = false;
+			try { Thread.sleep(1_500L); } catch (Exception ex) {}
+		}));
 	}
 }
