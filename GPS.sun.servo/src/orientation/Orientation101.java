@@ -10,9 +10,6 @@ import java.util.TimeZone;
 import user.util.GeomUtil;
 
 /**
- * Orient the servo, based on the calculated elevation of the Sun.
- * Calculation takes the following values as parameters
- *
  * System variables:
  *
  * latitude -Dlatitude=37.7489
@@ -22,7 +19,7 @@ import user.util.GeomUtil;
  *
  * or GPS... (later).
  */
-public class ElevationSimulator {
+public class Orientation101 {
 
 	private static double declination = 14D; // E+, W-
 	private static int targetWindow = 5;
@@ -32,29 +29,10 @@ public class ElevationSimulator {
 
 	private static boolean keepWorking = true;
 
-	private static double he = 0D, z = 0D;
-	private static boolean dayTime = true;
+	private static double z = 0D;
 
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
-
-	private static void getSunData(double lat, double lng) {
-		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
-		AstroComputer.setDateTime(current.get(Calendar.YEAR),
-						current.get(Calendar.MONTH) + 1,
-						current.get(Calendar.DAY_OF_MONTH),
-						current.get(Calendar.HOUR_OF_DAY),
-						current.get(Calendar.MINUTE),
-						current.get(Calendar.SECOND));
-		AstroComputer.calculate();
-		SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
-						AstroComputer.getSunDecl(),
-						lat,
-						lng);
-		sru.calculate();
-		he = sru.getHe().doubleValue();
-		z = sru.getZ().doubleValue();
-	}
 
 	private int servo = -1;
 
@@ -68,7 +46,7 @@ public class ElevationSimulator {
 
 	private PCA9685 servoBoard = null;
 
-	public ElevationSimulator(int channel) {
+	public Orientation101(int channel) {
 		try {
 			System.out.println("Driving Servo on Channel " + channel);
 			this.servo = channel;
@@ -79,41 +57,7 @@ public class ElevationSimulator {
 			ex.printStackTrace();
 			System.exit(1);
 		}
-		final ElevationSimulator instance = this;
-		Thread timeThread = new Thread(() -> {
-			int previous = 0;
-			while (keepWorking) {
-				getSunData(latitude, longitude);
-				if (he > 0) {
-					dayTime = true;
-					if (astroVerbose) {
-						System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
-										GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
-										GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
-										he,
-										z));
-					}
-					int angle = (int)Math.round(90 - he);
-					if (angle != previous) {
-						instance.setAngle((float) angle);
-						previous = angle;
-					}
-				} else {
-					dayTime = false;
-					System.out.println("Fait nuit...");
-					int angle = 0;
-					if (angle != previous) {
-						instance.setAngle((float) angle);
-						previous = angle;
-					}
-				}
-				try { Thread.sleep(1_000L); } catch (Exception ex) {}
-			}
-			System.out.println("Timer done.");
-		});
-		System.out.println("Starting the timer loop");
-		this.stop();
-		timeThread.start();
+
 	}
 
 	public void setAngle(float f) {
@@ -145,6 +89,7 @@ public class ElevationSimulator {
 				throw e;
 			}
 		}
+
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
 		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
 
@@ -175,7 +120,7 @@ public class ElevationSimulator {
 				System.exit(1);
 			}
 		}
-		String strTol = System.getProperty("tolerance", "5");
+		String strTol = System.getProperty("tolerance", "1");
 		if (strTol != null) {
 			try {
 				targetWindow = Integer.parseInt(strTol);
@@ -196,12 +141,61 @@ public class ElevationSimulator {
 						targetWindow));
 		System.out.println("----------------------------------------------");
 
-		final ElevationSimulator instance = new ElevationSimulator(channel);
+		final LSM303 sensor;
+		final LSM303Listener orientationListener;
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			instance.setAngle(0f);
-			keepWorking = false;
-			try { Thread.sleep(1_500L); } catch (Exception ex) {}
-		}));
+		final Orientation101 instance = new Orientation101(channel);
+		try {
+			sensor = new LSM303();
+			orientationListener = new LSM303Listener() {
+				@Override
+				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
+					// Heading
+					double headingDiff = z - (heading + declination);
+					if (headingDiff < -180) {
+						headingDiff += 360D;
+					}
+					String headingMessage = "Heading OK";
+					if (headingDiff > targetWindow) {
+						headingMessage = "Turn right";
+					} else if (headingDiff < -targetWindow) {
+						headingMessage = "Turn left";
+					}
+					if (orientationVerbose) {
+						System.out.println(String.format("Board orientation: Heading %.01f, Target Z: %.01f, %s", heading, z, headingMessage));
+					}
+					// TODO Drive servos accordingly.
+				}
+
+				@Override
+				public void close() {
+					super.close();
+				}
+			};
+			sensor.setDataListener(orientationListener);
+
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				System.out.println("\nBye.");
+				synchronized (sensor) {
+					sensor.setKeepReading(false);
+					orientationListener.close();
+					keepWorking = false;
+					instance.setAngle(0f);
+					try {
+						Thread.sleep(1_500L);
+					} catch (InterruptedException ie) {
+						System.err.println(ie.getMessage());
+					}
+				}
+			}));
+
+			System.out.println("Start listening to the LSM303");
+			sensor.startReading();
+
+		} catch (Throwable ex) {
+			System.err.println(">>> OrientationDetector... <<< BAM!");
+			ex.printStackTrace();
+//		System.exit(1);
+		}
 	}
 }
