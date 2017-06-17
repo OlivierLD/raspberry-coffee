@@ -27,14 +27,13 @@ public class Orientation101 {
 	private static double latitude = 0D;
 	private static double longitude = 0D;
 
-	private static boolean keepWorking = true;
-
 	private static double z = 0D;
 
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
 
 	private int servo = -1;
+	private static int currentServoAngle = 0;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
 	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
@@ -145,6 +144,9 @@ public class Orientation101 {
 		final LSM303Listener orientationListener;
 
 		final Orientation101 instance = new Orientation101(channel);
+		// Set to 0
+		instance.setAngle((float)currentServoAngle);
+
 		try {
 			sensor = new LSM303();
 			orientationListener = new LSM303Listener() {
@@ -156,15 +158,22 @@ public class Orientation101 {
 						headingDiff += 360D;
 					}
 					String headingMessage = "Heading OK";
+					int delta = 0;
 					if (headingDiff > targetWindow) {
 						headingMessage = "Turn right";
+						delta = 1;
 					} else if (headingDiff < -targetWindow) {
 						headingMessage = "Turn left";
+						delta = -1;
 					}
 					if (orientationVerbose) {
 						System.out.println(String.format("Board orientation: Heading %.01f, Target Z: %.01f, %s", heading, z, headingMessage));
 					}
-					// TODO Drive servos accordingly.
+					// Drive servo accordingly, to point north.
+					if (delta != 0) {
+						currentServoAngle += delta;
+						instance.setAngle((float)currentServoAngle);
+					}
 				}
 
 				@Override
@@ -179,7 +188,6 @@ public class Orientation101 {
 				synchronized (sensor) {
 					sensor.setKeepReading(false);
 					orientationListener.close();
-					keepWorking = false;
 					instance.setAngle(0f);
 					try {
 						Thread.sleep(1_500L);
