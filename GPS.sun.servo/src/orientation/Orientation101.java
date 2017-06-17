@@ -22,7 +22,7 @@ import user.util.GeomUtil;
 public class Orientation101 {
 
 	private static double declination = 14D; // E+, W-
-	private static int targetWindow = 5;
+	private static int targetWindow = 1;
 
 	private static double latitude = 0D;
 	private static double longitude = 0D;
@@ -161,17 +161,18 @@ public class Orientation101 {
 					int delta = 0;
 					if (headingDiff > targetWindow) {
 						headingMessage = "Turn right";
-						delta = 1;
+						delta = -1; 
 					} else if (headingDiff < -targetWindow) {
 						headingMessage = "Turn left";
-						delta = -1;
+						delta = 1;
 					}
 					if (orientationVerbose) {
 						System.out.println(String.format("Board orientation: Heading %.01f, Target Z: %.01f, %s", heading, z, headingMessage));
 					}
 					// Drive servo accordingly, to point north.
-					if (delta != 0) {
+					if (delta != 0) {						
 						currentServoAngle += delta;
+//					System.out.println("Pointing to " + currentServoAngle);
 						instance.setAngle((float)currentServoAngle);
 					}
 				}
