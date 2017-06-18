@@ -77,6 +77,14 @@ public class PanelOrienterV1 {
 	private static int freq = 60;
 
 	private PCA9685 servoBoard = null;
+	private static boolean calibrating = false;
+
+	private static void setCalibrating(boolean b) {
+		calibrating = b;
+	}
+	private static boolean isCalibrating() {
+		return calibrating;
+	}
 
 	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 
@@ -202,10 +210,6 @@ public class PanelOrienterV1 {
 		instance.setAngle(servoHeading, (float)currentServoAngle);
 		instance.setAngle(servoTilt, 0f);
 
-		// TODO Point LSM303 to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
-		System.out.println("Point the LSM303 to the South, hit [Return] when ready.");
-		userInput("");
-
 		boolean withTest = true; // PRM
 		if (withTest) {
 			instance.setAngle(servoHeading, -90f);
@@ -243,7 +247,7 @@ public class PanelOrienterV1 {
 						System.out.println(String.format("Board orientation: Heading %.01f, Target Z: %.01f, %s", heading, z, headingMessage));
 					}
 					// Drive servo accordingly, to point to Z.
-					if (delta != 0) {
+					if (delta != 0 && !isCalibrating()) {
 						if (false) {
 							currentServoAngle += delta;
 //					System.out.println("Pointing to " + currentServoAngle);
@@ -262,6 +266,13 @@ public class PanelOrienterV1 {
 				}
 			};
 			sensor.setDataListener(orientationListener);
+
+			// TODO Point LSM303 to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
+			System.out.println("Point the LSM303 to the South, hit [Return] when ready.");
+			z = 180;
+			setCalibrating(true);
+			userInput("");
+			setCalibrating(false);
 
 			Thread timeThread = new Thread(() -> {
 				int previous = 0;
@@ -300,13 +311,6 @@ public class PanelOrienterV1 {
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println("\nBye.");
-				instance.setAngle(servoHeading, 0f);
-				instance.setAngle(servoTilt, 0f);
-				try {
-					Thread.sleep(1_000L);
-				} catch (InterruptedException ie) {
-					System.err.println(ie.getMessage());
-				}
 				instance.stop(servoHeading);
 				instance.stop(servoTilt);
 				synchronized (sensor) {
@@ -317,6 +321,13 @@ public class PanelOrienterV1 {
 					} catch (InterruptedException ie) {
 						System.err.println(ie.getMessage());
 					}
+				}
+				instance.setAngle(servoHeading, 0f);
+				instance.setAngle(servoTilt, 0f);
+				try {
+					Thread.sleep(1_000L);
+				} catch (InterruptedException ie) {
+					System.err.println(ie.getMessage());
 				}
 			}));
 
