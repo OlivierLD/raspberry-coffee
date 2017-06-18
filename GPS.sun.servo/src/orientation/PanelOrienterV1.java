@@ -5,6 +5,8 @@ import calculation.SightReductionUtil;
 import i2c.sensor.LSM303;
 import i2c.sensor.listener.LSM303Listener;
 import i2c.servo.pwm.PCA9685;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.TimeZone;
 import user.util.GeomUtil;
@@ -76,6 +78,18 @@ public class PanelOrienterV1 {
 
 	private PCA9685 servoBoard = null;
 
+	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+	private static String userInput(String prompt) {
+		String retString = "";
+		System.err.print(prompt);
+		try {
+			retString = stdin.readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return retString;
+	}
 	public PanelOrienterV1() {
 		try {
 			System.out.println("Driving Servos on Channels " + servoHeading + " and " + servoTilt);
@@ -93,7 +107,12 @@ public class PanelOrienterV1 {
 		if (servoVerbose) {
 			System.out.println(String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm));
 		}
-		servoBoard.setPWM(servo, 0, pwm);
+		try {
+			servoBoard.setPWM(servo, 0, pwm);
+		} catch (IllegalArgumentException iae) {
+			System.err.println(String.format("Cannot set servo %d to PWM %d", servo, pwm));
+			iae.printStackTrace();
+		}
 	}
 
 	public void stop(int servo) { // Set to 0
@@ -175,6 +194,8 @@ public class PanelOrienterV1 {
 						targetWindow));
 		System.out.println("----------------------------------------------");
 
+		// TODO Point LSM303 to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
+
 		final LSM303 sensor;
 		final LSM303Listener orientationListener;
 
@@ -186,10 +207,10 @@ public class PanelOrienterV1 {
 		boolean withTest = true; // PRM
 		if (withTest) {
 			instance.setAngle(servoHeading, -90f);
-			instance.setAngle(servoTilt, -180f);
+			instance.setAngle(servoTilt, -90f);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			instance.setAngle(servoHeading, 90f);
-			instance.setAngle(servoTilt, 180f);
+			instance.setAngle(servoTilt, 90f);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			instance.setAngle(servoHeading, (float)currentServoAngle);
 			instance.setAngle(servoTilt, 0f);
