@@ -234,6 +234,10 @@ public class PanelOrienterV1 {
 			orientationListener = new LSM303Listener() {
 				@Override
 				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
+
+					// TODO if out of [-90..90], invert.
+
+
 					// Heading
 					double headingDiff = z - (heading + declination);
 					if (headingDiff < -180) {
@@ -296,7 +300,6 @@ public class PanelOrienterV1 {
 											he,
 											z));
 						}
-						// TODO if out of [-90..90], invert.
 						int angle = (int)Math.round(90 - he);
 						if (angle != previous) {
 							System.out.println(String.format("Tilt servo angle now: %d", angle));
