@@ -195,6 +195,8 @@ public class PanelOrienterV1 {
 		System.out.println("----------------------------------------------");
 
 		// TODO Point LSM303 to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
+		System.out.println("Point the LSM303 to the South, hit [Return] when ready.");
+		userInput("");
 
 		final LSM303 sensor;
 		final LSM303Listener orientationListener;
@@ -248,7 +250,7 @@ public class PanelOrienterV1 {
 //					System.out.println("Pointing to " + currentServoAngle);
 							instance.setAngle(servoHeading, (float) currentServoAngle);
 						} else {
-							currentServoAngle = (int)-z;
+							currentServoAngle = (int)(z - 180);
 							System.out.println(String.format("Setting servo #%d to %d", servoHeading, currentServoAngle));
 							instance.setAngle(servoHeading, (float) currentServoAngle);
 						}
