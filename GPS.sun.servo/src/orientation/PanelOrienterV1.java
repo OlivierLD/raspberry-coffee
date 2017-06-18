@@ -210,7 +210,12 @@ public class PanelOrienterV1 {
 		instance.setAngle(servoHeading, (float)currentServoAngle);
 		instance.setAngle(servoTilt, 0f);
 
-		boolean withTest = true; // PRM
+		setCalibrating(false);
+		boolean withTest = false; // PRM
+		String resp = userInput("Test servos? [Y] > ");
+		if ("Y".equalsIgnoreCase(resp)) {
+			withTest = true;
+		}
 		if (withTest) {
 			instance.setAngle(servoHeading, -90f);
 			instance.setAngle(servoTilt, -90f);
@@ -248,7 +253,7 @@ public class PanelOrienterV1 {
 					}
 					// Drive servo accordingly, to point to Z.
 					if (delta != 0 && !isCalibrating()) {
-						if (false) {
+						if (true) { // Go step-by-step
 							currentServoAngle += delta;
 //					  System.out.println("Pointing to " + currentServoAngle);
 							instance.setAngle(servoHeading, (float) currentServoAngle);
@@ -275,6 +280,7 @@ public class PanelOrienterV1 {
 			setCalibrating(true);
 			userInput("");
 			setCalibrating(false);
+			// Done calibrating
 
 			Thread timeThread = new Thread(() -> {
 				int previous = 0;
@@ -290,6 +296,7 @@ public class PanelOrienterV1 {
 											he,
 											z));
 						}
+						// TODO if out of [-90..90], invert.
 						int angle = (int)Math.round(90 - he);
 						if (angle != previous) {
 							System.out.println(String.format("Tilt servo angle now: %d", angle));
