@@ -237,10 +237,10 @@ public class PanelOrienterV1 {
 					String headingMessage = "Heading OK";
 					int delta = 0;
 					if (headingDiff > targetWindow) {
-						headingMessage = "Sun is on the right";
+						headingMessage = String.format("Target is on the right by %.02f\272", headingDiff);
 						delta = -1; 
 					} else if (headingDiff < -targetWindow) {
-						headingMessage = "Sun is on the left";
+						headingMessage = String.format("Target is on the left by %.02f\272", headingDiff);
 						delta = 1;
 					}
 					if (orientationVerbose) {
