@@ -194,10 +194,6 @@ public class PanelOrienterV1 {
 						targetWindow));
 		System.out.println("----------------------------------------------");
 
-		// TODO Point LSM303 to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
-		System.out.println("Point the LSM303 to the South, hit [Return] when ready.");
-		userInput("");
-
 		final LSM303 sensor;
 		final LSM303Listener orientationListener;
 
@@ -205,6 +201,10 @@ public class PanelOrienterV1 {
 		// Set to 0
 		instance.setAngle(servoHeading, (float)currentServoAngle);
 		instance.setAngle(servoTilt, 0f);
+
+		// TODO Point LSM303 to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
+		System.out.println("Point the LSM303 to the South, hit [Return] when ready.");
+		userInput("");
 
 		boolean withTest = true; // PRM
 		if (withTest) {
@@ -219,7 +219,6 @@ public class PanelOrienterV1 {
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			System.out.println("Test done.");
 		}
-
 
 		try {
 			sensor = new LSM303();
@@ -250,7 +249,7 @@ public class PanelOrienterV1 {
 //					System.out.println("Pointing to " + currentServoAngle);
 							instance.setAngle(servoHeading, (float) currentServoAngle);
 						} else {
-							currentServoAngle = (int)(z - 180);
+							currentServoAngle = (int) -(z - 180);
 							System.out.println(String.format("Setting servo #%d to %d", servoHeading, currentServoAngle));
 							instance.setAngle(servoHeading, (float) currentServoAngle);
 						}
@@ -303,6 +302,11 @@ public class PanelOrienterV1 {
 				System.out.println("\nBye.");
 				instance.setAngle(servoHeading, 0f);
 				instance.setAngle(servoTilt, 0f);
+				try {
+					Thread.sleep(1_000L);
+				} catch (InterruptedException ie) {
+					System.err.println(ie.getMessage());
+				}
 				instance.stop(servoHeading);
 				instance.stop(servoTilt);
 				synchronized (sensor) {
