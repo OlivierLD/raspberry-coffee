@@ -249,6 +249,7 @@ public class PanelOrienterV1 {
 							instance.setAngle(servoHeading, (float) currentServoAngle);
 						} else {
 							currentServoAngle = (int)-z;
+							System.out.println(String.format("Setting servo #%d to %d", servoHeading, currentServoAngle));
 							instance.setAngle(servoHeading, (float) currentServoAngle);
 						}
 					}
