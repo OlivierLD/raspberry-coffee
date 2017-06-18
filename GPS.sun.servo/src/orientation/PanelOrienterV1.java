@@ -40,10 +40,10 @@ public class PanelOrienterV1 {
 	private static boolean keepWorking = true;
 
 	private static double he = 0D, z = 0D;
-	private static boolean dayTime = true;
 
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
+	private static boolean servoVerbose = false;
 
 	private static void getSunData(double lat, double lng) {
 		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
@@ -72,7 +72,6 @@ public class PanelOrienterV1 {
 
 	private int servoMin = DEFAULT_SERVO_MIN;
 	private int servoMax = DEFAULT_SERVO_MAX;
-	private int diff = servoMax - servoMin;
 	private static int freq = 60;
 
 	private PCA9685 servoBoard = null;
@@ -91,7 +90,9 @@ public class PanelOrienterV1 {
 
 	public void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
-		// System.out.println(f + " degrees (" + pwm + ")");
+		if (servoVerbose) {
+			System.out.println(String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm));
+		}
 		servoBoard.setPWM(servo, 0, pwm);
 	}
 
@@ -123,6 +124,8 @@ public class PanelOrienterV1 {
 
 		// Read System Properties
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
+		servoVerbose = "true".equals(System.getProperty("servo.verbose", "false"));
+		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
 
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {
@@ -223,7 +226,7 @@ public class PanelOrienterV1 {
 					// Sun position calculation geos here
 					getSunData(latitude, longitude);
 					if (he > 0) {
-						dayTime = true;
+//					dayTime = true;
 						if (astroVerbose) {
 							System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
 											GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
@@ -237,7 +240,7 @@ public class PanelOrienterV1 {
 							previous = angle;
 						}
 					} else {
-						dayTime = false;
+//					dayTime = false;
 						System.out.println("Fait nuit, parked...");
 						int angle = 0;
 						if (angle != previous) {
@@ -254,11 +257,11 @@ public class PanelOrienterV1 {
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println("\nBye.");
+				instance.stop(servoHeading);
+				instance.stop(servoTilt);
 				synchronized (sensor) {
 					sensor.setKeepReading(false);
 					orientationListener.close();
-					instance.stop(servoHeading);
-					instance.stop(servoTilt);
 					try {
 						Thread.sleep(1_500L);
 					} catch (InterruptedException ie) {

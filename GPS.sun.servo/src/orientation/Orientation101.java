@@ -14,6 +14,10 @@ import user.util.GeomUtil;
  * Then move the servo (to which the board is attached).
  * The servo should orient the board, so it keeps pointing in the same (North, aka 0) direction.
  *
+ * <p>
+ *   <b>This is a test, the goal here is to keep pointing North!</b>
+ * </p>
+ *
  * System variables:
  *
  * latitude -Dlatitude=37.7489
