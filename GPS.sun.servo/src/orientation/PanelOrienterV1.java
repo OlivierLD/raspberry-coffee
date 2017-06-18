@@ -244,7 +244,7 @@ public class PanelOrienterV1 {
 						delta = 1;
 					}
 					if (orientationVerbose) {
-						System.out.println(String.format("Board orientation: Heading %.01f, Target Z: %.01f, %s", heading, z, headingMessage));
+						System.out.println(String.format("Board orientation: Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s", heading, (heading + declination), z, headingMessage));
 					}
 					// Drive servo accordingly, to point to Z.
 					if (delta != 0 && !isCalibrating()) {
@@ -298,7 +298,7 @@ public class PanelOrienterV1 {
 						}
 					} else {
 //					dayTime = false;
-						System.out.println("Fait nuit, parked...");
+						System.out.println("Night time, parked...");
 						int angle = 0;
 						if (angle != previous) {
 							instance.setAngle(servoTilt, (float) angle);
