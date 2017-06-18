@@ -250,11 +250,13 @@ public class PanelOrienterV1 {
 					if (delta != 0 && !isCalibrating()) {
 						if (false) {
 							currentServoAngle += delta;
-//					System.out.println("Pointing to " + currentServoAngle);
+//					  System.out.println("Pointing to " + currentServoAngle);
 							instance.setAngle(servoHeading, (float) currentServoAngle);
 						} else {
 							currentServoAngle = (int) -(z - 180);
-							System.out.println(String.format("Setting servo #%d to %d", servoHeading, currentServoAngle));
+							if (orientationVerbose) {
+								System.out.println(String.format("Setting servo #%d to %d", servoHeading, currentServoAngle));
+							}
 							instance.setAngle(servoHeading, (float) currentServoAngle);
 						}
 					}
@@ -290,6 +292,7 @@ public class PanelOrienterV1 {
 						}
 						int angle = (int)Math.round(90 - he);
 						if (angle != previous) {
+							System.out.println(String.format("Tilt servo angle now: %d", angle));
 							instance.setAngle(servoTilt, (float) angle);
 							previous = angle;
 						}
