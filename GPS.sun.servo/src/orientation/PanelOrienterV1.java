@@ -183,6 +183,21 @@ public class PanelOrienterV1 {
 		instance.setAngle(servoHeading, (float)currentServoAngle);
 		instance.setAngle(servoTilt, 0f);
 
+		boolean withTest = true; // PRM
+		if (withTest) {
+			instance.setAngle(servoHeading, -90f);
+			instance.setAngle(servoTilt, -180f);
+			try { Thread.sleep(1_000L); } catch (Exception ex) {}
+			instance.setAngle(servoHeading, 90f);
+			instance.setAngle(servoTilt, 180f);
+			try { Thread.sleep(1_000L); } catch (Exception ex) {}
+			instance.setAngle(servoHeading, (float)currentServoAngle);
+			instance.setAngle(servoTilt, 0f);
+			try { Thread.sleep(1_000L); } catch (Exception ex) {}
+			System.out.println("Test done.");
+		}
+
+
 		try {
 			sensor = new LSM303();
 			orientationListener = new LSM303Listener() {
@@ -205,11 +220,16 @@ public class PanelOrienterV1 {
 					if (orientationVerbose) {
 						System.out.println(String.format("Board orientation: Heading %.01f, Target Z: %.01f, %s", heading, z, headingMessage));
 					}
-					// Drive servo accordingly, to point north.
-					if (delta != 0) {						
-						currentServoAngle += delta;
+					// Drive servo accordingly, to point to Z.
+					if (delta != 0) {
+						if (false) {
+							currentServoAngle += delta;
 //					System.out.println("Pointing to " + currentServoAngle);
-						instance.setAngle(servoHeading, (float)currentServoAngle);
+							instance.setAngle(servoHeading, (float) currentServoAngle);
+						} else {
+							currentServoAngle = (int)-z;
+							instance.setAngle(servoHeading, (float) currentServoAngle);
+						}
 					}
 				}
 
@@ -257,6 +277,8 @@ public class PanelOrienterV1 {
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println("\nBye.");
+				instance.setAngle(servoHeading, 0f);
+				instance.setAngle(servoTilt, 0f);
 				instance.stop(servoHeading);
 				instance.stop(servoTilt);
 				synchronized (sensor) {
