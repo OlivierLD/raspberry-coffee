@@ -71,6 +71,7 @@ public class PanelOrienterV1 {
 	private static int servoTilt    = 15;
 
 	private static int currentServoAngle = 0;
+	private static boolean invert = false;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
 	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
@@ -137,6 +138,16 @@ public class PanelOrienterV1 {
 		int diff = max - min;
 		float oneDeg = diff / 180f;
 		return Math.round(min + ((deg + 90) * oneDeg));
+	}
+
+	private static float invertHeading(float h) {
+		float inverted = 0f;
+		if (h < 0) {
+			inverted = h + 180f;
+		} else {
+			inverted = h - 180f;
+		}
+		return inverted;
 	}
 
 	public static void main(String... args) {
@@ -238,9 +249,6 @@ public class PanelOrienterV1 {
 				@Override
 				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
 
-					// TODO if out of [-90..90], invert.
-
-
 					// Heading
 					double headingDiff = z - (heading + declination);
 					if (headingDiff < -180) {
@@ -260,21 +268,22 @@ public class PanelOrienterV1 {
 					}
 					// Drive servo accordingly, to point to Z.
 					if (delta != 0 && !isCalibrating()) {
+
 						if (true) { // Go step-by-step
 							currentServoAngle += delta;
-//					  System.out.println("Pointing to " + currentServoAngle);
-							instance.setAngle(servoHeading, (float) currentServoAngle);
 						} else {
 							currentServoAngle = (int) -(z - 180);
-							if (orientationVerbose) {
-								System.out.println(String.format("Setting servo #%d to %d", servoHeading, currentServoAngle));
-							}
-							if (currentServoAngle < -90 || currentServoAngle > 90) {
-								System.out.println("...Nope (TODO!!!)");
-							} else { // OK
-								instance.setAngle(servoHeading, (float) currentServoAngle);
-							}
 						}
+						// If out of [-90..90], invert.
+						if (currentServoAngle < -90 || currentServoAngle > 90) {
+							invert = true;
+						} else {
+							invert = false;
+						}
+						if (orientationVerbose) {
+							System.out.println(String.format("Setting servo #%d to %d", servoHeading, currentServoAngle));
+						}
+						instance.setAngle(servoHeading, invert ? invertHeading((float) currentServoAngle) : (float) currentServoAngle);
 					}
 				}
 
@@ -298,8 +307,7 @@ public class PanelOrienterV1 {
 				while (keepWorking) {
 					// Sun position calculation geos here
 					getSunData(latitude, longitude);
-					if (he > 0) {
-//					dayTime = true;
+					if (he > 0) { // Daytime
 						if (astroVerbose) {
 							System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
 											GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
@@ -310,11 +318,10 @@ public class PanelOrienterV1 {
 						int angle = (int)Math.round(90 - he);
 						if (angle != previous) {
 							System.out.println(String.format("Tilt servo angle now: %d", angle));
-							instance.setAngle(servoTilt, (float) angle);
+							instance.setAngle(servoTilt, invert ? (float) -angle : (float) angle);
 							previous = angle;
 						}
-					} else {
-//					dayTime = false;
+					} else { // Night time
 						System.out.println("Night time, parked...");
 						int angle = 0;
 						if (angle != previous) {
