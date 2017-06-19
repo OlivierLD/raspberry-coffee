@@ -620,5 +620,20 @@ They are [here](./examples.md).
 ## Case Studies
 - [NMEA Multiplexer on a Raspberry PI Zero W](./casestudy.md). Compared with Node-RED.
 
+## Bonus
+- A sample of a log file analyzer is in `util.LogAnalyzer`:
+```bash
+ $ java -cp ./build/libs/NMEA.multiplexer-1.0-all.jar util.LogAnalyzer ./sample.data/2017.06.17.nmea
+
+  Started 17-Jun-2017 09:11:01 PDT
+  Arrived 17-Jun-2017 11:42:37 PDT
+  9,097 record(s) out of 36,387. Total distance: 12.221 km, in 2 hour(s) 31 minute(s) 36.0 sec(s). Avg speed:4.837 km/h
+  Max Speed: 6.112 km/h
+  Top-Left    :N  37°20.17' / W 121°43.62'
+  Bottom-Right:N  37°18.70' / W 121°41.46'
+
+ $
+```
+
 
 -------------------------------

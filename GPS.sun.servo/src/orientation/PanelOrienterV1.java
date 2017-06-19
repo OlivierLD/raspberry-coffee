@@ -14,13 +14,8 @@ import user.util.GeomUtil;
 /**
  * The job of this one is to point North, and keep pointing to it.
  * You have an LSM303 attached to a standard servo.
- * Start at Zero, point the x -> arrow drawn on the LSM303 as close to the north as you can, and
- * start the program.
  *
  * In addition, this one <b>calculates</b> the Sun elevation and orients a second servo accordingly.
- *
- * Then move the servo (to which the board is attached).
- * The servo should orient the board, so it keeps pointing in the same (North, aka 0) direction.
  *
  * System variables:
  *
@@ -149,6 +144,7 @@ public class PanelOrienterV1 {
 		}
 		return inverted;
 	}
+
 
 	public static void main(String... args) {
 
