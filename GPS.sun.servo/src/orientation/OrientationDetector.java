@@ -9,6 +9,10 @@ import java.util.TimeZone;
 import user.util.GeomUtil;
 
 /**
+ * This one relies on the LSM303 for the pitch AND heading.
+ * Not found the way to make it work yet...
+ * See {@link PanelOrienterV1} for a better approach (for now).
+ *
  * System variables:
  *
  * latitude -Dlatitude=37.7489

@@ -29,6 +29,8 @@ import user.util.GeomUtil;
  * declination -Ddeclination=14
  * tolerance -Dtolerance=1
  *
+ * TODO ANSI console
+ *
  * or GPS... (later).
  */
 public class PanelOrienterV1 {
@@ -67,6 +69,7 @@ public class PanelOrienterV1 {
 
 	private static int servoHeading = 14;
 	private static int servoTilt    = 15;
+
 	private static int currentServoAngle = 0;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
@@ -266,7 +269,11 @@ public class PanelOrienterV1 {
 							if (orientationVerbose) {
 								System.out.println(String.format("Setting servo #%d to %d", servoHeading, currentServoAngle));
 							}
-							instance.setAngle(servoHeading, (float) currentServoAngle);
+							if (currentServoAngle < -90 || currentServoAngle > 90) {
+								System.out.println("...Nope (TODO!!!)");
+							} else { // OK
+								instance.setAngle(servoHeading, (float) currentServoAngle);
+							}
 						}
 					}
 				}
