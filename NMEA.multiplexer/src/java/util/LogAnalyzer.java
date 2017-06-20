@@ -93,20 +93,22 @@ public class LogAnalyzer {
 								arrival = rmcTime;
 							}
 							GeoPos gp = rmc.getGp();
-							minLat = Math.min(minLat, gp.lat);
-							maxLat = Math.max(maxLat, gp.lat);
-							minLng = Math.min(minLng, gp.lng);
-							maxLng = Math.max(maxLng, gp.lng);
-							if (previousPos != null) {
-								double distance = haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
+							if (gp != null) {
+								minLat = Math.min(minLat, gp.lat);
+								maxLat = Math.max(maxLat, gp.lat);
+								minLng = Math.min(minLng, gp.lng);
+								maxLng = Math.max(maxLng, gp.lng);
+								if (previousPos != null) {
+									double distance = haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
 //									System.out.println(String.format("Step: %.03f km between %s and %s (%s)",
 //													distance,
 //													previousPos.toString(),
 //													gp.toString(),
 //													SDF.format(rmcTime)));
-								distanceInKm += distance;
+									distanceInKm += distance;
+								}
+								previousPos = gp;
 							}
-							previousPos = gp;
 							maxSpeed = Math.max(maxSpeed, rmc.getSog());
 						}
 						// More Sentence IDs ?..

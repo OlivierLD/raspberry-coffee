@@ -100,6 +100,7 @@ public class PanelOrienterV1 {
 		}
 		return retString;
 	}
+
 	public PanelOrienterV1() {
 		try {
 			System.out.println("Driving Servos on Channels " + servoHeading + " and " + servoTilt);
@@ -316,7 +317,7 @@ public class PanelOrienterV1 {
 												z));
 							}
 							int angle = (int)Math.round(90 - he);
-							if (angle != previousTiltAngle) {
+							if (angle != previousTiltAngle) { // TODO: or invert has changed...
 								System.out.println(String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
 								instance.setAngle(servoTilt, invert ? (float) -angle : (float) angle);
 								previousTiltAngle = angle;
