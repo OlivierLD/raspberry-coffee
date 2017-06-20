@@ -265,19 +265,20 @@ public class PanelOrienterV1 {
 					String headingMessage = "Heading OK";
 					int delta = 0;
 					if (headingDiff > targetWindow) {
-						headingMessage = String.format("Target is on the right by %.02f\272", headingDiff);
+						headingMessage = String.format("Target is on the right by %.02f\272", Math.abs(headingDiff));
 						delta = -1; 
 					} else if (headingDiff < -targetWindow) {
-						headingMessage = String.format("Target is on the left by %.02f\272", headingDiff);
+						headingMessage = String.format("Target is on the left by %.02f\272", Math.abs(headingDiff));
 						delta = 1;
 					}
 					if (orientationVerbose) {
-						System.out.println(String.format("Board orientation: Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s %s",
+						System.out.println(String.format("Board orientation: Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s %s servo-angle: %d",
 										heading,
 										(heading + declination),
 										z,
 										headingMessage,
-										(invert ? "(inverted)" : "")));
+										(invert ? "(inverted)" : ""),
+										currentServoAngle));
 					}
 					// Drive servo accordingly, to point to Z.
 					if (delta != 0 && !isCalibrating()) {
@@ -294,7 +295,7 @@ public class PanelOrienterV1 {
 							invert = false;
 						}
 						if (orientationVerbose) {
-							System.out.println(String.format("Setting servo #%d to %d %s", servoHeading, currentServoAngle, (invert ? "(inverted)" : "")));
+							System.out.println(String.format(">>> Setting servo #%d to %d %s", servoHeading, currentServoAngle, (invert ? "(inverted)" : "")));
 						}
 						instance.setAngle(servoHeading, invert ? invertHeading((float) currentServoAngle) : (float) currentServoAngle);
 					}
@@ -330,7 +331,7 @@ public class PanelOrienterV1 {
 						}
 						int angle = (int)Math.round(90 - he);
 						if (angle != previous) {
-							System.out.println(String.format("Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
+							System.out.println(String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
 							instance.setAngle(servoTilt, invert ? (float) -angle : (float) angle);
 							previous = angle;
 						}
