@@ -25,6 +25,7 @@ import user.util.GeomUtil;
  * tolerance -Dtolerance=1
  *
  * TODO ANSI console
+ * TODO Manual entry (for test) in getSunData
  *
  * or GPS... (later).
  */
@@ -66,6 +67,8 @@ public class PanelOrienterV1 {
 	private static int servoTilt    = 15;
 
 	private static int currentServoAngle = 0;
+	private static int previousTiltAngle = 0;
+
 	private static boolean invert = false;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
@@ -263,7 +266,6 @@ public class PanelOrienterV1 {
 							heading -= 360;
 						}
 					}
-
 					// Heading
 					double headingDiff = z - (heading + declination);
 					if (headingDiff < -180) {
@@ -291,7 +293,7 @@ public class PanelOrienterV1 {
 					// Drive servo accordingly, to point to Z.
 					if (delta != 0 && !isCalibrating()) {
 
-						// TODO: Here, orient BOTH servos, with or without invert.
+						// Here, orient BOTH servos, with or without invert.
 
 						if (false) { // Go step-by-step
 							currentServoAngle += delta;
@@ -304,6 +306,30 @@ public class PanelOrienterV1 {
 						} else {
 							invert = false;
 						}
+
+						if (he > 0) { // Daytime
+							if (astroVerbose) {
+								System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
+												GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
+												GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
+												he,
+												z));
+							}
+							int angle = (int)Math.round(90 - he);
+							if (angle != previousTiltAngle) {
+								System.out.println(String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
+								instance.setAngle(servoTilt, invert ? (float) -angle : (float) angle);
+								previousTiltAngle = angle;
+							}
+						} else { // Night time
+							System.out.println("Night time, parked...");
+							int angle = 0;
+							if (angle != previousTiltAngle) {
+								instance.setAngle(servoTilt, (float) angle);
+								previousTiltAngle = angle;
+							}
+						}
+
 						if (orientationVerbose) {
 							System.out.println(String.format(">>> Setting servo #%d to %d %s", servoHeading, currentServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : "")));
 						}
@@ -331,27 +357,29 @@ public class PanelOrienterV1 {
 				while (keepWorking) {
 					// Sun position calculation geos here
 					getSunData(latitude, longitude);
-					if (he > 0) { // Daytime
-						if (astroVerbose) {
-							System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
-											GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
-											GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
-											he,
-											z));
-						}
-						int angle = (int)Math.round(90 - he);
-						if (angle != previous) {
-							System.out.println(String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
-							instance.setAngle(servoTilt, invert ? (float) -angle : (float) angle);
-							previous = angle;
-						}
-					} else { // Night time
-						System.out.println("Night time, parked...");
-						int angle = 0;
-						if (angle != previous) {
-							instance.setAngle(servoTilt, (float) angle);
-							previous = angle;
-						}
+					if (false) { // TODO Remove this block.
+//						if (he > 0) { // Daytime
+//							if (astroVerbose) {
+//								System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
+//												GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
+//												GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
+//												he,
+//												z));
+//							}
+//							int angle = (int) Math.round(90 - he);
+//							if (angle != previousTiltAngle) {
+//								System.out.println(String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
+//								instance.setAngle(servoTilt, invert ? (float) -angle : (float) angle);
+//								previousTiltAngle = angle;
+//							}
+//						} else { // Night time
+//							System.out.println("Night time, parked...");
+//							int angle = 0;
+//							if (angle != previousTiltAngle) {
+//								instance.setAngle(servoTilt, (float) angle);
+//								previousTiltAngle = angle;
+//							}
+//						}
 					}
 					try { Thread.sleep(1_000L); } catch (Exception ex) {}
 				}
