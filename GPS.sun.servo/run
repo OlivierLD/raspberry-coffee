@@ -6,4 +6,4 @@ JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true -Dastro.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=true"
 #
 # sudo java -cp $CP $JAVA_OPTS orientation.OrientationDetector
-sudo java -cp $CP $JAVA_OPTS orientation.PanelOrienterV1
+sudo java -cp $CP $JAVA_OPTS orientation.PanelOrienterV1 --heading:14 --tilt:15
