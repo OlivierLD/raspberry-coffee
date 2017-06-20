@@ -291,6 +291,8 @@ public class PanelOrienterV1 {
 					// Drive servo accordingly, to point to Z.
 					if (delta != 0 && !isCalibrating()) {
 
+						// TODO: Here, orient BOTH servos, with or without invert.
+
 						if (true) { // Go step-by-step
 							currentServoAngle += delta;
 						} else {
