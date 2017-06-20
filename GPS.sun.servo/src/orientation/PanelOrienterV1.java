@@ -277,7 +277,7 @@ public class PanelOrienterV1 {
 										(heading + declination),
 										z,
 										headingMessage,
-										(invert ? "(inverted)" : ""),
+										(invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : ""),
 										currentServoAngle));
 					}
 					// Drive servo accordingly, to point to Z.
@@ -295,7 +295,7 @@ public class PanelOrienterV1 {
 							invert = false;
 						}
 						if (orientationVerbose) {
-							System.out.println(String.format(">>> Setting servo #%d to %d %s", servoHeading, currentServoAngle, (invert ? "(inverted)" : "")));
+							System.out.println(String.format(">>> Setting servo #%d to %d %s", servoHeading, currentServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : "")));
 						}
 						instance.setAngle(servoHeading, invert ? invertHeading((float) currentServoAngle) : (float) currentServoAngle);
 					}
