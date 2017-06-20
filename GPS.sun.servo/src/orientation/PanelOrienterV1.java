@@ -24,8 +24,9 @@ import user.util.GeomUtil;
  * declination -Ddeclination=14
  * tolerance -Dtolerance=1
  *
+ * Manual Sun position entry -Dmanual.entry=true|false
+ *
  * TODO ANSI console
- * TODO Manual entry (for test) in getSunData
  *
  * or GPS... (later).
  */
@@ -45,22 +46,51 @@ public class PanelOrienterV1 {
 	private static boolean astroVerbose = false;
 	private static boolean servoVerbose = false;
 
+	private static boolean manualEntry = false;
+
 	private static void getSunData(double lat, double lng) {
-		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
-		AstroComputer.setDateTime(current.get(Calendar.YEAR),
-						current.get(Calendar.MONTH) + 1,
-						current.get(Calendar.DAY_OF_MONTH),
-						current.get(Calendar.HOUR_OF_DAY),
-						current.get(Calendar.MINUTE),
-						current.get(Calendar.SECOND));
-		AstroComputer.calculate();
-		SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
-						AstroComputer.getSunDecl(),
-						lat,
-						lng);
-		sru.calculate();
-		he = sru.getHe().doubleValue();
-		z = sru.getZ().doubleValue();
+		if (manualEntry) {
+			System.out.println("Enter [q] at the prompt to quit");
+			String strZ = userInput("Z  > ");
+			if ("Q".equalsIgnoreCase(strZ)) {
+				manualEntry = false;
+			} else {
+				try {
+					z = Double.parseDouble(strZ);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+					return;
+				}
+				String strHe = userInput("He > ");
+				if ("Q".equalsIgnoreCase(strHe)) {
+					manualEntry = false;
+				} else {
+					try {
+						he = Double.parseDouble(strHe);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+						return;
+					}
+				}
+			}
+			// Return here
+		} else {
+			Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+			AstroComputer.setDateTime(current.get(Calendar.YEAR),
+							current.get(Calendar.MONTH) + 1,
+							current.get(Calendar.DAY_OF_MONTH),
+							current.get(Calendar.HOUR_OF_DAY),
+							current.get(Calendar.MINUTE),
+							current.get(Calendar.SECOND));
+			AstroComputer.calculate();
+			SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
+							AstroComputer.getSunDecl(),
+							lat,
+							lng);
+			sru.calculate();
+			he = sru.getHe().doubleValue();
+			z = sru.getZ().doubleValue();
+		}
 	}
 
 	private static int servoHeading = 14;
@@ -69,7 +99,7 @@ public class PanelOrienterV1 {
 	private static int currentServoAngle = 0;
 	private static int previousTiltAngle = 0;
 
-	private static boolean invert = false;
+	private static boolean invert = false; // Used when the angle for the servoHeading is lower than -90 or greater than +90
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
 	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
@@ -106,7 +136,6 @@ public class PanelOrienterV1 {
 			System.out.println("Driving Servos on Channels " + servoHeading + " and " + servoTilt);
 			this.servoBoard = new PCA9685();
 			this.servoBoard.setPWMFreq(freq); // Set frequency in Hz
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(1);
@@ -154,6 +183,7 @@ public class PanelOrienterV1 {
 
 		servoHeading = 14;
 		servoTilt = 15;
+
 		// Supported parameters --heading:14 --tilt:15
 		if (args.length > 0) {
 			for (String prm : args) {
@@ -177,6 +207,8 @@ public class PanelOrienterV1 {
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
 		servoVerbose = "true".equals(System.getProperty("servo.verbose", "false"));
 		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
+
+		manualEntry = "true".equals(System.getProperty("manual.entry", "false"));
 
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {
@@ -301,7 +333,10 @@ public class PanelOrienterV1 {
 						} else { // All at once
 							currentServoAngle = (int) -(z - 180);
 						}
-						// If out of [-90..90], invert.
+
+						/*
+						 * If out of [-90..90], invert.
+						 */
 						if (currentServoAngle < -90 || currentServoAngle > 90) {
 							invert = true;
 						} else {
@@ -317,9 +352,12 @@ public class PanelOrienterV1 {
 												z));
 							}
 							int angle = (int)Math.round(90 - he);
-							if (angle != previousTiltAngle) { // TODO: or invert has changed...
+							if (invert) {
+								angle = -angle;
+							}
+							if (angle != previousTiltAngle) {
 								System.out.println(String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
-								instance.setAngle(servoTilt, invert ? (float) -angle : (float) angle);
+								instance.setAngle(servoTilt, (float) angle);
 								previousTiltAngle = angle;
 							}
 						} else { // Night time
@@ -346,6 +384,7 @@ public class PanelOrienterV1 {
 			sensor.setDataListener(orientationListener);
 
 			// TODO Point LSM303 to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
+			// TODO Tropical zone case
 			System.out.println("Point the LSM303 to the South, hit [Return] when ready.");
 			z = 180;
 			setCalibrating(true);
@@ -354,7 +393,7 @@ public class PanelOrienterV1 {
 			// Done calibrating
 
 			Thread timeThread = new Thread(() -> {
-				int previous = 0;
+//				int previous = 0;
 				while (keepWorking) {
 					// Sun position calculation geos here
 					getSunData(latitude, longitude);
