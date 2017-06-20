@@ -144,7 +144,7 @@ public class PanelOrienterV1 {
 
 	public void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
-		if (servoVerbose) {
+		if (servoVerbose && !manualEntry) {
 			System.out.println(String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm));
 		}
 		try {
@@ -369,7 +369,7 @@ public class PanelOrienterV1 {
 							}
 						}
 
-						if (orientationVerbose) {
+						if (orientationVerbose && !manualEntry) {
 							System.out.println(String.format(">>> Setting servo #%d to %d %s", servoHeading, currentServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : "")));
 						}
 						instance.setAngle(servoHeading, invert ? invertHeading((float) currentServoAngle) : (float) currentServoAngle);
