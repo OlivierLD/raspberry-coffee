@@ -150,14 +150,24 @@ public class PanelOrienterV1 {
 
 		servoHeading = 14;
 		servoTilt = 15;
-		// TODO PRM all that
-//		if (args.length > 0) {
-//			try {
-//				servoHeading = Integer.parseInt(args[0]);
-//			} catch (Exception e) {
-//				throw e;
-//			}
-//		}
+		// Supported parameters --heading:14 --tilt:15
+		if (args.length > 0) {
+			for (String prm : args) {
+				if (prm.startsWith("--heading:")) {
+					try {
+						servoHeading = Integer.parseInt(prm.substring("--heading:".length()));
+					} catch (Exception e) {
+						throw e;
+					}
+				} else if (prm.startsWith("--tilt:")) {
+					try {
+						servoTilt = Integer.parseInt(prm.substring("--tilt:".length()));
+					} catch (Exception e) {
+						throw e;
+					}
+				}
+			}
+		}
 
 		// Read System Properties
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
@@ -205,11 +215,13 @@ public class PanelOrienterV1 {
 		}
 
 		System.out.println("----------------------------------------------");
-		System.out.println(String.format("Position %s / %s, Mag Decl. %.01f, tolerance %d\272 each way.",
+		System.out.println(String.format("Position %s / %s, Mag Decl. %.01f, tolerance %d\272 each way. Heading servo: %d, Tilt servo: %d",
 						GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
 						declination,
-						targetWindow));
+						targetWindow,
+						servoHeading,
+						servoTilt));
 		System.out.println("----------------------------------------------");
 
 		final LSM303 sensor;
@@ -260,7 +272,12 @@ public class PanelOrienterV1 {
 						delta = 1;
 					}
 					if (orientationVerbose) {
-						System.out.println(String.format("Board orientation: Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s", heading, (heading + declination), z, headingMessage));
+						System.out.println(String.format("Board orientation: Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s %s",
+										heading,
+										(heading + declination),
+										z,
+										headingMessage,
+										(invert ? "(inverted)" : "")));
 					}
 					// Drive servo accordingly, to point to Z.
 					if (delta != 0 && !isCalibrating()) {
@@ -277,7 +294,7 @@ public class PanelOrienterV1 {
 							invert = false;
 						}
 						if (orientationVerbose) {
-							System.out.println(String.format("Setting servo #%d to %d", servoHeading, currentServoAngle));
+							System.out.println(String.format("Setting servo #%d to %d %s", servoHeading, currentServoAngle, (invert ? "(inverted)" : "")));
 						}
 						instance.setAngle(servoHeading, invert ? invertHeading((float) currentServoAngle) : (float) currentServoAngle);
 					}
@@ -313,7 +330,7 @@ public class PanelOrienterV1 {
 						}
 						int angle = (int)Math.round(90 - he);
 						if (angle != previous) {
-							System.out.println(String.format("Tilt servo angle now: %d", angle));
+							System.out.println(String.format("Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
 							instance.setAngle(servoTilt, invert ? (float) -angle : (float) angle);
 							previous = angle;
 						}

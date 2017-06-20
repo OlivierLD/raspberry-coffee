@@ -5,4 +5,4 @@ JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070 -Declination=14 -
 JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true -Dastro.verbose=false"
 #
 # sudo java -cp $CP $JAVA_OPTS orientation.OrientationDetector
-sudo java -cp $CP $JAVA_OPTS orientation.PanelOrienterV1
+sudo java -cp $CP $JAVA_OPTS orientation.PanelOrienterV1 --heading:14 --tilt:15
