@@ -257,14 +257,15 @@ public class PanelOrienterV1 {
 				@Override
 				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
 
-					// Heading
-					double headingDiff = z - (heading + declination);
 					if (invert) {
-						headingDiff += 180;
-						while (headingDiff > 360) {
-							headingDiff -= 360;
+						heading += 180;
+						while (heading > 360) {
+							heading -= 360;
 						}
 					}
+
+					// Heading
+					double headingDiff = z - (heading + declination);
 					if (headingDiff < -180) {
 						headingDiff += 360D;
 					}
