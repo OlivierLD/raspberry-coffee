@@ -259,6 +259,12 @@ public class PanelOrienterV1 {
 
 					// Heading
 					double headingDiff = z - (heading + declination);
+					if (invert) {
+						headingDiff += 180;
+						while (headingDiff > 360) {
+							headingDiff -= 360;
+						}
+					}
 					if (headingDiff < -180) {
 						headingDiff += 360D;
 					}
@@ -272,7 +278,8 @@ public class PanelOrienterV1 {
 						delta = 1;
 					}
 					if (orientationVerbose) {
-						System.out.println(String.format("Board orientation: Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s %s servo-angle: %d",
+						System.out.println(String.format(
+										"Board orientation (LSM303 listener): Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s %s servo-angle: %d",
 										heading,
 										(heading + declination),
 										z,
