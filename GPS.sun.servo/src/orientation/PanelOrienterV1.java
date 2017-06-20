@@ -356,7 +356,9 @@ public class PanelOrienterV1 {
 								angle = -angle;
 							}
 							if (angle != previousTiltAngle) {
-								System.out.println(String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
+								if (servoVerbose && !manualEntry) {
+									System.out.println(String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
+								}
 								instance.setAngle(servoTilt, (float) angle);
 								previousTiltAngle = angle;
 							}
