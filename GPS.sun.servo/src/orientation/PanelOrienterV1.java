@@ -293,9 +293,9 @@ public class PanelOrienterV1 {
 
 						// TODO: Here, orient BOTH servos, with or without invert.
 
-						if (true) { // Go step-by-step
+						if (false) { // Go step-by-step
 							currentServoAngle += delta;
-						} else {
+						} else { // All at once
 							currentServoAngle = (int) -(z - 180);
 						}
 						// If out of [-90..90], invert.
