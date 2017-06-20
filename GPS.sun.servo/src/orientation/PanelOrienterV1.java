@@ -313,7 +313,7 @@ public class PanelOrienterV1 {
 						headingMessage = String.format("Target is on the left by %.02f\272", Math.abs(headingDiff));
 						delta = 1;
 					}
-					if (orientationVerbose) {
+					if (orientationVerbose && !manualEntry) {
 						System.out.println(String.format(
 										"Board orientation (LSM303 listener): Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s %s servo-angle: %d",
 										heading,
@@ -344,7 +344,7 @@ public class PanelOrienterV1 {
 						}
 
 						if (he > 0) { // Daytime
-							if (astroVerbose) {
+							if (astroVerbose && !manualEntry) {
 								System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
 												GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
 												GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
