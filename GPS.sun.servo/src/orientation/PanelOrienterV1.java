@@ -32,6 +32,8 @@ import user.util.GeomUtil;
  */
 public class PanelOrienterV1 {
 
+	private static PanelOrienterV1 instance = null;
+
 	private static double declination = 14D; // E+, W-
 	private static int targetWindow = 1;
 
@@ -57,6 +59,7 @@ public class PanelOrienterV1 {
 				invert = false;
 				currentServoAngle = 0;
 				previousTiltAngle = 0;
+				servosZero();
 			} else {
 				if (strZ.trim().length() > 0) {
 					try {
@@ -76,6 +79,7 @@ public class PanelOrienterV1 {
 					invert = false;
 					currentServoAngle = 0;
 					previousTiltAngle = 0;
+					servosZero();
 				} else {
 					if (strHe.trim().length() > 0) {
 						try {
@@ -196,6 +200,12 @@ public class PanelOrienterV1 {
 		return inverted;
 	}
 
+	private static void servosZero() {
+		if (instance != null) {
+			instance.setAngle(servoHeading, 0f);
+			instance.setAngle(servoTilt, 0f);
+		}
+	}
 
 	public static void main(String... args) {
 
@@ -281,10 +291,9 @@ public class PanelOrienterV1 {
 		final LSM303 sensor;
 		final LSM303Listener orientationListener;
 
-		final PanelOrienterV1 instance = new PanelOrienterV1();
+		instance = new PanelOrienterV1();
 		// Set to 0
-		instance.setAngle(servoHeading, (float)currentServoAngle);
-		instance.setAngle(servoTilt, 0f);
+		servosZero();
 
 		setCalibrating(false);
 		boolean withTest = false; // PRM
