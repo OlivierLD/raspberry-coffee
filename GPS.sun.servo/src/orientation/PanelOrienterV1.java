@@ -51,22 +51,32 @@ public class PanelOrienterV1 {
 	private static void getSunData(double lat, double lng) {
 		if (manualEntry) {
 			System.out.println("Enter [q] at the prompt to quit");
-			String strZ = userInput("Z  > ");
+			String strZ = userInput("Z (0..360)   > ");
 			if ("Q".equalsIgnoreCase(strZ)) {
 				manualEntry = false;
+				invert = false;
 			} else {
 				try {
 					z = Double.parseDouble(strZ);
+					if (z < 0 || z > 360) {
+						System.err.println("Between 0 and 360, please.");
+						z = 0;
+					}
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 					return;
 				}
-				String strHe = userInput("He > ");
+				String strHe = userInput("He (-90..90) > ");
 				if ("Q".equalsIgnoreCase(strHe)) {
 					manualEntry = false;
+					invert = false;
 				} else {
 					try {
 						he = Double.parseDouble(strHe);
+						if (he < -90 || he > 90) {
+							System.err.println("Between -90 and 90, please.");
+							he = 90;
+						}
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
 						return;
