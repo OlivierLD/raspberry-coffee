@@ -16,6 +16,7 @@ import user.util.GeomUtil;
 /**
  * The job of this one is to point North, and keep pointing to it.
  * You have an LSM303 attached to a standard servo.
+ * Servos are driven by a PCA9685 board.
  *
  * In addition, this one <b>calculates</b> the Sun elevation and orients a second servo accordingly.
  *

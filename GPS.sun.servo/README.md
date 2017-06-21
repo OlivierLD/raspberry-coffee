@@ -46,3 +46,28 @@ You can test the Almanac behavior by running
 ### Issues
 The LSM303 returns both magnetic and gravity data.
 There seems to be a problem with the heading when pitch and/or roll are not equal to zero (ie when the board is not lying flat).
+
+## Tests
+To run a first version of the program, start the script named `run`:
+```bash
+ $ ./run
+```
+This runs the class named `orientation.PanelOrienterV1`.
+
+This class takes the following parameters and system variables:
+```
+System variables:
+
+ -Dlatitude=37.7489
+ -Dlongitude=-122.5070
+ -Declination=14
+ -Dtolerance=3
+ -Dorient.verbose=true
+ -Dastro.verbose=true
+ -Dservo.verbose=true
+ -Dansi.console=true
+ -Dmanual.entry=true
+
+Program parameters, to change the servo numbers on the PCA9685:
+ --heading:14 --tilt:15
+```
