@@ -51,10 +51,12 @@ public class PanelOrienterV1 {
 	private static void getSunData(double lat, double lng) {
 		if (manualEntry) {
 			System.out.println("Enter [q] at the prompt to quit");
-			String strZ = userInput("Z (0..360)   > ");
+			String strZ = userInput(String.format("Z (0..360) now %.02f  > ", z));
 			if ("Q".equalsIgnoreCase(strZ)) {
 				manualEntry = false;
 				invert = false;
+				currentServoAngle = 0;
+				previousTiltAngle = 0;
 			} else {
 				try {
 					z = Double.parseDouble(strZ);
@@ -66,10 +68,12 @@ public class PanelOrienterV1 {
 					nfe.printStackTrace();
 					return;
 				}
-				String strHe = userInput("He (-90..90) > ");
+				String strHe = userInput(String.format("He (-90..90) now %.02f > ", he));
 				if ("Q".equalsIgnoreCase(strHe)) {
 					manualEntry = false;
 					invert = false;
+					currentServoAngle = 0;
+					previousTiltAngle = 0;
 				} else {
 					try {
 						he = Double.parseDouble(strHe);
