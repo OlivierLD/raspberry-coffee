@@ -313,7 +313,7 @@ public class PanelOrienterV1 {
 						headingMessage = String.format("Target is on the left by %.02f\272", Math.abs(headingDiff));
 						delta = 1;
 					}
-					if (orientationVerbose && !manualEntry) {
+					if (isCalibrating() || (orientationVerbose && !manualEntry)) {
 						System.out.println(String.format(
 										"Board orientation (LSM303 listener): Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s %s servo-angle: %d",
 										heading,
@@ -399,30 +399,6 @@ public class PanelOrienterV1 {
 				while (keepWorking) {
 					// Sun position calculation geos here
 					getSunData(latitude, longitude);
-					if (false) { // TODO Remove this block.
-//						if (he > 0) { // Daytime
-//							if (astroVerbose) {
-//								System.out.println(String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
-//												GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
-//												GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
-//												he,
-//												z));
-//							}
-//							int angle = (int) Math.round(90 - he);
-//							if (angle != previousTiltAngle) {
-//								System.out.println(String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : "")));
-//								instance.setAngle(servoTilt, invert ? (float) -angle : (float) angle);
-//								previousTiltAngle = angle;
-//							}
-//						} else { // Night time
-//							System.out.println("Night time, parked...");
-//							int angle = 0;
-//							if (angle != previousTiltAngle) {
-//								instance.setAngle(servoTilt, (float) angle);
-//								previousTiltAngle = angle;
-//							}
-//						}
-					}
 					try { Thread.sleep(1_000L); } catch (Exception ex) {}
 				}
 				System.out.println("Timer done.");
