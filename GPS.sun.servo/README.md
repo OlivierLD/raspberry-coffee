@@ -62,6 +62,7 @@ System variables:
  -Dlongitude=-122.5070
  -Declination=14
  -Dtolerance=3
+ -Dtest.servos=true
  -Dorient.verbose=true
  -Dastro.verbose=true
  -Dservo.verbose=true

@@ -49,6 +49,7 @@ public class PanelOrienterV1 {
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
 	private static boolean servoVerbose = false;
+	private static boolean testServos = false;
 
 	private static boolean manualEntry = false;
 
@@ -174,7 +175,7 @@ public class PanelOrienterV1 {
 		if (servoVerbose && !manualEntry) {
 			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == servoHeading ? 10 : 11)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == servoHeading ? 8 : 9)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 			} else {
 				System.out.println(mess);
 			}
@@ -249,6 +250,8 @@ public class PanelOrienterV1 {
 		manualEntry = "true".equals(System.getProperty("manual.entry", "false"));
 		ansiConsole = "true".equals(System.getProperty("ansi.console", "false"));
 
+		testServos = "true".equals(System.getProperty("test.servos", "false"));
+
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {
 			try {
@@ -297,12 +300,8 @@ public class PanelOrienterV1 {
 		servosZero();
 
 		setCalibrating(false);
-		boolean withTest = false; // PRM
-		String resp = userInput("Test servos? [Y] > ");
-		if ("Y".equalsIgnoreCase(resp)) {
-			withTest = true;
-		}
-		if (withTest) {
+
+		if (testServos) {
 			instance.setAngle(servoHeading, -90f);
 			instance.setAngle(servoTilt, -90f);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
@@ -318,7 +317,7 @@ public class PanelOrienterV1 {
 		if (ansiConsole) {
 			AnsiConsole.systemInstall();
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos");
+			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun");
 		}
 		String mess = String.format("Position %s / %s, Mag Decl. %.01f, tolerance %d\272 each way. Heading servo: %d, Tilt servo: %d",
 						GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
@@ -363,13 +362,13 @@ public class PanelOrienterV1 {
 					}
 					if (isCalibrating() || (orientationVerbose && !manualEntry)) {
 						String mess = String.format(
-										"Board orientation (LSM303 listener): Heading %.01f (mag), %.01f (true), Target Z: %.01f, %s %s servo-angle: %d",
+										"Board orientation (LSM303 listener): Heading %.01f (mag), %.01f (true), Target Z: %.01f, servo-angle: %d %s %s ",
 										heading,
 										(heading + declination),
 										z,
+										currentServoAngle,
 										headingMessage,
-										(invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : ""),
-										currentServoAngle);
+										(invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : ""));
 						if (ansiConsole) {
 							AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 						} else {
@@ -441,7 +440,7 @@ public class PanelOrienterV1 {
 							}
 						}
 						if (orientationVerbose && !manualEntry) {
-							String mess = String.format(">>> Setting servo #%d to %d %s", servoHeading, currentServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : ""));
+							String mess = String.format(">>> Heading servo angle now %d %s", currentServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : ""));
 							if (ansiConsole) {
 								AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 6) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 							} else {
@@ -461,6 +460,9 @@ public class PanelOrienterV1 {
 
 			// TODO Point LSM303 to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
 			// TODO Tropical zone case
+			if (ansiConsole) {
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + PAD);
+			}
 			System.out.println("Point the LSM303 to the South, hit [Return] when ready.");
 			z = 180;
 			setCalibrating(true);
