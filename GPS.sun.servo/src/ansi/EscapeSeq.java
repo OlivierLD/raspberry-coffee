@@ -1,4 +1,4 @@
-package sunservo;
+package ansi;
 
 import org.fusesource.jansi.AnsiConsole;
 
@@ -15,6 +15,7 @@ public class EscapeSeq {
 	public final static String ANSI_WHITE = "7";
 
 	public static final String ANSI_CLS = ESC + "[2J";
+	public static final String ANSI_ERASE_TO_EOL = ESC + "[K";
 	public static final String ANSI_HOME = ESC + "[H"; // 0,0
 	public static final String ANSI_HEAD = ESC + "[1G"; // Start of current line, position 1
 

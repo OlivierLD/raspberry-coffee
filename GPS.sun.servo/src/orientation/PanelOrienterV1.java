@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.TimeZone;
 import org.fusesource.jansi.AnsiConsole;
-import sunservo.EscapeSeq;
+import ansi.EscapeSeq;
 import user.util.GeomUtil;
 
 /**
@@ -30,9 +30,7 @@ import user.util.GeomUtil;
  * ansi console -Dansi.console=true
  * Manual Sun position entry -Dmanual.entry=true|false
  *
- * TODO ANSI console
- *
- * or GPS... (later).
+ * or GPS input for the position... (later).
  */
 public class PanelOrienterV1 {
 
@@ -55,6 +53,7 @@ public class PanelOrienterV1 {
 	private static boolean manualEntry = false;
 
 	private static boolean ansiConsole = true;
+	private final static String PAD = EscapeSeq.ANSI_ERASE_TO_EOL;
 
 	private static void getSunData(double lat, double lng) {
 		if (manualEntry) {
@@ -175,7 +174,7 @@ public class PanelOrienterV1 {
 		if (servoVerbose && !manualEntry) {
 			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 10) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess);
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == servoHeading ? 10 : 11)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 			} else {
 				System.out.println(mess);
 			}
@@ -329,7 +328,7 @@ public class PanelOrienterV1 {
 						servoHeading,
 						servoTilt);
 		if (ansiConsole) {
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess);
+			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 		} else {
 			System.out.println("----------------------------------------------");
 			System.out.println(mess);
@@ -372,7 +371,7 @@ public class PanelOrienterV1 {
 										(invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : ""),
 										currentServoAngle);
 						if (ansiConsole) {
-							AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess);
+							AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 						} else {
 							System.out.println(mess);
 						}
@@ -405,7 +404,7 @@ public class PanelOrienterV1 {
 												he,
 												z);
 								if (ansiConsole) {
-									AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess);
+									AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 								} else {
 									System.out.println(mess);
 								}
@@ -418,7 +417,7 @@ public class PanelOrienterV1 {
 								if (servoVerbose && !manualEntry) {
 									String mess = String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : ""));
 									if (ansiConsole) {
-										AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 5) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess);
+										AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 5) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 									} else {
 										System.out.println(mess);
 									}
@@ -430,7 +429,7 @@ public class PanelOrienterV1 {
 							if (servoVerbose && !manualEntry) {
 								String mess = "Night time, parked...           ";
 								if (ansiConsole) {
-									AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess);
+									AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 								} else {
 									System.out.println(mess);
 								}
@@ -444,7 +443,7 @@ public class PanelOrienterV1 {
 						if (orientationVerbose && !manualEntry) {
 							String mess = String.format(">>> Setting servo #%d to %d %s", servoHeading, currentServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : ""));
 							if (ansiConsole) {
-								AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 6) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess);
+								AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 6) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 							} else {
 								System.out.println(mess);
 							}

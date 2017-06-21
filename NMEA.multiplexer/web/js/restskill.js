@@ -64,6 +64,11 @@ var getDeferred = function(
 
 var DEFAULT_TIMEOUT = 10000;
 
+var protocolTestFunc = function() {
+    return getDeferred('mux://this-is-a-test', DEFAULT_TIMEOUT, 'POST', 200, null, false);
+};
+
+
 var getVolume = function() {
     return getDeferred('/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
@@ -143,6 +148,25 @@ var pushData = function(flow) {
     }
 };
 
+var protocolTest = function() {
+    var postData = protocolTestFunc();
+    postData.done(function(value) {
+        console.log(value);
+    });
+    postData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager.display("Failed to get protocol test status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
+
+};
+
 var dataVolume = function() {
   // No REST traffic for this one.
     $('#flow').css('cursor', 'progress');
@@ -169,7 +193,6 @@ var dataVolume = function() {
         pushData(0);
         $('#flow').css('cursor', 'auto');
     });
-
 };
 
 var storedNMEA = "";
