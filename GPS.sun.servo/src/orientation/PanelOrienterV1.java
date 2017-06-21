@@ -51,22 +51,24 @@ public class PanelOrienterV1 {
 	private static void getSunData(double lat, double lng) {
 		if (manualEntry) {
 			System.out.println("Enter [q] at the prompt to quit");
-			String strZ = userInput(String.format("Z (0..360) now %.02f  > ", z));
+			String strZ = userInput(String.format("\nZ (0..360) now %.02f  > ", z));
 			if ("Q".equalsIgnoreCase(strZ)) {
 				manualEntry = false;
 				invert = false;
 				currentServoAngle = 0;
 				previousTiltAngle = 0;
 			} else {
-				try {
-					z = Double.parseDouble(strZ);
-					if (z < 0 || z > 360) {
-						System.err.println("Between 0 and 360, please.");
-						z = 0;
+				if (strZ.trim().length() > 0) {
+					try {
+						z = Double.parseDouble(strZ);
+						if (z < 0 || z > 360) {
+							System.err.println("Between 0 and 360, please.");
+							z = 0;
+						}
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+						return;
 					}
-				} catch (NumberFormatException nfe) {
-					nfe.printStackTrace();
-					return;
 				}
 				String strHe = userInput(String.format("He (-90..90) now %.02f > ", he));
 				if ("Q".equalsIgnoreCase(strHe)) {
@@ -75,15 +77,17 @@ public class PanelOrienterV1 {
 					currentServoAngle = 0;
 					previousTiltAngle = 0;
 				} else {
-					try {
-						he = Double.parseDouble(strHe);
-						if (he < -90 || he > 90) {
-							System.err.println("Between -90 and 90, please.");
-							he = 90;
+					if (strHe.trim().length() > 0) {
+						try {
+							he = Double.parseDouble(strHe);
+							if (he < -90 || he > 90) {
+								System.err.println("Between -90 and 90, please.");
+								he = 90;
+							}
+						} catch (NumberFormatException nfe) {
+							nfe.printStackTrace();
+							return;
 						}
-					} catch (NumberFormatException nfe) {
-						nfe.printStackTrace();
-						return;
 					}
 				}
 			}
@@ -377,7 +381,9 @@ public class PanelOrienterV1 {
 								previousTiltAngle = angle;
 							}
 						} else { // Night time
-							System.out.println("Night time, parked...");
+							if (servoVerbose && !manualEntry) {
+								System.out.println("Night time, parked...");
+							}
 							int angle = 0;
 							if (angle != previousTiltAngle) {
 								instance.setAngle(servoTilt, (float) angle);
