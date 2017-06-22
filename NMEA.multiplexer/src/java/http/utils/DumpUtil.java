@@ -63,7 +63,7 @@ public class DumpUtil {
 
 		String first = "   | ";
 		for (int i=0; i<LINE_LEN; i++) {
-			first += (NMEAUtils.lpad(Integer.toHexString(i & 0xFF).toUpperCase(), 2, "x") + " ");
+			first += (NMEAUtils.lpad(Integer.toHexString(i & 0xFF).toUpperCase(), 2, " ") + " ");
 		}
 		first += " |";
 		result[lineIdx++] = first;

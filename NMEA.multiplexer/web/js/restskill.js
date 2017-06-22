@@ -65,7 +65,8 @@ var getDeferred = function(
 var DEFAULT_TIMEOUT = 10000;
 
 var protocolTestFunc = function() {
-    return getDeferred('mux://this-is-a-test', DEFAULT_TIMEOUT, 'POST', 200, null, false);
+    var url = document.location.origin.replace('http', 'mux') + '/this-is-a-test';
+    return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, null, false);
 };
 
 
