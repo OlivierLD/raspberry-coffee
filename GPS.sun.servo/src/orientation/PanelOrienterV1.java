@@ -1,5 +1,6 @@
 package orientation;
 
+import static ansi.EscapeSeq.ANSI_BLINK;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import i2c.sensor.LSM303;
@@ -465,10 +466,14 @@ public class PanelOrienterV1 {
 
 			// TODO Point LSM303 to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
 			// TODO Tropical zone case
+			mess = "Point the LSM303 to the South, hit [Return] when ready.";
+
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + PAD);
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + ANSI_BLINK + mess + PAD);
+			} else {
+				System.out.println(mess);
 			}
-			System.out.println("Point the LSM303 to the South, hit [Return] when ready.");
+
 			z = 180;
 			setCalibrating(true);
 			userInput("");
@@ -487,7 +492,12 @@ public class PanelOrienterV1 {
 				}
 				System.out.println("Timer done.");
 			});
-			System.out.println("Starting the timer loop");
+			mess = "Starting the timer loop";
+			if (ansiConsole){
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + mess + PAD);
+			} else {
+				System.out.println(mess);
+			}
 			timeThread.start();
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -515,7 +525,12 @@ public class PanelOrienterV1 {
 				}
 			}));
 
-			System.out.println("Start listening to the LSM303");
+			mess = "Start listening to the LSM303";
+			if (ansiConsole){
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + mess + PAD);
+			} else {
+				System.out.println(mess);
+			}
 			sensor.startReading();
 
 		} catch (Throwable ex) {
