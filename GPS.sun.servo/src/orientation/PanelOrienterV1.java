@@ -472,6 +472,9 @@ public class PanelOrienterV1 {
 			z = 180;
 			setCalibrating(true);
 			userInput("");
+			if (ansiConsole) { // Cleanup
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + PAD);
+			}
 			setCalibrating(false);
 			// Done calibrating
 
