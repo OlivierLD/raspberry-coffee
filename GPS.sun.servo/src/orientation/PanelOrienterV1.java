@@ -63,7 +63,7 @@ public class PanelOrienterV1 {
 			if ("Q".equalsIgnoreCase(strZ)) {
 				manualEntry = false;
 				invert = false;
-				currentServoAngle = 0;
+				currentHeadingServoAngle = 0;
 				previousTiltAngle = 0;
 				servosZero();
 			} else {
@@ -83,7 +83,7 @@ public class PanelOrienterV1 {
 				if ("Q".equalsIgnoreCase(strHe)) {
 					manualEntry = false;
 					invert = false;
-					currentServoAngle = 0;
+					currentHeadingServoAngle = 0;
 					previousTiltAngle = 0;
 					servosZero();
 				} else {
@@ -124,7 +124,7 @@ public class PanelOrienterV1 {
 	private static int servoHeading = 14;
 	private static int servoTilt    = 15;
 
-	private static int currentServoAngle = 0;
+	private static int currentHeadingServoAngle = 0;
 	private static int previousTiltAngle = 0;
 
 	private static boolean invert = false; // Used when the angle for the servoHeading is lower than -90 or greater than +90
@@ -313,7 +313,7 @@ public class PanelOrienterV1 {
 			instance.setAngle(servoHeading, 90f);
 			instance.setAngle(servoTilt, 90f);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
-			instance.setAngle(servoHeading, (float)currentServoAngle);
+			instance.setAngle(servoHeading, (float) currentHeadingServoAngle);
 			instance.setAngle(servoTilt, 0f);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			System.out.println("Test done.");
@@ -371,9 +371,9 @@ public class PanelOrienterV1 {
 										heading,
 										(heading + declination),
 										z,
-										currentServoAngle,
+										currentHeadingServoAngle,
 										headingMessage,
-										(invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : ""));
+										(invert ? String.format("(inverted to %.02f)", invertHeading((float) currentHeadingServoAngle)) : ""));
 						if (ansiConsole) {
 							AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 						} else {
@@ -386,15 +386,15 @@ public class PanelOrienterV1 {
 						// Here, orient BOTH servos, with or without invert.
 
 						if (false) { // Go step-by-step
-							currentServoAngle += delta;
+							currentHeadingServoAngle += delta;
 						} else { // All at once
-							currentServoAngle = (int) -(z - 180);
+							currentHeadingServoAngle = (int) -(z - 180);
 						}
 
 						/*
 						 * If out of [-90..90], invert.
 						 */
-						if (currentServoAngle < -90 || currentServoAngle > 90) {
+						if (currentHeadingServoAngle < -90 || currentHeadingServoAngle > 90) {
 							invert = true;
 						} else {
 							invert = false;
@@ -430,6 +430,7 @@ public class PanelOrienterV1 {
 								previousTiltAngle = angle;
 							}
 						} else { // Night time
+							invert = false;
 							if (servoVerbose && !manualEntry) {
 								String mess = "Night time, parked...           ";
 								if (ansiConsole) {
@@ -443,16 +444,17 @@ public class PanelOrienterV1 {
 								instance.setAngle(servoTilt, (float) angle);
 								previousTiltAngle = angle;
 							}
+							currentHeadingServoAngle = 0;
 						}
 						if (orientationVerbose && !manualEntry) {
-							String mess = String.format(">>> Heading servo angle now %d %s", currentServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) currentServoAngle)) : ""));
+							String mess = String.format(">>> Heading servo angle now %d %s", currentHeadingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) currentHeadingServoAngle)) : ""));
 							if (ansiConsole) {
 								AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 6) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 							} else {
 								System.out.println(mess);
 							}
 						}
-						instance.setAngle(servoHeading, invert ? invertHeading((float) currentServoAngle) : (float) currentServoAngle);
+						instance.setAngle(servoHeading, invert ? invertHeading((float) currentHeadingServoAngle) : (float) currentHeadingServoAngle);
 					}
 				}
 
