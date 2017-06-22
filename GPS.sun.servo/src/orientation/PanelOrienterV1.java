@@ -7,7 +7,9 @@ import i2c.sensor.listener.LSM303Listener;
 import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 import org.fusesource.jansi.AnsiConsole;
 import ansi.EscapeSeq;
@@ -55,6 +57,8 @@ public class PanelOrienterV1 {
 
 	private static boolean ansiConsole = true;
 	private final static String PAD = EscapeSeq.ANSI_ERASE_TO_EOL;
+
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 
 	private static void getSunData(double lat, double lng) {
 		if (manualEntry) {
@@ -322,7 +326,8 @@ public class PanelOrienterV1 {
 		if (ansiConsole) {
 			AnsiConsole.systemInstall();
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun");
+//		AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun");
+			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + SDF.format(new Date()));
 		}
 		String mess = String.format("Position %s / %s, Mag Decl. %.01f, tolerance %d\272 each way. Heading servo: %d, Tilt servo: %d",
 						GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
