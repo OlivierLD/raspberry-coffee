@@ -73,14 +73,22 @@ Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15
 ```
 
-## Inversion
-Standard servos like the `SG92R` rotate on 180 degrees, from -90 to 90.
+First, the program sets the `heading` servo to zero, and asks you to point it South.
 
-Example, Wed June 21, 2017:
+Once this is done, Sun's position is calculate every second, and the 2 servos are driven to point to it, as long as the Sun it up (elevation greater than 0°).
+
+## Inversion
+Standard servos like the `SG92R` rotate on 180 degrees, from -90° to 90°.
+
+That could fit if the body to target (ie the Sun) was going for example from East to West, through South. Unfortunately,
+this is not the case.
+
+For example, from San Fancisco, on Wed June 21, 2017:
+```
 At N  37°44.96' / W 122°30.44'
 Sun Rise:21 Jun 2017 05:52 (PDT -0700) (Z= 59°)
 Sun Set :21 Jun 2017 20:31 (PDT -0700) (Z=301°)
-Sun transit :21 Jun 2017 13:11 (PDT -0700)
-Moon Rise:21 Jun 2017 03:56 (PDT -0700)
-Moon Set :20 Jun 2017 17:23 (PDT -0700)
-Moon Phase: 26 day(s).
+```
+The Sun rises in the 59°, and sets in the 301°.
+
+This is where we need to invert the angles.
