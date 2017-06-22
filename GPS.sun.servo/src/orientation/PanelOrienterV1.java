@@ -252,6 +252,11 @@ public class PanelOrienterV1 {
 
 		testServos = "true".equals(System.getProperty("test.servos", "false"));
 
+		if (manualEntry && ansiConsole) {
+			System.out.println("Manual Entry and ANSI COnsole are mutually exclusive. Please choose one, and only one... Thank you.");
+			System.exit(1);
+		}
+
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {
 			try {
