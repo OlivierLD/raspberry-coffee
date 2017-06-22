@@ -1,6 +1,5 @@
 package orientation;
 
-import static ansi.EscapeSeq.ANSI_BLINK;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import i2c.sensor.LSM303;
@@ -29,7 +28,7 @@ import user.util.GeomUtil;
  * tolerance -Dtolerance=1
  *
  * ansi console -Dansi.console=true
- * Manual Sun position entry -Dmanual.entry=true|false
+ * Manual Sun position entry -Dmanual.entry=true
  *
  * or GPS input for the position... (later).
  */
@@ -469,7 +468,7 @@ public class PanelOrienterV1 {
 			mess = "Point the LSM303 to the South, hit [Return] when ready.";
 
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + ANSI_BLINK + mess + PAD);
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + EscapeSeq.ANSI_REVERSE + mess + PAD);
 			} else {
 				System.out.println(mess);
 			}
