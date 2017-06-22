@@ -72,3 +72,15 @@ System variables:
 Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15
 ```
+
+## Inversion
+Standard servos like the `SG92R` rotate on 180 degrees, from -90 to 90.
+
+Example, Wed June 21, 2017:
+At N  37°44.96' / W 122°30.44'
+Sun Rise:21 Jun 2017 05:52 (PDT -0700) (Z= 59°)
+Sun Set :21 Jun 2017 20:31 (PDT -0700) (Z=301°)
+Sun transit :21 Jun 2017 13:11 (PDT -0700)
+Moon Rise:21 Jun 2017 03:56 (PDT -0700)
+Moon Set :20 Jun 2017 17:23 (PDT -0700)
+Moon Phase: 26 day(s).
