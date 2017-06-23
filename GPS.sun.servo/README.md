@@ -9,7 +9,7 @@ By default, in the northern hemisphere, the device would point due South, and th
 Heading and Position can be dynamically provided (in case the device is moving, in a car, a boat, etc) to the class named
 `orientation.SunFlower`.
 
-Originally, I had attached an LSM303 (magnetormeter and accelerometer), but it was too close to the servos. Those guys are electro-magnets, this was driving the LSM303 crazy...
+Originally, I had attached an LSM303 (magnetometer and accelerometer), but it was too close to the servos. Those guys are electro-magnets, this was driving the LSM303 crazy...
 
 Requires resources from other projects:
 
