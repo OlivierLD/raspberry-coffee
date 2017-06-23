@@ -116,6 +116,8 @@ This is a static situation, from the northern hemisphere.
 The device can also be on the go, the code can receive the position and the heading (from a GPS or an NMEA station for example) at any time, it will adjust the servos accordingly.
 
 A snapshot of the (optional) ANSI console:
+
+
 <img src="./doc/ansi.console.png" alt="ANSI Console" width="561" height="199">
 
 
