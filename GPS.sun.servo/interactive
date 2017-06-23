@@ -7,4 +7,6 @@ JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=true"
 # JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=true"
 JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
 #
+JAVA_OPTS="$JAVA_OPTS -Dauto.demo=true"
+#
 sudo java -cp $CP $JAVA_OPTS orientation.InteractivePanelOrienter --heading:14 --tilt:15

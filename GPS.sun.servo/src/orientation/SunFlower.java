@@ -313,7 +313,7 @@ public class SunFlower {
 			while (bearing > 180) { // Ex: 190 => -170
 				bearing -= 360;
 			}
-			int headingServoAngle = (int) -(headingServoSign * bearing);
+			int headingServoAngle = -(int)(headingServoSign * Math.round(bearing));
 			/*
 			 * If out of [-90..90], invert.
 			 */
@@ -350,7 +350,7 @@ public class SunFlower {
 						System.out.println(mess);
 					}
 				}
-				int angle = - (int)(tiltServoSign * Math.round(90 - he));
+				int angle = -(int)(tiltServoSign * Math.round(90 - he));
 				if (invert) {
 					angle = -angle;
 				}

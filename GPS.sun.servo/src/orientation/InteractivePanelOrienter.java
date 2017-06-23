@@ -71,26 +71,33 @@ public class InteractivePanelOrienter {
 		instance.setDeviceHeading(heading);
 		instance.startWorking();
 
-		boolean read = true;
-		System.out.println("Enter 'Q' at the prompt to quit.");
-		while (read) {
-			String input = SunFlower.userInput(String.format("Enter Device's true heading [0..360], now %.02f > ", instance.getDeviceHeading()));
-			if ("Q".equalsIgnoreCase(input.trim())) {
-				read = false;
-			} else {
-				try {
-					double h = Double.parseDouble(input);
-					if (h < 0 || h > 360) {
-						System.out.println("Bad range [0..360]");
-					} else {
-						instance.setDeviceHeading(h);
+		boolean demo = "true".equals(System.getProperty("auto.demo", "false"));
+		if (demo) {
+			for (int head = 30; head<330; head++) {
+				instance.setDeviceHeading(head);
+				try { Thread.sleep(200L); } catch (Exception ignore) {}
+			}
+		} else {
+			boolean read = true;
+			System.out.println("Enter 'Q' at the prompt to quit.");
+			while (read) {
+				String input = SunFlower.userInput(String.format("Enter Device's true heading [0..360], now %.02f > ", instance.getDeviceHeading()));
+				if ("Q".equalsIgnoreCase(input.trim())) {
+					read = false;
+				} else {
+					try {
+						double h = Double.parseDouble(input);
+						if (h < 0 || h > 360) {
+							System.out.println("Bad range [0..360]");
+						} else {
+							instance.setDeviceHeading(h);
+						}
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
 					}
-				} catch (NumberFormatException nfe) {
-					nfe.printStackTrace();
 				}
 			}
 		}
-
 		System.out.println("Bye.");
 		instance.stopWorking();
 		instance.stopHeadingServo();
