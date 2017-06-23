@@ -72,9 +72,14 @@ System variables:
  -Dansi.console=true
  -Dmanual.entry=true
 
+ -Dheading.servo.sign=-1
+ -Dtilt.servo.sign=-1
+
 Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15
 ```
+
+The variables `heading.servo.sign` and `tilt.servo.sign` can be set to `-1`, to invert the way the servos turn. This depends on the physical construction of your device.
 
 First, the program sets the `heading` servo to zero, and asks you to point it South.
 
@@ -92,13 +97,13 @@ At N  37°44.96' / W 122°30.44'
 Sun Rise:21 Jun 2017 05:52 (PDT -0700) (Z= 59°)
 Sun Set :21 Jun 2017 20:31 (PDT -0700) (Z=301°)
 ```
-The Sun rises in the 59°, and sets in the 301°. 59° translates into -121°, and 301° into 121°, which is far out of [-90°..90°].
+The Sun rises in the 59°, and sets in the 301°. 59° translates into -121°, and 301° into 121°, which is far out of `[-90°..90°]`.
 
 <img src="./doc/rise.set.png" width="594" height="523" alt="Sun rise and Set">
 
 This is where we need to invert the angles.
 
-Let's take this example, it is the morning, the azimuth of the Sun is smaller than 90.
+Let's take this example, it is a summer morning in the northern hemisphere, the azimuth of the Sun is smaller than 90.
 
 <img src="./doc/before.invert.png" width="643" height="501" alt="Sun rise and Set">
 

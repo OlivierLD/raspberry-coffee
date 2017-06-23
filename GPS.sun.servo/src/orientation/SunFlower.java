@@ -27,6 +27,9 @@ import user.util.GeomUtil;
  * -Dastro.verbose=true
  * -Dservo.verbose=true
  *
+ * -Dtilt.servo.sign=-1
+ * -Dheading.servo.sign=-1
+ *
  * For the main, as an example:
  * latitude -Dlatitude=37.7489
  * longitude -Dlongitude=-122.5070
@@ -42,13 +45,15 @@ public class SunFlower {
 	private static double he = 0D, z = 0D;
 	private static double deviceHeading = 0D;
 
+	private int tiltServoSign = 1;
+	private int headingServoSign = 1;
+
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
 	private static boolean servoVerbose = false;
 	private static boolean testServos = false;
 
 	private static boolean manualEntry = false;
-
 	private static boolean ansiConsole = true;
 	private final static String PAD = EscapeSeq.ANSI_ERASE_TO_EOL;
 
@@ -160,6 +165,34 @@ public class SunFlower {
 	public SunFlower(int headinServoNumber, int tiltServoNumber) {
 		servoHeading = headinServoNumber;
 		servoTilt = tiltServoNumber;
+
+		String strTiltServoSign = System.getProperty("tilt.servo.sign");
+		if (strTiltServoSign != null) {
+			try {
+				int sign = Integer.parseInt(strTiltServoSign);
+				if (sign != 1 && sign != -1) {
+					System.err.println("Only 1 or -1 are supported for tilt.servo.sign");
+				} else {
+					tiltServoSign = sign;
+				}
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+		String strHeadingServoSign = System.getProperty("heading.servo.sign");
+		if (strHeadingServoSign != null) {
+			try {
+				int sign = Integer.parseInt(strHeadingServoSign);
+				if (sign != 1 && sign != -1) {
+					System.err.println("Only 1 or -1 are supported for heading.servo.sign");
+				} else {
+					headingServoSign = sign;
+				}
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+
 		try {
 //		System.out.println("Driving Servos on Channels " + servoHeading + " and " + servoTilt);
 			this.servoBoard = new PCA9685();
@@ -272,7 +305,7 @@ public class SunFlower {
 			while (normalizedServoAngle > 180) { // Ex: 190 => -170
 				normalizedServoAngle = 360 - normalizedServoAngle;
 			}
-			int headingServoAngle = (int) -(normalizedServoAngle); // TODO the sign as parameter
+			int headingServoAngle = (int) -(headingServoSign * normalizedServoAngle);
 			/*
 			 * If out of [-90..90], invert.
 			 */
@@ -309,7 +342,7 @@ public class SunFlower {
 						System.out.println(mess);
 					}
 				}
-				int angle = - (int)Math.round(90 - he); // TODO The sign should be a prm
+				int angle = - (int)(tiltServoSign * Math.round(90 - he));
 				if (invert) {
 					angle = -angle;
 				}
