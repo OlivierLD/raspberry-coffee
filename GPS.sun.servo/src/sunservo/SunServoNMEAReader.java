@@ -28,6 +28,9 @@ import nmea.parser.RMC;
 import nmea.parser.StringParsers;
 import org.fusesource.jansi.AnsiConsole;
 
+/**
+ * @Deprecated
+ */
 public class SunServoNMEAReader extends NMEAClient {
 	private final static DecimalFormat DFH = new DecimalFormat("#0.00'\272'");
 	private final static DecimalFormat DFZ = new DecimalFormat("##0.00'\272'");

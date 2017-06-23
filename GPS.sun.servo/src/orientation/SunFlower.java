@@ -272,19 +272,25 @@ public class SunFlower {
 		return longitude;
 	}
 
+	public static double getDeviceHeading() {
+		return deviceHeading;
+	}
+
 	public void orientServos() {
 
 		if (!this.isCalibrating()) {
 			// Here, orient BOTH servos, with or without invert.
 
-			double normalizedZ = (z - 180); // deviceHeading); // TODO Use deviceHeading
-//			while (normalizedZ < 0) {
-//				normalizedZ += 360;
-//			}
-//			while (normalizedZ > 360) {
-//				normalizedZ -= 360;
-//			}
-			int headingServoAngle = (int) -(normalizedZ);
+			// default deviceHeading is 180 (in the Northern hemisphere) TODO: Manage hemisphere (carefull with tropical region, is the Sun north or south? Compare Lat and Sun's D)
+			// normalizedServoAngle ranges from 0 to 180 (counter-clockwise), 0 to -180 (clockwise)
+			double normalizedServoAngle = (z - deviceHeading); // Default deviceHeading=180
+			while (normalizedServoAngle < -180) { // Ex: -190 => 170
+				normalizedServoAngle += 180;
+			}
+			while (normalizedServoAngle > 180) { // Ex: 190 => -170
+				normalizedServoAngle = 360 - normalizedServoAngle;
+			}
+			int headingServoAngle = (int) -(normalizedServoAngle); // TODO the sign as parameter
 			/*
 			 * If out of [-90..90], invert.
 			 */
