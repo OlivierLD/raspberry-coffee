@@ -245,13 +245,13 @@ public class PanelOrienterV1 {
 		if (!isCalibrating()) {
 			// Here, orient BOTH servos, with or without invert.
 
-			double normalizedZ = (z - deviceHeading);
-			while (normalizedZ < 0) {
-				normalizedZ += 360;
-			}
-			while (normalizedZ > 360) {
-				normalizedZ -= 360;
-			}
+			double normalizedZ = (z - 180); // deviceHeading); // TODO Use deviceHeading
+//			while (normalizedZ < 0) {
+//				normalizedZ += 360;
+//			}
+//			while (normalizedZ > 360) {
+//				normalizedZ -= 360;
+//			}
 			int headingServoAngle = (int) -(normalizedZ);
 			/*
 			 * If out of [-90..90], invert.
@@ -265,10 +265,11 @@ public class PanelOrienterV1 {
 			if (he > 0) { // Daytime
 				if (orientationVerbose && !manualEntry) {
 					String mess = String.format(
-									"Heading servo : Aiming Z: %.01f, servo-angle: %d %s ",
+									"Heading servo : Aiming Z: %.01f, servo-angle: %d %s - device heading: %.01f.",
 									z,
 									headingServoAngle,
-									(invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
+									(invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""),
+									deviceHeading);
 					if (ansiConsole) {
 						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
 						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
