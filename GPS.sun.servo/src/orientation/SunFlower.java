@@ -54,7 +54,7 @@ public class SunFlower {
 	private static boolean testServos = false;
 
 	private static boolean manualEntry = false;
-	private static boolean ansiConsole = true;
+	private static boolean ansiConsole = false;
 	private final static String PAD = EscapeSeq.ANSI_ERASE_TO_EOL;
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
@@ -165,6 +165,14 @@ public class SunFlower {
 	public SunFlower(int headinServoNumber, int tiltServoNumber) {
 		servoHeading = headinServoNumber;
 		servoTilt = tiltServoNumber;
+
+		// Read System Properties
+		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
+		servoVerbose = "true".equals(System.getProperty("servo.verbose", "false"));
+		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
+
+		manualEntry = "true".equals(System.getProperty("manual.entry", "false"));
+		ansiConsole = "true".equals(System.getProperty("ansi.console", "false"));
 
 		String strTiltServoSign = System.getProperty("tilt.servo.sign");
 		if (strTiltServoSign != null) {
@@ -296,7 +304,7 @@ public class SunFlower {
 		if (!this.isCalibrating()) {
 			// Here, orient BOTH servos, with or without invert.
 
-			// default deviceHeading is 180 (in the Northern hemisphere) TODO: Manage hemisphere (carefull with tropical region, is the Sun north or south? Compare Lat and Sun's D)
+			// default deviceHeading is 180 (in the Northern hemisphere) TODO: Manage hemisphere (carefull with tropical zones, is the Sun north or south? Compare Lat and Sun's D)
 			// normalizedServoAngle ranges from 0 to 180 (counter-clockwise), 0 to -180 (clockwise)
 			double normalizedServoAngle = (z - deviceHeading); // Default deviceHeading=180
 			while (normalizedServoAngle < -180) { // Ex: -190 => 170
@@ -439,22 +447,14 @@ public class SunFlower {
 			}
 		}
 
-		// Read System Properties
-		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
-		servoVerbose = "true".equals(System.getProperty("servo.verbose", "false"));
-		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
-
-		manualEntry = "true".equals(System.getProperty("manual.entry", "false"));
-		ansiConsole = "true".equals(System.getProperty("ansi.console", "false"));
-
 		testServos = "true".equals(System.getProperty("test.servos", "false"));
 
+		SunFlower instance = new SunFlower(servoHeading, servoTilt);
 		if (manualEntry && ansiConsole) {
 			System.out.println("Manual Entry and ANSI Console are mutually exclusive. Please choose one, and only one... Thank you.");
 			System.exit(1);
 		}
 
-		SunFlower instance = new SunFlower(servoHeading, servoTilt);
 
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {
