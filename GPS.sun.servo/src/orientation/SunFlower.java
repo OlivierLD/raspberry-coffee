@@ -1,5 +1,6 @@
 package orientation;
 
+import ansi.EscapeSeq;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import i2c.sensor.LSM303;
@@ -12,38 +13,33 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import org.fusesource.jansi.AnsiConsole;
-import ansi.EscapeSeq;
 import user.util.GeomUtil;
 
 /**
- * The job of this one is to point North, and keep pointing to it.
- * You have an LSM303 attached to a standard servo.
  * Servos are driven by a PCA9685 board.
  *
- * In addition, this one <b>calculates</b> the Sun elevation and orients a second servo accordingly.
+ * In addition, <b>calculates</b> the Sun elevation and orients 2 servos accordingly.
  *
  * System variables:
+ * ansi console -Dansi.console=true
+ * Manual Sun position entry -Dmanual.entry=true
+ * -Dorient.verbose=true
+ * -Dastro.verbose=true
+ * -Dservo.verbose=true
  *
+ * For the main, as an example:
  * latitude -Dlatitude=37.7489
  * longitude -Dlongitude=-122.5070
  * declination -Ddeclination=14
- * tolerance -Dtolerance=1
- *
- * ansi console -Dansi.console=true
- * Manual Sun position entry -Dmanual.entry=true
- *
- * or GPS input for the position... (later).
+ * -Dtest.servos=true
  */
-public class PanelOrienterV1 {
+public class SunFlower {
 
-	private static PanelOrienterV1 instance = null;
+	private double declination = 14D; // E+, W-
+	private double latitude = 0D;
+	private double longitude = 0D;
 
-	private static double declination = 14D; // E+, W-
-
-	private static double latitude = 0D;
-	private static double longitude = 0D;
-
-	private static boolean keepWorking = true;
+	private boolean keepWorking = true;
 
 	private static double he = 0D, z = 0D;
 	private static double deviceHeading = 0D;
@@ -60,7 +56,7 @@ public class PanelOrienterV1 {
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 
-	private static void getSunData(double lat, double lng) {
+	private void getSunData(double lat, double lng) {
 		if (manualEntry) {
 			System.out.println("Enter [q] at the prompt to quit");
 			String strZ = userInput(String.format("\nZ (0..360) now %.02f  > ", z));
@@ -141,18 +137,18 @@ public class PanelOrienterV1 {
 	private static int freq = 60;
 
 	private PCA9685 servoBoard = null;
-	private static boolean calibrating = false;
+	private boolean calibrating = false;
 
-	private static void setCalibrating(boolean b) {
+	public void setCalibrating(boolean b) {
 		calibrating = b;
 	}
-	private static boolean isCalibrating() {
+	private boolean isCalibrating() {
 		return calibrating;
 	}
 
 	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 
-	private static String userInput(String prompt) {
+	public static String userInput(String prompt) {
 		String retString = "";
 		System.err.print(prompt);
 		try {
@@ -163,7 +159,9 @@ public class PanelOrienterV1 {
 		return retString;
 	}
 
-	public PanelOrienterV1() {
+	public SunFlower(int headinServoNumber, int tiltServoNumber) {
+		servoHeading = headinServoNumber;
+		servoTilt = tiltServoNumber;
 		try {
 //		System.out.println("Driving Servos on Channels " + servoHeading + " and " + servoTilt);
 			this.servoBoard = new PCA9685();
@@ -174,7 +172,13 @@ public class PanelOrienterV1 {
 		}
 	}
 
-	public void setAngle(int servo, float f) {
+	public void setHeadingServoAngle(float f) {
+		setAngle(servoHeading, f);
+	}
+	public void setTiltServoAngle(float f) {
+		setAngle(servoTilt, f);
+	}
+	private void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
 		if (servoVerbose && !manualEntry) {
 			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
@@ -192,7 +196,15 @@ public class PanelOrienterV1 {
 		}
 	}
 
-	public void stop(int servo) { // Set to 0
+	public void stopHeadingServo() {
+		stop(servoHeading);
+	}
+
+	public void stopTiltServo() {
+		stop(servoTilt);
+	}
+
+	private void stop(int servo) { // Set to 0
 		servoBoard.setPWM(servo, 0, 0);
 	}
 
@@ -215,18 +227,16 @@ public class PanelOrienterV1 {
 		return inverted;
 	}
 
-	private static void servosZero() {
-		if (instance != null) {
-			instance.setAngle(servoHeading, 0f);
-			instance.setAngle(servoTilt, 0f);
-		}
+	public void servosZero() {
+		this.setAngle(servoHeading, 0f);
+		this.setAngle(servoTilt, 0f);
 	}
 
 	/**
 	 * Set the true heading of the device
 	 * @param heading True heading in degrees
 	 */
-	public static void setDeviceHeading(double heading) {
+	public void setDeviceHeading(double heading) {
 		deviceHeading = heading;
 	}
 
@@ -234,15 +244,37 @@ public class PanelOrienterV1 {
 	 * Set the magnetic heading of the device
 	 * @param heading Mag heading in degrees
 	 */
-	public static void setDeviceMagHeading(double heading) {
+	public void setDeviceMagHeading(double heading) {
 		deviceHeading = heading + declination;
 	}
 
-	// TODO setDeclination, position
+	public void setDeclination(double declination) {
+		this.declination = declination;
+	}
 
-	public static void orientServos() {
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
 
-		if (!isCalibrating()) {
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
+
+	public double getDeclination() {
+		return declination;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void orientServos() {
+
+		if (!this.isCalibrating()) {
 			// Here, orient BOTH servos, with or without invert.
 
 			double normalizedZ = (z - 180); // deviceHeading); // TODO Use deviceHeading
@@ -302,7 +334,7 @@ public class PanelOrienterV1 {
 							System.out.println(mess);
 						}
 					}
-					instance.setAngle(servoTilt, (float) angle);
+					this.setAngle(servoTilt, (float) angle);
 					previousTiltAngle = angle;
 				}
 			} else { // Night time
@@ -317,7 +349,7 @@ public class PanelOrienterV1 {
 				}
 				int angle = 0;
 				if (angle != previousTiltAngle) {
-					instance.setAngle(servoTilt, (float) angle);
+					this.setAngle(servoTilt, (float) angle);
 					previousTiltAngle = angle;
 				}
 				headingServoAngle = 0;
@@ -331,10 +363,35 @@ public class PanelOrienterV1 {
 				}
 			}
 			if (headingServoAngle != previousHeadingAngle) {
-				instance.setAngle(servoHeading, invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle);
+				this.setAngle(servoHeading, invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle);
 			}
 			previousHeadingAngle = headingServoAngle;
 		}
+	}
+
+	public void startWorking() {
+		String mess;
+		Thread timeThread = new Thread(() -> {
+//				int previous = 0;
+			while (keepWorking) {
+				// Sun position calculation geos here
+				getSunData(latitude, longitude);
+				this.orientServos();
+				try { Thread.sleep(1_000L); } catch (Exception ex) {}
+			}
+			System.out.println("Timer done.");
+		});
+		mess = "Starting the timer loop";
+		if (ansiConsole){
+			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + mess + PAD);
+		} else {
+			System.out.println(mess);
+		}
+		timeThread.start();
+	}
+
+	public void stopWorking() {
+		this.keepWorking = false;
 	}
 
 	public static void main(String... args) {
@@ -372,14 +429,16 @@ public class PanelOrienterV1 {
 		testServos = "true".equals(System.getProperty("test.servos", "false"));
 
 		if (manualEntry && ansiConsole) {
-			System.out.println("Manual Entry and ANSI COnsole are mutually exclusive. Please choose one, and only one... Thank you.");
+			System.out.println("Manual Entry and ANSI Console are mutually exclusive. Please choose one, and only one... Thank you.");
 			System.exit(1);
 		}
+
+		SunFlower instance = new SunFlower(servoHeading, servoTilt);
 
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {
 			try {
-				latitude = Double.parseDouble(strLat);
+				instance.setLatitude(Double.parseDouble(strLat));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 				System.exit(1);
@@ -388,7 +447,7 @@ public class PanelOrienterV1 {
 		String strLong = System.getProperty("longitude");
 		if (strLong != null) {
 			try {
-				longitude = Double.parseDouble(strLong);
+				instance.setLongitude(Double.parseDouble(strLong));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 				System.exit(1);
@@ -397,21 +456,16 @@ public class PanelOrienterV1 {
 		String strDec = System.getProperty("declination");
 		if (strDec != null) {
 			try {
-				declination = Double.parseDouble(strDec);
+				instance.setDeclination(Double.parseDouble(strDec));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 				System.exit(1);
 			}
 		}
 
-		final LSM303 sensor;
-		final LSM303Listener lsm303Listener;
-
-		instance = new PanelOrienterV1();
 		// Set to 0
-		servosZero();
-
-		setCalibrating(false);
+		instance.servosZero();
+		instance.setCalibrating(false);
 
 		if (testServos) {
 			instance.setAngle(servoHeading, -90f);
@@ -432,9 +486,9 @@ public class PanelOrienterV1 {
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
 		}
 		String mess = String.format("Position %s / %s, Mag Decl. %.01f. Heading servo: %d, Tilt servo: %d",
-						GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
-						GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
-						declination,
+						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
+						GeomUtil.decToSex(instance.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
+						instance.getDeclination(),
 						servoHeading,
 						servoTilt);
 		if (ansiConsole) {
@@ -446,22 +500,7 @@ public class PanelOrienterV1 {
 		}
 
 		try {
-			sensor = new LSM303();
-			lsm303Listener = new LSM303Listener() {
-				@Override
-				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
-					setDeviceMagHeading(heading);
-				}
-
-				@Override
-				public void close() {
-					super.close();
-				}
-			};
-			sensor.setDataListener(lsm303Listener);
-
 			// TODO Point the device to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
-			// TODO Tropical zone case
 			mess = "Point the Device to the true South, hit [Return] when ready.";
 
 			if (ansiConsole) {
@@ -471,46 +510,23 @@ public class PanelOrienterV1 {
 			}
 
 			z = 180;
-			setCalibrating(true);
+			instance.setCalibrating(true);
 			userInput("");
 			if (ansiConsole) { // Cleanup
 				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + PAD);
 			}
-			setCalibrating(false);
+			instance.setCalibrating(false);
 			// Done calibrating
-			setDeviceHeading(180D);
+			instance.setDeviceHeading(180D);
 
-			Thread timeThread = new Thread(() -> {
-//				int previous = 0;
-				while (keepWorking) {
-					// Sun position calculation geos here
-					getSunData(latitude, longitude);
-					orientServos();
-					try { Thread.sleep(1_000L); } catch (Exception ex) {}
-				}
-				System.out.println("Timer done.");
-			});
-			mess = "Starting the timer loop";
-			if (ansiConsole){
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + mess + PAD);
-			} else {
-				System.out.println(mess);
-			}
-			timeThread.start();
+			instance.startWorking();
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println("\nBye.");
+				instance.stopWorking();
 				instance.stop(servoHeading);
 				instance.stop(servoTilt);
-				synchronized (sensor) {
-					sensor.setKeepReading(false);
-					lsm303Listener.close();
-					try {
-						Thread.sleep(1_500L);
-					} catch (InterruptedException ie) {
-						System.err.println(ie.getMessage());
-					}
-				}
+
 				instance.setAngle(servoHeading, 0f);
 				instance.setAngle(servoTilt, 0f);
 				try {
@@ -522,15 +538,6 @@ public class PanelOrienterV1 {
 					AnsiConsole.systemUninstall();
 				}
 			}));
-
-			mess = "Start listening to the LSM303";
-			if (ansiConsole){
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + mess + PAD);
-			} else {
-				System.out.println(mess);
-			}
-			sensor.startReading();
-
 		} catch (Throwable ex) {
 			System.err.println(">>> Panel Orienter... <<< BAM!");
 			ex.printStackTrace();
