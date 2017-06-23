@@ -39,7 +39,6 @@ public class PanelOrienterV1 {
 	private static PanelOrienterV1 instance = null;
 
 	private static double declination = 14D; // E+, W-
-	private static int targetWindow = 1;
 
 	private static double latitude = 0D;
 	private static double longitude = 0D;
@@ -68,7 +67,7 @@ public class PanelOrienterV1 {
 			if ("Q".equalsIgnoreCase(strZ)) {
 				manualEntry = false;
 				invert = false;
-				currentHeadingServoAngle = 0;
+				previousHeadingAngle = 0;
 				previousTiltAngle = 0;
 				servosZero();
 			} else {
@@ -88,7 +87,7 @@ public class PanelOrienterV1 {
 				if ("Q".equalsIgnoreCase(strHe)) {
 					manualEntry = false;
 					invert = false;
-					currentHeadingServoAngle = 0;
+					previousHeadingAngle = 0;
 					previousTiltAngle = 0;
 					servosZero();
 				} else {
@@ -129,7 +128,7 @@ public class PanelOrienterV1 {
 	private static int servoHeading = 14;
 	private static int servoTilt    = 15;
 
-	private static int currentHeadingServoAngle = 0;
+	private static int previousHeadingAngle = 0;
 	private static int previousTiltAngle = 0;
 
 	private static boolean invert = false; // Used when the angle for the servoHeading is lower than -90 or greater than +90
@@ -243,65 +242,40 @@ public class PanelOrienterV1 {
 
 	public static void orientServos() {
 
-		double heading = deviceHeading;
-
-		if (invert) {
-			heading += 180;
-			while (heading > 360) {
-				heading -= 360;
-			}
-		}
-		// Heading
-		double headingDiff = z - heading;
-		if (headingDiff < -180) {
-			headingDiff += 360D;
-		}
-		String headingMessage = "Heading OK";
-		int delta = 0;
-		if (headingDiff > targetWindow) {
-			headingMessage = String.format("Target is on the right by %.02f\272", Math.abs(headingDiff));
-			delta = -1;
-		} else if (headingDiff < -targetWindow) {
-			headingMessage = String.format("Target is on the left by %.02f\272", Math.abs(headingDiff));
-			delta = 1;
-		}
-		if (isCalibrating() || (orientationVerbose && !manualEntry)) {
-			String mess = String.format(
-							"Board orientation (LSM303 listener): Heading %.01f (mag), %.01f (true), Target Z: %.01f, servo-angle: %d %s %s ",
-							heading,
-							(heading + declination),
-							z,
-							currentHeadingServoAngle,
-							headingMessage,
-							(invert ? String.format("(inverted to %.02f)", invertHeading((float) currentHeadingServoAngle)) : ""));
-			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
-			} else {
-				System.out.println(mess);
-			}
-		}
-		// Drive servo accordingly, to point to Z.
-		if (delta != 0 && !isCalibrating()) {
-
+		if (!isCalibrating()) {
 			// Here, orient BOTH servos, with or without invert.
 
-			if (false) { // Go step-by-step
-				currentHeadingServoAngle += delta;
-			} else { // All at once
-				currentHeadingServoAngle = (int) -(z - 180);
+			double normalizedZ = (z - deviceHeading);
+			while (normalizedZ < 0) {
+				normalizedZ += 360;
 			}
-
-						/*
-						 * If out of [-90..90], invert.
-						 */
-			if (currentHeadingServoAngle < -90 || currentHeadingServoAngle > 90) {
+			while (normalizedZ > 360) {
+				normalizedZ -= 360;
+			}
+			int headingServoAngle = (int) -(normalizedZ);
+			/*
+			 * If out of [-90..90], invert.
+			 */
+			if (headingServoAngle < -90 || headingServoAngle > 90) {
 				invert = true;
 			} else {
 				invert = false;
 			}
 
 			if (he > 0) { // Daytime
+				if (orientationVerbose && !manualEntry) {
+					String mess = String.format(
+									"Heading servo : Aiming Z: %.01f, servo-angle: %d %s ",
+									z,
+									headingServoAngle,
+									(invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
+					if (ansiConsole) {
+						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
+						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+					} else {
+						System.out.println(mess);
+					}
+				}
 				if (astroVerbose && !manualEntry) {
 					String mess = String.format("+ Calculated: From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
 									GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
@@ -345,17 +319,20 @@ public class PanelOrienterV1 {
 					instance.setAngle(servoTilt, (float) angle);
 					previousTiltAngle = angle;
 				}
-				currentHeadingServoAngle = 0;
+				headingServoAngle = 0;
 			}
 			if (orientationVerbose && !manualEntry) {
-				String mess = String.format(">>> Heading servo angle now %d %s", currentHeadingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) currentHeadingServoAngle)) : ""));
+				String mess = String.format(">>> Heading servo angle now %d %s", headingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
 				if (ansiConsole) {
 					AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 6) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 				} else {
 					System.out.println(mess);
 				}
 			}
-			instance.setAngle(servoHeading, invert ? invertHeading((float) currentHeadingServoAngle) : (float) currentHeadingServoAngle);
+			if (headingServoAngle != previousHeadingAngle) {
+				instance.setAngle(servoHeading, invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle);
+			}
+			previousHeadingAngle = headingServoAngle;
 		}
 	}
 
@@ -425,18 +402,6 @@ public class PanelOrienterV1 {
 				System.exit(1);
 			}
 		}
-		String strTol = System.getProperty("tolerance", "1");
-		if (strTol != null) {
-			try {
-				targetWindow = Integer.parseInt(strTol);
-				if (targetWindow < 1) {
-					throw new IllegalArgumentException("Tolerance must be an int, greater than 1");
-				}
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-				System.exit(1);
-			}
-		}
 
 		final LSM303 sensor;
 		final LSM303Listener lsm303Listener;
@@ -454,7 +419,7 @@ public class PanelOrienterV1 {
 			instance.setAngle(servoHeading, 90f);
 			instance.setAngle(servoTilt, 90f);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
-			instance.setAngle(servoHeading, (float) currentHeadingServoAngle);
+			instance.setAngle(servoHeading, 0f);
 			instance.setAngle(servoTilt, 0f);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			System.out.println("Test done.");
@@ -465,11 +430,10 @@ public class PanelOrienterV1 {
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
 		}
-		String mess = String.format("Position %s / %s, Mag Decl. %.01f, tolerance %d\272 each way. Heading servo: %d, Tilt servo: %d",
+		String mess = String.format("Position %s / %s, Mag Decl. %.01f. Heading servo: %d, Tilt servo: %d",
 						GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
 						declination,
-						targetWindow,
 						servoHeading,
 						servoTilt);
 		if (ansiConsole) {
