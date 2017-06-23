@@ -232,14 +232,14 @@ public class NMEADataCache
 					}
 					break;
 				case "ZDA":
-					UTC utc = StringParsers.parseZDA(nmeaSentence);
+					UTCDate utc = StringParsers.parseZDA(nmeaSentence);
 					if (utc != null) {
-						this.put(GPS_DATE_TIME, new UTCDate(utc.getDate()));
-						this.put(GPS_TIME, new UTCTime(utc.getDate()));
+						this.put(GPS_DATE_TIME, utc);
+						this.put(GPS_TIME, new UTCTime(utc.getValue()));
 
 						GeoPos pos = (GeoPos)this.get(POSITION);
 						if (pos != null) {
-							long solarTime = utc.getDate().getTime() + longitudeToTime(pos.lng);
+							long solarTime = utc.getValue().getTime() + longitudeToTime(pos.lng);
 							Date solarDate = new Date(solarTime);
 							this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
 						}

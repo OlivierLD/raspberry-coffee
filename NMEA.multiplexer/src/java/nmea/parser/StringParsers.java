@@ -1457,9 +1457,10 @@ public class StringParsers {
 		return new int[]{mn, nbm};
 	}
 
-	public static UTC parseZDA(String str) {
+	public static UTCDate parseZDA(String str) {
     /* Structure is 
      * $GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
+     *        1         2  3  4
      * $GPZDA,201530.00,04,07,2002,00,00*60    
      *        |         |  |  |    |  |
      *        |         |  |  |    |  local zone minutes 0..59
@@ -1470,11 +1471,34 @@ public class StringParsers {
      *        HrMinSec(UTC)
      */
 		String[] data = str.substring(0, str.indexOf("*")).split(",");
-		UTC utc = new UTC(Integer.parseInt(data[1].substring(0, 2)),
-						Integer.parseInt(data[1].substring(2, 4)),
-						Float.parseFloat(data[1].substring(4)));
 
-		return utc;
+		Calendar local = new GregorianCalendar();
+		local.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+		local.set(Calendar.HOUR_OF_DAY, Integer.parseInt(data[1].substring(0, 2)));
+		local.set(Calendar.MINUTE, Integer.parseInt(data[1].substring(2, 4)));
+		local.set(Calendar.SECOND, (int) Math.round(Float.parseFloat(data[1].substring(4))));
+		local.set(Calendar.MILLISECOND, 0); // TODO Something nicer
+		int d = 1;
+		try {
+			d = Integer.parseInt(data[2]);
+		} catch (Exception ex) {
+		}
+		int mo = 0;
+		try {
+			mo = Integer.parseInt(data[3]) - 1;
+		} catch (Exception ex) {
+		}
+		int y = 0;
+		try {
+			y = Integer.parseInt(data[4]);
+		} catch (Exception ex) {
+		}
+		local.set(Calendar.DATE, d);
+		local.set(Calendar.MONTH, mo);
+		local.set(Calendar.YEAR, y);
+
+		Date utc = local.getTime();
+		return new UTCDate(utc);
 	}
 
 	public static final short DEPTH_IN_FEET = 0;
@@ -1886,8 +1910,8 @@ public class StringParsers {
 		System.out.println("HDT:" + h);
 
 		str = "$GPZDA,201530.00,04,07,2002,00,00*60";
-		UTC utc = parseZDA(str);
-		System.out.println("UTC Time: " + utc.toString());
+		UTCDate utcZDA = parseZDA(str);
+		System.out.println("UTC Time: " + utcZDA.toString());
 
 		str = "$IIVTG,17.,T,M,7.9,N,,*36";
 		og = parseVTG(str);
@@ -1981,7 +2005,7 @@ public class StringParsers {
 		System.out.println("------- GGA -------");
 		str = "$GPGGA,014457,3739.853,N,12222.821,W,1,03,5.4,1.1,M,-28.2,M,,*7E";
 		List<Object> al = parseGGA(str);
-		utc = (UTC) al.get(0);
+		UTC utc = (UTC) al.get(0);
 		GeoPos pos = (GeoPos) al.get(1);
 		Integer nbs = (Integer) al.get(2);
 		Double alt = (Double) al.get(3);
