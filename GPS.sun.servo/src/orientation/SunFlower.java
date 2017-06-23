@@ -410,7 +410,7 @@ public class SunFlower {
 		});
 		mess = "Starting the timer loop";
 		if (ansiConsole){
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + mess + PAD);
+			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 11) + mess + PAD);
 		} else {
 			System.out.println(mess);
 		}
@@ -513,7 +513,7 @@ public class SunFlower {
 			mess = String.format("Point the Device to the true %s, hit [Return] when ready.", instance.getLatitude() > 0 ? "South" : "North");
 
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + EscapeSeq.ANSI_REVERSE + mess + PAD);
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 11) + EscapeSeq.ANSI_REVERSE + mess + PAD);
 			} else {
 				System.out.println(mess);
 			}
@@ -522,7 +522,7 @@ public class SunFlower {
 			instance.setCalibrating(true);
 			userInput("");
 			if (ansiConsole) { // Cleanup
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + PAD);
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 11) + PAD);
 			}
 			instance.setCalibrating(false);
 			// Done calibrating
