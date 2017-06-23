@@ -1,10 +1,15 @@
 ## Servos and Sun
 
-The idea is to build a device with 2 standard servos and an LSM303 to orient a solar panel so it faces the Sun whenever possible (ie during the day).
+The original idea is to build a device with 2 standard servos to orient a solar panel so it faces the Sun whenever possible (ie during the day).
 
 For a given position (provided, or read from a GPS), the position of the Sun is calculated, and then its altitude and azimuth.
-The LSM303 gives the direction (magnetic heading) and inclination (on the Y axis) of the solar panel to which it is attached.
-The servos are triggered when necessary, for the data returned by the LSM303 and the calculated azimuth and elevation to match.
+The servos are triggered when necessary, for the calculated azimuth and elevation to match the orientation of the panel.
+
+By default, in the northern hemisphere, the device would point due South, and the servo angles would be set from there.
+Heading and Position can be dynamically provided (in case the device is moving, in a car, a boat, etc) to the class named
+`orientation.SunFlower`.
+
+Originally, I had attached an LSM303 (magnetormeter and accelerometer), but it was to close to the servos. Those guys are electro-magnets, this was driving the LSM303 crazy...
 
 Requires resources from other projects:
 

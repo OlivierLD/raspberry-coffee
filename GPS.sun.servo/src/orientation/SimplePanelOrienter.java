@@ -23,6 +23,8 @@ import user.util.GeomUtil;
  */
 public class SimplePanelOrienter {
 
+	private static double declination = 14d;
+
 	public static void main(String... args) {
 
 		int servoHeading = 14;
@@ -69,14 +71,11 @@ public class SimplePanelOrienter {
 				System.exit(1);
 			}
 		}
-		String strDec = System.getProperty("declination");
-		if (strDec != null) {
-			try {
-				instance.setDeclination(Double.parseDouble(strDec));
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-				System.exit(1);
-			}
+		String strDec = System.getProperty("declination", "14");
+		try {
+			declination = Double.parseDouble(strDec);
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
 		}
 
 		final LSM303 sensor;
@@ -92,7 +91,7 @@ public class SimplePanelOrienter {
 			lsm303Listener = new LSM303Listener() {
 				@Override
 				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
-					instance.setDeviceMagHeading(heading);
+					instance.setDeviceHeading(heading + declination);
 				}
 
 				@Override

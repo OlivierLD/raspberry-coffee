@@ -7,7 +7,7 @@ import org.fusesource.jansi.AnsiConsole;
 
 /**
  * Show how to use the panel orienter (SunFlower)
- * Takes the Device Heading from the Console
+ * Takes the Device (true) Heading from the Console
  */
 public class InteractivePanelOrienter {
 
@@ -50,15 +50,6 @@ public class InteractivePanelOrienter {
 		if (strLong != null) {
 			try {
 				instance.setLongitude(Double.parseDouble(strLong));
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-				System.exit(1);
-			}
-		}
-		String strDec = System.getProperty("declination");
-		if (strDec != null) {
-			try {
-				instance.setDeclination(Double.parseDouble(strDec));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 				System.exit(1);

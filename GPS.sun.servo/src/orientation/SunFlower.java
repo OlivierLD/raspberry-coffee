@@ -30,12 +30,10 @@ import user.util.GeomUtil;
  * For the main, as an example:
  * latitude -Dlatitude=37.7489
  * longitude -Dlongitude=-122.5070
- * declination -Ddeclination=14
  * -Dtest.servos=true
  */
 public class SunFlower {
 
-	private double declination = 14D; // E+, W-
 	private double latitude = 0D;
 	private double longitude = 0D;
 
@@ -240,28 +238,12 @@ public class SunFlower {
 		deviceHeading = heading;
 	}
 
-	/**
-	 * Set the magnetic heading of the device
-	 * @param heading Mag heading in degrees
-	 */
-	public void setDeviceMagHeading(double heading) {
-		deviceHeading = heading + declination;
-	}
-
-	public void setDeclination(double declination) {
-		this.declination = declination;
-	}
-
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
-	}
-
-	public double getDeclination() {
-		return declination;
 	}
 
 	public double getLatitude() {
@@ -459,15 +441,6 @@ public class SunFlower {
 				System.exit(1);
 			}
 		}
-		String strDec = System.getProperty("declination");
-		if (strDec != null) {
-			try {
-				instance.setDeclination(Double.parseDouble(strDec));
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-				System.exit(1);
-			}
-		}
 
 		// Set to 0
 		instance.servosZero();
@@ -491,10 +464,9 @@ public class SunFlower {
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
 		}
-		String mess = String.format("Position %s / %s, Mag Decl. %.01f. Heading servo: %d, Tilt servo: %d",
+		String mess = String.format("Position %s / %s, Heading servo: %d, Tilt servo: %d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(instance.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-						instance.getDeclination(),
 						servoHeading,
 						servoTilt);
 		if (ansiConsole) {
