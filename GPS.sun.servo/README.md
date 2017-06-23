@@ -118,7 +118,8 @@ The device can also be on the go, the code can receive the position and the head
 A snapshot of the (optional) ANSI console:
 <img src="./doc/ansi.console.png" alt="ANSI Console" width="561" height="199">
 
-here is a prototype:
+
+Here is a prototype:
 ![Proto](./doc/prototype.jpg)
 Now I have to build the real stuff!
 
