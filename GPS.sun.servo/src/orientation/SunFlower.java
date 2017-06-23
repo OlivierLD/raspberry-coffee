@@ -306,14 +306,14 @@ public class SunFlower {
 
 			// default deviceHeading is 180 (in the Northern hemisphere) TODO: Manage hemisphere (carefull with tropical zones, is the Sun north or south? Compare Lat and Sun's D)
 			// normalizedServoAngle ranges from 0 to 180 (counter-clockwise), 0 to -180 (clockwise)
-			double normalizedServoAngle = (z - deviceHeading); // Default deviceHeading=180
-			while (normalizedServoAngle < -180) { // Ex: -190 => 170
-				normalizedServoAngle += 180;
+			double bearing = (z - deviceHeading); // Default deviceHeading=180
+			while (bearing < -180) { // Ex: -190 => 170
+				bearing += 360;
 			}
-			while (normalizedServoAngle > 180) { // Ex: 190 => -170
-				normalizedServoAngle = 360 - normalizedServoAngle;
+			while (bearing > 180) { // Ex: 190 => -170
+				bearing -= 360;
 			}
-			int headingServoAngle = (int) -(headingServoSign * normalizedServoAngle);
+			int headingServoAngle = (int) -(headingServoSign * bearing);
 			/*
 			 * If out of [-90..90], invert.
 			 */
