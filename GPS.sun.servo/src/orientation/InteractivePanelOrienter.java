@@ -73,9 +73,9 @@ public class InteractivePanelOrienter {
 
 		boolean demo = "true".equals(System.getProperty("auto.demo", "false"));
 		if (demo) {
-			for (int head = 30; head<330; head++) {
+			for (int head = 30; head<330; head+=10) {
 				instance.setDeviceHeading(head);
-				try { Thread.sleep(200L); } catch (Exception ignore) {}
+				try { Thread.sleep(1_100L); } catch (Exception ignore) {}
 			}
 		} else {
 			boolean read = true;
