@@ -94,3 +94,14 @@ The Sun rises in the 59°, and sets in the 301°. 59° translates into -121°, a
 <img src="./doc/rise.set.png" width="594" height="523" alt="Sun rise and Set">
 
 This is where we need to invert the angles.
+
+Let's take this example, it is the morning, the azimuth of the Sun is smaller than 90.
+
+<img src="./doc/before.invert.png" width="643" height="501" alt="Sun rise and Set">
+
+The angle of the servo goes beyond limit, it cannot be set.
+A solution is to point in the opposite direction, and flip the tilt servo:
+
+<img src="./doc/after.invert.png" width="670" height="503" alt="Sun rise and Set">
+
+---
