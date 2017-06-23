@@ -16,8 +16,6 @@ public class InteractivePanelOrienter {
 		int servoHeading = 14;
 		int servoTilt = 15;
 
-		boolean ansiConsole = "true".equals(System.getProperty("ansi.console", "false"));
-
 		// Supported parameters --heading:14 --tilt:15
 		if (args.length > 0) {
 			for (String prm : args) {
@@ -72,18 +70,10 @@ public class InteractivePanelOrienter {
 		instance.setCalibrating(false);
 
 		String mess = "Point the Device to the true South, hit [Return] when ready."; // Assuming we are in the Northern hemisphere.
-
-		if (ansiConsole) {
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + EscapeSeq.ANSI_REVERSE + mess +  EscapeSeq.ANSI_ERASE_TO_EOL);
-		} else {
-			System.out.println(mess);
-		}
+		System.out.println(mess);
 
 		instance.setCalibrating(true);
 		SunFlower.userInput("");
-		if (ansiConsole) { // Cleanup
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + EscapeSeq.ANSI_ERASE_TO_EOL);
-		}
 		instance.setCalibrating(false);
 		// Done calibrating
 		double heading = 180D;
@@ -120,9 +110,6 @@ public class InteractivePanelOrienter {
 			Thread.sleep(1_000L);
 		} catch (InterruptedException ie) {
 			System.err.println(ie.getMessage());
-		}
-		if (ansiConsole) {
-			AnsiConsole.systemUninstall();
 		}
 	}
 }
