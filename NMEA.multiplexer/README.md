@@ -562,7 +562,7 @@ To enable `hostapd` to have you Raspberry PI acting as a WiFi hotspot, as we sai
 The thing is that when the Raspberry PI becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
 `git pull origin master`, etc, that can rapidely become quite frustrating.
 
-In the past, I had written a couple of scripts to jungle with the various configuration files (`hostapd.conf`, `wpa_supplicant.conf`, `/etc/network/interfaces`, etc).
+In the past, I had written a couple of scripts to juggle with the various configuration files (`hostapd.conf`, `wpa_supplicant.conf`, `/etc/network/interfaces`, etc).
 This worked for a while, then after an `apt-get upgrade`, it stopped working, some config files had changed... Bummer.
 
 A much better approach seems to be to have 2 WiFi adpaters. The Rasberry PI 3 and the Zero W already have one embedded, I just added another one, the small USB WiFi dongle I used to use
