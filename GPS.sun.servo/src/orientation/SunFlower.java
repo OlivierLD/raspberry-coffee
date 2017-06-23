@@ -303,8 +303,6 @@ public class SunFlower {
 
 		if (!this.isCalibrating()) {
 			// Here, orient BOTH servos, with or without invert.
-
-			// default deviceHeading is 180 (in the Northern hemisphere) TODO: Manage hemisphere (carefull with tropical zones, is the Sun north or south? Compare Lat and Sun's D)
 			// normalizedServoAngle ranges from 0 to 180 (counter-clockwise), 0 to -180 (clockwise)
 			double bearing = (z - deviceHeading); // Default deviceHeading=180
 			while (bearing < -180) { // Ex: -190 => 170
@@ -511,8 +509,8 @@ public class SunFlower {
 		}
 
 		try {
-			// TODO Point the device to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
-			mess = "Point the Device to the true South, hit [Return] when ready.";
+			// Point the device to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
+			mess = String.format("Point the Device to the true %s, hit [Return] when ready.", instance.getLatitude() > 0 ? "South" : "North");
 
 			if (ansiConsole) {
 				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + EscapeSeq.ANSI_REVERSE + mess + PAD);
@@ -520,7 +518,7 @@ public class SunFlower {
 				System.out.println(mess);
 			}
 
-			z = 180;
+			z = instance.getLatitude() > 0 ? 180 : 0;
 			instance.setCalibrating(true);
 			userInput("");
 			if (ansiConsole) { // Cleanup
@@ -528,7 +526,7 @@ public class SunFlower {
 			}
 			instance.setCalibrating(false);
 			// Done calibrating
-			instance.setDeviceHeading(180D);
+			instance.setDeviceHeading(z);
 
 			instance.startWorking();
 
