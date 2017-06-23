@@ -407,7 +407,7 @@ public class PanelOrienterV1 {
 
 						if (he > 0) { // Daytime
 							if (astroVerbose && !manualEntry) {
-								String mess = String.format("From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
+								String mess = String.format("+ Calculated: From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
 												GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
 												GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
 												he,
@@ -418,7 +418,7 @@ public class PanelOrienterV1 {
 									System.out.println(mess);
 								}
 							}
-							int angle = (int)Math.round(90 - he);
+							int angle = - (int)Math.round(90 - he); // TODO The sign should be a prm
 							if (invert) {
 								angle = -angle;
 							}
