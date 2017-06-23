@@ -1,6 +1,6 @@
 ## Servos and Sun
 
-The original idea is to build a device with 2 standard servos to orient a solar panel (like [that one](https://www.adafruit.com/product/200) or ) so it faces the Sun whenever possible (ie during the day).
+The original idea is to build a device with 2 standard servos to orient a solar panel (like [that one](https://www.adafruit.com/product/200) or similar) so it faces the Sun whenever possible (ie during the day).
 
 For a given position (provided, or read from a GPS), the position of the Sun is calculated, and then its altitude and azimuth.
 The servos are triggered when necessary, for the calculated azimuth and elevation to match the orientation of the panel.
