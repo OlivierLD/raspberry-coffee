@@ -1,6 +1,6 @@
 ## Servos and Sun
 
-The original idea is to build a device with 2 standard servos to orient a solar panel so it faces the Sun whenever possible (ie during the day).
+The original idea is to build a device with 2 standard servos to orient a solar panel (like [that one](https://www.adafruit.com/product/200) or ) so it faces the Sun whenever possible (ie during the day).
 
 For a given position (provided, or read from a GPS), the position of the Sun is calculated, and then its altitude and azimuth.
 The servos are triggered when necessary, for the calculated azimuth and elevation to match the orientation of the panel.
@@ -114,5 +114,13 @@ A solution is to point in the opposite direction, and flip the tilt servo:
 
 This is a static situation, from the northern hemisphere.
 The device can also be on the go, the code can receive the position and the heading (from a GPS or an NMEA station for example) at any time, it will adjust the servos accordingly.
+
+A snapshot of the (optional) ANSI console:
+<img src="./doc/ansi.console.png" alt="ANSI Console" width="561" height="199">
+
+here is a prototype:
+![Proto](./doc/prototype.jpg)
+Now I have to build the real stuff!
+
 
 ---
