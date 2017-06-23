@@ -112,4 +112,7 @@ A solution is to point in the opposite direction, and flip the tilt servo:
 
 <img src="./doc/after.invert.png" width="670" height="503" alt="Sun rise and Set">
 
+This is a static situation, from the northern hemisphere.
+The device can also be on the go, the code can receive the position and the heading (from a GPS or an NMEA station for example) at any time, it will adjust the servos accordingly.
+
 ---
