@@ -100,10 +100,10 @@ public class InteractivePanelOrienter {
 		}
 		System.out.println("Bye.");
 		instance.stopWorking();
-		instance.stopHeadingServo();
-		instance.stopTiltServo();
 		instance.setHeadingServoAngle(0f);
 		instance.setTiltServoAngle(0f);
+		instance.stopHeadingServo();
+		instance.stopTiltServo();
 		try {
 			Thread.sleep(1_000L);
 		} catch (InterruptedException ie) {
