@@ -11,6 +11,8 @@
         // WebSocket part
         var connection;
 
+        var pitch = 0, roll = 0, yaw = 0;
+
         (function () {
             var ws = window.WebSocket || window.MozWebSocket;
             if (!ws) {
@@ -49,6 +51,11 @@
                 if (json.type === 'message') {
                     try {
                         var command = JSON.parse(json.data.text);
+                        if (command.roll !== undefined && command.pitch !== undefined && command.yaw !== undefined) {
+                            pitch = command.pitch;
+                            roll = command.roll;
+                            yaw = command.yaw;
+                        }
                     } catch (err) {
                         console.log("Err:" + err + " for " + json.data.text);
                     }
@@ -85,62 +92,6 @@
             '}';
 
         // Vertices of the object
-//        var vertices = new Float32Array([
-//            /* X Axis */
-//            -1.0,  0.0,  0.0,
-//            0.9,  0.0,  0.0,
-//            0.9, -0.1,  0.0,
-//            1.0,  0.0,  0.0,
-//            0.9,  0.1,  0.0,
-//            0.9,  0.0,  0.0,
-//            0.0,  0.0,  0.0,
-//
-//            /* Y Axis */
-//            0.0, -1.0,  0.0,
-//            0.0,  0.9,  0.0,
-//            -0.1,  0.9,  0.0,
-//            0.0,  1.0,  0.0,
-//            0.1,  0.9,  0.0,
-//            0.0,  0.9,  0.0,
-//            0.0,  0.0,  0.0,
-//
-//            /* Z Axis */
-//            0.0,  0.0, -1.0,
-//            0.0,  0.0,  0.9,
-//            -0.1, -0.1,  0.9,
-//            0.0,  0.0,  1.0,
-//            0.1,  0.1,  0.9,
-//            0.0,  0.0,  0.9,
-//            0.0,  0.0,  0.0,
-//
-//            /* House Front*/
-//            0.6,  0.0,  0.0,
-//            0.6,  0.6,  0.0,
-//            0.0,  0.6,  0.0,
-//            0.3,  0.9,  0.0,
-//            0.6,  0.6,  0.0,
-//            0.6,  0.0,  0.0,
-//
-//            /* House Back */
-//            0.6,  0.0,  0.8,
-//            0.6,  0.6,  0.8,
-//            0.0,  0.6,  0.8,
-//            0.3,  0.9,  0.8,
-//            0.6,  0.6,  0.8,
-//
-//            /* Additional lines */
-//            0.6,  0.6,  0.0,
-//            0.3,  0.9,  0.0,
-//            0.3,  0.9,  0.8,
-//            0.0,  0.6,  0.8,
-//            0.0,  0.6,  0.0,
-//            0.6,  0.6,  0.0,
-//            0.6,  0.6,  0.8,
-//            0.0,  0.6,  0.8,
-//            0.0,  0.0,  0.8,
-//            0.6,  0.0,  0.8
-//        ]);
-
         var vertices = new Float32Array([-1, 0, 0.3333333333333333
             , -0.6666666666666666, 0, 0
             , -1, 0, 0.3333333333333333
@@ -246,8 +197,7 @@
         var running = true; // True when the canvas is periodically refreshed
 
         // Function called by onload handler
-        function start()
-        {
+        function start() {
             // Gets canvas from the HTML page
             var canvas = document.getElementById('glcanvas');
 
@@ -312,26 +262,14 @@
         }
 
         // Function called periodically to draw the scene
-        function draw()
-        {
+        function draw() {
             // Tests if canvas should be refreshed
             if(!running || !gl)
                 return;
 
-            // Gets control value angles from HTML page via DOM
-            var ax = parseInt(document.getElementById('ax').innerHTML, 10);
-            var ay = parseInt(document.getElementById('ay').innerHTML, 10);
-            var az = parseInt(document.getElementById('az').innerHTML, 10);
-
-            // Use increments via DOM to update angles (still in degrees)
-            ax = (ax + parseInt(document.getElementById('dx').value, 10) + 360) % 360; // Pitch
-            ay = (ay + parseInt(document.getElementById('dy').value, 10) + 360) % 360; // Roll
-            az = (az + parseInt(document.getElementById('dz').value, 10) + 360) % 360; // Heading
-
-            // Update HTML page with new values
-            document.getElementById('ax').innerHTML = ax.toString();
-            document.getElementById('ay').innerHTML = ay.toString();
-            document.getElementById('az').innerHTML = az.toString();
+            var ax = pitch.toFixed(0);
+            var ay = roll.toFixed(0);
+            var az = yaw.toFixed(0);
 
             // Convert values to radians
             ax *= 2*Math.PI/360;
@@ -378,13 +316,13 @@
 
 <body onload='start();'>
 
-<h1>WebGL wireframe object</h1>
+<h1>WebGL wireframe pitch and roll</h1>
 
 <canvas id='glcanvas' width=640 height=480 onclick='running = !running;'>
     Your browser may not support HTML5
 </canvas>
 
-<p>
+<!--p>
 <div style='display:inline-block;'>RX:</div>
 <div style='display:inline-block; width:1.5em;'id='ax'>0</div>
 <div style='display:inline-block;'>
@@ -406,10 +344,7 @@
         <option>-2<option>-1<option selected="selected">0<option>+1<option>+2
     </select>
 </div>
-</p>
-
-<p>Click on the animation to start and stop it.</p>
-
+</p-->
 
 </body>
 </html>
