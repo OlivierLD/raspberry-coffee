@@ -4,6 +4,9 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 #
 # Requires an LSM303
 #
+echo Make sure you\'ve started the node server \(with websocket\) from the node directory
+echo \$ node server.js
+ #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dlsm303.verbose=true"
 # For remote debugging:
