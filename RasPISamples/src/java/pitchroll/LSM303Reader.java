@@ -43,14 +43,16 @@ public class LSM303Reader {
 			try {
 				double pitch = lsm303.getPitch();
 				double roll  = lsm303.getRoll();
-				// TODO Feed WS
+				double heading = lsm303.getHeading();
+				// Feed WS
 				if (verbose) {
-					System.out.println(String.format("Pitch: %.02f, roll: %.02f", pitch, roll));
+					System.out.println(String.format("Heading: %.02f, pitch: %.02f, roll: %.02f", heading, pitch, roll));
 				}
 				if (webSocketClient != null) {
 					JSONObject json = new JSONObject();
 					json.put("pitch", pitch);
 					json.put("roll", roll);
+					json.put("yaw", heading);
 					webSocketClient.send(json.toString());
 				}
 
