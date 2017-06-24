@@ -39,10 +39,10 @@ public class LSM303Reader {
 	public void startReader() {
 		this.lsm303.startReading();
 		while (read) {
-			// Read data every 1 second
+			// Read data continuously, as defined by BETWEEN_LOOPS
 			try {
-				double pitch = lsm303.getPitch();
-				double roll  = lsm303.getRoll();
+				double pitch   = lsm303.getPitch();
+				double roll    = lsm303.getRoll();
 				double heading = lsm303.getHeading();
 				// Feed WS
 				if (verbose) {
@@ -51,11 +51,10 @@ public class LSM303Reader {
 				if (webSocketClient != null) {
 					JSONObject json = new JSONObject();
 					json.put("pitch", pitch);
-					json.put("roll", roll);
-					json.put("yaw", heading);
+					json.put("roll",  roll);
+					json.put("yaw",   heading);
 					webSocketClient.send(json.toString());
 				}
-
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -83,7 +82,6 @@ public class LSM303Reader {
 		if (webSocketClient != null) {
 			webSocketClient.close();
 		}
-
 	}
 
 	private void initWebSocketConnection(String serverURI) {
@@ -123,9 +121,6 @@ public class LSM303Reader {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			read = false;
 		}));
-
 		reader.startReader();
-
-		read = false;
 	}
 }
