@@ -6,7 +6,6 @@
 <head>
     <title>Sample Pitch Roll display</title>
     <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
-
     <script type='text/javascript'>
 
         // WebSocket part
@@ -54,8 +53,8 @@
                         var command = JSON.parse(json.data.text);
                         if (command.roll !== undefined && command.pitch !== undefined && command.yaw !== undefined) {
                             pitch = command.pitch;
-                            roll = command.roll;
-                            yaw = command.yaw;
+                            roll  = command.roll;
+                            yaw   = command.yaw;
                    //       console.log('Pitch', pitch, "Roll", roll);
                         }
                     } catch (err) {
@@ -341,7 +340,11 @@
 </canvas>
 
 <p>
-    Yaw <span id="yaw-val"></span>, Pitch <span id="pitch-val"></span>, Roll <span id="roll-val"></span>.
+    <table>
+      <tr><td>Yaw</td><td><span id="yaw-val"></span></td></tr>
+      <tr><td>Pitch</td><td><span id="pitch-val"></span></td></tr>
+      <tr><td>Roll</td><td><span id="roll-val"></span></td></tr>
+    </table>
 </p>
 
 <!-- Uncomment for manual entry -->
