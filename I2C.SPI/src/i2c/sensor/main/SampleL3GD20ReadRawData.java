@@ -4,13 +4,13 @@ import i2c.sensor.L3GD20;
 import i2c.sensor.utils.L3GD20Dictionaries;
 
 /*
- * Read real data
+ * Read raw data
  */
-public class SampleL3GD20ReadRawlData
+public class SampleL3GD20ReadRawData
 {
   private boolean go = true;
   
-  public SampleL3GD20ReadRawlData() throws Exception
+  public SampleL3GD20ReadRawData() throws Exception
   {
     L3GD20 sensor = new L3GD20();
     sensor.setPowerMode(L3GD20Dictionaries.NORMAL);
@@ -43,6 +43,6 @@ public class SampleL3GD20ReadRawlData
   
   public static void main(String[] args) throws Exception
   {
-    SampleL3GD20ReadRawlData main = new SampleL3GD20ReadRawlData();
+    SampleL3GD20ReadRawData main = new SampleL3GD20ReadRawData();
   }
 }

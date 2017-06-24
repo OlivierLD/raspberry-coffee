@@ -262,9 +262,9 @@
             var az = parseInt(document.getElementById('az').innerHTML, 10);
 
             // Use increments via DOM to update angles (still in degrees)
-            ax = (ax + parseInt(document.getElementById('dx').value, 10) + 360) % 360;
-            ay = (ay + parseInt(document.getElementById('dy').value, 10) + 360) % 360;
-            az = (az + parseInt(document.getElementById('dz').value, 10) + 360) % 360;
+            ax = (ax + parseInt(document.getElementById('dx').value, 10) + 360) % 360; // Pitch
+            ay = (ay + parseInt(document.getElementById('dy').value, 10) + 360) % 360; // Roll
+            az = (az + parseInt(document.getElementById('dz').value, 10) + 360) % 360; // Heading
 
             // Update HTML page with new values
             document.getElementById('ax').innerHTML = ax.toString();
@@ -272,7 +272,9 @@
             document.getElementById('az').innerHTML = az.toString();
 
             // Convert values to radians
-            ax *= 2*Math.PI/360; ay *= 2*Math.PI/360; az *= 2*Math.PI/360;
+            ax *= 2*Math.PI/360;
+            ay *= 2*Math.PI/360;
+            az *= 2*Math.PI/360;
 
             // Gets reference on the "uniform" 4x4 matrix transforming coordinates
             var amvp = gl.getUniformLocation(program, "mvp");
