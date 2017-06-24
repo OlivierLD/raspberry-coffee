@@ -167,7 +167,7 @@ wsServer.on('request', function(request) {
   // user sent some message
   connection.on('message', function(message) {
     if (message.type === 'utf8') { // accept only text
-//    console.log((new Date()) + ' Received Message: ' + message.utf8Data);
+      console.log((new Date()) + ' Received Message: ' + message.utf8Data);
       try
       {
         var mess = JSON.parse(message.utf8Data);

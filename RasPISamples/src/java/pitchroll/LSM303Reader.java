@@ -3,6 +3,10 @@ package pitchroll;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.sensor.LSM303;
 import java.io.IOException;
+import java.net.URI;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONObject;
 
 /**
  * Feeds a WebSocket server with pitch and roll data.
@@ -12,12 +16,19 @@ public class LSM303Reader {
 	private static boolean verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 	private LSM303 lsm303;
 
-	private static final long BETWEEN_LOOPS = 1_000L; // TODO: Make it an external parameter?
+	private static final long BETWEEN_LOOPS = 250L; // TODO: Make it an external parameter?
 	private static boolean read = true;
+
+	private WebSocketClient webSocketClient = null;
+
 
 	public LSM303Reader() {
 		try {
 			this.lsm303 = new LSM303();
+
+			String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
+			initWebSocketConnection(wsUri);
+
 		} catch (I2CFactory.UnsupportedBusNumberException e) {
 			e.printStackTrace();
 		} catch (IOException ioe) {
@@ -36,6 +47,13 @@ public class LSM303Reader {
 				if (verbose) {
 					System.out.println(String.format("Pitch: %.02f, roll: %.02f", pitch, roll));
 				}
+				if (webSocketClient != null) {
+					JSONObject json = new JSONObject();
+					json.put("pitch", pitch);
+					json.put("roll", roll);
+					webSocketClient.send(json.toString());
+				}
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -60,7 +78,43 @@ public class LSM303Reader {
 
 	public void closeReader() throws Exception {
 		this.lsm303.setKeepReading(false);
+		if (webSocketClient != null) {
+			webSocketClient.close();
+		}
+
 	}
+
+	private void initWebSocketConnection(String serverURI) {
+		try {
+			System.out.println("Connecting to " + serverURI);
+			webSocketClient = new WebSocketClient(new URI(serverURI)) //, (Draft)null)
+			{
+				@Override
+				public void onMessage(String mess) {
+				}
+
+				@Override
+				public void onOpen(ServerHandshake handshake) {
+					System.out.println("onOpen");
+				}
+
+				@Override
+				public void onClose(int code, String reason, boolean remote) {
+					System.out.println("onClose");
+				}
+
+				@Override
+				public void onError(Exception ex) {
+					System.err.println("onError");
+					System.err.println(ex.toString());
+				}
+			};
+			webSocketClient.connect(); // IMPORTANT! Do not forget that one...
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 
 	public static void main(String... args) {
 		LSM303Reader reader = new LSM303Reader();
