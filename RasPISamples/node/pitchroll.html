@@ -267,9 +267,17 @@
             if(!running || !gl)
                 return;
 
-            var ax = pitch.toFixed(0);
-            var ay = roll.toFixed(0);
+            var ax = roll.toFixed(0);
+            var ay = pitch.toFixed(0);
             var az = yaw.toFixed(0);
+
+            document.getElementById("yaw-val").innerHTML = az;
+            document.getElementById("pitch-val").innerHTML = ay;
+            document.getElementById("roll-val").innerHTML = ax;
+
+            // for the visualization
+            ax += 90;
+            az += 45;
 
             // Convert values to radians
             ax *= 2*Math.PI/360;
@@ -322,6 +330,9 @@
     Your browser may not support HTML5
 </canvas>
 
+<p>
+    Yaw <span id="yaw-val"></span>, Pitch <span id="pitch-val"></span>, Roll <span id="roll-val"></span>.
+</p>
 <!--p>
 <div style='display:inline-block;'>RX:</div>
 <div style='display:inline-block; width:1.5em;'id='ax'>0</div>
