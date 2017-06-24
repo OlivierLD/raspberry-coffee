@@ -38,6 +38,7 @@ import nmea.consumers.client.RandomClient;
 import nmea.consumers.client.SerialClient;
 import nmea.consumers.client.TCPClient;
 import nmea.consumers.client.WebSocketClient;
+import nmea.consumers.client.ZDAClient;
 import nmea.consumers.reader.BME280Reader;
 import nmea.consumers.reader.BMP180Reader;
 import nmea.consumers.reader.DataFileReader;
@@ -47,6 +48,7 @@ import nmea.consumers.reader.RandomReader;
 import nmea.consumers.reader.SerialReader;
 import nmea.consumers.reader.TCPReader;
 import nmea.consumers.reader.WebSocketReader;
+import nmea.consumers.reader.ZDAReader;
 import nmea.forwarders.ConsoleWriter;
 import nmea.forwarders.DataFileWriter;
 import nmea.forwarders.Forwarder;
@@ -549,6 +551,12 @@ public class RESTImplementation {
 				case "rnd":
 					opClient = nmeaDataClients.stream()
 									.filter(channel -> channel instanceof RandomClient)
+									.findFirst();
+					response = removeChannelIfPresent(request, opClient);
+					break;
+				case "zda":
+					opClient = nmeaDataClients.stream()
+									.filter(channel -> channel instanceof ZDAClient)
 									.findFirst();
 					response = removeChannelIfPresent(request, opClient);
 					break;
@@ -1097,6 +1105,44 @@ public class RESTImplementation {
 					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'lsm303' already exists");
 				}
 				break;
+			case "zda":
+				ZDAClient.ZDABean zdaJson = new Gson().fromJson(new String(request.getContent()), ZDAClient.ZDABean.class);
+				opClient = nmeaDataClients.stream()
+								.filter(channel -> channel instanceof ZDAClient)
+								.findFirst();
+				if (!opClient.isPresent()) {
+					try {
+						NMEAClient zdaClient = new ZDAClient(zdaJson.getDeviceFilters(), zdaJson.getSentenceFilters(), this.mux);
+						zdaClient.initClient();
+						zdaClient.setReader(new ZDAReader(zdaClient.getListeners()));
+						// To do BEFORE startWorking and AFTER setReader
+						if (zdaJson.getDevicePrefix() != null) {
+							if (zdaJson.getDevicePrefix().trim().length() != 2) {
+								throw new RuntimeException(String.format("Device prefix length must be exactly 2. [%s] is not valid", zdaJson.getDevicePrefix().trim()));
+							} else {
+								((ZDAClient)zdaClient).setSpecificDevicePrefix(zdaJson.getDevicePrefix().trim());
+							}
+						}
+						nmeaDataClients.add(zdaClient);
+						zdaClient.startWorking();
+						String content = new Gson().toJson(zdaClient.getBean());
+						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+					} catch (Exception ex) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, ex.toString());
+						ex.printStackTrace();
+					} catch (Error error) {
+						response.setStatus(HTTPServer.Response.BAD_REQUEST);
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						error.printStackTrace();
+					}
+				} else {
+					// Already there
+					response.setStatus(HTTPServer.Response.BAD_REQUEST);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'zda' already exists");
+				}
+				break;
 			case "bme280":
 				BME280Client.BME280Bean bme280Json = new Gson().fromJson(new String(request.getContent()), BME280Client.BME280Bean.class);
 				opClient = nmeaDataClients.stream()
@@ -1554,6 +1600,22 @@ public class RESTImplementation {
 					LSM303Client lsm303Client = (LSM303Client) opClient.get();
 					lsm303Client.setVerbose(lsm303Json.getVerbose());
 					String content = new Gson().toJson(lsm303Client.getBean());
+					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+				}
+				break;
+			case "zda":
+				ZDAClient.ZDABean zdaJson = new Gson().fromJson(new String(request.getContent()), ZDAClient.ZDABean.class);
+				opClient = nmeaDataClients.stream()
+								.filter(channel -> channel instanceof ZDAClient)
+								.findFirst();
+				if (!opClient.isPresent()) {
+					response.setStatus(HTTPServer.Response.NOT_FOUND);
+					RESTProcessorUtil.addErrorMessageToResponse(response, "this 'da' was not found");
+				} else { // Then update
+					ZDAClient zdaClient = (ZDAClient) opClient.get();
+					zdaClient.setVerbose(zdaJson.getVerbose());
+					String content = new Gson().toJson(zdaClient.getBean());
 					RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
 				}

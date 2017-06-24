@@ -22,6 +22,7 @@ import nmea.consumers.client.RandomClient;
 import nmea.consumers.client.SerialClient;
 import nmea.consumers.client.TCPClient;
 import nmea.consumers.client.WebSocketClient;
+import nmea.consumers.client.ZDAClient;
 import nmea.consumers.reader.BME280Reader;
 import nmea.consumers.reader.BMP180Reader;
 import nmea.consumers.reader.DataFileReader;
@@ -31,6 +32,7 @@ import nmea.consumers.reader.RandomReader;
 import nmea.consumers.reader.SerialReader;
 import nmea.consumers.reader.TCPReader;
 import nmea.consumers.reader.WebSocketReader;
+import nmea.consumers.reader.ZDAReader;
 import nmea.forwarders.ConsoleWriter;
 import nmea.forwarders.DataFileWriter;
 import nmea.forwarders.Forwarder;
@@ -250,6 +252,24 @@ public class MuxInitializer {
 								rndClient.setReader(new RandomReader(rndClient.getListeners()));
 								rndClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								nmeaDataClients.add(rndClient);
+							} catch (Exception e) {
+								e.printStackTrace();
+							} catch (Error err) {
+								err.printStackTrace();
+							}
+							break;
+						case "zda": // ZDA generator
+							try {
+								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
+								NMEAClient zdaClient = new ZDAClient(
+												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
+												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
+												mux);
+								zdaClient.initClient();
+								zdaClient.setReader(new ZDAReader(zdaClient.getListeners()));
+								zdaClient.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
+								nmeaDataClients.add(zdaClient);
 							} catch (Exception e) {
 								e.printStackTrace();
 							} catch (Error err) {

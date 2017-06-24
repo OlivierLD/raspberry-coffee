@@ -156,6 +156,7 @@
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-lsm303").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
                     break;
                 case 'tcp':
@@ -168,6 +169,7 @@
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-lsm303").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
                     break;
                 case 'file':
@@ -180,6 +182,7 @@
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-lsm303").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
                     break;
                 case 'ws':
@@ -192,6 +195,7 @@
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-lsm303").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
                     break;
                 case 'rnd':
@@ -204,6 +208,7 @@
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-lsm303").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
                     break;
                 case 'bmp180':
@@ -216,6 +221,7 @@
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-lsm303").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
                     break;
                 case 'bme280':
@@ -228,6 +234,7 @@
                     $("#channel-bme280").css('display', 'inline');
                     $("#channel-lsm303").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
                     break;
                 case 'lsm303':
@@ -240,6 +247,7 @@
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-lsm303").css('display', 'inline');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'none');
                     $("#channel-custom").css('display', 'none');
                     break;
                 case 'htu21df':
@@ -252,6 +260,20 @@
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-lsm303").css('display', 'none');
                     $("#channel-htu21df").css('display', 'inline');
+                    $("#channel-zda").css('display', 'none');
+                    $("#channel-custom").css('display', 'none');
+                    break;
+                case 'zda':
+                    $("#channel-serial").css('display', 'none');
+                    $("#channel-tcp").css('display', 'none');
+                    $("#channel-file").css('display', 'none');
+                    $("#channel-ws").css('display', 'none');
+                    $("#channel-rnd").css('display', 'none');
+                    $("#channel-bmp180").css('display', 'none');
+                    $("#channel-bme280").css('display', 'none');
+                    $("#channel-lsm303").css('display', 'none');
+                    $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'inline');
                     $("#channel-custom").css('display', 'none');
                     break;
                 case 'custom':
@@ -264,6 +286,7 @@
                     $("#channel-bme280").css('display', 'none');
                     $("#channel-lsm303").css('display', 'none');
                     $("#channel-htu21df").css('display', 'none');
+                    $("#channel-zda").css('display', 'none');
                     $("#channel-custom").css('display', 'inline');
                     break;
                 default:
@@ -485,6 +508,17 @@
                     var dPrefix = $('#lsm303-dev-prefix').val();
                     createChannel({
                         type: 'lsm303',
+                        devicePrefix: dPrefix,
+                        deviceFilters: dFilters,
+                        sentenceFilters: sFilters
+                    });
+                    break;
+                case 'zda':
+                    var dFilters = $("#zda-dev-filters").val().split(",");
+                    var sFilters = $("#zda-sentence-filters").val().split(",");
+                    var dPrefix = $('#zda-dev-prefix').val();
+                    createChannel({
+                        type: 'zda',
                         devicePrefix: dPrefix,
                         deviceFilters: dFilters,
                         sentenceFilters: sFilters
@@ -816,6 +850,7 @@
                 <option value="bme280">BME280</option>
                 <option value="lsm303">LSM303</option>
                 <option value="htu21df">HTU21DF</option>
+                <option value="zda">ZDA</option>
                 <option value="custom">Custom</option>
               </select>
             </td>
@@ -976,6 +1011,24 @@
                   <tr>
                     <td>Sentence filter(s)</td>
                     <td><input id="lsm303-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                </table>
+              </div>
+              <div id="channel-zda" style="display: none;">
+                <table>
+                  <tr>
+                    <td>Device Prefix</td>
+                    <td><input id="zda-dev-prefix" type="text" placeholder="Device Prefix" size="10" value="GP"></td>
+                  </tr>
+                  <tr>
+                    <td>Device filter(s)</td>
+                    <td><input id="zda-dev-filters" type="text" placeholder="Device filters, II, ~GP" size="30"></td>
+                    <td><small>Negate with <b>~</b></small></td>
+                  </tr>
+                  <tr>
+                    <td>Sentence filter(s)</td>
+                    <td><input id="zda-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
                     <td><small>Negate with <b>~</b></small></td>
                   </tr>
                 </table>
