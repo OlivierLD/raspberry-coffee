@@ -41,10 +41,31 @@
         nmeaID = document.getElementById("id");
 
         rose = new CompassRose('roseCanvas', 400, 50);
+
+        var max = 100;
+        var bigTick = 10;
+        var smallTick = 5;
+        if (getQueryParameterByName('type') === 'walk') {
+            max = 15;
+            bigTick = 5;
+            smallTick = 1;
+        }
+
         displayBSP = // new AnalogDisplay('bspCanvas', 100,   100,  10,  5);
-                     new AnalogDisplay('bspCanvas', 100, 100, 10, 5, true, 40);
+                     new AnalogDisplay('bspCanvas', 100, max, bigTick, smallTick, true, 40);
+        displayBSP.setWithMinMax(true);
         satellitesPlotter = new SatellitesPlotter("satCanvas", 100); // 100 is the radius.
     //  plotPositionOnChart({ lat: 0, lng: 0 }); // Default
+      };
+
+      var getQueryParameterByName = function(name, url) {
+          if (!url) url = window.location.href;
+          name = name.replace(/[\[\]]/g, "\\$&");
+          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+              results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, " "));
       };
 
       // Plot position on the chart
@@ -115,33 +136,28 @@
     </table>
     <table cellspacing="10" border="0">
       <tr>
-        <td valign="top"><div id="map-canvas" style="width: 800px; height: 400px; margin: 0px;"></div></td>
-        <td valign="top" rowspan="2">
+        <td valign="top" rowspan="3"><div id="map-canvas" style="width: 800px; height: 600px; margin: 0px;"></div></td>
+        <td><canvas id="bspCanvas" width="240" height="240" title="Speed (SOG) in mph"></canvas></td>
+        <td valign="top" rowspan="1">
           <canvas id="satCanvas" width="240" height="240" title="Satellites in sight"></canvas>
-          <br>
-          <textarea id="raw-json" placeholder="Raw Data" style="width: 100%; font-family: Courier" rows="30"></textarea>
-        </td>
-        <td rowspan="4" valign="top">
-          <div id="satData"></div>
         </td>
       </tr>
       <tr>
-        <td align="center" colspan="1">
-          <table>
-            <tr>
-              <td><canvas id="roseCanvas" width="500" height="50" title="True Heading (COG)"></canvas></td>
-              <td><canvas id="bspCanvas" width="240" height="240" title="Speed (SOG) in mph"></canvas></td>
-            </tr>
-          </table>
+        <td valign="top"><canvas id="roseCanvas" width="240" height="50" title="True Heading (COG)"></canvas></td>
+        <td rowspan="2" valign="top" align="center"><div id="satData"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <textarea id="raw-json" placeholder="Raw Data" style="width: 100%; font-family: Courier" rows="20"></textarea>
         </td>
       </tr>
       <tr>
-        <td align="left" colspan="2">
+        <td align="left" colspan="3">
           <div id="status" style="padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 80px;"></div>
         </td>
       </tr>
       <tr>
-        <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
+        <td valign="top" align="right" colspan="3"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
       </tr>
     </table>
     <hr>

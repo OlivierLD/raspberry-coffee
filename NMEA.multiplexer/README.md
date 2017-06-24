@@ -1,7 +1,16 @@
 # NMEA Multiplexer
+
+NMEA channels management, in and out.
+
+-------------------------------------
+
+[NMEA](http://nmea.org) (National Marine Electronics Association) is one of the oldest IT standards, defining how sensor data should be conveyed.
+
+--------
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
 
-Designed to run on very small boards, like a Raspberry PI Zero, and with _no_ Internet access.
+Designed to run on _very small_ boards, like a Raspberry PI Zero, and with possibly _no_ Internet access.
+> Warning: It is not designed to scale as an enterprise server!
 
 The operations on the Serial port require `libRxTx`. This is included in the gradle dependencies.
 To be able to use it outside gradle, run (on Linux/Debian/Raspberry PI):
@@ -553,7 +562,7 @@ To enable `hostapd` to have you Raspberry PI acting as a WiFi hotspot, as we sai
 The thing is that when the Raspberry PI becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
 `git pull origin master`, etc, that can rapidely become quite frustrating.
 
-In the past, I had written a couple of scripts to jungle with the various configuration files (`hostapd.conf`, `wpa_supplicant.conf`, `/etc/network/interfaces`, etc).
+In the past, I had written a couple of scripts to juggle with the various configuration files (`hostapd.conf`, `wpa_supplicant.conf`, `/etc/network/interfaces`, etc).
 This worked for a while, then after an `apt-get upgrade`, it stopped working, some config files had changed... Bummer.
 
 A much better approach seems to be to have 2 WiFi adpaters. The Rasberry PI 3 and the Zero W already have one embedded, I just added another one, the small USB WiFi dongle I used to use
@@ -610,6 +619,21 @@ They are [here](./examples.md).
 
 ## Case Studies
 - [NMEA Multiplexer on a Raspberry PI Zero W](./casestudy.md). Compared with Node-RED.
+
+## Bonus
+- A sample of a log file analyzer is in `util.LogAnalyzer`:
+```bash
+ $ java -cp ./build/libs/NMEA.multiplexer-1.0-all.jar util.LogAnalyzer ./sample.data/2017.06.17.nmea
+
+  Started 17-Jun-2017 09:11:01 PDT
+  Arrived 17-Jun-2017 11:42:37 PDT
+  9,097 record(s) out of 36,387. Total distance: 12.221 km, in 2 hour(s) 31 minute(s) 36.0 sec(s). Avg speed:4.837 km/h
+  Max Speed: 6.112 km/h
+  Top-Left    :N  37°20.17' / W 121°43.62'
+  Bottom-Right:N  37°18.70' / W 121°41.46'
+
+ $
+```
 
 
 -------------------------------

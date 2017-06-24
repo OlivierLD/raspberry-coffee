@@ -220,7 +220,12 @@ The data file can then be replayed. The Web UI has been reworked a bit, the spee
 
 ![Driving](./docimages/driving.png "Driving")
 
-With a bonus: a led that blinks everytime a _valid_ NMEA sentence is received!
+You can use a query parameter named `'type'` to set the maximum speed in the display. If the `'type'` is `walk`, then the maximum is `15`. Use it as in
+```
+ http://localhost:9999/web/googlemaps.driving.html?type=walk
+```
+
+With a bonus: a led that blinks every time a _valid_ NMEA sentence is received.
 ![Blink](./docimages/blink.jpg "Blink")
 
 See how `LedBlinker` is referred to in `nmea.mux.gps.log.properties`.

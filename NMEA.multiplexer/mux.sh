@@ -19,6 +19,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhtu21df.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dbme280.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drnd.data.verbose=false"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dzda.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"

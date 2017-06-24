@@ -3,8 +3,6 @@ package i2c.samples.mearm;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Optional;
@@ -47,7 +45,7 @@ public class MeArmPilot {
 	/**
 	 * @param howMuch in ms.
 	 */
-	private static void waitfor(long howMuch) {
+	private static void delay(long howMuch) {
 		try {
 			Thread.sleep(howMuch);
 		} catch (InterruptedException ie) {
@@ -144,7 +142,7 @@ public class MeArmPilot {
 				System.err.println(String.format("Unexpected number of args [%d] in servoWait.", cmd.args.length));
 			} else {
 				try {
-					waitfor(Long.parseLong(cmd.args[0].trim()));
+					delay(Long.parseLong(cmd.args[0].trim()));
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
@@ -316,7 +314,7 @@ public class MeArmPilot {
 		int inc = step * (from < to ? 1 : -1);
 		for (int i = from; (from < to && i <= to) || (to < from && i >= to); i += inc) {
 			servoBoard.setPWM(channel, 0, i);
-			waitfor(wait);
+			delay(wait);
 		}
 		servoBoard.setPWM(channel, 0, 0);
 	}

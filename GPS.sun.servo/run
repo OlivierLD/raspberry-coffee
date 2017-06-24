@@ -1,16 +1,12 @@
 #!/bin/bash
-echo Read serial port
-echo Usage $0 [BaudRate] \(default 4800\)
-echo Try 2400, 4800, 9600, 19200, 38400, 57600, 115200, ...
-CP=./classes
-CP=$CP:../I2C/classes
-CP=$CP:../GPSandSun/classes
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-CP=$CP:./lib/almanactools.jar
-CP=$CP:./lib/geomutil.jar
-CP=$CP:./lib/nauticalalmanac.jar
-CP=$CP:./lib/nmeaparser.jar
-CP=$CP:./lib/coreutilities.jar
-CP=$CP:./lib/jansi-1.9.jar
-sudo java -cp $CP sunservo.SunServoNMEAReader $*
-# sudo java -Dserial.port=/dev/ttyUSB0 -cp $CP sunservo.SunServoNMEAReader $*
+CP=./build/libs/GPS.sun.servo-1.0-all.jar
+JAVA_OPTS=
+JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070 -Declination=14"
+JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true -Dastro.verbose=true"
+JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=true"
+# JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=true"
+JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
+#
+# sudo java -cp $CP $JAVA_OPTS orientation.OrientationDetector
+# sudo java -cp $CP $JAVA_OPTS orientation.PanelOrienterV1 --heading:14 --tilt:15
+sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:14 --tilt:15

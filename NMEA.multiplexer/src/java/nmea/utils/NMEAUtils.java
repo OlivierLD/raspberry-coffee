@@ -660,37 +660,41 @@ public class NMEAUtils {
 	public static void calculateVMGs(NMEADataCache cache) {
 		double vmg = 0d;
 		try {
-			double sog = (((Speed) cache.get(NMEADataCache.SOG)).getValue());
-			double cog = ((Angle360) cache.get(NMEADataCache.COG)).getValue();
-			double twd = (((Angle360) cache.get(NMEADataCache.TWD)).getValue());
-			double twa = twd - cog;
-			if (sog > 0) // Try with GPS Data first
-				vmg = sog * Math.cos(Math.toRadians(twa));
-			else {
-				try {
-					twa = ((Angle180) cache.get(NMEADataCache.TWA)).getValue();
-					double bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
-					if (bsp > 0)
-						vmg = bsp * Math.cos(Math.toRadians(twa));
-				} catch (Exception e) {
-					vmg = 0;
+			if (cache.get(NMEADataCache.SOG) != null &&
+					cache.get(NMEADataCache.COG) != null &&
+					cache.get(NMEADataCache.TWD) != null) {
+				double sog = (((Speed) cache.get(NMEADataCache.SOG)).getValue());
+				double cog = ((Angle360) cache.get(NMEADataCache.COG)).getValue();
+				double twd = (((Angle360) cache.get(NMEADataCache.TWD)).getValue());
+				double twa = twd - cog;
+				if (sog > 0) // Try with GPS Data first
+					vmg = sog * Math.cos(Math.toRadians(twa));
+				else {
+					try {
+						twa = ((Angle180) cache.get(NMEADataCache.TWA)).getValue();
+						double bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
+						if (bsp > 0)
+							vmg = bsp * Math.cos(Math.toRadians(twa));
+					} catch (Exception e) {
+						vmg = 0;
+					}
 				}
-			}
-			cache.put(NMEADataCache.VMG_ON_WIND, vmg);
+				cache.put(NMEADataCache.VMG_ON_WIND, vmg);
 
-			if (cache.get(NMEADataCache.TO_WP) != null && cache.get(NMEADataCache.TO_WP).toString().trim().length() > 0) {
-				double b2wp = ((Angle360) cache.get(NMEADataCache.B2WP)).getValue();
-				sog = (((Speed) cache.get(NMEADataCache.SOG)).getValue());
-				cog = ((Angle360) cache.get(NMEADataCache.COG)).getValue();
-				if (sog > 0) {
-					double angle = b2wp - cog;
-					vmg = sog * Math.cos(Math.toRadians(angle));
-				} else {
-					double angle = b2wp - ((Angle360) cache.get(NMEADataCache.HDG_TRUE)).getValue();
-					double bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
-					vmg = bsp * Math.cos(Math.toRadians(angle));
+				if (cache.get(NMEADataCache.TO_WP) != null && cache.get(NMEADataCache.TO_WP).toString().trim().length() > 0) {
+					double b2wp = ((Angle360) cache.get(NMEADataCache.B2WP)).getValue();
+					sog = (((Speed) cache.get(NMEADataCache.SOG)).getValue());
+					cog = ((Angle360) cache.get(NMEADataCache.COG)).getValue();
+					if (sog > 0) {
+						double angle = b2wp - cog;
+						vmg = sog * Math.cos(Math.toRadians(angle));
+					} else {
+						double angle = b2wp - ((Angle360) cache.get(NMEADataCache.HDG_TRUE)).getValue();
+						double bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
+						vmg = bsp * Math.cos(Math.toRadians(angle));
+					}
+					cache.put(NMEADataCache.VMG_ON_WP, vmg);
 				}
-				cache.put(NMEADataCache.VMG_ON_WP, vmg);
 			}
 		} catch (Exception ex) {
 			Context.getInstance().getLogger().log(Level.WARNING, ex.getMessage(), ex);

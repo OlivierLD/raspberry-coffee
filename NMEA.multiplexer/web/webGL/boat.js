@@ -1,3 +1,7 @@
+/*
+ * The data below are elaborated from the spreadsheet boat.ods.
+ * To generate the vertices, jus run this file (like in node.js).
+ */
 var boat = {
     keel: [
         { x: -3, y: 0, z: 1},
@@ -69,11 +73,19 @@ var makeVertice = function(obj) {
 
 var valid = validate(boat);
 console.log("Valid:", valid);
+
+var factor = 3.0;
+
 if (valid === true) {
   var x = makeVertice(boat);
-  console.log(x.nb + " vertices");
+  console.log(x.nb + " vertices per side");
+  // One side
   for (var i=0; i<x.nb; i++) {
-    console.log((i === 0 ? " " : ", ") + x.vert[(i*3) + 0] + ", " + x.vert[(i*3) + 1] + ", " +  x.vert[(i*3) + 2]);
+    console.log((i === 0 ? " " : ", ") + (x.vert[(i*3) + 0] / factor) + ", " + (x.vert[(i*3) + 1] / factor) + ", " +  (x.vert[(i*3) + 2] / factor));
+  }
+  // Other side
+  for (var i=0; i<x.nb; i++) {
+    console.log((false && i === 0 ? " " : ", ") + (x.vert[(i*3) + 0] / factor) + ", " + (-x.vert[(i*3) + 1] / factor) + ", " +  (x.vert[(i*3) + 2] / factor));
   }
 //console.log(x.vert);
 }

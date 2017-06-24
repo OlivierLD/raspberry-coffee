@@ -2,6 +2,7 @@ package nmea.consumers.reader;
 
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.sensor.LSM303;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
@@ -30,6 +31,8 @@ public class LSM303Reader extends NMEAReader {
 			this.lsm303 = new LSM303();
 		} catch (I2CFactory.UnsupportedBusNumberException e) {
 			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
 	}
 

@@ -1,5 +1,6 @@
 package nmea.parser;
 
+import java.util.TimeZone;
 import nmea.utils.NMEAUtils;
 
 import java.text.DecimalFormat;
@@ -9,6 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class StringGenerator {
+	private static final SimpleDateFormat SDF_DATETIME = new SimpleDateFormat("yyyyMMddHHmmss.SSS");
+	static {
+		SDF_DATETIME.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+	}
 	private static final SimpleDateFormat SDF_TIME = new SimpleDateFormat("HHmmss");
 	private static final SimpleDateFormat SDF_DATE = new SimpleDateFormat("ddMMyy");
 	private final static NumberFormat LAT_DEG_FMT = new DecimalFormat("00");
@@ -432,6 +437,37 @@ public class StringGenerator {
 		return "$" + hdm;
 	}
 
+	public static String generateZDA(String devicePrefix, long epoch) {
+    /* Structure is
+     * $GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
+     * $GPZDA,201530.00,04,07,2002,00,00*60
+     *        |         |  |  |    |  |
+     *        |         |  |  |    |  local zone minutes 0..59
+     *        |         |  |  |    local zone hours -13..13
+     *        |         |  |  year
+     *        |         |  month
+     *        |         day
+     *        HrMinSec(UTC)
+     */
+		String zda = devicePrefix + "ZDA,";
+		Date utc = new Date(epoch);
+		String strUTC = SDF_DATETIME.format(utc); // "20170623194037.845"
+		//                                            012345678901234567
+		//                                            0         1
+		zda += strUTC.substring(8, 17); // Time
+		zda += ",";
+		zda += strUTC.substring(6, 8);  // day
+		zda += ",";
+		zda += strUTC.substring(4, 6);  // month
+		zda += ",";
+		zda += strUTC.substring(0, 4);  // year
+		zda += ",00,00";
+		// Checksum
+		int cs = StringParsers.calculateCheckSum(zda);
+		zda += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
+		return "$" + zda;
+	}
+
 	public static void main(String[] args) {
 		String rmc = generateRMC("II", new Date(), 38.2500, -122.5, 6.7, 210, 3d);
 		System.out.println("Generated RMC:" + rmc);
@@ -524,5 +560,10 @@ public class StringGenerator {
 
 		String mwd = generateMWD("II", 289, 20.9, 15.0);
 		System.out.println(mwd);
+
+		String zda = generateZDA("GP", System.currentTimeMillis());
+		System.out.println(zda);
+		UTCDate utc = StringParsers.parseZDA(zda);
+		System.out.println("ZDA:" + utc.toString());
 	}
 }

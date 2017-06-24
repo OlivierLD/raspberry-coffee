@@ -1,0 +1,72 @@
+buildscript {
+    ext.kotlin_version = '1.1.2-3'
+    ext.kotlin_version = '1.1.2'
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+//apply plugin: 'kotlin'
+
+plugins {
+  id 'java'
+  id 'scala'
+  id "org.jetbrains.kotlin.jvm" version "1.1.2"
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+shadowJar {
+  zip64 true
+}
+
+group = 'oliv.pi4j.samples'
+version = '1.0'
+
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src/java'
+    }
+    scala {
+      srcDir 'src/scala'
+    }
+    kotlin {
+      srcDir 'src/kotlin'
+    }
+  }
+  test {
+    java {
+      srcDir 'tests/java'
+    }
+  }  
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+  maven { url "https://oss.sonatype.org/content/groups/public" }
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+//compile 'com.pi4j:pi4j-core:1.1'
+  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+  compile 'org.fusesource.jansi:jansi:1.11'
+  compile 'org.json:json:20141113'
+  compile 'org.scala-lang:scala-library:2.11.6'
+//compile 'org.java-websocket:Java-WebSocket:1.3.0' // Already in ADC
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+}
+
+task copyResources(type: Copy) {
+  description = 'Copies non-java resources in the output directory before the jar task (png, xml, xsd, ttf, properties, etc)'
+  from 'src'
+  into 'build/classes/main'
+  include '**/*.xml', '**/*.xsd', '**/*.png', '**/*.gif', '**/*.jpg', '**/*.properties', '**/*.ttf', '**/*.html'
+}
+
+jar.dependsOn(copyResources)
