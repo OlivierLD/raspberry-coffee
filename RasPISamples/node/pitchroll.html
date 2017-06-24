@@ -55,6 +55,7 @@
                             pitch = command.pitch;
                             roll = command.roll;
                             yaw = command.yaw;
+                            console.log('Pitch', pitch, "Roll", roll);
                         }
                     } catch (err) {
                         console.log("Err:" + err + " for " + json.data.text);
@@ -276,8 +277,10 @@
             document.getElementById("roll-val").innerHTML = ax;
 
             // for the visualization
-            ax += 90;
-            az += 45;
+            ax += 90; // roll
+            az += 45; // heading
+            ay -=  5; // pitch
+            ay *= -1;
 
             // Convert values to radians
             ax *= 2*Math.PI/360;
@@ -333,29 +336,6 @@
 <p>
     Yaw <span id="yaw-val"></span>, Pitch <span id="pitch-val"></span>, Roll <span id="roll-val"></span>.
 </p>
-<!--p>
-<div style='display:inline-block;'>RX:</div>
-<div style='display:inline-block; width:1.5em;'id='ax'>0</div>
-<div style='display:inline-block;'>
-    <select id='dx'>
-        <option>-2<option>-1<option>0<option selected="selected">+1<option>+2
-    </select>
-</div>
-<div style='display:inline-block;padding-left:0.3em;'>RY:</div>
-<div style='display:inline-block; width:1.5em;'id='ay'>0</div>
-<div style='display:inline-block;'>
-    <select id='dy'>
-        <option>-2<option>-1<option>0<option>+1<option selected="selected">+2
-    </select>
-</div>
-<div style='display:inline-block;padding-left:0.3em;'>RZ:</div>
-<div style='display:inline-block; width:1.5em;'id='az'>0</div>
-<div style='display:inline-block;'>
-    <select id='dz'>
-        <option>-2<option>-1<option selected="selected">0<option>+1<option>+2
-    </select>
-</div>
-</p-->
 
 </body>
 </html>
