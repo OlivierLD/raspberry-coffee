@@ -55,7 +55,7 @@
                             pitch = command.pitch;
                             roll = command.roll;
                             yaw = command.yaw;
-                            console.log('Pitch', pitch, "Roll", roll);
+                   //       console.log('Pitch', pitch, "Roll", roll);
                         }
                     } catch (err) {
                         console.log("Err:" + err + " for " + json.data.text);
@@ -272,6 +272,10 @@
             var ay = pitch.toFixed(0);
             var az = 0; // yaw.toFixed(0);
 
+//            var ax = parseInt(document.getElementById('ax').value, 10);
+//            var ay = parseInt(document.getElementById('ay').value, 10);
+//            var az = parseInt(document.getElementById('az').value, 10);
+
             document.getElementById("yaw-val").innerHTML = az;
             document.getElementById("pitch-val").innerHTML = ay;
             document.getElementById("roll-val").innerHTML = ax;
@@ -279,7 +283,7 @@
             // for the visualization
             ax += 90; // roll
             az += 45; // heading
-            ay -=  5; // pitch
+            ay +=  0; // pitch
             ay *= -1;
 
             // Convert values to radians
@@ -336,6 +340,16 @@
 <p>
     Yaw <span id="yaw-val"></span>, Pitch <span id="pitch-val"></span>, Roll <span id="roll-val"></span>.
 </p>
+
+<!-- Uncomment for manual entry -->
+<!--p>
+<div style='display:inline-block;'>RX:</div>
+<input style='display:inline-block; width:1.5em;'id='ax'></input>
+<div style='display:inline-block;padding-left:0.3em;'>RY:</div>
+<input style='display:inline-block; width:1.5em;'id='ay'></input>
+<div style='display:inline-block;padding-left:0.3em;'>Heading:</div>
+<input style='display:inline-block; width:1.5em;'id='az'></input>
+</p-->
 
 </body>
 </html>
