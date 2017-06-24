@@ -232,9 +232,9 @@ See how `LedBlinker` is referred to in `nmea.mux.gps.log.properties`.
 
 Another one:
 A small [I2C OLED display](https://www.adafruit.com/product/3527) attached to the Zero, fed from a forwarder (`nmea.forwarders.SSD1306ProcessorI2C`).
-![](./docimages/oled.01.jpg)
-![](./docimages/oled.02.jpg)
-
+<table>
+<tr><td>![](./docimages/oled.01.jpg)</td><td>![](./docimages/oled.02.jpg)</td></tr>
+</table>
 
 ##### And more to come...
 <!--
