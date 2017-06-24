@@ -6,6 +6,7 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 #
 echo Make sure you\'ve started the node server \(with websocket\) from the node directory
 echo \$ node server.js
+echo Once node runs, and this script runs too, you can reach http://\<machine-name\>:9876/data/pitchroll.html from a WebSocket enabled browser.
  #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dlsm303.verbose=true"
