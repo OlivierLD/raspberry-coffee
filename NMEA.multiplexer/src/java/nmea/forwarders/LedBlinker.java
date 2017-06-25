@@ -9,11 +9,9 @@ import java.util.Properties;
 import nmea.parser.StringParsers;
 
 /**
- * This is a {@link Forwarder}, blinking a led everytime a message is received.
+ * This is a {@link Forwarder}, blinking a led everytime a valid message is received.
  * <br>
- * It can be loaded dynamically. As such, it can be set only from the properties file
- * used at startup. It - for now - cannot be managed from the Web UI.
- * The REST api is not aware of it.
+ * It can be loaded dynamically. From the properties file used at startup, or the Web UI.
  * <br>
  * To load it, use the properties file at startup:
  * <pre>
@@ -81,5 +79,6 @@ public class LedBlinker implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		// This could be used to change the pin number...
 	}
 }

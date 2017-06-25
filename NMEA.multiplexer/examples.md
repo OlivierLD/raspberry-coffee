@@ -228,7 +228,11 @@ You can use a query parameter named `'type'` to set the maximum speed in the dis
 With a bonus: a led that blinks every time a _valid_ NMEA sentence is received.
 ![Blink](./docimages/blink.jpg "Blink")
 
-See how `LedBlinker` is referred to in `nmea.mux.gps.log.properties`.
+See how `LedBlinker` is referred to in `nmea.mux.gps.log.properties`, it is a custom forwarder.
+
+```properties
+forward.02.cls=nmea.forwarders.LedBlinker
+```
 
 Another one:
 A small [I2C OLED display](https://www.adafruit.com/product/3527) attached to the Zero, fed from a forwarder (`nmea.forwarders.SSD1306ProcessorI2C`).
