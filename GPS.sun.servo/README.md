@@ -1,4 +1,4 @@
-## Servos and Sun
+## Servos and Sun, aka Sunflower project
 
 The original idea is to build a device with 2 standard servos to orient a solar panel (like [that one](https://www.adafruit.com/product/200) or similar) so it faces the Sun whenever possible (ie during the day).
 
