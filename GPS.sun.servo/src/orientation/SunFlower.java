@@ -29,6 +29,7 @@ import user.util.GeomUtil;
  *
  * -Dtilt.servo.sign=-1
  * -Dheading.servo.sign=-1
+ * -Dtilt.limit=0..90 <- Minimum elevation of the sun
  *
  * For the main, as an example:
  * latitude -Dlatitude=37.7489
@@ -44,6 +45,8 @@ public class SunFlower {
 
 	private static double he = 0D, z = 0D;
 	private static double deviceHeading = 0D;
+
+	private static int tiltLimit = 0;
 
 	private int tiltServoSign = 1;
 	private int headingServoSign = 1;
@@ -215,7 +218,7 @@ public class SunFlower {
 		setAngle(servoHeading, f);
 	}
 	public void setTiltServoAngle(float f) {
-		setAngle(servoTilt, f);
+		setAngle(servoTilt, applyLimit(f));
 	}
 	private void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
@@ -361,7 +364,7 @@ public class SunFlower {
 							System.out.println(mess);
 						}
 					}
-					this.setAngle(servoTilt, (float) angle);
+					this.setAngle(servoTilt, applyLimit((float) angle));
 					previousTiltAngle = angle;
 				}
 			} else { // Night time
@@ -376,7 +379,7 @@ public class SunFlower {
 				}
 				int angle = 0;
 				if (angle != previousTiltAngle) {
-					this.setAngle(servoTilt, (float) angle);
+					this.setAngle(servoTilt, applyLimit((float) angle));
 					previousTiltAngle = angle;
 				}
 				headingServoAngle = 0;
@@ -421,6 +424,24 @@ public class SunFlower {
 		this.keepWorking = false;
 	}
 
+	private static float applyLimit(float angle) {
+		float corrected = angle;
+		if (Math.abs(angle) > (90 - tiltLimit)) {
+			corrected = (angle > 0) ? (90 - tiltLimit) : (tiltLimit - 90);
+		}
+		return corrected;
+	}
+
+	public static void main_(String... args) {
+		tiltLimit = 5;
+
+		float[] angles = { 90f, 89f, 85f, 80f };
+		for (float angle : angles) {
+			System.out.println(String.format("For %.02f => corrected to %.02f", angle, applyLimit(angle)));
+			System.out.println(String.format("For %.02f => corrected to %.02f", -angle, applyLimit(-angle)));
+		}
+	}
+
 	public static void main(String... args) {
 
 		servoHeading = 14;
@@ -444,6 +465,19 @@ public class SunFlower {
 				}
 			}
 		}
+
+		String strTiltLimit = System.getProperty("tilt.limit");
+		if (strTiltLimit != null) {
+			try {
+				tiltLimit = Integer.parseInt(strTiltLimit);
+				if (tiltLimit < 0 || tiltLimit > 90) {
+					System.err.println("Tilt limit must be in [0..90], setting it to 0");
+				}
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+
 
 		testServos = "true".equals(System.getProperty("test.servos", "false"));
 
@@ -479,13 +513,13 @@ public class SunFlower {
 
 		if (testServos) {
 			instance.setAngle(servoHeading, -90f);
-			instance.setAngle(servoTilt, -90f);
+			instance.setAngle(servoTilt, applyLimit(-90));
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			instance.setAngle(servoHeading, 90f);
-			instance.setAngle(servoTilt, 90f);
+			instance.setAngle(servoTilt, applyLimit(90));
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			instance.setAngle(servoHeading, 0f);
-			instance.setAngle(servoTilt, 0f);
+			instance.setAngle(servoTilt, applyLimit(0));
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			System.out.println("Test done.");
 		}

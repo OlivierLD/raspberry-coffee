@@ -7,6 +7,7 @@ JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=true"
 # JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=true"
 JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
 #
+JAVA_OPTS="$JAVA_OPTS -Dtilt.limit=10"
 # sudo java -cp $CP $JAVA_OPTS orientation.OrientationDetector
 # sudo java -cp $CP $JAVA_OPTS orientation.PanelOrienterV1 --heading:14 --tilt:15
 sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:14 --tilt:15

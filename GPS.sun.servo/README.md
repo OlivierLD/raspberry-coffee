@@ -75,6 +75,8 @@ System variables:
  -Dheading.servo.sign=-1
  -Dtilt.servo.sign=-1
 
+ -Dtilt.limit=10
+
 Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15
 ```
