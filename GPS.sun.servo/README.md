@@ -81,7 +81,12 @@ Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15
 ```
 
-The variables `heading.servo.sign` and `tilt.servo.sign` can be set to `-1`, to invert the way the servos turn. This depends on the physical construction of your device.
+The variables `heading.servo.sign` and `tilt.servo.sign` can be set to `-1`, to invert the way the servos turn. This depends on the physical construction of your device, namely,
+is the tilt servo pointing left or right, is the heading servo pointing up or down?
+
+Also depending on the construction of the device, maybe a 90 degrees tilt will not be possible, maybe the panel cannot be tilted more than - say - 75 degrees.
+In this case, use the `-Dtilt.limit` system variable. If you set it to `15` for example, that would mean that even if the _Sun's altitude_ is below 15 degrees, the panel
+will not be tilted further down.
 
 First, the program sets the `heading` servo to zero, and asks you to point it South.
 
@@ -123,9 +128,9 @@ A snapshot of the (optional) ANSI console:
 <img src="./doc/ansi.console.png" alt="ANSI Console" width="561" height="199">
 
 
-Here is a prototype:
+Here is a prototype, made of plexiglass and adhesive tape:
 ![Proto](./doc/prototype.jpg)
-Now I have to build the real stuff!
+Next comes the real stuff!
 
 
 ---

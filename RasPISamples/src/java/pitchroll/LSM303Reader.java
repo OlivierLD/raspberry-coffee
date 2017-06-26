@@ -10,6 +10,11 @@ import org.json.JSONObject;
 
 /**
  * Feeds a WebSocket server with pitch and roll data.
+ * The WebSocket server can be started using nodejs.
+ * $> node server.js
+ *
+ * The WebSocket data can be read from an html page, and rendered as WebGL.
+ * See pitchroll.html in the `node` directory.
  */
 public class LSM303Reader {
 
@@ -20,7 +25,6 @@ public class LSM303Reader {
 	private static boolean read = true;
 
 	private WebSocketClient webSocketClient = null;
-
 
 	public LSM303Reader() {
 		try {
