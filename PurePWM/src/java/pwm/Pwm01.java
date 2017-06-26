@@ -7,6 +7,9 @@ import com.pi4j.io.gpio.RaspiPin;
 
 /**
  * See: http://wiringpi.com/reference/software-pwm-library/
+ * Suitable pins for PWM are GPIO_01, GPIO_23, GPIO_24, GPIO_26.
+ * See {@link RaspiPin} source.
+ *
  */
 public class Pwm01 {
 	public static void main(String[] args)
