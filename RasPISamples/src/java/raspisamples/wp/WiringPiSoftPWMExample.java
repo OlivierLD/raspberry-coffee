@@ -2,11 +2,31 @@ package raspisamples.wp;
 
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.SoftPwm;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /*
- * PWM with WiringPi
+ * PWM with WiringPi. Works with a led, or with a standard servo.
  */
 public class WiringPiSoftPWMExample {
+
+	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+	public static String userInput(String prompt) {
+		String retString = "";
+		System.err.print(prompt);
+		try {
+			retString = stdin.readLine();
+		} catch (Exception e) {
+			System.out.println(e);
+			try {
+				userInput("<Oooch/>");
+			} catch (Exception exception) {
+				exception.printStackTrace();
+			}
+		}
+		return retString;
+	}
 
 	private static boolean go = true;
 
@@ -26,7 +46,7 @@ public class WiringPiSoftPWMExample {
 
 		// continuous loop
 	//while (go) {
-			for (int idx = 0; idx < 5; idx++) {
+			for (int idx = 0; idx < 3; idx++) {
 				System.out.println(">> 0");
 				// fade LED to fully ON
 				for (int i = 0; i <= 100; i++) {
@@ -42,5 +62,22 @@ public class WiringPiSoftPWMExample {
 				System.out.println(">> 0");
 			}
 	//}
+		// Interactive?
+		System.out.println("Enter [Q] at the prompt to quit.");
+		go = true;
+		while (go) {
+			String s = userInput("PWM Value [0..100] > ");
+			if ("Q".equalsIgnoreCase(s.trim())) {
+				go = false;
+			} else {
+				try {
+					int pwm = Integer.parseInt(s);
+					SoftPwm.softPwmWrite(pinAddress, pwm);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+			}
+		}
+		// Done!
 	}
 }
