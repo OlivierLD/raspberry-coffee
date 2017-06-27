@@ -1,5 +1,6 @@
 package raspisamples.wp;
 
+import com.pi4j.wiringpi.Gpio;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.SoftPwm;
 import java.io.BufferedReader;
@@ -33,10 +34,9 @@ public class WiringPiSoftPWMExample {
 	public static void main(String[] args)
 					throws InterruptedException {
 		// initialize wiringPi library
-		com.pi4j.wiringpi.Gpio.wiringPiSetup();
+		int ret = Gpio.wiringPiSetup();
 		int pinAddress = RaspiPin.GPIO_01.getAddress();
 		// create soft-pwm pins (min=0 ; max=100)
-//  SoftPwm.softPwmCreate(1, 0, 100); 
 		SoftPwm.softPwmCreate(pinAddress, 0, 100);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
