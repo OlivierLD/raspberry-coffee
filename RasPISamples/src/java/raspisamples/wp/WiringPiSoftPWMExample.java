@@ -10,10 +10,6 @@ public class WiringPiSoftPWMExample {
 
 	private static boolean go = true;
 
-	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
-	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
-
-
 	public static void main(String[] args)
 					throws InterruptedException {
 		// initialize wiringPi library
@@ -21,7 +17,7 @@ public class WiringPiSoftPWMExample {
 		int pinAddress = RaspiPin.GPIO_01.getAddress();
 		// create soft-pwm pins (min=0 ; max=100)
 //  SoftPwm.softPwmCreate(1, 0, 100); 
-		SoftPwm.softPwmCreate(pinAddress, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX); // was 0, 100
+		SoftPwm.softPwmCreate(pinAddress, 0, 100);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			go = false;
@@ -29,19 +25,22 @@ public class WiringPiSoftPWMExample {
 		}));
 
 		// continuous loop
-		while (go) {
-	//	for (int idx = 0; idx < 5; idx++) {
+	//while (go) {
+			for (int idx = 0; idx < 5; idx++) {
+				System.out.println(">> 0");
 				// fade LED to fully ON
-				for (int i = DEFAULT_SERVO_MIN; i <= DEFAULT_SERVO_MAX; i++) {
+				for (int i = 0; i <= 100; i++) {
 					SoftPwm.softPwmWrite(pinAddress, i);
 					Thread.sleep(10);
 				}
+				System.out.println(">> 100");
 				// fade LED to fully OFF
-				for (int i = DEFAULT_SERVO_MAX; i >= DEFAULT_SERVO_MIN; i--) {
+				for (int i = 100; i >= 0; i--) {
 					SoftPwm.softPwmWrite(pinAddress, i);
 					Thread.sleep(10);
 				}
-	//	}
-		}
+				System.out.println(">> 0");
+			}
+	//}
 	}
 }
