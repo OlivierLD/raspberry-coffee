@@ -127,13 +127,13 @@ public class SunFlower {
 		}
 	}
 
-	private static int servoHeading = 14;
-	private static int servoTilt    = 15;
+	private static int headingServoID = 14;
+	private static int tiltServoID = 15;
 
 	private static int previousHeadingAngle = 0;
 	private static int previousTiltAngle = 0;
 
-	private static boolean invert = false; // Used when the angle for the servoHeading is lower than -90 or greater than +90
+	private static boolean invert = false; // Used when the angle for the headingServoID is lower than -90 or greater than +90
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
 	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
@@ -166,8 +166,8 @@ public class SunFlower {
 	}
 
 	public SunFlower(int headinServoNumber, int tiltServoNumber) {
-		servoHeading = headinServoNumber;
-		servoTilt = tiltServoNumber;
+		headingServoID = headinServoNumber;
+		tiltServoID = tiltServoNumber;
 
 		// Read System Properties
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
@@ -205,7 +205,7 @@ public class SunFlower {
 		}
 
 		try {
-//		System.out.println("Driving Servos on Channels " + servoHeading + " and " + servoTilt);
+//		System.out.println("Driving Servos on Channels " + headingServoID + " and " + tiltServoID);
 			this.servoBoard = new PCA9685();
 			this.servoBoard.setPWMFreq(freq); // Set frequency in Hz
 		} catch (Exception ex) {
@@ -215,17 +215,27 @@ public class SunFlower {
 	}
 
 	public void setHeadingServoAngle(float f) {
-		setAngle(servoHeading, f);
+		if (Math.abs(previousHeadingAngle - f) > 10) {
+			// TODO Smooth move for steps > 1
+			System.out.println("Smooth move to heading:" + f);
+		} else {
+			setAngle(headingServoID, f);
+		}
 	}
 	public void setTiltServoAngle(float f) {
-		setAngle(servoTilt, applyLimitAndOffset(f));
+		if (Math.abs(previousTiltAngle - f) > 10) {
+			// TODO Smooth move for steps > 1
+			System.out.println("Smooth move to tilt:" + f);
+		} else {
+			setAngle(tiltServoID, applyLimitAndOffset(f));
+		}
 	}
 	private void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
 		if (servoVerbose && !manualEntry) {
 			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == servoHeading ? 8 : 9)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == headingServoID ? 8 : 9)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 			} else {
 				System.out.println(mess);
 			}
@@ -239,11 +249,11 @@ public class SunFlower {
 	}
 
 	public void stopHeadingServo() {
-		stop(servoHeading);
+		stop(headingServoID);
 	}
 
 	public void stopTiltServo() {
-		stop(servoTilt);
+		stop(tiltServoID);
 	}
 
 	private void stop(int servo) { // Set to 0
@@ -270,8 +280,8 @@ public class SunFlower {
 	}
 
 	public void servosZero() {
-		this.setAngle(servoHeading, 0f);
-		this.setAngle(servoTilt, 0f);
+		this.setHeadingServoAngle(0f);
+		this.setTiltServoAngle(0f);
 	}
 
 	/**
@@ -364,7 +374,7 @@ public class SunFlower {
 							System.out.println(mess);
 						}
 					}
-					this.setAngle(servoTilt, applyLimitAndOffset((float) angle));
+					this.setTiltServoAngle((float) angle);
 					previousTiltAngle = angle;
 				}
 			} else { // Night time
@@ -379,7 +389,7 @@ public class SunFlower {
 				}
 				int angle = 0;
 				if (angle != previousTiltAngle) {
-					this.setAngle(servoTilt, applyLimitAndOffset((float) angle));
+					this.setTiltServoAngle((float) angle);
 					previousTiltAngle = angle;
 				}
 				headingServoAngle = 0;
@@ -393,7 +403,7 @@ public class SunFlower {
 				}
 			}
 			if (headingServoAngle != previousHeadingAngle) {
-				this.setAngle(servoHeading, invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle);
+				this.setHeadingServoAngle(invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle);
 			}
 			previousHeadingAngle = headingServoAngle;
 		}
@@ -444,21 +454,21 @@ public class SunFlower {
 
 	public static void main(String... args) {
 
-		servoHeading = 14;
-		servoTilt = 15;
+		headingServoID = 14;
+		tiltServoID = 15;
 
 		// Supported parameters --heading:14 --tilt:15
 		if (args.length > 0) {
 			for (String prm : args) {
 				if (prm.startsWith("--heading:")) {
 					try {
-						servoHeading = Integer.parseInt(prm.substring("--heading:".length()));
+						headingServoID = Integer.parseInt(prm.substring("--heading:".length()));
 					} catch (Exception e) {
 						throw e;
 					}
 				} else if (prm.startsWith("--tilt:")) {
 					try {
-						servoTilt = Integer.parseInt(prm.substring("--tilt:".length()));
+						tiltServoID = Integer.parseInt(prm.substring("--tilt:".length()));
 					} catch (Exception e) {
 						throw e;
 					}
@@ -492,7 +502,7 @@ public class SunFlower {
 
 		testServos = "true".equals(System.getProperty("test.servos", "false"));
 
-		SunFlower instance = new SunFlower(servoHeading, servoTilt);
+		SunFlower instance = new SunFlower(headingServoID, tiltServoID);
 		if (manualEntry && ansiConsole) {
 			System.out.println("Manual Entry and ANSI Console are mutually exclusive. Please choose one, and only one... Thank you.");
 			System.exit(1);
@@ -522,14 +532,14 @@ public class SunFlower {
 		instance.setCalibrating(false);
 
 		if (testServos) {
-			instance.setAngle(servoHeading, -90f);
-			instance.setAngle(servoTilt, applyLimitAndOffset(-90));
+			instance.setHeadingServoAngle(-90f);
+			instance.setTiltServoAngle(-90);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
-			instance.setAngle(servoHeading, 90f);
-			instance.setAngle(servoTilt, applyLimitAndOffset(90));
+			instance.setHeadingServoAngle(90f);
+			instance.setTiltServoAngle(90);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
-			instance.setAngle(servoHeading, 0f);
-			instance.setAngle(servoTilt, applyLimitAndOffset(0));
+			instance.setHeadingServoAngle(0f);
+			instance.setTiltServoAngle(0);
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			System.out.println("Test done.");
 		}
@@ -542,8 +552,8 @@ public class SunFlower {
 		String mess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(instance.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-						servoHeading,
-						servoTilt);
+						headingServoID,
+						tiltServoID);
 		if (ansiConsole) {
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 		} else {
@@ -577,11 +587,11 @@ public class SunFlower {
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println("\nBye.");
 				instance.stopWorking();
-				instance.stop(servoHeading);
-				instance.stop(servoTilt);
+				instance.stop(headingServoID);
+				instance.stop(tiltServoID);
 
-				instance.setAngle(servoHeading, 0f);
-				instance.setAngle(servoTilt, 0f);
+				instance.setHeadingServoAngle(0f);
+				instance.setTiltServoAngle(0f);
 				try {
 					Thread.sleep(1_000L);
 				} catch (InterruptedException ie) {
