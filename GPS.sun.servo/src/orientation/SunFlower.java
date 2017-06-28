@@ -3,8 +3,6 @@ package orientation;
 import ansi.EscapeSeq;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
-import i2c.sensor.LSM303;
-import i2c.sensor.listener.LSM303Listener;
 import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -30,6 +28,7 @@ import user.util.GeomUtil;
  * -Dtilt.servo.sign=-1
  * -Dheading.servo.sign=-1
  * -Dtilt.limit=0..90 <- Minimum elevation of the sun
+ * -Dtilt.offset=0    <- Offset in degrees
  *
  * For the main, as an example:
  * latitude -Dlatitude=37.7489
@@ -47,6 +46,7 @@ public class SunFlower {
 	private static double deviceHeading = 0D;
 
 	private static int tiltLimit = 0;
+	private static int tiltOffset = 0;
 
 	private int tiltServoSign = 1;
 	private int headingServoSign = 1;
@@ -218,7 +218,7 @@ public class SunFlower {
 		setAngle(servoHeading, f);
 	}
 	public void setTiltServoAngle(float f) {
-		setAngle(servoTilt, applyLimit(f));
+		setAngle(servoTilt, applyLimitAndOffset(f));
 	}
 	private void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
@@ -364,7 +364,7 @@ public class SunFlower {
 							System.out.println(mess);
 						}
 					}
-					this.setAngle(servoTilt, applyLimit((float) angle));
+					this.setAngle(servoTilt, applyLimitAndOffset((float) angle));
 					previousTiltAngle = angle;
 				}
 			} else { // Night time
@@ -379,7 +379,7 @@ public class SunFlower {
 				}
 				int angle = 0;
 				if (angle != previousTiltAngle) {
-					this.setAngle(servoTilt, applyLimit((float) angle));
+					this.setAngle(servoTilt, applyLimitAndOffset((float) angle));
 					previousTiltAngle = angle;
 				}
 				headingServoAngle = 0;
@@ -424,8 +424,8 @@ public class SunFlower {
 		this.keepWorking = false;
 	}
 
-	private static float applyLimit(float angle) {
-		float corrected = angle;
+	private static float applyLimitAndOffset(float angle) {
+		float corrected = angle - tiltOffset;
 		if (Math.abs(angle) > (90 - tiltLimit)) {
 			corrected = (angle > 0) ? (90 - tiltLimit) : (tiltLimit - 90);
 		}
@@ -437,8 +437,8 @@ public class SunFlower {
 
 		float[] angles = { 90f, 89f, 85f, 80f };
 		for (float angle : angles) {
-			System.out.println(String.format("For %.02f => corrected to %.02f", angle, applyLimit(angle)));
-			System.out.println(String.format("For %.02f => corrected to %.02f", -angle, applyLimit(-angle)));
+			System.out.println(String.format("For %.02f => corrected to %.02f", angle, applyLimitAndOffset(angle)));
+			System.out.println(String.format("For %.02f => corrected to %.02f", -angle, applyLimitAndOffset(-angle)));
 		}
 	}
 
@@ -478,6 +478,17 @@ public class SunFlower {
 			}
 		}
 
+		String strTiltOffset = System.getProperty("tilt.offset");
+		if (strTiltOffset != null) {
+			try {
+				tiltOffset = Integer.parseInt(strTiltOffset);
+				if (tiltOffset < -90 || tiltOffset > 90) {
+					System.err.println("Tilt offset must be in [-90..90], setting it to 0");
+				}
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
 
 		testServos = "true".equals(System.getProperty("test.servos", "false"));
 
@@ -486,7 +497,6 @@ public class SunFlower {
 			System.out.println("Manual Entry and ANSI Console are mutually exclusive. Please choose one, and only one... Thank you.");
 			System.exit(1);
 		}
-
 
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {
@@ -513,13 +523,13 @@ public class SunFlower {
 
 		if (testServos) {
 			instance.setAngle(servoHeading, -90f);
-			instance.setAngle(servoTilt, applyLimit(-90));
+			instance.setAngle(servoTilt, applyLimitAndOffset(-90));
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			instance.setAngle(servoHeading, 90f);
-			instance.setAngle(servoTilt, applyLimit(90));
+			instance.setAngle(servoTilt, applyLimitAndOffset(90));
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			instance.setAngle(servoHeading, 0f);
-			instance.setAngle(servoTilt, applyLimit(0));
+			instance.setAngle(servoTilt, applyLimitAndOffset(0));
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 			System.out.println("Test done.");
 		}
