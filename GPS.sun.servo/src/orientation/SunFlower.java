@@ -6,9 +6,11 @@ import calculation.SightReductionUtil;
 import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import org.fusesource.jansi.AnsiConsole;
 import user.util.GeomUtil;
@@ -34,6 +36,12 @@ import user.util.GeomUtil;
  * latitude -Dlatitude=37.7489
  * longitude -Dlongitude=-122.5070
  * -Dtest.servos=true
+ *
+ * -Dsmooth.moves=true
+ *
+ * -Ddemo.mode=true
+ * -Dfrom.date=2017-06-28T05:53:00
+ * -Dto.date=2017-06-28T20:33:00
  */
 public class SunFlower {
 
@@ -55,14 +63,25 @@ public class SunFlower {
 	private static boolean astroVerbose = false;
 	private static boolean servoVerbose = false;
 	private static boolean testServos = false;
+	private static boolean smoothMoves = false;
+	private static boolean demo = false;
+
+	private static boolean headingServoMoving = false;
+	private static boolean tiltServoMoving = false;
 
 	private static boolean manualEntry = false;
 	private static boolean ansiConsole = false;
 	private final static String PAD = EscapeSeq.ANSI_ERASE_TO_EOL;
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	private void getSunData(double lat, double lng) {
+		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		getSunDataForDate(lat, lng, current);
+	}
+
+	private void getSunDataForDate(double lat, double lng, Calendar current) {
 		if (manualEntry) {
 			System.out.println("Enter [q] at the prompt to quit");
 			String strZ = userInput(String.format("\nZ (0..360) now %.02f  > ", z));
@@ -109,7 +128,10 @@ public class SunFlower {
 			}
 			// Return here
 		} else {
-			Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+	//	Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+			if (astroVerbose) {
+				System.out.println(String.format(">>> Sun Calculation for %s", SDF.format(current.getTime())));
+			}
 			AstroComputer.setDateTime(current.get(Calendar.YEAR),
 							current.get(Calendar.MONTH) + 1,
 							current.get(Calendar.DAY_OF_MONTH),
@@ -176,6 +198,9 @@ public class SunFlower {
 
 		manualEntry = "true".equals(System.getProperty("manual.entry", "false"));
 		ansiConsole = "true".equals(System.getProperty("ansi.console", "false"));
+		demo = "true".equals(System.getProperty("demo.mode", "false"));
+
+		smoothMoves = "true".equals(System.getProperty("smooth.moves", "false"));
 
 		String strTiltServoSign = System.getProperty("tilt.servo.sign");
 		if (strTiltServoSign != null) {
@@ -214,20 +239,55 @@ public class SunFlower {
 		}
 	}
 
-	public void setHeadingServoAngle(float f) {
-		if (Math.abs(previousHeadingAngle - f) > 10) {
-			// TODO Smooth move for steps > 1
-			System.out.println("Smooth move to heading:" + f);
+	private static void setHeadingServoMoving(boolean b) {
+		headingServoMoving = b;
+	}
+	public void setHeadingServoAngle(final float f) {
+		if (smoothMoves && Math.abs(previousHeadingAngle - f) > 5) {
+			// Smooth move for steps > 10
+			System.out.println("Start a smooth move to heading:" + f);
+			Thread smoothy = new Thread(() -> {
+				int sign = (previousHeadingAngle > f) ? -1 : 1;
+				float pos = previousHeadingAngle;
+				while (Math.abs(pos - f) > 0) {
+					setAngle(headingServoID, pos);
+					pos += (sign * 1);
+					try { Thread.sleep(10L); } catch (Exception ex) {}
+				}
+				setHeadingServoMoving(false);
+			});
+			headingServoMoving = true;
+			smoothy.start();
 		} else {
-			setAngle(headingServoID, f);
+			if (!headingServoMoving) {
+				setAngle(headingServoID, f);
+			}
 		}
 	}
-	public void setTiltServoAngle(float f) {
-		if (Math.abs(previousTiltAngle - f) > 10) {
-			// TODO Smooth move for steps > 1
-			System.out.println("Smooth move to tilt:" + f);
+
+	private static void setTiltServoMoving(boolean b) {
+		tiltServoMoving = b;
+	}
+	public void setTiltServoAngle(final float f) {
+		if (smoothMoves && Math.abs(previousTiltAngle - f) > 5) {
+			// Smooth move for steps > 10
+			System.out.println("Start a smooth move to tilt:" + f);
+			Thread smoothy = new Thread(() -> {
+				int sign = (previousTiltAngle > f) ? -1 : 1;
+				float pos = previousTiltAngle;
+				while (Math.abs(pos - f) > 0) {
+					setAngle(tiltServoID, pos);
+					pos += (sign * 1);
+					try { Thread.sleep(10L); } catch (Exception ex) {}
+				}
+				setTiltServoMoving(false);
+			});
+			headingServoMoving = true;
+			smoothy.start();
 		} else {
-			setAngle(tiltServoID, applyLimitAndOffset(f));
+			if (!tiltServoMoving) {
+				setAngle(tiltServoID, applyLimitAndOffset(f));
+			}
 		}
 	}
 	private void setAngle(int servo, float f) {
@@ -409,15 +469,50 @@ public class SunFlower {
 		}
 	}
 
+	private Calendar current;
+	private Date fromDate = null, toDate = null;
+
 	public void startWorking() {
 		String mess;
+
+		if (demo) {
+			String strFromDate = System.getProperty("from.date");
+			String strToDate = System.getProperty("to.date");
+			if (strFromDate == null || strToDate == null) {
+				System.out.println("-Dfrom.date and -Dto.date are both required in demo mode");
+				System.exit(1);
+			} else {
+				try {
+					fromDate = SDF_INPUT.parse(strFromDate);
+					toDate = SDF_INPUT.parse(strToDate);
+					current = new GregorianCalendar(TimeZone.getTimeZone("etc/UTC"));
+					current.setTime(fromDate);
+				} catch (Exception ex) {
+					System.err.println(String.format("Bad date format, expecting %s", SDF_INPUT));
+					ex.printStackTrace();
+					System.exit(1);
+				}
+			}
+		}
+
 		Thread timeThread = new Thread(() -> {
-//				int previous = 0;
 			while (keepWorking) {
-				// Sun position calculation geos here
-				getSunData(latitude, longitude);
+				// Sun position calculation goes here
+				if (demo) {
+					getSunDataForDate(latitude, longitude, current);
+					current.add(Calendar.MINUTE, 1);
+					System.out.println(String.format(">>> %s", SDF.format(current.getTime())));
+					if (current.getTime().after(toDate)) {
+						keepWorking = false;
+					}
+				} else {
+					getSunData(latitude, longitude);
+				}
 				this.orientServos();
-				try { Thread.sleep(1_000L); } catch (Exception ex) {}
+				try {
+					Thread.sleep(demo ? 10L : 1_000L);
+				} catch (Exception ex) {
+				}
 			}
 			System.out.println("Timer done.");
 		});
@@ -442,13 +537,45 @@ public class SunFlower {
 		return corrected;
 	}
 
-	public static void main_(String... args) {
+	public static void main__(String... args) {
 		tiltLimit = 5;
 
 		float[] angles = { 90f, 89f, 85f, 80f };
 		for (float angle : angles) {
 			System.out.println(String.format("For %.02f => corrected to %.02f", angle, applyLimitAndOffset(angle)));
 			System.out.println(String.format("For %.02f => corrected to %.02f", -angle, applyLimitAndOffset(-angle)));
+		}
+	}
+
+	public static void main_(String... args) {
+		String from = "2017-06-28T05:53:00";
+		String to = "2017-06-28T20:33:00";
+
+		try {
+			Date fromDate = SDF_INPUT.parse(from);
+			Date toDate = SDF_INPUT.parse(to);
+			Calendar current = new GregorianCalendar(TimeZone.getTimeZone("etc/UTC"));
+			current.setTime(fromDate);
+
+			System.out.println("Starting");
+			long before = System.currentTimeMillis();
+			boolean keepWorking = true;
+			while (keepWorking) {
+				current.add(Calendar.MINUTE, 1);
+				System.out.println(String.format(">>> %s", SDF.format(current.getTime())));
+				if (current.getTime().after(toDate)) {
+					keepWorking = false;
+				}
+				try {
+					Thread.sleep(10L);
+				} catch (Exception ex) {
+				}
+			}
+			long after = System.currentTimeMillis();
+			System.out.println(String.format("Completed in %s ms", NumberFormat.getInstance().format(after - before)));
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
