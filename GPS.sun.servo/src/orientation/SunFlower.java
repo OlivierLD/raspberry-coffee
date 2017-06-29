@@ -239,13 +239,17 @@ public class SunFlower {
 		}
 	}
 
+	private boolean noServoIsMoving() {
+		return !headingServoMoving && !tiltServoMoving;
+	}
+
 	private static void setHeadingServoMoving(boolean b) {
 		headingServoMoving = b;
 	}
 	public void setHeadingServoAngle(final float f) {
 		System.out.println(String.format("--- Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving?"yes":"no")));
 
-		if (!headingServoMoving && smoothMoves && Math.abs(previousHeadingAngle - f) > 5) {
+		if (noServoIsMoving() /*!headingServoMoving*/ && smoothMoves && Math.abs(previousHeadingAngle - f) > 5) {
 			// Smooth move for steps > 10
 			if (servoVerbose) {
 				System.out.println(String.format("+++ Start a smooth move from heading %d to %.02f", previousHeadingAngle, f));
@@ -263,7 +267,7 @@ public class SunFlower {
 			headingServoMoving = true;
 			smoothy.start();
 		} else {
-			if (!headingServoMoving) {
+			if (noServoIsMoving() /*!headingServoMoving*/) {
 				setAngle(headingServoID, f);
 			}
 		}
@@ -275,7 +279,7 @@ public class SunFlower {
 	public void setTiltServoAngle(final float f) {
 		System.out.println(String.format("--- Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving?"yes":"no")));
 
-		if (!tiltServoMoving && smoothMoves && Math.abs(previousTiltAngle - f) > 5) {
+		if (noServoIsMoving() /*!tiltServoMoving*/ && smoothMoves && Math.abs(previousTiltAngle - f) > 5) {
 			// Smooth move for steps > 10
 			if (servoVerbose) {
 				System.out.println(String.format("+++ Start a smooth move from tilt %d to %.02f", previousTiltAngle, f));
@@ -293,7 +297,7 @@ public class SunFlower {
 			tiltServoMoving = true;
 			smoothy.start();
 		} else {
-			if (!tiltServoMoving) {
+			if (noServoIsMoving() /*!tiltServoMoving*/) {
 				System.out.println(String.format("Abrupt tilt set to %.02f", f));
 				setAngle(tiltServoID, applyLimitAndOffset(f));
 			}
