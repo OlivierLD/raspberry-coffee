@@ -255,6 +255,7 @@ public class SunFlower {
 				System.out.println(String.format("+++ Start a smooth move from heading %d to %.02f", previousHeadingAngle, f));
 			}
 			Thread smoothy = new Thread(() -> {
+				System.out.println("Starting smooth thread for heading");
 				int sign = (previousHeadingAngle > f) ? -1 : 1;
 				float pos = previousHeadingAngle;
 				while (Math.abs(pos - f) > 1) {
@@ -285,6 +286,7 @@ public class SunFlower {
 				System.out.println(String.format("+++ Start a smooth move from tilt %d to %.02f", previousTiltAngle, f));
 			}
 			Thread smoothy = new Thread(() -> {
+				System.out.println("Starting smooth thread for tilt");
 				int sign = (previousTiltAngle > f) ? -1 : 1;
 				float pos = previousTiltAngle;
 				while (Math.abs(pos - f) > 1) {
