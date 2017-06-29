@@ -454,7 +454,7 @@ public class SunFlower {
 					}
 					if (noServoIsMoving() /*!tiltServoMoving*/) {
 						if (angle != previousTiltAngle) {
-							System.out.println(String.format("??? Setting tilt angle from %d to %f", previousTiltAngle, angle));
+							System.out.println(String.format("??? Setting tilt angle from %d to %d", previousTiltAngle, angle));
 							this.setTiltServoAngle((float) angle);
 							previousTiltAngle = angle;
 						}
