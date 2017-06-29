@@ -454,9 +454,10 @@ public class SunFlower {
 					}
 					if (noServoIsMoving() /*!tiltServoMoving*/) {
 						if (angle != previousTiltAngle) {
+							System.out.println(String.format("??? Setting tilt angle from %d to %f", previousTiltAngle, angle));
 							this.setTiltServoAngle((float) angle);
+							previousTiltAngle = angle;
 						}
-						previousTiltAngle = angle;
 					}
 				}
 			} else { // Night time
@@ -473,8 +474,8 @@ public class SunFlower {
 				if (noServoIsMoving() /*!tiltServoMoving*/) {
 					if (angle != previousTiltAngle) {
 						this.setTiltServoAngle((float) angle);
+						previousTiltAngle = angle;
 					}
-					previousTiltAngle = angle;
 				}
 				headingServoAngle = 0; // for the night
 			} // End day or night
