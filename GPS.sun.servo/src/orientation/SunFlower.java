@@ -290,10 +290,12 @@ public class SunFlower {
 				int sign = (previousTiltAngle > f) ? -1 : 1;
 				float pos = previousTiltAngle;
 				while (Math.abs(pos - f) > 1) {
+					System.out.println(String.format("Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					setAngle(tiltServoID, pos);
 					pos += (sign * 1);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
+				System.out.println("...Tilt thread done.");
 				setTiltServoMoving(false);
 			});
 			tiltServoMoving = true;
