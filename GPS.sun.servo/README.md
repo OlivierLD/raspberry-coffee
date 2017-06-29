@@ -69,6 +69,7 @@ System variables:
  -Dorient.verbose=true
  -Dastro.verbose=true
  -Dservo.verbose=true
+ -Dservo.super.verbose=true
  -Dansi.console=true
  -Dmanual.entry=true
 
@@ -76,6 +77,12 @@ System variables:
  -Dtilt.servo.sign=-1
 
  -Dtilt.limit=10
+
+ -Dsmooth.moves=true
+
+ -Ddemo.mode=true
+ -Dfrom.date=2017-06-28T05:53:00
+ -Dto.date=2017-06-28T20:33:00
 
 Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15

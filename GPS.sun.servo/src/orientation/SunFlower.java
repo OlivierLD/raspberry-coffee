@@ -26,6 +26,7 @@ import user.util.GeomUtil;
  * -Dorient.verbose=true
  * -Dastro.verbose=true
  * -Dservo.verbose=true
+ * -Dservo.super.verbose=true
  *
  * -Dtilt.servo.sign=-1
  * -Dheading.servo.sign=-1
@@ -62,6 +63,7 @@ public class SunFlower {
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
 	private static boolean servoVerbose = false;
+	private static boolean servoSuperVerbose = false;
 	private static boolean testServos = false;
 	private static boolean smoothMoves = false;
 	private static boolean demo = false;
@@ -196,6 +198,7 @@ public class SunFlower {
 		// Read System Properties
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
 		servoVerbose = "true".equals(System.getProperty("servo.verbose", "false"));
+		servoSuperVerbose = "true".equals(System.getProperty("servo.super.verbose", "false"));
 		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
 
 		manualEntry = "true".equals(System.getProperty("manual.entry", "false"));
@@ -257,32 +260,41 @@ public class SunFlower {
 		headingServoMoving = b;
 	}
 	public void setHeadingServoAngle(final float f) {
-		System.out.println(String.format("H> Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving?"yes":"no")));
+		if (servoSuperVerbose) {
+			System.out.println(String.format("H> Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving ? "yes" : "no")));
+		}
 		float startFrom = previousHeadingAngle;
 		if (noServoIsMoving() /*!headingServoMoving*/ && smoothMoves && Math.abs(startFrom - f) > 5) {
 			headingServoMoving = true;
 			// Smooth move for steps > 5
-			if (servoVerbose) {
+			if (servoSuperVerbose) {
 				System.out.println(String.format("H> Start a smooth move from heading %.02f to %.02f", startFrom, f));
 			}
 			Thread smoothy = new Thread(() -> {
-				System.out.println(String.format("H> Starting smooth thread for heading %.02f to %.02f", startFrom, f));
+				if (servoSuperVerbose) {
+					System.out.println(String.format("H> Starting smooth thread for heading %.02f to %.02f", startFrom, f));
+				}
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - f) > 1) {
-					System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
+					if (servoSuperVerbose) {
+						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
+					}
 					setAngle(headingServoID, pos);
 					pos += (sign * 1);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
-				System.out.println(String.format("H>...Heading thread done, delta=%.02f", Math.abs(pos - f)));
+				if (servoSuperVerbose) {
+					System.out.println(String.format("H>...Heading thread done, delta=%.02f", Math.abs(pos - f)));
+				}
 				setHeadingServoMoving(false);
 			});
-//		headingServoMoving = true; // TODO Remove?
 			smoothy.start();
 		} else {
 			if (noServoIsMoving() /*!headingServoMoving*/) {
-				System.out.println(String.format("H> Abrupt heading set to %.02f", f));
+				if (servoSuperVerbose) {
+					System.out.println(String.format("H> Abrupt heading set to %.02f", f));
+				}
 				setAngle(headingServoID, f);
 			}
 		}
@@ -292,32 +304,41 @@ public class SunFlower {
 		tiltServoMoving = b;
 	}
 	public void setTiltServoAngle(final float f) {
-		System.out.println(String.format("T> Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving?"yes":"no")));
+		if (servoSuperVerbose) {
+			System.out.println(String.format("T> Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving ? "yes" : "no")));
+		}
 		float startFrom = previousTiltAngle;
 		if (noServoIsMoving() /*!tiltServoMoving*/ && smoothMoves && Math.abs(startFrom - f) > 5) {
 			tiltServoMoving = true;
 			// Smooth move for steps > 5
-			if (servoVerbose) {
+			if (servoSuperVerbose) {
 				System.out.println(String.format("T> Start a smooth move from tilt %.02f to %.02f", startFrom, f));
 			}
 			Thread smoothy = new Thread(() -> {
-				System.out.println(String.format("T> Starting smooth thread for tilt %.02f to %.02f", startFrom, f));
+				if (servoSuperVerbose) {
+					System.out.println(String.format("T> Starting smooth thread for tilt %.02f to %.02f", startFrom, f));
+				}
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - f) > 1) {
-					System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
+					if (servoSuperVerbose) {
+						System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
+					}
 					setAngle(tiltServoID, pos);
 					pos += (sign * 1);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
-				System.out.println(String.format("T>...Tilt thread done, delta=%.02f", Math.abs(pos - f)));
+				if (servoSuperVerbose) {
+					System.out.println(String.format("T>...Tilt thread done, delta=%.02f", Math.abs(pos - f)));
+				}
 				setTiltServoMoving(false);
 			});
-//		tiltServoMoving = true; // TODO Remove?
 			smoothy.start();
 		} else {
 			if (noServoIsMoving() /*!tiltServoMoving*/) {
-				System.out.println(String.format("T> Abrupt tilt set to %.02f", f));
+				if (servoSuperVerbose) {
+					System.out.println(String.format("T> Abrupt tilt set to %.02f", f));
+				}
 				setAngle(tiltServoID, applyLimitAndOffset(f));
 			}
 		}
