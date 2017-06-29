@@ -74,7 +74,9 @@ public class SunFlower {
 	private final static String PAD = EscapeSeq.ANSI_ERASE_TO_EOL;
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
-	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Duration
+
+	private static boolean foundPCA9685 = true;
 
 	private void getSunData(double lat, double lng) {
 		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
@@ -232,7 +234,15 @@ public class SunFlower {
 		try {
 //		System.out.println("Driving Servos on Channels " + headingServoID + " and " + tiltServoID);
 			this.servoBoard = new PCA9685();
-			this.servoBoard.setPWMFreq(freq); // Set frequency in Hz
+			try {
+				this.servoBoard.setPWMFreq(freq); // Set frequency in Hz
+			} catch (NullPointerException npe) {
+				foundPCA9685 = false;
+				System.err.println("------------------------------------------------------------");
+				System.err.println("PCA9685 was NOT initialized.\nCheck your wiring, or make sure you are on a Raspberry PI...");
+				System.err.println("Moving on anyway...");
+				System.err.println("------------------------------------------------------------");
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(1);
@@ -253,10 +263,10 @@ public class SunFlower {
 			headingServoMoving = true;
 			// Smooth move for steps > 5
 			if (servoVerbose) {
-				System.out.println(String.format("H> Start a smooth move from heading %d to %.02f", startFrom, f));
+				System.out.println(String.format("H> Start a smooth move from heading %.02f to %.02f", startFrom, f));
 			}
 			Thread smoothy = new Thread(() -> {
-				System.out.println(String.format("H> Starting smooth thread for heading %d to %.02f", startFrom, f));
+				System.out.println(String.format("H> Starting smooth thread for heading %.02f to %.02f", startFrom, f));
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - f) > 1) {
@@ -288,10 +298,10 @@ public class SunFlower {
 			tiltServoMoving = true;
 			// Smooth move for steps > 5
 			if (servoVerbose) {
-				System.out.println(String.format("T> Start a smooth move from tilt %d to %.02f", startFrom, f));
+				System.out.println(String.format("T> Start a smooth move from tilt %.02f to %.02f", startFrom, f));
 			}
 			Thread smoothy = new Thread(() -> {
-				System.out.println(String.format("T> Starting smooth thread for tilt %d to %.02f", startFrom, f));
+				System.out.println(String.format("T> Starting smooth thread for tilt %.02f to %.02f", startFrom, f));
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - f) > 1) {
@@ -324,7 +334,9 @@ public class SunFlower {
 			}
 		}
 		try {
-			servoBoard.setPWM(servo, 0, pwm);
+			if (foundPCA9685) {
+				servoBoard.setPWM(servo, 0, pwm);
+			}
 		} catch (IllegalArgumentException iae) {
 			System.err.println(String.format("Cannot set servo %d to PWM %d", servo, pwm));
 			iae.printStackTrace();
@@ -340,7 +352,9 @@ public class SunFlower {
 	}
 
 	private void stop(int servo) { // Set to 0
-		servoBoard.setPWM(servo, 0, 0);
+		if (foundPCA9685) {
+			this.servoBoard.setPWM(servo, 0, 0);
+		}
 	}
 
 	/*
@@ -752,7 +766,7 @@ public class SunFlower {
 				instance.setHeadingServoAngle(0f);
 				instance.setTiltServoAngle(0f);
 				try {
-					Thread.sleep(1_000L);
+					Thread.sleep(demo ? 10_000L : 1_000L);
 				} catch (InterruptedException ie) {
 					System.err.println(ie.getMessage());
 				}
