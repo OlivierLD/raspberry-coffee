@@ -763,12 +763,17 @@ public class SunFlower {
 				instance.stop(headingServoID);
 				instance.stop(tiltServoID);
 
-				instance.setHeadingServoAngle(0f);
-				instance.setTiltServoAngle(0f);
 				try {
 					if (!smoothMoves) {
+						instance.setHeadingServoAngle(0f);
+						instance.setTiltServoAngle(0f);
 						Thread.sleep(1_000L);
 					} else {
+						instance.setHeadingServoAngle(0f);
+						while (!instance.noServoIsMoving()) {
+							Thread.sleep(1_000L);
+						}
+						instance.setTiltServoAngle(0f);
 						while (!instance.noServoIsMoving()) {
 							Thread.sleep(1_000L);
 						}
