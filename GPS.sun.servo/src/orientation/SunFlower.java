@@ -247,7 +247,7 @@ public class SunFlower {
 		headingServoMoving = b;
 	}
 	public void setHeadingServoAngle(final float f) {
-		System.out.println(String.format("--- Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving?"yes":"no")));
+//	System.out.println(String.format("--- Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving?"yes":"no")));
 
 		if (noServoIsMoving() /*!headingServoMoving*/ && smoothMoves && Math.abs(previousHeadingAngle - f) > 5) {
 			// Smooth move for steps > 10
@@ -255,7 +255,7 @@ public class SunFlower {
 				System.out.println(String.format("+++ Start a smooth move from heading %d to %.02f", previousHeadingAngle, f));
 			}
 			Thread smoothy = new Thread(() -> {
-				System.out.println("Starting smooth thread for heading");
+//			System.out.println("Starting smooth thread for heading");
 				int sign = (previousHeadingAngle > f) ? -1 : 1;
 				float pos = previousHeadingAngle;
 				while (Math.abs(pos - f) > 1) {
@@ -286,7 +286,7 @@ public class SunFlower {
 				System.out.println(String.format("+++ Start a smooth move from tilt %d to %.02f", previousTiltAngle, f));
 			}
 			Thread smoothy = new Thread(() -> {
-				System.out.println("Starting smooth thread for tilt");
+				System.out.println(String.format("Starting smooth thread for tilt %d to %.02f", previousTiltAngle, f));
 				int sign = (previousTiltAngle > f) ? -1 : 1;
 				float pos = previousTiltAngle;
 				while (Math.abs(pos - f) > 1) {
@@ -295,7 +295,7 @@ public class SunFlower {
 					pos += (sign * 1);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
-				System.out.println("...Tilt thread done.");
+				System.out.println(String.format("...Tilt thread done, delta=%.02f", Math.abs(pos - f)));
 				setTiltServoMoving(false);
 			});
 			tiltServoMoving = true;
