@@ -247,29 +247,32 @@ public class SunFlower {
 		headingServoMoving = b;
 	}
 	public void setHeadingServoAngle(final float f) {
-//	System.out.println(String.format("--- Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving?"yes":"no")));
-
-		if (noServoIsMoving() /*!headingServoMoving*/ && smoothMoves && Math.abs(previousHeadingAngle - f) > 5) {
+		System.out.println(String.format("--- Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving?"yes":"no")));
+		float startFrom = previousHeadingAngle;
+		if (noServoIsMoving() /*!headingServoMoving*/ && smoothMoves && Math.abs(startFrom - f) > 5) {
 			// Smooth move for steps > 10
 			if (servoVerbose) {
-				System.out.println(String.format("+++ Start a smooth move from heading %d to %.02f", previousHeadingAngle, f));
+				System.out.println(String.format("+++ Start a smooth move from heading %d to %.02f", startFrom, f));
 			}
 			headingServoMoving = true;
 			Thread smoothy = new Thread(() -> {
-//			System.out.println("Starting smooth thread for heading");
-				int sign = (previousHeadingAngle > f) ? -1 : 1;
-				float pos = previousHeadingAngle;
+				System.out.println(String.format("H> Starting smooth thread for heading %d to %.02f", startFrom, f));
+				int sign = (startFrom > f) ? -1 : 1;
+				float pos = startFrom;
 				while (Math.abs(pos - f) > 1) {
+					System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					setAngle(headingServoID, pos);
 					pos += (sign * 1);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
+				System.out.println(String.format("H>...Heading thread done, delta=%.02f", Math.abs(pos - f)));
 				setHeadingServoMoving(false);
 			});
-			headingServoMoving = true; // TODO Remove
+			headingServoMoving = true; // TODO Remove?
 			smoothy.start();
 		} else {
 			if (noServoIsMoving() /*!headingServoMoving*/) {
+				System.out.println(String.format("H> Abrupt heading set to %.02f", f));
 				setAngle(headingServoID, f);
 			}
 		}
@@ -280,31 +283,31 @@ public class SunFlower {
 	}
 	public void setTiltServoAngle(final float f) {
 		System.out.println(String.format("--- Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving?"yes":"no")));
-
-		if (noServoIsMoving() /*!tiltServoMoving*/ && smoothMoves && Math.abs(previousTiltAngle - f) > 5) {
+		float startFrom = previousTiltAngle;
+		if (noServoIsMoving() /*!tiltServoMoving*/ && smoothMoves && Math.abs(startFrom - f) > 5) {
 			// Smooth move for steps > 10
 			if (servoVerbose) {
-				System.out.println(String.format("+++ Start a smooth move from tilt %d to %.02f", previousTiltAngle, f));
+				System.out.println(String.format("+++ Start a smooth move from tilt %d to %.02f", startFrom, f));
 			}
 			tiltServoMoving = true;
 			Thread smoothy = new Thread(() -> {
-				System.out.println(String.format("Starting smooth thread for tilt %d to %.02f", previousTiltAngle, f));
-				int sign = (previousTiltAngle > f) ? -1 : 1;
-				float pos = previousTiltAngle;
+				System.out.println(String.format("T> Starting smooth thread for tilt %d to %.02f", startFrom, f));
+				int sign = (startFrom > f) ? -1 : 1;
+				float pos = startFrom;
 				while (Math.abs(pos - f) > 1) {
-					System.out.println(String.format("Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
+					System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					setAngle(tiltServoID, pos);
 					pos += (sign * 1);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
-				System.out.println(String.format("...Tilt thread done, delta=%.02f", Math.abs(pos - f)));
+				System.out.println(String.format("T>...Tilt thread done, delta=%.02f", Math.abs(pos - f)));
 				setTiltServoMoving(false);
 			});
 			tiltServoMoving = true; // TODO Remove?
 			smoothy.start();
 		} else {
 			if (noServoIsMoving() /*!tiltServoMoving*/) {
-				System.out.println(String.format("Abrupt tilt set to %.02f", f));
+				System.out.println(String.format("T> Abrupt tilt set to %.02f", f));
 				setAngle(tiltServoID, applyLimitAndOffset(f));
 			}
 		}
