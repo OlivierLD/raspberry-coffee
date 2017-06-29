@@ -452,8 +452,12 @@ public class SunFlower {
 							System.out.println(mess);
 						}
 					}
-					this.setTiltServoAngle((float) angle);
-					previousTiltAngle = angle;
+					if (noServoIsMoving() /*!tiltServoMoving*/) {
+						if (angle != previousTiltAngle) {
+							this.setTiltServoAngle((float) angle);
+						}
+						previousTiltAngle = angle;
+					}
 				}
 			} else { // Night time
 				invert = false;
@@ -466,12 +470,14 @@ public class SunFlower {
 					}
 				}
 				int angle = 0;
-				if (noServoIsMoving() /*!tiltServoMoving*/ && angle != previousTiltAngle) {
-					this.setTiltServoAngle((float) angle);
+				if (noServoIsMoving() /*!tiltServoMoving*/) {
+					if (angle != previousTiltAngle) {
+						this.setTiltServoAngle((float) angle);
+					}
 					previousTiltAngle = angle;
 				}
-				headingServoAngle = 0;
-			}
+				headingServoAngle = 0; // for the night
+			} // End day or night
 			if (orientationVerbose && !manualEntry) {
 				String mess = String.format(">>> Heading servo angle now %d %s", headingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
 				if (ansiConsole) {
