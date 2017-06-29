@@ -766,13 +766,20 @@ public class SunFlower {
 				instance.setHeadingServoAngle(0f);
 				instance.setTiltServoAngle(0f);
 				try {
-					Thread.sleep(demo ? 10_000L : 1_000L);
+					if (!smoothMoves) {
+						Thread.sleep(1_000L);
+					} else {
+						while (!instance.noServoIsMoving()) {
+							Thread.sleep(1_000L);
+						}
+					}
 				} catch (InterruptedException ie) {
 					System.err.println(ie.getMessage());
 				}
 				if (ansiConsole) {
 					AnsiConsole.systemUninstall();
 				}
+				System.out.println("Finished!");
 			}));
 		} catch (Throwable ex) {
 			System.err.println(">>> Panel Orienter... <<< BAM!");
