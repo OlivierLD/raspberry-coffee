@@ -240,7 +240,7 @@ public class SunFlower {
 	}
 
 	private boolean noServoIsMoving() {
-		return !headingServoMoving && !tiltServoMoving;
+		return !(headingServoMoving || tiltServoMoving);
 	}
 
 	private static void setHeadingServoMoving(boolean b) {
