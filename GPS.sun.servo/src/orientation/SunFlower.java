@@ -254,6 +254,7 @@ public class SunFlower {
 			if (servoVerbose) {
 				System.out.println(String.format("+++ Start a smooth move from heading %d to %.02f", previousHeadingAngle, f));
 			}
+			headingServoMoving = true;
 			Thread smoothy = new Thread(() -> {
 //			System.out.println("Starting smooth thread for heading");
 				int sign = (previousHeadingAngle > f) ? -1 : 1;
@@ -265,7 +266,7 @@ public class SunFlower {
 				}
 				setHeadingServoMoving(false);
 			});
-			headingServoMoving = true;
+			headingServoMoving = true; // TODO Remove
 			smoothy.start();
 		} else {
 			if (noServoIsMoving() /*!headingServoMoving*/) {
@@ -285,6 +286,7 @@ public class SunFlower {
 			if (servoVerbose) {
 				System.out.println(String.format("+++ Start a smooth move from tilt %d to %.02f", previousTiltAngle, f));
 			}
+			tiltServoMoving = true;
 			Thread smoothy = new Thread(() -> {
 				System.out.println(String.format("Starting smooth thread for tilt %d to %.02f", previousTiltAngle, f));
 				int sign = (previousTiltAngle > f) ? -1 : 1;
@@ -298,7 +300,7 @@ public class SunFlower {
 				System.out.println(String.format("...Tilt thread done, delta=%.02f", Math.abs(pos - f)));
 				setTiltServoMoving(false);
 			});
-			tiltServoMoving = true;
+			tiltServoMoving = true; // TODO Remove?
 			smoothy.start();
 		} else {
 			if (noServoIsMoving() /*!tiltServoMoving*/) {
