@@ -246,12 +246,12 @@ public class SunFlower {
 		if (!headingServoMoving && smoothMoves && Math.abs(previousHeadingAngle - f) > 5) {
 			// Smooth move for steps > 10
 			if (servoVerbose) {
-				System.out.println(String.format("Start a smooth move from heading %d to %.02f", previousHeadingAngle, f));
+				System.out.println(String.format("+++ Start a smooth move from heading %d to %.02f", previousHeadingAngle, f));
 			}
 			Thread smoothy = new Thread(() -> {
 				int sign = (previousHeadingAngle > f) ? -1 : 1;
 				float pos = previousHeadingAngle;
-				while (Math.abs(pos - f) > 0) {
+				while (Math.abs(pos - f) > 1) {
 					setAngle(headingServoID, pos);
 					pos += (sign * 1);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
@@ -274,12 +274,12 @@ public class SunFlower {
 		if (!tiltServoMoving && smoothMoves && Math.abs(previousTiltAngle - f) > 5) {
 			// Smooth move for steps > 10
 			if (servoVerbose) {
-				System.out.println(String.format("Start a smooth move from tilt %d to %.02f", previousTiltAngle, f));
+				System.out.println(String.format("+++ Start a smooth move from tilt %d to %.02f", previousTiltAngle, f));
 			}
 			Thread smoothy = new Thread(() -> {
 				int sign = (previousTiltAngle > f) ? -1 : 1;
 				float pos = previousTiltAngle;
-				while (Math.abs(pos - f) > 0) {
+				while (Math.abs(pos - f) > 1) {
 					setAngle(tiltServoID, pos);
 					pos += (sign * 1);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
