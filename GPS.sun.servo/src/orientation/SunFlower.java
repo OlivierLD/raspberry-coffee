@@ -247,14 +247,14 @@ public class SunFlower {
 		headingServoMoving = b;
 	}
 	public void setHeadingServoAngle(final float f) {
-		System.out.println(String.format("--- Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving?"yes":"no")));
+		System.out.println(String.format("H> Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving?"yes":"no")));
 		float startFrom = previousHeadingAngle;
 		if (noServoIsMoving() /*!headingServoMoving*/ && smoothMoves && Math.abs(startFrom - f) > 5) {
-			// Smooth move for steps > 10
-			if (servoVerbose) {
-				System.out.println(String.format("+++ Start a smooth move from heading %d to %.02f", startFrom, f));
-			}
 			headingServoMoving = true;
+			// Smooth move for steps > 5
+			if (servoVerbose) {
+				System.out.println(String.format("H> Start a smooth move from heading %d to %.02f", startFrom, f));
+			}
 			Thread smoothy = new Thread(() -> {
 				System.out.println(String.format("H> Starting smooth thread for heading %d to %.02f", startFrom, f));
 				int sign = (startFrom > f) ? -1 : 1;
@@ -268,7 +268,7 @@ public class SunFlower {
 				System.out.println(String.format("H>...Heading thread done, delta=%.02f", Math.abs(pos - f)));
 				setHeadingServoMoving(false);
 			});
-			headingServoMoving = true; // TODO Remove?
+//		headingServoMoving = true; // TODO Remove?
 			smoothy.start();
 		} else {
 			if (noServoIsMoving() /*!headingServoMoving*/) {
@@ -282,14 +282,14 @@ public class SunFlower {
 		tiltServoMoving = b;
 	}
 	public void setTiltServoAngle(final float f) {
-		System.out.println(String.format("--- Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving?"yes":"no")));
+		System.out.println(String.format("T> Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving?"yes":"no")));
 		float startFrom = previousTiltAngle;
 		if (noServoIsMoving() /*!tiltServoMoving*/ && smoothMoves && Math.abs(startFrom - f) > 5) {
-			// Smooth move for steps > 10
-			if (servoVerbose) {
-				System.out.println(String.format("+++ Start a smooth move from tilt %d to %.02f", startFrom, f));
-			}
 			tiltServoMoving = true;
+			// Smooth move for steps > 5
+			if (servoVerbose) {
+				System.out.println(String.format("T> Start a smooth move from tilt %d to %.02f", startFrom, f));
+			}
 			Thread smoothy = new Thread(() -> {
 				System.out.println(String.format("T> Starting smooth thread for tilt %d to %.02f", startFrom, f));
 				int sign = (startFrom > f) ? -1 : 1;
@@ -303,7 +303,7 @@ public class SunFlower {
 				System.out.println(String.format("T>...Tilt thread done, delta=%.02f", Math.abs(pos - f)));
 				setTiltServoMoving(false);
 			});
-			tiltServoMoving = true; // TODO Remove?
+//		tiltServoMoving = true; // TODO Remove?
 			smoothy.start();
 		} else {
 			if (noServoIsMoving() /*!tiltServoMoving*/) {
