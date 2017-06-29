@@ -439,7 +439,7 @@ public class SunFlower {
 				if (invert) {
 					angle = -angle;
 				}
-				if (!tiltServoMoving && angle != previousTiltAngle) {
+				if (noServoIsMoving() /*!tiltServoMoving*/ && angle != previousTiltAngle) {
 					if (servoVerbose && !manualEntry) {
 						String mess = String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : ""));
 						if (ansiConsole) {
@@ -462,7 +462,7 @@ public class SunFlower {
 					}
 				}
 				int angle = 0;
-				if (!tiltServoMoving && angle != previousTiltAngle) {
+				if (noServoIsMoving() /*!tiltServoMoving*/ && angle != previousTiltAngle) {
 					this.setTiltServoAngle((float) angle);
 					previousTiltAngle = angle;
 				}
@@ -476,7 +476,7 @@ public class SunFlower {
 					System.out.println(mess);
 				}
 			}
-			if (!headingServoMoving) {
+			if (noServoIsMoving() /*!headingServoMoving*/) {
 				if (headingServoAngle != previousHeadingAngle) {
 					this.setHeadingServoAngle(invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle);
 				}
