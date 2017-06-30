@@ -134,10 +134,8 @@ A snapshot of the (optional) ANSI console:
 
 <img src="./doc/ansi.console.png" alt="ANSI Console" width="561" height="199">
 
-
-Here is a prototype, made of plexiglass and adhesive tape:
-![Proto](./doc/prototype.jpg)
-Next comes the real stuff!
-
+ Pix | Clip
+ --- | ---
+ Here is a prototype, made of plexiglass and adhesive tape:<br> ![Proto](./doc/prototype.jpg) <br> Next comes the real stuff! | <iframe width="560" height="315" src="https://www.youtube.com/embed/apTLJXE4vUk" frameborder="0" allowfullscreen></iframe>
 
 ---
