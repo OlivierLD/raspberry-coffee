@@ -2,8 +2,8 @@
 CP=./build/libs/GPS.sun.servo-1.0-all.jar
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070 -Declination=14" # SF, 2017.
-JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
-JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
+JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
 JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
