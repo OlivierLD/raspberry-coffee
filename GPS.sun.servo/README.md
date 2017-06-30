@@ -111,9 +111,9 @@ At N  37°44.96' / W 122°30.44'
 Sun Rise:21 Jun 2017 05:52 (PDT -0700) (Z= 59°)
 Sun Set :21 Jun 2017 20:31 (PDT -0700) (Z=301°)
 ```
-The Sun rises in the 59°, and sets in the 301°. 59° translates into -121°, and 301° into 121°, which is far out of `[-90°..90°]`.
+The Sun rises in the 59°, and sets in the 301°. Azimuth 59° translates into a servo angle of -121°, and azimuth 301° into a servo angle of 121°; -121° and 121° are far out of `[-90°..90°]`.
 
-<img src="./doc/rise.set.png" width="594" height="523" alt="Sun rise and Set">
+<img src="./doc/rise.set.png" width="594" height="523" alt="Sun Rise and Set">
 
 This is where we need to invert the angles.
 

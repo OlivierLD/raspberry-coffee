@@ -2,12 +2,6 @@
 CP=./build/libs/GPS.sun.servo-1.0-all.jar
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070 -Declination=14" # SF, 2017.
-JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
-JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
-JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
-JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
-JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
-JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
 #
 JAVA_OPTS="$JAVA_OPTS -Dtest.servos=false"
 #
@@ -17,11 +11,76 @@ JAVA_OPTS="$JAVA_OPTS -Dheading.servo.sign=1"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.limit=10"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.offset=0"
 #
-JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=true"
+OPTION=basic
+if [ $# -gt 0 ]
+then
+  OPTION=$1
+fi
 #
-JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
-# The 2 following ones are required if demo.mode=true
-#JAVA_OPTS="$JAVA_OPTS -Dfrom.date=2017-06-28T05:53:00"
-#JAVA_OPTS="$JAVA_OPTS -Dto.date=2017-06-28T20:33:00"
+case "$OPTION" in
+  basic)
+    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
+    JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
+    #
+    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
+    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    ;;
+  plus)
+    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
+    JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
+    #
+    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
+    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    ;;
+  verbose)
+    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
+    JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
+    #
+    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
+    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    ;;
+  demo)
+    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
+    JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
+    #
+    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
+    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=true"
+    # The 2 following ones are required if demo.mode=true
+    JAVA_OPTS="$JAVA_OPTS -Dfrom.date=2017-06-28T05:53:00"
+    JAVA_OPTS="$JAVA_OPTS -Dto.date=2017-06-28T20:33:00"
+    ;;
+  smooth)
+    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
+    JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
+    #
+    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=tgrue"
+    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    ;;
+  *)
+    echo "=============================================================================="
+    echo "Unknown option $OPTION. Available ones are basic, plus, verbose, demo, smooth."
+    echo "=============================================================================="
+    ;;
+esac
 #
 sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:14 --tilt:15
