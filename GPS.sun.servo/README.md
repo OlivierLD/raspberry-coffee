@@ -138,4 +138,8 @@ A snapshot of the (optional) ANSI console:
  --- | ---
  Here is a prototype, made of plexiglass and adhesive tape:<br> ![Proto](./doc/prototype.jpg) <br> Next comes the real stuff! | Here is <a href="https://youtu.be/apTLJXE4vUk" target="UTube">a video</a>, one day simulation, featuring the inversion function.
 
+## NMEA Feed
+_Next_: From the project `NMEA.multiplexer`, wrap the `SunFlower` class into a `forwarder`.
+This way, position and heading come from NMEA data (log file, NMEA Station, TCP Channel, etc).
+
 ---

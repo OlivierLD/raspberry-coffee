@@ -78,7 +78,7 @@ public class SunFlower {
 	private final static String PAD = EscapeSeq.ANSI_ERASE_TO_EOL;
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
-	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Duration
+	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Duration fmt.
 
 	private static boolean foundPCA9685 = true;
 
@@ -194,6 +194,10 @@ public class SunFlower {
 	}
 
 	public SunFlower(int headinServoNumber, int tiltServoNumber) {
+
+		// For celestial calculations:
+		System.setProperty("deltaT", System.getProperty("deltaT", "68.8033")); // 2017-Jun-01
+
 		headingServoID = headinServoNumber;
 		tiltServoID = tiltServoNumber;
 
