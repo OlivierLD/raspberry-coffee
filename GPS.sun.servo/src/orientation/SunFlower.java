@@ -60,6 +60,8 @@ public class SunFlower {
 	private int tiltServoSign = 1;
 	private int headingServoSign = 1;
 
+	private final static float SMOOTH_STEP = 1.0f;
+
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
 	private static boolean servoVerbose = false;
@@ -276,12 +278,12 @@ public class SunFlower {
 				}
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
-				while (Math.abs(pos - f) > 1) {
+				while (Math.abs(pos - f) > SMOOTH_STEP) {
 					if (servoSuperVerbose) {
 						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					}
 					setAngle(headingServoID, pos);
-					pos += (sign * 1);
+					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
 				if (servoSuperVerbose) {
@@ -320,12 +322,12 @@ public class SunFlower {
 				}
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
-				while (Math.abs(pos - f) > 1) {
+				while (Math.abs(pos - f) > SMOOTH_STEP) {
 					if (servoSuperVerbose) {
 						System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					}
 					setAngle(tiltServoID, pos);
-					pos += (sign * 1);
+					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
 				if (servoSuperVerbose) {
