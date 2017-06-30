@@ -33,6 +33,8 @@ import user.util.GeomUtil;
  * -Dtilt.limit=0..90 <- Minimum elevation of the sun
  * -Dtilt.offset=0    <- Offset in degrees
  *
+ * -Done.by.one=true <- true is the default
+ *
  * For the main, as an example:
  * latitude -Dlatitude=37.7489
  * longitude -Dlongitude=-122.5070
@@ -69,6 +71,8 @@ public class SunFlower {
 	private static boolean testServos = false;
 	private static boolean smoothMoves = false;
 	private static boolean demo = false;
+
+	private static boolean servoMoveOneByOne = true;
 
 	private static boolean headingServoMoving = false;
 	private static boolean tiltServoMoving = false;
@@ -213,6 +217,8 @@ public class SunFlower {
 
 		smoothMoves = "true".equals(System.getProperty("smooth.moves", "false"));
 
+		servoMoveOneByOne = "true".equals(System.getProperty("one.by.one", "true"));
+
 		String strTiltServoSign = System.getProperty("tilt.servo.sign");
 		if (strTiltServoSign != null) {
 			try {
@@ -247,10 +253,10 @@ public class SunFlower {
 				this.servoBoard.setPWMFreq(freq); // Set frequency in Hz
 			} catch (NullPointerException npe) {
 				foundPCA9685 = false;
-				System.err.println("------------------------------------------------------------");
-				System.err.println("PCA9685 was NOT initialized.\nCheck your wiring, or make sure you are on a Raspberry PI...");
-				System.err.println("Moving on anyway...");
-				System.err.println("------------------------------------------------------------");
+				System.err.println("+------------------------------------------------------------");
+				System.err.println("| PCA9685 was NOT initialized.\nCheck your wiring, or make sure you are on a Raspberry PI...");
+				System.err.println("| Moving on anyway...");
+				System.err.println("+------------------------------------------------------------");
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -270,7 +276,7 @@ public class SunFlower {
 			System.out.println(String.format("H> Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving ? "yes" : "no")));
 		}
 		float startFrom = previousHeadingAngle;
-		if (noServoIsMoving() /*!headingServoMoving*/ && smoothMoves && Math.abs(startFrom - f) > 5) {
+		if ((servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) && smoothMoves && Math.abs(startFrom - f) > 5) {
 			headingServoMoving = true;
 			// Smooth move for steps > 5
 			if (servoSuperVerbose) {
@@ -297,7 +303,7 @@ public class SunFlower {
 			});
 			smoothy.start();
 		} else {
-			if (noServoIsMoving() /*!headingServoMoving*/) {
+			if (servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) {
 				if (servoSuperVerbose) {
 					System.out.println(String.format("H> Abrupt heading set to %.02f", f));
 				}
@@ -314,7 +320,7 @@ public class SunFlower {
 			System.out.println(String.format("T> Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving ? "yes" : "no")));
 		}
 		float startFrom = previousTiltAngle;
-		if (noServoIsMoving() /*!tiltServoMoving*/ && smoothMoves && Math.abs(startFrom - f) > 5) {
+		if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && smoothMoves && Math.abs(startFrom - f) > 5) {
 			tiltServoMoving = true;
 			// Smooth move for steps > 5
 			if (servoSuperVerbose) {
@@ -341,7 +347,7 @@ public class SunFlower {
 			});
 			smoothy.start();
 		} else {
-			if (noServoIsMoving() /*!tiltServoMoving*/) {
+			if (servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) {
 				if (servoSuperVerbose) {
 					System.out.println(String.format("T> Abrupt tilt set to %.02f", f));
 				}
@@ -489,7 +495,7 @@ public class SunFlower {
 				if (invert) {
 					angle = -angle;
 				}
-				if (noServoIsMoving() /*!tiltServoMoving*/ && angle != previousTiltAngle) {
+				if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && angle != previousTiltAngle) {
 					if (servoVerbose && !manualEntry) {
 						String mess = String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : ""));
 						if (ansiConsole) {
@@ -498,7 +504,7 @@ public class SunFlower {
 							System.out.println(mess);
 						}
 					}
-					if (noServoIsMoving() /*!tiltServoMoving*/) {
+					if (servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) {
 						if (angle != previousTiltAngle) {
 //						System.out.println(String.format("??? Setting tilt angle from %d to %d", previousTiltAngle, angle));
 							this.setTiltServoAngle((float) angle);
@@ -517,7 +523,7 @@ public class SunFlower {
 					}
 				}
 				int angle = 0;
-				if (noServoIsMoving() /*!tiltServoMoving*/) {
+				if (servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) {
 					if (angle != previousTiltAngle) {
 						this.setTiltServoAngle((float) angle);
 						previousTiltAngle = angle;
@@ -533,7 +539,7 @@ public class SunFlower {
 					System.out.println(mess);
 				}
 			}
-			if (noServoIsMoving() /*!headingServoMoving*/) {
+			if (servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) {
 				if (headingServoAngle != previousHeadingAngle) {
 					this.setHeadingServoAngle(invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle);
 				}
