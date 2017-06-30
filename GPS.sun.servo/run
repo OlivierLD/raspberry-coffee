@@ -1,5 +1,9 @@
 #!/bin/bash
 CP=./build/libs/GPS.sun.servo-1.0-all.jar
+#
+HEADING_SERVO_ID=14
+TILT_SERVO_ID=15
+#
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070 -Declination=14" # SF, 2017.
 JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.8033" # 01-June-2017
@@ -18,8 +22,18 @@ then
   OPTION=$1
 fi
 #
+displayHelp() {
+  echo "=============================================================================="
+  echo "Available options are -help, basic, plus, verbose, demo, smooth."
+  echo "=============================================================================="
+}
+#
 case "$OPTION" in
-  basic)
+  "-help" | "?" | "-h")
+    displayHelp
+    exit 0
+    ;;
+  "basic")
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
@@ -30,7 +44,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
-  plus)
+  "plus")
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
@@ -41,7 +55,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
-  verbose)
+  "verbose")
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
@@ -52,7 +66,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
-  demo)
+  "demo")
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
@@ -66,7 +80,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dfrom.date=2017-06-28T05:53:00"
     JAVA_OPTS="$JAVA_OPTS -Dto.date=2017-06-28T20:33:00"
     ;;
-  smooth)
+  "smooth")
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dservo.verbose=false"
@@ -78,10 +92,11 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
   *)
-    echo "=============================================================================="
-    echo "Unknown option $OPTION. Available ones are basic, plus, verbose, demo, smooth."
-    echo "=============================================================================="
+    echo "======================="
+    echo "Unknown option $OPTION."
+    displayHelp
+    exit 1
     ;;
 esac
 #
-sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:14 --tilt:15
+sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID
