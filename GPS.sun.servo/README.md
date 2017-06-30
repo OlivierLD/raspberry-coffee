@@ -129,6 +129,13 @@ A solution is to point in the opposite direction, and flip the tilt servo:
 This is a static situation, from the northern hemisphere.
 The device can also be on the go, the code can receive the position and the heading (from a GPS or an NMEA station for example) at any time, it will adjust the servos accordingly.
 
+## Wiring
+<!-- ![Wiring](./sunflower_bb.png) -->
+<img src="./sunflower_bb.png" width="640" height="1240">
+
+Depending of the servos you use, you might want to power the `PCA9685` with its own 5v power supply.
+
+## At work
 A snapshot of the (optional) ANSI console:
 
 
