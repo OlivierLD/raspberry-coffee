@@ -133,7 +133,7 @@ public class SunFlower {
 			// Return here
 		} else {
 	//	Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
-			if (astroVerbose) {
+			if (astroVerbose && !ansiConsole) {
 				System.out.println(String.format(">>> Sun Calculation for %s", SDF.format(current.getTime())));
 			}
 			AstroComputer.setDateTime(current.get(Calendar.YEAR),
