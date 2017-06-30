@@ -136,6 +136,6 @@ A snapshot of the (optional) ANSI console:
 
  Pix | Clip
  --- | ---
- Here is a prototype, made of plexiglass and adhesive tape:<br> ![Proto](./doc/prototype.jpg) <br> Next comes the real stuff! | Here is <a href="https://youtu.be/apTLJXE4vUk" target="UTube">a video, one day simulation, featuring the inversion function.
+ Here is a prototype, made of plexiglass and adhesive tape:<br> ![Proto](./doc/prototype.jpg) <br> Next comes the real stuff! | Here is <a href="https://youtu.be/apTLJXE4vUk" target="UTube">a video</a>, one day simulation, featuring the inversion function.
 
 ---
