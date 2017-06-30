@@ -89,6 +89,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
     #
     JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=true"
+    JAVA_OPTS="$JAVA_OPTS -Done.by.one=false"
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
   *)
