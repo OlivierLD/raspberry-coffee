@@ -342,7 +342,7 @@ public class SunFlower {
 				}
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
-				while (Math.abs(pos - f) > SMOOTH_STEP) {
+				while (Math.abs(pos - f) >= SMOOTH_STEP) {
 					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f (target %.02f)", pos, Math.abs(pos - f), f));
 					}
@@ -387,7 +387,7 @@ public class SunFlower {
 				}
 				int sign = (startFrom > goToAngle) ? -1 : 1;
 				float pos = startFrom;
-				while (Math.abs(pos - goToAngle) > SMOOTH_STEP) {
+				while (Math.abs(pos - goToAngle) >= SMOOTH_STEP) {
 					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 						System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					}
