@@ -153,17 +153,17 @@ public class SolarPanelOrienter implements Forwarder {
 		int tiltPin = parsePropInt(props, "tilt.servo.id", 15);
 		
 		System.setProperty("deltaT", props.getProperty("deltaT", "68.8033"));
-		System.setProperty("smooth.moves", "true");
-		System.setProperty("ansi.console", "false");
-		System.setProperty("orient.verbose", "true");
-		System.setProperty("astro.verbose", "true");
-		System.setProperty("tilt.verbose", "true");
-		System.setProperty("servo.super.verbose", "false");
-		System.setProperty("tilt.servo.sign", "1");
-		System.setProperty("heading.servo.sign", "1");
-		System.setProperty("tilt.limit", "20");
-		System.setProperty("tilt.offset", "0");
-		System.setProperty("one.by.one", "false");
+		System.setProperty("smooth.moves", props.getProperty("smooth.moves", "true"));
+		System.setProperty("ansi.console", props.getProperty("ansi.console", "false"));
+		System.setProperty("orient.verbose", props.getProperty("orient.verbose", "true"));
+		System.setProperty("astro.verbose", props.getProperty("astro.verbose", "true"));
+		System.setProperty("tilt.verbose", props.getProperty("tilt.verbose", "true"));
+		System.setProperty("servo.super.verbose", props.getProperty("servo.super.verbose", "false"));
+		System.setProperty("tilt.servo.sign", props.getProperty("servo.tilt.sign", "1"));
+		System.setProperty("heading.servo.sign", props.getProperty("heading.servo.sign", "1"));
+		System.setProperty("tilt.limit", props.getProperty("tilt.limit", "20"));
+		System.setProperty("tilt.offset", props.getProperty("tilt.offset", "0"));
+		System.setProperty("one.by.one", props.getProperty("one.by.one", "false"));
 		
 		sunFlower = new SunFlower(headingPin, tiltPin);
 
