@@ -320,19 +320,20 @@ public class SunFlower {
 			System.out.println(String.format("T> Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving ? "yes" : "no")));
 		}
 		float startFrom = previousTiltAngle;
-		if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && smoothMoves && Math.abs(startFrom - f) > 5) {
+		float goToAngle = applyLimitAndOffset(f);
+		if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && smoothMoves && Math.abs(startFrom - goToAngle) > 5) {
 			tiltServoMoving = true;
 			// Smooth move for steps > 5
 			if (servoSuperVerbose) {
-				System.out.println(String.format("T> Start a smooth move from tilt %.02f to %.02f", startFrom, f));
+				System.out.println(String.format("T> Start a smooth move from tilt %.02f to %.02f (%.02f)", startFrom, f, goToAngle));
 			}
 			Thread smoothy = new Thread(() -> {
 				if (servoSuperVerbose) {
-					System.out.println(String.format("T> Starting smooth thread for tilt %.02f to %.02f", startFrom, f));
+					System.out.println(String.format("T> Starting smooth thread for tilt %.02f to %.02f (%.02f)", startFrom, f, goToAngle));
 				}
-				int sign = (startFrom > f) ? -1 : 1;
+				int sign = (startFrom > goToAngle) ? -1 : 1;
 				float pos = startFrom;
-				while (Math.abs(pos - f) > SMOOTH_STEP) {
+				while (Math.abs(pos - goToAngle) > SMOOTH_STEP) {
 					if (servoSuperVerbose) {
 						System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					}
@@ -341,7 +342,7 @@ public class SunFlower {
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
 				if (servoSuperVerbose) {
-					System.out.println(String.format("T>...Tilt thread done, delta=%.02f", Math.abs(pos - f)));
+					System.out.println(String.format("T>...Tilt thread done, delta=%.02f", Math.abs(pos - goToAngle)));
 				}
 				setTiltServoMoving(false);
 			});
@@ -349,9 +350,9 @@ public class SunFlower {
 		} else {
 			if (servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) {
 				if (servoSuperVerbose) {
-					System.out.println(String.format("T> Abrupt tilt set to %.02f", f));
+					System.out.println(String.format("T> Abrupt tilt set to %.02f (%.02f)", f, goToAngle));
 				}
-				setAngle(tiltServoID, applyLimitAndOffset(f));
+				setAngle(tiltServoID, goToAngle);
 			}
 		}
 	}
@@ -617,9 +618,9 @@ public class SunFlower {
 	}
 
 	public static void main__(String... args) {
-		tiltLimit = 5;
+		tiltLimit = 20;
 
-		float[] angles = { 90f, 89f, 85f, 80f };
+		float[] angles = { 90f, 89f, 85f, 80f, 79f };
 		for (float angle : angles) {
 			System.out.println(String.format("For %.02f => corrected to %.02f", angle, applyLimitAndOffset(angle)));
 			System.out.println(String.format("For %.02f => corrected to %.02f", -angle, applyLimitAndOffset(-angle)));
