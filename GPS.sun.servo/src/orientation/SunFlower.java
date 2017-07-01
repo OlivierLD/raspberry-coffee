@@ -25,7 +25,7 @@ import user.util.GeomUtil;
  * Manual Sun position entry -Dmanual.entry=true
  * -Dorient.verbose=true
  * -Dastro.verbose=true
- * -Dservo.verbose=true
+ * -Dtilt.verbose=true
  * -Dservo.super.verbose=true
  *
  * -Dtilt.servo.sign=-1
@@ -66,7 +66,7 @@ public class SunFlower {
 
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
-	private static boolean servoVerbose = false;
+	private static boolean tiltVerbose = false;
 	private static boolean servoSuperVerbose = false;
 	private static boolean testServos = false;
 	private static boolean smoothMoves = false;
@@ -207,7 +207,7 @@ public class SunFlower {
 
 		// Read System Properties
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
-		servoVerbose = "true".equals(System.getProperty("servo.verbose", "false"));
+		tiltVerbose = "true".equals(System.getProperty("tilt.verbose", "false"));
 		servoSuperVerbose = "true".equals(System.getProperty("servo.super.verbose", "false"));
 		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
 
@@ -358,7 +358,7 @@ public class SunFlower {
 
 	private void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
-		if (servoVerbose && !manualEntry) {
+		if (servoSuperVerbose && !manualEntry) {
 			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 			if (ansiConsole) {
 				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == headingServoID ? 8 : 9)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
@@ -496,8 +496,8 @@ public class SunFlower {
 					angle = -angle;
 				}
 				if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && angle != previousTiltAngle) {
-					if (servoVerbose && !manualEntry) {
-						String mess = String.format(">>> Tilt servo angle now: %d %s", angle, (invert ? "(inverted)" : ""));
+					if (tiltVerbose && !manualEntry) {
+						String mess = String.format(">>> Tilt servo angle now: %d %s, limited %.02f", angle, (invert ? "(inverted)" : ""), applyLimitAndOffset(angle));
 						if (ansiConsole) {
 							AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 5) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 						} else {
@@ -514,8 +514,8 @@ public class SunFlower {
 				}
 			} else { // Night time
 				invert = false;
-				if (servoVerbose && !manualEntry) {
-					String mess = "Night time, parked...";
+				if (tiltVerbose && !manualEntry) {
+					String mess = "Night time, tilt parked...";
 					if (ansiConsole) {
 						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 					} else {
