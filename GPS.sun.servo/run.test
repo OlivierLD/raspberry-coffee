@@ -1,3 +1,0 @@
-#!/bin/bash
-CP=./build/libs/GPS.sun.servo-1.0-all.jar
-java -cp $CP almanac.Main4Tests

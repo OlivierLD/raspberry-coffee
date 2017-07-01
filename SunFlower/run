@@ -5,7 +5,7 @@ HEADING_SERVO_ID=14
 TILT_SERVO_ID=15
 #
 JAVA_OPTS=
-JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070 -Declination=14" # SF, 2017.
+JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
 JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.8033" # 01-June-2017
 #
 JAVA_OPTS="$JAVA_OPTS -Dtest.servos=false"

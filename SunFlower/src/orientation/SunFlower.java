@@ -607,6 +607,27 @@ public class SunFlower {
 
 	public void stopWorking() {
 		this.keepWorking = false;
+		stop(headingServoID);
+		stop(tiltServoID);
+
+		try {
+			if (!smoothMoves) {
+				setHeadingServoAngle(0f);
+				setTiltServoAngle(0f);
+				Thread.sleep(1_000L);
+			} else {
+				setHeadingServoAngle(0f);
+				while (!noServoIsMoving()) {
+					Thread.sleep(1_000L);
+				}
+				setTiltServoAngle(0f);
+				while (!noServoIsMoving()) {
+					Thread.sleep(1_000L);
+				}
+			}
+		} catch (InterruptedException ie) {
+			System.err.println(ie.getMessage());
+		}
 	}
 
 	private static float applyLimitAndOffset(float angle) {
@@ -796,27 +817,6 @@ public class SunFlower {
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 				System.out.println("\nBye.");
 				instance.stopWorking();
-				instance.stop(headingServoID);
-				instance.stop(tiltServoID);
-
-				try {
-					if (!smoothMoves) {
-						instance.setHeadingServoAngle(0f);
-						instance.setTiltServoAngle(0f);
-						Thread.sleep(1_000L);
-					} else {
-						instance.setHeadingServoAngle(0f);
-						while (!instance.noServoIsMoving()) {
-							Thread.sleep(1_000L);
-						}
-						instance.setTiltServoAngle(0f);
-						while (!instance.noServoIsMoving()) {
-							Thread.sleep(1_000L);
-						}
-					}
-				} catch (InterruptedException ie) {
-					System.err.println(ie.getMessage());
-				}
 				if (ansiConsole) {
 					AnsiConsole.systemUninstall();
 				}

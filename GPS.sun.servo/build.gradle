@@ -19,12 +19,12 @@ version = '1.0'
 sourceSets {
   main {
     java {
-      srcDir 'src'
+      srcDir 'src/java'
     }
   }  
   test {
     java {
-      srcDir 'tests'
+      srcDir 'tests/java'
     }
   }  
 }
