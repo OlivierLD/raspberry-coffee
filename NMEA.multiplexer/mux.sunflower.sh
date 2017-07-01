@@ -26,7 +26,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 #
 CP=./build/libs/NMEA.multiplexer-1.0-all.jar
 CP=$CP:../SunFlower/build/libs/SunFlower-1.0-all.jar
-CP=$CP:../GSP.sun.servo/build/libs/GPS.sun.servo-1.0.jar
+CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0.jar
 # CP=$CP:./libs/RXTXcomm.jar          # for Mac
 CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
