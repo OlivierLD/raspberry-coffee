@@ -498,7 +498,7 @@ public class SunFlower {
 				}
 				if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && angle != previousTiltAngle) {
 					if (tiltVerbose && !manualEntry) {
-						String mess = String.format(">>> Tilt servo angle now: %d %s, limited %.02f", angle, (invert ? "(inverted)" : ""), applyLimitAndOffset(angle));
+						String mess = String.format(">>> Tilt servo angle now: %d %s%s", angle, (invert ? "(inverted)" : ""), (angle != applyLimitAndOffset(angle) ? String.format(", limited to %.02f", applyLimitAndOffset(angle)) : ""));
 						if (ansiConsole) {
 							AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 5) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 						} else {
