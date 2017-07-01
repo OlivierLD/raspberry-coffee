@@ -200,8 +200,8 @@ public class SunFlower {
 
 	public SunFlower(int headinServoNumber, int tiltServoNumber) {
 
-		Properties properties = System.getProperties();
-		properties.list(System.out);
+//		Properties properties = System.getProperties();
+//		properties.list(System.out);
 
 		// For celestial calculations:
 		System.setProperty("deltaT", System.getProperty("deltaT", "68.8033")); // 2017-Jun-01
@@ -467,6 +467,21 @@ public class SunFlower {
 				invert = true;
 			} else {
 				invert = false;
+			}
+
+			String posMess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
+							GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS),
+							GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW),
+							headingServoID,
+							tiltServoID,
+							tiltLimit,
+							tiltOffset);
+			if (ansiConsole) {
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + posMess + PAD);
+			} else {
+				System.out.println("----------------------------------------------");
+				System.out.println(posMess);
+				System.out.println("----------------------------------------------");
 			}
 
 			if (he > 0) { // Daytime
