@@ -223,6 +223,32 @@ public class SunFlower {
 
 		servoMoveOneByOne = "true".equals(System.getProperty("one.by.one", "true"));
 
+		String strTiltLimit = System.getProperty("tilt.limit");
+		if (strTiltLimit != null) {
+			try {
+				tiltLimit = Integer.parseInt(strTiltLimit);
+				if (tiltLimit < 0 || tiltLimit > 90) {
+					System.err.println("Tilt limit must be in [0..90], setting it to 0");
+				}
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+
+		String strTiltOffset = System.getProperty("tilt.offset");
+		if (strTiltOffset != null) {
+			try {
+				tiltOffset = Integer.parseInt(strTiltOffset);
+				if (tiltOffset < -90 || tiltOffset > 90) {
+					System.err.println("Tilt offset must be in [-90..90], setting it to 0");
+				}
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+
+		testServos = "true".equals(System.getProperty("test.servos", "false"));
+
 		String strTiltServoSign = System.getProperty("tilt.servo.sign");
 		if (strTiltServoSign != null) {
 			try {
@@ -722,32 +748,6 @@ public class SunFlower {
 				}
 			}
 		}
-
-		String strTiltLimit = System.getProperty("tilt.limit");
-		if (strTiltLimit != null) {
-			try {
-				tiltLimit = Integer.parseInt(strTiltLimit);
-				if (tiltLimit < 0 || tiltLimit > 90) {
-					System.err.println("Tilt limit must be in [0..90], setting it to 0");
-				}
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-			}
-		}
-
-		String strTiltOffset = System.getProperty("tilt.offset");
-		if (strTiltOffset != null) {
-			try {
-				tiltOffset = Integer.parseInt(strTiltOffset);
-				if (tiltOffset < -90 || tiltOffset > 90) {
-					System.err.println("Tilt offset must be in [-90..90], setting it to 0");
-				}
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-			}
-		}
-
-		testServos = "true".equals(System.getProperty("test.servos", "false"));
 
 		SunFlower instance = new SunFlower(headingServoID, tiltServoID);
 		if (manualEntry && ansiConsole) {
