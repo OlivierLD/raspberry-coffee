@@ -26,6 +26,7 @@ import user.util.GeomUtil;
  * -Dorient.verbose=true
  * -Dastro.verbose=true
  * -Dtilt.verbose=true
+ * -Dservo.verbose=true
  * -Dservo.super.verbose=true|both|tilt|heading|none|false
  *
  * -Dtilt.servo.sign=-1
@@ -74,6 +75,7 @@ public class SunFlower {
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
 	private static boolean tiltVerbose = false;
+	private static boolean servoVerbose = false;
 	private static superVerboseType servoSuperVerbose = superVerboseType.NONE;
 	private static boolean testServos = false;
 	private static boolean smoothMoves = false;
@@ -218,6 +220,7 @@ public class SunFlower {
 		// Read System Properties
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
 		tiltVerbose = "true".equals(System.getProperty("tilt.verbose", "false"));
+		servoVerbose = "true".equals(System.getProperty("servo.verbose", "false"));
 		String superVerbose = System.getProperty("servo.super.verbose", "none");
 		switch (superVerbose) {
 			case "both":
@@ -413,7 +416,7 @@ public class SunFlower {
 
 	private void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
-		if (!servoSuperVerbose.equals(superVerboseType.NONE) && !manualEntry) {
+		if (servoVerbose && !manualEntry) {
 			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 			if (ansiConsole) {
 				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == headingServoID ? 8 : 9)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
