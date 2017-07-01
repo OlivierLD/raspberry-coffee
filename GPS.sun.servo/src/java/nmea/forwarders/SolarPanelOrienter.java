@@ -152,7 +152,7 @@ public class SolarPanelOrienter implements Forwarder {
 		int headingPin = parsePropInt(props, "heading.servo.id", 14);
 		int tiltPin = parsePropInt(props, "tilt.servo.id", 15);
 		
-		System.setProperty("deltaT", "68.8033");
+		System.setProperty("deltaT", props.getProperty("deltaT", "68.8033"));
 		System.setProperty("smooth.moves", "true");
 		System.setProperty("ansi.console", "false");
 		System.setProperty("orient.verbose", "true");

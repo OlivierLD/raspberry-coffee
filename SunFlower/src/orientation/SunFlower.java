@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Properties;
 import java.util.TimeZone;
 import org.fusesource.jansi.AnsiConsole;
 import user.util.GeomUtil;
@@ -198,6 +199,9 @@ public class SunFlower {
 	}
 
 	public SunFlower(int headinServoNumber, int tiltServoNumber) {
+
+		Properties properties = System.getProperties();
+		properties.list(System.out);
 
 		// For celestial calculations:
 		System.setProperty("deltaT", System.getProperty("deltaT", "68.8033")); // 2017-Jun-01
