@@ -756,11 +756,13 @@ public class SunFlower {
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
 		}
-		String mess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d",
+		String mess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(instance.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
 						headingServoID,
-						tiltServoID);
+						tiltServoID,
+						tiltLimit,
+						tiltOffset);
 		if (ansiConsole) {
 			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 		} else {
