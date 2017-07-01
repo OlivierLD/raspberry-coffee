@@ -329,21 +329,22 @@ public class SunFlower {
 			System.out.println(String.format("H> Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving ? "yes" : "no")));
 		}
 		float startFrom = previousHeadingAngle;
+
 		if ((servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) && smoothMoves && Math.abs(startFrom - f) > 5) {
 			headingServoMoving = true;
 			// Smooth move for steps > 5
 			if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
-				System.out.println(String.format("H> Start a smooth move from heading %.02f to %.02f", startFrom, f));
+				System.out.println(String.format("H>> Start a smooth move from heading %.02f to %.02f", startFrom, f));
 			}
 			Thread smoothy = new Thread(() -> {
 				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
-					System.out.println(String.format("H> Starting smooth thread for heading %.02f to %.02f", startFrom, f));
+					System.out.println(String.format("H>> Starting smooth thread for heading %.02f to %.02f", startFrom, f));
 				}
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - f) > SMOOTH_STEP) {
 					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
-						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
+						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f (target %.02f)", pos, Math.abs(pos - f), f));
 					}
 					setAngle(headingServoID, pos);
 					pos += (sign * SMOOTH_STEP);
