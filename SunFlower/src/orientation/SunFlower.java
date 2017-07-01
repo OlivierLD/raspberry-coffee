@@ -330,9 +330,9 @@ public class SunFlower {
 		}
 		float startFrom = previousHeadingAngle;
 
-		if ((servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) && smoothMoves && Math.abs(startFrom - f) > 5) {
+		if ((servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) && smoothMoves && Math.abs(startFrom - f) > 1) {
 			headingServoMoving = true;
-			// Smooth move for steps > 5
+			// Smooth move for steps > 1
 			if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 				System.out.println(String.format("H>> Start a smooth move from heading %.02f to %.02f", startFrom, f));
 			}
@@ -375,9 +375,9 @@ public class SunFlower {
 		}
 		float startFrom = previousTiltAngle;
 		float goToAngle = applyLimitAndOffset(f);
-		if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && smoothMoves && Math.abs(startFrom - goToAngle) > 5) {
+		if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && smoothMoves && Math.abs(startFrom - goToAngle) > 1) {
 			tiltServoMoving = true;
-			// Smooth move for steps > 5
+			// Smooth move for steps > 1
 			if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 				System.out.println(String.format("T> Start a smooth move from tilt %.02f to %.02f (%.02f)", startFrom, f, goToAngle));
 			}
