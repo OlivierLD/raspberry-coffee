@@ -1,5 +1,5 @@
 #!/bin/bash
-CP=./build/libs/GPS.sun.servo-1.0-all.jar
+CP=./build/libs/SunFlower-1.0-all.jar
 #
 HEADING_SERVO_ID=14
 TILT_SERVO_ID=15

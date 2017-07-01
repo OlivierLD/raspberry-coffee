@@ -1,5 +1,3 @@
 #!/bin/bash
 CP=./build/libs/GPS.sun.servo-1.0-all.jar
-JAVA_OPTS=
-#
-java -cp $CP $JAVA_OPTS ansi.EscapeSeq
+java -cp $CP almanac.Main4Tests
