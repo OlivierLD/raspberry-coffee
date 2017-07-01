@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Properties;
 import java.util.TimeZone;
 import org.fusesource.jansi.AnsiConsole;
 import user.util.GeomUtil;
@@ -27,7 +26,7 @@ import user.util.GeomUtil;
  * -Dorient.verbose=true
  * -Dastro.verbose=true
  * -Dtilt.verbose=true
- * -Dservo.super.verbose=true
+ * -Dservo.super.verbose=true|both|tilt|heading|none|false
  *
  * -Dtilt.servo.sign=-1
  * -Dheading.servo.sign=-1
@@ -65,10 +64,17 @@ public class SunFlower {
 
 	private final static float SMOOTH_STEP = 1.0f;
 
+	private enum superVerboseType {
+		BOTH,
+		TILT,
+		HEADING,
+		NONE
+	}
+
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
 	private static boolean tiltVerbose = false;
-	private static boolean servoSuperVerbose = false;
+	private static superVerboseType servoSuperVerbose = superVerboseType.NONE;
 	private static boolean testServos = false;
 	private static boolean smoothMoves = false;
 	private static boolean demo = false;
@@ -212,7 +218,24 @@ public class SunFlower {
 		// Read System Properties
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
 		tiltVerbose = "true".equals(System.getProperty("tilt.verbose", "false"));
-		servoSuperVerbose = "true".equals(System.getProperty("servo.super.verbose", "false"));
+		String superVerbose = System.getProperty("servo.super.verbose", "none");
+		switch (superVerbose) {
+			case "both":
+			case "true":
+				servoSuperVerbose = superVerboseType.BOTH;
+				break;
+			case "tilt":
+				servoSuperVerbose = superVerboseType.TILT;
+				break;
+			case "heading":
+				servoSuperVerbose = superVerboseType.HEADING;
+				break;
+			case "none":
+			case "false":
+			default:
+				servoSuperVerbose = superVerboseType.NONE;
+				break;
+		}
 		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
 
 		manualEntry = "true".equals(System.getProperty("manual.entry", "false"));
@@ -302,31 +325,31 @@ public class SunFlower {
 		headingServoMoving = b;
 	}
 	public void setHeadingServoAngle(final float f) {
-		if (servoSuperVerbose) {
+		if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 			System.out.println(String.format("H> Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving ? "yes" : "no")));
 		}
 		float startFrom = previousHeadingAngle;
 		if ((servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) && smoothMoves && Math.abs(startFrom - f) > 5) {
 			headingServoMoving = true;
 			// Smooth move for steps > 5
-			if (servoSuperVerbose) {
+			if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 				System.out.println(String.format("H> Start a smooth move from heading %.02f to %.02f", startFrom, f));
 			}
 			Thread smoothy = new Thread(() -> {
-				if (servoSuperVerbose) {
+				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 					System.out.println(String.format("H> Starting smooth thread for heading %.02f to %.02f", startFrom, f));
 				}
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - f) > SMOOTH_STEP) {
-					if (servoSuperVerbose) {
+					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					}
 					setAngle(headingServoID, pos);
 					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
-				if (servoSuperVerbose) {
+				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 					System.out.println(String.format("H>...Heading thread done, delta=%.02f", Math.abs(pos - f)));
 				}
 				setHeadingServoMoving(false);
@@ -334,7 +357,7 @@ public class SunFlower {
 			smoothy.start();
 		} else {
 			if (servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) {
-				if (servoSuperVerbose) {
+				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 					System.out.println(String.format("H> Abrupt heading set to %.02f", f));
 				}
 				setAngle(headingServoID, f);
@@ -346,7 +369,7 @@ public class SunFlower {
 		tiltServoMoving = b;
 	}
 	public void setTiltServoAngle(final float f) {
-		if (servoSuperVerbose) {
+		if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 			System.out.println(String.format("T> Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving ? "yes" : "no")));
 		}
 		float startFrom = previousTiltAngle;
@@ -354,24 +377,24 @@ public class SunFlower {
 		if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && smoothMoves && Math.abs(startFrom - goToAngle) > 5) {
 			tiltServoMoving = true;
 			// Smooth move for steps > 5
-			if (servoSuperVerbose) {
+			if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 				System.out.println(String.format("T> Start a smooth move from tilt %.02f to %.02f (%.02f)", startFrom, f, goToAngle));
 			}
 			Thread smoothy = new Thread(() -> {
-				if (servoSuperVerbose) {
+				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 					System.out.println(String.format("T> Starting smooth thread for tilt %.02f to %.02f (%.02f)", startFrom, f, goToAngle));
 				}
 				int sign = (startFrom > goToAngle) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - goToAngle) > SMOOTH_STEP) {
-					if (servoSuperVerbose) {
+					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 						System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					}
 					setAngle(tiltServoID, pos);
 					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
-				if (servoSuperVerbose) {
+				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 					System.out.println(String.format("T>...Tilt thread done, delta=%.02f", Math.abs(pos - goToAngle)));
 				}
 				setTiltServoMoving(false);
@@ -379,7 +402,7 @@ public class SunFlower {
 			smoothy.start();
 		} else {
 			if (servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) {
-				if (servoSuperVerbose) {
+				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 					System.out.println(String.format("T> Abrupt tilt set to %.02f (%.02f)", f, goToAngle));
 				}
 				setAngle(tiltServoID, goToAngle);
@@ -389,7 +412,7 @@ public class SunFlower {
 
 	private void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
-		if (servoSuperVerbose && !manualEntry) {
+		if (!servoSuperVerbose.equals(superVerboseType.NONE) && !manualEntry) {
 			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 			if (ansiConsole) {
 				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == headingServoID ? 8 : 9)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);

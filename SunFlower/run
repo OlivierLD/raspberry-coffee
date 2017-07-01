@@ -37,7 +37,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=none"
     JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
     JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
     #
