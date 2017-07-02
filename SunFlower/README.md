@@ -2,6 +2,8 @@
 
 The original idea is to build a device with 2 standard servos to orient a solar panel (like [that one](https://www.adafruit.com/product/200) or similar) so it faces the Sun whenever possible (ie during the day).
 
+The servos are driven by a `PCA9685` board.
+
 For a given position (provided, or read from a GPS), the position of the Sun is calculated, and then its altitude and azimuth.
 The servos are triggered when necessary, for the calculated azimuth and elevation to match the orientation of the panel.
 
@@ -9,9 +11,9 @@ By default, in the northern hemisphere, the device would point due South, and th
 Heading and Position can be dynamically provided (in case the device is moving, in a car, a boat, etc) to the class named
 `orientation.SunFlower`.
 
-Originally, I had attached an LSM303 (magnetometer and accelerometer), but it was too close to the servos. Those guys are electro-magnets, this was driving the LSM303 crazy...
+Originally, I had attached an `LSM303` (magnetometer and accelerometer), but it was too close to the servos. Those guys are electro-magnets, this was driving the `LSM303` crazy...
 
-Requires resources from other projects:
+Requires resources from other projects, for the celestial calculations:
 
 Check out this one: https://github.com/OlivierLD/oliv-soft-project-builder
 
