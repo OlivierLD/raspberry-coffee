@@ -167,7 +167,7 @@ At work
 From the project `NMEA.multiplexer`, wrap the `SunFlower` class into a `forwarder`.
 This way, position and heading come from NMEA data (log file, NMEA Station, TCP Channel, etc).
 
-This gives the possibility to have the same orientation features, even is the panel is carried by a vehicle in motion.
+This gives the possibility to have the same orientation features, even if the panel is carried by a vehicle in motion.
 
 See the project named `GPS.sun.servo`.
 
