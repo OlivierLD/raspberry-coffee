@@ -154,13 +154,20 @@ Here is a prototype, made of plexiglass and adhesive tape:<br>
 Here is <a href="https://youtu.be/apTLJXE4vUk" target="UTube">a video</a>, one day simulation, featuring the inversion function at work.
 
 ## The real setting
-...paint is drying.
+This one is made out of plywood. My 3D printer is a jigsaw ;)
+
+Here is the device at work:
+
+Aligment
+![Alignment](./doc/alignment.jpg)
+At work
+![At work](./doc/at-work.jpg)
 
 ## NMEA Feed
 From the project `NMEA.multiplexer`, wrap the `SunFlower` class into a `forwarder`.
 This way, position and heading come from NMEA data (log file, NMEA Station, TCP Channel, etc).
 
-This gives the possibility to have the same orientation feature, even is the panel is carried by a vehicle in motion.
+This gives the possibility to have the same orientation features, even is the panel is carried by a vehicle in motion.
 
 See the project named `GPS.sun.servo`.
 
