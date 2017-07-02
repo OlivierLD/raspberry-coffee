@@ -540,7 +540,7 @@ public class SunFlower {
 			if (he > 0) { // Daytime
 				if (orientationVerbose && !manualEntry) {
 					String mess = String.format(
-									"Heading servo : Aiming Z: %.01f, servo-angle: %d %s - device heading: %.01f.",
+									"Heading servo : Aiming Z: %.01f, servo-angle (bearing): %d %s - device heading: %.01f.",
 									z,
 									headingServoAngle,
 									(invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""),
