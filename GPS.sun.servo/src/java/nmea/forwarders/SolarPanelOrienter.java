@@ -46,7 +46,9 @@ public class SolarPanelOrienter implements Forwarder {
 						sunFlower.setLatitude(gp.lat);
 						sunFlower.setLongitude(gp.lng);
 					}
-					// TODO Declination
+					if (rmc.getDeclination() != -Double.MAX_VALUE) {
+						this.defaultDeclination = rmc.getDeclination();
+					}
 					break;
 				case "GLL":
 					Object[] objects = StringParsers.parseGLL(str);
@@ -59,10 +61,14 @@ public class SolarPanelOrienter implements Forwarder {
 				case "HDG":
 					double[] hdg = StringParsers.parseHDG(str);
 					double heading = hdg[StringParsers.HDG_in_HDG];
-					sunFlower.setDeviceHeading(heading);
+					if (hdg[StringParsers.VAR_in_HDG] != -Double.MAX_VALUE) {
+						this.defaultDeclination = hdg[StringParsers.VAR_in_HDG];
+					}
+					sunFlower.setDeviceHeading(heading + this.defaultDeclination);
 					break;
 				case "HDM":
 					int hdm = StringParsers.parseHDM(str);
+					sunFlower.setDeviceHeading(hdm + this.defaultDeclination);
 					break;
 				default:
 					break;

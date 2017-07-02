@@ -75,5 +75,7 @@ public class ProcessorSkeleton implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		// Optional Properties file mention in the forwarder definition would be read here
+		// forward.XX.properties=my-forwarder.properties
 	}
 }
