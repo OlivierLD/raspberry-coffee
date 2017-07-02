@@ -133,7 +133,8 @@ The device can also be on the go, the code can receive the position and the head
 <!-- ![Wiring](./sunflower_bb.png) -->
 <img src="./sunflower_bb.png" width="640" height="1240">
 
-Depending of the servos you use, you might want to power the `PCA9685` with its own 5v power supply.
+_Note_: you want to power the `PCA9685` with its own 5v power supply, *not* from the 5v pin of the Raspberry PI! That would lead to very un-expected results.
+A good setting would be to power the Raspberry PI _and_ the `PCA9685` from the same source.
 
 ## At work
 A snapshot of the (optional) ANSI console:
@@ -141,12 +142,18 @@ A snapshot of the (optional) ANSI console:
 
 <img src="./doc/ansi.console.png" alt="ANSI Console" width="561" height="199">
 
- Pix | Clip
- --- | ---
- Here is a prototype, made of plexiglass and adhesive tape:<br> ![Proto](./doc/prototype.jpg) <br> Next comes the real stuff! | Here is <a href="https://youtu.be/apTLJXE4vUk" target="UTube">a video</a>, one day simulation, featuring the inversion function.
+Here is a prototype, made of plexiglass and adhesive tape:<br>
+![Proto](./doc/prototype.jpg) <br> Next comes the real stuff!
+
+Here is <a href="https://youtu.be/apTLJXE4vUk" target="UTube">a video</a>, one day simulation, featuring the inversion function at work.
+
+## The real setting
+...paint is drying.
 
 ## NMEA Feed
-_Next_: From the project `NMEA.multiplexer`, wrap the `SunFlower` class into a `forwarder`.
+From the project `NMEA.multiplexer`, wrap the `SunFlower` class into a `forwarder`.
 This way, position and heading come from NMEA data (log file, NMEA Station, TCP Channel, etc).
+
+See the project named `GPS.sun.servo`.
 
 ---
