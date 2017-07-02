@@ -50,7 +50,7 @@ Make sure you have built all the required parts:
 ```bash
  SunFlower $> ../gradlew clean shadowJar
  SunFlower $> cd ../GPS.sun.servo
- GPS.sun.servo $> ../gradlew clean shadowJar
+ GPS.sun.servo $> ../gradlew clean build
  GPS.sun.servo $> cd ../NMEA.multiplexer
  NMEA.multiplexer $> ../gradlew clean shadowJar
  NMEA.multiplexer $> cp ../GPS.sun.servo/sunflower.propeties .
@@ -71,6 +71,6 @@ You can use the file `nmea.mux.sun.flower.properties` to start the multiplexer, 
  NMEA.multiplexer $> ./mux.sunflower.sh nmea.mux.sun.flower.properties
 ```
 
-And that's it!
+And that's it! The solar panel keeps facing the Sun, wherever you are, and whatever your heading is.
 
 ---
