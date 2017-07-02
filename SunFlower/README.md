@@ -130,8 +130,8 @@ This is a static situation, from the northern hemisphere.
 The device can also be on the go, the code can receive the position and the heading (from a GPS or an NMEA station for example) at any time, it will adjust the servos accordingly.
 
 ## Wiring
-![Wiring](./sunflower_bb.png)
-<!--img src="./sunflower_bb.png" width="1240" height="640"-->
+<!-- ![Wiring](./sunflower_bb.png) -->
+<img src="./sunflower_bb.png" width="1240" height="640">
 
 _Note_: you want to power the `PCA9685` with its own 5v power supply, *not* from the 5v pin of the Raspberry PI! That would lead to very un-expected results.
 A good setting would be to power the Raspberry PI _and_ the `PCA9685` from the same source.
