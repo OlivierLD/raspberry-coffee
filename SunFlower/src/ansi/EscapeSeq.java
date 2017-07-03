@@ -120,6 +120,8 @@ public class EscapeSeq {
 		}
 
 		System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
+
+		main_(args);
 	}
 
 	public static String superpose(String orig, String override) {
@@ -134,7 +136,7 @@ public class EscapeSeq {
 		AnsiConsole.out.println(ANSI_CLS);
 		AnsiConsole.out.println(ANSI_AT55 + ANSI_REVERSE + "10,10 reverse : Hello world" + ANSI_NORMAL);
 		AnsiConsole.out.println(ANSI_HOME + ANSI_WHITEONBLUE + "WhiteOnBlue : Hello world" + ANSI_NORMAL);
-		AnsiConsole.out.print(ANSI_BOLD + "Bold : Press return..." + ANSI_NORMAL);
+		AnsiConsole.out.println(ANSI_BOLD + "Bold : Press return..." + ANSI_NORMAL);
 		try {
 			System.in.read();
 		} catch (Exception e) {
@@ -147,7 +149,7 @@ public class EscapeSeq {
 		System.out.println(ANSI_NORMAL + "Normal " + ansiSetTextColor(ANSI_YELLOW) + "yellow" + ANSI_NORMAL + " text and " + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + "bold" + ANSI_NORMAL + " text.");
 
 		for (String line : SOME_TEXT) {
-			System.out.print(ANSI_HEAD + line);
+			System.out.print(ANSI_HEAD + line + ANSI_ERASE_TO_EOL);
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
