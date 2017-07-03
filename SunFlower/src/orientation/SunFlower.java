@@ -1,6 +1,7 @@
 package orientation;
 
 import ansi.EscapeSeq;
+import static ansi.EscapeSeq.ANSI_BLACK;
 import static ansi.EscapeSeq.ANSI_BOLD;
 import static ansi.EscapeSeq.ANSI_CYAN;
 import static ansi.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
@@ -573,7 +574,7 @@ public class SunFlower {
 					String mess = String.format("+ Calculated: From %s / %s, %sHe:%.02f\272%s, %sZ:%.02f\272%s (true)",
 									GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
 									GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
-									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_YELLOW, ANSI_CYAN):""),
+									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_BLACK, ANSI_CYAN):""),
 									he,
 									(ansiConsole?ANSI_NORMAL + ANSI_BOLD:""),
 									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_RED, ANSI_CYAN):""),
