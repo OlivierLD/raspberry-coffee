@@ -1,6 +1,7 @@
 package orientation;
 
 import ansi.EscapeSeq;
+import static ansi.EscapeSeq.ANSI_BLACK;
 import static ansi.EscapeSeq.ANSI_BOLD;
 import static ansi.EscapeSeq.ANSI_CYAN;
 import static ansi.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
@@ -557,7 +558,10 @@ public class SunFlower {
 									z,
 									(ansiConsole?ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT:""),
 									headingServoAngle,
-									(invert ? String.format("(%sinverted to %.02f)", (ansiConsole?EscapeSeq.ANSI_REVERSE:""), invertHeading((float) headingServoAngle)) : ""),
+									(invert ? String.format("(%sinverted to %.02f%s)",
+													(ansiConsole?EscapeSeq.ANSI_REVERSE:""),
+													invertHeading((float) headingServoAngle),
+													(ansiConsole?ANSI_NORMAL + ANSI_BOLD:"")) : ""),
 									deviceHeading);
 					if (ansiConsole) {
 						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
@@ -570,7 +574,7 @@ public class SunFlower {
 					String mess = String.format("+ Calculated: From %s / %s, %sHe:%.02f\272%s, %sZ:%.02f\272%s (true)",
 									GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
 									GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
-									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_YELLOW, ANSI_CYAN):""),
+									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_BLACK, ANSI_CYAN):""),
 									he,
 									(ansiConsole?ANSI_NORMAL + ANSI_BOLD:""),
 									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_RED, ANSI_CYAN):""),
