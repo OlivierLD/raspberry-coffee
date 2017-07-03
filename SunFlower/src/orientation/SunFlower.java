@@ -2,12 +2,15 @@ package orientation;
 
 import ansi.EscapeSeq;
 import static ansi.EscapeSeq.ANSI_BOLD;
+import static ansi.EscapeSeq.ANSI_CYAN;
 import static ansi.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
 import static ansi.EscapeSeq.ANSI_DEFAULT_TEXT;
 import static ansi.EscapeSeq.ANSI_NORMAL;
 import static ansi.EscapeSeq.ANSI_RED;
 import static ansi.EscapeSeq.ANSI_WHITE;
 import static ansi.EscapeSeq.ANSI_WHITEONBLUE;
+import static ansi.EscapeSeq.ANSI_YELLOW;
+import static ansi.EscapeSeq.ansiSetTextAndBackgroundColor;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import i2c.servo.pwm.PCA9685;
@@ -564,11 +567,15 @@ public class SunFlower {
 					}
 				}
 				if (astroVerbose && !manualEntry) {
-					String mess = String.format("+ Calculated: From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
+					String mess = String.format("+ Calculated: From %s / %s, %sHe:%.02f\272%s, %sZ:%.02f\272%s (true)",
 									GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
 									GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
+									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_YELLOW, ANSI_CYAN):""),
 									he,
-									z);
+									(ansiConsole?ANSI_NORMAL + ANSI_BOLD:""),
+									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_RED, ANSI_CYAN):""),
+									z,
+									(ansiConsole?ANSI_NORMAL + ANSI_BOLD:""));
 					if (ansiConsole) {
 						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 					} else {
