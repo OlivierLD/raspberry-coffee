@@ -557,7 +557,10 @@ public class SunFlower {
 									z,
 									(ansiConsole?ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT:""),
 									headingServoAngle,
-									(invert ? String.format("(%sinverted to %.02f)", (ansiConsole?EscapeSeq.ANSI_REVERSE:""), invertHeading((float) headingServoAngle)) : ""),
+									(invert ? String.format("(%sinverted to %.02f%s)",
+													(ansiConsole?EscapeSeq.ANSI_REVERSE:""),
+													invertHeading((float) headingServoAngle),
+													(ansiConsole?ANSI_NORMAL + ANSI_BOLD:"")) : ""),
 									deviceHeading);
 					if (ansiConsole) {
 						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
