@@ -89,7 +89,7 @@ public class LSM303 {
 	private static boolean verboseMag = "true".equals(System.getProperty("lsm303.verbose.mag", "false"));
 
 
-	private double pitch = 0D, roll = 0D;
+	private double pitch = 0D, roll = 0D, heading = 0D;
 
 	private long wait = 1_000L;
 	private LSM303Listener dataListener = null;
@@ -194,12 +194,18 @@ public class LSM303 {
 	private void setRoll(double roll) {
 		this.roll = roll;
 	}
+	private void setHeading(double heading) {
+		this.heading = heading;
+	}
 
 	public double getPitch() {
 		return this.pitch;
 	}
 	public double getRoll() {
 		return  this.roll;
+	}
+	public double getHeading() {
+		return  this.heading;
 	}
 
 	public void setWait(long wait) {
@@ -273,6 +279,8 @@ public class LSM303 {
 //		float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Same as below (the ratio remains the same).
 			float heading = (float) Math.toDegrees(Math.atan2((double)magY, (double)magX));
 			while (heading < 0) heading += 360f;
+
+			setHeading(heading);
 
 			if (verboseMag) {
 				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));

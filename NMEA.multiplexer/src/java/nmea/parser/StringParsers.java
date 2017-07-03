@@ -1079,7 +1079,7 @@ public class StringParsers {
 		if (s.length() < 6)
 			return -1;
     /* Structure is 
-     *  $aaHDG,xxx,M*hh(CR)(LF)
+     *  $aaHDM,xxx,M*hh(CR)(LF)
      *         |   |   
      *         |   Magnetic, True
      *         Heading in degrees
