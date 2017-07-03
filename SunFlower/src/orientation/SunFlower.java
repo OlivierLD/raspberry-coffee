@@ -1,6 +1,11 @@
 package orientation;
 
 import ansi.EscapeSeq;
+import static ansi.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
+import static ansi.EscapeSeq.ANSI_DEFAULT_TEXT;
+import static ansi.EscapeSeq.ANSI_NORMAL;
+import static ansi.EscapeSeq.ANSI_RED;
+import static ansi.EscapeSeq.ANSI_WHITEONBLUE;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import i2c.servo.pwm.PCA9685;
@@ -419,7 +424,7 @@ public class SunFlower {
 		if (servoVerbose && !manualEntry) {
 			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == headingServoID ? 8 : 9)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == headingServoID ? 8 : 9)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 			} else {
 				System.out.println(mess);
 			}
@@ -522,15 +527,17 @@ public class SunFlower {
 				invert = false;
 			}
 
-			String posMess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
+			String posMess = String.format("Position %s%s / %s%s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
+							(ansiConsole?ANSI_WHITEONBLUE:""),
 							GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 							GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW),
+							(ansiConsole?ANSI_NORMAL:""),
 							headingServoID,
 							tiltServoID,
 							tiltLimit,
 							tiltOffset);
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + posMess + PAD);
+				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + posMess + PAD);
 			} else {
 				System.out.println("----------------------------------------------");
 				System.out.println(posMess);
@@ -540,14 +547,16 @@ public class SunFlower {
 			if (he > 0) { // Daytime
 				if (orientationVerbose && !manualEntry) {
 					String mess = String.format(
-									"Heading servo : Aiming Z: %.01f, servo-angle (bearing): %d %s - device heading: %.01f.",
+									"Heading servo : Aiming %sZ: %.01f%s, servo-angle (bearing): %d %s - device heading: %.01f.",
+									(ansiConsole?EscapeSeq.ansiSetTextAndBackgroundColor(ANSI_RED, ANSI_DEFAULT_BACKGROUND):""),
 									z,
+									(ansiConsole?EscapeSeq.ansiSetTextAndBackgroundColor(ANSI_DEFAULT_TEXT, ANSI_DEFAULT_BACKGROUND):""),
 									headingServoAngle,
 									(invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""),
 									deviceHeading);
 					if (ansiConsole) {
-						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
-						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
+						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 					} else {
 						System.out.println(mess);
 					}
@@ -559,7 +568,7 @@ public class SunFlower {
 									he,
 									z);
 					if (ansiConsole) {
-						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 					} else {
 						System.out.println(mess);
 					}
@@ -572,7 +581,7 @@ public class SunFlower {
 					if (tiltVerbose && !manualEntry) {
 						String mess = String.format(">>> Tilt servo angle now: %d %s%s", angle, (invert ? "(inverted)" : ""), (angle != applyLimitAndOffset(angle) ? String.format(", limited to %.02f", applyLimitAndOffset(angle)) : ""));
 						if (ansiConsole) {
-							AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 5) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+							AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 5) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 						} else {
 							System.out.println(mess);
 						}
@@ -590,7 +599,7 @@ public class SunFlower {
 				if (tiltVerbose && !manualEntry) {
 					String mess = "Night time, tilt parked...";
 					if (ansiConsole) {
-						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 					} else {
 						System.out.println(mess);
 					}
@@ -607,7 +616,7 @@ public class SunFlower {
 			if (orientationVerbose && !manualEntry) {
 				String mess = String.format(">>> Heading servo angle now %d %s", headingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
 				if (ansiConsole) {
-					AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 6) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+					AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 6) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 				} else {
 					System.out.println(mess);
 				}
@@ -821,7 +830,7 @@ public class SunFlower {
 		if (ansiConsole) {
 			AnsiConsole.systemInstall();
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
+			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
 		}
 		String mess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
@@ -831,7 +840,7 @@ public class SunFlower {
 						tiltLimit,
 						tiltOffset);
 		if (ansiConsole) {
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
 		} else {
 			System.out.println("----------------------------------------------");
 			System.out.println(mess);

@@ -31,7 +31,7 @@ Then you need to do those things to `install` the nautical almanac components in
 
 Then the build of this project should work:
 ```bash
- GPS.sun.servo $ ../gradlew clean shadowJar
+ SunFlower $ ../gradlew clean shadowJar
 ```
 You can test the Almanac behavior by running
 ```bash
