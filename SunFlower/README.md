@@ -29,7 +29,7 @@ Then you need to do those things to `install` the nautical almanac components in
  $ ../../gradlew clean build install
 ```
 
-Then the build of this project should work:
+After that, the build of this project should work:
 ```bash
  SunFlower $ ../gradlew clean shadowJar
 ```
