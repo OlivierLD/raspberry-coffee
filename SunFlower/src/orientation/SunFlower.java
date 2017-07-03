@@ -1,10 +1,12 @@
 package orientation;
 
 import ansi.EscapeSeq;
+import static ansi.EscapeSeq.ANSI_BOLD;
 import static ansi.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
 import static ansi.EscapeSeq.ANSI_DEFAULT_TEXT;
 import static ansi.EscapeSeq.ANSI_NORMAL;
 import static ansi.EscapeSeq.ANSI_RED;
+import static ansi.EscapeSeq.ANSI_WHITE;
 import static ansi.EscapeSeq.ANSI_WHITEONBLUE;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
@@ -531,7 +533,7 @@ public class SunFlower {
 							(ansiConsole?ANSI_WHITEONBLUE:""),
 							GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 							GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-							(ansiConsole?ANSI_NORMAL:""),
+							(ansiConsole?ANSI_NORMAL + ANSI_BOLD:""),
 							headingServoID,
 							tiltServoID,
 							tiltLimit,
@@ -548,9 +550,9 @@ public class SunFlower {
 				if (orientationVerbose && !manualEntry) {
 					String mess = String.format(
 									"Heading servo : Aiming %sZ: %.01f%s, servo-angle (bearing): %d %s - device heading: %.01f.",
-									(ansiConsole?EscapeSeq.ansiSetTextAndBackgroundColor(ANSI_RED, ANSI_DEFAULT_BACKGROUND):""),
+									(ansiConsole?EscapeSeq.ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_RED):""),
 									z,
-									(ansiConsole?EscapeSeq.ansiSetTextAndBackgroundColor(ANSI_DEFAULT_TEXT, ANSI_DEFAULT_BACKGROUND):""),
+									(ansiConsole?ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT:""),
 									headingServoAngle,
 									(invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""),
 									deviceHeading);
