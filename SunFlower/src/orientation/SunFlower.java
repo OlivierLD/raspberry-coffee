@@ -655,7 +655,7 @@ public class SunFlower {
 				if (headingServoAngle != previousHeadingAngle) {
 					this.setHeadingServoAngle(newHeadingAngle);
 				}
-				previousHeadingAngle = (int)Math.round(newHeadingAngle); // headingServoAngle;
+				previousHeadingAngle = (int)Math.round(newHeadingAngle); // Store the actual version of the angle, possibly inverted.
 			}
 		}
 	}
