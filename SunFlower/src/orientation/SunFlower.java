@@ -107,19 +107,20 @@ public class SunFlower {
 	private final static String PAD = ANSI_ERASE_TO_EOL;
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+	private final static SimpleDateFormat SDF_NO_Z = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Duration fmt.
-
-	private final static SimpleDateFormat SDF_H = new SimpleDateFormat("HH");
-	private final static SimpleDateFormat SDF_M = new SimpleDateFormat("mm");
-	private final static SimpleDateFormat SDF_S = new SimpleDateFormat("ss");
 	static {
-		SDF_H.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
-		SDF_M.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
-		SDF_M.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
-		SDF_S.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_NO_Z.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 	}
 
 	private static boolean foundPCA9685 = true;
+
+	private static Date getSolarDate(double longitude, Date utc) {
+		double toHours = longitude / 15d;
+		long ms = utc.getTime();
+		Date solar = new Date(ms + Math.round(toHours * 3_600_000));
+		return solar;
+	}
 
 	private void getSunData(double lat, double lng) {
 		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
@@ -531,14 +532,6 @@ public class SunFlower {
 		return deviceHeading;
 	}
 
-	private static double decimalHours(Date date) {
-		int hours = Integer.parseInt(SDF_H.format(date));
-		int minutes =Integer.parseInt(SDF_M.format(date));
-		int seconds = Integer.parseInt(SDF_S.format(date));
-
-		return ((double)hours + ((double)minutes / 60d) + ((double)seconds / 3600d));
-	}
-
 	public void orientServos() {
 
 		if (!this.isCalibrating()) {
@@ -599,7 +592,7 @@ public class SunFlower {
 										ANSI_DEFAULT_TEXT +
 										ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(date) +
 														(smoothMoves?" (smooth)":" (raw)") +
-										" Solar:" + GeomUtil.formatHMS(GeomUtil.getLocalSolarTime(getLongitude(), decimalHours(date))) +
+										" Solar:" + SDF_NO_Z.format(getSolarDate(getLongitude(), date)) +
 										PAD);
 						AnsiConsole.out.println(ansiLocate(1, 3) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 					} else {
