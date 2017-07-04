@@ -579,6 +579,7 @@ public class SunFlower {
 										ANSI_DEFAULT_BACKGROUND +
 										ANSI_DEFAULT_TEXT +
 										ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(timeProvided ? current.getTime() : new Date()) +
+														(smoothMoves?" (smooth)":" (raw)") +
 										PAD);
 						AnsiConsole.out.println(ansiLocate(1, 3) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 					} else {

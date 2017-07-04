@@ -142,7 +142,7 @@ public class SolarPanelOrienter implements Forwarder {
 		declination=14
 		deltaT=68.8033
 		#
-		smooth.move=true
+		smooth.moves=true
 		#
 		ansi.console=false
 		orient.verbose=true
