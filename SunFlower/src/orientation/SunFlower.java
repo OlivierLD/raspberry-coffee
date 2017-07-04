@@ -109,6 +109,16 @@ public class SunFlower {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Duration fmt.
 
+	private final static SimpleDateFormat SDF_H = new SimpleDateFormat("HH");
+	private final static SimpleDateFormat SDF_M = new SimpleDateFormat("mm");
+	private final static SimpleDateFormat SDF_S = new SimpleDateFormat("ss");
+	static {
+		SDF_H.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_M.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_M.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_S.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+	}
+
 	private static boolean foundPCA9685 = true;
 
 	private void getSunData(double lat, double lng) {
@@ -521,6 +531,14 @@ public class SunFlower {
 		return deviceHeading;
 	}
 
+	private static double decimalHours(Date date) {
+		int hours = Integer.parseInt(SDF_H.format(date));
+		int minutes =Integer.parseInt(SDF_M.format(date));
+		int seconds = Integer.parseInt(SDF_S.format(date));
+
+		return ((double)hours + ((double)minutes / 60d) + ((double)seconds / 3600d));
+	}
+
 	public void orientServos() {
 
 		if (!this.isCalibrating()) {
@@ -574,12 +592,14 @@ public class SunFlower {
 													(ansiConsole?ANSI_NORMAL + ANSI_BOLD:"")) : ""),
 									deviceHeading);
 					if (ansiConsole) {
+						Date date = timeProvided ? current.getTime() : new Date();
 						AnsiConsole.out.println(ansiLocate(1, 1) +
 										ANSI_NORMAL +
 										ANSI_DEFAULT_BACKGROUND +
 										ANSI_DEFAULT_TEXT +
-										ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(timeProvided ? current.getTime() : new Date()) +
+										ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(date) +
 														(smoothMoves?" (smooth)":" (raw)") +
+										" Solar:" + GeomUtil.formatHMS(GeomUtil.getLocalSolarTime(getLongitude(), decimalHours(date))) +
 										PAD);
 						AnsiConsole.out.println(ansiLocate(1, 3) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 					} else {
