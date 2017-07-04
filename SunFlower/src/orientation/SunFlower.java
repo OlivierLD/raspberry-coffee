@@ -651,10 +651,11 @@ public class SunFlower {
 				}
 			}
 			if (servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) {
+				float newHeadingAngle = invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle;
 				if (headingServoAngle != previousHeadingAngle) {
-					this.setHeadingServoAngle(invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle);
+					this.setHeadingServoAngle(newHeadingAngle);
 				}
-				previousHeadingAngle = headingServoAngle;
+				previousHeadingAngle = (int)Math.round(newHeadingAngle); // headingServoAngle;
 			}
 		}
 	}
