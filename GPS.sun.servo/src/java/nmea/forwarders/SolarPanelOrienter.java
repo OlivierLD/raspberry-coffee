@@ -46,6 +46,9 @@ public class SolarPanelOrienter implements Forwarder {
 						sunFlower.setLatitude(gp.lat);
 						sunFlower.setLongitude(gp.lng);
 					}
+					if (rmc.getRmcDate() != null) { // TODO Same for getRmcTime ?
+						sunFlower.setCurrentDateTime(rmc.getRmcDate());
+					}
 					if (rmc.getDeclination() != -Double.MAX_VALUE) {
 						this.defaultDeclination = rmc.getDeclination();
 					}
