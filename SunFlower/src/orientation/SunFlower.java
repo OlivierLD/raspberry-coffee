@@ -56,6 +56,8 @@ import user.util.GeomUtil;
  *
  * -Dsmooth.moves=true
  *
+ * -Dtime.provided=true
+ *
  * -Ddemo.mode=true
  * -Dfrom.date=2017-06-28T05:53:00
  * -Dto.date=2017-06-28T20:33:00
@@ -93,6 +95,7 @@ public class SunFlower {
 	private static boolean testServos = false;
 	private static boolean smoothMoves = false;
 	private static boolean demo = false;
+	private static boolean timeProvided = false;
 
 	private static boolean servoMoveOneByOne = true;
 
@@ -257,6 +260,9 @@ public class SunFlower {
 		manualEntry = "true".equals(System.getProperty("manual.entry", "false"));
 		ansiConsole = "true".equals(System.getProperty("ansi.console", "false"));
 		demo = "true".equals(System.getProperty("demo.mode", "false"));
+		timeProvided = "true".equals(System.getProperty("time.provided", "false"));
+
+		// TODO Warn if timeProvided & demo
 
 		smoothMoves = "true".equals(System.getProperty("smooth.moves", "false"));
 
@@ -648,6 +654,13 @@ public class SunFlower {
 	private Calendar current;
 	private Date fromDate = null, toDate = null;
 
+	public void setCurrentDateTime(Date date) {
+		if (current == null) {
+			current = new GregorianCalendar(TimeZone.getTimeZone("etc/UTC"));
+		}
+		current.setTime(date);
+	}
+
 	public void startWorking() {
 		String mess;
 
@@ -669,8 +682,13 @@ public class SunFlower {
 					System.exit(1);
 				}
 			}
+		} else if (timeProvided) {
+			if (current == null) {
+				current = new GregorianCalendar(TimeZone.getTimeZone("etc/UTC"));
+			}
 		}
 
+		// Timer Thread
 		Thread timeThread = new Thread(() -> {
 			while (keepWorking) {
 				// Sun position calculation goes here
@@ -681,6 +699,9 @@ public class SunFlower {
 					if (current.getTime().after(toDate)) {
 						keepWorking = false;
 					}
+				} else if (timeProvided) {
+					getSunDataForDate(latitude, longitude, current);
+					System.out.println(String.format(">>> %s", SDF.format(current.getTime())));
 				} else {
 					getSunData(latitude, longitude);
 				}
