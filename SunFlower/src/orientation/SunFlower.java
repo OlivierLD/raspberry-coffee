@@ -874,7 +874,7 @@ public class SunFlower {
 
 		if (ansiConsole) {
 			AnsiConsole.systemInstall();
-			AnsiConsole.out.println(ANSI_CLS);
+			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_CLS);
 			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
 		}
 		String mess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
