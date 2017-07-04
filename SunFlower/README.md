@@ -29,7 +29,7 @@ Then you need to do those things to `install` the nautical almanac components in
  $ ../../gradlew clean build install
 ```
 
-Then the build of this project should work:
+After that, the build of this project should work:
 ```bash
  SunFlower $ ../gradlew clean shadowJar
 ```
@@ -99,7 +99,7 @@ Also depending on the construction of the device, maybe a 90 degrees tilt will n
 In this case, use the `-Dtilt.limit` system variable. If you set it to `15` for example, that would mean that even if the _Sun's altitude_ is below 15 degrees, the panel
 will not be tilted further down.
 
-First, the program sets the `heading` servo to zero, and asks you to point it South.
+First, the program sets the `heading` servo to zero, and asks you to point it South (if you are in the northern hemisphere, that would be North otherwise).
 
 Once this is done, Sun's position is calculate every second, and the 2 servos are driven to point to it, as long as the Sun it up (elevation greater than 0°).
 

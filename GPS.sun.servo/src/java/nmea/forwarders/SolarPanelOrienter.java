@@ -46,6 +46,9 @@ public class SolarPanelOrienter implements Forwarder {
 						sunFlower.setLatitude(gp.lat);
 						sunFlower.setLongitude(gp.lng);
 					}
+					if (rmc.getRmcDate() != null) { // TODO Same for getRmcTime ?
+						sunFlower.setCurrentDateTime(rmc.getRmcDate());
+					}
 					if (rmc.getDeclination() != -Double.MAX_VALUE) {
 						this.defaultDeclination = rmc.getDeclination();
 					}
@@ -139,7 +142,7 @@ public class SolarPanelOrienter implements Forwarder {
 		declination=14
 		deltaT=68.8033
 		#
-		smooth.move=true
+		smooth.moves=true
 		#
 		ansi.console=false
 		orient.verbose=true
@@ -170,7 +173,8 @@ public class SolarPanelOrienter implements Forwarder {
 		System.setProperty("tilt.limit", props.getProperty("tilt.limit", "20"));
 		System.setProperty("tilt.offset", props.getProperty("tilt.offset", "0"));
 		System.setProperty("one.by.one", props.getProperty("one.by.one", "false"));
-		
+		System.setProperty("time.provided", props.getProperty("time.provided", "false"));
+
 		sunFlower = new SunFlower(headingPin, tiltPin);
 
 		defaultDeclination = parsePropDouble(props, "declination", 14.0);

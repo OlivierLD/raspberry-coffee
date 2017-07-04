@@ -1,16 +1,18 @@
 package orientation;
 
-import ansi.EscapeSeq;
 import static ansi.EscapeSeq.ANSI_BLACK;
 import static ansi.EscapeSeq.ANSI_BOLD;
 import static ansi.EscapeSeq.ANSI_CYAN;
 import static ansi.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
 import static ansi.EscapeSeq.ANSI_DEFAULT_TEXT;
+import static ansi.EscapeSeq.ANSI_ERASE_TO_EOL;
 import static ansi.EscapeSeq.ANSI_NORMAL;
 import static ansi.EscapeSeq.ANSI_RED;
 import static ansi.EscapeSeq.ANSI_WHITE;
 import static ansi.EscapeSeq.ANSI_WHITEONBLUE;
-import static ansi.EscapeSeq.ANSI_YELLOW;
+import static ansi.EscapeSeq.ANSI_CLS;
+import static ansi.EscapeSeq.ANSI_REVERSE;
+import static ansi.EscapeSeq.ansiLocate;
 import static ansi.EscapeSeq.ansiSetTextAndBackgroundColor;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
@@ -54,6 +56,8 @@ import user.util.GeomUtil;
  *
  * -Dsmooth.moves=true
  *
+ * -Dtime.provided=true
+ *
  * -Ddemo.mode=true
  * -Dfrom.date=2017-06-28T05:53:00
  * -Dto.date=2017-06-28T20:33:00
@@ -91,6 +95,7 @@ public class SunFlower {
 	private static boolean testServos = false;
 	private static boolean smoothMoves = false;
 	private static boolean demo = false;
+	private static boolean timeProvided = false;
 
 	private static boolean servoMoveOneByOne = true;
 
@@ -99,7 +104,7 @@ public class SunFlower {
 
 	private static boolean manualEntry = false;
 	private static boolean ansiConsole = false;
-	private final static String PAD = EscapeSeq.ANSI_ERASE_TO_EOL;
+	private final static String PAD = ANSI_ERASE_TO_EOL;
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Duration fmt.
@@ -255,6 +260,11 @@ public class SunFlower {
 		manualEntry = "true".equals(System.getProperty("manual.entry", "false"));
 		ansiConsole = "true".equals(System.getProperty("ansi.console", "false"));
 		demo = "true".equals(System.getProperty("demo.mode", "false"));
+		timeProvided = "true".equals(System.getProperty("time.provided", "false"));
+
+		if (demo && timeProvided) {
+			throw new IllegalArgumentException("demo.mode and time.provided are mutually exclusive.");
+		}
 
 		smoothMoves = "true".equals(System.getProperty("smooth.moves", "false"));
 
@@ -430,7 +440,7 @@ public class SunFlower {
 		if (servoVerbose && !manualEntry) {
 			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, (servo == headingServoID ? 8 : 9)) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+				AnsiConsole.out.println(ansiLocate(1, (servo == headingServoID ? 8 : 9)) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 			} else {
 				System.out.println(mess);
 			}
@@ -543,7 +553,7 @@ public class SunFlower {
 							tiltLimit,
 							tiltOffset);
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + posMess + PAD);
+				AnsiConsole.out.println(ansiLocate(1, 2) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + posMess + PAD);
 			} else {
 				System.out.println("----------------------------------------------");
 				System.out.println(posMess);
@@ -554,18 +564,24 @@ public class SunFlower {
 				if (orientationVerbose && !manualEntry) {
 					String mess = String.format(
 									"Heading servo : Aiming %sZ: %.01f%s, servo-angle (bearing): %d %s - device heading: %.01f.",
-									(ansiConsole?EscapeSeq.ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_RED):""),
+									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_RED):""),
 									z,
 									(ansiConsole?ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT:""),
 									headingServoAngle,
 									(invert ? String.format("(%sinverted to %.02f%s)",
-													(ansiConsole?EscapeSeq.ANSI_REVERSE:""),
+													(ansiConsole?ANSI_REVERSE:""),
 													invertHeading((float) headingServoAngle),
 													(ansiConsole?ANSI_NORMAL + ANSI_BOLD:"")) : ""),
 									deviceHeading);
 					if (ansiConsole) {
-						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
-						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 3) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+						AnsiConsole.out.println(ansiLocate(1, 1) +
+										ANSI_NORMAL +
+										ANSI_DEFAULT_BACKGROUND +
+										ANSI_DEFAULT_TEXT +
+										ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(timeProvided ? current.getTime() : new Date()) +
+														(smoothMoves?" (smooth)":" (raw)") +
+										PAD);
+						AnsiConsole.out.println(ansiLocate(1, 3) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 					} else {
 						System.out.println(mess);
 					}
@@ -581,7 +597,7 @@ public class SunFlower {
 									z,
 									(ansiConsole?ANSI_NORMAL + ANSI_BOLD:""));
 					if (ansiConsole) {
-						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+						AnsiConsole.out.println(ansiLocate(1, 4) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 					} else {
 						System.out.println(mess);
 					}
@@ -594,7 +610,7 @@ public class SunFlower {
 					if (tiltVerbose && !manualEntry) {
 						String mess = String.format(">>> Tilt servo angle now: %d %s%s", angle, (invert ? "(inverted)" : ""), (angle != applyLimitAndOffset(angle) ? String.format(", limited to %.02f", applyLimitAndOffset(angle)) : ""));
 						if (ansiConsole) {
-							AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 5) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+							AnsiConsole.out.println(ansiLocate(1, 5) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 						} else {
 							System.out.println(mess);
 						}
@@ -612,7 +628,7 @@ public class SunFlower {
 				if (tiltVerbose && !manualEntry) {
 					String mess = "Night time, tilt parked...";
 					if (ansiConsole) {
-						AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 4) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+						AnsiConsole.out.println(ansiLocate(1, 4) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 					} else {
 						System.out.println(mess);
 					}
@@ -629,22 +645,30 @@ public class SunFlower {
 			if (orientationVerbose && !manualEntry) {
 				String mess = String.format(">>> Heading servo angle now %d %s", headingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
 				if (ansiConsole) {
-					AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 6) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+					AnsiConsole.out.println(ansiLocate(1, 6) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 				} else {
 					System.out.println(mess);
 				}
 			}
 			if (servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) {
+				float newHeadingAngle = invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle;
 				if (headingServoAngle != previousHeadingAngle) {
-					this.setHeadingServoAngle(invert ? invertHeading((float) headingServoAngle) : (float) headingServoAngle);
+					this.setHeadingServoAngle(newHeadingAngle);
 				}
-				previousHeadingAngle = headingServoAngle;
+				previousHeadingAngle = (int)Math.round(newHeadingAngle); // headingServoAngle;
 			}
 		}
 	}
 
 	private Calendar current;
 	private Date fromDate = null, toDate = null;
+
+	public void setCurrentDateTime(Date date) {
+		if (current == null) {
+			current = new GregorianCalendar(TimeZone.getTimeZone("etc/UTC"));
+		}
+		current.setTime(date);
+	}
 
 	public void startWorking() {
 		String mess;
@@ -667,8 +691,13 @@ public class SunFlower {
 					System.exit(1);
 				}
 			}
+		} else if (timeProvided) {
+			if (current == null) {
+				current = new GregorianCalendar(TimeZone.getTimeZone("etc/UTC"));
+			}
 		}
 
+		// Timer Thread
 		Thread timeThread = new Thread(() -> {
 			while (keepWorking) {
 				// Sun position calculation goes here
@@ -679,6 +708,9 @@ public class SunFlower {
 					if (current.getTime().after(toDate)) {
 						keepWorking = false;
 					}
+				} else if (timeProvided) {
+					getSunDataForDate(latitude, longitude, current);
+					System.out.println(String.format(">>> %s", SDF.format(current.getTime())));
 				} else {
 					getSunData(latitude, longitude);
 				}
@@ -692,7 +724,7 @@ public class SunFlower {
 		});
 		mess = "Starting the timer loop";
 		if (ansiConsole){
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 11) + mess + PAD);
+			AnsiConsole.out.println(ansiLocate(1, 11) + mess + PAD);
 		} else {
 			System.out.println(mess);
 		}
@@ -842,8 +874,8 @@ public class SunFlower {
 
 		if (ansiConsole) {
 			AnsiConsole.systemInstall();
-			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
+			AnsiConsole.out.println(ANSI_CLS);
+			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
 		}
 		String mess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
@@ -853,7 +885,7 @@ public class SunFlower {
 						tiltLimit,
 						tiltOffset);
 		if (ansiConsole) {
-			AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 2) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + EscapeSeq.ANSI_BOLD + mess + PAD);
+			AnsiConsole.out.println(ansiLocate(1, 2) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 		} else {
 			System.out.println("----------------------------------------------");
 			System.out.println(mess);
@@ -865,7 +897,7 @@ public class SunFlower {
 			mess = String.format("Point the Device to the true %s, hit [Return] when ready.", instance.getLatitude() > 0 ? "South" : "North");
 
 			if (ansiConsole) {
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 11) + EscapeSeq.ANSI_REVERSE + mess + PAD);
+				AnsiConsole.out.println(ansiLocate(1, 11) + ANSI_REVERSE + mess + PAD);
 			} else {
 				System.out.println(mess);
 			}
@@ -874,7 +906,7 @@ public class SunFlower {
 			instance.setCalibrating(true);
 			userInput("");
 			if (ansiConsole) { // Cleanup
-				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 11) + PAD);
+				AnsiConsole.out.println(ansiLocate(1, 11) + PAD);
 			}
 			instance.setCalibrating(false);
 			// Done calibrating
