@@ -262,7 +262,9 @@ public class SunFlower {
 		demo = "true".equals(System.getProperty("demo.mode", "false"));
 		timeProvided = "true".equals(System.getProperty("time.provided", "false"));
 
-		// TODO Warn if timeProvided & demo
+		if (demo && timeProvided) {
+			throw new IllegalArgumentException("demo.mode and time.provided are mutually exclusive.");
+		}
 
 		smoothMoves = "true".equals(System.getProperty("smooth.moves", "false"));
 
@@ -572,7 +574,12 @@ public class SunFlower {
 													(ansiConsole?ANSI_NORMAL + ANSI_BOLD:"")) : ""),
 									deviceHeading);
 					if (ansiConsole) {
-						AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
+						AnsiConsole.out.println(ansiLocate(1, 1) +
+										ANSI_NORMAL +
+										ANSI_DEFAULT_BACKGROUND +
+										ANSI_DEFAULT_TEXT +
+										ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(timeProvided ? current.getTime() : new Date()) +
+										PAD);
 						AnsiConsole.out.println(ansiLocate(1, 3) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 					} else {
 						System.out.println(mess);
