@@ -33,6 +33,39 @@ public class EscapeSeq {
 	public static final String ANSI_DEFAULT_TEXT = ESC + "[39m";
 	public static final String ANSI_DEFAULT_BACKGROUND = ESC + "[49m";
 
+	// Unicode box drawing
+	public final static String SOLID_HORIZONTAL = "\u2500";
+	public final static String SOLID_HORIZONTAL_BOLD = "\u2501";
+	public final static String SOLID_VERTICAL = "\u2502";
+	public final static String SOLID_VERTICAL_BOLD = "\u2503";
+	public final static String DOTTED_HORIZONTAL = "\u2504";
+	public final static String DOTTED_HORIZONTAL_BOLD = "\u2505";
+	public final static String DOTTED_VERTICAL = "\u2506";
+	public final static String DOTTED_VERTICAL_BOLD = "\u2507";
+
+	public final static String TOP_LEFT_CORNER = "\u250c";
+	public final static String TOP_LEFT_CORNER_BOLD = "\u250f";
+	public final static String TOP_RIGHT_CORNER = "\u2510";
+	public final static String TOP_RIGHT_CORNER_BOLD = "\u2513";
+
+	public final static String BOTTOM_LEFT_CORNER = "\u2514";
+	public final static String BOTTOM_LEFT_CORNER_BOLD = "\u2517";
+	public final static String BOTTOM_RIGHT_CORNER = "\u2518";
+	public final static String BOTTOM_RIGHT_CORNER_BOLD = "\u251b";
+
+	public final static String LEFT_T = "\u251c";
+	public final static String LEFT_T_BOLD = "\u2523";
+	public final static String RIGHT_T = "\u2524";
+	public final static String RIGHT_T_BOLD = "\u252b";
+	public final static String TOP_T = "\u252c";
+	public final static String TOP_T_BOLD = "\u2533";
+	public final static String BOTTOM_T = "\u2534";
+	public final static String BOTTOM_T_BOLD = "\u253b";
+
+	public final static String CROSS = "\u253c";
+	public final static String CROSS_BOLD = "\u254b";
+// And there is way more...
+
 	private final static String[] SOME_TEXT =
 					{
 									"What happens when the boat sends an email:",
@@ -122,6 +155,7 @@ public class EscapeSeq {
 		System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
 
 		main_(args);
+		AnsiConsole.systemUninstall();
 	}
 
 	public static String superpose(String orig, String override) {
@@ -158,5 +192,9 @@ public class EscapeSeq {
 		System.out.println();
 
 		System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
+
+		System.out.println("\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n");
+
+
 	}
 }
