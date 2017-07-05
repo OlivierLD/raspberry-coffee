@@ -1073,12 +1073,12 @@ public class SunFlower {
 		// Dead Reckoning
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" He", 14) +
 						SOLID_VERTICAL_BOLD +
-						rpad(" " + String.format("%.02f\272", he), 29) +
+						rpad(" " + String.format("%6.02f\272", he), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Z", 14) +
 						SOLID_VERTICAL_BOLD +
-						rpad(" " + String.format("%.02f\272", z) + " true", 29) +
+						rpad(" " + String.format("%6.02f\272", z) + " true", 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
 		// Separator
