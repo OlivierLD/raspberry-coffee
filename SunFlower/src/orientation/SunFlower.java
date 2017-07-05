@@ -598,6 +598,7 @@ public class SunFlower {
 													(ansiConsole?ANSI_NORMAL + ANSI_BOLD:"")) : ""),
 									deviceHeading);
 					if (ansiConsole) {
+						ansiDeviceHeading = deviceHeading;
 						Date date = timeProvided ? current.getTime() : new Date();
 						ansiSystemDate = date;
 						ansiSolarDate = getSolarDate(getLongitude(), date);
@@ -638,6 +639,7 @@ public class SunFlower {
 					if (tiltVerbose && !manualEntry) {
 						String mess = String.format(">>> Tilt servo angle now: %d %s%s", angle, (invert ? "(inverted)" : ""), (angle != applyLimitAndOffset(angle) ? String.format(", limited to %.02f", applyLimitAndOffset(angle)) : ""));
 						if (ansiConsole) {
+							ansiTiltServoAngle = angle;
 							AnsiConsole.out.println(ansiLocate(1, 5) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 						} else {
 							System.out.println(mess);
@@ -656,6 +658,7 @@ public class SunFlower {
 				if (tiltVerbose && !manualEntry) {
 					String mess = "Night time, tilt parked...";
 					if (ansiConsole) {
+						ansiTiltServoAngle = 0;
 						AnsiConsole.out.println(ansiLocate(1, 4) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 					} else {
 						System.out.println(mess);
@@ -970,7 +973,7 @@ public class SunFlower {
 	private static Date ansiSystemDate = null;
 	private int ansiHeadingServoAngle = 0;
 	private int ansiTiltServoAngle = 0;
-	private int ansiDeviceHeading = 0;
+	private double ansiDeviceHeading = 0d;
 
 	private static String rpad(String s, int len) {
 		String str = s;
@@ -1001,7 +1004,6 @@ public class SunFlower {
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
 						rpad(String.format(" Tilt: limit %d, offset %d", tiltLimit, tiltOffset), 44) + SOLID_VERTICAL_BOLD +
 						PAD);
-
 
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						LEFT_T_BOLD +
@@ -1075,12 +1077,14 @@ public class SunFlower {
 		// Servos
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Heading Servo", 14) +
 						SOLID_VERTICAL_BOLD +
-						rpad(" " + String.format("%d", ansiHeadingServoAngle), 29) +
+						rpad(" " + String.format("%d%s", ansiHeadingServoAngle, (invert? String.format(" (inverted to %.0f)",	invertHeading((float) ansiHeadingServoAngle)) :"")), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Tilt Servo", 14) +
 						SOLID_VERTICAL_BOLD +
-						rpad(" " + String.format("%d", ansiTiltServoAngle), 29) +
+						rpad(" " + String.format("%d%s%s", ansiTiltServoAngle,
+										(invert ? " (inverted)":""),
+										(ansiTiltServoAngle != applyLimitAndOffset(ansiTiltServoAngle) ? String.format(", limited to %.0f", applyLimitAndOffset(ansiTiltServoAngle)) : "")), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
 
@@ -1096,7 +1100,7 @@ public class SunFlower {
 						PAD);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Device Hdg", 14) +
 						SOLID_VERTICAL_BOLD +
-						rpad(" " + String.format("%d\272", ansiDeviceHeading), 29) +
+						rpad(" " + String.format("%.01f\272", ansiDeviceHeading), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
 
