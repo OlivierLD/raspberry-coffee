@@ -933,6 +933,18 @@ public class SunFlower {
 		}
 	}
 
+	private static Date ansiSolarDate = null;
+	private static Date ansiSystemDate = null;
+	private int ansiHeadingServoAngle = 0;
+	private int ansiTiltServoAngle = 0;
+	private double ansiDeviceHeading = 0d;
+
+	/**
+	 * Returns a string of nb times the str parameter.
+	 * @param str the string to use
+	 * @param nb number of times
+	 * @return the expected string.
+	 */
 	private static String drawXChar(String str, int nb) {
 		StringBuffer sb = new StringBuffer();
 		for (int i=0; i<nb; i++) {
@@ -941,12 +953,12 @@ public class SunFlower {
 		return sb.toString();
 	}
 
-	private static Date ansiSolarDate = null;
-	private static Date ansiSystemDate = null;
-	private int ansiHeadingServoAngle = 0;
-	private int ansiTiltServoAngle = 0;
-	private double ansiDeviceHeading = 0d;
-
+	/**
+	 * Right pad, with blanks
+	 * @param s
+	 * @param len
+	 * @return
+	 */
 	private static String rpad(String s, int len) {
 		String str = s;
 		while (str.length() < len) {
@@ -954,6 +966,13 @@ public class SunFlower {
 		}
 		return str;
 	}
+
+	/**
+	 * Left pad, with blanks
+	 * @param s
+	 * @param len
+	 * @return
+	 */
 	private static String lpad(String s, int len) {
 		String str = s;
 		while (str.length() < len) {
@@ -962,6 +981,10 @@ public class SunFlower {
 		return str;
 	}
 
+	/**
+	 * Box codes are available at https://en.wikipedia.org/wiki/Box-drawing_character
+	 * Display the data in an ANSI box, refreshed every time is is displayed.
+	 */
 	private  void displayAnsiData() {
 		int line = 1; // Start from that line
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
@@ -984,6 +1007,7 @@ public class SunFlower {
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						TOP_T_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
 						RIGHT_T_BOLD +
 						PAD);
 		String lat = GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS);
@@ -1025,7 +1049,7 @@ public class SunFlower {
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						RIGHT_T_BOLD +
 						PAD);
-		// DR
+		// Dead Reckoning
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" He", 14) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + String.format("%.02f\272", he), 29) +
