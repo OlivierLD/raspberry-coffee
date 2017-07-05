@@ -143,8 +143,10 @@ A good setting would be to power the Raspberry PI _and_ the `PCA9685` from the s
 _Note_: The diagram above features a Raspberry PI 3, but they all work well, including the Raspberry PI Zero.
 
 ## At work
-A snapshot of the (optional) ANSI console:
-
+A snapshot of the (optional) ANSI console (look into the script named `run` for details):
+```bash
+ $> ./run smooth
+```
 
 <img src="./doc/ansi.console.png" alt="ANSI Console" width="341" height="246">
 
