@@ -146,7 +146,7 @@ _Note_: The diagram above features a Raspberry PI 3, but they all work well, inc
 A snapshot of the (optional) ANSI console:
 
 
-<img src="./doc/ansi.console.png" alt="ANSI Console" width="687" height="170">
+<img src="./doc/ansi.console.png" alt="ANSI Console" width="341" height="246">
 
 Here is a prototype, made of plexiglass and adhesive tape:<br>
 ![Proto](./doc/prototype.jpg) <br> Next comes the real stuff!
