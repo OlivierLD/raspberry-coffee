@@ -908,7 +908,7 @@ public class SunFlower {
 		if (ansiConsole) {
 			AnsiConsole.systemInstall();
 			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_CLS);
-			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + TOP_LEFT_CORNER_BOLD + " Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
+			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
 		}
 		String mess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
@@ -1003,7 +1003,7 @@ public class SunFlower {
 						TOP_RIGHT_CORNER_BOLD +
 						PAD);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-						rpad(String.format(" Tilt: limit %d, offset %d", tiltLimit, tiltOffset), 44) + SOLID_VERTICAL_BOLD +
+						rpad(String.format(" Hdg #%d, Tilt #%d, limit %d, offset %d", headingServoID, tiltServoID, tiltLimit, tiltOffset), 44) + SOLID_VERTICAL_BOLD +
 						PAD);
 
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
@@ -1085,7 +1085,7 @@ public class SunFlower {
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + String.format("%d%s%s", ansiTiltServoAngle,
 										(invert ? " (inverted)":""),
-										(ansiTiltServoAngle != applyLimitAndOffset(ansiTiltServoAngle) ? String.format(", limited to %.0f", applyLimitAndOffset(ansiTiltServoAngle)) : "")), 29) +
+										(ansiTiltServoAngle != applyLimitAndOffset(ansiTiltServoAngle) ? String.format(", limited: %.0f", applyLimitAndOffset(ansiTiltServoAngle)) : "")), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
 
@@ -1099,6 +1099,7 @@ public class SunFlower {
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						RIGHT_T_BOLD +
 						PAD);
+		// Device heading
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Device Hdg", 14) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + String.format("%.01f\272", ansiDeviceHeading), 29) +
