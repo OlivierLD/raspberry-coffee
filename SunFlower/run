@@ -59,10 +59,10 @@ case "$OPTION" in
   "verbose")
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
-    JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
-    JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
+    JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
     #
     JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
