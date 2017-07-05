@@ -987,6 +987,7 @@ public class SunFlower {
 	 */
 	private  void displayAnsiData() {
 		int line = 1; // Start from that line
+		// Frame top
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						TOP_LEFT_CORNER_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
@@ -996,10 +997,11 @@ public class SunFlower {
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						TOP_RIGHT_CORNER_BOLD +
 						PAD);
+		// Servo info
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
 						rpad(String.format(" Hdg #%d, Tilt #%d, limit %d, offset %d", headingServoID, tiltServoID, tiltLimit, tiltOffset), 44) + SOLID_VERTICAL_BOLD +
 						PAD);
-
+		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						LEFT_T_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
@@ -1010,6 +1012,7 @@ public class SunFlower {
 						RIGHT_T_BOLD +
 						RIGHT_T_BOLD +
 						PAD);
+		// Position
 		String lat = GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS);
 		String lng = GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
@@ -1101,7 +1104,7 @@ public class SunFlower {
 						SOLID_VERTICAL_BOLD +
 						PAD);
 
-		// Bottom Separator
+		// Frame bottom
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						BOTTOM_LEFT_CORNER_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
