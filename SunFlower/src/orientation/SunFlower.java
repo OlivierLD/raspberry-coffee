@@ -584,6 +584,11 @@ public class SunFlower {
 				System.out.println("----------------------------------------------");
 			}
 
+			ansiDeviceHeading = deviceHeading;
+			Date date = timeProvided ? current.getTime() : new Date();
+			ansiSystemDate = date;
+			ansiSolarDate = getSolarDate(getLongitude(), date);
+
 			if (he > 0) { // Daytime
 				if (orientationVerbose && !manualEntry) {
 					String mess = String.format(
@@ -598,10 +603,6 @@ public class SunFlower {
 													(ansiConsole?ANSI_NORMAL + ANSI_BOLD:"")) : ""),
 									deviceHeading);
 					if (ansiConsole) {
-						ansiDeviceHeading = deviceHeading;
-						Date date = timeProvided ? current.getTime() : new Date();
-						ansiSystemDate = date;
-						ansiSolarDate = getSolarDate(getLongitude(), date);
 						AnsiConsole.out.println(ansiLocate(1, 1) +
 										ANSI_NORMAL +
 										ANSI_DEFAULT_BACKGROUND +
@@ -635,11 +636,11 @@ public class SunFlower {
 				if (invert) {
 					angle = -angle;
 				}
+				ansiTiltServoAngle = angle;
 				if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && angle != previousTiltAngle) {
 					if (tiltVerbose && !manualEntry) {
 						String mess = String.format(">>> Tilt servo angle now: %d %s%s", angle, (invert ? "(inverted)" : ""), (angle != applyLimitAndOffset(angle) ? String.format(", limited to %.02f", applyLimitAndOffset(angle)) : ""));
 						if (ansiConsole) {
-							ansiTiltServoAngle = angle;
 							AnsiConsole.out.println(ansiLocate(1, 5) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 						} else {
 							System.out.println(mess);
@@ -673,10 +674,10 @@ public class SunFlower {
 				}
 				headingServoAngle = 0; // for the night
 			} // End day or night
+			ansiHeadingServoAngle = headingServoAngle;
 			if (orientationVerbose && !manualEntry) {
 				String mess = String.format(">>> Heading servo angle now %d %s", headingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
 				if (ansiConsole) {
-					ansiHeadingServoAngle = headingServoAngle;
 					AnsiConsole.out.println(ansiLocate(1, 6) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
 				} else {
 					System.out.println(mess);
