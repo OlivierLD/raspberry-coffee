@@ -960,9 +960,12 @@ public class SunFlower {
 	 * @return
 	 */
 	private static String rpad(String s, int len) {
+		return rpad(s, len, " ");
+	}
+	private static String rpad(String s, int len, String pad) {
 		String str = s;
 		while (str.length() < len) {
-			str += " ";
+			str += pad;
 		}
 		return str;
 	}
@@ -974,9 +977,12 @@ public class SunFlower {
 	 * @return
 	 */
 	private static String lpad(String s, int len) {
+		return lpad(s, len, " ");
+	}
+	private static String lpad(String s, int len, String pad) {
 		String str = s;
 		while (str.length() < len) {
-			str = " " + str;
+			str = pad + str;
 		}
 		return str;
 	}
@@ -1009,7 +1015,6 @@ public class SunFlower {
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						TOP_T_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-						RIGHT_T_BOLD +
 						RIGHT_T_BOLD +
 						PAD);
 		// Position
@@ -1076,12 +1081,12 @@ public class SunFlower {
 		// Servos
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Heading Servo", 14) +
 						SOLID_VERTICAL_BOLD +
-						rpad(" " + String.format("%d%s", ansiHeadingServoAngle, (invert? String.format(" (inverted to %.0f)",	invertHeading((float) ansiHeadingServoAngle)) :"")), 29) +
+						rpad(" " + String.format("%s%s", lpad(String.format("%+02d", ansiHeadingServoAngle), 3, " "), (invert? String.format(" (inverted to %+.0f)",	invertHeading((float) ansiHeadingServoAngle)) :"")), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Tilt Servo", 14) +
 						SOLID_VERTICAL_BOLD +
-						rpad(" " + String.format("%d%s%s", ansiTiltServoAngle,
+						rpad(" " + String.format("%s%s%s", lpad(String.format("%+02d", ansiTiltServoAngle), 3, " "),
 										(invert ? " (inverted)":""),
 										(ansiTiltServoAngle != applyLimitAndOffset(ansiTiltServoAngle) ? String.format(", limited: %.0f", applyLimitAndOffset(ansiTiltServoAngle)) : "")), 29) +
 						SOLID_VERTICAL_BOLD +
