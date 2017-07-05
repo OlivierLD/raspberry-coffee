@@ -997,7 +997,7 @@ public class SunFlower {
 		// Frame top
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						TOP_LEFT_CORNER_BOLD +
-						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
 						SOLID_HORIZONTAL_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						SOLID_HORIZONTAL_BOLD +
@@ -1005,11 +1005,11 @@ public class SunFlower {
 						TOP_RIGHT_CORNER_BOLD +
 						PAD);
 		// Title
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Solar Panel Orientation ", 44) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Solar Panel Orientation ", 45) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						LEFT_T_BOLD +
-						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
 						SOLID_HORIZONTAL_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						SOLID_HORIZONTAL_BOLD +
@@ -1018,12 +1018,12 @@ public class SunFlower {
 						PAD);
 		// Servo info
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-						rpad(String.format(" Hdg #%d, Tilt #%d, limit %d, offset %d", headingServoID, tiltServoID, tiltLimit, tiltOffset), 44) + SOLID_VERTICAL_BOLD +
+						rpad(String.format(" Hdg #%d, Tilt #%d, limit %d, offset %d", headingServoID, tiltServoID, tiltLimit, tiltOffset), 45) + SOLID_VERTICAL_BOLD +
 						PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						LEFT_T_BOLD +
-						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
 						TOP_T_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						TOP_T_BOLD +
@@ -1034,14 +1034,14 @@ public class SunFlower {
 		String lat = GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS);
 		String lng = GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-						rpad(" Position L/G", 14) + SOLID_VERTICAL_BOLD +
+						rpad(" Position L/G", 15) + SOLID_VERTICAL_BOLD +
 						rpad(lpad(" " + lat, 13), 14) + SOLID_VERTICAL_BOLD +
 						rpad(lpad(" " + lng, 13), 14) + SOLID_VERTICAL_BOLD +
 						PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						LEFT_T_BOLD +
-						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
 						CROSS_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						BOTTOM_T_BOLD +
@@ -1049,13 +1049,13 @@ public class SunFlower {
 						RIGHT_T_BOLD +
 						PAD);
 		// System date
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" System Date ", 14) +
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" System Date ", 15) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + (ansiSystemDate != null ? SDF.format(ansiSystemDate) : "null"), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
 		// Solar date
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Solar Date ", 14) +
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Solar Date ", 15) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + (ansiSolarDate != null ? SDF_NO_Z.format(ansiSolarDate) : "null"), 29) +
 						SOLID_VERTICAL_BOLD +
@@ -1063,7 +1063,7 @@ public class SunFlower {
     // Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						LEFT_T_BOLD +
-						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
 						CROSS_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						SOLID_HORIZONTAL_BOLD +
@@ -1071,12 +1071,12 @@ public class SunFlower {
 						RIGHT_T_BOLD +
 						PAD);
 		// Dead Reckoning
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" He", 14) +
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" He ", 15) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + String.format("%6.02f\272", he), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Z", 14) +
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Z ", 15) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + String.format("%6.02f\272", z) + " true", 29) +
 						SOLID_VERTICAL_BOLD +
@@ -1084,7 +1084,7 @@ public class SunFlower {
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						LEFT_T_BOLD +
-						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
 						CROSS_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						SOLID_HORIZONTAL_BOLD +
@@ -1092,23 +1092,22 @@ public class SunFlower {
 						RIGHT_T_BOLD +
 						PAD);
 		// Servos
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Heading Servo", 14) +
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Heading Servo ", 15) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + String.format("%s%s", lpad(String.format("%+02d", ansiHeadingServoAngle), 3, " "), (invert? String.format(" (inverted to %+.0f)",	invertHeading((float) ansiHeadingServoAngle)) :"")), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Tilt Servo", 14) +
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Tilt Servo ", 15) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + String.format("%s%s%s", lpad(String.format("%+02d", ansiTiltServoAngle), 3, " "),
 										(invert ? " (inverted)":""),
 										(ansiTiltServoAngle != applyLimitAndOffset(ansiTiltServoAngle) ? String.format(", limited: %.0f", applyLimitAndOffset(ansiTiltServoAngle)) : "")), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
-
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						LEFT_T_BOLD +
-						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
 						CROSS_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						SOLID_HORIZONTAL_BOLD +
@@ -1116,16 +1115,15 @@ public class SunFlower {
 						RIGHT_T_BOLD +
 						PAD);
 		// Device heading
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + rpad(" Device Hdg", 14) +
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Device Hdg ", 15) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + String.format("%.01f\272", ansiDeviceHeading), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
-
 		// Frame bottom
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 						BOTTOM_LEFT_CORNER_BOLD +
-						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
 						BOTTOM_T_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						SOLID_HORIZONTAL_BOLD +
