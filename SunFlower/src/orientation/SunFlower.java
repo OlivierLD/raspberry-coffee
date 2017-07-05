@@ -4,6 +4,7 @@ import static ansi.EscapeSeq.ANSI_BOLD;
 import static ansi.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
 import static ansi.EscapeSeq.ANSI_DEFAULT_TEXT;
 import static ansi.EscapeSeq.ANSI_ERASE_TO_EOL;
+import static ansi.EscapeSeq.ANSI_ITALIC;
 import static ansi.EscapeSeq.ANSI_NORMAL;
 import static ansi.EscapeSeq.ANSI_CLS;
 import static ansi.EscapeSeq.ANSI_REVERSE;
@@ -1002,6 +1003,18 @@ public class SunFlower {
 						SOLID_HORIZONTAL_BOLD +
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						TOP_RIGHT_CORNER_BOLD +
+						PAD);
+		// Title
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Solar Panel Orientation ", 44) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
 						PAD);
 		// Servo info
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +

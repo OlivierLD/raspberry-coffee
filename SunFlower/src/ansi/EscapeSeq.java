@@ -16,7 +16,7 @@ public class EscapeSeq {
 
 	public static final String ANSI_CLS = ESC + "[2J";
 	public static final String ANSI_ERASE_TO_EOL = ESC + "[K";
-	public static final String ANSI_HOME = ESC + "[H"; // 0,0
+	public static final String ANSI_HOME = ESC + "[H"; // 0,0 Top left
 	public static final String ANSI_HEAD = ESC + "[1G"; // Start of current line, position 1
 
 	public static final String ANSI_NORMAL = ESC + "[0m";
@@ -179,21 +179,22 @@ public class EscapeSeq {
 		AnsiConsole.out.println(ANSI_NORMAL + "Normal text and " + ANSI_WHITEONBLUE + "bold" + ANSI_NORMAL + " text.");
 		AnsiConsole.out.println(ANSI_NORMAL + "Normal " + ansiSetTextColor(ANSI_YELLOW) + "yellow" + ANSI_NORMAL + " text and " + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + "bold" + ANSI_NORMAL + " text.");
 
-		System.out.println(ANSI_NORMAL + "Normal text and " + ANSI_WHITEONBLUE + "bold" + ANSI_NORMAL + " text.");
-		System.out.println(ANSI_NORMAL + "Normal " + ansiSetTextColor(ANSI_YELLOW) + "yellow" + ANSI_NORMAL + " text and " + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + "bold" + ANSI_NORMAL + " text.");
+		AnsiConsole.out.println(ANSI_NORMAL + "Normal text and " + ANSI_WHITEONBLUE + "bold" + ANSI_NORMAL + " text.");
+		AnsiConsole.out.println(ANSI_ITALIC + "Italic text " + ANSI_NORMAL + "...");
+		AnsiConsole.out.println(ANSI_NORMAL + "Normal " + ansiSetTextColor(ANSI_YELLOW) + "yellow" + ANSI_NORMAL + " text and " + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + "bold" + ANSI_NORMAL + " text.");
 
 		for (String line : SOME_TEXT) {
-			System.out.print(ANSI_HEAD + line + ANSI_ERASE_TO_EOL);
+			AnsiConsole.out.print(ANSI_HEAD + line + ANSI_ERASE_TO_EOL);
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
 			}
 		}
-		System.out.println();
+		AnsiConsole.out.println();
 
-		System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
+		AnsiConsole.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
 
-		System.out.println("\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n");
+		AnsiConsole.out.println("\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n");
 
 
 	}
