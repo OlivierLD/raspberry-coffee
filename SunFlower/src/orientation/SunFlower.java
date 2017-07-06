@@ -113,10 +113,12 @@ public class SunFlower {
 	private final static String PAD = ANSI_ERASE_TO_EOL;
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+	private final static SimpleDateFormat SDF_UTC = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 	private final static SimpleDateFormat SDF_NO_Z = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Duration fmt.
 	static {
 		SDF_NO_Z.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_UTC.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 	}
 
 	private static boolean foundPCA9685 = true;
@@ -1052,6 +1054,12 @@ public class SunFlower {
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" System Date ", 15) +
 						SOLID_VERTICAL_BOLD +
 						rpad(" " + (ansiSystemDate != null ? SDF.format(ansiSystemDate) : "null"), 29) +
+						SOLID_VERTICAL_BOLD +
+						PAD);
+		// UTC date
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" UTC ", 15) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" " + (ansiSystemDate != null ? SDF_UTC.format(ansiSystemDate) : "null"), 29) +
 						SOLID_VERTICAL_BOLD +
 						PAD);
 		// Solar date
