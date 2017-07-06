@@ -2,6 +2,9 @@ package ansi;
 
 import org.fusesource.jansi.AnsiConsole;
 
+/**
+ * Find more ANSI box drawing codes at https://en.wikipedia.org/wiki/Box-drawing_character
+ */
 public class EscapeSeq {
 	public final static char ESC = '\u001b'; // (char) 27;
 
@@ -64,6 +67,10 @@ public class EscapeSeq {
 
 	public final static String CROSS = "\u253c";
 	public final static String CROSS_BOLD = "\u254b";
+
+	public final static String DOUBLE_LEFT_T = "\u2560";
+	public final static String DOUBLE_RIGHT_T = "\u2563";
+
 // And there is way more...
 
 	private final static String[] SOME_TEXT =
@@ -135,16 +142,16 @@ public class EscapeSeq {
 			str5 = superpose(str5, "Cell 5:" + Integer.toString(value5));
 
 //    AnsiConsole.out.println(ANSI_CLS);
-			AnsiConsole.out.println(ansiLocate(0, 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
-			AnsiConsole.out.println(ansiLocate(0, 1) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_RED) + ANSI_BOLD + str1 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT);
-			AnsiConsole.out.println(ansiLocate(0, 2) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
-			AnsiConsole.out.println(ansiLocate(0, 2) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_WHITE) + ANSI_BOLD + str2 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT);
-			AnsiConsole.out.println(ansiLocate(0, 3) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
-			AnsiConsole.out.println(ansiLocate(0, 3) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_YELLOW) + ANSI_BOLD + str3 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT);
-			AnsiConsole.out.println(ansiLocate(0, 4) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
-			AnsiConsole.out.println(ansiLocate(0, 4) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_GREEN) + ANSI_BOLD + str4 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT);
-			AnsiConsole.out.println(ansiLocate(0, 5) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
-			AnsiConsole.out.println(ansiLocate(0, 5) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLUE) + ANSI_BOLD + str5 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT);
+//  	AnsiConsole.out.println(ansiLocate(0, 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
+			AnsiConsole.out.println(ansiLocate(0, 1) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_RED) + ANSI_BOLD + str1 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_ERASE_TO_EOL);
+//		AnsiConsole.out.println(ansiLocate(0, 2) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
+			AnsiConsole.out.println(ansiLocate(0, 2) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_WHITE) + ANSI_BOLD + str2 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_ERASE_TO_EOL);
+//		AnsiConsole.out.println(ansiLocate(0, 3) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
+			AnsiConsole.out.println(ansiLocate(0, 3) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_YELLOW) + ANSI_BOLD + str3 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_ERASE_TO_EOL);
+//		AnsiConsole.out.println(ansiLocate(0, 4) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
+			AnsiConsole.out.println(ansiLocate(0, 4) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_GREEN) + ANSI_BOLD + str4 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_ERASE_TO_EOL);
+//		AnsiConsole.out.println(ansiLocate(0, 5) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + str80);
+			AnsiConsole.out.println(ansiLocate(0, 5) + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLUE) + ANSI_BOLD + str5 + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_ERASE_TO_EOL);
 
 			try {
 				Thread.sleep(1_000L);
@@ -152,7 +159,7 @@ public class EscapeSeq {
 			}
 		}
 
-		System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
+		System.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL + ANSI_ERASE_TO_EOL);
 
 		main_(args);
 		AnsiConsole.systemUninstall();
@@ -168,23 +175,23 @@ public class EscapeSeq {
 	public static void main_(String[] args) {
 		AnsiConsole.systemInstall();
 		AnsiConsole.out.println(ANSI_CLS);
-		AnsiConsole.out.println(ANSI_AT55 + ANSI_REVERSE + "10,10 reverse : Hello world" + ANSI_NORMAL);
-		AnsiConsole.out.println(ANSI_HOME + ANSI_WHITEONBLUE + "WhiteOnBlue : Hello world" + ANSI_NORMAL);
-		AnsiConsole.out.println(ANSI_BOLD + "Bold : Press return..." + ANSI_NORMAL);
+		AnsiConsole.out.println(ANSI_AT55 + ANSI_REVERSE + "10,10 reverse : Hello world" + ANSI_NORMAL + ANSI_ERASE_TO_EOL);
+		AnsiConsole.out.println(ANSI_HOME + ANSI_WHITEONBLUE + "WhiteOnBlue : Hello world" + ANSI_NORMAL + ANSI_ERASE_TO_EOL);
+		AnsiConsole.out.println(ANSI_BOLD + "Bold : Press return..." + ANSI_NORMAL + ANSI_ERASE_TO_EOL);
 		try {
 			System.in.read();
 		} catch (Exception e) {
 		}
 		//  AnsiConsole.out.println(ANSI_CLS);
-		AnsiConsole.out.println(ANSI_NORMAL + "Normal text and " + ANSI_WHITEONBLUE + "bold" + ANSI_NORMAL + " text.");
-		AnsiConsole.out.println(ANSI_NORMAL + "Normal " + ansiSetTextColor(ANSI_YELLOW) + "yellow" + ANSI_NORMAL + " text and " + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + "bold" + ANSI_NORMAL + " text.");
+		AnsiConsole.out.println(ANSI_NORMAL + "Normal text and " + ANSI_WHITEONBLUE + ANSI_BOLD + "bold" + ANSI_NORMAL + " text." + ANSI_ERASE_TO_EOL);
+		AnsiConsole.out.println(ANSI_NORMAL + "Normal " + ansiSetTextColor(ANSI_YELLOW) + "yellow" + ANSI_NORMAL + " text and " + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + ANSI_BOLD + "bold" + ANSI_NORMAL + " text." + ANSI_ERASE_TO_EOL);
 
 		AnsiConsole.out.println(ANSI_NORMAL + "Normal text and " + ANSI_WHITEONBLUE + "bold" + ANSI_NORMAL + " text.");
 		AnsiConsole.out.println(ANSI_ITALIC + "Italic text " + ANSI_NORMAL + "...");
-		AnsiConsole.out.println(ANSI_NORMAL + "Normal " + ansiSetTextColor(ANSI_YELLOW) + "yellow" + ANSI_NORMAL + " text and " + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + "bold" + ANSI_NORMAL + " text.");
+		AnsiConsole.out.println(ANSI_NORMAL + "Normal " + ansiSetTextColor(ANSI_YELLOW) + "yellow" + ANSI_NORMAL + " text and " + ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_BLACK) + ANSI_BOLD + "bold" + ANSI_NORMAL + " text." + ANSI_ERASE_TO_EOL);
 
 		for (String line : SOME_TEXT) {
-			AnsiConsole.out.print(ANSI_HEAD + line + ANSI_ERASE_TO_EOL);
+			AnsiConsole.out.print(ANSI_HEAD + line + "  " + ANSI_ERASE_TO_EOL);
 			try {
 				Thread.sleep(1_000);
 			} catch (Exception ex) {
@@ -192,10 +199,10 @@ public class EscapeSeq {
 		}
 		AnsiConsole.out.println();
 
-		AnsiConsole.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL);
+		AnsiConsole.out.println(ansiSetTextAndBackgroundColor(ANSI_GREEN, ANSI_RED) + "this concludes the " + ansiSetTextColor(ANSI_WHITE) + "Jansi" + ansiSetTextColor(ANSI_GREEN) + " demo" + ANSI_NORMAL + ANSI_ERASE_TO_EOL);
 
 		AnsiConsole.out.println("\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n");
 
-
+		AnsiConsole.systemUninstall();
 	}
 }
