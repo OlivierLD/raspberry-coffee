@@ -27,10 +27,16 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import org.fusesource.jansi.AnsiConsole;
 import user.util.GeomUtil;
 
@@ -69,6 +75,9 @@ import user.util.GeomUtil;
  * -Dto.date=2017-06-28T20:33:00
  */
 public class SunFlower {
+
+	private static int[] headingServoID = new int[] { 14 };
+	private static int tiltServoID = 15;
 
 	private double latitude = 0D;
 	private double longitude = 0D;
@@ -203,9 +212,6 @@ public class SunFlower {
 		}
 	}
 
-	private static int headingServoID = 14;
-	private static int tiltServoID = 15;
-
 	private static int previousHeadingAngle = 0;
 	private static int previousTiltAngle = 0;
 
@@ -241,7 +247,7 @@ public class SunFlower {
 		return retString;
 	}
 
-	public SunFlower(int headinServoNumber, int tiltServoNumber) {
+	public SunFlower(int[] headinServoNumber, int tiltServoNumber) {
 
 //		Properties properties = System.getProperties();
 //		properties.list(System.out);
@@ -389,7 +395,10 @@ public class SunFlower {
 					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f (target %.02f)", pos, Math.abs(pos - f), f));
 					}
-					setAngle(headingServoID, pos);
+					for (int id : headingServoID) {
+						setAngle(id, pos);
+					}
+//				setAngle(headingServoID, pos);
 					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
@@ -404,7 +413,8 @@ public class SunFlower {
 				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 					System.out.println(String.format("H> Abrupt heading set to %.02f", f));
 				}
-				setAngle(headingServoID, f);
+				Arrays.stream(headingServoID).forEach(id -> setAngle(id, f));
+//			setAngle(headingServoID, f);
 			}
 		}
 	}
@@ -475,7 +485,9 @@ public class SunFlower {
 	}
 
 	public void stopHeadingServo() {
-		stop(headingServoID);
+		for (int id : headingServoID) {
+			stop(id);
+		}
 	}
 
 	public void stopTiltServo() {
@@ -743,7 +755,9 @@ public class SunFlower {
 
 	public void stopWorking() {
 		this.keepWorking = false;
-		stop(headingServoID);
+		for (int id : headingServoID) {
+			stop(id);
+		}
 		stop(tiltServoID);
 
 		try {
@@ -818,7 +832,7 @@ public class SunFlower {
 
 	public static void main(String... args) {
 
-		headingServoID = 14;
+		headingServoID = new int[] { 14 };
 		tiltServoID = 15;
 
 		// Supported parameters --heading:14 --tilt:15
@@ -826,7 +840,13 @@ public class SunFlower {
 			for (String prm : args) {
 				if (prm.startsWith("--heading:")) {
 					try {
-						headingServoID = Integer.parseInt(prm.substring("--heading:".length()));
+						List<Integer> hsIDs = new ArrayList<>();
+						String[] strIds = prm.substring("--heading:".length()).split(",");
+						Arrays.stream(strIds).forEach(sid -> {
+							hsIDs.add(Integer.parseInt(sid));
+						});
+//					headingServoID = Integer.parseInt(prm.substring("--heading:".length()));
+						headingServoID = hsIDs.stream().mapToInt(x -> x).toArray();
 					} catch (Exception e) {
 						throw e;
 					}
@@ -886,10 +906,10 @@ public class SunFlower {
 			AnsiConsole.systemInstall();
 			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_CLS);
 		}
-		String mess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
+		String mess = String.format("Position %s / %s, Heading servo: #%s, Tilt servo: #%d, Tilt: limit %d, offset %d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(instance.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-						headingServoID,
+						Arrays.stream(headingServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
 						tiltServoID,
 						tiltLimit,
 						tiltOffset);
@@ -1020,7 +1040,11 @@ public class SunFlower {
 						PAD);
 		// Servo info
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-						rpad(String.format(" Hdg #%d, Tilt #%d, limit %d, offset %d", headingServoID, tiltServoID, tiltLimit, tiltOffset), 45) + SOLID_VERTICAL_BOLD +
+						rpad(String.format(" Hdg #%s, Tilt #%d, limit %d, offset %d",
+										Arrays.stream(headingServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
+										tiltServoID,
+										tiltLimit,
+										tiltOffset), 45) + SOLID_VERTICAL_BOLD +
 						PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +

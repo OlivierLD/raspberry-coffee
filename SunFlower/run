@@ -1,7 +1,7 @@
 #!/bin/bash
 CP=./build/libs/SunFlower-1.0-all.jar
 #
-HEADING_SERVO_ID=14
+HEADING_SERVO_ID=14,10
 TILT_SERVO_ID=15
 #
 JAVA_OPTS=
