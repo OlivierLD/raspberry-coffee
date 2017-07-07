@@ -77,7 +77,7 @@ import user.util.GeomUtil;
 public class SunFlower {
 
 	private static int[] headingServoID = new int[] { 14 };
-	private static int tiltServoID = 15;
+	private static int[] tiltServoID = new int[] { 15 };
 
 	private double latitude = 0D;
 	private double longitude = 0D;
@@ -247,7 +247,7 @@ public class SunFlower {
 		return retString;
 	}
 
-	public SunFlower(int[] headinServoNumber, int tiltServoNumber) {
+	public SunFlower(int[] headinServoNumber, int[] tiltServoNumber) {
 
 //		Properties properties = System.getProperties();
 //		properties.list(System.out);
@@ -444,7 +444,10 @@ public class SunFlower {
 					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 						System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					}
-					setAngle(tiltServoID, pos);
+//				setAngle(tiltServoID, pos);
+					for (int id : tiltServoID) {
+						setAngle(id, pos);
+					}
 					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
@@ -459,7 +462,10 @@ public class SunFlower {
 				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 					System.out.println(String.format("T> Abrupt tilt set to %.02f (%.02f)", f, goToAngle));
 				}
-				setAngle(tiltServoID, goToAngle);
+//			setAngle(tiltServoID, goToAngle);
+				for (int id : tiltServoID) {
+					setAngle(id, goToAngle);
+				}
 			}
 		}
 	}
@@ -491,7 +497,10 @@ public class SunFlower {
 	}
 
 	public void stopTiltServo() {
-		stop(tiltServoID);
+//	stop(tiltServoID);
+		for (int id: tiltServoID) {
+			stop(id);
+		}
 	}
 
 	private void stop(int servo) { // Set to 0
@@ -758,7 +767,9 @@ public class SunFlower {
 		for (int id : headingServoID) {
 			stop(id);
 		}
-		stop(tiltServoID);
+		for (int id : tiltServoID) {
+			stop(id);
+		}
 
 		try {
 			if (!smoothMoves) {
@@ -833,7 +844,7 @@ public class SunFlower {
 	public static void main(String... args) {
 
 		headingServoID = new int[] { 14 };
-		tiltServoID = 15;
+		tiltServoID = new int[] { 15 };
 
 		// Supported parameters --heading:14 --tilt:15
 		if (args.length > 0) {
@@ -845,14 +856,20 @@ public class SunFlower {
 						Arrays.stream(strIds).forEach(sid -> {
 							hsIDs.add(Integer.parseInt(sid));
 						});
-//					headingServoID = Integer.parseInt(prm.substring("--heading:".length()));
 						headingServoID = hsIDs.stream().mapToInt(x -> x).toArray();
+//					headingServoID = Integer.parseInt(prm.substring("--heading:".length()));
 					} catch (Exception e) {
 						throw e;
 					}
 				} else if (prm.startsWith("--tilt:")) {
 					try {
-						tiltServoID = Integer.parseInt(prm.substring("--tilt:".length()));
+						List<Integer> tsIDs = new ArrayList<>();
+						String[] strIds = prm.substring("--tilt:".length()).split(",");
+						Arrays.stream(strIds).forEach(sid -> {
+							tsIDs.add(Integer.parseInt(sid));
+						});
+						tiltServoID = tsIDs.stream().mapToInt(x -> x).toArray();
+//					tiltServoID = Integer.parseInt(prm.substring("--tilt:".length()));
 					} catch (Exception e) {
 						throw e;
 					}
@@ -906,11 +923,11 @@ public class SunFlower {
 			AnsiConsole.systemInstall();
 			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_CLS);
 		}
-		String mess = String.format("Position %s / %s, Heading servo: #%s, Tilt servo: #%d, Tilt: limit %d, offset %d",
+		String mess = String.format("Position %s / %s, Heading servo: #%s. Tilt servo: #%s. Tilt: limit %d, offset %d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(instance.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
 						Arrays.stream(headingServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
-						tiltServoID,
+						Arrays.stream(tiltServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
 						tiltLimit,
 						tiltOffset);
 		if (!ansiConsole) {
@@ -1040,9 +1057,9 @@ public class SunFlower {
 						PAD);
 		// Servo info
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-						rpad(String.format(" Hdg #%s, Tilt #%d, limit %d, offset %d",
+						rpad(String.format(" Hdg #%s. Tilt #%s. limit %d, offset %d",
 										Arrays.stream(headingServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
-										tiltServoID,
+										Arrays.stream(tiltServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
 										tiltLimit,
 										tiltOffset), 45) + SOLID_VERTICAL_BOLD +
 						PAD);

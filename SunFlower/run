@@ -1,8 +1,8 @@
 #!/bin/bash
 CP=./build/libs/SunFlower-1.0-all.jar
 #
-HEADING_SERVO_ID=14,10
-TILT_SERVO_ID=15
+HEADING_SERVO_ID=14,0,10
+TILT_SERVO_ID=15,1
 #
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
@@ -13,7 +13,7 @@ JAVA_OPTS="$JAVA_OPTS -Dtest.servos=false"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.servo.sign=1"
 JAVA_OPTS="$JAVA_OPTS -Dheading.servo.sign=1"
 #
-JAVA_OPTS="$JAVA_OPTS -Dtilt.limit=20"
+JAVA_OPTS="$JAVA_OPTS -Dtilt.limit=40"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.offset=0"
 #
 OPTION=basic
