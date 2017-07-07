@@ -1063,7 +1063,7 @@ public class SunFlower {
 						PAD);
 		// Servo info, heading
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-						rpad(String.format(" Heading Servo(s) # %s",
+						rpad(String.format(" Heading Servo(s) # %s.",
 										Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(","))), 45) + SOLID_VERTICAL_BOLD +
 						PAD);
 		// Separator
