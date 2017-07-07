@@ -456,22 +456,25 @@ And any REST client (NodeJS, Postman, curl, your own code, ...) does the job.
 
 Example with `curl`:
 ```
-$ curl -v http://localhost:9999/forwarders
-*   Trying ::1...
-* Connected to localhost (::1) port 9999 (#0)
-> GET /forwarders HTTP/1.1
-> Host: localhost:9999
-> User-Agent: curl/7.43.0
-> Accept: */*
->
-< HTTP/1.1 200
-< Access-Control-Allow-Origin: *
-< Content-Length: 66
-< Content-Type: application/json
-<
-* Connection #0 to host localhost left intact
-[{"cls":"nmea.forwarders.SolarPanelOrienter","type":"sun-flower"}]
-$
+$ curl -v http://192.168.1.181:9999/last-sentence
+  *   Trying 192.168.1.181...
+  * Connected to 192.168.1.181 (192.168.1.181) port 9999 (#0)
+  > GET /last-sentence HTTP/1.1
+  > Host: 192.168.1.181:9999
+  > User-Agent: curl/7.43.0
+  > Accept: */*
+  >
+  < HTTP/1.1 200
+  < Access-Control-Allow-Origin: *
+  < Content-Length: 110
+  < Content-Type: application/json
+  <
+  * Connection #0 to host 192.168.1.181 left intact
+  {
+      "last-data": "$GPGGA,171812.255,3718.7160,N,12142.3005,W,1,09,0.9,494.3,M,,,,0000*16",
+      "timestamp": 1499466116699
+  }
+ $
 ```
 
 ![With REST traffic](./docimages/AdminSnapshot.02.png "With REST traffic")
