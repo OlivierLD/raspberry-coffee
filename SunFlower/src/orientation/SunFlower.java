@@ -360,6 +360,12 @@ public class SunFlower {
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}
+		} catch (UnsatisfiedLinkError usle) {
+			foundPCA9685 = false;
+			System.err.println("+------------------------------------------------------------");
+			System.err.println("| PCA9685 was NOT initialized.\nCheck your wiring, or make sure you are on a Raspberry PI...");
+			System.err.println("| Moving on anyway...");
+			System.err.println("+------------------------------------------------------------");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(1);
