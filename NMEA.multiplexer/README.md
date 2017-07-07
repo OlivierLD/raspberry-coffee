@@ -456,7 +456,7 @@ And any REST client (NodeJS, Postman, curl, your own code, ...) does the job.
 
 Example with `curl`:
 ```
-$ curl -v http://192.168.1.181:9999/forwarders
+$ curl -v http://localhost:9999/forwarders
 *   Trying ::1...
 * Connected to localhost (::1) port 9999 (#0)
 > GET /forwarders HTTP/1.1
