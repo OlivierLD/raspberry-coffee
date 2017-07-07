@@ -1049,7 +1049,7 @@ public class SunFlower {
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						TOP_RIGHT_CORNER_BOLD +
 						PAD);
-		// Title
+		// Title. Note: The italic does not work on all platforms.
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Solar Panel Orientation ", 45) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
@@ -1061,7 +1061,7 @@ public class SunFlower {
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						RIGHT_T_BOLD +
 						PAD);
-		// Servo info
+		// Servo info, heading
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
 						rpad(String.format(" Heading Servo(s) # %s",
 										Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(","))), 45) + SOLID_VERTICAL_BOLD +
@@ -1076,7 +1076,7 @@ public class SunFlower {
 						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 						RIGHT_T_BOLD +
 						PAD);
-		// Servo info
+		// Servo info, tilt
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
 						rpad(String.format(" Tilt Servo(s) # %s. limit %d, offset %d",
 										Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),

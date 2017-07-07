@@ -91,6 +91,12 @@ System variables:
 Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15
 ```
+_Note_:
+The `--heading:` and `--tilt:` parameters can be comma-separated lists of numbers (servo channel IDs on the `PCA9685`). Useful when you want to drive several devices, each of them using two servos.
+ For example
+ ```
+ --heading:14,10 --tilt:15,11
+ ```
 
 The variables `heading.servo.sign` and `tilt.servo.sign` can be set to `-1`, to invert the way the servos turn. This depends on the physical construction of your device, namely,
 is the tilt servo pointing left or right, is the heading servo pointing up or down?
