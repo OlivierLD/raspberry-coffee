@@ -926,8 +926,8 @@ public class SunFlower {
 		String mess = String.format("Position %s / %s, Heading servo: #%s. Tilt servo: #%s. Tilt: limit %d, offset %d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(instance.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-						Arrays.stream(headingServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
-						Arrays.stream(tiltServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
+						Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
+						Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
 						tiltLimit,
 						tiltOffset);
 		if (!ansiConsole) {
@@ -1058,8 +1058,8 @@ public class SunFlower {
 		// Servo info
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
 						rpad(String.format(" Hdg #%s. Tilt #%s. limit %d, offset %d",
-										Arrays.stream(headingServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
-										Arrays.stream(tiltServoID).boxed().map(x -> String.valueOf(x)).collect(Collectors.joining(",")),
+										Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
+										Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
 										tiltLimit,
 										tiltOffset), 45) + SOLID_VERTICAL_BOLD +
 						PAD);
