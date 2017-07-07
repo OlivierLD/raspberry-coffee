@@ -593,11 +593,11 @@ public class SunFlower {
 				displayAnsiData();
 			} else {
 				System.out.println("----------------------------------------------");
-				String posMess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
+				String posMess = String.format("Position %s / %s, Heading servo: #%s, Tilt servo: #%s, Tilt: limit %d, offset %d",
 								GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 								GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-								headingServoID,
-								tiltServoID,
+								Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
+								Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
 								tiltLimit,
 								tiltOffset);
 				System.out.println(posMess);

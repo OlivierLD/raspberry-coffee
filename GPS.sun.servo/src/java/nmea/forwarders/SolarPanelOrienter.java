@@ -180,7 +180,7 @@ public class SolarPanelOrienter implements Forwarder {
 		System.setProperty("one.by.one", props.getProperty("one.by.one", "false"));
 		System.setProperty("time.provided", props.getProperty("time.provided", "false"));
 
-		sunFlower = new SunFlower(headingPin, tiltPin);
+		sunFlower = new SunFlower(new int [] { headingPin }, new int[] { tiltPin });
 
 		declination = parsePropDouble(props, "declination", 14.0);
 

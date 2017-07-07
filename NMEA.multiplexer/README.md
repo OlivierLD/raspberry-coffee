@@ -452,7 +452,27 @@ where `machine-name` is the name of the machine where the multiplexer is running
 
 ![Admin Web UI](./docimages/AdminSnapshot.png "Admin GUI")
 
-And any REST client (NodeJS, Postman, your own code, ...) does the job.
+And any REST client (NodeJS, Postman, curl, your own code, ...) does the job.
+
+Example with `curl`:
+```
+$ curl -v http://192.168.1.181:9999/forwarders
+*   Trying ::1...
+* Connected to localhost (::1) port 9999 (#0)
+> GET /forwarders HTTP/1.1
+> Host: localhost:9999
+> User-Agent: curl/7.43.0
+> Accept: */*
+>
+< HTTP/1.1 200
+< Access-Control-Allow-Origin: *
+< Content-Length: 66
+< Content-Type: application/json
+<
+* Connection #0 to host localhost left intact
+[{"cls":"nmea.forwarders.SolarPanelOrienter","type":"sun-flower"}]
+$
+```
 
 ![With REST traffic](./docimages/AdminSnapshot.02.png "With REST traffic")
 
