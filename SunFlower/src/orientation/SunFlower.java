@@ -362,10 +362,10 @@ public class SunFlower {
 			}
 		} catch (UnsatisfiedLinkError usle) {
 			foundPCA9685 = false;
-			System.err.println("+------------------------------------------------------------");
-			System.err.println("| PCA9685 was NOT initialized.\nCheck your wiring, or make sure you are on a Raspberry PI...");
+			System.err.println("+---------------------------------------------------------------------");
+			System.err.println("| You might not be on a Raspberry PI, or PI4J/WiringPi is not there...");
 			System.err.println("| Moving on anyway...");
-			System.err.println("+------------------------------------------------------------");
+			System.err.println("+---------------------------------------------------------------------");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(1);
@@ -1063,8 +1063,22 @@ public class SunFlower {
 						PAD);
 		// Servo info
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-						rpad(String.format(" Hdg #%s. Tilt #%s. limit %d, offset %d",
-										Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
+						rpad(String.format(" Heading Servo(s) # %s",
+										Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(","))), 45) + SOLID_VERTICAL_BOLD +
+						PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Servo info
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+						rpad(String.format(" Tilt Servo(s) # %s. limit %d, offset %d",
 										Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
 										tiltLimit,
 										tiltOffset), 45) + SOLID_VERTICAL_BOLD +
