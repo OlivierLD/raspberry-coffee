@@ -106,6 +106,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     #
     JAVA_OPTS="$JAVA_OPTS -Dhttp.port=9999"
+    JAVA_OPTS="$JAVA_OPTS -Dinteractive=false"
     ;;
   *)
     echo "======================="

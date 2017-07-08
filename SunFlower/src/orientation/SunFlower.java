@@ -117,6 +117,7 @@ public class SunFlower implements HTTPServerInterface {
 	private static boolean smoothMoves = false;
 	private static boolean demo = false;
 	private static boolean timeProvided = false;
+	private static boolean interactive = true; // Ask to point the device before starting
 
 	private static boolean servoMoveOneByOne = true;
 
@@ -319,6 +320,7 @@ public class SunFlower implements HTTPServerInterface {
 			throw new IllegalArgumentException("demo.mode and time.provided are mutually exclusive.");
 		}
 
+		interactive = "true".equals(System.getProperty("interactive", "true"));
 		smoothMoves = "true".equals(System.getProperty("smooth.moves", "false"));
 
 		servoMoveOneByOne = "true".equals(System.getProperty("one.by.one", "true"));
@@ -1040,20 +1042,22 @@ public class SunFlower implements HTTPServerInterface {
 		}
 
 		try {
-			// Point the device to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
-			mess = String.format("Point the Device to the true %s, hit [Return] when ready.", instance.getLatitude() > 0 ? "South" : "North");
+			if (interactive) {
+				// Point the device to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
+				mess = String.format("Point the Device to the true %s, hit [Return] when ready.", instance.getLatitude() > 0 ? "South" : "North");
 
-			if (ansiConsole) {
-				AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_REVERSE + mess + PAD);
-			} else {
-				System.out.println(mess);
-			}
+				if (ansiConsole) {
+					AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_REVERSE + mess + PAD);
+				} else {
+					System.out.println(mess);
+				}
 
-			z = instance.getLatitude() > 0 ? 180 : 0;
-			instance.setCalibrating(true);
-			userInput("");
-			if (ansiConsole) { // Cleanup
-				AnsiConsole.out.println(ansiLocate(1, 1) + PAD);
+				z = instance.getLatitude() > 0 ? 180 : 0;
+				instance.setCalibrating(true);
+				userInput("");
+				if (ansiConsole) { // Cleanup
+					AnsiConsole.out.println(ansiLocate(1, 1) + PAD);
+				}
 			}
 			instance.setCalibrating(false);
 			// Done calibrating
