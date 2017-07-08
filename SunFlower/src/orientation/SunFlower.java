@@ -393,7 +393,7 @@ public class SunFlower implements HTTPServerInterface {
 			} catch (NullPointerException npe) {
 				foundPCA9685 = false;
 				System.err.println("+------------------------------------------------------------");
-				System.err.println("| PCA9685 was NOT initialized.\nCheck your wiring, or make sure you are on a Raspberry PI...");
+				System.err.println("| PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}
@@ -685,7 +685,7 @@ public class SunFlower implements HTTPServerInterface {
 
 			if (ansiConsole) {
 				displayAnsiData();
-			} else {
+			} else if (servoVerbose) {
 				System.out.println("----------------------------------------------");
 				String posMess = String.format("Position %s / %s, Heading servo: #%s, Tilt servo: #%s, Tilt: limit %d, offset %d",
 								GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS),
