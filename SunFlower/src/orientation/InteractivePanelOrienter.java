@@ -35,7 +35,7 @@ public class InteractivePanelOrienter {
 			}
 		}
 
-		SunFlower instance = new SunFlower(servoHeading, servoTilt);
+		SunFlower instance = new SunFlower(new int[] { servoHeading }, new int[] { servoTilt });
 
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {

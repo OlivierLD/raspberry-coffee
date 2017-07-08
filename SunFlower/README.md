@@ -91,6 +91,12 @@ System variables:
 Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15
 ```
+_Note_:
+The `--heading:` and `--tilt:` parameters can be comma-separated lists of numbers (servo channel IDs on the `PCA9685`). Useful when you want to drive several devices, each of them using two servos.
+ For example
+ ```
+ --heading:14,10 --tilt:15,11
+ ```
 
 The variables `heading.servo.sign` and `tilt.servo.sign` can be set to `-1`, to invert the way the servos turn. This depends on the physical construction of your device, namely,
 is the tilt servo pointing left or right, is the heading servo pointing up or down?
@@ -143,10 +149,12 @@ A good setting would be to power the Raspberry PI _and_ the `PCA9685` from the s
 _Note_: The diagram above features a Raspberry PI 3, but they all work well, including the Raspberry PI Zero.
 
 ## At work
-A snapshot of the (optional) ANSI console:
+A snapshot of the (optional) ANSI console (look into the script named `run` for details):
+```bash
+ $> ./run smooth
+```
 
-
-<img src="./doc/ansi.console.png" alt="ANSI Console" width="561" height="199">
+<img src="./doc/ansi.console.png" alt="ANSI Console" width="339" height="285">
 
 Here is a prototype, made of plexiglass and adhesive tape:<br>
 ![Proto](./doc/prototype.jpg) <br> Next comes the real stuff!

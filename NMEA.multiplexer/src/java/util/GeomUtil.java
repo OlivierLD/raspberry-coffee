@@ -302,6 +302,12 @@ public final class GeomUtil {
 		return (positive ? "" : "-") + hValue;
 	}
 
+	/**
+	 *
+	 * @param g Longitude
+	 * @param hms UT HMS
+	 * @return
+	 */
 	public static double getLocalSolarTime(double g, double hms) {
 		double ahh = degrees2hours(g);
 		double localSolar = hms + ahh;

@@ -17,11 +17,14 @@ import orientation.SunFlower;
  * To load it, use the properties file at startup:
  * <pre>
  *   forward.XX.cls=nmea.forwarders.SolarPanelOrienter
+ *   forward.XX.properties=sunflower.properties
  * </pre>
- * A jar containing this class and its dependencies must be available in the classpath.
+ * A jar (or classpath) containing this class and its dependencies must be available in the classpath.
+ *
+ * TODO: Smoothing? Tolerance?
  */
 public class SolarPanelOrienter implements Forwarder {
-	private double defaultDeclination = 0d;
+	private double declination = 0d;
 
 	private SunFlower sunFlower = null;
 	/*
@@ -50,7 +53,7 @@ public class SolarPanelOrienter implements Forwarder {
 						sunFlower.setCurrentDateTime(rmc.getRmcDate());
 					}
 					if (rmc.getDeclination() != -Double.MAX_VALUE) {
-						this.defaultDeclination = rmc.getDeclination();
+						this.declination = rmc.getDeclination();
 					}
 					break;
 				case "GLL":
@@ -65,13 +68,13 @@ public class SolarPanelOrienter implements Forwarder {
 					double[] hdg = StringParsers.parseHDG(str);
 					double heading = hdg[StringParsers.HDG_in_HDG];
 					if (hdg[StringParsers.VAR_in_HDG] != -Double.MAX_VALUE) {
-						this.defaultDeclination = hdg[StringParsers.VAR_in_HDG];
+						this.declination = hdg[StringParsers.VAR_in_HDG];
 					}
-					sunFlower.setDeviceHeading(heading + this.defaultDeclination);
+					sunFlower.setDeviceHeading(heading + this.declination);
 					break;
 				case "HDM":
 					int hdm = StringParsers.parseHDM(str);
-					sunFlower.setDeviceHeading(hdm + this.defaultDeclination);
+					sunFlower.setDeviceHeading(hdm + this.declination);
 					break;
 				default:
 					break;
@@ -139,7 +142,7 @@ public class SolarPanelOrienter implements Forwarder {
 		heading.servo.id=14
 		tilt.servo.id=15
 		#
-		declination=14
+		declination=14 # default if missing
 		deltaT=68.8033
 		#
 		smooth.moves=true
@@ -157,6 +160,8 @@ public class SolarPanelOrienter implements Forwarder {
 		tilt.offset=0
 		#
 		one.by.one=false
+		#
+		time.provided=false
 		*/
 		int headingPin = parsePropInt(props, "heading.servo.id", 14);
 		int tiltPin = parsePropInt(props, "tilt.servo.id", 15);
@@ -175,9 +180,9 @@ public class SolarPanelOrienter implements Forwarder {
 		System.setProperty("one.by.one", props.getProperty("one.by.one", "false"));
 		System.setProperty("time.provided", props.getProperty("time.provided", "false"));
 
-		sunFlower = new SunFlower(headingPin, tiltPin);
+		sunFlower = new SunFlower(new int [] { headingPin }, new int[] { tiltPin });
 
-		defaultDeclination = parsePropDouble(props, "declination", 14.0);
+		declination = parsePropDouble(props, "declination", 14.0);
 
 		sunFlower.startWorking();
 	}

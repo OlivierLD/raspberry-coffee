@@ -1,19 +1,25 @@
 package orientation;
 
-import static ansi.EscapeSeq.ANSI_BLACK;
 import static ansi.EscapeSeq.ANSI_BOLD;
-import static ansi.EscapeSeq.ANSI_CYAN;
 import static ansi.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
 import static ansi.EscapeSeq.ANSI_DEFAULT_TEXT;
 import static ansi.EscapeSeq.ANSI_ERASE_TO_EOL;
+import static ansi.EscapeSeq.ANSI_ITALIC;
 import static ansi.EscapeSeq.ANSI_NORMAL;
-import static ansi.EscapeSeq.ANSI_RED;
-import static ansi.EscapeSeq.ANSI_WHITE;
-import static ansi.EscapeSeq.ANSI_WHITEONBLUE;
 import static ansi.EscapeSeq.ANSI_CLS;
 import static ansi.EscapeSeq.ANSI_REVERSE;
+import static ansi.EscapeSeq.BOTTOM_LEFT_CORNER_BOLD;
+import static ansi.EscapeSeq.BOTTOM_RIGHT_CORNER_BOLD;
+import static ansi.EscapeSeq.BOTTOM_T_BOLD;
+import static ansi.EscapeSeq.CROSS_BOLD;
+import static ansi.EscapeSeq.LEFT_T_BOLD;
+import static ansi.EscapeSeq.RIGHT_T_BOLD;
+import static ansi.EscapeSeq.SOLID_HORIZONTAL_BOLD;
+import static ansi.EscapeSeq.SOLID_VERTICAL_BOLD;
+import static ansi.EscapeSeq.TOP_LEFT_CORNER_BOLD;
+import static ansi.EscapeSeq.TOP_RIGHT_CORNER_BOLD;
+import static ansi.EscapeSeq.TOP_T_BOLD;
 import static ansi.EscapeSeq.ansiLocate;
-import static ansi.EscapeSeq.ansiSetTextAndBackgroundColor;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import i2c.servo.pwm.PCA9685;
@@ -21,10 +27,16 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import org.fusesource.jansi.AnsiConsole;
 import user.util.GeomUtil;
 
@@ -63,6 +75,9 @@ import user.util.GeomUtil;
  * -Dto.date=2017-06-28T20:33:00
  */
 public class SunFlower {
+
+	private static int[] headingServoID = new int[] { 14 };
+	private static int[] tiltServoID = new int[] { 15 };
 
 	private double latitude = 0D;
 	private double longitude = 0D;
@@ -107,9 +122,22 @@ public class SunFlower {
 	private final static String PAD = ANSI_ERASE_TO_EOL;
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+	private final static SimpleDateFormat SDF_UTC = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
+	private final static SimpleDateFormat SDF_NO_Z = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
 	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Duration fmt.
+	static {
+		SDF_NO_Z.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+		SDF_UTC.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+	}
 
 	private static boolean foundPCA9685 = true;
+
+	private static Date getSolarDate(double longitude, Date utc) {
+		double toHours = longitude / 15d;
+		long ms = utc.getTime();
+		Date solar = new Date(ms + Math.round(toHours * 3_600_000));
+		return solar;
+	}
 
 	private void getSunData(double lat, double lng) {
 		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
@@ -184,9 +212,6 @@ public class SunFlower {
 		}
 	}
 
-	private static int headingServoID = 14;
-	private static int tiltServoID = 15;
-
 	private static int previousHeadingAngle = 0;
 	private static int previousTiltAngle = 0;
 
@@ -222,7 +247,7 @@ public class SunFlower {
 		return retString;
 	}
 
-	public SunFlower(int headinServoNumber, int tiltServoNumber) {
+	public SunFlower(int[] headinServoNumber, int[] tiltServoNumber) {
 
 //		Properties properties = System.getProperties();
 //		properties.list(System.out);
@@ -335,6 +360,12 @@ public class SunFlower {
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}
+		} catch (UnsatisfiedLinkError usle) {
+			foundPCA9685 = false;
+			System.err.println("+---------------------------------------------------------------------");
+			System.err.println("| You might not be on a Raspberry PI, or PI4J/WiringPi is not there...");
+			System.err.println("| Moving on anyway...");
+			System.err.println("+---------------------------------------------------------------------");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(1);
@@ -370,7 +401,10 @@ public class SunFlower {
 					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f (target %.02f)", pos, Math.abs(pos - f), f));
 					}
-					setAngle(headingServoID, pos);
+					for (int id : headingServoID) {
+						setAngle(id, pos);
+					}
+//				setAngle(headingServoID, pos);
 					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
@@ -385,7 +419,8 @@ public class SunFlower {
 				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
 					System.out.println(String.format("H> Abrupt heading set to %.02f", f));
 				}
-				setAngle(headingServoID, f);
+				Arrays.stream(headingServoID).forEach(id -> setAngle(id, f));
+//			setAngle(headingServoID, f);
 			}
 		}
 	}
@@ -415,7 +450,10 @@ public class SunFlower {
 					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 						System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					}
-					setAngle(tiltServoID, pos);
+//				setAngle(tiltServoID, pos);
+					for (int id : tiltServoID) {
+						setAngle(id, pos);
+					}
 					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
@@ -430,7 +468,10 @@ public class SunFlower {
 				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
 					System.out.println(String.format("T> Abrupt tilt set to %.02f (%.02f)", f, goToAngle));
 				}
-				setAngle(tiltServoID, goToAngle);
+//			setAngle(tiltServoID, goToAngle);
+				for (int id : tiltServoID) {
+					setAngle(id, goToAngle);
+				}
 			}
 		}
 	}
@@ -438,10 +479,10 @@ public class SunFlower {
 	private void setAngle(int servo, float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
 		if (servoVerbose && !manualEntry) {
-			String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 			if (ansiConsole) {
-				AnsiConsole.out.println(ansiLocate(1, (servo == headingServoID ? 8 : 9)) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
+				displayAnsiData();
 			} else {
+				String mess = String.format("Servo %d, angle %.02f\272, pwm: %d", servo, f, pwm);
 				System.out.println(mess);
 			}
 		}
@@ -456,11 +497,16 @@ public class SunFlower {
 	}
 
 	public void stopHeadingServo() {
-		stop(headingServoID);
+		for (int id : headingServoID) {
+			stop(id);
+		}
 	}
 
 	public void stopTiltServo() {
-		stop(tiltServoID);
+//	stop(tiltServoID);
+		for (int id: tiltServoID) {
+			stop(id);
+		}
 	}
 
 	private void stop(int servo) { // Set to 0
@@ -543,62 +589,50 @@ public class SunFlower {
 				invert = false;
 			}
 
-			String posMess = String.format("Position %s%s / %s%s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
-							(ansiConsole?ANSI_WHITEONBLUE:""),
-							GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS),
-							GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-							(ansiConsole?ANSI_NORMAL + ANSI_BOLD:""),
-							headingServoID,
-							tiltServoID,
-							tiltLimit,
-							tiltOffset);
 			if (ansiConsole) {
-				AnsiConsole.out.println(ansiLocate(1, 2) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + posMess + PAD);
+				displayAnsiData();
 			} else {
 				System.out.println("----------------------------------------------");
+				String posMess = String.format("Position %s / %s, Heading servo: #%s, Tilt servo: #%s, Tilt: limit %d, offset %d",
+								GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS),
+								GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW),
+								Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
+								Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
+								tiltLimit,
+								tiltOffset);
 				System.out.println(posMess);
 				System.out.println("----------------------------------------------");
 			}
 
+			ansiDeviceHeading = deviceHeading;
+			Date date = timeProvided ? current.getTime() : new Date();
+			ansiSystemDate = date;
+			ansiSolarDate = getSolarDate(getLongitude(), date);
+
 			if (he > 0) { // Daytime
 				if (orientationVerbose && !manualEntry) {
 					String mess = String.format(
-									"Heading servo : Aiming %sZ: %.01f%s, servo-angle (bearing): %d %s - device heading: %.01f.",
-									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_WHITE, ANSI_RED):""),
+									"Heading servo : Aiming Z: %.01f, servo-angle (bearing): %d %s - device heading: %.01f.",
 									z,
-									(ansiConsole?ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT:""),
 									headingServoAngle,
-									(invert ? String.format("(%sinverted to %.02f%s)",
-													(ansiConsole?ANSI_REVERSE:""),
-													invertHeading((float) headingServoAngle),
-													(ansiConsole?ANSI_NORMAL + ANSI_BOLD:"")) : ""),
+									(invert ? String.format("(inverted to %.02f)",
+													invertHeading((float) headingServoAngle)) : ""),
 									deviceHeading);
 					if (ansiConsole) {
-						AnsiConsole.out.println(ansiLocate(1, 1) +
-										ANSI_NORMAL +
-										ANSI_DEFAULT_BACKGROUND +
-										ANSI_DEFAULT_TEXT +
-										ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(timeProvided ? current.getTime() : new Date()) +
-														(smoothMoves?" (smooth)":" (raw)") +
-										PAD);
-						AnsiConsole.out.println(ansiLocate(1, 3) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
+						displayAnsiData();
 					} else {
 						System.out.println(mess);
 					}
 				}
 				if (astroVerbose && !manualEntry) {
-					String mess = String.format("+ Calculated: From %s / %s, %sHe:%.02f\272%s, %sZ:%.02f\272%s (true)",
-									GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
-									GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
-									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_BLACK, ANSI_CYAN):""),
-									he,
-									(ansiConsole?ANSI_NORMAL + ANSI_BOLD:""),
-									(ansiConsole?ansiSetTextAndBackgroundColor(ANSI_RED, ANSI_CYAN):""),
-									z,
-									(ansiConsole?ANSI_NORMAL + ANSI_BOLD:""));
 					if (ansiConsole) {
-						AnsiConsole.out.println(ansiLocate(1, 4) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
+						displayAnsiData();
 					} else {
+						String mess = String.format("+ Calculated: From %s / %s, He:%.02f\272, Z:%.02f\272 (true)",
+										GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
+										GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW),
+										he,
+										z);
 						System.out.println(mess);
 					}
 				}
@@ -606,12 +640,13 @@ public class SunFlower {
 				if (invert) {
 					angle = -angle;
 				}
+				ansiTiltServoAngle = angle;
 				if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && angle != previousTiltAngle) {
 					if (tiltVerbose && !manualEntry) {
-						String mess = String.format(">>> Tilt servo angle now: %d %s%s", angle, (invert ? "(inverted)" : ""), (angle != applyLimitAndOffset(angle) ? String.format(", limited to %.02f", applyLimitAndOffset(angle)) : ""));
 						if (ansiConsole) {
-							AnsiConsole.out.println(ansiLocate(1, 5) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
+							displayAnsiData();
 						} else {
+							String mess = String.format(">>> Tilt servo angle now: %d %s%s", angle, (invert ? "(inverted)" : ""), (angle != applyLimitAndOffset(angle) ? String.format(", limited to %.02f", applyLimitAndOffset(angle)) : ""));
 							System.out.println(mess);
 						}
 					}
@@ -625,11 +660,12 @@ public class SunFlower {
 				}
 			} else { // Night time
 				invert = false;
+				ansiTiltServoAngle = 0;
 				if (tiltVerbose && !manualEntry) {
-					String mess = "Night time, tilt parked...";
 					if (ansiConsole) {
-						AnsiConsole.out.println(ansiLocate(1, 4) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
+						displayAnsiData();
 					} else {
+						String mess = "Night time, tilt parked...";
 						System.out.println(mess);
 					}
 				}
@@ -642,11 +678,12 @@ public class SunFlower {
 				}
 				headingServoAngle = 0; // for the night
 			} // End day or night
+			ansiHeadingServoAngle = headingServoAngle;
 			if (orientationVerbose && !manualEntry) {
-				String mess = String.format(">>> Heading servo angle now %d %s", headingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
 				if (ansiConsole) {
-					AnsiConsole.out.println(ansiLocate(1, 6) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
+					displayAnsiData();
 				} else {
+					String mess = String.format(">>> Heading servo angle now %d %s", headingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
 					System.out.println(mess);
 				}
 			}
@@ -655,7 +692,7 @@ public class SunFlower {
 				if (headingServoAngle != previousHeadingAngle) {
 					this.setHeadingServoAngle(newHeadingAngle);
 				}
-				previousHeadingAngle = (int)Math.round(newHeadingAngle); // headingServoAngle;
+				previousHeadingAngle = (int)Math.round(newHeadingAngle); // Store the actual version of the angle, possibly inverted.
 			}
 		}
 	}
@@ -704,7 +741,7 @@ public class SunFlower {
 				if (demo) {
 					getSunDataForDate(latitude, longitude, current);
 					current.add(Calendar.MINUTE, 1);
-					System.out.println(String.format(">>> %s", SDF.format(current.getTime())));
+//				System.out.println(String.format(">>> %s", SDF.format(current.getTime())));
 					if (current.getTime().after(toDate)) {
 						keepWorking = false;
 					}
@@ -724,7 +761,7 @@ public class SunFlower {
 		});
 		mess = "Starting the timer loop";
 		if (ansiConsole){
-			AnsiConsole.out.println(ansiLocate(1, 11) + mess + PAD);
+			AnsiConsole.out.println(ansiLocate(1, 1) + mess + PAD);
 		} else {
 			System.out.println(mess);
 		}
@@ -733,8 +770,12 @@ public class SunFlower {
 
 	public void stopWorking() {
 		this.keepWorking = false;
-		stop(headingServoID);
-		stop(tiltServoID);
+		for (int id : headingServoID) {
+			stop(id);
+		}
+		for (int id : tiltServoID) {
+			stop(id);
+		}
 
 		try {
 			if (!smoothMoves) {
@@ -808,21 +849,33 @@ public class SunFlower {
 
 	public static void main(String... args) {
 
-		headingServoID = 14;
-		tiltServoID = 15;
+		headingServoID = new int[] { 14 };
+		tiltServoID = new int[] { 15 };
 
 		// Supported parameters --heading:14 --tilt:15
 		if (args.length > 0) {
 			for (String prm : args) {
 				if (prm.startsWith("--heading:")) {
 					try {
-						headingServoID = Integer.parseInt(prm.substring("--heading:".length()));
+						List<Integer> hsIDs = new ArrayList<>();
+						String[] strIds = prm.substring("--heading:".length()).split(",");
+						Arrays.stream(strIds).forEach(sid -> {
+							hsIDs.add(Integer.parseInt(sid));
+						});
+						headingServoID = hsIDs.stream().mapToInt(x -> x).toArray();
+//					headingServoID = Integer.parseInt(prm.substring("--heading:".length()));
 					} catch (Exception e) {
 						throw e;
 					}
 				} else if (prm.startsWith("--tilt:")) {
 					try {
-						tiltServoID = Integer.parseInt(prm.substring("--tilt:".length()));
+						List<Integer> tsIDs = new ArrayList<>();
+						String[] strIds = prm.substring("--tilt:".length()).split(",");
+						Arrays.stream(strIds).forEach(sid -> {
+							tsIDs.add(Integer.parseInt(sid));
+						});
+						tiltServoID = tsIDs.stream().mapToInt(x -> x).toArray();
+//					tiltServoID = Integer.parseInt(prm.substring("--tilt:".length()));
 					} catch (Exception e) {
 						throw e;
 					}
@@ -874,19 +927,16 @@ public class SunFlower {
 
 		if (ansiConsole) {
 			AnsiConsole.systemInstall();
-			AnsiConsole.out.println(ANSI_CLS);
-			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + "Driving Servos toward the Sun, " + SDF.format(new Date()) + PAD);
+			AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_CLS);
 		}
-		String mess = String.format("Position %s / %s, Heading servo: #%d, Tilt servo: #%d, Tilt: limit %d, offset %d",
+		String mess = String.format("Position %s / %s, Heading servo: #%s. Tilt servo: #%s. Tilt: limit %d, offset %d",
 						GeomUtil.decToSex(instance.getLatitude(), GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(instance.getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-						headingServoID,
-						tiltServoID,
+						Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
+						Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
 						tiltLimit,
 						tiltOffset);
-		if (ansiConsole) {
-			AnsiConsole.out.println(ansiLocate(1, 2) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + ANSI_BOLD + mess + PAD);
-		} else {
+		if (!ansiConsole) {
 			System.out.println("----------------------------------------------");
 			System.out.println(mess);
 			System.out.println("----------------------------------------------");
@@ -897,7 +947,7 @@ public class SunFlower {
 			mess = String.format("Point the Device to the true %s, hit [Return] when ready.", instance.getLatitude() > 0 ? "South" : "North");
 
 			if (ansiConsole) {
-				AnsiConsole.out.println(ansiLocate(1, 11) + ANSI_REVERSE + mess + PAD);
+				AnsiConsole.out.println(ansiLocate(1, 1) + ANSI_REVERSE + mess + PAD);
 			} else {
 				System.out.println(mess);
 			}
@@ -906,7 +956,7 @@ public class SunFlower {
 			instance.setCalibrating(true);
 			userInput("");
 			if (ansiConsole) { // Cleanup
-				AnsiConsole.out.println(ansiLocate(1, 11) + PAD);
+				AnsiConsole.out.println(ansiLocate(1, 1) + PAD);
 			}
 			instance.setCalibrating(false);
 			// Done calibrating
@@ -927,5 +977,227 @@ public class SunFlower {
 			ex.printStackTrace();
 //		System.exit(1);
 		}
+	}
+
+	private static Date ansiSolarDate = null;
+	private static Date ansiSystemDate = null;
+	private int ansiHeadingServoAngle = 0;
+	private int ansiTiltServoAngle = 0;
+	private double ansiDeviceHeading = 0d;
+
+	/**
+	 * Returns a string of nb times the str parameter.
+	 * @param str the string to use
+	 * @param nb number of times
+	 * @return the expected string.
+	 */
+	private static String drawXChar(String str, int nb) {
+		StringBuffer sb = new StringBuffer();
+		for (int i=0; i<nb; i++) {
+			sb.append(str);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * Right pad, with blanks
+	 * @param s
+	 * @param len
+	 * @return
+	 */
+	private static String rpad(String s, int len) {
+		return rpad(s, len, " ");
+	}
+	private static String rpad(String s, int len, String pad) {
+		String str = s;
+		while (str.length() < len) {
+			str += pad;
+		}
+		return str;
+	}
+
+	/**
+	 * Left pad, with blanks
+	 * @param s
+	 * @param len
+	 * @return
+	 */
+	private static String lpad(String s, int len) {
+		return lpad(s, len, " ");
+	}
+	private static String lpad(String s, int len, String pad) {
+		String str = s;
+		while (str.length() < len) {
+			str = pad + str;
+		}
+		return str;
+	}
+
+	/**
+	 * Box codes are available at https://en.wikipedia.org/wiki/Box-drawing_character
+	 * Display the data in an ANSI box, refreshed every time is is displayed.
+	 */
+	private  void displayAnsiData() {
+		int line = 1; // Start from that line
+		// Frame top
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						TOP_LEFT_CORNER_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						TOP_RIGHT_CORNER_BOLD +
+						PAD);
+		// Title. Note: The italic escape code is correct. But it does not work on all platforms.
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Solar Panel Orientation ", 45) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Servo info, heading
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+						rpad(String.format(" Heading Servo(s) # %s.",
+										Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(","))), 45) + SOLID_VERTICAL_BOLD +
+						PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Servo info, tilt
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+						rpad(String.format(" Tilt Servo(s) # %s. limit %d, offset %d",
+										Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
+										tiltLimit,
+										tiltOffset), 45) + SOLID_VERTICAL_BOLD +
+						PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						TOP_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						TOP_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Position
+		String lat = GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS);
+		String lng = GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW);
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+						rpad(" Position L/G", 15) + SOLID_VERTICAL_BOLD +
+						rpad(lpad(" " + lat, 13), 14) + SOLID_VERTICAL_BOLD +
+						rpad(lpad(" " + lng, 13), 14) + SOLID_VERTICAL_BOLD +
+						PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						CROSS_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						BOTTOM_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
+						PAD);
+		// System date
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" System Date ", 15) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" " + (ansiSystemDate != null ? SDF.format(ansiSystemDate) : "null"), 29) +
+						SOLID_VERTICAL_BOLD +
+						PAD);
+		// UTC date
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" UTC ", 15) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" " + (ansiSystemDate != null ? SDF_UTC.format(ansiSystemDate) : "null"), 29) +
+						SOLID_VERTICAL_BOLD +
+						PAD);
+		// Solar date
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Solar Date ", 15) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" " + (ansiSolarDate != null ? SDF_NO_Z.format(ansiSolarDate) : "null"), 29) +
+						SOLID_VERTICAL_BOLD +
+						PAD);
+    // Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						CROSS_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Dead Reckoning
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" He ", 15) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" " + String.format("%6.02f\272", he), 29) +
+						SOLID_VERTICAL_BOLD +
+						PAD);
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Z ", 15) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" " + String.format("%6.02f\272", z) + " true", 29) +
+						SOLID_VERTICAL_BOLD +
+						PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						CROSS_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Servos
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Heading Servo ", 15) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" " + String.format("%s%s", lpad(String.format("%+02d", ansiHeadingServoAngle), 3, " "), (invert? String.format(" (inverted to %+.0f)",	invertHeading((float) ansiHeadingServoAngle)) :"")), 29) +
+						SOLID_VERTICAL_BOLD +
+						PAD);
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Tilt Servo ", 15) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" " + String.format("%s%s%s", lpad(String.format("%+02d", ansiTiltServoAngle), 3, " "),
+										(invert ? " (inverted)":""),
+										(ansiTiltServoAngle != applyLimitAndOffset(ansiTiltServoAngle) ? String.format(", limited: %.0f", applyLimitAndOffset(ansiTiltServoAngle)) : "")), 29) +
+						SOLID_VERTICAL_BOLD +
+						PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						LEFT_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						CROSS_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						RIGHT_T_BOLD +
+						PAD);
+		// Device heading
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Device Hdg ", 15) +
+						SOLID_VERTICAL_BOLD +
+						rpad(" " + String.format("%.01f\272", ansiDeviceHeading), 29) +
+						SOLID_VERTICAL_BOLD +
+						PAD);
+		// Frame bottom
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+						BOTTOM_LEFT_CORNER_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+						BOTTOM_T_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						SOLID_HORIZONTAL_BOLD +
+						drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+						BOTTOM_RIGHT_CORNER_BOLD +
+						PAD);
 	}
 }
