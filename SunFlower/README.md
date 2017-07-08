@@ -88,6 +88,8 @@ System variables:
  -Dfrom.date=2017-06-28T05:53:00
  -Dto.date=2017-06-28T20:33:00
 
+ -Dhttp.port=9999
+
 Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15
 ```
@@ -108,6 +110,12 @@ will not be tilted further down.
 First, the program sets the `heading` servo to zero, and asks you to point it South (if you are in the northern hemisphere, that would be North otherwise).
 
 Once this is done, Sun's position is calculate every second, and the 2 servos are driven to point to it, as long as the Sun it up (elevation greater than 0°).
+
+If `http.port` variable is here and greater than 0, an HTTP Server - with REST Services - is started, and can be reached from any REST Client. A Web page is provided, as an example,
+`web/sample.html`.
+
+<!-- ![Web REST Sample](./doc/web.ui.png) -->
+<img src="./doc/web.ui.png" height="872" width="1020">
 
 ## Inversion
 Standard servos like the `SG92R` rotate on 180 degrees, from -90° to 90°.
