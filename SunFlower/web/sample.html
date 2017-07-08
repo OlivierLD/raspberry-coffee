@@ -54,42 +54,76 @@
   </head>
   <body>
     <!--table width="600px" border="0"-->
-    <table width="800px" border="0">
+    <!--table width="800px" border="0"-->
+    <table border="0">
       <tr style="margin-bottom: 10px;">
         <td valign="top"><h2>SunFlower Data</h2></td>
-        <td>From the GPS: Position, Speed, Heading, Altitude.</td>
+        <td>From the SunFlower: Position, Dates, orientations, etc.</td>
       </tr>
       <tr>
         <td valign="top" colspan="2">
           <table width="100%" border="0">
             <tr>
-              <td colspan="3">Position</td>
+              <td colspan="2">Position</td>
             </tr>
             <tr>
-              <td colspan="3" align="right">
+              <td colspan="2" align="right">
                 <b><div id="lat"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">N 00"00.00'</div></b>
               </td>
             </tr>
             <tr>
-              <td colspan="3" align="right">
+              <td colspan="2" align="right">
                 <b><div id="lon"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">W 000"00.00'</div></b>
               </td>
             </tr>
             <tr>
-              <td width="33%" align="center">Sun Z in &deg;</td>
-              <td width="33%" align="center">Sun He in &deg;</td>
-              <td width="33%" align="center">Altitude in meters</td>
+              <td width="50%" align="center">Sun Z in &deg;</td>
+              <td width="50%" align="center">Sun He in &deg;</td>
             </tr>
             <tr>
-              <td width="33%" align="center">
+              <td width="50%" align="center">
                 <b><div id="sunZ" class="digifont"
                         style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
               </td>
-              <td width="33%" align="center">
+              <td width="50%" align="center">
                 <b><div id="sunH" class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">00.00</div></b>
               </td>
-              <td width="33%" align="center">
-                <b><div id="alt"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">00.00</div></b>
+            </tr>
+            <tr>
+              <td colspan="2">System date</td>
+            </tr>
+            <tr>
+              <td colspan="2" align="left">
+                <b><div id="syst-date"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">--</div></b>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">UTC date</td>
+            </tr>
+            <tr>
+              <td colspan="2" align="left">
+                <b><div id="utc-date"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">--</div></b>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">Solar date</td>
+            </tr>
+            <tr>
+              <td colspan="2" align="left">
+                <b><div id="solar-date"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">--</div></b>
+              </td>
+            </tr>
+            <tr>
+              <td width="50%" align="center">Heading Servo</td>
+              <td width="50%" align="center">Tilt Servo</td>
+            </tr>
+            <tr>
+              <td width="50%" align="center">
+                <b><div id="heading" class="digifont"
+                        style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
+              </td>
+              <td width="50%" align="center">
+                <b><div id="tilt" class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
               </td>
             </tr>
           </table>
@@ -110,9 +144,11 @@
     <script>
       var onMessage = function(json) {
           console.log(JSON.stringify(json, null, 2));
-          if (json["Altitude"] !== undefined) {
-              var altitude = json["Altitude"];
-              $("#alt").text(altitude.toFixed(2));
+          if (json["dates"] !== undefined) {
+              var dates = json["dates"];
+              $("#syst-date").text(dates.system);
+              $("#utc-date").text(dates.utc);
+              $("#solar-date").text(dates.solar);
           }
           if (json["sunData"] !== undefined) {
               var he = json["sunData"].h;
@@ -125,6 +161,12 @@
               $("#lat").text(decToSex(lat, 'NS'));
               var lon = json["pos"].longitude;
               $("#lon").text(decToSex(lon, 'EW'));
+          }
+          if (json["servos"] !== undefined) {
+              var h = json["servos"].heading.value;
+              $("#heading").text(h);
+              var t = json["servos"].tilt.value;
+              $("#tilt").text(t);
           }
       };
       var sunFlowerClient = new SunFlowerClient(onMessage);
