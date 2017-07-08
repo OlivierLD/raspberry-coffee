@@ -1042,6 +1042,7 @@ public class SunFlower implements HTTPServerInterface {
 		}
 
 		try {
+			z = instance.getLatitude() > 0 ? 180 : 0;
 			if (interactive) {
 				// Point the device to the lower pole: S if you are in the North hemisphere, N if you are in the South hemisphere.
 				mess = String.format("Point the Device to the true %s, hit [Return] when ready.", instance.getLatitude() > 0 ? "South" : "North");
@@ -1052,7 +1053,6 @@ public class SunFlower implements HTTPServerInterface {
 					System.out.println(mess);
 				}
 
-				z = instance.getLatitude() > 0 ? 180 : 0;
 				instance.setCalibrating(true);
 				userInput("");
 				if (ansiConsole) { // Cleanup
