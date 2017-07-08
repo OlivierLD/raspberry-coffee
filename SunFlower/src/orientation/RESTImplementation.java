@@ -1,25 +1,15 @@
 package orientation;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import context.ApplicationContext;
-import context.NMEADataCache;
-import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
-import nmea.mux.context.Context;
-import nmea.utils.NMEAUtils;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -100,6 +90,11 @@ public class RESTImplementation {
 									"Get device position on Earth."),
 					new Operation(
 									"GET",
+									"/device-heading",
+									this::getDeviceHeading,
+									"Get device heading."),
+					new Operation(
+									"GET",
 									"/servo-values",
 									this::getServoValues,
 									"Get servos values"),
@@ -151,6 +146,17 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private Response getDeviceHeading(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		double heading = sunFlower.getDeviceHeading();
+		String content = new Gson().toJson(heading);
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
 	private Response getServoValues(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
@@ -186,18 +192,9 @@ public class RESTImplementation {
 
 	private Response getAll(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		SunFlower.AllData allData = sunFlower.getAllData();
 
-		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
-
-		JsonElement jsonElement = null;
-		try {
-			Object all = null; // TODO Get the real ones.
-
-			jsonElement = new Gson().toJsonTree(all);
-		} catch (Exception ex) {
-			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getAll", ex);
-		}
-		String content = jsonElement != null ? jsonElement.toString() : "";
+		String content = new Gson().toJson(allData);
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
@@ -225,17 +222,4 @@ public class RESTImplementation {
 
 		return response;
 	}
-
-
-	private static List<String> getSerialPortList() {
-		List<String> portList = new ArrayList<>();
-		// Opening Serial port
-		Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
-		while (enumeration.hasMoreElements()) {
-			CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
-			portList.add(cpi.getName());
-		}
-		return portList;
-	}
-
 }

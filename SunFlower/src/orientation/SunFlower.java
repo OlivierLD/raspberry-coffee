@@ -624,11 +624,35 @@ public class SunFlower implements HTTPServerInterface {
 	}
 
 	public static class ServoValues {
-		int heading;
-		int tilt;
+		HeadingServo heading;
+		TiltServo tilt;
+
+
 		public ServoValues(int h, int t) {
-			this.heading = h;
-			this.tilt = t;
+			this.heading = new HeadingServo(headingServoID, h);
+			this.tilt = new TiltServo(tiltServoID, t, tiltOffset, tiltLimit);
+		}
+
+		public static class TiltServo {
+			int[] pins;
+			int value;
+			int offset;
+			int limit;
+			public TiltServo(int[] p, int v, int o, int l) {
+				this.pins = p;
+				this.value = v;
+				this.offset = o;
+				this.limit = l;
+			}
+		}
+
+		public static class HeadingServo {
+			int[] pins;
+			int value;
+			public HeadingServo(int[] p, int v) {
+				this.pins = p;
+				this.value = v;
+			}
 		}
 	}
 	public ServoValues getServoValues() {
@@ -661,6 +685,29 @@ public class SunFlower implements HTTPServerInterface {
 	}
 	public SunData getSunData() {
 		return new SunData(he, z);
+	}
+
+	public static class AllData {
+		GeographicPosition pos;
+		ServoValues servos;
+		Dates dates;
+		SunData sunData;
+		double heading;
+		public AllData(
+						GeographicPosition pos,
+						ServoValues servos,
+						Dates dates,
+						SunData sunData,
+						double heading) {
+			this.pos = pos;
+			this.servos = servos;
+			this.dates = dates;
+			this.sunData = sunData;
+			this.heading = heading;
+		}
+	}
+	public AllData getAllData() {
+		return new AllData(getPosition(), getServoValues(), getDates(), getSunData(), getDeviceHeading());
 	}
 
 	public void orientServos() {
