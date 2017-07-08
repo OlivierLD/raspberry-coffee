@@ -51,94 +51,114 @@
 
       return s;
   };
+
+  var showPos = false, showSunData = false, showDates = false, showServos = false;
+  var togglePos = function() {
+      showPos = !showPos;
+      $("#position").css('display', showPos ? 'block' : 'none');
+  };
+  var toggleSunData = function() {
+      showSunData = !showSunData;
+      $("#sun-data").css('display', showSunData ? 'block' : 'none');
+  };
+  var toggleDates = function() {
+      showDates = !showDates;
+      $("#dates").css('display', showDates ? 'block' : 'none');
+  };
+  var toggleServos = function() {
+      showServos = !showServos;
+      $("#servos").css('display', showServos ? 'block' : 'none');
+  };
     </script>
   </head>
   <body>
-    <!--table width="600px" border="0"-->
-    <!--table width="800px" border="0"-->
     <table border="0">
       <tr style="margin-bottom: 10px;">
         <td valign="top"><h2>SunFlower Data</h2></td>
         <td>From the SunFlower: Position, Dates, orientations, etc.</td>
       </tr>
-      <tr>
-        <td valign="top" colspan="2">
-          <table width="100%" border="0">
-            <tr>
-              <td colspan="2">Position</td>
-            </tr>
-            <tr>
-              <td colspan="2" align="right">
-                <b><div id="lat"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">N 00"00.00'</div></b>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" align="right">
-                <b><div id="lon"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">W 000"00.00'</div></b>
-              </td>
-            </tr>
-            <tr>
-              <td width="50%" align="center">Sun Z in &deg;</td>
-              <td width="50%" align="center">Sun He in &deg;</td>
-            </tr>
-            <tr>
-              <td width="50%" align="center">
-                <b><div id="sunZ" class="digifont"
-                        style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
-              </td>
-              <td width="50%" align="center">
-                <b><div id="sunH" class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">00.00</div></b>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">System date</td>
-            </tr>
-            <tr>
-              <td colspan="2" align="left">
-                <b><div id="syst-date"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">--</div></b>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">UTC date</td>
-            </tr>
-            <tr>
-              <td colspan="2" align="left">
-                <b><div id="utc-date"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">--</div></b>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2">Solar date</td>
-            </tr>
-            <tr>
-              <td colspan="2" align="left">
-                <b><div id="solar-date"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">--</div></b>
-              </td>
-            </tr>
-            <tr>
-              <td width="50%" align="center">Heading Servo</td>
-              <td width="50%" align="center">Tilt Servo</td>
-            </tr>
-            <tr>
-              <td width="50%" align="center">
-                <b><div id="heading" class="digifont"
-                        style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
-              </td>
-              <td width="50%" align="center">
-                <b><div id="tilt" class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td align="left" colspan="2">
-          <div id="status" style="display: none; padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 80px;"><i>Status will go here when needed...</i></div>
-        </td>
-      </tr>
-      <!--tr>
-        <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
-      </tr-->
-    </table>  
+    </table>
+    <hr/>
+    <a href="#" onclick="togglePos();">Position</a>
+    <div id="position" style="display:none;">
+      <table>
+        <tr>
+          <td colspan="2" align="right">
+            <b><div id="lat"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">N 00"00.00'</div></b>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" align="right">
+            <b><div id="lon"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">W 000"00.00'</div></b>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <br/><a href="#" onclick="toggleSunData();">Sun Data</a>
+    <div id="sun-data" style="display:none;">
+      <table>
+        <tr>
+          <td width="50%" align="center">Sun Z in &deg;</td>
+          <td width="50%" align="center">Sun He in &deg;</td>
+        </tr>
+        <tr>
+          <td width="50%" align="center">
+            <b><div id="sunZ" class="digifont"
+                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
+          </td>
+          <td width="50%" align="center">
+            <b><div id="sunH" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">00.00</div></b>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <br/><a href="#" onclick="toggleDates();">Dates</a>
+    <div id="dates" style="display:none;">
+      <table>
+        <tr>
+          <td colspan="2">System date</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="left">
+            <b><div id="syst-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">--</div></b>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">UTC date</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="left">
+            <b><div id="utc-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">--</div></b>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">Solar date</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="left">
+            <b><div id="solar-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">--</div></b>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <br/><a href="#" onclick="toggleServos();">Servos</a>
+    <div id="servos" style="display:none;">
+      <table>
+        <tr>
+          <td width="50%" align="center">Heading Servo</td>
+          <td width="50%" align="center">Tilt Servo</td>
+        </tr>
+        <tr>
+          <td width="50%" align="center">
+            <b><div id="heading" class="digifont"
+                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
+          </td>
+          <td width="50%" align="center">
+            <b><div id="tilt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">000</div></b>
+          </td>
+        </tr>
+      </table>
+    </div>
     <hr>
     <address>&copy; Oliv did it.</address>
     <script src="js/sf.client.js"></script>

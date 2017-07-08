@@ -89,6 +89,7 @@ System variables:
  -Dto.date=2017-06-28T20:33:00
 
  -Dhttp.port=9999
+ -Dinteractive=false
 
 Program parameters, to change the servo numbers on the PCA9685:
  --heading:14 --tilt:15
@@ -111,8 +112,14 @@ First, the program sets the `heading` servo to zero, and asks you to point it So
 
 Once this is done, Sun's position is calculate every second, and the 2 servos are driven to point to it, as long as the Sun it up (elevation greater than 0°).
 
-If `http.port` variable is here and greater than 0, an HTTP Server - with REST Services - is started, and can be reached from any REST Client. A Web page is provided, as an example,
+If the `http.port` variable is here and greater than 0, an HTTP Server - with REST Services - is started, and can be reached from any REST Client. A Web page is provided, as an example,
 `web/sample.html`.
+
+Set `interactive` to false to avoid the program asking the user to orient the device before beginning to work. Useful in batch mode.
+
+```
+ $> curl http://192.168.42.1:9999/oplist
+```
 
 <!-- ![Web REST Sample](./doc/web.ui.png) -->
 <img src="./doc/web.ui.png" height="872" width="1020">
