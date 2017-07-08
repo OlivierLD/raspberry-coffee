@@ -22,6 +22,8 @@ import static ansi.EscapeSeq.TOP_T_BOLD;
 import static ansi.EscapeSeq.ansiLocate;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
+import http.HTTPServer;
+import http.HTTPServerInterface;
 import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -35,8 +37,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import org.fusesource.jansi.AnsiConsole;
 import user.util.GeomUtil;
 
@@ -73,8 +73,10 @@ import user.util.GeomUtil;
  * -Ddemo.mode=true
  * -Dfrom.date=2017-06-28T05:53:00
  * -Dto.date=2017-06-28T20:33:00
+ *
+ * -Dhttp.port=9999
  */
-public class SunFlower {
+public class SunFlower implements HTTPServerInterface {
 
 	private static int[] headingServoID = new int[] { 14 };
 	private static int[] tiltServoID = new int[] { 15 };
@@ -101,6 +103,10 @@ public class SunFlower {
 		HEADING,
 		NONE
 	}
+
+	private boolean httpVerbose = false;
+	private HTTPServer httpServer = null;
+	private int httpPort = -1;
 
 	private static boolean orientationVerbose = false;
 	private static boolean astroVerbose = false;
@@ -247,6 +253,28 @@ public class SunFlower {
 		return retString;
 	}
 
+	private RESTImplementation restImplementation;
+
+	/**
+	 * Implements the management of the REST requests (see {@link RESTImplementation})
+	 * Dedicated Admin Server.
+	 *
+	 * @param request the parsed request.
+	 * @return the response, along with its HTTP status code.
+	 */
+	@Override
+	public HTTPServer.Response onRequest(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_IMPLEMENTED);
+		response = restImplementation.processRequest(request, response); // All the skill is here.
+		if (this.httpVerbose) {
+			System.out.println("======================================");
+			System.out.println("Request :\n" + request.toString());
+			System.out.println("Response :\n" + response.toString());
+			System.out.println("======================================");
+		}
+		return response;
+	}
+
 	public SunFlower(int[] headinServoNumber, int[] tiltServoNumber) {
 
 //		Properties properties = System.getProperties();
@@ -348,6 +376,15 @@ public class SunFlower {
 			}
 		}
 
+		String httpPortStr = System.getProperty("http.port");
+		if (httpPortStr != null) {
+			try {
+				httpPort = Integer.parseInt(httpPortStr);
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+
 		try {
 //		System.out.println("Driving Servos on Channels " + headingServoID + " and " + tiltServoID);
 			this.servoBoard = new PCA9685();
@@ -369,6 +406,11 @@ public class SunFlower {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(1);
+		}
+
+		if (httpPort > 0) {
+			restImplementation = new RESTImplementation(this);
+			startHttpServer(httpPort);
 		}
 	}
 
@@ -565,6 +607,58 @@ public class SunFlower {
 
 	public static double getDeviceHeading() {
 		return deviceHeading;
+	}
+
+	public static class GeographicPosition {
+		double latitude;
+		double longitude;
+		public GeographicPosition(double l, double g) {
+			this.latitude = l;
+			this.longitude = g;
+		}
+	}
+	public GeographicPosition getPosition() {
+		return new GeographicPosition(latitude, longitude);
+	}
+
+	public static class ServoValues {
+		int heading;
+		int tilt;
+		public ServoValues(int h, int t) {
+			this.heading = h;
+			this.tilt = t;
+		}
+	}
+	public ServoValues getServoValues() {
+		return new ServoValues(ansiHeadingServoAngle, ansiTiltServoAngle);
+	}
+
+	public static class Dates {
+		String system;
+		String utc;
+		String solar;
+		public Dates(String system, String utc, String solar) {
+			this.system = system;
+			this.utc = utc;
+			this.solar = solar;
+		}
+	}
+	public Dates getDates() {
+		return new Dates((ansiSystemDate != null ? SDF.format(ansiSystemDate) : "null"),
+						(ansiSystemDate != null ? SDF_UTC.format(ansiSystemDate) : "null"),
+						(ansiSolarDate != null ? SDF_NO_Z.format(ansiSolarDate) : "null"));
+	}
+
+	public static class SunData {
+		double h;
+		double z;
+		public SunData(double he, double azimuth) {
+			this.h = he;
+			this.z = azimuth;
+		}
+	}
+	public SunData getSunData() {
+		return new SunData(he, z);
 	}
 
 	public void orientServos() {
@@ -795,6 +889,9 @@ public class SunFlower {
 		} catch (InterruptedException ie) {
 			System.err.println(ie.getMessage());
 		}
+		if (httpServer != null) {
+			httpServer.stopRunning();
+		}
 	}
 
 	private static float applyLimitAndOffset(float angle) {
@@ -976,6 +1073,15 @@ public class SunFlower {
 			System.err.println(">>> Panel Orienter... <<< BAM!");
 			ex.printStackTrace();
 //		System.exit(1);
+		}
+	}
+
+
+	public void startHttpServer(int port) {
+		try {
+			this.httpServer = new HTTPServer(port, this);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

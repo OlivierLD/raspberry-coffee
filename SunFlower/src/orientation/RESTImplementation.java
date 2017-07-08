@@ -1,0 +1,241 @@
+package orientation;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import context.ApplicationContext;
+import context.NMEADataCache;
+import gnu.io.CommPortIdentifier;
+import http.HTTPServer;
+import http.HTTPServer.Request;
+import http.HTTPServer.Response;
+import http.RESTProcessorUtil;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
+import nmea.mux.context.Context;
+import nmea.utils.NMEAUtils;
+
+/**
+ * This class defines the REST operations supported by the HTTP Server.
+ *
+ * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
+ * <br>
+ * The Multiplexer will use the {@link #processRequest(Request, Response)} method of this class to
+ * have the required requests processed.
+ */
+public class RESTImplementation {
+
+	private SunFlower sunFlower;
+
+	public RESTImplementation(SunFlower sf) {
+
+		this.sunFlower = sf;
+
+		// Check duplicates in operation list. Barfs if duplicate is found.
+		for (int i = 0; i < operations.size(); i++) {
+			for (int j = i + 1; j < operations.size(); j++) {
+				if (operations.get(i).getVerb().equals(operations.get(j).getVerb()) &&
+								RESTProcessorUtil.pathsAreIndentical(operations.get(i).getPath(), operations.get(j).getPath())) {
+					throw new RuntimeException(String.format("Duplicate entry in operations list %s %s", operations.get(i).getVerb(), operations.get(i).getPath()));
+				}
+			}
+		}
+	}
+
+	private static class Operation {
+		String verb;
+		String path;
+		String description;
+		Function<Request, Response> fn;
+
+		public Operation(String verb, String path, Function<Request, Response> fn, String description) {
+			this.verb = verb;
+			this.path = path;
+			this.description = description;
+			this.fn = fn;
+		}
+
+		String getVerb() {
+			return verb;
+		}
+
+		String getPath() {
+			return path;
+		}
+
+		String getDescription() {
+			return description;
+		}
+
+		Function<Request, Response> getFn() {
+			return fn;
+		}
+	}
+
+	/**
+	 * Define all the REST operations to be managed
+	 * by the HTTP server.
+	 * <p>
+	 * Frame path parameters with curly braces.
+	 * <p>
+	 * See {@link #processRequest(Request, Response)}
+	 * See {@link HTTPServer}
+	 */
+	private List<Operation> operations = Arrays.asList(
+					new Operation(
+									"GET",
+									"/oplist",
+									this::getOperationList,
+									"List of all available operations."),
+					new Operation(
+									"GET",
+									"/position",
+									this::getPosition,
+									"Get device position on Earth."),
+					new Operation(
+									"GET",
+									"/servo-values",
+									this::getServoValues,
+									"Get servos values"),
+					new Operation(
+									"GET",
+									"/dates",
+									this::getDates,
+									"Get the dates (System, UTC, Solar"),
+					new Operation(
+									"GET",
+									"/sun-data",
+									this::getSunData,
+									"Get the computed su data"),
+					new Operation(
+									"GET",
+									"/all",
+									this::getAll,
+									"Get everything!"));
+
+	/**
+	 * This is the method to invoke to have a REST request processed as defined above.
+	 *
+	 * @param request as it comes from the client
+	 * @param defaultResponse with the expected 'happy' code.
+	 * @return the actual result.
+	 */
+	public Response processRequest(Request request, Response defaultResponse) {
+		Optional<Operation> opOp = operations
+						.stream()
+						.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
+						.findFirst();
+		if (opOp.isPresent()) {
+			Operation op = opOp.get();
+			request.setRequestPattern(op.getPath()); // To get the prms later on.
+			Response processed = op.getFn().apply(request); // Execute here.
+			return processed;
+		}
+		return defaultResponse;
+	}
+
+	private Response getPosition(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		SunFlower.GeographicPosition pos = sunFlower.getPosition();
+		String content = new Gson().toJson(pos);
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private Response getServoValues(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		SunFlower.ServoValues servoValues = sunFlower.getServoValues();
+		String content = new Gson().toJson(servoValues);
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private Response getDates(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		SunFlower.Dates dates = sunFlower.getDates();
+		String content = new Gson().toJson(dates);
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private Response getSunData(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		SunFlower.SunData sunData = sunFlower.getSunData();
+
+		String content = new Gson().toJson(sunData);
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private Response getAll(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+
+		JsonElement jsonElement = null;
+		try {
+			Object all = null; // TODO Get the real ones.
+
+			jsonElement = new Gson().toJsonTree(all);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getAll", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private Response getOperationList(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Operation[] channelArray = operations.stream()
+						.collect(Collectors.toList())
+						.toArray(new Operation[operations.size()]);
+		String content = new Gson().toJson(channelArray);
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+		return response;
+	}
+
+	/**
+	 * Use this as a temporary placeholder when creating a new operation.
+	 * @param request
+	 * @return
+	 */
+	private Response emptyOperation(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		return response;
+	}
+
+
+	private static List<String> getSerialPortList() {
+		List<String> portList = new ArrayList<>();
+		// Opening Serial port
+		Enumeration enumeration = CommPortIdentifier.getPortIdentifiers();
+		while (enumeration.hasMoreElements()) {
+			CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
+			portList.add(cpi.getName());
+		}
+		return portList;
+	}
+
+}
