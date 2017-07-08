@@ -107,7 +107,7 @@ public class RESTImplementation {
 									"GET",
 									"/sun-data",
 									this::getSunData,
-									"Get the computed su data"),
+									"Get the computed Sun data"),
 					new Operation(
 									"GET",
 									"/all",
