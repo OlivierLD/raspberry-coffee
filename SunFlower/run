@@ -16,6 +16,8 @@ JAVA_OPTS="$JAVA_OPTS -Dheading.servo.sign=1"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.limit=40"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.offset=0"
 #
+JAVA_OPTS="$JAVA_OPTS -Dhttp.port=9999"
+#
 OPTION=basic
 if [ $# -gt 0 ]
 then
