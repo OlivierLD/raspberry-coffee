@@ -1,8 +1,8 @@
 #!/bin/bash
 CP=./build/libs/SunFlower-1.0-all.jar
 #
-HEADING_SERVO_ID=14,0,10
-TILT_SERVO_ID=15,1
+HEADING_SERVO_ID=14 #,0,10
+TILT_SERVO_ID=15    #,1
 #
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
@@ -16,8 +16,6 @@ JAVA_OPTS="$JAVA_OPTS -Dheading.servo.sign=1"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.limit=40"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.offset=0"
 #
-JAVA_OPTS="$JAVA_OPTS -Dhttp.port=9999"
-#
 OPTION=basic
 if [ $# -gt 0 ]
 then
@@ -26,7 +24,7 @@ fi
 #
 displayHelp() {
   echo "=============================================================================="
-  echo "Available options are -help, basic, plus, verbose, demo, smooth."
+  echo "Available options are -help, basic, plus, verbose, demo, smooth, smoothhttp."
   echo "=============================================================================="
 }
 #
@@ -94,6 +92,20 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=true"
     JAVA_OPTS="$JAVA_OPTS -Done.by.one=false"
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    ;;
+  "smoothhttp")
+    JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
+    JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
+    #
+    JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=true"
+    JAVA_OPTS="$JAVA_OPTS -Done.by.one=false"
+    JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
+    #
+    JAVA_OPTS="$JAVA_OPTS -Dhttp.port=9999"
     ;;
   *)
     echo "======================="
