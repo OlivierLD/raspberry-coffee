@@ -122,7 +122,7 @@ Set `interactive` to false to avoid the program asking the user to orient the de
 ```
 
 <!-- ![Web REST Sample](./doc/web.ui.png) -->
-<img src="./doc/web.ui.png" height="436" width="510">
+<img src="./doc/web.ui.png" height="334" width="584">
 
 ## Inversion
 Standard servos like the `SG92R` rotate on 180 degrees, from -90° to 90°.
