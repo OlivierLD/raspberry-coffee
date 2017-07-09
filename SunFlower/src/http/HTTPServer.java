@@ -359,18 +359,19 @@ public class HTTPServer {
 								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
-							} else if (path.startsWith("/web/")) {                                    // Assume this is static content. TODO Tweak that.
+							} else if (path.startsWith("/web/")) {  // Assume this is static content. TODO Tweak that.
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								File f = new File("." + path);
 								if (!f.exists()) {
 									response = new Response(request.getProtocol(), Response.NOT_FOUND);
+								} else {
+									ByteArrayOutputStream baos = new ByteArrayOutputStream();
+									Files.copy(f.toPath(), baos);
+									baos.close();
+									byte[] content = baos.toByteArray();
+									RESTProcessorUtil.generateHappyResponseHeaders(response, getContentType(path), content.length);
+									response.setPayload(content);
 								}
-								ByteArrayOutputStream baos = new ByteArrayOutputStream();
-								Files.copy(f.toPath(), baos);
-								baos.close();
-								byte[] content = baos.toByteArray();
-								RESTProcessorUtil.generateHappyResponseHeaders(response, getContentType(path), content.length);
-								response.setPayload(content);
 								sendResponse(response, out);
 							} else {
 								if (requestManager != null) {
