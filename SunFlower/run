@@ -24,7 +24,7 @@ fi
 #
 displayHelp() {
   echo "=============================================================================="
-  echo "Available options are -help, basic, plus, verbose, demo, smooth, smoothhttp."
+  echo "Available options are -help, basic, plus, verbose, demo, smooth, resthttp."
   echo "=============================================================================="
 }
 #
@@ -93,7 +93,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Done.by.one=false"
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
-  "smoothhttp")
+  "resthttp") # With smooth moves, non-interactive
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
