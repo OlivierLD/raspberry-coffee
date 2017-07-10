@@ -13,11 +13,14 @@ import java.util.stream.Collectors;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
- *
+ * <p>
  * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
  * <br>
- * The Multiplexer will use the {@link #processRequest(Request, Response)} method of this class to
+ * Those operation mostly retrieve the state of the SunFlower class, and device.
+ * <br>
+ * The SunFlower will use the {@link #processRequest(Request, Response)} method of this class to
  * have the required requests processed.
+ * </p>
  */
 public class RESTImplementation {
 
