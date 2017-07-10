@@ -112,15 +112,38 @@ First, the program sets the `heading` servo to zero, and asks you to point it So
 
 Once this is done, Sun's position is calculate every second, and the 2 servos are driven to point to it, as long as the Sun it up (elevation greater than 0°).
 
+Set `interactive` to false to avoid the program asking the user to orient the device before beginning to work. Useful in batch mode.
+
 If the `http.port` variable is here and greater than 0, an HTTP Server - with REST Services - is started, and can be reached from any REST Client. A Web page is provided, as an example,
 `web/sample.html`.
 
-Set `interactive` to false to avoid the program asking the user to orient the device before beginning to work. Useful in batch mode.
-
+Here is an example of a REST request, that returns the list of available operations:
 ```
  $> curl http://192.168.42.1:9999/oplist
+ [
+     {
+         "verb": "GET",
+         "path": "/oplist",
+         "description": "List of all available operations.",
+         "fn": {}
+     },
+     {
+         "verb": "GET",
+         "path": "/position",
+         "description": "Get device position on Earth.",
+         "fn": {}
+     },
+     {
+         "verb": "GET",
+         "path": "/device-heading",
+         "description": "Get device heading.",
+         "fn": {}
+     },
+     ...
+
 ```
 
+And this is a snapshot of the sample page mentioned above:
 <!-- ![Web REST Sample](./doc/web.ui.png) -->
 <img src="./doc/web.ui.png" height="334" width="584">
 
