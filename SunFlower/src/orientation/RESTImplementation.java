@@ -216,7 +216,7 @@ public class RESTImplementation {
 	}
 
 	/**
-	 * Use this as a temporary placeholder when creating a new operation.
+	 * Can be used as a temporary placeholder when creating a new operation.
 	 * @param request
 	 * @return
 	 */
