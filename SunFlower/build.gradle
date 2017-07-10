@@ -40,7 +40,7 @@ dependencies {
   compile 'com.google.code.gson:gson:2.8.0'
   compile 'org.fusesource.jansi:jansi:1.11'
   compile 'oliv.cool.stuff:javanauticalalmanac:4.0.0.0' // For the astronomical calculus
-  compile project(':I2C.SPI') // For the Servo Board (PCA9685) 
+  compile project(':I2C.SPI') // For the Servo Board (PCA9685)
   compile project (':NMEA.multiplexer') // For the NMEA Parser (GPS Strings)
 }
 
