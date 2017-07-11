@@ -140,18 +140,28 @@ public class SunFlower implements HTTPServerInterface {
 
 	private static boolean foundPCA9685 = true;
 
-	private static Date getSolarDate(double longitude, Date utc) {
-//		double toHours = longitude / 15d;
-
+	/**
+	 * Does not take the EoT in account, just longitude
+	 * @param longitude
+	 * @param utc
+	 * @return
+	 */
+	private static Date getSolarDateFromLongitude(double longitude, Date utc) {
+		double toHours = longitude / 15d;
 		long ms = utc.getTime();
+		Date solar = new Date(ms + Math.round(toHours * 3_600_000));
+		return solar;
+	}
 
-//	  System.out.println(String.format("GtoHours: %f, Eot:%f", toHours, (12 - eot)));
-
-//		System.out.println(String.format("GtoHours: %s, Eot:%s",
-//						SDF_NO_Z.format(new Date(ms + Math.round(toHours * 3_600_000))),
-//						SDF_NO_Z.format(new Date(ms + Math.round((12 - eot) * 3_600_000)))));
-
-		//	Date solar = new Date(ms + Math.round(toHours * 3_600_000));
+	/**
+	 * This one is accurate, it uses EoT (Meridian passage).
+	 * Noon corresponds to EoT.
+	 * The EoT is updated in the Timer loop.
+	 * @param utc
+	 * @return
+	 */
+	private static Date getSolarDate(Date utc) {
+		long ms = utc.getTime();
 		Date solar = new Date(ms + Math.round((12 - eot) * 3_600_000));
 		return solar;
 	}
@@ -227,7 +237,7 @@ public class SunFlower implements HTTPServerInterface {
 			he = sru.getHe().doubleValue();
 			z = sru.getZ().doubleValue();
 			// Get Equation of time, used to calculate solar time.
-			eot = AstroComputer.getSunMeridianPassageTime(latitude, longitude); // in hours
+			eot = AstroComputer.getSunMeridianPassageTime(latitude, longitude); // in decimal hours
 		}
 	}
 
@@ -762,7 +772,7 @@ public class SunFlower implements HTTPServerInterface {
 			ansiDeviceHeading = deviceHeading;
 			Date date = timeProvided ? current.getTime() : new Date();
 			ansiSystemDate = date;
-			ansiSolarDate = getSolarDate(getLongitude(), date);
+			ansiSolarDate = getSolarDate(date);
 
 			if (he > 0) { // Daytime
 				if (orientationVerbose && !manualEntry) {
