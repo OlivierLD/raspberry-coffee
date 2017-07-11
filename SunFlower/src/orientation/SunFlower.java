@@ -142,6 +142,7 @@ public class SunFlower implements HTTPServerInterface {
 
 	/**
 	 * Does not take the EoT in account, just longitude
+	 * See {@link #getSolarDate(Date)} for an accurate version.
 	 * @param longitude
 	 * @param utc
 	 * @return
@@ -155,7 +156,7 @@ public class SunFlower implements HTTPServerInterface {
 
 	/**
 	 * This one is accurate, it uses EoT (Meridian passage).
-	 * Noon corresponds to EoT.
+	 * Noon corresponds to EoT. EoT is calculated with the Longitude
 	 * The EoT is updated in the Timer loop.
 	 * @param utc
 	 * @return
