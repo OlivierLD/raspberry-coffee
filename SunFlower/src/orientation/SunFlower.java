@@ -88,6 +88,7 @@ public class SunFlower implements HTTPServerInterface {
 
 	private static double he = 0D, z = 0D;
 	private static double deviceHeading = 0D;
+	private static double eot = 12d;
 
 	private static int tiltLimit = 0;
 	private static int tiltOffset = 0;
@@ -140,9 +141,18 @@ public class SunFlower implements HTTPServerInterface {
 	private static boolean foundPCA9685 = true;
 
 	private static Date getSolarDate(double longitude, Date utc) {
-		double toHours = longitude / 15d;
+//		double toHours = longitude / 15d;
+
 		long ms = utc.getTime();
-		Date solar = new Date(ms + Math.round(toHours * 3_600_000));
+
+//	  System.out.println(String.format("GtoHours: %f, Eot:%f", toHours, (12 - eot)));
+
+//		System.out.println(String.format("GtoHours: %s, Eot:%s",
+//						SDF_NO_Z.format(new Date(ms + Math.round(toHours * 3_600_000))),
+//						SDF_NO_Z.format(new Date(ms + Math.round((12 - eot) * 3_600_000)))));
+
+		//	Date solar = new Date(ms + Math.round(toHours * 3_600_000));
+		Date solar = new Date(ms + Math.round((12 - eot) * 3_600_000));
 		return solar;
 	}
 
@@ -216,6 +226,8 @@ public class SunFlower implements HTTPServerInterface {
 			sru.calculate();
 			he = sru.getHe().doubleValue();
 			z = sru.getZ().doubleValue();
+			// Get Equation of time, used to calculate solar time.
+			eot = AstroComputer.getSunMeridianPassageTime(latitude, longitude); // in hours
 		}
 	}
 
