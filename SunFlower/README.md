@@ -26,6 +26,8 @@ Heading and Position can be dynamically provided (in case the device is moving, 
 
 Originally, I had attached an `LSM303` (magnetometer and accelerometer), but it was too close to the servos. Those guys are electro-magnets, this was driving the `LSM303` crazy...
 
+---
+
 Requires resources from other projects, for the celestial calculations:
 
 Check out this one: https://github.com/OlivierLD/oliv-soft-project-builder
