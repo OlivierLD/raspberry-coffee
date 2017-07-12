@@ -210,7 +210,9 @@ A snapshot of the (optional) ANSI console (look into the script named `run` for 
 <img src="./doc/ansi.console.png" alt="ANSI Console" width="339" height="285">
 
 Here is a prototype, made of plexiglass and adhesive tape:<br>
-![Proto](./doc/prototype.jpg) <br> Next comes the real stuff!
+<!-- ![Proto](./doc/prototype.jpg) -->
+<img src="./doc/prototype.jpg" width="512" height="853">
+<br> Next comes the real stuff!
 
 Here is <a href="https://youtu.be/apTLJXE4vUk" target="UTube">a video</a>, one day simulation, featuring the inversion function at work.
 
