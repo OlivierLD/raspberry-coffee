@@ -196,8 +196,8 @@ The device can also be on the go, the code can receive the position and the head
 <!-- ![Wiring](./sunflower_bb.png) -->
 <img src="./sunflower_bb.png" width="827" height="426">
 
-_Note_: you want to power the `PCA9685` with its own 5v power supply, *not* from the 5v pin of the Raspberry PI! That would lead to very un-expected results.
-A good setting would be to power the Raspberry PI _and_ the `PCA9685` from the same source.
+_Note_: you want to power the `PCA9685` with its own 5v power supply, *not* from the 5v pin of the Raspberry PI! That would lead to very un-expected results (like constantly re-booting).
+A good setting would be to power the Raspberry PI _and_ the `PCA9685` from the same source. More about that soon.
 
 _Note_: The diagram above features a Raspberry PI 3, but they all work well, including the Raspberry PI Zero.
 
