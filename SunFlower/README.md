@@ -160,7 +160,7 @@ Here is an example of a REST request, that returns the list of available operati
 
 And this is a snapshot of the sample page mentioned above:
 <!-- ![Web REST Sample](./doc/web.ui.png) -->
-<img src="./doc/web.ui.png" height="334" width="584">
+<img src="./doc/web.ui.png" width="400" height="388">
 
 ## Inversion
 Standard servos like the `SG92R` rotate on 180 degrees, from -90° to 90°.

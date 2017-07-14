@@ -9,12 +9,12 @@
     <style type="text/css">
       @font-face {
         font-family: "Digi Font";
-        src: url(fonts/ds-digi.ttf) format("truetype");
-    /*  src: url(fonts/ledbdrev.ttf) format("truetype"); */
+    /*  src: url(fonts/ds-digi.ttf) format("truetype"); */
+        src: url(fonts/ledbdrev.ttf) format("truetype");
       }
       .digifont {
         font-family: "Digi Font", Verdana, Tahoma;
-        color: yellow;
+        color: yellow; /* this is the default */
     /*  color: orangered; */
         background-color: black;
         size: 10px;
@@ -79,17 +79,48 @@
       </tr>
     </table>
     <hr/>
+    <table>
+      <tr>
+        <td>
+          <table style="padding:1px; border-radius:5px; border:1px solid #CCC; margin-top:1px;">
+            <tr>
+              <td>Heading servo(s):</td>
+              <td><div id="heading-pins"></div></td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table style="padding:1px; border-radius:5px; border:1px solid #CCC; margin-top:1px;">
+            <tr>
+              <td>Tilt servo(s):</td>
+              <td><div id="tilt-pins"></div></td>
+              <td>. Tilt offset:</td>
+              <td><div id="tilt-offset"></div></td>
+              <td>, tilt limit:</td>
+              <td><div id="tilt-limit"></div></td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table style="padding:1px; border-radius:5px; border:1px solid #CCC; margin-top:1px;">
+            <tr>
+              <td>Device heading:</td>
+              <td><div id="device-heading"></div></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <hr/>
     <a href="#" onclick="togglePos();">Position</a>
     <div id="position" style="display:none;">
       <table>
         <tr>
           <td colspan="2" align="right">
-            <b><div id="lat"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 80px; ">N 00"00.00'</div></b>
+            <b><div id="lat"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">N 00"00.00'</div></b>
           </td>
-        </tr>
-        <tr>
           <td colspan="2" align="right">
-            <b><div id="lon"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 80px; ">W 000"00.00'</div></b>
+            <b><div id="lon"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">W 000"00.00'</div></b>
           </td>
         </tr>
       </table>
@@ -104,10 +135,10 @@
         <tr>
           <td width="50%" align="center">
             <b><div id="sunZ" class="digifont"
-                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 80px; color: red;">000</div></b>
+                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange;">000</div></b>
           </td>
           <td width="50%" align="center">
-            <b><div id="sunH" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 80px; color: red;">00.00</div></b>
+            <b><div id="sunH" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange;">00.00</div></b>
           </td>
         </tr>
       </table>
@@ -120,7 +151,7 @@
         </tr>
         <tr>
           <td colspan="2" align="left">
-            <b><div id="syst-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 80px; color: orange;">--</div></b>
+            <b><div id="syst-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: red;">--</div></b>
           </td>
         </tr>
         <tr>
@@ -128,7 +159,7 @@
         </tr>
         <tr>
           <td colspan="2" align="left">
-            <b><div id="utc-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 80px; color: orange;">--</div></b>
+            <b><div id="utc-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: deeppink;">--</div></b>
           </td>
         </tr>
         <tr>
@@ -136,7 +167,7 @@
         </tr>
         <tr>
           <td colspan="2" align="left">
-            <b><div id="solar-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 80px; color: orange;">--</div></b>
+            <b><div id="solar-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orangered;">--</div></b>
           </td>
         </tr>
       </table>
@@ -145,16 +176,16 @@
     <div id="servos" style="display:none;">
       <table>
         <tr>
-          <td width="50%" align="center">Heading Servo</td>
-          <td width="50%" align="center">Tilt Servo</td>
+          <td width="50%" align="center">Heading Servo in &deg;</td>
+          <td width="50%" align="center">Tilt Servo in &deg;</td>
         </tr>
         <tr>
           <td width="50%" align="center">
             <b><div id="heading" class="digifont"
-                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 80px; color: cyan;">000</div></b>
+                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan;">000</div></b>
           </td>
           <td width="50%" align="center">
-            <b><div id="tilt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 80px; color: cyan;">000</div></b>
+            <b><div id="tilt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan;">000</div></b>
           </td>
         </tr>
       </table>
@@ -188,6 +219,17 @@
               $("#heading").text(h);
               var t = json["servos"].tilt.value;
               $("#tilt").text(t);
+
+              var hpins = json["servos"].heading.pins;
+              $("#heading-pins").text(hpins.join());
+
+              var tpins = json["servos"].tilt.pins;
+              $("#tilt-pins").text(tpins.join());
+              $("#tilt-offset").text(json["servos"].tilt.offset + "\272");
+              $("#tilt-limit").text(json["servos"].tilt.limit + "\272");
+          }
+          if (json.heading !== undefined) {
+              $("#device-heading").text(json.heading + "\272");
           }
       };
       var sunFlowerClient = new SunFlowerClient(onMessage);
