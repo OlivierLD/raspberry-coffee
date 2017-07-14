@@ -2,7 +2,7 @@ package http.utils;
 
 import java.io.PrintStream;
 import java.util.Arrays;
-import nmea.utils.NMEAUtils;
+import utils.StringUtils;
 
 public class DumpUtil {
 	private final static int LINE_LEN = 16;
@@ -62,7 +62,7 @@ public class DumpUtil {
 
 		String first = "   | ";
 		for (int i=0; i<LINE_LEN; i++) {
-			first += (NMEAUtils.lpad(Integer.toHexString(i & 0xFF).toUpperCase(), 2, " ") + " ");
+			first += (StringUtils.lpad(Integer.toHexString(i & 0xFF).toUpperCase(), 2, " ") + " ");
 		}
 		first += " |";
 		result[lineIdx++] = first;
@@ -70,14 +70,14 @@ public class DumpUtil {
 		result[lineIdx++] = separator();
 
 		for (int l = 0; l < (dim + 1); l++) {
-			String lineLeft = (NMEAUtils.lpad(Integer.toHexString(l & 0xFF).toUpperCase(), 2, "0") + " | ");
+			String lineLeft = (StringUtils.lpad(Integer.toHexString(l & 0xFF).toUpperCase(), 2, "0") + " | ");
 			String lineRight = "";
 			int start = l * LINE_LEN;
 			for (int c = start; c < Math.min(start + LINE_LEN, ba.length); c++) {
-				lineLeft += (NMEAUtils.lpad(Integer.toHexString(ba[c] & 0xFF).toUpperCase(), 2, "0") + " ");
+				lineLeft += (StringUtils.lpad(Integer.toHexString(ba[c] & 0xFF).toUpperCase(), 2, "0") + " ");
 				lineRight += (isAsciiPrintable((char) ba[c]) ? (char) ba[c] : ".");
 			}
-			lineLeft = NMEAUtils.rpad(lineLeft, (3 * LINE_LEN) + 5, " ");
+			lineLeft = StringUtils.rpad(lineLeft, (3 * LINE_LEN) + 5, " ");
 			result[lineIdx++] /*[l + 3]*/ = lineLeft + " |  " + lineRight;
 		}
 		result[lineIdx++] = separator();
@@ -88,7 +88,7 @@ public class DumpUtil {
 	public static String dumpHexMess(byte[] mess) {
 		String line = "";
 		for (int i = 0; i < mess.length; i++)
-			line += (NMEAUtils.lpad(Integer.toHexString(mess[i] & 0xFF).toUpperCase(), 2, "0") + " ");
+			line += (StringUtils.lpad(Integer.toHexString(mess[i] & 0xFF).toUpperCase(), 2, "0") + " ");
 		return line.trim();
 	}
 

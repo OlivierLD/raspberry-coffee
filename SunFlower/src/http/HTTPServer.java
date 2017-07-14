@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import nmea.mux.context.Context;
+import java.util.logging.Logger;
 
 /**
  * See {@link orientation.RESTImplementation}
@@ -28,6 +28,10 @@ import nmea.mux.context.Context;
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // HTTPServer.class.getName());
+	static {
+		LOGGER.setLevel(Level.INFO);
+	}
 
 	private Thread httpListenerThread;
 
@@ -201,7 +205,7 @@ public class HTTPServer {
 
 	public void stopRunning() {
 		if (verbose) {
-			Context.getInstance().getLogger().info("Stop nicely requested");
+			LOGGER.info("Stop nicely requested");
 		}
 		this.keepRunning = false;
 	}
@@ -232,7 +236,7 @@ public class HTTPServer {
 					boolean okToStop = false;
 					ServerSocket ss = new ServerSocket(port);
 					if (verbose) {
-						Context.getInstance().getLogger().info("Port " + port + " opened successfully.");
+						LOGGER.info("Port " + port + " opened successfully.");
 					}
 					while (isRunning()) {
 						Socket client = ss.accept(); // Blocking read
@@ -250,7 +254,7 @@ public class HTTPServer {
 						StringBuffer sb = new StringBuffer();
 						boolean keepReading = true;
 						if (verbose) {
-							Context.getInstance().getLogger().info(">>> Top of the loop <<<");
+							LOGGER.info(">>> Top of the loop <<<");
 						}
 						while (keepReading) {
 							if (top) { // Ugly!! Argh! :(
@@ -265,7 +269,7 @@ public class HTTPServer {
 									read = in.read();
 								} else {
 									if (verbose)
-										Context.getInstance().getLogger().info(">>> End of InputStream <<<");
+										LOGGER.info(">>> End of InputStream <<<");
 									read = -1;
 								}
 							} catch (IOException ioe) {
@@ -312,7 +316,7 @@ public class HTTPServer {
 												String[] requestElements = line.split(" ");
 												request = new Request(requestElements[0], requestElements[1], requestElements[2]);
 												if (verbose) {
-													Context.getInstance().getLogger().info(">>> New request: " + line + " <<<");
+													LOGGER.info(">>> New request: " + line + " <<<");
 												}
 											}
 										}
@@ -334,7 +338,7 @@ public class HTTPServer {
 							request.setContent(payload.getBytes());
 						}
 						if (verbose) {
-							Context.getInstance().getLogger().info(">>> End of HTTP Request <<<");
+							LOGGER.info(">>> End of HTTP Request <<<");
 						}
 						if (request != null) {
 							String path = request.getPath();
@@ -387,9 +391,9 @@ public class HTTPServer {
 								out.write(responsePayload.getBytes());
 								out.flush();
 							} else if (line != null && line.length() != 0) {
-								Context.getInstance().getLogger().warning(">>>>>>>>>> What?"); // TODO See when/why this happens...
-								Context.getInstance().getLogger().warning(">>>>>>>>>> Last line was [" + line + "]");
-								Context.getInstance().getLogger().warning(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
+								LOGGER.warning(">>>>>>>>>> What?"); // TODO See when/why this happens...
+								LOGGER.warning(">>>>>>>>>> Last line was [" + line + "]");
+								LOGGER.warning(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
 							}
 						}
 						out.flush();
@@ -401,12 +405,12 @@ public class HTTPServer {
 					}
 					ss.close();
 				} catch (Exception e) {
-					Context.getInstance().getLogger().severe(String.format(">>> Port %d, %s >>>", port, e.toString()));
-					Context.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
-					Context.getInstance().getLogger().severe(String.format("<<< Port %d <<<", port));
+					LOGGER.severe(String.format(">>> Port %d, %s >>>", port, e.toString()));
+					LOGGER.log(Level.SEVERE, e.getMessage(), e);
+					LOGGER.severe(String.format("<<< Port %d <<<", port));
 				} finally {
 					if (verbose)
-						Context.getInstance().getLogger().info("HTTP Server is done.");
+						LOGGER.info("HTTP Server is done.");
 					if (waiter != null) {
 						synchronized (waiter) {
 							waiter.notify();

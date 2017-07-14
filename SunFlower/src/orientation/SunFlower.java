@@ -39,6 +39,8 @@ import java.util.TimeZone;
 import java.util.stream.Collectors;
 import org.fusesource.jansi.AnsiConsole;
 import user.util.GeomUtil;
+import static utils.StringUtils.lpad;
+import static utils.StringUtils.rpad;
 
 /**
  * Servos are driven by a PCA9685 board.
@@ -1177,40 +1179,6 @@ public class SunFlower implements HTTPServerInterface {
 			sb.append(str);
 		}
 		return sb.toString();
-	}
-
-	/**
-	 * Right pad, with blanks
-	 * @param s
-	 * @param len
-	 * @return
-	 */
-	private static String rpad(String s, int len) {
-		return rpad(s, len, " ");
-	}
-	private static String rpad(String s, int len, String pad) {
-		String str = s;
-		while (str.length() < len) {
-			str += pad;
-		}
-		return str;
-	}
-
-	/**
-	 * Left pad, with blanks
-	 * @param s
-	 * @param len
-	 * @return
-	 */
-	private static String lpad(String s, int len) {
-		return lpad(s, len, " ");
-	}
-	private static String lpad(String s, int len, String pad) {
-		String str = s;
-		while (str.length() < len) {
-			str = pad + str;
-		}
-		return str;
 	}
 
 	/**
