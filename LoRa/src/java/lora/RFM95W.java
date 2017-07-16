@@ -254,7 +254,7 @@ public class RFM95W {
 	private static Pin spiMosi = RaspiPin.GPIO_12; // data out. MOSI: Master Out Slave In (pin #19)
 	private static Pin spiCs = RaspiPin.GPIO_10; // Chip Select (pin #24)
 
-	public RFM95W(int slavePin, int interruptPin) throws Exception {
+	public RFM95W(int slavePin, int interruptPin) throws Exception { // TODO Manage the parameters
 		initRFM95W();
 
 		writeByte(RH_RF95_REG_01_OP_MODE, RH_RF95_MODE_SLEEP | RH_RF95_LONG_RANGE_MODE);
@@ -312,7 +312,7 @@ public class RFM95W {
 	 * @param addr   Register
 	 * @param value  value to write
 	 * @param rw     READ or WRITE
-	 * @param length length in <b>bits</b>
+	 * @param length length in <b><u><i>bits</i></u></b>
 	 * @return
 	 */
 	private int spiTransfer(int addr, int value, int rw, int length) {
