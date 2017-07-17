@@ -290,8 +290,9 @@ public class RFM95W {
 
 	private static int mkInt16(int val) {
 		int ret = val & 0x7FFF;
-		if (val > 0x7FFF)
+		if (val > 0x7FFF) {
 			ret -= 0x8000;
+		}
 //    if (verbose)
 //      System.out.println(val + " becomes " + ret);
 		return ret;
@@ -319,47 +320,49 @@ public class RFM95W {
 		// Bit banging at address "addr", "rw" indicates READ (1) or WRITE (0) operation
 		int retValue = 0;
 		int spiAddr;
-		if (rw == WRITE)
+		if (rw == WRITE) {
 			spiAddr = addr & (~READWRITE);
-		else
+		} else {
 			spiAddr = addr | READWRITE;
-
+		}
 		// System.out.println("SPI ADDR: 0x" + Integer.toHexString(spiAddr) + ", mode:" + rw);
 
 		chipSelectOutput.low();
 //  waitFor(DELAY);
 		for (int i = 0; i < 8; i++) {
 			int bit = spiAddr & (0x01 << (7 - i));
-			if (bit != 0)
+			if (bit != 0) {
 				mosiOutput.high();
-			else
+			} else {
 				mosiOutput.low();
+			}
 			clockOutput.low();
-//    waitFor(DELAY);
+//    delay(DELAY);
 			clockOutput.high();
-//    waitFor(DELAY);
+//    delay(DELAY);
 		}
 		if (rw == READ) {
 			for (int i = 0; i < length; i++) {
 				clockOutput.low();
-//      waitFor(DELAY);
+//      delay(DELAY);
 				int bit = misoInput.getState().getValue(); // TODO Check that
 				clockOutput.high();
 				retValue = (retValue << 1) | bit;
-//      waitFor(DELAY);
+//      delay(DELAY);
 			}
 		}
 		if (rw == WRITE) {
 			for (int i = 0; i < length; i++) {
 				int bit = value & (0x01 << (length - 1 - i));
-				if (bit != 0)
+				if (bit != 0) {
 					mosiOutput.high();
-				else
+				} else {
 					mosiOutput.low();
+				}
 				clockOutput.low();
-//      waitFor(DELAY);
+//      delay(DELAY);
 				clockOutput.high();
-//      waitFor(DELAY);
+//      delay(DELAY);
 			}
 		}
 		chipSelectOutput.high();
