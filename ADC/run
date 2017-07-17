@@ -1,9 +1,9 @@
 #!/bin/bash
-export PI4J_HOME=/opt/pi4j
 echo Read an ADC
 #
-DISPLAY_DIGIT="-Ddisplay.digit=true"
-DEBUG="-Ddebug=true"
-CP=./build/classes/main:$PI4J_HOME/lib/pi4j-core.jar
+JAVA_OPTS=
+JAVA_OPTS="$JAVA_OPTS -Ddisplay.digit=true"
+JAVA_OPTS="$JAVA_OPTS -Ddebug=true"
+CP=./build/libs/ADC-1.0-all.jar
 # sudo java -cp $CP analogdigitalconverter.ADCReader
-sudo java -cp $CP $DISPLAY_DIGIT $DEBUG analogdigitalconverter.mcp3008.sample.MainMCP3008Sample
+sudo java -cp $CP $JAVA_OPTS analogdigitalconverter.mcp3008.sample.MainMCP3008Sample
