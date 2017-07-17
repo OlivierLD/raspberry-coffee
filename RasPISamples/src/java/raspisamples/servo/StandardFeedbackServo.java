@@ -120,8 +120,9 @@ public class StandardFeedbackServo {
 				int adc = MCP3008Reader.readMCP3008(ADC_CHANNEL);
 				int diffAdc = Math.abs(adc - prevAdc);
 				if (diffAdc > tolerance) {
-					System.out.println(String.format(">>  (diff:%d) adc: %04d (0x%s, 0&%s) => Deg:%+03d\272",
+					System.out.println(String.format(">>  (diff:%d, prev=%04d)) adc: %04d (0x%s, 0&%s) => Deg:%+03d\272",
 									diffAdc,
+									prevAdc,
 									adc,
 									lpad(Integer.toString(adc, 16).toUpperCase(), "0", 4),
 									lpad(Integer.toString(adc, 2), "0", 8),
