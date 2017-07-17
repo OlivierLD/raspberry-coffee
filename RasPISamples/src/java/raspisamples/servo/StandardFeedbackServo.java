@@ -49,8 +49,8 @@ public class StandardFeedbackServo {
 		servoBoard.setPWMFreq(freq); // Set frequency in Hz
 
 		this.servo = channel;
-		System.out.println("Channel " + channel + " all set. Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
-
+		System.out.println("Servo Channel " + channel + " all set. Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
+		System.out.println("ADC Channel:" + ADC_CHANNEL);
 	}
 
 	public void setAngle(float f) {
@@ -118,13 +118,16 @@ public class StandardFeedbackServo {
 		Thread adcReader = new Thread(() -> {
 			while (go) {
 				int adc = MCP3008Reader.readMCP3008(ADC_CHANNEL);
-				int postAdjust = Math.abs(adc - prevAdc);
-				if (postAdjust > tolerance) {
-					System.out.println(">>   readAdc:" + Integer.toString(adc) +
-									" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), "0", 2) +
-									", 0&" + lpad(Integer.toString(adc, 2), "0", 8) + ") => Deg:" + Math.round(pwmToDegree(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, adc)));
+				int diffAdc = Math.abs(adc - prevAdc);
+				if (diffAdc > tolerance) {
+					System.out.println(String.format(">>  (diff:%d) readAdc: %03d (0x%s, 0&%s) => Deg:%d\272",
+									diffAdc,
+									adc,
+									lpad(Integer.toString(adc, 16).toUpperCase(), "0", 4),
+									lpad(Integer.toString(adc, 2), "0", 8),
+									Math.round(pwmToDegree(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, adc))));
 				}
-				prevAdc= adc;
+				prevAdc = adc;
 			}
 			try {
 				synchronized (Thread.currentThread()) {
