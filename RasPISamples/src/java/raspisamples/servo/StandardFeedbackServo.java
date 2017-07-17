@@ -181,7 +181,7 @@ public class StandardFeedbackServo {
 			System.out.println("More randomly:");
 			float[] degValues = {-10, 0, -90, 45, -30, 90, 10, 20, 30, 40, 50, 60, 70, 80, 90, 0};
 			for (float f : degValues) {
-				System.out.println("In degrees:" + f);
+				System.out.println(String.format("In degrees:%f (pwm %d)", f, degreeToPWM(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, f)));
 				ss.setAngle(f);
 				delay(1_500);
 			}
