@@ -91,7 +91,6 @@ public class StandardFeedbackServo {
 		System.out.println(String.format("From %f, to %d, back to %f", 52f, pwm, deg));
 	}
 
-	private static int prevAdc = 0;
 	private static int tolerance = 5;
 
 	/**
@@ -116,11 +115,12 @@ public class StandardFeedbackServo {
 
 		// Read the ADC in a thread
 		Thread adcReader = new Thread(() -> {
+			int prevAdc = 0;
 			while (go) {
 				int adc = MCP3008Reader.readMCP3008(ADC_CHANNEL);
 				int diffAdc = Math.abs(adc - prevAdc);
 				if (diffAdc > tolerance) {
-					System.out.println(String.format(">>  (diff:%d) readAdc: %03d (0x%s, 0&%s) => Deg:%d\272",
+					System.out.println(String.format(">>  (diff:%d) adc: %04d (0x%s, 0&%s) => Deg:%+03d\272",
 									diffAdc,
 									adc,
 									lpad(Integer.toString(adc, 16).toUpperCase(), "0", 4),
