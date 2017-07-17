@@ -76,8 +76,26 @@ public class StandardFeedbackServo {
 		return Math.round(min + ((deg + 90) * oneDeg));
 	}
 
+	/*
+	 * pwm in [0..1023]
+	 */
+	private static float pwmToDegree(int min, int max, int pwm) {
+		int diff = max - min;
+		float oneDeg = diff / 180f;
+		return ((pwm - min) / oneDeg) - 90;
+	}
+
+	public static void main_(String... args) {
+		int pwm = degreeToPWM(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, 52);
+		float deg = pwmToDegree(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, pwm);
+		System.out.println(String.format("From %f, to %d, back to %f", 52f, pwm, deg));
+	}
+
+	private static int prevAdc = 0;
+
 	/**
 	 * To test the servo - namely, the min & max values.
+	 * Displays the feedback value.
 	 *
 	 * @param args
 	 * @throws Exception
@@ -99,11 +117,12 @@ public class StandardFeedbackServo {
 		Thread adcReader = new Thread(() -> {
 			while (go) {
 				int adc = MCP3008Reader.readMCP3008(ADC_CHANNEL);
-//			int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
-				System.out.println(">>                                      readAdc:" + Integer.toString(adc) +
-								" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), "0", 2) +
-								", 0&" + lpad(Integer.toString(adc, 2), "0", 8) + ")");
-//			System.out.println("Volume:" + volume + "% (" + adc + ")");
+				if (adc != prevAdc) {
+					System.out.println(">>   readAdc:" + Integer.toString(adc) +
+									" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), "0", 2) +
+									", 0&" + lpad(Integer.toString(adc, 2), "0", 8) + ") => Deg:" + Math.round(pwmToDegree(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, adc)));
+				}
+				prevAdc= adc;
 			}
 			try {
 				synchronized (Thread.currentThread()) {
