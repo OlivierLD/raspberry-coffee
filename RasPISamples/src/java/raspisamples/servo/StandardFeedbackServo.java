@@ -91,8 +91,6 @@ public class StandardFeedbackServo {
 		System.out.println(String.format("From %f, to %d, back to %f", 52f, pwm, deg));
 	}
 
-	private static int tolerance = 5;
-
 	/**
 	 * To test the servo - namely, the min & max values.
 	 * Displays the feedback value.
@@ -116,6 +114,8 @@ public class StandardFeedbackServo {
 		// Read the ADC in a thread
 		Thread adcReader = new Thread(() -> {
 			int prevAdc = 0;
+			int tolerance = 10;
+
 			while (go) {
 				int adc = MCP3008Reader.readMCP3008(ADC_CHANNEL);
 				int diffAdc = Math.abs(adc - prevAdc);
@@ -127,8 +127,8 @@ public class StandardFeedbackServo {
 									lpad(Integer.toString(adc, 16).toUpperCase(), "0", 4),
 									lpad(Integer.toString(adc, 2), "0", 8),
 									Math.round(pwmToDegree(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, adc))));
+					prevAdc = adc;
 				}
-				prevAdc = adc;
 			}
 			try {
 				synchronized (Thread.currentThread()) {
