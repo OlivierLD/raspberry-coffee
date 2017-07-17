@@ -11,7 +11,7 @@ import i2c.servo.pwm.PCA9685;
 public class StandardFeedbackServo {
 
 	private static int ADC_CHANNEL =
-					MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
+					MCP3008Reader.MCP3008_input_channels.CH1.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 	private static boolean go = true;
 
@@ -119,7 +119,7 @@ public class StandardFeedbackServo {
 
 		StandardFeedbackServo ss = new StandardFeedbackServo(channel);
 
-		Thread.sleep(10_000);
+		Thread.sleep(10_000); // Turn it the way you want...
 
 		try {
 			ss.stop();
