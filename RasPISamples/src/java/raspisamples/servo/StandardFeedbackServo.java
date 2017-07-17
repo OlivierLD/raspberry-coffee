@@ -109,6 +109,9 @@ public class StandardFeedbackServo {
 		}
 		System.out.println("Servo Channel " + channel);
 
+		StandardFeedbackServo ss = new StandardFeedbackServo(channel);
+		ss.setAngle(0); // Set to 0
+
 		MCP3008Reader.initMCP3008();
 
 		// Read the ADC in a thread
@@ -120,12 +123,12 @@ public class StandardFeedbackServo {
 				int adc = MCP3008Reader.readMCP3008(ADC_CHANNEL);
 				int diffAdc = Math.abs(adc - prevAdc);
 				if (diffAdc > tolerance) {
-					System.out.println(String.format(">>  (diff:%d, prev=%04d)) adc: %04d (0x%s, 0&%s) => Deg:%+03d\272",
+					System.out.println(String.format(">>  (diff:%d, prev=%04d) adc: %04d (0x%s, 0&%s) => Deg:%+03d\272",
 									diffAdc,
 									prevAdc,
 									adc,
-									lpad(Integer.toString(adc, 16).toUpperCase(), "0", 4),
-									lpad(Integer.toString(adc, 2), "0", 8),
+									lpad(Integer.toString(adc, 16).toUpperCase(), "0", 3), // 1023 ; 0x3FF
+									lpad(Integer.toString(adc, 2), "0", 10),
 									Math.round(pwmToDegree(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, adc))));
 					prevAdc = adc;
 				}
@@ -141,8 +144,6 @@ public class StandardFeedbackServo {
 			MCP3008Reader.shutdownMCP3008();
 		});
 		adcReader.start();
-
-		StandardFeedbackServo ss = new StandardFeedbackServo(channel);
 
 		Thread.sleep(10_000); // Turn it the way you want...
 
