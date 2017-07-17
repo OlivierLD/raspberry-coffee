@@ -92,6 +92,7 @@ public class StandardFeedbackServo {
 	}
 
 	private static int prevAdc = 0;
+	private static int tolerance = 5;
 
 	/**
 	 * To test the servo - namely, the min & max values.
@@ -117,7 +118,8 @@ public class StandardFeedbackServo {
 		Thread adcReader = new Thread(() -> {
 			while (go) {
 				int adc = MCP3008Reader.readMCP3008(ADC_CHANNEL);
-				if (adc != prevAdc) {
+				int postAdjust = Math.abs(adc - prevAdc);
+				if (postAdjust > tolerance) {
 					System.out.println(">>   readAdc:" + Integer.toString(adc) +
 									" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), "0", 2) +
 									", 0&" + lpad(Integer.toString(adc, 2), "0", 8) + ") => Deg:" + Math.round(pwmToDegree(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, adc)));
