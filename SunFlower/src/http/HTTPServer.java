@@ -1,6 +1,6 @@
 package http;
 
-import http.utils.DumpUtil;
+import utils.DumpUtil;
 import http.utils.HTTPClient;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

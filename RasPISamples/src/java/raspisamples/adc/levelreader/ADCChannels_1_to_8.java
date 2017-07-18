@@ -120,14 +120,6 @@ public class ADCChannels_1_to_8
       obs.stop();    
   }
 
-  private static String lpad(String str, String with, int len)
-  {
-    String s = str;
-    while (s.length() < len)
-      s = with + s;
-    return s;
-  }
-  
   /**
    * Sample main
    * @param args Unused. But see the "threshold" and "verbose" System variables.

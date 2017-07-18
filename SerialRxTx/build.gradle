@@ -23,6 +23,7 @@ sourceSets {
 }
 
 dependencies {
+    compile project(':common-utils')
     compile 'org.rxtx:rxtx:2.1.7'
 }
 

@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import utils.StringUtils;
+import static utils.StringUtils.lpad;
 
 /*
  * Humidity, Temperature
@@ -62,7 +64,7 @@ public class HTU21DF {
 			htu21df.write((byte) HTU21DF_READREG);
 			r = htu21df.read();
 			if (verbose)
-				System.out.println("DBG: Begin: 0x" + lpad(Integer.toHexString(r), "0", 2));
+				System.out.println("DBG: Begin: 0x" + lpad(Integer.toHexString(r), 2, "0"));
 		} catch (Exception ex) {
 			System.err.println("Begin:" + ex.toString());
 		}
@@ -93,7 +95,7 @@ public class HTU21DF {
 					throws Exception {
 		// Reads the raw temperature from the sensor
 		if (verbose)
-			System.out.println("Read Temp: Written 0x" + lpad(Integer.toHexString((HTU21DF_READTEMP & 0xff)), "0", 2));
+			System.out.println("Read Temp: Written 0x" + lpad(Integer.toHexString((HTU21DF_READTEMP & 0xff)), 2, "0"));
 		htu21df.write((byte) (HTU21DF_READTEMP)); //  & 0xff));
 		waitfor(50); // Wait 50ms
 		byte[] buf = new byte[3];
@@ -107,8 +109,8 @@ public class HTU21DF {
 		//  while (!Wire.available()) {}
 
 		if (verbose) {
-			System.out.println("Temp -> 0x" + lpad(Integer.toHexString(msb), "0", 2) + " " + "0x" +
-							lpad(Integer.toHexString(lsb), "0", 2) + " " + "0x" + lpad(Integer.toHexString(crc), "0", 2));
+			System.out.println("Temp -> 0x" + lpad(Integer.toHexString(msb), 2, "0") + " " + "0x" +
+							lpad(Integer.toHexString(lsb), 2, "0") + " " + "0x" + lpad(Integer.toHexString(crc), 2, "0"));
 			System.out.println("DBG: Raw Temp: " + (raw & 0xFFFF) + ", " + raw);
 		}
 
@@ -138,8 +140,8 @@ public class HTU21DF {
 		//  while (!Wire.available()) {}
 
 		if (verbose) {
-			System.out.println("Hum -> 0x" + lpad(Integer.toHexString(msb), "0", 2) + " " + "0x" +
-							lpad(Integer.toHexString(lsb), "0", 2) + " " + "0x" + lpad(Integer.toHexString(crc), "0", 2));
+			System.out.println("Hum -> 0x" + lpad(Integer.toHexString(msb), 2, "0") + " " + "0x" +
+							lpad(Integer.toHexString(lsb), 2, "0") + " " + "0x" + lpad(Integer.toHexString(crc), 2, "0"));
 			System.out.println("DBG: Raw Humidity: " + (raw & 0xFFFF) + ", " + raw);
 		}
 
@@ -159,13 +161,6 @@ public class HTU21DF {
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
 		}
-	}
-
-	private static String lpad(String s, String with, int len) {
-		String str = s;
-		while (str.length() < len)
-			str = with + str;
-		return str;
 	}
 
 	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {

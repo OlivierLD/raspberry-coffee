@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import utils.StringUtils;
 
 /*
  * Pressure, Altitude, Temperature, Humidity
@@ -183,7 +184,7 @@ public class BME280 {
 	}
 
 	private String displayRegister(int reg) {
-		return String.format("0x%s (%d)", lpad(Integer.toHexString(reg & 0xFFFF).toUpperCase(), "0", 4), reg);
+		return String.format("0x%s (%d)", StringUtils.lpad(Integer.toHexString(reg & 0xFFFF).toUpperCase(), 4, "0"), reg);
 	}
 
 	private void showCalibrationData() {
@@ -329,13 +330,6 @@ public class BME280 {
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
 		}
-	}
-
-	private static String lpad(String s, String with, int len) {
-		String str = s;
-		while (str.length() < len)
-			str = with + str;
-		return str;
 	}
 
 	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {

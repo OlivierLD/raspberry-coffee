@@ -7,6 +7,7 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import static utils.StringUtils.lpad;
 
 /**
  * Read an Analog to Digital Converter
@@ -72,22 +73,22 @@ public class MCP3008Reader {
 
 		int adccommand = channel;
 		if (DISPLAY_DIGIT)
-			System.out.println("1 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), "0", 4) +
-							", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), "0", 16));
+			System.out.println("1 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), 4, "0") +
+							", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), 16, "0"));
 		adccommand |= 0x18; // 0x18: 00011000
 		if (DISPLAY_DIGIT)
-			System.out.println("2 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), "0", 4) +
-							", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), "0", 16));
+			System.out.println("2 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), 4, "0") +
+							", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(),16, "0"));
 		adccommand <<= 3;
 		if (DISPLAY_DIGIT)
-			System.out.println("3 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), "0", 4) +
-							", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), "0", 16));
+			System.out.println("3 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(),4, "0") +
+							", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), 16, "0"));
 		// Send 5 bits: 8 - 3. 8 input channels on the MCP3008.
 		for (int i = 0; i < 5; i++) //
 		{
 			if (DISPLAY_DIGIT)
-				System.out.println("4 - (i=" + i + ") ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), "0", 4) +
-								", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), "0", 16));
+				System.out.println("4 - (i=" + i + ") ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(),4, "0") +
+								", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(),16, "0"));
 			if ((adccommand & 0x80) != 0x0) // 0x80 = 0&10000000
 				mosiOutput.high();
 			else
@@ -108,8 +109,8 @@ public class MCP3008Reader {
 				adcOut |= 0x1;
 			}
 			if (DISPLAY_DIGIT)
-				System.out.println("ADCOUT: 0x" + lpad(Integer.toString(adcOut, 16).toUpperCase(), "0", 4) +
-								", 0&" + lpad(Integer.toString(adcOut, 2).toUpperCase(), "0", 16));
+				System.out.println("ADCOUT: 0x" + lpad(Integer.toString(adcOut, 16).toUpperCase(), 4, "0") +
+								", 0&" + lpad(Integer.toString(adcOut, 2).toUpperCase(), 16, "0"));
 		}
 		chipSelectOutput.high();
 
@@ -120,12 +121,5 @@ public class MCP3008Reader {
 	private static void tickOnPin(GpioPinDigitalOutput pin) {
 		pin.high();
 		pin.low();
-	}
-
-	private static String lpad(String str, String with, int len) {
-		String s = str;
-		while (s.length() < len)
-			s = with + s;
-		return s;
 	}
 }

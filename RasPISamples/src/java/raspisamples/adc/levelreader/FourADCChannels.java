@@ -72,12 +72,4 @@ public class FourADCChannels
     // Channels are hard-coded
     new FourADCChannels();
   }
-
-  private static String lpad(String str, String with, int len)
-  {
-    String s = str;
-    while (s.length() < len)
-      s = with + s;
-    return s;
-  }
 }

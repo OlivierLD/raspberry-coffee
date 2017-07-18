@@ -313,22 +313,6 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
     }    
   }
 
-  private static String lpad(String str, String with, int len)
-  {
-    String s = str;
-    while (s.length() < len)
-      s = with + s;
-    return s;
-  }
-  
-  private static String rpad(String str, String with, int len)
-  {
-    String s = str;
-    while (s.length() < len)
-      s += with;
-    return s;
-  }
-  
   private static String materialToString(SevenADCChannelsManager.Material material)
   {
     String s = "UNKNOWN";

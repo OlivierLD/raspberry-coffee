@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import utils.StringUtils;
 
 @SuppressWarnings("oracle.jdeveloper.java.serialversionuid-field-missing")
 public class LedPanelMain
@@ -114,7 +115,7 @@ public class LedPanelMain
                     lpad(Integer.toBinaryString(screenbuffer[i + (1 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " + 
                     lpad(Integer.toBinaryString(screenbuffer[i + (0 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X'); */
 			for (int l = (NB_LINES / 8) - 1; l >= 0; l--)
-				line += lpad(Integer.toBinaryString(screenbuffer[i + (l * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X');
+				line += StringUtils.lpad(Integer.toBinaryString(screenbuffer[i + (l * NB_COLS)]), 8, "0").replace('0', ' ').replace('1', 'X');
 
 //    System.out.println(line);
 //    for (int c=0; c<Math.min(line.length(), NB_COLS); c++)
@@ -620,13 +621,6 @@ public class LedPanelMain
 
 			System.out.println("...Done!");
 		}
-	}
-
-	private static String lpad(String str, String with, int len) {
-		String s = str;
-		while (s.length() < len)
-			s = with + s;
-		return s;
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package sample;
 
 import gnu.io.CommPortIdentifier;
-import sample.util.DumpUtil;
+import utils.DumpUtil;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 

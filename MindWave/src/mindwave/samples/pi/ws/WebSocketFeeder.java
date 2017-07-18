@@ -16,7 +16,7 @@
 
   import org.json.JSONObject;
 
-  import util.DumpUtil;
+  import utils.StringUtils;
 
   public class WebSocketFeeder implements MindWaveCallbacks,
           SerialCommunicatorInterface
@@ -25,10 +25,10 @@
     public void mindWaveConnected(MindWaveController.DeviceID did)
     {
       System.out.println("Connected to Device ID: 0x" +
-              util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+              StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
       JSONObject json = new JSONObject();
       json.put("mindwave-connected", true);
-      json.put("device-id", util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+      json.put("device-id", StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
       webSocketClient.send(json.toString());
     }
 
@@ -36,10 +36,10 @@
     public void mindWaveDisconnected(MindWaveController.DeviceID did)
     {
       System.out.println("Disconnected from Device ID: 0x" +
-              util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+              StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
       JSONObject json = new JSONObject();
       json.put("mindwave-connected", false);
-      json.put("device-id", util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+      json.put("device-id", StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
       webSocketClient.send(json.toString());
     }
 
@@ -143,7 +143,7 @@
   @Override
   public void mindWaveUnknowType(byte t)
   {
-    System.out.println("Unknown type [" + DumpUtil.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
+    System.out.println("Unknown type [" + StringUtils.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
   }
 
   @Override

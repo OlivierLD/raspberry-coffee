@@ -1,16 +1,13 @@
 package mindwave;
 
-import com.pi4j.io.serial.Serial;
-import com.pi4j.io.serial.SerialFactory;
-
-import java.io.ByteArrayOutputStream;
-
 import java.text.NumberFormat;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import util.DumpUtil;
+import utils.DumpUtil;
+import utils.StringUtils;
+
 /**
  * See http://developer.neurosky.com/docs/doku.php?id=thinkgear_communications_protocol#data_payload
  * 
@@ -608,7 +605,7 @@ public class MindWaveController
       String s = DumpUtil.dumpHexMess(cmd[i]);
       System.out.println("Parsing [" + s + "]");
       cs = thinkGearChecksum(cmd[i]);
-      System.out.println("Checksum: 0x" + DumpUtil.lpad(Integer.toHexString(cs & 0xFF).toUpperCase(), 2, "0"));
+      System.out.println("Checksum: 0x" + StringUtils.lpad(Integer.toHexString(cs & 0xFF).toUpperCase(), 2, "0"));
     
       if (cs == cmd[i][cmd[i].length -1])
       {
@@ -618,7 +615,7 @@ public class MindWaveController
           if (obj instanceof DeviceID)
           {
             DeviceID id = (DeviceID)obj;
-            System.out.println("- Device ID: 0x" + DumpUtil.lpad(Integer.toHexString(id.getID() & 0xFFFF), 4, "0"));
+            System.out.println("- Device ID: 0x" + StringUtils.lpad(Integer.toHexString(id.getID() & 0xFFFF), 4, "0"));
           }
           else if (obj instanceof StbyStatus)
           {
@@ -683,7 +680,7 @@ public class MindWaveController
           {
             UnknownType ut = (UnknownType)obj;
             byte t = ut.getType();
-            System.out.println("- Unknown type [" + DumpUtil.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
+            System.out.println("- Unknown type [" + StringUtils.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
           }
           else
             System.out.println("What?");

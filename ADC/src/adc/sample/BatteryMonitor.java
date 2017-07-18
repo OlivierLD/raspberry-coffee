@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.function.Consumer;
+import utils.StringUtils;
 
 public class BatteryMonitor {
 	private static boolean debug = false;
@@ -134,8 +135,8 @@ public class BatteryMonitor {
 							}
 							if (debug) {
 								System.out.print("readAdc:" + Integer.toString(newValue) +
-												" (0x" + lpad(Integer.toString(newValue, 16).toUpperCase(), "0", 2) +
-												", 0&" + lpad(Integer.toString(newValue, 2), "0", 8) + ") ");
+												" (0x" + StringUtils.lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
+												", 0&" + StringUtils.lpad(Integer.toString(newValue, 2), 8, "0") + ") ");
 								System.out.println("Volume:" + volume + "% (" + newValue + ") Volt:" + VF.format(voltage));
 							}
 
@@ -292,12 +293,5 @@ public class BatteryMonitor {
 				throw new IllegalArgumentException("No channel " + Integer.toString(ch));
 		}
 		return channel;
-	}
-
-	private static String lpad(String str, String with, int len) {
-		String s = str;
-		while (s.length() < len)
-			s = with + s;
-		return s;
 	}
 }

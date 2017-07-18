@@ -16,7 +16,7 @@ import mindwave.MindWaveCallbacks;
 
 import mindwave.SerialCommunicatorInterface;
 
-import util.DumpUtil;
+import utils.StringUtils;
 
 import org.fusesource.jansi.AnsiConsole;
 import util.EscapeSeq;
@@ -29,14 +29,14 @@ public class ClientTwo implements MindWaveCallbacks,
   @Override
   public void mindWaveConnected(MindWaveController.DeviceID did)
   {
-    String str = "Status : Connected to Device ID: 0x" + DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0");
+    String str = "Status : Connected to Device ID: 0x" + StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0");
     locate(str, 1, 1);
   }
 
   @Override
   public void mindWaveDisconnected(MindWaveController.DeviceID did)
   {
-    String str = "Status : Disconnected from Device ID: 0x" + DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0");
+    String str = "Status : Disconnected from Device ID: 0x" + StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0");
     locate(str, 1, 1);
   }
 
@@ -134,7 +134,7 @@ public class ClientTwo implements MindWaveCallbacks,
   @Override
   public void mindWaveUnknowType(byte t)
   {
-    String str = "Unknown type [" + DumpUtil.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]";
+    String str = "Unknown type [" + StringUtils.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]";
     locate(str, 1, 11);
   }
 

@@ -26,6 +26,7 @@ dependencies {
 //  compile 'com.pi4j:pi4j-core:1.1'
 //  compile 'comm:rxtx:1.0'
     compile 'org.rxtx:rxtx:2.1.7'
+    compile project(':common-utils')
 }
 
 task runArduinoSample(type: JavaExec, dependsOn: classes, description: 'Runs the Arduino Serial.IO sample') {

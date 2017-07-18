@@ -138,13 +138,6 @@ public class SwingLedPanel
 		System.out.println("...Done!");
 	}
 
-	private static String lpad(String str, String with, int len) {
-		String s = str;
-		while (s.length() < len)
-			s = with + s;
-		return s;
-	}
-
 	/**
 	 * Exit the Application
 	 */

@@ -140,14 +140,6 @@ public class LevelAndTemperature implements LevelListenerInterface
     }    
   }
 
-  private static String lpad(String str, String with, int len)
-  {
-    String s = str;
-    while (s.length() < len)
-      s = with + s;
-    return s;
-  }
-  
   public static void main(String[] args) throws Exception
   {
     System.out.println(args.length + " parameter(s).");    

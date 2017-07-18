@@ -7,6 +7,7 @@ import adc.ADCObserver;
 import adc.utils.EscapeSeq;
 
 import org.fusesource.jansi.AnsiConsole;
+import static utils.StringUtils.lpad;
 
 public class FiveChannelListener
 {
@@ -47,8 +48,8 @@ public class FiveChannelListener
              channelValues[ch] = volume;
              if (DEBUG)
                System.out.println("readAdc:" + Integer.toString(newValue) + 
-                                               " (0x" + lpad(Integer.toString(newValue, 16).toUpperCase(), "0", 2) + 
-                                               ", 0&" + lpad(Integer.toString(newValue, 2), "0", 8) + ")"); 
+                                               " (0x" + lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
+                                               ", 0&" + lpad(Integer.toString(newValue, 2), 8, "0") + ")");
              if (displayOption == DIGITAL_OPTION)
              {
                String output = "";
@@ -100,13 +101,5 @@ public class FiveChannelListener
     }
     // Channels are hard-coded
     new FiveChannelListener();
-  }
-
-  private static String lpad(String str, String with, int len)
-  {
-    String s = str;
-    while (s.length() < len)
-      s = with + s;
-    return s;
   }
 }

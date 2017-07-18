@@ -7,6 +7,7 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import static utils.StringUtils.lpad;
 
 /**
  * Read an Analog to Digital Converter
@@ -84,8 +85,8 @@ public class ADCReader
         int volume = (int)(adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
         if (DEBUG)
           System.out.println("readAdc:" + Integer.toString(adc) + 
-                                          " (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), "0", 2) + 
-                                          ", 0&" + lpad(Integer.toString(adc, 2), "0", 8) + ")");        
+                                          " (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
+                                          ", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
         System.out.println("Volume:" + volume + "% (" + adc + ")");
         lastRead = adc;
       }
@@ -138,13 +139,5 @@ public class ADCReader
 
     adcOut >>= 1; // Drop first bit
     return adcOut;
-  }
-  
-  private static String lpad(String str, String with, int len)
-  {
-    String s = str;
-    while (s.length() < len)
-      s = with + s;
-    return s;
   }
 }

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import utils.StringUtils;
 
 @SuppressWarnings("oracle.jdeveloper.java.serialversionuid-field-missing")
 public class LedPanelMain2
@@ -117,7 +118,7 @@ public class LedPanelMain2
                     lpad(Integer.toBinaryString(screenbuffer[i + (1 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " + 
                     lpad(Integer.toBinaryString(screenbuffer[i + (0 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X'); */
       for (int l = (NB_LINES / 8) - 1; l>=0; l--)
-        line += lpad(Integer.toBinaryString(screenbuffer[i + (l * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X');
+        line += StringUtils.lpad(Integer.toBinaryString(screenbuffer[i + (l * NB_COLS)]),8, "0").replace('0', ' ').replace('1', 'X');
        
 //    System.out.println(line);
 //    for (int c=0; c<Math.min(line.length(), NB_COLS); c++)
@@ -205,14 +206,6 @@ public class LedPanelMain2
     }
   }
   
-  private static String lpad(String str, String with, int len)
-  {
-    String s = str;
-    while (s.length() < len)
-      s = with + s;
-    return s;
-  }
-
   /** Exit the Application */
   private void exitForm(@SuppressWarnings("oracle.jdeveloper.java.unused-parameter") java.awt.event.WindowEvent evt) 
   {

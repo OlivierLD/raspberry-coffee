@@ -16,6 +16,7 @@ import mindwave.SerialCommunicatorInterface;
 
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
+import utils.StringUtils;
 
 public class BlinkDetector
   implements SerialIOCallbacks, 
@@ -64,14 +65,14 @@ public class BlinkDetector
   public void mindWaveConnected(MindWaveController.DeviceID did)
   {
     System.out.println("Connected to Device ID: 0x" +
-                       util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+            StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
   }
 
   @Override
   public void mindWaveDisconnected(MindWaveController.DeviceID did)
   {
     System.out.println("Disconnected from Device ID: 0x" +
-                       util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+            StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
   }
 
   @Override
@@ -204,7 +205,7 @@ public class BlinkDetector
   @Override
   public void mindWaveUnknowType(byte t)
   {
-    System.out.println("Unknown type [" + util.DumpUtil.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
+    System.out.println("Unknown type [" + StringUtils.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
   }
 
   @Override

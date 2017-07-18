@@ -2,6 +2,7 @@ package analogdigitalconverter.mcp3008.sample;
 
 import analogdigitalconverter.mcp3008.MCP3008Reader;
 import analogdigitalconverter.mcp3008.MCP3008Reader.MCP3008_input_channels;
+import static utils.StringUtils.lpad;
 
 public class MainMCP3008Sample {
 	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
@@ -33,8 +34,8 @@ public class MainMCP3008Sample {
 				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 				if (DEBUG || trimPotChanged)
 					System.out.println("readAdc:" + Integer.toString(adc) +
-									" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), "0", 2) +
-									", 0&" + lpad(Integer.toString(adc, 2), "0", 8) + ")");
+									" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
+									", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
 				System.out.println("Volume:" + volume + "% (" + adc + ")");
 				lastRead = adc;
 			}
@@ -48,12 +49,5 @@ public class MainMCP3008Sample {
 		}
 		System.out.println("Bye, freeing resources.");
 		MCP3008Reader.shutdownMCP3008();
-	}
-
-	private static String lpad(String str, String with, int len) {
-		String s = str;
-		while (s.length() < len)
-			s = with + s;
-		return s;
 	}
 }

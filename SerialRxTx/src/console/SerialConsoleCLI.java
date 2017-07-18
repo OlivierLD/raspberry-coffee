@@ -13,11 +13,9 @@ import java.util.Map;
 
 import java.util.Set;
 
-
-import console.util.DumpUtil;
-
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
+import utils.DumpUtil;
 
 public class SerialConsoleCLI implements SerialIOCallbacks {
 	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));

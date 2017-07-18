@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 
-import util.DumpUtil;
+import utils.StringUtils;
 
 public class WebSocketFeeder
   implements SerialIOCallbacks, 
@@ -56,7 +56,7 @@ public class WebSocketFeeder
     {
       try
       {
-        log.write(DumpUtil.lpad(Integer.toHexString(b & 0xFF).toUpperCase(), 2, "0") + " ");
+        log.write(StringUtils.lpad(Integer.toHexString(b & 0xFF).toUpperCase(), 2, "0") + " ");
         log.flush();
       }
       catch (IOException ioe)
@@ -88,10 +88,10 @@ public class WebSocketFeeder
   public void mindWaveConnected(MindWaveController.DeviceID did)
   {
     System.out.println("Connected to Device ID: 0x" +
-                       util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+            StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
     JSONObject json = new JSONObject();
     json.put("mindwave-connected", true);
-    json.put("device-id", util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+    json.put("device-id", StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
     webSocketClient.send(json.toString());
   }
 
@@ -99,10 +99,10 @@ public class WebSocketFeeder
   public void mindWaveDisconnected(MindWaveController.DeviceID did)
   {
     System.out.println("Disconnected from Device ID: 0x" +
-                       util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+            StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
     JSONObject json = new JSONObject();
     json.put("mindwave-connected", false);
-    json.put("device-id", util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+    json.put("device-id", StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
     webSocketClient.send(json.toString());
   }
 
@@ -206,7 +206,7 @@ public class WebSocketFeeder
   @Override
   public void mindWaveUnknowType(byte t)
   {
-    System.out.println("Unknown type [" + util.DumpUtil.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
+    System.out.println("Unknown type [" + StringUtils.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
   }
 
   @Override

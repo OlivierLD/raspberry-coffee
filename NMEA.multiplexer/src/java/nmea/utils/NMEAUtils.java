@@ -56,25 +56,6 @@ public class NMEAUtils {
 		return offset;
 	}
 
-	public final static String lpad(String s, int len) {
-		return lpad(s, len, " ");
-	}
-	public final static String lpad(String s, int len, String pad) {
-		String str = s;
-		while (str.length() < len)
-			str = pad + str;
-		return str;
-	}
-
-	public static String rpad(String s, int len) {
-		return rpad(s, len, " ");
-	}
-	public static String rpad(String s, int len, String with) {
-		while (s.length() < len)
-			s += with;
-		return s;
-	}
-
 	/*
 	 * Calculated Data
 	 * <p>

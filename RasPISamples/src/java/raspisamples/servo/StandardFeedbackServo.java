@@ -30,7 +30,7 @@ public class StandardFeedbackServo {
 
 	private int servoMin = DEFAULT_SERVO_MIN;
 	private int servoMax = DEFAULT_SERVO_MAX;
-	private int diff = servoMax - servoMin;
+	private int diff     = servoMax - servoMin;
 
 	private PCA9685 servoBoard = null;
 
@@ -191,12 +191,5 @@ public class StandardFeedbackServo {
 		}
 
 		System.out.println("Done.");
-	}
-
-	private static String lpad(String str, String with, int len) {
-		String s = str;
-		while (s.length() < len)
-			s = with + s;
-		return s;
 	}
 }

@@ -5,6 +5,7 @@ import lcd.utils.CharacterMatrixes;
 
 import java.awt.Point;
 import java.awt.Polygon;
+import utils.StringUtils;
 
 public class ScreenBuffer {
 	private final static int WIDTH = 128, HEIGHT = 32; // Default values, for SSD1306
@@ -306,7 +307,7 @@ public class ScreenBuffer {
 		int[] imgBuf = img.getImgBuffer();
 		for (int col = 0; col < w; col++) {
 			for (int row = 0; row < (h / 8); row++) {
-				String bitMapCol = lpad(Integer.toBinaryString(imgBuf[col + (w * row)]), "0", 8).replace('0', (mode == Mode.WHITE_ON_BLACK ? ' ' : 'X')).replace('1', (mode == Mode.WHITE_ON_BLACK ? 'X' : ' '));
+				String bitMapCol = StringUtils.lpad(Integer.toBinaryString(imgBuf[col + (w * row)]), 8, "0").replace('0', (mode == Mode.WHITE_ON_BLACK ? ' ' : 'X')).replace('1', (mode == Mode.WHITE_ON_BLACK ? 'X' : ' '));
 				// Write in the scren matrix
 				// screenMatrix[line][col]
 				for (int y = 0; y < 8; y++) {
@@ -331,10 +332,4 @@ public class ScreenBuffer {
 		return len;
 	}
 
-	private static String lpad(String str, String with, int len) {
-		String s = str;
-		while (s.length() < len)
-			s = with + s;
-		return s;
-	}
 }

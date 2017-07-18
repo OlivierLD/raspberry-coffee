@@ -8,9 +8,9 @@ import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialConfig;
 import com.pi4j.io.serial.SerialFactory;
 import com.pi4j.io.serial.StopBits;
-import util.DumpUtil;
 
 import java.io.IOException;
+import utils.DumpUtil;
 
 /**
  * Just reads the GPS data, with PI4J (no need for libRxTx here).

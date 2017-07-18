@@ -19,7 +19,7 @@ import mindwave.SerialCommunicatorInterface;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 
-import util.DumpUtil;
+import utils.StringUtils;
 
 public class ClientOne
   implements SerialIOCallbacks, 
@@ -45,7 +45,7 @@ public class ClientOne
     {
       try
       {
-        log.write(DumpUtil.lpad(Integer.toHexString(b & 0xFF).toUpperCase(), 2, "0") + " ");
+        log.write(StringUtils.lpad(Integer.toHexString(b & 0xFF).toUpperCase(), 2, "0") + " ");
         log.flush();
       }
       catch (IOException ioe)
@@ -77,14 +77,14 @@ public class ClientOne
   public void mindWaveConnected(MindWaveController.DeviceID did)
   {
     System.out.println("Connected to Device ID: 0x" +
-                       util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+                       StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
   }
 
   @Override
   public void mindWaveDisconnected(MindWaveController.DeviceID did)
   {
     System.out.println("Disconnected from Device ID: 0x" +
-                       util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
+            StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0"));
   }
 
   @Override
@@ -168,7 +168,7 @@ public class ClientOne
   @Override
   public void mindWaveUnknowType(byte t)
   {
-    System.out.println("Unknown type [" + util.DumpUtil.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
+    System.out.println("Unknown type [" + StringUtils.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
   }
 
   @Override

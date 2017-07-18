@@ -24,7 +24,7 @@ import mindwave.samples.io.gui.ctx.MindWaveListener;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 
-import util.DumpUtil;
+import utils.StringUtils;
 
 public class MindWaves
   implements SerialIOCallbacks, MindWaveCallbacks, SerialCommunicatorInterface
@@ -92,7 +92,7 @@ public class MindWaves
     {
       String s = "";
       for (int i=0; i<bufferIdx; i++)
-        s += (DumpUtil.lpad(Integer.toHexString(serialBuffer[i] & 0xFF).toUpperCase(), 2, "0") + " ");
+        s += (StringUtils.lpad(Integer.toHexString(serialBuffer[i] & 0xFF).toUpperCase(), 2, "0") + " ");
       MindWaveContext.getInstance().fireSerialData(s);
     }
     // Log - end
@@ -129,7 +129,7 @@ public class MindWaves
   public void mindWaveConnected(MindWaveController.DeviceID did)
   {
     String mess = "Connected to Device ID: 0x" +
-                       util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0");
+            StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0");
     System.out.println(mess);
     MindWaveContext.getInstance().fireMindWaveStatus(mess);
   }
@@ -138,7 +138,7 @@ public class MindWaves
   public void mindWaveDisconnected(MindWaveController.DeviceID did)
   {
     String mess = "Disconnected from Device ID: 0x" +
-                       util.DumpUtil.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0");
+            StringUtils.lpad(Integer.toHexString(did.getID() & 0xFFFF), 4, "0");
     System.out.println(mess);
     MindWaveContext.getInstance().fireMindWaveStatus(mess);
   }
@@ -231,7 +231,7 @@ public class MindWaves
   @Override
   public void mindWaveUnknowType(byte t)
   {
-    System.out.println("Unknown type [" + util.DumpUtil.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
+    System.out.println("Unknown type [" + StringUtils.lpad(Integer.toHexString(t & 0xFF), 2, "0") + "]");
   }
 
   @Override
