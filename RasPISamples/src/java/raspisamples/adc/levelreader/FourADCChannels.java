@@ -3,6 +3,7 @@ package raspisamples.adc.levelreader;
 import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
+import utils.StringUtils;
 
 public class FourADCChannels
 {
@@ -40,15 +41,15 @@ public class FourADCChannels
                channelValues[ch] = volume;
                if (DEBUG)
                  System.out.println("readAdc:" + Integer.toString(newValue) + 
-                                                 " (0x" + lpad(Integer.toString(newValue, 16).toUpperCase(), "0", 2) + 
-                                                 ", 0&" + lpad(Integer.toString(newValue, 2), "0", 8) + ")"); 
+                                                 " (0x" + StringUtils.lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
+                                                 ", 0&" + StringUtils.lpad(Integer.toString(newValue, 2), 8, "0") + ")");
                String output = "";
                for (int chan=0; chan<channel.length; chan++)
                  output += (channelValues[chan] != calibrationValues[chan] ? "*" : " ");
                output += " || ";
                for (int chan=0; chan<channel.length; chan++)
     //           output += "Ch " + Integer.toString(chan) + ":" + lpad(Integer.toString(channelValues[chan]), " ", 3) + "%" + (chan != (channel.length - 1)?", ":"");
-                 output += (Integer.toString(chan) + ":" + lpad(Integer.toString(channelValues[chan]), " ", 4) + (chan != (channel.length - 1)?" | ":" |"));
+                 output += (Integer.toString(chan) + ":" + StringUtils.lpad(Integer.toString(channelValues[chan]), 4, " ") + (chan != (channel.length - 1)?" | ":" |"));
                System.out.println(output);
              }
            }

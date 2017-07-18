@@ -1,6 +1,6 @@
 package nmea.api;
 
-import http.utils.DumpUtil;
+import utils.DumpUtil;
 import nmea.parser.StringParsers;
 
 import java.util.Arrays;

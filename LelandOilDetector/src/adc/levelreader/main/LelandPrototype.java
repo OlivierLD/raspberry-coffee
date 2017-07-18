@@ -56,6 +56,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
 
 import relay.RelayManager;
+import utils.StringUtils;
 
 /**
  * Relies on props.properties
@@ -420,8 +421,8 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
                       EscapeSeq.ansiSetTextAndBackgroundColor(EscapeSeq.ANSI_WHITE, color) + EscapeSeq.ANSI_BOLD;
       String suffix = EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT;
       str = "| " + Integer.toString(chan + 1) + " | " +
-                   lpad(DF4.format(data[chan].getPercent()), " ", 4) + " % | " +
-                   lpad(materialToString(data[chan].getMaterial()), " ", 7) + " |";
+              StringUtils.lpad(DF4.format(data[chan].getPercent()), 4) + " % | " +
+              StringUtils.lpad(materialToString(data[chan].getMaterial()), 7) + " |";
       str += (" " + nbSameMaterialInARow[chan] + "   ");
    // if (maxOilLevel == -1 && data[chan].getMaterial().equals(SevenADCChannelsManager.Material.OIL))
    //   maxOilLevel = chan;
@@ -745,7 +746,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
     if (false && ansiConsole)
     {
       AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 50));
-      AnsiConsole.out.println(rpad(mess, " ", 80));    
+      AnsiConsole.out.println(StringUtils.rpad(mess, 80));
     }
     else
       log("AppMess>> " + mess);
@@ -756,7 +757,7 @@ public class LelandPrototype implements AirWaterInterface, FONAClient, PushButto
     if (ansiConsole)
     {
       AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 60));
-      AnsiConsole.out.println(rpad(ex.toString(), " ", 80));    
+      AnsiConsole.out.println(StringUtils.rpad(ex.toString(), 80));
     }
     else 
       ex.printStackTrace();

@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import lcd.ScreenBuffer;
 import lcd.utils.CharacterMatrixes;
 import lcd.utils.LEDPanel;
+import utils.StringUtils;
 
 @SuppressWarnings("oracle.jdeveloper.java.serialversionuid-field-missing")
 public class SwingLedPanel
@@ -92,7 +93,7 @@ public class SwingLedPanel
                     lpad(Integer.toBinaryString(screenbuffer[i + (1 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " + 
                     lpad(Integer.toBinaryString(screenbuffer[i + (0 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X'); */
 			for (int l = (NB_LINES / 8) - 1; l >= 0; l--)
-				line += lpad(Integer.toBinaryString(screenbuffer[i + (l * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X');
+				line += StringUtils.lpad(Integer.toBinaryString(screenbuffer[i + (l * NB_COLS)]), 8, "0").replace('0', ' ').replace('1', 'X');
 
 //    System.out.println(line);
 //    for (int c=0; c<Math.min(line.length(), NB_COLS); c++)

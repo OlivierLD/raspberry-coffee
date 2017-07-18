@@ -1,6 +1,6 @@
 package util.tests;
 
-import http.utils.DumpUtil;
+import utils.DumpUtil;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;

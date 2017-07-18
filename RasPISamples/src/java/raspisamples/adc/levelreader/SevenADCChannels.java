@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fusesource.jansi.AnsiConsole;
+import utils.StringUtils;
 
 public class SevenADCChannels
 {
@@ -83,15 +84,15 @@ public class SevenADCChannels
                if (false)
                {
                  System.out.println("readAdc:" + Integer.toString(newValue) + 
-                                                 " (0x" + lpad(Integer.toString(newValue, 16).toUpperCase(), "0", 2) + 
-                                                 ", 0&" + lpad(Integer.toString(newValue, 2), "0", 8) + ")"); 
+                                                 " (0x" + StringUtils.lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
+                                                 ", 0&" + StringUtils.lpad(Integer.toString(newValue, 2), 8, "0") + ")");
                  String output = "";
                  for (int chan=0; chan<channel.length; chan++)
                    output += (channelVolumes[chan] > WATER_THRESHOLD ? "*" : " ");
                  output += " || ";
                  for (int chan=0; chan<channel.length; chan++)
       //           output += "Ch " + Integer.toString(chan) + ":" + lpad(Integer.toString(channelValues[chan]), " ", 3) + "%" + (chan != (channel.length - 1)?", ":"");
-                   output += (Integer.toString(chan) + ":" + lpad(Integer.toString(channelVolumes[chan]), " ", 4) + (chan != (channel.length - 1)?" | ":" |"));
+                   output += (Integer.toString(chan) + ":" + StringUtils.lpad(Integer.toString(channelVolumes[chan]), 4, " ") + (chan != (channel.length - 1)?" | ":" |"));
                  System.out.println(output);
                }
                // Clear the screen, cursor on top left.
@@ -115,8 +116,8 @@ public class SevenADCChannels
                {
                  str = (ansiBox ? "\u2551 " : "| ") + 
                        Integer.toString(chan) + (ansiBox ? " \u2503 " : " | ") +
-                       lpad(DF3.format(channelVolumes[chan]), " ", 3) + (ansiBox ? " % \u2503 " : " % | ") +
-                       lpad(DF4.format(channelValues[chan]), " ", 4) + (ansiBox ? " \u2551" : " |");
+                         StringUtils.lpad(DF3.format(channelVolumes[chan]), 3, " ") + (ansiBox ? " % \u2503 " : " % | ") +
+                         StringUtils.lpad(DF4.format(channelValues[chan]), 4, " ") + (ansiBox ? " \u2551" : " |");
 
                  if (smoothedChannelVolumes[chan] > WATER_THRESHOLD)
                    str += " Water (~ " + DF33.format(smoothedChannelVolumes[chan]) + ")                 ";

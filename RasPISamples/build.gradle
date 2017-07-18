@@ -74,7 +74,7 @@ dependencies {
   compile project(':WeatherStation')
   compile project(':SevenSegDisplay')
   compile project(':Adafruit.IO.REST')
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }
 
 task copyResources(type: Copy) {

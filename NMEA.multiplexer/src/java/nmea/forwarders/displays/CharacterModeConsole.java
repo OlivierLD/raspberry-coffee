@@ -11,7 +11,6 @@ import nmea.parser.GeoPos;
 import nmea.parser.SolarDate;
 import nmea.parser.Speed;
 import nmea.parser.UTCDate;
-import nmea.utils.NMEAUtils;
 
 import java.io.File;
 import java.io.FileReader;
@@ -33,6 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.fusesource.jansi.AnsiConsole;
 import context.NMEADataCache;
 import util.GeomUtil;
+import utils.StringUtils;
 
 public class CharacterModeConsole {
 	private final static boolean DEBUG = "true".equals(System.getProperty("cc.verbose", "false"));
@@ -184,8 +184,8 @@ public class CharacterModeConsole {
 					switch (s) {
 						case "POS": // POSition
 							try {
-								value = NMEAUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.NO_DEG, GeomUtil.NS), 12, " ") +
-												NMEAUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lng, GeomUtil.NO_DEG, GeomUtil.EW), 12, " ");
+								value = StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lat, GeomUtil.NO_DEG, GeomUtil.NS), 12, " ") +
+												StringUtils.lpad(GeomUtil.decToSex(((GeoPos) ndc.get(NMEADataCache.POSITION, true)).lng, GeomUtil.NO_DEG, GeomUtil.EW), 12, " ");
 							} catch (Exception ex) {
 								value = "-";
 								//  ex.printStackTrace();
@@ -194,7 +194,7 @@ public class CharacterModeConsole {
 						case "GDT": // GPS Date Time
 							try {
 								UTCDate utcDate = (UTCDate) ndc.get(NMEADataCache.GPS_DATE_TIME, true);
-								value = NMEAUtils.lpad(SDF.format(utcDate.getValue()), 24, " ");
+								value = StringUtils.lpad(SDF.format(utcDate.getValue()), 24, " ");
 							} catch (Exception e) {
 								value = "-";
 								//  e.printStackTrace();
@@ -203,7 +203,7 @@ public class CharacterModeConsole {
 						case "SLT": // SoLar Time
 							try {
 								SolarDate solarDate = (SolarDate) ndc.get(NMEADataCache.GPS_SOLAR_TIME, true);
-								value = NMEAUtils.lpad(SOLAR_DATE_FORMAT.format(solarDate.getValue()), 24, " ");
+								value = StringUtils.lpad(SOLAR_DATE_FORMAT.format(solarDate.getValue()), 24, " ");
 							} catch (Exception e) {
 								value = "-";
 								//   e.printStackTrace();
@@ -219,7 +219,7 @@ public class CharacterModeConsole {
 							break;
 						default: // Un-managed...
 							try {
-								value = NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " "); // + " ";
+								value = StringUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " "); // + " ";
 							} catch (Exception e) {
 								value = "-";
 								// e.printStackTrace();
@@ -227,7 +227,7 @@ public class CharacterModeConsole {
 							break;
 					}
 				} else {
-					value = NMEAUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " ");
+					value = StringUtils.lpad(suffixes.get(s).getFmt().format(getValueFromCache(s, ndc)), dataSize, " ");
 				}
 				String plot = plotOneValue(1 + ((col - 1) * cellSize), row + 1, value, colorMap.get(cd.getFgData()), colorMap.get(cd.getBgData()));
 				AnsiConsole.out.println(plot);
@@ -468,7 +468,7 @@ public class CharacterModeConsole {
 				if (nonNumericData.containsKey(k)) {
 //      if ("POS".equals(k))
 					consoleLine.add(new CharData(k,
-									NMEAUtils.lpad(" ", nonNumericData.get(k), " "), // "  ** **.**'N *** **.**'E",  //    "                        ",
+									StringUtils.lpad(" ", nonNumericData.get(k), " "), // "  ** **.**'N *** **.**'E",  //    "                        ",
 									"", // suffixes.get(k).getSuffix(),
 									cellSize,
 									colorMap.get(consoleData.get(k).getFgData()),
@@ -510,7 +510,7 @@ public class CharacterModeConsole {
 							" " + cd.formattedValue() + " " +
 							EscapeSeq.ansiSetTextAndBackgroundColor(cd.getTitleColor(), cd.getTitleBackground()) +
 							EscapeSeq.ANSI_BOLD +
-							NMEAUtils.rpad(cd.getSuffix(), suffixSize, " ") +  // "(" + Integer.toString(rpad) + ")" +
+							StringUtils.rpad(cd.getSuffix(), suffixSize, " ") +  // "(" + Integer.toString(rpad) + ")" +
 							// DesktopUtilities.rpad("", " ", rpad) +
 							EscapeSeq.ANSI_NORMAL +
 							EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT;
@@ -606,7 +606,7 @@ public class CharacterModeConsole {
 		public String formattedValue() {
 			String str = "";
 			if (this.fmt != null)
-				str = NMEAUtils.lpad(this.fmt.format(this.value), this.valueLen, " ");
+				str = StringUtils.lpad(this.fmt.format(this.value), this.valueLen, " ");
 			else
 				str = this.charValue;
 			return str;
@@ -843,7 +843,7 @@ public class CharacterModeConsole {
 				if ("POS".equals(s))
 					value = "  12 34.56'N 123 45.67'W";
 				else
-					value = NMEAUtils.lpad(suffixes.get(s).getFmt().format(Math.random() * 100), dataSize, " "); // + " ";
+					value = StringUtils.lpad(suffixes.get(s).getFmt().format(Math.random() * 100), dataSize, " "); // + " ";
 				String plot = plotOneValue(1 + ((col - 1) * cellSize), row + 1, value, colorMap.get(cd.getFgData()), colorMap.get(cd.getBgData()));
 				AnsiConsole.out.println(plot);
 				//    try { Thread.sleep(100); } catch (Exception ex) {}

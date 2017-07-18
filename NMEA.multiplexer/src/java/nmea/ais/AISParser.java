@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 import nmea.parser.StringParsers;
-import nmea.utils.NMEAUtils;
+import utils.StringUtils;
 
 public class AISParser {
 	public final static boolean verbose = false;
@@ -194,7 +194,7 @@ AIS Message type 2:
 			c -= 48;
 			if (c > 40)
 				c -= 8;
-			String bin = NMEAUtils.lpad(Integer.toBinaryString(c), 6, "0");
+			String bin = StringUtils.lpad(Integer.toBinaryString(c), 6, "0");
 			sb.append(bin);
 			if (verbose)
 				System.out.println(encoded.charAt(i) + " becomes " + bin + " (" + c + ")");

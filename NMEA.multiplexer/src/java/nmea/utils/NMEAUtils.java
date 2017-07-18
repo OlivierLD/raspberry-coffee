@@ -27,6 +27,7 @@ import nmea.parser.Speed;
 import nmea.parser.StringParsers;
 import nmea.parser.TrueWindDirection;
 import nmea.parser.TrueWindSpeed;
+import utils.StringUtils;
 
 public class NMEAUtils {
 	public final static int ALL_IN_HEXA = 0;
@@ -45,7 +46,7 @@ public class NMEAUtils {
 					sb.append(str.charAt(i));
 			} else {
 				String c = Integer.toHexString((int) str.charAt(i) & 0xFF).toUpperCase();
-				sb.append(lpad(c, 2, "0") + " ");
+				sb.append(StringUtils.lpad(c, 2, "0") + " ");
 			}
 		}
 		return sb.toString();
@@ -634,7 +635,7 @@ public class NMEAUtils {
 		std += Long.toString(age);
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(std);
-		std += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
+		std += ("*" + StringUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 		return "$" + std;
 	}
 

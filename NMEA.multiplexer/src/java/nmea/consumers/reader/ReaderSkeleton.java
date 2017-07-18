@@ -5,9 +5,9 @@ import nmea.api.NMEAListener;
 import nmea.api.NMEAParser;
 import nmea.api.NMEAReader;
 import nmea.parser.StringParsers;
-import nmea.utils.NMEAUtils;
 
 import java.util.List;
+import utils.StringUtils;
 
 /**
  * Reader Skeleton
@@ -43,7 +43,7 @@ public class ReaderSkeleton extends NMEAReader {
 		String custom = devicePrefix + id + "," + value;
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(custom);
-		custom += ("*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
+		custom += ("*" + StringUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
 		return "$" + custom;
 	}
 

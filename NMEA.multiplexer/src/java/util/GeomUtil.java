@@ -3,6 +3,7 @@ package util;
 import nmea.utils.NMEAUtils;
 
 import java.text.DecimalFormat;
+import utils.StringUtils;
 
 public final class GeomUtil {
 	public static final int HTML = 0;
@@ -194,10 +195,10 @@ public final class GeomUtil {
 					s = "-" + s;
 					break;
 				case NS:
-					s = (signPosition == TRAILING_SIGN ? s + "S" : "S " + NMEAUtils.lpad(s, (output == HTML) ? 13 : 9));
+					s = (signPosition == TRAILING_SIGN ? s + "S" : "S " + StringUtils.lpad(s, (output == HTML) ? 13 : 9));
 					break;
 				case EW:
-					s = (signPosition == TRAILING_SIGN ? s + "W" : "W " + NMEAUtils.lpad(s, (output == HTML) ? 14 : 10));
+					s = (signPosition == TRAILING_SIGN ? s + "W" : "W " + StringUtils.lpad(s, (output == HTML) ? 14 : 10));
 					break;
 			}
 		} else {
@@ -206,10 +207,10 @@ public final class GeomUtil {
 					s = " " + s;
 					break;
 				case NS:
-					s = (signPosition == TRAILING_SIGN ? s + "N" : "N " + NMEAUtils.lpad(s, (output == HTML) ? 13 : 9));
+					s = (signPosition == TRAILING_SIGN ? s + "N" : "N " + StringUtils.lpad(s, (output == HTML) ? 13 : 9));
 					break;
 				case EW:
-					s = (signPosition == TRAILING_SIGN ? s + "E" : "E " + NMEAUtils.lpad(s, (output == HTML) ? 14 : 10));
+					s = (signPosition == TRAILING_SIGN ? s + "E" : "E " + StringUtils.lpad(s, (output == HTML) ? 14 : 10));
 					break;
 			}
 		}

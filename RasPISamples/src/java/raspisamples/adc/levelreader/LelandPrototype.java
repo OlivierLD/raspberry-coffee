@@ -17,6 +17,7 @@ import org.fusesource.jansi.AnsiConsole;
 
 import raspisamples.adc.levelreader.manager.AirWaterOilInterface;
 import raspisamples.adc.levelreader.manager.SevenADCChannelsManager;
+import utils.StringUtils;
 
 public class LelandPrototype implements AirWaterOilInterface
 {
@@ -60,12 +61,12 @@ public class LelandPrototype implements AirWaterOilInterface
     for (int chan=data.length - 1; chan >= 0; chan--)
     {
       str = "| " + Integer.toString(chan) + " | " +
-                   lpad(DF4.format(data[chan].getPercent()), " ", 4) + " % | " +
-                   lpad(materialToString(data[chan].getMaterial()), " ", 7) + " |";
+              StringUtils.lpad(DF4.format(data[chan].getPercent()), 4, " ") + " % | " +
+              StringUtils.lpad(materialToString(data[chan].getMaterial()), 7, " ") + " |";
 
       AnsiConsole.out.println(str);
     }
-    str =        "+---+--------+---------+";
+    str =        "+---StringUtils.+--------+---------+";
     AnsiConsole.out.println(str);    
   }
   

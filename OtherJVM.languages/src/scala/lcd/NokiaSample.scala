@@ -2,7 +2,6 @@ package lcd
 
 import java.text.DecimalFormat
 
-import ScreenBuffer
 import spi.lcd.nokia.Nokia5110 // See this class for the wiring
 
 object NokiaSample {

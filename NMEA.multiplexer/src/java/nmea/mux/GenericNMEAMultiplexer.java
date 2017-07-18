@@ -4,7 +4,7 @@ import nmea.computers.Computer;
 import context.ApplicationContext;
 import http.HTTPServer;
 import http.HTTPServerInterface;
-import http.utils.DumpUtil;
+import utils.DumpUtil;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAParser;

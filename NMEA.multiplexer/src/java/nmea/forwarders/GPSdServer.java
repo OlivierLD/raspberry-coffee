@@ -2,7 +2,7 @@ package nmea.forwarders;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import http.utils.DumpUtil;
+import utils.DumpUtil;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

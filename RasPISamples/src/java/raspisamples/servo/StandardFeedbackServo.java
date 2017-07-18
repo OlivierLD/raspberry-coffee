@@ -3,6 +3,7 @@ package raspisamples.servo;
 import analogdigitalconverter.mcp3008.MCP3008Reader;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
+import utils.StringUtils;
 
 /*
  * Standard, using I2C and the PCA9685 servo board
@@ -127,8 +128,8 @@ public class StandardFeedbackServo {
 									diffAdc,
 									prevAdc,
 									adc,
-									lpad(Integer.toString(adc, 16).toUpperCase(), "0", 3), // 1023 ; 0x3FF
-									lpad(Integer.toString(adc, 2), "0", 10),
+									StringUtils.lpad(Integer.toString(adc, 16).toUpperCase(), 3, "0"), // 1023 ; 0x3FF
+									StringUtils.lpad(Integer.toString(adc, 2), 10, "0"),
 									Math.round(pwmToDegree(DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, adc))));
 					prevAdc = adc;
 				}

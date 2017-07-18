@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.fusesource.jansi.AnsiConsole;
+import utils.StringUtils;
 
 public class SevenADCChannelsManager
 {
@@ -106,9 +107,9 @@ public class SevenADCChannelsManager
              // DEBUG
              {
                AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 24 + ch));
-               AnsiConsole.out.print("Channel " + ch + ": Value " + lpad(Integer.toString(newValue), " ", 4) + 
-                                                       ", " + lpad(Integer.toString(volume), " ", 3) + " (inst)" + 
-                                                       ", " + lpad(DF32.format(val), " ", 6) + " (avg)" + 
+               AnsiConsole.out.print("Channel " + ch + ": Value " + StringUtils.lpad(Integer.toString(newValue), 4, " ") +
+                                                       ", " + StringUtils.lpad(Integer.toString(volume), 3, " ") + " (inst)" +
+                                                       ", " + StringUtils.lpad(DF32.format(val), 6, " ") + " (avg)" +
                                                        ", " + smoothedChannel[ch].size() + " val. : ");
                for (int vol : smoothedChannel[ch])
                  AnsiConsole.out.print(DF4.format(vol) + " ");

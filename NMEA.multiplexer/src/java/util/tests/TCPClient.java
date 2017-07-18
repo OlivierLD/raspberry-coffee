@@ -1,7 +1,7 @@
 package util.tests;
 
 
-import http.utils.DumpUtil;
+import utils.DumpUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

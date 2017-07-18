@@ -17,7 +17,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import com.pi4j.io.serial.StopBits;
-import util.DumpUtil;
+import utils.DumpUtil;
 
 /**
  * Important: Makes sure you've run

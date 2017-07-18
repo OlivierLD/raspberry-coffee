@@ -3,10 +3,10 @@ package nmea.computers;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAParser;
 import nmea.parser.StringParsers;
-import nmea.utils.NMEAUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import utils.StringUtils;
 
 /**
  * Computer Skeleton
@@ -51,7 +51,7 @@ public class ComputerSkeleton extends Computer {
 				String s = this.generatedStringsPrefix + content.substring(2);
 				// Recompute the Checksum
 				int cs = StringParsers.calculateCheckSum(s);
-				String newStr = "$" + s + "*" + NMEAUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0") + NMEAParser.STANDARD_NMEA_EOS;
+				String newStr = "$" + s + "*" + StringUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0") + NMEAParser.STANDARD_NMEA_EOS;
 				this.produce(newStr);
 			}
 		}
