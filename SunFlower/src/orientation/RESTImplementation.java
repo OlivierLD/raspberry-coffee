@@ -134,6 +134,8 @@ public class RESTImplementation {
 			request.setRequestPattern(op.getPath()); // To get the prms later on.
 			Response processed = op.getFn().apply(request); // Execute here.
 			return processed;
+		} else {
+			RESTProcessorUtil.addErrorMessageToResponse(defaultResponse, "Requested operation not found or implemented");
 		}
 		return defaultResponse;
 	}
