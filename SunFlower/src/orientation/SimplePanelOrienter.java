@@ -1,19 +1,9 @@
 package orientation;
 
 import ansi.EscapeSeq;
-import calculation.AstroComputer;
-import calculation.SightReductionUtil;
 import i2c.sensor.LSM303;
 import i2c.sensor.listener.LSM303Listener;
-import i2c.servo.pwm.PCA9685;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 import org.fusesource.jansi.AnsiConsole;
-import user.util.GeomUtil;
 
 /**
  * This is an implementation example:

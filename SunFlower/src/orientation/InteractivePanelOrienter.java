@@ -1,10 +1,5 @@
 package orientation;
 
-import ansi.EscapeSeq;
-import i2c.sensor.LSM303;
-import i2c.sensor.listener.LSM303Listener;
-import org.fusesource.jansi.AnsiConsole;
-
 /**
  * Show how to use the panel orienter (SunFlower)
  * Takes the Device (true) Heading from the Console

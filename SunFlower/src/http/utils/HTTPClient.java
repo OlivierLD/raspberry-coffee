@@ -58,5 +58,4 @@ public class HTTPClient {
 		newContent[newLength - 1] = b;
 		return newContent;
 	}
-
 }

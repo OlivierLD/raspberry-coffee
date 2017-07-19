@@ -100,7 +100,7 @@ public class SunFlower implements HTTPServerInterface {
 
 	private final static float SMOOTH_STEP = 1.0f;
 
-	private enum superVerboseType {
+	private enum servoVerboseType {
 		BOTH,
 		TILT,
 		HEADING,
@@ -115,7 +115,7 @@ public class SunFlower implements HTTPServerInterface {
 	private static boolean astroVerbose = false;
 	private static boolean tiltVerbose = false;
 	private static boolean servoVerbose = false;
-	private static superVerboseType servoSuperVerbose = superVerboseType.NONE;
+	private static servoVerboseType servoSuperVerbose = servoVerboseType.NONE;
 	private static boolean testServos = false;
 	private static boolean smoothMoves = false;
 	private static boolean demo = false;
@@ -322,18 +322,18 @@ public class SunFlower implements HTTPServerInterface {
 		switch (superVerbose) {
 			case "both":
 			case "true":
-				servoSuperVerbose = superVerboseType.BOTH;
+				servoSuperVerbose = servoVerboseType.BOTH;
 				break;
 			case "tilt":
-				servoSuperVerbose = superVerboseType.TILT;
+				servoSuperVerbose = servoVerboseType.TILT;
 				break;
 			case "heading":
-				servoSuperVerbose = superVerboseType.HEADING;
+				servoSuperVerbose = servoVerboseType.HEADING;
 				break;
 			case "none":
 			case "false":
 			default:
-				servoSuperVerbose = superVerboseType.NONE;
+				servoSuperVerbose = servoVerboseType.NONE;
 				break;
 		}
 		astroVerbose = "true".equals(System.getProperty("astro.verbose", "false"));
@@ -451,7 +451,7 @@ public class SunFlower implements HTTPServerInterface {
 		headingServoMoving = b;
 	}
 	public void setHeadingServoAngle(final float f) {
-		if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
+		if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
 			System.out.println(String.format("H> Servo heading set required to %.02f (previous %d), moving:%s", f, previousHeadingAngle, (headingServoMoving ? "yes" : "no")));
 		}
 		float startFrom = previousHeadingAngle;
@@ -459,17 +459,17 @@ public class SunFlower implements HTTPServerInterface {
 		if ((servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) && smoothMoves && Math.abs(startFrom - f) > 1) {
 			headingServoMoving = true;
 			// Smooth move for steps > 1
-			if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
+			if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
 				System.out.println(String.format("H>> Start a smooth move from heading %.02f to %.02f", startFrom, f));
 			}
 			Thread smoothy = new Thread(() -> {
-				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
+				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
 					System.out.println(String.format("H>> Starting smooth thread for heading %.02f to %.02f", startFrom, f));
 				}
 				int sign = (startFrom > f) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - f) >= SMOOTH_STEP) {
-					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
+					if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
 						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f (target %.02f)", pos, Math.abs(pos - f), f));
 					}
 					for (int id : headingServoID) {
@@ -479,7 +479,7 @@ public class SunFlower implements HTTPServerInterface {
 					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
-				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
+				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
 					System.out.println(String.format("H>...Heading thread done, delta=%.02f", Math.abs(pos - f)));
 				}
 				setHeadingServoMoving(false);
@@ -487,7 +487,7 @@ public class SunFlower implements HTTPServerInterface {
 			smoothy.start();
 		} else {
 			if (servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) {
-				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.HEADING)) {
+				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
 					System.out.println(String.format("H> Abrupt heading set to %.02f", f));
 				}
 				Arrays.stream(headingServoID).forEach(id -> setAngle(id, f));
@@ -500,7 +500,7 @@ public class SunFlower implements HTTPServerInterface {
 		tiltServoMoving = b;
 	}
 	public void setTiltServoAngle(final float f) {
-		if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
+		if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
 			System.out.println(String.format("T> Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving ? "yes" : "no")));
 		}
 		float startFrom = previousTiltAngle;
@@ -508,17 +508,17 @@ public class SunFlower implements HTTPServerInterface {
 		if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && smoothMoves && Math.abs(startFrom - goToAngle) > 1) {
 			tiltServoMoving = true;
 			// Smooth move for steps > 1
-			if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
+			if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
 				System.out.println(String.format("T> Start a smooth move from tilt %.02f to %.02f (%.02f)", startFrom, f, goToAngle));
 			}
 			Thread smoothy = new Thread(() -> {
-				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
+				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
 					System.out.println(String.format("T> Starting smooth thread for tilt %.02f to %.02f (%.02f)", startFrom, f, goToAngle));
 				}
 				int sign = (startFrom > goToAngle) ? -1 : 1;
 				float pos = startFrom;
 				while (Math.abs(pos - goToAngle) >= SMOOTH_STEP) {
-					if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
+					if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
 						System.out.println(String.format("T> Setting tilt to %.02f, delta=%.02f", pos, Math.abs(pos - f)));
 					}
 //				setAngle(tiltServoID, pos);
@@ -528,7 +528,7 @@ public class SunFlower implements HTTPServerInterface {
 					pos += (sign * SMOOTH_STEP);
 					try { Thread.sleep(10L); } catch (Exception ex) {}
 				}
-				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
+				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
 					System.out.println(String.format("T>...Tilt thread done, delta=%.02f", Math.abs(pos - goToAngle)));
 				}
 				setTiltServoMoving(false);
@@ -536,7 +536,7 @@ public class SunFlower implements HTTPServerInterface {
 			smoothy.start();
 		} else {
 			if (servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) {
-				if (servoSuperVerbose.equals(superVerboseType.BOTH) || servoSuperVerbose.equals(superVerboseType.TILT)) {
+				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
 					System.out.println(String.format("T> Abrupt tilt set to %.02f (%.02f)", f, goToAngle));
 				}
 //			setAngle(tiltServoID, goToAngle);
