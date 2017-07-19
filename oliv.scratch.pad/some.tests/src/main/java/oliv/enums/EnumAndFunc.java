@@ -25,10 +25,10 @@ public class EnumAndFunc {
 
 	public enum OlivType {
 
-		TYPE_ONE (EchoClass.class, "Identical", EnumAndFunc::echo),
-		TYPE_TWO (ReverseClass.class, "Reverse", EnumAndFunc::reverse),
-		TYPE_THREE (AllUpperClass.class, "Upper", String::toUpperCase),
-		TYPE_FOUR (AllLowerClass.class, "Lower", String::toLowerCase);
+		TYPE_ONE (EchoClass.class,       "Identical", EnumAndFunc::echo),
+		TYPE_TWO (ReverseClass.class,    "Reverse",   EnumAndFunc::reverse),
+		TYPE_THREE (AllUpperClass.class, "Upper",     String::toUpperCase),
+		TYPE_FOUR (AllLowerClass.class,  "Lower",     String::toLowerCase);
 
 		private final Class id;
 		private final String description;
@@ -43,7 +43,7 @@ public class EnumAndFunc {
 		public Class id() { return this.id; }
 		public String description() { return this.description; }
 		public Function<String, String> fn() { return this.fn; }
-	}
+	};
 
 	public static void main(String[] args) {
 		String str = "AbCdEfGhIjKlMnOpQrStUvWxYz";

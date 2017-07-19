@@ -46,7 +46,7 @@ public class FunctionalInterfaces {
 
         public String interfaceName() { return this.interfaceName; }
         public Functional processor() { return this.processor; }
-    }
+    };
 
     public static String reverse(String s) {
         String reversed = "";

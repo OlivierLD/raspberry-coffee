@@ -12,9 +12,11 @@ public class GenericHandler<X> {
 		return this.storage;
 	}
 
-	public static <T> GenericHandler<T> of(T obj) {
+	public static <T> GenericHandler<T> of(T... obj) {
 		GenericHandler gh = new GenericHandler<T>();
-		gh.put(obj);
+		for (T o : obj) {
+			gh.put(o);
+		}
 		return gh;
 	}
 }
