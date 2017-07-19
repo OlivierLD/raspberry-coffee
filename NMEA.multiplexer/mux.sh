@@ -34,7 +34,7 @@ CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
 # For JFR
 JFR_FLAGS=
-# JFR_FLAGS="-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=10m,filename=nmea.jfr"
+JFR_FLAGS="-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=10m,filename=nmea.jfr"
 # For remote debugging
 REMOTE_DEBUG_FLAGS=
 # REMOTE_DEBUG_FLAGS="$REMOTE_DEBUG_FLAGS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"

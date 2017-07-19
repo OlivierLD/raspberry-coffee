@@ -15,7 +15,7 @@ import nmea.parser.StringGenerator.XDRTypes;
 
 /**
  * Reads data from an LSM303 sensor.
- * Pitch and Roll.
+ * Pitch and Roll, as XDR Strings.
  */
 public class LSM303Reader extends NMEAReader {
 
@@ -59,7 +59,7 @@ public class LSM303Reader extends NMEAReader {
 								new StringGenerator.XDRElement(XDRTypes.ANGULAR_DISPLACEMENT,
 												pitch,
 												"PTCH"), // No, it's not a typo, there is no 'I' in 'PTCH'.
-								new StringGenerator.XDRElement(StringGenerator.XDRTypes.ANGULAR_DISPLACEMENT,
+								new StringGenerator.XDRElement(XDRTypes.ANGULAR_DISPLACEMENT,
 												roll,
 												"ROLL"));
 				nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;

@@ -7,7 +7,7 @@ import nmea.api.NMEAReader;
 import nmea.consumers.reader.LSM303Reader;
 
 /**
- * Reads a LSM303 sensor, and produces a valid NMEA sentence.
+ * Reads a LSM303 sensor, and produces valid NMEA XDR sentences.
  * Pitch & Roll
  */
 public class LSM303Client extends NMEAClient {
