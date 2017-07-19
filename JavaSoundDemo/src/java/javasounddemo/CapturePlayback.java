@@ -70,7 +70,7 @@ public class CapturePlayback extends JPanel implements ActionListener, ControlCo
 	private String errStr;
 	private double duration, seconds;
 	private File file;
-	private Vector lines = new Vector();
+	private Vector<Line2D.Double> lines = new Vector<>();
 
 	public CapturePlayback() {
 		setLayout(new BorderLayout());
@@ -544,7 +544,7 @@ public class CapturePlayback extends JPanel implements ActionListener, ControlCo
 	 */
 	class FormatControls extends JPanel {
 
-		Vector groups = new Vector();
+		Vector<ButtonGroup> groups = new Vector<>();
 		JToggleButton linrB, ulawB, alawB, rate8B, rate11B, rate16B, rate22B, rate44B;
 		JToggleButton size8B, size16B, signB, unsignB, litB, bigB, monoB, sterB;
 
@@ -613,7 +613,7 @@ public class CapturePlayback extends JPanel implements ActionListener, ControlCo
 
 		public AudioFormat getFormat() {
 
-			Vector v = new Vector(groups.size());
+			Vector<String> v = new Vector<>(groups.size());
 			for (int i = 0; i < groups.size(); i++) {
 				ButtonGroup g = (ButtonGroup) groups.get(i);
 				for (Enumeration e = g.getElements(); e.hasMoreElements(); ) {

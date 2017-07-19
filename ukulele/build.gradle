@@ -41,6 +41,8 @@ task copyResources(type: Copy) {
     include '**/*.xml', '**/*.xsd', '**/*.png', '**/*.gif', '**/*.jpg', '**/*.properties', '**/*.ttf', '**/*.html'
 }
 
+compileJava.options.compilerArgs += ["-Xlint:unchecked"]
+
 jar.dependsOn(copyResources)
 shadowJar.dependsOn(copyResources)
 

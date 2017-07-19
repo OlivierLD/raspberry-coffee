@@ -32,6 +32,8 @@ sourceSets {
   }  
 }
 
+compileJava.options.compilerArgs += ["-Xlint:none"]
+
 repositories {
   mavenCentral()
   mavenLocal()

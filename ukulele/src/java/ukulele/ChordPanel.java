@@ -207,7 +207,7 @@ public class ChordPanel
 			if ((title != null) && (title.trim().length() > 0)) {
 				AttributedString astr = new AttributedString(title);
 				astr.addAttribute(TextAttribute.FONT, f2);
-				Map<TextAttribute, Object> map = new HashMap();
+				Map<TextAttribute, Object> map = new HashMap<>();
 				map.put(TextAttribute.SUPERSCRIPT, TextAttribute.SUPERSCRIPT_SUPER);
 				map.put(TextAttribute.FONT, musicFont);
 

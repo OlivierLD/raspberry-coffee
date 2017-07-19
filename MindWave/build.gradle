@@ -23,6 +23,8 @@ sourceSets {
   }  
 }
 
+compileJava.options.compilerArgs += ["-Xlint:unchecked"]
+
 dependencies {
 //compile 'com.pi4j:pi4j-core:1.1'
   compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'

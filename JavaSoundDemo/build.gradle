@@ -32,6 +32,8 @@ shadowJar {
     zip64 true
 }
 
+compileJava.options.compilerArgs += ["-Xlint:none"]
+
 task runJuke(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {
     main = 'javasounddemo.Juke'
     workingDir "."

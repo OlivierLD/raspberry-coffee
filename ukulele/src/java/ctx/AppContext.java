@@ -5,7 +5,7 @@ import java.util.List;
 
 public class AppContext {
 	private static AppContext instance = null;
-	private List<AppListener> appListeners = new ArrayList();
+	private List<AppListener> appListeners = new ArrayList<>();
 
 	public static synchronized AppContext getInstance() {
 		if (instance == null) {

@@ -41,9 +41,9 @@ public class MindWavePanel
   private JLabel portLabel = new JLabel();
   private JLabel brLabel = new JLabel();
   private JPanel centerPanel = new MindWaveCurve();
-  private JComboBox portComboBox = new JComboBox();
+  private JComboBox<String> portComboBox = new JComboBox<>();
   private JButton connectButton = new JButton();
-  private JComboBox brComboBox = new JComboBox();
+  private JComboBox<Integer> brComboBox = new JComboBox<>();
   private JLabel statusLabel = new JLabel();
   
   private boolean serialConnected = false;

@@ -1020,7 +1020,7 @@ public class ChordList {
 	};
 
 
-	public static final Map<String, String> EQUIVALENCES = new HashMap();
+	public static final Map<String, String> EQUIVALENCES = new HashMap<>();
 
 	static {
 		EQUIVALENCES.put("A#", "Bb");
@@ -1036,7 +1036,7 @@ public class ChordList {
 	}
 
 	public static List<Chord> findChord(String chordName) {
-		List<Chord> list = new ArrayList();
+		List<Chord> list = new ArrayList<>();
 		for (Chord c : CHORDS) {
 			if (chordName.equalsIgnoreCase(c.getTitle())) {
 				list.add(c);
