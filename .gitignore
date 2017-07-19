@@ -40,3 +40,10 @@ gen/*
 # gradlew
 gradle-app.setting
 *.zip
+NMEA.multiplexer/libs
+SerialRxTx/libs
+C/SatelliteFinder
+C/fork
+C/tools
+snap.jpg
+NMEA.multiplexer/web/leaflet
