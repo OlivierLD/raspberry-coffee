@@ -10,6 +10,7 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
+import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -145,9 +146,12 @@ public class EmailSender {
 			System.out.println("This is NOT an SMTPTransport:[" + tr.getClass().getName() + "]");
 
 		Message msg = new MimeMessage(session);
-		msg.setFrom(new InternetAddress(EmailSender.replyto));
-		if (dest == null || dest.length == 0)
+//	msg.setFrom(new InternetAddress(EmailSender.replyto));
+		msg.setFrom(new InternetAddress("not-me@neverthere.com")); // Did not find the way to hide the from address...
+		msg.setReplyTo(new Address[] { new InternetAddress(EmailSender.replyto) });
+		if (dest == null || dest.length == 0) {
 			throw new RuntimeException("Need at least one recipient.");
+		}
 		msg.setRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(dest[0]));
 		for (int i = 1; i < dest.length; i++)
 			msg.addRecipient(javax.mail.Message.RecipientType.CC, new InternetAddress(dest[i]));

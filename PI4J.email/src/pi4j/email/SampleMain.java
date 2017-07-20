@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class SampleMain {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("mail.verbose", "false"));
 
 	private static String nbEmails = System.getProperty("nb.emails", "3");
 	/**

@@ -1,10 +1,9 @@
 #!/bin/bash
 CP=
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 CP=$CP:./build/libs/PI4J.email-1.0-all.jar
 #
 OPT=
-# OPT=-Dverbose=true
+# OPT=-Dmail.verbose=true
 #
 java $OPT -classpath $CP pi4j.email.SampleMain $*
 
