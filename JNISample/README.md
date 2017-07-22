@@ -11,12 +11,10 @@ $> javac -source 1.7 -target 1.7 -sourcepath ./src -d ./classes -classpath ./cla
  $> javah -jni -cp ./classes -d C jnisample.HelloWorld
 ```
 * Implement the native code (`HelloWorld.c`) that includes the generated `.h` file
-* Compile it, using `gcc` or `g++`. Make sure you use the right flags for the C compiler... Notice that the generated
+* Compile it, using `gcc` or `g++`. Make sure you use the right flags for the C compiler... Notice that the generated library _**must**_ be named `libHelloWorld.so` and _**not**_ `HelloWorld.so`, for the `System.loadLibrary("HelloWorld");` to work.
 ```
 $> g++ -Wall -shared -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -lwiringPi -o libHelloWorld.so
 ```
-library _**must**_ be named `libHelloWorld.so` and _**not**_ `HelloWorld.so`, for the `System.loadLibrary("HelloWorld");` to
-work.
 * To run the Java code, the `-Djava.library.path`  variable must be set.
 * The Java class should run.
 

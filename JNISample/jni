@@ -1,7 +1,9 @@
 #!/bin/bash
-JAVA_HOME=/usr/lib/jvm/jdk1.8.0_33
+JAVA_HOME=/opt/jdk/jdk1.8.0_112
+PATH=$JAVA_HOME/bin:$PATH
+mkdir classes 2> /dev/null
 echo \>\> Compiling
-javac -source 1.7 -target 1.7 -sourcepath ./src -d ./classes -classpath ./classes -g ./src/jnisample/HelloWorld.java 
+javac -sourcepath ./src -d ./classes -classpath ./classes -g ./src/jnisample/HelloWorld.java
 echo \>\> Running javah
 javah -jni -cp ./classes -d C jnisample.HelloWorld
 echo \>\> Here you should implement HelloWorld.c, including jnisample_HelloWorld.h
@@ -14,4 +16,3 @@ export LD_LIBRARY_PATH=./C
 # ls -l $LD_LIBRARY_PATH/*.so
 java -Djava.library.path=$LD_LIBRARY_PATH -cp ./classes jnisample.HelloWorld
 echo \>\> Done.
-

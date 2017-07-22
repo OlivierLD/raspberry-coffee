@@ -17,19 +17,19 @@ if (userprofile == null) { // Linux ?
 group = 'oliv.pi4j.samples'
 version = '1.0'
 
-// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password") 
+// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password")
 
 sourceSets {
   main {
     java {
       srcDir 'src'
     }
-  }  
+  }
   test {
     java {
       srcDir 'tests'
     }
-  }  
+  }
 }
 
 repositories {
@@ -80,7 +80,7 @@ task runBMP180(type: JavaExec, dependsOn: build, description: "Run the BMP180 De
 }
 
 task runLedPanel(type: JavaExec, dependsOn: build, description: "Run the LED panel simulator (Swing)") {
-  main = 'spi.lcd.utils.LedPanelMain'
+  main = 'lcd.utils.LedPanelMain'
   classpath project.configurations.default
   classpath sourceSets.main.output.classesDir
 }

@@ -66,6 +66,10 @@ compileClojure {
     dependsOn 'compileJava'
 }
 
+compileScala {
+  options.compilerArgs << "-feature"
+}
+
 task runScript(type: JavaExec) {
     description 'Run Groovy script'
     // Set main property to name of Groovy script class.

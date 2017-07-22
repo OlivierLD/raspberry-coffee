@@ -3,11 +3,11 @@ buildscript {
     ext.kotlin_version = '1.1.2'
   repositories {
     mavenCentral()
-    maven { url "https://plugins.gradle.org/m2/" }
+//  maven { url "https://plugins.gradle.org/m2/" }
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    classpath "gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.6"
+//  classpath "gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.6"
   }
 }
 //apply plugin: 'kotlin'
@@ -18,7 +18,7 @@ plugins {
   id "org.jetbrains.kotlin.jvm" version "1.1.2"
   id 'maven'
   id 'com.github.johnrengelman.shadow' version '1.2.3'
-  id "com.github.sherter.google-java-format" version "0.6"
+//id "com.github.sherter.google-java-format" version "0.6"
 }
 //
 // To skip the GoogleJavaFormat:
@@ -38,7 +38,7 @@ if (userprofile == null) { // Linux ?
 group = 'oliv.pi4j.samples'
 version = '1.0'
 
-// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password") 
+// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password")
 
 sourceSets {
   main {
@@ -56,7 +56,7 @@ sourceSets {
     java {
       srcDir 'tests/java'
     }
-  }  
+  }
 }
 
 repositories {

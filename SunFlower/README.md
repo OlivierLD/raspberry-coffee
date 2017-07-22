@@ -9,7 +9,7 @@ In the same light conditions, a panel with an incidence of 0 degrees (normal) pr
  cos(0)  = 1
  cos(30) = 0.866
  cos(45) = 0.707
- cos(30) = 0.5
+ cos(60) = 0.5
 ```
 
 <!-- ![Angles and cosinus](./doc/angles.png) -->
