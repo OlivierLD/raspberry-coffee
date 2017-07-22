@@ -5,6 +5,8 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 
+//apply plugin: 'checkstyle'
+
 //apply plugin: 'java'
 //compileJava.options.encoding = 'ISO-8859-1'
 //apply plugin: 'maven'
@@ -88,3 +90,11 @@ task runLedPanel(type: JavaExec, dependsOn: build, description: "Run the LED pan
 shadowJar {
   zip64 true
 }
+
+//tasks.withType(Checkstyle) {
+//    reports {
+//        xml.enabled false
+//        html.enabled true
+////      html.stylesheet resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
+//    }
+//}
