@@ -7,7 +7,6 @@ buildscript {
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-//  classpath "gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.6"
   }
 }
 //apply plugin: 'kotlin'
@@ -18,12 +17,7 @@ plugins {
   id "org.jetbrains.kotlin.jvm" version "1.1.2"
   id 'maven'
   id 'com.github.johnrengelman.shadow' version '1.2.3'
-//id "com.github.sherter.google-java-format" version "0.6"
 }
-//
-// To skip the GoogleJavaFormat:
-// ../gradlew clean build shadowJar -x verifyGoogleJavaFormat
-//
 
 shadowJar {
   zip64 true
