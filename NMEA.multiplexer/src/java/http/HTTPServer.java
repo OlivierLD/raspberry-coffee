@@ -52,6 +52,7 @@ import http.utils.HTTPClient;
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private int port = -1;
 
 	private Thread httpListenerThread;
 
@@ -225,7 +226,7 @@ public class HTTPServer {
 
 	public void stopRunning() {
 		if (verbose) {
-			Context.getInstance().getLogger().info("Stop nicely requested");
+			Context.getInstance().getLogger().info("Stop nicely (HTTP) requested");
 		}
 		this.keepRunning = false;
 	}
@@ -234,6 +235,10 @@ public class HTTPServer {
 	private HTTPServerInterface requestManager = null;
 
 	private static int defaultPort = 9999;
+
+	public int getPort() {
+		return this.port;
+	}
 
 	public HTTPServer() throws Exception {
 		this(defaultPort, null);
@@ -248,6 +253,7 @@ public class HTTPServer {
 	}
 
 	public HTTPServer(int port, HTTPServerInterface requestManager) throws Exception {
+		this.port = port;
 		this.requestManager = requestManager;
 		// Infinite loop, waiting for requests
 		httpListenerThread = new Thread("HTTPListener") {
@@ -273,6 +279,7 @@ public class HTTPServer {
 						boolean inPayload = false;
 						StringBuffer sb = new StringBuffer();
 						boolean keepReading = true;
+//					System.out.println(">>> Top of the Loop <<<");
 						if (verbose) {
 							Context.getInstance().getLogger().info(">>> Top of the loop <<<");
 						}
@@ -367,7 +374,7 @@ public class HTTPServer {
 								verbose = (verb == null || verb.toUpperCase().equals("YES") || verb.toUpperCase().equals("TRUE") || verb.toUpperCase().equals("ON"));
 							}
 							if ("/exit".equals(path)) {
-								System.out.println("Received an exit signal");
+								System.out.println("Received an exit signal (path)");
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String content = "Exiting";
 								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
@@ -401,6 +408,7 @@ public class HTTPServer {
 								if (requestManager != null) {
 									Response response = requestManager.onRequest(request); // REST Request, most likely.
 									sendResponse(response, out);
+//								System.out.println(">> Returned REST response.");
 								}
 							}
 						} else {
@@ -422,7 +430,7 @@ public class HTTPServer {
 						client.close();
 						if (okToStop)
 							stopRunning();
-					}
+					} // while (isRunning())
 					ss.close();
 				} catch (Exception e) {
 					Context.getInstance().getLogger().severe(String.format(">>> Port %d, %s >>>", port, e.toString()));
@@ -443,7 +451,7 @@ public class HTTPServer {
 
 		// Intercept Ctrl+C
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("Ctrl+C intercepted.");
+			System.out.println("HTTP: Ctrl+C intercepted.");
 			// Send /exit
 			try {
 				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", port));

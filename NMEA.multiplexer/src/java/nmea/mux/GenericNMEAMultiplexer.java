@@ -4,6 +4,7 @@ import nmea.computers.Computer;
 import context.ApplicationContext;
 import http.HTTPServer;
 import http.HTTPServerInterface;
+import http.utils.HTTPClient;
 import utils.DumpUtil;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
@@ -61,7 +62,7 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		// Last sentence (inbound)
 		Context.getInstance().setLastDataSentence(mess);
 
-		if (verbose) {
+		if (this.verbose) {
 			System.out.println("==== From MUX: " + mess);
 			DumpUtil.displayDualDump(mess);
 			System.out.println("==== End Mux =============");
@@ -70,23 +71,26 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		if (ApplicationContext.getInstance().getDataCache() != null) {
 			ApplicationContext.getInstance().getDataCache().parseAndFeed(mess);
 		}
-		// Computers. Must go first, as a computer may refeed the present onData method.
-		synchronized (nmeaDataComputers) {
-			nmeaDataComputers.stream()
-							.forEach(computer -> {
-								computer.write(mess.getBytes());
-							});
-		}
-		// Forwarders
-		synchronized (nmeaDataForwarders) {
-			nmeaDataForwarders.stream()
-							.forEach(fwd -> {
-								try {
-									fwd.write((mess.trim() + NMEAParser.STANDARD_NMEA_EOS).getBytes());
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							});
+		if (this.process) {
+			// Computers. Must go first, as a computer may refeed the present onData method.
+			synchronized (nmeaDataComputers) {
+			 	nmeaDataComputers.stream()
+								.forEach(computer -> {
+									computer.write(mess.getBytes());
+								});
+							}
+
+			// Forwarders
+			synchronized (nmeaDataForwarders) {
+				nmeaDataForwarders.stream()
+								.forEach(fwd -> {
+									try {
+										fwd.write((mess.trim() + NMEAParser.STANDARD_NMEA_EOS).getBytes());
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+			 					});
+							}
 		}
 	}
 
@@ -95,8 +99,55 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 		this.verbose = b;
 	}
 
-	private boolean verbose = false;
+	@Override
+	public void setEnableProcess(boolean b) {
+		this.process = b;
+	}
+	@Override
+	public boolean getEnableProcess() {
+		return this.process;
+	}
+	@Override
+	public void stopAll() {
+		// Send Ctrl+C
+		softStop = true;
+		terminateMux();
+//	System.exit(0);
+//	try {  Thread.sleep(2_500L); } catch (InterruptedException ie) {}
+		System.out.println("Soft Exit");
+		Runtime.getRuntime().exit(0); // Ctrl-C for the HTTP Server
+	}
 
+	private boolean verbose = false;
+	private boolean process = true; // onData, forward to computers and forwarders
+
+	private boolean softStop = false;
+
+	public void terminateMux() {
+		System.out.println("Shutting down multiplexer nicely.");
+    if (adminServer != null && softStop) {
+			// Delay for the REST response
+	//	System.out.println("Waiting a bit (for REST terminate request to complete)...");
+			try {
+				Thread.sleep(1_000L);
+			} catch (InterruptedException ie) {
+				// Absorb
+			}
+//		System.out.println("Done waiting");
+		}
+		nmeaDataClients.stream()
+						.forEach(client -> client.stopDataRead());
+		nmeaDataForwarders.stream()
+						.forEach(fwd -> fwd.close());
+		nmeaDataComputers.stream()
+						.forEach(comp -> comp.close());
+		if (adminServer != null) {
+			synchronized (adminServer) {
+				System.out.println("Mux Stopping Admin server");
+				adminServer.stopRunning();
+			}
+		}
+	}
 	/**
 	 * Constructor.
 	 * @param muxProps Initial config. See {@link #main(String...)} method.
@@ -112,15 +163,8 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 
 		Runtime.getRuntime().addShutdownHook(new Thread("Multiplexer shutdown hook") {
 			public void run() {
-				System.out.println("Shutting down multiplexer nicely.");
-				nmeaDataClients.stream()
-								.forEach(client -> client.stopDataRead());
-				nmeaDataForwarders.stream()
-								.forEach(fwd -> fwd.close());
-				nmeaDataComputers.stream()
-								.forEach(comp -> comp.close());
-				if (adminServer != null) {
-					adminServer.stopRunning();
+				if (!softStop) {
+					terminateMux();
 				}
 			}
 		});
@@ -163,9 +207,9 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 				ioe.printStackTrace();
 			}
 		}
-
+		boolean startProcessingOnStart = "true".equals(System.getProperty("process.on.start", "true"));
 		GenericNMEAMultiplexer mux = new GenericNMEAMultiplexer(definitions);
-
+		mux.setEnableProcess(startProcessingOnStart);
 		// with.http.server=yes
 		// http.port=9999
 		if ("yes".equals(definitions.getProperty("with.http.server", "no"))) {

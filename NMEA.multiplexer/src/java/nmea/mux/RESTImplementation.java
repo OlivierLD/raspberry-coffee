@@ -143,6 +143,11 @@ public class RESTImplementation {
 									this::getOperationList,
 									"List of all available operations."),
 					new Operation(
+									"POST",
+									"/terminate",
+									this::stopAll,
+									"Hard stop, shutdown"),
+					new Operation(
 									"GET",
 									"/serial-ports",
 									this::getSerialPorts,
@@ -212,6 +217,16 @@ public class RESTImplementation {
 									"/mux-verbose/{state}",
 									this::putMuxVerbose,
 									"Update Multiplexer verbose"),
+					new Operation(
+									"PUT",
+									"/mux-process/{state}",
+									this::putMuxProcess,
+									"Update Multiplexer processing status. Aka enable/disable logging."),
+					new Operation(
+									"GET",
+									"/mux-process",
+									this::getMuxProcess,
+									"Get the mux process status (on/off)"),
 					new Operation(
 									"GET",
 									"/cache",
@@ -1790,6 +1805,59 @@ public class RESTImplementation {
 		this.mux.setVerbose(newValue);
 		JsonElement jsonElement = new Gson().toJsonTree(newValue);
 		String content = jsonElement.toString();
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response putMuxProcess(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		if (prmValues.size() != 1) {
+			response.setStatus(HTTPServer.Response.BAD_REQUEST);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter");
+			return response;
+		}
+		boolean newValue = "on".equals(prmValues.get(0));
+		this.mux.setEnableProcess(newValue);
+		JsonElement jsonElement = new Gson().toJsonTree(newValue);
+		String content = jsonElement.toString();
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response stopAll(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		boolean ok = true;
+		// Needs to be in its own thread, as it will send a GET /exit request
+		Thread stopThread = new Thread(() -> mux.stopAll());
+		stopThread.start();
+		JsonElement jsonElement = new Gson().toJsonTree(ok);
+		String content = jsonElement.toString();
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response getMuxProcess(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		boolean status = this.mux.getEnableProcess();
+		Map<String, Object> map = new HashMap<>(2);
+		map.put("started", Context.getInstance().getStartTime());
+		map.put("processing", new Boolean(status));
+
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(map);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getNMEAVolumeStatus", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 

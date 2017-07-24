@@ -21,8 +21,13 @@ public class NMEAMultiplexer implements Multiplexer {
 	}
 
 	@Override
-	public void setVerbose(boolean b) {
-	}
+	public void setVerbose(boolean b) {}
+	@Override
+	public void setEnableProcess(boolean b) {}
+	@Override
+	public boolean getEnableProcess() { return true; }
+	@Override
+	public void stopAll() {}
 
 	private NMEAClient tcpClient;
 	private NMEAClient fileClient;

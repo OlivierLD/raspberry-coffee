@@ -23,6 +23,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=false"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 #
@@ -34,7 +35,7 @@ CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
 # For JFR
 JFR_FLAGS=
-JFR_FLAGS="-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=10m,filename=nmea.jfr"
+# JFR_FLAGS="-XX:+UnlockCommercialFeatures -XX:+FlightRecorder -XX:StartFlightRecording=duration=10m,filename=nmea.jfr"
 # For remote debugging
 REMOTE_DEBUG_FLAGS=
 # REMOTE_DEBUG_FLAGS="$REMOTE_DEBUG_FLAGS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
