@@ -69,6 +69,13 @@ var protocolTestFunc = function() {
     return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, null, false);
 };
 
+var terminate = function() {
+    return getDeferred('/terminate', DEFAULT_TIMEOUT, 'POST', 200, null, false);
+};
+
+var enableLogging = function(b) {
+    return getDeferred('/mux-process/' + (b === true ? 'on' : 'off'), DEFAULT_TIMEOUT, 'PUT', 200, null, false);
+};
 
 var getVolume = function() {
     return getDeferred('/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
