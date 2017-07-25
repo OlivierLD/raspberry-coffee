@@ -12,7 +12,7 @@ JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=./libs"       # for Mac
 JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 #
-PROCESS_ON_START=false # Default is true
+PROCESS_ON_START=false # Default is true # TODO Set this a prm of the logger forwarder.
 if [ "$PROCESS_ON_START" = "false" ]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
