@@ -12,6 +12,21 @@ JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=./libs"       # for Mac
 JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 #
+PROCESS_ON_START=false # Default is true
+if [ "$PROCESS_ON_START" = "false" ]
+then
+  MACHINE_NAME=`uname -a | awk '{ print $2 }'`
+  PORT=`cat $MUX_PROP_FILE | grep http.port=`
+  PORT=${PORT#*http.port=}
+  echo -e "+-------- N O T E   o n   L O G G I N G ------------------------"
+  echo -e "| You will need to start the logging yourself,"
+  echo -e "| invoke GET http://$MACHINE_NAME:$PORT/mux-process/on to start"
+  echo -e "| invoke GET http://$MACHINE_NAME:$PORT/mux-process/off to stop"
+  echo -e "| Or use http://$MACHINE_NAME:$PORT/web/runner.html from a "
+  echo -e "| browser (laptop, cell, tablet...)"
+  echo -e "+---------------------------------------------------------------"
+fi
+#
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dfile.data.verbose=false"
@@ -23,7 +38,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=false"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 #
