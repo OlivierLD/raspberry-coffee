@@ -642,10 +642,12 @@ The current status can be read using
 ```
  GET /mux-process
 ```
-A Web UI is also available:
+A Web UI (using the above) is also available:
 ```
   http://machine:9999/web/runner.html
 ```
+
+Screenshots from a smart-phone:
 <table>
   <tr>
     <td><img src="./docimages/runner.UI.01.png"></td>
@@ -653,16 +655,17 @@ A Web UI is also available:
     <td><img src="./docimages/runner.UI.03.png"></td>
   </tr>
 </table>
+
 Notice that this allows you to set the `process.on.start`, but also to shutdown the Multiplexer.
 Use it with caution.
 
 Here is a use case:
 > You start from your home for a run, you want to log the data from a GPS.
-> You start everything at home before you go, with process.on.start=false
+> You start everything at home before you go, with `process.on.start=false`
 > You get out, and when you're about to start running, you connect to the Raspberry PI from your cell phone,
 > and from the UI above, you start the recording.
 > Once done, you stop it the same way. The data have been collected only when you were running.
-> Then you can even stop the Multiplexer, before going home.
+> Then you can even stop the Multiplexer, before going home to download and visualize your data file.
 
 ## Demos
 

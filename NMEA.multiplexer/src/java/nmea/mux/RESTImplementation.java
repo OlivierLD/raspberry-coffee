@@ -150,7 +150,7 @@ public class RESTImplementation {
 									"POST",
 									"/terminate",
 									this::stopAll,
-									"Hard stop, shutdown"),
+									"Hard stop, shutdown. VERY unusual REST resource..."),
 					new Operation(
 									"GET",
 									"/serial-ports",
@@ -1879,6 +1879,11 @@ public class RESTImplementation {
 		return response;
 	}
 
+  /**
+	 * This one is a very unusual REST resource; it kills its own server.
+	 * And it is a recursive one, it itself invokes another REST resource.
+	 * Hence the thread, see the code.
+   */
 	private HTTPServer.Response stopAll(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		boolean ok = true;
