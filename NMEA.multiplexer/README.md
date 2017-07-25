@@ -661,7 +661,8 @@ Use it with caution.
 
 Here is a use case:
 > You start from your home for a run, you want to log the data from a GPS.
-> You start everything at home before you go, with `process.on.start=false`
+> You start everything at home before you go, with `process.on.start=false`.
+> All the stuff (Raspberry Pi Zero W, battery, GPS) is in a plastic box in your backpack, a Nalgene canteen, or something similar.
 > You get out, and when you're about to start running, you connect to the Raspberry PI from your cell phone,
 > and from the UI above, you start the recording.
 > Once done, you stop it the same way. The data have been collected only when you were running.
