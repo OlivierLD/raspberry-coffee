@@ -646,6 +646,8 @@ A Web UI is also available:
 ```
   http://machine:9999/web/runner.html
 ```
+![Web UI](./docimages/runner.UI.png)
+
 Notice that this allows you to set the `process.on.start`, but also to shutdown the Multiplexer.
 Use it with caution.
 
