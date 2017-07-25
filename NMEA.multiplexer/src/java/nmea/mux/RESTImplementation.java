@@ -1832,7 +1832,7 @@ public class RESTImplementation {
 	private HTTPServer.Response stopAll(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		boolean ok = true;
-		// Needs to be in its own thread, as it will send a GET /exit request
+		// Needs to be in its own thread, as it will send a GET /exit request, it is a recursive call.
 		Thread stopThread = new Thread(() -> mux.stopAll());
 		stopThread.start();
 		JsonElement jsonElement = new Gson().toJsonTree(ok);

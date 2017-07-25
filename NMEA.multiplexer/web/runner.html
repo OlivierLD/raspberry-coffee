@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Log my Run</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/jquery.mobile-1.3.2.min.css" />
+    <script src="js/jquery-2.1.3.js"></script>
+    <script src="./js/jquery.mobile-1.3.2.min.js"></script>
+    <script type="text/javascript">
+  var logEnabled = function(cb) {
+    if ("on" === cb.value) {
+      console.log('On');
+    } else {
+      console.log('Off');      
+    }
+  };
+    </script>
+  </head>
+  <body>
+    <div data-role="page" id="main">
+      <div data-role="header" class="jqm-header">
+        <h1>Running!..</h1>
+      </div>
+
+      <div data-role="content">
+
+        <label for="flip-1">Logging:</label>
+        <select name="flip-1" id="flip-1" data-role="slider" onchange="logEnabled(this);">
+        	<option value="off">Off</option>
+        	<option value="on">On</option>
+        </select>
+
+        <div data-role="fieldcontain">
+          <label for="wsuri">NMEA Server WS Uri:</label>
+          <br/>
+          <input type="text" size="40" name="wsuri" id="wsuri" placeholder="ws://machine:port/"></input>
+        </div>
+
+        <div class="ui-body ui-body-b">
+          <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><button type="submit" data-theme="d" id="b-cancel">Cancel</button></div>
+            <div class="ui-block-b"><button type="submit" data-theme="a" id="b-submit">Submit</button></div>
+          </fieldset>
+        </div>
+      </div>
+      <div style="display: none"> <!-- turn display to block or inline for debugging -->
+        <textarea id="message" style="width: 98%; height: 150px;"></textarea>
+      </div>
+    </div>
+    <script>
+      var appendMess = function(txt) {
+        var content = $('#message').text();
+        content += ((content.length > 0 ? '\n' : '') + txt);
+        $('#message').text(content);
+      };
+      var saveOptions = function() {
+        var options = { wsuri: $('#wsuri').val() };
+        console.log('saveOptions:', options);
+        return options;
+      };
+      $().ready(function() {
+        $("#b-cancel").click(function() {
+          console.log("Cancel");
+          document.location = "pebblejs://close";
+        });
+        $("#b-submit").click(function() {
+          var opt = saveOptions();
+          console.log("Submit:", saveOptions());
+          var location = "pebblejs://close#" + encodeURIComponent(JSON.stringify(opt));
+          console.log("Warping to: " + location);
+          console.log(location);
+          document.location = location;
+          alert('If your App is running,\nplease restart it.');
+        });
+        //Set form values to whatever is passed in.
+        console.log('Window location:' + window.location);
+        appendMess('0 - ' + window.location);
+        try {
+          var search = window.location.search;
+          if (search.length === 0) {
+            search = window.location.toString().substring(window.location.toString().indexOf("#"));
+          }
+          var strQVal = search.substring(1);
+          appendMess('1 - ' + strQVal);
+          if (strQVal.startsWith("return_to=")) {
+            strQVal = strQVal.substring("return_to=".length);
+          }
+          var strJson = decodeURIComponent(strQVal);
+          appendMess('2 - ' + strJson);
+          var obj = jQuery.parseJSON(strJson);
+          console.log('Received:', JSON.stringify(obj));
+          appendMess('3 - ' + JSON.stringify(obj));
+          if (obj.wsuri) {
+            $('#wsuri').val(obj.wsuri);
+          }
+        } catch (err) {
+          console.log(err);
+          appendMess('Err:' + err);
+        }
+      });
+    </script>
+  </body>
+</html>
