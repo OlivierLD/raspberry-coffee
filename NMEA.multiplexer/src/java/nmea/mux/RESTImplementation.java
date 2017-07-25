@@ -11,8 +11,12 @@ import http.HTTPServer;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import java.io.File;
 import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.StringReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -242,6 +246,11 @@ public class RESTImplementation {
 									"/nmea-volume",
 									this::getNMEAVolumeStatus,
 									"Get the time elapsed and the NMEA volume managed so far"),
+					new Operation(
+									"GET",
+									"/log-files/{log-file}",
+									this::getLogFile,
+									"Download the log file"),
 					new Operation(
 									"GET",
 									"/last-sentence",
@@ -1824,6 +1833,47 @@ public class RESTImplementation {
 		JsonElement jsonElement = new Gson().toJsonTree(newValue);
 		String content = jsonElement.toString();
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response getLogFile(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		if (prmValues.size() != 1) {
+			response.setStatus(HTTPServer.Response.BAD_REQUEST);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {log-file-name}");
+			return response;
+		}
+		String logFileName = prmValues.get(0);
+		File file = new File(logFileName);
+		if (!file.exists()) {
+			response.setStatus(HTTPServer.Response.NOT_FOUND);
+			RESTProcessorUtil.addErrorMessageToResponse(response, String.format("File %s was not found.", logFileName));
+			return response;
+		}
+		StringBuffer sb = new StringBuffer();
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String line = "";
+			boolean go = true;
+			while (go) {
+				line = br.readLine();
+				if (line == null) {
+					go = false;
+				} else {
+					sb.append(line + "\n");
+				}
+			}
+	    br.close();
+		} catch (FileNotFoundException fnfe) {
+			fnfe.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		String content = sb.toString();
+		RESTProcessorUtil.generateHappyResponseHeaders(response, "text/plain", content.length());
 		response.setPayload(content.getBytes());
 
 		return response;
