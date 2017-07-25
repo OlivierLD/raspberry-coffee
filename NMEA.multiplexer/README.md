@@ -311,7 +311,7 @@ http.port=9999
 ### Supported REST end-points
 
 #### List of operations
-A full list of the available REST services is available at 
+A full list of the available REST services is available at
 ```
  GET /oplist
 ```
@@ -332,7 +332,7 @@ returns a payload as:
 ```
 The list of _available_ serial ports.
 
-``` 
+```
  GET /channels
 ```
 returns a payload like
@@ -351,7 +351,7 @@ returns a payload like
 ]
 ```
 
-``` 
+```
  GET /forwarders
 ```
 returns a payload like
@@ -369,20 +369,20 @@ returns a payload like
 ]
 ```
 
-```text 
+```text
  DELETE /forwarders/:type
 ```
 `type` is one of
-- `file`. requires a body like 
+- `file`. requires a body like
  ```json
-{ 
+{
     "log": "./data.nmea",
     "type": "file"
 }
 ```
 identical to the elements returned by `GET /forwarders`.
 - `console`. requires no body.
-- `tcp`. requires a body like 
+- `tcp`. requires a body like
 ```json
 {
      "port": 7002,
@@ -390,7 +390,7 @@ identical to the elements returned by `GET /forwarders`.
 }
 ```
 identical to the elements returned by `GET /forwarders`.
-- `ws`. requires a body like 
+- `ws`. requires a body like
 ```json
 {
    "wsUri": "ws://localhost:9876/",
@@ -399,29 +399,29 @@ identical to the elements returned by `GET /forwarders`.
 ```
 identical to the elements returned by `GET /forwarders`.
 
-``` 
+```
  DELETE /channels/:type
 ```
 
-``` 
+```
  POST /forwarders
 ```
 with payloads like:
-- `file`. requires a body like 
+- `file`. requires a body like
  ```json
-{ 
+{
     "log": "./data.nmea",
     "type": "file"
 }
 ```
 identical to the elements returned by `GET /forwarders`.
-- `console`. requires a body like 
+- `console`. requires a body like
 ```json
-{ 
+{
      "type": "console"
 }
 ```
-- `tcp`. requires a body like 
+- `tcp`. requires a body like
 ```json
 {
      "port": 7002,
@@ -429,7 +429,7 @@ identical to the elements returned by `GET /forwarders`.
 }
 ```
 identical to the elements returned by `GET /forwarders`.
-- `ws`. requires a body like 
+- `ws`. requires a body like
 ```json
 {
    "wsUri": "ws://localhost:9876/",
@@ -438,7 +438,7 @@ identical to the elements returned by `GET /forwarders`.
 ```
 identical to the elements returned by `GET /forwarders`.
 
-``` 
+```
  POST /channels
 ```
 
@@ -622,6 +622,40 @@ wpa-psk "<your network passphrase>"
 See the 4 lines at the bottom of the file, that's it!
 
 Now, when the `wlan1` is plugged in, this Raspberry PI is a WiFi hotspot, *_and_* has Internet access.
+
+## Start / Stop all forwarders
+In some cases, you might want to start and stop the forwarders (doing logging for example) on demand.
+Like when you want to log data when driving, hiking, running, etc.
+
+There is a possibility _not_ to start the forwarders when the multiplexer is starting.
+For that, set the system variable `process.on.start` to `false`, default value is `true`.
+
+In any case, the value can be set using the service
+```
+ PUT /mux-process/on
+```
+or
+```
+ PUT /mux-process/off
+```
+The current status can be read using
+```
+ GET /mux-process
+```
+A Web UI is also available:
+```
+  http://machine:9999/web/runner.html
+```
+Notice that this allows you to set the `process.on.start`, but also to shutdown the Multiplexer.
+Use it with caution.
+
+Here is a use case:
+> You start from your home for a run, you want to log the data from a GPS.
+> You start everything at home before you go, with process.on.start=false
+> You get out, and when you're about to start running, you connect to the Raspberry PI from your cell phone,
+> and from the UI above, you start the recording.
+> Once done, you stop it the same way. The data have been collected only when you were running.
+> Then you can even stop the Multiplexer, before going home.
 
 ## Demos
 

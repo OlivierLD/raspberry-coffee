@@ -12,16 +12,20 @@ JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=./libs"       # for Mac
 JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 #
-PROCESS_ON_START=false # Default is true # TODO Set this a prm of the logger forwarder.
+# This variable is used to set the System variable process.on.start.
+# (See below).
+# It controls ALL the forwarders at once.
+#
+PROCESS_ON_START=false # Default is true
 if [ "$PROCESS_ON_START" = "false" ]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`
   PORT=`cat $MUX_PROP_FILE | grep http.port=`
   PORT=${PORT#*http.port=}
-  echo -e "+-------- N O T E   o n   L O G G I N G ------------------------"
-  echo -e "| You will need to start the logging yourself,"
-  echo -e "| invoke GET http://$MACHINE_NAME:$PORT/mux-process/on to start"
-  echo -e "| invoke GET http://$MACHINE_NAME:$PORT/mux-process/off to stop"
+  echo -e "+-------- N O T E   o n   F O R W A R D E R S ------------------"
+  echo -e "| You will need to start the forwarders yourself,"
+  echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux-process/on to start"
+  echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux-process/off to stop"
   echo -e "| Or use http://$MACHINE_NAME:$PORT/web/runner.html from a "
   echo -e "| browser (laptop, cell, tablet...)"
   echo -e "+---------------------------------------------------------------"
