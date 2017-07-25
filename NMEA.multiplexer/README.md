@@ -646,9 +646,13 @@ A Web UI is also available:
 ```
   http://machine:9999/web/runner.html
 ```
-|---|---|---|
-| ![Web UI](./docimages/runner.UI.01.png) | ![Web UI](./docimages/runner.UI.02.png) | ![Web UI](./docimages/runner.UI.03.png) |
-
+<table>
+  <tr>
+    <td><img src="./docimages/runner.UI.01.png"></td>
+    <td><img src="./docimages/runner.UI.02.png"></td>
+    <td><img src="./docimages/runner.UI.03.png"></td>
+  </tr>
+</table>
 Notice that this allows you to set the `process.on.start`, but also to shutdown the Multiplexer.
 Use it with caution.
 
