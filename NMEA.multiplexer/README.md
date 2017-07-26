@@ -669,7 +669,6 @@ Here is a use case:
 > Then you can even stop the Multiplexer, before going home to download and visualize your data file.
 
 ## Demos
-
 Follow [this link](./demos.md).
 
 <!-- Commented, not 100% relevant --
@@ -682,7 +681,6 @@ Thread view, with thread names
 -->
 
 ## Examples!!
-
 They are [here](./examples.md).
 
 ## Case Studies

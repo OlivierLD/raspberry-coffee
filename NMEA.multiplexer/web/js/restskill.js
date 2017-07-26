@@ -77,6 +77,10 @@ var enableLogging = function(b) {
     return getDeferred('/mux-process/' + (b === true ? 'on' : 'off'), DEFAULT_TIMEOUT, 'PUT', 200, null, false);
 };
 
+var getForwarderStatus = function() {
+    return getDeferred('/mux-process', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var getVolume = function() {
     return getDeferred('/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
@@ -173,6 +177,28 @@ var protocolTest = function() {
         errManager.display("Failed to get protocol test status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 
+};
+
+var forwarderStatus = function() {
+  // No REST traffic for this one.
+    var getData = getForwarderStatus();
+    getData.done(function(value) {
+        var json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
+        var status = json.processing;
+        $("#forwarders-status").text(status === true ? 'ON' :'OFF');
+    });
+    getData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager.display("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        $("#forwarders-status").text('-');
+    });
 };
 
 var dataVolume = function() {

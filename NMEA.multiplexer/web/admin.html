@@ -729,6 +729,7 @@
 
           var interv = setInterval(function() {
               dataVolume();
+              forwarderStatus();
               flowGraph.drawGraph("flowCanvas", flowData, idx2plot);
           }, 1000);
         };
@@ -744,7 +745,13 @@
                       "Please wait!");
             }
         };
-
+        var toggleForwarders = function() {
+          if ("ON" === $("#forwarders-status").text()) {
+            enableLogging(false)
+          } else {
+            enableLogging(true)
+          }
+        };
         var setSmooth = function(cb) {
             flowGraph.setSmoothing(cb.checked);
         };
@@ -763,17 +770,29 @@
 
         var pingLastSentence = function() {
             inboudDataInterval = setInterval(getLastNMEASentence, 1000);
-        }
+        };
+
+        var shutdownMux = function() {
+          if (confirm("You are about to bring the whole Multiplexer down.\nPlease confirm.") === true) {
+            terminate();
+            document.body.innerHTML = '<h1>Bye-bye...</h1>' +
+            '<h2>Server is going down upon your request.</h2>' +
+            '<p>Restart the server from a console to continue...</p>';
+          } else {
+            console.log('Canceled');
+          }
+        };
     </script>
   </head>
   <body>
     <table width="100%">
       <tr>
         <td><h2>NMEA Multiplexer Admin</h2></td>
+        <td align="center">Forwarders are <span id="forwarders-status" onclick="toggleForwarders();" title="Click to toggle value" style="cursor: pointer;"></span></td>
         <td align="right">Flow <span id="flow" onclick="showHideGraph();" title="Click to show/hide graph" style="cursor: pointer;"></span></td>
       </tr>
       <tr>
-        <td colspan="2" align="center">
+        <td colspan="3" align="center">
           <div id="graphdiv" style="display: none;">
             <input type="checkbox" id="smooth-data" onchange="setSmooth(this);">Smoothed <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">Tooltip
             <br>
@@ -782,10 +801,11 @@
         </td>
       </tr>
       <tr>
+        <td colspan="1" align="left">Bring the house down: <button title="Really? At your own risk..." onclick="shutdownMux();">Terminate</button></td>
         <td colspan="2" align="right"><input type="checkbox" id="show-inbound-data" onchange="showInboudData(this);">Show Inbound Data</td>
       </tr>
       <tr>
-        <td colspan="2" align="left">
+        <td colspan="3" align="left">
           <div id="inbound-data-div" style="display: none; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 100px; overflow-y: scroll;">
           </div>
         </td>
