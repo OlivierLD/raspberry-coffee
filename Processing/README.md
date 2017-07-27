@@ -23,16 +23,15 @@ void setup() {
 void draw() { // Draw the value of the ADC (MCP3008) at each repaint
   background(0);
   fill(255);
-//value = (int)Math.floor(1023 * Math.random());  // Simulation
-  value = MCP3008Reader.readMCP3008(ADC_CHANNEL); // Real stuff
+  value = MCP3008Reader.readMCP3008(ADC_CHANNEL); 
   text(String.format("%04d", value), 10, 100);
 }
-
-void dispose() {
-  println("Bye!");
-  MCP3008Reader.shutdownMCP3008();
-}
 ```
-Only 27 lines...
+About 20 lines...
 
-More soon.
+The wiring looks like this:
+![MCP3008 with Pot](../ADC/RPi-MCP3008-Pot_bb.png)
+
+---
+
+And more to come.
