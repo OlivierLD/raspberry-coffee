@@ -47,3 +47,4 @@ C/fork
 C/tools
 snap.jpg
 NMEA.multiplexer/web/leaflet
+Processing/**/*.jar
