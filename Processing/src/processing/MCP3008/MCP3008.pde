@@ -21,7 +21,8 @@ void draw() { // Draw the value of the ADC (MCP3008) at each repaint
   text(String.format("%04d", value), 10, 100);
 }
 
-void stop() {
+void exit() {
   println("Bye!");
   MCP3008Reader.shutdownMCP3008();
+  super.exit();
 }
