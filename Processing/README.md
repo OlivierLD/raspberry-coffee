@@ -23,11 +23,21 @@ void setup() {
 void draw() { // Draw the value of the ADC (MCP3008) at each repaint
   background(0);
   fill(255);
-  value = MCP3008Reader.readMCP3008(ADC_CHANNEL); 
+  value = MCP3008Reader.readMCP3008(ADC_CHANNEL);
   text(String.format("%04d", value), 10, 100);
 }
 ```
 About 20 lines...
+
+### To run the Sketch
+- From the project root, to produce the required jar files, run
+```bash
+ $> ./gradlew clean shadowJar
+```
+- Open it in `Processing` (no need to copy it anywhere else)
+- If instructed in the comment at the top of the sketch, use the menu `Sketch > Add File...` to select the appropriate archive
+- Make sure your wiring is correct
+- Hit the `Run` button in `Processing`.
 
 The wiring looks like this:
 ![MCP3008 with Pot](../ADC/RPi-MCP3008-Pot_bb.png)
