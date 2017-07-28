@@ -1,4 +1,6 @@
+import i2c.sensor.LSM303;
 /**
+ * Using Sketch > Add File..., select ADC/build/libs/I2C.SPI-1.0-all.jar 
  */
 
 float[][] keel = new float[][] {
@@ -34,8 +36,19 @@ int pts = keel.length; // TODO Verify they all have the same length
 // for shaded or wireframe rendering 
 boolean isWireFrame = false;
 
+boolean withSensor = true;
+
+LSM303 lsm303;
+
 void setup(){
   size(640, 360, P3D);
+  if (withSensor) {
+    try {
+      lsm303 = new LSM303();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
 }
 
 float heading = -90; // -PI / 4;
@@ -62,20 +75,24 @@ void draw(){
   // center
   translate(width/2, height/2, -100);
 
-  roll += (rollSign * 0.1);
-  pitch += (pitchSign * 0.05);
+  if (withSensor) {
+    roll = (float)lsm303.getRoll();
+    pitch = (float)lsm303.getPitch();
+  } else {
+    roll += (rollSign * 0.1);
+    pitch += (pitchSign * 0.05);
+    if (roll > 15 || roll < -15) {
+      rollSign *= -1;
+    }
+    if (pitch > 15 || pitch < -15) {
+      pitchSign *= -1;
+    }
+  }
   
 // Heading given by the mouse (left-right)
   float newXmag = mouseX/float(width) * 180;
   heading = - newXmag;
   
-  if (roll > 15 || roll < -15) {
-    rollSign *= -1;
-  }
-  if (pitch > 15 || pitch < -15) {
-    pitchSign *= -1;
-  }
-
   rotateX((roll * PI / 180) + (PI / 2)); // Roll PI/2: 0 Roll
   rotateY(pitch * (PI / 180)); // Pitch
   rotateZ(heading * (PI / 180)); // Heading. -PI/2: facing
