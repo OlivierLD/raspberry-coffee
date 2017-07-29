@@ -22,8 +22,6 @@ This is the output of the execution of the `jni` script:
 ```
 pi@raspi-dev ~/raspberry-pi4j-samples/JNISample $ ./jni
 >> Compiling
-warning: [options] bootstrap class path not set in conjunction with -source 1.7
-1 warning
 >> Running javah
 >> Here you should implement HelloWorld.c, including jnisample_HelloWorld.h
 >> Library must be named libHelloWorld.so and not only HelloWorld.so
