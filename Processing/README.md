@@ -42,6 +42,9 @@ About 20 lines...
 The wiring looks like this:
 ![MCP3008 with Pot](../ADC/RPi-MCP3008-Pot_bb.png)
 
+## PitchRoll.pde
+Displays the pitch and roll, returned by an LSM303 sensor.
+![Pitch & Roll](./pitch.roll.01.png) ![Pitch & Roll](./pitch.roll.02.png)
 ---
 
 And more to come.
