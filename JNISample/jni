@@ -14,7 +14,17 @@ echo \>\> Here you should implement HelloWorld.c, including jnisample_HelloWorld
 cd C
 echo \>\> Library must be named libHelloWorld.so and not only HelloWorld.so
 echo \>\> Compiling C
-g++ -Wall -shared -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -lwiringPi -o libHelloWorld.so
+RPI=`uname -a | grep arm`
+if [ "$RPI" != "" ]
+then
+  # For Raspberry PI. -lwiringPi is not mandatory in this case...
+  echo C compilation on the Raspberry PI
+  g++ -Wall -shared -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -lwiringPi -o libHelloWorld.so
+else
+  # For Linux Debian
+  echo C Compilation on Linux \(Not Raspberry PI\)
+  g++ -Wall -shared -fPIC -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -o libHelloWorld.so
+fi
 cd ..
 echo \>\> Now running \(java\) the class invoking the native lib:
 export LD_LIBRARY_PATH=./C
