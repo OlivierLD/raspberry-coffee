@@ -1,8 +1,17 @@
 ### Quick Java Native Interface (JNI) Sample on the Raspberry PI
 The script named `jni` does all the job. You can run it. Here are below the steps the script is going through:
 
-* **_First_**, write the class named `jnisample.HelloWorld.java`. Notice in the code the `System.loadLibrary("HelloWorld");` and the `private native void print();` directive.
-* Compile it
+* **_First_**, write the class named [`jnisample.HelloWorld.java`](./src/jnisample/HelloWorld.java). Notice in the code the `private native void print();` directive:
+```java
+  private native void print(); // Tells javah to build the stub
+```
+and the `System.loadLibrary("HelloWorld");` statement:
+```java
+  static {
+    System.loadLibrary("HelloWorld");
+  }
+```
+* Compile it:
 ```
 $> javac -sourcepath ./src -d ./classes -classpath ./classes -g ./src/jnisample/HelloWorld.java
 ```
@@ -10,7 +19,7 @@ $> javac -sourcepath ./src -d ./classes -classpath ./classes -g ./src/jnisample/
 ```
  $> javah -jni -cp ./classes -d C jnisample.HelloWorld
 ```
-* Implement the native code (`HelloWorld.c`) that includes the generated `.h` file
+* **_Then_** implement the native code (`HelloWorld.c`) that _includes_ the generated `.h` file
 * Compile it, using `gcc` or `g++`. Make sure you use the right flags for the C compiler... Notice that the generated library _**must**_ be named `libHelloWorld.so` and _**not**_ `HelloWorld.so`, for the `System.loadLibrary("HelloWorld");` to work.
 ```
 $> g++ -Wall -shared -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -lwiringPi -o libHelloWorld.so
