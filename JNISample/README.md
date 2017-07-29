@@ -21,11 +21,12 @@ $> g++ -Wall -shared -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.
 This is the output of the execution of the `jni` script:
 ```
 pi@raspi-dev ~/raspberry-pi4j-samples/JNISample $ ./jni
->> Compiling
+>> Compiling Java
 >> Running javah
->> Here you should implement HelloWorld.c, including jnisample_HelloWorld.h
+>> Here you should implement HelloWorld.c, including jnisample_HelloWorld.h, and compile it.
 >> Library must be named libHelloWorld.so and not only HelloWorld.so
->> Now running the class invoking the native lib:
+>> Compiling C
+>> Now running (java) the class invoking the native lib:
 Hello C World!
 >> Done.
 pi@raspi-dev ~/raspberry-pi4j-samples/JNISample $
