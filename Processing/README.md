@@ -1,4 +1,5 @@
 # Processing.org
+
 [Processing](http://processing.org) is a framework that considerably simplifies Java development.
 
 It seems to be compatible with the projects of this repository.
@@ -19,7 +20,6 @@ void setup() {
   textSize(72);  
   MCP3008Reader.initMCP3008();
 }
-
 void draw() { // Draw the value of the ADC (MCP3008) at each repaint
   background(0);
   fill(255);
@@ -36,12 +36,20 @@ About 20 lines...
 ```
 - Open it in `Processing` (no need to copy it anywhere else)
 - If instructed in the comment at the top of the sketch, use the menu `Sketch > Add File...` to select the appropriate archive
-- Make sure your wiring is correct
+- Make sure your wiring is correct.
 - Hit the `Run` button in `Processing`.
+- Turn the button of the potentiometer, and see for yourself.
+
+![MCP3008 pie](./mcp3008.png)
 
 The wiring looks like this:
 ![MCP3008 with Pot](../ADC/RPi-MCP3008-Pot_bb.png)
 
+## PitchRoll.pde
+
+Displays the pitch and roll, returned by an LSM303 sensor.
+
+![Pitch & Roll](./pitch.roll.01.png) ![Pitch & Roll](./pitch.roll.02.png)
 ---
 
 And more to come.
