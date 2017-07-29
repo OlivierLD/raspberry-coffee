@@ -28,7 +28,6 @@ void draw() { // Draw the value of the ADC (MCP3008) at each repaint
   }
   fill(128);
   arc(width/2, height/2, 200, 200, (float)-Math.PI/2, (float)(-Math.PI/2) + radians(360 * value / 1023));
-
   fill(255);
   text(String.format("%04d", value), 10, 75);
 }
