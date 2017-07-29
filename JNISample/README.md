@@ -1,10 +1,10 @@
 ### Quick Java Native Interface (JNI) Sample on the Raspberry PI
 The script named `jni` does all the job. You can run it. Here are below the steps the script is going through:
 
-* **_First_**, write the class named `jnisample.HelloWorld.java`. Notice in the code the `System.loadLibrary("HelloWorld");`
+* **_First_**, write the class named `jnisample.HelloWorld.java`. Notice in the code the `System.loadLibrary("HelloWorld");` and the `private native void print();` directive.
 * Compile it
 ```
-$> javac -source 1.7 -target 1.7 -sourcepath ./src -d ./classes -classpath ./classes -g ./src/jnisample/HelloWorld.java
+$> javac -sourcepath ./src -d ./classes -classpath ./classes -g ./src/jnisample/HelloWorld.java
 ```
 * Run the `javah` utility on it
 ```
@@ -28,7 +28,7 @@ warning: [options] bootstrap class path not set in conjunction with -source 1.7
 >> Here you should implement HelloWorld.c, including jnisample_HelloWorld.h
 >> Library must be named libHelloWorld.so and not only HelloWorld.so
 >> Now running the class invoking the native lib:
-Hello World!
+Hello C World!
 >> Done.
 pi@raspi-dev ~/raspberry-pi4j-samples/JNISample $
 ```
