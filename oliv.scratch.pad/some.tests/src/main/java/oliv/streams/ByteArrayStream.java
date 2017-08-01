@@ -1,4 +1,4 @@
-package test;
+package oliv;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
