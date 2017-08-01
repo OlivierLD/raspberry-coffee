@@ -13,7 +13,7 @@ public class ByteArrayStream {
                 0x00, 0x01, 0x03, 0x67
         };
 
-        String concat = IntStream.range(0, ba.length)
+        String concat = IntStream.range(0, ba.length) // This is a for (int i=0; i<ba.length; i++)
                 .map(idx -> ba[idx])
                 .boxed()
                 .map(b -> String.format("%02X", (b & 0xFF)))
