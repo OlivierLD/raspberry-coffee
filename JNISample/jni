@@ -26,7 +26,7 @@ else
   g++ -Wall -shared -fPIC -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -o libHelloWorld.so
 fi
 cd ..
-echo \>\> Now running \(java\) the class invoking the native lib:
+echo \>\> Now running the Java class invoking the native lib:
 export LD_LIBRARY_PATH=./C
 # ls -l $LD_LIBRARY_PATH/*.so
 java -Djava.library.path=$LD_LIBRARY_PATH -cp ./classes jnisample.HelloWorld

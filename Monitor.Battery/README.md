@@ -387,5 +387,10 @@ You need to modify the MQTT Node to enter your own credentials.
 
 
 ### Next?
+
+#### LoRa
+
+---
+
 There is a lot more to do with the options and features described above, specially in the User Interface area.
 Your imagination is the limit...

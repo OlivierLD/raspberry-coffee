@@ -61,7 +61,7 @@ pi@raspi-dev ~/raspberry-pi4j-samples/JNISample $ ./jni
 >> Here you should implement HelloWorld.c, including jnisample_HelloWorld.h, and compile it.
 >> Library must be named libHelloWorld.so and not only HelloWorld.so
 >> Compiling C
->> Now running (java) the class invoking the native lib:
+>> Now running the Java class invoking the native lib:
 Hello C World!
 >> Done.
 pi@raspi-dev ~/raspberry-pi4j-samples/JNISample $
