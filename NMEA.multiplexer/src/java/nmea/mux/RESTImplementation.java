@@ -2082,5 +2082,4 @@ public class RESTImplementation {
 	private List<Object> getComputerList() {
 		return nmeaDataComputers.stream().map(cptr -> cptr.getBean()).collect(Collectors.toList());
 	}
-
 }

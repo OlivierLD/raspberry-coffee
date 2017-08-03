@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT void JNICALL Java_jnisample_HelloWorld_print
   (JNIEnv *, jobject);
 
+/*
+ * Class:     jnisample_HelloWorld
+ * Method:    manageObject
+ * Signature: (Ljnisample/HelloWorld/SomeObject;)I
+ */
+JNIEXPORT jint JNICALL Java_jnisample_HelloWorld_manageObject
+  (JNIEnv *, jobject, jobject);
+
 #ifdef __cplusplus
 }
 #endif

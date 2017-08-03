@@ -18,17 +18,19 @@ public class SystemUtil {
 	 * Solves a system, n equations, n unknowns.
 	 * <p>
 	 * the values we look for are x, y, z.
-	 * <p>
+	 * <pre>
 	 * ax + by + cz = X
 	 * Ax + By + Cz = Y
 	 * Px + Qy + Rz = Z
-	 *
-	 * @param m Coeffs matrix, n x n (left)
-	 *          | a b c |
-	 *          | A B C |
-	 *          | P Q R |
-	 * @param c Constants array, n (right) [X, Y, Z]
-	 * @return the unknown array, n. [x, y, z]
+	 * </pre>
+	 * @param m Coeffs matrix, n x n (left) from the system above
+	 * <pre>
+	 * | a b c |
+	 * | A B C |
+	 * | P Q R |
+	 * </pre>
+	 * @param c Constants array, n (right) <code>[X, Y, Z]</code> from the system above
+	 * @return the unknown array, n. <code>[x, y, z]</code> from the system above
 	 */
 	public static double[] solveSystem(SquareMatrix m,
 	                                   double[] c) {
