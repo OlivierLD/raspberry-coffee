@@ -24,7 +24,7 @@ JNIEXPORT void JNICALL Java_jnisample_HelloWorld_print (JNIEnv * env, jobject ob
 JNIEXPORT jint JNICALL Java_jnisample_HelloWorld_manageObject (JNIEnv * env, jobject obj1, jobject obj2) {
   printf("C receiving Java Object\n");
   jclass objClass = (*env)->GetObjectClass(env, obj2);
-  jfieldID fidInt    = (*env)->GetFieldID(env, objClass, "someNumber", "I");
+  jfieldID fidInt = (*env)->GetFieldID(env, objClass, "someNumber", "I");
   jint iVal = (*env)->GetIntField(env, obj2, fidInt);
   printf("- Value: %d\n", iVal);
 

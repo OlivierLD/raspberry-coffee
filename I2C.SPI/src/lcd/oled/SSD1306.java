@@ -59,7 +59,7 @@ public class SSD1306 {
 	private int width = 128,
 							height = 32;
 	private int clockHertz = 8_000_000; // 8 MHz
-	private int vccstate = 0;
+	private int vccstate = 0; // or SSD1306_EXTERNALVCC
 	private int pages = 0;
 	private int[] buffer = null;
 
@@ -351,7 +351,7 @@ public class SSD1306 {
 		else
 			this.command(0x14);
 		this.command(SSD1306_MEMORYMODE);          // 0x20
-		this.command(0x00);                        // 0x0 act like ks0108
+		this.command(0x00);                     // 0x0 act like ks0108
 		this.command(SSD1306_SEGREMAP | 0x1);
 		this.command(SSD1306_COMSCANDEC);
 		this.command(SSD1306_SETCOMPINS);          // 0xDA
