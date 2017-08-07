@@ -304,6 +304,9 @@ function Graph(cName,       // Canvas Name
 
   this.drawGraph = function(displayCanvasName, data, idx) {
 
+    // In case the CSS has changed, dynamically.
+    getColorConfig();
+
     if (data.length < 2) {
       return;
     }

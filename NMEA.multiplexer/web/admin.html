@@ -60,55 +60,22 @@
         height: 100px;
       }
 
-      .graphdisplay {
-        --tooltip-color: rgba(250, 250, 210, .7);
-        --tooltip-text-color: black;
-        --with-bg-gradient: false;
-        --bg-gradient-from: rgba(0,0,0,0);
-        --bg-gradient-to: cyan;
-        --bg-color: white; /* used if --with-bg-gradient: false */
-        --horizontal-grid-color: gray;
-        --horizontal-grid-text-color: black;
-        --vertical-grid-color: gray;
-        --vertical-grid-text-color: black;
-        --raw-data-line-color: red;
-        --fill-raw-data: false;
-        --raw-data-fill-color: rgba(0, 255, 0, 0.35); /* used if --fill-raw-data: true */
-        --smooth-data-line-color: blue;
-        --fill-smooth-data: false;
-        --smooth-data-fill-color: rgba(255, 0, 0, 0.35); /* used if --fill-smooth-data: true */
-        --clicked-index-color: orange;
-        --font: Arial;
-      }
-
-      .graphdisplay-backup {
-        --tooltip-color: rgba(250, 250, 210, .7);
-        --tooltip-text-color: black;
-        --with-bg-gradient: true;
-        --bg-gradient-from: rgba(0,0,0,0);
-        --bg-gradient-to: cyan;
-        --bg-color: LightGray; /* used if --with-bg-gradient: false */
-        --horizontal-grid-color: gray;
-        --horizontal-grid-text-color: black;
-        --vertical-grid-color: gray;
-        --vertical-grid-text-color: black;
-        --raw-data-line-color: green;
-        --fill-raw-data: true;
-        --raw-data-fill-color: rgba(0, 255, 0, 0.35); /* used if --fill-raw-data: true */
-        --smooth-data-line-color: red;
-        --fill-smooth-data: true;
-        --smooth-data-fill-color: rgba(255, 0, 0, 0.35); /* used if --fill-smooth-data: true */
-        --clicked-index-color: orange;
-        --font: Arial;
-      }
-
     </style>
+    <link id="graph-ux" rel="stylesheet" href="css/graph.ux.01.css" type="text/css"/>
     <script type="text/javascript">
 
         /**
          * Displays the errors in a non-modal way.
          * @param mess
          */
+        var cssSelectManager = function() {
+            var x = document.getElementById("css-select").value;
+            var css = document.getElementById("graph-ux");
+            var cssName = "./css/" + x;
+            css.href =  cssName;
+//          document.all."graph-ux".href = cssName;
+        };
+
         var errorHandler = function(mess) {
           var messZone = document.getElementById("err-mess");
           messZone.innerText = mess;
@@ -789,10 +756,19 @@
       <tr>
         <td><h2>NMEA Multiplexer Admin</h2></td>
         <td align="center">Forwarders are <span id="forwarders-status" onclick="toggleForwarders();" title="Click to toggle value" style="cursor: pointer;"></span></td>
+        <td align="center">
+          Graph CSS
+          <select id="css-select" onchange="cssSelectManager();">
+            <option value="graph.ux.01.css">One</option>
+            <option value="graph.ux.02.css">Two</option>
+            <option value="graph.ux.03.css">Three</option>
+            <!-- More here if needed -->
+          </select>
+        </td>
         <td align="right">Flow <span id="flow" onclick="showHideGraph();" title="Click to show/hide graph" style="cursor: pointer;"></span></td>
       </tr>
       <tr>
-        <td colspan="3" align="center">
+        <td colspan="4" align="center">
           <div id="graphdiv" style="display: none;">
             <input type="checkbox" id="smooth-data" onchange="setSmooth(this);">Smoothed <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">Tooltip
             <br>
@@ -802,10 +778,10 @@
       </tr>
       <tr>
         <td colspan="1" align="left">Bring the house down: <button title="Really? At your own risk..." onclick="shutdownMux();">Terminate</button></td>
-        <td colspan="2" align="right"><input type="checkbox" id="show-inbound-data" onchange="showInboudData(this);">Show Inbound Data</td>
+        <td colspan="3" align="right"><input type="checkbox" id="show-inbound-data" onchange="showInboudData(this);">Show Inbound Data</td>
       </tr>
       <tr>
-        <td colspan="3" align="left">
+        <td colspan="4" align="left">
           <div id="inbound-data-div" style="display: none; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 100px; overflow-y: scroll;">
           </div>
         </td>
