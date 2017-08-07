@@ -243,6 +243,8 @@ public class BME280 {
 		int lsb = readU8(BME280_REGISTER_PRESSURE_DATA + 1);
 		int xlsb = readU8(BME280_REGISTER_PRESSURE_DATA + 2);
 		int raw = ((msb << 16) | (lsb << 8) | xlsb) >> 4;
+		if (verbose)
+			System.out.println("DBG: Raw Press: " + (raw & 0xFFFF) + ", " + raw + String.format(", msb: 0x%04X lsb: 0x%04X xlsb: 0x%04X", msb, lsb, xlsb));
 		return raw;
 	}
 
