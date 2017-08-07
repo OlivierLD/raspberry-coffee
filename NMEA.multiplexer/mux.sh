@@ -16,7 +16,8 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 # (See below).
 # It controls ALL the forwarders at once.
 #
-PROCESS_ON_START=false # Default is true
+# PROCESS_ON_START=false # Default is true
+#
 if [ "$PROCESS_ON_START" = "false" ]
 then
   MACHINE_NAME=`uname -a | awk '{ print $2 }'`

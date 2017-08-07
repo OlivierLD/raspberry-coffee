@@ -19,7 +19,7 @@
     <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
     <script type="text/javascript" src="js/restskill.js"></script>
     <script type="text/javascript" src="widgets/Graph.js"></script>
-    <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
+    <link id="page-ux" rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
     <style>
       .selectedButton {
         padding:5px;
@@ -66,6 +66,12 @@
 
         var cssSelectManager = function() {
             var x = document.getElementById("css-select").value;
+            var css = document.getElementById("page-ux");
+            var cssName = "./css/" + x;
+            css.href =  cssName;
+        };
+        var graphCssSelectManager = function() {
+            var x = document.getElementById("graph-css-select").value;
             var css = document.getElementById("graph-ux");
             var cssName = "./css/" + x;
             css.href =  cssName;
@@ -756,8 +762,14 @@
         <td><h2>NMEA Multiplexer Admin</h2></td>
         <td align="center">Forwarders are <span id="forwarders-status" onclick="toggleForwarders();" title="Click to toggle value" style="cursor: pointer;"></span></td>
         <td align="center">
-          Graph CSS
-          <select id="css-select" onchange="cssSelectManager();">
+          Page CSS:
+          <select id="css-select" onchange="cssSelectManager();" title="Page StyleSheet">
+            <option value="stylesheet.css">Day</option>
+            <option value="night.stylesheet.css">Night</option>
+            <!-- More here if needed -->
+          </select> &nbsp;
+          Graph CSS:
+          <select id="graph-css-select" onchange="graphCssSelectManager();" title="Graph StyleSheet">
             <option value="graph.ux.01.css">One</option>
             <option value="graph.ux.02.css">Two</option>
             <option value="graph.ux.03.css">Three</option>
