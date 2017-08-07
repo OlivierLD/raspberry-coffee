@@ -64,18 +64,17 @@
     <link id="graph-ux" rel="stylesheet" href="css/graph.ux.01.css" type="text/css"/>
     <script type="text/javascript">
 
-        /**
-         * Displays the errors in a non-modal way.
-         * @param mess
-         */
         var cssSelectManager = function() {
             var x = document.getElementById("css-select").value;
             var css = document.getElementById("graph-ux");
             var cssName = "./css/" + x;
             css.href =  cssName;
-//          document.all."graph-ux".href = cssName;
         };
 
+        /**
+         * Displays the errors in a non-modal way.
+         * @param mess the error message to display.
+         */
         var errorHandler = function(mess) {
           var messZone = document.getElementById("err-mess");
           messZone.innerText = mess;
