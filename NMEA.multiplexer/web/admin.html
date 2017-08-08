@@ -75,6 +75,8 @@
             var css = document.getElementById("graph-ux");
             var cssName = "./css/" + x;
             css.href =  cssName;
+            // Broadcast the event, for reload of the css by the component.
+            flowGraph.reloadColorConfig();
         };
 
         /**

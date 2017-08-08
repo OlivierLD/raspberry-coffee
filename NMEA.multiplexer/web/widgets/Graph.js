@@ -302,10 +302,20 @@ function Graph(cName,       // Canvas Name
       return { mini: mini, maxi: maxi };
   };
 
+  var reloadColor = false;
+  this.reloadColorConfig = function() {
+    console.log('Color scheme has changed');
+    reloadColor = true;
+//  graphColorConfig = getColorConfig(); // TODO: Subscribe to event
+  };
+
   this.drawGraph = function(displayCanvasName, data, idx) {
 
-    // In case the CSS has changed, dynamically.
-    getColorConfig();
+    if (reloadColor) {
+      // In case the CSS has changed, dynamically.
+      getColorConfig();
+    }
+    reloadColor = false;
 
     if (data.length < 2) {
       return;
