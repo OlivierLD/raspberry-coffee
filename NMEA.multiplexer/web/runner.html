@@ -10,6 +10,7 @@
     <script src="./js/jquery.mobile-1.3.2.min.js"></script>
     <script type="text/javascript" src="js/restskill.js"></script>
     <script type="text/javascript">
+
   var logEnabled = function(cb) {
     if ("on" === cb.value) {
       console.log('On');
@@ -19,6 +20,27 @@
       enableLogging(false)
     }
   };
+
+  var forwarderStatus = function() {
+    var getData = getForwarderStatus();
+    getData.done(function(value) {
+        var json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
+        var status = json.processing;
+        $("#flip-1").val(status === true ? 'on' : 'off').slider('refresh');
+    });
+    getData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        console.log("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
+  };
+
     </script>
   </head>
   <body>
@@ -51,7 +73,11 @@
         content += ((content.length > 0 ? '\n' : '') + txt);
         $('#message').text(content);
       };
+
       $().ready(function() {
+
+        forwarderStatus();
+
         $("#b-terminate").click(function() {
           console.log("terminating");
           terminate();

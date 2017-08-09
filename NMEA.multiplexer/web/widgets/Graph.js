@@ -150,6 +150,13 @@ function Graph(cName,       // Canvas Name
 
   var instance = this;
 
+  if (events !== undefined) {
+    events.subscribe('color-scheme-changed', function(val) {
+//    console.log('Color scheme changed:', val);
+      reloadColorConfig();
+    });
+  }
+
   graphColorConfig = getColorConfig();
 
   var xScale, yScale;
@@ -303,10 +310,9 @@ function Graph(cName,       // Canvas Name
   };
 
   var reloadColor = false;
-  this.reloadColorConfig = function() {
-    console.log('Color scheme has changed');
+  var reloadColorConfig = function() {
+//  console.log('Color scheme has changed');
     reloadColor = true;
-//  graphColorConfig = getColorConfig(); // TODO: Subscribe to event
   };
 
   this.drawGraph = function(displayCanvasName, data, idx) {

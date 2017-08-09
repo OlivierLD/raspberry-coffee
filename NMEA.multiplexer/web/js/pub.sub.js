@@ -1,3 +1,12 @@
+/**
+ Subscribe like this:
+ events.subscribe('topic', function(val) {
+   doSomethingSmart(val);
+ });
+
+ Publish like that:
+ events.publish('topic', val);
+ */
 var events = {
     listener: [],
 
