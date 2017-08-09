@@ -22,11 +22,11 @@
   };
 
   var forwarderStatus = function() {
-    var getData = getForwarderStatus();
+    var getData = getForwarderStatus(); // A promise
     getData.done(function(value) {
         var json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
         var status = json.processing;
-        $("#flip-1").val(status === true ? 'on' : 'off').slider('refresh');
+        $("#flip-1").val(status === true ? 'on' : 'off').slider('refresh'); // important: slider.refresh
     });
     getData.fail(function(error, errmess) {
         var message;
@@ -83,9 +83,10 @@
           terminate();
           $("#b-terminate").prop('disabled', true);
           // Say bye-bye...
-          document.body.innerHTML = '<h1>Bye-bye...</h1>' +
-          '<h2>Server is going down upon your request.</h2>' +
-          '<p>Restart the server to continue...</p>';
+          document.body.innerHTML =
+          '<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">Bye-bye...</h1>' +
+          '<h2 style="color: blue; font-family: Verdana, Helvetica, Geneva;">Server is going down upon your request.</h2>' +
+          '<p style="color: blue; font-family: Verdana, Helvetica, Geneva;">Restart the server from a terminal to continue...</p>';
         });
       });
     </script>
