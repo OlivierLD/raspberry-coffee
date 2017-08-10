@@ -21,6 +21,12 @@
     }
   };
 
+  var speedUnit = function(su) {
+    if (su.value !== undefined && su.value.trim().length > 0) {
+      setSpeedUnit(su.value);
+    }
+  };
+
   var forwarderStatus = function() {
     var getData = getForwarderStatus(); // A promise
     getData.done(function(value) {
@@ -55,6 +61,15 @@
         <select name="flip-1" id="flip-1" data-role="slider" onchange="logEnabled(this);">
         	<option value="off">Off</option>
         	<option value="on">On</option>
+        </select>
+
+        <label for="speed-unit">Set Speed Unit:</label>
+        <select name="speed-unit" id="speed-unit" onchange="speedUnit(this);">
+          <option value=""></option>
+          <option value="kmh">km/h</option>
+          <option value="mph">mph</option>
+          <option value="ms">m/s</option>
+          <option value="kts">knots</option>
         </select>
 
         <div class="ui-body ui-body-b">

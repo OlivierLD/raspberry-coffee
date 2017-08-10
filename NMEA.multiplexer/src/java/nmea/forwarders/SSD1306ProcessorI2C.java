@@ -4,13 +4,12 @@ import context.ApplicationContext;
 import context.NMEADataCache;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import nmea.forwarders.substitute.SwingLedPanel;
+import nmea.mux.context.Context;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle180LR;
@@ -179,6 +178,43 @@ public class SSD1306ProcessorI2C implements Forwarder {
 				ok = true;
 			}
 		}
+
+		Context.getInstance().addTopicListener(new Context.TopicListener() {
+			/**
+			 * Speed Unit can be changed with a REST call: POST /events/change-speed-unit with a payload like
+			 * { "speed-unit": "kmh" }
+			 * @param topic change-speed-unit for this to work
+			 * @param payload { "speed-unit": "kmh" }, { "speed-unit": "mph" }, { "speed-unit": "ms" }, or { "speed-unit": "kts" }
+			 */
+			public void topicBroadcast(String topic, Object payload){
+//			System.out.println("Topic:" + topic +", payload:" + payload);
+				if ("change-speed-unit".equals(topic)) {
+					if (payload instanceof Map) {
+						Map<String, Object> map = (Map)payload;
+						Object unit = map.get("speed-unit");
+//					System.out.println("Changing Speed Unit to " + unit.toString());
+						switch (unit.toString()) {
+							case "kmh":
+								speedUnit = SpeedUnit.KMH;
+								break;
+							case "ms":
+								speedUnit = SpeedUnit.MS;
+								break;
+							case "mph":
+								speedUnit = SpeedUnit.MPH;
+								break;
+							case "kts":
+								speedUnit = SpeedUnit.KNOTS;
+								break;
+							default:
+								System.err.println(String.format("Un-managed speed unit [%s]", unit.toString()));
+								break;
+						}
+					}
+				}
+			}
+		});
+
 		try {
 			oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C Config
 			oled.begin();

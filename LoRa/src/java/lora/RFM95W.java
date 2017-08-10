@@ -262,7 +262,7 @@ public class RFM95W {
 		// Check we are in sleep mode, with LORA set
 		if (readByte(RH_RF95_REG_01_OP_MODE) != (RH_RF95_MODE_SLEEP | RH_RF95_LONG_RANGE_MODE)) {
 			System.err.println("Ooops!");
-			shutdownRFM85W();
+			shutdownRFM95W();
 		}
 		// TODO Attach interrupt?
 
@@ -284,7 +284,7 @@ public class RFM95W {
 		misoInput = gpio.provisionDigitalInputPin(spiMiso, "MISO");
 	}
 
-	public static void shutdownRFM85W() {
+	public static void shutdownRFM95W() {
 		gpio.shutdown();
 	}
 

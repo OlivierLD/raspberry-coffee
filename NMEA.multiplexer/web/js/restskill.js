@@ -145,6 +145,10 @@ var deleteChannel = function(channel) {
     return getDeferred('/channels/' + channel.type, DEFAULT_TIMEOUT, 'DELETE', 204, channel);
 };
 
+var setSpeedUnit = function(speedUnit) {
+    return getDeferred('/events/change-speed-unit', DEFAULT_TIMEOUT, 'POST', 200, { "speed-unit": speedUnit }, false);
+};
+
 var pushData = function(flow) {
     if (false && flowData.length < (INIT_SIZE - 1)) {
         flowData.splice(0, 1);

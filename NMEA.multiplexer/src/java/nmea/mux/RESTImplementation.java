@@ -252,6 +252,11 @@ public class RESTImplementation {
 									this::getLogFile,
 									"Download the log file"),
 					new Operation(
+							"POST",
+							"/events/{topic}",
+							this::broadcastOnTopic,
+							"Broadcast event (payload in the body) on specific topic."),
+					new Operation(
 									"GET",
 									"/last-sentence",
 									this::getLastNMEASentence,
@@ -2017,6 +2022,38 @@ public class RESTImplementation {
 
 		return response;
 	}
+
+	/**
+	 * Used to broadcast an event a component would be listening to.
+	 * @param request
+	 * @return
+	 */
+	private HTTPServer.Response broadcastOnTopic(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		if (prmValues.size() != 1) {
+			response.setStatus(HTTPServer.Response.BAD_REQUEST);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {topic}");
+			return response;
+		}
+		String topic = prmValues.get(0);
+		if (topic != null) {
+			// Get the payload, the one to broadcast
+			Object payload = null;
+			try {
+				payload = new GsonBuilder().create().fromJson(new String(request.getContent()), Object.class);
+			} catch (Exception ex) {
+				// No payload
+			}
+			// Broadcast
+			Context.getInstance().broadcastOnTopic(topic, payload);
+		} else {
+			response = new HTTPServer.Response(request.getProtocol(), Response.BAD_REQUEST);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "Topic cannot be null");
+		}
+		return response;
+	}
+
 
 	private HTTPServer.Response removeForwarderIfPresent(HTTPServer.Request request, Optional<Forwarder> opFwd) {
 		HTTPServer.Response response;

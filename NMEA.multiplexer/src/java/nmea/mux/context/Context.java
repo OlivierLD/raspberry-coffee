@@ -1,5 +1,8 @@
 package nmea.mux.context;
 
+import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +28,26 @@ public class Context {
 			instance = new Context();
 		}
 		return instance;
+	}
+
+	private List<TopicListener> topicListeners = new ArrayList<>();
+	public void addTopicListener(TopicListener topicListener) {
+		synchronized (this.topicListeners) {
+			this.topicListeners.add(topicListener);
+		}
+	}
+	public void removeTopicListener(TopicListener topicListener) {
+		if (this.topicListeners.contains(topicListener)) {
+			synchronized (this.topicListeners) {
+				this.topicListeners.remove(topicListener);
+			}
+		}
+	}
+	public void broadcastOnTopic(String topic, Object payload) {
+		this.topicListeners.stream()
+				.forEach(tl -> {
+					tl.topicBroadcast(topic, payload);
+				});
 	}
 
 	public Logger getLogger() {
@@ -64,5 +87,9 @@ public class Context {
 		}
 		public String getString() { return this.str; }
 		public long getTimestamp() { return this.timestamp; }
+	}
+
+	public static abstract class TopicListener implements EventListener {
+		public abstract void topicBroadcast(String topic, Object payload);
 	}
 }
