@@ -311,7 +311,8 @@ public class LSM303 {
 	}
 
 	private static int accel12(byte[] list, int idx) {
-		int n = (list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8); // Low, high bytes
+//	int n = (list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8); // Low, high bytes
+		int n =  ((list[idx + 1] & 0xFF) << 8) | (list[idx] & 0xFF); // Low, high bytes
 		if (n > 32767) n -= 65536;              // 2's complement signed
 		return n >> 4;                          // 12-bit resolution
 	}

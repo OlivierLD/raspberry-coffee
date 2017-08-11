@@ -6,9 +6,13 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
 import nmea.parser.GeoPos;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;
+
+import static nmea.parser.StringParsers.GGA_ALT_IDX;
 
 /**
  * Analyze a log file
@@ -67,6 +71,7 @@ public class LogAnalyzer {
 			double minLat = Double.MAX_VALUE, maxLat = -Double.MAX_VALUE;
 			double minLng = Double.MAX_VALUE, maxLng = -Double.MAX_VALUE;
 			double maxSpeed = -Double.MAX_VALUE;
+			double minAlt = Double.MAX_VALUE, maxAlt = -Double.MAX_VALUE;
 			long nbRec = 0L, totalNbRec = 0L;
 			Date start = null;
 			Date arrival = null;
@@ -86,6 +91,7 @@ public class LogAnalyzer {
 							// Get date, speed, position (for distance)
 							Date rmcDate = rmc.getRmcDate();
 							Date rmcTime = rmc.getRmcTime();
+
 
 							if (start == null) {
 								start = rmcTime;
@@ -110,6 +116,14 @@ public class LogAnalyzer {
 								previousPos = gp;
 							}
 							maxSpeed = Math.max(maxSpeed, rmc.getSog());
+						} else if (id.equals("GGA")) {
+							nbRec++;
+							List<Object> gga = StringParsers.parseGGA(line);
+							if (gga != null) {
+								double alt = (Double)gga.get(GGA_ALT_IDX);
+								maxAlt = Math.max(maxAlt, alt);
+								minAlt = Math.min(minAlt, alt);
+							}
 						}
 						// More Sentence IDs ?..
 					} else {
@@ -129,6 +143,7 @@ public class LogAnalyzer {
 							msToHMS(arrival.getTime() - start.getTime()),
 							distanceInKm / ((arrival.getTime() - start.getTime()) / ((double)HOUR))));
 			System.out.println(String.format("Max Speed: %.03f km/h", maxSpeed * 1.852));
+			System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));
 			System.out.println(String.format("Top-Left    :%s", new GeoPos(maxLat, minLng).toString()));
 			System.out.println(String.format("Bottom-Right:%s", new GeoPos(minLat, maxLng).toString()));
 

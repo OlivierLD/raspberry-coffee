@@ -49,3 +49,12 @@ dependencies {
 shadowJar {
     zip64 true
 }
+
+task runLogAnalyzer(type: JavaExec) {
+    description 'Analyze a log file. Use -Pdatafile=[datafile.nmea]'
+    main = 'util.LogAnalyzer'
+    classpath = sourceSets.main.runtimeClasspath
+    if (project.hasProperty('datafile')) { // gradlew -Pdatafile=XXXXX runLogAnalyzer
+        args (project.getProperty('datafile'))
+    }
+}
