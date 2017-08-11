@@ -255,7 +255,7 @@ public class RESTImplementation {
 							"POST",
 							"/events/{topic}",
 							this::broadcastOnTopic,
-							"Broadcast event (payload in the body) on specific topic."),
+							"Broadcast event (payload in the body) on specific topic. The {topic} can be a regex."),
 					new Operation(
 									"GET",
 									"/last-sentence",
@@ -2025,8 +2025,22 @@ public class RESTImplementation {
 
 	/**
 	 * Used to broadcast an event a component would be listening to.
-	 * @param request
-	 * @return
+	 * <p>
+	 *   This service can be used to brodcast any payload, on any topic.
+	 *   Whatever component that has subscribed to the topic will receive the event.
+	 * </p>
+	 * <p>
+	 *   See {@link Context#addTopicListener(Context.TopicListener)}
+	 *   <br/>
+	 *   See {@link nmea.forwarders.SSD1306ProcessorI2C} for a usage example.
+	 * </p>
+	 * <p>
+	 *   {@link nmea.forwarders.SSD1306ProcessorI2C} displays several data, including the speed.
+	 *   This service can be used to change the speed unit (knots, m/s, km/h, mph). DEtails are give in the code.
+	 * </p>
+	 *
+	 * @param request the REST/HTTP request.
+	 * @return the REST/HTTP Response.
 	 */
 	private HTTPServer.Response broadcastOnTopic(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);

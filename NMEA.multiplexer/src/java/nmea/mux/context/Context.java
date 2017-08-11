@@ -1,10 +1,14 @@
 package nmea.mux.context;
 
+import http.HTTPServer;
+
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * a singleton for the whole mux application
@@ -30,6 +34,12 @@ public class Context {
 		return instance;
 	}
 
+	/**
+	 * Those topic listeners can be used like regular event listeners.
+	 * They've be designed to be used in conjunction with the POST /events/{topic} service, though.
+	 * <br/>
+	 * See {@link nmea.mux.RESTImplementation#broadcastOnTopic(HTTPServer.Request)} for more details about that.
+	 */
 	private List<TopicListener> topicListeners = new ArrayList<>();
 	public void addTopicListener(TopicListener topicListener) {
 		synchronized (this.topicListeners) {
@@ -43,8 +53,20 @@ public class Context {
 			}
 		}
 	}
+
+	/**
+	 *
+	 * @param topic A RegEx to match the topic of the payload. The payload will be sent only to those who subscribed to a topic matching the regex.
+	 * @param payload Usually a Map&lt;String, Object&gt;, representing the payload json object. Can be null.
+	 */
 	public void broadcastOnTopic(String topic, Object payload) {
+		Pattern pattern = Pattern.compile(topic);
 		this.topicListeners.stream()
+				.filter(tl -> {
+					Matcher matcher = pattern.matcher(tl.getSubscribedTopic());
+		    	System.out.println(String.format("[%s] %s [%s]", tl.getSubscribedTopic(), (matcher.matches() ? "matches" : "does not match"), topic));
+					return matcher.matches();
+				})
 				.forEach(tl -> {
 					tl.topicBroadcast(topic, payload);
 				});
@@ -90,6 +112,14 @@ public class Context {
 	}
 
 	public static abstract class TopicListener implements EventListener {
+		private String subscribedTopic;
+		public TopicListener(String topic) {
+			this.subscribedTopic = topic;
+		}
+		public String getSubscribedTopic() {
+			return this.subscribedTopic;
+		}
+
 		public abstract void topicBroadcast(String topic, Object payload);
 	}
 }

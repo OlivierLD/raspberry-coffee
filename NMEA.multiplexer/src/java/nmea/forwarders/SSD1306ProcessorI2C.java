@@ -179,20 +179,21 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			}
 		}
 
-		Context.getInstance().addTopicListener(new Context.TopicListener() {
+		Context.getInstance().addTopicListener(new Context.TopicListener("change-speed-unit") {
 			/**
 			 * Speed Unit can be changed with a REST call: POST /events/change-speed-unit with a payload like
 			 * { "speed-unit": "kmh" }
-			 * @param topic change-speed-unit for this to work
-			 * @param payload { "speed-unit": "kmh" }, { "speed-unit": "mph" }, { "speed-unit": "ms" }, or { "speed-unit": "kts" }
+			 * @param topic <code>change-speed-unit</code> for this to work, or a regex matching it.
+			 * @param payload one of { "speed-unit": "kmh" }, { "speed-unit": "mph" }, { "speed-unit": "ms" }, or { "speed-unit": "kts" }
 			 */
+			@Override
 			public void topicBroadcast(String topic, Object payload){
-//			System.out.println("Topic:" + topic +", payload:" + payload);
-				if ("change-speed-unit".equals(topic)) {
-					if (payload instanceof Map) {
-						Map<String, Object> map = (Map)payload;
-						Object unit = map.get("speed-unit");
-//					System.out.println("Changing Speed Unit to " + unit.toString());
+//			System.out.println("Topic:" + topic + ", payload:" + payload);
+				if (payload instanceof Map) {
+					Map<String, Object> map = (Map) payload;
+					Object unit = map.get("speed-unit");
+					if (unit != null) {
+//				  System.out.println("Changing Speed Unit to " + unit.toString());
 						switch (unit.toString()) {
 							case "kmh":
 								speedUnit = SpeedUnit.KMH;
@@ -210,7 +211,11 @@ public class SSD1306ProcessorI2C implements Forwarder {
 								System.err.println(String.format("Un-managed speed unit [%s]", unit.toString()));
 								break;
 						}
+					} else {
+						System.err.println("Expected member [speed-unit] not found in the payload.");
 					}
+				} else {
+					System.err.println(String.format("Un-expected payload type [%s]", payload.getClass().getName()));
 				}
 			}
 		});
