@@ -8,7 +8,6 @@ var onMessage = function (json) {
             clear("mapCanvas");
             drawWorldMap("mapCanvas");
         } catch (absorb) {
-
         }
         plotPositionOnChart({lat: json.Position.lat, lng: json.Position.lng});
     }

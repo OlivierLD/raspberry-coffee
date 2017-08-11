@@ -119,19 +119,29 @@
           follow = !follow;
           if (lastLatlng !== undefined) {
               map.panTo(lastLatlng);
+              var cb = document.getElementById("with-zoom");
+              if (cb !== undefined) {
+                if (cb.checked == true) {
+                  map.setZoom(14);
+                }
+              }
           }
       };
     </script>
   </head>
   <body>
-    <table cellspacing="10" border="0">
+    <table cellspacing="20" border="0">
       <tr>
         <td valign="top" colspan="3"><h2><div id="title">GPS Data</div></h2></td>
       </tr>
       <tr>
-        <td valign="top" style="vertical-align: top;"><img src="crosshair.png" width="30" height="30" onclick="recenter();" title="Follow" alt="Follow"></td>
-        <td style="vertical-align: top;"><div id="fixdate"></div></td>
-        <td style="vertical-align: top;">Sentence <span id="id"></span></td>
+        <td align="center" style="vertical-align: middle;">
+          <img src="crosshair.png" width="30" height="30" onclick="recenter();" title="Follow" alt="Follow">
+          <br/>
+          <input type="checkbox" id="with-zoom">&nbsp;with zoom.
+        </td>
+        <td style="vertical-align: middle;"><div id="fixdate"></div></td>
+        <td style="vertical-align: middle;">Sentence <span id="id"></span></td>
       </tr>
     </table>
     <table cellspacing="10" border="0">
