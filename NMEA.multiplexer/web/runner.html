@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Log my Run</title>
     <meta charset="utf-8">
     <link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
@@ -50,8 +50,32 @@
   var getDistanceTraveled = function() {
     var getData = getDistance(); // A promise
     getData.done(function(value) {
-        var json = JSON.parse(value);
-        $("#dist-val").text((json["distance"] * 1.852).toFixed(2) + " km");
+        var json = JSON.parse(value); // Speed comes in knots
+        var unit = $("#speed-unit").val();
+        var distFactor = 1;
+        var unitStr = "nm";
+        switch (unit) {
+          case "":
+          case "ms":
+            distFactor = 1852; // 1.852 * (1000 / 3600);
+            unitStr = "m";
+            break;
+          case "kmh":
+            distFactor = 1.852;
+            unitStr = "km";
+            break;
+          case "mph":
+            distFactor = 1.15078; // 1.852 / 1.609;
+            unitStr = "miles";
+            break;
+          case "knots":
+            distFactor = 1;
+            unitStr = "nm";
+            break;
+          default:
+            break;
+        }
+        $("#dist-val").text((json["distance"] * distFactor).toFixed(2) + " " + unitStr);
     });
     getData.fail(function(error, errmess) {
         var message;
@@ -71,7 +95,31 @@
     getData.done(function(value) {
         var json = JSON.parse(value);
         if (json !== undefined) {
-          $("#delta-alt-val").text(json["delta-altitude"].toFixed(2) + " " + json.unit);
+          var unit = $("#speed-unit").val(); // Altitude comes in meters
+          var unitFactor = 1;
+          var unitStr = "m";
+          switch (unit) {
+            case "":
+            case "ms":
+              unitFactor = 1;
+              unitStr = "m";
+              break;
+            case "kmh":
+              unitFactor = 1;
+              unitStr = "m";
+              break;
+            case "mph":
+              unitFactor = 3.28084;
+              unitStr = "feet";
+              break;
+            case "knots":
+              unitFactor = 1;
+              unitStr = "m";
+              break;
+            default:
+              break;
+          }
+          $("#delta-alt-val").text((json["delta-altitude"] * unitFactor).toFixed(2) + " " + unitStr);
         }
     });
     getData.fail(function(error, errmess) {
@@ -88,52 +136,52 @@
   };
 
     </script>
-  </head>
-  <body>
-    <div data-role="page" id="main">
-      <div data-role="header" class="jqm-header">
+</head>
+<body>
+<div data-role="page" id="main">
+    <div data-role="header" class="jqm-header">
         <h1>Running!..</h1>
-      </div>
+    </div>
 
-      <div data-role="content">
+    <div data-role="content">
 
         <label for="flip-1">Logging:</label>
         <select name="flip-1" id="flip-1" data-role="slider" onchange="logEnabled(this);">
-        	<option value="off">Off</option>
-        	<option value="on">On</option>
+            <option value="off">Off</option>
+            <option value="on">On</option>
         </select>
 
-        <label for="speed-unit">Set Speed Unit:</label>
+        <label for="speed-unit">Units:</label>
         <select name="speed-unit" id="speed-unit" onchange="speedUnit(this);">
-          <option value=""></option>
-          <option value="kmh">km/h</option>
-          <option value="mph">mph</option>
-          <option value="ms">m/s</option>
-          <option value="kts">knots</option>
+            <option value=""></option>
+            <option value="kmh">km/h, km and meters</option>
+            <option value="mph">mph statute miles and feet</option>
+            <option value="ms">m/s and meters</option>
+            <option value="kts">knots, nautical miles and meters</option>
         </select>
 
         <div class="ui-grid-a">
-          <div class="ui-block-a">
-            <div class="ui-bar ui-bar-e" style="height:60px">Distance<br><span id="dist-val"></span></div>
-          </div>
-          <div class="ui-block-b">
-            <div class="ui-bar ui-bar-e" style="height:60px">Delta Alt<br><span id="delta-alt-val"></span></div>
-          </div>
+            <div class="ui-block-a">
+                <div class="ui-bar ui-bar-e" style="height:40px">Distance<br><span id="dist-val"></span></div>
+            </div>
+            <div class="ui-block-b">
+                <div class="ui-bar ui-bar-e" style="height:40px">Delta Alt<br><span id="delta-alt-val"></span></div>
+            </div>
         </div>
 
         <div class="ui-body ui-body-b">
-          <fieldset class="ui-grid-a">
-            <div class="ui-block-b"><button data-theme="a" id="b-reset">Reset</button></div>
-            <div class="ui-block-b"><button data-theme="a" id="b-terminate">Terminate</button></div>
-          </fieldset>
+            <fieldset class="ui-grid-a">
+                <div class="ui-block-b"><button data-theme="a" id="b-reset">Reset</button></div>
+                <div class="ui-block-b"><button data-theme="a" id="b-terminate">Terminate</button></div>
+            </fieldset>
         </div>
 
-      </div>
-      <div style="display: none"> <!-- turn display to block or inline for debugging -->
-        <textarea id="message" style="width: 98%; height: 150px;"></textarea>
-      </div>
     </div>
-    <script>
+    <div style="display: none"> <!-- turn display to block or inline for debugging -->
+        <textarea id="message" style="width: 98%; height: 150px;"></textarea>
+    </div>
+</div>
+<script>
       var getTravelData = function() {
         getDistanceTraveled();
         getDeltaAltitude();
@@ -170,5 +218,5 @@
         setInterval(getTravelData, 1000); // Distance and delta-alt
       });
     </script>
-  </body>
+</body>
 </html>
