@@ -64,7 +64,7 @@ public class Context {
 		this.topicListeners.stream()
 				.filter(tl -> {
 					Matcher matcher = pattern.matcher(tl.getSubscribedTopic());
-		    	System.out.println(String.format("[%s] %s [%s]", tl.getSubscribedTopic(), (matcher.matches() ? "matches" : "does not match"), topic));
+//	    	System.out.println(String.format("[%s] %s [%s]", tl.getSubscribedTopic(), (matcher.matches() ? "matches" : "does not match"), topic));
 					return matcher.matches();
 				})
 				.forEach(tl -> {

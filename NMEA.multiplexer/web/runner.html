@@ -47,6 +47,50 @@
     });
   };
 
+  var speedAndCourse = function() {
+    var getData = getSOGCOG(); // A promise
+    getData.done(function(value) {
+        var json = JSON.parse(value);
+        var speedFactor = 1;
+        var unitStr = "kts";
+        var unit = $("#speed-unit").val();
+        switch (unit) {
+          case "":
+          case "ms":
+            speedFactor = 1.852 * (1000 / 3600);
+            unitStr = "m/s";
+            break;
+          case "kmh":
+            distFactor = 1.852;
+            unitStr = "km/h";
+            break;
+          case "mph":
+            speedFactor = 1.15078; // 1.852 / 1.609;
+            unitStr = "mph";
+            break;
+          case "knots":
+            speedFactor = 1;
+            unitStr = "kts";
+            break;
+          default:
+            break;
+        }
+        $("#sog").text((json.sog.sog * speedFactor).toFixed(2) + " " + unitStr);
+        $("#cog").text((json.cog.cog).toFixed(0) + "\272");
+    });
+    getData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        console.log("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
+  };
+
   var getDistanceTraveled = function() {
     var getData = getDistance(); // A promise
     getData.done(function(value) {
@@ -162,6 +206,15 @@
 
         <div class="ui-grid-a">
             <div class="ui-block-a">
+                <span id="sog" style="font-weight: bold; font-size: 30px;"></span>
+            </div>
+            <div class="ui-block-b">
+                <span id="cog" style="font-weight: bold; font-size: 30px;"></span>
+            </div>
+        </div>
+
+        <div class="ui-grid-a">
+            <div class="ui-block-a">
                 <div class="ui-bar ui-bar-e" style="height:40px">Distance<br><span id="dist-val"></span></div>
             </div>
             <div class="ui-block-b">
@@ -185,6 +238,7 @@
       var getTravelData = function() {
         getDistanceTraveled();
         getDeltaAltitude();
+        speedAndCourse();
       };
 
       var appendMess = function(txt) {

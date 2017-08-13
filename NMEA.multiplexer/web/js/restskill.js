@@ -89,6 +89,10 @@ var getLastSentence = function() {
     return getDeferred('/last-sentence', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+var getSOGCOG = function() {
+    return getDeferred('/sog-cog', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var getDistance = function() {
     return getDeferred('/distance', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };

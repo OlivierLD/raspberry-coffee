@@ -64,6 +64,8 @@ import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
 import nmea.mux.context.Context;
 import nmea.mux.context.Context.StringAndTimeStamp;
+import nmea.parser.Angle360;
+import nmea.parser.Speed;
 import nmea.utils.NMEAUtils;
 
 /**
@@ -256,6 +258,11 @@ public class RESTImplementation {
 									"/nmea-volume",
 									this::getNMEAVolumeStatus,
 									"Get the time elapsed and the NMEA volume managed so far"),
+					new Operation(
+							"GET",
+							"/sog-cog",
+							this::getSCOG,
+							"Get Speed and Course Over Ground"),
 					new Operation(
 									"GET",
 									"/log-files/{log-file}",
@@ -1948,6 +1955,39 @@ public class RESTImplementation {
 			((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
 		} catch (Exception ex) {
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response getSCOG(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		Speed sog = (Speed)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SOG);
+		Angle360 cog = (Angle360)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.COG);
+
+		Map<String, Object> map = new HashMap<>(2);
+
+		Map<String, Object> sogMap = new HashMap<>(2);
+		Map<String, Object> cogMap = new HashMap<>(2);
+
+		sogMap.put("sog", (sog != null) ? sog.getValue() : null);
+		sogMap.put("unit", "kt");
+
+		cogMap.put("cog", (cog != null) ? cog.getValue() : null);
+		cogMap.put("unit", "deg");
+
+		map.put("sog", sogMap);
+		map.put("cog", cogMap);
+
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(map);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getSCOG", ex);
 		}
 		String content = jsonElement != null ? jsonElement.toString() : "";
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
