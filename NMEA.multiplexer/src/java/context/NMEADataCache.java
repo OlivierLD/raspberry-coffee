@@ -201,9 +201,11 @@ public class NMEADataCache
 		Object smallDistObj = this.get(SMALL_DISTANCE);
 		double smallDist = 0;
 		if (smallDistObj != null) {
-			double previousDist = (Double)smallDistObj;
-			double distanceFromPreviousPos = GeomUtil.haversineNm(this.previousPosition.lat, this.previousPosition.lng, lastPos.lat, lastPos.lng);
-			smallDist = previousDist + distanceFromPreviousPos;
+			if (this.previousPosition != null && lastPos != null) {
+				double previousDist = (Double) smallDistObj;
+				double distanceFromPreviousPos = GeomUtil.haversineNm(this.previousPosition.lat, this.previousPosition.lng, lastPos.lat, lastPos.lng);
+				smallDist = previousDist + distanceFromPreviousPos;
+			}
 		}
 		return smallDist;
 	}
