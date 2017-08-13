@@ -28,6 +28,7 @@ import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
 import nmea.parser.Wind;
 import nmea.utils.NMEAUtils;
+import util.GeomUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -107,6 +108,8 @@ public class NMEADataCache
 	public static final String VMG_ON_WP = "VMG to Waypoint";
 
 	public static final String ALTITUDE = "Altitude";
+	public static final String SMALL_DISTANCE = "Small Distance"; // For runners
+	public static final String DELTA_ALTITUDE = "Delta Altitude";
 
 	// Damping ArrayList's
 	private transient int dampingSize = 1;
@@ -128,6 +131,9 @@ public class NMEADataCache
 	private transient long started = 0L;
 
 	private transient NMEADataCache instance = this;
+	private transient double maxAlt = -Double.MAX_VALUE;
+	private transient double minAlt =  Double.MAX_VALUE;
+	private transient GeoPos previousPosition = null;
 
 	public NMEADataCache() {
 		super();
@@ -168,6 +174,10 @@ public class NMEADataCache
 			if (currentMap != null) {
 				currentMap.keySet().stream().forEach(tbl -> currentMap.put(tbl, null));
 			}
+			this.started = 0L;
+			this.maxAlt = -Double.MAX_VALUE;
+			this.minAlt =  Double.MAX_VALUE;
+			this.previousPosition = null;
 			init();
 //	}
 	}
@@ -187,6 +197,17 @@ public class NMEADataCache
 		return o;
 	}
 
+	private double feedSmallDistance(GeoPos lastPos) {
+		Object smallDistObj = this.get(SMALL_DISTANCE);
+		double smallDist = 0;
+		if (smallDistObj != null) {
+			double previousDist = (Double)smallDistObj;
+			double distanceFromPreviousPos = GeomUtil.haversineNm(this.previousPosition.lat, this.previousPosition.lng, lastPos.lat, lastPos.lng);
+			smallDist = previousDist + distanceFromPreviousPos;
+		}
+		return smallDist;
+	}
+
 	public void parseAndFeed(String nmeaSentence) {
 		if (StringParsers.validCheckSum(nmeaSentence)) {
 
@@ -197,7 +218,14 @@ public class NMEADataCache
 				case "GGA":
 					List<Object> gga = StringParsers.parseGGA(nmeaSentence);
 					GeoPos ggaPos = (GeoPos)gga.get(StringParsers.GGA_POS_IDX);
-					this.put(POSITION, ggaPos);
+					if (ggaPos != null) {
+						this.put(POSITION, ggaPos);
+						if (this.previousPosition != null) {
+							double smallDist = feedSmallDistance(ggaPos);
+							this.put(SMALL_DISTANCE, smallDist);
+						}
+						this.previousPosition = ggaPos;
+					}
 					UTC ggaDate = (UTC)gga.get(StringParsers.GGA_UTC_IDX);
 					if (ggaDate != null) {
 						this.put(GPS_DATE_TIME, new UTCDate(ggaDate.getDate()));
@@ -205,11 +233,20 @@ public class NMEADataCache
 			//	int ggaNbSat = (Integer)gga.get(StringParsers.GGA_NBSAT_IDX);
 					double ggaAlt = (Double)gga.get(StringParsers.GGA_ALT_IDX);
 					this.put(ALTITUDE, ggaAlt);
+					this.minAlt = Math.min(this.minAlt, ggaAlt);
+					this.maxAlt = Math.max(this.maxAlt, ggaAlt);
+					this.put(DELTA_ALTITUDE, (this.maxAlt - this.minAlt));
+//				System.out.println(String.format("Alt: Min %.02f, Max %.02f, Diff %.02f", this.minAlt, this.maxAlt, (this.maxAlt - this.minAlt)));
 					break;
 				case "RMC":
 					RMC rmc = StringParsers.parseRMC(nmeaSentence);
 					if (rmc != null) {
 						this.put(POSITION, rmc.getGp());
+						if (this.previousPosition != null) {
+							double smallDist = feedSmallDistance(rmc.getGp());
+							this.put(SMALL_DISTANCE, smallDist);
+						}
+						this.previousPosition = rmc.getGp();
 						this.put(COG, new Angle360(rmc.getCog()));
 						this.put(SOG, new Speed(rmc.getSog()));
 						this.put(DECLINATION, new Angle180EW(rmc.getDeclination()));
@@ -311,6 +348,11 @@ public class NMEADataCache
 							GeoPos pos = (GeoPos)obj[StringParsers.GP_in_GLL];
 							if (pos != null) {
 								this.put(POSITION, pos);
+								if (this.previousPosition != null) {
+									double smallDist = feedSmallDistance(pos);
+									this.put(SMALL_DISTANCE, smallDist);
+								}
+								this.previousPosition = pos;
 							}
 							Date date = (Date)obj[StringParsers.DATE_in_GLL];
 							if (date != null) {

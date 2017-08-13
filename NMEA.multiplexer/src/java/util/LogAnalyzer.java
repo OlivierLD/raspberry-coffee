@@ -22,17 +22,7 @@ public class LogAnalyzer {
 
 	private static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 
-	private final static double kmEquatorialEarthRadius = 6378.1370D;
-
-	private static double haversineKm(double lat1, double long1, double lat2, double long2) {
-		double dlong = Math.toRadians(long2 - long1);
-		double dlat = Math.toRadians(lat2 - lat1);
-		double a = Math.pow(Math.sin(dlat / 2.0), 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.pow(Math.sin(dlong / 2.0), 2);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-		double d = /* 6367 */ kmEquatorialEarthRadius * c;
-
-		return d;
-	}
+	private final static double KNOTS_TO_KMH = 1.852;
 
 	private final static long SEC  = 1000L;
 	private final static long MIN  = 60 * SEC;
@@ -61,7 +51,7 @@ public class LogAnalyzer {
 
 	public static void main(String... args) {
 		if (args.length == 0) {
-			throw new IllegalArgumentException("Provide the name of the file to analyze as first parameter");
+			throw new IllegalArgumentException("Please provide the name of the file to analyze as first parameter");
 		}
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(args[0]));
@@ -92,7 +82,6 @@ public class LogAnalyzer {
 							Date rmcDate = rmc.getRmcDate();
 							Date rmcTime = rmc.getRmcTime();
 
-
 							if (start == null) {
 								start = rmcTime;
 							} else {
@@ -105,7 +94,7 @@ public class LogAnalyzer {
 								minLng = Math.min(minLng, gp.lng);
 								maxLng = Math.max(maxLng, gp.lng);
 								if (previousPos != null) {
-									double distance = haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
+									double distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
 //									System.out.println(String.format("Step: %.03f km between %s and %s (%s)",
 //													distance,
 //													previousPos.toString(),
@@ -142,7 +131,7 @@ public class LogAnalyzer {
 							distanceInKm,
 							msToHMS(arrival.getTime() - start.getTime()),
 							distanceInKm / ((arrival.getTime() - start.getTime()) / ((double)HOUR))));
-			System.out.println(String.format("Max Speed: %.03f km/h", maxSpeed * 1.852));
+			System.out.println(String.format("Max Speed: %.03f km/h", maxSpeed * KNOTS_TO_KMH));
 			System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));
 			System.out.println(String.format("Top-Left    :%s", new GeoPos(maxLat, minLng).toString()));
 			System.out.println(String.format("Bottom-Right:%s", new GeoPos(minLat, maxLng).toString()));

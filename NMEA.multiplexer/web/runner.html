@@ -47,6 +47,46 @@
     });
   };
 
+  var getDistanceTraveled = function() {
+    var getData = getDistance(); // A promise
+    getData.done(function(value) {
+        var json = JSON.parse(value);
+        $("#dist-val").text((json["distance"] * 1.852).toFixed(2) + " km");
+    });
+    getData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        console.log("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
+  };
+
+  var getDeltaAltitude = function() {
+    var getData = getDeltaAlt(); // A promise
+    getData.done(function(value) {
+        var json = JSON.parse(value);
+        if (json !== undefined) {
+          $("#delta-alt-val").text(json["delta-altitude"].toFixed(2) + " " + json.unit);
+        }
+    });
+    getData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        console.log("Failed to get the forwarders status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+    });
+  };
+
     </script>
   </head>
   <body>
@@ -72,17 +112,33 @@
           <option value="kts">knots</option>
         </select>
 
+        <div class="ui-grid-a">
+          <div class="ui-block-a">
+            <div class="ui-bar ui-bar-e" style="height:60px">Distance<br><span id="dist-val"></span></div>
+          </div>
+          <div class="ui-block-b">
+            <div class="ui-bar ui-bar-e" style="height:60px">Delta Alt<br><span id="delta-alt-val"></span></div>
+          </div>
+        </div>
+
         <div class="ui-body ui-body-b">
           <fieldset class="ui-grid-a">
+            <div class="ui-block-b"><button data-theme="a" id="b-reset">Reset</button></div>
             <div class="ui-block-b"><button data-theme="a" id="b-terminate">Terminate</button></div>
           </fieldset>
         </div>
+
       </div>
       <div style="display: none"> <!-- turn display to block or inline for debugging -->
         <textarea id="message" style="width: 98%; height: 150px;"></textarea>
       </div>
     </div>
     <script>
+      var getTravelData = function() {
+        getDistanceTraveled();
+        getDeltaAltitude();
+      };
+
       var appendMess = function(txt) {
         var content = $('#message').text();
         content += ((content.length > 0 ? '\n' : '') + txt);
@@ -103,6 +159,13 @@
           '<h2 style="color: blue; font-family: Verdana, Helvetica, Geneva;">Server is going down upon your request.</h2>' +
           '<p style="color: blue; font-family: Verdana, Helvetica, Geneva;">Restart the server from a terminal to continue...</p>';
         });
+
+        $("#b-reset").click(function() {
+          console.log("reset");
+          resetDataCache();
+        });
+
+        setInterval(getTravelData, 1000);
       });
     </script>
   </body>

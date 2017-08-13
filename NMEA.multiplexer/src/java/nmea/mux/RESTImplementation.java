@@ -242,6 +242,16 @@ public class RESTImplementation {
 									this::resetCache,
 									"Reset the cache"),
 					new Operation(
+							"GET",
+							"/distance",
+							this::getDistance,
+							"Get distance traveled since last reset"),
+					new Operation(
+							"GET",
+							"/delta-alt",
+							this::getDeltaAlt,
+							"Get delta altitude since last reset"),
+					new Operation(
 									"GET",
 									"/nmea-volume",
 									this::getNMEAVolumeStatus,
@@ -1938,6 +1948,50 @@ public class RESTImplementation {
 			((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
 		} catch (Exception ex) {
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response getDistance(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		Double dist = (Double)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SMALL_DISTANCE);
+
+		Map<String, Object> map = new HashMap<>(2);
+		map.put("distance", dist);
+		map.put("unit", "nm");
+
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(map);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getDistance", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response getDeltaAlt(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		Double delta = (Double)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.DELTA_ALTITUDE);
+
+		Map<String, Object> map = new HashMap<>(2);
+		map.put("delta-altitude", delta);
+		map.put("unit", "m");
+
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(map);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getDeltaAlt", ex);
 		}
 		String content = jsonElement != null ? jsonElement.toString() : "";
 		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());

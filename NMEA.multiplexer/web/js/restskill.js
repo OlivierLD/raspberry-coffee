@@ -89,6 +89,14 @@ var getLastSentence = function() {
     return getDeferred('/last-sentence', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+var getDistance = function() {
+    return getDeferred('/distance', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
+var getDeltaAlt = function() {
+    return getDeferred('/delta-alt', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var getSerialPorts = function() {
     return getDeferred('/serial-ports', DEFAULT_TIMEOUT, 'GET', 200);
 };
@@ -189,7 +197,7 @@ var forwarderStatus = function() {
     getData.done(function(value) {
         var json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
         var status = json.processing;
-        $("#forwarders-status").text(status === true ? 'ON' :'OFF');
+        $("#forwarders-status").text(status === true ? 'ON' :'Paused');
     });
     getData.fail(function(error, errmess) {
         var message;
@@ -342,8 +350,12 @@ var displayRawData = function(elapsed) {
 };
 
 var displayRawDataOut = function() {
+  if ($("#raw-data-out") !== undefined) {
     $("#raw-data-out").html('<pre>' + storedHistoryOut + '</pre>');
-    $("#raw-data-out").scrollTop($("#raw-data-out")[0].scrollHeight);
+    if ($("#raw-data-out")[0] !== undefined) {
+      $("#raw-data-out").scrollTop($("#raw-data-out")[0].scrollHeight);
+    }
+  }
 };
 
 var clearRESTData = function() {
