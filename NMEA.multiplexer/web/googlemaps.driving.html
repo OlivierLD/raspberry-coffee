@@ -68,9 +68,51 @@
           return decodeURIComponent(results[2].replace(/\+/g, " "));
       };
 
+      var KM_EQUATORIAL_EARTH_RADIUS = 6378.1370;
+      var NM_EQUATORIAL_EARTH_RADIUS = 3443.9184665227;
+      var MILE_EQUATORIAL_EARTH_RADIUS = 3964.0379117464;
+
+      var toRadians = function(deg) {
+        return (deg / 180.0) * Math.PI;
+      };
+
+      var haversineRaw = function(lat1, long1, lat2, long2) {
+        var dlong = toRadians(long2 - long1);
+        var dlat = toRadians(lat2 - lat1);
+        var a = Math.pow(Math.sin(dlat / 2.0), 2) + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.pow(Math.sin(dlong / 2.0), 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return c;
+      };
+
+      var haversineKm = function(lat1, long1, lat2, long2) {
+        return haversineRaw(lat1, long1, lat2, long2) * KM_EQUATORIAL_EARTH_RADIUS;
+      };
+
+      var haversineNm = function(lat1, long1, lat2, long2) {
+        return haversineRaw(lat1, long1, lat2, long2) * NM_EQUATORIAL_EARTH_RADIUS;
+      };
+
+      var haversineMile = function(lat1, long1, lat2, long2) {
+        return haversineRaw(lat1, long1, lat2, long2) * MILE_EQUATORIAL_EARTH_RADIUS;
+      };
+
+      // Used to eliminate "bad" GPS points.
+      var __50_METERS = 0.050; // In km
+      var _100_METERS = 0.100;
+      var _500_METERS = 0.500;
+
+      var maxDeltaPos = 0.0;
       // Plot position on the chart
       var plotPositionOnChart = function(val) {
         var pos = new google.maps.LatLng(val.lat, val.lng);
+        if (lastLatlng !== undefined) {
+          var dist = haversineKm(lastLatlng.lat(), lastLatlng.lng(), pos.lat(), pos.lng());
+          if (dist > __50_METERS) { // Ignore above this threshold.
+            return;
+          }
+          maxDeltaPos = Math.max(maxDeltaPos, dist);
+//        console.log("Delta pos:" + dist.toFixed(4) + " km, max:" + maxDeltaPos.toFixed(4) + " km.")
+        }
       //  new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180);
         lastLatlng = pos;
 
@@ -117,12 +159,15 @@
 
       var recenter = function() {
           follow = !follow;
+          // Set crosshair title
+          $("#crosshair").attr('title', follow === true ? "Stop following" : "Start following");
           if (lastLatlng !== undefined) {
               map.panTo(lastLatlng);
               var cb = document.getElementById("with-zoom");
               if (cb !== undefined) {
                 if (cb.checked == true) {
-                  map.setZoom(14);
+                  var zoomVal = parseInt($("#zoom-value").val());
+                  map.setZoom(zoomVal);
                 }
               }
           }
@@ -135,13 +180,34 @@
         <td valign="top" colspan="3"><h2><div id="title">GPS Data</div></h2></td>
       </tr>
       <tr>
-        <td align="center" style="vertical-align: middle;">
-          <img src="crosshair.png" width="30" height="30" onclick="recenter();" title="Follow" alt="Follow">
+        <td align="center" style="vertical-align: middle; border-radius:5px; border:1px solid #CCC; padding: 5px;">
+          <img src="crosshair.png" id="crosshair" width="30" height="30" onclick="recenter();" title="Start Following" alt="Follow">
           <br/>
-          <input type="checkbox" id="with-zoom">&nbsp;with zoom.
+          <input type="checkbox" id="with-zoom">&nbsp;with zoom <select id="zoom-value">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14" selected>14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+          </select>
         </td>
-        <td style="vertical-align: middle;"><div id="fixdate"></div></td>
-        <td style="vertical-align: middle;">Sentence <span id="id"></span></td>
+        <td style="vertical-align: middle;"><div id="fixdate"></div><br/>
+        Sentence <span id="id"></span></td>
       </tr>
     </table>
     <table cellspacing="10" border="0">

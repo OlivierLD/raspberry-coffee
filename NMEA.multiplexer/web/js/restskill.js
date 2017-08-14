@@ -192,7 +192,6 @@ var protocolTest = function() {
         }
         errManager.display("Failed to get protocol test status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
-
 };
 
 var forwarderStatus = function() {
