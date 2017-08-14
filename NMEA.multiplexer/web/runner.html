@@ -61,7 +61,7 @@
             unitStr = "m/s";
             break;
           case "kmh":
-            distFactor = 1.852;
+            speedFactor = 1.852;
             unitStr = "km/h";
             break;
           case "mph":
@@ -205,11 +205,11 @@
         </select>
 
         <div class="ui-grid-a">
-            <div class="ui-block-a">
-                <span id="sog" style="font-weight: bold; font-size: 30px;"></span>
+            <div class="ui-block-a" style="text-align: center;">
+                <span id="sog" style="font-weight: bold; font-size: 30px;">0.0</span>
             </div>
-            <div class="ui-block-b">
-                <span id="cog" style="font-weight: bold; font-size: 30px;"></span>
+            <div class="ui-block-b" style="text-align: center;">
+                <span id="cog" style="font-weight: bold; font-size: 30px;">000</span>
             </div>
         </div>
 

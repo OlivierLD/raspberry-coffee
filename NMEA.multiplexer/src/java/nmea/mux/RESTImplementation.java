@@ -244,35 +244,40 @@ public class RESTImplementation {
 									this::resetCache,
 									"Reset the cache"),
 					new Operation(
-							"GET",
-							"/distance",
-							this::getDistance,
-							"Get distance traveled since last reset"),
+									"GET",
+									"/distance",
+									this::getDistance,
+									"Get distance traveled since last reset"),
 					new Operation(
-							"GET",
-							"/delta-alt",
-							this::getDeltaAlt,
-							"Get delta altitude since last reset"),
+									"GET",
+									"/delta-alt",
+									this::getDeltaAlt,
+									"Get delta altitude since last reset"),
 					new Operation(
 									"GET",
 									"/nmea-volume",
 									this::getNMEAVolumeStatus,
 									"Get the time elapsed and the NMEA volume managed so far"),
 					new Operation(
-							"GET",
-							"/sog-cog",
-							this::getSCOG,
-							"Get Speed and Course Over Ground"),
+									"GET",
+									"/sog-cog",
+									this::getSCOG,
+									"Get Speed and Course Over Ground"),
+					new Operation(
+									"GET",
+									"/run-data",
+									this::getRunData,
+									"Get Speed and Course Over Ground, distance, and delta-altitude, in one shot."),
 					new Operation(
 									"GET",
 									"/log-files/{log-file}",
 									this::getLogFile,
 									"Download the log file"),
 					new Operation(
-							"POST",
-							"/events/{topic}",
-							this::broadcastOnTopic,
-							"Broadcast event (payload in the body) on specific topic. The {topic} can be a regex."),
+									"POST",
+									"/events/{topic}",
+									this::broadcastOnTopic,
+									"Broadcast event (payload in the body) on specific topic. The {topic} can be a regex."),
 					new Operation(
 									"GET",
 									"/last-sentence",
@@ -1925,7 +1930,7 @@ public class RESTImplementation {
 
 		boolean status = this.mux.getEnableProcess();
 		Map<String, Object> map = new HashMap<>(2);
-		map.put("started", Context.getInstance().getStartTime());
+		map.put("started", ApplicationContext.getInstance().getDataCache().getStartTime());
 		map.put("processing", new Boolean(status));
 
 		JsonElement jsonElement = null;
@@ -1996,6 +2001,54 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private HTTPServer.Response getRunData(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		Speed sog = (Speed)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SOG);
+		Angle360 cog = (Angle360)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.COG);
+
+		Map<String, Object> map = new HashMap<>(5);
+
+		Map<String, Object> sogMap = new HashMap<>(2);
+		Map<String, Object> cogMap = new HashMap<>(2);
+
+		sogMap.put("sog", (sog != null) ? sog.getValue() : null);
+		sogMap.put("unit", "kt");
+
+		cogMap.put("cog", (cog != null) ? cog.getValue() : null);
+		cogMap.put("unit", "deg");
+
+		Double dist = (Double)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SMALL_DISTANCE);
+
+		Map<String, Object> distMap = new HashMap<>(2);
+		distMap.put("distance", dist);
+		distMap.put("unit", "nm");
+
+		Double delta = (Double)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.DELTA_ALTITUDE);
+
+		Map<String, Object> altMap = new HashMap<>(2);
+		altMap.put("delta-altitude", delta);
+		altMap.put("unit", "m");
+
+		map.put("started", ApplicationContext.getInstance().getDataCache().getStartTime());
+		map.put("sog",     sogMap);
+		map.put("cog",     cogMap);
+		map.put("dist",    distMap);
+		map.put("alt",     altMap);
+
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(map);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getRunData", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
 	private HTTPServer.Response getDistance(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
@@ -2058,7 +2111,7 @@ public class RESTImplementation {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
 		Map<String, Long> map = new HashMap<>(2);
-		map.put("started", Context.getInstance().getStartTime());
+		map.put("started", ApplicationContext.getInstance().getDataCache().getStartTime());
 		map.put("nmea-bytes", Context.getInstance().getManagedBytes());
 
 		JsonElement jsonElement = null;
@@ -2095,6 +2148,11 @@ public class RESTImplementation {
 		return response;
 	}
 
+	/**
+	 * Dynamically composed, based on the <code>operations</code> List.
+	 * @param request
+	 * @return
+	 */
 	private HTTPServer.Response getOperationList(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		Operation[] channelArray = operations.stream()

@@ -146,6 +146,10 @@ public class NMEADataCache
 		init();
 	}
 
+	public long getStartTime() {
+		return this.started;
+	}
+
 	private void init() {
 		dampingMap.put(BSP, new ArrayList<Object>());
 		dampingMap.put(HDG_TRUE, new ArrayList<Object>());
@@ -174,7 +178,8 @@ public class NMEADataCache
 			if (currentMap != null) {
 				currentMap.keySet().stream().forEach(tbl -> currentMap.put(tbl, null));
 			}
-			this.started = 0L;
+//		this.started = 0L;
+			this.started = System.currentTimeMillis();
 			this.maxAlt = -Double.MAX_VALUE;
 			this.minAlt =  Double.MAX_VALUE;
 			this.previousPosition = null;
