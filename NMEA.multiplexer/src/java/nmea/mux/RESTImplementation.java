@@ -11,12 +11,9 @@ import http.HTTPServer;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
-import java.io.File;
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.StringReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+
+import java.io.*;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -278,6 +275,11 @@ public class RESTImplementation {
 									"/events/{topic}",
 									this::broadcastOnTopic,
 									"Broadcast event (payload in the body) on specific topic. The {topic} can be a regex."),
+					new Operation(
+								"GET",
+								"/custom-protocol", // ?uri={content}
+								this::customProtocolManager,
+								"Manage custom protocol"),
 					new Operation(
 									"GET",
 									"/last-sentence",
@@ -1903,6 +1905,38 @@ public class RESTImplementation {
 		RESTProcessorUtil.generateHappyResponseHeaders(response, "text/plain", content.length());
 		response.setPayload(content.getBytes());
 
+		return response;
+	}
+
+	private HTTPServer.Response customProtocolManager(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+//		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+//		if (prmValues.size() != 1) {
+//			response.setStatus(HTTPServer.Response.BAD_REQUEST);
+//			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {content}");
+//			return response;
+//		}
+//		String protocolContent = prmValues.get(0);
+
+		String protocolContent = "";
+		Map<String, String> queryStringParameters = request.getQueryStringParameters();
+		if (queryStringParameters.get("uri") == null) {
+			response.setStatus(HTTPServer.Response.BAD_REQUEST);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing query string parameter [uri]");
+			return response;
+		} else {
+			protocolContent = queryStringParameters.get("uri");
+		}
+		System.out.println("Managing " + protocolContent);
+		Map<String, Object> responsePayload = new HashMap<>(1);
+		try {
+		responsePayload.put("payload", URLDecoder.decode(protocolContent, "utf-8"));
+		} catch (UnsupportedEncodingException uee) {
+			uee.printStackTrace();
+		}
+		String content = new Gson().toJson(responsePayload);
+		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
 		return response;
 	}
 

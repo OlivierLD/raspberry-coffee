@@ -281,7 +281,7 @@ public class HTTPServer {
 						boolean keepReading = true;
 //					System.out.println(">>> Top of the Loop <<<");
 						if (verbose) {
-							Context.getInstance().getLogger().info(">>> Top of the loop <<<");
+							Context.getInstance().getLogger().info(">>> MUX: Top of the loop <<<");
 						}
 						while (keepReading) {
 							if (top) { // Ugly!! Argh! :(
@@ -451,7 +451,7 @@ public class HTTPServer {
 
 		// Intercept Ctrl+C
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("HTTP: Ctrl+C intercepted.");
+			System.out.println(" <- HTTP: Ctrl+C intercepted.");
 			// Send /exit
 			try {
 				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", port));
