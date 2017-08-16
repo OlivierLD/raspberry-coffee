@@ -2038,7 +2038,8 @@ public class RESTImplementation {
 	private HTTPServer.Response getRunData(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
-		Speed sog = (Speed)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SOG);
+		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+		Speed sog = (Speed)cache.get(NMEADataCache.SOG);
 		Angle360 cog = (Angle360)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.COG);
 
 		Map<String, Object> map = new HashMap<>(5);
@@ -2052,19 +2053,20 @@ public class RESTImplementation {
 		cogMap.put("cog", (cog != null) ? cog.getValue() : null);
 		cogMap.put("unit", "deg");
 
-		Double dist = (Double)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SMALL_DISTANCE);
+		Double dist = (Double)cache.get(NMEADataCache.SMALL_DISTANCE);
 
 		Map<String, Object> distMap = new HashMap<>(2);
 		distMap.put("distance", dist);
 		distMap.put("unit", "nm");
 
-		Double delta = (Double)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.DELTA_ALTITUDE);
-
+		Double delta = (Double)cache.get(NMEADataCache.DELTA_ALTITUDE);
+		Double altitude = (Double)cache.get(NMEADataCache.ALTITUDE);
 		Map<String, Object> altMap = new HashMap<>(2);
 		altMap.put("delta-altitude", delta);
+		altMap.put("altitude", altitude);
 		altMap.put("unit", "m");
 
-		map.put("started", ApplicationContext.getInstance().getDataCache().getStartTime());
+		map.put("started", cache.getStartTime());
 		map.put("sog",     sogMap);
 		map.put("cog",     cogMap);
 		map.put("dist",    distMap);

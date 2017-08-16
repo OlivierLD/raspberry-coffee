@@ -140,3 +140,39 @@ var setConnectionStatus = function(ok) {
 };
 
 var cacheClient = new cacheClient(onMessage, 222); // 2nd prm: between pings
+
+var pushAltitudeData = function(alt) {
+    if (false && altitudeData.length < (INIT_SIZE - 1)) {
+        altitudeData.splice(0, 1);
+        altitudeData.push(new Tuple(altitudeData.length, alt));
+    } else {
+        altitudeData.push(new Tuple(altitudeData.length, alt));
+    }
+    if (GRAPH_MAX_LEN !== undefined && altitudeData.length > GRAPH_MAX_LEN) {
+        while (altitudeData.length > GRAPH_MAX_LEN) {
+            altitudeData.splice(0, 1);
+        }
+    }
+};
+
+var getAltitudeData = function() {
+    // No REST traffic for this one.
+    var getData = getRunData();
+    getData.done(function(value) {
+        var json = JSON.parse(value);
+        var alt = json.alt.altitude;
+        pushAltitudeData(alt);
+    });
+    getData.fail(function(error, errmess) {
+        var message;
+        if (errmess !== undefined) {
+            if (errmess.message !== undefined) {
+                message = errmess.message;
+            } else {
+                message = errmess;
+            }
+        }
+        errManager.display("Failed to get the run data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+        pushAltitudeData(0);
+    });
+};

@@ -5,7 +5,6 @@ $(document).ready(function() {
 var errManager = {
   display: alert
 };
-
 var RESTPayload = {};
 var storedHistory = "";
 var storedHistoryOut = "";
@@ -83,6 +82,10 @@ var getForwarderStatus = function() {
 
 var getVolume = function() {
     return getDeferred('/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
+var getRunData = function() {
+    return getDeferred('/run-data', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getLastSentence = function() {
