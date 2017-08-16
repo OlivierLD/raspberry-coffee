@@ -277,7 +277,7 @@ public class RESTImplementation {
 									"Broadcast event (payload in the body) on specific topic. The {topic} can be a regex."),
 					new Operation(
 								"GET",
-								"/custom-protocol", // ?uri={content}
+								"/custom-protocol/{content}", // ?uri={content}
 								this::customProtocolManager,
 								"Manage custom protocol"),
 					new Operation(
@@ -1910,23 +1910,23 @@ public class RESTImplementation {
 
 	private HTTPServer.Response customProtocolManager(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-//		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
-//		if (prmValues.size() != 1) {
-//			response.setStatus(HTTPServer.Response.BAD_REQUEST);
-//			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {content}");
-//			return response;
-//		}
-//		String protocolContent = prmValues.get(0);
-
-		String protocolContent = "";
-		Map<String, String> queryStringParameters = request.getQueryStringParameters();
-		if (queryStringParameters.get("uri") == null) {
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
-			RESTProcessorUtil.addErrorMessageToResponse(response, "missing query string parameter [uri]");
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {content}");
 			return response;
-		} else {
-			protocolContent = queryStringParameters.get("uri");
 		}
+		String protocolContent = prmValues.get(0);
+
+//	  String protocolContent = "";
+//		Map<String, String> queryStringParameters = request.getQueryStringParameters();
+//		if (queryStringParameters.get("uri") == null) {
+//			response.setStatus(HTTPServer.Response.BAD_REQUEST);
+//			RESTProcessorUtil.addErrorMessageToResponse(response, "missing query string parameter [uri]");
+//			return response;
+//		} else {
+//			protocolContent = queryStringParameters.get("uri");
+//		}
 		System.out.println("Managing " + protocolContent);
 		Map<String, Object> responsePayload = new HashMap<>(1);
 		try {
