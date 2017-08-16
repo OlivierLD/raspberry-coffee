@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * a singleton for the whole mux application
  */
 public class Context {
-	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME); // HTTPServer.class.getName());
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	static {
 		LOGGER.setLevel(Level.INFO);
 	}

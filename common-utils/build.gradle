@@ -27,4 +27,5 @@ dependencies {
 //  compile 'com.pi4j:pi4j-core:1.1'
 //  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
 //  compile project(':I2C.SPI')
+    compile 'com.google.code.gson:gson:2.8.0'
 }

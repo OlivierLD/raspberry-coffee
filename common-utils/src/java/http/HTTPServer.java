@@ -1,14 +1,11 @@
 package http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import http.utils.HTTPClient;
+import utils.DumpUtil;
 
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,18 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import utils.DumpUtil;
-import nmea.mux.context.Context;
-import http.utils.HTTPClient;
-
 /**
- * Used for the REST interface of the Multiplexer.
- * <p>
- * Get the list of the multiplexed channels,
- * Get the list of the forwarders
- * Add channel, forwarder
- * Delete channel, forwarder
- * <p>
+ * Used for the REST interface of an HTTP Server.
+ *
  * GET, POST, DELETE, PUT, no PATCH (for now)
  * <br>
  * Also serves as a regular HTTP server for static documents (in the /web directory).
@@ -226,7 +214,7 @@ public class HTTPServer {
 
 	public void stopRunning() {
 		if (verbose) {
-			Context.getInstance().getLogger().info("Stop nicely (HTTP) requested");
+			HTTPContext.getInstance().getLogger().info("Stop nicely (HTTP) requested");
 		}
 		this.keepRunning = false;
 	}
@@ -262,7 +250,7 @@ public class HTTPServer {
 					boolean okToStop = false;
 					ServerSocket ss = new ServerSocket(port);
 					if (verbose) {
-						Context.getInstance().getLogger().info("Port " + port + " opened successfully.");
+						HTTPContext.getInstance().getLogger().info("Port " + port + " opened successfully.");
 					}
 					while (isRunning()) {
 						Socket client = ss.accept(); // Blocking read
@@ -281,7 +269,7 @@ public class HTTPServer {
 						boolean keepReading = true;
 //					System.out.println(">>> Top of the Loop <<<");
 						if (verbose) {
-							Context.getInstance().getLogger().info(">>> MUX: Top of the loop <<<");
+							HTTPContext.getInstance().getLogger().info(">>> MUX: Top of the loop <<<");
 						}
 						while (keepReading) {
 							if (top) { // Ugly!! Argh! :(
@@ -296,7 +284,7 @@ public class HTTPServer {
 									read = in.read();
 								} else {
 									if (verbose)
-										Context.getInstance().getLogger().info(">>> End of InputStream <<<");
+										HTTPContext.getInstance().getLogger().info(">>> End of InputStream <<<");
 									read = -1;
 								}
 							} catch (IOException ioe) {
@@ -343,7 +331,7 @@ public class HTTPServer {
 												String[] requestElements = line.split(" ");
 												request = new Request(requestElements[0], requestElements[1], requestElements[2]);
 												if (verbose) {
-													Context.getInstance().getLogger().info(">>> New request: " + line + " <<<");
+													HTTPContext.getInstance().getLogger().info(">>> New request: " + line + " <<<");
 												}
 											}
 										}
@@ -365,7 +353,7 @@ public class HTTPServer {
 							request.setContent(payload.getBytes());
 						}
 						if (verbose) {
-							Context.getInstance().getLogger().info(">>> End of HTTP Request <<<");
+							HTTPContext.getInstance().getLogger().info(">>> End of HTTP Request <<<");
 						}
 						if (request != null) {
 							String path = request.getPath();
@@ -419,9 +407,9 @@ public class HTTPServer {
 								out.write(responsePayload.getBytes());
 								out.flush();
 							} else if (line != null && line.length() != 0) {
-								Context.getInstance().getLogger().warning(">>>>>>>>>> What?"); // TODO See when/why this happens...
-								Context.getInstance().getLogger().warning(">>>>>>>>>> Last line was [" + line + "]");
-								Context.getInstance().getLogger().warning(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
+								HTTPContext.getInstance().getLogger().warning(">>>>>>>>>> What?"); // TODO See when/why this happens...
+								HTTPContext.getInstance().getLogger().warning(">>>>>>>>>> Last line was [" + line + "]");
+								HTTPContext.getInstance().getLogger().warning(String.format(">>>>>>>>>> line: %s, in payload: %s, request %s", lineAvailable, inPayload, request));
 							}
 						}
 						out.flush();
@@ -433,12 +421,12 @@ public class HTTPServer {
 					} // while (isRunning())
 					ss.close();
 				} catch (Exception e) {
-					Context.getInstance().getLogger().severe(String.format(">>> Port %d, %s >>>", port, e.toString()));
-					Context.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
-					Context.getInstance().getLogger().severe(String.format("<<< Port %d <<<", port));
+					HTTPContext.getInstance().getLogger().severe(String.format(">>> Port %d, %s >>>", port, e.toString()));
+					HTTPContext.getInstance().getLogger().log(Level.SEVERE, e.getMessage(), e);
+					HTTPContext.getInstance().getLogger().severe(String.format("<<< Port %d <<<", port));
 				} finally {
 					if (verbose)
-						Context.getInstance().getLogger().info("HTTP Server is done.");
+						HTTPContext.getInstance().getLogger().info("HTTP Server is done.");
 					if (waiter != null) {
 						synchronized (waiter) {
 							waiter.notify();
