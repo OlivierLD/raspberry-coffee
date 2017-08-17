@@ -21,11 +21,12 @@ import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+
 import utils.StringUtils;
 
 @SuppressWarnings("oracle.jdeveloper.java.serialversionuid-field-missing")
 public class LedPanelMain
-				extends java.awt.Frame {
+		extends java.awt.Frame {
 	private LedPanelMain instance = this;
 	private LEDPanel ledPanel;
 	private JPanel bottomPanel;
@@ -111,7 +112,7 @@ public class LedPanelMain
 		for (int i = 0; i < NB_COLS; i++) {
 			// Line is a vertical line, its length is NB_LINES / 8
 			String line = ""; /*lpad(Integer.toBinaryString(screenbuffer[i + (3 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
-	                  lpad(Integer.toBinaryString(screenbuffer[i + (2 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
+		                lpad(Integer.toBinaryString(screenbuffer[i + (2 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
                     lpad(Integer.toBinaryString(screenbuffer[i + (1 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " + 
                     lpad(Integer.toBinaryString(screenbuffer[i + (0 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X'); */
 			for (int l = (NB_LINES / 8) - 1; l >= 0; l--)
@@ -254,13 +255,13 @@ public class LedPanelMain
 
 			if (false) {
 				String[] txt1 = new String[]{
-								"!\":#$%&'()*+,-./01234",
-								"56789;<=>?@ABCDEFGHI",
-								"JKLMNOPQRSTUVWXYZ[\\]"
+						"!\":#$%&'()*+,-./01234",
+						"56789;<=>?@ABCDEFGHI",
+						"JKLMNOPQRSTUVWXYZ[\\]"
 				};
 				String[] txt2 = new String[]{
-								"^_abcdefghijklmnopqr",
-								"stuvwxyz{|}"
+						"^_abcdefghijklmnopqr",
+						"stuvwxyz{|}"
 				};
 
 				boolean one = false;
@@ -474,12 +475,12 @@ public class LedPanelMain
 			// Vertical marquee
 			if (true) {
 				String[] txt = new String[]{
-								"Centered",
-								"This is line one",
-								"More text goes here",
-								"Some crap follows: ...",
-								"We're reaching the end",
-								"* The End *"
+						"Centered",
+						"This is line one",
+						"More text goes here",
+						"Some crap follows: ...",
+						"We're reaching the end",
+						"* The End *"
 				};
 				int len = 0;
 				for (int t = 0; t < 80; t++) {
@@ -520,7 +521,7 @@ public class LedPanelMain
 						}
 						double virtualAngle = Math.PI * (((c - i) % 32) / 32d);
 						int x = strOffset - i,
-										y = 26 + (int) (16 * Math.sin(virtualAngle));
+								y = 26 + (int) (16 * Math.sin(virtualAngle));
 //          System.out.println("Displaying " + ca[c] + " at " + x + ", " + y + ", i=" + i + ", strOffset=" + strOffset);
 						sb.text(new String(new char[]{ca[c]}), x, y);
 					}

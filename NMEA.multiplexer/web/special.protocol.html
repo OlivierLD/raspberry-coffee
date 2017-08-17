@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
- | Note: OK on Firefox, no luck with Chromne...
+ | Note: OK on Firefox, no luck with Chrome...
  +-->
 <html>
   <head>
@@ -12,7 +12,7 @@
          * See https://developer.mozilla.org/en-US/docs/Web-based_protocol_handlers
          * See https://developers.google.com/web/updates/2011/06/Registering-a-custom-protocol-handler
          */
-        var handler =  "http://" + document.location.host + "/custom-protocol?uri=%s";
+        var handler =  "http://" + document.location.host + "/custom-protocol/%s";
         console.log("Handler: " + handler);
         try {
           navigator.registerProtocolHandler("web+olivjs",
