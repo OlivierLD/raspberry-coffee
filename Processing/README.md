@@ -50,6 +50,15 @@ The wiring looks like this:
 Displays the pitch and roll, returned by an LSM303 sensor.
 
 ![Pitch & Roll](./pitch.roll.01.png) ![Pitch & Roll](./pitch.roll.02.png)
----
+
+## SSD1306 (oled display)
+
+Mirror - synchronously - the display of the SSD1306.
+
+![SSD1306](./ssd1306.emulation.png)
+
+![Wiring](./src/processing/LCD/SSD1306_bb.png)
+
+----------------------------------------------
 
 And more to come.
