@@ -27,7 +27,7 @@ void setup() {
   size(1280, 320); // (WIDTH, HEIGHT); 
   stroke(BLACK);
   noFill();
-  textSize(72);  
+  textSize(72); // if text() is used. 
 }
 
 void draw() {
@@ -36,7 +36,7 @@ void draw() {
   value = (int)Math.floor(1023 * Math.random());  // Simulation
 //text(String.format("%04d", value), 10, 100);
   
-  stroke(GRAY);
+  stroke(GRAY); // For the grid
   // Vertical grid
   for (int i=1; i<NB_COLS; i++) {
     int abs = i * (int)(WIDTH / NB_COLS);
