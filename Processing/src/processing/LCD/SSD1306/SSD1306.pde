@@ -1,4 +1,5 @@
 /*
+ * Emulates the SSD1306.
  * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
  */
 int value;
@@ -16,9 +17,12 @@ final int HEIGHT = 320;
 
 final int CELL_SIZE = 10;
 
+final ScreenBuffer.Mode SCREEN_FLAVOR = ScreenBuffer.Mode.WHITE_ON_BLACK;
+
 ScreenBuffer sb;
 
 void setup() {
+  frameRate(4); // fps. Default is 60. Slow down to 4, to be able to read.
   initLeds();
   size(1280, 320); // (WIDTH, HEIGHT); 
   stroke(BLACK);
@@ -26,11 +30,11 @@ void setup() {
   textSize(72);  
 }
 
-void draw() { // Draw the value of the ADC (MCP3008) at each repaint
+void draw() {
   background(BLACK);
   fill(WHITE);
   value = (int)Math.floor(1023 * Math.random());  // Simulation
-  text(String.format("%04d", value), 10, 100);
+//text(String.format("%04d", value), 10, 100);
   
   stroke(GRAY);
   // Vertical grid
@@ -47,12 +51,22 @@ void draw() { // Draw the value of the ADC (MCP3008) at each repaint
   // Character display
   if (sb == null) {
     sb = new ScreenBuffer(NB_COLS, NB_LINES);
-    sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
+    sb.clear(SCREEN_FLAVOR);
   }
 
-  sb.text("ScreenBuffer", 2, 9, ScreenBuffer.Mode.BLACK_ON_WHITE);
-  sb.text(NB_COLS + " x " + NB_LINES + " for LCD", 2, 19, ScreenBuffer.Mode.BLACK_ON_WHITE);
-  sb.text("I speak Java!", 2, 29, ScreenBuffer.Mode.BLACK_ON_WHITE);
+  // TODO: From user entry (keyboard?)
+  boolean random = true;
+  if (!random) {
+    sb.text("ScreenBuffer", 2, 9, SCREEN_FLAVOR);
+    sb.text(NB_COLS + " x " + NB_LINES + " for LCD", 2, 19, SCREEN_FLAVOR);
+    sb.text("I speak Java!", 2, 29, SCREEN_FLAVOR);
+  } else {
+    String text = String.format("- %04d -", value);
+    int fontFactor = 3;
+    int len = sb.strlen(text) * fontFactor;
+    sb.text(text, 62 - (len / 2), 11, fontFactor, SCREEN_FLAVOR);
+  }
+  
   this.setBuffer(sb.getScreenBuffer());
   this.display();
 }
@@ -69,13 +83,13 @@ void display() {
       if (leds[col][line]) {
         int x = (CELL_SIZE * col) + (CELL_SIZE / 2);
         int y = (CELL_SIZE * line) + (CELL_SIZE / 2);
-        ellipse(x, y, 9, 9);
+        ellipse(x, y, 8, 8);
       }
     }
   }
 }
 
-private boolean[][] ledOnOff; // = new boolean[NB_COLS][NB_LINES];
+private boolean[][] ledOnOff;
 
 void setLedOnOff(boolean[][] ledOnOff) {
   this.ledOnOff = ledOnOff;
@@ -98,15 +112,12 @@ void setBuffer(int[] screenbuffer) {
   char[][] screenMatrix = new char[NB_LINES][NB_COLS];
   for (int i = 0; i < NB_COLS; i++) {
     // Line is a vertical line, its length is NB_LINES / 8
-    String line = ""; /*lpad(Integer.toBinaryString(screenbuffer[i + (3 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
-                  lpad(Integer.toBinaryString(screenbuffer[i + (2 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
-                  lpad(Integer.toBinaryString(screenbuffer[i + (1 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " + 
-                  lpad(Integer.toBinaryString(screenbuffer[i + (0 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X'); */
+    String line = ""; 
     for (int l = (NB_LINES / 8) - 1; l >= 0; l--) {
       line += StringUtils.lpad(Integer.toBinaryString(screenbuffer[i + (l * NB_COLS)]), 8, "0").replace('0', ' ').replace('1', 'X');
     }
-
 //  println(line);
+
     for (int c = 0; c < line.length(); c++) {
       try {
         char mc = line.charAt(c);
