@@ -2,6 +2,9 @@
  * Emulates the SSD1306.
  * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
  */
+
+// import lcd.oled.SSD1306; // Not mandatory in Processing.
+ 
 int value;
 
 final int NB_LINES = 32;
@@ -19,6 +22,7 @@ final int CELL_SIZE = 10;
 
 final ScreenBuffer.Mode SCREEN_FLAVOR = ScreenBuffer.Mode.WHITE_ON_BLACK;
 
+SSD1306 oled;
 ScreenBuffer sb;
 
 void setup() {
@@ -27,7 +31,14 @@ void setup() {
   size(1280, 320); // (WIDTH, HEIGHT); 
   stroke(BLACK);
   noFill();
-  textSize(72); // if text() is used. 
+  textSize(72); // if text() is used.
+  
+  try {
+    oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS);
+  } catch (Exception ex) {
+    oled = null;
+    println("Cannot find the device, moving on without it.");
+  }
 }
 
 void draw() {
@@ -66,12 +77,18 @@ void draw() {
     int len = sb.strlen(text) * fontFactor;
     sb.text(text, 62 - (len / 2), 11, fontFactor, SCREEN_FLAVOR);
   }
-  
+  if (oled != null) {
+    oled.setBuffer(sb.getScreenBuffer());
+    oled.display();
+  }
   this.setBuffer(sb.getScreenBuffer());
   this.display();
 }
 
 void dispose() {
+  if (oled != null) {
+   oled.shutdown();
+  }
   println("Bye!");
 }
 
