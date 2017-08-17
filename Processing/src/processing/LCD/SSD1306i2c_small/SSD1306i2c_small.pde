@@ -1,5 +1,5 @@
 /*
- * Sends data to the SSD1306.
+ * Sends data to the SSD1306. The valkue sent to the screen is displayed as text in the Processing Frame. 
  * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
  */
 
@@ -39,7 +39,6 @@ void draw() {
   value = (int)Math.floor(1023 * Math.random()); 
   text(String.format("%04d", value), 10, 100);
   
-  // Character display
   if (sb == null) {
     sb = new ScreenBuffer(NB_COLS, NB_LINES);
   }

@@ -1,5 +1,5 @@
 /*
- * Sends data to the SSD1306, and emulates it.
+ * Sends data to the SSD1306, and emulates it. Both displays (oled and Processing Frame) should look the sme.
  * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
  */
 
