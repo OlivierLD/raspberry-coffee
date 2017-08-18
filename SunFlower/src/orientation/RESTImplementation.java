@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 import http.HTTPServer;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
+import http.HTTPServer.Operation;
 import http.RESTProcessorUtil;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.Arrays;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -38,36 +38,6 @@ public class RESTImplementation {
 					throw new RuntimeException(String.format("Duplicate entry in operations list %s %s", operations.get(i).getVerb(), operations.get(i).getPath()));
 				}
 			}
-		}
-	}
-
-	private static class Operation {
-		String verb;
-		String path;
-		String description;
-		Function<Request, Response> fn;
-
-		public Operation(String verb, String path, Function<Request, Response> fn, String description) {
-			this.verb = verb;
-			this.path = path;
-			this.description = description;
-			this.fn = fn;
-		}
-
-		String getVerb() {
-			return verb;
-		}
-
-		String getPath() {
-			return path;
-		}
-
-		String getDescription() {
-			return description;
-		}
-
-		Function<Request, Response> getFn() {
-			return fn;
 		}
 	}
 

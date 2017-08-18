@@ -10,6 +10,7 @@ import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
+import http.HTTPServer.Operation;
 import http.RESTProcessorUtil;
 
 import java.io.*;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import nmea.api.Multiplexer;
@@ -97,36 +97,6 @@ public class RESTImplementation {
 					throw new RuntimeException(String.format("Duplicate entry in operations list %s %s", operations.get(i).getVerb(), operations.get(i).getPath()));
 				}
 			}
-		}
-	}
-
-	private static class Operation {
-		String verb;
-		String path;
-		String description;
-		Function<Request, Response> fn;
-
-		public Operation(String verb, String path, Function<HTTPServer.Request, HTTPServer.Response> fn, String description) {
-			this.verb = verb;
-			this.path = path;
-			this.description = description;
-			this.fn = fn;
-		}
-
-		String getVerb() {
-			return verb;
-		}
-
-		String getPath() {
-			return path;
-		}
-
-		String getDescription() {
-			return description;
-		}
-
-		Function<HTTPServer.Request, HTTPServer.Response> getFn() {
-			return fn;
 		}
 	}
 

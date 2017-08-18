@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 
 /**
@@ -205,6 +206,36 @@ public class HTTPServer {
 			}
 
 			return sb.toString();
+		}
+	}
+
+	public static class Operation {
+		String verb;
+		String path;
+		String description;
+		Function<Request, Response> fn;
+
+		public Operation(String verb, String path, Function<HTTPServer.Request, HTTPServer.Response> fn, String description) {
+			this.verb = verb;
+			this.path = path;
+			this.description = description;
+			this.fn = fn;
+		}
+
+		public String getVerb() {
+			return verb;
+		}
+
+		public String getPath() {
+			return path;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public Function<HTTPServer.Request, HTTPServer.Response> getFn() {
+			return fn;
 		}
 	}
 
