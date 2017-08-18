@@ -209,6 +209,9 @@ public class HTTPServer {
 		}
 	}
 
+	/**
+	 * Used for REST. See usages of this class.
+	 */
 	public static class Operation {
 		String verb;
 		String path;
