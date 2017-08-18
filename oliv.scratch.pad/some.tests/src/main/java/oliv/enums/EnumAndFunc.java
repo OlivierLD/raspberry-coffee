@@ -11,24 +11,31 @@ public class EnumAndFunc {
 	private static String reverse(String str) {
 		String s = str.toString();
 		StringBuffer sb = new StringBuffer();
-		for (int i=s.length(); i>0; i--) {
+		for (int i = s.length(); i > 0; i--) {
 			sb.append(s.charAt(i - 1));
 		}
 		return sb.toString();
 	}
 
 	// Those 4 are used as key in the enum below.
-	private static class EchoClass {}
-	private static class ReverseClass {}
-	private static class AllUpperClass {}
-	private static class AllLowerClass {}
+	private static class EchoClass {
+	}
+
+	private static class ReverseClass {
+	}
+
+	private static class AllUpperClass {
+	}
+
+	private static class AllLowerClass {
+	}
 
 	public enum OlivType {
 
-		TYPE_ONE (EchoClass.class,       "Identical", EnumAndFunc::echo),
-		TYPE_TWO (ReverseClass.class,    "Reverse",   EnumAndFunc::reverse),
-		TYPE_THREE (AllUpperClass.class, "Upper",     String::toUpperCase),
-		TYPE_FOUR (AllLowerClass.class,  "Lower",     String::toLowerCase);
+		TYPE_ONE(EchoClass.class, "Identical", EnumAndFunc::echo),
+		TYPE_TWO(ReverseClass.class, "Reverse", EnumAndFunc::reverse),
+		TYPE_THREE(AllUpperClass.class, "Upper", String::toUpperCase),
+		TYPE_FOUR(AllLowerClass.class, "Lower", String::toLowerCase);
 
 		private final Class id;
 		private final String description;
@@ -40,10 +47,20 @@ public class EnumAndFunc {
 			this.fn = fn;
 		}
 
-		public Class id() { return this.id; }
-		public String description() { return this.description; }
-		public Function<String, String> fn() { return this.fn; }
-	};
+		public Class id() {
+			return this.id;
+		}
+
+		public String description() {
+			return this.description;
+		}
+
+		public Function<String, String> fn() {
+			return this.fn;
+		}
+	}
+
+	;
 
 	public static void main(String[] args) {
 		String str = "AbCdEfGhIjKlMnOpQrStUvWxYz";

@@ -23,15 +23,15 @@ public class RmiClient {
 		System.out.println("Sending " + text + " to " + serverAddress + ":" + serverPort);
 		try {
 			// get the registry
-			registry=LocateRegistry.getRegistry(serverAddress, (new Integer(serverPort)).intValue());
+			registry = LocateRegistry.getRegistry(serverAddress, (new Integer(serverPort)).intValue());
 			// look up the remote object
-			rmiServer = (ServerInterface)(registry.lookup(serverBindingName));
+			rmiServer = (ServerInterface) (registry.lookup(serverBindingName));
 			// call the remote method
 			String response = rmiServer.execute(text);
 			System.out.println("Response:" + response);
-		} catch(RemoteException e) {
+		} catch (RemoteException e) {
 			e.printStackTrace();
-		} catch(NotBoundException e) {
+		} catch (NotBoundException e) {
 			e.printStackTrace();
 		}
 	}

@@ -5,8 +5,7 @@ import java.rmi.registry.*;
 import java.net.*;
 
 public class RmiServer extends java.rmi.server.UnicastRemoteObject
-				implements ServerInterface
-{
+		implements ServerInterface {
 	private String bindingName = "rmiServer";
 	private int port = 1099;
 	private String serverAddress;
@@ -21,11 +20,11 @@ public class RmiServer extends java.rmi.server.UnicastRemoteObject
 	public RmiServer() throws RemoteException {
 		try {
 			serverAddress = (InetAddress.getLocalHost()).toString();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			throw new RemoteException("Can't get inet address.");
 		}
 		System.out.println(String.format("Server address : %s, port %d", serverAddress, port));
-		try{
+		try {
 			registry = LocateRegistry.createRegistry(port);
 			registry.rebind(bindingName, this);
 		} catch (RemoteException e) {

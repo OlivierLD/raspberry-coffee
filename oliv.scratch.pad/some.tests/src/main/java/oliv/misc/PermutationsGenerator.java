@@ -39,7 +39,7 @@ public class PermutationsGenerator {
 				ioe.printStackTrace();
 			}
 		}
-		for (int i=2; i<=Math.min(maxPermSize, listOfN.size()); i++) {
+		for (int i = 2; i <= Math.min(maxPermSize, listOfN.size()); i++) {
 			this.generateForSize(option, listOfN, i);
 		}
 		if (GenerationOption.WRITE_TO_FILE.equals(option)) {
@@ -54,7 +54,7 @@ public class PermutationsGenerator {
 
 	private void generateForSize(GenerationOption option, List<Integer> listOfN, int permSize) {
 		int limit = listOfN.size() - (permSize - 1);
-		for (int i=0; i<limit; i++) {
+		for (int i = 0; i < limit; i++) {
 			List<Integer> idx = new ArrayList<>();
 			idx.add(i);
 			recurse(option, listOfN, idx, 1, permSize);
@@ -64,13 +64,13 @@ public class PermutationsGenerator {
 	private void recurse(GenerationOption option, List<Integer> listOfN, List<Integer> idx, int rnk, int permSize) {
 		if (rnk < permSize) {
 			int limit = listOfN.size() - (permSize - 1) + rnk;
-			for (int i=idx.get(idx.size() - 1) + 1; i<limit; i++) {
+			for (int i = idx.get(idx.size() - 1) + 1; i < limit; i++) {
 				List<Integer> indexes = new ArrayList<>();
 				indexes.addAll(idx);
 				indexes.add(i);
 				recurse(option, listOfN, indexes, rnk + 1, permSize);
 			}
-		} else{
+		} else {
 			List<List<Integer>> perms = generatePermutations(idx);
 			perms.stream().forEach(list -> {
 				nbPerm++;
@@ -100,7 +100,7 @@ public class PermutationsGenerator {
 		List<List<E>> listValue = new ArrayList<List<E>>();
 		List<List<E>> permutations = generatePermutations(original);
 		for (List<E> smallerPermutated : permutations) {
-			for (int i=0; i <= smallerPermutated.size(); i++) {
+			for (int i = 0; i <= smallerPermutated.size(); i++) {
 				List<E> temp = new ArrayList<E>(smallerPermutated);
 				temp.add(i, firstElement);
 				listValue.add(temp);
@@ -117,11 +117,11 @@ public class PermutationsGenerator {
 		List<List<List<Integer>>> allPermutations = new ArrayList<>();
 
 		List<Integer> listOfIndexes = new ArrayList<>();
-		for (int i=0; i<valueListSize; i++) {
+		for (int i = 0; i < valueListSize; i++) {
 			listOfIndexes.add(i);
 		}
 
-		for (int i=2; i<=listOfIndexes.size(); i++) {
+		for (int i = 2; i <= listOfIndexes.size(); i++) {
 			List<Integer> elmtList = listOfIndexes.subList(0, i);
 			PermutationsGenerator generator = new PermutationsGenerator();
 			List<List<Integer>> permutations = generator.generate(elmtList, genOpt, maxPermSize);

@@ -13,7 +13,7 @@ public class Lambda102 {
 		String[] pathElem = path.split("/");
 
 		if (patternElem.length == pathElem.length) {
-			for (int i=0; match && i<patternElem.length; i++) {
+			for (int i = 0; match && i < patternElem.length; i++) {
 				if (patternElem[i].startsWith("{") && patternElem[i].endsWith("}")) {
 					match = true;
 				} else {
@@ -42,10 +42,10 @@ public class Lambda102 {
 	}
 
 	enum ResourceProcessor {
-		RESOURCE_ONE   ("GET",    "/one/{x}/two/{y}", Lambda102::mirror),
-		RESOURCE_TWO   ("POST",   "/one/{x}/two/{y}", Lambda102::mirror),
-		RESOURCE_THREE ("PUT",    "/one/{x}/two/{y}", Lambda102::mirror),
-		RESOURCE_FOUR  ("DELETE", "/first/{prm}",     Lambda102::mirror);
+		RESOURCE_ONE("GET", "/one/{x}/two/{y}", Lambda102::mirror),
+		RESOURCE_TWO("POST", "/one/{x}/two/{y}", Lambda102::mirror),
+		RESOURCE_THREE("PUT", "/one/{x}/two/{y}", Lambda102::mirror),
+		RESOURCE_FOUR("DELETE", "/first/{prm}", Lambda102::mirror);
 
 		private final String verb;
 		private final String path;
@@ -57,9 +57,17 @@ public class Lambda102 {
 			this.fn = fn;
 		}
 
-		public String verb() { return this.verb; }
-		public String path() { return this.path; }
-		public Function<List<String>, String> fn() { return this.fn; }
+		public String verb() {
+			return this.verb;
+		}
+
+		public String path() {
+			return this.path;
+		}
+
+		public Function<List<String>, String> fn() {
+			return this.fn;
+		}
 	}
 
 	private static String mirror(List<String> s) {

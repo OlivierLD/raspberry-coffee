@@ -2,7 +2,7 @@ package oliv.misc;
 
 public class Permutations {
 
-	private static String[] listOfN = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" }; // No duplicates
+	private static String[] listOfN = new String[]{"A", "B", "C", "D", "E", "F", "G", "H"}; // No duplicates
 
 	private static void printCombinations() {
 		int i, j, k;

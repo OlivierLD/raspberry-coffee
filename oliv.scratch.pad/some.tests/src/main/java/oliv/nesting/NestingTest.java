@@ -4,39 +4,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NestingTest {
-    public static void main(String[] args){
-        System.out.println("Let's go");
+	public static void main(String[] args) {
+		System.out.println("Let's go");
 
-        Wrapper wrap = new Wrapper(new String[] { "A", "B", "C" });
-        wrap.crack();
-        wrap.getResult().forEach(System.out::println);
-    }
+		Wrapper wrap = new Wrapper(new String[]{"A", "B", "C"});
+		wrap.crack();
+		wrap.getResult().forEach(System.out::println);
+	}
 
-    private abstract static class ClassOne {
-        public abstract void work(String stuff);
-    }
+	private abstract static class ClassOne {
+		public abstract void work(String stuff);
+	}
 
-    private static class Wrapper {
-        private String[] args;
-        private final List<String> result;
-        public Wrapper(String[] things) {
-            this.args = things;
-            result = new ArrayList<>();
-        }
+	private static class Wrapper {
+		private String[] args;
+		private final List<String> result;
 
-        public void crack() {
-            ClassOne c1Impl = new ClassOne() {
-                public void work(String s) {
-                    result.add(s);
-                }
-            };
-            for (String s : args) {
-                c1Impl.work(s);
-            }
-        }
+		public Wrapper(String[] things) {
+			this.args = things;
+			result = new ArrayList<>();
+		}
 
-        public List<String> getResult() {
-            return result;
-        }
-    }
+		public void crack() {
+			ClassOne c1Impl = new ClassOne() {
+				public void work(String s) {
+					result.add(s);
+				}
+			};
+			for (String s : args) {
+				c1Impl.work(s);
+			}
+		}
+
+		public List<String> getResult() {
+			return result;
+		}
+	}
 }

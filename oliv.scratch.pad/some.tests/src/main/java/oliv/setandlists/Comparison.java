@@ -13,8 +13,8 @@ public class Comparison {
 
 		System.out.println("li1 = li2: " + li1.equals(li2));
 
-		Set<Integer>set1 = li1.stream().collect(Collectors.toSet());
-		Set<Integer>set2 = li2.stream().collect(Collectors.toSet());
+		Set<Integer> set1 = li1.stream().collect(Collectors.toSet());
+		Set<Integer> set2 = li2.stream().collect(Collectors.toSet());
 
 		li1.stream().collect(Collectors.toSet());
 

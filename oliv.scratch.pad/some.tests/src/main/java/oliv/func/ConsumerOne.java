@@ -16,8 +16,13 @@ public class ConsumerOne {
 			this.consumer = consumer;
 		}
 
-		public String label() { return this.label; }
-		public Consumer<String> consumer() { return this.consumer; }
+		public String label() {
+			return this.label;
+		}
+
+		public Consumer<String> consumer() {
+			return this.consumer;
+		}
 	}
 
 	private static void optionOne(String str) {

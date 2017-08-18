@@ -24,7 +24,7 @@ public class FlatMapSample {
 		tree.add(secondBranch);
 
 		tree.stream()
-						.flatMap(List::stream)
-						.forEach(System.out::println);
+				.flatMap(List::stream)
+				.forEach(System.out::println);
 	}
 }

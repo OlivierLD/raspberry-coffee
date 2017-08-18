@@ -22,7 +22,7 @@ public class Lambda101 {
 	}
 
 	public static void main(String[] args) {
-	  String str = genericStuff("Akeu", Lambda101::repeat);
+		String str = genericStuff("Akeu", Lambda101::repeat);
 		System.out.println(str);
 
 		int len = genericStuff("Akeu-coucou", Lambda101::count);
@@ -38,7 +38,7 @@ public class Lambda101 {
 		});
 		System.out.println(str);
 
-		str = genericStuff("Rha lovely!", a ->  reverse(a) );
+		str = genericStuff("Rha lovely!", a -> reverse(a));
 		System.out.println(str);
 
 		str = genericStuff("Pouet-pouet", Lambda101::reverse);
@@ -46,7 +46,7 @@ public class Lambda101 {
 
 		str = genericBiStuff(3, "Merde!", (a, b) -> {
 			StringBuffer sb = new StringBuffer();
-			for (int i=0; i<a; i++) {
+			for (int i = 0; i < a; i++) {
 				sb.append(b + " ");
 			}
 			return sb.toString().trim();
@@ -56,7 +56,7 @@ public class Lambda101 {
 
 	private static String reverse(String s) {
 		StringBuffer sb = new StringBuffer();
-		for (int i=s.length(); i>0; i--) {
+		for (int i = s.length(); i > 0; i--) {
 			sb.append(s.charAt(i - 1));
 		}
 		return sb.toString();
