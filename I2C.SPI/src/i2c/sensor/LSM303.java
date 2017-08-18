@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
 import utils.StringUtils;
 
 /**
@@ -24,8 +25,8 @@ import utils.StringUtils;
  * <br>
  * Also, another funny one:
  * <ul>
- *   <li>The data read from the accelerometer are read in the order X, Y, Z</li>
- *   <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, Y, funny isn't it?</li>
+ * <li>The data read from the accelerometer are read in the order X, Y, Z</li>
+ * <li>The data read from the magnetometer are read in the order X, <b style='color: red;'>Z</b>, Y, funny isn't it?</li>
  * </ul>
  * And they both have different endianness.
  * <br>
@@ -50,10 +51,10 @@ public class LSM303 {
 	// Default    Type
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG1_A = 0x20; // 00000111   rw
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG4_A = 0x23; // 00000000   rw
-	public final static int LSM303_REGISTER_ACCEL_OUT_X_L_A   = 0x28;
-	public final static int LSM303_REGISTER_MAG_CRB_REG_M     = 0x01;
-	public final static int LSM303_REGISTER_MAG_MR_REG_M      = 0x02;
-	public final static int LSM303_REGISTER_MAG_OUT_X_H_M     = 0x03;
+	public final static int LSM303_REGISTER_ACCEL_OUT_X_L_A = 0x28;
+	public final static int LSM303_REGISTER_MAG_CRB_REG_M = 0x01;
+	public final static int LSM303_REGISTER_MAG_MR_REG_M = 0x02;
+	public final static int LSM303_REGISTER_MAG_OUT_X_H_M = 0x03;
 
 	// Gain settings for setMagGain()
 	public final static int LSM303_MAGGAIN_1_3 = 0x20; // +/- 1.3
@@ -66,7 +67,7 @@ public class LSM303 {
 
 	private final static float _lsm303Accel_MG_LSB = 0.001F; // 1, 2, 4 or 12 mg per lsb
 	private static float _lsm303Mag_Gauss_LSB_XY = 1100.0F;  // Varies with gain
-	private static float _lsm303Mag_Gauss_LSB_Z  =  980.0F;  // Varies with gain
+	private static float _lsm303Mag_Gauss_LSB_Z = 980.0F;  // Varies with gain
 
 	private float SENSORS_GRAVITY_EARTH = 9.80665f;        // < Earth's gravity in m/s^2
 	private float SENSORS_GRAVITY_MOON = 1.6f;             // < The moon's gravity in m/s^2
@@ -79,7 +80,7 @@ public class LSM303 {
 	private float SENSORS_GAUSS_TO_MICROTESLA = 100;       // < Gauss to micro-Tesla multiplier
 
 	private I2CBus bus;
-	private I2CDevice accelerometer, magnetometer;
+	private I2CDevice accelerometer = null, magnetometer = null;
 	private byte[] accelData, magData;
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
@@ -94,6 +95,14 @@ public class LSM303 {
 
 	private long wait = 1_000L;
 	private LSM303Listener dataListener = null;
+
+	public enum EnabledFeature {
+		MAGNETOMETER,
+		ACCELEROMETER,
+		BOTH
+	}
+
+	;
 
 	private void setMagGain(int gain) throws IOException {
 		magnetometer.write(LSM303_REGISTER_MAG_CRB_REG_M, (byte) gain);
@@ -131,39 +140,52 @@ public class LSM303 {
 	}
 
 	public LSM303() throws I2CFactory.UnsupportedBusNumberException, IOException {
+		this(EnabledFeature.BOTH);
+	}
+
+	public LSM303(EnabledFeature feature) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		if (verbose) {
 			System.out.println("Starting sensors reading:");
 		}
 //		try {
-			// Get i2c bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
-			if (verbose)
-				System.out.println("Connected to bus. OK.");
+		// Get i2c bus
+		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
+		if (verbose)
+			System.out.println("Connected to bus. OK.");
 
-			// Get device itself
+		// Get device itself
+		if (feature.equals(EnabledFeature.ACCELEROMETER) || feature.equals(EnabledFeature.BOTH)) {
 			accelerometer = bus.getDevice(LSM303_ADDRESS_ACCEL);
+		}
+		if (feature.equals(EnabledFeature.MAGNETOMETER) || feature.equals(EnabledFeature.BOTH)) {
 			magnetometer = bus.getDevice(LSM303_ADDRESS_MAG);
-			if (verbose)
-				System.out.println("Connected to devices. OK.");
+		}
+		if (verbose)
+			System.out.println("Connected to devices. OK.");
 
       /*
        * Start sensing
        */
-			// Enable accelerometer
+		// Enable accelerometer
+		if (accelerometer != null) {
 			accelerometer.write(LSM303_REGISTER_ACCEL_CTRL_REG1_A, (byte) 0x27); // 00100111
 			accelerometer.write(LSM303_REGISTER_ACCEL_CTRL_REG4_A, (byte) 0x00); // Low Res. For Hi Res, write 0b00001000, 0x08
-			if (verbose)
+			if (verbose) {
 				System.out.println("Accelerometer OK.");
+			}
+		}
 
-			// Enable magnetometer
+		// Enable magnetometer
+		if (magnetometer != null) {
 			magnetometer.write(LSM303_REGISTER_MAG_MR_REG_M, (byte) 0x00);
 
 			int gain = LSM303_MAGGAIN_1_3;
 			setMagGain(gain);
 			if (verbose)
 				System.out.println("Magnetometer OK.");
+		}
 
-			startReading();
+		startReading();
 //		} catch (IOException e) {
 //			System.err.println(e.getMessage());
 //		}
@@ -192,9 +214,11 @@ public class LSM303 {
 	private void setPitch(double pitch) {
 		this.pitch = pitch;
 	}
+
 	private void setRoll(double roll) {
 		this.roll = roll;
 	}
+
 	private void setHeading(double heading) {
 		this.heading = heading;
 	}
@@ -202,11 +226,13 @@ public class LSM303 {
 	public double getPitch() {
 		return this.pitch;
 	}
+
 	public double getRoll() {
-		return  this.roll;
+		return this.roll;
 	}
+
 	public double getHeading() {
-		return  this.heading;
+		return this.heading;
 	}
 
 	public void setWait(long wait) {
@@ -220,69 +246,77 @@ public class LSM303 {
 	}
 
 	private void readingSensors()
-					throws IOException {
+			throws IOException {
 		while (keepReading) {
 			accelData = new byte[6];
 			magData = new byte[6];
 
-			accelerometer.write((byte)(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80));
+			int accelX = 0, accelY = 0, accelZ = 0;
+			float accX = 0, accY = 0, accZ = 0;
+			int magX = 0, magY = 0, magZ = 0;
+			double pitchDegrees = 0d, rollDegrees = 0d;
+			float heading = 0;
 
-			int r = accelerometer.read(accelData, 0, 6);
-			if (r != 6) {
-				System.out.println("Error reading accel data, < 6 bytes");
-			}
-			// raw Acc data
-			int accelX = accel12(accelData, 0);
-			int accelY = accel12(accelData, 2);
-			int accelZ = accel12(accelData, 4);
+			if (accelerometer != null) {
+				accelerometer.write((byte) (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80));
 
-			if (verboseAcc) {
-				System.out.println(String.format("Raw(int)Acc XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", accelX, accelY, accelZ, accelX & 0xFFFF, accelY & 0xFFFF, accelZ & 0xFFFF));
-			}
+				int r = accelerometer.read(accelData, 0, 6);
+				if (r != 6) {
+					System.out.println("Error reading accel data, < 6 bytes");
+				}
+				// raw Acc data
+				accelX = accel12(accelData, 0);
+				accelY = accel12(accelData, 2);
+				accelZ = accel12(accelData, 4);
 
-			float accX = (float) accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
-			float accY = (float) accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
-			float accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+				if (verboseAcc) {
+					System.out.println(String.format("Raw(int)Acc XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", accelX, accelY, accelZ, accelX & 0xFFFF, accelY & 0xFFFF, accelZ & 0xFFFF));
+				}
+
+				accX = (float) accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+				accY = (float) accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+				accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
 			/*
 				pitch = atan (x / sqrt(y^2 + z^2));
 				roll  = atan (y / sqrt(x^2 + z^2));
 			 */
-			double pitchDegrees = Math.toDegrees(Math.atan(accX / Math.sqrt((accY * accY) + (accZ * accZ))));
-			double rollDegrees  = Math.toDegrees(Math.atan(accY / Math.sqrt((accX * accX) + (accZ * accZ))));
+				pitchDegrees = Math.toDegrees(Math.atan(accX / Math.sqrt((accY * accY) + (accZ * accZ))));
+				rollDegrees = Math.toDegrees(Math.atan(accY / Math.sqrt((accX * accX) + (accZ * accZ))));
 
-			setPitch(pitchDegrees); // TODO make sure the range is [-180..180]
-			setRoll(rollDegrees);   // TODO make sure the range is [-180..180]
+				setPitch(pitchDegrees); // TODO make sure the range is [-180..180]
+				setRoll(rollDegrees);   // TODO make sure the range is [-180..180]
 
-			if (verboseAcc) {
-				System.out.println("Pitch & Roll with Accelerometer:");
-				System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accX, accY, accZ));
-				System.out.println(String.format("\tPitch:%f, Roll:%f", pitchDegrees, rollDegrees));
+				if (verboseAcc) {
+					System.out.println("Pitch & Roll with Accelerometer:");
+					System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accX, accY, accZ));
+					System.out.println(String.format("\tPitch:%f, Roll:%f", pitchDegrees, rollDegrees));
+				}
 			}
-
 			// Request magnetometer measurements.
-			magnetometer.write((byte)LSM303_REGISTER_MAG_OUT_X_H_M);
-			// Reading magnetometer measurements.
-			r = magnetometer.read(magData, 0, 6);
-			if (r != 6) {
-				System.out.println("Error reading mag data, < 6 bytes");
-			} else if (verboseMag) {
-				dumpBytes(magData, 6);
+			if (magnetometer != null) {
+				magnetometer.write((byte) LSM303_REGISTER_MAG_OUT_X_H_M);
+				// Reading magnetometer measurements.
+				int r = magnetometer.read(magData, 0, 6);
+				if (r != 6) {
+					System.out.println("Error reading mag data, < 6 bytes");
+				} else if (verboseMag) {
+					dumpBytes(magData, 6);
+				}
+				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
+				magX = mag16(magData, 0);
+				magZ = mag16(magData, 2); // Yes, Z
+				magY = mag16(magData, 4); // Then Y
+
+//		  float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//		  float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//		  float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
+//		  float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Same as below (the ratio remains the same).
+				heading = (float) Math.toDegrees(Math.atan2((double) magY, (double) magX));
+				while (heading < 0) heading += 360f;
+
+				setHeading(heading);
 			}
-			// Mag raw data. !!! Warning !!! Order here is X, Z, Y
-			int magX = mag16(magData, 0);
-			int magZ = mag16(magData, 2); // Yes, Z
-			int magY = mag16(magData, 4); // Then Y
-
-//		float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//		float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//		float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
-//		float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Same as below (the ratio remains the same).
-			float heading = (float) Math.toDegrees(Math.atan2((double)magY, (double)magX));
-			while (heading < 0) heading += 360f;
-
-			setHeading(heading);
-
 			if (verboseMag) {
 				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
 			}
@@ -293,13 +327,13 @@ public class LSM303 {
 
 			if (dataListener != null) {
 				// Use the values as you want here.
-				dataListener.dataDetected(accX, accY, accZ, magX, magY, magZ, heading, (float)pitchDegrees, (float)rollDegrees);
+				dataListener.dataDetected(accX, accY, accZ, magX, magY, magZ, heading, (float) pitchDegrees, (float) rollDegrees);
 			} else {
 				if (verbose) {
 					System.out.println(String.format("heading: %s (mag), pitch: %s, roll: %s",
-									Z_FMT.format(heading),
-									Z_FMT.format(pitch),
-									Z_FMT.format(roll)));
+							Z_FMT.format(heading),
+							Z_FMT.format(pitch),
+							Z_FMT.format(roll)));
 				}
 			}
 			try {
@@ -312,7 +346,7 @@ public class LSM303 {
 
 	private static int accel12(byte[] list, int idx) {
 //	int n = (list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8); // Low, high bytes
-		int n =  ((list[idx + 1] & 0xFF) << 8) | (list[idx] & 0xFF); // Low, high bytes
+		int n = ((list[idx + 1] & 0xFF) << 8) | (list[idx] & 0xFF); // Low, high bytes
 		if (n > 32767) n -= 65536;              // 2's complement signed
 		return n >> 4;                          // 12-bit resolution
 	}
@@ -324,7 +358,7 @@ public class LSM303 {
 
 	private static void dumpBytes(byte[] ba, int len) {
 		String str = String.format("%d bytes: ", len);
-		for (int i=0; i<len; i++) {
+		for (int i = 0; i < len; i++) {
 			str += (StringUtils.lpad(Integer.toHexString(ba[i] & 0xFF).toUpperCase(), 2, "0") + " ");
 		}
 		System.out.println(str);

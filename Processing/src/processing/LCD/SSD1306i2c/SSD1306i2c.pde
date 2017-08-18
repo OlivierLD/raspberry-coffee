@@ -73,10 +73,9 @@ void draw() {
     sb.text("I speak Java!", 2, 29, SCREEN_FLAVOR);
   } else {
     String text = String.format("- %04d -", value);
-    text = "128x32 OLED";
-    int fontFactor = 1; // 3;
+    int fontFactor = 3;
     int len = sb.strlen(text) * fontFactor;
-    sb.text(text, 62 - (len / 2), 18 /*11*/, fontFactor, SCREEN_FLAVOR);
+    sb.text(text, 62 - (len / 2), 11, fontFactor, SCREEN_FLAVOR);
   }
   if (oled != null) {
     oled.setBuffer(sb.getScreenBuffer());

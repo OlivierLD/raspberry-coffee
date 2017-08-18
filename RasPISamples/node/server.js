@@ -72,12 +72,19 @@ var handler = function(req, res) {
                     contentType = "image/gif";
                   } else if (resource.endsWith(".png")) {
                     contentType = "image/png";
+                    } else if (resource.endsWith(".svg")) {
+                      contentType = "image/svg+xml";
+                    } else {
+                      console.log("+-------------------------------------------")
+                      console.log("| Un-managed content type for " + resource);
+                      console.log("+-------------------------------------------")
                   }
 
                   res.writeHead(200, {'Content-Type': contentType});
               //  console.log('Data is ' + typeof(data));
                   if (resource.endsWith(".jpg") || 
                       resource.endsWith(".gif") ||
+                      resource.endsWith(".svg") ||
                       resource.endsWith(".png")) {
                 //  res.writeHead(200, {'Content-Type': 'image/gif' });
                     res.end(data, 'binary');
