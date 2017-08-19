@@ -2,7 +2,9 @@ package analogdigitalconverter.mcp3008.sample;
 
 import analogdigitalconverter.mcp3008.MCP3008Reader;
 import analogdigitalconverter.mcp3008.MCP3008Reader.MCP3008_input_channels;
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
+import utils.PinUtil;
 
 import static utils.StringUtils.lpad;
 
@@ -28,8 +30,13 @@ public class MainMCP3008Sample {
 				" | CS      ||  #24 | SPI0_CE0_N | GPIO_8  |  10           |\n" +
 				" +---------++------+------------+---------+---------------+";
 		System.out.println(pinout);
-		//                        spiMiso,          spiMosi,          spiClk,           spiCs
-		MCP3008Reader.initMCP3008(RaspiPin.GPIO_13, RaspiPin.GPIO_12, RaspiPin.GPIO_14, RaspiPin.GPIO_10);
+		// TODO Get the pins from the command line
+		Pin miso = PinUtil.GPIOPin.GPIO_13.getPin();
+		Pin mosi = PinUtil.GPIOPin.GPIO_12.getPin();
+		Pin clk  = PinUtil.GPIOPin.GPIO_14.getPin();
+		Pin cs   = PinUtil.GPIOPin.GPIO_10.getPin();
+
+		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
