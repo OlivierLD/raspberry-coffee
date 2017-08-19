@@ -2,6 +2,8 @@ package analogdigitalconverter.mcp3008.sample;
 
 import analogdigitalconverter.mcp3008.MCP3008Reader;
 import analogdigitalconverter.mcp3008.MCP3008Reader.MCP3008_input_channels;
+import com.pi4j.io.gpio.RaspiPin;
+
 import static utils.StringUtils.lpad;
 
 public class MainMCP3008Sample {
@@ -12,7 +14,22 @@ public class MainMCP3008Sample {
 
 	public static void main(String[] args) {
 		System.out.println(String.format("Reading MCP3008 on channel %d", ADC_CHANNEL));
-		MCP3008Reader.initMCP3008();
+		System.out.println("Using the following pins:");
+		String pinout =
+				" Wiring of the MCP3008-SPI (without power supply):\n" +
+				" +---------++---------------------------------------------+\n" +
+				" | MCP3008 || Raspberry PI                                |\n" +
+				" +---------++------+------------+---------+---------------+\n" +
+				" |         || Pin# | Name       | GPIO    | wiringPI/PI4J |\n" +
+				" +---------++------+------------+---------+---------------+\n" +
+				" | CLK     ||  #23 | SPI0_CLK   | GPIO_11 |  14           |\n" +
+				" | Din     ||  #21 | SPI0_MISO  | GPIO_9  |  13           |\n" +
+				" | Dout    ||  #19 | SPI0_MOSI  | GPIO_10 |  12           |\n" +
+				" | CS      ||  #24 | SPI0_CE0_N | GPIO_8  |  10           |\n" +
+				" +---------++------+------------+---------+---------------+";
+		System.out.println(pinout);
+		//                        spiMiso,          spiMosi,          spiClk,           spiCs
+		MCP3008Reader.initMCP3008(RaspiPin.GPIO_13, RaspiPin.GPIO_12, RaspiPin.GPIO_14, RaspiPin.GPIO_10);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {

@@ -52,6 +52,15 @@ public class MCP3008Reader {
 	private static GpioPinDigitalOutput chipSelectOutput = null;
 
 	public static void initMCP3008() {
+		initMCP3008(spiMiso, spiMosi, spiClk, spiCs);
+	}
+
+	public static void initMCP3008(Pin miso, Pin mosi, Pin clk, Pin cs) {
+		spiMiso = miso;
+		spiMosi = mosi;
+		spiClk = clk;
+		spiCs = cs;
+
 		gpio = GpioFactory.getInstance();
 		// Out
 		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
