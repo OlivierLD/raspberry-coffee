@@ -13,6 +13,7 @@ int intRadius = 20;
 int extRadius = 190;
 
 void setup(){
+//frameRate(4);
   size(400, 400);
 //stroke(255);
   noStroke();
@@ -37,6 +38,7 @@ void setup(){
 }
 
 float heading = 0;
+float previousHeading = heading;
 
 void draw(){
   background(0);
@@ -48,23 +50,34 @@ void draw(){
     heading = heading % 360;
   }
   text(String.format("%05.1f\272", heading), 5, 12);
-  fill(255);
-  float _heading = heading - 90;
-  for (int q=0; q<4; q++) {
-    fill(255);
-    triangle(centerX, 
-             centerY, 
-             (float)(centerX + (extRadius * Math.cos(Math.toRadians(_heading)))),
-             (float)(centerY + (extRadius * Math.sin(Math.toRadians(_heading)))),
-             (float)(centerX + (intRadius * Math.cos(Math.toRadians(_heading + 45)))),
-             (float)(centerY + (intRadius * Math.sin(Math.toRadians(_heading + 45)))));
-    fill(128);
-    triangle(centerX, 
-             centerY, 
-             (float)(centerX + (extRadius * Math.cos(Math.toRadians(_heading)))),
-             (float)(centerY + (extRadius * Math.sin(Math.toRadians(_heading)))),
-             (float)(centerX + (intRadius * Math.cos(Math.toRadians(_heading - 45)))),
-             (float)(centerY + (intRadius * Math.sin(Math.toRadians(_heading - 45)))));
-    _heading += 90;
+
+  float diff = Math.round(heading - previousHeading);
+  float step = 0.25;
+  if (diff < 0) {
+    step *= -1;
   }
+
+  float _heading = Math.round(previousHeading);
+  while (Math.round(_heading) != Math.round(heading)) {
+    float __heading = _heading + 90;
+    for (int q=0; q<4; q++) {
+      fill(255);
+      triangle(centerX, 
+               centerY, 
+               (float)(centerX + (extRadius * Math.cos(Math.toRadians(__heading)))),
+               (float)(centerY + (extRadius * Math.sin(Math.toRadians(__heading)))),
+               (float)(centerX + (intRadius * Math.cos(Math.toRadians(__heading + 45)))),
+               (float)(centerY + (intRadius * Math.sin(Math.toRadians(__heading + 45)))));
+      fill(128);
+      triangle(centerX, 
+               centerY, 
+               (float)(centerX + (extRadius * Math.cos(Math.toRadians(__heading)))),
+               (float)(centerY + (extRadius * Math.sin(Math.toRadians(__heading)))),
+               (float)(centerX + (intRadius * Math.cos(Math.toRadians(__heading - 45)))),
+               (float)(centerY + (intRadius * Math.sin(Math.toRadians(__heading - 45)))));
+      __heading += 90;
+    }
+    _heading += step;
+  }
+  previousHeading = (int)heading;
 }
