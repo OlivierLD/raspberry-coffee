@@ -1,9 +1,7 @@
 package analogdigitalconverter.mcp3008.sample;
 
 import analogdigitalconverter.mcp3008.MCP3008Reader;
-import analogdigitalconverter.mcp3008.MCP3008Reader.MCP3008_input_channels;
 import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
 import utils.PinUtil;
 
 import static utils.StringUtils.lpad;

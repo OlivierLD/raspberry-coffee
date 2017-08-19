@@ -4,6 +4,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class PinUtil {
+	// Disposed as on the board
 	public enum GPIOPin {
 		/* 3v3, 1 */                                          /* 5v0, 2 */
 		GPIO_8("SDA1", 3, 2, 8, RaspiPin.GPIO_08),            /* 5v0, 4 */

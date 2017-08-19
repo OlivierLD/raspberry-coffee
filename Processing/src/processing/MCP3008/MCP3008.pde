@@ -1,4 +1,6 @@
 import analogdigitalconverter.mcp3008.MCP3008Reader;
+import com.pi4j.io.gpio.Pin;
+import utils.PinUtil;
 /*
  * Using Sketch > Add File..., select ADC/build/libs/ADC-1.0-all.jar 
  */
@@ -10,7 +12,12 @@ void setup() {
   stroke(255);
   noFill();
   textSize(72);  
-  MCP3008Reader.initMCP3008();
+  Pin miso = PinUtil.GPIOPin.GPIO_13.getPin();
+  Pin mosi = PinUtil.GPIOPin.GPIO_12.getPin();
+  Pin clk  = PinUtil.GPIOPin.GPIO_14.getPin();
+  Pin cs   = PinUtil.GPIOPin.GPIO_10.getPin();
+
+  MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
 }
 
 void draw() { // Draw the value of the ADC (MCP3008) at each repaint
