@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.function.Consumer;
+
 import utils.StringUtils;
 
 public class BatteryMonitor {
@@ -87,6 +88,7 @@ public class BatteryMonitor {
 	public BatteryMonitor(int ch) throws Exception {
 		this(ch, null);
 	}
+
 	public BatteryMonitor(int ch, Consumer<ADCData> processor) throws Exception {
 		channel = findChannel(ch);
 
@@ -127,7 +129,7 @@ public class BatteryMonitor {
 									voltage = /* 0 + */ minVolt * ((float) newValue / (float) minADC);
 								} else if (newValue >= minADC && newValue <= maxADC) {
 									voltage = minVolt + (deltaVolt * (float) (newValue - minADC) / (float) deltaADC);
-								} else  { // value > maxADC
+								} else { // value > maxADC
 									voltage = maxVolt + ((15 - maxVolt) * (float) (newValue - maxADC) / (float) (1023 - maxADC));
 								}
 							} else {
@@ -135,8 +137,8 @@ public class BatteryMonitor {
 							}
 							if (debug) {
 								System.out.print("readAdc:" + Integer.toString(newValue) +
-												" (0x" + StringUtils.lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
-												", 0&" + StringUtils.lpad(Integer.toString(newValue, 2), 8, "0") + ") ");
+										" (0x" + StringUtils.lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
+										", 0&" + StringUtils.lpad(Integer.toString(newValue, 2), 8, "0") + ") ");
 								System.out.println("Volume:" + volume + "% (" + newValue + ") Volt:" + VF.format(voltage));
 							}
 
@@ -192,8 +194,8 @@ public class BatteryMonitor {
 				calib = true;
 			} else if (!debug && prm.startsWith(DEBUG_PRM))
 				debug = ("y".equals(prm.substring(DEBUG_PRM.length())) ||
-								"yes".equals(prm.substring(DEBUG_PRM.length())) ||
-								"true".equals(prm.substring(DEBUG_PRM.length())));
+						"yes".equals(prm.substring(DEBUG_PRM.length())) ||
+						"true".equals(prm.substring(DEBUG_PRM.length())));
 			else if (prm.startsWith(SCALE_PRM))
 				scale = ("y".equals(prm.substring(SCALE_PRM.length())));
 			else if (prm.startsWith(LOG_PRM))
@@ -214,10 +216,11 @@ public class BatteryMonitor {
 			}
 		}
 		String prms = "Prms: ADC Channel:" + channel;
-		if (tuning)
+		if (tuning) {
 			prms += ", tuningADC:" + tuningADC + ", tuningVolt:" + tuningVolt;
-		else
+		} else {
 			prms += ", MinADC:" + minADC + ", MinVolt:" + minVolt + ", MaxADC:" + maxADC + ", maxVolt:" + maxVolt;
+		}
 		System.out.println(prms);
 		if (scale) {
 			if (tuning) {
@@ -237,28 +240,27 @@ public class BatteryMonitor {
 			System.out.println("=== Scale ===");
 			System.out.println("Value range: ADC:0 => V:" + b + ", ADC:1023 => V:" + ((a * 1023) + b));
 			System.out.println("Coeff A:" + a + ", coeff B:" + b);
-			for (int i = 0; i < 1024; i++)
+			for (int i = 0; i < 1024; i++) {
 				System.out.println(i + ";" + ((a * i) + b));
+			}
 			System.out.println("=============");
 			System.exit(0);
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("\nShutting down");
-				if (bw != null) {
-					System.out.println("Closing log file");
-					try {
-						bw.flush();
-						bw.close();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("\nShutting down");
+			if (bw != null) {
+				System.out.println("Closing log file");
+				try {
+					bw.flush();
+					bw.close();
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
-				if (obs != null)
-					obs.stop();
 			}
-		});
+			if (obs != null)
+				obs.stop();
+		}));
 		new BatteryMonitor(channel);
 	}
 

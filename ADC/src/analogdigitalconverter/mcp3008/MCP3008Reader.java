@@ -18,10 +18,10 @@ public class MCP3008Reader {
 	// 23: DOUT on the ADC is IN on the GPIO. ADC:Slave, GPIO:Master
 	// 24: DIN on the ADC, OUT on the GPIO. Same reason as above.
 	// SPI: Serial Peripheral Interface
-	private static Pin spiClk = RaspiPin.GPIO_01; // Pin #18, clock
+	private static Pin spiClk  = RaspiPin.GPIO_01; // Pin #18, clock
 	private static Pin spiMiso = RaspiPin.GPIO_04; // Pin #23, data in.  MISO: Master In Slave Out
 	private static Pin spiMosi = RaspiPin.GPIO_05; // Pin #24, data out. MOSI: Master Out Slave In
-	private static Pin spiCs = RaspiPin.GPIO_06; // Pin #25, Chip Select
+	private static Pin spiCs   = RaspiPin.GPIO_06; // Pin #25, Chip Select
 
 	public enum MCP3008_input_channels {
 		CH0(0),
@@ -46,10 +46,10 @@ public class MCP3008Reader {
 
 	private static GpioController gpio;
 
-	private static GpioPinDigitalInput misoInput = null;
-	private static GpioPinDigitalOutput mosiOutput = null;
-	private static GpioPinDigitalOutput clockOutput = null;
-	private static GpioPinDigitalOutput chipSelectOutput = null;
+	private static GpioPinDigitalInput misoInput = null;         // In
+	private static GpioPinDigitalOutput mosiOutput = null;       // Out
+	private static GpioPinDigitalOutput clockOutput = null;      // Out
+	private static GpioPinDigitalOutput chipSelectOutput = null; // Out
 
 	public static void initMCP3008() {
 		initMCP3008(spiMiso, spiMosi, spiClk, spiCs);
@@ -63,8 +63,8 @@ public class MCP3008Reader {
 
 		gpio = GpioFactory.getInstance();
 		// Out
-		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
-		clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
+		mosiOutput       = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
+		clockOutput      = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
 		chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.LOW);
 		// In
 		misoInput = gpio.provisionDigitalInputPin(spiMiso, "MISO");
@@ -81,27 +81,32 @@ public class MCP3008Reader {
 		chipSelectOutput.low();
 
 		int adccommand = channel;
-		if (DISPLAY_DIGIT)
+		if (DISPLAY_DIGIT) {
 			System.out.println("1 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), 4, "0") +
-							", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), 16, "0"));
+					", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), 16, "0"));
+		}
 		adccommand |= 0x18; // 0x18: 00011000
-		if (DISPLAY_DIGIT)
+		if (DISPLAY_DIGIT) {
 			System.out.println("2 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), 4, "0") +
-							", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(),16, "0"));
+					", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), 16, "0"));
+		}
 		adccommand <<= 3;
-		if (DISPLAY_DIGIT)
-			System.out.println("3 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(),4, "0") +
-							", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), 16, "0"));
+		if (DISPLAY_DIGIT) {
+			System.out.println("3 -       ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), 4, "0") +
+					", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), 16, "0"));
+		}
 		// Send 5 bits: 8 - 3. 8 input channels on the MCP3008.
 		for (int i = 0; i < 5; i++) //
 		{
-			if (DISPLAY_DIGIT)
-				System.out.println("4 - (i=" + i + ") ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(),4, "0") +
-								", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(),16, "0"));
-			if ((adccommand & 0x80) != 0x0) // 0x80 = 0&10000000
+			if (DISPLAY_DIGIT) {
+				System.out.println("4 - (i=" + i + ") ADCCOMMAND: 0x" + lpad(Integer.toString(adccommand, 16).toUpperCase(), 4, "0") +
+						", 0&" + lpad(Integer.toString(adccommand, 2).toUpperCase(), 16, "0"));
+			}
+			if ((adccommand & 0x80) != 0x0) { // 0x80 = 0&10000000
 				mosiOutput.high();
-			else
+			} else {
 				mosiOutput.low();
+			}
 			adccommand <<= 1;
 			// Clock high and low
 			tickOnPin(clockOutput);
@@ -117,9 +122,10 @@ public class MCP3008Reader {
 				// Shift one bit on the adcOut
 				adcOut |= 0x1;
 			}
-			if (DISPLAY_DIGIT)
+			if (DISPLAY_DIGIT) {
 				System.out.println("ADCOUT: 0x" + lpad(Integer.toString(adcOut, 16).toUpperCase(), 4, "0") +
-								", 0&" + lpad(Integer.toString(adcOut, 2).toUpperCase(), 16, "0"));
+						", 0&" + lpad(Integer.toString(adcOut, 2).toUpperCase(), 16, "0"));
+			}
 		}
 		chipSelectOutput.high();
 

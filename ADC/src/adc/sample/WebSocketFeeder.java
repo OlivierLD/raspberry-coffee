@@ -9,56 +9,49 @@ import java.net.URI;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
+
 import static utils.StringUtils.lpad;
 
-public class WebSocketFeeder
-{
-  private final static boolean DEBUG = false;
-  private ADCObserver.MCP3008_input_channels channel = null;
-  private boolean keepWorking = true;
-  private WebSocketClient webSocketClient = null;
-  
-  public WebSocketFeeder(int ch) throws Exception
-  {
-    channel = findChannel(ch);
-    String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/"); 
-    
-    initWebSocketConnection(wsUri);
-    final ADCObserver obs = new ADCObserver(channel); // Note: We could instantiate more than one observer (on several channels).
-    ADCContext.getInstance().addListener(new ADCListener()
-       {
-         @Override
-         public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) 
-         {
-           if (inputChannel.equals(channel))
-           {
-             int volume = (int)(newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
-             if (DEBUG)
-               System.out.println("readAdc:" + Integer.toString(newValue) + 
-                                               " (0x" + lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
-                                               ", 0&" + lpad(Integer.toString(newValue, 2), 8, "0") + ")");
-             System.out.println("Volume:" + volume + "% (" + newValue + ")");
-             webSocketClient.send(Integer.toString(volume));
-           }
-         }
-       });
-    obs.start();         
-    
-    Runtime.getRuntime().addShutdownHook(new Thread()
-       {
-         public void run()
-         {
-           if (obs != null)
-             obs.stop();
-           keepWorking = false;
-           webSocketClient.close();
-         }
-       });    
-  }
-  
-  private void initWebSocketConnection(String serverURI)
-  {
-    /*
+public class WebSocketFeeder {
+	private final static boolean DEBUG = false;
+	private ADCObserver.MCP3008_input_channels channel = null;
+	private boolean keepWorking = true;
+	private WebSocketClient webSocketClient = null;
+
+	public WebSocketFeeder(int ch) throws Exception {
+		channel = findChannel(ch);
+		String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
+
+		initWebSocketConnection(wsUri);
+		final ADCObserver obs = new ADCObserver(channel); // Note: We could instantiate more than one observer (on several channels).
+		ADCContext.getInstance().addListener(new ADCListener() {
+			@Override
+			public void valueUpdated(ADCObserver.MCP3008_input_channels inputChannel, int newValue) {
+				if (inputChannel.equals(channel)) {
+					int volume = (int) (newValue / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
+					if (DEBUG) {
+						System.out.println("readAdc:" + Integer.toString(newValue) +
+								" (0x" + lpad(Integer.toString(newValue, 16).toUpperCase(), 2, "0") +
+								", 0&" + lpad(Integer.toString(newValue, 2), 8, "0") + ")");
+					}
+					System.out.println("Volume:" + volume + "% (" + newValue + ")");
+					webSocketClient.send(Integer.toString(volume));
+				}
+			}
+		});
+		obs.start();
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			if (obs != null) {
+				obs.stop();
+			}
+			keepWorking = false;
+			webSocketClient.close();
+		}));
+	}
+
+	private void initWebSocketConnection(String serverURI) {
+	  /*
     ServerListenerInterface serverListener = new ServerListenerAdapter()
     {
       @Override
@@ -150,82 +143,71 @@ public class WebSocketFeeder
       }      
     };
     */
-    try
-    {
-      webSocketClient = new WebSocketClient(new URI(serverURI), (Draft) null)
-        {
-        @Override
-        public void onOpen(ServerHandshake serverHandshake)
-        {
-          // TODO Implement this method
-        }
+		try {
+			webSocketClient = new WebSocketClient(new URI(serverURI), (Draft) null) {
+				@Override
+				public void onOpen(ServerHandshake serverHandshake) {
+					// TODO Implement this method
+				}
 
-        @Override
-        public void onMessage(String string)
-        {
-          // TODO Implement this method
-        }
+				@Override
+				public void onMessage(String string) {
+					// TODO Implement this method
+				}
 
-        @Override
-        public void onClose(int i, String string, boolean b)
-        {
-          // TODO Implement this method
-        }
+				@Override
+				public void onClose(int i, String string, boolean b) {
+					// TODO Implement this method
+				}
 
-        @Override
-        public void onError(Exception exception)
-        {
-          // TODO Implement this method
-        }
-      };
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-    }    
-  }
-  
-  public static void main(String[] args) throws Exception
-  {
-    int channel = 0;
-    if (args.length > 0)
-      channel = Integer.parseInt(args[0]);
-    new WebSocketFeeder(channel);
-  }
+				@Override
+				public void onError(Exception exception) {
+					// TODO Implement this method
+				}
+			};
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 
-  private static ADCObserver.MCP3008_input_channels findChannel(int ch) throws IllegalArgumentException
-  {
-    ADCObserver.MCP3008_input_channels channel = null;
-    switch (ch)
-    {
-      case 0:
-        channel = ADCObserver.MCP3008_input_channels.CH0;
-        break;
-      case 1:
-        channel = ADCObserver.MCP3008_input_channels.CH1;
-        break;
-      case 2:
-        channel = ADCObserver.MCP3008_input_channels.CH2;
-        break;
-      case 3:
-        channel = ADCObserver.MCP3008_input_channels.CH3;
-        break;
-      case 4:
-        channel = ADCObserver.MCP3008_input_channels.CH4;
-        break;
-      case 5:
-        channel = ADCObserver.MCP3008_input_channels.CH5;
-        break;
-      case 6:
-        channel = ADCObserver.MCP3008_input_channels.CH6;
-        break;
-      case 7:
-        channel = ADCObserver.MCP3008_input_channels.CH7;
-        break;
-      default:
-        throw new IllegalArgumentException("No channel " + Integer.toString(ch));
-    }
-    return channel;
-  }
+	public static void main(String... args) throws Exception {
+		int channel = 0;
+		if (args.length > 0)
+			channel = Integer.parseInt(args[0]);
+		new WebSocketFeeder(channel);
+	}
+
+	private static ADCObserver.MCP3008_input_channels findChannel(int ch) throws IllegalArgumentException {
+		ADCObserver.MCP3008_input_channels channel = null;
+		switch (ch) {
+			case 0:
+				channel = ADCObserver.MCP3008_input_channels.CH0;
+				break;
+			case 1:
+				channel = ADCObserver.MCP3008_input_channels.CH1;
+				break;
+			case 2:
+				channel = ADCObserver.MCP3008_input_channels.CH2;
+				break;
+			case 3:
+				channel = ADCObserver.MCP3008_input_channels.CH3;
+				break;
+			case 4:
+				channel = ADCObserver.MCP3008_input_channels.CH4;
+				break;
+			case 5:
+				channel = ADCObserver.MCP3008_input_channels.CH5;
+				break;
+			case 6:
+				channel = ADCObserver.MCP3008_input_channels.CH6;
+				break;
+			case 7:
+				channel = ADCObserver.MCP3008_input_channels.CH7;
+				break;
+			default:
+				throw new IllegalArgumentException("No channel " + Integer.toString(ch));
+		}
+		return channel;
+	}
 }
 

@@ -160,18 +160,18 @@ public class ADCObserver {
 		// Send 5 bits: 8 - 3. 8 input channels on the MCP3008.
 		for (int i = 0; i < 5; i++) //
 		{
-			if ((adccommand & 0x80) != 0x0) // 0x80 = 0&10000000
+			if ((adccommand & 0x80) != 0x0) { // 0x80 = 0&10000000
 				mosiOutput.high();
-			else
+			} else {
 				mosiOutput.low();
+			}
 			adccommand <<= 1;
 			clockOutput.high();
 			clockOutput.low();
 		}
 
 		int adcOut = 0;
-		for (int i = 0; i < 12; i++) // Read in one empty bit, one null bit and 10 ADC bits
-		{
+		for (int i = 0; i < 12; i++) { // Read in one empty bit, one null bit and 10 ADC bits
 			clockOutput.high();
 			clockOutput.low();
 			adcOut <<= 1;
@@ -181,9 +181,10 @@ public class ADCObserver {
 				// Shift one bit on the adcOut
 				adcOut |= 0x1;
 			}
-			if (DISPLAY_DIGIT)
+			if (DISPLAY_DIGIT) {
 				System.out.println("ADCOUT: 0x" + Integer.toString(adcOut, 16).toUpperCase() +
-								", 0&" + Integer.toString(adcOut, 2).toUpperCase());
+						", 0&" + Integer.toString(adcOut, 2).toUpperCase());
+			}
 		}
 		chipSelectOutput.high();
 
