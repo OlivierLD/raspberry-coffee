@@ -12,7 +12,7 @@ public class PinUtil {
 		GPIO_7("GPCLK0", 7, 4, 7, RaspiPin.GPIO_07),          GPIO_15("UART0_TXD", 8, 14, 15, RaspiPin.GPIO_15),
 		/* GND, 9 */                                          GPIO_16("UART0_RXD", 10, 15, 16, RaspiPin.GPIO_16),
 		GPIO_0("GPIO_0", 11, 17, 0, RaspiPin.GPIO_00),        GPIO_1("PCM_CLK/PWM0", 12, 18, 1, RaspiPin.GPIO_01),
-		GPIO_2("GPIO_2", 13, 27, 2, RaspiPin.GPIO_14),        /* GND, 14 */
+		GPIO_2("GPIO_2", 13, 27, 2, RaspiPin.GPIO_02),        /* GND, 14 */
 		GPIO_3("GPIO_3", 15, 22, 3, RaspiPin.GPIO_03),        GPIO_4("GPIO_4", 16, 23, 4, RaspiPin.GPIO_04),
 		/* 3v3, 17 */                                         GPIO_5("GPIO_5", 18, 24, 5, RaspiPin.GPIO_05),
 		GPIO_12("SPI0_MOSI", 19, 10, 12, RaspiPin.GPIO_12),   /* GND, 20 */
@@ -45,6 +45,28 @@ public class PinUtil {
 		public int pinNumber() { return this.pinNumber; }
 		public int gpio() { return this.gpio; }
 		public int wiringPi() { return this.wiringPi; }
-		public Pin getPin() { return this.pin; }
+		public Pin pin() { return this.pin; }
 	};
+
+	public static Pin getPinByWiringPiNumber(int n) {
+		Pin pin = null;
+		for (GPIOPin gpioPin : GPIOPin.values()) {
+			if (gpioPin.wiringPi() == n) {
+				pin = gpioPin.pin();
+				break;
+			}
+		}
+		return pin;
+	}
+
+	public static GPIOPin findByPin(Pin pin) {
+		GPIOPin gpio = null;
+		for (GPIOPin gpioPin : GPIOPin.values()) {
+			if (gpioPin.pin().equals(pin)) {
+				gpio = gpioPin;
+				break;
+			}
+		}
+		return gpio;
+	}
 }

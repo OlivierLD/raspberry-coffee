@@ -40,8 +40,7 @@ void setup(){
 float heading = 0;
 
 void draw(){
-  background(0);
-  fill(255);
+  background(0); // Black
   if (withSensor) {
     heading = (float)lsm303.getHeading();
   } else {
@@ -50,16 +49,17 @@ void draw(){
   }
   text(String.format("%05.1f\272", heading), 5, 12);
 
+  // Drawing the rose
   float _heading = heading + 90;
   for (int q=0; q<4; q++) {
-    fill(255);
+    fill(255); // White
     triangle(centerX, 
              centerY, 
              (float)(centerX + (extRadius * Math.cos(Math.toRadians(_heading)))),
              (float)(centerY + (extRadius * Math.sin(Math.toRadians(_heading)))),
              (float)(centerX + (intRadius * Math.cos(Math.toRadians(_heading + 45)))),
              (float)(centerY + (intRadius * Math.sin(Math.toRadians(_heading + 45)))));
-    fill(128);
+    fill(128); // Gray
     triangle(centerX, 
              centerY, 
              (float)(centerX + (extRadius * Math.cos(Math.toRadians(_heading)))),

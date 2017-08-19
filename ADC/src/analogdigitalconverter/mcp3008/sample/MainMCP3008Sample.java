@@ -3,6 +3,7 @@ package analogdigitalconverter.mcp3008.sample;
 import analogdigitalconverter.mcp3008.MCP3008Reader;
 import com.pi4j.io.gpio.Pin;
 import utils.PinUtil;
+import utils.StringUtils;
 
 import static utils.StringUtils.lpad;
 
@@ -12,27 +13,90 @@ public class MainMCP3008Sample {
 	private static int ADC_CHANNEL =
 					MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
-	public static void main(String[] args) {
+	private static final String MISO_PRM_PREFIX = "-miso:";
+	private static final String MOSI_PRM_PREFIX = "-mosi:";
+	private static final String CLK_PRM_PREFIX  = "-clk:";
+	private static final String CS_PRM_PREFIX   = "-cs:";
+
+	public static void main(String... args) {
+		// Default pins
+		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
+		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
+		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
+		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+
+		if (args.length > 0) {
+			String pinValue = "";
+			int pin;
+			for (String prm : args) {
+				if (prm.startsWith(MISO_PRM_PREFIX)) {
+					pinValue = prm.substring(MISO_PRM_PREFIX.length());
+					try {
+						pin = Integer.parseInt(pinValue);
+						miso = PinUtil.getPinByWiringPiNumber(pin);
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else if (prm.startsWith(MOSI_PRM_PREFIX)) {
+					pinValue = prm.substring(MOSI_PRM_PREFIX.length());
+					try {
+						pin = Integer.parseInt(pinValue);
+						mosi = PinUtil.getPinByWiringPiNumber(pin);
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else if (prm.startsWith(CLK_PRM_PREFIX)) {
+					pinValue = prm.substring(CLK_PRM_PREFIX.length());
+					try {
+						pin = Integer.parseInt(pinValue);
+						clk = PinUtil.getPinByWiringPiNumber(pin);
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else if (prm.startsWith(CS_PRM_PREFIX)) {
+					pinValue = prm.substring(CS_PRM_PREFIX.length());
+					try {
+						pin = Integer.parseInt(pinValue);
+						cs = PinUtil.getPinByWiringPiNumber(pin);
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else {
+					// What?
+					System.err.println(String.format("Un-managed prm: %s", prm));
+				}
+			}
+		}
+
 		System.out.println(String.format("Reading MCP3008 on channel %d", ADC_CHANNEL));
-		System.out.println("Using the following pins:");
-		String pinout =
+		System.out.println(
 				" Wiring of the MCP3008-SPI (without power supply):\n" +
 				" +---------++---------------------------------------------+\n" +
 				" | MCP3008 || Raspberry PI                                |\n" +
 				" +---------++------+------------+---------+---------------+\n" +
 				" |         || Pin# | Name       | GPIO    | wiringPI/PI4J |\n" +
-				" +---------++------+------------+---------+---------------+\n" +
-				" | CLK     ||  #23 | SPI0_CLK   | GPIO_11 |  14           |\n" +
-				" | Din     ||  #21 | SPI0_MISO  | GPIO_9  |  13           |\n" +
-				" | Dout    ||  #19 | SPI0_MOSI  | GPIO_10 |  12           |\n" +
-				" | CS      ||  #24 | SPI0_CE0_N | GPIO_8  |  10           |\n" +
-				" +---------++------+------------+---------+---------------+";
-		System.out.println(pinout);
-		// TODO Get the pins from the command line
-		Pin miso = PinUtil.GPIOPin.GPIO_13.getPin();
-		Pin mosi = PinUtil.GPIOPin.GPIO_12.getPin();
-		Pin clk  = PinUtil.GPIOPin.GPIO_14.getPin();
-		Pin cs   = PinUtil.GPIOPin.GPIO_10.getPin();
+				" +---------++------+------------+---------+---------------+");
+		System.out.println(String.format(" | CLK     || #%02d  | %s | GPIO_%02d | %02d            |",
+				PinUtil.findByPin(clk).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
+				PinUtil.findByPin(clk).gpio(),
+				PinUtil.findByPin(clk).wiringPi()));
+		System.out.println(String.format(" | Din     || #%02d  | %s | GPIO_%02d | %02d            |",
+				PinUtil.findByPin(miso).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
+				PinUtil.findByPin(miso).gpio(),
+				PinUtil.findByPin(miso).wiringPi()));
+		System.out.println(String.format(" | Dout    || #%02d  | %s | GPIO_%02d | %02d            |",
+				PinUtil.findByPin(mosi).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
+				PinUtil.findByPin(mosi).gpio(),
+				PinUtil.findByPin(mosi).wiringPi()));
+		System.out.println(String.format(" | CS      || #%02d  | %s | GPIO_%02d | %02d            |",
+				PinUtil.findByPin(cs).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
+				PinUtil.findByPin(cs).gpio(),
+				PinUtil.findByPin(cs).wiringPi()));
+		System.out.println(" +---------++------+------------+---------+---------------+");
 
 		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
 
