@@ -19,11 +19,21 @@ public class MainMCP3008Sample {
 	private static final String CS_PRM_PREFIX   = "-cs:";
 
 	public static void main(String... args) {
+
 		// Default pins
 		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
 		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+
+		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d ",
+				MainMCP3008Sample.class.getName(),
+				MISO_PRM_PREFIX, PinUtil.findByPin(miso).gpio(),
+				MOSI_PRM_PREFIX, PinUtil.findByPin(mosi).gpio(),
+				CLK_PRM_PREFIX, PinUtil.findByPin(clk).gpio(),
+				CS_PRM_PREFIX, PinUtil.findByPin(cs).gpio()));
+		System.out.println("Values above are default values.");
+		System.out.println();
 
 		if (args.length > 0) {
 			String pinValue = "";
