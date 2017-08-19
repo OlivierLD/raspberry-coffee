@@ -1,8 +1,9 @@
 import i2c.sensor.LSM303;
 /**
- * Using Sketch > Add File..., select ADC/build/libs/I2C.SPI-1.0-all.jar 
+ * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar 
  */
 
+// These are the points drawing the boat.
 float[][] keel = new float[][] {
   { -3, 0, 1 },
   { -2, 0, 0 },
@@ -44,10 +45,19 @@ void setup(){
   size(640, 360, P3D);
   if (withSensor) {
     try {
-      lsm303 = new LSM303();
+      lsm303 = new LSM303(LSM303.EnabledFeature.ACCELEROMETER);
     } catch (Exception ex) {
       ex.printStackTrace();
+      withSensor = false;
+      println("-----------------------------------------------");
+      println(" No sensor found, moving on in simulation mode.");
+      println("-----------------------------------------------");
     }
+  }
+  if (!withSensor) {
+    println("----------------------------------------------------");
+    println(" Move the mouse left and right to change the heading");
+    println("----------------------------------------------------");
   }
 }
 
