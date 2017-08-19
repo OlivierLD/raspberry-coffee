@@ -4,6 +4,7 @@
 - Show sensor drivers
 - Show how to use them, from straight java code
 - Show how to integrate existing jars
+- Show _remote debugging_ !!
 - Show Processing.org
     - Planets
     - Sensors

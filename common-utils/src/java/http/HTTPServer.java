@@ -31,13 +31,17 @@ import java.util.logging.Level;
  * To turn it on: give verbose no value, or 'on', 'true', 'yes' (non case sensitive).
  * To turn it off: any other value.
  * <br>
- * Example: http://localhost:9999/web/admin.html?verbose=on
+ * Example: <code>http://localhost:9999/web/admin.html?verbose=on</code>
+ * <br>
  * <em>
- * Warning: This is a very lightweight HTTP server. It is not supposed to scale!!
+ * Warning: This is a <b>very lightweight</b> HTTP server. It is not supposed to scale!!
  * </em>
+ * </p>
  * <p>
- * Logging can be done. See -Djava.util.logging.config.file=[path]/logging.properties
- * See https://docs.oracle.com/cd/E23549_01/doc.1111/e14568/handler.htm
+ * Logging can be done. See <code>-Djava.util.logging.config.file=[path]/logging.properties</code>
+ * <br>
+ * See <a href="https://docs.oracle.com/cd/E23549_01/doc.1111/e14568/handler.htm">https://docs.oracle.com/cd/E23549_01/doc.1111/e14568/handler.htm</a>
+ * </p>
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
@@ -138,12 +142,12 @@ public class HTTPServer {
 
 	public static class Response {
 
-		public final static int STATUS_OK = 200;
+		public final static int STATUS_OK       = 200;
 		public final static int NOT_IMPLEMENTED = 501;
-		public final static int NO_CONTENT = 204;
-		public final static int BAD_REQUEST = 400;
-		public final static int NOT_FOUND = 404;
-		public final static int TIMEOUT = 408;
+		public final static int NO_CONTENT      = 204;
+		public final static int BAD_REQUEST     = 400;
+		public final static int NOT_FOUND       = 404;
+		public final static int TIMEOUT         = 408;
 
 		private int status;
 		private String protocol;
