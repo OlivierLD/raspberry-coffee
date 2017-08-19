@@ -68,7 +68,6 @@ void draw() {
   }
   sb.clear(SCREEN_FLAVOR);
 
-  // TODO: From user entry (keyboard?)
   boolean random = true;
   if (!random) {
     sb.text("ScreenBuffer", 2, 9, SCREEN_FLAVOR);

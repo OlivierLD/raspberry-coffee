@@ -27,6 +27,8 @@ void setup() {
   
   try {
     oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS);
+    oled.begin();
+    oled.clear();
   } catch (Exception ex) {
     oled = null;
     println("Cannot find the device, moving on without it.");
@@ -57,7 +59,11 @@ void draw() {
 
 void dispose() {
   if (oled != null) {
-   oled.shutdown();
+    sb.clear();
+    oled.clear(); // Blank screen
+    oled.setBuffer(sb.getScreenBuffer());
+    oled.display();
+    oled.shutdown();
   }
   println("Bye!");
 }
