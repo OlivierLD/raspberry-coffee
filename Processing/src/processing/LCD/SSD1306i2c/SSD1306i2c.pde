@@ -34,7 +34,10 @@ void setup() {
   textSize(72); // if text() is used.
   
   try {
+    println(String.format("SSD1306 address: 0x%02X", SSD1306.SSD1306_I2C_ADDRESS));
     oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS);
+    oled.begin();
+    oled.clear();
   } catch (Exception ex) {
     oled = null;
     println("Cannot find the device, moving on without it.");
@@ -80,6 +83,8 @@ void draw() {
   if (oled != null) {
     oled.setBuffer(sb.getScreenBuffer());
     oled.display();
+  } else {
+    println("No device");
   }
   this.setBuffer(sb.getScreenBuffer());
   this.display();
@@ -87,7 +92,11 @@ void draw() {
 
 void dispose() {
   if (oled != null) {
-   oled.shutdown();
+    sb.clear();
+    oled.clear(); // Blank screen
+    oled.setBuffer(sb.getScreenBuffer());
+    oled.display();
+    oled.shutdown();
   }
   println("Bye!");
 }
