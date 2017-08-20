@@ -122,7 +122,7 @@ public class MeArmPilotInteractiveDemo {
 			System.out.println(">> Ooops!, wrong bus... Moving on anyway, but without the board.");
 		}
 
-		// Initializing MeArm pos
+		// Initializing MeArm pos                  TODO An 'ExecuteMACRO' command...
 		String init = "SET_PWM:LEFT,   0, 0";
 		MeArmPilot.executeCommand(init, -1);
 		init = "SET_PWM:RIGHT,  0, 0";

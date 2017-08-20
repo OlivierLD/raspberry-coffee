@@ -82,6 +82,11 @@ public class MeArmPilot {
 			"      |     |    To\n" +
 			"      |     From\n" +
 			"      Servo ID";
+	private final static String DIRECT_MOVE_HELP =
+			"DIRECT: LEFT, 350\n" +
+			"        |     |\n" +
+			"        |     To\n" +
+			"        Servo ID";
 	private final static String USER_INPUT_HELP =
 			"USER_INPUT: \"Prompt\"";
 	/**
@@ -98,6 +103,10 @@ public class MeArmPilot {
 		SET_PMW("SET_PWM", 3, MeArmPilot::servoSetPwm, SET_PWM_HELP),
 		PRINT("PRINT", 1, MeArmPilot::servoPrint, PRINT_HELP),
 		MOVE("MOVE", 5, MeArmPilot::servoMove, MOVE_HELP),
+
+		DIRECT("DIRECT", 2, MeArmPilot::servoDirectMove, DIRECT_MOVE_HELP),
+		BOUNDARIES("BOUNDARIES", 0, MeArmPilot::showBoundaries, "Just type it"),
+
 		USER_INPUT("USER_INPUT", 1, MeArmPilot::servoUserInput, USER_INPUT_HELP),
 		WAIT("WAIT", 1, MeArmPilot::servoWait, WAIT_HELP);
 
@@ -297,6 +306,52 @@ public class MeArmPilot {
 					}
 				} else {
 					System.err.println(String.format("Unknown servo: [%s]", cmd.args[0].trim()));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Syntax DIRECT: LEFT, 350
+	 *                |     |
+	 *                |     To
+	 *                Servo ID
+	 * @param cmd
+	 */
+	private static void servoDirectMove(CommandWithArgs cmd) {
+		if (!cmd.command.equals("DIRECT")) {
+			System.err.println(String.format("Unexpected command [%s] in servoDirectMove.", cmd.command));
+		} else {
+			if (cmd.args.length != 2) {
+				System.err.println(String.format("Unexpected number of args [%d] in servoDirectMove.", cmd.args.length));
+			} else {
+				int servoNum = getServoNum(cmd.args[0].trim());
+				if (servoNum != -1) {
+					try {
+						int to = Integer.parseInt(cmd.args[1].trim());
+						if (servoBoard != null) {
+							servoBoard.setPWM(servoNum, 0, to);
+						}
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else {
+					System.err.println(String.format("Unknown servo: [%s]", cmd.args[0].trim()));
+				}
+			}
+		}
+	}
+
+	private static void showBoundaries(CommandWithArgs cmd) {
+		if (!cmd.command.equals("BOUNDARIES")) {
+			System.err.println(String.format("Unexpected command [%s] in showBoundaries.", cmd.command));
+		} else {
+			if (cmd.args.length != 0) {
+				System.err.println(String.format("Unexpected number of args [%d] in showBoundaries.", cmd.args.length));
+			} else {
+				// ServoBoundaries
+				for (ServoBoundaries boundary : ServoBoundaries.values()) {
+					System.out.println(String.format("Servo %s, min: %d, max: %d", boundary.toString(), boundary.min(), boundary.max()));
 				}
 			}
 		}
