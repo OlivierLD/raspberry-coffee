@@ -351,7 +351,7 @@ public class MeArmPilot {
 			} else {
 				// ServoBoundaries
 				for (ServoBoundaries boundary : ServoBoundaries.values()) {
-					System.out.println(String.format("Servo %s, min: %d, max: %d", boundary.toString(), boundary.min(), boundary.max()));
+					System.out.println(String.format("Servo %s, min: %d, max: %d, center: %d", boundary.toString(), boundary.min(), boundary.max(), boundary.center()));
 				}
 			}
 		}
