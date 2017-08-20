@@ -122,6 +122,39 @@ public class MeArmPilotInteractiveDemo {
 			System.out.println(">> Ooops!, wrong bus... Moving on anyway, but without the board.");
 		}
 
+		// Initializing MeArm pos
+		String init = "SET_PWM:LEFT,   0, 0";
+		MeArmPilot.executeCommand(init, -1);
+		init = "SET_PWM:RIGHT,  0, 0";
+		MeArmPilot.executeCommand(init, -1);
+		init = "SET_PWM:CLAW,   0, 0";
+		MeArmPilot.executeCommand(init, -1);
+		init = "SET_PWM:BOTTOM, 0, 0";
+		MeArmPilot.executeCommand(init, -1);
+		init = "WAIT:1000";
+		MeArmPilot.executeCommand(init, -1);
+		// Center the arm
+		init = "SET_PWM:BOTTOM, 0, 410";
+		MeArmPilot.executeCommand(init, -1);
+		init = "SET_PWM:BOTTOM, 0, 0";
+		MeArmPilot.executeCommand(init, -1);
+		init = "WAIT:250";
+		MeArmPilot.executeCommand(init, -1);
+		// Stand up
+		init = "SET_PWM:RIGHT, 0, 430";
+		MeArmPilot.executeCommand(init, -1);
+		init = "SET_PWM:RIGHT, 0, 0";
+		MeArmPilot.executeCommand(init, -1);
+		init = "WAIT:250";
+		MeArmPilot.executeCommand(init, -1);
+		// Middle
+		init = "SET_PWM:LEFT, 0, 230";
+		MeArmPilot.executeCommand(init, -1);
+		init = "SET_PWM:LEFT, 0, 0";
+		MeArmPilot.executeCommand(init, -1);
+		init = "WAIT:250";
+		MeArmPilot.executeCommand(init, -1);
+
 		boolean keepAsking = true;
 		int nbCommand = 0;
 		System.out.println("Entre 'Q' at the prompt to quit.");

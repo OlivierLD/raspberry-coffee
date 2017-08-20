@@ -71,11 +71,11 @@ PRINT: "Closing"
 MOVE: CLAW, 130, 400, 10, 25
 WAIT:500
 #
-PRINT: "Erroring, TOP does not exist."
+PRINT: "Erroring -> TOP does not exist."
 MOVE: TOP, 130, 400, 10, 25
 WAIT:500
 #
-# Stop the servos
+# Stop and Park the servos
 #
 SET_PWM:LEFT,   0, 0
 SET_PWM:RIGHT,  0, 0

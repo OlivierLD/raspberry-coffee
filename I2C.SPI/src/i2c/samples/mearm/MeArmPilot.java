@@ -133,6 +133,27 @@ public class MeArmPilot {
 	public final static int DEFAULT_BOTTOM_SERVO_CHANNEL = 2; // Right and Left. 130 (all the way right) 675 (all the way left). Center at ~410
 	public final static int DEFAULT_RIGHT_SERVO_CHANNEL = 4; // Back and forth. 130 (too far back, limit to 300) 675 (all the way ahead), standing right at ~430
 
+	enum ServoBoundaries {
+		LEFT(135, 350, 230),
+		RIGHT(130, 675, 410),
+		BOTTOM(675, 130, 430),
+		CLAW(130, 400, 265);
+
+		private final int min;
+		private final int max;
+		private final int center;
+
+		ServoBoundaries(int min, int max, int center) {
+			this.min = min;
+			this.max = max;
+			this.center = center;
+		}
+
+		public int min() { return this.min; }
+		public int max() { return this.max; }
+		public int center() { return this.center; }
+	}
+
 	private static int leftServoChannel = DEFAULT_LEFT_SERVO_CHANNEL;
 	private static int clawServoChannel = DEFAULT_CLAW_SERVO_CHANNEL;
 	private static int bottomServoChannel = DEFAULT_BOTTOM_SERVO_CHANNEL;
