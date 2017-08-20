@@ -147,11 +147,19 @@ public class MeArmPilotInteractiveDemo {
 
 		String park = "SET_PWM:LEFT,   0, 0";
 		MeArmPilot.executeCommand(park, -1);
+		park = "WAIT:500";
+		MeArmPilot.executeCommand(park, -1);
 		park = "SET_PWM:RIGHT,  0, 0";
+		MeArmPilot.executeCommand(park, -1);
+		park = "WAIT:500";
 		MeArmPilot.executeCommand(park, -1);
 		park = "SET_PWM:CLAW,   0, 0";
 		MeArmPilot.executeCommand(park, -1);
+		park = "WAIT:500";
+		MeArmPilot.executeCommand(park, -1);
 		park = "SET_PWM:BOTTOM, 0, 0";
+		MeArmPilot.executeCommand(park, -1);
+		park = "WAIT:500";
 		MeArmPilot.executeCommand(park, -1);
 
 		System.out.println("Bye.");
