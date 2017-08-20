@@ -339,7 +339,7 @@ public class MeArmScriptDemo {
 		System.out.println("> Script is valid. <");
 
 		// 2 - Execute the script
-
+		System.out.println("Now running the commands");
 		initContext();
 
 		scriptReader = new BufferedReader(new FileReader(scriptName));
@@ -354,6 +354,7 @@ public class MeArmScriptDemo {
 				nbLine++;
 //      System.out.println("Executing " + line);
 				if (!line.startsWith("#")) {
+					System.out.println(String.format("\tExecuting [%s]", line));
 					executeCommand(line, nbLine);
 				}
 			}
