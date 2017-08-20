@@ -57,6 +57,33 @@ public class MeArmPilot {
 	private static int servoMin = 130; // -90 degrees at 60 Hertz
 	private static int servoMax = 675; //  90 degrees at 60 Hertz
 
+	private final static String DUMMY_HELP = "Duh...";
+
+	private final static String HELP_HELP = "You're on it...";
+	private final static String PRINT_HELP =
+	    "PRINT: \"Your message here\"\n" +
+			"        |\n" +
+			"        No comma in the message!!";
+	private final static String WAIT_HELP =
+			"WAIT: 1000\n" +
+			"      |\n" +
+			"      In ms";
+	private final static String SET_PWM_HELP =
+			"SET_PWM: BOTTOM, 0, 0\n" +
+			"         |       |  |\n" +
+			"         |       |  Off\n" +
+			"         |       On\n" +
+			"         Servo ID";
+	private final static String MOVE_HELP =
+			"MOVE: LEFT, 350, 230, 10, 25\n" +
+			"      |     |    |    |   |\n" +
+			"      |     |    |    |   Wait (between each step)\n" +
+			"      |     |    |    Nb steps from 'from' to 'to'\n" +
+			"      |     |    To\n" +
+			"      |     From\n" +
+			"      Servo ID";
+	private final static String USER_INPUT_HELP =
+			"USER_INPUT: \"Prompt\"";
 	/**
 	 * Commands supported in the script.
 	 * Constructor's parameters are:
@@ -67,20 +94,23 @@ public class MeArmPilot {
 	 * </ol>
 	 */
 	public enum Commands {
-		SET_PMW("SET_PWM", 3, MeArmPilot::servoSetPwm),
-		PRINT("PRINT", 1, MeArmPilot::servoPrint),
-		MOVE("MOVE", 5, MeArmPilot::servoMove),
-		USER_INPUT("USER_INPUT", 1, MeArmPilot::servoUserInput),
-		WAIT("WAIT", 1, MeArmPilot::servoWait);
+		HELP("HELP", 0, MeArmPilot::displayHelp, HELP_HELP),
+		SET_PMW("SET_PWM", 3, MeArmPilot::servoSetPwm, SET_PWM_HELP),
+		PRINT("PRINT", 1, MeArmPilot::servoPrint, PRINT_HELP),
+		MOVE("MOVE", 5, MeArmPilot::servoMove, MOVE_HELP),
+		USER_INPUT("USER_INPUT", 1, MeArmPilot::servoUserInput, USER_INPUT_HELP),
+		WAIT("WAIT", 1, MeArmPilot::servoWait, WAIT_HELP);
 
 		private final String command;
 		private final int nbPrm;
 		private final Consumer<CommandWithArgs> processor;
+		private final String help;
 
-		Commands(String command, int nbPrm, Consumer<CommandWithArgs> processor) {
+		Commands(String command, int nbPrm, Consumer<CommandWithArgs> processor, String help) {
 			this.command = command;
 			this.nbPrm = nbPrm;
 			this.processor = processor;
+			this.help = help;
 		}
 
 		public String command() {
@@ -94,12 +124,19 @@ public class MeArmPilot {
 		public Consumer<CommandWithArgs> processor() {
 			return this.processor;
 		}
+
+		public String help() { return this.help; }
 	}
 
-	private final static int LEFT_SERVO_CHANNEL = 0; // Up and down. Range 350 (all the way up) 135 (all the way down), Centered at ~230
-	private final static int CLAW_SERVO_CHANNEL = 1; // Open and close. Range 130 (open) 400 (closed)
-	private final static int BOTTOM_SERVO_CHANNEL = 2; // Right and Left. 130 (all the way right) 675 (all the way left). Center at ~410
-	private final static int RIGHT_SERVO_CHANNEL = 4; // Back and forth. 130 (too far back, limit to 300) 675 (all the way ahead), standing right at ~430
+	public final static int DEFAULT_LEFT_SERVO_CHANNEL = 0; // Up and down. Range 350 (all the way up) 135 (all the way down), Centered at ~230
+	public final static int DEFAULT_CLAW_SERVO_CHANNEL = 1; // Open and close. Range 130 (open) 400 (closed)
+	public final static int DEFAULT_BOTTOM_SERVO_CHANNEL = 2; // Right and Left. 130 (all the way right) 675 (all the way left). Center at ~410
+	public final static int DEFAULT_RIGHT_SERVO_CHANNEL = 4; // Back and forth. 130 (too far back, limit to 300) 675 (all the way ahead), standing right at ~430
+
+	private static int leftServoChannel = DEFAULT_LEFT_SERVO_CHANNEL;
+	private static int clawServoChannel = DEFAULT_CLAW_SERVO_CHANNEL;
+	private static int bottomServoChannel = DEFAULT_BOTTOM_SERVO_CHANNEL;
+	private static int rightServoChannel = DEFAULT_RIGHT_SERVO_CHANNEL;
 
 	private final static class CommandWithArgs {
 		private final String command;
@@ -108,6 +145,15 @@ public class MeArmPilot {
 		public CommandWithArgs(String command, String[] args) {
 			this.command = command;
 			this.args = args;
+		}
+	}
+
+	private static void displayHelp(CommandWithArgs cmd) {
+		System.out.println("Available commands with their syntax:");
+		System.out.println("-------------------------------------");
+		for (Commands command : Commands.values()) {
+			System.out.println(String.format("Command '%s', %d parameters.\nUsage is:\n%s", command.command(), command.nbPrm(), command.help()));
+			System.out.println("-------------------------------------");
 		}
 	}
 
@@ -150,6 +196,9 @@ public class MeArmPilot {
 		}
 	}
 
+	/**
+	 * Syntax USER_INPUT: "Prompt"
+	 */
 	private static void servoUserInput(CommandWithArgs cmd) {
 		if (!cmd.command.equals("USER_INPUT")) {
 			System.err.println(String.format("Unexpected command [%s] in servoUserInput.", cmd.command));
@@ -235,7 +284,23 @@ public class MeArmPilot {
 	private static PCA9685 servoBoard = null;
 
 	public static void initContext()
+			throws I2CFactory.UnsupportedBusNumberException {
+		initContext(DEFAULT_LEFT_SERVO_CHANNEL, DEFAULT_CLAW_SERVO_CHANNEL, DEFAULT_BOTTOM_SERVO_CHANNEL, DEFAULT_RIGHT_SERVO_CHANNEL);
+	}
+	public static void initContext(int leftServo, int clawServo, int bottomServo, int rightServo)
 					throws I2CFactory.UnsupportedBusNumberException {
+		leftServoChannel = leftServo;
+		clawServoChannel = clawServo;
+		bottomServoChannel = bottomServo;
+		rightServoChannel = rightServo;
+
+		System.out.println("InitContext:");
+		System.out.println(String.format("Left Servo (Up and Down), #%d", leftServoChannel));
+		System.out.println(String.format("Claw Servo (Open and Close), #%d", clawServoChannel));
+		System.out.println(String.format("Bottom Servo (Right and Left), #%d", bottomServoChannel));
+		System.out.println(String.format("Right Servo (Back and Forth), #%d", rightServoChannel));
+		System.out.println("----------------------------------");
+
 		servoBoard = new PCA9685();
 		int freq = 60;
 		servoBoard.setPWMFreq(freq); // Set frequency in Hz
@@ -245,14 +310,14 @@ public class MeArmPilot {
 		String[] cmdAndPrms = cmd.split(":");
 		Optional<Commands> commandOptional = Arrays.stream(Commands.values()).filter(verb -> verb.command().equals(cmdAndPrms[0])).findFirst();
 		if (!commandOptional.isPresent()) {
-			System.err.println(String.format("Line #%d, Command [%s] not found.", lineNo, cmdAndPrms[0]));
-			System.exit(1);
+			throw new RuntimeException(String.format("Line #%d, Command [%s] not found.", lineNo, cmdAndPrms[0]));
 		} else {
 			Commands command = commandOptional.get();
-			String[] prms = cmdAndPrms[1].split(",");
-			if (command.nbPrm() != prms.length) {
-				System.err.println(String.format("Command %s expects %d parameters. Found %d in [%s]", command.command(), command.nbPrm(), prms.length, cmd));
-				System.exit(1);
+			if (command.nbPrm() > 0) {
+				String[] prms = cmdAndPrms[1].split(",");
+				if (command.nbPrm() != prms.length) {
+					throw new RuntimeException(String.format("Command %s expects %d parameters. Found %d in [%s]", command.command(), command.nbPrm(), prms.length, cmd));
+				}
 			}
 		}
 	}
@@ -265,7 +330,10 @@ public class MeArmPilot {
 			System.exit(1);
 		} else {
 			Commands command = commandOptional.get();
-			String[] prms = cmdAndPrms[1].split(",");
+			String[] prms = new String[] {};
+			if (command.nbPrm() > 0) {
+				prms = cmdAndPrms[1].split(",");
+			}
 			if (command.nbPrm() != prms.length) {
 				System.err.println(String.format("Command %s expects %d parameters. Found %d in [%s]", command.command(), command.nbPrm(), prms.length, cmd));
 				System.exit(1);
@@ -285,16 +353,16 @@ public class MeArmPilot {
 		int servoNum = -1;
 		switch (servoId) {
 			case "LEFT":
-				servoNum = LEFT_SERVO_CHANNEL;
+				servoNum = leftServoChannel;
 				break;
 			case "RIGHT":
-				servoNum = RIGHT_SERVO_CHANNEL;
+				servoNum = rightServoChannel;
 				break;
 			case "CLAW":
-				servoNum = CLAW_SERVO_CHANNEL;
+				servoNum = clawServoChannel;
 				break;
 			case "BOTTOM":
-				servoNum = BOTTOM_SERVO_CHANNEL;
+				servoNum = bottomServoChannel;
 				break;
 			default:
 				break;

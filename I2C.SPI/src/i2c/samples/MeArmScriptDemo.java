@@ -117,7 +117,7 @@ public class MeArmScriptDemo {
 	}
 
 	/**
-	 * Warning No comma "," in the message!!
+	 * Warning No comma "," in the message body!!
 	 *
 	 * @param cmd
 	 */

@@ -10,6 +10,7 @@
     - Sensors
     - OLED
     - OLED with Sensors
+    - **Processing GUI with MeArm**
 - Show MCP3008 with SSD1306
 - Show Project
     - IoT
