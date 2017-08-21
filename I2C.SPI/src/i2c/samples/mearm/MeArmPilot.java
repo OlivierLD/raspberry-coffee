@@ -184,10 +184,12 @@ public class MeArmPilot {
 	private static int rightServoChannel = DEFAULT_RIGHT_SERVO_CHANNEL;
 
 	private final static class CommandWithArgs {
+		private final String full;
 		private final String command;
 		private final String[] args;
 
-		public CommandWithArgs(String command, String[] args) {
+		public CommandWithArgs(String input, String command, String[] args) {
+			this.full = input;
 			this.command = command;
 			this.args = args;
 		}
@@ -568,7 +570,7 @@ public class MeArmPilot {
 			} else {
 				Consumer<CommandWithArgs> processor = command.processor();
 				if (processor != null) {
-					CommandWithArgs cna = new CommandWithArgs(command.command(), prms);
+					CommandWithArgs cna = new CommandWithArgs(cmd, command.command(), prms);
 					processor.accept(cna);
 				} else {
 					System.out.println(String.format(">>> %s >>> null.", command.command()));
