@@ -80,7 +80,7 @@ void draw() {
   int clawSliderValue = (int)Math.round(openClosePos / 3.09);
   int bottomSliderValue = (int)Math.round(leftRightPos / 3.09);
   int rightSliderValue = (int)Math.round(backForthPos / 3.09);
-  
+  // The SLIDE command is defined in MeArmPilot
   MeArmPilot.runMacro(String.format("SLIDE: %s, %d", "LEFT", leftSliderValue));
   MeArmPilot.runMacro(String.format("SLIDE: %s, %d", "RIGHT", rightSliderValue));
   MeArmPilot.runMacro(String.format("SLIDE: %s, %d", "CLAW", clawSliderValue));

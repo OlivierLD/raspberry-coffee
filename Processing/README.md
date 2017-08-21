@@ -30,12 +30,17 @@ void draw() { // Draw the value of the ADC (MCP3008) at each repaint
 About 20 lines...
 
 ### To run the Sketch
-- From the project root, to produce the required jar files, run
+- From the project root (Processing), to produce the required jar files, run
 ```bash
  $> ./gradlew clean shadowJar
 ```
-- Open the sketch (the one with a `.pde` extension) in `Processing` (no need to copy it anywhere else)
-- If instructed in the comment at the top of the sketch, use the menu `Sketch > Add File...` to select the appropriate archive
+- Open the sketch [MCP3008_Pie.pde](./src/processing/MCP3008_Pie/MCP3008_Pie.pde) in `Processing` (no need to copy it anywhere else)
+- If instructed in the comment at the top of the sketch, use the menu `Sketch > Add File...` to select the appropriate archive, like here:
+```java
+/*
+ * Using Sketch > Add File..., select ADC/build/libs/ADC-1.0-all.jar
+ */
+```
 - Make sure your wiring is correct.
 - Hit the `Run` button in `Processing`.
 - Turn the button of the potentiometer, and see for yourself.
