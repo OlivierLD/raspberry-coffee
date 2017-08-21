@@ -70,10 +70,10 @@ In this example, each servo is driven by a slide bar displayed on the Processing
 <table>
   <tr>
     <td>
-      ![MeArm](./src/processing/MeArmGUI/MeArm_bb.png)
+      <img src="./src/processing/MeArmGUI/MeArm_bb.png" title="MeArm Wiring">
     </td>
     <td>
-      ![MeArm.pde](./src/processing/MeArmGUI/MeArmGUIpde.png)
+      <img src="./src/processing/MeArmGUI/MeArmGUIpde.png" title="Processing GUI">
     </td>
   </tr>
 </table>
