@@ -67,10 +67,16 @@ Mirror - synchronously - the display of the SSD1306.
 - One to open and close the claw
 
 In this example, each servo is driven by a slide bar displayed on the Processing GUI.
-| Wiring | Processing GUI |
-|--------|----------------|
-| ![MeArm](./src/processing/MeArmGUI/MeArm_bb.png) | ![MeArm.pde](./src/processing/MeArmGUI/MeArmGUIpde.png) |
-
+<table>
+  <tr>
+    <td>
+      ![MeArm](./src/processing/MeArmGUI/MeArm_bb.png)
+    </td>
+    <td>
+      ![MeArm.pde](./src/processing/MeArmGUI/MeArmGUIpde.png)
+    </td>
+  </tr>
+</table>
 
 ----------------------------------------------
 
