@@ -4,7 +4,7 @@
  *
  * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
  */
-import i2c.samples.mearm.MeArmPilot;
+// import i2c.samples.mearm.MeArmPilot; // Not mandatory in Processing.
 
 HScrollbar hs1, // Up and Down 
            hs2, // Left and Right

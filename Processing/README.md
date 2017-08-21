@@ -82,10 +82,10 @@ Mirror - synchronously - the display of the SSD1306.
 
 ## MeArm
 [MeArm](https://shop.mime.co.uk/) is a ~$42 (2017) robotic arm, using four micro servos.
-- One to move the arm up and down
-- One to move the arm back and forth
-- One to move the arm left and right
-- One to open and close the claw
+- One to move the arm up and down (located at the LEFT of the arm)
+- One to move the arm back and forth (located at the RIGHT of the arm)
+- One to move the arm left and right (located at the BOTTOM of the arm)
+- One to open and close the claw (located on the CLAW)
 
 In this example, each servo is driven by a slide bar displayed on the Processing GUI.
 <table>
