@@ -378,13 +378,13 @@ public class MeArmPilot {
 
 	public static String[] closeClaw() {
 		return new String[] {
-				String.format("SET_PWM: CLAW, %d", ServoBoundaries.CLAW.max())
+				String.format("DIRECT: CLAW, %d", ServoBoundaries.CLAW.max())
 		};
 	}
 
 	public static String[] openClaw() {
 		return new String[] {
-				String.format("SET_PWM: CLAW, %d", ServoBoundaries.CLAW.min())
+				String.format("DIRECT: CLAW, %d", ServoBoundaries.CLAW.min())
 		};
 	}
 
