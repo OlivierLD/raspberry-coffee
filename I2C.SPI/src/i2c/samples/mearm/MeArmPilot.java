@@ -188,7 +188,7 @@ public class MeArmPilot {
 		private final String command;
 		private final String[] args;
 
-		public CommandWithArgs(String input, String command, String[] args) {
+		public CommandWithArgs(String input, String command, String... args) {
 			this.full = input;
 			this.command = command;
 			this.args = args;
