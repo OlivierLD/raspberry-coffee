@@ -4,6 +4,8 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,7 +67,8 @@ public class MeArmPilot {
 	private final static String PRINT_HELP =
 	    "PRINT: \"Your message here\"\n" +
 			"        |\n" +
-			"        No comma in the message!!";
+			"        No comma in the message!! (Encode them with UTF-8, like %2C):\n" +
+			"       \"Your message here%2C please.\"";
 	private final static String WAIT_HELP =
 			"WAIT: 1000\n" +
 			"      |\n" +
@@ -90,10 +93,10 @@ public class MeArmPilot {
 			"        |     To\n" +
 			"        Servo ID";
 	private final static String SLIDE_HELP =
-			"SLIDE:BOTTOM, 0\n" +
-			"      |       |\n" +
-			"      |       Value [-100..+100]\n" +
-			"      Servo ID";
+			"SLIDE: BOTTOM, 0\n" +
+			"       |       |\n" +
+			"       |       Value [-100..+100]\n" +
+			"       Servo ID";
 	private final static String USER_INPUT_HELP =
 			"USER_INPUT: \"Prompt\"";
 	/**
@@ -207,7 +210,11 @@ public class MeArmPilot {
 			if (cmd.args.length != 1) {
 				System.err.println(String.format("Unexpected number of args [%d] in servoPrint.", cmd.args.length));
 			} else {
-				System.out.println(">> PRINT >>> " + cmd.args[0]);
+				try {
+					System.out.println(">> PRINT >>> " + URLDecoder.decode(cmd.args[0], "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

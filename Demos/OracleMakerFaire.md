@@ -10,13 +10,12 @@
     - Sensors
     - OLED
     - OLED with Sensors
-    - **Processing GUI with MeArm**
+    - **Processing GUI for MeArm**
 - Show MCP3008 with SSD1306
 - Show Project
-    - IoT
+    - IoT with Adafruit-IO, Pebble watch
     - Camera
     - SunFlower
-    - MeArm
     - NMEA.Multiplexer (recording, replay)
     - FONA
 - All together

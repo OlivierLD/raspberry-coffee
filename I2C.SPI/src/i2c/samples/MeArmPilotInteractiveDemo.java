@@ -31,9 +31,8 @@ public class MeArmPilotInteractiveDemo {
 			retString = stdin.readLine();
 		} catch (Exception e) {
 			System.out.println(e);
-			String s;
 			try {
-				s = userInput("<Oooch/>");
+				userInput("<Oooch/>");
 			} catch (Exception exception) {
 				exception.printStackTrace();
 			}
@@ -41,10 +40,10 @@ public class MeArmPilotInteractiveDemo {
 		return retString;
 	}
 
-	private final static String LEFT_PRM = "-left:";
-	private final static String RIGHT_PRM = "-right:";
+	private final static String LEFT_PRM   = "-left:";
+	private final static String RIGHT_PRM  = "-right:";
 	private final static String BOTTOM_PRM = "-bottom:";
-	private final static String CLAW_PRM = "-claw:";
+	private final static String CLAW_PRM   = "-claw:";
 
 	/**
 	 * Execute MeArm pilot commands provided by the user, from the CLI.
@@ -61,6 +60,7 @@ public class MeArmPilotInteractiveDemo {
 		int claw = MeArmPilot.DEFAULT_CLAW_SERVO_CHANNEL;
 		int bottom = MeArmPilot.DEFAULT_BOTTOM_SERVO_CHANNEL;
 
+		// Managing parameters
 		for (String arg : args) {
 			if (arg.startsWith(LEFT_PRM)) {
 				String val = arg.substring(LEFT_PRM.length());
@@ -125,6 +125,7 @@ public class MeArmPilotInteractiveDemo {
 		MeArmPilot.runMacro(MeArmPilot.initStop());
 		MeArmPilot.runMacro(MeArmPilot.initialPosition());
 
+		// Now looping on user input.
 		boolean keepAsking = true;
 		int nbCommand = 0;
 		System.out.println("Entre 'Q' at the prompt to quit.");
@@ -146,14 +147,13 @@ public class MeArmPilotInteractiveDemo {
 				}
 			}
 	  }
+	  // Done, quitting.
 		System.out.println("Parking servos");
-
 		MeArmPilot.runMacro(MeArmPilot.initialPosition());
 		MeArmPilot.runMacro("WAIT:1000");
 		MeArmPilot.runMacro(MeArmPilot.closeClaw());
 		MeArmPilot.runMacro("WAIT:500");
 		MeArmPilot.runMacro(MeArmPilot.initStop());
-
 		System.out.println("Bye.");
 	}
 }
