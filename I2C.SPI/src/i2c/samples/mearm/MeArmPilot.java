@@ -4,7 +4,9 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -355,6 +357,33 @@ public class MeArmPilot {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Execute an array of commands
+	 * @param command
+	 */
+	public static void runMacro(String... command) {
+		for (String cmd : command) {
+			MeArmPilot.executeCommand(cmd, -1);
+		}
+	}
+
+	public static String[] initStop() {
+		return new String[]{
+				"SET_PWM:LEFT,   0, 0",
+				"SET_PWM:RIGHT,  0, 0",
+				"SET_PWM:CLAW,   0, 0",
+				"SET_PWM:BOTTOM, 0, 0"
+		};
+	}
+
+	public static String[] initialPosition() {
+		List<String> cmds = new ArrayList<>();
+		for (ServoBoundaries boundary : ServoBoundaries.values()) {
+			cmds.add(String.format("DIRECT: %s, %d", boundary.toString(), boundary.center()));
+		}
+    return cmds.toArray(new String[cmds.size()]);
 	}
 
 	private static PCA9685 servoBoard = null;

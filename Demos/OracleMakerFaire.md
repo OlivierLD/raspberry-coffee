@@ -4,7 +4,7 @@
 - Show sensor drivers. Python, C, Java
 - Show how to use them, from straight java code
 - Show how to integrate existing jars
-- Show _remote debugging_ !!
+- Show **remote debugging** !!
 - Show Processing.org
     - Planets
     - Sensors
@@ -18,6 +18,7 @@
     - SunFlower
     - MeArm
     - NMEA.Multiplexer (recording, replay)
+    - FONA
 - All together
     - Sensor > RPi > IoT
 ---
