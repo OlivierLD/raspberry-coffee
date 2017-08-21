@@ -205,7 +205,8 @@ public class MeArmPilot {
 	}
 
 	/**
-	 * Warning No comma "," in the message!!
+	 * Warning No comma ",", to columns ":" in the message!!
+	 * Encode comma with %2C, column with %3A
 	 *
 	 * @param cmd
 	 */
@@ -249,6 +250,8 @@ public class MeArmPilot {
 
 	/**
 	 * Syntax USER_INPUT: "Prompt"
+	 * Warning No comma ",", to columns ":" in the prompt!!
+	 * Encode comma with %2C, column with %3A
 	 */
 	private static void servoUserInput(CommandWithArgs cmd) {
 		if (!cmd.command.equals("USER_INPUT")) {
