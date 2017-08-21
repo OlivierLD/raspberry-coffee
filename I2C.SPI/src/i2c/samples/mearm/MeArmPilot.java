@@ -331,6 +331,8 @@ public class MeArmPilot {
 				if (servoNum != -1) {
 					try {
 						int to = Integer.parseInt(cmd.args[1].trim());
+
+
 						if (servoBoard != null) {
 							servoBoard.setPWM(servoNum, 0, to);
 						}
@@ -344,6 +346,11 @@ public class MeArmPilot {
 		}
 	}
 
+	private static boolean validateValue(int servo, int value) {
+		boolean ok = true;
+
+		return ok;
+	}
 	private static void showBoundaries(CommandWithArgs cmd) {
 		if (!cmd.command.equals("BOUNDARIES")) {
 			System.err.println(String.format("Unexpected command [%s] in showBoundaries.", cmd.command));
@@ -367,6 +374,18 @@ public class MeArmPilot {
 		for (String cmd : command) {
 			MeArmPilot.executeCommand(cmd, -1);
 		}
+	}
+
+	public static String[] closeClaw() {
+		return new String[] {
+				String.format("SET_PWM: CLAW, %d", ServoBoundaries.CLAW.max())
+		};
+	}
+
+	public static String[] openClaw() {
+		return new String[] {
+				String.format("SET_PWM: CLAW, %d", ServoBoundaries.CLAW.min())
+		};
 	}
 
 	public static String[] initStop() {

@@ -150,6 +150,9 @@ public class MeArmPilotInteractiveDemo {
 		System.out.println("Parking servos");
 
 		MeArmPilot.runMacro(MeArmPilot.initialPosition());
+		MeArmPilot.runMacro("WAIT:1000");
+		MeArmPilot.runMacro(MeArmPilot.closeClaw());
+		MeArmPilot.runMacro("WAIT:500");
 		MeArmPilot.runMacro(MeArmPilot.initStop());
 
 		System.out.println("Bye.");
