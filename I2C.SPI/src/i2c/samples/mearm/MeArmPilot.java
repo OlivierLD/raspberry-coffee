@@ -67,7 +67,7 @@ public class MeArmPilot {
 	private final static String PRINT_HELP =
 	    "PRINT: \"Your message here\"\n" +
 			"        |\n" +
-			"        No comma in the message!! (Encode them with UTF-8, like %2C):\n" +
+			"        Encode commas and columns with UTF-8: ','=%2C, ':'=%3A):\n" +
 			"       \"Your message here%2C please.\"";
 	private final static String WAIT_HELP =
 			"WAIT: 1000\n" +
@@ -98,7 +98,11 @@ public class MeArmPilot {
 			"       |       Value [-100..+100]\n" +
 			"       Servo ID";
 	private final static String USER_INPUT_HELP =
-			"USER_INPUT: \"Prompt\"";
+			"USER_INPUT: \"Prompt\"\n" +
+			"  Resumes after the user hits [Return]\n" +
+			"  Encode commas and columns with UTF-8: ','=%2C, ':'=%3A):\n" +
+			"  Typically used to wait for the user to be ready:\n" +
+			"USER_INPUT: \"Hit [Return] when ready \"";
 	/**
 	 * Commands supported in the script.
 	 * Constructor's parameters are:
@@ -251,7 +255,11 @@ public class MeArmPilot {
 			if (cmd.args.length != 1) {
 				System.err.println(String.format("Unexpected number of args [%d] in servoUserInput.", cmd.args.length));
 			} else {
-				String absorbed = userInput(cmd.args[0]);
+				try {
+					String absorbed = userInput(URLDecoder.decode(cmd.args[0], "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
