@@ -34,30 +34,51 @@ About 20 lines...
 ```bash
  $> ./gradlew clean shadowJar
 ```
-- Open it in `Processing` (no need to copy it anywhere else)
+- Open the sketch (the one with a `.pde` extension) in `Processing` (no need to copy it anywhere else)
 - If instructed in the comment at the top of the sketch, use the menu `Sketch > Add File...` to select the appropriate archive
 - Make sure your wiring is correct.
 - Hit the `Run` button in `Processing`.
 - Turn the button of the potentiometer, and see for yourself.
 
-![MCP3008 pie](./mcp3008.png)
-
-The wiring looks like this:
-![MCP3008 with Pot](../ADC/RPi-MCP3008-Pot_bb.png)
+<table>
+  <tr>
+    <td valign="top">
+      <img src="./mcp3008.png" title="MCP3008 pie">
+    </td>
+    <td valign="top">
+      <img src="../ADC/RPi-MCP3008-Pot_bb.png" title="Wiring">
+    </td>
+  </tr>
+</table>
 
 ## PitchRoll.pde
 
-Displays the pitch and roll, returned by an LSM303 sensor.
-
-![Pitch & Roll](./pitch.roll.01.png) ![Pitch & Roll](./pitch.roll.02.png)
+Displays the pitch and roll, returned by an LSM303 (accelerometer) sensor.
+<table>
+  <tr>
+    <td valign="top">
+      <img src="./pitch.roll.01.png" title="Processing GUI">
+    </td>
+    <td valign="top">
+      <img src="./pitch.roll.02.png" title="Processing GUI">
+    </td>
+  </tr>
+</table>
 
 ## SSD1306 (oled display)
 
 Mirror - synchronously - the display of the SSD1306.
 
-![SSD1306](./ssd1306.emulation.png)
-
-![Wiring](./src/processing/LCD/SSD1306_bb.png)
+<table>
+  <tr>
+    <td valign="top">
+      <img src="./ssd1306.emulation.png" title="Processing GUI">
+    </td>
+    <td valign="top">
+      <img src="./src/processing/LCD/SSD1306_bb.png" title="Wiring">
+    </td>
+  </tr>
+</table>
 
 ## MeArm
 [MeArm](https://shop.mime.co.uk/) is a ~$42 (2017) robotic arm, using four micro servos.
@@ -69,10 +90,10 @@ Mirror - synchronously - the display of the SSD1306.
 In this example, each servo is driven by a slide bar displayed on the Processing GUI.
 <table>
   <tr>
-    <td>
+    <td valign="top">
       <img src="./src/processing/MeArmGUI/MeArm_bb.png" title="MeArm Wiring">
     </td>
-    <td>
+    <td valign="top">
       <img src="./src/processing/MeArmGUI/MeArmGUIpde.png" title="Processing GUI">
     </td>
   </tr>
