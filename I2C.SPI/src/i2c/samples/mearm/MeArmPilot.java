@@ -89,6 +89,11 @@ public class MeArmPilot {
 			"        |     |\n" +
 			"        |     To\n" +
 			"        Servo ID";
+	private final static String SLIDE_HELP =
+			"SLIDE:BOTTOM, 0\n" +
+			"      |       |\n" +
+			"      |       Value [-100..+100]\n" +
+			"      Servo ID";
 	private final static String USER_INPUT_HELP =
 			"USER_INPUT: \"Prompt\"";
 	/**
@@ -107,6 +112,7 @@ public class MeArmPilot {
 		MOVE("MOVE", 5, MeArmPilot::servoMove, MOVE_HELP),
 
 		DIRECT("DIRECT", 2, MeArmPilot::servoDirectMove, DIRECT_MOVE_HELP),
+		SLIDE("SLIDE", 2, MeArmPilot::servoSlide, SLIDE_HELP),
 		BOUNDARIES("BOUNDARIES", 0, MeArmPilot::showBoundaries, "Just type it"),
 
 		USER_INPUT("USER_INPUT", 1, MeArmPilot::servoUserInput, USER_INPUT_HELP),
@@ -331,10 +337,43 @@ public class MeArmPilot {
 				if (servoNum != -1) {
 					try {
 						int to = Integer.parseInt(cmd.args[1].trim());
+						if (!validateValue(servoNum, to)) {
+							System.out.println(String.format("Servo value [%s] out of bounds for %s.", to, cmd.args[0].trim()));
+						} else {
+							if (servoBoard != null) {
+								servoBoard.setPWM(servoNum, 0, to);
+							}
+						}
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else {
+					System.err.println(String.format("Unknown servo: [%s]", cmd.args[0].trim()));
+				}
+			}
+		}
+	}
 
-
+	/**
+	 * Syntax SLIDE:BOTTOM, 0
+	 *              |       |
+	 *              |       Value [-100..+100]
+	 *              Servo ID
+	 * @param cmd
+	 */
+	private static void servoSlide(CommandWithArgs cmd) {
+		if (!cmd.command.equals("SLIDE")) {
+			System.err.println(String.format("Unexpected command [%s] in servoSlide.", cmd.command));
+		} else {
+			if (cmd.args.length != 2) {
+				System.err.println(String.format("Unexpected number of args [%d] in servoSlide.", cmd.args.length));
+			} else {
+				int servoNum = getServoNum(cmd.args[0].trim());
+				if (servoNum != -1) {
+					try {
+						int to = Integer.parseInt(cmd.args[1].trim());
 						if (servoBoard != null) {
-							servoBoard.setPWM(servoNum, 0, to);
+							setFromSlider(cmd.args[0].trim(), to);
 						}
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
@@ -348,9 +387,20 @@ public class MeArmPilot {
 
 	private static boolean validateValue(int servo, int value) {
 		boolean ok = true;
-
+		if (servo == leftServoChannel) {
+			ok = !(value < ServoBoundaries.LEFT.min() || value > ServoBoundaries.LEFT.max());
+		} else if (servo == rightServoChannel) {
+			ok = !(value < ServoBoundaries.RIGHT.min() || value > ServoBoundaries.RIGHT.max());
+		} else if (servo == bottomServoChannel) {
+			ok = !(value < ServoBoundaries.BOTTOM.min() || value > ServoBoundaries.BOTTOM.max());
+		} else if (servo == clawServoChannel) {
+			ok = !(value < ServoBoundaries.CLAW.min() || value > ServoBoundaries.CLAW.max());
+		} else {
+				ok = false;
+		}
 		return ok;
 	}
+
 	private static void showBoundaries(CommandWithArgs cmd) {
 		if (!cmd.command.equals("BOUNDARIES")) {
 			System.err.println(String.format("Unexpected command [%s] in showBoundaries.", cmd.command));
@@ -386,6 +436,38 @@ public class MeArmPilot {
 		return new String[] {
 				String.format("DIRECT: CLAW, %d", ServoBoundaries.CLAW.min())
 		};
+	}
+
+	/**
+	 * Set the value from a slider. The value MUST be in [-100.0..+100.0]
+	 *
+	 * @param servoName
+	 * @param value
+	 */
+	public static void setFromSlider(String servoName, double value) {
+		if (value < -100 || value > 100) {
+			throw new IllegalArgumentException(String.format("Invalid value [-100..100] %f", value));
+		}
+		int servoValue = -1;
+		switch (servoName) {
+			case "LEFT":
+				int delta = (value < 0 ? ServoBoundaries.LEFT.center() - ServoBoundaries.LEFT.min() : ServoBoundaries.LEFT.max() - ServoBoundaries.LEFT.center());
+				servoValue = (int)Math.round(ServoBoundaries.LEFT.center() + (delta * (value / 100d)));
+				break;
+			case "RIGHT":
+				break;
+			case "CLAW":
+				break;
+			case "BOTTOM":
+				break;
+			default:
+				System.out.println(String.format("Unknown servo %s", servoName));
+				break;
+		}
+		if (servoValue != -1) {
+			String macro = String.format("DIRECT: %s, %d", servoName, servoValue);
+			runMacro(macro);
+		}
 	}
 
 	public static String[] initStop() {
