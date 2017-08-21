@@ -35,6 +35,9 @@ About 20 lines...
  $> ./gradlew clean shadowJar
 ```
 - Open the sketch [MCP3008_Pie.pde](./src/processing/MCP3008_Pie/MCP3008_Pie.pde) in `Processing` (no need to copy it anywhere else)
+
+  ![Open in Processing](./sketch.png)
+
 - If instructed in the comment at the top of the sketch, use the menu `Sketch > Add File...` to select the appropriate archive, like here:
 ```java
 /*
@@ -85,7 +88,7 @@ Mirror - synchronously - the display of the SSD1306.
   </tr>
 </table>
 
-## MeArm
+## MeArm GUI
 [MeArm](https://shop.mime.co.uk/) is a ~$42 (2017) robotic arm, using four micro servos.
 - One to move the arm up and down (located at the LEFT of the arm)
 - One to move the arm back and forth (located at the RIGHT of the arm)
