@@ -59,6 +59,11 @@ Mirror - synchronously - the display of the SSD1306.
 
 ![Wiring](./src/processing/LCD/SSD1306_bb.png)
 
+## MeArm
+
+![MeArm](./src/processing/MeArmGUI/MeArm_bb.png) ![MeArm.pde](./src/processing/MeArmGUI/MeArmGUI.pde.png)
+
+
 ----------------------------------------------
 
 And more to come.

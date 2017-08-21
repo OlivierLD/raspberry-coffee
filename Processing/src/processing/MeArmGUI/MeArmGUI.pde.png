@@ -74,8 +74,8 @@ void draw() {
   text(String.format("Left and Right: %+03.0f", leftRightPos / 3.09), 10, (height / 2) - 32); 
   text(String.format("Back and Forth: %+03.0f", backForthPos / 3.09), 10, (3 * height / 4) - 32); 
   text(String.format("Open and Close: %+03.0f", openClosePos / 3.09), 10, (height) - 32); 
-  // TODO Drive the servos here.
   
+  // Drive the servos here.
   int leftSliderValue = (int)Math.round(upDownPos / 3.09);
   int clawSliderValue = (int)Math.round(openClosePos / 3.09);
   int bottomSliderValue = (int)Math.round(leftRightPos / 3.09);
@@ -89,7 +89,6 @@ void draw() {
 
 void dispose() {
   println("Parking the MeArm");
-  System.out.println("Parking servos");
 
   MeArmPilot.runMacro(MeArmPilot.initialPosition());
   MeArmPilot.runMacro("WAIT:1000");
@@ -97,7 +96,7 @@ void dispose() {
   MeArmPilot.runMacro("WAIT:500");
   MeArmPilot.runMacro(MeArmPilot.initStop());
 
-  System.out.println("Bye.");
+  println("Bye.");
 }
 
 class HScrollbar {
