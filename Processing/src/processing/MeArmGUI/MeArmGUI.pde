@@ -1,7 +1,10 @@
 /**
  * 4 Scrollbars to drive a MeArm robotic arm.. 
  * Move the scrollbars left and right to change the positions of associated servos. 
+ *
+ * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
  */
+import i2c.samples.mearm.MeArmPilot;
 
 HScrollbar hs1, // Up and Down 
            hs2, // Left and Right
@@ -22,6 +25,21 @@ void setup() {
   
   bg = loadImage("MeArm.jpg");
   imgFactor = Math.max((bg.width / 640f), (bg.height / 320f));
+  
+  int left = MeArmPilot.DEFAULT_LEFT_SERVO_CHANNEL;
+  int right = MeArmPilot.DEFAULT_RIGHT_SERVO_CHANNEL;
+  int claw = MeArmPilot.DEFAULT_CLAW_SERVO_CHANNEL;
+  int bottom = MeArmPilot.DEFAULT_BOTTOM_SERVO_CHANNEL;
+
+  try {
+    MeArmPilot.initContext(left, claw, bottom, right);
+  } catch (I2CFactory.UnsupportedBusNumberException oops) {
+    println(">> Ooops!, wrong bus... Moving on anyway, but without the board.");
+  }
+
+  // Initializing MeArm pos
+  MeArmPilot.runMacro(MeArmPilot.initStop());
+  MeArmPilot.runMacro(MeArmPilot.initialPosition());
 }
 
 void draw() {
@@ -29,10 +47,10 @@ void draw() {
   // right aligned.
   image(bg, (width) - ((bg.width / imgFactor)), 0, (bg.width / imgFactor), (bg.height / imgFactor));
   
-  float upDownPos = hs1.getPos() - (width / 2);
-  float leftRightPos = hs2.getPos() - (width / 2);
-  float backForthPos = hs3.getPos() - (width / 2);
-  float openClosePos = hs4.getPos() - (width / 2);
+  float upDownPos = hs1.getPos() - ((width) / 2);
+  float leftRightPos = hs2.getPos() - ((width) / 2);
+  float backForthPos = hs3.getPos() - ((width) / 2);
+  float openClosePos = hs4.getPos() - ((width) / 2);
   fill(255);
 
   hs1.update();
@@ -52,15 +70,34 @@ void draw() {
   text("Drive a MeArm robotic arm", 10, 25);
   
   fill(0);
-  text(String.format("Up and Down   : %+03.0f", upDownPos), 10, (height / 4) - 32); 
-  text(String.format("Left and Right: %+03.0f", leftRightPos), 10, (height / 2) - 32); 
-  text(String.format("Back and Forth: %+03.0f", backForthPos), 10, (3 * height / 4) - 32); 
-  text(String.format("Open and Close: %+03.0f", openClosePos), 10, (height) - 32); 
+  text(String.format("Up and Down   : %+03.0f", upDownPos / 3.09), 10, (height / 4) - 32); 
+  text(String.format("Left and Right: %+03.0f", leftRightPos / 3.09), 10, (height / 2) - 32); 
+  text(String.format("Back and Forth: %+03.0f", backForthPos / 3.09), 10, (3 * height / 4) - 32); 
+  text(String.format("Open and Close: %+03.0f", openClosePos / 3.09), 10, (height) - 32); 
   // TODO Drive the servos here.
+  
+  int leftSliderValue = (int)Math.round(upDownPos / 3.09);
+  int clawSliderValue = (int)Math.round(openClosePos / 3.09);
+  int bottomSliderValue = (int)Math.round(leftRightPos / 3.09);
+  int rightSliderValue = (int)Math.round(backForthPos / 3.09);
+  
+  MeArmPilot.runMacro(String.format("SLIDE: %s, %d", "LEFT", leftSliderValue));
+  MeArmPilot.runMacro(String.format("SLIDE: %s, %d", "RIGHT", rightSliderValue));
+  MeArmPilot.runMacro(String.format("SLIDE: %s, %d", "CLAW", clawSliderValue));
+  MeArmPilot.runMacro(String.format("SLIDE: %s, %d", "BOTTOM", bottomSliderValue));
 }
 
 void dispose() {
   println("Parking the MeArm");
+  System.out.println("Parking servos");
+
+  MeArmPilot.runMacro(MeArmPilot.initialPosition());
+  MeArmPilot.runMacro("WAIT:1000");
+  MeArmPilot.runMacro(MeArmPilot.closeClaw());
+  MeArmPilot.runMacro("WAIT:500");
+  MeArmPilot.runMacro(MeArmPilot.initStop());
+
+  System.out.println("Bye.");
 }
 
 class HScrollbar {

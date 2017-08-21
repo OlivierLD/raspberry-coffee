@@ -153,7 +153,7 @@ public class MeArmPilot {
 	enum ServoBoundaries {
 		LEFT(135, 350, 230),
 		RIGHT(130, 675, 410),
-		BOTTOM(675, 130, 430),
+		BOTTOM(130, 675, 430),
 		CLAW(130, 400, 265);
 
 		private final int min;
