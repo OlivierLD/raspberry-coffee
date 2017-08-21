@@ -451,14 +451,20 @@ public class MeArmPilot {
 		int servoValue = -1;
 		switch (servoName) {
 			case "LEFT":
-				int delta = (value < 0 ? ServoBoundaries.LEFT.center() - ServoBoundaries.LEFT.min() : ServoBoundaries.LEFT.max() - ServoBoundaries.LEFT.center());
-				servoValue = (int)Math.round(ServoBoundaries.LEFT.center() + (delta * (value / 100d)));
+				int deltaL = (value < 0 ? ServoBoundaries.LEFT.center() - ServoBoundaries.LEFT.min() : ServoBoundaries.LEFT.max() - ServoBoundaries.LEFT.center());
+				servoValue = (int)Math.round(ServoBoundaries.LEFT.center() + (deltaL * (value / 100d)));
 				break;
 			case "RIGHT":
+				int deltaR = (value < 0 ? ServoBoundaries.RIGHT.center() - ServoBoundaries.RIGHT.min() : ServoBoundaries.RIGHT.max() - ServoBoundaries.RIGHT.center());
+				servoValue = (int)Math.round(ServoBoundaries.RIGHT.center() + (deltaR * (value / 100d)));
 				break;
 			case "CLAW":
+				int deltaC = (value < 0 ? ServoBoundaries.CLAW.center() - ServoBoundaries.CLAW.min() : ServoBoundaries.CLAW.max() - ServoBoundaries.CLAW.center());
+				servoValue = (int)Math.round(ServoBoundaries.CLAW.center() + (deltaC * (value / 100d)));
 				break;
 			case "BOTTOM":
+				int deltaB = (value < 0 ? ServoBoundaries.BOTTOM.center() - ServoBoundaries.BOTTOM.min() : ServoBoundaries.BOTTOM.max() - ServoBoundaries.BOTTOM.center());
+				servoValue = (int)Math.round(ServoBoundaries.BOTTOM.center() + (deltaB * (value / 100d)));
 				break;
 			default:
 				System.out.println(String.format("Unknown servo %s", servoName));
@@ -466,6 +472,7 @@ public class MeArmPilot {
 		}
 		if (servoValue != -1) {
 			String macro = String.format("DIRECT: %s, %d", servoName, servoValue);
+			System.out.println(String.format("Executing %s", macro));
 			runMacro(macro);
 		}
 	}
