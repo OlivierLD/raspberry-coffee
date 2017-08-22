@@ -1089,7 +1089,22 @@ var showAddComputer = function() {
 
 var showDivs = function(channels, forwarders, computers) {
 //  console.log("Displaying divs: channels " + (channels === true ? 'X' : 'O') + " forwarders " + (forwarders === true ? 'X' : 'O') + " computers " + (computers === true ? 'X' : 'O'));
-    $("#add-channel").css('display', (channels === true ? 'inline' : 'none'));
-    $("#add-forwarder").css('display', (forwarders === true ? 'inline' : 'none'));
-    $("#add-computer").css('display', (computers === true ? 'inline' : 'none'));
+//   $("#add-channel").css('display', (channels === true ? 'inline' : 'none'));
+    if (channels === true) {
+      $("#add-channel").show(1000);
+    } else {
+      $("#add-channel").hide(1000);
+    }
+//  $("#add-forwarder").css('display', (forwarders === true ? 'inline' : 'none'));
+    if (forwarders === true) {
+      $("#add-forwarder").show(1000);
+    } else {
+      $("#add-forwarder").hide(1000);
+    }
+//  $("#add-computer").css('display', (computers === true ? 'inline' : 'none'));
+    if (computers === true) {
+      $("#add-computer").show(1000);
+    } else {
+      $("#add-computer").hide(1000);
+    }
 };

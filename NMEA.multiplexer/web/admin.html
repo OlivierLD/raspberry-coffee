@@ -115,7 +115,13 @@
         var showRESTData = false;
         var showHideRESTData = function() {
             showRESTData = !showRESTData;
-            $("#raw-data-div").css('display', showRESTData ? 'block' : 'none');
+      //    $("#raw-data-div").css('display', showRESTData ? 'block' : 'none');
+            if (showRESTData) {
+              $("#raw-data-div").show(1000);
+            } else {
+              $("#raw-data-div").hide(1000);
+            }
+
             $("#show-hide-raw-data").html(showRESTData ? "<small>&nbsp;<img src='pandown.gif'> Hide REST Traffic</small>" : "<small>&nbsp;<img src='panright.gif'> Show REST Traffic</small>");
         };
 
@@ -713,7 +719,12 @@
         var showHideGraph = function() {
             if (flowData.length >= 10) {
                 graphVisible = !graphVisible;
-                $("#graphdiv").css('display', graphVisible ? 'block' : 'none');
+             // $("#graphdiv").css('display', graphVisible ? 'block' : 'none');
+                if (graphVisible) {
+                  $("#graphdiv").show(1000);
+                } else {
+                  $("#graphdiv").hide(1000);
+                }
             } else {
                 alert("Not enough data to show on the graph... \n" +
                       "Need at least 10 data points, just got " + flowData.length + "\n" +
@@ -735,10 +746,12 @@
         };
         var inboudDataInterval;
         var showInboudData = function(cb) {
-            $("#inbound-data-div").css('display', cb.checked ? 'block' : 'none');
+//          $("#inbound-data-div").css('display', cb.checked ? 'block' : 'none');
             if (cb.checked) {
+                $("#inbound-data-div").show(1000);
                 pingLastSentence();
             } else {
+                $("#inbound-data-div").hide(1000);
                 clearInterval(inboudDataInterval);
             }
         };

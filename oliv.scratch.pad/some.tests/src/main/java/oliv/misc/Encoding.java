@@ -8,7 +8,7 @@ public class Encoding {
 	public static void main(String... args)
 	throws UnsupportedEncodingException {
 		String encoding = "UTF-8";
-		String toEncode = "This is an en coded String, with comma: Toc!";
+		String toEncode = "This is an encoded String, with comma: Toc!";
 		String encoded = URLEncoder.encode(toEncode, encoding);
 		System.out.format("Encoded [%s]\n", encoded);
 		System.out.println("Back:");

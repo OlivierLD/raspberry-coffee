@@ -4,13 +4,12 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.samples.mearm.MeArmPilot;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Standard, all the way, clockwise, counterclockwise.
- *
- * Uses a PCA9685 (I2C) to drive a MeArm
+ * Drive a MeArm robotic arm, interactively.
+ * Uses a PCA9685 (I2C) to drive the MeArm's 4 servos.
+ * Relies on {@link MeArmPilot}
  *
  * See the {@link #main} method.
  */
@@ -47,14 +46,18 @@ public class MeArmPilotInteractiveDemo {
 
 	/**
 	 * Execute MeArm pilot commands provided by the user, from the CLI.
+	 * <br/>
+	 * Command line parameters:
+	 * <pre>
+	 * $ java i2c.samples.MeArmPilotInteractiveDemo -left:0 -right:4 -bottom:2 -claw:1
+	 * </pre>
+	 * The numbers are the IDs (0..15) of the channels of the PCA9685. The numbers above are the default channels.
 	 *
-	 * @param args None required.
+	 * @param args -left:X -right:X -bottom:X -claw:X. See above
 	 * @throws I2CFactory.UnsupportedBusNumberException when I2C bus is not found (if you're not on a Raspberry PI)
-	 * @throws IOException                              when the script cannot be read, for example. File not found or so.
 	 */
 	public static void main(String... args)
-					throws I2CFactory.UnsupportedBusNumberException,
-					IOException {
+					throws I2CFactory.UnsupportedBusNumberException {
 		int left = MeArmPilot.DEFAULT_LEFT_SERVO_CHANNEL;
 		int right = MeArmPilot.DEFAULT_RIGHT_SERVO_CHANNEL;
 		int claw = MeArmPilot.DEFAULT_CLAW_SERVO_CHANNEL;
