@@ -2,15 +2,16 @@ body {
   color : blue;
   font-weight: normal;
   font-size: 10pt;
-  font-family: Verdana, Helvetica, Geneva;
+  font-family: "Lato", Verdana, Helvetica, Geneva, sans-serif;
   background-position: top left;
   background-repeat: repeat;
 }
+
 h1 {
   color: silver;
   font-style: italic;
   font-size: 26pt;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
   padding-left: 5pt;
   padding-bottom: 1pt;
   padding-top: 1pt;
@@ -18,7 +19,7 @@ h1 {
 h2 {
   color: silver;
   font-size: 12pt;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
   padding-left: 5pt;
   margin-bottom: 1pt;
   margin-top: 1pt;
@@ -28,7 +29,7 @@ h3 {
   font-style: italic;
   font-weight: bold;
   font-size: 11pt;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
   padding-left: 5pt;
   margin-bottom: 1pt;
   margin-top: 1pt;
@@ -38,7 +39,7 @@ h4 {
   font-style: italic;
   font-weight: bold;
   font-size: 10pt;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
   padding-left: 5pt;
   margin-bottom: 1pt;
   margin-top: 1pt;
@@ -48,7 +49,7 @@ h5 {
   font-style: normal;
   font-weight: bold;
   font-size: 10pt;
-  font-family: Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
   padding-left: 5pt;
   margin-bottom: 1pt;
   margin-top: 1pt;
@@ -57,7 +58,7 @@ h6 {
   font-style: italic;
   font-weight: normal;
   font-size: 10pt;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
   padding-left: 5pt;
   margin-bottom: 1pt;
   margin-top: 1pt;
@@ -65,41 +66,41 @@ h6 {
 li {
   font-weight: normal;
   font-size: 10pt;
-  font-family: Verdana, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
 dt {
   font-size: 10pt;
   font-weight: bold;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
 dd {
   font-size: 10pt;
   font-weight: normal;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
 p {
   font-size: 10pt;
   font-weight: normal;
-  font-family: Verdana, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
 td {
   font-size: 10pt;
-  font-family: Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
 small {
   font-size: 8pt;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
 blockquote {
   font-style: italic;
   font-size: 10pt;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
 em {
   font-size: 10pt;
   font-style: italic;
   font-weight: bold;
-  font-family: Verdana, Arial, Helvetica, Geneva
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
 pre {
   margin-top: 0px;
@@ -109,7 +110,7 @@ pre {
 }
 address {
   font-size: 8pt;
-  font-family: Verdana, Arial, Helvetica, Geneva;
+/*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
 img {
   vertical-align: middle;
