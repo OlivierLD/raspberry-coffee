@@ -504,24 +504,31 @@ public class HTTPServer {
 	 * @param f
 	 * @return
 	 */
-	private static String getContentType(String f) { // TODO add more types, as requested
+	private static String getContentType(String f) { // TODO add more types, as required
 		String contentType = "text/plain";
-		if (f.endsWith(".html"))
+		if (f.endsWith(".html")) {
 			contentType = "text/html";
-		else if (f.endsWith(".js"))
+		} else if (f.endsWith(".js")) {
 			contentType = "text/javascript";
-		else if (f.endsWith(".css"))
+		} else if (f.endsWith(".css")) {
 			contentType = "text/css";
-		else if (f.endsWith(".xml"))
+		} else if (f.endsWith(".xml")) {
 			contentType = "text/xml";
-		else if (f.endsWith(".ico"))
-			contentType = "iimage/x-icon";
-		else if (f.endsWith(".png"))
+		} else if (f.endsWith(".ico")) {
+			contentType = "image/x-icon";
+		} else if (f.endsWith(".png")) {
 			contentType = "image/png";
-		else if (f.endsWith(".gif"))
+		} else if (f.endsWith(".gif")) {
 			contentType = "image/gif";
-		else if (f.endsWith(".jpg") || f.endsWith(".jpeg"))
+		} else if (f.endsWith(".jpg") || f.endsWith(".jpeg")) {
 			contentType = "image/jpeg";
+		} else if (f.endsWith(".svg")) {
+			contentType = "image/svg+xml";
+		} else if (f.endsWith(".woff")) {
+			contentType = "application/x-font-woff";
+		} else if (f.endsWith(".ttf")) {
+			contentType = "application/x-font-ttf";
+		}
 		return contentType;
 	}
 
