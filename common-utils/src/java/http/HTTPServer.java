@@ -81,6 +81,10 @@ public class HTTPServer {
 			this.protocol = protocol;
 		}
 
+		public String getResource() {
+			return getVerb() + " " + getPath();
+		}
+
 		public byte[] getContent() {
 			return content;
 		}

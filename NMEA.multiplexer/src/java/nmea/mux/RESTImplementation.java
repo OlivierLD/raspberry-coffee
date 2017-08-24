@@ -100,6 +100,10 @@ public class RESTImplementation {
 		}
 	}
 
+	private static boolean restVerbose() {
+		return "true".equals(System.getProperty("rest.verbose", "false"));
+	}
+
 	/**
 	 * Define all the REST operations to be managed
 	 * by the HTTP server.
@@ -264,6 +268,9 @@ public class RESTImplementation {
 	 * @return the actual result.
 	 */
 	public HTTPServer.Response processRequest(HTTPServer.Request request, HTTPServer.Response defaultResponse) {
+		if (restVerbose()) {
+			System.out.println(">> " + request.getResource());
+		}
 		Optional<Operation> opOp = operations
 						.stream()
 						.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
