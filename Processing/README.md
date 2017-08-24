@@ -59,6 +59,54 @@ About 20 lines...
   </tr>
 </table>
 
+### Processing and Java
+As you would notice, the code of a `sketch` looks like Java code, but it is not _exactly_ Java code...
+
+Actually, the Processing Development Environment (aka `PDE`) wraps the code with what is missing for Java to be 100% happy.
+
+If you have for example a sketch like that one:
+```java
+void setup() {
+  size(200, 200); 
+  stroke(255);
+  noFill();
+  textSize(72);  
+}
+
+void draw() { 
+  background(0);
+  fill(255);
+  value = (int)Math.floor(1023 * Math.random());  // Simulation
+  text(String.format("%04d", value), 10, 100);
+}
+```
+Then _this_ code will actually be compiled and executed:
+```java
+package your.sketch;
+
+import processing.core.PApplet;
+
+public class Sketch extends PApplet {
+
+  public void settings() {
+  }
+
+  public void setup() {
+	  size(200, 200); 
+	  stroke(255);
+	  noFill();
+	  textSize(72);  
+  }
+
+  public void draw() {
+	  background(0);
+	  fill(255);
+	  value = (int)Math.floor(1023 * Math.random());  // Simulation
+	  text(String.format("%04d", value), 10, 100);
+  }
+}
+``` 
+
 ## PitchRoll.pde
 
 Displays the pitch and roll, returned by an LSM303 (accelerometer) sensor.
