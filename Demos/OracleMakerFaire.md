@@ -7,7 +7,7 @@
 - Show **remote debugging** !!
 - Show Processing.org
     - Planets
-    - Sensors
+    - Sensors (ADC, Color Sensor, LSM303)
     - OLED
     - OLED with Sensors
     - **Processing GUI for MeArm**
@@ -16,7 +16,7 @@
     - IoT with Adafruit-IO, Pebble watch
     - Camera
     - SunFlower
-    - NMEA.Multiplexer (recording, replay)
+    - NMEA.Multiplexer (recording, replay, rich web UI)
     - FONA
 - All together
     - Sensor > RPi > IoT
