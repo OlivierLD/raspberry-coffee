@@ -69,7 +69,13 @@ public class JoyStick {
 				if ("true".equals(System.getProperty("joystick.verbose", "false")))
 					System.out.println("\tServo channel:" + ch + ", value " + newValue + ", vol. " + volume + " %.");
 
-				channelValues[ch] = volume;
+				for (int i=0; i<channel.length; i++) {
+					if (channel[i].ch() == ch) {
+						channelValues[i] = volume;
+						break;
+					}
+				}
+
 				if (ch == channel[0].ch() && volume != prevUDValue)
 					joyStickClient.setUD(volume);
 				if (ch == channel[1].ch() && volume != prevLRValue)
