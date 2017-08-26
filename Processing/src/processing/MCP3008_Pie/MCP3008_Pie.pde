@@ -16,10 +16,10 @@ void setup() {
   noFill();
   textSize(72);  
   if (!SIMULATION) {
-    Pin miso = PinUtil.GPIOPin.GPIO_13.getPin();
-    Pin mosi = PinUtil.GPIOPin.GPIO_12.getPin();
-    Pin clk  = PinUtil.GPIOPin.GPIO_14.getPin();
-    Pin cs   = PinUtil.GPIOPin.GPIO_10.getPin();
+    Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
+    Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
+    Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
+    Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
     MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
   }

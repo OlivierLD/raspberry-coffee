@@ -3,12 +3,20 @@ package raspisamples.adc;
 import adc.ADCContext;
 import adc.ADCListener;
 import adc.ADCObserver;
+import com.pi4j.io.gpio.Pin;
+import utils.PinUtil;
 
 /**
  * A two-channel listener. Uses an MCP3008 to get the values of the 2 joystick's channels.
  * An example, for inspiration.
  */
 public class JoyStick {
+	// Default wiring for MCP3008
+	private static Pin defaultMiso = PinUtil.GPIOPin.GPIO_13.pin();
+	private static Pin defaultMosi = PinUtil.GPIOPin.GPIO_12.pin();
+	private static Pin defaultClk  = PinUtil.GPIOPin.GPIO_14.pin();
+	private static Pin defaultCs   = PinUtil.GPIOPin.GPIO_10.pin();
+
 	private static ADCObserver.MCP3008_input_channels channel[] = null;
 	private final int[] channelValues = new int[]{0, 0}; // (0..100)
 
@@ -19,12 +27,33 @@ public class JoyStick {
 		this(jsc, true);
 	}
 	public JoyStick(JoyStickClient jsc, boolean withHook) throws Exception {
-		this(jsc, ADCObserver.MCP3008_input_channels.CH0, ADCObserver.MCP3008_input_channels.CH1, withHook);
+		this(jsc,
+				ADCObserver.MCP3008_input_channels.CH0,
+				ADCObserver.MCP3008_input_channels.CH1,
+				defaultClk,
+				defaultMiso,
+				defaultMosi,
+				defaultCs,
+				withHook);
 	}
 	public JoyStick(JoyStickClient jsc, ADCObserver.MCP3008_input_channels ud, ADCObserver.MCP3008_input_channels lr) throws Exception {
-		this(jsc, ud, lr, true);
+		this(jsc,
+				ud,
+				lr,
+				defaultClk,
+				defaultMiso,
+				defaultMosi,
+				defaultCs,
+				true);
 	}
-	public JoyStick(JoyStickClient jsc, ADCObserver.MCP3008_input_channels ud, ADCObserver.MCP3008_input_channels lr, boolean withHook) throws Exception {
+	public JoyStick(JoyStickClient jsc,
+	                ADCObserver.MCP3008_input_channels ud,
+	                ADCObserver.MCP3008_input_channels lr,
+	                Pin clk,
+	                Pin miso,
+	                Pin mosi,
+	                Pin cs,
+	                boolean withHook) throws Exception {
 		System.out.println(String.format(">> Channel MCP3008 #%s: Up-Down", ud.toString()));
 		System.out.println(String.format(">> Channel MCP3008 #%s: Left-Right", lr.toString()));
 

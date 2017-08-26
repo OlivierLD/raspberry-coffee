@@ -18,7 +18,7 @@ import raspisamples.servo.StandardServo;
  *
  * Parameters are optional.
  * Usage is:
- *   [sudo] java raspisamples.PanTiltJoyStick -ud:14 -lr:15 -adcUD:0 -adcLR:1
+ *   [sudo] java -cp XXX -Dverbose=true|false raspisamples.PanTiltJoyStick -ud:14 -lr:15 -adcUD:0 -adcLR:1
  */
 public class PanTiltJoyStick {
 	private static StandardServo ssUD = null,
