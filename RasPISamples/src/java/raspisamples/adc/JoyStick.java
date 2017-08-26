@@ -59,7 +59,7 @@ public class JoyStick {
 
 		joyStickClient = jsc;
 		channel = new ADCObserver.MCP3008_input_channels[] { ud, lr };
-		final ADCObserver obs = new ADCObserver(channel);
+		final ADCObserver obs = new ADCObserver(channel, clk, miso, mosi, cs);
 
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
