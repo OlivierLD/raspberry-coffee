@@ -1,5 +1,6 @@
 package raspisamples;
 
+import adc.ADCObserver;
 import com.pi4j.io.i2c.I2CFactory;
 import raspisamples.adc.JoyStick;
 
@@ -14,14 +15,90 @@ import raspisamples.servo.StandardServo;
  * <p>
  * Joystick read with ADC (MCP3008)
  * 2 Servos (UP/LR)
+ *
+ * Parameters are optional.
+ * Usage is:
+ *   [sudo] java raspisamples.PanTiltJoyStick -ud:14 -lr:15 -adcUD:0 -adcLR:1
  */
 public class PanTiltJoyStick {
 	private static StandardServo ssUD = null,
-					ssLR = null;
+					                     ssLR = null;
 
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
-		ssUD = new StandardServo(14); // 14 : Address on the board (1..15)
-		ssLR = new StandardServo(15); // 15 : Address on the board (1..15)
+	private final static String UD_PREFIX = "-ud:";
+	private final static String LR_PREFIX = "-lr:";
+
+	private final static String ADC_UD_PREFIX = "-adcUD:";
+	private final static String ADC_LR_PREFIX = "-adcLR:";
+
+	private static ADCObserver.MCP3008_input_channels getChannelByNumber(int num) {
+		ADCObserver.MCP3008_input_channels channel = null;
+		for (ADCObserver.MCP3008_input_channels ch : ADCObserver.MCP3008_input_channels.values()) {
+			if (ch.ch() == num) {
+				channel = ch;
+				break;
+			}
+		}
+		return channel;
+	}
+
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+
+		int ud = 14, lr = 15; // Default
+		ADCObserver.MCP3008_input_channels adcUD = ADCObserver.MCP3008_input_channels.CH0;
+		ADCObserver.MCP3008_input_channels adcLR = ADCObserver.MCP3008_input_channels.CH1;
+
+		if (args.length > 0) {
+			for (int i=0; i<args.length; i++) {
+				if (args[i].startsWith(UD_PREFIX)) {
+					String val = args[i].substring(UD_PREFIX.length());
+					try {
+						ud = Integer.parseInt(val);
+						if (ud < 0 || ud > 15) {
+							throw new IllegalArgumentException("Channel must be in [0..15]");
+						}
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else if (args[i].startsWith(LR_PREFIX)) {
+					String val = args[i].substring(LR_PREFIX.length());
+					try {
+						lr = Integer.parseInt(val);
+						if (lr < 0 || lr > 15) {
+							throw new IllegalArgumentException("Channel must be in [0..15]");
+						}
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else if (args[i].startsWith(ADC_UD_PREFIX)) {
+					String val = args[i].substring(ADC_UD_PREFIX.length());
+					try {
+						int ch = Integer.parseInt(val);
+						if (ch < 0 || ch > 7) {
+							throw new IllegalArgumentException("ADC Channel must be in [0..7]");
+						}
+						adcUD = getChannelByNumber(ch);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else if (args[i].startsWith(ADC_LR_PREFIX)) {
+					String val = args[i].substring(ADC_LR_PREFIX.length());
+					try {
+						int ch = Integer.parseInt(val);
+						if (ch < 0 || ch > 7) {
+							throw new IllegalArgumentException("ADC Channel must be in [0..7]");
+						}
+						adcLR = getChannelByNumber(ch);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else {
+					System.out.println("Un-recognized parameter " + args[i]);
+				}
+			}
+		}
+
+		ssUD = new StandardServo(ud); // 14 : Address on the board (1..15)
+		ssLR = new StandardServo(lr); // 15 : Address on the board (1..15)
 
 		// Init/Reset
 		ssUD.stop();
@@ -59,7 +136,7 @@ public class PanTiltJoyStick {
 		}));
 
 		try {
-			new JoyStick(jsc);
+			new JoyStick(jsc, adcUD, adcLR);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

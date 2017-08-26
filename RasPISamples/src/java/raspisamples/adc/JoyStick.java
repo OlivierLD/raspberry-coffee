@@ -19,14 +19,17 @@ public class JoyStick {
 		this(jsc, true);
 	}
 	public JoyStick(JoyStickClient jsc, boolean withHook) throws Exception {
-		System.out.println(">> Channel MCP3008 #0: Up-Down");
-		System.out.println(">> Channel MCP3008 #1: Left-Right");
+		this(jsc, ADCObserver.MCP3008_input_channels.CH0, ADCObserver.MCP3008_input_channels.CH1, withHook);
+	}
+	public JoyStick(JoyStickClient jsc, ADCObserver.MCP3008_input_channels ud, ADCObserver.MCP3008_input_channels lr) throws Exception {
+		this(jsc, ud, lr, true);
+	}
+	public JoyStick(JoyStickClient jsc, ADCObserver.MCP3008_input_channels ud, ADCObserver.MCP3008_input_channels lr, boolean withHook) throws Exception {
+		System.out.println(String.format(">> Channel MCP3008 #%s: Up-Down", ud.toString()));
+		System.out.println(String.format(">> Channel MCP3008 #%s: Left-Right", lr.toString()));
 
 		joyStickClient = jsc;
-		channel = new ADCObserver.MCP3008_input_channels[] {
-										ADCObserver.MCP3008_input_channels.CH0, // UD
-										ADCObserver.MCP3008_input_channels.CH1  // LR
-						};
+		channel = new ADCObserver.MCP3008_input_channels[] { ud, lr };
 		final ADCObserver obs = new ADCObserver(channel);
 
 		ADCContext.getInstance().addListener(new ADCListener() {
