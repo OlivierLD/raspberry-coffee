@@ -6,7 +6,7 @@ import i2c.sensor.TCS34725;
 boolean withSensor = true;
 
 TCS34725 sensor;
-int colorThreshold = 4_000;
+int colorThreshold = 1_000;
 
 void setup(){
   size(200, 200);
@@ -14,7 +14,7 @@ void setup(){
 //noFill();
   smooth(4);
   textSize(18);
-  frameRate(2);
+  frameRate(20);
   if (withSensor) {
     try {
       sensor = new TCS34725(TCS34725.TCS34725_INTEGRATIONTIME_50MS, TCS34725.TCS34725_GAIN_4X);
