@@ -171,7 +171,7 @@ and this is where it fits in the picture above.
 A `Transformer` is just reworking the data before forwarding them as a regular `forwarder` would.
 
 The example in `WebSocketProcessor.java` is transforming the NMEA Data in the format expected by a Pebble (this is a smart watch) application.
-See it [here](https://github.com/OlivierLD/pebble/tree/master/NMEA.app). Data are expected as a json object, over WebSocket.
+See it [here](https://github.com/OlivierLD/pebble/tree/master/NMEA). Data are expected as a json object, over WebSocket.
 The expected data look like:
 ```json
 {
@@ -220,7 +220,7 @@ Define your transformer in the `properties` file:
 forward.07.type=wsp
 forward.07.wsuri=ws://localhost:1234/
 ```
-Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/pebble/tree/master/NMEA.app) (WebSocket URI), and you are good to go.
+Make sure you have configured the Pebble application [as required](https://github.com/OlivierLD/pebble/tree/master/NMEA) (WebSocket URI), and you are good to go.
 
 <table>
   <tr>
