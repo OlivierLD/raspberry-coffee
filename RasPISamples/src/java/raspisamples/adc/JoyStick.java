@@ -9,6 +9,8 @@ import utils.PinUtil;
 /**
  * A two-channel listener. Uses an MCP3008 to get the values of the 2 joystick's channels.
  * An example, for inspiration.
+ *
+ * See joystick's wiring at http://raspberrypi.lediouris.net/joystick/readme.html
  */
 public class JoyStick {
 	// Default wiring for MCP3008

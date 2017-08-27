@@ -41,7 +41,7 @@ fi
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drnd.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dzda.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
-JAVA_OPTIONS="$JAVA_OPTIONS -Drest.verbose=true"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Drest.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"

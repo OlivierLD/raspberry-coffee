@@ -132,6 +132,8 @@ Mirror - synchronously - the display of the SSD1306.
   </tr>
 </table>
 
+The `RST` pin is not necessary. And yes, the `3.3` goes to `Vin`.
+
 ## MeArm GUI
 [MeArm](https://shop.mime.co.uk/) is a ~$42 (2017) robotic arm, using four micro servos.
 - One to move the arm up and down (located at the LEFT of the arm)

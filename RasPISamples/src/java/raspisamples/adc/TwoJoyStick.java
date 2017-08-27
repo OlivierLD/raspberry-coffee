@@ -7,6 +7,8 @@ import adc.ADCObserver;
 /**
  * A two-channel listener. Uses an MCP3008 to get the values of the 2 joystick's channels.
  * An example, for inspiration.
+ *
+ * Wiring at http://raspberrypi.lediouris.net/joystick/readme.html
  */
 public class TwoJoyStick {
 	private static ADCObserver.MCP3008_input_channels channel[] = null;

@@ -14,7 +14,7 @@
 - Show MCP3008 with SSD1306
 - Show Project
     - IoT with Adafruit-IO, Pebble watch
-    - Camera
+    - Camera - with pan-tilt servos and joystick.
     - SunFlower
     - NMEA.Multiplexer (recording, replay, rich web UI)
     - FONA
