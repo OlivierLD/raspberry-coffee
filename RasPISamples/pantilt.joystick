@@ -6,5 +6,5 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 JAVA_OPT="-Dverbose=true"
 JAVA_OPT="$JAVA_OPT -Djoystick.verbose=true"
 #
-sudo java -cp $CP $JAVA_OPT raspisamples.PanTiltJoyStick -ud:8 -lr:9 -adcUD:3 -adcLR:2
+sudo java -cp $CP $JAVA_OPT raspisamples.PanTiltJoyStick -ud:8 -lr:9 -adcLR:2 -adcUD:3
 
