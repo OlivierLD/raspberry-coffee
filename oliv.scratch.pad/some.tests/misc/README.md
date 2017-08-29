@@ -31,6 +31,8 @@ If the `oraclejet` template was not installed yet, no panic, install it by typin
 ```bash
 $ npm install generator-oraclejet
 ```
+This will install a bunch of stuff in a `node_modules` directory.
+
 And now you can proceed, re-type the `yo` command:
 ```bash
 $ yo oraclejet myfirstCCA --template=basic
@@ -60,7 +62,7 @@ The composite meta-data need to be stored in this `my-cc` directory, as a `json`
 }
 ```
 We've defined 2 properties. 
-> Notice the case. Property names use camel case.
+> Notice the case. Property names use camel case. The tags will use the spine-case equivalents.
 
 ##### HTML Template
 In the same `src/js/jet-composites/my-cc` directory, create an HTML template.
@@ -153,5 +155,34 @@ Ok, now we can use the Composite Component.
 
 Create your own page, `src/js/views/myWork.html`:
 ```html
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>My Work</title>
+</head>
+<body>
+	<div>
+		<h2>Test Composite</h2>
+		<my-cc badge-name="Duke Mascot" badge-image="/images/duke.png"/>
+	</div>
+</body>
+</html>
 ```
+For the code above to work, create a directory named `images` in the `src` directory (the one containing `index.html`), and drop the image `duke.png` in it. 
+
+Modify the `index.html` as instructed in the tutorial:
+```html
+      <div role="main" class="oj-web-applayout-max-width oj-web-applayout-content">
+        <!-- Added stuff goes here -->
+        <div data-bind="ojModule:'myWork'"/>
+      </div>
+```
+
+Last, from the root directory (the one containing `Gruntfile.js`), run the following command:
+```bash
+ $ grunt serve
+```
+This should start a web server, and load the `index.html` in your default browser.
+
+---
