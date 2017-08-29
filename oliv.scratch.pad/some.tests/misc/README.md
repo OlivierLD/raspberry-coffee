@@ -169,3 +169,18 @@ Create your own page, `src/js/views/myWork.html`:
 </body>
 </html>
 ```
+Modify the `index.html` as instructed in the tutorial:
+```html
+      <div role="main" class="oj-web-applayout-max-width oj-web-applayout-content">
+        <!-- Added stuff goes here -->
+        <div data-bind="ojModule:'myWork'"/>
+      </div>
+```
+
+Last, from the root directory (the one containing `Gruntfile.js`), run the following command:
+```bash
+ $ grunt serve
+```
+This should start a web server, and load the `index.html` in your default browser.
+
+---
