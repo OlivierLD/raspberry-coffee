@@ -30,7 +30,7 @@ public class PinUtil {
 
 		private String pinName; // Pin name
 		private int pinNumber;  // Physical
-		private int gpio;       // Used by onoff (nodejs) anf Javah-io
+		private int gpio;       // Used by onoff (nodejs), BCM in 'gpio readall', and Javah-io
 		private int wiringPi;   // Also used by PI4J
 		private Pin pin;
 
