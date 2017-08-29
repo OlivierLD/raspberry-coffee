@@ -169,6 +169,8 @@ Create your own page, `src/js/views/myWork.html`:
 </body>
 </html>
 ```
+For the code above to work, create a directory named `images` in the `src` directory (the one containing `index.html`), and drop the image `duke.png` in it. 
+
 Modify the `index.html` as instructed in the tutorial:
 ```html
       <div role="main" class="oj-web-applayout-max-width oj-web-applayout-content">
