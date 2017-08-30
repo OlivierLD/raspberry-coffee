@@ -19,7 +19,7 @@ import java.util.Optional;
  * <br>
  * Those operation mostly retrieve the state of the SunFlower class, and device.
  * <br>
- * The SunFlower will use the {@link #processRequest(Request, Response)} method of this class to
+ * The SunFlower will use the {@link #processRequest(Request)} method of this class to
  * have the required requests processed.
  * </p>
  */
@@ -48,7 +48,7 @@ public class RESTImplementation {
 	 * <p>
 	 * Frame path parameters with curly braces.
 	 * <p>
-	 * See {@link #processRequest(Request, Response)}
+	 * See {@link #processRequest(Request)}
 	 * See {@link HTTPServer}
 	 */
 	private List<Operation> operations = Arrays.asList(

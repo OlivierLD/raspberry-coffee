@@ -210,7 +210,6 @@ public class HTTPServer {
 			if (this.payload != null) {
 				sb.append("\n\n" + new String(this.payload));
 			}
-
 			return sb.toString();
 		}
 	}
@@ -224,6 +223,13 @@ public class HTTPServer {
 		String description;
 		Function<Request, Response> fn;
 
+		/**
+		 *
+		 * @param verb GET, PUT, POST, or DELETE
+		 * @param path can include {parameters}
+		 * @param fn
+		 * @param description
+		 */
 		public Operation(String verb, String path, Function<HTTPServer.Request, HTTPServer.Response> fn, String description) {
 			this.verb = verb;
 			this.path = path;
@@ -271,7 +277,10 @@ public class HTTPServer {
 			if (requestManagers == null) {
 				requestManagers = new ArrayList<>(1);
 			}
-			// Make sure no operation is duplicated across request managers
+			/*
+			 * Make sure no operation is duplicated across request managers.
+			 * We assume that there is no duplicate in each operation list.
+			 */
 			if (requestManagers.size() > 0) {
 				for (HTTPServerInterface reqMgr : requestManagers) {
 					List<Operation> opList = reqMgr.getRESTOperationList();
@@ -289,7 +298,6 @@ public class HTTPServer {
 					}
 				}
 			}
-
 			requestManagers.add(requestManager);
 		}
 	}
