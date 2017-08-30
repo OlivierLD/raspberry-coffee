@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAReader;
@@ -70,7 +71,7 @@ import nmea.utils.NMEAUtils;
  *
  * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
  * <br>
- * The Multiplexer will use the {@link #processRequest(Request, Response)} method of this class to
+ * The Multiplexer will use the {@link #processRequest(Request)} method of this class to
  * have the required requests processed.
  */
 public class RESTImplementation {
@@ -110,7 +111,7 @@ public class RESTImplementation {
 	 * <p>
 	 * Frame path parameters with curly braces.
 	 * <p>
-	 * See {@link #processRequest(HTTPServer.Request, HTTPServer.Response)}
+	 * See {@link #processRequest(HTTPServer.Request)}
 	 * See {@link HTTPServer}
 	 */
 	private List<Operation> operations = Arrays.asList(
@@ -260,14 +261,18 @@ public class RESTImplementation {
 									this::getLastNMEASentence,
 									"Get the last available inbound sentence"));
 
+	protected List<Operation> getOperations() {
+		return  this.operations;
+	}
+
 	/**
 	 * This is the method to invoke to have a REST request processed as defined above.
 	 *
 	 * @param request as it comes from the client
-	 * @param defaultResponse with the expected 'happy' code.
 	 * @return the actual result.
 	 */
-	public HTTPServer.Response processRequest(HTTPServer.Request request, HTTPServer.Response defaultResponse) {
+	public HTTPServer.Response processRequest(HTTPServer.Request request)
+		throws UnsupportedOperationException {
 		if (restVerbose()) {
 			System.out.println(">> " + request.getResource());
 		}
@@ -280,8 +285,9 @@ public class RESTImplementation {
 			request.setRequestPattern(op.getPath()); // To get the prms later on.
 			HTTPServer.Response processed = op.getFn().apply(request); // Execute here.
 			return processed;
+		} else {
+			throw new UnsupportedOperationException(String.format("%s not managed", request.toString()));
 		}
-		return defaultResponse;
 	}
 
 	private HTTPServer.Response getSerialPorts(HTTPServer.Request request) {

@@ -7,12 +7,10 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * Used for the REST interface of an HTTP Server.
@@ -262,7 +260,45 @@ public class HTTPServer {
 	}
 
 	private boolean keepRunning = true;
-	private HTTPServerInterface requestManager = null;
+
+	// This is an array, so several apps can subscribe to the same HTTPServer.
+	// A REST operation list belongs to each application.
+	// In this case, the HTTPServer should probably live in a singleton.
+	private List<HTTPServerInterface> requestManagers = null;
+
+	public void addRequestManager(HTTPServerInterface requestManager) {
+		if (requestManager != null) {
+			if (requestManagers == null) {
+				requestManagers = new ArrayList<>(1);
+			}
+			// Make sure no operation is duplicated across request managers
+			if (requestManagers.size() > 0) {
+				for (HTTPServerInterface reqMgr : requestManagers) {
+					List<Operation> opList = reqMgr.getRESTOperationList();
+					List<Operation> dups = opList.stream()
+							.filter(op -> requestManager.getRESTOperationList().stream()
+									.filter(newOp -> (newOp.getVerb().equals(op.getVerb()) &&
+											              RESTProcessorUtil.pathsAreIndentical(newOp.getPath(), op.getPath())))
+									.collect(Collectors.counting()) > 0)
+							.collect(Collectors.toList());
+					if (dups.size() > 0) {
+						String duplicates = dups.stream()
+								.map(op -> op.getVerb() + " " + op.getPath())
+								.collect(Collectors.joining(", "));
+						throw new IllegalArgumentException(String.format("Duplicate operation%s [%s]", (dups.size() == 1 ? "" : "s"), duplicates));
+					}
+				}
+			}
+
+			requestManagers.add(requestManager);
+		}
+	}
+
+	public void removeRequestManager(HTTPServerInterface requestManager) {
+		if (requestManagers.contains(requestManager)) {
+			requestManagers.remove(requestManager);
+		}
+	}
 
 	private static int defaultPort = 9999;
 
@@ -284,7 +320,7 @@ public class HTTPServer {
 
 	public HTTPServer(int port, HTTPServerInterface requestManager) throws Exception {
 		this.port = port;
-		this.requestManager = requestManager;
+		addRequestManager(requestManager);
 		// Infinite loop, waiting for requests
 		httpListenerThread = new Thread("HTTPListener") {
 			public void run() {
@@ -435,10 +471,23 @@ public class HTTPServer {
 								}
 								sendResponse(response, out);
 							} else {
-								if (requestManager != null) {
-									Response response = requestManager.onRequest(request); // REST Request, most likely.
-									sendResponse(response, out);
-//								System.out.println(">> Returned REST response.");
+								if (requestManagers != null) {  // Manage it as a REST Request.
+									boolean unManagedRequest = true;
+									for (HTTPServerInterface reqMgr : requestManagers) { // Loop on requestManagers
+										try {
+											Response response = reqMgr.onRequest(request); // REST Request, most likely.
+											sendResponse(response, out);
+//								    System.out.println(">> Returned REST response.");
+											unManagedRequest = false;
+											break;
+										} catch (UnsupportedOperationException usoe) {
+											// Absorb
+										}
+									}
+									if (unManagedRequest) {
+										Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
+										sendResponse(response, out);
+									}
 								}
 							}
 						} else {
@@ -530,6 +579,8 @@ public class HTTPServer {
 			contentType = "image/svg+xml";
 		} else if (f.endsWith(".woff")) {
 			contentType = "application/x-font-woff";
+		} else if (f.endsWith(".wav")) {
+			contentType = "audio/wav";
 		} else if (f.endsWith(".ttf")) {
 			contentType = "application/x-font-ttf";
 		}

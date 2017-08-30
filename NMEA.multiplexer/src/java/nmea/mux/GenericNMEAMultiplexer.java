@@ -24,7 +24,7 @@ import java.util.Properties;
  * See {@link HTTPServerInterface} and {@link HTTPServer}.<br>
  * Also see below the definition of <code>List&lt;Operation&gt; operations</code>.
  */
-public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface {
+public class GenericNMEAMultiplexer  implements HTTPServerInterface, Multiplexer  {
 	private HTTPServer adminServer = null;
 
 	private List<NMEAClient> nmeaDataClients = new ArrayList<>();
@@ -36,14 +36,15 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 	/**
 	 * Implements the management of the REST requests (see {@link RESTImplementation})
 	 * Dedicated Admin Server.
+	 * This method is called by the HTTPServer through the current HTTPServerInterface
 	 *
 	 * @param request the parsed request.
 	 * @return the response, along with its HTTP status code.
 	 */
 	@Override
-	public HTTPServer.Response onRequest(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_IMPLEMENTED);
-		response = restImplementation.processRequest(request, response); // All the skill is here.
+	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
+//	HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_IMPLEMENTED);
+		HTTPServer.Response response = restImplementation.processRequest(request); // All the skill is here.
 		if (this.verbose) {
 			System.out.println("======================================");
 			System.out.println("Request :\n" + request.toString());
@@ -51,6 +52,11 @@ public class GenericNMEAMultiplexer implements Multiplexer, HTTPServerInterface 
 			System.out.println("======================================");
 		}
 		return response;
+	}
+
+	@Override
+	public List<HTTPServer.Operation> getRESTOperationList() {
+		return restImplementation.getOperations();
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.HTTPServer.Operation;
 import http.RESTProcessorUtil;
+
 import java.util.List;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -87,14 +88,17 @@ public class RESTImplementation {
 									this::getAll,
 									"Get everything!"));
 
+	protected List<Operation> getOperations() {
+		return  this.operations;
+	}
+
 	/**
 	 * This is the method to invoke to have a REST request processed as defined above.
 	 *
 	 * @param request as it comes from the client
-	 * @param defaultResponse with the expected 'happy' code.
 	 * @return the actual result.
 	 */
-	public Response processRequest(Request request, Response defaultResponse) {
+	public Response processRequest(Request request) throws UnsupportedOperationException {
 		Optional<Operation> opOp = operations
 						.stream()
 						.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
@@ -105,9 +109,8 @@ public class RESTImplementation {
 			Response processed = op.getFn().apply(request); // Execute here.
 			return processed;
 		} else {
-			RESTProcessorUtil.addErrorMessageToResponse(defaultResponse, "Requested operation not found or implemented");
+			throw new UnsupportedOperationException(String.format("%s not managed", request.toString()));
 		}
-		return defaultResponse;
 	}
 
 	private Response getPosition(Request request) {

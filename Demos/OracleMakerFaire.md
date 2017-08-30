@@ -4,7 +4,7 @@
 - Show sensor drivers. Python, C, Java
 - Show how to use them, from straight java code
 - Show how to integrate existing jars
-- Show **remote debugging** !!
+- Show **remote debugging** !! Set verbose on and off on the Multiplexer.
 - Show Processing.org
     - Planets
     - Sensors (ADC, Color Sensor, LSM303)

@@ -291,9 +291,8 @@ public class SunFlower implements HTTPServerInterface {
 	 * @return the response, along with its HTTP status code.
 	 */
 	@Override
-	public HTTPServer.Response onRequest(HTTPServer.Request request) {
-		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NOT_IMPLEMENTED);
-		response = restImplementation.processRequest(request, response); // All the skill is here.
+	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
+		HTTPServer.Response response = restImplementation.processRequest(request); // All the skill is here.
 		if (this.httpVerbose) {
 			System.out.println("======================================");
 			System.out.println("Request :\n" + request.toString());
@@ -301,6 +300,11 @@ public class SunFlower implements HTTPServerInterface {
 			System.out.println("======================================");
 		}
 		return response;
+	}
+
+	@Override
+	public List<HTTPServer.Operation> getRESTOperationList() {
+		return restImplementation.getOperations();
 	}
 
 	public SunFlower(int[] headinServoNumber, int[] tiltServoNumber) {
