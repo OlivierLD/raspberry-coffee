@@ -1,6 +1,9 @@
 package fortest;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
@@ -11,6 +14,7 @@ import tideengine.TideStation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +66,12 @@ public class RESTImplementation {
 									"GET",
 									"/tide-stations",
 									this::getStationsList,
-									"Get Tide Stations list."));
+									"Get Tide Stations list."),
+					new Operation(
+							"GET",
+							"/tide-stations/{st-regex}",
+							this::getStations,
+							"Get Tide Stations list."));
 
 	protected List<Operation> getOperations() {
 		return  this.operations;
@@ -103,12 +112,43 @@ public class RESTImplementation {
 	private Response getStationsList(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			List<TideStation> ts = this.one.getStationList();
-			String content = new Gson().toJson(ts);
+			List<String> stationNames = this.one.getStationList().
+					stream()
+					.map(ts -> ts.getFullName())
+					.collect(Collectors.toList());
+			String content = new Gson().toJson(stationNames);
+//		System.out.println(String.format("Length:%d,\n%s", content.length(), content));
 			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private Response getStations(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		final Pattern pattern;
+		if (prmValues.size() == 1) {
+			String nameRegex = prmValues.get(0);
+			pattern = Pattern.compile(String.format(".*%s.*", nameRegex)); // TODO decode/unescape?
+		} else {
+			throw new RuntimeException("Need one path parameter {regex}.");
+		}
+		try {
+			List<TideStation> ts = this.one.getStationList().
+					stream()
+					.filter(station -> pattern.matcher(station.getFullName()).matches())
+					.collect(Collectors.toList());
+			String content = new Gson().toJson(ts);
+//		System.out.println(String.format("Length:%d,\n%s", content.length(), content));
+			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex) {
+			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		}
 	}

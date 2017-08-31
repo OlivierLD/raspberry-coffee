@@ -35,7 +35,7 @@ public class BackEndXMLTideComputer {
 	}
 
 	public static Map<String, TideStation> getStationData() throws Exception {
-		Map<String, TideStation> stationData = new HashMap<String, TideStation>();
+		Map<String, TideStation> stationData = new HashMap<>();
 		StationFinder sf = new StationFinder(stationData);
 		try {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -51,7 +51,7 @@ public class BackEndXMLTideComputer {
 
 	public static List<TideStation> getStationData(Stations stations) throws Exception {
 		long before = System.currentTimeMillis();
-		List<TideStation> stationData = new ArrayList<TideStation>();
+		List<TideStation> stationData = new ArrayList<>();
 		Set<String> keys = stations.getStations().keySet();
 		for (String k : keys) {
 			try {
