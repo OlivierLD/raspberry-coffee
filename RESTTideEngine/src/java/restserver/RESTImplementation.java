@@ -66,12 +66,12 @@ public class RESTImplementation {
 					"GET",
 					"/tide-stations/{st-regex}",
 					this::getStations,
-					"Get Tide Stations matching the regex. Returns all data of the matching stations"),
+					"Get Tide Stations matching the regex. Returns all data of the matching stations. Regex might need encoding/escaping."),
 			new Operation(
 					"GET",
 					"/tide-stations/{station-name}/wh",
 					this::getWaterHeight,
-					"Get Water Height for the station. Requires 2 query params: from, and to, in Duration format."));
+					"Get Water Height for the station. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping."));
 
 	protected List<Operation> getOperations() {
 		return  this.operations;
