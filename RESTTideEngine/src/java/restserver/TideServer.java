@@ -1,4 +1,4 @@
-package fortest;
+package restserver;
 
 import http.HTTPServer;
 import http.HTTPServerInterface;
@@ -8,17 +8,27 @@ import tideengine.TideStation;
 
 import java.util.List;
 
-public class One implements HTTPServerInterface {
+public class TideServer implements HTTPServerInterface {
 
-	private boolean httpVerbose = false;
+	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private HTTPServer httpServer = null;
-	private int httpPort = -1;
+	private int httpPort = 9999;
 	private RESTImplementation restImplementation;
 
 	private List<Coefficient> constSpeed = null;
 	private List<TideStation> stationData = null;
 
-	public One() {
+	public TideServer() {
+
+		String port = System.getProperty("http.port");
+		if (port != null) {
+			try {
+				httpPort = Integer.parseInt(port);
+			} catch (NumberFormatException nfe) {
+				System.err.println(nfe.toString());
+			}
+		}
+
 		try {
 			BackEndTideComputer.connect();
 			BackEndTideComputer.setVerbose(false);
@@ -26,11 +36,11 @@ public class One implements HTTPServerInterface {
 			ex.printStackTrace();
 		}
 		restImplementation = new RESTImplementation(this);
-		startHttpServer(9999);
+		startHttpServer(httpPort);
 	}
 
 	public static void main(String... args) {
-		new One();
+		new TideServer();
 	}
 
 	protected List<Coefficient> getConstSpeed() throws Exception {

@@ -1,9 +1,6 @@
-package fortest;
+package restserver;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
@@ -20,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -35,14 +31,13 @@ import java.util.stream.IntStream;
  */
 public class RESTImplementation {
 
-	private One one;
+	private TideServer tideServer;
 
 	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-	public RESTImplementation(One sf) {
+	public RESTImplementation(TideServer ts) {
 
-		this.one = sf;
-
+		this.tideServer = ts;
 		// Check duplicates in operation list. Barfs if duplicate is found.
 		RESTProcessorUtil.checkDuplicateOperations(operations);
 	}
@@ -57,26 +52,26 @@ public class RESTImplementation {
 	 * See {@link HTTPServer}
 	 */
 	private List<Operation> operations = Arrays.asList(
-					new Operation(
-									"GET",
-									"/oplist",
-									this::getOperationList,
-									"List of all available operations."),
-					new Operation(
-									"GET",
-									"/tide-stations",
-									this::getStationsList,
-									"Get Tide Stations list. Returns an array of Strings containing the Station full names"),
-					new Operation(
-							"GET",
-							"/tide-stations/{st-regex}",
-							this::getStations,
-							"Get Tide Stations matching the regex. Returns all data of the matching stations"),
-					new Operation(
-							"GET",
-							"/tide-stations/{station-name}/wh",
-							this::getWaterHeight,
-							"Get Water Height for the station. Requires 2 query params: from, and to, in Duration format."));
+			new Operation(
+					"GET",
+					"/oplist",
+					this::getOperationList,
+					"List of all available operations."),
+			new Operation(
+					"GET",
+					"/tide-stations",
+					this::getStationsList,
+					"Get Tide Stations list. Returns an array of Strings containing the Station full names"),
+			new Operation(
+					"GET",
+					"/tide-stations/{st-regex}",
+					this::getStations,
+					"Get Tide Stations matching the regex. Returns all data of the matching stations"),
+			new Operation(
+					"GET",
+					"/tide-stations/{station-name}/wh",
+					this::getWaterHeight,
+					"Get Water Height for the station. Requires 2 query params: from, and to, in Duration format."));
 
 	protected List<Operation> getOperations() {
 		return  this.operations;
@@ -117,7 +112,7 @@ public class RESTImplementation {
 	private Response getStationsList(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			List<String> stationNames = this.one.getStationList().
+			List<String> stationNames = this.tideServer.getStationList().
 					stream()
 					.map(ts -> ts.getFullName())
 					.collect(Collectors.toList());
@@ -151,7 +146,7 @@ public class RESTImplementation {
 			}
 		} else {
 			response.setStatus(Response.BAD_REQUEST);
-			response.setPayload("Need one path parameter {station-name}.".getBytes());
+			response.setPayload("Need tideServer path parameter {station-name}.".getBytes());
 			proceed = false;
 		}
 		if (proceed) {
@@ -180,7 +175,7 @@ public class RESTImplementation {
 				final String stationName = stationFullName;
 				try {
 					TideStation ts = null;
-					Optional<TideStation> optTs = this.one.getStationList().
+					Optional<TideStation> optTs = this.tideServer.getStationList().
 							stream()
 							.filter(station -> stationName.equals(station.getFullName()))
 							.findFirst();
@@ -204,19 +199,14 @@ public class RESTImplementation {
 						if (ts != null) {
 //            TimeZone tz = TimeZone.getDefault();
 							now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
-							for (int h = 0; h < 24; h++) { // This is for one full day, starting from 'from' at 00:00.
-								for (int m = 0; m < 60; m += 30) {
-									Calendar cal = new GregorianCalendar(now.get(Calendar.YEAR),
-											now.get(Calendar.MONTH),
-											now.get(Calendar.DAY_OF_MONTH),
-											h, m);
-									double wh = TideUtilities.getWaterHeight(ts, this.one.getConstSpeed(), cal);
-//								TimeZone.setDefault(TimeZone.getTimeZone("127")); // for UTC display
-									TimeZone.setDefault(TimeZone.getTimeZone(ts.getTimeZone())); // for TS Timezone display
-//								System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
-//                TimeZone.setDefault(tz);
-									map.put(cal.getTime().toString(), wh);
-								}
+							while (now.before(calTo)) {
+								double wh = TideUtilities.getWaterHeight(ts, this.tideServer.getConstSpeed(), now);
+//							TimeZone.setDefault(TimeZone.getTimeZone("127")); // for UTC display
+								TimeZone.setDefault(TimeZone.getTimeZone(ts.getTimeZone())); // for TS Timezone display
+//							System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
+//              TimeZone.setDefault(tz);
+								map.put(now.getTime().toString(), wh);
+								now.add(Calendar.MINUTE, 5);
 							}
 						}
 						tideTable.heights = map;
@@ -251,11 +241,11 @@ public class RESTImplementation {
 			}
 		} else {
 			response.setStatus(Response.BAD_REQUEST);
-			response.setPayload("Need one path parameter {regex}.".getBytes());
+			response.setPayload("Need tideServer path parameter {regex}.".getBytes());
 			return response;
 		}
 		try {
-			List<TideStation> ts = this.one.getStationList().
+			List<TideStation> ts = this.tideServer.getStationList().
 					stream()
 					.filter(station -> pattern.matcher(station.getFullName()).matches()) // TODO IgnoreCase?
 					.collect(Collectors.toList());

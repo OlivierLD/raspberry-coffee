@@ -1,4 +1,5 @@
 #!/bin/bash
 CP=./build/libs/RESTTideEngine-1.0-all.jar
-java -cp $CP fortest.One
+JAVA_OPTS="-Dhttp.verbose=false"
+java -cp $CP $JAVA_OPTS restserver.TideServer
 

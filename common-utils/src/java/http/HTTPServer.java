@@ -355,7 +355,7 @@ public class HTTPServer {
 						boolean keepReading = true;
 //					System.out.println(">>> Top of the Loop <<<");
 						if (verbose) {
-							HTTPContext.getInstance().getLogger().info(">>> MUX: Top of the loop <<<");
+							HTTPContext.getInstance().getLogger().info(">>> HTTP: Top of the loop <<<");
 						}
 						while (keepReading) {
 							if (top) { // Ugly!! Argh! :(
