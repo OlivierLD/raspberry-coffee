@@ -1,0 +1,62 @@
+plugins {
+  id 'java'
+//id 'scala'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
+
+//def userprofile = System.getenv()['USERPROFILE'] // On Windows...
+//if (userprofile == null) { // Linux ?
+//  userprofile = System.getenv()['HOME']
+//}
+
+group = 'oliv.pi4j.samples'
+version = '1.0'
+
+// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password") 
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src/java'
+    }
+    resources {
+      srcDir 'src/resources'
+    }
+  }  
+  test {
+    java {
+      srcDir 'tests/java'
+    }
+  }  
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+  maven { url "https://oss.sonatype.org/content/groups/public" }
+  maven { url "http://www.datanucleus.org/downloads/maven2" }
+}
+
+dependencies {
+  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+  compile 'com.google.code.gson:gson:2.8.0'
+  compile 'org.fusesource.jansi:jansi:1.11'
+  compile 'oracle:xmlparser:2.0'
+  compile project (':common-utils')
+//compile project (':NMEA.multiplexer') // For the NMEA Parser (GPS Strings)
+}
+
+//task copyResources(type: Copy) {
+//  description = 'Copies non-java resources in the output directory before the jar task (png, xml, xsd, ttf, properties, etc)'
+//  from 'src/java'
+//  into 'out/production/classes'
+//  include '**/*.xml', '**/*.xsd', '**/*.png', '**/*.gif', '**/*.jpg', '**/*.properties', '**/*.ttf', '**/*.html'
+//}
+
+shadowJar {
+  zip64 true
+}
+
+// build.dependsOn(copyResources)
