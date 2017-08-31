@@ -11,11 +11,14 @@ import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import tideengine.TideStation;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -37,14 +40,7 @@ public class RESTImplementation {
 		this.one = sf;
 
 		// Check duplicates in operation list. Barfs if duplicate is found.
-		for (int i = 0; i < operations.size(); i++) {
-			for (int j = i + 1; j < operations.size(); j++) {
-				if (operations.get(i).getVerb().equals(operations.get(j).getVerb()) &&
-								RESTProcessorUtil.pathsAreIndentical(operations.get(i).getPath(), operations.get(j).getPath())) {
-					throw new RuntimeException(String.format("Duplicate entry in operations list %s %s", operations.get(i).getVerb(), operations.get(i).getPath()));
-				}
-			}
-		}
+		RESTProcessorUtil.checkDuplicateOperations(operations);
 	}
 
 	/**
@@ -66,12 +62,12 @@ public class RESTImplementation {
 									"GET",
 									"/tide-stations",
 									this::getStationsList,
-									"Get Tide Stations list."),
+									"Get Tide Stations list. Returns an array of Strings containing the Station full names"),
 					new Operation(
 							"GET",
 							"/tide-stations/{st-regex}",
 							this::getStations,
-							"Get Tide Stations list."));
+							"Get Tide Stations matching the regex. Returns all data of the matching stations"));
 
 	protected List<Operation> getOperations() {
 		return  this.operations;
@@ -133,14 +129,18 @@ public class RESTImplementation {
 		final Pattern pattern;
 		if (prmValues.size() == 1) {
 			String nameRegex = prmValues.get(0);
-			pattern = Pattern.compile(String.format(".*%s.*", nameRegex)); // TODO decode/unescape?
+			try {
+				pattern = Pattern.compile(String.format(".*%s.*", URLDecoder.decode(nameRegex, "UTF-8"))); // decode/unescape
+			} catch (UnsupportedEncodingException uee) {
+				throw new RuntimeException(uee);
+			}
 		} else {
 			throw new RuntimeException("Need one path parameter {regex}.");
 		}
 		try {
 			List<TideStation> ts = this.one.getStationList().
 					stream()
-					.filter(station -> pattern.matcher(station.getFullName()).matches())
+					.filter(station -> pattern.matcher(station.getFullName()).matches()) // TODO IgnoreCase?
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(ts);
 //		System.out.println(String.format("Length:%d,\n%s", content.length(), content));

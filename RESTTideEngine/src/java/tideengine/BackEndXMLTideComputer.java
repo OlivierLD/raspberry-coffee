@@ -9,7 +9,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.*;
 
-
 public class BackEndXMLTideComputer {
 	public final static String ARCHIVE_STREAM = "xml/xml.zip";
 	public final static String CONSTITUENTS_ENTRY = "constituents.xml";

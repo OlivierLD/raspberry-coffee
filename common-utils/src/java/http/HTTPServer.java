@@ -294,7 +294,7 @@ public class HTTPServer {
 						String duplicates = dups.stream()
 								.map(op -> op.getVerb() + " " + op.getPath())
 								.collect(Collectors.joining(", "));
-						throw new IllegalArgumentException(String.format("Duplicate operation%s [%s]", (dups.size() == 1 ? "" : "s"), duplicates));
+						throw new IllegalArgumentException(String.format("Duplicate operation%s across request managers [%s]", (dups.size() == 1 ? "" : "s"), duplicates));
 					}
 				}
 			}
@@ -422,8 +422,7 @@ public class HTTPServer {
 											}
 										}
 										if (request != null && !inPayload) {
-											if (line.indexOf(":") > -1) // Header?
-											{
+											if (line.indexOf(":") > -1) { // Header?
 												String headerKey = line.substring(0, line.indexOf(":"));
 												String headerValue = line.substring(line.indexOf(":") + 1);
 												headers.put(headerKey, headerValue);
@@ -464,9 +463,13 @@ public class HTTPServer {
 								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
-							} else if (path.startsWith("/web/")) { // Assume this is static content. TODO Tweak that.
+							} else if (path.startsWith("/web/")) { // Assume this is static content. TODO Tweak that, in some configuration.
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-								File f = new File("." + path);
+								String fName = path;
+								if (fName.indexOf("?") > -1) {
+									fName = fName.substring(0, fName.indexOf("?"));
+								}
+								File f = new File("." + fName);
 								if (!f.exists()) {
 									response = new Response(request.getProtocol(), Response.NOT_FOUND);
 								} else {

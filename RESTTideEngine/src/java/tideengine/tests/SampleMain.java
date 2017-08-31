@@ -13,7 +13,7 @@ import java.util.*;
 public class SampleMain {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyy-MMM-dd HH:mm z (Z)");
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		System.out.println(args.length + " Argument(s)...");
 		boolean xmlTest = true;
 

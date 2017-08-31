@@ -22,7 +22,7 @@ public class HTTPServerTests {
 						"POST",
 						"/create/{it}",
 						this::emptyOperation,
-						"List of all available operations."),
+						"Blah."),
 				new HTTPServer.Operation(
 						"POST",
 						"/terminate",
@@ -40,7 +40,7 @@ public class HTTPServerTests {
 						"POST",
 						"/create/{this}",
 						this::emptyOperation,
-						"List of all available operations."),
+						"Blah."),
 				new HTTPServer.Operation(
 						"POST",
 						"/finish",
@@ -85,6 +85,37 @@ public class HTTPServerTests {
 			fail("We should not be there");
 		} catch (IllegalArgumentException ex) {
 			System.out.println(String.format("As expected [%s]", ex.toString()));
+		}
+	}
+
+	@Test
+	public void detectDuplicateOperations() {
+		List<HTTPServer.Operation> opList = Arrays.asList(
+				new HTTPServer.Operation(
+						"GET",
+						"/oplist",
+						this::emptyOperation,
+						"List of all available operations."),
+				new HTTPServer.Operation(
+						"POST",
+						"/create/{it}",
+						this::emptyOperation,
+						"Blah."),
+				new HTTPServer.Operation(
+						"POST",
+						"/create/{stuff}",
+						this::emptyOperation,
+						"Blah."),
+				new HTTPServer.Operation(
+						"POST",
+						"/terminate",
+						this::emptyOperation,
+						"Hard stop, shutdown. VERY unusual REST resource..."));
+		try {
+			RESTProcessorUtil.checkDuplicateOperations(opList);
+			fail("Should have detected duplicate");
+		} catch (Exception ex) {
+			System.out.println(String.format("As expected: %s", ex.toString()));
 		}
 	}
 

@@ -91,14 +91,7 @@ public class RESTImplementation {
 		this.mux = mux;
 
 		// Check duplicates in operation list. Barfs if duplicate is found.
-		for (int i = 0; i < operations.size(); i++) {
-			for (int j = i + 1; j < operations.size(); j++) {
-				if (operations.get(i).getVerb().equals(operations.get(j).getVerb()) &&
-								RESTProcessorUtil.pathsAreIndentical(operations.get(i).getPath(), operations.get(j).getPath())) {
-					throw new RuntimeException(String.format("Duplicate entry in operations list %s %s", operations.get(i).getVerb(), operations.get(i).getPath()));
-				}
-			}
-		}
+		RESTProcessorUtil.checkDuplicateOperations(operations);
 	}
 
 	private static boolean restVerbose() {

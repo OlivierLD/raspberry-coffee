@@ -6,8 +6,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class RESTProcessorUtil {
+
+	/**
+	 * Make sure no operation is duplicated. Check on Verb anf Path
+	 * Throws an Exception isf a duplicate operation is found.
+	 * @param opList
+	 */
+	public static void checkDuplicateOperations(List<HTTPServer.Operation> opList) {
+		IntStream.range(0, opList.size())
+				.boxed()
+				.forEach(i -> {
+					IntStream.range(i + 1, opList.size())
+							.boxed()
+							.forEach(j -> {
+								if (opList.get(i).getVerb().equals(opList.get(j).getVerb()) &&
+										RESTProcessorUtil.pathsAreIndentical(opList.get(i).getPath(), opList.get(j).getPath())) {
+									throw new RuntimeException(String.format("Duplicate entry in operations list %s %s", opList.get(i).getVerb(), opList.get(i).getPath()));
+								}
+							});
+				});
+	}
 
 	/**
 	 * Check path identity, even if they contains prms.

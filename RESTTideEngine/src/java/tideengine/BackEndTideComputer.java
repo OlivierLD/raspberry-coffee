@@ -29,8 +29,9 @@ public class BackEndTideComputer {
 	public static void connect() throws Exception {
 		long before = 0L, after = 0L;
 		BackEndXMLTideComputer.setVerbose(verbose);
-		if (verbose)
+		if (verbose) {
 			before = System.currentTimeMillis();
+		}
 		constituentsObject = BackEndXMLTideComputer.buildConstituents(); // Uses SAX
 		stationsObject = BackEndXMLTideComputer.getTideStations();       // Uses SAX
 		if (verbose) {
@@ -123,14 +124,16 @@ public class BackEndTideComputer {
 	}
 
 	public static List<Coefficient> buildSiteConstSpeed(Constituents doc) throws Exception {
-		List<Coefficient> csal = new ArrayList<Coefficient>();
+		List<Coefficient> csal = new ArrayList<>();
 		Map<String, Constituents.ConstSpeed> csm = doc.getConstSpeedMap();
-		Set<String> keys = csm.keySet();
-		for (String k : keys) {
-			Constituents.ConstSpeed cs = csm.get(k);
-			Coefficient coef = new Coefficient(cs.getCoeffName(), cs.getCoeffValue() * TideUtilities.COEFF_FOR_EPOCH);
-			csal.add(coef);
-		}
+		csm.keySet()
+				.stream()
+				.forEach(key -> {
+					Constituents.ConstSpeed cs = csm.get(key);
+					Coefficient coef = new Coefficient(cs.getCoeffName(), cs.getCoeffValue() * TideUtilities.COEFF_FOR_EPOCH);
+					csal.add(coef);
+				});
+
 		return csal;
 	}
 
@@ -163,8 +166,7 @@ public class BackEndTideComputer {
 	public static TideStation findTideStation(String stationName, int year, Constituents constituents, Stations stations) throws Exception {
 		long before = System.currentTimeMillis();
 		TideStation station = stations.getStations().get(stationName);
-		if (station == null) // Try match
-		{
+		if (station == null) { // Try match
 			Set<String> keys = stations.getStations().keySet();
 			for (String s : keys) {
 				if (s.contains(stationName)) {
@@ -175,12 +177,13 @@ public class BackEndTideComputer {
 			}
 		}
 		long after = System.currentTimeMillis();
-		if (verbose) System.out.println("Finding the node took " + Long.toString(after - before) + " ms");
+		if (verbose) {
+			System.out.println("Finding the node took " + Long.toString(after - before) + " ms");
+		}
 
 		// Fix for the given year
 //  System.out.println("findTideStation: We are in " + year + ", coeff fixed for " + station.yearHarmonicsFixed());
-		if (station != null && station.yearHarmonicsFixed() != -1 && station.yearHarmonicsFixed() != year) // Then reload station data from source
-		{
+		if (station != null && station.yearHarmonicsFixed() != -1 && station.yearHarmonicsFixed() != year) { // Then reload station data from source
 			System.out.println("Reloading Station Data for corrections in year " + year);
 			try {
 				TideStation newTs = reloadTideStation(station.getFullName());
@@ -221,7 +224,7 @@ public class BackEndTideComputer {
 
 	public static List<TideStation> getStationData(Stations stations) throws Exception {
 		long before = System.currentTimeMillis();
-		List<TideStation> stationData = new ArrayList<TideStation>();
+		List<TideStation> stationData = new ArrayList<>();
 		Set<String> keys = stations.getStations().keySet();
 		for (String k : keys) {
 			try {
@@ -231,8 +234,9 @@ public class BackEndTideComputer {
 			}
 		}
 		long after = System.currentTimeMillis();
-		if (verbose) System.out.println("Finding all the stations took " + Long.toString(after - before) + " ms");
-
+		if (verbose) {
+			System.out.println("Finding all the stations took " + Long.toString(after - before) + " ms");
+		}
 		return stationData;
 	}
 
