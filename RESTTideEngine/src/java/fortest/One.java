@@ -3,6 +3,7 @@ package fortest;
 import http.HTTPServer;
 import http.HTTPServerInterface;
 import tideengine.BackEndTideComputer;
+import tideengine.Coefficient;
 import tideengine.TideStation;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public class One implements HTTPServerInterface {
 	private HTTPServer httpServer = null;
 	private int httpPort = -1;
 	private RESTImplementation restImplementation;
+
+	private List<Coefficient> constSpeed = null;
+	private List<TideStation> stationData = null;
 
 	public One() {
 		try {
@@ -29,10 +33,23 @@ public class One implements HTTPServerInterface {
 		new One();
 	}
 
+	protected List<Coefficient> getConstSpeed() throws Exception {
+		try {
+			if (this.constSpeed == null) {
+				this.constSpeed = BackEndTideComputer.buildSiteConstSpeed();
+			}
+			return this.constSpeed;
+		} catch (Exception ex) {
+			throw ex;
+		}
+	}
+
 	protected List<TideStation> getStationList() throws Exception {
 		try {
-			List<TideStation> stationData = BackEndTideComputer.getStationData();
-			return stationData;
+			if (this.stationData == null) {
+				this.stationData = BackEndTideComputer.getStationData();
+			}
+			return this.stationData;
 		} catch (Exception ex) {
 			throw ex;
 		}

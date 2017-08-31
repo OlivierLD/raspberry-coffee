@@ -36,15 +36,6 @@ dependencies {
   compile project(':common-utils')
 }
 
-task copyResources(type: Copy) {
-  description = 'Copies non-java resources in the output directory before the jar task (png, xml, xsd, ttf, properties, etc)'
-  from 'src'
-  into 'build/classes/main'
-  include '**/*.xml', '**/*.xsd', '**/*.png', '**/*.gif', '**/*.jpg', '**/*.properties', '**/*.ttf', '**/*.html'
-}
-
-jar.dependsOn(copyResources)
-
 shadowJar {
   zip64 true
 }

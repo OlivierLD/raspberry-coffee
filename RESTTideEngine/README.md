@@ -8,8 +8,8 @@ If that one works, then we can really move away from Swing.
 ```
  /GET /tide-stations
  /GET /tide-stations/{station}
- /GET /tide-stations/{station}/data?from=XXX&to=YYY
- /GET /tide-stations/{station}/data/details?from=XXX&to=YYY
+ /GET /tide-stations/{station}/wh?from=XXX&to=YYY
+ /GET /tide-stations/{station}/wh/details?from=XXX&to=YYY
  
  ... etc
  

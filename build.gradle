@@ -6,12 +6,6 @@ apply plugin: 'maven'
 group = 'oliv.pi4j.samples'
 version = '1.0'
 
-def userprofile = System.getenv()['USERPROFILE'] // On Windows...
-if (userprofile == null) { // Linux ?
-  userprofile = System.getenv()['HOME']
-}
-// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password")
-
 dependencies {
   compile project(':common-utils')
   compile project(':Adafruit.IO.REST')

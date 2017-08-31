@@ -9,13 +9,15 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import tideengine.BackEndTideComputer;
 import tideengine.TideStation;
+import tideengine.TideUtilities;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -34,6 +36,8 @@ import java.util.stream.IntStream;
 public class RESTImplementation {
 
 	private One one;
+
+	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	public RESTImplementation(One sf) {
 
@@ -67,7 +71,12 @@ public class RESTImplementation {
 							"GET",
 							"/tide-stations/{st-regex}",
 							this::getStations,
-							"Get Tide Stations matching the regex. Returns all data of the matching stations"));
+							"Get Tide Stations matching the regex. Returns all data of the matching stations"),
+					new Operation(
+							"GET",
+							"/tide-stations/{station-name}/wh",
+							this::getWaterHeight,
+							"Get Water Height for the station. Requires 2 query params: from, and to, in Duration format."));
 
 	protected List<Operation> getOperations() {
 		return  this.operations;
@@ -119,8 +128,112 @@ public class RESTImplementation {
 			return response;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new RuntimeException(ex);
+			response.setStatus(Response.BAD_REQUEST);
+			response.setPayload(ex.toString().getBytes());
+			return response;
 		}
+	}
+
+	private Response getWaterHeight(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		String stationFullName = "";
+		Calendar calFrom = null, calTo = null;
+		boolean proceed = true;
+		if (prmValues.size() == 1) {
+			String param = prmValues.get(0);
+			try {
+				stationFullName = URLDecoder.decode(param, "UTF-8"); // decode/unescape
+			} catch (UnsupportedEncodingException uee) {
+				response.setStatus(Response.BAD_REQUEST);
+				response.setPayload(uee.toString().getBytes());
+				proceed = false;
+			}
+		} else {
+			response.setStatus(Response.BAD_REQUEST);
+			response.setPayload("Need one path parameter {station-name}.".getBytes());
+			proceed = false;
+		}
+		if (proceed) {
+			Map<String, String> prms = request.getQueryStringParameters();
+			if (prms == null || prms.get("from") == null || prms.get("to") == null) {
+				response.setStatus(Response.BAD_REQUEST);
+				response.setPayload("Query parameters 'from' and 'to' are required.".getBytes());
+				proceed = false;
+			} else {
+				String from = prms.get("from");
+				String to = prms.get("to");
+				try {
+					Date fromDate = DURATION_FMT.parse(from);
+					Date toDate = DURATION_FMT.parse(to);
+					calFrom = Calendar.getInstance();
+					calFrom.setTime(fromDate);
+					calTo = Calendar.getInstance();
+					calTo.setTime(toDate);
+				} catch (ParseException pe) {
+					response.setStatus(Response.BAD_REQUEST);
+					response.setPayload(pe.toString().getBytes());
+					proceed = false;
+				}
+			}
+			if (proceed) {
+				final String stationName = stationFullName;
+				try {
+					TideStation ts = null;
+					Optional<TideStation> optTs = this.one.getStationList().
+							stream()
+							.filter(station -> stationName.equals(station.getFullName()))
+							.findFirst();
+					if (!optTs.isPresent()) {
+						response.setStatus(Response.NOT_FOUND);
+						response.setPayload(String.format("Station [%s] not found", stationName).getBytes());
+						proceed = false;
+					} else {
+						ts = optTs.get();
+					}
+					if (proceed) {
+						// Calculate water height, from-to;
+						TideTable tideTable = new TideTable();
+						tideTable.stationName = stationName;
+						tideTable.baseHeight = ts.getBaseHeight();
+						tideTable.unit = ts.getDisplayUnit();
+						Map<String, Double> map = new LinkedHashMap<>();
+
+						Calendar now = calFrom;
+						ts = BackEndTideComputer.findTideStation(stationName, now.get(Calendar.YEAR));
+						if (ts != null) {
+//            TimeZone tz = TimeZone.getDefault();
+							now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
+							for (int h = 0; h < 24; h++) { // This is for one full day, starting from 'from' at 00:00.
+								for (int m = 0; m < 60; m += 30) {
+									Calendar cal = new GregorianCalendar(now.get(Calendar.YEAR),
+											now.get(Calendar.MONTH),
+											now.get(Calendar.DAY_OF_MONTH),
+											h, m);
+									double wh = TideUtilities.getWaterHeight(ts, this.one.getConstSpeed(), cal);
+//								TimeZone.setDefault(TimeZone.getTimeZone("127")); // for UTC display
+									TimeZone.setDefault(TimeZone.getTimeZone(ts.getTimeZone())); // for TS Timezone display
+//								System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
+//                TimeZone.setDefault(tz);
+									map.put(cal.getTime().toString(), wh);
+								}
+							}
+						}
+						tideTable.heights = map;
+
+						String content = new Gson().toJson(tideTable);
+						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+						return response;
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					response.setStatus(Response.BAD_REQUEST);
+					response.setPayload(ex.toString().getBytes());
+				}
+			}
+		}
+		return response; // If we reach here, something went wrong, it's a BAD_REQUEST or so.
 	}
 
 	private Response getStations(Request request) {
@@ -132,10 +245,14 @@ public class RESTImplementation {
 			try {
 				pattern = Pattern.compile(String.format(".*%s.*", URLDecoder.decode(nameRegex, "UTF-8"))); // decode/unescape
 			} catch (UnsupportedEncodingException uee) {
-				throw new RuntimeException(uee);
+				response.setStatus(Response.BAD_REQUEST);
+				response.setPayload(uee.toString().getBytes());
+				return response;
 			}
 		} else {
-			throw new RuntimeException("Need one path parameter {regex}.");
+			response.setStatus(Response.BAD_REQUEST);
+			response.setPayload("Need one path parameter {regex}.".getBytes());
+			return response;
 		}
 		try {
 			List<TideStation> ts = this.one.getStationList().
@@ -143,13 +260,14 @@ public class RESTImplementation {
 					.filter(station -> pattern.matcher(station.getFullName()).matches()) // TODO IgnoreCase?
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(ts);
-//		System.out.println(String.format("Length:%d,\n%s", content.length(), content));
 			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			throw new RuntimeException(ex);
+			response.setStatus(Response.BAD_REQUEST);
+			response.setPayload(ex.toString().getBytes());
+			return response;
 		}
 	}
 
@@ -160,7 +278,13 @@ public class RESTImplementation {
 	 */
 	private Response emptyOperation(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-
 		return response;
+	}
+
+	private static class TideTable {
+		String stationName;
+		double baseHeight;
+		String unit;
+		Map<String, Double> heights;
 	}
 }
