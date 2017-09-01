@@ -218,7 +218,9 @@ public class HTTPServer {
 	/**
 	 * Used for REST. See usages of this class.
 	 *
-	 * TODO Add parameters, path, QS, mandatory, optional (or comment about that, saying it is in the implementation).
+	 * Note: Parameters (query string and body payloads) are defined and managed at he operation implementation (fn) level.
+	 * We are not re-writing Swagger ;)
+	 *
 	 */
 	public static class Operation {
 		String verb;
