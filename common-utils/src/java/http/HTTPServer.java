@@ -217,6 +217,8 @@ public class HTTPServer {
 
 	/**
 	 * Used for REST. See usages of this class.
+	 *
+	 * TODO Add parameters, path, QS, mandatory, optional (or comment about that, saying it is in the implementation).
 	 */
 	public static class Operation {
 		String verb;
@@ -513,7 +515,7 @@ public class HTTPServer {
 											Response response = reqMgr.onRequest(request); // REST Request, most likely.
 											sendResponse(response, out);
 //								    System.out.println(">> Returned REST response.");
-											unManagedRequest = false;
+											unManagedRequest = false; // Found it.
 											break;
 										} catch (UnsupportedOperationException usoe) {
 											// Absorb

@@ -65,6 +65,13 @@ public class TideServer implements HTTPServerInterface {
 		}
 	}
 
+	/**
+	 * Manage the REST requests.
+	 *
+	 * @param request incoming request
+	 * @return as defined in the {@link RESTImplementation}
+	 * @throws UnsupportedOperationException
+	 */
 	@Override
 	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
 		HTTPServer.Response response = restImplementation.processRequest(request); // All the skill is here.

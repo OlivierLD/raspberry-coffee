@@ -1,6 +1,7 @@
 package restserver;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
@@ -10,6 +11,7 @@ import tideengine.BackEndTideComputer;
 import tideengine.TideStation;
 import tideengine.TideUtilities;
 
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.ParseException;
@@ -68,13 +70,13 @@ public class RESTImplementation {
 					this::getStations,
 					"Get Tide Stations matching the regex. Returns all data of the matching stations. Regex might need encoding/escaping."),
 			new Operation(
-					"GET",
+					"POST",
 					"/tide-stations/{station-name}/wh",
 					this::getWaterHeight,
-					"Get Water Height for the station. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping."));
+					"Creates a Water Height request for the {station}. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."));
 
 	protected List<Operation> getOperations() {
-		return  this.operations;
+		return this.operations;
 	}
 
 	/**
@@ -85,9 +87,9 @@ public class RESTImplementation {
 	 */
 	public Response processRequest(Request request) throws UnsupportedOperationException {
 		Optional<Operation> opOp = operations
-						.stream()
-						.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
-						.findFirst();
+				.stream()
+				.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
+				.findFirst();
 		if (opOp.isPresent()) {
 			Operation op = opOp.get();
 			request.setRequestPattern(op.getPath()); // To get the prms later on.
@@ -101,8 +103,8 @@ public class RESTImplementation {
 	private Response getOperationList(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		Operation[] channelArray = operations.stream()
-						.collect(Collectors.toList())
-						.toArray(new Operation[operations.size()]);
+				.collect(Collectors.toList())
+				.toArray(new Operation[operations.size()]);
 		String content = new Gson().toJson(channelArray);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
@@ -129,8 +131,26 @@ public class RESTImplementation {
 		}
 	}
 
+	/**
+	 * Supports a payload in the body, in json format:
+	 * <pre>
+	 * {
+	 *   "timezone": "Etc/UTC",
+	 *   "step": 5,
+	 *   "unit": "meters"|"feet"
+	 * }
+	 * </pre>
+	 * <ul>
+	 * <li>Default timezone is the timezone of the station</li>
+	 * <li>Default step (in minutes) is 5</li>
+	 * <li>Default unit is the unit of the station</li>
+	 * </ul>
+	 *
+	 * @param request Requires two query string parameters <b>from</b> and <b>to</b>, in Duration format (yyyy-MM-ddThh:mm:ss)
+	 * @return the expect response. Could contain an error, see the "TIDE-XXXX" messages.
+	 */
 	private Response getWaterHeight(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK); // Happy response
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		String stationFullName = "";
 		Calendar calFrom = null, calTo = null;
@@ -174,6 +194,14 @@ public class RESTImplementation {
 					calFrom.setTime(fromDate);
 					calTo = Calendar.getInstance();
 					calTo.setTime(toDate);
+					if (calTo.before(calFrom)) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("TIDE-0014")
+										.errorMessage(String.format("Bad date chronology. %s is after %s", from, to)));
+						proceed = false;
+					}
 				} catch (ParseException pe) {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
@@ -185,58 +213,119 @@ public class RESTImplementation {
 			}
 			if (proceed) {
 				final String stationName = stationFullName;
-				try {
-					TideStation ts = null;
-					Optional<TideStation> optTs = this.tideServer.getStationList().
-							stream()
-							.filter(station -> stationName.equals(station.getFullName()))
-							.findFirst();
-					if (!optTs.isPresent()) {
-						response = HTTPServer.buildErrorResponse(response,
-								Response.NOT_FOUND,
-								new HTTPServer.ErrorPayload()
-										.errorCode("TIDE-0005")
-										.errorMessage(String.format("Station [%s] not found", stationName)));
-						proceed = false;
-					} else {
-						ts = optTs.get();
-					}
-					if (proceed) {
-						// Calculate water height, from-to;
-						TideTable tideTable = new TideTable();
-						tideTable.stationName = stationName;
-						tideTable.baseHeight = ts.getBaseHeight();
-						tideTable.unit = ts.getDisplayUnit();
-						Map<String, Double> map = new LinkedHashMap<>();
-
-						Calendar now = calFrom;
-						ts = BackEndTideComputer.findTideStation(stationName, now.get(Calendar.YEAR));
-						if (ts != null) {
-//            TimeZone tz = TimeZone.getDefault();
-							now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
-							while (now.before(calTo)) {
-								double wh = TideUtilities.getWaterHeight(ts, this.tideServer.getConstSpeed(), now);
-//							TimeZone.setDefault(TimeZone.getTimeZone("127")); // for UTC display
-								TimeZone.setDefault(TimeZone.getTimeZone(ts.getTimeZone())); // for TS Timezone display
-//							System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
-//              TimeZone.setDefault(tz);
-								map.put(now.getTime().toString(), wh);
-								now.add(Calendar.MINUTE, 5);
+				int step = 5;
+				String timeZoneToUse = null;
+				unit unitToUse = null;
+				// Payload in the body?
+				if (request.getContent() != null && request.getContent().length > 0) {
+					Gson gson = new GsonBuilder().create();
+					String payload = new String(request.getContent());
+					StringReader stringReader = new StringReader(payload);
+					try {
+						WaterHeightOptions options = gson.fromJson(stringReader, WaterHeightOptions.class);
+						if (options.step == 0 &&
+								options.timezone == null &&
+								options.unit == null) {
+							response = HTTPServer.buildErrorResponse(response,
+									Response.BAD_REQUEST,
+									new HTTPServer.ErrorPayload()
+											.errorCode("TIDE-0011")
+											.errorMessage(String.format("Invalid payload: %s", payload)));
+							proceed = false;
+						} else {
+							if (options.step < 0) {
+								response = HTTPServer.buildErrorResponse(response,
+										Response.BAD_REQUEST,
+										new HTTPServer.ErrorPayload()
+												.errorCode("TIDE-0012")
+												.errorMessage(String.format("Step MUST be positive: %d", options.step)));
+								proceed = false;
+							}
+							if (proceed && options.timezone != null) {
+								if (!Arrays.asList(TimeZone.getAvailableIDs()).contains(options.timezone)) {
+									response = HTTPServer.buildErrorResponse(response,
+											Response.BAD_REQUEST,
+											new HTTPServer.ErrorPayload()
+													.errorCode("TIDE-0013")
+													.errorMessage(String.format("Invalid TimeZone: %s", options.timezone)));
+									proceed = false;
+								}
+							}
+							if (proceed) {
+								// Set overriden parameter values
+								if (options.timezone != null) {
+									timeZoneToUse = options.timezone;
+								}
+								if (options.unit != null) {
+									unitToUse = options.unit;
+								}
+								if (options.step != 0) {
+									step = options.step;
+								}
 							}
 						}
-						tideTable.heights = map;
-
-						String content = new Gson().toJson(tideTable);
-						RESTProcessorUtil.generateResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
-						return response;
+					} catch (Exception ex) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("TIDE-0010")
+										.errorMessage(ex.toString()));
+						proceed = false;
 					}
-				} catch (Exception ex) {
-					response = HTTPServer.buildErrorResponse(response,
-							Response.BAD_REQUEST,
-							new HTTPServer.ErrorPayload()
-									.errorCode("TIDE-0006")
-									.errorMessage(ex.toString()));
+				}
+				if (proceed) {
+					try {
+						TideStation ts = null;
+						Optional<TideStation> optTs = this.tideServer.getStationList().
+								stream()
+								.filter(station -> stationName.equals(station.getFullName()))
+								.findFirst();
+						if (!optTs.isPresent()) {
+							response = HTTPServer.buildErrorResponse(response,
+									Response.NOT_FOUND,
+									new HTTPServer.ErrorPayload()
+											.errorCode("TIDE-0005")
+											.errorMessage(String.format("Station [%s] not found", stationName)));
+							proceed = false;
+						} else {
+							ts = optTs.get();
+						}
+						if (proceed) {
+							// Calculate water height, from-to;
+							TideTable tideTable = new TideTable();
+							tideTable.stationName = stationName;
+							tideTable.baseHeight = ts.getBaseHeight() * unitSwitcher(ts, unitToUse);
+							tideTable.unit = (unitToUse != null ? unitToUse.toString() : ts.getDisplayUnit());
+							Map<String, Double> map = new LinkedHashMap<>();
+
+							Calendar now = calFrom;
+							ts = BackEndTideComputer.findTideStation(stationName, now.get(Calendar.YEAR));
+							if (ts != null) {
+								now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
+								while (now.before(calTo)) {
+									double wh = TideUtilities.getWaterHeight(ts, this.tideServer.getConstSpeed(), now);
+									TimeZone.setDefault(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())); // for TS Timezone display
+//							  System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
+									map.put(now.getTime().toString(), wh * unitSwitcher(ts, unitToUse));
+									now.add(Calendar.MINUTE, step);
+								}
+							}
+							tideTable.heights = map;
+							/*
+							 * Happy End
+							 */
+							String content = new Gson().toJson(tideTable);
+							RESTProcessorUtil.generateResponseHeaders(response, content.length());
+							response.setPayload(content.getBytes());
+							return response;
+						}
+					} catch (Exception ex) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("TIDE-0006")
+										.errorMessage(ex.toString()));
+					}
 				}
 			}
 		}
@@ -280,7 +369,7 @@ public class RESTImplementation {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
-							.errorCode("TIDE-0008")
+							.errorCode("TIDE-0009")
 							.errorMessage(ex.toString()));
 			return response;
 		}
@@ -288,6 +377,7 @@ public class RESTImplementation {
 
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -301,5 +391,34 @@ public class RESTImplementation {
 		double baseHeight;
 		String unit;
 		Map<String, Double> heights;
+	}
+
+	private enum unit {
+		meters, feet
+	}
+
+	private static double unitSwitcher(TideStation ts, unit overridden) {
+		double factor = 1d;
+		if (overridden != null) {
+			if (!ts.getDisplayUnit().equals(overridden.toString())) {
+				switch (ts.getDisplayUnit()) {
+					case "feet": // feet to meters
+						factor = 0.3048;
+						break;
+					case "meters": // meters to feet
+						factor = 3.28084;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+		return factor;
+	}
+
+	private static class WaterHeightOptions {
+		String timezone; // If not the Station timezone
+		int step; // In minutes
+		unit unit; // If not the station unit
 	}
 }
