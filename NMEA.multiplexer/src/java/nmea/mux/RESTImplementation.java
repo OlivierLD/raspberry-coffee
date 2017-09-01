@@ -8,63 +8,30 @@ import context.ApplicationContext;
 import context.NMEADataCache;
 import gnu.io.CommPortIdentifier;
 import http.HTTPServer;
+import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
-import http.HTTPServer.Operation;
 import http.RESTProcessorUtil;
-
-import java.io.*;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAReader;
 import nmea.computers.Computer;
 import nmea.computers.ExtraDataComputer;
-import nmea.consumers.client.BME280Client;
-import nmea.consumers.client.BMP180Client;
-import nmea.consumers.client.DataFileClient;
-import nmea.consumers.client.HTU21DFClient;
-import nmea.consumers.client.LSM303Client;
-import nmea.consumers.client.RandomClient;
-import nmea.consumers.client.SerialClient;
-import nmea.consumers.client.TCPClient;
-import nmea.consumers.client.WebSocketClient;
-import nmea.consumers.client.ZDAClient;
-import nmea.consumers.reader.BME280Reader;
-import nmea.consumers.reader.BMP180Reader;
-import nmea.consumers.reader.DataFileReader;
-import nmea.consumers.reader.HTU21DFReader;
-import nmea.consumers.reader.LSM303Reader;
-import nmea.consumers.reader.RandomReader;
-import nmea.consumers.reader.SerialReader;
-import nmea.consumers.reader.TCPReader;
-import nmea.consumers.reader.WebSocketReader;
-import nmea.consumers.reader.ZDAReader;
-import nmea.forwarders.ConsoleWriter;
-import nmea.forwarders.DataFileWriter;
-import nmea.forwarders.Forwarder;
-import nmea.forwarders.GPSdServer;
-import nmea.forwarders.SerialWriter;
-import nmea.forwarders.TCPServer;
-import nmea.forwarders.WebSocketProcessor;
-import nmea.forwarders.WebSocketWriter;
+import nmea.consumers.client.*;
+import nmea.consumers.reader.*;
+import nmea.forwarders.*;
 import nmea.forwarders.rmi.RMIServer;
 import nmea.mux.context.Context;
 import nmea.mux.context.Context.StringAndTimeStamp;
 import nmea.parser.Angle360;
 import nmea.parser.Speed;
 import nmea.utils.NMEAUtils;
+
+import java.io.*;
+import java.net.URLDecoder;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -293,8 +260,9 @@ public class RESTImplementation {
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 		} catch (Error error) {
-			response.setStatus(HTTPServer.Response.BAD_REQUEST);
-			RESTProcessorUtil.addErrorMessageToResponse(response, error.toString());
+			response = HTTPServer.buildErrorResponse(response, Response.BAD_REQUEST, new HTTPServer.ErrorPayload()
+					.errorCode("MUX-0001")
+					.errorMessage(error.toString()));
 		}
 		return response;
 	}
