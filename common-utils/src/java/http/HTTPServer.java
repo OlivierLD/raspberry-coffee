@@ -1,5 +1,6 @@
 package http;
 
+import com.google.gson.Gson;
 import http.utils.HTTPClient;
 import utils.DumpUtil;
 
@@ -254,6 +255,29 @@ public class HTTPServer {
 		}
 	}
 
+	public static class ErrorPayload {
+		String errorCode;
+		String errorMessage;
+
+		public ErrorPayload errorCode(String errorCode) {
+			this.errorCode = errorCode;
+			return this;
+		}
+
+		public ErrorPayload errorMessage(String errorMessage) {
+			this.errorMessage = errorMessage;
+			return this;
+		}
+	}
+
+	public static Response buildErrorResponse(Response response, int httpStatus, ErrorPayload payload) {
+		response.setStatus(httpStatus);
+		String content = new Gson().toJson(payload);
+		RESTProcessorUtil.generateResponseHeaders(response, "application/json", content.length());
+		response.setPayload(content.getBytes());
+		return response;
+	}
+
 	public boolean isRunning() {
 		return keepRunning;
 	}
@@ -450,7 +474,7 @@ public class HTTPServer {
 								System.out.println("Received an exit signal (path)");
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String content = "Exiting";
-								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
+								RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
 								okToStop = true;
@@ -460,7 +484,7 @@ public class HTTPServer {
 								if (request.getContent() != null && request.getContent().length > 0) {
 									content += String.format("\nYour payload was [%s]", new String(request.getContent()));
 								}
-								RESTProcessorUtil.generateHappyResponseHeaders(response, "text/html", content.length());
+								RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
 							} else if (path.startsWith("/web/")) { // Assume this is static content. TODO Tweak that, in some configuration.
@@ -477,7 +501,7 @@ public class HTTPServer {
 									Files.copy(f.toPath(), baos);
 									baos.close();
 									byte[] content = baos.toByteArray();
-									RESTProcessorUtil.generateHappyResponseHeaders(response, getContentType(path), content.length);
+									RESTProcessorUtil.generateResponseHeaders(response, getContentType(path), content.length);
 									response.setPayload(content);
 								}
 								sendResponse(response, out);

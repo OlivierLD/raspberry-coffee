@@ -108,11 +108,11 @@ public class RESTProcessorUtil {
 
 	/* Utility(ies) */
 
-	public static void generateHappyResponseHeaders(HTTPServer.Response response, int contentLength) {
-		generateHappyResponseHeaders(response, "application/json", contentLength);
+	public static void generateResponseHeaders(HTTPServer.Response response, int contentLength) {
+		generateResponseHeaders(response, "application/json", contentLength);
 	}
 
-	public static void generateHappyResponseHeaders(HTTPServer.Response response, String contentType, int contentLength) {
+	public static void generateResponseHeaders(HTTPServer.Response response, String contentType, int contentLength) {
 		Map<String, String> responseHeaders = new HashMap<>();
 		responseHeaders.put("Content-Type", contentType);
 		responseHeaders.put("Content-Length", String.valueOf(contentLength));
@@ -122,7 +122,7 @@ public class RESTProcessorUtil {
 
 	public static void addErrorMessageToResponse(HTTPServer.Response response, String errMess) {
 		String content = new Gson().toJson(new ErrorMessage(errMess)).toString();
-		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 	}
 

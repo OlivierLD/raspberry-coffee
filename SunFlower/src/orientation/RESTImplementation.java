@@ -112,7 +112,7 @@ public class RESTImplementation {
 
 		SunFlower.GeographicPosition pos = sunFlower.getPosition();
 		String content = new Gson().toJson(pos);
-		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
 		return response;
@@ -123,7 +123,7 @@ public class RESTImplementation {
 
 		double heading = sunFlower.getDeviceHeading();
 		String content = new Gson().toJson(heading);
-		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
 		return response;
@@ -134,7 +134,7 @@ public class RESTImplementation {
 
 		SunFlower.ServoValues servoValues = sunFlower.getServoValues();
 		String content = new Gson().toJson(servoValues);
-		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
 		return response;
@@ -145,7 +145,7 @@ public class RESTImplementation {
 
 		SunFlower.Dates dates = sunFlower.getDates();
 		String content = new Gson().toJson(dates);
-		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
 		return response;
@@ -156,7 +156,7 @@ public class RESTImplementation {
 		SunFlower.SunData sunData = sunFlower.getSunData();
 
 		String content = new Gson().toJson(sunData);
-		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
 		return response;
@@ -167,7 +167,7 @@ public class RESTImplementation {
 		SunFlower.AllData allData = sunFlower.getAllData();
 
 		String content = new Gson().toJson(allData);
-		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
 		return response;
@@ -179,7 +179,7 @@ public class RESTImplementation {
 						.collect(Collectors.toList())
 						.toArray(new Operation[operations.size()]);
 		String content = new Gson().toJson(channelArray);
-		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 		return response;
 	}

@@ -15,5 +15,10 @@ If that one works, then we can really move away from Swing.
  
 ```
 
+### Features (to be)
+- Web UI for tidal curves
+- REST APIs for server-side computation 
+- Publishing: Server side `pdf` generation
+
 ### TODO
 Dig out the `XML` generation from the `txt` harmonic files.

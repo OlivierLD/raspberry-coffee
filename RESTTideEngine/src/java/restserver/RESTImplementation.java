@@ -104,7 +104,7 @@ public class RESTImplementation {
 						.collect(Collectors.toList())
 						.toArray(new Operation[operations.size()]);
 		String content = new Gson().toJson(channelArray);
-		RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 		return response;
 	}
@@ -118,7 +118,7 @@ public class RESTImplementation {
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(stationNames);
 //		System.out.println(String.format("Length:%d,\n%s", content.length(), content));
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex) {
@@ -140,20 +140,29 @@ public class RESTImplementation {
 			try {
 				stationFullName = URLDecoder.decode(param, "UTF-8"); // decode/unescape
 			} catch (UnsupportedEncodingException uee) {
-				response.setStatus(Response.BAD_REQUEST);
-				response.setPayload(uee.toString().getBytes());
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("TIDE-0001")
+								.errorMessage(uee.toString()));
 				proceed = false;
 			}
 		} else {
-			response.setStatus(Response.BAD_REQUEST);
-			response.setPayload("Need tideServer path parameter {station-name}.".getBytes());
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("TIDE-0002")
+							.errorMessage("Need tideServer path parameter {station-name}."));
 			proceed = false;
 		}
 		if (proceed) {
 			Map<String, String> prms = request.getQueryStringParameters();
 			if (prms == null || prms.get("from") == null || prms.get("to") == null) {
-				response.setStatus(Response.BAD_REQUEST);
-				response.setPayload("Query parameters 'from' and 'to' are required.".getBytes());
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("TIDE-0003")
+								.errorMessage("Query parameters 'from' and 'to' are required."));
 				proceed = false;
 			} else {
 				String from = prms.get("from");
@@ -166,8 +175,11 @@ public class RESTImplementation {
 					calTo = Calendar.getInstance();
 					calTo.setTime(toDate);
 				} catch (ParseException pe) {
-					response.setStatus(Response.BAD_REQUEST);
-					response.setPayload(pe.toString().getBytes());
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("TIDE-0004")
+									.errorMessage(pe.toString()));
 					proceed = false;
 				}
 			}
@@ -180,8 +192,11 @@ public class RESTImplementation {
 							.filter(station -> stationName.equals(station.getFullName()))
 							.findFirst();
 					if (!optTs.isPresent()) {
-						response.setStatus(Response.NOT_FOUND);
-						response.setPayload(String.format("Station [%s] not found", stationName).getBytes());
+						response = HTTPServer.buildErrorResponse(response,
+								Response.NOT_FOUND,
+								new HTTPServer.ErrorPayload()
+										.errorCode("TIDE-0005")
+										.errorMessage(String.format("Station [%s] not found", stationName)));
 						proceed = false;
 					} else {
 						ts = optTs.get();
@@ -212,14 +227,16 @@ public class RESTImplementation {
 						tideTable.heights = map;
 
 						String content = new Gson().toJson(tideTable);
-						RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+						RESTProcessorUtil.generateResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 						return response;
 					}
 				} catch (Exception ex) {
-					ex.printStackTrace();
-					response.setStatus(Response.BAD_REQUEST);
-					response.setPayload(ex.toString().getBytes());
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("TIDE-0006")
+									.errorMessage(ex.toString()));
 				}
 			}
 		}
@@ -235,13 +252,19 @@ public class RESTImplementation {
 			try {
 				pattern = Pattern.compile(String.format(".*%s.*", URLDecoder.decode(nameRegex, "UTF-8"))); // decode/unescape
 			} catch (UnsupportedEncodingException uee) {
-				response.setStatus(Response.BAD_REQUEST);
-				response.setPayload(uee.toString().getBytes());
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("TIDE-0007")
+								.errorMessage(uee.toString()));
 				return response;
 			}
 		} else {
-			response.setStatus(Response.BAD_REQUEST);
-			response.setPayload("Need tideServer path parameter {regex}.".getBytes());
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("TIDE-0008")
+							.errorMessage("Need tideServer path parameter {regex}."));
 			return response;
 		}
 		try {
@@ -250,13 +273,15 @@ public class RESTImplementation {
 					.filter(station -> pattern.matcher(station.getFullName()).matches()) // TODO IgnoreCase?
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(ts);
-			RESTProcessorUtil.generateHappyResponseHeaders(response, content.length());
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			response.setStatus(Response.BAD_REQUEST);
-			response.setPayload(ex.toString().getBytes());
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("TIDE-0008")
+							.errorMessage(ex.toString()));
 			return response;
 		}
 	}
