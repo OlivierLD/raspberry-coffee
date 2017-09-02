@@ -122,7 +122,6 @@ public class BackEndXMLTideComputer {
 					foundStation = true;
 					ts = new TideStation();
 					try {
-//					ts.setFullName(URLEncoder.encode(URLDecoder.decode(name, "ISO-8859-1"), "UTF-8").replace("+", "%20"));
 						ts.setFullName(URLEncoder.encode(URLDecoder.decode(name, "ISO-8859-1"), "UTF-8").replace("+", "%20"));
 					} catch (UnsupportedEncodingException uee) {
 						uee.printStackTrace();

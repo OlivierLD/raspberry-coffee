@@ -55,6 +55,12 @@ public class TideServer implements HTTPServerInterface {
 		}
 	}
 
+	/**
+	 * All strings UTF-8 Encoded.
+	 *
+	 * @return
+	 * @throws Exception
+	 */
 	protected List<TideStation> getStationList() throws Exception {
 		try {
 			if (this.stationData == null) {
