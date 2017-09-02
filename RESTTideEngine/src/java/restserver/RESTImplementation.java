@@ -61,7 +61,7 @@ public class RESTImplementation {
 					"GET",
 					"/tide-stations",
 					this::getStationsList,
-					"Get Tide Stations list. Returns an array of Strings containing the Station full names"),
+					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'limit' and 'offset' optional parameters. Default offset is 0, default limit is 500."),
 			new Operation(
 					"GET",
 					"/tide-stations/{st-regex}",
