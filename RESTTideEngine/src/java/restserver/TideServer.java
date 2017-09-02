@@ -46,6 +46,7 @@ public class TideServer implements HTTPServerInterface {
 	protected List<Coefficient> getConstSpeed() throws Exception {
 		try {
 			if (this.constSpeed == null) {
+//			System.out.println("Creating constants list");
 				this.constSpeed = BackEndTideComputer.buildSiteConstSpeed();
 			}
 			return this.constSpeed;
@@ -57,6 +58,7 @@ public class TideServer implements HTTPServerInterface {
 	protected List<TideStation> getStationList() throws Exception {
 		try {
 			if (this.stationData == null) {
+//			System.out.println("Creating stations list");
 				this.stationData = BackEndTideComputer.getStationData();
 			}
 			return this.stationData;

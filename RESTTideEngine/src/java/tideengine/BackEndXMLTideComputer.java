@@ -9,6 +9,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.*;
 
 public class BackEndXMLTideComputer {
@@ -121,7 +122,8 @@ public class BackEndXMLTideComputer {
 					foundStation = true;
 					ts = new TideStation();
 					try {
-						ts.setFullName(URLDecoder.decode(name, "ISO-8859-1"));
+//					ts.setFullName(URLEncoder.encode(URLDecoder.decode(name, "ISO-8859-1"), "UTF-8").replace("+", "%20"));
+						ts.setFullName(URLEncoder.encode(URLDecoder.decode(name, "ISO-8859-1"), "UTF-8").replace("+", "%20"));
 					} catch (UnsupportedEncodingException uee) {
 						uee.printStackTrace();
 					}
@@ -131,7 +133,7 @@ public class BackEndXMLTideComputer {
 					foundNameCollection = true;
 				} else if ("name-part".equals(qName) && foundNameCollection) {
 					try {
-						ts.getNameParts().add(URLDecoder.decode(attributes.getValue("name"), "ISO-8859-1"));
+						ts.getNameParts().add(URLEncoder.encode(URLDecoder.decode(attributes.getValue("name"), "ISO-8859-1"), "UTF-8").replace("+", "%20"));
 					} catch (UnsupportedEncodingException uee) {
 						uee.printStackTrace();
 					}

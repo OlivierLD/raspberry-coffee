@@ -12,15 +12,11 @@ import tideengine.TideStation;
 import tideengine.TideUtilities;
 
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -141,24 +137,11 @@ public class RESTImplementation {
 		try {
 			List<String> stationNames = this.tideServer.getStationList().
 					stream()
-					.map(ts -> {
-						try {
-							String encoded = URLEncoder.encode(ts.getFullName(), "UTF-8");
-//						System.out.println(String.format("[%s] encoded as [%s], back to [%s]", ts.getFullName(), encoded, URLDecoder.decode(encoded, "ISO-8859-1")));
-							return encoded.replace("+", "%20");
-						} catch (UnsupportedEncodingException usee) {
-							System.out.println(String.format("!!>> Bad encoding for [%s]", ts.getFullName()));
-//						usee.printStackTrace();
-							return usee.toString();
-						}
-					})
+					.map(ts -> ts.getFullName())
 					.skip(offset)
 					.limit(limit)
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(stationNames);
-//		System.out.println(String.format("Length:%d,\n%s", content.length(), content));
-			// Set Content-Type's charset to ISO-8859-1
-//		RESTProcessorUtil.generateResponseHeaders(response, "application/x-www-form-urlencoded;charset=ISO-8859-1", content.length());
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
@@ -196,16 +179,7 @@ public class RESTImplementation {
 		boolean proceed = true;
 		if (prmValues.size() == 1) {
 			String param = prmValues.get(0);
-			try {
-				stationFullName = URLDecoder.decode(param, "UTF-8"); // decode/unescape
-			} catch (UnsupportedEncodingException uee) {
-				response = HTTPServer.buildErrorResponse(response,
-						Response.BAD_REQUEST,
-						new HTTPServer.ErrorPayload()
-								.errorCode("TIDE-0001")
-								.errorMessage(uee.toString()));
-				proceed = false;
-			}
+			stationFullName = param;
 		} else {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
@@ -319,13 +293,7 @@ public class RESTImplementation {
 						TideStation ts = null;
 						Optional<TideStation> optTs = this.tideServer.getStationList().
 								stream()
-								.filter(station -> {
-									try {
-										return stationName.equals(URLDecoder.decode(station.getFullName(), "UTF-8"));
-									} catch (UnsupportedEncodingException uee) {
-										return false;
-									}
-								})
+								.filter(station -> station.getFullName().equals(stationName))
 								.findFirst();
 						if (!optTs.isPresent()) {
 							response = HTTPServer.buildErrorResponse(response,
@@ -346,7 +314,7 @@ public class RESTImplementation {
 							Map<String, Double> map = new LinkedHashMap<>();
 
 							Calendar now = calFrom;
-							ts = BackEndTideComputer.findTideStation(stationName, now.get(Calendar.YEAR));
+							ts = BackEndTideComputer.findTideStation(stationFullName, now.get(Calendar.YEAR));
 							if (ts != null) {
 								now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 								while (now.before(calTo)) {
@@ -356,6 +324,8 @@ public class RESTImplementation {
 									map.put(now.getTime().toString(), wh * unitSwitcher(ts, unitToUse));
 									now.add(Calendar.MINUTE, step);
 								}
+							} else {
+								System.out.println("Wow!"); // I know...
 							}
 							tideTable.heights = map;
 							/*
@@ -385,16 +355,7 @@ public class RESTImplementation {
 		final Pattern pattern;
 		if (prmValues.size() == 1) {
 			String nameRegex = prmValues.get(0);
-			try {
-				pattern = Pattern.compile(String.format(".*%s.*", URLDecoder.decode(nameRegex, "UTF-8"))); // decode/unescape
-			} catch (UnsupportedEncodingException uee) {
-				response = HTTPServer.buildErrorResponse(response,
-						Response.BAD_REQUEST,
-						new HTTPServer.ErrorPayload()
-								.errorCode("TIDE-0007")
-								.errorMessage(uee.toString()));
-				return response;
-			}
+			pattern = Pattern.compile(String.format(".*%s.*", nameRegex)); // decode/unescape
 		} else {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
@@ -407,28 +368,8 @@ public class RESTImplementation {
 			List<TideStation> ts = this.tideServer.getStationList().
 					stream()
 					.filter(station -> pattern.matcher(station.getFullName()).matches()) // TODO IgnoreCase?
-					.map(station -> {
-						try {
-							String encoded = URLEncoder.encode(station.getFullName(), "UTF-8");
-							station.setFullName(encoded.replace("+", "%20")); // Was ISO-8859-1
-							// Name parts
-							IntStream.range(0, station.getNameParts().size())
-									.boxed()
-									.forEach(idx -> {
-										try {
-											station.getNameParts().set(idx, URLEncoder.encode(station.getNameParts().get(idx), "UTF-8").replace("+", "%20"));
-										} catch (UnsupportedEncodingException uee) {
-											uee.printStackTrace();
-										}
-									});
-						} catch (UnsupportedEncodingException uee) {
-							uee.printStackTrace();
-						}
-						return station;
-					})
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(ts);
-//		RESTProcessorUtil.generateResponseHeaders(response, "application/x-www-form-urlencoded;charset=ISO-8859-1", content.length());
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
