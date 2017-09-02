@@ -12,7 +12,7 @@ import java.net.URL;
  */
 public class HarmonicsToXML {
 
-	private static boolean verbose = true;
+	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 
 	// Those two are used only to generate and write the data files.
 	public final static String CONSTITUENT_FILE = /* "xml.data" + File.separator + */ "constituents.xml";
@@ -46,7 +46,9 @@ public class HarmonicsToXML {
 
 		for (int h = 0; h < harmonicName.length; h++) {
 			URL harmonic = new File(harmonicName[h]).toURI().toURL();
-			if (verbose) System.out.println("URL:" + harmonic.toString());
+			if (verbose) {
+				System.out.println("Processing URL:" + harmonic.toString());
+			}
 
 			BufferedReader br = new BufferedReader(new FileReader(harmonic.getFile()));
 

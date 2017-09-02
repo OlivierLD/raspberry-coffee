@@ -63,7 +63,9 @@ public class BackEndXMLTideComputer {
 			}
 		}
 		long after = System.currentTimeMillis();
-		if (verbose) System.out.println("Finding all the stations took " + Long.toString(after - before) + " ms");
+		if (verbose) {
+			System.out.println("Finding all the stations took " + Long.toString(after - before) + " ms");
+		}
 
 		return stationData;
 	}
@@ -163,10 +165,11 @@ public class BackEndXMLTideComputer {
 			super.endElement(uri, localName, qName);
 			if (foundStation && "station".equals(qName)) {
 				foundStation = false;
-				if (stationMap == null)
+				if (stationMap == null) {
 					throw new DoneWithSiteException("Done with it.");
-				else
+				} else {
 					stationMap.put(ts.getFullName(), ts);
+				}
 			} else if (foundNameCollection && "name-collection".equals(qName)) {
 				foundNameCollection = false;
 			} else if (foundStationData && "station-data".equals(qName)) {
@@ -258,11 +261,11 @@ public class BackEndXMLTideComputer {
 		public void characters(char ch[], int start, int length)
 				throws SAXException {
 			String str = new String(ch).substring(start, start + length).trim();
-			if (foundCoeffName)
+			if (foundCoeffName) {
 				coeffName = str;
-			else if (foundCoeffValue)
+			} else if (foundCoeffValue) {
 				coeffValue = Double.parseDouble(str);
-			else if (foundEquilibrium) {
+			} else if (foundEquilibrium) {
 				value = Double.parseDouble(str);
 			} else if (foundFactor) {
 				value = Double.parseDouble(str);

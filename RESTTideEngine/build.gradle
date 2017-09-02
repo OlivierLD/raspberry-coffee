@@ -43,3 +43,24 @@ dependencies {
 shadowJar {
   zip64 true
 }
+
+task harmonicsXML(type: JavaExec, dependsOn: build, description: "Generate the XML Document from the harmonic files") {
+  classpath = configurations.runtime
+  classpath project.configurations.default
+  classpath sourceSets.main.output.classesDir
+  classpath sourceSets.main.runtimeClasspath
+  main = 'utils.HarmonicsToXML'
+//args "none", "nothing", "needed"
+//standardInput System.in
+//jvmArgs "-Dverbose=tgrue"
+//if (project.hasProperty('key')) { // gradlew -Pkey=XXXXX runJAXRSScript
+//  args ('key:' + project.getProperty('key'))
+//}
+  systemProperty 'verbose', 'true'
+  workingDir "."
+}
+
+harmonicsXML.doFirst {
+  println ">>> Run like this: gradlew harmonicsXML [--console plain] --no-daemon"
+}
+
