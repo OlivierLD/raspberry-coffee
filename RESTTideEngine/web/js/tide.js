@@ -168,16 +168,20 @@ var tideStationsFiltered = function(filter) {
 	});
 };
 
-var tideTable = function(station, tz, step, unit) {
+var tideTable = function(station, tz, step, unit, callback) {
 	var getData = getTideTable(station, tz, step, unit);
 	getData.done(function(value) {
-		try {
-			var json = JSON.parse(value);
-			// Do something smart
-			json.stationName = decodeURIComponent(decodeURIComponent(json.stationName));
-			$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
-		} catch (err) {
-			errManager(err + '\nFor\n' + value);
+		if (callback === undefined) {
+			try {
+				var json = JSON.parse(value);
+				// Do something smart
+				json.stationName = decodeURIComponent(decodeURIComponent(json.stationName));
+				$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+			} catch (err) {
+				errManager(err + '\nFor\n' + value);
+			}
+		} else {
+			callback(value);
 		}
 	});
 	getData.fail(function(error, errmess) {

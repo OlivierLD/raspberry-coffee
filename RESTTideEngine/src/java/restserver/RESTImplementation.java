@@ -64,6 +64,16 @@ public class RESTImplementation {
 					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'limit' and 'offset' optional parameters. Default offset is 0, default limit is 500."),
 			new Operation(
 					"GET",
+					"/coeff-definitions",
+					this::getCoefficients,
+					"Get all the coefficient names and definitions"),
+			new Operation(
+					"GET",
+					"/coeff-definitions/{coeff-name}",
+					this::getCoefficient,
+					"Get one coefficient name and definition. {coeff-name} is the name. Returns 'unknown' if not found in the map."),
+			new Operation(
+					"GET",
 					"/tide-stations/{st-regex}",
 					this::getStations,
 					"Get Tide Stations matching the regex. Returns all data of the matching stations. Regex might need encoding/escaping."),
@@ -107,6 +117,62 @@ public class RESTImplementation {
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 		return response;
+	}
+
+	/**
+	 * Returns the coefficient names and definitions
+	 *
+	 * @param request
+	 * @return
+	 */
+	private Response getCoefficients(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String content = new Gson().toJson(this.tideServer.getCoeffDefinitions());
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response.setStatus(Response.BAD_REQUEST);
+			response.setPayload(ex.toString().getBytes());
+			return response;
+		}
+	}
+
+	/**
+	 * Returns the coefficient name and definition, just for one.
+	 *
+	 * @param request
+	 * @return
+	 */
+	private Response getCoefficient(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		String coeffName = "";
+		if (prmValues.size() == 1) {
+			String param = prmValues.get(0);
+			coeffName = param;
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("TIDE-0001")
+							.errorMessage("Need tideServer path parameter {coeff-name}."));
+			return response;
+		}
+		try {
+			String definition = this.tideServer.getCoeffDefinitions().get(coeffName);
+			String content = new Gson().toJson(new NameValuePair<String>().name(coeffName).value(definition == null ? "unknown" : definition));
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response.setStatus(Response.BAD_REQUEST);
+			response.setPayload(ex.toString().getBytes());
+			return response;
+		}
 	}
 
 	/**
@@ -428,5 +494,20 @@ public class RESTImplementation {
 		String timezone; // If not the Station timezone
 		int step; // In minutes
 		unit unit; // If not the station unit
+	}
+
+	private static class NameValuePair<T> {
+		String name;
+		T value;
+
+		public NameValuePair<T> name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public NameValuePair<T> value(T value) {
+			this.value = value;
+			return this;
+		}
 	}
 }

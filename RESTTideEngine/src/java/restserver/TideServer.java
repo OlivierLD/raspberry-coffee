@@ -5,8 +5,10 @@ import http.HTTPServerInterface;
 import tideengine.BackEndTideComputer;
 import tideengine.Coefficient;
 import tideengine.TideStation;
+import tideengine.TideUtilities;
 
 import java.util.List;
+import java.util.Map;
 
 public class TideServer implements HTTPServerInterface {
 
@@ -17,6 +19,7 @@ public class TideServer implements HTTPServerInterface {
 
 	private List<Coefficient> constSpeed = null;
 	private List<TideStation> stationData = null;
+	private Map<String, String> coeffDefinitions = null;
 
 	public TideServer() {
 
@@ -71,6 +74,13 @@ public class TideServer implements HTTPServerInterface {
 		} catch (Exception ex) {
 			throw ex;
 		}
+	}
+
+	protected Map<String, String> getCoeffDefinitions() {
+		if (this.coeffDefinitions == null) {
+			this.coeffDefinitions = TideUtilities.COEFF_DEFINITION;
+		}
+		return this.coeffDefinitions;
 	}
 
 	/**

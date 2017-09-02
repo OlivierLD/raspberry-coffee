@@ -30,7 +30,7 @@ harmonic data files found in the `harmonics` directory.
 ```
 The sources of the generator are obviously available.
 
-Implements **two** REST Request Managers.
+Implements (will implement...) **two** REST Request Managers.
 - One for tide data
 - One for celestial data
 
