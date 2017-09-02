@@ -14,11 +14,13 @@ import tideengine.TideUtilities;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -111,15 +113,52 @@ public class RESTImplementation {
 		return response;
 	}
 
+	/**
+	 * Accepts limit and offset Query String parameters. Optional.
+	 *
+	 * @param request
+	 * @return Encoded list (UTF-8)
+	 */
 	private Response getStationsList(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		long offset = 0;
+		long limit = 500;
+		Map<String, String> qsPrms = request.getQueryStringParameters();
+		if (qsPrms != null && qsPrms.containsKey("offset")) {
+			try {
+				offset = Long.parseLong(qsPrms.get("offset"));
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+		if (qsPrms != null && qsPrms.containsKey("limit")) {
+			try {
+				limit = Long.parseLong(qsPrms.get("limit"));
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
 		try {
 			List<String> stationNames = this.tideServer.getStationList().
 					stream()
-					.map(ts -> ts.getFullName())
+					.map(ts -> {
+						try {
+							String encoded = URLEncoder.encode(ts.getFullName(), "UTF-8");
+//						System.out.println(String.format("[%s] encoded as [%s], back to [%s]", ts.getFullName(), encoded, URLDecoder.decode(encoded, "ISO-8859-1")));
+							return encoded.replace("+", "%20");
+						} catch (UnsupportedEncodingException usee) {
+							System.out.println(String.format("!!>> Bad encoding for [%s]", ts.getFullName()));
+//						usee.printStackTrace();
+							return usee.toString();
+						}
+					})
+					.skip(offset)
+					.limit(limit)
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(stationNames);
 //		System.out.println(String.format("Length:%d,\n%s", content.length(), content));
+			// Set Content-Type's charset to ISO-8859-1
+//		RESTProcessorUtil.generateResponseHeaders(response, "application/x-www-form-urlencoded;charset=ISO-8859-1", content.length());
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
@@ -218,59 +257,61 @@ public class RESTImplementation {
 				unit unitToUse = null;
 				// Payload in the body?
 				if (request.getContent() != null && request.getContent().length > 0) {
-					Gson gson = new GsonBuilder().create();
 					String payload = new String(request.getContent());
-					StringReader stringReader = new StringReader(payload);
-					try {
-						WaterHeightOptions options = gson.fromJson(stringReader, WaterHeightOptions.class);
-						if (options.step == 0 &&
-								options.timezone == null &&
-								options.unit == null) {
-							response = HTTPServer.buildErrorResponse(response,
-									Response.BAD_REQUEST,
-									new HTTPServer.ErrorPayload()
-											.errorCode("TIDE-0011")
-											.errorMessage(String.format("Invalid payload: %s", payload)));
-							proceed = false;
-						} else {
-							if (options.step < 0) {
+					if (!"null".equals(payload)) {
+						Gson gson = new GsonBuilder().create();
+						StringReader stringReader = new StringReader(payload);
+						try {
+							WaterHeightOptions options = gson.fromJson(stringReader, WaterHeightOptions.class);
+							if (options.step == 0 &&
+									options.timezone == null &&
+									options.unit == null) {
 								response = HTTPServer.buildErrorResponse(response,
 										Response.BAD_REQUEST,
 										new HTTPServer.ErrorPayload()
-												.errorCode("TIDE-0012")
-												.errorMessage(String.format("Step MUST be positive: %d", options.step)));
+												.errorCode("TIDE-0011")
+												.errorMessage(String.format("Invalid payload: %s", payload)));
 								proceed = false;
-							}
-							if (proceed && options.timezone != null) {
-								if (!Arrays.asList(TimeZone.getAvailableIDs()).contains(options.timezone)) {
+							} else {
+								if (options.step < 0) {
 									response = HTTPServer.buildErrorResponse(response,
 											Response.BAD_REQUEST,
 											new HTTPServer.ErrorPayload()
-													.errorCode("TIDE-0013")
-													.errorMessage(String.format("Invalid TimeZone: %s", options.timezone)));
+													.errorCode("TIDE-0012")
+													.errorMessage(String.format("Step MUST be positive: %d", options.step)));
 									proceed = false;
 								}
+								if (proceed && options.timezone != null) {
+									if (!Arrays.asList(TimeZone.getAvailableIDs()).contains(options.timezone)) {
+										response = HTTPServer.buildErrorResponse(response,
+												Response.BAD_REQUEST,
+												new HTTPServer.ErrorPayload()
+														.errorCode("TIDE-0013")
+														.errorMessage(String.format("Invalid TimeZone: %s", options.timezone)));
+										proceed = false;
+									}
+								}
+								if (proceed) {
+									// Set overriden parameter values
+									if (options.timezone != null) {
+										timeZoneToUse = options.timezone;
+									}
+									if (options.unit != null) {
+										unitToUse = options.unit;
+									}
+									if (options.step != 0) {
+										step = options.step;
+									}
+								}
 							}
-							if (proceed) {
-								// Set overriden parameter values
-								if (options.timezone != null) {
-									timeZoneToUse = options.timezone;
-								}
-								if (options.unit != null) {
-									unitToUse = options.unit;
-								}
-								if (options.step != 0) {
-									step = options.step;
-								}
-							}
+						} catch (Exception ex) {
+							response = HTTPServer.buildErrorResponse(response,
+									Response.BAD_REQUEST,
+									new HTTPServer.ErrorPayload()
+											.errorCode("TIDE-0010")
+											.errorMessage(ex.toString()));
+							proceed = false;
 						}
-					} catch (Exception ex) {
-						response = HTTPServer.buildErrorResponse(response,
-								Response.BAD_REQUEST,
-								new HTTPServer.ErrorPayload()
-										.errorCode("TIDE-0010")
-										.errorMessage(ex.toString()));
-						proceed = false;
 					}
 				}
 				if (proceed) {
@@ -278,7 +319,13 @@ public class RESTImplementation {
 						TideStation ts = null;
 						Optional<TideStation> optTs = this.tideServer.getStationList().
 								stream()
-								.filter(station -> stationName.equals(station.getFullName()))
+								.filter(station -> {
+									try {
+										return stationName.equals(URLDecoder.decode(station.getFullName(), "UTF-8"));
+									} catch (UnsupportedEncodingException uee) {
+										return false;
+									}
+								})
 								.findFirst();
 						if (!optTs.isPresent()) {
 							response = HTTPServer.buildErrorResponse(response,
@@ -360,8 +407,28 @@ public class RESTImplementation {
 			List<TideStation> ts = this.tideServer.getStationList().
 					stream()
 					.filter(station -> pattern.matcher(station.getFullName()).matches()) // TODO IgnoreCase?
+					.map(station -> {
+						try {
+							String encoded = URLEncoder.encode(station.getFullName(), "UTF-8");
+							station.setFullName(encoded.replace("+", "%20")); // Was ISO-8859-1
+							// Name parts
+							IntStream.range(0, station.getNameParts().size())
+									.boxed()
+									.forEach(idx -> {
+										try {
+											station.getNameParts().set(idx, URLEncoder.encode(station.getNameParts().get(idx), "UTF-8").replace("+", "%20"));
+										} catch (UnsupportedEncodingException uee) {
+											uee.printStackTrace();
+										}
+									});
+						} catch (UnsupportedEncodingException uee) {
+							uee.printStackTrace();
+						}
+						return station;
+					})
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(ts);
+//		RESTProcessorUtil.generateResponseHeaders(response, "application/x-www-form-urlencoded;charset=ISO-8859-1", content.length());
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;

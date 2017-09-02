@@ -7,6 +7,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 public class BackEndXMLTideComputer {
@@ -118,13 +120,21 @@ public class BackEndXMLTideComputer {
 				if (name.contains(this.stationName)) {
 					foundStation = true;
 					ts = new TideStation();
-					ts.setFullName(name);
+					try {
+						ts.setFullName(URLDecoder.decode(name, "ISO-8859-1"));
+					} catch (UnsupportedEncodingException uee) {
+						uee.printStackTrace();
+					}
 				}
 			} else if (foundStation) {
 				if ("name-collection".equals(qName)) {
 					foundNameCollection = true;
 				} else if ("name-part".equals(qName) && foundNameCollection) {
-					ts.getNameParts().add(attributes.getValue("name"));
+					try {
+						ts.getNameParts().add(URLDecoder.decode(attributes.getValue("name"), "ISO-8859-1"));
+					} catch (UnsupportedEncodingException uee) {
+						uee.printStackTrace();
+					}
 				} else if ("position".equals(qName)) {
 					ts.setLatitude(Double.parseDouble(attributes.getValue("latitude")));
 					ts.setLongitude(Double.parseDouble(attributes.getValue("longitude")));
