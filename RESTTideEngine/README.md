@@ -10,19 +10,19 @@ If that one works, then we can really move away from Swing.
  /GET /tide-stations/{station}
  /POST /tide-stations/{station}/wh?from=XXX&to=YYY
  /POST /tide-stations/{station}/wh/details?from=XXX&to=YYY
- 
+
  ... etc
- 
+
 ```
 
 ### Features (to be)
 - Web UI for tidal curves
-- REST APIs for server-side computation 
+- REST APIs for server-side computation
 - Publishing: Server side `pdf` generation
 
 ---
 
-The engine is based on XML data, stored in `xml.zip`. Those data are generated after the 
+The engine is based on XML data, stored in `xml.zip`. Those data are generated after the
 harmonic data files found in the `harmonics` directory.
  Re-generating those is not necessary, but in case you're interested, run
 ```bash
@@ -34,8 +34,12 @@ Implements **two** REST Request Managers.
 - One for tide data
 - One for celestial data
 
+#### HTTP Server, Request Manager, REST Implementation
+
+![Class Diagram](./docimg/ClassDiagram.png)
+
 ### Why are we using XML instead of the raw `txt` file?
-The format of the harmonic files is a proprietary format. To be used efficiently, the file has to 
+The format of the harmonic files is a proprietary format. To be used efficiently, the file has to
 be parsed and loaded in memory for the data it contains to be available in a timely manner.
 
 This could be quite demanding for a small machine like the Raspberry PI (the`Zero` has "only" 512 Mb of RAM), even the generation of the XML files
