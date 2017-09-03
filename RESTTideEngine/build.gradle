@@ -37,6 +37,7 @@ dependencies {
   compile 'org.fusesource.jansi:jansi:1.11'
   compile 'oracle:xmlparser:2.0'
   compile project (':common-utils')
+  compile project (':RESTNauticalAlmanac')
 }
 
 shadowJar {

@@ -7,7 +7,6 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,13 +23,10 @@ import java.util.stream.Collectors;
  */
 public class RESTImplementation {
 
-	private AstroServer astroServer;
+	private AstroRequestManager astroRequestManager;
 
-	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-	public RESTImplementation(AstroServer ts) {
-
-		this.astroServer = ts;
+	public RESTImplementation(AstroRequestManager astroRequestManager) {
+		this.astroRequestManager = astroRequestManager;
 		// Check duplicates in operation list. Barfs if duplicate is found.
 		RESTProcessorUtil.checkDuplicateOperations(operations);
 	}
@@ -49,7 +45,12 @@ public class RESTImplementation {
 					"GET",
 					"/oplist",
 					this::getOperationList,
-					"List of all available operations.")
+					"List of all available operations."),
+			new Operation(
+					"GET",
+					"/utc",
+					this::getOperationList,
+					"Get current UTC Date.")
 	);
 
 	protected List<Operation> getOperations() {

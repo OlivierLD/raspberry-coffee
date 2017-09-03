@@ -1,5 +1,7 @@
 package tiderest;
 
+import astrorest.AstroRequestManager;
+import astrorest.AstroServer;
 import http.HTTPServer;
 import http.HTTPServerInterface;
 import tideengine.BackEndTideComputer;
@@ -39,7 +41,9 @@ public class TideServer implements HTTPServerInterface {
 			ex.printStackTrace();
 		}
 		restImplementation = new RESTImplementation(this);
-		startHttpServer(httpPort);
+		this.httpServer = startHttpServer(httpPort);
+		// Astronomical features...
+		this.httpServer.addRequestManager(new AstroRequestManager()); // TODO oplist..
 	}
 
 	public static void main(String... args) {
@@ -107,11 +111,13 @@ public class TideServer implements HTTPServerInterface {
 		return restImplementation.getOperations();
 	}
 
-	public void startHttpServer(int port) {
+	public HTTPServer startHttpServer(int port) {
+		HTTPServer newHttpServer = null;
 		try {
-			this.httpServer = new HTTPServer(port, this);
+			newHttpServer = new HTTPServer(port, this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return newHttpServer;
 	}
 }
