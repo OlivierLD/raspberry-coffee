@@ -1,6 +1,6 @@
 package util;
 
-import util.greatcircle.GreatCirclePoint;
+import calc.GreatCirclePoint;
 
 public final class MercatorUtil {
 

@@ -27,8 +27,7 @@ import nmea.parser.UTC;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
 import nmea.parser.Wind;
-import nmea.utils.NMEAUtils;
-import util.GeomUtil;
+import calc.GeomUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;

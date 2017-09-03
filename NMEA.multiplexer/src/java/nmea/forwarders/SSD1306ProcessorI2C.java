@@ -24,7 +24,7 @@ import nmea.parser.Speed;
 import nmea.parser.Temperature;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
-import util.GeomUtil;
+import calc.GeomUtil;
 
 /**
  * This is an example of a <b>transformer</b>.

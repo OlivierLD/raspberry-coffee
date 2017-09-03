@@ -1,4 +1,4 @@
-package util.greatcircle;
+package calc;
 
 
 // Referenced classes of package astro.calc:

@@ -9,8 +9,8 @@ import nmea.parser.UTCDate;
 import nmea.parser.UTCHolder;
 import nmea.parser.UTCTime;
 import util.MercatorUtil;
-import util.greatcircle.GreatCirclePoint;
-import util.greatcircle.GreatCircle;
+import calc.GreatCirclePoint;
+import calc.GreatCircle;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

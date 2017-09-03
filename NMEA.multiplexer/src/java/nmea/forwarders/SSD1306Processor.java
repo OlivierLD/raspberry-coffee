@@ -25,7 +25,7 @@ import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 
 import java.util.Properties;
-import util.GeomUtil;
+import calc.GeomUtil;
 
 /**
  * This is an example of a <b>transformer</b>.

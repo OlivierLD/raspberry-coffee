@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.fusesource.jansi.AnsiConsole;
 import context.NMEADataCache;
-import util.GeomUtil;
+import calc.GeomUtil;
 import utils.StringUtils;
 
 public class CharacterModeConsole {

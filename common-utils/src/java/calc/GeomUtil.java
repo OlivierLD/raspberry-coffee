@@ -1,9 +1,8 @@
-package util;
+package calc;
 
-import nmea.utils.NMEAUtils;
+import utils.StringUtils;
 
 import java.text.DecimalFormat;
-import utils.StringUtils;
 
 public final class GeomUtil {
 	public static final int HTML = 0;
@@ -57,7 +56,7 @@ public final class GeomUtil {
 		double dlong = Math.toRadians(long2 - long1);
 		double dlat = Math.toRadians(lat2 - lat1);
 		double a = Math.pow(Math.sin(dlat / 2.0), 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.pow(Math.sin(dlong / 2.0), 2);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		return c;
 	}
 
@@ -82,28 +81,30 @@ public final class GeomUtil {
 	 */
 	public static double getDir(float x, float y) {
 		double dir = 0.0D;
-		if (y != 0)
+		if (y != 0) {
 			dir = Math.toDegrees(Math.atan((double) x / (double) y));
+		}
 		if (x <= 0 || y <= 0) {
-			if (x > 0 && y < 0)
+			if (x > 0 && y < 0) {
 				dir += 180D;
-			else if (x < 0 && y > 0)
+			} else if (x < 0 && y > 0) {
 				dir += 360D;
-			else if (x < 0 && y < 0)
+			} else if (x < 0 && y < 0) {
 				dir += 180D;
-			else if (x == 0) {
-				if (y > 0)
+			} else if (x == 0) {
+				if (y > 0) {
 					dir = 0.0D;
-				else
+				} else {
 					dir = 180D;
+				}
 			} else if (y == 0) {
-				if (x > 0)
+				if (x > 0) {
 					dir = 90D;
-				else
+				} else {
 					dir = 270D;
+				}
 			}
 		}
-
 		while (dir >= 360D) dir -= 360D;
 		return dir;
 	}
@@ -117,24 +118,27 @@ public final class GeomUtil {
 		try {
 			String sgn = fullString.substring(0, 1);
 			int degSignIndex = fullString.indexOf(DEGREE_SYMBOL);
-			if (degSignIndex < 0)
+			if (degSignIndex < 0) {
 				degSignIndex = fullString.indexOf(DEGREE_SYMBOL);
+			}
 			String degrees = fullString.substring(2, degSignIndex);
 			String minutes = "";
 			String seconds = "";
 			if (fullString.indexOf("\"") > -1) {
 				minutes = fullString.substring(degSignIndex + 1, fullString.indexOf("'"));
 				seconds = fullString.substring(fullString.indexOf("'") + 1, fullString.indexOf("\""));
-			} else
+			} else {
 				minutes = fullString.substring(degSignIndex + 1);
-
+			}
 			double d = 0L;
-			if (seconds.trim().length() > 0)
+			if (seconds.trim().length() > 0) {
 				d = sexToDec(degrees, minutes, seconds);
-			else
+			} else {
 				d = sexToDec(degrees, minutes);
-			if (sgn.equals("S") || sgn.equals("W"))
+			}
+			if (sgn.equals("S") || sgn.equals("W")) {
 				d = -d;
+			}
 			return d;
 		} catch (Exception e) {
 			throw new RuntimeException("For [" + fullString + "] :" + e.getMessage());
@@ -142,7 +146,7 @@ public final class GeomUtil {
 	}
 
 	public static double sexToDec(String degrees, String minutes)
-					throws RuntimeException {
+			throws RuntimeException {
 		double deg = 0.0D;
 		double min = 0.0D;
 		double ret = 0.0D;
@@ -158,7 +162,7 @@ public final class GeomUtil {
 	}
 
 	public static double sexToDec(String degrees, String minutes, String seconds)
-					throws RuntimeException {
+			throws RuntimeException {
 		double deg = 0.0D;
 		double min = 0.0D;
 		double sec = 0.0D;
@@ -205,14 +209,15 @@ public final class GeomUtil {
 		int i = (int) intValue;
 		dec *= 60D;
 		DecimalFormat df = (truncMinute ? new DecimalFormat("00") : new DecimalFormat("00.00"));
-		if (output == GeomUtil.HTML)
+		if (output == GeomUtil.HTML) {
 			s = Integer.toString(i) + "&deg;" + df.format(dec) + "'";
-		else if (output == GeomUtil.SWING)
+		} else if (output == GeomUtil.SWING) {
 			s = Integer.toString(i) + '\260' + df.format(dec) + "'";
-		else if (output == GeomUtil.NO_DEG)
+		} else if (output == GeomUtil.NO_DEG) {
 			s = Integer.toString(i) + ' ' + df.format(dec) + "'";
-		else
+		} else {
 			s = Integer.toString(i) + '\370' + df.format(dec) + "'";
+		}
 		if (v < 0.0D) {
 			switch (displayType) {
 				case NONE:
@@ -328,18 +333,15 @@ public final class GeomUtil {
 	}
 
 	/**
-	 *
-	 * @param g Longitude
+	 * @param g   Longitude
 	 * @param hms UT HMS
 	 * @return
 	 */
 	public static double getLocalSolarTime(double g, double hms) {
 		double ahh = degrees2hours(g);
 		double localSolar = hms + ahh;
-		while (localSolar < 0)
-			localSolar += 24;
-		while (localSolar > 24)
-			localSolar -= 24;
+		while (localSolar < 0) localSolar += 24;
+		while (localSolar > 24) localSolar -= 24;
 		return localSolar;
 	}
 
@@ -455,5 +457,57 @@ public final class GeomUtil {
 		System.out.println("19 00.00 N  =" + (sexToDec("19", "00.00")));
 		System.out.println("170 00.00 W =" + (-sexToDec("170", "00.00")));
 
+		GreatCircle gc = new GreatCircle();
+		gc.setStart(new GreatCirclePoint(Math.toRadians(sexToDec("19", "00.00")),
+				Math.toRadians((-sexToDec("160", "00.00")))));
+		gc.setArrival(new GreatCirclePoint(Math.toRadians(sexToDec("19", "00.00")),
+				Math.toRadians((-sexToDec("170", "00.00")))));
+		gc.calculateGreatCircle(20);
+		//  Vector route = gc.getRoute();
+		double distance = gc.getDistance();
+		System.out.println("Dist:" + (Math.toDegrees(distance) * 60) + " nm");
+
+		System.out.println("Tonga:");
+		System.out.println("21 10.00 N  =" + (sexToDec("21", "10.00")));
+		System.out.println("175 08.00 W =" + (-sexToDec("175", "08.00")));
+
+		gc = new GreatCircle();
+		gc.setStart(new GreatCirclePoint(Math.toRadians(sexToDec("19", "00.00")),
+				Math.toRadians((-sexToDec("170", "00.00")))));
+		gc.setArrival(new GreatCirclePoint(Math.toRadians(sexToDec("21", "10.00")),
+				Math.toRadians((-sexToDec("175", "08.00")))));
+		gc.calculateGreatCircle(20);
+		//  Vector route = gc.getRoute();
+		distance = gc.getDistance();
+		System.out.println("Dist:" + (Math.toDegrees(distance) * 60) + " nm");
+
+		System.out.println("Fiji:");
+		System.out.println("18 00.00 N  =" + (sexToDec("18", "00.00")));
+		System.out.println("180 00.00 W =" + (-sexToDec("180", "00.00")));
+
+		gc = new GreatCircle();
+		gc.setStart(new GreatCirclePoint(Math.toRadians(sexToDec("21", "10.00")),
+				Math.toRadians((-sexToDec("175", "08.00")))));
+		gc.setArrival(new GreatCirclePoint(Math.toRadians(sexToDec("18", "00.00")),
+				Math.toRadians((-sexToDec("180", "00.00")))));
+		gc.calculateGreatCircle(20);
+		//  Vector route = gc.getRoute();
+		distance = gc.getDistance();
+		System.out.println("Dist:" + (Math.toDegrees(distance) * 60) + " nm");
+
+		double bug = -sexToDec("10", "58", "20.8");
+		System.out.println("Bug:" + bug + " " + formatDMS(bug) + " (fixed)");
+
+		System.out.println("Display (no deg):[" + GeomUtil.decToSex(37.123, GeomUtil.NO_DEG, GeomUtil.NS) + "]");
+
+		String fromJPEG = String.format("N 37%s39'49.8\"", DEGREE_SYMBOL);
+		System.out.println(fromJPEG + " is [" + sexToDec(fromJPEG) + "]");
+
+		fromJPEG = String.format("W 112%s9'34.36\"", DEGREE_SYMBOL);
+		System.out.println(fromJPEG + " is [" + sexToDec(fromJPEG) + "]");
+
+		double lat = 37.750585;
+		double lng = -122.507891;
+		System.out.println("Grid Square: " + new GeoPoint(lat, lng).toString() + " => " + gridSquare(lat, lng));
 	}
 }

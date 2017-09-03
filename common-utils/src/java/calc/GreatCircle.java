@@ -1,6 +1,4 @@
-package util.greatcircle;
-
-import util.GeomUtil;
+package calc;
 
 import java.util.Vector;
 

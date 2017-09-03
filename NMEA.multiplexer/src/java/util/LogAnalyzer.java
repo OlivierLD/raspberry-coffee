@@ -11,6 +11,7 @@ import java.util.List;
 import nmea.parser.GeoPos;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;
+import calc.GeomUtil;
 
 import static nmea.parser.StringParsers.GGA_ALT_IDX;
 
