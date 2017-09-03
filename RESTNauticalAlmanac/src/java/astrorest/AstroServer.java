@@ -4,7 +4,7 @@ import http.HTTPServer;
 
 public class AstroServer {
 
-	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
+//private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private HTTPServer httpServer = null;
 	private int httpPort = 9999;
 	private AstroRequestManager requestManager;
@@ -20,7 +20,7 @@ public class AstroServer {
 			}
 		}
 		requestManager = new AstroRequestManager();
-		startHttpServer(httpPort);
+		this.httpServer = startHttpServer(httpPort);
 	}
 
 	public static void main(String... args) {
@@ -28,11 +28,13 @@ public class AstroServer {
 	}
 
 
-	public void startHttpServer(int port) {
+	public HTTPServer startHttpServer(int port) {
+		HTTPServer newHttpServer = null;
 		try {
-			this.httpServer = new HTTPServer(port, requestManager);
+			newHttpServer = new HTTPServer(port, requestManager);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return newHttpServer;
 	}
 }

@@ -66,6 +66,11 @@ var getDeferred = function(
 
 var DEFAULT_TIMEOUT = 10000;
 
+var getCurrentTime = function() {
+	var url = "/utc";
+	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var getTideStations = function(offset, limit) {
 	var url = "/tide-stations";
 	if (! isNaN(parseInt(offset))) {
@@ -153,6 +158,26 @@ var tideStationsFiltered = function(filter) {
 				console.log("Oops:" + ts);
 			}
 		});
+		$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+var showTime = function() {
+	var getData = getCurrentTime();
+	getData.done(function(value) {
+		var json = JSON.parse(value);
+		// Do something smart
 		$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
 	});
 	getData.fail(function(error, errmess) {

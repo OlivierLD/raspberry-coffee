@@ -47,7 +47,7 @@ public class HTTPServerTests {
 						this::emptyOperation,
 						"Hard stop, shutdown. VERY unusual REST resource..."));
 
-		 HTTPServerInterface restServerImplOne = new HTTPServerInterface() {
+		 RESTRequestManager restServerImplOne = new RESTRequestManager() {
 
 			 @Override
 			 public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
@@ -61,7 +61,7 @@ public class HTTPServerTests {
 		 };
 
 
-		HTTPServerInterface restServerImplTwo = new HTTPServerInterface() {
+		RESTRequestManager restServerImplTwo = new RESTRequestManager() {
 
 			@Override
 			public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {

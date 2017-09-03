@@ -1,27 +1,16 @@
 package tiderest;
 
 import astrorest.AstroRequestManager;
-import astrorest.AstroServer;
 import http.HTTPServer;
-import http.HTTPServerInterface;
 import tideengine.BackEndTideComputer;
-import tideengine.Coefficient;
-import tideengine.TideStation;
-import tideengine.TideUtilities;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
-public class TideServer implements HTTPServerInterface {
+public class TideServer {
 
-	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private HTTPServer httpServer = null;
 	private int httpPort = 9999;
-	private RESTImplementation restImplementation;
-
-	private List<Coefficient> constSpeed = null;
-	private List<TideStation> stationData = null;
-	private Map<String, String> coeffDefinitions = null;
 
 	public TideServer() {
 
@@ -40,81 +29,26 @@ public class TideServer implements HTTPServerInterface {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		restImplementation = new RESTImplementation(this);
-		this.httpServer = startHttpServer(httpPort);
-		// Astronomical features...
-		this.httpServer.addRequestManager(new AstroRequestManager()); // TODO oplist..
+		this.httpServer = startHttpServer(httpPort, new TideRequestManager(this));
+		// Add astronomical features...
+		this.httpServer.addRequestManager(new AstroRequestManager());
+	}
+
+	protected List<HTTPServer.Operation> getAllOperationList() {
+		return this.httpServer.getRequestManagers()
+				.stream()
+				.flatMap(requestManager -> requestManager.getRESTOperationList().stream())
+				.collect(Collectors.toList());
 	}
 
 	public static void main(String... args) {
 		new TideServer();
 	}
 
-	protected List<Coefficient> getConstSpeed() throws Exception {
-		try {
-			if (this.constSpeed == null) {
-//			System.out.println("Creating constants list");
-				this.constSpeed = BackEndTideComputer.buildSiteConstSpeed();
-			}
-			return this.constSpeed;
-		} catch (Exception ex) {
-			throw ex;
-		}
-	}
-
-	/**
-	 * All strings UTF-8 Encoded.
-	 *
-	 * @return
-	 * @throws Exception
-	 */
-	protected List<TideStation> getStationList() throws Exception {
-		try {
-			if (this.stationData == null) {
-//			System.out.println("Creating stations list");
-				this.stationData = BackEndTideComputer.getStationData();
-			}
-			return this.stationData;
-		} catch (Exception ex) {
-			throw ex;
-		}
-	}
-
-	protected Map<String, String> getCoeffDefinitions() {
-		if (this.coeffDefinitions == null) {
-			this.coeffDefinitions = TideUtilities.COEFF_DEFINITION;
-		}
-		return this.coeffDefinitions;
-	}
-
-	/**
-	 * Manage the REST requests.
-	 *
-	 * @param request incoming request
-	 * @return as defined in the {@link RESTImplementation}
-	 * @throws UnsupportedOperationException
-	 */
-	@Override
-	public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
-		HTTPServer.Response response = restImplementation.processRequest(request); // All the skill is here.
-		if (this.httpVerbose) {
-			System.out.println("======================================");
-			System.out.println("Request :\n" + request.toString());
-			System.out.println("Response :\n" + response.toString());
-			System.out.println("======================================");
-		}
-		return response;
-	}
-
-	@Override
-	public List<HTTPServer.Operation> getRESTOperationList() {
-		return restImplementation.getOperations();
-	}
-
-	public HTTPServer startHttpServer(int port) {
+	public HTTPServer startHttpServer(int port, TideRequestManager requestManager) {
 		HTTPServer newHttpServer = null;
 		try {
-			newHttpServer = new HTTPServer(port, this);
+			newHttpServer = new HTTPServer(port, requestManager);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

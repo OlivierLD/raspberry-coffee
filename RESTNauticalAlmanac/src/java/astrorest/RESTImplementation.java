@@ -7,6 +7,7 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,15 +42,15 @@ public class RESTImplementation {
 	 * See {@link HTTPServer}
 	 */
 	private List<Operation> operations = Arrays.asList(
-			new Operation(
-					"GET",
-					"/oplist",
-					this::getOperationList,
-					"List of all available operations."),
+//			new Operation(
+//					"GET",
+//					"/oplist",
+//					this::getOperationList,
+//					"List of all available operations."),
 			new Operation(
 					"GET",
 					"/utc",
-					this::getOperationList,
+					this::getCurrentTime,
 					"Get current UTC Date.")
 	);
 
@@ -78,14 +79,44 @@ public class RESTImplementation {
 		}
 	}
 
-	private Response getOperationList(Request request) {
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z z");
+
+	private Response getCurrentTime(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		Operation[] channelArray = operations.stream()
-				.collect(Collectors.toList())
-				.toArray(new Operation[operations.size()]);
-		String content = new Gson().toJson(channelArray);
+		long now = System.currentTimeMillis();
+		Calendar calNow = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+		calNow.setTimeInMillis(now);
+		SDF.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+		String utc = SDF.format(calNow.getTime());
+		SDF.setTimeZone(TimeZone.getDefault());
+		String sys = SDF.format(calNow.getTime());
+
+		DateHolder dateHolder = new DateHolder()
+				.epoch(now)
+				.utcStr(utc)
+				.sysStr(sys);
+		String content = new Gson().toJson(dateHolder);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 		return response;
+	}
+
+	public static class DateHolder {
+		long epoch;
+		String utcStr;
+		String sysStr;
+
+		public DateHolder epoch(long epoch) {
+			this.epoch = epoch;
+			return this;
+		}
+		public DateHolder utcStr(String utcStr) {
+			this.utcStr = utcStr;
+			return this;
+		}
+		public DateHolder sysStr(String sysStr) {
+			this.sysStr = sysStr;
+			return this;
+		}
 	}
 }

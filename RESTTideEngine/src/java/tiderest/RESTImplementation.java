@@ -31,13 +31,13 @@ import java.util.stream.Collectors;
  */
 public class RESTImplementation {
 
-	private TideServer tideServer;
+	private TideRequestManager tideRequestManager;
 
 	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-	public RESTImplementation(TideServer ts) {
+	public RESTImplementation(TideRequestManager restRequestManager) {
 
-		this.tideServer = ts;
+		this.tideRequestManager = restRequestManager;
 		// Check duplicates in operation list. Barfs if duplicate is found.
 		RESTProcessorUtil.checkDuplicateOperations(operations);
 	}
@@ -56,7 +56,7 @@ public class RESTImplementation {
 					"GET",
 					"/oplist",
 					this::getOperationList,
-					"List of all available operations."),
+					"List of all available operations, on all request managers."),
 			new Operation(
 					"GET",
 					"/tide-stations",
@@ -110,10 +110,9 @@ public class RESTImplementation {
 
 	private Response getOperationList(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		Operation[] channelArray = operations.stream()
-				.collect(Collectors.toList())
-				.toArray(new Operation[operations.size()]);
-		String content = new Gson().toJson(channelArray);
+
+		List<Operation> opList = this.tideRequestManager.getAllOperationList(); // Aggregates ops from all request managers
+		String content = new Gson().toJson(opList);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 		return response;
@@ -128,7 +127,7 @@ public class RESTImplementation {
 	private Response getCoefficients(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String content = new Gson().toJson(this.tideServer.getCoeffDefinitions());
+			String content = new Gson().toJson(this.tideRequestManager.getCoeffDefinitions());
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
 			return response;
@@ -158,11 +157,11 @@ public class RESTImplementation {
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
 							.errorCode("TIDE-0001")
-							.errorMessage("Need tideServer path parameter {coeff-name}."));
+							.errorMessage("Need tideRequestManager path parameter {coeff-name}."));
 			return response;
 		}
 		try {
-			String definition = this.tideServer.getCoeffDefinitions().get(coeffName);
+			String definition = this.tideRequestManager.getCoeffDefinitions().get(coeffName);
 			String content = new Gson().toJson(new NameValuePair<String>().name(coeffName).value(definition == null ? "unknown" : definition));
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
@@ -201,7 +200,7 @@ public class RESTImplementation {
 			}
 		}
 		try {
-			List<String> stationNames = this.tideServer.getStationList().
+			List<String> stationNames = this.tideRequestManager.getStationList().
 					stream()
 					.map(ts -> ts.getFullName())
 					.skip(offset)
@@ -251,7 +250,7 @@ public class RESTImplementation {
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
 							.errorCode("TIDE-0002")
-							.errorMessage("Need tideServer path parameter {station-name}."));
+							.errorMessage("Need tideRequestManager path parameter {station-name}."));
 			proceed = false;
 		}
 		if (proceed) {
@@ -357,7 +356,7 @@ public class RESTImplementation {
 				if (proceed) {
 					try {
 						TideStation ts = null;
-						Optional<TideStation> optTs = this.tideServer.getStationList().
+						Optional<TideStation> optTs = this.tideRequestManager.getStationList().
 								stream()
 								.filter(station -> station.getFullName().equals(stationName))
 								.findFirst();
@@ -384,7 +383,7 @@ public class RESTImplementation {
 							if (ts != null) {
 								now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 								while (now.before(calTo)) {
-									double wh = TideUtilities.getWaterHeight(ts, this.tideServer.getConstSpeed(), now);
+									double wh = TideUtilities.getWaterHeight(ts, this.tideRequestManager.getConstSpeed(), now);
 									TimeZone.setDefault(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())); // for TS Timezone display
 //							  System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
 									map.put(now.getTime().toString(), wh * unitSwitcher(ts, unitToUse));
@@ -427,11 +426,11 @@ public class RESTImplementation {
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
 							.errorCode("TIDE-0008")
-							.errorMessage("Need tideServer path parameter {regex}."));
+							.errorMessage("Need tideRequestManager path parameter {regex}."));
 			return response;
 		}
 		try {
-			List<TideStation> ts = this.tideServer.getStationList().
+			List<TideStation> ts = this.tideRequestManager.getStationList().
 					stream()
 					.filter(station -> pattern.matcher(station.getFullName()).matches()) // TODO IgnoreCase?
 					.collect(Collectors.toList());

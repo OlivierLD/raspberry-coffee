@@ -30,7 +30,7 @@ harmonic data files found in the `harmonics` directory.
 ```
 The sources of the generator are obviously available.
 
-Implements (will implement...) **two** REST Request Managers.
+Implements **two** REST Request Managers.
 - One for tide data
 - One for celestial data
 
@@ -38,7 +38,7 @@ Implements (will implement...) **two** REST Request Managers.
 The format of the harmonic files is a proprietary format. To be used efficiently, the file has to 
 be parsed and loaded in memory for the data it contains to be available in a timely manner.
 
-This could be quite demanding for a small machine like the Raspberry PI (the`Zero` has "only" 518 Mb of RAM), even the generation of the XML files
+This could be quite demanding for a small machine like the Raspberry PI (the`Zero` has "only" 512 Mb of RAM), even the generation of the XML files
 can be challenginfg for the Raspberry PI.
 
 Using a SAX Parser allows the amount of memory to use to substancially shrink.

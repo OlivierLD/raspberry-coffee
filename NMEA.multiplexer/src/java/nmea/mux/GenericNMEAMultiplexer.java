@@ -1,9 +1,9 @@
 package nmea.mux;
 
+import http.RESTRequestManager;
 import nmea.computers.Computer;
 import context.ApplicationContext;
 import http.HTTPServer;
-import http.HTTPServerInterface;
 import utils.DumpUtil;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
@@ -21,10 +21,10 @@ import java.util.Properties;
 /**
  * <b>NMEA Multiplexer.</b><br>
  * Also contains the definition of the REST operations for admin purpose.<br>
- * See {@link HTTPServerInterface} and {@link HTTPServer}.<br>
+ * See {@link RESTRequestManager} and {@link HTTPServer}.<br>
  * Also see below the definition of <code>List&lt;Operation&gt; operations</code>.
  */
-public class GenericNMEAMultiplexer  implements HTTPServerInterface, Multiplexer  {
+public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer  {
 	private HTTPServer adminServer = null;
 
 	private List<NMEAClient> nmeaDataClients = new ArrayList<>();
@@ -36,7 +36,7 @@ public class GenericNMEAMultiplexer  implements HTTPServerInterface, Multiplexer
 	/**
 	 * Implements the management of the REST requests (see {@link RESTImplementation})
 	 * Dedicated Admin Server.
-	 * This method is called by the HTTPServer through the current HTTPServerInterface
+	 * This method is called by the HTTPServer through the current RESTRequestManager
 	 *
 	 * @param request the parsed request.
 	 * @return the response, along with its HTTP status code.

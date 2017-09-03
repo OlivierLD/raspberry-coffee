@@ -23,7 +23,7 @@ import static ansi.EscapeSeq.ansiLocate;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import http.HTTPServer;
-import http.HTTPServerInterface;
+import http.RESTRequestManager;
 import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -78,7 +78,7 @@ import static utils.StringUtils.rpad;
  *
  * -Dhttp.port=9999
  */
-public class SunFlower implements HTTPServerInterface {
+public class SunFlower implements RESTRequestManager {
 
 	private static int[] headingServoID = new int[] { 14 };
 	private static int[] tiltServoID = new int[] { 15 };

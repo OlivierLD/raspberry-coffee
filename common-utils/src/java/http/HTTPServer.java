@@ -298,9 +298,13 @@ public class HTTPServer {
 	// This is an array, so several apps can subscribe to the same HTTPServer.
 	// A REST operation list belongs to each application.
 	// In this case, the HTTPServer should probably live in a singleton.
-	private List<HTTPServerInterface> requestManagers = null;
+	private List<RESTRequestManager> requestManagers = null;
 
-	public void addRequestManager(HTTPServerInterface requestManager) {
+	public List<RESTRequestManager> getRequestManagers() {
+		return this.requestManagers;
+	}
+
+	public void addRequestManager(RESTRequestManager requestManager) {
 		if (requestManager != null) {
 			if (requestManagers == null) {
 				requestManagers = new ArrayList<>(1);
@@ -310,7 +314,7 @@ public class HTTPServer {
 			 * We assume that there is no duplicate in each operation list.
 			 */
 			if (requestManagers.size() > 0) {
-				for (HTTPServerInterface reqMgr : requestManagers) {
+				for (RESTRequestManager reqMgr : requestManagers) {
 					List<Operation> opList = reqMgr.getRESTOperationList();
 					List<Operation> dups = opList.stream()
 							.filter(op -> requestManager.getRESTOperationList().stream()
@@ -330,7 +334,7 @@ public class HTTPServer {
 		}
 	}
 
-	public void removeRequestManager(HTTPServerInterface requestManager) {
+	public void removeRequestManager(RESTRequestManager requestManager) {
 		if (requestManagers.contains(requestManager)) {
 			requestManagers.remove(requestManager);
 		}
@@ -350,11 +354,11 @@ public class HTTPServer {
 		this(port, null);
 	}
 
-	public HTTPServer(HTTPServerInterface requestManager) throws Exception {
+	public HTTPServer(RESTRequestManager requestManager) throws Exception {
 		this(defaultPort, requestManager);
 	}
 
-	public HTTPServer(int port, HTTPServerInterface requestManager) throws Exception {
+	public HTTPServer(int port, RESTRequestManager requestManager) throws Exception {
 		this.port = port;
 		addRequestManager(requestManager);
 		// Infinite loop, waiting for requests
@@ -512,7 +516,7 @@ public class HTTPServer {
 							} else {
 								if (requestManagers != null) {  // Manage it as a REST Request.
 									boolean unManagedRequest = true;
-									for (HTTPServerInterface reqMgr : requestManagers) { // Loop on requestManagers
+									for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
 										try {
 											Response response = reqMgr.onRequest(request); // REST Request, most likely.
 											sendResponse(response, out);

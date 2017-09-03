@@ -1,11 +1,11 @@
 package astrorest;
 
 import http.HTTPServer;
-import http.HTTPServerInterface;
+import http.RESTRequestManager;
 
 import java.util.List;
 
-public class AstroRequestManager implements HTTPServerInterface {
+public class AstroRequestManager implements RESTRequestManager {
 
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private RESTImplementation restImplementation;
