@@ -1,4 +1,4 @@
-package restserver;
+package tiderest;
 
 import http.HTTPServer;
 import http.HTTPServerInterface;

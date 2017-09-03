@@ -1,4 +1,4 @@
-package restserver;
+package tiderest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
