@@ -3,6 +3,7 @@ plugins {
 //id 'scala'
   id 'maven'
   id 'com.github.johnrengelman.shadow' version '2.0.1'
+  id 'findbugs'
 }
 
 group = 'oliv.pi4j.samples'
@@ -38,10 +39,19 @@ dependencies {
   compile 'oracle:xmlparser:2.0'
   compile project (':common-utils')
   compile project (':RESTNauticalAlmanac')
+  compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
 }
 
 shadowJar {
   zip64 true
+}
+
+tasks.withType(FindBugs) {
+  reports {
+    xml.enabled false
+    html.enabled true
+//  html.stylesheet resources.text.fromFile('config/xsl/findbugs-custom.xsl')
+  }
 }
 
 task harmonicsXML(type: JavaExec, dependsOn: build, description: "Generate the XML Document from the harmonic files") {

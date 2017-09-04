@@ -11,6 +11,7 @@ import tideengine.BackEndTideComputer;
 import tideengine.TideStation;
 import tideengine.TideUtilities;
 
+import javax.annotation.Nonnull;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,7 +36,7 @@ public class RESTImplementation {
 
 	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-	public RESTImplementation(TideRequestManager restRequestManager) {
+	public RESTImplementation(@Nonnull TideRequestManager restRequestManager) {
 
 		this.tideRequestManager = restRequestManager;
 		// Check duplicates in operation list. Barfs if duplicate is found.
@@ -93,7 +94,7 @@ public class RESTImplementation {
 	 * @param request as it comes from the client
 	 * @return the actual result.
 	 */
-	public Response processRequest(Request request) throws UnsupportedOperationException {
+	public Response processRequest(@Nonnull Request request) throws UnsupportedOperationException {
 		Optional<Operation> opOp = operations
 				.stream()
 				.filter(op -> op.getVerb().equals(request.getVerb()) && RESTProcessorUtil.pathMatches(op.getPath(), request.getPath()))
@@ -108,7 +109,7 @@ public class RESTImplementation {
 		}
 	}
 
-	private Response getOperationList(Request request) {
+	private Response getOperationList(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
 		List<Operation> opList = this.tideRequestManager.getAllOperationList(); // Aggregates ops from all request managers
@@ -124,7 +125,7 @@ public class RESTImplementation {
 	 * @param request
 	 * @return
 	 */
-	private Response getCoefficients(Request request) {
+	private Response getCoefficients(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
 			String content = new Gson().toJson(this.tideRequestManager.getCoeffDefinitions());
@@ -145,7 +146,7 @@ public class RESTImplementation {
 	 * @param request
 	 * @return
 	 */
-	private Response getCoefficient(Request request) {
+	private Response getCoefficient(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		String coeffName = "";
@@ -180,7 +181,7 @@ public class RESTImplementation {
 	 * @param request
 	 * @return Encoded list (UTF-8)
 	 */
-	private Response getStationsList(Request request) {
+	private Response getStationsList(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		long offset = 0;
 		long limit = 500;
@@ -236,7 +237,7 @@ public class RESTImplementation {
 	 * @param request Requires two query string parameters <b>from</b> and <b>to</b>, in Duration format (yyyy-MM-ddThh:mm:ss)
 	 * @return the expect response. Could contain an error, see the "TIDE-XXXX" messages.
 	 */
-	private Response getWaterHeight(Request request) {
+	private Response getWaterHeight(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK); // Happy response
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		String stationFullName = "";
@@ -414,7 +415,7 @@ public class RESTImplementation {
 		return response; // If we reach here, something went wrong, it's a BAD_REQUEST or so.
 	}
 
-	private Response getStations(Request request) {
+	private Response getStations(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		final Pattern pattern;
@@ -454,7 +455,7 @@ public class RESTImplementation {
 	 * @param request
 	 * @return
 	 */
-	private Response emptyOperation(Request request) {
+	private Response emptyOperation(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		return response;
 	}
@@ -470,7 +471,7 @@ public class RESTImplementation {
 		meters, feet
 	}
 
-	private static double unitSwitcher(TideStation ts, unit overridden) {
+	private static double unitSwitcher(@Nonnull TideStation ts, unit overridden) {
 		double factor = 1d;
 		if (overridden != null) {
 			if (!ts.getDisplayUnit().equals(overridden.toString())) {

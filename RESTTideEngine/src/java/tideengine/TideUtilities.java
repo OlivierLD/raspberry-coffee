@@ -35,8 +35,7 @@ public class TideUtilities {
 	public final static DecimalFormat DF13 = new DecimalFormat("##0.000");
 	public final static DecimalFormat DF36 = new DecimalFormat("##0.000000");
 
-	public final static Map<String, String> COEFF_DEFINITION = new HashMap<String, String>();
-
+	public final static Map<String, String> COEFF_DEFINITION = new HashMap<>();
 	static {
 		COEFF_DEFINITION.put("M2", "Principal lunar semidiurnal constituent");
 		COEFF_DEFINITION.put("S2", "Principal solar semidiurnal constituent");

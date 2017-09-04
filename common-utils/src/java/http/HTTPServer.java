@@ -525,6 +525,9 @@ public class HTTPServer {
 											break;
 										} catch (UnsupportedOperationException usoe) {
 											// Absorb
+										} catch (Exception ex) {
+											System.err.println("Ooch");
+											ex.printStackTrace();
 										}
 									}
 									if (unManagedRequest) {

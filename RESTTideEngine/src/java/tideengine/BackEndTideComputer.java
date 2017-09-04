@@ -2,6 +2,7 @@ package tideengine;
 
 import org.xml.sax.InputSource;
 
+import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -163,7 +164,7 @@ public class BackEndTideComputer {
 		return d;
 	}
 
-	public static TideStation findTideStation(String stationName, int year, Constituents constituents, Stations stations) throws Exception {
+	public static TideStation findTideStation(@Nonnull  String stationName, int year, @Nonnull Constituents constituents, @Nonnull Stations stations) throws Exception {
 		long before = System.currentTimeMillis();
 		TideStation station = stations.getStations().get(stationName);
 		if (station == null) { // Try match
@@ -194,7 +195,7 @@ public class BackEndTideComputer {
 			}
 		}
 		// Correction to the Harmonics
-		if (station.yearHarmonicsFixed() == -1) {
+		if (station != null && station.yearHarmonicsFixed() == -1) {
 			for (Harmonic harm : station.getHarmonics()) {
 				String name = harm.getName();
 				if (!"x".equals(name)) {
