@@ -54,7 +54,7 @@ public class RESTImplementation {
 //					"/oplist",
 //					this::getOperationList,
 //					"List of all available operations."),
-			
+
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
 					"POST",
 					"/sun-now",
@@ -226,9 +226,15 @@ public class RESTImplementation {
 		double lat;
 		double lng;
 		String body;
+		double decl;
+		double gha;
 		double altitude;
 		double z;
 		double eot;
+		double riseTime;
+		double setTime;
+		double riseZ;
+		double setZ;
 
 		public BodyDataForPos(long epoch, double lat, double lng, String body) {
 			this.epoch = epoch;
@@ -241,12 +247,36 @@ public class RESTImplementation {
 			this.altitude = alititude;
 			return this;
 		}
+		public BodyDataForPos decl(double decl) {
+			this.decl = decl;
+			return this;
+		}
+		public BodyDataForPos gha(double gha) {
+			this.gha = gha;
+			return this;
+		}
 		public BodyDataForPos z(double z) {
 			this.z = z;
 			return this;
 		}
 		public BodyDataForPos eot(double eot) {
 			this.eot = eot;
+			return this;
+		}
+		public BodyDataForPos riseTime(double riseTime) {
+			this.riseTime = riseTime;
+			return this;
+		}
+		public BodyDataForPos setTime(double setTime) {
+			this.setTime = setTime;
+			return this;
+		}
+		public BodyDataForPos riseZ(double riseZ) {
+			this.riseZ = riseZ;
+			return this;
+		}
+		public BodyDataForPos setZ(double setZ) {
+			this.setZ = setZ;
 			return this;
 		}
 	}
@@ -271,12 +301,22 @@ public class RESTImplementation {
 		sru.calculate();
 		double he = sru.getHe().doubleValue();
 		double z = sru.getZ().doubleValue();
+		double sunDecl = AstroComputer.getSunDecl();
+		double sunGHA = AstroComputer.getSunGHA();
+
+		double[] sunRiseAndSet = AstroComputer.sunRiseAndSet(lat, lng);
 		// Get Equation of time, used to calculate solar time.
 		double eot = AstroComputer.getSunMeridianPassageTime(lat, lng); // in decimal hours
 
 		return new BodyDataForPos(current.getTimeInMillis(), lat, lng, "Sun")
+				.decl(sunDecl)
+				.gha(sunGHA)
 				.altitude(he)
 				.z(z)
-				.eot(eot);
+				.eot(eot)
+				.riseTime(sunRiseAndSet[AstroComputer.UTC_RISE_IDX])
+				.setTime(sunRiseAndSet[AstroComputer.UTC_SET_IDX])
+				.riseZ(sunRiseAndSet[AstroComputer.RISE_Z_IDX])
+				.setZ(sunRiseAndSet[AstroComputer.SET_Z_IDX]);
 	}
 }

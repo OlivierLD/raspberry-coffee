@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="js/jquery-2.1.3.js"></script>
 	<script type="text/javascript" src="js/date.proto.js"></script>
 	<script type="text/javascript" src="js/tide.js"></script>
+	<script type="text/javascript" src="js/conversion.utils.js"></script>
 </head>
 <body>
   <h2>Tide REST API tests</h2>
@@ -33,6 +34,11 @@
 	Unit <select id="unit"><option value="">None</option><option value="meters">Meters</option><option value="feet">Feet</option></select>
 	&nbsp;
 	<button onclick="tideTable($('#station').val(), $('#tz').val(), $('#step').val(), $('#unit').val());">Water Heights</button>
+	<hr/>
+	Sun Data, now. Latitude <input type="text" size="30" placeholder="As a decimal number" id="latitude" value="37.76661945">,
+	Longitude <input type="text" size="30" placeholder="As a decimal number" id="longitude" value="-122.5166988">
+	&nbsp;
+	<button onclick="sunData($('#latitude').val(), $('#longitude').val());">Sun Data</button>
 	<hr/>
 	Results:
 	<br/>

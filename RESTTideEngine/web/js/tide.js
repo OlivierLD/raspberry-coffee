@@ -114,6 +114,14 @@ var getTideTable = function(station, tz, step, unit) {
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
 };
 
+var getSunData = function(lat, lng) {
+	var url = "/sun-now";
+	var data = {}; // Payload
+	data.latitude = lat;
+	data.longitude = lng;
+	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
+};
+
 var tideStations = function(offset, limit) {
 	var getData = getTideStations(offset, limit);
 	getData.done(function(value) {
@@ -202,6 +210,53 @@ var tideTable = function(station, tz, step, unit, callback) {
 				// Do something smart
 				json.stationName = decodeURIComponent(decodeURIComponent(json.stationName));
 				$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+			} catch (err) {
+				errManager(err + '\nFor\n' + value);
+			}
+		} else {
+			callback(value);
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+var sunData = function(lat, lng, callback) {
+	var getData = getSunData(lat, lng);
+	getData.done(function(value) {
+		if (callback === undefined) {
+			try {
+				var json = JSON.parse(value);
+				// Do something smart
+				var strLat = decToSex(json.lat, "NS");
+				var strLng = decToSex(json.lng, "EW");
+				var strDecl = decToSex(json.decl, "NS");
+				var strGHA = decToSex(json.gha);
+
+				$("#result").html("<pre>" +
+						JSON.stringify(json, null, 2) +
+						"<br/>" +
+						( strLat + " / " + strLng) +
+						"<br/>" +
+						new Date(json.epoch) +
+						"<br/>" +
+						("Dec: " + strDecl) +
+						"<br/>" +
+						("GHA: " + strGHA) +
+						"<br/>" +
+						("Rise: " + hoursDecimalToHMS(json.riseTime) + " UTC") +
+						"<br/>" +
+						("Set: " + hoursDecimalToHMS(json.setTime) + " UTC") +
+						"</pre>");
 			} catch (err) {
 				errManager(err + '\nFor\n' + value);
 			}

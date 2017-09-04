@@ -3,7 +3,7 @@ plugins {
 //id 'scala'
   id 'maven'
   id 'com.github.johnrengelman.shadow' version '2.0.1'
-  id 'findbugs'
+//id 'findbugs'
 }
 
 group = 'oliv.pi4j.samples'
@@ -46,13 +46,28 @@ shadowJar {
   zip64 true
 }
 
-tasks.withType(FindBugs) {
-  reports {
-    xml.enabled false
-    html.enabled true
-//  html.stylesheet resources.text.fromFile('config/xsl/findbugs-custom.xsl')
-  }
-}
+//tasks.withType(FindBugs) {
+//  reports {
+//    xml.enabled false
+//    html.enabled true
+////  html.stylesheet resources.text.fromFile('config/xsl/findbugs-custom.xsl')
+//  }
+//}
+
+// See https://docs.gradle.org/4.1/dsl/org.gradle.api.plugins.quality.FindBugsExtension.html
+//findbugs {
+//  toolVersion = "2.0.1"
+//  sourceSets = [sourceSets.main]
+//  ignoreFailures = true
+//  reportsDir = file("$project.buildDir/findbugsReports")
+//  effort = "min"
+//  reportLevel = "high"
+////  visitors = ["FindSqlInjection", "SwitchFallthrough"]
+////  omitVisitors = ["FindNonShortCircuit"]
+////  includeFilter = file("$rootProject.projectDir/config/findbugs/includeFilter.xml")
+////  excludeFilter = file("$rootProject.projectDir/config/findbugs/excludeFilter.xml")
+////  excludeBugsFilter = file("$rootProject.projectDir/config/findbugs/excludeBugsFilter.xml")
+//}
 
 task harmonicsXML(type: JavaExec, dependsOn: build, description: "Generate the XML Document from the harmonic files") {
   classpath = configurations.runtime

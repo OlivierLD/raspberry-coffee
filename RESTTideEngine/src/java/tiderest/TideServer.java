@@ -29,6 +29,7 @@ public class TideServer {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		System.out.println(String.format("Running on port %d", httpPort));
 		this.httpServer = startHttpServer(httpPort, new TideRequestManager(this));
 		// Add astronomical features...
 		this.httpServer.addRequestManager(new AstroRequestManager());
