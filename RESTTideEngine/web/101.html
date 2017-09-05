@@ -20,9 +20,9 @@
 	&nbsp;
 	<button onclick="showTime();">Now</button>
 	<hr/>
-  Full Station list <input type="text" size="5" placeholder="offset" id="offset">, <input type="text" size="5" placeholder="limit" id="limit">
+  Full Station list <input type="text" size="5" placeholder="offset" id="offset">, <input type="text" size="5" placeholder="limit" id="limit">, <input type="text" size="20" placeholder="Filter" id="name-filter">
 	&nbsp;
-	<button onclick="tideStations($('#offset').val(), $('#limit').val());">Tide Stations</button>
+	<button onclick="tideStations($('#offset').val(), $('#limit').val(), $('#name-filter').val());">Tide Stations</button>
   <hr/>
 	Filtered list <input type="text" size="20" placeholder="Filter" id="filter">
 	&nbsp;

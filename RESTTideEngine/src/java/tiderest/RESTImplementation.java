@@ -61,7 +61,7 @@ public class RESTImplementation {
 					"GET",
 					"/tide-stations",
 					this::getStationsList,
-					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'limit' and 'offset' optional parameters. Default offset is 0, default limit is 500."),
+					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'filter', 'limit' and 'offset' optional query string parameters. Default offset is 0, default limit is 500."),
 			new Operation(
 					"GET",
 					"/coeff-definitions",
@@ -189,6 +189,7 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		long offset = 0;
 		long limit = 500;
+		final Pattern pattern;
 		Map<String, String> qsPrms = request.getQueryStringParameters();
 		if (qsPrms != null && qsPrms.containsKey("offset")) {
 			try {
@@ -204,9 +205,16 @@ public class RESTImplementation {
 				nfe.printStackTrace();
 			}
 		}
+		if (qsPrms != null && qsPrms.containsKey("filter")) {
+			String filter = qsPrms.get("filter");
+			pattern = Pattern.compile(String.format(".*%s.*", filter)); // decode/unescape
+		} else {
+			pattern = null;
+		}
 		try {
 			List<String> stationNames = this.tideRequestManager.getStationList().
 					stream()
+					.filter(ts -> (pattern == null ? true : pattern.matcher(ts.getFullName()).matches()))
 					.map(ts -> ts.getFullName())
 					.skip(offset)
 					.limit(limit)

@@ -71,13 +71,16 @@ var getCurrentTime = function() {
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
-var getTideStations = function(offset, limit) {
+var getTideStations = function(offset, limit, filter) {
 	var url = "/tide-stations";
 	if (! isNaN(parseInt(offset))) {
 		url += ("?offset=" + offset);
 	}
 	if (! isNaN(parseInt(limit))) {
 		url += ((url.indexOf("?") > -1 ? "&" : "?") + "limit=" + limit);
+	}
+	if (filter !== undefined) {
+		url += ((url.indexOf("?") > -1 ? "&" : "?") + "filter=" + encodeURIComponent(filter));
 	}
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
@@ -125,20 +128,24 @@ var getSunData = function(lat, lng) {
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
 };
 
-var tideStations = function(offset, limit) {
-	var getData = getTideStations(offset, limit);
+var tideStations = function(offset, limit, filter, callback) {
+	var getData = getTideStations(offset, limit, filter);
 	getData.done(function(value) {
 		var json = JSON.parse(value);
 		// Do something smart
 		messManager("Got " + json.length + " stations.");
-		json.forEach(function(ts, idx) {
-			try {
-				json[idx] = decodeURI(decodeURIComponent(ts));
-			} catch (err) {
-				console.log("Oops:" + ts);
-			}
-		});
-		$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+		if (callback === undefined) {
+			json.forEach(function (ts, idx) {
+				try {
+					json[idx] = decodeURI(decodeURIComponent(ts));
+				} catch (err) {
+					console.log("Oops:" + ts);
+				}
+			});
+			$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+		} else {
+			callback(json);
+		}
 	});
 	getData.fail(function(error, errmess) {
 		var message;

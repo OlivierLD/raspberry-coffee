@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Ocean Beach Tide</title>
+	<title>Tide curve</title>
 	<link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
 	<!--meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /-->
 	<link id="page-ux" rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
@@ -16,6 +16,14 @@
 		var graphCallback = undefined;
 		window.onload = function() {
 			tideGraph = new TideGraph("tideCanvas", tideData, graphCallback, "feet");
+		};
+
+		var populateList = function(stationList) {
+			$("#station-list").empty();
+			stationList.forEach(function(station, idx) {
+				var option = "<option value='" + decodeURIComponent(station) + "'>" + decodeURIComponent(station) + "</option>";
+				$('#station-list').append(option);
+			});
 		};
 
 		/*
@@ -68,15 +76,17 @@
 <body>
   <h2>Tide Curve tests</h2>
 	<hr/>
-  Tide at Ocean Beach, today.
+  Tide, today. Choose your station (filter first), and hit [Draw Curve].
 	<hr/>
+	<input type="text" size="30" placeholder="Filter" id="filter">&nbsp;<button onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button>
+	<select id="station-list" style="width: 300px;"></select>
 	<!-- Graph here -->
 	<div style="width: 100%;">
 		<canvas id="tideCanvas" style="height: 400px; width: 100%;" title="Tide Curve"></canvas>
 	</div>
 
 	<hr/>
-	<button onclick="tideTable('Ocean Beach, California', '', '', '', $('#with-details').prop('checked'), dataManager);">Draw Curve</button>
+	<button onclick="tideTable($('#station-list').val(), '', '', '', $('#with-details').prop('checked'), dataManager);">Draw Curve</button>
 	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With details.
 	<hr/>
 	Results:
