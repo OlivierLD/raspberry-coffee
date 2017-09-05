@@ -91,8 +91,10 @@ var getTideStationsFiltered = function(filter) {
 };
 
 var DURATION_FMT = "Y-m-dTH:i:s";
-var getTideTable = function(station, tz, step, unit, withDetails) {
-	var nbDays = 1;
+var getTideTable = function(station, tz, step, unit, withDetails, nbDays) {
+	if (nbDays === undefined) {
+		nbDays = 1;
+	}
 	var url = "/tide-stations/" + encodeURIComponent(station) + "/wh";
 	if (withDetails === true) {
 		url += "/details";
@@ -212,8 +214,8 @@ var showTime = function() {
 	});
 };
 
-var tideTable = function(station, tz, step, unit, withDetails, callback) {
-	var getData = getTideTable(station, tz, step, unit, withDetails);
+var tideTable = function(station, tz, step, unit, withDetails, nbDays, callback) {
+	var getData = getTideTable(station, tz, step, unit, withDetails, nbDays);
 	getData.done(function(value) {
 		if (callback === undefined) {
 			try {

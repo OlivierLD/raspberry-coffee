@@ -442,7 +442,7 @@ function TideGraph(cName,       // Canvas Name
       context.rotate(-Math.PI / 2);
       context.font = "bold 10px " + graphColorConfig.font;
       context.fillStyle = graphColorConfig.verticalGridTextColor;
-      var str = i.toString();
+      var str = new Date(parseInt(data[i].getX())).format('H:i:s X'); // i.toString();
       var len = context.measureText(str).width;
       context.fillText(str, 2, -1); //i * xScale, cHeight - (len));
       context.restore();

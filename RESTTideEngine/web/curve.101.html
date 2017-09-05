@@ -27,7 +27,7 @@
 		};
 
 		/*
-		 * TODO BaseHeight, Daylight, current time, harmonics, moon phases
+		 * TODO BaseHeight, Daylight, moon phases
 		 */
 		var dataManager = function(value) { // Callback when tide data are ready
 //		console.log(value);
@@ -74,28 +74,28 @@
 	</script>
 </head>
 <body>
-  <h2>Tide Curve tests</h2>
+  <h2>Tide Curve</h2>
 	<hr/>
   Tide, today. Choose your station (filter first), and hit [Draw Curve].
 	<hr/>
 	<input type="text" size="30" placeholder="Filter" id="filter">&nbsp;<button onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button>
-	<select id="station-list" style="width: 300px;"></select>
-	<!-- Graph here -->
+	<select id="station-list" style="width: 300px;"></select>, <select id="nb-days"><option value="1">1 Day</option><option value="7">1 Week</option><option value="14">2 Weeks</option><option value="31">1 Month</option></select>
 	<div style="width: 100%;">
+		<!-- Graph here -->
 		<canvas id="tideCanvas" style="height: 400px; width: 100%;" title="Tide Curve"></canvas>
 	</div>
 
 	<hr/>
-	<button onclick="tideTable($('#station-list').val(), '', '', '', $('#with-details').prop('checked'), dataManager);">Draw Curve</button>
-	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With details.
+	<button onclick="tideTable($('#station-list').val(), '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
+	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With harmonic details.
 	<hr/>
 	Results:
 	<br/>
-	<div id="result" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 200px; max-height: 200px; overflow-y: scroll;"></div>
+	<div id="result" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 50px; overflow-y: scroll;"></div>
   <hr/>
 	Errors:
   <br/>
-	<div id="error" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; color: red; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 75px; max-height: 75px; overflow-y: scroll;"></div>
+	<div id="error" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; color: red; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 50px; overflow-y: scroll;"></div>
 	<button onclick="$('#error').html('');">Clear log</button>
 	<hr/>
 	Messages:
