@@ -28,7 +28,7 @@ small board like the Raspberry PI Zero. It becomes sometime really slow, and cum
 Running on it a program like [`OpenCPN`](https://opencpn.org/) seems absurd to me.
 Such a program runs fine on a bigger device, with several gigabytes of RAM available.
 
-*But*, running a laptop 24x7 would be in many cases too demanding...
+*But*, running a laptop 24x7 would be in many cases too demanding, specially on a sailboat, where everyone hates to run the engine ;)
 
 I observed that at sea, I spend only a couple hours a day in front of the laptop, but it is often running by itself, doing some logging or calculations.
 
@@ -43,11 +43,11 @@ _**A problem**_ is that writing a native application on those devices requires s
 those skills are often redundant. `iOS`, `Android`, `JavaFx`, `Swing` all have UI rendering capabilities, but they're all totally different,
 and the learning curve for each of them is not always smooth.
 
-_**A solution**_ would be to write the UI part of your apllications using HTML. Whatever OS
+_**A solution**_ would be to write the UI part of the applications using HTML. Whatever OS
 runs on your laptop, tablet or smartphone (`Windows`, `MacOS`, `iOS`, `Linux`, `Android`, etc), you have
 a browser available, supporting `HTML5` (if it does not, you should really upgrade it).
 
-`HTML5` and `JavaScript` have been gaining a lot of momentum in the recent years, new frameworks Like 
+`HTML5` and `JavaScript` have been gaining a lot of momentum in the recent years, new frameworks like 
 `jQuery`, `ionic`, `ReactJS`, ...) appear every day, and provide really rich and nice UI.
 
 My feeling would be to go down this route whenever possible, that would save a lot of efforts, and provide a pretty cool
