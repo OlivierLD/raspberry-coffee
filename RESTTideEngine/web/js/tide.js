@@ -88,8 +88,11 @@ var getTideStationsFiltered = function(filter) {
 };
 
 var DURATION_FMT = "Y-m-dTH:i:s";
-var getTideTable = function(station, tz, step, unit) {
+var getTideTable = function(station, tz, step, unit, withDetails) {
 	var url = "/tide-stations/" + encodeURIComponent(station) + "/wh";
+	if (withDetails === true) {
+		url += "/details";
+	}
 	// From and To parameters
 	var now = new Date();
 	var from = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
@@ -201,8 +204,8 @@ var showTime = function() {
 	});
 };
 
-var tideTable = function(station, tz, step, unit, callback) {
-	var getData = getTideTable(station, tz, step, unit);
+var tideTable = function(station, tz, step, unit, withDetails, callback) {
+	var getData = getTideTable(station, tz, step, unit, withDetails);
 	getData.done(function(value) {
 		if (callback === undefined) {
 			try {
@@ -252,6 +255,8 @@ var sunData = function(lat, lng, callback) {
 						("Dec: " + strDecl) +
 						"<br/>" +
 						("GHA: " + strGHA) +
+						"<br/>" +
+						("Meridian Pass. Time: " + hoursDecimalToHMS(json.eot) + " UTC") +
 						"<br/>" +
 						("Rise: " + hoursDecimalToHMS(json.riseTime) + " UTC") +
 						"<br/>" +

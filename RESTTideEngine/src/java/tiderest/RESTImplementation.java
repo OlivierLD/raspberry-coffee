@@ -7,9 +7,8 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
-import tideengine.BackEndTideComputer;
-import tideengine.TideStation;
-import tideengine.TideUtilities;
+import nauticalalmanac.Utils;
+import tideengine.*;
 
 import javax.annotation.Nonnull;
 import java.io.StringReader;
@@ -82,7 +81,12 @@ public class RESTImplementation {
 					"POST",
 					"/tide-stations/{station-name}/wh",
 					this::getWaterHeight,
-					"Creates a Water Height request for the {station}. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."));
+					"Creates a Water Height request for the {station}. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."),
+			new Operation(
+					"POST",
+					"/tide-stations/{station-name}/wh/details",
+					this::getWaterHeightPlus,
+					"Creates a Water Height request for the {station}, with harmonic curves. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."));
 
 	protected List<Operation> getOperations() {
 		return this.operations;
@@ -238,6 +242,33 @@ public class RESTImplementation {
 	 * @return the expect response. Could contain an error, see the "TIDE-XXXX" messages.
 	 */
 	private Response getWaterHeight(@Nonnull Request request) {
+		return getWaterHeightWithDetails(request, false);
+	}
+
+	private Response getWaterHeightPlus(@Nonnull Request request) {
+		return getWaterHeightWithDetails(request, true);
+	}
+
+	/**
+	 * Supports a payload in the body, in json format:
+	 * <pre>
+	 * {
+	 *   "timezone": "Etc/UTC",
+	 *   "step": 5,
+	 *   "unit": "meters"|"feet"
+	 * }
+	 * </pre>
+	 * <ul>
+	 * <li>Default timezone is the timezone of the station</li>
+	 * <li>Default step (in minutes) is 5</li>
+	 * <li>Default unit is the unit of the station</li>
+	 * </ul>
+	 *
+	 * @param request Requires two query string parameters <b>from</b> and <b>to</b>, in Duration format (yyyy-MM-ddThh:mm:ss)
+	 * @param withDetails if true, also returns the curves for all harmonic coeffs.
+	 * @return the expect response. Could contain an error, see the "TIDE-XXXX" messages.
+	 */
+	private Response getWaterHeightWithDetails(@Nonnull Request request, boolean withDetails) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK); // Happy response
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		String stationFullName = "";
@@ -355,6 +386,7 @@ public class RESTImplementation {
 					}
 				}
 				if (proceed) {
+					// Parameters OK, now performing the real calculation
 					try {
 						TideStation ts = null;
 						Optional<TideStation> optTs = this.tideRequestManager.getStationList().
@@ -379,7 +411,7 @@ public class RESTImplementation {
 							tideTable.unit = (unitToUse != null ? unitToUse.toString() : ts.getDisplayUnit());
 							Map<String, Double> map = new LinkedHashMap<>();
 
-							Calendar now = calFrom;
+							Calendar now = (Calendar)calFrom.clone();
 							ts = BackEndTideComputer.findTideStation(stationFullName, now.get(Calendar.YEAR));
 							if (ts != null) {
 								now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
@@ -387,13 +419,73 @@ public class RESTImplementation {
 									double wh = TideUtilities.getWaterHeight(ts, this.tideRequestManager.getConstSpeed(), now);
 									TimeZone.setDefault(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())); // for TS Timezone display
 //							  System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
-									map.put(now.getTime().toString(), wh * unitSwitcher(ts, unitToUse));
+//								map.put(now.getTime().toString(), wh * unitSwitcher(ts, unitToUse));
+									map.put(String.valueOf(now.getTimeInMillis()), wh * unitSwitcher(ts, unitToUse));
 									now.add(Calendar.MINUTE, step);
 								}
 							} else {
 								System.out.println("Wow!"); // I know...
 							}
 							tideTable.heights = map;
+							if (withDetails) { // With harmonic curves
+								final TideStation fts = ts;
+								final Calendar _reference = (Calendar)calFrom.clone();
+								final Calendar _calTo = (Calendar)calTo.clone();
+								final String tztu = timeZoneToUse;
+								final unit unit2use = unitToUse;
+								final int _step = step;
+								final List<Coefficient> constSpeed = this.tideRequestManager.getConstSpeed();
+								_reference.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
+								List<Harmonic> harmonics = ts.getHarmonics()
+										.stream()
+										.filter(harmonic -> (harmonic.getAmplitude() != 0d && harmonic.getEpoch() != 0d))
+										.collect(Collectors.toList());
+								Hashtable<String, List<DataPoint>> harmonicCurves = new Hashtable<>();
+								harmonics.stream()
+										.forEach(harmonicCoeff -> {
+											List<DataPoint> oneCurve = new ArrayList<>();
+											Calendar _now = (Calendar)_reference.clone();
+											_now.setTimeZone(TimeZone.getTimeZone(tztu != null ? tztu : fts.getTimeZone()));
+											while (_now.before(_calTo)) {
+												int year = _now.get(Calendar.YEAR);
+												// Calc Jan 1st of the current year
+												Date jan1st = new GregorianCalendar(year, 0, 1).getTime();
+												//      double value = Utils.convert(TideUtilities.getHarmonicValue(cal.getTime(), jan1st, ts, constSpeed, i), ts.getDisplayUnit(), currentUnit);
+												double value = TideUtilities.getHarmonicValue(
+														_now.getTime(),
+														jan1st,
+														fts,
+														constSpeed,
+														harmonicCoeff.getName()) * unitSwitcher(fts, unit2use);
+
+												double x = _now.getTimeInMillis(); // (h + (double) (m / 60D));
+												double y = (value); // - _bottomValue);
+												oneCurve.add(new DataPoint(x, y));
+
+												_now.add(Calendar.MINUTE, _step);
+											}
+
+//											for (int h = 0; h < 24; h++) {
+//												for (int m = 0; m < 60; m++) {
+//													Calendar cal = new GregorianCalendar(_reference.get(Calendar.YEAR),
+//															_reference.get(Calendar.MONTH),
+//															_reference.get(Calendar.DAY_OF_MONTH),
+//															h + hourOffset, m);
+//													cal.setTimeZone(TimeZone.getTimeZone(timeZone2Use));
+//													int year = cal.get(Calendar.YEAR);
+//													// Calc Jan 1st of the current year
+//													Date jan1st = new GregorianCalendar(year, 0, 1).getTime();
+//									//      double value = Utils.convert(TideUtilities.getHarmonicValue(cal.getTime(), jan1st, ts, constSpeed, i), ts.getDisplayUnit(), currentUnit);
+//													double value = Utils.convert(TideUtilities.getHarmonicValue(cal.getTime(), jan1st, fts, constSpeed, harmonicCoeff.getName()), fts.getDisplayUnit(), currentUnit);
+//													double x = (h + (double) (m / 60D));
+//													double y = (value - _bottomValue);
+//													oneCurve.add(new DataPoint(x, y));
+//												}
+//											}
+											harmonicCurves.put(harmonicCoeff.getName(), oneCurve);
+										});
+								tideTable.harmonicCurves = harmonicCurves;
+							}
 							/*
 							 * Happy End
 							 */
@@ -465,6 +557,7 @@ public class RESTImplementation {
 		double baseHeight;
 		String unit;
 		Map<String, Double> heights;
+		Hashtable<String, List<DataPoint>> harmonicCurves;
 	}
 
 	private enum unit {
@@ -508,6 +601,23 @@ public class RESTImplementation {
 		public NameValuePair<T> value(T value) {
 			this.value = value;
 			return this;
+		}
+	}
+
+	public class DataPoint {
+		private double x, y;
+
+		public DataPoint(double x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		public double getX() {
+			return x;
+		}
+
+		public double getY() {
+			return y;
 		}
 	}
 }

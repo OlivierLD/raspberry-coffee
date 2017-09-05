@@ -9,16 +9,18 @@
 	<script type="text/javascript" src="js/date.proto.js"></script>
 	<script type="text/javascript" src="js/tide.js"></script>
 	<script type="text/javascript" src="js/pub.sub.js"></script>
-	<script type="text/javascript" src="widgets/Graph.js"></script>
+	<script type="text/javascript" src="widgets/TideGraph.js"></script>
 	<script type="text/javascript">
 		var tideGraph; // The graph itself.
 		var tideData = [];
 		var graphCallback = undefined;
 		window.onload = function() {
-
-			tideGraph = new Graph("tideCanvas", tideData, graphCallback, "feet");
+			tideGraph = new TideGraph("tideCanvas", tideData, graphCallback, "feet");
 		};
 
+		/*
+		 * TODO BaseHeight, Daylight, current time, harmonics, moon phases
+		 */
 		var dataManager = function(value) { // Callback when tide data are ready
 //		console.log(value);
 			try {
@@ -30,7 +32,7 @@
 				var size = 0;
 				tideData = [];
 				for (var tDate in data){
-					tideData.push(new Tuple(size, data[tDate]));
+					tideData.push(new Tuple(tDate, data[tDate]));
 					size++;
 //				console.log(tDate + ': ' + data[tDate]);
 					min = Math.min(min, data[tDate]);
@@ -40,7 +42,22 @@
 				console.log(size + " element(s)");
 				console.log("Min: " + min + ", Max: " + max);
 
-				tideGraph.drawGraph("tideCanvas", tideData); //, idx2plot);
+				console.log("Harmonics?");
+				var harmonics;
+				if (json.harmonicCurves !== undefined) {
+					harmonics = [];
+					for (var coeff in json.harmonicCurves) {
+						var dataArray = json.harmonicCurves[coeff];
+						console.log(coeff + " ; " + dataArray.length + " element(s)");
+						var curve = [];
+						for (var i=0; i<dataArray.length; i++) {
+							curve.push(new Tuple(dataArray[i].x, dataArray[i].y));
+						}
+						harmonics.push({ name: coeff, data: curve });
+					}
+				}
+				var idx2plot;
+				tideGraph.drawGraph("tideCanvas", tideData, idx2plot, harmonics);
 			} catch (err) {
 				console.log(err);
 			}
@@ -59,7 +76,8 @@
 	</div>
 
 	<hr/>
-	<button onclick="tideTable('Ocean Beach, California', '', '', '', dataManager);">Draw Curve</button>
+	<button onclick="tideTable('Ocean Beach, California', '', '', '', $('#with-details').prop('checked'), dataManager);">Draw Curve</button>
+	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With details.
 	<hr/>
 	Results:
 	<br/>

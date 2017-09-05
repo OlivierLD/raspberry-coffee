@@ -32,10 +32,11 @@
 	TimeZone <input type="text" size="20" placeholder="Etc/UTC" id="tz">
 	Step <input type="text" size="5" placeholder="minutes" id="step">
 	Unit <select id="unit"><option value="">None</option><option value="meters">Meters</option><option value="feet">Feet</option></select>
+	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With details.
 	&nbsp;
-	<button onclick="tideTable($('#station').val(), $('#tz').val(), $('#step').val(), $('#unit').val());">Water Heights</button>
+	<button onclick="tideTable($('#station').val(), $('#tz').val(), $('#step').val(), $('#unit').val(), $('#with-details').prop('checked'));">Water Heights</button>
 	<hr/>
-	Sun Data, now. Latitude <input type="text" size="30" placeholder="As a decimal number" id="latitude" value="37.76661945">,
+	Sun Data, now. From Latitude <input type="text" size="30" placeholder="As a decimal number" id="latitude" value="37.76661945"> -
 	Longitude <input type="text" size="30" placeholder="As a decimal number" id="longitude" value="-122.5166988">
 	&nbsp;
 	<button onclick="sunData($('#latitude').val(), $('#longitude').val());">Sun Data</button>
