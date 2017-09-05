@@ -212,8 +212,8 @@ public class RESTImplementation {
 			pattern = null;
 		}
 		try {
-			List<String> stationNames = this.tideRequestManager.getStationList().
-					stream()
+			List<String> stationNames = this.tideRequestManager.getStationList()
+					.stream()
 					.filter(ts -> (pattern == null ? true : pattern.matcher(ts.getFullName()).matches()))
 					.map(ts -> ts.getFullName())
 					.skip(offset)
@@ -397,8 +397,8 @@ public class RESTImplementation {
 					// Parameters OK, now performing the real calculation
 					try {
 						TideStation ts = null;
-						Optional<TideStation> optTs = this.tideRequestManager.getStationList().
-								stream()
+						Optional<TideStation> optTs = this.tideRequestManager.getStationList()
+								.stream()
 								.filter(station -> station.getFullName().equals(stationName))
 								.findFirst();
 						if (!optTs.isPresent()) {
@@ -531,8 +531,8 @@ public class RESTImplementation {
 			return response;
 		}
 		try {
-			List<TideStation> ts = this.tideRequestManager.getStationList().
-					stream()
+			List<TideStation> ts = this.tideRequestManager.getStationList()
+					.stream()
 					.filter(station -> pattern.matcher(station.getFullName()).matches()) // TODO IgnoreCase?
 					.collect(Collectors.toList());
 			String content = new Gson().toJson(ts);
