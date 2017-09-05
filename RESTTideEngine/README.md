@@ -1,5 +1,7 @@
 ## REST Tide Engine
 
+This project intends to be a Proof of Concept.
+
 This is a tentative Tide Application, based on Server-Side Java implementing REST APIs for a Tide Computer.
 The rendering will be done through HTML5 and JavaScript querying the REST APIs.  
 
@@ -14,6 +16,52 @@ If that one works, then we can really move away from Swing.
  ... etc
 
 ```
+#### Rationale
+This starts from a simple observation. A Raspberry PI can run on a boat, and consumes
+a very small amount of energy. It can do a lot of computations, logging, and multiplexing, among many others.
+It can run 24x7, without you noticing. It makes _no noise_, almost no light, and requires ridiculous amount of energy to run. 
+Even a Raspberry PI Zero does this kind of job (for even less power), successfully.
+
+One thing it is not good at are graphical UIs. A graphical desktop is often too demanding on a
+small board like the Raspberry PI Zero. It becomes sometime really slow, and cumbersome.
+
+Running on it a program like [`OpenCPN`](https://opencpn.org/) seems absurd to me.
+Such a program runs fine on a laptop, with several gigabytes of RAM available.
+
+*But*, running a laptop 24x7 would be in many cases too demanding...
+
+I observed that at sea, I spend only a couple hours a day in front of the laptop, but it is often running by itself, doing some logging or calculations.
+
+This is where it comes together, you could have a Raspberry PI Zero doing logging, multiplexing and what not,
+broadcasting require data on its own network (see the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA.multiplexer) about that), 
+Then you would use a laptop whenever necessary, connecting on the Raspberry PI's network to get NMEA Data and more.
+
+**In addition**, you can also use tablets and smart-phones, those devices know how to connect to a network, and have great
+rendering capabilities.
+
+_**A problem**_ is that writing a native application on those devices requires specific knowledge of the operating system,
+those skills are often redundant. `iOS`, `Android`, `JavaFx`, `Swing` all have UI rendering capabilities, but they're all totally different,
+and the learning curve for each of them is not always smooth.
+
+_**A solution**_ would be to write the UI part of your apllications using HTML. Whatever OS
+runs on your laptop, tablet or smartphone (`Windows`, `MacOS`, `iOS`, `Linux`, `Android`, etc), you have
+a browser available, supporting `HTML5` (if it does not, you should really upgrade it).
+
+`HTML5` and `JavaScript` have been gaining a lot of momentum in the recent years, new frameworks Like 
+`jQuery`, `ionic`, `ReactJS`, ...) appear every day, and provide really rich and nice UI.
+
+My feeling would be to go down this route whenever possible, that would save a lot of efforts, and provide a pretty cool
+Graphical User Interface (GUI). I have written a lot of GUI in Swing. It would be now time to upgrade it.
+Re-writing them using JavaFX does not sound like the right choice. If I have to learn a new language to build 
+a modern GUI, for now I'd rather use `JavaScript` and `HTML5`. This way, the same code runs whenever a browser exists...
+You have REST APIs available on the server (again, a Raspberry PI, even the Zero does the job well), and you use AJAX and Promises to get to them from the Web UI
+(WebSockets are also a realistic option, tested).
+  
+After a 3-day week-end of work, I was able to produce a tidal graph like that one:
+![Tide at Ocean Beach](./docimg/first.glimpse.png)
+
+This is not finished, but that looks promising... 
+
 
 ### Features (to be)
 - Web UI for tidal curves
