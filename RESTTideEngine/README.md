@@ -22,11 +22,11 @@ a very small amount of energy. It can do a lot of computations, logging, and mul
 It can run 24x7, without you noticing. It makes _no noise_, almost no light, and requires ridiculous amount of energy to run. 
 Even a Raspberry PI Zero does this kind of job (for even less power), successfully.
 
-One thing it is not good at are graphical UIs. A graphical desktop is often too demanding on a
+One thing it is not good at is graphical UI. A graphical desktop is often too demanding on a
 small board like the Raspberry PI Zero. It becomes sometime really slow, and cumbersome.
 
 Running on it a program like [`OpenCPN`](https://opencpn.org/) seems absurd to me.
-Such a program runs fine on a laptop, with several gigabytes of RAM available.
+Such a program runs fine on a bigger device, with several gigabytes of RAM available.
 
 *But*, running a laptop 24x7 would be in many cases too demanding...
 
@@ -34,7 +34,7 @@ I observed that at sea, I spend only a couple hours a day in front of the laptop
 
 This is where it comes together, you could have a Raspberry PI Zero doing logging, multiplexing and what not,
 broadcasting require data on its own network (see the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA.multiplexer) about that), 
-Then you would use a laptop whenever necessary, connecting on the Raspberry PI's network to get NMEA Data and more.
+then you would use a laptop whenever necessary, connecting on the Raspberry PI's network to get NMEA Data and more.
 
 **In addition**, you can also use tablets and smart-phones, those devices know how to connect to a network, and have great
 rendering capabilities.
@@ -55,13 +55,14 @@ Graphical User Interface (GUI). I have written a lot of GUI in Swing. It would b
 Re-writing them using JavaFX does not sound like the right choice. If I have to learn a new language to build 
 a modern GUI, for now I'd rather use `JavaScript` and `HTML5`. This way, the same code runs whenever a browser exists...
 You have REST APIs available on the server (again, a Raspberry PI, even the Zero does the job well), and you use AJAX and Promises to get to them from the Web UI
-(WebSockets are also a realistic option, tested).
+(WebSockets are also a realistic option, tested). The computation required to produce the payload returned by the REST services 
+(often in `json` format) is easily supported by a Raspberry PI, and the complexity of the UI rendering is 100% taken care of by the browser, running
+on a more powerful device.
   
 After a 3-day week-end of work, I was able to produce a tidal graph like that one:
 ![Tide at Ocean Beach](./docimg/first.glimpse.png)
 
 This is not finished, but that looks promising... 
-
 
 ### Features (to be)
 - Web UI for tidal curves
