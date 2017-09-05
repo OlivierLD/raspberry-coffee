@@ -64,7 +64,7 @@
 						harmonics.push({ name: coeff, data: curve });
 					}
 				}
-				var idx2plot;
+				var idx2plot = new Date().getTime();
 				tideGraph.drawGraph("tideCanvas", tideData, idx2plot, harmonics);
 			} catch (err) {
 				console.log(err);

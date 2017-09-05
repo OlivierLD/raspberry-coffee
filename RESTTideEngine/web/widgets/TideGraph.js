@@ -149,6 +149,7 @@ function TideGraph(cName,       // Canvas Name
                    unit) {      // Unit label, for display
 
   var instance = this;
+  var gData = graphData;
 
   if (events !== undefined) {
     events.subscribe('color-scheme-changed', function(val) {
@@ -167,7 +168,7 @@ function TideGraph(cName,       // Canvas Name
   var lastClicked;
 
   var withRawData = true;
-  var withTooltip = false;
+  var withTooltip = true;
   var withSmoothing = false;
 
   this.setRawData = function(rd) {
@@ -211,17 +212,18 @@ function TideGraph(cName,       // Canvas Name
 //    console.log("Mouse: x=" + x + ", y=" + y);
 
       var idx = xScale !== 0 ? Math.round(x / xScale) : 0;
-      if (idx < graphData.length) {
+      if (idx < gData.length) { // graphData.length) {
         var str = [];
         try { 
-          str.push("Pos:" + idx);
-          str.push(graphData[idx].getY() + " " + unit);
+//        str.push("Pos:" + idx);
+	        str.push("At:" + new Date(parseInt(gData[idx].getX()))); // TODO Format the date
+          str.push(gData[idx].getY().toFixed(2) + " " + unit);
   //      console.log("Bubble:" + str);
         } catch (err) { console.log(JSON.stringify(err)); }
         
   //    context.fillStyle = '#000';
   //    context.fillRect(0, 0, w, h);
-        instance.drawGraph(cName, graphData, lastClicked);
+        instance.drawGraph(cName, gData, lastClicked);
         var tooltipW = 80, nblines = str.length;
         context.fillStyle = graphColorConfig.tooltipColor;
 //      context.fillStyle = 'yellow';
@@ -317,6 +319,8 @@ function TideGraph(cName,       // Canvas Name
 
   this.drawGraph = function(displayCanvasName, data, idx, harmonics) {
 
+	  gData = data;
+
     if (reloadColor) {
       // In case the CSS has changed, dynamically.
       getColorConfig();
@@ -343,7 +347,14 @@ function TideGraph(cName,       // Canvas Name
 
     var _idxX;
     if (idx !== undefined) {
-      _idxX = idx * xScale;
+//    _idxX = idx * xScale;
+      // Find the corresponding time
+      for (var x=0; x<data.length; x++) {
+        if (data[x].getX() > idx) {
+          _idxX = x * xScale;
+          break;
+        }
+      }
     }
 
     document.getElementById(displayCanvasName).title = data.length + " elements, [" + miny + ", " + maxy + "]";

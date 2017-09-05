@@ -92,6 +92,7 @@ var getTideStationsFiltered = function(filter) {
 
 var DURATION_FMT = "Y-m-dTH:i:s";
 var getTideTable = function(station, tz, step, unit, withDetails) {
+	var nbDays = 1;
 	var url = "/tide-stations/" + encodeURIComponent(station) + "/wh";
 	if (withDetails === true) {
 		url += "/details";
@@ -99,7 +100,7 @@ var getTideTable = function(station, tz, step, unit, withDetails) {
 	// From and To parameters
 	var now = new Date();
 	var from = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-	var to = new Date(from.getTime() + (3600 * 24 * 1000) + 1000); // + 24h and 1s
+	var to = new Date(from.getTime() + (nbDays * 3600 * 24 * 1000) + 1000); // + 24h and 1s
 	var fromPrm = (new Date(from)).format(DURATION_FMT);
 	var toPrm = (new Date(to)).format(DURATION_FMT);
 	url += ("?from=" + fromPrm + "&to=" + toPrm);
