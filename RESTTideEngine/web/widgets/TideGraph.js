@@ -216,7 +216,9 @@ function TideGraph(cName,       // Canvas Name
         var str = [];
         try { 
 //        str.push("Pos:" + idx);
-	        str.push("At:" + new Date(parseInt(gData[idx].getX()))); // TODO Format the date
+          var date = new Date(parseInt(gData[idx].getX()));
+	        str.push(date.format('Y-m-d'));   // Format the date
+	        str.push(date.format('H:i:s X')); // Format the date
           str.push(gData[idx].getY().toFixed(2) + " " + unit);
   //      console.log("Bubble:" + str);
         } catch (err) { console.log(JSON.stringify(err)); }
@@ -224,7 +226,7 @@ function TideGraph(cName,       // Canvas Name
   //    context.fillStyle = '#000';
   //    context.fillRect(0, 0, w, h);
         instance.drawGraph(cName, gData, lastClicked);
-        var tooltipW = 80, nblines = str.length;
+        var tooltipW = 100, nblines = str.length;
         context.fillStyle = graphColorConfig.tooltipColor;
 //      context.fillStyle = 'yellow';
         var fontSize = 10;
@@ -500,7 +502,7 @@ function TideGraph(cName,       // Canvas Name
     
     if (idx !== undefined) {
       context.beginPath();
-      context.lineWidth = 1;
+      context.lineWidth = 3;
       context.strokeStyle = graphColorConfig.clickedIndexColor;
       context.moveTo(_idxX, 0);
       context.lineTo(_idxX, height);

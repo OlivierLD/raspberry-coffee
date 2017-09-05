@@ -141,6 +141,7 @@ Date.prototype.format = function (dateFormat) {
         minutes = this.getMinutes(),
         seconds = this.getSeconds(),
         milli = this.getTime() % 1000,
+        tzName = this.toString().substring(this.toString().indexOf('(') + 1, this.toString().indexOf(')')),
         tzOffset = -(this.getTimezoneOffset() / 60);
 
     var lpad = function (s, w, len) {
@@ -178,6 +179,7 @@ Date.prototype.format = function (dateFormat) {
             i: minutes < 10 ? '0' + minutes : minutes,
             s: seconds < 10 ? '0' + seconds : seconds,
             Z: "UTC" + (tzOffset > 0 ? "+" : "") + tzOffset,
+            X: tzName,
             _: lpad(milli, '0', 3)
         };
 
