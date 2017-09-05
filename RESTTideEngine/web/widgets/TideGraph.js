@@ -150,6 +150,8 @@ function TideGraph(cName,       // Canvas Name
 
   var instance = this;
   var gData = graphData;
+  var plotX;
+  var harm;
 
   if (events !== undefined) {
     events.subscribe('color-scheme-changed', function(val) {
@@ -165,7 +167,6 @@ function TideGraph(cName,       // Canvas Name
   var context;
 
   var unit = unit;
-  var lastClicked;
 
   var withRawData = true;
   var withTooltip = true;
@@ -178,7 +179,7 @@ function TideGraph(cName,       // Canvas Name
     withTooltip = tt;
   };
   this.setSmoothing = function(sm) {
-      withSmoothing = sm;
+    withSmoothing = sm;
   };
 
   var canvas = document.getElementById(cName);
@@ -217,7 +218,7 @@ function TideGraph(cName,       // Canvas Name
         try { 
 //        str.push("Pos:" + idx);
           var date = new Date(parseInt(gData[idx].getX()));
-	        str.push(date.format('Y-m-d'));   // Format the date
+	        str.push(date.format('Y-M-d'));   // Format the date
 	        str.push(date.format('H:i:s X')); // Format the date
           str.push(gData[idx].getY().toFixed(2) + " " + unit);
   //      console.log("Bubble:" + str);
@@ -225,7 +226,7 @@ function TideGraph(cName,       // Canvas Name
         
   //    context.fillStyle = '#000';
   //    context.fillRect(0, 0, w, h);
-        instance.drawGraph(cName, gData, lastClicked);
+        instance.drawGraph(cName, gData, plotX, harm);
         var tooltipW = 100, nblines = str.length;
         context.fillStyle = graphColorConfig.tooltipColor;
 //      context.fillStyle = 'yellow';
@@ -322,6 +323,8 @@ function TideGraph(cName,       // Canvas Name
   this.drawGraph = function(displayCanvasName, data, idx, harmonics) {
 
 	  gData = data;
+	  plotX = idx;
+	  harm = harmonics;
 
     if (reloadColor) {
       // In case the CSS has changed, dynamically.
