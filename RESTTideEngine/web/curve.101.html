@@ -145,8 +145,11 @@
 		};
 
 		var manageClick = function(div) {
-			document.getElementById('error-tab').className = (div.id === 'error-tab' ? 'selectedButton' : 'unselectedButton');
-			document.getElementById('message-tab').className = (div.id === 'message-tab' ? 'selectedButton' : 'unselectedButton');
+			// Set the right class to the clicked tab
+			[ 'error-tab', 'message-tab' ].forEach(function(tab, idx) {
+				document.getElementById(tab).className = (div.id === tab ? 'selectedButton' : 'unselectedButton');
+			});
+			// Show the right div
 			switch (div.id) {
 				case 'error-tab':
 					$("#error-div").css('display', 'block');
