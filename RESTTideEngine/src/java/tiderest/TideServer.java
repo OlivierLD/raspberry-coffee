@@ -25,7 +25,7 @@ public class TideServer {
 
 		try {
 			BackEndTideComputer.connect();
-			BackEndTideComputer.setVerbose(false);
+			BackEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

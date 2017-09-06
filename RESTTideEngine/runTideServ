@@ -1,5 +1,7 @@
 #!/bin/bash
 CP=./build/libs/RESTTideEngine-1.0-all.jar
-JAVA_OPTS="-Dhttp.verbose=false"
+JAVA_OPTS=
+JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=true"
 java -cp $CP $JAVA_OPTS tiderest.TideServer
 

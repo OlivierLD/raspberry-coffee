@@ -14,8 +14,58 @@
 		var tideGraph; // The graph itself.
 		var tideData = [];
 		var graphCallback = undefined;
+
+		var isLeapYear = function (yr) {
+			if ((parseInt(yr) % 4) === 0) {
+				if (parseInt(yr) % 100 === 0) {
+					if (parseInt(yr) % 400 !== 0)
+						return false;
+					if (parseInt(yr) % 400 === 0)
+						return true;
+				}
+				if (parseInt(yr) % 100 !== 0)
+					return true;
+			}
+			if ((parseInt(yr) % 4) !== 0)
+				return false;
+		};
+
 		window.onload = function() {
-			tideGraph = new TideGraph("tideCanvas", tideData, graphCallback, "feet");
+			tideGraph = new TideGraph("tideCanvas", tideData, graphCallback, "feet"); // TODO Change the unit, based on the station
+			// Load the date dropdown lists
+			var year = new Date().getFullYear();
+			$("#year").empty();
+			for (var i=0; i<20; i++) {
+				var option = "<option value='" + (year - 10 + i) + "'>" + (year - 10 + i) + "</option>";
+				$('#year').append(option);
+			}
+			$('#year').val(year);
+			var month = new Date().getMonth();
+			var mNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+			$("#month").empty();
+			for (var i=0; i<mNames.length; i++) {
+				var option = "<option value='" + (i + 1) + "'>" + mNames[i] + "</option>";
+				$('#month').append(option);
+			}
+			$('#month').val(month + 1);
+			var day = new Date().getDate();
+			populateDays();
+			$('#day').val(day);
+		};
+
+		var getNbDayInMonth = function(yr, mo) { // mo in [1..12]
+			var leap = isLeapYear(yr);
+			var nb = (mo === 1 || mo === 3 || mo === 5 || mo === 7 || mo === 8 || mo === 10 || mo === 12 ? 31 : (mo === 2 ? (leap ? 29 : 28) : 30));
+			return nb;
+		};
+
+		var populateDays = function() {
+			var nbDays = getNbDayInMonth(parseInt($('#year').val()), parseInt($('#month').val()));
+			$("#day").empty();
+			for (var i=0; i<nbDays; i++) {
+				var option = "<option value='" + (i + 1) + "'>" + (i + 1) + "</option>";
+				$('#day').append(option);
+			}
 		};
 
 		var populateList = function(stationList) {
@@ -86,7 +136,8 @@
 	</div>
 
 	<hr/>
-	<button onclick="tideTable($('#station-list').val(), '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
+	Starting <select id="year" onchange="populateDays();"></select> <select id="month" onchange="populateDays();"></select> <select id="day"></select>
+	<button onclick="tideTable($('#station-list').val(), { year: parseInt($('#year').val()), month: parseInt($('#month').val()), day: parseInt($('#day').val()) }, '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
 	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With harmonic details.
 	<hr/>
 	Results:

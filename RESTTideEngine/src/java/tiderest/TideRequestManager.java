@@ -30,7 +30,7 @@ public class TideRequestManager implements RESTRequestManager {
 
 		try {
 			BackEndTideComputer.connect();
-			BackEndTideComputer.setVerbose(false); // TODO Prm
+			BackEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

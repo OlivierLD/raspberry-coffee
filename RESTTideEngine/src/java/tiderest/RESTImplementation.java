@@ -7,7 +7,6 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
-import nauticalalmanac.Utils;
 import tideengine.*;
 
 import javax.annotation.Nonnull;
@@ -432,7 +431,7 @@ public class RESTImplementation {
 									now.add(Calendar.MINUTE, step);
 								}
 							} else {
-								System.out.println("Wow!"); // I know...
+								System.out.println("No Tide station, Wow!"); // I know...
 							}
 							tideTable.heights = map;
 							if (withDetails) { // With harmonic curves

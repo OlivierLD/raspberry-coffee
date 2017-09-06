@@ -4,6 +4,7 @@ import org.xml.sax.InputSource;
 
 import javax.annotation.Nonnull;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -17,7 +18,7 @@ public class BackEndTideComputer {
 	private static Constituents constituentsObject = null;
 	private static Stations stationsObject = null;
 
-	private static boolean verbose = false;
+	private static boolean verbose = "true".equals(System.getProperty("tide.verbose", "false"));
 
 	public static Stations getStations() {
 		return stationsObject;
@@ -168,6 +169,7 @@ public class BackEndTideComputer {
 		long before = System.currentTimeMillis();
 		TideStation station = stations.getStations().get(stationName);
 		if (station == null) { // Try match
+			System.out.println(String.format("%s not found, trying partial match.", stationName));
 			Set<String> keys = stations.getStations().keySet();
 			for (String s : keys) {
 				if (s.contains(stationName)) {
@@ -187,7 +189,7 @@ public class BackEndTideComputer {
 		if (station != null && station.yearHarmonicsFixed() != -1 && station.yearHarmonicsFixed() != year) { // Then reload station data from source
 			System.out.println("Reloading Station Data for corrections in year " + year);
 			try {
-				TideStation newTs = reloadTideStation(station.getFullName());
+				TideStation newTs = reloadTideStation(URLDecoder.decode(station.getFullName(), "UTF-8"));
 				stations.getStations().put(station.getFullName(), newTs);
 				station = newTs;
 			} catch (Exception ex) {
@@ -212,8 +214,9 @@ public class BackEndTideComputer {
 			station.setHarmonicsFixedForYear(year);
 			if (verbose)
 				System.out.println("Sites coefficients of [" + station.getFullName() + "] fixed for " + year);
-		} else if (verbose)
+		} else if (verbose) {
 			System.out.println("Coefficients already fixed for " + year);
+		}
 		return station;
 	}
 

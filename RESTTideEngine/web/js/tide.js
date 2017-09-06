@@ -91,7 +91,17 @@ var getTideStationsFiltered = function(filter) {
 };
 
 var DURATION_FMT = "Y-m-dTH:i:s";
-var getTideTable = function(station, tz, step, unit, withDetails, nbDays) {
+/**
+ *
+ * @param station
+ * @param at A json Object like { year: 2017, month: 09, day: 06 }. month 09 is Sep.
+ * @param tz
+ * @param step
+ * @param unit
+ * @param withDetails
+ * @param nbDays
+ */
+var getTideTable = function(station, at, tz, step, unit, withDetails, nbDays) {
 	if (nbDays === undefined) {
 		nbDays = 1;
 	}
@@ -101,10 +111,13 @@ var getTideTable = function(station, tz, step, unit, withDetails, nbDays) {
 	}
 	// From and To parameters
 	var now = new Date();
-	var from = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
-	var to = new Date(from.getTime() + (nbDays * 3600 * 24 * 1000) + 1000); // + 24h and 1s
-	var fromPrm = (new Date(from)).format(DURATION_FMT);
-	var toPrm = (new Date(to)).format(DURATION_FMT);
+	var year = (at !== undefined && at.year !== undefined ? at.year : now.getFullYear());
+	var month = (at !== undefined && at.month !== undefined ? at.month - 1 : now.getMonth());
+	var day = (at !== undefined && at.day !== undefined ? at.day : now.getDate());
+	var from = new Date(year, month, day, 0, 0, 0, 0);
+	var to = new Date(from.getTime() + (nbDays * 3600 * 24 * 1000) + 1000); // + (x * 24h) and 1s
+	var fromPrm = from.format(DURATION_FMT);
+	var toPrm = to.format(DURATION_FMT);
 	url += ("?from=" + fromPrm + "&to=" + toPrm);
 
 	var data = null; // Payload
@@ -214,8 +227,8 @@ var showTime = function() {
 	});
 };
 
-var tideTable = function(station, tz, step, unit, withDetails, nbDays, callback) {
-	var getData = getTideTable(station, tz, step, unit, withDetails, nbDays);
+var tideTable = function(station, at, tz, step, unit, withDetails, nbDays, callback) {
+	var getData = getTideTable(station, at, tz, step, unit, withDetails, nbDays);
 	getData.done(function(value) {
 		if (callback === undefined) {
 			try {
