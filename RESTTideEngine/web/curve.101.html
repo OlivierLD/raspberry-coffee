@@ -51,7 +51,9 @@
 		};
 
 		window.onload = function() {
-			tideGraph = new TideGraph("tideCanvas", tideData, graphCallback, "feet"); // TODO Change the unit, based on the station
+			// TODO Change the unit, based on the station
+			// TODO the tideData in a json object, with unit, base-height, harmonics, moon phases, etc.
+			tideGraph = new TideGraph("tideCanvas", tideData, graphCallback, "feet");
 			// Load the date dropdown lists
 			var year = new Date().getFullYear();
 			$("#year").empty();
@@ -118,21 +120,20 @@
 					min = Math.min(min, data[tDate]);
 					max = Math.max(max, data[tDate]);
 				}
-				console.log("Base: " + base);
-				console.log(size + " element(s)");
-				console.log("Min: " + min + ", Max: " + max);
+//			console.log("Base: " + base);
+//			console.log(size + " element(s)");
+//			console.log("Min: " + min + ", Max: " + max);
 
-				console.log("Harmonics?");
 				var harmonics;
 				if (json.harmonicCurves !== undefined) {
 					harmonics = [];
 					for (var coeff in json.harmonicCurves) {
 						var dataArray = json.harmonicCurves[coeff];
-						console.log(coeff + " ; " + dataArray.length + " element(s)");
+//					console.log(coeff + " ; " + dataArray.length + " element(s)");
 						var curve = [];
-						for (var i=0; i<dataArray.length; i++) {
-							curve.push(new Tuple(dataArray[i].x, dataArray[i].y));
-						}
+						dataArray.forEach(function(pt, idx) {
+							curve.push(new Tuple(pt.x, pt.y));
+						});
 						harmonics.push({ name: coeff, data: curve });
 					}
 				}
