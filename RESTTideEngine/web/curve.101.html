@@ -90,10 +90,12 @@
 
 		var populateList = function(stationList) {
 			$("#station-list").empty();
+			$("#draw-curve").prop('disabled', true);
 			stationList.forEach(function(station, idx) {
 				var option = "<option value='" + decodeURIComponent(station) + "'>" + decodeURIComponent(station) + "</option>";
 				$('#station-list').append(option);
 			});
+			$("#draw-curve").prop('disabled', stationList.length === 0);
 		};
 
 		/*
@@ -174,7 +176,7 @@
 
 	<hr/>
 	Starting <select id="year" onchange="populateDays();"></select> <select id="month" onchange="populateDays();"></select> <select id="day"></select>
-	<button onclick="tideTable($('#station-list').val(), { year: parseInt($('#year').val()), month: parseInt($('#month').val()), day: parseInt($('#day').val()) }, '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
+	<button id="draw-curve" disabled onclick="tideTable($('#station-list').val(), { year: parseInt($('#year').val()), month: parseInt($('#month').val()), day: parseInt($('#day').val()) }, '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
 	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With harmonic details.
 	<hr/>
 	<!-- Tabs -->
