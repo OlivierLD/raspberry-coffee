@@ -10,6 +10,26 @@
 	<script type="text/javascript" src="js/tide.js"></script>
 	<script type="text/javascript" src="js/pub.sub.js"></script>
 	<script type="text/javascript" src="widgets/TideGraph.js"></script>
+	<style>
+		.selectedButton {
+			padding:5px;
+			border-top-right-radius: 10px;
+			border:1px solid #CCC;
+			margin-top:10px;
+			border-bottom: none;
+			font-size: 12px;
+			font-weight: bold;
+		}
+		.unselectedButton {
+			padding:5px;
+			border-top-right-radius: 10px;
+			border:1px solid #CCC;
+			margin-top:10px;
+			border-bottom: none;
+			font-size: 12px;
+			font-weight: normal;
+		}
+	</style>
 	<script type="text/javascript">
 		var tideGraph; // The graph itself.
 		var tideData = [];
@@ -121,6 +141,23 @@
 			}
 		};
 
+		var manageClick = function(div) {
+			document.getElementById('error-tab').className = (div.id === 'error-tab' ? 'selectedButton' : 'unselectedButton');
+			document.getElementById('message-tab').className = (div.id === 'message-tab' ? 'selectedButton' : 'unselectedButton');
+			switch (div.id) {
+				case 'error-tab':
+					$("#error-div").css('display', 'block');
+					$("#message-div").css('display', 'none');
+					break;
+				case 'message-tab':
+					$("#error-div").css('display', 'none');
+					$("#message-div").css('display', 'block');
+					break;
+				default:
+					break;
+			}
+		};
+
 	</script>
 </head>
 <body>
@@ -140,19 +177,18 @@
 	<button onclick="tideTable($('#station-list').val(), { year: parseInt($('#year').val()), month: parseInt($('#month').val()), day: parseInt($('#day').val()) }, '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
 	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With harmonic details.
 	<hr/>
-	Results:
-	<br/>
-	<div id="result" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 50px; overflow-y: scroll;"></div>
-  <hr/>
-	Errors:
-  <br/>
-	<div id="error" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; color: red; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 50px; overflow-y: scroll;"></div>
-	<button onclick="$('#error').html('');">Clear log</button>
-	<hr/>
-	Messages:
-	<br/>
-	<div id="messages" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 50px; max-height: 50px; overflow-y: scroll;"></div>
-	<button onclick="$('#messages').html('');">Clear log</button>
-	<hr/>
+	<!-- Tabs -->
+	<div style="margin-bottom: 5px;">
+		<span id="message-tab" onclick="manageClick(this);" class="selectedButton" style="margin-left: 5px; cursor: pointer;">Messages</span>
+		<span id="error-tab"   onclick="manageClick(this);" class="unselectedButton" style="cursor: pointer;">Errors</span>
+	</div>
+	<div id="message-div" style="display: block;">
+		<div id="messages" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 75px; max-height: 75px; overflow-y: scroll;"></div>
+		<button onclick="$('#messages').html('');">Clear log</button>
+	</div>
+	<div id="error-div" style="display: none;">
+		<div id="error" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; color: red; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 75px; max-height: 75px; overflow-y: scroll;"></div>
+		<button onclick="$('#error').html('');">Clear log</button>
+	</div>
 </body>
 </html>
