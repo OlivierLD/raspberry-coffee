@@ -155,9 +155,9 @@ function TideGraph(cName,       // Canvas Name
   var harmonicColors = [];
 
   var initHarmonicColors = function() {
-    for (var i=0; i<98; i++) {
-      harmonicColors.push(rndColor());
-    }
+    intRange(0, 98).forEach(function(obj, idx) {
+	    harmonicColors.push(rndColor());
+    });
   };
 
   if (events !== undefined) {
@@ -586,6 +586,14 @@ function sortTupleX(t1, t2) {
     return 1;
   }
   return 0;  
+};
+
+var intRange = function(fromInclusive, toExclusive) {
+  var array = [];
+  for (var  i=fromInclusive; i<toExclusive; i++) {
+    array.push(i);
+  }
+  return array;
 };
 
 var rndColor = function() {
