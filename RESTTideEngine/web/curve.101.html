@@ -169,9 +169,9 @@
 <body>
   <h2>Tide Curve</h2>
 	<hr/>
-  Tide, today. Choose your station (filter first), and hit [Draw Curve].
+  Tide curve. Choose your station (filter first), and hit [Draw Curve].
 	<hr/>
-	<input type="text" size="30" placeholder="Filter" id="filter">&nbsp;<button onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button>
+	<input type="search" size="30" placeholder="Filter" id="filter">&nbsp;<button onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button>
 	<select id="station-list" style="width: 300px;"></select>, <select id="nb-days"><option value="1">1 Day</option><option value="7">1 Week</option><option value="14">2 Weeks</option><option value="31">1 Month</option></select>
 	<div style="width: 100%;">
 		<!-- Graph here -->

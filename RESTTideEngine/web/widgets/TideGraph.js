@@ -152,6 +152,13 @@ function TideGraph(cName,       // Canvas Name
   var gData = graphData;
   var plotX;
   var harm;
+  var harmonicColors = [];
+
+  var initHarmonicColors = function() {
+    for (var i=0; i<98; i++) {
+      harmonicColors.push(rndColor());
+    }
+  };
 
   if (events !== undefined) {
     events.subscribe('color-scheme-changed', function(val) {
@@ -518,8 +525,11 @@ function TideGraph(cName,       // Canvas Name
 		  context.lineWidth = 1;
 		  context.strokeStyle = "black";
 
+		  if (harmonicColors.length === 0) {
+		    initHarmonicColors();
+      }
 		  for (var i = 0; i < harmonics.length; i++) {
-			  context.strokeStyle = rndColor();
+			  context.strokeStyle = harmonicColors[i];
 			  console.log("plotting " + harmonics[i].name);
 			  var tupleArray = harmonics[i].data;
 			  context.beginPath();

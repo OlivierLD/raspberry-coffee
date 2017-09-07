@@ -7,6 +7,7 @@ import utils.DumpUtil;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Function;
@@ -649,6 +650,14 @@ public class HTTPServer {
 			if (response.getPayload() != null) {
 				os.write(response.getPayload());
 				os.flush();
+			}
+		} catch (SocketException se) {
+			if (se.getMessage().contains("Broken pipe")) {
+				System.err.println("+-------------------------");
+				System.err.println("| Oops, client hung up!");
+				System.err.println("+-------------------------");
+			} else {
+				se.printStackTrace();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

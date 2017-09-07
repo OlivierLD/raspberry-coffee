@@ -20,11 +20,11 @@
 	&nbsp;
 	<button onclick="showTime();">Now</button>
 	<hr/>
-  Full Station list <input type="text" size="5" placeholder="offset" id="offset">, <input type="text" size="5" placeholder="limit" id="limit">, <input type="text" size="20" placeholder="Filter" id="name-filter">
+  Full Station list <input type="text" size="5" placeholder="offset" id="offset">, <input type="text" size="5" placeholder="limit" id="limit">, <input type="search" size="20" placeholder="Filter" id="name-filter">
 	&nbsp;
 	<button onclick="tideStations($('#offset').val(), $('#limit').val(), $('#name-filter').val());">Tide Stations</button>
   <hr/>
-	Filtered list <input type="text" size="20" placeholder="Filter" id="filter">
+	Filtered list <input type="search" size="20" placeholder="Filter" id="filter">
 	&nbsp;
 	<button onclick="tideStationsFiltered($('#filter').val());">Tide Stations</button>
   <hr/>
@@ -34,7 +34,7 @@
 	Unit <select id="unit"><option value="">None</option><option value="meters">Meters</option><option value="feet">Feet</option></select>
 	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With details.
 	&nbsp;
-	<button onclick="tideTable($('#station').val(), $('#tz').val(), $('#step').val(), $('#unit').val(), $('#with-details').prop('checked'));">Water Heights</button>
+	<button onclick="tideTable($('#station').val(), {}, $('#tz').val(), $('#step').val(), $('#unit').val(), $('#with-details').prop('checked'));">Water Heights</button>
 	<hr/>
 	Sun Data, now. From Latitude <input type="text" size="30" placeholder="As a decimal number" id="latitude" value="37.76661945"> -
 	Longitude <input type="text" size="30" placeholder="As a decimal number" id="longitude" value="-122.5166988">

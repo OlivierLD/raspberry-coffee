@@ -1,5 +1,7 @@
 "use strict";
 
+var DEFAULT_TIMEOUT = 60000;
+
 // var errManager = console.log;
 var errManager = function(mess) {
 	var content = $("#error").html();
@@ -63,8 +65,6 @@ var getDeferred = function(
 	};
 	return deferred.promise();
 };
-
-var DEFAULT_TIMEOUT = 60000;
 
 var getCurrentTime = function() {
 	var url = "/utc";
