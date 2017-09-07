@@ -92,11 +92,11 @@ The format of the harmonic files is a proprietary format. To be used efficiently
 be parsed and loaded in memory for the data it contains to be available in a timely manner.
 
 This could be quite demanding for a small machine like the Raspberry PI (the`Zero` has "only" 512 Mb of RAM), even the generation of the XML files
-can be challenginfg for the Raspberry PI.
+can be challenging for the Raspberry PI.
 
-Using a SAX Parser allows the amount of memory to use to substancially shrink.
+Using a SAX Parser allows the amount of required memory to substantially shrink.
 As opposed to a DOM Parser that loads the DOM representation of the document in memory,
-the SAX parser scans it un til the expected data are found.
+the SAX parser scans it until the expected data are found.
 
 > Note about the encoding: The XML Data are 'ISO-8859-1' encoded. For an easier access, those
 > elements (mainly the String elements, like station names) are returned as 'UTF-8' encoded by the REST API.
