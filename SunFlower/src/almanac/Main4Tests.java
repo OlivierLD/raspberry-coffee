@@ -8,7 +8,7 @@ import java.util.TimeZone;
 import nauticalalmanac.Anomalies;
 import nauticalalmanac.Context;
 import nauticalalmanac.Core;
-import user.util.GeomUtil;
+import calc.GeomUtil;
 
 public class Main4Tests {
 	public static void main(String[] args) {
