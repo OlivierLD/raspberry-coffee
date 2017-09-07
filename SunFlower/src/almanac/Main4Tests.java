@@ -66,7 +66,7 @@ public class Main4Tests {
 		// Sun orientation, now.
 		double lat = 37.7489;
 		double lng = -122.5070;
-		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
 		AstroComputer.setDateTime(current.get(Calendar.YEAR),
 						current.get(Calendar.MONTH) + 1,
 						current.get(Calendar.DAY_OF_MONTH),
@@ -81,12 +81,18 @@ public class Main4Tests {
 		sru.calculate();
 		Double he = sru.getHe();
 		Double  z = sru.getZ();
-		System.out.println(String.format("From %s / %s, at %02d:%02d:%02d UTC, He:%.02f\272, Z:%.02f\272 (true)",
+		// Local time
+		Calendar local = (Calendar)current.clone();
+		local.setTimeZone(TimeZone.getDefault());
+		System.out.println(String.format("From %s / %s, at %02d:%02d:%02d UTC (%02d:%02d:%02d Local), He:%.02f\272, Z:%.02f\272 (true)",
 						GeomUtil.decToSex(lat, GeomUtil.SWING, GeomUtil.NS),
 						GeomUtil.decToSex(lng, GeomUtil.SWING, GeomUtil.EW),
 						current.get(Calendar.HOUR_OF_DAY),
 						current.get(Calendar.MINUTE),
 						current.get(Calendar.SECOND),
+						local.get(Calendar.HOUR_OF_DAY),
+						local.get(Calendar.MINUTE),
+						local.get(Calendar.SECOND),
 						he.doubleValue(),
 						z.doubleValue()));
 	}
