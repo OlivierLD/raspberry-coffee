@@ -218,8 +218,8 @@ function TideGraph(cName,       // Canvas Name
         try { 
 //        str.push("Pos:" + idx);
           var date = new Date(parseInt(gData[idx].getX()));
-	        str.push(date.format('Y-M-d'));   // Format the date
-	        str.push(date.format('H:i:s X')); // Format the date
+	        str.push(date.format('Y-M-d')); // Format the date
+	        str.push(date.format('H:i X')); // Format the date
           str.push(gData[idx].getY().toFixed(2) + " " + unit);
   //      console.log("Bubble:" + str);
         } catch (err) { console.log(JSON.stringify(err)); }
@@ -442,7 +442,7 @@ function TideGraph(cName,       // Canvas Name
       context.rotate(-Math.PI / 2);
       context.font = "bold 10px " + graphColorConfig.font;
       context.fillStyle = graphColorConfig.verticalGridTextColor;
-      var str = new Date(parseInt(data[i].getX())).format('H:i:s X'); // i.toString();
+      var str = new Date(parseInt(data[i].getX())).format('H:i X'); // i.toString();
       var len = context.measureText(str).width;
       context.fillText(str, 2, -1); //i * xScale, cHeight - (len));
       context.restore();

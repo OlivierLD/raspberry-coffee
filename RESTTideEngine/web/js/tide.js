@@ -64,7 +64,7 @@ var getDeferred = function(
 	return deferred.promise();
 };
 
-var DEFAULT_TIMEOUT = 10000;
+var DEFAULT_TIMEOUT = 60000;
 
 var getCurrentTime = function() {
 	var url = "/utc";
