@@ -1,5 +1,6 @@
 package tiderest;
 
+import calc.GeoPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import http.HTTPServer;
@@ -396,6 +397,7 @@ public class RESTImplementation {
 							tideTable.baseHeight = ts.getBaseHeight() * unitSwitcher(ts, unitToUse);
 							tideTable.unit = (unitToUse != null ? unitToUse.toString() : ts.getDisplayUnit());
 							tideTable.timeZone = (timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone());
+							tideTable.position = new GeoPoint(ts.getLatitude(), ts.getLongitude());
 							Map<String, Double> map = new LinkedHashMap<>();
 
 							DURATION_FMT.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
@@ -568,6 +570,7 @@ public class RESTImplementation {
 		double baseHeight;
 		String unit;
 		String timeZone;
+		GeoPoint position;
 		Map<String, Double> heights;
 		Hashtable<String, List<DataPoint>> harmonicCurves;
 	}

@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 public class RESTImplementation {
 
 	private AstroRequestManager astroRequestManager;
+	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
 
 	public RESTImplementation(AstroRequestManager astroRequestManager) {
 		this.astroRequestManager = astroRequestManager;
@@ -60,6 +62,11 @@ public class RESTImplementation {
 					"/sun-now",
 					this::getSunDataNow,
 					"Create a request for Sun data now. Requires body payload (GeoPoint)"),
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+					"POST",
+					"/sun-between-dates",
+					this::getSunDataBetween,
+					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 3 queryString prm : from and to, in DURATION Format, and tz, the timezone name."),
 			new Operation( // Example: GET /utc?tz=America%2FNome,America%2FNew_York,Europe%2FParis,Pacific%2FMarquesas
 					"GET",
 					"/utc",
@@ -174,22 +181,109 @@ public class RESTImplementation {
 					pos = gson.fromJson(stringReader, GeoPoint.class);
 					System.out.println();
 				} catch (Exception ex) {
-					// Oooch!
-					System.out.println();
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("ASTRO-0004")
+									.errorMessage(ex.toString()));
+					return response;
 				}
-			} else {
-				// Expected payload
-				System.out.println();
 			}
-		} else {
-			// Expected payload
-			System.out.println();
 		}
 		BodyDataForPos sunData = getSunData(pos.getL(), pos.getG());
 		String content = new Gson().toJson(sunData);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 		return response;
+	}
+
+	/**
+	 *
+	 * @param request MUST contain a GeoPoint payload (observer's position), and query String prms from (duration format), to (duration format), and tz (timezone name).
+	 * @return
+	 */
+	private Response getSunDataBetween(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		GeoPoint pos = null;
+
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				Gson gson = new GsonBuilder().create();
+				StringReader stringReader = new StringReader(payload);
+				try {
+					pos = gson.fromJson(stringReader, GeoPoint.class);
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("ASTRO-0002")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		}
+		String fromPrm = null, toPrm = null;
+		String tzName = null;
+		Map<String, String> prms = request.getQueryStringParameters();
+		if (prms == null || prms.get("from") == null || prms.get("to") == null || prms.get("tz") == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0003")
+							.errorMessage("Query parameters 'tz', 'from' and 'to' are required."));
+			return response;
+		} else {
+			fromPrm = prms.get("from");
+			toPrm = prms.get("to");
+			tzName = prms.get("tz");
+			try {
+				tzName = URLDecoder.decode(tzName, "UTF-8");
+			} catch (Exception ex) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("ASTRO-0006")
+								.errorMessage(ex.toString()));
+				return response;
+			}
+			if (!Arrays.asList(TimeZone.getAvailableIDs()).contains(tzName)) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("ASTRO-0005")
+								.errorMessage(String.format("Invalid TimeZone: %s", tzName)));
+				return response;
+			}
+		}
+
+		Map<Long, BodyDataForPos> map = new LinkedHashMap<>();
+		DURATION_FMT.setTimeZone(TimeZone.getTimeZone(tzName));
+		try {
+			Date from = DURATION_FMT.parse(fromPrm);
+			Date to = DURATION_FMT.parse(toPrm);
+			Calendar toCal = Calendar.getInstance(TimeZone.getTimeZone(tzName));
+			toCal.setTime(to);
+			Calendar current = Calendar.getInstance(TimeZone.getTimeZone(tzName));
+			current.setTime(from);
+			do {
+				BodyDataForPos data = getSunDataForDate(pos.getL(), pos.getG(), current);
+				map.put(current.getTimeInMillis(), data);
+				current.add(Calendar.DATE , 1);
+			} while (current.before(toCal));
+			String content = new Gson().toJson(map);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0006")
+							.errorMessage(ex.toString()));
+			return response;
+		}
 	}
 
 	private Response emptyOperation(Request request) {

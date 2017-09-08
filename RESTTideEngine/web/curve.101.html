@@ -51,8 +51,6 @@
 		};
 
 		window.onload = function() {
-			// TODO Change the unit, based on the station
-			// TODO the tideData in a json object, with unit, base-height, harmonics, moon phases, etc.
 			tideGraph = new TideGraph("tideCanvas", tideData, graphCallback, "feet");
 			// Load the date dropdown lists
 			var year = new Date().getFullYear();
@@ -100,9 +98,16 @@
 			$("#draw-curve").prop('disabled', stationList.length === 0);
 		};
 
+		var daylightReceiver = function(value) {
+			console.log("Received daylight ", value);
+			// TODO Manage data here
+		};
+
 		/*
-		 * TODO Daylight, moon phases
-		 * Daylight: POST /sun-now { latitude: 37.76661945, longitude: -122.5166988 }
+		 * TODO moon phases
+		 * Daylight:
+		 * POST /sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+		 * 		payload { latitude: 37.76661945, longitude: -122.5166988 }
 		 */
 		var dataManager = function(value) { // Callback when tide data are ready
 //		console.log(value);
@@ -115,7 +120,12 @@
 				var size = 0;
 				tideData = {};
 				tideCurve = [];
+				var fromDate, toDate;
 				for (var tDate in data){
+					if (fromDate === undefined) {
+						fromDate = tDate;
+					}
+					toDate = tDate;
 					tideCurve.push(new Tuple(tDate, data[tDate]));
 					size++;
 //				console.log(tDate + ': ' + data[tDate]);
@@ -126,6 +136,18 @@
 				tideData.unit = json.unit;
 				tideData.base = base;
 				tideData.station = decodeURIComponent(json.stationName);
+				// Get position and timezone, for the daylight
+				var tzName = json.timeZone;
+				var position = {
+					latitude: parseFloat(json.position.latitude),
+					longitude: parseFloat(json.position.longitude)
+				};
+				// Invoke daylight service
+				var from = new Date(parseInt(fromDate));
+				var to = new Date(parseInt(toDate));
+				// DURATION_FMT defined in tide.js
+				getSunData(from.format(DURATION_FMT), to.format(DURATION_FMT), tzName, position, daylightReceiver);
+
 				var harmonics;
 				if (json.harmonicCurves !== undefined) {
 					harmonics = [];

@@ -90,6 +90,19 @@ var getTideStationsFiltered = function(filter) {
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+/**
+ * POST /sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+ * 		payload { latitude: 37.76661945, longitude: -122.5166988 }
+ * @param from
+ * @param to
+ * @param tz
+ * @param pos
+ */
+var requestDaylightData = function(from, to, tz, pos) {
+	var url = "/sun-between-dates?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
+	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
+};
+
 var DURATION_FMT = "Y-m-dTH:i:s";
 /**
  *
@@ -204,6 +217,31 @@ var tideStationsFiltered = function(filter) {
 			}
 		}
 		errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+var getSunData = function(from, to, tz, pos, callback) {
+	var getData = requestDaylightData(from, to, tz, pos);
+	getData.done(function(value) {
+		var json = JSON.parse(value);
+		if (callback === undefined) {
+			// Do something smart
+			messManager("Got " + json);
+			$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+		} else {
+			callback(json);
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed to get Sun data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 
