@@ -11,6 +11,7 @@ import tideengine.*;
 
 import javax.annotation.Nonnull;
 import java.io.StringReader;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -280,6 +281,7 @@ public class RESTImplementation {
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		String stationFullName = "";
 		Calendar calFrom = null, calTo = null;
+		String fromPrm = null, toPrm = null;
 		boolean proceed = true;
 		if (prmValues.size() == 1) {
 			String param = prmValues.get(0);
@@ -302,31 +304,8 @@ public class RESTImplementation {
 								.errorMessage("Query parameters 'from' and 'to' are required."));
 				proceed = false;
 			} else {
-				String from = prms.get("from");
-				String to = prms.get("to");
-				try {
-					Date fromDate = DURATION_FMT.parse(from);
-					Date toDate = DURATION_FMT.parse(to);
-					calFrom = Calendar.getInstance();
-					calFrom.setTime(fromDate);
-					calTo = Calendar.getInstance();
-					calTo.setTime(toDate);
-					if (calTo.before(calFrom)) {
-						response = HTTPServer.buildErrorResponse(response,
-								Response.BAD_REQUEST,
-								new HTTPServer.ErrorPayload()
-										.errorCode("TIDE-0014")
-										.errorMessage(String.format("Bad date chronology. %s is after %s", from, to)));
-						proceed = false;
-					}
-				} catch (ParseException pe) {
-					response = HTTPServer.buildErrorResponse(response,
-							Response.BAD_REQUEST,
-							new HTTPServer.ErrorPayload()
-									.errorCode("TIDE-0004")
-									.errorMessage(pe.toString()));
-					proceed = false;
-				}
+				fromPrm = prms.get("from");
+				toPrm = prms.get("to");
 			}
 			if (proceed) {
 				final String stationName = stationFullName;
@@ -416,90 +395,115 @@ public class RESTImplementation {
 							tideTable.stationName = stationName;
 							tideTable.baseHeight = ts.getBaseHeight() * unitSwitcher(ts, unitToUse);
 							tideTable.unit = (unitToUse != null ? unitToUse.toString() : ts.getDisplayUnit());
+							tideTable.timeZone = (timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone());
 							Map<String, Double> map = new LinkedHashMap<>();
 
-							Calendar now = (Calendar)calFrom.clone();
-							ts = BackEndTideComputer.findTideStation(stationFullName, now.get(Calendar.YEAR));
-							if (ts != null) {
-								now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
-								while (now.before(calTo)) {
-									double wh = TideUtilities.getWaterHeight(ts, this.tideRequestManager.getConstSpeed(), now);
-									TimeZone.setDefault(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())); // for TS Timezone display
-//							  System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
-//								map.put(now.getTime().toString(), wh * unitSwitcher(ts, unitToUse));
-									map.put(String.valueOf(now.getTimeInMillis()), wh * unitSwitcher(ts, unitToUse));
-									now.add(Calendar.MINUTE, step);
+							DURATION_FMT.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
+							try {
+								Date fromDate = DURATION_FMT.parse(fromPrm);
+								Date toDate = DURATION_FMT.parse(toPrm);
+								calFrom = Calendar.getInstance();
+								calFrom.setTime(fromDate);
+								calTo = Calendar.getInstance();
+								calTo.setTime(toDate);
+								if (calTo.before(calFrom)) {
+									response = HTTPServer.buildErrorResponse(response,
+											Response.BAD_REQUEST,
+											new HTTPServer.ErrorPayload()
+													.errorCode("TIDE-0014")
+													.errorMessage(String.format("Bad date chronology. %s is after %s", fromPrm, toPrm)));
+									proceed = false;
 								}
-							} else {
-								System.out.println("No Tide station, Wow!"); // I know...
+							} catch (ParseException pe) {
+								response = HTTPServer.buildErrorResponse(response,
+										Response.BAD_REQUEST,
+										new HTTPServer.ErrorPayload()
+												.errorCode("TIDE-0004")
+												.errorMessage(pe.toString()));
+								proceed = false;
 							}
-							tideTable.heights = map;
-							if (withDetails) { // With harmonic curves
-								final TideStation fts = ts;
-								final Calendar _reference = (Calendar)calFrom.clone();
-								final Calendar _calTo = (Calendar)calTo.clone();
-								final String tztu = timeZoneToUse;
-								final unit unit2use = unitToUse;
-								final int _step = step;
-								final List<Coefficient> constSpeed = this.tideRequestManager.getConstSpeed();
-								_reference.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
-								List<Harmonic> harmonics = ts.getHarmonics()
-										.stream()
-										.filter(harmonic -> (harmonic.getAmplitude() != 0d && harmonic.getEpoch() != 0d))
-										.collect(Collectors.toList());
-								Hashtable<String, List<DataPoint>> harmonicCurves = new Hashtable<>();
-								harmonics.stream()
-										.forEach(harmonicCoeff -> {
-											List<DataPoint> oneCurve = new ArrayList<>();
-											Calendar _now = (Calendar)_reference.clone();
-											_now.setTimeZone(TimeZone.getTimeZone(tztu != null ? tztu : fts.getTimeZone()));
-											while (_now.before(_calTo)) {
-												int year = _now.get(Calendar.YEAR);
-												// Calc Jan 1st of the current year
-												Date jan1st = new GregorianCalendar(year, 0, 1).getTime();
-												//      double value = Utils.convert(TideUtilities.getHarmonicValue(cal.getTime(), jan1st, ts, constSpeed, i), ts.getDisplayUnit(), currentUnit);
-												double value = TideUtilities.getHarmonicValue(
-														_now.getTime(),
-														jan1st,
-														fts,
-														constSpeed,
-														harmonicCoeff.getName()) * unitSwitcher(fts, unit2use);
 
-												double x = _now.getTimeInMillis(); // (h + (double) (m / 60D));
-												double y = (value); // - _bottomValue);
-												oneCurve.add(new DataPoint(x, y));
+							if (proceed) {
+								Calendar now = (Calendar)calFrom.clone();
+								Calendar upTo = (Calendar)calTo.clone();
 
-												_now.add(Calendar.MINUTE, _step);
-											}
+								if ("true".equals(System.getProperty("tide.verbose", "false"))) {
+									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z z");
+									sdf.setTimeZone(TimeZone.getTimeZone((timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())));
+									try {
+										System.out.println(String.format("Calculating tide in %s, from %s to %s",
+												URLDecoder.decode(ts.getFullName(), "UTF-8"),
+												sdf.format(now.getTime()),
+												sdf.format(upTo.getTime())));
+									} catch (Exception ex) {
+										ex.printStackTrace();
+									}
+								}
 
-//											for (int h = 0; h < 24; h++) {
-//												for (int m = 0; m < 60; m++) {
-//													Calendar cal = new GregorianCalendar(_reference.get(Calendar.YEAR),
-//															_reference.get(Calendar.MONTH),
-//															_reference.get(Calendar.DAY_OF_MONTH),
-//															h + hourOffset, m);
-//													cal.setTimeZone(TimeZone.getTimeZone(timeZone2Use));
-//													int year = cal.get(Calendar.YEAR);
-//													// Calc Jan 1st of the current year
-//													Date jan1st = new GregorianCalendar(year, 0, 1).getTime();
-//									//      double value = Utils.convert(TideUtilities.getHarmonicValue(cal.getTime(), jan1st, ts, constSpeed, i), ts.getDisplayUnit(), currentUnit);
-//													double value = Utils.convert(TideUtilities.getHarmonicValue(cal.getTime(), jan1st, fts, constSpeed, harmonicCoeff.getName()), fts.getDisplayUnit(), currentUnit);
-//													double x = (h + (double) (m / 60D));
-//													double y = (value - _bottomValue);
-//													oneCurve.add(new DataPoint(x, y));
-//												}
-//											}
-											harmonicCurves.put(harmonicCoeff.getName(), oneCurve);
-										});
-								tideTable.harmonicCurves = harmonicCurves;
+								ts = BackEndTideComputer.findTideStation(stationFullName, now.get(Calendar.YEAR));
+								if (ts != null) {
+									now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
+									while (now.before(upTo)) {
+										double wh = TideUtilities.getWaterHeight(ts, this.tideRequestManager.getConstSpeed(), now);
+										TimeZone.setDefault(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())); // for TS Timezone display
+	//							  System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
+	//								map.put(now.getTime().toString(), wh * unitSwitcher(ts, unitToUse));
+										map.put(String.valueOf(now.getTimeInMillis()), wh * unitSwitcher(ts, unitToUse));
+										now.add(Calendar.MINUTE, step);
+									}
+								} else {
+									System.out.println("No Tide station, Wow!"); // I know...
+								}
+								tideTable.heights = map;
+								if (withDetails) { // With harmonic curves
+									final TideStation fts = ts;
+									final Calendar _reference = (Calendar) calFrom.clone();
+									final Calendar _calTo = (Calendar) calTo.clone();
+									final String tztu = timeZoneToUse;
+									final unit unit2use = unitToUse;
+									final int _step = step;
+									final List<Coefficient> constSpeed = this.tideRequestManager.getConstSpeed();
+									_reference.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
+									List<Harmonic> harmonics = ts.getHarmonics()
+											.stream()
+											.filter(harmonic -> (harmonic.getAmplitude() != 0d && harmonic.getEpoch() != 0d))
+											.collect(Collectors.toList());
+									Hashtable<String, List<DataPoint>> harmonicCurves = new Hashtable<>();
+									harmonics.stream()
+											.forEach(harmonicCoeff -> {
+												List<DataPoint> oneCurve = new ArrayList<>();
+												Calendar _now = (Calendar) _reference.clone();
+												_now.setTimeZone(TimeZone.getTimeZone(tztu != null ? tztu : fts.getTimeZone()));
+												while (_now.before(_calTo)) {
+													int year = _now.get(Calendar.YEAR);
+													// Calc Jan 1st of the current year
+													Date jan1st = new GregorianCalendar(year, 0, 1).getTime();
+													//      double value = Utils.convert(TideUtilities.getHarmonicValue(cal.getTime(), jan1st, ts, constSpeed, i), ts.getDisplayUnit(), currentUnit);
+													double value = TideUtilities.getHarmonicValue(
+															_now.getTime(),
+															jan1st,
+															fts,
+															constSpeed,
+															harmonicCoeff.getName()) * unitSwitcher(fts, unit2use);
+
+													double x = _now.getTimeInMillis(); // (h + (double) (m / 60D));
+													double y = (value); // - _bottomValue);
+													oneCurve.add(new DataPoint(x, y));
+
+													_now.add(Calendar.MINUTE, _step);
+												}
+												harmonicCurves.put(harmonicCoeff.getName(), oneCurve);
+											});
+									tideTable.harmonicCurves = harmonicCurves;
+								}
+								/*
+								 * Happy End
+								 */
+								String content = new Gson().toJson(tideTable);
+								RESTProcessorUtil.generateResponseHeaders(response, content.length());
+								response.setPayload(content.getBytes());
+								return response;
 							}
-							/*
-							 * Happy End
-							 */
-							String content = new Gson().toJson(tideTable);
-							RESTProcessorUtil.generateResponseHeaders(response, content.length());
-							response.setPayload(content.getBytes());
-							return response;
 						}
 					} catch (Exception ex) {
 						response = HTTPServer.buildErrorResponse(response,
@@ -563,6 +567,7 @@ public class RESTImplementation {
 		String stationName;
 		double baseHeight;
 		String unit;
+		String timeZone;
 		Map<String, Double> heights;
 		Hashtable<String, List<DataPoint>> harmonicCurves;
 	}
