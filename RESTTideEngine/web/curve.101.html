@@ -32,7 +32,7 @@
 	</style>
 	<script type="text/javascript">
 		var tideGraph; // The graph itself.
-		var tideData = [];
+		var tideData = {};
 		var graphCallback = undefined;
 
 		var isLeapYear = function (yr) {
@@ -101,29 +101,30 @@
 		};
 
 		/*
-		 * TODO BaseHeight, Daylight, moon phases
+		 * TODO Daylight, moon phases
 		 */
 		var dataManager = function(value) { // Callback when tide data are ready
 //		console.log(value);
 			try {
 				var json = JSON.parse(value);
-				var base = json.baseHeight;
 				var data = json.heights;
+				var base = json.baseHeight;
 				// Detect min & max
 				var min = base, max = base;
 				var size = 0;
-				tideData = [];
+				tideData = {};
+				tideCurve = [];
 				for (var tDate in data){
-					tideData.push(new Tuple(tDate, data[tDate]));
+					tideCurve.push(new Tuple(tDate, data[tDate]));
 					size++;
 //				console.log(tDate + ': ' + data[tDate]);
 					min = Math.min(min, data[tDate]);
 					max = Math.max(max, data[tDate]);
 				}
-//			console.log("Base: " + base);
-//			console.log(size + " element(s)");
-//			console.log("Min: " + min + ", Max: " + max);
-
+				tideData.curve = tideCurve;
+				tideData.unit = json.unit;
+				tideData.base = base;
+				tideData.station = decodeURIComponent(json.stationName);
 				var harmonics;
 				if (json.harmonicCurves !== undefined) {
 					harmonics = [];
@@ -136,9 +137,10 @@
 						});
 						harmonics.push({ name: coeff, data: curve });
 					}
+					tideData.harmonics = harmonics;
 				}
 				var idx2plot = new Date().getTime();
-				tideGraph.drawGraph("tideCanvas", tideData, idx2plot, harmonics);
+				tideGraph.drawGraph("tideCanvas", tideData, idx2plot);
 			} catch (err) {
 				console.log(err);
 			}
