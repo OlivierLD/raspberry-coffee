@@ -311,20 +311,20 @@ function TideGraph(cName,       // Canvas Name
     return max;
   };
 
-  this.getMinMax = function(data) {
-      var mini = Math.floor(this.minY(data));
-      var maxi = Math.ceil(this.maxY(data));
+	this.getMinMax = function (data) {
+		var mini = Math.floor(this.minY(data));
+		var maxi = Math.ceil(this.maxY(data));
 
-      if (Math.abs(maxi - mini) < 5) { // To have a significant Y scale.
-          maxi += 3;
-          if (mini > 0) {
-              mini -= 1;
-          } else {
-              maxi += 1;
-          }
-      }
-      return { mini: mini, maxi: maxi };
-  };
+		if (false && Math.abs(maxi - mini) < 5) { // To have a significant Y scale.
+			maxi += 3;
+			if (mini > 0) {
+				mini -= 1;
+			} else {
+				maxi += 1;
+			}
+		}
+		return {mini: mini, maxi: maxi};
+	};
 
   var reloadColor = false;
   var reloadColorConfig = function() {
