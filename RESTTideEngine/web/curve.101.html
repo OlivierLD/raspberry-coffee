@@ -99,8 +99,9 @@
 		};
 
 		var daylightReceiver = function(value) {
-			console.log("Received daylight ", value);
-			// TODO Manage data here
+//		console.log("Received daylight ", value);
+			// Manage Sun data here
+			tideGraph.setSunData(value);
 		};
 
 		/*
@@ -110,6 +111,7 @@
 		 * 		payload { latitude: 37.76661945, longitude: -122.5166988 }
 		 */
 		var dataManager = function(value) { // Callback when tide data are ready
+			tideGraph.unsetSunData();
 //		console.log(value);
 			try {
 				var json = JSON.parse(value);
@@ -145,10 +147,11 @@
 				tideData.timeZone = tzName;
 				tideData.position = position;
 				// Invoke daylight service
-				var from = new Date(parseInt(fromDate));
-				var to = new Date(parseInt(toDate));
-				// DURATION_FMT defined in tide.js
-				getSunData(from.format(DURATION_FMT), to.format(DURATION_FMT), tzName, position, daylightReceiver);
+//				var from = new Date(parseInt(fromDate));
+//				var to = new Date(parseInt(toDate));
+//				// DURATION_FMT is defined in tide.js
+//				getSunData(from.format(DURATION_FMT), to.format(DURATION_FMT), tzName, position, daylightReceiver);
+				getSunData(json.fromPrm, json.toPrm, tzName, position, daylightReceiver);
 
 				var harmonics;
 				if (json.harmonicCurves !== undefined) {
@@ -164,7 +167,7 @@
 					}
 					tideData.harmonics = harmonics;
 				}
-				var idx2plot = new Date().getTime();
+				var idx2plot = new Date().getTime(); // Current date/time
 				tideGraph.drawGraph("tideCanvas", tideData, idx2plot);
 			} catch (err) {
 				console.log(err);

@@ -169,8 +169,17 @@ function TideGraph(cName,       // Canvas Name
   var gData = graphData;
   var plotX;
   var harmonicColors = [];
+  var sunRiseSet = undefined;
 
-  var initHarmonicColors = function() {
+  this.setSunData = function(values) {
+  	sunRiseSet = values;
+  };
+
+	this.unsetSunData = function() {
+		sunRiseSet = undefined;
+	};
+
+	var initHarmonicColors = function() {
     intRange(0, 98).forEach(function(obj, idx) {
 	    harmonicColors.push(rndColor());
     });
@@ -315,7 +324,7 @@ function TideGraph(cName,       // Canvas Name
 		var mini = Math.floor(this.minY(data));
 		var maxi = Math.ceil(this.maxY(data));
 
-		if (false && Math.abs(maxi - mini) < 5) { // To have a significant Y scale.
+		if (false && Math.abs(maxi - mini) < 5) { // This is to have a significant Y scale, when applied.
 			maxi += 3;
 			if (mini > 0) {
 				mini -= 1;
@@ -332,6 +341,20 @@ function TideGraph(cName,       // Canvas Name
     reloadColor = true;
   };
 
+	/**
+	 * Drawing happens here.
+	 * Draws:
+	 * - Grids and background
+	 * - Main curve
+	 * - Tooltips
+	 * - Harmonic curves
+	 * - Daylight
+	 * - Moon declination (TODO)
+	 * - Moon phases (TODO)
+	 * @param displayCanvasName
+	 * @param data
+	 * @param idx
+	 */
   this.drawGraph = function(displayCanvasName, data, idx) {
 
 	  gData = data;
@@ -388,6 +411,7 @@ function TideGraph(cName,       // Canvas Name
     context.fillStyle = "white";
     context.fillRect(0, 0, width, height);
 
+    // Background
     if (graphColorConfig.withBGGradient === false) {
       context.fillStyle = graphColorConfig.bgColorNoGradient;
       context.fillRect(0, 0, width, height);
@@ -441,6 +465,7 @@ function TideGraph(cName,       // Canvas Name
       context.restore();
       context.closePath();
     }
+    // Base Height
 		if (data.base !== undefined) {
 			context.beginPath();
 			context.lineWidth = 2;
@@ -449,7 +474,7 @@ function TideGraph(cName,       // Canvas Name
 			context.lineTo(width, height - (data.base - miny) * yScale);
 			context.stroke();
 		}
-
+		// Main curve
     if (data.curve.length > 0) {
       context.beginPath();
       context.lineWidth = 3; // For the main curve
@@ -474,7 +499,10 @@ function TideGraph(cName,       // Canvas Name
           context.fill();
       }
     }
-    
+
+    /*
+     * Current date, usually
+     */
     if (idx !== undefined) {
       context.beginPath();
       context.lineWidth = 3;
@@ -484,7 +512,9 @@ function TideGraph(cName,       // Canvas Name
       context.stroke();
       context.closePath();
     }
-
+		/*
+		 * Harmonic curves?
+		 */
 	  if (data.harmonics !== undefined) {
 //	  console.log("Plotting Harmonics: " + data.harmonics.length + " curve(s)");
 		  context.lineWidth = 1;
@@ -508,6 +538,82 @@ function TideGraph(cName,       // Canvas Name
 			  context.closePath();
 			  console.log();
 		  }
+	  }
+
+	  /*
+	   * Daylight?
+	   */
+	  if (sunRiseSet !== undefined) {
+//  	console.log("Drawing daylight.");
+	  	var previousX = 0;
+      for (key in sunRiseSet) {
+//      console.log("At " + key + ", ", new Date(parseInt(key)));
+        var riseTime = sunRiseSet[key].riseTime;
+			  var setTime = sunRiseSet[key].setTime;
+//		  console.log("Rise %s (%d), Set %s (%d)", new Date(riseTime), riseTime, new Date(setTime), setTime);
+// 			  console.log("Curve data from %s (%d) to %s (%d)",
+// 					  new Date(parseInt(data.curve[0].getX())),
+// 					  parseInt(data.curve[0].getX()),
+// 					  new Date(parseInt(data.curve[data.curve.length - 1].getX())),
+// 					  parseInt(data.curve[data.curve.length - 1].getX()));
+
+	      if (riseTime !== undefined) {
+		      // Find the corresponding time
+		      for (var x=0; x<data.curve.length; x++) {
+			      if (data.curve[x].getX() > riseTime) {
+				      riseX = x * xScale;
+
+				      context.beginPath();
+				      context.lineWidth = 1;
+				      context.strokeStyle = "gray"; // graphColorConfig.clickedIndexColor;
+				      context.moveTo(riseX, 0);
+				      context.lineTo(riseX, height);
+				      context.stroke();
+				      context.closePath();
+							// Draw night previousX to riseX
+				      var grV = context.createLinearGradient(previousX, 0, riseX, height);
+				      grV.addColorStop(0, 'rgba(169, 169, 169, 0.5)'); // graphColorConfig.bgGradientFrom);
+				      grV.addColorStop(1, 'rgba(211, 211, 211, 0.5)');  // graphColorConfig.bgGradientTo);
+
+				      context.fillStyle = grV;
+				      context.fillRect(previousX, 0, (riseX - previousX), height);
+
+			        previousX = -1;
+				      break;
+			      }
+		      }
+	      }
+
+	      if (setTime !== undefined) {
+		      // Find the corresponding time
+		      for (var x=0; x<data.curve.length; x++) {
+			      if (data.curve[x].getX() > setTime) {
+				      setX = x * xScale;
+
+				      context.beginPath();
+				      context.lineWidth = 1;
+				      context.strokeStyle = "gray"; // graphColorConfig.clickedIndexColor;
+				      context.moveTo(setX, 0);
+				      context.lineTo(setX, height);
+				      context.stroke();
+				      context.closePath();
+
+				      previousX = setX;
+
+				      break;
+			      }
+		      }
+	      }
+      }
+      if (previousX !== -1) { // Last night part
+      	// Draw night from previousX to width
+	      var grV = context.createLinearGradient(previousX, 0, width, height);
+	      grV.addColorStop(0, 'rgba(169, 169, 169, 0.5)'); // graphColorConfig.bgGradientFrom);
+	      grV.addColorStop(1, 'rgba(211, 211, 211, 0.5)');  // graphColorConfig.bgGradientTo);
+
+	      context.fillStyle = grV;
+	      context.fillRect(previousX, 0, (width - previousX), height);
+      }
 	  }
   };
 

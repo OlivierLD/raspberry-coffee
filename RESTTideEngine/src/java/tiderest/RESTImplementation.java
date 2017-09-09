@@ -13,6 +13,7 @@ import tideengine.*;
 import javax.annotation.Nonnull;
 import java.io.StringReader;
 import java.net.URLDecoder;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -402,6 +403,8 @@ public class RESTImplementation {
 							tideTable.unit = (unitToUse != null ? unitToUse.toString() : ts.getDisplayUnit());
 							tideTable.timeZone = (timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone());
 							tideTable.position = new GeoPoint(ts.getLatitude(), ts.getLongitude());
+							tideTable.fromPrm = fromPrm;
+							tideTable.toPrm = toPrm;
 							Map<String, WhDate> map = new LinkedHashMap<>();
 
 							DURATION_FMT.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
@@ -437,10 +440,12 @@ public class RESTImplementation {
 									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z z");
 									sdf.setTimeZone(TimeZone.getTimeZone((timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())));
 									try {
-										System.out.println(String.format("Calculating tide in %s, from %s to %s",
+										System.out.println(String.format("Calculating tide in %s, from %s (%s) to %s (%s)",
 												URLDecoder.decode(ts.getFullName(), "UTF-8"),
 												sdf.format(now.getTime()),
-												sdf.format(upTo.getTime())));
+												NumberFormat.getInstance().format(now.getTimeInMillis()),
+												sdf.format(upTo.getTime()),
+												NumberFormat.getInstance().format(upTo.getTimeInMillis())));
 									} catch (Exception ex) {
 										ex.printStackTrace();
 									}
@@ -452,6 +457,8 @@ public class RESTImplementation {
 									DATE_FMT.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 									TIME_FMT.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 									now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
+
+
 									while (now.before(upTo)) {
 										double wh = TideUtilities.getWaterHeight(ts, this.tideRequestManager.getConstSpeed(), now);
 										TimeZone.setDefault(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())); // for TS Timezone display
@@ -584,6 +591,8 @@ public class RESTImplementation {
 		String unit;
 		String timeZone;
 		GeoPoint position;
+		String fromPrm;
+		String toPrm;
 		Map<String, WhDate> heights;
 		Hashtable<String, List<DataPoint>> harmonicCurves;
 	}

@@ -9,7 +9,13 @@ import java.util.TimeZone;
 
 public class TimeUtil {
 
-	public TimeUtil() {
+	public static String decHoursToDMS(double decimalHours) {
+		String s = "";
+		int hours = (int)Math.floor(decimalHours);
+		double min = (decimalHours - hours) * 60D;
+		double sec = (min - Math.floor(min)) * 60D;
+		s = String.format("%02d:%02d:%02d", hours, (int)Math.floor(min), (int)Math.round(sec));
+		return s;
 	}
 
 	public static Date getGMT() {
@@ -165,5 +171,7 @@ public class TimeUtil {
 		Date now = new Date();
 		System.out.println("Date:" + now.toString());
 		System.out.println("GTM :" + (new SimpleDateFormat("yyyy MMMMM dd HH:mm:ss 'GMT'").format(getGMT(now))));
+
+		System.out.println("To DMS:" + decHoursToDMS(13.831260480533272));
 	}
 }

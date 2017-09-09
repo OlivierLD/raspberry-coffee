@@ -10,10 +10,12 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import utils.TimeUtil;
 
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -267,6 +269,9 @@ public class RESTImplementation {
 			toCal.setTime(to);
 			Calendar current = Calendar.getInstance(TimeZone.getTimeZone(tzName));
 			current.setTime(from);
+			if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+				System.out.println("Starting SunData calculation at " + current.getTime() + " (" + fromPrm + ")");
+			}
 			do {
 				BodyDataForPos data = getSunDataForDate(pos.getL(), pos.getG(), current);
 				map.put(current.getTimeInMillis(), data);
@@ -325,8 +330,8 @@ public class RESTImplementation {
 		double altitude;
 		double z;
 		double eot;
-		double riseTime;
-		double setTime;
+		long riseTime; // epoch
+		long setTime;  // epoch
 		double riseZ;
 		double setZ;
 
@@ -357,11 +362,11 @@ public class RESTImplementation {
 			this.eot = eot;
 			return this;
 		}
-		public BodyDataForPos riseTime(double riseTime) {
+		public BodyDataForPos riseTime(long riseTime) {
 			this.riseTime = riseTime;
 			return this;
 		}
-		public BodyDataForPos setTime(double setTime) {
+		public BodyDataForPos setTime(long setTime) {
 			this.setTime = setTime;
 			return this;
 		}
@@ -383,7 +388,7 @@ public class RESTImplementation {
 	private BodyDataForPos getSunDataForDate(double lat, double lng, Calendar current) {
 		AstroComputer.setDateTime(current.get(Calendar.YEAR),
 				current.get(Calendar.MONTH) + 1,
-				current.get(Calendar.DAY_OF_MONTH),
+				current.get(Calendar.DATE),
 				current.get(Calendar.HOUR_OF_DAY),
 				current.get(Calendar.MINUTE),
 				current.get(Calendar.SECOND));
@@ -399,6 +404,40 @@ public class RESTImplementation {
 		double sunGHA = AstroComputer.getSunGHA();
 
 		double[] sunRiseAndSet = AstroComputer.sunRiseAndSet(lat, lng);
+		Calendar dayOne = Calendar.getInstance(current.getTimeZone()); // TimeZone.getTimeZone("Etc/UTC"));
+		// 00:00:00
+		dayOne.set(current.get(Calendar.YEAR), current.get(Calendar.MONTH), current.get(Calendar.DATE), 0, 0, 0);
+		dayOne.set(Calendar.MILLISECOND, 0);
+		Calendar rise = (Calendar)dayOne.clone();
+		Calendar set = (Calendar)dayOne.clone();
+
+		rise.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); // current.getTimeZone());
+		set.setTimeZone(TimeZone.getTimeZone("Etc/UTC")); // current.getTimeZone());
+
+		String riseToDMS = TimeUtil.decHoursToDMS(sunRiseAndSet[AstroComputer.UTC_RISE_IDX]);
+		try {
+			rise.add(Calendar.HOUR_OF_DAY, Integer.parseInt(riseToDMS.split(":")[0]));
+			rise.add(Calendar.MINUTE, Integer.parseInt(riseToDMS.split(":")[1]));
+			rise.add(Calendar.SECOND, Integer.parseInt(riseToDMS.split(":")[2]));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		String setToDMS = TimeUtil.decHoursToDMS(sunRiseAndSet[AstroComputer.UTC_SET_IDX]);
+		try {
+			set.add(Calendar.HOUR_OF_DAY, Integer.parseInt(setToDMS.split(":")[0]));
+			set.add(Calendar.MINUTE, Integer.parseInt(setToDMS.split(":")[1]));
+			set.add(Calendar.SECOND, Integer.parseInt(setToDMS.split(":")[2]));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+			System.out.println("Day origin:" + dayOne.getTime() + " (" + NumberFormat.getInstance().format(dayOne.getTimeInMillis()) + ")");
+			System.out.println(
+					"Rise:" + rise.getTime() + " (" + NumberFormat.getInstance().format(sunRiseAndSet[AstroComputer.UTC_RISE_IDX]) +
+							"), Set:" + set.getTime() + " (" + NumberFormat.getInstance().format(sunRiseAndSet[AstroComputer.UTC_SET_IDX]) + ")");
+
+			System.out.println("Rise Time Zone:" + rise.getTimeZone());
+		}
 		// Get Equation of time, used to calculate solar time.
 		double eot = AstroComputer.getSunMeridianPassageTime(lat, lng); // in decimal hours
 
@@ -408,8 +447,8 @@ public class RESTImplementation {
 				.altitude(he)
 				.z(z)
 				.eot(eot)
-				.riseTime(sunRiseAndSet[AstroComputer.UTC_RISE_IDX])
-				.setTime(sunRiseAndSet[AstroComputer.UTC_SET_IDX])
+				.riseTime(rise.getTimeInMillis())
+				.setTime(set.getTimeInMillis())
 				.riseZ(sunRiseAndSet[AstroComputer.RISE_Z_IDX])
 				.setZ(sunRiseAndSet[AstroComputer.SET_Z_IDX]);
 	}
