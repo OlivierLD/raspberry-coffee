@@ -142,6 +142,8 @@
 					latitude: parseFloat(json.position.latitude),
 					longitude: parseFloat(json.position.longitude)
 				};
+				tideData.timeZone = tzName;
+				tideData.position = position;
 				// Invoke daylight service
 				var from = new Date(parseInt(fromDate));
 				var to = new Date(parseInt(toDate));

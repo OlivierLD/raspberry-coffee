@@ -225,14 +225,12 @@ function TideGraph(cName,       // Canvas Name
 //    console.log("Mouse: x=" + x + ", y=" + y);
 
       var idx = xScale !== 0 ? Math.round(x / xScale) : 0;
-      if (gData.curve !== undefined && idx < gData.curve.length) { // graphData.length) {
+      if (gData.curve !== undefined && idx < gData.curve.length) {
         var str = [];
         try { 
-//        str.push("Pos:" + idx);
-          var date = new Date(parseInt(gData.curve[idx].getX()));
-	        str.push(date.format('Y-M-d')); // Format the date
-	        str.push(date.format('H:i X')); // Format the date
-          str.push(gData.curve[idx].getY().toFixed(2) + " " + gData.unit);
+	        str.push(gData.curve[idx].getY().date);
+	        str.push(gData.curve[idx].getY().time + " " + gData.curve[idx].getY().tz);
+          str.push(gData.curve[idx].getY().wh.toFixed(2) + " " + gData.unit);
   //      console.log("Bubble:" + str);
         } catch (err) { console.log(JSON.stringify(err)); }
         
@@ -292,7 +290,7 @@ function TideGraph(cName,       // Canvas Name
   this.minY = function(data) {
     var min = Number.MAX_VALUE;
     for (var i=0; i<data.length; i++) {
-      min = Math.min(min, data[i].getY());
+      min = Math.min(min, data[i].getY().wh);
     }
     return min;
   };
@@ -308,7 +306,7 @@ function TideGraph(cName,       // Canvas Name
   this.maxY = function(data) {
     var max = Number.MIN_VALUE;
     for (var i=0; i<data.length; i++) {
-      max = Math.max(max, data[i].getY());
+      max = Math.max(max, data[i].getY().wh);
     }
     return max;
   };
@@ -435,7 +433,9 @@ function TideGraph(cName,       // Canvas Name
       context.rotate(-Math.PI / 2);
       context.font = "bold 10px " + graphColorConfig.font;
       context.fillStyle = graphColorConfig.verticalGridTextColor;
-      var str = new Date(parseInt(data.curve[i].getX())).format('H:i X'); // i.toString();
+
+//    var str = new Date(parseInt(data.curve[i].getX())).format('H:i X'); // i.toString();
+	    var str = data.curve[i].getY().time + " " + data.curve[i].getY().tz; // i.toString();
       var len = context.measureText(str).width;
       context.fillText(str, 2, -1); //i * xScale, cHeight - (len));
       context.restore();
@@ -456,10 +456,10 @@ function TideGraph(cName,       // Canvas Name
       context.strokeStyle = "red"; // graphColorConfig.rawDataLineColor;
   
       var previousPoint = data.curve[0];
-      context.moveTo((0 - minx) * xScale, height - (data.curve[0].getY() - miny) * yScale);
+      context.moveTo((0 - minx) * xScale, height - (data.curve[0].getY().wh - miny) * yScale);
       for (var i=1; i<data.curve.length; i++) {
     //  context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
-        context.lineTo((i - minx) * xScale, height - (data.curve[i].getY() - miny) * yScale);
+        context.lineTo((i - minx) * xScale, height - (data.curve[i].getY().wh - miny) * yScale);
     //  context.stroke();
         previousPoint = data.curve[i];
       }
@@ -486,7 +486,7 @@ function TideGraph(cName,       // Canvas Name
     }
 
 	  if (data.harmonics !== undefined) {
-		  console.log("Plotting Harmonics: " + data.harmonics.length + " curve(s)");
+//	  console.log("Plotting Harmonics: " + data.harmonics.length + " curve(s)");
 		  context.lineWidth = 1;
 		  context.strokeStyle = "black";
 
@@ -495,7 +495,7 @@ function TideGraph(cName,       // Canvas Name
       }
 		  for (var i = 0; i < data.harmonics.length; i++) {
 			  context.strokeStyle = harmonicColors[i];
-			  console.log("plotting " + data.harmonics[i].name);
+//		  console.log("plotting " + data.harmonics[i].name);
 			  var tupleArray = data.harmonics[i].data;
 			  context.beginPath();
 			  context.moveTo((0 - minx) * xScale, height - (tupleArray[0].getY() - miny) * yScale);

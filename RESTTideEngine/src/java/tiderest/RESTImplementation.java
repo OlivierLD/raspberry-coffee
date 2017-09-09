@@ -34,7 +34,11 @@ public class RESTImplementation {
 
 	private TideRequestManager tideRequestManager;
 
-	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private final static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private final static SimpleDateFormat TZ_ABR = new SimpleDateFormat("z");
+	private final static SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd");
+	private final static SimpleDateFormat TIME_FMT = new SimpleDateFormat("HH:mm");
+
 
 	public RESTImplementation(@Nonnull TideRequestManager restRequestManager) {
 
@@ -398,7 +402,7 @@ public class RESTImplementation {
 							tideTable.unit = (unitToUse != null ? unitToUse.toString() : ts.getDisplayUnit());
 							tideTable.timeZone = (timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone());
 							tideTable.position = new GeoPoint(ts.getLatitude(), ts.getLongitude());
-							Map<String, Double> map = new LinkedHashMap<>();
+							Map<String, WhDate> map = new LinkedHashMap<>();
 
 							DURATION_FMT.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 							try {
@@ -444,13 +448,22 @@ public class RESTImplementation {
 
 								ts = BackEndTideComputer.findTideStation(stationFullName, now.get(Calendar.YEAR));
 								if (ts != null) {
+									TZ_ABR.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
+									DATE_FMT.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
+									TIME_FMT.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 									now.setTimeZone(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone()));
 									while (now.before(upTo)) {
 										double wh = TideUtilities.getWaterHeight(ts, this.tideRequestManager.getConstSpeed(), now);
 										TimeZone.setDefault(TimeZone.getTimeZone(timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())); // for TS Timezone display
 	//							  System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + stationName + " at " + cal.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
 	//								map.put(now.getTime().toString(), wh * unitSwitcher(ts, unitToUse));
-										map.put(String.valueOf(now.getTimeInMillis()), wh * unitSwitcher(ts, unitToUse));
+										Date d = now.getTime();
+										map.put(String.valueOf(now.getTimeInMillis()),
+												new WhDate()
+														.wh(wh * unitSwitcher(ts, unitToUse))
+														.tz(TZ_ABR.format(d))
+														.date(DATE_FMT.format(d))
+														.time(TIME_FMT.format(d)));
 										now.add(Calendar.MINUTE, step);
 									}
 								} else {
@@ -571,7 +584,7 @@ public class RESTImplementation {
 		String unit;
 		String timeZone;
 		GeoPoint position;
-		Map<String, Double> heights;
+		Map<String, WhDate> heights;
 		Hashtable<String, List<DataPoint>> harmonicCurves;
 	}
 
@@ -617,6 +630,31 @@ public class RESTImplementation {
 			this.value = value;
 			return this;
 		}
+	}
+
+	public static class WhDate {
+		double wh;
+		String date;
+		String time;
+		String tz;
+
+		public WhDate wh(double wh) {
+			this.wh = wh;
+			return this;
+		}
+		public WhDate date(String date) {
+			this.date = date;
+			return this;
+		}
+		public WhDate time(String time) {
+			this.time = time;
+			return this;
+		}
+		public WhDate tz(String tz) {
+			this.tz = tz;
+			return this;
+		}
+
 	}
 
 	public class DataPoint {
