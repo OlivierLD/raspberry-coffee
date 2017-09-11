@@ -94,7 +94,7 @@ public class TidePublisher {
 				int exitStatus = p.waitFor();
 				System.out.println("Script completed, status " + exitStatus);
 				System.out.println(String.format("See %s.pdf", radical));
-				cmd = String.format("mv %s.pdf .", radical);
+				cmd = String.format("mv %s.pdf web", radical);
 				p = Runtime.getRuntime().exec(cmd);
 				exitStatus = p.waitFor();
 				System.out.println("Command completed, status " + exitStatus);

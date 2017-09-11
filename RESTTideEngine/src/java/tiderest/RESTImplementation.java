@@ -9,6 +9,7 @@ import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import tideengine.*;
+import tideengine.publisher.TidePublisher;
 
 import javax.annotation.Nonnull;
 import java.io.StringReader;
@@ -88,6 +89,11 @@ public class RESTImplementation {
 					"/tide-stations/{station-name}/wh",
 					this::getWaterHeight,
 					"Creates a Water Height request for the {station}. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."),
+			new Operation(
+					"POST",
+					"/publish/{station-name}",
+					this::publishTideTable,
+					"Generates tide table document (pdf)"),
 			new Operation(
 					"POST",
 					"/tide-stations/{station-name}/wh/details",
@@ -575,6 +581,86 @@ public class RESTImplementation {
 	}
 
 	/**
+	 * Publish (generate pdf) for a station.
+	 * Supports a payload in the body, in json format:
+	 * <pre>
+	 * {
+	 *   "startMonth": 0,
+	 *   "startYear": 2017,
+	 *   "nb": 1,
+	 *   "quantity": "YEAR" | "MONTH"
+	 * }
+	 * </pre>
+	 * @param request
+	 * @return
+	 */
+	private Response publishTideTable(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		String stationFullName = "";
+		boolean proceed = true;
+		if (prmValues.size() == 1) {
+			String param = prmValues.get(0);
+			stationFullName = param;
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("TIDE-0100")
+							.errorMessage("Need tideRequestManager path parameter {station-name}."));
+			return response;
+		}
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				Gson gson = new GsonBuilder().create();
+				StringReader stringReader = new StringReader(payload);
+				String errMess = "";
+				PublishingOptions options;
+				try {
+					options = gson.fromJson(stringReader, PublishingOptions.class);
+					if (options.startMonth > 11 || options.startMonth < 0) {
+						errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [0..11].");
+					}
+					if (options.nb < 1) {
+						errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid number, must be at least 1 ");
+					}
+					if (options.quantity == null) {
+						errMess += ((errMess.length() > 0 ? "\n" : "") + "Quantity must be YEAR on MONTH.");
+					}
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("TIDE-0102")
+									.errorMessage(errMess));
+					return response;
+				}
+				try {
+//				String unescaped = URLDecoder.decode(stationFullName, "UTF-8");
+					String generatedFileName = TidePublisher.publish(stationFullName, options.startMonth, options.startYear, options.nb, (options.quantity.equals(Quantity.MONTH) ? Calendar.MONTH : Calendar.YEAR));
+					response.setPayload(generatedFileName.getBytes());
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("TIDE-0103")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("TIDE-0101")
+							.errorMessage("Required payload not found."));
+			return response;
+		}
+		return response;
+	}
+
+	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
 	 *
 	 * @param request
@@ -624,6 +710,17 @@ public class RESTImplementation {
 		String timezone; // If not the Station timezone
 		int step; // In minutes
 		unit unit; // If not the station unit
+	}
+
+	private enum Quantity {
+	  MONTH, YEAR
+	};
+
+	private static class PublishingOptions {
+		int startMonth;
+		int startYear;
+		int nb;
+		Quantity quantity;
 	}
 
 	private static class NameValuePair<T> {

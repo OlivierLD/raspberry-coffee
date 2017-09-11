@@ -628,6 +628,8 @@ public class HTTPServer {
 			contentType = "application/x-font-woff";
 		} else if (f.endsWith(".wav")) {
 			contentType = "audio/wav";
+		} else if (f.endsWith(".pdf")) {
+			contentType = "application/pdf";
 		} else if (f.endsWith(".ttf")) {
 			contentType = "application/x-font-ttf";
 		}
