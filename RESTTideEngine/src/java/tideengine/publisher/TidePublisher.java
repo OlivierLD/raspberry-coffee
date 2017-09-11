@@ -25,14 +25,14 @@ public class TidePublisher {
 	 * @param utu        Unit to use
 	 * @param sPrm       Special parameters
 	 */
-	public static void publish(TideStation ts, String timeZoneId, int sm, int sy, int nb, int q, String utu, TideForOneMonth.SpecialPrm sPrm) {
+	public static String publish(TideStation ts, String timeZoneId, int sm, int sy, int nb, int q, String utu, TideForOneMonth.SpecialPrm sPrm)
+	throws Exception {
 
 		final TideForOneMonth.SpecialPrm specialBGPrm = sPrm;
 
 		System.out.println("Starting month:" + sm + ", year:" + sy);
 		System.out.println("For " + nb + " " + (q == Calendar.MONTH ? "month(s)" : "year(s)"));
 
-		Thread printThread = new Thread(() -> {
 			GregorianCalendar start = new GregorianCalendar(sy, sm, 1);
 			GregorianCalendar end = (GregorianCalendar) start.clone();
 			end.add(q, nb);
@@ -44,11 +44,11 @@ public class TidePublisher {
 				out = new PrintStream(new FileOutputStream(tempFile));
 				radical = tempFile.getAbsolutePath();
 				radical = radical.substring(0, radical.lastIndexOf(".xml"));
-//            System.out.println("Writing data in " + tempFile.getAbsolutePath());
+//      System.out.println("Writing data in " + tempFile.getAbsolutePath());
 			} catch (Exception ex) {
 				System.err.println("Error creating temp file");
 				ex.printStackTrace();
-				return;
+				throw ex;
 			}
 
 			try {
@@ -94,38 +94,20 @@ public class TidePublisher {
 				int exitStatus = p.waitFor();
 				System.out.println("Script completed, status " + exitStatus);
 				System.out.println(String.format("See %s.pdf", radical));
+				cmd = String.format("mv %s.pdf .", radical);
+				p = Runtime.getRuntime().exec(cmd);
+				exitStatus = p.waitFor();
+				System.out.println("Command completed, status " + exitStatus);
+
+				return "." + radical.substring(radical.lastIndexOf(File.separator)) + ".pdf";
+
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				throw ex;
 			}
-			// Also see // https://mvnrepository.com/artifact/org.apache.xmlgraphics/fop, but does it stream like the Oracle one?
-//		compile group: 'org.apache.xmlgraphics', name: 'fop', version: '2.2'
-
-			// This should do it:
-//			FOProcessor processor = new FOProcessor();
-//			// set XML input file
-//			processor.setData("c:\\temp\\check_data.xml");
-//			// set XSL input file
-//			processor.setTemplate("c:\\temp\\check.xsl");
-//			// set the output format
-//			processor.setOutputFormat(FOProcessor.FORMAT_PDF);
-//			//set output file
-//			processor.setOutput("c:\\temp\\check.pdf");
-//			// Now we process, have to surround with a try-catch block thou
-//			try
-//			{
-//				// Process !
-//				processor.generate();
-//			}
-//			catch (XDOException e)
-//			{
-//				e.printStackTrace();
-//			}
-
-		});
-		printThread.start();
 	}
 
-	public static void publish(String stationName, int startMonth, int startYear, int nb, int quantity) {
+	public static String publish(String stationName, int startMonth, int startYear, int nb, int quantity)
+	throws Exception {
 		TideStation ts = null;
 		try {
 			Optional<TideStation> optTs = BackEndTideComputer.getStationData()
@@ -133,14 +115,13 @@ public class TidePublisher {
 					.filter(station -> station.getFullName().equals(stationName))
 					.findFirst();
 			if (!optTs.isPresent()) {
-				// TODO Barf
-				System.out.println(String.format("Station [%s] not found.", stationName));
+				throw new Exception(String.format("Station [%s] not found.", stationName));
 			} else {
 				ts = optTs.get();
-				publish(ts, ts.getTimeZone(), startMonth, startYear, nb, quantity, null, null);
+				return publish(ts, ts.getTimeZone(), startMonth, startYear, nb, quantity, null, null);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			throw ex;
 		}
 	}
 
@@ -152,7 +133,8 @@ public class TidePublisher {
 		try {
 			BackEndTideComputer.connect();
 			BackEndTideComputer.setVerbose("true".equals(System.getProperty("tide.verbose", "false")));
-			publish(URLEncoder.encode("Ocean Beach, California", "UTF-8").replace("+", "%20"), Calendar.SEPTEMBER, 2017, 1, Calendar.MONTH);
+			String f = publish(URLEncoder.encode("Ocean Beach, California", "UTF-8").replace("+", "%20"), Calendar.SEPTEMBER, 2017, 1, Calendar.MONTH);
+			System.out.println(String.format("%s generated", f));
 			System.out.println("Done!");
 		} catch (Exception ex) {
 			ex.printStackTrace();
