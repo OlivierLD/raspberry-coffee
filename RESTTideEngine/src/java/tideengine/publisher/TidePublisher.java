@@ -72,7 +72,7 @@ public class TidePublisher {
 								start.get(Calendar.YEAR),
 								start.get(Calendar.MONTH) + 1, // Base: 1
 								ts.getFullName(),
-								utu,
+								(utu == null ? ts.getUnit() : utu),
 								BackEndTideComputer.buildSiteConstSpeed(),
 								TideForOneMonth.XML_FLAVOR,
 								specialBGPrm);

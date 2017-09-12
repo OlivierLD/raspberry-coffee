@@ -632,6 +632,10 @@ public class HTTPServer {
 			contentType = "application/pdf";
 		} else if (f.endsWith(".ttf")) {
 			contentType = "application/x-font-ttf";
+		} else {
+			System.out.println(String.format("Unrecognized file type (content type) for [%s], you might want to add it to " +
+							"%s", f, HTTPServer.class.getName()
+					));
 		}
 		return contentType;
 	}

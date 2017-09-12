@@ -149,6 +149,11 @@ var getTideTable = function(station, at, tz, step, unit, withDetails, nbDays) {
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
 };
 
+var getPublishedDoc = function(station, options) {
+	var url = "/publish/" + encodeURIComponent(station);
+	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+};
+
 var getSunData = function(lat, lng) {
 	var url = "/sun-now";
 	var data = {}; // Payload
@@ -291,6 +296,34 @@ var tideTable = function(station, at, tz, step, unit, withDetails, nbDays, callb
 			}
 		}
 		errManager("Failed to get the station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+var publishTable = function(station, options, callback) {
+	var getData = getPublishedDoc(station, options);
+	getData.done(function(value) {
+		if (callback === undefined) {
+			try {
+				// Do something smart
+				$("#result").html("<pre>" + value + "</pre>");
+			} catch (err) {
+				errManager(err + '\nFor\n' + value);
+			}
+		} else {
+			callback(value);
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+		? message : ' - '));
 	});
 };
 
