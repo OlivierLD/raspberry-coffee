@@ -64,10 +64,10 @@ After a 3-day week-end of work, I was able to produce a tidal graph like that on
 
 This is not finished, but that looks promising... 
 
-### Features (to be)
+### Features
 - Web UI for tidal curves
 - REST APIs for server-side computation
-- Publishing: Server side `pdf` generation
+- Publishing: Server side `pdf` generation, download from your browser
 
 ---
 
