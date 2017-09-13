@@ -312,6 +312,20 @@ public class AstroComputer {
 	public final static int DEC_SUN_IDX = 2;
 	public final static int DEC_MOON_IDX = 3;
 
+	/**
+	 * Returns Altitude and Declination, for Sun and Moon,
+	 * for a given UTC time, at a given location.
+	 *
+	 * @param y year
+	 * @param m month (like Calendar.MONTH + 1, Jan is 1)
+	 * @param d day of the month
+	 * @param h hour of the day
+	 * @param mi minutes
+	 * @param s seconds
+	 * @param lat latitude
+	 * @param lng longitude
+	 * @return an array of 4 doubles. See HE_SUN_IDX, HE_MOON_IDX, DEC_SUN_IDX and DEC_MOON_IDX.
+	 */
 	public static synchronized double[] getSunMoonAltDecl(int y, int m, int d, int h, int mi, int s, double lat, double lng) {
 		double[] values = new double[4];
 		year = y;

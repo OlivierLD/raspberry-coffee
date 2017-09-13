@@ -69,6 +69,11 @@ public class RESTImplementation {
 					"/sun-between-dates",
 					this::getSunDataBetween,
 					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 3 queryString prm : from and to, in DURATION Format, and tz, the timezone name."),
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+					"POST",
+					"/sun-moon-dec-alt",
+					this::getSunMoonDecAlt,
+					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 2 queryString prm : from and to, in DURATION Format."),
 			new Operation( // Example: GET /utc?tz=America%2FNome,America%2FNew_York,Europe%2FParis,Pacific%2FMarquesas
 					"GET",
 					"/utc",
@@ -291,6 +296,118 @@ public class RESTImplementation {
 		}
 	}
 
+	/**
+	 * Computes the Sun and Moon Declination and altitude for a given position, and given time (UTC).
+	 *
+	 * @param request MUST contain a GeoPoint payload (observer's position), and query String prms from (duration format), to (duration format), and tz (timezone name).
+	 * @return
+	 */
+	private Response getSunMoonDecAlt(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		GeoPoint pos = null;
+
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				Gson gson = new GsonBuilder().create();
+				StringReader stringReader = new StringReader(payload);
+				try {
+					pos = gson.fromJson(stringReader, GeoPoint.class);
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("ASTRO-0007")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		}
+		String fromPrm = null, toPrm = null;
+		String tzName = null;
+		Map<String, String> prms = request.getQueryStringParameters();
+		if (prms == null || prms.get("from") == null || prms.get("to") == null || prms.get("tz") == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0008")
+							.errorMessage("Query parameters 'tz', 'from' and 'to' are required."));
+			return response;
+		} else {
+			fromPrm = prms.get("from");
+			toPrm = prms.get("to");
+			tzName = prms.get("tz");
+			try {
+				tzName = URLDecoder.decode(tzName, "UTF-8");
+			} catch (Exception ex) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("ASTRO-0009")
+								.errorMessage(ex.toString()));
+				return response;
+			}
+			if (!Arrays.asList(TimeZone.getAvailableIDs()).contains(tzName)) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("ASTRO-0010")
+								.errorMessage(String.format("Invalid TimeZone: %s", tzName)));
+				return response;
+			}
+		}
+
+		List<SunMoonDecAlt> list = new ArrayList<>();
+		DURATION_FMT.setTimeZone(TimeZone.getTimeZone(tzName));
+		try {
+			Date from = DURATION_FMT.parse(fromPrm);
+			Date to = DURATION_FMT.parse(toPrm);
+			Calendar toCal = Calendar.getInstance(TimeZone.getTimeZone(tzName));
+			toCal.setTime(to);
+			Calendar current = Calendar.getInstance(TimeZone.getTimeZone(tzName));
+			current.setTime(from);
+			if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+				System.out.println("Starting Sun and Moon data calculation at " + current.getTime() + " (" + fromPrm + ")");
+			}
+			do {
+				Calendar utc = (Calendar)current.clone();
+				utc.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+				double[] astroData = AstroComputer.getSunMoonAltDecl(
+						utc.get(Calendar.YEAR),
+						utc.get(Calendar.MONTH) + 1,
+						utc.get(Calendar.DATE),
+						utc.get(Calendar.HOUR),
+						utc.get(Calendar.MINUTE),
+						0, // current.get(Calendar.SECOND),
+						pos.getL(),
+						pos.getG());
+
+				SunMoonDecAlt data = new SunMoonDecAlt()
+						.epoch(current.getTimeInMillis())
+						.lat(pos.getL())
+						.lng(pos.getG())
+						.sunAlt(astroData[AstroComputer.HE_SUN_IDX])
+						.sunDecl(astroData[AstroComputer.DEC_SUN_IDX])
+						.moonAlt(astroData[AstroComputer.HE_MOON_IDX])
+						.moonDecl(astroData[AstroComputer.DEC_MOON_IDX]);
+				list.add(data);
+				current.add(Calendar.MINUTE , 5); // Hard coded for now, 5 minutes interval.
+			} while (current.before(toCal));
+			String content = new Gson().toJson(list);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+			return response;
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0006")
+							.errorMessage(ex.toString()));
+			return response;
+		}
+	}
+
 	private Response emptyOperation(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		return response;
@@ -316,6 +433,51 @@ public class RESTImplementation {
 		}
 		public DateHolder others(List<String> others) {
 			this.others = others;
+			return this;
+		}
+	}
+
+	public static class SunMoonDecAlt {
+		long epoch;
+		double lat;
+		double lng;
+		double sunDecl;
+		double moonDecl;
+		double sunAlt;
+		double moonAlt;
+
+		public SunMoonDecAlt epoch(long epoch) {
+			this.epoch = epoch;
+			return this;
+		}
+
+		public SunMoonDecAlt lat(double lat) {
+			this.lat = lat;
+			return this;
+		}
+
+		public SunMoonDecAlt lng(double lng) {
+			this.lng = lng;
+			return this;
+		}
+
+		public SunMoonDecAlt sunDecl(double sunDecl) {
+			this.sunDecl = sunDecl;
+			return this;
+		}
+
+		public SunMoonDecAlt moonDecl(double moonDecl) {
+			this.moonDecl = moonDecl;
+			return this;
+		}
+
+		public SunMoonDecAlt sunAlt(double sunAlt) {
+			this.sunAlt = sunAlt;
+			return this;
+		}
+
+		public SunMoonDecAlt moonAlt(double moonAlt) {
+			this.moonAlt = moonAlt;
 			return this;
 		}
 	}

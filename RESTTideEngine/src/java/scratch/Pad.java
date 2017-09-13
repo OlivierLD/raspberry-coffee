@@ -32,6 +32,10 @@ public class Pad {
 				cal.getTimeZone().getID()));
 
 		cal.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+		epoch = 1_505_312_100_000L;
+		cal.setTimeInMillis(epoch);
+		SDF.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+		System.out.println(String.format("SunSet: %s, %s", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis())));
 		System.out.println(String.format("%s, %s", SDF.format(cal.getTime()), NumberFormat.getInstance().format(cal.getTimeInMillis())));
 
 		System.out.println(String.format("%04d-%02d-%02d %02d:%02d:%02d, epoch %s, tz %s",
