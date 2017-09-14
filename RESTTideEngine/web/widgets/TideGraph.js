@@ -638,19 +638,21 @@ function TideGraph(cName,       // Canvas Name
 		  context.lineWidth = 1;
 		  context.strokeStyle = "black";
 
-		  context.beginPath();
-		  context.moveTo(0, (height / 2));
-		  context.lineTo(width, (height / 2));
-		  context.stroke();
-		  context.closePath();
+		  // Zero = base height: height - (data.base - miny) * yScale
+		  var zero = height - (data.base - miny) * yScale;
+		  // context.beginPath();
+		  // context.moveTo(0, zero);
+		  // context.lineTo(width, zero);
+		  // context.stroke();
+		  // context.closePath();
 
 		  context.beginPath();
-		  context.moveTo((0 - minx) * xScale, (height / 2) - ((height / 2) * (altitudes[0].sunAlt / 90)));
+		  context.moveTo((0 - minx) * xScale, zero - ((height / 2) * (altitudes[0].sunAlt / 90)));
 
 		  altitudes.forEach(function(el, idx) {
 			  var alt = el.sunAlt;
 			  var _y = (height / 2) * (alt / 90);
-			  context.lineTo((idx - minx) * xScale, (height / 2) - _y);
+			  context.lineTo((idx - minx) * xScale, zero - _y);
 		  });
 		  context.stroke();
 		  context.closePath();
