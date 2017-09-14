@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Tide curve</title>
+	<title>Tide Publication</title>
 	<link rel="icon" type="image/jpg" href="icons/palm.04.jpg">
 	<!--meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /-->
 	<link id="page-ux" rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
@@ -50,8 +50,7 @@
 
 		var dataManager = function(value) { // Callback when tide data are ready
 			console.log('Received the file name %s', value);
-			$("#doc-url").prop('href', value);
-			$("#doc-url").text('Here');
+			$("#doc-url").html("<a href='" + value + "' target='pdf'>Here</a>!");
 		};
 
 		var getStarted = function() {
@@ -112,7 +111,7 @@
 	<button id="publish" disabled
 	        onclick="getStarted(); publishTable($('#station-list').val(), { startYear: parseInt($('#year').val()), startMonth: parseInt($('#month').val()), nb: parseInt($('#nb').val()), quantity: $('#quantity').val() }, dataManager);">Publish</button>
 	<hr/>
-    Your document is <a id="doc-url" href="" target="pdf">...</a>
+    Your document is <span id="doc-url">...</span>
   <hr/>
 	<!-- Tabs -->
 	<div style="margin-bottom: 5px;">
