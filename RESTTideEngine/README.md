@@ -139,4 +139,13 @@ Using Delta-T:68.803300
 ```
 - From a browser, access `http://host:9999/web/index.html`, where`host` is the name or IP of the machine where the server runs.
 
+![Ocean Beach, California](./docimg/ocean.beach.png)
+
+Visible on the diagram above:
+- Tide at `Ocean Beach, California` for one day
+- Day light
+- Harmonic coefficients
+- Sun and Moon Altitude
+- Current time (orange vertical line)
+
 ---  
