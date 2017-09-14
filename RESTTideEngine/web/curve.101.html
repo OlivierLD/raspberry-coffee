@@ -104,14 +104,23 @@
 			tideGraph.setSunData(value);
 		};
 
+		var sunMoonReceiver = function(value) {
+//		console.log("Received sunMooon ", value);
+			// Manage Sun data here
+			tideGraph.setAltitudes(value);
+		};
+
 		/*
-		 * TODO moon phases
+		 * TODO moon phases, sun and moon altitude, moon decl.
 		 * Daylight:
 		 * POST /sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+		 * 		payload { latitude: 37.76661945, longitude: -122.5166988 }
+		 * POST /sun-moon-dec-alt?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
 		 * 		payload { latitude: 37.76661945, longitude: -122.5166988 }
 		 */
 		var dataManager = function(value) { // Callback when tide data are ready
 			tideGraph.unsetSunData();
+			tideGraph.unsetAltitudes();
 //		console.log(value);
 			try {
 				var json = JSON.parse(value);
@@ -152,6 +161,8 @@
 //				// DURATION_FMT is defined in tide.js
 //				getSunData(from.format(DURATION_FMT), to.format(DURATION_FMT), tzName, position, daylightReceiver);
 				getSunData(json.fromPrm, json.toPrm, tzName, position, daylightReceiver);
+
+				getSunMoonCurves(json.fromPrm, json.toPrm, tzName, position, sunMoonReceiver);
 
 				var harmonics;
 				if (json.harmonicCurves !== undefined) {

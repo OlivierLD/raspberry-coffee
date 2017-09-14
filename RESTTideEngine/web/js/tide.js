@@ -103,6 +103,11 @@ var requestDaylightData = function(from, to, tz, pos) {
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 };
 
+var requestSunMoontData= function(from, to, tz, pos) {
+	var url = "/sun-moon-dec-alt?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
+	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
+};
+
 var DURATION_FMT = "Y-m-dTH:i:s";
 /**
  *
@@ -247,6 +252,31 @@ var getSunData = function(from, to, tz, pos, callback) {
 			}
 		}
 		errManager("Failed to get Sun data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+var getSunMoonCurves = function(from, to, tz, pos, callback) {
+	var getData = requestSunMoontData(from, to, tz, pos);
+	getData.done(function(value) {
+		var json = JSON.parse(value);
+		if (callback === undefined) {
+			// Do something smart
+			messManager("Got " + json);
+			$("#result").html("<pre>" + JSON.stringify(json, null, 2) + "</pre>");
+		} else {
+			callback(json);
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed to get Sun & Moon data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 

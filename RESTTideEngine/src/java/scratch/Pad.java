@@ -1,5 +1,7 @@
 package scratch;
 
+import calculation.AstroComputer;
+
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -61,5 +63,16 @@ public class Pad {
 				cal.get(Calendar.SECOND),
 				NumberFormat.getInstance().format(cal.getTimeInMillis()),
 				cal.getTimeZone().getID()));
+
+		double[] astroData = AstroComputer.getSunMoonAltDecl(
+				2017,
+				9,
+				13,
+				18,
+				58,
+				25,
+				38,
+				-122);
+		System.out.println(String.format("hSun: %.02f", astroData[AstroComputer.HE_SUN_IDX]));
 	}
 }

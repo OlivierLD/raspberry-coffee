@@ -372,12 +372,13 @@ public class RESTImplementation {
 			}
 			do {
 				Calendar utc = (Calendar)current.clone();
+				utc.getTime(); // Bug? Needed to apply the new timezone...
 				utc.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 				double[] astroData = AstroComputer.getSunMoonAltDecl(
 						utc.get(Calendar.YEAR),
 						utc.get(Calendar.MONTH) + 1,
-						utc.get(Calendar.DATE),
-						utc.get(Calendar.HOUR),
+						utc.get(Calendar.DAY_OF_MONTH),
+						utc.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
 						utc.get(Calendar.MINUTE),
 						0, // current.get(Calendar.SECOND),
 						pos.getL(),
@@ -392,6 +393,16 @@ public class RESTImplementation {
 						.moonAlt(astroData[AstroComputer.HE_MOON_IDX])
 						.moonDecl(astroData[AstroComputer.DEC_MOON_IDX]);
 				list.add(data);
+				if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+					System.out.println(String.format("%04d-%02d-%02d %02d:%02d:%02d, %s, hSun: %.02f",
+							utc.get(Calendar.YEAR),
+							utc.get(Calendar.MONTH) + 1,
+							utc.get(Calendar.DATE),
+							utc.get(Calendar.HOUR_OF_DAY),
+							utc.get(Calendar.MINUTE),
+							utc.get(Calendar.SECOND),
+							utc.getTime(), astroData[AstroComputer.HE_SUN_IDX]));
+				}
 				current.add(Calendar.MINUTE , 5); // Hard coded for now, 5 minutes interval.
 			} while (current.before(toCal));
 			String content = new Gson().toJson(list);

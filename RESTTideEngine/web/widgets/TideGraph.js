@@ -170,6 +170,7 @@ function TideGraph(cName,       // Canvas Name
   var plotX;
   var harmonicColors = [];
   var sunRiseSet = undefined;
+  var altitudes = undefined;
 
   this.setSunData = function(values) {
   	sunRiseSet = values;
@@ -177,6 +178,14 @@ function TideGraph(cName,       // Canvas Name
 
 	this.unsetSunData = function() {
 		sunRiseSet = undefined;
+	};
+
+	this.setAltitudes = function(values) {
+		altitudes = values;
+	};
+
+	this.unsetAltitudes = function() {
+		altitudes = undefined;
 	};
 
 	var initHarmonicColors = function() {
@@ -536,7 +545,6 @@ function TideGraph(cName,       // Canvas Name
 			  }
 			  context.stroke();
 			  context.closePath();
-			  console.log();
 		  }
 	  }
 
@@ -614,6 +622,38 @@ function TideGraph(cName,       // Canvas Name
 	      context.fillStyle = grV;
 	      context.fillRect(previousX, 0, (width - previousX), height);
       }
+	  }
+
+	  /*
+	   * Sun and Moon altitudes (and more)
+	   */
+	  if (altitudes !== undefined) {
+			// console.log("Altitudes! %d elements", altitudes.length);
+			// var min = 0, max = 0;
+			// altitudes.forEach(function(el, idx) {
+			// 	min = Math.min(min, el.sunAlt);
+			// 	max = Math.max(max, el.sunAlt);
+			// });
+			// console.log("Min: %f, Max: %f", min, max);
+		  context.lineWidth = 1;
+		  context.strokeStyle = "black";
+
+		  context.beginPath();
+		  context.moveTo(0, (height / 2));
+		  context.lineTo(width, (height / 2));
+		  context.stroke();
+		  context.closePath();
+
+		  context.beginPath();
+		  context.moveTo((0 - minx) * xScale, (height / 2) - ((height / 2) * (altitudes[0].sunAlt / 90)));
+
+		  altitudes.forEach(function(el, idx) {
+			  var alt = el.sunAlt;
+			  var _y = (height / 2) * (alt / 90);
+			  context.lineTo((idx - minx) * xScale, (height / 2) - _y);
+		  });
+		  context.stroke();
+		  context.closePath();
 	  }
   };
 
