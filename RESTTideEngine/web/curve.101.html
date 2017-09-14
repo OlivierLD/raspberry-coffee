@@ -219,6 +219,10 @@
 		<canvas id="tideCanvas" style="height: 400px; width: 100%;" title="Tide Curve"></canvas>
 	</div>
 
+	<div style="display: none;">
+		<img src="images/moon.png" id="moon-png"/>
+		<img src="images/sun.png" id="sun-png"/>
+	</div>
 	<hr/>
 	Starting <select id="year" onchange="populateDays();"></select> <select id="month" onchange="populateDays();"></select> <select id="day"></select>
 	<button id="draw-curve" disabled onclick="tideTable($('#station-list').val(), { year: parseInt($('#year').val()), month: parseInt($('#month').val()), day: parseInt($('#day').val()) }, '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
