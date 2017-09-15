@@ -171,6 +171,7 @@ function TideGraph(cName,       // Canvas Name
   var harmonicColors = [];
   var sunRiseSet = undefined;
   var altitudes = undefined;
+  var table = undefined;
 
   this.setSunData = function(values) {
   	sunRiseSet = values;
@@ -184,8 +185,16 @@ function TideGraph(cName,       // Canvas Name
 		altitudes = values;
 	};
 
+	this.setTable = function(values) {
+		table = values;
+	};
+
 	this.unsetAltitudes = function() {
 		altitudes = undefined;
+	};
+
+	this.unsetTable = function() {
+		table = undefined;
 	};
 
 	var initHarmonicColors = function() {
@@ -254,7 +263,7 @@ function TideGraph(cName,       // Canvas Name
         
   //    context.fillStyle = '#000';
   //    context.fillRect(0, 0, w, h);
-        instance.drawGraph(cName, gData, plotX);
+        instance.drawGraph(cName, gData, plotX, table);
         var tooltipW = 100, nblines = str.length;
         context.fillStyle = graphColorConfig.tooltipColor;
 //      context.fillStyle = 'yellow';
@@ -364,10 +373,11 @@ function TideGraph(cName,       // Canvas Name
 	 * @param data
 	 * @param idx
 	 */
-  this.drawGraph = function(displayCanvasName, data, idx) {
+  this.drawGraph = function(displayCanvasName, data, idx, table) {
 
 	  gData = data;
 	  plotX = idx;
+	  instance.setTable(table);
 
     if (reloadColor) {
       // In case the CSS has changed, dynamically.
@@ -681,6 +691,20 @@ function TideGraph(cName,       // Canvas Name
 		  });
 		  context.stroke();
 		  context.closePath();
+	  }
+	  if (table !== undefined) {
+	  	// Display table
+		  context.beginPath();
+		  context.save();
+		  context.font = "bold 20px Courier New"; // + graphColorConfig.font;
+		  context.fillStyle = graphColorConfig.horizontalGridTextColor;
+		  table.forEach(function(line, idx) {
+		  	var str = line.type + " : " + line.formattedDate + ", " + line.value.toFixed(2) + " " + line.unit;
+		  	context.fillText(str, 20, 30 + (idx * 21));
+		  });
+		  context.restore();
+		  context.closePath();
+
 	  }
   };
 

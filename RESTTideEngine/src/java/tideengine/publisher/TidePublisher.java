@@ -3,6 +3,7 @@ package tideengine.publisher;
 import calc.GeomUtil;
 import tideengine.BackEndTideComputer;
 import tideengine.TideStation;
+import tideengine.TideUtilities;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,10 +26,10 @@ public class TidePublisher {
 	 * @param utu        Unit to use
 	 * @param sPrm       Special parameters
 	 */
-	public static String publish(TideStation ts, String timeZoneId, int sm, int sy, int nb, int q, String utu, TideForOneMonth.SpecialPrm sPrm)
+	public static String publish(TideStation ts, String timeZoneId, int sm, int sy, int nb, int q, String utu, TideUtilities.SpecialPrm sPrm)
 	throws Exception {
 
-		final TideForOneMonth.SpecialPrm specialBGPrm = sPrm;
+		final TideUtilities.SpecialPrm specialBGPrm = sPrm;
 
 		System.out.println("Starting month:" + sm + ", year:" + sy);
 		System.out.println("For " + nb + " " + (q == Calendar.MONTH ? "month(s)" : "year(s)"));

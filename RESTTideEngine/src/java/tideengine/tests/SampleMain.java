@@ -5,7 +5,9 @@ import tideengine.BackEndTideComputer;
 import tideengine.Coefficient;
 import tideengine.TideStation;
 import tideengine.TideUtilities;
+import tideengine.TideUtilities.TimedValue;
 
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -34,22 +36,27 @@ public class SampleMain {
 				Calendar now = GregorianCalendar.getInstance();
 				String location = null;
 				if (true) {
-					location = "Port Townsend";
+					location = URLEncoder.encode("Port Townsend", "UTF-8").replace("+", "%20");
 					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
-					now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
 					if (ts != null) {
-						if (true) {
-							double[] mm = TideUtilities.getMinMaxWH(ts, constSpeed, now);
-							System.out.println("At " + location + " in " + now.get(Calendar.YEAR) + ", min : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MIN_POS]) + " " + ts.getUnit() + ", max : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MAX_POS]) + " " + ts.getDisplayUnit());
+						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
+						if (ts != null) {
+							if (true) {
+								double[] mm = TideUtilities.getMinMaxWH(ts, constSpeed, now);
+								System.out.println("At " + location + " in " + now.get(Calendar.YEAR) + ", min : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MIN_POS]) + " " + ts.getUnit() + ", max : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MAX_POS]) + " " + ts.getDisplayUnit());
+							}
+							double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
+							System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
+							if (false && ts.isTideStation())
+								System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(TideUtilities.getWaterHeightIn(wh, ts, TideStation.METERS)) + " " + TideStation.METERS);
 						}
-						double wh = TideUtilities.getWaterHeight(ts, constSpeed, now);
-						System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
-						if (false && ts.isTideStation())
-							System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(TideUtilities.getWaterHeightIn(wh, ts, TideStation.METERS)) + " " + TideStation.METERS);
+					} else {
+						System.out.println(String.format("%s not found :(", location));
+
 					}
 				}
 				if (true) {
-					location = "Fare Ute Point";
+					location = URLEncoder.encode("Fare Ute Point", "UTF-8").replace("+", "%20");
 					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
@@ -57,7 +64,7 @@ public class SampleMain {
 						System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
 					}
 
-					location = "Oyster Point Marina, San Francisco Bay, California";
+					location = URLEncoder.encode("Oyster Point Marina, San Francisco Bay, California", "UTF-8").replace("+", "%20");
 					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
@@ -65,7 +72,7 @@ public class SampleMain {
 						System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
 					}
 
-					location = "Shediac Bay, New Brunswick";
+					location = URLEncoder.encode("Shediac Bay, New Brunswick", "UTF-8").replace("+", "%20");
 					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
@@ -74,7 +81,7 @@ public class SampleMain {
 					} else
 						System.out.println("-- " + location + " not found...");
 
-					location = "Alcatraz (North Point)";
+					location = URLEncoder.encode("Alcatraz (North Point)", "UTF-8").replace("+", "%20");
 					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
@@ -82,7 +89,7 @@ public class SampleMain {
 						System.out.println((ts.isTideStation() ? "Water Height" : "Current Speed") + " in " + location + " at " + now.getTime().toString() + " : " + TideUtilities.DF22PLUS.format(wh) + " " + ts.getDisplayUnit());
 					}
 
-					location = "Cape Cod Canal, Massachusetts Current";
+					location = URLEncoder.encode("Cape Cod Canal, Massachusetts Current", "UTF-8").replace("+", "%20");
 					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 						now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
@@ -91,7 +98,7 @@ public class SampleMain {
 					}
 
 					// Oyster Point for today (every 30 minutes)
-					location = "Oyster Point Marina";
+					location = URLEncoder.encode("Oyster Point Marina", "UTF-8").replace("+", "%20");
 					ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 					if (ts != null) {
 //          TimeZone tz = TimeZone.getDefault();
@@ -233,7 +240,7 @@ public class SampleMain {
 					}
 				}
 				// Kodiak for today (every 30 minutes)
-				location = "Kodiak, Women's Bay, Alaska";
+				location = URLEncoder.encode("Kodiak, Women's Bay, Alaska", "UTF-8").replace("+", "%20");
 				ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
 
 				if (true) {
@@ -360,39 +367,32 @@ public class SampleMain {
 //      else
 //        System.out.println(location + " not found...");
 			}
+			if (true) {
+				List<Coefficient> constSpeed = BackEndTideComputer.buildSiteConstSpeed();
+				// Tide table for one day:
+				Calendar now = GregorianCalendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
+				String location = null;
+				if (true) {
+					location = URLEncoder.encode("Ocean Beach, California", "UTF-8").replace("+", "%20");
+					TideStation ts = BackEndTideComputer.findTideStation(location, now.get(Calendar.YEAR));
+					now.setTimeZone(TimeZone.getTimeZone(ts.getTimeZone()));
+					if (ts != null) {
+						if (true) {
+							double[] mm = TideUtilities.getMinMaxWH(ts, constSpeed, now);
+							System.out.println("At " + location + " on " + now.getTime() + ", min : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MIN_POS]) + " " + ts.getUnit() + ", max : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MAX_POS]) + " " + ts.getDisplayUnit());
+							System.out.println("------------");
+						}
+						List<TideUtilities.TimedValue> table = TideUtilities.getTideTableForOneDay(ts, constSpeed, now, null);
+
+						for (TimedValue tv : table) {
+							System.out.println(tv.getType() + " " + tv.getCalendar().getTime() + " : " + TideUtilities.DF22PLUS.format(tv.getValue()) + " " + ts.getDisplayUnit());
+						}
+
+						System.out.println("Done");
+					}
+				}
+			}
 			BackEndTideComputer.disconnect();
-		}
-	}
-
-	private static class TimedValue implements Comparable<TimedValue> {
-		private Calendar cal;
-		private double value;
-		private String type = "";
-
-		public TimedValue(String type, Calendar cal, double d) {
-			this.type = type;
-			this.cal = cal;
-			this.value = d;
-		}
-
-		public int compareTo(TimedValue tv) {
-			return this.cal.compareTo(tv.getCalendar());
-		}
-
-		public Calendar getCalendar() {
-			return cal;
-		}
-
-		public double getValue() {
-			return value;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public boolean equals(Object o) {
-			return (o instanceof TimedValue && this.compareTo((TimedValue) o) == 0);
 		}
 	}
 }

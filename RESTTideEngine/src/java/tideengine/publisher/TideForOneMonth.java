@@ -11,7 +11,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+import tideengine.TideUtilities.TimedValue;
+import tideengine.TideUtilities.SpecialPrm;
 
 /**
  * Tide Publisher
@@ -389,81 +390,6 @@ public class TideForOneMonth {
 
 		Collections.sort(timeAL);
 		return timeAL;
-	}
-
-	public static class TimedValue implements Comparable<TimedValue> {
-		private Calendar cal;
-		private double value;
-		private String type = "";
-
-		public TimedValue(String type, Calendar cal, double d) {
-			this.type = type;
-			this.cal = cal;
-			this.value = d;
-		}
-
-		public int compareTo(TimedValue tv) {
-			return this.cal.compareTo(tv.getCalendar());
-		}
-
-		public Calendar getCalendar() {
-			return cal;
-		}
-
-		public double getValue() {
-			return value;
-		}
-
-		public String getType() {
-			return type;
-		}
-	}
-
-	public static class SpecialPrm {
-		private int tideType;
-		private int fromHour;
-		private int toHour;
-		private int[] weekdays;
-
-		public void setTideType(int tideType)
-		{
-			this.tideType = tideType;
-		}
-
-		public int getTideType()
-		{
-			return tideType;
-		}
-
-		public void setFromHour(int fromHour)
-		{
-			this.fromHour = fromHour;
-		}
-
-		public int getFromHour()
-		{
-			return fromHour;
-		}
-
-		public void setToHour(int toHour)
-		{
-			this.toHour = toHour;
-		}
-
-		public int getToHour()
-		{
-			return toHour;
-		}
-
-		public void setWeekdays(int[] weekdays)
-		{
-			this.weekdays = weekdays;
-		}
-
-		public int[] getWeekdays()
-		{
-			return weekdays;
-		}
 	}
 
 }

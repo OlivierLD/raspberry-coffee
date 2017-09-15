@@ -121,6 +121,7 @@
 		var dataManager = function(value) { // Callback when tide data are ready
 			tideGraph.unsetSunData();
 			tideGraph.unsetAltitudes();
+			tideGraph.unsetTable();
 //		console.log(value);
 			try {
 				var json = JSON.parse(value);
@@ -132,7 +133,7 @@
 				tideData = {};
 				tideCurve = [];
 				var fromDate, toDate;
-				for (var tDate in data){
+				for (var tDate in data) {
 					if (fromDate === undefined) {
 						fromDate = tDate;
 					}
@@ -179,7 +180,7 @@
 					tideData.harmonics = harmonics;
 				}
 				var idx2plot = new Date().getTime(); // Current date/time
-				tideGraph.drawGraph("tideCanvas", tideData, idx2plot);
+				tideGraph.drawGraph("tideCanvas", tideData, idx2plot, $('#with-table').prop('checked') === true ? json.table : undefined);
 			} catch (err) {
 				console.log(err);
 			}
@@ -226,7 +227,8 @@
 	<hr/>
 	Starting <select id="year" onchange="populateDays();"></select> <select id="month" onchange="populateDays();"></select> <select id="day"></select>
 	<button id="draw-curve" disabled onclick="tideTable($('#station-list').val(), { year: parseInt($('#year').val()), month: parseInt($('#month').val()), day: parseInt($('#day').val()) }, '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
-	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With harmonic details.
+	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With harmonic details,
+	&nbsp;<input type="checkbox" id="with-table" title="Include Time Table"> With time table.
 	<hr/>
 	<!-- Tabs -->
 	<div style="margin-bottom: 5px;">

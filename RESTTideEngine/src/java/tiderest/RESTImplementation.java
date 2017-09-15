@@ -442,6 +442,9 @@ public class RESTImplementation {
 								Calendar now = (Calendar)calFrom.clone();
 								Calendar upTo = (Calendar)calTo.clone();
 
+								List<TideUtilities.TimedValue> table = TideUtilities.getTideTableForOneDay(ts, this.tideRequestManager.getConstSpeed(), now, timeZoneToUse);
+								tideTable.table = table;
+
 								if ("true".equals(System.getProperty("tide.verbose", "false"))) {
 									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z z");
 									sdf.setTimeZone(TimeZone.getTimeZone((timeZoneToUse != null ? timeZoneToUse : ts.getTimeZone())));
@@ -679,6 +682,7 @@ public class RESTImplementation {
 		GeoPoint position;
 		String fromPrm;
 		String toPrm;
+		List<TideUtilities.TimedValue> table;
 		Map<String, WhDate> heights;
 		Hashtable<String, List<DataPoint>> harmonicCurves;
 	}

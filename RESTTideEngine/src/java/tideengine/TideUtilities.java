@@ -1,5 +1,6 @@
 package tideengine;
 
+import calculation.AstroComputer;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -10,6 +11,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -36,6 +38,7 @@ public class TideUtilities {
 	public final static DecimalFormat DF36 = new DecimalFormat("##0.000000");
 
 	public final static Map<String, String> COEFF_DEFINITION = new HashMap<>();
+
 	static {
 		COEFF_DEFINITION.put("M2", "Principal lunar semidiurnal constituent");
 		COEFF_DEFINITION.put("S2", "Principal solar semidiurnal constituent");
@@ -221,6 +224,129 @@ public class TideUtilities {
 		return value;
 	}
 
+	public final static int RISING = 1;
+	public final static int FALLING = -1;
+
+	private final static SimpleDateFormat SDF_TIDE = new SimpleDateFormat("HH:mm");
+
+	public static List<TimedValue> getTideTableForOneDay(TideStation ts, List<Coefficient> constSpeed, Calendar today, String timeZone2Use) {
+		double low1 = Double.NaN;
+		double low2 = Double.NaN;
+		double high1 = Double.NaN;
+		double high2 = Double.NaN;
+		Calendar low1Cal = null;
+		Calendar low2Cal = null;
+		Calendar high1Cal = null;
+		Calendar high2Cal = null;
+		List<TimedValue> slackList = new ArrayList<>();
+		int trend = 0;
+
+		double previousWH = Double.NaN;
+
+		Calendar reference = (Calendar) today.clone();
+
+		double previousUTCOffset = Double.NaN;
+
+		for (int h = 0; h < 24; h++) {
+			for (int m = 0; m < 60; m++) {
+				Calendar cal = new GregorianCalendar(reference.get(Calendar.YEAR),
+						reference.get(Calendar.MONTH),
+						reference.get(Calendar.DAY_OF_MONTH),
+						h, m, 0);
+				cal.setTimeZone(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()));
+				double wh = 0;
+				try {
+					wh = TideUtilities.getWaterHeight(ts, constSpeed, cal);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				double offset = AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), cal.getTime());
+				if (Double.isNaN(previousUTCOffset))
+					previousUTCOffset = offset;
+				if (offset != previousUTCOffset) { // This is for when the time goes from DT to ST and vice versa.
+					System.out.println("TimeOffset change at " + cal.getTime() + ", offset was " + previousUTCOffset + ", now " + offset);
+					System.out.println("Previous WH:" + previousWH + ", WH:" + wh);
+					System.out.println("Trend:" + (trend == FALLING ? "Falling" : "Rising"));
+				}
+				if (!Double.isNaN(previousWH)) {
+					if (ts.isCurrentStation()) {
+						if ((previousWH > 0 && wh <= 0) || (previousWH < 0 && wh >= 0)) {
+							slackList.add(new TimedValue("Slack", cal, 0d));
+						}
+					}
+					if (trend == 0) {
+						if (previousWH > wh) {
+							trend = FALLING;
+						} else if (previousWH < wh) {
+							trend = RISING;
+						}
+					} else {
+						switch (trend) {
+							case RISING:
+								if (previousWH > wh && offset == previousUTCOffset) { // Now going down
+									Calendar prev = (Calendar) cal.clone();
+									prev.add(Calendar.MINUTE, -1);
+									if (AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), cal.getTime()) ==
+											AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), prev.getTime())) {
+										if (Double.isNaN(high1)) {
+											high1 = previousWH;
+											cal.add(Calendar.MINUTE, -1);
+											high1Cal = cal;
+										} else {
+											high2 = previousWH;
+											cal.add(Calendar.MINUTE, -1);
+											high2Cal = cal;
+										}
+									}
+									trend = FALLING; // Now falling
+								}
+								break;
+							case FALLING:
+								if (previousWH < wh && offset == previousUTCOffset) { // Now going up
+									Calendar prev = (Calendar) cal.clone();
+									prev.add(Calendar.MINUTE, -1);
+									if (AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), cal.getTime()) ==
+											AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), prev.getTime())) {
+										if (Double.isNaN(low1)) {
+											low1 = previousWH;
+											cal.add(Calendar.MINUTE, -1);
+											low1Cal = cal;
+										} else {
+											low2 = previousWH;
+											cal.add(Calendar.MINUTE, -1);
+											low2Cal = cal;
+										}
+									}
+									trend = RISING; // Now rising
+								}
+								break;
+						}
+					}
+				}
+				previousWH = wh;
+				previousUTCOffset = offset;
+			}
+		}
+		List<TimedValue> timeList = new ArrayList<>(4);
+		if (low1Cal != null) {
+			timeList.add(new TimedValue("LW", low1Cal, low1).unit(ts.getDisplayUnit()).formattedDate(SDF_TIDE.format(low1Cal.getTime())));
+		}
+		if (low2Cal != null) {
+			timeList.add(new TimedValue("LW", low2Cal, low2).unit(ts.getDisplayUnit()).formattedDate(SDF_TIDE.format(low2Cal.getTime())));
+		}
+		if (high1Cal != null) {
+			timeList.add(new TimedValue("HW", high1Cal, high1).unit(ts.getDisplayUnit()).formattedDate(SDF_TIDE.format(high1Cal.getTime())));
+		}
+		if (high2Cal != null) {
+			timeList.add(new TimedValue("HW", high2Cal, high2).unit(ts.getDisplayUnit()).formattedDate(SDF_TIDE.format(high2Cal.getTime())));
+		}
+		if (ts.isCurrentStation() && slackList != null && slackList.size() > 0) {
+			slackList.stream().forEach(timeList::add);
+		}
+		Collections.sort(timeList);
+		return timeList;
+	}
+
 	public static String getHarmonicCoeffName(TideStation ts,
 	                                          List<Coefficient> constSpeed,
 	                                          int constSpeedIdx) {
@@ -360,7 +486,7 @@ public class TideUtilities {
 	}
 
 	public static List<String[]> getStationHarmonicConstituents(TideStation ts, List<Coefficient> constSpeed) {
-		List<String[]> hcList = new ArrayList<String[]>();
+		List<String[]> hcList = new ArrayList<>();
 		int rank = 1;
 
 		Calendar now = GregorianCalendar.getInstance();
@@ -422,7 +548,6 @@ public class TideUtilities {
 			currentTree = stn.getSubTree();
 		}
 		stn.setFullStationName(ts.getFullName());
-		// currentTree.put(ts.getFullName(), new StationTreeNode(ts.getFullName()));
 	}
 
 	public static class StationTreeNode implements Comparable {
@@ -524,4 +649,85 @@ public class TideUtilities {
 		}
 	}
 
+	public static class TimedValue implements Comparable<TimedValue> {
+		private Calendar cal;
+		double value;
+		String type = "";
+
+		long epoch;
+		String unit;
+		String formattedDate;
+
+		public TimedValue(String type, Calendar cal, double d) {
+			this.type = type;
+			this.cal = cal;
+			this.epoch = cal.getTimeInMillis();
+			this.value = d;
+		}
+
+		public TimedValue unit(String unit) {
+			this.unit = unit;
+			return this;
+		}
+
+		public TimedValue formattedDate(String formattedDate) {
+			this.formattedDate = formattedDate;
+			return this;
+		}
+
+		public int compareTo(TimedValue tv) {
+			return this.cal.compareTo(tv.getCalendar());
+		}
+
+		public Calendar getCalendar() {
+			return cal;
+		}
+
+		public double getValue() {
+			return value;
+		}
+
+		public String getType() {
+			return type;
+		}
+	}
+
+	public static class SpecialPrm {
+		private int tideType;
+		private int fromHour;
+		private int toHour;
+		private int[] weekdays;
+
+		public void setTideType(int tideType) {
+			this.tideType = tideType;
+		}
+
+		public int getTideType() {
+			return tideType;
+		}
+
+		public void setFromHour(int fromHour) {
+			this.fromHour = fromHour;
+		}
+
+		public int getFromHour() {
+			return fromHour;
+		}
+
+		public void setToHour(int toHour) {
+			this.toHour = toHour;
+		}
+
+		public int getToHour() {
+			return toHour;
+		}
+
+		public void setWeekdays(int[] weekdays) {
+			this.weekdays = weekdays;
+		}
+
+		public int[] getWeekdays() {
+			return weekdays;
+		}
+	}
 }
