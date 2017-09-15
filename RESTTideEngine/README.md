@@ -16,6 +16,8 @@ If that one works, then we can really move away from Swing.
  ... etc
 
 ```
+> Warning: In the project described here, we use a REST server. It works like a REST server, but it will _not_ scale like an enterprise one. It has been designed to run on _small_ boards like the Raspberry PI Zero, it has some limits.
+
 #### Rationale
 This starts from a simple observation. A Raspberry PI can run on a boat, and consumes
 a very small amount of energy. It can do a lot of computations, logging, and multiplexing, among many others.
