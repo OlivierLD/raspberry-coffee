@@ -653,10 +653,12 @@ function TideGraph(cName,       // Canvas Name
 			  var alt = el.sunAlt;
 			  var _y = (height / 2) * (alt / 90);
 			  context.lineTo((idx - minx) * xScale, zero - _y);
-			  if (((idx - minx) * xScale).toFixed(0) === _idxX.toFixed(0)) {
-//		  	console.log("Plotting the Sun");
-				  var img = document.getElementById("sun-png");
-				  context.drawImage(img, _idxX, zero - _y - 12); //, 150, 180);
+			  if (_idxX !== undefined) {
+				  if (((idx - minx) * xScale).toFixed(0) === _idxX.toFixed(0)) {
+	//		  	console.log("Plotting the Sun");
+					  var img = document.getElementById("sun-png");
+					  context.drawImage(img, _idxX, zero - _y - 12); //, 150, 180);
+				  }
 			  }
 		  });
 		  context.stroke();
@@ -669,10 +671,12 @@ function TideGraph(cName,       // Canvas Name
 			  var alt = el.moonAlt;
 			  var _y = (height / 2) * (alt / 90);
 			  context.lineTo((idx - minx) * xScale, zero - _y);
-			  if (((idx - minx) * xScale).toFixed(0) === _idxX.toFixed(0)) {
-//		  	console.log("Plotting the Moon");
-				  var img = document.getElementById("moon-png");
-				  context.drawImage(img, _idxX, zero - _y - 12); //, 150, 180);
+			  if (_idxX !== undefined) {
+				  if (((idx - minx) * xScale).toFixed(0) === _idxX.toFixed(0)) {
+	//		  	console.log("Plotting the Moon");
+					  var img = document.getElementById("moon-png");
+					  context.drawImage(img, _idxX, zero - _y - 12); //, 150, 180);
+				  }
 			  }
 		  });
 		  context.stroke();
