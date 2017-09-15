@@ -656,7 +656,7 @@ function TideGraph(cName,       // Canvas Name
 			  if (((idx - minx) * xScale).toFixed(0) === _idxX.toFixed(0)) {
 //		  	console.log("Plotting the Sun");
 				  var img = document.getElementById("sun-png");
-				  context.drawImage(img, _idxX, _y); //, 150, 180);
+				  context.drawImage(img, _idxX, zero - _y - 12); //, 150, 180);
 			  }
 		  });
 		  context.stroke();
@@ -672,7 +672,7 @@ function TideGraph(cName,       // Canvas Name
 			  if (((idx - minx) * xScale).toFixed(0) === _idxX.toFixed(0)) {
 //		  	console.log("Plotting the Moon");
 				  var img = document.getElementById("moon-png");
-				  context.drawImage(img, _idxX, _y); //, 150, 180);
+				  context.drawImage(img, _idxX, zero - _y - 12); //, 150, 180);
 			  }
 		  });
 		  context.stroke();
