@@ -1,6 +1,5 @@
 package tideengine;
 
-import calculation.AstroComputer;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -207,8 +206,9 @@ public class TideUtilities {
 		value = stationBaseHeight;
 		for (int i = 0; i < constSpeed.size(); i++) {
 			assert (ts.getHarmonics().get(i).getName().equals(constSpeed.get(i).getName()));
-			if (!ts.getHarmonics().get(i).getName().equals(constSpeed.get(i).getName()))
+			if (!ts.getHarmonics().get(i).getName().equals(constSpeed.get(i).getName())) {
 				System.out.println("..... Mismatch!!!");
+			}
 
 			value += (ts.getHarmonics().get(i).getAmplitude() * Math.cos(constSpeed.get(i).getValue() * timeOffset - ts.getHarmonics().get(i).getEpoch()));
 //    if (b && 
@@ -218,18 +218,18 @@ public class TideUtilities {
 //      System.out.println("TS Coefficient:" + ts.getHarmonics().get(i).getName() + " ampl:" + ts.getHarmonics().get(i).getAmplitude() + ", epoch:" + ts.getHarmonics().get(i).getEpoch() + ", timeOffset:" + timeOffset + " value:" + value + ", Date:" + d.getTime().toString());
 		}
 		if (verbose) System.out.println("-----------------------------");
-		if (ts.getUnit().indexOf("^2") > -1)
+		if (ts.getUnit().indexOf("^2") > -1) {
 			value = (value >= 0.0D ? Math.sqrt(value) : -Math.sqrt(-value));
-
+		}
 		return value;
 	}
 
 	public final static int RISING = 1;
 	public final static int FALLING = -1;
 
-	private final static SimpleDateFormat SDF_TIDE = new SimpleDateFormat("HH:mm");
+	private final static SimpleDateFormat SDF_TIDE = new SimpleDateFormat("MMM-dd HH:mm z Z");
 
-	public static List<TimedValue> getTideTableForOneDay(TideStation ts, List<Coefficient> constSpeed, Calendar today, String timeZone2Use) {
+	public static List<TimedValue> getTideTableForOneDay(TideStation ts, List<Coefficient> constSpeed, int year, int month, int day, String timeZone2Use) {
 		double low1 = Double.NaN;
 		double low2 = Double.NaN;
 		double high1 = Double.NaN;
@@ -243,30 +243,18 @@ public class TideUtilities {
 
 		double previousWH = Double.NaN;
 
-		Calendar reference = (Calendar) today.clone();
-
-		double previousUTCOffset = Double.NaN;
-
 		for (int h = 0; h < 24; h++) {
 			for (int m = 0; m < 60; m++) {
-				Calendar cal = new GregorianCalendar(reference.get(Calendar.YEAR),
-						reference.get(Calendar.MONTH),
-						reference.get(Calendar.DAY_OF_MONTH),
+				Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()));
+				cal.set(year,
+						month,
+						day,
 						h, m, 0);
-				cal.setTimeZone(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()));
 				double wh = 0;
 				try {
 					wh = TideUtilities.getWaterHeight(ts, constSpeed, cal);
 				} catch (Exception ex) {
 					ex.printStackTrace();
-				}
-				double offset = AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), cal.getTime());
-				if (Double.isNaN(previousUTCOffset))
-					previousUTCOffset = offset;
-				if (offset != previousUTCOffset) { // This is for when the time goes from DT to ST and vice versa.
-					System.out.println("TimeOffset change at " + cal.getTime() + ", offset was " + previousUTCOffset + ", now " + offset);
-					System.out.println("Previous WH:" + previousWH + ", WH:" + wh);
-					System.out.println("Trend:" + (trend == FALLING ? "Falling" : "Rising"));
 				}
 				if (!Double.isNaN(previousWH)) {
 					if (ts.isCurrentStation()) {
@@ -283,39 +271,33 @@ public class TideUtilities {
 					} else {
 						switch (trend) {
 							case RISING:
-								if (previousWH > wh && offset == previousUTCOffset) { // Now going down
+								if (previousWH > wh) { // Now going down
 									Calendar prev = (Calendar) cal.clone();
 									prev.add(Calendar.MINUTE, -1);
-									if (AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), cal.getTime()) ==
-											AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), prev.getTime())) {
-										if (Double.isNaN(high1)) {
-											high1 = previousWH;
-											cal.add(Calendar.MINUTE, -1);
-											high1Cal = cal;
-										} else {
-											high2 = previousWH;
-											cal.add(Calendar.MINUTE, -1);
-											high2Cal = cal;
-										}
+									if (Double.isNaN(high1)) {
+										high1 = previousWH;
+										cal.add(Calendar.MINUTE, -1);
+										high1Cal = cal;
+									} else {
+										high2 = previousWH;
+										cal.add(Calendar.MINUTE, -1);
+										high2Cal = cal;
 									}
 									trend = FALLING; // Now falling
 								}
 								break;
 							case FALLING:
-								if (previousWH < wh && offset == previousUTCOffset) { // Now going up
+								if (previousWH < wh) { // Now going up
 									Calendar prev = (Calendar) cal.clone();
 									prev.add(Calendar.MINUTE, -1);
-									if (AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), cal.getTime()) ==
-											AstroComputer.getTimeZoneOffsetInHours(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()), prev.getTime())) {
-										if (Double.isNaN(low1)) {
-											low1 = previousWH;
-											cal.add(Calendar.MINUTE, -1);
-											low1Cal = cal;
-										} else {
-											low2 = previousWH;
-											cal.add(Calendar.MINUTE, -1);
-											low2Cal = cal;
-										}
+									if (Double.isNaN(low1)) {
+										low1 = previousWH;
+										cal.add(Calendar.MINUTE, -1);
+										low1Cal = cal;
+									} else {
+										low2 = previousWH;
+										cal.add(Calendar.MINUTE, -1);
+										low2Cal = cal;
 									}
 									trend = RISING; // Now rising
 								}
@@ -324,10 +306,10 @@ public class TideUtilities {
 					}
 				}
 				previousWH = wh;
-				previousUTCOffset = offset;
 			}
 		}
 		List<TimedValue> timeList = new ArrayList<>(4);
+		SDF_TIDE.setTimeZone(TimeZone.getTimeZone(timeZone2Use != null ? timeZone2Use : ts.getTimeZone()));
 		if (low1Cal != null) {
 			timeList.add(new TimedValue("LW", low1Cal, low1).unit(ts.getDisplayUnit()).formattedDate(SDF_TIDE.format(low1Cal.getTime())));
 		}

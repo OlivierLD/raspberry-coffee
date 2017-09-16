@@ -442,7 +442,11 @@ public class RESTImplementation {
 								Calendar now = (Calendar)calFrom.clone();
 								Calendar upTo = (Calendar)calTo.clone();
 
-								List<TideUtilities.TimedValue> table = TideUtilities.getTideTableForOneDay(ts, this.tideRequestManager.getConstSpeed(), now, timeZoneToUse);
+								List<TideUtilities.TimedValue> table = TideUtilities.getTideTableForOneDay(
+										ts,
+										this.tideRequestManager.getConstSpeed(),
+										now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH),
+										timeZoneToUse);
 								tideTable.table = table;
 
 								if ("true".equals(System.getProperty("tide.verbose", "false"))) {

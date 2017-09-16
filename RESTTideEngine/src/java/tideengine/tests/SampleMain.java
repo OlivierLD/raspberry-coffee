@@ -382,7 +382,7 @@ public class SampleMain {
 							System.out.println("At " + location + " on " + now.getTime() + ", min : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MIN_POS]) + " " + ts.getUnit() + ", max : " + TideUtilities.DF22PLUS.format(mm[TideUtilities.MAX_POS]) + " " + ts.getDisplayUnit());
 							System.out.println("------------");
 						}
-						List<TideUtilities.TimedValue> table = TideUtilities.getTideTableForOneDay(ts, constSpeed, now, null);
+						List<TideUtilities.TimedValue> table = TideUtilities.getTideTableForOneDay(ts, constSpeed, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH), null);
 
 						for (TimedValue tv : table) {
 							System.out.println(tv.getType() + " " + tv.getCalendar().getTime() + " : " + TideUtilities.DF22PLUS.format(tv.getValue()) + " " + ts.getDisplayUnit());

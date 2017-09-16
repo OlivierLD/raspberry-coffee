@@ -697,7 +697,7 @@ function TideGraph(cName,       // Canvas Name
 		  context.beginPath();
 		  context.save();
 		  context.font = "bold 20px Courier New"; // + graphColorConfig.font;
-		  context.fillStyle = graphColorConfig.horizontalGridTextColor;
+		  context.fillStyle = 'navy'; // graphColorConfig.horizontalGridTextColor;
 		  table.forEach(function(line, idx) {
 		  	var str = line.type + " : " + line.formattedDate + ", " + line.value.toFixed(2) + " " + line.unit;
 		  	context.fillText(str, 20, 30 + (idx * 21));

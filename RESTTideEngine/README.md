@@ -150,5 +150,16 @@ Visible on the diagram above:
 - Harmonic coefficients
 - Sun and Moon Altitude
 - Current time (orange vertical line)
+- Tide Time Table
+
+![Saint Malo, France](./docimg/saint.malo.png)
+
+Tide at St Malo (France), another time zone.
+
+![Saint Malo, one month](./docimg/one.month.png)
+
+One month graph, St Malo.
+
+
 
 ---  
