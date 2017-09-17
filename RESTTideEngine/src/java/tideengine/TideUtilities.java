@@ -333,10 +333,11 @@ public class TideUtilities {
 	                                          List<Coefficient> constSpeed,
 	                                          int constSpeedIdx) {
 		String name = "";
-		if (ts != null)
+		if (ts != null) {
 			name = ts.getHarmonics().get(constSpeedIdx).getName();
-		else
+		} else {
 			name = constSpeed.get(constSpeedIdx).getName();
+		}
 		return name;
 	}
 
@@ -357,9 +358,9 @@ public class TideUtilities {
 		value = stationBaseHeight;
 
 		value += (ts.getHarmonics().get(constSpeedIdx).getAmplitude() * Math.cos(constSpeed.get(constSpeedIdx).getValue() * timeOffset - ts.getHarmonics().get(constSpeedIdx).getEpoch()));
-		if (ts.getUnit().indexOf("^2") > -1)
+		if (ts.getUnit().indexOf("^2") > -1) {
 			value = (value >= 0.0D ? Math.sqrt(value) : -Math.sqrt(-value));
-
+		}
 		return value;
 	}
 
@@ -379,9 +380,9 @@ public class TideUtilities {
 //  int constSpeedIdx = getHarmonicIndex(constSpeed, coeffName);
 
 		value += (ts.getHarmonics().get(constSpeedIdx).getAmplitude() * Math.cos(constSpeed.get(constSpeedIdx).getValue() * timeOffset - ts.getHarmonics().get(constSpeedIdx).getEpoch()));
-		if (ts.getUnit().indexOf("^2") > -1)
+		if (ts.getUnit().indexOf("^2") > -1) {
 			value = (value >= 0.0D ? Math.sqrt(value) : -Math.sqrt(-value));
-
+		}
 		return value;
 	}
 
@@ -395,8 +396,9 @@ public class TideUtilities {
 			} else
 				idx++;
 		}
-		if (!found)
+		if (!found) {
 			System.out.println("Coeff [" + name + "] not found.");
+		}
 		return (found ? idx : -1);
 	}
 
@@ -454,15 +456,17 @@ public class TideUtilities {
 
 	public static double getWaterHeightIn(double d, TideStation ts, String unit) {
 		double val = d;
-		if (ts.isCurrentStation())
+		if (ts.isCurrentStation()) {
 			throw new RuntimeException(ts.getFullName() + " is a current station. Method getWaterHeightIn applies only to tide stations.");
+		}
 		if (!unit.equals(ts.getUnit())) {
 			if (!unit.equals(TideStation.METERS) && !unit.equals(TideStation.FEET))
 				throw new RuntimeException("Unsupported unit [" + unit + "]. Only " + TideStation.METERS + " or " + TideStation.FEET + " please.");
-			if (unit.equals(TideStation.METERS) && ts.getUnit().equals(TideStation.FEET))
+			if (unit.equals(TideStation.METERS) && ts.getUnit().equals(TideStation.FEET)) {
 				val *= FEET_2_METERS;
-			else
+			} else {
 				val /= FEET_2_METERS;
+			}
 		}
 		return val;
 	}

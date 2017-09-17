@@ -20,8 +20,7 @@ public class POSTImage
     json.put("value", base64);
     String imgPayload = json.toString();
     int ret = HttpClient.doPost(url, headers, imgPayload);
-    if (DEBUG)
-      System.out.println("POST: " + ret);
+    if (DEBUG) System.out.println("POST: " + ret);
     return ret;
   }
 

@@ -1,7 +1,9 @@
 package http;
 
+import http.client.HTTPClient;
 import org.junit.Test;
 
+import java.net.ProtocolException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -116,6 +118,50 @@ public class HTTPServerTests {
 			fail("Should have detected duplicate");
 		} catch (Exception ex) {
 			System.out.println(String.format("As expected: %s", ex.toString()));
+		}
+	}
+
+	@Test
+	public void useCustomVerb() {
+		List<HTTPServer.Operation> opList = Arrays.asList(
+				new HTTPServer.Operation(
+						"GET",
+						"/oplist",
+						this::emptyOperation,
+						"List of all available operations."),
+				new HTTPServer.Operation(
+						"CUST",
+						"/customverb/{it}",
+						this::emptyOperation,
+						"Blah."));
+
+		RESTRequestManager restServerImpl = new RESTRequestManager() {
+
+			@Override
+			public HTTPServer.Response onRequest(HTTPServer.Request request) throws UnsupportedOperationException {
+				return null;
+			}
+
+			@Override
+			public List<HTTPServer.Operation> getRESTOperationList() {
+				return opList;
+			}
+		};
+		HTTPServer httpServer = null;
+		try {
+			httpServer = new HTTPServer(restServerImpl);
+		} catch (Exception ex) {
+			fail(ex.toString());
+		}
+		assertNotNull(httpServer);
+		try {
+			int ret = HTTPClient.doCustomVerb("CUST", "http://localhost:9999/cutomverb/Yo", null, null);
+			fail("Custom protocol should not be supported.");
+		} catch (ProtocolException pe) {
+			// Expected
+			System.out.println("As expected");
+		} catch (Exception ex) {
+			fail(ex.toString());
 		}
 	}
 

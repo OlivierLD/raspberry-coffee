@@ -1,7 +1,7 @@
 package http;
 
 import com.google.gson.Gson;
-import http.utils.HTTPClient;
+import http.client.HTTPClient;
 import utils.DumpUtil;
 
 import java.io.*;
