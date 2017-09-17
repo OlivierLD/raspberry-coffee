@@ -16,14 +16,13 @@
 #define RFM95_RST 2
 #define RFM95_INT 3
 
-// Change to 434.0 or other frequency, must match RX's freq!
+// Change to 434.0 or other frequency, must match RX's freq.
 #define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
-void setup()
-{
+void setup() {
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
 
@@ -34,7 +33,7 @@ void setup()
 
   delay(100);
 
-  Serial.println("Arduino LoRa TX Test!");
+  Serial.println("Arduino LoRa TX Test.");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -46,7 +45,7 @@ void setup()
     Serial.println("LoRa radio init failed");
     while (1);
   }
-  Serial.println("LoRa radio init OK!");
+  Serial.println("LoRa radio init OK.");
 
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
   if (!rf95.setFrequency(RF95_FREQ)) {
@@ -65,8 +64,7 @@ void setup()
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
-void loop()
-{
+void loop() {
   delay(1000); // Wait 1 second between transmits, could also 'sleep' here!
   Serial.println(">> Transmitting..."); // Send a message to rf95_server (receiver)
 
@@ -89,21 +87,15 @@ void loop()
   uint8_t len = sizeof(buf);
 
   Serial.println("<< Waiting for reply...");
-  if (rf95.waitAvailableTimeout(1000))
-  {
+  if (rf95.waitAvailableTimeout(1000)) {
     // Should be a reply message for us now
-    if (rf95.recv(buf, &len))
-    {
+    if (rf95.recv(buf, &len)) {
       Serial.print("<< Got reply: "); Serial.println((char*)buf);
   //  Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
-    }
-    else
-    {
+    } else {
       Serial.println("!! Receive failed");
     }
-  }
-  else
-  {
+  } else {
     Serial.println("<< No reply..., is there a listener around?");
   }
 }

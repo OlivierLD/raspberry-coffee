@@ -13,4 +13,8 @@ You need two Arduinos: one to transmit, one to receive.
 ## Next
 The same, on a Raspberry PI, in Java.
 
+
+## Another option
+Serial communication between the Raspberry PI and the Arduino.
+
 ----
