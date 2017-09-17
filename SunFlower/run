@@ -19,15 +19,23 @@ JAVA_OPTS="$JAVA_OPTS -Dtilt.limit=40"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.offset=0"
 #
 OPTION=basic
+WITH_HELP=false
 if [ $# -gt 0 ]
 then
   OPTION=$1
 fi
+if [ $OPTION = "-help" ] && [ $# -gt 1 ]
+then
+  OPTION=$2
+  WITH_HELP=true
+fi
 #
 displayHelp() {
-  echo "=============================================================================="
-  echo "Available CLI options are -help, basic, plus, verbose, demo, smooth, resthttp."
-  echo "=============================================================================="
+  echo -e "=============================================================================="
+  echo -e "Available CLI options are -help, basic, plus, verbose, demo, smooth, resthttp."
+  echo -e " Use $0 -help [option] to know more about options, like:"
+  echo -e " $ $0 -help resthttp "
+  echo -e "=============================================================================="
 }
 #
 echo Using option "$OPTION"
@@ -120,4 +128,16 @@ case "$OPTION" in
     ;;
 esac
 #
-sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID
+if [ $WITH_HELP = false ]
+then
+  sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID
+else
+  echo Option $OPTION :
+# echo $JAVA_OPTS
+  opts=$(echo $JAVA_OPTS | tr ";" "\n")
+  for opt in $opts
+  do
+    echo "> $opt"
+  done
+fi
+
