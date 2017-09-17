@@ -1,6 +1,8 @@
 #!/bin/bash
 CP=./build/libs/SunFlower-1.0-all.jar
 #
+echo Try $0 -help
+#
 HEADING_SERVO_ID=14 #,0,10
 TILT_SERVO_ID=15    #,1
 #
@@ -24,9 +26,11 @@ fi
 #
 displayHelp() {
   echo "=============================================================================="
-  echo "Available options are -help, basic, plus, verbose, demo, smooth, resthttp."
+  echo "Available CLI options are -help, basic, plus, verbose, demo, smooth, resthttp."
   echo "=============================================================================="
 }
+#
+echo Using option "$OPTION"
 #
 case "$OPTION" in
   "-help" | "?" | "-h")
