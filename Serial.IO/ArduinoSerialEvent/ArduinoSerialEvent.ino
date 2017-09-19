@@ -1,6 +1,8 @@
 /**
  * Serial Event example, demonstrating the Serial communication
  * with the Raspberry PI.
+ * 
+ * For dev, from the Arduino Console: use "Both NL & CR"
  */
 
 String inputString = "";         // a string to hold incoming data
@@ -11,6 +13,7 @@ void setup() {
   Serial.begin(9600);
   // reserve 256 bytes for the inputString:
   inputString.reserve(256);
+  Serial.println("Yo!");
 }
 
 void loop() {

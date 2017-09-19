@@ -1,4 +1,6 @@
 /*
+ * Serial Read and Write.
+ *
  * Read data from the RPi (0, or 1) from the Serial port
  * Generates NMEA-like messages, emitted on the Serial port
  */
@@ -19,7 +21,7 @@ void loop() {
   if (idx > 0xFFFF) {
     idx = 0;
   }
-  String payload = String(idx) + ",Message from Arduino";
+  String payload = String(idx) + ", Message from Arduino";
   String nmea = generateNMEAString(payload, prefix, id);
   Serial.println(nmea);  // Send message to the Raspberry
   

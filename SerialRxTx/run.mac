@@ -7,7 +7,7 @@ CP=./build/libs/SerialRxTx-1.0.jar
 CP=$CP:$RXTX_HOME/RXTXcomm.jar
 #
 JAVA_OPTS=
-JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$RXTX_HOME"
+JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$RXTX_HOM "
 JAVA_OPTS="$JAVA_OPTS -Dserial.port=/dev/tty.usbserial"
 JAVA_OPTS="$JAVA_OPTS -Dbaud.rate=115200"
 JAVA_OPTS="$JAVA_OPTS -Dverbose=false"

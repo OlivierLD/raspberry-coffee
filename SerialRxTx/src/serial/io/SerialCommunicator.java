@@ -32,7 +32,7 @@ public class SerialCommunicator
 
 	private final static int TIMEOUT = 2_000;
 
-	private final static int DEFAULT_BAUD_RATE = 9600;
+	private final static int DEFAULT_BAUD_RATE = 9_600;
 	private final static int DEFAULT_FLOW_CTRL_IN = SerialPort.FLOWCONTROL_NONE;
 	private final static int DEFAULT_FLOW_CTRL_OUT = SerialPort.FLOWCONTROL_NONE;
 	private final static int DEFAULT_DATABITS = SerialPort.DATABITS_8;

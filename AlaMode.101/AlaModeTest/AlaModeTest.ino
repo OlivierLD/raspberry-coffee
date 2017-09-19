@@ -54,15 +54,15 @@ void loop() {
       if (false) {
         int nb = atoi(buffer);
         String customMess = "- Not Found -";
-        if (nb % 4 == 0)
+        if (nb % 4 == 0) {
           customMess = REF_STRING_01;
-        else if (nb % 4 == 1)
+        } else if (nb % 4 == 1) {
           customMess = REF_STRING_02;
-        else if (nb % 4 == 2)
+        } else if (nb % 4 == 2) {
           customMess = REF_STRING_03;
-        else if (nb % 4 == 3)
+        } else if (nb % 4 == 3) {
           customMess = REF_STRING_04;
-  
+        }
         char buf[64];
         customMess.toCharArray(buf, customMess.length() + 1);    
         char mess[64];
