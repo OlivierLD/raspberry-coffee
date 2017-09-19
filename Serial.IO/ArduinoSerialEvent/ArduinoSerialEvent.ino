@@ -2,6 +2,11 @@
  * Serial Event example, demonstrating the Serial communication
  * with the Raspberry PI.
  * 
+ * Receives a String from the Raspberry PI (on the Serial port),
+ * Returns it reversed (on the Serial port).
+ * 
+ * Both baud rates (Arduino & RPi0 have to be the same.
+ * 
  * For dev, from the Arduino Console: use "Both NL & CR"
  */
 
@@ -10,10 +15,10 @@ boolean stringComplete = false;  // whether the string is complete
 
 void setup() {
   // initialize serial:
-  Serial.begin(9600);
+  Serial.begin(115200);
   // reserve 256 bytes for the inputString:
   inputString.reserve(256);
-  Serial.println("Yo!");
+  Serial.println("Arduino is ready");
 }
 
 void loop() {

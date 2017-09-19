@@ -13,11 +13,18 @@ import java.util.Set;
  * Connect an Arduino Uno with its USB cable.
  * Serial port (ttyUSB0 below) may vary.
  *
+ * Interacticve version.
+ * Enter a String from the command line,
+ * Send it to the Arduino,
+ * It comes back inverted.
+ *
+ * The Arduino must have the ArduinoSerialEvent.ino sketch running on it.
+ *
  * See system properties:
  * "serial.port", default "/dev/ttyUSB0"
  * "baud.rate", default "9600"
  */
-public class ArduinoEchoClient implements SerialIOCallbacks {
+public class ArduinoCLIClient implements SerialIOCallbacks {
 	@Override
 	public void connected(boolean b) {
 		System.out.println("Arduino connected: " + b);
@@ -34,8 +41,9 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 		if (b == 0xA) { // \n
 			// Message completed
 			byte[] mess = new byte[bufferIdx];
-			for (int i = 0; i < bufferIdx; i++)
+			for (int i = 0; i < bufferIdx; i++) {
 				mess[i] = serialBuffer[i];
+			}
 			arduinoOutput(mess);
 			// Reset
 			lenToRead = 0;
@@ -58,25 +66,8 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 		}
 	}
 
-	private final static String[] LOREM_IPSUM = {
-			"Lorem ipsum dolor sit amet, consectetuer adipiscing elit, ",
-			"sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. ",
-			"Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. ",
-			"Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, ",
-			"vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim ",
-			"qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.",
-			"Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat ",
-			"facer possim assum. Typi non habent claritatem insitam; ",
-			"est usus legentis in iis qui facit eorum claritatem. ",
-			"Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. ",
-			"Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. ",
-			"Mirum est notare quam littera gothica, quam nunc putamus parum claram, ",
-			"anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. ",
-			"Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum."
-	};
-
 	public static void main(String[] args) {
-		final ArduinoEchoClient mwc = new ArduinoEchoClient();
+		final ArduinoCLIClient mwc = new ArduinoCLIClient();
 		final SerialCommunicator sc = new SerialCommunicator(mwc);
 		sc.setVerbose(false);
 
@@ -100,7 +91,8 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 			System.out.println(String.format("Port %s not found, aborting", serialPortName));
 			System.exit(1);
 		}
-		System.out.println("Lorem ipsum, inverted");
+
+		System.out.println("Enter 'Q' at the prompt to quit.");
 		try {
 			sc.connect(arduinoPort, "Arduino", Integer.parseInt(baudRateStr));
 			boolean b = sc.initIOStream();
@@ -112,22 +104,21 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 			for (int i = 0; i < 5; i++) {
 				sc.writeData("\n");
 			}
-			Thread.sleep(1_000L);
-			System.out.println("Writing to the serial port.");
-			for (String str : LOREM_IPSUM) {
-				sc.writeData(str + "\n");
-				Thread.sleep(500L);
+
+			boolean keepWorking = true;
+			while (keepWorking) {
+				String str = utils.StaticUtil.userInput("?> ");
+				if ("Q".equalsIgnoreCase(str.trim())) {
+					keepWorking = false;
+				} else {
+					sc.writeData(str + "\n");
+				}
 			}
-			System.out.println("Data written to the serial port.");
+			System.out.println("Exiting.");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
-		try {
-			Thread.sleep(10_000L);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
 		try {
 			sc.disconnect();
 		} catch (IOException ioe) {
