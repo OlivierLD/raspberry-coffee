@@ -11,7 +11,7 @@ import java.util.Set;
 
 /**
  * Connect an Arduino Uno with its USB cable.
- * Serial port (ttyUSB0 below) may vary.
+ * Serial port (/dev/ttyUSB0 below) may vary.
  *
  * Interacticve version.
  * Enter a String from the command line,
@@ -57,8 +57,9 @@ public class ArduinoCLIClient implements SerialIOCallbacks {
 				String[] sa = DumpUtil.dualDump(mess);
 				if (sa != null) {
 					System.out.println("\t>>> [From Arduino] Received:");
-					for (String s : sa)
+					for (String s : sa) {
 						System.out.println("\t\t" + s);
+					}
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -94,6 +95,9 @@ public class ArduinoCLIClient implements SerialIOCallbacks {
 
 		System.out.println("Enter 'Q' at the prompt to quit.");
 		try {
+			/*
+			 * Serial connection here
+			 */
 			sc.connect(arduinoPort, "Arduino", Integer.parseInt(baudRateStr));
 			boolean b = sc.initIOStream();
 			System.out.println("IO Streams " + (b ? "" : "NOT ") + "initialized");
