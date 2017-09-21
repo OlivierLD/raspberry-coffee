@@ -1,21 +1,14 @@
 package console;
 
 import gnu.io.CommPortIdentifier;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
-import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Map;
-
-import java.util.Set;
-
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 import utils.DumpUtil;
+
+import java.io.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 
 public class SerialConsoleCLI implements SerialIOCallbacks {
 	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
@@ -38,8 +31,7 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 	@Override
 	public void onSerialData(byte b) {
 		serialBuffer[bufferIdx++] = (byte) (b & 0xFF);
-		if (b == 0xA) // \n , EOM
-		{
+		if (b == 0xA) { // \n , EOM
 			// Message completed
 			byte[] mess = new byte[bufferIdx];
 			System.arraycopy(serialBuffer, 0, mess, 0, bufferIdx);
@@ -68,13 +60,15 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 				System.out.println(DumpUtil.dumpHexMess(newMess.getBytes()));
 				System.out.println("====================================");
 			}
-			Arrays.stream(messages).filter(str -> str.length() > 0 && str.charAt(0) != 0xD).forEach(mess -> {
-				if (this.verbose) {
-					System.out.println("\tMess len:" + mess.length());
-					DumpUtil.displayDualDump(mess);
-				}
-				serialOutput(mess);
-			});
+			Arrays.stream(messages)
+					.filter(str -> str.length() > 0 && str.charAt(0) != 0xD)
+					.forEach(mess -> {
+						if (this.verbose) {
+							System.out.println("\tMess len:" + mess.length());
+							DumpUtil.displayDualDump(mess);
+						}
+						serialOutput(mess);
+					});
 		}
 		if (this.verbose) {
 			System.out.println("...Reseting.");
@@ -93,8 +87,9 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 		}
 
 		int offset = 0;
-		while (mess[offset] == 0xA || mess[offset] == 0xD) // Skip leading CR & NL
+		while (mess[offset] == 0xA || mess[offset] == 0xD) { // Skip leading CR & NL
 			offset++;
+		}
 		String str = new String(mess, offset, mess.length - offset);
 		System.out.print(str.replace('\r', '\n'));
 		System.out.flush();
@@ -104,8 +99,9 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 
 	private static String userInput(String prompt) {
 		String retString = "";
-		if (prompt != null)
+		if (prompt != null) {
 			System.err.print(prompt);
+		}
 		try {
 			retString = stdin.readLine();
 		} catch (Exception e) {
@@ -195,8 +191,9 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 		}
 		// Bonus
 		System.out.println("== Serial Port List ==");
-		for (String port : ports)
+		for (String port : ports) {
 			System.out.println("-> " + port);
+		}
 		System.out.println("======================");
 
 		String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
@@ -229,8 +226,7 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 			boolean keepWorking = true;
 			while (keepWorking) {
 				String userInput = userInput(null);
-				if (userInput.trim().equals("\\help") || (userInput.length() >= 2 && "\\help".startsWith(userInput.trim()))) // type just \h, \he ..., etc
-				{
+				if (userInput.trim().equals("\\help") || (userInput.length() >= 2 && "\\help".startsWith(userInput.trim()))) { // type just \h, \he ..., etc
 					displayHelp();
 				} else if (userInput.trim().equals("\\quit") || (userInput.length() >= 2 && "\\quit".startsWith(userInput.trim()))) {
 					System.out.println("Bye!");
@@ -238,9 +234,7 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 				} else if (userInput.startsWith("\\tx ")) {
 					String fileName = userInput.substring("\\tx ".length());
 					transfer(fileName, sc);
-				}
-				// TODO \rx file, \cd dir, \dir
-				else {
+				} else { // TODO \rx file, \cd dir, \dir
 					sc.writeData(userInput + "\n");
 				}
 			}

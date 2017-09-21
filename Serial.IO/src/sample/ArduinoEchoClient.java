@@ -34,8 +34,9 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 		if (b == 0xA) { // \n
 			// Message completed
 			byte[] mess = new byte[bufferIdx];
-			for (int i = 0; i < bufferIdx; i++)
+			for (int i = 0; i < bufferIdx; i++) {
 				mess[i] = serialBuffer[i];
+			}
 			arduinoOutput(mess);
 			// Reset
 			lenToRead = 0;
@@ -49,8 +50,9 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 				String[] sa = DumpUtil.dualDump(mess);
 				if (sa != null) {
 					System.out.println("\t>>> [From Arduino] Received:");
-					for (String s : sa)
+					for (String s : sa) {
 						System.out.println("\t\t" + s);
+					}
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
