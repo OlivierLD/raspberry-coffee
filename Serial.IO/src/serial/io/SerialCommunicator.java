@@ -74,20 +74,20 @@ public class SerialCommunicator
 		return portMap;
 	}
 
-	public void connect(CommPortIdentifier port) throws PortInUseException, Exception {
+	public void connect(CommPortIdentifier port) throws Exception {
 		connect(port, "");
 	}
 
-	public void connect(CommPortIdentifier port, String userPortName) throws PortInUseException, Exception {
+	public void connect(CommPortIdentifier port, String userPortName) throws Exception {
 		connect(port, userPortName, DEFAULT_BAUD_RATE);
 	}
 
-	public void connect(CommPortIdentifier port, String userPortName, int br) throws PortInUseException, Exception, UnsupportedCommOperationException {
+	public void connect(CommPortIdentifier port, String userPortName, int br) throws Exception {
 		connect(port, userPortName, br, DEFAULT_DATABITS, DEFAULT_STOP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
 	}
 
 	public void connect(CommPortIdentifier port, String userPortName, int br, int db, int sb, int par, int fIn, int fOut)
-			throws PortInUseException, Exception, UnsupportedCommOperationException {
+			throws Exception {
 		try {
 			serialPort = (SerialPort) port.open(userPortName, TIMEOUT);
 			serialPort.setSerialPortParams(br, db, sb, par);

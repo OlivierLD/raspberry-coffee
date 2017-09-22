@@ -74,7 +74,7 @@ void draw(){
   }
   // print the North
   textSize(32);
-  fill(255, 204, 0);
+  fill(255, 204, 0); // Goldish
   pushMatrix();
   translate(centerX + (extRadius * (float)Math.cos(Math.toRadians(heading - 90))), 
             centerY + (extRadius * (float)Math.sin(Math.toRadians(heading - 90))));
