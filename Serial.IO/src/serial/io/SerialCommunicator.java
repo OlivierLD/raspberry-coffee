@@ -25,12 +25,12 @@ public class SerialCommunicator
 
 	private final static int TIMEOUT = 2_000;
 
-	private final static int DEFAULT_BAUD_RATE = 9_600;
-	private final static int DEFAULT_FLOW_CTRL_IN = SerialPort.FLOWCONTROL_NONE;
+	private final static int DEFAULT_BAUD_RATE     = 9_600;
+	private final static int DEFAULT_FLOW_CTRL_IN  = SerialPort.FLOWCONTROL_NONE;
 	private final static int DEFAULT_FLOW_CTRL_OUT = SerialPort.FLOWCONTROL_NONE;
-	private final static int DEFAULT_DATABITS = SerialPort.DATABITS_8;
-	private final static int DEFAULT_STOIP_BITS = SerialPort.STOPBITS_1;
-	private final static int DEFAULT_PARITY = SerialPort.PARITY_NONE;
+	private final static int DEFAULT_DATABITS      = SerialPort.DATABITS_8;
+	private final static int DEFAULT_STOIP_BITS    = SerialPort.STOPBITS_1;
+	private final static int DEFAULT_PARITY        = SerialPort.PARITY_NONE;
 
 	public SerialCommunicator(SerialIOCallbacks caller) {
 		this.parent = caller;
@@ -49,7 +49,7 @@ public class SerialCommunicator
 			case CommPortIdentifier.PORT_SERIAL:
 				return "SERIAL";
 			default:
-				return "Unknown";
+				return "Unknown type";
 		}
 	}
 
@@ -106,15 +106,13 @@ public class SerialCommunicator
 	}
 
 	public boolean initIOStream() throws IOException {
-		boolean success = false;
 		try {
 			input = serialPort.getInputStream();
 			output = serialPort.getOutputStream();
-			success = true;
 		} catch (IOException e) {
 			throw e;
 		}
-		return success;
+		return true;
 	}
 
 	public void initListener() throws TooManyListenersException {
@@ -138,7 +136,6 @@ public class SerialCommunicator
 			}
 			setConnected(false);
 			this.parent.connected(false);
-
 		} catch (IOException e) {
 			throw e;
 		}
