@@ -12,16 +12,19 @@ CP=./build/libs/Serial.IO-1.0-all.jar
 #
 JAVA_OPTIONS=
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
+JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 #
 # For Mac
-JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"
 SERIAL_PRMS=
 # SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1411"
-SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1421"
+# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1421"
 # SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyUSB0"
+SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyACM0"
+# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyAMA0"
 #
-SERIAL_PRMS="$SERIAL_PRMS -Dbaud.rate=115200"
+# SERIAL_PRMS="$SERIAL_PRMS -Dbaud.rate=115200"
+SERIAL_PRMS="$SERIAL_PRMS -Dbaud.rate=9600"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.verbose=true"
 #
