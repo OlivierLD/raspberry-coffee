@@ -1,6 +1,7 @@
 package sample;
 
 import gnu.io.CommPortIdentifier;
+import gnu.io.NoSuchPortException;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 import utils.DumpUtil;
@@ -68,8 +69,8 @@ public class ArduinoCLIClient implements SerialIOCallbacks {
 	}
 
 	public static void main(String[] args) {
-		final ArduinoCLIClient mwc = new ArduinoCLIClient();
-		final SerialCommunicator sc = new SerialCommunicator(mwc);
+		final ArduinoCLIClient caller = new ArduinoCLIClient();
+		final SerialCommunicator sc = new SerialCommunicator(caller);
 		sc.setVerbose(false);
 
 		Map<String, CommPortIdentifier> pm = sc.getPortList();
@@ -87,10 +88,23 @@ public class ArduinoCLIClient implements SerialIOCallbacks {
 		String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
 		String baudRateStr = System.getProperty("baud.rate", "9600");
 		System.out.println(String.format("Opening port %s:%s", serialPortName, baudRateStr));
+
 		CommPortIdentifier arduinoPort = pm.get(serialPortName);
 		if (arduinoPort == null) {
-			System.out.println(String.format("Port %s not found, aborting", serialPortName));
-			System.exit(1);
+			System.out.println(String.format("Port %s not found in the list", serialPortName));
+//		System.exit(1);
+		}
+
+		// Try this if not found in list...
+		if (arduinoPort == null) {
+			System.out.println("Trying plan B...");
+			try {
+				arduinoPort = CommPortIdentifier.getPortIdentifier(serialPortName);
+			} catch (NoSuchPortException nspe) {
+				System.err.println(serialPortName + ": No Such Port");
+				nspe.printStackTrace();
+				System.exit(1);
+			}
 		}
 
 		System.out.println("Enter 'Q' at the prompt to quit.");

@@ -25,12 +25,12 @@ public class SerialCommunicator
 
 	private final static int TIMEOUT = 2_000;
 
-	private final static int DEFAULT_BAUD_RATE = 9_600;
-	private final static int DEFAULT_FLOW_CTRL_IN = SerialPort.FLOWCONTROL_NONE;
+	private final static int DEFAULT_BAUD_RATE     = 9_600;
+	private final static int DEFAULT_FLOW_CTRL_IN  = SerialPort.FLOWCONTROL_NONE;
 	private final static int DEFAULT_FLOW_CTRL_OUT = SerialPort.FLOWCONTROL_NONE;
-	private final static int DEFAULT_DATABITS = SerialPort.DATABITS_8;
-	private final static int DEFAULT_STOIP_BITS = SerialPort.STOPBITS_1;
-	private final static int DEFAULT_PARITY = SerialPort.PARITY_NONE;
+	private final static int DEFAULT_DATABITS      = SerialPort.DATABITS_8;
+	private final static int DEFAULT_STOP_BITS     = SerialPort.STOPBITS_1;
+	private final static int DEFAULT_PARITY        = SerialPort.PARITY_NONE;
 
 	public SerialCommunicator(SerialIOCallbacks caller) {
 		this.parent = caller;
@@ -49,7 +49,7 @@ public class SerialCommunicator
 			case CommPortIdentifier.PORT_SERIAL:
 				return "SERIAL";
 			default:
-				return "Unknown";
+				return "Unknown type";
 		}
 	}
 
@@ -74,23 +74,24 @@ public class SerialCommunicator
 		return portMap;
 	}
 
-	public void connect(CommPortIdentifier port) throws PortInUseException, Exception {
+	public void connect(CommPortIdentifier port) throws Exception {
 		connect(port, "");
 	}
 
-	public void connect(CommPortIdentifier port, String userPortName) throws PortInUseException, Exception {
+	public void connect(CommPortIdentifier port, String userPortName) throws Exception {
 		connect(port, userPortName, DEFAULT_BAUD_RATE);
 	}
 
-	public void connect(CommPortIdentifier port, String userPortName, int br) throws PortInUseException, Exception, UnsupportedCommOperationException {
-		connect(port, userPortName, br, DEFAULT_DATABITS, DEFAULT_STOIP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
+	public void connect(CommPortIdentifier port, String userPortName, int br) throws Exception {
+		connect(port, userPortName, br, DEFAULT_DATABITS, DEFAULT_STOP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
 	}
 
 	public void connect(CommPortIdentifier port, String userPortName, int br, int db, int sb, int par, int fIn, int fOut)
-			throws PortInUseException, Exception, UnsupportedCommOperationException {
+			throws Exception {
 		try {
 			serialPort = (SerialPort) port.open(userPortName, TIMEOUT);
 			serialPort.setSerialPortParams(br, db, sb, par);
+	//	serialPort.setRTS(true); // For tests
 			try {
 				serialPort.setFlowControlMode(fIn | fOut);
 			} catch (UnsupportedCommOperationException e) {
@@ -106,15 +107,13 @@ public class SerialCommunicator
 	}
 
 	public boolean initIOStream() throws IOException {
-		boolean success = false;
 		try {
 			input = serialPort.getInputStream();
 			output = serialPort.getOutputStream();
-			success = true;
 		} catch (IOException e) {
 			throw e;
 		}
-		return success;
+		return true;
 	}
 
 	public void initListener() throws TooManyListenersException {
@@ -138,7 +137,6 @@ public class SerialCommunicator
 			}
 			setConnected(false);
 			this.parent.connected(false);
-
 		} catch (IOException e) {
 			throw e;
 		}
