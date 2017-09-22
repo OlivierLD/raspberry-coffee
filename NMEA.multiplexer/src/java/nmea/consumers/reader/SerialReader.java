@@ -54,6 +54,23 @@ public class SerialReader
 
 	private InputStream theInput = null;
 
+	private static String readablePortType(int type) {
+		switch (type) {
+			case CommPortIdentifier.PORT_I2C:
+				return "I2C";
+			case CommPortIdentifier.PORT_PARALLEL:
+				return "PARALLEL";
+			case CommPortIdentifier.PORT_RAW:
+				return "RAW";
+			case CommPortIdentifier.PORT_RS485:
+				return "RS485";
+			case CommPortIdentifier.PORT_SERIAL:
+				return "SERIAL";
+			default:
+				return "Unknown type";
+		}
+	}
+
 	@Override
 	public void startReader() {
 		super.enableReading();
@@ -63,7 +80,7 @@ public class SerialReader
 			int nbp = 0;
 			while (enumeration.hasMoreElements()) {
 				CommPortIdentifier cpi = (CommPortIdentifier) enumeration.nextElement();
-				System.out.println("Port:" + cpi.getName());
+				System.out.println(String.format("Port: %s, %s", cpi.getName(), readablePortType(cpi.getPortType())));
 				nbp++;
 			}
 			System.out.println("Found " + nbp + " port(s)");
