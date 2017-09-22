@@ -9,7 +9,7 @@ LSM303 lsm303;
 
 int centerX = 200;
 int centerY = 200;
-int intRadius = 20;
+int intRadius =  20;
 int extRadius = 190;
 
 void setup(){
@@ -44,9 +44,13 @@ void draw(){
   if (withSensor) {
     heading = (float)lsm303.getHeading();
   } else {
-    heading += 0.25;
-    heading = heading % 360;
+    if (!mousePressed) {
+      heading += 0.25;
+      heading = heading % 360;
+    }
   }
+  textSize(10);
+  fill(255);
   text(String.format("%05.1f\272", heading), 5, 12);
 
   // Drawing the rose
@@ -68,4 +72,15 @@ void draw(){
              (float)(centerY + (intRadius * Math.sin(Math.toRadians(_heading - 45)))));
     _heading += 90;
   }
+  // print the North
+  textSize(32);
+  fill(255, 204, 0);
+  pushMatrix();
+  translate(centerX + (extRadius * (float)Math.cos(Math.toRadians(heading - 90))), 
+            centerY + (extRadius * (float)Math.sin(Math.toRadians(heading - 90))));
+  rotate((float)Math.toRadians(heading));
+  String north = "N";
+  float w = textWidth(north);
+  text(north, -w / 2, 40);
+  popMatrix();
 }

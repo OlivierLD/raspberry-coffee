@@ -29,7 +29,7 @@ public class SerialCommunicator
 	private final static int DEFAULT_FLOW_CTRL_IN  = SerialPort.FLOWCONTROL_NONE;
 	private final static int DEFAULT_FLOW_CTRL_OUT = SerialPort.FLOWCONTROL_NONE;
 	private final static int DEFAULT_DATABITS      = SerialPort.DATABITS_8;
-	private final static int DEFAULT_STOIP_BITS    = SerialPort.STOPBITS_1;
+	private final static int DEFAULT_STOP_BITS     = SerialPort.STOPBITS_1;
 	private final static int DEFAULT_PARITY        = SerialPort.PARITY_NONE;
 
 	public SerialCommunicator(SerialIOCallbacks caller) {
@@ -83,7 +83,7 @@ public class SerialCommunicator
 	}
 
 	public void connect(CommPortIdentifier port, String userPortName, int br) throws PortInUseException, Exception, UnsupportedCommOperationException {
-		connect(port, userPortName, br, DEFAULT_DATABITS, DEFAULT_STOIP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
+		connect(port, userPortName, br, DEFAULT_DATABITS, DEFAULT_STOP_BITS, DEFAULT_PARITY, DEFAULT_FLOW_CTRL_IN, DEFAULT_FLOW_CTRL_OUT);
 	}
 
 	public void connect(CommPortIdentifier port, String userPortName, int br, int db, int sb, int par, int fIn, int fOut)
@@ -91,6 +91,7 @@ public class SerialCommunicator
 		try {
 			serialPort = (SerialPort) port.open(userPortName, TIMEOUT);
 			serialPort.setSerialPortParams(br, db, sb, par);
+	//	serialPort.setRTS(true); // For tests
 			try {
 				serialPort.setFlowControlMode(fIn | fOut);
 			} catch (UnsupportedCommOperationException e) {
