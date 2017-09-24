@@ -47,10 +47,10 @@ public class RFM95W {
 // #endif
 
 	// The crystal oscillator frequency of the module
-	private final static int RH_RF95_FXOSC = 32000000;
+	private final static int RH_RF95_FXOSC = 32_000_000;
 
 	// The Frequency Synthesizer step = RH_RF95_FXOSC / 2^^19
-	private final static int RH_RF95_FSTEP = (RH_RF95_FXOSC / 524288);
+	private final static int RH_RF95_FSTEP = (RH_RF95_FXOSC / 524_288);
 
 
 	// Register names (LoRa Mode, from table 85)

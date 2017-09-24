@@ -10,6 +10,13 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * There is some bug in libRxTx, that prevents access to /dev/ttyACM0.
+ * To work around it:
+ * $ ln -s /dev/ttyACM0 /dev/ttyS80
+ *
+ * ... and access /dev/ttyS80 instead of /dev/ttyACM0
+ */
 public class SerialConsoleCLI implements SerialIOCallbacks {
 	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 
@@ -19,7 +26,7 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 	}
 
 	private int bufferIdx = 0;
-	private final static int BUFFER_SIZE = 4096;
+	private final static int BUFFER_SIZE = 4_096;
 	private byte[] serialBuffer = new byte[BUFFER_SIZE];
 
 	private void resetSerialBuffer() {
