@@ -195,7 +195,7 @@
     <script src="js/sf.client.js"></script>
     <script>
       var onMessage = function(json) {
-          console.log(JSON.stringify(json, null, 2));
+//        console.log(JSON.stringify(json, null, 2));
           if (json["dates"] !== undefined) {
               var dates = json["dates"];
               $("#syst-date").text(dates.system);

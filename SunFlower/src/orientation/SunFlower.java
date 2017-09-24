@@ -507,7 +507,7 @@ public class SunFlower implements RESTRequestManager {
 		if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
 			System.out.println(String.format("T> Servo tilt set required to %.02f (previous %d), moving:%s", f, previousTiltAngle, (tiltServoMoving ? "yes" : "no")));
 		}
-		float startFrom = previousTiltAngle;
+		float startFrom = applyLimitAndOffset(previousTiltAngle);
 		float goToAngle = applyLimitAndOffset(f);
 		if ((servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) && smoothMoves && Math.abs(startFrom - goToAngle) > 1) {
 			tiltServoMoving = true;
