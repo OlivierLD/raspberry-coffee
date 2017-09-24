@@ -69,6 +69,18 @@
       showServos = !showServos;
       $("#servos").css('display', showServos ? 'block' : 'none');
   };
+
+  var manageFont = function(checked) {
+    $("#lat").toggleClass("digifont", checked);
+	  $("#lon").toggleClass("digifont", checked);
+	  $("#sunZ").toggleClass("digifont", checked);
+	  $("#sunH").toggleClass("digifont", checked);
+	  $("#syst-date").toggleClass("digifont", checked);
+	  $("#utc-date").toggleClass("digifont", checked);
+	  $("#solar-date").toggleClass("digifont", checked);
+	  $("#heading").toggleClass("digifont", checked);
+	  $("#tilt").toggleClass("digifont", checked);
+  }
     </script>
   </head>
   <body>
@@ -76,6 +88,7 @@
       <tr style="margin-bottom: 10px;">
         <td valign="top"><h2>SunFlower Data</h2></td>
         <td>From the SunFlower: Position, Dates, orientations, etc.</td>
+        <td><input id="font-box" type="checkbox" onclick="manageFont(this.checked);" checked /> Led Font</td>
       </tr>
     </table>
     <hr/>
@@ -117,10 +130,10 @@
       <table>
         <tr>
           <td colspan="2" align="right">
-            <b><div id="lat"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">N 00"00.00'</div></b>
+            <b><div id="lat"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">N 00"00.00'</div></b>
           </td>
           <td colspan="2" align="right">
-            <b><div id="lon"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">W 000"00.00'</div></b>
+            <b><div id="lon"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">W 000"00.00'</div></b>
           </td>
         </tr>
       </table>
@@ -135,10 +148,10 @@
         <tr>
           <td width="50%" align="center">
             <b><div id="sunZ" class="digifont"
-                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange;">000</div></b>
+                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange; background: black;">000</div></b>
           </td>
           <td width="50%" align="center">
-            <b><div id="sunH" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange;">00.00</div></b>
+            <b><div id="sunH" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange; background: black;">00.00</div></b>
           </td>
         </tr>
       </table>
@@ -151,7 +164,7 @@
         </tr>
         <tr>
           <td colspan="2" align="left">
-            <b><div id="syst-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: red;">--</div></b>
+            <b><div id="syst-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: red; background: black;">--</div></b>
           </td>
         </tr>
         <tr>
@@ -159,7 +172,7 @@
         </tr>
         <tr>
           <td colspan="2" align="left">
-            <b><div id="utc-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: deeppink;">--</div></b>
+            <b><div id="utc-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: deeppink; background: black;">--</div></b>
           </td>
         </tr>
         <tr>
@@ -167,7 +180,7 @@
         </tr>
         <tr>
           <td colspan="2" align="left">
-            <b><div id="solar-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orangered;">--</div></b>
+            <b><div id="solar-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orangered; background: black;">--</div></b>
           </td>
         </tr>
       </table>
@@ -182,10 +195,10 @@
         <tr>
           <td width="50%" align="center">
             <b><div id="heading" class="digifont"
-                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan;">000</div></b>
+                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">000</div></b>
           </td>
           <td width="50%" align="center">
-            <b><div id="tilt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan;">000</div></b>
+            <b><div id="tilt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">000</div></b>
           </td>
         </tr>
       </table>

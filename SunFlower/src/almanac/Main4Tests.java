@@ -67,33 +67,41 @@ public class Main4Tests {
 		double lat = 37.7489;
 		double lng = -122.5070;
 		Calendar current = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
-		AstroComputer.setDateTime(current.get(Calendar.YEAR),
-						current.get(Calendar.MONTH) + 1,
-						current.get(Calendar.DAY_OF_MONTH),
-						current.get(Calendar.HOUR_OF_DAY),
-						current.get(Calendar.MINUTE),
-						current.get(Calendar.SECOND));
-		AstroComputer.calculate();
-		SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
-						AstroComputer.getSunDecl(),
-						lat,
-						lng);
-		sru.calculate();
-		Double he = sru.getHe();
-		Double  z = sru.getZ();
-		// Local time
-		Calendar local = (Calendar)current.clone();
-		local.setTimeZone(TimeZone.getDefault());
-		System.out.println(String.format("From %s / %s, at %02d:%02d:%02d UTC (%02d:%02d:%02d Local), He:%.02f\272, Z:%.02f\272 (true)",
-						GeomUtil.decToSex(lat, GeomUtil.SWING, GeomUtil.NS),
-						GeomUtil.decToSex(lng, GeomUtil.SWING, GeomUtil.EW),
-						current.get(Calendar.HOUR_OF_DAY),
-						current.get(Calendar.MINUTE),
-						current.get(Calendar.SECOND),
-						local.get(Calendar.HOUR_OF_DAY),
-						local.get(Calendar.MINUTE),
-						local.get(Calendar.SECOND),
-						he.doubleValue(),
-						z.doubleValue()));
+
+		int h = 0;
+		while (h < 48) {
+
+			AstroComputer.setDateTime(current.get(Calendar.YEAR),
+					current.get(Calendar.MONTH) + 1,
+					current.get(Calendar.DAY_OF_MONTH),
+					current.get(Calendar.HOUR_OF_DAY),
+					current.get(Calendar.MINUTE),
+					current.get(Calendar.SECOND));
+			AstroComputer.calculate();
+			SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
+					AstroComputer.getSunDecl(),
+					lat,
+					lng);
+			sru.calculate();
+			Double he = sru.getHe();
+			Double z = sru.getZ();
+			// Local time
+			Calendar local = (Calendar) current.clone();
+			local.setTimeZone(TimeZone.getDefault());
+			System.out.println(String.format("From %s / %s, at %02d:%02d:%02d UTC (%02d:%02d:%02d Local), He:%.02f\272, Z:%.02f\272 (true)",
+					GeomUtil.decToSex(lat, GeomUtil.SWING, GeomUtil.NS),
+					GeomUtil.decToSex(lng, GeomUtil.SWING, GeomUtil.EW),
+					current.get(Calendar.HOUR_OF_DAY),
+					current.get(Calendar.MINUTE),
+					current.get(Calendar.SECOND),
+					local.get(Calendar.HOUR_OF_DAY),
+					local.get(Calendar.MINUTE),
+					local.get(Calendar.SECOND),
+					he.doubleValue(),
+					z.doubleValue()));
+
+			current.add(Calendar.HOUR, 1);
+			h += 1;
+		}
 	}
 }
