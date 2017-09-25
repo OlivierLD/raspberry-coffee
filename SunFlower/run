@@ -3,6 +3,8 @@ CP=./build/libs/SunFlower-1.0-all.jar
 #
 echo Try $0 -help
 #
+# You can use several servos for heading, several servos for tilt,
+# in case you need to orient several solar panels.
 HEADING_SERVO_ID=14 #,0,10
 TILT_SERVO_ID=15    #,1
 #
@@ -18,7 +20,7 @@ JAVA_OPTS="$JAVA_OPTS -Dheading.servo.sign=1"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.limit=40"
 JAVA_OPTS="$JAVA_OPTS -Dtilt.offset=0"
 #
-OPTION=basic
+OPTION=-help
 WITH_HELP=false
 if [ $# -gt 0 ]
 then
@@ -38,10 +40,15 @@ displayHelp() {
   echo -e "=============================================================================="
 }
 #
-echo Using option "$OPTION"
+if [ $WITH_HELP = true ]
+then
+  echo Explaining option "$OPTION"
+else
+  echo Using option "$OPTION"
+fi
 #
 case "$OPTION" in
-  "-help" | "?" | "-h")
+  "-help" | "?" | "-h" | "help")
     displayHelp
     exit 0
     ;;
@@ -139,5 +146,6 @@ else
   do
     echo "> $opt"
   done
+  echo "------------"
 fi
 
