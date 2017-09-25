@@ -47,8 +47,8 @@
           s += (ns_ew === 'NS' ? 'N' : 'E');
       }
       s += " ";
-      s += i + "\"" + dec.toFixed(2) + "'";
-
+//    s += i + "\"" + dec.toFixed(2) + "'";
+	    s += i + " " + dec.toFixed(2) + "'";
       return s;
   };
 
@@ -88,7 +88,6 @@
       <tr style="margin-bottom: 10px;">
         <td valign="top"><h2>SunFlower Data</h2></td>
         <td>From the SunFlower: Position, Dates, orientations, etc.</td>
-        <td><input id="font-box" type="checkbox" onclick="manageFont(this.checked);" checked /> Led Font</td>
       </tr>
     </table>
     <hr/>
@@ -122,18 +121,25 @@
             </tr>
           </table>
         </td>
+				<td>
+					<table style="padding:1px; border-radius:5px; border:1px solid #CCC; margin-top:1px;">
+						<tr>
+							<td><input id="font-box" type="checkbox" onclick="manageFont(this.checked);" checked /> Led Font</td>
+						</tr>
+					</table>
+				</td>
       </tr>
     </table>
     <hr/>
-    <a href="#" onclick="togglePos();">Position</a>
+    <a href="#" onclick="togglePos();">Position (deg, decimal minutes)</a>
     <div id="position" style="display:none;">
       <table>
         <tr>
           <td colspan="2" align="right">
-            <b><div id="lat"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">N 00"00.00'</div></b>
+            <b><div id="lat"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">N 00 00.00'</div></b>
           </td>
           <td colspan="2" align="right">
-            <b><div id="lon"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">W 000"00.00'</div></b>
+            <b><div id="lon"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">W 000 00.00'</div></b>
           </td>
         </tr>
       </table>
