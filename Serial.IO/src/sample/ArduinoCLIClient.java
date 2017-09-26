@@ -103,6 +103,12 @@ public class ArduinoCLIClient implements SerialIOCallbacks {
 			} catch (NoSuchPortException nspe) {
 				System.err.println(serialPortName + ": No Such Port");
 				nspe.printStackTrace();
+				if ("/dev/ttyACM0".equals(serialPortName)) {
+					System.err.println("Note: There is some bug in libRxTx-java regarding the access to /dev/ttyACM0");
+					System.err.println("If this is your case, try creating a symbolic link on the port, and access it through its link:");
+					System.err.println(" $ sudo ln -s /dev/ttyACM0 /dev/ttyS80");
+					System.err.println("Then try reading or writing on /dev/ttyS80");
+				}
 				System.exit(1);
 			}
 		}
