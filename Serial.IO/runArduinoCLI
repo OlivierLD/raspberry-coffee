@@ -16,7 +16,8 @@ SERIAL_PRMS=
 # for Raspberry PI
 JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"
 # SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyUSB0"
-SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyACM0"
+# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyACM0"
+SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyS80"
 # SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyAMA0"
 #
 # For Mac
