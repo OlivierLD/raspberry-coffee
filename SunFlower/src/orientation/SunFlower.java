@@ -220,8 +220,7 @@ public class SunFlower implements RESTRequestManager {
 						}
 					}
 				}
-			}
-			// Return here
+			} // Return here
 		} else {
 	//	Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
 			if (astroVerbose && !ansiConsole) {
