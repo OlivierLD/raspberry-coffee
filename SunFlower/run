@@ -42,7 +42,9 @@ displayHelp() {
 #
 if [ $WITH_HELP = true ]
 then
-  echo Explaining option "$OPTION"
+  echo -e "+-----------------------------"
+  echo -e "| Explaining option $OPTION"
+  echo -e "+-----------------------------"
 else
   echo Using option "$OPTION"
 fi
@@ -116,7 +118,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=tilt"
     JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
     JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
     #
@@ -139,13 +141,11 @@ if [ $WITH_HELP = false ]
 then
   sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID
 else
-  echo Option $OPTION :
-# echo $JAVA_OPTS
   opts=$(echo $JAVA_OPTS | tr ";" "\n")
   for opt in $opts
   do
-    echo "> $opt"
+    echo -e "| $opt"
   done
-  echo "------------"
+  echo -e "+-----------------------------"
 fi
 

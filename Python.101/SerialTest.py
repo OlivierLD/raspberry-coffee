@@ -12,8 +12,8 @@ def readlineCR(port):
 		if ch=='\r' or ch=='':
 			return rv
 
-port = serial.Serial("/dev/ttyAMA0", baudrate=115200, timeout=3.0)
-
+port = serial.Serial("/dev/ttyACM0", baudrate=115200, timeout=3.0)
+print "Let's go"
 while True:
 	port.write("\r\nSay something:")
 	rcv = readlineCR(port)
