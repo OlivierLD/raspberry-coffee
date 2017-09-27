@@ -165,12 +165,12 @@ And this is a snapshot of the sample page mentioned above, the "led" sections ca
 <img src="./doc/web.ui.png" width="400" height="388">
 
 ## Inversion
-Standard servos like the `SG92R` rotate on 180 degrees, from -90° to 90°.
+Standard servos like the `SG92R` (and many - if not all - others) rotate on 180 degrees, from -90° to 90°.
 
 That could fit if the body to target (ie the Sun) was going for example from East to West, through South. Unfortunately,
 this is not the case.
 
-For example, from San Fancisco, on Wed June 21, 2017:
+For example, from San Francisco, on Wed June 21, 2017:
 ```
 At N  37°44.96' / W 122°30.44'
 Sun Rise:21 Jun 2017 05:52 (PDT -0700) (Z= 59°)
@@ -198,8 +198,8 @@ The device can also be on the go, the code can receive the position and the head
 <!-- ![Wiring](./sunflower_bb.png) -->
 <img src="./sunflower_bb.png" width="827" height="426">
 
-_Note_: you want to power the `PCA9685` with its own 5v power supply, *not* from the 5v pin of the Raspberry PI! That would lead to very un-expected results (like constantly re-booting).
-A good setting would be to power the Raspberry PI _and_ the `PCA9685` from the same source. More about that soon.
+> _Note_: If you want to power the `PCA9685` from the Raspberry PI (5v, GND), you need a power outlet that feeds more than 1A, and probably more than 1.5A.
+> If you see the Raspberry PI constantly rebooting itself, it is very likely to be a power issue, you do not feed it enough. 
 
 _Note_: The diagram above features a Raspberry PI 3, but they all work well, including the Raspberry PI Zero.
 
