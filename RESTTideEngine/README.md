@@ -181,6 +181,11 @@ You need to proceed in two steps:
 - Generate the document
 - Download it
 
+#### REST Clients
+Any REST Client can access the services. Postman, node-red, anyone! 
+
+![Node-red](./docimg/node-red.png)
+
 ###### Generation
 Use `POST /publish/{station name}`
 
