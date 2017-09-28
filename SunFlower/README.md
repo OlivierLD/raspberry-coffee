@@ -15,7 +15,11 @@ In the same light conditions, a panel with an incidence of 0 degrees (normal) pr
 <!-- ![Angles and cosinus](./doc/angles.png) -->
 <img src="./doc/angles.png" width="494" height="309" alt="Angles and cosinus">
 
-The servos are driven by a `PCA9685` board.
+And thnis applies to the two dimensions, tilt, and heading. Orienting the panel so
+it faces the Sun can definitely make a substantial difference in the output.
+
+
+In this version, the servos are driven by a `PCA9685` board.
 
 For a given position (provided, or read from a GPS), the position of the Sun is calculated, and then its altitude and azimuth.
 The servos are triggered when necessary, for the calculated azimuth and elevation to match the orientation of the panel.
