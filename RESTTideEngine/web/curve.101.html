@@ -71,6 +71,17 @@
 			var day = new Date().getDate();
 			populateDays();
 			$('#day').val(day);
+
+			// Query parameters?
+			var station = getQueryParameterByName("station");
+			if (station !== undefined && station !== null) {
+				// alert("Station " + station);
+				// Do it, for now, 1 day
+				$('#with-table').prop('checked', true);
+				tideTable(station,
+					{ year: year, month: month + 1, day: day }, '', '', '', false, 1, dataManager);
+
+			}
 		};
 
 		var getNbDayInMonth = function(yr, mo) { // mo in [1..12]

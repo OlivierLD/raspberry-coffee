@@ -368,10 +368,11 @@ function TideGraph(cName,       // Canvas Name
 	 * - Harmonic curves
 	 * - Daylight
 	 * - Moon declination (TODO)
-	 * - Moon phases (TODO)
+	 * - Moon phases
 	 * @param displayCanvasName
 	 * @param data
 	 * @param idx
+	 * @param table
 	 */
   this.drawGraph = function(displayCanvasName, data, idx, table) {
 
@@ -708,9 +709,10 @@ function TideGraph(cName,       // Canvas Name
 		  context.save();
 		  context.font = "bold 20px Courier New"; // + graphColorConfig.font;
 		  context.fillStyle = 'navy'; // graphColorConfig.horizontalGridTextColor;
+		  context.fillText(gData.station, 20, 30);
 		  table.forEach(function(line, idx) {
 		  	var str = line.type + " : " + line.formattedDate + ", " + line.value.toFixed(2) + " " + line.unit;
-		  	context.fillText(str, 20, 30 + (idx * 21));
+		  	context.fillText(str, 20, 30 + ((idx + 1) * 21));
 		  });
 		  context.restore();
 		  context.closePath();
