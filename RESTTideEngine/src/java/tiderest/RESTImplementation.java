@@ -605,7 +605,6 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		String stationFullName = "";
-		boolean proceed = true;
 		if (prmValues.size() == 1) {
 			String param = prmValues.get(0);
 			stationFullName = param;

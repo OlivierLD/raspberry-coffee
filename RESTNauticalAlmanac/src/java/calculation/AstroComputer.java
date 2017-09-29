@@ -311,6 +311,7 @@ public class AstroComputer {
 	public final static int HE_MOON_IDX = 1;
 	public final static int DEC_SUN_IDX = 2;
 	public final static int DEC_MOON_IDX = 3;
+	public final static int MOON_PHASE_IDX = 4;
 
 	/**
 	 * Returns Altitude and Declination, for Sun and Moon,
@@ -327,7 +328,7 @@ public class AstroComputer {
 	 * @return an array of 4 doubles. See HE_SUN_IDX, HE_MOON_IDX, DEC_SUN_IDX and DEC_MOON_IDX.
 	 */
 	public static synchronized double[] getSunMoonAltDecl(int y, int m, int d, int h, int mi, int s, double lat, double lng) {
-		double[] values = new double[4];
+		double[] values = new double[5];
 		year = y;
 		month = m;
 		day = d;
@@ -355,6 +356,9 @@ public class AstroComputer {
 
 		values[DEC_SUN_IDX] = Context.DECsun;
 		values[DEC_MOON_IDX] = Context.DECmoon;
+
+		double moonPhase = getMoonPhase(y, m, d, h, m, s);
+		values[MOON_PHASE_IDX] = moonPhase;
 
 		return values;
 	}

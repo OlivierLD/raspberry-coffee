@@ -14,5 +14,10 @@ public class ReverseString {
 				.collect(Collectors.joining(""));
 
 		System.out.println(String.format("%s becomes %s", str, reversed));
+
+		IntStream.range(1, 29)
+				.boxed()
+				.map(idx -> String.format("<img src=\"images/phase%02d.gif\" id=\"phase-%02d\" />", idx, idx))
+				.forEach(System.out::println);
 	}
 }

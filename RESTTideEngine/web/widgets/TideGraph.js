@@ -677,6 +677,7 @@ function TideGraph(cName,       // Canvas Name
 		  // Moon
 		  context.beginPath();
 		  context.moveTo((0 - minx) * xScale, zero - ((height / 2) * (altitudes[0].moonAlt / 90)));
+		  var phase;
 		  altitudes.forEach(function(el, idx) {
 			  var alt = el.moonAlt;
 			  var _y = (height / 2) * (alt / 90);
@@ -688,9 +689,18 @@ function TideGraph(cName,       // Canvas Name
 					  context.drawImage(img, _idxX, zero - _y - 12); //, 150, 180);
 				  }
 			  }
+			  // Moon phases?
+			  phase = Math.round(el.moonPhase / (360 / 28)) + 1;
+			  if (phase > 28) phase = 28;
+			  if (phase < 1) phase = 1;
 		  });
 		  context.stroke();
 		  context.closePath();
+		  if (phase !== undefined) {
+			  var pixName = "phase-" + (phase < 10 ? "0" : "") + phase.toFixed(0);
+			  var moonPix = document.getElementById(pixName);
+			  context.drawImage(moonPix, width - 60, 10);
+		  }
 	  }
 	  if (table !== undefined) {
 	  	// Display table

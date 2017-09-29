@@ -391,7 +391,8 @@ public class RESTImplementation {
 						.sunAlt(astroData[AstroComputer.HE_SUN_IDX])
 						.sunDecl(astroData[AstroComputer.DEC_SUN_IDX])
 						.moonAlt(astroData[AstroComputer.HE_MOON_IDX])
-						.moonDecl(astroData[AstroComputer.DEC_MOON_IDX]);
+						.moonDecl(astroData[AstroComputer.DEC_MOON_IDX])
+						.moonPhase(astroData[AstroComputer.MOON_PHASE_IDX]);
 				list.add(data);
 				if ("true".equals(System.getProperty("astro.verbose", "false"))) {
 					System.out.println(String.format("%04d-%02d-%02d %02d:%02d:%02d, %s, hSun: %.02f",
@@ -456,6 +457,7 @@ public class RESTImplementation {
 		double moonDecl;
 		double sunAlt;
 		double moonAlt;
+		double moonPhase;
 
 		public SunMoonDecAlt epoch(long epoch) {
 			this.epoch = epoch;
@@ -489,6 +491,11 @@ public class RESTImplementation {
 
 		public SunMoonDecAlt moonAlt(double moonAlt) {
 			this.moonAlt = moonAlt;
+			return this;
+		}
+
+		public SunMoonDecAlt moonPhase(double moonPhase) {
+			this.moonPhase = moonPhase;
 			return this;
 		}
 	}
