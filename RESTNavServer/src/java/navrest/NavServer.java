@@ -2,9 +2,11 @@ package navrest;
 
 import astrorest.AstroRequestManager;
 import http.HTTPServer;
+import nmea.mux.GenericNMEAMultiplexer;
 import tiderest.TideRequestManager;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +35,9 @@ public class NavServer {
 		this.httpServer.addRequestManager(new AstroRequestManager());
 		// Add tide features...
 		this.httpServer.addRequestManager(new TideRequestManager());
-		// TODO Dead Reckoning, logging, re-broadcasting, from the NMEA Multiplexer
+		// Add Dead Reckoning, logging, re-broadcasting, from the NMEA Multiplexer
+		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
+		this.httpServer.addRequestManager(new GenericNMEAMultiplexer(definitions));
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {

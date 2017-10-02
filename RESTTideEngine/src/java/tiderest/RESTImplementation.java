@@ -59,11 +59,11 @@ public class RESTImplementation {
 	 * See {@link HTTPServer}
 	 */
 	private List<Operation> operations = Arrays.asList(
-//			new Operation(
-//					"GET",
-//					"/oplist",
-//					this::getOperationList,
-//					"List of all available operations, on all request managers."),
+			new Operation(
+					"GET",
+					"/tide/oplist",
+					this::getOperationList,
+					"List of all available operations, on tide request manager."),
 			new Operation(
 					"GET",
 					"/tide-stations",
@@ -125,15 +125,15 @@ public class RESTImplementation {
 		}
 	}
 
-//	private Response getOperationList(@Nonnull Request request) {
-//		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-//
-//		List<Operation> opList = this.tideRequestManager.getAllOperationList(); // Aggregates ops from all request managers
-//		String content = new Gson().toJson(opList);
-//		RESTProcessorUtil.generateResponseHeaders(response, content.length());
-//		response.setPayload(content.getBytes());
-//		return response;
-//	}
+	private Response getOperationList(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		List<Operation> opList = this.getOperations();
+		String content = new Gson().toJson(opList);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+		return response;
+	}
 
 	/**
 	 * Returns the coefficient names and definitions
@@ -632,7 +632,7 @@ public class RESTImplementation {
 						errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid number, must be at least 1 ");
 					}
 					if (options.quantity == null) {
-						errMess += ((errMess.length() > 0 ? "\n" : "") + "Quantity must be YEAR on MONTH.");
+						errMess += ((errMess.length() > 0 ? "\n" : "") + "Quantity must be YEAR or MONTH.");
 					}
 				} catch (Exception ex) {
 					response = HTTPServer.buildErrorResponse(response,

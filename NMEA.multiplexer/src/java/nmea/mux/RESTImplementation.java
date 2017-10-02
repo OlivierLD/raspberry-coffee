@@ -77,9 +77,9 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 					new Operation(
 									"GET",
-									"/oplist",
+									"/mux/oplist",
 									this::getOperationList,
-									"List of all available operations."),
+									"List of all available operations, on NMEA request manager."),
 					new Operation(
 									"POST",
 									"/terminate",

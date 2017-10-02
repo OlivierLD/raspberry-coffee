@@ -10,8 +10,11 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import implementation.almanac.AlmanacComputer;
+import implementation.perpetualalmanac.Publisher;
 import utils.TimeUtil;
 
+import java.io.File;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -53,12 +56,11 @@ public class RESTImplementation {
 	 * See {@link HTTPServer}
 	 */
 	private List<Operation> operations = Arrays.asList(
-//			new Operation(
-//					"GET",
-//					"/oplist",
-//					this::getOperationList,
-//					"List of all available operations."),
-
+			new Operation(
+					"GET",
+					"/astro/oplist",
+					this::getOperationList,
+					"List of all available operations, on astro request manager."),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
 					"POST",
 					"/sun-now",
@@ -78,7 +80,23 @@ public class RESTImplementation {
 					"GET",
 					"/utc",
 					this::getCurrentTime,
-					"Get current UTC Date. Will return UTC time, system time, and optionally, the time(s) at the time zone(s) passed in QS prm 'tz', UTF-8 encoded, comma separated.")
+					"Get current UTC Date. Will return UTC time, system time, and optionally, the time(s) at the time zone(s) passed in QS prm 'tz', UTF-8 encoded, comma separated."),
+			new Operation(
+					"POST",
+					"/publish/almanac",
+					this::publishAlmanac,
+					"Generates nautical almanac document (pdf)"),
+			new Operation(
+					"POST",
+							"/publish/lunar",
+							this::publishLunar,
+					"Generates lunar distances document (pdf)"),
+			new Operation(
+					"POST",
+					"/publish/perpetual",
+					this::publishPerpetual,
+					"Generates perpetual nautical almanac document (pdf)")
+
 	);
 
 	protected List<Operation> getOperations() {
@@ -105,6 +123,17 @@ public class RESTImplementation {
 			throw new UnsupportedOperationException(String.format("%s not managed", request.toString()));
 		}
 	}
+
+	private Response getOperationList(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		List<Operation> opList = this.getOperations(); // Aggregates ops from all request managers
+		String content = new Gson().toJson(opList);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+		return response;
+	}
+
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z z");
 
@@ -420,6 +449,313 @@ public class RESTImplementation {
 		}
 	}
 
+	private String generateAstroData(Request request) throws Exception {
+		String payload = new String(request.getContent());
+		Gson gson = new GsonBuilder().create();
+		StringReader stringReader = new StringReader(payload);
+		String errMess = "";
+		AlmanacOptions options;
+		try {
+			options = gson.fromJson(stringReader, AlmanacOptions.class);
+			if (options.startDay > 31 || options.startDay < 1) {
+				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [1..31].");
+			}
+			if (options.startMonth > 11 || options.startMonth < 0) {
+				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [0..11].");
+			}
+			if (options.nb < 1) {
+				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid number, must be at least 1 ");
+			}
+			if (options.quantity == null) {
+				errMess += ((errMess.length() > 0 ? "\n" : "") + "Quantity must be YEAR, MONTH, or DAY.");
+			}
+			if (!errMess.isEmpty()) {
+				throw new RuntimeException(errMess);
+			}
+		} catch (Exception ex) {
+			throw ex;
+		}
+		try {
+			// Right parameters
+			Calendar start = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+			start.set(options.startYear, options.startMonth, options.startDay, 0, 0, 0);
+			Calendar end = (Calendar) start.clone();
+			end.add((Quantity.YEAR.equals(options.quantity)) ? Calendar.YEAR : ((Quantity.MONTH.equals(options.quantity)) ? Calendar.MONTH : Calendar.DAY_OF_MONTH), options.nb);
+
+			File temp = File.createTempFile("astro", ".xml");
+			String tempFileName = temp.getAbsolutePath();
+			String[] prms = new String[]{
+					"-type", "from-to",
+
+					"-from-year", String.valueOf(start.get(Calendar.YEAR)),
+					"-from-month", String.valueOf(start.get(Calendar.MONTH) + 1),
+					"-from-day", String.valueOf(start.get(Calendar.DAY_OF_MONTH)),
+
+					"-to-year", String.valueOf(end.get(Calendar.YEAR)),
+					"-to-month", String.valueOf(end.get(Calendar.MONTH) + 1),
+					"-to-day", String.valueOf(end.get(Calendar.DAY_OF_MONTH)),
+
+					"-out", tempFileName
+			};
+			if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+				System.out.println(String.format("Invoking AlmanacComputer with %s", Arrays.asList(prms).stream()
+						.collect(Collectors.joining(" "))));
+			}
+			AlmanacComputer.main(prms);
+			return tempFileName;
+
+		} catch (Exception ex) {
+			throw ex;
+		}
+	}
+
+	/**
+	 * Publish almanac (generate pdf) for a given period of time.
+	 * Supports a payload in the body, in json format:
+	 * <pre>
+	 * {
+	 *   "startDay": 1,
+	 *   "startMonth": 0,
+	 *   "startYear": 2017,
+	 *   "nb": 1,
+	 *   "quantity": "YEAR" | "MONTH" | "DAY"
+	 * }
+	 * </pre>
+	 * @param request
+	 * @return
+	 */
+	private Response publishAlmanac(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				try {
+					String tempFileName = generateAstroData(request);
+					System.out.println("Data Generation completed.");
+					// Ready for transformation
+					try {
+						String tempPdfFileName = File.createTempFile("almanac", ".pdf").getAbsolutePath();
+						String almanacTxPrm = String.format("EN true %s %s", tempFileName, tempPdfFileName);
+						String cmd = "." + File.separator + "xsl" + File.separator + "publishalmanac " + almanacTxPrm;
+						System.out.println("Tx Command:" + cmd);
+						Process p = Runtime.getRuntime().exec(cmd);
+						int exitStatus = p.waitFor();
+						System.out.println("Script completed, status " + exitStatus);
+						System.out.println(String.format("See %s", tempPdfFileName));
+						cmd = String.format("mv %s web", tempPdfFileName);
+						p = Runtime.getRuntime().exec(cmd);
+						exitStatus = p.waitFor();
+						System.out.println("Copy command completed, status " + exitStatus);
+						response.setPayload(String.format(".%s", tempPdfFileName.substring(tempPdfFileName.lastIndexOf(File.separator))).getBytes());
+					} catch (Exception ex) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("ASTRO-0104")
+										.errorMessage(ex.toString()));
+						return response;
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("ASTRO-0103")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0101")
+							.errorMessage("Required payload not found."));
+			return response;
+		}
+		return response;
+	}
+
+	/**
+	 * Publish lunar distances (generate pdf) for a given period of time.
+	 * Supports a payload in the body, in json format:
+	 * <pre>
+	 * {
+	 *   "startDay": 1,
+	 *   "startMonth": 0,
+	 *   "startYear": 2017,
+	 *   "nb": 1,
+	 *   "quantity": "YEAR" | "MONTH" | "DAY"
+	 * }
+	 * </pre>
+	 * @param request
+	 * @return
+	 */
+	private Response publishLunar(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				try {
+					String tempFileName = generateAstroData(request);
+					System.out.println("Data Generation completed.");
+					// Ready for transformation
+					try {
+						String tempPdfFileName = File.createTempFile("lunar", ".pdf").getAbsolutePath();
+						String almanacTxPrm = String.format("EN %s %s", tempFileName, tempPdfFileName);
+						String cmd = "." + File.separator + "xsl" + File.separator + "publishlunar " + almanacTxPrm;
+						System.out.println("Tx Command:" + cmd);
+						Process p = Runtime.getRuntime().exec(cmd);
+						int exitStatus = p.waitFor();
+						System.out.println("Script completed, status " + exitStatus);
+						System.out.println(String.format("See %s", tempPdfFileName));
+						cmd = String.format("mv %s web", tempPdfFileName);
+						p = Runtime.getRuntime().exec(cmd);
+						exitStatus = p.waitFor();
+						System.out.println("Copy command completed, status " + exitStatus);
+						response.setPayload(String.format(".%s", tempPdfFileName.substring(tempPdfFileName.lastIndexOf(File.separator))).getBytes());
+					} catch (Exception ex) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("ASTRO-0204")
+										.errorMessage(ex.toString()));
+						return response;
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("ASTRO-0203")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0201")
+							.errorMessage("Required payload not found."));
+			return response;
+		}
+		return response;
+	}
+
+	/**
+	 * Publish perpetual almanac (generate pdf) for a given period of time.
+	 * Supports a payload in the body, in json format:
+	 * <pre>
+	 * {
+	 *   "from": 2017,
+	 *   "to": 2020,
+	 * }
+	 * </pre>
+	 * @param request
+	 * @return
+	 */
+	private Response publishPerpetual(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				try {
+					Gson gson = new GsonBuilder().create();
+					StringReader stringReader = new StringReader(payload);
+					String errMess = "";
+					PerpetualAlmanacOptions options;
+					try {
+						options = gson.fromJson(stringReader, PerpetualAlmanacOptions.class);
+						if (options.from > 2100 || options.from < 1900) {
+							errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid from year, must be in [1900..2100].");
+						}
+						if (options.to > 2100 || options.to < 1900) {
+							errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid to year, must be in [1900..2100].");
+						}
+						if (!errMess.isEmpty()) {
+							response = HTTPServer.buildErrorResponse(response,
+									Response.BAD_REQUEST,
+									new HTTPServer.ErrorPayload()
+											.errorCode("ASTRO-0300")
+											.errorMessage(errMess));
+							return response;
+						}
+					} catch (Exception ex) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("ASTRO-0301")
+										.errorMessage(ex.toString()));
+						return response;
+					}
+					try {
+						// Right parameters
+						File temp = File.createTempFile("perpetual", ".xml");
+						String tempFileName = temp.getAbsolutePath();
+						String[] prms = new String[]{
+								String.valueOf(options.from),
+								String.valueOf(options.to),
+								tempFileName
+						};
+						if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+							System.out.println(String.format("Invoking Almanac Publisher with %s", Arrays.asList(prms).stream()
+									.collect(Collectors.joining(" "))));
+						}
+						Publisher.main(prms);
+						System.out.println("Data Generation completed.");
+						// Ready for transformation
+						try {
+							String tempPdfFileName = File.createTempFile("perpetual", ".pdf").getAbsolutePath();
+							String almanacTxPrm = String.format("%s %s", tempFileName, tempPdfFileName);
+							String cmd = "." + File.separator + "xsl" + File.separator + "publishperpetual " + almanacTxPrm;
+							System.out.println("Tx Command:" + cmd);
+							Process p = Runtime.getRuntime().exec(cmd);
+							int exitStatus = p.waitFor();
+							System.out.println("Script completed, status " + exitStatus);
+							System.out.println(String.format("See %s", tempPdfFileName));
+							cmd = String.format("mv %s web", tempPdfFileName);
+							p = Runtime.getRuntime().exec(cmd);
+							exitStatus = p.waitFor();
+							System.out.println("Copy command completed, status " + exitStatus);
+							response.setPayload(String.format(".%s", tempPdfFileName.substring(tempPdfFileName.lastIndexOf(File.separator))).getBytes());
+						} catch (Exception ex) {
+							response = HTTPServer.buildErrorResponse(response,
+									Response.BAD_REQUEST,
+									new HTTPServer.ErrorPayload()
+											.errorCode("ASTRO-0304")
+											.errorMessage(ex.toString()));
+							return response;
+						}
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("ASTRO-0303")
+										.errorMessage(ex.toString()));
+						return response;
+					}
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("ASTRO-0302")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			} else {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("ASTRO-0306")
+								.errorMessage("Required payload not found."));
+				return response;
+			}
+		}
+		return response;
+	}
+
 	private Response emptyOperation(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		return response;
@@ -631,5 +967,22 @@ public class RESTImplementation {
 				.setTime(set.getTimeInMillis())
 				.riseZ(sunRiseAndSet[AstroComputer.RISE_Z_IDX])
 				.setZ(sunRiseAndSet[AstroComputer.SET_Z_IDX]);
+	}
+
+	private enum Quantity {
+		DAY, MONTH, YEAR
+	};
+
+	private static class AlmanacOptions {
+		int startDay;
+		int startMonth;
+		int startYear;
+		int nb;
+		Quantity quantity;
+	}
+
+	private static class PerpetualAlmanacOptions {
+		int from;
+		int to;
 	}
 }

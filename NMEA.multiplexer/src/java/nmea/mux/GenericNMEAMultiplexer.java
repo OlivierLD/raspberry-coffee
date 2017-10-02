@@ -192,13 +192,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		}
 	}
 
-	/**
-	 * Start the Multiplexer from here.
-	 *
-	 * @param args unused.
-	 */
-	public static void main(String... args) {
-
+	public static Properties getDefinitions() {
 		String propertiesFile = System.getProperty("mux.properties", "nmea.mux.properties");
 
 		Properties definitions = new Properties();
@@ -212,6 +206,17 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 				ioe.printStackTrace();
 			}
 		}
+		return definitions;
+	}
+
+	/**
+	 * Start the Multiplexer from here.
+	 *
+	 * @param args unused.
+	 */
+	public static void main(String... args) {
+		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
+
 		boolean startProcessingOnStart = "true".equals(System.getProperty("process.on.start", "true"));
 		GenericNMEAMultiplexer mux = new GenericNMEAMultiplexer(definitions);
 		mux.setEnableProcess(startProcessingOnStart);
