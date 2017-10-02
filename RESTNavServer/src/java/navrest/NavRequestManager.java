@@ -1,22 +1,25 @@
-package astrorest;
+package navrest;
 
 import http.HTTPServer;
 import http.RESTRequestManager;
 
 import java.util.List;
 
-public class AstroRequestManager implements RESTRequestManager {
+public class NavRequestManager implements RESTRequestManager {
 
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private RESTImplementation restImplementation;
 
+	private NavServer navServer = null;
 
-	// See http://maia.usno.navy.mil/ser7/deltat.data
-	private double deltaT = Double.parseDouble(System.getProperty("deltaT", Double.toString(68.8033))); // June 2017
-
-	public AstroRequestManager() {
-		System.out.println(String.format("Using Delta-T:%f", deltaT));
+	/**
+	 *
+	 * @param parent to be able to refer to all the request managers
+	 */
+	public NavRequestManager(NavServer parent) {
+		this.navServer = parent;
 		restImplementation = new RESTImplementation(this);
+
 	}
 
 	/**
@@ -42,4 +45,13 @@ public class AstroRequestManager implements RESTRequestManager {
 	public List<HTTPServer.Operation> getRESTOperationList() {
 		return restImplementation.getOperations();
 	}
+
+	/*
+	 Specific operations
+	 */
+
+	protected List<HTTPServer.Operation> getAllOperationList() {
+		return navServer.getAllOperationList();
+	}
+
 }

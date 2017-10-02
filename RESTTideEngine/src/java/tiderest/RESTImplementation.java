@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
  * <p>
  * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
  * <br>
- * Those operation mostly retrieve the state of the SunFlower class, and device.
+ * Those operation mostly retrieve the state of the TideServer class, and device.
  * <br>
- * The SunFlower will use the {@link #processRequest(Request)} method of this class to
+ * The TideServer will use the {@link #processRequest(Request)} method of this class to
  * have the required requests processed.
  * </p>
  */
@@ -59,11 +59,11 @@ public class RESTImplementation {
 	 * See {@link HTTPServer}
 	 */
 	private List<Operation> operations = Arrays.asList(
-			new Operation(
-					"GET",
-					"/oplist",
-					this::getOperationList,
-					"List of all available operations, on all request managers."),
+//			new Operation(
+//					"GET",
+//					"/oplist",
+//					this::getOperationList,
+//					"List of all available operations, on all request managers."),
 			new Operation(
 					"GET",
 					"/tide-stations",
@@ -125,15 +125,15 @@ public class RESTImplementation {
 		}
 	}
 
-	private Response getOperationList(@Nonnull Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-
-		List<Operation> opList = this.tideRequestManager.getAllOperationList(); // Aggregates ops from all request managers
-		String content = new Gson().toJson(opList);
-		RESTProcessorUtil.generateResponseHeaders(response, content.length());
-		response.setPayload(content.getBytes());
-		return response;
-	}
+//	private Response getOperationList(@Nonnull Request request) {
+//		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+//
+//		List<Operation> opList = this.tideRequestManager.getAllOperationList(); // Aggregates ops from all request managers
+//		String content = new Gson().toJson(opList);
+//		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+//		response.setPayload(content.getBytes());
+//		return response;
+//	}
 
 	/**
 	 * Returns the coefficient names and definitions

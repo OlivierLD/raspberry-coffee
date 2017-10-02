@@ -20,6 +20,9 @@ public class TideRequestManager implements RESTRequestManager {
 	private Map<String, String> coeffDefinitions = null;
 	private TideServer tideServer = null;
 
+	public TideRequestManager() {
+		this(null);
+	}
 	/**
 	 *
 	 * @param parent to be able to refer to all the request managers

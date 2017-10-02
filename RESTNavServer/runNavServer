@@ -1,0 +1,12 @@
+#!/bin/bash
+# Navigation REST server
+#
+echo -e "Starting the Navigation Rest Server"
+#
+CP=./build/libs/RESTNavServer-1.0-all.jar
+JAVA_OPTS=
+JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=true"
+# JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
+java -cp $CP $JAVA_OPTS navrest.NavServer
+
