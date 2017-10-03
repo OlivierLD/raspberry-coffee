@@ -449,26 +449,22 @@ public class RESTImplementation {
 		}
 	}
 
-	private String generateAstroData(Request request) throws Exception {
-		String payload = new String(request.getContent());
-		Gson gson = new GsonBuilder().create();
-		StringReader stringReader = new StringReader(payload);
+	private String generateAstroData(Request request, AlmanacOptions options) throws Exception {
 		String errMess = "";
-		AlmanacOptions options;
 		try {
-			options = gson.fromJson(stringReader, AlmanacOptions.class);
-			if (options.startDay > 31 || options.startDay < 1) {
-				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [1..31].");
-			}
-			if (options.startMonth > 11 || options.startMonth < 0) {
-				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [0..11].");
-			}
-			if (options.nb < 1) {
-				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid number, must be at least 1 ");
-			}
-			if (options.quantity == null) {
-				errMess += ((errMess.length() > 0 ? "\n" : "") + "Quantity must be YEAR, MONTH, or DAY.");
-			}
+			// TODO Validate
+//			if (options.startDay > 31 || options.startDay < 1) {
+//				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [1..31].");
+//			}
+//			if (options.startMonth > 11 || options.startMonth < 0) {
+//				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [0..11].");
+//			}
+//			if (options.nb < 1) {
+//				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid number, must be at least 1 ");
+//			}
+//			if (options.quantity == null) {
+//				errMess += ((errMess.length() > 0 ? "\n" : "") + "Quantity must be YEAR, MONTH, or DAY.");
+//			}
 			if (!errMess.isEmpty()) {
 				throw new RuntimeException(errMess);
 			}
@@ -477,26 +473,42 @@ public class RESTImplementation {
 		}
 		try {
 			// Right parameters
-			Calendar start = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
-			start.set(options.startYear, options.startMonth, options.startDay, 0, 0, 0);
-			Calendar end = (Calendar) start.clone();
-			end.add((Quantity.YEAR.equals(options.quantity)) ? Calendar.YEAR : ((Quantity.MONTH.equals(options.quantity)) ? Calendar.MONTH : Calendar.DAY_OF_MONTH), options.nb);
-
 			File temp = File.createTempFile("astro", ".xml");
 			String tempFileName = temp.getAbsolutePath();
-			String[] prms = new String[]{
-					"-type", "from-to",
+			String[] prms = null;
+			if ("continuous".equals(options.type.type())) {
+				int card = 6;
+				if (options.month > 0) {
+					card = 8;
+				}
+				if (options.day > 0) {
+					card = 10;
+				}
+				prms = new String[card];
+				prms[0] = "-type"; prms[1] = options.type.type();
+				prms[2] = "-year"; prms[3] = String.valueOf(options.year);
+				prms[4] = "-out"; prms[5] = tempFileName;
+				if (options.month > 0) {
+					prms[6] = "-month"; prms[7] = String.valueOf(options.month);
+				}
+				if (options.day > 0) {
+					prms[8] = "-day"; prms[9] = String.valueOf(options.day);
+				}
+			} else {
+				prms = new String[]{
+						"-type", options.type.type(),
 
-					"-from-year", String.valueOf(start.get(Calendar.YEAR)),
-					"-from-month", String.valueOf(start.get(Calendar.MONTH) + 1),
-					"-from-day", String.valueOf(start.get(Calendar.DAY_OF_MONTH)),
+						"-from-year", String.valueOf(options.fromYear),
+						"-from-month", String.valueOf(options.fromMonth),
+						"-from-day", String.valueOf(options.fromDay),
 
-					"-to-year", String.valueOf(end.get(Calendar.YEAR)),
-					"-to-month", String.valueOf(end.get(Calendar.MONTH) + 1),
-					"-to-day", String.valueOf(end.get(Calendar.DAY_OF_MONTH)),
+						"-to-year", String.valueOf(options.toYear),
+						"-to-month", String.valueOf(options.toMonth),
+						"-to-day", String.valueOf(options.toDay),
 
-					"-out", tempFileName
-			};
+						"-out", tempFileName
+				};
+			}
 			if ("true".equals(System.getProperty("astro.verbose", "false"))) {
 				System.out.println(String.format("Invoking AlmanacComputer with %s", Arrays.asList(prms).stream()
 						.collect(Collectors.joining(" "))));
@@ -530,12 +542,15 @@ public class RESTImplementation {
 			String payload = new String(request.getContent());
 			if (!"null".equals(payload)) {
 				try {
-					String tempFileName = generateAstroData(request);
+					Gson gson = new GsonBuilder().create();
+					StringReader stringReader = new StringReader(payload);
+					AlmanacOptions options = gson.fromJson(stringReader, AlmanacOptions.class);
+					String tempFileName = generateAstroData(request, options);
 					System.out.println("Data Generation completed.");
 					// Ready for transformation
 					try {
 						String tempPdfFileName = File.createTempFile("almanac", ".pdf").getAbsolutePath();
-						String almanacTxPrm = String.format("EN true %s %s", tempFileName, tempPdfFileName);
+						String almanacTxPrm = String.format("%s %s %s %s", options.language, options.withStars ? "true" : "false", tempFileName, tempPdfFileName);
 						String cmd = "." + File.separator + "xsl" + File.separator + "publishalmanac " + almanacTxPrm;
 						System.out.println("Tx Command:" + cmd);
 						Process p = Runtime.getRuntime().exec(cmd);
@@ -597,12 +612,15 @@ public class RESTImplementation {
 			String payload = new String(request.getContent());
 			if (!"null".equals(payload)) {
 				try {
-					String tempFileName = generateAstroData(request);
+					Gson gson = new GsonBuilder().create();
+					StringReader stringReader = new StringReader(payload);
+					AlmanacOptions options = gson.fromJson(stringReader, AlmanacOptions.class);
+					String tempFileName = generateAstroData(request, options);
 					System.out.println("Data Generation completed.");
 					// Ready for transformation
 					try {
 						String tempPdfFileName = File.createTempFile("lunar", ".pdf").getAbsolutePath();
-						String almanacTxPrm = String.format("EN %s %s", tempFileName, tempPdfFileName);
+						String almanacTxPrm = String.format("%s %s %s", options.language, tempFileName, tempPdfFileName);
 						String cmd = "." + File.separator + "xsl" + File.separator + "publishlunar " + almanacTxPrm;
 						System.out.println("Tx Command:" + cmd);
 						Process p = Runtime.getRuntime().exec(cmd);
@@ -969,16 +987,36 @@ public class RESTImplementation {
 				.setZ(sunRiseAndSet[AstroComputer.SET_Z_IDX]);
 	}
 
-	private enum Quantity {
-		DAY, MONTH, YEAR
-	};
+	public enum AlmanacType {
+		CONTINUOUS("continuous"),
+		FROM_TO("from-to");
+
+		private String type;
+
+		AlmanacType(String type) {
+			this.type = type;
+		}
+
+		public String type() {
+			return this.type;
+		}
+	}
 
 	private static class AlmanacOptions {
-		int startDay;
-		int startMonth;
-		int startYear;
-		int nb;
-		Quantity quantity;
+		AlmanacType type;
+		String language;
+		boolean withStars;
+
+		int day;
+		int month;
+		int year;
+
+		int fromYear;
+		int toYear;
+		int fromMonth;
+		int toMonth;
+		int fromDay;
+		int toDay;
 	}
 
 	private static class PerpetualAlmanacOptions {
