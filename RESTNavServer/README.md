@@ -24,6 +24,12 @@ Finally, use `Postman`, any `REST` client, or your browser, and reach
 
 You will see it displays operations from three services.
 
+## Use it
+
+```
+ http://localhost:9999/web/tide/index.html
+```
+
 ---
 
 More to come...
