@@ -21,6 +21,9 @@ Finally, use `Postman`, any `REST` client, or your browser, and reach
 ```
  http://localhost:9999/oplist
 ```
+
+You will see it displays operations from three services.
+
 ---
 
 More to come...
