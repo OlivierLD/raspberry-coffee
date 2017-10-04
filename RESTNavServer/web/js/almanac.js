@@ -6,6 +6,11 @@ var DEFAULT_TIMEOUT = 60000;
 var errManager = function(mess) {
 	var content = $("#error").html();
 	$("#error").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
+	try {
+		flipTab('error-tab');
+	} catch (err) {
+		console.log(err);
+	}
 	var div = document.getElementById("error");
 	div.scrollTop = div.scrollHeight;
 };
@@ -14,6 +19,11 @@ var errManager = function(mess) {
 var messManager = function(mess) {
 	var content = $("#messages").html();
 	$("#messages").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
+	try {
+		flipTab('message-tab');
+	} catch (err) {
+		console.log(err);
+	}
 	var div = document.getElementById("messages");
 	div.scrollTop = div.scrollHeight;
 };
@@ -116,7 +126,7 @@ var publishPerpetual = function(options, callback) {
 				message = errmess;
 			}
 		}
-		errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+		errManager("Failed publish perpetual almanac data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
 		? message : ' - '));
 	});
 };
