@@ -27,12 +27,17 @@ You will see it displays operations from three services.
 ## Use it
 
 ```
- http://localhost:9999/web/tide/index.html
+ http://localhost:9999/web/index.html
 ```
 
 ---
 
-More to come...
+## Notice
+Notice that the `RESTImplementation` only cioncerns `one` resource, `/oplist`.
+All the others come from different projects.
+
+Everything is pulled together by the build (`shadowJar` aggregates everything in only one jar file).
+The biggest part of this project will be the web pages, served by the same HTTP server as the REST services.
 
 ---
 
