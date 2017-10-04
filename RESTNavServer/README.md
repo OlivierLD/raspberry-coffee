@@ -33,7 +33,7 @@ You will see it displays operations from three services.
 ---
 
 ## Notice
-Notice that the `RESTImplementation` only cioncerns `one` resource, `/oplist`.
+Notice that the `RESTImplementation` only concerns `one` resource, `/oplist`.
 All the others come from different projects.
 
 Everything is pulled together by the build (`shadowJar` aggregates everything in only one jar file).
