@@ -22,7 +22,7 @@ export CP=${CP}:${HOME}/libs/fnd2.zip
 export CP=${CP}:${HOME}/libs/xdo-0301.jar
 #
 XSL_STYLESHEET=./data2fop_2pages.xsl
-LANG=S1
+LANG=$1
 WITH_STARS=$2
 PRM_OPTION=
 if [ $LANG = "FR" ]

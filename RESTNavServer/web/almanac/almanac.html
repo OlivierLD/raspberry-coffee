@@ -71,7 +71,7 @@
 					case "sun-moon-planets":
 					case "lunar-distances":
 						var options = {};
-						options.witStars = $("#with-stars").prop('checked');
+						options.withStars = $("#with-stars").prop('checked');
 						options.language = $("#almanac-lang").val();
 						if (almanacFlavor === 'period') {
 							options.type = 'CONTINUOUS';
@@ -83,7 +83,7 @@
 								options.day = parseInt($("#period-day").val());
 							}
 						} else {
-							options.type = 'FROM_TO-to';
+							options.type = 'FROM_TO';
 							options.fromYear = parseInt($("#p-from-year").val());
 							options.fromMonth = parseInt($("#p-from-month").val()) + 1;
 							options.fromDay = parseInt($("#p-from-day").val());

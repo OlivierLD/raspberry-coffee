@@ -14,9 +14,7 @@ import implementation.almanac.AlmanacComputer;
 import implementation.perpetualalmanac.Publisher;
 import utils.TimeUtil;
 
-import java.io.File;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -554,11 +552,21 @@ public class RESTImplementation {
 						String cmd = "." + File.separator + "xsl" + File.separator + "publishalmanac " + almanacTxPrm;
 						System.out.println("Tx Command:" + cmd);
 						Process p = Runtime.getRuntime().exec(cmd);
+						BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
+						String line = null;
+						while ((line = stdout.readLine()) != null) {
+							System.out.println(line);
+						}
 						int exitStatus = p.waitFor();
 						System.out.println("Script completed, status " + exitStatus);
 						System.out.println(String.format("See %s", tempPdfFileName));
 						cmd = String.format("mv %s web", tempPdfFileName);
 						p = Runtime.getRuntime().exec(cmd);
+						stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
+						line = null;
+						while ((line = stdout.readLine()) != null) {
+							System.out.println(line);
+						}
 						exitStatus = p.waitFor();
 						System.out.println("Copy command completed, status " + exitStatus);
 						response.setPayload(String.format(".%s", tempPdfFileName.substring(tempPdfFileName.lastIndexOf(File.separator))).getBytes());
@@ -624,11 +632,21 @@ public class RESTImplementation {
 						String cmd = "." + File.separator + "xsl" + File.separator + "publishlunar " + almanacTxPrm;
 						System.out.println("Tx Command:" + cmd);
 						Process p = Runtime.getRuntime().exec(cmd);
+						BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
+						String line = null;
+						while ((line = stdout.readLine()) != null) {
+							System.out.println(line);
+						}
 						int exitStatus = p.waitFor();
 						System.out.println("Script completed, status " + exitStatus);
 						System.out.println(String.format("See %s", tempPdfFileName));
 						cmd = String.format("mv %s web", tempPdfFileName);
 						p = Runtime.getRuntime().exec(cmd);
+						stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
+						line = null;
+						while ((line = stdout.readLine()) != null) {
+							System.out.println(line);
+						}
 						exitStatus = p.waitFor();
 						System.out.println("Copy command completed, status " + exitStatus);
 						response.setPayload(String.format(".%s", tempPdfFileName.substring(tempPdfFileName.lastIndexOf(File.separator))).getBytes());
@@ -729,11 +747,21 @@ public class RESTImplementation {
 							String cmd = "." + File.separator + "xsl" + File.separator + "publishperpetual " + almanacTxPrm;
 							System.out.println("Tx Command:" + cmd);
 							Process p = Runtime.getRuntime().exec(cmd);
+							BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
+							String line = null;
+							while ((line = stdout.readLine()) != null) {
+								System.out.println(line);
+							}
 							int exitStatus = p.waitFor();
 							System.out.println("Script completed, status " + exitStatus);
 							System.out.println(String.format("See %s", tempPdfFileName));
 							cmd = String.format("mv %s web", tempPdfFileName);
 							p = Runtime.getRuntime().exec(cmd);
+							stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
+							line = null;
+							while ((line = stdout.readLine()) != null) {
+								System.out.println(line);
+							}
 							exitStatus = p.waitFor();
 							System.out.println("Copy command completed, status " + exitStatus);
 							response.setPayload(String.format(".%s", tempPdfFileName.substring(tempPdfFileName.lastIndexOf(File.separator))).getBytes());

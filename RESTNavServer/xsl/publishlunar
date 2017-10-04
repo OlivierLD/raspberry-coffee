@@ -21,7 +21,7 @@ export CP=${CP}:${HOME}/libs/fnd2.zip
 export CP=${CP}:${HOME}/libs/xdo-0301.jar
 #
 XSL_STYLESHEET=./lunar2fop.xsl
-LANG=S1
+LANG=$1
 if [ $LANG = "FR" ]
 then
   echo On parle francais
