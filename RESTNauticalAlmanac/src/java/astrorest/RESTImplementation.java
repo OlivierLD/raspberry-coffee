@@ -501,15 +501,8 @@ public class RESTImplementation {
 	/**
 	 * Publish almanac (generate pdf) for a given period of time.
 	 * Supports a payload in the body, in json format:
-	 * <pre>
-	 * {
-	 *   "startDay": 1,
-	 *   "startMonth": 0,
-	 *   "startYear": 2017,
-	 *   "nb": 1,
-	 *   "quantity": "YEAR" | "MONTH" | "DAY"
-	 * }
-	 * </pre>
+	 * @see {@link AlmanacOptions}
+	 *
 	 * @param request
 	 * @return
 	 */
@@ -581,15 +574,8 @@ public class RESTImplementation {
 	/**
 	 * Publish lunar distances (generate pdf) for a given period of time.
 	 * Supports a payload in the body, in json format:
-	 * <pre>
-	 * {
-	 *   "startDay": 1,
-	 *   "startMonth": 0,
-	 *   "startYear": 2017,
-	 *   "nb": 1,
-	 *   "quantity": "YEAR" | "MONTH" | "DAY"
-	 * }
-	 * </pre>
+	 * @see {@link AlmanacOptions}
+	 *
 	 * @param request
 	 * @return
 	 */
