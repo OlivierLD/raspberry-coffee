@@ -59,8 +59,8 @@
 
 		var dataManager = function(value) { // Callback when almanac is ready
 			console.log('Received the file name %s', value);
-			messManager('Document ' + value + ' is ready.');
-			$("#doc-url").html("<a href='" + "." + value + "' target='pdf'>Here</a>!");
+			messManager('Requested document ' + value + ' is ready.');
+			$("#doc-url").html("<a href='" + "." + value + "' target='pdf'>here</a>!");
 		};
 
 		var getStarted = function() {
@@ -96,12 +96,12 @@
 							}
 						} else {
 							options.type = 'FROM_TO';
-							options.fromYear = parseInt($("#p-from-year").val());
-							options.fromMonth = parseInt($("#p-from-month").val()) + 1;
-							options.fromDay = parseInt($("#p-from-day").val());
-							options.toYear = parseInt($("#p-to-year").val());
-							options.toMonth = parseInt($("#p-to-month").val()) + 1;
-							options.toDay = parseInt($("#p-to-day").val());
+							options.fromYear = parseInt($("#int-year-from").val());
+							options.fromMonth = parseInt($("#int-month-from").val()) + 1;
+							options.fromDay = parseInt($("#int-day-from").val());
+							options.toYear = parseInt($("#int-year-to").val());
+							options.toMonth = parseInt($("#int-month-to").val()) + 1;
+							options.toDay = parseInt($("#int-day-to").val());
 						}
 						try {
 							if (typeToPublish === 'sun-moon-planets') {
@@ -210,6 +210,22 @@
 			}
 		};
 
+		var enableFields = function(rb) {
+			if (rb.id === 'for-one-year') {
+				$("#period-year").prop('disabled', false);
+				$("#period-month").prop('disabled', true);
+				$("#period-day").prop('disabled', true);
+			} else if (rb.id === 'for-one-month') {
+				$("#period-year").prop('disabled', false);
+				$("#period-month").prop('disabled', false);
+				$("#period-day").prop('disabled', true);
+			} else if (rb.id === 'for-one-day') {
+				$("#period-year").prop('disabled', false);
+				$("#period-month").prop('disabled', false);
+				$("#period-day").prop('disabled', false);
+			}
+		};
+
 	</script>
 </head>
 <body>
@@ -239,13 +255,13 @@
 		<div id="period-div" style="display: block; border: 1px solid silver;">
 			<table>
 				<tr>
-					<td><input type="radio" name="how-long" id="for-one-year" checked/><label for="for-one-year">For one year</label></td>
+					<td><input type="radio" name="how-long" id="for-one-year" onchange="enableFields(this);" checked/><label for="for-one-year">For one year</label></td>
 					<td><input type="text" size="4" placeholder="Year" id="period-year"/></td>
 				</tr>
 				<tr>
-					<td><input type="radio" name="how-long" id="for-one-month"/><label for="for-one-month">For one month</label></td>
+					<td><input type="radio" name="how-long" id="for-one-month" onchange="enableFields(this);"/><label for="for-one-month">For one month</label></td>
 					<td>
-						<select id="period-month">
+						<select id="period-month" disabled>
 							<option value="0">Jan</option>
 							<option value="1">Feb</option>
 							<option value="2">Mar</option>
@@ -262,8 +278,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td><input type="radio" name="how-long" id="for-one-day"/><label for="for-one-day">For one day</label></td>
-					<td><input type="text" size="2" placeholder="Day" id="period-day"/></td>
+					<td><input type="radio" name="how-long" id="for-one-day" onchange="enableFields(this);"/><label for="for-one-day">For one day</label></td>
+					<td><input type="text" size="2" placeholder="Day" id="period-day" disabled/></td>
 				</tr>
 			</table>
 		</div>

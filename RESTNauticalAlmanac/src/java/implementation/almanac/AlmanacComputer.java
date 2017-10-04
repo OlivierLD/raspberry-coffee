@@ -156,7 +156,7 @@ public class AlmanacComputer {
 				Date t = cal.getTime();
 
 				if (f.compareTo(t) > 0) {
-					throw new RuntimeException("Wrong chronology for the dates (from and to).");
+					throw new RuntimeException(String.format("Wrong chronology for the dates (from: %s and to: %s).", f.toString(), t.toString()));
 				}
 			} catch (NumberFormatException nfe) {
 				throw nfe;

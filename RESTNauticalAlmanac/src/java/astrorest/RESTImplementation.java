@@ -447,30 +447,9 @@ public class RESTImplementation {
 		}
 	}
 
-	private String generateAstroData(Request request, AlmanacOptions options) throws Exception {
-		String errMess = "";
+	private String generateAstroData(AlmanacOptions options) throws Exception {
 		try {
-			// TODO Validate
-//			if (options.startDay > 31 || options.startDay < 1) {
-//				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [1..31].");
-//			}
-//			if (options.startMonth > 11 || options.startMonth < 0) {
-//				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid month, must be in [0..11].");
-//			}
-//			if (options.nb < 1) {
-//				errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid number, must be at least 1 ");
-//			}
-//			if (options.quantity == null) {
-//				errMess += ((errMess.length() > 0 ? "\n" : "") + "Quantity must be YEAR, MONTH, or DAY.");
-//			}
-			if (!errMess.isEmpty()) {
-				throw new RuntimeException(errMess);
-			}
-		} catch (Exception ex) {
-			throw ex;
-		}
-		try {
-			// Right parameters
+			// Extract parameters
 			File temp = File.createTempFile("astro", ".xml");
 			String tempFileName = temp.getAbsolutePath();
 			String[] prms = null;
@@ -543,7 +522,7 @@ public class RESTImplementation {
 					Gson gson = new GsonBuilder().create();
 					StringReader stringReader = new StringReader(payload);
 					AlmanacOptions options = gson.fromJson(stringReader, AlmanacOptions.class);
-					String tempFileName = generateAstroData(request, options);
+					String tempFileName = generateAstroData(options);
 					System.out.println("Data Generation completed.");
 					// Ready for transformation
 					try {
@@ -623,7 +602,7 @@ public class RESTImplementation {
 					Gson gson = new GsonBuilder().create();
 					StringReader stringReader = new StringReader(payload);
 					AlmanacOptions options = gson.fromJson(stringReader, AlmanacOptions.class);
-					String tempFileName = generateAstroData(request, options);
+					String tempFileName = generateAstroData(options);
 					System.out.println("Data Generation completed.");
 					// Ready for transformation
 					try {
