@@ -42,6 +42,8 @@ In addition, as we are using the `NMEA Multiplexer` (see this project), you can 
 NMEA data source, compute and transform then, and rebroadcast then on any channel you like, to enable other devices and programs
 to read them (`OpenCPN`, `SignalK`, etc) .
 
+![Menu and Console](./docimg/screenshot.png)
+
 ---
 
 ## Notice
