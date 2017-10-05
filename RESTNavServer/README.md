@@ -26,9 +26,21 @@ You will see it displays operations from three services.
 
 ## Use it
 
+From _any_ device (laptop, tablet, smart-phone) that can run a browser, reach this url:
 ```
- http://localhost:9999/web/index.html
+ http://[host]:9999/web/index.html
 ```
+> `[host]` is the name or IP of the machine the server runs on.
+
+Then you are able to:
+- See the Navigation Console 
+- Publish Nautical Almanacs
+- Visualize Tide Curves
+- etc.
+
+In addition, as we are using the `NMEA Multiplexer` (see this project), you can read pretty much any
+NMEA data source, compute and transform then, and rebroadcast then on any channel you like, to enable other devices and programs
+to read them (`OpenCPN`, `SignalK`, etc) .
 
 ---
 
