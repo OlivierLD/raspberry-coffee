@@ -5,6 +5,7 @@ body {
   font-family: "Lato", Verdana, Helvetica, Geneva, sans-serif;
   background-position: top left;
   background-repeat: repeat;
+/*background-image: linear-gradient(white, lightgray);*/
 }
 
 h1 {

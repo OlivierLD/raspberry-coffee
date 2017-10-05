@@ -3,7 +3,7 @@
  */
 var currentDisplayColorConfigWhite =
     {
-        bgColor: 'white',
+        bgColor: 'rgba(0, 0, 0, 0)', /*'white',*/
         digitColor: 'black',
         withGradient: true,
         displayBackgroundGradient: {from: 'LightGrey', to: 'white'},
@@ -25,7 +25,7 @@ var currentDisplayColorConfigWhite =
 
 var currentDisplayColorConfigBlack =
     {
-        bgColor: 'black',
+        bgColor: 'rgba(0, 0, 0, 0)', /*'black',*/
         digitColor: 'white',
         withGradient: true,
         displayBackgroundGradient: {from: 'DarkGrey', to: 'black'},
@@ -200,6 +200,7 @@ function CurrentDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 
         var canvas = document.getElementById(displayCanvasName);
         var context = canvas.getContext('2d');
+	      context.clearRect(0, 0, canvas.width, canvas.height);
 
         var radius = displayRadius;
 

@@ -3,10 +3,10 @@
  */
 var thermometerColorConfigWhite =
     {
-        bgColor: 'white',
+        bgColor: 'rgba(0, 0, 0, 0)', /*'white',*/
         digitColor: 'red',
         withGradient: true,
-        displayBackgroundGradient: {from: 'black', to: 'LightGrey'},
+        displayBackgroundGradient: {from: 'LightGrey', to: 'white'},
         withDisplayShadow: true,
         shadowColor: 'rgba(0, 0, 0, 0.75)',
         majorTickColor: 'DarkGrey',
@@ -19,7 +19,7 @@ var thermometerColorConfigWhite =
 
 var thermometerColorConfigBlack =
     {
-        bgColor: 'black',
+        bgColor: 'rgba(0, 0, 0, 0)', /*'black',*/
         digitColor: 'red',
         withGradient: true,
         displayBackgroundGradient: {from: 'black', to: 'LightGrey'},
@@ -150,6 +150,7 @@ function Thermometer(cName, dSize, minValue, maxValue, majorTicks, minorTicks) {
 
         var canvas = document.getElementById(displayCanvasName);
         var context = canvas.getContext('2d');
+    	  context.clearRect(0, 0, canvas.width, canvas.height);
 
         var radius = 10; // The ball at the bottom. The tube is (radius / 2) wide.
 

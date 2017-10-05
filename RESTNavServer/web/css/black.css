@@ -1,11 +1,11 @@
-body
-{
+body {
   background-color: black;
   color: red;
   font-family: Arial, Helvetica, sans-serif;
+	background-image: linear-gradient(gray, black);
 }
-.display-scheme
-{
+
+.display-scheme {
   color: black;
 }
 

@@ -17,7 +17,7 @@
   * if color is white, analogDisplayColorConfigWhite is applied, etc
   */
 var analogDisplayColorConfigWhite = {
-  bgColor:           'white',
+  bgColor:           'rgba(0, 0, 0, 0)', /* 'white', */
   digitColor:        'black',
   withGradient:      true,
   displayBackgroundGradient: { from: 'LightGrey', to: 'white' },
@@ -38,7 +38,7 @@ var analogDisplayColorConfigWhite = {
 };
 
 var analogDisplayColorConfigBlack = {
-  bgColor:           'black',
+  bgColor:           'rgba(0, 0, 0, 0)', /* 'black', */
   digitColor:        'cyan',
   withGradient:      true,
   displayBackgroundGradient: { from: 'DarkGrey', to: 'black' },
@@ -218,6 +218,7 @@ function AnalogDisplay(cName,                     // Canvas Name
 
     var canvas = document.getElementById(displayCanvasName);
     var context = canvas.getContext('2d');
+	  context.clearRect(0, 0, canvas.width, canvas.height);
 
     var radius = displayRadius;
 

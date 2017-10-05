@@ -4,7 +4,7 @@
 
 var directionColorConfigWhite =
     {
-        bgColor: 'white',
+        bgColor: 'rgba(0, 0, 0, 0)', /*'white',*/
         digitColor: 'black',
         withGradient: true,
         displayBackgroundGradient: {from: 'LightGrey', to: 'white'},
@@ -26,7 +26,7 @@ var directionColorConfigWhite =
 
 var directionColorConfigBlack =
     {
-        bgColor: 'black',
+        bgColor: 'rgba(0, 0, 0, 0)', /*'black',*/
         digitColor: 'cyan',
         withGradient: true,
         displayBackgroundGradient: {from: 'DarkGrey', to: 'black'},
@@ -208,6 +208,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose) {
 
         var canvas = document.getElementById(displayCanvasName);
         var context = canvas.getContext('2d');
+	      context.clearRect(0, 0, canvas.width, canvas.height);
 
         var radius = displayRadius;
 

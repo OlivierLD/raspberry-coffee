@@ -4,8 +4,9 @@ body {
   font-size: 10pt;
   font-family: Verdana, Helvetica, Geneva;
   background-color: black;
-  background-position: top left;
+/*background-position: top left;
   background-repeat: repeat;
+  background-image: linear-gradient(gray, black);*/
 }
 h1 {
   color: silver;
