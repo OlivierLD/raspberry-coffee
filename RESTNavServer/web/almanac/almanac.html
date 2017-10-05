@@ -58,6 +58,7 @@
 		};
 
 		var dataManager = function(value) { // Callback when almanac is ready
+			document.body.style.cursor = 'default';
 			console.log('Received the file name %s', value);
 			messManager('Requested document ' + value + ' is ready.');
 			$("#doc-url").html("<a href='" + "." + value + "' target='pdf'>here</a>!");
@@ -71,6 +72,7 @@
 		var almanacFlavor = "period";
 
 		var publish = function() {
+			document.body.style.cursor = 'wait';
 			if (typeToPublish !== undefined) {
 				switch (typeToPublish) {
 					case "perpetual":

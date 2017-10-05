@@ -10,6 +10,9 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 /**
+ * Entry point. Very Simple.
+ * The complexity is somewhere else.
+ *
  * Gathers other REST Services, all in one place.
  * See RESTTideEngine, RESTNauticalAlmanac, etc.
  */
@@ -35,7 +38,7 @@ public class NavServer {
 		this.httpServer.addRequestManager(new AstroRequestManager());
 		// Add tide features...
 		this.httpServer.addRequestManager(new TideRequestManager());
-		// Add Dead Reckoning, logging, re-broadcasting, from the NMEA Multiplexer
+		// Add Nav features: Dead Reckoning, logging, re-broadcasting, from the NMEA Multiplexer
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
 		this.httpServer.addRequestManager(new GenericNMEAMultiplexer(definitions));
 	}

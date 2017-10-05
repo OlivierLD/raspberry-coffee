@@ -52,7 +52,7 @@ var getDeferred = function(
 	}
 
 	xhr.open(verb, url, true);
-	xhr.setRequestHeader("Content-type", "application/json");
+	xhr.setRequestHeader("Content-type", "application/json"); // I know, hard-coded.
 	if (data === undefined) {
 		xhr.send();
 	} else {

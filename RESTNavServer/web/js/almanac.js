@@ -69,14 +69,19 @@ var getDeferred = function(
 		xhr.send(JSON.stringify(data));
 	}
 
-	var requestTimer = setTimeout(function() {
-		xhr.abort();
-		var mess = { message: 'Timeout' };
-		deferred.reject(408, mess);
-	}, TIMEOUT);
+	if (TIMEOUT > 0) {
+		// requestTimer will be used to clear the timeout in case the request comes back in time.
+		var requestTimer = setTimeout(function () {
+			xhr.abort();
+			var mess = {message: 'Timeout'};
+			deferred.reject(408, mess);
+		}, TIMEOUT);
+	}
 
 	xhr.onload = function() {
-		clearTimeout(requestTimer);
+		if (requestTimer !== undefined) {
+			clearTimeout(requestTimer);
+		}
 		if (xhr.status === happyCode) {
 			deferred.resolve(xhr.response);
 		} else {
@@ -95,7 +100,8 @@ var getPerpetualDoc = function(options) {
 
 var getAlmanac = function(options) {
 	var url = "/publish/almanac";
-	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+//return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+	return getDeferred(url, -1, 'POST', 200, options, false);
 };
 
 var getLunar = function(options) {
