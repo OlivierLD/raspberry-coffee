@@ -10,13 +10,19 @@
 	<script type="text/javascript" src="../js/tide.js"></script>
 	<script type="text/javascript" src="../js/pub.sub.js"></script>
 	<style>
+
+		body, td, input, select, button, label, href {
+			font-size: 16pt;
+			font-family: "Lato", Verdana, Helvetica, Geneva, sans-serif;
+		}
+
 		.selectedButton {
 			padding:5px;
 			border-top-right-radius: 10px;
 			border:1px solid #CCC;
 			margin-top:10px;
 			border-bottom: none;
-			font-size: 12px;
+			font-size: 16pt;
 			font-weight: bold;
 		}
 		.unselectedButton {
@@ -25,7 +31,7 @@
 			border:1px solid #CCC;
 			margin-top:10px;
 			border-bottom: none;
-			font-size: 12px;
+			font-size: 16pt;
 			font-weight: normal;
 		}
 	</style>
@@ -83,7 +89,10 @@
 	<hr/>
   Tide Table. Choose your station (filter first), and hit [Publish].
 	<hr/>
-	<input type="search" size="30" placeholder="Filter" id="filter">&nbsp;<button onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button>
+	<!--input type="search" size="30" placeholder="Filter" id="filter">&nbsp;<button
+				  onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button-->
+  <input type="text" size="30" placeholder="Filter" id="filter">&nbsp;<button
+				  onclick="tideStations(0, 500, $('#filter').val(), populateList);">Search</button>
 	<select id="station-list" style="width: 300px;"></select>, Starting
   <select id="month">
 	  <option value="0">Jan</option>
