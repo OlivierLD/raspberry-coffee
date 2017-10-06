@@ -175,6 +175,7 @@
     });
     events.subscribe('log', function(val) {
       displayLog.setValue(val);
+	    displayBSP.setDigitValue(val);
     });
     events.subscribe('gps-time', function(val) {
       displayDate.setValue(val);
@@ -330,7 +331,8 @@
     document.getElementById('overviewCanvas').height = wh * 0.8;
     // BSP
     document.getElementById('bspCanvas').width = 240 * (Math.min(ww, totalWidth) / totalWidth);
-    document.getElementById('bspCanvas').height = 120 * (Math.min(ww, totalWidth) / totalWidth);
+//  document.getElementById('bspCanvas').height = 120 * (Math.min(ww, totalWidth) / totalWidth);
+	  document.getElementById('bspCanvas').height = 240 * (Math.min(ww, totalWidth) / totalWidth);
     // HDG
     document.getElementById('hdgCanvas').width = 240 * (Math.min(ww, totalWidth) / totalWidth);
     document.getElementById('hdgCanvas').height = 220 * (Math.min(ww, totalWidth) / totalWidth);
@@ -448,10 +450,11 @@
         </tr>
         <tr>
           <td align="center" valign="top" rowspan="2">
-            <table>
+            <table border="0">
               <tr>
                 <td align="center" valign="top">
-                  <canvas id="bspCanvas" width="240" height="120" title="Boat Speed in knots"></canvas>
+                  <!--canvas id="bspCanvas" width="240" height="120" title="Boat Speed in knots"></canvas-->
+                  <canvas id="bspCanvas" width="240" height="240" title="Boat Speed in knots, plus log"></canvas>
                 </td>
               </tr>
               <tr>

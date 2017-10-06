@@ -106,6 +106,8 @@ function AnalogDisplay(cName,                     // Canvas Name
 	var maxiVal = -10000000;
 
 	var label;
+	var digits; // Number of digits to display in the lower part, like daily log value...
+	var digitValue;
 
 	var instance = this;
 
@@ -130,6 +132,12 @@ function AnalogDisplay(cName,                     // Canvas Name
 	};
 	this.setLabel = function (lbl) {
 		label = lbl;
+	};
+	this.setDigits= function (d) {
+		digits = d;
+	};
+	this.setDigitValue= function (val) {
+		digitValue = val;
 	};
 
 	this.repaint = function () {
@@ -390,6 +398,64 @@ function AnalogDisplay(cName,                     // Canvas Name
 			context.strokeStyle = analogDisplayColorConfig.valueOutlineColor;
 			context.strokeText(text, (canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1))); // Outlined
 			context.closePath();
+		}
+
+		// Digits? Note: not compatible with label (above)
+		if (digits !== undefined) {
+			var oneDigitWidth = (canvas.width / 3) / digits;
+			var oneDigitHeight = oneDigitWidth * 2; // (canvas.height / 6);
+
+			if (analogDisplayColorConfig.withGradient) {
+				var start = 1.025 * (canvas.height / 2);
+				var grd = context.createLinearGradient(0, start, 0, start + oneDigitHeight);
+				grd.addColorStop(0, analogDisplayColorConfig.displayBackgroundGradient.to);// 0  Beginning
+				grd.addColorStop(1, analogDisplayColorConfig.displayBackgroundGradient.from);// 1  End
+				context.fillStyle = grd;
+			}
+
+			// The rectangles around each digit
+			var digitOrigin = (canvas.width / 2) - ((digits * oneDigitWidth) / 2);
+			for (var i = 0; i < digits; i++) {
+				context.beginPath();
+
+				var x = digitOrigin + (i * oneDigitWidth);
+				var y = 1.025 * (canvas.height / 2);
+				context.fillRect(x, y, oneDigitWidth, oneDigitHeight);
+				context.lineWidth = 1;
+				context.strokeStyle = 'rgba(255, 255, 255, 0.5)'; //'black';
+				context.rect(x, y, oneDigitWidth, oneDigitHeight);
+				context.stroke();
+				context.closePath();
+			}
+
+			context.shadowOffsetX = 0;
+			context.shadowOffsetY = 0;
+			context.shadowBlur = 0;
+
+			// Value
+			if (digitValue !== undefined) {
+				text = digitValue.toFixed(0);
+				while (text.length < digits) {
+					text = '0' + text;
+				}
+				var fontSize = Math.round(scale * 14);
+				for (var i = 0; i < digits; i++) {
+					len = 0;
+					context.font = "bold " + fontSize + "px Arial"; // "bold 40px Arial"
+					var txt = text.substring(i, i + 1);
+					var metrics = context.measureText(txt);
+					len = metrics.width;
+					var x = digitOrigin + (i * oneDigitWidth);
+					var y = 1.025 * (canvas.height / 2);
+					context.beginPath();
+					context.fillStyle = analogDisplayColorConfig.valueColor;
+					context.fillText(txt, x + (oneDigitWidth / 2) - (len / 2), y + (oneDigitHeight / 2) + (fontSize / 2));
+					context.lineWidth = 1;
+					context.strokeStyle = analogDisplayColorConfig.valueOutlineColor;
+					context.strokeText(txt, x + (oneDigitWidth / 2) - (len / 2), y + (oneDigitHeight / 2) + (fontSize / 2)); // Outlined
+					context.closePath();
+				}
+			}
 		}
 
 		// Hand

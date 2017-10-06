@@ -13,7 +13,9 @@ var jumboList = [];
 var editing = false;
 
 var init = function () {
-	displayBSP = new AnalogDisplay('bspCanvas', 100, 15, 5, 1);
+//displayBSP = new AnalogDisplay('bspCanvas', 100, 15, 5, 1);
+	displayBSP = new AnalogDisplay('bspCanvas', 100, 15, 5, 1, true, 40);
+	displayBSP.setDigits(5);
 	displayLog = new NumericDisplay('logCanvas', 60, 5);
 
 	displayHDG = new Direction('hdgCanvas', 100, 45, 5, true);
