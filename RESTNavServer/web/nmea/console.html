@@ -50,8 +50,8 @@
     <script type="text/javascript" src="../widgets/CurrentDisplay.js"></script>
     <script type="text/javascript" src="../widgets/DateDisplay.js"></script>
     <script type="text/javascript" src="../widgets/TimeDisplay.js"></script>
-    <script type="text/javascript" src="../widgets/TWDEvolution.js"></script>
-    <script type="text/javascript" src="../widgets/TWSEvolution.js"></script>
+    <script type="text/javascript" src="../widgets/DirectionEvolution.js"></script>
+    <script type="text/javascript" src="../widgets/SpeedEvolution.js"></script>
 		<script type="text/javascript" src="../widgets/WorldMapData.js"></script>
     <script type="text/javascript" src="../widgets/worldmap.js"></script>
     <script type="text/javascript" src="../js/pub.sub.js"></script>
@@ -78,30 +78,35 @@
     return value;
   };      
 
-  var setup = function(b1, b2, b3, b4) {
+  var setup = function(b1, b2, b3, b4, b5) {
     document.getElementById('displays').style.display = (b1 === true ? 'inline' : 'none');
     document.getElementById('overview').style.display = (b2 === true ? 'inline' : 'none');
     document.getElementById('map').style.display = (b3 === true ? 'inline' : 'none');
     document.getElementById('twd-evolution').style.display = (b4 === true ? 'inline' : 'none');
+	  document.getElementById('current-evolution').style.display = (b5 === true ? 'inline' : 'none');
 
     document.getElementById('showDisplays').className = (b1 === true ? 'selectedButton' : 'unselectedButton');
     document.getElementById('showOverview').className = (b2 === true ? 'selectedButton' : 'unselectedButton');
     document.getElementById('showMap').className = (b3 === true ? 'selectedButton' : 'unselectedButton');
     document.getElementById('showTWDEvolution').className = (b4 === true ? 'selectedButton' : 'unselectedButton');
-  };  
+	  document.getElementById('showCurrentEvolution').className = (b5 === true ? 'selectedButton' : 'unselectedButton');
+  };
 
   var showMap = function() {
-    setup(false, false, true, false);
+    setup(false, false, true, false, false);
   };  
   var showDisplays = function() {
-    setup(true, false, false, false);
+    setup(true, false, false, false, false);
   };  
   var showOverview = function() {
-    setup(false, true, false, false);
+    setup(false, true, false, false, false);
   };    
   var showTWDEvolution = function() {
-    setup(false, false, false, true);
+    setup(false, false, false, true, false);
   };
+  var showCurrentEvolution = function() {
+	  setup(false, false, false, false, true);
+	}
 
   var LATITUDE  = 0;
   var LONGITUDE = 1;
@@ -194,7 +199,7 @@
       displayTWD.setValue(val);
       displayOverview.setTWD(val);
       jumboTWD.setValue(lpad(Math.round(val).toString(), '0', 3));
-      twdEvolution.addTWD({ "angle": val, 
+      twdEvolution.addDirection({ "angle": val,
                             "time": (new Date()).getTime() });
     });
     events.subscribe('twa', function(val) {
@@ -212,7 +217,7 @@
       displayTWS.setValue(val);
       displayOverview.setTWS(val);
       jumboTWS.setValue(val.toFixed(1));
-      twsEvolution.addTWS({ "speed": val, "time": (new Date()).getTime() });
+      twsEvolution.addSpeed({ "speed": val, "time": (new Date()).getTime() });
       
       var from = twsEvolution.getFromBoundary();
       var to   = twsEvolution.getToBoundary();
@@ -255,10 +260,11 @@
       displayAW.setValue(val);
       displayOverview.setAWA(val);
       var awaStr = lpad(Math.round(Math.abs(val)).toString(), '0', 3);
-      if (awa < 0)
-        awaStr = '-' + awaStr;
-      else
-        awaStr += '-';
+      if (awa < 0) {
+	      awaStr = '-' + awaStr;
+      } else {
+	      awaStr += '-';
+      }
       jumboAWA.setValue(awaStr);
     });
     events.subscribe('cdr', function(val) {
@@ -266,7 +272,52 @@
       displayOverview.setCDR(val);
       jumboCDR.setValue(lpad(Math.round(val).toString(), '0', 3));
       displayCurrent.setValue(val);
+	    currentDirEvolution.addDirection({ "angle": val,
+		    													       "time": (new Date()).getTime() });
     });
+	  events.subscribe('csp', function(val) {
+		  var csp = val.toFixed(2);
+		  displayOverview.setCSP(val);
+		  jumboCSP.setValue(csp);
+		  displayCurrent.setCurrentSpeed(val);
+		  currentSpeedEvolution.addSpeed({ "speed": val,
+				                               "time": (new Date()).getTime() });
+		  var from = currentSpeedEvolution.getFromBoundary();
+		  var to   = currentSpeedEvolution.getToBoundary();
+
+		  var dateFmt = (to - from > (3600000 * 24)) ? "d-M H:i:s" : "H:i:s"; // "d-M-Y H:i:s._ Z";
+		  document.getElementById("life-span-current").innerHTML = currentSpeedEvolution.getBufferLength() + "&nbsp;pts<br>" +
+				  "From&nbsp;" + (new Date(from)).format(dateFmt) + "<br>" +
+				  "To&nbsp;" + (new Date(to)).format(dateFmt) + "<br>" +
+				  // "(" + twsEvolution.getLifeSpan() + ")" + "<br>" +
+				  currentSpeedEvolution.getLifeSpanFormatted();
+	  });
+
+	  events.subscribe("csp-30000", function(val) {
+		  currentSpeedEvolution30s.addSpeed({ "speed": val,
+			  																	"time": (new Date()).getTime() });
+		});
+	  events.subscribe("cdr-30000", function(val) {
+		  currentDirEvolution30s.addDirection({ "angle": val,
+			  																		"time": (new Date()).getTime() });
+	  });
+	  events.subscribe("csp-60000", function(val) {
+		  currentSpeedEvolution1m.addSpeed({ "speed": val,
+			  "time": (new Date()).getTime() });
+	  });
+	  events.subscribe("cdr-60000", function(val) {
+		  currentDirEvolution1m.addDirection({ "angle": val,
+			  "time": (new Date()).getTime() });
+	  });
+	  events.subscribe("csp-600000", function(val) {
+		  currentSpeedEvolution10m.addSpeed({ "speed": val,
+			  "time": (new Date()).getTime() });
+	  });
+	  events.subscribe("cdr-600000", function(val) {
+		  currentDirEvolution10m.addDirection({ "angle": val,
+			  "time": (new Date()).getTime() });
+	  });
+
     events.subscribe('cog', function(val) {
       var cog = val.toFixed(0);
       displayOverview.setCOG(val);
@@ -283,12 +334,6 @@
       else
         lwyStr += '-';
       jumboLWY.setValue(lwyStr);
-    });
-    events.subscribe('csp', function(val) {
-      var csp = val.toFixed(2);
-      displayOverview.setCSP(val);
-      jumboCSP.setValue(csp);
-      displayCurrent.setCurrentSpeed(val);
     });
     events.subscribe('sog', function(val) {
       val = val.toFixed(2);
@@ -369,7 +414,17 @@
     }
     document.getElementById('twdEvolutionCanvas').height = wh * 0.8;
     document.getElementById('twsEvolutionCanvas').height = wh * 0.8;
-    // Displays inside the canvases        
+
+	  document.getElementById('currentDirEvolutionCanvas').height = wh * 0.8;
+	  document.getElementById('currentSpeedEvolutionCanvas').height = wh * 0.8;
+
+	  document.getElementById('currentDirEvolutionCanvas30s').height = wh * 0.8;
+	  document.getElementById('currentSpeedEvolutionCanvas30s').height = wh * 0.8;
+	  document.getElementById('currentDirEvolutionCanvas1m').height = wh * 0.8;
+	  document.getElementById('currentSpeedEvolutionCanvas1m').height = wh * 0.8;
+	  document.getElementById('currentDirEvolutionCanvas10m').height = wh * 0.8;
+	  document.getElementById('currentSpeedEvolutionCanvas10m').height = wh * 0.8;
+    // Displays inside the canvases
     resizeDisplays(ww); 
   };
   
@@ -400,18 +455,58 @@
   
   var resetTWBuffer = function() {
     if (twdEvolution !== undefined)
-      twdEvolution.resetTWD();
+      twdEvolution.resetDirection();
     if (twsEvolution !== undefined)
-      twsEvolution.resetTWS();
+      twsEvolution.resetSpeed();
   };
   
   var resetTW2Buffer = function() {
     if (twdEvolution !== undefined)
-      twdEvolution.reset2TWD();
+      twdEvolution.reset2Direction();
     if (twsEvolution !== undefined)
-      twsEvolution.reset2TWS();
+      twsEvolution.reset2Speed();
   };
-  
+
+  var resetCurrBuffer = function() {
+	  if (currentDirEvolution !== undefined)
+		  currentDirEvolution.resetDirection();
+	  if (currentSpeedEvolution !== undefined)
+		  currentSpeedEvolution.resetSpeed();
+
+	  if (currentDirEvolution30s !== undefined)
+		  currentDirEvolution30s.resetDirection();
+	  if (currentSpeedEvolution30s !== undefined)
+		  currentSpeedEvolution30s.resetSpeed();
+	  if (currentDirEvolution1m !== undefined)
+		  currentDirEvolution1m.resetDirection();
+	  if (currentSpeedEvolution1m !== undefined)
+		  currentSpeedEvolution1m.resetSpeed();
+	  if (currentDirEvolution10m !== undefined)
+		  currentDirEvolution10m.resetDirection();
+	  if (currentSpeedEvolution10m !== undefined)
+		  currentSpeedEvolution10m.resetSpeed();
+  };
+
+  var resetCurr2Buffer = function() {
+	  if (currentDirEvolution !== undefined)
+		  currentDirEvolution.reset2Direction();
+	  if (currentSpeedEvolution !== undefined)
+		  currentSpeedEvolution.reset2Speed();
+
+	  if (currentDirEvolution30s !== undefined)
+		  currentDirEvolution30s.reset2Direction();
+	  if (currentSpeedEvolution30s !== undefined)
+		  currentSpeedEvolution30s.reset2Speed();
+	  if (currentDirEvolution1m !== undefined)
+		  currentDirEvolution1m.reset2Direction();
+	  if (currentSpeedEvolution1m !== undefined)
+		  currentSpeedEvolution1m.reset2Speed();
+	  if (currentDirEvolution10m !== undefined)
+		  currentDirEvolution10m.reset2Direction();
+	  if (currentSpeedEvolution10m !== undefined)
+		  currentSpeedEvolution10m.reset2Speed();
+  };
+
   var handleRadioValue = function(radio) {
     var val = radio.value;
 //  console.log("Radio:" + val);
@@ -431,6 +526,7 @@
       <span id="showOverview" onclick="showOverview();" class="unselectedButton">Overview</span>
       <span id="showMap" onclick="showMap();" class="unselectedButton">Map</span>
       <span id="showTWDEvolution" onclick="showTWDEvolution();" class="unselectedButton">TW Evolution</span>
+			<span id="showCurrentEvolution" onclick="showCurrentEvolution();" class="unselectedButton">Current Evolution</span>
     </small>
     &nbsp;&nbsp;Color Scheme:&nbsp;
     <input type="radio" name="theme" value="black" checked onclick="changeTheme(this.value);">Night&nbsp;
@@ -641,6 +737,101 @@
         </table>
       </p>
     </div>
+		<div id="current-evolution" style="display: none;">
+			<div style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 510px; overflow-y: scroll; overflow-x: scroll;">
+			  <table>
+					<tr>
+						<td valign="top">
+							<div>
+								<table align="center" cellspacing="10" border="0">
+									<tr>
+										<th></th>
+									</tr>
+									<tr>
+										<td valign="top" align="right">
+											<button onclick="resetCurrBuffer();" style="margin-bottom: 10px;">Reset All</button>
+											<br>
+											<button onclick="resetCurr2Buffer();" style="margin-bottom: 10px;">Drop Oldest Half</button>
+											<br>
+											<div id="life-span-current">
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td>
+							<div style="border-radius: 5px; border: 1px solid rgba(155, 255, 255, 0.5);">
+							<table align="center" cellspacing="10" border="0">
+								<tr>
+									<th colspan="2">Instant.</th>
+								</tr>
+								<tr>
+									<td align="center" valign="top">
+										<canvas id="currentDirEvolutionCanvas" height="500" width="200" class="displayCanvas"></canvas>
+									</td>
+									<td align="center" valign="top">
+										<canvas id="currentSpeedEvolutionCanvas" height="500" width="200" class="displayCanvas"></canvas>
+									</td>
+								</tr>
+							</table>
+							</div>
+						</td>
+						<td>
+							<div style="border-radius: 5px; border: 1px solid rgba(155, 255, 255, 0.5);">
+								<table align="center" cellspacing="10" border="0">
+									<tr>
+										<th colspan="2">On 30s</th>
+									</tr>
+									<tr>
+										<td align="center" valign="top">
+											<canvas id="currentDirEvolutionCanvas30s" height="500" width="200" class="displayCanvas"></canvas>
+										</td>
+										<td align="center" valign="top">
+											<canvas id="currentSpeedEvolutionCanvas30s" height="500" width="200" class="displayCanvas"></canvas>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td>
+							<div style="border-radius: 5px; border: 1px solid rgba(155, 255, 255, 0.5);">
+								<table align="center" cellspacing="10" border="0">
+									<tr>
+										<th colspan="2">On 1m</th>
+									</tr>
+									<tr>
+										<td align="center" valign="top">
+											<canvas id="currentDirEvolutionCanvas1m" height="500" width="200" class="displayCanvas"></canvas>
+										</td>
+										<td align="center" valign="top">
+											<canvas id="currentSpeedEvolutionCanvas1m" height="500" width="200" class="displayCanvas"></canvas>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td>
+							<div style="border-radius: 5px; border: 1px solid rgba(155, 255, 255, 0.5);">
+								<table align="center" cellspacing="10" border="0">
+									<tr>
+										<th colspan="2">On 10m</th>
+									</tr>
+									<tr>
+										<td align="center" valign="top">
+											<canvas id="currentDirEvolutionCanvas10m" height="500" width="200" class="displayCanvas"></canvas>
+										</td>
+										<td align="center" valign="top">
+											<canvas id="currentSpeedEvolutionCanvas10m" height="500" width="200" class="displayCanvas"></canvas>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
     <div id="err-mess"></div>
     <address><span id="console-type"></span></address>
   </body>

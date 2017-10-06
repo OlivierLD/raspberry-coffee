@@ -6,7 +6,12 @@ var displayBSP, displayLog, displayTWD, displayTWS, thermometer, athermometer, d
 		jumboBSP, jumboHDG, jumboTWD, jumboLWY, jumboAWA, jumboTWA, jumboAWS, jumboTWS, jumboCOG, jumboCDR, jumboSOG,
 		jumboCSP, jumboVMG,
 		displayAW, displayCurrent,
-		twdEvolution, twsEvolution;
+		twdEvolution, twsEvolution,
+
+		currentDirEvolution, currentSpeedEvolution,
+		currentDirEvolution30s, currentSpeedEvolution30s,
+		currentDirEvolution1m, currentSpeedEvolution1m,
+		currentDirEvolution10m, currentSpeedEvolution10m;
 
 var jumboList = [];
 
@@ -58,8 +63,18 @@ var init = function () {
 	displayAW = new AWDisplay('awDisplayCanvas', 80, 45, 5);
 	displayAW.setLabel("AW");
 	displayCurrent = new CurrentDisplay('currentDisplayCanvas', 80, 45, 5);
-	twdEvolution = new TWDEvolution('twdEvolutionCanvas');
-	twsEvolution = new TWSEvolution('twsEvolutionCanvas');
+	twdEvolution = new DirectionEvolution('twdEvolutionCanvas', "TWD");
+	twsEvolution = new SpeedEvolution('twsEvolutionCanvas', 60, true, "TWS");
+
+	currentDirEvolution = new DirectionEvolution('currentDirEvolutionCanvas');
+	currentSpeedEvolution = new SpeedEvolution('currentSpeedEvolutionCanvas', 5, false, undefined, 1);
+
+	currentDirEvolution30s = new DirectionEvolution('currentDirEvolutionCanvas30s');
+	currentSpeedEvolution30s = new SpeedEvolution('currentSpeedEvolutionCanvas30s', 5, false, undefined, 1);
+	currentDirEvolution1m = new DirectionEvolution('currentDirEvolutionCanvas1m');
+	currentSpeedEvolution1m = new SpeedEvolution('currentSpeedEvolutionCanvas1m', 5, false, undefined, 1);
+	currentDirEvolution10m = new DirectionEvolution('currentDirEvolutionCanvas10m');
+	currentSpeedEvolution10m = new SpeedEvolution('currentSpeedEvolutionCanvas10m', 5, false, undefined, 1);
 };
 
 var changeBorder = function (b) {
@@ -91,6 +106,14 @@ var resizeDisplays = function (width) {
 		displayOverview.drawGraph();
 		twdEvolution.drawGraph();
 		twsEvolution.drawGraph();
+		currentDirEvolution.drawGraph();
+		currentSpeedEvolution.drawGraph();
+		currentDirEvolution30s.drawGraph();
+		currentSpeedEvolution30s.drawGraph();
+		currentDirEvolution1m.drawGraph();
+		currentSpeedEvolution1m.drawGraph();
+		currentDirEvolution10m.drawGraph();
+		currentSpeedEvolution10m.drawGraph();
 
 		var jumboFactor = width / TOTAL_WIDTH;
 		for (var i = 0; i < jumboList.length; i++) {

@@ -201,6 +201,25 @@ var onMessage = function (json) {
 		catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "CSP");
 		}
+
+		// Buffered current
+		try {
+			var buffered = json['Current calculated with damping'];
+			if (buffered !== undefined) {
+				var keys = Object.keys(buffered);
+				for (var i=0; i<keys.length; i++) {
+					var k = keys[i];
+//				console.log("K:" + k);
+					var damp = buffered[k];
+//				console.log("Publishing csp-" + k);
+					events.publish("csp-" + k, damp.speed.speed);
+					events.publish("cdr-" + k, damp.direction.angle);
+				}
+			}
+		} catch (err) {
+			console.log(err);
+		}
+
 		try {
 			var sog = json.SOG.speed;
 			events.publish('sog', sog);

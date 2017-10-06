@@ -403,13 +403,13 @@ function AnalogDisplay(cName,                     // Canvas Name
 		// Digits? Note: not compatible with label (above), would hide it.
 		if (digits !== undefined) {
 			var oneDigitWidth = (canvas.width / 3) / digits;
-			var oneDigitHeight = oneDigitWidth * 2; // (canvas.height / 6);
+			var oneDigitHeight = oneDigitWidth * 1.4;
 
 			if (analogDisplayColorConfig.withGradient) {
 				var start = 1.025 * (canvas.height / 2);
 				var grd = context.createLinearGradient(0, start, 0, start + oneDigitHeight);
-				grd.addColorStop(0, analogDisplayColorConfig.displayBackgroundGradient.to);// 0  Beginning
-				grd.addColorStop(1, analogDisplayColorConfig.displayBackgroundGradient.from);// 1  End
+				grd.addColorStop(0, analogDisplayColorConfig.displayBackgroundGradient.to);   // 0  Beginning
+				grd.addColorStop(1, analogDisplayColorConfig.displayBackgroundGradient.from); // 1  End
 				context.fillStyle = grd;
 			}
 
