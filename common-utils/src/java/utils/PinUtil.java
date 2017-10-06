@@ -6,7 +6,7 @@ import com.pi4j.io.gpio.RaspiPin;
 public class PinUtil {
 	// Disposed as on the board
 	public enum GPIOPin {
-		// IO: JavaHard, gpio, onoff.js
+		// IO: BCM, JavaHard, gpio, onoff.js
 		// WiPi: WiringPI, Pi4J
 		//
 		//      Name            #  IO WiPi                            Name            #  IO WiPi
@@ -95,6 +95,8 @@ public class PinUtil {
 					values[1 + (row * 2)].gpio() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].gpio()));        // BCM
 			System.out.println(line);
 		}
+		System.out.println(hr);
+		System.out.println(header);
 		System.out.println(hr);
 	}
 
