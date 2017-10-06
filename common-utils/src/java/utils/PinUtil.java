@@ -76,23 +76,23 @@ public class PinUtil {
 
 	public static void print() {
 		GPIOPin[] values = GPIOPin.values();
-//	String hr =     "| 3v3          | #01 |    |    ||    |    | #02 |          5v0 |";
-		String hr =     "+--------------+-----+----+----++----+----+-----+--------------+";
-		String header = "| Name         | Phy | GP | WPi||WPi | GP | Phy |         Name |";
+//	String hr =     "|  04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | 15  |";
+		String hr =     "+-----+-----+--------------+-----++-----+--------------+-----+-----+";
+		String header = "| BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |";
 		System.out.println(hr);
 		System.out.println(header);
 		System.out.println(hr);
 		for (int row=0; row<(values.length / 2); row++) {
-			String line = String.format("| %-12s | #%02d | %s | %s || %s | %s | #%02d | %12s |",
+			String line = String.format("|  %s |  %s | %-12s | #%02d || #%02d | %12s | %s  | %s  |",
+					values[row * 2].gpio() == -1 ? "  " : String.format("%02d", values[row * 2].gpio()),         // BCM
+					values[row * 2].wiringPi() == -1 ? "  " : String.format("%02d", values[row * 2].wiringPi()), // wPI
 					values[row * 2].pinName(),
 					values[row * 2].pinNumber(),
-					values[row * 2].gpio() == -1 ?     "  " : String.format("%02d", values[row * 2].gpio()),
-					values[row * 2].wiringPi() == -1 ? "  " : String.format("%02d", values[row * 2].wiringPi()),
 
-					values[1 + (row * 2)].wiringPi() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].wiringPi()),
-					values[1 + (row * 2)].gpio() == -1 ?     "  " : String.format("%02d", values[1 + (row * 2)].gpio()),
 					values[1 + (row * 2)].pinNumber(),
-					values[1 + (row * 2)].pinName());
+					values[1 + (row * 2)].pinName(),
+					values[1 + (row * 2)].wiringPi() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].wiringPi()), // wPI
+					values[1 + (row * 2)].gpio() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].gpio()));        // BCM
 			System.out.println(line);
 		}
 		System.out.println(hr);
