@@ -16,6 +16,8 @@ var init = function () {
 //displayBSP = new AnalogDisplay('bspCanvas', 100, 15, 5, 1);
 	displayBSP = new AnalogDisplay('bspCanvas', 100, 15, 5, 1, true, 40);
 	displayBSP.setDigits(5);
+	displayBSP.setWithMinMax(true);
+
 	displayLog = new NumericDisplay('logCanvas', 60, 5);
 
 	displayHDG = new Direction('hdgCanvas', 100, 45, 5, true);
@@ -24,6 +26,7 @@ var init = function () {
 	displayTWD.setLabel('TWD');
 	displayTWS = new AnalogDisplay('twsCanvas', 100, 50, 10, 1, true, 40);
 	displayTWS.setLabel('TWS');
+	displayTWS.setWithMinMax(true);
 	thermometer = new Thermometer('tmpCanvas', 200);
 	athermometer = new Thermometer('atmpCanvas', 200);
 	rose = new CompassRose('roseCanvas', 400, 50);

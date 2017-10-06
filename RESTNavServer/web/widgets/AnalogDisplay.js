@@ -400,7 +400,7 @@ function AnalogDisplay(cName,                     // Canvas Name
 			context.closePath();
 		}
 
-		// Digits? Note: not compatible with label (above)
+		// Digits? Note: not compatible with label (above), would hide it.
 		if (digits !== undefined) {
 			var oneDigitWidth = (canvas.width / 3) / digits;
 			var oneDigitHeight = oneDigitWidth * 2; // (canvas.height / 6);
