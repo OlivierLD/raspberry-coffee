@@ -291,6 +291,7 @@
 				  "To&nbsp;" + (new Date(to)).format(dateFmt) + "<br>" +
 				  // "(" + twsEvolution.getLifeSpan() + ")" + "<br>" +
 				  currentSpeedEvolution.getLifeSpanFormatted();
+				  currentSpeedEvolution.getLifeSpanFormatted();
 	  });
 
 	  events.subscribe("csp-30000", function(val) {
@@ -738,7 +739,7 @@
       </p>
     </div>
 		<div id="current-evolution" style="display: none;">
-			<div style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 510px; overflow-y: scroll; overflow-x: scroll;">
+			<div style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; max-height: 80%; overflow-y: scroll; overflow-x: scroll; overflow-y: scroll;">
 			  <table>
 					<tr>
 						<td valign="top">
@@ -764,7 +765,7 @@
 							<div style="border-radius: 5px; border: 1px solid rgba(155, 255, 255, 0.5);">
 							<table align="center" cellspacing="10" border="0">
 								<tr>
-									<th colspan="2">Instant.</th>
+									<th colspan="2">Instant triangulation</th>
 								</tr>
 								<tr>
 									<td align="center" valign="top">
@@ -781,7 +782,7 @@
 							<div style="border-radius: 5px; border: 1px solid rgba(155, 255, 255, 0.5);">
 								<table align="center" cellspacing="10" border="0">
 									<tr>
-										<th colspan="2">On 30s</th>
+										<th colspan="2">On 30 seconds</th>
 									</tr>
 									<tr>
 										<td align="center" valign="top">
@@ -798,7 +799,7 @@
 							<div style="border-radius: 5px; border: 1px solid rgba(155, 255, 255, 0.5);">
 								<table align="center" cellspacing="10" border="0">
 									<tr>
-										<th colspan="2">On 1m</th>
+										<th colspan="2">On 1 minute</th>
 									</tr>
 									<tr>
 										<td align="center" valign="top">
@@ -815,7 +816,7 @@
 							<div style="border-radius: 5px; border: 1px solid rgba(155, 255, 255, 0.5);">
 								<table align="center" cellspacing="10" border="0">
 									<tr>
-										<th colspan="2">On 10m</th>
+										<th colspan="2">On 10 minutes</th>
 									</tr>
 									<tr>
 										<td align="center" valign="top">
