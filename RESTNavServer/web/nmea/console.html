@@ -17,23 +17,25 @@
       }
       
       .selectedButton {
-        padding:5px;
+        padding: 5px;
         border-top-right-radius: 10px;
-        border:1px solid #CCC;
-        margin-top:10px;
+        border: 1px solid #CCC;
+        margin-top: 10px;
         border-bottom: none;
         font-size: 12px;
         font-weight: bold;
+				cursor: pointer;
       }
 
       .unselectedButton {
-        padding:5px;
+        padding: 5px;
         border-top-right-radius: 10px;
-        border:1px solid #CCC;
-        margin-top:10px;
+        border: 1px solid #CCC;
+        margin-top: 10px;
         border-bottom: none;
         font-size: 12px;
         font-weight: normal;
+				cursor: pointer;
       }
     </style>
     <link rel="stylesheet" href="../css/black.css" type="text/css" id="theme"/>
@@ -127,7 +129,7 @@
       return str;
   };
 
-  var flavor = 'Ajax'; // Default, WebSocket not implemented yet.
+  var flavor = 'Ajax'; // Default, WebSocket not implemented here.
 
   window.onload = function() {
     init(); // init UI
@@ -522,19 +524,21 @@
     </script>
   </head>
   <body bgcolor="white">
-    <small>
+		<div style="margin-bottom: 0px;">
       <span id="showDisplays" onclick="showDisplays();" class="selectedButton">Displays</span>
       <span id="showOverview" onclick="showOverview();" class="unselectedButton">Overview</span>
       <span id="showMap" onclick="showMap();" class="unselectedButton">Map</span>
       <span id="showTWDEvolution" onclick="showTWDEvolution();" class="unselectedButton">TW Evolution</span>
 			<span id="showCurrentEvolution" onclick="showCurrentEvolution();" class="unselectedButton">Current Evolution</span>
-    </small>
-    &nbsp;&nbsp;Color Scheme:&nbsp;
-    <input type="radio" name="theme" value="black" checked onclick="changeTheme(this.value);">Night&nbsp;
-    <input type="radio" name="theme" value="white" onclick="changeTheme(this.value);">Day&nbsp;
-    &nbsp;&nbsp;
-    <input type="checkbox" id="with-border" checked onclick="changeBorder(this.checked);">With Border
-    <hr>
+			<span>
+				&nbsp;&nbsp;Color Scheme:&nbsp;
+				<input type="radio" name="theme" value="black" checked onclick="changeTheme(this.value);">Night&nbsp;
+				<input type="radio" name="theme" value="white" onclick="changeTheme(this.value);">Day&nbsp;
+				&nbsp;&nbsp;
+				<input type="checkbox" id="with-border" checked onclick="changeBorder(this.checked);">With Border
+			</span>
+		</div>
+    <hr style="margin-top: 1px;">
     <div id="displays" style="display: inline;">
       <!-- Analog Displays -->
       <table align="center" border="0">
@@ -634,7 +638,7 @@
               <br>
               <canvas id="awDisplayCanvas" height="180" width="180" title="Apparent Wind, speed and direction"><!-- class="displayCanvas" --></canvas>
               <br>
-              <canvas id="currentDisplayCanvas" height="180" width="180" title="Current, speed and direction"><!-- class="displayCanvas" --></canvas>
+              <canvas id="currentDisplayCanvas" height="180" width="180" title="Instant Current, speed and direction"><!-- class="displayCanvas" --></canvas>
             </td>
             <td align="center" valign="top" rowspan="7">
               <canvas id="overviewCanvas" height="500" width="600" class="displayCanvas"></canvas>
@@ -724,7 +728,8 @@
               <button onclick="resetTWBuffer();" style="margin-bottom: 10px;">Reset All</button>
               <br>
               <button onclick="resetTW2Buffer();" style="margin-bottom: 10px;">Drop Oldest Half</button>
-              <br>
+							<br>
+							Max&nbsp;nb&nbsp;pts:<input type="text" style="text-align: right;" size="6" placeholder="Nb" value="1200" onchange="updateTWBufferLength(this);"/>
               <div id="life-span">
               </div>
             </td>
@@ -739,7 +744,7 @@
       </p>
     </div>
 		<div id="current-evolution" style="display: none;">
-			<div style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; max-height: 80%; overflow-y: scroll; overflow-x: scroll; overflow-y: scroll;">
+			<div style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; max-height: 80%; width: 150px; float: left;">
 			  <table>
 					<tr>
 						<td valign="top">
@@ -754,6 +759,8 @@
 											<br>
 											<button onclick="resetCurr2Buffer();" style="margin-bottom: 10px;">Drop Oldest Half</button>
 											<br>
+											Max&nbsp;nb&nbsp;pts:<input type="text" style="text-align: right;" size="6" placeholder="Nb" value="1200" onchange="updateCurrentBufferLength(this);"/>
+											<br>
 											<div id="life-span-current">
 											</div>
 										</td>
@@ -761,6 +768,12 @@
 								</table>
 							</div>
 						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; max-height: 80%; overflow-y: scroll; overflow-x: scroll;">
+				<table align="center" cellspacing="10" border="0">
+					<tr>
 						<td>
 							<div style="border-radius: 5px; border: 1px solid rgba(155, 255, 255, 0.5);">
 							<table align="center" cellspacing="10" border="0">

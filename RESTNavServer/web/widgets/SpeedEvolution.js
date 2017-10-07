@@ -30,8 +30,19 @@ function SpeedEvolution(cName, maxSpeed, withBeaufortScale, label, scaleInc)  //
 	var speedBuffer = [];
 	var lastSpeed = {};
 
+	var maxBuffLength;
+
+	this.setMaxBuffLength = function(len) {
+		maxBuffLength = len;
+	}
+
 	this.addSpeed = function (d) { // { "speed": speed, "time": time }
 		speedBuffer.push(d);
+		if (maxBuffLength !== undefined) {
+			if (speedBuffer.length > maxBuffLength) {
+				speedBuffer.splice(0, (speedBuffer.length - maxBuffLength)); // Drop the head, keep the tail
+			}
+		}
 		lastSpeed = d;
 		instance.drawGraph();
 	};
@@ -100,8 +111,7 @@ function SpeedEvolution(cName, maxSpeed, withBeaufortScale, label, scaleInc)  //
 //  context.closePath();
 		// Grid
 		context.strokeStyle = 'LightGreen';
-		for (var i = 0; i < maxSpeed; i += scaleInc)
-		{
+		for (var i = 0; i < maxSpeed; i += scaleInc) {
 			var x = i * (canvas.width / maxSpeed);
 			context.beginPath();
 			context.lineWidth = (i % 10 === 0) ? 3 : 1;
@@ -114,18 +124,19 @@ function SpeedEvolution(cName, maxSpeed, withBeaufortScale, label, scaleInc)  //
 		// Horizontal grid
 		var lifeSpan = this.getLifeSpan();
 		var timeStep = 15 * SEC; // Default, 15s
-		if (lifeSpan > DAY)
+		if (lifeSpan > DAY) {
 			timeStep = 3 * HRS;
-		else if (lifeSpan > 3 * HRS)
+		} else if (lifeSpan > 3 * HRS) {
 			timeStep = 30 * MIN;
-		else if (lifeSpan > HRS)
+		} else if (lifeSpan > HRS) {
 			timeStep = 10 * MIN;
-		else if (lifeSpan > 30 * MIN)
+		} else if (lifeSpan > 30 * MIN) {
 			timeStep = 5 * MIN;
-		else if (lifeSpan > 10 * MIN)
+		} else if (lifeSpan > 10 * MIN) {
 			timeStep = 1 * MIN;
-		else if (lifeSpan > MIN)
+		} else if (lifeSpan > MIN) {
 			timeStep = 30 * SEC;
+		}
 
 		context.strokeStyle = 'white';
 		context.fillStyle = 'white';
@@ -189,10 +200,11 @@ function SpeedEvolution(cName, maxSpeed, withBeaufortScale, label, scaleInc)  //
 			var xPt = speedBuffer[i].speed * xScale;
 			var yPt = canvas.height - (i * yScale);
 //    console.log("i:" + i + ", " + xPt + "/" + yPt);
-			if (i === 0)
+			if (i === 0) {
 				context.moveTo(xPt, yPt);
-			else
+			} else {
 				context.lineTo(xPt, yPt);
+			}
 		}
 //  context.closePath();
 		context.stroke();
@@ -220,8 +232,7 @@ function SpeedEvolution(cName, maxSpeed, withBeaufortScale, label, scaleInc)  //
 		do {
 			totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
 			totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-		}
-		while (currentElement = currentElement.offsetParent)
+		} while (currentElement = currentElement.offsetParent)
 
 		canvasX = event.pageX - totalOffsetX;
 		canvasY = event.pageY - totalOffsetY;
@@ -252,7 +263,7 @@ function SpeedEvolution(cName, maxSpeed, withBeaufortScale, label, scaleInc)  //
 			var str2 = ((speedBuffer[yInBuffer] !== undefined) ? new Date(speedBuffer[yInBuffer].time).format("H:i:s") : "");
 			instance.drawGraph();
 			context.fillStyle = "rgba(250, 250, 210, .6)";
-//      context.fillStyle = 'yellow';
+//    context.fillStyle = 'yellow';
 			context.fillRect(x + 10, y + 10, 70, 40); // Background
 			context.fillStyle = 'black';
 			context.font = 'bold 12px verdana';

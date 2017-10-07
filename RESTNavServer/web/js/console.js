@@ -66,6 +66,9 @@ var init = function () {
 	twdEvolution = new DirectionEvolution('twdEvolutionCanvas', "TWD");
 	twsEvolution = new SpeedEvolution('twsEvolutionCanvas', 60, true, "TWS");
 
+	twdEvolution.setMaxBuffLength(1200);
+	twsEvolution.setMaxBuffLength(1200);
+
 	currentDirEvolution = new DirectionEvolution('currentDirEvolutionCanvas');
 	currentSpeedEvolution = new SpeedEvolution('currentSpeedEvolutionCanvas', 5, false, undefined, 1);
 
@@ -75,6 +78,59 @@ var init = function () {
 	currentSpeedEvolution1m = new SpeedEvolution('currentSpeedEvolutionCanvas1m', 5, false, undefined, 1);
 	currentDirEvolution10m = new DirectionEvolution('currentDirEvolutionCanvas10m');
 	currentSpeedEvolution10m = new SpeedEvolution('currentSpeedEvolutionCanvas10m', 5, false, undefined, 1);
+
+	currentDirEvolution.setMaxBuffLength(1200);
+	currentDirEvolution30s.setMaxBuffLength(1200);
+	currentDirEvolution1m.setMaxBuffLength(1200);
+	currentDirEvolution10m.setMaxBuffLength(1200);
+	currentSpeedEvolution.setMaxBuffLength(1200);
+	currentSpeedEvolution30s.setMaxBuffLength(1200);
+	currentSpeedEvolution1m.setMaxBuffLength(1200);
+	currentSpeedEvolution10m.setMaxBuffLength(1200);
+};
+
+/**
+ *
+ * @param len can be undefined
+ */
+var updateTWBufferLength = function(txt) {
+	var len;
+	if (txt.value.length === 0) {
+		len = undefined;
+	}
+	try {
+		len = parseInt(txt.value);
+	} catch (err) {
+		len = undefined;
+		console.log(err);
+	}
+	twdEvolution.setMaxBuffLength(len);
+	twsEvolution.setMaxBuffLength(len);
+};
+
+/**
+ *
+ * @param len can be undefined
+ */
+var updateCurrentBufferLength = function(txt) {
+	var len;
+	if (txt.value.length === 0) {
+		len = undefined;
+	}
+	try {
+		len = parseInt(txt.value);
+	} catch (err) {
+		len = undefined;
+		console.log(err);
+	}
+	currentDirEvolution.setMaxBuffLength(len);
+	currentDirEvolution30s.setMaxBuffLength(len);
+	currentDirEvolution1m.setMaxBuffLength(len);
+	currentDirEvolution10m.setMaxBuffLength(len);
+	currentSpeedEvolution.setMaxBuffLength(len);
+	currentSpeedEvolution30s.setMaxBuffLength(len);
+	currentSpeedEvolution1m.setMaxBuffLength(len);
+	currentSpeedEvolution10m.setMaxBuffLength(len);
 };
 
 var changeBorder = function (b) {

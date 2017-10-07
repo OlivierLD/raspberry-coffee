@@ -20,8 +20,20 @@ function DirectionEvolution(cName, label)     // Canvas name
 	if (label === undefined) {
 		label = "Dir.";
 	}
+
+	var maxBuffLength;
+
+	this.setMaxBuffLength = function(len) {
+		maxBuffLength = len;
+	}
+
 	this.addDirection = function (d) { // { "angle": angle, "time": time }
 		directionBuffer.push(d);
+		if (maxBuffLength !== undefined) {
+			if (directionBuffer.length > maxBuffLength) {
+				directionBuffer.splice(0, (directionBuffer.length - maxBuffLength)); // Drop the head, keep the tail
+			}
+		}
 		lastDirection = d;
 		instance.drawGraph();
 	};
