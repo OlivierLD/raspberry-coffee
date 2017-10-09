@@ -20,7 +20,7 @@
 	&nbsp;
 	<button onclick="showTime();">Now</button>
 	<hr/>
-  Full Station list <input type="text" size="5" placeholder="offset" id="offset">, <input type="text" size="5" placeholder="limit" id="limit">, <input type="search" size="20" placeholder="Filter" id="name-filter">
+  Full Station list <input type="text" size="5" placeholder="offset" style="text-align: right;" id="offset">, <input type="text" size="5" placeholder="limit" style="text-align: right;" id="limit">, <input type="search" size="20" placeholder="Filter" id="name-filter">
 	&nbsp;
 	<button onclick="tideStations($('#offset').val(), $('#limit').val(), $('#name-filter').val());">Tide Stations</button>
   <hr/>
@@ -30,7 +30,7 @@
   <hr/>
 	Station <input type="text" size="40" placeholder="Station Full Name" id="station">, today.
 	TimeZone <input type="text" size="20" placeholder="Etc/UTC" id="tz">
-	Step <input type="text" size="5" placeholder="minutes" id="step">
+	Step <input type="text" size="5" style="text-align: right;" placeholder="minutes" id="step">
 	Unit <select id="unit"><option value="">None</option><option value="meters">Meters</option><option value="feet">Feet</option></select>
 	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With details.
 	&nbsp;

@@ -1932,10 +1932,11 @@ public class RESTImplementation {
 		JsonElement jsonElement = null;
 		try {
 			// Calculate VMG(s)
-			NMEAUtils.calculateVMGs(cache);
-
-			jsonElement = new Gson().toJsonTree(cache);
-			((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
+			synchronized (cache) {
+				NMEAUtils.calculateVMGs(cache);
+				jsonElement = new Gson().toJsonTree(cache);
+				((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
+			}
 		} catch (Exception ex) {
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
 		}

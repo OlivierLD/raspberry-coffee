@@ -42,7 +42,17 @@ In addition, as we are using the `NMEA Multiplexer` (see this project), you can 
 NMEA data source, compute and transform then, and rebroadcast then on any channel you like, to enable other devices and programs
 to read them (`OpenCPN`, `SignalK`, etc) .
 
-![Menu and Console](./docimg/screenshot.png)
+![Console](./docimg/screenshot.01.png)
+
+The displays
+
+![Menu and Console](./docimg/screenshot.02.png)
+
+Current evaluation, instantaneous, 30 seconds.
+
+![Menu and Console](./docimg/screenshot.03.png)
+
+Current evaluation, 1  minute, 10 minutes, much more accurate!
 
 ---
 
