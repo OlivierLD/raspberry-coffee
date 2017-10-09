@@ -44,7 +44,7 @@ to read them (`OpenCPN`, `SignalK`, etc) .
 
 ![Console](./docimg/screenshot.01.png)
 
-The displays
+NMEA Console. The displays (night theme).
 
 ![Menu and Console](./docimg/screenshot.02.png)
 
@@ -68,7 +68,6 @@ Current evaluation, 1  minute, 10 minutes, much more accurate!
 ## TODO
 
 - Previous Next on the tide
-- Current buffer length on NMEA Mux
 - Globe display for Earth
 - `npm` for non-java resource sharing
 
