@@ -5,7 +5,7 @@
     <!--meta charset="iso-8859-1"-->
     <!--meta charset="utf-8"-->
     <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
-    <title>NMEA Console Data</title>
+    <title>World Map Demo</title>
 
     <link rel="icon" type="image/ico" href="../icons/hammerhead.02.ico">
 
@@ -45,6 +45,7 @@
     <script type="text/javascript" src="../widgets/worldmap.js"></script>
     <script type="text/javascript" src="../js/pub.sub.js"></script>
     <script type="text/javascript" src="../js/conversion.utils.js"></script>
+    <script type="text/javascript" src="../js/routes.utils.js"></script>
 		<script type="text/javascript" src="worldmap.demo.js"></script>
     <script type="text/javascript">
     
@@ -108,15 +109,56 @@
     }
   };
 
+  var changeGrid = function(cb) {
+  	worldMap.setWithGrid(cb.checked);
+  };
+  var changeSun = function(cb) {
+	  worldMap.setWithSun(cb.checked);
+  };
+  var changeMoon = function(cb) {
+	  worldMap.setWithMoon(cb.checked);
+  };
+  var changeSunlight = function(cb) {
+	  worldMap.setWithSunLight(cb.checked);
+  };
+  var changeMoonlight = function(cb) {
+	  worldMap.setWithMoonLight(cb.checked);
+  };
+
     </script>
   </head>
-  <body bgcolor="white">
-    <div id="map" style="display: block; height: 450px; width: 850px;">
-      <p align="center">
-        <canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
-      </p>
-    </div>
-    <div id="err-mess"></div>
+  <body>
+  <h2>World Globe Demo</h2>
+    <table>
+      <tr>
+        <td valign="top">
+          <div id="map" style="display: block; height: 450px; width: 850px;">
+            <p align="center">
+              <canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
+            </p>
+          </div>
+        </td>
+        <td valign="top">
+          <div id="current-date"> --- </div>
+          <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid
+          <br/>
+          <input type="checkbox" onchange="changeSun(this);" checked/> With Sun
+          <br/>
+          <input type="checkbox" onchange="changeMoon(this);" checked/> With Moon
+          <br/>
+          <input type="checkbox" onchange="changeSunlight(this);" /> With Sun light
+          <br/>
+          <input type="checkbox" onchange="changeMoonlight(this);" /> With Moon light
+          <br/>
+
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div id="err-mess"></div>
+        </td>
+      </tr>
+    </table>
     <address><span id="console-type"></span></address>
   </body>
 </html>

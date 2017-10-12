@@ -54,6 +54,7 @@
     <script type="text/javascript" src="../widgets/TimeDisplay.js"></script>
     <script type="text/javascript" src="../widgets/DirectionEvolution.js"></script>
     <script type="text/javascript" src="../widgets/SpeedEvolution.js"></script>
+		<script type="text/javascript" src="../js/routes.utils.js"></script>
 		<script type="text/javascript" src="../widgets/WorldMapData.js"></script>
     <script type="text/javascript" src="../widgets/worldmap.js"></script>
     <script type="text/javascript" src="../js/pub.sub.js"></script>
@@ -510,7 +511,24 @@
       jumboVMG.setTitle(val);
     }
   };
-    </script>
+
+  var changeGrid = function(cb) {
+	  worldMap.setWithGrid(cb.checked);
+  };
+  var changeSun = function(cb) {
+	  worldMap.setWithSun(cb.checked);
+  };
+  var changeMoon = function(cb) {
+	  worldMap.setWithMoon(cb.checked);
+  };
+  var changeSunlight = function(cb) {
+	  worldMap.setWithSunLight(cb.checked);
+  };
+  var changeMoonlight = function(cb) {
+	  worldMap.setWithMoonLight(cb.checked);
+  };
+
+		</script>
   </head>
   <body bgcolor="white">
 		<div style="margin-bottom: 0px;">
@@ -705,9 +723,26 @@
       </p>
     </div>
     <div id="map" style="display: none; height: 450px; width: 850px;">
-      <p align="center">
-        <canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
-      </p>
+			<table>
+				<tr>
+					<td valign="top">
+						<p align="center">
+							<canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
+						</p>
+					</td>
+					<td valign="top">
+						<input type="checkbox" onchange="changeGrid(this);" checked/> With Grid
+						<br/>
+						<input type="checkbox" onchange="changeSun(this);" checked/> With Sun
+						<br/>
+						<input type="checkbox" onchange="changeMoon(this);" checked/> With Moon
+						<br/>
+						<input type="checkbox" onchange="changeSunlight(this);" /> With Sun light
+						<br/>
+						<input type="checkbox" onchange="changeMoonlight(this);" /> With Moon light
+					</td>
+				</tr>
+			</table>
     </div>
     <div id="twd-evolution" style="display: none;">
       <p align="center">

@@ -8,6 +8,27 @@ const projections = [ "ANAXIMANDRE", "MERCATOR", "GLOBE" ];
 function WorldMap (cName, prj) {
 
 	var canvasName = cName;
+	var withGrid = true;
+	var withSun = true;
+	var withMoon = true;
+	var withSunlight = false;
+	var withMoonlight = false;
+
+	this.setWithGrid = function(b) {
+		withGrid = b;
+	};
+	this.setWithSun = function(b) {
+		withSun = b;
+	};
+	this.setWithMoon = function(b) {
+		withMoon = b;
+	};
+	this.setWithSunLight = function(b) {
+		withSunlight = b;
+	};
+	this.setWithMoonLight = function(b) {
+		withMoonlight = b;
+	};
 
 	var arrayContains = function(array, value) {
 		for (var idx=0; idx<array.length; idx++) {
@@ -90,6 +111,7 @@ function WorldMap (cName, prj) {
 		context.arc(pt.x, pt.y, 2, 0, 2 * Math.PI);
 		context.stroke();
 		context.fill();
+		context.closePath();
 	};
 
 	var currentStep = 0;
@@ -253,17 +275,6 @@ function WorldMap (cName, prj) {
 		}
 	};
 
-	var sign = function (d) {
-		var s = 0;
-		if (d > 0.0) {
-			s = 1;
-		}
-		if (d < 0.0) {
-			s = -1;
-		}
-		return s;
-	};
-
 	/**
 	 *
 	 * @param lat in degrees
@@ -386,7 +397,6 @@ function WorldMap (cName, prj) {
 		// Circle
 		context.fillStyle = "rgba(0, 0, 100, 10.0)"; // Dark blue
 		context.arc(canvas.width / 2, canvas.height / 2, Math.min(w / 2, h / 2) * 0.9, 0, 2 * Math.PI);
-		context.stroke();
 		context.fill();
 
 		globeViewOffset_X = Math.abs((globeView_ratio * opWidth) - w) / 2 - (globeView_ratio * minX);
@@ -398,8 +408,8 @@ function WorldMap (cName, prj) {
 		context.lineWidth = 1;
 		context.strokeStyle = 'rgba(0, 255, 255, 0.3)'; // 'cyan';
 
-		var drawGrid = true; // TODO Make it a prm
-		if (drawGrid) {
+		if (withGrid) {
+			context.save();
 			// Meridians
 			for (var i = Math.min(_east, _west); i < Math.max(_east, _west); i += gstep) {
 				var previous = null;
@@ -410,7 +420,6 @@ function WorldMap (cName, prj) {
 					var thisPointIsBehind = isBehind(toRadians(j), toRadians(i - globeViewLngOffset));
 
 					if (!isTransparentGlobe() && thisPointIsBehind) {
-//			context.stroke();
 						previous = null;
 					} else {
 						if (previous !== null) {
@@ -436,7 +445,6 @@ function WorldMap (cName, prj) {
 					var thisPointIsBehind = isBehind(toRadians(j), toRadians(i - globeViewLngOffset));
 
 					if (!isTransparentGlobe() && thisPointIsBehind) {
-//				context.stroke();
 						previous = null;
 					} else {
 						if (previous !== null) {
@@ -452,9 +460,11 @@ function WorldMap (cName, prj) {
 				context.stroke();
 				context.closePath();
 			}
+			context.restore();
 		}
 
 		// Chart
+		context.save();
 		if (fullWorldMap === undefined) {
 			console.log("You must load [WorldMapData.js] to display a chart.");
 		} else {
@@ -462,7 +472,7 @@ function WorldMap (cName, prj) {
 				var worldTop = fullWorldMap.top;
 				var section = worldTop.section; // We assume top has been found.
 
-//    console.log("Found " + section.length + " section(s).")
+//      console.log("Found " + section.length + " section(s).")
 				for (var i = 0; i < section.length; i++) {
 					var point = section[i].point;
 					if (point !== undefined) {
@@ -506,6 +516,8 @@ function WorldMap (cName, prj) {
 				console.log("Oops:" + ex);
 			}
 		}
+		context.restore();
+
 		// User position
 		if (userPosition !== {}) {
 			var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
@@ -515,7 +527,8 @@ function WorldMap (cName, prj) {
 		}
 		// Celestial bodies?
 		if (astronomicalData !== {}) {
-			if (astronomicalData.sun !== undefined) {
+			if (astronomicalData.sun !== undefined && withSun) {
+				context.save();
 				var sunLng = haToLongitude(astronomicalData.sun.gha);
 				var sun = getPanelPoint(astronomicalData.sun.decl, sunLng);
 				var thisPointIsBehind = isBehind(toRadians(astronomicalData.sun.decl), toRadians(sunLng - globeViewLngOffset));
@@ -525,23 +538,135 @@ function WorldMap (cName, prj) {
 					context.fillStyle = "yellow";
 					context.fillText("Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
 				}
+				// Route to sun?
+				// context.lineWidth = 1;
+				// context.strokeStyle = "yellow";
+				// drawRhumbline(canvas, context, userPosition, { lat: astronomicalData.sun.decl, lng: sunLng })
 				// Sunlight
-
+				if (withSunlight) {
+					var from = {lat: toRadians(astronomicalData.sun.decl), lng: toRadians(sunLng)};
+					drawNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
+				}
+				context.restore();
 			}
-			if (astronomicalData.moon !== undefined) {
+			if (astronomicalData.moon !== undefined && withMoon) {
+				context.save();
 				var moonLng = haToLongitude(astronomicalData.moon.gha);
 				var moon = getPanelPoint(astronomicalData.moon.decl, moonLng);
 				var thisPointIsBehind = isBehind(toRadians(astronomicalData.moon.decl), toRadians(moonLng - globeViewLngOffset));
 				if (!thisPointIsBehind) {
-					// Draw Sun
+					// Draw Moon
 					plot(context, moon, "white");
 					context.fillStyle = "white";
 					context.fillText("Moon", Math.round(moon.x) + 3, Math.round(moon.y) - 3);
 				}
 				// Moonlight
-
+				if (withMoonlight) {
+					var from = {lat: toRadians(astronomicalData.moon.decl), lng: toRadians(moonLng)};
+					drawNight(canvas, context, from, userPosition, astronomicalData.moon.gha);
+				}
+				context.restore();
 			}
 		}
+	};
+
+	var drawRhumbline = function(canvas, context, userPosition, body) {
+		var gc = new GreatCircle(
+				{ lat: toRadians(userPosition.latitude), lng: toRadians(userPosition.longitude) },
+				{ lat: toRadians(body.lat), lng: toRadians(body.lng) });
+		var pts = gc.calculateGreatCircle(10);
+		pts.forEach(function(item, idx) {
+			var pt = getPanelPoint(toDegrees(item.pt.lat), toDegrees(item.pt.lng));
+			if (idx === 0) {
+				context.moveTo(pt.x, pt.y);
+			} else {
+				if (!isBehind(item.pt.lat, item.pt.lng - toRadians(globeViewLngOffset))) {
+					context.lineTo(pt.x, pt.y);
+				}
+			}
+		});
+		context.stroke();
+	};
+
+	var drawNight = function(canvas, context, from, user, gha) {
+		const NINETY_DEGREES = 90 * 60; // in nm
+
+		var firstVisible = -1;
+		const VISIBLE = 1;
+		const INVISIBLE = 2;
+		var visibility = 0;
+
+		// context.lineWidth = 1;
+		context.fillStyle = 'rgba(192, 192, 192, 0.3)';
+
+		// find first visible point of the night limb
+		for (var i=0; i<360; i++) {
+			var night = deadReckoning(from, NINETY_DEGREES, i);
+			var visible = isBehind(night.lat, night.lng - toRadians(globeViewLngOffset)) ? INVISIBLE : VISIBLE;
+			if (visible === VISIBLE && visibility === INVISIBLE) { // Just became visible
+				firstVisible = i;
+				break;
+			}
+			visibility = visible;
+		}
+
+		context.beginPath();
+		// Night limb
+		var firstPt, lastPt;
+		for (var dir=firstVisible; dir<firstVisible+360; dir++) {
+			var dr = deadReckoning(from, NINETY_DEGREES, dir);
+			var borderPt = getPanelPoint(toDegrees(dr.lat), toDegrees(dr.lng));
+			if (dir === firstVisible) {
+				context.moveTo(borderPt.x, borderPt.y);
+				firstPt = borderPt;
+			} else {
+				if (!isBehind(dr.lat, dr.lng - toRadians(globeViewLngOffset))) {
+					lastPt = borderPt;
+					context.lineTo(borderPt.x, borderPt.y);
+				}
+			}
+		}
+		// Earth limb
+		var center = { x: canvas.width / 2, y: canvas.height / 2};
+		var startAngle = getDir(lastPt.x - center.x, center.y - lastPt.y);
+		var arrivalAngle = getDir(firstPt.x - center.x, center.y - firstPt.y);
+
+		var lhaSun = gha + user.longitude;
+		while (lhaSun < 0) lhaSun += 360;
+		while (lhaSun > 360) lhaSun -= 360;
+
+		var clockwise = true;  // From the bottom
+		if (lhaSun < 90 || lhaSun > 270) {  // Observer in the light
+			clockwise = (lhaSun > 270);
+		} else {                            // Observer in the dark
+			clockwise = (lhaSun > 180);
+		}
+		if ((startAngle > 270 || startAngle < 90) && arrivalAngle > 90 && arrivalAngle < 270) {
+			clockwise = !clockwise;
+		}
+
+		var inc = 1; // Clockwise
+		var firstBoundary, lastBoundary;
+
+		if (clockwise) {
+			firstBoundary = Math.floor(startAngle);
+			lastBoundary = Math.ceil(arrivalAngle);
+			while (lastBoundary < firstBoundary) lastBoundary += 360;
+		} else {
+			inc = -1;
+			firstBoundary = Math.ceil(startAngle);
+			lastBoundary = Math.floor(arrivalAngle);
+			while (lastBoundary > firstBoundary) firstBoundary += 360;
+		}
+
+		var userPos = { lat: toRadians(user.latitude), lng: toRadians(user.longitude) };
+		for (var i=firstBoundary; (inc>0 && i<=lastBoundary) || (inc<0 && i>=lastBoundary); i+=inc) {
+			var limb = deadReckoning(userPos, NINETY_DEGREES, i);
+			var limbPt = getPanelPoint(toDegrees(limb.lat), toDegrees(limb.lng));
+			context.lineTo(limbPt.x, limbPt.y);
+		}
+		context.closePath();
+		context.fill();
 	};
 
 	var drawAnaximandreChart = function (canvas, context) {
@@ -666,6 +791,17 @@ function WorldMap (cName, prj) {
 		var y = canvas.height - ((lat + 90) * canvas.height / 180);
 
 		return {"x": x, "y": y};
+	};
+
+	var sign = function (d) {
+		var s = 0;
+		if (d > 0.0) {
+			s = 1;
+		}
+		if (d < 0.0) {
+			s = -1;
+		}
+		return s;
 	};
 
 	var toRadians = function (deg) {
