@@ -54,6 +54,10 @@ Current evaluation, instantaneous, 30 seconds.
 
 Current evaluation, 1  minute, 10 minutes, much more accurate!
 
+![The 3D Map](./docimg/screenshot.04.png)
+
+Actual position, in real time. With sunlight and moonlight options.
+
 ---
 
 ## Notice
