@@ -72,6 +72,5 @@ Actual position, in real time. With sunlight and moonlight options.
 ## TODO
 
 - Previous Next on the tide
-- Globe display for Earth
 - `npm` for non-java resource sharing
 
