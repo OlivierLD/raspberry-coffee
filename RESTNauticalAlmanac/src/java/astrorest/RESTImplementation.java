@@ -59,6 +59,11 @@ public class RESTImplementation {
 					"/astro/oplist",
 					this::getOperationList,
 					"List of all available operations, on astro request manager."),
+			new Operation( // QueryString contains date /sun-moon-gp?at=2017-09-01T00:00:00
+					"GET",
+					"/sun-moon-gp",
+					this::getSunMoonGP,
+					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format."),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
 					"POST",
 					"/sun-now",
@@ -321,6 +326,64 @@ public class RESTImplementation {
 							.errorMessage(ex.toString()));
 			return response;
 		}
+	}
+
+	/**
+	 * Computes sun's and moon's Declination and GHA at a given (UTC) time.
+	 * @param request
+	 * @return
+	 */
+	private Response getSunMoonGP(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		String atPrm = null;
+		Map<String, String> prms = request.getQueryStringParameters();
+		if (prms == null || prms.get("at") == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0400")
+							.errorMessage("Query parameters 'at' is required."));
+			return response;
+		} else {
+			atPrm = prms.get("at");
+			DURATION_FMT.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+			try {
+				Date at = DURATION_FMT.parse(atPrm);
+				Calendar date = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+				date.setTime(at);
+				if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+					System.out.println("Starting Sun and Moon data calculation at " + date.getTime());
+				}
+				// TODO Make it non-static, and synchronized
+				AstroComputer.calculate(
+						date.get(Calendar.YEAR),
+						date.get(Calendar.MONTH) + 1,
+						date.get(Calendar.DAY_OF_MONTH),
+						date.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+						date.get(Calendar.MINUTE),
+						date.get(Calendar.SECOND));
+
+				SunMoonGP data = new SunMoonGP()
+						.epoch(date.getTimeInMillis())
+						.sun(new GP().gha(AstroComputer.getSunGHA())
+								.decl(AstroComputer.getSunDecl()))
+						.moon(new GP().gha(AstroComputer.getMoonGHA())
+								.decl(AstroComputer.getMoonDecl()));
+
+				String content = new Gson().toJson(data);
+				RESTProcessorUtil.generateResponseHeaders(response, content.length());
+				response.setPayload(content.getBytes());
+
+			} catch (Exception ex) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("ASTRO-0401")
+								.errorMessage(ex.toString()));
+				return response;
+			}
+		}
+		return response;
 	}
 
 	/**
@@ -792,6 +855,40 @@ public class RESTImplementation {
 		}
 		public DateHolder others(List<String> others) {
 			this.others = others;
+			return this;
+		}
+	}
+
+	public static class GP {
+		double decl;
+		double gha;
+
+		public GP decl(double d) {
+			this.decl = d;
+			return this;
+		}
+
+		public GP gha(double d) {
+			this.gha = d;
+			return this;
+		}
+	}
+
+	public static class SunMoonGP {
+		long epoch;
+		GP sun;
+		GP moon;
+
+		public SunMoonGP epoch(long epoch) {
+			this.epoch = epoch;
+			return this;
+		}
+		public SunMoonGP sun(GP sun) {
+			this.sun = sun;
+			return this;
+		}
+		public SunMoonGP moon(GP moon) {
+			this.moon = moon;
 			return this;
 		}
 	}

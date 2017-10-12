@@ -59,7 +59,8 @@
     <script type="text/javascript" src="../js/pub.sub.js"></script>
     <script type="text/javascript" src="../js/ajax.manager.js"></script>
     <script type="text/javascript" src="../js/ws.manager.js"></script>
-    <script type="text/javascript" src="../js/console.js"></script>
+    <script type="text/javascript" src="../js/conversion.utils.js"></script>
+		<script type="text/javascript" src="../js/console.js"></script>
     <script type="text/javascript">
     
   var getQSPrm = function(prm) {
@@ -112,31 +113,32 @@
 
   var LATITUDE  = 0;
   var LONGITUDE = 1;
+  var DURATION_FMT = "Y-m-dTH:i:s";
 
-  var toDMS = function(val, flavor) {
-      var str = "";
-      var value = val;
-      if (val < 0) {
-          value = -val;
-          str = (flavor === LATITUDE ? "S" : "W");
-      } else {
-          str = (flavor === LATITUDE ? "N" : "E");
-      }
-      var deg = Math.floor(value).toFixed(0);
-      str += (" " + deg + "&deg;");
-      var min = (value - deg) * 60;
-      str += (min.toFixed(2) + "'");
-      return str;
+  var toDMS = function (val, flavor) {
+	  var str = "";
+	  var value = val;
+	  if (val < 0) {
+		  value = -val;
+		  str = (flavor === LATITUDE ? "S" : "W");
+	  } else {
+		  str = (flavor === LATITUDE ? "N" : "E");
+	  }
+	  var deg = Math.floor(value).toFixed(0);
+	  str += (" " + deg + "&deg;");
+	  var min = (value - deg) * 60;
+	  str += (min.toFixed(2) + "'");
+	  return str;
   };
 
-  var flavor = 'Ajax'; // Default, WebSocket not implemented here.
+  var flavor = 'Ajax'; // Default, WebSocket not implemented here (we run on a small http server).
 
   window.onload = function() {
     init(); // init UI
 
-    clear('mapCanvas');
+	  worldMap.clear();
     setTimeout(function() {
-        drawWorldMap('mapCanvas');
+	    worldMap.drawWorldMap();
     }, 1);
 
     var type = getQSPrm('type');
@@ -162,8 +164,9 @@
       var cb = document.getElementById('with-border');
       cb.checked = (border === 'Y');
     }
-    // Subscribers here
     /**
+		 *  SUBSCRIBERS HERE.
+		 *
      * The following subscriptions make the distinction between Ajax & WebSockets
      * (See the initAjax & initWS methods)
      */
@@ -171,9 +174,9 @@
       var label = "Your position";
       // Plot the station on the map
       var canvas = "mapCanvas";
-      clear(canvas);
-      drawWorldMap(canvas);
-      plotPosToCanvas(canvas, val.lat, val.lng, label);
+	    worldMap.clear();
+	    worldMap.drawWorldMap();
+	    worldMap.setUserPosition({ latitude: val.lat, longitude: val.lng });
     });
     events.subscribe('bsp', function(val) {
 //    displayBSP.animate(bsp);
@@ -188,6 +191,9 @@
     events.subscribe('gps-time', function(val) {
       displayDate.setValue(val);
       displayTime.setValue(val);
+      // Require astronomical data for the map
+	    var date = new Date(val);
+	    getAstroData(date.format(DURATION_FMT), worldMap.setAstronomicalData);
     });
     events.subscribe('hdg', function(val) {
 //    displayHDG.animate(val);
@@ -208,10 +214,11 @@
       val = val.toFixed(0);
       displayOverview.setTWA(val);
       var twaStr = lpad(Math.round(Math.abs(val)).toString(), '0', 3);
-      if (val < 0)
-        twaStr = '-' + twaStr;
-      else
-        twaStr += '-';
+      if (val < 0) {
+	      twaStr = '-' + twaStr;
+      } else {
+	      twaStr += '-';
+      }
       jumboTWA.setValue(twaStr);
     });
     events.subscribe('tws', function(val) {
@@ -306,19 +313,19 @@
 	  });
 	  events.subscribe("csp-60000", function(val) {
 		  currentSpeedEvolution1m.addSpeed({ "speed": val,
-			  "time": (new Date()).getTime() });
+			  																 "time": (new Date()).getTime() });
 	  });
 	  events.subscribe("cdr-60000", function(val) {
 		  currentDirEvolution1m.addDirection({ "angle": val,
-			  "time": (new Date()).getTime() });
+				 																	 "time": (new Date()).getTime() });
 	  });
 	  events.subscribe("csp-600000", function(val) {
 		  currentSpeedEvolution10m.addSpeed({ "speed": val,
-			  "time": (new Date()).getTime() });
+																					"time": (new Date()).getTime() });
 	  });
 	  events.subscribe("cdr-600000", function(val) {
 		  currentDirEvolution10m.addDirection({ "angle": val,
-			  "time": (new Date()).getTime() });
+			  																		"time": (new Date()).getTime() });
 	  });
 
     events.subscribe('cog', function(val) {
@@ -332,10 +339,11 @@
     events.subscribe('leeway', function(val) {
       displayOverview.setLeeway(val);
       var lwyStr = lpad(Math.round(Math.abs(val)).toString(), '0', 2);
-      if (val < 0)
-        lwyStr = '-' + lwyStr;
-      else
-        lwyStr += '-';
+      if (val < 0) {
+	      lwyStr = '-' + lwyStr;
+      } else {
+	      lwyStr += '-';
+      }
       jumboLWY.setValue(lwyStr);
     });
     events.subscribe('sog', function(val) {
@@ -351,18 +359,20 @@
     });
     events.subscribe('vmg', function(val) {
       var vmg = 0;
-      if (document.getElementById("display.vmg.wind").checked)
-        vmg = val.onwind.toFixed(2);
-      else
-        vmg = val.onwp.toFixed(2);
+      if (document.getElementById("display.vmg.wind").checked) {
+	      vmg = val.onwind.toFixed(2);
+      } else {
+	      vmg = val.onwp.toFixed(2);
+      }
       displayOverview.setVMG(vmg);
       jumboVMG.setValue(vmg);
     });
   };
   
   var displayErr = function(err) {
-    if (err !== undefined)
-      document.getElementById("err-mess").innerHTML = ("<small>" + err + "</small>");
+    if (err !== undefined) {
+	    document.getElementById("err-mess").innerHTML = ("<small>" + err + "</small>");
+    }
   };
 
   window.onresize = function() {
@@ -410,8 +420,7 @@
                            'jumboCOGCanvas', 'jumboCDRCanvas', 'jumboSOGCanvas', 'jumboCSPCanvas',
                            'jumboVMGCanvas'];
     var jumboFactor = ww / totalWidth;
-    for (var i=0; i<jumboCanvasList.length; i++)
-    {
+    for (var i=0; i<jumboCanvasList.length; i++) {
       document.getElementById(jumboCanvasList[i]).width  = 120 * jumboFactor;
       document.getElementById(jumboCanvasList[i]).height =  60 * jumboFactor;
     }
@@ -457,57 +466,37 @@
   };
   
   var resetTWBuffer = function() {
-    if (twdEvolution !== undefined)
-      twdEvolution.resetDirection();
-    if (twsEvolution !== undefined)
-      twsEvolution.resetSpeed();
+    if (twdEvolution !== undefined) twdEvolution.resetDirection();
+    if (twsEvolution !== undefined) twsEvolution.resetSpeed();
   };
   
   var resetTW2Buffer = function() {
-    if (twdEvolution !== undefined)
-      twdEvolution.reset2Direction();
-    if (twsEvolution !== undefined)
-      twsEvolution.reset2Speed();
+    if (twdEvolution !== undefined) twdEvolution.reset2Direction();
+    if (twsEvolution !== undefined) twsEvolution.reset2Speed();
   };
 
   var resetCurrBuffer = function() {
-	  if (currentDirEvolution !== undefined)
-		  currentDirEvolution.resetDirection();
-	  if (currentSpeedEvolution !== undefined)
-		  currentSpeedEvolution.resetSpeed();
+	  if (currentDirEvolution !== undefined) currentDirEvolution.resetDirection();
+	  if (currentSpeedEvolution !== undefined) currentSpeedEvolution.resetSpeed();
 
-	  if (currentDirEvolution30s !== undefined)
-		  currentDirEvolution30s.resetDirection();
-	  if (currentSpeedEvolution30s !== undefined)
-		  currentSpeedEvolution30s.resetSpeed();
-	  if (currentDirEvolution1m !== undefined)
-		  currentDirEvolution1m.resetDirection();
-	  if (currentSpeedEvolution1m !== undefined)
-		  currentSpeedEvolution1m.resetSpeed();
-	  if (currentDirEvolution10m !== undefined)
-		  currentDirEvolution10m.resetDirection();
-	  if (currentSpeedEvolution10m !== undefined)
-		  currentSpeedEvolution10m.resetSpeed();
+	  if (currentDirEvolution30s !== undefined) currentDirEvolution30s.resetDirection();
+	  if (currentSpeedEvolution30s !== undefined) currentSpeedEvolution30s.resetSpeed();
+	  if (currentDirEvolution1m !== undefined) currentDirEvolution1m.resetDirection();
+	  if (currentSpeedEvolution1m !== undefined) currentSpeedEvolution1m.resetSpeed();
+	  if (currentDirEvolution10m !== undefined) currentDirEvolution10m.resetDirection();
+	  if (currentSpeedEvolution10m !== undefined) currentSpeedEvolution10m.resetSpeed();
   };
 
   var resetCurr2Buffer = function() {
-	  if (currentDirEvolution !== undefined)
-		  currentDirEvolution.reset2Direction();
-	  if (currentSpeedEvolution !== undefined)
-		  currentSpeedEvolution.reset2Speed();
+	  if (currentDirEvolution !== undefined) currentDirEvolution.reset2Direction();
+	  if (currentSpeedEvolution !== undefined) currentSpeedEvolution.reset2Speed();
 
-	  if (currentDirEvolution30s !== undefined)
-		  currentDirEvolution30s.reset2Direction();
-	  if (currentSpeedEvolution30s !== undefined)
-		  currentSpeedEvolution30s.reset2Speed();
-	  if (currentDirEvolution1m !== undefined)
-		  currentDirEvolution1m.reset2Direction();
-	  if (currentSpeedEvolution1m !== undefined)
-		  currentSpeedEvolution1m.reset2Speed();
-	  if (currentDirEvolution10m !== undefined)
-		  currentDirEvolution10m.reset2Direction();
-	  if (currentSpeedEvolution10m !== undefined)
-		  currentSpeedEvolution10m.reset2Speed();
+	  if (currentDirEvolution30s !== undefined) currentDirEvolution30s.reset2Direction();
+	  if (currentSpeedEvolution30s !== undefined) currentSpeedEvolution30s.reset2Speed();
+	  if (currentDirEvolution1m !== undefined) currentDirEvolution1m.reset2Direction();
+	  if (currentSpeedEvolution1m !== undefined) currentSpeedEvolution1m.reset2Speed();
+	  if (currentDirEvolution10m !== undefined) currentDirEvolution10m.reset2Direction();
+	  if (currentSpeedEvolution10m !== undefined) currentSpeedEvolution10m.reset2Speed();
   };
 
   var handleRadioValue = function(radio) {
@@ -593,7 +582,7 @@
         </tr>
         <tr>
           <td align="center" valign="top">
-            <div id="display-gdt-div" style="display: none'">
+            <div id="display-gdt-div" style="display: inline">
               <canvas id="dateCanvas" width="216" height="40" title="GPS Date"></canvas>
               <br>
               <canvas id="timeCanvas" width="192" height="40" title="GPS Time"></canvas>

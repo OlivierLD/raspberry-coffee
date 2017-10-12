@@ -135,6 +135,6 @@ function TimeDisplay(cName,     // Canvas Name
 
     this.setValue = function (val) {
         var time = new Date(val);
-        drawDisplay(canvasName, displaySize, time.getHours(), time.getMinutes() + 1, time.getSeconds());
+        drawDisplay(canvasName, displaySize, time.getHours(), time.getMinutes(), time.getSeconds());
     };
 }

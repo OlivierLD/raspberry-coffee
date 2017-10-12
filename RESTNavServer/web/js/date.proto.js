@@ -163,7 +163,7 @@ Date.prototype.format = function (dateFormat) {
             z: this.getDayOfYear(),
             W: this.getWeekOfYear(),
             F: this.getMonthName(),
-            m: month < 10 ? '0' + (month + 1) : month + 1,
+            m: month < 9 ? '0' + (month + 1) : month + 1,
             M: this.getMonthAbbr(),
             n: month + 1,
             t: this.getMonthDayCount(),

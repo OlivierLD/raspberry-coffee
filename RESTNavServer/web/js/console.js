@@ -1,12 +1,16 @@
 /*
  * @author Olivier Le Diouris
  */
+"use strict";
+
 var displayBSP, displayLog, displayTWD, displayTWS, thermometer, athermometer, displayHDG, rose,
 		displayBaro, displayHum, displayDate, displayTime, displayOverview, displayOverview,
 		jumboBSP, jumboHDG, jumboTWD, jumboLWY, jumboAWA, jumboTWA, jumboAWS, jumboTWS, jumboCOG, jumboCDR, jumboSOG,
 		jumboCSP, jumboVMG,
 		displayAW, displayCurrent,
 		twdEvolution, twsEvolution,
+
+		worldMap,
 
 		currentDirEvolution, currentSpeedEvolution,
 		currentDirEvolution30s, currentSpeedEvolution30s,
@@ -43,6 +47,7 @@ var init = function () {
 	displayHum.setLabel('HUM');
 
 	displayOverview = new BoatOverview('overviewCanvas');
+	worldMap = new WorldMap('mapCanvas', 'GLOBE');
 
 	jumboBSP = new JumboDisplay('jumboBSPCanvas', 'BSP', 120, 60, "0.00");
 	jumboHDG = new JumboDisplay('jumboHDGCanvas', 'HDG', 120, 60, "000");
@@ -183,4 +188,84 @@ var lpad = function (str, pad, len) {
 	while (str.length < len)
 		str = pad + str;
 	return str;
+};
+
+var DEFAULT_TIMEOUT = 60000;
+
+var getDeferred = function(
+		url,                          // full api path
+		timeout,                      // After that, fail.
+		verb,                         // GET, PUT, DELETE, POST, etc
+		happyCode,                    // if met, resolve, otherwise fail.
+		data,                         // payload, when needed (PUT, POST...)
+		show) {                       // Show the traffic [true]|false
+	if (show === undefined) {
+		show = true;
+	}
+	if (show === true) {
+		document.body.style.cursor = 'wait';
+	}
+	var deferred = $.Deferred(),  // a jQuery deferred
+			url = url,
+			xhr = new XMLHttpRequest(),
+			TIMEOUT = timeout;
+
+	var req = verb + " " + url;
+	if (data !== undefined && data !== null) {
+		req += ("\n" + JSON.stringify(data, null, 2));
+	}
+
+	xhr.open(verb, url, true);
+	xhr.setRequestHeader("Content-type", "application/json");
+	if (data === undefined) {
+		xhr.send();
+	} else {
+		xhr.send(JSON.stringify(data));
+	}
+
+	var requestTimer = setTimeout(function() {
+		xhr.abort();
+		var mess = { message: 'Timeout' };
+		deferred.reject(408, mess);
+	}, TIMEOUT);
+
+	xhr.onload = function() {
+		clearTimeout(requestTimer);
+		if (xhr.status === happyCode) {
+			deferred.resolve(xhr.response);
+		} else {
+			deferred.reject(xhr.status, xhr.response);
+		}
+	};
+	return deferred.promise();
+};
+
+var getSunMoonGP = function(when) {
+	var url = "/sun-moon-gp";
+	// Add date
+	url += ("?at=" + when);
+	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
+var getAstroData = function(when, callback) {
+	var getData = getSunMoonGP(when);
+	getData.done(function(value) {
+		var json = JSON.parse(value);
+		if (callback !== undefined) {
+			callback(json);
+		} else {
+			console.log(JSON.stringify(json, null, 2));
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
 };
