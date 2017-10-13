@@ -310,7 +310,12 @@ var showTime = function() {
 	});
 };
 
+var lastRequiredDate;
+var lastRequiredStation;
+
 var tideTable = function(station, at, tz, step, unit, withDetails, nbDays, callback) {
+	lastRequiredStation = station;
+	lastRequiredDate = at;
 	var getData = getTideTable(station, at, tz, step, unit, withDetails, nbDays);
 	getData.done(function(value) {
 		if (callback === undefined) {

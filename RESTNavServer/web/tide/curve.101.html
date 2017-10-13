@@ -80,7 +80,6 @@
 				$('#with-table').prop('checked', true);
 				tideTable(station,
 					{ year: year, month: month + 1, day: day }, '', '', '', false, 1, dataManager);
-
 			}
 		};
 
@@ -133,6 +132,11 @@
 			tideGraph.unsetSunData();
 			tideGraph.unsetAltitudes();
 			tideGraph.unsetTable();
+
+			// Enable Prev and Next buttons
+			$("#previous").prop('disabled', false);
+			$("#next").prop('disabled', false);
+
 //		console.log(value);
 			try {
 				var json = JSON.parse(value);
@@ -217,6 +221,39 @@
 			}
 		};
 
+
+		var addOneDay = function(date) {
+			var dateObj = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
+			var millis = dateObj.getTime();
+			millis += (24 * 3600 * 1000);
+			var added = new Date(millis);
+			return {
+				year: added.getFullYear(),
+				month: added.getMonth() + 1,
+				day: added.getDate()
+			};
+		};
+
+		var substractOneDay = function(date) {
+			var dateObj = new Date(date.year, date.month - 1, date.day, 0, 0, 0, 0);
+			var millis = dateObj.getTime();
+			millis -= (24 * 3600 * 1000);
+			var added = new Date(millis);
+			return {
+				year: added.getFullYear(),
+				month: added.getMonth() + 1,
+				day: added.getDate()
+			};
+		};
+
+		var nextDay = function() {
+			tideTable(lastRequiredStation, addOneDay(lastRequiredDate), '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);
+		};
+
+		var previousDay = function() {
+			tideTable(lastRequiredStation, substractOneDay(lastRequiredDate), '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);
+		};
+
 	</script>
 </head>
 <body>
@@ -265,10 +302,20 @@
 		<img src="../images/phase28.gif" id="phase-28" />
 	</div>
 	<hr/>
-	Starting <select id="year" onchange="populateDays();"></select> <select id="month" onchange="populateDays();"></select> <select id="day"></select>
-	<button id="draw-curve" disabled onclick="tideTable($('#station-list').val(), { year: parseInt($('#year').val()), month: parseInt($('#month').val()), day: parseInt($('#day').val()) }, '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
-	&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With harmonic details,
-	&nbsp;<input type="checkbox" id="with-table" title="Include Time Table"> With time table.
+	<table style="width: 100%;">
+		<tr>
+		<td style="text-align: left;">
+			Starting <select id="year" onchange="populateDays();"></select> <select id="month" onchange="populateDays();"></select> <select id="day"></select>
+			<button id="draw-curve" disabled onclick="tideTable($('#station-list').val(), { year: parseInt($('#year').val()), month: parseInt($('#month').val()), day: parseInt($('#day').val()) }, '', '', '', $('#with-details').prop('checked'), $('#nb-days').val(), dataManager);">Draw Curve</button>
+			&nbsp;<input type="checkbox" id="with-details" title="Include Harmonics"> With harmonic details,
+			&nbsp;<input type="checkbox" id="with-table" title="Include Time Table"> With time table.
+		</td>
+		<td style="text-align: right;">
+			<button id="previous" onclick="previousDay()">Prev.</button>
+			<button id="next" onclick="nextDay()">Next</button>
+		</td>
+		</tr>
+	</table>
 	<hr/>
 	<!-- Tabs -->
 	<div style="margin-bottom: 5px;">
