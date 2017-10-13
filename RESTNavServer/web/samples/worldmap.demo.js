@@ -101,12 +101,16 @@ var position = {
 
 const MINUTE = 60000; // in ms.
 
-var initAjax = function () {
-
+var getCurrentUTCDate = function() {
 	var date = new Date();
 	var offset = date.getTimezoneOffset() * MINUTE; // in millisecs
 
-	currentDate = new Date().getTime() + offset;
+	return new Date().getTime() + offset;
+};
+
+var initAjax = function () {
+
+	currentDate = getCurrentUTCDate();
 	console.log("Starting (now) at " + new Date(currentDate).format("Y-M-d H:i:s UTC"));
 
 	var interval = setInterval(function () {
@@ -140,6 +144,8 @@ var tickClock = function () {
 
 	if (moveFast) {
 		currentDate += (10 * MINUTE);
+	} else {
+		currentDate = getCurrentUTCDate();
 	}
 
 	var mess = "Time is now " + new Date(currentDate).format("Y-M-d H:i:s UTC");
