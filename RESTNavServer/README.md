@@ -56,7 +56,7 @@ Then you are able to:
 
 ![Home page](./docimg/screenshot.00.png)
 
-The menu is accessible from teh hamburger at the top left.
+The menu is accessible from the hamburger at the top left.
 
 In addition, as we are using the `NMEA Multiplexer` (see this project), you can read pretty much any
 NMEA data source, compute and transform then, and rebroadcast then on any channel you like, to enable other devices and programs
