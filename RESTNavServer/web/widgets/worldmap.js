@@ -598,7 +598,6 @@ function WorldMap (cName, prj) {
 					context.closePath();
 					var img = document.getElementById("moon-png");
 					context.drawImage(img, moon.x + deltaX, moon.y + deltaY);
-					context.drawImage(img, userPos.x, userPos.y);
 				}
 				// Moonlight
 				if (withMoonlight) {

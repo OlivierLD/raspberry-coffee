@@ -284,6 +284,10 @@
       displayCurrent.setValue(val);
 	    currentDirEvolution.addDirection({ "angle": val,
 		    													       "time": (new Date()).getTime() });
+	    var evolutionFlavor = getRadioButtonValue("buffer-size-rb");
+	    if (evolutionFlavor === 'inst') {
+		    displayCurrent2.setValue(val);
+	    }
     });
 	  events.subscribe('csp', function(val) {
 		  var csp = val.toFixed(2);
@@ -302,31 +306,59 @@
 				  // "(" + twsEvolution.getLifeSpan() + ")" + "<br>" +
 				  currentSpeedEvolution.getLifeSpanFormatted();
 				  currentSpeedEvolution.getLifeSpanFormatted();
+			var evolutionFlavor = getRadioButtonValue("buffer-size-rb");
+			if (evolutionFlavor === 'inst') {
+				displayCurrent2.setCurrentSpeed(val);
+			}
 	  });
 
 	  events.subscribe("csp-30000", function(val) {
 		  currentSpeedEvolution30s.addSpeed({ "speed": val,
 			  																	"time": (new Date()).getTime() });
+		  var evolutionFlavor = getRadioButtonValue("buffer-size-rb");
+		  if (evolutionFlavor === '30s') {
+			  displayCurrent2.setCurrentSpeed(val);
+		  }
 		});
 	  events.subscribe("cdr-30000", function(val) {
 		  currentDirEvolution30s.addDirection({ "angle": val,
 			  																		"time": (new Date()).getTime() });
+		  var evolutionFlavor = getRadioButtonValue("buffer-size-rb");
+		  if (evolutionFlavor === '30s') {
+			  displayCurrent2.setValue(val);
+		  }
 	  });
 	  events.subscribe("csp-60000", function(val) {
 		  currentSpeedEvolution1m.addSpeed({ "speed": val,
 			  																 "time": (new Date()).getTime() });
+		  var evolutionFlavor = getRadioButtonValue("buffer-size-rb");
+		  if (evolutionFlavor === '1m') {
+			  displayCurrent2.setCurrentSpeed(val);
+		  }
 	  });
 	  events.subscribe("cdr-60000", function(val) {
 		  currentDirEvolution1m.addDirection({ "angle": val,
 				 																	 "time": (new Date()).getTime() });
+		  var evolutionFlavor = getRadioButtonValue("buffer-size-rb");
+		  if (evolutionFlavor === '1m') {
+			  displayCurrent2.setValue(val);
+		  }
 	  });
 	  events.subscribe("csp-600000", function(val) {
 		  currentSpeedEvolution10m.addSpeed({ "speed": val,
 																					"time": (new Date()).getTime() });
+		  var evolutionFlavor = getRadioButtonValue("buffer-size-rb");
+		  if (evolutionFlavor === '10m') {
+			  displayCurrent2.setCurrentSpeed(val);
+		  }
 	  });
 	  events.subscribe("cdr-600000", function(val) {
 		  currentDirEvolution10m.addDirection({ "angle": val,
 			  																		"time": (new Date()).getTime() });
+		  var evolutionFlavor = getRadioButtonValue("buffer-size-rb");
+		  if (evolutionFlavor === '10m') {
+			  displayCurrent2.setValue(val);
+		  }
 	  });
 
     events.subscribe('cog', function(val) {
@@ -369,6 +401,20 @@
       jumboVMG.setValue(vmg);
     });
   };
+
+  var getRadioButtonValue = function(rbName) {
+  	var elmts = document.getElementsByName(rbName);
+  	var value;
+  	if (elmts !== undefined && elmts !== null) {
+		  for (var idx = 0; idx < elmts.length; idx++) {
+				if (elmts[idx].checked) {
+					value = elmts[idx].value;
+					break;
+				}
+		  }
+	  }
+		return value;
+	};
   
   var displayErr = function(err) {
     if (err !== undefined) {
@@ -772,7 +818,7 @@
       </p>
     </div>
 		<div id="current-evolution" style="display: none;">
-			<div style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; max-height: 80%; width: 150px; float: left;">
+			<div style="padding: 1px; border-radius: 5px; border: 1px solid #CCC; max-height: 80%; width: 160px; float: left;">
 			  <table>
 					<tr>
 						<td valign="top">
@@ -790,6 +836,17 @@
 											Max&nbsp;nb&nbsp;pts:<input type="text" style="text-align: right;" size="6" placeholder="Nb" value="1200" onchange="updateCurrentBufferLength(this);"/>
 											<br>
 											<div id="life-span-current">
+											</div>
+											<div style="text-align: left;">
+												<canvas id="currentDisplayCanvas2" height="140" width="140" title="Current, speed and direction"><!-- class="displayCanvas" --></canvas>
+												<br/>
+												<input type="radio" name="buffer-size-rb" onchange="" value="inst" checked /> Instant.
+												<br/>
+												<input type="radio" name="buffer-size-rb" onchange="" value="30s" /> 30 seconds.
+												<br/>
+												<input type="radio" name="buffer-size-rb" onchange="" value="1m" /> 1 minute.
+												<br/>
+												<input type="radio" name="buffer-size-rb" onchange="" value="10m" /> 10 minutes.
 											</div>
 										</td>
 									</tr>

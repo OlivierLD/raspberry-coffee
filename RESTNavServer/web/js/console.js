@@ -7,7 +7,7 @@ var displayBSP, displayLog, displayTWD, displayTWS, thermometer, athermometer, d
 		displayBaro, displayHum, displayDate, displayTime, displayOverview, displayOverview,
 		jumboBSP, jumboHDG, jumboTWD, jumboLWY, jumboAWA, jumboTWA, jumboAWS, jumboTWS, jumboCOG, jumboCDR, jumboSOG,
 		jumboCSP, jumboVMG,
-		displayAW, displayCurrent,
+		displayAW, displayCurrent, displayCurrent2,
 		twdEvolution, twsEvolution,
 
 		worldMap,
@@ -67,7 +67,9 @@ var init = function () {
 
 	displayAW = new AWDisplay('awDisplayCanvas', 80, 45, 5);
 	displayAW.setLabel("AW");
-	displayCurrent = new CurrentDisplay('currentDisplayCanvas', 80, 45, 5);
+	displayCurrent  = new CurrentDisplay('currentDisplayCanvas',  80, 45, 5);
+	displayCurrent2 = new CurrentDisplay('currentDisplayCanvas2', 60, 45, 5);
+
 	twdEvolution = new DirectionEvolution('twdEvolutionCanvas', "TWD");
 	twsEvolution = new SpeedEvolution('twsEvolutionCanvas', 60, true, "TWS");
 

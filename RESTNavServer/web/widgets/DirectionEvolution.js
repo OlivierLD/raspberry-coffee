@@ -201,7 +201,8 @@ function DirectionEvolution(cName, label)     // Canvas name
 		for (var i = 0; i < directionBuffer.length; i++) {
 			var dir = directionBuffer[i].angle;
 			if (prevDir !== undefined) {
-				if (Math.abs(prevDir - dir) > 180) {
+//			if (Math.abs(prevDir - dir) > 180) {
+				if (Math.abs(lastDirection.angle - dir) > 180) {
 					if (dir > 180) {
 						dir -= 360;
 					} else {
