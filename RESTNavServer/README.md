@@ -9,6 +9,19 @@ An illustration of the way to gather several REST Services all in one place.
 The idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry PI, where the server is running.
 The GUI is dedicated to `HTML5` and `CSS3`, rendered in the browser of any device connected to the Raspoberry PI's network (laptop, tablet, smartphone, etc).
 
+An application like `OpenCPN` seems (to me) too demanding for the Raspberry PI. Same for all `Swing` applications
+developed in Java. And actually, this is a general trend in this area.
+Java applets are being de-supported in more and more browsers, HTML and connected technologies keep improving
+their graphical capabilities (see [WebGL](http://learningwebgl.com/blog/), really [amazing](http://arodic.github.io/p/jellyfish/)).
+
+Learning how to use graphical libraries (like `Swing`, `JavaFX`, and others) is not an easy task,
+it is demanding, it is long, and there is no standard way to do it. For example, moving from `Swing` to `JavaFX` or `SWT` pretty much requires
+a full re-write of your application.
+
+I'd rather spend time learning how use HTML5's canvases, or WebGL.
+
+The sample web pages presented below are relying on HTML5 and CSS3.
+
 ## Try it
 Build it:
 ```bash
