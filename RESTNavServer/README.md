@@ -6,6 +6,9 @@ An illustration of the way to gather several REST Services all in one place.
 - Astro REST Service
 - NMEA Multiplexer REST Service
 
+The idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry PI, where the server is running.
+The GUI is dedicated to `HTML5` and `CSS3`, rendered in the browser of any device connected to the Raspoberry PI's network (laptop, tablet, smartphone, etc).
+
 ## Try it
 Build it:
 ```bash
