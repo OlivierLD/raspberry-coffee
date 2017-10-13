@@ -97,7 +97,7 @@
 	    worldMap.setUserPosition({ latitude: val.lat, longitude: val.lng });
     });
 	  events.subscribe('gps-time', function(val) {
-		  // Require astronomical data for the map
+		  // Request astronomical data for the map
 		  var date = new Date(val);
 		  getAstroData(date.format(DURATION_FMT), worldMap.setAstronomicalData);
 	  });

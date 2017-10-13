@@ -227,7 +227,7 @@ public class TideUtilities {
 	public final static int RISING = 1;
 	public final static int FALLING = -1;
 
-	private final static SimpleDateFormat SDF_TIDE = new SimpleDateFormat("MMM-dd HH:mm z Z");
+	private final static SimpleDateFormat SDF_TIDE = new SimpleDateFormat("EEE, MMM dd, ''yy HH:mm z Z");
 
 	public static List<TimedValue> getTideTableForOneDay(TideStation ts, List<Coefficient> constSpeed, int year, int month, int day, String timeZone2Use) {
 		double low1 = Double.NaN;
