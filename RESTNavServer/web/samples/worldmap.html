@@ -74,6 +74,7 @@
     init(); // init UI
 
 	  worldMap.clear();
+	  worldMap.setPositionLabel("");
     setTimeout(function() {
 	    worldMap.drawWorldMap();
     }, 1);
@@ -125,6 +126,11 @@
 	  worldMap.setWithMoonLight(cb.checked);
   };
 
+  var changeLat = function(slider) {
+    var val = slider.value;
+    position.lat = val;
+	  worldMap.setUserLatitude(parseInt(val));
+  };
     </script>
   </head>
   <body>
@@ -154,6 +160,10 @@
           <input type="checkbox" onchange="changeSunlight(this);" /> With Sun light
           <br/>
           <input type="checkbox" onchange="changeMoonlight(this);" /> With Moon light
+          <br />
+          Latitude:
+          <br />
+          <input type="range" min="-90" max="90" step="1" value="38" title="Latitude" onchange="changeLat(this);"/>
         </td>
       </tr>
       <tr>

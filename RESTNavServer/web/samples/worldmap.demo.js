@@ -115,23 +115,25 @@ var initAjax = function () {
 
 	var interval = setInterval(function () {
 		tickClock();
-	}, 1000);
+	}, 100);
 
 };
 
 var tickClock = function () {
 
-	var moveFast = false;
+	var moveFast = true, erratic = false;
 	if (moveFast) {
 		// Changed position, increment time
 		position.lng += 1;
 		if (position.lng > 360) position.lng -= 360;
 		if (position.lng > 180) position.lng -= 360;
 
-		var plus = (Math.random() > 0.5);
-		position.lat += (Math.random() * (plus ? 1 : -1));
-		if (position.lat > 90) position.lat = 180 - position.lat;
-		if (position.lat < -90) position.lat = -180 + position.lat;
+		if (erratic) {
+			var plus = (Math.random() > 0.5);
+			position.lat += (Math.random() * (plus ? 1 : -1));
+			if (position.lat > 90) position.lat = 180 - position.lat;
+			if (position.lat < -90) position.lat = -180 + position.lat;
+		}
 	}
 	var json = {
 		Position: {
@@ -143,7 +145,7 @@ var tickClock = function () {
 	onMessage(json); // Position and date
 
 	if (moveFast) {
-		currentDate += (10 * MINUTE);
+		currentDate += (1 * MINUTE);
 	} else {
 		currentDate = getCurrentUTCDate();
 	}

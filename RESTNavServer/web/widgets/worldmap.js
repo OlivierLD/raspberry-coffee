@@ -14,6 +14,8 @@ function WorldMap (cName, prj) {
 	var withSunlight = false;
 	var withMoonlight = false;
 
+	var label = "Your position";
+
 	this.setWithGrid = function(b) {
 		withGrid = b;
 	};
@@ -28,6 +30,10 @@ function WorldMap (cName, prj) {
 	};
 	this.setWithMoonLight = function(b) {
 		withMoonlight = b;
+	};
+
+	this.setPositionLabel = function(str) {
+		label = str;
 	};
 
 	var arrayContains = function(array, value) {
@@ -149,6 +155,11 @@ function WorldMap (cName, prj) {
 		userPosition = pos;
 		globeViewLngOffset = pos.longitude;
 		globeViewForeAftRotation = pos.latitude;
+	};
+
+	this.setUserLatitude = function(val) {
+		globeViewForeAftRotation = val;
+		userPosition.latitude = val;
 	};
 
 	/*
@@ -532,7 +543,7 @@ function WorldMap (cName, prj) {
 			var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
 			plot(context, userPos, "red");
 			context.fillStyle = "red";
-			context.fillText("Your position", Math.round(userPos.x) + 3, Math.round(userPos.y) - 3);
+			context.fillText(label, Math.round(userPos.x) + 3, Math.round(userPos.y) - 3);
 		}
 		// Celestial bodies?
 		if (astronomicalData !== {}) {
