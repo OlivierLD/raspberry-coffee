@@ -537,6 +537,23 @@ function WorldMap (cName, prj) {
 					plot(context, sun, "yellow");
 					context.fillStyle = "yellow";
 					context.fillText("Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
+					// Arrow, to the sun
+					context.setLineDash([2]);
+					context.strokeStyle = 'rgba(255, 255, 0, 0.5)';
+					context.beginPath();
+					context.moveTo(userPos.x, userPos.y);
+					context.lineTo(sun.x, sun.y);
+					context.stroke();
+					context.closePath();
+					context.setLineDash([0]); // Reset
+					context.strokeStyle = 'yellow';
+					var deltaX = sun.x - userPos.x;
+					var deltaY = sun.y - userPos.y;
+					context.beginPath();
+					context.moveTo(sun.x, sun.y);
+					context.lineTo(sun.x + deltaX, sun.y + deltaY);
+					context.stroke();
+					context.closePath();
 				}
 				// Route to sun?
 				// context.lineWidth = 1;
@@ -559,6 +576,23 @@ function WorldMap (cName, prj) {
 					plot(context, moon, "white");
 					context.fillStyle = "white";
 					context.fillText("Moon", Math.round(moon.x) + 3, Math.round(moon.y) - 3);
+					// Arrow, to the moon
+					context.setLineDash([2]);
+					context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+					context.beginPath();
+					context.moveTo(userPos.x, userPos.y);
+					context.lineTo(moon.x, moon.y);
+					context.stroke();
+					context.closePath();
+					context.setLineDash([0]); // Reset
+					context.strokeStyle = 'white';
+					var deltaX = moon.x - userPos.x;
+					var deltaY = moon.y - userPos.y;
+					context.beginPath();
+					context.moveTo(moon.x, moon.y);
+					context.lineTo(moon.x + deltaX, moon.y + deltaY);
+					context.stroke();
+					context.closePath();
 				}
 				// Moonlight
 				if (withMoonlight) {
