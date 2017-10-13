@@ -114,6 +114,15 @@ function WorldMap (cName, prj) {
 		context.closePath();
 	};
 
+	var fillCircle = function(context, pt, radius, color) {
+		context.beginPath();
+		context.fillStyle = color;
+		context.arc(pt.x, pt.y, radius, 0, radius * Math.PI);
+//	context.stroke();
+		context.fill();
+		context.closePath();
+	};
+
 	var currentStep = 0;
 	this.travel = function (canvasName, from, to, nbStep) {
 		var newX = from.x + (currentStep * (to.x - from.x) / nbStep);
@@ -554,9 +563,15 @@ function WorldMap (cName, prj) {
 					context.lineTo(sun.x + deltaX, sun.y + deltaY);
 					context.stroke();
 					context.closePath();
-					var img = document.getElementById("sun-png");
-					context.drawImage(img, sun.x + deltaX, sun.y + deltaY);
-
+					if (false) {
+						var img = document.getElementById("sun-png"); // 13x13
+						var direction = getDir(deltaX, -deltaY);
+						var imgXOffset = 7 * Math.sin(toRadians(direction));
+						var imgYOffset = 7 * Math.cos(toRadians(direction));
+						context.drawImage(img, sun.x + deltaX + Math.ceil(imgXOffset), sun.y + deltaY - Math.ceil(imgYOffset));
+					} else {
+						fillCircle(context, { x: sun.x + deltaX, y: sun.y + deltaY}, 6, 'yellow');
+					}
 				}
 				// Route to sun?
 				// context.lineWidth = 1;
@@ -596,8 +611,15 @@ function WorldMap (cName, prj) {
 					context.lineTo(moon.x + deltaX, moon.y + deltaY);
 					context.stroke();
 					context.closePath();
-					var img = document.getElementById("moon-png");
-					context.drawImage(img, moon.x + deltaX, moon.y + deltaY);
+					if (false) {
+						var img = document.getElementById("moon-png");
+						var direction = getDir(deltaX, -deltaY);
+						var imgXOffset = 7 * Math.sin(toRadians(direction));
+						var imgYOffset = 7 * Math.cos(toRadians(direction));
+						context.drawImage(img, moon.x + deltaX + Math.ceil(imgXOffset), moon.y + deltaY - Math.ceil(imgYOffset));
+					} else {
+						fillCircle(context, { x: moon.x + deltaX, y: moon.y + deltaY}, 5, 'white');
+					}
 				}
 				// Moonlight
 				if (withMoonlight) {

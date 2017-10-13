@@ -105,7 +105,7 @@ var getCurrentUTCDate = function() {
 	var date = new Date();
 	var offset = date.getTimezoneOffset() * MINUTE; // in millisecs
 
-	return new Date().getTime() + offset;
+	return new Date().getTime() + offset; // - (6 * 3600 * 1000);
 };
 
 var initAjax = function () {
