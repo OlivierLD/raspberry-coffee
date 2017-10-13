@@ -99,7 +99,7 @@ var position = {
 	lng: -122
 };
 
-const MINUTE = 60000;
+const MINUTE = 60000; // in ms.
 
 var initAjax = function () {
 
@@ -120,6 +120,11 @@ var tickClock = function () {
 	position.lng += 1;
 	if (position.lng > 360) position.lng -= 360;
 	if (position.lng > 180) position.lng -= 360;
+
+	var plus = (Math.random() > 0.5);
+	position.lat += (Math.random() * (plus ? 1 : -1));
+	if (position.lat > 90) position.lat = 180 - position.lat;
+	if (position.lat < -90) position.lat = -180 + position.lat;
 
 	var json = { // Changed position, increment time
 		Position: {
