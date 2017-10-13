@@ -554,6 +554,9 @@ function WorldMap (cName, prj) {
 					context.lineTo(sun.x + deltaX, sun.y + deltaY);
 					context.stroke();
 					context.closePath();
+					var img = document.getElementById("sun-png");
+					context.drawImage(img, sun.x + deltaX, sun.y + deltaY);
+
 				}
 				// Route to sun?
 				// context.lineWidth = 1;
@@ -593,6 +596,9 @@ function WorldMap (cName, prj) {
 					context.lineTo(moon.x + deltaX, moon.y + deltaY);
 					context.stroke();
 					context.closePath();
+					var img = document.getElementById("moon-png");
+					context.drawImage(img, moon.x + deltaX, moon.y + deltaY);
+					context.drawImage(img, userPos.x, userPos.y);
 				}
 				// Moonlight
 				if (withMoonlight) {
