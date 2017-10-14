@@ -90,6 +90,16 @@ var getAstroData = function(when, callback) {
 	});
 };
 
+var getQueryParameterByName = function(name, url) {
+	if (!url) url = window.location.href;
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+
 /*
  *  Demo features
  */
@@ -117,13 +127,21 @@ var initAjax = function () {
 		tickClock();
 	}, 100);
 
+	var intervalGPS = setInterval(function () {
+		tickGPS();
+	}, 10000) // 10 sec;
+
 };
 
 var tickClock = function () {
 
 	var moveFast = true, erratic = false;
+
+	var mf = getQueryParameterByName("move-fast");
+	moveFast = (mf !== "false");
+
 	if (moveFast) {
-		// Changed position, increment time
+		// Changed position
 		position.lng += 1;
 		if (position.lng > 360) position.lng -= 360;
 		if (position.lng > 180) position.lng -= 360;
@@ -139,10 +157,21 @@ var tickClock = function () {
 		Position: {
 			lat: position.lat,
 			lng: position.lng
-		},
+		}
+	};
+	onMessage(json); // Position
+};
+
+var tickGPS = function () {
+
+	var moveFast = true;
+	var mf = getQueryParameterByName("move-fast");
+	moveFast = (mf !== "false");
+
+	var json = {
 		GPS: new Date(currentDate)
 	};
-	onMessage(json); // Position and date
+	onMessage(json); // Date
 
 	if (moveFast) {
 		currentDate += (1 * MINUTE);
@@ -164,20 +193,24 @@ var onMessage = function (json) {
 		var errMess = "";
 
 		try {
-			var latitude = json.Position.lat;
-//          console.log("latitude:" + latitude)
-			var longitude = json.Position.lng;
-//          console.log("Pt:" + latitude + ", " + longitude);
-			events.publish('pos', {
-				'lat': latitude,
-				'lng': longitude
-			});
+			if (json.Position !== undefined) {
+				var latitude = json.Position.lat;
+	//    console.log("latitude:" + latitude)
+				var longitude = json.Position.lng;
+	//    console.log("Pt:" + latitude + ", " + longitude);
+				events.publish('pos', {
+					'lat': latitude,
+					'lng': longitude
+				});
+			}
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "position");
 		}
 		try {
-			var gpsDate = json.GPS;
-			events.publish('gps-time', gpsDate);
+		  if (json.GPS !== undefined) {
+				var gpsDate = json.GPS;
+				events.publish('gps-time', gpsDate);
+			}
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
 		}

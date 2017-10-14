@@ -280,7 +280,7 @@ function WorldMap (cName, prj) {
 
 	/**
 	 *
-	 * rotate.x Canvas abscise
+	 * rotate.x Canvas abscissa
 	 * rotate.y Canvas ordinate
 	 * rotate.z -: behind the canvas, +: in front of the canvas
 	 *
