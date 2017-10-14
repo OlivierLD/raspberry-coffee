@@ -238,6 +238,10 @@ function WorldMap (cName, prj) {
 		var alfa = toRadians(globeViewRightLeftRotation); // in plan (x, y), z unchanged, earth inclination on its axis
 		var beta = toRadians(globeViewForeAftRotation);   // in plan (y, z), x unchanged, latitude of the eye
 		/*
+		 * x is the x of the screen
+		 * y is the y of the screen
+		 * z goes through the screen
+		 *
 		 *                      |  cos a -sin a  0 |  a > 0 : counter-clockwise
 		 * Rotation plan x, y:  |  sin a  cos a  0 |
 		 *                      |    0     0     1 |
@@ -409,14 +413,21 @@ function WorldMap (cName, prj) {
 //console.log("MinX:" + minX + ", MaxX:" + maxX + ", MinY:" + minY + ", MaxY:" + maxY);
 		var opWidth = Math.abs(maxX - minX);
 		var opHeight = Math.abs(maxY - minY);
-		globeView_ratio = Math.min(w / opWidth, h / opHeight) * 0.9;
+		globeView_ratio = Math.min(w / opWidth, h / opHeight) * 0.9; // 0.9, not to take all the space...
 
 		// Black background
 		context.fillStyle = "black";
 		context.fillRect(0, 0, canvas.width, canvas.height);
+
 		// Circle
-		context.fillStyle = "rgba(0, 0, 100, 10.0)"; // Dark blue
-		context.arc(canvas.width / 2, canvas.height / 2, Math.min(w / 2, h / 2) * 0.9, 0, 2 * Math.PI);
+		var radius = Math.min(w / 2, h / 2) * 0.9;
+		var grd = context.createRadialGradient(canvas.width / 2, canvas.height / 2, radius, 90, 60, radius);
+		grd.addColorStop(0, "navy");
+		grd.addColorStop(1, "blue");
+
+		context.fillStyle = grd; // "rgba(0, 0, 100, 10.0)"; // Dark blue
+
+		context.arc(canvas.width / 2, canvas.height / 2, radius, 0, 2 * Math.PI);
 		context.fill();
 
 		globeViewOffset_X = Math.abs((globeView_ratio * opWidth) - w) / 2 - (globeView_ratio * minX);
