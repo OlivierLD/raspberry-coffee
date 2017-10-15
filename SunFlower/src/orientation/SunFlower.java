@@ -134,7 +134,7 @@ public class SunFlower implements RESTRequestManager {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 	private final static SimpleDateFormat SDF_UTC = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss' UTC'");
 //private final static SimpleDateFormat SDF_NO_Z = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
-	private final static SimpleDateFormat SDF_SOLAR = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss' SOL'");
+	private final static SimpleDateFormat SDF_SOLAR = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss' SLR'");
 	private final static SimpleDateFormat SDF_INPUT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); // Duration fmt.
 	static {
 		SDF_SOLAR.setTimeZone(TimeZone.getTimeZone("etc/UTC"));

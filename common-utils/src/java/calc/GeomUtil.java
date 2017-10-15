@@ -110,7 +110,7 @@ public final class GeomUtil {
 	}
 
 	/**
-	 * @param fullString like [N 37�55.49], or [N 37�55'12.49"]
+	 * @param fullString like [N°37 55.49], or [N°37 55'12.49"]
 	 * @return The expected string
 	 * @throws RuntimeException when failing
 	 */

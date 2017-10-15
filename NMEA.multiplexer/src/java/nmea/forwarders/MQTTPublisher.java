@@ -105,14 +105,14 @@ public class MQTTPublisher implements Forwarder {
 
 	private void publishAirTemperature(double temp) throws MqttException {
 		final MqttTopic temperatureTopic = mqttClient.getTopic(TOPIC_AIR_TEMPERATURE);
-		final String temperature = String.format("%s°C", TEMP_FMT.format(temp));
+		final String temperature = String.format("%s\272C", TEMP_FMT.format(temp));
 		temperatureTopic.publish(new MqttMessage(temperature.getBytes()));
 		System.out.println("Published data. Topic: " + temperatureTopic.getName() + "  Message: " + temperature);
 	}
 
 	private void publishWaterTemperature(double temp) throws MqttException {
 		final MqttTopic temperatureTopic = mqttClient.getTopic(TOPIC_WATER_TEMPERATURE);
-		final String temperature = String.format("%s°C", TEMP_FMT.format(temp));
+		final String temperature = String.format("%s\272C", TEMP_FMT.format(temp));
 		temperatureTopic.publish(new MqttMessage(temperature.getBytes()));
 		System.out.println("Published data. Topic: " + temperatureTopic.getName() + "  Message: " + temperature);
 	}
