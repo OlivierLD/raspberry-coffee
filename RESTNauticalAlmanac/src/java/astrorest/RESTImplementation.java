@@ -411,6 +411,16 @@ public class RESTImplementation {
 							.latitude(lat)
 							.longitude(lng));
 					double tPass = AstroComputer.getSunMeridianPassageTime(lat, lng);
+
+					int hTPass = (int)Math.floor(tPass);
+					int mTPass = (int)Math.floor((tPass - hTPass) * 60);
+					int sTPaas = (int)Math.round((((tPass - hTPass) * 60) - mTPass) * 60);
+					data = data.tPass(new FmtDate()
+															.hour(hTPass)
+															.min(mTPass)
+															.sec(sTPaas)
+															.tz("UTC"));
+
 					Date solar = getSolarDate(at, tPass);
 //				System.out.println(SDF_SOLAR.format(solar));
 					String[] sol = SDF_SOLAR.format(solar).split(";");
@@ -977,6 +987,7 @@ public class RESTImplementation {
 		int hour;
 		int min;
 		int sec;
+		String tz;
 
 		public FmtDate epoch(long epoch) {
 			this.epoch = epoch;
@@ -1006,6 +1017,10 @@ public class RESTImplementation {
 			this.sec = sec;
 			return this;
 		}
+		public FmtDate tz(String tz) {
+			this.tz = tz;
+			return this;
+		}
 	}
 
 	public static class SunMoonGP {
@@ -1015,6 +1030,7 @@ public class RESTImplementation {
 		Pos from;
 		OBS sunObs;
 		OBS moonObs;
+		FmtDate tPass;
 		FmtDate solarDate;
 
 
@@ -1043,6 +1059,11 @@ public class RESTImplementation {
 
 		public SunMoonGP moonObs(OBS moon) {
 			this.moonObs = moon;
+			return this;
+		}
+
+		public SunMoonGP tPass(FmtDate tPass) {
+			this.tPass = tPass;
 			return this;
 		}
 

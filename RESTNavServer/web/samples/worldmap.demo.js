@@ -6,6 +6,10 @@
 var worldMap;
 var currentDate;
 
+var errManager = function(mess) {
+	console.log(mess);
+};
+
 var init = function () {
 	worldMap = new WorldMap('mapCanvas', 'GLOBE');
 };
@@ -88,7 +92,7 @@ var getAstroData = function(when, callback) {
 				message = errmess;
 			}
 		}
-		errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		errManager("Failed to get the Astro Data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 

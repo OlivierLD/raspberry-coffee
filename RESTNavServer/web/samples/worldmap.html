@@ -33,12 +33,14 @@
 	               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 
 	var astroCallback = function(data) { // Intercepted
-		console.log("Astro Data:", data);
+//	console.log("Astro Data:", data);
 		document.getElementById("sun-moon-data").innerHTML =
-			'<table><tr><td>Sun D:</td><td align="right">' +
+			'<table border="0"><tr><td>Sun D:</td><td align="right">' +
 			decToSex(data.sun.decl, "NS") +
 			'</td></tr><tr><td>Sun GHA:</td><td align="right">' +
 			decToSex(data.sun.gha) +
+			'</td><td>&nbsp;LHA:</td><td align="right">' +
+			decToSex(data.sun.gha + data.from.longitude) +
 			'</td></tr><tr><td>Sun Alt:</td><td align="right">' +
 			decToSex(data.sunObs.alt) +
 			'</td></tr><tr><td>Sun Z:</td><td align="right">' +
@@ -48,6 +50,8 @@
 			decToSex(data.moon.decl, "NS") +
 			'</td></tr><tr><td>Moon GHA:</td><td align="right">' +
 			decToSex(data.moon.gha) +
+			'</td><td>&nbsp;LHA:</td><td align="right">' +
+			decToSex(data.moon.gha + data.from.longitude) +
 			'</td></tr><tr><td>Moon Alt:</td><td align="right">' +
 			decToSex(data.moonObs.alt) +
 			'</td></tr><tr><td>Moon Z:</td><td align="right">' +
@@ -61,7 +65,12 @@
 				(data.solarDate.hour < 10 ? '0' : '') + data.solarDate.hour + ':' +
 				(data.solarDate.min < 10 ? '0' : '') + data.solarDate.min + ':' +
 				(data.solarDate.sec < 10 ? '0' : '') + data.solarDate.sec;
-		;
+
+		document.getElementById("sun-meridian").innerHTML =
+				(data.tPass.hour < 10 ? '0' : '') + data.tPass.hour + ':' +
+				(data.tPass.min < 10 ? '0' : '') + data.tPass.min + ':' +
+				(data.tPass.sec < 10 ? '0' : '') + data.tPass.sec + ' ' +
+				data.tPass.tz;
 
 		worldMap.setAstronomicalData(data);
 	};
@@ -135,7 +144,7 @@
     </div>
     <table border="0">
       <tr>
-        <td valign="top" rowspan="3">
+        <td valign="top" rowspan="4">
           <div id="map" style="display: block; height: 450px; width: 850px;">
             <p align="center">
               <canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
@@ -159,6 +168,13 @@
           <input type="range" min="-90" max="90" step="1" value="38" title="Latitude" onchange="changeLat(this);"/>
         </td>
       </tr>
+			<tr>
+				<td valign="bottom">
+					<i>Sun Transit Time (at your location)</i>
+					<br />
+					<div id="sun-meridian"></div>
+				</td>
+			</tr>
 			<tr>
 				<td valign="bottom">
 					<i>Solar Date</i>
