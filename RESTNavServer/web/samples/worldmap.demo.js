@@ -64,6 +64,8 @@ var getSunMoonGP = function(when) {
 	var url = "/sun-moon-gp";
 	// Add date
 	url += ("?at=" + when);
+	url += ("&fromL=" + position.lat);
+	url += ("&fromG=" + position.lng);
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
@@ -105,8 +107,8 @@ var getQueryParameterByName = function(name, url) {
  */
 
 var position = {
-	lat: 38,
-	lng: -122
+	lat: 37.7489,
+	lng: -122.5070
 };
 
 const MINUTE = 60000; // in ms.
@@ -129,7 +131,7 @@ var initAjax = function () {
 
 	var intervalGPS = setInterval(function () {
 		tickGPS();
-	}, 10000) // 10 sec;
+	}, 1000) // 1 sec;
 
 };
 

@@ -63,7 +63,7 @@ public class RESTImplementation {
 					"GET",
 					"/sun-moon-gp",
 					this::getSunMoonGP,
-					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format."),
+					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optiopnal 'fromL' and 'fromnG'."),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
 					"POST",
 					"/sun-now",
@@ -328,6 +328,18 @@ public class RESTImplementation {
 		}
 	}
 
+	private static Date getSolarDate(Date utc, double eot) {
+		long ms = utc.getTime();
+		Date solar = new Date(ms + Math.round((12 - eot) * 3_600_000));
+		return solar;
+	}
+
+	private final static SimpleDateFormat SDF_SOLAR = new SimpleDateFormat("yyyy;MM;dd;HH;mm;ss");
+	static {
+		SDF_SOLAR.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+	}
+
+
 	/**
 	 * Computes sun's and moon's Declination and GHA at a given (UTC) time.
 	 * @param request
@@ -346,6 +358,18 @@ public class RESTImplementation {
 			return response;
 		} else {
 			atPrm = prms.get("at");
+			// Check if prms fromG and fromL are available
+			if (prms.get("fromL") != null || prms.get("fromG") != null) {
+				if (prms.get("fromL") == null || prms.get("fromG") == null) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("ASTRO-0402")
+									.errorMessage("Query parameters 'fromL' and 'fromG' must both be here, or missing. Just one of them does not work."));
+					return response;
+				}
+			}
+
 			DURATION_FMT.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 			try {
 				Date at = DURATION_FMT.parse(atPrm);
@@ -369,6 +393,47 @@ public class RESTImplementation {
 								.decl(AstroComputer.getSunDecl()))
 						.moon(new GP().gha(AstroComputer.getMoonGHA())
 								.decl(AstroComputer.getMoonDecl()));
+
+				if (prms.get("fromL") != null && prms.get("fromG") != null) {
+					double lat = 0d, lng = 0d;
+					try {
+						lat = Double.parseDouble(prms.get("fromL"));
+						lng = Double.parseDouble(prms.get("fromG"));
+					} catch (NumberFormatException nfe) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("ASTRO-0403")
+										.errorMessage(String.format("Invalid Query parameters 'fromL' and 'fromG' [%s], [%s]", prms.get("fromL"), prms.get("fromG"))));
+						return response;
+					}
+					data = data.from(new Pos()
+							.latitude(lat)
+							.longitude(lng));
+					double tPass = AstroComputer.getSunMeridianPassageTime(lat, lng);
+					Date solar = getSolarDate(at, tPass);
+//				System.out.println(SDF_SOLAR.format(solar));
+					String[] sol = SDF_SOLAR.format(solar).split(";");
+
+					data = data.solar(new FmtDate()
+							.epoch(solar.getTime())
+							.year(Integer.parseInt(sol[0]))
+							.month(Integer.parseInt(sol[1]))
+							.day(Integer.parseInt(sol[2]))
+							.hour(Integer.parseInt(sol[3]))
+							.min(Integer.parseInt(sol[4]))
+							.sec(Integer.parseInt(sol[5])));
+
+					SightReductionUtil sru = new SightReductionUtil();
+					sru.calculate(lat, lng, AstroComputer.getSunGHA(), AstroComputer.getSunDecl());
+					data = data.sunObs(new OBS()
+					.alt(sru.getHe())
+					.z(sru.getZ()));
+					sru.calculate(lat, lng, AstroComputer.getMoonGHA(), AstroComputer.getMoonDecl());
+					data = data.moonObs(new OBS()
+							.alt(sru.getHe())
+							.z(sru.getZ()));
+				}
 
 				String content = new Gson().toJson(data);
 				RESTProcessorUtil.generateResponseHeaders(response, content.length());
@@ -874,10 +939,84 @@ public class RESTImplementation {
 		}
 	}
 
+	public static class OBS {
+		double alt;
+		double z;
+
+		public OBS alt(double alt) {
+			this.alt = alt;
+			return this;
+		}
+
+		public OBS z(double z) {
+			this.z = z;
+			return this;
+		}
+	}
+
+	public static class Pos {
+		double latitude;
+		double longitude;
+
+		public Pos latitude(double lat) {
+			this.latitude = lat;
+			return this;
+		}
+
+		public Pos longitude(double lng) {
+			this.longitude = lng;
+			return this;
+		}
+	}
+
+	public static class FmtDate {
+		long epoch;
+		int year;
+		int month; // Jan: 1, Dec: 12
+		int day;
+		int hour;
+		int min;
+		int sec;
+
+		public FmtDate epoch(long epoch) {
+			this.epoch = epoch;
+			return this;
+		}
+		public FmtDate year(int year) {
+			this.year = year;
+			return this;
+		}
+		public FmtDate month(int month) {
+			this.month = month;
+			return this;
+		}
+		public FmtDate day(int day) {
+			this.day = day;
+			return this;
+		}
+		public FmtDate hour(int hour) {
+			this.hour = hour;
+			return this;
+		}
+		public FmtDate min(int min) {
+			this.min = min;
+			return this;
+		}
+		public FmtDate sec(int sec) {
+			this.sec = sec;
+			return this;
+		}
+	}
+
 	public static class SunMoonGP {
 		long epoch;
 		GP sun;
 		GP moon;
+		Pos from;
+		OBS sunObs;
+		OBS moonObs;
+		FmtDate solarDate;
+
 
 		public SunMoonGP epoch(long epoch) {
 			this.epoch = epoch;
@@ -889,6 +1028,26 @@ public class RESTImplementation {
 		}
 		public SunMoonGP moon(GP moon) {
 			this.moon = moon;
+			return this;
+		}
+
+		public SunMoonGP from(Pos pos) {
+			this.from = pos;
+			return this;
+		}
+
+		public SunMoonGP sunObs(OBS sun) {
+			this.sunObs = sun;
+			return this;
+		}
+
+		public SunMoonGP moonObs(OBS moon) {
+			this.moonObs = moon;
+			return this;
+		}
+
+		public SunMoonGP solar(FmtDate solar) {
+			this.solarDate = solar;
 			return this;
 		}
 	}
