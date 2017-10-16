@@ -40,7 +40,7 @@
 			'</td></tr><tr><td>Sun GHA:</td><td align="right">' +
 			decToSex(data.sun.gha) +
 			'</td><td>&nbsp;LHA:</td><td align="right">' +
-			decToSex(data.sun.gha + data.from.longitude) +
+			decToSex((data.sun.gha + data.from.longitude) % 360) +
 			'</td></tr><tr><td>Sun Alt:</td><td align="right">' +
 			decToSex(data.sunObs.alt) +
 			'</td></tr><tr><td>Sun Z:</td><td align="right">' +
@@ -51,7 +51,7 @@
 			'</td></tr><tr><td>Moon GHA:</td><td align="right">' +
 			decToSex(data.moon.gha) +
 			'</td><td>&nbsp;LHA:</td><td align="right">' +
-			decToSex(data.moon.gha + data.from.longitude) +
+			decToSex((data.moon.gha + data.from.longitude) % 360) +
 			'</td></tr><tr><td>Moon Alt:</td><td align="right">' +
 			decToSex(data.moonObs.alt) +
 			'</td></tr><tr><td>Moon Z:</td><td align="right">' +
