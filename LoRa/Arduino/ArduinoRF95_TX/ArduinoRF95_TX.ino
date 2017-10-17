@@ -22,6 +22,9 @@
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
+String inputString = "";         // a string to hold incoming data
+boolean stringComplete = false;  // whether the string is complete
+
 void setup() {
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
@@ -30,6 +33,8 @@ void setup() {
   while (!Serial) {
     delay(1);
   }
+  // reserve 256 bytes for the inputString:
+  inputString.reserve(256);
 
   delay(100);
 
@@ -65,71 +70,66 @@ void setup() {
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
-/**
- * Read string from serial port
- * Max length 255
- */
-
-char* getSerialString() {
-   char string[256];
-   int index = 0;
-   
-   while (Serial.available() > 0) {
-       /*Read a character as it comes in:*/
-       char byteBuffer = Serial.read(); 
-
-       if (index < 255) { // TODO Check [CR] ?
-           /*Place the character in the string buffer:*/
-           string[index] = byteBuffer;
-           /*Go to the index to place the next character in:*/
-           index++;
-       }
-   }
-   string[index] = '\0'; //Null-terminate the string;
-   return string;
+char* string2char(String command) {
+  if (command.length()!=0) {
+    char *p = const_cast<char*>(command.c_str());
+    return p;
+  }
 }
           
 void loop() {
-  delay(1000); // Wait 1 second between transmits, could also 'sleep' here!
+  if (stringComplete) {
+    // Return the string, reversed.
+    String st = inputString;
   // DATA Payload: read from the RaspberryPI, Serial port.
+    inputString = "";
+    stringComplete = false;
 
-  while (Serial.available() == 0) { // Wait for RPi input.
-    delay(1);
-  }
-
-  // TODO Use void serialEvent() {
-  char* radiopacket = getSerialString(); // TODO Validate this one.
+    Serial.println("LORA-0010: Transmitting..."); // Send a message to rf95_server (receiver)
+    Serial.print("LORA-0011: Sending ["); Serial.print(st); Serial.println("]");
   
-//  char radiopacket[20] = "Hello World #      ";
-//  itoa(packetnum++, radiopacket+13, 10);
-//  if (packetnum >= 32768) { // Reset
-//    packetnum = 1;
-//  }
-
-  Serial.println("LORA-0010: Transmitting..."); // Send a message to rf95_server (receiver)
-  Serial.print("LORA-0011: Sending ["); Serial.print(radiopacket); Serial.println("]");
-//  radiopacket[19] = 0;
-
-  delay(10);
-  rf95.send((uint8_t *)radiopacket, 20);
-
-  Serial.println("LORA-0012: Waiting for packet (send) to complete...");
-  delay(10);
-  rf95.waitPacketSent();
-  // Now wait for a reply
-  uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-  uint8_t len = sizeof(buf);
-
-  Serial.println("LORA-0013: Waiting for reply...");
-  if (rf95.waitAvailableTimeout(1000)) {
-    // Should be a reply message for us now
-    if (rf95.recv(buf, &len)) {
-      Serial.print("LORA-0014: Got reply: "); Serial.println((char*)buf);
-  //  Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
+    delay(10);
+    rf95.send((uint8_t *)string2char(st), 20);
+  
+    Serial.println("LORA-0012: Waiting for packet (send) to complete...");
+    delay(10);
+    rf95.waitPacketSent();
+    // Now wait for a reply
+    uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+    uint8_t len = sizeof(buf);
+  
+    Serial.println("LORA-0013: Waiting for reply...");
+    if (rf95.waitAvailableTimeout(1000)) {
+      // Should be a reply message for us now
+      if (rf95.recv(buf, &len)) {
+        Serial.print("LORA-0014: Got reply: "); Serial.println((char*)buf);
+    //  Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
+      } else {
+        Serial.println("LORA-0015: Receive failed");
+      }
     } else {
-      Serial.println("LORA-0015: Receive failed");
+      Serial.println("LORA-0016: No reply..., is there a listener around?");
     }
-  } else {
-    Serial.println("LORA-0016: No reply..., is there a listener around?");
   }
 }
+
+/*
+ * SerialEvent occurs whenever a new data comes in the
+ * hardware serial RX.  This routine is run between each
+ * time loop() runs, so using delay inside loop can delay
+ * response.  Multiple bytes of data may be available.
+ */
+void serialEvent() {
+  while (Serial.available()) {
+    // get the new byte:
+    char inChar = (char)Serial.read();
+    // add it to the inputString:
+    inputString += inChar;
+    // if the incoming character is a newline, set a flag
+    // so the main loop can do something about it:
+    if (inChar == '\n') {
+      stringComplete = true;
+    }
+  }
+}
+
