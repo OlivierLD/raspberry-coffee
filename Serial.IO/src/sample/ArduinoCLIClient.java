@@ -14,7 +14,7 @@ import java.util.Set;
  * Connect an Arduino Uno with its USB cable.
  * Serial port (/dev/ttyUSB0 below) may vary.
  *
- * Interacticve version.
+ * Interactive version.
  * Enter a String from the command line,
  * Send it to the Arduino,
  * It comes back inverted.
