@@ -1,12 +1,14 @@
 /**
  * @author Olivier LeDiouris
  */
-var TO_NORTH = 0;
-var TO_SOUTH = 1;
-var TO_EAST = 2;
-var TO_WEST = 3;
-
 var GreatCircle = function (from, to) {
+
+	var dirs = {
+		TO_NORTH: 0,
+		TO_SOUTH: 1,
+		TO_EAST:  2,
+		TO_WEST:  3
+	};
 
 	var ewDir, nsDir;
 
@@ -42,15 +44,15 @@ var GreatCircle = function (from, to) {
 		if (this.start === undefined || this.arrival === undefined) {
 			throw ({err: "Start and Arrival are required"});
 		}
-		nsDir = (this.arrival.lat > this.start.lat) ? TO_NORTH : TO_SOUTH;
-		ewDir = (this.arrival.lng > this.start.lng) ? TO_EAST : TO_WEST;
+		nsDir = (this.arrival.lat > this.start.lat) ? dirs.TO_NORTH : dirs.TO_SOUTH;
+		ewDir = (this.arrival.lng > this.start.lng) ? dirs.TO_EAST : dirs.TO_WEST;
 
 		if (Math.abs(this.arrival.lng - this.start.lng) > Math.PI) {
-			if (ewDir === TO_EAST) {
-				ewDir = TO_WEST;
+			if (ewDir === dirs.TO_EAST) {
+				ewDir = dirs.TO_WEST;
 				this.arrival.lng -= (2 * Math.PI);
 			} else {
-				ewDir = TO_EAST;
+				ewDir = dirs.TO_EAST;
 				this.arrival.lng += (2 * Math.PI);
 			}
 		}
@@ -71,7 +73,7 @@ var GreatCircle = function (from, to) {
 			}
 			var routePt = {lat: ptL, lng: ptG};
 			var ari = Math.abs(toDegrees(Math.atan(tgStartAngle)));
-			var _nsDir = (routePt.lat > pt.lat) ? TO_NORTH : TO_SOUTH;
+			var _nsDir = (routePt.lat > pt.lat) ? dirs.TO_NORTH : dirs.TO_SOUTH;
 			var arrG = routePt.lng;
 			var staG = pt.lng;
 			if (sign(arrG) !== sign(staG)) {
@@ -81,17 +83,17 @@ var GreatCircle = function (from, to) {
 					arrG = Math.PI - arrG;
 				}
 			}
-			var _ewDir = (arrG > staG) ? TO_EAST : TO_WEST;
+			var _ewDir = (arrG > staG) ? dirs.TO_EAST : dirs.TO_WEST;
 			var _start = 0;
-			if (_nsDir === TO_SOUTH) {
+			if (_nsDir === dirs.TO_SOUTH) {
 				_start = 180;
-				if (_ewDir === TO_EAST) {
+				if (_ewDir === dirs.TO_EAST) {
 					ari = _start - ari;
 				} else {
 					ari = _start + ari;
 				}
 			} else {
-				if (_ewDir == TO_EAST) {
+				if (_ewDir == dirs.TO_EAST) {
 					ari = _start + ari;
 				} else {
 					ari = _start - ari;
@@ -169,7 +171,7 @@ var getGCDistanceInNM = function (from, to) {
  * returned value in radians
  */
 var calculateRhumLine = function (from, to) {
-	var nsDir = (to.lat > from.lat) ? TO_NORTH : TO_SOUTH;
+	var nsDir = (to.lat > from.lat) ? dirs.TO_NORTH : dirs.TO_SOUTH;
 	var arrG = to.lng;
 	var staG = from.lng;
 	if (sign(arrG) !== sign(staG) && Math.abs(arrG - staG) > Math.PI) {
@@ -179,7 +181,7 @@ var calculateRhumLine = function (from, to) {
 			arrG = Math.PI - arrG;
 		}
 	}
-	var ewDir = (arrG - staG > 0.0) ? TO_EAST : TO_WEST;
+	var ewDir = (arrG - staG > 0.0) ? dirs.TO_EAST : dirs.TO_WEST;
 	var deltaL = toDegrees((to.lat - from.lat)) * 60;
 	var radianDeltaG = to.lng - from.lng;
 	if (Math.abs(radianDeltaG) > Math.PI) {
@@ -205,12 +207,12 @@ var calculateRhumLine = function (from, to) {
 	}
 	dLoxo = Math.abs(dLoxo);
 	rv = Math.abs(rv);
-	if (ewDir === TO_EAST) {
-		if (nsDir !== TO_NORTH) {
+	if (ewDir === dirs.TO_EAST) {
+		if (nsDir !== dirs.TO_NORTH) {
 			rv = Math.PI - rv;
 		}
 	} else if (deltaLC !== 0) {
-		if (nsDir === TO_NORTH) {
+		if (nsDir === dirs.TO_NORTH) {
 			rv = (2 * Math.PI) - rv;
 		} else {
 			rv = Math.PI + rv;
