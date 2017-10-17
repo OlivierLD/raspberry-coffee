@@ -40,6 +40,8 @@ void loop() {
     // clear the string:
     inputString = "";
     stringComplete = false;
+  } else {
+    delay(1);
   }
 }
 

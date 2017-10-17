@@ -33,7 +33,7 @@ void setup() {
 
   delay(100);
 
-  Serial.println("Arduino LoRa TX Test.");
+  Serial.println("LORA-0001: Arduino LoRa TX Test.");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -42,17 +42,18 @@ void setup() {
   delay(10);
 
   while (!rf95.init()) {
-    Serial.println("LoRa radio init failed");
+    Serial.println("LORA-0002: LoRa radio init failed");
     while (1);
   }
-  Serial.println("LoRa radio init OK.");
+  Serial.println("LORA-0003: LoRa radio init OK.");
 
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
   if (!rf95.setFrequency(RF95_FREQ)) {
-    Serial.println("setFrequency failed");
+    Serial.println("LORA-0004: setFrequency failed");
     while (1);
   }
-  Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
+  Serial.print("LORA-0005: Set Freq to: "); Serial.println(RF95_FREQ);
+  Serial.println("LORA-0006: Now ready to send messages");
 
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
@@ -64,38 +65,71 @@ void setup() {
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
+/**
+ * Read string from serial port
+ * Max length 255
+ */
+
+char* getSerialString() {
+   char string[256];
+   int index = 0;
+   
+   while (Serial.available() > 0) {
+       /*Read a character as it comes in:*/
+       char byteBuffer = Serial.read(); 
+
+       if (index < 255) { // TODO Check [CR] ?
+           /*Place the character in the string buffer:*/
+           string[index] = byteBuffer;
+           /*Go to the index to place the next character in:*/
+           index++;
+       }
+   }
+   string[index] = '\0'; //Null-terminate the string;
+   return string;
+}
+          
 void loop() {
   delay(1000); // Wait 1 second between transmits, could also 'sleep' here!
-  Serial.println(">> Transmitting..."); // Send a message to rf95_server (receiver)
+  // DATA Payload: read from the RaspberryPI, Serial port.
 
-  char radiopacket[20] = "Hello World #      ";
-  itoa(packetnum++, radiopacket+13, 10);
-  if (packetnum >= 32768) { // Reset
-    packetnum = 1;
+  while (Serial.available() == 0) { // Wait for RPi input.
+    delay(1);
   }
-  Serial.print(">> Sending ["); Serial.print(radiopacket); Serial.println("]");
-  radiopacket[19] = 0;
+
+  // TODO Use void serialEvent() {
+  char* radiopacket = getSerialString(); // TODO Validate this one.
+  
+//  char radiopacket[20] = "Hello World #      ";
+//  itoa(packetnum++, radiopacket+13, 10);
+//  if (packetnum >= 32768) { // Reset
+//    packetnum = 1;
+//  }
+
+  Serial.println("LORA-0010: Transmitting..."); // Send a message to rf95_server (receiver)
+  Serial.print("LORA-0011: Sending ["); Serial.print(radiopacket); Serial.println("]");
+//  radiopacket[19] = 0;
 
   delay(10);
   rf95.send((uint8_t *)radiopacket, 20);
 
-  Serial.println("Waiting for packet (send) to complete...");
+  Serial.println("LORA-0012: Waiting for packet (send) to complete...");
   delay(10);
   rf95.waitPacketSent();
   // Now wait for a reply
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
 
-  Serial.println("<< Waiting for reply...");
+  Serial.println("LORA-0013: Waiting for reply...");
   if (rf95.waitAvailableTimeout(1000)) {
     // Should be a reply message for us now
     if (rf95.recv(buf, &len)) {
-      Serial.print("<< Got reply: "); Serial.println((char*)buf);
+      Serial.print("LORA-0014: Got reply: "); Serial.println((char*)buf);
   //  Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
     } else {
-      Serial.println("!! Receive failed");
+      Serial.println("LORA-0015: Receive failed");
     }
   } else {
-    Serial.println("<< No reply..., is there a listener around?");
+    Serial.println("LORA-0016: No reply..., is there a listener around?");
   }
 }

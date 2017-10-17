@@ -30,7 +30,7 @@ void setup() {
   Serial.begin(115200);
   delay(100);
 
-  Serial.println("Arduino LoRa RX Test. Started.");
+  Serial.println("LORA-0001: Arduino LoRa RX Test, started");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -39,19 +39,19 @@ void setup() {
   delay(10);
 
   while (!rf95.init()) {
-    Serial.println("LoRa radio init failed");
+    Serial.println("LORA-0002: LoRa radio init failed");
     // delay(100);
     while (1);
   }
-  Serial.println("LoRa radio init OK.");
+  Serial.println("LORA-0003: LoRa radio init OK");
 
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
   if (!rf95.setFrequency(RF95_FREQ)) {
-    Serial.println("setFrequency failed");
+    Serial.println("LORA-0004: setFrequency failed");
     while (1);
   }
-  Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
-  Serial.println("Now waiting for messages");
+  Serial.print("LORA-0005: Set Freq to: "); Serial.println(RF95_FREQ);
+  Serial.println("LORA-0006: Now waiting for messages");
 
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
@@ -69,16 +69,17 @@ void loop() {
 
     if (rf95.recv(buf, &len)) {
 //    RH_RF95::printBuffer("Received: ", buf, len);
-      Serial.print("Received: "); Serial.println((char*)buf);
+      // Data received
+      Serial.print("LORA-0007: "); Serial.println((char*)buf);
 //    Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
 
       // Send a reply
-      uint8_t data[] = "And hello back to you";
+      uint8_t data[] = "LORA-0008: ACK";
       rf95.send(data, sizeof(data));
       rf95.waitPacketSent();
-      Serial.println("...Sent a reply");
+//    Serial.println("...Sent a reply");
     } else {
-      Serial.println("Receive failed");
+      Serial.println("LORA-0009: Receive failed");
     }
   }
 }
