@@ -54,7 +54,7 @@ public class ArduinoLoRaClient implements SerialIOCallbacks {
 	}
 
 	public void arduinoOutput(byte[] mess) {
-		if (true) { // verbose...
+		if ("true".equals(System.getProperty("serial.verbose", "false"))) { // verbose...
 			try {
 				String[] sa = DumpUtil.dualDump(mess);
 				if (sa != null) {
