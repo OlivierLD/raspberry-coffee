@@ -126,7 +126,7 @@ public class ArduinoLoRaClient implements SerialIOCallbacks {
 
 			Thread.sleep(500L);
 			// Wake up!
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 2; i++) {
 				sc.writeData("\n");
 			}
 

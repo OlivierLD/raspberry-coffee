@@ -78,6 +78,7 @@ char* string2char(String command) {
 }
           
 void loop() {
+  
   if (stringComplete) {
     // Return the string, reversed.
     String st = inputString;
