@@ -34,13 +34,19 @@
 
 	var astroCallback = function(data) { // Intercepted
 //	console.log("Astro Data:", data);
+		var sunLHA = data.sun.gha + data.from.longitude;
+		while (sunLHA < 0) sunLHA +=360;
+		while (sunLHA > 360) sunLHA -= 360;
+		var moonLHA = data.moon.gha + data.from.longitude;
+		while (moonLHA < 0) moonLHA +=360;
+		while (moonLHA > 360) moonLHA -= 360;
 		document.getElementById("sun-moon-data").innerHTML =
 			'<table border="0"><tr><td>Sun D:</td><td align="right">' +
 			decToSex(data.sun.decl, "NS") +
 			'</td></tr><tr><td>Sun GHA:</td><td align="right">' +
 			decToSex(data.sun.gha) +
 			'</td><td>&nbsp;LHA:</td><td align="right">' +
-			decToSex((data.sun.gha + data.from.longitude) % 360) +
+			decToSex(sunLHA) +
 			'</td></tr><tr><td>Sun Alt:</td><td align="right">' +
 			decToSex(data.sunObs.alt) +
 			'</td></tr><tr><td>Sun Z:</td><td align="right">' +
@@ -51,7 +57,7 @@
 			'</td></tr><tr><td>Moon GHA:</td><td align="right">' +
 			decToSex(data.moon.gha) +
 			'</td><td>&nbsp;LHA:</td><td align="right">' +
-			decToSex((data.moon.gha + data.from.longitude) % 360) +
+			decToSex(moonLHA) +
 			'</td></tr><tr><td>Moon Alt:</td><td align="right">' +
 			decToSex(data.moonObs.alt) +
 			'</td></tr><tr><td>Moon Z:</td><td align="right">' +

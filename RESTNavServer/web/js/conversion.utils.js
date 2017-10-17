@@ -14,6 +14,10 @@ var decToSex = function (val, ns_ew) {
 			s += (ns_ew === 'NS' ? 'N' : 'E');
 		}
 		s += " ";
+	} else {
+		if (val < 0) {
+			s += '-'
+		}
 	}
 	s += i + "\272" + dec.toFixed(2) + "'";
 
