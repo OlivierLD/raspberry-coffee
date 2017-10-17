@@ -11,12 +11,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ *
+ * Receiver.
+ *
  * Connect an Arduino Uno with its USB cable.
  * Serial port (/dev/ttyUSB0 below) may vary.
- *
- * Interacticve version.
- * Enter a String from the command line,
- * Send it to the Arduino,
  *
  * Can act as a server or as a client (Tx or Rx).
  * This depends on the Arduino sketch we're talking to.
@@ -25,7 +24,7 @@ import java.util.Set;
  * "serial.port", default "/dev/ttyUSB0"
  * "baud.rate", default "9600"
  */
-public class ArduinoLoRaClient implements SerialIOCallbacks {
+public class ArduinoLoRaServer implements SerialIOCallbacks {
 	@Override
 	public void connected(boolean b) {
 		System.out.println("Arduino connected: " + b);
@@ -52,6 +51,8 @@ public class ArduinoLoRaClient implements SerialIOCallbacks {
 		}
 	}
 
+	private final static String PAYLOAD_PREFIX = "LORA-0007: ";
+
 	public void arduinoOutput(byte[] mess) {
 		if ("true".equals(System.getProperty("serial.verbose", "false"))) { // verbose...
 			try {
@@ -66,10 +67,18 @@ public class ArduinoLoRaClient implements SerialIOCallbacks {
 				ex.printStackTrace();
 			}
 		}
+		// Analyze the message
+		String payload = new String(mess);
+		if (!payload.isEmpty()) {
+			if (payload.startsWith(PAYLOAD_PREFIX)) {
+				String actual = payload.substring(PAYLOAD_PREFIX.length()).trim();
+				System.out.println(String.format("Received [%s]", actual));
+			}
+		}
 	}
 
 	public static void main(String[] args) {
-		final ArduinoLoRaClient caller = new ArduinoLoRaClient();
+		final ArduinoLoRaServer caller = new ArduinoLoRaServer();
 		final SerialCommunicator sc = new SerialCommunicator(caller);
 		sc.setVerbose(false);
 
