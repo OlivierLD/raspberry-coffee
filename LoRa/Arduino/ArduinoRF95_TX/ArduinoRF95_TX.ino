@@ -80,11 +80,11 @@ char* string2char(String command) {
 void loop() {
   
   if (stringComplete) {
-    // Return the string, reversed.
+    // Return the string coming from the Serial Port (Raspberry PI ?)
     String st = inputString;
   // DATA Payload: read from the RaspberryPI, Serial port.
-    inputString = "";
-    stringComplete = false;
+    inputString = "";       // Reset - 1
+    stringComplete = false; // Reset - 2
 
     Serial.println("LORA-0010: Transmitting..."); // Send a message to rf95_server (receiver)
     Serial.print("LORA-0011: Sending ["); Serial.print(st); Serial.println("]");
