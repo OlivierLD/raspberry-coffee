@@ -23,10 +23,10 @@ import arduino.ArduinoLoRaClient;
  * A jar containing this class and its dependencies must be available in the classpath.
  */
 public class LoRaPublisher implements Forwarder {
-	private double previousTemp = -Double.MAX_VALUE;
 
 	private String portName;
 	private int baudRate;
+	private boolean verbose = false;
 
 	private ArduinoLoRaClient bridge = null;
 
@@ -63,11 +63,18 @@ public class LoRaPublisher implements Forwarder {
 		String str = new String(message);
 //	System.out.println(">>>> Mess:" + str);
 		if (StringParsers.validCheckSum(str)) {
-			// Forward to LoRa
-			try {
-				bridge.sendToLora(str + "\n");
-			} catch (IOException e) {
-				e.printStackTrace();
+			String sentenceId = StringParsers.getSentenceID(str);
+			if ("RMC".equals(sentenceId)) { // Filter sentences here
+				// Forward to LoRa
+				try {
+					bridge.sendToLora(str + "\n");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				if (this.verbose) {
+					System.out.println(String.format("Dropping %s", sentenceId));
+				}
 			}
 		}
 	}
@@ -104,6 +111,7 @@ public class LoRaPublisher implements Forwarder {
 	public void setProperties(Properties props) {
 		this.portName = props.getProperty("serial.port", "/dev/ttyUSB0");
 		String baudRateStr = props.getProperty("baud.rate", "9600");
+		this.verbose = "true".equals(props.getProperty("lora.verbose", "false"));
 		try {
 			this.baudRate = Integer.parseInt(baudRateStr);
 		} catch (NumberFormatException nfe) {

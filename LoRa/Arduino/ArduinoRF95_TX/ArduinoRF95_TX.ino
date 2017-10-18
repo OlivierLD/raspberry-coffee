@@ -68,8 +68,6 @@ void setup() {
   rf95.setTxPower(23, false);
 }
 
-int16_t packetnum = 0;  // packet counter, we increment per xmission
-
 char* string2char(String command) {
   if (command.length()!=0) {
     char *p = const_cast<char*>(command.c_str());
@@ -100,11 +98,11 @@ void loop() {
     uint8_t len = sizeof(buf);
   
     Serial.println("LORA-0013: Waiting for reply...");
-    if (rf95.waitAvailableTimeout(1000)) {
+    if (rf95.waitAvailableTimeout(1000)) { // Wait 1s max.
       // Should be a reply message for us now
       if (rf95.recv(buf, &len)) {
         Serial.print("LORA-0014: Got reply: "); Serial.println((char*)buf);
-    //  Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
+        Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
       } else {
         Serial.println("LORA-0015: Receive failed");
       }
