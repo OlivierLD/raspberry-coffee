@@ -54,7 +54,7 @@ public class ArduinoLoRaServer implements SerialIOCallbacks {
 	private final static String PAYLOAD_PREFIX = "LORA-0007: ";
 
 	public void arduinoOutput(byte[] mess) {
-		if ("true".equals(System.getProperty("serial.verbose", "false"))) { // verbose...
+		if ("true".equals(System.getProperty("lora.verbose", "false"))) { // verbose...
 			try {
 				String[] sa = DumpUtil.dualDump(mess);
 				if (sa != null) {
@@ -67,7 +67,7 @@ public class ArduinoLoRaServer implements SerialIOCallbacks {
 				ex.printStackTrace();
 			}
 		}
-		// Analyze the message
+		// Analyze the message. This is where the server does its job.
 		String payload = new String(mess);
 		if (!payload.isEmpty()) {
 			if (payload.startsWith(PAYLOAD_PREFIX)) {
