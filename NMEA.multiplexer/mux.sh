@@ -9,8 +9,8 @@ fi
 echo Using properties file $MUX_PROP_FILE
 #
 JAVA_OPTIONS=
-# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=./libs"       # for Mac
-JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
+JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
+# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 #
 # This variable is used to set the System variable process.on.start.
 # (See below).
@@ -51,8 +51,8 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=./build/libs/NMEA.multiplexer-1.0-all.jar
-# CP=$CP:./libs/RXTXcomm.jar          # for Mac
-CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
+CP=$CP:./libs/RXTXcomm.jar          # for Mac
+# CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
 # For JFR
 JFR_FLAGS=

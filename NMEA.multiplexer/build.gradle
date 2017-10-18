@@ -44,6 +44,7 @@ dependencies {
     compile 'org.fusesource.jansi:jansi:1.11'
     compile project(':common-utils')
     compile project(':I2C.SPI')
+    compile project(':LoRa')
 }
 
 shadowJar {

@@ -18,6 +18,7 @@ import java.io.IOException;
  */
 public class ArduinoLoRaInteractiveClient  {
 
+	// This is the callback when LoRa returned some data.
 	private static void onData(String str) {
 		System.out.println(String.format("Received [%s]", str.trim()));
 		// Manage potential errors.
@@ -34,7 +35,6 @@ public class ArduinoLoRaInteractiveClient  {
 		String baudRateStr = System.getProperty("baud.rate", "9600");
 		try {
 			int br = Integer.parseInt(baudRateStr);
-
 			final ArduinoLoRaClient bridge = new ArduinoLoRaClient(serialPortName, br, ArduinoLoRaInteractiveClient::onData);
 
 			System.out.println("Enter 'Q' at the prompt to quit.");
