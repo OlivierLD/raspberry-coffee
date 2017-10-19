@@ -28,6 +28,12 @@ public class LoRaPublisher implements Forwarder {
 	private int baudRate;
 	private boolean verbose = false;
 
+	private boolean available = false; // Released when ready, or Tx ACK'd
+
+	private boolean isChannelAvailable() {
+		return this.available;
+	}
+
 	private ArduinoLoRaClient bridge = null;
 
 	/*
@@ -39,6 +45,11 @@ public class LoRaPublisher implements Forwarder {
 	private void onDataFromArduino(String str) {
 		// Callback from Arduino
 		System.out.println(String.format("Received [%s]", str.trim()));
+
+		if (str.startsWith(LoRaMessages.Messages.LORA_0008.id()) ||
+				str.startsWith(LoRaMessages.Messages.LORA_0006.id())) { // ACK or Ready
+			this.available = true;
+		}
 		// Manage potential errors.
 		try {
 			LoRaMessages.throwIfError(str);
@@ -64,16 +75,23 @@ public class LoRaPublisher implements Forwarder {
 //	System.out.println(">>>> Mess:" + str);
 		if (StringParsers.validCheckSum(str)) {
 			String sentenceId = StringParsers.getSentenceID(str);
-			if ("RMC".equals(sentenceId)) { // Filter sentences here
+			if ("RMC".equals(sentenceId) && this.isChannelAvailable()) { // Filter sentences here
 				// Forward to LoRa
 				try {
+					this.available = false; // Released when ACK is received
 					bridge.sendToLora(str + "\n");
 				} catch (IOException e) {
 					e.printStackTrace();
+					this.available = true;
 				}
 			} else {
 				if (this.verbose) {
-					System.out.println(String.format("Dropping %s", sentenceId));
+					if (this.isChannelAvailable()) {
+						System.out.println(
+								String.format("Dropping %s%s",
+										sentenceId,
+										this.isChannelAvailable() ? "" : " (not available)"));
+					}
 				}
 			}
 		}

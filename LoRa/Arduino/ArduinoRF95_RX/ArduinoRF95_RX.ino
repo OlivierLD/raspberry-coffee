@@ -74,7 +74,7 @@ void loop() {
 //    Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
 
       // Send a reply
-      uint8_t data[] = "LORA-0008: ACK";
+      uint8_t data[] = "LORA-0008"; // Was LORA-0008
       rf95.send(data, sizeof(data));
       rf95.waitPacketSent();
 //    Serial.println("...Sent a reply");

@@ -74,6 +74,10 @@ char* string2char(String command) {
     return p;
   }
 }
+
+int startsWith(const char *pre, const char *str) {
+  return strncmp(pre, str, strlen(pre)) == 0;
+}
           
 void loop() {
   
@@ -101,8 +105,12 @@ void loop() {
     if (rf95.waitAvailableTimeout(1000)) { // Wait 1s max.
       // Should be a reply message for us now
       if (rf95.recv(buf, &len)) {
-        Serial.print("LORA-0014: Got reply: "); Serial.println((char*)buf);
-        Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
+        if (startsWith("LORA-0008", (char*)buf)) {
+          Serial.println((char*)buf);
+        } else {
+          Serial.print("LORA-0014: Got reply: "); Serial.println((char*)buf);
+//        Serial.print("RSSI: "); Serial.println(rf95.lastRssi(), DEC);
+        }
       } else {
         Serial.println("LORA-0015: Receive failed");
       }
