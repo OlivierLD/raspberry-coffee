@@ -40,7 +40,7 @@ Tests on the range of the LoRa.
 
 ### Example
 #### Broadcast NMEA Data
-Using the NMEA Multiplexer, based on its stgructgure, we've written a `LoRaPublisher`.
+Using the NMEA Multiplexer, based on its structure, we've written a `LoRaPublisher`.
 
 On one machine (Raspberry PI or not), connected to an Arduino UNO with the
 sketch `ArduinoRF95_RX` running on it, start the Arduino Server:
@@ -115,7 +115,7 @@ Dropping GSA
 Received [LORA-0010: Transmitting...]
 ```
 
-This `forwarder` filters the `NMEA` sentences, it send only the `RMC` ones.
+This `forwarder` filters the `NMEA` sentences, it sends only the `RMC` ones.
 As a result, they're received by the RF95 Server:
 
 ```
@@ -127,5 +127,10 @@ As a result, they're received by the RF95 Server:
 ... this is where you could do something more interesting with them.
 
 This could for example be a way to know where a remote vehicle is, and plot its position on a map.
+
+> And to nail it down one more time, `NMEA` has been designed to convey sensor data.
+> I've still not found any reason _not_ to use it. The fact that it's one of the oldest IT standards
+> does not make it look like archeology (to me).
+
 
 ---
