@@ -55,6 +55,7 @@ public class LoRaPublisher implements Forwarder {
 			LoRaMessages.throwIfError(str);
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			this.available = true; // Release
 		}
 	}
 
@@ -79,7 +80,7 @@ public class LoRaPublisher implements Forwarder {
 				// Forward to LoRa
 				try {
 					this.available = false; // Released when ACK is received
-					bridge.sendToLora(str + "\n");
+					bridge.sendToLora(str); //  + "\n");
 				} catch (IOException e) {
 					e.printStackTrace();
 					this.available = true;

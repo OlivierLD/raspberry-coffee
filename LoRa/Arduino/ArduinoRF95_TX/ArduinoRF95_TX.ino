@@ -68,13 +68,6 @@ void setup() {
   rf95.setTxPower(23, false);
 }
 
-char* string2char(String command) {
-  if (command.length()!=0) {
-    char *p = const_cast<char*>(command.c_str());
-    return p;
-  }
-}
-
 int startsWith(const char *pre, const char *str) {
   return strncmp(pre, str, strlen(pre)) == 0;
 }
@@ -89,11 +82,20 @@ void loop() {
     stringComplete = false; // Reset - 2
 
     Serial.println("LORA-0010: Transmitting..."); // Send a message to rf95_server (receiver)
-    Serial.print("LORA-0011: Sending ["); Serial.print(st); Serial.println("]");
+
+    Serial.print("LORA-0011: Sending {"); 
+    Serial.print(st); 
+    Serial.print(" (");
+    Serial.print(st.length());
+    Serial.println(")}");
   
     delay(10);
-    rf95.send((uint8_t *)string2char(st), 20);
-  
+
+//  Serial.print(">> "); Serial.println(st);
+    char charBuf[st.length() + 1];
+    st.toCharArray(charBuf, st.length());
+    rf95.send((uint8_t *)charBuf, st.length());     
+
     Serial.println("LORA-0012: Waiting for packet (send) to complete...");
     delay(10);
     rf95.waitPacketSent();
@@ -130,12 +132,14 @@ void serialEvent() {
   while (Serial.available()) {
     // get the new byte:
     char inChar = (char)Serial.read();
-    // add it to the inputString:
-    inputString += inChar;
     // if the incoming character is a newline, set a flag
     // so the main loop can do something about it:
     if (inChar == '\n') {
+      inputString += '\0'; // EOS
       stringComplete = true;
+    } else {
+      // add it to the inputString:
+      inputString += inChar;
     }
   }
 }
