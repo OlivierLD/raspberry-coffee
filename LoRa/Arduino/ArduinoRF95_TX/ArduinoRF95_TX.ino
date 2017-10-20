@@ -138,8 +138,10 @@ void serialEvent() {
       inputString += '\0'; // EOS
       stringComplete = true;
     } else {
-      // add it to the inputString:
-      inputString += inChar;
+      if (inChar != '\r') {
+        // add it to the inputString:
+        inputString += inChar;
+      }
     }
   }
 }

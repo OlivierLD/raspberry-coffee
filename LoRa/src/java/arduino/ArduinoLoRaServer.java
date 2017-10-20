@@ -7,6 +7,8 @@ import serial.io.SerialIOCallbacks;
 import utils.DumpUtil;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,6 +55,8 @@ public class ArduinoLoRaServer implements SerialIOCallbacks {
 
 	private final static String PAYLOAD_PREFIX = "LORA-0007: ";
 
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
+
 	public void arduinoOutput(byte[] mess) {
 		if ("true".equals(System.getProperty("lora.verbose", "false"))) { // verbose...
 			try {
@@ -72,7 +76,7 @@ public class ArduinoLoRaServer implements SerialIOCallbacks {
 		if (!payload.isEmpty()) {
 			if (payload.startsWith(PAYLOAD_PREFIX)) {
 				String actual = payload.substring(PAYLOAD_PREFIX.length()).trim();
-				System.out.println(String.format("Received [%s]", actual));
+				System.out.println(String.format("Received [%s] [%s]", SDF.format(new Date()), actual));
 			}
 		}
 	}

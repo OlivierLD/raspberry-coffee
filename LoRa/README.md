@@ -66,7 +66,7 @@ sketch `ArduinoRF95_RX` running on it, start the Arduino Server:
 ```
 
 Then from the Raspberry PI with the NMEA Multiplexer, connected to an Arduino UNO
-running the sketch `ArduinoRF95_TX` running on it:
+running the sketch `ArduinoRF95_TX` running on it, reading GPS data:
 
 ```
 $ ./mux.sh nmea.mux.replay.log.properties
@@ -92,27 +92,55 @@ Received [LORA-0001: Arduino LoRa TX Test.]
 Received [LORA-0003: LoRa radio init OK.]
 Received [LORA-0005: Set Freq to: 915.00]
 Received [LORA-0006: Now ready to send messages]
+Dropping GGA
+Dropping GSA
+Dropping GSV
+Dropping GSV
+Dropping GSV
 Received [LORA-0010: Transmitting...]
- (72)}]d [LORA-0011: Sending {$GPRMC,161145.252,A,3720.1538,N,12143.0135,W,000.0,116.3,170617,,,A*77
+Received [LORA-0011: Sending {$GPRMC,161154.252,A,3720.1534,N,12143.0128,W,000.0,116.3,170617,,,A*77 (71)}]
 Received [LORA-0012: Waiting for packet (send) to complete...]
 Received [LORA-0013: Waiting for reply...]
 Received [LORA-0008]
 Dropping GGA
 Dropping GSA
+Dropping GSV
+Dropping GSV
+Dropping GSV
 Received [LORA-0010: Transmitting...]
- (72)}]d [LORA-0011: Sending {$GPRMC,161304.252,A,3720.1306,N,12142.9689,W,000.0,102.1,170617,,,A*74
+Received [LORA-0011: Sending {$GPRMC,161306.252,A,3720.1312,N,12142.9697,W,000.0,102.1,170617,,,A*7C (71)}]
+Received [LORA-0012: Waiting for packet (send) to complete...]
+Received [LORA-0013: Waiting for reply...]
+Received [LORA-0008]
+Received [LORA-0010: Transmitting...]
+Received [LORA-0011: Sending {$GPRMC,161414.252,A,3720.1319,N,12142.9689,W,000.0,004.9,170617,,,A*73 (71)}]
 Received [LORA-0012: Waiting for packet (send) to complete...]
 Received [LORA-0013: Waiting for reply...]
 Received [LORA-0008]
 Dropping GGA
 Dropping GSA
+Dropping GSV
+Dropping GSV
+Dropping GSV
 Received [LORA-0010: Transmitting...]
- (72)}]d [LORA-0011: Sending {$GPRMC,161416.252,A,3720.1319,N,12142.9689,W,000.0,004.9,170617,,,A*71
+Received [LORA-0011: Sending {$GPRMC,161533.253,A,3720.1390,N,12142.9645,W,002.2,354.6,170617,,,A*7E (71)}]
+Received [LORA-0012: Waiting for packet (send) to complete...]
+Received [LORA-0013: Waiting for reply...]
+Received [LORA-0008]
+Dropping GSV
+Dropping GSV
+Dropping GSV
+Received [LORA-0010: Transmitting...]
+Received [LORA-0011: Sending {$GPRMC,161642.253,A,3720.1402,N,12143.0101,W,002.1,231.4,170617,,,A*7B (71)}]
+Received [LORA-0012: Waiting for packet (send) to complete...]
+Received [LORA-0013: Waiting for reply...]
+Received [LORA-0008]
+Received [LORA-0010: Transmitting...]
+Received [LORA-0011: Sending {$GPRMC,161734.253,A,3720.1211,N,12143.0515,W,002.0,227.7,170617,,,A*7B (71)}]
 Received [LORA-0012: Waiting for packet (send) to complete...]
 Received [LORA-0013: Waiting for reply...]
 Received [LORA-0008]
 Dropping GSA
-Received [LORA-0010: Transmitting...]
 ```
 
 This `forwarder` filters the `NMEA` sentences, it sends only the `RMC` ones.
