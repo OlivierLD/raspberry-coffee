@@ -76,6 +76,7 @@ public class ArduinoLoRaServer implements SerialIOCallbacks {
 		if (!payload.isEmpty()) {
 			if (payload.startsWith(PAYLOAD_PREFIX)) {
 				String actual = payload.substring(PAYLOAD_PREFIX.length()).trim();
+				// TODO Something smart
 				System.out.println(String.format("Received [%s] [%s]", SDF.format(new Date()), actual));
 			}
 		}

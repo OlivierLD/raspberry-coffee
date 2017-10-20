@@ -23,7 +23,7 @@ public class ArduinoLoRaInteractiveClient  {
 		System.out.println(String.format("Received [%s]", str.trim()));
 		// Manage potential errors.
 		try {
-			LoRaMessages.throwIfError(str);
+			LoRaMessageManager.throwIfError(str);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

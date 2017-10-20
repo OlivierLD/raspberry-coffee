@@ -1,6 +1,6 @@
 package arduino;
 
-public class LoRaMessages {
+public class LoRaMessageManager {
 
 	public enum MessageType {
 		INFO,
@@ -23,7 +23,7 @@ public class LoRaMessages {
 		LORA_0011("LORA-0011", MessageType.INFO,  "Sending data [...]"),
 		LORA_0012("LORA-0012", MessageType.INFO,  "Waiting for packet (send) to complete..."),
 		LORA_0013("LORA-0013", MessageType.INFO,  "Waiting for reply..."),
-		LORA_0014("LORA-0014", MessageType.INFO,  "Got reply: ... (From Tx)"), // TODO Make sure this exists
+		LORA_0014("LORA-0014", MessageType.INFO,  "Got reply: ... (From Tx)"), // TODO Make sure this exists (and is required)
 		LORA_0015("LORA-0015", MessageType.ERROR, "Receive failed (From Tx)"),
 		LORA_0016("LORA-0016", MessageType.ERROR, "No reply..., is there a listener around? (From Tx)");
 

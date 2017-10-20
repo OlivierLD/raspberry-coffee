@@ -3,7 +3,7 @@ package nmea.forwarders;
 import java.io.IOException;
 import java.util.Properties;
 
-import arduino.LoRaMessages;
+import arduino.LoRaMessageManager;
 import nmea.parser.StringParsers;
 import arduino.ArduinoLoRaClient;
 
@@ -46,13 +46,13 @@ public class LoRaPublisher implements Forwarder {
 		// Callback from Arduino
 		System.out.println(String.format("Received [%s]", str.trim()));
 
-		if (str.startsWith(LoRaMessages.Messages.LORA_0008.id()) ||
-				str.startsWith(LoRaMessages.Messages.LORA_0006.id())) { // ACK or Ready
+		if (str.startsWith(LoRaMessageManager.Messages.LORA_0008.id()) ||
+				str.startsWith(LoRaMessageManager.Messages.LORA_0006.id())) { // ACK or Ready
 			this.available = true;
 		}
 		// Manage potential errors.
 		try {
-			LoRaMessages.throwIfError(str);
+			LoRaMessageManager.throwIfError(str);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			this.available = true; // Release
