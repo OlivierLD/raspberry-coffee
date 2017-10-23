@@ -133,6 +133,12 @@
   var changeMoonlight = function(cb) {
 	  worldMap.setWithMoonLight(cb.checked);
   };
+  var changeWanderingBodies = function(cb) {
+    worldMap.setWithWanderingBodies(cb.checked);
+  };
+  var changeTropics = function(cb) {
+    worldMap.setWithTropics(cb.checked);
+  };
 
   var changeLat = function(slider) {
     var val = slider.value;
@@ -159,8 +165,10 @@
         </td>
         <td valign="top">
           <div id="current-date"> --- </div>
-          <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid
-          <br/>
+          <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
+	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
+
+	        <br/>
           <input type="checkbox" onchange="changeSun(this);" checked/> With Sun
           <br/>
           <input type="checkbox" onchange="changeMoon(this);" checked/> With Moon
@@ -169,6 +177,8 @@
           <br/>
           <input type="checkbox" onchange="changeMoonlight(this);" /> With Moon light
           <br />
+	        <input type="checkbox" onchange="changeWanderingBodies(this);" /> With Wandering Bodies
+	        <br />
           Latitude:
           <br />
           <input type="range" min="-90" max="90" step="1" value="38" title="Latitude" onchange="changeLat(this);"/>

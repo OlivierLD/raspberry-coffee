@@ -242,15 +242,21 @@ var getDeferred = function(
 	return deferred.promise();
 };
 
-var getSunMoonGP = function(when) {
+var getSunMoonGP = function(from, when) {
 	var url = "/sun-moon-gp";
 	// Add date
 	url += ("?at=" + when);
+	if (from !== undefined) {
+		url += ("&fromL=" + from.latitude);
+		url += ("&fromG=" + from.longitude);
+	}
+	// Wandering bodies
+	url += ("&wandering=true");
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
-var getAstroData = function(when, callback) {
-	var getData = getSunMoonGP(when);
+var getAstroData = function(from, when, callback) {
+	var getData = getSunMoonGP(from, when);
 	getData.done(function(value) {
 		var json = JSON.parse(value);
 		if (callback !== undefined) {
@@ -268,6 +274,6 @@ var getAstroData = function(when, callback) {
 				message = errmess;
 			}
 		}
-		errManager("Failed to get the station list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		displayErr("Failed to get Astro Data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };

@@ -4,6 +4,7 @@
  */
 
 const projections = [ "ANAXIMANDRE", "MERCATOR", "GLOBE" ];
+const tropicLat = 23.43698;
 
 function WorldMap (cName, prj) {
 
@@ -13,6 +14,8 @@ function WorldMap (cName, prj) {
 	var withMoon = true;
 	var withSunlight = false;
 	var withMoonlight = false;
+	var withWanderingBodies = false;
+	var withTropics = false;
 
 	var label = "Your position";
 
@@ -30,6 +33,12 @@ function WorldMap (cName, prj) {
 	};
 	this.setWithMoonLight = function(b) {
 		withMoonlight = b;
+	};
+	this.setWithWanderingBodies = function(b) {
+		withWanderingBodies = b;
+	};
+	this.setWithTropics = function(b) {
+	  withTropics = b;
 	};
 
 	this.setPositionLabel = function(str) {
@@ -342,6 +351,38 @@ function WorldMap (cName, prj) {
 		return lng;
 	};
 
+	var positionBody = function(context, userPos, color, name, decl, gha) {
+		context.save();
+		var lng = haToLongitude(gha);
+		var body = getPanelPoint(decl, lng);
+		var thisPointIsBehind = isBehind(toRadians(decl), toRadians(lng - globeViewLngOffset));
+		if (!thisPointIsBehind) {
+			// Draw Body
+			plot(context, body, color);
+			context.fillStyle = color;
+			context.fillText(name, Math.round(body.x) + 3, Math.round(body.y) - 3);
+			// Arrow, to the moon
+			context.setLineDash([2]);
+			context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+			context.beginPath();
+			context.moveTo(userPos.x, userPos.y);
+			context.lineTo(body.x, body.y);
+			context.stroke();
+			context.closePath();
+			context.setLineDash([0]); // Reset
+			context.strokeStyle = color;
+			var deltaX = body.x - userPos.x;
+			var deltaY = body.y - userPos.y;
+			context.beginPath();
+			context.moveTo(body.x, body.y);
+			context.lineTo(body.x + deltaX, body.y + deltaY);
+			context.stroke();
+			context.closePath();
+			fillCircle(context, { x: body.x + deltaX, y: body.y + deltaY}, 3, color);
+		}
+		context.restore();
+	};
+
 	var drawGlobe = function (canvas, context) {
 		var minX = Number.MAX_VALUE;
 		var maxX = -Number.MAX_VALUE;
@@ -492,6 +533,46 @@ function WorldMap (cName, prj) {
 				context.closePath();
 			}
 			context.restore();
+		}
+
+		if (withTropics) {
+			// Cancer
+			context.fillStyle = 'LightGray';
+			for (var lng = 0; lng<360; lng++) {
+				var p = getPanelPoint(tropicLat, lng);
+				var thisPointIsBehind = isBehind(toRadians(tropicLat), toRadians(lng - globeViewLngOffset));
+
+				if (isTransparentGlobe() || !thisPointIsBehind) {
+					context.fillRect(p.x, p.y, 1, 1);
+				}
+			}
+			// Capricorn
+			for (var lng = 0; lng<360; lng++) {
+				var p = getPanelPoint(-tropicLat, lng);
+				var thisPointIsBehind = isBehind(toRadians(-tropicLat), toRadians(lng - globeViewLngOffset));
+
+				if (isTransparentGlobe() || !thisPointIsBehind) {
+					context.fillRect(p.x, p.y, 1, 1);
+				}
+			}
+			// North Polar Circle
+			for (var lng = 0; lng<360; lng++) {
+				var p = getPanelPoint(90 - tropicLat, lng);
+				var thisPointIsBehind = isBehind(toRadians(90 - tropicLat), toRadians(lng - globeViewLngOffset));
+
+				if (isTransparentGlobe() || !thisPointIsBehind) {
+					context.fillRect(p.x, p.y, 1, 1);
+				}
+			}
+			// South Polar Circle
+			for (var lng = 0; lng<360; lng++) {
+				var p = getPanelPoint(tropicLat - 90, lng);
+				var thisPointIsBehind = isBehind(toRadians(tropicLat - 90), toRadians(lng - globeViewLngOffset));
+
+				if (isTransparentGlobe() || !thisPointIsBehind) {
+					context.fillRect(p.x, p.y, 1, 1);
+				}
+			}
 		}
 
 		// Chart
@@ -650,6 +731,63 @@ function WorldMap (cName, prj) {
 				}
 				context.restore();
 			}
+			if (astronomicalData.wanderingBodies !== undefined && withWanderingBodies) {
+			  // 1 - Ecliptic
+			  var aries = findInList(astronomicalData.wanderingBodies, "name", "aries");
+			  if (aries !== null) {
+			    drawEcliptic(canvas, context, aries.gha, astronomicalData.eclipticObliquity);
+			    positionBody(context, userPos, "LightGray", "Aries", 0, aries.gha);
+			    positionBody(context, userPos, "LightGray", "Anti-Aries", 0, aries.gha + 180);
+			  }
+			  // 2 - Other planets
+			  var venus = findInList(astronomicalData.wanderingBodies, "name", "venus");
+			  var mars = findInList(astronomicalData.wanderingBodies, "name", "mars");
+			  var jupiter = findInList(astronomicalData.wanderingBodies, "name", "jupiter");
+			  var saturn = findInList(astronomicalData.wanderingBodies, "name", "saturn");
+			  if (venus !== null) {
+			    positionBody(context, userPos, "orange", "Venus", venus.decl, venus.gha);
+			  }
+			  if (mars !== null) {
+			    positionBody(context, userPos, "red", "Mars", mars.decl, mars.gha);
+			  }
+			  if (jupiter !== null) {
+			    positionBody(context, userPos, "LightPink", "Jupiter", jupiter.decl, jupiter.gha);
+			  }
+			  if (saturn !== null) {
+			    positionBody(context, userPos, "LightYellow", "Saturn", saturn.decl, saturn.gha);
+			  }
+			}
+		}
+	};
+
+	var findInList = function(array, member, value) {
+		for (var idx=0; idx<array.length; idx++) {
+			if (array[idx][member] !== undefined && array[idx][member] === value) {
+				return array[idx];
+			}
+		}
+		return null;
+	};
+
+	var drawEcliptic = function(canvas, context, ariesGHA, obl) {
+		var longitude = (ariesGHA < 180) ? -ariesGHA : 360 - ariesGHA;
+		longitude += 90; // Extremum
+    while (longitude > 360) {
+      longitude -= 360;
+    }
+		var aries = { lat: toRadians(obl), lng: toRadians(longitude) };
+		var eclCenter = deadReckoning(aries, 90 * 60, 0); // "Center" of the Ecliptic
+
+		context.fillStyle = "white";
+		for (var hdg=0; hdg<360; hdg++) {
+			var pt = deadReckoning(eclCenter, 90 * 60, hdg);
+			var pp = getPanelPoint(toDegrees(pt.lat), toDegrees(pt.lng));
+
+			var thisPointIsBehind = isBehind(pt.lat, pt.lng - toRadians(globeViewLngOffset));
+
+			if (isTransparentGlobe() || !thisPointIsBehind) {
+				context.fillRect(pp.x, pp.y, 1, 1);
+			}
 		}
 	};
 
@@ -800,7 +938,7 @@ function WorldMap (cName, prj) {
 	};
 
 	this.drawWorldMap = function () {
-//var start = new Date().getTime();
+		//var start = new Date().getTime();
 
 		var canvas = document.getElementById(canvasName);
 		var context = canvas.getContext('2d');

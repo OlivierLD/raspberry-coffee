@@ -63,7 +63,7 @@ public class RESTImplementation {
 					"GET",
 					"/sun-moon-gp",
 					this::getSunMoonGP,
-					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optiopnal 'fromL' and 'fromnG'."),
+					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optional: 'fromL' and 'fromG', 'wandering' (true|[false])."),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
 					"POST",
 					"/sun-now",
@@ -348,6 +348,7 @@ public class RESTImplementation {
 	private Response getSunMoonGP(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		String atPrm = null;
+		boolean wandering = false; // Wandering bodies
 		Map<String, String> prms = request.getQueryStringParameters();
 		if (prms == null || prms.get("at") == null) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -368,6 +369,17 @@ public class RESTImplementation {
 									.errorMessage("Query parameters 'fromL' and 'fromG' must both be here, or missing. Just one of them does not work."));
 					return response;
 				}
+			}
+			if ("true".equals(prms.get("wandering"))) {
+				/*
+				 * Then will also get data for
+				 * - Aries (-> ecliptic)
+				 * - Venus
+				 * - Mars
+				 * - Jupiter
+				 * - Saturn
+				 */
+				wandering = true;
 			}
 
 			DURATION_FMT.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
@@ -443,6 +455,31 @@ public class RESTImplementation {
 					data = data.moonObs(new OBS()
 							.alt(sru.getHe())
 							.z(sru.getZ()));
+				}
+				// Wandering bodies
+				if (wandering) {
+					List<GP> wanderingBodies = new ArrayList<>();
+					wanderingBodies.add(new GP()
+							.name("aries")
+							.gha(AstroComputer.getAriesGHA()));
+					wanderingBodies.add(new GP()
+						.name("venus")
+						.decl(AstroComputer.getVenusDecl())
+						.gha(AstroComputer.getVenusGHA()));
+					wanderingBodies.add(new GP()
+							.name("mars")
+							.decl(AstroComputer.getMarsDecl())
+							.gha(AstroComputer.getMarsGHA()));
+					wanderingBodies.add(new GP()
+							.name("jupiter")
+							.decl(AstroComputer.getJupiterDecl())
+							.gha(AstroComputer.getJupiterGHA()));
+					wanderingBodies.add(new GP()
+							.name("saturn")
+							.decl(AstroComputer.getSaturnDecl())
+							.gha(AstroComputer.getSaturnGHA()));
+					data = data.wandering(wanderingBodies)
+							.meanObliquity(AstroComputer.getMeanObliquityOfEcliptic());
 				}
 
 				String content = new Gson().toJson(data);
@@ -935,8 +972,14 @@ public class RESTImplementation {
 	}
 
 	public static class GP {
+		String name;
 		double decl;
 		double gha;
+
+		public GP name(String body) {
+			this.name = body;
+			return this;
+		}
 
 		public GP decl(double d) {
 			this.decl = d;
@@ -1027,6 +1070,8 @@ public class RESTImplementation {
 		long epoch;
 		GP sun;
 		GP moon;
+		List<GP> wanderingBodies;
+		double eclipticObliquity; // Mean
 		Pos from;
 		OBS sunObs;
 		OBS moonObs;
@@ -1069,6 +1114,16 @@ public class RESTImplementation {
 
 		public SunMoonGP solar(FmtDate solar) {
 			this.solarDate = solar;
+			return this;
+		}
+
+		public SunMoonGP meanObliquity(double obl) {
+			this.eclipticObliquity = obl;
+			return this;
+		}
+
+		public SunMoonGP wandering(List<GP> bodies) {
+			this.wanderingBodies = bodies;
 			return this;
 		}
 	}

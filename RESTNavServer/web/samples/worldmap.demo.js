@@ -70,6 +70,8 @@ var getSunMoonGP = function(when) {
 	url += ("?at=" + when);
 	url += ("&fromL=" + position.lat);
 	url += ("&fromG=" + position.lng);
+	// Wandering bodies
+	url += ("&wandering=true");
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 

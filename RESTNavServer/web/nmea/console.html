@@ -63,7 +63,9 @@
     <script type="text/javascript" src="../js/conversion.utils.js"></script>
 		<script type="text/javascript" src="../js/console.js"></script>
     <script type="text/javascript">
-    
+
+  var lastKnownPosition;
+
   var getQSPrm = function(prm) {
     var value;
     var loc = document.location.toString();
@@ -177,7 +179,8 @@
       var canvas = "mapCanvas";
 	    worldMap.clear();
 	    worldMap.drawWorldMap();
-	    worldMap.setUserPosition({ latitude: val.lat, longitude: val.lng });
+	    lastKnownPosition = { latitude: val.lat, longitude: val.lng };
+	    worldMap.setUserPosition(lastKnownPosition);
     });
     events.subscribe('bsp', function(val) {
 //    displayBSP.animate(bsp);
@@ -194,7 +197,12 @@
       displayTime.setValue(val);
       // Require astronomical data for the map
 	    var date = new Date(val);
-	    getAstroData(date.format(DURATION_FMT), worldMap.setAstronomicalData);
+	    var mess = "Time is now " + new Date(date).format("Y-M-d H:i:s UTC");
+	    var dateField = document.getElementById("current-date");
+	    if (dateField !== undefined) {
+		    dateField.innerText = mess;
+	    }
+			getAstroData(lastKnownPosition, date.format(DURATION_FMT), onAstroData);
     });
     events.subscribe('hdg', function(val) {
 //    displayHDG.animate(val);
@@ -402,6 +410,57 @@
     });
   };
 
+  var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+
+  var onAstroData = function(data) {
+		var sunLHA = data.sun.gha + data.from.longitude;
+		while (sunLHA < 0) sunLHA +=360;
+		while (sunLHA > 360) sunLHA -= 360;
+		var moonLHA = data.moon.gha + data.from.longitude;
+		while (moonLHA < 0) moonLHA +=360;
+		while (moonLHA > 360) moonLHA -= 360;
+		document.getElementById("sun-moon-data").innerHTML =
+				'<table border="0"><tr><td>Sun D:</td><td align="right">' +
+				decToSex(data.sun.decl, "NS") +
+				'</td></tr><tr><td>Sun GHA:</td><td align="right">' +
+				decToSex(data.sun.gha) +
+				'</td><td>&nbsp;LHA:</td><td align="right">' +
+				decToSex(sunLHA) +
+				'</td></tr><tr><td>Sun Alt:</td><td align="right">' +
+				decToSex(data.sunObs.alt) +
+				'</td></tr><tr><td>Sun Z:</td><td align="right">' +
+				decToSex(data.sunObs.z) +
+
+				'</td></tr><tr><td>Moon D:</td><td align="right">' +
+				decToSex(data.moon.decl, "NS") +
+				'</td></tr><tr><td>Moon GHA:</td><td align="right">' +
+				decToSex(data.moon.gha) +
+				'</td><td>&nbsp;LHA:</td><td align="right">' +
+				decToSex(moonLHA) +
+				'</td></tr><tr><td>Moon Alt:</td><td align="right">' +
+				decToSex(data.moonObs.alt) +
+				'</td></tr><tr><td>Moon Z:</td><td align="right">' +
+				decToSex(data.moonObs.z) +
+				'</td></tr></table>';
+
+		document.getElementById("solar-date").innerHTML =
+				data.solarDate.year + ' ' +
+				months[data.solarDate.month - 1] + ' ' +
+				(data.solarDate.day < 10 ? '0' : '') + data.solarDate.day + ' ' +
+				(data.solarDate.hour < 10 ? '0' : '') + data.solarDate.hour + ':' +
+				(data.solarDate.min < 10 ? '0' : '') + data.solarDate.min + ':' +
+				(data.solarDate.sec < 10 ? '0' : '') + data.solarDate.sec;
+
+		document.getElementById("sun-meridian").innerHTML =
+				(data.tPass.hour < 10 ? '0' : '') + data.tPass.hour + ':' +
+				(data.tPass.min < 10 ? '0' : '') + data.tPass.min + ':' +
+				(data.tPass.sec < 10 ? '0' : '') + data.tPass.sec + ' ' +
+				data.tPass.tz;
+
+		worldMap.setAstronomicalData(data);
+	};
+
   var getRadioButtonValue = function(rbName) {
   	var elmts = document.getElementsByName(rbName);
   	var value;
@@ -572,6 +631,12 @@
   };
   var changeMoonlight = function(cb) {
 	  worldMap.setWithMoonLight(cb.checked);
+  };
+  var changeWanderingBodies = function(cb) {
+    worldMap.setWithWanderingBodies(cb.checked);
+  };
+  var changeTropics = function(cb) {
+    worldMap.setWithTropics(cb.checked);
   };
 
 		</script>
@@ -773,15 +838,17 @@
       </p>
     </div>
     <div id="map" style="display: none; height: 450px; width: 850px;">
-			<table>
+			<table border="1">
 				<tr>
-					<td valign="top">
+					<td valign="top" rowspan="4">
 						<p align="center">
 							<canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
 						</p>
 					</td>
 					<td valign="top">
-						<input type="checkbox" onchange="changeGrid(this);" checked/> With Grid
+						<div id="current-date"> --- </div>
+						<input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
+						<input type="checkbox" onchange="changeTropics(this);" /> With Tropics
 						<br/>
 						<input type="checkbox" onchange="changeSun(this);" checked/> With Sun
 						<br/>
@@ -790,8 +857,31 @@
 						<input type="checkbox" onchange="changeSunlight(this);" /> With Sun light
 						<br/>
 						<input type="checkbox" onchange="changeMoonlight(this);" /> With Moon light
+						<br />
+						<input type="checkbox" onchange="changeWanderingBodies(this);" /> With Wandering Bodies
+	        </td>
+	      </tr>
+				<tr>
+					<td valign="bottom">
+						<i>Sun Transit Time (at your location)</i>
+						<br />
+						<div id="sun-meridian"></div>
 					</td>
 				</tr>
+				<tr>
+					<td valign="bottom">
+						<i>Solar Date</i>
+						<br />
+						<div id="solar-date"></div>
+					</td>
+				</tr>
+		    <tr>
+			    <td valign="bottom">
+				    <i>Sun and Moon</i>
+				    <br />
+				    <div id="sun-moon-data"></div>
+			    </td>
+		    </tr>
 			</table>
     </div>
     <div id="twd-evolution" style="display: none;">
