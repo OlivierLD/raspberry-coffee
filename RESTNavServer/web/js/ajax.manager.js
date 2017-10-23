@@ -82,7 +82,9 @@ var onMessage = function (json) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "log (" + err + ")");
 		}
 		try {
-			var gpsDate = json["GPS Date & Time"].date;
+			var gdt = json["GPS Date & Time"];
+			var gpsDate = new Date(gdt.fmtDate.year, gdt.fmtDate.month - 1, gdt.fmtDate.day, gdt.fmtDate.hour, gdt.fmtDate.min, gdt.fmtDate.sec, 0);
+			// UTC dates
 			events.publish('gps-time', gpsDate);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");

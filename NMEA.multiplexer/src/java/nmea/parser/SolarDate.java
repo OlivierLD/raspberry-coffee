@@ -10,7 +10,10 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class SolarDate implements Serializable {
+
 	private Date date = null;
+	private FmtDate fmtDate = null;
+
 	private static SimpleDateFormat FMT = new SimpleDateFormat("EEE, yyyy MMM dd HH:mm:ss");
 
 	static {
@@ -22,6 +25,12 @@ public class SolarDate implements Serializable {
 
 	public SolarDate(Date date) {
 		this.date = date;
+
+		String[] sol = FmtDate.SDF_ARRAY.format(date).split(";");
+		this.fmtDate = new FmtDate()
+				.hour(Integer.parseInt(sol[3]))
+				.min(Integer.parseInt(sol[4]))
+				.sec(Integer.parseInt(sol[5]));
 	}
 
 	public Date getValue() {

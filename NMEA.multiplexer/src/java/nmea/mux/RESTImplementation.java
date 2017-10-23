@@ -1935,12 +1935,13 @@ public class RESTImplementation {
 			synchronized (cache) {
 				NMEAUtils.calculateVMGs(cache);
 				jsonElement = new Gson().toJsonTree(cache);
+				String str = new Gson().toJson(cache);
 				((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client.
 			}
 		} catch (Exception ex) {
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
 		}
-		String content = jsonElement != null ? jsonElement.toString() : "";
+		String content = jsonElement != null ? jsonElement.toString() : ""; // was toString()
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 

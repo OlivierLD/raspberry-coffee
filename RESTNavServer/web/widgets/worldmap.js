@@ -739,7 +739,7 @@ function WorldMap (cName, prj) {
 			  if (aries !== null) {
 			    drawEcliptic(canvas, context, aries.gha, astronomicalData.eclipticObliquity);
 			    positionBody(context, userPos, "LightGray", "Aries", 0, aries.gha);
-			    positionBody(context, userPos, "LightGray", "Anti-Aries", 0, aries.gha + 180);
+			    positionBody(context, userPos, "LightGray", "Anti-Aries", 0, aries.gha + 180); // Libra?
 			  }
 			  // 2 - Other planets
 			  var venus = findInList(astronomicalData.wanderingBodies, "name", "venus");
