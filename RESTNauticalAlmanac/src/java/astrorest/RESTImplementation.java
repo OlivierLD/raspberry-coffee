@@ -401,6 +401,7 @@ public class RESTImplementation {
 
 				SunMoonGP data = new SunMoonGP()
 						.epoch(date.getTimeInMillis())
+						.deltaT(AstroComputer.getDeltaT())
 						.sun(new GP().gha(AstroComputer.getSunGHA())
 								.decl(AstroComputer.getSunDecl()))
 						.moon(new GP().gha(AstroComputer.getMoonGHA())
@@ -1068,6 +1069,7 @@ public class RESTImplementation {
 
 	public static class SunMoonGP {
 		long epoch;
+		double deltaT;
 		GP sun;
 		GP moon;
 		List<GP> wanderingBodies;
@@ -1081,6 +1083,10 @@ public class RESTImplementation {
 
 		public SunMoonGP epoch(long epoch) {
 			this.epoch = epoch;
+			return this;
+		}
+		public SunMoonGP deltaT(double deltaT) {
+			this.deltaT = deltaT;
 			return this;
 		}
 		public SunMoonGP sun(GP sun) {

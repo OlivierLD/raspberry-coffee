@@ -9,6 +9,7 @@ ASTRO_VERBOSE=false
 #
 CP=./build/libs/RESTNavServer-1.0-all.jar
 JAVA_OPTS=
+JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.8033" # 01-June-2017
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=$TIDE_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=$ASTRO_VERBOSE"

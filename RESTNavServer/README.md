@@ -76,11 +76,15 @@ Current evaluation, 1  minute, 10 minutes, much more accurate!
 
 ![The 3D Map](./docimg/screenshot.04.png)
 
+![The 3D Map](./docimg/screenshot.06.png)
+
 Actual position, in real time. With sunlight and moonlight options.
 
 ---
 
 ![Map Demo](./docimg/screenshot.05.png)
+
+![Map Demo](./docimg/screenshot.07.png)
 
 The 3D map - beside being an interesting trigonometric exercise - is pinging the REST Astro Service
 to get the real time coordinates of the Sun and the Moon, to display them on the globe.

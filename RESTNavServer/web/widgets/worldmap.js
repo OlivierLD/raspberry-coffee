@@ -17,6 +17,8 @@ function WorldMap (cName, prj) {
 	var withWanderingBodies = false;
 	var withTropics = false;
 
+	var deltaT;
+
 	var label = "Your position";
 
 	this.setWithGrid = function(b) {
@@ -971,6 +973,13 @@ function WorldMap (cName, prj) {
 			context.font = "bold 16px Arial"; // "bold 40px Arial"
 			context.fillText(strLat, 10, 18);
 			context.fillText(strLng, 10, 38);
+		}
+
+		if (astronomicalData !== undefined && astronomicalData.deltaT !== undefined) {
+			context.fillStyle = "cyan";
+			context.font = "12px Arial"; // "bold 40px Arial"
+			var deltaT = "\u0394T=" + astronomicalData.deltaT + " s";
+			context.fillText(deltaT, 10, canvas.height - 5);
 		}
 
 //var end = new Date().getTime();
