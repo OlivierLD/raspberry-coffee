@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class CameraManager {
 	private final static boolean verbose = true;
-	private final static String SNAPSHOT_COMMAND_1 = "raspistill -rot 180 --width 200 --height 150 --timeout 1 --output snap%s.jpg --nopreview";
+	private final static String SNAPSHOT_COMMAND_1 = "raspistill -rot 180 --width 200 --height 150 --timeout 1 --output %s/snap%s.jpg --nopreview";
 
 	// For a webcam
 	// Requires sudo apt-get install fswebcam
@@ -20,7 +20,7 @@ public class CameraManager {
 
 		try {
 			long before = System.currentTimeMillis();
-			String command = String.format(SNAPSHOT_COMMAND_1, name);
+			String command = String.format(SNAPSHOT_COMMAND_1, "web", name);
 			Process snap = rt.exec(command);
 			snap.waitFor(); // Sync
 			long after = System.currentTimeMillis();
