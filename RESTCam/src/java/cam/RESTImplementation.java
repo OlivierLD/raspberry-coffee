@@ -68,6 +68,9 @@ public class RESTImplementation {
 
 			try {
 				this.servoBoard.setPWMFreq(freq); // Set frequency in Hz
+				// Set servos to Zero.
+				setAngle(servoHeading, 0f);
+				setAngle(servoTilt, 0f);
 			} catch (NullPointerException npe) {
 				foundPCA9685 = false;
 				System.err.println("+------------------------------------------------------------");
