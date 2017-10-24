@@ -32,6 +32,10 @@ dependencies {
   compile project(':GPS.read')
   compile project(':RMI.sample')
   compile project(':NMEA.multiplexer')
+  compile project(':RESTCam')
+  compile project(':RESTNavServer')
+  compile project(':RESTTideEngine')
+  compile project(':RESTNauticalAlmanac')
   compile project(':JavaSoundDemo')
 }
 
