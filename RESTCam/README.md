@@ -2,6 +2,6 @@
 
 For remote access
 
-TODO: Add camera orientation (2 servos)
+Camera can be oriented with a PCA9685 connected on a [pan-tilt](https://www.adafruit.com/product/1967) module.
 
 ---
