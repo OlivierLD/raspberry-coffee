@@ -10,12 +10,7 @@ public class CamRequestManager implements RESTRequestManager {
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private RESTImplementation restImplementation;
 
-
-	// See http://maia.usno.navy.mil/ser7/deltat.data
-	private double deltaT = Double.parseDouble(System.getProperty("deltaT", Double.toString(68.8033))); // June 2017
-
 	public CamRequestManager() {
-		System.out.println(String.format("Using Delta-T:%f", deltaT));
 		restImplementation = new RESTImplementation(this);
 	}
 

@@ -7,6 +7,8 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import implementation.cam.CameraManager;
+
 import java.util.*;
 
 /**
@@ -50,7 +52,7 @@ public class RESTImplementation {
 					"POST",
 					"/cam/snap",
 					this::takeSnap,
-					"TAkes a snapshot.")
+					"Takes a snapshot.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -98,7 +100,9 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		Map<String, String> prms = request.getQueryStringParameters();
 
-		String content = ""; // new Gson().toJson(data);
+		CameraManager.snap("-pouet");
+
+		String content = "Ok"; // new Gson().toJson(data);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 

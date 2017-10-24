@@ -10,7 +10,7 @@ public class CamServer {
 	private CamRequestManager requestManager;
 
 	public CamServer() {
-		String port = System.getProperty("http.port");
+		String port = System.getProperty("http.port", "9999");
 		if (port != null) {
 			try {
 				httpPort = Integer.parseInt(port);
@@ -18,7 +18,7 @@ public class CamServer {
 				System.err.println(nfe.toString());
 			}
 		}
-		System.out.println(String.format("Running on port %d", port));
+		System.out.println(String.format("Running on port %d", httpPort));
 		requestManager = new CamRequestManager();
 		this.httpServer = startHttpServer(httpPort);
 	}
