@@ -102,7 +102,7 @@ public class RESTImplementation {
 
 		CameraManager.snap("-pouet");
 
-		String content = "Ok"; // new Gson().toJson(data);
+		String content = "{ 'status': 'Ok' }"; // new Gson().toJson(data);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
