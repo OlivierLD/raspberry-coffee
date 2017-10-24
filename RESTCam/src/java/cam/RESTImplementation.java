@@ -93,14 +93,57 @@ public class RESTImplementation {
 
 	/**
 	 * Take a snap
-	 * @param request
+	 * @param request QS prms: 'rot', 'height', 'width', 'name'
 	 * @return
 	 */
 	private Response takeSnap(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		Map<String, String> prms = request.getQueryStringParameters();
-
-		CameraManager.snap("-pouet");
+		// rot, width, height, name.
+		int rot = 180;
+		int width = 640;
+		int height = 480;
+		String name = "-snap";
+		if (prms.get("rot") != null) {
+			try {
+				rot = Integer.parseInt(prms.get("rot"));
+			} catch (NumberFormatException nfe) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SNAP-0001")
+								.errorMessage(String.format("Bad 'rot' parameter [%s], must be an integer", prms.get("rot"))));
+				return response;
+			}
+		}
+		if (prms.get("width") != null) {
+			try {
+				width = Integer.parseInt(prms.get("width"));
+			} catch (NumberFormatException nfe) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SNAP-0002")
+								.errorMessage(String.format("Bad 'width' parameter [%s], must be an integer", prms.get("width"))));
+				return response;
+			}
+		}
+		if (prms.get("height") != null) {
+			try {
+				height = Integer.parseInt(prms.get("height"));
+			} catch (NumberFormatException nfe) {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("SNAP-0003")
+								.errorMessage(String.format("Bad 'height' parameter [%s], must be an integer", prms.get("height"))));
+				return response;
+			}
+		}
+		if (prms.get("name") != null) {
+			name = prms.get("name");
+		}
+		CameraManager.snap(name, rot, width, height);
 
 		String content = "{ \"status\": \"Ok\" }"; // new Gson().toJson(data);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
