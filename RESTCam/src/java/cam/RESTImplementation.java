@@ -12,10 +12,8 @@ import i2c.servo.pwm.PCA9685;
 import implementation.cam.CameraManager;
 
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -36,6 +34,8 @@ public class RESTImplementation {
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
 	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
+
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
 
 	private int servoMin = DEFAULT_SERVO_MIN;
 	private int servoMax = DEFAULT_SERVO_MAX;
@@ -172,7 +172,7 @@ public class RESTImplementation {
 		int rot = 180;
 		int width = 640;
 		int height = 480;
-		String name = "-snap";
+		String name = "";
 		if (prms != null && prms.get("rot") != null) {
 			try {
 				rot = Integer.parseInt(prms.get("rot"));
@@ -213,6 +213,9 @@ public class RESTImplementation {
 			name = prms.get("name");
 		}
 		String snapshotName = "";
+		if (name.isEmpty()) {
+			name = SDF.format(new Date());
+		}
 		try {
 			snapshotName = CameraManager.snap(name, rot, width, height);
 		} catch (Exception ex) {
