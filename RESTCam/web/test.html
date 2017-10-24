@@ -19,13 +19,20 @@
 			data.tilt += 1;
 			setTiltCam(data, display);
 		};
+		var moveDown = function(data) {
+			console.log(data);
+			// Increment position, and send to server.
+			data.tilt -= 1;
+			setTiltCam(data, display);
+		};
 		var up = function() {
 			var cb = moveUp;
 			getCamPos(cb);
 		};
 
 		var down = function() {
-
+			var cb = moveDown;
+			getCamPos(cb);
 		};
 
 		var left = function() {
