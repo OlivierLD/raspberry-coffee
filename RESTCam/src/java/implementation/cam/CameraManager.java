@@ -5,6 +5,7 @@ import java.io.IOException;
 
 public class CameraManager {
 	private final static boolean verbose = "true".equals(System.getProperty("cam.verbose", "false"));
+
 	private final static String SNAPSHOT_COMMAND_1 = "raspistill -rot %d --width %d --height %d --timeout 1 --output %s/snap%s.jpg --nopreview";
 
 	// For a webcam
@@ -12,7 +13,7 @@ public class CameraManager {
 	// See http://www.raspberrypi.org/documentation/usage/webcams/ for some doc.
 	private final static String SNAPSHOT_COMMAND_2 = "fswebcam snap%s.jpg";
 
-	// Slow motion:
+	// Stop motion:
 	private final static String SNAPSHOT_COMMAND_3 = "raspivid -w 640 -h 480 -fps 90 -t 30000 -o vid.h264";
 
 	public static void snap(String name, int rot, int width, int height) {

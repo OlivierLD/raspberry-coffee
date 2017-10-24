@@ -3,4 +3,7 @@ echo Running Cam Server
 #
 CP=./build/libs/RESTCam-1.0-all.jar
 #
-java -cp $CP cam.CamServer
+JAVA_OPTIONS=
+JAVA_OPTIONS="$JAVA_OPTIONS -Dcam.verbose=true"
+#
+java -cp $CP $JAVA_OPTIONS cam.CamServer

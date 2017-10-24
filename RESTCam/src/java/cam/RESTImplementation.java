@@ -72,7 +72,7 @@ public class RESTImplementation {
 				.findFirst();
 		if (opOp.isPresent()) {
 			Operation op = opOp.get();
-			request.setRequestPattern(op.getPath()); // To get the prms later on.
+			request.setRequestPattern(op.getPath());        // To get the prms later on.
 			Response processed = op.getFn().apply(request); // Execute here.
 			return processed;
 		} else {
@@ -104,7 +104,7 @@ public class RESTImplementation {
 		int width = 640;
 		int height = 480;
 		String name = "-snap";
-		if (prms.get("rot") != null) {
+		if (prms != null && prms.get("rot") != null) {
 			try {
 				rot = Integer.parseInt(prms.get("rot"));
 			} catch (NumberFormatException nfe) {
@@ -116,7 +116,7 @@ public class RESTImplementation {
 				return response;
 			}
 		}
-		if (prms.get("width") != null) {
+		if (prms != null && prms.get("width") != null) {
 			try {
 				width = Integer.parseInt(prms.get("width"));
 			} catch (NumberFormatException nfe) {
@@ -128,7 +128,7 @@ public class RESTImplementation {
 				return response;
 			}
 		}
-		if (prms.get("height") != null) {
+		if (prms != null && prms.get("height") != null) {
 			try {
 				height = Integer.parseInt(prms.get("height"));
 			} catch (NumberFormatException nfe) {
@@ -140,7 +140,7 @@ public class RESTImplementation {
 				return response;
 			}
 		}
-		if (prms.get("name") != null) {
+		if (prms != null && prms.get("name") != null) {
 			name = prms.get("name");
 		}
 		CameraManager.snap(name, rot, width, height);
