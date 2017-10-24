@@ -13,6 +13,29 @@
 			document.getElementById("snap").src = data.snapUrl;
 		};
 
+		var moveUp = function(data) {
+			console.log(data);
+			// Increment position, and send to server.
+			data.tilt += 1;
+			setTiltCam(data, display);
+		};
+		var up = function() {
+			var cb = moveUp;
+			getCamPos(cb);
+		};
+
+		var down = function() {
+
+		};
+
+		var left = function() {
+
+		};
+
+		var right = function() {
+
+		};
+
 	</script>
 </head>
 <body>
@@ -20,13 +43,13 @@
 	<p align="center">
 		<img id="snap" src="snap.jpg"/>
 		<table style="margin: auto;">
-			<tr><td colspan="3" align="center"><button>^</button></td></tr>
+			<tr><td colspan="3" align="center"><button onclick="up();">^</button></td></tr>
 			<tr>
-				<td align="center"><button><</button></td>
+				<td align="center"><button onclick="left();"><</button></td>
 				<td align="center"><button onclick="takeSnap('clack', display);">?</button></td>
-				<td align="center"><button>></button></td>
+				<td align="center"><button onclick="right();">></button></td>
 			</tr>
-			<tr><td colspan="3" align="center"><button>v</button></td></tr>
+			<tr><td colspan="3" align="center"><button onclick="down();">v</button></td></tr>
 		</table>
 	</p>
 	<hr/>

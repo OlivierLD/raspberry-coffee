@@ -83,3 +83,60 @@ var takeSnap = function(name, callback) {
 		displayErr("Failed to Take snapshot..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
+
+var camPostition = function() {
+	var url = "/cam/position";
+	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
+var getCamPos = function(callback) {
+	var getData = camPostition();
+	getData.done(function(value) {
+		var json = JSON.parse(value);
+		if (callback !== undefined) {
+			callback(json);
+		} else {
+			console.log(JSON.stringify(json, null, 2));
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		displayErr("Failed to get cam position..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+var setCamTiltPostition = function(data) {
+	var url = "/cam/tilt";
+	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
+};
+
+var setTiltCam = function(data, callback) {
+	var getData = setCamTiltPostition(data);
+	getData.done(function(value) {
+		var json = JSON.parse(value);
+		if (callback !== undefined) {
+			callback(json);
+		} else {
+			console.log(JSON.stringify(json, null, 2));
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		displayErr("Failed to set cam position..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
