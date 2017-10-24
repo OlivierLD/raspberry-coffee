@@ -16,6 +16,9 @@ public class CameraManager {
 	// Stop motion:
 	private final static String SNAPSHOT_COMMAND_3 = "raspivid -w 640 -h 480 -fps 90 -t 30000 -o vid.h264";
 
+	private static int tilt = 0, heading = 0;
+
+
 	public static String snap(String name, int rot, int width, int height)
 			throws Exception {
 		Runtime rt = Runtime.getRuntime();
@@ -35,6 +38,20 @@ public class CameraManager {
 			throw ioe;
 		}
 		return snapshotName;
+	}
+
+	public static int getTilt() {
+		return tilt;
+	}
+	public static int getHeading() {
+		return heading;
+	}
+
+	public static void setTilt(int t) {
+		tilt = t;
+	}
+	public static void setHeading(int h) {
+		heading = h;
 	}
 
 	public static void main(String... args) {

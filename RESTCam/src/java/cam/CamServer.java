@@ -31,7 +31,13 @@ public class CamServer {
 	public HTTPServer startHttpServer(int port) {
 		HTTPServer newHttpServer = null;
 		try {
-			newHttpServer = new HTTPServer(port, requestManager);
+			newHttpServer = new HTTPServer(port, requestManager) {
+				public void onExit() {
+					// Reset the servos to zero before closing.
+					System.out.println("Reseting servos before shutting down.");
+					requestManager.stopServos();
+				}
+			};
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

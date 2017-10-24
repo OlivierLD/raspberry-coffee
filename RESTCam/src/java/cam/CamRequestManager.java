@@ -37,4 +37,9 @@ public class CamRequestManager implements RESTRequestManager {
 	public List<HTTPServer.Operation> getRESTOperationList() {
 		return restImplementation.getOperations();
 	}
+
+	public void stopServos() {
+		restImplementation.stopHeadingServo();
+		restImplementation.stopTiltServo();
+	}
 }

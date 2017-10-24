@@ -578,6 +578,7 @@ public class HTTPServer {
 		// Intercept Ctrl+C
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println(" <- HTTP: Ctrl+C intercepted.");
+			onExit();
 			// Send /exit
 			try {
 				String returned = HTTPClient.getContent(String.format("http://localhost:%d/exit", port));
@@ -668,6 +669,14 @@ public class HTTPServer {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * For possible override.
+	 * Called before shutting down.
+	 */
+	public void onExit() {
+
 	}
 
 	private static Thread waiter = null;
