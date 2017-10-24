@@ -225,7 +225,8 @@ public class RESTImplementation {
 		}
 		SnapPayload payload = new SnapPayload()
 				.status("Ok")
-				.snapUrl(snapshotName);
+				.fullPath(snapshotName)
+				.snapUrl(String.format("%s.jpg", name));
 
 		String content = new Gson().toJson(payload);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
@@ -409,6 +410,7 @@ public class RESTImplementation {
 	public static class SnapPayload {
 		String status;
 		String snapUrl;
+		String fullPath;
 
 		public SnapPayload status(String status) {
 			this.status = status;
@@ -416,6 +418,10 @@ public class RESTImplementation {
 		}
 		public SnapPayload snapUrl(String snapUrl) {
 			this.snapUrl = snapUrl;
+			return this;
+		}
+		public SnapPayload fullPath(String fullPath) {
+			this.fullPath = fullPath;
 			return this;
 		}
 	}
