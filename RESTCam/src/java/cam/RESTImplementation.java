@@ -143,14 +143,39 @@ public class RESTImplementation {
 		if (prms != null && prms.get("name") != null) {
 			name = prms.get("name");
 		}
-		CameraManager.snap(name, rot, width, height);
+		String snapshotName = "";
+		try {
+			snapshotName = CameraManager.snap(name, rot, width, height);
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("SNAP-0004")
+							.errorMessage(ex.toString()));
+			return response;
+		}
+		SnapPayload payload = new SnapPayload()
+				.status("Ok")
+				.snapUrl(snapshotName);
 
-		String content = "{ \"status\": \"Ok\" }"; // new Gson().toJson(data);
+		String content = new Gson().toJson(payload);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
 		return response;
 	}
 
+	public static class SnapPayload {
+		String status;
+		String snapUrl;
 
+		public SnapPayload status(String status) {
+			this.status = status;
+			return this;
+		}
+		public SnapPayload snapUrl(String snapUrl) {
+			this.snapUrl = snapUrl;
+			return this;
+		}
+	}
 }
