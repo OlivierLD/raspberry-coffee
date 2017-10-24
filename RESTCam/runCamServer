@@ -3,7 +3,28 @@ echo Running Cam Server
 #
 CP=./build/libs/RESTCam-1.0-all.jar
 #
+HTTP_PORT=9999
+#
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dcam.verbose=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dservo.heading=14"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dservo.tilt=15"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.port=$HTTP_PORT"
+#
+HOST=`hostname`
+DOMAIN=`domainname`
+if [ "$DOMAIN" != "" ]
+then
+	HOST=$HOST.$DOMAIN
+fi
+URL=http://${HOST}:${HTTP_PORT}/web/test.html
+#
+IP_ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
+if [ "$IP_ADDR" != "" ]
+then
+	echo Server IP is $IP_ADDR
+fi
+#
+echo "Try opening $URL in a browser"
 #
 java -cp $CP $JAVA_OPTIONS cam.CamServer
