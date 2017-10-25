@@ -26,7 +26,7 @@ public class CamServer {
 	public static void main(String... args) {
 		new CamServer();
 	}
-	
+
 	public HTTPServer startHttpServer(int port) {
 		HTTPServer newHttpServer = null;
 		try {
