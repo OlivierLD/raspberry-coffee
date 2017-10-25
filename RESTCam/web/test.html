@@ -47,6 +47,21 @@
 			displayMess("Tilt is now " + data.tilt);
 			setTiltCam(data, display);
 		};
+		var moveLeft = function(data) {
+			console.log(data);
+			// Decrement position, and send to server.
+			data.heading -= 1;
+			displayMess("Heading is now " + data.heading);
+			setHeadingCam(data, display);
+		};
+		var moveRight = function(data) {
+			console.log(data);
+			// Increment position, and send to server.
+			data.heading += 1;
+			displayMess("Heading is now " + data.heading);
+			setHeadingCam(data, display);
+		};
+
 		var up = function() {
 			var cb = moveUp;
 			getCamPos(cb);
@@ -58,11 +73,13 @@
 		};
 
 		var left = function() {
-
+			var cb = moveLeft;
+			getCamPos(cb);
 		};
 
 		var right = function() {
-
+			var cb = moveRight;
+			getCamPos(cb);
 		};
 
 	</script>

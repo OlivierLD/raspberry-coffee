@@ -140,7 +140,35 @@ var setTiltCam = function(data, callback) {
 				message = errmess;
 			}
 		}
-		displayErr("Failed to set cam position..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		displayErr("Failed to set cam position (tilt)..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+var setCamHeadingPostition = function(data) {
+	var url = "/cam/heading";
+	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, data, false);
+};
+
+var setHeadingCam = function(data, callback) {
+	var getData = setCamHeadingPostition(data);
+	getData.done(function(value) {
+		var json = JSON.parse(value);
+		if (callback !== undefined) {
+			callback(json);
+		} else {
+			console.log(JSON.stringify(json, null, 2));
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		displayErr("Failed to set cam position (heading)..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
 
