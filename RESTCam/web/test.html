@@ -24,19 +24,26 @@
 
 		var display = function(data) {
 			console.log(data);
+			displayMess("New picture available " + data.snapUrl);
 			document.getElementById("snap").src = data.snapUrl;
+		};
+
+		var displayMess = function(mess) {
+			document.getElementById("mess-zone").innerText = mess;
 		};
 
 		var moveUp = function(data) {
 			console.log(data);
 			// Increment position, and send to server.
 			data.tilt += 1;
+			displayMess("Tilt is now " + data.tilt);
 			setTiltCam(data, display);
 		};
 		var moveDown = function(data) {
 			console.log(data);
 			// Decrement position, and send to server.
 			data.tilt -= 1;
+			displayMess("Tilt is now " + data.tilt);
 			setTiltCam(data, display);
 		};
 		var up = function() {
@@ -69,12 +76,13 @@
 			<tr><td colspan="3" align="center"><button onclick="up();">&#x25B2;</button></td></tr>
 			<tr>
 				<td align="center"><button onclick="left();">&#x25C0;</button></td>
-				<!-- put 'clack' as first prm of takeSnap -->
+				<!-- put 'clack' (no .jpg extension) as first prm of takeSnap, leave it blank for auto-generated name -->
 				<td align="center"><button onclick="takeSnap('', display);"><img src="snap.png" width="28" height="25"/></button></td>
 				<td align="center"><button onclick="right();">&#x25B6;</button></td>
 			</tr>
 			<tr><td colspan="3" align="center"><button onclick="down();">&#x25BC;</button></td></tr>
 		</table>
+		<div id="mess-zone" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; width: 98%; height: 100px; overflow-y: scroll;" />
 	</p>
 	<hr/>
 	<address>Oliv Soft</address>
