@@ -9,6 +9,7 @@
 	<script src="js/restcam.js"></script>
 	<!--
 	 	Arrow Symbols
+	 	-------------
 	 	&#x25B2; ▲
 		&#x25B4; ▴
 		&#x25B6; ▶
@@ -24,7 +25,7 @@
 
 		var display = function(data) {
 			console.log(data);
-			displayMess("New picture available " + data.snapUrl);
+			displayMess("New picture available [" + data.snapUrl + "]");
 			document.getElementById("snap").src = data.snapUrl;
 		};
 

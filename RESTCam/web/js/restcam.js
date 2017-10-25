@@ -3,7 +3,11 @@
 var DEFAULT_TIMEOUT = 60000;
 
 var displayErr = function(mess) {
-	console.log(mess);
+	if (displayMess !== undefined) {
+		displayMess(mess);
+	} else {
+		console.log(mess);
+	}
 };
 
 var getDeferred = function(

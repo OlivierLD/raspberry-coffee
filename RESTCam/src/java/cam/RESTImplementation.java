@@ -28,6 +28,8 @@ import java.util.*;
  */
 public class RESTImplementation {
 
+	private final static boolean verbose = "true".equals(System.getProperty("cam.verbose", "false"));
+
 	private CamRequestManager camRequestManager;
 
 	private static boolean foundPCA9685 = true;
@@ -280,6 +282,9 @@ public class RESTImplementation {
 	private Response setCameraTilt(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		if (!foundPCA9685) {
+			if (verbose) {
+				System.out.println("No PCA9685 was found");
+			}
 			response = HTTPServer.buildErrorResponse(response,
 					Response.NOT_FOUND,
 					new HTTPServer.ErrorPayload()
@@ -346,6 +351,9 @@ public class RESTImplementation {
 	private Response setCameraHeading(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		if (!foundPCA9685) {
+			if (verbose) {
+				System.out.println("No PCA9685 was found");
+			}
 			response = HTTPServer.buildErrorResponse(response,
 					Response.NOT_FOUND,
 					new HTTPServer.ErrorPayload()
