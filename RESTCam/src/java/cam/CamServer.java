@@ -26,16 +26,20 @@ public class CamServer {
 	public static void main(String... args) {
 		new CamServer();
 	}
-
-
+	
 	public HTTPServer startHttpServer(int port) {
 		HTTPServer newHttpServer = null;
 		try {
 			newHttpServer = new HTTPServer(port, requestManager) {
 				public void onExit() {
 					// Reset the servos to zero before closing.
-					System.out.println("Reseting servos before shutting down.");
+					System.out.println(">> Reseting servos before shutting down.");
 					requestManager.stopServos();
+					try {
+						Thread.sleep(2_000);
+					} catch (InterruptedException ie) {
+						ie.printStackTrace();
+					}
 				}
 			};
 		} catch (Exception e) {
