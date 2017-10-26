@@ -22,7 +22,9 @@
 		&#x25C4; ◄
 	 +-->
 	<script>
-
+		/*
+		 * Display the image that has been taken.
+		 */
 		var display = function(data) {
 			console.log(data);
 			displayMess("New picture available [" + data.snapUrl + "]");
@@ -38,28 +40,28 @@
 			// Increment position, and send to server.
 			data.tilt += 1;
 			displayMess("Tilt is now " + data.tilt);
-			setTiltCam(data, display);
+			setTiltCam(data, displayMess);
 		};
 		var moveDown = function(data) {
 			console.log(data);
 			// Decrement position, and send to server.
 			data.tilt -= 1;
 			displayMess("Tilt is now " + data.tilt);
-			setTiltCam(data, display);
+			setTiltCam(data, displayMess);
 		};
 		var moveLeft = function(data) {
 			console.log(data);
 			// Decrement position, and send to server.
 			data.heading -= 1;
 			displayMess("Heading is now " + data.heading);
-			setHeadingCam(data, display);
+			setHeadingCam(data, displayMess);
 		};
 		var moveRight = function(data) {
 			console.log(data);
 			// Increment position, and send to server.
 			data.heading += 1;
 			displayMess("Heading is now " + data.heading);
-			setHeadingCam(data, display);
+			setHeadingCam(data, displayMess);
 		};
 
 		var up = function() {
