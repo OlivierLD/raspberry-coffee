@@ -27,7 +27,7 @@
 ### The battery monitoring trinket
 How to build and connect:
 
-![The hardware](./BatteryMonitor.png "The Hardware")
+![The hardware](./BatteryMonitor.png)
 
 #### NMEA?
 NMEA stands for **N**ational **M**arine **E**lectronics **A**ssociation (National means American, US). It is one of the oldest IT standards.
@@ -67,7 +67,7 @@ All you need to add to the diagram above is a network connection.
  ./email.battery -verbose -send:google -sendto:me@home.net,you@yourplace.biz -loop:6h
 ```
 You will receive an email, in this case every 6 hours, containing the expected battery tension.
-![Email](./email.png "Email")
+![Email](./email.png)
 
 ##### Pros
 - Free
@@ -85,7 +85,7 @@ The FONA requires a SIM Card.
 
 > If the network led (red) is not blinking, you might have to hold down the FONA's reset button for ~2 seconds.
 
-![With a FONA](./battery-fona.png "With a FONA")
+![With a FONA](./battery-fona.png)
 
 ##### Pros
 - Can be available where Internet is not
@@ -370,7 +370,7 @@ The widget reacts every time you hit return.
 
 So, to access tha data provided by an MQTT server from a browser, we need some process that would broadcast the MQTT data over WebSocket.
 [Node-RED](http://nodered.org) provides such possibility, easily.
-![Node-RED](./nodered.png "Node-RED at work")
+![Node-RED](./nodered.png)
 
 One input node reads the Adafruit-IO MQTT topic, and forwards it to a local WebSocket server (running on node too),
 started with `node wsbattery.js`, and that is it. The page [http://localhost:9876/web/adc.one.html](http://localhost:9876/web/adc.one.html) is available:
