@@ -37,7 +37,7 @@ public class RESTImplementation {
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
 	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
 
-	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd_hh-mm-ss");
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
 	private int servoMin = DEFAULT_SERVO_MIN;
 	private int servoMax = DEFAULT_SERVO_MAX;

@@ -1,6 +1,6 @@
 "use strict";
 
-var DEFAULT_TIMEOUT = 60000;
+var DEFAULT_TIMEOUT = 60000; // 60000 ms: 1 minute
 
 var displayErr = function(mess) {
 	if (displayMess !== undefined) {
