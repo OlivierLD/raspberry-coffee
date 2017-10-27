@@ -455,6 +455,10 @@ public class RESTImplementation {
 		}
 	}
 
+	/*
+	 * Servo (pan-tilt) methods.
+	 * Could be isolated in another class, along with all the PCA9685 related variables...
+	 */
 	public void setHeadingServoAngle(final float f) {
 		setAngle(servoHeading, f);
 	}

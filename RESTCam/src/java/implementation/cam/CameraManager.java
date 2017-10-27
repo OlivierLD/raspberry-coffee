@@ -13,11 +13,10 @@ public class CameraManager {
 	// See http://www.raspberrypi.org/documentation/usage/webcams/ for some doc.
 	private final static String SNAPSHOT_COMMAND_2 = "fswebcam snap%s.jpg";
 
-	// Stop motion:
+	// Slow motion:
 	private final static String SNAPSHOT_COMMAND_3 = "raspivid -w 640 -h 480 -fps 90 -t 30000 -o vid.h264";
 
 	private static int tilt = 0, heading = 0;
-
 
 	public static String snap(String name, int rot, int width, int height)
 			throws Exception {

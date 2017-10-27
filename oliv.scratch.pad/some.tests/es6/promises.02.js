@@ -1,4 +1,4 @@
-function getSum(n1, n2) {
+function getSum(n1, n2) { // this function returns a Promise
 	var isAnyNegative = function() {
 		return n1 < 0 || n2 < 0;
 	};
