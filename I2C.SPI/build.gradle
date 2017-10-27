@@ -38,24 +38,27 @@ dependencies {
 
 // Warning: Must be run as root
 task runOled(type: JavaExec, dependsOn: build, description: "Run the OLED Demo") {
-  main = 'adafruitspi.oled.OLEDSSD1306Sample'
+  main = 'spi.lcd.oled.samples.OLEDSSD1306Sample'
   systemProperty 'verbose', 'true'
-  classpath project.configurations.default
-  classpath sourceSets.main.output.classesDir
+//classpath project.configurations.default
+  classpath sourceSets.main.runtimeClasspath
+//classpath sourceSets.main.output.classesDir
 }
 
 // Warning: Must be run as root
 task runBMP180(type: JavaExec, dependsOn: build, description: "Run the BMP180 Demo") {
   main = 'i2c.sensor.BMP180'
   systemProperty 'bmp180.verbose', 'true'
-  classpath project.configurations.default
-  classpath sourceSets.main.output.classesDir
+//classpath project.configurations.default
+  classpath sourceSets.main.runtimeClasspath
+//classpath sourceSets.main.output.classesDir
 }
 
 task runLedPanel(type: JavaExec, dependsOn: build, description: "Run the LED panel simulator (Swing)") {
   main = 'lcd.utils.LedPanelMain'
-  classpath project.configurations.default
-  classpath sourceSets.main.output.classesDir
+//classpath project.configurations.default
+  classpath sourceSets.main.runtimeClasspath
+//classpath sourceSets.main.output.classesDir
 }
 
 shadowJar {

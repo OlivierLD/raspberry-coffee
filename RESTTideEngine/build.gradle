@@ -71,8 +71,8 @@ shadowJar {
 
 task harmonicsXML(type: JavaExec, dependsOn: build, description: "Generate the XML Document from the harmonic files") {
   classpath = configurations.runtime
-  classpath project.configurations.default
-  classpath sourceSets.main.output.classesDir
+//classpath project.configurations.default
+//classpath sourceSets.main.output.classesDir
   classpath sourceSets.main.runtimeClasspath
   main = 'utils.HarmonicsToXML'
   jvmArgs "-Xms512m"

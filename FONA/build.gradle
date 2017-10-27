@@ -37,12 +37,14 @@ task runFONAArduinoPi(type: JavaExec, dependsOn: build, description: "Run the FO
     systemProperty 'verbose', 'true'
     systemProperty 'baud.rate', '115200'
     systemProperty 'serial.port', '/dev/ttyACM0'
-    classpath project.configurations.default
-    classpath sourceSets.main.output.classesDir
+//  classpath project.configurations.default
+    classpath sourceSets.main.runtimeClasspath
+//  classpath sourceSets.main.output.classesDir
 }
 
 task runFONAJavaPi(type: JavaExec, dependsOn: build, description: "Run the FONA Sample, RPi + Java") {
     main = 'fona.manager.sample.InteractiveFona'
-    classpath project.configurations.default
-    classpath sourceSets.main.output.classesDir
+//  classpath project.configurations.default
+    classpath sourceSets.main.runtimeClasspath
+//  classpath sourceSets.main.output.classesDir
 }

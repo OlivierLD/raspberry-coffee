@@ -33,7 +33,8 @@ dependencies {
 task runPIR(type: JavaExec, dependsOn: build, description: "Run the PIR Demo") {
   main = 'main.SampleMain'
   systemProperty 'verbose', 'true'
-  classpath project.configurations.default
-  classpath sourceSets.main.output.classesDir
+//classpath project.configurations.default
+  classpath sourceSets.main.runtimeClasspath
+//classpath sourceSets.main.output.classesDir
 }
 

@@ -56,6 +56,7 @@ task runNodeServer(type: NodeTask) {
 
 task run(type: JavaExec, dependsOn: [ build, runNodeServer ], description: "Run it.") {
   main = 'adc.levelreader.main.LelandPrototype'   
-  classpath project.configurations.default 
-  classpath sourceSets.main.output.classesDir
+//classpath project.configurations.default
+  classpath sourceSets.main.runtimeClasspath
+//classpath sourceSets.main.output.classesDir
 }

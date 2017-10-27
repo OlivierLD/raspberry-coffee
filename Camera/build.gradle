@@ -36,6 +36,7 @@ dependencies {
 task runSample(type: JavaExec, dependsOn: build, description: "Test run.") {
   main = 'image.util.ImageUtil'
 //jvmArgs "-verbose"
-  classpath project.configurations.default
-  classpath sourceSets.main.output.classesDir
+//classpath project.configurations.default
+  classpath sourceSets.main.runtimeClasspath
+//classpath sourceSets.main.output.classesDir
 }
