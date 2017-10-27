@@ -1,9 +1,12 @@
 package nmea.forwarders;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import arduino.LoRaMessageManager;
+import gnu.io.NoSuchPortException;
 import nmea.parser.StringParsers;
 import arduino.ArduinoLoRaClient;
 
@@ -27,6 +30,9 @@ public class LoRaPublisher implements Forwarder {
 	private String portName;
 	private int baudRate;
 	private boolean verbose = false;
+	private List<String> sentenceList = null;
+
+	private boolean openTheSerialPort = true;
 
 	private boolean available = false; // Released when ready, or Tx ACK'd
 
@@ -65,9 +71,13 @@ public class LoRaPublisher implements Forwarder {
 
 	@Override
 	public void write(byte[] message) {
-		if (bridge == null) {
+		if (bridge == null && openTheSerialPort) {
 			try {
 				bridge = init();
+			} catch (NoSuchPortException nspe) {
+				System.out.println(String.format(" >> Serial port [%s] not available...", this.portName));
+				openTheSerialPort = false; // Forget it.
+				available = true; // Release
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -76,11 +86,16 @@ public class LoRaPublisher implements Forwarder {
 //	System.out.println(">>>> Mess:" + str);
 		if (StringParsers.validCheckSum(str)) {
 			String sentenceId = StringParsers.getSentenceID(str);
-			if ("RMC".equals(sentenceId) && this.isChannelAvailable()) { // Filter sentences here
+			if (("*".equals(sentenceList.get(0)) || sentenceList.contains(sentenceId)) && this.isChannelAvailable()) { // Filter sentences here
 				// Forward to LoRa
 				try {
-					this.available = false; // Released when ACK is received
-					bridge.sendToLora(str); //  + "\n");
+					this.available = !openTheSerialPort || false; // Released when ACK is received
+					if (bridge != null) {
+						bridge.sendToLora(str); //  + "\n");
+					}
+					if (this.verbose) {
+						System.out.println(String.format("Sending [%s] to Lora", str.trim()));
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 					this.available = true;
@@ -102,7 +117,9 @@ public class LoRaPublisher implements Forwarder {
 	public void close() {
 		System.out.println("- Stop writing to " + this.getClass().getName());
 		try {
-			bridge.close();
+			if (bridge != null) {
+				bridge.close();
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -136,5 +153,7 @@ public class LoRaPublisher implements Forwarder {
 		} catch (NumberFormatException nfe) {
 			this.baudRate = 9600;
 		}
+		String[] sentences = props.getProperty("nmea.filter", "RMC").split(",");
+		this.sentenceList = Arrays.asList(sentences);
 	}
 }
