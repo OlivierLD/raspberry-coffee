@@ -39,6 +39,14 @@ The scripts `runArduinoComm` and `runArduinoServer` go along with those classes.
 Tests on the range of the LoRa.
 
 ### Example
+
+### To build
+```bash
+ $ cd LoRa
+ $ git pull origin master
+ $ ../gradlew [--no-daemon] shadowJar
+```
+
 #### Broadcast NMEA Data
 Using the NMEA Multiplexer, based on its structure, we've written a `LoRaPublisher`.
 

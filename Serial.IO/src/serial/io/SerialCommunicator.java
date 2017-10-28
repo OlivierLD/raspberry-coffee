@@ -127,9 +127,11 @@ public class SerialCommunicator
 
 	public void disconnect() throws IOException {
 		try {
-			serialPort.removeEventListener();
 			if (!System.getProperty("os.name").toUpperCase().contains("MAC")) { // close crashes on Mac OS
+				serialPort.removeEventListener();
 				serialPort.close();
+			} else {
+				System.out.println(">> On Mac OS, *not* removing the serial listeners, *not* closing serial ports.");
 			}
 			if (input != null) {
 				input.close();

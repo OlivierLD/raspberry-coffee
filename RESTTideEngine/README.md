@@ -109,7 +109,7 @@ the SAX parser scans it until the expected data are found.
 ### To run the examples
 - Build the soft
 ```bash
- $ ../gradlew clean shadowJar
+ $ ../gradlew [--no-daemon] clean shadowJar
 ```
 - Then start then server
 ```bash
