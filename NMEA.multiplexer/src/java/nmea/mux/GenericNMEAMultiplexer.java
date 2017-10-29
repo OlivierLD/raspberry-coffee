@@ -166,13 +166,11 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		restImplementation = new RESTImplementation(nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
 		MuxInitializer.setup(muxProps, nmeaDataClients, nmeaDataForwarders, nmeaDataComputers, this);
 
-		Runtime.getRuntime().addShutdownHook(new Thread("Multiplexer shutdown hook") {
-			public void run() {
-				if (!softStop) {
-					terminateMux();
-				}
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			if (!softStop) {
+				terminateMux();
 			}
-		});
+		}, "Multiplexer shutdown hook"));
 
 		nmeaDataClients.stream()
 						.forEach(client -> {

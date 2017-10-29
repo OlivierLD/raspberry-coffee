@@ -22,6 +22,7 @@ SERIAL_PRMS=
 #
 # For Mac
 JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"
+# SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/tty.usbmodem1411"
 SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1411"
 # SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/cu.usbmodem1421"
 #

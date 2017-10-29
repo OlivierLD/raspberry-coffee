@@ -289,6 +289,18 @@ function WorldMap (cName, prj) {
 		return transparent;
 	};
 
+	this.changeCanvasWidth = function(factor) {
+		var canvas = document.getElementById(canvasName);
+		var newWidth = canvas.width * factor;
+		canvas.width = newWidth;
+	};
+
+	this.changeCanvasHeight = function(factor) {
+		var canvas = document.getElementById(canvasName);
+		var newHeight = canvas.height * factor;
+		canvas.height = newHeight;
+	};
+
 	/**
 	 *
 	 * rotate.x Canvas abscissa
@@ -353,17 +365,17 @@ function WorldMap (cName, prj) {
 		return lng;
 	};
 
-	var positionBody = function(context, userPos, color, name, decl, gha) {
+	var positionBody = function(context, userPos, color, name, decl, gha, drawCircle) {
 		context.save();
 		var lng = haToLongitude(gha);
 		var body = getPanelPoint(decl, lng);
 		var thisPointIsBehind = isBehind(toRadians(decl), toRadians(lng - globeViewLngOffset));
-		if (!thisPointIsBehind) {
+		if (!thisPointIsBehind || isTransparentGlobe()) {
 			// Draw Body
 			plot(context, body, color);
 			context.fillStyle = color;
 			context.fillText(name, Math.round(body.x) + 3, Math.round(body.y) - 3);
-			// Arrow, to the moon
+			// Arrow, to the body
 			context.setLineDash([2]);
 			context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
 			context.beginPath();
@@ -380,7 +392,9 @@ function WorldMap (cName, prj) {
 			context.lineTo(body.x + deltaX, body.y + deltaY);
 			context.stroke();
 			context.closePath();
-			fillCircle(context, { x: body.x + deltaX, y: body.y + deltaY}, 3, color);
+			if (drawCircle === undefined && drawCircle !== false) {
+				fillCircle(context, { x: body.x + deltaX, y: body.y + deltaY}, 3, color);
+			}
 		}
 		context.restore();
 	};
@@ -646,7 +660,7 @@ function WorldMap (cName, prj) {
 				var sunLng = haToLongitude(astronomicalData.sun.gha);
 				var sun = getPanelPoint(astronomicalData.sun.decl, sunLng);
 				var thisPointIsBehind = isBehind(toRadians(astronomicalData.sun.decl), toRadians(sunLng - globeViewLngOffset));
-				if (!thisPointIsBehind) {
+				if (!thisPointIsBehind || isTransparentGlobe()) {
 					// Draw Sun
 					plot(context, sun, "yellow");
 					context.fillStyle = "yellow";
@@ -694,7 +708,7 @@ function WorldMap (cName, prj) {
 				var moonLng = haToLongitude(astronomicalData.moon.gha);
 				var moon = getPanelPoint(astronomicalData.moon.decl, moonLng);
 				var thisPointIsBehind = isBehind(toRadians(astronomicalData.moon.decl), toRadians(moonLng - globeViewLngOffset));
-				if (!thisPointIsBehind) {
+				if (!thisPointIsBehind || isTransparentGlobe()) {
 					// Draw Moon
 					plot(context, moon, "white");
 					context.fillStyle = "white";
@@ -738,8 +752,8 @@ function WorldMap (cName, prj) {
 			  var aries = findInList(astronomicalData.wanderingBodies, "name", "aries");
 			  if (aries !== null) {
 			    drawEcliptic(canvas, context, aries.gha, astronomicalData.eclipticObliquity);
-			    positionBody(context, userPos, "LightGray", "Aries", 0, aries.gha);
-			    positionBody(context, userPos, "LightGray", "Anti-Aries", 0, aries.gha + 180); // Libra?
+			    positionBody(context, userPos, "LightGray", "Aries", 0, aries.gha, false);
+			    positionBody(context, userPos, "LightGray", "Anti-Aries", 0, aries.gha + 180, false); // Libra?
 			  }
 			  // 2 - Other planets
 			  var venus = findInList(astronomicalData.wanderingBodies, "name", "venus");

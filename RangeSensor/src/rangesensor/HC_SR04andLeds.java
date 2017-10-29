@@ -48,17 +48,13 @@ public class HC_SR04andLeds
     
     final GpioPinDigitalOutput[] ledArray = new GpioPinDigitalOutput[] { ledOne, ledTwo, ledThree, ledFour, ledFive };
 
-    Runtime.getRuntime().addShutdownHook(new Thread()
-    {
-      public void run()
-      {
-        System.out.println("Oops!");
-        for (int i=0; i<ledArray.length; i++)
-          ledArray[i].low();
-        gpio.shutdown();
-        System.out.println("Exiting nicely.");
-      }       
-    });
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      System.out.println("Oops!");
+      for (int i=0; i<ledArray.length; i++)
+        ledArray[i].low();
+      gpio.shutdown();
+      System.out.println("Exiting nicely.");
+    }));
     
     System.out.println("Waiting for the sensor to be ready (2s)...");
     Thread.sleep(2_000L);

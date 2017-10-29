@@ -145,6 +145,16 @@
     position.lat = val;
 	  worldMap.setUserLatitude(parseInt(val));
   };
+
+	var changeTransparency = function(cb) {
+		worldMap.setTransparent(cb.checked);
+	};
+  var changeCanvasWidth = function(factor) {
+    worldMap.changeCanvasWidth(factor);
+  };
+  var changeCanvasHeight = function(factor) {
+    worldMap.changeCanvasHeight(factor);
+  };
     </script>
   </head>
   <body>
@@ -154,10 +164,10 @@
       <img src="../images/moon-white.png" id="moon-png" />
       <img src="../images/sun-white.png" id="sun-png" />
     </div>
-    <table border="0">
+    <table border="1">
       <tr>
-        <td valign="top" rowspan="4">
-          <div id="map" style="display: block; height: 450px; width: 850px;">
+        <td valign="top" rowspan="6">
+          <div id="map" style="display: block; height: 450px; width: 850px; overflow-x: scroll; overflow-y: scroll;">
             <p align="center">
               <canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
             </p>
@@ -184,6 +194,29 @@
           <input type="range" min="-90" max="90" step="1" value="38" title="Latitude" onchange="changeLat(this);"/>
         </td>
       </tr>
+	    <tr>
+		    <td align="left">
+			    <table>
+				    <tr>
+					    <td align="center">Width</td>
+					    <td align="center">Height</td>
+				    </tr>
+				    <tr>
+							<td>
+								<button onclick="changeCanvasWidth(0.9);">-</button><button onclick="changeCanvasWidth(1.1);">+</button>
+							</td>
+					    <td>
+						    <button onclick="changeCanvasHeight(0.9);">-</button><button onclick="changeCanvasHeight(1.1);">+</button>
+					    </td>
+				    </tr>
+			    </table>
+		    </td>
+      </tr>
+	    <tr>
+		    <td>
+			    <input type="checkbox" onchange="changeTransparency(this);" /> Transparent
+		    </td>
+	    </tr>
 			<tr>
 				<td valign="bottom">
 					<i>Sun Transit Time (at your location)</i>
