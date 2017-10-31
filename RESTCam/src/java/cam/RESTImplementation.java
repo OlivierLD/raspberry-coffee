@@ -297,13 +297,16 @@ public class RESTImplementation {
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent());
 			if (!"null".equals(payload)) {
+				if (verbose) {
+					System.out.println(String.format("setCameraTilt: %s", payload));
+				}
 				Gson gson = new GsonBuilder().create();
 				StringReader stringReader = new StringReader(payload);
 				try {
 					pos = gson.fromJson(stringReader, CameraPosition.class);
 					int tilt = pos.tilt;
 					setTiltServoAngle(tilt);
-					CameraManager.setTilt(tilt);
+					CameraManager.setTilt(tilt); // Here
 					tilt = CameraManager.getTilt();
 					int heading = CameraManager.getHeading();
 					CameraPosition position = new CameraPosition()
@@ -366,13 +369,16 @@ public class RESTImplementation {
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent());
 			if (!"null".equals(payload)) {
+				if (verbose) {
+					System.out.println(String.format("setCameraHeading: %s", payload));
+				}
 				Gson gson = new GsonBuilder().create();
 				StringReader stringReader = new StringReader(payload);
 				try {
 					pos = gson.fromJson(stringReader, CameraPosition.class);
 					int heading = pos.heading;
 					setHeadingServoAngle(heading);
-					CameraManager.setHeading(heading);
+					CameraManager.setHeading(heading); // Here
 					int tilt = CameraManager.getTilt();
 					heading = CameraManager.getHeading();
 					CameraPosition position = new CameraPosition()
