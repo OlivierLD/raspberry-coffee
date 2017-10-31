@@ -491,6 +491,8 @@ public class RESTImplementation {
 		try {
 			if (foundPCA9685) {
 				servoBoard.setPWM(servo, 0, pwm);
+			} else {
+				System.out.println("No Servo board.");
 			}
 		} catch (IllegalArgumentException iae) {
 			System.err.println(String.format("Cannot set servo %d to PWM %d", servo, pwm));
