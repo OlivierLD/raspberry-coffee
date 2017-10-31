@@ -64,19 +64,21 @@ var getDeferred = function(
 	return deferred.promise();
 };
 
-var getSunMoonGP = function(when) {
-	var url = "/sun-moon-gp";
+var getSkyGP = function(when) {
+	var url = "/positions-in-the-sky";
 	// Add date
 	url += ("?at=" + when);
 	url += ("&fromL=" + position.lat);
 	url += ("&fromG=" + position.lng);
 	// Wandering bodies
 	url += ("&wandering=true");
+	// Stars
+	url += ("&stars=true");
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getAstroData = function(when, callback) {
-	var getData = getSunMoonGP(when);
+	var getData = getSkyGP(when);
 	getData.done(function(value) {
 		var json = JSON.parse(value);
 		if (callback !== undefined) {

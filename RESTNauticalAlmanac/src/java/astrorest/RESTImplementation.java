@@ -12,6 +12,9 @@ import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import implementation.almanac.AlmanacComputer;
 import implementation.perpetualalmanac.Publisher;
+import nauticalalmanac.Context;
+import nauticalalmanac.Core;
+import nauticalalmanac.Star;
 import utils.TimeUtil;
 
 import java.io.*;
@@ -59,10 +62,10 @@ public class RESTImplementation {
 					"/astro/oplist",
 					this::getOperationList,
 					"List of all available operations, on astro request manager."),
-			new Operation( // QueryString contains date /sun-moon-gp?at=2017-09-01T00:00:00
+			new Operation( // QueryString contains date /positions-in-the-sky?at=2017-09-01T00:00:00
 					"GET",
-					"/sun-moon-gp",
-					this::getSunMoonGP,
+					"/positions-in-the-sky",
+					this::getPositionsInTheSky,
 					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optional: 'fromL' and 'fromG', 'wandering' (true|[false])."),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
 					"POST",
@@ -91,8 +94,8 @@ public class RESTImplementation {
 					"Generates nautical almanac document (pdf)"),
 			new Operation(
 					"POST",
-							"/publish/lunar",
-							this::publishLunar,
+					"/publish/lunar",
+					this::publishLunar,
 					"Generates lunar distances document (pdf)"),
 			new Operation(
 					"POST",
@@ -342,13 +345,17 @@ public class RESTImplementation {
 
 	/**
 	 * Computes sun's and moon's Declination and GHA at a given (UTC) time.
+	 * Also, optionally:
+	 * - wandering bodies
+	 * - stars
 	 * @param request
 	 * @return
 	 */
-	private Response getSunMoonGP(Request request) {
+	private Response getPositionsInTheSky(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		String atPrm = null;
-		boolean wandering = false; // Wandering bodies
+		boolean wandering = false;  // Wandering bodies (visible ones)
+		boolean stars = false;      // Selected stars (selected by me)
 		Map<String, String> prms = request.getQueryStringParameters();
 		if (prms == null || prms.get("at") == null) {
 			response = HTTPServer.buildErrorResponse(response,
@@ -381,6 +388,9 @@ public class RESTImplementation {
 				 */
 				wandering = true;
 			}
+			if ("true".equals(prms.get("stars"))) {
+				stars = true;
+			}
 
 			DURATION_FMT.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 			try {
@@ -399,7 +409,7 @@ public class RESTImplementation {
 						date.get(Calendar.MINUTE),
 						date.get(Calendar.SECOND));
 
-				SunMoonGP data = new SunMoonGP()
+				PositionsInTheSky data = new PositionsInTheSky()
 						.epoch(date.getTimeInMillis())
 						.deltaT(AstroComputer.getDeltaT())
 						.sun(new GP().gha(AstroComputer.getSunGHA())
@@ -481,6 +491,19 @@ public class RESTImplementation {
 							.gha(AstroComputer.getSaturnGHA()));
 					data = data.wandering(wanderingBodies)
 							.meanObliquity(AstroComputer.getMeanObliquityOfEcliptic());
+				}
+
+				if (stars) {
+					List<GP> starPositions = new ArrayList<>();
+					Arrays.asList(Star.getCatalog()).stream()
+							.forEach(star -> {
+								Core.starPos(star.getStarName());
+								starPositions.add(new GP()
+								.name(star.getStarName()) // Also available star.getConstellation()
+								.gha(Context.GHAstar)
+								.decl(Context.DECstar));
+							});
+					data = data.stars(starPositions);
 				}
 
 				String content = new Gson().toJson(data);
@@ -1067,12 +1090,13 @@ public class RESTImplementation {
 		}
 	}
 
-	public static class SunMoonGP {
+	public static class PositionsInTheSky {
 		long epoch;
 		double deltaT;
 		GP sun;
 		GP moon;
 		List<GP> wanderingBodies;
+		List<GP> stars;
 		double eclipticObliquity; // Mean
 		Pos from;
 		OBS sunObs;
@@ -1081,55 +1105,60 @@ public class RESTImplementation {
 		FmtDate solarDate;
 
 
-		public SunMoonGP epoch(long epoch) {
+		public PositionsInTheSky epoch(long epoch) {
 			this.epoch = epoch;
 			return this;
 		}
-		public SunMoonGP deltaT(double deltaT) {
+		public PositionsInTheSky deltaT(double deltaT) {
 			this.deltaT = deltaT;
 			return this;
 		}
-		public SunMoonGP sun(GP sun) {
+		public PositionsInTheSky sun(GP sun) {
 			this.sun = sun;
 			return this;
 		}
-		public SunMoonGP moon(GP moon) {
+		public PositionsInTheSky moon(GP moon) {
 			this.moon = moon;
 			return this;
 		}
 
-		public SunMoonGP from(Pos pos) {
+		public PositionsInTheSky from(Pos pos) {
 			this.from = pos;
 			return this;
 		}
 
-		public SunMoonGP sunObs(OBS sun) {
+		public PositionsInTheSky sunObs(OBS sun) {
 			this.sunObs = sun;
 			return this;
 		}
 
-		public SunMoonGP moonObs(OBS moon) {
+		public PositionsInTheSky moonObs(OBS moon) {
 			this.moonObs = moon;
 			return this;
 		}
 
-		public SunMoonGP tPass(FmtDate tPass) {
+		public PositionsInTheSky tPass(FmtDate tPass) {
 			this.tPass = tPass;
 			return this;
 		}
 
-		public SunMoonGP solar(FmtDate solar) {
+		public PositionsInTheSky solar(FmtDate solar) {
 			this.solarDate = solar;
 			return this;
 		}
 
-		public SunMoonGP meanObliquity(double obl) {
+		public PositionsInTheSky meanObliquity(double obl) {
 			this.eclipticObliquity = obl;
 			return this;
 		}
 
-		public SunMoonGP wandering(List<GP> bodies) {
+		public PositionsInTheSky wandering(List<GP> bodies) {
 			this.wanderingBodies = bodies;
+			return this;
+		}
+
+		public PositionsInTheSky stars(List<GP> stars) {
+			this.stars = stars;
 			return this;
 		}
 	}

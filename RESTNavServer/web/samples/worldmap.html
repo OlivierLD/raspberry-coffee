@@ -136,6 +136,10 @@
   var changeWanderingBodies = function(cb) {
     worldMap.setWithWanderingBodies(cb.checked);
   };
+  // changeStars
+  var changeStars = function(cb) {
+	  worldMap.setWithStars(cb.checked);
+  };
   var changeTropics = function(cb) {
     worldMap.setWithTropics(cb.checked);
   };
@@ -189,6 +193,8 @@
           <br />
 	        <input type="checkbox" onchange="changeWanderingBodies(this);" /> With Wandering Bodies
 	        <br />
+					<input type="checkbox" onchange="changeStars(this);" /> With Stars
+					<br />
           Latitude:
           <br />
           <input type="range" min="-90" max="90" step="1" value="38" title="Latitude" onchange="changeLat(this);"/>

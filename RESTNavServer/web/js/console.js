@@ -243,7 +243,7 @@ var getDeferred = function(
 };
 
 var getSunMoonGP = function(from, when) {
-	var url = "/sun-moon-gp";
+	var url = "/positions-in-the-sky";
 	// Add date
 	url += ("?at=" + when);
 	if (from !== undefined) {

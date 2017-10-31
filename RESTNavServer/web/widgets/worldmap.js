@@ -15,6 +15,7 @@ function WorldMap (cName, prj) {
 	var withSunlight = false;
 	var withMoonlight = false;
 	var withWanderingBodies = false;
+	var withStars = false;
 	var withTropics = false;
 
 	var deltaT;
@@ -38,6 +39,9 @@ function WorldMap (cName, prj) {
 	};
 	this.setWithWanderingBodies = function(b) {
 		withWanderingBodies = b;
+	};
+	this.setWithStars = function(b) {
+		withStars = b;
 	};
 	this.setWithTropics = function(b) {
 	  withTropics = b;
@@ -154,7 +158,7 @@ function WorldMap (cName, prj) {
 	/*
 	 * The right tilt is:
 	 *   chartPanel.setGlobeViewRightLeftRotation(-(sunD * Math.sin(Math.toRadians(lhaSun))));
-	 * An astro resource exists: GET /sun-moon-gp?at=2017-10-11T15:23:28
+	 * An astro resource exists: GET /positions-in-the-sky?at=2017-10-11T15:23:28
 	 */
 	var globeViewRightLeftRotation = -23.4; // Tilt
 	var globeViewForeAftRotation = 0; // Observer's latitude
@@ -772,6 +776,12 @@ function WorldMap (cName, prj) {
 			  if (saturn !== null) {
 			    positionBody(context, userPos, "LightYellow", "Saturn", saturn.decl, saturn.gha);
 			  }
+			}
+
+			if (astronomicalData.stars !== undefined && withStars) {
+				astronomicalData.stars.forEach(function(star, idx) {
+					positionBody(context, userPos, "white", star.name, star.decl, star.gha);
+				});
 			}
 		}
 	};
