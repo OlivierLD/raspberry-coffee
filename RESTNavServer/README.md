@@ -20,6 +20,10 @@ a full re-write of your application.
 
 I'd rather spend time learning how use HTML5's canvases, or WebGL.
 
+> This project has two distinct aspects:
+> - REST services written in Java, running on the Raspberry PI (or any other machine)
+> - Web pages, to be rendered on any device that can reach the Raspberry PI's network
+
 The sample web pages presented below are relying on HTML5 and CSS3.
 
 ## Try it
@@ -35,18 +39,24 @@ Then run the server
 
 Finally, use `Postman`, any `REST` client, or your browser, and reach
 ```
- http://localhost:9999/oplist
+ GET http://localhost:9999/oplist
 ```
 
 You will see it displays operations from three services.
 
 ## Use it
 
+The web pages mentioned below are provided _as examples_ of the way to consume the REST services provided on the Raspberry PI.
+The snapshots might be a little obsolete, this iks a work in porigress, constantly evolving.
+But this will give you an idea.
+
 From _any_ device (laptop, tablet, smart-phone) that can run a browser, reach this url:
 ```
  http://[host]:9999/web/index.html
 ```
 > `[host]` is the name or IP of the machine the server runs on.
+
+_Your browser needs to support `HTML5` and `CSS3`, but nowadays, less and less browsers do not._
 
 Then you are able to:
 - See the Navigation Console 
