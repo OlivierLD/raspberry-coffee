@@ -1,4 +1,4 @@
-package image.util.image.util.samples;
+package image.util.samples;
 
 import image.util.ImageUtil;
 

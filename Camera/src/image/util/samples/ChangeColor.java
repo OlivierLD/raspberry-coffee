@@ -1,4 +1,4 @@
-package image.util.image.util.samples;
+package image.util.samples;
 
 import image.util.ImageUtil;
 
@@ -11,7 +11,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.net.URI;
 
 public class ChangeColor {
 	/**

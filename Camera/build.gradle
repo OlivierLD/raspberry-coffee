@@ -1,6 +1,8 @@
-apply plugin: 'java'
-compileJava.options.encoding = 'ISO-8859-1'
-apply plugin: 'maven'
+plugins {
+  id 'java'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '2.0.1'
+}
 
 group = 'oliv.pi4j.samples'
 version = '1.0'
@@ -34,9 +36,13 @@ dependencies {
 }
 
 task runSample(type: JavaExec, dependsOn: build, description: "Test run.") {
-  main = 'image.util.ImageUtil'
+  main = 'image.util.samples.FindSpot'
 //jvmArgs "-verbose"
 //classpath project.configurations.default
   classpath sourceSets.main.runtimeClasspath
 //classpath sourceSets.main.output.classesDir
+}
+
+shadowJar {
+  zip64 true
 }
