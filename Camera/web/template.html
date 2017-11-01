@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Template</title>
+</head>
+<body>
+  <h1 style="font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular; color: silver;">Sample</h1>
+	<canvas id="faxCanvas" width="2640" height="1728"></canvas>
+	<script>
+		var canvas = document.getElementById('faxCanvas');
+		var context = canvas.getContext('2d');
+		var faxObj_1 = new Image();
+		var faxObj_2 = new Image();
+
+		faxObj_1.onload = function() {
+			context.drawImage(faxObj_1, 10, 50);
+		};
+		faxObj_2.onload = function() {
+			context.drawImage(faxObj_2, 69, 150);
+		};
+		faxObj_1.src = '<FAX_1>';
+		faxObj_2.src = '<FAX_2>';
+	</script>
+</body>
+</html>

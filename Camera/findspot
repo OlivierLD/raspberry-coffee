@@ -1,4 +1,4 @@
 #!/bin/bash
 CP=./build/classes/main/
 # CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-java -cp $CP image.util.ImageUtil
+java -cp $CP image.util.samples.FindSpot
