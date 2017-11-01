@@ -31,7 +31,7 @@ The sample web pages presented below are relying on HTML5 and CSS3.
 ## Try it
 Build it:
 ```bash
- $ ../gradlew shadowJar
+ $ ../gradlew [--no-daemon] shadowJar
 ```
 
 Then run the server
