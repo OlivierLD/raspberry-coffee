@@ -8,6 +8,8 @@ const tropicLat = 23.43698;
 
 function WorldMap (cName, prj) {
 
+	var defaultRadiusRatio = 0.6;
+
 	var canvasName = cName;
 	var withGrid = true;
 	var withSun = true;
@@ -293,16 +295,29 @@ function WorldMap (cName, prj) {
 		return transparent;
 	};
 
-	this.changeCanvasWidth = function(factor) {
+	this.getCanvasHeight = function() {
+		return document.getElementById(canvasName).height;
+	};
+	this.getCanvasWidth = function() {
+		return document.getElementById(canvasName).width;
+	};
+	this.setCanvasWidth = function(w) {
 		var canvas = document.getElementById(canvasName);
-		var newWidth = canvas.width * factor;
-		canvas.width = newWidth;
+		canvas.width = w;
+	};
+	this.setCanvasHeight = function(h) {
+		var canvas = document.getElementById(canvasName);
+		canvas.height = h;
 	};
 
-	this.changeCanvasHeight = function(factor) {
-		var canvas = document.getElementById(canvasName);
-		var newHeight = canvas.height * factor;
-		canvas.height = newHeight;
+	this.setZoomRatio = function(zr) {
+		defaultRadiusRatio = Math.min(zr, 1);
+	};
+	this.getZoomRatio = function() {
+		return defaultRadiusRatio;
+	};
+	this.resetZoomRatio = function() {
+		defaultRadiusRatio = 0.6;
 	};
 
 	/**
@@ -369,7 +384,8 @@ function WorldMap (cName, prj) {
 		return lng;
 	};
 
-	var positionBody = function(context, userPos, color, name, decl, gha, drawCircle) {
+	var positionBody = function(context, userPos, color, name, decl, gha, drawCircle, isStar) {
+		isStar = isStar || false;
 		context.save();
 		var lng = haToLongitude(gha);
 		var body = getPanelPoint(decl, lng);
@@ -378,7 +394,9 @@ function WorldMap (cName, prj) {
 			// Draw Body
 			plot(context, body, color);
 			context.fillStyle = color;
-			context.fillText(name, Math.round(body.x) + 3, Math.round(body.y) - 3);
+			if (!isStar) { // Body name, on the ground
+				context.fillText(name, Math.round(body.x) + 3, Math.round(body.y) - 3);
+			}
 			// Arrow, to the body
 			context.setLineDash([2]);
 			context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
@@ -395,6 +413,12 @@ function WorldMap (cName, prj) {
 			context.moveTo(body.x, body.y);
 			context.lineTo(body.x + deltaX, body.y + deltaY);
 			context.stroke();
+			if (isStar) { // Body name, in the sky
+				context.font = "10px Arial";
+				var metrics = context.measureText(name);
+				len = metrics.width;
+				context.fillText(name, Math.round(body.x + deltaX) - (len / 2), Math.round(body.y + deltaY));
+			}
 			context.closePath();
 			if (drawCircle === undefined && drawCircle !== false) {
 				fillCircle(context, { x: body.x + deltaX, y: body.y + deltaY}, 3, color);
@@ -474,14 +498,14 @@ function WorldMap (cName, prj) {
 //console.log("MinX:" + minX + ", MaxX:" + maxX + ", MinY:" + minY + ", MaxY:" + maxY);
 		var opWidth = Math.abs(maxX - minX);
 		var opHeight = Math.abs(maxY - minY);
-		globeView_ratio = Math.min(w / opWidth, h / opHeight) * 0.9; // 0.9, not to take all the space...
+		globeView_ratio = Math.min(w / opWidth, h / opHeight) * defaultRadiusRatio; // 0.9, not to take all the space...
 
 		// Black background
 		context.fillStyle = "black";
 		context.fillRect(0, 0, canvas.width, canvas.height);
 
 		// Circle
-		var radius = Math.min(w / 2, h / 2) * 0.9;
+		var radius = Math.min(w / 2, h / 2) * defaultRadiusRatio;
 		var grd = context.createRadialGradient(canvas.width / 2, canvas.height / 2, radius, 90, 60, radius);
 		grd.addColorStop(0, "navy");
 		grd.addColorStop(1, "blue");
@@ -780,7 +804,7 @@ function WorldMap (cName, prj) {
 
 			if (astronomicalData.stars !== undefined && withStars) {
 				astronomicalData.stars.forEach(function(star, idx) {
-					positionBody(context, userPos, "white", star.name, star.decl, star.gha);
+					positionBody(context, userPos, "white", star.name, star.decl, star.gha, false, true);
 				});
 			}
 		}

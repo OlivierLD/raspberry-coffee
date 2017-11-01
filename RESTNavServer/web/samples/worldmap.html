@@ -154,10 +154,22 @@
 		worldMap.setTransparent(cb.checked);
 	};
   var changeCanvasWidth = function(factor) {
-    worldMap.changeCanvasWidth(factor);
+    worldMap.setCanvasWidth(worldMap.getCanvasWidth() * factor);
   };
   var changeCanvasHeight = function(factor) {
-    worldMap.changeCanvasHeight(factor);
+    worldMap.setCanvasHeight(worldMap.getCanvasHeight() * factor);
+  };
+  var changeCanvasSize = function(factor) {
+	  worldMap.setCanvasHeight(worldMap.getCanvasHeight() * factor);
+	  worldMap.setCanvasWidth(worldMap.getCanvasWidth() * factor);
+  };
+
+  var changeZoomRatio = function(factor) {
+  	var zoomRatio = worldMap.getZoomRatio() * factor;
+  	worldMap.setZoomRatio(zoomRatio);
+	};
+  var resetZoomRatio = function() {
+	  worldMap.resetZoomRatio();
   };
     </script>
   </head>
@@ -168,13 +180,11 @@
       <img src="../images/moon-white.png" id="moon-png" />
       <img src="../images/sun-white.png" id="sun-png" />
     </div>
-    <table border="1">
+    <table border="0">
       <tr>
         <td valign="top" rowspan="6">
-          <div id="map" style="display: block; height: 450px; width: 850px; overflow-x: scroll; overflow-y: scroll;">
-            <p align="center">
-              <canvas id="mapCanvas" width="800" height="400" style="border-radius:10px;"></canvas>
-            </p>
+          <div id="map" style="display: block; height: 500px; width: 850px; overflow-x: auto; overflow-y: auto; text-align: center;">
+            <canvas id="mapCanvas" width="800" height="490" style="border-radius:10px;"></canvas>
           </div>
         </td>
         <td valign="top">
@@ -191,9 +201,9 @@
           <br/>
           <input type="checkbox" onchange="changeMoonlight(this);" /> With Moon light
           <br />
-	        <input type="checkbox" onchange="changeWanderingBodies(this);" /> With Wandering Bodies
+	        <input id="WWB" type="checkbox" onchange="changeWanderingBodies(this);" /> With Wandering Bodies
 	        <br />
-					<input type="checkbox" onchange="changeStars(this);" /> With Stars
+					<input id="WS" type="checkbox" onchange="changeStars(this);" /> With Stars
 					<br />
           Latitude:
           <br />
@@ -206,6 +216,7 @@
 				    <tr>
 					    <td align="center">Width</td>
 					    <td align="center">Height</td>
+							<td align="center">Globe</td>
 				    </tr>
 				    <tr>
 							<td>
@@ -214,7 +225,18 @@
 					    <td>
 						    <button onclick="changeCanvasHeight(0.9);">-</button><button onclick="changeCanvasHeight(1.1);">+</button>
 					    </td>
+							<td>
+								<button onclick="changeZoomRatio(0.95);">-</button><button onclick="changeZoomRatio(1.05);">+</button>
+							</td>
 				    </tr>
+						<tr>
+							<td colspan="2" align="center">
+								<button onclick="changeCanvasSize(0.9);">-</button><button onclick="changeCanvasSize(1.1);">+</button>
+							</td>
+							<td>
+								<button onclick="resetZoomRatio();">Reset</button>
+							</td>
+						</tr>
 			    </table>
 		    </td>
       </tr>

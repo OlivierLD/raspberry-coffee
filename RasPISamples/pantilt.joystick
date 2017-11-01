@@ -1,6 +1,6 @@
 # Joystick
 #
-# TODO add a camera
+# TODO add a camera -> SEE RESTCAM PROJECT
 #
 CP=./build/libs/RasPISamples-1.0-all.jar
 JAVA_OPT="-Dverbose=true"

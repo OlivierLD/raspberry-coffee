@@ -71,9 +71,13 @@ var getSkyGP = function(when) {
 	url += ("&fromL=" + position.lat);
 	url += ("&fromG=" + position.lng);
 	// Wandering bodies
-	url += ("&wandering=true");
+	if ($("#WWB")[0].checked) { // to minimize the size of the payload
+		url += ("&wandering=true");
+	}
 	// Stars
-	url += ("&stars=true");
+	if ($("#WS")[0].checked) { // to minimize the size of the payload
+		url += ("&stars=true");
+	}
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
