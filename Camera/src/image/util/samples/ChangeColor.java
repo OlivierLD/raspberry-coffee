@@ -11,6 +11,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.NumberFormat;
 
 public class ChangeColor {
 	/**
@@ -44,11 +45,13 @@ public class ChangeColor {
 		after = System.currentTimeMillis();
 		long writing = after - before;
 
-		System.out.println(String.format("Reading took %d ms", reading));
-		System.out.println(String.format("Transforming took %d ms", tx));
-		System.out.println(String.format("Writing took %d ms", writing));
+		NumberFormat nf = NumberFormat.getInstance();
 
-		System.out.println(String.format("All together %d ms", (reading + tx + writing)));
+		System.out.println(String.format("Reading took %s ms", nf.format(reading)));
+		System.out.println(String.format("Transforming took %s ms", nf.format(tx)));
+		System.out.println(String.format("Writing took %s ms", nf.format(writing)));
+
+		System.out.println(String.format("All together %s ms", nf.format(reading + tx + writing)));
 
 		bimg = ImageIO.read(new File(IMG_NAME_2));
 		bimg = ImageUtil.switchColorAndMakeColorTransparent(bimg, Color.black, Color.red, Color.white);
