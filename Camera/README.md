@@ -13,3 +13,10 @@
  $ ../gradlew [--no-daemon] shadowJar
  $ ./changecolor
 ```
+
+## TODO
+- Download a fax, make it transparent and change its color.
+- Draw chart under the fax, Mercator projection
+- Display fax(es) on top of the chart
+- Move fax on top of the chart, to find its right position (and size, by scaling it)
+- Store and browse composites in a catalog

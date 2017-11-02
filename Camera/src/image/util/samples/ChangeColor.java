@@ -25,6 +25,7 @@ public class ChangeColor {
 			throws Exception {
 		final String IMG_NAME_1 = "NOAA_sfc_2017_10_16_07_31_42_PDT.png";
 		final String IMG_NAME_2 = "NOAA_sfc_2017_08_02_07_52_35_PDT.png";
+		final String IMG_NAME_3 = "NOAA_sfc_2017_08_02_07_52_35_PDT.png"; // Yes, same as above.
 
 		long before = System.currentTimeMillis();
 	  BufferedImage bimg = ImageIO.read(new File(IMG_NAME_1));
@@ -57,6 +58,11 @@ public class ChangeColor {
 		bimg = ImageUtil.switchColorAndMakeColorTransparent(bimg, Color.black, Color.red, Color.white);
 		ImageUtil.writeImageToFile(bimg, "png", "web" + File.separator + IMG_NAME_2);
 
+//	bimg = ImageIO.read(new File(IMG_NAME_3));
+		bimg = ImageUtil.toBufferedImage(ImageUtil.readImage(IMG_NAME_3), Math.toRadians(90));
+		bimg = ImageUtil.switchColorAndMakeColorTransparent(bimg, Color.black, Color.magenta, Color.white);
+		ImageUtil.writeImageToFile(bimg, "png", "web" + File.separator + "_" + IMG_NAME_3);
+
 		// Transform template
 		BufferedReader br = new BufferedReader(new FileReader("web" + File.separator + "template.html"));
 		BufferedWriter bw = new BufferedWriter(new FileWriter("web" + File.separator + "index.html"));
@@ -69,6 +75,9 @@ public class ChangeColor {
 				}
 				if (line.contains("<FAX_2>")) {
 					line = line.replace("<FAX_2>", IMG_NAME_2);
+				}
+				if (line.contains("<FAX_3>")) {
+					line = line.replace("<FAX_3>", "_" + IMG_NAME_3);
 				}
 				bw.write(line + "\n");
 			}

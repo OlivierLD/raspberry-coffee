@@ -1,26 +1,38 @@
 <!DOCTYPE html>
+<!--
+ | drawImage, see https://www.w3schools.com/tags/canvas_drawimage.asp
+ +-->
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Template</title>
+	<title>Sample</title>
 </head>
 <body>
-  <h1 style="font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular; color: silver;">Sample</h1>
-	<canvas id="faxCanvas" width="2640" height="1728"></canvas>
+  <h3 style="font-family: Verdana, Arial, Helvetica, Geneva, Swiss, SunSans-Regular; color: silver;">Sample, 3 faxes</h3>
+	<div style="width: 1024px; height: 600px; padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
+		<canvas id="faxCanvas" width="2640" height="1728"></canvas>
+	</div>
 	<script>
 		var canvas = document.getElementById('faxCanvas');
 		var context = canvas.getContext('2d');
 		var faxObj_1 = new Image();
 		var faxObj_2 = new Image();
+		var faxObj_3 = new Image();
 
 		faxObj_1.onload = function() {
 			context.drawImage(faxObj_1, 10, 50);
 		};
 		faxObj_2.onload = function() {
-			context.drawImage(faxObj_2, 69, 150);
+			context.drawImage(faxObj_2, 69, 150, (parseInt(faxObj_2.width) / 2), (parseInt(faxObj_2.height) / 2)); // Half the size.
+		};
+		faxObj_3.onload = function() {
+			context.drawImage(faxObj_3, 10, 10, (parseInt(faxObj_3.width) / 3), (parseInt(faxObj_3.height) / 3)); // Half the size.
 		};
 		faxObj_1.src = '<FAX_1>';
 		faxObj_2.src = '<FAX_2>';
+		faxObj_3.src = '<FAX_3>';
 	</script>
+	<hr/>
+	<i>OlivSoft</i>
 </body>
 </html>
