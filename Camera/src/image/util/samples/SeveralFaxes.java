@@ -12,7 +12,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.text.NumberFormat;
 
 public class SeveralFaxes {
 
@@ -20,9 +19,11 @@ public class SeveralFaxes {
 			throws Exception {
 		final String FAX_NAME_1 = "http://www.opc.ncep.noaa.gov/P_sfc_full_ocean.gif";  // Surface, current
 		final String FAX_NAME_2 = "http://www.opc.ncep.noaa.gov/shtml/P_06hr500bw.gif"; // 500mb, current
+		final String FAX_NAME_3 = "http://www.prh.noaa.gov/hnl/graphics/stream.gif";    // Streamlines
 
 		final String IMG_NAME_1 = "NOAA_sfc_1.png";
 		final String IMG_NAME_2 = "NOAA_500_2.png";
+		final String IMG_NAME_3 = "NOAA_Stream_2.png";
 
 		Image fax1 = ImageHTTPClient.getFax(FAX_NAME_1, "web" + File.separator + IMG_NAME_1);
 		BufferedImage bimg1 = ImageUtil.toBufferedImage(fax1);
@@ -35,6 +36,12 @@ public class SeveralFaxes {
 		// Transparent red, blur
 		bimg2 = ImageUtil.switchColorAndMakeColorTransparent(bimg2, Color.black, Color.red, Color.white, ImageUtil.BLUR);
 		ImageUtil.writeImageToFile(bimg2, "png", "web" + File.separator + "_" + IMG_NAME_2);
+
+		Image fax3 = ImageHTTPClient.getFax(FAX_NAME_3, "web" + File.separator + IMG_NAME_3);
+		BufferedImage bimg3 = ImageUtil.toBufferedImage(fax3);
+		// Transparent, blur, no color change.
+		bimg3 = ImageUtil.makeColorTransparent(bimg3, Color.white, ImageUtil.BLUR);
+		ImageUtil.writeImageToFile(bimg3, "png", "web" + File.separator + "_" + IMG_NAME_3);
 
 		// Transform template
 		BufferedReader br = new BufferedReader(new FileReader("web" + File.separator + "template.html"));
@@ -49,9 +56,8 @@ public class SeveralFaxes {
 				if (line.contains("<FAX_2>")) {
 					line = line.replace("<FAX_2>", "_" + IMG_NAME_2);
 				}
-				// No 3rd fax for now
 				if (line.contains("<FAX_3>")) {
-					line = line.replace("<FAX_3>", "");
+					line = line.replace("<FAX_3>", "_" + IMG_NAME_3);
 				}
 				bw.write(line + "\n");
 			}
