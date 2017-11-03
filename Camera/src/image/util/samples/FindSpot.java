@@ -1,6 +1,6 @@
 package image.util.samples;
 
-import image.util.ImageUtil;
+import images.ImageUtil;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -8,11 +8,11 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import static image.util.ImageUtil.countColors;
-import static image.util.ImageUtil.findMaxLum;
-import static image.util.ImageUtil.findSpot;
-import static image.util.ImageUtil.mostUsedColor;
-import static image.util.ImageUtil.writeImageToFile;
+import static images.ImageUtil.countColors;
+import static images.ImageUtil.findMaxLum;
+import static images.ImageUtil.findSpot;
+import static images.ImageUtil.mostUsedColor;
+import static images.ImageUtil.writeImageToFile;
 
 public class FindSpot {
 	public static void main(String[] args) throws Exception {

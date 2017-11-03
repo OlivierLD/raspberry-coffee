@@ -1,4 +1,4 @@
-package image.util;
+package images;
 
 import com.sun.media.jai.codec.FileSeekableStream;
 import com.sun.media.jai.codec.ImageCodec;

@@ -1,6 +1,6 @@
 package image.util.samples;
 
-import image.util.ImageUtil;
+import images.ImageUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -18,6 +18,8 @@ public class ChangeColor {
 	 * Turn 2 black and white, opaque faxes, into a transparent blue one and a transparent red on.
 	 * Then display them in a web page, superimposed.
 	 *
+	 * TODO Add blur & sharp, drawing underneath
+	 *
 	 * @param args
 	 * @throws Exception
 	 */
@@ -34,9 +36,10 @@ public class ChangeColor {
 
 	  int width          = bimg.getWidth();
 	  int height         = bimg.getHeight();
-	  System.out.println("Image is " + width + " x " + height);
-//  bimg = ImageUtil.turnColorTransparent(bimg, Color.white);
+	  System.out.println("Image size is " + width + " x " + height);
+
 		before = System.currentTimeMillis();
+		// Transparent blue
 		bimg = ImageUtil.switchColorAndMakeColorTransparent(bimg, Color.black, Color.blue, Color.white);
 		after = System.currentTimeMillis();
 		long tx = after - before;
@@ -55,11 +58,13 @@ public class ChangeColor {
 		System.out.println(String.format("All together %s ms", nf.format(reading + tx + writing)));
 
 		bimg = ImageIO.read(new File(IMG_NAME_2));
+		// Transparent red
 		bimg = ImageUtil.switchColorAndMakeColorTransparent(bimg, Color.black, Color.red, Color.white);
 		ImageUtil.writeImageToFile(bimg, "png", "web" + File.separator + IMG_NAME_2);
 
 //	bimg = ImageIO.read(new File(IMG_NAME_3));
 		bimg = ImageUtil.toBufferedImage(ImageUtil.readImage(IMG_NAME_3), Math.toRadians(90));
+		// Transparent pink
 		bimg = ImageUtil.switchColorAndMakeColorTransparent(bimg, Color.black, Color.magenta, Color.white);
 		ImageUtil.writeImageToFile(bimg, "png", "web" + File.separator + "_" + IMG_NAME_3);
 
