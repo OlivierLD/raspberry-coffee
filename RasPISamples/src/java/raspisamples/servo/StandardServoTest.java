@@ -6,8 +6,8 @@ import i2c.servo.pwm.PCA9685;
 /*
  * Standard, using I2C and the PCA9685 servo board
  */
-public class StandardServo {
-	public static void waitfor(long howMuch) {
+public class StandardServoTest {
+	public static void delay(long howMuch) {
 		try {
 			Thread.sleep(howMuch);
 		} catch (InterruptedException ie) {
@@ -26,11 +26,11 @@ public class StandardServo {
 
 	private PCA9685 servoBoard = null;
 
-	public StandardServo(int channel) throws I2CFactory.UnsupportedBusNumberException {
+	public StandardServoTest(int channel) throws I2CFactory.UnsupportedBusNumberException {
 		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX);
 	}
 
-	public StandardServo(int channel, int servoMin, int servoMax) throws I2CFactory.UnsupportedBusNumberException {
+	public StandardServoTest(int channel, int servoMin, int servoMax) throws I2CFactory.UnsupportedBusNumberException {
 		this.servoBoard = new PCA9685();
 
 		this.servoMin = servoMin;
@@ -71,7 +71,7 @@ public class StandardServo {
 	/**
 	 * To test the servo - namely, the min & max values.
 	 *
-	 * @param args
+	 * @param args The number of the servo to test [0..15]
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
@@ -80,48 +80,32 @@ public class StandardServo {
 			try {
 				channel = Integer.parseInt(args[0]);
 			} catch (Exception e) {
-				throw e;
+				throw new RuntimeException(e);
 			}
 		}
 		System.out.println("Servo Channel " + channel);
-		StandardServo ss = new StandardServo(channel);
+		StandardServoTest ss = new StandardServoTest(channel);
 		try {
 			ss.stop();
-			waitfor(2_000);
-			System.out.println("Let's go, 1 by 1 (" + ss.servoMin + " to " + ss.servoMax + ")");
-			for (int i = ss.servoMin; i <= ss.servoMax; i++) {
-				System.out.println("i=" + i + ", " + (-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
-				ss.setPWM(i);
-				waitfor(10);
-			}
-			for (int i = ss.servoMax; i >= ss.servoMin; i--) {
-				System.out.println("i=" + i + ", " + (-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
-				ss.setPWM(i);
-				waitfor(10);
-			}
-			ss.stop();
-			waitfor(2_000);
-			System.out.println("Let's go, 1 deg by 1 deg, forward");
-			for (int i = ss.servoMin; i <= ss.servoMax; i += (ss.diff / 180)) {
-				System.out.println("i=" + i + ", " + Math.round(-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
-				ss.setPWM(i);
-				waitfor(10);
-			}
-			System.out.println("... backward");
-			for (int i = ss.servoMax; i >= ss.servoMin; i -= (ss.diff / 180)) {
-				System.out.println("i=" + i + ", " + Math.round(-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
-				ss.setPWM(i);
-				waitfor(10);
-			}
-			ss.stop();
-			waitfor(2_000);
 
-			System.out.println("More randomly:");
-			float[] degValues = {-10, 0, -90, 45, -30, 90, 10, 20, 30, 40, 50, 60, 70, 80, 90, 0};
-			for (float f : degValues) {
+			ss.setAngle(0f);
+
+
+
+			for (float f=0; f<=45; f++) {
 				System.out.println("In degrees:" + f);
 				ss.setAngle(f);
-				waitfor(1_500);
+				delay(500);
+			}
+			for (float f=45; f>=-45; f--) {
+				System.out.println("In degrees:" + f);
+				ss.setAngle(f);
+				delay(500);
+			}
+			for (float f=-45; f<=0; f++) {
+				System.out.println("In degrees:" + f);
+				ss.setAngle(f);
+				delay(500);
 			}
 		} finally {
 			ss.stop();
