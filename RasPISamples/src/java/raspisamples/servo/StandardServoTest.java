@@ -95,17 +95,17 @@ public class StandardServoTest {
 			for (float f=0; f<=45; f++) {
 				System.out.println("In degrees:" + f);
 				ss.setAngle(f);
-				delay(500);
+				delay(10);
 			}
 			for (float f=45; f>=-45; f--) {
 				System.out.println("In degrees:" + f);
 				ss.setAngle(f);
-				delay(500);
+				delay(10);
 			}
 			for (float f=-45; f<=0; f++) {
 				System.out.println("In degrees:" + f);
 				ss.setAngle(f);
-				delay(500);
+				delay(10);
 			}
 		} finally {
 			ss.stop();
