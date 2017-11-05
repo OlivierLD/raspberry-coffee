@@ -40,29 +40,29 @@
 
 		var moveUp = function(data) {
 			console.log(data);
-			// Increment position, and send to server.
-			data.tilt += 1;
+			// Decrement position, and send to server. (inversed)
+			data.tilt -= 1;
 			displayMess("Tilt is now " + data.tilt);
 			setTiltCam(data, doNothing);
 		};
 		var moveDown = function(data) {
 			console.log(data);
-			// Decrement position, and send to server.
-			data.tilt -= 1;
+			// Increment position, and send to server. (inversed)
+			data.tilt += 1;
 			displayMess("Tilt is now " + data.tilt);
 			setTiltCam(data, doNothing);
 		};
 		var moveLeft = function(data) {
 			console.log(data);
 			// Decrement position, and send to server.
-			data.heading -= 1;
+			data.heading += 1;
 			displayMess("Heading is now " + data.heading);
 			setHeadingCam(data, doNothing);
 		};
 		var moveRight = function(data) {
 			console.log(data);
 			// Increment position, and send to server.
-			data.heading += 1;
+			data.heading -= 1;
 			displayMess("Heading is now " + data.heading);
 			setHeadingCam(data, doNothing);
 		};

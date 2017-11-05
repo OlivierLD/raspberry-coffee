@@ -62,6 +62,7 @@ var snap = function(name) {
 	var url = "/cam/snap";
 	// Add name
 	url += ("?name=" + name);
+	url += ("&rot=270"); // Depends on your camera setup
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, null, false);
 };
 
