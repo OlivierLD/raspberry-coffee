@@ -66,7 +66,7 @@ public class PinUtil {
 	public static GPIOPin findByPin(Pin pin) {
 		GPIOPin gpio = null;
 		for (GPIOPin gpioPin : GPIOPin.values()) {
-			if (gpioPin.pin().equals(pin)) {
+			if (pin != null && pin.equals(gpioPin.pin())) {
 				gpio = gpioPin;
 				break;
 			}

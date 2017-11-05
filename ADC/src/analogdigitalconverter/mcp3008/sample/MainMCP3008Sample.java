@@ -34,7 +34,7 @@ public class MainMCP3008Sample {
 				MOSI_PRM_PREFIX, PinUtil.findByPin(mosi).gpio(),
 				CLK_PRM_PREFIX, PinUtil.findByPin(clk).gpio(),
 				CS_PRM_PREFIX, PinUtil.findByPin(cs).gpio(),
-				CHANNEL_PREFIX, MCP3008Reader.MCP3008_input_channels.CH0.ch()));
+				CHANNEL_PREFIX, adcChannel));
 		System.out.println("Values above are default values.");
 		System.out.println();
 
