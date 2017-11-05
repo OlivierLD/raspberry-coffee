@@ -10,13 +10,15 @@ import static utils.StringUtils.lpad;
 public class MainMCP3008Sample {
 	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
 	private static boolean go = true;
-	private static int ADC_CHANNEL =
+	private static int adcChannel =
 					MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 	private static final String MISO_PRM_PREFIX = "-miso:";
 	private static final String MOSI_PRM_PREFIX = "-mosi:";
 	private static final String CLK_PRM_PREFIX  = "-clk:";
 	private static final String CS_PRM_PREFIX   = "-cs:";
+
+	private static final String CHANNEL_PREFIX  = "-channel:";
 
 	public static void main(String... args) {
 
@@ -26,12 +28,13 @@ public class MainMCP3008Sample {
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
-		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d ",
+		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d %s%d",
 				MainMCP3008Sample.class.getName(),
 				MISO_PRM_PREFIX, PinUtil.findByPin(miso).gpio(),
 				MOSI_PRM_PREFIX, PinUtil.findByPin(mosi).gpio(),
 				CLK_PRM_PREFIX, PinUtil.findByPin(clk).gpio(),
-				CS_PRM_PREFIX, PinUtil.findByPin(cs).gpio()));
+				CS_PRM_PREFIX, PinUtil.findByPin(cs).gpio(),
+				CHANNEL_PREFIX, MCP3008Reader.MCP3008_input_channels.CH0.ch()));
 		System.out.println("Values above are default values.");
 		System.out.println();
 
@@ -71,6 +74,16 @@ public class MainMCP3008Sample {
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
+				} else if (prm.startsWith(CHANNEL_PREFIX)) {
+					String chValue = prm.substring(CHANNEL_PREFIX.length());
+					try {
+						adcChannel = Integer.parseInt(chValue);
+						if (adcChannel > 7 || adcChannel < 0) {
+							throw new RuntimeException("Channel in [0..7] please");
+						}
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+					}
 				} else {
 					// What?
 					System.err.println(String.format("Un-managed prm: %s", prm));
@@ -78,7 +91,7 @@ public class MainMCP3008Sample {
 			}
 		}
 
-		System.out.println(String.format("Reading MCP3008 on channel %d", ADC_CHANNEL));
+		System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
 		System.out.println(
 				" Wiring of the MCP3008-SPI (without power supply):\n" +
 				" +---------++---------------------------------------------+\n" +
@@ -123,7 +136,7 @@ public class MainMCP3008Sample {
 		int tolerance = 5;
 		while (go) {
 			boolean trimPotChanged = false;
-			int adc = MCP3008Reader.readMCP3008(ADC_CHANNEL);
+			int adc = MCP3008Reader.readMCP3008(adcChannel);
 			int postAdjust = Math.abs(adc - lastRead);
 			if (postAdjust > tolerance) {
 				trimPotChanged = true;
