@@ -1,5 +1,9 @@
 /*
  * @author Olivier Le Diouris
+ *
+ * Shows how to use the WorldMap object
+ * and the REST APIs of the Astro service.
+ * Displays a GLOBE
  */
 "use strict";
 

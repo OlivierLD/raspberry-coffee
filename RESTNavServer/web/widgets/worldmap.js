@@ -3,7 +3,11 @@
  * @author Olivier Le Diouris
  */
 
-const projections = [ "ANAXIMANDRE", "MERCATOR", "GLOBE" ];
+const projections = {
+	anaximandre: { type: "ANAXIMANDRE"},
+	mercator: { type: "MERCATOR"},
+	globe: { type: "GLOBE"}
+};
 const tropicLat = 23.43698;
 
 function WorldMap (cName, prj) {
@@ -53,16 +57,16 @@ function WorldMap (cName, prj) {
 		label = str;
 	};
 
-	var arrayContains = function(array, value) {
-		for (var idx=0; idx<array.length; idx++) {
-			if (array[idx] === value) {
+	var projectionSupported = function(value) {
+		for  (var name in projections) {
+			if (projections[name].type === value) {
 				return true;
 			}
 		}
 		return false;
 	};
 
-	if (!arrayContains(projections, prj)) {
+	if (!projectionSupported(prj)) {
 		throw { "err": "Projection [" + prj + "] not supported" };
 	}
 	var projection = prj; // Make sure it's available in the list
@@ -162,7 +166,7 @@ function WorldMap (cName, prj) {
 	 *   chartPanel.setGlobeViewRightLeftRotation(-(sunD * Math.sin(Math.toRadians(lhaSun))));
 	 * An astro resource exists: GET /positions-in-the-sky?at=2017-10-11T15:23:28
 	 */
-	var globeViewRightLeftRotation = -23.4; // Tilt
+	var globeViewRightLeftRotation = -tropicLat; // Tilt
 	var globeViewForeAftRotation = 0; // Observer's latitude
 	var globeViewLngOffset = 0;       // Observer's longitude
 
@@ -810,6 +814,53 @@ function WorldMap (cName, prj) {
 		}
 	};
 
+	var drawMercatorChart = function (canvas, context) {
+		// TODO This is a copy of Anaximandre, fix this.
+		var worldTop = fullWorldMap.top;
+		var section = worldTop.section; // We assume top has been found.
+
+//    console.log("Found " + section.length + " section(s).")
+		for (var i = 0; i < section.length; i++) {
+			var point = section[i].point;
+			if (point !== undefined) {
+				var firstPt = null;
+				var previousPt = null;
+				context.beginPath();
+				for (var p = 0; p < point.length; p++) {
+					var lat = parseFloat(point[p].Lat);
+					var lng = parseFloat(point[p].Lng);
+					if (lng < -180) lng += 360;
+					if (lng > 180) lng -= 360;
+					var pt = posToCanvas(canvas, lat, lng);
+					if (p === 0) {
+						context.moveTo(pt.x, pt.y);
+						firstPt = pt;
+						previousPt = pt;
+					} else {
+						if (Math.abs(previousPt.x - pt.x) < (canvas.width / 2) && Math.abs(previousPt.y - pt.y) < (canvas.height / 2)) {
+							context.lineTo(pt.x, pt.y);
+							previousPt = pt;
+						}
+					}
+				}
+			}
+			if (firstPt !== null) {
+				context.lineTo(firstPt.x, firstPt.y); // close the loop
+			}
+			context.lineWidth = 1;
+			context.strokeStyle = 'black';
+			context.stroke();
+			context.fillStyle = "goldenrod";
+			context.fill();
+			context.closePath();
+		}
+		// User position
+		if (userPosition !== {}) {
+			var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
+			plotPosToCanvas(canvas, userPos.latitude, userPos.longitude, "Your position");
+		}
+	};
+
 	var findInList = function(array, member, value) {
 		for (var idx=0; idx<array.length; idx++) {
 			if (array[idx][member] !== undefined && array[idx][member] === value) {
@@ -999,14 +1050,17 @@ function WorldMap (cName, prj) {
 			try {
 				switch (projection) {
 					case undefined:
-					case "ANAXIMANDRE":
+					case projections.anaximandre.type:
 						drawAnaximandreChart(canvas, context);
 						break;
-					case "GLOBE":
+					case projections.globe.type:
 						drawGlobe(canvas, context);
 						break;
+					case projections.mercator.type:
+						drawMercatorChart(canvas, context);
+						break;
 					default:
-						console.log("Projection %s not available yet", proj);
+						console.log("Projection %s not available yet", projection);
 						break;
 				}
 			} catch (ex) {

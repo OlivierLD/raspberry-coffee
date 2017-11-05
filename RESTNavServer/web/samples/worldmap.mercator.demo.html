@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <!--
- | Take move-fast=false as QS parameter.
- | Start the nav server (./runNavServer)
- | Then try http://localhost:9999/web/samples/worldmap.html?move-fast=false
+ | No server required, just displays the map, Mercator projection
  +-->
 <html>
   <head>
@@ -16,14 +14,11 @@
 
     <link rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>
 		<link rel="stylesheet" href="../css/black.css" type="text/css" id="theme"/>
-    <script type="text/javascript" src="../js/jquery-2.1.3.js"></script>
-    <script type="text/javascript" src="../js/date.proto.js"></script>
 		<script type="text/javascript" src="../widgets/WorldMapData.js"></script>
     <script type="text/javascript" src="../widgets/worldmap.js"></script>
-    <script type="text/javascript" src="../js/pub.sub.js"></script>
     <script type="text/javascript" src="../js/conversion.utils.js"></script>
     <script type="text/javascript" src="../js/routes.utils.js"></script>
-		<script type="text/javascript" src="worldmap.demo.js"></script>
+		<script type="text/javascript" src="worldmap.mercator.demo.js"></script>
     <script type="text/javascript">
     
   var DURATION_FMT = "Y-m-dTH:i:s";
@@ -32,84 +27,16 @@
 	var months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 
-	var astroCallback = function(data) { // Intercepted
-//	console.log("Astro Data:", data);
-		var sunLHA = data.sun.gha + data.from.longitude;
-		while (sunLHA < 0) sunLHA +=360;
-		while (sunLHA > 360) sunLHA -= 360;
-		var moonLHA = data.moon.gha + data.from.longitude;
-		while (moonLHA < 0) moonLHA +=360;
-		while (moonLHA > 360) moonLHA -= 360;
-		document.getElementById("sun-moon-data").innerHTML =
-			'<table border="0"><tr><td>Sun D:</td><td align="right">' +
-			decToSex(data.sun.decl, "NS") +
-			'</td></tr><tr><td>Sun GHA:</td><td align="right">' +
-			decToSex(data.sun.gha) +
-			'</td><td>&nbsp;LHA:</td><td align="right">' +
-			decToSex(sunLHA) +
-			'</td></tr><tr><td>Sun Alt:</td><td align="right">' +
-			decToSex(data.sunObs.alt) +
-			'</td></tr><tr><td>Sun Z:</td><td align="right">' +
-			decToSex(data.sunObs.z) +
-
-			'</td></tr><tr><td>Moon D:</td><td align="right">' +
-			decToSex(data.moon.decl, "NS") +
-			'</td></tr><tr><td>Moon GHA:</td><td align="right">' +
-			decToSex(data.moon.gha) +
-			'</td><td>&nbsp;LHA:</td><td align="right">' +
-			decToSex(moonLHA) +
-			'</td></tr><tr><td>Moon Alt:</td><td align="right">' +
-			decToSex(data.moonObs.alt) +
-			'</td></tr><tr><td>Moon Z:</td><td align="right">' +
-			decToSex(data.moonObs.z) +
-			'</td></tr></table>';
-
-		document.getElementById("solar-date").innerHTML =
-				data.solarDate.year + ' ' +
-				months[data.solarDate.month - 1] + ' ' +
-				(data.solarDate.day < 10 ? '0' : '') + data.solarDate.day + ' ' +
-				(data.solarDate.hour < 10 ? '0' : '') + data.solarDate.hour + ':' +
-				(data.solarDate.min < 10 ? '0' : '') + data.solarDate.min + ':' +
-				(data.solarDate.sec < 10 ? '0' : '') + data.solarDate.sec;
-
-		document.getElementById("sun-meridian").innerHTML =
-				(data.tPass.hour < 10 ? '0' : '') + data.tPass.hour + ':' +
-				(data.tPass.min < 10 ? '0' : '') + data.tPass.min + ':' +
-				(data.tPass.sec < 10 ? '0' : '') + data.tPass.sec + ' ' +
-				data.tPass.tz;
-
-		worldMap.setAstronomicalData(data);
-	};
-
   window.onload = function() {
-    init(); // init UI
+	  init(); // init UI
 
 	  worldMap.clear();
 	  worldMap.setPositionLabel("");
-    setTimeout(function() {
-	    worldMap.drawWorldMap();
-    }, 1);
+	  setTimeout(function () {
+		  worldMap.drawWorldMap();
+	  }, 1);
 
-	  initAjax(); // Starts the clock
-
-    document.getElementById("console-type").innerHTML = 'The HTML5 ' + flavor + ' Console.';
-
-    /**
-		 *  SUBSCRIBERS HERE.
-		 *
-     * The following subscriptions make the distinction between Ajax & WebSockets
-     * (See the initAjax & initWS methods)
-     */
-    events.subscribe('pos', function(val) {
-	    worldMap.clear();
-	    worldMap.drawWorldMap();
-	    worldMap.setUserPosition({ latitude: val.lat, longitude: val.lng });
-    });
-	  events.subscribe('gps-time', function(val) {
-		  // Request astronomical data for the map
-		  var date = new Date(val);
-		  getAstroData(date.format(DURATION_FMT), astroCallback);
-	  });
+	  document.getElementById("console-type").innerHTML = 'The HTML5 ' + flavor + ' Console.';
   };
 
   var displayErr = function(err) {
@@ -174,17 +101,12 @@
     </script>
   </head>
   <body>
-    <h2>World Globe Demo</h2>
-    <!--h4>Traveling east, random latitude increment.</h4-->
-    <div style="display: none;">
-      <img src="../images/moon-white.png" id="moon-png" />
-      <img src="../images/sun-white.png" id="sun-png" />
-    </div>
+    <h2>World Marcator Demo</h2>
     <table border="0">
       <tr>
         <td valign="top" rowspan="6">
           <div id="map" style="display: block; height: 500px; width: 850px; overflow-x: auto; overflow-y: auto; text-align: center;">
-            <canvas id="mapCanvas" width="800" height="490" style="border-radius:10px;"></canvas>
+            <canvas id="mapCanvas" width="800" height="495" style="border-radius:10px;"></canvas>
           </div>
         </td>
         <td valign="top">
