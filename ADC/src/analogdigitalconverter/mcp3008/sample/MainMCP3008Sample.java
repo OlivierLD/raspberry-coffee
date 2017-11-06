@@ -82,7 +82,7 @@ public class MainMCP3008Sample {
 							throw new RuntimeException("Channel in [0..7] please");
 						}
 					} catch (NumberFormatException nfe) {
-						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
 					}
 				} else {
 					// What?
@@ -99,27 +99,28 @@ public class MainMCP3008Sample {
 				" +---------++------+------------+---------+---------------+\n" +
 				" |         || Pin# | Name       | GPIO    | wiringPI/PI4J |\n" +
 				" +---------++------+------------+---------+---------------+");
-		System.out.println(String.format(" | CLK     || #%02d  | %s | GPIO_%02d | %02d            |",
+		System.out.println(String.format(" | CLK (13)|| #%02d  | %s | GPIO_%02d | %02d            |",
 				PinUtil.findByPin(clk).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
 				PinUtil.findByPin(clk).gpio(),
 				PinUtil.findByPin(clk).wiringPi()));
-		System.out.println(String.format(" | Din     || #%02d  | %s | GPIO_%02d | %02d            |",
+		System.out.println(String.format(" | Din (11)|| #%02d  | %s | GPIO_%02d | %02d            |",
 				PinUtil.findByPin(miso).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
 				PinUtil.findByPin(miso).gpio(),
 				PinUtil.findByPin(miso).wiringPi()));
-		System.out.println(String.format(" | Dout    || #%02d  | %s | GPIO_%02d | %02d            |",
+		System.out.println(String.format(" | Dout(12)|| #%02d  | %s | GPIO_%02d | %02d            |",
 				PinUtil.findByPin(mosi).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
 				PinUtil.findByPin(mosi).gpio(),
 				PinUtil.findByPin(mosi).wiringPi()));
-		System.out.println(String.format(" | CS      || #%02d  | %s | GPIO_%02d | %02d            |",
+		System.out.println(String.format(" | CS  (10)|| #%02d  | %s | GPIO_%02d | %02d            |",
 				PinUtil.findByPin(cs).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
 				PinUtil.findByPin(cs).gpio(),
 				PinUtil.findByPin(cs).wiringPi()));
 		System.out.println(" +---------++------+------------+---------+---------------+");
+		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 
 		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
 
