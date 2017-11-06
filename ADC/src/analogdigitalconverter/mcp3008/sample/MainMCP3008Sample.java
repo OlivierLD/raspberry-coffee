@@ -121,6 +121,16 @@ public class MainMCP3008Sample {
 				PinUtil.findByPin(cs).wiringPi()));
 		System.out.println(" +---------++------+------------+---------+---------------+");
 		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
+		System.out.println("       +--------+ ");
+		System.out.println("  CH0 -+  1  16 +- Vdd ");
+		System.out.println("  CH1 -+  2  15 +- Vref ");
+		System.out.println("  CH2 -+  3  14 +- aGnd ");
+		System.out.println("  CH3 -+  4  13 +- CLK ");
+		System.out.println("  CH4 -+  5  12 +- Dout ");
+		System.out.println("  CH5 -+  6  11 +- Din ");
+		System.out.println("  CH6 -+  7  10 +- CS ");
+		System.out.println("  CH7 -+  8   9 +- dGnd ");
+		System.out.println("       +--------+ ");
 
 		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
 
