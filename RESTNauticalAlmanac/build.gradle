@@ -4,7 +4,10 @@ plugins {
   id 'maven'
   id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
-compileJava.options.encoding = 'UTF-8'
+compileJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
 
 group = 'oliv.pi4j.samples'
 version = '1.0'

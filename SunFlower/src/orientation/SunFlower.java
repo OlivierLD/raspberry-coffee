@@ -22,9 +22,11 @@ import static ansi.EscapeSeq.TOP_T_BOLD;
 import static ansi.EscapeSeq.ansiLocate;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
+import com.pi4j.io.gpio.Pin;
 import http.HTTPServer;
 import http.RESTRequestManager;
 import i2c.servo.pwm.PCA9685;
+import analogdigitalconverter.mcp3008.MCP3008Reader;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.NumberFormat;
@@ -39,6 +41,9 @@ import java.util.TimeZone;
 import java.util.stream.Collectors;
 import org.fusesource.jansi.AnsiConsole;
 import calc.GeomUtil;
+import utils.PinUtil;
+import utils.StringUtils;
+
 import static utils.StringUtils.lpad;
 import static utils.StringUtils.rpad;
 
@@ -77,6 +82,9 @@ import static utils.StringUtils.rpad;
  * -Dto.date=2017-06-28T20:33:00
  *
  * -Dhttp.port=9999
+ *
+ * For the MCP3008, command line parameters (default below):
+ * -miso:9 -mosi:10 -clk:11 -cs:8 -channel:0
  */
 public class SunFlower implements RESTRequestManager {
 
@@ -142,6 +150,15 @@ public class SunFlower implements RESTRequestManager {
 		SDF_UTC.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
 	}
 
+	private static int adcChannel =
+			MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
+
+	private static final String MISO_PRM_PREFIX = "-miso:";
+	private static final String MOSI_PRM_PREFIX = "-mosi:";
+	private static final String CLK_PRM_PREFIX  = "-clk:";
+	private static final String CS_PRM_PREFIX   = "-cs:";
+
+	private static final String CHANNEL_PREFIX  = "-channel:";
 	private static boolean foundPCA9685 = true;
 
 	/**
@@ -713,6 +730,39 @@ public class SunFlower implements RESTRequestManager {
 			this.z = azimuth;
 		}
 	}
+
+	public static class BatteryData {
+		double volt;
+		int adc; // 0..1023
+		int volume; // 0..100
+		public BatteryData volt(double v) {
+			this.volt = v;
+			return this;
+		}
+		public BatteryData adc(int adc) {
+			this.adc = adc;
+			return this;
+		}
+		public BatteryData volume(int volume) {
+			this.volume = volume;
+			return this;
+		}
+	}
+
+	/**
+	 * Requires an MCP3008
+	 * @return the voltage of the LiPo battery
+	 */
+	public BatteryData getBatteryData() {
+		int adc = MCP3008Reader.readMCP3008(adcChannel);
+		int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
+		BatteryData batteryData = new BatteryData()
+				.adc(adc)
+				.volume(volume);
+		// TODO Voltage
+		return batteryData;
+	}
+
 	public SunData getSunData() {
 		return new SunData(he, z);
 	}
@@ -943,6 +993,9 @@ public class SunFlower implements RESTRequestManager {
 
 	public void stopWorking() {
 		this.keepWorking = false;
+
+		MCP3008Reader.shutdownMCP3008();
+
 		for (int id : headingServoID) {
 			stop(id);
 		}
@@ -1028,8 +1081,26 @@ public class SunFlower implements RESTRequestManager {
 		headingServoID = new int[] { 14 };
 		tiltServoID = new int[] { 15 };
 
+		// Default pins
+		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
+		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
+		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
+		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+
+		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d %s%d",
+				SunFlower.class.getName(),
+				MISO_PRM_PREFIX, PinUtil.findByPin(miso).gpio(),
+				MOSI_PRM_PREFIX, PinUtil.findByPin(mosi).gpio(),
+				CLK_PRM_PREFIX, PinUtil.findByPin(clk).gpio(),
+				CS_PRM_PREFIX, PinUtil.findByPin(cs).gpio(),
+				CHANNEL_PREFIX, adcChannel));
+		System.out.println("Values above are default values.");
+		System.out.println();
+
 		// Supported parameters --heading:14 --tilt:15
 		if (args.length > 0) {
+			String pinValue = "";
+			int pin;
 			for (String prm : args) {
 				if (prm.startsWith("--heading:")) {
 					try {
@@ -1055,6 +1126,51 @@ public class SunFlower implements RESTRequestManager {
 					} catch (Exception e) {
 						throw e;
 					}
+				} else if (prm.startsWith(MISO_PRM_PREFIX)) {
+					pinValue = prm.substring(MISO_PRM_PREFIX.length());
+					try {
+						pin = Integer.parseInt(pinValue);
+						miso = PinUtil.getPinByWiringPiNumber(pin);
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else if (prm.startsWith(MOSI_PRM_PREFIX)) {
+					pinValue = prm.substring(MOSI_PRM_PREFIX.length());
+					try {
+						pin = Integer.parseInt(pinValue);
+						mosi = PinUtil.getPinByWiringPiNumber(pin);
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else if (prm.startsWith(CLK_PRM_PREFIX)) {
+					pinValue = prm.substring(CLK_PRM_PREFIX.length());
+					try {
+						pin = Integer.parseInt(pinValue);
+						clk = PinUtil.getPinByWiringPiNumber(pin);
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else if (prm.startsWith(CS_PRM_PREFIX)) {
+					pinValue = prm.substring(CS_PRM_PREFIX.length());
+					try {
+						pin = Integer.parseInt(pinValue);
+						cs = PinUtil.getPinByWiringPiNumber(pin);
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else if (prm.startsWith(CHANNEL_PREFIX)) {
+					String chValue = prm.substring(CHANNEL_PREFIX.length());
+					try {
+						adcChannel = Integer.parseInt(chValue);
+						if (adcChannel > 7 || adcChannel < 0) {
+							throw new RuntimeException("Channel in [0..7] please");
+						}
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
+					}
+				} else {
+					// What?
+					System.err.println(String.format("Un-managed prm: %s", prm));
 				}
 			}
 		}
@@ -1064,6 +1180,40 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println("Manual Entry and ANSI Console are mutually exclusive. Please choose one, and only one... Thank you.");
 			System.exit(1);
 		}
+
+		System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
+		System.out.println(
+				" Wiring of the MCP3008-SPI (without power supply):\n" +
+						" +---------++---------------------------------------------+\n" +
+						" | MCP3008 || Raspberry PI                                |\n" +
+						" +---------++------+------------+---------+---------------+\n" +
+						" |         || Pin# | Name       | GPIO    | wiringPI/PI4J |\n" +
+						" +---------++------+------------+---------+---------------+");
+		System.out.println(String.format(" | CLK (13)|| #%02d  | %s | GPIO_%02d | %02d            |",
+				PinUtil.findByPin(clk).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
+				PinUtil.findByPin(clk).gpio(),
+				PinUtil.findByPin(clk).wiringPi()));
+		System.out.println(String.format(" | Din (11)|| #%02d  | %s | GPIO_%02d | %02d            |",
+				PinUtil.findByPin(miso).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
+				PinUtil.findByPin(miso).gpio(),
+				PinUtil.findByPin(miso).wiringPi()));
+		System.out.println(String.format(" | Dout(12)|| #%02d  | %s | GPIO_%02d | %02d            |",
+				PinUtil.findByPin(mosi).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
+				PinUtil.findByPin(mosi).gpio(),
+				PinUtil.findByPin(mosi).wiringPi()));
+		System.out.println(String.format(" | CS  (10)|| #%02d  | %s | GPIO_%02d | %02d            |",
+				PinUtil.findByPin(cs).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
+				PinUtil.findByPin(cs).gpio(),
+				PinUtil.findByPin(cs).wiringPi()));
+		System.out.println(" +---------++------+------------+---------+---------------+");
+		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
+
+		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
+
 
 		String strLat = System.getProperty("latitude");
 		if (strLat != null) {

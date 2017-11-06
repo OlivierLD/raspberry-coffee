@@ -108,7 +108,7 @@ public class SightReductionUtil {
 		double sinHe = (sinL * sinD) + (cosL * cosD * cosAHL);
 		double He = Math.toDegrees(Math.asin(sinHe));
 //  System.out.println("Hauteur Estimee : " + GeomUtil.decToSex(He));
-		dHe = new Double(He);
+		dHe = He;
 
 		// Formula to solve : tg Z = sin P / cos L tan D - sin L cos P
 		double P = (AHL < 180.0) ? AHL : (360.0 - AHL);
@@ -132,7 +132,7 @@ public class SightReductionUtil {
 //      Z = Z;
 		}
 //  System.out.println("Azimut : " + GeomUtil.decToSex(Z));
-		dZ = new Double(Z);
+		dZ = Z;
 	}
 
 	/**

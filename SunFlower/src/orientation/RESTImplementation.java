@@ -77,6 +77,11 @@ public class RESTImplementation {
 									this::getSunData,
 									"Get the computed Sun data"),
 					new Operation(
+							"GET",
+							"/battery-data",
+							this::getBatteryData,
+							"Get the LiPo battery data (voltage)"),
+					new Operation(
 									"GET",
 									"/all",
 									this::getAll,
@@ -151,7 +156,7 @@ public class RESTImplementation {
 		return response;
 	}
 
-	private Response getSunData(Request request) {
+	private Response getSunData(Request request)  {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		SunFlower.SunData sunData = sunFlower.getSunData();
 
@@ -173,6 +178,18 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private Response getBatteryData(Request request)  {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		SunFlower.BatteryData batteryData = sunFlower.getBatteryData();
+
+		String content = new Gson().toJson(batteryData);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+
 	private Response getOperationList(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		Operation[] channelArray = operations.stream()
@@ -190,7 +207,7 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response emptyOperation(Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
 
 		return response;
 	}
