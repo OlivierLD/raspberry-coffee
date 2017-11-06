@@ -23,6 +23,7 @@ import static ansi.EscapeSeq.ansiLocate;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.i2c.I2CFactory;
 import http.HTTPServer;
 import http.RESTRequestManager;
 import i2c.servo.pwm.PCA9685;
@@ -160,6 +161,7 @@ public class SunFlower implements RESTRequestManager {
 
 	private static final String CHANNEL_PREFIX  = "-channel:";
 	private static boolean foundPCA9685 = true;
+	private static boolean foundMCP3008 = true;
 
 	/**
 	 * Does not take the EoT in account, just longitude
@@ -446,7 +448,7 @@ public class SunFlower implements RESTRequestManager {
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}
-		} catch (UnsatisfiedLinkError usle) {
+		} catch (UnsatisfiedLinkError | I2CFactory.UnsupportedBusNumberException oops) {
 			foundPCA9685 = false;
 			System.err.println("+---------------------------------------------------------------------");
 			System.err.println("| You might not be on a Raspberry PI, or PI4J/WiringPi is not there...");
@@ -994,7 +996,9 @@ public class SunFlower implements RESTRequestManager {
 	public void stopWorking() {
 		this.keepWorking = false;
 
-		MCP3008Reader.shutdownMCP3008();
+		if (foundMCP3008) {
+			MCP3008Reader.shutdownMCP3008();
+		}
 
 		for (int id : headingServoID) {
 			stop(id);
@@ -1212,7 +1216,24 @@ public class SunFlower implements RESTRequestManager {
 		System.out.println(" +---------++------+------------+---------+---------------+");
 		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 
-		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
+		System.out.println("       +--------+ ");
+		System.out.println("  CH0 -+  1  16 +- Vdd ");
+		System.out.println("  CH1 -+  2  15 +- Vref ");
+		System.out.println("  CH2 -+  3  14 +- aGnd ");
+		System.out.println("  CH3 -+  4  13 +- CLK ");
+		System.out.println("  CH4 -+  5  12 +- Dout ");
+		System.out.println("  CH5 -+  6  11 +- Din ");
+		System.out.println("  CH6 -+  7  10 +- CS ");
+		System.out.println("  CH7 -+  8   9 +- dGnd ");
+		System.out.println("       +--------+ ");
+
+		try {
+			MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
+		} catch (UnsatisfiedLinkError ule) {
+			// Still not on a PI, hey?
+			System.err.println(ule.toString());
+			foundMCP3008 = false;
+		}
 
 
 		String strLat = System.getProperty("latitude");

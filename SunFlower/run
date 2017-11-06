@@ -118,7 +118,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
-    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=tilt"
+    JAVA_OPTS="$JAVA_OPTS -Dservo.super.verbose=false" # tilt, heading, none, false, both, true.
     JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
     JAVA_OPTS="$JAVA_OPTS -Dansi.console=false"
     #

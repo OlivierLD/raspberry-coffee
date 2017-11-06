@@ -118,18 +118,18 @@ public class SightReductionUtil {
 		double tanZ = sinP / ((cosL * tanD) - (sinL * cosP));
 		double Z = Math.toDegrees(Math.atan(tanZ));
 
-		if (AHL < 180.0) // vers l'West
-		{
-			if (Z < 0.0) // sud vers nord
+		if (AHL < 180.0) { // vers l'West
+			if (Z < 0.0) { // sud vers nord
 				Z = 180.0 - Z;
-			else         // Nord vers Sud
+			} else {         // Nord vers Sud
 				Z = 360.0 - Z;
-		} else             // vers l'Est
-		{
-			if (Z < 0.0) // sud vers nord
+			}
+		} else {           // vers l'Est
+			if (Z < 0.0) { // sud vers nord
 				Z = 180.0 + Z;
-//    else         // nord vers sud
+//    } else {       // nord vers sud
 //      Z = Z;
+			}
 		}
 //  System.out.println("Azimut : " + GeomUtil.decToSex(Z));
 		dZ = Z;
@@ -323,17 +323,20 @@ public class SightReductionUtil {
 			horizonDip = getHorizonDip(eyeHeight);
 			correction -= (horizonDip / 60.0);
 		}
-		if (verbose)
+		if (verbose) {
 			System.out.println("Original Altitude:" + df.format(appAltitude));
+		}
 		double observedAltitude = appAltitude + correction;
-		if (verbose && !artificialHorizon)
+		if (verbose && !artificialHorizon) {
 			System.out.println("-> With Hor.Dip :" + df.format(observedAltitude) + " (Horizon Dip for " + eyeHeight + "m:" + df.format(horizonDip) + "', total correction:" + df.format(correction * 60d) + "')");
+		}
 		// Refraction
 		refr = getRefr(observedAltitude);
 		correction -= (refr / 60.0);
 		observedAltitude = appAltitude + correction;
-		if (verbose)
+		if (verbose) {
 			System.out.println("-> With Refr    :" + df.format(observedAltitude) + " (Refraction:" + df.format(refr) + "', total correction:" + df.format(correction * 60d) + "')");
+		}
 		// Barometric & temp correction - stby for now
 
 		// Parallax
@@ -348,8 +351,9 @@ public class SightReductionUtil {
 
 		correction += (pa);
 		observedAltitude = appAltitude + correction;
-		if (verbose)
+		if (verbose) {
 			System.out.println("-> With Parallax:" + df.format(observedAltitude) + " (Parallax for hp " + (hp * 60) + ":" + df.format(pa * 60d) + "', total correction:" + df.format(correction * 60d) + "')");
+		}
 		// Semi diameter
 		if (limb == LOWER_LIMB) {
 			correction += (sd); // Lower Limb;
@@ -360,10 +364,10 @@ public class SightReductionUtil {
 		}
 
 		observedAltitude = appAltitude + correction;
-		if (verbose)
+		if (verbose) {
 			System.out.println("-> With Semi-Diam:" + df.format(observedAltitude) + ", total correction:" + df.format(correction * 60d) + "'");
-		if (verbose)
 			System.out.println("- Total Correction:" + df.format(correction) + "\272, " + GeomUtil.decToSex(correction, GeomUtil.SHELL, GeomUtil.NONE));
+		}
 		return observedAltitude;
 	}
 
@@ -394,7 +398,6 @@ public class SightReductionUtil {
 		if (verbose) {
 			System.out.println(" refraction:" + df.format(refr / 60.0) + ", app. alt:" + df.format(appAlt));
 		}
-
 		return appAlt;
 	}
 
@@ -444,36 +447,42 @@ public class SightReductionUtil {
 			horizonDip = getHorizonDip(eyeHeight);
 			correction -= (horizonDip / 60D);
 		}
-		if (verbose)
+		if (verbose) {
 			System.out.println("Original Altitude:" + df.format(instrAltitude));
+		}
 		double observedAltitude = instrAltitude + correction;
-		if (verbose && !artificialHorizon)
+		if (verbose && !artificialHorizon) {
 			System.out.println("-> With Hor.Dip :" + df.format(observedAltitude) + " (Horizon Dip:" + df.format(horizonDip) + "')");
+		}
 		refr = getRefr(observedAltitude);
 		correction -= (refr / 60D);
 		observedAltitude = instrAltitude + correction;
-		if (verbose)
+		if (verbose) {
 			System.out.println("-> With Refr    :" + df.format(observedAltitude) + " (Refraction:" + df.format(refr) + "')");
+		}
 		double pa = 0.0D;
 		pa = getParallax(hp, observedAltitude);
 		correction += pa;
 		observedAltitude = instrAltitude + correction;
-		if (verbose)
+		if (verbose) {
 			System.out.println("-> With Parallax:" + df.format(observedAltitude) + " (Parallax:" + df.format(pa * 57.295779513082323D) + "')");
+		}
 		if (limb == LOWER_LIMB) {
 			correction += sd;
-			if (verbose)
+			if (verbose) {
 				System.out.println("  Semi-Diameter:" + df.format(sd * 60d) + "'");
+			}
 		} else if (limb == UPPER_LIMB) {
 			correction -= sd;
-			if (verbose)
+			if (verbose) {
 				System.out.println("  Semi-Diameter:" + df.format(-sd * 60d) + "'");
+			}
 		}
 		observedAltitude = instrAltitude + correction;
-		if (verbose)
+		if (verbose) {
 			System.out.println("-> With Semi-Diam:" + df.format(observedAltitude));
-		if (verbose)
 			System.out.println("- Total Correction:" + df.format(correction) + "\272");
+		}
 		return correction;
 	}
 
