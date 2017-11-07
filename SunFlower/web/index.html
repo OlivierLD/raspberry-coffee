@@ -191,20 +191,24 @@
         </tr>
       </table>
     </div>
-    <br/><a href="#" onclick="toggleServos();">Servos</a>
+    <br/><a href="#" onclick="toggleServos();">Servos &amp; Voltage</a>
     <div id="servos" style="display:none;">
       <table>
         <tr>
-          <td width="50%" align="center">Heading Servo in &deg;</td>
-          <td width="50%" align="center">Tilt Servo in &deg;</td>
+          <td width="33%" align="center">Heading Servo in &deg;</td>
+          <td width="33%" align="center">Tilt Servo in &deg;</td>
+          <td width="33%" align="center">Battery in V</td>
         </tr>
         <tr>
-          <td width="50%" align="center">
+          <td width="33%" align="center">
             <b><div id="heading" class="digifont"
                     style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">000</div></b>
           </td>
-          <td width="50%" align="center">
+          <td width="33%" align="center">
             <b><div id="tilt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">000</div></b>
+          </td>
+          <td width="33%" align="center">
+            <b><div id="volt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">0.00</div></b>
           </td>
         </tr>
       </table>
@@ -249,6 +253,9 @@
           }
           if (json.heading !== undefined) {
               $("#device-heading").text(json.heading + "\272");
+          }
+          if (json.lipo !== undefined) {
+	          $("#volt").text(json.lipo.volt.toFixed(2) + " V");
           }
       };
       var sunFlowerClient = new SunFlowerClient(onMessage);

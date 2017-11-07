@@ -756,7 +756,10 @@ public class SunFlower implements RESTRequestManager {
 	 * @return the voltage of the LiPo battery
 	 */
 	public BatteryData getBatteryData() {
-		int adc = MCP3008Reader.readMCP3008(adcChannel);
+		int adc = 0;
+		if (foundMCP3008) {
+			adc = MCP3008Reader.readMCP3008(adcChannel);
+		}
 		int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 		BatteryData batteryData = new BatteryData()
 				.adc(adc)
