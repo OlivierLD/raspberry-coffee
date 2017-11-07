@@ -775,21 +775,24 @@ public class SunFlower implements RESTRequestManager {
 		Dates dates;
 		SunData sunData;
 		double heading;
+		BatteryData lipo;
 		public AllData(
 						GeographicPosition pos,
 						ServoValues servos,
 						Dates dates,
 						SunData sunData,
-						double heading) {
+						double heading,
+						BatteryData lipo) {
 			this.pos = pos;
 			this.servos = servos;
 			this.dates = dates;
 			this.sunData = sunData;
 			this.heading = heading;
+			this.lipo = lipo;
 		}
 	}
 	public AllData getAllData() {
-		return new AllData(getPosition(), getServoValues(), getDates(), getSunData(), getDeviceHeading());
+		return new AllData(getPosition(), getServoValues(), getDates(), getSunData(), getDeviceHeading(), getBatteryData());
 	}
 
 	public void orientServos() {

@@ -139,7 +139,7 @@ esac
 #
 if [ $WITH_HELP = false ]
 then
-  sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID
+  sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID -channel:7
 else
   opts=$(echo $JAVA_OPTS | tr ";" "\n")
   for opt in $opts
