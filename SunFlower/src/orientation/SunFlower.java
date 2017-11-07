@@ -760,8 +760,8 @@ public class SunFlower implements RESTRequestManager {
 		int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 		BatteryData batteryData = new BatteryData()
 				.adc(adc)
-				.volume(volume);
-		// TODO Voltage
+				.volume(volume)
+				.volt(5d * ((double)adc / 1023d));
 		return batteryData;
 	}
 
