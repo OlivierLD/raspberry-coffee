@@ -14,10 +14,6 @@ var errManager = function(mess) {
 	console.log(mess);
 };
 
-var init = function () {
-	worldMap = new WorldMap('mapCanvas', 'MERCATOR');
-};
-
 var DEFAULT_TIMEOUT = 60000;
 
 /*
@@ -37,3 +33,15 @@ var getCurrentUTCDate = function() {
 
 	return new Date().getTime() + offset; // - (6 * 3600 * 1000);
 };
+
+var init = function () {
+	worldMap = new WorldMap('mapCanvas', 'MERCATOR');
+
+	worldMap.setNorth(66.5);
+	worldMap.setSouth(-48.5);
+	worldMap.setWest(127.5);
+
+	worldMap.setUserPosition({ latitude: position.lat, longitude: position.lng });
+
+};
+

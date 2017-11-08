@@ -24,8 +24,6 @@ function WorldMap (cName, prj) {
 	var withStars = false;
 	var withTropics = false;
 
-	var deltaT;
-
 	var label = "Your position";
 
 	this.setWithGrid = function(b) {
@@ -288,6 +286,22 @@ function WorldMap (cName, prj) {
 			_east = 180,
 			_north = 90,
 			_south = -90;
+
+	this.setNorth = function(n) {
+		_north = n;
+	};
+
+	this.setSouth = function(s) {
+		_south = s;
+	};
+
+	this.setWest = function(w) {
+		_west = w;
+	};
+
+	this.setEast = function(e) {
+		_east = en;
+	};
 
 	var transparent = false;
 
@@ -815,7 +829,10 @@ function WorldMap (cName, prj) {
 	};
 
 	var drawMercatorChart = function (canvas, context) {
-		// TODO This is a copy of Anaximandre, fix this.
+		// TODO This is a copy of Anaximandre, fix this. (DeDup)
+
+		// TODO Grid, tropics, astro, sun/moon light.
+
 		var worldTop = fullWorldMap.top;
 		var section = worldTop.section; // We assume top has been found.
 
@@ -840,24 +857,28 @@ function WorldMap (cName, prj) {
 						if (Math.abs(previousPt.x - pt.x) < (canvas.width / 2) && Math.abs(previousPt.y - pt.y) < (canvas.height / 2)) {
 							context.lineTo(pt.x, pt.y);
 							previousPt = pt;
+						} else { // Too far apart
+							firstPt = pt;
+							context.moveTo(pt.x, pt.y);
+							previousPt = pt;
 						}
 					}
 				}
 			}
-			if (firstPt !== null) {
-				context.lineTo(firstPt.x, firstPt.y); // close the loop
-			}
+			// if (firstPt !== null) {
+			// 	context.lineTo(firstPt.x, firstPt.y); // close the loop
+			// }
 			context.lineWidth = 1;
-			context.strokeStyle = 'black';
+			context.strokeStyle = 'cyan'; // 'black';
 			context.stroke();
-			context.fillStyle = "goldenrod";
-			context.fill();
+			// context.fillStyle = "goldenrod";
+			// context.fill();
 			context.closePath();
 		}
 		// User position
 		if (userPosition !== {}) {
-			var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
-			plotPosToCanvas(canvas, userPos.latitude, userPos.longitude, "Your position");
+//		var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
+			plotPosToCanvas(userPosition.latitude, userPosition.longitude, "Your position");
 		}
 	};
 
@@ -1034,7 +1055,7 @@ function WorldMap (cName, prj) {
 		// User position
 		if (userPosition !== {}) {
 			var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
-			plotPosToCanvas(canvas, userPos.latitude, userPos.longitude, "Your position");
+			plotPosToCanvas(userPos.latitude, userPos.longitude, "Your position");
 		}
 	};
 
@@ -1089,8 +1110,7 @@ function WorldMap (cName, prj) {
 	};
 
 	/**
-	 * For Anaximandre (for now).
-	 * TODO Make it generic (projection agnostic)
+	 * For Anaximandre and Mercator
 	 *
 	 * @param lat
 	 * @param lng
@@ -1118,9 +1138,47 @@ function WorldMap (cName, prj) {
 		}
 	};
 
-	var posToCanvas = function (canvas, lat, lng) { // Anaximandre
-		var x = (180 + lng) * (canvas.width / 360);
-		var y = canvas.height - ((lat + 90) * canvas.height / 180);
+	var posToCanvas = function (canvas, lat, lng) { // Anaximandre ans Mercator
+
+		_east = calculateEastG(_north, _south, _west, canvas.width, canvas.height);
+		adjustBoundaries();
+
+		var x, y;
+
+		var gAmpl;
+		for (gAmpl = _east - _west; gAmpl < 0; gAmpl += 360);
+		var graph2chartRatio = canvas.width / gAmpl;
+		var _lng = lng;
+		if (Math.abs(_west) > 180 && Math.sign(_lng) != Math.sign(_west) && Math.sign(_lng) > 0) {
+			_lng -= 360;
+		}
+		if (gAmpl > 180 && _lng < 0 && _west > 0) {
+			_lng += 360;
+		}
+		if (gAmpl > 180 && _lng >= 0 && _west > 0 && _lng < _east) {
+			_lng += (_west + (gAmpl - _east));
+		}
+
+		var incSouth = 0, incLat = 0;
+
+		switch (projection) {
+			case undefined:
+			case projections.anaximandre.type:
+		//	x = (180 + lng) * (canvas.width / 360);
+				x = ((_lng - _west) * graph2chartRatio);
+				incSouth = _south;
+				incLat = lat;
+		//	y = canvas.height - ((lat + 90) * canvas.height / 180);
+				y = canvas.height - ((incLat - incSouth) * (canvas.height / (_north - _south)));
+				break;
+			case projections.mercator.type:
+				// Requires _north, _south, _east, _west
+				x = ((_lng - _west) * graph2chartRatio);
+				incSouth = getIncLat(_south);
+				incLat = getIncLat(lat);
+				y = canvas.height - ((incLat - incSouth) * graph2chartRatio);
+				break;
+		}
 
 		return {"x": x, "y": y};
 	};

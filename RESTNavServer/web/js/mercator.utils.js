@@ -60,6 +60,18 @@ var getIncLatRatio = function(lat) {
 	}
 };
 
+var calculateEastG = function(nLat, sLat, wLong, canvasW, canvasH) {
+	var deltaIncLat =  getIncLat(nLat) - getIncLat(sLat);
+
+	var graphicRatio = canvasW / canvasH;
+	var deltaG = deltaIncLat * graphicRatio;
+	var eLong = wLong + deltaG;
+	while (eLong > 180) {
+		eLong -= 360;
+	}
+	return eLong;
+};
+
 // Main for tests
 if (false) {
 	var d = getIncLat(45);
