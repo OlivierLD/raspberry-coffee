@@ -934,9 +934,9 @@ function WorldMap (cName, prj) {
 					}
 				}
 			}
-			// if (firstPt !== null) {
-			// 	context.lineTo(firstPt.x, firstPt.y); // close the loop
-			// }
+			if (firstPt !== null && Math.abs(previousPt.x - firstPt.x) < (canvas.width / 5) && Math.abs(previousPt.y - firstPt.y) < (canvas.height / 5)) {
+				context.lineTo(firstPt.x, firstPt.y); // close the loop
+			}
 			context.lineWidth = 1;
 			context.strokeStyle = 'cyan'; // 'black';
 			context.stroke();
