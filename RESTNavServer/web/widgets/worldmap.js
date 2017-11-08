@@ -4,9 +4,15 @@
  */
 
 const projections = {
-	anaximandre: { type: "ANAXIMANDRE"},
-	mercator: { type: "MERCATOR"},
-	globe: { type: "GLOBE"}
+	anaximandre: {
+		type: "ANAXIMANDRE"
+	},
+	mercator: {
+		type: "MERCATOR"
+	},
+	globe: {
+		type: "GLOBE"
+	}
 };
 const tropicLat = 23.43698;
 
@@ -831,7 +837,70 @@ function WorldMap (cName, prj) {
 	var drawMercatorChart = function (canvas, context) {
 		// TODO This is a copy of Anaximandre, fix this. (DeDup)
 
-		// TODO Grid, tropics, astro, sun/moon light.
+		// TODO Tropics, astro, sun/moon light.
+
+		var gstep = 10; //Math.abs(_east - _west) / 60;
+		var lstep = 10;  //Math.abs(_north - _south) / 10;
+
+		context.lineWidth = 1;
+		context.strokeStyle = 'rgba(0, 255, 255, 0.3)'; // 'cyan';
+
+		if (withGrid) {
+			// Parallels
+			for (var lat=-80; lat<=80; lat+=lstep) {
+				var y = posToCanvas(canvas, lat, 0).y;
+				context.beginPath();
+
+				context.moveTo(0, y);
+				context.lineTo(canvas.width, y);
+
+				context.stroke();
+				context.closePath();
+			}
+			// Meridians
+			for (var lng=-180; lng<180; lng+=gstep) {
+				var x = posToCanvas(canvas, 0, lng).x;
+				context.beginPath();
+
+				context.moveTo(x, 0);
+				context.lineTo(x, canvas.height);
+
+				context.stroke();
+				context.closePath();
+			}
+		}
+
+		if (withTropics) {
+			context.strokeStyle = 'LightGray';
+			// Cancer
+			var y = posToCanvas(canvas, tropicLat, 0).y;
+			context.beginPath();
+			context.moveTo(0, y);
+			context.lineTo(canvas.width, y);
+			context.stroke();
+			context.closePath();
+			// Capricorn
+			y = posToCanvas(canvas, -tropicLat, 0).y;
+			context.beginPath();
+			context.moveTo(0, y);
+			context.lineTo(canvas.width, y);
+			context.stroke();
+			context.closePath();
+			// North polar circle
+			y = posToCanvas(canvas, 90-tropicLat, 0).y;
+			context.beginPath();
+			context.moveTo(0, y);
+			context.lineTo(canvas.width, y);
+			context.stroke();
+			context.closePath();
+			// South polar circle
+			y = posToCanvas(canvas, -90+tropicLat, 0).y;
+			context.beginPath();
+			context.moveTo(0, y);
+			context.lineTo(canvas.width, y);
+			context.stroke();
+			context.closePath();
+		}
 
 		var worldTop = fullWorldMap.top;
 		var section = worldTop.section; // We assume top has been found.
@@ -1068,6 +1137,8 @@ function WorldMap (cName, prj) {
 		if (fullWorldMap === undefined) {
 			console.log("You must load [WorldMapData.js] to display a chart.");
 		} else {
+			// clear
+			this.clear();
 			try {
 				switch (projection) {
 					case undefined:

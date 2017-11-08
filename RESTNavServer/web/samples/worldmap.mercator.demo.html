@@ -48,6 +48,7 @@
 
   var changeGrid = function(cb) {
   	worldMap.setWithGrid(cb.checked);
+	  worldMap.drawWorldMap();
   };
   var changeSun = function(cb) {
 	  worldMap.setWithSun(cb.checked);
@@ -70,6 +71,7 @@
   };
   var changeTropics = function(cb) {
     worldMap.setWithTropics(cb.checked);
+	  worldMap.drawWorldMap();
   };
 
   var changeLat = function(slider) {
