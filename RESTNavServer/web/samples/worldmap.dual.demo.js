@@ -16,6 +16,11 @@ var errManager = function(mess) {
 
 var init = function () {
 	worldMap = new WorldMap('mapCanvas', 'GLOBE');
+
+	// For Mercator
+	// worldMap.setNorth(75);
+	// worldMap.setSouth(-75);
+	// worldMap.setWest(127.5);
 };
 
 var DEFAULT_TIMEOUT = 60000;

@@ -18,6 +18,11 @@ const tropicLat = 23.43698;
 
 function WorldMap (cName, prj) {
 
+	var _west = -180,
+			_east = 180,
+			_north = 90,
+			_south = -90;
+
 	var defaultRadiusRatio = 0.6;
 
 	var canvasName = cName;
@@ -70,10 +75,16 @@ function WorldMap (cName, prj) {
 		return false;
 	};
 
-	if (!projectionSupported(prj)) {
-		throw { "err": "Projection [" + prj + "] not supported" };
-	}
-	var projection = prj; // Make sure it's available in the list
+	var projection;
+
+	this.setProjection = function(prj) {
+		if (!projectionSupported(prj)) {
+			throw { "err": "Projection [" + prj + "] not supported" };
+		}
+		projection = prj;
+	};
+
+	this.setProjection(prj);
 
 	this.clear = function () {
 		var canvas = document.getElementById(canvasName);
@@ -288,11 +299,6 @@ function WorldMap (cName, prj) {
 		return {x: _x, y: _y, z: _z};
 	};
 
-	var _west = -180,
-			_east = 180,
-			_north = 90,
-			_south = -90;
-
 	this.setNorth = function(n) {
 		_north = n;
 	};
@@ -306,7 +312,7 @@ function WorldMap (cName, prj) {
 	};
 
 	this.setEast = function(e) {
-		_east = en;
+		_east = e;
 	};
 
 	var transparent = false;
@@ -837,7 +843,7 @@ function WorldMap (cName, prj) {
 	var drawMercatorChart = function (canvas, context) {
 		// TODO This is a copy of Anaximandre, fix this. (DeDup)
 
-		// TODO Tropics, astro, sun/moon light.
+		// TODO Astro, sun/moon light.
 
 		var gstep = 10; //Math.abs(_east - _west) / 60;
 		var lstep = 10;  //Math.abs(_north - _south) / 10;
@@ -934,7 +940,7 @@ function WorldMap (cName, prj) {
 					}
 				}
 			}
-			if (firstPt !== null && Math.abs(previousPt.x - firstPt.x) < (canvas.width / 5) && Math.abs(previousPt.y - firstPt.y) < (canvas.height / 5)) {
+			if (firstPt !== null && Math.abs(previousPt.x - firstPt.x) < (canvas.width / 20) && Math.abs(previousPt.y - firstPt.y) < (canvas.height / 20)) {
 				context.lineTo(firstPt.x, firstPt.y); // close the loop
 			}
 			context.lineWidth = 1;
@@ -949,6 +955,80 @@ function WorldMap (cName, prj) {
 //		var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
 			plotPosToCanvas(userPosition.latitude, userPosition.longitude, "Your position");
 		}
+
+		if (astronomicalData !== {}) {
+			if (astronomicalData.sun !== undefined && withSun) {
+				context.save();
+				var sunLng = haToLongitude(astronomicalData.sun.gha);
+				plotPosToCanvas(astronomicalData.sun.decl, sunLng, "Sun", "yellow");
+
+				// Sunlight
+				if (false && withSunlight) {
+					var from = {lat: toRadians(astronomicalData.sun.decl), lng: toRadians(sunLng)};
+					drawNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
+				}
+				context.restore();
+			}
+			if (astronomicalData.moon !== undefined && withMoon) {
+				context.save();
+				var moonLng = haToLongitude(astronomicalData.moon.gha);
+				plotPosToCanvas(astronomicalData.moon.decl, moonLng, "Moon", "white");
+				// Moonlight
+				if (false && withMoonlight) {
+					var from = {lat: toRadians(astronomicalData.moon.decl), lng: toRadians(moonLng)};
+					drawNight(canvas, context, from, userPosition, astronomicalData.moon.gha);
+				}
+				context.restore();
+			}
+			if (astronomicalData.wanderingBodies !== undefined && withWanderingBodies) {
+				// 1 - Ecliptic
+				var aries = findInList(astronomicalData.wanderingBodies, "name", "aries");
+				if (aries !== null) {
+					// 1 - Draw Ecliptic
+					var longitude = (aries.gha < 180) ? -aries.gha : 360 - aries.gha;
+					longitude += 90; // Extremum
+					while (longitude > 360) {
+						longitude -= 360;
+					}
+					var ariesRad = { lat: toRadians(astronomicalData.eclipticObliquity), lng: toRadians(longitude) };
+					var eclCenter = deadReckoning(ariesRad, 90 * 60, 0); // "Center" of the Ecliptic
+
+					context.fillStyle = "white";
+					for (var hdg=0; hdg<360; hdg++) {
+						var pt = deadReckoning(eclCenter, 90 * 60, hdg);
+						var pp = posToCanvas(canvas, toDegrees(pt.lat), toDegrees(pt.lng));
+						context.fillRect(pp.x, pp.y, 1, 1);
+					}
+
+					plotPosToCanvas(0, haToLongitude(aries.gha), "Aries", "LightGray");
+					plotPosToCanvas(0, haToLongitude(aries.gha + 180), "Anti-Aries", "LightGray");
+				}
+				// 2 - Other planets
+				var venus = findInList(astronomicalData.wanderingBodies, "name", "venus");
+				var mars = findInList(astronomicalData.wanderingBodies, "name", "mars");
+				var jupiter = findInList(astronomicalData.wanderingBodies, "name", "jupiter");
+				var saturn = findInList(astronomicalData.wanderingBodies, "name", "saturn");
+				if (venus !== null) {
+					plotPosToCanvas(venus.decl, haToLongitude(venus.gha), "Venus", "orange");
+				}
+				if (mars !== null) {
+					plotPosToCanvas(mars.decl, haToLongitude(mars.gha), "Mars", "red");
+				}
+				if (jupiter !== null) {
+					plotPosToCanvas(jupiter.decl, haToLongitude(jupiter.gha), "Jupiter", "LightPink");
+				}
+				if (saturn !== null) {
+					plotPosToCanvas(saturn.decl, haToLongitude(saturn.gha), "Saturn", "LightYellow");
+				}
+			}
+
+			if (astronomicalData.stars !== undefined && withStars) {
+				astronomicalData.stars.forEach(function(star, idx) {
+					plotPosToCanvas(star.decl, haToLongitude(star.gha), star.name, "white");
+				});
+			}
+		}
+
 	};
 
 	var findInList = function(array, member, value) {
@@ -1189,6 +1269,7 @@ function WorldMap (cName, prj) {
 	 * @param color
 	 */
 	var plotPosToCanvas = function (lat, lng, label, color) {
+
 		var canvas = document.getElementById(canvasName);
 		var pt = posToCanvas(canvas, lat, lng);
 		plotPoint(canvasName, pt, (color !== undefined ? color : "red"));
@@ -1209,7 +1290,7 @@ function WorldMap (cName, prj) {
 		}
 	};
 
-	var posToCanvas = function (canvas, lat, lng) { // Anaximandre ans Mercator
+	var posToCanvas = function (canvas, lat, lng) { // Anaximandre and Mercator
 
 		_east = calculateEastG(_north, _south, _west, canvas.width, canvas.height);
 		adjustBoundaries();

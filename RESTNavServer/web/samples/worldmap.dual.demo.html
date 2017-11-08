@@ -21,11 +21,12 @@
     <script type="text/javascript" src="../js/jquery-2.1.3.js"></script>
     <script type="text/javascript" src="../js/date.proto.js"></script>
 		<script type="text/javascript" src="../widgets/WorldMapData.js"></script>
+		<script type="text/javascript" src="../js/mercator.utils.js"></script>
     <script type="text/javascript" src="../widgets/worldmap.js"></script>
     <script type="text/javascript" src="../js/pub.sub.js"></script>
     <script type="text/javascript" src="../js/conversion.utils.js"></script>
     <script type="text/javascript" src="../js/routes.utils.js"></script>
-		<script type="text/javascript" src="worldmap.globe.demo.js"></script>
+		<script type="text/javascript" src="worldmap.dual.demo.js"></script>
     <script type="text/javascript">
     
   var DURATION_FMT = "Y-m-dTH:i:s";
@@ -173,10 +174,24 @@
   var resetZoomRatio = function() {
 	  worldMap.resetZoomRatio();
   };
+
+  var setProjection = function(radio) {
+  	worldMap.setProjection(radio.value);
+  	if (radio.value === 'MERCATOR') {
+		  worldMap.setNorth(75);
+		  worldMap.setSouth(-75);
+		  worldMap.setWest(127.5);
+	  } else {
+		  worldMap.setNorth(90);
+		  worldMap.setSouth(-90);
+		  worldMap.setWest(-180);
+		  worldMap.setEast(180);
+		}
+	};
     </script>
   </head>
   <body>
-    <h2>World Globe Demo</h2>
+    <h2>World Map Demo</h2>
     <!--h4>Traveling east, random latitude increment.</h4-->
     <div style="display: none;">
       <img src="../images/moon-white.png" id="moon-png" />
@@ -185,6 +200,8 @@
     <table border="0">
       <tr>
         <td valign="top" rowspan="6">
+					<input type="radio" name="projection" value="GLOBE" checked onchange="setProjection(this);"> Globe
+					<input type="radio" name="projection" value="MERCATOR" onchange="setProjection(this);"> Mercator
           <div id="map" style="display: block; height: 500px; width: 850px; overflow-x: auto; overflow-y: auto; text-align: center;">
             <canvas id="mapCanvas" width="800" height="495" style="border-radius:10px;"></canvas>
           </div>
