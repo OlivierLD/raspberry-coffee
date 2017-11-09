@@ -61,10 +61,11 @@ function WorldMap (cName, prj) {
 	this.setWithTropics = function(b) {
 	  withTropics = b;
 	};
-
 	this.setPositionLabel = function(str) {
 		label = str;
 	};
+
+	// TODO Add callbacks, beforeDrawing, afterDrawing.
 
 	var projectionSupported = function(value) {
 		for  (var name in projections) {
@@ -166,6 +167,7 @@ function WorldMap (cName, prj) {
 	};
 
 	var currentStep = 0;
+	//  TODO Make sure that works
 	this.travel = function (canvasName, from, to, nbStep) {
 		var newX = from.x + (currentStep * (to.x - from.x) / nbStep);
 		var newY = from.y + (currentStep * (to.y - from.y) / nbStep);
@@ -843,7 +845,7 @@ function WorldMap (cName, prj) {
 	var drawMercatorChart = function (canvas, context) {
 		// TODO This is a copy of Anaximandre, fix this. (DeDup)
 
-		// TODO Astro, sun/moon light.
+		// TODO sun/moon light.
 
 		var gstep = 10; //Math.abs(_east - _west) / 60;
 		var lstep = 10;  //Math.abs(_north - _south) / 10;
