@@ -8,10 +8,10 @@ The rendering will be done through HTML5 and JavaScript querying the REST APIs.
 If that one works, then we can really move away from Swing.
 
 ```
- /GET /tide-stations
- /GET /tide-stations/{station}
- /POST /tide-stations/{station}/wh?from=XXX&to=YYY
- /POST /tide-stations/{station}/wh/details?from=XXX&to=YYY
+ /GET /tide/tide-stations
+ /GET /tide/tide-stations/{station}
+ /POST /tide/tide-stations/{station}/wh?from=XXX&to=YYY
+ /POST /tide/tide-stations/{station}/wh/details?from=XXX&to=YYY
 
  ... etc
 

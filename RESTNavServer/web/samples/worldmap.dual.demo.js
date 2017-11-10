@@ -74,7 +74,7 @@ var getDeferred = function(
 };
 
 var getSkyGP = function(when) {
-	var url = "/positions-in-the-sky";
+	var url = "/astro/positions-in-the-sky";
 	// Add date
 	url += ("?at=" + when);
 	url += ("&fromL=" + position.lat);

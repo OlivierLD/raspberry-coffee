@@ -181,7 +181,7 @@ function WorldMap (cName, prj) {
 	/*
 	 * The right tilt is:
 	 *   chartPanel.setGlobeViewRightLeftRotation(-(sunD * Math.sin(Math.toRadians(lhaSun))));
-	 * An astro resource exists: GET /positions-in-the-sky?at=2017-10-11T15:23:28
+	 * An astro resource exists: GET /astro/positions-in-the-sky?at=2017-10-11T15:23:28
 	 */
 	var globeViewRightLeftRotation = -tropicLat; // Tilt
 	var globeViewForeAftRotation = 0; // Observer's latitude

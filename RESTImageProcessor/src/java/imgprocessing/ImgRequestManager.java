@@ -12,6 +12,10 @@ public class ImgRequestManager implements RESTRequestManager {
 
 	private ImgServer imgServer = null;
 
+	public ImgRequestManager() {
+		this(null);
+	}
+
 	/**
 	 *
 	 * @param parent to be able to refer to all the request managers

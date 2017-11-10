@@ -77,12 +77,12 @@ var getDeferred = function(
 };
 
 var getCurrentTime = function() {
-	var url = "/utc";
+	var url = "/astro/utc";
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getTideStations = function(offset, limit, filter) {
-	var url = "/tide-stations";
+	var url = "/tide/tide-stations";
 	if (! isNaN(parseInt(offset))) {
 		url += ("?offset=" + offset);
 	}
@@ -96,12 +96,12 @@ var getTideStations = function(offset, limit, filter) {
 };
 
 var getTideStationsFiltered = function(filter) {
-	var url = "/tide-stations/" + encodeURIComponent(filter);
+	var url = "/tide/tide-stations/" + encodeURIComponent(filter);
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 /**
- * POST /sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+ * POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
  * 		payload { latitude: 37.76661945, longitude: -122.5166988 }
  * @param from
  * @param to
@@ -109,12 +109,12 @@ var getTideStationsFiltered = function(filter) {
  * @param pos
  */
 var requestDaylightData = function(from, to, tz, pos) {
-	var url = "/sun-between-dates?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
+	var url = "/astro/sun-between-dates?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 };
 
 var requestSunMoontData= function(from, to, tz, pos) {
-	var url = "/sun-moon-dec-alt?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
+	var url = "/astro/sun-moon-dec-alt?from=" + from + "&to=" + to + "&tz=" + encodeURIComponent(tz);
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 };
 
@@ -133,7 +133,7 @@ var getTideTable = function(station, at, tz, step, unit, withDetails, nbDays) {
 	if (nbDays === undefined) {
 		nbDays = 1;
 	}
-	var url = "/tide-stations/" + encodeURIComponent(station) + "/wh";
+	var url = "/tide/tide-stations/" + encodeURIComponent(station) + "/wh";
 	if (withDetails === true) {
 		url += "/details";
 	}
@@ -165,12 +165,12 @@ var getTideTable = function(station, at, tz, step, unit, withDetails, nbDays) {
 };
 
 var getPublishedDoc = function(station, options) {
-	var url = "/publish/" + encodeURIComponent(station);
+	var url = "/tide/publish/" + encodeURIComponent(station);
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
 };
 
 var getSunData = function(lat, lng) {
-	var url = "/sun-now";
+	var url = "/astro/sun-now";
 	var data = {}; // Payload
 	data.latitude = lat;
 	data.longitude = lng;

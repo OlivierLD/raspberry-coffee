@@ -9,7 +9,7 @@ var initAjax = function () {
 
 var getNMEAData = function () {
 	var deferred = $.Deferred(),  // a jQuery deferred
-			url = '/cache',
+			url = '/mux/cache',
 			xhr = new XMLHttpRequest(),
 			TIMEOUT = 10000;
 

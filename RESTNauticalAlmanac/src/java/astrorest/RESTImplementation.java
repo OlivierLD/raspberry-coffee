@@ -69,37 +69,37 @@ public class RESTImplementation {
 					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optional: 'fromL' and 'fromG', 'wandering' (true|[false])."),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
 					"POST",
-					"/sun-now",
+					"/astro/sun-now",
 					this::getSunDataNow,
 					"Create a request for Sun data now. Requires body payload (GeoPoint)"),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
 					"POST",
-					"/sun-between-dates",
+					"/astro/sun-between-dates",
 					this::getSunDataBetween,
 					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 3 queryString prm : from and to, in DURATION Format, and tz, the timezone name."),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
 					"POST",
-					"/sun-moon-dec-alt",
+					"/astro/sun-moon-dec-alt",
 					this::getSunMoonDecAlt,
 					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 2 queryString prm : from and to, in DURATION Format."),
-			new Operation( // Example: GET /utc?tz=America%2FNome,America%2FNew_York,Europe%2FParis,Pacific%2FMarquesas
+			new Operation( // Example: GET /astro/utc?tz=America%2FNome,America%2FNew_York,Europe%2FParis,Pacific%2FMarquesas
 					"GET",
-					"/utc",
+					"/astro/utc",
 					this::getCurrentTime,
 					"Get current UTC Date. Will return UTC time, system time, and optionally, the time(s) at the time zone(s) passed in QS prm 'tz', UTF-8 encoded, comma separated."),
 			new Operation(
 					"POST",
-					"/publish/almanac",
+					"/astro/publish/almanac",
 					this::publishAlmanac,
 					"Generates nautical almanac document (pdf)"),
 			new Operation(
 					"POST",
-					"/publish/lunar",
+					"/astro/publish/lunar",
 					this::publishLunar,
 					"Generates lunar distances document (pdf)"),
 			new Operation(
 					"POST",
-					"/publish/perpetual",
+					"/astro/publish/perpetual",
 					this::publishPerpetual,
 					"Generates perpetual nautical almanac document (pdf)")
 
