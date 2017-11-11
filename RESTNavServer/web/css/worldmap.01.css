@@ -10,6 +10,7 @@
     --gridColor: rgba(0, 255, 255, 0.3);
     --tropicColor: LightGray;
     --chartColor: cyan;
+		--chartLineWidth: 1;
     --userPosColor: red;
     --sunColor: yellow;
     --sunArrowColor: rgba(255, 255, 0, 0.5);

@@ -90,6 +90,9 @@ var getWorldmapColorConfig = function() {
 							case '--tropicColor':
 								colorConfig.tropicColor = value;
 								break;
+							case '--chartLineWidth':
+								colorConfig.chartLineWidth = value;
+								break;
 							case '--chartColor':
 								colorConfig.chartColor = value;
 								break;
@@ -151,6 +154,7 @@ var defaultWorldmapColorConfig = {
   gridColor: 'rgba(0, 255, 255, 0.3)',
   tropicColor: 'LightGray',
   chartColor: 'cyan',
+	chartLineWidth: 1,
   userPosColor: 'red',
   sunColor: 'yellow',
   sunArrowColor: 'rgba(255, 255, 0, 0.5)',
@@ -224,7 +228,7 @@ function WorldMap (cName, prj) {
 		label = str;
 	};
 
-	// TODO Add callbacks, beforeDrawing, afterDrawing.
+	// TODO Add callbacks, beforeDrawing, afterDrawing ?
 
 	var projectionSupported = function(value) {
 		for  (var name in projections) {
@@ -836,7 +840,7 @@ function WorldMap (cName, prj) {
 							var drawIt = true;
 							if (!isTransparentGlobe() && thisPointIsBehind) {
 								drawIt = false;
-								previousPt = null; // TODO Something better
+								previousPt = null; // Something better, maybe ?
 							}
 							var pt = getPanelPoint(lat, lng);
 							if (previousPt === null) { // p === 0) {
@@ -854,7 +858,7 @@ function WorldMap (cName, prj) {
 					if (false && firstPt !== null && previousPt != null) {
 						context.lineTo(firstPt.x, firstPt.y); // close the loop
 					}
-					context.lineWidth = 1;
+					context.lineWidth = worldmapColorConfig.chartLineWidth;
 					context.strokeStyle = worldmapColorConfig.chartColor;
 					context.stroke();
 					context.closePath();
@@ -1104,7 +1108,7 @@ function WorldMap (cName, prj) {
 			if (firstPt !== null && Math.abs(previousPt.x - firstPt.x) < (canvas.width / 20) && Math.abs(previousPt.y - firstPt.y) < (canvas.height / 20)) {
 				context.lineTo(firstPt.x, firstPt.y); // close the loop
 			}
-			context.lineWidth = 1;
+			context.lineWidth = worldmapColorConfig.chartLineWidth;
 			context.strokeStyle = worldmapColorConfig.chartColor; // 'black';
 			context.stroke();
 			// context.fillStyle = "goldenrod";
@@ -1123,7 +1127,7 @@ function WorldMap (cName, prj) {
 				var sunLng = haToLongitude(astronomicalData.sun.gha);
 				plotPosToCanvas(astronomicalData.sun.decl, sunLng, "Sun", worldmapColorConfig.sunColor);
 
-				// Sunlight
+				// TODO Sunlight
 				if (false && withSunlight) {
 					var from = {lat: toRadians(astronomicalData.sun.decl), lng: toRadians(sunLng)};
 					drawNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
@@ -1134,7 +1138,7 @@ function WorldMap (cName, prj) {
 				context.save();
 				var moonLng = haToLongitude(astronomicalData.moon.gha);
 				plotPosToCanvas(astronomicalData.moon.decl, moonLng, "Moon", worldmapColorConfig.moonColor);
-				// Moonlight
+				// TODO Moonlight
 				if (false && withMoonlight) {
 					var from = {lat: toRadians(astronomicalData.moon.decl), lng: toRadians(moonLng)};
 					drawNight(canvas, context, from, userPosition, astronomicalData.moon.gha);
@@ -1369,7 +1373,10 @@ function WorldMap (cName, prj) {
 		}
 	};
 
-	this.drawWorldMap = function () {
+	this.drawWorldMap = function (clear) {
+		if (clear === undefined) {
+			clear = true;
+		}
 		//var start = new Date().getTime();
 
 		var canvas = document.getElementById(canvasName);
@@ -1378,8 +1385,9 @@ function WorldMap (cName, prj) {
 		if (fullWorldMap === undefined) {
 			console.log("You must load [WorldMapData.js] to display a chart.");
 		} else {
-			// clear
-			this.clear();
+			if (clear) {
+				this.clear();
+			}
 			try {
 				switch (projection) {
 					case undefined:

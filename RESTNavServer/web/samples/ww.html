@@ -29,9 +29,13 @@
   var flavor = 'Ajax'; // Default, WebSocket not implemented here (we run on a small http server).
 
   var currentFax = 1;
+  var canvas, context;
 
   window.onload = function() {
 	  init(); // init UI
+
+	  canvas = document.getElementById('mapCanvas');
+	  context = canvas.getContext('2d');
 
 	  worldMap.clear();
 	  worldMap.setPositionLabel("");
@@ -48,89 +52,61 @@
     }
   };
 
+  var withChart = true;
+
+  var changeChart = function(cb) {
+	  withChart = cb.checked;
+	  redraw();
+  };
   var changeGrid = function(cb) {
-  	worldMap.setWithGrid(cb.checked);
-	  worldMap.drawWorldMap();
+	  worldMap.setWithGrid(cb.checked);
+	  redraw();
   };
   var changeTropics = function(cb) {
     worldMap.setWithTropics(cb.checked);
-	  worldMap.drawWorldMap();
+	  redraw();
   };
 
-  var changeCanvasWidth = function(factor) {
-    worldMap.setCanvasWidth(worldMap.getCanvasWidth() * factor);
-  };
-  var changeCanvasHeight = function(factor) {
-    worldMap.setCanvasHeight(worldMap.getCanvasHeight() * factor);
-  };
-  var changeCanvasSize = function(factor) {
-	  worldMap.setCanvasHeight(worldMap.getCanvasHeight() * factor);
-	  worldMap.setCanvasWidth(worldMap.getCanvasWidth() * factor);
-  };
-  var changeZoomRatio = function(factor) {
-  	var zoomRatio = worldMap.getZoomRatio() * factor;
-  	worldMap.setZoomRatio(zoomRatio);
-	};
-  var resetZoomRatio = function() {
-	  worldMap.resetZoomRatio();
-  };
-
-  var show = [true, true, true];
-
+  var show = []; // [true, true, true];
+	var faxName = [];
   // For 3 faxes Sfc, 500mb, StreamLines
-  var zoom = [0.3418498710866215, 0.5209310701416114, 1.0040821009550305];
-  var topLeft = [
-	  [10, 10],
-	  [15, 30],
-	  [-41, 460]
-  ];
+  var zoom = []; // [0.3418498710866215, 0.5209310701416114, 1.0040821009550305];
+  var topLeft = [];
+//  [
+//	  [10, 10],
+//	  [15, 30],
+//	  [-41, 460]
+//  ];
   var faxObj = [];
 
   var faxRequestCallback = function(val, originalRequest) {
 		var returned = JSON.parse(val);
 
-	  var canvas = document.getElementById('mapCanvas');
-	  var context = canvas.getContext('2d');
-
 	  // get data from originalRequest
+		show = [];
+		zoom = [];
+		topLeft = [];
 		faxObj = [];
+	  faxName = [];
 		for (var idx=0; idx<originalRequest.faxData.length; idx++) {
+			show.push(true);
+
 			var fax = new Image();
 			var x = originalRequest.faxData[idx].location.x;
 			var y = originalRequest.faxData[idx].location.y;
-			var zoom = originalRequest.faxData[idx].zoom;
+			var faxZoom = originalRequest.faxData[idx].zoom;
+			zoom.push(faxZoom);
+			topLeft.push([x, y]);
+			faxName.push(originalRequest.faxData[idx].name);
 			fax.onload = function () {
-				context.drawImage(fax, x, y, (parseInt(fax.width) * zoom), (parseInt(fax.height) * zoom));
+				context.drawImage(fax, x, y, (parseInt(fax.width) * faxZoom), (parseInt(fax.height) * faxZoom));
 			};
 			// Assume that returned and originalRequest have the name cardinality
 			fax.src = '../../' + returned[idx].returned; // Tweak for another context...
+			speakUp(idx + 1);
 			console.log(fax.src);
 			faxObj.push(fax);
 		}
-//
-//	  // Hard coded for now
-//	  var faxObj_1 = new Image();
-//	  var faxObj_2 = new Image();
-//	  var faxObj_3 = new Image();
-//
-//	  var zoom = [0.3418498710866215, 0.5209310701416114, 1.0040821009550305];
-//	  var topLeft = [
-//		  [10, 10],
-//		  [15, 30],
-//		  [-41, 460]
-//	  ];
-//	  faxObj_1.onload = function() {
-//		  context.drawImage(faxObj_1, topLeft[0][0], topLeft[0][1], (parseInt(faxObj_1.width) * zoom[0]), (parseInt(faxObj_1.height) * zoom[0]));
-//	  };
-//	  faxObj_2.onload = function() {
-//		  context.drawImage(faxObj_2, topLeft[1][0], topLeft[1][1], (parseInt(faxObj_2.width) * zoom[1]), (parseInt(faxObj_2.height) * zoom[1]));
-//	  };
-//	  faxObj_3.onload = function() {
-//		  context.drawImage(faxObj_3, topLeft[2][0], topLeft[2][1], (parseInt(faxObj_3.width) * zoom[2]), (parseInt(faxObj_3.height) * zoom[2]));
-//	  };
-//	  faxObj_1.src = '../_fax_0.png';
-//	  faxObj_2.src = '../_fax_1.png';
-//	  faxObj_3.src = '../_fax_2.png';
   };
 
   var loadFaxes = function() {
@@ -151,6 +127,7 @@
 		compositeData.faxData.forEach(function(fax, idx) {
 			var oneFax = {
 				url: fax.faxUrl,
+				name: fax.name,
 				storage: 'web/fax_' + idx + '.png',
 				returned: 'web/_fax_' + idx + '.png',
 				transparent: fax.transp,
@@ -173,15 +150,24 @@
 	  switch (num) {
 		  case 1:
 		  case "1":
-			  document.getElementById("fax-1").innerText = 'Fax #1: x=' + topLeft[0][0] + ", y=" + topLeft[0][1] + ', zoom=' + zoom[0];
+			  document.getElementById("name-1").innerText = faxName[0];
+			  document.getElementById("x-1").innerText = topLeft[0][0];
+			  document.getElementById("y-1").innerText = topLeft[0][1];
+			  document.getElementById("zoom-1").innerText = zoom[0];
 			  break;
 		  case 2:
 		  case "2":
-			  document.getElementById("fax-2").innerText = 'Fax #2: x=' + topLeft[1][0] + ", y=" + topLeft[1][1] + ', zoom=' + zoom[1];
+			  document.getElementById("name-2").innerText = faxName[1];
+			  document.getElementById("x-2").innerText = topLeft[1][0];
+			  document.getElementById("y-2").innerText = topLeft[1][1];
+			  document.getElementById("zoom-2").innerText = zoom[1];
 			  break;
 		  case 3:
 		  case "3":
-			  document.getElementById("fax-3").innerText = 'Fax #3: x=' + topLeft[2][0] + ", y=" + topLeft[2][1] + ', zoom=' + zoom[2];
+			  document.getElementById("name-3").innerText = faxName[2];
+			  document.getElementById("x-3").innerText = topLeft[2][0];
+			  document.getElementById("y-3").innerText = topLeft[2][1];
+			  document.getElementById("zoom-3").innerText = zoom[2];
 			  break;
 		  default:
 			  break;
@@ -230,17 +216,21 @@
   };
 
   var redraw = function() {
-	  context.fillStyle = 'white';
-	  context.fillRect(0, 0, canvas.width, canvas.height); // Clear
+	  worldMap.clear();
+//  worldMap.setPositionLabel("");
+
 	  if (show[0] === true) {
-		  context.drawImage(faxObj_1, topLeft[0][0], topLeft[0][1], (parseInt(faxObj_1.width) * zoom[0]), (parseInt(faxObj_1.height) * zoom[0]));
+		  context.drawImage(faxObj[0], topLeft[0][0], topLeft[0][1], (parseInt(faxObj[0].width) * zoom[0]), (parseInt(faxObj[0].height) * zoom[0]));
 	  }
 	  if (show[1] === true) {
-		  context.drawImage(faxObj_2, topLeft[1][0], topLeft[1][1], (parseInt(faxObj_2.width) * zoom[1]), (parseInt(faxObj_2.height) * zoom[1]));
+		  context.drawImage(faxObj[1], topLeft[1][0], topLeft[1][1], (parseInt(faxObj[1].width) * zoom[1]), (parseInt(faxObj[1].height) * zoom[1]));
 	  }
 	  if (show[2] === true) {
-		  context.drawImage(faxObj_3, topLeft[2][0], topLeft[2][1], (parseInt(faxObj_3.width) * zoom[2]), (parseInt(faxObj_3.height) * zoom[2]));
+		  context.drawImage(faxObj[2], topLeft[2][0], topLeft[2][1], (parseInt(faxObj[2].width) * zoom[2]), (parseInt(faxObj[2].height) * zoom[2]));
 	  }
+		if (withChart) {
+			worldMap.drawWorldMap(false);
+		}
   };
 
   var changeFax = function(val) {
@@ -258,6 +248,7 @@
           </div>
         </td>
         <td valign="top">
+					<input type="checkbox" onchange="changeChart(this);" checked/> With Chart&nbsp;
           <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
 	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
 					<hr/>
@@ -272,9 +263,36 @@
 						<br/>
 						<input type="checkbox" onchange="showHide(3, this);" checked>Show fax #3
 						<hr/>
-						<div id="fax-1">Fax 1:</div>
-						<div id="fax-2">Fax 2:</div>
-						<div id="fax-3">Fax 3:</div>
+						<table>
+							<tr>
+								<th>#</th>
+								<th>Name</th>
+								<th>x</th>
+								<th>y</th>
+								<th>zoom</th>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td><div id="name-1"></div></td>
+								<td><div id="x-1" style="text-align: right;"></div></td>
+								<td><div id="y-1" style="text-align: right;"></div></td>
+								<td><div id="zoom-1" style="text-align: right;"></div></td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td><div id="name-2"></div></td>
+								<td><div id="x-2" style="text-align: right;"></div></td>
+								<td><div id="y-2" style="text-align: right;"></div></td>
+								<td><div id="zoom-2" style="text-align: right;"></div></td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td><div id="name-3"></div></td>
+								<td><div id="x-3" style="text-align: right;"></div></td>
+								<td><div id="y-3" style="text-align: right;"></div></td>
+								<td><div id="zoom-3" style="text-align: right;"></div></td>
+							</tr>
+						</table>
 					</div>
 
 					<div style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
@@ -301,36 +319,6 @@
 
 					<!-- End of Test -->
         </td>
-      </tr>
-	    <tr>
-		    <td align="left">
-			    <table>
-				    <tr>
-					    <td align="center">Width</td>
-					    <td align="center">Height</td>
-							<td align="center">Globe</td>
-				    </tr>
-				    <tr>
-							<td>
-								<button onclick="changeCanvasWidth(0.9);">-</button><button onclick="changeCanvasWidth(1.1);">+</button>
-							</td>
-					    <td>
-						    <button onclick="changeCanvasHeight(0.9);">-</button><button onclick="changeCanvasHeight(1.1);">+</button>
-					    </td>
-							<td>
-								<button onclick="changeZoomRatio(0.95);">-</button><button onclick="changeZoomRatio(1.05);">+</button>
-							</td>
-				    </tr>
-						<tr>
-							<td colspan="2" align="center">
-								<button onclick="changeCanvasSize(0.9);">-</button><button onclick="changeCanvasSize(1.1);">+</button>
-							</td>
-							<td>
-								<button onclick="resetZoomRatio();">Reset</button>
-							</td>
-						</tr>
-			    </table>
-		    </td>
       </tr>
       <tr>
         <td colspan="2">

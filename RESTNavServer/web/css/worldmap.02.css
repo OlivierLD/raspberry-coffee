@@ -1,4 +1,4 @@
-/* Default colors */
+/* Non default colors */
 .worldmapdisplay {
     --canvasBackground: white;
     --defaultPlotPointColor: red;
@@ -9,7 +9,8 @@
     --globeGradientTo: blue;
     --gridColor: rgba(0, 0, 0, 0.3);
     --tropicColor: LightGray;
-    --chartColor: black;
+    --chartColor: rgba(0, 0, 0, 0.8);
+    --chartLineWidth: 2;
     --userPosColor: red;
     --sunColor: yellow;
     --sunArrowColor: rgba(255, 255, 0, 0.5);

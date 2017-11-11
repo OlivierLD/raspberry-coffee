@@ -36,40 +36,43 @@ const compositeCatalog = [
 		faxData: [
 			{
 				faxUrl: "http://www.opc.ncep.noaa.gov/P_sfc_full_ocean.gif",
+				name: "North Pac surface analysis",
 				transp: faxColors.white,
 				tx: {
 					from: faxColors.black,
 					to: faxColors.red
 				},
 				effect: faxEffects.blur,
-				zoom: 0.3418498710866215,
+				zoom: 0.34390610490333456,
 				location: {
-					x: 10,
-					y: 10
+					x: 61,
+					y: 30
 				}
 			},
 			{
 				faxUrl: "http://www.opc.ncep.noaa.gov/shtml/P_06hr500bw.gif",
+				name: "North Pac 500mb analysis",
 				transp: faxColors.white,
 				tx: {
 					from: faxColors.black,
 					to: faxColors.blue
 				},
 				effect: faxEffects.blur,
-				zoom: 0.5209310701416114,
+				zoom: 0.5251131339813421,
 				location: {
-					x: 15,
-					y: 30
+					x: 66,
+					y: 48
 				}
 			},
 			{
 				faxUrl: "http://www.prh.noaa.gov/hnl/graphics/stream.gif",
+				name: "Central Pac Streamlines",
 				transp: faxColors.white,
 				effect: faxEffects.blur,
 				zoom: 1.0040821009550305,
 				location: {
-					x: -41,
-					y: 460
+					x: 14,
+					y: 482
 				}
 			}
 		]
