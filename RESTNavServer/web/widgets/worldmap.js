@@ -16,7 +16,166 @@ const projections = {
 };
 const tropicLat = 23.43698;
 
+/**
+ *
+ * See custom properties in CSS.
+ * =============================
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+ * Relies on a rule named .worldmapdisplay, like that:
+ *
+ .worldmapdisplay {
+    --canvasBackground: "rgba(0, 0, 100, 10.0)";
+    --defaultPlotPointColor: "red";
+    --travelColor: "gray";
+    --arrowBodyColor: 'rgba(255, 255, 255, 0.5)';
+    --globeBackground: "black";
+    --globeGradientFrom: "navy";
+    --globeGradientTo: "blue";
+    --gridColor: 'rgba(0, 255, 255, 0.3)';
+    --tropicColor: 'LightGray';
+    --chartColor: 'cyan';
+    --userPosColor: 'red';
+    --sunColor: 'yellow';
+    --sunArrowColor: 'rgba(255, 255, 0, 0.5)';
+    --moonColor: 'white';
+    --moonArrowColor: 'rgba(255, 255, 255, 0.5)';
+    --ariesColor: 'LightGray';
+    --venusColor: "orange";
+    --marsColor: "red";
+    --jupiterColor: "LightPink";
+    --saturnColor: "LightYellow";
+    --starsColor: "white";
+    --nightColor: 'rgba(192, 192, 192, 0.3)';
+    --displayPositionColor: 'white';
+}
+*/
+
+var getWorldmapColorConfig = function() {
+	var colorConfig = defaultWorldmapColorConfig;
+	for (var s=0; s<document.styleSheets.length; s++) {
+		for (var r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+			if (document.styleSheets[s].cssRules[r].selectorText === '.worldmapdisplay') {
+				var cssText = document.styleSheets[s].cssRules[r].style.cssText;
+				var cssTextElems = cssText.split(";");
+				cssTextElems.forEach(function(elem) {
+					if (elem.trim().length > 0) {
+						var keyValPair = elem.split(":");
+						var key = keyValPair[0].trim();
+						var value = keyValPair[1].trim();
+						switch (key) {
+							case '--canvasBackground':
+								colorConfig.canvasBackground = value;
+								break;
+							case '--defaultPlotPointColor':
+								colorConfig.defaultPlotPointColor = value;
+								break;
+							case '--travelColor':
+								colorConfig.travelColor = value;
+								break;
+							case '--arrowBodyColor':
+								colorConfig.arrowBodyColor = value;
+								break;
+							case '--globeBackground':
+								colorConfig.globeBackground = value;
+								break;
+							case '--globeGradientFrom':
+								colorConfig.globeGradientFrom = value;
+								break;
+							case '--globeGradientTo':
+								colorConfig.globeGradientTo = value;
+								break;
+							case '--gridColor':
+								colorConfig.gridColor = value;
+								break;
+							case '--tropicColor':
+								colorConfig.tropicColor = value;
+								break;
+							case '--chartColor':
+								colorConfig.chartColor = value;
+								break;
+							case '--userPosColor':
+								colorConfig.userPosColor = value;
+								break;
+							case '--sunColor':
+								colorConfig.sunColor = value;
+								break;
+							case '--sunArrowColor':
+								colorConfig.sunArrowColor = value;
+								break;
+							case '--moonArrowColor':
+								colorConfig.moonArrowColor = value;
+								break;
+							case '--ariesColor':
+								colorConfig.ariesColor = value;
+								break;
+							case '--venusColor':
+								colorConfig.venusColor = value;
+								break;
+							case '--marsColor':
+								colorConfig.marsColor = value;
+								break;
+							case '--jupiterColor':
+								colorConfig.jupiterColor = value;
+								break;
+							case '--saturnColor':
+								colorConfig.saturnColor = value;
+								break;
+							case '--starsColor':
+								colorConfig.starsColor = value;
+								break;
+							case '--nightColor':
+								colorConfig.nightColor = value;
+								break;
+							case '--displayPositionColor':
+								colorConfig.displayPositionColor = value;
+								break;
+							default:
+								break;
+						}
+					}
+				});
+			}
+		}
+	}
+	return colorConfig;
+};
+
+var defaultWorldmapColorConfig = {
+  canvasBackground: "rgba(0, 0, 100, 10.0)",
+  defaultPlotPointColor: "red",
+  travelColor: "gray",
+  arrowBodyColor: 'rgba(255, 255, 255, 0.5)',
+  globeBackground: "black",
+  globeGradientFrom: "navy",
+  globeGradientTo: "blue",
+  gridColor: 'rgba(0, 255, 255, 0.3)',
+  tropicColor: 'LightGray',
+  chartColor: 'cyan',
+  userPosColor: 'red',
+  sunColor: 'yellow',
+  sunArrowColor: 'rgba(255, 255, 0, 0.5)',
+  moonColor: 'white',
+  moonArrowColor: 'rgba(255, 255, 255, 0.5)',
+  ariesColor: 'LightGray',
+  venusColor: "orange",
+  marsColor: "red",
+  jupiterColor: "LightPink",
+  saturnColor: "LightYellow",
+  starsColor: "white",
+  nightColor: 'rgba(192, 192, 192, 0.3)',
+  displayPositionColor: 'white'
+};
+
+var worldmapColorConfig = defaultWorldmapColorConfig;
+
+/** 
+ * @param cName
+ * @param prj
+ * @constructor
+ */
 function WorldMap (cName, prj) {
+
+	worldmapColorConfig = getWorldmapColorConfig();
 
 	var _west = -180,
 			_east = 180,
@@ -92,7 +251,7 @@ function WorldMap (cName, prj) {
 		if (canvas !== undefined) {
 			var context = canvas.getContext('2d');
 			// Cleanup
-			context.fillStyle = "rgba(0, 0, 100, 10.0)";
+			context.fillStyle = worldmapColorConfig.canvasBackground;
 			context.fillRect(0, 0, canvas.width, canvas.height);
 		}
 	};
@@ -126,14 +285,14 @@ function WorldMap (cName, prj) {
 						toPt = undefined;
 						clear();
 						drawWorldMap();
-						plotPoint(canvasName, fromPt, "red");
+						plotPoint(canvasName, fromPt, worldmapColorConfig.defaultPlotPointColor);
 					}
 					if (fromPt === undefined) {
 						fromPt = {"x": xClick, "y": yClick};
-						plotPoint(canvasName, fromPt, "red");
+						plotPoint(canvasName, fromPt, worldmapColorConfig.defaultPlotPointColor);
 					} else if (toPt === undefined) {
 						toPt = {"x": xClick, "y": yClick};
-						plotPoint(canvasName, toPt, "red");
+						plotPoint(canvasName, toPt, worldmapColorConfig.defaultPlotPointColor);
 						currentStep = 0;
 						animationID = window.setInterval(function () {
 							travel(canvasName, fromPt, toPt, 10);
@@ -171,7 +330,7 @@ function WorldMap (cName, prj) {
 	this.travel = function (canvasName, from, to, nbStep) {
 		var newX = from.x + (currentStep * (to.x - from.x) / nbStep);
 		var newY = from.y + (currentStep * (to.y - from.y) / nbStep);
-		plotPoint(canvasName, {"x": newX, "y": newY}, "gray");
+		plotPoint(canvasName, {"x": newX, "y": newY}, worldmapColorConfig.travelColor);
 		currentStep++;
 		if (currentStep > nbStep) {
 			window.clearInterval(animationID);
@@ -431,7 +590,7 @@ function WorldMap (cName, prj) {
 			}
 			// Arrow, to the body
 			context.setLineDash([2]);
-			context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+			context.strokeStyle = worldmapColorConfig.arrowBodyColor;
 			context.beginPath();
 			context.moveTo(userPos.x, userPos.y);
 			context.lineTo(body.x, body.y);
@@ -533,14 +692,14 @@ function WorldMap (cName, prj) {
 		globeView_ratio = Math.min(w / opWidth, h / opHeight) * defaultRadiusRatio; // 0.9, not to take all the space...
 
 		// Black background
-		context.fillStyle = "black";
+		context.fillStyle = worldmapColorConfig.globeBackground;
 		context.fillRect(0, 0, canvas.width, canvas.height);
 
 		// Circle
 		var radius = Math.min(w / 2, h / 2) * defaultRadiusRatio;
 		var grd = context.createRadialGradient(canvas.width / 2, canvas.height / 2, radius, 90, 60, radius);
-		grd.addColorStop(0, "navy");
-		grd.addColorStop(1, "blue");
+		grd.addColorStop(0, worldmapColorConfig.globeGradientFrom);
+		grd.addColorStop(1, worldmapColorConfig.globeGradientTo);
 
 		context.fillStyle = grd; // "rgba(0, 0, 100, 10.0)"; // Dark blue
 
@@ -554,7 +713,7 @@ function WorldMap (cName, prj) {
 		var lstep = 10;  //Math.abs(_north - _south) / 10;
 
 		context.lineWidth = 1;
-		context.strokeStyle = 'rgba(0, 255, 255, 0.3)'; // 'cyan';
+		context.strokeStyle = worldmapColorConfig.gridColor; // 'cyan';
 
 		if (withGrid) {
 			context.save();
@@ -613,7 +772,7 @@ function WorldMap (cName, prj) {
 
 		if (withTropics) {
 			// Cancer
-			context.fillStyle = 'LightGray';
+			context.fillStyle = worldmapColorConfig.tropicColor;
 			for (var lng = 0; lng<360; lng++) {
 				var p = getPanelPoint(tropicLat, lng);
 				var thisPointIsBehind = isBehind(toRadians(tropicLat), toRadians(lng - globeViewLngOffset));
@@ -696,7 +855,7 @@ function WorldMap (cName, prj) {
 						context.lineTo(firstPt.x, firstPt.y); // close the loop
 					}
 					context.lineWidth = 1;
-					context.strokeStyle = 'cyan';
+					context.strokeStyle = worldmapColorConfig.chartColor;
 					context.stroke();
 					context.closePath();
 				}
@@ -709,8 +868,8 @@ function WorldMap (cName, prj) {
 		// User position
 		if (userPosition !== {}) {
 			var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
-			plot(context, userPos, "red");
-			context.fillStyle = "red";
+			plot(context, userPos, worldmapColorConfig.userPosColor);
+			context.fillStyle = worldmapColorConfig.userPosColor;
 			context.fillText(label, Math.round(userPos.x) + 3, Math.round(userPos.y) - 3);
 		}
 		// Celestial bodies?
@@ -722,19 +881,19 @@ function WorldMap (cName, prj) {
 				var thisPointIsBehind = isBehind(toRadians(astronomicalData.sun.decl), toRadians(sunLng - globeViewLngOffset));
 				if (!thisPointIsBehind || isTransparentGlobe()) {
 					// Draw Sun
-					plot(context, sun, "yellow");
-					context.fillStyle = "yellow";
+					plot(context, sun, worldmapColorConfig.sunColor);
+					context.fillStyle = worldmapColorConfig.sunColor;
 					context.fillText("Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
 					// Arrow, to the sun
 					context.setLineDash([2]);
-					context.strokeStyle = 'rgba(255, 255, 0, 0.5)';
+					context.strokeStyle = worldmapColorConfig.sunArrowColor;
 					context.beginPath();
 					context.moveTo(userPos.x, userPos.y);
 					context.lineTo(sun.x, sun.y);
 					context.stroke();
 					context.closePath();
 					context.setLineDash([0]); // Reset
-					context.strokeStyle = 'yellow';
+					context.strokeStyle = worldmapColorConfig.sunColor;
 					var deltaX = sun.x - userPos.x;
 					var deltaY = sun.y - userPos.y;
 					context.beginPath();
@@ -749,7 +908,7 @@ function WorldMap (cName, prj) {
 						var imgYOffset = 7 * Math.cos(toRadians(direction));
 						context.drawImage(img, sun.x + deltaX + Math.ceil(imgXOffset), sun.y + deltaY - Math.ceil(imgYOffset));
 					} else {
-						fillCircle(context, { x: sun.x + deltaX, y: sun.y + deltaY}, 6, 'yellow');
+						fillCircle(context, { x: sun.x + deltaX, y: sun.y + deltaY}, 6, worldmapColorConfig.sunColor);
 					}
 				}
 				// Route to sun?
@@ -770,19 +929,19 @@ function WorldMap (cName, prj) {
 				var thisPointIsBehind = isBehind(toRadians(astronomicalData.moon.decl), toRadians(moonLng - globeViewLngOffset));
 				if (!thisPointIsBehind || isTransparentGlobe()) {
 					// Draw Moon
-					plot(context, moon, "white");
-					context.fillStyle = "white";
+					plot(context, moon, worldmapColorConfig.moonColor);
+					context.fillStyle = worldmapColorConfig.moonColor;
 					context.fillText("Moon", Math.round(moon.x) + 3, Math.round(moon.y) - 3);
 					// Arrow, to the moon
 					context.setLineDash([2]);
-					context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+					context.strokeStyle = worldmapColorConfig.moonArrowColor;
 					context.beginPath();
 					context.moveTo(userPos.x, userPos.y);
 					context.lineTo(moon.x, moon.y);
 					context.stroke();
 					context.closePath();
 					context.setLineDash([0]); // Reset
-					context.strokeStyle = 'white';
+					context.strokeStyle = worldmapColorConfig.moonColor;
 					var deltaX = moon.x - userPos.x;
 					var deltaY = moon.y - userPos.y;
 					context.beginPath();
@@ -797,7 +956,7 @@ function WorldMap (cName, prj) {
 						var imgYOffset = 7 * Math.cos(toRadians(direction));
 						context.drawImage(img, moon.x + deltaX + Math.ceil(imgXOffset), moon.y + deltaY - Math.ceil(imgYOffset));
 					} else {
-						fillCircle(context, { x: moon.x + deltaX, y: moon.y + deltaY}, 5, 'white');
+						fillCircle(context, { x: moon.x + deltaX, y: moon.y + deltaY}, 5, worldmapColorConfig.moonColor);
 					}
 				}
 				// Moonlight
@@ -812,8 +971,8 @@ function WorldMap (cName, prj) {
 			  var aries = findInList(astronomicalData.wanderingBodies, "name", "aries");
 			  if (aries !== null) {
 			    drawEcliptic(canvas, context, aries.gha, astronomicalData.eclipticObliquity);
-			    positionBody(context, userPos, "LightGray", "Aries", 0, aries.gha, false);
-			    positionBody(context, userPos, "LightGray", "Anti-Aries", 0, aries.gha + 180, false); // Libra?
+			    positionBody(context, userPos, worldmapColorConfig.ariesColor, "Aries", 0, aries.gha, false);
+			    positionBody(context, userPos, worldmapColorConfig.ariesColor, "Anti-Aries", 0, aries.gha + 180, false); // Libra?
 			  }
 			  // 2 - Other planets
 			  var venus = findInList(astronomicalData.wanderingBodies, "name", "venus");
@@ -821,22 +980,22 @@ function WorldMap (cName, prj) {
 			  var jupiter = findInList(astronomicalData.wanderingBodies, "name", "jupiter");
 			  var saturn = findInList(astronomicalData.wanderingBodies, "name", "saturn");
 			  if (venus !== null) {
-			    positionBody(context, userPos, "orange", "Venus", venus.decl, venus.gha);
+			    positionBody(context, userPos, worldmapColorConfig.venusColor, "Venus", venus.decl, venus.gha);
 			  }
 			  if (mars !== null) {
-			    positionBody(context, userPos, "red", "Mars", mars.decl, mars.gha);
+			    positionBody(context, userPos, worldmapColorConfig.marsColor, "Mars", mars.decl, mars.gha);
 			  }
 			  if (jupiter !== null) {
-			    positionBody(context, userPos, "LightPink", "Jupiter", jupiter.decl, jupiter.gha);
+			    positionBody(context, userPos, worldmapColorConfig.jupiterColor, "Jupiter", jupiter.decl, jupiter.gha);
 			  }
 			  if (saturn !== null) {
-			    positionBody(context, userPos, "LightYellow", "Saturn", saturn.decl, saturn.gha);
+			    positionBody(context, userPos, worldmapColorConfig.saturnColor, "Saturn", saturn.decl, saturn.gha);
 			  }
 			}
 
 			if (astronomicalData.stars !== undefined && withStars) {
 				astronomicalData.stars.forEach(function(star, idx) {
-					positionBody(context, userPos, "white", star.name, star.decl, star.gha, false, true);
+					positionBody(context, userPos, worldmapColorConfig.starsColor, star.name, star.decl, star.gha, false, true);
 				});
 			}
 		}
@@ -851,7 +1010,7 @@ function WorldMap (cName, prj) {
 		var lstep = 10;  //Math.abs(_north - _south) / 10;
 
 		context.lineWidth = 1;
-		context.strokeStyle = 'rgba(0, 255, 255, 0.3)'; // 'cyan';
+		context.strokeStyle = worldmapColorConfig.gridColor; // 'cyan';
 
 		if (withGrid) {
 			// Parallels
@@ -879,7 +1038,7 @@ function WorldMap (cName, prj) {
 		}
 
 		if (withTropics) {
-			context.strokeStyle = 'LightGray';
+			context.strokeStyle = worldmapColorConfig.tropicColor;
 			// Cancer
 			var y = posToCanvas(canvas, tropicLat, 0).y;
 			context.beginPath();
@@ -946,7 +1105,7 @@ function WorldMap (cName, prj) {
 				context.lineTo(firstPt.x, firstPt.y); // close the loop
 			}
 			context.lineWidth = 1;
-			context.strokeStyle = 'cyan'; // 'black';
+			context.strokeStyle = worldmapColorConfig.chartColor; // 'black';
 			context.stroke();
 			// context.fillStyle = "goldenrod";
 			// context.fill();
@@ -962,7 +1121,7 @@ function WorldMap (cName, prj) {
 			if (astronomicalData.sun !== undefined && withSun) {
 				context.save();
 				var sunLng = haToLongitude(astronomicalData.sun.gha);
-				plotPosToCanvas(astronomicalData.sun.decl, sunLng, "Sun", "yellow");
+				plotPosToCanvas(astronomicalData.sun.decl, sunLng, "Sun", worldmapColorConfig.sunColor);
 
 				// Sunlight
 				if (false && withSunlight) {
@@ -974,7 +1133,7 @@ function WorldMap (cName, prj) {
 			if (astronomicalData.moon !== undefined && withMoon) {
 				context.save();
 				var moonLng = haToLongitude(astronomicalData.moon.gha);
-				plotPosToCanvas(astronomicalData.moon.decl, moonLng, "Moon", "white");
+				plotPosToCanvas(astronomicalData.moon.decl, moonLng, "Moon", worldmapColorConfig.moonColor);
 				// Moonlight
 				if (false && withMoonlight) {
 					var from = {lat: toRadians(astronomicalData.moon.decl), lng: toRadians(moonLng)};
@@ -995,15 +1154,15 @@ function WorldMap (cName, prj) {
 					var ariesRad = { lat: toRadians(astronomicalData.eclipticObliquity), lng: toRadians(longitude) };
 					var eclCenter = deadReckoning(ariesRad, 90 * 60, 0); // "Center" of the Ecliptic
 
-					context.fillStyle = "white";
+					context.fillStyle = worldmapColorConfig.tropicColor;
 					for (var hdg=0; hdg<360; hdg++) {
 						var pt = deadReckoning(eclCenter, 90 * 60, hdg);
 						var pp = posToCanvas(canvas, toDegrees(pt.lat), toDegrees(pt.lng));
 						context.fillRect(pp.x, pp.y, 1, 1);
 					}
 
-					plotPosToCanvas(0, haToLongitude(aries.gha), "Aries", "LightGray");
-					plotPosToCanvas(0, haToLongitude(aries.gha + 180), "Anti-Aries", "LightGray");
+					plotPosToCanvas(0, haToLongitude(aries.gha), "Aries", worldmapColorConfig.ariesColor);
+					plotPosToCanvas(0, haToLongitude(aries.gha + 180), "Anti-Aries", worldmapColorConfig.ariesColor);
 				}
 				// 2 - Other planets
 				var venus = findInList(astronomicalData.wanderingBodies, "name", "venus");
@@ -1011,22 +1170,22 @@ function WorldMap (cName, prj) {
 				var jupiter = findInList(astronomicalData.wanderingBodies, "name", "jupiter");
 				var saturn = findInList(astronomicalData.wanderingBodies, "name", "saturn");
 				if (venus !== null) {
-					plotPosToCanvas(venus.decl, haToLongitude(venus.gha), "Venus", "orange");
+					plotPosToCanvas(venus.decl, haToLongitude(venus.gha), "Venus", worldmapColorConfig.venusColor);
 				}
 				if (mars !== null) {
-					plotPosToCanvas(mars.decl, haToLongitude(mars.gha), "Mars", "red");
+					plotPosToCanvas(mars.decl, haToLongitude(mars.gha), "Mars", worldmapColorConfig.marsColor);
 				}
 				if (jupiter !== null) {
-					plotPosToCanvas(jupiter.decl, haToLongitude(jupiter.gha), "Jupiter", "LightPink");
+					plotPosToCanvas(jupiter.decl, haToLongitude(jupiter.gha), "Jupiter", worldmapColorConfig.jupiterColor);
 				}
 				if (saturn !== null) {
-					plotPosToCanvas(saturn.decl, haToLongitude(saturn.gha), "Saturn", "LightYellow");
+					plotPosToCanvas(saturn.decl, haToLongitude(saturn.gha), "Saturn", worldmapColorConfig.saturnColor);
 				}
 			}
 
 			if (astronomicalData.stars !== undefined && withStars) {
 				astronomicalData.stars.forEach(function(star, idx) {
-					plotPosToCanvas(star.decl, haToLongitude(star.gha), star.name, "white");
+					plotPosToCanvas(star.decl, haToLongitude(star.gha), star.name, worldmapColorConfig.starsColor);
 				});
 			}
 		}
@@ -1051,7 +1210,7 @@ function WorldMap (cName, prj) {
 		var aries = { lat: toRadians(obl), lng: toRadians(longitude) };
 		var eclCenter = deadReckoning(aries, 90 * 60, 0); // "Center" of the Ecliptic
 
-		context.fillStyle = "white";
+		context.fillStyle = worldmapColorConfig.tropicColor;
 		for (var hdg=0; hdg<360; hdg++) {
 			var pt = deadReckoning(eclCenter, 90 * 60, hdg);
 			var pp = getPanelPoint(toDegrees(pt.lat), toDegrees(pt.lng));
@@ -1091,7 +1250,7 @@ function WorldMap (cName, prj) {
 		var visibility = 0;
 
 		// context.lineWidth = 1;
-		context.fillStyle = 'rgba(192, 192, 192, 0.3)';
+		context.fillStyle = worldmapColorConfig.nightColor;
 
 		// find first visible point of the night limb
 		for (var i=0; i<360; i++) {
@@ -1245,14 +1404,14 @@ function WorldMap (cName, prj) {
 		if (userPosition !== {}) {
 			var strLat = decToSex(userPosition.latitude, "NS");
 			var strLng = decToSex(userPosition.longitude, "EW");
-			context.fillStyle = "cyan";
+			context.fillStyle = worldmapColorConfig.displayPositionColor;
 			context.font = "bold 16px Arial"; // "bold 40px Arial"
 			context.fillText(strLat, 10, 18);
 			context.fillText(strLng, 10, 38);
 		}
 
 		if (astronomicalData !== undefined && astronomicalData.deltaT !== undefined) {
-			context.fillStyle = "cyan";
+			context.fillStyle = worldmapColorConfig.displayPositionColor;
 			context.font = "12px Arial"; // "bold 40px Arial"
 			var deltaT = "\u0394T=" + astronomicalData.deltaT + " s";
 			context.fillText(deltaT, 10, canvas.height - 5);
@@ -1274,11 +1433,11 @@ function WorldMap (cName, prj) {
 
 		var canvas = document.getElementById(canvasName);
 		var pt = posToCanvas(canvas, lat, lng);
-		plotPoint(canvasName, pt, (color !== undefined ? color : "red"));
+		plotPoint(canvasName, pt, (color !== undefined ? color : worldmapColorConfig.defaultPlotPointColor));
 		if (label !== undefined) {
 			try {
 				var context = canvas.getContext('2d');
-				context.fillStyle = (color !== undefined ? color : "red");
+				context.fillStyle = (color !== undefined ? color : worldmapColorConfig.defaultPlotPointColor);
 				context.fillText(label, Math.round(pt.x) + 3, Math.round(pt.y) - 3);
 			} catch (err) { // Firefox has some glitches here
 				if (console.log !== undefined) {

@@ -20,6 +20,7 @@ const mapProjections = {
 
 const compositeCatalog = [
 	{
+		key: "PAC-0001",
 		name: "All Pacific, current analysis",
 		map: {
 			projection: mapProjections.mercator,
@@ -29,8 +30,8 @@ const compositeCatalog = [
 			west: 127.5
 		},
 		canvas: {
-			w: 2640,
-			h: 1728
+			w: 1000,
+			h: 1200
 		},
 		faxData: [
 			{

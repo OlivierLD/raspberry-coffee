@@ -64,7 +64,7 @@ public class RESTImplementation {
 					"List of all available operations, on astro request manager."),
 			new Operation( // QueryString contains date /positions-in-the-sky?at=2017-09-01T00:00:00
 					"GET",
-					"/positions-in-the-sky",
+					"/astro/positions-in-the-sky",
 					this::getPositionsInTheSky,
 					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optional: 'fromL' and 'fromG', 'wandering' (true|[false])."),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
@@ -133,7 +133,7 @@ public class RESTImplementation {
 	private Response getOperationList(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
-		List<Operation> opList = this.getOperations(); // Aggregates ops from all request managers
+		List<Operation> opList = this.getOperations();
 		String content = new Gson().toJson(opList);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());

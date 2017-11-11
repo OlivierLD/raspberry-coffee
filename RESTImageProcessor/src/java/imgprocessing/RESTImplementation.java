@@ -86,7 +86,7 @@ public class RESTImplementation {
 	private Response getOperationList(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
-		List<Operation> opList = this.imgRequestManager.getAllOperationList(); // Aggregates ops from all request managers
+		List<Operation> opList = this.getOperations();
 		String content = new Gson().toJson(opList);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
