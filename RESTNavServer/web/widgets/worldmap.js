@@ -198,7 +198,7 @@ function WorldMap (cName, prj) {
 	var withStars = false;
 	var withTropics = false;
 
-	var label = "Your position";
+	var posLabel = "Your position";
 
 	this.setWithGrid = function(b) {
 		withGrid = b;
@@ -225,7 +225,7 @@ function WorldMap (cName, prj) {
 	  withTropics = b;
 	};
 	this.setPositionLabel = function(str) {
-		label = str;
+		posLabel = str;
 	};
 
 	// TODO Add callbacks, beforeDrawing, afterDrawing ?
@@ -874,7 +874,7 @@ function WorldMap (cName, prj) {
 			var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
 			plot(context, userPos, worldmapColorConfig.userPosColor);
 			context.fillStyle = worldmapColorConfig.userPosColor;
-			context.fillText(label, Math.round(userPos.x) + 3, Math.round(userPos.y) - 3);
+			context.fillText(posLabel, Math.round(userPos.x) + 3, Math.round(userPos.y) - 3);
 		}
 		// Celestial bodies?
 		if (astronomicalData !== {}) {
@@ -1117,8 +1117,8 @@ function WorldMap (cName, prj) {
 		}
 		// User position
 		if (userPosition !== {}) {
-//		var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
-			plotPosToCanvas(userPosition.latitude, userPosition.longitude, "Your position");
+			context.fillStyle = worldmapColorConfig.userPosColor;
+			plotPosToCanvas(userPosition.latitude, userPosition.longitude, posLabel, worldmapColorConfig.userPosColor);
 		}
 
 		if (astronomicalData !== {}) {
@@ -1369,7 +1369,7 @@ function WorldMap (cName, prj) {
 		// User position
 		if (userPosition !== {}) {
 			var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
-			plotPosToCanvas(userPos.latitude, userPos.longitude, "Your position");
+			plotPosToCanvas(userPos.latitude, userPos.longitude, posLabel);
 		}
 	};
 

@@ -38,12 +38,20 @@
 	  context = canvas.getContext('2d');
 
 	  worldMap.clear();
-	  worldMap.setPositionLabel("");
+	  worldMap.setPositionLabel("SF");
 	  setTimeout(function () {
 		  worldMap.drawWorldMap();
 	  }, 1);
 
 	  document.getElementById("console-type").innerHTML = 'The HTML5 ' + flavor + ' Console.';
+
+	  // Populate composites list
+	  for (var i=0; i<compositeCatalog.length; i++) {
+	    var opt = document.createElement('option');
+			opt.setAttribute('value', compositeCatalog[i].key);
+			opt.appendChild(document.createTextNode(compositeCatalog[i].name));
+			document.getElementById('composites').appendChild(opt);
+	  }
   };
 
   var displayErr = function(err) {
@@ -110,8 +118,21 @@
 		}
   };
 
+	var findCompositeByKey = function(key) {
+		var comp = {};
+		for (var i=0; i<compositeCatalog.length; i++) {
+	    if (key === compositeCatalog[i].key) {
+	      comp = compositeCatalog[i];
+	      break;
+	    }
+		}
+		return comp;
+	};
+
   var loadFaxes = function() {
-  	var compositeData = compositeCatalog[0];
+    var key = document.getElementById('composites').value;
+
+  	var compositeData = findCompositeByKey(key);
 
   	console.log(compositeData);
 	  worldMap.setCanvasWidth(compositeData.canvas.w);
@@ -155,8 +176,8 @@
 			var oneFax = {
 				url: fax.faxUrl,
 				name: fax.name,
-				storage: 'web/fax_' + idx + '.png',
-				returned: 'web/_fax_' + idx + '.png',
+				storage: 'web/' + compositeData.key + '_' + idx + '.png', // TODO With the date
+				returned: 'web/_' + compositeData.key + '_' + idx + '.png',
 				transparent: fax.transp,
 				imgType: "png",
 				tx: fax.effect
@@ -334,7 +355,7 @@
       <tr>
         <td valign="top" rowspan="2">
           <div id="map" style="display: block; height: 700px; width: 850px; overflow-x: auto; overflow-y: auto; text-align: center;">
-            <canvas id="mapCanvas" width="1000" height="900" style="border-radius:10px;"></canvas>
+            <canvas id="mapCanvas" width="1400" height="900" style="border-radius:10px;"></canvas>
           </div>
         </td>
         <td valign="top">
@@ -342,7 +363,7 @@
           <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
 	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
 					<hr/>
-
+					<select id="composites"></select>
 					<button onclick="loadFaxes();">Load faxes</button>
 					<hr/>
 

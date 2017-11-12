@@ -1,3 +1,4 @@
+// Composite Catalog (Weather Wizard)
 const faxColors = {
 	black: "BLACK",
 	white: "WHITE",
@@ -73,6 +74,53 @@ const compositeCatalog = [
 				location: {
 					x: 14,
 					y: 482
+				}
+			}
+		]
+	},
+	{
+		key: "ATL-0001",
+		name: "North Atlantic, current analysis",
+		map: {
+			projection: mapProjections.mercator,
+			north: 65.5,
+			south: 10,
+			east: 28.2,
+			west: -101.8
+		},
+		canvas: {
+			w: 900,
+			h: 600
+		},
+		faxData: [
+			{
+				faxUrl: "http://www.opc.ncep.noaa.gov/A_sfc_full_ocean.gif",
+				name: "North Atl surface analysis",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.red
+				},
+				effect: faxEffects.blur,
+				zoom: 0.32291855775920775,
+				location: {
+					x: 13,
+					y: 8
+				}
+			},
+			{
+				faxUrl: "http://www.opc.ncep.noaa.gov/shtml/A_06hr500bw.gif",
+				name: "North Atl 500mb analysis",
+				transp: faxColors.white,
+				tx: {
+					from: faxColors.black,
+					to: faxColors.blue
+				},
+				effect: faxEffects.blur,
+				zoom: 0.4928121938611098,
+				location: {
+					x: 26,
+					y: 27
 				}
 			}
 		]
