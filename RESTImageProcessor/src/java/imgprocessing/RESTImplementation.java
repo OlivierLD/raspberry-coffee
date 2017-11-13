@@ -132,6 +132,9 @@ public class RESTImplementation {
 									JsonObject jObj = gson.toJsonTree(json).getAsJsonObject();
 									PullTxManager.TxRequest txRequest = gson.fromJson(jObj.toString(), PullTxManager.TxRequest.class);
 									// Do the job here
+									if (verbose) {
+										System.out.println(String.format("Downloading %s...", txRequest.getUrl()));
+									}
 									PullTxManager.downloadAndTransform(
 											txRequest.getUrl(),
 											txRequest.getStorage(),
@@ -141,6 +144,9 @@ public class RESTImplementation {
 											txRequest.getTo() == null ? null : txRequest.getTo().color(),
 											txRequest.getImgType(),
 											txRequest.getTx().type());
+									if (verbose) {
+										System.out.println(String.format("Done with %s...", txRequest.getUrl()));
+									}
 									resultList.add(txRequest);
 								} catch (Exception ex) {
 									// Return this
