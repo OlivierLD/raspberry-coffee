@@ -2,20 +2,20 @@
 const faxColors = {
 	black: "BLACK",
 	white: "WHITE",
-	red: "RED",
+	red:   "RED",
 	green: "GREEN",
-	pink: "PINK",
-	blue: "BLUE"
+	pink:  "PINK",
+	blue:  "BLUE"
 };
 
 const faxEffects = {
-	blur: "BLUR",
+	blur:  "BLUR",
 	sharp: "SHARP",
-	none: "NONE"
+	none:  "NONE"
 };
 
 const mapProjections = {
-	globe: "GLOBE",
+	globe:    "GLOBE",
 	mercator: "MERCATOR"
 };
 
@@ -25,10 +25,10 @@ const compositeCatalog = [
 		name: "All Pacific, current analysis",
 		map: {
 			projection: mapProjections.mercator,
-			north: 66.5,
+			north:  66.5,
 			south: -48.5,
 			east: -102,
-			west: 127.5
+			west:  127.5
 		},
 		canvas: {
 			w: 1000,
