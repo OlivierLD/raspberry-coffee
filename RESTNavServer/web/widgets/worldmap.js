@@ -1007,9 +1007,6 @@ function WorldMap (cName, prj) {
 
 	var drawMercatorChart = function (canvas, context) {
 		// TODO This is a copy of Anaximandre, fix this. (DeDup)
-
-		// TODO sun/moon light.
-
 		var gstep = 10; //Math.abs(_east - _west) / 60;
 		var lstep = 10;  //Math.abs(_north - _south) / 10;
 
@@ -1127,10 +1124,9 @@ function WorldMap (cName, prj) {
 				var sunLng = haToLongitude(astronomicalData.sun.gha);
 				plotPosToCanvas(astronomicalData.sun.decl, sunLng, "Sun", worldmapColorConfig.sunColor);
 
-				// TODO Sunlight
-				if (false && withSunlight) {
+				if (withSunlight) {
 					var from = {lat: toRadians(astronomicalData.sun.decl), lng: toRadians(sunLng)};
-					drawNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
+					drawMercatorNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
 				}
 				context.restore();
 			}
@@ -1138,10 +1134,9 @@ function WorldMap (cName, prj) {
 				context.save();
 				var moonLng = haToLongitude(astronomicalData.moon.gha);
 				plotPosToCanvas(astronomicalData.moon.decl, moonLng, "Moon", worldmapColorConfig.moonColor);
-				// TODO Moonlight
-				if (false && withMoonlight) {
+				if (withMoonlight) {
 					var from = {lat: toRadians(astronomicalData.moon.decl), lng: toRadians(moonLng)};
-					drawNight(canvas, context, from, userPosition, astronomicalData.moon.gha);
+					drawMercatorNight(canvas, context, from, userPosition, astronomicalData.moon.gha);
 				}
 				context.restore();
 			}
@@ -1322,6 +1317,75 @@ function WorldMap (cName, prj) {
 			var limbPt = getPanelPoint(toDegrees(limb.lat), toDegrees(limb.lng));
 			context.lineTo(limbPt.x, limbPt.y);
 		}
+		context.closePath();
+		context.fill();
+	};
+
+	var toRealLng = function(lng) {
+		var g = lng;
+		while (g > 180) {
+			g -= 360;
+		}
+		while (g < -180) {
+			g += 360;
+		}
+		return g;
+	};
+	var drawMercatorNight = function(canvas, context, from, user, gha) {
+		const NINETY_DEGREES = 90 * 60; // in nm
+
+		// context.lineWidth = 1;
+		context.fillStyle = worldmapColorConfig.nightColor;
+
+		var nightRim = [];
+		// Calculate the night rim
+		for (var i=0; i<360; i++) {
+			var night = deadReckoning(from, NINETY_DEGREES, i);
+			nightRim.push(night);
+		}
+
+		// Night limb
+		// Find the first point (west) of the rim
+		var first = 0;
+		for (var x=0; x<nightRim.length; x++) {
+			var lng = toRealLng(toDegrees(nightRim[x].lng));
+//		console.log("Night lng: " + lng);
+			if (lng > _west) {
+				first = x - 1;
+				break;
+			}
+		}
+		context.beginPath();
+		var pt = posToCanvas(canvas, toDegrees(nightRim[first].lat), toDegrees(nightRim[first].lng));
+		context.moveTo(pt.x, pt.y);
+
+		var go = true;
+		for (var idx=first; idx<360 && go === true; idx++) {
+			pt = posToCanvas(canvas, toDegrees(nightRim[idx].lat), toDegrees(nightRim[idx].lng));
+			context.lineTo(pt.x, pt.y);
+	//  if (toRealLng(toDegrees(nightRim[idx].lng)) > _east) {
+	// 	 go = false;
+	//  }
+		}
+		if (go) {
+			for (var idx=0; idx<360 && go === true; idx++) {
+				if (toRealLng(toDegrees(nightRim[idx].lng)) > _east) {
+					go = false;
+				} else {
+					pt = posToCanvas(canvas, toDegrees(nightRim[idx].lat), toDegrees(nightRim[idx].lng));
+					context.lineTo(pt.x, pt.y);
+				}
+			}
+		}
+
+		if (from.lat > 0) { // N Decl, night is south
+			context.lineTo(canvas.width, canvas.height);
+			context.lineTo(0, canvas.height);
+		} else {            // S Decl, night is north
+			context.lineTo(canvas.width, 0);
+			context.lineTo(0, 0);
+		}
+
 		context.closePath();
 		context.fill();
 	};
