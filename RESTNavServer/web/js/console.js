@@ -151,6 +151,7 @@ var changeBorder = function (b) {
 	displayHum.repaint();
 	displayAW.setBorder(b);
 	displayCurrent.setBorder(b);
+	displayCurrent2.setBorder(b);
 };
 
 var TOTAL_WIDTH = 1200;

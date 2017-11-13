@@ -129,7 +129,9 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 
 ---
 
-## TODO
+## TODOs, next...
 
 - `npm` for non-java resource sharing
+- GRIB rendering
+- Routing features
 
