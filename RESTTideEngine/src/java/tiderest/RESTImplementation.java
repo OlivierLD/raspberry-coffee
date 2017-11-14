@@ -66,37 +66,37 @@ public class RESTImplementation {
 					"List of all available operations, on tide request manager."),
 			new Operation(
 					"GET",
-					"/tide-stations",
+					"/tide/tide-stations",
 					this::getStationsList,
 					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'filter', 'limit' and 'offset' optional query string parameters. Default offset is 0, default limit is 500."),
 			new Operation(
 					"GET",
-					"/coeff-definitions",
+					"/tide/coeff-definitions",
 					this::getCoefficients,
 					"Get all the coefficient names and definitions"),
 			new Operation(
 					"GET",
-					"/coeff-definitions/{coeff-name}",
+					"/tide/coeff-definitions/{coeff-name}",
 					this::getCoefficient,
 					"Get one coefficient name and definition. {coeff-name} is the name. Returns 'unknown' if not found in the map."),
 			new Operation(
 					"GET",
-					"/tide-stations/{st-regex}",
+					"/tide/tide-stations/{st-regex}",
 					this::getStations,
 					"Get Tide Stations matching the regex. Returns all data of the matching stations. Regex might need encoding/escaping."),
 			new Operation(
 					"POST",
-					"/tide-stations/{station-name}/wh",
+					"/tide/tide-stations/{station-name}/wh",
 					this::getWaterHeight,
 					"Creates a Water Height request for the {station}. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."),
 			new Operation(
 					"POST",
-					"/publish/{station-name}",
+					"/tide/publish/{station-name}",
 					this::publishTideTable,
 					"Generates tide table document (pdf)"),
 			new Operation(
 					"POST",
-					"/tide-stations/{station-name}/wh/details",
+					"/tide/tide-stations/{station-name}/wh/details",
 					this::getWaterHeightPlus,
 					"Creates a Water Height request for the {station}, with harmonic curves. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."));
 

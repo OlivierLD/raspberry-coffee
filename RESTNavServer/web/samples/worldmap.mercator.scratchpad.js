@@ -37,9 +37,10 @@ var getCurrentUTCDate = function() {
 var init = function () {
 	worldMap = new WorldMap('mapCanvas', 'MERCATOR');
 
-	worldMap.setNorth(75);
-	worldMap.setSouth(-75);
+	worldMap.setNorth(66.5);
+	worldMap.setSouth(-48.5);
 	worldMap.setWest(127.5);
+	worldMap.setEast(-102.0); // Recalculated, anyway.
 
 	worldMap.setUserPosition({ latitude: position.lat, longitude: position.lng });
 

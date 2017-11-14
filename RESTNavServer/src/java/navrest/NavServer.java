@@ -2,6 +2,7 @@ package navrest;
 
 import astrorest.AstroRequestManager;
 import http.HTTPServer;
+import imgprocessing.ImgRequestManager;
 import nmea.mux.GenericNMEAMultiplexer;
 import tiderest.TideRequestManager;
 
@@ -41,6 +42,8 @@ public class NavServer {
 		// Add Nav features: Dead Reckoning, logging, re-broadcasting, from the NMEA Multiplexer
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
 		this.httpServer.addRequestManager(new GenericNMEAMultiplexer(definitions));
+		// Add image processing service...
+		this.httpServer.addRequestManager(new ImgRequestManager());
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {

@@ -94,18 +94,18 @@ var getDeferred = function(
 var DURATION_FMT = "Y-m-dTH:i:s";
 
 var getPerpetualDoc = function(options) {
-	var url = "/publish/perpetual";
+	var url = "/astro/publish/perpetual";
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
 };
 
 var getAlmanac = function(options) {
-	var url = "/publish/almanac";
+	var url = "/astro/publish/almanac";
 //return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
 	return getDeferred(url, -1, 'POST', 200, options, false);
 };
 
 var getLunar = function(options) {
-	var url = "/publish/lunar";
+	var url = "/astro/publish/lunar";
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
 };
 

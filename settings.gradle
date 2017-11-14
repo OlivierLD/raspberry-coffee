@@ -35,5 +35,6 @@ include "common-image-utils"
 include "RESTNavServer"
 include "RESTTideEngine"
 include "RESTNauticalAlmanac"
+include 'RESTImageProcessor'
 include "RESTCam"
 include "Camera"

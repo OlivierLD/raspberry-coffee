@@ -151,6 +151,7 @@ var changeBorder = function (b) {
 	displayHum.repaint();
 	displayAW.setBorder(b);
 	displayCurrent.setBorder(b);
+	displayCurrent2.setBorder(b);
 };
 
 var TOTAL_WIDTH = 1200;
@@ -243,7 +244,7 @@ var getDeferred = function(
 };
 
 var getSunMoonGP = function(from, when) {
-	var url = "/positions-in-the-sky";
+	var url = "/astro/positions-in-the-sky";
 	// Add date
 	url += ("?at=" + when);
 	if (from !== undefined) {

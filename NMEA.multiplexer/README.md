@@ -321,7 +321,7 @@ A full list of the available REST services is available at
 All the end points and operations are defined in `nmea.mux.GenericNMEAMultiplexer.java`. See the `List<Operation>` named `operations`.
 
 ```
- GET /serial-ports
+ GET /mux/serial-ports
 ```
 returns a payload as:
 ```
@@ -333,7 +333,7 @@ returns a payload as:
 The list of _available_ serial ports.
 
 ```
- GET /channels
+ GET /mux/channels
 ```
 returns a payload like
 ```json
@@ -352,7 +352,7 @@ returns a payload like
 ```
 
 ```
- GET /forwarders
+ GET /mux/forwarders
 ```
 returns a payload like
 ```json
@@ -370,7 +370,7 @@ returns a payload like
 ```
 
 ```text
- DELETE /forwarders/:type
+ DELETE /mux/forwarders/:type
 ```
 `type` is one of
 - `file`. requires a body like
@@ -380,7 +380,7 @@ returns a payload like
     "type": "file"
 }
 ```
-identical to the elements returned by `GET /forwarders`.
+identical to the elements returned by `GET /mux/forwarders`.
 - `console`. requires no body.
 - `tcp`. requires a body like
 ```json
@@ -389,7 +389,7 @@ identical to the elements returned by `GET /forwarders`.
      "type": "tcp"
 }
 ```
-identical to the elements returned by `GET /forwarders`.
+identical to the elements returned by `GET /mux/forwarders`.
 - `ws`. requires a body like
 ```json
 {
@@ -397,14 +397,14 @@ identical to the elements returned by `GET /forwarders`.
    "type": "ws"
 }
 ```
-identical to the elements returned by `GET /forwarders`.
+identical to the elements returned by `GET /mux/forwarders`.
 
 ```
- DELETE /channels/:type
+ DELETE /mux/channels/:type
 ```
 
 ```
- POST /forwarders
+ POST /mux/forwarders
 ```
 with payloads like:
 - `file`. requires a body like
@@ -414,7 +414,7 @@ with payloads like:
     "type": "file"
 }
 ```
-identical to the elements returned by `GET /forwarders`.
+identical to the elements returned by `GET /mux/forwarders`.
 - `console`. requires a body like
 ```json
 {
@@ -428,7 +428,7 @@ identical to the elements returned by `GET /forwarders`.
      "type": "tcp"
 }
 ```
-identical to the elements returned by `GET /forwarders`.
+identical to the elements returned by `GET /mux/forwarders`.
 - `ws`. requires a body like
 ```json
 {
@@ -436,10 +436,10 @@ identical to the elements returned by `GET /forwarders`.
    "type": "ws"
 }
 ```
-identical to the elements returned by `GET /forwarders`.
+identical to the elements returned by `GET /mux/forwarders`.
 
 ```
- POST /channels
+ POST /mux/channels
 ```
 
 There is a Web UI using the REST resources above.
@@ -456,10 +456,10 @@ And any REST client (NodeJS, Postman, curl, your own code, ...) does the job.
 
 Example with `curl`:
 ```
-$ curl -v http://192.168.1.181:9999/last-sentence
+$ curl -v http://192.168.1.181:9999/mux/last-sentence
   *   Trying 192.168.1.181...
   * Connected to 192.168.1.181 (192.168.1.181) port 9999 (#0)
-  > GET /last-sentence HTTP/1.1
+  > GET /mux/last-sentence HTTP/1.1
   > Host: 192.168.1.181:9999
   > User-Agent: curl/7.43.0
   > Accept: */*
@@ -632,15 +632,15 @@ For that, set the system variable `process.on.start` to `false`, default value i
 
 In any case, the value can be set using the service
 ```
- PUT /mux-process/on
+ PUT /mux/mux-process/on
 ```
 or
 ```
- PUT /mux-process/off
+ PUT /mux/mux-process/off
 ```
 The current status can be read using
 ```
- GET /mux-process
+ GET /mux/mux-process
 ```
 A Web UI (using the above) is also available:
 ```

@@ -6,6 +6,23 @@ An illustration of the way to gather several REST Services all in one place.
 - [Astro](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNauticalAlmanac) REST Service
 - [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md) REST Service
 
+In addition, I'll be attempting to implement the features of the Weather Wizard (another project I own, in Java and Swing, that can superimpose different heterogeneous documents on the same chart, like Faxes, GRIBS, routing results, etc.). This part involes the
+`Img` REST Service, found in the `RESTImgProcessor` project.
+
+![Weather Wizard, early attempt](./docimg/screenshot.08.png)
+
+> A quick note on the Weather Wizard: The faxes can be downloaded from the Internet, from the NOAA web site or its equivalents. At sea, SailMail does the job,
+> I heavily tested it, it does work. 
+>
+> Now, to be able to superimpose faxes as above, you need 2 main things:
+> - turn the white background of the fax into a transparent color
+> - change the black foreground color (in case we deal with a black and white fax) into something else, for better reading.
+>
+> I was not able to find a way to do this in JavaScript (JavaScript in the browser, hey, some `nodejs` library do it, but they run on a server side - aka dark side).
+> That's where the `RESTImageProcessor` comes in. This is the onwe transforming the images (faxes) into what's expected.
+>
+> Again, all this runs _fine_ on a Raspberry PI Zero.
+
 ### Rationale
 
 The idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry PI, where the server is running.
@@ -112,7 +129,9 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 
 ---
 
-## TODO
+## TODOs, next...
 
 - `npm` for non-java resource sharing
+- GRIB rendering
+- Routing features
 

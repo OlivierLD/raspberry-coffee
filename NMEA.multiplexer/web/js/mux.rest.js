@@ -69,79 +69,79 @@ var protocolTestFunc = function() {
 };
 
 var terminate = function() {
-    return getDeferred('/terminate', DEFAULT_TIMEOUT, 'POST', 200, null, false);
+    return getDeferred('/mux/terminate', DEFAULT_TIMEOUT, 'POST', 200, null, false);
 };
 
 var enableLogging = function(b) {
-    return getDeferred('/mux-process/' + (b === true ? 'on' : 'off'), DEFAULT_TIMEOUT, 'PUT', 200, null, false);
+    return getDeferred('/mux/mux-process/' + (b === true ? 'on' : 'off'), DEFAULT_TIMEOUT, 'PUT', 200, null, false);
 };
 
 var getForwarderStatus = function() {
-    return getDeferred('/mux-process', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getDeferred('/mux/mux-process', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getVolume = function() {
-    return getDeferred('/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getDeferred('/mux/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getRunData = function() {
-    return getDeferred('/run-data', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getDeferred('/mux/run-data', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getLastSentence = function() {
-    return getDeferred('/last-sentence', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getDeferred('/mux/last-sentence', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getSOGCOG = function() {
-    return getDeferred('/sog-cog', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getDeferred('/mux/sog-cog', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getDistance = function() {
-    return getDeferred('/distance', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getDeferred('/mux/distance', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getDeltaAlt = function() {
-    return getDeferred('/delta-alt', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+    return getDeferred('/mux/delta-alt', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var getSerialPorts = function() {
-    return getDeferred('/serial-ports', DEFAULT_TIMEOUT, 'GET', 200);
+    return getDeferred('/mux/serial-ports', DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 var getChannels = function() {
-    return getDeferred('/channels', DEFAULT_TIMEOUT, 'GET', 200);
+    return getDeferred('/mux/channels', DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 var getForwarders = function() {
-    return getDeferred('/forwarders', DEFAULT_TIMEOUT, 'GET', 200);
+    return getDeferred('/mux/forwarders', DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 var getComputers = function() {
-    return getDeferred('/computers', DEFAULT_TIMEOUT, 'GET', 200);
+    return getDeferred('/mux/computers', DEFAULT_TIMEOUT, 'GET', 200);
 };
 
 var addForwarder = function(forwarder) {
-    return getDeferred('/forwarders', DEFAULT_TIMEOUT, 'POST', 200, forwarder);
+    return getDeferred('/mux/forwarders', DEFAULT_TIMEOUT, 'POST', 200, forwarder);
 };
 
 var addChannel = function(channel) {
-    return getDeferred('/channels', DEFAULT_TIMEOUT, 'POST', 200, channel);
+    return getDeferred('/mux/channels', DEFAULT_TIMEOUT, 'POST', 200, channel);
 };
 
 var addComputer = function(computer) {
-    return getDeferred('/computers', DEFAULT_TIMEOUT, 'POST', 200, computer);
+    return getDeferred('/mux/computers', DEFAULT_TIMEOUT, 'POST', 200, computer);
 };
 
 var updateChannel = function(channel) {
-    return getDeferred('/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 200, channel);
+    return getDeferred('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'PUT', 200, channel);
 };
 
 var updateComputer = function(computer) {
-    return getDeferred('/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 200, computer);
+    return getDeferred('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'PUT', 200, computer);
 };
 
 var updateMuxVerbose = function(value) {
-    return getDeferred('/mux-verbose/' + value, DEFAULT_TIMEOUT, 'PUT', 200);
+    return getDeferred('/mux/mux-verbose/' + value, DEFAULT_TIMEOUT, 'PUT', 200);
 };
 
 var resetDataCache = function() {
@@ -149,15 +149,15 @@ var resetDataCache = function() {
 };
 
 var deleteForwarder = function(forwarder) {
-    return getDeferred('/forwarders/' + forwarder.type, DEFAULT_TIMEOUT, 'DELETE', 204, forwarder);
+    return getDeferred('/mux/forwarders/' + forwarder.type, DEFAULT_TIMEOUT, 'DELETE', 204, forwarder);
 };
 
 var deleteComputer = function(computer) {
-    return getDeferred('/computers/' + computer.type, DEFAULT_TIMEOUT, 'DELETE', 204, computer);
+    return getDeferred('/mux/computers/' + computer.type, DEFAULT_TIMEOUT, 'DELETE', 204, computer);
 };
 
 var deleteChannel = function(channel) {
-    return getDeferred('/channels/' + channel.type, DEFAULT_TIMEOUT, 'DELETE', 204, channel);
+    return getDeferred('/mux/channels/' + channel.type, DEFAULT_TIMEOUT, 'DELETE', 204, channel);
 };
 
 var setSpeedUnit = function(speedUnit) {

@@ -202,7 +202,7 @@ The device can also be on the go, the code can receive the position and the head
 <!-- ![Wiring](./sunflower_bb.png) -->
 <img src="./sunflower_bb.png" width="827" height="426">
 
-> _Note_: If you want to power the `PCA9685` from the Raspberry PI (5v, GND), you need a power outlet that feeds more than 1A, and probably more than 1.5A.
+> _Note_: If you want to power the `PCA9685` from the Raspberry PI (5v, GND), you need a power outlet that feeds around 1A.
 > If you see the Raspberry PI constantly rebooting itself, it is very likely to be a power issue, you do not feed it enough. 
 
 Like here:

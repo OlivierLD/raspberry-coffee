@@ -25,8 +25,8 @@ then
   PORT=${PORT#*http.port=}
   echo -e "+-------- N O T E   o n   F O R W A R D E R S ------------------"
   echo -e "| You will need to start the forwarders yourself,"
-  echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux-process/on to start"
-  echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux-process/off to stop"
+  echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux/mux-process/on to start"
+  echo -e "| invoke PUT http://$MACHINE_NAME:$PORT/mux/mux-process/off to stop"
   echo -e "| Or use http://$MACHINE_NAME:$PORT/web/runner.html from a "
   echo -e "| browser (laptop, cell, tablet...)"
   echo -e "+---------------------------------------------------------------"
