@@ -126,6 +126,7 @@ public class SunFlower implements RESTRequestManager {
 	private static boolean astroVerbose = false;
 	private static boolean tiltVerbose = false;
 	private static boolean servoVerbose = false;
+	private static boolean adcVerbose = false;
 	private static servoVerboseType servoSuperVerbose = servoVerboseType.NONE;
 	private static boolean testServos = false;
 	private static boolean smoothMoves = false;
@@ -339,6 +340,7 @@ public class SunFlower implements RESTRequestManager {
 		tiltServoID = tiltServoNumber;
 
 		// Read System Properties
+		adcVerbose = "true".equals(System.getProperty("adc.verbose", "false"));
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
 		tiltVerbose = "true".equals(System.getProperty("tilt.verbose", "false"));
 		servoVerbose = "true".equals(System.getProperty("servo.verbose", "false"));
@@ -761,6 +763,13 @@ public class SunFlower implements RESTRequestManager {
 		int adc = 0;
 		if (foundMCP3008) {
 			adc = MCP3008Reader.readMCP3008(adcChannel);
+		}
+		if (adcVerbose) {
+			if (foundMCP3008) {
+				System.out.println(String.format("Read from MCP3008 cannel %d: %d", adcChannel, adc));
+			} else {
+				System.out.println("No MCP3008 found.");
+			}
 		}
 		int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 		BatteryData batteryData = new BatteryData()
