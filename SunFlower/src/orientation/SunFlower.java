@@ -84,8 +84,10 @@ import static utils.StringUtils.rpad;
  *
  * -Dhttp.port=9999
  *
+ * Battery voltage can be monitored with an MCP3008.
  * For the MCP3008, command line parameters (default below):
  * -miso:9 -mosi:10 -clk:11 -cs:8 -channel:0
+ * For miso, mosi, clk, and cs, numbers represent thr GPIO (aka BCM) pins on the PI header.
  */
 public class SunFlower implements RESTRequestManager {
 
