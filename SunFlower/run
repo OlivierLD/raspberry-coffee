@@ -55,6 +55,7 @@ case "$OPTION" in
     exit 0
     ;;
   "basic")
+    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
@@ -66,6 +67,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
   "plus")
+    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
@@ -78,6 +80,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Done.by.one=false"
     ;;
   "verbose")
+    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=true"
@@ -89,6 +92,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
   "demo")
+    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
@@ -103,6 +107,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dto.date=2017-06-28T20:33:00"
     ;;
   "smooth")
+    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=true"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=true"
@@ -115,6 +120,8 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
   "resthttp") # With smooth moves, non-interactive
+    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=false"
+    JAVA_OPTS="$JAVA_OPTS -Ddisplay.digit=false"
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dtilt.verbose=false"
@@ -139,6 +146,7 @@ esac
 #
 if [ $WITH_HELP = false ]
 then
+	# sudo is required when running on the RPi.
   # nohup sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID -channel:7 &
   sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID -channel:7
 else

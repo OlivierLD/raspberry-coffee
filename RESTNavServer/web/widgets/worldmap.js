@@ -1351,7 +1351,7 @@ function WorldMap (cName, prj) {
 			var lng = toRealLng(toDegrees(nightRim[x].lng));
 //		console.log("Night lng: " + lng);
 			if (lng > _west) {
-				first = x - 1;
+				first = Math.max(0, x - 1);
 				break;
 			}
 		}
