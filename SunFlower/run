@@ -148,7 +148,7 @@ if [ $WITH_HELP = false ]
 then
 	# sudo is required when running on the RPi.
   # nohup sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID -channel:7 &
-  java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID -channel:7
+  java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID --with-adc:false -channel:7
 else
   opts=$(echo $JAVA_OPTS | tr ";" "\n")
   for opt in $opts

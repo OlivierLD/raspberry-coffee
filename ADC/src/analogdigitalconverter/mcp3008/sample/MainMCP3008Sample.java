@@ -15,8 +15,8 @@ public class MainMCP3008Sample {
 
 	private static final String MISO_PRM_PREFIX = "-miso:";
 	private static final String MOSI_PRM_PREFIX = "-mosi:";
-	private static final String CLK_PRM_PREFIX  = "-clk:";
-	private static final String CS_PRM_PREFIX   = "-cs:";
+	private static final String CLK_PRM_PREFIX  =  "-clk:";
+	private static final String CS_PRM_PREFIX   =   "-cs:";
 
 	private static final String CHANNEL_PREFIX  = "-channel:";
 
@@ -30,11 +30,11 @@ public class MainMCP3008Sample {
 
 		System.out.println(String.format("Usage is java %s %s%d %s%d %s%d %s%d %s%d",
 				MainMCP3008Sample.class.getName(),
-				MISO_PRM_PREFIX, PinUtil.findByPin(miso).gpio(),
-				MOSI_PRM_PREFIX, PinUtil.findByPin(mosi).gpio(),
-				CLK_PRM_PREFIX, PinUtil.findByPin(clk).gpio(),
-				CS_PRM_PREFIX, PinUtil.findByPin(cs).gpio(),
-				CHANNEL_PREFIX, adcChannel));
+				MISO_PRM_PREFIX,  PinUtil.findByPin(miso).gpio(),
+				MOSI_PRM_PREFIX,  PinUtil.findByPin(mosi).gpio(),
+				CLK_PRM_PREFIX,   PinUtil.findByPin(clk).gpio(),
+				CS_PRM_PREFIX,    PinUtil.findByPin(cs).gpio(),
+				CHANNEL_PREFIX,   adcChannel));
 		System.out.println("Values above are default values.");
 		System.out.println();
 
@@ -145,17 +145,18 @@ public class MainMCP3008Sample {
 		});
 		int lastRead = 0;
 		int tolerance = 5;
+		boolean trimPotChanged = false;
 		while (go) {
-			boolean trimPotChanged = false;
 			int adc = MCP3008Reader.readMCP3008(adcChannel);
 			int postAdjust = Math.abs(adc - lastRead);
 			if (postAdjust > tolerance) {
 				trimPotChanged = true;
 				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
-				if (DEBUG || trimPotChanged)
+				if (DEBUG || trimPotChanged) {
 					System.out.println("readAdc:" + Integer.toString(adc) +
-									" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
-									", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
+							" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
+							", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
+				}
 				System.out.println("Volume:" + volume + "% (" + adc + ")");
 				lastRead = adc;
 			}
