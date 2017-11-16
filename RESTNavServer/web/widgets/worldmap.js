@@ -1156,7 +1156,7 @@ function WorldMap (cName, prj) {
 					context.fillStyle = worldmapColorConfig.tropicColor;
 					for (var hdg=0; hdg<360; hdg++) {
 						var pt = deadReckoning(eclCenter, 90 * 60, hdg);
-						var pp = posToCanvas(canvas, toDegrees(pt.lat), toDegrees(pt.lng));
+						var pp = posToCanvas(canvas, toDegrees(pt.lat), toRealLng(toDegrees(pt.lng)));
 						context.fillRect(pp.x, pp.y, 1, 1);
 					}
 
@@ -1357,7 +1357,7 @@ function WorldMap (cName, prj) {
 		}
 		context.beginPath();
 		var pt = posToCanvas(canvas, toDegrees(nightRim[first].lat), toDegrees(nightRim[first].lng));
-		context.moveTo(pt.x, pt.y);
+		context.moveTo(0 /*pt.x*/, pt.y);
 
 		var go = true;
 		for (var idx=first; idx<360 && go === true; idx++) {
@@ -1378,6 +1378,8 @@ function WorldMap (cName, prj) {
 			}
 		}
 
+		context.lineTo(canvas.width, pt.y);
+
 		if (from.lat > 0) { // N Decl, night is south
 			context.lineTo(canvas.width, canvas.height);
 			context.lineTo(0, canvas.height);
@@ -1385,7 +1387,8 @@ function WorldMap (cName, prj) {
 			context.lineTo(canvas.width, 0);
 			context.lineTo(0, 0);
 		}
-
+//	context.lineTo(firstPt.x, firstPt.y);
+		context.fillStyle = worldmapColorConfig.nightColor;
 		context.closePath();
 		context.fill();
 	};
