@@ -457,7 +457,6 @@ public class SunFlower implements RESTRequestManager {
 				foundPCA9685 = false;
 				System.err.println("+------------------------------------------------------------");
 				System.err.println("| PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");
-				System.out.println("| Or you don't have enough credentials (sudo?).");
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}
@@ -465,6 +464,7 @@ public class SunFlower implements RESTRequestManager {
 			foundPCA9685 = false;
 			System.err.println("+---------------------------------------------------------------------");
 			System.err.println("| You might not be on a Raspberry PI, or PI4J/WiringPi is not there...");
+			System.out.println("| Or you don't have enough credentials (sudo?).");
 			System.err.println("| Moving on anyway...");
 			System.err.println("+---------------------------------------------------------------------");
 		} catch (Exception ex) {
