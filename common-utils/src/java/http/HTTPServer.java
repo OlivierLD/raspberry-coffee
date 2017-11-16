@@ -295,6 +295,8 @@ public class HTTPServer {
 	}
 
 	private boolean keepRunning = true;
+	private List<String> staticDocumentsLocation = null;
+	private static final String DEFAULT_RESOURCE = "index.html";
 
 	// This is an array, so several apps can subscribe to the same HTTPServer.
 	// A REST operation list belongs to each application.
@@ -348,19 +350,40 @@ public class HTTPServer {
 	}
 
 	public HTTPServer() throws Exception {
-		this(defaultPort, null);
+		this(defaultPort, null, new Properties());
 	}
 
 	public HTTPServer(int port) throws Exception {
-		this(port, null);
+		this(port, null, new Properties());
+	}
+
+	public HTTPServer(Properties properties) throws Exception {
+		this(defaultPort, null, properties);
 	}
 
 	public HTTPServer(RESTRequestManager requestManager) throws Exception {
-		this(defaultPort, requestManager);
+		this(defaultPort, requestManager, new Properties());
 	}
 
 	public HTTPServer(int port, RESTRequestManager requestManager) throws Exception {
+		this(port, requestManager, new Properties());
+	}
+
+	/**
+	 *
+	 * @param port
+	 * @param requestManager
+	 * @param properties can contain a static.docs properties, comma-separated list of the directories considered as containing static documents.
+	 *                   Defaulted to "/web/". Example: "/web/,/admin/docs/,/static/".
+	 * @throws Exception
+	 */
+	public HTTPServer(int port, RESTRequestManager requestManager, Properties properties) throws Exception {
 		this.port = port;
+		if (properties == null) {
+			throw new RuntimeException("Properties parameter should not be null");
+		}
+		this.staticDocumentsLocation = Arrays.asList(properties.getProperty("static.docs", "/web/").split(","));
+
 		addRequestManager(requestManager);
 		// Infinite loop, waiting for requests
 		httpListenerThread = new Thread("HTTPListener") {
@@ -496,15 +519,23 @@ public class HTTPServer {
 								RESTProcessorUtil.generateResponseHeaders(response, "text/html", content.length());
 								response.setPayload(content.getBytes());
 								sendResponse(response, out);
-							} else if (path.startsWith("/web/")) { // Assume this is static content. TODO Tweak that, in some configuration.
+							} else if (pathIsStatic(path)) { // Then this is static content. See "static.docs" property.
 								Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 								String fName = path;
 								if (fName.indexOf("?") > -1) {
 									fName = fName.substring(0, fName.indexOf("?"));
 								}
 								File f = new File("." + fName);
+
+								if ((!f.exists() || f.isDirectory()) && fName.endsWith("/")) { // try index.html
+									fName += DEFAULT_RESOURCE;
+									path  += DEFAULT_RESOURCE; // Will be used for Content-Type
+									f = new File("." + fName);
+								}
+
 								if (!f.exists()) {
 									response = new Response(request.getProtocol(), Response.NOT_FOUND);
+									response.setPayload(String.format("File [%s] not found (%s).", fName, f.getAbsolutePath()).getBytes());
 								} else {
 									ByteArrayOutputStream baos = new ByteArrayOutputStream();
 									Files.copy(f.toPath(), baos);
@@ -599,6 +630,14 @@ public class HTTPServer {
 		return this.httpListenerThread;
 	}
 
+	private boolean pathIsStatic(String path) {
+		return this.staticDocumentsLocation
+				.stream()
+				.filter(elmt -> path.startsWith(elmt))
+				.findFirst()
+				.isPresent();
+	}
+
 	/**
 	 * Full mime-type list at https://www.sitepoint.com/web-foundations/mime-types-complete-list/
 	 *
@@ -687,7 +726,7 @@ public class HTTPServer {
 		HTTPServer httpServer = new HTTPServer(9999);
 		System.out.println("Started");
 
-		if (false) {
+		if (true) {
 			waiter = new Thread("HTTPWaiter") {
 				public void run() {
 					synchronized (this) {
