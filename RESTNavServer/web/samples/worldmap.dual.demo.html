@@ -193,8 +193,16 @@
     </script>
   </head>
   <body>
-    <h2>World Map Demo</h2>
-    <!--h4>Traveling east, random latitude increment.</h4-->
+		<table>
+			<tr>
+				<td valign="middle"><h2>World Map Demo</h2></td>
+				<td valign="middle" style="padding-left: 20px;">
+					<input type="radio" name="projection" value="GLOBE" checked onchange="setProjection(this);"> Globe
+					<input type="radio" name="projection" value="MERCATOR" onchange="setProjection(this);"> Mercator
+				</td>
+			</tr>
+		</table>
+
     <div style="display: none;">
       <img src="../images/moon-white.png" id="moon-png" />
       <img src="../images/sun-white.png" id="sun-png" />
@@ -202,8 +210,6 @@
     <table border="0">
       <tr>
         <td valign="top" rowspan="6">
-					<input type="radio" name="projection" value="GLOBE" checked onchange="setProjection(this);"> Globe
-					<input type="radio" name="projection" value="MERCATOR" onchange="setProjection(this);"> Mercator
           <div id="map" style="display: block; height: 500px; width: 850px; overflow-x: auto; overflow-y: auto; text-align: center;">
             <canvas id="mapCanvas" width="800" height="495" style="border-radius:10px;"></canvas>
           </div>
