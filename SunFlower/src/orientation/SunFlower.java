@@ -1205,7 +1205,6 @@ public class SunFlower implements RESTRequestManager {
 						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
 					}
 				} else if (prm.startsWith(WITH_ADC_PREFIX)) {
-					System.out.println(">>> WithADC:" + prm);
 					String adcValue = prm.substring(WITH_ADC_PREFIX.length());
 					try {
 						withAdc = Boolean.valueOf(adcValue);
