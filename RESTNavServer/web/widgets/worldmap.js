@@ -268,6 +268,7 @@ function WorldMap (cName, prj) {
 	 */
 	var addCanvasListener = function () {
 		var canvas = document.getElementById(canvasName);
+		var self = this;
 		canvas.addEventListener("click", // "dblclick", "mousedown", "mouseup", "mousemove"
 				function (event) {
 //        console.log("Click on Canvas, event=" + (event == undefined?"undefined":("OK:" + event.clientX + ", " + event.clientY)));
@@ -287,19 +288,19 @@ function WorldMap (cName, prj) {
 					if (toPt !== undefined) {
 						fromPt = toPt; // Swap
 						toPt = undefined;
-						clear();
-						drawWorldMap();
-						plotPoint(canvasName, fromPt, worldmapColorConfig.defaultPlotPointColor);
+						self.clear();
+						self.drawWorldMap();
+						self.plotPoint(canvasName, fromPt, worldmapColorConfig.defaultPlotPointColor);
 					}
 					if (fromPt === undefined) {
 						fromPt = {"x": xClick, "y": yClick};
-						plotPoint(canvasName, fromPt, worldmapColorConfig.defaultPlotPointColor);
+						self.plotPoint(canvasName, fromPt, worldmapColorConfig.defaultPlotPointColor);
 					} else if (toPt === undefined) {
 						toPt = {"x": xClick, "y": yClick};
-						plotPoint(canvasName, toPt, worldmapColorConfig.defaultPlotPointColor);
+						self.plotPoint(canvasName, toPt, worldmapColorConfig.defaultPlotPointColor);
 						currentStep = 0;
 						animationID = window.setInterval(function () {
-							travel(canvasName, fromPt, toPt, 10);
+							self.travel(canvasName, fromPt, toPt, 10);
 						}, 100);
 					}
 				}, false);
@@ -531,7 +532,7 @@ function WorldMap (cName, prj) {
 	};
 
 	var adjustBoundaries = function () {
-		if (sign(_east) != sign(_west) && sign(_east) == -1) {
+		if (sign(_east) !== sign(_west) && sign(_east) === -1) {
 			_west -= 360;
 		}
 	};
@@ -545,7 +546,10 @@ function WorldMap (cName, prj) {
 		var pt = {};
 		adjustBoundaries();
 		if (_north !== _south && _east !== _west) {
-			for (var gAmpl = _east - _west; gAmpl < 0; gAmpl += 360) ;
+			var gAmpl = _east - _west;
+			while (gAmpl < 0) {
+				gAmpl += 360;
+			}
 			var graph2chartRatio = w / gAmpl;
 			var _lng = lng;
 			if (Math.abs(_west) > 180 && sign(_lng) !== sign(_west) && sign(_lng) > 0) {
@@ -565,7 +569,7 @@ function WorldMap (cName, prj) {
 			pt = {x: x, y: y};
 		}
 		return pt;
-	}
+	};
 
 	var vGrid = 5,
 			hGrid = 5;
@@ -855,7 +859,7 @@ function WorldMap (cName, prj) {
 							}
 						}
 					}
-					if (false && firstPt !== null && previousPt != null) {
+					if (false && firstPt !== null && previousPt !== null) {
 						context.lineTo(firstPt.x, firstPt.y); // close the loop
 					}
 					context.lineWidth = worldmapColorConfig.chartLineWidth;
@@ -1156,7 +1160,7 @@ function WorldMap (cName, prj) {
 					context.fillStyle = worldmapColorConfig.tropicColor;
 					for (var hdg=0; hdg<360; hdg++) {
 						var pt = deadReckoning(eclCenter, 90 * 60, hdg);
-						var pp = posToCanvas(canvas, toDegrees(pt.lat), toDegrees(pt.lng));
+						var pp = posToCanvas(canvas, toDegrees(pt.lat), toRealLng(toDegrees(pt.lng)));
 						context.fillRect(pp.x, pp.y, 1, 1);
 					}
 
@@ -1357,7 +1361,7 @@ function WorldMap (cName, prj) {
 		}
 		context.beginPath();
 		var pt = posToCanvas(canvas, toDegrees(nightRim[first].lat), toDegrees(nightRim[first].lng));
-		context.moveTo(pt.x, pt.y);
+		context.moveTo(0 /*pt.x*/, pt.y);
 
 		var go = true;
 		for (var idx=first; idx<360 && go === true; idx++) {
@@ -1378,6 +1382,8 @@ function WorldMap (cName, prj) {
 			}
 		}
 
+		context.lineTo(canvas.width, pt.y);
+
 		if (from.lat > 0) { // N Decl, night is south
 			context.lineTo(canvas.width, canvas.height);
 			context.lineTo(0, canvas.height);
@@ -1385,7 +1391,8 @@ function WorldMap (cName, prj) {
 			context.lineTo(canvas.width, 0);
 			context.lineTo(0, 0);
 		}
-
+//	context.lineTo(firstPt.x, firstPt.y);
+		context.fillStyle = worldmapColorConfig.nightColor;
 		context.closePath();
 		context.fill();
 	};
@@ -1530,11 +1537,13 @@ function WorldMap (cName, prj) {
 
 		var x, y;
 
-		var gAmpl;
-		for (gAmpl = _east - _west; gAmpl < 0; gAmpl += 360);
+		var gAmpl = _east - _west;
+		while (gAmpl < 0) {
+			gAmpl += 360;
+		}
 		var graph2chartRatio = canvas.width / gAmpl;
 		var _lng = lng;
-		if (Math.abs(_west) > 180 && Math.sign(_lng) != Math.sign(_west) && Math.sign(_lng) > 0) {
+		if (Math.abs(_west) > 180 && Math.sign(_lng) !== Math.sign(_west) && Math.sign(_lng) > 0) {
 			_lng -= 360;
 		}
 		if (gAmpl > 180 && _lng < 0 && _west > 0) {

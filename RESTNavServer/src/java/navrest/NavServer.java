@@ -2,7 +2,7 @@ package navrest;
 
 import astrorest.AstroRequestManager;
 import http.HTTPServer;
-import imgprocessing.ImgRequestManager;
+import gribprocessing.ImgRequestManager;
 import nmea.mux.GenericNMEAMultiplexer;
 import tiderest.TideRequestManager;
 

@@ -36,5 +36,6 @@ include "RESTNavServer"
 include "RESTTideEngine"
 include "RESTNauticalAlmanac"
 include 'RESTImageProcessor'
+include "RESTRouting"
 include "RESTCam"
 include "Camera"

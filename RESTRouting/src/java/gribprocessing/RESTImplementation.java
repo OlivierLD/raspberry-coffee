@@ -1,9 +1,8 @@
-package imgprocessing;
+package gribprocessing;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import core.PullTxManager;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
@@ -11,14 +10,15 @@ import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
  * <p>
  * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
- * <br>
- * Those operation mostly retrieve the state of the SunFlower class, and device.
  * <br>
  * The SunFlower will use the {@link #processRequest(Request)} method of this class to
  * have the required requests processed.
@@ -26,13 +26,13 @@ import java.util.*;
  */
 public class RESTImplementation {
 
-	private static boolean verbose = "true".equals(System.getProperty("image.verbose", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("grib.verbose", "false"));
 
-	private ImgRequestManager imgRequestManager;
+	private GRIBRequestManager gribRequestManager;
 
-	public RESTImplementation(ImgRequestManager restRequestManager) {
+	public RESTImplementation(GRIBRequestManager restRequestManager) {
 
-		this.imgRequestManager = restRequestManager;
+		this.gribRequestManager = restRequestManager;
 		// Check duplicates in operation list. Barfs if duplicate is found.
 		RESTProcessorUtil.checkDuplicateOperations(operations);
 	}
@@ -49,14 +49,14 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
-					"/img/oplist",
+					"/grib/oplist",
 					this::getOperationList,
 					"List of all available operations on the Img service."),
 			new Operation(
 					"POST",
-					"/img/download-and-transform",
-					this::requestTransformation,
-					"Request the download and transform of images (faxes) from the web."));
+					"/grib/get-data",
+					this::requestGRIBData,
+					"Request a GRIB download from the web, and return its json representation."));
 
 	protected List<Operation> getOperations() {
 		return this.operations;
@@ -96,22 +96,12 @@ public class RESTImplementation {
 	/**
 	 * The payload is a list of requests, like this
 	 *
-	 * [
-			 {
-				 "url": "http://img.url",
-				 "storage": "store/here",
-				 "returned": "return/this",
-				 "transparent": "WHITE",
-				 "from": "BLACK",
-				 "to": "BLUE",
-	       "imgType": "png",
-				 "tx": "BLUR"
-			 }
-		 ]
+	 * {}
+	 *
 	 * @param request
 	 * @return
 	 */
-	private Response requestTransformation(Request request) {
+	private Response requestGRIBData(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
 		if (request.getContent() != null && request.getContent().length > 0) {
@@ -126,34 +116,9 @@ public class RESTImplementation {
 				final List<Object> resultList = new ArrayList<>();
 				try {
 					txRequests = gson.fromJson(stringReader, List.class);
-					txRequests
-							.forEach(json -> {
-								try {
-									JsonObject jObj = gson.toJsonTree(json).getAsJsonObject();
-									PullTxManager.TxRequest txRequest = gson.fromJson(jObj.toString(), PullTxManager.TxRequest.class);
-									// Do the job here
-									if (verbose) {
-										System.out.println(String.format("Downloading %s...", txRequest.getUrl()));
-									}
-									PullTxManager.downloadAndTransform(
-											txRequest.getUrl(),
-											txRequest.getStorage(),
-											txRequest.getReturned(),
-											txRequest.getTransparent().color(),
-											txRequest.getFrom() == null ? null : txRequest.getFrom().color(),
-											txRequest.getTo() == null ? null : txRequest.getTo().color(),
-											txRequest.getImgType(),
-											txRequest.getTx().type());
-									if (verbose) {
-										System.out.println(String.format("Done with %s...", txRequest.getUrl()));
-									}
-									resultList.add(txRequest);
-								} catch (Exception ex) {
-									// Return this
-									ex.printStackTrace();
-									resultList.add(ex);
-								}
-							});
+
+					// TODO Invoke GRIB utilities here. See Sample01
+
 					String content = new Gson().toJson(resultList);
 					RESTProcessorUtil.generateResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
@@ -162,7 +127,7 @@ public class RESTImplementation {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
 							new HTTPServer.ErrorPayload()
-									.errorCode("IMG-0001")
+									.errorCode("GRIB-0001")
 									.errorMessage(ex.toString()));
 					return response;
 				}
@@ -170,7 +135,7 @@ public class RESTImplementation {
 				response = HTTPServer.buildErrorResponse(response,
 						Response.BAD_REQUEST,
 						new HTTPServer.ErrorPayload()
-								.errorCode("IMG-0002")
+								.errorCode("GRIB-0002")
 								.errorMessage("Request payload not found"));
 				return response;
 			}
@@ -178,7 +143,7 @@ public class RESTImplementation {
 			response = HTTPServer.buildErrorResponse(response,
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
-							.errorCode("IMG-0002")
+							.errorCode("GRIB-0002")
 							.errorMessage("Request payload not found"));
 			return response;
 		}
