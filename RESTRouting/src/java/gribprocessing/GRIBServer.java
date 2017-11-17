@@ -1,4 +1,4 @@
-package imgprocessing;
+package gribprocessing;
 
 import http.HTTPServer;
 
@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 
 /**
  */
-public class ImgServer {
+public class GRIBServer {
 
 	private HTTPServer httpServer = null;
 	private int httpPort = 9999;
 
-	public ImgServer() {
+	public GRIBServer() {
 
 		String port = System.getProperty("http.port");
 		if (port != null) {
@@ -24,7 +24,7 @@ public class ImgServer {
 		}
 
 		System.out.println(String.format("Running on port %d", httpPort));
-		this.httpServer = startHttpServer(httpPort, new ImgRequestManager(this));
+		this.httpServer = startHttpServer(httpPort, new GRIBRequestManager(this));
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {
@@ -35,10 +35,10 @@ public class ImgServer {
 	}
 
 	public static void main(String... args) {
-		new ImgServer();
+		new GRIBServer();
 	}
 
-	public HTTPServer startHttpServer(int port, ImgRequestManager requestManager) {
+	public HTTPServer startHttpServer(int port, GRIBRequestManager requestManager) {
 		HTTPServer newHttpServer = null;
 		try {
 			newHttpServer = new HTTPServer(port, requestManager);
