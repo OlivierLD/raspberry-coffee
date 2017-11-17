@@ -1205,9 +1205,10 @@ public class SunFlower implements RESTRequestManager {
 						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
 					}
 				} else if (prm.startsWith(WITH_ADC_PREFIX)) {
+					System.out.println(">>> WithADC:" + prm);
 					String adcValue = prm.substring(WITH_ADC_PREFIX.length());
 					try {
-						withAdc = Boolean.getBoolean(adcValue);
+						withAdc = Boolean.valueOf(adcValue);
 					} catch (Exception nfe) {
 						System.err.println(String.format("Bad value for %s, must be a boolean [%s]", prm, adcValue));
 					}
@@ -1276,6 +1277,7 @@ public class SunFlower implements RESTRequestManager {
 			}
 		} else {
 			foundMCP3008 = false;
+			System.out.println(">>> No ADC");
 		}
 
 		String strLat = System.getProperty("latitude");
