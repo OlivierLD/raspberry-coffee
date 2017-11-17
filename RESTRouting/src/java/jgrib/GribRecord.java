@@ -27,7 +27,7 @@
  * GribRecord.java  1.0  01/01/2001
  *
  * (C) Benjamin Stark
- * Updated Kjell Røang, 18/03/2002
+ * Updated Kjell RXang, 18/03/2002
  */
 
 package jgrib;

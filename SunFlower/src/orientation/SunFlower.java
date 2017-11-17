@@ -161,12 +161,12 @@ public class SunFlower implements RESTRequestManager {
 
 	private static final String WITH_ADC_PREFIX = "--with-adc:";
 
-	private static final String MISO_PRM_PREFIX = "-miso:";
-	private static final String MOSI_PRM_PREFIX = "-mosi:";
-	private static final String CLK_PRM_PREFIX  =  "-clk:";
-	private static final String CS_PRM_PREFIX   =   "-cs:";
+	private static final String MISO_PRM_PREFIX = "--miso:";
+	private static final String MOSI_PRM_PREFIX = "--mosi:";
+	private static final String CLK_PRM_PREFIX  =  "--clk:";
+	private static final String CS_PRM_PREFIX   =   "--cs:";
 
-	private static final String CHANNEL_PREFIX  = "-channel:";
+	private static final String CHANNEL_PREFIX  = "--channel:";
 
 	private static final String HEADING_PREFIX = "--heading:";
 	private static final String TILT_PREFIX    = "--tilt:";
@@ -1207,13 +1207,13 @@ public class SunFlower implements RESTRequestManager {
 				} else if (prm.startsWith(WITH_ADC_PREFIX)) {
 					String adcValue = prm.substring(WITH_ADC_PREFIX.length());
 					try {
-						withAdc = Boolean.getBoolean(adcValue);
+						withAdc = Boolean.valueOf(adcValue);
 					} catch (Exception nfe) {
 						System.err.println(String.format("Bad value for %s, must be a boolean [%s]", prm, adcValue));
 					}
 				} else {
 					// What?
-					System.err.println(String.format("Un-managed prm: %s", prm));
+					System.err.println(String.format("Warning >>> Un-managed prm: %s", prm));
 				}
 			}
 		}
@@ -1228,43 +1228,44 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
 			System.out.println(
 					" Wiring of the MCP3008-SPI (without power supply):\n" +
-							" +---------++---------------------------------------------+\n" +
-							" | MCP3008 || Raspberry PI                                |\n" +
-							" +---------++------+------------+---------+---------------+\n" +
-							" |         || Pin# | Name       | GPIO    | wiringPI/PI4J |\n" +
-							" +---------++------+------------+---------+---------------+");
-			System.out.println(String.format(" | CLK (13)|| #%02d  | %s | GPIO_%02d | %02d            |",
+							" +---------++----------------------------------------+\n" +
+							" | MCP3008 || Raspberry PI                           |\n" +
+							" +---------++------+------------+---------+----------+\n" +
+							" |         || Pin# | Name       | GPIO    | wiringPI |\n" +
+							" |         ||      |            | /BCM    | /PI4J    |\n" +
+							" +---------++------+------------+---------+----------+");
+			System.out.println(String.format(" | CLK (13)|| #%02d  | %s | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(clk).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
 					PinUtil.findByPin(clk).gpio(),
 					PinUtil.findByPin(clk).wiringPi()));
-			System.out.println(String.format(" | Din (11)|| #%02d  | %s | GPIO_%02d | %02d            |",
+			System.out.println(String.format(" | Din (11)|| #%02d  | %s | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(miso).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
 					PinUtil.findByPin(miso).gpio(),
 					PinUtil.findByPin(miso).wiringPi()));
-			System.out.println(String.format(" | Dout(12)|| #%02d  | %s | GPIO_%02d | %02d            |",
+			System.out.println(String.format(" | Dout(12)|| #%02d  | %s | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(mosi).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
 					PinUtil.findByPin(mosi).gpio(),
 					PinUtil.findByPin(mosi).wiringPi()));
-			System.out.println(String.format(" | CS  (10)|| #%02d  | %s | GPIO_%02d | %02d            |",
+			System.out.println(String.format(" | CS  (10)|| #%02d  | %s | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(cs).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
 					PinUtil.findByPin(cs).gpio(),
 					PinUtil.findByPin(cs).wiringPi()));
-			System.out.println(" +---------++------+------------+---------+---------------+");
+			System.out.println(" +---------++------+------------+---------+----------+");
 			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 
 			System.out.println("       +--------+ ");
-			System.out.println("  CH0 -+  1  16 +- Vdd ");
-			System.out.println("  CH1 -+  2  15 +- Vref ");
-			System.out.println("  CH2 -+  3  14 +- aGnd ");
-			System.out.println("  CH3 -+  4  13 +- CLK ");
-			System.out.println("  CH4 -+  5  12 +- Dout ");
-			System.out.println("  CH5 -+  6  11 +- Din ");
-			System.out.println("  CH6 -+  7  10 +- CS ");
-			System.out.println("  CH7 -+  8   9 +- dGnd ");
+			System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 ? "*" : " ")));
+			System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 ? "*" : " ")));
+			System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 ? "*" : " ")));
+			System.out.println(String.format("%s CH3 -+  4  13 +- CLK ",  (adcChannel == 3 ? "*" : " ")));
+			System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (adcChannel == 4 ? "*" : " ")));
+			System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5 ? "*" : " ")));
+			System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6 ? "*" : " ")));
+			System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
 			System.out.println("       +--------+ ");
 
 			try {
@@ -1276,6 +1277,7 @@ public class SunFlower implements RESTRequestManager {
 			}
 		} else {
 			foundMCP3008 = false;
+			System.out.println(">>> No ADC");
 		}
 
 		String strLat = System.getProperty("latitude");
