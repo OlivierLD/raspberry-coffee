@@ -27,7 +27,7 @@
  * GribFile.java  1.0  01/01/2001
  *
  * (C) Benjamin Stark
- * Updated Kjell Røang, 18/03/2002
+ * Updated Kjell RXang, 18/03/2002
  * Updated Richard D. Gonzalez 7 Dec 02
  */
 
@@ -632,7 +632,7 @@ public class GribFile
 
       while (in.available() > 2)
       {
-        //This code has been commented by Antonio S. Cofiño, because if
+        //This code has been commented by Antonio S. Cofiï¿½o, because if
         // you have this sequence of characters GGRIB you will skip the message
         //
         // code must be "G" "R" "I" "B"

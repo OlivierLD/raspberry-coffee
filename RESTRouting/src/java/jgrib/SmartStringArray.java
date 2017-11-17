@@ -26,7 +26,7 @@ package jgrib;
 
 /**
 * Class to handle addition of elements
-* Kjell Røang, 18/03/2002
+* Kjell RXang, 18/03/2002
 */
 public class SmartStringArray
 {

@@ -25,7 +25,7 @@
 
 /**
  * Created by IntelliJ IDEA.
- * User: Kjell Røang
+ * User: Kjell RXang
  * Date: 15.mar.02
  */
 package jgrib;

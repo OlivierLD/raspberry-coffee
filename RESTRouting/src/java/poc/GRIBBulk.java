@@ -166,6 +166,11 @@ public class GRIBBulk {
 		}
 	}
 
+	private void dumpFeedback() {
+		if (feedback != null) {
+			feedback.stream().forEach(System.out::println);
+		}
+	}
 	// For standalone tests
 	public static void main(String[] args) throws Exception {
 		GRIBBulk gb = new GRIBBulk();
@@ -178,7 +183,8 @@ public class GRIBBulk {
 		synchronized (me) {
 			me.wait();
 		}
-		System.out.println("Done!");
+		System.out.println("Done:");
+		gb.dumpFeedback();
 		System.exit(0);
 	}
 }
