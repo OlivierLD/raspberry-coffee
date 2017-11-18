@@ -147,7 +147,9 @@ public class MainMCP3008Sample {
 		int tolerance = 5;
 		boolean trimPotChanged = false;
 		while (go) {
+			System.out.println("Reading channel " + adcChannel);
 			int adc = MCP3008Reader.readMCP3008(adcChannel);
+			System.out.println(String.format("From ch %d: %d", adcChannel, adc));
 			int postAdjust = Math.abs(adc - lastRead);
 			if (postAdjust > tolerance) {
 				trimPotChanged = true;
