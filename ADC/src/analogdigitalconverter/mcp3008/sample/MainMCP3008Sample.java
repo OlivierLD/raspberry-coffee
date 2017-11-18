@@ -145,13 +145,13 @@ public class MainMCP3008Sample {
 		});
 		int lastRead = 0;
 		int tolerance = 5;
-		boolean trimPotChanged = false;
+		boolean trimPotChanged = false, first = true;
 		while (go) {
-			System.out.println("Reading channel " + adcChannel);
+	//	System.out.println("Reading channel " + adcChannel);
 			int adc = MCP3008Reader.readMCP3008(adcChannel);
-			System.out.println(String.format("From ch %d: %d", adcChannel, adc));
+	//	System.out.println(String.format("From ch %d: %d", adcChannel, adc));
 			int postAdjust = Math.abs(adc - lastRead);
-			if (postAdjust > tolerance) {
+			if (first || postAdjust > tolerance) {
 				trimPotChanged = true;
 				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 				if (DEBUG || trimPotChanged) {
@@ -161,6 +161,7 @@ public class MainMCP3008Sample {
 				}
 				System.out.println("Volume:" + volume + "% (" + adc + ")");
 				lastRead = adc;
+				first = false;
 			}
 			try {
 				synchronized (Thread.currentThread()) {
