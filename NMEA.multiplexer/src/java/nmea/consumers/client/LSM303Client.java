@@ -8,7 +8,8 @@ import nmea.consumers.reader.LSM303Reader;
 
 /**
  * Reads a LSM303 sensor, and produces valid NMEA XDR sentences.
- * Pitch & Roll
+ * Pitch & Roll.
+ * Also available: HDM (heading).
  */
 public class LSM303Client extends NMEAClient {
 	public LSM303Client() {

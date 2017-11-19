@@ -244,13 +244,13 @@
       var onMessage = function(json) {
         var mess = JSON.stringify(json, null, 2);
 	      var content = ""; // $("#messages").html();
-//	      if (content.length > 10000) {
-//	      	content = content.substring(0, 10000);
-//				}
-	      $("#messages").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
-	      var div = document.getElementById("messages");
-	      div.scrollTop = div.scrollHeight;
-
+//	    if (content.length > 10000) {
+//	    	content = content.substring(0, 10000);
+//			}
+//      $("#messages").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
+	      $("#messages").html('<pre>' + new Date() + "\n " + mess + '</pre>');
+	//    var div = document.getElementById("messages");
+	//    div.scrollTop = div.scrollHeight;
 
 	      if (json["dates"] !== undefined) {
               var dates = json["dates"];

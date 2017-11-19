@@ -51,10 +51,19 @@ public class LSM303Reader extends NMEAReader {
 		System.out.println(String.format(">> Starting reader [%s] (%s). Enabled:%s", this.getClass().getName(), this.devicePrefix, this.canRead()));
 		while (this.canRead()) {
 			// Read data every 1 second
+			// Filter accordingly if needed, on XDR and HDM
 			try {
+
 				double pitch = lsm303.getPitch();
 				double roll  = lsm303.getRoll();
-				// Generate NMEA String(s). OpenCPN recognize those ones (Needs a 'II' prefix though).
+
+				double heading = lsm303.getHeading();
+
+				if ("true".equals(System.getProperty("lsm303.data.verbose", "false"))) {
+					System.out.println(String.format(">>> From LSM303: Heading %f, Pitch: %f, Roll: %f", heading, pitch, roll));
+				}
+
+				// Generate NMEA String(s). OpenCPN recognizes those ones (Needs a 'II' prefix though).
 				String nmeaXDR = StringGenerator.generateXDR(devicePrefix,
 								new StringGenerator.XDRElement(XDRTypes.ANGULAR_DISPLACEMENT,
 												pitch,
@@ -64,6 +73,10 @@ public class LSM303Reader extends NMEAReader {
 												"ROLL"));
 				nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 				fireDataRead(new NMEAEvent(this, nmeaXDR));
+
+				String nmeaHDM = StringGenerator.generateHDM(devicePrefix, (int)Math.round(heading));
+				nmeaHDM += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+				fireDataRead(new NMEAEvent(this, nmeaHDM));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

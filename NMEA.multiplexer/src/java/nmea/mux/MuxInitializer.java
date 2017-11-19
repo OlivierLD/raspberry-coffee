@@ -410,6 +410,7 @@ public class MuxInitializer {
 						throw new RuntimeException(String.format("Expected a Forwarder, found a [%s]", dynamic.getClass().getName()));
 					}
 				} catch (Exception ex) {
+					System.err.println("Classpath: " + System.getProperty("java.class.path"));
 					ex.printStackTrace();
 				}
 			} else {
