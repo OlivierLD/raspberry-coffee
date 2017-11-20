@@ -131,95 +131,129 @@
       </tr>
     </table>
     <hr/>
-    <a href="#" onclick="togglePos();">Position (deg, decimal minutes)</a>
-    <div id="position" style="display:none;">
-      <table>
-        <tr>
-          <td colspan="2" align="right">
-            <b><div id="lat"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">N 00 00.00'</div></b>
-          </td>
-          <td colspan="2" align="right">
-            <b><div id="lon"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">W 000 00.00'</div></b>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <br/><a href="#" onclick="toggleSunData();">Sun Data</a>
-    <div id="sun-data" style="display:none;">
-      <table>
-        <tr>
-          <td width="50%" align="center">Sun Z in &deg;</td>
-          <td width="50%" align="center">Sun He in &deg;</td>
-        </tr>
-        <tr>
-          <td width="50%" align="center">
-            <b><div id="sunZ" class="digifont"
-                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange; background: black;">000</div></b>
-          </td>
-          <td width="50%" align="center">
-            <b><div id="sunH" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange; background: black;">00.00</div></b>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <br/><a href="#" onclick="toggleDates();">Dates</a>
-    <div id="dates" style="display:none;">
-      <table>
-        <tr>
-          <td colspan="2">System date</td>
-        </tr>
-        <tr>
-          <td colspan="2" align="left">
-            <b><div id="syst-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: red; background: black;">--</div></b>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">UTC date</td>
-        </tr>
-        <tr>
-          <td colspan="2" align="left">
-            <b><div id="utc-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: deeppink; background: black;">--</div></b>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">Solar date</td>
-        </tr>
-        <tr>
-          <td colspan="2" align="left">
-            <b><div id="solar-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orangered; background: black;">--</div></b>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <br/><a href="#" onclick="toggleServos();">Servos &amp; Voltage</a>
-    <div id="servos" style="display:none;">
-      <table>
-        <tr>
-          <td width="33%" align="center">Heading Servo in &deg;</td>
-          <td width="33%" align="center">Tilt Servo in &deg;</td>
-          <td width="33%" align="center">Battery in V</td>
-        </tr>
-        <tr>
-          <td width="33%" align="center">
-            <b><div id="heading" class="digifont"
-                    style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">000</div></b>
-          </td>
-          <td width="33%" align="center">
-            <b><div id="tilt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">000</div></b>
-          </td>
-          <td width="33%" align="center">
-            <b><div id="volt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">0.00</div></b>
-          </td>
-        </tr>
-      </table>
-    </div>
+
+		<div style="margin-bottom: 10px;">
+			<input type="radio" name="visual" value="data" checked onchange="setVisual(this)"> Data
+			<input type="radio" name="visual" value="json" onchange="setVisual(this)"> JSON
+		</div>
+
+		<div id="sunflower-data" style="display: block;">
+			<a href="#" onclick="togglePos();">Position (deg, decimal minutes)</a>
+			<div id="position" style="display:none;">
+				<table>
+					<tr>
+						<td colspan="2" align="right">
+							<b><div id="lat"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">N 00 00.00'</div></b>
+						</td>
+						<td colspan="2" align="right">
+							<b><div id="lon"  class="digifont" style="color: yellow; background: black; padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; ">W 000 00.00'</div></b>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<br/><a href="#" onclick="toggleSunData();">Sun Data</a>
+			<div id="sun-data" style="display:none;">
+				<table>
+					<tr>
+						<td width="50%" align="center">Sun Z in &deg;</td>
+						<td width="50%" align="center">Sun He in &deg;</td>
+					</tr>
+					<tr>
+						<td width="50%" align="center">
+							<b><div id="sunZ" class="digifont"
+											style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange; background: black;">000</div></b>
+						</td>
+						<td width="50%" align="center">
+							<b><div id="sunH" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orange; background: black;">00.00</div></b>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<br/><a href="#" onclick="toggleDates();">Dates</a>
+			<div id="dates" style="display:none;">
+				<table>
+					<tr>
+						<td colspan="2">System date</td>
+					</tr>
+					<tr>
+						<td colspan="2" align="left">
+							<b><div id="syst-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: red; background: black;">--</div></b>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">UTC date</td>
+					</tr>
+					<tr>
+						<td colspan="2" align="left">
+							<b><div id="utc-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: deeppink; background: black;">--</div></b>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">Solar date</td>
+					</tr>
+					<tr>
+						<td colspan="2" align="left">
+							<b><div id="solar-date"  class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: orangered; background: black;">--</div></b>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<br/><a href="#" onclick="toggleServos();">Servos &amp; Voltage</a>
+			<div id="servos" style="display:none;">
+				<table>
+					<tr>
+						<td width="33%" align="center">Heading Servo in &deg;</td>
+						<td width="33%" align="center">Tilt Servo in &deg;</td>
+						<td width="33%" align="center">Battery in V</td>
+					</tr>
+					<tr>
+						<td width="33%" align="center">
+							<b><div id="heading" class="digifont"
+											style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">000</div></b>
+						</td>
+						<td width="33%" align="center">
+							<b><div id="tilt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">000</div></b>
+						</td>
+						<td width="33%" align="center">
+							<b><div id="volt" class="digifont" style="padding:5px; border-radius:10px; border:1px solid #CCC; margin-top:1px; font-size: 40px; color: cyan; background: black;">0.00</div></b>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div id="sunflower-json" style="display: none;">
+			JSON Traffic
+			<div id="messages" style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva; display: block; padding: 1px; border-radius: 5px; border: 1px solid #CCC; min-height: 75px; max-height: 400px; overflow-y: scroll;"></div>
+		</div>
+
     <hr>
     <address>&copy; Oliv did it.</address>
     <script src="js/sf.client.js"></script>
     <script>
+			var setVisual = function(radio) {
+				if (radio.value === 'data') {
+					$("#sunflower-data").css('display', 'block');
+					$("#sunflower-json").css('display', 'none');
+				} else {
+					$("#sunflower-data").css('display', 'none');
+					$("#sunflower-json").css('display', 'block');
+				}
+			};
+
       var onMessage = function(json) {
-//        console.log(JSON.stringify(json, null, 2));
-          if (json["dates"] !== undefined) {
+        var mess = JSON.stringify(json, null, 2);
+	      var content = ""; // $("#messages").html();
+//	    if (content.length > 10000) {
+//	    	content = content.substring(0, 10000);
+//			}
+//      $("#messages").html((content.length > 0 ? content + "<br/>" : "") + new Date() + ": " + mess);
+	      $("#messages").html('<pre>' + new Date() + "\n " + mess + '</pre>');
+	//    var div = document.getElementById("messages");
+	//    div.scrollTop = div.scrollHeight;
+
+
+	      if (json["dates"] !== undefined) {
               var dates = json["dates"];
               $("#syst-date").text(dates.system);
               $("#utc-date").text(dates.utc);
