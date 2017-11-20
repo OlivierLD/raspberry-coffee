@@ -176,6 +176,9 @@ public class SunFlower implements RESTRequestManager {
 
 	public static void setWithAdc(boolean b) {
 		withAdc = b;
+		if (!withAdc) {
+			foundMCP3008 = false;
+		}
 	}
 
 	/**
