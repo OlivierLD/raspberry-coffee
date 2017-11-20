@@ -558,7 +558,7 @@ var computerList = function() {
 
 var buildTable = function (channels, forwarders, computers) {
     var html = "<table width='100%'>" +
-        "<tr><th width='45%'>Pulled in</th><th width='10%'></th><th width='45%'>Pushed out</th></tr>" +
+        "<tr><th width='45%'>Pulled in from</th><th width='10%'></th><th width='45%'>Pushed out to</th></tr>" +
         "<tr><td valign='middle' align='center' rowspan='2' title='Channels'>" + channels + "</td>" +
         "<td valign='middle' align='center' rowspan='2'><b><i>MUX</i></b></td>" +
         "<td valign='middle' align='center' title='Forwarders'>" + forwarders + "</td></tr>" +
@@ -638,6 +638,7 @@ var generateDiagram = function () {
                     html += ("<tr><td><b>lsm303</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
+		                    ((json[i].headingOffset !== undefined) ? ("<td>Heading Offset: " + json[i].headingOffset + "</td>") : "" ) +
                     "</td></tr>");
                     break;
                 case 'zda':

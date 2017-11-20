@@ -1015,7 +1015,7 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println("Timer done.");
 		});
 		mess = "Starting the timer loop";
-		if (ansiConsole){
+		if (ansiConsole) {
 			AnsiConsole.out.println(ansiLocate(1, 1) + mess + PAD);
 		} else {
 			System.out.println(mess);
