@@ -174,6 +174,13 @@ public class SunFlower implements RESTRequestManager {
 	private static boolean foundPCA9685 = true;
 	private static boolean foundMCP3008 = true;
 
+	public static void setWithAdc(boolean b) {
+		withAdc = b;
+		if (!withAdc) {
+			foundMCP3008 = false;
+		}
+	}
+
 	/**
 	 * Does not take the EoT in account, just longitude
 	 * See {@link #getSolarDate(Date)} for an accurate version.
@@ -897,8 +904,10 @@ public class SunFlower implements RESTRequestManager {
 						if (ansiConsole) {
 							displayAnsiData();
 						} else {
-							String mess = String.format(">>> Tilt servo angle now: %d %s%s", angle, (invert ? "(inverted)" : ""), (angle != applyLimitAndOffset(angle) ? String.format(", limited to %.02f", applyLimitAndOffset(angle)) : ""));
-							System.out.println(mess);
+							if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
+								String mess = String.format(">>> Tilt servo angle now: %d %s%s", angle, (invert ? "(inverted)" : ""), (angle != applyLimitAndOffset(angle) ? String.format(", limited to %.02f", applyLimitAndOffset(angle)) : ""));
+								System.out.println(mess);
+							}
 						}
 					}
 					if (servoMoveOneByOne ? noServoIsMoving() : !tiltServoMoving) {
@@ -934,8 +943,10 @@ public class SunFlower implements RESTRequestManager {
 				if (ansiConsole) {
 					displayAnsiData();
 				} else {
-					String mess = String.format(">>> Heading servo angle now %d %s", headingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
-					System.out.println(mess);
+					if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
+						String mess = String.format(">>> Heading servo angle now %d %s", headingServoAngle, (invert ? String.format("(inverted to %.02f)", invertHeading((float) headingServoAngle)) : ""));
+						System.out.println(mess);
+					}
 				}
 			}
 			if (servoMoveOneByOne ? noServoIsMoving() : !headingServoMoving) {
@@ -998,7 +1009,7 @@ public class SunFlower implements RESTRequestManager {
 					}
 				} else if (timeProvided) {
 					getSunDataForDate(latitude, longitude, current);
-					System.out.println(String.format(">>> %s", SDF.format(current.getTime())));
+					System.out.println(String.format(">>> Time Provided: %s", SDF.format(current.getTime())));
 				} else {
 					getSunData(latitude, longitude);
 				}
@@ -1011,7 +1022,7 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println("Timer done.");
 		});
 		mess = "Starting the timer loop";
-		if (ansiConsole){
+		if (ansiConsole) {
 			AnsiConsole.out.println(ansiLocate(1, 1) + mess + PAD);
 		} else {
 			System.out.println(mess);

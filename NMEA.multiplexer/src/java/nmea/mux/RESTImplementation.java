@@ -1071,7 +1071,10 @@ public class RESTImplementation {
 								.findFirst();
 				if (!opClient.isPresent()) {
 					try {
-						NMEAClient lsm303Client = new LSM303Client(lsm303Json.getDeviceFilters(), lsm303Json.getSentenceFilters(),this.mux);
+						NMEAClient lsm303Client = new LSM303Client(lsm303Json.getDeviceFilters(), lsm303Json.getSentenceFilters(), this.mux);
+						if (lsm303Json.getHeadingOffset() != 0) {
+							((LSM303Client)lsm303Client).setHeadingOffset(lsm303Json.getHeadingOffset());
+						}
 						lsm303Client.initClient();
 						lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader

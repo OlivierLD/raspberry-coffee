@@ -1,6 +1,8 @@
 package nmea.forwarders;
 
 import java.util.Properties;
+
+import calc.GeomUtil;
 import nmea.parser.GeoPos;
 import nmea.parser.RMC;
 import nmea.parser.StringParsers;
@@ -24,6 +26,7 @@ import orientation.SunFlower;
  * TODO: Smoothing? Tolerance?
  */
 public class SolarPanelOrienter implements Forwarder {
+	private boolean verbose = "true".equals(System.getProperty("mux.data.verbose", "false"));
 	private double declination = 0d;
 
 	private SunFlower sunFlower = null;
@@ -48,6 +51,11 @@ public class SolarPanelOrienter implements Forwarder {
 					if (gp != null) {
 						sunFlower.setLatitude(gp.lat);
 						sunFlower.setLongitude(gp.lng);
+					}
+					if (verbose) {
+						System.out.println(String.format("Pos from RMC: %s %s",
+								GeomUtil.decToSex(gp.lat, GeomUtil.SWING, GeomUtil.NS, GeomUtil.LEADING_SIGN),
+								GeomUtil.decToSex(gp.lng, GeomUtil.SWING, GeomUtil.EW, GeomUtil.LEADING_SIGN)));
 					}
 					if (rmc.getRmcDate() != null) { // TODO Same for getRmcTime ?
 						sunFlower.setCurrentDateTime(rmc.getRmcDate());
@@ -75,6 +83,9 @@ public class SolarPanelOrienter implements Forwarder {
 				case "HDM":
 					int hdm = StringParsers.parseHDM(str);
 					sunFlower.setDeviceHeading(hdm + this.declination);
+					if (verbose) {
+						System.out.println(String.format("From HDM: heading: %d, decl: %.2f", hdm, this.declination));
+					}
 					break;
 				default:
 					break;
@@ -172,7 +183,7 @@ public class SolarPanelOrienter implements Forwarder {
 		System.setProperty("orient.verbose", props.getProperty("orient.verbose", "true"));
 		System.setProperty("astro.verbose", props.getProperty("astro.verbose", "true"));
 		System.setProperty("tilt.verbose", props.getProperty("tilt.verbose", "true"));
-		System.setProperty("servo.super.verbose", props.getProperty("servo.super.verbose", "false"));
+		System.setProperty("servo.super.verbose", props.getProperty("servo.super.verbose", "none"));
 		System.setProperty("tilt.servo.sign", props.getProperty("servo.tilt.sign", "1"));
 		System.setProperty("heading.servo.sign", props.getProperty("heading.servo.sign", "1"));
 		System.setProperty("tilt.limit", props.getProperty("tilt.limit", "20"));
@@ -181,6 +192,7 @@ public class SolarPanelOrienter implements Forwarder {
 		System.setProperty("time.provided", props.getProperty("time.provided", "false"));
 
 		sunFlower = new SunFlower(new int [] { headingPin }, new int[] { tiltPin });
+		sunFlower.setWithAdc("true".equals(props.getProperty("with.adc", "false")));
 
 		declination = parsePropDouble(props, "declination", 14.0);
 

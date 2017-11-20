@@ -16,6 +16,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dbme280.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drnd.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dzda.data.verbose=true"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dlsm303.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
@@ -24,9 +25,12 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
-CP=./build/libs/NMEA.multiplexer-1.0-all.jar
+CP=.
+# SolarPanelOrienter lives in this one:
+CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar
+#
+CP=$CP:./build/libs/NMEA.multiplexer-1.0-all.jar
 CP=$CP:../SunFlower/build/libs/SunFlower-1.0-all.jar
-CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0.jar
 # CP=$CP:./libs/RXTXcomm.jar          # for Mac
 CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
