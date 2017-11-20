@@ -276,15 +276,28 @@ public class MuxInitializer {
 								err.printStackTrace();
 							}
 							break;
-						case "lsm303": // Pitch & Roll
+						case "lsm303": // Pitch & Roll, plus Heading (possibly).
 							try {
 								deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
 								String lsm303DevicePrefix = muxProps.getProperty(String.format("mux.%s.device.prefix", MUX_IDX_FMT.format(muxIdx)), "");
+								int headingOffset = 0;
+								try {
+									headingOffset = Integer.parseInt(muxProps.getProperty(String.format("mux.%s.heading.offset", MUX_IDX_FMT.format(muxIdx)), "0"));
+									if (headingOffset > 180 || headingOffset < -180) {
+										System.err.println(String.format("Warning: Bad range for Heading Offset, must be in [-180..180], found %d. Defaulting to 0", headingOffset));
+										headingOffset = 0;
+									}
+								} catch (NumberFormatException nfe) {
+									nfe.printStackTrace();
+								}
 								NMEAClient lsm303Client = new LSM303Client(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
+								if (headingOffset != 0) {
+									((LSM303Client) lsm303Client).setHeadingOffset(headingOffset);
+								}
 								lsm303Client.initClient();
 								lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));
 								lsm303Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));

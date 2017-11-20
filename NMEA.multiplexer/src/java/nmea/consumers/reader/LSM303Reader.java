@@ -22,6 +22,7 @@ public class LSM303Reader extends NMEAReader {
 	private LSM303 lsm303;
 	private static final String DEFAULT_DEVICE_PREFIX = "RP";
 	private String devicePrefix = DEFAULT_DEVICE_PREFIX;
+	private int headingOffset = 0;
 
 	private static final long BETWEEN_LOOPS = 1_000L; // TODO: Make it an external parameter?
 
@@ -42,6 +43,14 @@ public class LSM303Reader extends NMEAReader {
 
 	public void setDevicePrefix(String devicePrefix) {
 		this.devicePrefix = devicePrefix;
+	}
+
+	public int getHeadingOffset() {
+		return this.headingOffset;
+	}
+
+	public void setHeadingOffset(int headingOffset) {
+		this.headingOffset = headingOffset;
 	}
 
 	@Override
@@ -91,6 +100,8 @@ public class LSM303Reader extends NMEAReader {
 
 	@Override
 	public void closeReader() throws Exception {
-		this.lsm303.setKeepReading(false);
+		if (this.lsm303 != null) {
+			this.lsm303.setKeepReading(false);
+		}
 	}
 }

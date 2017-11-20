@@ -45,6 +45,22 @@ public class LSM303Client extends NMEAClient {
 		}
 	}
 
+	public int getHeadingOffset() {
+		int headingOffet = 0;
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof LSM303Reader) {
+			headingOffet = ((LSM303Reader)reader).getHeadingOffset();
+		}
+		return headingOffet;
+	}
+
+	public void setHeadingOffset(int headingOffset) {
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof LSM303Reader) {
+			((LSM303Reader)reader).setHeadingOffset(headingOffset);
+		}
+	}
+
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
 		if (verbose)
@@ -63,6 +79,7 @@ public class LSM303Client extends NMEAClient {
 		private String[] deviceFilters;
 		private String[] sentenceFilters;
 		private String devicePrefix;
+		private int headingOffset;
 
 		public LSM303Bean(LSM303Client instance) {
 			cls = instance.getClass().getName();
@@ -70,6 +87,7 @@ public class LSM303Client extends NMEAClient {
 			deviceFilters = instance.getDevicePrefix();
 			sentenceFilters = instance.getSentenceArray();
 			devicePrefix = instance.getSpecificDevicePrefix();
+			headingOffset = instance.getHeadingOffset();
 		}
 
 		@Override
@@ -89,6 +107,10 @@ public class LSM303Client extends NMEAClient {
 		public String[] getSentenceFilters() { return this.sentenceFilters; }
 
 		public String getDevicePrefix() { return this.devicePrefix; }
+
+		public int getHeadingOffset() {
+			return this.headingOffset;
+		}
 	}
 
 	@Override
