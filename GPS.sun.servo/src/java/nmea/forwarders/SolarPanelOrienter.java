@@ -192,6 +192,7 @@ public class SolarPanelOrienter implements Forwarder {
 		System.setProperty("time.provided", props.getProperty("time.provided", "false"));
 
 		sunFlower = new SunFlower(new int [] { headingPin }, new int[] { tiltPin });
+		sunFlower.setWithAdc("true".equals(props.getProperty("with.adc", "false")));
 
 		declination = parsePropDouble(props, "declination", 14.0);
 

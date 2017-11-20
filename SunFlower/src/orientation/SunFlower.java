@@ -174,6 +174,10 @@ public class SunFlower implements RESTRequestManager {
 	private static boolean foundPCA9685 = true;
 	private static boolean foundMCP3008 = true;
 
+	public static void setWithAdc(boolean b) {
+		withAdc = b;
+	}
+
 	/**
 	 * Does not take the EoT in account, just longitude
 	 * See {@link #getSolarDate(Date)} for an accurate version.
