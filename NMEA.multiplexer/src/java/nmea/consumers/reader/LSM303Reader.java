@@ -28,6 +28,7 @@ public class LSM303Reader extends NMEAReader {
 
 	public LSM303Reader(List<NMEAListener> al) {
 		super(al);
+		this.setVerbose("true".equals(System.getProperty("lsm303.data.verbose", "false")));
 		try {
 			this.lsm303 = new LSM303();
 		} catch (I2CFactory.UnsupportedBusNumberException e) {
@@ -67,8 +68,17 @@ public class LSM303Reader extends NMEAReader {
 				double roll  = lsm303.getRoll();
 
 				double heading = lsm303.getHeading();
+				if (this.headingOffset != 0) {
+					heading += headingOffset;
+					while (heading > 360) {
+						heading -= 360;
+					}
+					while (heading < 0) {
+						heading += 360;
+					}
+				}
 
-				if ("true".equals(System.getProperty("lsm303.data.verbose", "false"))) {
+				if (this.verbose) {
 					System.out.println(String.format(">>> From LSM303: Heading %f, Pitch: %f, Roll: %f", heading, pitch, roll));
 				}
 
