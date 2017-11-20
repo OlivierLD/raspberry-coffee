@@ -638,7 +638,7 @@ var generateDiagram = function () {
                     html += ("<tr><td><b>lsm303</b></td><td>" + (json[i].devicePrefix !== undefined ? json[i].devicePrefix : "") +
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
-		                    ((json[i].headingOffset !== undefined) ? ("<td>Heading Offset: " + json[i].headingOffset + "</td>") : "" ) +
+		                    ((json[i].headingOffset !== undefined && json[i].headingOffset !== 0) ? ("<td>Heading Offset: " + json[i].headingOffset + "</td>") : "" ) +
                     "</td></tr>");
                     break;
                 case 'zda':
