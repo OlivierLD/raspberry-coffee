@@ -16,12 +16,19 @@ import nmea.parser.StringGenerator.XDRTypes;
 /**
  * Reads data from an LSM303 sensor.
  * Pitch and Roll, as XDR Strings.
+ * Heading, as HDM String.
  */
 public class LSM303Reader extends NMEAReader {
 
 	private LSM303 lsm303;
 	private static final String DEFAULT_DEVICE_PREFIX = "RP";
 	private String devicePrefix = DEFAULT_DEVICE_PREFIX;
+	/*
+	 * Heading offset is the *read* bearing of the magnetic north.
+	 * Point the LSM303 to the Magnetic North, and read the value returned by the lsm303.getHeading() methods.
+	 * The value read by the device is the offset.
+	 * Offset value is in [-180..180].
+	 */
 	private int headingOffset = 0;
 
 	private static final long BETWEEN_LOOPS = 1_000L; // TODO: Make it an external parameter?
