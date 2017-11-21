@@ -19,6 +19,10 @@ tilt.servo.id=15
 declination=14
 deltaT=68.8033
 #
+# If no GPS:
+latitude=37.7489
+longitude=-122.5070
+#
 smooth.moves=true
 #
 ansi.console=false
@@ -48,11 +52,10 @@ forward.01.properties=sunflower.properties
 Make sure you have built all the required parts:
 
 ```bash
- SunFlower $> ../gradlew clean shadowJar
  SunFlower $> cd ../GPS.sun.servo
- GPS.sun.servo $> ../gradlew clean build
+ GPS.sun.servo $> ../gradlew [--no-daemon] clean shadowJar
  GPS.sun.servo $> cd ../NMEA.multiplexer
- NMEA.multiplexer $> ../gradlew clean shadowJar
+ NMEA.multiplexer $> ../gradlew [--no-daemon] clean shadowJar
  NMEA.multiplexer $> cp ../GPS.sun.servo/sunflower.propeties .
  NMEA.multiplexer $> cp mux.sh mux.sunflower.sh
 ```
@@ -60,8 +63,7 @@ The last line creates a duplicate of the script that runs the multiplexer, edit 
 ```bash
 #
 CP=./build/libs/NMEA.multiplexer-1.0-all.jar
-CP=$CP:../SunFlower/build/libs/SunFlower-1.0-all.jar
-CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0.jar
+CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar
 # CP=$CP:./libs/RXTXcomm.jar          # for Mac
 CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
@@ -70,6 +72,9 @@ You can use the file `nmea.mux.sun.flower.properties` to start the multiplexer, 
 ```bash
  NMEA.multiplexer $> ./mux.sunflower.sh nmea.mux.sun.flower.properties
 ```
+> If you want to read a GPS from a serial port, use `nmea.mux.sun.flower.properties`.
+>
+> Use `nmea.mux.sun.flower.02.properties` otherwise.
 
 And that's it! The solar panel keeps facing the Sun, wherever you are, and whatever your heading is.
 
