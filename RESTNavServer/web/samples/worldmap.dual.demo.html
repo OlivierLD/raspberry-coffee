@@ -183,7 +183,12 @@
 		  worldMap.setNorth(75);
 		  worldMap.setSouth(-75);
 		  worldMap.setWest(127.5);
-	  } else { // GLOBE & ANAXIMANDRE
+	  } else if (radio.value === 'ANAXIMANDRE') {
+			worldMap.setNorth(90);
+			worldMap.setSouth(-90);
+			worldMap.setWest(-178);
+			worldMap.setEast(178);
+	  } else { // GLOBE
 		  worldMap.setNorth(90);
 		  worldMap.setSouth(-90);
 		  worldMap.setWest(-180);
@@ -197,9 +202,9 @@
 			<tr>
 				<td valign="middle"><h2>World Map Demo</h2></td>
 				<td valign="middle" style="padding-left: 20px;">
-					<input type="radio" name="projection" value="GLOBE" checked onchange="setProjection(this);"> Globe
-					<input type="radio" name="projection" value="MERCATOR" onchange="setProjection(this);"> Mercator
-					<input type="radio" name="projection" value="ANAXIMANDRE" onchange="setProjection(this);"> Anaximandre
+					<input type="radio" name="projection" value="GLOBE" checked onchange="setProjection(this);"> Globe&nbsp;
+					<input type="radio" name="projection" value="MERCATOR" onchange="setProjection(this);"> Mercator&nbsp;
+					<input type="radio" name="projection" value="ANAXIMANDRE" onchange="setProjection(this);"> Anaximandre&nbsp;
 				</td>
 			</tr>
 		</table>
