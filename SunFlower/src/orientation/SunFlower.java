@@ -925,7 +925,9 @@ public class SunFlower implements RESTRequestManager {
 					if (ansiConsole) {
 						displayAnsiData();
 					} else {
-						String mess = "Night time, tilt parked...";
+						String mess = String.format("Night time at %s %s, tilt parked...",
+								GeomUtil.decToSex(latitude, GeomUtil.SWING, GeomUtil.NS),
+								GeomUtil.decToSex(longitude, GeomUtil.SWING, GeomUtil.EW));
 						System.out.println(mess);
 					}
 				}
