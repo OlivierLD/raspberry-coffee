@@ -156,6 +156,10 @@ public class SolarPanelOrienter implements Forwarder {
 		declination=14 # default if missing
 		deltaT=68.8033
 		#
+		# If no GPS:
+		latitude=37.7489
+		longitude=-122.5070
+		#
 		smooth.moves=true
 		#
 		ansi.console=false
