@@ -379,9 +379,6 @@ function WorldMap (cName, prj) {
 		}
 	 */
 	var astronomicalData = {};
-	var getAstronomicalData = function() {
-		return astronimicalData;
-	};
 
 	/**
 	 * Angles in degrees
@@ -538,6 +535,7 @@ function WorldMap (cName, prj) {
 	};
 
 	/**
+	 * For the Globe projection
 	 *
 	 * @param lat in degrees
 	 * @param lng in degrees
@@ -1335,6 +1333,7 @@ function WorldMap (cName, prj) {
 		}
 		return g;
 	};
+
 	var drawMercatorNight = function(canvas, context, from, user, gha) {
 		const NINETY_DEGREES = 90 * 60; // in nm
 
