@@ -489,13 +489,15 @@
                     var dPrefix = $('#lsm303-dev-prefix').val();
                     var hOffset = $('#lsm303-heading-offset').val();
 	                	var rFreq = $('#lsm303-read-frequency').val();
+	                	var dampSize = $('#lsm303-damping-size').val();
                     createChannel({
                         type: 'lsm303',
                         devicePrefix: dPrefix,
                         deviceFilters: dFilters,
                         sentenceFilters: sFilters,
                         headingOffset: hOffset,
-												readFrequency: rFreq
+												readFrequency: rFreq,
+												dampingSize: dampSize
                     });
                     break;
                 case 'zda':
@@ -1049,6 +1051,11 @@
 										<td>Read Frequency</td>
 										<td><input id="lsm303-read-frequency" type="text" placeholder="1000" size="4" style="text-align: right;"></td>
 										<td><small>in ms</small></td>
+									</tr>
+									<tr>
+										<td>Damping Size</td>
+										<td><input id="lsm303-damping-size" type="text" placeholder="200" size="4" style="text-align: right;"></td>
+										<td><small>in elements</small></td>
 									</tr>
                 </table>
               </div>

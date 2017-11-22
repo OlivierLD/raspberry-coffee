@@ -24,6 +24,10 @@ public class DampingService<T> {
 		return smoothed.smooth(buffer);
 	}
 
+	public int getBufferSize() {
+		return buffer.size();
+	}
+
 	public interface Smoothable<T> {
 		T get();
 		void accumulate(T elmt);
