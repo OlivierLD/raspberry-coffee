@@ -1075,6 +1075,9 @@ public class RESTImplementation {
 						if (lsm303Json.getHeadingOffset() != 0) {
 							((LSM303Client)lsm303Client).setHeadingOffset(lsm303Json.getHeadingOffset());
 						}
+						if (lsm303Json.getReadFrequency() != null) {
+							((LSM303Client)lsm303Client).setReadFrequency(lsm303Json.getReadFrequency());
+						}
 						lsm303Client.initClient();
 						lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));
 						// To do BEFORE startWorking and AFTER setReader

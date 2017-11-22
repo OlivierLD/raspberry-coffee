@@ -291,12 +291,25 @@ public class MuxInitializer {
 								} catch (NumberFormatException nfe) {
 									nfe.printStackTrace();
 								}
+								Long readFrequency = null;
+								try {
+									readFrequency = new Long(muxProps.getProperty(String.format("mux.%s.read.frequency", MUX_IDX_FMT.format(muxIdx))));
+									if (readFrequency < 0) {
+										System.err.println(String.format("Warning: Bad value for Read Frequency, must be positive, found %d.", readFrequency));
+										readFrequency = null;
+									}
+								} catch (NumberFormatException nfe) {
+									nfe.printStackTrace();
+								}
 								NMEAClient lsm303Client = new LSM303Client(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
 								if (headingOffset != 0) {
 									((LSM303Client) lsm303Client).setHeadingOffset(headingOffset);
+								}
+								if (readFrequency != null) {
+									((LSM303Client) lsm303Client).setReadFrequency(readFrequency);
 								}
 								lsm303Client.initClient();
 								lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));

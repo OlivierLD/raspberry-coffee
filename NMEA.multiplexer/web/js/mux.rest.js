@@ -418,6 +418,9 @@ var channelList = function() {
                   if (json[i].headingOffset !== undefined) {
                       html += ("<td>Heading Offset: " + json[i].headingOffset + "</td>");
                   }
+		              if (json[i].readFrequency !== undefined) {
+			              html += ("<td>Read Frequency: " + json[i].readFrequency + " ms</td>");
+		              }
                   html += "</tr>";
                   break;
               case 'zda':
@@ -639,6 +642,7 @@ var generateDiagram = function () {
                     "</td><td>" + valueOrText(buildList(json[i].deviceFilters), 'No Device Filter') +
                     "</td><td>" + valueOrText(buildList(json[i].sentenceFilters), 'No Device Filter') +
 		                    ((json[i].headingOffset !== undefined && json[i].headingOffset !== 0) ? ("<td>Heading Offset: " + json[i].headingOffset + "</td>") : "" ) +
+		                    ((json[i].readFrequency !== undefined && json[i].readFrequency !== 0) ? ("<td>Read Frequency: " + json[i].readFrequency + " ms</td>") : "" ) +
                     "</td></tr>");
                     break;
                 case 'zda':
