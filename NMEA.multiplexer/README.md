@@ -683,6 +683,12 @@ Thread view, with thread names
 ## Examples!!
 They are [here](./examples.md).
 
+Also see a combination with the `SunFlower` project. This takes the position from a GPS (serial port), and the device heading from an `LSM303`.
+Then it orients a solar panel so it faces the sun. The specific `forwarder` that does the job is the 
+[GPS.sun.servo](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/GPS.sun.servo) project.
+
+And there is an integration with the [REST Nav Server](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNavServer).
+
 ## Case Studies
 - [NMEA Multiplexer on a Raspberry PI Zero W](./casestudy.md). Compared with Node-RED.
 

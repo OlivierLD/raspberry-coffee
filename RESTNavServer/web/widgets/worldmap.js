@@ -379,9 +379,6 @@ function WorldMap (cName, prj) {
 		}
 	 */
 	var astronomicalData = {};
-	var getAstronomicalData = function() {
-		return astronimicalData;
-	};
 
 	/**
 	 * Angles in degrees
@@ -538,6 +535,7 @@ function WorldMap (cName, prj) {
 	};
 
 	/**
+	 * For the Globe projection
 	 *
 	 * @param lat in degrees
 	 * @param lng in degrees
@@ -1009,119 +1007,71 @@ function WorldMap (cName, prj) {
 		}
 	};
 
-	var drawMercatorChart = function (canvas, context) {
-		// TODO This is a copy of Anaximandre, fix this. (DeDup)
-		var gstep = 10; //Math.abs(_east - _west) / 60;
-		var lstep = 10;  //Math.abs(_north - _south) / 10;
-
+	var drawFlatGrid = function(canvas, context) {
 		context.lineWidth = 1;
 		context.strokeStyle = worldmapColorConfig.gridColor; // 'cyan';
 
-		if (withGrid) {
-			// Parallels
-			for (var lat=-80; lat<=80; lat+=lstep) {
-				var y = posToCanvas(canvas, lat, 0).y;
-				context.beginPath();
+		var gstep = 10; //Math.abs(_east - _west) / 60;
+		var lstep = 10;  //Math.abs(_north - _south) / 10;
 
-				context.moveTo(0, y);
-				context.lineTo(canvas.width, y);
-
-				context.stroke();
-				context.closePath();
-			}
-			// Meridians
-			for (var lng=-180; lng<180; lng+=gstep) {
-				var x = posToCanvas(canvas, 0, lng).x;
-				context.beginPath();
-
-				context.moveTo(x, 0);
-				context.lineTo(x, canvas.height);
-
-				context.stroke();
-				context.closePath();
-			}
-		}
-
-		if (withTropics) {
-			context.strokeStyle = worldmapColorConfig.tropicColor;
-			// Cancer
-			var y = posToCanvas(canvas, tropicLat, 0).y;
+		// Parallels
+		for (var lat=-80; lat<=80; lat+=lstep) {
+			var y = posToCanvas(canvas, lat, 0).y;
 			context.beginPath();
+
 			context.moveTo(0, y);
 			context.lineTo(canvas.width, y);
-			context.stroke();
-			context.closePath();
-			// Capricorn
-			y = posToCanvas(canvas, -tropicLat, 0).y;
-			context.beginPath();
-			context.moveTo(0, y);
-			context.lineTo(canvas.width, y);
-			context.stroke();
-			context.closePath();
-			// North polar circle
-			y = posToCanvas(canvas, 90-tropicLat, 0).y;
-			context.beginPath();
-			context.moveTo(0, y);
-			context.lineTo(canvas.width, y);
-			context.stroke();
-			context.closePath();
-			// South polar circle
-			y = posToCanvas(canvas, -90+tropicLat, 0).y;
-			context.beginPath();
-			context.moveTo(0, y);
-			context.lineTo(canvas.width, y);
+
 			context.stroke();
 			context.closePath();
 		}
+		// Meridians
+		for (var lng=-180; lng<180; lng+=gstep) {
+			var x = posToCanvas(canvas, 0, lng).x;
+			context.beginPath();
 
-		var worldTop = fullWorldMap.top;
-		var section = worldTop.section; // We assume top has been found.
+			context.moveTo(x, 0);
+			context.lineTo(x, canvas.height);
 
-//    console.log("Found " + section.length + " section(s).")
-		for (var i = 0; i < section.length; i++) {
-			var point = section[i].point;
-			if (point !== undefined) {
-				var firstPt = null;
-				var previousPt = null;
-				context.beginPath();
-				for (var p = 0; p < point.length; p++) {
-					var lat = parseFloat(point[p].Lat);
-					var lng = parseFloat(point[p].Lng);
-					if (lng < -180) lng += 360;
-					if (lng > 180) lng -= 360;
-					var pt = posToCanvas(canvas, lat, lng);
-					if (p === 0) {
-						context.moveTo(pt.x, pt.y);
-						firstPt = pt;
-						previousPt = pt;
-					} else {
-						if (Math.abs(previousPt.x - pt.x) < (canvas.width / 2) && Math.abs(previousPt.y - pt.y) < (canvas.height / 2)) {
-							context.lineTo(pt.x, pt.y);
-							previousPt = pt;
-						} else { // Too far apart
-							firstPt = pt;
-							context.moveTo(pt.x, pt.y);
-							previousPt = pt;
-						}
-					}
-				}
-			}
-			if (firstPt !== null && Math.abs(previousPt.x - firstPt.x) < (canvas.width / 20) && Math.abs(previousPt.y - firstPt.y) < (canvas.height / 20)) {
-				context.lineTo(firstPt.x, firstPt.y); // close the loop
-			}
-			context.lineWidth = worldmapColorConfig.chartLineWidth;
-			context.strokeStyle = worldmapColorConfig.chartColor; // 'black';
 			context.stroke();
-			// context.fillStyle = "goldenrod";
-			// context.fill();
 			context.closePath();
 		}
-		// User position
-		if (userPosition !== {}) {
-			context.fillStyle = worldmapColorConfig.userPosColor;
-			plotPosToCanvas(userPosition.latitude, userPosition.longitude, posLabel, worldmapColorConfig.userPosColor);
-		}
+	};
 
+	var drawFlatTropics = function(canvas, context) {
+		context.lineWidth = 1;
+		context.strokeStyle = worldmapColorConfig.tropicColor;
+		// Cancer
+		var y = posToCanvas(canvas, tropicLat, 0).y;
+		context.beginPath();
+		context.moveTo(0, y);
+		context.lineTo(canvas.width, y);
+		context.stroke();
+		context.closePath();
+		// Capricorn
+		y = posToCanvas(canvas, -tropicLat, 0).y;
+		context.beginPath();
+		context.moveTo(0, y);
+		context.lineTo(canvas.width, y);
+		context.stroke();
+		context.closePath();
+		// North polar circle
+		y = posToCanvas(canvas, 90-tropicLat, 0).y;
+		context.beginPath();
+		context.moveTo(0, y);
+		context.lineTo(canvas.width, y);
+		context.stroke();
+		context.closePath();
+		// South polar circle
+		y = posToCanvas(canvas, -90+tropicLat, 0).y;
+		context.beginPath();
+		context.moveTo(0, y);
+		context.lineTo(canvas.width, y);
+		context.stroke();
+		context.closePath();
+	};
+
+	var drawFlatCelestialOptions = function(canvas, context) {
 		if (astronomicalData !== {}) {
 			if (astronomicalData.sun !== undefined && withSun) {
 				context.save();
@@ -1130,7 +1080,7 @@ function WorldMap (cName, prj) {
 
 				if (withSunlight) {
 					var from = {lat: toRadians(astronomicalData.sun.decl), lng: toRadians(sunLng)};
-					drawMercatorNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
+					drawFlatNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
 				}
 				context.restore();
 			}
@@ -1140,7 +1090,7 @@ function WorldMap (cName, prj) {
 				plotPosToCanvas(astronomicalData.moon.decl, moonLng, "Moon", worldmapColorConfig.moonColor);
 				if (withMoonlight) {
 					var from = {lat: toRadians(astronomicalData.moon.decl), lng: toRadians(moonLng)};
-					drawMercatorNight(canvas, context, from, userPosition, astronomicalData.moon.gha);
+					drawFlatNight(canvas, context, from, userPosition, astronomicalData.moon.gha);
 				}
 				context.restore();
 			}
@@ -1192,7 +1142,67 @@ function WorldMap (cName, prj) {
 				});
 			}
 		}
+	};
 
+	var drawMercatorChart = function (canvas, context) {
+		// TODO This is a copy of Anaximandre, fix this. (DeDup)
+
+		if (withGrid) {
+			drawFlatGrid(canvas, context);
+		}
+
+		if (withTropics) {
+			drawFlatTropics(canvas, context);
+		}
+
+		var worldTop = fullWorldMap.top;
+		var section = worldTop.section; // We assume top has been found.
+
+//    console.log("Found " + section.length + " section(s).")
+		for (var i = 0; i < section.length; i++) {
+			var point = section[i].point;
+			if (point !== undefined) {
+				var firstPt = null;
+				var previousPt = null;
+				context.beginPath();
+				for (var p = 0; p < point.length; p++) {
+					var lat = parseFloat(point[p].Lat);
+					var lng = parseFloat(point[p].Lng);
+					if (lng < -180) lng += 360;
+					if (lng > 180) lng -= 360;
+					var pt = posToCanvas(canvas, lat, lng);
+					if (p === 0) {
+						context.moveTo(pt.x, pt.y);
+						firstPt = pt;
+						previousPt = pt;
+					} else {
+						if (Math.abs(previousPt.x - pt.x) < (canvas.width / 2) && Math.abs(previousPt.y - pt.y) < (canvas.height / 2)) {
+							context.lineTo(pt.x, pt.y);
+							previousPt = pt;
+						} else { // Too far apart
+							firstPt = pt;
+							context.moveTo(pt.x, pt.y);
+							previousPt = pt;
+						}
+					}
+				}
+			}
+			if (firstPt !== null && Math.abs(previousPt.x - firstPt.x) < (canvas.width / 20) && Math.abs(previousPt.y - firstPt.y) < (canvas.height / 20)) {
+				context.lineTo(firstPt.x, firstPt.y); // close the loop
+			}
+			context.lineWidth = worldmapColorConfig.chartLineWidth;
+			context.strokeStyle = worldmapColorConfig.chartColor; // 'black';
+			context.stroke();
+			// context.fillStyle = "goldenrod";
+			// context.fill();
+			context.closePath();
+		}
+		// User position
+		if (userPosition !== {}) {
+			plotPosToCanvas(userPosition.latitude, userPosition.longitude, posLabel, worldmapColorConfig.userPosColor);
+		}
+
+		drawFlatCelestialOptions(canvas, context);
 	};
 
 	var findInList = function(array, member, value) {
@@ -1335,7 +1345,8 @@ function WorldMap (cName, prj) {
 		}
 		return g;
 	};
-	var drawMercatorNight = function(canvas, context, from, user, gha) {
+
+	var drawFlatNight = function(canvas, context, from, user, gha) {
 		const NINETY_DEGREES = 90 * 60; // in nm
 
 		// context.lineWidth = 1;
@@ -1360,12 +1371,13 @@ function WorldMap (cName, prj) {
 			}
 		}
 		context.beginPath();
-		var pt = posToCanvas(canvas, toDegrees(nightRim[first].lat), toDegrees(nightRim[first].lng));
-		context.moveTo(0 /*pt.x*/, pt.y);
+		var pt = posToCanvas(canvas, toDegrees(nightRim[first].lat), toRealLng(toDegrees(nightRim[first].lng)));
+		context.moveTo(-10 /*pt.x*/, pt.y);
 
 		var go = true;
+
 		for (var idx=first; idx<360 && go === true; idx++) {
-			pt = posToCanvas(canvas, toDegrees(nightRim[idx].lat), toDegrees(nightRim[idx].lng));
+			pt = posToCanvas(canvas, toDegrees(nightRim[idx].lat), toRealLng(toDegrees(nightRim[idx].lng)));
 			context.lineTo(pt.x, pt.y);
 	//  if (toRealLng(toDegrees(nightRim[idx].lng)) > _east) {
 	// 	 go = false;
@@ -1376,7 +1388,7 @@ function WorldMap (cName, prj) {
 				if (toRealLng(toDegrees(nightRim[idx].lng)) > _east) {
 					go = false;
 				} else {
-					pt = posToCanvas(canvas, toDegrees(nightRim[idx].lat), toDegrees(nightRim[idx].lng));
+					pt = posToCanvas(canvas, toDegrees(nightRim[idx].lat), toRealLng(toDegrees(nightRim[idx].lng)));
 					context.lineTo(pt.x, pt.y);
 				}
 			}
@@ -1399,6 +1411,13 @@ function WorldMap (cName, prj) {
 
 	var drawAnaximandreChart = function (canvas, context) {
 		// Square projection, Anaximandre.
+		if (withGrid) {
+			drawFlatGrid(canvas, context);
+		}
+
+		if (withTropics) {
+			drawFlatTropics(canvas, context);
+		}
 		var worldTop = fullWorldMap.top;
 		var section = worldTop.section; // We assume top has been found.
 
@@ -1439,9 +1458,9 @@ function WorldMap (cName, prj) {
 		}
 		// User position
 		if (userPosition !== {}) {
-			var userPos = getPanelPoint(userPosition.latitude, userPosition.longitude);
-			plotPosToCanvas(userPos.latitude, userPos.longitude, posLabel);
+			plotPosToCanvas(userPosition.latitude, userPosition.longitude, posLabel, worldmapColorConfig.userPosColor);
 		}
+		drawFlatCelestialOptions(canvas, context);
 	};
 
 	this.drawWorldMap = function (clear) {

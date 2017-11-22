@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 #
-MUX_PROP_FILE=nmea.mux.sun.flower.properties
+# No properties file name is used as parameter here...
+if [ $# -ne 0 ]
+then
+	echo -e ">>> No argument needed (nor taken). Properties file is hard-coded."
+fi
+#
+MUX_PROP_FILE=nmea.mux.sun.flower.02.properties
 #
 echo Using properties file $MUX_PROP_FILE
 #
@@ -26,11 +32,10 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=.
-# SolarPanelOrienter lives in this one:
-CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar
-#
+CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar  # SolarPanelOrienter lives in this one:
 CP=$CP:./build/libs/NMEA.multiplexer-1.0-all.jar
-CP=$CP:../SunFlower/build/libs/SunFlower-1.0-all.jar
+# CP=$CP:../SunFlower/build/libs/SunFlower-1.0-all.jar # Included in GPS.sun.servo-1.0-all.jar
+#
 # CP=$CP:./libs/RXTXcomm.jar          # for Mac
 CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
