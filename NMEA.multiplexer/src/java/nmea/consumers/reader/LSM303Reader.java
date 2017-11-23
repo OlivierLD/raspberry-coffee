@@ -205,6 +205,9 @@ public class LSM303Reader extends NMEAReader {
 			} else {
 				deg = 0;
 			}
+			while (deg < 0) { // On 360, instead of [-180..180]
+				deg += 360;
+			}
 			return deg;
 		}
 	}
