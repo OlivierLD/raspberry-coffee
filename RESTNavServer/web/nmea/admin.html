@@ -489,11 +489,17 @@
                     var dFilters = $("#lsm303-dev-filters").val().split(",");
                     var sFilters = $("#lsm303-sentence-filters").val().split(",");
                     var dPrefix = $('#lsm303-dev-prefix').val();
+                    var hOffset = $('#lsm303-heading-offset').val();
+	                	var rFreq = $('#lsm303-read-frequency').val();
+	                	var dampSize = $('#lsm303-damping-size').val();
                     createChannel({
                         type: 'lsm303',
                         devicePrefix: dPrefix,
                         deviceFilters: dFilters,
-                        sentenceFilters: sFilters
+                        sentenceFilters: sFilters,
+                        headingOffset: hOffset,
+												readFrequency: rFreq,
+												dampingSize: dampSize
                     });
                     break;
                 case 'zda':
@@ -1038,6 +1044,21 @@
                     <td><input id="lsm303-sentence-filters" type="text" placeholder="Sentence filters, GLL, ~RMC" size="30"></td>
                     <td><small>Negate with <b>~</b></small></td>
                   </tr>
+                  <tr>
+                    <td>Heading Offset</td>
+                    <td><input id="lsm303-heading-offset" type="text" placeholder="0" size="4" style="text-align: right;"></td>
+                    <td><small>Integer<b>[-180..180]</b></small></td>
+                  </tr>
+									<tr>
+										<td>Read Frequency</td>
+										<td><input id="lsm303-read-frequency" type="text" placeholder="1000" size="4" style="text-align: right;"></td>
+										<td><small>in ms</small></td>
+									</tr>
+									<tr>
+										<td>Damping Size</td>
+										<td><input id="lsm303-damping-size" type="text" placeholder="200" size="4" style="text-align: right;"></td>
+										<td><small>in elements</small></td>
+									</tr>
                 </table>
               </div>
               <div id="channel-zda" style="display: none;">
