@@ -291,17 +291,43 @@ public class MuxInitializer {
 								} catch (NumberFormatException nfe) {
 									nfe.printStackTrace();
 								}
+								Long readFrequency = null;
+								try {
+									readFrequency = new Long(muxProps.getProperty(String.format("mux.%s.read.frequency", MUX_IDX_FMT.format(muxIdx))));
+									if (readFrequency < 0) {
+										System.err.println(String.format("Warning: Bad value for Read Frequency, must be positive, found %d.", readFrequency));
+										readFrequency = null;
+									}
+								} catch (NumberFormatException nfe) {
+									nfe.printStackTrace();
+								}
+								Integer dampingSize = null;
+								try {
+									dampingSize = new Integer(muxProps.getProperty(String.format("mux.%s.damping.size", MUX_IDX_FMT.format(muxIdx))));
+									if (dampingSize < 0) {
+										System.err.println(String.format("Warning: Bad value for Damping Size, must be positive, found %d.", dampingSize));
+										dampingSize = null;
+									}
+								} catch (NumberFormatException nfe) {
+									nfe.printStackTrace();
+								}
 								NMEAClient lsm303Client = new LSM303Client(
 												deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
 												sentenceFilters.trim().length() > 0 ? sentenceFilters.split(",") : null,
 												mux);
-								if (headingOffset != 0) {
-									((LSM303Client) lsm303Client).setHeadingOffset(headingOffset);
-								}
 								lsm303Client.initClient();
 								lsm303Client.setReader(new LSM303Reader(lsm303Client.getListeners()));
 								lsm303Client.setVerbose("true".equals(muxProps.getProperty(String.format("mux.%s.verbose", MUX_IDX_FMT.format(muxIdx)), "false")));
 								// Important: after the setReader
+								if (headingOffset != 0) {
+									((LSM303Client) lsm303Client).setHeadingOffset(headingOffset);
+								}
+								if (readFrequency != null) {
+									((LSM303Client) lsm303Client).setReadFrequency(readFrequency);
+								}
+								if (dampingSize != null) {
+									((LSM303Client) lsm303Client).setDampingSize(dampingSize);
+								}
 								if (lsm303DevicePrefix.trim().length() > 0) {
 									if (lsm303DevicePrefix.trim().length() == 2) {
 										((LSM303Client) lsm303Client).setSpecificDevicePrefix(lsm303DevicePrefix.trim());

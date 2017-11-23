@@ -61,10 +61,43 @@ public class LSM303Client extends NMEAClient {
 		}
 	}
 
+	public long getReadFrequency() {
+		Long readFrequency = null;
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof LSM303Reader) {
+			readFrequency = ((LSM303Reader)reader).getReadFrequency();
+		}
+		return readFrequency;
+	}
+
+	public void setReadFrequency(Long readFrequency) {
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof LSM303Reader) {
+			((LSM303Reader)reader).setReadFrequency(readFrequency);
+		}
+	}
+
+	public int geDampingSize() {
+		Integer dampingSize = null;
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof LSM303Reader) {
+			dampingSize = ((LSM303Reader)reader).getDampingSize();
+		}
+		return dampingSize;
+	}
+
+	public void setDampingSize(Integer dampingSize) {
+		NMEAReader reader = this.getReader();
+		if (reader != null && reader instanceof LSM303Reader) {
+			((LSM303Reader)reader).setDampingSize(dampingSize);
+		}
+	}
+
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if (verbose)
+		if (verbose) {
 			System.out.println(">> Received from LSM303:" + e.getContent());
+		}
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}
@@ -80,6 +113,8 @@ public class LSM303Client extends NMEAClient {
 		private String[] sentenceFilters;
 		private String devicePrefix;
 		private int headingOffset;
+		private Long readFrequency;
+		private Integer dampingSize;
 
 		public LSM303Bean(LSM303Client instance) {
 			cls = instance.getClass().getName();
@@ -88,6 +123,8 @@ public class LSM303Client extends NMEAClient {
 			sentenceFilters = instance.getSentenceArray();
 			devicePrefix = instance.getSpecificDevicePrefix();
 			headingOffset = instance.getHeadingOffset();
+			readFrequency = instance.getReadFrequency();
+			dampingSize = instance.geDampingSize();
 		}
 
 		@Override
@@ -111,6 +148,14 @@ public class LSM303Client extends NMEAClient {
 		public int getHeadingOffset() {
 			return this.headingOffset;
 		}
+
+		public Long getReadFrequency() {
+			return this.readFrequency;
+		}
+
+		public Integer getDampingSize() {
+			return this.dampingSize;
+		}
 	}
 
 	@Override
@@ -120,8 +165,9 @@ public class LSM303Client extends NMEAClient {
 
 	public static void main(String[] args) {
 		System.out.println("LSM303Client invoked with " + args.length + " Parameter(s).");
-		for (String s : args)
+		for (String s : args) {
 			System.out.println("LSM303Client prm:" + s);
+		}
 
 		nmeaClient = new LSM303Client();
 
