@@ -146,7 +146,7 @@ public class LSM303Reader extends NMEAReader {
 				}
 
 				if (this.verbose) {
-					System.out.println(String.format(">>> From LSM303: Heading %f, Pitch: %f, Roll: %f", heading, pitch, roll));
+					System.out.println(String.format("\t>>> From LSM303: Heading %f, Pitch: %f, Roll: %f", heading, pitch, roll));
 				}
 
 				// Generate NMEA String(s). OpenCPN recognizes those ones (Needs a 'II' prefix though).

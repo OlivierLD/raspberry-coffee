@@ -84,7 +84,7 @@ public class SolarPanelOrienter implements Forwarder {
 					int hdm = StringParsers.parseHDM(str);
 					sunFlower.setDeviceHeading(hdm + this.declination);
 					if (verbose) {
-						System.out.println(String.format("From HDM: heading: %d, decl: %.2f", hdm, this.declination));
+						System.out.println(String.format("From HDM: heading: %d, decl: %.2f => True Heading %.2f", hdm, this.declination, (hdm + this.declination)));
 					}
 					break;
 				default:
