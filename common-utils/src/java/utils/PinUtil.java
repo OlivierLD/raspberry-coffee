@@ -63,6 +63,17 @@ public class PinUtil {
 		return pin;
 	}
 
+	public static Pin getPinByGPIONumber(int n) {
+		Pin pin = null;
+		for (GPIOPin gpioPin : GPIOPin.values()) {
+			if (gpioPin.gpio() == n) {
+				pin = gpioPin.pin();
+				break;
+			}
+		}
+		return pin;
+	}
+
 	public static GPIOPin findByPin(Pin pin) {
 		GPIOPin gpio = null;
 		for (GPIOPin gpioPin : GPIOPin.values()) {

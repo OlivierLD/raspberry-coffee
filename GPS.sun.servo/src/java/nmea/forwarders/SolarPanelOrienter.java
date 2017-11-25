@@ -23,7 +23,6 @@ import orientation.SunFlower;
  * </pre>
  * A jar (or classpath) containing this class and its dependencies must be available in the classpath.
  *
- * TODO: Smoothing? Tolerance?
  */
 public class SolarPanelOrienter implements Forwarder {
 	private boolean verbose = "true".equals(System.getProperty("mux.data.verbose", "false"));
@@ -196,7 +195,11 @@ public class SolarPanelOrienter implements Forwarder {
 		System.setProperty("time.provided", props.getProperty("time.provided", "false"));
 
 		sunFlower = new SunFlower(new int [] { headingPin }, new int[] { tiltPin });
-		sunFlower.setWithAdc("true".equals(props.getProperty("with.adc", "false")));
+		boolean withVoltageADC = "true".equals(props.getProperty("with.adc", "false"));
+		sunFlower.setWithAdc(withVoltageADC);
+		if (withVoltageADC) {
+			SunFlower.initADC();
+		}
 
 		// Start with this, in case the GPS is down...
 		String strLat  = props.getProperty("latitude");

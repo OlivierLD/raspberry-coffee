@@ -3,12 +3,20 @@ package utils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Provide smoothing service for generic type of data.
+ *
+ * @param <T> the type to smooth. See {@link Smoothable} interface
+ */
 public class DampingService<T> {
 
 	private int maxLength;
 	private List<T> buffer;
 
 	public DampingService (int maxLength) {
+		if (maxLength < 1) {
+			throw new RuntimeException("maxLength must be at least 1");
+		}
 		this.maxLength = maxLength; // Must be greater than 0
 		buffer = new ArrayList<>();
 	}
