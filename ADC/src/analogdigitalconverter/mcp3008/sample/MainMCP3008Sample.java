@@ -23,8 +23,8 @@ public class MainMCP3008Sample {
 	public static void main(String... args) {
 
 		// Default pins
-		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
-		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
+		Pin miso = PinUtil.GPIOPin.GPIO_12.pin();
+		Pin mosi = PinUtil.GPIOPin.GPIO_13.pin();
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
@@ -105,22 +105,25 @@ public class MainMCP3008Sample {
 				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
 				PinUtil.findByPin(clk).gpio(),
 				PinUtil.findByPin(clk).wiringPi()));
-		System.out.println(String.format(" | Din (11)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
-				PinUtil.findByPin(miso).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
-				PinUtil.findByPin(miso).gpio(),
-				PinUtil.findByPin(miso).wiringPi()));
-		System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
+		System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(mosi).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
 				PinUtil.findByPin(mosi).gpio(),
 				PinUtil.findByPin(mosi).wiringPi()));
+		System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
+				PinUtil.findByPin(miso).pinNumber(),
+				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
+				PinUtil.findByPin(miso).gpio(),
+				PinUtil.findByPin(miso).wiringPi()));
 		System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(cs).pinNumber(),
 				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
 				PinUtil.findByPin(cs).gpio(),
 				PinUtil.findByPin(cs).wiringPi()));
 		System.out.println(" +---------++------+------------+-----+----------+----------+");
+		System.out.println("Raspberry PI is the Master, MCP3008 is the slave:");
+		System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
+		System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 		System.out.println("       +--------+ ");
 		System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 ? "*" : " ")));
