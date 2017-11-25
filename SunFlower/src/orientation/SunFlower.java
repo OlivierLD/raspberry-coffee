@@ -182,16 +182,16 @@ public class SunFlower implements RESTRequestManager {
 	}
 
 	public static void setMISO(int pin) {
-
+		miso = PinUtil.getPinByGPIONumber(pin);
 	}
 	public static void setMOSI(int pin) {
-
+		mosi = PinUtil.getPinByGPIONumber(pin);
 	}
 	public static void setCLK(int pin) {
-
+		clk = PinUtil.getPinByGPIONumber(pin);
 	}
 	public static void setCS(int pin) {
-
+		cs = PinUtil.getPinByGPIONumber(pin);
 	}
 
 	/**
