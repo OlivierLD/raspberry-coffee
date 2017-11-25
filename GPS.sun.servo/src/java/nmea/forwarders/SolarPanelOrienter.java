@@ -198,6 +198,42 @@ public class SolarPanelOrienter implements Forwarder {
 		boolean withVoltageADC = "true".equals(props.getProperty("with.adc", "false"));
 		sunFlower.setWithAdc(withVoltageADC);
 		if (withVoltageADC) {
+			String pinStr = props.getProperty("miso");
+			if (pinStr != null) {
+				try {
+					int pin = Integer.parseInt(pinStr);
+					SunFlower.setMISO(pin);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+			pinStr = props.getProperty("mosi");
+			if (pinStr != null) {
+				try {
+					int pin = Integer.parseInt(pinStr);
+					SunFlower.setMOSI(pin);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+			pinStr = props.getProperty("clk");
+			if (pinStr != null) {
+				try {
+					int pin = Integer.parseInt(pinStr);
+					SunFlower.setCLK(pin);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+			pinStr = props.getProperty("cs");
+			if (pinStr != null) {
+				try {
+					int pin = Integer.parseInt(pinStr);
+					SunFlower.setCS(pin);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
 			SunFlower.initADC();
 		}
 
