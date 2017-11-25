@@ -1272,7 +1272,7 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println(" +---------++------+------------+-----+----------+----------+");
 			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 
-			System.out.println("       +--------+ ");
+			System.out.println(               "       +--------+ ");
 			System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 ? "*" : " ")));
 			System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 ? "*" : " ")));
 			System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 ? "*" : " ")));
@@ -1281,7 +1281,7 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5 ? "*" : " ")));
 			System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6 ? "*" : " ")));
 			System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
-			System.out.println("       +--------+ ");
+			System.out.println(               "       +--------+ ");
 
 			try {
 				MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
