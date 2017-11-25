@@ -13,12 +13,12 @@ public class MainMCP3008Sample {
 	private static int adcChannel =
 					MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
-	private static final String MISO_PRM_PREFIX = "-miso:";
-	private static final String MOSI_PRM_PREFIX = "-mosi:";
-	private static final String CLK_PRM_PREFIX  =  "-clk:";
-	private static final String CS_PRM_PREFIX   =   "-cs:";
+	private static final String MISO_PRM_PREFIX = "--miso:";
+	private static final String MOSI_PRM_PREFIX = "--mosi:";
+	private static final String CLK_PRM_PREFIX  =  "--clk:";
+	private static final String CS_PRM_PREFIX   =   "--cs:";
 
-	private static final String CHANNEL_PREFIX  = "-channel:";
+	private static final String CHANNEL_PREFIX  = "--channel:";
 
 	public static void main(String... args) {
 
@@ -122,14 +122,14 @@ public class MainMCP3008Sample {
 		System.out.println(" +---------++------+------------+---------+---------------+");
 		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 		System.out.println("       +--------+ ");
-		System.out.println("  CH0 -+  1  16 +- Vdd ");
-		System.out.println("  CH1 -+  2  15 +- Vref ");
-		System.out.println("  CH2 -+  3  14 +- aGnd ");
-		System.out.println("  CH3 -+  4  13 +- CLK ");
-		System.out.println("  CH4 -+  5  12 +- Dout ");
-		System.out.println("  CH5 -+  6  11 +- Din ");
-		System.out.println("  CH6 -+  7  10 +- CS ");
-		System.out.println("  CH7 -+  8   9 +- dGnd ");
+		System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 ? "*" : " ")));
+		System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 ? "*" : " ")));
+		System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 ? "*" : " ")));
+		System.out.println(String.format("%s CH3 -+  4  13 +- CLK ",  (adcChannel == 3 ? "*" : " ")));
+		System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (adcChannel == 4 ? "*" : " ")));
+		System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5 ? "*" : " ")));
+		System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6 ? "*" : " ")));
+		System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
 		System.out.println("       +--------+ ");
 
 		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
