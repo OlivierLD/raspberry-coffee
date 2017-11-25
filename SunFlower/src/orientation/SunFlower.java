@@ -181,6 +181,19 @@ public class SunFlower implements RESTRequestManager {
 		}
 	}
 
+	public static void setMISO(int pin) {
+
+	}
+	public static void setMOSI(int pin) {
+
+	}
+	public static void setCLK(int pin) {
+
+	}
+	public static void setCS(int pin) {
+
+	}
+
 	/**
 	 * Does not take the EoT in account, just longitude
 	 * See {@link #getSolarDate(Date)} for an accurate version.
@@ -1119,16 +1132,26 @@ public class SunFlower implements RESTRequestManager {
 		}
 	}
 
+	// Default ADC pins
+	private static Pin miso = PinUtil.GPIOPin.GPIO_12.pin();
+	private static Pin mosi = PinUtil.GPIOPin.GPIO_13.pin();
+	private static Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
+	private static Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
+
+	public static void initADC() {
+		try {
+			MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
+		} catch (UnsatisfiedLinkError ule) {
+			// Still not on a PI, hey?
+			System.err.println(ule.toString());
+			foundMCP3008 = false;
+		}
+	}
+
 	public static void main(String... args) {
 
 		headingServoID = new int[] { 14 };
 		tiltServoID = new int[] { 15 };
-
-		// Default pins
-		Pin miso = PinUtil.GPIOPin.GPIO_12.pin();
-		Pin mosi = PinUtil.GPIOPin.GPIO_13.pin();
-		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
-		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
 		System.out.println("---------------------------------------------------");
 		System.out.println(String.format("Usage is java %s %s%s %s%d %s%d %s%d %s%d %s%d %s%s %s%s",
@@ -1285,13 +1308,8 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
 			System.out.println(               "       +--------+ ");
 
-			try {
-				MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
-			} catch (UnsatisfiedLinkError ule) {
-				// Still not on a PI, hey?
-				System.err.println(ule.toString());
-				foundMCP3008 = false;
-			}
+			initADC();
+
 		} else {
 			foundMCP3008 = false;
 			System.out.println(">>> No ADC");
