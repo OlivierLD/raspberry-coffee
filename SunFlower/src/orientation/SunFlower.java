@@ -111,6 +111,8 @@ public class SunFlower implements RESTRequestManager {
 
 	private final static float SMOOTH_STEP = 1.0f;
 
+	private final static float MAX_BATTERY_VOLTAGE = 3.7f;
+
 	private enum servoVerboseType {
 		BOTH,
 		TILT,
@@ -792,6 +794,7 @@ public class SunFlower implements RESTRequestManager {
 		int adc = 0;
 		if (foundMCP3008) {
 			adc = MCP3008Reader.readMCP3008(adcChannel);
+			// TODO Damping here
 		}
 		if (adcVerbose) {
 			if (foundMCP3008) {
@@ -800,11 +803,12 @@ public class SunFlower implements RESTRequestManager {
 				System.out.println("No MCP3008 found.");
 			}
 		}
+		// TODO Return damped value
 		int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 		BatteryData batteryData = new BatteryData()
 				.adc(adc)
 				.volume(volume)
-				.volt(5d * ((double)adc / 1023d));
+				.volt(MAX_BATTERY_VOLTAGE * ((double)adc / 1023d)); // TODO MAX_BATTERY_VOLTAGE: a prm?
 		return batteryData;
 	}
 
@@ -1204,7 +1208,7 @@ public class SunFlower implements RESTRequestManager {
 					pinValue = prm.substring(MISO_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						miso = PinUtil.getPinByGPIONumber(pin);
+						setMISO(pin);
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -1212,7 +1216,7 @@ public class SunFlower implements RESTRequestManager {
 					pinValue = prm.substring(MOSI_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						mosi = PinUtil.getPinByGPIONumber(pin);
+						setMOSI(pin);
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -1220,7 +1224,7 @@ public class SunFlower implements RESTRequestManager {
 					pinValue = prm.substring(CLK_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						clk = PinUtil.getPinByGPIONumber(pin);
+						setCLK(pin);
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -1228,7 +1232,7 @@ public class SunFlower implements RESTRequestManager {
 					pinValue = prm.substring(CS_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						cs = PinUtil.getPinByGPIONumber(pin);
+						setCS(pin);
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -1293,7 +1297,7 @@ public class SunFlower implements RESTRequestManager {
 					PinUtil.findByPin(cs).gpio(),
 					PinUtil.findByPin(cs).wiringPi()));
 			System.out.println(" +---------++------+------------+-----+----------+----------+");
-			System.out.println("Raspberry PI is the Master, MCP3008 is the slave:");
+			System.out.println("Raspberry PI is the Master, MCP3008 is the Slave:");
 			System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
 			System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");

@@ -257,6 +257,8 @@ See the project named `GPS.sun.servo`.
 
 ## Next
 
-Monitor the load of the LiPo battery, with an MPC3008 (_*Warning:*_ there seems to be some problems between the Raspberry Pi Zero and the SPI interface... I was _not_ able to read an MCP3008 from a Zero, and the _exact_ same code (the exact same SD card, actually) runs fine on other Raspberries... Forums are unclear about that, but that seems to be 'occurring' some times...)
+Monitor the load of the LiPo battery, with an MPC3008.
+
+With a photocell, to know how sunny it is.
 
 Orienting much bigger panels, using *feedback servos* and *stepper motors*.
