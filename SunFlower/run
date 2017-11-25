@@ -146,9 +146,16 @@ esac
 #
 if [ $WITH_HELP = false ]
 then
+	MISO=9
+	MOSI=10
+	CLK=11
+	CS=8
+	CHANNEL=0
+	#
+	ADC_PRM="--with-adc:true --miso:$MISO --mosi:$MOSI --clk:$CLK --cs:$CS --channel:$CHANNEL"
 	# sudo is required when running on the RPi.
   # nohup sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID -channel:7 &
-  java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID --with-adc:true --channel:7
+  java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID $ADC_PRM
 else
   opts=$(echo $JAVA_OPTS | tr ";" "\n")
   for opt in $opts

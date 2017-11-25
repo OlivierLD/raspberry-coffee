@@ -1143,6 +1143,8 @@ public class SunFlower implements RESTRequestManager {
 				TILT_PREFIX, Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(", "))));
 		System.out.println("Values above are default values.");
 		System.out.println(String.format("%s and %s take comma-separated lists of ints as parameters", HEADING_PREFIX, TILT_PREFIX));
+		System.out.println(String.format("Values for %s, %s, %s, and %s are GPIO/BCM values", MISO_PRM_PREFIX, MOSI_PRM_PREFIX, CLK_PRM_PREFIX, CS_PRM_PREFIX));
+
 		System.out.println("---------------------------------------------------");
 		System.out.println();
 
@@ -1179,7 +1181,7 @@ public class SunFlower implements RESTRequestManager {
 					pinValue = prm.substring(MISO_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						miso = PinUtil.getPinByWiringPiNumber(pin);
+						miso = PinUtil.getPinByGPIONumber(pin);
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -1187,7 +1189,7 @@ public class SunFlower implements RESTRequestManager {
 					pinValue = prm.substring(MOSI_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						mosi = PinUtil.getPinByWiringPiNumber(pin);
+						mosi = PinUtil.getPinByGPIONumber(pin);
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -1195,7 +1197,7 @@ public class SunFlower implements RESTRequestManager {
 					pinValue = prm.substring(CLK_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						clk = PinUtil.getPinByWiringPiNumber(pin);
+						clk = PinUtil.getPinByGPIONumber(pin);
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -1203,7 +1205,7 @@ public class SunFlower implements RESTRequestManager {
 					pinValue = prm.substring(CS_PRM_PREFIX.length());
 					try {
 						pin = Integer.parseInt(pinValue);
-						cs = PinUtil.getPinByWiringPiNumber(pin);
+						cs = PinUtil.getPinByGPIONumber(pin);
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
@@ -1241,33 +1243,33 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
 			System.out.println(
 					" Wiring of the MCP3008-SPI (without power supply):\n" +
-							" +---------++----------------------------------------+\n" +
-							" | MCP3008 || Raspberry PI                           |\n" +
-							" +---------++------+------------+---------+----------+\n" +
-							" |         || Pin# | Name       | GPIO    | wiringPI |\n" +
-							" |         ||      |            | /BCM    | /PI4J    |\n" +
-							" +---------++------+------------+---------+----------+");
-			System.out.println(String.format(" | CLK (13)|| #%02d  | %s | GPIO_%02d | %02d       |",
+							" +---------++-----------------------------------------------+\n" +
+							" | MCP3008 || Raspberry PI                                  |\n" +
+							" +---------++------+------------+------+---------+----------+\n" +
+							" |         || Pin# | Name       | Role | GPIO    | wiringPI |\n" +
+							" |         ||      |            |      | /BCM    | /PI4J    |\n" +
+							" +---------++------+------------+------+---------+----------+");
+			System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(clk).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
 					PinUtil.findByPin(clk).gpio(),
 					PinUtil.findByPin(clk).wiringPi()));
-			System.out.println(String.format(" | Din (11)|| #%02d  | %s | GPIO_%02d | %02d       |",
+			System.out.println(String.format(" | Din (11)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(miso).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
 					PinUtil.findByPin(miso).gpio(),
 					PinUtil.findByPin(miso).wiringPi()));
-			System.out.println(String.format(" | Dout(12)|| #%02d  | %s | GPIO_%02d | %02d       |",
+			System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(mosi).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
 					PinUtil.findByPin(mosi).gpio(),
 					PinUtil.findByPin(mosi).wiringPi()));
-			System.out.println(String.format(" | CS  (10)|| #%02d  | %s | GPIO_%02d | %02d       |",
+			System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
 					PinUtil.findByPin(cs).pinNumber(),
 					StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
 					PinUtil.findByPin(cs).gpio(),
 					PinUtil.findByPin(cs).wiringPi()));
-			System.out.println(" +---------++------+------------+---------+----------+");
+			System.out.println(" +---------++------+------------+-----+----------+----------+");
 			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 
 			System.out.println("       +--------+ ");
