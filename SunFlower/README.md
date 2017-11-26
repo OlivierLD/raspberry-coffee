@@ -247,9 +247,15 @@ All is good with the 1000.
 
 ## NMEA Feed
 From the project `NMEA.multiplexer`, wrap the `SunFlower` class into a `forwarder`.
-This way, position and heading come from NMEA data (log file, NMEA Station, TCP Channel, etc).
+This way, position and heading come from an NMEA channel (log file, NMEA Station, TCP Channel, etc), and
+_forwarded_ to the `SunFlower`.
 
-This gives the possibility to have the same orientation features, even if the panel is carried by a vehicle in motion.
+This gives the possibility to have the same orientation features, even if the panel(s) is(are) carried by a vehicle in motion.
+Requires a damping on the heading values (to avoid all the energy gathered by the solar panel to be wasted in 
+shaking the heading servo).
+> _Note_: It is the `heading` that is required here, not only the Course Over Ground (`COG`), returned by the GPS.
+> In the sample implementation of `GPS.sun.servo` mentioned below, this is why we use an `LSM303` (magnetometer), that will return the heading,
+> even if the device is not in motion; `COG` requires motion, as it is calculated between the current and previous positions.
 
 See the project named `GPS.sun.servo`.
 
@@ -259,6 +265,6 @@ See the project named `GPS.sun.servo`.
 
 Monitor the load of the LiPo battery, with an MPC3008.
 
-With a photocell, to know how sunny it is.
+With a photocell(s) (read by the MCP3008 as well), to know how sunny it is.
 
 Orienting much bigger panels, using *feedback servos* and *stepper motors*.
