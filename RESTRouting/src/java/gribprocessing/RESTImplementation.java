@@ -3,16 +3,25 @@ package gribprocessing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import gribprocessing.utils.GRIBUtils;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import jgrib.GribFile;
+import poc.GRIBDump;
+import poc.data.GribDate;
+import poc.data.GribType;
 
+import java.io.File;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -96,7 +105,9 @@ public class RESTImplementation {
 	/**
 	 * The payload is a list of requests, like this
 	 *
-	 * {}
+	 * {
+	 *   "request": "GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"
+	 * }
 	 *
 	 * @param request
 	 * @return
@@ -112,16 +123,27 @@ public class RESTImplementation {
 				}
 				Gson gson = new GsonBuilder().create();
 				StringReader stringReader = new StringReader(payload);
-				List<Object> txRequests = null;
-				final List<Object> resultList = new ArrayList<>();
 				try {
-					txRequests = gson.fromJson(stringReader, List.class);
-
-					// TODO Invoke GRIB utilities here. See Sample01
-
-					String content = new Gson().toJson(resultList);
-					RESTProcessorUtil.generateResponseHeaders(response, content.length());
-					response.setPayload(content.getBytes());
+					GRIBRequest gribRequest = gson.fromJson(stringReader, GRIBRequest.class);
+					try {
+						String gribFileName = "grib.grb";
+						GRIBUtils.getGRIB(GRIBUtils.generateGRIBRequest(gribRequest.request), ".", gribFileName, true);
+						GRIBDump dump = new GRIBDump();
+						URL gribURL = new File(gribFileName).toURI().toURL();
+						GribFile gf = new GribFile(gribURL.openStream());
+						Map<GribDate, HashMap<GribType, Float[][]>> gribMap = dump.dump(gf);
+						String content = new Gson().toJson(gribMap);
+						RESTProcessorUtil.generateResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("GRIB-0003")
+										.errorMessage(ex.toString()));
+						return response;
+					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					response = HTTPServer.buildErrorResponse(response,
@@ -160,5 +182,9 @@ public class RESTImplementation {
 	private Response emptyOperation(Request request) {
 		Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
 		return response;
+	}
+
+	public static class GRIBRequest {
+		String request;
 	}
 }
