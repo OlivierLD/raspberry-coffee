@@ -6,6 +6,10 @@ The rendering is (to be) done on the client (HTML5/CSS) over a map. See in `REST
 
 And later, add the faxes.
 
+Run `./runGRIBserver`:
+
+![Test API](./screenshot.00.png)
+
 ### TODO
 - GRIB Request generator
 - GRIB rendering
