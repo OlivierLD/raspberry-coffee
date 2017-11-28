@@ -9,7 +9,8 @@ import java.util.TimeZone;
 
 public class Pad {
 	public static void main(String... args) {
-		long epoch = 1_504_821_600_841L;
+//	long epoch = 1_504_821_600_841L;
+		long epoch = 1_235_700_000_000L;
 		String tzName = "Europe/Paris";
 		SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z z");
 

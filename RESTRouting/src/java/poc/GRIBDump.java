@@ -1,6 +1,7 @@
 package poc;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jgrib.GribFile;
 import jgrib.GribRecord;
 import jgrib.GribRecordBDS;
@@ -8,54 +9,35 @@ import jgrib.GribRecordGDS;
 import jgrib.GribRecordPDS;
 import jgrib.NoValidGribException;
 import jgrib.NotSupportedException;
-import poc.bulkpanel.BulkGribPanel;
-import poc.bulkpanel.GribDatePanel;
-import poc.bulkpanel.OneGRIBTablePanel;
 import poc.data.GribDate;
 import poc.data.GribType;
 
-import javax.swing.JFrame;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
-import java.util.TimeZone;
 import java.util.TreeSet;
 
 public class GRIBDump {
 
 	private final static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
 
-	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_S_z");
-	public static final SimpleDateFormat FORMATTED = new SimpleDateFormat("yyyy MMM dd HH:mm:ss.S z");
-
-	private HashMap<GribDate, HashMap<GribType, Float[][]>> gribDataMap = null;
+	private Map<GribDate, Map<GribType, Float[][]>> gribDataMap = null;
 	private List<String> feedback = null;
 
 	public GRIBDump() {
 		super();
 	}
 
-	public final Map<GribDate, HashMap<GribType, Float[][]>> dump(GribFile gribFile) {
-		String content = "";
+	public final Map<GribDate, Map<GribType, Float[][]>> dump(GribFile gribFile) {
 		feedback = new ArrayList<>(1);
 		try {
 //    GribPDSParamTable.turnOffJGRIBLogging();
-
-			TimeZone tz = TimeZone.getTimeZone("127"); // "GMT + 0"
-			//  TimeZone.setDefault(tz);
-			SDF.setTimeZone(tz);
-
 			gribDataMap = new HashMap<>();
 
 			for (int i = 0; i < gribFile.getLightRecords().length; i++) {
@@ -66,6 +48,7 @@ public class GRIBDump {
 					GribRecordBDS grbds = gr.getBDS(); // TASK get min and max from this one.
 
 					Date date = grpds.getGMTForecastTime().getTime();
+
 					int width = grgds.getGridNX();
 					int height = grgds.getGridNY();
 					double stepX = grgds.getGridDX();
@@ -99,7 +82,8 @@ public class GRIBDump {
 							}
 						}
 					}
-					HashMap<GribType, Float[][]> subMap = gribDataMap.get(gDate);
+
+					Map<GribType, Float[][]> subMap = gribDataMap.get(gDate);
 					if (subMap == null) {
 						subMap = new HashMap<>();
 					}
@@ -125,22 +109,59 @@ public class GRIBDump {
 			feedback.stream().forEach(System.out::println);
 		}
 	}
+
+	public static List<DatedGRIB> expandGrib(Map<GribDate, Map<GribType, Float[][]>> data) {
+		List<DatedGRIB> grib = new ArrayList<>();
+		// Sort by date
+		SortedSet<GribDate> ss = new TreeSet<>(data.keySet());
+		for (GribDate gribDate : ss) {
+			Map<GribType, Float[][]> typeMaps = data.get(gribDate);
+			DatedGRIB datedGRIB = new DatedGRIB();
+			datedGRIB.gribDate = gribDate;
+			datedGRIB.typedData = new ArrayList<>();
+
+			for (GribType type : typeMaps.keySet()) {
+				GRIBTypedData typedData = new GRIBTypedData();
+				typedData.gribType = type;
+				typedData.data = typeMaps.get(type);
+				datedGRIB.typedData.add(typedData);
+			}
+			grib.add(datedGRIB);
+		}
+		return grib;
+	}
+
+	public static class GRIBTypedData {
+		GribType gribType;
+		Float[][] data;
+	}
+
+	public static class DatedGRIB {
+		GribDate gribDate;
+		List<GRIBTypedData> typedData;
+	}
+
+	public List<DatedGRIB> getExpandedGBRIB(GribFile gf) {
+		return expandGrib(dump(gf));
+	}
+
 	// For standalone tests
 	public static void main(String[] args) throws Exception {
-		GRIBDump gb = new GRIBDump();
+		GRIBDump gribDump = new GRIBDump();
 //	"GRIB_2017_10_16_07_31_47_PDT.grb", "GRIB_2009_02_25_Sample.grb";
-		String gribFileName = "GRIB_2009_02_25_Sample.grb";
+//	String gribFileName = "GRIB_2009_02_25_Sample.grb";
+		String gribFileName = "grib.grb";
 		URL gribURL = new File(gribFileName).toURI().toURL();
 		GribFile gf = new GribFile(gribURL.openStream());
-		Map<GribDate, HashMap<GribType, Float[][]>> gribMap = gb.dump(gf);
-		String json = new Gson().toJson(gribMap);
+
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		System.out.println(gson.toJson(gribDump.getExpandedGBRIB(gf)));
 
 		if (verbose) {
 			System.out.println("Done:");
 		}
-		System.out.println(json);
 		if (verbose) {
-			gb.dumpFeedback();
+			gribDump.dumpFeedback();
 		}
 	}
 }

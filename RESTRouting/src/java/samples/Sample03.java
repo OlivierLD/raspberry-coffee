@@ -33,7 +33,7 @@ public class Sample03 {
 			URL gribURL = new File(gribFileName).toURI().toURL();
 			GribFile gf = new GribFile(gribURL.openStream());
 
-			Map<GribDate, HashMap<GribType, Float[][]>> gribMap = dump.dump(gf);
+			Map<GribDate, Map<GribType, Float[][]>> gribMap = dump.dump(gf);
 			String json = new Gson().toJson(gribMap);
 
 			if (verbose) {

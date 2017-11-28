@@ -11,7 +11,8 @@ import java.text.NumberFormat;
 public class Sample01 {
 
 	public static void main(String... args) {
-		String fName = "GRIB_2017_10_16_07_31_47_PDT.grb";
+//	String fName = "GRIB_2017_10_16_07_31_47_PDT.grb";
+		String fName = "grib.grb";
 		try {
 			long before = System.currentTimeMillis();
 			GribFile gribFile = new GribFile(fName);

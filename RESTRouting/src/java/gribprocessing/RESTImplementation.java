@@ -131,8 +131,8 @@ public class RESTImplementation {
 						GRIBDump dump = new GRIBDump();
 						URL gribURL = new File(gribFileName).toURI().toURL();
 						GribFile gf = new GribFile(gribURL.openStream());
-						Map<GribDate, HashMap<GribType, Float[][]>> gribMap = dump.dump(gf);
-						String content = new Gson().toJson(gribMap);
+						List<GRIBDump.DatedGRIB> expandedGBRIB = dump.getExpandedGBRIB(gf);
+						String content = new Gson().toJson(expandedGBRIB);
 						RESTProcessorUtil.generateResponseHeaders(response, content.length());
 						response.setPayload(content.getBytes());
 					} catch (Exception ex) {

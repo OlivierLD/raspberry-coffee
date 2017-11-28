@@ -1,20 +1,30 @@
 package poc.data;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
-public class GribDate
-		extends Date {
+public class GribDate extends Date {
 	private Date date;
+	private long epoch;
+	private String formattedUTCDate;
 	private int height;
 	private int width;
 	private double stepx;
 	private double stepy;
 	private double top, bottom, left, right;
 
+	private final static SimpleDateFormat SDF_UTC = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss 'UTC'"); // I know, its's weird.
+//	static {
+//		SDF_UTC.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+//	}
+
 	public GribDate(Date d, int h, int w, double x, double y, double t,
 	                double b, double l, double r) {
 		super(d.getTime());
 		this.date = d;
+		this.epoch = d.getTime();
+		this.formattedUTCDate = SDF_UTC.format(d);
 		this.height = h;
 		this.width = w;
 		this.stepx = x;
