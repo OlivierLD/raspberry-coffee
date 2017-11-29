@@ -2,7 +2,7 @@
 <!--
  | Take move-fast=false as QS parameter.
  | Start the nav server (./runNavServer)
- | Then try http://localhost:9999/web/samples/worldmap.html?move-fast=false
+ | Then try http://localhost:9999/web/samples/worldmap.dual.demo.html?move-fast=false
  |
  | Globe, and REST APIs for the Astro service.
  +-->
@@ -86,8 +86,19 @@
 		worldMap.setAstronomicalData(data);
 	};
 
+	// Callback test
+	var after = function(canvas, context) {
+		console.log("To do after drawing the chart");
+		context.fillStyle = "pink";
+		context.font = "bold 72px Arial";
+		context.fillText("After drawing", 10, canvas.height / 2);
+	};
+
   window.onload = function() {
     init(); // init UI
+
+		// Callback test
+		worldMap.setAfterDrawing(after);
 
 	  worldMap.clear();
 	  worldMap.setPositionLabel("");

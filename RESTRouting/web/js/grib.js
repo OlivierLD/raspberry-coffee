@@ -81,7 +81,7 @@ var requestGRIB = function(gribRequest) {
 	var getData = getGRIB(gribRequest);
 	getData.done(function(value) {
 		var json = JSON.parse(value);
-		// Do something smart
+		// Do something smart here.
 		console.log("GRIB Data:", json);
 		$("#result").html("<pre>" +
 				JSON.stringify(json, null, 2) +

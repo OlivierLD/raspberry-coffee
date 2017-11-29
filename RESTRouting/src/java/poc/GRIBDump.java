@@ -110,6 +110,12 @@ public class GRIBDump {
 		}
 	}
 
+	/**
+	 * For Gson to work properly...
+	 *
+	 * @param data
+	 * @return
+	 */
 	public static List<DatedGRIB> expandGrib(Map<GribDate, Map<GribType, Float[][]>> data) {
 		List<DatedGRIB> grib = new ArrayList<>();
 		// Sort by date
