@@ -37,6 +37,7 @@ dependencies {
   compile project (':RESTNauticalAlmanac')
   compile project (':RESTTideEngine')
   compile project (':RESTImageProcessor')
+  compile project (':RESTRouting')
   compile project (':NMEA.multiplexer')
 }
 

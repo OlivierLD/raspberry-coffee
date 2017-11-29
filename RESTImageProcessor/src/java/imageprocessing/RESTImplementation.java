@@ -1,4 +1,4 @@
-package gribprocessing;
+package imageprocessing;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

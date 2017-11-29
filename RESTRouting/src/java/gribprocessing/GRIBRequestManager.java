@@ -10,7 +10,7 @@ public class GRIBRequestManager implements RESTRequestManager {
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private RESTImplementation restImplementation;
 
-	private GRIBServer imgServer = null;
+	private GRIBServer gribServer = null;
 
 	public GRIBRequestManager() {
 		this(null);
@@ -21,7 +21,7 @@ public class GRIBRequestManager implements RESTRequestManager {
 	 * @param parent to be able to refer to all the request managers
 	 */
 	public GRIBRequestManager(GRIBServer parent) {
-		this.imgServer = parent;
+		this.gribServer = parent;
 		restImplementation = new RESTImplementation(this);
 
 	}
@@ -55,7 +55,7 @@ public class GRIBRequestManager implements RESTRequestManager {
 	 */
 
 	protected List<HTTPServer.Operation> getAllOperationList() {
-		return imgServer.getAllOperationList();
+		return gribServer.getAllOperationList();
 	}
 
 }

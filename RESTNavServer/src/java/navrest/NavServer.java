@@ -1,8 +1,9 @@
 package navrest;
 
 import astrorest.AstroRequestManager;
+import gribprocessing.GRIBRequestManager;
 import http.HTTPServer;
-import gribprocessing.ImgRequestManager;
+import imageprocessing.ImgRequestManager;
 import nmea.mux.GenericNMEAMultiplexer;
 import tiderest.TideRequestManager;
 
@@ -44,6 +45,8 @@ public class NavServer {
 		this.httpServer.addRequestManager(new GenericNMEAMultiplexer(definitions));
 		// Add image processing service...
 		this.httpServer.addRequestManager(new ImgRequestManager());
+		// Add GRIB features
+		this.httpServer.addRequestManager(new GRIBRequestManager());
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {

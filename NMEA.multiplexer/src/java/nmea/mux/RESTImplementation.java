@@ -207,7 +207,7 @@ public class RESTImplementation {
 									"Download the log file"),
 					new Operation(
 									"POST",
-									"/events/{topic}",
+									"/mux/events/{topic}",
 									this::broadcastOnTopic,
 									"Broadcast event (payload in the body) on specific topic. The {topic} can be a regex."),
 					new Operation(
