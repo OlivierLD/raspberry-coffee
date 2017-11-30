@@ -46,7 +46,6 @@ var init = function () {
 
 };
 
-
 var DEFAULT_TIMEOUT = 60000;
 
 var getDeferred = function(
@@ -129,3 +128,14 @@ var getCompositeData = function(options, compositeData, callback) {
 				? message : ' - '));
 	});
 };
+
+var gribData = {};
+
+// Callback for GRIBs
+var after = function(canvas, context) {
+	console.log("Now drawing GRIB");
+	if (gribData !== {}) { // TODO Identify date and type
+		drawGrib(canvas, context, gribData, date, type);
+	}
+};
+

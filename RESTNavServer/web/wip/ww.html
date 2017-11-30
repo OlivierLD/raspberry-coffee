@@ -361,7 +361,9 @@
 			console.log('Type:', type.gribType.desc);
 		});
 
-	};
+		gribData = jsonGrib; // gbribData defined in ww.js
+	  worldMap.setAfterDrawing(after);
+  };
 
   var makeGRIBRequest = function() {
 	  var rawRequest = $("#grib-request").val();

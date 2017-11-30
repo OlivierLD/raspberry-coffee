@@ -79,6 +79,12 @@ public class GRIBBulk {
 					String description = grpds.getDescription();
 					String unit = grpds.getUnit();
 
+					if (right - left > 180) { // then swap. like left=-110, right=130
+						double tmp = right;
+						right = left;
+						left = tmp;
+					}
+
 					GribDate gDate = new GribDate(date, height, width, stepX, stepY, top, bottom, left, right);
 
 					Float[][] data = new Float[height][width];
