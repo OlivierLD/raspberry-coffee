@@ -23,7 +23,6 @@ public class GRIBRequestManager implements RESTRequestManager {
 	public GRIBRequestManager(GRIBServer parent) {
 		this.gribServer = parent;
 		restImplementation = new RESTImplementation(this);
-
 	}
 
 	/**

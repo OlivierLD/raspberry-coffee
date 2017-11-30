@@ -22,8 +22,10 @@
     <script type="text/javascript" src="../widgets/worldmap.js"></script>
     <script type="text/javascript" src="../js/conversion.utils.js"></script>
     <script type="text/javascript" src="../js/routes.utils.js"></script>
+		<script type="text/javascript" src="../js/grib.routing.js"></script>
 		<script type="text/javascript" src="../catalog/catalog.js"></script>
 		<script type="text/javascript" src="ww.js"></script>
+
     <script type="text/javascript">
     
   var flavor = 'Ajax'; // Default, WebSocket not implemented here (we run on a small http server).
@@ -347,6 +349,27 @@
   var changeFax = function(val) {
 	  currentFax = val;
   };
+
+  var plotGrib = function(jsonGrib) {
+		console.log("Received GRIB");
+		// Extract the dates
+		jsonGrib.forEach((grib, idx) => {
+			console.log('GRIB Date:', grib.gribDate.formattedUTCDate);
+		});
+
+		jsonGrib[0].typedData.forEach((type, idx) => {
+			console.log('Type:', type.gribType.desc);
+		});
+
+	};
+
+  var makeGRIBRequest = function() {
+	  var rawRequest = $("#grib-request").val();
+	  console.log(rawRequest);
+	  var jsonRequest = { request: rawRequest };
+	  requestGRIB(jsonRequest, plotGrib);
+  };
+
     </script>
   </head>
   <body>
@@ -366,7 +389,10 @@
 					<select id="composites"></select>
 					<button onclick="loadFaxes();">Load faxes</button>
 					<hr/>
-
+					<input type="text" size="80" id="grib-request" placeholder="Raw GRIB Request" value="GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"></input>
+					&nbsp;
+					<button onclick="makeGRIBRequest();">GRIB Request</button>
+					<hr/>
 	        <div id="dyn-faxes" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 		        <table id="fax-table">
 			        <tr>

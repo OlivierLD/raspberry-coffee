@@ -51,7 +51,7 @@ const compositeCatalog = [
 				}
 			},
 			{
-				faxUrl: "http://www.opc.ncep.noaa.gov/shtml/P_06hr500bw.gif",
+				faxUrl: "http://www.opc.ncep.noaa.gov/shtml/P_00hr500bw.gif",
 				name: "North Pac 500mb analysis",
 				transp: faxColors.white,
 				tx: {
