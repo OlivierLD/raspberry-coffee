@@ -107,27 +107,30 @@ var getDir = function(x, y) {
 	if (y != 0)
 		dir = toDegrees(Math.atan(x / y));
 	if (x <= 0 || y <= 0) {
-		if (x > 0 && y < 0)
+		if (x > 0 && y < 0) {
 			dir += 180;
-		else if (x < 0 && y > 0)
+		} else if (x < 0 && y > 0) {
 			dir += 360;
-		else if (x < 0 && y < 0)
+		} else if (x < 0 && y < 0) {
 			dir += 180;
-		else if (x == 0) {
-			if (y > 0)
+		} else if (x == 0) {
+			if (y > 0) {
 				dir = 0.0;
-			else
+			} else {
 				dir = 180;
+			}
 		} else if (y == 0) {
-			if (x > 0)
+			if (x > 0) {
 				dir = 90;
-			else
+			} else {
 				dir = 270;
+			}
 		}
 	}
 	dir += 180;
-	while (dir >= 360)
+	while (dir >= 360) {
 		dir -= 360;
+	}
 	return dir;
 };
 
