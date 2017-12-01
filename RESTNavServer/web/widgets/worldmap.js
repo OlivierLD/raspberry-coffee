@@ -379,6 +379,11 @@ function WorldMap (cName, prj) {
 		userPosition.latitude = val;
 	};
 
+	this.getCanvasLocation = function (canvas, lat, lng) {
+		var pt = posToCanvas(canvas, lat, lng); // TODO Manage projection
+		return pt;
+	};
+
 	/*
 	 * Example:
 	 * {

@@ -134,7 +134,8 @@ var gribData = {};
 // Callback for GRIBs
 var after = function(canvas, context) {
 	console.log("Now drawing GRIB");
-	if (gribData !== {}) { // TODO Identify date and type
+	if (gribData !== {}) {  // TODO Identify date and type
+		var date, type;       // TODO Remove that...
 		drawGrib(canvas, context, gribData, date, type);
 	}
 };

@@ -361,18 +361,26 @@
 			console.log('Type:', type.gribType.desc);
 		});
 
-		gribData = jsonGrib; // gbribData defined in ww.js
-	  worldMap.setAfterDrawing(after);
+		gribData = jsonGrib; // gribData defined in ww.js
   };
 
   var makeGRIBRequest = function() {
 	  var rawRequest = $("#grib-request").val();
 	  console.log(rawRequest);
 	  var jsonRequest = { request: rawRequest };
+
+	  worldMap.setAfterDrawing(after);
+
 	  requestGRIB(jsonRequest, plotGrib);
   };
 
-    </script>
+  var renderGRIB = function() {
+	  var rawGrib = JSON.parse($("#json-grib").val());
+	  worldMap.setAfterDrawing(after);
+	  plotGrib(rawGrib);
+  };
+
+		</script>
   </head>
   <body>
     <h2>Weather Wizard in HTML5</h2>
@@ -391,10 +399,13 @@
 					<select id="composites"></select>
 					<button onclick="loadFaxes();">Load faxes</button>
 					<hr/>
-					<input type="text" size="80" id="grib-request" placeholder="Raw GRIB Request" value="GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"></input>
+					<input type="text" size="60" id="grib-request" placeholder="Raw GRIB Request" value="GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"></input>
 					&nbsp;
 					<button onclick="makeGRIBRequest();">GRIB Request</button>
 					<hr/>
+					<textarea id="json-grib" style="width: 100%; height: 80px;" placeholder="Drop here a GRIB in json format"></textarea>
+					<br/>
+					<button onclick="renderGRIB();">Render GRIB from above</button>
 	        <div id="dyn-faxes" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 		        <table id="fax-table">
 			        <tr>

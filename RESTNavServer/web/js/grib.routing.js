@@ -178,7 +178,26 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 			// data
 			var dir = getDir(data.x[yGRIB][xGRIB], data.y[yGRIB][xGRIB]);
 			var speed = getSpeed(data.x[yGRIB][xGRIB], data.y[yGRIB][xGRIB]);
-			console.log("%f / %f, dir %d, speed %f kn", lat, lng, dir.toFixed(0), speed);
+//		console.log("%f / %f, dir %s, speed %f kn", lat, lng, dir.toFixed(0), speed);
+
+			var canvasPt = worldMap.getCanvasLocation(canvas, lat, lng);
+
+			context.strokeStyle = 'black';
+			var arrowLen = 10;
+			var featherX = arrowLen * Math.cos(Math.toRadians(dir));
+			var featherY = arrowLen * Math.sin(Math.toRadians(dir));
+
+			var radius = 1;
+			context.beginPath();
+			context.fillStyle = 'red';
+			context.arc(canvasPt.x, canvasPt.y, radius, 0, radius * Math.PI);
+			context.fill();
+			context.closePath();
+
+			context.moveTo(canvasPt.x, canvasPt.y);
+			context.lineTo(canvasPt.x + featherX, canvasPt.y - featherY);
+			context.stroke();
+
 			maxTWS = Math.max(maxTWS, speed);
 		}
 	}
@@ -186,6 +205,7 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 };
 
 // For tests
+/*
 var gribData = [
 	{
 		"gribDate": {
@@ -117240,3 +117260,4 @@ var gribData = [
 	}
 ];
 drawGrib(null, null, gribData, null, null);
+*/
