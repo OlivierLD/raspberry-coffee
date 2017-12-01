@@ -110,6 +110,7 @@
 			faxName.push(originalRequest.faxData[idx].name);
 			fax.onload = function () {
 				context.drawImage(fax, x, y, (parseInt(fax.width) * faxZoom), (parseInt(fax.height) * faxZoom));
+				redraw();
 			};
 			// Assume that returned and originalRequest have the name cardinality
 			fax.src = '../../' + returned[idx].returned; // Tweak for another context...
@@ -276,7 +277,7 @@
 			zdiv.appendChild(document.createElement('br'));
 			document.getElementById('zooms').appendChild(zdiv);
 
-		});
+		}); // end forEach
 
 		// Request ready
 		console.log(requestData);
@@ -362,6 +363,7 @@
 		});
 
 		gribData = jsonGrib; // gribData defined in ww.js
+		redraw();
   };
 
   var makeGRIBRequest = function() {

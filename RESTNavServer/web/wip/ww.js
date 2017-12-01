@@ -2,8 +2,8 @@
  * @author Olivier Le Diouris
  *
  * Shows how to use the WorldMap object
- * and the REST APIs of the Astro service.
- * Displays a GLOBE
+ * and the REST APIs of the img service.
+ * Displays faxes.
  */
 "use strict";
 
