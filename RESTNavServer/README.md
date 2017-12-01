@@ -130,9 +130,14 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 
 ---
 
+## Various features
+![GRIB Rendering](./docimg/screenshot.09.png)
+Faxes and GRIB, together
+
+
 ## TODOs, next...
 
 - `npm` for non-java resource sharing
-- GRIB rendering
+- GRIB rendering (in full)
 - Routing features
 

@@ -380,6 +380,16 @@
 	  plotGrib(rawGrib);
   };
 
+  var flipGRIB = function(radio) {
+	  if (radio.value === 'web') {
+	  	$("#grib-web").css('display', 'block');
+		  $("#grib-json").css('display', 'none');
+	  } else if (radio.value === 'json') {
+		  $("#grib-web").css('display', 'none');
+		  $("#grib-json").css('display', 'block');
+	  }
+	};
+
 		</script>
   </head>
   <body>
@@ -399,13 +409,20 @@
 					<select id="composites"></select>
 					<button onclick="loadFaxes();">Load faxes</button>
 					<hr/>
-					<input type="text" size="60" id="grib-request" placeholder="Raw GRIB Request" value="GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"></input>
-					&nbsp;
-					<button onclick="makeGRIBRequest();">GRIB Request</button>
+					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
+					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From JSON
 					<hr/>
-					<textarea id="json-grib" style="width: 100%; height: 80px;" placeholder="Drop here a GRIB in json format"></textarea>
-					<br/>
-					<button onclick="renderGRIB();">Render GRIB from above</button>
+					<div id="grib-web">
+						<input type="text" size="60" id="grib-request" placeholder="Raw GRIB Request" value="GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"></input>
+						&nbsp;
+						<button onclick="makeGRIBRequest();">GRIB Request</button>
+					</div>
+					<div id="grib-json" style="display: none;">
+						<textarea id="json-grib" style="width: 100%; height: 80px;" placeholder="Drop here a GRIB in json format"></textarea>
+						<br/>
+						<button onclick="renderGRIB();">Render GRIB from above</button>
+					</div>
+					<hr/>
 	        <div id="dyn-faxes" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 		        <table id="fax-table">
 			        <tr>
