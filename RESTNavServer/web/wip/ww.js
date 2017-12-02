@@ -135,7 +135,7 @@ var gribData = {};
 var after = function(canvas, context) {
 	console.log("Now drawing GRIB");
 	if (gribData !== {}) {  // TODO Identify date and type
-		var date, type;       // TODO Remove that...
+		var date = $("#grib-dates").val(), type = $("#grib-types").val();
 		drawGrib(canvas, context, gribData, date, type);
 	}
 };

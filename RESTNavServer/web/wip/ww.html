@@ -352,15 +352,53 @@
   };
 
   var plotGrib = function(jsonGrib) {
-		console.log("Received GRIB");
-		// Extract the dates
-		jsonGrib.forEach((grib, idx) => {
-			console.log('GRIB Date:', grib.gribDate.formattedUTCDate);
-		});
+  	if (false) { // DEBUG
+			console.log("Received GRIB");
+			// Extract the dates
+			jsonGrib.forEach((grib, idx) => {
+				console.log('GRIB Date:', grib.gribDate.formattedUTCDate);
+			});
 
-		jsonGrib[0].typedData.forEach((type, idx) => {
-			console.log('Type:', type.gribType.desc);
-		});
+			jsonGrib[0].typedData.forEach((type, idx) => {
+				console.log('Type:', type.gribType.desc);
+			});
+	  }
+		// Create the UI widgets to deal with the GRIB
+		// 1. Dates
+		var gribDates = $("#grib-dates");
+	  gribDates
+			  .find('option')
+			  .remove();
+
+	  jsonGrib.forEach((grib, idx) => {
+		  gribDates.append($('<option>', {
+		  	value: grib.gribDate.formattedUTCDate,
+  			text: grib.gribDate.formattedUTCDate }));
+  	});
+		// 2. Types
+	  var gribTypes = $("#grib-types");
+	  gribTypes
+			  .find('option')
+			  .remove();
+
+	  var foundWind = false;
+	  jsonGrib[0].typedData.forEach((type, idx) => {
+	  	if (type.gribType.type === 'vgrd' || type.gribType.type === 'ugrd') {
+	  		if (!foundWind) {
+				  gribTypes.append($('<option>', {
+					  value: 'wind',
+					  text: 'Surface Wind',
+						selected: 'selected'
+				  }));
+				}
+	  		foundWind = true;
+		  } else {
+				gribTypes.append($('<option>', {
+					value: type.gribType.type,
+					text: type.gribType.desc
+				}));
+	  }
+  });
 
 		gribData = jsonGrib; // gribData defined in ww.js
 		redraw();
@@ -371,7 +409,7 @@
 	  console.log(rawRequest);
 	  var jsonRequest = { request: rawRequest };
 
-	  worldMap.setAfterDrawing(after);
+	  worldMap.setAfterDrawing(after); // That is the callback
 
 	  requestGRIB(jsonRequest, plotGrib);
   };
@@ -425,6 +463,19 @@
 						<button onclick="renderGRIB();">Render GRIB from above</button>
 					</div>
 					<hr/>
+					<div style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
+						<table>
+							<tr><th>Date</th><th>Type</th></tr>
+							<tr>
+								<td>
+									<select id="grib-dates" onchange="redraw()"></select>
+								</td>
+								<td>
+									<select id="grib-types" onchange="redraw()"></select>
+								</td>
+							</tr>
+						</table>
+					</div>
 	        <div id="dyn-faxes" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 		        <table id="fax-table">
 			        <tr>
