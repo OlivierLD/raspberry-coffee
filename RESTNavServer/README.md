@@ -5,6 +5,7 @@ An illustration of the way to gather several REST Services all in one place.
 - [Tide](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTTideEngine/README.md) REST Service
 - [Astro](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNauticalAlmanac) REST Service
 - [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md) REST Service
+- ... and the list keeps growing (see in `navrest.NavServer.java` how to add a `RequestManager`).
 
 In addition, I'll be attempting to implement the features of the Weather Wizard (another project I own, in Java and Swing, that can superimpose different heterogeneous documents on the same chart, like Faxes, GRIBS, routing results, etc.). This part involes the
 `Img` REST Service, found in the `RESTImgProcessor` project.
@@ -129,9 +130,14 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 
 ---
 
+## Various features
+![GRIB Rendering](./docimg/screenshot.09.png)
+Faxes and GRIB, together
+
+
 ## TODOs, next...
 
 - `npm` for non-java resource sharing
-- GRIB rendering
+- GRIB rendering (in full)
 - Routing features
 

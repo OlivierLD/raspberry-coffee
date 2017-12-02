@@ -1,4 +1,4 @@
-package gribprocessing;
+package imageprocessing;
 
 import http.HTTPServer;
 import http.RESTRequestManager;

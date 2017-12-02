@@ -2,8 +2,8 @@
  * @author Olivier Le Diouris
  *
  * Shows how to use the WorldMap object
- * and the REST APIs of the Astro service.
- * Displays a GLOBE
+ * and the REST APIs of the img service.
+ * Displays faxes.
  */
 "use strict";
 
@@ -45,7 +45,6 @@ var init = function () {
 	worldMap.setUserPosition({ latitude: position.lat, longitude: position.lng });
 
 };
-
 
 var DEFAULT_TIMEOUT = 60000;
 
@@ -129,3 +128,15 @@ var getCompositeData = function(options, compositeData, callback) {
 				? message : ' - '));
 	});
 };
+
+var gribData = {};
+
+// Callback for GRIBs
+var after = function(canvas, context) {
+	console.log("Now drawing GRIB");
+	if (gribData !== {}) {  // TODO Identify date and type
+		var date, type;       // TODO Remove that...
+		drawGrib(canvas, context, gribData, date, type);
+	}
+};
+

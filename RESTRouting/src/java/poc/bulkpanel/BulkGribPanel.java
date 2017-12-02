@@ -15,7 +15,7 @@ public class BulkGribPanel
 	private transient GRIBBulk parent = null;
 
 	public BulkGribPanel(GRIBBulk caller) {
-		parent = caller;
+		this.parent = caller;
 		try {
 			jbInit();
 		} catch (Exception e) {

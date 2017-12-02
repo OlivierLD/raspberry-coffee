@@ -20,4 +20,18 @@ public class StaticUtil {
 		}
 		return retString;
 	}
+
+	public static byte[] appendByteArrays(byte c[], byte b[], int n) {
+		int newLength = c != null ? c.length + n : n;
+		byte newContent[] = new byte[newLength];
+		if (c != null) {
+			for (int i = 0; i < c.length; i++)
+				newContent[i] = c[i];
+		}
+		int offset = (c != null ? c.length : 0);
+		for (int i = 0; i < n; i++)
+			newContent[offset + i] = b[i];
+		return newContent;
+	}
+
 }

@@ -23,9 +23,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TimeZone;
 import java.util.TreeSet;
@@ -34,7 +36,7 @@ public class GRIBBulk {
 	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_S_z");
 	public static final SimpleDateFormat FORMATTED = new SimpleDateFormat("yyyy MMM dd HH:mm:ss.S z");
 
-	private HashMap<GribDate, HashMap<GribType, Float[][]>> gribDataMap = null;
+	private Map<GribDate, Map<GribType, Float[][]>> gribDataMap = null;
 	private List<String> feedback = null;
 
 	public GRIBBulk() {
@@ -46,11 +48,12 @@ public class GRIBBulk {
 		try {
 //    GribPDSParamTable.turnOffJGRIBLogging();
 
-			TimeZone tz = TimeZone.getTimeZone("127"); // "GMT + 0"
+			TimeZone tz = TimeZone.getTimeZone("Etc/UTC"); // ("127"); // "GMT + 0"
 			//  TimeZone.setDefault(tz);
 			SDF.setTimeZone(tz);
+			FORMATTED.setTimeZone(tz);
 
-			gribDataMap = new HashMap<GribDate, HashMap<GribType, Float[][]>>();
+			gribDataMap = new HashMap<>();
 
 			for (int i = 0; i < gribFile.getLightRecords().length; i++) {
 				try {
@@ -59,7 +62,10 @@ public class GRIBBulk {
 					GribRecordGDS grgds = gr.getGDS(); // Boundaries and Steps
 					GribRecordBDS grbds = gr.getBDS(); // TASK get min and max from this one.
 
-					Date date = grpds.getGMTForecastTime().getTime();
+					Calendar cal = grpds.getGMTForecastTime();
+					cal.setTimeZone(tz);
+					Date date = cal.getTime();
+
 					int width = grgds.getGridNX();
 					int height = grgds.getGridNY();
 					double stepX = grgds.getGridDX();
@@ -72,6 +78,12 @@ public class GRIBBulk {
 					String type = grpds.getType();
 					String description = grpds.getDescription();
 					String unit = grpds.getUnit();
+
+					if (right - left > 180) { // then swap. like left=-110, right=130
+						double tmp = right;
+						right = left;
+						left = tmp;
+					}
 
 					GribDate gDate = new GribDate(date, height, width, stepX, stepY, top, bottom, left, right);
 
@@ -91,7 +103,7 @@ public class GRIBBulk {
 							}
 						}
 					}
-					HashMap<GribType, Float[][]> subMap = gribDataMap.get(gDate);
+					Map<GribType, Float[][]> subMap = gribDataMap.get(gDate);
 					if (subMap == null) {
 						subMap = new HashMap<>();
 					}
@@ -108,7 +120,7 @@ public class GRIBBulk {
 
 			BulkGribPanel bgp = new BulkGribPanel(this);
 
-			SortedSet<GribDate> ss = new TreeSet<GribDate>(gribDataMap.keySet());
+			SortedSet<GribDate> ss = new TreeSet<>(gribDataMap.keySet());
 			for (GribDate d : ss) {
 				// New Date Tab
 				GribDatePanel datePanel = new GribDatePanel();
@@ -123,8 +135,8 @@ public class GRIBBulk {
 				datePanel.setLeft(d.getLeft());
 				datePanel.setRight(d.getRight());
 
-				HashMap<GribType, Float[][]> dMap = gribDataMap.get(d);
-				SortedSet<GribType> type4date = new TreeSet<GribType>(dMap.keySet());
+				Map<GribType, Float[][]> dMap = gribDataMap.get(d);
+				SortedSet<GribType> type4date = new TreeSet<>(dMap.keySet());
 				//    System.out.println(d.getGDate().toString() + " : " + type4date.size() + " type(s)");
 				for (GribType t : type4date) {
 					// New type tab in this date tab
@@ -175,7 +187,8 @@ public class GRIBBulk {
 	public static void main(String[] args) throws Exception {
 		GRIBBulk gb = new GRIBBulk();
 //	"GRIB_2017_10_16_07_31_47_PDT.grb", "GRIB_2009_02_25_Sample.grb";
-		String gribFileName = "GRIB_2009_02_25_Sample.grb";
+//	String gribFileName = "GRIB_2009_02_25_Sample.grb";
+		String gribFileName = "grib.grb";
 		URL gribURL = new File(gribFileName).toURI().toURL();
 		GribFile gf = new GribFile(gribURL.openStream());
 		gb.showBulk(Thread.currentThread(), gf);

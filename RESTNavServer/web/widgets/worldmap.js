@@ -228,7 +228,22 @@ function WorldMap (cName, prj) {
 		posLabel = str;
 	};
 
-	// TODO Add callbacks, beforeDrawing, afterDrawing ?
+	// 2 custom functions (callbacks)
+	var doBeforeDrawing, doAfterDrawing;
+	/**
+	 *
+	 * @param before a function, taking canvas and context as parameters
+	 */
+	this.setBeforeDrawing = function(before) {
+		doBeforeDrawing = before;
+	};
+	/**
+	 *
+	 * @param after a function, taking canvas and context as parameters
+	 */
+	this.setAfterDrawing = function(after) {
+		doAfterDrawing = after;
+	};
 
 	var projectionSupported = function(value) {
 		for  (var name in projections) {
@@ -362,6 +377,11 @@ function WorldMap (cName, prj) {
 	this.setUserLatitude = function(val) {
 		globeViewForeAftRotation = val;
 		userPosition.latitude = val;
+	};
+
+	this.getCanvasLocation = function (canvas, lat, lng) {
+		var pt = posToCanvas(canvas, lat, lng); // TODO Manage projection
+		return pt;
 	};
 
 	/*
@@ -1145,7 +1165,6 @@ function WorldMap (cName, prj) {
 	};
 
 	var drawMercatorChart = function (canvas, context) {
-		// TODO This is a copy of Anaximandre, fix this. (DeDup)
 
 		if (withGrid) {
 			drawFlatGrid(canvas, context);
@@ -1463,6 +1482,17 @@ function WorldMap (cName, prj) {
 		drawFlatCelestialOptions(canvas, context);
 	};
 
+	this.beforeDrawingWorldMap = function(canvas, context) {
+	};
+
+	this.afterDrawingWorldMap = function(canvas, context) {
+	};
+
+	/**
+	 * Accessible from outside.
+	 *
+	 * @param clear
+	 */
 	this.drawWorldMap = function (clear) {
 		if (clear === undefined) {
 			clear = true;
@@ -1477,6 +1507,10 @@ function WorldMap (cName, prj) {
 		} else {
 			if (clear) {
 				this.clear();
+			}
+			// Before?
+			if (doBeforeDrawing !== undefined) {
+				doBeforeDrawing(canvas, context);
 			}
 			try {
 				switch (projection) {
@@ -1517,6 +1551,10 @@ function WorldMap (cName, prj) {
 
 //var end = new Date().getTime();
 //console.log("Operation completed in " + (end - start) + " ms.");
+		// After?
+		if (doAfterDrawing !== undefined) {
+			doAfterDrawing(canvas, context);
+		}
 	};
 
 	/**
@@ -1600,8 +1638,7 @@ function WorldMap (cName, prj) {
 		var s = 0;
 		if (d > 0.0) {
 			s = 1;
-		}
-		if (d < 0.0) {
+		} else if (d < 0.0) {
 			s = -1;
 		}
 		return s;
