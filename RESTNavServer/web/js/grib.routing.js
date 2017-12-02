@@ -225,10 +225,18 @@ var drawWindArrow = function(context, at, twd, tws) {
 	}
 };
 
+// Invoked by the callback
 var drawGrib = function(canvas, context, gribData, date, type) {
-	var oneDateGRIB = gribData[0]; // TODO Base this on the date
+	var oneDateGRIB = gribData[0]; // Default
 
-	// TODO Base this on the type
+	for (var i=0; i<gribData.length; i++) {
+		if (gribData[i].gribDate.formattedUTCDate === date) {
+			oneDateGRIB = gribData[i];
+			break;
+		}
+	}
+
+	// TODO Base this on the type. This is for the Surface Wind
 	var data = {}; // ugrd, vgrd
 	for (var i=0; i<oneDateGRIB.typedData.length; i++) {
 		if (oneDateGRIB.typedData[i].gribType.type === 'ugrd') {
@@ -245,6 +253,20 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 	for (var hGRIB=0; hGRIB<oneDateGRIB.gribDate.height; hGRIB++) {
 		for (var wGRIB=0; wGRIB<oneDateGRIB.gribDate.width; wGRIB++) {
 			// Evaluate the cell (lat/lng): [0][0] is bottom left (SW).
+			// 1. Cell BG
+			var bottomLeft = worldMap.getCanvasLocation(canvas,
+					oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB)),
+					ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB)));
+			var bottomRight = worldMap.getCanvasLocation(canvas,
+					oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB)),
+					ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB) + (oneDateGRIB.gribDate.stepx)));
+			var topLeft = worldMap.getCanvasLocation(canvas,
+					oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB) + (oneDateGRIB.gribDate.stepy)),
+					ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB)));
+			var topRight = worldMap.getCanvasLocation(canvas,
+					oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB) + (oneDateGRIB.gribDate.stepy)),
+					ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB) + (oneDateGRIB.gribDate.stepx)));
+
 			// Center of the cell
 			var lng = ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB) + (oneDateGRIB.gribDate.stepx / 2));
 			var lat  = oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB) + (oneDateGRIB.gribDate.stepy / 2));
@@ -252,6 +274,11 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 			var dir = getDir(data.x[hGRIB][wGRIB], data.y[hGRIB][wGRIB]);
 			var speed = getSpeed(data.x[hGRIB][wGRIB], data.y[hGRIB][wGRIB]);
 //		console.log("%f / %f, dir %s, speed %f kn", lat, lng, dir.toFixed(0), speed);
+
+			// BG Color
+			context.fillStyle = 'rgba(0, 0, 255, ' + Math.min((speed / 50), 1) + ')';
+			context.fillRect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
+//		context.stroke();
 
 			var canvasPt = worldMap.getCanvasLocation(canvas, lat, lng);
 			drawWindArrow(context, canvasPt, dir, speed);
