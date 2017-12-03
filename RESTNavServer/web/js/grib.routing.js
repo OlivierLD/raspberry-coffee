@@ -225,10 +225,41 @@ var drawWindArrow = function(context, at, twd, tws) {
 	}
 };
 
+var getBGColor = function(value, type) {
+	var color = 'white';
+	switch (type) {
+		case 'wind': // blue, [0..50]
+			color = 'rgba(0, 0, 255, ' + Math.min((value / 50), 1) + ')';
+			break;
+		case 'prmsl': // red, 101300, [95000..104000], inverted
+			color = 'rgba(255, 0, 0,' + (1 - Math.min((value - 95000) / (104000 - 95000), 1)) + ')';
+			break;
+		case 'hgt': // blue, 5640, [4700..6000], inverted
+			color = 'rgba(0, 0, 255,' + (1 - Math.min((value - 4700) / (6000 - 4700), 1)) + ')';
+			break;
+		case 'prate': // black, [0..0.001]
+			color = 'rgba(0, 0, 0,' + Math.min((value) / 0.001, 1) + ')';
+			break;
+		case 'tmp': // blue, to red, [233..323] (Celcius [-40..50]). [-40..0] -> blue. [0..50] -> red
+			if (value <= 273) { // 0 C
+				color = 'rgba(0, 0, 255,' + (1 - Math.min((value - 233) / (273 - 233), 1)) + ')';
+			} else {
+				color = 'rgba(255, 0, 0,' + Math.min((value - 273) / (323 - 273), 1) + ')';
+			}
+			break;
+		case 'htsgw': // green, [0..15]
+			color = 'rgba(0, 255, 0,' + Math.min((value) / 15, 1) + ')';
+			break;
+		default:
+			break;
+	}
+	return color;
+};
+
 // Invoked by the callback
 var drawGrib = function(canvas, context, gribData, date, type) {
 	var oneDateGRIB = gribData[0]; // Default
-
+	// Look for the right date
 	for (var i=0; i<gribData.length; i++) {
 		if (gribData[i].gribDate.formattedUTCDate === date) {
 			oneDateGRIB = gribData[i];
@@ -236,17 +267,36 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 		}
 	}
 
-	// TODO Base this on the type. This is for the Surface Wind
+	// Base this on the type.
 	var data = {}; // ugrd, vgrd
-	for (var i=0; i<oneDateGRIB.typedData.length; i++) {
-		if (oneDateGRIB.typedData[i].gribType.type === 'ugrd') {
-			data.x = oneDateGRIB.typedData[i].data;
-		} else if (oneDateGRIB.typedData[i].gribType.type === 'vgrd') {
-			data.y = oneDateGRIB.typedData[i].data;
-		}
+	// Look for the right data
+	switch (type) {
+		case 'wind': // Hybrid type
+			for (var i = 0; i < oneDateGRIB.typedData.length; i++) {
+				if (oneDateGRIB.typedData[i].gribType.type === 'ugrd') {
+					data.x = oneDateGRIB.typedData[i].data;
+				} else if (oneDateGRIB.typedData[i].gribType.type === 'vgrd') {
+					data.y = oneDateGRIB.typedData[i].data;
+				}
+			}
+			break;
+		case 'hgt': // 500mb, gpm
+		case 'tmp': // Air temp, K
+		case 'prmsl': // Atm Press, Pa
+		case 'htsgw': // Wave Height, m
+		case 'prate': // Precitpiation rate, kg/m^2/s
+			for (var i = 0; i < oneDateGRIB.typedData.length; i++) {
+				if (oneDateGRIB.typedData[i].gribType.type === type) {
+					data.x = oneDateGRIB.typedData[i].data;
+				}
+			}
+			break;
+		default:
+			break;
+
 	}
-	console.log("Width :", data.x[0].length);
-	console.log("Height:", data.x.length);
+	// console.log("Width :", data.x[0].length);
+	// console.log("Height:", data.x.length);
 
 	var maxTWS = 0;
 
@@ -267,23 +317,33 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 					oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB) + (oneDateGRIB.gribDate.stepy)),
 					ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB) + (oneDateGRIB.gribDate.stepx)));
 
-			// Center of the cell
-			var lng = ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB) + (oneDateGRIB.gribDate.stepx / 2));
-			var lat  = oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB) + (oneDateGRIB.gribDate.stepy / 2));
-			// data
-			var dir = getDir(data.x[hGRIB][wGRIB], data.y[hGRIB][wGRIB]);
-			var speed = getSpeed(data.x[hGRIB][wGRIB], data.y[hGRIB][wGRIB]);
-//		console.log("%f / %f, dir %s, speed %f kn", lat, lng, dir.toFixed(0), speed);
+			var gribValue;
+			if (type === 'wind') {
+				gribValue = getSpeed(data.x[hGRIB][wGRIB], data.y[hGRIB][wGRIB]);
+			} else {
+				gribValue = data.x[hGRIB][wGRIB];
+			}
 
 			// BG Color
-			context.fillStyle = 'rgba(0, 0, 255, ' + Math.min((speed / 50), 1) + ')';
+			context.fillStyle = getBGColor(gribValue, type);
 			context.fillRect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
 //		context.stroke();
 
-			var canvasPt = worldMap.getCanvasLocation(canvas, lat, lng);
-			drawWindArrow(context, canvasPt, dir, speed);
+			if (type === 'wind') {
+				// Center of the cell
+				var lng = ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB) + (oneDateGRIB.gribDate.stepx / 2));
+				var lat  = oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB) + (oneDateGRIB.gribDate.stepy / 2));
+				// data
+				var dir = getDir(data.x[hGRIB][wGRIB], data.y[hGRIB][wGRIB]);
+				var speed = gribValue;
+//		  console.log("%f / %f, dir %s, speed %f kn", lat, lng, dir.toFixed(0), speed);
 
-			maxTWS = Math.max(maxTWS, speed);
+				var canvasPt = worldMap.getCanvasLocation(canvas, lat, lng);
+				drawWindArrow(context, canvasPt, dir, speed);
+
+				maxTWS = Math.max(maxTWS, speed);
+			}
+
 		}
 	}
 	console.log("Max TWS: %d kn", maxTWS);
