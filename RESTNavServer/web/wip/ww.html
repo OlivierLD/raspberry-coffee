@@ -53,6 +53,11 @@
 			opt.setAttribute('value', compositeCatalog[i].key);
 			opt.appendChild(document.createTextNode(compositeCatalog[i].name));
 			document.getElementById('composites').appendChild(opt);
+			if (i === 0) {
+				if (compositeCatalog[i].gribRequest !== undefined) {
+					$("#grib-request").val(compositeCatalog[i].gribRequest);
+				}
+			}
 	  }
   };
 
@@ -175,23 +180,24 @@
     }
 
 		var requestData = [];
-		compositeData.faxData.forEach(function(fax, idx) {
-			var oneFax = {
-				url: fax.faxUrl,
-				name: fax.name,
-				storage: 'web/' + compositeData.key + '_' + idx + '.png', // TODO With the date
-				returned: 'web/_' + compositeData.key + '_' + idx + '.png',
-				transparent: fax.transp,
-				imgType: "png",
-				tx: fax.effect
-			};
-			if (fax.tx !== undefined) {
-				oneFax.from = fax.tx.from;
-				oneFax.to = fax.tx.to;
-			}
-			requestData.push(oneFax);
+		if (compositeData.faxData !== undefined) {
+			compositeData.faxData.forEach(function (fax, idx) {
+				var oneFax = {
+					url: fax.faxUrl,
+					name: fax.name,
+					storage: 'web/' + compositeData.key + '_' + idx + '.png', // TODO With the date
+					returned: 'web/_' + compositeData.key + '_' + idx + '.png',
+					transparent: fax.transp,
+					imgType: "png",
+					tx: fax.effect
+				};
+				if (fax.tx !== undefined) {
+					oneFax.from = fax.tx.from;
+					oneFax.to = fax.tx.to;
+				}
+				requestData.push(oneFax);
 
-			/*
+				/*
 			  Adding rows like
 	        <tr>
 	          <td>[checkbox]</td>
@@ -202,87 +208,87 @@
 						<td><div id="zoom-1" style="text-align: right;"></div></td>
 					</tr>
 			*/
-			var faxTable = document.getElementById('fax-table');
-			var row = document.createElement('tr');
-			row.id = 'row-' + (idx + 1);
+				var faxTable = document.getElementById('fax-table');
+				var row = document.createElement('tr');
+				row.id = 'row-' + (idx + 1);
 
-			// Adding a checkbox <input type="checkbox" onchange="showHide(1, this);" checked>Show fax #1 <br/>
-			var div = document.createElement('div');
-			div.id = 'cb-' + (idx + 1);
+				// Adding a checkbox <input type="checkbox" onchange="showHide(1, this);" checked>Show fax #1 <br/>
+				var div = document.createElement('div');
+				div.id = 'cb-' + (idx + 1);
 
-  		var cb = document.createElement('input');
-			cb.type = 'checkbox';
-			cb.id = 'cb-' + (idx + 1);
-			cb.setAttribute('onchange', 'showHide(' + (idx + 1) + ', this);');
-			cb.checked = true;
-			div.appendChild(cb);
-			var col0 = document.createElement('td');
-			col0.setAttribute('style', 'text-align: center;');
-			row.appendChild(col0);
-			col0.appendChild(cb);
+				var cb = document.createElement('input');
+				cb.type = 'checkbox';
+				cb.id = 'cb-' + (idx + 1);
+				cb.setAttribute('onchange', 'showHide(' + (idx + 1) + ', this);');
+				cb.checked = true;
+				div.appendChild(cb);
+				var col0 = document.createElement('td');
+				col0.setAttribute('style', 'text-align: center;');
+				row.appendChild(col0);
+				col0.appendChild(cb);
 
-			var col1 = document.createElement('td');
-			row.appendChild(col1);
-			col1.appendChild(document.createTextNode((idx + 1)));
+				var col1 = document.createElement('td');
+				row.appendChild(col1);
+				col1.appendChild(document.createTextNode((idx + 1)));
 
-			var col2 = document.createElement('td');
-			row.appendChild(col2);
-			var div2 = document.createElement('div');
-			div2.id = 'name-' + (idx + 1);
-			div2.appendChild(document.createTextNode(fax.name));
-			col2.appendChild(div2);
+				var col2 = document.createElement('td');
+				row.appendChild(col2);
+				var div2 = document.createElement('div');
+				div2.id = 'name-' + (idx + 1);
+				div2.appendChild(document.createTextNode(fax.name));
+				col2.appendChild(div2);
 
-			var col3 = document.createElement('td');
-			row.appendChild(col3);
-			var div3 = document.createElement('div');
-			div3.id = 'x-' + (idx + 1);
-			div3.setAttribute('style', 'text-align: right;');
-			div3.appendChild(document.createTextNode(fax.location.x));
-			col3.appendChild(div3);
+				var col3 = document.createElement('td');
+				row.appendChild(col3);
+				var div3 = document.createElement('div');
+				div3.id = 'x-' + (idx + 1);
+				div3.setAttribute('style', 'text-align: right;');
+				div3.appendChild(document.createTextNode(fax.location.x));
+				col3.appendChild(div3);
 
-			var col4 = document.createElement('td');
-			row.appendChild(col4);
-			var div4 = document.createElement('div');
-			div4.id = 'y-' + (idx + 1);
-			div4.setAttribute('style', 'text-align: right;');
-			div4.appendChild(document.createTextNode(fax.location.y));
-			col4.appendChild(div4);
+				var col4 = document.createElement('td');
+				row.appendChild(col4);
+				var div4 = document.createElement('div');
+				div4.id = 'y-' + (idx + 1);
+				div4.setAttribute('style', 'text-align: right;');
+				div4.appendChild(document.createTextNode(fax.location.y));
+				col4.appendChild(div4);
 
-			var col5 = document.createElement('td');
-			row.appendChild(col5);
-			var div5 = document.createElement('div');
-			div5.id = 'zoom-' + (idx + 1);
-			div5.setAttribute('style', 'text-align: left;');
-			div5.appendChild(document.createTextNode(fax.zoom));
-			col5.appendChild(div5);
+				var col5 = document.createElement('td');
+				row.appendChild(col5);
+				var div5 = document.createElement('div');
+				div5.id = 'zoom-' + (idx + 1);
+				div5.setAttribute('style', 'text-align: left;');
+				div5.appendChild(document.createTextNode(fax.zoom));
+				col5.appendChild(div5);
 
-			faxTable.appendChild(row);
+				faxTable.appendChild(row);
 
-			/*
+				/*
 			 Adding zoom for each fax:
 			    <input type="radio" name="faxnum" value="1" checked onclick="changeFax(this.value);">Fax #1
 					<br/>
 			 */
-			var zdiv = document.createElement('div');
-			zdiv.id = 'zoomfor-' + (idx + 1);
+				var zdiv = document.createElement('div');
+				zdiv.id = 'zoomfor-' + (idx + 1);
 
-  		var radio = document.createElement('input');
-			radio.type = 'radio';
-			radio.name = 'faxnum';
-			radio.value = (idx + 1);
-			radio.setAttribute('onclick', 'changeFax(this.value);');
-			radio.checked = (idx === 0) ? true : false;
-			zdiv.appendChild(radio);
-			zdiv.appendChild(document.createTextNode("Fax #" + (idx + 1)));
-			zdiv.appendChild(document.createElement('br'));
-			document.getElementById('zooms').appendChild(zdiv);
+				var radio = document.createElement('input');
+				radio.type = 'radio';
+				radio.name = 'faxnum';
+				radio.value = (idx + 1);
+				radio.setAttribute('onclick', 'changeFax(this.value);');
+				radio.checked = (idx === 0) ? true : false;
+				zdiv.appendChild(radio);
+				zdiv.appendChild(document.createTextNode("Fax #" + (idx + 1)));
+				zdiv.appendChild(document.createElement('br'));
+				document.getElementById('zooms').appendChild(zdiv);
 
-		}); // end forEach
+			}); // end forEach
 
-		// Request ready
-		console.log(requestData);
-	  getCompositeData(requestData, compositeData, faxRequestCallback);
-
+			// Request ready
+			console.log(requestData);
+			getCompositeData(requestData, compositeData, faxRequestCallback);
+		}
 	};
 
   var speakUp = function(num) {
@@ -430,6 +436,20 @@
 	  }
 	};
 
+  var updateGRIBRequest = function(option) {
+  	var key = option.value;
+	  for (var i=0; i<compositeCatalog.length; i++) {
+		  if (key === compositeCatalog[i].key) {
+			  if (compositeCatalog[i].gribRequest !== undefined) {
+				  $("#grib-request").val(compositeCatalog[i].gribRequest);
+			  } else {
+				  $("#grib-request").val('');
+				}
+			  break;
+		  }
+	  }
+	};
+
 		</script>
   </head>
   <body>
@@ -446,14 +466,14 @@
           <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
 	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
 					<hr/>
-					<select id="composites"></select>
-					<button onclick="loadFaxes();">Load faxes</button>
+					<select id="composites" onchange="updateGRIBRequest(this);"></select>
+					<button onclick="loadFaxes();">Load documents</button>
 					<hr/>
 					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
 					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From JSON
 					<hr/>
 					<div id="grib-web">
-						<input type="text" size="60" id="grib-request" placeholder="Raw GRIB Request" value="GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"></input>
+						<input type="text" size="60" id="grib-request" placeholder="Raw GRIB Request" value=""></input>
 						&nbsp;
 						<button onclick="makeGRIBRequest();">GRIB Request</button>
 					</div>

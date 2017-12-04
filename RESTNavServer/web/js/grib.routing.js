@@ -237,7 +237,7 @@ var getBGColor = function(value, type) {
 		case 'hgt': // blue, 5640, [4700..6000], inverted
 			color = 'rgba(0, 0, 255,' + (1 - Math.min((value - 4700) / (6000 - 4700), 1)) + ')';
 			break;
-		case 'prate': // black, [0..0.001]
+		case 'prate': // black, [0..0.001]. Unit is Kg x m-2 x s-1, which is 1mm.s-1
 			color = 'rgba(0, 0, 0,' + Math.min((value) / 0.001, 1) + ')';
 			break;
 		case 'tmp': // blue, to red, [233..323] (Celcius [-40..50]). [-40..0] -> blue. [0..50] -> red
