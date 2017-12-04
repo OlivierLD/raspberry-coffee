@@ -8,7 +8,7 @@ An illustration of the way to gather several REST Services all in one place.
 - ... and the list keeps growing (see in `navrest.NavServer.java` how to add a `RequestManager`).
 
 In addition, I'll be attempting to implement the features of the Weather Wizard (another project I own, in Java and Swing, that can superimpose different heterogeneous documents on the same chart, like Faxes, GRIBS, routing results, etc.). This part involves the
-`Img` REST Service, found in the `RESTImgProcessor` project, and the routing features, found in the `RESTRouting` project.
+`Img` REST Service, found in the [`RESTImageProcessor`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTImageProcessor/README.md) project, and the routing features, found in the [`RESTRouting`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTRouting/README.md) project.
 
 ### Rationale
 
@@ -39,7 +39,7 @@ This clearly divides the problem to address in two distinct parts:
 - The broker (the glue) in-between is HTTP.
 
 This allows pretty much _any_ device that knows about a network to connect to the Local Area Network (LAN)
-created by the Raspberry PI (or any machine the server runs on) to connect on it and consume the data it produces. 
+created by the Raspberry PI (or any machine the server runs on) to connect to it and consume the data it produces. 
 
 The way to go for the front end is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
 Consuming REST services can be done from many frameworks, here we'll use `jQuery`.
