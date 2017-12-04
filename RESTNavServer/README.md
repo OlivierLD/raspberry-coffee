@@ -35,7 +35,11 @@ The sample web pages presented below are relying on HTML5 and CSS3.
 #### Two languages
 This clearly divides the problem to address in two distinct parts:
 - Back end computation, providing the data to render, exposed as REST services.
-- Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface
+- Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface.
+- The broker (the glue) in-between is HTTP.
+
+This allows pretty much _any_ device that knows about a network to connect to the Local Area Network (LAN)
+created by the Raspberry PI (or any machine the server runs on) to connect on it and consume the data it produces. 
 
 The way to go for the front end is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
 Consuming REST services can be done from many frameworks, here we'll use `jQuery`.
