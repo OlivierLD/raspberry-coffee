@@ -41,7 +41,7 @@ The way to go for the front end is - at least for now - quite obvious, it is the
 Consuming REST services can be done from many frameworks, here we'll use `jQuery`.
 
 For the back end, my choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), but
-other options could be considered, the most proeminent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
+other options could be considered, the most prominent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
 Front End _and_ the Back End.
 
 Something to think about.
