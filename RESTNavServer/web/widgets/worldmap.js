@@ -644,7 +644,7 @@ function WorldMap (cName, prj) {
 		context.restore();
 	};
 
-	var drawGlobe = function (canvas, context) {
+	var drawGlobe = function (canvas, context, before) {
 		var minX = Number.MAX_VALUE;
 		var maxX = -Number.MAX_VALUE;
 		var minY = Number.MAX_VALUE;
@@ -717,9 +717,13 @@ function WorldMap (cName, prj) {
 		var opHeight = Math.abs(maxY - minY);
 		globeView_ratio = Math.min(w / opWidth, h / opHeight) * defaultRadiusRatio; // 0.9, not to take all the space...
 
-		// Black background
+		// Black background.
 		context.fillStyle = worldmapColorConfig.globeBackground;
 		context.fillRect(0, 0, canvas.width, canvas.height);
+
+		if (before !== undefined) {
+			before(canvas, context);
+		}
 
 		// Circle
 		var radius = Math.min(w / 2, h / 2) * defaultRadiusRatio;
@@ -1519,7 +1523,7 @@ function WorldMap (cName, prj) {
 						drawAnaximandreChart(canvas, context);
 						break;
 					case projections.globe.type:
-						drawGlobe(canvas, context);
+						drawGlobe(canvas, context, doBeforeDrawing); // TODO 3rd prm...
 						break;
 					case projections.mercator.type:
 						drawMercatorChart(canvas, context);

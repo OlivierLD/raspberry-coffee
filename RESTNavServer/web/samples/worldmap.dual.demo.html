@@ -2,7 +2,7 @@
 <!--
  | Take move-fast=false as QS parameter.
  | Start the nav server (./runNavServer)
- | Then try http://localhost:9999/web/samples/worldmap.dual.demo.html?move-fast=false
+ | Then try http://localhost:9999/web/samples/worldmap.dual.demo.html?move-fast=true
  |
  | Globe, and REST APIs for the Astro service.
  +-->
@@ -87,11 +87,25 @@
 	};
 
 	// Callback test
+  var before = function(canvas, context) {
+	  console.log("To do before drawing the chart");
+	  var savedFont = context.font;
+	  var savedStyle = context.fillStyle;
+	  context.fillStyle = "blue";
+	  context.font = "bold 72px Arial";
+	  context.fillText("Written before drawing", 10, canvas.height / 2);
+	  context.fillStyle = savedStyle;
+	  context.font = savedFont;
+  };
 	var after = function(canvas, context) {
 		console.log("To do after drawing the chart");
+		var savedFont = context.font;
+		var savedStyle = context.fillStyle;
 		context.fillStyle = "pink";
 		context.font = "bold 72px Arial";
-		context.fillText("After drawing", 10, canvas.height / 2);
+		context.fillText("Written after drawing", 10, (canvas.height / 2) - 80);
+		context.fillStyle = savedStyle;
+		context.font = savedFont;
 	};
 
   window.onload = function() {
@@ -99,6 +113,7 @@
 
 		// Callback test
 		worldMap.setAfterDrawing(after);
+	  worldMap.setBeforeDrawing(before);
 
 	  worldMap.clear();
 	  worldMap.setPositionLabel("");

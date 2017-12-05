@@ -161,7 +161,7 @@ var tickClock = function () {
 	var moveFast = true, erratic = false;
 
 	var mf = getQueryParameterByName("move-fast");
-	moveFast = (mf !== "false");
+	moveFast = (mf === "true");
 
 	if (moveFast) {
 		// Changed position
@@ -189,7 +189,7 @@ var tickGPS = function () {
 
 	var moveFast = true;
 	var mf = getQueryParameterByName("move-fast");
-	moveFast = (mf !== "false");
+	moveFast = (mf === "true");
 
 	var json = {
 		GPS: new Date(currentDate)
