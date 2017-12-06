@@ -20,6 +20,10 @@ developed in Java. And actually, this is a general trend in this area, languages
 Java applets are being de-supported in more and more browsers, HTML and connected technologies keep improving
 their graphical capabilities (see [WebGL](http://learningwebgl.com/blog/), really [amazing](http://arodic.github.io/p/jellyfish/)).
 
+> Just to nail it down: we've all used Integrated Development Environments (IDE), considering that this is (or was) where
+> client side processing capabilities were needed.
+> Well, think again, and look at what [Cloud9](http://c9.io/) is capable of...
+
 Learning how to use graphical libraries (like `Swing`, `JavaFX`, and others) is not an easy task,
 it is demanding, it is long, and there is no standard way to do it. For example, moving from `Swing` to `JavaFX` or `SWT` pretty much requires
 a full re-write of your application.
