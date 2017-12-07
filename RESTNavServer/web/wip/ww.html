@@ -33,6 +33,8 @@
   var currentFax = 1;
   var canvas, context;
 
+  var thisZoomFactor = 1;
+
   window.onload = function() {
 	  init(); // init UI
 
@@ -345,7 +347,12 @@
 
 		for (var sh=0; sh<show.length; sh++) {
 	    if (show[sh] === true) {
-		    context.drawImage(faxObj[sh], topLeft[sh][0], topLeft[sh][1], (parseInt(faxObj[sh].width) * zoom[sh]), (parseInt(faxObj[sh].height) * zoom[sh]));
+		    context.drawImage(
+		    		faxObj[sh],
+						topLeft[sh][0] * thisZoomFactor,
+						topLeft[sh][1] * thisZoomFactor,
+						(parseInt(faxObj[sh].width) * zoom[sh]) * thisZoomFactor,
+						(parseInt(faxObj[sh].height) * zoom[sh] * thisZoomFactor));
 	    }
 		}
 		if (withChart) {
@@ -450,10 +457,18 @@
 	  }
 	};
 
+  var changeCanvasSize = function(factor) {
+	  thisZoomFactor *= factor;
+	  worldMap.setCanvasHeight(worldMap.getCanvasHeight() * factor);
+	  worldMap.setCanvasWidth(worldMap.getCanvasWidth() * factor);
+	  // TODO Faxes offset and zoom
+	  redraw();
+  };
+
 		</script>
   </head>
   <body>
-    <h2>Weather Wizard in HTML5</h2>
+    <h2>Weather Wizard in HTML5, trop fort!</h2>
     <table border="0">
       <tr>
         <td valign="top" rowspan="2">
@@ -482,6 +497,10 @@
 						<br/>
 						<button onclick="renderGRIB();">Render GRIB from above</button>
 					</div>
+					<hr/>
+
+					Zoom for the whole thing: <button onclick="changeCanvasSize(0.9);">-</button><button onclick="changeCanvasSize(1.1);">+</button>
+
 					<hr/>
 					<div style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 						<table>
