@@ -155,7 +155,9 @@
 
 		worldMap.drawWorldMap();
 
-		// Clean up dynamic data
+	  document.getElementById("canvas-size").innerText = "Canvas Size: (WxH): " + worldMap.getCanvasWidth() + " x " + worldMap.getCanvasHeight();
+
+	  // Clean up dynamic data
 		// 1 - Fax Table rows
 		var idx = 1;
 		var go = true;
@@ -295,9 +297,9 @@
 
   var speakUp = function(num) {
     document.getElementById("name-" + num).innerText = faxName[num - 1];
-		document.getElementById("x-" + num).innerText = topLeft[num - 1][0];
-		document.getElementById("y-" + num).innerText = topLeft[num - 1][1];
-		document.getElementById("zoom-" + num).innerText = zoom[num - 1];
+		document.getElementById("x-" + num).innerText = (topLeft[num - 1][0] * thisZoomFactor).toFixed(0);
+		document.getElementById("y-" + num).innerText = (topLeft[num - 1][1] * thisZoomFactor).toFixed(0);
+		document.getElementById("zoom-" + num).innerText = (zoom[num - 1] * thisZoomFactor);
   };
 
   var zoomFax = function(num, factor) {
@@ -352,7 +354,8 @@
 						topLeft[sh][0] * thisZoomFactor,
 						topLeft[sh][1] * thisZoomFactor,
 						(parseInt(faxObj[sh].width) * zoom[sh]) * thisZoomFactor,
-						(parseInt(faxObj[sh].height) * zoom[sh] * thisZoomFactor));
+						(parseInt(faxObj[sh].height) * zoom[sh] * thisZoomFactor)
+				);
 	    }
 		}
 		if (withChart) {
@@ -461,8 +464,12 @@
 	  thisZoomFactor *= factor;
 	  worldMap.setCanvasHeight(worldMap.getCanvasHeight() * factor);
 	  worldMap.setCanvasWidth(worldMap.getCanvasWidth() * factor);
-	  // TODO Faxes offset and zoom
-	  redraw();
+	  // Faxes offset and zoom
+	  for (var sh=0; sh<show.length; sh++) {
+	  	speakUp(sh + 1);
+	  }
+	  document.getElementById("canvas-size").innerText = "Canvas Size: (WxH):" + worldMap.getCanvasWidth() + "x" + worldMap.getCanvasHeight();
+		redraw();
   };
 
 		</script>
@@ -514,6 +521,8 @@
 								</td>
 							</tr>
 						</table>
+					</div>
+					<div id="canvas-size" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 					</div>
 	        <div id="dyn-faxes" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 		        <table id="fax-table">
