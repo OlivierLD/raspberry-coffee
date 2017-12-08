@@ -104,7 +104,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose) {
 	};
 
 	var on360 = function (angle) {
-		var num = angle;
+		var num = parseFloat(angle);
 		while (num < 0)
 			num += 360;
 		while (num > 360)
@@ -165,8 +165,9 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose) {
 		//console.log('Tic ' + inc + ', ' + finalValue);
 		this.drawDisplay(canvasName, displaySize, this.valueToDisplay);
 		this.valueToDisplay += this.incr;
-		if (canvasName === 'twdCanvas')
+		if (canvasName === 'twdCanvas') { // DEBUG!
 			console.log('       displayAndIncrement curr:' + this.valueToDisplay.toFixed(2) + ', final:' + finalValue + ', step ' + this.incr);
+		}
 		if ((this.incr > 0 && this.valueToDisplay.toFixed(2) >= finalValue) || (this.incr < 0 && this.valueToDisplay.toFixed(2) <= finalValue)) {
 			if (canvasName === 'twdCanvas')
 				console.log('Stop, ' + finalValue + ' reached, steps were ' + this.incr);
@@ -371,10 +372,14 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose) {
 		}
 		context.closePath();
 		// Value
-		var dv = displayValue;
+		var dv = parseFloat(displayValue);
 		while (dv > 360) dv -= 360;
 		while (dv < 0) dv += 360;
-		text = dv.toFixed(directionColorConfig.valueNbDecimal);
+		try {
+			text = dv.toFixed(directionColorConfig.valueNbDecimal);
+		} catch (err) {
+			console.log(err);
+		}
 		len = 0;
 		context.font = "bold " + Math.round(scale * 40) + "px " + directionColorConfig.font; // "bold 40px Arial"
 		var metrics = context.measureText(text);
@@ -393,15 +398,15 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose) {
 			var fontSize = 20;
 			text = label;
 			len = 0;
-			context.font = "bold " + Math.round(scale * fontSize) + "px " + analogDisplayColorConfig.font; // "bold 40px Arial"
+			context.font = "bold " + Math.round(scale * fontSize) + "px " + directionColorConfig.font; // "bold 40px Arial"
 			metrics = context.measureText(text);
 			len = metrics.width;
 
 			context.beginPath();
-			context.fillStyle = 'rgba(255, 255, 255, 0.5)'; // analogDisplayColorConfig.valueColor;
+			context.fillStyle = 'rgba(255, 255, 255, 0.5)'; // directionColorConfig.valueColor;
 			context.fillText(text, (canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)));
 			context.lineWidth = 1;
-			context.strokeStyle = analogDisplayColorConfig.valueOutlineColor;
+			context.strokeStyle = directionColorConfig.valueOutlineColor;
 			context.strokeText(text, (canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1))); // Outlined
 			context.closePath();
 		}
