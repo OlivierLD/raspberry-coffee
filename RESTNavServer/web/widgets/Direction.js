@@ -81,6 +81,10 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose) {
 		this.drawDisplay(canvasName, displaySize, instance.previousValue);
 	};
 
+	this.repaint = function () {
+		this.drawDisplay(canvasName, displaySize, this.previousValue);
+	};
+
 	this.setBorder = function (b) {
 		withBorder = b;
 	};
