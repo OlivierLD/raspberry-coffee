@@ -228,8 +228,8 @@ var drawWindArrow = function(context, at, twd, tws) {
 var getBGColor = function(value, type) {
 	var color = 'white';
 	switch (type) {
-		case 'wind': // blue, [0..50]
-			color = 'rgba(0, 0, 255, ' + Math.min((value / 50), 1) + ')';
+		case 'wind': // blue, [0..80]
+			color = 'rgba(0, 0, 255, ' + Math.min((value / 80), 1) + ')';
 			break;
 		case 'prmsl': // red, 101300, [95000..104000], inverted
 			color = 'rgba(255, 0, 0,' + (1 - Math.min((value - 95000) / (104000 - 95000), 1)) + ')';
