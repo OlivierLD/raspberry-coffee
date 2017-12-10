@@ -1,6 +1,6 @@
 /* Default colors */
 .worldmapdisplay {
-    --canvasBackground: rgba(0, 0, 100, 10.0);
+    --canvasBackground: rgba(0, 0, 100, 1.0);
     --defaultPlotPointColor: red;
     --travelColor: gray;
     --arrowBodyColor: rgba(255, 255, 255, 0.5);
