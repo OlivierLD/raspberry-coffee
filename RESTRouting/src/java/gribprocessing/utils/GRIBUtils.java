@@ -79,8 +79,9 @@ public class GRIBUtils {
 			long before = System.currentTimeMillis();
 			if (verbose) System.out.println("...reading (2) " + urlStr);
 			String fName = fileName;
-			if (fName == null)
+			if (fName == null) {
 				fName = outputdir + File.separator + "GRIB" + SDF.format(new Date()) + ".grb";
+			}
 			try {
 //      System.out.println(request);
 				URL saildocs = new URL(urlString);
@@ -103,7 +104,7 @@ public class GRIBUtils {
 //        System.out.println("Read " + nBytes + " more bytes.");
 					content = StaticUtil.appendByteArrays(content, aByte, nBytes);
 				}
-				System.out.println("Read " + content.length + " bytes.");
+//			System.out.println("Read " + content.length + " bytes.");
 				System.out.println("Read " + NumberFormat.getInstance().format(content.length) + " bytes of GRIB data.");
 				dis.close();
 				ByteArrayInputStream bais = new ByteArrayInputStream(content);
@@ -111,7 +112,7 @@ public class GRIBUtils {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			File f = new File(fName);
+			File f = new File(outputdir, fName);
 			if (new File(outputdir).canWrite()) {
 				FileOutputStream fos = new FileOutputStream(f);
 				fos.write(content);

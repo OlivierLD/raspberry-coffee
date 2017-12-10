@@ -25,6 +25,20 @@ public class PullTxManager {
 			String imgType,
 			int tx)
 		throws Exception {
+		// Create output directory if they don't exist
+		String outputDir = locationOut.substring(0, locationOut.lastIndexOf(File.separator));
+		File dir = new File(outputDir);
+		if (!dir.exists()) {
+			boolean ok = dir.mkdirs();
+			System.out.println(String.format("Directory(ies) %s created:", outputDir) + ok);
+		}
+		outputDir = finalLocation.substring(0, finalLocation.lastIndexOf(File.separator));
+		dir = new File(outputDir);
+		if (!dir.exists()) {
+			boolean ok = dir.mkdirs();
+			System.out.println(String.format("Directory(ies) %s created:", outputDir) + ok);
+		}
+
 		Image fax = ImageHTTPClient.getFax(urlIn, locationOut);
 		BufferedImage bimg = ImageUtil.toBufferedImage(fax);;
 		if (changeThis == null && intoThat == null) {
