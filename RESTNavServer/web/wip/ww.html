@@ -72,6 +72,121 @@
 	  str += ("\nL: " + decToSex(obj.lat, "NS"));
 	  str += ("\nG: " + decToSex(obj.lng, "EW"));
 
+		if (gribData !== undefined) {
+			var date = $("#grib-dates").val();
+			var oneDateGRIB = gribData[0]; // Default
+			// Look for the right date
+			for (var i = 0; i < gribData.length; i++) {
+				if (gribData[i].gribDate.formattedUTCDate === date) {
+					oneDateGRIB = gribData[i];
+					break;
+				}
+			}
+			// The current frame is oneDateGRIB
+			// Find the GRIB Cell
+			var xCell = 0, yCell = 0;
+			for (var hGRIB = 0; hGRIB < oneDateGRIB.gribDate.height; hGRIB++) {
+				var lat = oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB));
+				if (lat > obj.lat) {
+					yCell = (hGRIB - 1);
+					break;
+				}
+			}
+
+			for (var wGRIB = 0; wGRIB < oneDateGRIB.gribDate.width; wGRIB++) {
+				var lng = ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB));
+				if (lng > 0 && obj.lng > 0 && lng > obj.lng) {
+					xCell = wGRIB - 1;
+					break;
+				} else if (lng < 0 && obj.lng < 0 && obj.lng < lng) {
+					xCell = wGRIB - 1;
+					break;
+				}
+			}
+			console.log("%s / %s is in cell Row:%d, Col:%d (Total is %d rows, %d cols)",
+					decToSex(obj.lat, "NS"),
+					decToSex(obj.lng, "EW"),
+					yCell,
+					xCell,
+					oneDateGRIB.gribDate.height,
+					oneDateGRIB.gribDate.width);
+			str += ("\nGRIB cell row " + yCell + ", col " + xCell);
+			var foundWind = false;
+			for (var idx=0; idx<oneDateGRIB.typedData.length; idx++) {
+				var skip = false;
+				var value = oneDateGRIB.typedData[idx].data[yCell][xCell];
+				var unit  = oneDateGRIB.typedData[idx].gribType.unit;
+				var type = oneDateGRIB.typedData[idx].gribType.type;
+
+				var displayValue, displayUnit, displayType;
+				switch (type) {
+					case 'prmsl':
+						displayType = 'PRMSL';
+						displayValue = (value/100).toFixed(2);
+						displayUnit = 'hPa';
+						break;
+					case 'tmp':
+						displayType = 'AIRTMP';
+						displayValue = (value - 273.6).toFixed(2);
+						displayUnit = 'C';
+						break;
+					case 'ugrd':
+						if (!foundWind) {
+							var vgrd;
+							for (var i=0; i<oneDateGRIB.typedData.length; i++) {
+								if (oneDateGRIB.typedData[i].gribType.type === 'vgrd') {
+									vgrd = oneDateGRIB.typedData[i].data;
+									break;
+								}
+							}
+							if (vgrd !== undefined) {
+								displayUnit = '';
+								displayType = "WIND";
+								var u = value;
+								var v = vgrd[yCell][xCell]
+								var tws = getSpeed(u, v);
+								var dir = getDir(u, v);
+								displayValue = tws.toFixed(1) + " kts, " + dir.toFixed(0) + "&deg; (u:" + u.toFixed(1) + ", v:" + v.toFixed(1) + ")";
+								foundWind = true;
+							}
+						} else {
+							skip = true;
+						}
+						break;
+					case 'vgrd':
+						skip = true;
+						break;
+					case 'prate':
+						displayType = 'PRATE';
+						displayValue = (value * 3600).toFixed(2);
+						displayUnit = "mm/h";
+						break;
+					case 'hgt':
+						displayType = '500HGT';
+						displayValue = (value).toFixed(2);
+						displayUnit = "m";
+						break;
+					case 'htsgw':
+						displayType = 'WAVES';
+						try {
+							displayValue = (value).toFixed(2);
+							displayUnit = unit;
+						} catch (err) {
+							displayValue = "xx";
+							displayUnit = "-";
+							console.log(err);
+						}
+						break;
+					default:
+						break;
+				}
+				if (!skip) {
+					str += ("\n" + displayType + ": " + displayValue + " " + displayUnit);
+				}
+			}
+
+		}
+
 	  mouseDataElmt.html("<pre>" + str + "</pre>");
 	};
 
@@ -437,8 +552,8 @@
 					value: type.gribType.type,
 					text: type.gribType.desc
 				}));
-	  }
-  });
+			}
+		});
 
 		gribData = jsonGrib; // gribData defined in ww.js
 		redraw();
