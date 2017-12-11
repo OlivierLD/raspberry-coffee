@@ -43,6 +43,7 @@
 	  context = canvas.getContext('2d');
 
 	  worldMap.clear();
+	  worldMap.setMouseMoveCallback(mouseMoveCallback);
 	  worldMap.setPositionLabel("SF");
 	  setTimeout(function () {
 		  worldMap.drawWorldMap();
@@ -63,6 +64,16 @@
 			}
 	  }
   };
+
+  var mouseMoveCallback = function(obj) {
+		//  Display position, GRIB Data., etc...
+		var mouseDataElmt = $("#mouse-data");
+		var str = "Mouse X: " + obj.x + ", Y:" + obj.y;
+	  str += ("\nL: " + decToSex(obj.lat, "NS"));
+	  str += ("\nG: " + decToSex(obj.lng, "EW"));
+
+	  mouseDataElmt.html("<pre>" + str + "</pre>");
+	};
 
   var displayErr = function(err) {
     if (err !== undefined) {
@@ -582,7 +593,10 @@
 							</tr>
 						</table>
 					</div>
-        </td>
+
+					<div id="mouse-data" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;"></div>
+
+				</td>
       </tr>
       <tr>
         <td colspan="2">

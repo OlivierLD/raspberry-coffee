@@ -228,8 +228,24 @@ function WorldMap (cName, prj) {
 		posLabel = str;
 	};
 
+	var mouseMoveCallback;
+
+	/*
+	 func is a function taking an object as parameter, like:
+	    {
+	      x: x,      // Mouse abscissa on the canvas
+	      y: y,      // Mouse ordinate on the canvas
+	      lat: lat,  // latitude of the mouse on the chart
+	      lng: lng   // longitude of the mouse on the chart
+	    }
+	 */
+	this.setMouseMoveCallback = function(func) {
+		mouseMoveCallback = func;
+	};
+
 	// 2 custom functions (callbacks)
 	var doBeforeDrawing, doAfterDrawing;
+
 	/**
 	 *
 	 * @param before a function, taking canvas and context as parameters
@@ -279,7 +295,7 @@ function WorldMap (cName, prj) {
 	var animationID;
 
 	/**
-	 * Listens to clicks on canvas.
+	 * Listens to clicks and mousemove on canvas.
 	 */
 	var addCanvasListener = function () {
 		var canvas = document.getElementById(canvasName);
@@ -320,6 +336,111 @@ function WorldMap (cName, prj) {
 					}
 				}, false);
 	};
+
+	var canvas = document.getElementById(canvasName);
+	// var context = canvas.getContext('2d');
+	// var self = this;
+
+	canvas.addEventListener('mousemove', function(evt) {
+
+		if (mouseMoveCallback !== undefined) {
+			var x = evt.pageX - canvas.offsetLeft;
+			var y = evt.pageY - canvas.offsetTop;
+
+			var coords = relativeMouseCoords(evt, canvas);
+			x = coords.x;
+			y = coords.y;
+//    console.log("Mouse: x=" + x + ", y=" + y);
+			var pos = pointToPos(x, y);
+			mouseMoveCallback({
+				x: x,
+				y: y,
+				lat: pos.lat,
+				lng: pos.lng
+			});
+		}
+	}, 0);
+
+	var relativeMouseCoords = function (event, element) {
+		var totalOffsetX = 0;
+		var totalOffsetY = 0;
+		var canvasX = 0;  // TODO: Manage those 2.
+		var canvasY = 0;
+		var currentElement = element;
+
+		do {
+			totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+			totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+		} while (currentElement = currentElement.offsetParent)
+
+		canvasX = event.pageX - totalOffsetX;
+		canvasY = event.pageY - totalOffsetY;
+
+		return {x:canvasX, y:canvasY};
+	};
+
+	var pointToPos = function(x, y) {
+		var gp = {};
+		var l = 0.0;
+		var g = 0.0;
+		adjustBoundaries();
+		if (_north != _south && _east != _west) {
+			var gAmpl; // = Math.abs(_east - _west);
+			for (gAmpl = _east - _west; gAmpl < 0; gAmpl += 360);
+			var lAmpl = 0.0;
+			switch (projection) {
+				case projections.anaximandre.type:
+					lAmpl = Math.abs(_north - _south);
+					break;
+				case projections.mercator.type:
+					lAmpl = Math.abs(getIncLat(_north) - getIncLat(_south));
+					break;
+			}
+			var graph2chartRatio = canvas.width / gAmpl;
+			switch (projection) {
+				default:
+				case projections.globe.type:
+					break;
+				case projections.anaximandre.type:
+				case projections.mercator.type:
+					g = x / graph2chartRatio + _west;
+					if (g < -180) {
+						g += 360;
+					}
+					if (g > 180) {
+						g -= 360;
+					}
+					break;
+			}
+			var incSouth = 0.0;
+			switch (projection) {
+				case projections.anaximandre.type:
+					incSouth = _south;
+					break;
+				case projections.mercator.type:
+					incSouth = getIncLat(_south);
+					break;
+			}
+			var incLat =(canvas.height - y) / graph2chartRatio + incSouth;
+			l = 0.0;
+			switch (projection)
+			{
+				default:
+					// return null
+					break;
+				case projections.anaximandre.type:
+					incLat = (canvas.height - y) / (canvas.height / lAmpl) + incSouth;
+					l = incLat;
+					break;
+				case projections.mercator.type:
+					l = getInvIncLat(incLat);
+					break;
+			}
+			gp = { lat: l, lng: g };
+		}
+		return gp;
+	};
+
 
 	var plotPoint = function (canvasName, pt, color) {
 		var canvas = document.getElementById(canvasName);

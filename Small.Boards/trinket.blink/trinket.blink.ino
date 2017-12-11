@@ -9,8 +9,7 @@ To upload to your Gemma or Trinket:
 2) Select USBtinyISP from the Tools->Programmer
 3) Plug in the Gemma/Trinket, make sure you see the green LED lit
 4) For windows, install the USBtiny drivers
-5) Press the button on the Gemma/Trinket - verify you see
-the red LED pulse. This means it is ready to receive data
+5) Press the button on the Gemma/Trinket - verify you see the red LED pulse. This means it is ready to receive data
 6) Click the upload button above within 10 seconds
 */
 
