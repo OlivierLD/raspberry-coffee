@@ -103,13 +103,13 @@
 					break;
 				}
 			}
-			console.log("%s / %s is in cell Row:%d, Col:%d (Total is %d rows, %d cols)",
-					decToSex(obj.lat, "NS"),
-					decToSex(obj.lng, "EW"),
-					yCell,
-					xCell,
-					oneDateGRIB.gribDate.height,
-					oneDateGRIB.gribDate.width);
+//			console.log("%s / %s is in cell Row:%d, Col:%d (Total is %d rows, %d cols)",
+//					decToSex(obj.lat, "NS"),
+//					decToSex(obj.lng, "EW"),
+//					yCell,
+//					xCell,
+//					oneDateGRIB.gribDate.height,
+//					oneDateGRIB.gribDate.width);
 			str += ("\nGRIB cell row " + yCell + ", col " + xCell);
 			var foundWind = false;
 			for (var idx=0; idx<oneDateGRIB.typedData.length; idx++) {
@@ -163,8 +163,14 @@
 						break;
 					case 'hgt':
 						displayType = '500HGT';
-						displayValue = (value).toFixed(2);
-						displayUnit = "m";
+						try {
+							displayValue = (value).toFixed(2);
+							displayUnit = "m";
+						} catch (err) {
+							displayValue = "xx";
+							displayUnit = "-";
+							console.log(err);
+						}
 						break;
 					case 'htsgw':
 						displayType = 'WAVES';

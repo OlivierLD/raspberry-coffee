@@ -344,12 +344,10 @@ function WorldMap (cName, prj) {
 	canvas.addEventListener('mousemove', function(evt) {
 
 		if (mouseMoveCallback !== undefined) {
-			var x = evt.pageX - canvas.offsetLeft;
-			var y = evt.pageY - canvas.offsetTop;
+			var rect = canvas.getBoundingClientRect();
+			var x = Math.round(evt.clientX - rect.left);
+			var y = Math.round(evt.clientY - rect.top);
 
-			var coords = relativeMouseCoords(evt, canvas);
-			x = coords.x;
-			y = coords.y;
 //    console.log("Mouse: x=" + x + ", y=" + y);
 			var pos = pointToPos(x, y);
 			mouseMoveCallback({
@@ -360,24 +358,6 @@ function WorldMap (cName, prj) {
 			});
 		}
 	}, 0);
-
-	var relativeMouseCoords = function (event, element) {
-		var totalOffsetX = 0;
-		var totalOffsetY = 0;
-		var canvasX = 0;  // TODO: Manage those 2.
-		var canvasY = 0;
-		var currentElement = element;
-
-		do {
-			totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-			totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-		} while (currentElement = currentElement.offsetParent)
-
-		canvasX = event.pageX - totalOffsetX;
-		canvasY = event.pageY - totalOffsetY;
-
-		return {x:canvasX, y:canvasY};
-	};
 
 	var pointToPos = function(x, y) {
 		var gp = {};
@@ -1674,8 +1654,8 @@ function WorldMap (cName, prj) {
 			context.fillText(deltaT, 10, canvas.height - 5);
 		}
 
-//var end = new Date().getTime();
-//console.log("Operation completed in " + (end - start) + " ms.");
+		//var end = new Date().getTime();
+		//console.log("Operation completed in " + (end - start) + " ms.");
 		// After?
 		if (doAfterDrawing !== undefined) {
 			doAfterDrawing(canvas, context);
