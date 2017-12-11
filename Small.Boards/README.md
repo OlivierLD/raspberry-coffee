@@ -59,6 +59,9 @@ In the Arduino IDE, got to `File > Preferences`, and add a URL in `Boards Manage
 ```
 Use a USB-A to USB-C (male-male) cable.
 
+To upload a sketch:
+- Press the button on the Trinket - verify you see the red LED pulse. This means it is ready to receive data.
+
 See the [Adafruit tutorial](https://learn.adafruit.com/introducing-trinket?view=all).
 
 ### Photon
