@@ -175,10 +175,12 @@
 					case 'htsgw':
 						displayType = 'WAVES';
 						if (oneDateGRIB.typedData[idx].data[0].length !== oneDateGRIB.gribDate.width) {
-							console.log(">>> Weird..."); 
+							// Re-adjust. Not very elegant...
+							xCell *= Math.floor(oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
+							value = oneDateGRIB.typedData[idx].data[yCell][xCell];
 						}
 						try {
-							displayValue = (value).toFixed(2);
+							displayValue = value.toFixed(2);
 							displayUnit = unit;
 						} catch (err) {
 							displayValue = "xx";
@@ -580,14 +582,14 @@
 		  jsonRequest.directory = where;
 		}
 
-	  worldMap.setAfterDrawing(after); // That is the callback
+	  worldMap.setAfterDrawing(renderGRIBData); // That is the callback
 
 	  requestGRIB(jsonRequest, plotGrib);
   };
 
   var renderGRIB = function() {
 	  var rawGrib = JSON.parse($("#json-grib").val());
-	  worldMap.setAfterDrawing(after);
+	  worldMap.setAfterDrawing(renderGRIBData);
 	  plotGrib(rawGrib);
   };
 

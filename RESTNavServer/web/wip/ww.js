@@ -132,8 +132,8 @@ var getCompositeData = function(options, compositeData, callback) {
 var gribData;
 
 // Callback for GRIBs
-var after = function(canvas, context) {
-	console.log("Now drawing GRIB");
+var renderGRIBData = function(canvas, context) {
+//console.log("Now drawing GRIB");
 	if (gribData !== undefined) {
 		var date = $("#grib-dates").val(), type = $("#grib-types").val();
 		drawGrib(canvas, context, gribData, date, type);

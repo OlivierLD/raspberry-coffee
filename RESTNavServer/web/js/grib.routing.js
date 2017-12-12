@@ -235,10 +235,11 @@ var getBGColor = function(value, type) {
 			color = 'rgba(255, 0, 0,' + (1 - Math.min((value - 95000) / (104000 - 95000), 1)) + ')';
 			break;
 		case 'hgt': // blue, 5640, [4700..6000], inverted
-			color = 'rgba(0, 0, 255,' + (1 - Math.min((value - 4700) / (6000 - 4700), 1)) + ')';
+			color = 'rgba(0, 0, 255, ' + (1 - Math.min((value - 4700) / (6000 - 4700), 1)) + ')';
 			break;
-		case 'prate': // black, [0..0.001]. Unit is Kg x m-2 x s-1, which is 1mm.s-1
-			color = 'rgba(0, 0, 0,' + Math.min((value) / 0.001, 1) + ')';
+		case 'prate': // black, [0..7]. Unit is Kg x m-2 x s-1, which is 1mm.s-1. Turned into mm/h
+			var transp = 	Math.min(((value * 3600) / 7), 1);
+			color = 'rgba(0, 0, 0, ' + transp.toFixed(2) + ')'; // 7 mm/h
 			break;
 		case 'tmp': // blue, to red, [233..323] (Celcius [-40..50]). [-40..0] -> blue. [0..50] -> red
 			if (value <= 273) { // 0 C
@@ -284,7 +285,7 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 		case 'tmp': // Air temp, K
 		case 'prmsl': // Atm Press, Pa
 		case 'htsgw': // Wave Height, m
-		case 'prate': // Precitpiation rate, kg/m^2/s
+		case 'prate': // Precipitation rate, kg/m^2/s
 			for (var i = 0; i < oneDateGRIB.typedData.length; i++) {
 				if (oneDateGRIB.typedData[i].gribType.type === type) {
 					data.x = oneDateGRIB.typedData[i].data;
@@ -364,7 +365,7 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 
 		}
 	}
-	console.log("Max TWS: %d kn", maxTWS);
+//console.log("Max TWS: %d kn", maxTWS);
 };
 
 // For tests
