@@ -301,21 +301,39 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 	var maxTWS = 0;
 
 	for (var hGRIB=0; hGRIB<oneDateGRIB.gribDate.height; hGRIB++) {
-		for (var wGRIB=0; wGRIB<oneDateGRIB.gribDate.width; wGRIB++) {
+		// Actual width... Waves Height has a different lng step.
+		var stepX = oneDateGRIB.gribDate.stepx;
+		var width = oneDateGRIB.gribDate.width;
+
+		// Find the typedData
+		var typedData;
+		for (var t=0; t<oneDateGRIB.typedData.length; t++) {
+			if (type === oneDateGRIB.typedData[t].gribType.type) {
+				typedData = oneDateGRIB.typedData[t];
+				break;
+			}
+		}
+
+		if (typedData !== undefined && typedData.data[0].length !== oneDateGRIB.gribDate.width) {
+			width = typedData.data[0].length;
+			stepX *= (oneDateGRIB.gribDate.width / typedData.data[0].length);
+		}
+
+		for (var wGRIB=0; wGRIB<width; wGRIB++) {
 			// Evaluate the cell (lat/lng): [0][0] is bottom left (SW).
 			// 1. Cell BG
 			var bottomLeft = worldMap.getCanvasLocation(canvas,
 					oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB)),
-					ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB)));
+					ajustedLongitude(oneDateGRIB.gribDate.left, (stepX * wGRIB)));
 			var bottomRight = worldMap.getCanvasLocation(canvas,
 					oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB)),
-					ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB) + (oneDateGRIB.gribDate.stepx)));
+					ajustedLongitude(oneDateGRIB.gribDate.left, (stepX * wGRIB) + (stepX)));
 			var topLeft = worldMap.getCanvasLocation(canvas,
 					oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB) + (oneDateGRIB.gribDate.stepy)),
-					ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB)));
+					ajustedLongitude(oneDateGRIB.gribDate.left, (stepX * wGRIB)));
 			var topRight = worldMap.getCanvasLocation(canvas,
 					oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB) + (oneDateGRIB.gribDate.stepy)),
-					ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB) + (oneDateGRIB.gribDate.stepx)));
+					ajustedLongitude(oneDateGRIB.gribDate.left, (stepX * wGRIB) + (stepX)));
 
 			var gribValue;
 			if (type === 'wind') {
