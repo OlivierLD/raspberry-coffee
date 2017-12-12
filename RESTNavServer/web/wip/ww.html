@@ -497,6 +497,10 @@
 	  worldMap.clear();
 //  worldMap.setPositionLabel("");
 
+	  if (withChart) { // Chart (and GRIBs) under the faxes
+		  worldMap.drawWorldMap(false);
+	  }
+
 		for (var sh=0; sh<show.length; sh++) {
 	    if (show[sh] === true) {
 		    context.drawImage(
@@ -508,9 +512,9 @@
 				);
 	    }
 		}
-		if (withChart) {
-			worldMap.drawWorldMap(false);
-		}
+//		if (withChart) { // GRIB over the faxes
+//			worldMap.drawWorldMap(false);
+//		}
   };
 
   var changeFax = function(val) {

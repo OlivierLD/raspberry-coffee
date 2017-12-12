@@ -2,6 +2,16 @@
 # Navigation REST server
 #
 echo -e "Starting the Navigation Rest Server"
+USE_PROXY=false
+#
+if [ $# -gt 0 ]
+then
+  if [ $1 == y ]
+  then
+    echo Will use a proxy
+    USE_PROXY=true
+  fi
+fi
 #
 HTTP_VERBOSE=false
 TIDE_VERBOSE=false
@@ -18,8 +28,11 @@ JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=$ASTRO_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dimage.verbose=$IMAGE_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dgrib.verbose=$GRIB_VERBOSE"
 #
-# echo Using proxy
-# JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80"
+if [ $USE_PROXY == true ]
+then
+  echo Using proxy
+  JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80"
+fi
 #
 java -cp $CP $JAVA_OPTS navrest.NavServer
 #
