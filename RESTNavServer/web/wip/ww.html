@@ -84,7 +84,7 @@
 			}
 			// The current frame is oneDateGRIB
 			// Find the GRIB Cell
-			var xCell = 0, yCell = 0;
+			var xCell = oneDateGRIB.gribDate.width - 1, yCell = oneDateGRIB.gribDate.height - 1;
 			for (var hGRIB = 0; hGRIB < oneDateGRIB.gribDate.height; hGRIB++) {
 				var lat = oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB));
 				if (lat > obj.lat) {
@@ -497,7 +497,7 @@
 	  worldMap.clear();
 //  worldMap.setPositionLabel("");
 
-	  if (withChart) { // Chart (and GRIBs) under the faxes
+	  if (withChart) { // Chart (and GRIBs) *under* the faxes
 		  worldMap.drawWorldMap(false);
 	  }
 
@@ -636,7 +636,7 @@
 		</script>
   </head>
   <body>
-    <h2>Weather Wizard in HTML5, trop fort!</h2>
+    <h2>Weather Wizard in HTML5</h2>
     <table border="0">
       <tr>
         <td valign="top" rowspan="2">

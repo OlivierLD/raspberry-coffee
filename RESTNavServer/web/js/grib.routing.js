@@ -363,6 +363,13 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 				maxTWS = Math.max(maxTWS, speed);
 			}
 
+			// DEBUG, print cell coordinates
+			if (false) {
+				var label = hGRIB + "-" + wGRIB;
+				context.fillStyle = 'black';
+				context.font = "8px Arial";
+				context.fillText(label, topLeft.x + 1, topLeft.y + 9);
+			}
 		}
 	}
 //console.log("Max TWS: %d kn", maxTWS);
