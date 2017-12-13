@@ -293,8 +293,6 @@
 
 		worldMap.drawWorldMap();
 
-	  document.getElementById("canvas-size").innerText = "Canvas Size: (WxH): " + worldMap.getCanvasWidth() + " x " + worldMap.getCanvasHeight();
-
 	  // Clean up dynamic data
 		// 1 - Fax Table rows
 		var idx = 1;
@@ -347,7 +345,7 @@
 				}
 				requestData.push(oneFax);
 
-				/*
+			/*
 			  Adding rows like
 	        <tr>
 	          <td>[checkbox]</td>
@@ -413,25 +411,6 @@
 				col5.appendChild(div5);
 
 				faxTable.appendChild(row);
-
-				/*
-			 Adding zoom for each fax:
-			    <input type="radio" name="faxnum" value="1" checked onclick="changeFax(this.value);">Fax #1
-					<br/>
-			 */
-				var zdiv = document.createElement('div');
-				zdiv.id = 'zoomfor-' + (idx + 1);
-
-				var radio = document.createElement('input');
-				radio.type = 'radio';
-				radio.name = 'faxnum';
-				radio.value = (idx + 1);
-				radio.setAttribute('onclick', 'changeFax(this.value);');
-				radio.checked = (idx === 0) ? true : false;
-				zdiv.appendChild(radio);
-				zdiv.appendChild(document.createTextNode("Fax #" + (idx + 1)));
-				zdiv.appendChild(document.createElement('br'));
-				document.getElementById('zooms').appendChild(zdiv);
 
 			}); // end forEach
 
@@ -629,7 +608,6 @@
 	  for (var sh=0; sh<show.length; sh++) {
 	  	speakUp(sh + 1);
 	  }
-	  document.getElementById("canvas-size").innerText = "Canvas Size: (WxH):" + worldMap.getCanvasWidth() + "x" + worldMap.getCanvasHeight();
 		redraw();
   };
 
