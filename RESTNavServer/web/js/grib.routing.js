@@ -363,7 +363,7 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 				maxTWS = Math.max(maxTWS, speed);
 			}
 
-			// DEBUG, print cell coordinates
+			// DEBUG, print cell coordinates IN the cell.
 			if (false) {
 				var label = hGRIB + "-" + wGRIB;
 				context.fillStyle = 'black';
