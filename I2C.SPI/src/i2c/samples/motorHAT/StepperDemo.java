@@ -12,12 +12,17 @@ public class StepperDemo {
 	private AdafruitMotorHAT mh;
 	private AdafruitMotorHAT.AdafruitStepperMotor stepper;
 
+	private boolean keepGoing = true;
+
 	public StepperDemo() throws I2CFactory.UnsupportedBusNumberException {
 		this.mh = new AdafruitMotorHAT(); // Default addr 0x60
 		this.stepper = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);
 		this.stepper.setSpeed(30d); // 30 RPM
+	}
 
-		while (true) {
+	public void go() {
+		keepGoing = true;
+		while (keepGoing) {
 			try {
 				System.out.println("Single coil steps");
 				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.SINGLE);
@@ -35,10 +40,21 @@ public class StepperDemo {
 				ioe.printStackTrace();
 			}
 		}
+		System.out.println("Done with the demo");
+	}
+
+	public void stop() {
+		this.keepGoing = false;
 	}
 
 	public static void main(String args[]) throws Exception {
-		StepperDemo omd = new StepperDemo();
+		StepperDemo demo = new StepperDemo();
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			demo.stop();
+		}));
+
+		demo.go();
 
 		System.out.println("Done.");
 	}

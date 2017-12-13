@@ -88,7 +88,6 @@ public class HTTPClient {
 		os.close();
 
 		responseCode = conn.getResponseCode();
-
 		return responseCode;
 	}
 
