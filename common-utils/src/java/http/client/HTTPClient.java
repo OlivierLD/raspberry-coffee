@@ -1,8 +1,10 @@
 package http.client;
 
+import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.SocketException;
@@ -88,6 +90,19 @@ public class HTTPClient {
 		os.close();
 
 		responseCode = conn.getResponseCode();
+
+		if (true) {
+			// Response payload
+			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+			String output;
+			System.out.println("Output from Server .... \n");
+			while ((output = br.readLine()) != null) {
+				System.out.println(output);
+			}
+		}
+		conn.disconnect();
+
 		return responseCode;
 	}
 

@@ -21,7 +21,7 @@ var DEFAULT_TIMEOUT = 60000;
  */
 
 var position = {
-	lat: 37.7489,
+	lat:   37.7489,
 	lng: -122.5070
 };
 
@@ -133,10 +133,12 @@ var gribData;
 
 // Callback for GRIBs
 var renderGRIBData = function(canvas, context) {
+	$("#grib-checkbox").prop("disabled", false);
+	$("#grib-checkbox").prop("checked", true);
+
 //console.log("Now drawing GRIB");
 	if (gribData !== undefined) {
 		var date = $("#grib-dates").val(), type = $("#grib-types").val();
 		drawGrib(canvas, context, gribData, date, type);
 	}
 };
-

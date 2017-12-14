@@ -222,6 +222,11 @@
 	  redraw();
   };
 
+  var changeGRIB = function(cb) {
+  	worldMap.setAfterDrawing(cb.checked ? renderGRIBData : undefined);
+  	redraw();
+	}
+
   var show = []; // [true, true, true];
 	var faxName = [];
   // For 3 faxes Sfc, 500mb, StreamLines
@@ -292,6 +297,8 @@
 		worldMap.setProjection(compositeData.map.projection);
 
 		worldMap.drawWorldMap();
+	  $("#grib-checkbox").prop("disabled", true);
+	  $("#grib-checkbox").prop("checked", false);
 
 	  // Clean up dynamic data
 		// 1 - Fax Table rows
@@ -612,20 +619,43 @@
   };
 
 		</script>
+		<style>
+			.map-style {
+				display: block;
+				height: 600px;
+				width: 850px;
+				resize: both;
+				overflow-x: auto;
+				overflow-y: auto;
+				text-align: center;
+			}
+
+			.table-style {
+				padding:5px;
+				background:#fff;
+				border-radius: 5px;
+				overflow-y: auto;
+				overflow-x: auto;
+				border: 1px solid #CCC;
+				margin-top: 10px;
+			}
+		</style>
   </head>
   <body>
     <h2>Weather Wizard in HTML5 - Operations</h2>
+		<div>
     <table border="0">
       <tr>
         <td valign="top" rowspan="2">
-          <div id="map" style="display: block; height: 600px; width: 850px; overflow-x: auto; overflow-y: auto; text-align: center;">
-            <canvas id="mapCanvas" width="1400" height="900" style="border-radius:10px;"></canvas>
+          <div id="map" class="map-style">
+            <canvas id="mapCanvas" width="1400" height="900"></canvas>
           </div>
         </td>
         <td valign="top">
 					<input type="checkbox" onchange="changeChart(this);" checked/> With Chart&nbsp;
           <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
 	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
+					<input id="grib-checkbox" type="checkbox" onchange="changeGRIB(this);" disabled /> With GRIB Data
 					<hr/>
 					<select id="composites" onchange="updateGRIBRequest(this);"></select>
 					<button onclick="loadFaxes();">Load documents</button>
@@ -642,7 +672,7 @@
 					<hr/>
 					Zoom for the whole thing: <button onclick="changeCanvasSize(0.9);">-</button><button onclick="changeCanvasSize(1.1);">+</button>
 					<hr/>
-					<div style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
+					<div class="table-style">
 						<table>
 							<tr><th>Date</th><th>Type</th></tr>
 							<tr>
@@ -655,7 +685,7 @@
 							</tr>
 						</table>
 					</div>
-	        <div id="dyn-faxes" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
+	        <div id="dyn-faxes" class="table-style">
 		        <table id="fax-table">
 			        <tr>
 				        <th>Show</th>
@@ -669,7 +699,7 @@
 	        </div>
 
 					<!-- TODO Displays for the values -->
-					<div id="mouse-data" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;"></div>
+					<div id="mouse-data" class="table-style"></div>
 
 				</td>
       </tr>
@@ -679,6 +709,7 @@
         </td>
       </tr>
     </table>
+		</div>
     <address><span id="console-type"></span></address>
   </body>
 </html>
