@@ -292,6 +292,18 @@
 		console.log("Reloading", compositeData);
 	};
 
+	var readableName = function(name) {
+		var key = name.substring(0, name.indexOf('_'));
+		var time = name.substring(name.indexOf('_') + 1);
+		var hours = time.substring(0, 2);
+		var min = time.substring(2, 4);
+		var sec = time.substring(4);
+
+		var comp = findCompositeByKey(key);
+		var desc = comp.name;
+
+		return (key + " @ " + hours + ":" + min + ":" + sec + (desc !== undefined ? "<br><small>" + desc + "</small>" : ""));
+	};
 	/*
 	Sample data:
 
@@ -327,25 +339,25 @@
 
 	 */
 	var makeCompositeTree = function(tree) {
-		var htmlCode = "<b>Existing Composites:</b><ul>";
+		var htmlCode = "<b>Existing Composites:</b><ul style='padding-left: 10px;'>";
 		for (var year in tree) {
 			htmlCode += "<li>";
 			htmlCode += (year + " :");
-			htmlCode += "<ul>";
+			htmlCode += "<ul style='padding-left: 10px;'>";
 			var months = tree[year];
 			for (var month in months) {
 				htmlCode += "<li>";
 				htmlCode += (monthNames[parseInt(month) - 1] + " :");
-				htmlCode += "<ul>";
+				htmlCode += "<ul style='padding-left: 10px;'>";
 				var days = months[month];
 				for (var day in days) {
 					htmlCode += "<li>";
 					htmlCode += (day + " :");
 					var compositeList = days[day]; // Array
-					htmlCode += "<ul>";
+					htmlCode += "<ul style='padding-left: 10px;'>";
 					for (var i=0; i<compositeList.length; i++) {
 						var comp = compositeList[i];
-						htmlCode += ("<li><a onclick='reload(" + JSON.stringify(comp.compositeElements) + ");'>" + comp.name + "</a></li>"); // The leaf! TODO Coordinates, onclick, definition or name?...
+						htmlCode += ("<li><a onclick='reload(" + JSON.stringify(comp.compositeElements) + ");'>" + readableName(comp.name) + "</a></li>"); // The leaf! TODO Coordinates, onclick, definition or name?...
 					}
 					htmlCode += "</ul>";
 					htmlCode += "</li>";
