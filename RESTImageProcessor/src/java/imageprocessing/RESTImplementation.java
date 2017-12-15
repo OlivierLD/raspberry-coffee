@@ -56,7 +56,13 @@ public class RESTImplementation {
 					"POST",
 					"/img/download-and-transform",
 					this::requestTransformation,
-					"Request the download and transform of images (faxes) from the web."));
+					"Request the download and transform of images (faxes) from the web."),
+			new Operation(
+					"POST",
+					"/img/get-from-file-system",
+					this::requestTransformation,
+					"Same result as for download-and-transform, but will pick already transformed faxes from the file system.")
+	);
 
 	protected List<Operation> getOperations() {
 		return this.operations;
@@ -99,8 +105,8 @@ public class RESTImplementation {
 	 * [
 			 {
 				 "url": "http://img.url",
-				 "storage": "store/here",
-				 "returned": "return/this",
+				 "storage": "store/here",   <- Original
+				 "returned": "return/this", <- transformed as requested
 				 "transparent": "WHITE",
 				 "from": "BLACK",
 				 "to": "BLUE",
@@ -145,7 +151,7 @@ public class RESTImplementation {
 											txRequest.getImgType(),
 											txRequest.getTx().type());
 									if (verbose) {
-										System.out.println(String.format("Done with %s...", txRequest.getUrl()));
+										System.out.println(String.format("Done with %s... final document is %s", txRequest.getUrl(), txRequest.getReturned()));
 									}
 									resultList.add(txRequest);
 								} catch (Exception ex) {

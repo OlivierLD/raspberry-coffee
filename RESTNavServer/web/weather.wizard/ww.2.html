@@ -68,7 +68,7 @@
   };
 
   var mouseMoveCallback = function(obj) {
-		//  Display position, GRIB Data., etc...
+		//  Display position, GRIB Data, etc...
 		var mouseDataElmt = $("#mouse-data");
 		var str = "Mouse X: " + obj.x + ", Y:" + obj.y;
 	  str += ("\nL: " + decToSex(obj.lat, "NS"));
@@ -284,7 +284,7 @@
 		return comp;
 	};
 
-  var loadFaxes = function() {
+  var loadComposite = function() {
     var key = document.getElementById('composites').value;
 
   	var compositeData = findCompositeByKey(key);
@@ -425,7 +425,7 @@
 
 			// Request ready
 			console.log(requestData);
-			getCompositeData(requestData, compositeData, faxRequestCallback);
+			getCompositeFaxes(requestData, compositeData, faxRequestCallback);
 		}
 
 		if (compositeData.gribRequest !== undefined) {
@@ -660,7 +660,7 @@
 					<input id="grib-checkbox" type="checkbox" onchange="changeGRIB(this);" disabled /> With GRIB Data
 					<hr/>
 					<select id="composites" onchange="updateGRIBRequest(this);"></select>
-					<button onclick="loadFaxes();">Load documents</button>
+					<button onclick="loadComposite();">Load documents</button>
 					<hr/>
 					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
 					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Storage <!-- TODO -->

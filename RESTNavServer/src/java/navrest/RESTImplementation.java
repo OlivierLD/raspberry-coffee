@@ -47,6 +47,10 @@ public class RESTImplementation {
 					"/oplist",
 					this::getOperationList,
 					"List of all available operations, on all request managers."),
+			/*
+			 * This resource involves both the Routing (for the GRIB) and the ImageProcessing (for the faxes) services.
+			 * This is why it is here. It may go somewhere else in the future...
+			 */
 			new Operation(
 					"GET",
 					"/ww/composite-hierarchy",

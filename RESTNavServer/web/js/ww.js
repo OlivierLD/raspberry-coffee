@@ -96,13 +96,13 @@ var getDeferred = function(
 	return deferred.promise();
 };
 
-var requestComposite = function(requestPayload) {
+var requestCompositeFaxes = function(requestPayload) {
 	var url = "/img/download-and-transform";
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, requestPayload, false);
 };
 
-var getCompositeData = function(options, compositeData, callback) {
-	var getData = requestComposite(options);
+var getCompositeFaxes = function(options, compositeData, callback) {
+	var getData = requestCompositeFaxes(options);
 	getData.done(function(value) {
 		if (callback === undefined) {
 			try {

@@ -6,6 +6,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +33,15 @@ public class CompositeCrawler {
 			YEAR_PATTERN,
 			MONTH_PATTERN,
 			DAY_PATTERN
+	};
+
+	private FilenameFilter compositeElementFilter = (dir, name) -> {
+		if ((name.startsWith("_") && name.endsWith(".png")) ||
+				name.equals("grib.grb")) {
+			return true;
+		} else {
+			return false;
+		}
 	};
 
 	private Map<String, Object> getCompositeCatalog() throws Exception {
@@ -76,11 +86,25 @@ public class CompositeCrawler {
 							crawl(f, level + 1, pList, subMap);
 						} else {
 							// If directory starts with a composite key name, followed by '_' and 6 digits, then ok.
-							List<String> compositeList = new ArrayList<>();
+							List<CompositeDescription> compositeList = new ArrayList<>();
 							Arrays.stream(f.listFiles()).forEach(d -> {
-								if (matchesOneOf(d.getName(), pList)) {
+								if (d.isDirectory() && matchesOneOf(d.getName(), pList)) {
 //								System.out.println(String.format("%s", d.getName()));
-									compositeList.add(d.getName());
+									CompositeDescription compositeDescription = new CompositeDescription()
+										.name(d.getName());
+									List<CompositeElement> elements = new ArrayList<>();
+									// Now scan the files in this directory
+									File[] compositeElements = d.listFiles(compositeElementFilter);
+									Arrays.stream(compositeElements).forEach(fName -> {
+//									System.out.println(String.format("  >> %s : file:%s", fName.getName(), fName.getAbsolutePath()));
+										CompositeElement element = new CompositeElement()
+												.type(fName.getName().equals("grib.grb") ? ElementType.GRIB : ElementType.FAX)
+												.name(fName.getName())
+												.resource("file:" + fName.getAbsolutePath());
+										elements.add(element);
+									});
+									compositeDescription = compositeDescription.compositeElements(elements);
+									compositeList.add(compositeDescription);
 								}
 							});
 							compositeTree.put(name, compositeList);
@@ -105,6 +129,43 @@ public class CompositeCrawler {
 		Map<String, Object> composites = new HashMap<>();
 		composites = this.crawl(new File("web"), 0, this.buildPatternList(), composites);
 		return composites;
+	}
+
+	public static class CompositeDescription {
+		String name;
+		List<CompositeElement> compositeElements;
+
+		public CompositeDescription name(String name) {
+			this.name = name;
+			return this;
+		}
+		public CompositeDescription compositeElements(List<CompositeElement> compositeElements) {
+			this.compositeElements = compositeElements;
+			return this;
+		}
+	}
+
+	enum ElementType {
+		FAX, GRIB
+	};
+
+	public static class CompositeElement {
+		ElementType type;
+		String name;
+		String resource;
+
+		public CompositeElement type(ElementType type) {
+			this.type = type;
+			return this;
+		}
+		public CompositeElement name(String name) {
+			this.name = name;
+			return this;
+		}
+		public CompositeElement resource(String resource) {
+			this.resource = resource;
+			return this;
+		}
 	}
 
 	public static void main(String... args) throws Exception {
