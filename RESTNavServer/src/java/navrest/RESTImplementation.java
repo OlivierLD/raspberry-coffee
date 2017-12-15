@@ -101,7 +101,8 @@ public class RESTImplementation {
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
 							.errorCode("COMP-0001")
-							.errorMessage(ex.toString()));
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
 			return response;
 
 		}

@@ -1,5 +1,7 @@
 package navrest;
 
+import http.HTTPServer;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.io.File;
@@ -108,6 +110,17 @@ public class CompositeCrawler {
 	public static void main(String... args) throws Exception {
 		CompositeCrawler crawler = new CompositeCrawler();
 		Map<String, Object> composites = crawler.getCompositeHierarchy();
-		System.out.println("-");
+
+		String[] blah = new String[] { "Ah!" };
+		try {
+			String x = blah[10]; // Bam!
+			System.out.println("Ok");
+		} catch (Exception ex) {
+			System.out.println("Boom:");
+			List<String> stack = HTTPServer.dumpException(ex);
+			stack.stream()
+					.forEach(System.out::println);
+		}
+		System.out.println("\nDone.");
 	}
 }

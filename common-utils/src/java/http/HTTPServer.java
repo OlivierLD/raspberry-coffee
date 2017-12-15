@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -263,6 +264,7 @@ public class HTTPServer {
 	public static class ErrorPayload {
 		String errorCode;
 		String errorMessage;
+		List<String> errorStack;
 
 		public ErrorPayload errorCode(String errorCode) {
 			this.errorCode = errorCode;
@@ -273,6 +275,11 @@ public class HTTPServer {
 			this.errorMessage = errorMessage;
 			return this;
 		}
+
+		public ErrorPayload errorStack(List<String> errorStack) {
+			this.errorStack = errorStack;
+			return this;
+		}
 	}
 
 	public static Response buildErrorResponse(Response response, int httpStatus, ErrorPayload payload) {
@@ -281,6 +288,17 @@ public class HTTPServer {
 		RESTProcessorUtil.generateResponseHeaders(response, "application/json", content.length());
 		response.setPayload(content.getBytes());
 		return response;
+	}
+
+	public static List<String> dumpException(Exception ex) {
+		return Arrays.stream(ex.getStackTrace())
+				.map(ste -> String.format(
+						"from %s.%s [%s:%d]",
+						ste.getClassName(),
+						ste.getMethodName(),
+						ste.getFileName(),
+						ste.getLineNumber()))
+				.collect(Collectors.toList());
 	}
 
 	public boolean isRunning() {
