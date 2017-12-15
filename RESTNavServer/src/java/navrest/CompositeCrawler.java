@@ -168,6 +168,7 @@ public class CompositeCrawler {
 		}
 	}
 
+	/* For tests */
 	public static void main(String... args) throws Exception {
 		CompositeCrawler crawler = new CompositeCrawler();
 		Map<String, Object> composites = crawler.getCompositeHierarchy();
@@ -179,6 +180,7 @@ public class CompositeCrawler {
 		} catch (Exception ex) {
 			System.out.println("Boom:");
 			List<String> stack = HTTPServer.dumpException(ex);
+			System.out.println(ex.toString());
 			stack.stream()
 					.forEach(System.out::println);
 		}

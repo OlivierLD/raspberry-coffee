@@ -284,6 +284,92 @@
 		return comp;
 	};
 
+	var monthNames = [
+		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+	];
+
+	var reload = function(compositeData) {
+		console.log("Reloading", compositeData);
+	};
+
+	/*
+	Sample data:
+
+	{
+	"2017": {
+		"12": {
+			"10": [
+				{
+					"name": "ATL-0001_184206",
+					"compositeElements": [
+						{
+							"type": "FAX",
+							"name": "_ATL-0001_0.png",
+							"resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/web/2017/12/10/ATL-0001_184206/_ATL-0001_0.png"
+						},
+						{
+							"type": "FAX",
+							"name": "_ATL-0001_1.png",
+							"resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/web/2017/12/10/ATL-0001_184206/_ATL-0001_1.png"
+						},
+						{
+							"type": "GRIB",
+							"name": "grib.grb",
+							"resource": "file:/Users/olediour/repos/raspberry-pi4j-samples/RESTNavServer/web/2017/12/10/ATL-0001_184206/grib.grb"
+						}
+					]
+				},
+				{
+					"name": "PAC-0001_073637",
+					"compositeElements": [
+						{
+				...
+
+	 */
+	var makeCompositeTree = function(tree) {
+		var htmlCode = "<b>Existing Composites:</b><ul>";
+		for (var year in tree) {
+			htmlCode += "<li>";
+			htmlCode += (year + " :");
+			htmlCode += "<ul>";
+			var months = tree[year];
+			for (var month in months) {
+				htmlCode += "<li>";
+				htmlCode += (monthNames[parseInt(month) - 1] + " :");
+				htmlCode += "<ul>";
+				var days = months[month];
+				for (var day in days) {
+					htmlCode += "<li>";
+					htmlCode += (day + " :");
+					var compositeList = days[day]; // Array
+					htmlCode += "<ul>";
+					for (var i=0; i<compositeList.length; i++) {
+						var comp = compositeList[i];
+						htmlCode += ("<li><a onclick='reload(" + JSON.stringify(comp.compositeElements) + ");'>" + comp.name + "</a></li>"); // The leaf! TODO Coordinates, onclick, definition or name?...
+					}
+					htmlCode += "</ul>";
+					htmlCode += "</li>";
+				}
+				htmlCode += "</ul>";
+				htmlCode += "</li>";
+			}
+			htmlCode += "</ul>";
+			htmlCode += "</li>";
+		}
+		htmlCode += "</ul>";
+		return htmlCode;
+	};
+
+	var getCompositeList = function() {
+		var cb = function(value) {
+//		console.log(value);
+			var data = JSON.parse(value);
+			$("#composite-list").html(makeCompositeTree(data)); // "<pre>" + JSON.stringify(data, null, 2) + "</pre>");
+
+		};
+		getExistingComposites(cb);
+	};
+
   var loadComposite = function() {
     var key = document.getElementById('composites').value;
 
@@ -641,6 +727,17 @@
 				border: 1px solid #CCC;
 				margin-top: 10px;
 			}
+
+			.complist-style {
+				padding:5px;
+				background:#fff;
+				border-radius: 5px;
+				height: 100px;
+				overflow-y: auto;
+				overflow-x: auto;
+				border: 1px solid #CCC;
+				margin-top: 10px;
+			}
 		</style>
   </head>
   <body>
@@ -668,8 +765,10 @@
 					<div id="grib-web">
 					</div>
 					<div id="grib-json" style="display: none;">
-						<!-- TODO from an existing composite -->
-						<h5>Get existing composite data</h5>
+						<button onclick="getCompositeList();">Get Composites list</button>
+						<div id="composite-list" class="complist-style">
+
+						</div>
 					</div>
 					<hr/>
 					Zoom for the whole thing: <button onclick="changeCanvasSize(0.9);">-</button><button onclick="changeCanvasSize(1.1);">+</button>

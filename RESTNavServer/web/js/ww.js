@@ -129,6 +129,39 @@ var getCompositeFaxes = function(options, compositeData, callback) {
 	});
 };
 
+var crawlComposites = function() {
+	var url = "/ww/composite-hierarchy";
+	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, undefined, false);
+}
+
+var getExistingComposites = function(callback) {
+	var getData = crawlComposites();
+	getData.done(function(value) {
+		if (callback === undefined) {
+			try {
+				// Do something smart
+				console.log(value);
+			} catch (err) {
+				errManager(err + '\nFor\n' + value);
+			}
+		} else {
+			callback(value);
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed to get composite data data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+				? message : ' - '));
+	});
+};
+
 var gribData;
 
 // Callback for GRIBs
