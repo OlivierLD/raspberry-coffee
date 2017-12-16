@@ -215,10 +215,12 @@
 	  withChart = cb.checked;
 	  redraw();
   };
+
   var changeGrid = function(cb) {
 	  worldMap.setWithGrid(cb.checked);
 	  redraw();
   };
+
   var changeTropics = function(cb) {
     worldMap.setWithTropics(cb.checked);
 	  redraw();
@@ -264,8 +266,14 @@
 				context.drawImage(fax, x, y, (parseInt(fax.width) * faxZoom), (parseInt(fax.height) * faxZoom));
 				redraw();
 			};
-			// Assume that returned and originalRequest have the name cardinality
-			fax.src = '../../' + returned[idx].returned; // Tweak for another context...
+			// Assume that returned and originalRequest have the same cardinality
+			if (returned[idx].returned.startsWith("file:")) { // && returned[idx].returned.indexOf("/web/") > -1) {
+				// TODO Something better, relative to /web
+				var loc = returned[idx].returned.substring(returned[idx].returned.indexOf("/web/") + 1);
+				fax.src = '../../' + loc;
+			} else {
+				fax.src = '../../' + returned[idx].returned;
+			}
 			speakUp(idx + 1);
 			console.log(fax.src);
 			faxObj.push(fax);
@@ -288,12 +296,43 @@
 		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 	];
 
-	var reload = function(compositeData) {
-		console.log("Reloading", compositeData);
+	/*
+	 * Reload an existing composite.
+	 */
+	var reload = function(key, compositeData) {
+		console.log("Reloading", key, compositeData);
+		var composite = findCompositeByKey(key);
+		// Fill out with actual file locations
+		if (composite.faxData != undefined) {
+			for (var i=0; i<composite.faxData.length; i++) {
+				for (var f=0; f<compositeData.length; f++) {
+					if (compositeData[f].type === 'FAX' &&
+					    compositeData[f].name === '_' + key + '_' + i + '.png') {
+						composite.faxData[i].faxUrl = compositeData[f].resource;
+						break;
+					}
+				}
+			}
+			// GRIB
+			if (composite.gribRequest !== undefined) {
+				for (var f=0; f<compositeData.length; f++) {
+					if (compositeData[f].type === 'GRIB') { // name='grib.grb'
+						composite.gribRequest = compositeData[f].resource;
+						break;
+					}
+				}
+			}
+		}
+		loadComposite(composite);
+	};
+
+	var getKeyFromName = function(name) {
+		var key = name.substring(0, name.indexOf('_'));
+		return key;
 	};
 
 	var readableName = function(name) {
-		var key = name.substring(0, name.indexOf('_'));
+		var key = getKeyFromName(name);
 		var time = name.substring(name.indexOf('_') + 1);
 		var hours = time.substring(0, 2);
 		var min = time.substring(2, 4);
@@ -304,6 +343,7 @@
 
 		return (key + " @ " + hours + ":" + min + ":" + sec + (desc !== undefined ? "<br><small>" + desc + "</small>" : ""));
 	};
+
 	/*
 	Sample data:
 
@@ -357,7 +397,7 @@
 					htmlCode += "<ul style='padding-left: 10px;'>";
 					for (var i=0; i<compositeList.length; i++) {
 						var comp = compositeList[i];
-						htmlCode += ("<li><a onclick='reload(" + JSON.stringify(comp.compositeElements) + ");'>" + readableName(comp.name) + "</a></li>"); // The leaf! TODO Coordinates, onclick, definition or name?...
+						htmlCode += ("<li><a onclick='reload(\"" + getKeyFromName(comp.name) + "\", " + JSON.stringify(comp.compositeElements) + ");'>" + readableName(comp.name) + "</a></li>"); // The leaf! TODO Coordinates, onclick, definition or name?...
 					}
 					htmlCode += "</ul>";
 					htmlCode += "</li>";
@@ -377,17 +417,19 @@
 //		console.log(value);
 			var data = JSON.parse(value);
 			$("#composite-list").html(makeCompositeTree(data)); // "<pre>" + JSON.stringify(data, null, 2) + "</pre>");
-
 		};
 		getExistingComposites(cb);
 	};
 
-  var loadComposite = function() {
+	/**
+	 * If existing data is provided, it comes from the file system
+	 */
+  var loadComposite = function(existingData) {
     var key = document.getElementById('composites').value;
 
-  	var compositeData = findCompositeByKey(key);
+  	var compositeData = (existingData === undefined ? findCompositeByKey(key) : existingData);
 
-  	console.log(compositeData);
+  	console.log("Loading", compositeData);
 	  worldMap.setCanvasWidth(compositeData.canvas.w);
 	  worldMap.setCanvasHeight(compositeData.canvas.h);
 	  worldMap.setNorth(compositeData.map.north);
@@ -548,6 +590,7 @@
 	  var factor = parseFloat(document.getElementById("zoom-factor").value);
 	  zoomFax(currentFax, factor);
   };
+
   var zoomOut = function() {
 	  var factor = parseFloat(document.getElementById("zoom-factor").value);
 	  zoomFax(currentFax, 1 / factor);
@@ -558,16 +601,19 @@
 	  speakUp(currentFax);
 	  redraw();
   };
+
   var down = function() {
 	  topLeft[currentFax - 1][1] += 1;
 	  speakUp(currentFax);
 	  redraw();
   };
+
   var left = function() {
 	  topLeft[currentFax - 1][0] -= 1;
 	  speakUp(currentFax);
 	  redraw();
   };
+
   var right = function() {
 	  topLeft[currentFax - 1][0] += 1;
 	  speakUp(currentFax);

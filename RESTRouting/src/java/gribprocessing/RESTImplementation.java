@@ -16,6 +16,7 @@ import poc.data.GribType;
 
 import java.io.File;
 import java.io.StringReader;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,42 +126,48 @@ public class RESTImplementation {
 				StringReader stringReader = new StringReader(payload);
 				try {
 					GRIBRequest gribRequest = gson.fromJson(stringReader, GRIBRequest.class);
-					try {
-						String dir =  gribRequest.directory;
-						if (dir == null) {
-							dir = ".";
+					URL gribURL = null;
+					GRIBDump dump = new GRIBDump();
+					if (gribRequest.request.startsWith("file:")) { // Reusing grib file
+						gribURL = new URI(gribRequest.request).toURL();
+					} else {
+						try {
+							String dir = gribRequest.directory;
+							if (dir == null) {
+								dir = ".";
+							}
+							File location = new File(dir);
+							if (!location.exists()) {
+								boolean ok = location.mkdirs();
+								System.out.println(String.format("Created directory(ies) %s:", dir) + ok);
+							}
+							String gribFileName = "grib.grb";
+							System.out.println(String.format(" >> Will pull %s into %s", gribFileName, dir));
+							GRIBUtils.getGRIB(GRIBUtils.generateGRIBRequest(gribRequest.request), dir, gribFileName, true);
+							gribURL = new File(dir, gribFileName).toURI().toURL();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+							response = HTTPServer.buildErrorResponse(response,
+									Response.BAD_REQUEST,
+									new HTTPServer.ErrorPayload()
+											.errorCode("GRIB-0004")
+											.errorMessage(ex.toString()));
+							return response;
 						}
-						File location = new File(dir);
-						if (!location.exists()) {
-							boolean ok = location.mkdirs();
-							System.out.println(String.format("Created directory(ies) %s:", dir) + ok);
-						}
-						String gribFileName = "grib.grb";
-						System.out.println(String.format(" >> Will pull %s into %s", gribFileName, dir));
-						GRIBUtils.getGRIB(GRIBUtils.generateGRIBRequest(gribRequest.request), dir, gribFileName, true);
-						GRIBDump dump = new GRIBDump();
-						URL gribURL = new File(dir, gribFileName).toURI().toURL();
-						GribFile gf = new GribFile(gribURL.openStream());
-						List<GRIBDump.DatedGRIB> expandedGBRIB = dump.getExpandedGBRIB(gf);
-						String content = new Gson().toJson(expandedGBRIB);
-						RESTProcessorUtil.generateResponseHeaders(response, content.length());
-						response.setPayload(content.getBytes());
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						response = HTTPServer.buildErrorResponse(response,
-								Response.BAD_REQUEST,
-								new HTTPServer.ErrorPayload()
-										.errorCode("GRIB-0003")
-										.errorMessage(ex.toString()));
-						return response;
 					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
+
+					GribFile gf = new GribFile(gribURL.openStream());
+					List<GRIBDump.DatedGRIB> expandedGBRIB = dump.getExpandedGBRIB(gf);
+					String content = new Gson().toJson(expandedGBRIB);
+					RESTProcessorUtil.generateResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+				} catch (Exception ex1) {
+					ex1.printStackTrace();
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
 							new HTTPServer.ErrorPayload()
-									.errorCode("GRIB-0001")
-									.errorMessage(ex.toString()));
+									.errorCode("GRIB-0003")
+									.errorMessage(ex1.toString()));
 					return response;
 				}
 			} else {
