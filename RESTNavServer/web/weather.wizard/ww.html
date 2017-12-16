@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
- | No server required, just displays the map, Mercator projection
+ | Weather Wizard main features.
  +-->
 <html>
   <head>
@@ -21,10 +21,11 @@
 		<script type="text/javascript" src="../js/mercator.utils.js"></script>
     <script type="text/javascript" src="../widgets/worldmap.js"></script>
     <script type="text/javascript" src="../js/conversion.utils.js"></script>
+		<script type="text/javascript" src="../js/date.proto.js"></script>
     <script type="text/javascript" src="../js/routes.utils.js"></script>
 		<script type="text/javascript" src="../js/grib.routing.js"></script>
 		<script type="text/javascript" src="../catalog/catalog.js"></script>
-		<script type="text/javascript" src="ww.js"></script>
+		<script type="text/javascript" src="../js/ww.js"></script>
 
     <script type="text/javascript">
     
@@ -33,6 +34,8 @@
   var currentFax = 1;
   var canvas, context;
 
+  var thisZoomFactor = 1;
+
   window.onload = function() {
 	  init(); // init UI
 
@@ -40,6 +43,7 @@
 	  context = canvas.getContext('2d');
 
 	  worldMap.clear();
+	  worldMap.setMouseMoveCallback(mouseMoveCallback);
 	  worldMap.setPositionLabel("SF");
 	  setTimeout(function () {
 		  worldMap.drawWorldMap();
@@ -53,8 +57,149 @@
 			opt.setAttribute('value', compositeCatalog[i].key);
 			opt.appendChild(document.createTextNode(compositeCatalog[i].name));
 			document.getElementById('composites').appendChild(opt);
+			if (i === 0) {
+				if (compositeCatalog[i].gribRequest !== undefined) {
+					$("#grib-request").val(compositeCatalog[i].gribRequest);
+				}
+			}
 	  }
   };
+
+  var mouseMoveCallback = function(obj) {
+		//  Display position, GRIB Data., etc...
+		var mouseDataElmt = $("#mouse-data");
+		var str = "Mouse X: " + obj.x + ", Y:" + obj.y;
+	  str += ("\nL: " + decToSex(obj.lat, "NS"));
+	  str += ("\nG: " + decToSex(obj.lng, "EW"));
+
+		if (gribData !== undefined) {
+			var date = $("#grib-dates").val();
+			var oneDateGRIB = gribData[0]; // Default
+			// Look for the right date
+			for (var i = 0; i < gribData.length; i++) {
+				if (gribData[i].gribDate.formattedUTCDate === date) {
+					oneDateGRIB = gribData[i];
+					break;
+				}
+			}
+			// The current frame is oneDateGRIB
+			// Find the GRIB Cell
+			var xCell = oneDateGRIB.gribDate.width - 1, yCell = oneDateGRIB.gribDate.height - 1;
+			for (var hGRIB = 0; hGRIB < oneDateGRIB.gribDate.height; hGRIB++) {
+				var lat = oneDateGRIB.gribDate.bottom + ((oneDateGRIB.gribDate.stepy * hGRIB));
+				if (lat > obj.lat) {
+					yCell = (hGRIB - 1);
+					break;
+				}
+			}
+
+			for (var wGRIB = 0; wGRIB < oneDateGRIB.gribDate.width; wGRIB++) {
+				var lng = ajustedLongitude(oneDateGRIB.gribDate.left, (oneDateGRIB.gribDate.stepx * wGRIB));
+				if (lng > 0 && obj.lng > 0 && lng > obj.lng) {
+					xCell = wGRIB - 1;
+					break;
+				} else if (lng < 0 && obj.lng < 0 && obj.lng < lng) {
+					xCell = wGRIB - 1;
+					break;
+				}
+			}
+//			console.log("%s / %s is in cell Row:%d, Col:%d (Total is %d rows, %d cols)",
+//					decToSex(obj.lat, "NS"),
+//					decToSex(obj.lng, "EW"),
+//					yCell,
+//					xCell,
+//					oneDateGRIB.gribDate.height,
+//					oneDateGRIB.gribDate.width);
+			str += ("\nGRIB cell row " + yCell + ", col " + xCell);
+			var foundWind = false;
+			for (var idx=0; idx<oneDateGRIB.typedData.length; idx++) {
+				var skip = false;
+				var value = oneDateGRIB.typedData[idx].data[yCell][xCell];
+				var unit  = oneDateGRIB.typedData[idx].gribType.unit;
+				var type = oneDateGRIB.typedData[idx].gribType.type;
+
+				var displayValue, displayUnit, displayType;
+				switch (type) {
+					case 'prmsl':
+						displayType = 'PRMSL';
+						displayValue = (value/100).toFixed(2);
+						displayUnit = 'hPa';
+						break;
+					case 'tmp':
+						displayType = 'AIRTMP';
+						displayValue = (value - 273.6).toFixed(2);
+						displayUnit = 'C';
+						break;
+					case 'ugrd':
+						if (!foundWind) {
+							var vgrd;
+							for (var i=0; i<oneDateGRIB.typedData.length; i++) {
+								if (oneDateGRIB.typedData[i].gribType.type === 'vgrd') {
+									vgrd = oneDateGRIB.typedData[i].data;
+									break;
+								}
+							}
+							if (vgrd !== undefined) {
+								displayUnit = '';
+								displayType = "WIND";
+								var u = value;
+								var v = vgrd[yCell][xCell]
+								var tws = getSpeed(u, v);
+								var dir = getDir(u, v);
+								displayValue = tws.toFixed(1) + " kts, " + dir.toFixed(0) + "&deg; (u:" + u.toFixed(1) + ", v:" + v.toFixed(1) + ")";
+								foundWind = true;
+							}
+						} else {
+							skip = true;
+						}
+						break;
+					case 'vgrd':
+						skip = true;
+						break;
+					case 'prate':
+						displayType = 'PRATE';
+						displayValue = (value * 3600).toFixed(2);
+						displayUnit = "mm/h";
+						break;
+					case 'hgt':
+						displayType = '500HGT';
+						try {
+							displayValue = (value).toFixed(2);
+							displayUnit = "m";
+						} catch (err) {
+							displayValue = "xx";
+							displayUnit = "-";
+							console.log(err);
+						}
+						break;
+					case 'htsgw':
+						displayType = 'WAVES';
+						if (oneDateGRIB.typedData[idx].data[0].length !== oneDateGRIB.gribDate.width) {
+							// Re-adjust. Not very elegant...
+							xCell *= Math.floor(oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
+							value = oneDateGRIB.typedData[idx].data[yCell][xCell];
+						}
+						try {
+							displayValue = value.toFixed(2);
+							displayUnit = unit;
+						} catch (err) {
+							displayValue = "xx";
+							displayUnit = "-";
+							console.log(err);
+						}
+						break;
+					default:
+						break;
+				}
+				if (!skip) {
+					str += ("\n" + displayType + ": " + displayValue + " " + displayUnit);
+				}
+			}
+
+		}
+
+	  mouseDataElmt.html("<pre>" + str + "</pre>");
+	};
 
   var displayErr = function(err) {
     if (err !== undefined) {
@@ -148,7 +293,9 @@
 
 		worldMap.drawWorldMap();
 
-		// Clean up dynamic data
+	  document.getElementById("canvas-size").innerText = "Canvas Size: (WxH): " + worldMap.getCanvasWidth() + " x " + worldMap.getCanvasHeight();
+
+	  // Clean up dynamic data
 		// 1 - Fax Table rows
 		var idx = 1;
 		var go = true;
@@ -174,24 +321,33 @@
 			}
     }
 
-		var requestData = [];
-		compositeData.faxData.forEach(function(fax, idx) {
-			var oneFax = {
-				url: fax.faxUrl,
-				name: fax.name,
-				storage: 'web/' + compositeData.key + '_' + idx + '.png', // TODO With the date
-				returned: 'web/_' + compositeData.key + '_' + idx + '.png',
-				transparent: fax.transp,
-				imgType: "png",
-				tx: fax.effect
-			};
-			if (fax.tx !== undefined) {
-				oneFax.from = fax.tx.from;
-				oneFax.to = fax.tx.to;
-			}
-			requestData.push(oneFax);
+	  var year, month, day, time;
+	  var now = new Date();
+	  year = now.format('Y');
+	  month = now.format('m');
+	  day = now.format('d');
+	  time = compositeData.key + '_' + now.format('His');
 
-			/*
+		var requestData = [];
+		if (compositeData.faxData !== undefined) {
+
+			compositeData.faxData.forEach(function (fax, idx) {
+				var oneFax = {
+					url: fax.faxUrl,
+					name: fax.name,
+					storage: 'web/' + year + '/' + month + '/' + day + '/' + time + '/' + compositeData.key + '_' + idx + '.png', // Original. With the date
+					returned: 'web/' + year + '/' + month + '/' + day + '/' + time + '/_' + compositeData.key + '_' + idx + '.png', // Transformed
+					transparent: fax.transp,
+					imgType: "png",
+					tx: fax.effect
+				};
+				if (fax.tx !== undefined) {
+					oneFax.from = fax.tx.from;
+					oneFax.to = fax.tx.to;
+				}
+				requestData.push(oneFax);
+
+				/*
 			  Adding rows like
 	        <tr>
 	          <td>[checkbox]</td>
@@ -202,94 +358,98 @@
 						<td><div id="zoom-1" style="text-align: right;"></div></td>
 					</tr>
 			*/
-			var faxTable = document.getElementById('fax-table');
-			var row = document.createElement('tr');
-			row.id = 'row-' + (idx + 1);
+				var faxTable = document.getElementById('fax-table');
+				var row = document.createElement('tr');
+				row.id = 'row-' + (idx + 1);
 
-			// Adding a checkbox <input type="checkbox" onchange="showHide(1, this);" checked>Show fax #1 <br/>
-			var div = document.createElement('div');
-			div.id = 'cb-' + (idx + 1);
+				// Adding a checkbox <input type="checkbox" onchange="showHide(1, this);" checked>Show fax #1 <br/>
+				var div = document.createElement('div');
+				div.id = 'cb-' + (idx + 1);
 
-  		var cb = document.createElement('input');
-			cb.type = 'checkbox';
-			cb.id = 'cb-' + (idx + 1);
-			cb.setAttribute('onchange', 'showHide(' + (idx + 1) + ', this);');
-			cb.checked = true;
-			div.appendChild(cb);
-			var col0 = document.createElement('td');
-			col0.setAttribute('style', 'text-align: center;');
-			row.appendChild(col0);
-			col0.appendChild(cb);
+				var cb = document.createElement('input');
+				cb.type = 'checkbox';
+				cb.id = 'cb-' + (idx + 1);
+				cb.setAttribute('onchange', 'showHide(' + (idx + 1) + ', this);');
+				cb.checked = true;
+				div.appendChild(cb);
+				var col0 = document.createElement('td');
+				col0.setAttribute('style', 'text-align: center;');
+				row.appendChild(col0);
+				col0.appendChild(cb);
 
-			var col1 = document.createElement('td');
-			row.appendChild(col1);
-			col1.appendChild(document.createTextNode((idx + 1)));
+				var col1 = document.createElement('td');
+				row.appendChild(col1);
+				col1.appendChild(document.createTextNode((idx + 1)));
 
-			var col2 = document.createElement('td');
-			row.appendChild(col2);
-			var div2 = document.createElement('div');
-			div2.id = 'name-' + (idx + 1);
-			div2.appendChild(document.createTextNode(fax.name));
-			col2.appendChild(div2);
+				var col2 = document.createElement('td');
+				row.appendChild(col2);
+				var div2 = document.createElement('div');
+				div2.id = 'name-' + (idx + 1);
+				div2.appendChild(document.createTextNode(fax.name));
+				col2.appendChild(div2);
 
-			var col3 = document.createElement('td');
-			row.appendChild(col3);
-			var div3 = document.createElement('div');
-			div3.id = 'x-' + (idx + 1);
-			div3.setAttribute('style', 'text-align: right;');
-			div3.appendChild(document.createTextNode(fax.location.x));
-			col3.appendChild(div3);
+				var col3 = document.createElement('td');
+				row.appendChild(col3);
+				var div3 = document.createElement('div');
+				div3.id = 'x-' + (idx + 1);
+				div3.setAttribute('style', 'text-align: right;');
+				div3.appendChild(document.createTextNode(fax.location.x));
+				col3.appendChild(div3);
 
-			var col4 = document.createElement('td');
-			row.appendChild(col4);
-			var div4 = document.createElement('div');
-			div4.id = 'y-' + (idx + 1);
-			div4.setAttribute('style', 'text-align: right;');
-			div4.appendChild(document.createTextNode(fax.location.y));
-			col4.appendChild(div4);
+				var col4 = document.createElement('td');
+				row.appendChild(col4);
+				var div4 = document.createElement('div');
+				div4.id = 'y-' + (idx + 1);
+				div4.setAttribute('style', 'text-align: right;');
+				div4.appendChild(document.createTextNode(fax.location.y));
+				col4.appendChild(div4);
 
-			var col5 = document.createElement('td');
-			row.appendChild(col5);
-			var div5 = document.createElement('div');
-			div5.id = 'zoom-' + (idx + 1);
-			div5.setAttribute('style', 'text-align: left;');
-			div5.appendChild(document.createTextNode(fax.zoom));
-			col5.appendChild(div5);
+				var col5 = document.createElement('td');
+				row.appendChild(col5);
+				var div5 = document.createElement('div');
+				div5.id = 'zoom-' + (idx + 1);
+				div5.setAttribute('style', 'text-align: left;');
+				div5.appendChild(document.createTextNode(fax.zoom));
+				col5.appendChild(div5);
 
-			faxTable.appendChild(row);
+				faxTable.appendChild(row);
 
-			/*
+				/*
 			 Adding zoom for each fax:
 			    <input type="radio" name="faxnum" value="1" checked onclick="changeFax(this.value);">Fax #1
 					<br/>
 			 */
-			var zdiv = document.createElement('div');
-			zdiv.id = 'zoomfor-' + (idx + 1);
+				var zdiv = document.createElement('div');
+				zdiv.id = 'zoomfor-' + (idx + 1);
 
-  		var radio = document.createElement('input');
-			radio.type = 'radio';
-			radio.name = 'faxnum';
-			radio.value = (idx + 1);
-			radio.setAttribute('onclick', 'changeFax(this.value);');
-			radio.checked = (idx === 0) ? true : false;
-			zdiv.appendChild(radio);
-			zdiv.appendChild(document.createTextNode("Fax #" + (idx + 1)));
-			zdiv.appendChild(document.createElement('br'));
-			document.getElementById('zooms').appendChild(zdiv);
+				var radio = document.createElement('input');
+				radio.type = 'radio';
+				radio.name = 'faxnum';
+				radio.value = (idx + 1);
+				radio.setAttribute('onclick', 'changeFax(this.value);');
+				radio.checked = (idx === 0) ? true : false;
+				zdiv.appendChild(radio);
+				zdiv.appendChild(document.createTextNode("Fax #" + (idx + 1)));
+				zdiv.appendChild(document.createElement('br'));
+				document.getElementById('zooms').appendChild(zdiv);
 
-		}); // end forEach
+			}); // end forEach
 
-		// Request ready
-		console.log(requestData);
-	  getCompositeData(requestData, compositeData, faxRequestCallback);
+			// Request ready
+			console.log(requestData);
+			getCompositeFaxes(requestData, compositeData, faxRequestCallback);
+		}
 
+		if (compositeData.gribRequest !== undefined) {
+			makeGRIBRequest(compositeData.gribRequest, 'web/' + year + '/' + month + '/' + day + '/' + time); // grib file Location
+		}
 	};
 
   var speakUp = function(num) {
     document.getElementById("name-" + num).innerText = faxName[num - 1];
-		document.getElementById("x-" + num).innerText = topLeft[num - 1][0];
-		document.getElementById("y-" + num).innerText = topLeft[num - 1][1];
-		document.getElementById("zoom-" + num).innerText = zoom[num - 1];
+		document.getElementById("x-" + num).innerText = (topLeft[num - 1][0] * thisZoomFactor).toFixed(0);
+		document.getElementById("y-" + num).innerText = (topLeft[num - 1][1] * thisZoomFactor).toFixed(0);
+		document.getElementById("zoom-" + num).innerText = (zoom[num - 1] * thisZoomFactor);
   };
 
   var zoomFax = function(num, factor) {
@@ -337,14 +497,24 @@
 	  worldMap.clear();
 //  worldMap.setPositionLabel("");
 
+	  if (withChart) { // Chart (and GRIBs) *under* the faxes
+		  worldMap.drawWorldMap(false);
+	  }
+
 		for (var sh=0; sh<show.length; sh++) {
 	    if (show[sh] === true) {
-		    context.drawImage(faxObj[sh], topLeft[sh][0], topLeft[sh][1], (parseInt(faxObj[sh].width) * zoom[sh]), (parseInt(faxObj[sh].height) * zoom[sh]));
+		    context.drawImage(
+		    		faxObj[sh],
+						topLeft[sh][0] * thisZoomFactor,
+						topLeft[sh][1] * thisZoomFactor,
+						(parseInt(faxObj[sh].width) * zoom[sh]) * thisZoomFactor,
+						(parseInt(faxObj[sh].height) * zoom[sh] * thisZoomFactor)
+				);
 	    }
 		}
-		if (withChart) {
-			worldMap.drawWorldMap(false);
-		}
+//		if (withChart) { // GRIB over the faxes
+//			worldMap.drawWorldMap(false);
+//		}
   };
 
   var changeFax = function(val) {
@@ -397,26 +567,33 @@
 					value: type.gribType.type,
 					text: type.gribType.desc
 				}));
-	  }
-  });
+			}
+		});
 
 		gribData = jsonGrib; // gribData defined in ww.js
 		redraw();
   };
 
-  var makeGRIBRequest = function() {
-	  var rawRequest = $("#grib-request").val();
+  var makeGRIBRequest = function(gribRequest, where) {
+	  var rawRequest = gribRequest;
+	  if (rawRequest === undefined) {
+		  rawRequest = $("#grib-request").val();
+	  }
 	  console.log(rawRequest);
 	  var jsonRequest = { request: rawRequest };
+	  if (where !== undefined) {
+	  	console.log('... into', where);
+		  jsonRequest.directory = where;
+		}
 
-	  worldMap.setAfterDrawing(after); // That is the callback
+	  worldMap.setAfterDrawing(renderGRIBData); // That is the callback
 
 	  requestGRIB(jsonRequest, plotGrib);
   };
 
   var renderGRIB = function() {
 	  var rawGrib = JSON.parse($("#json-grib").val());
-	  worldMap.setAfterDrawing(after);
+	  worldMap.setAfterDrawing(renderGRIBData);
 	  plotGrib(rawGrib);
   };
 
@@ -430,10 +607,36 @@
 	  }
 	};
 
+  var updateGRIBRequest = function(option) {
+  	var key = option.value;
+	  for (var i=0; i<compositeCatalog.length; i++) {
+		  if (key === compositeCatalog[i].key) {
+			  if (compositeCatalog[i].gribRequest !== undefined) {
+				  $("#grib-request").val(compositeCatalog[i].gribRequest);
+			  } else {
+				  $("#grib-request").val('');
+				}
+			  break;
+		  }
+	  }
+	};
+
+  var changeCanvasSize = function(factor) {
+	  thisZoomFactor *= factor;
+	  worldMap.setCanvasHeight(worldMap.getCanvasHeight() * factor);
+	  worldMap.setCanvasWidth(worldMap.getCanvasWidth() * factor);
+	  // Faxes offset and zoom
+	  for (var sh=0; sh<show.length; sh++) {
+	  	speakUp(sh + 1);
+	  }
+	  document.getElementById("canvas-size").innerText = "Canvas Size: (WxH):" + worldMap.getCanvasWidth() + "x" + worldMap.getCanvasHeight();
+		redraw();
+  };
+
 		</script>
   </head>
   <body>
-    <h2>Weather Wizard in HTML5</h2>
+    <h2>Weather Wizard in HTML5 - Basics</h2>
     <table border="0">
       <tr>
         <td valign="top" rowspan="2">
@@ -446,14 +649,14 @@
           <input type="checkbox" onchange="changeGrid(this);" checked/> With Grid&nbsp;
 	        <input type="checkbox" onchange="changeTropics(this);" /> With Tropics
 					<hr/>
-					<select id="composites"></select>
-					<button onclick="loadFaxes();">Load faxes</button>
+					<select id="composites" onchange="updateGRIBRequest(this);"></select>
+					<button onclick="loadFaxes();">Load documents</button>
 					<hr/>
 					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
 					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From JSON
 					<hr/>
 					<div id="grib-web">
-						<input type="text" size="60" id="grib-request" placeholder="Raw GRIB Request" value="GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"></input>
+						<input type="text" size="60" id="grib-request" placeholder="Raw GRIB Request" value=""></input>
 						&nbsp;
 						<button onclick="makeGRIBRequest();">GRIB Request</button>
 					</div>
@@ -462,6 +665,10 @@
 						<br/>
 						<button onclick="renderGRIB();">Render GRIB from above</button>
 					</div>
+					<hr/>
+
+					Zoom for the whole thing: <button onclick="changeCanvasSize(0.9);">-</button><button onclick="changeCanvasSize(1.1);">+</button>
+
 					<hr/>
 					<div style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 						<table>
@@ -475,6 +682,8 @@
 								</td>
 							</tr>
 						</table>
+					</div>
+					<div id="canvas-size" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 					</div>
 	        <div id="dyn-faxes" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;">
 		        <table id="fax-table">
@@ -514,7 +723,10 @@
 							</tr>
 						</table>
 					</div>
-        </td>
+
+					<div id="mouse-data" style="padding:5px; background:#fff; border-radius: 5px; overflow-y: auto; overflow-x: auto; border: 1px solid #CCC; margin-top: 10px;"></div>
+
+				</td>
       </tr>
       <tr>
         <td colspan="2">

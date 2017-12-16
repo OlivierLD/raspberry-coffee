@@ -7,22 +7,8 @@ An illustration of the way to gather several REST Services all in one place.
 - [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md) REST Service
 - ... and the list keeps growing (see in `navrest.NavServer.java` how to add a `RequestManager`).
 
-In addition, I'll be attempting to implement the features of the Weather Wizard (another project I own, in Java and Swing, that can superimpose different heterogeneous documents on the same chart, like Faxes, GRIBS, routing results, etc.). This part involes the
-`Img` REST Service, found in the `RESTImgProcessor` project.
-
-![Weather Wizard, early attempt](./docimg/screenshot.08.png)
-
-> A quick note on the Weather Wizard: The faxes can be downloaded from the Internet, from the NOAA web site or its equivalents. At sea, SailMail does the job,
-> I heavily tested it, it does work. 
->
-> Now, to be able to superimpose faxes as above, you need 2 main things:
-> - turn the white background of the fax into a transparent color
-> - change the black foreground color (in case we deal with a black and white fax) into something else, for better reading.
->
-> I was not able to find a way to do this in JavaScript (JavaScript in the browser, hey, some `nodejs` library do it, but they run on a server side - aka dark side).
-> That's where the `RESTImageProcessor` comes in. This is the onwe transforming the images (faxes) into what's expected.
->
-> Again, all this runs _fine_ on a Raspberry PI Zero.
+In addition, I'll be attempting to implement the features of the Weather Wizard (another project I own, in Java and Swing, that can superimpose different heterogeneous documents on the same chart, like Faxes, GRIBS, routing results, etc.). This part involves the
+`Img` REST Service, found in the [`RESTImageProcessor`](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTImageProcessor) project, and the routing features, found in the [`RESTRouting`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTRouting/README.md) project.
 
 ### Rationale
 
@@ -30,9 +16,13 @@ The idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Ra
 The GUI is dedicated to `HTML5` and `CSS3`, rendered in the browser of any device connected to the Raspberry PI's network (laptop, tablet, smartphone, etc).
 
 An application like `OpenCPN` seems (to me) too demanding for the Raspberry PI. Same for all `Swing` applications
-developed in Java. And actually, this is a general trend in this area.
+developed in Java. And actually, this is a general trend in this area, languages like Java are clearly moving to the back-end side of the story.
 Java applets are being de-supported in more and more browsers, HTML and connected technologies keep improving
 their graphical capabilities (see [WebGL](http://learningwebgl.com/blog/), really [amazing](http://arodic.github.io/p/jellyfish/)).
+
+> Just to nail it down: we've all used Integrated Development Environments (IDE), considering that this is (or was) where
+> client side processing capabilities were needed.
+> Well, think again, and look at what [Cloud9](http://c9.io/) is capable of...
 
 Learning how to use graphical libraries (like `Swing`, `JavaFX`, and others) is not an easy task,
 it is demanding, it is long, and there is no standard way to do it. For example, moving from `Swing` to `JavaFX` or `SWT` pretty much requires
@@ -45,6 +35,24 @@ I'd rather spend time learning how use HTML5's canvases, or WebGL.
 > - Web pages, to be rendered on any device that can reach the Raspberry PI's network
 
 The sample web pages presented below are relying on HTML5 and CSS3.
+
+#### Two languages
+This clearly divides the problem to address in two distinct parts:
+- Back end computation, providing the data to render, exposed as REST services.
+- Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface.
+- The broker (the glue) in-between is HTTP.
+
+This allows pretty much _any_ device that knows about a network to connect to the Local Area Network (LAN)
+created by the Raspberry PI (or any machine the server runs on) to connect to it and consume the data it produces. 
+
+The way to go for the front end is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
+Consuming REST services can be done from many frameworks, here we'll use `jQuery`.
+
+For the back end, my choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), but
+other options could be considered, the most prominent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
+Front End _and_ the Back End.
+
+Something to think about.
 
 ## Try it
 Build it:
@@ -131,6 +139,23 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 ---
 
 ## Various features
+    
+**Weather Wizard**:
+
+![Weather Wizard, early attempt](./docimg/screenshot.08.png)
+
+> A quick note on the Weather Wizard: The faxes can be downloaded from the Internet, from the NOAA web site or its equivalents. At sea, SailMail does the job,
+> I heavily tested it, it does work. 
+>
+> Now, to be able to superimpose faxes as above, you need 2 main things:
+> - turn the white background of the fax into a transparent color
+> - change the black foreground color (in case we deal with a black and white fax) into something else, for better reading.
+>
+> I was not able to find a way to do this in JavaScript (JavaScript in the browser, hey, some `nodejs` library do it, but they run on a server side - aka dark side).
+> That's where the `RESTImageProcessor` comes in. This is the onwe transforming the images (faxes) into what's expected.
+>
+> Again, all this runs _fine_ on a Raspberry PI Zero.
+
 ![GRIB Rendering](./docimg/screenshot.09.png)
 Faxes and GRIB, together
 
@@ -138,6 +163,6 @@ Faxes and GRIB, together
 ## TODOs, next...
 
 - `npm` for non-java resource sharing
-- GRIB rendering (in full)
+- GRIB rendering (in full), coming good.
 - Routing features
 

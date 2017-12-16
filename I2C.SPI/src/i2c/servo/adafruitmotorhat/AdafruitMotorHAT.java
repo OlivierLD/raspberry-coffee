@@ -294,14 +294,16 @@ public class AdafruitMotorHAT {
 				else if (this.currentStep >= this.MICROSTEPS * 3 && this.currentStep < this.MICROSTEPS * 4)
 					coils = new int[]{1, 0, 0, 1};
 			} else {
-				int[][] step2coils = new int[][]{{1, 0, 0, 0},
-								{1, 1, 0, 0},
-								{0, 1, 0, 0},
-								{0, 1, 1, 0},
-								{0, 0, 1, 0},
-								{0, 0, 1, 1},
-								{0, 0, 0, 1},
-								{1, 0, 0, 1}};
+				int[][] step2coils = new int[][]{
+						{1, 0, 0, 0},
+						{1, 1, 0, 0},
+						{0, 1, 0, 0},
+						{0, 1, 1, 0},
+						{0, 0, 1, 0},
+						{0, 0, 1, 1},
+						{0, 0, 0, 1},
+						{1, 0, 0, 1}
+				};
 				coils = step2coils[this.currentStep / (this.MICROSTEPS / 2)];
 			}
 			// print "coils state = " + str(coils)

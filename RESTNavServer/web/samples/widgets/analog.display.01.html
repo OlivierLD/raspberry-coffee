@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Widget Samples</title>
+	<link rel="stylesheet" href="../../css/stylesheet.css" type="text/css"/>
+	<script src="../../widgets/AnalogDisplay.js"></script>
+	<script type="text/javascript">
+
+		var analogDisplay;
+
+		window.onload = function() {
+			analogDisplay = new AnalogDisplay(
+					'aCanvas', 	// canvas name
+					100, 				// radius
+					50,  				// max
+					10,  				// major ticks
+					1,   				// minor ticks
+					true,				// with digits
+					40); 				// overlap in degrees
+			analogDisplay.setLabel('Data');
+			analogDisplay.setWithMinMax(true);
+
+			analogDisplay.setValue(10);
+		};
+
+		var change = function(slider) {
+			var val = slider.value;
+			analogDisplay.animate(val);
+		};
+
+		var onBorderChange = function(cb) {
+			analogDisplay.setBorder(cb.checked);
+			analogDisplay.repaint();
+		};
+
+		// TODO with mini-maxi y/n, smooth y/n, overlap y/n, etc
+
+	</script>
+</head>
+<body>
+	<div style="border-radius: 5px; border: 1px solid silver; width: 250px; margin-bottom: 3px;">
+		<input type="checkbox" onchange="onBorderChange(this);" checked />With Border
+	</div>
+	<div style="border-radius: 5px; border: 1px solid silver; width: 250px; text-align: center;">
+	<canvas id="aCanvas" width="240" height="220" title="Title show up here"></canvas>
+	<br/>
+	<input type="range" min="0" max="50" step="0.1" value="10" onchange="change(this);" style="width: 240px;">
+	</div>
+</body>
+</html>

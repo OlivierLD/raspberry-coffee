@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <!--
- | Take move-fast=false as QS parameter.
  | Start the nav server (./runNavServer)
- | Then try http://localhost:9999/web/samples/worldmap.dual.demo.html?move-fast=true
+ | Then try http://localhost:9999/web/samples/now.from.SF.html
  |
  | Globe, and REST APIs for the Astro service.
  +-->
@@ -12,7 +11,7 @@
     <!--meta charset="iso-8859-1"-->
     <!--meta charset="utf-8"-->
     <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
-    <title>World Map Demo</title>
+    <title>World Map Demo, from San Francisco</title>
 
     <link rel="icon" type="image/ico" href="../icons/hammerhead.02.ico">
 
@@ -86,34 +85,8 @@
 		worldMap.setAstronomicalData(data);
 	};
 
-	// Callback test
-  var before = function(canvas, context) {
-	  console.log("To do before drawing the chart");
-	  var savedFont = context.font;
-	  var savedStyle = context.fillStyle;
-	  context.fillStyle = "blue";
-	  context.font = "bold 72px Arial";
-	  context.fillText("Written before drawing", 10, canvas.height / 2);
-	  context.fillStyle = savedStyle;
-	  context.font = savedFont;
-  };
-	var after = function(canvas, context) {
-		console.log("To do after drawing the chart");
-		var savedFont = context.font;
-		var savedStyle = context.fillStyle;
-		context.fillStyle = "pink";
-		context.font = "bold 72px Arial";
-		context.fillText("Written after drawing", 10, (canvas.height / 2) - 80);
-		context.fillStyle = savedStyle;
-		context.font = savedFont;
-	};
-
   window.onload = function() {
     init(); // init UI
-
-		// Callback test
-		worldMap.setAfterDrawing(after);
-	  worldMap.setBeforeDrawing(before);
 
 	  worldMap.clear();
 	  worldMap.setPositionLabel("");

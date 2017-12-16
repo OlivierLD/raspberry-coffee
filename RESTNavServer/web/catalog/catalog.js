@@ -76,7 +76,8 @@ const compositeCatalog = [
 					y: 482
 				}
 			}
-		]
+		],
+		gribRequest: 'GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
 	},
 	{
 		key: "ATL-0001",
@@ -123,6 +124,23 @@ const compositeCatalog = [
 					y: 27
 				}
 			}
-		]
+		],
+		gribRequest: 'GFS:65N,10N,100W,10E|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
+	},
+	{
+		key: "MED-0001",
+		name: 'Mediterranean GRIBs',
+		map: {
+			projection: mapProjections.mercator,
+			north: 50,
+			south: 20,
+			east: 45,
+			west: -20
+		},
+		canvas: {
+			w: 1000,
+			h:  600
+		},
+		gribRequest: 'GFS:45N,30N,10W,40E|0.5,0.5|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN'
 	}
 ];

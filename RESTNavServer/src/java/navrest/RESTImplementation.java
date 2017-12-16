@@ -46,7 +46,17 @@ public class RESTImplementation {
 					"GET",
 					"/oplist",
 					this::getOperationList,
-					"List of all available operations, on all request managers."));
+					"List of all available operations, on all request managers."),
+			/*
+			 * This resource involves both the Routing (for the GRIB) and the ImageProcessing (for the faxes) services.
+			 * This is why it is here. It may go somewhere else in the future...
+			 */
+			new Operation(
+					"GET",
+					"/ww/composite-hierarchy",
+					this::getCompositeHierarchy,
+					"Retrieve the list of the composites already available on the file system")
+	);
 
 	protected List<Operation> getOperations() {
 		return this.operations;
@@ -83,6 +93,26 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private Response getCompositeHierarchy(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			Map<String, Object> compositeHierarchy = new CompositeCrawler().getCompositeHierarchy();
+			String content = new Gson().toJson(compositeHierarchy);
+			RESTProcessorUtil.generateResponseHeaders(response, content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("COMP-0001")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+
+		}
+		return response;
+	}
+
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
 	 *
@@ -90,7 +120,7 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response emptyOperation(@Nonnull Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
 		return response;
 	}
 }

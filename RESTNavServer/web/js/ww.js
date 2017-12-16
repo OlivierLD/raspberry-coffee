@@ -21,7 +21,7 @@ var DEFAULT_TIMEOUT = 60000;
  */
 
 var position = {
-	lat: 37.7489,
+	lat:   37.7489,
 	lng: -122.5070
 };
 
@@ -96,13 +96,13 @@ var getDeferred = function(
 	return deferred.promise();
 };
 
-var requestComposite = function(requestPayload) {
+var requestCompositeFaxes = function(requestPayload) {
 	var url = "/img/download-and-transform";
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, requestPayload, false);
 };
 
-var getCompositeData = function(options, compositeData, callback) {
-	var getData = requestComposite(options);
+var getCompositeFaxes = function(options, compositeData, callback) {
+	var getData = requestCompositeFaxes(options);
 	getData.done(function(value) {
 		if (callback === undefined) {
 			try {
@@ -129,14 +129,49 @@ var getCompositeData = function(options, compositeData, callback) {
 	});
 };
 
-var gribData = {};
+var crawlComposites = function() {
+	var url = "/ww/composite-hierarchy";
+	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, undefined, false);
+}
+
+var getExistingComposites = function(callback) {
+	var getData = crawlComposites();
+	getData.done(function(value) {
+		if (callback === undefined) {
+			try {
+				// Do something smart
+				console.log(value);
+			} catch (err) {
+				errManager(err + '\nFor\n' + value);
+			}
+		} else {
+			callback(value);
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed to get composite data data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+				? message : ' - '));
+	});
+};
+
+var gribData;
 
 // Callback for GRIBs
-var after = function(canvas, context) {
-	console.log("Now drawing GRIB");
-	if (gribData !== {}) {  // TODO Identify date and type
+var renderGRIBData = function(canvas, context) {
+	$("#grib-checkbox").prop("disabled", false);
+	$("#grib-checkbox").prop("checked", true);
+
+//console.log("Now drawing GRIB");
+	if (gribData !== undefined) {
 		var date = $("#grib-dates").val(), type = $("#grib-types").val();
 		drawGrib(canvas, context, gribData, date, type);
 	}
 };
-

@@ -126,10 +126,20 @@ public class RESTImplementation {
 				try {
 					GRIBRequest gribRequest = gson.fromJson(stringReader, GRIBRequest.class);
 					try {
+						String dir =  gribRequest.directory;
+						if (dir == null) {
+							dir = ".";
+						}
+						File location = new File(dir);
+						if (!location.exists()) {
+							boolean ok = location.mkdirs();
+							System.out.println(String.format("Created directory(ies) %s:", dir) + ok);
+						}
 						String gribFileName = "grib.grb";
-						GRIBUtils.getGRIB(GRIBUtils.generateGRIBRequest(gribRequest.request), ".", gribFileName, true);
+						System.out.println(String.format(" >> Will pull %s into %s", gribFileName, dir));
+						GRIBUtils.getGRIB(GRIBUtils.generateGRIBRequest(gribRequest.request), dir, gribFileName, true);
 						GRIBDump dump = new GRIBDump();
-						URL gribURL = new File(gribFileName).toURI().toURL();
+						URL gribURL = new File(dir, gribFileName).toURI().toURL();
 						GribFile gf = new GribFile(gribURL.openStream());
 						List<GRIBDump.DatedGRIB> expandedGBRIB = dump.getExpandedGBRIB(gf);
 						String content = new Gson().toJson(expandedGBRIB);
@@ -186,5 +196,6 @@ public class RESTImplementation {
 
 	public static class GRIBRequest {
 		String request;
+		String directory;
 	}
 }

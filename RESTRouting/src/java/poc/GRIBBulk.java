@@ -188,7 +188,10 @@ public class GRIBBulk {
 		GRIBBulk gb = new GRIBBulk();
 //	"GRIB_2017_10_16_07_31_47_PDT.grb", "GRIB_2009_02_25_Sample.grb";
 //	String gribFileName = "GRIB_2009_02_25_Sample.grb";
-		String gribFileName = "grib.grb";
+		String gribFileName = "GRIB_2017_10_16_07_31_47_PDT.grb";
+		if (args.length > 0) {
+			gribFileName = args[0];
+		}
 		URL gribURL = new File(gribFileName).toURI().toURL();
 		GribFile gf = new GribFile(gribURL.openStream());
 		gb.showBulk(Thread.currentThread(), gf);
