@@ -141,6 +141,9 @@ public class RESTImplementation {
 									if (verbose) {
 										System.out.println(String.format("Downloading %s...", txRequest.getUrl()));
 									}
+									if (txRequest.getUrl().startsWith("file:")) { // Comes from an existing composite
+										txRequest = txRequest.returned(txRequest.getUrl());
+									}
 									PullTxManager.downloadAndTransform(
 											txRequest.getUrl(),
 											txRequest.getStorage(),
