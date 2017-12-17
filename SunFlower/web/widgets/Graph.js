@@ -146,9 +146,20 @@ var graphColorConfig = defaultGraphColorConfig;
 function Graph(cName,       // Canvas Name
                graphData,   // x,y tuple array
                callback,    // Callback on mouseclick
-               unit) {      // Unit label, for display
+               unit,        // Unit label, for display
+               minMax) {    // { min: a, max: b }, to have static boundaries
 
   var instance = this;
+  var staticMinimum, staticMaximum;
+
+  if (minMax !== undefined) {
+  	if (minMax.min !== undefined) {
+  		staticMinimum = minMax.min;
+	  }
+	  if (minMax.max !== undefined) {
+		  staticMaximum = minMax.max;
+	  }
+  }
 
   if (events !== undefined) {
     events.subscribe('color-scheme-changed', function(val) {
@@ -244,7 +255,7 @@ function Graph(cName,       // Canvas Name
     }
   }, 0);
   
-  var relativeMouseCoords = function (event, element) {
+  var relativeMouseCoords = function (event, element) { // TODO See in worldmap.js how this is done
     var totalOffsetX = 0;
     var totalOffsetY = 0;
     var canvasX = 0;
@@ -295,8 +306,8 @@ function Graph(cName,       // Canvas Name
   };
 
   this.getMinMax = function(data) {
-      var mini = Math.floor(this.minY(data));
-      var maxi = Math.ceil(this.maxY(data));
+      var mini = (staticMinimum !== undefined ? staticMinimum : Math.floor(this.minY(data)));
+      var maxi = (staticMaximum !== undefined ? staticMaximum : Math.ceil(this.maxY(data)));
 
       if (Math.abs(maxi - mini) < 5) { // To have a significant Y scale.
           maxi += 3;

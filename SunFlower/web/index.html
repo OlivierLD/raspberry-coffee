@@ -36,7 +36,7 @@
 
   window.onload = function() {
     statusFld  = document.getElementById('status');
-	  flowGraph = new Graph("flowCanvas", flowData, undefined, "V");
+	  flowGraph = new Graph("flowCanvas", flowData, undefined, "V",  { min: 0, max: 6 });
   };
 
   var decToSex = function (val, ns_ew) {
