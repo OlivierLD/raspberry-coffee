@@ -6,6 +6,11 @@ Several possibilities are available, among them:
 
 #### Arduino Uno, Arduino Mini, ESP8266 (Huzzah), Adafruit Trinket, Photon, etc
 
+###### Universal Serial Bus (USB)
+Universal, but there are at least 3 versions: A, B, C:
+
+![USBs](./img/usbs.png)
+
 ## Install the Arduino IDE on the Raspberry PI
 - Go to [arduino.cc](https://www.arduino.cc/) -> Software
 - Download the last version for Linux ARM
@@ -22,12 +27,14 @@ Then
 
 ### Ardiuno Uno
 Use a USB-A to USB-B (male-male) cable.
+
 ![Arduino Uno](./img/Arduino.Uno.png)
 
 Programmer: `AVRISP mkII`
 
 ### Arduino Mini
 Use a [CP2104](https://www.adafruit.com/product/3309) connector and a USB-A to USB-C (male-male) cable.
+
 ![Arduino Mini](./img/Arduino.Mini.png)
 
 Programmer: `AVRISP mkII`
@@ -42,6 +49,7 @@ In the Arduino IDE, got to `File > Preferences`, and add a URL in `Boards Manage
  http://arduino.esp8266.com/stable/package_esp8266com_index.json
 ```
 Connect the Huzzah to the Raspberry PI with an [FTDI cable](https://www.adafruit.com/product/70), make sure the black goes on the `GND`.
+
 ![Huzzah](./img/Huzzah.png)
 
 To upload a sketch:
@@ -61,6 +69,7 @@ In the Arduino IDE, got to `File > Preferences`, and add a URL in `Boards Manage
  https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
 ```
 Use a USB-A to USB-C (male-male) cable.
+
 ![Arduino Uno](./img/Trinket.png)
 
 To upload a sketch:
