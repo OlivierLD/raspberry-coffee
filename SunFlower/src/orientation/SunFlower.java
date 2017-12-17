@@ -111,7 +111,7 @@ public class SunFlower implements RESTRequestManager {
 
 	private final static float SMOOTH_STEP = 1.0f;
 
-	private final static float MAX_BATTERY_VOLTAGE = 3.7f;
+	private static float maxBatteryVoltage = 5.0f;
 
 	private enum servoVerboseType {
 		BOTH,
@@ -370,6 +370,8 @@ public class SunFlower implements RESTRequestManager {
 		tiltServoID = tiltServoNumber;
 
 		// Read System Properties
+		maxBatteryVoltage = Float.parseFloat(System.getProperty("max.battery.voltage", "5.0"));
+
 		adcVerbose = "true".equals(System.getProperty("adc.verbose", "false"));
 		orientationVerbose = "true".equals(System.getProperty("orient.verbose", "false"));
 		tiltVerbose = "true".equals(System.getProperty("tilt.verbose", "false"));
@@ -808,7 +810,7 @@ public class SunFlower implements RESTRequestManager {
 		BatteryData batteryData = new BatteryData()
 				.adc(adc)
 				.volume(volume)
-				.volt(MAX_BATTERY_VOLTAGE * ((double)adc / 1023d)); // TODO MAX_BATTERY_VOLTAGE: a prm?
+				.volt(maxBatteryVoltage * ((double)adc / 1023d)); // max.battery.voltage: a System prm
 		return batteryData;
 	}
 
@@ -1313,6 +1315,22 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println(               "       +--------+ ");
 
 			initADC();
+
+			if ("true".equals(System.getProperty("log.battery.data", "false"))) {
+				final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+				Thread batteryLogger = new Thread(() -> {
+					while (true) {
+						BatteryData batteryData = instance.getBatteryData();
+						System.out.println(String.format(">> BAT: %s %.02f V", SDF.format(new Date()), batteryData.volt));
+						try {
+							Thread.sleep(1_000);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				});
+				batteryLogger.start();
+			}
 
 		} else {
 			foundMCP3008 = false;

@@ -265,6 +265,6 @@ See the project named `GPS.sun.servo`.
 
 Monitor the load of the LiPo battery, with an MPC3008.
 
-With a photocell(s) (read by the MCP3008 as well), to know how sunny it is.
+Add a photocell(s) (read by the MCP3008 as well), to know how sunny it is.
 
 Orienting much bigger panels, using *feedback servos* and *stepper motors*.
