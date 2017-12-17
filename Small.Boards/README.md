@@ -22,11 +22,13 @@ Then
 
 ### Ardiuno Uno
 Use a USB-A to USB-B (male-male) cable.
+![Arduino Uno](./img/Arduino.Uno.png)
 
 Programmer: `AVRISP mkII`
 
 ### Arduino Mini
 Use a [CP2104](https://www.adafruit.com/product/3309) connector and a USB-A to USB-C (male-male) cable.
+![Arduino Mini](./img/Arduino.Mini.png)
 
 Programmer: `AVRISP mkII`
 
@@ -40,6 +42,7 @@ In the Arduino IDE, got to `File > Preferences`, and add a URL in `Boards Manage
  http://arduino.esp8266.com/stable/package_esp8266com_index.json
 ```
 Connect the Huzzah to the Raspberry PI with an [FTDI cable](https://www.adafruit.com/product/70), make sure the black goes on the `GND`.
+![Huzzah](./img/Huzzah.png)
 
 To upload a sketch:
 - press the `GPIO0` button
@@ -58,6 +61,7 @@ In the Arduino IDE, got to `File > Preferences`, and add a URL in `Boards Manage
  https://adafruit.github.io/arduino-board-index/package_adafruit_index.json
 ```
 Use a USB-A to USB-C (male-male) cable.
+![Arduino Uno](./img/Trinket.png)
 
 To upload a sketch:
 - Press the button on the Trinket - verify you see the red LED pulse. This means it is ready to receive data.
