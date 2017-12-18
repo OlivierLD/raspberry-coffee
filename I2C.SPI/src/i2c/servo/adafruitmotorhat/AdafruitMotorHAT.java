@@ -208,7 +208,7 @@ public class AdafruitMotorHAT {
 
 		public int oneStep(ServoCommand dir, Style style) throws IOException {
 			int pwmA = 255,
-							pwmB = 255;
+					pwmB = 255;
 
 			// first determine what sort of stepping procedure we're up to
 			if (style == Style.SINGLE) {
