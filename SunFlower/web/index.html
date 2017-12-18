@@ -251,6 +251,9 @@
     <address>&copy; Oliv did it.</address>
     <script src="js/sf.client.js"></script>
     <script>
+
+			var parked = false;
+
 			var setVisual = function(radio) {
 				if (radio.value === 'data') {
 					$("#sunflower-data").css('display', 'block');
@@ -283,6 +286,7 @@
               $("#sunH").text(he.toFixed(2));
               var z = json["sunData"].z;
               $("#sunZ").text(z.toFixed(2));
+              parked =  (he <= 0);
           }
           if (json["pos"] !== undefined) {
               var lat = json["pos"].latitude;
@@ -291,18 +295,23 @@
               $("#lon").text(decToSex(lon, 'EW'));
           }
           if (json["servos"] !== undefined) {
-              var h = json["servos"].heading.value;
-              $("#heading").text(h);
-              var t = json["servos"].tilt.value;
-              $("#tilt").text(t);
+	          if (!parked) {
 
-              var hpins = json["servos"].heading.pins;
-              $("#heading-pins").text(hpins.join());
+		          var h = json["servos"].heading.value;
+		          $("#heading").text(h);
+		          var t = json["servos"].tilt.value;
+		          $("#tilt").text(t);
+	          } else {
+		          $("#heading").text("---");
+		          $("#tilt").text("---");
+						}
+						var hpins = json["servos"].heading.pins;
+						$("#heading-pins").text(hpins.join());
 
-              var tpins = json["servos"].tilt.pins;
-              $("#tilt-pins").text(tpins.join());
-              $("#tilt-offset").text(json["servos"].tilt.offset + "\272");
-              $("#tilt-limit").text(json["servos"].tilt.limit + "\272");
+						var tpins = json["servos"].tilt.pins;
+						$("#tilt-pins").text(tpins.join());
+						$("#tilt-offset").text(json["servos"].tilt.offset + "\272");
+						$("#tilt-limit").text(json["servos"].tilt.limit + "\272");
           }
           if (json.heading !== undefined) {
               $("#device-heading").text(json.heading + "\272");
@@ -317,9 +326,6 @@
 			          flowData.splice(0, 1);
 		          }
 	          }
-
-
-
 	          flowGraph.drawGraph("flowCanvas", flowData, undefined);
           }
       };

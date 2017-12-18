@@ -705,6 +705,7 @@ public class SunFlower implements RESTRequestManager {
 			this.longitude = g;
 		}
 	}
+
 	public GeographicPosition getPosition() {
 		return new GeographicPosition(latitude, longitude);
 	}
@@ -741,6 +742,7 @@ public class SunFlower implements RESTRequestManager {
 			}
 		}
 	}
+
 	public ServoValues getServoValues() {
 		return new ServoValues(ansiHeadingServoAngle, ansiTiltServoAngle);
 	}
@@ -755,6 +757,7 @@ public class SunFlower implements RESTRequestManager {
 			this.solar = solar;
 		}
 	}
+
 	public Dates getDates() {
 		return new Dates((ansiSystemDate != null ? SDF.format(ansiSystemDate) : "null"),
 						(ansiSystemDate != null ? SDF_UTC.format(ansiSystemDate) : "null"),

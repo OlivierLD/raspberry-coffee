@@ -10,7 +10,7 @@ import org.fusesource.jansi.AnsiConsole;
  * It shows how to use the panel orienter (SunFlower)
  * in addition with a LSM303 for the device heading.
  *
- * Along the same lines, position can be provided, form a GPS for example.
+ * Along the same lines, position can be provided, from a GPS for example.
  * And instead of using an LSM303, the heading could come from an NMEA Station...
  */
 public class SimplePanelOrienter {
