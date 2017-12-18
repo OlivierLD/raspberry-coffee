@@ -77,6 +77,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         xmlns:fo="http://www.w3.org/1999/XSL/Format"
         xmlns:fox="http://xml.apache.org/fop/extensions" version="2.0">
+
   <xsl:template match="/">
     <fo:root>
       <fo:layout-master-set>
@@ -102,10 +103,77 @@
           <!-- First Page -->
           <!--fo:block break-after="page">
                     </fo:block-->
+
+          <!-- Put a title here -->
+	        <fo:block text-align="center" font-family="Helvetica Neue" font-size="24pt" font-weight="bold" margin="0.25in">
+		        <xsl:value-of select="'Lunar Calendar, 2018'"/>
+	        </fo:block>
+
           <fo:block margin="0.1in">
-            <xsl:for-each select="//period">
-              <xsl:apply-templates select="."/>
-            </xsl:for-each>
+
+            <fo:table>
+	            <!-- border="0.5pt solid black"> -->
+	            <fo:table-column column-width="0.40in"/>
+
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-column column-width="0.33in"/>
+	            <fo:table-body font-size="7pt">
+		            <xsl:for-each select="//period">
+		              <fo:table-row>
+			              <fo:table-cell padding="medium"
+			                             vertical-align="middle" text-align="center">
+				              <fo:block vertical-align="middle" text-align="center" font-family="Book Antiqua" font-size="10pt" font-weight="bold">
+					              <xsl:choose>
+						              <xsl:when test="position() = 1"><xsl:value-of select="'Jan'"/></xsl:when>
+						              <xsl:when test="position() = 2"><xsl:value-of select="'Feb'"/></xsl:when>
+						              <xsl:when test="position() = 3"><xsl:value-of select="'Mar'"/></xsl:when>
+						              <xsl:when test="position() = 4"><xsl:value-of select="'Apr'"/></xsl:when>
+						              <xsl:when test="position() = 5"><xsl:value-of select="'May'"/></xsl:when>
+						              <xsl:when test="position() = 6"><xsl:value-of select="'Jun'"/></xsl:when>
+						              <xsl:when test="position() = 7"><xsl:value-of select="'Jul'"/></xsl:when>
+						              <xsl:when test="position() = 8"><xsl:value-of select="'Aug'"/></xsl:when>
+						              <xsl:when test="position() = 9"><xsl:value-of select="'Sep'"/></xsl:when>
+						              <xsl:when test="position() = 10"><xsl:value-of select="'Oct'"/></xsl:when>
+						              <xsl:when test="position() = 11"><xsl:value-of select="'Nov'"/></xsl:when>
+						              <xsl:when test="position() = 12"><xsl:value-of select="'Dec'"/></xsl:when>
+						              <xsl:otherwise><xsl:value-of select="position()"/></xsl:otherwise>
+					              </xsl:choose>
+				              </fo:block>
+			              </fo:table-cell>
+		                <xsl:apply-templates select="."/>
+		              </fo:table-row>
+		            </xsl:for-each>
+	            </fo:table-body>
+            </fo:table>
           </fo:block>
           <!--fo:block id="last-page"/-->
           <fo:block text-align="left" font-family="Book Antiqua" font-size="8pt" font-weight="normal" font-style="italic" margin="0.1in">by OlivSoft</fo:block>
@@ -115,192 +183,132 @@
   </xsl:template>
 	
   <xsl:template match="period" name="one-month-tide">
-    <fo:block text-align="center" font-family="Courier" font-size="10pt" margin="0.1in">
-      <fo:block margin="0.15in">
-        <fo:table>
-          <!-- border="0.5pt solid black"> -->
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-column column-width="0.4in"/>
-          <fo:table-body font-size="7pt">
-            <xsl:for-each select="./date">
-              <xsl:if test="(position() - 1) mod 3 = 0">
-                <xsl:text disable-output-escaping="yes">&lt;fo:table-row&gt;</xsl:text>
-              </xsl:if>
-              <xsl:if test="(position() - 1) mod 3 = 2 or position() = last()">
-                <xsl:text disable-output-escaping="yes">&lt;/fo:table-row&gt;</xsl:text>
-              </xsl:if>
-            </xsl:for-each>
-          </fo:table-body>
-          <!--fo:table-footer>
-                      That's it
-                    </fo:table-footer-->
-        </fo:table>
-      </fo:block>
-    </fo:block>
+    <xsl:for-each select="./date">
+      <fo:table-cell padding="medium"
+                     vertical-align="middle" text-align="center">
+	      <fo:block vertical-align="middle" text-align="center">
+		      <xsl:value-of select="position()"/>
+	      </fo:block>
+        <fo:block vertical-align="middle">
+          <!--xsl:value-of select="./@val"/-->
+          <!--xsl:apply-templates select="."/-->
+          <xsl:choose>
+            <xsl:when test="./@moon-phase = '01'">
+              <fo:external-graphic src="url('phase01.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '02'">
+              <fo:external-graphic src="url('phase02.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '03'">
+              <fo:external-graphic src="url('phase03.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '04'">
+              <fo:external-graphic src="url('phase04.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '05'">
+              <fo:external-graphic src="url('phase05.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '06'">
+              <fo:external-graphic src="url('phase06.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '07'">
+              <fo:external-graphic src="url('phase07.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '08'">
+              <fo:external-graphic src="url('phase08.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '09'">
+              <fo:external-graphic src="url('phase09.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '10'">
+              <fo:external-graphic src="url('phase10.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '11'">
+              <fo:external-graphic src="url('phase11.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '12'">
+              <fo:external-graphic src="url('phase12.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '13'">
+              <fo:external-graphic src="url('phase13.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '14'">
+              <fo:external-graphic src="url('phase14.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '15'">
+              <fo:external-graphic src="url('phase15.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '16'">
+              <fo:external-graphic src="url('phase16.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '17'">
+              <fo:external-graphic src="url('phase17.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '18'">
+              <fo:external-graphic src="url('phase18.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '19'">
+              <fo:external-graphic src="url('phase19.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '20'">
+              <fo:external-graphic src="url('phase20.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '21'">
+              <fo:external-graphic src="url('phase21.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '22'">
+              <fo:external-graphic src="url('phase22.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '23'">
+              <fo:external-graphic src="url('phase23.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '24'">
+              <fo:external-graphic src="url('phase24.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '25'">
+              <fo:external-graphic src="url('phase25.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '26'">
+              <fo:external-graphic src="url('phase26.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '27'">
+              <fo:external-graphic src="url('phase27.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+            <xsl:when test="./@moon-phase = '28'">
+              <fo:external-graphic src="url('phase28.gif')"
+                                   vertical-align="middle" text-align="center"/>
+            </xsl:when>
+          </xsl:choose>
+        </fo:block>
+      </fo:table-cell>
+    </xsl:for-each>
   </xsl:template>
 
-  <xsl:template match="date" name="one-day-tide">
-    <xsl:param name="data"/>
-    <!-- Create new table here -->
-    <fo:table>
-      <fo:table-column column-width="0.4in"/>    <!-- Moon image -->
-      <fo:table-body>
-        <xsl:for-each select="$data/plot">
-          <fo:table-row>
-            <xsl:if test="position() = 1">
-              <fo:table-cell padding="medium"
-                       vertical-align="middle" horizontal-align="center">
-                <fo:block vertical-align="middle">
-                  <!--xsl:value-of select="position()"/-->
-                  <xsl:choose>
-                    <xsl:when test="$data/@moon-phase = '01'">
-                      <fo:external-graphic src="url('phase01.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '02'">
-                      <fo:external-graphic src="url('phase02.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '03'">
-                      <fo:external-graphic src="url('phase03.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '04'">
-                      <fo:external-graphic src="url('phase04.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '05'">
-                      <fo:external-graphic src="url('phase05.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '06'">
-                      <fo:external-graphic src="url('phase06.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '07'">
-                      <fo:external-graphic src="url('phase07.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '08'">
-                      <fo:external-graphic src="url('phase08.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '09'">
-                      <fo:external-graphic src="url('phase09.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '10'">
-                      <fo:external-graphic src="url('phase10.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '11'">
-                      <fo:external-graphic src="url('phase11.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '12'">
-                      <fo:external-graphic src="url('phase12.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '13'">
-                      <fo:external-graphic src="url('phase13.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '14'">
-                      <fo:external-graphic src="url('phase14.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '15'">
-                      <fo:external-graphic src="url('phase15.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '16'">
-                      <fo:external-graphic src="url('phase16.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '17'">
-                      <fo:external-graphic src="url('phase17.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '18'">
-                      <fo:external-graphic src="url('phase18.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '19'">
-                      <fo:external-graphic src="url('phase19.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '20'">
-                      <fo:external-graphic src="url('phase20.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '21'">
-                      <fo:external-graphic src="url('phase21.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '22'">
-                      <fo:external-graphic src="url('phase22.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '23'">
-                      <fo:external-graphic src="url('phase23.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '24'">
-                      <fo:external-graphic src="url('phase24.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '25'">
-                      <fo:external-graphic src="url('phase25.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '26'">
-                      <fo:external-graphic src="url('phase26.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '27'">
-                      <fo:external-graphic src="url('phase27.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                    <xsl:when test="$data/@moon-phase = '28'">
-                      <fo:external-graphic src="url('phase28.gif')"
-                                 vertical-align="middle" horizontal-align="center"/>
-                    </xsl:when>
-                  </xsl:choose>
-                </fo:block>
-              </fo:table-cell>
-            </xsl:if>
-          </fo:table-row>
-        </xsl:for-each>
-      </fo:table-body>
-    </fo:table>
-  </xsl:template>
 </xsl:stylesheet>
