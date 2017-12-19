@@ -52,8 +52,9 @@ public class TidePublisher {
 			boolean loop = true;
 			PrintStream out = System.out;
 			String radical = "";
+			String prefix = (scriptToRun == null ? TIDE_TABLE : scriptToRun);
 			try {
-				File tempFile = File.createTempFile("tide.data.", ".xml");
+				File tempFile = File.createTempFile(prefix + ".data.", ".xml");
 				out = new PrintStream(new FileOutputStream(tempFile));
 				radical = tempFile.getAbsolutePath();
 				radical = radical.substring(0, radical.lastIndexOf(".xml"));
