@@ -169,6 +169,11 @@ var getPublishedDoc = function(station, options) {
 	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
 };
 
+var getPublishedMoonCal = function(station, options) {
+	var url = "/tide/publish/" + encodeURIComponent(station) + "/moon-cal";
+	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, options, false);
+};
+
 var getSunData = function(lat, lng) {
 	var url = "/astro/sun-now";
 	var data = {}; // Payload
@@ -346,6 +351,35 @@ var tideTable = function(station, at, tz, step, unit, withDetails, nbDays, callb
 
 var publishTable = function(station, options, callback) {
 	var getData = getPublishedDoc(station, options);
+	getData.done(function(value) {
+		if (callback === undefined) {
+			try {
+				// Do something smart
+				$("#result").html("<pre>" + value + "</pre>");
+			} catch (err) {
+				errManager(err + '\nFor\n' + value);
+			}
+		} else {
+			callback(value);
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed publish station data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+				? message : ' - '));
+	});
+};
+
+
+var publishMoonCal = function(station, options, callback) {
+	var getData = getPublishedMoonCal(station, options);
 	getData.done(function(value) {
 		if (callback === undefined) {
 			try {

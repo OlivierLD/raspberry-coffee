@@ -96,6 +96,11 @@ public class RESTImplementation {
 					"Generates tide table document (pdf)"),
 			new Operation(
 					"POST",
+					"/tide/publish/{station-name}/moon-cal",
+					this::publishMoonCalendar,
+					"Generates moon calendar document (pdf), for one year"),
+			new Operation(
+					"POST",
 					"/tide/tide-stations/{station-name}/wh/details",
 					this::getWaterHeightPlus,
 					"Creates a Water Height request for the {station}, with harmonic curves. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."));
@@ -592,6 +597,24 @@ public class RESTImplementation {
 	 * Supports a payload in the body, in json format:
 	 * <pre>
 	 * {
+	 *   "startMonth": 0,             // Optional, default 0
+	 *   "startYear": 2017,
+	 *   "nb": 1,                     // Optional, default 1
+	 *   "quantity": "YEAR" | "MONTH" // Optional, default "YEAR"
+	 * }
+	 * </pre>
+	 * @param request
+	 * @return
+	 */
+	private Response publishMoonCalendar(@Nonnull Request request) {
+		return publishTideDocument(request, TidePublisher.MOON_CALENDAR);
+	}
+
+	/**
+	 * Publish (generate pdf) for a station.
+	 * Supports a payload in the body, in json format:
+	 * <pre>
+	 * {
 	 *   "startMonth": 0,
 	 *   "startYear": 2017,
 	 *   "nb": 1,
@@ -602,6 +625,10 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response publishTideTable(@Nonnull Request request) {
+		return publishTideDocument(request, TidePublisher.TIDE_TABLE);
+	}
+
+	private Response publishTideDocument(@Nonnull Request request, String script) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
 		String stationFullName = "";
@@ -644,7 +671,13 @@ public class RESTImplementation {
 				}
 				try {
 //				String unescaped = URLDecoder.decode(stationFullName, "UTF-8");
-					String generatedFileName = TidePublisher.publish(stationFullName, options.startMonth, options.startYear, options.nb, (options.quantity.equals(Quantity.MONTH) ? Calendar.MONTH : Calendar.YEAR));
+					String generatedFileName = TidePublisher.publish(
+							stationFullName,
+							options.startMonth,
+							options.startYear,
+							options.nb,
+							(options.quantity.equals(Quantity.MONTH) ? Calendar.MONTH : Calendar.YEAR),
+							script);
 					response.setPayload(generatedFileName.getBytes());
 				} catch (Exception ex) {
 					response = HTTPServer.buildErrorResponse(response,
@@ -673,7 +706,7 @@ public class RESTImplementation {
 	 * @return
 	 */
 	private Response emptyOperation(@Nonnull Request request) {
-		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
 		return response;
 	}
 
