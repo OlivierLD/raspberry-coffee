@@ -1,11 +1,10 @@
-package fona.manager;
+package fona.pi4jmanager;
 
-import fona.manager.FONAManager.ReceivedSMS;
-import fona.manager.FONAManager.NetworkStatus;
+import fona.pi4jmanager.FONAManager.ReceivedSMS;
+import fona.pi4jmanager.FONAManager.NetworkStatus;
 
-public interface FONAClient
-{
-  public void recievedSMS(int sms);
+public interface FONAClient {
+  public void receivedSMS(int sms);
   public void fonaConnected();
   public void moduleNameAndRevision(String str);
   public void debugOn();

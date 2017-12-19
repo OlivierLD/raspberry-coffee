@@ -1,4 +1,4 @@
-package fona.manager;
+package fona.pi4jmanager;
 
 import com.pi4j.io.serial.Baud;
 import com.pi4j.io.serial.DataBits;
@@ -676,7 +676,7 @@ public class FONAManager {
 					System.out.println("Received message #" + messNumStr);
 				delay(2f);
 				int messToRead = Integer.parseInt(messNumStr.trim());
-				this.parent.recievedSMS(messToRead);
+				this.parent.receivedSMS(messToRead);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

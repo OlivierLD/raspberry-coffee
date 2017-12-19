@@ -71,8 +71,9 @@ public class GPSReader implements SerialIOCallbacks {
 			System.out.println("Did you run as administrator (sudo) ?");
 		}
 		System.out.println("== Serial Port List ==");
-		for (String port : ports)
+		for (String port : ports) {
 			System.out.println("-> " + port);
+		}
 		System.out.println("======================");
 
 		String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");

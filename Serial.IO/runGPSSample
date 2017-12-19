@@ -1,14 +1,24 @@
 #!/bin/bash
 #
-# Running the Serial sample, communication between RPi and Arduino.
-# Needs to be run as root (Gradle may have problemn with that...)
-# Requires the ArduinoSerialEvent.ino (provided) to be running on the Arduino.
-# The baud rate in the Arduino sketch must be the same as the one
-# provided below in the System variabl "baud.rate".
+# Read a GPS
 #
-CP=./build/libs/Serial.IO-1.0.jar
-CP=$CP:/usr/share/java/RXTXcomm.jar
+CP=./build/libs/Serial.IO-1.0-all.jar
+# CP=$CP:/usr/share/java/RXTXcomm.jar
 echo Make sure the GPS is connected it through its USB cable.
-JAVA_OPTS="-Dserial.port=/dev/ttyUSB1 -Dbaud.rate=4800" 
-sudo java -Djava.library.path=/usr/lib/jni $JAVA_OPTS -cp $CP sample.GPSReader
-
+#
+SERIAL_PORT=/dev/ttyUSB1
+BAUD_RATE=4800
+#
+JAVA_OPTS="-Dserial.port=$SERIAL_PORT -Dbaud.rate=$BAUD_RATE"
+#
+DARWIN=`uname -a | grep Darwin`
+if [ "$DARWIN" != "" ]
+then
+	echo Running on Mac
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"  # for Mac
+else
+	echo Assuming Raspberry PI
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"              # RPi
+fi
+#
+java $JAVA_OPTS -cp $CP sample.GPSReader

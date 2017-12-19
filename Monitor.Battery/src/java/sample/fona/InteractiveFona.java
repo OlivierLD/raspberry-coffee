@@ -2,9 +2,9 @@ package sample.fona;
 
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialPortException;
-import fona.manager.FONAClient;
-import fona.manager.FONAManager;
-import fona.manager.FONAManager.NetworkStatus;
+import fona.pi4jmanager.FONAClient;
+import fona.pi4jmanager.FONAManager;
+import fona.pi4jmanager.FONAManager.NetworkStatus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -265,7 +265,7 @@ public class InteractiveFona implements FONAClient {
 	}
 
 	@Override
-	public void recievedSMS(final int sms) {
+	public void receivedSMS(final int sms) {
 		if (false) {
 			messToRead = sms;
 			System.out.println(">>> Message received, hit [Return] to read it.");
