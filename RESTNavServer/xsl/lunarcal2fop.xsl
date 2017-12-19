@@ -106,14 +106,14 @@
 
           <!-- Put a title here -->
 	        <fo:block text-align="center" font-family="Helvetica Neue" font-size="24pt" font-weight="bold" margin="0.25in">
-		        <xsl:value-of select="'Lunar Calendar, 2018'"/>
+		        <xsl:value-of select="concat('Moon Calendar, ', /tide/period[1]/@year )"/>
 	        </fo:block>
 
           <fo:block margin="0.1in">
 
             <fo:table>
 	            <!-- border="0.5pt solid black"> -->
-	            <fo:table-column column-width="0.40in"/>
+	            <fo:table-column column-width="0.40in"/> <!-- Month column -->
 
 	            <fo:table-column column-width="0.33in"/>
 	            <fo:table-column column-width="0.33in"/>
@@ -147,6 +147,44 @@
 	            <fo:table-column column-width="0.33in"/>
 	            <fo:table-column column-width="0.33in"/>
 	            <fo:table-body font-size="7pt">
+
+		            <!-- Day nums on top -->
+		            <fo:table-row>
+			            <fo:table-cell></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">1</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">2</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">3</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">4</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">5</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">6</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">7</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">8</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">9</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">10</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">11</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">12</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">13</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">14</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">15</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">16</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">17</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">18</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">19</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">20</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">21</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">22</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">23</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">24</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">25</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">26</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">27</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">28</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">29</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">30</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">31</fo:block></fo:table-cell>
+		            </fo:table-row>
+
+		            <!-- Moon data, month per month -->
 		            <xsl:for-each select="//period">
 		              <fo:table-row>
 			              <fo:table-cell padding="medium"
@@ -172,6 +210,43 @@
 		                <xsl:apply-templates select="."/>
 		              </fo:table-row>
 		            </xsl:for-each>
+
+		            <!-- Day nums at the bottom -->
+		            <fo:table-row>
+			            <fo:table-cell></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">1</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">2</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">3</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">4</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">5</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">6</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">7</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">8</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">9</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">10</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">11</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">12</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">13</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">14</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">15</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">16</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">17</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">18</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">19</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">20</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">21</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">22</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">23</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">24</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">25</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">26</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">27</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">28</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">29</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">30</fo:block></fo:table-cell>
+			            <fo:table-cell padding="medium" vertical-align="middle" text-align="center"><fo:block text-align="center" font-family="Book Antiqua" font-size="12pt" font-weight="bold">31</fo:block></fo:table-cell>
+		            </fo:table-row>
+
 	            </fo:table-body>
             </fo:table>
           </fo:block>
@@ -186,9 +261,6 @@
     <xsl:for-each select="./date">
       <fo:table-cell padding="medium"
                      vertical-align="middle" text-align="center">
-	      <fo:block vertical-align="middle" text-align="center">
-		      <xsl:value-of select="position()"/>
-	      </fo:block>
         <fo:block vertical-align="middle">
           <!--xsl:value-of select="./@val"/-->
           <!--xsl:apply-templates select="."/-->
@@ -307,6 +379,10 @@
             </xsl:when>
           </xsl:choose>
         </fo:block>
+	      <fo:block vertical-align="middle" text-align="center">
+		      <!--xsl:value-of select="position()"/-->
+		      <xsl:value-of select="substring(./@val, 1, 3)"/> <!-- Day of Week -->
+	      </fo:block>
       </fo:table-cell>
     </xsl:for-each>
   </xsl:template>
