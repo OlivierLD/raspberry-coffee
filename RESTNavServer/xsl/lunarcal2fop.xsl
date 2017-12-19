@@ -100,11 +100,8 @@
           <!--fo:block text-align="center" font-size="8pt">Page <fo:page-number/> of <fo:page-number-citation ref-id="last-page"/></fo:block-->
         </fo:static-content>
         <fo:flow flow-name="xsl-region-body">
-          <!-- First Page -->
-          <!--fo:block break-after="page">
-                    </fo:block-->
 
-          <!-- Put a title here -->
+          <!-- Put a title here, assume the xml data is a one year document -->
 	        <fo:block text-align="center" font-family="Helvetica Neue" font-size="24pt" font-weight="bold" margin="0.25in">
 		        <xsl:value-of select="concat('Moon Calendar, ', /tide/period[1]/@year )"/>
 	        </fo:block>
@@ -189,7 +186,7 @@
 		              <fo:table-row>
 			              <fo:table-cell padding="medium"
 			                             vertical-align="middle" text-align="center">
-				              <fo:block vertical-align="middle" text-align="center" font-family="Book Antiqua" font-size="10pt" font-weight="bold">
+				              <fo:block text-align="center" font-family="Book Antiqua" font-size="10pt" font-weight="bold">
 					              <xsl:choose>
 						              <xsl:when test="position() = 1"><xsl:value-of select="'Jan'"/></xsl:when>
 						              <xsl:when test="position() = 2"><xsl:value-of select="'Feb'"/></xsl:when>
@@ -257,11 +254,12 @@
     </fo:root>
   </xsl:template>
 	
-  <xsl:template match="period" name="one-month-tide">
+  <xsl:template match="period" name="one-month-moon">
     <xsl:for-each select="./date">
       <fo:table-cell padding="medium"
-                     vertical-align="middle" text-align="center">
-        <fo:block vertical-align="middle">
+                     vertical-align="middle"
+                     text-align="center">
+        <fo:block>
           <!--xsl:value-of select="./@val"/-->
           <!--xsl:apply-templates select="."/-->
           <xsl:choose>
@@ -379,7 +377,7 @@
             </xsl:when>
           </xsl:choose>
         </fo:block>
-	      <fo:block vertical-align="middle" text-align="center">
+	      <fo:block text-align="center">
 		      <!--xsl:value-of select="position()"/-->
 		      <xsl:value-of select="substring(./@val, 1, 3)"/> <!-- Day of Week -->
 	      </fo:block>

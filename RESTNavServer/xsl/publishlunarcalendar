@@ -1,6 +1,7 @@
 #!/bin/bash
 echo ----------------------------
-echo Tide publisher
+echo Moon Calendar publisher
+echo To run on a one-year tide xml file
 echo ----------------------------
 #
 export SCRIPT_DIR=`dirname $0`
