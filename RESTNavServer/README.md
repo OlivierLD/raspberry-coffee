@@ -163,6 +163,7 @@ Faxes and GRIB, together
 ## TODOs, next...
 
 - `npm` for non-java resource sharing
+- Minify JavaScript resources
 - GRIB rendering (in full), coming good.
 - Routing features
 

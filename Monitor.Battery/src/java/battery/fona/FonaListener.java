@@ -4,9 +4,9 @@ import adc.ADCObserver;
 import adc.sample.BatteryMonitor;
 import com.pi4j.io.serial.Serial;
 import com.pi4j.io.serial.SerialPortException;
-import fona.manager.FONAClient;
-import fona.manager.FONAManager;
-import fona.manager.FONAManager.NetworkStatus;
+import fona.pi4jmanager.FONAClient;
+import fona.pi4jmanager.FONAManager;
+import fona.pi4jmanager.FONAManager.NetworkStatus;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -137,7 +137,7 @@ public class FonaListener implements FONAClient {
 	}
 
 	@Override
-	public void recievedSMS(final int sms) {
+	public void receivedSMS(final int sms) {
 		if (verbose) {
 			System.out.println("Received mess #" + sms);
 		}

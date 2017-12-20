@@ -42,14 +42,19 @@ public class GPSReader implements SerialIOCallbacks {
 		}
 	}
 
+	/**
+	 * Formatting the data read by {@link #onSerialData(byte)}
+	 * @param mess
+	 */
 	public void serialOutput(byte[] mess) {
 		if (verbose) { // verbose...
 			try {
 				String[] sa = DumpUtil.dualDump(mess);
 				if (sa != null) {
 					System.out.println("\t>>> [From GPS] Received:");
-					for (String s : sa)
+					for (String s : sa) {
 						System.out.println("\t\t" + s);
+					}
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -71,8 +76,9 @@ public class GPSReader implements SerialIOCallbacks {
 			System.out.println("Did you run as administrator (sudo) ?");
 		}
 		System.out.println("== Serial Port List ==");
-		for (String port : ports)
+		for (String port : ports) {
 			System.out.println("-> " + port);
+		}
 		System.out.println("======================");
 
 		String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");

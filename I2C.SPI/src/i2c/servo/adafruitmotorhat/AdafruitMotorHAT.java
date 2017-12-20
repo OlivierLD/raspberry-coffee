@@ -17,9 +17,12 @@ public class AdafruitMotorHAT {
 		FORWARD, BACKWARD, BRAKE, RELEASE
 	}
 
+	public final static int STEPPER_1 = 1;
+	public final static int STEPPER_2 = 2;
+
 	private final static int HAT_ADDR = 0x60;
 	private final static int DEFAULT_FREQ = 1600;
-	private int freq = 1600;
+	private int freq = DEFAULT_FREQ;
 	private int i2cAddr = HAT_ADDR;
 
 	private AdafruitDCMotor motors[];
@@ -30,7 +33,15 @@ public class AdafruitMotorHAT {
 		this(HAT_ADDR, DEFAULT_FREQ);
 	}
 
+	public AdafruitMotorHAT(int nbSteps) throws I2CFactory.UnsupportedBusNumberException {
+		this(HAT_ADDR, DEFAULT_FREQ, nbSteps);
+	}
+
 	public AdafruitMotorHAT(int addr, int freq) throws I2CFactory.UnsupportedBusNumberException {
+		this(addr, freq, AdafruitStepperMotor.DEFAULT_NB_STEPS);
+	}
+
+	public AdafruitMotorHAT(int addr, int freq, int nbSteps) throws I2CFactory.UnsupportedBusNumberException {
 		this.i2cAddr = addr;
 		this.freq = freq;
 		motors = new AdafruitDCMotor[4];
@@ -38,8 +49,8 @@ public class AdafruitMotorHAT {
 		for (Motor motor : Motor.values())
 			motors[i++] = new AdafruitDCMotor(this, motor);
 		steppers = new AdafruitStepperMotor[2];
-		steppers[0] = new AdafruitStepperMotor(this, 1);
-		steppers[1] = new AdafruitStepperMotor(this, 2);
+		steppers[0] = new AdafruitStepperMotor(this, STEPPER_1, nbSteps);
+		steppers[1] = new AdafruitStepperMotor(this, STEPPER_2, nbSteps);
 		pwm = new PWM(addr);
 		try {
 			pwm.setPWMFreq(freq);
@@ -60,8 +71,8 @@ public class AdafruitMotorHAT {
 	}
 
 	public AdafruitStepperMotor getStepper(int num) {
-		if (num < 1 || num > 2)
-			throw new RuntimeException("MotorHAT Stepper must be between 1 and 2 inclusive");
+		if (num != STEPPER_1 && num != STEPPER_2)
+			throw new RuntimeException("MotorHAT Stepper must be 1 or 2.");
 		return steppers[num - 1];
 	}
 
@@ -151,7 +162,7 @@ public class AdafruitMotorHAT {
 		private int MICROSTEPS = 8;
 		private int[] MICROSTEP_CURVE = new int[]{0, 50, 98, 142, 180, 212, 236, 250, 255};
 
-		private static int DEFAULT_NB_STEPS = 200; // between 35 & 200
+		public static int DEFAULT_NB_STEPS = 200; // between 35 & 200. Nb steps per revolujtion.
 
 		private int PWMA = 8;
 		private int AIN2 = 9;
@@ -182,14 +193,14 @@ public class AdafruitMotorHAT {
 			this.steppingCounter = 0;
 			this.currentStep = 0;
 
-			if ((num - 1) == 0) {
+			if ((num - 1) == 0) { // num == STEPPER_1
 				this.PWMA = 8;
 				this.AIN2 = 9;
 				this.AIN1 = 10;
 				this.PWMB = 13;
 				this.BIN2 = 12;
 				this.BIN1 = 11;
-			} else if ((num - 1) == 1) {
+			} else if ((num - 1) == 1) { // num == STEPPER_2
 				this.PWMA = 2;
 				this.AIN2 = 3;
 				this.AIN1 = 4;
@@ -197,7 +208,7 @@ public class AdafruitMotorHAT {
 				this.BIN2 = 6;
 				this.BIN1 = 5;
 			} else {
-				throw new RuntimeException("MotorHAT Stepper must be between 1 and 2 inclusive");
+				throw new RuntimeException("MotorHAT Stepper must be 1 or 2");
 			}
 		}
 
@@ -208,7 +219,7 @@ public class AdafruitMotorHAT {
 
 		public int oneStep(ServoCommand dir, Style style) throws IOException {
 			int pwmA = 255,
-							pwmB = 255;
+					pwmB = 255;
 
 			// first determine what sort of stepping procedure we're up to
 			if (style == Style.SINGLE) {

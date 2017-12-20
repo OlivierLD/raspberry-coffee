@@ -1,11 +1,10 @@
-package fona.manager;
+package fona.rxtxmanager;
 
-import fona.manager.FONAManager.ReceivedSMS;
-import fona.manager.FONAManager.NetworkStatus;
+import fona.rxtxmanager.FONAManager.ReceivedSMS;
+import fona.rxtxmanager.FONAManager.NetworkStatus;
 
-public interface FONAClient
-{
-  public void recievedSMS(int sms);
+public interface FONAClient {
+  public void receivedSMS(int sms);
   public void fonaConnected();
   public void moduleNameAndRevision(String str);
   public void debugOn();

@@ -1,7 +1,6 @@
 package fona.arduino;
 
-public interface FONAClient
-{
+public interface FONAClient {
   public void genericSuccess(String mess);
   public void genericFailure(String mess);
   public void adcState(String mess);

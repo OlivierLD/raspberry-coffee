@@ -1,6 +1,7 @@
 #!/bin/bash
 echo ----------------------------
-echo Tide publisher
+echo Moon Calendar publisher
+echo To run on a one-year tide xml file
 echo ----------------------------
 #
 export SCRIPT_DIR=`dirname $0`
@@ -22,5 +23,5 @@ export XSL_STYLESHEET=./lunarcal2fop.xsl
 echo Publishing
 java -Xms256m -Xmx1024m -classpath ${CP} oracle.apps.xdo.template.FOProcessor -xml ${RADICAL}.xml -xsl ${XSL_STYLESHEET} -pdf ${RADICAL}.pdf
 echo Done transforming, document is ready.
-# open ${RADICAL}.pdf
+echo See ${RADICAL}.pdf
 # exit

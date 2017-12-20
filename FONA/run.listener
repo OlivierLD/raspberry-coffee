@@ -11,4 +11,4 @@ JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=4800"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.port=/dev/ttyUSB1"
 #
-sudo java $JAVA_OPTIONS -cp $CP fona.manager.sample.FonaListener
+sudo java $JAVA_OPTIONS -cp $CP fona.pi4jmanager.sample.FonaListener

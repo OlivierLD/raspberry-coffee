@@ -135,6 +135,8 @@ case "$OPTION" in
     #
     JAVA_OPTS="$JAVA_OPTS -Dhttp.port=9999"
     JAVA_OPTS="$JAVA_OPTS -Dinteractive=false"
+    #
+    JAVA_OPTS="$JAVA_OPTS -Dlog.battery.data=true"
     ;;
   *)
     echo "======================="

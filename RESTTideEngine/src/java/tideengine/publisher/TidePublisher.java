@@ -16,6 +16,9 @@ import java.util.Optional;
 
 public class TidePublisher {
 
+	public final static String TIDE_TABLE = "publishtide";
+	public final static String MOON_CALENDAR = "publishlunarcalendar";
+
 	/**
 	 * @param ts         TideStation
 	 * @param timeZoneId TimeZone ID to use
@@ -26,7 +29,16 @@ public class TidePublisher {
 	 * @param utu        Unit to use
 	 * @param sPrm       Special parameters
 	 */
-	public static String publish(TideStation ts, String timeZoneId, int sm, int sy, int nb, int q, String utu, TideUtilities.SpecialPrm sPrm)
+	public static String publish(
+			TideStation ts,
+			String timeZoneId,
+			int sm,
+			int sy,
+			int nb,
+			int q,
+			String utu,
+			TideUtilities.SpecialPrm sPrm,
+			String scriptToRun)
 	throws Exception {
 
 		final TideUtilities.SpecialPrm specialBGPrm = sPrm;
@@ -40,8 +52,9 @@ public class TidePublisher {
 			boolean loop = true;
 			PrintStream out = System.out;
 			String radical = "";
+			String prefix = (scriptToRun == null ? TIDE_TABLE : scriptToRun);
 			try {
-				File tempFile = File.createTempFile("tide.data.", ".xml");
+				File tempFile = File.createTempFile(prefix + ".data.", ".xml");
 				out = new PrintStream(new FileOutputStream(tempFile));
 				radical = tempFile.getAbsolutePath();
 				radical = radical.substring(0, radical.lastIndexOf(".xml"));
@@ -89,7 +102,7 @@ public class TidePublisher {
 			System.out.println("Generation completed.");
 			// Ready for transformation
 			try {
-				String cmd = "." + File.separator + "xsl" + File.separator + "publishtide " + radical;
+				String cmd = "." + File.separator + "xsl" + File.separator + (scriptToRun == null ? TIDE_TABLE : scriptToRun) + " " + radical;
 				System.out.println("Command:" + cmd);
 				Process p = Runtime.getRuntime().exec(cmd);
 				int exitStatus = p.waitFor();
@@ -109,6 +122,11 @@ public class TidePublisher {
 
 	public static String publish(String stationName, int startMonth, int startYear, int nb, int quantity)
 	throws Exception {
+		return publish(stationName, startMonth, startYear, nb, quantity, null);
+	}
+
+	public static String publish(String stationName, int startMonth, int startYear, int nb, int quantity, String script)
+	throws Exception {
 		TideStation ts = null;
 		try {
 			Optional<TideStation> optTs = BackEndTideComputer.getStationData()
@@ -119,7 +137,7 @@ public class TidePublisher {
 				throw new Exception(String.format("Station [%s] not found.", stationName));
 			} else {
 				ts = optTs.get();
-				return publish(ts, ts.getTimeZone(), startMonth, startYear, nb, quantity, null, null);
+				return publish(ts, ts.getTimeZone(), startMonth, startYear, nb, quantity, null, null, script);
 			}
 		} catch (Exception ex) {
 			throw ex;

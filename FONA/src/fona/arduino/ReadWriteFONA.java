@@ -7,12 +7,11 @@ import com.pi4j.io.serial.SerialFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.function.Consumer;
 
 /**
  * Write data, from the Raspberry to the Arduino/FONA, through the serial port.
  * Receives a response from the Arduino/FONA.
- * 
+ *
  *  Commands (sent to FONA/Arduino) are:
 
   a   read the ADC 2.8V max (FONA800 & 808)
@@ -25,13 +24,13 @@ import java.util.function.Consumer;
   r|x Read SMS # x
   d|x Delete SMS # x
   s|(dest number)|(mess payload) Send SMS payload (mess payload) to (dest number)
-  
+
   Message received: +CMTI: "SM",3 <- where 3 is the number of the message just received.
- */ 
+ */
 public class ReadWriteFONA
 {
   private FONAClient caller;
-  
+
   private static Method GENERIC_FAILURE_PARSER;
   private static Method GENERIC_SUCCESS_PARSER;
   private static Method INCOMING_MESSAGE_MANAGER;
@@ -45,7 +44,7 @@ public class ReadWriteFONA
   private static Method MESS_PARSER;
   private static Method ON_SENT_OK;
   // All methods have the same signature: void function(String). <= Consumer<String>
-  static 
+  static
   {
     try { GENERIC_FAILURE_PARSER   = ReadWriteFONA.class.getMethod("genericFailureParser",   String.class); } catch (Exception ex) { ex.printStackTrace(); }
     try { GENERIC_SUCCESS_PARSER   = ReadWriteFONA.class.getMethod("genericSuccessParser",   String.class); } catch (Exception ex) { ex.printStackTrace(); }
@@ -63,8 +62,7 @@ public class ReadWriteFONA
 
   // TODO Rewrite this one with Consumer<String> instead of the Method
   // Like this::onSendOK in place of ON_SENT_OK
-  public enum ArduinoMessagePrefix
-  {
+  public enum ArduinoMessagePrefix {
     FONA_OK       (">> FONA READY",          "Good to go",                     READY),
     INCOMING_MESS ("+CMTI:",                 "Incoming message",               INCOMING_MESSAGE_MANAGER),
     ADC_OK        (">> ADC:",                "Read ADC",                       ADC_PARSER),
@@ -86,8 +84,7 @@ public class ReadWriteFONA
     private final String prefix;
     private final String meaning;
     private final transient Method parser;
-    ArduinoMessagePrefix(String prefix, String meaning, Method parser)
-    {
+    ArduinoMessagePrefix(String prefix, String meaning, Method parser) {
       this.prefix  = prefix;
       this.meaning = meaning;
       this.parser  = parser;
@@ -104,175 +101,145 @@ public class ReadWriteFONA
   {
     this.caller = from;
   }
-  
+
   public void startListening()
-    throws NumberFormatException
-  {
+    throws NumberFormatException {
     // create and register the serial data listener
-    serial.addListener(new SerialDataEventListener()
-    {
+    serial.addListener(new SerialDataEventListener() {
       private StringBuffer fullMessage = new StringBuffer();
-      private final String ACK = "\n"; // "\r\n"; 
+      private final String ACK = "\n"; // "\r\n";
 
       @Override
-      public void dataReceived(SerialDataEvent event)
-      {
+      public void dataReceived(SerialDataEvent event) {
         // print out the data received to the console
         String payload = null;
-        try
-        {
+        try {
           payload = event.getAsciiString();
         } catch (IOException ioe) {
           throw new RuntimeException(ioe);
         }
-        
+
         fullMessage.append(payload);
-        if (fullMessage.toString().endsWith(ACK))
-        {
-        //        System.out.println("Flushing...");
+        if (fullMessage.toString().endsWith(ACK)) {
+       // System.out.println("Flushing...");
           String mess = fullMessage.toString(); // Send the full message. Parsed later.
-        // Manage data here. Check in the enum ArduinoMessagePrefix
-        try
-        {
-          mess = mess.trim();
-          while (mess.endsWith("\n") ||
-                 mess.endsWith("\r"))
-            mess = mess.substring(mess.length() - 1);
-          takeAction(mess);
-        }
-        catch (Exception e)
-        {
-          e.printStackTrace();
-        }
+	        // Manage data here. Check in the enum ArduinoMessagePrefix
+	        try {
+	          mess = mess.trim();
+	          while (mess.endsWith("\n") ||
+	                 mess.endsWith("\r")) {
+		          mess = mess.substring(mess.length() - 1);
+	          }
+	          takeAction(mess);
+	        } catch (Exception e) {
+	          e.printStackTrace();
+	        }
           fullMessage = new StringBuffer();
-        } 
+        }
       }
     });
   }
-  
-  public void openSerialInput() throws IOException
-  {
+
+  public void openSerialInput() throws IOException {
     String port = System.getProperty("serial.port", Serial.DEFAULT_COM_PORT);
     int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
 
     System.out.println("Serial Communication.");
     System.out.println(" ... connect using settings: " + Integer.toString(br) +  ", N, 8, 1.");
-    System.out.println(" ... data received on serial port should be displayed below.");    
+    System.out.println(" ... data received on serial port should be displayed below.");
 
     System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
     serial.open(port, br);
     System.out.println("Port is opened.");
   }
-  
-  public void closeChannel() throws IOException
-  {
+
+  public void closeChannel() throws IOException {
     serial.close();
   }
-  
-  public void requestBatteryState() throws IOException
-  {
+
+  public void requestBatteryState() throws IOException {
     String mess = "b";
     this.sendSerial(mess);
   }
-  
-  public void requestADC() throws IOException
-  {
+
+  public void requestADC() throws IOException {
     String mess = "a";
     this.sendSerial(mess);
   }
-  
-  public void requestSIMCardNumber() throws IOException
-  {
+
+  public void requestSIMCardNumber() throws IOException {
     String mess = "C";
     this.sendSerial(mess);
   }
-  
-  public void requestRSSI() throws IOException
-  {
+
+  public void requestRSSI() throws IOException {
     String mess = "i";
     this.sendSerial(mess);
   }
-  
-  public void requestNetworkStatus() throws IOException
-  {
+
+  public void requestNetworkStatus() throws IOException {
     String mess = "n";
     this.sendSerial(mess);
   }
 
-  public void requestNumberOfMessage() throws IOException
-  {
+  public void requestNumberOfMessage() throws IOException {
     String mess = "N";
     this.sendSerial(mess);
   }
 
-  public void readMessNum(int smsn) throws IOException
-  {
+  public void readMessNum(int smsn) throws IOException {
     String mess = "r|" + Integer.toString(smsn);
     this.sendSerial(mess);
   }
-  
-  public void deleteMessNum(int smsn) throws IOException
-  {
+
+  public void deleteMessNum(int smsn) throws IOException {
     String mess = "d|" + Integer.toString(smsn);
     this.sendSerial(mess);
   }
-  
-  public void sendMess(String to, String payload) throws IOException
-  {
-    if (payload.length() > 140)
-    {
+
+  public void sendMess(String to, String payload) throws IOException {
+    if (payload.length() > 140) {
       System.out.println("Truncating payload to 140 characters");
       payload = payload.substring(0, 140);
     }
     String mess = "s|" + to + "|" + payload;
     this.sendSerial(mess);
   }
-    
-  private void sendSerial(String payload) throws IOException
-  {
-    if (serial.isOpen())
-    {
-      if ("true".equals(System.getProperty("fona.verbose", "false")))
-        System.out.println("\tWriting [" + payload + "] to the serial port...");
-      try
-      {
-        serial.write(payload + "\n");
+
+  private void sendSerial(String payload) throws IOException {
+    if (serial.isOpen()) {
+      if ("true".equals(System.getProperty("fona.verbose", "false"))) {
+	      System.out.println("\tWriting [" + payload + "] to the serial port...");
       }
-      catch (IllegalStateException ex)
-      {
+      try {
+        serial.write(payload + "\n");
+      } catch (IllegalStateException ex) {
         ex.printStackTrace();
       }
-    }
-    else
-    {
+    } else {
       System.out.println("Not open yet...");
     }
   }
-  
-  private void takeAction(String mess) throws Exception
-  {
+
+  private void takeAction(String mess) throws Exception {
     ArduinoMessagePrefix amp = findCommand(mess);
-    if (amp != null)
-    {
-      if ("true".equals(System.getProperty("fona.verbose", "false")))
-        System.out.println(amp.meaning());
+    if (amp != null) {
+      if ("true".equals(System.getProperty("fona.verbose", "false"))) {
+	      System.out.println(amp.meaning());
+      }
       Method parser = amp.parser();
-      if (parser != null)
-      {
+      if (parser != null) {
         parser.invoke(this, mess);
       }
+    } else {
+	    System.out.println("Command [" + mess + "] unknown.");
     }
-    else
-      System.out.println("Command [" + mess + "] unknown.");
   }
 
-  private ArduinoMessagePrefix findCommand(String message)
-  {
+  private ArduinoMessagePrefix findCommand(String message) {
     ArduinoMessagePrefix ret = null;
-    for (ArduinoMessagePrefix amp: ArduinoMessagePrefix.values())
-    {
-      if (message.startsWith(amp.prefix()))
-      {
+    for (ArduinoMessagePrefix amp : ArduinoMessagePrefix.values()) {
+      if (message.startsWith(amp.prefix())) {
         ret = amp;
         break;
       }
@@ -280,23 +247,19 @@ public class ReadWriteFONA
     return ret;
   }
 
-  public void onSendOK(String message)
-  {
+  public void onSendOK(String message) {
     caller.sendSuccess(message);
   }
-  
-  public void genericSuccessParser(String message)
-  {
+
+  public void genericSuccessParser(String message) {
     caller.genericSuccess(message);
   }
-  
-  public void genericFailureParser(String message)
-  {
+
+  public void genericFailureParser(String message) {
     caller.genericFailure(message);
   }
-  
-  public void incomingMessageManager(String message) throws IOException
-  {
+
+  public void incomingMessageManager(String message) throws IOException {
     // +CMTI: "SM",3
     System.out.println("Incoming message:" + message);
     String[] sa = message.split(",");
@@ -304,89 +267,77 @@ public class ReadWriteFONA
       this.readMessNum(Integer.parseInt(sa[1].trim()));
     }
   }
-  
-  public void adcParser(String message)
-  {
+
+  public void adcParser(String message) {
     String s = message.substring(">> ADC:".length());
     String mess = ("ADC: " + s + " mV");
     caller.adcState(mess);
   }
-  
-  public void ready(@SuppressWarnings("unused") String s)
-  {
+
+  public void ready(@SuppressWarnings("unused") String s) {
     caller.ready();
   }
-  
-  public void batteryParser(String message)
-  {
+
+  public void batteryParser(String message) {
     String[] sa = message.substring(">> BAT:".length()).split(",");
     String mess = ("Battery: " + sa[0] + " mV, " + sa[1] + "%");
     caller.batteryState(mess);
   }
-  
-  public void ccidParser(String message)
-  {
+
+  public void ccidParser(String message) {
     String s = message.substring(">> CCID:".length());
     String mess = ("SIM Card#:" + s);
     caller.ccidState(mess);
   }
-  
-  public void rssiParser(String message)
-  {
+
+  public void rssiParser(String message) {
     String[] sa = message.substring(">> RSSI:".length()).split(",");
     String mess = ("RSSI: level " + sa[0] + ", " + sa[1] + "dBm");
     caller.rssiState(mess);
   }
-  
-  public void networkParser(String message)
-  {
+
+  public void networkParser(String message) {
     String[] sa = message.substring(">> NETW:".length()).split(",");
     String mess = ("Network: level " + sa[0] + ": " + sa[1]);
     caller.networkState(mess);
   }
-  
-  public void numberOfMessagesParser(String message)
-  {
+
+  public void numberOfMessagesParser(String message) {
     int nb = Integer.parseInt(message.substring(">> MESS:".length()));
     caller.numberOfMessages(nb);
   }
-  
-  public void readMessageParser(String message)
-  {
+
+  public void readMessageParser(String message) {
     String[] sa = message.substring(">> MESSNUM:".length()).split("\\|");
-    try
-    {
+    try {
       caller.message(new SMS(Integer.parseInt(sa[0]),
                              sa[1].substring("FROM:".length()),
                              Integer.parseInt(sa[2]),
                              sa[3]));
-    }
-    catch (Exception ex)
-    {
+    } catch (Exception ex) {
       System.err.println("Message [" + message + "]");
       System.err.println("==================");
-      for (String s : sa)
-        System.err.println(s);
+      for (String s : sa) {
+	      System.err.println(s);
+      }
       System.err.println("==================");
       ex.printStackTrace();
     }
   }
-  
-  public static class SMS
-  {
+
+  public static class SMS {
     private int num;
     private String from;
     private int len;
     private String content;
-    
-    public SMS(int num, String from, int len, String content)
-    {
+
+    public SMS(int num, String from, int len, String content) {
       this.num     = num;
       this.from    = from;
       this.len     = len;
       this.content = content;
     }
-    
+
     public int getNum() { return this.num; }
     public String getFrom() { return this.from; }
     public int getLen() { return this.len; }
