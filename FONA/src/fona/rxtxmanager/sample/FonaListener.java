@@ -11,65 +11,6 @@ import java.io.IOException;
 public class FonaListener implements FONAClient {
 	private static FONAManager fona;
 
-	public static void main(String args[])
-					throws InterruptedException, NumberFormatException, IOException {
-		FonaListener sf = new FonaListener();
-		fona = new FONAManager(sf);
-
-		FONAManager.setVerbose(false);
-
-		String port = System.getProperty("serial.port", "/dev/ttyUSB0");
-		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
-		if (args.length > 0) {
-			try {
-				br = Integer.parseInt(args[0]);
-			} catch (Exception ex) {
-				System.err.println(ex.getMessage());
-			}
-		}
-
-		System.out.println("Serial Communication.");
-		System.out.println(" ... connect using port " + port + " : " + Integer.toString(br)); // +  ", N, 8, 1.");
-		System.out.println(" ... data received on serial port should be displayed below.");
-
-		try {
-			System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
-			fona.openSerial(port, br);
-			System.out.println("Port is opened.");
-			System.out.println("Establishing connection (can take up to 3 seconds).");
-			while (!fona.isConnected()) {
-				fona.tryToConnect();
-				if (!fona.isConnected()) {
-					FONAManager.delay(1);
-				}
-			}
-			System.out.println("Connection established.");
-
-			final Thread me = Thread.currentThread();
-
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				public void run() {
-					System.out.println();
-					synchronized (me) {
-						me.notify();
-					}
-					System.out.println("Program stopped by user's request.");
-				}
-			});
-
-			synchronized (me) {
-				me.wait();
-			}
-			System.out.println("Bye!");
-			fona.stopReading();
-			fona.closeSerial();
-		} catch (Exception ex) {
-			System.out.println(" ==>> Serial Setup failed : " + ex.getMessage() + " <<== ");
-			return;
-		}
-		System.exit(0);
-	}
-
 	@Override
 	public void networkStatusResponse(NetworkStatus ns) {
 		System.out.println(ns.label());
@@ -180,4 +121,72 @@ public class FonaListener implements FONAClient {
 	public void someoneCalling() {
 		System.out.println("Dring dring! Pouet pouet pouet!");
 	}
+
+	/**
+	 * The main.
+	 *
+	 * Supported System variables:
+	 * <b>serial.port</b>: A stgring like "/dev/ttyUSB0". Default is "/dev/ttyUSB0"
+	 * <b>baud.rate</b>: As an integer like 1200, 4800, 9600, etc. Default is 9600.
+	 *
+	 * @param args Can be used to pass the Baud Rate prm, as an integer. Overrides the "baud.rate" system variable.
+	 * @throws NumberFormatException if baud rate passed as a parameter or system variable is invalid (i.e. not an integer).
+	 */
+	public static void main(String... args)
+			throws NumberFormatException {
+		FonaListener sf = new FonaListener();
+		fona = new FONAManager(sf);
+
+		FONAManager.setVerbose(false);
+
+		String port = System.getProperty("serial.port", "/dev/ttyUSB0");
+		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
+		if (args.length > 0) {
+			try {
+				br = Integer.parseInt(args[0]);
+			} catch (Exception ex) {
+				System.err.println(ex.getMessage());
+			}
+		}
+
+		System.out.println("Serial Communication.");
+		System.out.println(" ... connect using port " + port + " : " + Integer.toString(br)); // +  ", N, 8, 1.");
+		System.out.println(" ... data received on serial port should be displayed below.");
+
+		try {
+			System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
+			fona.openSerial(port, br);
+			System.out.println("Port is opened.");
+			System.out.println("Establishing connection (can take up to 3 seconds).");
+			while (!fona.isConnected()) {
+				fona.tryToConnect();
+				if (!fona.isConnected()) {
+					FONAManager.delay(1);
+				}
+			}
+			System.out.println("Connection established.");
+
+			final Thread me = Thread.currentThread();
+
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				System.out.println();
+				synchronized (me) {
+					me.notify();
+				}
+				System.out.println("Program stopped by user's request.");
+			}));
+
+			synchronized (me) {
+				me.wait();
+			}
+			System.out.println("Bye!");
+			fona.stopReading();
+			fona.closeSerial();
+		} catch (Exception ex) {
+			System.out.println(" ==>> Serial Setup failed : " + ex.getMessage() + " <<== ");
+			return;
+		}
+		System.exit(0);
+	}
+
 }

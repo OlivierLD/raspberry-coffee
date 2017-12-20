@@ -24,7 +24,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dzda.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dlsm303.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"

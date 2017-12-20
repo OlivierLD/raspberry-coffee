@@ -7,6 +7,7 @@ CP=$CP:/usr/share/java/RXTXcomm.jar
 echo Make sure the GPS is connected it through its USB cable.
 #
 SERIAL_PORT=/dev/ttyUSB0
+# SERIAL_PORT=/dev/tty.Bluetooth-Incoming-Port
 BAUD_RATE=4800
 #
 JAVA_OPTS="-Dserial.port=$SERIAL_PORT -Dbaud.rate=$BAUD_RATE"
@@ -17,7 +18,7 @@ then
 	echo Running on Mac
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"  # for Mac
 else
-	echo Assuming Raspberry PI
+	echo Assuming Linux/Raspberry PI
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"              # RPi
 fi
 #
