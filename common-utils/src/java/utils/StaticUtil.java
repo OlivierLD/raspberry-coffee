@@ -34,4 +34,9 @@ public class StaticUtil {
 		return newContent;
 	}
 
+	public static void main(String... args) {
+		String akeu = userInput("Tell me > ");
+		System.out.println(akeu);
+	}
+
 }

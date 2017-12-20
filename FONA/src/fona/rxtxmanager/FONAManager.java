@@ -47,12 +47,6 @@ import utils.DumpUtil;
  * This would be another project, a FONA on its own board, with a USB Cable attached to it ;)
  */
 public class FONAManager implements SerialIOCallbacks {
-	public enum SerialOption {
-		SERIAL_LISTENER_OPTION,
-		SERIAL_READER_OPTION
-	}
-
-	public final static SerialOption SERIAL_OPTION = SerialOption.SERIAL_LISTENER_OPTION;
 
 	public enum NetworkStatus {
 		NOT_REGISTERED(0, "Not Registered"),
@@ -140,79 +134,73 @@ public class FONAManager implements SerialIOCallbacks {
 
 	public FONAManager(FONAClient parent) {
 		this.parent = parent;
-		if (SERIAL_OPTION.equals(SerialOption.SERIAL_READER_OPTION)) {
-			// Option: serial.read() in its own thread...
-			Thread serialReader = new Thread() {
-				private StringBuffer fullMessage = new StringBuffer();
 
-				public void run() {
-					while (keepReading()) {
-						try {
-							while (true && serialBuffer.length > 0) {
-								fullMessage.append(new String(serialBuffer));
+		// Option: serial.read() in its own thread...
+		Thread serialReader = new Thread() {
+			private StringBuffer fullMessage = new StringBuffer();
 
-								String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
-								if (sa0 != null) {
-									System.out.println("\t<<< [FONA] Received (top)...");
-									for (String s : sa0)
-										System.out.println("\t\t" + s);
-								}
+			public void run() {
+				while (keepReading()) {
+					try {
+						while (true && bufferIdx > 0) { // serialBuffer.length > 0) {
+							fullMessage.append(new String(serialBuffer));
 
-//                char c = (char)serial.read();
-//                c &= 0xFF;
-//
-//                if ((c & 0xFF) != 0xFF)
-//                  fullMessage.append(c);
-
-								if (fullMessage.toString().endsWith(FONAManager.ACK) || fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT)) {
-									String mess = fullMessage.toString(); // Send the full message. Parsed later.
-									//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
-									if (getVerbose()) {
-										try {
-											String[] sa = DumpUtil.dualDump(mess);
-											if (sa != null) {
-												System.out.println("\t<<< [FONA] Received...");
-												for (String s : sa)
-													System.out.println("\t\t" + s);
-											}
-										} catch (Exception ex) {
-											System.out.println(ex.toString());
-										}
-									}
-									fonaOutput(mess);
-									//    delay(0.5f);
-									fullMessage = new StringBuffer(); // Reset
-								}
-								//  delay(0.02f);
-								if (serialBuffer.length == 0)
-									delay(0.5f);
+							String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
+							if (sa0 != null) {
+								System.out.println("\t<<< [FONA] Received (top)...");
+								for (String s : sa0)
+									System.out.println("\t\t" + s);
 							}
-							//   delay(0.5f);
-						} catch (IllegalStateException ise) {
-							// Not opened yet
-						} catch (Exception ex) {
-							System.err.println(ex.toString());
+
+//            char c = (char)serial.read();
+//            c &= 0xFF;
+//
+//            if ((c & 0xFF) != 0xFF)
+//              fullMessage.append(c);
+
+							if (fullMessage.toString().endsWith(FONAManager.ACK) || fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT)) {
+								String mess = fullMessage.toString(); // Send the full message. Parsed later.
+								//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
+								if (getVerbose()) {
+									try {
+										String[] sa = DumpUtil.dualDump(mess);
+										if (sa != null) {
+											System.out.println("\t<<< [FONA] Received...");
+											for (String s : sa)
+												System.out.println("\t\t" + s);
+										}
+									} catch (Exception ex) {
+										System.out.println(ex.toString());
+									}
+								}
+								fonaOutput(mess);
+								//    delay(0.5f);
+								fullMessage = new StringBuffer(); // Reset
+							}
+							//  delay(0.02f);
+							if (serialBuffer.length == 0)
+								delay(0.5f);
 						}
+						//   delay(0.5f);
+					} catch (IllegalStateException ise) {
+						// Not opened yet
+					} catch (Exception ex) {
+						System.err.println(ex.toString());
 					}
 				}
-			};
-			serialReader.start();
-		}
-
-		if (SERIAL_OPTION.equals(SerialOption.SERIAL_LISTENER_OPTION)) {
-			// create and register the serial data listener
-			// TODO See that
-		}
+			}
+		};
+		serialReader.start();
 	}
 
 	@Override
 	public void connected(boolean b) {
-		System.out.println("GPS connected: " + b);
+		System.out.println("Connected: " + b);
 	}
 
 	private int lenToRead = 0;
 	private int bufferIdx = 0;
-	private byte[] serialBuffer = new byte[256];
+	private byte[] serialBuffer = new byte[1024];
 
 	@Override
 	public void onSerialData(byte b) {
@@ -264,16 +252,16 @@ public class FONAManager implements SerialIOCallbacks {
 			System.out.println("Did you run as administrator (sudo) ?");
 		}
 		System.out.println("== Serial Port List ==");
-		for (String serialport : ports)
+		for (String serialport : ports) {
 			System.out.println("-> " + serialport);
+		}
 		System.out.println("======================");
 
-		String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
-		String baudRateStr = System.getProperty("baud.rate", "4800");
-		System.out.println(String.format("Opening port %s:%s", serialPortName, baudRateStr));
-		CommPortIdentifier serialPort = pm.get(serialPortName);
+		// String serialPortName = port; // System.getProperty("serial.port", "/dev/ttyUSB0");
+		System.out.println(String.format("Opening port %s:%d", port, br));
+		CommPortIdentifier serialPort = pm.get(port);
 		if (serialPort == null) {
-			String mess = String.format("Port %s not found, aborting", serialPortName);
+			String mess = String.format("Port %s not found, aborting", port);
 			throw new RuntimeException(mess);
 		}
 		try {

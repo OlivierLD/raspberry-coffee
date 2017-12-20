@@ -18,7 +18,7 @@ then
 	echo Running on Mac
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"  # for Mac
 else
-	echo Assuming Raspberry PI
+	echo Assuming Linux/Raspberry PI
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"              # RPi
 fi
 #

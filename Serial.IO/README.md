@@ -11,6 +11,12 @@ It requires:
 * on the runtime command line `-Djava.library.path=/usr/lib/jni`
 * in the classpath `/usr/share/java/RXTXcomm.jar`, to compile or run.
 
+> If you keep having `UnsatisfiedLinkError` when running the samples, check [this post](http://lukealderton.com/blog/posts/2016/javalangunsatisfiedlinkerror-no-rxtxserial-in-javalibrarypath/)...
+> It worked for me. I ran the following command to fix it:
+```bash
+ $ sudo cp /usr/lib/jni/* /usr/lib
+```
+
 ### To run the example
 The example illustrates a Serial communication between the Raspberry PI (or any other machine) and an Arduino Uno.
 
