@@ -1,6 +1,10 @@
 # Case Study
 
 ## How to remotely monitor a 12 Volt Battery
+##### Or more generically, how to emit all kinds of data...
+
+---
+
  Options and possibilities to transmit data
 
  We'll explore several possibilities:
@@ -17,7 +21,7 @@
 
  All the code - mentioned below and contained in this project - can be run for real.
 
-##### Read the tension
+##### Read the tension (get the data to emit).
  As the Raspberry PI's GPIO pins are all digital ones, to read the battery's tension, you need an Analog to Digital Converter (ADC).
  As you can see in the Fritzing diagram below, we will use here an MCP3008. It is cheap, and good enough for our purpose.
 
@@ -383,14 +387,37 @@ You need to modify the MQTT Node to enter your own credentials.
 - Server: `io.adafruit.com:1883`
   - In the Connection tab, leave the `Client ID` blank
   - In the Security tab, enter your Adafruit-IO username and password.
-- Topic: `olivierld/feeds/battery-pi` Make sure your user-name preceeds the feed name.
+- Topic: `olivierld/feeds/battery-pi` Make sure your user-name precedes the feed name.
 
 
 ### Next?
 
 #### LoRa
+More details will be available soon here. LoRa is free.
+You have to come up with your own protocol though.
+
+#### Satellite?
+Ok, it you are far from everything (at sea, at war, in a remote place after a cyclone or an earth-quake), this may be a possibility to consider. But that is expensive.
+In 2017, it is about $1 per minute.
 
 ---
 
 There is a lot more to do with the options and features described above, specially in the User Interface area.
 Your imagination is the limit...
+
+---
+
+### Glossary
+
+- API: **A**pplication **P**rogramming **I**nterface
+- HTML: **H**yper **T**ext **M**arkup **L**anguage
+- HTTP: **H**yper **T**ext **T**ransfer **P**rotocol
+- IoT: **I**nternet **o**f **T**hings
+- LAN: **L**ocal **A**rea **N**etwork
+- LoRa: **Lo**ng **Ra**nge
+- MQTT: **M**essage **Q**ueuing **T**elemetry **T**ransport
+- REST: **RE**presentational **S**tate **T**ransfer
+- SMS: **S**hort **M**essage **S**ervice
+- TCP: **T**ransmission **C**ontrol **P**rotocol
+- TCP/IP: **T**ransmission **C**ontrol **P**rotocol / **I**nternet **P**rotocol
+- UDP: **U**ser **D**atagram **P**rotocol
