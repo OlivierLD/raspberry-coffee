@@ -4,32 +4,13 @@ import fona.rxtxmanager.FONAClient;
 import fona.rxtxmanager.FONAManager;
 
 import fona.rxtxmanager.FONAManager.NetworkStatus;
+import utils.StaticUtil;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.io.IOException;
 
 public class InteractiveFona implements FONAClient {
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	private static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
 
 	private static void displayMenu() {
 		System.out.println("> Commands are case-sensitive.");
@@ -56,202 +37,6 @@ public class InteractiveFona implements FONAClient {
 
 	private final static void reprompt() {
 		System.out.print("FONA> ");
-	}
-
-	public static void main(String args[])
-					throws InterruptedException, NumberFormatException, IOException {
-		try {
-			// Display current Classpath
-			ClassLoader cl = ClassLoader.getSystemClassLoader();
-
-			URL[] urls = ((URLClassLoader) cl).getURLs();
-
-			for (URL url : urls) {
-				System.out.println(url.getFile());
-			}
-		} catch (Exception ex) {
-			// TODO Fix that
-			System.err.println("Cannot display Classpath...");
-		}
-
-		InteractiveFona sf = new InteractiveFona();
-		fona = new FONAManager(sf);
-
-		String verbose = System.getProperty("verbose");
-		if (verbose != null && "true".equals(verbose)) {
-			fona.setVerbose(true);
-		}
-
-		String port = System.getProperty("serial.port", "/dev/ttyUSB0");
-		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
-		if (args.length > 0) {
-			try {
-				br = Integer.parseInt(args[0]);
-			} catch (Exception ex) {
-				System.err.println(ex.getMessage());
-			}
-		}
-
-		System.out.println("Serial Communication.");
-		System.out.println(" ... connect using port " + port + " : " + Integer.toString(br)); // +  ", N, 8, 1.");
-		System.out.println(" ... data received on serial port should be displayed below.");
-
-		// create an instance of the serial communications class
-		// final Serial serial = SerialFactory.createInstance();
-		try {
-			System.out.println("Hit 'Q' to quit.");
-			System.out.println("Hit 'V' to toggle verbose on/off.");
-			userInput("Hit [return] when ready to start."); // Usefull when connecting a remote debugger.
-
-			System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
-			fona.openSerial(port, br);
-
-			System.out.println("Port is opened.");
-
-			final Thread me = Thread.currentThread();
-			Thread userInputThread = new Thread(() -> {
-				System.out.println("Establishing connection (can take up to 3 seconds).");
-				while (!fona.isConnected()) {
-//            System.out.println(">>>> Trying to connect...");
-					try {
-						fona.tryToConnect();
-					} catch (IOException ioe) {
-						throw new RuntimeException(ioe);
-					}
-					if (!fona.isConnected()) {
-						FONAManager.delay(1);
-					}
-				}
-				System.out.println("Connection established.");
-				displayMenu();
-				boolean loop = true;
-				while (loop) {
-					String userInput = "";
-					if (messToRead == -1)
-						userInput = userInput("FONA> ");
-					else {
-						FONAManager.delay(1);
-						userInput = "r"; // FONA received a message
-						System.out.println("\t\t>>> Automated read");
-					}
-					if ("Q".equalsIgnoreCase(userInput)) {
-						loop = false;
-					} else if ("V".equalsIgnoreCase(userInput)) {
-						FONAManager.setVerbose(!FONAManager.getVerbose());
-						System.out.println("Verbose is now " + (FONAManager.getVerbose() ? "on" : "off") + ".");
-					} else if ("?".equalsIgnoreCase(userInput) || "".equalsIgnoreCase(userInput)) {
-						displayMenu();
-					} else if (userInput.trim().length() > 0) {
-						if (fona.isSerialOpen()) {
-							String cmd = "";
-							try {
-								if ("M".equals(userInput)) { // Module Name and Revision
-									fona.requestModuleNameAndRevision();
-								} else if ("D".equals(userInput)) { // Debug
-									fona.requestDebug();
-								} else if ("C".equals(userInput)) { // Read SIM CCID
-									fona.requestSimCCID();
-								} else if ("b".equals(userInput)) { // Battery
-									fona.requestBatteryLevel();
-								} else if ("n".equals(userInput)) { // Network Name
-									fona.requestNetworkName();
-								} else if ("I".equals(userInput)) { // Network Status
-									fona.requestNetworkStatus();
-								} else if ("i".equals(userInput)) { // RSSI Signal strength
-									fona.requestRSSI();
-								} else if ("N".equals(userInput)) { // Number of SMS
-									fona.requestNumberOfSMS();
-								} else if ("r".equals(userInput)) { // Read mess num x
-									if (messToRead == -1) {
-										String str = userInput("  Mess Num? (return to cancel) > ");
-										try {
-											messToRead = Integer.parseInt(str.trim());
-										} catch (NumberFormatException nfe) {
-											System.out.println("...Cancelling.");
-										}
-									}
-									if (messToRead != -1) {
-										fona.readMessNum(messToRead);
-									}
-									messToRead = -1;
-								} else if ("s".equals(userInput)) // Send SMS
-								{
-									System.out.println("> Note: Enter [Return] at the prompt to cancel the 'send SMS' operation <");
-									String sendTo = userInput("  Send messsage to (like 14153505547) ?> ");
-									if (sendTo.trim().length() > 0) {
-										if (FONAManager.getVerbose()) {
-											System.out.println("Sending message to " + sendTo);
-										}
-										String messagePayload = userInput("  Mess Content (140 char max)?         > ");
-										if (messagePayload.trim().length() > 0) {
-											fona.sendSMS(sendTo, messagePayload);
-											System.out.println("Sent.");
-										} else {
-											System.out.println("... Canceled.");
-										}
-									} else {
-										System.out.println("... Canceled.");
-									}
-								} else if ("R".equals(userInput)) { // Read all messages
-									System.out.println("Operation not available yet...");
-								} else if ("d".equals(userInput)) { // Delete message #x
-									String num = userInput("  Delete messsage # (return to cancel) ?> ");
-									int messNum = -1;
-									try {
-										messNum = Integer.parseInt(num);
-										fona.deleteSMS(messNum);
-									} catch (NumberFormatException nfe) {
-										System.out.println("...Cancelling.");
-									}
-								} else { // Whatever is not implemented... out of sync, whatever.
-									cmd = userInput;
-									if (FONAManager.getVerbose()) {
-										System.out.println("\tWriting [" + cmd + "] to the serial port...");
-									}
-									try {
-										fona.dumpToSerial(cmd + "\n");
-									} catch (IllegalStateException ex) {
-										ex.printStackTrace();
-									}
-								}
-							} catch (IOException ioe) {
-								ioe.printStackTrace();
-							}
-						} else {
-							System.out.println("Not open yet...");
-						}
-					}
-				}
-				synchronized (me) {
-					me.notify();
-				}
-			});
-			userInputThread.start();
-
-			// Debug thread... simulates fona output
-			if (false) {
-				Thread simulator = new Thread() {
-					public void run() {
-						while (true) {
-							FONAManager.delay(10F);
-							fona.fonaOutput(FONAManager.CRLF + "+CMTI: \"ME\",77" + FONAManager.CRLF);
-						}
-					}
-				};
-				simulator.start();
-			}
-
-			synchronized (me) {
-				me.wait();
-			}
-			System.out.println("Bye!");
-			fona.stopReading();
-			fona.closeSerial();
-		} catch (Exception ex) {
-			System.out.println(" ==>> Serial etup Failed : " + ex.getMessage());
-			return;
-		}
-		System.exit(0);
 	}
 
 	@Override
@@ -356,4 +141,216 @@ public class InteractiveFona implements FONAClient {
 		System.out.println("Dring dring!");
 		reprompt();
 	}
+
+	/**
+	 * The main.
+	 *
+	 * Supported System variables:
+	 * <b>serial.port</b>: A stgring like "/dev/ttyUSB0". Default is "/dev/ttyUSB0"
+	 * <b>baud.rate</b>: As an integer like 1200, 4800, 9600, etc. Default is 9600.
+	 * <b>verbose</b> "true" or "false", default "false"
+	 *
+	 * @param args Can be used to pass the Baud Rate prm, as an integer. Overrides the "baud.rate" system variable.
+	 * @throws NumberFormatException if baud rate passed as a parameter or system variable is invalid (i.e. not an integer).
+	 */
+	public static void main(String args[])
+			throws NumberFormatException {
+		try {
+			// Display current Classpath
+			ClassLoader cl = ClassLoader.getSystemClassLoader();
+
+			if (cl instanceof URLClassLoader) {
+				URL[] urls = ((URLClassLoader) cl).getURLs();
+
+				System.out.println("Classpath:");
+				for (URL url : urls) {
+					System.out.println(url.getFile());
+				}
+			} else {
+				System.out.println("ClassLoader is NOT an URLClassLoader. Java 9?...");
+			}
+		} catch (Exception ex) {
+			// TODO Fix that
+			System.err.println("Cannot display Classpath...");
+		}
+
+		InteractiveFona sf = new InteractiveFona();
+		fona = new FONAManager(sf);
+
+		String verbose = System.getProperty("verbose", "false");
+		if ("true".equals(verbose)) {
+			fona.setVerbose(true);
+		}
+
+		String port = System.getProperty("serial.port", "/dev/ttyUSB0");
+		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
+		if (args.length > 0) {
+			try {
+				br = Integer.parseInt(args[0]);
+			} catch (Exception ex) {
+				System.err.println(ex.getMessage());
+			}
+		}
+
+		System.out.println("Serial Communication.");
+		System.out.println(" ... connecting using port " + port + ":" + Integer.toString(br)); // +  ", N, 8, 1.");
+		System.out.println(" ... data received on serial port should be displayed below.");
+
+		// create an instance of the serial communications class
+		// final Serial serial = SerialFactory.createInstance();
+		try {
+			System.out.println("Hit 'Q' to quit.");
+			System.out.println("Hit 'V' to toggle verbose on/off.");
+			StaticUtil.userInput("Hit [return] when ready to start."); // Usefull when connecting a remote debugger.
+
+			System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
+			fona.openSerial(port, br);
+
+			System.out.println("Port is opened.");
+
+			final Thread me = Thread.currentThread();
+			Thread userInputThread = new Thread(() -> {
+				System.out.println("Establishing connection (can take up to 3 seconds).");
+				while (!fona.isConnected()) {
+//            System.out.println(">>>> Trying to connect...");
+					try {
+						fona.tryToConnect();
+					} catch (IOException ioe) {
+						throw new RuntimeException(ioe);
+					}
+					if (!fona.isConnected()) {
+						FONAManager.delay(1);
+					}
+				}
+				System.out.println("Connection established.");
+				displayMenu();
+				boolean loop = true;
+				while (loop) {
+					String userInput = "";
+					if (messToRead == -1)
+						userInput = StaticUtil.userInput("FONA> ");
+					else {
+						FONAManager.delay(1);
+						userInput = "r"; // FONA received a message
+						System.out.println("\t\t>>> Automated read");
+					}
+					if ("Q".equalsIgnoreCase(userInput)) {
+						loop = false;
+					} else if ("V".equalsIgnoreCase(userInput)) {
+						FONAManager.setVerbose(!FONAManager.getVerbose());
+						System.out.println("Verbose is now " + (FONAManager.getVerbose() ? "on" : "off") + ".");
+					} else if ("?".equalsIgnoreCase(userInput) || "".equalsIgnoreCase(userInput)) {
+						displayMenu();
+					} else if (userInput.trim().length() > 0) {
+						if (fona.isSerialOpen()) {
+							String cmd = "";
+							try {
+								if ("M".equals(userInput)) { // Module Name and Revision
+									fona.requestModuleNameAndRevision();
+								} else if ("D".equals(userInput)) { // Debug
+									fona.requestDebug();
+								} else if ("C".equals(userInput)) { // Read SIM CCID
+									fona.requestSimCCID();
+								} else if ("b".equals(userInput)) { // Battery
+									fona.requestBatteryLevel();
+								} else if ("n".equals(userInput)) { // Network Name
+									fona.requestNetworkName();
+								} else if ("I".equals(userInput)) { // Network Status
+									fona.requestNetworkStatus();
+								} else if ("i".equals(userInput)) { // RSSI Signal strength
+									fona.requestRSSI();
+								} else if ("N".equals(userInput)) { // Number of SMS
+									fona.requestNumberOfSMS();
+								} else if ("r".equals(userInput)) { // Read mess num x
+									if (messToRead == -1) {
+										String str = StaticUtil.userInput("  Mess Num? (return to cancel) > ");
+										try {
+											messToRead = Integer.parseInt(str.trim());
+										} catch (NumberFormatException nfe) {
+											System.out.println("...Cancelling.");
+										}
+									}
+									if (messToRead != -1) {
+										fona.readMessNum(messToRead);
+									}
+									messToRead = -1;
+								} else if ("s".equals(userInput)) // Send SMS
+								{
+									System.out.println("> Note: Enter [Return] at the prompt to cancel the 'send SMS' operation <");
+									String sendTo = StaticUtil.userInput("  Send messsage to (like 14153505547) ?> ");
+									if (sendTo.trim().length() > 0) {
+										if (FONAManager.getVerbose()) {
+											System.out.println("Sending message to " + sendTo);
+										}
+										String messagePayload = StaticUtil.userInput("  Mess Content (140 char max)?         > ");
+										if (messagePayload.trim().length() > 0) {
+											fona.sendSMS(sendTo, messagePayload);
+											System.out.println("Sent.");
+										} else {
+											System.out.println("... Canceled.");
+										}
+									} else {
+										System.out.println("... Canceled.");
+									}
+								} else if ("R".equals(userInput)) { // Read all messages
+									System.out.println("Operation not available yet...");
+								} else if ("d".equals(userInput)) { // Delete message #x
+									String num = StaticUtil.userInput("  Delete messsage # (return to cancel) ?> ");
+									int messNum = -1;
+									try {
+										messNum = Integer.parseInt(num);
+										fona.deleteSMS(messNum);
+									} catch (NumberFormatException nfe) {
+										System.out.println("...Cancelling.");
+									}
+								} else { // Whatever is not implemented... out of sync, whatever.
+									cmd = userInput;
+									if (FONAManager.getVerbose()) {
+										System.out.println("\tWriting [" + cmd + "] to the serial port...");
+									}
+									try {
+										fona.dumpToSerial(cmd + "\n");
+									} catch (IllegalStateException ex) {
+										ex.printStackTrace();
+									}
+								}
+							} catch (IOException ioe) {
+								ioe.printStackTrace();
+							}
+						} else {
+							System.out.println("Not open yet...");
+						}
+					}
+				}
+				synchronized (me) {
+					me.notify();
+				}
+			});
+			userInputThread.start();
+
+			// Debug thread... simulates fona output
+			if (false) {
+				Thread simulator = new Thread() {
+					public void run() {
+						while (true) {
+							FONAManager.delay(10F);
+							fona.fonaOutput(FONAManager.CRLF + "+CMTI: \"ME\",77" + FONAManager.CRLF);
+						}
+					}
+				};
+				simulator.start();
+			}
+
+			synchronized (me) {
+				me.wait();
+			}
+			System.out.println("Bye!");
+			fona.stopReading();
+			fona.closeSerial();
+		} catch (Exception ex) {
+			System.out.println(" ==>> Serial Setup Failed : " + ex.getMessage());
+		}
+		System.exit(0);
+	}
+
 }

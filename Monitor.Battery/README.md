@@ -410,6 +410,7 @@ Your imagination is the limit...
 ### Glossary
 
 - API: **A**pplication **P**rogramming **I**nterface
+- GPIO: **G**eneral **P**urpose **I**nput **O**utput
 - HTML: **H**yper **T**ext **M**arkup **L**anguage
 - HTTP: **H**yper **T**ext **T**ransfer **P**rotocol
 - IoT: **I**nternet **o**f **T**hings
