@@ -167,10 +167,11 @@ public class InteractiveFona implements FONAClient {
 					System.out.println(url.getFile());
 				}
 			} else {
-				System.out.println("ClassLoader is NOT an URLClassLoader. Java 9?...");
+				System.out.println("ClassLoader is NOT an URLClassLoader:");
+				System.out.println(String.format(">> %s", cl.getClass().getName()));
+
 			}
 		} catch (Exception ex) {
-			// TODO Fix that
 			System.err.println("Cannot display Classpath...");
 		}
 
@@ -212,7 +213,7 @@ public class InteractiveFona implements FONAClient {
 			Thread userInputThread = new Thread(() -> {
 				System.out.println("Establishing connection (can take up to 3 seconds).");
 				while (!fona.isConnected()) {
-//            System.out.println(">>>> Trying to connect...");
+//        System.out.println(">>>> Trying to connect...");
 					try {
 						fona.tryToConnect();
 					} catch (IOException ioe) {
@@ -227,9 +228,9 @@ public class InteractiveFona implements FONAClient {
 				boolean loop = true;
 				while (loop) {
 					String userInput = "";
-					if (messToRead == -1)
+					if (messToRead == -1) {
 						userInput = StaticUtil.userInput("FONA> ");
-					else {
+					} else {
 						FONAManager.delay(1);
 						userInput = "r"; // FONA received a message
 						System.out.println("\t\t>>> Automated read");
@@ -318,7 +319,7 @@ public class InteractiveFona implements FONAClient {
 								ioe.printStackTrace();
 							}
 						} else {
-							System.out.println("Not open yet...");
+							System.out.println("Not connected yet...");
 						}
 					}
 				}
@@ -330,6 +331,7 @@ public class InteractiveFona implements FONAClient {
 
 			// Debug thread... simulates fona output
 			if (false) {
+				System.out.println("Debug thread...");
 				Thread simulator = new Thread() {
 					public void run() {
 						while (true) {
@@ -348,7 +350,7 @@ public class InteractiveFona implements FONAClient {
 			fona.stopReading();
 			fona.closeSerial();
 		} catch (Exception ex) {
-			System.out.println(" ==>> Serial Setup Failed : " + ex.getMessage());
+			System.out.println(" ==> Serial Setup Failed : " + ex.getMessage());
 		}
 		System.exit(0);
 	}

@@ -195,12 +195,12 @@ public class FONAManager implements SerialIOCallbacks {
 
 	@Override
 	public void connected(boolean b) {
-		System.out.println("GPS connected: " + b);
+		System.out.println("Connected: " + b);
 	}
 
 	private int lenToRead = 0;
 	private int bufferIdx = 0;
-	private byte[] serialBuffer = new byte[256];
+	private byte[] serialBuffer = new byte[1024];
 
 	@Override
 	public void onSerialData(byte b) {
