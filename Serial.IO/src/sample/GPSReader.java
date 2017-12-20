@@ -42,14 +42,19 @@ public class GPSReader implements SerialIOCallbacks {
 		}
 	}
 
+	/**
+	 * Formatting the data read by {@link #onSerialData(byte)}
+	 * @param mess
+	 */
 	public void serialOutput(byte[] mess) {
 		if (verbose) { // verbose...
 			try {
 				String[] sa = DumpUtil.dualDump(mess);
 				if (sa != null) {
 					System.out.println("\t>>> [From GPS] Received:");
-					for (String s : sa)
+					for (String s : sa) {
 						System.out.println("\t\t" + s);
+					}
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
