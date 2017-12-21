@@ -513,6 +513,7 @@ public class FONAManager implements SerialIOCallbacks {
 
 	/*
 	 * Data received from FONA
+	 * Aware of the FONA Protocol.
 	 */
 	public void manageFonaOutput(String mess) {
 		if (mess.equals(CONNECTION_OK)) {
@@ -536,7 +537,7 @@ public class FONAManager implements SerialIOCallbacks {
 				int end = mess.indexOf(CRLF, start + CRLF.length() + 1);
 				String content = mess.substring(start, end);
 				String[] parsed = content.substring("+CBC: ".length()).split(",");
-				//     System.out.println("Load:" + parsed[1] + "%, " + parsed[2] + " mV");
+//     System.out.println("Load:" + parsed[1] + "%, " + parsed[2] + " mV");
 				this.parent.batteryResponse(parsed[1], parsed[2]);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -547,7 +548,7 @@ public class FONAManager implements SerialIOCallbacks {
 				int end = mess.indexOf(CRLF, start + CRLF.length() + 1);
 				String content = mess.substring(start, end);
 				String[] parsed = content.substring("+CSQ: ".length()).split(",");
-				//  System.out.println("Signal:" + parsed[0] + " dB. Must be higher than 5, the higher the better.");
+//      System.out.println("Signal:" + parsed[0] + " dB. Must be higher than 5, the higher the better.");
 				this.parent.signalResponse(parsed[0]);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -557,7 +558,7 @@ public class FONAManager implements SerialIOCallbacks {
 				int start = mess.indexOf(CRLF) + CRLF.length();
 				int end = mess.indexOf(CRLF, start + CRLF.length() + 1);
 				String content = mess.substring(start, end);
-				//  System.out.println("SIM Card # " + content);
+//      System.out.println("SIM Card # " + content);
 				this.parent.simCardResponse(content);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -569,7 +570,7 @@ public class FONAManager implements SerialIOCallbacks {
 				String content = mess.substring(start, end);
 				String[] parsed = content.substring("+COPS: ".length()).split(",");
 				if (parsed != null && parsed.length > 2) {
-					//  System.out.println("Network:" + parsed[2]);
+			//  System.out.println("Network:" + parsed[2]);
 					this.parent.networkNameResponse(parsed[2]);
 				} else
 					System.out.println("Invalid Network Name response");
@@ -596,7 +597,7 @@ public class FONAManager implements SerialIOCallbacks {
 				int end = mess.indexOf(CRLF, start + CRLF.length() + 1);
 				String content = mess.substring(start, end);
 				String[] parsed = content.substring("+CPMS: ".length()).split(",");
-				//  System.out.println("Number of SMS :" + parsed[1]);
+	//    System.out.println("Number of SMS :" + parsed[1]);
 				this.parent.numberSMSResponse(Integer.parseInt(parsed[1]));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
@@ -635,7 +636,7 @@ public class FONAManager implements SerialIOCallbacks {
 					System.out.println("Message Content:" + payload);
 				}
 				ReceivedSMS sms = new ReceivedSMS(payload);
-				//   System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
+	//    System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
 				this.parent.readSMS(sms);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -686,10 +687,9 @@ public class FONAManager implements SerialIOCallbacks {
 				ex.printStackTrace();
 			}
 		} else if (mess.startsWith(SOMEONE_CALLING)) {
-			//  System.out.println("Someone is calling!..");
+	//  System.out.println("Someone is calling!..");
 			this.parent.someoneCalling();
-		} else // The rest...
-		{
+		} else { // The rest...
 			if (expectingNotification != null) {
 				if (getVerbose()) {
 					System.out.println("Releasing the waiter");

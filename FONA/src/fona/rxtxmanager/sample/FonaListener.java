@@ -92,6 +92,7 @@ public class FonaListener implements FONAClient {
 	public void readSMS(FONAManager.ReceivedSMS sms) {
 		System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
 		// TODO: This is where you would parse the message and take the appropriate action.
+
 //	String mess = "Message from " + sms.getFrom() + ", " + sms.getContent();
 		String mess = sms.getContent();
 		TextToSpeech.speak(mess);
@@ -184,9 +185,7 @@ public class FonaListener implements FONAClient {
 			fona.closeSerial();
 		} catch (Exception ex) {
 			System.out.println(" ==>> Serial Setup failed : " + ex.getMessage() + " <<== ");
-			return;
 		}
 		System.exit(0);
 	}
-
 }
