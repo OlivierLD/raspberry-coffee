@@ -336,7 +336,7 @@ public class InteractiveFona implements FONAClient {
 					public void run() {
 						while (true) {
 							FONAManager.delay(10F);
-							fona.fonaOutput(FONAManager.CRLF + "+CMTI: \"ME\",77" + FONAManager.CRLF);
+							fona.manageFonaOutput(FONAManager.CRLF + "+CMTI: \"ME\",77" + FONAManager.CRLF);
 						}
 					}
 				};

@@ -1,8 +1,6 @@
 package fona.rxtxmanager;
 
 import java.io.IOException;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Map;
@@ -45,6 +43,12 @@ import utils.DumpUtil;
  *
  * You can as well use the VIn and the GND of the USB cable.
  * This would be another project, a FONA on its own board, with a USB Cable attached to it ;)
+ *
+ * IMPORTANT:
+ * ==========
+ * This version uses Lib-RxTx for Java, and not the com.pi4j.io.serial package of PI4J.
+ * As such, it could possibly run on other machines than Raspberry PI.
+ *
  */
 public class FONAManager implements SerialIOCallbacks {
 
@@ -143,13 +147,12 @@ public class FONAManager implements SerialIOCallbacks {
 				while (keepReading()) {
 					try {
 						while (true && bufferIdx > 0) { // serialBuffer.length > 0) {
-							fullMessage.append(new String(serialBuffer));
-
 							String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
 							if (sa0 != null) {
 								System.out.println("\t<<< [FONA] Received (top)...");
-								for (String s : sa0)
+								for (String s : sa0) {
 									System.out.println("\t\t" + s);
+								}
 							}
 
 //            char c = (char)serial.read();
@@ -160,7 +163,7 @@ public class FONAManager implements SerialIOCallbacks {
 
 							if (fullMessage.toString().endsWith(FONAManager.ACK) || fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT)) {
 								String mess = fullMessage.toString(); // Send the full message. Parsed later.
-								//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
+						//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
 								if (getVerbose()) {
 									try {
 										String[] sa = DumpUtil.dualDump(mess);
@@ -173,13 +176,14 @@ public class FONAManager implements SerialIOCallbacks {
 										System.out.println(ex.toString());
 									}
 								}
-								fonaOutput(mess);
-								//    delay(0.5f);
-								fullMessage = new StringBuffer(); // Reset
+								manageFonaOutput(mess);
+					//    delay(0.5f);
+								resetSerialBuffer();
 							}
 							//  delay(0.02f);
-							if (serialBuffer.length == 0)
+							if (bufferIdx == 0) {
 								delay(0.5f);
+							}
 						}
 						//   delay(0.5f);
 					} catch (IllegalStateException ise) {
@@ -198,31 +202,28 @@ public class FONAManager implements SerialIOCallbacks {
 		System.out.println("Connected: " + b);
 	}
 
-	private int lenToRead = 0;
 	private int bufferIdx = 0;
 	private byte[] serialBuffer = new byte[1024];
+
+	private StringBuffer fullMessage = new StringBuffer();
+
+	private void resetSerialBuffer() {
+		bufferIdx = 0;
+		synchronized (fullMessage) {
+			fullMessage = new StringBuffer();
+		}
+	}
 
 	@Override
 	public void onSerialData(byte b) {
 //  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
 		serialBuffer[bufferIdx++] = (byte) (b & 0xFF);
-		if (b == 0xA) { // \n
-			// Message completed
-			byte[] mess = new byte[bufferIdx];
-			for (int i = 0; i < bufferIdx; i++) {
-				mess[i] = serialBuffer[i];
-			}
-			serialOutput(mess);
-			// Reset
-			lenToRead = 0;
-			bufferIdx = 0;
-		}
-	}
+		fullMessage.append(b);
 
-	public void serialOutput(byte[] mess) {
-		if (verbose) { // verbose...
+		if (verbose) {
+			String payload = fullMessage.substring(0, bufferIdx);
 			try {
-				String[] sa = DumpUtil.dualDump(mess);
+				String[] sa = DumpUtil.dualDump(payload);
 				if (sa != null) {
 					System.out.println("\t>>> [From FONA] Received:");
 					for (String s : sa)
@@ -231,8 +232,6 @@ public class FONAManager implements SerialIOCallbacks {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		} else {
-			System.out.print(new String(mess));
 		}
 	}
 
@@ -240,7 +239,7 @@ public class FONAManager implements SerialIOCallbacks {
 		return connectionEstablished;
 	}
 
-	public void openSerial(String port, int br) throws IOException {
+	public void openSerial(String port, int br) {
 
 		serialCommunicator = new SerialCommunicator(this);
 		serialCommunicator.setVerbose(false);
@@ -289,12 +288,14 @@ public class FONAManager implements SerialIOCallbacks {
 		sendToFona(SET_TO_TEXT);
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
 				if (getVerbose())
 					System.out.println("Moving on!");
 			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
 		}
 		expectingNotification = Thread.currentThread();
@@ -303,12 +304,14 @@ public class FONAManager implements SerialIOCallbacks {
 		sendToFona("AT+CSDH=1");
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
 				if (getVerbose())
 					System.out.println("Moving on!");
 			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
 		}
 		expectingNotification = null;
@@ -353,12 +356,15 @@ public class FONAManager implements SerialIOCallbacks {
 		sendToFona(SET_TO_TEXT);
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on!");
+				}
 			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
 		}
 		expectingNotification = null;
@@ -373,12 +379,15 @@ public class FONAManager implements SerialIOCallbacks {
 		sendToFona(SET_TO_TEXT);
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on!");
+				}
 			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
 		}
 		expectingNotification = null;
@@ -391,12 +400,15 @@ public class FONAManager implements SerialIOCallbacks {
 
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on, enter message");
+				}
 			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
 		}
 		expectingNotification = null;
@@ -422,12 +434,15 @@ public class FONAManager implements SerialIOCallbacks {
 		sendToFona(first);
 		synchronized (expectingNotification) {
 			try {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("     ... Waiting");
+				}
 				expectingNotification.wait(); // TODO Timeout?
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Moving on!");
+				}
 			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
 		}
 		expectingNotification = null;
@@ -452,8 +467,9 @@ public class FONAManager implements SerialIOCallbacks {
 						String[] sa = DumpUtil.dualDump(payload);
 						if (sa != null) {
 							System.out.println("\t>>> [FONA] Sent...");
-							for (String s : sa)
+							for (String s : sa) {
 								System.out.println("\t\t" + s);
+							}
 						}
 					} catch (Exception ex) {
 						System.out.println(ex.toString());
@@ -487,7 +503,7 @@ public class FONAManager implements SerialIOCallbacks {
 	/*
 	 * Data received from FONA
 	 */
-	public void fonaOutput(String mess) {
+	public void manageFonaOutput(String mess) {
 		if (mess.equals(CONNECTION_OK)) {
 			connectionEstablished = true;
 			this.parent.fonaConnected();
@@ -552,14 +568,16 @@ public class FONAManager implements SerialIOCallbacks {
 		} else if (mess.startsWith(SET_TO_TEXT_RESPONSE)) {
 			// Release the waiting thread
 			if (expectingNotification != null) {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Releasing the waiter");
+				}
 				synchronized (expectingNotification) {
 					expectingNotification.notify();
 				}
 			} else {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Weird: no one is waiting...");
+				}
 			}
 		} else if (mess.startsWith(NUM_SMS_RESPONSE)) {
 			try {
@@ -574,8 +592,9 @@ public class FONAManager implements SerialIOCallbacks {
 			}
 		} else if (mess.startsWith(READ_SMS_RESPONSE)) {
 			if (expectingNotification != null) {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Releasing the waiter");
+				}
 				synchronized (expectingNotification) {
 					expectingNotification.notify();
 				}
@@ -584,12 +603,14 @@ public class FONAManager implements SerialIOCallbacks {
 			}
 //    System.out.println("Enter number of message to read here:...");
 		} else if (mess.startsWith(MESSAGE_PROMPT)) {
-			if (getVerbose())
+			if (getVerbose()) {
 				System.out.println("Enter message prompt, received:" + mess);
+			}
 			// Release the waiting thread
 			if (expectingNotification != null) {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Releasing the waiter");
+				}
 				synchronized (expectingNotification) {
 					expectingNotification.notify();
 				}
@@ -599,8 +620,9 @@ public class FONAManager implements SerialIOCallbacks {
 		} else if (mess.startsWith(READ_SMS_CONTENT_RESPONSE)) {
 			try {
 				String payload = mess.substring(mess.indexOf(CRLF) + CRLF.length());
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Message Content:" + payload);
+				}
 				ReceivedSMS sms = new ReceivedSMS(payload);
 				//   System.out.println("From " + sms.getFrom() + ", " + sms.getMessLen() + " char : " + sms.getContent());
 				this.parent.readSMS(sms);
@@ -634,16 +656,18 @@ public class FONAManager implements SerialIOCallbacks {
 					System.err.println("Original mess [" + mess + "], num:[" + num + "]");
 					nfe.printStackTrace();
 				}
-				if (mn != -1)
+				if (mn != -1) {
 					this.parent.smsDeletedResponse(mn, success);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else if (mess.startsWith(RECEIVED_SMS)) {
 			try {
 				String messNumStr = mess.substring(mess.lastIndexOf(",") + 1, mess.lastIndexOf(CRLF));
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Received message #" + messNumStr);
+				}
 				delay(2f);
 				int messToRead = Integer.parseInt(messNumStr.trim());
 				this.parent.receivedSMS(messToRead);
@@ -656,14 +680,16 @@ public class FONAManager implements SerialIOCallbacks {
 		} else // The rest...
 		{
 			if (expectingNotification != null) {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("Releasing the waiter");
+				}
 				synchronized (expectingNotification) {
 					expectingNotification.notify();
 				}
 			} else {
-				if (getVerbose())
+				if (getVerbose()) {
 					System.out.println("... No one is waiting on a lock.");
+				}
 			}
 			if (getVerbose()) {
 				try {
@@ -684,6 +710,7 @@ public class FONAManager implements SerialIOCallbacks {
 		try {
 			Thread.sleep(Math.round(delay * 1_000L));
 		} catch (InterruptedException ie) {
+			ie.printStackTrace();
 		}
 	}
 
