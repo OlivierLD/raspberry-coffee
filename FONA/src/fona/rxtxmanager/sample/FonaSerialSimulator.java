@@ -8,10 +8,6 @@ import utils.StaticUtil;
 import utils.StringUtils;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-
-import static fona.rxtxmanager.FONAManager.CONNECTION_OK;
 
 public class FonaSerialSimulator implements FONAClient {
 
@@ -145,6 +141,33 @@ public class FonaSerialSimulator implements FONAClient {
 		reprompt();
 	}
 
+	private void onBehalfOfFONA(String mess) {
+		Thread iAmFONA = new Thread(() -> {
+			try {
+				Thread.sleep(2_000);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			if (fona.getVerbose()) {
+				try {
+					String[] sa = DumpUtil.dualDump(mess);
+					if (sa != null) {
+						System.out.println("\t>>> [FONA Sending] :");
+						for (String s : sa)
+							System.out.println("\t\t" + s);
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+			for (byte b : mess.getBytes()) {
+				System.out.println(String.format("Sending one byte >> %d 0x%s", b, StringUtils.lpad(Integer.toHexString(b).toUpperCase(), 2, "0")));
+				fona.onSerialData(b);
+			}
+		});
+		iAmFONA.start();
+	}
+
 	/**
 	 * The main.
 	 *
@@ -190,33 +213,9 @@ public class FonaSerialSimulator implements FONAClient {
 			System.out.println("Hit 'V' to toggle verbose on/off.");
 			StaticUtil.userInput("Hit [return] when ready to start."); // Usefull when connecting a remote debugger.
 
-			Thread connector = new Thread(() -> {
-				try {
-					Thread.sleep(2_000);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				// Send a CONNECTION_OK
-				try {
-					String[] sa = DumpUtil.dualDump(CONNECTION_OK);
-					if (sa != null) {
-						System.out.println("\t>>> [FONA Sending] :");
-						for (String s : sa)
-							System.out.println("\t\t" + s);
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-
-				System.out.println("FONA Sending a CONNECTION_OK message");
-				for (byte b : CONNECTION_OK.getBytes()) {
-					System.out.println(String.format("Sending one byte >> %d 0x%s", b, StringUtils.lpad(Integer.toHexString(b).toUpperCase(), 2, "0")));
-					fona.onSerialData(b);
-				}
-				System.out.println("CONNECTION_OK message was sent");
-
-			});
-			connector.start();
+			System.out.println("FONA Sending a CONNECTION_OK message");
+			sf.onBehalfOfFONA(FONAManager.CONNECTION_OK);
+			System.out.println("CONNECTION_OK message was sent");
 
 			System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
 			fona.openSerial(port, br);
@@ -262,14 +261,21 @@ public class FonaSerialSimulator implements FONAClient {
 							try {
 								if ("M".equals(userInput)) { // Module Name and Revision
 									fona.requestModuleNameAndRevision();
+									// Start FONA Response thread
+									String mResponse = FONAManager.ATI_RESPONSE + "(Simulated Module Name and Revision)" + FONAManager.ACK;
+									sf.onBehalfOfFONA(mResponse);
 								} else if ("D".equals(userInput)) { // Debug
 									fona.requestDebug();
 								} else if ("C".equals(userInput)) { // Read SIM CCID
 									fona.requestSimCCID();
 								} else if ("b".equals(userInput)) { // Battery
 									fona.requestBatteryLevel();
+									String bResponse = FONAManager.BATTERY_RESPONSE + "+CBC: xx,98,1234" + FONAManager.ACK; // TODO Make sure this is right.
+									sf.onBehalfOfFONA(bResponse);
 								} else if ("n".equals(userInput)) { // Network Name
 									fona.requestNetworkName();
+									String nResponse = FONAManager.NETWORK_NAME_RESPONSE + "+COPS: x,y,(Simulated Network)" + FONAManager.ACK;
+									sf.onBehalfOfFONA(nResponse);
 								} else if ("I".equals(userInput)) { // Network Status
 									fona.requestNetworkStatus();
 								} else if ("i".equals(userInput)) { // RSSI Signal strength
@@ -319,6 +325,7 @@ public class FonaSerialSimulator implements FONAClient {
 										System.out.println("...Cancelling.");
 									}
 								} else { // Whatever is not implemented... out of sync, whatever.
+									System.out.println("Not a recognized command, sending it raw to FONA");
 									cmd = userInput;
 									if (FONAManager.getVerbose()) {
 										System.out.println("\tWriting [" + cmd + "] to the serial port...");

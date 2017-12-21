@@ -10,7 +10,6 @@ import gnu.io.CommPortIdentifier;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 import utils.DumpUtil;
-import utils.StringUtils;
 
 /**
  * Important: On the Raspberry PI, make sure you've run
@@ -144,6 +143,10 @@ public class FONAManager implements SerialIOCallbacks {
 
 		simulateSerial = "true".equals(System.getProperty("simulate.serial"));
 
+		/**
+		 * Reads what FONA emits
+		 * Identifies the full messages, and send them to {@link #manageFonaOutput(String)}
+		 */
 		Thread serialReader = new Thread(() -> {
 			while (keepReading()) {
 				try {
@@ -181,8 +184,9 @@ public class FONAManager implements SerialIOCallbacks {
 							delay(0.5f);
 						}
 					}
-
-					delay(0.5f); // DEBUG, For debug, simulation...
+					if (simulateSerial) {
+						delay(0.5f); // TODO, make sure this is not necessary when not simulating...
+					}
 
 				} catch (IllegalStateException ise) {
 					// Not opened yet
@@ -201,7 +205,7 @@ public class FONAManager implements SerialIOCallbacks {
 	}
 
 	private int bufferIdx = 0;
-	private byte[] serialBuffer = new byte[1024]; // TODO See if this is necessary
+	private byte[] serialBuffer = new byte[1024]; // TODO See if this is necessary (seems it is not)
 
 	private StringBuffer fullMessage = new StringBuffer();
 
