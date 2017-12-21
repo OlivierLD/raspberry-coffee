@@ -175,8 +175,8 @@ public class InteractiveFona implements FONAClient {
 			System.err.println("Cannot display Classpath...");
 		}
 
-		InteractiveFona sf = new InteractiveFona();
-		fona = new FONAManager(sf);
+		InteractiveFona interactiveFona = new InteractiveFona();
+		fona = new FONAManager(interactiveFona);
 
 		String verbose = System.getProperty("verbose", "false");
 		if ("true".equals(verbose)) {

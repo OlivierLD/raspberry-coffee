@@ -23,28 +23,24 @@ public class FonaListener implements FONAClient {
 
 	@Override
 	public void receivedSMS(final int sms) {
-		Thread readit = new Thread() {
-			public void run() {
-				try {
-					fona.readMessNum(sms);
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
+		Thread readit = new Thread(() -> {
+			try {
+				fona.readMessNum(sms);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
-		};
+		});
 		readit.start();
 
-		Thread deleteit = new Thread() {
-			public void run() {
-				FONAManager.delay(10f);
-				System.out.println("\t\t>>>> Deleting mess #" + sms);
-				try {
-					fona.deleteSMS(sms);
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
+		Thread deleteit = new Thread(() -> {
+			FONAManager.delay(10f);
+			System.out.println("\t\t>>>> Deleting mess #" + sms);
+			try {
+				fona.deleteSMS(sms);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
-		};
+		});
 		deleteit.start();
 	}
 
@@ -135,8 +131,8 @@ public class FonaListener implements FONAClient {
 	 */
 	public static void main(String... args)
 			throws NumberFormatException {
-		FonaListener sf = new FonaListener();
-		fona = new FONAManager(sf);
+		FonaListener fonaListener = new FonaListener();
+		fona = new FONAManager(fonaListener);
 
 		FONAManager.setVerbose(false);
 

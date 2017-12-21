@@ -9,6 +9,12 @@ import utils.StringUtils;
 
 import java.io.IOException;
 
+/**
+ * To use to simulate FONA traffic,
+ * without a FONA, without Serial port.
+ *
+ * See where {@link #onBehalfOfFONA(String)} is used.
+ */
 public class FonaSerialSimulator implements FONAClient {
 
 	private static void displayMenu() {
@@ -182,10 +188,10 @@ public class FonaSerialSimulator implements FONAClient {
 	public static void main(String args[])
 			throws NumberFormatException {
 
-		FonaSerialSimulator sf = new FonaSerialSimulator();
+		FonaSerialSimulator fonaSimulator = new FonaSerialSimulator();
 		System.setProperty("simulate.serial", "true");
 //	System.setProperty("fona.verbose", "true");
-		fona = new FONAManager(sf);
+		fona = new FONAManager(fonaSimulator);
 
 		String verbose = System.getProperty("verbose", "false");
 		if ("true".equals(verbose)) {
@@ -213,9 +219,9 @@ public class FonaSerialSimulator implements FONAClient {
 			System.out.println("Hit 'V' to toggle verbose on/off.");
 			StaticUtil.userInput("Hit [return] when ready to start."); // Usefull when connecting a remote debugger.
 
-			System.out.println("FONA Sending a CONNECTION_OK message");
-			sf.onBehalfOfFONA(FONAManager.CONNECTION_OK);
-			System.out.println("CONNECTION_OK message was sent");
+			System.out.println("<< FONA Sending a CONNECTION_OK message");
+			fonaSimulator.onBehalfOfFONA(FONAManager.CONNECTION_OK);
+			System.out.println("CONNECTION_OK message was sent >>");
 
 			System.out.println("Opening port [" + port + ":" + Integer.toString(br) + "]");
 			fona.openSerial(port, br);
@@ -262,22 +268,28 @@ public class FonaSerialSimulator implements FONAClient {
 								if ("M".equals(userInput)) { // Module Name and Revision
 									fona.requestModuleNameAndRevision();
 									// Start FONA Response thread
-									String mResponse = FONAManager.ATI_RESPONSE + "(Simulated Module Name and Revision)" + FONAManager.ACK;
-									sf.onBehalfOfFONA(mResponse);
+									String response = FONAManager.ATI_RESPONSE + "(Simulated Module Name and Revision)" + FONAManager.ACK;
+									fonaSimulator.onBehalfOfFONA(response);
 								} else if ("D".equals(userInput)) { // Debug
 									fona.requestDebug();
+									String response = FONAManager.DEBUG_ON_RESPONSE + FONAManager.ACK;
+									fonaSimulator.onBehalfOfFONA(response);
 								} else if ("C".equals(userInput)) { // Read SIM CCID
 									fona.requestSimCCID();
+									String response = FONAManager.SIM_CARD_RESPONSE + "(Simulated Card ID)" + FONAManager.ACK;
+									fonaSimulator.onBehalfOfFONA(response);
 								} else if ("b".equals(userInput)) { // Battery
 									fona.requestBatteryLevel();
-									String bResponse = FONAManager.BATTERY_RESPONSE + "+CBC: xx,98,1234" + FONAManager.ACK; // TODO Make sure this is right.
-									sf.onBehalfOfFONA(bResponse);
+									String response = FONAManager.BATTERY_RESPONSE + "+CBC: xx,98,1234" + FONAManager.ACK; // TODO Make sure this is right.
+									fonaSimulator.onBehalfOfFONA(response);
 								} else if ("n".equals(userInput)) { // Network Name
 									fona.requestNetworkName();
-									String nResponse = FONAManager.NETWORK_NAME_RESPONSE + "+COPS: x,y,(Simulated Network)" + FONAManager.ACK;
-									sf.onBehalfOfFONA(nResponse);
+									String response = FONAManager.NETWORK_NAME_RESPONSE + "+COPS: x,y,(Simulated Network)" + FONAManager.ACK;
+									fonaSimulator.onBehalfOfFONA(response);
 								} else if ("I".equals(userInput)) { // Network Status
 									fona.requestNetworkStatus();
+									String response = FONAManager.NETWORK_STATE_RESPONSE + " x," + String.valueOf(NetworkStatus.REGISTERED_HOME.val()) + FONAManager.CRLF +  FONAManager.ACK;
+									fonaSimulator.onBehalfOfFONA(response);
 								} else if ("i".equals(userInput)) { // RSSI Signal strength
 									fona.requestRSSI();
 								} else if ("N".equals(userInput)) { // Number of SMS
