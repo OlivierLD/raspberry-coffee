@@ -15,6 +15,8 @@ public class SerialCommunicator
 	private SerialIOCallbacks parent;
 	private boolean verbose = false;
 
+	private boolean emulateCommunicator = false;
+
 	private SerialPort serialPort = null;
 
 	// Serial input and output
@@ -34,6 +36,13 @@ public class SerialCommunicator
 
 	public SerialCommunicator(SerialIOCallbacks caller) {
 		this.parent = caller;
+	}
+
+	public SerialCommunicator(SerialIOCallbacks caller, InputStream in, OutputStream out) {
+		this.parent = caller;
+		this.input = in;
+		this.output = out;
+		this.emulateCommunicator = true;
 	}
 
 	public static String readablePortType(int type) {
@@ -88,61 +97,73 @@ public class SerialCommunicator
 
 	public void connect(CommPortIdentifier port, String userPortName, int br, int db, int sb, int par, int fIn, int fOut)
 			throws Exception {
-		try {
-			serialPort = (SerialPort) port.open(userPortName, TIMEOUT);
-			serialPort.setSerialPortParams(br, db, sb, par);
-	//	serialPort.setRTS(true); // For tests
+		if (!emulateCommunicator) {
 			try {
-				serialPort.setFlowControlMode(fIn | fOut);
-			} catch (UnsupportedCommOperationException e) {
+				serialPort = (SerialPort) port.open(userPortName, TIMEOUT);
+				serialPort.setSerialPortParams(br, db, sb, par);
+				//	serialPort.setRTS(true); // For tests
+				try {
+					serialPort.setFlowControlMode(fIn | fOut);
+				} catch (UnsupportedCommOperationException e) {
+					throw e;
+				}
+				setConnected(true);
+				this.parent.connected(true);
+			} catch (PortInUseException e) {
+				throw e;
+			} catch (Exception e) {
 				throw e;
 			}
+		} else {
 			setConnected(true);
-			this.parent.connected(true);
-		} catch (PortInUseException e) {
-			throw e;
-		} catch (Exception e) {
-			throw e;
 		}
 	}
 
 	public boolean initIOStream() throws IOException {
-		try {
-			input = serialPort.getInputStream();
-			output = serialPort.getOutputStream();
-		} catch (IOException e) {
-			throw e;
+		if (!emulateCommunicator) {
+			try {
+				input = serialPort.getInputStream();
+				output = serialPort.getOutputStream();
+			} catch (IOException e) {
+				throw e;
+			}
 		}
 		return true;
 	}
 
 	public void initListener() throws TooManyListenersException {
-		try {
-			serialPort.addEventListener(this);
-			serialPort.notifyOnDataAvailable(true);
-		} catch (TooManyListenersException e) {
-			throw e;
+		if (!emulateCommunicator) {
+			try {
+				serialPort.addEventListener(this);
+				serialPort.notifyOnDataAvailable(true);
+			} catch (TooManyListenersException e) {
+				throw e;
+			}
 		}
 	}
 
 	public void disconnect() throws IOException {
-		try {
-			if (!System.getProperty("os.name").toUpperCase().contains("MAC")) { // close crashes on Mac OS
-				serialPort.removeEventListener();
-				serialPort.close();
-			} else {
-				System.out.println(">> On Mac OS, *not* removing the serial listeners, *not* closing serial ports.");
+		if (!emulateCommunicator) {
+			try {
+				if (!System.getProperty("os.name").toUpperCase().contains("MAC")) { // close crashes on Mac OS
+					serialPort.removeEventListener();
+					serialPort.close();
+				} else {
+					System.out.println(">> On Mac OS, *not* removing the serial listeners, *not* closing serial ports.");
+				}
+				if (input != null) {
+					input.close();
+				}
+				if (output != null) {
+					output.close();
+				}
+				setConnected(false);
+				this.parent.connected(false);
+			} catch (IOException e) {
+				throw e;
 			}
-			if (input != null) {
-				input.close();
-			}
-			if (output != null) {
-				output.close();
-			}
+		} else {
 			setConnected(false);
-			this.parent.connected(false);
-		} catch (IOException e) {
-			throw e;
 		}
 	}
 

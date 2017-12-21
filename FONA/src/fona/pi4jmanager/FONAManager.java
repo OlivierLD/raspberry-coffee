@@ -20,7 +20,7 @@ import com.pi4j.io.serial.StopBits;
 import utils.DumpUtil;
 
 /**
- * Important: Makes sure you've run
+ * Important: Make sure you've run
  * Prompt> rpi-serial-console disable (or its equivalent)
  * and re-booted.
  * =====================================

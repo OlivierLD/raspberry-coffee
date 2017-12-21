@@ -10,9 +10,10 @@ import gnu.io.CommPortIdentifier;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 import utils.DumpUtil;
+import utils.StringUtils;
 
 /**
- * Important: Makes sure you've run
+ * Important: On the Raspberry PI, make sure you've run
  * Prompt> rpi-serial-console disable (or its equivalent)
  * and re-booted.
  * =====================================
@@ -80,24 +81,24 @@ public class FONAManager implements SerialIOCallbacks {
 	public final static String CRLF = "\r\n";
 //private final static String CRCRLF                   = "\r\r\n";
 
-	public final static String CONNECTION_OK = "AT" + CRLF + "OK" + CRLF;
-	public final static String ATI_RESPONSE = "ATI" + CRLF;
-	public final static String DEBUG_ON_RESPONSE = "AT+CMEE=2" + CRLF;
-	public final static String BATTERY_RESPONSE = "AT+CBC" + CRLF;
-	public final static String SIGNAL_RESPONSE = "AT+CSQ" + CRLF;
-	public final static String SIM_CARD_RESPONSE = "AT+CCID" + CRLF;
-	public final static String NETWORK_NAME_RESPONSE = "AT+COPS?" + CRLF;
-	public final static String NETWORK_STATE_RESPONSE = "AT+CREG?" + CRLF + "+CREG:";
-	public final static String SET_TO_TEXT = "AT+CMGF=1";
-	public final static String SET_TO_TEXT_RESPONSE = SET_TO_TEXT + CRLF;
-	public final static String NUM_SMS_RESPONSE = "AT+CPMS?" + CRLF;
-	public final static String MESSAGE_PROMPT = "AT+CMGS=\"";
-	public final static String READ_SMS_RESPONSE = "AT+CSDH=1" + CRLF;
+	public final static String CONNECTION_OK             = "AT" + CRLF + "OK" + CRLF;
+	public final static String ATI_RESPONSE              = "ATI" + CRLF;
+	public final static String DEBUG_ON_RESPONSE         = "AT+CMEE=2" + CRLF;
+	public final static String BATTERY_RESPONSE          = "AT+CBC" + CRLF;
+	public final static String SIGNAL_RESPONSE           = "AT+CSQ" + CRLF;
+	public final static String SIM_CARD_RESPONSE         = "AT+CCID" + CRLF;
+	public final static String NETWORK_NAME_RESPONSE     = "AT+COPS?" + CRLF;
+	public final static String NETWORK_STATE_RESPONSE    = "AT+CREG?" + CRLF + "+CREG:";
+	public final static String SET_TO_TEXT               = "AT+CMGF=1";
+	public final static String SET_TO_TEXT_RESPONSE      = SET_TO_TEXT + CRLF;
+	public final static String NUM_SMS_RESPONSE          = "AT+CPMS?" + CRLF;
+	public final static String MESSAGE_PROMPT            = "AT+CMGS=\"";
+	public final static String READ_SMS_RESPONSE         = "AT+CSDH=1" + CRLF;
 	public final static String READ_SMS_CONTENT_RESPONSE = "AT+CMGR="; // + CRLF;
-	public final static String SMS_DELETED_RESPONSE = "AT+CMGD=";
+	public final static String SMS_DELETED_RESPONSE      = "AT+CMGD=";
 
-	public final static String RECEIVED_SMS = CRLF + "+CMTI:";
-	public final static String SOMEONE_CALLING = CRLF + "RING" + CRLF;
+	public final static String RECEIVED_SMS              = CRLF + "+CMTI:";
+	public final static String SOMEONE_CALLING           = CRLF + "RING" + CRLF;
 
 	private static SerialCommunicator serialCommunicator = null;
 
@@ -136,64 +137,61 @@ public class FONAManager implements SerialIOCallbacks {
 
 	private FONAClient parent;
 
+	private boolean simulateSerial = false;
+
 	public FONAManager(FONAClient parent) {
 		this.parent = parent;
 
-		// Option: serial.read() in its own thread...
-		Thread serialReader = new Thread() {
-			private StringBuffer fullMessage = new StringBuffer();
+		simulateSerial = "true".equals(System.getProperty("simulate.serial"));
 
-			public void run() {
-				while (keepReading()) {
-					try {
-						while (true && bufferIdx > 0) { // serialBuffer.length > 0) {
-							String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
-							if (sa0 != null) {
-								System.out.println("\t<<< [FONA] Received (top)...");
-								for (String s : sa0) {
-									System.out.println("\t\t" + s);
-								}
-							}
+		Thread serialReader = new Thread(() -> {
+			while (keepReading()) {
+				try {
+					while (/*true && */bufferIdx > 0) {
 
-//            char c = (char)serial.read();
-//            c &= 0xFF;
-//
-//            if ((c & 0xFF) != 0xFF)
-//              fullMessage.append(c);
-
-							if (fullMessage.toString().endsWith(FONAManager.ACK) || fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT)) {
-								String mess = fullMessage.toString(); // Send the full message. Parsed later.
-						//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
-								if (getVerbose()) {
-									try {
-										String[] sa = DumpUtil.dualDump(mess);
-										if (sa != null) {
-											System.out.println("\t<<< [FONA] Received...");
-											for (String s : sa)
-												System.out.println("\t\t" + s);
-										}
-									} catch (Exception ex) {
-										System.out.println(ex.toString());
-									}
-								}
-								manageFonaOutput(mess);
-					//    delay(0.5f);
-								resetSerialBuffer();
-							}
-							//  delay(0.02f);
-							if (bufferIdx == 0) {
-								delay(0.5f);
+						String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
+						if (sa0 != null) {
+							System.out.println("\t<<< [FONA] Received (top)...");
+							for (String s : sa0) {
+								System.out.println("\t\t" + s);
 							}
 						}
-						//   delay(0.5f);
-					} catch (IllegalStateException ise) {
-						// Not opened yet
-					} catch (Exception ex) {
-						System.err.println(ex.toString());
+
+						if (fullMessage.toString().endsWith(FONAManager.ACK) || fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT)) {
+							String mess = fullMessage.toString(); // Send the full message. Parsed later.
+					//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
+							if (getVerbose()) {
+								try {
+									String[] sa = DumpUtil.dualDump(mess);
+									if (sa != null) {
+										System.out.println("\t<<< [FONA] Received...");
+										for (String s : sa)
+											System.out.println("\t\t" + s);
+									}
+								} catch (Exception ex) {
+									System.out.println(ex.toString());
+								}
+							}
+							manageFonaOutput(mess);
+				//    delay(0.5f);
+							resetSerialBuffer();
+						}
+						//  delay(0.02f);
+						if (bufferIdx == 0) {
+							delay(0.5f);
+						}
 					}
+
+					delay(0.5f); // DEBUG, For debug, simulation...
+
+				} catch (IllegalStateException ise) {
+					// Not opened yet
+				} catch (Exception ex) {
+					System.err.println(ex.toString());
 				}
 			}
-		};
+			System.out.println(">> Stop Reading FONA");
+		});
 		serialReader.start();
 	}
 
@@ -203,7 +201,7 @@ public class FONAManager implements SerialIOCallbacks {
 	}
 
 	private int bufferIdx = 0;
-	private byte[] serialBuffer = new byte[1024];
+	private byte[] serialBuffer = new byte[1024]; // TODO See if this is necessary
 
 	private StringBuffer fullMessage = new StringBuffer();
 
@@ -216,16 +214,18 @@ public class FONAManager implements SerialIOCallbacks {
 
 	@Override
 	public void onSerialData(byte b) {
-//  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
+
+//	System.out.println(String.format("Receiving one byte >> %d 0x%s (bufferIdx=%d)", b, StringUtils.lpad(Integer.toHexString(b).toUpperCase(), 2, "0"), bufferIdx));
+
 		serialBuffer[bufferIdx++] = (byte) (b & 0xFF);
-		fullMessage.append(b);
+		fullMessage.append((char) (b & 0xFF));
 
 		if (verbose) {
 			String payload = fullMessage.substring(0, bufferIdx);
 			try {
 				String[] sa = DumpUtil.dualDump(payload);
 				if (sa != null) {
-					System.out.println("\t>>> [From FONA] Received:");
+					System.out.println("\t>>> [From FONA, onSerialData] Received:");
 					for (String s : sa)
 						System.out.println("\t\t" + s);
 				}
@@ -240,8 +240,11 @@ public class FONAManager implements SerialIOCallbacks {
 	}
 
 	public void openSerial(String port, int br) {
-
-		serialCommunicator = new SerialCommunicator(this);
+		if (!simulateSerial) {
+			serialCommunicator = new SerialCommunicator(this);
+		} else {
+			serialCommunicator = new SerialCommunicator(this, System.in, System.out);
+		}
 		serialCommunicator.setVerbose(false);
 
 		Map<String, CommPortIdentifier> pm = serialCommunicator.getPortList();
@@ -257,11 +260,15 @@ public class FONAManager implements SerialIOCallbacks {
 		System.out.println("======================");
 
 		// String serialPortName = port; // System.getProperty("serial.port", "/dev/ttyUSB0");
-		System.out.println(String.format("Opening port %s:%d", port, br));
-		CommPortIdentifier serialPort = pm.get(port);
-		if (serialPort == null) {
-			String mess = String.format("Port %s not found, aborting", port);
-			throw new RuntimeException(mess);
+		System.out.println(String.format("Opening port %s:%d%s", port, br, (simulateSerial? " (Simulation)" : "")));
+
+		CommPortIdentifier serialPort = null;
+		if (!simulateSerial) {
+			serialPort =	pm.get(port);
+			if (serialPort == null) {
+				String mess = String.format("Port %s not found, aborting", port);
+				throw new RuntimeException(mess);
+			}
 		}
 		try {
 			serialCommunicator.connect(serialPort, "FONA", br); // Other values are defaulted
