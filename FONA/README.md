@@ -36,8 +36,14 @@ The first approach is straightforward. It requires the sketch `FONA_for_RPi.ino`
 The second approach does not require an Arduino, I find it more interesting, as none of the real-time capabilities
 provided by an Arduino are required in the FONA context.
 
-See an example of a client in `fona.manager.sample.InteractiveFona.java`. It requires the client
-to implement the `fona.manager.FONAClient` interface, mostly for the callbacks.
+See an example of a client in `fona.pi4jmanager.sample.InteractiveFona.java`. It requires the client
+to implement the `fona.pi4jmanager.FONAClient` interface, mostly for the callbacks.
+
+##### December 2017
+Adding the possibility to access the FONA from the `LibRxTx` API.
+This would allow other machines than the Raspberry PI to access the FONA.
+
+This is a Work In Progress.
 
 ### What Serial port, UART or another one?
  To use `/dev/ttyAMA0`, you need to disable the Serial Shell (from `raspi-config`).
