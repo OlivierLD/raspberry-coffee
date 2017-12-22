@@ -678,12 +678,12 @@ public class FONAManager implements SerialIOCallbacks {
 		} else if (mess.startsWith(RECEIVED_SMS)) {
 			try {
 				String messNumStr = mess.substring(mess.lastIndexOf(",") + 1, mess.lastIndexOf(CRLF));
-				if (getVerbose()) {
+				if (true || getVerbose()) {
 					System.out.println("Received message #" + messNumStr);
 				}
-				delay(2f);
-				int messToRead = Integer.parseInt(messNumStr.trim());
-				this.parent.receivedSMS(messToRead);
+//				delay(2f);
+//				int messToRead = Integer.parseInt(messNumStr.trim());
+//				this.parent.receivedSMS(messToRead);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

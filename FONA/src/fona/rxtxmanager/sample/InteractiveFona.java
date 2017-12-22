@@ -55,7 +55,7 @@ public class InteractiveFona implements FONAClient {
 	public void receivedSMS(final int sms) {
 		if (false) {
 			messToRead = sms;
-			System.out.println(">>> Message received, hit [Return] to read it.");
+			System.out.println(">>> Message received, hit [Return] to read it."); // ??
 		} else {
 			Thread readit = new Thread() {
 				public void run() {
