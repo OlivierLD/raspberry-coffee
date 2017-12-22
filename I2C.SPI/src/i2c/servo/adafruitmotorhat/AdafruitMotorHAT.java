@@ -146,10 +146,12 @@ public class AdafruitMotorHAT {
 		}
 
 		public void setSpeed(int speed) throws IOException {
-			if (speed < 0)
+			if (speed < 0) {
 				speed = 0;
-			if (speed > 255)
+			}
+			if (speed > 255) {
 				speed = 255;
+			}
 			this.mh.pwm.setPWM(this.PWMpin, (short) 0, (short) (speed * 16));
 		}
 	}
@@ -160,9 +162,11 @@ public class AdafruitMotorHAT {
 
 		private AdafruitMotorHAT mc;
 		private int MICROSTEPS = 8;
-		private int[] MICROSTEP_CURVE = new int[]{0, 50, 98, 142, 180, 212, 236, 250, 255};
+		private int[] MICROSTEP_CURVE = new int[] {
+				0, 50, 98, 142, 180, 212, 236, 250, 255
+		};
 
-		public static int DEFAULT_NB_STEPS = 200; // between 35 & 200. Nb steps per revolujtion.
+		public final static int DEFAULT_NB_STEPS = 200; // between 35 & 200. Nb steps per revolution.
 
 		private int PWMA = 8;
 		private int AIN2 = 9;

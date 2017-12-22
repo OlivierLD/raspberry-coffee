@@ -15,7 +15,7 @@ public class StepperDemo {
 	private boolean keepGoing = true;
 	private final static String DEFAULT_RPM = "30";
 
-	private static int nbStepsPerRev = AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS;
+	private static int nbStepsPerRev = AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS; // 200 steps per rev
 
 	public StepperDemo() throws I2CFactory.UnsupportedBusNumberException {
 		this.mh = new AdafruitMotorHAT(nbStepsPerRev); // Default addr 0x60
@@ -52,6 +52,7 @@ public class StepperDemo {
 			}
 			System.out.println("........... again");
 		}
+		try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 		System.out.println("Done with the demo");
 	}
 
@@ -69,9 +70,17 @@ public class StepperDemo {
 		}
 	}
 
-	public static void main(String args[]) throws Exception {
+	/**
+	 * System properties:
+	 * rpm, default 30
+	 * hat.debug, default false
+	 *
+	 * @param args Not used
+	 * @throws Exception
+	 */
+	public static void main(String... args) throws Exception {
 		StepperDemo demo = new StepperDemo();
-
+		System.out.println("Ctrl-C to stop the demo");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			demo.stop();
 			try { Thread.sleep(1_000); } catch (Exception absorbed) {}
@@ -79,6 +88,6 @@ public class StepperDemo {
 
 		demo.go();
 
-		System.out.println("Done.");
+		System.out.println("Bye.");
 	}
 }
