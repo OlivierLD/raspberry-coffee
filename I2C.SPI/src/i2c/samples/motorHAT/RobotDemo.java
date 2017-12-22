@@ -22,14 +22,17 @@ public class RobotDemo {
 		robot.forward(150, 1.0f);   // Move forward at speed 150 for 1 second.
 		System.out.println("Left");
 		robot.left(200, 0.5f);      // Spin left at speed 200 for 0.5 seconds.
+
 		System.out.println("Forward");
 		robot.forward(150, 1.0f);   // Repeat the same movement 3 times below...
 		System.out.println("Left");
 		robot.left(200, 0.5f);
+
 		System.out.println("Forward");
 		robot.forward(150, 1.0f);
 		System.out.println("Left");
 		robot.left(200, 0.5f);
+
 		System.out.println("Forward");
 		robot.forward(150, 1.0f);
 		System.out.println("Right");
@@ -38,22 +41,25 @@ public class RobotDemo {
 		// Spin in place slowly for a few seconds.
 		System.out.println("Right...");
 		robot.right(100);  // No time is specified so the robot will start spinning forever.
-		Robot.delay(2.0f); // Pause for a few seconds while the robot spins (you could do other processing here though!).
-		robot.stop();      // Stop the robot from moving.
+		Robot.delay(2.0f);   // Pause for a few seconds while the robot spins (you could do other processing here though).
+		robot.stop();             // Stop the robot.
 
 		// Now move backwards and spin right a few times.
 		System.out.println("Backward");
 		robot.backward(150, 1.0f);
 		System.out.println("Right");
 		robot.right(200, 0.5f);
+
 		System.out.println("Backward");
 		robot.backward(150, 1.0f);
 		System.out.println("Right");
 		robot.right(200, 0.5f);
+
 		System.out.println("Backward");
 		robot.backward(150, 1.0f);
 		System.out.println("Right");
 		robot.right(200, 0.5f);
+
 		System.out.println("Backward");
 		robot.backward(150, 1.0f);
 
