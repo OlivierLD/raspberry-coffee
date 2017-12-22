@@ -151,12 +151,13 @@ public class FONAManager implements SerialIOCallbacks {
 			while (keepReading()) {
 				try {
 					while (/*true && */bufferIdx > 0) {
-
-						String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
-						if (sa0 != null) {
-							System.out.println("\t<<< [FONA] Received (top)...");
-							for (String s : sa0) {
-								System.out.println("\t\t" + s);
+						if (getVerbose()) {
+							String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
+							if (sa0 != null) {
+								System.out.println("\t<<< [FONA] Received (top)...");
+								for (String s : sa0) {
+									System.out.println("\t\t" + s);
+								}
 							}
 						}
 
