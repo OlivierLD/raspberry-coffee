@@ -58,7 +58,7 @@ public class StepperDemo {
 	public void stop() {
 		this.keepGoing = false;
 		if (mh != null) {
-			try {
+			try { // Release all
 				mh.getMotor(AdafruitMotorHAT.Motor.M1).run(AdafruitMotorHAT.ServoCommand.RELEASE);
 				mh.getMotor(AdafruitMotorHAT.Motor.M2).run(AdafruitMotorHAT.ServoCommand.RELEASE);
 				mh.getMotor(AdafruitMotorHAT.Motor.M3).run(AdafruitMotorHAT.ServoCommand.RELEASE);

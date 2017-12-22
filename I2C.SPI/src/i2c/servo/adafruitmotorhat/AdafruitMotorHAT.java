@@ -225,44 +225,50 @@ public class AdafruitMotorHAT {
 			if (style == Style.SINGLE) {
 				if ((this.currentStep / (this.MICROSTEPS / 2)) % 2 == 1) {
 					// we're at an odd step, weird
-					if (dir == ServoCommand.FORWARD)
+					if (dir == ServoCommand.FORWARD) {
 						this.currentStep += this.MICROSTEPS / 2;
-					else
+					} else {
 						this.currentStep -= this.MICROSTEPS / 2;
+					}
 				}
 			} else {
 				// go to next even step
-				if (dir == ServoCommand.FORWARD)
+				if (dir == ServoCommand.FORWARD) {
 					this.currentStep += this.MICROSTEPS;
-				else
+				} else {
 					this.currentStep -= this.MICROSTEPS;
+				}
 			}
 			if (style == Style.DOUBLE) {
 				if (this.currentStep / (this.MICROSTEPS / 2) % 2 == 0) {
 					// we're at an even step, weird
-					if (dir == ServoCommand.FORWARD)
+					if (dir == ServoCommand.FORWARD) {
 						this.currentStep += this.MICROSTEPS / 2;
-					else
+					} else {
 						this.currentStep -= this.MICROSTEPS / 2;
+					}
 				} else {
 					// go to next odd step
-					if (dir == ServoCommand.FORWARD)
+					if (dir == ServoCommand.FORWARD) {
 						this.currentStep += this.MICROSTEPS;
-					else
+					} else {
 						this.currentStep -= this.MICROSTEPS;
+					}
 				}
 			}
 			if (style == Style.INTERLEAVE) {
-				if (dir == ServoCommand.FORWARD)
+				if (dir == ServoCommand.FORWARD) {
 					this.currentStep += this.MICROSTEPS / 2;
-				else
+				} else {
 					this.currentStep -= this.MICROSTEPS / 2;
+				}
 			}
 			if (style == Style.MICROSTEP) {
-				if (dir == ServoCommand.FORWARD)
+				if (dir == ServoCommand.FORWARD) {
 					this.currentStep += 1;
-				else
+				} else {
 					this.currentStep -= 1;
+				}
 			}
 			// go to next 'step' and wrap around
 			this.currentStep += this.MICROSTEPS * 4;
@@ -296,14 +302,15 @@ public class AdafruitMotorHAT {
 			int coils[] = new int[]{0, 0, 0, 0};
 
 			if (style == Style.MICROSTEP) {
-				if (this.currentStep >= 0 && this.currentStep < this.MICROSTEPS)
+				if (this.currentStep >= 0 && this.currentStep < this.MICROSTEPS) {
 					coils = new int[]{1, 1, 0, 0};
-				else if (this.currentStep >= this.MICROSTEPS && this.currentStep < this.MICROSTEPS * 2)
+				} else if (this.currentStep >= this.MICROSTEPS && this.currentStep < this.MICROSTEPS * 2) {
 					coils = new int[]{0, 1, 1, 0};
-				else if (this.currentStep >= this.MICROSTEPS * 2 && this.currentStep < this.MICROSTEPS * 3)
+				} else if (this.currentStep >= this.MICROSTEPS * 2 && this.currentStep < this.MICROSTEPS * 3) {
 					coils = new int[]{0, 0, 1, 1};
-				else if (this.currentStep >= this.MICROSTEPS * 3 && this.currentStep < this.MICROSTEPS * 4)
+				} else if (this.currentStep >= this.MICROSTEPS * 3 && this.currentStep < this.MICROSTEPS * 4) {
 					coils = new int[]{1, 0, 0, 1};
+				}
 			} else {
 				int[][] step2coils = new int[][]{
 						{1, 0, 0, 0},
@@ -330,8 +337,9 @@ public class AdafruitMotorHAT {
 			double sPerS = this.secPerStep;
 			int latestStep = 0;
 
-			if (stepStyle == Style.INTERLEAVE)
+			if (stepStyle == Style.INTERLEAVE) {
 				sPerS = sPerS / 2.0;
+			}
 			if (stepStyle == Style.MICROSTEP) {
 				sPerS /= this.MICROSTEPS;
 				steps *= this.MICROSTEPS;

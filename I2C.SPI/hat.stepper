@@ -1,9 +1,9 @@
 #!/bin/bash
 CP=./build/libs/I2C.SPI-1.0-all.jar
 #
-echo Stepper Mortor Demo
+echo Stepper Motor Demo
 #
 OPTS=
 OPTS="$OPTS -Drpm=30"
+#
 sudo java -cp $CP $OPTS i2c.samples.motorHAT.StepperDemo
-
