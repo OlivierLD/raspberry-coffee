@@ -19,7 +19,7 @@ The serial-console must have been enabled for this to work.
 ```bash
  $ sudo raspi-config
 ``` 
-Go to **“9 Advanced Function menu”**, then **“A8.Serial”** and select **“No”** to disable shell terminal on the serial port, **Yes** to enable it.
+Go to **“9 Advanced Function menu”**, then **“A8.Serial”** and select **“No”** to disable shell terminal on the serial port, **"Yes"** to enable it.
 
 See [this document](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-5-using-a-console-cable/enabling-serial-console) for more details.
  
