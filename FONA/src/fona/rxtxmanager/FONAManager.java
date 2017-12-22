@@ -53,12 +53,12 @@ import utils.DumpUtil;
 public class FONAManager implements SerialIOCallbacks {
 
 	public enum NetworkStatus {
-		NOT_REGISTERED(0, "Not Registered"),
-		REGISTERED_HOME(1, "Registered (Home)"),
+		NOT_REGISTERED          (0, "Not Registered"),
+		REGISTERED_HOME         (1, "Registered (Home)"),
 		NOT_REGISTERED_SEARCHING(2, "Not Registered (searching)"),
-		DENIED(3, "Denied"),
-		UNKNOWN(4, "Unknown"),
-		REGISTERED_ROAMING(5, "Registered (roaming)");
+		DENIED                  (3, "Denied"),
+		UNKNOWN                 (4, "Unknown"),
+		REGISTERED_ROAMING      (5, "Registered (roaming)");
 
 		private final int val;
 		private final String label;
@@ -71,13 +71,12 @@ public class FONAManager implements SerialIOCallbacks {
 		public int val() {
 			return this.val;
 		}
-
 		public String label() {
 			return this.label;
 		}
 	}
 
-	public final static String CRLF = "\r\n";
+	public final static String CRLF                      = "\r\n";
 //private final static String CRCRLF                   = "\r\r\n";
 
 	public final static String CONNECTION_OK             = "AT" + CRLF + "OK" + CRLF;
@@ -104,8 +103,8 @@ public class FONAManager implements SerialIOCallbacks {
 	private static String expectedNotification = "";
 	private static Thread expectingNotification = null;
 
-	public final static String CLTR_Z = "\032";           // 26, 0x1A, 032
-	public final static String ACK = CRLF + "OK" + CRLF;  // QUESTION specially when entering a message.
+	public final static String CLTR_Z                    = "\032";              // 26, 0x1A, 032
+	public final static String ACK                       = CRLF + "OK" + CRLF;  // QUESTION specially when entering a message.
 	private final static float BETWEEN_SENT_CHAR = 0.001F;
 
 	private static boolean verbose = "true".equals(System.getProperty("fona.verbose", "false"));
