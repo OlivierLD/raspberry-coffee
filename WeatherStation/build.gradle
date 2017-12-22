@@ -1,6 +1,9 @@
-apply plugin: 'java'
-compileJava.options.encoding = 'ISO-8859-1'
-apply plugin: 'maven'
+plugins {
+  id 'java'
+//id 'scala'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '2.0.1'
+}
 
 group = 'oliv.pi4j.samples'
 version = '1.0'
@@ -28,4 +31,8 @@ dependencies {
 //compile 'com.pi4j:pi4j-core:1.1'
   compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
   compile project(':I2C.SPI')
+}
+
+shadowJar {
+  zip64 true
 }

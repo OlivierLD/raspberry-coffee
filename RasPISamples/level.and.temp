@@ -9,14 +9,7 @@
 # Prompt> cd node; node level.server.js
 # GUI will be available at http://machine:9876/level.station/analog.html
 #
-PI4J_HOME=/opt/pi4j
-CP=./classes
-CP=$CP:../ADC/classes
-CP=$CP:../I2C/classes
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-CP=$CP:./lib/jansi-1.9.jar
-CP=$CP:./lib/json.jar
-CP=$CP:./lib/java_websocket.jar
+CP=./build/libs/RasPISamples-1.0-all.jar
 #
 JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"
