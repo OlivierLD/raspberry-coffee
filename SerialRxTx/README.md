@@ -17,9 +17,17 @@ Next, we'll see how to transfer files (text and binaries).
 ### Enable / disable the serial console.
 The serial-console must have been enabled for this to work.
 ```bash
- $> sudo raspi-config
+ $ sudo raspi-config
 ``` 
 Go to **“9 Advanced Function menu”**, then **“A8.Serial”** and select **“No”** to disable shell terminal on the serial port.
+ 
+### Build
+On the machine you want to connect to the Raspberry PI from, just run
+```bash
+ $ cd SerialRxTx
+ $ ../gradlew clean build 
+```
+ This will generate a jar file `build/libs/SerialRxTx-1.0.jar`, required by the scripts mentioned below.
  
 ### Examples
 The most important is probably to set the `java.library.path` to its right value. `RXTXcomm.jar` uses Java Native Interface (`JNI`), to invoke 
@@ -39,7 +47,7 @@ from a severe mismatch between your system libraries and the version of `RXTXcom
 #### From a Mac
 
 Script `run.mac` :
-```
+```bash
 #!/bin/bash
 #
 RXTX_HOME=./libs
@@ -127,7 +135,7 @@ $> ./run.mac
 ### From Windows
 
 Script `run.bat`
-```
+```commandline
 @echo off
 @setlocal
 ::
