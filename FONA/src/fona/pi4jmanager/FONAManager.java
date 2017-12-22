@@ -161,8 +161,9 @@ public class FONAManager {
 								String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
 								if (sa0 != null) {
 									System.out.println("\t<<< [FONA] Received (top)...");
-									for (String s : sa0)
+									for (String s : sa0) {
 										System.out.println("\t\t" + s);
+									}
 								}
 
 //                char c = (char)serial.read();
@@ -245,8 +246,9 @@ public class FONAManager {
 					} else if (fullMessage.toString().endsWith(FONAManager.CRLF)) {
 						String mess = fullMessage.toString(); // Send the full message. Parsed later.
 						//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
-						if (getVerbose())
+						if (getVerbose()) {
 							System.out.println("   >> A Full message.");
+						}
 						fonaOutput(mess);
 						// Reset
 						fullMessage = new StringBuffer();

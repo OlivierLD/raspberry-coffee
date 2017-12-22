@@ -46,8 +46,8 @@ import utils.DumpUtil;
  *
  * IMPORTANT:
  * ==========
- * This version uses Lib-RxTx for Java, and not the com.pi4j.io.serial package of PI4J.
- * As such, it could possibly run on other machines than Raspberry PI.
+ * This version uses Lib-RxTx for Java, and <b>not</b> the com.pi4j.io.serial package of PI4J.
+ * As such, it could possibly run on other machines than the Raspberry PI.
  *
  */
 public class FONAManager implements SerialIOCallbacks {
@@ -160,10 +160,8 @@ public class FONAManager implements SerialIOCallbacks {
 								}
 							}
 						}
-
 						if (fullMessage.toString().endsWith(FONAManager.ACK) || fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT)) {
 							String mess = fullMessage.toString(); // Send the full message. Parsed later.
-					//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
 							if (getVerbose()) {
 								try {
 									String[] sa = DumpUtil.dualDump(mess);
@@ -179,6 +177,30 @@ public class FONAManager implements SerialIOCallbacks {
 							manageFonaOutput(mess);
 				//    delay(0.5f);
 							resetSerialBuffer();
+						} else if (fullMessage.toString().endsWith(FONAManager.CRLF)) {
+							String mess = fullMessage.toString(); // Send the full message. Parsed later.
+							//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
+							if (getVerbose()) {
+								System.out.println("   >> A Full message.");
+							}
+							manageFonaOutput(mess);
+							resetSerialBuffer();
+						} else {
+							if (getVerbose()) {
+								System.out.println("No ACK, no PROMPT:");
+								System.out.println("\t--> Available bytes:" + bufferIdx);
+								try {
+									String[] sa = DumpUtil.dualDump(fullMessage.toString());
+									if (sa != null) {
+										System.out.println("\t<<< [FONA] Received...");
+										for (String s : sa)
+											System.out.println("\t\t" + s);
+									}
+								} catch (Exception ex) {
+									System.out.println(ex.toString());
+								}
+							}
+							//   fonaOutput(fullMessage.toString());
 						}
 						//  delay(0.02f);
 						if (bufferIdx == 0) {
@@ -186,7 +208,7 @@ public class FONAManager implements SerialIOCallbacks {
 						}
 					}
 					if (simulateSerial) {
-						delay(0.5f); // TODO, make sure this is not necessary when not simulating...
+						delay(0.5f); // Make sure this is not necessary when not simulating...
 					}
 
 				} catch (IllegalStateException ise) {
