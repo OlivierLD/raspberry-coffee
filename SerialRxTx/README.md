@@ -34,7 +34,7 @@ you get a warning like this when launching the scripts:
  ```
 
 If those values are set, and if you get a privilege related error message when accessing your serial port, it probably comes 
-from a severe mismatch between your system libraries and the veriosn of `RXTXcomm.jar`.
+from a severe mismatch between your system libraries and the version of `RXTXcomm.jar`.
 
 #### From a Mac
 

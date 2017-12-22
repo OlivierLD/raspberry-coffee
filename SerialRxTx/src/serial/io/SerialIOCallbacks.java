@@ -1,7 +1,7 @@
 package serial.io;
 
 public interface SerialIOCallbacks {
-	public void connected(boolean b);
-	public void onSerialData(byte b);
-	public void onSerialData(byte[] ba, int len);
+	void connected(boolean b);
+	void onSerialData(byte b);
+	void onSerialData(byte[] ba, int len);
 }
