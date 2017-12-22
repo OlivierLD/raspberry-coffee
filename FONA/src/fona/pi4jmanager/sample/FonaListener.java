@@ -68,7 +68,6 @@ public class FonaListener implements FONAClient {
 			fona.closeSerial();
 		} catch (SerialPortException ex) {
 			System.out.println(" ==>> SERIAL SETUP FAILED : " + ex.getMessage() + " <<== ");
-			return;
 		}
 		System.exit(0);
 	}
