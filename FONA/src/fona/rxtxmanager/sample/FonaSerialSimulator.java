@@ -280,11 +280,11 @@ public class FonaSerialSimulator implements FONAClient {
 									fonaSimulator.onBehalfOfFONA(response);
 								} else if ("b".equals(userInput)) { // Battery
 									fona.requestBatteryLevel();
-									String response = FONAManager.BATTERY_RESPONSE + "+CBC: xx,98,1234" + FONAManager.ACK; // TODO Make sure this is right.
+									String response = FONAManager.BATTERY_RESPONSE + "+CBC: 0,98,4189" + FONAManager.CRLF + FONAManager.ACK;
 									fonaSimulator.onBehalfOfFONA(response);
 								} else if ("n".equals(userInput)) { // Network Name
 									fona.requestNetworkName();
-									String response = FONAManager.NETWORK_NAME_RESPONSE + "+COPS: x,y,(Simulated Network)" + FONAManager.ACK;
+									String response = FONAManager.NETWORK_NAME_RESPONSE + "+COPS: 0,0,(Simulated Network)" + FONAManager.ACK;
 									fonaSimulator.onBehalfOfFONA(response);
 								} else if ("I".equals(userInput)) { // Network Status
 									fona.requestNetworkStatus();

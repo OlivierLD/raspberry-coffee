@@ -150,6 +150,7 @@ public class FONAManager implements SerialIOCallbacks {
 			while (keepReading()) {
 				try {
 					while (/*true && */bufferIdx > 0) {
+
 						if (getVerbose()) {
 							String[] sa0 = DumpUtil.dualDump(fullMessage.toString());
 							if (sa0 != null) {
@@ -158,7 +159,8 @@ public class FONAManager implements SerialIOCallbacks {
 									System.out.println("\t\t" + s);
 								}
 							}
-						}
+						} // verbose
+
 						if (fullMessage.toString().endsWith(FONAManager.ACK) || fullMessage.toString().startsWith(FONAManager.MESSAGE_PROMPT)) {
 							String mess = fullMessage.toString(); // Send the full message. Parsed later.
 							if (getVerbose()) {
@@ -176,11 +178,20 @@ public class FONAManager implements SerialIOCallbacks {
 							manageFonaOutput(mess);
 				//    delay(0.5f);
 							resetSerialBuffer();
-						} else if (fullMessage.toString().endsWith(FONAManager.CRLF)) {
+						} else if (fullMessage.toString().endsWith(FONAManager.ACK)) { // CRLF)) {
 							String mess = fullMessage.toString(); // Send the full message. Parsed later.
 							//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
 							if (getVerbose()) {
 								System.out.println("   >> A Full message.");
+							}
+							manageFonaOutput(mess);
+							resetSerialBuffer();
+						} else if ((fullMessage.toString().startsWith(FONAManager.RECEIVED_SMS) || fullMessage.toString().startsWith(FONAManager.SOMEONE_CALLING)) &&
+								fullMessage.toString().endsWith(FONAManager.CRLF)) {
+							String mess = fullMessage.toString(); // Send the full message. Parsed later.
+							//  mess = mess.substring(0, mess.length() - ACK.length() - 1);
+							if (getVerbose()) {
+								System.out.println("   >> Received.");
 							}
 							manageFonaOutput(mess);
 							resetSerialBuffer();
@@ -206,7 +217,7 @@ public class FONAManager implements SerialIOCallbacks {
 							delay(0.5f);
 						}
 					}
-					if (simulateSerial) {
+					if (true || simulateSerial) {
 						delay(0.5f); // Make sure this is not necessary when not simulating...
 					}
 
