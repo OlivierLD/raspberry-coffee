@@ -714,8 +714,8 @@ public class FONAManager implements SerialIOCallbacks {
 					System.out.println("Received message #" + messNumStr);
 				}
 //				delay(2f);
-//				int messToRead = Integer.parseInt(messNumStr.trim());
-//				this.parent.receivedSMS(messToRead);
+				int messToRead = Integer.parseInt(messNumStr.trim());
+				this.parent.receivedSMS(messToRead);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
