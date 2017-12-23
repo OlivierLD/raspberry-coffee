@@ -134,7 +134,7 @@ public class FonaListener implements FONAClient {
 		FonaListener fonaListener = new FonaListener();
 		fona = new FONAManager(fonaListener);
 
-		FONAManager.setVerbose(false);
+		FONAManager.setVerbose("true".equals(System.getProperty("fona.verbose")));
 
 		String port = System.getProperty("serial.port", "/dev/ttyUSB0");
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
