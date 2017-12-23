@@ -41,9 +41,7 @@ to implement the `fona.pi4jmanager.FONAClient` interface, mostly for the callbac
 
 ##### December 2017
 Adding the possibility to access the FONA from the `LibRxTx` API.
-This would allow other machines than the Raspberry PI to access the FONA.
-
-> This is a Work In Progress.
+This allows other machines than the Raspberry PI to access the FONA.
 
 ### What Serial port, UART or another one?
  To use `/dev/ttyAMA0`, you need to disable the Serial Shell (from `raspi-config`).
