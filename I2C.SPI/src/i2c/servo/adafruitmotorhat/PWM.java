@@ -47,35 +47,42 @@ public class PWM {
 		try {
 			// Get I2C bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
+			}
 
 			// Get the device itself
 			servoDriver = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
+			}
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
 
 		try {
-			if (verbose)
+			if (verbose) {
 				System.out.println("Reseting AdafruitHAT MODE1 (without SLEEP) and MODE2");
+			}
 			this.setAllPWM((byte) 0, (byte) 0);
-			if (verbose)
+			if (verbose) {
 				System.out.printf("01 - Writing 0x%02x to register 0x%02x\n", OUTDRV, MODE2);
+			}
 			this.servoDriver.write(MODE2, (byte) OUTDRV);
-			if (verbose)
+			if (verbose) {
 				System.out.printf("02 - Writing 0x%02x to register 0x%02x\n", ALLCALL, MODE1);
+			}
 			this.servoDriver.write(MODE1, (byte) ALLCALL);
 			delay(5); // wait for oscillator
 
 			int mode1 = this.servoDriver.read(MODE1);
-			if (verbose)
+			if (verbose) {
 				System.out.printf("03 - Device 0x%02x returned 0x%02x from register 0x%02x\n", this.deviceAddr, mode1, MODE1);
+			}
 			mode1 = mode1 & ~SLEEP; // wake up (reset sleep)
-			if (verbose)
+			if (verbose) {
 				System.out.printf("04 - Writing 0x%02x to register 0x%02x\n", mode1, MODE1);
+			}
 			this.servoDriver.write(MODE1, (byte) mode1);
 			delay(5); // wait for oscillator
 		} catch (Exception ex) {
@@ -144,8 +151,9 @@ public class PWM {
 		this.servoDriver.write(PRESCALE, (byte) (Math.floor(preScale)));
 		this.servoDriver.write(MODE1, (byte) oldMode);
 		delay(5);
-		if (verbose)
+		if (verbose) {
 			System.out.printf("16 - Writing 0x%02x to register 0x%02x\n", (oldMode | 0x80), MODE1);
+		}
 		this.servoDriver.write(MODE1, (byte) (oldMode | 0x80));
 	}
 	/*

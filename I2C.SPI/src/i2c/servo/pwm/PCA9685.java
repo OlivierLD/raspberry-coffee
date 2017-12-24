@@ -40,13 +40,15 @@ public class PCA9685 {
 		try {
 			// Get I2C bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
+			}
 
 			// Get the device itself
 			servoDriver = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
+			}
 			// Reseting
 			servoDriver.write(MODE1, (byte) 0x00);
 		} catch (IOException e) {
@@ -68,8 +70,9 @@ public class PCA9685 {
 			System.out.println("Estimated pre-scale: " + preScaleVal);
 		}
 		double preScale = Math.floor(preScaleVal + 0.5);
-		if (verbose)
+		if (verbose) {
 			System.out.println("Final pre-scale: " + preScale);
+		}
 
 		try {
 			byte oldmode = (byte) servoDriver.read(MODE1);
@@ -130,8 +133,9 @@ public class PCA9685 {
 		pulseLength /= 4096;       // 12 bits of resolution
 		int pulse = (int) (pulseMS * 1_000);
 		pulse /= pulseLength;
-		if (verbose)
+		if (verbose) {
 			System.out.println(pulseLength + " us per bit, pulse:" + pulse);
+		}
 		this.setPWM(channel, 0, pulse);
 	}
 
@@ -224,7 +228,8 @@ public class PCA9685 {
 		pulseLength /= 4096; // 12 bits of resolution
 		int pulse = (int) (1.5 * 1_000);
 		pulse /= pulseLength;
-		if (verbose)
+		if (verbose) {
 			System.out.println(pulseLength + " us per bit, pulse:" + pulse);
+		}
 	}
 }

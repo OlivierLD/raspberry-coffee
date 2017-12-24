@@ -61,7 +61,7 @@ public class AdafruitMotorHAT {
 
 	public void setPin(int pin, int value) throws IOException {
 		if (pin < 0 || pin > 15)
-			throw new RuntimeException("PWM pin must be between 0 and 15 inclusive : " + pin);
+			throw new RuntimeException("PWM pin must be in [0..15] : " + pin);
 		if (value != 0 && value != 1)
 			throw new RuntimeException("Pin value must be 0 or 1! " + value);
 		if (value == 0)
