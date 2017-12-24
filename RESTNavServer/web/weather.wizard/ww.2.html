@@ -388,7 +388,26 @@
 				...
 
 	 */
-	var makeCompositeTree = function(tree) {
+
+  var sortObject = function(o) {
+	  var sorted = {},
+			  key, a = [];
+
+	  for (key in o) {
+		  if (o.hasOwnProperty(key)) {
+			  a.push(key);
+		  }
+	  }
+
+	  a.sort();
+
+	  for (key = 0; key < a.length; key++) {
+		  sorted[a[key]] = o[a[key]];
+	  }
+	  return sorted;
+  };
+
+  var makeCompositeTree = function(tree) {
 		var htmlCode = "<b>Existing Composites:</b><ul style='padding-left: 10px;'>";
 		for (var year in tree) {
 			htmlCode += "<li>";
@@ -405,13 +424,9 @@
 
 				htmlCode += ("<ul id='" + year + "-" + month + "' style='display: none; padding-left: 10px;'>");
 
-				console.log(htmlCode);
-
-
-				var days = months[month];
-				for (var day in days) {
+				var days = sortObject(months[month]);
+				for (var day in days) { // Seems not to be sorted..., "10" > "09". :(
 					htmlCode += "<li>";
-
 					htmlCode += ("<span onclick='expandCollapse(\"" + year + "-" + month + "-" + day + "\");' style='cursor: pointer;'>");
 					htmlCode += (day + " :");
 					htmlCode += ("</span>");
