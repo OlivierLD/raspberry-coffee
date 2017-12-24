@@ -1678,8 +1678,16 @@ function WorldMap (cName, prj) {
 		if (label !== undefined) {
 			try {
 				var context = canvas.getContext('2d');
+				// BG
+				var metrics = context.measureText(label);
+				var xLabel = Math.round(pt.x) + 3;
+				var yLabel = Math.round(pt.y) - 3;
+
+				context.fillStyle = 'yellow'; // worldmapColorConfig.canvasBackground;
+				context.fillRect( xLabel, yLabel - 14, metrics.width, 14);
+				// Text
 				context.fillStyle = (color !== undefined ? color : worldmapColorConfig.defaultPlotPointColor);
-				context.fillText(label, Math.round(pt.x) + 3, Math.round(pt.y) - 3);
+				context.fillText(label, xLabel, yLabel);
 			} catch (err) { // Firefox has some glitches here
 				if (console.log !== undefined) {
 					if (err.message !== undefined && err.name !== undefined) {

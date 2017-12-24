@@ -356,7 +356,6 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 
 		// Hand
 		context.beginPath();
-		context.beginPath();
 		if (awDisplayColorConfig.withHandShadow) {
 			context.shadowColor = awDisplayColorConfig.shadowColor;
 			context.shadowOffsetX = 3;
