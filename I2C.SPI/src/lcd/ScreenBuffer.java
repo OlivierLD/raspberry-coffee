@@ -20,8 +20,8 @@ public class ScreenBuffer {
 		BLACK_ON_WHITE
 	}
 
-	private int w = 128, // Actual values, defaulted to SSD1306
-							h = 32;
+	private int w = WIDTH, // Actual values, defaulted to SSD1306
+							h = HEIGHT;
 	// This is the buffer that will be pushed on the device
 	private int[] screenBuffer = null;
 	// This represents the led array (128x32). 'X' means on, ' ' means off.
@@ -125,19 +125,22 @@ public class ScreenBuffer {
 						char[] verticalBitmap = new char[fontFact * CharacterMatrixes.FONT_SIZE];
 						int vmY = 0;
 						for (int y = 0; y < matrix.length; y++) {  // Each LINE of the character matrix
-							for (int f = 0; f < fontFact; f++)
+							for (int f = 0; f < fontFact; f++) {
 								verticalBitmap[vmY++] = matrix[y].charAt(x);
+							}
 						}
 						// Write the character in the screen matrix
 						// screenMatrix[line][col]
 						for (int y = 0; y < (fontFact * CharacterMatrixes.FONT_SIZE); y++) {
 							int l = (y + yPx - (CharacterMatrixes.FONT_SIZE - 1));
 							if (!rotate) {
-								if (l >= 0 && l < this.h && xProgress >= 0 && xProgress < this.w)
+								if (l >= 0 && l < this.h && xProgress >= 0 && xProgress < this.w) {
 									screenMatrix[l][xProgress] = (mode == Mode.WHITE_ON_BLACK ? verticalBitmap[y] : invert(verticalBitmap[y]));
+								}
 							} else { // 90 deg counter-clockwise
-								if (l >= 0 && l < this.w && xProgress >= 0 && xProgress < this.h)
+								if (l >= 0 && l < this.w && xProgress >= 0 && xProgress < this.h) {
 									screenMatrix[this.h - xProgress][l] = (mode == Mode.WHITE_ON_BLACK ? verticalBitmap[y] : invert(verticalBitmap[y]));
+								}
 							}
 						}
 						xProgress++;
@@ -167,8 +170,9 @@ public class ScreenBuffer {
 	}
 
 	public void plot(int x, int y, Mode mode) {
-		if (x >= 0 && x < this.w && y >= 0 && y < this.h)
+		if (x >= 0 && x < this.w && y >= 0 && y < this.h) {
 			screenMatrix[y][x] = (mode == Mode.WHITE_ON_BLACK ? 'X' : ' ');
+		}
 	}
 
 	public void unplot(int x, int y) {
@@ -176,8 +180,9 @@ public class ScreenBuffer {
 	}
 
 	public void unplot(int x, int y, Mode mode) {
-		if (x >= 0 && x < this.w && y >= 0 && y < this.h)
+		if (x >= 0 && x < this.w && y >= 0 && y < this.h) {
 			screenMatrix[y][x] = (mode == Mode.WHITE_ON_BLACK ? ' ' : 'X');
+		}
 	}
 
 	public void line(int fromx, int fromy, int tox, int toy) {
@@ -193,13 +198,15 @@ public class ScreenBuffer {
 		}
 		if (deltaX == 0) {
 			for (int y = Math.min(fromy, toy); y <= Math.max(toy, fromy); y++) {
-				if (fromx >= 0 && fromx < this.w && y >= 0 && y < this.h)
+				if (fromx >= 0 && fromx < this.w && y >= 0 && y < this.h) {
 					screenMatrix[y][fromx] = (mode == Mode.WHITE_ON_BLACK ? 'X' : ' ');
+				}
 			}
 		} else if (deltaY == 0) {
 			for (int x = Math.min(fromx, tox); x <= Math.max(tox, fromx); x++) {
-				if (x >= 0 && x < this.w && fromy >= 0 && fromy < this.h)
+				if (x >= 0 && x < this.w && fromy >= 0 && fromy < this.h) {
 					screenMatrix[fromy][x] = (mode == Mode.WHITE_ON_BLACK ? 'X' : ' ');
+				}
 			}
 		} else if (Math.abs(deltaX) > Math.abs(deltaY)) { // [-45, +45]
 			if (deltaX < 0) {
@@ -218,8 +225,9 @@ public class ScreenBuffer {
 				for (int x = 0; x <= deltaX; x++) {
 					int y = fromy + (int) (Math.round(x * coeffDir));
 					int _x = x + fromx;
-					if (_x >= 0 && _x < this.w && y >= 0 && y < this.h)
+					if (_x >= 0 && _x < this.w && y >= 0 && y < this.h) {
 						screenMatrix[y][_x] = (mode == Mode.WHITE_ON_BLACK ? 'X' : ' ');
+					}
 				}
 			}
 		} else if (Math.abs(deltaX) < Math.abs(deltaY)) { // > 45, < -45
@@ -239,8 +247,9 @@ public class ScreenBuffer {
 				for (int y = 0; y <= deltaY; y++) {
 					int x = fromx + (int) (Math.round(y * coeffDir));
 					int _y = y + fromy;
-					if (_y >= 0 && _y < this.h && x >= 0 && x < this.w)
+					if (_y >= 0 && _y < this.h && x >= 0 && x < this.w) {
 						screenMatrix[_y][x] = (mode == Mode.WHITE_ON_BLACK ? 'X' : ' ');
+					}
 				}
 			}
 		}
@@ -253,10 +262,12 @@ public class ScreenBuffer {
 	public void shape(Polygon polygon, boolean closed, Mode mode) {
 		int[] x = polygon.xpoints;
 		int[] y = polygon.ypoints;
-		for (int i = 1; i < polygon.npoints; i++)
+		for (int i = 1; i < polygon.npoints; i++) {
 			line(x[i - 1], y[i - 1], x[i], y[i], mode);
-		if (closed)
+		}
+		if (closed) {
 			line(x[0], y[0], x[polygon.npoints - 1], y[polygon.npoints - 1], mode);
+		}
 	}
 
 	public void rectangle(int tlX, int tlY, int brX, int brY) {
@@ -291,9 +302,9 @@ public class ScreenBuffer {
 			if (x >= 0 && x < this.w && y >= 0 && y < this.h) {
 				screenMatrix[y][x] = (mode == Mode.WHITE_ON_BLACK ? 'X' : ' ');
 				prevPt = pt;
-			} else
+			} else {
 				prevPt = null;
-
+			}
 		}
 	}
 
@@ -312,8 +323,9 @@ public class ScreenBuffer {
 				// screenMatrix[line][col]
 				for (int y = 0; y < 8; y++) {
 					int l = (topLeftY + (7 - y) + (row * 8));
-					if (l >= 0 && l < this.h && (col + topLeftX) >= 0 && (col + topLeftX) < this.w)
+					if (l >= 0 && l < this.h && (col + topLeftX) >= 0 && (col + topLeftX) < this.w) {
 						screenMatrix[l][(col + topLeftX)] = bitMapCol.charAt(y);
+					}
 				}
 			}
 		}
