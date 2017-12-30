@@ -450,12 +450,15 @@
 	};
 
 	var getCompositeList = function() {
+	  var filter = document.getElementById("comp-name-filter").value;
+	  console.log("Filtering: " + filter);
+
 		var cb = function(value) {
 //		console.log(value);
 			var data = JSON.parse(value);
 			$("#composite-list").html(makeCompositeTree(data)); // "<pre>" + JSON.stringify(data, null, 2) + "</pre>");
 		};
-		getExistingComposites(cb);
+		getExistingComposites(cb, filter);
 	};
 
 	/**
@@ -855,15 +858,13 @@
 					<button onclick="loadComposite();">Load documents</button>
 					<hr/>
 					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
-					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Storage <!-- TODO -->
+					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Storage
 					<hr/>
 					<div id="grib-web">
 					</div>
 					<div id="grib-json" style="display: none;">
-						<button onclick="getCompositeList();">Get Composites list</button>
-						<div id="composite-list" class="complist-style">
-
-						</div>
+						<button onclick="getCompositeList();">Get Composites list</button> <input type="text" id="comp-name-filter" placeholder="Composite Name Filter" title="Enter the Composite key, or any part of the name of the directory the composite lives in."/>
+						<div id="composite-list" class="complist-style"></div>
 					</div>
 					<hr/>
 					Zoom for the whole thing: <button onclick="changeCanvasSize(0.9);">-</button><button onclick="changeCanvasSize(1.1);">+</button>

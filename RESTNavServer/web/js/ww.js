@@ -129,13 +129,16 @@ var getCompositeFaxes = function(options, compositeData, callback) {
 	});
 };
 
-var crawlComposites = function() {
+var crawlComposites = function(filter) {
 	var url = "/ww/composite-hierarchy";
+	if (filter !== undefined && filter.length > 0) {
+		url += ("?filter=" + filter);
+	}
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, undefined, false);
-}
+};
 
-var getExistingComposites = function(callback) {
-	var getData = crawlComposites();
+var getExistingComposites = function(callback, filter) {
+	var getData = crawlComposites(filter);
 	getData.done(function(value) {
 		if (callback === undefined) {
 			try {

@@ -11,14 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 /**
- * Reads web/catalog/catalog.js to find the compoisite definitions
+ * Reads web/catalog/catalog.js to find the composite definitions
  * Crawls the directory under web/ matching [0..9]{4}/[0..9]{2}/[0..9]{2}/<composite-key>_[0..9]{6}
  */
 public class CompositeCrawler {
@@ -28,9 +27,9 @@ public class CompositeCrawler {
 	private final static String NASHORN_ARGS = "nashorn.args";
 	private final static String ES_6 = "--language=es6";
 
-	private final Pattern YEAR_PATTERN = Pattern.compile("^\\d{4}$");
+	private final Pattern YEAR_PATTERN  = Pattern.compile("^\\d{4}$");
 	private final Pattern MONTH_PATTERN = Pattern.compile("^\\d{2}$");
-	private final Pattern DAY_PATTERN = MONTH_PATTERN;
+	private final Pattern DAY_PATTERN   = MONTH_PATTERN;
 
 	private final Pattern[] PATTERNS = new Pattern[] {
 			YEAR_PATTERN,
@@ -39,8 +38,7 @@ public class CompositeCrawler {
 	};
 
 	private FilenameFilter compositeElementFilter = (dir, name) -> {
-		if ((name.startsWith("_") && name.endsWith(".png")) ||
-				name.equals("grib.grb")) {
+		if ((name.startsWith("_") && name.endsWith(".png")) || name.equals("grib.grb")) {
 			return true;
 		} else {
 			return false;
@@ -65,19 +63,19 @@ public class CompositeCrawler {
 
 	private List<Pattern> buildPatternList() throws Exception {
 		Map<String, Object> catalog = getCompositeCatalog();
-		List<Pattern> patternlist = new ArrayList<>();
+		List<Pattern> patternList = new ArrayList<>();
 		catalog.keySet().forEach(k -> {
 			Map<String, Object> composite = (Map<String, Object>)catalog.get(k);
 			String key = (String)composite.get("key");
 			Pattern pattern = Pattern.compile(String.format("^%s_\\d{6}$", key));
-			patternlist.add(pattern);
+			patternList.add(pattern);
 		});
-		return patternlist;
+		return patternList;
 	}
 
 
 
-	private Map<String, Object> crawl(File from, int level, List<Pattern> pList, Map<String, Object> compositeTree) {
+	private Map<String, Object> crawl(File from, int level, List<Pattern> pList, Map<String, Object> compositeTree, String filter) {
 
 		Comparator<File> fileComparator = Comparator.comparing(File::getName);
 
@@ -85,9 +83,9 @@ public class CompositeCrawler {
 			List<File> fromList = Arrays.asList(from.listFiles());
 			Collections.sort(fromList, fileComparator);
 
-//			System.out.println("-- Sorted --");
-//			fromList.stream().forEach(System.out::println);
-//			System.out.println("------------");
+//		System.out.println("-- Sorted --");
+//		fromList.stream().forEach(System.out::println);
+//		System.out.println("------------");
 
 			fromList.stream().forEach(f -> {
 				if (f.isDirectory()) {
@@ -98,7 +96,7 @@ public class CompositeCrawler {
 						if (level < (PATTERNS.length - 1)) {
 							Map<String, Object> subMap = new TreeMap<>();
 							compositeTree.put(name, subMap);
-							crawl(f, level + 1, pList, subMap);
+							crawl(f, level + 1, pList, subMap, filter);
 						} else {
 							// If directory starts with a composite key name, followed by '_' and 6 digits, then ok.
 							List<CompositeDescription> compositeList = new ArrayList<>();
@@ -106,24 +104,27 @@ public class CompositeCrawler {
 							Collections.sort(fList);
 							fList.stream().forEach(d -> {
 								if (d.isDirectory() && matchesOneOf(d.getName(), pList)) {
-//								System.out.println(String.format(">> Sorted %s", d.getName()));
-									CompositeDescription compositeDescription = new CompositeDescription()
-										.name(d.getName());
-									List<CompositeElement> elements = new ArrayList<>();
-									// Now scan the files in this directory
-									File[] compositeElements = d.listFiles(compositeElementFilter);
-									List<File> fileList = Arrays.asList(compositeElements);
-									Collections.sort(fileList);
-									fileList.stream().forEach(fName -> {
-//									System.out.println(String.format("  >> %s : file:%s", fName.getName(), fName.getAbsolutePath()));
-										CompositeElement element = new CompositeElement()
-												.type(fName.getName().equals("grib.grb") ? ElementType.GRIB : ElementType.FAX)
-												.name(fName.getName())
-												.resource("file:" + fName.getAbsolutePath());
-										elements.add(element);
-									});
-									compositeDescription = compositeDescription.compositeElements(elements);
-									compositeList.add(compositeDescription);
+
+									if (filter == null || filter.isEmpty() || (filter != null && d.getName().contains(filter))) {
+										System.out.println(String.format(">> Sorted %s, level %d, filter %s", d.getName(), level, filter));
+
+										CompositeDescription compositeDescription = new CompositeDescription().name(d.getName());
+										List<CompositeElement> elements = new ArrayList<>();
+										// Now scan the files in this directory
+										File[] compositeElements = d.listFiles(compositeElementFilter);
+										List<File> fileList = Arrays.asList(compositeElements);
+										Collections.sort(fileList);
+										fileList.stream().forEach(fName -> {
+	//									System.out.println(String.format("  >> %s : file:%s", fName.getName(), fName.getAbsolutePath()));
+											CompositeElement element = new CompositeElement()
+													.type(fName.getName().equals("grib.grb") ? ElementType.GRIB : ElementType.FAX)
+													.name(fName.getName())
+													.resource("file:" + fName.getAbsolutePath());
+											elements.add(element);
+										});
+										compositeDescription = compositeDescription.compositeElements(elements);
+										compositeList.add(compositeDescription);
+									}
 								}
 							});
 							compositeTree.put(name, compositeList);
@@ -144,9 +145,9 @@ public class CompositeCrawler {
 		return false;
 	}
 
-	public Map<String, Object> getCompositeHierarchy() throws Exception {
+	public Map<String, Object> getCompositeHierarchy(String filter) throws Exception {
 		Map<String, Object> composites = new TreeMap<>();
-		composites = this.crawl(new File("web"), 0, this.buildPatternList(), composites);
+		composites = this.crawl(new File("web"), 0, this.buildPatternList(), composites, filter);
 		return composites;
 	}
 
@@ -190,7 +191,7 @@ public class CompositeCrawler {
 	/* For tests */
 	public static void main(String... args) throws Exception {
 		CompositeCrawler crawler = new CompositeCrawler();
-		Map<String, Object> composites = crawler.getCompositeHierarchy();
+		Map<String, Object> composites = crawler.getCompositeHierarchy("MED-0001");
 
 		String[] blah = new String[] { "Ah!" };
 		try {

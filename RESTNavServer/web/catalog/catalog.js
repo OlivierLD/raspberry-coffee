@@ -110,7 +110,7 @@ const compositeCatalog = [
 				}
 			},
 			{
-				faxUrl: "http://www.opc.ncep.noaa.gov/shtml/A_06hr500bw.gif",
+				faxUrl: "http://www.opc.ncep.noaa.gov/shtml/A_00hr500bw.gif",
 				name: "North Atl 500mb analysis",
 				transp: faxColors.white,
 				tx: {

@@ -1496,13 +1496,22 @@ function WorldMap (cName, prj) {
 		}
 		context.beginPath();
 		var pt = posToCanvas(canvas, toDegrees(nightRim[first].lat), toRealLng(toDegrees(nightRim[first].lng)));
-		context.moveTo(-10 /*pt.x*/, pt.y);
+		context.moveTo(-10 /*pt.x*/, pt.y); // left++
 
 		var go = true;
+
+//	console.log("_west ", _west, "first", first);
 
 		for (var idx=first; idx<360 && go === true; idx++) {
 			pt = posToCanvas(canvas, toDegrees(nightRim[idx].lat), toRealLng(toDegrees(nightRim[idx].lng)));
 			context.lineTo(pt.x, pt.y);
+
+			// DEBUG
+			// if (idx % 20 === 0) {
+			// 	context.fillStyle = 'cyan';
+			// 	context.fillText(idx, pt.x, pt.y);
+			// }
+
 	//  if (toRealLng(toDegrees(nightRim[idx].lng)) > _east) {
 	// 	 go = false;
 	//  }
@@ -1514,18 +1523,26 @@ function WorldMap (cName, prj) {
 				} else {
 					pt = posToCanvas(canvas, toDegrees(nightRim[idx].lat), toRealLng(toDegrees(nightRim[idx].lng)));
 					context.lineTo(pt.x, pt.y);
+					// DEBUG
+					// if (idx % 20 === 0) {
+					// 	context.fillStyle = 'red';
+					// 	context.fillText(idx, pt.x, pt.y);
+					// }
 				}
 			}
 		}
+		context.lineTo(canvas.width + 10, pt.y); // right most
 
-		context.lineTo(canvas.width, pt.y);
+		// DEBUG
+		// context.fillStyle = 'red';
+		// context.fillText('Last', pt.x - 10, pt.y);
 
 		if (from.lat > 0) { // N Decl, night is south
-			context.lineTo(canvas.width, canvas.height);
-			context.lineTo(0, canvas.height);
+			context.lineTo(canvas.width, canvas.height); // bottom right
+			context.lineTo(0, canvas.height);            // bottom left
 		} else {            // S Decl, night is north
-			context.lineTo(canvas.width, 0);
-			context.lineTo(0, 0);
+			context.lineTo(canvas.width, 0);             // top right
+			context.lineTo(0, 0);                        // top left
 		}
 //	context.lineTo(firstPt.x, firstPt.y);
 		context.fillStyle = worldmapColorConfig.nightColor;

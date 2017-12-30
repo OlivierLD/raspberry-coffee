@@ -46,11 +46,13 @@ public class ScreenBuffer {
 
 	public void clear(Mode mode) {
 		for (int i = 0; i < this.h; i++) {
-			for (int j = 0; j < this.w; j++)
+			for (int j = 0; j < this.w; j++) {
 				screenMatrix[i][j] = (mode == Mode.WHITE_ON_BLACK ? ' ' : 'X');
+			}
 		}
-		for (int i = 0; i < this.screenBuffer.length; i++)
+		for (int i = 0; i < this.screenBuffer.length; i++) {
 			this.screenBuffer[i] = (mode == Mode.WHITE_ON_BLACK ? 0 : 1);
+		}
 	}
 
 	/**
@@ -63,8 +65,9 @@ public class ScreenBuffer {
 			for (int col = 0; col < this.w; col++) {
 				int bmVal = 0;
 				for (int b = 0; b < 8; b++) {
-					if (screenMatrix[(line * 8) + b][col] == 'X')
+					if (screenMatrix[(line * 8) + b][col] == 'X') {
 						bmVal |= (1 << b);
+					}
 				}
 	//    System.out.println(lpad(Integer.toHexString(bmVal), "0", 2) + ", " + lpad(Integer.toBinaryString(bmVal), "0", 8));
 				this.screenBuffer[(this.w * (line)) + col] = bmVal;
@@ -333,8 +336,7 @@ public class ScreenBuffer {
 
 	public int strlen(String s) {
 		int len = 0;
-		for (int i = 0; i < s.length(); i++) // For each character of the string to display
-		{
+		for (int i = 0; i < s.length(); i++) { // For each character of the string to display
 			String c = new String(new char[]{s.charAt(i)});
 			if (CharacterMatrixes.characters.containsKey(c)) {
 				String[] matrix = CharacterMatrixes.characters.get(c);
@@ -343,5 +345,4 @@ public class ScreenBuffer {
 		}
 		return len;
 	}
-
 }
