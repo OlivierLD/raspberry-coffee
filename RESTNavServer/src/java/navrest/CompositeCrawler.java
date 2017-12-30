@@ -7,13 +7,7 @@ import javax.script.ScriptEngineManager;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -148,6 +142,54 @@ public class CompositeCrawler {
 	public Map<String, Object> getCompositeHierarchy(String filter) throws Exception {
 		Map<String, Object> composites = new TreeMap<>();
 		composites = this.crawl(new File("web"), 0, this.buildPatternList(), composites, filter);
+		// Cut empty branches
+//	System.out.println("Tree First Pass completed");
+		Set<String> years = composites.keySet();
+		List<String> yearsToDelete = new ArrayList<>();
+		for (String year : years) {
+			List<String> monthsToDelete = new ArrayList<>();
+			TreeMap<String, Object> monthsMap = (TreeMap<String, Object>)composites.get(year);
+//		System.out.println("monthsMap");
+			for (String month : monthsMap.keySet()) {
+				List<String> daysToDelete = new ArrayList<>();
+				TreeMap<String, Object> daysMap = (TreeMap<String, Object>)monthsMap.get(month);
+//			System.out.println("daysMap");
+				Set<String> days = daysMap.keySet();
+				for (String day : days) {
+					List<Object> compositesList = (List<Object>)daysMap.get(day);
+//				System.out.println(String.format("Day %s: %d elements", day, compositesList.size()));
+					if (compositesList.size() == 0) {
+						// Cut that branch!
+//					System.out.println(String.format(">>> Cut branch for day %s", day));
+						daysToDelete.add(day); // Mark it to be deleted
+					}
+				}
+				daysToDelete.stream()
+						.forEach(d -> {
+							daysMap.remove(d);
+						});
+				if (daysMap.size() == 0) {
+					monthsToDelete.add(month);
+				}
+//			System.out.println(String.format(">> Month %s", month));
+			}
+			monthsToDelete.stream()
+					.forEach(m -> {
+						monthsMap.remove(m);
+					});
+//		System.out.println(String.format(">> Year %s", year));
+			if (monthsMap.size() == 0) {
+				yearsToDelete.add(year);
+			}
+		}
+		if (yearsToDelete.size() > 0) {
+			Map<String, Object> finalMap = composites;
+			yearsToDelete.stream()
+					.forEach(y -> {
+						finalMap.remove(y);
+					});
+			composites = finalMap;
+		}
 		return composites;
 	}
 
