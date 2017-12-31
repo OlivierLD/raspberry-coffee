@@ -96,7 +96,7 @@ public class RESTImplementation {
 	private Response getCompositeHierarchy(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		Map<String, String>  qs = request.getQueryStringParameters();
-		String filter = qs.get("filter");
+		String filter = qs == null ? null : qs.get("filter");
 		try {
 			Map<String, Object> compositeHierarchy = new CompositeCrawler().getCompositeHierarchy(filter);
 			String content = new Gson().toJson(compositeHierarchy);

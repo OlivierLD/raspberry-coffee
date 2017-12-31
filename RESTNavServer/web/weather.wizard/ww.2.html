@@ -412,25 +412,23 @@
 		for (var year in tree) {
 			htmlCode += "<li>";
 			htmlCode += ("<span onclick='expandCollapse(\"" + year + "\");' style='cursor: pointer;'>");
-			htmlCode += (year + " :");
+			var months = tree[year];
+			htmlCode += (year + " (" + Object.keys(months).length + " month(s)) :");
 			htmlCode += ("</span>");
 			htmlCode += ("<ul id='" + year + "' style='display: none; padding-left: 10px;'>");
-			var months = tree[year];
 			for (var month in months) {
 				htmlCode += "<li>";
 				htmlCode += ("<span onclick='expandCollapse(\"" + year + "-" + month + "\");' style='cursor: pointer;'>");
-				htmlCode += (monthNames[parseInt(month) - 1] + " :");
-				htmlCode += ("</span>");
-
-				htmlCode += ("<ul id='" + year + "-" + month + "' style='display: none; padding-left: 10px;'>");
-
 				var days = sortObject(months[month]);
+				htmlCode += (monthNames[parseInt(month) - 1] + " (" + Object.keys(days).length + ") day(s)) :");
+				htmlCode += ("</span>");
+				htmlCode += ("<ul id='" + year + "-" + month + "' style='display: none; padding-left: 10px;'>");
 				for (var day in days) { // Seems not to be sorted..., "10" > "09". :(
 					htmlCode += "<li>";
 					htmlCode += ("<span onclick='expandCollapse(\"" + year + "-" + month + "-" + day + "\");' style='cursor: pointer;'>");
-					htmlCode += (day + " :");
-					htmlCode += ("</span>");
 					var compositeList = days[day]; // Array
+					htmlCode += (day + " (" + compositeList.length + " composite(s)) :");
+					htmlCode += ("</span>");
 					htmlCode += ("<ul id='" + year + "-" + month + "-" + day + "' style='display: none; padding-left: 10px;'>");
 					for (var i=0; i<compositeList.length; i++) {
 						var comp = compositeList[i];
