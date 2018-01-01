@@ -7,7 +7,14 @@ import javax.script.ScriptEngineManager;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
-import java.util.*;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.TreeMap;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -77,9 +84,9 @@ public class CompositeCrawler {
 			List<File> fromList = Arrays.asList(from.listFiles());
 			Collections.sort(fromList, fileComparator);
 
-//		System.out.println("-- Sorted --");
-//		fromList.stream().forEach(System.out::println);
-//		System.out.println("------------");
+//			System.out.println("-- Sorted --");
+//			fromList.stream().forEach(System.out::println);
+//			System.out.println("------------");
 
 			fromList.stream().forEach(f -> {
 				if (f.isDirectory()) {
@@ -100,8 +107,7 @@ public class CompositeCrawler {
 								if (d.isDirectory() && matchesOneOf(d.getName(), pList)) {
 
 									if (filter == null || filter.isEmpty() || (filter != null && d.getName().contains(filter))) {
-										System.out.println(String.format(">> Sorted %s, level %d, filter %s", d.getName(), level, filter));
-
+//									System.out.println(String.format(">> Sorted %s, level %d, filter %s", d.getName(), level, filter));
 										CompositeDescription compositeDescription = new CompositeDescription().name(d.getName());
 										List<CompositeElement> elements = new ArrayList<>();
 										// Now scan the files in this directory
@@ -233,7 +239,7 @@ public class CompositeCrawler {
 	/* For tests */
 	public static void main(String... args) throws Exception {
 		CompositeCrawler crawler = new CompositeCrawler();
-		Map<String, Object> composites = crawler.getCompositeHierarchy("MED-0001");
+		Map<String, Object> composites = crawler.getCompositeHierarchy("PAC-0001");
 
 		String[] blah = new String[] { "Ah!" };
 		try {

@@ -98,6 +98,7 @@ public class RESTImplementation {
 		Map<String, String>  qs = request.getQueryStringParameters();
 		String filter = qs == null ? null : qs.get("filter");
 		try {
+			// compositeHierarchy is still ordered.
 			Map<String, Object> compositeHierarchy = new CompositeCrawler().getCompositeHierarchy(filter);
 			String content = new Gson().toJson(compositeHierarchy);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());

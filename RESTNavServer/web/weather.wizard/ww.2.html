@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>
 		<link rel="stylesheet" href="../css/white.css" type="text/css" id="theme"/>
 		<link rel="stylesheet" href="../css/worldmap.02.css" type="text/css"/>
+		<link rel="stylesheet" href="../css/composites.css" type="text/css"/>
 
 		<script type="text/javascript" src="../js/jquery-2.1.3.js"></script>
 		<script type="text/javascript" src="../widgets/WorldMapData.js"></script>
@@ -293,7 +294,7 @@
 	};
 
 	var monthNames = [
-		"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+		"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 	];
 
 	/*
@@ -408,31 +409,37 @@
   };
 
   var makeCompositeTree = function(tree) {
-		var htmlCode = "<b>Existing Composites:</b><ul style='padding-left: 10px;'>";
+		var htmlCode = "<b>Existing Composites:</b><ul style='margin-left: -20px;'>";
 		for (var year in tree) {
-			htmlCode += "<li>";
-			htmlCode += ("<span onclick='expandCollapse(\"" + year + "\");' style='cursor: pointer;'>");
+			htmlCode += "<li type='disc'>";
+			htmlCode += ("<span class='compositeNode' onclick='expandCollapse(\"" + year + "\");' style='cursor: pointer;'>");
 			var months = tree[year];
-			htmlCode += (year + " (" + Object.keys(months).length + " month(s)) :");
+			var nbMonths = Object.keys(months).length;
+			htmlCode += (year + " (" + nbMonths + " month" + (nbMonths > 1 ? "s" : "") + ") :");
 			htmlCode += ("</span>");
 			htmlCode += ("<ul id='" + year + "' style='display: none; padding-left: 10px;'>");
 			for (var month in months) {
-				htmlCode += "<li>";
-				htmlCode += ("<span onclick='expandCollapse(\"" + year + "-" + month + "\");' style='cursor: pointer;'>");
+				htmlCode += "<li type='disc'>";
+				htmlCode += ("<span class='compositeNode' onclick='expandCollapse(\"" + year + "-" + month + "\");' style='cursor: pointer;'>");
 				var days = sortObject(months[month]);
-				htmlCode += (monthNames[parseInt(month) - 1] + " (" + Object.keys(days).length + ") day(s)) :");
+				var nbDays = Object.keys(days).length;
+				htmlCode += (monthNames[parseInt(month) - 1] + " (" + nbDays + " day" + (nbDays > 1 ? "s" : "") + ") :");
 				htmlCode += ("</span>");
 				htmlCode += ("<ul id='" + year + "-" + month + "' style='display: none; padding-left: 10px;'>");
-				for (var day in days) { // Seems not to be sorted..., "10" > "09". :(
-					htmlCode += "<li>";
-					htmlCode += ("<span onclick='expandCollapse(\"" + year + "-" + month + "-" + day + "\");' style='cursor: pointer;'>");
+
+				var sortedDays = Object.keys(days);
+				sortedDays.sort();
+				for (var x=0; x<sortedDays.length; x++) {
+					var day = sortedDays[x];
+					htmlCode += "<li type='disc'>";
+					htmlCode += ("<span class='compositeNode' onclick='expandCollapse(\"" + year + "-" + month + "-" + day + "\");' style='cursor: pointer;'>");
 					var compositeList = days[day]; // Array
-					htmlCode += (day + " (" + compositeList.length + " composite(s)) :");
+					htmlCode += (day + " (" + compositeList.length + " composite" + (compositeList.length > 1 ? "s" : "") + ") :");
 					htmlCode += ("</span>");
 					htmlCode += ("<ul id='" + year + "-" + month + "-" + day + "' style='display: none; padding-left: 10px;'>");
 					for (var i=0; i<compositeList.length; i++) {
 						var comp = compositeList[i];
-						htmlCode += ("<li><a onclick='reload(\"" + getKeyFromName(comp.name) + "\", " + JSON.stringify(comp.compositeElements) + ");'>" + readableName(comp.name) + "</a></li>"); // The leaf! TODO Coordinates, onclick, definition or name?...
+						htmlCode += ("<li type='disc'><a class='compositeNode' onclick='reload(\"" + getKeyFromName(comp.name) + "\", " + JSON.stringify(comp.compositeElements) + ");'>" + readableName(comp.name) + "</a></li>"); // The leaf!
 					}
 					htmlCode += "</ul>";
 					htmlCode += "</li>";
@@ -449,8 +456,7 @@
 
 	var getCompositeList = function() {
 	  var filter = document.getElementById("comp-name-filter").value;
-	  console.log("Filtering: " + filter);
-
+//  console.log("Filtering: " + filter);
 		var cb = function(value) {
 //		console.log(value);
 			var data = JSON.parse(value);
