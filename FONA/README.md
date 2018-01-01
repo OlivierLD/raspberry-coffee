@@ -43,6 +43,8 @@ to implement the `fona.pi4jmanager.FONAClient` interface, mostly for the callbac
 Adding the possibility to access the FONA from the `LibRxTx` API.
 This allows other machines than the Raspberry PI to access the FONA.
 
+> Quick note: on a Mac, you might need to install [Prolific drivers](https://plugable.com/drivers/prolific/).
+
 ### What Serial port, UART or another one?
  To use `/dev/ttyAMA0`, you need to disable the Serial Shell (from `raspi-config`).
 

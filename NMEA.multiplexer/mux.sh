@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 #
+# Note: Serial ports on MacOS:
+# may require Prolific drivers: https://plugable.com/drivers/prolific/
+#
 MUX_PROP_FILE=nmea.mux.rpi.demo.properties
 if [ $# -gt 0 ]
 then
