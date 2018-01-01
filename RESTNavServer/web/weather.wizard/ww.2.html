@@ -408,6 +408,8 @@
 	  return sorted;
   };
 
+  var dayNames = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ];
+
   var makeCompositeTree = function(tree) {
 		var htmlCode = "<b>Existing Composites:</b><ul style='margin-left: -20px;'>";
 		for (var year in tree) {
@@ -430,11 +432,14 @@
 				var sortedDays = Object.keys(days);
 				sortedDays.sort();
 				for (var x=0; x<sortedDays.length; x++) {
-					var day = sortedDays[x];
+					var day = sortedDays[x]; // day number as a String
+					// Find week day
+					var date = new Date(year, month - 1, day);
+					var weekDay = date.getDay();
 					htmlCode += "<li type='disc'>";
 					htmlCode += ("<span class='compositeNode' onclick='expandCollapse(\"" + year + "-" + month + "-" + day + "\");' style='cursor: pointer;'>");
 					var compositeList = days[day]; // Array
-					htmlCode += (day + " (" + compositeList.length + " composite" + (compositeList.length > 1 ? "s" : "") + ") :");
+					htmlCode += (day + ", " + dayNames[weekDay] + " (" + compositeList.length + " composite" + (compositeList.length > 1 ? "s" : "") + ") :");
 					htmlCode += ("</span>");
 					htmlCode += ("<ul id='" + year + "-" + month + "-" + day + "' style='display: none; padding-left: 10px;'>");
 					for (var i=0; i<compositeList.length; i++) {

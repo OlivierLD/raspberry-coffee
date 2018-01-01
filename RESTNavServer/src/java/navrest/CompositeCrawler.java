@@ -148,7 +148,7 @@ public class CompositeCrawler {
 	public Map<String, Object> getCompositeHierarchy(String filter) throws Exception {
 		Map<String, Object> composites = new TreeMap<>();
 		composites = this.crawl(new File("web"), 0, this.buildPatternList(), composites, filter);
-		// Cut empty branches
+		// Done. Now cut empty branches
 //	System.out.println("Tree First Pass completed");
 		Set<String> years = composites.keySet();
 		List<String> yearsToDelete = new ArrayList<>();
