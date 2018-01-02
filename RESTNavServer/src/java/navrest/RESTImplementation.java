@@ -53,7 +53,7 @@ public class RESTImplementation {
 			 */
 			new Operation(
 					"GET",
-					"/ww/composite-hierarchy",
+					"/ww/composite-hierarchy", // QS Prm: filter
 					this::getCompositeHierarchy,
 					"Retrieve the list of the composites already available on the file system")
 	);
@@ -95,8 +95,8 @@ public class RESTImplementation {
 
 	private Response getCompositeHierarchy(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		Map<String, String>  qs = request.getQueryStringParameters();
-		String filter = qs == null ? null : qs.get("filter");
+		Map<String, String> qs = request.getQueryStringParameters();
+		String filter = (qs == null ? null : qs.get("filter")); // Filter on the COMPOSITE name.
 		try {
 			// compositeHierarchy is still ordered.
 			Map<String, Object> compositeHierarchy = new CompositeCrawler().getCompositeHierarchy(filter);
