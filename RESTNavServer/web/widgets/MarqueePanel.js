@@ -1281,9 +1281,14 @@ function MarqueePanel(cName, nbColumns, nbLines, bgColor, fgColor) {
 		}
 	};
 
+
 	var fillCircle = function(context, pt, radius, color) {
+		var grd = context.createRadialGradient(pt.x - (radius / 3), pt.y - (radius / 3), radius / 3, pt.x, pt.y, radius);
+		grd.addColorStop(0, "red");
+		grd.addColorStop(1, "orange");
+
 		context.beginPath();
-		context.fillStyle = color;
+		context.fillStyle = grd; // color;
 		context.arc(pt.x, pt.y, radius, 0, radius * Math.PI);
 		context.fill();
 		context.closePath();
