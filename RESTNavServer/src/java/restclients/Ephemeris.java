@@ -1,5 +1,6 @@
 package restclients;
 
+import calc.GeomUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
@@ -51,7 +52,12 @@ public class Ephemeris {
 		String stationName = "Ocean Beach, California";
 		String url = "";
 
+		StringBuffer messageContent = new StringBuffer();
+
 		double lat = 0d, lng = 0d;
+
+		messageContent.append("<!DOCTYPE html>\n<html><body>");
+		messageContent.append(String.format("<h1>%s</h1>", stationName));
 
 		// 1 - Get station position
 		String tideResourcePath = String.format("tide/tide-stations/%s", URLEncoder.encode(stationName, "UTF-8").replace("+", "%20"));
@@ -67,6 +73,10 @@ public class Ephemeris {
 				}
 				lat = (double)list.get(0).get("latitude");
 				lng = (double)list.get(0).get("longitude");
+
+				messageContent.append(String.format("<table><tr><td>%s</td></tr><tr><td>%s</td></tr></table>",
+						GeomUtil.decToSex(lat, GeomUtil.HTML, GeomUtil.NS, GeomUtil.TRAILING_SIGN),
+						GeomUtil.decToSex(lng, GeomUtil.HTML, GeomUtil.EW, GeomUtil.TRAILING_SIGN)));
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -138,6 +148,7 @@ public class Ephemeris {
 			// Parse payload
 			Gson gson = new GsonBuilder().create();
 			StringReader stringReader = new StringReader(response.getPayload());
+			messageContent.append("<pre>");
 			try {
 				LinkedTreeMap map = (LinkedTreeMap)gson.fromJson(stringReader, Map.class);
 				List<LinkedTreeMap> table = (List<LinkedTreeMap>)map.get("table");
@@ -147,22 +158,28 @@ public class Ephemeris {
 					String unit = (String)tideEvent.get("unit");
 					String fmtDate = (String)tideEvent.get("formattedDate");
 
-					String line = String.format("%s: %.02f %s, %s", type, value, unit, fmtDate);
-					System.out.println(line);
+					String line = String.format("%s: %.02f %s, %s\n", type, value, unit, fmtDate);
+					messageContent.append(line);
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
+			messageContent.append("</pre>");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+
+		messageContent.append("</body></html>");
+		String content = messageContent.toString();
+
+		System.out.println(content);
 
 		// 4 - Compose and send email
 		final EmailSender sender = new EmailSender("google");
 		String[] emails = { "olivier@lediouris.net", "olivier.lediouris@gmail.com" };
 		sender.send(emails,
 				"Ephemeris",
-				"<html><body><h1>HTML Content goes here</h1></body></html>",
+				content,
 				"text/html;charset=utf-8");
 	}
 }
