@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Ephemeris {
@@ -38,11 +39,41 @@ public class Ephemeris {
 	 * - Server name and port
 	 * - Service resource path
 	 * - from, to, TZ
-	 * - latitude and longitude (From tide station ?)
+	 * - latitude and longitude (From tide station)
 	 *
 	 * @param args
 	 */
 	public static void main(String... args) throws Exception {
+
+		String serverName = "localhost";
+		String serverPort = "9999";
+
+		String stationName = "Ocean Beach, California";
+		String url = "";
+
+		double lat = 0d, lng = 0d;
+
+		// Get station position
+		String tideResourcePath = String.format("tide/tide-stations/%s", URLEncoder.encode(stationName, "UTF-8").replace("+", "%20"));
+		url = String.format("http://%s:%s/%s", serverName, serverPort, tideResourcePath);
+		try {
+			String response = HTTPClient.doGet(url, new HashMap<>());
+			Gson gson = new GsonBuilder().create();
+			StringReader stringReader = new StringReader(response);
+			try {
+				List<LinkedTreeMap> list = gson.fromJson(stringReader, List.class);
+				if (list.size()  > 1) {
+					// Weird
+				}
+				lat = (double)list.get(0).get("latitude");
+				lng = (double)list.get(0).get("longitude");
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
 		Calendar now = Calendar.getInstance();
 		now.set(Calendar.HOUR_OF_DAY, 0);
@@ -54,16 +85,14 @@ public class Ephemeris {
 		Calendar tomorrow = Calendar.getInstance();
 		tomorrow.setTimeInMillis(today + (24 * 3_600_000) + 1_000); // Tomorrow at 00:00:01
 
-		String serverName = "localhost";
-		String serverPort = "9999";
-		String resourcePath = "astro/sun-between-dates";
+		String astroResourcePath = "astro/sun-between-dates";
 		String from = DURATION_FMT.format(now.getTime());      // "2017-09-01T00:00:00";
 		String to   = DURATION_FMT.format(tomorrow.getTime()); // "2017-09-02T00:00:01";
 		String tz = URLEncoder.encode("America/Los_Angeles", "UTF-8");
-		String latitude = "37.76661945";
-		String longitude = "-122.5166988";
+		String latitude = String.valueOf(lat);
+		String longitude = String.valueOf(lng);
 
-		String url = String.format("http://%s:%s/%s?from=%s&to=%s&tz=%s", serverName, serverPort, resourcePath, from, to, tz);
+		url = String.format("http://%s:%s/%s?from=%s&to=%s&tz=%s", serverName, serverPort, astroResourcePath, from, to, tz);
 		String payload = String.format("{ latitude: %s, longitude: %s }", latitude, longitude);
 
 		try {
@@ -77,7 +106,6 @@ public class Ephemeris {
 			StringReader stringReader = new StringReader(response.getPayload());
 			try {
 				Map<String, LinkedTreeMap> map = gson.fromJson(stringReader, Map.class);
-				System.out.println("!");
 				for (String epoch : map.keySet()) {
 					LinkedTreeMap linkedTreeMap = map.get(epoch);
 					Date date = new Date(Long.parseLong(epoch));
@@ -86,11 +114,9 @@ public class Ephemeris {
 					Date riseTimeDate = new Date(Math.round(riseTime));
 					System.out.println("Sun Rise > " + riseTimeDate.toString());
 				}
-
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
