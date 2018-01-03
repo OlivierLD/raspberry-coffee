@@ -1,9 +1,9 @@
 package restclients;
 
-import astrorest.RESTImplementation;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
+import email.EmailSender;
 import http.client.HTTPClient;
 
 import java.io.StringReader;
@@ -53,7 +53,7 @@ public class Ephemeris {
 
 		double lat = 0d, lng = 0d;
 
-		// Get station position
+		// 1 - Get station position
 		String tideResourcePath = String.format("tide/tide-stations/%s", URLEncoder.encode(stationName, "UTF-8").replace("+", "%20"));
 		url = String.format("http://%s:%s/%s", serverName, serverPort, tideResourcePath);
 		try {
@@ -63,7 +63,7 @@ public class Ephemeris {
 			try {
 				List<LinkedTreeMap> list = gson.fromJson(stringReader, List.class);
 				if (list.size()  > 1) {
-					// Weird
+					// Weird. Honk.
 				}
 				lat = (double)list.get(0).get("latitude");
 				lng = (double)list.get(0).get("longitude");
@@ -75,6 +75,7 @@ public class Ephemeris {
 			ex.printStackTrace();
 		}
 
+		// 2 - Get the Sun data (rise and set)
 		Calendar now = Calendar.getInstance();
 		now.set(Calendar.HOUR_OF_DAY, 0);
 		now.set(Calendar.MINUTE, 0);
@@ -100,7 +101,7 @@ public class Ephemeris {
 					url,
 					new HashMap<>(),
 					payload);
-			System.out.println(String.format("Code:%d\nPayload=%s", response.getCode(), response.getPayload()));
+//		System.out.println(String.format("Code:%d\nPayload=%s", response.getCode(), response.getPayload()));
 			// Parse payload
 			Gson gson = new GsonBuilder().create();
 			StringReader stringReader = new StringReader(response.getPayload());
@@ -120,5 +121,48 @@ public class Ephemeris {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+
+		// 3 - Get the tide data
+		// POST http://localhost:9999/tide/tide-stations/Ocean%20Beach%2C%20California/wh?from=2018-01-03T00:00:00&to=2018-01-04T00:00:01
+		String tideResourcePath2 = String.format(
+				"tide/tide-stations/%s/wh?from=%s&to=%s",
+				URLEncoder.encode(stationName, "UTF-8").replace("+", "%20"),
+				from,
+				to);
+		url = String.format("http://%s:%s/%s", serverName, serverPort, tideResourcePath2);
+		try {
+			HTTPClient.HTTPResponse response = HTTPClient.doPost(
+					url,
+					new HashMap<>(),
+					"");
+			// Parse payload
+			Gson gson = new GsonBuilder().create();
+			StringReader stringReader = new StringReader(response.getPayload());
+			try {
+				LinkedTreeMap map = (LinkedTreeMap)gson.fromJson(stringReader, Map.class);
+				List<LinkedTreeMap> table = (List<LinkedTreeMap>)map.get("table");
+				for (LinkedTreeMap tideEvent : table) {
+					String type = (String)tideEvent.get("type");
+					double value = (double)tideEvent.get("value");
+					String unit = (String)tideEvent.get("unit");
+					String fmtDate = (String)tideEvent.get("formattedDate");
+
+					String line = String.format("%s: %.02f %s, %s", type, value, unit, fmtDate);
+					System.out.println(line);
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		// 4 - Compose and send email
+		final EmailSender sender = new EmailSender("google");
+		String[] emails = { "olivier@lediouris.net", "olivier.lediouris@gmail.com" };
+		sender.send(emails,
+				"Ephemeris",
+				"<html><body><h1>HTML Content goes here</h1></body></html>",
+				"text/html;charset=utf-8");
 	}
 }

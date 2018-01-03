@@ -1,15 +1,10 @@
-package pi4j.email;
+package email;
 
 import com.sun.mail.smtp.SMTPTransport;
-
-import java.io.FileInputStream;
-
-import java.util.Properties;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -23,6 +18,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.io.FileInputStream;
+import java.util.Properties;
 
 public class EmailSender {
 	private static String protocol;
@@ -129,6 +126,15 @@ public class EmailSender {
 	public void send(String[] dest,
 	                 String subject,
 	                 String content,
+	                 String mimeType)
+			throws MessagingException, AddressException {
+		send(dest, subject, content, mimeType, null);
+	}
+
+	public void send(String[] dest,
+	                 String subject,
+	                 String content,
+	                 String mimeType,
 	                 String attachment)
 					throws MessagingException, AddressException {
 		Properties props = setProps();
@@ -153,13 +159,15 @@ public class EmailSender {
 			throw new RuntimeException("Need at least one recipient.");
 		}
 		msg.setRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(dest[0]));
-		for (int i = 1; i < dest.length; i++)
+		for (int i = 1; i < dest.length; i++) {
 			msg.addRecipient(javax.mail.Message.RecipientType.CC, new InternetAddress(dest[i]));
+		}
 		msg.setSubject(subject);
 
 		if (attachment != null) {
 			BodyPart messageBodyPart = new MimeBodyPart();
 			messageBodyPart.setText(content);
+			messageBodyPart.setHeader("Content-Type", (mimeType == null ? "text/plain" : mimeType));
 			Multipart multipart = new MimeMultipart();
 			// Set text message part
 			multipart.addBodyPart(messageBodyPart);
@@ -174,10 +182,12 @@ public class EmailSender {
 			msg.setContent(multipart);
 		} else {
 			msg.setText(content != null ? content : "");
-			msg.setContent(content, "text/plain");
+			msg.setContent(content, (mimeType == null ? "text/plain" : mimeType));
 		}
 		msg.saveChanges();
-		if (verbose) System.out.println("sending:[" + content + "], " + Integer.toString(content.length()) + " characters");
+		if (verbose) {
+			System.out.println("sending:[" + content + "], " + Integer.toString(content.length()) + " characters");
+		}
 		Transport.send(msg);
 	}
 
