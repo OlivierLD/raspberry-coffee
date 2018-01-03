@@ -197,6 +197,13 @@ public class HTTPClient {
 	public static class HTTPResponse {
 		int code;
 		String response;
+
+		public int getCode() {
+			return this.code;
+		}
+		public String getPayload() {
+			return this.response;
+		}
 	}
 
 }
