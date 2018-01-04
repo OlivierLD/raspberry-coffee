@@ -33,18 +33,46 @@ public class Ephemeris {
 	// Tide Table:
 	// POST http://localhost:9999/tide/tide-stations/Ocean%20Beach%2C%20California/wh?from=2018-01-03T00:00:00&to=2018-01-04T00:00:01
 
+	private final static EmailSender sender = new EmailSender("google");
+	private static boolean keepLooping = true;
+
+	private static boolean keepLooping() {
+		return keepLooping;
+	}
 
 	public static void main(String... args) throws Exception {
-		go();
+
+		Thread loop = new Thread(() -> {
+			while (keepLooping()) {
+				try {
+					go();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				try {
+					Thread.sleep(1_000);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+			System.out.println("Stopped");
+		});
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			keepLooping = false;
+			System.out.println("Stopping.");
+			try {
+				Thread.sleep(2_000);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}));
+
+		loop.start();
 	}
 
 	/**
-	 * Requires the following parameters:
-	 *
-	 * - Server name and port
-	 * - Service resource path
-	 * - from, to, TZ
-	 * - latitude and longitude (From tide station)
+	 * TODO Isolate prms in a properties file.
 \	 */
 	private final static void go() throws Exception {
 
@@ -75,7 +103,8 @@ public class Ephemeris {
 				lat = (double)list.get(0).get("latitude");
 				lng = (double)list.get(0).get("longitude");
 
-				messageContent.append(String.format("<table style='font-family: Verdana;'><tr><td style='text-align: right;'>%s</td></tr><tr><td style='text-align: right;'>%s</td></tr></table>",
+				messageContent.append(String.format(
+						"<table style='font-family: Verdana;'><tr><td style='text-align: right;'>%s</td></tr><tr><td style='text-align: right;'>%s</td></tr></table>",
 						GeomUtil.decToSex(lat, GeomUtil.HTML, GeomUtil.NS, GeomUtil.TRAILING_SIGN),
 						GeomUtil.decToSex(lng, GeomUtil.HTML, GeomUtil.EW, GeomUtil.TRAILING_SIGN)));
 
@@ -195,7 +224,7 @@ public class Ephemeris {
 		String content = messageContent.toString();
 
 		// 4 - Send email
-		final EmailSender sender = new EmailSender("google");
+//	final EmailSender sender = new EmailSender("google");
 		String[] toEmails = { "olivier@lediouris.net", "olivier.lediouris@gmail.com" };
 		sender.send(
 				toEmails,
