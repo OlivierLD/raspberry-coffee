@@ -48,7 +48,7 @@ import com.eriwen.gradle.js.tasks.MinifyJsTask
 task minifyJS
 
 minifyJS.doLast {
-  fileTree(includes: ['**/*.js'], dir: 'web', excludes: ['minjs/*']).eachWithIndex { file, index ->
+  fileTree(includes: ['**/*.js'], dir: 'web', excludes: ['web/minjs/*']).eachWithIndex { file, index ->
     println ">>> Processing " + file.name
     def dynamicTask = "minify$index"
     task "${dynamicTask}" (type: MinifyJsTask) {
