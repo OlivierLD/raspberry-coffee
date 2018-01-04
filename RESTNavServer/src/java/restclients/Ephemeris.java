@@ -20,7 +20,7 @@ public class Ephemeris {
 
 	private final static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	private final static SimpleDateFormat TZ_ABR = new SimpleDateFormat("z");
-	private final static SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd");
+	private final static SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MMM-dd");
 	private final static SimpleDateFormat TIME_FMT = new SimpleDateFormat("HH:mm");
 
 	// Get the station position:
@@ -34,6 +34,10 @@ public class Ephemeris {
 	// POST http://localhost:9999/tide/tide-stations/Ocean%20Beach%2C%20California/wh?from=2018-01-03T00:00:00&to=2018-01-04T00:00:01
 
 
+	public static void main(String... args) throws Exception {
+		go();
+	}
+
 	/**
 	 * Requires the following parameters:
 	 *
@@ -41,13 +45,10 @@ public class Ephemeris {
 	 * - Service resource path
 	 * - from, to, TZ
 	 * - latitude and longitude (From tide station)
-	 *
-	 * @param args
-	 */
-	public static void main(String... args) throws Exception {
+\	 */
+	private final static void go() throws Exception {
 
-		String serverName = "localhost";
-		String serverPort = "9999";
+		String serverName = "localhost", serverPort = "9999";
 
 		String stationName = "Ocean Beach, California";
 		String url = "";
@@ -56,8 +57,8 @@ public class Ephemeris {
 
 		double lat = 0d, lng = 0d;
 
-		messageContent.append("<!DOCTYPE html>\n<html><body>");
-		messageContent.append(String.format("<h1>%s</h1>", stationName));
+		messageContent.append("<!DOCTYPE html><html><body>");
+		messageContent.append(String.format("<h2>%s</h2>", stationName));
 
 		// 1 - Get station position
 		String tideResourcePath = String.format("tide/tide-stations/%s", URLEncoder.encode(stationName, "UTF-8").replace("+", "%20"));
@@ -74,7 +75,7 @@ public class Ephemeris {
 				lat = (double)list.get(0).get("latitude");
 				lng = (double)list.get(0).get("longitude");
 
-				messageContent.append(String.format("<table><tr><td>%s</td></tr><tr><td>%s</td></tr></table>",
+				messageContent.append(String.format("<table style='font-family: Verdana;'><tr><td style='text-align: right;'>%s</td></tr><tr><td style='text-align: right;'>%s</td></tr></table>",
 						GeomUtil.decToSex(lat, GeomUtil.HTML, GeomUtil.NS, GeomUtil.TRAILING_SIGN),
 						GeomUtil.decToSex(lng, GeomUtil.HTML, GeomUtil.EW, GeomUtil.TRAILING_SIGN)));
 
@@ -91,6 +92,11 @@ public class Ephemeris {
 		now.set(Calendar.MINUTE, 0);
 		now.set(Calendar.SECOND, 0);
 		now.set(Calendar.MILLISECOND, 0); // Today at 00:00:00
+
+		// Date
+		messageContent.append("<hr/>");
+		messageContent.append(String.format("<p style='margin: 10px;'><span style='font-family: Verdana;'>%s</span></p>", DATE_FMT.format(now.getTime())));
+		messageContent.append("<hr/>");
 
 		long today = now.getTimeInMillis();
 		Calendar tomorrow = Calendar.getInstance();
@@ -117,14 +123,25 @@ public class Ephemeris {
 			StringReader stringReader = new StringReader(response.getPayload());
 			try {
 				Map<String, LinkedTreeMap> map = gson.fromJson(stringReader, Map.class);
+				messageContent.append("<table>");
 				for (String epoch : map.keySet()) {
 					LinkedTreeMap linkedTreeMap = map.get(epoch);
 					Date date = new Date(Long.parseLong(epoch));
-					System.out.println("Date > " + date.toString());
+//				System.out.println("Date > " + date.toString());
 					double riseTime = (double)linkedTreeMap.get("riseTime");
 					Date riseTimeDate = new Date(Math.round(riseTime));
-					System.out.println("Sun Rise > " + riseTimeDate.toString());
+
+					double setTime = (double)linkedTreeMap.get("setTime");
+					Date setTimeDate = new Date(Math.round(setTime));
+
+					double riseZ = (double)linkedTreeMap.get("riseZ");
+					double setZ = (double)linkedTreeMap.get("setZ");
+
+					messageContent.append(String.format("<tr><td>Sun Rise:</td><td>%s</td><td> - Z:</td><td>%d&deg;</td></tr>", TIME_FMT.format(riseTimeDate), Math.round(riseZ)));
+					messageContent.append(String.format("<tr><td>Sun Set:</td><td>%s</td><td> - Z:</td><td>%d&deg;</td></tr>", TIME_FMT.format(setTimeDate), Math.round(setZ)));
+					break;
 				}
+				messageContent.append("</table>");
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -140,6 +157,7 @@ public class Ephemeris {
 				from,
 				to);
 		url = String.format("http://%s:%s/%s", serverName, serverPort, tideResourcePath2);
+		messageContent.append("<hr/>");
 		try {
 			HTTPClient.HTTPResponse response = HTTPClient.doPost(
 					url,
@@ -152,15 +170,17 @@ public class Ephemeris {
 			try {
 				LinkedTreeMap map = (LinkedTreeMap)gson.fromJson(stringReader, Map.class);
 				List<LinkedTreeMap> table = (List<LinkedTreeMap>)map.get("table");
+				messageContent.append("<table>");
 				for (LinkedTreeMap tideEvent : table) {
 					String type = (String)tideEvent.get("type");
 					double value = (double)tideEvent.get("value");
 					String unit = (String)tideEvent.get("unit");
 					String fmtDate = (String)tideEvent.get("formattedDate");
 
-					String line = String.format("%s: %.02f %s, %s\n", type, value, unit, fmtDate);
+					String line = String.format("<tr><td>%s</td><td style='text-align: right;'>%.02f %s</td><td> - </td><td>%s</td></tr>", type, value, unit, fmtDate);
 					messageContent.append(line);
 				}
+				messageContent.append("</table>");
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -169,16 +189,17 @@ public class Ephemeris {
 			ex.printStackTrace();
 		}
 
+		messageContent.append("<hr/><i>by OlivSoft</i>");
+
 		messageContent.append("</body></html>");
 		String content = messageContent.toString();
 
-		System.out.println(content);
-
-		// 4 - Compose and send email
+		// 4 - Send email
 		final EmailSender sender = new EmailSender("google");
-		String[] emails = { "olivier@lediouris.net", "olivier.lediouris@gmail.com" };
-		sender.send(emails,
-				"Ephemeris",
+		String[] toEmails = { "olivier@lediouris.net", "olivier.lediouris@gmail.com" };
+		sender.send(
+				toEmails,
+				"Ephemeris for " + DATE_FMT.format(now.getTime()),
 				content,
 				"text/html;charset=utf-8");
 	}
