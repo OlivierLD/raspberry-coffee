@@ -20,7 +20,7 @@ var analogDisplayColorConfigWhite = {
 	digitColor: 'black',
 	withGradient: true,
 	displayBackgroundGradient: {from: 'LightGrey', to: 'white'},
-	withDisplayShadow: true,
+	withDisplayShadow: false,
 	shadowColor: 'rgba(0, 0, 0, 0.75)',
 	outlineColor: 'DarkGrey',
 	majorTickColor: 'black',
@@ -55,6 +55,28 @@ var analogDisplayColorConfigBlack = {
 	knobOutlineColor: 'blue',
 	font: 'Arial'
 };
+
+var analogDisplayColorConfigMonochrome = {
+	bgColor: 'rgba(0, 0, 0, 0.0)', /* 'white', */
+	digitColor: 'cyan',
+	withGradient: false,
+	displayBackgroundGradient: {from: 'LightGrey', to: 'white'},
+	withDisplayShadow: false,
+	shadowColor: 'rgba(0, 0, 0, 0.75)',
+	outlineColor: 'cyan',
+	majorTickColor: 'cyan',
+	minorTickColor: 'cyan',
+	valueColor: 'cyan',
+	valueOutlineColor: 'cyan',
+	valueNbDecimal: 1,
+	handColor: 'rgba(0, 0, 0, 0.0)',
+	handOutlineColor: 'cyan',
+	withHandShadow: false,
+	knobColor: 'rgba(0, 0, 0, 0.0)',
+	knobOutlineColor: 'cyan',
+	font: 'Arial' /* 'Source Code Pro' */
+};
+
 var analogDisplayColorConfig = analogDisplayColorConfigWhite; // analogDisplayColorConfigBlack; // White is the default
 
 function AnalogDisplay(cName,                     // Canvas Name
