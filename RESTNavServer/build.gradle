@@ -72,7 +72,7 @@ shadowJar {
 
 task finalize
 finalize.doLast {
-  println('Finally!')
+  println('Minifying JS')
   minifyJS.execute()
 }
 
