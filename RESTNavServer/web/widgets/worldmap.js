@@ -1700,8 +1700,8 @@ function WorldMap (cName, prj) {
 				var xLabel = Math.round(pt.x) + 3;
 				var yLabel = Math.round(pt.y) - 3;
 
-				context.fillStyle = 'yellow'; // worldmapColorConfig.canvasBackground;
-				context.fillRect( xLabel, yLabel - 14, metrics.width, 14);
+				// context.fillStyle = 'yellow'; // worldmapColorConfig.canvasBackground;
+				// context.fillRect( xLabel, yLabel - 14, metrics.width, 14);
 				// Text
 				context.fillStyle = (color !== undefined ? color : worldmapColorConfig.defaultPlotPointColor);
 				context.fillText(label, xLabel, yLabel);
