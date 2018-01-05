@@ -24,7 +24,7 @@ const tropicLat = 23.43698;
  * Relies on a rule named .worldmapdisplay, like that:
  *
  .worldmapdisplay {
-    --canvasBackground: "rgba(0, 0, 100, 10.0)";
+    --canvasBackground: "rgba(0, 0, 100, 1.0)";
     --defaultPlotPointColor: "red";
     --travelColor: "gray";
     --arrowBodyColor: 'rgba(255, 255, 255, 0.5)';
@@ -144,7 +144,7 @@ var getWorldmapColorConfig = function() {
 };
 
 var defaultWorldmapColorConfig = {
-  canvasBackground: "rgba(0, 0, 100, 10.0)",
+  canvasBackground: "rgba(0, 0, 100, 1.0)",
   defaultPlotPointColor: "red",
   travelColor: "gray",
   arrowBodyColor: 'rgba(255, 255, 255, 0.5)',
@@ -832,7 +832,7 @@ function WorldMap (cName, prj) {
 		grd.addColorStop(0, worldmapColorConfig.globeGradientFrom);
 		grd.addColorStop(1, worldmapColorConfig.globeGradientTo);
 
-		context.fillStyle = grd; // "rgba(0, 0, 100, 10.0)"; // Dark blue
+		context.fillStyle = grd; // "rgba(0, 0, 100, 1.0)"; // Dark blue
 
 		context.arc(canvas.width / 2, canvas.height / 2, radius, 0, 2 * Math.PI);
 		context.fill();
