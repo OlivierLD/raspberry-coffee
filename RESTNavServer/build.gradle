@@ -48,8 +48,8 @@ import com.eriwen.gradle.js.tasks.MinifyJsTask
 task minifyJS
 
 minifyJS.doLast {
-  fileTree(includes: ['**/*.js'], dir: 'web', excludes: ['web/minjs/*']).eachWithIndex { file, index ->
-    println ">>> Processing " + file.absolutePath
+  fileTree(dir: 'web', include: ['js/*.js', 'widgets/*.js'], exclude: ['minjs/*']).eachWithIndex { file, index ->
+    println ">>> Processing " + file.absoluteFile
     def dynamicTask = "minify$index"
     task "${dynamicTask}" (type: MinifyJsTask) {
       source = file.absolutePath;
@@ -70,10 +70,10 @@ shadowJar {
   zip64 true
 }
 
-//task finalize
-//finalize.doLast {
-//  println('Minifying JS')
-//  minifyJS.execute()
-//}
-//
-//shadowJar.finalizedBy(finalize)
+task finalize
+finalize.doLast {
+  println('Minifying JS')
+  minifyJS.execute()
+}
+
+shadowJar.finalizedBy(finalize)
