@@ -49,7 +49,7 @@ task minifyJS
 
 minifyJS.doLast {
   fileTree(includes: ['**/*.js'], dir: 'web', excludes: ['web/minjs/*']).eachWithIndex { file, index ->
-    println ">>> Processing " + file.name
+    println ">>> Processing " + file.absolutePath
     def dynamicTask = "minify$index"
     task "${dynamicTask}" (type: MinifyJsTask) {
       source = file.absolutePath;

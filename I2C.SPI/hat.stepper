@@ -5,6 +5,6 @@ echo Stepper Motor Demo
 #
 OPTS=
 OPTS="$OPTS -Drpm=30"
-OPTS="$OPTS -Dhat.debug=true"
+OPTS="$OPTS -Dhat.debug=false"
 #
 sudo java -cp $CP $OPTS i2c.samples.motorHAT.StepperDemo
