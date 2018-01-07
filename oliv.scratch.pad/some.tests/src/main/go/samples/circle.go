@@ -17,5 +17,5 @@ func (circle Circle) area() float64 {
 
 func main() {
 	circle := Circle{ x:0, y:0, radius:5 } // Curly braces!!
-	fmt.Printf("Circle area: %f", circle.area())
+	fmt.Printf("Circle area: %f\n", circle.area())
 }
