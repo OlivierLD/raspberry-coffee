@@ -19,7 +19,7 @@ public class ruleGenerator {
 	public static void main(String... args) {
 		int val = 234;
 		int[] rule = getRule(val);
-		String strRule = 		Arrays.stream(rule)
+		String strRule = Arrays.stream(rule)
 				.boxed()
 				.map(String::valueOf)
 				.collect(Collectors.joining(", "));
