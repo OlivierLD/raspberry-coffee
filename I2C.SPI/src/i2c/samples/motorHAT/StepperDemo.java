@@ -18,6 +18,9 @@ public class StepperDemo {
 	private static int nbStepsPerRev = AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS; // 200 steps per rev
 
 	public StepperDemo() throws I2CFactory.UnsupportedBusNumberException {
+
+		System.out.println("Starting Stepper Demo");
+
 		this.mh = new AdafruitMotorHAT(nbStepsPerRev); // Default addr 0x60
 		this.stepper = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);
 		this.stepper.setSpeed(Double.parseDouble(System.getProperty("rpm", DEFAULT_RPM))); // Default 30 RPM
