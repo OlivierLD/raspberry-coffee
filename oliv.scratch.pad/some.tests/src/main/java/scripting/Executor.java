@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Executor {
-//private final static String SCRIPT_TO_RUN = "es6" + File.separator + "out" + File.separator + "modules.consume.js"; // Transpiled
-	private final static String SCRIPT_TO_RUN = "es6" + File.separator + "modules.consume.js"; // Not transpiled
+	private final static String SCRIPT_TO_RUN = "es6" + File.separator + "out" + File.separator + "modules.consume.js"; // Transpiled
+//private final static String SCRIPT_TO_RUN = "es6" + File.separator + "modules.consume.js"; // Not transpiled
 
 	private final static String NASHORN_ARGS = "nashorn.args";
 	private final static String ES_6 = "--language=es6";
@@ -47,7 +47,9 @@ public class Executor {
 		}
 		// Another approach
 		try {
-			engine.eval(String.format("load('%s');", script));
+			String command = String.format("load('%s');", script);
+			System.out.println(String.format("Executing [%s]", command));
+			engine.eval(command);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -239,13 +239,13 @@ public class AdafruitMotorHAT {
 					} else {
 						this.currentStep -= ((int)(this.MICROSTEPS / 2));
 					}
-				}
-			} else {
-				// go to next even step
-				if (dir == ServoCommand.FORWARD) {
-					this.currentStep += this.MICROSTEPS;
 				} else {
-					this.currentStep -= this.MICROSTEPS;
+					// go to next even step
+					if (dir == ServoCommand.FORWARD) {
+						this.currentStep += this.MICROSTEPS;
+					} else {
+						this.currentStep -= this.MICROSTEPS;
+					}
 				}
 			}
 			if (style == Style.DOUBLE) {
