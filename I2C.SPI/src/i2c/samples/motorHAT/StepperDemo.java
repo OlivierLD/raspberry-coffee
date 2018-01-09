@@ -20,10 +20,12 @@ public class StepperDemo {
 	public StepperDemo() throws I2CFactory.UnsupportedBusNumberException {
 
 		System.out.println("Starting Stepper Demo");
+		int rpm = Integer.parseInt(System.getProperty("rpm", DEFAULT_RPM));
+		System.out.println(String.format("RPM set to %d.", rpm));
 
 		this.mh = new AdafruitMotorHAT(nbStepsPerRev); // Default addr 0x60
 		this.stepper = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);
-		this.stepper.setSpeed(Double.parseDouble(System.getProperty("rpm", DEFAULT_RPM))); // Default 30 RPM
+		this.stepper.setSpeed(rpm); // Default 30 RPM
 	}
 
 	public void go() {
