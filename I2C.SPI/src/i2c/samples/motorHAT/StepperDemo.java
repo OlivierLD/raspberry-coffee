@@ -33,7 +33,10 @@ public class StepperDemo {
 		while (keepGoing) {
 			try {
 				System.out.println(String.format(
-						"RPM set to %f, %d Steps per Rev, %f sec per step.",
+						"-------------------------------------------------------------\n" +
+						"Motor # %d, RPM set to %f, %d Steps per Rev, %f sec per step.\n" +
+						"-------------------------------------------------------------",
+						this.stepper.getMotorNum(),
 						this.stepper.getRPM(),
 						this.stepper.getStepPerRev(),
 						this.stepper.getSecPerStep()));
@@ -62,8 +65,8 @@ public class StepperDemo {
 			}
 			System.out.println("==== Again! ====");
 		}
-		try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 		System.out.println("... Done with the demo ...");
+		try { Thread.sleep(1_000); } catch (Exception ex) {} // Wait for the motors to be released.
 	}
 
 	public void stop() {
@@ -93,7 +96,7 @@ public class StepperDemo {
 		System.out.println("Hit Ctrl-C to stop the demo");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			demo.stop();
-			try { Thread.sleep(1_000); } catch (Exception absorbed) {}
+			try { Thread.sleep(5_000); } catch (Exception absorbed) {}
 		}));
 
 		demo.go();
