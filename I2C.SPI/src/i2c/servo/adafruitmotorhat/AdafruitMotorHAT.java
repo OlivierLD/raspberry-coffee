@@ -166,6 +166,8 @@ public class AdafruitMotorHAT {
 		public final static int PORT_M1_M2 = 1; // Port #1
 		public final static int PORT_M3_M4 = 2; // Port #2
 
+		private double rpm = 30; // Default
+
 		private AdafruitMotorHAT mc;
 		private int MICROSTEPS = 8;
 		private int[] MICROSTEP_CURVE = new int[] {
@@ -197,7 +199,13 @@ public class AdafruitMotorHAT {
 
 		public AdafruitStepperMotor(AdafruitMotorHAT controller, int num, int steps) {
 			this.mc = controller;
+			if (steps < 35 || steps > 200) {
+				throw new RuntimeException(String.format("StepsPerRevolution must be in [35..200], found %d", steps));
+			}
 			this.revSteps = steps;
+			if (num != PORT_M1_M2 && num != PORT_M3_M4) {
+				throw new RuntimeException(String.format("Motor Num can only be 1 or 2, found %d.", num));
+			}
 			this.motorNum = num;
 			this.secPerStep = 0.1;
 			this.steppingCounter = 0;
@@ -223,8 +231,25 @@ public class AdafruitMotorHAT {
 		}
 
 		public void setSpeed(double rpm) {
+			this.rpm = rpm;
 			this.secPerStep = 60.0 / (this.revSteps * rpm);
 			this.steppingCounter = 0;
+		}
+
+		public int getStepPerRev() {
+			return this.revSteps;
+		}
+
+		public int getMotorNum() {
+			return this.motorNum;
+		}
+
+		public double getSecPerStep() {
+			return this.secPerStep;
+		}
+
+		public double getRPM() {
+			return this.rpm;
 		}
 
 		public int oneStep(ServoCommand dir, Style style) throws IOException {
