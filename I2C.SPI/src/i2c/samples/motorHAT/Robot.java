@@ -5,6 +5,10 @@ import i2c.servo.adafruitmotorhat.AdafruitMotorHAT;
 
 import java.io.IOException;
 
+/**
+ * A robot, with 2 wheels.
+ * Each wheel is moved by a DC motor.
+ */
 public class Robot {
 	private int addr = 0x60;    // The I2C address of the motor HAT, default is 0x60.
 	private AdafruitMotorHAT.Motor leftMotorID = AdafruitMotorHAT.Motor.M1; // The ID of the left motor, default is 1.

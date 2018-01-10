@@ -4,6 +4,10 @@ import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
 
+/**
+ * Adapted from the python code at https://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git
+ * WIP.
+ */
 public class AdafruitMotorHAT {
 	public enum Style {
 		SINGLE, DOUBLE, INTERLEAVE, MICROSTEP
@@ -20,10 +24,8 @@ public class AdafruitMotorHAT {
 	public final static int STEPPER_1 = 1;
 	public final static int STEPPER_2 = 2;
 
-	private final static int HAT_ADDR = 0x60;
-	private final static int DEFAULT_FREQ = 1600;
-	private int freq = DEFAULT_FREQ;
-	private int i2cAddr = HAT_ADDR;
+	private final static int HAT_ADDR     = 0x60;
+	private final static int DEFAULT_FREQ = 1_600;
 
 	private AdafruitDCMotor motors[];
 	private AdafruitStepperMotor steppers[];
@@ -42,12 +44,11 @@ public class AdafruitMotorHAT {
 	}
 
 	public AdafruitMotorHAT(int addr, int freq, int nbSteps) throws I2CFactory.UnsupportedBusNumberException {
-		this.i2cAddr = addr;
-		this.freq = freq;
 		motors = new AdafruitDCMotor[4];
 		int i = 0;
-		for (Motor motor : Motor.values())
+		for (Motor motor : Motor.values()) {
 			motors[i++] = new AdafruitDCMotor(this, motor);
+		}
 		steppers = new AdafruitStepperMotor[2];
 		steppers[0] = new AdafruitStepperMotor(this, STEPPER_1, nbSteps);
 		steppers[1] = new AdafruitStepperMotor(this, STEPPER_2, nbSteps);
@@ -61,16 +62,16 @@ public class AdafruitMotorHAT {
 
 	public void setPin(int pin, int value) throws IOException {
 		if (pin < 0 || pin > 15) {
-			throw new RuntimeException("PWM pin must be in [0..15] : " + pin);
+			throw new RuntimeException("PWM pin must be in [0..15], found " + pin);
 		}
 		if (value != 0 && value != 1) {
-			throw new RuntimeException("Pin value must be 0 or 1! " + value);
+			throw new RuntimeException("Pin value must be 0 or 1, found " + value);
 		}
 		if (value == 0) {
-			this.pwm.setPWM(pin, (short) 0, (short) 4096);
+			this.pwm.setPWM(pin, (short) 0, (short) 4_096);
 		}
 		if (value == 1) {
-			this.pwm.setPWM(pin, (short) 4096, (short) 0);
+			this.pwm.setPWM(pin, (short) 4_096, (short) 0);
 		}
 	}
 
@@ -302,11 +303,11 @@ public class AdafruitMotorHAT {
 			this.currentStep += this.MICROSTEPS * 4;
 			this.currentStep %= this.MICROSTEPS * 4;
 
-			// only really used for microstepping, otherwise always on!
+			// only really used for microstepping, otherwise always on.
 			this.mc.pwm.setPWM(this.PWMA, (short) 0, (short) (pwmA * 16));
 			this.mc.pwm.setPWM(this.PWMB, (short) 0, (short) (pwmB * 16));
 
-			// set up coil energizing!
+			// set up coil energizing.
 			int coils[] = new int[]{0, 0, 0, 0};
 
 			if (style == Style.MICROSTEP) {

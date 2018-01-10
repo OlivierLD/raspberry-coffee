@@ -1,11 +1,14 @@
 package adafruit.io;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class Base64Util {
 	/**
@@ -19,8 +22,9 @@ public class Base64Util {
 		BufferedImage image = null;
 		byte[] imageByte;
 		try {
-			BASE64Decoder decoder = new BASE64Decoder();
-			imageByte = decoder.decodeBuffer(imageString);
+			Base64.Decoder mimeDecoder = java.util.Base64.getMimeDecoder();
+			imageByte = mimeDecoder.decode(imageString);
+
 			ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
 			image = ImageIO.read(bis);
 			bis.close();
@@ -45,8 +49,7 @@ public class Base64Util {
 			ImageIO.write(image, type, bos);
 			byte[] imageBytes = bos.toByteArray();
 
-			BASE64Encoder encoder = new BASE64Encoder();
-			imageString = encoder.encode(imageBytes);
+			imageString = new String(java.util.Base64.getMimeEncoder().encode(imageBytes), StandardCharsets.UTF_8);
 
 			bos.close();
 		} catch (IOException e) {
