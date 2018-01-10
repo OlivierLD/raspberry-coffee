@@ -14,6 +14,7 @@ public class StepperDemo {
 
 	private boolean keepGoing = true;
 	private final static String DEFAULT_RPM = "30";
+	int nbSteps = 100;
 
 	private static int nbStepsPerRev = AdafruitMotorHAT.AdafruitStepperMotor.DEFAULT_NB_STEPS; // 200 steps per rev
 
@@ -22,6 +23,8 @@ public class StepperDemo {
 		System.out.println("Starting Stepper Demo");
 		int rpm = Integer.parseInt(System.getProperty("rpm", DEFAULT_RPM));
 		System.out.println(String.format("RPM set to %d.", rpm));
+
+		nbSteps = Integer.parseInt(System.getProperty("steps", "100"));
 
 		this.mh = new AdafruitMotorHAT(nbStepsPerRev); // Default addr 0x60
 		this.stepper = mh.getStepper(AdafruitMotorHAT.AdafruitStepperMotor.PORT_M1_M2);
@@ -33,33 +36,34 @@ public class StepperDemo {
 		while (keepGoing) {
 			try {
 				System.out.println(String.format(
-						"-------------------------------------------------------------\n" +
-						"Motor # %d, RPM set to %f, %d Steps per Rev, %f sec per step.\n" +
-						"-------------------------------------------------------------",
+						"-----------------------------------------------------------------------------------\n" +
+						"Motor # %d, RPM set to %f, %d Steps per Rev, %f sec per step, %d steps per move.\n" +
+						"-----------------------------------------------------------------------------------",
 						this.stepper.getMotorNum(),
 						this.stepper.getRPM(),
 						this.stepper.getStepPerRev(),
-						this.stepper.getSecPerStep()));
+						this.stepper.getSecPerStep(),
+						nbSteps));
 				System.out.println("-- Single coil steps --");
 				System.out.println("  Forward");
-				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.SINGLE);
+				this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.SINGLE);
 				System.out.println("  Backward");
-				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.SINGLE);
+				this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.SINGLE);
 				System.out.println("-- Double coil steps --");
 				System.out.println("  Forward");
-				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.DOUBLE);
+				this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.DOUBLE);
 				System.out.println("  Backward");
-				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.DOUBLE);
+				this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.DOUBLE);
 				System.out.println("-- Interleaved coil steps --");
 				System.out.println("  Forward");
-				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.INTERLEAVE);
+				this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.INTERLEAVE);
 				System.out.println("  Backward");
-				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.INTERLEAVE);
+				this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.INTERLEAVE);
 				System.out.println("-- Microsteps --");
 				System.out.println("  Forward");
-				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.MICROSTEP);
+				this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.MICROSTEP);
 				System.out.println("  Backward");
-				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.MICROSTEP);
+				this.stepper.step(nbSteps, AdafruitMotorHAT.ServoCommand.BACKWARD, AdafruitMotorHAT.Style.MICROSTEP);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
