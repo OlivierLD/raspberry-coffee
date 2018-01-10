@@ -116,7 +116,7 @@ public class StepperDemo {
 		System.out.println("Hit Ctrl-C to stop the demo");
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			demo.stop();
-			try { Thread.sleep(20_000); } catch (Exception absorbed) {}
+			try { Thread.sleep(5_000); } catch (Exception absorbed) {}
 		}));
 
 		demo.go();
