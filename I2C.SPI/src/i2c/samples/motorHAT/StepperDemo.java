@@ -32,6 +32,7 @@ public class StepperDemo {
 		keepGoing = true;
 		while (keepGoing) {
 			try {
+				System.out.println(String.format("RPM set to %f, %f Steps per Rev, %f sec per step.", this.stepper.getRPM(), this.stepper.getStepPerRev(), this.stepper.getSecPerStep()));
 				System.out.println("-- Single coil steps --");
 				System.out.println("  Forward");
 				this.stepper.step(100, AdafruitMotorHAT.ServoCommand.FORWARD, AdafruitMotorHAT.Style.SINGLE);
