@@ -1,5 +1,5 @@
 #!/bin/bash
-echo To instaall trhe transpiler, run:
+echo To install the transpiler, run:
 echo sudo npm install -g es6-module-transpiler
 #
 echo Now transpiling

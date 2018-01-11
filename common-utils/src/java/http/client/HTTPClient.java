@@ -33,7 +33,9 @@ public class HTTPClient {
 			conn.setUseCaches(false);
 			responseCode = conn.getResponseCode();
 
-			if (DEBUG) System.out.println("Done. (" + responseCode + ")");
+			if (DEBUG) {
+				System.out.println("Done. (" + responseCode + ")");
+			}
 
 			InputStream is = conn.getInputStream();
 			byte aByte[] = new byte[2];
@@ -49,7 +51,9 @@ public class HTTPClient {
 					long now = System.currentTimeMillis();
 					long delta = now - started;
 					double rate = (double) content.length / ((double) delta / 1_000D);
-					if (DEBUG) System.out.println("Downloading at " + rate + " bytes per second.");
+					if (DEBUG) {
+						System.out.println("Downloading at " + rate + " bytes per second.");
+					}
 					nbLoop++;
 				}
 			}
@@ -67,7 +71,7 @@ public class HTTPClient {
 		return getContent;
 	}
 
-	public static int doPost(String urlStr, Map<String, String> headers, String payload) throws Exception {
+	public static HTTPResponse doPost(String urlStr, Map<String, String> headers, String payload) throws Exception {
 		int responseCode = 0;
 		URL url = new URL(urlStr);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -91,19 +95,25 @@ public class HTTPClient {
 
 		responseCode = conn.getResponseCode();
 
+		HTTPResponse response = new HTTPResponse();
+		response.code = responseCode;
+
 		if (true) {
 			// Response payload
 			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
+			StringBuffer sb = new StringBuffer();
 			String output;
-			System.out.println("Output from Server .... \n");
+//		System.out.println("Output from Server .... \n");
 			while ((output = br.readLine()) != null) {
-				System.out.println(output);
+//			System.out.println(output);
+				sb.append(output);
 			}
+			response.response = sb.toString();
 		}
 		conn.disconnect();
 
-		return responseCode;
+		return response;
 	}
 
 	public static int doCustomVerb(String verb, String urlStr, Map<String, String> headers, String payload) throws Exception {
@@ -182,6 +192,18 @@ public class HTTPClient {
 
 		newContent[newLength - 1] = b;
 		return newContent;
+	}
+
+	public static class HTTPResponse {
+		int code;
+		String response;
+
+		public int getCode() {
+			return this.code;
+		}
+		public String getPayload() {
+			return this.response;
+		}
 	}
 
 }

@@ -2,7 +2,7 @@ package battery.email;
 
 import adc.ADCObserver;
 import adc.sample.BatteryMonitor;
-import pi4j.email.EmailSender;
+import email.EmailSender;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

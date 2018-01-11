@@ -21,7 +21,7 @@ classes/
 classes/*
 doc/
 I2C/src/misc
-PI4J.email/email.properties
+*/email.properties
 node_modules/
 RaspberryPI.doc/
 RasPISamples.2/

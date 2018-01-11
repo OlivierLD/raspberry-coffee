@@ -62,7 +62,7 @@ public class PCA9685 {
 	public void setPWMFreq(int freq) {
 		this.freq = freq;
 		float preScaleVal = 25_000_000.0f; // 25MHz
-		preScaleVal /= 4096.0;           // 4096: 12-bit
+		preScaleVal /= 4_096.0;           // 4096: 12-bit
 		preScaleVal /= freq;
 		preScaleVal -= 1.0;
 		if (verbose) {
@@ -96,10 +96,10 @@ public class PCA9685 {
 		if (channel < 0 || channel > 15) {
 			throw new IllegalArgumentException("Channel must be in [0, 15]");
 		}
-		if (on < 0 || on > 4095) {
+		if (on < 0 || on > 4_095) {
 			throw new IllegalArgumentException("On must be in [0, 4095]");
 		}
-		if (off < 0 || off > 4095) {
+		if (off < 0 || off > 4_095) {
 			throw new IllegalArgumentException("Off must be in [0, 4095]");
 		}
 		if (on > off) {
@@ -130,7 +130,7 @@ public class PCA9685 {
 	public void setServoPulse(int channel, float pulseMS) {
 		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
 		pulseLength /= this.freq;  // 40..1000 Hz
-		pulseLength /= 4096;       // 12 bits of resolution
+		pulseLength /= 4_096;       // 12 bits of resolution
 		int pulse = (int) (pulseMS * 1_000);
 		pulse /= pulseLength;
 		if (verbose) {
@@ -149,8 +149,9 @@ public class PCA9685 {
 	 */
 	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
 		int freq = 60;
-		if (args.length > 0)
+		if (args.length > 0) {
 			freq = Integer.parseInt(args[0]);
+		}
 		PCA9685 servoBoard = new PCA9685();
 		servoBoard.setPWMFreq(freq); // Set frequency to 60 Hz
 		int servoMin = 122; // 130;   // was 150. Min pulse length out of 4096
@@ -225,7 +226,7 @@ public class PCA9685 {
 	public static void main__(String[] args) {
 		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
 		pulseLength /= 250;  // 40..1000 Hz
-		pulseLength /= 4096; // 12 bits of resolution
+		pulseLength /= 4_096; // 12 bits of resolution
 		int pulse = (int) (1.5 * 1_000);
 		pulse /= pulseLength;
 		if (verbose) {

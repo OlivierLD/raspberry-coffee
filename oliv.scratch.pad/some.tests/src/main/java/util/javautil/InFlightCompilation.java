@@ -69,20 +69,22 @@ public class InFlightCompilation {
 	                                             boolean deleteClassWhenLoaded) throws Exception {
 		Class loaded = null;
 
-		if (compiler == null)
+		if (compiler == null) {
 			compiler = ToolProvider.getSystemJavaCompiler();
-		if (diagnostics == null)
-			diagnostics = new DiagnosticCollector<JavaFileObject>();
+		}
+		if (diagnostics == null) {
+			diagnostics = new DiagnosticCollector<>();
+		}
 
 //  JavaFileManager jfm = compiler.getStandardFileManager(null, null, null);
 
 		// "Files" to compiles
-		ArrayList<JavaFileObject> sfs = new ArrayList<JavaFileObject>();
+		ArrayList<JavaFileObject> sfs = new ArrayList<>();
 		sfs.add(new JavaSourceFromString(className, code));
 		Iterable<? extends JavaFileObject> compilationUnits = sfs;
 
 		// Call compiler task
-		ArrayList<String> options = new ArrayList<String>();
+		ArrayList<String> options = new ArrayList<>();
 		if (classDir != null) {
 			options.add("-d");
 			options.add(classDir);
@@ -95,12 +97,12 @@ public class InFlightCompilation {
 
 		System.out.print("Compiling...");
 		JavaMemFileManager jmfm = null;
-		if (classDir == null)
+		if (classDir == null) {
 			jmfm = new JavaMemFileManager(); // Compiled class is not written on the file system, remains in memory.
-
-		if (customClassLoader != null && jmfm != null)
+		}
+		if (customClassLoader != null && jmfm != null) {
 			jmfm.replaceClassLoader(customClassLoader); // Does not work, no impact...
-
+		}
 		if (false) {
 			ClassLoader clldr = jmfm.getClassLoader(StandardLocation.CLASS_PATH);
 			if (clldr != null) {
@@ -111,8 +113,9 @@ public class InFlightCompilation {
 				} catch (ClassNotFoundException cnfe) {
 					System.err.println(clsName + ":NOT LOADED");
 				}
-			} else
+			} else {
 				System.out.println("CLassLoader is null :(");
+			}
 		}
 
 		JavaCompiler.CompilationTask task = compiler.getTask(null, jmfm, diagnostics, options, null, compilationUnits);
@@ -153,17 +156,19 @@ public class InFlightCompilation {
 				try {
 					long length = classFile.length();
 					InputStream cis = new FileInputStream(classFile);
-					if (length > Integer.MAX_VALUE)
+					if (length > Integer.MAX_VALUE) {
 						throw new RuntimeException("Class file too large...");
-					else {
+					} else {
 						// Read bytes from the class
 						byte[] bytes = new byte[(int) length];
 						int offset = 0, numread = 0;
-						while (offset < bytes.length && (numread = cis.read(bytes, offset, bytes.length - offset)) >= 0)
+						while (offset < bytes.length && (numread = cis.read(bytes, offset, bytes.length - offset)) >= 0) {
 							offset += numread;
+						}
 						cis.close();
-						if (deleteClassWhenLoaded)
+						if (deleteClassWhenLoaded) {
 							classFile.delete();
+						}
 						loaded = customClassLoader.getClassFromBytes(packageName + "." + className, bytes);
 					}
 				} catch (Exception ex) {
@@ -191,10 +196,9 @@ public class InFlightCompilation {
 					"      System.out.println(\"End of output.\");\n" +
 					"   }\n" +
 					"\n" +
-					"    public void sayHi(String name)\n" +
-					"    {\n" +
-					"      System.out.println(\"Hi \" + name);\n" +
-					"    }\n" +
+					"   public void sayHi(String name) {\n" +
+					"     System.out.println(\"Hi \" + name);\n" +
+					"   }\n" +
 					"}";
 
 	public static void main(String[] args) throws Exception {
@@ -236,8 +240,9 @@ public class InFlightCompilation {
 		}
 		if (customClassLoader != null) {
 			System.out.println("CustomClassLoader is not null, good.");
-		} else
+		} else {
 			System.out.println("CustomClassLoader is null");
+		}
 
 		if (false) {
 			try {
@@ -277,15 +282,12 @@ public class InFlightCompilation {
 		String newCode =
 				"package test;\n" +
 						"\n" +
-						"public class extendedTest extends " + newClass.getName() + "\n" +
+						"public class extendedTest extends " + newClass.getName() + " {\n" +
 						//  "public class extendedTest extends test.MyClass\n" +
-						"{\n" +
-						"  public void sayHi(String name)\n" +
-						"  {\n" +
+						"  public void sayHi(String name) {\n" +
 						"    System.out.println(\"Hello Mr \" + name);\n" +
 						"  }\n" +
-						"  public String greetings(String name)\n" +
-						"  {\n" +
+						"  public String greetings(String name) {\n" +
 						"    return(\"Hello Mr \" + name);\n" +
 						"  }\n" +
 						"}";
@@ -356,7 +358,7 @@ public class InFlightCompilation {
 	}
 
 	public static class JavaMemFileManager extends ForwardingJavaFileManager {
-		private HashMap<String, ClassMemFileObject> classes = new HashMap<String, ClassMemFileObject>();
+		private HashMap<String, ClassMemFileObject> classes = new HashMap<>();
 		private ClassLoader customClsLoader = null;
 
 
@@ -394,8 +396,9 @@ public class InFlightCompilation {
 		@Override
 		public ClassLoader getClassLoader(JavaFileManager.Location location) {
 			ClassLoader cl = customClsLoader;
-			if (cl == null)
+			if (cl == null) {
 				cl = super.getClassLoader(location);
+			}
 			return cl;
 		}
 	}

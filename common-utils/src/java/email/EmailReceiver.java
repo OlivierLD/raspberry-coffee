@@ -1,18 +1,4 @@
-package pi4j.email;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+package email;
 
 import javax.mail.Address;
 import javax.mail.Flags;
@@ -27,9 +13,19 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.search.AndTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.FromStringTerm;
-import javax.mail.search.OrTerm;
 import javax.mail.search.SearchTerm;
-import javax.mail.search.SubjectTerm;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
 public class EmailReceiver {
 	private static String protocol;

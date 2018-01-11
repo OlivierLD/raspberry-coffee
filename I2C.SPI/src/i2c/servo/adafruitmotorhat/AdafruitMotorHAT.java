@@ -4,6 +4,10 @@ import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
 
+/**
+ * Adapted from the python code at https://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git
+ * WIP.
+ */
 public class AdafruitMotorHAT {
 	public enum Style {
 		SINGLE, DOUBLE, INTERLEAVE, MICROSTEP
@@ -20,10 +24,8 @@ public class AdafruitMotorHAT {
 	public final static int STEPPER_1 = 1;
 	public final static int STEPPER_2 = 2;
 
-	private final static int HAT_ADDR = 0x60;
-	private final static int DEFAULT_FREQ = 1600;
-	private int freq = DEFAULT_FREQ;
-	private int i2cAddr = HAT_ADDR;
+	private final static int HAT_ADDR     = 0x60;
+	private final static int DEFAULT_FREQ = 1_600;
 
 	private AdafruitDCMotor motors[];
 	private AdafruitStepperMotor steppers[];
@@ -42,12 +44,11 @@ public class AdafruitMotorHAT {
 	}
 
 	public AdafruitMotorHAT(int addr, int freq, int nbSteps) throws I2CFactory.UnsupportedBusNumberException {
-		this.i2cAddr = addr;
-		this.freq = freq;
 		motors = new AdafruitDCMotor[4];
 		int i = 0;
-		for (Motor motor : Motor.values())
+		for (Motor motor : Motor.values()) {
 			motors[i++] = new AdafruitDCMotor(this, motor);
+		}
 		steppers = new AdafruitStepperMotor[2];
 		steppers[0] = new AdafruitStepperMotor(this, STEPPER_1, nbSteps);
 		steppers[1] = new AdafruitStepperMotor(this, STEPPER_2, nbSteps);
@@ -60,19 +61,24 @@ public class AdafruitMotorHAT {
 	}
 
 	public void setPin(int pin, int value) throws IOException {
-		if (pin < 0 || pin > 15)
-			throw new RuntimeException("PWM pin must be in [0..15] : " + pin);
-		if (value != 0 && value != 1)
-			throw new RuntimeException("Pin value must be 0 or 1! " + value);
-		if (value == 0)
-			this.pwm.setPWM(pin, (short) 0, (short) 4096);
-		if (value == 1)
-			this.pwm.setPWM(pin, (short) 4096, (short) 0);
+		if (pin < 0 || pin > 15) {
+			throw new RuntimeException("PWM pin must be in [0..15], found " + pin);
+		}
+		if (value != 0 && value != 1) {
+			throw new RuntimeException("Pin value must be 0 or 1, found " + value);
+		}
+		if (value == 0) {
+			this.pwm.setPWM(pin, (short) 0, (short) 4_096);
+		}
+		if (value == 1) {
+			this.pwm.setPWM(pin, (short) 4_096, (short) 0);
+		}
 	}
 
 	public AdafruitStepperMotor getStepper(int num) {
-		if (num != STEPPER_1 && num != STEPPER_2)
+		if (num != STEPPER_1 && num != STEPPER_2) {
 			throw new RuntimeException("MotorHAT Stepper must be 1 or 2.");
+		}
 		return steppers[num - 1];
 	}
 
@@ -130,9 +136,9 @@ public class AdafruitMotorHAT {
 		}
 
 		public void run(ServoCommand command) throws IOException {
-			if (this.mh == null)
+			if (this.mh == null) {
 				return;
-
+			}
 			if (command == ServoCommand.FORWARD) {
 				this.mh.setPin(this.IN2pin, 0);
 				this.mh.setPin(this.IN1pin, 1);
@@ -160,11 +166,18 @@ public class AdafruitMotorHAT {
 		public final static int PORT_M1_M2 = 1; // Port #1
 		public final static int PORT_M3_M4 = 2; // Port #2
 
+		private double rpm = 30; // Default
+
 		private AdafruitMotorHAT mc;
 		private int MICROSTEPS = 8;
 		private int[] MICROSTEP_CURVE = new int[] {
 				0, 50, 98, 142, 180, 212, 236, 250, 255
 		};
+//		private int MICROSTEPS = 16;
+//		// a sinusoidal curve NOT LINEAR!
+//		private int[] MICROSTEP_CURVE = new int[] {
+//				0, 25, 50, 74, 98, 120, 141, 162, 180, 197, 212, 225, 236, 244, 250, 253, 255
+//		};
 
 		public final static int DEFAULT_NB_STEPS = 200; // between 35 & 200. Nb steps per revolution.
 
@@ -181,17 +194,19 @@ public class AdafruitMotorHAT {
 		private int steppingCounter = 0;
 		private int currentStep = 0;
 
-		// MICROSTEPS = 16
-		// a sinusoidal curve NOT LINEAR!
-		// MICROSTEP_CURVE = [0, 25, 50, 74, 98, 120, 141, 162, 180, 197, 212, 225, 236, 244, 250, 253, 255]
-
 		public AdafruitStepperMotor(AdafruitMotorHAT controller, int num) {
 			this(controller, num, DEFAULT_NB_STEPS);
 		}
 
 		public AdafruitStepperMotor(AdafruitMotorHAT controller, int num, int steps) {
 			this.mc = controller;
+			if (steps < 35 || steps > 200) {
+				throw new RuntimeException(String.format("StepsPerRevolution must be in [35..200], found %d", steps));
+			}
 			this.revSteps = steps;
+			if (num != PORT_M1_M2 && num != PORT_M3_M4) {
+				throw new RuntimeException(String.format("Motor Num can only be 1 or 2, found %d.", num));
+			}
 			this.motorNum = num;
 			this.secPerStep = 0.1;
 			this.steppingCounter = 0;
@@ -217,8 +232,25 @@ public class AdafruitMotorHAT {
 		}
 
 		public void setSpeed(double rpm) {
+			this.rpm = rpm;
 			this.secPerStep = 60.0 / (this.revSteps * rpm);
 			this.steppingCounter = 0;
+		}
+
+		public int getStepPerRev() {
+			return this.revSteps;
+		}
+
+		public int getMotorNum() {
+			return this.motorNum;
+		}
+
+		public double getSecPerStep() {
+			return this.secPerStep;
+		}
+
+		public double getRPM() {
+			return this.rpm;
 		}
 
 		public int oneStep(ServoCommand dir, Style style) throws IOException {
@@ -227,29 +259,28 @@ public class AdafruitMotorHAT {
 
 			// first determine what sort of stepping procedure we're up to
 			if (style == Style.SINGLE) {
-				if ((this.currentStep / (this.MICROSTEPS / 2)) % 2 == 1) {
+				if ((int)(this.currentStep / (int)(this.MICROSTEPS / 2)) % 2 == 1) {
 					// we're at an odd step, weird
 					if (dir == ServoCommand.FORWARD) {
-						this.currentStep += this.MICROSTEPS / 2;
+						this.currentStep += ((int)(this.MICROSTEPS / 2));
 					} else {
-						this.currentStep -= this.MICROSTEPS / 2;
+						this.currentStep -= ((int)(this.MICROSTEPS / 2));
+					}
+				} else {
+					// go to next even step
+					if (dir == ServoCommand.FORWARD) {
+						this.currentStep += this.MICROSTEPS;
+					} else {
+						this.currentStep -= this.MICROSTEPS;
 					}
 				}
-			} else {
-				// go to next even step
-				if (dir == ServoCommand.FORWARD) {
-					this.currentStep += this.MICROSTEPS;
-				} else {
-					this.currentStep -= this.MICROSTEPS;
-				}
-			}
-			if (style == Style.DOUBLE) {
-				if (this.currentStep / (this.MICROSTEPS / 2) % 2 == 0) {
+			} else if (style == Style.DOUBLE) {
+				if ((int)(this.currentStep / (int)(this.MICROSTEPS / 2)) % 2 == 0) {
 					// we're at an even step, weird
 					if (dir == ServoCommand.FORWARD) {
-						this.currentStep += this.MICROSTEPS / 2;
+						this.currentStep += ((int)(this.MICROSTEPS / 2));
 					} else {
-						this.currentStep -= this.MICROSTEPS / 2;
+						this.currentStep -= ((int)(this.MICROSTEPS / 2));
 					}
 				} else {
 					// go to next odd step
@@ -259,74 +290,71 @@ public class AdafruitMotorHAT {
 						this.currentStep -= this.MICROSTEPS;
 					}
 				}
-			}
-			if (style == Style.INTERLEAVE) {
+			} else if (style == Style.INTERLEAVE) {
 				if (dir == ServoCommand.FORWARD) {
-					this.currentStep += this.MICROSTEPS / 2;
+					this.currentStep += ((int)(this.MICROSTEPS / 2));
 				} else {
-					this.currentStep -= this.MICROSTEPS / 2;
+					this.currentStep -= ((int)(this.MICROSTEPS / 2));
 				}
-			}
-			if (style == Style.MICROSTEP) {
+			} else if (style == Style.MICROSTEP) {
 				if (dir == ServoCommand.FORWARD) {
 					this.currentStep += 1;
 				} else {
 					this.currentStep -= 1;
+					// go to next 'step' and wrap around
+					this.currentStep += this.MICROSTEPS * 4;
+					this.currentStep %= this.MICROSTEPS * 4;
+				}
+				pwmA = 0;
+				pwmB = 0;
+				if (this.currentStep >= 0 && this.currentStep < this.MICROSTEPS) {
+					pwmA = this.MICROSTEP_CURVE[this.MICROSTEPS - this.currentStep];
+					pwmB = this.MICROSTEP_CURVE[this.currentStep];
+				} else if (this.currentStep >= this.MICROSTEPS && this.currentStep < this.MICROSTEPS * 2) {
+					pwmA = this.MICROSTEP_CURVE[this.currentStep - this.MICROSTEPS];
+					pwmB = this.MICROSTEP_CURVE[this.MICROSTEPS * 2 - this.currentStep];
+				} else if (this.currentStep >= this.MICROSTEPS * 2 && this.currentStep < this.MICROSTEPS * 3) {
+					pwmA = this.MICROSTEP_CURVE[this.MICROSTEPS * 3 - this.currentStep];
+					pwmB = this.MICROSTEP_CURVE[this.currentStep - this.MICROSTEPS * 2];
+				} else if (this.currentStep >= this.MICROSTEPS * 3 && this.currentStep < this.MICROSTEPS * 4) {
+					pwmA = this.MICROSTEP_CURVE[this.currentStep - this.MICROSTEPS * 3];
+					pwmB = this.MICROSTEP_CURVE[this.MICROSTEPS * 4 - this.currentStep];
 				}
 			}
-			// go to next 'step' and wrap around
-			this.currentStep += this.MICROSTEPS * 4;
-			this.currentStep %= this.MICROSTEPS * 4;
-
-			pwmA = 0;
-			pwmB = 0;
-			if (this.currentStep >= 0 && this.currentStep < this.MICROSTEPS) {
-				pwmA = this.MICROSTEP_CURVE[this.MICROSTEPS - this.currentStep];
-				pwmB = this.MICROSTEP_CURVE[this.currentStep];
-			} else if (this.currentStep >= this.MICROSTEPS && this.currentStep < this.MICROSTEPS * 2) {
-				pwmA = this.MICROSTEP_CURVE[this.currentStep - this.MICROSTEPS];
-				pwmB = this.MICROSTEP_CURVE[this.MICROSTEPS * 2 - this.currentStep];
-			} else if (this.currentStep >= this.MICROSTEPS * 2 && this.currentStep < this.MICROSTEPS * 3) {
-				pwmA = this.MICROSTEP_CURVE[this.MICROSTEPS * 3 - this.currentStep];
-				pwmB = this.MICROSTEP_CURVE[this.currentStep - this.MICROSTEPS * 2];
-			} else if (this.currentStep >= this.MICROSTEPS * 3 && this.currentStep < this.MICROSTEPS * 4) {
-				pwmA = this.MICROSTEP_CURVE[this.currentStep - this.MICROSTEPS * 3];
-				pwmB = this.MICROSTEP_CURVE[this.MICROSTEPS * 4 - this.currentStep];
-			}
 
 			// go to next 'step' and wrap around
 			this.currentStep += this.MICROSTEPS * 4;
 			this.currentStep %= this.MICROSTEPS * 4;
 
-			// only really used for microstepping, otherwise always on!
+			// only really used for microstepping, otherwise always on.
 			this.mc.pwm.setPWM(this.PWMA, (short) 0, (short) (pwmA * 16));
 			this.mc.pwm.setPWM(this.PWMB, (short) 0, (short) (pwmB * 16));
 
-			// set up coil energizing!
-			int coils[] = new int[]{0, 0, 0, 0};
+			// set up coil energizing.
+			int coils[] = new int[]{ 0, 0, 0, 0 };
 
 			if (style == Style.MICROSTEP) {
 				if (this.currentStep >= 0 && this.currentStep < this.MICROSTEPS) {
-					coils = new int[]{1, 1, 0, 0};
+					coils = new int[] { 1, 1, 0, 0 };
 				} else if (this.currentStep >= this.MICROSTEPS && this.currentStep < this.MICROSTEPS * 2) {
-					coils = new int[]{0, 1, 1, 0};
+					coils = new int[] { 0, 1, 1, 0 };
 				} else if (this.currentStep >= this.MICROSTEPS * 2 && this.currentStep < this.MICROSTEPS * 3) {
-					coils = new int[]{0, 0, 1, 1};
+					coils = new int[] { 0, 0, 1, 1 };
 				} else if (this.currentStep >= this.MICROSTEPS * 3 && this.currentStep < this.MICROSTEPS * 4) {
-					coils = new int[]{1, 0, 0, 1};
+					coils = new int[] { 1, 0, 0, 1 };
 				}
 			} else {
-				int[][] step2coils = new int[][]{
-						{1, 0, 0, 0},
-						{1, 1, 0, 0},
-						{0, 1, 0, 0},
-						{0, 1, 1, 0},
-						{0, 0, 1, 0},
-						{0, 0, 1, 1},
-						{0, 0, 0, 1},
-						{1, 0, 0, 1}
+				int[][] step2coils = new int[][] {
+						{ 1, 0, 0, 0 },
+						{ 1, 1, 0, 0 },
+						{ 0, 1, 0, 0 },
+						{ 0, 1, 1, 0 },
+						{ 0, 0, 1, 0 },
+						{ 0, 0, 1, 1 },
+						{ 0, 0, 0, 1 },
+						{ 1, 0, 0, 1 }
 				};
-				coils = step2coils[this.currentStep / (this.MICROSTEPS / 2)];
+				coils = step2coils[(int)(this.currentStep / (int)(this.MICROSTEPS / 2))];
 			}
 			// print "coils state = " + str(coils)
 			this.mc.setPin(this.AIN2, coils[0]);
@@ -343,8 +371,7 @@ public class AdafruitMotorHAT {
 
 			if (stepStyle == Style.INTERLEAVE) {
 				sPerS = sPerS / 2.0;
-			}
-			if (stepStyle == Style.MICROSTEP) {
+			} else if (stepStyle == Style.MICROSTEP) {
 				sPerS /= this.MICROSTEPS;
 				steps *= this.MICROSTEPS;
 			}

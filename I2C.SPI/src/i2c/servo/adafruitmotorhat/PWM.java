@@ -6,29 +6,32 @@ import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
 
+/**
+ * Also see {@link i2c.servo.pwm.PCA9685}
+ */
 public class PWM {
 	// Registers/etc.
-	private final static int MODE1 = 0x00;
-	private final static int MODE2 = 0x01;
-	private final static int SUBADR1 = 0x02;
-	private final static int SUBADR2 = 0x03;
-	private final static int SUBADR3 = 0x04;
-	private final static int PRESCALE = 0xFE;
-	private final static int LED0_ON_L = 0x06;
-	private final static int LED0_ON_H = 0x07;
-	private final static int LED0_OFF_L = 0x08;
-	private final static int LED0_OFF_H = 0x09;
-	private final static int ALL_LED_ON_L = 0xFA;
-	private final static int ALL_LED_ON_H = 0xFB;
+	private final static int MODE1         = 0x00;
+	private final static int MODE2         = 0x01;
+	private final static int SUBADR1       = 0x02;
+	private final static int SUBADR2       = 0x03;
+	private final static int SUBADR3       = 0x04;
+	private final static int PRESCALE      = 0xFE;
+	private final static int LED0_ON_L     = 0x06;
+	private final static int LED0_ON_H     = 0x07;
+	private final static int LED0_OFF_L    = 0x08;
+	private final static int LED0_OFF_H    = 0x09;
+	private final static int ALL_LED_ON_L  = 0xFA;
+	private final static int ALL_LED_ON_H  = 0xFB;
 	private final static int ALL_LED_OFF_L = 0xFC;
 	private final static int ALL_LED_OFF_H = 0xFD;
 
 	// Bits
 	private final static int RESTART = 0x80;
-	private final static int SLEEP = 0x10;
+	private final static int SLEEP   = 0x10;
 	private final static int ALLCALL = 0x01;
-	private final static int INVRT = 0x10;
-	private final static int OUTDRV = 0x04;
+	private final static int INVRT   = 0x10;
+	private final static int OUTDRV  = 0x04;
 
 	private I2CBus bus;
 	private I2CDevice servoDriver;
@@ -137,9 +140,9 @@ public class PWM {
 			System.out.println("Estimated pre-scale:" + preScaleVal);
 		}
 		double preScale = Math.floor(preScaleVal + 0.5);
-		if (verbose)
+		if (verbose) {
 			System.out.println("Final pre-scale: " + preScale);
-
+		}
 		int oldMode = this.servoDriver.read(MODE1);
 		byte newMode = (byte) ((oldMode & 0x7F) | 0x10); // sleep
 		if (verbose) {

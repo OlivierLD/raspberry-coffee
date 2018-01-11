@@ -26,7 +26,7 @@ object SampleOne extends App {
 
     try {
       var before = System.currentTimeMillis
-      val registry = LocateRegistry.getRegistry(name, new Integer(port))
+      val registry = LocateRegistry.getRegistry(name, Integer.valueOf(port))
       // Server name, port
       val remote = registry.lookup(bindingName)
       println(s"Remote is a ${remote.getClass.getName}")

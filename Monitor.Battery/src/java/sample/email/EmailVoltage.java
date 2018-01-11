@@ -3,7 +3,7 @@ package sample.email;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import pi4j.email.EmailSender;
+import email.EmailSender;
 
 public class EmailVoltage {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
