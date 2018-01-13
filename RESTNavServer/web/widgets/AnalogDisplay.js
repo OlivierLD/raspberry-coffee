@@ -1,25 +1,135 @@
 /*
  * @author Olivier Le Diouris
  */
-// TODO This config in CSS, like for Graph.js
-// We wait for the var- custom properties to be implemented in CSS...
-// @see http://www.w3.org/TR/css-variables-1/
 
 /*
- * For now:
- * Themes are applied based on a css class:
- * .display-scheme {
- *   color: black;
- * }
+ * See custom properties in CSS.
+ * =============================
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/
+ * Relies on a rule named .graphdisplay, like that:
  *
- * if color is black, analogDisplayColorConfigBlack is applied
- * if color is white, analogDisplayColorConfigWhite is applied, etc
+ .analogdisplay {
+		--bg-color: rgba(0, 0, 0, 0);
+		--digit-color: black;
+		--with-gradient: true;
+		--display-background-gradient-from: LightGrey;
+		--display-background-gradient-to: white;
+		--with-display-shadow: false;
+		--shadow-color: rgba(0, 0, 0, 0.75);
+		--outline-color: DarkGrey;
+		--major-tick-color: black;
+		--minor-tick-color: black;
+		--value-color: grey;
+		--value-outline-color: black;
+		--value-nb-decimal: 1;
+		--hand-color: red;
+		--hand-outline-color: black;
+		--with-hand-shadow: true;
+		--knob-color: DarkGrey;
+		--knob-outline-color: black;
+		--font: Arial;
+	}
  */
-var analogDisplayColorConfigWhite = {
-	bgColor: 'rgba(0, 0, 0, 0)', /* 'white', */
+
+/**
+ * Recurse from the top down, on styleSheets and cssRules
+ *
+ * document.styleSheets[0].cssRules[2].selectorText returns ".analogdisplay"
+ * document.styleSheets[0].cssRules[2].cssText returns ".analogdisplay { --hand-color: red;  --face-color: white; }"
+ * document.styleSheets[0].cssRules[2].style.cssText returns "--hand-color: red; --face-color: white;"
+ *
+ * spine-case to camelCase
+ */
+var getColorConfig = function() {
+	var colorConfig = defaultAnalogColorConfig;
+	for (var s=0; s<document.styleSheets.length; s++) {
+		console.log("Walking though ", document.styleSheets[s]);
+		for (var r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
+			if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
+				console.log("  >>> Found it!");
+				var cssText = document.styleSheets[s].cssRules[r].style.cssText;
+				var cssTextElems = cssText.split(";");
+				cssTextElems.forEach(function(elem) {
+					if (elem.trim().length > 0) {
+						var keyValPair = elem.split(":");
+						var key = keyValPair[0].trim();
+						var value = keyValPair[1].trim();
+						switch (key) {
+							case '--bg-color':
+								colorConfig.bgColor = value;
+								break;
+							case '--digit-color':
+								colorConfig.digitColor = value;
+								break;
+							case '--with-gradient':
+								colorConfig.withGradient = (value === 'true');
+								break;
+							case '--display-background-gradient-from':
+								colorConfig.displayBackgroundGradientFrom = value;
+								break;
+							case '--display-background-gradient-to':
+								colorConfig.displayBackgroundGradientTo = value;
+								break;
+							case '--with-display-shadow':
+								colorConfig.withDisplayShadow = (value === 'true');
+								break;
+							case '--shadow-color':
+								colorConfig.shadowColor = value;
+								break;
+							case '--outline-color':
+								colorConfig.outlineColor = value;
+								break;
+							case '--major-tick-color':
+								colorConfig.majorTickColor = value;
+								break;
+							case '--minor-tick-color':
+								colorConfig.minorTickColor = value;
+								break;
+							case '--value-color':
+								colorConfig.valueColor = value;
+								break;
+							case '--value-outline-color':
+								colorConfig.valueOutlineColor = value;
+								break;
+							case '--value-nb-decimal':
+								colorConfig.valueNbDecimal = value;
+								break;
+							case '--hand-color':
+								colorConfig.handColor = value;
+								break;
+							case '--hand-outline-color':
+								colorConfig.handOutlineColor = value;
+								break;
+							case '--with-hand-shadow':
+								colorConfig.withHandShadow = (value === 'true');
+								break;
+							case '--knob-color':
+								colorConfig.knobColor = value;
+								break;
+							case '--knob-outline-color':
+								colorConfig.knobOutlineColor = value;
+								break;
+							case '--font':
+								colorConfig.font = value;
+								break;
+							default:
+								break;
+						}
+					}
+				});
+			}
+		}
+	}
+	return colorConfig;
+};
+
+var defaultAnalogColorConfig = {
+	bgColor: 'rgba(0, 0, 0, 0)', /* transparent, 'white', */
 	digitColor: 'black',
 	withGradient: true,
-	displayBackgroundGradient: {from: 'LightGrey', to: 'white'},
+	displayBackgroundGradientFrom: 'LightGrey',
+	displayBackgroundGradientTo: 'white',
 	withDisplayShadow: false,
 	shadowColor: 'rgba(0, 0, 0, 0.75)',
 	outlineColor: 'DarkGrey',
@@ -36,48 +146,7 @@ var analogDisplayColorConfigWhite = {
 	font: 'Arial' /* 'Source Code Pro' */
 };
 
-var analogDisplayColorConfigBlack = {
-	bgColor: 'rgba(0, 0, 0, 0)', /* 'black', */
-	digitColor: 'cyan',
-	withGradient: true,
-	displayBackgroundGradient: {from: 'DarkGrey', to: 'black'},
-	shadowColor: 'black',
-	outlineColor: 'DarkGrey',
-	majorTickColor: 'red',
-	minorTickColor: 'red',
-	valueColor: 'red',
-	valueOutlineColor: 'black',
-	valueNbDecimal: 1,
-	handColor: 'rgba(255, 0, 0, 0.4)', // 'rgba(0, 0, 100, 0.25)',
-	handOutlineColor: 'red', // 'blue',
-	withHandShadow: true,
-	knobColor: '#8ED6FF', // Kind of blue
-	knobOutlineColor: 'blue',
-	font: 'Arial'
-};
-
-var analogDisplayColorConfigMonochrome = {
-	bgColor: 'rgba(0, 0, 0, 0.0)', /* 'white', */
-	digitColor: 'cyan',
-	withGradient: false,
-	displayBackgroundGradient: {from: 'LightGrey', to: 'white'},
-	withDisplayShadow: false,
-	shadowColor: 'rgba(0, 0, 0, 0.75)',
-	outlineColor: 'cyan',
-	majorTickColor: 'cyan',
-	minorTickColor: 'cyan',
-	valueColor: 'cyan',
-	valueOutlineColor: 'cyan',
-	valueNbDecimal: 1,
-	handColor: 'rgba(0, 0, 0, 0.0)',
-	handOutlineColor: 'cyan',
-	withHandShadow: false,
-	knobColor: 'rgba(0, 0, 0, 0.0)',
-	knobOutlineColor: 'cyan',
-	font: 'Arial' /* 'Source Code Pro' */
-};
-
-var analogDisplayColorConfig = analogDisplayColorConfigWhite; // analogDisplayColorConfigBlack; // White is the default
+var analogDisplayColorConfig = defaultAnalogColorConfig; // analogDisplayColorConfigBlack; // White is the default
 
 function AnalogDisplay(cName,                     // Canvas Name
                        dSize,                     // Display radius
@@ -109,6 +178,14 @@ function AnalogDisplay(cName,                     // Canvas Name
 	if (nbDecimal === undefined) {
 		nbDecimal = analogDisplayColorConfig.valueNbDecimal;
 	}
+
+	if (events !== undefined) {
+		events.subscribe('color-scheme-changed', function(val) {
+//    console.log('Color scheme changed:', val);
+			reloadColorConfig();
+		});
+	}
+	analogDisplayColorConfig = getColorConfig();
 
 	var scale = dSize / 100;
 
@@ -236,31 +313,20 @@ function AnalogDisplay(cName,                     // Canvas Name
 		}
 	};
 
-	function getStyleRuleValue(style, selector, sheet) {
-		var sheets = typeof sheet !== 'undefined' ? [sheet] : document.styleSheets;
-		for (var i = 0, l = sheets.length; i < l; i++) {
-			var sheet = sheets[i];
-			if (!sheet.cssRules) {
-				continue;
-			}
-			for (var j = 0, k = sheet.cssRules.length; j < k; j++) {
-				var rule = sheet.cssRules[j];
-				if (rule.selectorText && rule.selectorText.split(',').indexOf(selector) !== -1) {
-					return rule.style[style];
-				}
-			}
-		}
-		return null;
+	var reloadColor = false;
+	var reloadColorConfig = function() {
+//  console.log('Color scheme has changed');
+		reloadColor = true;
 	};
 
 	function drawDisplay(displayCanvasName, displayRadius, displayValue) {
-		var schemeColor = getStyleRuleValue('color', '.display-scheme');
-//  console.log(">>> DEBUG >>> color:" + schemeColor);
-		if (schemeColor === 'black') {
-			analogDisplayColorConfig = analogDisplayColorConfigBlack;
-		} else if (schemeColor === 'white') {
-			analogDisplayColorConfig = analogDisplayColorConfigWhite;
+		if (reloadColor) {
+			// In case the CSS has changed, dynamically.
+			analogDisplayColorConfig = getColorConfig();
+			console.log("Changed theme:", analogDisplayColorConfig);
 		}
+		reloadColor = false;
+
 		var digitColor = analogDisplayColorConfig.digitColor;
 
 		var canvas = document.getElementById(displayCanvasName);
@@ -290,17 +356,22 @@ function AnalogDisplay(cName,                     // Canvas Name
 
 		if (analogDisplayColorConfig.withGradient) {
 			var grd = context.createLinearGradient(0, 5, 0, radius);
-			grd.addColorStop(0, analogDisplayColorConfig.displayBackgroundGradient.from);// 0  Beginning
-			grd.addColorStop(1, analogDisplayColorConfig.displayBackgroundGradient.to);  // 1  End
+			grd.addColorStop(0, analogDisplayColorConfig.displayBackgroundGradientFrom);// 0  Beginning
+			grd.addColorStop(1, analogDisplayColorConfig.displayBackgroundGradientTo);  // 1  End
 			context.fillStyle = grd;
 		} else {
-			context.fillStyle = analogDisplayColorConfig.displayBackgroundGradient.to;
+			context.fillStyle = analogDisplayColorConfig.displayBackgroundGradientTo;
 		}
 		if (analogDisplayColorConfig.withDisplayShadow) {
 			context.shadowOffsetX = 3;
 			context.shadowOffsetY = 3;
 			context.shadowBlur = 3;
 			context.shadowColor = analogDisplayColorConfig.shadowColor;
+		} else {
+			context.shadowOffsetX = 0;
+			context.shadowOffsetY = 0;
+			context.shadowBlur = 0;
+			context.shadowColor = undefined;
 		}
 		context.lineJoin = "round";
 		context.fill();
