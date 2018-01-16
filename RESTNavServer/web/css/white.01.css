@@ -6,7 +6,8 @@ body {
   background-color: white;
   color: darkgray;
   font-family: Arial, Helvetica, sans-serif;
-	background-image: linear-gradient(to bottom right, white, lightgray);
+/*background-image: linear-gradient(to bottom right, white, lightgray); */
+  background: radial-gradient(at top, white -8%, lightgray 55%);
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
