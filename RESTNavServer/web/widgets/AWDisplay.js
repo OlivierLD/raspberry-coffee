@@ -37,6 +37,7 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 			--with-hand-shadow: true;
 			--knob-color: DarkGrey;
 			--knob-outline-color: black;
+			--outlined-port-starboard: false;
 			--font: Arial;
 		}
 	 */
@@ -120,6 +121,9 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 								case '--knob-outline-color':
 									colorConfig.knobOutlineColor = value;
 									break;
+								case "--outlined-port-starboard":
+									colorConfig.outlinedPortStarboard = (value === 'true');
+									break;
 								case '--font':
 									colorConfig.font = value;
 									break;
@@ -153,6 +157,7 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 		withHandShadow: true,
 		knobColor: 'DarkGrey',
 		knobOutlineColor: 'black',
+		outlinedPortStarboard: false,
 		font: 'Arial' /* 'Source Code Pro' */
 	};
 
@@ -290,23 +295,6 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 		drawDisplay(canvasName, displaySize, val);
 	};
 
-	function getStyleRuleValue(style, selector, sheet) {
-		var sheets = typeof sheet !== 'undefined' ? [sheet] : document.styleSheets;
-		for (var i = 0, l = sheets.length; i < l; i++) {
-			var sheet = sheets[i];
-			if (!sheet.cssRules) {
-				continue;
-			}
-			for (var j = 0, k = sheet.cssRules.length; j < k; j++) {
-				var rule = sheet.cssRules[j];
-				if (rule.selectorText && rule.selectorText.split(',').indexOf(selector) !== -1) {
-					return rule.style[style];
-				}
-			}
-		}
-		return null;
-	};
-
 	var reloadColor = false;
 	var reloadColorConfig = function () {
 //  console.log('Color scheme has changed');
@@ -330,12 +318,8 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 		var radius = displayRadius;
 
 		// Cleanup
-		//context.fillStyle = "#ffffff";
 		context.fillStyle = awDisplayColorConfig.bgColor;
-		//context.fillStyle = "transparent";
 		context.fillRect(0, 0, canvas.width, canvas.height);
-		//context.fillStyle = 'rgba(255, 255, 255, 0.0)';
-		//context.fillRect(0, 0, canvas.width, canvas.height);
 
 		context.beginPath();
 		if (withBorder === true) {
@@ -348,9 +332,9 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 			grd.addColorStop(0, awDisplayColorConfig.displayBackgroundGradientFrom);// 0  Beginning
 			grd.addColorStop(1, awDisplayColorConfig.displayBackgroundGradientTo);// 1  End
 			context.fillStyle = grd;
-		}
-		else
+		} else {
 			context.fillStyle = awDisplayColorConfig.displayBackgroundGradientTo;
+		}
 
 		if (awDisplayColorConfig.withDisplayShadow) {
 			context.shadowOffsetX = 3;
@@ -426,18 +410,39 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 		var arcWidth = toRadians(120);
 
 		// Starboard
-		context.beginPath();
-		context.strokeStyle = 'rgba(0, 255, 0, 0.25)';
-		context.arc(x, y, radius * .75, 1.5 * Math.PI, top + arcWidth, false);
-		context.stroke();
-		context.closePath();
-
+		if (awDisplayColorConfig.outlinedPortStarboard === true) {
+			context.beginPath();
+			context.lineWidth = 2;
+			context.strokeStyle = 'rgba(0, 255, 0, 0.75)';
+			context.arc(x, y, radius * .75, 1.5 * Math.PI, top + arcWidth, false);
+			context.arc(x, y, radius * .55, top + arcWidth, 1.5 * Math.PI, true);
+			context.lineTo(x, y - (radius * .75));
+			context.stroke();
+			context.closePath();
+		} else {
+			context.beginPath();
+			context.strokeStyle = 'rgba(0, 255, 0, 0.25)';
+			context.arc(x, y, radius * .75, 1.5 * Math.PI, top + arcWidth, false);
+			context.stroke();
+			context.closePath();
+		}
 		// Port
-		context.beginPath();
-		context.strokeStyle = 'rgba(255, 0, 0, 0.25)';
-		context.arc(x, y, radius * .75, 1.5 * Math.PI, top - arcWidth, true);
-		context.stroke();
-		context.closePath();
+		if (awDisplayColorConfig.outlinedPortStarboard === true) {
+			context.beginPath();
+			context.lineWidth = 2;
+			context.strokeStyle = 'rgba(255, 0, 0, 0.75)';
+			context.arc(x, y, radius * .75, 1.5 * Math.PI, top - arcWidth, true);
+			context.arc(x, y, radius * .55, top - arcWidth, 1.5 * Math.PI, false);
+			context.lineTo(x, y - (radius * .75));
+			context.stroke();
+			context.closePath();
+		} else {
+			context.beginPath();
+			context.strokeStyle = 'rgba(255, 0, 0, 0.25)';
+			context.arc(x, y, radius * .75, 1.5 * Math.PI, top - arcWidth, true);
+			context.stroke();
+			context.closePath();
+		}
 
 		// Value
 //    var dv = displayValue;

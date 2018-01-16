@@ -52,6 +52,7 @@ body {
 	--knob-color: orange;
 	--knob-outline-color: orange;
 	--index-color: orange; /* Compass rose index */
+	--outlined-port-starboard: true;
 	--font: Arial;
 }
 
