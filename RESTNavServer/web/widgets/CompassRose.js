@@ -96,6 +96,9 @@ function CompassRose(cName,                     // Canvas Name
 								case '--value-color':
 									colorConfig.valueColor = value;
 									break;
+								case '--index-color':
+									colorConfig.indexColor = value;
+									break;
 								case '--value-outline-color':
 									colorConfig.valueOutlineColor = value;
 									break;
@@ -135,7 +138,8 @@ function CompassRose(cName,                     // Canvas Name
 		bgColor:           'white',
 		digitColor:        '#404040',
 		withGradient:      true,
-		displayBackgroundGradient: { from: 'gray', to: 'white' },
+		displayBackgroundGradientFrom: 'gray',
+		displayBackgroundGradientTo: 'white',
 		tickColor:         'darkGray',
 		valueColor:        'blue',
 		indexColor:        'red',
@@ -188,21 +192,6 @@ function CompassRose(cName,                     // Canvas Name
     drawDisplay(canvasName, displayWidth, displayHeight);
   };
   
-  function getStyleRuleValue(style, selector, sheet) {
-    var sheets = typeof sheet !== 'undefined' ? [sheet] : document.styleSheets;
-    for (var i = 0, l = sheets.length; i < l; i++) {
-      var sheet = sheets[i];
-      if (!sheet.cssRules) { continue; }
-      for (var j = 0, k = sheet.cssRules.length; j < k; j++) {
-        var rule = sheet.cssRules[j];
-        if (rule.selectorText && rule.selectorText.split(',').indexOf(selector) !== -1) {
-          return rule.style[style];
-        }
-      }
-    }
-    return null;
-  };
-
 	var reloadColor = false;
 	var reloadColorConfig = function() {
 //  console.log('Color scheme has changed');
@@ -217,17 +206,20 @@ function CompassRose(cName,                     // Canvas Name
 		}
 		reloadColor = false;
 
-    var schemeColor = getStyleRuleValue('color', '.display-scheme');
     if (displayW !== undefined && displayH !== undefined) {
       scale = Math.min(displayW / 200, displayH / 50);
     }
     var canvas = document.getElementById(displayCanvasName);
     var context = canvas.getContext('2d');
 
-    var grd = context.createLinearGradient(0, 5, 0, document.getElementById(cName).height);
-    grd.addColorStop(0, roseColorConfig.displayBackgroundGradientFrom); // 0  Beginning
-    grd.addColorStop(1, roseColorConfig.displayBackgroundGradientTo);  // 1  End
-    context.fillStyle = grd;
+    if (roseColorConfig.withGradient === true) {
+	    var grd = context.createLinearGradient(0, 5, 0, document.getElementById(cName).height);
+	    grd.addColorStop(0, roseColorConfig.displayBackgroundGradientFrom); // 0  Beginning
+	    grd.addColorStop(1, roseColorConfig.displayBackgroundGradientTo);   // 1  End
+	    context.fillStyle = grd;
+    } else {
+	    context.fillStyle = roseColorConfig.displayBackgroundGradientTo;
+    }
   
     // Background
     roundRect(context, 0, 0, canvas.width, canvas.height, 10, true, false);    

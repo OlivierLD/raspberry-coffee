@@ -155,24 +155,9 @@ var changeBorder = function (b) {
 };
 
 var cssSelectManager = function() {
-	var x = document.getElementById("css-select").value.split(";");
-	var css = document.getElementById("page-ux");
-	var cssName = x[0];
-	var newCssLoc = css.href.substring(0, css.href.lastIndexOf("/")) + "/" + cssName;
-	console.log("Replacing " + css.href + " with " + newCssLoc);
-	css.href =  newCssLoc;
-	events.publish('color-scheme-changed', cssName); // Name is not used...
-
-	var cssLink = document.getElementById("theme");
-	var selected = x[1];
-	cssLink.href = '../css/' + selected + '.css';
-	// Repaint the displays ?
-	setTimeout(function() {
-		displayBaro.repaint();
-		displayHum.repaint();
-		thermometer.repaint();
-		athermometer.repaint();
-	}, 1000);
+	var x = document.getElementById("css-select").value;
+	var cssName = x;
+	changeTheme(cssName);
 };
 
 var TOTAL_WIDTH = 1200;

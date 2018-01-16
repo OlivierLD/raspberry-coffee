@@ -56,11 +56,11 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose) {
 	var getColorConfig = function() {
 		var colorConfig = defaultAnalogColorConfig;
 		for (var s=0; s<document.styleSheets.length; s++) {
-			console.log("Walking though ", document.styleSheets[s]);
+//		console.log("Walking though ", document.styleSheets[s]);
 			for (var r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
-				console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
+//			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
 				if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
-					console.log("  >>> Found it!");
+//				console.log("  >>> Found it!");
 					var cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					var cssTextElems = cssText.split(";");
 					cssTextElems.forEach(function(elem) {
