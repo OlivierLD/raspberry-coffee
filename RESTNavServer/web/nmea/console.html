@@ -39,6 +39,7 @@
       }
     </style>
     <link rel="stylesheet" href="../css/black.css" type="text/css" id="theme"/>
+		<link id="page-ux" rel="stylesheet" href="../css/analog.display.01.css" type="text/css"/>
     <script type="text/javascript" src="../js/jquery-2.1.3.js"></script>
     <script type="text/javascript" src="../js/date.proto.js"></script>
     <script type="text/javascript" src="../widgets/AnalogDisplay.js"></script>
@@ -656,6 +657,13 @@
 				&nbsp;&nbsp;Color Scheme:&nbsp;
 				<input type="radio" name="theme" value="black" checked onclick="changeTheme(this.value);">Night&nbsp;
 				<input type="radio" name="theme" value="white" onclick="changeTheme(this.value);">Day&nbsp;
+				<select id="css-select" onchange="cssSelectManager();" title="Page StyleSheet">
+					<option value="analog.display.02.css;black">Night</option>
+					<option value="analog.display.01.css;white">Day</option>
+					<option value="analog.display.03.css;black">Night/Cyan</option>
+					<option value="analog.display.11.css;white">Day/Flat</option>
+					<!-- More here if needed -->
+				</select>
 				&nbsp;&nbsp;
 				<input type="checkbox" id="with-border" checked onclick="changeBorder(this.checked);">With Border
 			</span>

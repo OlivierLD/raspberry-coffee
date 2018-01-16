@@ -1,49 +1,6 @@
 /*
  * @author Olivier Le Diouris
  */
-var awDisplayColorConfigWhite =
-		{
-			bgColor: 'rgba(0, 0, 0, 0)', /* 'white', */
-			digitColor: 'black',
-			withGradient: true,
-			displayBackgroundGradient: {from: 'LightGrey', to: 'white'},
-			withDisplayShadow: true,
-			shadowColor: 'rgba(0, 0, 0, 0.75)',
-			outlineColor: 'DarkGrey',
-			majorTickColor: 'black',
-			minorTickColor: 'black',
-			valueColor: 'grey',
-			valueOutlineColor: 'black',
-			valueNbDecimal: 1,
-			handColor: 'red', // 'rgba(0, 0, 100, 0.25)',
-			handOutlineColor: 'black',
-			withHandShadow: true,
-			knobColor: 'DarkGrey',
-			knobOutlineColor: 'black',
-			font: 'Arial' /* 'Source Code Pro' */
-		};
-
-var awDisplayColorConfigBlack =
-		{
-			bgColor: 'rgba(0, 0, 0, 0)', /*'black',*/
-			digitColor: 'white',
-			withGradient: true,
-			displayBackgroundGradient: {from: 'DarkGrey', to: 'black'},
-			shadowColor: 'black',
-			outlineColor: 'DarkGrey',
-			majorTickColor: 'red',
-			minorTickColor: 'red',
-			valueColor: 'red',
-			valueOutlineColor: 'black',
-			valueNbDecimal: 1,
-			handColor: 'rgba(255, 0, 0, 0.4)', // 'rgba(0, 0, 100, 0.25)',
-			handOutlineColor: 'red', // 'blue',
-			withHandShadow: true,
-			knobColor: '#8ED6FF', // Kind of blue
-			knobOutlineColor: 'blue',
-			font: 'Arial'
-		};
-var awDisplayColorConfig = awDisplayColorConfigWhite; // 
 
 function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 	if (majorTicks === undefined) {
@@ -55,6 +12,159 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 	if (withDigits === undefined) {
 		withDigits = false;
 	}
+	/*
+	 * See custom properties in CSS.
+	 * =============================
+	 * @see https://developer.mozilla.org/en-US/docs/Web/CSS/
+	 * Relies on a rule named .graphdisplay, like that:
+	 *
+	 .analogdisplay {
+			--bg-color: rgba(0, 0, 0, 0);
+			--digit-color: black;
+			--with-gradient: true;
+			--display-background-gradient-from: LightGrey;
+			--display-background-gradient-to: white;
+			--with-display-shadow: false;
+			--shadow-color: rgba(0, 0, 0, 0.75);
+			--outline-color: DarkGrey;
+			--major-tick-color: black;
+			--minor-tick-color: black;
+			--value-color: grey;
+			--value-outline-color: black;
+			--value-nb-decimal: 1;
+			--hand-color: red;
+			--hand-outline-color: black;
+			--with-hand-shadow: true;
+			--knob-color: DarkGrey;
+			--knob-outline-color: black;
+			--font: Arial;
+		}
+	 */
+
+	/**
+	 * Recurse from the top down, on styleSheets and cssRules
+	 *
+	 * document.styleSheets[0].cssRules[2].selectorText returns ".analogdisplay"
+	 * document.styleSheets[0].cssRules[2].cssText returns ".analogdisplay { --hand-color: red;  --face-color: white; }"
+	 * document.styleSheets[0].cssRules[2].style.cssText returns "--hand-color: red; --face-color: white;"
+	 *
+	 * spine-case to camelCase
+	 */
+	var getColorConfig = function () {
+		var colorConfig = defaultAnalogColorConfig;
+		for (var s = 0; s < document.styleSheets.length; s++) {
+			console.log("Walking though ", document.styleSheets[s]);
+			for (var r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
+				console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
+				if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
+					console.log("  >>> Found it!");
+					var cssText = document.styleSheets[s].cssRules[r].style.cssText;
+					var cssTextElems = cssText.split(";");
+					cssTextElems.forEach(function (elem) {
+						if (elem.trim().length > 0) {
+							var keyValPair = elem.split(":");
+							var key = keyValPair[0].trim();
+							var value = keyValPair[1].trim();
+							switch (key) {
+								case '--bg-color':
+									colorConfig.bgColor = value;
+									break;
+								case '--digit-color':
+									colorConfig.digitColor = value;
+									break;
+								case '--with-gradient':
+									colorConfig.withGradient = (value === 'true');
+									break;
+								case '--display-background-gradient-from':
+									colorConfig.displayBackgroundGradientFrom = value;
+									break;
+								case '--display-background-gradient-to':
+									colorConfig.displayBackgroundGradientTo = value;
+									break;
+								case '--with-display-shadow':
+									colorConfig.withDisplayShadow = (value === 'true');
+									break;
+								case '--shadow-color':
+									colorConfig.shadowColor = value;
+									break;
+								case '--outline-color':
+									colorConfig.outlineColor = value;
+									break;
+								case '--major-tick-color':
+									colorConfig.majorTickColor = value;
+									break;
+								case '--minor-tick-color':
+									colorConfig.minorTickColor = value;
+									break;
+								case '--value-color':
+									colorConfig.valueColor = value;
+									break;
+								case '--value-outline-color':
+									colorConfig.valueOutlineColor = value;
+									break;
+								case '--value-nb-decimal':
+									colorConfig.valueNbDecimal = value;
+									break;
+								case '--hand-color':
+									colorConfig.handColor = value;
+									break;
+								case '--hand-outline-color':
+									colorConfig.handOutlineColor = value;
+									break;
+								case '--with-hand-shadow':
+									colorConfig.withHandShadow = (value === 'true');
+									break;
+								case '--knob-color':
+									colorConfig.knobColor = value;
+									break;
+								case '--knob-outline-color':
+									colorConfig.knobOutlineColor = value;
+									break;
+								case '--font':
+									colorConfig.font = value;
+									break;
+								default:
+									break;
+							}
+						}
+					});
+				}
+			}
+		}
+		return colorConfig;
+	};
+
+	var defaultAnalogColorConfig = {
+		bgColor: 'rgba(0, 0, 0, 0)', /* transparent, 'white', */
+		digitColor: 'black',
+		withGradient: true,
+		displayBackgroundGradientFrom: 'LightGrey',
+		displayBackgroundGradientTo: 'white',
+		withDisplayShadow: false,
+		shadowColor: 'rgba(0, 0, 0, 0.75)',
+		outlineColor: 'DarkGrey',
+		majorTickColor: 'black',
+		minorTickColor: 'black',
+		valueColor: 'grey',
+		valueOutlineColor: 'black',
+		valueNbDecimal: 1,
+		handColor: 'red', // 'rgba(0, 0, 100, 0.25)',
+		handOutlineColor: 'black',
+		withHandShadow: true,
+		knobColor: 'DarkGrey',
+		knobOutlineColor: 'black',
+		font: 'Arial' /* 'Source Code Pro' */
+	};
+
+	var awDisplayColorConfig = defaultAnalogColorConfig; //
+
+	if (events !== undefined) {
+		events.subscribe('color-scheme-changed', function (val) {
+//    console.log('Color scheme changed:', val);
+			reloadColorConfig();
+		});
+	}
+	awDisplayColorConfig = getColorConfig();
 
 	var canvasName = cName;
 	var displaySize = dSize;
@@ -197,13 +307,19 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 		return null;
 	};
 
+	var reloadColor = false;
+	var reloadColorConfig = function () {
+//  console.log('Color scheme has changed');
+		reloadColor = true;
+	};
+
 	function drawDisplay(displayCanvasName, displayRadius, displayValue) {
-		var schemeColor = getStyleRuleValue('color', '.display-scheme');
-//  console.log(">>> DEBUG >>> color:" + schemeColor);
-		if (schemeColor === 'black')
-			awDisplayColorConfig = awDisplayColorConfigBlack;
-		else if (schemeColor === 'white')
-			awDisplayColorConfig = awDisplayColorConfigWhite;
+		if (reloadColor) {
+			// In case the CSS has changed, dynamically.
+			awDisplayColorConfig = getColorConfig();
+			console.log("Changed theme:", awDisplayColorConfig);
+		}
+		reloadColor = false;
 
 		var digitColor = awDisplayColorConfig.digitColor;
 
@@ -215,7 +331,7 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 
 		// Cleanup
 		//context.fillStyle = "#ffffff";
-		context.fillStyle = analogDisplayColorConfig.bgColor;
+		context.fillStyle = awDisplayColorConfig.bgColor;
 		//context.fillStyle = "transparent";
 		context.fillRect(0, 0, canvas.width, canvas.height);
 		//context.fillStyle = 'rgba(255, 255, 255, 0.0)';
@@ -227,20 +343,25 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 			context.arc(canvas.width / 2, radius + 10, radius, 0, 2 * Math.PI, false);
 			context.lineWidth = 5;
 		}
-		if (analogDisplayColorConfig.withGradient) {
+		if (awDisplayColorConfig.withGradient) {
 			var grd = context.createLinearGradient(0, 5, 0, radius);
-			grd.addColorStop(0, awDisplayColorConfig.displayBackgroundGradient.from);// 0  Beginning
-			grd.addColorStop(1, awDisplayColorConfig.displayBackgroundGradient.to);// 1  End
+			grd.addColorStop(0, awDisplayColorConfig.displayBackgroundGradientFrom);// 0  Beginning
+			grd.addColorStop(1, awDisplayColorConfig.displayBackgroundGradientTo);// 1  End
 			context.fillStyle = grd;
 		}
 		else
-			context.fillStyle = awDisplayColorConfig.displayBackgroundGradient.to;
+			context.fillStyle = awDisplayColorConfig.displayBackgroundGradientTo;
 
 		if (awDisplayColorConfig.withDisplayShadow) {
 			context.shadowOffsetX = 3;
 			context.shadowOffsetY = 3;
 			context.shadowBlur = 3;
 			context.shadowColor = awDisplayColorConfig.shadowColor;
+		} else {
+			context.shadowOffsetX = 0;
+			context.shadowOffsetY = 0;
+			context.shadowBlur = 0;
+			context.shadowColor = undefined;
 		}
 
 		context.lineJoin = "round";
@@ -341,15 +462,15 @@ function AWDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 			var fontSize = 20;
 			text = label;
 			len = 0;
-			context.font = "bold " + Math.round(scale * fontSize) + "px " + analogDisplayColorConfig.font; // "bold 40px Arial"
+			context.font = "bold " + Math.round(scale * fontSize) + "px " + awDisplayColorConfig.font; // "bold 40px Arial"
 			metrics = context.measureText(text);
 			len = metrics.width;
 
 			context.beginPath();
-			context.fillStyle = 'rgba(255, 255, 255, 0.5)'; // analogDisplayColorConfig.valueColor;
+			context.fillStyle = 'rgba(255, 255, 255, 0.5)'; // TODO A CSS element analogDisplayColorConfig.valueColor;
 			context.fillText(text, (canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)));
 			context.lineWidth = 1;
-			context.strokeStyle = analogDisplayColorConfig.valueOutlineColor;
+			context.strokeStyle = awDisplayColorConfig.valueOutlineColor;
 			context.strokeText(text, (canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1))); // Outlined
 			context.closePath();
 		}

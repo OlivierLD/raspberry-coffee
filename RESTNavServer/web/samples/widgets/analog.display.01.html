@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>Widget Samples</title>
 	<link rel="stylesheet" href="../../css/stylesheet.css" type="text/css"/>
-	<link id="page-ux" rel="stylesheet" href="../../css/analog.display.01.css" type="text/css"/>
+	<link id="page-ux" rel="stylesheet" href=../../css/analog.display.01.css" type="text/css"/>
 	<script src="../../widgets/AnalogDisplay.js"></script>
 	<script type="text/javascript" src="../../js/pub.sub.js"></script>
 	<script type="text/javascript">
@@ -86,14 +86,15 @@
 		</tr>
 		<tr>
 			<td colspan="2" style="border-radius: 5px; border: 1px solid silver; width: 250px; margin-bottom: 3px;">
-				<input type="checkbox" onchange="onBorderChange(this);" checked />With Border and Face
+				<input type="checkbox" onchange="onBorderChange(this);" checked />With Border
 			</td>
 		</tr>
 		<tr>
 			<td style="border-radius: 5px; border: 1px solid silver; width: 250px; margin-bottom: 3px;">
 				<canvas id="aCanvas" width="240" height="220" title="Title show up here"></canvas>
 			</td>
-			<td  style="border-radius: 5px; border: 1px solid silver; width: 250px; margin-bottom: 3px; background-color: black;">
+			<!-- 			<td  style="border-radius: 5px; border: 1px solid silver; width: 250px; margin-bottom: 3px; background: linear-gradient(to bottom right, black, white);> -->
+			<td  style="border-radius: 5px; border: 1px solid silver; width: 250px; margin-bottom: 3px; background-color: black; background-image: linear-gradient(to bottom right, black, white);">
 				<canvas id="bCanvas" width="240" height="220" title="Title show up here"></canvas>
 			</td>
 		</tr>
