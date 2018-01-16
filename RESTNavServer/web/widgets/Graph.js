@@ -376,7 +376,7 @@ function Graph(cName,       // Canvas Name
 //          console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].getY() + " becomes " + yAccu);
         }
     }
-    // Clear
+    // Cleanup
     context.fillStyle = "white";
     context.fillRect(0, 0, width, height);
 

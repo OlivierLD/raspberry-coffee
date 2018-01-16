@@ -335,12 +335,8 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose) {
 		var radius = displayRadius;
 
 		// Cleanup
-		//context.fillStyle = "#ffffff";
 		context.fillStyle = directionColorConfig.bgColor;
-//  context.fillStyle = "transparent";
 		context.fillRect(0, 0, canvas.width, canvas.height);
-		//context.fillStyle = 'rgba(255, 255, 255, 0.0)';
-		//context.fillRect(0, 0, canvas.width, canvas.height);
 
 		context.beginPath();
 		if (withBorder === true) {
