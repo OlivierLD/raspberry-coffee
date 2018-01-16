@@ -1,26 +1,6 @@
 /*
  * @author Olivier Le Diouris
  */
-var numericDisplayColorConfigBlack = {
-	bgColor: 'black',
-	withGradient: true,
-	displayBackgroundGradientFrom: 'black',
-	displayBackgroundGradientTo: 'LightGrey',
-	valueColor: 'red',
-	valueOutlineColor: 'black',
-	font: 'Arial'
-};
-var numericDisplayColorConfigWhite = {
-	bgColor: 'white',
-	withGradient: true,
-	displayBackgroundGradientFrom: 'LightGrey',
-	displayBackgroundGradientTo: 'white',
-	valueColor: 'grey',
-	valueOutlineColor: 'black',
-	font: 'Arial'
-};
-var numericDisplayColorConfig = numericDisplayColorConfigBlack;
-
 function NumericDisplay(cName,     // Canvas Name
                         dSize,     // height         
                         nbDigits) {
@@ -31,7 +11,7 @@ function NumericDisplay(cName,     // Canvas Name
 		nbDigits = 1;
 	}
 
-	/*
+/*
  * See custom properties in CSS.
  * =============================
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/

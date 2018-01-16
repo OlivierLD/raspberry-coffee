@@ -35,7 +35,7 @@ body {
 	--with-gradient: false;
 	--display-background-gradient-from: undefined; /* used if --withGradient: true */
 	--display-background-gradient-to: black;
-	--display-line-color: rgba(255, 165, 0, 0.5);
+	--display-line-color: rgba(255, 165, 0, 0.5); /* orange */
 	--label-fill-color: rgba(255, 255, 255, 0);
 	--with-display-shadow: false;
 	--shadow-color: black;
