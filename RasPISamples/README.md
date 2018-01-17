@@ -52,6 +52,8 @@ _For example_:`http://localhost:9876/data/weather.station/analog.html?border=N&t
 
 See [here](http://www.lediouris.net/RaspberryPI/WeatherStation/readme.html).
 
+> See also [this document](./src/java/weatherstation/README.md) 
+
 ---
 
 ### <a name="robotonwheels"></a>Robot on wheels
