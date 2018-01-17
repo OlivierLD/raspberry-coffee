@@ -112,6 +112,10 @@ Current evaluation, instantaneous, 30 seconds.
 
 Current evaluation, 1  minute, 10 minutes, much more accurate!
 
+![Several stylings available](./docimg/screenshot.10.png)
+
+All CSS driven, it's very easy to create your own. The screenshot above involves the exact same components than in then other screenshots.
+
 ![The 3D Map](./docimg/screenshot.04.png)
 
 ![The 3D Map](./docimg/screenshot.06.png)

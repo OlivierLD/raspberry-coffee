@@ -427,7 +427,7 @@ function TideGraph(cName,       // Canvas Name
     // Sort the tuples (on X, time)
 //   data.sort(sortTupleX);
     
-    // Clear
+    // Cleanup
     context.fillStyle = "white";
     context.fillRect(0, 0, width, height);
 

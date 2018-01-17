@@ -154,6 +154,12 @@ var changeBorder = function (b) {
 	displayCurrent2.setBorder(b);
 };
 
+var cssSelectManager = function() {
+	var x = document.getElementById("css-select").value;
+	var cssName = x;
+	changeTheme(cssName);
+};
+
 var TOTAL_WIDTH = 1200;
 
 var resizeDisplays = function (width) {

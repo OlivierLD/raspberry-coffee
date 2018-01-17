@@ -1,0 +1,24 @@
+/* Night */
+.analogdisplay {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: cyan;
+	--with-gradient: true;
+	--display-background-gradient-from: DarkGrey; /* used if --withGradient: true */
+	--display-background-gradient-to: black;
+	--display-line-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: rgba(255, 255, 255, 0.5);
+	--with-display-shadow: true;
+	--shadow-color: black;
+	--outline-color: DarkGrey;
+	--major-tick-color: red;
+	--minor-tick-color: red;
+	--value-color: red;
+	--value-outline-color: black;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(255, 0, 0, 0.4);
+	--hand-outline-color: red;
+	--with-hand-shadow: true;
+	--knob-color: #8ed6ff;
+	--knob-outline-color: blue;
+	--font: Arial;
+}
