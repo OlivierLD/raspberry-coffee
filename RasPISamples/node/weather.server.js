@@ -1,26 +1,26 @@
 /**
  * To debug:
- *   Prompt> set HTTP_PROXY=http://www-proxy.us.oracle.com:80
+ *   Prompt> set HTTP_PROXY=http://www-proxy.us.oracle.com:80 # if needed
  *   Prompt> npm install -g node-inspector
  *   Prompt> node-inspector
- *   
+ *
  * From another console:
  *   Prompt> node --debug server.js
  */
 "use strict";
- 
+
 process.title = 'node-weather';
- 
+
 // Port where we'll run the websocket server
 var port = 9876;
- 
+
 // websocket and http servers
 var webSocketServer = require('websocket').server;
 var http = require('http');
 var fs = require('fs');
 
 var verbose = false;
- 
+
 if (typeof String.prototype.startsWith != 'function') {
   String.prototype.startsWith = function (str) {
     return this.indexOf(str) === 0;
@@ -41,7 +41,7 @@ function handler (req, res) {
     console.log("Speaking HTTP from " + __dirname);
     console.log("Server received an HTTP Request:\n" + req.method + "\n" + req.url + "\n-------------");
     console.log("ReqHeaders:" + JSON.stringify(req.headers, null, '\t'));
-    console.log('Request:' + req.url);    
+    console.log('Request:' + req.url);
     var prms = require('url').parse(req.url, true);
     console.log(prms);
     console.log("Search: [" + prms.search + "]");
@@ -82,7 +82,7 @@ function handler (req, res) {
                   }
                   res.writeHead(200, {'Content-Type': contentType});
               //  console.log('Data is ' + typeof(data));
-                  if (resource.endsWith(".jpg") || 
+                  if (resource.endsWith(".jpg") ||
                       resource.endsWith(".ico") ||
                       resource.endsWith(".gif") ||
                       resource.endsWith(".ttf") ||
@@ -144,7 +144,7 @@ function handler (req, res) {
  */
 // list of currently connected clients (users)
 var clients = [];
- 
+
 /**
  * Helper function for escaping input strings
  */
@@ -152,7 +152,7 @@ var htmlEntities = function(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 };
- 
+
 /**
  * HTTP server
  */
@@ -161,7 +161,7 @@ var server = http.createServer(handler);
 server.listen(port, function() {
   console.log((new Date()) + " Server is listening on port " + port);
 });
- 
+
 /**
  * WebSocket server
  */
@@ -170,7 +170,7 @@ var wsServer = new webSocketServer({
   // an enhanced HTTP request. For more info http://tools.ietf.org/html/rfc6455#page-6
   httpServer: server
 });
- 
+
 // This callback function is called every time someone
 // tries to connect to the WebSocket server
 wsServer.on('request', function(request) {
@@ -179,7 +179,7 @@ wsServer.on('request', function(request) {
   // accept connection - you should check 'request.origin' to make sure that
   // client is connecting from your website
   // (http://en.wikipedia.org/wiki/Same_origin_policy)
-  var connection = request.accept(null, request.origin); 
+  var connection = request.accept(null, request.origin);
   clients.push(connection);
   console.log((new Date()) + ' Connection accepted.');
 
@@ -216,5 +216,5 @@ wsServer.on('request', function(request) {
     if (verbose) {
       console.log("We have (" + nb + "->) " + clients.length + " client(s) connected.");
     }
-  }); 
+  });
 });

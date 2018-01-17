@@ -7,7 +7,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dws.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1.7"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.log=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.MySQLLoggerImpl -Dws.between.logs=600000"
-JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=1044"
+# JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=1044"
 #
 echo Make sure the server is started \(node/weather.server.js\)
 # ADDR=`hostname`
