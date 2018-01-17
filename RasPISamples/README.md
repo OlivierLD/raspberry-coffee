@@ -50,7 +50,7 @@ and it supports query string parameters `border` and `theme`.
 
 _For example_:`http://localhost:9876/data/weather.station/analog.html?border=N&theme=white`.
 
-See [here](http://www.lediouris.net/RaspberryPI/WeatherStation/readme.html).
+See [here](http://raspberrypi.lediouris.net/WeatherStation/readme.html).
 
 > See also [this document](./src/java/weatherstation/README.md) 
 
