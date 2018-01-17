@@ -4,6 +4,7 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.system.SystemInfo;
+import i2c.sensor.utils.EndianReaders;
 
 import java.io.IOException;
 
@@ -14,9 +15,7 @@ import java.util.Map;
  * Light sensor, color sensor
  */
 public class TCS34725 {
-	public final static int LITTLE_ENDIAN = 0;
-	public final static int BIG_ENDIAN = 1;
-	private final static int TCS34725_ENDIANNESS = BIG_ENDIAN;
+	private final static EndianReaders.Endianness TCS34725_ENDIANNESS = EndianReaders.Endianness.BIG_ENDIAN;
 	/*
 	Prompt> sudo i2cdetect -y 1
 			 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
@@ -142,13 +141,15 @@ public class TCS34725 {
 		try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
+			}
 
 			// Get device itself
 			tcs34725 = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
+			}
 
 			initialize();
 		} catch (IOException e) {
@@ -163,8 +164,9 @@ public class TCS34725 {
 
 	private int initialize() throws Exception {
 		int result = this.readU8(TCS34725_ID);
-		if (result != 0x44)
+		if (result != 0x44) {
 			return -1;
+		}
 		enable();
 		return 0;
 	}
@@ -209,10 +211,11 @@ public class TCS34725 {
 
 	public void setInterrupt(boolean intrpt) throws Exception {
 		int r = this.readU8(TCS34725_ENABLE);
-		if (intrpt)
+		if (intrpt) {
 			r |= TCS34725_ENABLE_AIEN;
-		else
+		} else {
 			r &= ~TCS34725_ENABLE_AIEN;
+		}
 		this.write8(TCS34725_ENABLE, (byte) r);
 	}
 
@@ -268,9 +271,10 @@ public class TCS34725 {
 	private int readU16(int register) throws Exception {
 		int lo = this.readU8(register);
 		int hi = this.readU8(register + 1);
-		int result = (TCS34725_ENDIANNESS == BIG_ENDIAN) ? (hi << 8) + lo : (lo << 8) + hi; // Big Endian
-		if (verbose)
+		int result = (TCS34725_ENDIANNESS == EndianReaders.Endianness.BIG_ENDIAN) ? (hi << 8) + lo : (lo << 8) + hi; // Big Endian
+		if (verbose) {
 			System.out.println("(U16) I2C: Device " + toHex(TCS34725_ADDRESS) + " returned " + toHex(result) + " from reg " + toHex(TCS34725_COMMAND_BIT | register));
+		}
 		return result;
 	}
 
@@ -281,8 +285,9 @@ public class TCS34725 {
 		int result = 0;
 		try {
 			result = this.tcs34725.read(TCS34725_COMMAND_BIT | reg);
-			if (verbose)
+			if (verbose) {
 				System.out.println("(U8) I2C: Device " + toHex(TCS34725_ADDRESS) + " returned " + toHex(result) + " from reg " + toHex(TCS34725_COMMAND_BIT | reg));
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -291,8 +296,9 @@ public class TCS34725 {
 
 	private static String toHex(int i) {
 		String s = Integer.toString(i, 16).toUpperCase();
-		while (s.length() % 2 != 0)
+		while (s.length() % 2 != 0) {
 			s = "0" + s;
+		}
 		return "0x" + s;
 	}
 

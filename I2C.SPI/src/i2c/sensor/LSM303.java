@@ -102,14 +102,12 @@ public class LSM303 {
 		BOTH
 	}
 
-	;
-
 	private void setMagGain(int gain) throws IOException {
 		magnetometer.write(LSM303_REGISTER_MAG_CRB_REG_M, (byte) gain);
 
 		switch (gain) {
 			case LSM303_MAGGAIN_1_3:
-				_lsm303Mag_Gauss_LSB_XY = 1100F;
+				_lsm303Mag_Gauss_LSB_XY = 1_100F;
 				_lsm303Mag_Gauss_LSB_Z = 980F;
 				break;
 			case LSM303_MAGGAIN_1_9:
@@ -150,9 +148,9 @@ public class LSM303 {
 //		try {
 		// Get i2c bus
 		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
-		if (verbose)
+		if (verbose) {
 			System.out.println("Connected to bus. OK.");
-
+		}
 		// Get device itself
 		if (feature.equals(EnabledFeature.ACCELEROMETER) || feature.equals(EnabledFeature.BOTH)) {
 			accelerometer = bus.getDevice(LSM303_ADDRESS_ACCEL);
@@ -160,9 +158,9 @@ public class LSM303 {
 		if (feature.equals(EnabledFeature.MAGNETOMETER) || feature.equals(EnabledFeature.BOTH)) {
 			magnetometer = bus.getDevice(LSM303_ADDRESS_MAG);
 		}
-		if (verbose)
+		if (verbose) {
 			System.out.println("Connected to devices. OK.");
-
+		}
       /*
        * Start sensing
        */
@@ -181,8 +179,9 @@ public class LSM303 {
 
 			int gain = LSM303_MAGGAIN_1_3;
 			setMagGain(gain);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Magnetometer OK.");
+			}
 		}
 
 		startReading();

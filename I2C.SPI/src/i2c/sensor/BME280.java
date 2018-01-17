@@ -112,13 +112,15 @@ public class BME280 {
 		try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
+			}
 
 			// Get device itself
 			bme280 = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
+			}
 
 			try {
 				this.readCalibrationData();
@@ -179,8 +181,9 @@ public class BME280 {
 		h5 = (h5 << 24) >> 20;
 		dig_H5 = h5 | (readU8(BME280_REGISTER_DIG_H5) >> 4 & 0x0F);
 
-		if (verbose)
+		if (verbose) {
 			showCalibrationData();
+		}
 	}
 
 	private String displayRegister(int reg) {
@@ -216,24 +219,27 @@ public class BME280 {
 	private int readRawTemp() throws Exception {
 		// Reads the raw (uncompensated) temperature from the sensor
 		int meas = mode;
-		if (verbose)
+		if (verbose) {
 			System.out.println(String.format("readRawTemp: 1 - meas=%d", meas));
+		}
 		bme280.write(BME280_REGISTER_CONTROL_HUM, (byte) meas); // HUM ?
 		meas = mode << 5 | mode << 2 | 1;
-		if (verbose)
+		if (verbose) {
 			System.out.println(String.format("readRawTemp: 2 - meas=%d", meas));
+		}
 		bme280.write(BME280_REGISTER_CONTROL, (byte) meas);
 
 		double sleepTime = 0.00125 + 0.0023 * (1 << mode);
 		sleepTime = sleepTime + 0.0023 * (1 << mode) + 0.000575;
 		sleepTime = sleepTime + 0.0023 * (1 << mode) + 0.000575;
-		waitfor((long) (sleepTime * 1_000L));
+		delay((long) (sleepTime * 1_000L));
 		int msb = readU8(BME280_REGISTER_TEMP_DATA);
 		int lsb = readU8(BME280_REGISTER_TEMP_DATA + 1);
 		int xlsb = readU8(BME280_REGISTER_TEMP_DATA + 2);
 		int raw = ((msb << 16) | (lsb << 8) | xlsb) >> 4;
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Raw Temp: " + (raw & 0xFFFF) + ", " + raw + String.format(", msb: 0x%04X lsb: 0x%04X xlsb: 0x%04X", msb, lsb, xlsb));
+		}
 		return raw;
 	}
 
@@ -243,8 +249,9 @@ public class BME280 {
 		int lsb = readU8(BME280_REGISTER_PRESSURE_DATA + 1);
 		int xlsb = readU8(BME280_REGISTER_PRESSURE_DATA + 2);
 		int raw = ((msb << 16) | (lsb << 8) | xlsb) >> 4;
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Raw Press: " + (raw & 0xFFFF) + ", " + raw + String.format(", msb: 0x%04X lsb: 0x%04X xlsb: 0x%04X", msb, lsb, xlsb));
+		}
 		return raw;
 	}
 
@@ -263,54 +270,60 @@ public class BME280 {
 		float temp = 0.0f;
 
 		// Read raw temp before aligning it with the calibration values
-		var1 = (UT / 16384.0f - dig_T1 / 1024.0f) * (float) dig_T2;
-		var2 = ((UT / 131072.0f - dig_T1 / 8192.0f) * (UT / 131072.0f - dig_T1 / 8192.0f)) * (float) dig_T3;
+		var1 = (UT / 16_384.0f - dig_T1 / 1_024.0f) * (float) dig_T2;
+		var2 = ((UT / 131_072.0f - dig_T1 / 8_192.0f) * (UT / 131_072.0f - dig_T1 / 8_192.0f)) * (float) dig_T3;
 		tFine = (int) (var1 + var2);
-		temp = (var1 + var2) / 5120.0f;
-		if (verbose)
+		temp = (var1 + var2) / 5_120.0f;
+		if (verbose) {
 			System.out.println("DBG: Calibrated temperature = " + temp + " C");
+		}
 		return temp;
 	}
 
 	public float readPressure() throws Exception {
 		// Gets the compensated pressure in pascal
 		int adc = readRawPressure();
-		if (verbose)
+		if (verbose) {
 			System.out.println("ADC:" + adc + ", tFine:" + tFine);
-		float var1 = (tFine / 2.0f) - 64000.0f;
-		float var2 = var1 * var1 * (dig_P6 / 32768.0f);
+		}
+		float var1 = (tFine / 2.0f) - 64_000.0f;
+		float var2 = var1 * var1 * (dig_P6 / 32_768.0f);
 		var2 = var2 + var1 * dig_P5 * 2.0f;
-		var2 = (var2 / 4.0f) + (dig_P4 * 65536.0f);
-		var1 = (dig_P3 * var1 * var1 / 524288.0f + dig_P2 * var1) / 524288.0f;
-		var1 = (1.0f + var1 / 32768.0f) * dig_P1;
-		if (var1 == 0f)
+		var2 = (var2 / 4.0f) + (dig_P4 * 65_536.0f);
+		var1 = (dig_P3 * var1 * var1 / 524_288.0f + dig_P2 * var1) / 524_288.0f;
+		var1 = (1.0f + var1 / 32_768.0f) * dig_P1;
+		if (var1 == 0f) {
 			return 0f;
-		float p = 1048576.0f - adc;
-		p = ((p - var2 / 4096.0f) * 6250.0f) / var1;
-		var1 = dig_P9 * p * p / 2147483648.0f;
-		var2 = p * dig_P8 / 32768.0f;
+		}
+		float p = 1_048_576.0f - adc;
+		p = ((p - var2 / 4_096.0f) * 6_250.0f) / var1;
+		var1 = dig_P9 * p * p / 2_147_483_648.0f;
+		var2 = p * dig_P8 / 32_768.0f;
 		p = p + (var1 + var2 + dig_P7) / 16.0f;
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Pressure = " + p + " Pa");
+		}
 		return p;
 	}
 
 	public float readHumidity() throws Exception {
 		int adc = readRawHumidity();
-		float h = tFine - 76800.0f;
-		h = (adc - (dig_H4 * 64.0f + dig_H5 / 16384.8f * h)) *
-						(dig_H2 / 65536.0f * (1.0f + dig_H6 / 67108864.0f * h * (1.0f + dig_H3 / 67108864.0f * h)));
-		h = h * (1.0f - dig_H1 * h / 524288.0f);
-		if (h > 100)
+		float h = tFine - 76_800.0f;
+		h = (adc - (dig_H4 * 64.0f + dig_H5 / 16_384.8f * h)) *
+						(dig_H2 / 65_536.0f * (1.0f + dig_H6 / 67_108_864.0f * h * (1.0f + dig_H3 / 67_108_864.0f * h)));
+		h = h * (1.0f - dig_H1 * h / 524_288.0f);
+		if (h > 100) {
 			h = 100;
-		else if (h < 0)
+		} else if (h < 0) {
 			h = 0;
-		if (verbose)
+		}
+		if (verbose) {
 			System.out.println("DBG: Humidity = " + h);
+		}
 		return h;
 	}
 
-	private int standardSeaLevelPressure = 101325;
+	private int standardSeaLevelPressure = 101_325;
 
 	public void setStandardSeaLevelPressure(int standardSeaLevelPressure) {
 		this.standardSeaLevelPressure = standardSeaLevelPressure;
@@ -320,13 +333,13 @@ public class BME280 {
 		// "Calculates the altitude in meters"
 		double altitude = 0.0;
 		float pressure = readPressure();
-		altitude = 44330.0 * (1.0 - Math.pow(pressure / standardSeaLevelPressure, 0.1903));
+		altitude = 44_330.0 * (1.0 - Math.pow(pressure / standardSeaLevelPressure, 0.1903));
 		if (verbose)
 			System.out.println("DBG: Altitude = " + altitude);
 		return altitude;
 	}
 
-	protected static void waitfor(long howMuch) {
+	protected static void delay(long howMuch) {
 		try {
 			Thread.sleep(howMuch);
 		} catch (InterruptedException ie) {
@@ -356,10 +369,10 @@ public class BME280 {
 		}
 	  /*
     sensor.setStandardSeaLevelPressure((int)press); // As we ARE at the sea level (in San Francisco).
-    try { alt = sensor.readAltitude(); } 
-    catch (Exception ex) 
-    { 
-      System.err.println(ex.getMessage()); 
+    try { alt = sensor.readAltitude(); }
+    catch (Exception ex)
+    {
+      System.err.println(ex.getMessage());
       ex.printStackTrace();
     }
     */

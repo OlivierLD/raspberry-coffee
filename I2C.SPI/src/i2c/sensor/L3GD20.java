@@ -134,8 +134,9 @@ public class L3GD20 {
 
 			// Get device itself
 			l3dg20 = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
+			}
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
@@ -155,15 +156,17 @@ public class L3GD20 {
 	private String readFromRegisterWithDictionaryMatch(int register, int mask, Map<String, Byte> dictionary) throws Exception {
 		int current = this.readFromRegister(register, mask);
 		for (String key : dictionary.keySet()) {
-			if (dictionary.get(key) == (byte) current)
+			if (dictionary.get(key) == (byte) current) {
 				return key;
+			}
 		}
 		return null;
 	}
 
 	private void writeToRegisterWithDictionaryCheck(int register, int mask, String value, Map<String, Byte> dictionary, String dictName) throws Exception {
-		if (!dictionary.containsKey(value))
+		if (!dictionary.containsKey(value)) {
 			throw new RuntimeException("Value [" + value + "] not in range of " + dictName);
+		}
 		this.writeToRegister(register, mask, dictionary.get(value));
 	}
 
@@ -172,20 +175,22 @@ public class L3GD20 {
 	 */
 	public void init() throws Exception {
 		String fullScaleValue = getFullScaleValue();
-		if (fullScaleValue.equals(L3GD20Dictionaries._250_DPS))
+		if (fullScaleValue.equals(L3GD20Dictionaries._250_DPS)) {
 			this.gain = 0.00875;
-		else if (fullScaleValue.equals(L3GD20Dictionaries._500_DPS))
+		} else if (fullScaleValue.equals(L3GD20Dictionaries._500_DPS)) {
 			this.gain = 0.0175;
-		else if (fullScaleValue.equals(L3GD20Dictionaries._2000_DPS))
+		} else if (fullScaleValue.equals(L3GD20Dictionaries._2000_DPS)) {
 			this.gain = 0.07;
+		}
 	}
 
 	public void calibrateX() throws Exception {
 		System.out.println("Calibrating X, please do not move the sensor...");
 		double[] buff = new double[20];
 		for (int i = 0; i < 20; i++) {
-			while (this.getAxisDataAvailableValue()[0] == 0)
-				waitfor(1L);
+			while (this.getAxisDataAvailableValue()[0] == 0) {
+				delay(1L);
+			}
 			buff[i] = this.getRawOutXValue();
 		}
 		this.meanX = getMean(buff);
@@ -197,8 +202,9 @@ public class L3GD20 {
 		System.out.println("Calibrating Y, please do not move the sensor...");
 		double[] buff = new double[20];
 		for (int i = 0; i < 20; i++) {
-			while (this.getAxisDataAvailableValue()[1] == 0)
-				waitfor(1L);
+			while (this.getAxisDataAvailableValue()[1] == 0) {
+				delay(1L);
+			}
 			buff[i] = this.getRawOutYValue();
 		}
 		this.meanY = getMean(buff);
@@ -210,8 +216,9 @@ public class L3GD20 {
 		System.out.println("Calibrating Z, please do not move the sensor...");
 		double[] buff = new double[20];
 		for (int i = 0; i < 20; i++) {
-			while (this.getAxisDataAvailableValue()[2] == 0)
-				waitfor(1L);
+			while (this.getAxisDataAvailableValue()[2] == 0) {
+				delay(1L);
+			}
 			buff[i] = this.getRawOutZValue();
 		}
 		this.meanZ = getMean(buff);
@@ -227,22 +234,25 @@ public class L3GD20 {
 
 	private static double getMax(double[] da) {
 		double max = da[0];
-		for (double d : da)
+		for (double d : da) {
 			max = Math.max(max, d);
+		}
 		return max;
 	}
 
 	private static double getMin(double[] da) {
 		double min = da[0];
-		for (double d : da)
+		for (double d : da) {
 			min = Math.min(min, d);
+		}
 		return min;
 	}
 
 	private static double getMean(double[] da) {
 		double mean = 0;
-		for (double d : da)
+		for (double d : da) {
 			mean += d;
+		}
 		return mean / da.length;
 	}
 
@@ -275,10 +285,11 @@ public class L3GD20 {
 		int h_u2 = this.readFromRegister(L3GD20_REG_R_OUT_X_H, 0xff);
 		int h = BitOps.twosComplementToByte(h_u2);
 		int value = 0;
-		if (h < 0)
+		if (h < 0) {
 			value = (h * 256 - l);
-		else if (h >= 0)
+		} else if (h >= 0) {
 			value = (h * 256 + l);
+		}
 		return value * this.gain;
 	}
 
@@ -287,10 +298,11 @@ public class L3GD20 {
 		int h_u2 = this.readFromRegister(L3GD20_REG_R_OUT_Y_H, 0xff);
 		int h = BitOps.twosComplementToByte(h_u2);
 		int value = 0;
-		if (h < 0)
+		if (h < 0) {
 			value = (h * 256 - l);
-		else if (h >= 0)
+		} else if (h >= 0) {
 			value = (h * 256 + l);
+		}
 		return value * this.gain;
 	}
 
@@ -299,10 +311,11 @@ public class L3GD20 {
 		int h_u2 = this.readFromRegister(L3GD20_REG_R_OUT_Z_H, 0xff);
 		int h = BitOps.twosComplementToByte(h_u2);
 		int value = 0;
-		if (h < 0)
+		if (h < 0) {
 			value = (h * 256 - l);
-		else if (h >= 0)
+		} else if (h >= 0) {
 			value = (h * 256 + l);
+		}
 		return value * this.gain;
 	}
 
@@ -313,30 +326,33 @@ public class L3GD20 {
 	public double getCalOutXValue() throws Exception {
 		double calX = 0d;
 		double x = this.getRawOutXValue();
-		if (x >= this.minX && x <= this.maxX)
+		if (x >= this.minX && x <= this.maxX) {
 			calX = 0d;
-		else
+		} else {
 			calX = x - this.meanX;
+		}
 		return calX;
 	}
 
 	public double getCalOutYValue() throws Exception {
 		double calY = 0d;
 		double y = this.getRawOutYValue();
-		if (y >= this.minY && y <= this.maxY)
+		if (y >= this.minY && y <= this.maxY) {
 			calY = 0d;
-		else
+		} else {
 			calY = y - this.meanY;
+		}
 		return calY;
 	}
 
 	public double getCalOutZValue() throws Exception {
 		double calZ = 0d;
 		double z = this.getRawOutZValue();
-		if (z >= this.minZ && z <= this.maxZ)
+		if (z >= this.minZ && z <= this.maxZ) {
 			calZ = 0d;
-		else
+		} else {
 			calZ = z - this.meanZ;
+		}
 		return calZ;
 	}
 
@@ -403,28 +419,31 @@ public class L3GD20 {
 	}
 
 	public void setPowerMode(String mode) throws Exception {
-		if (!L3GD20Dictionaries.PowerModeMap.containsKey(mode))
+		if (!L3GD20Dictionaries.PowerModeMap.containsKey(mode)) {
 			throw new RuntimeException("Value [" + mode + "] not accepted for PowerMode");
-		if (mode.equals(L3GD20Dictionaries.POWER_DOWN))
+		}
+		if (mode.equals(L3GD20Dictionaries.POWER_DOWN)) {
 			this.writeToRegister(L3GD20_REG_RW_CTRL_REG1, L3GD20_MASK_CTRL_REG1_PD, 0);
-		else if (mode.equals(L3GD20Dictionaries.SLEEP))
+		} else if (mode.equals(L3GD20Dictionaries.SLEEP)) {
 			this.writeToRegister(L3GD20_REG_RW_CTRL_REG1, L3GD20_MASK_CTRL_REG1_PD |
-							L3GD20_MASK_CTRL_REG1_Zen |
-							L3GD20_MASK_CTRL_REG1_Yen |
-							L3GD20_MASK_CTRL_REG1_Xen, 8);
-		else if (mode.equals(L3GD20Dictionaries.NORMAL))
+					L3GD20_MASK_CTRL_REG1_Zen |
+					L3GD20_MASK_CTRL_REG1_Yen |
+					L3GD20_MASK_CTRL_REG1_Xen, 8);
+		} else if (mode.equals(L3GD20Dictionaries.NORMAL)) {
 			this.writeToRegister(L3GD20_REG_RW_CTRL_REG1, L3GD20_MASK_CTRL_REG1_PD, 1);
+		}
 	}
 
 	public String getPowerMode() throws Exception {
 		int powermode = this.readFromRegister(L3GD20_REG_RW_CTRL_REG1, L3GD20_MASK_CTRL_REG1_PD | L3GD20_MASK_CTRL_REG1_Xen | L3GD20_MASK_CTRL_REG1_Yen | L3GD20_MASK_CTRL_REG1_Zen);
 		int dictval = -1;
-		if (!BitOps.checkBit(powermode, 3))
+		if (!BitOps.checkBit(powermode, 3)) {
 			dictval = 0;
-		else if (powermode == 0b1000)
+		} else if (powermode == 0b1000) {
 			dictval = 1;
-		else if (BitOps.checkBit(powermode, 3))
+		} else if (BitOps.checkBit(powermode, 3)) {
 			dictval = 2;
+		}
 		String key = "Unknown";
 		for (String s : L3GD20Dictionaries.PowerModeMap.keySet()) {
 			if (L3GD20Dictionaries.PowerModeMap.get(s) == dictval) {
@@ -448,10 +467,12 @@ public class L3GD20 {
 	}
 
 	public void setDataRateAndBandwidth(int datarate, float bandwidth) throws Exception {
-		if (!L3GD20Dictionaries.DataRateBandWidthMap.keySet().contains(datarate))
+		if (!L3GD20Dictionaries.DataRateBandWidthMap.keySet().contains(datarate)) {
 			throw new RuntimeException("Data rate:[" + Integer.toString(datarate) + "] not in range of data rate values.");
-		if (!L3GD20Dictionaries.DataRateBandWidthMap.get(datarate).keySet().contains(bandwidth))
+		}
+		if (!L3GD20Dictionaries.DataRateBandWidthMap.get(datarate).keySet().contains(bandwidth)) {
 			throw new RuntimeException("Bandwidth: [" + Float.toString(bandwidth) + "] cannot be assigned to data rate: [" + Integer.toString(datarate) + "]");
+		}
 		int bits = L3GD20Dictionaries.DataRateBandWidthMap.get(datarate).get(bandwidth);
 		this.writeToRegister(L3GD20_REG_RW_CTRL_REG1, L3GD20_MASK_CTRL_REG1_DR | L3GD20_MASK_CTRL_REG1_BW, bits);
 	}
@@ -719,12 +740,13 @@ public class L3GD20 {
 
 	private static String toHex(int i) {
 		String s = Integer.toString(i, 16).toUpperCase();
-		while (s.length() % 2 != 0)
+		while (s.length() % 2 != 0) {
 			s = "0" + s;
+		}
 		return "0x" + s;
 	}
 
-	private static void waitfor(long howMuch) {
+	private static void delay(long howMuch) {
 		try {
 			Thread.sleep(howMuch);
 		} catch (InterruptedException ie) {

@@ -38,13 +38,14 @@ public class HMC5883L {
 		try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
-
+			}
 			// Get device itself
 			hcm5883l = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -59,8 +60,9 @@ public class HMC5883L {
 
 		w = (short) ((((high & 0xFF) << 8) | (low & 0xFF)) & 0xFFFF); // Little endian
 
-		if (w >= 0x8000)
+		if (w >= 0x8000) {
 			w = (short) -((0xFFFF - w) + 1);
+		}
 
 		if (verbose) {
 			System.out.println(String.format("ReadWord: 0x%s << 8 | 0x%s => 0x%s, dec: %d",
@@ -101,8 +103,9 @@ public class HMC5883L {
 		}
 
 		heading = Math.atan2(yOut, xOut);
-		if (heading < 0)
+		if (heading < 0) {
 			heading += (2 * Math.PI);
+		}
 		return heading;
 	}
 
