@@ -1,6 +1,7 @@
 # Navigation Server
 
 An illustration of the way to gather several REST Services all in one place.
+This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md).
 
 - [Tide](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTTideEngine/README.md) REST Service
 - [Astro](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNauticalAlmanac) REST Service
@@ -106,11 +107,11 @@ NMEA Console. The displays (night theme).
 
 ![Menu and Console](./docimg/screenshot.02.png)
 
-Current evaluation, instantaneous, 30 seconds.
+Evaluation of the current, instantaneous, 30 seconds.
 
 ![Menu and Console](./docimg/screenshot.03.png)
 
-Current evaluation, 1  minute, 10 minutes, much more accurate!
+Evaluation of the current, 1  minute, 10 minutes, _much more_ accurate!
 
 ![Several stylings available](./docimg/screenshot.10.png)
 
@@ -163,6 +164,8 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 ![GRIB Rendering](./docimg/screenshot.09.png)
 Faxes and GRIB, together
 
+## Server Remote access
+> See [this document](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA.multiplexer#remote-access).
 
 ## TODOs, next...
 
@@ -170,4 +173,5 @@ Faxes and GRIB, together
 - Minify JavaScript resources
 - GRIB rendering (in full), coming good.
 - Routing features
+- Use the GRIBs available through [Outernet](https://outernet.is/) (Need more thoughts...) ?
 
