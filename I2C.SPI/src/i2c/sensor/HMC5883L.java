@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import static utils.TimeUtil.delay;
+
 /*
  * 3 Axis compass
  */
@@ -37,7 +39,7 @@ public class HMC5883L {
 	public HMC5883L(int address) throws I2CFactory.UnsupportedBusNumberException {
 		try {
 			// Get i2c bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
 			if (verbose) {
 				System.out.println("Connected to bus. OK.");
 			}
@@ -117,20 +119,12 @@ public class HMC5883L {
 		}
 	}
 
-	protected static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
 	private static boolean go = true;
 	private static void setGo(boolean b) {
 		go = b;
 	}
 
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		HMC5883L sensor = new HMC5883L();
 		double hdg = 0;
@@ -139,7 +133,7 @@ public class HMC5883L {
 			synchronized (sensor) {
 				setGo(false);
 				sensor.close();
-				delay(1_000);
+				delay(1_000L);
 			}
 		}));
 

@@ -12,7 +12,7 @@ public class PanTilt {
 	private static StandardServo ssUD = null,
 					ssLR = null;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		ssUD = new StandardServo(14); // 14 : Address on the board (1..15)
 		ssLR = new StandardServo(15); // 15 : Address on the board (1..15)
 

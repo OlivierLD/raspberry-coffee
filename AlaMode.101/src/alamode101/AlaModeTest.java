@@ -12,6 +12,9 @@ import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import static utils.StaticUtil.userInput;
+import static utils.TimeUtil.delay;
+
 /*
  * See the Arduino sketch named AlaModeTest.ino
  */
@@ -146,15 +149,7 @@ public class AlaModeTest {
 	public void writeAlaMode(byte b)
 			throws Exception {
 		alamode.write(b);
-		delay(0.001F);
-	}
-
-	private static void delay(float d) // d in seconds.
-	{
-		try {
-			Thread.sleep((long) d * 1_000);
-		} catch (Exception ex) {
-		}
+		delay(1L);
 	}
 
 	private static void displayMenu() {
@@ -183,27 +178,7 @@ public class AlaModeTest {
 			System.out.println("Not open yet...");
 		}
 	}
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	private static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
-
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		verbose = "true".equals(System.getProperty("alamode.debug", "false"));
 
 		final NumberFormat NF = new DecimalFormat("##00.00");

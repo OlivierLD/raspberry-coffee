@@ -49,7 +49,7 @@ public class StringGenerator {
   |GN    |  Mixed GPS and GLONASS data, according to IEIC 61162-1
   |================================================================
  */
-  
+
   /*
    * XDR - Transducer Measurements
       $--XDR,a,x.x,a,c--c,...    ...a,x.x,a,c--c*hh<CR><LF>
@@ -468,7 +468,7 @@ public class StringGenerator {
 		return "$" + zda;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String rmc = generateRMC("II", new Date(), 38.2500, -122.5, 6.7, 210, 3d);
 		System.out.println("Generated RMC:" + rmc);
 

@@ -155,7 +155,7 @@ public class TCPClient {
 
 	public void setTimeout(long timeout) { /* Not used for TCP */ }
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.setProperty("verbose", "true");
 		String host = "localhost";
 		int port = 2947;

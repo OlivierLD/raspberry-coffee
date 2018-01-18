@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static utils.StaticUtil.userInput;
+import static utils.TimeUtil.delay;
+
 /**
  * Standard, all the way, clockwise, counterclockwise.
  *
@@ -20,43 +23,6 @@ import java.util.function.Consumer;
  * Execute commands sent by a main or another program.
  */
 public class MeArmPilot {
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	/**
-	 * Prompt the user for input, from stdin. Completed on [Return]
-	 *
-	 * @param prompt The prompt
-	 * @return the user's input.
-	 */
-	private static String userInput(String prompt) {
-		String retString = "";
-		System.out.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
-
-	/**
-	 * @param howMuch in ms.
-	 */
-	private static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
 	// Servo MG90S
 	private static int servoMin = 130; // -90 degrees at 60 Hertz
 	private static int servoMax = 675; //  90 degrees at 60 Hertz

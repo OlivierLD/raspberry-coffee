@@ -15,6 +15,8 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import static utils.TimeUtil.delay;
+
 /**
  * Publishes the data from a BME280 on an IoT server (Adafruit-IO)
  * Data from the same server can be read to turn on a heater (with a relay), remotely
@@ -28,22 +30,22 @@ public class TemperatureRelaySample
 
   private final static String HEATER_NAME      = "onoff";
   private final static String THERMOMETER_NAME = "air-temperature";
-  
-  private final static String key = System.getProperty("key"); 
-  
+
+  private final static String key = System.getProperty("key");
+
   final GpioController gpio = GpioFactory.getInstance();
   private GpioPinDigitalOutput relayPin;
-  
+
   private final static int ON  = 1;
   private final static int OFF = 2;
 
   private void initRelay()
   {
     // For a relay it seems that HIGH means NC (Normally Closed)...
-    // pin 00/#17 
+    // pin 00/#17
     relayPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Relay", PinState.HIGH);
   }
-  
+
   private void setRelay(int pos)
   {
     if (pos == OFF)
@@ -51,12 +53,12 @@ public class TemperatureRelaySample
     else
       relayPin.low();
   }
-  
+
   private void shutdownRelay()
   {
     gpio.shutdown();
   }
-  
+
   private String readHeaterSwitch(String key) throws Exception
   {
     String url = "https://io.adafruit.com/api/feeds/" + HEATER_NAME;
@@ -72,7 +74,7 @@ public class TemperatureRelaySample
       System.out.println("Feed value:" + lastValue);
     return lastValue;
   }
-  
+
   private String readTemperature(String key) throws Exception
   {
     String url = "https://io.adafruit.com/api/feeds/" + THERMOMETER_NAME;
@@ -87,7 +89,7 @@ public class TemperatureRelaySample
  // System.out.println("Feed value:" + tempValue);
     return tempValue;
   }
-  
+
   private void setTemperature(String key, float temperature) throws Exception
   {
     String url = "https://io.adafruit.com/api/feeds/" + THERMOMETER_NAME + "/data";
@@ -100,26 +102,26 @@ public class TemperatureRelaySample
     if (DEBUG)
       System.out.println("POST Ret:" + httpCode);
   }
-  
+
   private boolean working = false;
-  
+
   private boolean keepWorking()
   {
     return working;
   }
-  
+
   private void setWorking(boolean b)
   {
     working = b;
   }
-  
-  public static void main(String[] args) throws Exception
+
+  public static void main(String... args) throws Exception
   {
     final TemperatureRelaySample trs = new TemperatureRelaySample();
     trs.initRelay();
-    
+
     final BME280 sensor = new BME280();
-    
+
     Thread thermometerThread = new Thread()
     {
       float press = 0;
@@ -132,14 +134,14 @@ public class TemperatureRelaySample
         System.out.println("Starting temperature thread");
         while (trs.keepWorking())
         {
-          try 
-          { 
-            temp = sensor.readTemperature(); 
+          try
+          {
+            temp = sensor.readTemperature();
             trs.setTemperature(key, temp);
-          } 
-          catch (Exception ex) 
-          { 
-            System.err.println(ex.getMessage()); 
+          }
+          catch (Exception ex)
+          {
+            System.err.println(ex.getMessage());
             ex.printStackTrace();
           }
           delay(1_000L);
@@ -147,7 +149,7 @@ public class TemperatureRelaySample
         System.out.println("\nTemperature thread completed");
       }
     };
-    
+
     Thread switchReader = new Thread()
     {
       public void run()
@@ -155,14 +157,14 @@ public class TemperatureRelaySample
         System.out.println("Starting switch thread");
         while (trs.keepWorking())
         {
-          try 
-          { 
+          try
+          {
             String switchValue = trs.readHeaterSwitch(key);
             trs.setRelay(switchValue.equals("ON") ? ON : OFF);
-          } 
-          catch (Exception ex) 
-          { 
-            System.err.println(ex.getMessage()); 
+          }
+          catch (Exception ex)
+          {
+            System.err.println(ex.getMessage());
             ex.printStackTrace();
           }
           delay(1_000L);
@@ -170,37 +172,32 @@ public class TemperatureRelaySample
         System.out.println("\nSwitch thread completed");
       }
     };
-    
+
     final Thread me = Thread.currentThread();
-    
+
     Runtime.getRuntime().addShutdownHook(new Thread()
     {
       public void run()
       {
         trs.setWorking(false);
         delay(3_000L);
-        trs.shutdownRelay(); 
+        trs.shutdownRelay();
         synchronized (me)
         {
           me.notify();
         }
       }
     });
-    
+
     trs.setWorking(true);
     thermometerThread.start();
     switchReader.start();
-    
+
     synchronized (me)
     {
       me.wait();
       System.out.println("\nWait is over");
     }
     System.out.println("Done!");
-  }
-  
-  private final static void delay(long ms)
-  {
-    try { Thread.sleep(ms); } catch (Exception ex) {}
   }
 }

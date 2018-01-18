@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Altitude, Pressure, Temperature
  */
@@ -143,7 +145,7 @@ public class BMP180 {
 	public int readRawTemp() throws Exception {
 		// Reads the raw (uncompensated) temperature from the sensor
 		bmp180.write(BMP180_CONTROL, (byte) BMP180_READTEMPCMD);
-		delay(5);  // Wait 5ms
+		delay(5L);  // Wait 5ms
 		int raw = readU16(BMP180_TEMPDATA);
 		if (verbose) {
 			System.out.println("DBG: Raw Temp: " + (raw & 0xFFFF) + ", " + raw);
@@ -307,15 +309,7 @@ public class BMP180 {
 		return altitude;
 	}
 
-	protected static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		BMP180 sensor = new BMP180();
 		float press = 0;

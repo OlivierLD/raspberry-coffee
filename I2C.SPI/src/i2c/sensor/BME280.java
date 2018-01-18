@@ -13,6 +13,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import utils.StringUtils;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Pressure, Altitude, Temperature, Humidity
  * Adapted from https://github.com/adafruit/Adafruit_Python_BME280
@@ -339,15 +341,7 @@ public class BME280 {
 		return altitude;
 	}
 
-	protected static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		BME280 sensor = new BME280();
 		float press = 0;

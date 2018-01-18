@@ -21,7 +21,7 @@ public class Lambda101 {
 		return s.length();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String str = genericStuff("Akeu", Lambda101::repeat);
 		System.out.println(str);
 

@@ -12,6 +12,8 @@ import java.io.IOException;
 
 import java.util.Map;
 
+import static utils.TimeUtil.delay;
+
 /**
  * Triple axis Gyro
  */
@@ -744,13 +746,5 @@ public class L3GD20 {
 			s = "0" + s;
 		}
 		return "0x" + s;
-	}
-
-	private static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
 	}
 }

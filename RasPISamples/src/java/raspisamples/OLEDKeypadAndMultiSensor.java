@@ -27,14 +27,14 @@ import phonekeyboard3x4.KeyboardController;
 
 /*
  * A phone keypad, and a 128x32 oled screen
- * 
+ *
  * Plus HMC5883L (triple-axis compass)
  *    & MPL115A2 (temp + pressure)
- * 
+ *
  * and an Arduino Uno on a serial (USB) port (that reads an analog light sensor)
- * 
+ *
  * and a relay
- * 
+ *
  * Several threads are using the oled screen.
  * Synchronization (thread-safety) is important.
  */
@@ -357,7 +357,7 @@ public class OLEDKeypadAndMultiSensor {
 		}
 	}
 
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		if (args.length > 0) {
 			try {
 				relayThreshold = Integer.parseInt(args[0]);

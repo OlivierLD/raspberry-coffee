@@ -24,7 +24,7 @@ public class BMP180Logging
   private static String boardID = "OlivRPi1";
   private static long waitTime  = 10_000L;
   private static String sessionID = "XX";
-  static 
+  static
   {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     sessionID = sdf.format(new Date());
@@ -34,13 +34,13 @@ public class BMP180Logging
   private final static String WAIT_PRM  = "-wait";
   private final static String SESS_PRM  = "-sess";
   private final static String HELP_PRM  = "-help";
-  
+
   protected static void waitfor(long howMuch)
   {
     try { Thread.sleep(howMuch); } catch (InterruptedException ie) { ie.printStackTrace(); }
   }
-  
-  private static void processPrm(String[] args)
+
+  private static void processPrm(String... args)
   {
     for (int i=0; i<args.length; i++)
     {
@@ -52,7 +52,7 @@ public class BMP180Logging
         {
           waitTime = 1_000L * Integer.parseInt(args[i + 1]);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
           ex.printStackTrace();
         }
@@ -73,13 +73,13 @@ public class BMP180Logging
       }
     }
   }
-  
-  public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException
+
+  public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException
   {
     processPrm(args);
 
     System.out.println("Logging data for [" + boardID + "], every " + Long.toString(waitTime / 1_000) + " s.");
-    
+
     final NumberFormat NF = new DecimalFormat("##00.00");
     BMP180 sensor = new BMP180();
     float press = 0;
@@ -96,30 +96,30 @@ public class BMP180Logging
 
     while (true)
     {
-      try { press = sensor.readPressure(); } 
-      catch (Exception ex) 
-      { 
-        System.err.println(ex.getMessage()); 
+      try { press = sensor.readPressure(); }
+      catch (Exception ex)
+      {
+        System.err.println(ex.getMessage());
         ex.printStackTrace();
       }
       sensor.setStandardSeaLevelPressure((int)press); // As we ARE at the sea level (in San Francisco).
-      try { alt = sensor.readAltitude(); } 
-      catch (Exception ex) 
-      { 
-        System.err.println(ex.getMessage()); 
+      try { alt = sensor.readAltitude(); }
+      catch (Exception ex)
+      {
+        System.err.println(ex.getMessage());
         ex.printStackTrace();
       }
-      try { temp = sensor.readTemperature(); } 
-      catch (Exception ex) 
-      { 
-        System.err.println(ex.getMessage()); 
+      try { temp = sensor.readTemperature(); }
+      catch (Exception ex)
+      {
+        System.err.println(ex.getMessage());
         ex.printStackTrace();
       }
       System.out.println("At " + new Date().toString());
       System.out.println("Temperature: " + NF.format(temp) + " C");
       System.out.println("Pressure   : " + NF.format(press / 100) + " hPa");
       System.out.println("Altitude   : " + NF.format(alt) + " m");
-      
+
       // Log here
       try
       {

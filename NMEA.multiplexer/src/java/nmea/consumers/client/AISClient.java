@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class AISClient {
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		try {
 			Map<Integer, AISParser.AISRecord> map = new HashMap<>();
 

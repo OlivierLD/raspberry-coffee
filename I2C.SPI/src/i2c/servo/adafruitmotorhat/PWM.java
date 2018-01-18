@@ -6,6 +6,8 @@ import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
 
+import static utils.TimeUtil.delay;
+
 /**
  * Also see {@link i2c.servo.pwm.PCA9685}
  */
@@ -90,13 +92,6 @@ public class PWM {
 			delay(5); // wait for oscillator
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		}
-	}
-
-	private static void delay(long t) {
-		try {
-			Thread.sleep(t);
-		} catch (InterruptedException ie) {
 		}
 	}
 

@@ -12,7 +12,7 @@ import java.io.IOException;
  * Uses the Serial communication packages from PI4J
  */
 public class GPSDataReader {
-	public static void main(String args[])
+	public static void main(String... args)
 					throws InterruptedException, NumberFormatException {
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
 		String port = System.getProperty("port.name", Serial.DEFAULT_COM_PORT);

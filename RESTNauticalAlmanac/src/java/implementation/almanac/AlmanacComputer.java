@@ -72,7 +72,7 @@ public class AlmanacComputer {
 	 * An example of a main.
 	 * Generates the xml output for the requested period.
 	 */
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String help = getPrm(args, "-help");
 		if (help != null) {
 			displayHelp();
@@ -238,7 +238,7 @@ public class AlmanacComputer {
 		out.println("</almanac>");
 	}
 
-	public static void main_1(String[] args) {
+	public static void main_1(String... args) {
 		year = 2012;
 		month = SEPTEMBER;
 		day = 21;

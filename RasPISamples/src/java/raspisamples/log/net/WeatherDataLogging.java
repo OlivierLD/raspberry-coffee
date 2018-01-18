@@ -30,7 +30,7 @@ public class WeatherDataLogging
   private static String boardID = "OlivRPi1";
   private static long waitTime  = 10_000L;
   private static String sessionID = "XX";
-  static 
+  static
   {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     sessionID = sdf.format(new Date());
@@ -43,7 +43,7 @@ public class WeatherDataLogging
 
   private final static String NO_BMP180  = "-nobmp180";
   private final static String NO_HTU21DF = "-nohtu21df";
-  
+
   private static boolean withBMP180  = true;
   private static boolean withHTU21DF = true;
 
@@ -51,8 +51,8 @@ public class WeatherDataLogging
   {
     try { Thread.sleep(howMuch); } catch (InterruptedException ie) { ie.printStackTrace(); }
   }
-  
-  private static void processPrm(String[] args)
+
+  private static void processPrm(String... args)
   {
     for (int i=0; i<args.length; i++)
     {
@@ -68,7 +68,7 @@ public class WeatherDataLogging
         {
           waitTime = 1_000L * Integer.parseInt(args[i + 1]);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
           ex.printStackTrace();
         }
@@ -89,13 +89,13 @@ public class WeatherDataLogging
       }
     }
   }
-  
-  public static void main(String[] args)
+
+  public static void main(String... args)
   {
     processPrm(args);
 
     System.out.println("Logging data for [" + boardID + "], every " + Long.toString(waitTime / 1_000) + " s.");
-    
+
     final NumberFormat NF = new DecimalFormat("##00.00");
 
     float press = 0;
@@ -133,7 +133,7 @@ public class WeatherDataLogging
       {
         if (!humSensor.begin())
         {
-          System.out.println("Sensor not found!");        
+          System.out.println("Sensor not found!");
           System.exit(1);
         }
       }
@@ -157,32 +157,32 @@ public class WeatherDataLogging
       // Read/Measure here
       if (bmpSensor != null)
       {
-        try { press = bmpSensor.readPressure(); } 
-        catch (Exception ex) 
-        { 
-          System.err.println(ex.getMessage()); 
+        try { press = bmpSensor.readPressure(); }
+        catch (Exception ex)
+        {
+          System.err.println(ex.getMessage());
           ex.printStackTrace();
         }
         bmpSensor.setStandardSeaLevelPressure((int)press); // As we ARE at the sea level (in San Francisco).
-        try { alt = bmpSensor.readAltitude(); } 
-        catch (Exception ex) 
-        { 
-          System.err.println(ex.getMessage()); 
+        try { alt = bmpSensor.readAltitude(); }
+        catch (Exception ex)
+        {
+          System.err.println(ex.getMessage());
           ex.printStackTrace();
         }
-        try { temp = bmpSensor.readTemperature(); } 
-        catch (Exception ex) 
-        { 
-          System.err.println(ex.getMessage()); 
+        try { temp = bmpSensor.readTemperature(); }
+        catch (Exception ex)
+        {
+          System.err.println(ex.getMessage());
           ex.printStackTrace();
         }
       }
       if (humSensor != null)
       {
-        try { hum = humSensor.readHumidity(); } 
-        catch (Exception ex) 
-        { 
-          System.err.println(ex.getMessage()); 
+        try { hum = humSensor.readHumidity(); }
+        catch (Exception ex)
+        {
+          System.err.println(ex.getMessage());
           ex.printStackTrace();
         }
       }
@@ -191,7 +191,7 @@ public class WeatherDataLogging
       System.out.println("Pressure   : " + NF.format(press / 100) + " hPa");
       System.out.println("Altitude   : " + NF.format(alt) + " m");
       System.out.println("Humidity   : " + NF.format(hum) + " %");
-      
+
       // Log here
       try
       {

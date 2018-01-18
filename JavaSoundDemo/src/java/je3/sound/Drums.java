@@ -16,7 +16,7 @@ public class Drums extends JFrame {
 	MidiChannel channel;  // The channel we play on: 10 is for percussion
 	int velocity = 64;    // Default volume is 50%
 
-	public static void main(String[] args) throws MidiUnavailableException {
+	public static void main(String... args) throws MidiUnavailableException {
 		// We don't need a Sequencer in this example, since we send MIDI
 		// events directly to the Synthesizer instead.
 		Synthesizer synthesizer = MidiSystem.getSynthesizer();

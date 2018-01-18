@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
+import static utils.StaticUtil.userInput;
+
 /**
  * There is some bug in libRxTx, that prevents access to /dev/ttyACM0.
  * To work around it:
@@ -102,26 +104,6 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 		System.out.flush();
 	}
 
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	private static String userInput(String prompt) {
-		String retString = "";
-		if (prompt != null) {
-			System.err.print(prompt);
-		}
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			try {
-				userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
-
 	private static void displayHelp() {
 		System.out.println("Special Commands:");
 		System.out.println("=================");
@@ -185,7 +167,7 @@ public class SerialConsoleCLI implements SerialIOCallbacks {
 	 *                                             #9 . . #10  - Green
 	 * @param args                            etc #11 . . #12
 	 */
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		final SerialConsoleCLI mwc = new SerialConsoleCLI();
 		final SerialCommunicator sc = new SerialCommunicator(mwc);
 		sc.setVerbose(verbose);

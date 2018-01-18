@@ -68,7 +68,7 @@ public class ArduinoCLIClient implements SerialIOCallbacks {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		final ArduinoCLIClient caller = new ArduinoCLIClient();
 		final SerialCommunicator sc = new SerialCommunicator(caller);
 		sc.setVerbose(false);

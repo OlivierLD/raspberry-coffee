@@ -383,7 +383,7 @@ public final class GeomUtil {
 		return gridSquare;
 	}
 
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		DecimalFormat nf3 = new DecimalFormat("000.0000000");
 		double d = sexToDec("333", "22.07");
 //  PolyAngle pa = new PolyAngle(d, PolyAngle.DEGREES);

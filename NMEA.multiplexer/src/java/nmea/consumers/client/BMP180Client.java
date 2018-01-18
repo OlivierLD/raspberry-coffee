@@ -95,7 +95,7 @@ public class BMP180Client extends NMEAClient {
 		return new BMP180Bean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("BMP180Client invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
 			System.out.println("BMP180Client prm:" + s);

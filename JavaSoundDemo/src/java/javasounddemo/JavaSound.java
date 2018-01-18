@@ -157,7 +157,7 @@ public class JavaSound extends JPanel implements ChangeListener, Runnable {
 		tabPane.addTab("Groove Box", p);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 
 		try {
 			if (MidiSystem.getSequencer() == null) {

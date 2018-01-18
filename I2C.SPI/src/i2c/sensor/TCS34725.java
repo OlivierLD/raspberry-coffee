@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Light sensor, color sensor
  */
@@ -300,14 +302,6 @@ public class TCS34725 {
 			s = "0" + s;
 		}
 		return "0x" + s;
-	}
-
-	private static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
 	}
 
 	public static class TCSColor {

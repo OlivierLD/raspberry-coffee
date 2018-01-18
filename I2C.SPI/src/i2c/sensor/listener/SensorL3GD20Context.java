@@ -1,61 +1,50 @@
 package i2c.sensor.listener;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A singleton
  */
-public class SensorL3GD20Context implements Serializable
-{
-  private static SensorL3GD20Context context = null;
-  private transient List<L3GD20Listener> sensorReaderListeners = null;
-  
-  private SensorL3GD20Context()
-  {
-    sensorReaderListeners = new ArrayList<L3GD20Listener>();
-  }
-  
-  public static synchronized SensorL3GD20Context getInstance()
-  {
-    if (context == null)
-      context = new SensorL3GD20Context();    
-    return context;
-  }
+public class SensorL3GD20Context implements Serializable {
+	private static SensorL3GD20Context context = null;
+	private transient List<L3GD20Listener> sensorReaderListeners;
 
-  public List<L3GD20Listener> getReaderListeners()
-  {
-    return sensorReaderListeners;
-  }    
+	private SensorL3GD20Context() {
+		sensorReaderListeners = new ArrayList<>();
+	}
 
-  public synchronized void addReaderListener(L3GD20Listener l)
-  {
-    if (!sensorReaderListeners.contains(l))
-    {
-      sensorReaderListeners.add(l);
-    }
-  }
+	public static synchronized SensorL3GD20Context getInstance() {
+		if (context == null) {
+			context = new SensorL3GD20Context();
+		}
+		return context;
+	}
 
-  public synchronized void removeReaderListener(L3GD20Listener l)
-  {
-    sensorReaderListeners.remove(l);
-  }
+	public List<L3GD20Listener> getReaderListeners() {
+		return sensorReaderListeners;
+	}
 
-  public void fireMotionDetected(double x, double y, double z)
-  {
-    for (L3GD20Listener l : sensorReaderListeners)
-    {
-      l.motionDetected(x, y, z);
-    }
-  }
+	public synchronized void addReaderListener(L3GD20Listener l) {
+		if (!sensorReaderListeners.contains(l)) {
+			sensorReaderListeners.add(l);
+		}
+	}
 
-  public void fireClose()
-  {
-    for (L3GD20Listener l : sensorReaderListeners)
-    {
-      l.close();
-    }
-  }
+	public synchronized void removeReaderListener(L3GD20Listener l) {
+		sensorReaderListeners.remove(l);
+	}
+
+	public void fireMotionDetected(double x, double y, double z) {
+		for (L3GD20Listener l : sensorReaderListeners) {
+			l.motionDetected(x, y, z);
+		}
+	}
+
+	public void fireClose() {
+		for (L3GD20Listener l : sensorReaderListeners) {
+			l.close();
+		}
+	}
 }

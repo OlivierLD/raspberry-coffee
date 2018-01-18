@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Pressure, Temperature
  */
@@ -163,15 +165,7 @@ public class MPL115A2 {
 		}
 	}
 
-	protected static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		MPL115A2 sensor = new MPL115A2();
 		float press = 0;

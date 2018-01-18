@@ -29,20 +29,20 @@ public class WeatherDataFileLogging
   private final static String WAIT_PRM  = "-wait";
   private final static String FILE_PRM  = "-file";
   private final static String HELP_PRM  = "-help";
-  
+
   private final static String NO_BMP180  = "-nobmp180";
   private final static String NO_HTU21DF = "-nohtu21df";
-  
+
   private static String logFileName = "weather.data.log";
   private static boolean withBMP180  = true;
   private static boolean withHTU21DF = true;
-  
+
   protected static void waitfor(long howMuch)
   {
     try { Thread.sleep(howMuch); } catch (InterruptedException ie) { ie.printStackTrace(); }
   }
-  
-  private static void processPrm(String[] args)
+
+  private static void processPrm(String... args)
   {
     for (int i=0; i<args.length; i++)
     {
@@ -54,7 +54,7 @@ public class WeatherDataFileLogging
         {
           waitTime = 1_000L * Integer.parseInt(args[i + 1]);
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
           ex.printStackTrace();
         }
@@ -76,8 +76,8 @@ public class WeatherDataFileLogging
       }
     }
   }
-  
-  public static void main(String[] args) throws Exception
+
+  public static void main(String... args) throws Exception
   {
     processPrm(args);
 
@@ -99,14 +99,14 @@ public class WeatherDataFileLogging
       catch (Exception ex ) { ex.printStackTrace(); }
     }
     float hum  = 0;
-    
+
     if (humSensor != null)
     {
       try
       {
         if (!humSensor.begin())
         {
-          System.out.println("Sensor not found!");        
+          System.out.println("Sensor not found!");
           System.exit(1);
         }
       }
@@ -125,10 +125,10 @@ public class WeatherDataFileLogging
                                              // Close log file
                                              if (log != null)
                                              {
-                                               try 
-                                               { 
+                                               try
+                                               {
                                                  log.flush();
-                                                 log.close(); 
+                                                 log.close();
                                                } catch (Exception ex) { ex.printStackTrace(); }
                                              }
                                            }
@@ -138,25 +138,25 @@ public class WeatherDataFileLogging
     {
       if (bmpSensor != null)
       {
-        try { press = bmpSensor.readPressure(); } 
-        catch (Exception ex) 
-        { 
-          System.err.println(ex.getMessage()); 
+        try { press = bmpSensor.readPressure(); }
+        catch (Exception ex)
+        {
+          System.err.println(ex.getMessage());
           ex.printStackTrace();
         }
-        try { temp = bmpSensor.readTemperature(); } 
-        catch (Exception ex) 
-        { 
-          System.err.println(ex.getMessage()); 
+        try { temp = bmpSensor.readTemperature(); }
+        catch (Exception ex)
+        {
+          System.err.println(ex.getMessage());
           ex.printStackTrace();
         }
       }
       if (humSensor != null)
       {
-        try { hum = humSensor.readHumidity(); } 
-        catch (Exception ex) 
-        { 
-          System.err.println(ex.getMessage()); 
+        try { hum = humSensor.readHumidity(); }
+        catch (Exception ex)
+        {
+          System.err.println(ex.getMessage());
           ex.printStackTrace();
         }
       }
@@ -165,7 +165,7 @@ public class WeatherDataFileLogging
       System.out.println("Temperature: " + NF.format(temp) + " C");
       System.out.println("Pressure   : " + NF.format(press / 100) + " hPa");
       System.out.println("Humidity   : " + NF.format(hum) + " %");
-      
+
       // Log here
       try
       {
@@ -174,7 +174,7 @@ public class WeatherDataFileLogging
         dataObject.put("pressure", press/100);
         dataObject.put("temperature", temp);
         dataObject.put("humidity", hum);
-        
+
         String logStr = dataObject.toString();
         log.write(logStr + "\n");
         log.flush();

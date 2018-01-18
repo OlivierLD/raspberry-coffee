@@ -10,6 +10,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import static utils.StringUtils.lpad;
+import static utils.TimeUtil.delay;
 
 /*
  * Humidity, Temperature
@@ -162,15 +163,7 @@ public class HTU21DF {
 		return hum;
 	}
 
-	protected static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		HTU21DF sensor = new HTU21DF();
 		float hum = 0;

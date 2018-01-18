@@ -20,12 +20,12 @@ public class SerialReader
     }
     return cs;
   }
-  
+
   // NMEA Style
   public static boolean validCheckSum(String data, boolean verb)
   {
     String sentence = data.trim();
-    boolean b = false;    
+    boolean b = false;
     try
     {
       int starIndex = sentence.indexOf("*");
@@ -58,28 +58,28 @@ public class SerialReader
     nmea += ("*" + cks);
     return "$" + nmea;
   }
-  
-  public static void main_4tests(String[] args)
+
+  public static void main_4tests(String... args)
   {
     String payload = "This is some bullshit.";
     String prefix = "OS";
     String id     = "MSG";
     String sentence = generateNMEAString(payload, prefix, id);
     System.out.println(">>> Sentence [" + sentence + "] is " + (validCheckSum(sentence, false)?"":"NOT ") + "valid");
-    
+
     sentence = generateNMEAString("3,Message from Arduino", prefix, id);
     System.out.println(sentence);
     sentence = "$OSMSG,3,Message from Arduino*61";
     System.out.println(">>> Sentence [" + sentence + "] is " + (validCheckSum(sentence, false)?"":"NOT ") + "valid");
-    
+
     payload = "$OSMSG,LR,178*65";
     String content = payload.substring(7, payload.indexOf("*"));
     String[] sa = content.split(",");
     String strVal = sa[1];
     System.out.println("\tVal:" + strVal);
   }
-  
-  public static void main(String args[])
+
+  public static void main(String... args)
     throws InterruptedException, NumberFormatException
   {
     String port = System.getProperty("serial.port", Serial.DEFAULT_COM_PORT);
@@ -95,7 +95,7 @@ public class SerialReader
         System.err.println(ex.getMessage());
       }
     }
-    
+
     System.out.println("Serial Communication.");
     System.out.println(" ... connect using settings: " + Integer.toString(br) +  ", N, 8, 1.");
     System.out.println(" ... data received on serial port should be displayed below.");

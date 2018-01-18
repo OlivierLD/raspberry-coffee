@@ -32,7 +32,7 @@ public class RmiServer extends java.rmi.server.UnicastRemoteObject
 		}
 	}
 
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		try {
 			RmiServer server = new RmiServer();
 		} catch (Exception e) {

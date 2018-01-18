@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import static utils.StaticUtil.userInput;
+
 public class SampleClient
 		implements FONAClient {
 	public SampleClient() {
@@ -102,7 +104,7 @@ public class SampleClient
 	 * @param args
 	 * @throws InterruptedException
 	 */
-	public static void main(String args[]) throws InterruptedException, IOException {
+	public static void main(String... args) throws InterruptedException, IOException {
 		if (args.length > 0) {
 			System.out.print("Called with");
 			for (String s : args)
@@ -196,24 +198,5 @@ public class SampleClient
 		System.out.println("[r] Read message");
 		System.out.println("[d] Delete message");
 		System.out.println("[s] Send message");
-	}
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	private static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
 	}
 }

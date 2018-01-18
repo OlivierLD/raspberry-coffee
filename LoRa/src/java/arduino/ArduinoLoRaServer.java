@@ -82,7 +82,7 @@ public class ArduinoLoRaServer implements SerialIOCallbacks {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		final ArduinoLoRaServer caller = new ArduinoLoRaServer();
 		final SerialCommunicator sc = new SerialCommunicator(caller);
 		sc.setVerbose(false);

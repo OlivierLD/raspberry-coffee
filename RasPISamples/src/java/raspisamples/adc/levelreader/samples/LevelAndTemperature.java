@@ -31,10 +31,10 @@ public class LevelAndTemperature implements LevelListenerInterface
 {
   private final static NumberFormat NF = new DecimalFormat("#0.00");
   private final static Format SDF = new SimpleDateFormat("hh:mm:ss");
-  
+
   private static WebSocketClient webSocketClient = null;
-  private static String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/"); 
-  private static String customerID = System.getProperty("customer.id", "Joe Shmow"); 
+  private static String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
+  private static String customerID = System.getProperty("customer.id", "Joe Shmow");
 
   @Override
   public void setLevel(int level)
@@ -53,7 +53,7 @@ public class LevelAndTemperature implements LevelListenerInterface
         System.out.println("No websocket client (for level)");
     }
   }
-  
+
   private static boolean readTemperature = true;
 
   public static void setReadTemperature(boolean b)
@@ -89,7 +89,7 @@ public class LevelAndTemperature implements LevelListenerInterface
               {
                 ByteArrayInputStream bais = new ByteArrayInputStream(serverHandshake.getFieldValue(h).getBytes("UTF-8"));
                 byte[] buf = new BASE64Decoder().decodeBuffer(bais);
-                System.out.print("Server Key:"); //  + new String(buf));                
+                System.out.print("Server Key:"); //  + new String(buf));
                 for (int i=0; i<buf.length; i++)
                   System.out.print("[" + lpad(Integer.toHexString(buf[i] & 0xFF), "0", 2) + "]");
                 System.out.println();
@@ -112,11 +112,11 @@ public class LevelAndTemperature implements LevelListenerInterface
             String ack  = obj.getString("ack");
             String mess = obj.getString("mess");
             // TODO Display on the small oled screen
-            System.out.println(ack + ":" + mess);            
+            System.out.println(ack + ":" + mess);
           }
           catch (Exception ex)
           {
-            System.out.println("WS message:" + string);            
+            System.out.println("WS message:" + string);
           }
         }
 
@@ -137,55 +137,55 @@ public class LevelAndTemperature implements LevelListenerInterface
     catch (Exception ex)
     {
       ex.printStackTrace();
-    }    
+    }
   }
 
-  public static void main(String[] args) throws Exception
+  public static void main(String... args) throws Exception
   {
-    System.out.println(args.length + " parameter(s).");    
+    System.out.println(args.length + " parameter(s).");
     initWebSocketConnection(wsUri);
     LevelAndTemperature lat = new LevelAndTemperature();
     /**
      * This is the list of the ADC channels to listen to.
      */
-    ADCObserver.MCP3008_input_channels[] listening2 = new ADCObserver.MCP3008_input_channels[] 
+    ADCObserver.MCP3008_input_channels[] listening2 = new ADCObserver.MCP3008_input_channels[]
     {
       ADCObserver.MCP3008_input_channels.CH0,
       ADCObserver.MCP3008_input_channels.CH1,
-      ADCObserver.MCP3008_input_channels.CH2,  
-      ADCObserver.MCP3008_input_channels.CH3,  
-      ADCObserver.MCP3008_input_channels.CH4, 
-      ADCObserver.MCP3008_input_channels.CH5, 
-      ADCObserver.MCP3008_input_channels.CH6 
+      ADCObserver.MCP3008_input_channels.CH2,
+      ADCObserver.MCP3008_input_channels.CH3,
+      ADCObserver.MCP3008_input_channels.CH4,
+      ADCObserver.MCP3008_input_channels.CH5,
+      ADCObserver.MCP3008_input_channels.CH6
     };
-    
+
     final ADCChannels_1_to_8 sac = new ADCChannels_1_to_8(listening2, lat);
     final BMP180 bmp180  = new BMP180();
-    
+
     final Thread tempReader = new Thread()
       {
         public void run()
         {
           float temp  = 0;
           float originalTemp = 0;
-          try { originalTemp = bmp180.readTemperature(); } 
-          catch (Exception ex) 
-          { 
-            System.err.println(ex.getMessage()); 
+          try { originalTemp = bmp180.readTemperature(); }
+          catch (Exception ex)
+          {
+            System.err.println(ex.getMessage());
             ex.printStackTrace();
           }
-          System.out.println(">>> Original Temperature :" + NF.format(originalTemp) + "\272C");                          
+          System.out.println(">>> Original Temperature :" + NF.format(originalTemp) + "\272C");
           while (keepReadingTemperature())
           {
-            try 
-            { 
-              temp = bmp180.readTemperature(); 
-//            System.out.println(">>> Temperature is now :" + NF.format(temp) + "\272C");                          
+            try
+            {
+              temp = bmp180.readTemperature();
+//            System.out.println(">>> Temperature is now :" + NF.format(temp) + "\272C");
               if (Math.abs(temp - originalTemp) > 0.25f)
               {
                 if (temp > originalTemp)
                 {
-                  System.out.println(">>> Warning! >>> " + SDF.format(new Date()) + ", Temperature is rising, now " + NF.format(temp) + "\272C");                
+                  System.out.println(">>> Warning! >>> " + SDF.format(new Date()) + ", Temperature is rising, now " + NF.format(temp) + "\272C");
                   JSONObject obj = new JSONObject();
                   obj.put("temperature", temp);
                   if (webSocketClient != null)
@@ -200,10 +200,10 @@ public class LevelAndTemperature implements LevelListenerInterface
                   System.out.println("                 Setting base temperature to " + NF.format(temp) + "\272C");
                 originalTemp = temp;
               }
-            } 
-            catch (Exception ex) 
-            { 
-              System.err.println(ex.getMessage()); 
+            }
+            catch (Exception ex)
+            {
+              System.err.println(ex.getMessage());
               ex.printStackTrace();
             }
           }
@@ -211,7 +211,7 @@ public class LevelAndTemperature implements LevelListenerInterface
         }
       };
     tempReader.start();
-    
+
     final Thread me = Thread.currentThread();
     Runtime.getRuntime().addShutdownHook(new Thread()
        {

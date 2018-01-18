@@ -77,7 +77,7 @@ public class WebSocketClient extends NMEAClient {
 		return new WSBean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String serverUri = "ws://localhost:9876/";
 
 		nmeaClient = new WebSocketClient();

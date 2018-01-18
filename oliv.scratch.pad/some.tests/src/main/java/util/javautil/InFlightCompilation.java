@@ -187,7 +187,7 @@ public class InFlightCompilation {
 	private static final String SAMPLE_CODE =
 			"package test;\n\n" +
 					"public class OlivTest {\n" +
-					"   public static void main(String args[]) {\n" +
+					"   public static void main(String... args) {\n" +
 					"      System.out.println(\"Output of program:\");\n" +
 					"      for (int i=0; i<10; i++) {\n" +
 					"         System.out.print(i + \" \");\n" +
@@ -201,7 +201,7 @@ public class InFlightCompilation {
 					"   }\n" +
 					"}";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		PrintStream stdout = System.out;
 

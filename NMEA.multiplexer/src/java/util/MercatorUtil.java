@@ -59,7 +59,7 @@ public final class MercatorUtil {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		double d = getIncLat(45D);
 		System.out.println("IncLat(45)=" + d);
 		System.out.println("Rad(45)=" + Math.toRadians(45D));

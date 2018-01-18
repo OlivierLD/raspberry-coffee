@@ -41,7 +41,7 @@ sourceSets {
     java {
       srcDir 'tests/java'
     }
-  }  
+  }
 }
 
 repositories {
@@ -59,4 +59,5 @@ dependencies {
   compile 'org.scala-lang:scala-library:2.11.8'
 //compile 'org.java-websocket:Java-WebSocket:1.3.0' // Already in ADC
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+  compile project(':common-utils')
 }

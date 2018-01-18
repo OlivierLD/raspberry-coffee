@@ -45,6 +45,7 @@ import calc.GeomUtil;
 import utils.PinUtil;
 import utils.StringUtils;
 
+import static utils.StaticUtil.userInput;
 import static utils.StringUtils.lpad;
 import static utils.StringUtils.rpad;
 
@@ -317,19 +318,6 @@ public class SunFlower implements RESTRequestManager {
 	}
 	private boolean isCalibrating() {
 		return calibrating;
-	}
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return retString;
 	}
 
 	private RESTImplementation restImplementation;

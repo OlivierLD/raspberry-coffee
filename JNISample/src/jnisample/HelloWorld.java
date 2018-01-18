@@ -16,7 +16,7 @@ public class HelloWorld {
 	private native void print();
 	private native int manageObject(SomeObject so);
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		HelloWorld hw = new HelloWorld();
 		hw.print();
 		hw.manageObject(new SomeObject("Oliv", 1));

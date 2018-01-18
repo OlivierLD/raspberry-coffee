@@ -25,7 +25,7 @@ public class LogAnalysis
   private static int hourOffset     = 0;
   private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
   private final Map<Date, LogData> logdata = new HashMap<Date, LogData>();
-  
+
   public LogAnalysis(String fName) throws IOException, ParseException
   {
     LogAnalysisFrame frame = new LogAnalysisFrame(this);
@@ -41,7 +41,7 @@ public class LogAnalysis
     }
     frame.setLocation( ( screenSize.width - frameSize.width ) / 2, ( screenSize.height - frameSize.height ) / 2 );
     //  frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-    frame.addWindowListener(new WindowAdapter() 
+    frame.addWindowListener(new WindowAdapter()
       {
         public void windowClosing(WindowEvent e)
         {
@@ -80,9 +80,9 @@ public class LogAnalysis
           logDate = new Date(logDate.getTime() + (hourOffset * 3_600_000)); // TODO Make sure the gap is not too big (like > 1 day)
           int adc       = Integer.parseInt(data[1]);
           int volume    = Integer.parseInt(data[2]);
-          float voltage = Float.parseFloat(data[3]) * voltageCoeff; 
+          float voltage = Float.parseFloat(data[3]) * voltageCoeff;
           if (withSmoothing && previousDate != -1)
-          { 
+          {
             // Smooth...
             long deltaT = (logDate.getTime() - previousDate) / 1_000; // in seconds
             int deltaADC = (adc - prevAdc);
@@ -143,8 +143,8 @@ public class LogAnalysis
     System.out.println("Read " + nbl + " lines.");
     // Sort
 //    SortedSet<Date> keys = new TreeSet<Date>(logdata.keySet());
-//    for (Date key : keys) 
-//    { 
+//    for (Date key : keys)
+//    {
 //       LogData value = logdata.get(key);
 //       // do something
 //      System.out.println(value.getDate() + ": " + value.getVoltage()  + " V");
@@ -163,8 +163,8 @@ public class LogAnalysis
       frame.setLogData(logdata);
     }
   }
-  
-  public static void main(String[] args) throws Exception
+
+  public static void main(String... args) throws Exception
   {
     try
     {
@@ -175,7 +175,7 @@ public class LogAnalysis
     {
       e.printStackTrace();
     }
-    
+
     try { voltageCoeff = Float.parseFloat(System.getProperty("voltage.coeff", Float.toString(voltageCoeff))); }
     catch (NumberFormatException nfe)
     {
@@ -192,7 +192,7 @@ public class LogAnalysis
       dataFName = args[0];
     new LogAnalysis(dataFName);
   }
-  
+
   public static class LogData
   {
     private Date date;
@@ -219,7 +219,7 @@ public class LogAnalysis
       return voltage;
     }
     private float voltage;
-    
+
     public LogData(Date d, int a, int v, float volt)
     {
       this.date = d;

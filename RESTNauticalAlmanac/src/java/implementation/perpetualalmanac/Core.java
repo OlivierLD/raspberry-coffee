@@ -55,7 +55,7 @@ public class Core {
 	private static boolean verbose = false;
 	private final static DecimalFormat df2 = new DecimalFormat("00.00");
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		long before = System.currentTimeMillis();
 		double[] data = compute(2010, 2, 23, 12, 0, 0);
 		long after = System.currentTimeMillis();

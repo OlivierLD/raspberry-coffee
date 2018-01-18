@@ -10,11 +10,11 @@ import raspisamples.servo.StandardServo;
 /*
  * Driven by WesbSocket server
  * See in node/server.js
- * 
+ *
  * 2 Servos (UP/LR)
- * 
+ *
  * Web interface available, see in node/servo.pilot.html
- * 
+ *
  * Start the WebSocket node server,
  * Start the script named pantilt.ws
  */
@@ -24,7 +24,7 @@ public class PanTiltWebSocket {
 
 	private static WebSocketClient webSocketClient = null;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		ssUD = new StandardServo(14); // 14 : Address on the board (1..15)
 		ssLR = new StandardServo(15); // 15 : Address on the board (1..15)
 

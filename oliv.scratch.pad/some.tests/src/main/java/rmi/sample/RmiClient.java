@@ -7,7 +7,7 @@ public class RmiClient {
 
 	private static String serverBindingName = "rmiServer";
 
-	public static void main(String args[]) {
+	public static void main(String... args) {
 
 		if (args.length != 3) {
 			System.err.println("Usage is:");

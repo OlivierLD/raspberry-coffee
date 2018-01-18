@@ -2,22 +2,22 @@
  * ===============================================================================
  * $Id: UserSuppliedGribTable.java,v 1.2 2006/07/25 13:45:13 frv_peg Exp $
  * ===============================================================================
- * JGRIB library  
- *  
+ * JGRIB library
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  * Authors:
  * See AUTHORS file
  * ===============================================================================
@@ -40,16 +40,16 @@ import jgrib.NotSupportedException;
 
 /****************************************************************************
  * Example class: UserSuppliedGribTable
- * 
+ *
  * The purpose of this class is to demonstrate a way to
  * make the JGrib library read your own grib table before
  * processing the actual file you want to read.
- * 
+ *
  * Be aware, that this subject has changed from beta 5 to beta 6,
  * so if you are upgrading from beta 5 - read on carefully.
- * 
+ *
  * @author Peter Gylling<br>email: peg at frv dot dk
- * 
+ *
  * @since 1.2
  ****************************************************************************/
 public class UserSuppliedGribTable
@@ -69,15 +69,15 @@ public class UserSuppliedGribTable
    * Standard generated main method
    * @param args - Not checked anyway
    */
-  public static void main(String[] args)
+  public static void main(String... args)
   {
-    System.setProperty(PROPERTY_GRIBFILEPATH, 
+    System.setProperty(PROPERTY_GRIBFILEPATH,
                        "C:\\_myWork\\_ForExport\\dev-corner\\olivsoft\\all-scripts\\GRIBFiles\\2008\\GRIB_2008_02_26_09_06_49_PST.grb");
 
 //  System.setProperty(PROPERTY_GRIBTABPATH, "jar:file:/C:/_myWork/_ForExport/dev-corner/olivsoft/GRIBApplet11g/public_html/apps/gribDisplay.jar!/tables");
 
     // This one works.
-    System.setProperty("GribTabURL", 
+    System.setProperty("GribTabURL",
                        "jar:http://donpedro.lediouris.net/oliv-jnpl/apps/gribDisplay.jar!/tables");
 //                     "jar:file:/C:/_myWork/_ForExport/dev-corner/olivsoft/GRIBApplet11g/public_html/apps/gribDisplay.jar!/tables");
 
@@ -105,7 +105,7 @@ public class UserSuppliedGribTable
       // Set gribtab property to JGRIB library
       //	System.setProperty("GribTabURL", gribTab.toURL().toString());
 
-      // Create GribFile instance	    	
+      // Create GribFile instance
       GribFile gribFile = new GribFile(gribFilePath);
 
       // Get light grib reccord (used to get the meta data)

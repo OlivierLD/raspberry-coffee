@@ -6,6 +6,8 @@ import i2c.samples.mearm.MeArmPilot;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import static utils.StaticUtil.userInput;
+
 /**
  * Drive a MeArm robotic arm, interactively.
  * Uses a PCA9685 (I2C) to drive the MeArm's 4 servos.
@@ -14,30 +16,6 @@ import java.io.InputStreamReader;
  * See the {@link #main} method.
  */
 public class MeArmPilotInteractiveDemo {
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	/**
-	 * Prompt the user for input, from stdin. Completed on [Return]
-	 *
-	 * @param prompt The prompt
-	 * @return the user's input.
-	 */
-	private static String userInput(String prompt) {
-		String retString = "";
-		System.out.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			try {
-				userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
 
 	private final static String LEFT_PRM   = "-left:";
 	private final static String RIGHT_PRM  = "-right:";

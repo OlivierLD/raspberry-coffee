@@ -6,12 +6,14 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
-
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.wiringpi.Spi;
+
 import java.io.IOException;
+
+import static utils.TimeUtil.delay;
 
 /**
  * SSD1306, small OLED screen. SPI and I2C. 128x32
@@ -138,23 +140,20 @@ public class SSD1306 {
 	}
 
 	public SSD1306(int i2cAddr) throws I2CFactory.UnsupportedBusNumberException, IOException {
-//	try {
-			// Get i2c bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
-			if (verbose)
-				System.out.println("Connected to bus. OK.");
+		// Get i2c bus
+		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
+		if (verbose) {
+			System.out.println("Connected to bus. OK.");
+		}
 
-			// Get device itself
-			ssd1306 = bus.getDevice(i2cAddr);
+		// Get device itself
+		ssd1306 = bus.getDevice(i2cAddr);
 
-			if (verbose)
-				System.out.println("Connected to devices. OK.");
+		if (verbose) {
+			System.out.println("Connected to devices. OK.");
+		}
 
-			initSSD1306(this.width, this.height); // 128x32, hard coded for now.
-
-//		} catch (IOException e) {
-//			System.err.println(e.getMessage());
-//		}
+		initSSD1306(this.width, this.height); // 128x32, hard coded for now.
 	}
 
 	private void initSSD1306(int w, int h) {
@@ -252,27 +251,31 @@ public class SSD1306 {
 
 	private void write(int[] data, boolean assert_ss, boolean deassert_ss) {
 		// Fail if MOSI is not specified.
-		if (mosiOutput == null)
+		if (mosiOutput == null) {
 			throw new RuntimeException("Write attempted with no MOSI pin specified.");
-		if (assert_ss && chipSelectOutput != null)
+		}
+		if (assert_ss && chipSelectOutput != null) {
 			chipSelectOutput.low();
+		}
 		for (int i = 0; i < data.length; i++) {
 			byte b = (byte) data[i];
 			for (int j = 0; j < 8; j++) {
 				byte bit = (byte) ((b << j) & MASK);
 				// Write bit to MOSI.
-				if (bit != 0)
+				if (bit != 0) {
 					mosiOutput.high();
-				else
+				} else {
 					mosiOutput.low();
+				}
 				// Flip clock off base. // TODO Check the value of the base (LOW Here)
 				clockOutput.high();
 				// Return clock to base.
 				clockOutput.low();
 			}
 		}
-		if (deassert_ss && chipSelectOutput != null)
+		if (deassert_ss && chipSelectOutput != null) {
 			chipSelectOutput.high();
+		}
 	}
 
 	private void command(int c) {
@@ -346,10 +349,11 @@ public class SSD1306 {
 		this.command(0x0);                         // no offset
 		this.command(SSD1306_SETSTARTLINE | 0x0);  // line //0
 		this.command(SSD1306_CHARGEPUMP);          // 0x8D
-		if (this.vccstate == SSD1306_EXTERNALVCC)
+		if (this.vccstate == SSD1306_EXTERNALVCC) {
 			this.command(0x10);
-		else
+		} else {
 			this.command(0x14);
+		}
 		this.command(SSD1306_MEMORYMODE);          // 0x20
 		this.command(0x00);                     // 0x0 act like ks0108
 		this.command(SSD1306_SEGREMAP | 0x1);
@@ -359,10 +363,11 @@ public class SSD1306 {
 		this.command(SSD1306_SETCONTRAST);         // 0x81
 		this.command(0x8F);
 		this.command(SSD1306_SETPRECHARGE);        // 0xd9
-		if (this.vccstate == SSD1306_EXTERNALVCC)
+		if (this.vccstate == SSD1306_EXTERNALVCC) {
 			this.command(0x22);
-		else
+		} else {
 			this.command(0xF1);
+		}
 		this.command(SSD1306_SETVCOMDETECT);       // 0xDB
 		this.command(0x40);
 		this.command(SSD1306_DISPLAYALLON_RESUME); // 0xA4
@@ -370,8 +375,9 @@ public class SSD1306 {
 	}
 
 	public void clear() {
-		for (int i = 0; this.buffer != null && i < this.buffer.length; i++)
+		for (int i = 0; this.buffer != null && i < this.buffer.length; i++) {
 			this.buffer[i] = 0;
+		}
 	}
 
 	public void setContrast(int contrast)
@@ -421,18 +427,11 @@ public class SSD1306 {
 		int contrast = 0;
 		// Adjust contrast based on VCC if not dimming.
 		if (!dim) {
-			if (this.vccstate == SSD1306_EXTERNALVCC)
+			if (this.vccstate == SSD1306_EXTERNALVCC) {
 				contrast = 0x9F;
-			else
+			} else {
 				contrast = 0xCF;
-		}
-	}
-
-	private static void delay(long ms) {
-		try {
-			Thread.sleep(ms);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			}
 		}
 	}
 }

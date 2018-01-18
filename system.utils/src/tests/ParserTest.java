@@ -38,15 +38,15 @@ public class ParserTest
     public Method parser()  { return this.parser; }
   }
 
-  public static void main(String[] args) throws Exception
+  public static void main(String... args) throws Exception
   {
     ParserTest pt = new ParserTest();
-    
+
     pt.takeAction(">> BAT FAILED, c'est tout pete!");
     pt.takeAction(">> FONA READY");
     pt.takeAction(">> BAT OK");
     pt.takeAction("+CMTI: \"SM\",54");
-    
+
     String message = ">> BAT:1234,98";
     String[] sa = message.substring(">> BAT:".length()).split(",");
     for (String s : sa)

@@ -5,6 +5,8 @@ import i2c.servo.adafruitmotorhat.AdafruitMotorHAT;
 
 import java.io.IOException;
 
+import static i2c.samples.motorHAT.Robot.delay;
+
 /**
  * DC Motor demo
  */
@@ -71,15 +73,7 @@ public class OneMotorDemo {
 		}
 	}
 
-	public static void delay(float sec) {
-		try {
-			Thread.sleep((long) (sec * 1_000));
-		} catch (InterruptedException ie) {
-			// Absorb
-		}
-	}
-
-	public static void main(String args[]) throws Exception {
+	public static void main(String... args) throws Exception {
 		OneMotorDemo omd = new OneMotorDemo();
 		System.out.println("Forward...");
 		omd.forward(100, 10f);

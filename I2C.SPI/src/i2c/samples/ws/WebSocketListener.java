@@ -15,7 +15,7 @@ public class WebSocketListener
 
   private boolean keepWorking = true;
   private WebSocketClient webSocketClient = null;
-  
+
   PCA9685 servoBoard = null;
   private final int freq = 60;
   // For the TowerPro SG-5010
@@ -23,9 +23,9 @@ public class WebSocketListener
   private final static int servoMax = 600;   // +90 deg
 
   private final static int STANDARD_SERVO_CHANNEL   = 15;
-  
+
   private int servo = STANDARD_SERVO_CHANNEL;
-  
+
   public WebSocketListener() throws Exception
   {
     try
@@ -35,22 +35,22 @@ public class WebSocketListener
     }
     catch (UnsatisfiedLinkError ule)
     {
-      System.err.println("You're not on the PI, are you?");  
+      System.err.println("You're not on the PI, are you?");
     }
-    
-    String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/"); 
-    
+
+    String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
+
     initWebSocketConnection(wsUri);
   }
-  
+
   private void initWebSocketConnection(String serverURI)
   {
     try
     {
-      webSocketClient = new WebSocketClient(new URI(serverURI), (Draft)null) 
+      webSocketClient = new WebSocketClient(new URI(serverURI), (Draft)null)
         {
           @Override
-          public void onMessage(String mess) 
+          public void onMessage(String mess)
           {
         //  System.out.println("    . Text message :[" + mess + "]");
             JSONObject json = new JSONObject(mess);
@@ -77,17 +77,17 @@ public class WebSocketListener
           }
 
           @Override
-          public void onOpen( ServerHandshake handshake ) 
+          public void onOpen( ServerHandshake handshake )
           {
           }
 
           @Override
-          public void onClose( int code, String reason, boolean remote ) 
+          public void onClose( int code, String reason, boolean remote )
           {
           }
 
           @Override
-          public void onError( Exception ex ) 
+          public void onError( Exception ex )
           {
           }
       };
@@ -95,10 +95,10 @@ public class WebSocketListener
     catch (Exception ex)
     {
       ex.printStackTrace();
-    }    
+    }
   }
-  
-  public static void main(String[] args) throws Exception
+
+  public static void main(String... args) throws Exception
   {
     System.out.println("System variable ws.uri can be used if the URL is not ws://localhost:9876/");
     new WebSocketListener();

@@ -12,7 +12,7 @@ import java.text.Format;
 
 /**
  * See https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
- * 
+ *
  * This version is multi-threaded.
  * This allows the management of a signal that does not come back.
  */
@@ -22,13 +22,13 @@ public class HC_SR04andLeds
   private final static double SOUND_SPEED = 34_300;          // in cm, 343 m/s
   private final static double DIST_FACT   = SOUND_SPEED / 2; // round trip
   private final static int MIN_DIST       = 5;
-  
+
   private final static long BETWEEN_LOOPS = 500L;
   private final static long MAX_WAIT      = 500L;
-  
+
   private final static boolean DEBUG = false;
-  
-  public static void main(String[] args)
+
+  public static void main(String... args)
     throws InterruptedException
   {
     System.out.println("GPIO Control - Range Sensor HC-SR04.");
@@ -39,13 +39,13 @@ public class HC_SR04andLeds
 
     final GpioPinDigitalOutput trigPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "Trig", PinState.LOW);
     final GpioPinDigitalInput  echoPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, "Echo");
-    
+
     final GpioPinDigitalOutput ledOne   = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "One",   PinState.LOW);
     final GpioPinDigitalOutput ledTwo   = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "Two",   PinState.LOW);
     final GpioPinDigitalOutput ledThree = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "Three", PinState.LOW);
     final GpioPinDigitalOutput ledFour  = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_03, "Four",  PinState.LOW);
     final GpioPinDigitalOutput ledFive  = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, "Five",  PinState.LOW);
-    
+
     final GpioPinDigitalOutput[] ledArray = new GpioPinDigitalOutput[] { ledOne, ledTwo, ledThree, ledFour, ledFive };
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -55,7 +55,7 @@ public class HC_SR04andLeds
       gpio.shutdown();
       System.out.println("Exiting nicely.");
     }));
-    
+
     System.out.println("Waiting for the sensor to be ready (2s)...");
     Thread.sleep(2_000L);
     Thread mainThread = Thread.currentThread();
@@ -69,7 +69,7 @@ public class HC_SR04andLeds
       if (DEBUG) System.out.println("Triggering module.");
       TriggerThread trigger = new TriggerThread(mainThread, trigPin, echoPin);
       trigger.start();
-      try 
+      try
       {
         synchronized (mainThread)
         {
@@ -92,9 +92,9 @@ public class HC_SR04andLeds
         ex.printStackTrace();
         ok = false;
       }
-      
+
       if (ok)
-      {      
+      {
         start = trigger.getStart();
         end = trigger.getEnd();
         if (DEBUG) System.out.println("Measuring...");
@@ -115,11 +115,11 @@ public class HC_SR04andLeds
             {
               if (distance < ((i+1) * 10))
               {
-                
+
                 ledArray[i].high();
               }
               else
-                ledArray[i].low();            
+                ledArray[i].low();
             }
             try { Thread.sleep(BETWEEN_LOOPS); } catch (Exception ex) {}
           }
@@ -140,40 +140,40 @@ public class HC_SR04andLeds
     gpio.shutdown();
     System.exit(0);
   }
-  
+
   private static class TriggerThread extends Thread
   {
     private GpioPinDigitalOutput trigPin = null;
     private GpioPinDigitalInput echoPin = null;
     private Thread caller = null;
-    
+
     private double start = 0D, end = 0D;
-    
+
     public TriggerThread(Thread parent, GpioPinDigitalOutput trigger, GpioPinDigitalInput echo)
     {
       this.trigPin = trigger;
       this.echoPin = echo;
       this.caller = parent;
     }
-    
+
     public void run()
     {
       trigPin.high();
-      // 10 microsec (10000 ns) to trigger the module  (8 ultrasound bursts at 40 kHz) 
+      // 10 microsec (10000 ns) to trigger the module  (8 ultrasound bursts at 40 kHz)
       // https://www.dropbox.com/s/615w1321sg9epjj/hc-sr04-ultrasound-timing-diagram.png
       try { Thread.sleep(0, 10_000); } catch (Exception ex) { ex.printStackTrace(); }
       trigPin.low();
-      
+
       // Wait for the signal to return
       while (echoPin.isLow())
         start = System.nanoTime();
       // There it is
       while (echoPin.isHigh())
         end = System.nanoTime();
-      
+
       synchronized (caller) { caller.notify(); }
-    }    
-    
+    }
+
     public double getStart() { return start; }
     public double getEnd() { return end; }
   }

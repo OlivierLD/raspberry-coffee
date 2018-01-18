@@ -31,7 +31,7 @@ public class AccelerometerUI
     }
     frame.setLocation( ( screenSize.width - frameSize.width ) / 2, ( screenSize.height - frameSize.height ) / 2 );
 //  frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-    frame.addWindowListener(new WindowAdapter() 
+    frame.addWindowListener(new WindowAdapter()
       {
         public void windowClosing(WindowEvent e)
         {
@@ -43,7 +43,7 @@ public class AccelerometerUI
     frame.setVisible(true);
   }
 
-  public static void main(String[] args)
+  public static void main(String... args)
   {
     try
     {
@@ -56,7 +56,7 @@ public class AccelerometerUI
     }
     new AccelerometerUI();
   }
-  
+
   public void close()
   {
     System.out.println("Exiting.");

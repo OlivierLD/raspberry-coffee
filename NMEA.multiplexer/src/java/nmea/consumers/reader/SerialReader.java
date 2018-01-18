@@ -203,7 +203,7 @@ public class SerialReader
 			System.out.println("ownership changed:" + type);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		new SerialReader().startReader();
 	}
 }

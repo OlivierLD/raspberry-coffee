@@ -9,7 +9,7 @@ public class DocletTest {
 	private final static String PRIVATE_FLAG = "-private";
 
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println(String.format("Looking for %s from %s", FILE_PATH, new java.io.File(".").getAbsolutePath()));
 		Main.execute("", Analyzer.class.getName(), new String[]{FILE_PATH, PRIVATE_FLAG});
 	}

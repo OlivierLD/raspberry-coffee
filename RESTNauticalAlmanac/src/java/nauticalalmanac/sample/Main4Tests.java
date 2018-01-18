@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 public class Main4Tests {
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		int year = 2017;
 		int month = Calendar.JANUARY;
 		int day = 1;

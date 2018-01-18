@@ -11,35 +11,11 @@ import java.io.InputStreamReader;
 
 import raspisamples.pwm.PWMPin;
 
+import static utils.StaticUtil.userInput;
+
 public class RealPWMLed
 {
-  private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-  public static String userInput(String prompt)
-  {
-    String retString = "";
-    System.err.print(prompt);
-    try
-    {
-      retString = stdin.readLine();
-    }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      String s;
-      try
-      {
-        s = userInput("<Oooch/>");
-      }
-      catch(Exception exception) 
-      {
-        exception.printStackTrace();
-      }
-    }
-    return retString;
-  }
-
-  public static void main(String[] args)
+  public static void main(String... args)
     throws InterruptedException
   {
     final GpioController gpio = GpioFactory.getInstance();
@@ -84,7 +60,7 @@ public class RealPWMLed
       }
     }
     pin.stopPWM();
-    
+
     Thread.sleep(1_000);
     // Last blink
     System.out.println("Bye-bye");
@@ -93,10 +69,10 @@ public class RealPWMLed
     pin.high();
     Thread.sleep(500);
     pin.low();
-    
+
     gpio.shutdown();
   }
-  
+
   private static void waitFor(long ms)
   {
     try

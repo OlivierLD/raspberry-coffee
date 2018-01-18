@@ -9,14 +9,14 @@ import twoleds.led.OneLed;
 
 public class MainController
 {
-  public static void main(String[] args)
+  public static void main(String... args)
   {
     GpioController gpio = GpioFactory.getInstance();
     OneLed yellowLed = new OneLed(gpio, RaspiPin.GPIO_01, "yellow");
     OneLed greenLed  = new OneLed(gpio, RaspiPin.GPIO_04, "green");
-    
+
     long step = 50L;
-    
+
     for (int i=0; i<10; i++)
     {
       yellowLed.on();
@@ -31,5 +31,5 @@ public class MainController
       try { Thread.sleep(step); } catch (InterruptedException ie) {}
     }
     gpio.shutdown();
-  }   
+  }
 }

@@ -19,8 +19,8 @@ import serial.io.SerialIOCallbacks;
 import utils.StringUtils;
 
 public class BlinkDetector
-  implements SerialIOCallbacks, 
-             MindWaveCallbacks, 
+  implements SerialIOCallbacks,
+             MindWaveCallbacks,
              SerialCommunicatorInterface
 {
   private List<Short> wave = new ArrayList<Short>();
@@ -99,7 +99,7 @@ public class BlinkDetector
   private final static int NO_BLINK_BELOW = 100;
   private boolean blinked = false;
   private boolean started = false;
-  
+
   @Override
   public void mindWaveRawWave(MindWaveController.RawWave rw)
   {
@@ -109,7 +109,7 @@ public class BlinkDetector
     while (wave.size() > WIDTH)
       wave.remove(0);
 
-    // Smooth    
+    // Smooth
     if (wave.size() > 500)
     {
       if (!started)
@@ -117,7 +117,7 @@ public class BlinkDetector
         System.out.println("\n-- Detection started");
         started = true;
       }
-      
+
       if (false)
       {
         int smoothWidth = SMOOTH_WIDTH;
@@ -128,7 +128,7 @@ public class BlinkDetector
           int k = 0;
           for (int j=i-(smoothWidth/2); j<(i+(smoothWidth/2)); j++)
           {
-            k = j; 
+            k = j;
             if (k < 0) k = 0;
             if (k >= wave.size()) k = wave.size() - 1;
             d += wave.get(k);
@@ -250,7 +250,7 @@ public class BlinkDetector
   private static SerialCommunicator sc = null;
   private static MindWaveController mwc = null;
 
-  private static void parseParameters(String[] args) 
+  private static void parseParameters(String... args)
   {
     for (String prm : args)
     {
@@ -261,7 +261,7 @@ public class BlinkDetector
       if (prm.startsWith(BAUD_RATE_PRFX))
       {
         String brStr = prm.substring(BAUD_RATE_PRFX.length());
-        try 
+        try
         {
           baudRate = Integer.parseInt(brStr);
         }
@@ -272,19 +272,19 @@ public class BlinkDetector
       }
     }
   }
-  
+
   private final static String LIST_PORTS_PRFX = "-list-ports";
   private final static String PORT_NAME_PRFX  = "-port:";
   private final static String BAUD_RATE_PRFX  = "-br:";
-  
+
   private static String serialPort = "COM25";
   private static int baudRate      = 115200;
   private static boolean listPort  = false;
-  
-  public static void main(String[] args)
+
+  public static void main(String... args)
   {
     parseParameters(args);
-    
+
     BlinkDetector mwClient = new BlinkDetector();
     sc = new SerialCommunicator(mwClient);
 
@@ -298,15 +298,15 @@ public class BlinkDetector
         System.out.println("-> " + port);
       System.exit(0);
     }
-    
+
     final Thread waiter = Thread.currentThread();
-    
+
     Runtime.getRuntime().addShutdownHook(new Thread()
      {
        public void run()
        {
          mwc.disconnectHeadSet();
-         try 
+         try
          {
            sc.disconnect();
          }
@@ -321,7 +321,7 @@ public class BlinkDetector
          }
        }
      });
-    
+
     CommPortIdentifier mwPort = pm.get(serialPort);
     try
     {

@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Temperature
  */
@@ -103,14 +105,6 @@ public class MCP9808 {
 		return temp;
 	}
 
-	protected static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
 	private static String lpad(String s, String with, int len) {
 		String str = s;
 		while (str.length() < len) {
@@ -121,7 +115,7 @@ public class MCP9808 {
 
 	private final static NumberFormat NF = new DecimalFormat("##00.000");
 
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		System.out.println("MCP9808 Demo");
 		MCP9808 sensor = new MCP9808();
 		try {

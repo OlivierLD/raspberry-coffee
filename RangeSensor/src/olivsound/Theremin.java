@@ -31,7 +31,7 @@ static int echo    = GPIO24;
 
 	public native double readRange();
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 
 		System.out.println("Theremin, initializing the sound part...");
 

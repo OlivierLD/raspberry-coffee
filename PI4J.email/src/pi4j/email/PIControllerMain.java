@@ -35,7 +35,7 @@ public class PIControllerMain implements RaspberryPIEventListener {
 	 *
 	 * @param args See above
 	 */
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		for (int i = 0; i < args.length; i++) {
 			if ("-verbose".equals(args[i])) {
 				verbose = true;

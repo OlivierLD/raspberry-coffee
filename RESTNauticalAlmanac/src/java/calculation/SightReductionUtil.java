@@ -509,7 +509,7 @@ public class SightReductionUtil {
 		return Math.toDegrees(Math.acos(cosD));
 	}
 
-	public static void main2(String[] args) {
+	public static void main2(String... args) {
 		double corr = getAltitudeCorrection(7d,
 				2d,
 				0.1 / 60d,

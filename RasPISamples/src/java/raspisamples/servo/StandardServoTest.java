@@ -3,18 +3,12 @@ package raspisamples.servo;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Standard, using I2C and the PCA9685 servo board
  */
 public class StandardServoTest {
-	public static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
 	private int servo = -1;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
@@ -74,7 +68,7 @@ public class StandardServoTest {
 	 * @param args The number of the servo to test [0..15]
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		int channel = 14;
 		if (args.length > 0) {
 			try {

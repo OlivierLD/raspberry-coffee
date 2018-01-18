@@ -52,7 +52,7 @@ public class Utilities
         }
       }
     }
-  }  
+  }
 
   public static File findFileName(String str) throws Exception
   {
@@ -75,34 +75,34 @@ public class Utilities
   }
 
   /**
-   * 
+   *
    * @param filename
    * @param extension with the preceeding ".", like ".ptrn"
    * @return
    */
   public static String makeSureExtensionIsOK(String filename, String extension)
   {
-    if (!filename.toLowerCase().endsWith(extension)) 
+    if (!filename.toLowerCase().endsWith(extension))
       filename += extension;
-    return filename;  
+    return filename;
   }
-  
+
   public static String makeSureExtensionIsOK(String filename, String[] extension, String defaultExtension)
   {
     boolean extensionExists = false;
     for (int i=0; i<extension.length; i++)
     {
-      if (filename.toLowerCase().endsWith(extension[i].toLowerCase())) 
+      if (filename.toLowerCase().endsWith(extension[i].toLowerCase()))
       {
         extensionExists = true;
         break;
       }
     }
-    if (!extensionExists) 
+    if (!extensionExists)
       filename += defaultExtension;
-    return filename;  
+    return filename;
   }
-  
+
   public static String getMacAddress() throws IOException
   {
     String macAddress = null;
@@ -156,7 +156,7 @@ public class Utilities
   {
     URI uri = new URI(page);
     try
-    {      
+    {
   //  System.out.println("Opening in browser:[" + uri.toString() + "]");
       Desktop.getDesktop().browse(uri);
     }
@@ -166,7 +166,7 @@ public class Utilities
       mess += ("\n\nUnsupported operation on your system. URL [" + uri.toString() + "] is in the clipboard.\nOpen your browser manually, and paste it in there (Ctrl+V).");
       Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
       String path = uri.toString();
-      try 
+      try
       {
         File f = new File(page);
         if (f.exists())
@@ -184,8 +184,8 @@ public class Utilities
         ex2.printStackTrace();
       }
       StringSelection stringSelection = new StringSelection(path);
-      clipboard.setContents(stringSelection, null);          
-      JOptionPane.showMessageDialog(null, mess, "Showing in Browser", JOptionPane.ERROR_MESSAGE);      
+      clipboard.setContents(stringSelection, null);
+      JOptionPane.showMessageDialog(null, mess, "Showing in Browser", JOptionPane.ERROR_MESSAGE);
     }
 //    String os = System.getProperty("os.name");
 //    if (os.indexOf("Windows") > -1)
@@ -205,7 +205,7 @@ public class Utilities
 //      throw new RuntimeException("OS [" + os + "] not supported yet");
 //    }
   }
-  
+
   public static void showFileSystem(String where) throws Exception
   {
     String os = System.getProperty("os.name");
@@ -215,11 +215,11 @@ public class Utilities
   //    System.out.println("Executing [" + cmd + "]");
       Runtime.getRuntime().exec(cmd); // Can contain blanks, need quotes around it...
     }
-    else if (os.indexOf("Linux") > -1) 
+    else if (os.indexOf("Linux") > -1)
       Runtime.getRuntime().exec("nautilus " + where);
     else if (os.indexOf("Mac") > -1)
     {
-      String[] applScriptCmd = 
+      String[] applScriptCmd =
       {
         "osascript",
         "-e", "tell application \"Finder\"",
@@ -242,16 +242,16 @@ public class Utilities
     {
       throw new RuntimeException("showFileSystem method on OS [" + os + "] not implemented yet.\nFor now, you should open [" + where +"] by yourself.");
     }
-  }    
-  
-  public static void main(String[] args) throws Exception
+  }
+
+  public static void main(String... args) throws Exception
   {
 //  System.setProperty("os.name", "Mac OS X");
 //  showFileSystem(System.getProperty("user.dir"));
     long elapsed = 123456L; // 231234567890L;
     System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
   }
-  
+
   public static int sign(double d)
   {
     int s = 0;
@@ -268,7 +268,7 @@ public class Utilities
     if (!dir.exists())
       dir.mkdirs();
   }
-  
+
   /**
    * remove leading and trailing blanks, CR, NL
    * @param str
@@ -289,9 +289,9 @@ public class Utilities
     str2 = str.substring(i);
     while(str2.endsWith("\n") || str2.endsWith("\r"))
       str2 = str2.substring(0, str2.length() - 2);
-    return str2.trim();    
+    return str2.trim();
   }
-  
+
   public static String replaceString(String orig, String oldStr, String newStr)
   {
     String ret = orig;
@@ -302,7 +302,7 @@ public class Utilities
       if (indx < 0)
       {
         go = false;
-      } 
+      }
       else
       {
         ret = ret.substring(0, indx) + newStr + ret.substring(indx + oldStr.length());
@@ -310,7 +310,7 @@ public class Utilities
       }
     }
     return ret;
-  }  
+  }
 
   public static byte[] appendByte(byte c[], byte b)
   {
@@ -322,7 +322,7 @@ public class Utilities
     newContent[newLength - 1] = b;
     return newContent;
   }
-    
+
   public static byte[] appendByteArrays(byte c[], byte b[], int n)
   {
     int newLength = c != null ? c.length + n : n;
@@ -337,7 +337,7 @@ public class Utilities
       newContent[offset + i] = b[i];
     return newContent;
   }
-    
+
   public static String chooseFile(int mode,
                                   String flt,
                                   String desc,
@@ -349,11 +349,11 @@ public class Utilities
     if (title != null)
       chooser.setDialogTitle(title);
     if (buttonLabel != null)
-      chooser.setApproveButtonText(buttonLabel);    
+      chooser.setApproveButtonText(buttonLabel);
     if (flt != null)
     {
       ToolFileFilter filter = new ToolFileFilter(flt,
-                                                 desc);                                               
+                                                 desc);
       chooser.addChoosableFileFilter(filter);
       chooser.setFileFilter(filter);
     }
@@ -376,46 +376,46 @@ public class Utilities
         break;
     }
     return fileName;
-  }  
-  
+  }
+
   public static int drawPanelTable(String[][] data, Graphics gr, Point topLeft, int betweenCols, int betweenRows)
   {
     return drawPanelTable(data, gr, topLeft, betweenCols, betweenRows, null);
   }
-  
+
   public final static int LEFT_ALIGNED   = 0;
   public final static int RIGHT_ALIGNED  = 1;
   public final static int CENTER_ALIGNED = 2;
-  
+
   public static int drawPanelTable(String[][] data, Graphics gr, Point topLeft, int betweenCols, int betweenRows, int[] colAlignment)
   {
-    return drawPanelTable(data, gr, topLeft, betweenCols, betweenRows, colAlignment, false, null, 0f);  
+    return drawPanelTable(data, gr, topLeft, betweenCols, betweenRows, colAlignment, false, null, 0f);
   }
-  
+
   public static int drawPanelTable(String[][] data, Graphics gr, Point topLeft, int betweenCols, int betweenRows, int[] colAlignment, boolean paintBackground, Color bgColor, float bgTransparency)
   {
     return drawPanelTable(data, gr, topLeft, betweenCols, betweenRows, colAlignment, paintBackground, bgColor, null, bgTransparency, 1f);
   }
-  
-  public static int drawPanelTable(String[][] data, 
-                                   Graphics gr, 
-                                   Point topLeft, 
-                                   int betweenCols, 
+
+  public static int drawPanelTable(String[][] data,
+                                   Graphics gr,
+                                   Point topLeft,
+                                   int betweenCols,
                                    int betweenRows,
-                                   int[] colAlignment, 
-                                   boolean paintBackground, 
-                                   Color bgLightColor, 
-                                   Color bgDarkColor, 
-                                   float bgTransparency, 
+                                   int[] colAlignment,
+                                   boolean paintBackground,
+                                   Color bgLightColor,
+                                   Color bgDarkColor,
+                                   float bgTransparency,
                                    float textTransparency)
   {
     int w = 0, h = 0;
-    
+
     Font f = gr.getFont();
     int[] maxLength = new int[data[0].length]; // Max length for each column
     for (int i=0; i<maxLength.length; i++) // init. All to 0
       maxLength[i] = 0;
-    
+
     // Identify the max length for each column
     for (int row=0; row<data.length; row++)
     {
@@ -427,24 +427,24 @@ public class Utilities
     }
     int x = topLeft.x;
     int y = topLeft.y;
-    
+
     w = betweenCols;
     for (int i=0; i<maxLength.length; i++)
       w += (maxLength[i] + betweenCols);
     h = betweenRows + (data.length * (f.getSize() + betweenRows)) + betweenRows;
-    
+
     if (paintBackground) // Glossy
     {
       boolean glossy = (bgLightColor != null && bgDarkColor != null);
       Color c = gr.getColor();
       if (glossy)
       {
-        drawGlossyRectangularDisplay((Graphics2D)gr, 
+        drawGlossyRectangularDisplay((Graphics2D)gr,
                                      new Point(x - betweenCols, y - f.getSize() - betweenRows),
                                      new Point(x - betweenCols + w, y - f.getSize() - betweenRows + h),
                                      bgLightColor,
                                      bgDarkColor,
-                                     bgTransparency);      
+                                     bgTransparency);
       }
       else
       {
@@ -480,7 +480,7 @@ public class Utilities
         gr.drawString(data[row][col], _x, y);
       }
       y += (f.getSize() + betweenRows);
-    }    
+    }
     return y;
   }
 
@@ -498,28 +498,28 @@ public class Utilities
 
     Point gradientOrigin = new Point(topLeft.x + (width) / 2,
                                      topLeft.y);
-    GradientPaint gradient = new GradientPaint(gradientOrigin.x, 
-                                               gradientOrigin.y, 
-                                               lightColor, 
-                                               gradientOrigin.x, 
-                                               gradientOrigin.y + (height / 3), 
+    GradientPaint gradient = new GradientPaint(gradientOrigin.x,
+                                               gradientOrigin.y,
+                                               lightColor,
+                                               gradientOrigin.x,
+                                               gradientOrigin.y + (height / 3),
                                                darkColor); // vertical, light on top
     g2d.setPaint(gradient);
     int offset = 3;
     int arcRadius = 5;
-    g2d.fillRoundRect(topLeft.x + offset, topLeft.y + offset, (width - (2 * offset)), (height - (2 * offset)), 2 * arcRadius, 2 * arcRadius); 
+    g2d.fillRoundRect(topLeft.x + offset, topLeft.y + offset, (width - (2 * offset)), (height - (2 * offset)), 2 * arcRadius, 2 * arcRadius);
   }
-  
+
   public static boolean thisClassVerbose(Class c)
   {
     return (System.getProperty(c.getName() + ".verbose", "false").equals("true") || System.getProperty("all.verbose", "false").equals("true"));
   }
-  
+
   public static String readableTime(long elapsed)
   {
     return readableTime(elapsed, false);
   }
-  
+
   public static String readableTime(long elapsed, boolean small)
   {
     long amount = elapsed;
@@ -529,7 +529,7 @@ public class Utilities
     final long HOUR   = 60 * MINUTE;
     final long DAY    = 24 * HOUR;
     final long WEEK   =  7 * DAY;
-     
+
     if (amount >= WEEK)
     {
       int week = (int)(amount / WEEK);
@@ -562,7 +562,7 @@ public class Utilities
     }
     return str;
   }
-  
+
   static class ToolFileFilter extends FileFilter
   {
     private Hashtable<String, FileFilter> filters = null;

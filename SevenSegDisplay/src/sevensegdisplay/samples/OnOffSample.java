@@ -6,7 +6,7 @@ import com.pi4j.io.i2c.I2CFactory;
 import sevensegdisplay.SevenSegment;
 
 public class OnOffSample {
-	public static void main(String[] args) throws IOException, I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws IOException, I2CFactory.UnsupportedBusNumberException {
 		SevenSegment segment = new SevenSegment(0x70, true);
 
 		for (int i = 0; i < 5; i++) {

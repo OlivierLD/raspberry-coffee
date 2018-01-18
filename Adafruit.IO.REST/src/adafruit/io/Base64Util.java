@@ -58,7 +58,7 @@ public class Base64Util {
 		return imageString;
 	}
 
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		System.out.println("A test. Reads a jpg, encodes it, decodes into a png.");
 		String IMG_RADIX = "Adafruit.IO.REST" + File.separator + "bonus";
 		try {

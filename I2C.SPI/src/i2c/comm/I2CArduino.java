@@ -15,16 +15,16 @@ import java.text.NumberFormat;
  * Raspberry is the Master, Arduino is the Slave
  *
  * See the Arduino sketch named RPi_I2C_2.ino
- * 
+ *
  * Wiring:
  * RasPI    Arduino
  * ----------------
  * GND #9   GND
  * SDA #3   SDA (or A4, before Rev3)
  * SLC #5   SLC (or A5, before Rev3)
- * 
+ *
  * This illustrates a more elaborated dialog between master and slave.
- * 
+ *
  */
 public class I2CArduino {
 	public final static int ARDUINO_ADDRESS = 0x04; // See RPi_I2C_2.ino
@@ -91,7 +91,7 @@ public class I2CArduino {
 		}
 	}
 
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		I2CArduino sensor = new I2CArduino();
 		int read = 0;

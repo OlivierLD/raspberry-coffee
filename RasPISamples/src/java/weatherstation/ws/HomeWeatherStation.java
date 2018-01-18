@@ -55,7 +55,7 @@ public class HomeWeatherStation {
 	private final static int AVG_BUFFER_SIZE = 100;
 	private static List<Float> avgWD = new ArrayList<>(AVG_BUFFER_SIZE);
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		final Thread coreThread = Thread.currentThread();
 		final WebSocketFeeder wsf;
 		if ("true".equals(System.getProperty("ws.log", "false"))) {

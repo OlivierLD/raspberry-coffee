@@ -8,6 +8,8 @@ import i2c.sensor.utils.EndianReaders;
 
 import java.io.IOException;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Proximity sensor
  */
@@ -206,14 +208,6 @@ public class VCNL4000 {
 		return "0x" + s;
 	}
 
-	private static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
 	private static boolean go = true;
 
 	private static int minProx = Integer.MAX_VALUE;
@@ -221,7 +215,7 @@ public class VCNL4000 {
 	private static int maxProx = Integer.MIN_VALUE;
 	private static int maxAmbient = Integer.MIN_VALUE;
 
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		VCNL4000 sensor = new VCNL4000();
 		int prox = 0;
 		int ambient = 0;

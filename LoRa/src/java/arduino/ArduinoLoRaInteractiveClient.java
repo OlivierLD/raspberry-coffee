@@ -29,7 +29,7 @@ public class ArduinoLoRaInteractiveClient  {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 
 		String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
 		String baudRateStr = System.getProperty("baud.rate", "9600");

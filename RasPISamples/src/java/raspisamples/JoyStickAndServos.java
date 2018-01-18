@@ -19,7 +19,7 @@ public class JoyStickAndServos {
 	private static StandardServo ss1 = null, ss2 = null;
 	private static JoyStick joyStick = null;
 
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		ss1 = new StandardServo(13); // 13 : Address on the board (1..15)
 		ss2 = new StandardServo(15); // 15 : Address on the board (1..15)
 

@@ -10,7 +10,7 @@ public class Streams {
 
 	private final static List<String> WORDS = Arrays.asList(LOREM_IPSUM.split(" "));
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println(String.format("Found %d word(s).", WORDS.parallelStream().count()));
 
 		for (String s : WORDS) {

@@ -5,7 +5,7 @@ import java.io.PrintStream;
 
 
 public class ChordFinder {
-	public static void main(String[] args)
+	public static void main(String... args)
 					throws Exception {
 		if (args.length != 4)
 			throw new IllegalArgumentException("Need 4 int.");

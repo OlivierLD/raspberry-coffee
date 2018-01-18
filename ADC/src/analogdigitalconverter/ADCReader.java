@@ -55,7 +55,7 @@ public class ADCReader {
 
 	private static boolean go = true;
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		GpioController gpio = GpioFactory.getInstance();
 		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
 		clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);

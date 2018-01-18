@@ -31,7 +31,7 @@ public class MindWaves
 {
   private final static String replay = System.getProperty("replay.serial");
   private MindWaveFrame frame;
-  
+
   public MindWaves()
   {
     frame = new MindWaveFrame(this);
@@ -48,12 +48,12 @@ public class MindWaves
     frame.setLocation( ( screenSize.width - frameSize.width ) / 2, ( screenSize.height - frameSize.height ) / 2 );
     frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
     frame.setVisible(true);
-    
+
     MindWaveContext.getInstance().addListener(new MindWaveListener()
     {
       @Override
-      public void connect(String port, int br) 
-      { 
+      public void connect(String port, int br)
+      {
         serialConnect(port, br);
       }
       @Override
@@ -63,7 +63,7 @@ public class MindWaves
       }
     });
   }
-  
+
   public void setPortList(Map<String, CommPortIdentifier> pm)
   {
     frame.setPortList(pm);
@@ -115,7 +115,7 @@ public class MindWaves
         {
           public void run()
           {
-            mwc.mwOutput(mess);          
+            mwc.mwOutput(mess);
           }
         };
       messProcessor.start();
@@ -311,7 +311,7 @@ public class MindWaves
               {
                 byte bt = (byte)Integer.parseInt(b, 16);
                 onSerialData(bt);
-                try { Thread.sleep(10L); } catch (InterruptedException ie) {} 
+                try { Thread.sleep(10L); } catch (InterruptedException ie) {}
               }
               System.out.println("Data Replay completed.");
             }
@@ -329,7 +329,7 @@ public class MindWaves
       MindWaveContext.getInstance().fireSerialDisconnected();
     }
   }
-  
+
   private void serialDisconnect()
   {
     try
@@ -344,8 +344,8 @@ public class MindWaves
       MindWaveContext.getInstance().fireSerialConnected();
     }
   }
-  
-  public static void main(String[] args)
+
+  public static void main(String... args)
   {
     try
     {

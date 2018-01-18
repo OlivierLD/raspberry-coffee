@@ -15,7 +15,7 @@ import static images.ImageUtil.mostUsedColor;
 import static images.ImageUtil.writeImageToFile;
 
 public class FindSpot {
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 //  final String IMG_NAME = "white.spot.jpg"; // "red.dot.jpg"; // "P8150115.JPG";
 //  final String IMG_NAME = "P8150115.JPG";
 		final String IMG_NAME = "snap.jpg";

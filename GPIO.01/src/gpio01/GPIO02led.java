@@ -8,7 +8,7 @@ import com.pi4j.io.gpio.RaspiPin;
 
 public class GPIO02led
 {
-  public static void main(String[] args)
+  public static void main(String... args)
     throws InterruptedException
   {
 
@@ -34,11 +34,11 @@ public class GPIO02led
       pin02.toggle();
       Thread.sleep(50);
     }
-    
+
     pin00.low();
     pin02.low();
     Thread.sleep(1_000);
-    pin00.high(); 
+    pin00.high();
     System.out.println("Blinking red & green fast...");
     for (int i=0; i<100; i++)
     {
@@ -72,7 +72,7 @@ public class GPIO02led
     pin00.high();
     pin02.high();
     Thread.sleep(1_000);
-    
+
     pin00.low();
     pin02.low();
     // stop all GPIO activity/threads by shutting down the GPIO controller

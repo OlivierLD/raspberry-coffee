@@ -1,12 +1,10 @@
 package i2c.sensor.main;
 
-import i2c.sensor.TCS34725;
-
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
-
+import i2c.sensor.TCS34725;
 import i2c.sensor.utils.PWMPin;
 
 public class SampleTCS34725PWMMain {
@@ -14,19 +12,20 @@ public class SampleTCS34725PWMMain {
 
 	public static void main(String... args) throws Exception {
 		int colorThreshold = 4_000;
-		if (args.length > 0)
+		if (args.length > 0) {
 			try {
 				colorThreshold = Integer.parseInt(args[0]);
 			} catch (NumberFormatException nfe) {
 				System.err.println(nfe.toString());
 			}
+		}
 		final TCS34725 sensor = new TCS34725(TCS34725.TCS34725_INTEGRATIONTIME_50MS, TCS34725.TCS34725_GAIN_4X);
 		// Setup output pins here for the 3 color led
 		final GpioController gpio = GpioFactory.getInstance();
 
 		final PWMPin greenPin = new PWMPin(RaspiPin.GPIO_00, "green", PinState.LOW);
-		final PWMPin bluePin  = new PWMPin(RaspiPin.GPIO_01, "blue", PinState.LOW);
-		final PWMPin redPin   = new PWMPin(RaspiPin.GPIO_02, "red", PinState.LOW);
+		final PWMPin bluePin = new PWMPin(RaspiPin.GPIO_01, "blue", PinState.LOW);
+		final PWMPin redPin = new PWMPin(RaspiPin.GPIO_02, "red", PinState.LOW);
 
 		Thread.sleep(1_000);
 

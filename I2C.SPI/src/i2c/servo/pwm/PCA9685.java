@@ -6,6 +6,8 @@ import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Servo Driver
  */
@@ -80,7 +82,7 @@ public class PCA9685 {
 			servoDriver.write(MODE1, newmode);              // go to sleep
 			servoDriver.write(PRESCALE, (byte) (Math.floor(preScale)));
 			servoDriver.write(MODE1, oldmode);
-			waitfor(5);
+			delay(5);
 			servoDriver.write(MODE1, (byte) (oldmode | 0x80));
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -115,14 +117,6 @@ public class PCA9685 {
 		}
 	}
 
-	private static void waitfor(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
 	/**
 	 * @param channel 0..15
 	 * @param pulseMS in ms.
@@ -147,7 +141,7 @@ public class PCA9685 {
 	 * 1ms pulse   | -90 deg  | FullSpeed backward
 	 * ------------+----------+-------------------
 	 */
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		int freq = 60;
 		if (args.length > 0) {
 			freq = Integer.parseInt(args[0]);
@@ -164,10 +158,10 @@ public class PCA9685 {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMin);
-			waitfor(1_000);
+			delay(1_000);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMax);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMax);
-			waitfor(1000);
+			delay(1_000);
 		}
 		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
 		servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0);   // Stop the standard one
@@ -176,12 +170,12 @@ public class PCA9685 {
 		for (int i = servoMin; i <= servoMax; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, i);
-			waitfor(10);
+			delay(10);
 		}
 		for (int i = servoMax; i >= servoMin; i--) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, i);
-			waitfor(10);
+			delay(10);
 		}
 
 		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
@@ -190,12 +184,12 @@ public class PCA9685 {
 		for (int i = servoMin; i <= servoMax; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, i);
-			waitfor(100);
+			delay(100);
 		}
 		for (int i = servoMax; i >= servoMin; i--) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, i);
-			waitfor(100);
+			delay(100);
 		}
 
 		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
@@ -210,10 +204,10 @@ public class PCA9685 {
 			for (int i = 0; i < 5; i++) {
 				servoBoard.setServoPulse(STANDARD_SERVO_CHANNEL, 1f);
 				servoBoard.setServoPulse(CONTINUOUS_SERVO_CHANNEL, 1f);
-				waitfor(1000);
+				delay(1_000);
 				servoBoard.setServoPulse(STANDARD_SERVO_CHANNEL, 2f);
 				servoBoard.setServoPulse(CONTINUOUS_SERVO_CHANNEL, 2f);
-				waitfor(1000);
+				delay(1_000);
 			}
 			// Stop, Middle
 			servoBoard.setServoPulse(STANDARD_SERVO_CHANNEL, 1.5f);
@@ -223,7 +217,7 @@ public class PCA9685 {
 		}
 	}
 
-	public static void main__(String[] args) {
+	public static void main__(String... args) {
 		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
 		pulseLength /= 250;  // 40..1000 Hz
 		pulseLength /= 4_096; // 12 bits of resolution

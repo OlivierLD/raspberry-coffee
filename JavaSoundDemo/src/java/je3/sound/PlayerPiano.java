@@ -11,7 +11,7 @@ public class PlayerPiano {
 	public static final int DAMPER_OFF = 0;
 	public static final int END_OF_TRACK = 47;
 
-	public static void main(String[] args)
+	public static void main(String... args)
 					throws MidiUnavailableException, InvalidMidiDataException, IOException {
 		int instrument = 0;
 		int tempo = 120;

@@ -98,5 +98,4 @@ public class LSM303HeelPitchWebGL {
 		System.out.println("Starting listening...");
 		sensor.startReading();
 	}
-
 }

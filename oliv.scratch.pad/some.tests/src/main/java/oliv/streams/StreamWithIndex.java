@@ -12,7 +12,7 @@ public class StreamWithIndex {
 			"Cu per graece percipit postulant, ad iusto utinam recteque per. Has facer quaeque te. Pro et tation commodo comprehensam. Mei ea purto iusto, his assum laudem animal ne." +
 			"No vel quis assum, sea no erant tractatos, mel ei nihil deserunt. Illum offendit dissentiet eu qui, habeo tollit id sea. Ei nam invidunt gloriatur. Id dicant ignota vim. Te has iudicabit deseruisse.";
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 
 		List<String> source = Arrays.asList(LOREM_IPSUM.split(" "));
 

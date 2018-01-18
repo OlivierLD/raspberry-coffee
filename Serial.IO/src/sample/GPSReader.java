@@ -64,7 +64,7 @@ public class GPSReader implements SerialIOCallbacks {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		final GPSReader gpsReader = new GPSReader();
 		final SerialCommunicator sc = new SerialCommunicator(gpsReader);
 		sc.setVerbose(false);

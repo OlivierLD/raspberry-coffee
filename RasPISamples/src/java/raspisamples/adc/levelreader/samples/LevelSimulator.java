@@ -21,8 +21,8 @@ import org.json.JSONObject;
 public class LevelSimulator implements LevelListenerInterface
 {
   private static WebSocketClient webSocketClient = null;
-  private static String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/"); 
-  private static String customerID = System.getProperty("customer.id", "Joe Shmow"); 
+  private static String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
+  private static String customerID = System.getProperty("customer.id", "Joe Shmow");
 
   @Override
   public void setLevel(int level)
@@ -41,7 +41,7 @@ public class LevelSimulator implements LevelListenerInterface
         System.out.println("No websocket client (for level)");
     }
   }
-  
+
   private static void initWebSocketConnection(String serverURI)
   {
     System.out.println("Connecting on WS " + serverURI);
@@ -64,11 +64,11 @@ public class LevelSimulator implements LevelListenerInterface
             String ack  = obj.getString("ack");
             String mess = obj.getString("mess");
             // TODO Display on the small oled screen
-            System.out.println(ack + ":" + mess);            
+            System.out.println(ack + ":" + mess);
           }
           catch (Exception ex)
           {
-            System.out.println("WS message:" + string);            
+            System.out.println("WS message:" + string);
           }
         }
 
@@ -89,7 +89,7 @@ public class LevelSimulator implements LevelListenerInterface
     catch (Exception ex)
     {
       ex.printStackTrace();
-    }    
+    }
   }
 
   private static boolean simulating = true;
@@ -98,15 +98,15 @@ public class LevelSimulator implements LevelListenerInterface
     return simulating;
   }
 
-  public static void main(String[] args) throws Exception
+  public static void main(String... args) throws Exception
   {
-    System.out.println(args.length + " parameter(s).");    
+    System.out.println(args.length + " parameter(s).");
     initWebSocketConnection(wsUri);
     final LevelSimulator ls = new LevelSimulator();
-    
+
     final Thread me = Thread.currentThread();
-    
-    final Thread simulator = new Thread() 
+
+    final Thread simulator = new Thread()
       {
         public void run()
         {
@@ -114,8 +114,8 @@ public class LevelSimulator implements LevelListenerInterface
           {
             int level = (int)(Math.round(Math.random() * 7d));
             ls.setLevel(level);
-            try 
-            { 
+            try
+            {
               synchronized (this)
               { wait(2_000L); }
             } catch (InterruptedException ie) { System.out.println("Simulator interrupted"); }
@@ -124,7 +124,7 @@ public class LevelSimulator implements LevelListenerInterface
         }
       };
     simulator.start();
-    
+
     Runtime.getRuntime().addShutdownHook(new Thread()
        {
          public void run()

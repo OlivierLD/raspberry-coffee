@@ -22,8 +22,8 @@ import serial.io.SerialIOCallbacks;
 import utils.StringUtils;
 
 public class ClientOne
-  implements SerialIOCallbacks, 
-             MindWaveCallbacks, 
+  implements SerialIOCallbacks,
+             MindWaveCallbacks,
              SerialCommunicatorInterface
 {
   @Override
@@ -53,7 +53,7 @@ public class ClientOne
         ioe.printStackTrace();
       }
     }
-    
+
     if (bufferIdx == 1 && serialBuffer[0] != MindWaveController.SYNC)
       bufferIdx = 0;
     if (bufferIdx == 2 && (serialBuffer[0] != MindWaveController.SYNC || serialBuffer[1] != MindWaveController.SYNC))
@@ -212,7 +212,7 @@ public class ClientOne
   private static SerialCommunicator sc = null; // SerialIOCallbacks
   private static MindWaveController mwc = null;
 
-  private static void parseParameters(String[] args) 
+  private static void parseParameters(String... args)
   {
     for (String prm : args)
     {
@@ -225,7 +225,7 @@ public class ClientOne
       if (prm.startsWith(BAUD_RATE_PRFX))
       {
         String brStr = prm.substring(BAUD_RATE_PRFX.length());
-        try 
+        try
         {
           baudRate = Integer.parseInt(brStr);
         }
@@ -236,27 +236,27 @@ public class ClientOne
       }
     }
   }
-  
+
   private final static String LIST_PORTS_PRFX = "-list-ports";
   private final static String PORT_NAME_PRFX  = "-port:";
   private final static String BAUD_RATE_PRFX  = "-br:";
   private final static String LOG_PRFX        = "-log:";
-  
+
   private static String serialPort = "COM25";
   private static int baudRate      = 115200;
   private static boolean listPort  = false;
   private static boolean logSerial = false;
-  
+
   private static BufferedWriter log = null;
-  
-  public static void main(String[] args)
+
+  public static void main(String... args)
   {
     final String replay = System.getProperty("replay.serial");
 
     parseParameters(args);
     if (logSerial)
     {
-      try 
+      try
       {
         log = new BufferedWriter(new FileWriter("serial.log"));
       }
@@ -265,7 +265,7 @@ public class ClientOne
         ioe.printStackTrace();
       }
     }
-    
+
     final ClientOne mwClient = new ClientOne();
     sc = new SerialCommunicator(mwClient);
 
@@ -280,7 +280,7 @@ public class ClientOne
       System.exit(0);
     }
     final Thread waiter = Thread.currentThread();
-    
+
     Runtime.getRuntime().addShutdownHook(new Thread()
      {
        public void run()
@@ -288,7 +288,7 @@ public class ClientOne
          if (replay == null)
          {
            mwc.disconnectHeadSet();
-           try 
+           try
            {
              sc.disconnect();
              if (logSerial)
@@ -306,7 +306,7 @@ public class ClientOne
          }
        }
      });
-        
+
     CommPortIdentifier mwPort = pm.get(serialPort);
     try
     {
@@ -339,7 +339,7 @@ public class ClientOne
               {
                 byte bt = (byte)Integer.parseInt(b, 16);
                 mwClient.onSerialData(bt);
-                try { Thread.sleep(10L); } catch (InterruptedException ie) {} 
+                try { Thread.sleep(10L); } catch (InterruptedException ie) {}
               }
             }
           };

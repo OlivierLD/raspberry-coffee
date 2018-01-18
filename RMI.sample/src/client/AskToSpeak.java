@@ -15,7 +15,7 @@ public class AskToSpeak {
 
   private static String bindingName = "Compute";
 
-  public static void main(String args[]) {
+  public static void main(String... args) {
     if (args.length < 3) {
       System.out.println("Arguments: [RMI Server Name] [Port] [Text to Speak]");
       System.out.println(String.format("You have provided %d argument(s)", args.length));

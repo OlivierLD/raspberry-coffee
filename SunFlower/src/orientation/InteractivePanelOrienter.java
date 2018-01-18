@@ -1,5 +1,7 @@
 package orientation;
 
+import static utils.StaticUtil.userInput;
+
 /**
  * Show how to use the panel orienter (SunFlower)
  * Takes the Device (true) Heading from the Console
@@ -59,7 +61,7 @@ public class InteractivePanelOrienter {
 		System.out.println(mess);
 
 		instance.setCalibrating(true);
-		SunFlower.userInput("");
+		userInput("");
 		instance.setCalibrating(false);
 		// Done calibrating
 		double heading = 180D;
@@ -76,7 +78,7 @@ public class InteractivePanelOrienter {
 			boolean read = true;
 			System.out.println("Enter 'Q' at the prompt to quit.");
 			while (read) {
-				String input = SunFlower.userInput(String.format("Enter Device's true heading [0..360], now %.02f > ", instance.getDeviceHeading()));
+				String input = userInput(String.format("Enter Device's true heading [0..360], now %.02f > ", instance.getDeviceHeading()));
 				if ("Q".equalsIgnoreCase(input.trim())) {
 					read = false;
 				} else {

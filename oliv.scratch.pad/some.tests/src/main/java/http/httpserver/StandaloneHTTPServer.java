@@ -187,7 +187,7 @@ public class StandaloneHTTPServer {
 	/**
 	 * @param args see usage
 	 */
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("Starting tiny dedicated server");
 		System.out.println("Use [Ctrl] + [C] to stop it, or POST or GET the following request:");
 		System.out.println("http://localhost:" + System.getProperty("http.port", "9999") + "/exit");
@@ -215,7 +215,7 @@ public class StandaloneHTTPServer {
 		new StandaloneHTTPServer(args);
 	}
 
-	private static boolean isHelpRequired(String[] args) {
+	private static boolean isHelpRequired(String... args) {
 		boolean ret = false;
 		if (args != null) {
 			for (int i = 0; i < args.length; i++) {

@@ -72,7 +72,7 @@ public class XSLUtil {
 		return ((d > 0 ? "+" : "-") + Integer.toString(m) + "m" + Integer.toString(s) + "s");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println(eotToString(-0.059105719534287005));
 	}
 

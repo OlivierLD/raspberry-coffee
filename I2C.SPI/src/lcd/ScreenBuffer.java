@@ -334,6 +334,13 @@ public class ScreenBuffer {
 		}
 	}
 
+	/**
+	 * Return the length of the matrix displaying the string,
+	 * NOT the length of the string...
+	 *
+	 * @param s
+	 * @return
+	 */
 	public int strlen(String s) {
 		int len = 0;
 		for (int i = 0; i < s.length(); i++) { // For each character of the string to display

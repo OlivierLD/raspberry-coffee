@@ -31,7 +31,7 @@ public class CollisionTester {
 	private final static int REG_WIDTH =  8;
 	private final static int LOG_2_M   = 30;
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		final HLL hll = new HLL(LOG_2_M, REG_WIDTH); // (13/*log2m*/, 5/*registerWidth*/);
 
 		for (long i=0; i<NB_ETAG_GEN; i++) {

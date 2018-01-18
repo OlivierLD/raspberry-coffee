@@ -85,7 +85,7 @@ public class TCPClient extends NMEAClient {
 		return new TCPBean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("CustomTCPClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
 			System.out.println("CustomTCPClient prm:" + s);

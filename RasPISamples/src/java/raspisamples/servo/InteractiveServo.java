@@ -5,6 +5,8 @@ import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import static utils.StaticUtil.userInput;
+
 /*
  * Standard, using I2C and the PCA9685 servo board
  * User interface (CLI).
@@ -71,32 +73,13 @@ public class InteractiveServo {
 		return Math.round(min + ((deg + 90) * oneDeg));
 	}
 
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
-
 	/**
 	 * To test the servo - namely, the min & max values.
 	 *
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		int channel = 14;
 		if (args.length > 0) {
 			try {
