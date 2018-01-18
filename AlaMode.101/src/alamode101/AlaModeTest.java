@@ -6,9 +6,7 @@ import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.io.serial.*;
 import utils.DumpUtil;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -35,13 +33,14 @@ public class AlaModeTest {
 		try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
-
+			}
 			// Get device itself
 			alamode = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
+			}
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
@@ -77,8 +76,9 @@ public class AlaModeTest {
 						String[] sa = DumpUtil.dualDump(payload);
 						if (sa != null) {
 							System.out.println("\t<<< [Serial] Received...");
-							for (String s : sa)
+							for (String s : sa) {
 								System.out.println("\t\t" + s);
+							}
 						}
 					} catch (Exception ex) {
 						System.out.println(ex.toString());
@@ -91,9 +91,9 @@ public class AlaModeTest {
 					// Manage data here. Check in the enum ArduinoMessagePrefix
 					try {
 						mess = mess.trim();
-						while (mess.endsWith("\n") ||
-								mess.endsWith("\r"))
+						while (mess.endsWith("\n") || mess.endsWith("\r")) {
 							mess = mess.substring(mess.length() - 1);
+						}
 						takeAction(mess);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -166,8 +166,9 @@ public class AlaModeTest {
 
 	private void sendSerial(String payload) throws IOException {
 		if (serial.isOpen()) {
-			if (verbose)
+			if (verbose) {
 				System.out.println("\t>>> Writing [" + payload + "] to the serial port...");
+			}
 			try {
 				serial.write(payload); // + "\n");
 //      serial.flush();
@@ -197,15 +198,15 @@ public class AlaModeTest {
 					while (loop) {
 						String userInput = "";
 						userInput = userInput("So? > ");
-						if ("Q".equalsIgnoreCase(userInput))
+						if ("Q".equalsIgnoreCase(userInput)) {
 							loop = false;
-						else if ("V".equalsIgnoreCase(userInput))
+						} else if ("V".equalsIgnoreCase(userInput)) {
 							verbose = !verbose;
-						else {
+						} else {
 							//  channel.sendSerial(userInput); // Private
-							if ("?".equals(userInput))
+							if ("?".equals(userInput)) {
 								displayMenu();
-							else if ("S".equalsIgnoreCase(userInput)) {
+							} else if ("S".equalsIgnoreCase(userInput)) {
 								if (false) {
 									String mess = userInput("Enter a number > ");
 									try {
@@ -248,8 +249,9 @@ public class AlaModeTest {
 								} catch (Exception ex) {
 									ex.printStackTrace();
 								}
-							} else
+							} else {
 								System.out.println("Duh?");
+							}
 						}
 					}
 					synchronized (me) {
