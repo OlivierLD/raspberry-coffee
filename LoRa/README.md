@@ -50,7 +50,7 @@ Tests on the range of the LoRa.
 #### Broadcast NMEA Data
 Using the NMEA Multiplexer, based on its structure, we've written a `LoRaPublisher`.
 
-One one Raspberry PI (emitter, **1**), where the NMEAMultiplexer reads NMEA Data (from a GPS, a log file, etc),
+On one Raspberry PI (emitter, **1**), where the NMEAMultiplexer reads NMEA Data (from a GPS, a log file, etc),
 there is also an Arduino with a `LoRa` connected to it, with `ArduinoRF95_TX` running on it.
 
 On another machine (receiver, **2**), with an Arduino running `ArduinoRF95_RX` connected to it, run the script
