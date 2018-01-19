@@ -44,6 +44,10 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 		}
 	}
 
+	@Override
+	public void onSerialData(byte[] b, int len) {
+	}
+
 	public void arduinoOutput(byte[] mess) {
 		if (true) { // verbose...
 			try {
