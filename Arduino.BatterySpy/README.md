@@ -7,3 +7,5 @@ smart-phones.
 
 But still, as it relates to the `adc.sample.BatteryMonitor.java`, this could be something to look at.
 The hardware part is much simpler, as the Arduino has analog pins, it does not require an ADC.
+
+![Wiring](./arduiono.fona_bb.png)

@@ -86,8 +86,9 @@ void setup() {
 //if (imeiLen > 0) {
 //  Serial.print("SIM card IMEI: "); Serial.println(imei);
 //}
-  if (fonaOK)
+  if (fonaOK) {
     Serial.println(">> FONA READY");
+  }
 //printMenu(); // Optional
 }
 
@@ -116,19 +117,18 @@ void loop() {
 //Serial.print("Voltage:"); Serial.print(voltage); Serial.println(" V");
   
   char smsQueryString[128];
-  for (int i=0; i<128; i++)
+  for (int i=0; i<128; i++) {
     smsQueryString[i] = '\0';
+  }
   // Serial.print(F("FONA> "));
   String command = "";
   if (fonaOK && fona.available()) {
     // Command input
     readFonaLine(smsQueryString, 128); // From Fona
     Serial.print("Received:"); Serial.println(smsQueryString);
-    if (strlen(smsQueryString) > 0)
-    {
+    if (strlen(smsQueryString) > 0) {
       String fonaQ = String(smsQueryString);
-      if (fonaQ.startsWith("+CMTI:"))
-      {
+      if (fonaQ.startsWith("+CMTI:")) {
         int idx = fonaQ.indexOf(",") + 1;
         String messNum = fonaQ.substring(idx);
         command = "r|" + messNum; // Will tell the 'appLogic' to read the message, and process it.
@@ -138,17 +138,17 @@ void loop() {
   }
 //Serial.print("Query len:"); Serial.println(strlen(smsQueryString));
   // For debugging
-  if (Serial.available())
-  {
+  if (Serial.available()) {
     readSerialLine(smsQueryString, 128); // From Serial port
     Serial.print("Received from Serial:"); Serial.println(smsQueryString);
     command = String(smsQueryString);
   }
   
-  if (command.length() > 0)
+  if (command.length() > 0) {
     appLogic(command);
-  else
+  } else {
     delay(500);
+  }
 }
 
 void appLogic(String command) {
@@ -160,101 +160,91 @@ void appLogic(String command) {
   String QUERY = String(query);
   QUERY.toUpperCase();
   String meaning = "";
-  if (query.equals("a"))
+  if (query.equals("a")) {
     readADC();
-  else if (query.equals("b"))
+  } else if (query.equals("b")) {
     readBattery();
-  else if (query.equals("C"))
+  } else if (query.equals("C")) {
     readCCID();
-  else if (query.equals("i"))
+  } else if (query.equals("i")) {
     readRSSI();
-  else if (query.equals("n"))
+  } else if (query.equals("n")) {
     readNetworkStatus();
-  else if (query.equals("N"))
+  } else if (query.equals("N")) {
     readNumberOfMessages();
-  else if (query.startsWith("d|"))
-  {
+  } else if (query.startsWith("d|")) {
     String smsn = getElem(query, '|', 1);
     char _1[6];
     smsn.toCharArray(_1, 6);
     int num = atoi(_1);
     deleteMessNum(num);
-  }
-  else if (query.startsWith("r|"))
-  {
+  } else if (query.startsWith("r|")) {
     String smsn = getElem(query, '|', 1);
     char _1[6];
     smsn.toCharArray(_1, 6);
     int num = atoi(_1);
     readMessNum(num);
-  }
-  else if (query.startsWith("s|"))
-  {
+  } else if (query.startsWith("s|")) {
     String to   = getElem(query, '|', 1);
     String mess = getElem(query, '|', 2);
     Serial.print("Sending ["); Serial.print(mess); Serial.print("] to ["); Serial.print(to); Serial.println("]");
-    if (!to.equals("FAKE"))
+    if (!to.equals("FAKE")) {
       sendSMS(to, mess);
-  }
-  else if (query.startsWith("?|"))
-  {
+    }
+  } else if (query.startsWith("?|")) {
     String to   = getElem(query, '|', 1);
     String menu = "Menu: ? for Menu, b for battery";
     Serial.print("Sending ["); Serial.print(menu); Serial.print("] to ["); Serial.print(to); Serial.println("]");
-    if (!to.equals("FAKE"))
+    if (!to.equals("FAKE")) {
       sendSMS(to, menu);
-  }
-  else if (QUERY.startsWith("BAT|")) // TODO QUERY - Uppercase
-  {
+    }
+  } else if (QUERY.startsWith("BAT|")) { // TODO QUERY - Uppercase
     String to = getElem(query, '|', 1);
     Serial.print("Will (BAT) reply to "); Serial.println(to);
     String payload = String(voltage, 2) + " V";
     Serial.print("Sending ["); Serial.print(payload); Serial.print("] to ["); Serial.print(to); Serial.println("]");
-    if (!to.equals("FAKE"))
+    if (!to.equals("FAKE")) {
       sendSMS(to, payload);
+    }
     Serial.println("Bat, done.");
-  }
-  else
-  { 
-    if (query.length() > 0)
+  } else { 
+    if (query.length() > 0) {
       meaning = query + ":Unknown";
+    }
   }
-  if (meaning.length() > 0)  
+  if (meaning.length() > 0) {
     Serial.println(meaning);
+  }
 }
 
-String getElem(String str, char sep, int idx)
-{
+String getElem(String str, char sep, int idx) {
   String ret = "";
 
   int start = -1, end = -1;  
   int nbSep = 0;
-  for (int i=0; i<str.length(); i++)
-  {
-    if (str.charAt(i) == sep)
-    {
+  for (int i=0; i<str.length(); i++) {
+    if (str.charAt(i) == sep) {
       nbSep++;
-      if (nbSep == idx && start == -1)
+      if (nbSep == idx && start == -1) {
         start = i + 1;
-      if (nbSep > idx && end == -1)
-      {
+      }
+      if (nbSep > idx && end == -1) {
         end = i;
         break;
       }
     }
   }
-  if (start > -1)
-  {
-    if (end > -1)
+  if (start > -1) {
+    if (end > -1) {
       ret = str.substring(start, end);
-    else
+    } else {
       ret = str.substring(start);
+    }
   }
   return ret;
 }
 
-void readADC()
-{
+void readADC() {
   uint16_t adc;
   if (! fona.getADCVoltage(&adc)) {
     Serial.println(F(">> ADC FAILED"));
@@ -264,8 +254,7 @@ void readADC()
   }
 }
 
-void readBattery()
-{
+void readBattery() {
   uint16_t vbat, vpercent;
   if (! fona.getBattVoltage(&vbat)) {
     Serial.println(F(">> BATTERY READ FAILED"));
@@ -285,15 +274,13 @@ void readBattery()
   Serial.print(">> BAT:"); Serial.println(payload); // mV, %
 }
 
-void readCCID()
-{
+void readCCID() {
   fona.getSIMCCID(replybuffer);  // make sure replybuffer is at least 21 bytes!
   Serial.print(">> CCID:"); 
   Serial.println(replybuffer);
 }
 
-void readRSSI()
-{
+void readRSSI() {
   uint8_t n = fona.getRSSI();
   int8_t r;
 
@@ -306,8 +293,7 @@ void readRSSI()
   Serial.print(">> RSSI:"); Serial.print(n); Serial.print(","); Serial.println(r); // level,  dBm
 }
 
-void readNetworkStatus()
-{
+void readNetworkStatus() {
   // read the network/cellular status
   uint8_t n = fona.getNetworkStatus();
   Serial.print(">> NETW:"); Serial.print(n);
@@ -320,8 +306,7 @@ void readNetworkStatus()
   if (n == 5) Serial.println(F("Registered roaming"));
 }
 
-void readNumberOfMessages()
-{
+void readNumberOfMessages() {
   int8_t smsnum = fona.getNumSMS();
   if (smsnum < 0) {
     Serial.println(F(">> NUMMESS FAILED"));
@@ -331,8 +316,7 @@ void readNumberOfMessages()
   }
 }
 
-void readMessNum(int smsn)
-{
+void readMessNum(int smsn) {
   // read an SMS
   flushSerial();
   // Retrieve SMS sender address/phone number.
@@ -360,8 +344,7 @@ void readMessNum(int smsn)
   appLogic(command);
 }
 
-void deleteMessNum(uint8_t smsn)
-{
+void deleteMessNum(uint8_t smsn) {
   // delete an SMS
   flushSerial();
   if (fona.deleteSMS(smsn)) {
@@ -371,8 +354,7 @@ void deleteMessNum(uint8_t smsn)
   }
 }
 
-void sendSMS(String to, String mess)
-{
+void sendSMS(String to, String mess) {
   // send an SMS!
   char sendto[21], message[141];
   flushSerial();
@@ -381,8 +363,7 @@ void sendSMS(String to, String mess)
 
   Serial.print(F("Send to #")); Serial.print(to); Serial.print(", "); Serial.println(mess);
 
-  if (fonaOK)
-  {
+  if (fonaOK) {
     if (!fona.sendSMS(sendto, message)) {
       Serial.println(F(">> SEND FAILED"));
     } else {
@@ -392,8 +373,9 @@ void sendSMS(String to, String mess)
 }
 
 void flushSerial() {
-  while (Serial.available())
+  while (Serial.available()) {
     Serial.read();
+  }
 }
 
 /**
