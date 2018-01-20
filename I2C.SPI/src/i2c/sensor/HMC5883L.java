@@ -94,15 +94,16 @@ public class HMC5883L {
 	 */
 	public double readHeading() throws IOException {
 		double heading = 0f;
-
-//		byte[] w = new byte[]{
-//			(byte) HMC5883L_8_SAMPLES_15HZ,
-//			(byte) HMC5883L_13_GAIN_LSB_GAUSS_1090,
-//			(byte) HMC5883L_CONTINUOUS_SAMPLING
-//		};
-//		hcm5883l.write(w, 0, 3); // BeginTrans, write 3 bytes, EndTrans.
-
-		hcm5883l.write((byte)0x03);
+		if (true) {
+			byte[] w = new byte[]{
+				(byte) HMC5883L_8_SAMPLES_15HZ,
+				(byte) HMC5883L_13_GAIN_LSB_GAUSS_1090,
+				(byte) HMC5883L_CONTINUOUS_SAMPLING
+			};
+			hcm5883l.write(w, 0, 3); // BeginTrans, write 3 bytes, EndTrans.
+		} else {
+			hcm5883l.write((byte) 0x03);
+		}
 
 		double xOut = readWord_2C(HMC5883L_X_ADR);
 		double yOut = readWord_2C(HMC5883L_Y_ADR);
