@@ -198,9 +198,9 @@ public class HMC5883L {
 		double yOut = readWord();
 
 		if (verbose) { // RAW
-			System.out.println(String.format("Raw X: 0x%02X", (int)xOut));
-			System.out.println(String.format("Raw Y: 0x%02X", (int)yOut));
-			System.out.println(String.format("Raw Z: 0x%02X", (int)zOut));
+			System.out.println(String.format("Raw X: 0x%04X", ((int)xOut & 0xFFFF)));
+			System.out.println(String.format("Raw Y: 0x%04X", ((int)yOut & 0xFFFF)));
+			System.out.println(String.format("Raw Z: 0x%04X", ((int)zOut & 0xFFFF)));
 		}
 
 		//		xOut *= SCALE;
