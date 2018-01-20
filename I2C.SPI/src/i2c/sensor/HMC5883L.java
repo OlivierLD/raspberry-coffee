@@ -144,7 +144,7 @@ public class HMC5883L {
 		short w = 0;
 
 		byte high = (byte) (hcm5883l.read(reg) & 0xFF);
-		byte low = (byte) (hcm5883l.read(reg + 1) & 0xFF);
+		byte low  = (byte) (hcm5883l.read(reg + 1) & 0xFF);
 
 		w = (short) ((((high & 0xFF) << 8) | (low & 0xFF)) & 0xFFFF); // Little endian
 
@@ -196,6 +196,12 @@ public class HMC5883L {
 		double xOut = readWord();
 		double zOut = readWord();
 		double yOut = readWord();
+
+		if (verbose) { // RAW
+			System.out.println(String.format("Raw X: 0x%02X", (int)xOut));
+			System.out.println(String.format("Raw Y: 0x%02X", (int)yOut));
+			System.out.println(String.format("Raw Z: 0x%02X", (int)zOut));
+		}
 
 		//		xOut *= SCALE;
 //		yOut *= SCALE;
