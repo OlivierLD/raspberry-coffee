@@ -28,6 +28,8 @@ Then
 ### Ardiuno Uno
 Use a USB-A to USB-B (male-male) cable.
 
+For Arduino Uno, use board `Arduino/Genuino Uno`.
+
 ![Arduino Uno](./img/Arduino.Uno.png)
 
 Programmer: `AVRISP mkII`
