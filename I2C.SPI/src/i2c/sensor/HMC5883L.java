@@ -201,9 +201,9 @@ public class HMC5883L {
 //		yOut *= SCALE;
 //		zOut *= SCALE;
 
-		xOut /= (_hmc5883_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA);
-		yOut /= (_hmc5883_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA);
-		zOut /= (_hmc5883_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA);
+		xOut = xOut / _hmc5883_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+		yOut = yOut / _hmc5883_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+		zOut = zOut / _hmc5883_Gauss_LSB_Z  * SENSORS_GAUSS_TO_MICROTESLA;
 
 		if (verbose) {
 			System.out.println("xOut:" + xOut);
@@ -241,7 +241,7 @@ public class HMC5883L {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		HMC5883L sensor = new HMC5883L();
 		sensor.init();
-		
+
 		double hdg = 0;
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
