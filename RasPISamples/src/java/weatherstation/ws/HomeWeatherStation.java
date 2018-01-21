@@ -160,16 +160,16 @@ public class HomeWeatherStation {
 						System.out.println("-> Sending message (wsf)");
 					}
 					wsf.pushMessage(message);
-					if (logger != null) {
-						try {
-							logger.pushMessage(windObj);
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					}
 				} else {
 					if ("true".equals(System.getProperty("ws.verbose", "false"))) {
 						System.out.println("-> NOT Sending message (wsf)");
+					}
+				}
+				if (logger != null) {
+					try {
+						logger.pushMessage(windObj);
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				}
 			} catch (NotYetConnectedException nyce) {
