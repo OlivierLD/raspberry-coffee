@@ -32,24 +32,24 @@ public class PIControllerMain implements RaspberryPIEventListener
   /**
    * Invoked like:
    *   java relay.email.PIControllerMain [-verbose] -send:google -receive:yahoo -help
-   *   
+   *
    * This will send emails using google, and receive using yahoo.
    * Default values are:
    *   java pi4j.email.PIControllerMain -send:google -receive:google
-   *   
+   *
    * Do check the file email.properties for the different values associated with email servers.
-   * 
+   *
    * @param args See above
-   * 
+   *
    * To try it:
    * send email to the right destination (like olivier.lediouris@gmail.com, see in email.properties) with a plain text payload like
    * { 'operation':'turn-relay-on' }
    * or
    * { 'operation':'turn-relay-off' }
-   * 
+   *
    * Subject: 'PI Request'
    */
-  public static void main(String[] args)  
+  public static void main(String... args)
   {
     for (int i=0; i<args.length; i++)
     {
@@ -59,9 +59,9 @@ public class PIControllerMain implements RaspberryPIEventListener
         System.setProperty("verbose", "true");
       }
       else if (args[i].startsWith("-send:"))
-        providerSend = args[i].substring("-send:".length());      
+        providerSend = args[i].substring("-send:".length());
       else if (args[i].startsWith("-receive:"))
-        providerReceive =args[i].substring("-receive:".length());  
+        providerReceive =args[i].substring("-receive:".length());
       else if ("-help".equals(args[i]))
       {
         System.out.println("Usage:");
@@ -69,10 +69,10 @@ public class PIControllerMain implements RaspberryPIEventListener
         System.exit(0);
       }
     }
-    
+
     final GPIOController piController = new GPIOController();
     EmailReceiver receiver = new EmailReceiver(providerReceive); // For Google, pop must be explicitely enabled at the account level
-    
+
     Runtime.getRuntime().addShutdownHook(new Thread()
      {
        public void run()
@@ -82,7 +82,7 @@ public class PIControllerMain implements RaspberryPIEventListener
          System.out.println("\nExiting nicely.");
        }
      });
-    
+
     try
     {
       String from = "";
@@ -158,8 +158,8 @@ public class PIControllerMain implements RaspberryPIEventListener
     {
       String mess = "{ pin: '" + event.getPin() + "', state:'" + event.getState() + "' }";
       System.out.println("Sending:" + mess);
-      sender.send(sender.getEmailDest().split(","), 
-                  sender.getEventSubject(), 
+      sender.send(sender.getEmailDest().split(","),
+                  sender.getEventSubject(),
                   mess);
     }
     catch (Exception ex)

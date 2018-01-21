@@ -22,7 +22,7 @@ static int echo    = GPIO24;
   public native void init(int trigPin, int echoPin); // Uses the WiringPi numbers. See default above.
   public native double readRange();
 
-  public static void main(String[] args) {
+  public static void main(String... args) {
     JNI_HC_SR04 jni_hc_sr04 = new JNI_HC_SR04();
     jni_hc_sr04.init(); // With default prms. See above.
     System.out.println("Initialized. Get closer than 5cm to stop.");

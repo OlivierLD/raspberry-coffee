@@ -269,7 +269,7 @@ public class Core {
 		return (int) ((Context.JD0h + 1.5) - 7 * Math.floor((Context.JD0h + 1.5) / 7));
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		julianDate(2009, 4, 20, 0, 0, 0f, 65.5);
 		System.out.println("DayFraction:" + Context.dayfraction);
 		julianDate(2009, 4, 20, 0, 10, 0f, 65.5);

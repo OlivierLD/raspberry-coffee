@@ -123,6 +123,10 @@ public class ArduinoLoRaClient implements SerialIOCallbacks {
 		}
 	}
 
+	@Override
+	public void onSerialData(byte[] b, int len) {
+	}
+
 	private void arduinoOutput(byte[] mess) {
 		if (this.verbose) {
 			try {

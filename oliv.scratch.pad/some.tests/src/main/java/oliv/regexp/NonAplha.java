@@ -10,7 +10,7 @@ public class NonAplha {
 	private final static String NON_ALPHA_CHARACTERS_PATTERN = "[^a-zA-Z0-9_]";
 	private final static Pattern NA_PATTERN = Pattern.compile(NON_ALPHA_CHARACTERS_PATTERN);
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String val = "Akeu coucou, et #%$ -^+=! Ca rigole.";
 		String original = val;
 		Matcher matcher = NA_PATTERN.matcher(val);

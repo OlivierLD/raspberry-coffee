@@ -158,7 +158,7 @@ public class GRIBDump {
 	}
 
 	// For standalone tests
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		GRIBDump gribDump = new GRIBDump();
 //	"GRIB_2017_10_16_07_31_47_PDT.grb", "GRIB_2009_02_25_Sample.grb";
 //	String gribFileName = "GRIB_2009_02_25_Sample.grb";

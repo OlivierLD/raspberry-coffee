@@ -186,7 +186,7 @@ public class ServoHat {
 		System.out.println("That's it!");
 	}
 
-	public static void main(String args[]) throws IOException, I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws IOException, I2CFactory.UnsupportedBusNumberException {
 		help();
 		ServoHat proto = new ServoHat();
 		if ("true".equals(System.getProperty("test.only", "false"))) {

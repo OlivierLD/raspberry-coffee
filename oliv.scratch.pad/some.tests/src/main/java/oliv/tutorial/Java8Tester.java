@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Java8Tester {
-	public static void main(String args[]) {
+	public static void main(String... args) {
 
 		List<String> names1 = new ArrayList<String>();
 		names1.add("Mahesh ");

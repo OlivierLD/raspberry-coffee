@@ -5,6 +5,8 @@ import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 import utils.StringUtils;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Standard, using I2C and the PCA9685 servo board
  * Feedback comes from an MCP3008
@@ -15,14 +17,6 @@ public class StandardFeedbackServo {
 					MCP3008Reader.MCP3008_input_channels.CH1.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 	private static boolean go = true;
-
-	public static void delay(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
 
 	private int servo = -1;
 
@@ -99,7 +93,7 @@ public class StandardFeedbackServo {
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		int channel = 7; // For the servo
 		if (args.length > 0) {
 			try {

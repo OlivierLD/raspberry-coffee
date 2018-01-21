@@ -13,7 +13,7 @@ public class OLEDScreenAndKeypad
   private KeyboardController kbc;
   private SSD1306 oled;
   private ScreenBuffer sb;
-  
+
   // This one overrides the default pins for the OLED
   public OLEDScreenAndKeypad()
   {
@@ -24,10 +24,10 @@ public class OLEDScreenAndKeypad
     oled.clear();
 
     sb = new ScreenBuffer(128, 32);
-    
+
     reset();
   }
-  
+
   public void display(String txt)
   {
     sb.text(txt, 2, 17);
@@ -42,7 +42,7 @@ public class OLEDScreenAndKeypad
     boolean go = true;
     while (go)
     {
-      char c = kbc.getKey();    
+      char c = kbc.getKey();
 //    System.out.println("At " + System.currentTimeMillis() + ", Char: " + c);
       if (c == '#')
         go = false;
@@ -71,18 +71,18 @@ public class OLEDScreenAndKeypad
     oled.clear();
     sb.text("* = Reset, # = Exit.", 2, 8);
     oled.setBuffer(sb.getScreenBuffer());
-    oled.display();    
+    oled.display();
   }
-  
+
   public void clear()
   {
     sb.clear();
     oled.clear();
     oled.setBuffer(sb.getScreenBuffer());
-    oled.display();       
+    oled.display();
   }
-  
-  public static void main(String[] args)
+
+  public static void main(String... args)
   {
     System.out.println("Hit * to reset");
     System.out.println("Hit # to exit");

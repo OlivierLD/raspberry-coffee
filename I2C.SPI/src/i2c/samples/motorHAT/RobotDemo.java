@@ -9,7 +9,7 @@ import java.io.IOException;
  *
  */
 public class RobotDemo {
-	public static void main(String args[]) throws IOException, I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws IOException, I2CFactory.UnsupportedBusNumberException {
 		Robot robot = new Robot();
 
     /* Now move the robot around!

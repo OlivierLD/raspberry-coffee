@@ -6,32 +6,15 @@ import com.pi4j.wiringpi.SoftPwm;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import static utils.StaticUtil.userInput;
+
 /*
  * PWM with WiringPi. Works with a led, or with a standard servo.
  */
 public class WiringPiSoftPWMExample {
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			try {
-				userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
-
 	private static boolean go = true;
 
-	public static void main(String[] args)
+	public static void main(String... args)
 					throws InterruptedException {
 		// initialize wiringPi library
 		int ret = Gpio.wiringPiSetup();

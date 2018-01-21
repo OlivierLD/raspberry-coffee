@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-CP=./build/libs/SerialRxTx-1.0.jar
+CP=./build/libs/SerialRxTx-1.0-all.jar
 CP=$CP:/usr/share/java/RXTXcomm.jar
 #
 SERIAL_PRMS="-Dserial.port=/dev/ttyUSB0"

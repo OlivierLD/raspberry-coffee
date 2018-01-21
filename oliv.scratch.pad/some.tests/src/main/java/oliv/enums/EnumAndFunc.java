@@ -62,7 +62,7 @@ public class EnumAndFunc {
 
 	;
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String str = "AbCdEfGhIjKlMnOpQrStUvWxYz";
 		System.out.println(String.format("%s: (%s) \t %s", OlivType.TYPE_ONE.id.getName(), OlivType.TYPE_ONE.description(), OlivType.TYPE_ONE.fn().apply(str)));
 		System.out.println(String.format("%s: (%s) \t %s", OlivType.TYPE_TWO.id.getName(), OlivType.TYPE_TWO.description(), OlivType.TYPE_TWO.fn().apply(str)));

@@ -5,6 +5,8 @@ import i2c.servo.adafruitmotorhat.AdafruitMotorHAT;
 
 import java.io.IOException;
 
+import static i2c.samples.motorHAT.Robot.delay;
+
 public class Robot {
 	private int addr = 0x60;    // The I2C address of the motor HAT, default is 0x60.
 	private AdafruitMotorHAT.Motor leftMotorID = AdafruitMotorHAT.Motor.M1; // The ID of the left motor, default is 1.
@@ -30,6 +32,14 @@ public class Robot {
 		}
 		// if stopOnExit...
 	}
+
+	final static void delay(float delay) {
+		try {
+			Thread.sleep(Math.round(delay * 1_000L));
+		} catch (InterruptedException ie) {
+		}
+	}
+
 
 	public void stop() {
 		try {
@@ -115,14 +125,6 @@ public class Robot {
 		if (seconds > 0) {
 			delay(seconds);
 			this.stop();
-		}
-	}
-
-	public static void delay(float sec) {
-		try {
-			Thread.sleep((long) (sec * 1_000));
-		} catch (InterruptedException ie) {
-			// Absorb
 		}
 	}
 }

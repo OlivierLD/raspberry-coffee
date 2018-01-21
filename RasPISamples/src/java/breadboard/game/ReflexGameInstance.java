@@ -10,7 +10,7 @@ public class ReflexGameInstance implements PushButtonObserver {
 	private static long now = 0L;
 	private static ReflexGameMaster rgm = null;
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		ReflexGameInstance instance = new ReflexGameInstance();
 		rgm = new ReflexGameMaster(instance);
 		rgm.initCtx();                                   // Initialize

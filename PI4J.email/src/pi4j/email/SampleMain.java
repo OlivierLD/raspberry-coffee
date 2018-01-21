@@ -28,7 +28,7 @@ public class SampleMain {
 	 * </p>
 	 * @param args See above
 	 */
-	public static void main(String[] args)
+	public static void main(String... args)
 	throws Exception {
 
 		int nbEmailsToSend = 3;

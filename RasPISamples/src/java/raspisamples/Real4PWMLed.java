@@ -13,7 +13,7 @@ import raspisamples.pwm.PWMPin;
 
 public class Real4PWMLed
 {
-  public static void main(String[] args)
+  public static void main(String... args)
     throws InterruptedException
   {
     final GpioController gpio = GpioFactory.getInstance();
@@ -32,7 +32,7 @@ public class Real4PWMLed
     pin03.emitPWM(0);
 
     final Thread mainThread = Thread.currentThread();
-  
+
     final Thread monitor = new Thread()
       {
         public void run()
@@ -43,21 +43,21 @@ public class Real4PWMLed
           {
             synchronized (this)
             {
-              try 
-              { 
+              try
+              {
                 System.out.println("Monitor waiting.");
-                wait(); 
+                wait();
                 nbNotification++;
                 System.out.println("Received " + nbNotification + " notification(s)...");
                 if (nbNotification == 4)
                 {
                   synchronized (mainThread)
                   {
-                    mainThread.notify();                    
+                    mainThread.notify();
                   }
                   keepWaiting = false;
                 }
-              } 
+              }
               catch (InterruptedException ie) { ie.printStackTrace(); }
             }
           }
@@ -65,7 +65,7 @@ public class Real4PWMLed
         }
       };
     monitor.start();
-    
+
     Thread one = new Thread()
       {
         public void run()
@@ -80,10 +80,10 @@ public class Real4PWMLed
             pin00.adjustPWMVolume(vol);
             try { Thread.sleep(10); } catch (Exception ex) {}
           }
-          synchronized(monitor) 
-          { 
+          synchronized(monitor)
+          {
             System.out.println("Thread One finishing");
-            monitor.notify(); 
+            monitor.notify();
           }
         }
       };
@@ -102,10 +102,10 @@ public class Real4PWMLed
             try { Thread.sleep(10); } catch (Exception ex) {}
           }
           try { Thread.sleep(100); } catch (Exception ex) {}
-          synchronized(monitor) 
-          { 
+          synchronized(monitor)
+          {
             System.out.println("Thread Two finishing");
-            monitor.notify(); 
+            monitor.notify();
           }
         }
       };
@@ -134,10 +134,10 @@ public class Real4PWMLed
             try { Thread.sleep(5); } catch (Exception ex) {}
           }
           try { Thread.sleep(200); } catch (Exception ex) {}
-          synchronized(monitor) 
-          { 
+          synchronized(monitor)
+          {
             System.out.println("Thread Three finishing");
-            monitor.notify(); 
+            monitor.notify();
           }
         }
       };
@@ -166,29 +166,29 @@ public class Real4PWMLed
             try { Thread.sleep(5); } catch (Exception ex) {}
           }
           try { Thread.sleep(300); } catch (Exception ex) {}
-          synchronized(monitor) 
-          { 
+          synchronized(monitor)
+          {
             System.out.println("Thread Four finishing");
-            monitor.notify(); 
+            monitor.notify();
           }
         }
       };
-        
+
     one.start();
     two.start();
     three.start();
     four.start();
-    
+
     synchronized (mainThread) { mainThread.wait(); }
     System.out.println("Everyone's done, finishing.");
-    
+
 //  try { Thread.sleep(5000L); } catch (Exception ex) {}
 
     pin00.stopPWM();
     pin01.stopPWM();
     pin02.stopPWM();
     pin03.stopPWM();
-    
+
     Thread.sleep(1_000);
     // Last blink
     System.out.println("Bye-bye");
@@ -197,7 +197,7 @@ public class Real4PWMLed
     pin00.high();
     Thread.sleep(500);
     pin00.low();
-    
+
     gpio.shutdown();
   }
 }

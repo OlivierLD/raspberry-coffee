@@ -13,33 +13,7 @@ import raspisamples.pwm.PWMPin;
 
 public class PWM3ColorLed
 {
-  private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-  public static String userInput(String prompt)
-  {
-    String retString = "";
-    System.err.print(prompt);
-    try
-    {
-      retString = stdin.readLine();
-    }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      String s;
-      try
-      {
-        s = userInput("<Oooch/>");
-      }
-      catch(Exception exception) 
-      {
-        exception.printStackTrace();
-      }
-    }
-    return retString;
-  }
-
-  public static void main(String[] args)
+  public static void main(String... args)
     throws InterruptedException
   {
     final GpioController gpio = GpioFactory.getInstance();
@@ -56,11 +30,11 @@ public class PWM3ColorLed
         {
           try
           {
-            System.out.println("\nQuitting");            
+            System.out.println("\nQuitting");
             pin00.stopPWM();
             pin01.stopPWM();
             pin02.stopPWM();
-            
+
             Thread.sleep(1_000);
             // Last blink
             System.out.println("Bye-bye");
@@ -69,7 +43,7 @@ public class PWM3ColorLed
             pin00.high();
             Thread.sleep(500);
             pin00.low();
-            
+
             gpio.shutdown();
           }
           catch (Exception ex)
@@ -78,7 +52,7 @@ public class PWM3ColorLed
           }
         }
       });
-    
+
 
     Thread.sleep(1_000);
 
@@ -179,16 +153,16 @@ public class PWM3ColorLed
           }
         }
       };
-        
+
     one.start();
     two.start();
     three.start();
-    
+
     Thread me = Thread.currentThread();
     synchronized (me)
     {
       try { me.wait(); } catch (InterruptedException ie) {}
-    }  
+    }
     System.out.println("Tcho!");
   }
 }

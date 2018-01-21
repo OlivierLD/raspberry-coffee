@@ -24,7 +24,7 @@ public class SampleRMIClient {
 	private static String bindingName = "RMIServer";
 
 	// For the MUX: olediouris-mbp/10.10.226.181, port 1099, name RMI-NMEA
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		String name;
 		String port;
 

@@ -42,7 +42,7 @@ public class VCNL4000ProximityWithSound {
 		sdl.close();
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		VCNL4000 sensor = new VCNL4000();
 		int prox = 0;
 		int ambient = 0;

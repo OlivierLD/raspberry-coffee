@@ -22,7 +22,7 @@ import relay.RelayManager;
  *
  * Runs the communication between an HTTP client and the
  * features of the Data server to be displayed remotely.
- * 
+ *
  * Comes with a speech option using "freeTTS" (see http://freetts.sourceforge.net/docs/index.php)
  */
 public class StandaloneHTTPServer
@@ -35,7 +35,7 @@ public class StandaloneHTTPServer
   private final static String VOICENAME = "kevin16";
 
   public StandaloneHTTPServer() {}
-  
+
   public StandaloneHTTPServer(String[] prms)
   {
     try { rm = new RelayManager(); }
@@ -50,10 +50,10 @@ public class StandaloneHTTPServer
 
     machineName = System.getProperty("http.host", machineName);
     port        = System.getProperty("http.port", port);
-    
+
     System.out.println("HTTP Host:" + machineName);
     System.out.println("HTTP Port:" + port);
-    
+
     System.out.println("\nOptions are -verbose=y|[n], -speak=y|[n]");
     if (prms != null && prms.length > 0)
     {
@@ -71,7 +71,7 @@ public class StandaloneHTTPServer
 //      System.out.println("verbose=" + verbose);
       }
     }
-    
+
     int _port = 0;
     try
     {
@@ -98,7 +98,7 @@ public class StandaloneHTTPServer
         Socket client = ss.accept();
         BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
         PrintWriter   out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
-        
+
         String line;
         while ((line = in.readLine()) != null)
         {
@@ -130,12 +130,12 @@ public class StandaloneHTTPServer
       e.printStackTrace();
     }
   }
-  
+
   private void manageRequest(String request, PrintWriter out)
   {
     out.println(generateContent(request));
   }
- 
+
   private String generateContent(String request)
   {
     String str = ""; // "Content-Type: text/xml\r\n\r\n";
@@ -198,7 +198,7 @@ public class StandaloneHTTPServer
             {
               System.err.println(ex.toString());
             }
-            str = "200 OK\r\n"; 
+            str = "200 OK\r\n";
           }
           else
           {
@@ -209,10 +209,10 @@ public class StandaloneHTTPServer
     }
     else
       str = "- Not managed -";
-    
+
     return str;
   }
-  
+
   public static void shutdown()
   {
     rm.shutdown();
@@ -223,10 +223,10 @@ public class StandaloneHTTPServer
   }
 
   /**
-   * 
+   *
    * @param args see usage
    */
-  public static void main(String[] args)
+  public static void main(String... args)
   {
     System.out.println("Starting tiny dedicated server");
     System.out.println("Use [Ctrl] + [C] to stop it, or POST the following request:");
@@ -257,8 +257,8 @@ public class StandaloneHTTPServer
      });
     new StandaloneHTTPServer(args);
   }
-  
-  private static boolean isHelpRequired(String[] args)
+
+  private static boolean isHelpRequired(String... args)
   {
     boolean ret = false;
     if (args != null)
@@ -266,9 +266,9 @@ public class StandaloneHTTPServer
       for (int i=0; i<args.length; i++)
       {
         if (args[i].toUpperCase().equals("-H") ||
-            args[i].toUpperCase().equals("-HELP") || 
-            args[i].toUpperCase().equals("HELP") || 
-            args[i].equals("?") || 
+            args[i].toUpperCase().equals("-HELP") ||
+            args[i].toUpperCase().equals("HELP") ||
+            args[i].equals("?") ||
             args[i].equals("-?"))
         {
           ret = true;

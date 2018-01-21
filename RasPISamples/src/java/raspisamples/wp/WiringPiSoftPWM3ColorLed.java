@@ -14,20 +14,20 @@ import com.pi4j.wiringpi.Gpio;
 public class WiringPiSoftPWM3ColorLed
 {
 
-  public static void main(String[] args)
+  public static void main(String... args)
     throws InterruptedException
   {
     // initialize wiringPi library
     Gpio.wiringPiSetup();
 
-    int pinAddress_00 = RaspiPin.GPIO_00.getAddress(); 
-    int pinAddress_01 = RaspiPin.GPIO_01.getAddress(); 
-    int pinAddress_02 = RaspiPin.GPIO_02.getAddress(); 
+    int pinAddress_00 = RaspiPin.GPIO_00.getAddress();
+    int pinAddress_01 = RaspiPin.GPIO_01.getAddress();
+    int pinAddress_02 = RaspiPin.GPIO_02.getAddress();
     // create soft-pwm pins (min=0 ; max=100)
 
-    SoftPwm.softPwmCreate(pinAddress_00, 0, 100); 
-    SoftPwm.softPwmCreate(pinAddress_01, 0, 100); 
-    SoftPwm.softPwmCreate(pinAddress_02, 0, 100); 
+    SoftPwm.softPwmCreate(pinAddress_00, 0, 100);
+    SoftPwm.softPwmCreate(pinAddress_01, 0, 100);
+    SoftPwm.softPwmCreate(pinAddress_02, 0, 100);
 
     // continuous loop
 //  while (true)
@@ -148,6 +148,6 @@ public class WiringPiSoftPWM3ColorLed
         }
       }
     }
-    System.out.println("Done");     
+    System.out.println("Done");
   }
 }

@@ -47,7 +47,7 @@ public class AnalogTemperatureSensorReader {
 	private final static String DEBUG_PRM = "-debug=";
 	private final static String CHANNEL_PRM = "-ch=";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		System.out.println("Parameters are:");
 		System.out.println("  -debug=y|n|yes|no|true|false - example -debug=y        (default is n)");
 		System.out.println("  -ch=[0-7]                    - example -ch=0           (default is 0)");

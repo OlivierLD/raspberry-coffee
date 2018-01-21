@@ -438,7 +438,7 @@ public class AstroComputer {
 		return longitude;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("Moon phase:" + getMoonPhase(2011, 8, 22, 12, 00, 00));
 		System.out.println("TimeOffset:" + getTimeOffsetInHours("-09:30"));
 		String[] tz = new String[]{"Pacific/Marquesas", "America/Los_Angeles", "GMT", "Europe/Paris", "Europe/Moscow", "Australia/Sydney", "Australia/Adelaide"};

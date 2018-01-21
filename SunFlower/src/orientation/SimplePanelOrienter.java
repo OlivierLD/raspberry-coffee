@@ -5,6 +5,8 @@ import i2c.sensor.LSM303;
 import i2c.sensor.listener.LSM303Listener;
 import org.fusesource.jansi.AnsiConsole;
 
+import static utils.StaticUtil.userInput;
+
 /**
  * This is an implementation example:
  * It shows how to use the panel orienter (SunFlower)
@@ -103,7 +105,7 @@ public class SimplePanelOrienter {
 			}
 
 			instance.setCalibrating(true);
-			SunFlower.userInput("");
+			userInput("");
 			if (ansiConsole) { // Cleanup
 				AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 15) + EscapeSeq.ANSI_ERASE_TO_EOL);
 			}

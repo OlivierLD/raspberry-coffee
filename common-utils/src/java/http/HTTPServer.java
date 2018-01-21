@@ -739,7 +739,7 @@ public class HTTPServer {
 	private static Thread waiter = null;
 
 	//  For dev tests
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		//System.setProperty("http.port", "9999");
 		HTTPServer httpServer = new HTTPServer(9999);
 		System.out.println("Started");

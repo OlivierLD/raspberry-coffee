@@ -17,7 +17,7 @@ public class BasicWindTest {
 	// Sample main, for tests
 	private static boolean go = true;
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		final Thread coreThread = Thread.currentThread();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {

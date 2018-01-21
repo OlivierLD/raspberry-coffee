@@ -33,7 +33,7 @@ public class OnDiscCompilation {
 	private static DiagnosticCollector<JavaFileObject> diagnostics = null;
 	private static CustomClassLoader customClassLoader = null;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		if (compiler == null)
 			compiler = ToolProvider.getSystemJavaCompiler();
 		if (diagnostics == null)

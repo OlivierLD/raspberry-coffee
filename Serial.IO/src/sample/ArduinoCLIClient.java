@@ -52,6 +52,10 @@ public class ArduinoCLIClient implements SerialIOCallbacks {
 		}
 	}
 
+	@Override
+	public void onSerialData(byte[] b, int len) {
+	}
+
 	public void arduinoOutput(byte[] mess) {
 		if (true) { // verbose...
 			try {
@@ -68,7 +72,7 @@ public class ArduinoCLIClient implements SerialIOCallbacks {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		final ArduinoCLIClient caller = new ArduinoCLIClient();
 		final SerialCommunicator sc = new SerialCommunicator(caller);
 		sc.setVerbose(false);

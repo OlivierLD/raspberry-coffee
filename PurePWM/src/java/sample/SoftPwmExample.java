@@ -54,7 +54,7 @@ public class SoftPwmExample {
 	 * @throws InterruptedException
 	 * @throws PlatformAlreadyAssignedException
 	 */
-	public static void main(String[] args) throws InterruptedException, PlatformAlreadyAssignedException {
+	public static void main(String... args) throws InterruptedException, PlatformAlreadyAssignedException {
 
 		// create Pi4J console wrapper/helper
 		// (This is a utility class to abstract some of the boilerplate code)

@@ -95,7 +95,7 @@ public class ZDAClient extends NMEAClient {
 		return new ZDABean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("ZDAClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
 			System.out.println("ZDAClient prm:" + s);

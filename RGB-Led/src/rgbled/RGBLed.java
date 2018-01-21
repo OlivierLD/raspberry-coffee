@@ -12,33 +12,8 @@ import java.io.InputStreamReader;
 
 public class RGBLed
 {
-  private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 
-  public static String userInput(String prompt)
-  {
-    String retString = "";
-    System.err.print(prompt);
-    try
-    {
-      retString = stdin.readLine();
-    }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      String s;
-      try
-      {
-        s = userInput("<Oooch/>");
-      }
-      catch(Exception exception) 
-      {
-        exception.printStackTrace();
-      }
-    }
-    return retString;
-  }
-
-  public static void main(String[] args)
+  public static void main(String... args)
     throws InterruptedException
   {
     System.out.println("GPIO Control - pin 00, 01 & 02 ... started.");
@@ -49,7 +24,7 @@ public class RGBLed
     final GpioPinDigitalOutput greenPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "green", PinState.LOW);
     final GpioPinDigitalOutput bluePin  = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01, "blue",  PinState.LOW);
     final GpioPinDigitalOutput redPin   = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "red",   PinState.LOW);
-    
+
     /*
      * yellow  = R+G
      * cyan    = G+B

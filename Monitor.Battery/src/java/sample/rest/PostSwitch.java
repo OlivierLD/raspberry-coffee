@@ -8,36 +8,14 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import static utils.StaticUtil.userInput;
+
 public class PostSwitch {
 
 	private static String key = "";
 
 	private String ONOFF_FEED = "onoff";
 	private boolean DEBUG = true;
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	/**
-	 * Prompt the user for input, from stdin. Completed on [Return]
-	 * @param prompt The prompt
-	 * @return the user's input.
-	 */
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.out.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
 
 	public void setSwitch(String key, String switchPos) throws Exception {
 		String url = "https://io.adafruit.com/api/feeds/" + ONOFF_FEED + "/data";

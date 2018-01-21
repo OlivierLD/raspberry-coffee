@@ -12,12 +12,12 @@ public class GPIOLevelReader
 {
   private final static GpioController gpio = GpioFactory.getInstance();
   private final boolean[] status = { false, false, false, false, false, false, false };
-  
+
   public GPIOLevelReader()
   {
-    this.init();  
+    this.init();
   }
-  
+
   public void displayStatus()
   {
     String statusStr = "";
@@ -25,14 +25,14 @@ public class GPIOLevelReader
       statusStr += (b?"*":" ");
     System.out.println(statusStr);
   }
-  
+
   public void init()
   {
     final GpioPinDigitalInput contact00 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);
-    contact00.addListener(new GpioPinListenerDigital() 
+    contact00.addListener(new GpioPinListenerDigital()
       {
         @Override
-        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) 
+        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event)
         {
 //        System.out.println(" --> GPIO pin state changed: " + event.getPin() + " = " + event.getState());
           status[0] = (event.getState().isHigh());
@@ -40,10 +40,10 @@ public class GPIOLevelReader
         }
       });
     final GpioPinDigitalInput contact01 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_01, PinPullResistance.PULL_DOWN);
-    contact01.addListener(new GpioPinListenerDigital() 
+    contact01.addListener(new GpioPinListenerDigital()
       {
         @Override
-        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) 
+        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event)
         {
 //        System.out.println(" --> GPIO pin state changed: " + event.getPin() + " = " + event.getState());
           status[1] = (event.getState().isHigh());
@@ -51,10 +51,10 @@ public class GPIOLevelReader
         }
       });
     final GpioPinDigitalInput contact02 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
-    contact02.addListener(new GpioPinListenerDigital() 
+    contact02.addListener(new GpioPinListenerDigital()
       {
         @Override
-        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) 
+        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event)
         {
 //        System.out.println(" --> GPIO pin state changed: " + event.getPin() + " = " + event.getState());
           status[2] = (event.getState().isHigh());
@@ -62,10 +62,10 @@ public class GPIOLevelReader
         }
       });
     final GpioPinDigitalInput contact03 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_03, PinPullResistance.PULL_DOWN);
-    contact03.addListener(new GpioPinListenerDigital() 
+    contact03.addListener(new GpioPinListenerDigital()
       {
         @Override
-        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) 
+        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event)
         {
 //        System.out.println(" --> GPIO pin state changed: " + event.getPin() + " = " + event.getState());
           status[3] = (event.getState().isHigh());
@@ -73,10 +73,10 @@ public class GPIOLevelReader
         }
       });
     final GpioPinDigitalInput contact04 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_04, PinPullResistance.PULL_DOWN);
-    contact04.addListener(new GpioPinListenerDigital() 
+    contact04.addListener(new GpioPinListenerDigital()
       {
         @Override
-        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) 
+        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event)
         {
 //        System.out.println(" --> GPIO pin state changed: " + event.getPin() + " = " + event.getState());
           status[4] = (event.getState().isHigh());
@@ -84,10 +84,10 @@ public class GPIOLevelReader
 }
       });
     final GpioPinDigitalInput contact05 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, PinPullResistance.PULL_DOWN);
-    contact05.addListener(new GpioPinListenerDigital() 
+    contact05.addListener(new GpioPinListenerDigital()
       {
         @Override
-        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) 
+        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event)
         {
 //        System.out.println(" --> GPIO pin state changed: " + event.getPin() + " = " + event.getState());
           status[5] = (event.getState().isHigh());
@@ -95,10 +95,10 @@ public class GPIOLevelReader
         }
       });
     final GpioPinDigitalInput contact06 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_06, PinPullResistance.PULL_DOWN);
-    contact06.addListener(new GpioPinListenerDigital() 
+    contact06.addListener(new GpioPinListenerDigital()
       {
         @Override
-        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) 
+        public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event)
         {
 //        System.out.println(" --> GPIO pin state changed: " + event.getPin() + " = " + event.getState());
           status[6] = (event.getState().isHigh());
@@ -106,11 +106,11 @@ public class GPIOLevelReader
         }
       });
   }
-  
-  public static void main(String[] args)
+
+  public static void main(String... args)
   {
     final Thread me = Thread.currentThread();
-    
+
     Runtime.getRuntime().addShutdownHook(new Thread()
      {
        public void run()
@@ -122,16 +122,16 @@ public class GPIOLevelReader
          }
        }
      });
-    
+
 /*  GPIOLevelReader gpioLevelReader = */ new GPIOLevelReader();
-    
+
     synchronized (me)
     {
-      try 
-      { 
-        me.wait(); 
+      try
+      {
+        me.wait();
         System.out.println("\nDone!\n=================\n");
-      } catch (Exception ex) 
+      } catch (Exception ex)
       {
         ex.printStackTrace();
       }

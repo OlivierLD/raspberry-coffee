@@ -79,7 +79,7 @@ public class FiveChannelListener {
 		});
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		if (displayOption == ANALOG_OPTION) {
 			AnsiConsole.systemInstall();
 			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);

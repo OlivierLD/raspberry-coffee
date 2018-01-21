@@ -4,6 +4,8 @@ import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
 
+import static utils.TimeUtil.delay;
+
 /**
  * Adapted from the python code at https://github.com/adafruit/Adafruit-Motor-HAT-Python-Library.git
  * WIP.
@@ -389,13 +391,6 @@ public class AdafruitMotorHAT {
 					delay((long) (sPerS * 1_000));
 				}
 			}
-		}
-	}
-
-	private static void delay(long t) {
-		try {
-			Thread.sleep(t);
-		} catch (InterruptedException ie) {
 		}
 	}
 }

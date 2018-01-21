@@ -106,7 +106,7 @@ public class EscapeSeq {
 	}
 
 	// An example
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String str80 = "                                                                                ";
 		AnsiConsole.systemInstall();
 		AnsiConsole.out.println(ANSI_CLS);
@@ -172,7 +172,7 @@ public class EscapeSeq {
 		return new String(ret);
 	}
 
-	public static void main_(String[] args) {
+	public static void main_(String... args) {
 		AnsiConsole.systemInstall();
 		AnsiConsole.out.println(ANSI_CLS);
 		AnsiConsole.out.println(ANSI_AT55 + ANSI_REVERSE + "10,10 reverse : Hello world" + ANSI_NORMAL + ANSI_ERASE_TO_EOL);

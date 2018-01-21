@@ -845,7 +845,7 @@ public class MidiSynth extends JPanel implements ControlContext {
 		} // End class TrackData
 	} // End class RecordFrame
 
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		final MidiSynth midiSynth = new MidiSynth();
 		midiSynth.open();
 		JFrame f = new JFrame("Midi Synthesizer");
@@ -863,4 +863,4 @@ public class MidiSynth extends JPanel implements ControlContext {
 		f.setSize(w, h);
 		f.setVisible(true);
 	}
-} 
+}

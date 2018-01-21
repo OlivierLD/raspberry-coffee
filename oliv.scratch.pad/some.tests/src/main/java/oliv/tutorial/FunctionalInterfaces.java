@@ -74,7 +74,7 @@ public class FunctionalInterfaces {
 		System.out.println(String.format("%s %s %s", reverse(a), reverse(b), reverse(c)));
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 
 		InterfaceEnum one = InterfaceEnum.ONE;
 		System.out.println("For " + one.interfaceName());

@@ -45,7 +45,7 @@ public class TideForOneMonth {
 	 * @param args -month MM -year YYYY. For month, 1=Jan, 2=Feb,..., 12=Dec.
 	 * @throws Exception
 	 */
-	public static void main_(String[] args) throws Exception {
+	public static void main_(String... args) throws Exception {
 		String yearStr = null;
 		String monthStr = null;
 

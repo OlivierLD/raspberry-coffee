@@ -36,7 +36,7 @@ public class ComputeEngine extends UnicastRemoteObject implements Compute {
 		return t.execute();
 	}
 
-	public static void main(String[] args) throws RemoteException {
+	public static void main(String... args) throws RemoteException {
 		ComputeEngine ce = new ComputeEngine();
 	}
 }

@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import static utils.StaticUtil.userInput;
+
 /**
  * Write data, from the Raspberry to the Arduino, through the serial port.
  * Receives a response from the Arduino.
@@ -49,7 +51,7 @@ public class SerialReaderWriter {
 		return verbose;
 	}
 
-	public static void main(String args[])
+	public static void main(String... args)
 			throws InterruptedException, NumberFormatException {
 		String port = System.getProperty("serial.port", Serial.DEFAULT_COM_PORT);
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
@@ -148,24 +150,4 @@ public class SerialReaderWriter {
 		}
 		System.exit(0);
 	}
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	private static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
-
 }

@@ -1,111 +1,103 @@
 package breadboard.game;
 
-import com.pi4j.io.gpio.*;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.gpio.PinPullResistance;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import pushbutton.PushButtonObserver;
+
+import static utils.TimeUtil.delay;
 
 /**
  * Implements the nuts and bolts of the reflex game.
  * No need to worry about that in the main class.
  * From the main:
- *   Invoke the initCtx method
- *   Invoke the go method
- *     in the onButtonPressed method, invoke the release method
- *   Invoke the freeResources method
+ * Invoke the initCtx method
+ * Invoke the go method
+ * in the onButtonPressed method, invoke the release method
+ * Invoke the freeResources method
  */
-public class ReflexGameMaster
-{
-  private static long startedAt = 0L;
-  private static Thread waiter = null;
-  private final static long MAX_WAIT_TIME = 10_000L; // 10 sec max.
+public class ReflexGameMaster {
+	private static long startedAt = 0L;
+	private static Thread waiter = null;
+	private final static long MAX_WAIT_TIME = 10_000L; // 10 sec max.
 
-  private final GpioController gpio = GpioFactory.getInstance();
-  private GpioPinDigitalOutput led   = null;
-  private GpioPinDigitalInput button = null;
+	private final GpioController gpio = GpioFactory.getInstance();
+	private GpioPinDigitalOutput led = null;
+	private GpioPinDigitalInput button = null;
 
-  private PushButtonObserver pbo = null;
-  
-  public ReflexGameMaster(PushButtonObserver obs)
-  {
-    if (obs == null)
-      throw new IllegalArgumentException("Observer cannot be null");
-    this.pbo = obs;
-  }
+	private PushButtonObserver pbo = null;
 
-  public void initCtx()
-  {
-    initCtx(RaspiPin.GPIO_01, RaspiPin.GPIO_02);
-  }
+	public ReflexGameMaster(PushButtonObserver obs) {
+		if (obs == null) {
+			throw new IllegalArgumentException("Observer cannot be null");
+		}
+		this.pbo = obs;
+	}
 
-  public void initCtx(Pin ledPin, Pin buttonPin)
-  {
-    // provision gpio pin #01 as an output pin and turn it off
-    led = gpio.provisionDigitalOutputPin(ledPin, "TheLED", PinState.LOW);
-    button = gpio.provisionDigitalInputPin(buttonPin, PinPullResistance.PULL_DOWN);
-    button.addListener(new GpioPinListenerDigital() {
-      @Override
-      public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-        if (event.getState().isHigh())
-          pbo.onButtonPressed();
-      }
-    });
-  }
+	public void initCtx() {
+		initCtx(RaspiPin.GPIO_01, RaspiPin.GPIO_02);
+	}
 
-  public void release()
-  {
-    Thread waiter = this.getWaiter();
-    synchronized (waiter)
-    {
-      waiter.notify();
-    }
-  }
+	public void initCtx(Pin ledPin, Pin buttonPin) {
+		// provision gpio pin #01 as an output pin and turn it off
+		led = gpio.provisionDigitalOutputPin(ledPin, "TheLED", PinState.LOW);
+		button = gpio.provisionDigitalInputPin(buttonPin, PinPullResistance.PULL_DOWN);
+		button.addListener(new GpioPinListenerDigital() {
+			@Override
+			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+				if (event.getState().isHigh()) {
+					pbo.onButtonPressed();
+				}
+			}
+		});
+	}
 
-  public long getStartTime()
-  {
-    return startedAt;
-  }
+	public void release() {
+		Thread waiter = this.getWaiter();
+		synchronized (waiter) {
+			waiter.notify();
+		}
+	}
 
-  public void go()
-  {
-    System.out.println("Get ready...");
-    long rnd = (MAX_WAIT_TIME * Math.round(1 - Math.random())); // TASK Parameter this amount?
-    delay(rnd);
+	public long getStartTime() {
+		return startedAt;
+	}
 
-    // turn on the led
-    led.high();
-    System.out.println("Hit the button NOW!!");
-    startedAt = System.currentTimeMillis();
+	public void go() {
+		System.out.println("Get ready...");
+		long rnd = (MAX_WAIT_TIME * Math.round(1 - Math.random())); // TASK Parameter this amount?
+		delay(rnd);
 
-    waiter = Thread.currentThread();
-    synchronized (waiter)
-    {
-      try
-      {
-        waiter.wait();
-      }
-      catch (InterruptedException ex)
-      {
-        ex.printStackTrace();
-      }
-    }
-    System.out.println("Good Job!");
-    led.low();
-  }
+		// turn on the led
+		led.high();
+		System.out.println("Hit the button NOW!!");
+		startedAt = System.currentTimeMillis();
 
-  public void freeResources()
-  {
-    gpio.shutdown();
-    System.exit(0);
-  }
+		waiter = Thread.currentThread();
+		synchronized (waiter) {
+			try {
+				waiter.wait();
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
+		System.out.println("Good Job!");
+		led.low();
+	}
 
-  private Thread getWaiter()
-  {
-    return waiter;
-  }
+	public void freeResources() {
+		gpio.shutdown();
+		System.exit(0);
+	}
 
-  private static void delay(long ms)
-  {
-    try { Thread.sleep(ms); } catch (InterruptedException ie) { ie.printStackTrace(); }
-  }
+	private Thread getWaiter() {
+		return waiter;
+	}
 }

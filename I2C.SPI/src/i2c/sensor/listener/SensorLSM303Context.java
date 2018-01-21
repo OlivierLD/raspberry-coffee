@@ -1,7 +1,6 @@
 package i2c.sensor.listener;
 
 import java.io.Serializable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,15 +9,16 @@ import java.util.List;
  */
 public class SensorLSM303Context implements Serializable {
 	private static SensorLSM303Context context = null;
-	private transient List<LSM303Listener> sensorReaderListeners = null;
+	private transient List<LSM303Listener> sensorReaderListeners;
 
 	private SensorLSM303Context() {
 		sensorReaderListeners = new ArrayList<>();
 	}
 
 	public static synchronized SensorLSM303Context getInstance() {
-		if (context == null)
+		if (context == null) {
 			context = new SensorLSM303Context();
+		}
 		return context;
 	}
 

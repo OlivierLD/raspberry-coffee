@@ -1027,7 +1027,7 @@ public class Juke extends JPanel implements Runnable, LineListener, MetaEventLis
 		}
 	}
 
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		String media = "./audio";
 		final Juke juke = new Juke(args.length == 0 ? media : args[0]);
 		juke.open();
@@ -1056,4 +1056,4 @@ public class Juke extends JPanel implements Runnable, LineListener, MetaEventLis
 			}
 		}
 	}
-} 
+}

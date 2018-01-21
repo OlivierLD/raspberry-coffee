@@ -8,7 +8,7 @@ import com.pi4j.io.gpio.RaspiPin;
 
 public class SpeedTest
 {
-  public static void main(String[] args)
+  public static void main(String... args)
     throws InterruptedException
   {
 

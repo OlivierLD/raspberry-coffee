@@ -26,7 +26,7 @@ public class HC_SR04 {
 	private final static long BILLION = (long) 1E9;
 	private final static int TEN_MICRO_SEC = 10_000; // In Nano secs
 
-	public static void main(String[] args)
+	public static void main(String... args)
 			throws InterruptedException {
 
 //	System.out.println("BILLION:" + NumberFormat.getInstance().format(BILLION));

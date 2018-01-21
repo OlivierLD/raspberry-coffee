@@ -163,7 +163,7 @@ public class LSM303Client extends NMEAClient {
 		return new LSM303Bean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("LSM303Client invoked with " + args.length + " Parameter(s).");
 		for (String s : args) {
 			System.out.println("LSM303Client prm:" + s);

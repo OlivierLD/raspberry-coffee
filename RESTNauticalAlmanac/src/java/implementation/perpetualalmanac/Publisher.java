@@ -63,7 +63,7 @@ public class Publisher {
 		System.out.println("Found " + nl.getLength() + " nodes.");
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		int from = Integer.parseInt(args[0]);
 		int to = Integer.parseInt(args[1]);
 		if (from < 1900 || to > 2100) {

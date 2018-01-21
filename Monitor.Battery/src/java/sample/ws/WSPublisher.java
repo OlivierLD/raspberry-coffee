@@ -10,36 +10,14 @@ import java.net.URI;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import static utils.StaticUtil.userInput;
+
 public class WSPublisher {
 
 	private static boolean verbose = false;
 
 	private WebSocketClient webSocketClient = null;
 	private final static NumberFormat VOLT_FMT = new DecimalFormat("##0.00");
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	/**
-	 * Prompt the user for input, from stdin. Completed on [Return]
-	 * @param prompt The prompt
-	 * @return the user's input.
-	 */
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.out.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
 
 	private void initWebSocketConnection(String serverURI) {
 		try {

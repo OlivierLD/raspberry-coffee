@@ -9,18 +9,18 @@ import org.json.JSONObject;
 /*
  * Driven by WesbSocket server
  * See in node/server.js
- * 
+ *
  * 2 Servos (UP/LR)
- * 
+ *
  * Web interface available, see in node/servo.pilot.html
- * 
+ *
  * Start the WebSocket node server,
  * Start the script named pantilt.ws
  */
 public class PanTiltWebSocketClient {
 	private static WebSocketClient webSocketClient = null;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
 		float yaw = 0f;
 		if (args.length == 0) {

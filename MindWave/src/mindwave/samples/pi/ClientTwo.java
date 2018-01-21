@@ -25,7 +25,7 @@ public class ClientTwo implements MindWaveCallbacks,
                                   SerialCommunicatorInterface
 {
   private static List<Short> rawWaves = null;
-  
+
   @Override
   public void mindWaveConnected(MindWaveController.DeviceID did)
   {
@@ -151,11 +151,11 @@ public class ClientTwo implements MindWaveCallbacks,
     while (mwc.isConnected())
       MindWaveController.delay(1f);
 //  System.out.println("Disconnected. Done");
-    
+
     stopReading();
-    closeSerial();    
+    closeSerial();
   }
-  
+
   private static void dumpRawValues()
   {
     try
@@ -165,19 +165,19 @@ public class ClientTwo implements MindWaveCallbacks,
         bw.write(Integer.toString(v) + "\n");
       bw.close();
 //    System.out.println("raw.csv created");
-    } 
+    }
     catch (Exception ex)
     {
       ex.printStackTrace();
     }
   }
-  
+
   private static void locate(String str, int x, int y)
   {
     try
     {
       AnsiConsole.out.println(EscapeSeq.ansiLocate(x, y) + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT + "                                                               ");
-      AnsiConsole.out.println(EscapeSeq.ansiLocate(x, y) + EscapeSeq.ansiSetTextColor(EscapeSeq.ANSI_WHITE) + EscapeSeq.ANSI_BOLD + str + "    " + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT);               
+      AnsiConsole.out.println(EscapeSeq.ansiLocate(x, y) + EscapeSeq.ansiSetTextColor(EscapeSeq.ANSI_WHITE) + EscapeSeq.ANSI_BOLD + str + "    " + EscapeSeq.ANSI_NORMAL + EscapeSeq.ANSI_DEFAULT_BACKGROUND + EscapeSeq.ANSI_DEFAULT_TEXT);
     }
     catch (Exception ex)
     {
@@ -210,35 +210,35 @@ public class ClientTwo implements MindWaveCallbacks,
       throw new RuntimeException(ioe);
     }
   }
-  
+
   private final static Serial serial = SerialFactory.createInstance(); // PI4J Serial manager
-  
+
   private static boolean verbose = "true".equals(System.getProperty("mindwave.verbose", "false"));
   public static void setVerbose(boolean b) { verbose = b; }
   public static boolean getVerbose() { return verbose; }
-  
+
   private static boolean readSerial = true;
   public static boolean keepReading() { return readSerial; }
   public void stopReading() { readSerial = false; }
   public void closeSerial() throws IOException { serial.close(); }
 
-  public static void main(String[] args) throws IOException
+  public static void main(String... args) throws IOException
   {
     rawWaves = new ArrayList<Short>();
-    
+
     final ClientTwo c2 = new ClientTwo();
     final MindWaveController mwc = new MindWaveController(c2, c2);
     System.out.println("Connection...");
 
     AnsiConsole.systemInstall();
     AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
-    
+
     serial.open("/dev/ttyUSB0", 115200);
 
     Thread serialReader = new Thread()
     {
       private byte[] serialBuffer = new byte[256];
-    
+
       public void run()
       {
         int lenToRead = 0;
@@ -285,8 +285,8 @@ public class ClientTwo implements MindWaveCallbacks,
         }
       }
     };
-    serialReader.start(); 
-    
+    serialReader.start();
+
     final Thread waiter = Thread.currentThread();
     Runtime.getRuntime().addShutdownHook(new Thread()
      {
@@ -303,18 +303,18 @@ public class ClientTwo implements MindWaveCallbacks,
            waiter.notify();
          }
          System.out.println("Released Waiter...");
-         
+
        }
      });
-    
+
   //  short hID = (short)0x9228;
   //  mwc.connectHeadSet(hID);
     mwc.connectHeadSet();
-    
+
     while (!mwc.isConnected())
-      MindWaveController.delay(1f);    
+      MindWaveController.delay(1f);
     System.out.println("Connected!");
-    
+
     // Some time to live here
     synchronized (waiter)
     {

@@ -9,6 +9,8 @@ import org.eclipse.paho.client.mqttv3.MqttTopic;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import static utils.StaticUtil.userInput;
+
 /**
  * Use paho MQTT client to connect on Adafruit-IO
  * Paho doc at https://www.eclipse.org/paho/files/javadoc/index.html?org/eclipse/paho/client/mqttv3/
@@ -22,30 +24,6 @@ public class AIOPublisher {
 	public static final String ON_OFF_TOPIC = "/feeds/onoff"; // Concat with userName in front before using.
 
 	private MqttClient client;
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	/**
-	 * Prompt the user for input, from stdin. Completed on [Return]
-	 * @param prompt The prompt
-	 * @return the user's input.
-	 */
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.out.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
 
 	public AIOPublisher() {
 

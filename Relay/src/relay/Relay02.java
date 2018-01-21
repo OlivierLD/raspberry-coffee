@@ -10,6 +10,8 @@ import com.pi4j.io.gpio.RaspiPin;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import static utils.StaticUtil.userInput;
+
 /**
  * 5v are required to drive the relay
  * The GPIO pins deliver 3.3v
@@ -19,13 +21,13 @@ import java.io.InputStreamReader;
 public class Relay02
 {
   private static Pin relayPin = RaspiPin.GPIO_00;
-  
-  public static void main(String[] args) throws InterruptedException
+
+  public static void main(String... args) throws InterruptedException
   {
     int pin = 0;
     if (args.length > 0)
     {
-      try 
+      try
       {
         pin = Integer.parseInt(args[0]);
       }
@@ -113,9 +115,9 @@ public class Relay02
     final GpioPinDigitalOutput outputPin = gpio.provisionDigitalOutputPin(relayPin); //, PinState.HIGH);
 
     System.out.println("--> GPIO state is " + (outputPin.isHigh()?"High":"Low"));
-    
+
     boolean go = true;
-    
+
     System.out.println("Type Q to quit.");
     while (go)
     {
@@ -147,31 +149,5 @@ public class Relay02
       }
     }
     gpio.shutdown();
-  }
-
-  private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-  public static String userInput(String prompt)
-  {
-    String retString = "";
-    System.err.print(prompt);
-    try
-    {
-      retString = stdin.readLine();
-    }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      String s;
-      try
-      {
-        s = userInput("<Oooch/>");
-      }
-      catch(Exception exception) 
-      {
-        exception.printStackTrace();
-      }
-    }
-    return retString;
   }
 }

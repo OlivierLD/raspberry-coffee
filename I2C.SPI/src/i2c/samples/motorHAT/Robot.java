@@ -35,6 +35,13 @@ public class Robot {
 		// if stopOnExit...
 	}
 
+	public final static void delay(float delay) {
+		try {
+			Thread.sleep(Math.round(delay * 1_000L));
+		} catch (InterruptedException ie) {
+		}
+	}
+
 	public void stop() {
 		try {
 			this.leftMotor.run(AdafruitMotorHAT.ServoCommand.RELEASE);
@@ -119,14 +126,6 @@ public class Robot {
 		if (seconds > 0) {
 			delay(seconds);
 			this.stop();
-		}
-	}
-
-	public static void delay(float sec) {
-		try {
-			Thread.sleep((long) (sec * 1_000));
-		} catch (InterruptedException ie) {
-			// Absorb
 		}
 	}
 }

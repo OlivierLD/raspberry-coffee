@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Altitude, Pressure, Temperature
  */
@@ -82,14 +84,14 @@ public class BMP180 {
 		try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
-
+			}
 			// Get device itself
 			bmp180 = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
-
+			}
 			try {
 				this.readCalibrationData();
 			} catch (Exception ex) {
@@ -143,30 +145,33 @@ public class BMP180 {
 	public int readRawTemp() throws Exception {
 		// Reads the raw (uncompensated) temperature from the sensor
 		bmp180.write(BMP180_CONTROL, (byte) BMP180_READTEMPCMD);
-		waitfor(5);  // Wait 5ms
+		delay(5L);  // Wait 5ms
 		int raw = readU16(BMP180_TEMPDATA);
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Raw Temp: " + (raw & 0xFFFF) + ", " + raw);
+		}
 		return raw;
 	}
 
 	public int readRawPressure() throws Exception {
 		// Reads the raw (uncompensated) pressure level from the sensor
 		bmp180.write(BMP180_CONTROL, (byte) (BMP180_READPRESSURECMD + (this.mode << 6)));
-		if (this.mode == BMP180_ULTRALOWPOWER)
-			waitfor(5);
-		else if (this.mode == BMP180_HIGHRES)
-			waitfor(14);
-		else if (this.mode == BMP180_ULTRAHIGHRES)
-			waitfor(26);
-		else
-			waitfor(8);
+		if (this.mode == BMP180_ULTRALOWPOWER) {
+			delay(5);
+		} else if (this.mode == BMP180_HIGHRES) {
+			delay(14);
+		} else if (this.mode == BMP180_ULTRAHIGHRES) {
+			delay(26);
+		} else {
+			delay(8);
+		}
 		int msb = bmp180.read(BMP180_PRESSUREDATA);
 		int lsb = bmp180.read(BMP180_PRESSUREDATA + 1);
 		int xlsb = bmp180.read(BMP180_PRESSUREDATA + 2);
 		int raw = ((msb << 16) + (lsb << 8) + xlsb) >> (8 - this.mode);
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Raw Pressure: " + (raw & 0xFFFF) + ", " + raw);
+		}
 		return raw;
 	}
 
@@ -184,8 +189,9 @@ public class BMP180 {
 		X2 = (this.cal_MC << 11) / (X1 + this.cal_MD);
 		B5 = X1 + X2;
 		temp = ((B5 + 8) >> 4) / 10.0f;
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Calibrated temperature = " + temp + " C");
+		}
 		return temp;
 	}
 
@@ -213,20 +219,21 @@ public class BMP180 {
 		if (dsValues) {
 			UT = 27898;
 			UP = 23843;
-			this.cal_AC6 = 23153;
-			this.cal_AC5 = 32757;
-			this.cal_MB = -32768;
-			this.cal_MC = -8711;
-			this.cal_MD = 2868;
-			this.cal_B1 = 6190;
+			this.cal_AC6 = 23_153;
+			this.cal_AC5 = 32_757;
+			this.cal_MB = -32_768;
+			this.cal_MC = -8_711;
+			this.cal_MD = 2_868;
+			this.cal_B1 = 6_190;
 			this.cal_B2 = 4;
-			this.cal_AC3 = -14383;
+			this.cal_AC3 = -14_383;
 			this.cal_AC2 = -72;
 			this.cal_AC1 = 408;
-			this.cal_AC4 = 32741;
+			this.cal_AC4 = 32_741;
 			this.mode = BMP180_ULTRALOWPOWER;
-			if (verbose)
+			if (verbose) {
 				this.showCalibrationData();
+			}
 		}
 		// True Temperature Calculations
 		X1 = (int) ((UT - this.cal_AC6) * this.cal_AC5) >> 15;
@@ -254,7 +261,7 @@ public class BMP180 {
 		X1 = (this.cal_AC3 * B6) >> 13;
 		X2 = (this.cal_B1 * ((B6 * B6) >> 12)) >> 16;
 		X3 = ((X1 + X2) + 2) >> 2;
-		B4 = (this.cal_AC4 * (X3 + 32768)) >> 15;
+		B4 = (this.cal_AC4 * (X3 + 32_768)) >> 15;
 		B7 = (UP - B3) * (50_000 >> this.mode);
 		if (verbose) {
 			System.out.println("DBG: X1 = " + X1);
@@ -286,7 +293,7 @@ public class BMP180 {
 		return p;
 	}
 
-	private int standardSeaLevelPressure = 101325;
+	private int standardSeaLevelPressure = 101_325;
 
 	public void setStandardSeaLevelPressure(int standardSeaLevelPressure) {
 		this.standardSeaLevelPressure = standardSeaLevelPressure;
@@ -296,21 +303,13 @@ public class BMP180 {
 		// "Calculates the altitude in meters"
 		double altitude = 0.0;
 		float pressure = readPressure();
-		altitude = 44330.0 * (1.0 - Math.pow(pressure / standardSeaLevelPressure, 0.1903));
+		altitude = 44_330.0 * (1.0 - Math.pow(pressure / standardSeaLevelPressure, 0.1903));
 		if (verbose)
 			System.out.println("DBG: Altitude = " + altitude);
 		return altitude;
 	}
 
-	protected static void waitfor(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		BMP180 sensor = new BMP180();
 		float press = 0;

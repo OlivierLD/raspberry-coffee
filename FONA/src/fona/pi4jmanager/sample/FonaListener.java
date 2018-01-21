@@ -14,7 +14,7 @@ import java.io.IOException;
 public class FonaListener implements FONAClient {
 	private static FONAManager fona;
 
-	public static void main(String args[])
+	public static void main(String... args)
 					throws InterruptedException, NumberFormatException, IOException {
 		FonaListener sf = new FonaListener();
 		fona = new FONAManager(sf);

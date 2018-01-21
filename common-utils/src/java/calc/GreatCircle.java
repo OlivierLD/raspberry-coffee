@@ -398,7 +398,7 @@ public final class GreatCircle {
 		return new GreatCirclePoint(l2, g2);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		GreatCirclePoint dr = dr(new GreatCirclePoint(Math.toRadians(45D), Math.toRadians(-130D)), 55, 270);
 		System.out.println("Reaching " + new GreatCirclePoint(Math.toDegrees(dr.getL()), Math.toDegrees(dr.getG())).toString());
 		System.out.println("Done.");
@@ -423,7 +423,7 @@ public final class GreatCircle {
 		System.out.println(String.format("Distance between %s and %s = %.04f nm, %.04f km", from, to, (p1.gcDistanceBetween(p2) * 60), (p1.gcDistanceBetween(p2) * 60 * 1.852)));
 	}
 
-	public static void main2(String args[]) {
+	public static void main2(String... args) {
 		GreatCirclePoint start = new GreatCirclePoint(Math.toRadians(GeomUtil.sexToDec("37", "38")), Math.toRadians(-GeomUtil.sexToDec("122", "46")));
 //  GeoPoint p = dr(start, 30D, 230D);
 		GreatCirclePoint p = new GreatCirclePoint(Math.toRadians(GeomUtil.sexToDec("20", "00")), Math.toRadians(-GeomUtil.sexToDec("150", "00")));

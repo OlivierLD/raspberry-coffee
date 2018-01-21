@@ -7,7 +7,7 @@ import java.io.FileWriter;
 
 public class LogReworker
 {
-  public static void main(String[] args) throws Exception
+  public static void main(String... args) throws Exception
   {
     String original = "C:\\Users\\olediour.ORADEV\\Desktop\\serial.data.log";
     String reworked = "reworked.serial.log";
@@ -25,7 +25,7 @@ public class LogReworker
           bw.write(s);
         }
       }
-    }    
+    }
     br.close();
     bw.close();
   }

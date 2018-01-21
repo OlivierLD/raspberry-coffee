@@ -79,7 +79,7 @@ public class ThreeChordPanel
 	}
 
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String s = "Db Gb Ab7";
 		String[] sa = s.split(" ");
 		for (String str : sa)

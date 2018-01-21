@@ -23,7 +23,7 @@ public class CustomNMEAReader extends NMEAClient
 {
   private final static DecimalFormat DFH = new DecimalFormat("#0.00'\272'");
   private final static DecimalFormat DFZ = new DecimalFormat("##0.00'\272'");
-  
+
   private static GeoPos prevPosition = null;
   private static long   prevDateTime = -1L;
 
@@ -31,7 +31,7 @@ public class CustomNMEAReader extends NMEAClient
   {
     super();
   }
-  
+
   @Override
   public void dataDetectedEvent(NMEAEvent e)
   {
@@ -39,8 +39,8 @@ public class CustomNMEAReader extends NMEAClient
     manageData(e.getContent().trim());
   }
 
-  private static CustomNMEAReader customClient = null;  
-  
+  private static CustomNMEAReader customClient = null;
+
   private static void manageData(String sentence)
   {
     boolean valid = StringParsers.validCheckSum(sentence);
@@ -59,11 +59,11 @@ public class CustomNMEAReader extends NMEAClient
           {
             Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
             current.setTime(rmc.getRmcDate());
-            AstroComputer.setDateTime(current.get(Calendar.YEAR), 
-                                      current.get(Calendar.MONTH) + 1, 
-                                      current.get(Calendar.DAY_OF_MONTH), 
-                                      current.get(Calendar.HOUR_OF_DAY), 
-                                      current.get(Calendar.MINUTE), 
+            AstroComputer.setDateTime(current.get(Calendar.YEAR),
+                                      current.get(Calendar.MONTH) + 1,
+                                      current.get(Calendar.DAY_OF_MONTH),
+                                      current.get(Calendar.HOUR_OF_DAY),
+                                      current.get(Calendar.MINUTE),
                                       current.get(Calendar.SECOND));
             AstroComputer.calculate();
             SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
@@ -83,7 +83,7 @@ public class CustomNMEAReader extends NMEAClient
           if (rmc == null)
             System.out.println("... no RMC data in [" + sentence + "]");
           else
-          {  
+          {
             String errMess = "";
             if (rmc.getRmcDate() == null)
               errMess += ("no Date ");
@@ -95,12 +95,12 @@ public class CustomNMEAReader extends NMEAClient
       }
       else
         System.out.println("Read [" + sentence + "]");
-    }    
+    }
     else
       System.out.println("Invalid data [" + sentence + "]");
   }
 
-  public static void main(String[] args)
+  public static void main(String... args)
   {
     System.setProperty("deltaT", System.getProperty("deltaT", "67.2810")); // 2014-Jan-01
 
@@ -111,17 +111,17 @@ public class CustomNMEAReader extends NMEAClient
       System.out.println("CustomNMEAReader prm:" + s);
       try { br = Integer.parseInt(s); } catch (NumberFormatException nfe) {}
     }
-    
+
     customClient = new CustomNMEAReader();
-      
-    Runtime.getRuntime().addShutdownHook(new Thread() 
+
+    Runtime.getRuntime().addShutdownHook(new Thread()
       {
-        public void run() 
+        public void run()
         {
           System.out.println ("\nShutting down nicely.");
           customClient.stopDataRead();
         }
-      });    
+      });
     customClient.initClient();
     customClient.setReader(new CustomNMEASerialReader(customClient.getListeners(), br));
     customClient.startWorking(); // Feignasse!

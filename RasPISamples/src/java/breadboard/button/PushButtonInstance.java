@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import pushbutton.PushButtonObserver;
 
+import static utils.StaticUtil.userInput;
+
 /**
  * This shows how to hide the "complexity" of the PushButtonMaster
  * Just implement the onButtonPressed method, and you're good.
@@ -21,7 +23,7 @@ public class PushButtonInstance implements PushButtonObserver {
 					"Option Three"
 	};
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("Enter Q (followed by [Return]) in the console to quit.");
 		PushButtonInstance instance = new PushButtonInstance();
 		rgm = new PushButtonMaster(instance);
@@ -54,20 +56,6 @@ public class PushButtonInstance implements PushButtonObserver {
 	@Override
 	public void onButtonReleased() {
 	}
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	private static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return retString;
-	}
-
 	private static void stateOption() {
 		System.out.println(String.format("Current Option is %s", OPTION_ARRAY[currentOption]));
 	}

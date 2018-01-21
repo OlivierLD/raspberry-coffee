@@ -1,6 +1,7 @@
 # Navigation Server
 
 An illustration of the way to gather several REST Services all in one place.
+This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md).
 
 - [Tide](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTTideEngine/README.md) REST Service
 - [Astro](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNauticalAlmanac) REST Service
@@ -36,23 +37,30 @@ I'd rather spend time learning how use HTML5's canvases, or WebGL.
 
 The sample web pages presented below are relying on HTML5 and CSS3.
 
-#### Two languages
+#### Two languages?
 This clearly divides the problem to address in two distinct parts:
-- Back end computation, providing the data to render, exposed as REST services.
-- Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface.
-- The broker (the glue) in-between is HTTP.
+- Back end computation, providing the data to render in some agnostic format like `json` or `XML` (we'll use `json` here), exposed as REST services.
+- Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface (GUI).
+- The broker (the glue) in-between is relying on the HTTP protocol.
 
 This allows pretty much _any_ device that knows about a network to connect to the Local Area Network (LAN)
 created by the Raspberry PI (or any machine the server runs on) to connect to it and consume the data it produces. 
 
 The way to go for the front end is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
-Consuming REST services can be done from many frameworks, here we'll use `jQuery`.
+Consuming REST services can be done from many frameworks, here we'll use `jQuery`, for its `Promise` (aka `Deferred`) features.
+> The `Promise` aspect might go away, once `EcmaScript6` is more widely supported (in the browsers; it currently requires a transpilation).
 
-For the back end, my choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), but
-other options could be considered, the most prominent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
+For the back end, my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability 
+and re-usability reasons. I have several other projects (not necessarily dedicated to the Raspberry PI) writen in Java; a `jar` (JAva Archive) generated from those projects can be part of any
+Raspberry PI project as long as it runs on a JVM. 
+But other options could be considered, the most prominent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
 Front End _and_ the Back End.
 
 Something to think about.
+
+Also, the emergence of container techniques like `Docker` opens the door to other languages, like `Golang`. What's said above about re-usability remains, but this might also be something to take a look at. 
+
+Anyway! For now, the back-end is running on a JVM.
 
 ## Try it
 Build it:
@@ -106,15 +114,15 @@ NMEA Console. The displays (night theme).
 
 ![Menu and Console](./docimg/screenshot.02.png)
 
-Current evaluation, instantaneous, 30 seconds.
+Evaluation of the current, instantaneous, 30 seconds.
 
 ![Menu and Console](./docimg/screenshot.03.png)
 
-Current evaluation, 1  minute, 10 minutes, much more accurate!
+Evaluation of the current, 1  minute, 10 minutes, _much more_ accurate!
 
 ![Several stylings available](./docimg/screenshot.10.png)
 
-All CSS driven, it's very easy to create your own. The screenshot above involves the exact same components than in then other screenshots.
+All CSS driven, it's very easy to create your own stylesheet. The screenshot above involves the exact same components as in then other screenshots.
 
 ![The 3D Map](./docimg/screenshot.04.png)
 
@@ -156,13 +164,15 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 > - change the black foreground color (in case we deal with a black and white fax) into something else, for better reading.
 >
 > I was not able to find a way to do this in JavaScript (JavaScript in the browser, hey, some `nodejs` library do it, but they run on a server side - aka dark side).
-> That's where the `RESTImageProcessor` comes in. This is the onwe transforming the images (faxes) into what's expected.
+> That's where the `RESTImageProcessor` comes in. This is the one transforming the images (faxes) into what's expected.
 >
 > Again, all this runs _fine_ on a Raspberry PI Zero.
 
 ![GRIB Rendering](./docimg/screenshot.09.png)
 Faxes and GRIB, together
 
+## Server Remote access
+> See [this document](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA.multiplexer#remote-access).
 
 ## TODOs, next...
 
@@ -170,4 +180,5 @@ Faxes and GRIB, together
 - Minify JavaScript resources
 - GRIB rendering (in full), coming good.
 - Routing features
+- Use the GRIBs available through [Outernet](https://outernet.is/) (Need more thoughts...) ?
 

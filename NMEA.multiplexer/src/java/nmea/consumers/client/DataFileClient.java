@@ -84,7 +84,7 @@ public class DataFileClient extends NMEAClient {
 		return new DataFileBean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("DataFileClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
 			System.out.println("DataFileClient prm:" + s);

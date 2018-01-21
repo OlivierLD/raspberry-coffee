@@ -1,15 +1,15 @@
 package fona.rxtxmanager;
 
+import gnu.io.CommPortIdentifier;
+import serial.io.SerialCommunicator;
+import serial.io.SerialIOCallbacks;
+import utils.DumpUtil;
+
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Map;
 import java.util.Set;
-
-import gnu.io.CommPortIdentifier;
-import serial.io.SerialCommunicator;
-import serial.io.SerialIOCallbacks;
-import utils.DumpUtil;
 
 /**
  * Important: On the Raspberry PI, make sure you've run
@@ -272,6 +272,10 @@ public class FONAManager implements SerialIOCallbacks {
 		}
 	}
 
+	@Override
+	public void onSerialData(byte[] ba, int len) {
+	}
+
 	public boolean isConnected() {
 		return connectionEstablished;
 	}
@@ -459,7 +463,7 @@ public class FONAManager implements SerialIOCallbacks {
 //  delay(1);
 		String messagePayload = content; // userInput("  Mess Content?> ");
 	  /*
-     * TASK Compare to 
+     * TASK Compare to
     mySerial->println(smsmsg);
     mySerial->println();
     mySerial->write(0x1A);

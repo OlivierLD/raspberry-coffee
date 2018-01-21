@@ -26,7 +26,7 @@ public class MeArmPilotDemo {
 	 * @throws I2CFactory.UnsupportedBusNumberException when I2C bus is not found (if you're not on a Raspberry PI)
 	 * @throws IOException                              when the script cannot be read, for example. File not found or so.
 	 */
-	public static void main(String[] args)
+	public static void main(String... args)
 					throws I2CFactory.UnsupportedBusNumberException,
 					IOException {
 		String scriptName = System.getProperty("script.name");

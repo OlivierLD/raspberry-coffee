@@ -3,7 +3,7 @@
 # RXTX_HOME=~/repos/oliv-soft-project-builder/olivsoft/release/all-3rd-party/rxtx.distrib
 RXTX_HOME=./libs
 #
-CP=./build/libs/SerialRxTx-1.0.jar
+CP=./build/libs/SerialRxTx-1.0-all.jar
 CP=$CP:$RXTX_HOME/RXTXcomm.jar
 #
 JAVA_OPTS=

@@ -5,6 +5,8 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinPwmOutput;
 import com.pi4j.io.gpio.RaspiPin;
 
+import static utils.TimeUtil.delay;
+
 /**
  * See: http://wiringpi.com/reference/software-pwm-library/
  * Suitable pins for PWM are GPIO_01, GPIO_23, GPIO_24, GPIO_26.
@@ -12,7 +14,7 @@ import com.pi4j.io.gpio.RaspiPin;
  *
  */
 public class Pwm01 {
-	public static void main(String[] args)
+	public static void main(String... args)
 					throws InterruptedException
 	{
 
@@ -25,18 +27,14 @@ public class Pwm01 {
 //	pin.setMode(PinMode.PWM_OUTPUT);
 		pin.setPwmRange(100);
 		pin.setPwm(100);
-		delay(1000);
+		delay(1_000L);
 		pin.setPwm(50);
-		delay(1000);
+		delay(1_000L);
 		pin.setPwm(0);
 
 		// stop all GPIO activity/threads by shutting down the GPIO controller
 		// (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
 		gpio.shutdown();
 		System.out.println("Bye");
-	}
-
-	private static void delay(long ms) {
-		try { Thread.sleep(ms); } catch (InterruptedException ignore) {}
 	}
 }

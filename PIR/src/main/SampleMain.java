@@ -7,7 +7,7 @@ import pir.MotionDetector;
 
 public class SampleMain
 {
-  public static void main(String[] args)
+  public static void main(String... args)
   {
     final MotionDetector md = new MotionDetector(RaspiPin.GPIO_05, new MotionDetectionInterface()
      {
@@ -32,13 +32,13 @@ public class SampleMain
      });
 
     System.out.println("...On watch.");
-    try 
-    { 
+    try
+    {
       synchronized (coreThread)
       {
-        coreThread.wait(); 
+        coreThread.wait();
       }
-    } 
+    }
     catch (Exception ex) { ex.printStackTrace(); }
     md.shutdown();
     System.out.println("Done.");

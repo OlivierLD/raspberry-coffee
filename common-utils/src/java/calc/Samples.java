@@ -2,7 +2,7 @@ package calc;
 
 public class Samples {
 	// Examples of distances and directions calculations
-	public static void main_(String[] args) {
+	public static void main_(String... args) {
 		GreatCirclePoint from = new GreatCirclePoint(37.501282801564244, -122.48082160949707); // the boat
 		GreatCirclePoint to = new GreatCirclePoint(37.49403906867881, -122.48468399047852); // HMB Entrance
 
@@ -41,7 +41,7 @@ public class Samples {
 		System.out.println("Satellite: Alt:" + alt + " , true heading " + heading);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		GreatCircle gc = new GreatCircle();
 		// Find satellite heading (direction), and altitude
 		// Satellite I-4 F3 Americas: 0N, 98W, I-4 F1 APAC, Asia Pac: 144E, Alphasat, Europe, West Asia, Africa: 25E

@@ -53,6 +53,10 @@ public class ArduinoLoRaServer implements SerialIOCallbacks {
 		}
 	}
 
+	@Override
+	public void onSerialData(byte[] b, int len) {
+	}
+
 	private final static String PAYLOAD_PREFIX = "LORA-0007: ";
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("HH:mm:ss");
@@ -82,7 +86,7 @@ public class ArduinoLoRaServer implements SerialIOCallbacks {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		final ArduinoLoRaServer caller = new ArduinoLoRaServer();
 		final SerialCommunicator sc = new SerialCommunicator(caller);
 		sc.setVerbose(false);

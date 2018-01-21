@@ -153,7 +153,7 @@ public class InteractiveFona implements FONAClient {
 	 * @param args Can be used to pass the Baud Rate prm, as an integer. Overrides the "baud.rate" system variable.
 	 * @throws NumberFormatException if baud rate passed as a parameter or system variable is invalid (i.e. not an integer).
 	 */
-	public static void main(String args[])
+	public static void main(String... args)
 			throws NumberFormatException {
 		try {
 			// Display current Classpath

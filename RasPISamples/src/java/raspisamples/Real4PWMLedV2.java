@@ -11,35 +11,11 @@ import java.io.InputStreamReader;
 
 import raspisamples.pwm.PWMPin;
 
+import static utils.StaticUtil.userInput;
+
 public class Real4PWMLedV2
 {
-  private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-  public static String userInput(String prompt)
-  {
-    String retString = "";
-    System.err.print(prompt);
-    try
-    {
-      retString = stdin.readLine();
-    }
-    catch(Exception e)
-    {
-      System.out.println(e);
-      String s;
-      try
-      {
-        s = userInput("<Oooch/>");
-      }
-      catch(Exception exception) 
-      {
-        exception.printStackTrace();
-      }
-    }
-    return retString;
-  }
-
-  public static void main(String[] args)
+  public static void main(String... args)
     throws InterruptedException
   {
     final GpioController gpio = GpioFactory.getInstance();
@@ -148,12 +124,12 @@ public class Real4PWMLedV2
             System.out.println("Thread Four finishing");
           }
         };
-          
+
       one.start();
       two.start();
       three.start();
       four.start();
-    
+
       String usr = userInput("Again y|n ? > ");
       if (!"Y".equalsIgnoreCase(usr))
         go = false;
@@ -163,7 +139,7 @@ public class Real4PWMLedV2
     pin01.stopPWM();
     pin02.stopPWM();
     pin03.stopPWM();
-    
+
     Thread.sleep(1_000);
     // Last blink
     System.out.println("Bye-bye");
@@ -172,7 +148,7 @@ public class Real4PWMLedV2
     pin00.high();
     Thread.sleep(500);
     pin00.low();
-    
+
     gpio.shutdown();
   }
 }

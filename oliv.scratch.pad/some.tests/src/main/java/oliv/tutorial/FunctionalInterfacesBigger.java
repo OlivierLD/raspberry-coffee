@@ -64,7 +64,7 @@ public class FunctionalInterfacesBigger {
 		System.out.println(String.format("%s %s %s", reverse(a), reverse(b), reverse(c)));
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		Converter<String, Integer> converter = (from) -> Integer.valueOf(from);
 
 		Integer converted = converter.convert("1234");

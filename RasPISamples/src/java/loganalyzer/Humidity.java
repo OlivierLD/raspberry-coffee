@@ -15,13 +15,13 @@ import org.json.JSONObject;
 
 public class Humidity
 {
-  public static void main(String[] args) throws Exception
+  public static void main(String... args) throws Exception
   {
     String fName = "weather.data.log";
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
     BufferedReader br = new BufferedReader(new FileReader(new File(fName)));
     BufferedWriter bw = new BufferedWriter(new FileWriter(new File("data.csv")));
-    int nbl = 0; 
+    int nbl = 0;
     String line = "";
     long before = System.currentTimeMillis();
     bw.write("Date;humidity;temperature;pressure\n");

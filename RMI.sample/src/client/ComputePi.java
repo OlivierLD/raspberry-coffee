@@ -14,7 +14,7 @@ public class ComputePi {
 
 	private static String bindingName = "Compute";
 
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		if (args.length != 3) {
 			System.out.println("Arguments: [RMI Server Name] [Port] [PI precision]");
 			System.exit(1);

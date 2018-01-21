@@ -9,13 +9,13 @@ import java.net.URL;
 
 public class SmallClient
 {
-  public static void main(String[] args) throws Exception
+  public static void main(String... args) throws Exception
   {
     int responseCode = 0;
     try
     {
       URL url = new URL("http://raspberrypi:9999/relay-access?dev=01&status=off");
-      HttpURLConnection conn = (HttpURLConnection)url.openConnection();  
+      HttpURLConnection conn = (HttpURLConnection)url.openConnection();
       conn.setRequestMethod("GET");
       responseCode = conn.getResponseCode();
       System.out.println("Done. (" + responseCode + ")");

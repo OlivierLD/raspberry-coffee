@@ -42,6 +42,10 @@ public class GPSReader implements SerialIOCallbacks {
 		}
 	}
 
+	@Override
+	public void onSerialData(byte[] b, int len) {
+	}
+
 	/**
 	 * Formatting the data read by {@link #onSerialData(byte)}
 	 * @param mess
@@ -64,7 +68,7 @@ public class GPSReader implements SerialIOCallbacks {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		final GPSReader gpsReader = new GPSReader();
 		final SerialCommunicator sc = new SerialCommunicator(gpsReader);
 		sc.setVerbose(false);

@@ -8,8 +8,9 @@ import java.io.IOException;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import utils.StringUtils;
+
 import static utils.StringUtils.lpad;
+import static utils.TimeUtil.delay;
 
 /*
  * Humidity, Temperature
@@ -40,13 +41,15 @@ public class HTU21DF {
 		try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
+			}
 
 			// Get device itself
 			htu21df = bus.getDevice(address);
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to device. OK.");
+			}
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		}
@@ -63,8 +66,9 @@ public class HTU21DF {
 		try {
 			htu21df.write((byte) HTU21DF_READREG);
 			r = htu21df.read();
-			if (verbose)
+			if (verbose) {
 				System.out.println("DBG: Begin: 0x" + lpad(Integer.toHexString(r), 2, "0"));
+			}
 		} catch (Exception ex) {
 			System.err.println("Begin:" + ex.toString());
 		}
@@ -76,10 +80,11 @@ public class HTU21DF {
 		//  htu21df.write(HTU21DF_ADDRESS, (byte)HTU21DF_RESET);
 		try {
 			htu21df.write((byte) HTU21DF_RESET);
-			if (verbose)
+			if (verbose) {
 				System.out.println("DBG: Reset OK");
+			}
 		} finally {
-			waitfor(15); // Wait 15ms
+			delay(15); // Wait 15ms
 		}
 	}
 
@@ -94,10 +99,11 @@ public class HTU21DF {
 	public float readTemperature()
 					throws Exception {
 		// Reads the raw temperature from the sensor
-		if (verbose)
+		if (verbose) {
 			System.out.println("Read Temp: Written 0x" + lpad(Integer.toHexString((HTU21DF_READTEMP & 0xff)), 2, "0"));
+		}
 		htu21df.write((byte) (HTU21DF_READTEMP)); //  & 0xff));
-		waitfor(50); // Wait 50ms
+		delay(50); // Wait 50ms
 		byte[] buf = new byte[3];
 	  /*int rc  = */
 		htu21df.read(buf, 0, 3);
@@ -119,8 +125,9 @@ public class HTU21DF {
 		temp /= 65536;
 		temp -= 46.85;
 
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Temp: " + temp);
+		}
 		return temp;
 	}
 
@@ -128,7 +135,7 @@ public class HTU21DF {
 					throws Exception {
 		// Reads the raw (uncompensated) humidity from the sensor
 		htu21df.write((byte) HTU21DF_READHUM);
-		waitfor(50); // Wait 50ms
+		delay(50); // Wait 50ms
 		byte[] buf = new byte[3];
     /* int rc  = */
 		htu21df.read(buf, 0, 3);
@@ -150,20 +157,13 @@ public class HTU21DF {
 		hum /= 65536;
 		hum -= 6;
 
-		if (verbose)
+		if (verbose) {
 			System.out.println("DBG: Humidity: " + hum);
+		}
 		return hum;
 	}
 
-	protected static void waitfor(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
 		HTU21DF sensor = new HTU21DF();
 		float hum = 0;

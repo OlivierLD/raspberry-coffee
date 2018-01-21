@@ -18,15 +18,15 @@ public class SampleMain
   /**
    * Invoked like:
    *   java relay.SampleMain [-verbose] -send:google -receive:yahoo
-   *   
+   *
    * This will send emails using google, and receive using yahoo.
    * Do check the file email.properties for the different values associated with email servers.
-   * 
+   *
    * NO GPIO INTERACTION in this one.
-   * 
+   *
    * @param args See above
    */
-  public static void main(String[] args)  
+  public static void main(String... args)
   {
     String providerSend = "yahoo";
     String providerReceive = "google";
@@ -39,9 +39,9 @@ public class SampleMain
         System.setProperty("verbose", "true");
       }
       else if (args[i].startsWith("-send:"))
-        providerSend = args[i].substring("-send:".length());      
+        providerSend = args[i].substring("-send:".length());
       else if (args[i].startsWith("-receive:"))
-        providerReceive =args[i].substring("-receive:".length());  
+        providerReceive =args[i].substring("-receive:".length());
       else if ("-help".equals(args[i]))
       {
         System.out.println("Usage:");
@@ -49,7 +49,7 @@ public class SampleMain
         System.exit(0);
       }
     }
-      
+
     final EmailSender sender = new EmailSender(providerSend);
     Thread senderThread = new Thread()
       {
@@ -60,24 +60,24 @@ public class SampleMain
             for (int i=0; i<10; i++)
             {
               System.out.println("Sending...");
-              sender.send(new String[] { "olivier@lediouris.net", 
-                                         "webmaster@lediouris.net", 
-                                         "olivier.lediouris@gmail.com", 
+              sender.send(new String[] { "olivier@lediouris.net",
+                                         "webmaster@lediouris.net",
+                                         "olivier.lediouris@gmail.com",
                                          "olivier_le_diouris@yahoo.com",
-                                         "olivier.lediouris@oracle.com" }, 
-                          "PI Request", 
+                                         "olivier.lediouris@oracle.com" },
+                          "PI Request",
                           "{ operation: 'see-attached-" + Integer.toString(i + 1) + "' }",
                           "P8150115.JPG");
               System.out.println("Sent.");
               Thread.sleep(60_000L); // 1 minute
             }
             System.out.println("Exiting...");
-            sender.send(new String[] { "olivier@lediouris.net", 
-                                       "webmaster@lediouris.net", 
-                                       "olivier.lediouris@gmail.com", 
+            sender.send(new String[] { "olivier@lediouris.net",
+                                       "webmaster@lediouris.net",
+                                       "olivier.lediouris@gmail.com",
                                        "olivier_le_diouris@yahoo.com",
-                                       "olivier.lediouris@oracle.com" }, 
-                        "PI Request", 
+                                       "olivier.lediouris@oracle.com" },
+                        "PI Request",
                         "{ operation: 'exit' }");
             System.out.println("Bye.");
           }
@@ -85,11 +85,11 @@ public class SampleMain
           {
             ex.printStackTrace();
           }
-        
+
         }
       };
     senderThread.start(); // Bombarding
-        
+
     if (args.length > 1)
       providerSend = args[1];
 

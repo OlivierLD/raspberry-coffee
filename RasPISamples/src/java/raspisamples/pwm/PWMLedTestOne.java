@@ -7,7 +7,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
 public class PWMLedTestOne {
-	public static void main(String[] args)
+	public static void main(String... args)
 					throws InterruptedException {
 
 		System.out.println("GPIO Control - pin 01 ... started.");

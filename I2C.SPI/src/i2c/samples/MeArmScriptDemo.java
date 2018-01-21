@@ -6,10 +6,12 @@ import i2c.servo.pwm.PCA9685;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
+
+import static utils.StaticUtil.userInput;
+import static utils.TimeUtil.delay;
 
 /**
  * Standard, all the way, clockwise, counterclockwise.
@@ -20,42 +22,6 @@ import java.util.function.Consumer;
  * See the {@link #main} method.
  */
 public class MeArmScriptDemo {
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	/**
-	 * Prompt the user for input, from stdin. Completed on [Return]
-	 *
-	 * @param prompt The prompt
-	 * @return the user's input.
-	 */
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.out.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
-
-	/**
-	 * @param howMuch in ms.
-	 */
-	private static void waitfor(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
 	// Servo MG90S
 	private static int servoMin = 130; // -90 degrees at 60 Hertz
 	private static int servoMax = 675; //  90 degrees at 60 Hertz
@@ -141,7 +107,7 @@ public class MeArmScriptDemo {
 				System.err.println(String.format("Unexpected number of args [%d] in servoWait.", cmd.args.length));
 			} else {
 				try {
-					waitfor(Long.parseLong(cmd.args[0].trim()));
+					delay(Long.parseLong(cmd.args[0].trim()));
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
@@ -295,7 +261,7 @@ public class MeArmScriptDemo {
 		int inc = step * (from < to ? 1 : -1);
 		for (int i = from; (from < to && i <= to) || (to < from && i >= to); i += inc) {
 			servoBoard.setPWM(channel, 0, i);
-			waitfor(wait);
+			delay(wait);
 		}
 		servoBoard.setPWM(channel, 0, 0);
 	}
@@ -310,7 +276,7 @@ public class MeArmScriptDemo {
 	 * @throws I2CFactory.UnsupportedBusNumberException when I2C bus is not found (if you're not on a Raspberry PI)
 	 * @throws IOException                              when the script cannot be read, for example. File not found or so.
 	 */
-	public static void main(String[] args)
+	public static void main(String... args)
 					throws I2CFactory.UnsupportedBusNumberException,
 					IOException {
 		String scriptName = System.getProperty("script.name");

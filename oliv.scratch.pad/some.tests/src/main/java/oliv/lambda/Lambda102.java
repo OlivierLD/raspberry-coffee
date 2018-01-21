@@ -86,7 +86,7 @@ public class Lambda102 {
 		System.out.println(verb + ", " + resource + " : Not found!!");
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String verb = "GET";
 		String resource = "/one/1/two/2";
 		processRequest(verb, resource);

@@ -8,7 +8,7 @@ import com.pi4j.io.gpio.RaspiPin;
 
 public class GPIO08led
 {
-  public static void main(String[] args)
+  public static void main(String... args)
     throws InterruptedException
   {
 
@@ -25,7 +25,7 @@ public class GPIO08led
     final GpioPinDigitalOutput pin05 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, "05", PinState.HIGH);
     final GpioPinDigitalOutput pin06 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, "06", PinState.HIGH);
     final GpioPinDigitalOutput pin07 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_07, "07", PinState.HIGH);
-    
+
     final GpioPinDigitalOutput[] ledArray = { pin00, pin01, pin02, pin03, pin04, pin05, pin06, pin07 };
 
     System.out.println("Down an Up");
@@ -35,15 +35,15 @@ public class GPIO08led
     {
       ledArray[i].toggle();
       Thread.sleep(100);
-    } 
+    }
     Thread.sleep(1_000);
     // Up
     for (int i=0; i<ledArray.length; i++)
     {
       ledArray[ledArray.length - 1 - i].toggle();
       Thread.sleep(100);
-    } 
-    
+    }
+
     System.out.println("One only");
     // Down
     Thread.sleep(1_000);
@@ -51,15 +51,15 @@ public class GPIO08led
     {
       oneOnly(ledArray, ledArray[i]);
       Thread.sleep(100);
-    } 
+    }
     Thread.sleep(1_000);
     // Up
     for (int i=0; i<ledArray.length; i++)
     {
       oneOnly(ledArray, ledArray[ledArray.length - 1 - i]);
       Thread.sleep(100);
-    } 
-    
+    }
+
     System.out.println("Messy...");
     Thread.sleep(1_000);
     // Big mess
@@ -77,14 +77,14 @@ public class GPIO08led
     {
       oneOnly(ledArray, ledArray[i]);
       Thread.sleep(100);
-    } 
+    }
     // Up
     for (int i=0; i<ledArray.length; i++)
     {
       oneOnly(ledArray, ledArray[ledArray.length - 1 - i]);
       Thread.sleep(100);
-    } 
-    
+    }
+
     System.out.println("Done.");
     Thread.sleep(1_000);
     // Everything off
@@ -93,7 +93,7 @@ public class GPIO08led
 
     gpio.shutdown();
   }
-  
+
   private static void oneOnly(GpioPinDigitalOutput[] allLeds, GpioPinDigitalOutput theOneOn)
   {
     for (int i=0; i<allLeds.length; i++)

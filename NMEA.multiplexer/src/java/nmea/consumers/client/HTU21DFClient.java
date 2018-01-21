@@ -95,7 +95,7 @@ public class HTU21DFClient extends NMEAClient {
 		return new HTU21DFBean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("HTU21DFClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
 			System.out.println("HTU21DFClient prm:" + s);

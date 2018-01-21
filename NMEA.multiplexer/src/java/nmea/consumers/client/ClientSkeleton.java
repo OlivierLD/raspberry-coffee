@@ -73,7 +73,7 @@ public class ClientSkeleton extends NMEAClient {
 		return new SkeletonBean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("ClientSkeleton invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
 			System.out.println("ClientSkeleton prm:" + s);

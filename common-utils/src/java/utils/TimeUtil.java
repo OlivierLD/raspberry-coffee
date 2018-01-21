@@ -84,6 +84,18 @@ public class TimeUtil {
 		return (new SimpleDateFormat("z")).format(new Date());
 	}
 
+	/**
+	 * @param howMuch in ms.
+	 */
+	public static void delay(long howMuch) {
+		try {
+			Thread.sleep(howMuch);
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
+		}
+	}
+
+
 	public static void main(String args[]) {
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));

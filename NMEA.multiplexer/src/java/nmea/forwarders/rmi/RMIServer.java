@@ -161,7 +161,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	}
 
 	// For standalone tests
-	public static void main_(String[] args) throws RemoteException {
+	public static void main_(String... args) throws RemoteException {
 		RMIServer server = new RMIServer(1099);
 	}
 

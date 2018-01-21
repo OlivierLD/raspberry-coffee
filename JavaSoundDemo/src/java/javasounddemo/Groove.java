@@ -2,13 +2,13 @@
  * @(#)Groove.java	1.16	99/11/03
  *
  * Copyright (c) 1998, 1999 by Sun Microsystems, Inc. All Rights Reserved.
- * 
+ *
  * Sun grants you ("Licensee") a non-exclusive, royalty free, license to use,
  * modify and redistribute this software in source and binary code form,
  * provided that i) this copyright notice and license appear on all copies of
  * the software; and ii) Licensee does not utilize the software in a manner
  * which is disparaging to Sun.
- * 
+ *
  * This software is provided "AS IS," without a warranty of any kind. ALL
  * EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING ANY
  * IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
@@ -20,7 +20,7 @@
  * CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF THE USE OF
  * OR INABILITY TO USE SOFTWARE, EVEN IF SUN HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGES.
- * 
+ *
  * This software is not designed or intended for use in on-line control of
  * aircraft, air traffic, aircraft navigation or aircraft communications; or in
  * the design, construction, operation or maintenance of any nuclear
@@ -433,7 +433,7 @@ public class Groove extends JPanel implements ActionListener, ControlContext, Me
 		}
 	}
 
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		final Groove groove = new Groove();
 		JFrame f = new JFrame("Rhythm Groove Box");
 		f.addWindowListener(new WindowAdapter() {
@@ -451,4 +451,4 @@ public class Groove extends JPanel implements ActionListener, ControlContext, Me
 		f.show();
 		groove.open();
 	}
-} 
+}

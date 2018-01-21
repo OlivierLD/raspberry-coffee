@@ -137,7 +137,7 @@ public class TCPReader extends NMEAReader {
 
 	public void setTimeout(long timeout) { /* Not used for TCP */ }
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String host = "192.168.1.1";
 		int port = 7001; // 2947
 		try {

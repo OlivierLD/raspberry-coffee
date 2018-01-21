@@ -42,7 +42,7 @@ public class GPSDataReader {
 		serial.open(config);
 	}
 
-	public static void main(String args[])
+	public static void main(String... args)
 					throws InterruptedException, NumberFormatException {
 		int br = Integer.parseInt(System.getProperty("baud.rate", "9600"));
 		String port = System.getProperty("port.name", Serial.DEFAULT_COM_PORT);

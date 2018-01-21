@@ -13,6 +13,9 @@ import i2c.sensor.BMP180;
 import i2c.sensor.HTU21DF;
 import weatherstation.utils.Utilities;
 
+/**
+ * Board from Switch Doc Labs
+ */
 public class SDLWeather80422 {
 	final GpioController gpio = GpioFactory.getInstance();
 
@@ -74,8 +77,8 @@ public class SDLWeather80422 {
 	}
 
 	private void init(Pin anemo, Pin rain, AdcMode ADMode) {
-//  Gpio.add_event_detect(pinAnem, GPIO.RISING, callback=self.serviceInterruptAnem, bouncetime=300)  
-//  GPIO.add_event_detect(pinRain, GPIO.RISING, callback=self.serviceInterruptRain, bouncetime=300)  
+//  Gpio.add_event_detect(pinAnem, GPIO.RISING, callback=self.serviceInterruptAnem, bouncetime=300)
+//  GPIO.add_event_detect(pinRain, GPIO.RISING, callback=self.serviceInterruptRain, bouncetime=300)
 
 		try {
 			wsCoeff = Double.parseDouble(System.getProperty("ws.wspeed.coeff", Double.toString(wsCoeff)));
@@ -173,7 +176,7 @@ public class SDLWeather80422 {
 					this.gain,
 					this.sps); // AIN1 wired to wind vane on WeatherPiArduino
 //    System.out.println("Voltage Value:" + value);
-			voltage = value / 1000f;
+			voltage = value / 1_000f;
 		} else {
 			// user internal A/D converter
 			voltage = 0.0f;
@@ -202,10 +205,10 @@ public class SDLWeather80422 {
 			long timeSpan = (Utilities.currentTimeMicros() - this.startSampleTime);
 			this.currentWindSpeed = (float) ((this.currentWindCount) / (float) timeSpan) * WIND_FACTOR * wsCoeff * 1_000_000.0;
       /*
-      System.out.printf("SDL_CWS = %f, shortestWindTime = %d, CWCount=%d TPS=%f\n", 
+      System.out.printf("SDL_CWS = %f, shortestWindTime = %d, CWCount=%d TPS=%f\n",
                         this.currentWindSpeed,
-                        this.shortestWindTime, 
-                        this.currentWindCount, 
+                        this.shortestWindTime,
+                        this.currentWindCount,
                         (float)this.currentWindCount/(float)this.sampleTime );
       */
 			this.currentWindCount = 0;

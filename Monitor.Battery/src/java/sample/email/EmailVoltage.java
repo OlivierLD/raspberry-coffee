@@ -5,34 +5,12 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import email.EmailSender;
 
+import static utils.StaticUtil.userInput;
+
 public class EmailVoltage {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
 
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	/**
-	 * Prompt the user for input, from stdin. Completed on [Return]
-	 * @param prompt The prompt
-	 * @return the user's input.
-	 */
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.out.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
-
-	public static void main(String[] args)
+	public static void main(String... args)
 	throws Exception {
 
 		String providerSend = "google"; // default

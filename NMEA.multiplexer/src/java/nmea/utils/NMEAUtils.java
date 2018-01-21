@@ -683,7 +683,7 @@ public class NMEAUtils {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		String data = "Akeu CoucouA*FG\r\n";
 		System.out.println(translateEscape(data, ALL_IN_HEXA));
 		System.out.println(translateEscape(data, CR_NL));

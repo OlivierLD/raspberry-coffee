@@ -73,7 +73,7 @@ public class RandomClient extends NMEAClient {
 		return new RandomBean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("RandomClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
 			System.out.println("RandomClient prm:" + s);

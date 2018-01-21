@@ -957,7 +957,7 @@ public class Gif {
 		return result.toString();
 	}
 
-	public static void main(String[] args)
+	public static void main(String... args)
 			throws Exception {
 		Gif image = new Gif();
 		try {

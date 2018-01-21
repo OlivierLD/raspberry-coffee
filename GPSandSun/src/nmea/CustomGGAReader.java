@@ -26,7 +26,7 @@ public class CustomGGAReader extends NMEAClient
   {
     super();
   }
-  
+
   @Override
   public void dataDetectedEvent(NMEAEvent e)
   {
@@ -34,8 +34,8 @@ public class CustomGGAReader extends NMEAClient
     manageData(e.getContent().trim());
   }
 
-  private static CustomGGAReader customClient = null;  
-  
+  private static CustomGGAReader customClient = null;
+
   private static void manageData(String sentence)
   {
     boolean valid = StringParsers.validCheckSum(sentence);
@@ -57,12 +57,12 @@ public class CustomGGAReader extends NMEAClient
       }
   //  else
   //    System.out.println("Read [" + sentence + "]");
-    }    
+    }
     else
       System.out.println("Invalid data [" + sentence + "]");
   }
 
-  public static void main(String[] args)
+  public static void main(String... args)
   {
     int br = 9600;
     System.out.println("CustomNMEAReader invoked with " + args.length + " Parameter(s).");
@@ -71,17 +71,17 @@ public class CustomGGAReader extends NMEAClient
       System.out.println("CustomGGAReader prm:" + s);
       try { br = Integer.parseInt(s); } catch (NumberFormatException nfe) {}
     }
-    
+
     customClient = new CustomGGAReader();
-      
-    Runtime.getRuntime().addShutdownHook(new Thread() 
+
+    Runtime.getRuntime().addShutdownHook(new Thread()
       {
-        public void run() 
+        public void run()
         {
           System.out.println ("\nShutting down nicely.");
           customClient.stopDataRead();
         }
-      });    
+      });
     customClient.initClient();
     customClient.setReader(new CustomNMEASerialReader(customClient.getListeners(), br));
     customClient.startWorking(); // Feignasse!

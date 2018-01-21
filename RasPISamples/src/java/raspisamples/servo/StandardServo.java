@@ -74,7 +74,7 @@ public class StandardServo {
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		int channel = 14;
 		if (args.length > 0) {
 			try {

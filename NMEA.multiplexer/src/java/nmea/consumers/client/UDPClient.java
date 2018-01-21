@@ -86,7 +86,7 @@ public class UDPClient extends NMEAClient {
 		return new UDPBean(this);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		System.out.println("CustomUDPClient invoked with " + args.length + " Parameter(s).");
 		for (String s : args)
 			System.out.println("CustomUDPClient prm:" + s);

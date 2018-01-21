@@ -24,7 +24,7 @@ public class LelandPrototype implements AirWaterOilInterface
   private static LevelMaterial<Float, SevenADCChannelsManager.Material>[] data = null;
   private final static NumberFormat DF31 = new DecimalFormat("000.0");
   private final static NumberFormat DF4  = new DecimalFormat("###0");
-  
+
   public LelandPrototype()
   {
     data = new LevelMaterial[7];
@@ -33,7 +33,7 @@ public class LelandPrototype implements AirWaterOilInterface
       data[i] = new LevelMaterial<Float, SevenADCChannelsManager.Material>(0f, SevenADCChannelsManager.Material.UNKNOWN);
     }
   }
-    
+
   private static String materialToString(SevenADCChannelsManager.Material material)
   {
     String s = "UNKNOWN";
@@ -49,13 +49,13 @@ public class LelandPrototype implements AirWaterOilInterface
   private static void displayData()
   {
     // Clear the screen, cursor on top left.
- // AnsiConsole.out.println(EscapeSeq.ANSI_CLS); 
+ // AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
     AnsiConsole.out.println(EscapeSeq.ansiLocate(1, 1));
     String str = "+---+--------+---------+";
     AnsiConsole.out.println(str);
     str =        "| C |  Vol % |   Mat   |";
     AnsiConsole.out.println(str);
-    
+
     str =        "+---+--------+---------+";
     AnsiConsole.out.println(str);
     for (int chan=data.length - 1; chan >= 0; chan--)
@@ -67,9 +67,9 @@ public class LelandPrototype implements AirWaterOilInterface
       AnsiConsole.out.println(str);
     }
     str =        "+---StringUtils.+--------+---------+";
-    AnsiConsole.out.println(str);    
+    AnsiConsole.out.println(str);
   }
-  
+
   @Override
   public void setTypeOfChannel(int channel, SevenADCChannelsManager.Material material, float val)
   {
@@ -81,13 +81,13 @@ public class LelandPrototype implements AirWaterOilInterface
     AnsiConsole.out.println(now.toString() + ": Channel " + channel + " >> (" + DF31.format(val) + ") " + materialToString(material) + "       ");
   }
 
-  public static void main(String[] args) throws Exception
+  public static void main(String... args) throws Exception
   {
-    System.out.println(args.length + " parameter(s).");    
+    System.out.println(args.length + " parameter(s).");
     LelandPrototype lp = new LelandPrototype();
     final SevenADCChannelsManager sac = new SevenADCChannelsManager(lp);
     // CLS
-    AnsiConsole.out.println(EscapeSeq.ANSI_CLS); 
+    AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
 
     final Thread me = Thread.currentThread();
     Runtime.getRuntime().addShutdownHook(new Thread()
@@ -157,14 +157,14 @@ public class LelandPrototype implements AirWaterOilInterface
       return result;
     }
   }
-  
+
   public static class LevelMaterial<X, Y> extends Tuple<X, Y>
   {
     public LevelMaterial(X x, Y y)
     {
-      super(x, y);    
+      super(x, y);
     }
-    
+
     public X getPercent() { return this.x; }
     public Y getMaterial() { return this.y; }
   }

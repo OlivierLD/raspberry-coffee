@@ -1,5 +1,8 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+    id 'java'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+}
 
 group = 'oliv.pi4j.samples'
 version = '1.0'
@@ -15,17 +18,22 @@ sourceSets {
     java {
       srcDir 'src'
     }
-  }  
+  }
   test {
     java {
       srcDir 'tests'
     }
-  }  
+  }
 }
 
 dependencies {
-    compile project(':common-utils')
     compile 'org.rxtx:rxtx:2.1.7'
+    compile project(':common-utils')
+    compile project(':Serial.IO')
+}
+
+shadowJar {
+    zip64 true
 }
 
 task runSample(type: JavaExec, dependsOn: classes, description: 'Runs the sample') {

@@ -28,8 +28,7 @@ import http.HTTPServer;
 import http.RESTRequestManager;
 import i2c.servo.pwm.PCA9685;
 import analogdigitalconverter.mcp3008.MCP3008Reader;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +44,7 @@ import calc.GeomUtil;
 import utils.PinUtil;
 import utils.StringUtils;
 
+import static utils.StaticUtil.userInput;
 import static utils.StringUtils.lpad;
 import static utils.StringUtils.rpad;
 
@@ -84,9 +84,9 @@ import static utils.StringUtils.rpad;
  *
  * -Dhttp.port=9999
  *
- * Battery voltage can be monitored with an MCP3008.
+ * Battery voltage can be monitored with an MCP3008, and a photo cell as well.
  * For the MCP3008, command line parameters (default below):
- * -miso:9 -mosi:10 -clk:11 -cs:8 -channel:0
+ * -miso:9 -mosi:10 -clk:11 -cs:8 --battery-channel:0 --photo-cell-channel:1
  * For miso, mosi, clk, and cs, numbers represent thr GPIO (aka BCM) pins on the PI header.
  */
 public class SunFlower implements RESTRequestManager {
@@ -168,7 +168,8 @@ public class SunFlower implements RESTRequestManager {
 	private static final String CLK_PRM_PREFIX  =  "--clk:";
 	private static final String CS_PRM_PREFIX   =   "--cs:";
 
-	private static final String CHANNEL_PREFIX  = "--channel:";
+	private static final String BATTERY_CHANNEL_PREFIX = "--battery-channel:";
+	private static final String PHOTO_CELL_CHANNEL_PREFIX = "--photo-cell-channel:"; // TODO Implement
 
 	private static final String HEADING_PREFIX = "--heading:";
 	private static final String TILT_PREFIX    = "--tilt:";
@@ -317,19 +318,6 @@ public class SunFlower implements RESTRequestManager {
 	}
 	private boolean isCalibrating() {
 		return calibrating;
-	}
-
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	public static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return retString;
 	}
 
 	private RESTImplementation restImplementation;
@@ -1170,7 +1158,7 @@ public class SunFlower implements RESTRequestManager {
 				MOSI_PRM_PREFIX, PinUtil.findByPin(mosi).gpio(),
 				CLK_PRM_PREFIX, PinUtil.findByPin(clk).gpio(),
 				CS_PRM_PREFIX, PinUtil.findByPin(cs).gpio(),
-				CHANNEL_PREFIX, adcChannel,
+				BATTERY_CHANNEL_PREFIX, adcChannel,
 				HEADING_PREFIX, Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(", ")),
 				TILT_PREFIX, Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(", "))));
 		System.out.println("Values above are default values.");
@@ -1241,8 +1229,8 @@ public class SunFlower implements RESTRequestManager {
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad pin value for %s, must be an integer [%s]", prm, pinValue));
 					}
-				} else if (prm.startsWith(CHANNEL_PREFIX)) {
-					String chValue = prm.substring(CHANNEL_PREFIX.length());
+				} else if (prm.startsWith(BATTERY_CHANNEL_PREFIX)) {
+					String chValue = prm.substring(BATTERY_CHANNEL_PREFIX.length());
 					try {
 						adcChannel = Integer.parseInt(chValue);
 						if (adcChannel > 7 || adcChannel < 0) {

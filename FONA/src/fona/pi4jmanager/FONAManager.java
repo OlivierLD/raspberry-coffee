@@ -435,7 +435,7 @@ public class FONAManager {
 //  delay(1);
 		String messagePayload = content; // userInput("  Mess Content?> ");
 	  /*
-     * TASK Compare to 
+     * TASK Compare to
     mySerial->println(smsmsg);
     mySerial->println();
     mySerial->write(0x1A);

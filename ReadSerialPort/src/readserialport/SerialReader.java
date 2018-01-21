@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class SerialReader
 {
-  public static void main(String args[])
+  public static void main(String... args)
     throws InterruptedException, NumberFormatException
   {
     String port = System.getProperty("serial.port", Serial.DEFAULT_COM_PORT);
@@ -26,7 +26,7 @@ public class SerialReader
         System.err.println(ex.getMessage());
       }
     }
-    
+
     System.out.println("Serial Communication.");
     System.out.println(" ... connect using settings: " + Integer.toString(br) +  ", N, 8, 1.");
     System.out.println(" ... data received on serial port should be displayed below.");
@@ -62,18 +62,18 @@ public class SerialReader
           {
             // write a formatted string to the serial transmit buffer
             serial.write("CURRENT TIME: %s", new Date().toString());
-  
+
             // write a individual bytes to the serial transmit buffer
             serial.write((byte) 13);
             serial.write((byte) 10);
-  
+
             // write a simple string to the serial transmit buffer
             serial.write("Second Line");
-  
+
             // write a individual characters to the serial transmit buffer
             serial.write('\r');
             serial.write('\n');
-  
+
             // write a string terminating with CR+LF to the serial transmit buffer
             serial.writeln("Third Line");
           }

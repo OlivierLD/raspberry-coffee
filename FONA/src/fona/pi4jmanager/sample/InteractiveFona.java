@@ -14,26 +14,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.io.IOException;
 
+import static utils.StaticUtil.userInput;
+
 public class InteractiveFona implements FONAClient {
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-
-	private static String userInput(String prompt) {
-		String retString = "";
-		System.err.print(prompt);
-		try {
-			retString = stdin.readLine();
-		} catch (Exception e) {
-			System.out.println(e);
-			String s;
-			try {
-				s = userInput("<Oooch/>");
-			} catch (Exception exception) {
-				exception.printStackTrace();
-			}
-		}
-		return retString;
-	}
-
 	private static void displayMenu() {
 		System.out.println("> Commands are case-sensitive.");
 		System.out.println("Verbose is " + (FONAManager.getVerbose() ? "on" : "off"));
@@ -61,7 +44,7 @@ public class InteractiveFona implements FONAClient {
 		System.out.print("FONA> ");
 	}
 
-	public static void main(String args[])
+	public static void main(String... args)
 					throws InterruptedException, NumberFormatException, IOException {
 		// Display current Classpath
 		try {

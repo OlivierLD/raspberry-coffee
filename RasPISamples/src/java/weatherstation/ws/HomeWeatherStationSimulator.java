@@ -14,7 +14,7 @@ public class HomeWeatherStationSimulator {
 	private static boolean go = true;
 	private static LoggerInterface logger = null;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		final Thread coreThread = Thread.currentThread();
 		final WebSocketFeeder wsf = null; // new WebSocketFeeder();
 		String loggerClassName = System.getProperty("data.logger", null);

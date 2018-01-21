@@ -14,7 +14,7 @@ import com.pi4j.io.gpio.RaspiPin;
  */
 public class Relay01
 {
-  public static void main(String[] args) throws InterruptedException
+  public static void main(String... args) throws InterruptedException
   {
 
     System.out.println("GPIO Control - pin 00/#17 and 01/#18 ... started.");

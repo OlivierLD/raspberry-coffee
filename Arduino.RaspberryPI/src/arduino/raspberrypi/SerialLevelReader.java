@@ -25,15 +25,15 @@ public class SerialLevelReader
   {
     return previousLevel;
   }
-  
+
   public synchronized static void appendToStream(String str)
   {
     if (stream == null)
       stream = new StringBuffer();
     stream.append(str);
   }
-  
-  public synchronized static void processStream() 
+
+  public synchronized static void processStream()
   {
     String str = stream.toString();
     String[] elem = str.split("\n");
@@ -60,10 +60,10 @@ public class SerialLevelReader
           System.err.println("\t>>> Oops! Invalid String [" + s + "]");
       }
     }
-    // Reset 
+    // Reset
     stream = newStr;
   }
-  
+
   // NMEA Style
   public static int calculateCheckSum(String str)
   {
@@ -76,12 +76,12 @@ public class SerialLevelReader
     }
     return cs;
   }
-  
+
   // NMEA Style
   public static boolean validCheckSum(String data, boolean verb)
   {
     String sentence = data.trim();
-    boolean b = false;    
+    boolean b = false;
     try
     {
       int starIndex = sentence.indexOf("*");
@@ -126,7 +126,7 @@ public class SerialLevelReader
   {
     int level = -1;
     String[] data = message.split(",");
-    try 
+    try
     {
       level = Integer.parseInt(data[2]);
     }
@@ -136,8 +136,8 @@ public class SerialLevelReader
     }
     return level;
   }
-  
-  public static void main(String args[])
+
+  public static void main(String... args)
     throws InterruptedException, NumberFormatException
   {
     String port = System.getProperty("serial.port", Serial.DEFAULT_COM_PORT);
@@ -153,7 +153,7 @@ public class SerialLevelReader
         System.err.println(ex.getMessage());
       }
     }
-    
+
     System.out.println("Serial Communication.");
     System.out.println(" ... connect on " + port + " using settings: " + Integer.toString(br) +  ", N, 8, 1.");
     System.out.println(" ... data received on serial port should be displayed below.");
@@ -182,7 +182,7 @@ public class SerialLevelReader
          }
        }
      });
-    
+
     // create and register the serial data listener
     serial.addListener(event -> {
         // print out the data received to the console
@@ -194,7 +194,7 @@ public class SerialLevelReader
         }
         if ("true".equals(System.getProperty("verbose", "false")))
           System.out.println("Payload [" + payload + "]");
-        
+
         appendToStream(payload);
         processStream();
       });

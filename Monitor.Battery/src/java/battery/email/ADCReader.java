@@ -56,7 +56,7 @@ public class ADCReader {
 	 *
 	 * @param args use -help
 	 */
-	public static void main(String[] args)
+	public static void main(String... args)
 	throws Exception {
 
 		final long SECOND = 1_000L;

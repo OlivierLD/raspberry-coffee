@@ -92,7 +92,7 @@ public final class GreatCirclePoint
 		return new GreatCirclePoint(Math.toDegrees(this.getL()), Math.toDegrees(this.getG()));
 	}
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		GreatCirclePoint p1 = new GreatCirclePoint(37, -122);
 		GreatCirclePoint p2 = new GreatCirclePoint(38, -121);
 		System.out.println("Ortho:" + p1.orthoDistanceBetween(p2));

@@ -20,10 +20,10 @@ public class AISParser {
    * |      Number of sentences
    * NMEA Message type, for AIS
    */
-  
+
   /*
    * See http://gpsd.berlios.de/AIVDM.html
-   * 
+   *
 AIS Message Type 1:
   1-6     Message Type
   7-8     Repeat Indicator
@@ -392,7 +392,7 @@ AIS Message type 2:
 		}
 	}
 
-	public static void main_(String[] args) throws Exception {
+	public static void main_(String... args) throws Exception {
 		String ais;
 		if (args.length > 0)
 			System.out.println(parseAIS(args[0]));
@@ -408,7 +408,7 @@ AIS Message type 2:
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		String dataFileName = "sample.data/nais400-merrimac.log";
 		if (args.length > 0)
 			dataFileName = args[0];

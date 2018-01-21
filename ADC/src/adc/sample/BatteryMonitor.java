@@ -173,7 +173,7 @@ public class BatteryMonitor {
 	private static boolean scale = false;
 	private static boolean tuning = false;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		System.out.println("Parameters are:");
 		System.out.println("  -calibration or -cal");
 		System.out.println("  -debug=y|n|yes|no|true|false - example -debug=y        (default is n)");
