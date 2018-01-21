@@ -82,7 +82,10 @@ public class HomeWeatherStation {
 			}
 		}));
 
-		HTTPServer httpServer = new HTTPServer(); // Created and started
+		HTTPServer httpServer = null;
+		if ("true".equals(System.getProperty("ws.http", "true"))) {
+			httpServer = new HTTPServer(); // Created and started
+		}
 
 		SDLWeather80422 weatherStation = new SDLWeather80422(); // With default parameters.
 		weatherStation.setWindMode(SDLWeather80422.SdlMode.SAMPLE, 5);
@@ -149,7 +152,9 @@ public class HomeWeatherStation {
 				if ("true".equals(System.getProperty("ws.verbose", "false"))) {
 					System.out.println("-> Wind Message:" + message);
 				}
-				httpServer.setData(message);
+				if (httpServer != null) {
+					httpServer.setData(message);
+				}
 				if (wsf != null) {
 					if ("true".equals(System.getProperty("ws.verbose", "false"))) {
 						System.out.println("-> Sending message (wsf)");
