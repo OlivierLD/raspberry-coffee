@@ -16,7 +16,11 @@ public class HomeWeatherStationSimulator {
 
 	public static void main(String... args) throws Exception {
 		final Thread coreThread = Thread.currentThread();
-		final WebSocketFeeder wsf = null; // new WebSocketFeeder();
+		WebSocketFeeder wsf = null; // new WebSocketFeeder();
+		if ("true".equals(System.getProperty("ws.log"))) {
+			// Uses -Dws.uri
+			wsf = new WebSocketFeeder();
+		}
 		String loggerClassName = System.getProperty("data.logger", null);
 		if (loggerClassName != null) {
 			try {
@@ -83,6 +87,7 @@ public class HomeWeatherStationSimulator {
 				System.out.println("Pushing " + windObj.toString());
 				try {
 					wsf.pushMessage(windObj.toString());
+					System.out.println(">> WS pushed OK");
 				} catch (Exception ex) {
 					System.err.println("WS Push error:");
 					ex.printStackTrace();

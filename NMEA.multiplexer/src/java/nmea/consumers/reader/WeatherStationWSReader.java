@@ -1,9 +1,12 @@
 package nmea.consumers.reader;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import nmea.api.NMEAEvent;
 import nmea.api.NMEAListener;
 import nmea.api.NMEAParser;
 import nmea.api.NMEAReader;
+import nmea.parser.StringGenerator;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -18,6 +21,8 @@ public class WeatherStationWSReader extends NMEAReader {
 	private WebSocketClient wsClient = null;
 	private WeatherStationWSReader instance = this;
 	private String wsUri;
+
+	private final static String DEVICE_PREFIX = "WS";
 
 	public WeatherStationWSReader(List<NMEAListener> al) {
 		this(al, (Properties)null);
@@ -52,9 +57,53 @@ public class WeatherStationWSReader extends NMEAReader {
 						    "hum": 58.5,
 						    "cputemp": 34.56 }
 					 */
-					String s = mess + NMEAParser.NMEA_SENTENCE_SEPARATOR; // Blah blah blah
-					NMEAEvent n = new NMEAEvent(this, s);
-					instance.fireDataRead(n);
+					JsonParser jsonParser = new JsonParser();
+					JsonObject json = (JsonObject)jsonParser.parse(mess);
+
+					double hum    = json.get("hum").getAsDouble();
+					double volts  = json.get("volts").getAsDouble();
+					double dir    = json.get("dir").getAsDouble();
+					double avgdir = json.get("avgdir").getAsDouble();
+					double speed  = json.get("speed").getAsDouble();
+					double gust   = json.get("gust").getAsDouble();
+					double rain   = json.get("rain").getAsDouble();
+					double press  = json.get("press").getAsDouble();
+					double temp   = json.get("temp").getAsDouble();
+
+					int deviceIdx = 0; // Instead of "BME280"...
+					String nmeaXDR = StringGenerator.generateXDR(DEVICE_PREFIX,
+							new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
+									hum,
+									String.valueOf(deviceIdx++)), // %, Humidity
+							new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
+									temp,
+									String.valueOf(deviceIdx++)), // Celcius, Temperature
+							new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
+									press,
+									String.valueOf(deviceIdx++))); // Pascal, pressure
+					nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+					fireDataRead(new NMEAEvent(this, nmeaXDR));
+
+					String nmeaMDA = StringGenerator.generateMDA(DEVICE_PREFIX,
+							press / 100,
+							temp,
+							-Double.MAX_VALUE,  // Water Temp
+							hum,
+							-Double.MAX_VALUE,  // Abs hum
+							-Double.MAX_VALUE,  // dew point
+							avgdir,  // TWD
+							-Double.MAX_VALUE,  // TWD (mag)
+							speed); // TWS
+					nmeaMDA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+					instance.fireDataRead(new NMEAEvent(this, nmeaMDA));
+
+					String nmeaMTA = StringGenerator.generateMTA(DEVICE_PREFIX, temp);
+					nmeaMTA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+					instance.fireDataRead(new NMEAEvent(this, nmeaMTA));
+
+					String nmeaMMB = StringGenerator.generateMMB(DEVICE_PREFIX, press / 100);
+					nmeaMMB += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+					instance.fireDataRead(new NMEAEvent(this, nmeaMMB));
 				}
 
 				@Override
