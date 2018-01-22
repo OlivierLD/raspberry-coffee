@@ -3,27 +3,27 @@ package nmea.consumers.client;
 import nmea.api.Multiplexer;
 import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
-import nmea.consumers.reader.WebSocketReader;
+import nmea.consumers.reader.WeatherStationWSReader;
 
 /**
- * Read NMEA Data from a WebSocket server
+ * Read WeatherStation Data from its WebSocket server, and turns them into NMEA data.
  */
-public class WebSocketClient extends NMEAClient {
-	public WebSocketClient() {
+public class WeatherStationWSClient extends NMEAClient {
+	public WeatherStationWSClient() {
 		this(null, null, null);
 	}
 
-	public WebSocketClient(Multiplexer mux) {
+	public WeatherStationWSClient(Multiplexer mux) {
 		this(null, null, mux);
 	}
 
-	public WebSocketClient(String[] s, String[] sa) {
+	public WeatherStationWSClient(String[] s, String[] sa) {
 		this(s, sa, null);
 	}
 
-	public WebSocketClient(String[] s, String[] sa, Multiplexer mux) {
+	public WeatherStationWSClient(String[] s, String[] sa, Multiplexer mux) {
 		super(s, sa, mux);
-		this.verbose = "true".equals(System.getProperty("ws.data.verbose", "false"));
+		this.verbose = "true".equals(System.getProperty("weather.station.data.verbose", "false"));
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class WebSocketClient extends NMEAClient {
 		}
 	}
 
-	private static WebSocketClient nmeaClient = null;
+	private static WeatherStationWSClient nmeaClient = null;
 
 	public static class WSBean implements ClientBean {
 		private String cls;
@@ -45,9 +45,9 @@ public class WebSocketClient extends NMEAClient {
 		private String[] sentenceFilters;
 		private boolean verbose;
 
-		public WSBean(WebSocketClient instance) {
+		public WSBean(WeatherStationWSClient instance) {
 			cls = instance.getClass().getName();
-			wsUri = ((WebSocketReader) instance.getReader()).getWsUri();
+			wsUri = ((WeatherStationWSReader) instance.getReader()).getWsUri();
 			verbose = instance.isVerbose();
 			deviceFilters = instance.getDevicePrefix();
 			sentenceFilters = instance.getSentenceArray();
@@ -80,7 +80,7 @@ public class WebSocketClient extends NMEAClient {
 	public static void main(String... args) {
 		String serverUri = "ws://localhost:9876/";
 
-		nmeaClient = new WebSocketClient();
+		nmeaClient = new WeatherStationWSClient();
 
 		Runtime.getRuntime().addShutdownHook(new Thread("WebSocketClient shutdown hook") {
 			public void run() {
@@ -89,7 +89,7 @@ public class WebSocketClient extends NMEAClient {
 			}
 		});
 		nmeaClient.initClient();
-		nmeaClient.setReader(new WebSocketReader(nmeaClient.getListeners(), serverUri));
+		nmeaClient.setReader(new WeatherStationWSReader(nmeaClient.getListeners(), serverUri));
 		nmeaClient.startWorking();
 	}
 }

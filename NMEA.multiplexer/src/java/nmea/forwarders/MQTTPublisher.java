@@ -24,6 +24,8 @@ public class MQTTPublisher implements Forwarder {
 	private Properties props;
 
 	private final static NumberFormat TEMP_FMT = new DecimalFormat("##0.00");
+
+	// Topic list. To be extended as needed.
 	public static final String TOPIC_AIR_TEMPERATURE = "nmea/airTemperature";
 	public static final String TOPIC_WATER_TEMPERATURE = "nmea/waterTemperature";
 	public static final String TOPIC_POSITION = "nmea/position";

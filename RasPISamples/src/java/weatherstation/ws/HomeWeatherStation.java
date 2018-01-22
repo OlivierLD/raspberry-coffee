@@ -83,7 +83,7 @@ public class HomeWeatherStation {
 		}));
 
 		HTTPServer httpServer = null;
-		if ("true".equals(System.getProperty("ws.http", "true"))) {
+		if ("true".equals(System.getProperty("weather.station.http", "true"))) {
 			httpServer = new HTTPServer(); // Created and started
 		}
 
@@ -91,7 +91,7 @@ public class HomeWeatherStation {
 		weatherStation.setWindMode(SDLWeather80422.SdlMode.SAMPLE, 5);
 
 		while (go) {
-			if ("true".equals(System.getProperty("ws.verbose", "false"))) {
+			if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {
 				System.out.println("-> While go...");
 			}
 
@@ -149,19 +149,20 @@ public class HomeWeatherStation {
 			 */
 			try {
 				String message = windObj.toString();
-				if ("true".equals(System.getProperty("ws.verbose", "false"))) {
+				if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {
 					System.out.println("-> Wind Message:" + message);
 				}
 				if (httpServer != null) {
 					httpServer.setData(message);
 				}
 				if (wsf != null) {
-					if ("true".equals(System.getProperty("ws.verbose", "false"))) {
+					if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {
 						System.out.println("-> Sending message (wsf)");
 					}
+					// TODO JSON or NMEA?
 					wsf.pushMessage(message);
 				} else {
-					if ("true".equals(System.getProperty("ws.verbose", "false"))) {
+					if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {
 						System.out.println("-> NOT Sending message (wsf)");
 					}
 				}
