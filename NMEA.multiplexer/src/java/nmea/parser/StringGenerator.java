@@ -240,34 +240,41 @@ public class StringGenerator {
 		} else {
 			mda += ",,,,";
 		}
-		if (airTempInDegrees != -Double.MAX_VALUE)
+		if (airTempInDegrees != -Double.MAX_VALUE) {
 			mda += (TEMP_FMT.format(airTempInDegrees) + ",C,");
-		else
+		} else {
 			mda += ",,";
-		if (waterTempInDegrees != -Double.MAX_VALUE)
+		}
+		if (waterTempInDegrees != -Double.MAX_VALUE) {
 			mda += (TEMP_FMT.format(waterTempInDegrees) + ",C,");
-		else
+		} else {
 			mda += ",,";
-		if (relHumidity != -Double.MAX_VALUE)
+		}
+		if (relHumidity != -Double.MAX_VALUE) {
 			mda += (PERCENT_FMT.format(relHumidity) + ",");
-		else
+		} else {
 			mda += ",";
-		if (absHumidity != -Double.MAX_VALUE)
+		}
+		if (absHumidity != -Double.MAX_VALUE) {
 			mda += (PERCENT_FMT.format(absHumidity) + ",");
-		else
+		} else {
 			mda += ",";
-		if (dewPointInCelcius != -Double.MAX_VALUE)
+		}
+		if (dewPointInCelcius != -Double.MAX_VALUE) {
 			mda += (DIR_FMT.format(dewPointInCelcius) + ",C,");
-		else
+		} else {
 			mda += ",,";
-		if (windDirTrue != -Double.MAX_VALUE)
-			mda += (TEMP_FMT.format(windDirTrue) + ",T,");
-		else
+		}
+		if (windDirTrue != -Double.MAX_VALUE) {
+			mda += (DIR_FMT.format(windDirTrue) + ",T,");
+		} else {
 			mda += ",,";
-		if (windDirTrue != -Double.MAX_VALUE)
-			mda += (TEMP_FMT.format(windDirMag) + ",M,");
-		else
+		}
+		if (windDirMag != -Double.MAX_VALUE) {
+			mda += (DIR_FMT.format(windDirMag) + ",M,");
+		} else {
 			mda += ",,";
+		}
 		if (windSpeedInKnots != -Double.MAX_VALUE) {
 			mda += (SPEED_FMT.format(windSpeedInKnots) + ",N,");
 			mda += (SPEED_FMT.format(windSpeedInKnots * 1.852 / 3.6) + ",M");
