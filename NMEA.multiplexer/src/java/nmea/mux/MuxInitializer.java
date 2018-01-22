@@ -99,11 +99,12 @@ public class MuxInitializer {
 						NMEAClient nmeaClient = (NMEAClient)dynamic;
 						String propProp = String.format("mux.%s.properties", MUX_IDX_FMT.format(muxIdx));
 						String propFileName = muxProps.getProperty(propProp);
+						Properties readerProperties = null;
 						if (propFileName != null) {
 							try {
-								Properties properties = new Properties();
-								properties.load(new FileReader(propFileName));
-								nmeaClient.setProperties(properties);
+								readerProperties = new Properties();
+								readerProperties.load(new FileReader(propFileName));
+								nmeaClient.setProperties(readerProperties);
 							} catch (Exception ex) {
 								ex.printStackTrace();
 							}
@@ -114,7 +115,11 @@ public class MuxInitializer {
 							String readerProp = String.format("mux.%s.reader", MUX_IDX_FMT.format(muxIdx));
 							String readerClass = muxProps.getProperty(readerProp);
 							// Cannot invoke declared constructor with a generic type... :(
-							reader = (NMEAReader)Class.forName(readerClass).getDeclaredConstructor(List.class).newInstance(nmeaClient.getListeners());
+							if (readerProperties == null) {
+								reader = (NMEAReader) Class.forName(readerClass).getDeclaredConstructor(List.class).newInstance(nmeaClient.getListeners());
+							} else {
+								reader = (NMEAReader) Class.forName(readerClass).getDeclaredConstructor(List.class, Properties.class).newInstance(nmeaClient.getListeners(), readerProperties);
+							}
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}

@@ -9,6 +9,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * WebSocket reader
@@ -18,6 +19,12 @@ public class WeatherStationWSReader extends NMEAReader {
 	private WeatherStationWSReader instance = this;
 	private String wsUri;
 
+	public WeatherStationWSReader(List<NMEAListener> al) {
+		this(al, (Properties)null);
+	}
+	public WeatherStationWSReader(List<NMEAListener> al, Properties props) {
+		this(al, props.getProperty("ws.uri"));
+	}
 	public WeatherStationWSReader(List<NMEAListener> al, String wsUri) {
 		super(al);
 		this.wsUri = wsUri;

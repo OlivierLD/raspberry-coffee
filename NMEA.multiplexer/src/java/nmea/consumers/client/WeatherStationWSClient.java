@@ -5,6 +5,8 @@ import nmea.api.NMEAClient;
 import nmea.api.NMEAEvent;
 import nmea.consumers.reader.WeatherStationWSReader;
 
+import java.util.Properties;
+
 /**
  * Read WeatherStation Data from its WebSocket server, and turns them into NMEA data.
  */
@@ -35,17 +37,22 @@ public class WeatherStationWSClient extends NMEAClient {
 		}
 	}
 
+	@Override
+	public void setProperties(Properties props) {
+		super.setProperties(props);
+	}
+
 	private static WeatherStationWSClient nmeaClient = null;
 
-	public static class WSBean implements ClientBean {
+	public static class WeatherStationBean implements ClientBean {
 		private String cls;
-		private String type = "ws";
+		private String type = "weather.station";
 		private String wsUri;
 		private String[] deviceFilters;
 		private String[] sentenceFilters;
 		private boolean verbose;
 
-		public WSBean(WeatherStationWSClient instance) {
+		public WeatherStationBean(WeatherStationWSClient instance) {
 			cls = instance.getClass().getName();
 			wsUri = ((WeatherStationWSReader) instance.getReader()).getWsUri();
 			verbose = instance.isVerbose();
@@ -74,7 +81,7 @@ public class WeatherStationWSClient extends NMEAClient {
 
 	@Override
 	public Object getBean() {
-		return new WSBean(this);
+		return new WeatherStationBean(this);
 	}
 
 	public static void main(String... args) {

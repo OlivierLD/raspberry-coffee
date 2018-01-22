@@ -1,6 +1,8 @@
 import i2c.sensor.LSM303;
 /**
- * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar 
+ * Value returned by an LSM303, graphically.
+ *
+ * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
  */
 
 boolean withSensor = true;
@@ -32,7 +34,7 @@ void setup(){
   }
   if (!withSensor) {
     println("----------------------------------------------------");
-    println(" Move the mouse left and right to change the heading");
+    println(" Drag the mouse left and right to change the heading");
     println("----------------------------------------------------");
   }
 }
@@ -44,10 +46,16 @@ void draw(){
   if (withSensor) {
     heading = (float)lsm303.getHeading();
   } else {
+    float increment = 0;
     if (!mousePressed) {
-      heading += 0.25;
-      heading = heading % 360;
+      increment = 0.25;
+    } else {
+//    println(String.format("Mouse: X=%d, Y=%d", mouseX, mouseY));
+      int diffX = mouseX - centerX;
+      increment = diffX / 100f;
     }
+    heading += increment;
+    heading = heading % 360;
   }
   textSize(10);
   fill(255);
@@ -57,15 +65,15 @@ void draw(){
   float _heading = heading + 90;
   for (int q=0; q<4; q++) {
     fill(255); // White
-    triangle(centerX, 
-             centerY, 
+    triangle(centerX,
+             centerY,
              (float)(centerX + (extRadius * Math.cos(Math.toRadians(_heading)))),
              (float)(centerY + (extRadius * Math.sin(Math.toRadians(_heading)))),
              (float)(centerX + (intRadius * Math.cos(Math.toRadians(_heading + 45)))),
              (float)(centerY + (intRadius * Math.sin(Math.toRadians(_heading + 45)))));
     fill(128); // Gray
-    triangle(centerX, 
-             centerY, 
+    triangle(centerX,
+             centerY,
              (float)(centerX + (extRadius * Math.cos(Math.toRadians(_heading)))),
              (float)(centerY + (extRadius * Math.sin(Math.toRadians(_heading)))),
              (float)(centerX + (intRadius * Math.cos(Math.toRadians(_heading - 45)))),
@@ -76,7 +84,7 @@ void draw(){
   textSize(32);
   fill(255, 204, 0); // Goldish
   pushMatrix();
-  translate(centerX + (extRadius * (float)Math.cos(Math.toRadians(heading - 90))), 
+  translate(centerX + (extRadius * (float)Math.cos(Math.toRadians(heading - 90))),
             centerY + (extRadius * (float)Math.sin(Math.toRadians(heading - 90))));
   rotate((float)Math.toRadians(heading));
   String north = "N";

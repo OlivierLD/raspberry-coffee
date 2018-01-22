@@ -1,6 +1,7 @@
 import i2c.sensor.LSM303;
 /**
- * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar 
+ * Numeric value returned by an LSM303.
+ * Using Sketch > Add File..., select I2C.SPI/build/libs/I2C.SPI-1.0-all.jar
  */
 
 boolean withSensor = true;
@@ -38,7 +39,14 @@ void draw(){
   if (withSensor) {
     heading = (float)lsm303.getHeading();
   } else {
-    heading = 0;
+    int diffX = mouseX - (275 / 2);
+    float increment = diffX / 10_000f;
+    println(String.format(">> diffX:%d, inc:%f", diffX, increment));
+    heading += increment;
+    while (heading < 0) {
+      heading += 360;
+    }
+    heading = heading % 360;
   }
   text(String.format("%05.1f\272", heading), 10, 100);
 }
