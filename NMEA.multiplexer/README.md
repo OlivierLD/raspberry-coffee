@@ -565,6 +565,8 @@ In this kind of case, it could be a good idea to have scripts with small names..
 
 The Raspberry PI can also be an hotspot, you connect to its network to be able to access the data. there is a good tutorial for that on the <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">Adafruit website</a>.
 
+The definition of your network is in `/etc/hostapd/hostapd.conf`.
+
 `scp` and other such tools are also conveniently available.
 
 This can prove to be particularly convenient when you want to log data away from a stable Internet connection (in your car, in a plane, on a boat, etc).
