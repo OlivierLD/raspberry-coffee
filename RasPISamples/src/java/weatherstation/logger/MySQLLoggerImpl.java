@@ -27,7 +27,7 @@ public class MySQLLoggerImpl implements LoggerInterface {
 	private long lastLogged = 0L; // Time of the last logging
 	private static final long MINIMUM_BETWEEN_LOGS = 5_000L; // A System variable, in ms.
 	private final static NumberFormat DOUBLE_FMT = new DecimalFormat("#0.000");
-	private final static String REST_URL = "http://donpedro.lediouris.net/php/raspi/insert.wd.php"; // A System.variable
+	private final static String REST_URL = "http://donpedro.lediouris.net/php/raspi/insert.wd.php"; // A System variable, "ws.rest.url"
 
 	private String restURL = "";
 	private long betweenLogs = MINIMUM_BETWEEN_LOGS;
@@ -108,7 +108,8 @@ public class MySQLLoggerImpl implements LoggerInterface {
 			String queryString = composeQS(json);
 			this.lastLogged = now;
 			/*
-			 * Actual logging goes here
+			 * Actual logging goes here.
+			 * And yes, it is an insert, done through a GET. Limitation on Yahoo!'s php.
 			 * URL would be like
 			 * http://donpedro.lediouris.net/php/raspi/insert.wd.php?WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&CPU=34.56
 			 */
