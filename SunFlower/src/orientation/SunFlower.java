@@ -809,6 +809,8 @@ public class SunFlower implements RESTRequestManager {
 		return batteryData;
 	}
 
+	// TODO getPhotocellData
+
 	public SunData getSunData() {
 		return new SunData(he, z);
 	}
@@ -1282,8 +1284,10 @@ public class SunFlower implements RESTRequestManager {
 			System.exit(1);
 		}
 
-		if (withAdc) {
-			System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
+		if (withAdc || withPhotocell) {
+			System.out.println(String.format("Reading MCP3008 on channel%s %s",
+					(withAdc && withPhotocell ? "s" : ""),
+					(withAdc && withPhotocell ? String.valueOf(adcChannel) + " and " + String.valueOf(photocellChannel) : (withAdc ? String.valueOf(adcChannel) : String.valueOf(photocellChannel)))) );
 			System.out.println(
 					" Wiring of the MCP3008-SPI (without power supply):\n" +
 							" +---------++-----------------------------------------------+\n" +
@@ -1318,14 +1322,14 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");
 			System.out.println(               "       +--------+ ");
-			System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0 ? "*" : " ")));
-			System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1 ? "*" : " ")));
-			System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2 ? "*" : " ")));
-			System.out.println(String.format("%s CH3 -+  4  13 +- CLK ",  (adcChannel == 3 ? "*" : " ")));
-			System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (adcChannel == 4 ? "*" : " ")));
-			System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5 ? "*" : " ")));
-			System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6 ? "*" : " ")));
-			System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
+			System.out.println(String.format("%s CH0 -+  1  16 +- Vdd ",  (adcChannel == 0  || photocellChannel == 0 ? "*" : " ")));
+			System.out.println(String.format("%s CH1 -+  2  15 +- Vref ", (adcChannel == 1  || photocellChannel == 1 ? "*" : " ")));
+			System.out.println(String.format("%s CH2 -+  3  14 +- aGnd ", (adcChannel == 2  || photocellChannel == 2 ? "*" : " ")));
+			System.out.println(String.format("%s CH3 -+  4  13 +- CLK ",  (adcChannel == 3  || photocellChannel == 3 ? "*" : " ")));
+			System.out.println(String.format("%s CH4 -+  5  12 +- Dout ", (adcChannel == 4  || photocellChannel == 4 ? "*" : " ")));
+			System.out.println(String.format("%s CH5 -+  6  11 +- Din ",  (adcChannel == 5  || photocellChannel == 5 ? "*" : " ")));
+			System.out.println(String.format("%s CH6 -+  7  10 +- CS ",   (adcChannel == 6  || photocellChannel == 6 ? "*" : " ")));
+			System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7  || photocellChannel == 7 ? "*" : " ")));
 			System.out.println(               "       +--------+ ");
 
 			initADC();
