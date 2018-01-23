@@ -2,15 +2,15 @@ package orientation;
 
 import com.google.gson.Gson;
 import http.HTTPServer;
+import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
-import http.HTTPServer.Operation;
 import http.RESTProcessorUtil;
 
-import java.util.List;
 import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * This class defines the REST operations supported by the HTTP Server.
@@ -46,46 +46,51 @@ public class RESTImplementation {
 	 * See {@link HTTPServer}
 	 */
 	private List<Operation> operations = Arrays.asList(
-					new Operation(
-									"GET",
-									"/oplist",
-									this::getOperationList,
-									"List of all available operations."),
-					new Operation(
-									"GET",
-									"/position",
-									this::getPosition,
-									"Get device position on Earth."),
-					new Operation(
-									"GET",
-									"/device-heading",
-									this::getDeviceHeading,
-									"Get device heading."),
-					new Operation(
-									"GET",
-									"/servo-values",
-									this::getServoValues,
-									"Get servos values"),
-					new Operation(
-									"GET",
-									"/dates",
-									this::getDates,
-									"Get the dates (System, UTC, Solar"),
-					new Operation(
-									"GET",
-									"/sun-data",
-									this::getSunData,
-									"Get the computed Sun data"),
-					new Operation(
-							"GET",
-							"/battery-data",
-							this::getBatteryData,
-							"Get the LiPo battery data (voltage)"),
-					new Operation(
-									"GET",
-									"/all",
-									this::getAll,
-									"Get everything!"));
+			new Operation(
+					"GET",
+					"/oplist",
+					this::getOperationList,
+					"List of all available operations."),
+			new Operation(
+					"GET",
+					"/position",
+					this::getPosition,
+					"Get device position on Earth."),
+			new Operation(
+					"GET",
+					"/device-heading",
+					this::getDeviceHeading,
+					"Get device heading."),
+			new Operation(
+					"GET",
+					"/servo-values",
+					this::getServoValues,
+					"Get servos values"),
+			new Operation(
+					"GET",
+					"/dates",
+					this::getDates,
+					"Get the dates (System, UTC, Solar"),
+			new Operation(
+					"GET",
+					"/sun-data",
+					this::getSunData,
+					"Get the computed Sun data"),
+			new Operation(
+					"GET",
+					"/battery-data",
+					this::getBatteryData,
+					"Get the LiPo battery data (voltage)"),
+			new Operation(
+					"GET",
+					"/photo-cell-data",
+					this::getPhotoCellData,
+					"Get the photo-cell data (adc [0..1023])"),
+			new Operation(
+					"GET",
+					"/all",
+					this::getAll,
+					"Get everything!"));
 
 	protected List<Operation> getOperations() {
 		return  this.operations;
@@ -189,6 +194,16 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private Response getPhotoCellData(Request request)  {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		int photoCellData = sunFlower.getPhotocellData();
+
+		String content = new Gson().toJson(photoCellData);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
 
 	private Response getOperationList(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);

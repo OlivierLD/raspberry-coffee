@@ -800,7 +800,7 @@ public class SunFlower implements RESTRequestManager {
 				System.out.println("No MCP3008 found.");
 			}
 		}
-		// TODO Return damped value
+		// TODO Return damped value ?
 		int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 		BatteryData batteryData = new BatteryData()
 				.adc(adc)
@@ -809,7 +809,25 @@ public class SunFlower implements RESTRequestManager {
 		return batteryData;
 	}
 
-	// TODO getPhotocellData
+	/**
+	 * Requires an MCP3008
+	 * @return the ADC value of the photocell (photo-resistor)
+	 */
+	public int getPhotocellData() {
+		int adc = 0;
+		if (foundMCP3008) {
+			adc = MCP3008Reader.readMCP3008(photocellChannel);
+			// TODO Damping here?
+		}
+		if (adcVerbose) {
+			if (foundMCP3008) {
+				System.out.println(String.format("Read from MCP3008 channel %d: %d", photocellChannel, adc));
+			} else {
+				System.out.println("No MCP3008 found.");
+			}
+		}
+		return adc;
+	}
 
 	public SunData getSunData() {
 		return new SunData(he, z);
@@ -822,23 +840,27 @@ public class SunFlower implements RESTRequestManager {
 		SunData sunData;
 		double heading;
 		BatteryData lipo;
+		int photocell;
 		public AllData(
 						GeographicPosition pos,
 						ServoValues servos,
 						Dates dates,
 						SunData sunData,
 						double heading,
-						BatteryData lipo) {
+						BatteryData lipo,
+						int photoCell) {
 			this.pos = pos;
 			this.servos = servos;
 			this.dates = dates;
 			this.sunData = sunData;
 			this.heading = heading;
 			this.lipo = lipo;
+			this.photocell = photoCell;
 		}
 	}
+
 	public AllData getAllData() {
-		return new AllData(getPosition(), getServoValues(), getDates(), getSunData(), getDeviceHeading(), getBatteryData());
+		return new AllData(getPosition(), getServoValues(), getDates(), getSunData(), getDeviceHeading(), getBatteryData(), getPhotocellData());
 	}
 
 	public void orientServos() {
