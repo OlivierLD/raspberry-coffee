@@ -9,6 +9,7 @@
 - [Web Console](#web-console)
 - [Distinction on the device ID](#inside-and-outside)
 - [Driving and Logging](#driving-and-logging)
+- [Weather Station](#weather-station)
 
 #### Small external display
 There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
@@ -238,6 +239,58 @@ Another one:
 A small [I2C OLED display](https://www.adafruit.com/product/3527) attached to the Zero, fed from a forwarder (`nmea.forwarders.SSD1306ProcessorI2C`).
 ![](./docimages/oled.01.jpg)
 ![](./docimages/oled.02.jpg)
+
+#### Weather Station
+Feed the NMEA Multiplexer with the Weather Station from SwitchDoc labs.
+The code of then project is [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WeatherStation), 
+and an implementation is available [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RasPISamples#weatherstation).
+
+There is a  `custom channel` (aka `consumers`) made out of
+- `WeatherStationWSClient`
+- `WeatherStationWSReader`
+
+The `WeatherStation` feeds a WebSocket server with a `json` object like this:
+```json
+{ "dir": 350.0,
+  "avgdir": 345.67,
+  "volts": 3.4567,
+  "speed": 12.345,
+  "gust": 13.456,
+  "rain": 0.1,
+  "press": 101300.00,
+  "temp": 18.34,
+  "hum": 58.5,
+  "cputemp": 34.56 }
+```
+The `consumer` turns this object into several `NMEA` sentences.
+It also listens to the WebSocket topic fed by the `WeatherStation`. Its URL is to be provided in
+the properties file mentioned in the `channel` definition:
+```properties
+mux.01.cls=nmea.consumers.client.WeatherStationWSClient
+mux.01.reader=nmea.consumers.reader.WeatherStationWSReader
+mux.01.properties=weather.station.properties
+``` 
+
+```properties
+ws.uri=ws://192.168.127.127:9876/
+```
+
+###### Summary
+From the `RasPISamples` directory, on its own machine (or not...), use `weather.menu`:
+```javascript
+ $ ./weather.menu
+ N: Start Node server
+ W: Start Weather Station reader
+ D: Start Weather Station dump
+ S: Show processes
+ K: Kill them all
+ Q: Quit
+ You Choose > 
+```
+- Start the node server (including the `WebSocket` server)
+- Then start the Weather Station Reader
+
+Then the NMEA Multiplexer will be able to listen to the WebSocket topic.
 
 ##### And more to come...
 <!--

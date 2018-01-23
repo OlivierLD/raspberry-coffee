@@ -43,7 +43,7 @@ public class WeatherStationWSReader extends NMEAReader {
 				@Override
 				public void onMessage(String mess) {
 //        System.out.println("WS On Message");
-					// TODO Transform into NMEA
+					// Transform into NMEA
 					/*
 					   Received message is like
 					   {  "dir": 350.0,
