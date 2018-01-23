@@ -242,7 +242,7 @@ A small [I2C OLED display](https://www.adafruit.com/product/3527) attached to th
 
 #### Weather Station
 Feed the NMEA Multiplexer with the Weather Station from SwitchDoc labs.
-The code of then project is [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WeatherStation), 
+The code of the project is [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WeatherStation), 
 and an implementation is available [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RasPISamples#weatherstation).
 
 There is a  `custom channel` (aka `consumers`) made out of
