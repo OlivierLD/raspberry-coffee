@@ -157,18 +157,22 @@ public class SunFlower implements RESTRequestManager {
 	}
 
 	private static boolean withAdc = true;
+	private static boolean withPhotocell = false;
 
 	private static int adcChannel =
 			MCP3008Reader.MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008. Default is 0.
+	private static int photocellChannel =
+			MCP3008Reader.MCP3008_input_channels.CH1.ch(); // Between 0 and 7, 8 channels on the MCP3008. Default is 1.
 
-	private static final String WITH_ADC_PREFIX = "--with-adc:";
+	private static final String WITH_ADC_PREFIX       = "--with-adc:";
+	private static final String WITH_PHOTOCELL_PREFIX = "--with-photocell:"; // TODO Implement
 
 	private static final String MISO_PRM_PREFIX = "--miso:";
 	private static final String MOSI_PRM_PREFIX = "--mosi:";
 	private static final String CLK_PRM_PREFIX  =  "--clk:";
 	private static final String CS_PRM_PREFIX   =   "--cs:";
 
-	private static final String BATTERY_CHANNEL_PREFIX = "--battery-channel:";
+	private static final String BATTERY_CHANNEL_PREFIX    = "--battery-channel:";
 	private static final String PHOTO_CELL_CHANNEL_PREFIX = "--photo-cell-channel:"; // TODO Implement
 
 	private static final String HEADING_PREFIX = "--heading:";
@@ -1151,14 +1155,16 @@ public class SunFlower implements RESTRequestManager {
 		tiltServoID = new int[] { 15 };
 
 		System.out.println("---------------------------------------------------");
-		System.out.println(String.format("Usage is java %s %s%s %s%d %s%d %s%d %s%d %s%d %s%s %s%s",
+		System.out.println(String.format("Usage is java %s %s%s %s%s %s%d %s%d %s%d %s%d %s%d %s%d %s%s %s%s",
 				SunFlower.class.getName(),
 				WITH_ADC_PREFIX, "true",
+				WITH_PHOTOCELL_PREFIX, "false",
 				MISO_PRM_PREFIX, PinUtil.findByPin(miso).gpio(),
 				MOSI_PRM_PREFIX, PinUtil.findByPin(mosi).gpio(),
 				CLK_PRM_PREFIX, PinUtil.findByPin(clk).gpio(),
 				CS_PRM_PREFIX, PinUtil.findByPin(cs).gpio(),
 				BATTERY_CHANNEL_PREFIX, adcChannel,
+				PHOTO_CELL_CHANNEL_PREFIX, photocellChannel,
 				HEADING_PREFIX, Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(", ")),
 				TILT_PREFIX, Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(", "))));
 		System.out.println("Values above are default values.");
@@ -1239,12 +1245,29 @@ public class SunFlower implements RESTRequestManager {
 					} catch (NumberFormatException nfe) {
 						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
 					}
+				} else if (prm.startsWith(PHOTO_CELL_CHANNEL_PREFIX)) {
+					String chValue = prm.substring(PHOTO_CELL_CHANNEL_PREFIX.length());
+					try {
+						photocellChannel = Integer.parseInt(chValue);
+						if (photocellChannel > 7 || photocellChannel < 0) {
+							throw new RuntimeException("Channel in [0..7] please");
+						}
+					} catch (NumberFormatException nfe) {
+						System.err.println(String.format("Bad value for %s, must be an integer [%s]", prm, pinValue));
+					}
 				} else if (prm.startsWith(WITH_ADC_PREFIX)) {
 					String adcValue = prm.substring(WITH_ADC_PREFIX.length());
 					try {
 						withAdc = Boolean.valueOf(adcValue);
 					} catch (Exception nfe) {
 						System.err.println(String.format("Bad value for %s, must be a boolean [%s]", prm, adcValue));
+					}
+				} else if (prm.startsWith(WITH_PHOTOCELL_PREFIX)) {
+					String pcValue = prm.substring(WITH_PHOTOCELL_PREFIX.length());
+					try {
+						withPhotocell = Boolean.valueOf(pcValue);
+					} catch (Exception nfe) {
+						System.err.println(String.format("Bad value for %s, must be a boolean [%s]", prm, pcValue));
 					}
 				} else {
 					// What?
