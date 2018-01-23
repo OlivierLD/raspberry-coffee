@@ -165,7 +165,7 @@ public class SunFlower implements RESTRequestManager {
 			MCP3008Reader.MCP3008_input_channels.CH1.ch(); // Between 0 and 7, 8 channels on the MCP3008. Default is 1.
 
 	private static final String WITH_ADC_PREFIX       = "--with-adc:";
-	private static final String WITH_PHOTOCELL_PREFIX = "--with-photocell:"; // TODO Implement
+	private static final String WITH_PHOTOCELL_PREFIX = "--with-photocell:";
 
 	private static final String MISO_PRM_PREFIX = "--miso:";
 	private static final String MOSI_PRM_PREFIX = "--mosi:";
@@ -173,7 +173,7 @@ public class SunFlower implements RESTRequestManager {
 	private static final String CS_PRM_PREFIX   =   "--cs:";
 
 	private static final String BATTERY_CHANNEL_PREFIX    = "--battery-channel:";
-	private static final String PHOTO_CELL_CHANNEL_PREFIX = "--photo-cell-channel:"; // TODO Implement
+	private static final String PHOTO_CELL_CHANNEL_PREFIX = "--photo-cell-channel:";
 
 	private static final String HEADING_PREFIX = "--heading:";
 	private static final String TILT_PREFIX    = "--tilt:";
@@ -786,6 +786,11 @@ public class SunFlower implements RESTRequestManager {
 	/**
 	 * Requires an MCP3008
 	 * @return the voltage of the LiPo battery
+	 *
+	 * For smoothing/damping, use a low pass filter, in a reading loop:
+	 * float filteredValue = 0;
+	 * ...
+	 * filteredValue = (filteredValue * 0.85) + (adc * 0.15);
 	 */
 	public BatteryData getBatteryData() {
 		int adc = 0;
