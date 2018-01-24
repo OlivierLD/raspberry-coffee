@@ -5,7 +5,6 @@ import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -14,28 +13,30 @@ import static utils.TimeUtil.delay;
 /*
  * 3 Axis compass
  */
-public class HMC5883L {
+public class HMC5883L_v1 {
 	private final static int HMC5883L_ADDRESS = 0x1E;
 
 	private final static int HMC5883L_CONTINUOUS_SAMPLING = 0x00;
-	private final static int HMC5883L_SELECT_MODE         = 0x02;
+
+	private final static int HMC5883L_13_GAIN_LSB_GAUSS_1090 = 0x20; // 1.3 gain LSb / Gauss 1090 (default)
+	private final static int HMC5883L_8_SAMPLES_15HZ = 0x70; // Set to 8 samples @ 15Hz.
 
 	private final static int HMC5883L_X_ADR = 0x03;
 	private final static int HMC5883L_Y_ADR = 0x07;
 	private final static int HMC5883L_Z_ADR = 0x05;
 
-	private final static float SCALE = 0.00092F;
+	private final static float SCALE = 0.92f;
 
 	private static boolean verbose = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
 
 	private I2CBus bus;
 	private I2CDevice hcm5883l;
 
-	public HMC5883L() throws I2CFactory.UnsupportedBusNumberException {
+	public HMC5883L_v1() throws I2CFactory.UnsupportedBusNumberException {
 		this(HMC5883L_ADDRESS);
 	}
 
-	public HMC5883L(int address) throws I2CFactory.UnsupportedBusNumberException {
+	public HMC5883L_v1(int address) throws I2CFactory.UnsupportedBusNumberException {
 		try {
 			// Get i2c bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
@@ -52,14 +53,26 @@ public class HMC5883L {
 		}
 	}
 
-	private short readWord(int reg) throws IOException {
+	// Complement to 2
+	private short readWord_2C(int reg) throws IOException {
 		short w = 0;
-		hcm5883l.write((byte)reg);
-		int low = hcm5883l.read();
-		hcm5883l.write((byte)(reg + 1));
-		int high = hcm5883l.read();
 
-		w = (short)((low & 0xFF) | ((high & 0xFF) << 8));
+		byte high = (byte) (hcm5883l.read(reg) & 0xFF);
+		byte low = (byte) (hcm5883l.read(reg + 1) & 0xFF);
+
+		w = (short) ((((high & 0xFF) << 8) | (low & 0xFF)) & 0xFFFF); // Little endian
+
+		if (w >= 0x8000) {
+			w = (short) -((0xFFFF - w) + 1);
+		}
+
+		if (verbose) {
+			System.out.println(String.format("ReadWord: 0x%s << 8 | 0x%s => 0x%s, dec: %d",
+					Integer.toHexString(high & 0xFF).toUpperCase(),
+					Integer.toHexString(low & 0xFF).toUpperCase(),
+					Integer.toHexString(w).toUpperCase(),
+					w));
+		}
 		return w;
 	}
 
@@ -70,9 +83,14 @@ public class HMC5883L {
 	public double readHeading() throws IOException {
 		double heading = 0f;
 
-		double xOut = readWord(HMC5883L_X_ADR) * SCALE;
-		double yOut = readWord(HMC5883L_Y_ADR) * SCALE;
-		double zOut = readWord(HMC5883L_Z_ADR) * SCALE;
+		byte[] w = new byte[]{(byte) HMC5883L_8_SAMPLES_15HZ,
+				(byte) HMC5883L_13_GAIN_LSB_GAUSS_1090,
+				(byte) HMC5883L_CONTINUOUS_SAMPLING};
+		hcm5883l.write(w, 0, 3); // BeginTrans, write 3 bytes, EndTrans.
+
+		double xOut = readWord_2C(HMC5883L_X_ADR) * SCALE;
+		double yOut = readWord_2C(HMC5883L_Y_ADR) * SCALE;
+		double zOut = readWord_2C(HMC5883L_Z_ADR) * SCALE;
 
 		if (verbose) {
 			System.out.println("xOut:" + xOut);
@@ -90,15 +108,7 @@ public class HMC5883L {
 		if (heading < 0) {
 			heading += (2 * Math.PI);
 		}
-		if (heading > (2 * Math.PI)) {
-			heading -= (2 * Math.PI);
-		}
 		return heading;
-	}
-
-	public void init() throws IOException {
-		hcm5883l.write((byte)HMC5883L_SELECT_MODE);
-		hcm5883l.write((byte)HMC5883L_CONTINUOUS_SAMPLING);
 	}
 
 	public void close() {
@@ -114,11 +124,9 @@ public class HMC5883L {
 		go = b;
 	}
 
-	public static void main(String... args)
-			throws I2CFactory.UnsupportedBusNumberException,
-						 IOException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		final NumberFormat NF = new DecimalFormat("##00.00");
-		HMC5883L sensor = new HMC5883L();
+		HMC5883L_v1 sensor = new HMC5883L_v1();
 		double hdg = 0;
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -128,8 +136,6 @@ public class HMC5883L {
 				delay(1_000L);
 			}
 		}));
-
-		sensor.init();
 
 		while (go) {
 			try {
