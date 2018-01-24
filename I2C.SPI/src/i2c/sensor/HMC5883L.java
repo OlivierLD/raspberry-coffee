@@ -68,7 +68,6 @@ public class HMC5883L {
 	 * @throws IOException
 	 */
 	public double readHeading() throws IOException {
-		double heading = 0f;
 
 		double xOut = readWord(HMC5883L_X_ADR) * SCALE;
 		double yOut = readWord(HMC5883L_Y_ADR) * SCALE;
@@ -86,7 +85,7 @@ public class HMC5883L {
 			System.out.println(String.format("Roll   : %f", Math.toDegrees(Math.atan2(xOut, zOut))));
 		}
 
-		heading = Math.atan2(yOut, xOut);
+		double heading = Math.atan2(yOut, xOut);
 		if (heading < 0) {
 			heading += (2 * Math.PI);
 		}
