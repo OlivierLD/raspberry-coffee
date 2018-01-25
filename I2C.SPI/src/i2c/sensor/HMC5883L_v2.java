@@ -13,8 +13,7 @@ import static utils.TimeUtil.delay;
 /**
  * 3 Axis compass
  *
- * @Deprecated
- * This PCB is no longer produced...
+ * Does not work
  */
 public class HMC5883L_v2 {
 	private final static int HMC5883L_ADDRESS = 0x1E;

@@ -47,7 +47,7 @@ public class LSM303 {
    */
 	// Those 2 next addresses are returned by "sudo i2cdetect -y 1", see above.
 	public final static int LSM303_ADDRESS_ACCEL = (0x32 >> 1); // 0011001x, 0x19
-	public final static int LSM303_ADDRESS_MAG = (0x3C >> 1);   // 0011110x, 0x1E
+	public final static int LSM303_ADDRESS_MAG   = (0x3C >> 1); // 0011110x, 0x1E <- that is an HMC5883L !
 	// Default    Type
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG1_A = 0x20; // 00000111   rw
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG4_A = 0x23; // 00000000   rw
@@ -346,7 +346,9 @@ public class LSM303 {
 	private static int accel12(byte[] list, int idx) {
 //	int n = (list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8); // Low, high bytes
 		int n = ((list[idx + 1] & 0xFF) << 8) | (list[idx] & 0xFF); // Low, high bytes
-		if (n > 32767) n -= 65536;              // 2's complement signed
+		if (n > 32767) {
+			n -= 65536;              // 2's complement signed
+		}
 		return n >> 4;                          // 12-bit resolution
 	}
 
