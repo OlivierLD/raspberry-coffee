@@ -22,7 +22,7 @@ import org.json.JSONObject;
  * See doc at https://io.adafruit.com/api/docs/#!/Feeds/all
  */
 public class HttpClient {
-	private final static boolean DEBUG = false;
+	private final static boolean DEBUG = "true".equals(System.getProperty("rest.debug"));
 
 	public static String doGet(String urlStr, Map<String, String> headers) throws Exception {
 		int responseCode = 0;
@@ -95,6 +95,29 @@ public class HttpClient {
 
 		responseCode = conn.getResponseCode();
 
+		// response payload ?
+		InputStream is = conn.getInputStream();
+		byte aByte[] = new byte[2];
+		int nBytes;
+
+		byte content[] = null;
+		int nbLoop = 1;
+		long started = System.currentTimeMillis();
+
+		while ((nBytes = is.read(aByte, 0, 1)) != -1) {
+			content = appendByte(content, aByte[0]);
+			if (content.length > (nbLoop * 1_000)) {
+				long now = System.currentTimeMillis();
+				long delta = now - started;
+				double rate = (double) content.length / ((double) delta / 1_000D);
+				if (DEBUG) System.out.println("Downloading at " + rate + " bytes per second.");
+				nbLoop++;
+			}
+		}
+		conn.disconnect();
+		String postContent = new String(content);
+		System.out.println(String.format("POST returns %s",  postContent));
+
 		return responseCode;
 	}
 
@@ -156,7 +179,7 @@ public class HttpClient {
 		url += "/data";
 		JSONObject off = new JSONObject();
 		off.put("value", lastValue.equals("ON") ? "OFF" : "ON");
-		System.out.println("Sending " + off.toString(2));
+		System.out.println("POSTing " + off.toString(2) + " to " + url);
 		int httpCode = HttpClient.doPost(url, headers, off.toString());
 		System.out.println("POST Ret:" + httpCode);
 
@@ -168,6 +191,7 @@ public class HttpClient {
 		System.out.println("Read OK");
 		if (DEBUG) System.out.println("GET\n" + content);
 		JSONObject tempData = new JSONObject(content);
+		System.out.println(tempData.toString(2));
 		System.out.println("Last temp:" + tempData.getDouble("last_value") + "\272C");
 
 		try {
@@ -181,6 +205,13 @@ public class HttpClient {
 				JSONObject js = data.getJSONObject(i);
 				System.out.println("Value:" + js.getDouble("value") + "\272C at " + js.getString("updated_at"));
 			}
+			// Updating
+			JSONObject newTemp = new JSONObject();
+			newTemp.put("value", tempData.getDouble("last_value") + 0.1);
+			System.out.println("POSTing " + newTemp.toString(2) + " to " + url);
+			httpCode = HttpClient.doPost(url, headers, newTemp.toString());
+			System.out.println("POST Ret:" + httpCode);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

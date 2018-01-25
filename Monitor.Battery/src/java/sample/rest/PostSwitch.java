@@ -3,8 +3,6 @@ package sample.rest;
 import adafruit.io.rest.HttpClient;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
