@@ -10,30 +10,14 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import static utils.TimeUtil.delay;
-
 /*
  * 3 Axis compass
  */
 public class HMC5883L {
 	private final static int HMC5883L_ADDRESS = 0x1E;
 
-
-	public final static int HMC5883L_REGISTER_CRB_REG_M = 0x01;
 	public final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
 	public final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
-
-	// Gain settings for setMagGain()
-	public final static int HMC5883L_GAIN_1_3 = 0x20; // +/- 1.3
-	public final static int HMC5883L_GAIN_1_9 = 0x40; // +/- 1.9
-	public final static int HMC5883L_GAIN_2_5 = 0x60; // +/- 2.5
-	public final static int HMC5883L_GAIN_4_0 = 0x80; // +/- 4.0
-	public final static int HMC5883L_GAIN_4_7 = 0xA0; // +/- 4.7
-	public final static int HMC5883L_GAIN_5_6 = 0xC0; // +/- 5.6
-	public final static int HMC5883L_GAIN_8_1 = 0xE0; // +/- 8.1
-
-//	private static float _hmc5883l_Gauss_LSB_XY = 1100.0F;  // Varies with gain
-//	private static float _hmc5882l_Gauss_LSB_Z = 980.0F;  // Varies with gain
 
 	private I2CBus bus;
 	private I2CDevice magnetometer = null;
@@ -42,48 +26,11 @@ public class HMC5883L {
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
 	private static boolean verbose = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
 	private static boolean verboseRaw = "true".equals(System.getProperty("hmc5883l.verbose.raw", "false"));
-
 	private static boolean verboseMag = "true".equals(System.getProperty("hmc5883l.verbose.mag", "false"));
-
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
 
 	private long wait = 1_000L;
-
-//	private void setMagGain(int gain) throws IOException {
-//		magnetometer.write(HMC5883L_REGISTER_CRB_REG_M, (byte) gain);
-//
-//		switch (gain) {
-//			case HMC5883L_GAIN_1_3:
-//				_hmc5883l_Gauss_LSB_XY = 1_100F;
-//				_hmc5882l_Gauss_LSB_Z = 980F;
-//				break;
-//			case HMC5883L_GAIN_1_9:
-//				_hmc5883l_Gauss_LSB_XY = 855F;
-//				_hmc5882l_Gauss_LSB_Z = 760F;
-//				break;
-//			case HMC5883L_GAIN_2_5:
-//				_hmc5883l_Gauss_LSB_XY = 670F;
-//				_hmc5882l_Gauss_LSB_Z = 600F;
-//				break;
-//			case HMC5883L_GAIN_4_0:
-//				_hmc5883l_Gauss_LSB_XY = 450F;
-//				_hmc5882l_Gauss_LSB_Z = 400F;
-//				break;
-//			case HMC5883L_GAIN_4_7:
-//				_hmc5883l_Gauss_LSB_XY = 400F;
-//				_hmc5882l_Gauss_LSB_Z = 355F;
-//				break;
-//			case HMC5883L_GAIN_5_6:
-//				_hmc5883l_Gauss_LSB_XY = 330F;
-//				_hmc5882l_Gauss_LSB_Z = 295F;
-//				break;
-//			case HMC5883L_GAIN_8_1:
-//				_hmc5883l_Gauss_LSB_XY = 230F;
-//				_hmc5882l_Gauss_LSB_Z = 205F;
-//				break;
-//		}
-//	}
 
 	public HMC5883L() throws I2CFactory.UnsupportedBusNumberException, IOException {
 		if (verbose) {
@@ -103,17 +50,13 @@ public class HMC5883L {
 		/*
 		 * Start sensing
 		 */
-		// Enable magnetometer
 		if (magnetometer != null) {
 			magnetometer.write(HMC5883L_REGISTER_MR_REG_M, (byte) 0x00);
 
-			int gain = HMC5883L_GAIN_1_3;
-//		setMagGain(gain);
 			if (verbose) {
 				System.out.println("Magnetometer OK.");
 			}
 		}
-
 		startReading();
 	}
 
@@ -170,10 +113,7 @@ public class HMC5883L {
 			magData = new byte[6];
 
 			int accelX = 0, accelY = 0, accelZ = 0;
-			float accX = 0, accY = 0, accZ = 0;
 			int magX = 0, magY = 0, magZ = 0;
-			double pitchDegrees = 0d, rollDegrees = 0d;
-			float heading = 0;
 
 			// Request magnetometer measurements.
 			if (magnetometer != null) {
@@ -194,8 +134,12 @@ public class HMC5883L {
 				while (heading < 0) {
 					heading += 360f;
 				}
-
 				setHeading(heading);
+
+				pitch = Math.toDegrees(Math.atan2((double) magY, (double) magZ));
+				setPitch(pitch);
+				roll = Math.toDegrees(Math.atan2((double) magX, (double) magZ));
+				setRoll(roll);
 			}
 			if (verboseMag) {
 				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
@@ -221,8 +165,8 @@ public class HMC5883L {
 	}
 
 	private static int mag16(byte[] list, int idx) {
-		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF);   // High, low bytes
-		return (n < 32768 ? n : n - 65536);                           // 2's complement signed
+		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF); // High, low bytes
+		return (n < 32768 ? n : n - 65536);                         // 2's complement signed
 	}
 
 	private static void dumpBytes(byte[] ba, int len) {
