@@ -241,7 +241,7 @@ just need to create your free account, and remember your Token.
 To access MQTT from Java, I use [paho](http://www.eclipse.org/paho/), as you can see in the `dependencies`
 section of the `build.gradle` file of this project.
 
-> Note: As far as I can tell, if you are behind a firewall, you will hve troubles with MQTT.
+> Note: As far as I can tell, if you are behind a firewall, you will have troubles with MQTT.
 > Several MQTT servers (like Adafruit.IO) also provide a REST interface; REST relying on HTTP,
 > setting the `http.proxyHost` and `http.proxyPort` allows you to access your server, and thus to feed
 > it appropriately. See [Using REST](#using-rest).
@@ -354,11 +354,11 @@ The switch toggles just like with MQTT.
 Interestingly, the MQTT subscriber mentioned above (`aio.subscribe`) also works when the switch has been fed with REST.
 
 #### IoT for Real
-Just like we said before, a feed named `battery-pi` has been created on Adafruit.IO:
+Just like we said before, if a feed named `battery-pi` has been created on Adafruit.IO:
 
 <img src='./battery-feed.png' alt='Battery feed' title='Battery feed' width='432' height='426'>
 
-For all the samples below, you do not need a FONA. Just a connection to the Internet (Wireless or Ethernet).
+For all the samples below, you do *not* need a FONA. Just a connection to the Internet (Wireless or Ethernet).
 
 ###### MQTT
 ```bash
