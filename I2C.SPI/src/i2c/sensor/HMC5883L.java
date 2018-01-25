@@ -20,9 +20,12 @@ public class HMC5883L {
 	private final static int HMC5883L_CONTINUOUS_SAMPLING = 0x00;
 	private final static int HMC5883L_SELECT_MODE         = 0x02;
 
-	private final static int HMC5883L_X_ADR = 0x03;
-	private final static int HMC5883L_Y_ADR = 0x07;
-	private final static int HMC5883L_Z_ADR = 0x05;
+	private final static int HMC5883L_X_ADR_0 = 0x03;
+	private final static int HMC5883L_X_ADR_1 = 0x04;
+	private final static int HMC5883L_Y_ADR_0 = 0x07;
+	private final static int HMC5883L_Y_ADR_1 = 0x08;
+	private final static int HMC5883L_Z_ADR_0 = 0x05;
+	private final static int HMC5883L_Z_ADR_1 = 0x06;
 
 	private final static float SCALE = 0.00092F;
 
@@ -52,26 +55,37 @@ public class HMC5883L {
 		}
 	}
 
-	private short readWord(int reg) throws IOException {
-		short w = 0;
-		hcm5883l.write((byte)reg);
-		int low = hcm5883l.read();
-		hcm5883l.write((byte)(reg + 1));
-		int high = hcm5883l.read();
-
-		w = (short)((low & 0xFF) | ((high & 0xFF) << 8));
-		return w;
-	}
-
 	/**
-	 * @return Heading in Radians
+	 * @return Heading in Radians - MAGNETIC Heading.
 	 * @throws IOException
 	 */
 	public double readHeading() throws IOException {
 
-		double xOut = readWord(HMC5883L_X_ADR) * SCALE;
-		double yOut = readWord(HMC5883L_Y_ADR) * SCALE;
-		double zOut = readWord(HMC5883L_Z_ADR) * SCALE;
+		hcm5883l.write((byte)HMC5883L_X_ADR_1);
+		int low = hcm5883l.read();
+		hcm5883l.write((byte)HMC5883L_X_ADR_0);
+		int high = hcm5883l.read();
+
+		int x = (short)((low & 0xFF) | ((high & 0xFF) << 8));
+
+		hcm5883l.write((byte)HMC5883L_Y_ADR_1);
+		low = hcm5883l.read();
+		hcm5883l.write((byte)HMC5883L_Y_ADR_0);
+		high = hcm5883l.read();
+
+		int y = (short)((low & 0xFF) | ((high & 0xFF) << 8));
+
+		hcm5883l.write((byte)HMC5883L_Z_ADR_1);
+		low = hcm5883l.read();
+		hcm5883l.write((byte)HMC5883L_Z_ADR_0);
+		high = hcm5883l.read();
+
+		int z = (short)((low & 0xFF) | ((high & 0xFF) << 8));
+
+
+		double xOut = x * SCALE;
+		double yOut = y * SCALE;
+		double zOut = z * SCALE;
 
 		if (verbose) {
 			System.out.println("xOut:" + xOut);
