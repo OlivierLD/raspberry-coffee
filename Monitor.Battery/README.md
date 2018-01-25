@@ -241,6 +241,11 @@ just need to create your free account, and remember your Token.
 To access MQTT from Java, I use [paho](http://www.eclipse.org/paho/), as you can see in the `dependencies`
 section of the `build.gradle` file of this project.
 
+> Note: As far as I can tell, if you are behind a firewall, you will hve troubles with MQTT.
+> Several MQTT servers (like Adafruit.IO) also provide a REST interface; REST relying on HTTP,
+> setting the `http.proxyHost` and `http.proxyPort` allows you to access your server, and thus to feed
+> it appropriately. See [Using REST](#using-rest).
+
 An MQTT server like `Mosquitto` is also perfectly suited for a LAN configuration.
 
 ##### Pros
