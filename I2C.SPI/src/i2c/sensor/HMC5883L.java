@@ -130,7 +130,7 @@ public class HMC5883L {
 				magZ = mag16(magData, 2); // Yes, Z
 				magY = mag16(magData, 4); // Then Y
 
-				heading = (float) Math.toDegrees(Math.atan2((double) magY, (double) magX));
+				heading = (float) Math.toDegrees(Math.atan2((double) magY, (double) magX) * 0.92);
 				while (heading < 0) {
 					heading += 360f;
 				}
