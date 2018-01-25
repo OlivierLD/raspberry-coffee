@@ -19,6 +19,8 @@ public class HMC5883L {
 	public final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
 	public final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
 
+	private final static float SCALE = 0.92F; // 0.00092
+
 	private I2CBus bus;
 	private I2CDevice magnetometer = null;
 	private byte[] magData;
@@ -112,7 +114,6 @@ public class HMC5883L {
 		while (keepReading) {
 			magData = new byte[6];
 
-//		int accelX = 0, accelY = 0, accelZ = 0;
 			double magX = 0, magY = 0, magZ = 0;
 
 			// Request magnetometer measurements.
@@ -126,9 +127,9 @@ public class HMC5883L {
 					dumpBytes(magData, 6);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
-				magX = mag16(magData, 0) * 0.00092;
-				magZ = mag16(magData, 2) * 0.00092; // Yes, Z
-				magY = mag16(magData, 4) * 0.00092; // Then Y
+				magX = mag16(magData, 0) * SCALE;
+				magZ = mag16(magData, 2) * SCALE; // Yes, Z
+				magY = mag16(magData, 4) * SCALE; // Then Y
 
 				heading = (float) Math.toDegrees(Math.atan2((double) magY, (double) magX));
 				while (heading < 0) {
