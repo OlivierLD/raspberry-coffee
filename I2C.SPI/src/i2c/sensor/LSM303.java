@@ -84,12 +84,11 @@ public class LSM303 {
 	private byte[] accelData, magData;
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
-	private static boolean verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
+	private static boolean verbose    = "true".equals(System.getProperty("lsm303.verbose", "false"));
 	private static boolean verboseRaw = "true".equals(System.getProperty("lsm303.verbose.raw", "false"));
 
 	private static boolean verboseAcc = "true".equals(System.getProperty("lsm303.verbose.acc", "false"));
 	private static boolean verboseMag = "true".equals(System.getProperty("lsm303.verbose.mag", "false"));
-
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
 
@@ -303,10 +302,11 @@ public class LSM303 {
 					dumpBytes(magData, 6);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
-				magX = mag16(magData, 0);
+				magX = mag16(magData, 0); // TODO * 0.92 ?
 				magZ = mag16(magData, 2); // Yes, Z
 				magY = mag16(magData, 4); // Then Y
 
+				// TODO See that...
 //		  float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //		  float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //		  float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;

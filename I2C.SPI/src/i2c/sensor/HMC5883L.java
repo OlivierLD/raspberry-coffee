@@ -19,14 +19,14 @@ public class HMC5883L {
 	public final static int HMC5883L_REGISTER_MR_REG_M  = 0x02;
 	public final static int HMC5883L_REGISTER_OUT_X_H_M = 0x03;
 
-	private final static float SCALE = 0.92F; // 0.00092
+	private final static float SCALE = 0.92F;
 
 	private I2CBus bus;
-	private I2CDevice magnetometer = null;
+	private I2CDevice magnetometer;
 	private byte[] magData;
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
-	private static boolean verbose = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
+	private static boolean verbose    = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
 	private static boolean verboseRaw = "true".equals(System.getProperty("hmc5883l.verbose.raw", "false"));
 	private static boolean verboseMag = "true".equals(System.getProperty("hmc5883l.verbose.mag", "false"));
 
@@ -137,14 +137,14 @@ public class HMC5883L {
 				}
 				setHeading(heading);
 
-				pitch = Math.toDegrees(Math.atan2((double) magY, (double) magZ));
+				pitch = Math.toDegrees(Math.atan2((double) magY, (double) magZ)); // See how it's done in LSM303...
 				setPitch(pitch);
 				roll = Math.toDegrees(Math.atan2((double) magX, (double) magZ));
 				setRoll(roll);
 			}
-//			if (verboseMag) {
-//				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
-//			}
+//		if (verboseMag) {
+//			System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
+//		}
 
 			if (verboseRaw) {
 				System.out.println(String.format("RawMag (XYZ) (%d, %d, %d)", magX, magY, magZ));
