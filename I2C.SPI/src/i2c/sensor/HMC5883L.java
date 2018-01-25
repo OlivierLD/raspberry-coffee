@@ -112,8 +112,8 @@ public class HMC5883L {
 		while (keepReading) {
 			magData = new byte[6];
 
-			int accelX = 0, accelY = 0, accelZ = 0;
-			int magX = 0, magY = 0, magZ = 0;
+//		int accelX = 0, accelY = 0, accelZ = 0;
+			double magX = 0, magY = 0, magZ = 0;
 
 			// Request magnetometer measurements.
 			if (magnetometer != null) {
@@ -126,11 +126,11 @@ public class HMC5883L {
 					dumpBytes(magData, 6);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
-				magX = mag16(magData, 0);
-				magZ = mag16(magData, 2); // Yes, Z
-				magY = mag16(magData, 4); // Then Y
+				magX = mag16(magData, 0) * 0.00092;
+				magZ = mag16(magData, 2) * 0.00092; // Yes, Z
+				magY = mag16(magData, 4) * 0.00092; // Then Y
 
-				heading = (float) Math.toDegrees(Math.atan2((double) magY, (double) magX) * 0.92);
+				heading = (float) Math.toDegrees(Math.atan2((double) magY, (double) magX));
 				while (heading < 0) {
 					heading += 360f;
 				}
@@ -141,16 +141,17 @@ public class HMC5883L {
 				roll = Math.toDegrees(Math.atan2((double) magX, (double) magZ));
 				setRoll(roll);
 			}
-			if (verboseMag) {
-				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
-			}
+//			if (verboseMag) {
+//				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
+//			}
 
 			if (verboseRaw) {
-				System.out.println(String.format("RawAcc (XYZ) (%d, %d, %d)\tRawMag (XYZ) (%d, %d, %d)", accelX, accelY, accelZ, magX, magY, magZ));
+				System.out.println(String.format("RawMag (XYZ) (%d, %d, %d)", magX, magY, magZ));
 			}
 
 			if (verbose) {
-				System.out.println(String.format("heading: %s (mag), pitch: %s, roll: %s",
+				System.out.println(String.format(
+						"heading: %s (mag), pitch: %s, roll: %s",
 						Z_FMT.format(heading),
 						Z_FMT.format(pitch),
 						Z_FMT.format(roll)));
