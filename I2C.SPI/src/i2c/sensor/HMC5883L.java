@@ -54,7 +54,6 @@ public class HMC5883L {
 		 */
 		if (magnetometer != null) {
 			magnetometer.write(HMC5883L_REGISTER_MR_REG_M, (byte) 0x00);
-
 			if (verbose) {
 				System.out.println("Magnetometer OK.");
 			}
