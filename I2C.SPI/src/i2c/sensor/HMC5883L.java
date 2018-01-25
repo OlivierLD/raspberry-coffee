@@ -40,10 +40,10 @@ public class HMC5883L {
 	private byte[] magData;
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
-	private static boolean verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
-	private static boolean verboseRaw = "true".equals(System.getProperty("lsm303.verbose.raw", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
+	private static boolean verboseRaw = "true".equals(System.getProperty("hmc5883l.verbose.raw", "false"));
 
-	private static boolean verboseMag = "true".equals(System.getProperty("lsm303.verbose.mag", "false"));
+	private static boolean verboseMag = "true".equals(System.getProperty("hmc5883l.verbose.mag", "false"));
 
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
@@ -241,7 +241,7 @@ public class HMC5883L {
 	 * @throws I2CFactory.UnsupportedBusNumberException
 	 */
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
-		verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
+		verbose = "true".equals(System.getProperty("hmc5883l.verbose", "false"));
 		System.out.println("Verbose: " + verbose);
 		HMC5883L sensor = new HMC5883L();
 
