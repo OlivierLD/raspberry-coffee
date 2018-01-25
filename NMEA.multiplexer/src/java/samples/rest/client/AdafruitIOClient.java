@@ -14,7 +14,7 @@ public class AdafruitIOClient {
 
 	private static String ONOFF_FEED = "onoff";
 	private static String AIR_TEMP   = "air-temperature";
-	private static String ATM_PRESS  = "atm-pressure";
+	private static String ATM_PRESS  = "atm-press";
 	private static String HUMIDITY   = "humidity";
 
 	// TODO Camera, Wind Speed, dir, rain

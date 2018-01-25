@@ -30,10 +30,9 @@ public class StringParsers {
 	private static Map<Integer, SVData> gsvMap = null;
 
 	public static List<StringGenerator.XDRElement> parseXDR(String data) {
-		List<StringGenerator.XDRElement> lxdr = new ArrayList<StringGenerator.XDRElement>();
+		List<StringGenerator.XDRElement> lxdr = new ArrayList<>();
 		String sa[] = data.substring(0, data.indexOf("*")).split(",");
-		if ((sa.length - 1) % 4 != 0) // Mismatch
-		{
+		if ((sa.length - 1) % 4 != 0) { // Mismatch
 			System.out.println("XDR String invalid (" + sa.length + " element(s) found, expected a multiple of 4)");
 			return lxdr;
 		}

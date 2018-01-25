@@ -84,8 +84,7 @@ public class StringGenerator {
       salinity               L           S = ppt                ppt = parts per thousand
    */
 
-	public static enum XDRTypes // Se above for more details
-	{
+	public static enum XDRTypes { // Se above for more details
 		TEMPERATURE("C", "C"), // in Celcius
 		ANGULAR_DISPLACEMENT("A", "D"), // In degrees
 		LINEAR_DISPLACEMENT("D", "M"), // In meters
@@ -120,8 +119,6 @@ public class StringGenerator {
 		}
 	}
 
-	;
-
 	public static class XDRElement {
 		private XDRTypes typeNunit;
 		private double value;
@@ -155,22 +152,28 @@ public class StringGenerator {
 		String xdr = devicePrefix + "XDR,";
 		NumberFormat nf = null;
 		xdr += (first.getTypeNunit().type() + ",");
-		if (first.getTypeNunit().equals(XDRTypes.PRESSURE_B))
+		if (first.getTypeNunit().equals(XDRTypes.PRESSURE_B)) {
 			nf = PRMSL_FMT;
-		if (first.getTypeNunit().equals(XDRTypes.PRESSURE_P))
+		}
+		if (first.getTypeNunit().equals(XDRTypes.PRESSURE_P)) {
 			nf = PRMSL_FMT_2;
-		if (first.getTypeNunit().equals(XDRTypes.TEMPERATURE))
+		}
+		if (first.getTypeNunit().equals(XDRTypes.TEMPERATURE)) {
 			nf = TEMP_FMT;
-		if (first.getTypeNunit().equals(XDRTypes.HUMIDITY))
+		}
+		if (first.getTypeNunit().equals(XDRTypes.HUMIDITY)) {
 			nf = PERCENT_FMT;
-		if (first.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT))
+		}
+		if (first.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT)) {
 			nf = ANGLE_FMT;
+		}
 		// TODO More formats...
 //  System.out.println("XDR Format for [" + first.getTypeNunit() + "] is " + (nf == null?"":"not ") + "null");
-		if (nf != null)
+		if (nf != null) {
 			xdr += (nf.format(first.getValue()) + ",");
-		else
+		} else {
 			xdr += (Double.toString(first.getValue()) + ",");
+		}
 		xdr += (first.getTypeNunit().unit() + ",");
 		xdr += (first.getTransducerName());
 		// xdr += (Integer.toString(nbDevice++));
@@ -178,23 +181,29 @@ public class StringGenerator {
 		for (XDRElement e : next) {
 			nf = null;
 			// TASK More formats
-			if (e.getTypeNunit().equals(XDRTypes.PRESSURE_B))
+			if (e.getTypeNunit().equals(XDRTypes.PRESSURE_B)) {
 				nf = PRMSL_FMT;
-			if (e.getTypeNunit().equals(XDRTypes.PRESSURE_P))
+			}
+			if (e.getTypeNunit().equals(XDRTypes.PRESSURE_P)) {
 				nf = PRMSL_FMT_2;
-			if (e.getTypeNunit().equals(XDRTypes.TEMPERATURE))
+			}
+			if (e.getTypeNunit().equals(XDRTypes.TEMPERATURE)) {
 				nf = TEMP_FMT;
-			if (first.getTypeNunit().equals(XDRTypes.HUMIDITY))
+			}
+			if (first.getTypeNunit().equals(XDRTypes.HUMIDITY)) {
 				nf = PERCENT_FMT;
-			if (first.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT))
+			}
+			if (first.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT)) {
 				nf = ANGLE_FMT;
+			}
 			// TODO More formats...
 			xdr += ("," + e.getTypeNunit().type() + ",");
 //    System.out.println("XDR Format for [" + e.getTypeNunit() + "] is " + (nf == null?"":"not ") + "null");
-			if (nf != null)
+			if (nf != null) {
 				xdr += (nf.format(e.getValue()) + ",");
-			else
+			} else {
 				xdr += (Double.toString(e.getValue()) + ",");
+			}
 			xdr += (e.getTypeNunit().unit() + ",");
 			xdr += (e.getTransducerName());
 //    xdr += (Integer.toString(nbDevice++));

@@ -7,4 +7,5 @@ JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Ddata.logger=weatherstation.logger.DummyLogger"
 # JAVA_OPTS="$JAVA_OPTS -Ddata.logger=weatherstation.logger.MySQLLoggerImpl"
 JAVA_OPTS="$JAVA_OPTS -Dws.log=true"
+# Also -Dws.uri if needed
 java -cp $CP $JAVA_OPTS weatherstation.ws.HomeWeatherStationSimulator
