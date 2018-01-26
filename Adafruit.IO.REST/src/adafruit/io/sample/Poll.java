@@ -13,7 +13,7 @@ public class Poll {
 
 	private static String getFeedValue(String key) throws Exception {
 		String url = "https://io.adafruit.com/api/feeds/" + FEED_NAME;
-		Map<String, String> headers = new HashMap<String, String>(1);
+		Map<String, String> headers = new HashMap<>(1);
 		headers.put("X-AIO-Key", key);
 		String content = HttpClient.doGet(url, headers);
 		if (DEBUG) {
