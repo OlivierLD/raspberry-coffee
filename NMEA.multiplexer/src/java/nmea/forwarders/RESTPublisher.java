@@ -109,10 +109,10 @@ public class RESTPublisher implements Forwarder {
 		String feed = ATM_PRESS;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousHumLog) > INTERVAL) {
+		if (Math.abs(now - previousPressLog) > INTERVAL) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
-				previousHumLog = now;
+				previousPressLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -123,10 +123,10 @@ public class RESTPublisher implements Forwarder {
 		String feed = PRATE;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousHumLog) > INTERVAL) {
+		if (Math.abs(now - previousPRateLog) > INTERVAL) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
-				previousHumLog = now;
+				previousPRateLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -137,10 +137,10 @@ public class RESTPublisher implements Forwarder {
 		String feed = TWS;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousHumLog) > INTERVAL) {
+		if (Math.abs(now - previousTWSLog) > INTERVAL) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
-				previousHumLog = now;
+				previousTWSLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -151,10 +151,10 @@ public class RESTPublisher implements Forwarder {
 		String feed = TWD;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousHumLog) > INTERVAL) {
+		if (Math.abs(now - previousTWDLog) > INTERVAL) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
-				previousHumLog = now;
+				previousTWDLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
