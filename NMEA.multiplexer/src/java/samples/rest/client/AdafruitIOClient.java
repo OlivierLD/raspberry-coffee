@@ -20,7 +20,7 @@ public class AdafruitIOClient {
 	private static String TWD        = "twd";
 	private static String PRATE      = "prate";
 
-	// TODO Camera, rain
+	// TODO Camera
 
 	private static String FEED_TO_USE = PRATE;
 
