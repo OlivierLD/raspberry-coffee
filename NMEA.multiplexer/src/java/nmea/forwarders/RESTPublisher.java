@@ -41,6 +41,9 @@ public class RESTPublisher implements Forwarder {
 	private static String AIR_TEMP   = "air-temperature";
 	private static String ATM_PRESS  = "atm-press";
 	private static String HUMIDITY   = "humidity";
+	private static String TWS        = "tws";
+	private static String TWD        = "twd";
+	private static String PRATE      = "prate";
 
 	private Properties properties;
 
@@ -50,6 +53,9 @@ public class RESTPublisher implements Forwarder {
 	private long previousTempLog = 0;
 	private long previousHumLog = 0;
 	private long previousPressLog = 0;
+	private long previousPRateLog = 0;
+	private long previousTWSLog = 0;
+	private long previousTWDLog = 0;
 
 	/*
 	 * @throws Exception
@@ -71,6 +77,90 @@ public class RESTPublisher implements Forwarder {
 		}
 	}
 
+	private void logAirTemp(double value) {
+		String feed = AIR_TEMP;
+		String url = this.properties.getProperty("aio.url");
+		long now = System.currentTimeMillis();
+		if (Math.abs(now - previousTempLog) > INTERVAL) {
+			try {
+				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				previousTempLog = now;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private void logHumidity(double value) {
+		String feed = HUMIDITY;
+		String url = this.properties.getProperty("aio.url");
+		long now = System.currentTimeMillis();
+		if (Math.abs(now - previousHumLog) > INTERVAL) {
+			try {
+				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				previousHumLog = now;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private void logPressure(double value) {
+		String feed = ATM_PRESS;
+		String url = this.properties.getProperty("aio.url");
+		long now = System.currentTimeMillis();
+		if (Math.abs(now - previousHumLog) > INTERVAL) {
+			try {
+				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				previousHumLog = now;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private void logPRate(double value) {
+		String feed = PRATE;
+		String url = this.properties.getProperty("aio.url");
+		long now = System.currentTimeMillis();
+		if (Math.abs(now - previousHumLog) > INTERVAL) {
+			try {
+				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				previousHumLog = now;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private void logTWS(double value) {
+		String feed = TWS;
+		String url = this.properties.getProperty("aio.url");
+		long now = System.currentTimeMillis();
+		if (Math.abs(now - previousHumLog) > INTERVAL) {
+			try {
+				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				previousHumLog = now;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private void logTWD(double value) {
+		String feed = TWD;
+		String url = this.properties.getProperty("aio.url");
+		long now = System.currentTimeMillis();
+		if (Math.abs(now - previousHumLog) > INTERVAL) {
+			try {
+				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				previousHumLog = now;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 	@Override
 	public void write(byte[] message) {
 		String str = new String(message);
@@ -87,47 +177,35 @@ public class RESTPublisher implements Forwarder {
 //						mda.pressBar * 1_000,
 //						mda.windDirM,
 //						mda.windSpeedK));
+				if (mda.relHum != null) {
+					logHumidity(mda.relHum);
+				}
+				if (mda.airT != null) {
+					logAirTemp(mda.airT);
+				}
+				if (mda.pressBar != null) {
+					logPressure(mda.pressBar * 1_000);
+				}
+				if (mda.windDirM != null) {
+					logTWD(mda.windDirM);
+				}
+				if (mda.windSpeedK != null) {
+					logTWS(mda.windSpeedK);
+				}
 			} else if ("XDR".equals(sentenceId)) {
 				List<StringGenerator.XDRElement> xdrElements = StringParsers.parseXDR(str);
 				xdrElements.stream().forEach(xdr -> {
 //				System.out.println(String.format("XDR: %s -> %s", xdr.getTypeNunit(), xdr.toString()));
 					String url = this.properties.getProperty("aio.url");
 					if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.TEMPERATURE)) {
-						String feed = AIR_TEMP;
-						long now = System.currentTimeMillis();
-						if (Math.abs(now - previousTempLog) > INTERVAL) {
-							try {
-								setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(xdr.getValue()));
-								previousTempLog = now;
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-						}
+						logAirTemp(xdr.getValue());
 					} else if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.HUMIDITY)) {
-						String feed = HUMIDITY;
-						long now = System.currentTimeMillis();
-						if (Math.abs(now - previousHumLog) > INTERVAL) {
-							try {
-								setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(xdr.getValue()));
-								previousHumLog = now;
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-						}
+						logHumidity(xdr.getValue());
 					} else if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.PRESSURE_P)) {
-						String feed = ATM_PRESS;
-						long now = System.currentTimeMillis();
-						if (Math.abs(now - previousPressLog) > INTERVAL) {
-							try {
-								setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(xdr.getValue() / 100));
-								previousPressLog = now;
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-						}
+						logPressure(xdr.getValue() / 100);
 					}
 				});
-			}
+			} // TODO PRate
 		}
 	}
 

@@ -16,10 +16,13 @@ public class AdafruitIOClient {
 	private static String AIR_TEMP   = "air-temperature";
 	private static String ATM_PRESS  = "atm-press";
 	private static String HUMIDITY   = "humidity";
+	private static String TWS        = "tws";
+	private static String TWD        = "twd";
+	private static String PRATE      = "prate";
 
-	// TODO Camera, Wind Speed, dir, rain
+	// TODO Camera, rain
 
-	private static String FEED_TO_USE = AIR_TEMP;
+	private static String FEED_TO_USE = PRATE;
 
 	private boolean DEBUG = true;
 
