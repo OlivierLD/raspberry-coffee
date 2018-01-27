@@ -57,7 +57,7 @@ public class OLEDKeypadAndMultiSensor {
 	private static int relayThreshold = 50;
 
 	// This one overrides the default pins for the OLED
-	public OLEDKeypadAndMultiSensor() throws I2CFactory.UnsupportedBusNumberException {
+	public OLEDKeypadAndMultiSensor() throws I2CFactory.UnsupportedBusNumberException, IOException {
 		// Relay
 		try {
 			rm = new OneRelayManager();
@@ -104,7 +104,7 @@ public class OLEDKeypadAndMultiSensor {
 
 		// First sensor readings
 		try {
-			double hdg = magnetometer.readHeading();
+			double hdg = magnetometer.getHeading();
 			displayHdg(hdg);
 			float[] data = ptSensor.measure();
 			displayPT(data[MPL115A2.PRESSURE_IDX],
@@ -138,18 +138,18 @@ public class OLEDKeypadAndMultiSensor {
 			public void run() {
 				while (keepReading) {
 					try {
-						double hdg = magnetometer.readHeading();
+						double hdg = magnetometer.getHeading();
 						displayHdg(hdg);
 						try {
 							Thread.sleep(500L);
 						} catch (Exception ex) {
 						}
-					} catch (IOException ioe) {
+					} catch (Exception ioe) {
 						ioe.printStackTrace();
 					}
 				}
 				System.out.println("hdgThread completed");
-				magnetometer.close();
+//			magnetometer.close();
 			}
 		};
 		ptThread.start();
@@ -357,7 +357,7 @@ public class OLEDKeypadAndMultiSensor {
 		}
 	}
 
-	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		if (args.length > 0) {
 			try {
 				relayThreshold = Integer.parseInt(args[0]);

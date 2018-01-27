@@ -47,6 +47,8 @@ import java.util.List;
  * <p>
  * Use -Dws.verbose=true for more output.
  * Use -Ddata.logger=<LoggerClassName> for logging
+ *
+ * LoggerClassName must implement the LoggerInterface
  */
 public class HomeWeatherStation {
 	private static boolean go = true;
