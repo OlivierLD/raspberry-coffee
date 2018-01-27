@@ -4,7 +4,6 @@ import http.client.HTTPClient;
 import nmea.parser.StringGenerator;
 import nmea.parser.StringParsers;
 import org.json.JSONObject;
-import util.TextToSpeech;
 
 import java.util.HashMap;
 import java.util.List;
@@ -203,9 +202,11 @@ public class RESTPublisher implements Forwarder {
 						logHumidity(xdr.getValue());
 					} else if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.PRESSURE_P)) {
 						logPressure(xdr.getValue() / 100);
+					} else if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.GENERIC)) { // Gonflé...
+						logPRate(xdr.getValue());
 					}
 				});
-			} // TODO PRate
+			}
 		}
 	}
 
