@@ -70,7 +70,7 @@ public class WeatherStationWSReader extends NMEAReader {
 					double press  = json.get("press").getAsDouble();
 					double temp   = json.get("temp").getAsDouble();
 
-					int deviceIdx = 0; // Instead of "BME280"...
+					int deviceIdx = 0; // Instead of "BME280" or so...
 					String nmeaXDR = StringGenerator.generateXDR(DEVICE_PREFIX,
 							new StringGenerator.XDRElement(StringGenerator.XDRTypes.HUMIDITY,
 									hum,
@@ -78,8 +78,11 @@ public class WeatherStationWSReader extends NMEAReader {
 							new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
 									temp,
 									String.valueOf(deviceIdx++)), // Celcius, Temperature
-							new StringGenerator.XDRElement(StringGenerator.XDRTypes.PRESSURE_P,
-									press,
+							new StringGenerator.XDRElement(StringGenerator.XDRTypes.TEMPERATURE,
+									temp,
+									String.valueOf(deviceIdx++)), // mm/h, Rain
+							new StringGenerator.XDRElement(StringGenerator.XDRTypes.GENERIC,
+									rain,
 									String.valueOf(deviceIdx++))); // Pascal, pressure
 					nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 					fireDataRead(new NMEAEvent(this, nmeaXDR));

@@ -16,6 +16,7 @@ public class StringGenerator {
 	}
 	private static final SimpleDateFormat SDF_TIME = new SimpleDateFormat("HHmmss");
 	private static final SimpleDateFormat SDF_DATE = new SimpleDateFormat("ddMMyy");
+
 	private final static NumberFormat LAT_DEG_FMT = new DecimalFormat("00");
 	private final static NumberFormat LONG_DEG_FMT = new DecimalFormat("000");
 	private final static NumberFormat MIN_FMT = new DecimalFormat("00.000");
@@ -30,11 +31,12 @@ public class StringGenerator {
 	private final static NumberFormat SPEED_FMT_2 = new DecimalFormat("#0.00");
 	private final static NumberFormat ANGLE_FMT = new DecimalFormat("##0");
 
-
 	private final static NumberFormat PRMSL_FMT_MDA = new DecimalFormat("##0.000");
 
+	private final static NumberFormat GENERIC_1_FMT = new DecimalFormat("##0.0000");
+
 	private final static double KNOTS_TO_KMH = 1.852;
-	private final static double KNOTS_TO_MS = 1.852 * 0.27777777;
+	private final static double KNOTS_TO_MS  = 1.852 * 0.27777777;
 
 /*
  * Common talker IDs
@@ -84,7 +86,7 @@ public class StringGenerator {
       salinity               L           S = ppt                ppt = parts per thousand
    */
 
-	public static enum XDRTypes { // Se above for more details
+	public enum XDRTypes { // Se above for more details
 		TEMPERATURE("C", "C"), // in Celcius
 		ANGULAR_DISPLACEMENT("A", "D"), // In degrees
 		LINEAR_DISPLACEMENT("D", "M"), // In meters
@@ -167,7 +169,10 @@ public class StringGenerator {
 		if (first.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT)) {
 			nf = ANGLE_FMT;
 		}
-		// TODO More formats...
+		if (first.getTypeNunit().equals(XDRTypes.GENERIC)) {
+			nf = GENERIC_1_FMT;
+		}
+		// TODO More formats as needed...
 //  System.out.println("XDR Format for [" + first.getTypeNunit() + "] is " + (nf == null?"":"not ") + "null");
 		if (nf != null) {
 			xdr += (nf.format(first.getValue()) + ",");
@@ -196,6 +201,9 @@ public class StringGenerator {
 			if (first.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT)) {
 				nf = ANGLE_FMT;
 			}
+			if (first.getTypeNunit().equals(XDRTypes.GENERIC)) {
+				nf = GENERIC_1_FMT;
+			}
 			// TODO More formats...
 			xdr += ("," + e.getTypeNunit().type() + ",");
 //    System.out.println("XDR Format for [" + e.getTypeNunit() + "] is " + (nf == null?"":"not ") + "null");
@@ -207,7 +215,6 @@ public class StringGenerator {
 			xdr += (e.getTypeNunit().unit() + ",");
 			xdr += (e.getTransducerName());
 //    xdr += (Integer.toString(nbDevice++));
-
 		}
 		// Checksum
 		int cs = StringParsers.calculateCheckSum(xdr);
