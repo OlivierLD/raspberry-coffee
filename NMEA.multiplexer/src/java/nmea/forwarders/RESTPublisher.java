@@ -48,7 +48,7 @@ public class RESTPublisher implements Forwarder {
 
 	private final static long ONE_MINUTE = 60 * 1_000;
 
-	private long INTERVAL = ONE_MINUTE;
+	private final static long INTERVAL = ONE_MINUTE;
 	private long previousTempLog = 0;
 	private long previousHumLog = 0;
 	private long previousPressLog = 0;

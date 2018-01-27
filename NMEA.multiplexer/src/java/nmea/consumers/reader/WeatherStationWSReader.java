@@ -22,7 +22,7 @@ public class WeatherStationWSReader extends NMEAReader {
 	private WeatherStationWSReader instance = this;
 	private String wsUri;
 
-	private final static String DEVICE_PREFIX = "WS";
+	private final static String DEVICE_PREFIX = "WS"; // Weather Station
 
 	public WeatherStationWSReader(List<NMEAListener> al) {
 		this(al, (Properties)null);

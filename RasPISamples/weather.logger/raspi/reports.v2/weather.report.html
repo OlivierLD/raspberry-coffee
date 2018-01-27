@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <!-- Home location is 
+  <!-- Home location is
        37.74888723023488N,122.50712603330612W
    +-->
   <head>
@@ -158,18 +158,18 @@ var displayScale = 0.75;
 var displayTWD, displayTWS, displayPRMSL, displayRain, displayTemp, graph, map;
 var withTWD = true;
 var dataType = "";
- 
+
 window.onload = function() {
   displayTWD   = new Direction('twdCanvas', 100 * displayScale, 45, 5, true);
   displayTWS   = new AnalogDisplay('twsCanvas',   100 * displayScale,   50, 10, 1, true, 40);
   displayPRMSL = new AnalogDisplay('prmslCanvas', 100 * displayScale, 1045, 10, 1, true, 50, 985, 0);
   displayTemp  = new Thermometer('tempCanvas', 200);
   displayRain  = new Pluviometer('rainCanvas');
-   
+
   loadMap();
   setDefaultTimeZone();
 };
- 
+
 var setDefaultTimeZone = function() {
   // For the best soleution, check out https://bitbucket.org/pellepim/jstimezonedetect
   var tzOffset;
@@ -182,22 +182,22 @@ var setDefaultTimeZone = function() {
     var rightNow = new Date();
     var today0000 = new Date(rightNow.getFullYear(), rightNow.getMonth(), rightNow.getDay(), 0, 0, 0, 0);
 //  console.log("Now:" + today0000.toGMTString());
-    var regExp = new RegExp("(\\d{2}):.*");  
+    var regExp = new RegExp("(\\d{2}):.*");
     var matches = regExp.exec(today0000.toGMTString());
     if (matches !== null) {
       var offset  = matches[1];
       tzOffset = parseInt(offset) * -1;
     }
-  }  
+  }
   document.getElementById("tz").value = tzOffset;
 };
- 
+
 var ANIMATE = false;
 
 var updateOnClick = function(idx, tws, twd, prmsl, temp, rain) {
   var txtDate = JSONParser.nmeaData[idx].getNMEADate();
 //console.log("Date is : " + reformatDate(txtDate));
-  var utc = document.getElementById("tz");   
+  var utc = document.getElementById("tz");
   document.getElementById("recno").innerHTML = "Record #<b style='color: red;'>" + (idx + 1) + "</b> of " + JSONParser.nmeaData.length + ", " +  reformatDate(txtDate) + " " + utc.options[utc.selectedIndex].text;
 
   var wd = twd;
@@ -213,14 +213,14 @@ var updateOnClick = function(idx, tws, twd, prmsl, temp, rain) {
   } else {
     displayTWS.setValue(ws);
   }
-   
+
   var pr = prmsl;
   if (ANIMATE) {
     displayPRMSL.animate(pr);
   } else {
     displayPRMSL.setValue(pr);
   }
-   
+
   var tmp = temp;
   if (ANIMATE) {
     displayTemp.animate(tmp);
@@ -234,14 +234,14 @@ var updateOnClick = function(idx, tws, twd, prmsl, temp, rain) {
   } else {
     displayRain.setValue(prate);
   }
-   
+
   graph.drawGraph("graphCanvas", graphdata, idx, dataType);
 
   clearMarkers();
   if (windArrow !== undefined) {
     windArrow.setMap(null);
   }
-   
+
   var marker = new google.maps.Marker({
     position: new google.maps.LatLng(defaultLat, defaultLong),
     map: map
@@ -258,9 +258,9 @@ var updateOnClick = function(idx, tws, twd, prmsl, temp, rain) {
 var SPEED_PRM = 0.05;
 
 var drawWindFeather = function(lat, lng, speed, dir) {
-  var windpoints = [];  
+  var windpoints = [];
   windpoints.push(new google.maps.LatLng(lat, lng));
-  
+
   var onedash = false;
   if (onedash) {
     windpoints.push(deadReckoning(lat, lng, speed * SPEED_PRM, dir));
@@ -270,15 +270,15 @@ var drawWindFeather = function(lat, lng, speed, dir) {
     windpoints.push(deadReckoning(lat, lng, speed * SPEED_PRM, dir + 10));
     windpoints.push(new google.maps.LatLng(lat, lng));
   }
-  
+
   var color = "#ffff00"; // yellow
-  
+
   var lightblue = "#00ffff";
   var green     = "#00ff00";
   var yellow    = "#ffff00";
   var orange    = "#ff8000";
   var red       = "#ff0000";
-  
+
   if (speed < 10) color = lightblue;
   else if (speed < 20) color = green;
   else if (speed < 30) color = yellow;
@@ -354,25 +354,29 @@ var reformatDate = function(utcDate, fmt) {
 var mouseMoveOnGraphCallback = function(idx) {
   if (JSONParser.nmeaData.length > idx) {
     data = JSONParser.nmeaData[idx];
-    updateOnClick(idx, 
-                  data.getNMEATws(), 
-                  data.getNMEATwd(), 
-                  data.getNMEAPrmsl(), 
+    updateOnClick(idx,
+                  data.getNMEATws(),
+                  data.getNMEATwd(),
+                  data.getNMEAPrmsl(),
                   data.getNMEATemp(),
                   data.getNMEARain());
-  }   
+  }
 };
 
 var graphdata = [];
 //var rainData = []; // rain
  // Parse the data
 var onDataChange = function() {
-  var text = document.getElementById("spot").value;  
+  var text = document.getElementById("spot").value;
 
   if (text.length > 0) {
-    var weatherData = JSON.parse(text);
-    JSONParser.parse(weatherData.data);
-    displayData();
+  	try {
+		  var weatherData = JSON.parse(text);
+		  JSONParser.parse(weatherData.data);
+		  displayData();
+	  } catch (err) {
+  		alert("Error:" + err);
+    }
   }
 };
 
@@ -436,21 +440,21 @@ var displayData = function() {
     var max = graph.maxY(graphdata);
     var fromDate = nmeaData[0].getNMEADate();
     var toDate   = nmeaData[nmeaData.length - 1].getNMEADate();
-    document.getElementById("rec-span").innerHTML = "From " + reformatDate(fromDate, "d-M-Y H:i") + 
-                                                    " to "  + reformatDate(toDate, "d-M-Y H:i") + 
+    document.getElementById("rec-span").innerHTML = "From " + reformatDate(fromDate, "d-M-Y H:i") +
+                                                    " to "  + reformatDate(toDate, "d-M-Y H:i") +
                                                     ", value range (raw): " + min + " " + unit + " to " + max + " " + unit;
     // Last value recorded
     var idx = JSONParser.nmeaData.length - 1;
     var data = JSONParser.nmeaData[idx];
-    updateOnClick(idx, 
-                  data.getNMEATws(), 
-                  data.getNMEATwd(), 
-                  data.getNMEAPrmsl(), 
+    updateOnClick(idx,
+                  data.getNMEATws(),
+                  data.getNMEATwd(),
+                  data.getNMEAPrmsl(),
                   data.getNMEATemp(),
-                  data.getNMEARain());                                                    
+                  data.getNMEARain());
   }
 };
- 
+
 var setPosOnMap = function() {
   try {
      var marker = new google.maps.Marker({
@@ -464,7 +468,7 @@ var setPosOnMap = function() {
     // In case Google Map APIs are not loaded...
   }
 };
-   
+
 var loadMap = function() {
   map = new google.maps.Map(document.getElementById("map"),
                             {
@@ -477,7 +481,7 @@ var loadMap = function() {
 //   placeMarker(event.latLng);
 // });
 };
- 
+
 function setAllMap(map) {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
@@ -492,7 +496,7 @@ function clearMarkers() {
 /*
  * Data (services) available as json, through PHP:
  *   json.data.php?type=XXX&period=YYY
- */ 
+ */
 var period, type, graphData, graph;
 
 var getData = function(type, period) {
@@ -523,29 +527,29 @@ var getData = function(type, period) {
 var go = function() {
   // Disable query button
   document.getElementById("query").disabled = true;
-  setTimeout(function() { 
+  setTimeout(function() {
 //  console.log(">>> DEBUG >>> Set busy... (type) " + new Date());
-    $('body').css('cursor', 'progress'); 
+    $('body').css('cursor', 'progress');
   }, 1);
   $("#smooth-width").val("");
 //document.getElementById("graphCanvas").width = 800;
 
   var type = "ALL";
   var period = $("#period").val();
-  console.log("Type Selected:" + type + ", period:" + period);
-//$("#data-div").hide();      
+//console.log("Type Selected:" + type + ", period:" + period);
+//$("#data-div").hide();
   // Produce data list, the promise
   var fetchData = getData(type, period);
   fetchData.done(function(value) {
     // Enable query button
     document.getElementById("query").disabled = false;
-    console.log("Done :" + value); // Raw data
+//  console.log("Done :" + value); // Raw data
     if (value !== undefined) {
   //  graphData = JSON.parse(value);
   //  displayGraph(type, graphData.data);
-      document.getElementById("spot").value = value;  
+      document.getElementById("spot").value = value;
       onDataChange();
-//    $("#data-div").show(2000);  
+//    $("#data-div").show(2000);
     }
     setTimeout(function() {
 //    console.log(">>> DEBUG >>> Set busy (type), done! " + new Date())
@@ -572,7 +576,7 @@ var go = function() {
       }
     </style>
   </head>
-  <body onunload="GUnload();">    
+  <body onunload="GUnload();">
     <table border="0">
       <tr>
         <td valign="top" colspan="1">
@@ -591,7 +595,7 @@ var go = function() {
                   <option value="WEEK">Last Week</option>
                   <option value="MONTH">Last Month</option>
                   <option value="ALL">All</option>
-                </select>         
+                </select>
                  &nbsp;&nbsp;
                  <button id="query" onclick="go();">Query</button>
               </td>
@@ -663,12 +667,12 @@ var go = function() {
         </td>
       </tr>
       <tr>
-        <td colspan="5">      
+        <td colspan="5">
           <div id="rec-span" title="Selected Data">Span...</div>
         </td>
       </tr>
       <tr>
-        <td colspan="5" title="Clicked on the graph">      
+        <td colspan="5" title="Clicked on the graph">
           <div id="recno">Record...</div>
         </td>
       </tr>
@@ -696,7 +700,7 @@ var go = function() {
           <canvas id="rainCanvas" width="90" height="165"/> <!-- class="displayCanvas"/-->
         </td>
       </tr>
-    </table>  
+    </table>
     <hr/>
     <table width="100%">
       <tr>

@@ -39,7 +39,7 @@ var boom = function() {
 
 var goDelete = function(url) {
     var deferred = $.Deferred(),  // a jQuery deferred
-    xhr = new XMLHttpRequest(),
+        xhr = new XMLHttpRequest(),
         TIMEOUT = 60000;
 
     xhr.open('GET', url, true);

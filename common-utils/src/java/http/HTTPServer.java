@@ -51,7 +51,13 @@ public class HTTPServer {
 	private Thread httpListenerThread;
 
 	public static class Request {
-		public final static List<String> VERBS = Arrays.asList("GET", "POST", "DELETE", "PUT", "PATCH");
+		public final static List<String> VERBS = Arrays.asList(
+				"GET",
+				"POST",
+				"DELETE",
+				"PUT",
+				"PATCH"
+		);
 
 		private String verb;
 		private String path;
@@ -67,10 +73,10 @@ public class HTTPServer {
 
 		public Request(String verb, String path, String protocol) {
 			this.verb = verb;
-			String[] pathAndQuesryString = path.split("\\?");
-			this.path = pathAndQuesryString[0];
-			if (pathAndQuesryString.length > 1) {
-				String[] nvPairs = pathAndQuesryString[1].split("&");
+			String[] pathAndQueryString = path.split("\\?");
+			this.path = pathAndQueryString[0];
+			if (pathAndQueryString.length > 1) {
+				String[] nvPairs = pathAndQueryString[1].split("&");
 				Arrays.asList(nvPairs).stream().forEach(nv -> {
 					if (queryStringParameters == null) {
 						queryStringParameters = new HashMap<>();
@@ -148,11 +154,12 @@ public class HTTPServer {
 	public static class Response {
 
 		public final static int STATUS_OK       = 200;
-		public final static int NOT_IMPLEMENTED = 501;
+		public final static int STATUS_OK_      = 201;
 		public final static int NO_CONTENT      = 204;
 		public final static int BAD_REQUEST     = 400;
 		public final static int NOT_FOUND       = 404;
 		public final static int TIMEOUT         = 408;
+		public final static int NOT_IMPLEMENTED = 501;
 
 		private int status;
 		private String protocol;

@@ -32,7 +32,7 @@ if (!empty($_GET['period'])) {
 }
 
 $username = "oliv";
-$password = "xxxx";
+$password = "xxxxxx";
 $database = "sensors";
 
 $link = mysql_connect("mysql", $username, $password);
@@ -59,7 +59,7 @@ if ($type == 'WIND') {
 // All the data we are interested in are in WEATHER_DATA.
 $sql .=   ' FROM weather_data';
 if ($period != '' && $period != 'ALL') {
-  $nbs = 3600 * 24; 
+  $nbs = 3600 * 24;
   if ($period == 'DAY') {
     $nbs = 3600 * 24; // DAY, with time offset ??
    } else if ($period == 'WEEK') {
@@ -69,17 +69,17 @@ if ($period != '' && $period != 'ALL') {
   } else if ($period == 'YEAR') {
     $nbs *= 365;
   }
-  $sql .= (' WHERE (UNIX_TIMESTAMP(current_date()) - UNIX_TIMESTAMP(log_time)) < ' . $nbs); 
+//$sql .= (' WHERE (UNIX_TIMESTAMP(current_date()) - UNIX_TIMESTAMP(log_time)) < ' . $nbs);
+  $sql .= (' WHERE (UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(log_time)) < ' . $nbs);
 }
 $sql .=   ' ORDER BY log_time'
         . ' ASC '; // Oldest on top
-
 
 $result = mysql_query($sql);
 $num = mysql_numrows($result);
 $i = 0;
 
-// Build the json object here... 
+// Build the json object here...
 $json = '{ "type":"' . $type . '", "period":"' . $period . '", ';
 $json .= '"query":"' . $sql . '", ';
 $json .= '"data":[';
@@ -87,13 +87,13 @@ $first = true;
 while ($i < $num) {
   $time  = mysql_result($result, $i, "log_time");
   $value = mysql_result($result, $i, "data_value"); // Alias
-  
+
   if ($type == 'WIND') {
     $array = explode(',', $value);
-    $json .= (($first ? '' : ', ') . '{ "time": "' . $time 
-                                   . '", "wdir": ' . $array[0] 
-                                   .  ', "gust":'  . $array[1] 
-                                   .  ', "ws":'    . $array[2] 
+    $json .= (($first ? '' : ', ') . '{ "time": "' . $time
+                                   . '", "wdir": ' . $array[0]
+                                   .  ', "gust":'  . $array[1]
+                                   .  ', "ws":'    . $array[2]
                                    . ' }');
   } else if ($type == 'ALL') {
     $cpu   = mysql_result($result, $i, "cputemp");
@@ -104,8 +104,8 @@ while ($i < $num) {
     $press = mysql_result($result, $i, "press");
     $atemp = mysql_result($result, $i, "atemp");
     $hum   = mysql_result($result, $i, "hum");
-    $json .= (($first ? '' : ', ') 
-          . '{ "time": "' . $time 
+    $json .= (($first ? '' : ', ')
+          . '{ "time": "' . $time
           . '", "wdir": ' . $wdir
           .  ', "gust":'  . $wgust
           .  ', "ws":'    . $ws
@@ -114,7 +114,7 @@ while ($i < $num) {
           .  ', "atemp":' . $atemp
           .  ', "hum":'   . $hum
           .  ', "cpu":'   . $cpu
-          . ' }');    
+          . ' }');
   } else {
     $json .= (($first ? '' : ', ') . '{ "time": "' . $time . '", "value": ' . $value . ' }');
   }
@@ -124,8 +124,8 @@ while ($i < $num) {
 }
 $json .= ']}';
 
-mysql_close($link);        
+mysql_close($link);
 // Return the result. Yes, echo.
 echo $json;
 
-?>        
+?>
