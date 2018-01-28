@@ -45,17 +45,31 @@ if ($min == -1) { $min = 00; }
 if ($sec == -1) { $sec = 00; }
 $sql = "DELETE FROM `weather_data` WHERE `log_time` < STR_TO_DATE('$day-$month-$year $hour:$min:$sec', '%d-%m-%Y %h:%i:%s')";
 
-$mess = "Deleting with [$sql]";
+$mess = "Deleting with \n[$sql]";
 
 $link = mysql_connect("mysql", $username, $password);
 //$link = mysql_connect("localhost", $username, $password);
-@mysql_select_db($database) or die("Unable to select database $database");
+@mysql_select_db($database) or die("Unable to reach database $database with username $username and provided paswword.");
+
+if (!mysql_query("BEGIN WORK")) {
+    $mess .= ("\n" + mysql_error());
+    die('BEGIN WORK problem: ' . $mess . '<br><a href="#" onclick="back();">Back</a>');
+} else {
+    $mess .= "\nBEGIN WORK Done.";
+}
 
 if (!mysql_query($sql)) {
   $mess .= ("\n" + mysql_error());
   die('Delete from DB problem: ' . $mess . '<br><a href="#" onclick="back();">Back</a>');
 } else {
-  $mess .= "\nDone.";
+  $mess .= ("\nDELETE Done, record(s) deleted: " . mysql_affected_rows());
+}
+
+if (!mysql_query("COMMIT")) {
+    $mess .= ("\n" + mysql_error());
+    die('COMMIT problem: ' . $mess . '<br><a href="#" onclick="back();">Back</a>');
+} else {
+    $mess .= "\nCOMMIT Done.";
 }
 
 //mysql_close();

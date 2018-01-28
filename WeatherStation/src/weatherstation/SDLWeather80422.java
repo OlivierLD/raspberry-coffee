@@ -34,6 +34,7 @@ public class SDLWeather80422 {
 
 	private final static double WIND_FACTOR = 2.400;
 	private static double wsCoeff = 1.0; // -Dws.wspeed.coeff=1.0
+	private static int wdOffset = 0;     // -Dws.wdir.offset=0
 
 	private int currentWindCount = 0;
 	private float currentRainCount = 0;
@@ -82,6 +83,11 @@ public class SDLWeather80422 {
 
 		try {
 			wsCoeff = Double.parseDouble(System.getProperty("ws.wspeed.coeff", Double.toString(wsCoeff)));
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+		}
+		try {
+			wdOffset = Integer.parseInt(System.getProperty("ws.wdir.offset", String.valueOf(wdOffset)));
 		} catch (NumberFormatException nfe) {
 			nfe.printStackTrace();
 		}
@@ -164,7 +170,15 @@ public class SDLWeather80422 {
 	// Wind Direction Routines
 	public float getCurrentWindDirection() {
 		double direction = Utilities.voltageToDegrees(getCurrentWindDirectionVoltage(), this.currentWindDirection);
+		direction += wdOffset;
+		while (direction > 360) {
+			direction -= 360;
+		}
+		while (direction < 0) {
+			direction += 360;
+		}
 		this.currentWindDirection = direction;
+
 		return (float) direction;
 	}
 

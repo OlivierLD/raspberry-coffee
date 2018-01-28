@@ -28,7 +28,7 @@ var boom = function() {
     var deleteData = goDelete(url);
     deleteData.done(function(value) {
         // Ok
-        alert("Done:\n" + value);
+        alert("After execution:\n" + value);
     });
     // Errors etc
     deleteData.fail(function(error) {
@@ -248,10 +248,12 @@ var goDelete = function(url) {
                 <option value="57">57</option>
                 <option value="58">58</option>
                 <option value="59">59</option>
-            </select>
+            </select>&nbsp; UTC
         </td>
     </tr>
   </table>
+  <hr/>
   <button onclick="boom();">Delete</button>
+  <hr/>
 </body>
 </html>
