@@ -302,6 +302,9 @@ The `Raspberry PI` and the `Other Machine` are on the same Local Area Network (L
 
 The `IoT server` and the `php/MySQL` are hosted on the Internet.
 
+See it live [here](http://donpedro.lediouris.net/php/weather/reports.v2/weather.report.html). 
+This renders the data inserted in MySQL.
+
 ###### More on IoT
 [TODO, WIP]
 
