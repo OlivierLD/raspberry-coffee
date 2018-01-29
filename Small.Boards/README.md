@@ -81,3 +81,6 @@ See the [Adafruit tutorial](https://learn.adafruit.com/introducing-trinket?view=
 
 ### Photon
 Use a USB-A to USB-C (male-male) cable.
+
+Beside that, the `Photon` uses its own web-based IDE, at [https://build.particle.io](https://build.particle.io)'.
+The code is similar to what's used above. It also comes with a free access to an IoT server.

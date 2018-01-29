@@ -298,15 +298,25 @@ Then the NMEA Multiplexer will be able to listen to the WebSocket topic.
 
 ![Weather Station](./docimages/weather.station.nmea.png)
 
-The `Raspberry PI` and the `Other Machine` are on the same Local Area Network (LAN).
+The `Raspberry PI` and the `Other machine` are on the same Local Area Network (LAN).
 
 The `IoT server` and the `php/MySQL` are hosted on the Internet.
 
 See it live [here](http://donpedro.lediouris.net/php/weather/reports.v2/weather.report.html). 
 This renders the data inserted in MySQL.
 
+See those documents for more details:
+- [http://raspberrypi.lediouris.net/WeatherStation/readme.html](http://raspberrypi.lediouris.net/WeatherStation/readme.html)
+- [https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RasPISamples#home-weather-station](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RasPISamples#home-weather-station)
+
 ###### More on IoT
-[TODO, WIP]
+I've tried two options:
+- Particle
+- Adafruit-IO
+
+Both can provide some free access to an IoT server.
+
+Adafruit-IO supports `MQTT` and `REST` protocols.
 
 ##### And more to come...
 <!--
