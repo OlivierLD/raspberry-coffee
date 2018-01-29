@@ -298,6 +298,10 @@ Then the NMEA Multiplexer will be able to listen to the WebSocket topic.
 
 ![Weather Station](./docimages/weather.station.nmea.png)
 
+The `Raspberry PI` and the `Other Machine` are on the same Local Area Network (LAN).
+
+The `IoT server` and the `php/MySQL` are hosted on the Internet.
+
 ###### More on IoT
 [TODO, WIP]
 
