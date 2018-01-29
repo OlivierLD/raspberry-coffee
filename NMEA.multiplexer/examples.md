@@ -277,9 +277,8 @@ ws.uri=ws://192.168.127.127:9876/
 
 ##### Further: IoT
 
-Now the Weather Station is being read, we could forward its data somewhere else, likme on an IoT server.
+Now the Weather Station is being read, we could forward its data somewhere else, like on an IoT server.
  
-
 ###### Summary
 From the `RasPISamples` directory, on its own machine (or not...), use `weather.menu`:
 ```javascript
@@ -298,6 +297,9 @@ From the `RasPISamples` directory, on its own machine (or not...), use `weather.
 Then the NMEA Multiplexer will be able to listen to the WebSocket topic.
 
 ![Weather Station](./docimages/weather.station.nmea.png)
+
+###### More on IoT
+[TODO, WIP]
 
 ##### And more to come...
 <!--
