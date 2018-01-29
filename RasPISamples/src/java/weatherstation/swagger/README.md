@@ -1,5 +1,7 @@
 # Swagger definition and generation
 
+This is a WIP.
+
 Go in the `swagger` directory, we will process the file called `weather.sensors.yaml`
 
 ```
