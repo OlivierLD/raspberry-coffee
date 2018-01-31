@@ -76,4 +76,4 @@ finalize.doLast {
   minifyJS.execute()
 }
 
-shadowJar.finalizedBy(finalize)
+// shadowJar.finalizedBy(finalize)

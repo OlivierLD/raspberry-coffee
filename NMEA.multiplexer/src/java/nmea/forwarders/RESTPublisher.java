@@ -69,10 +69,14 @@ public class RESTPublisher implements Forwarder {
 		headers.put("X-AIO-Key", key);
 		JSONObject json = new JSONObject();
 		json.put("value", new Double(value));
-		System.out.println("POSTing " + json.toString(2) + " to " + url);
-		HTTPClient.HTTPResponse response = HTTPClient.doPost(url, headers, json.toString());
-		if (response.getCode() > 299) {
-			System.out.println(String.format("POST Ret: %d, %s", response.getCode(), response.getPayload()));
+		if ("true".equals(this.properties.getProperty("aio.verbose"))) {
+			System.out.println(String.format("->->-> POSTing to feed [%s]: %s to %s", feed, json.toString(2), url));
+		}
+		if ("true".equals(this.properties.getProperty("aio.push.to.server", "true"))) {
+			HTTPClient.HTTPResponse response = HTTPClient.doPost(url, headers, json.toString());
+			if (response.getCode() > 299) {
+				System.out.println(String.format("POST Ret: %d, %s", response.getCode(), response.getPayload()));
+			}
 		}
 	}
 
@@ -167,6 +171,9 @@ public class RESTPublisher implements Forwarder {
 		if (StringParsers.validCheckSum(str)) {
 //		String deviceId = StringParsers.getDeviceID(str);
 			String sentenceId = StringParsers.getSentenceID(str);
+			if ("true".equals(this.properties.getProperty("aio.verbose"))) {
+				System.out.println(String.format("->->-> From NMEA data [%s]", str.trim()));
+			}
 			if ("MDA".equals(sentenceId)) {
 				StringParsers.MDA mda = StringParsers.parseMDA(str);
 //				System.out.println(String.format(
@@ -185,8 +192,8 @@ public class RESTPublisher implements Forwarder {
 				if (mda.pressBar != null) {
 					logPressure(mda.pressBar * 1_000);
 				}
-				if (mda.windDirM != null) {
-					logTWD(mda.windDirM);
+				if (mda.windDirT != null) {
+					logTWD(mda.windDirT);
 				}
 				if (mda.windSpeedK != null) {
 					logTWS(mda.windSpeedK);
@@ -195,7 +202,6 @@ public class RESTPublisher implements Forwarder {
 				List<StringGenerator.XDRElement> xdrElements = StringParsers.parseXDR(str);
 				xdrElements.stream().forEach(xdr -> {
 //				System.out.println(String.format("XDR: %s -> %s", xdr.getTypeNunit(), xdr.toString()));
-					String url = this.properties.getProperty("aio.url");
 					if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.TEMPERATURE)) {
 						logAirTemp(xdr.getValue());
 					} else if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.HUMIDITY)) {
