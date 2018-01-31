@@ -95,27 +95,28 @@ public class StringParsers {
 	private final static int AIR_T = 5;
 	private final static int WATER_T = 7;
 	private final static int REL_HUM = 9;
-	private final static int ABS_HUM = 11;
-	private final static int DEW_P_C = 13;
-	private final static int WD_T = 15;
-	private final static int WD_M = 17;
-	private final static int WS_KNOTS = 19;
-	private final static int WS_MS = 21;
+	private final static int ABS_HUM = 10;
+	private final static int DEW_P_C = 11;
+	private final static int WD_T = 13;
+	private final static int WD_M = 15;
+	private final static int WS_KNOTS = 17;
+	private final static int WS_MS = 19;
 
 	public static MDA parseMDA(String data) {
 	  /*
      * $--MDA,x.x,I,x.x,B,x.x,C,x.x,C,x.x,x.x,x.x,C,x.x,T,x.x,M,x.x,N,x.x,M*hh<CR><LF>
-     *        |     |     |     |     |   |   |     |     |     |     Wind speed, m/s
-     *        |     |     |     |     |   |   |     |     |     Wind speed, knots
-     *        |     |     |     |     |   |   |     |     Wind dir Mag
-     *        |     |     |     |     |   |   |     Wind dir, True
-     *        |     |     |     |     |   |   Dew Point C
-     *        |     |     |     |     |   Absolute hum %
-     *        |     |     |     |     Relative hum %
-     *        |     |     |     Water temp in Celcius
-     *        |     |     Air Temp in Celcius  |
-     *        |     Pressure in Bars
-     *        Pressure in inches
+     *        |     |     |     |     |   |   |     |     |     |     |
+     *        |     |     |     |     |   |   |     |     |     |     19-Wind speed, m/s
+     *        |     |     |     |     |   |   |     |     |     17-Wind speed, knots
+     *        |     |     |     |     |   |   |     |     15-Wind dir Mag
+     *        |     |     |     |     |   |   |     13-Wind dir, True
+     *        |     |     |     |     |   |   11-Dew Point C
+     *        |     |     |     |     |   10-Absolute hum %
+     *        |     |     |     |     9-Relative hum %
+     *        |     |     |     7-Water temp in Celcius
+     *        |     |     5-Air Temp in Celcius  |
+     *        |     3-Pressure in Bars
+     *        1-Pressure in inches
      *
      * Example: $WIMDA,29.4473,I,0.9972,B,17.2,C,,,,,,,,,,,,,,*3E
      */
@@ -2167,6 +2168,7 @@ public class StringParsers {
 
 		str = "$WIMDA,29.4473,I,0.9972,B,17.2,C,10.2,C,81.2,,,,,,,,,,,*75";
 		str = "$RPMDA,30.177,I,1.022,B,17.5,C,9.0,C,89.1,,,,42.0,T,43.0,M,12.8,N,6.6,M*76";
+		str = "$WSMDA,30.029,I,1.017,B,16.6,C,,,66.0,,,,12,T,,,3.1,N,1.6,M*6B";
 		valid = validCheckSum(str);
 		System.out.println("MDA Chain is " + (valid ? "" : "not ") + "valid");
 		MDA mda = parseMDA(str);

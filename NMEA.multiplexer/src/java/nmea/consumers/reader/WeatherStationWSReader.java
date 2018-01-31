@@ -21,6 +21,7 @@ public class WeatherStationWSReader extends NMEAReader {
 	private WebSocketClient wsClient = null;
 	private WeatherStationWSReader instance = this;
 	private String wsUri;
+	private boolean verbose = false;
 
 	private final static String DEVICE_PREFIX = "WS"; // Weather Station
 
@@ -29,6 +30,7 @@ public class WeatherStationWSReader extends NMEAReader {
 	}
 	public WeatherStationWSReader(List<NMEAListener> al, Properties props) {
 		this(al, props.getProperty("ws.uri"));
+		verbose = "true".equals(props.getProperty("ws.verbose"));
 	}
 	public WeatherStationWSReader(List<NMEAListener> al, String wsUri) {
 		super(al);
@@ -57,6 +59,11 @@ public class WeatherStationWSReader extends NMEAReader {
 						    "hum": 58.5,
 						    "cputemp": 34.56 }
 					 */
+
+					if (verbose) {
+						System.out.println(String.format(">> From WeatherStation: %s", mess));
+					}
+
 					JsonParser jsonParser = new JsonParser();
 					JsonObject json = (JsonObject)jsonParser.parse(mess);
 
@@ -85,6 +92,11 @@ public class WeatherStationWSReader extends NMEAReader {
 									rain,
 									String.valueOf(deviceIdx++))); // Pascal, pressure
 					nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+
+					if (verbose) {
+						System.out.println(String.format(">>> Generated [%s]", nmeaXDR.trim()));
+					}
+
 					fireDataRead(new NMEAEvent(this, nmeaXDR));
 
 					String nmeaMDA = StringGenerator.generateMDA(DEVICE_PREFIX,
@@ -98,14 +110,29 @@ public class WeatherStationWSReader extends NMEAReader {
 							-Double.MAX_VALUE,  // TWD (mag)
 							speed); // TWS
 					nmeaMDA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+
+					if (verbose) {
+						System.out.println(String.format(">>> Generated [%s]", nmeaMDA.trim()));
+					}
+
 					instance.fireDataRead(new NMEAEvent(this, nmeaMDA));
 
 					String nmeaMTA = StringGenerator.generateMTA(DEVICE_PREFIX, temp);
 					nmeaMTA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+
+					if (verbose) {
+						System.out.println(String.format(">>> Generated [%s]", nmeaMTA.trim()));
+					}
+
 					instance.fireDataRead(new NMEAEvent(this, nmeaMTA));
 
 					String nmeaMMB = StringGenerator.generateMMB(DEVICE_PREFIX, press / 100);
 					nmeaMMB += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+
+					if (verbose) {
+						System.out.println(String.format(">>> Generated [%s]", nmeaMMB.trim()));
+					}
+
 					instance.fireDataRead(new NMEAEvent(this, nmeaMMB));
 				}
 
