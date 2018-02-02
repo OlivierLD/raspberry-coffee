@@ -53,8 +53,9 @@ Line.prototype.drawWithArrowhead = function(ctx) {
 };
 
 Line.prototype.drawWithArrowheads = function(ctx, both) {
-  if (both === undefined)
-    both = true;
+  if (both === undefined) {
+	  both = true;
+  }
   // arbitrary styling
   ctx.strokeStyle = "blue";
   ctx.fillStyle   = "blue";
@@ -279,11 +280,17 @@ var drawWindFeather = function(lat, lng, speed, dir) {
   var orange    = "#ff8000";
   var red       = "#ff0000";
 
-  if (speed < 10) color = lightblue;
-  else if (speed < 20) color = green;
-  else if (speed < 30) color = yellow;
-  else if (speed < 40) color = orange;
-  else color = red;
+  if (speed < 10) {
+  	color = lightblue;
+  } else if (speed < 20) {
+  	color = green;
+  } else if (speed < 30) {
+  	color = yellow;
+  } else if (speed < 40) {
+  	color = orange;
+  } else {
+  	color = red;
+  }
 
   windArrow = new google.maps.Polyline({
     path: windpoints,
@@ -470,9 +477,8 @@ var setPosOnMap = function() {
 };
 
 var loadMap = function() {
-  map = new google.maps.Map(document.getElementById("map"),
-                            {
-                              center: new google.maps.LatLng(37.74888723023488, -122.50712603330612),
+  map = new google.maps.Map(document.getElementById("map"), {
+                              center: new google.maps.LatLng(defaultLat, defaultLong),
                               zoom: 14,
                               mapTypeId: google.maps.MapTypeId.SATELLITE
                             });
@@ -527,6 +533,7 @@ var getData = function(type, period) {
 var go = function() {
   // Disable query button
   document.getElementById("query").disabled = true;
+	document.getElementById("spot").value = 'Fetching...'; // clean-up
   setTimeout(function() {
 //  console.log(">>> DEBUG >>> Set busy... (type) " + new Date());
     $('body').css('cursor', 'progress');
@@ -577,7 +584,7 @@ var go = function() {
     </style>
   </head>
   <body onunload="GUnload();">
-    <table border="0">
+    <table border="0" style="padding:5px; border-radius:5px; overflow-y: scroll; border:1px solid #CCC;">
       <tr>
         <td valign="top" colspan="1">
           <h1 style="margin: 0px;">Weather Report</h1>
@@ -591,7 +598,7 @@ var go = function() {
               <td> <!-- Data Type, Period, go -->
                 Period:
                 <select id="period">
-                  <option value="DAY">Last Day</option>
+                  <option value="DAY">Last Day (24 hours)</option>
                   <option value="WEEK">Last Week</option>
                   <option value="MONTH">Last Month</option>
                   <option value="ALL">All</option>
