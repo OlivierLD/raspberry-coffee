@@ -13,4 +13,7 @@ then
   echo Aborting.
   exit 1
 fi
+#
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 sudo java -Dkey=$1 -cp $CP adafruit.io.sample.POSTSnapshot
+# java -Dkey=$1 -cp $CP $JAVA_OPTIONS adafruit.io.sample.POSTSnapshot

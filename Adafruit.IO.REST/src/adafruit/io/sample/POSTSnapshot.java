@@ -30,7 +30,7 @@ public class POSTSnapshot {
 
 	private static int postImage(String key, String base64) throws Exception {
 		String url = "https://io.adafruit.com/api/feeds/" + FEED_NAME + "/data";
-		Map<String, String> headers = new HashMap<String, String>(2);
+		Map<String, String> headers = new HashMap<>(2);
 		headers.put("X-AIO-Key", key);
 		headers.put("Content-Type", "application/json");
 		JSONObject json = new JSONObject();
@@ -53,7 +53,7 @@ public class POSTSnapshot {
 		return keepLooping;
 	}
 
-	public static void main(@SuppressWarnings("unused") String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		String key = System.getProperty("key");
 		if (key == null) {
 			System.out.println("... Provide a key (see doc).");

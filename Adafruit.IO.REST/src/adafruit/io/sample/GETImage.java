@@ -12,20 +12,21 @@ public class GETImage {
 
 	private static String getImageValue(String key) throws Exception {
 		String url = "https://io.adafruit.com/api/feeds/" + FEED_NAME;
-		Map<String, String> headers = new HashMap<String, String>(1);
+		Map<String, String> headers = new HashMap<>(1);
 		headers.put("X-AIO-Key", key);
 		String content = HttpClient.doGet(url, headers);
-		if (DEBUG)
+		if (DEBUG) {
 			System.out.println("GET\n" + content);
+		}
 		JSONObject json = new JSONObject(content);
 		String lastValue = json.getString("last_value");
-		if (DEBUG)
+		if (DEBUG) {
 			System.out.println("Feed value:" + lastValue);
+		}
 		return lastValue;
 	}
 
-	@SuppressWarnings("oracle.jdeveloper.java.insufficient-catch-block")
-	public static void main(@SuppressWarnings("unused") String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		String key = System.getProperty("key");
 		if (key == null) {
 			System.out.println("... Provide a key (see doc).");
