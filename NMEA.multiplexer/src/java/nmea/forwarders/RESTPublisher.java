@@ -32,8 +32,6 @@ import java.util.Properties;
  *   forward.XX.properties=rest.server.properties
  * </pre>
  * A jar containing this class and its dependencies must be available in the classpath.
- *
- * // TODO Logging rate, per channel.
  */
 public class RESTPublisher implements Forwarder {
 

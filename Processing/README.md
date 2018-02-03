@@ -2,6 +2,8 @@
 
 [Processing](http://processing.org) is a framework that considerably simplifies Java development.
 
+> See how to install it on the Raspberry PI [here](https://www.raspberrypi.org/blog/now-available-for-download-processing/).
+
 It seems to be compatible with the projects of this repository.
 
 For example, here is the code that graphically displays the value returned by an ADC (MCP3008):

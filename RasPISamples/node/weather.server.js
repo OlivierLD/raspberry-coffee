@@ -53,46 +53,56 @@ function handler (req, res) {
       resource = resource.substring(0, resource.indexOf("?"));
     }
     console.log('Loading static ' + req.url + " (" + resource + ")");
-    fs.readFile(__dirname + '/' + resource,
-                function (err, data) {
-                  if (err) {
-                    res.writeHead(500);
-                    return res.end('Error loading ' + resource);
-                  }
-                  if (verbose) {
-                    console.log("Read resource content:\n---------------\n" + data + "\n--------------");
-                  }
-                  var contentType = "text/html";
-                  if (resource.endsWith(".css")) {
-                    contentType = "text/css";
-                  } else if (resource.endsWith(".html")) {
-                    contentType = "text/html";
-                  } else if (resource.endsWith(".xml")) {
-                    contentType = "text/xml";
-                  } else if (resource.endsWith(".js")) {
-                    contentType = "text/javascript";
-                  } else if (resource.endsWith(".jpg")) {
-                    contentType = "image/jpg";
-                  } else if (resource.endsWith(".gif")) {
-                    contentType = "image/gif";
-                  } else if (resource.endsWith(".png")) {
-                    contentType = "image/png";
-                  } else if (resource.endsWith(".ttf")) {
-                    contentType = "application/x-font-TrueType";
-                  }
-                  res.writeHead(200, {'Content-Type': contentType});
-              //  console.log('Data is ' + typeof(data));
-                  if (resource.endsWith(".jpg") ||
-                      resource.endsWith(".ico") ||
-                      resource.endsWith(".gif") ||
-                      resource.endsWith(".ttf") ||
-                      resource.endsWith(".png")) {
-                //  res.writeHead(200, {'Content-Type': 'image/gif' });
-                    res.end(data, 'binary');
-                  } else {
-                    res.end(data.toString().replace('$PORT$', port.toString())); // Replace $PORT$ with the actual port value.
-                  }
-                });
+    fs.readFile(__dirname + '/' + resource, function (err, data) {
+        if (err) {
+          res.writeHead(500);
+          return res.end('Error loading ' + resource);
+        }
+        if (verbose) {
+          console.log("Read resource content:\n---------------\n" + data + "\n--------------");
+        }
+        var contentType = "text/html";
+        if (resource.endsWith(".css")) {
+          contentType = "text/css";
+        } else if (resource.endsWith(".html")) {
+          contentType = "text/html";
+        } else if (resource.endsWith(".xml")) {
+          contentType = "text/xml";
+        } else if (resource.endsWith(".js")) {
+          contentType = "text/javascript";
+        } else if (resource.endsWith(".jpg")) {
+          contentType = "image/jpg";
+        } else if (resource.endsWith(".gif")) {
+          contentType = "image/gif";
+        } else if (resource.endsWith(".png")) {
+          contentType = "image/png";
+        } else if (resource.endsWith(".ico")) {
+          contentType = "image/x-icon";
+        } else if (resource.endsWith(".svg")) {
+          contentType = "image/svg+xml";
+        } else if (resource.endsWith(".ttf")) {
+          contentType = "application/x-font-TrueType";
+        } else if (resource.endsWith(".woff")) {
+          contentType = "application/x-font-woff";
+        } else {
+          console.log("+-------------------------------------------")
+          console.log("| Un-managed content type for " + resource);
+          console.log("| You should add it in '%s'", __filename);
+          console.log("+-------------------------------------------")
+        }
+        res.writeHead(200, {'Content-Type': contentType});
+    //  console.log('Data is ' + typeof(data));
+        if (resource.endsWith(".jpg") ||
+            resource.endsWith(".ico") ||
+            resource.endsWith(".gif") ||
+            resource.endsWith(".ttf") ||
+            resource.endsWith(".png")) {
+      //  res.writeHead(200, {'Content-Type': 'image/gif' });
+          res.end(data, 'binary');
+        } else {
+          res.end(data.toString().replace('$PORT$', port.toString())); // Replace $PORT$ with the actual port value.
+        }
+      });
   } else if (req.url.startsWith("/verbose=")) {
     if (req.method === "GET") {
       var isVerboseOn = (req.url.substring("/verbose=".length) === 'on');
