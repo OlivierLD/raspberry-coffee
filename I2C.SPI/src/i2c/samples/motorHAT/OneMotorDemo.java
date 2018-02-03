@@ -9,11 +9,18 @@ import static i2c.samples.motorHAT.Robot.delay;
 
 /**
  * DC Motor demo
+ *
+ * I used motors like https://www.adafruit.com/product/2941
+ * or https://www.adafruit.com/product/711
  */
 public class OneMotorDemo {
-	private int addr = 0x60;    // The I2C address of the motor HAT, default is 0x60.
-	private AdafruitMotorHAT.Motor motorID = AdafruitMotorHAT.Motor.M1; // The ID of the left motor, default is 1.
-	private int trim = 0;  // Amount to offset the speed of the left motor, can be positive or negative and use useful for matching the speed of both motors.  Default is 0.
+	// The I2C address of the motor HAT, default is 0x60.
+	private int addr = 0x60;
+	// The ID of the left motor, default is 1.
+	private static AdafruitMotorHAT.Motor motorID = AdafruitMotorHAT.Motor.M1;
+	// Amount to offset the speed of the left motor, can be positive or negative and use
+	// useful for matching the speed of both motors.  Default is 0.
+	private int trim = 0;
 
 	private AdafruitMotorHAT mh;
 	private AdafruitMotorHAT.AdafruitDCMotor motor;
@@ -74,9 +81,54 @@ public class OneMotorDemo {
 	}
 
 	public static void main(String... args) throws Exception {
+
+		if (args.length > 0){
+			try {
+				int motorNum = Integer.parseInt(args[0]);
+				switch (motorNum) {
+					case 1:
+						OneMotorDemo.motorID = AdafruitMotorHAT.Motor.M1;
+						break;
+					case 2:
+						OneMotorDemo.motorID = AdafruitMotorHAT.Motor.M2;
+						break;
+					case 3:
+						OneMotorDemo.motorID = AdafruitMotorHAT.Motor.M3;
+						break;
+					case 4:
+						OneMotorDemo.motorID = AdafruitMotorHAT.Motor.M4;
+						break;
+					default:
+						System.out.println("Between 1 and 4 only... Keeping default (1).");
+						break;
+				}
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+
 		OneMotorDemo omd = new OneMotorDemo();
+
+		int speed = 100; // 0..255
 		System.out.println("Forward...");
-		omd.forward(100, 10f);
+		omd.forward(speed, 5f);
+		System.out.println("Backward...");
+		omd.backward(speed, 5f);
+
+		speed = 50;
+		System.out.println("Forward...");
+		omd.forward(speed, 5f);
+		System.out.println("Backward...");
+		omd.backward(speed, 5f);
+
+		// Speed variation test
+		for (speed=0; speed<=255; speed++) {
+			System.out.println(String.format("Speed %f", speed));
+			omd.forward(speed);
+			delay(0.05f);
+		}
+		omd.stop();
+
 		System.out.println("Done.");
 	}
 }
