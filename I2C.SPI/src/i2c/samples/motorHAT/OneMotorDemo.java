@@ -113,6 +113,11 @@ public class OneMotorDemo {
 
 		OneMotorDemo omd = new OneMotorDemo();
 
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("Oops!");
+			omd.stop();
+		}));
+
 		int speed = 100; // 0..255
 		System.out.println("Forward 100...");
 		omd.forward(speed, 5f);
