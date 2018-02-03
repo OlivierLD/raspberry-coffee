@@ -87,16 +87,20 @@ public class OneMotorDemo {
 				int motorNum = Integer.parseInt(args[0]);
 				switch (motorNum) {
 					case 1:
+						System.out.println("Using M1");
 						OneMotorDemo.motorID = AdafruitMotorHAT.Motor.M1;
 						break;
 					case 2:
+						System.out.println("Using M2");
 						OneMotorDemo.motorID = AdafruitMotorHAT.Motor.M2;
 						break;
 					case 3:
+						System.out.println("Using M3");
 						OneMotorDemo.motorID = AdafruitMotorHAT.Motor.M3;
 						break;
 					case 4:
 						OneMotorDemo.motorID = AdafruitMotorHAT.Motor.M4;
+						System.out.println("Using M4");
 						break;
 					default:
 						System.out.println("Between 1 and 4 only... Keeping default (1).");
@@ -110,20 +114,27 @@ public class OneMotorDemo {
 		OneMotorDemo omd = new OneMotorDemo();
 
 		int speed = 100; // 0..255
-		System.out.println("Forward...");
+		System.out.println("Forward 100...");
 		omd.forward(speed, 5f);
-		System.out.println("Backward...");
+		System.out.println("Backward 100...");
 		omd.backward(speed, 5f);
 
 		speed = 50;
-		System.out.println("Forward...");
+		System.out.println("Forward 50...");
 		omd.forward(speed, 5f);
-		System.out.println("Backward...");
+		System.out.println("Backward 50...");
 		omd.backward(speed, 5f);
 
 		// Speed variation test
+		System.out.println("Accelerating...");
 		for (speed=0; speed<=255; speed++) {
-			System.out.println(String.format("Speed %f", speed));
+			System.out.println(String.format("Speed %d", speed));
+			omd.forward(speed);
+			delay(0.05f);
+		}
+		System.out.println("De-celarating...");
+		for (speed=255; speed>=0; speed--) {
+			System.out.println(String.format("Speed %d", speed));
 			omd.forward(speed);
 			delay(0.05f);
 		}
