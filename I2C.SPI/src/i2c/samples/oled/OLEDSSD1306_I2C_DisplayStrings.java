@@ -21,7 +21,7 @@ public class OLEDSSD1306_I2C_DisplayStrings {
 			return;
 		}
 
-		String[] buffer = args[0].split("|");
+		String[] buffer = args[0].split("\\|");
 
 		SSD1306 oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C interface
 		boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
