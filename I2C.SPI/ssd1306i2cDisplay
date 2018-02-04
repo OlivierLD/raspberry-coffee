@@ -8,4 +8,4 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.verbose=true "
 #
 # Separate the lines with a pipe |
 #
-sudo java $JAVA_OPTIONS -cp $CP i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$*"
+sudo java $JAVA_OPTIONS -cp $CP i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "$1"

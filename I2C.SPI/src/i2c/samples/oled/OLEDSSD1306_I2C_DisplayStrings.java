@@ -17,6 +17,12 @@ public class OLEDSSD1306_I2C_DisplayStrings {
 
 	public static void main(String... args) throws UnsupportedBusNumberException, IOException {
 
+		if (args.length == 0) {
+			return;
+		}
+
+		String[] buffer = args[0].split("|");
+
 		SSD1306 oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C interface
 		boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
 
@@ -30,7 +36,7 @@ public class OLEDSSD1306_I2C_DisplayStrings {
 		ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-		for (int i=0; i<args.length; i++) {
+		for (int i=0; i<buffer.length; i++) {
 			sb.text(args[i], 2, 10 + (i * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
