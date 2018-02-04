@@ -17,7 +17,7 @@ import static adafruit.io.Base64Util.encodeToString;
  * <pre>
  *   while :
  *   do
- *     raspistill -rot 180 --width 200 --height 150 --timeout 1 --output snap.jpg --nopreview
+ *     raspistill -rot 180 --width 200 --height 150 --output snap.jpg --nopreview
  *     sleep 10
  *   done
  * </pre>
@@ -37,8 +37,9 @@ public class POSTSnapshot {
 		json.put("value", base64);
 		String imgPayload = json.toString();
 		int ret = HttpClient.doPost(url, headers, imgPayload);
-		if (DEBUG)
+		if (DEBUG) {
 			System.out.println("POST: " + ret);
+		}
 		return ret;
 	}
 
