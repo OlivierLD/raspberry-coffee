@@ -28,7 +28,7 @@ public class OLEDSSD1306_I2C_DisplayStrings {
 		int HEIGHT = 32;
 
 		ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
-		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
+		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 		for (int i=0; i<args.length; i++) {
 			sb.text(args[i], 2, 10 + (i * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
