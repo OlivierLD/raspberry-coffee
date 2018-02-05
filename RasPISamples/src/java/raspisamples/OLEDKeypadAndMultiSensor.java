@@ -1,7 +1,9 @@
 package raspisamples;
 
 import com.pi4j.io.i2c.I2CFactory;
-import com.pi4j.io.serial.*;
+import com.pi4j.io.serial.Serial;
+import com.pi4j.io.serial.SerialFactory;
+import com.pi4j.io.serial.SerialPortException;
 import i2c.sensor.HMC5883L;
 import i2c.sensor.MPL115A2;
 

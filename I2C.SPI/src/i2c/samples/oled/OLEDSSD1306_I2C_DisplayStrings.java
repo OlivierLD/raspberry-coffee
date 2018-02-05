@@ -11,7 +11,13 @@ import java.awt.Polygon;
 import java.io.IOException;
 
 /**
- * Uses the I2C interface
+ * Uses the I2C interface.
+ * Usage:
+ * $ java ... i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "Blah"
+ *
+ * To display on several lines, use "|" to separate them:
+ * $ java ... i2c.samples.oled.OLEDSSD1306_I2C_DisplayStrings "First|Second line|Finally, third one."
+ *
  */
 public class OLEDSSD1306_I2C_DisplayStrings {
 
