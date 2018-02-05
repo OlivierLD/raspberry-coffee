@@ -10,7 +10,7 @@ var SunFlowerClient = function(dataManager, bp){
 
     var getSunFlowerData = function () {
         var deferred = $.Deferred(),  // a jQuery deferred
-            url = '/all',
+            url = '/sun-flower/all',
             xhr = new XMLHttpRequest(),
             TIMEOUT = 10000;
 

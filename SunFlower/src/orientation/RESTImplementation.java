@@ -48,47 +48,47 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
-					"/oplist",
+					"/sun-flower/oplist",
 					this::getOperationList,
 					"List of all available operations."),
 			new Operation(
 					"GET",
-					"/position",
+					"/sun-flower/position",
 					this::getPosition,
 					"Get device position on Earth."),
 			new Operation(
 					"GET",
-					"/device-heading",
+					"/sun-flower/device-heading",
 					this::getDeviceHeading,
 					"Get device heading."),
 			new Operation(
 					"GET",
-					"/servo-values",
+					"/sun-flower/servo-values",
 					this::getServoValues,
 					"Get servos values"),
 			new Operation(
 					"GET",
-					"/dates",
+					"/sun-flower/dates",
 					this::getDates,
 					"Get the dates (System, UTC, Solar"),
 			new Operation(
 					"GET",
-					"/sun-data",
+					"/sun-flower/sun-data",
 					this::getSunData,
 					"Get the computed Sun data"),
 			new Operation(
 					"GET",
-					"/battery-data",
+					"/sun-flower/battery-data",
 					this::getBatteryData,
 					"Get the LiPo battery data (voltage)"),
 			new Operation(
 					"GET",
-					"/photo-cell-data",
+					"/sun-flower/photo-cell-data",
 					this::getPhotoCellData,
 					"Get the photo-cell data (adc [0..1023])"),
 			new Operation(
 					"GET",
-					"/all",
+					"/sun-flower/all",
 					this::getAll,
 					"Get everything!"));
 

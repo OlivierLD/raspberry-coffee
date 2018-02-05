@@ -10,9 +10,15 @@ MUX_PROP_FILE=nmea.mux.sun.flower.02.properties
 #
 echo Using properties file $MUX_PROP_FILE
 #
+MACHINE=Mac
+#
 JAVA_OPTIONS=
-# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=./libs"       # for Mac
-JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
+if [ "$MACHINE" = "Mac" ]
+then
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=./libs"       # for Mac
+else
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
+fi
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.data.verbose=false"
@@ -32,12 +38,12 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=.
-CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar  # SolarPanelOrienter lives in this one
-# CP=$CP:./build/libs/NMEA.multiplexer-1.0-all.jar
+CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar  # SolarPanelOrienter lives in this one, must have been built.
+CP=$CP:./build/libs/NMEA.multiplexer-1.0-all.jar
 # CP=$CP:../SunFlower/build/libs/SunFlower-1.0-all.jar # Included in GPS.sun.servo-1.0-all.jar
 #
-# CP=$CP:./libs/RXTXcomm.jar          # for Mac
-CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
+CP=$CP:./libs/RXTXcomm.jar          # for Mac
+# CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
 #
 # For JFR
 JFR_FLAGS=
@@ -48,6 +54,13 @@ REMOTE_DEBUG_FLAGS=
 #
 LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
-# use sudo on Raspberry PI
-sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+#
+if [ "$MACHINE" = "Mac" ]
+then
+  # No need to use sudo on Mac
+  java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+else
+  # use sudo on Raspberry PI
+  sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+fi
 #

@@ -42,7 +42,7 @@ public class NavServer {
 		this.httpServer.addRequestManager(new TideRequestManager());
 		// Add Nav features: Dead Reckoning, logging, re-broadcasting, from the NMEA Multiplexer
 		Properties definitions = GenericNMEAMultiplexer.getDefinitions();
-		this.httpServer.addRequestManager(new GenericNMEAMultiplexer(definitions));
+		this.httpServer.addRequestManager(new GenericNMEAMultiplexer(definitions)); // refers to nmea.mux.properties, unless -Dmux.properties is set
 		// Add image processing service...
 		this.httpServer.addRequestManager(new ImgRequestManager());
 		// Add GRIB features

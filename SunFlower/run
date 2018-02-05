@@ -152,10 +152,10 @@ then
 	MOSI=10
 	CLK=11
 	CS=8
-	BAT-CHANNEL=0
-	PHOTO-CHANNEL=1
+	BAT_CHANNEL=0
+	PHOTO_CHANNEL=1
 	#
-	ADC_PRM="--with-adc:true --with-photocell:true --miso:$MISO --mosi:$MOSI --clk:$CLK --cs:$CS --battery-channel:$BAT-CHANNEL --photo-cell-channel:$PHOTO-CHANNEL"
+	ADC_PRM="--with-adc:true --with-photocell:true --miso:$MISO --mosi:$MOSI --clk:$CLK --cs:$CS --battery-channel:$BAT_CHANNEL --photo-cell-channel:$PHOTO_CHANNEL"
 	# sudo is required when running on the RPi.
   # ohup sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID --with-adc:false --with-photocell:false &
   java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID $ADC_PRM
