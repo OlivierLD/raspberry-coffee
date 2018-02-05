@@ -23,6 +23,7 @@ doc/
 I2C/src/misc
 */email.properties
 node_modules/
+bower_components/
 RaspberryPI.doc/
 RasPISamples.2/
 POVUtil.One/
