@@ -51,12 +51,13 @@ public class RMC implements Serializable {
 
 	public String toString() {
 		String str = "";
-		str = gp.toString() + ", " + "SOG:" + sog + ", COG:" + cog;
-		if (rmcDate != null)
+		str = (gp != null ? gp.toString() : "[no pos]") + ", " + "SOG:" + sog + ", COG:" + cog;
+		if (rmcDate != null) {
 			str += (" " + SDF.format(rmcDate) + " ");
-		if (declination != -Double.MAX_VALUE)
+		}
+		if (declination != -Double.MAX_VALUE) {
 			str += ("D:" + Double.toString(declination));
-
+		}
 		return str;
 	}
 

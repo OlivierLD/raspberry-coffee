@@ -2337,6 +2337,7 @@ public class StringParsers {
 			System.out.println("AutoParse retgurned null");
 		} else {
 			System.out.println(String.format("AutoParse returned a %s", auto.getClass().getName()));
+			System.out.println(auto.toString());
 		}
 		System.out.println("Done!");
 	}
