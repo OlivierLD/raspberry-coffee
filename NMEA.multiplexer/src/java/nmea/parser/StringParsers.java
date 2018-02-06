@@ -3,6 +3,7 @@ package nmea.parser;
 import java.text.NumberFormat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -12,6 +13,7 @@ import java.util.Locale;
 
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.function.Function;
 
 import calc.GeomUtil;
 
@@ -25,6 +27,8 @@ public class StringParsers {
    * MDW Surface Wind, direction and velocity
    * VPW Device measured velocity parallel true wind
    * ZLZ Time of Day
+   *
+   * Good source: http://www.catb.org/gpsd/NMEA.html
    */
 
 	private static Map<Integer, SVData> gsvMap = null;
@@ -271,8 +275,9 @@ public class StringParsers {
 
 	public static Map<Integer, SVData> parseGSV(String data) {
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return gsvMap;
+		}
 //  System.out.println("String [" + s + "]");
     /* Structure is $GPGSV,3,1,11,03,03,111,00,04,15,270,00,06,01,010,00,13,06,292,00*74
      *                     | | |  |  |  |   |  |            |            |
@@ -298,8 +303,7 @@ public class StringParsers {
 			nbMess = Integer.parseInt(sa[1]);
 			messNum = Integer.parseInt(sa[2]);
 			int nbSVinView = Integer.parseInt(sa[3]);
-			if (messNum == 1) // Reset
-			{
+			if (messNum == 1) { // Reset
 				gsvMap = new HashMap<Integer, SVData>(nbSVinView);
 			}
 
@@ -334,9 +338,9 @@ public class StringParsers {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		if (messNum != -1 && nbMess != -1 && messNum == nbMess)
+		if (messNum != -1 && nbMess != -1 && messNum == nbMess) {
 			return gsvMap;
-
+		}
 		return null;
 	}
 
@@ -370,8 +374,9 @@ public class StringParsers {
 
 		ArrayList<Object> al = null;
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return al;
+		}
     /* Structure is
      *  $GPGGA,014457,3739.853,N,12222.821,W,1,03,5.4,1.1,M,-28.2,M,,*7E
      *  $aaGGA,hhmmss.ss,llll.ll,a,gggg.gg,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh(CR)(LF)
@@ -413,8 +418,9 @@ public class StringParsers {
 			double m = ((g / 100.0) - intG) * 100.0;
 			m *= (100.0 / 60.0);
 			lng = intG + (m / 100.0);
-			if ("W".equals(sa[LONG_SGN_POS]))
+			if ("W".equals(sa[LONG_SGN_POS])) {
 				lng = -lng;
+			}
 		} catch (Exception ex) {
 		}
 		try {
@@ -461,18 +467,23 @@ public class StringParsers {
 		GSA gsa = new GSA();
 		String[] elements = data.substring(0, data.indexOf("*")).split(",");
 		if (elements.length >= 2) {
-			if ("M".equals(elements[1]))
+			if ("M".equals(elements[1])) {
 				gsa.setMode1(GSA.ModeOne.Manual);
-			if ("A".equals(elements[1]))
+			}
+			if ("A".equals(elements[1])) {
 				gsa.setMode1(GSA.ModeOne.Auto);
+			}
 		}
 		if (elements.length >= 3) {
-			if ("1".equals(elements[2]))
+			if ("1".equals(elements[2])) {
 				gsa.setMode2(GSA.ModeTwo.NoFix);
-			if ("2".equals(elements[2]))
+			}
+			if ("2".equals(elements[2])) {
 				gsa.setMode2(GSA.ModeTwo.TwoD);
-			if ("3".equals(elements[2]))
+			}
+			if ("3".equals(elements[2])) {
 				gsa.setMode2(GSA.ModeTwo.ThreeD);
+			}
 		}
 		for (int i = 3; i < 15; i++) {
 			if (elements[i].trim().length() > 0) {
@@ -480,13 +491,15 @@ public class StringParsers {
 				gsa.getSvArray().add(sv);
 			}
 		}
-		if (elements.length >= 16)
+		if (elements.length >= 16) {
 			gsa.setPDOP(Float.parseFloat(elements[15]));
-		if (elements.length >= 17)
+		}
+		if (elements.length >= 17) {
 			gsa.setHDOP(Float.parseFloat(elements[16]));
-		if (elements.length >= 18)
+		}
+		if (elements.length >= 18) {
 			gsa.setVDOP(Float.parseFloat(elements[17]));
-
+		}
 		return gsa;
 	}
 
@@ -500,8 +513,9 @@ public class StringParsers {
 
 	public static double[] parseVHW(String data, double defaultBSP) {
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return (double[]) null;
+		}
     /* Structure is
      *         1   2 3   4 5   6 7   8
      *  $aaVHW,x.x,T,x.x,M,x.x,N,x.x,K*hh(CR)(LF)
@@ -552,8 +566,9 @@ public class StringParsers {
 
 	public static double[] parseVLW(String data) {
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return (double[]) null;
+		}
 
 		double cumulative = 0d;
 		double sinceReset = 0d;
@@ -582,14 +597,17 @@ public class StringParsers {
      *
      */
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return 0d;
+		}
 
 		double temp = 0d;
 		try {
 			String[] nmeaElements = data.substring(0, data.indexOf("*")).split(",");
 			String _s = nmeaElements[1];
-			if (_s.startsWith("+")) _s = _s.substring(1);
+			if (_s.startsWith("+")) {
+				_s = _s.substring(1);
+			}
 			temp = parseNMEADouble(_s);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -606,8 +624,9 @@ public class StringParsers {
 		int flavor = -1;
 
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return null;
+		}
     /* Structure is
      *  $aaMWV,x.x,a,x.x,a,A*hh
      *         |   | |   | |
@@ -620,12 +639,11 @@ public class StringParsers {
 		// We're interested only in Speed in knots.
 		Wind aw = null;
 		try {
-			if (s.indexOf("A*") == -1) // Data invalid
+			if (s.indexOf("A*") == -1) { // Data invalid
 				return aw;
-			else {
+			} else {
 				String speed = "", angle = "";
-				if (s.indexOf("MWV,") > -1 && s.indexOf(",R,") > -1) // Apparent
-				{
+				if (s.indexOf("MWV,") > -1 && s.indexOf(",R,") > -1) { // Apparent
 					flavor = APPARENT_WIND;
 					angle = s.substring(s.indexOf("MWV,") + "MWV,".length(), s.indexOf(",R,"));
 				}
@@ -651,12 +669,13 @@ public class StringParsers {
 					aws = parseNMEADouble(speed);
 				} catch (Exception ex) {
 				}
-				if (flavor == APPARENT_WIND)
+				if (flavor == APPARENT_WIND) {
 					aw = new ApparentWind(Math.round(awa), aws);
-				else if (flavor == TRUE_WIND)
+				} else if (flavor == TRUE_WIND) {
 					aw = new TrueWind(Math.round(awa), aws);
-				else
+				} else {
 					System.out.println("UNKNOWN wind type!");
+				}
 			}
 		} catch (Exception e) {
 			System.err.println("parseMWV for " + s + ", " + e.toString());
@@ -706,10 +725,11 @@ public class StringParsers {
 	public static Wind parseVWT(String data) {
 		Wind wind = null;
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return null;
+		}
 		try {
-			// TODO Implement?
+			// TODO Implement
 		} catch (Exception e) {
 			System.err.println("parseVWT for " + s + ", " + e.toString());
 //    e.printStackTrace();
@@ -752,8 +772,9 @@ public class StringParsers {
 	// Example: VWR,148.,L,02.4,N,01.2,M,04.4,K*XX
 	public static Wind parseVWR(String data) {
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return null;
+		}
     /* Structure is
      *  $aaVWR,x.x,a,x.x,N,x.x,M,x.x,K*hh
      *         |   | |     |     |
@@ -766,22 +787,26 @@ public class StringParsers {
 		// We're interested only in Speed in knots.
 		Wind aw = null;
 		try {
-			if (false && s.indexOf("K*") == -1) // Data invalid // Watafok???
+			if (false && s.indexOf("K*") == -1) { // Data invalid // Watafok???
 				return aw;
-			else {
+			} else {
 				String speed = "", angle = "", side = "";
 				int firstCommaIndex = s.indexOf(",");
 				int secondCommaIndex = s.indexOf(",", firstCommaIndex + 1);
 				int thirdCommaIndex = s.indexOf(",", secondCommaIndex + 1);
 				int fourthCommaIndex = s.indexOf(",", thirdCommaIndex + 1);
-				if (firstCommaIndex > -1 && secondCommaIndex > -1)
+				if (firstCommaIndex > -1 && secondCommaIndex > -1) {
 					angle = s.substring(firstCommaIndex + 1, secondCommaIndex);
-				while (angle.endsWith("."))
+				}
+				while (angle.endsWith(".")) {
 					angle = angle.substring(0, angle.length() - 1);
-				if (secondCommaIndex > -1 && thirdCommaIndex > -1)
+				}
+				if (secondCommaIndex > -1 && thirdCommaIndex > -1) {
 					side = s.substring(secondCommaIndex + 1, thirdCommaIndex);
-				if (thirdCommaIndex > -1 && fourthCommaIndex > -1)
+				}
+				if (thirdCommaIndex > -1 && fourthCommaIndex > -1) {
 					speed = s.substring(thirdCommaIndex + 1, fourthCommaIndex);
+				}
 				double ws = 0d;
 				try {
 					ws = parseNMEADouble(speed);
@@ -792,8 +817,9 @@ public class StringParsers {
 					wa = Integer.parseInt(angle);
 				} catch (Exception ex) {
 				}
-				if (side.equals("L"))
+				if (side.equals("L")) {
 					wa = 360 - wa;
+				}
 				aw = new ApparentWind(wa, ws);
 			}
 		} catch (Exception e) {
@@ -837,8 +863,9 @@ public class StringParsers {
 	public static OverGround parseVTG(String data) {
 		String s = data.trim();
 		OverGround og = null;
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return null;
+		}
     /* Structure is
      * $IIVTG,x.x,T,x.x,M,x.x,N,x.x,K,A*hh
               |   | |  |  |   | |___|SOG, km/h
@@ -856,9 +883,9 @@ public class StringParsers {
      */
 		// We're interested only in Speed in knots.
 		try {
-			if (false && s.indexOf("A*") == -1) // Data invalid, only for NMEA 2.3 and later
+			if (false && s.indexOf("A*") == -1) { // Data invalid, only for NMEA 2.3 and later
 				return og;
-			else {
+			} else {
 				String speed = "", angle = "";
 				String[] sa = s.split(",");
 
@@ -878,11 +905,13 @@ public class StringParsers {
 				}
 				angle = sa[tIndex - 1];
 				speed = sa[nIndex - 1];
-				if (speed.endsWith("."))
+				if (speed.endsWith(".")) {
 					speed += "0";
+				}
 				double sog = parseNMEADouble(speed);
-				if (angle.endsWith("."))
+				if (angle.endsWith(".")) {
 					angle += "0";
+				}
 				int cog = (int) Math.round(parseNMEADouble(angle));
 				og = new OverGround(sog, cog);
 			}
@@ -931,8 +960,9 @@ public class StringParsers {
 	// Geographical Latitude & Longitude
 	public static Object[] parseGLL(String data) {
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return (Object[]) null;
+		}
     /* Structure is
      *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A*hh
      *         |       | |       | |         |
@@ -946,9 +976,9 @@ public class StringParsers {
 		GeoPos ll = null;
 		Date date = null;
 		try {
-			if (s.indexOf("A*") == -1) // Data invalid
+			if (s.indexOf("A*") == -1) { // Data invalid
 				return (Object[]) null;
-			else {
+			} else {
 				int i = s.indexOf(",");
 				if (i > -1) {
 					String lat = "";
@@ -960,8 +990,9 @@ public class StringParsers {
 					m *= (100.0 / 60.0);
 					l = intL + (m / 100.0);
 					String latSgn = s.substring(j + 1, j + 2);
-					if (latSgn.equals("S"))
+					if (latSgn.equals("S")) {
 						l *= -1.0;
+					}
 					int k = s.indexOf(",", j + 3);
 					String lng = s.substring(j + 3, k);
 					double g = parseNMEADouble(lng);
@@ -970,14 +1001,15 @@ public class StringParsers {
 					m *= (100.0 / 60.0);
 					g = intG + (m / 100.0);
 					String lngSgn = s.substring(k + 1, k + 2);
-					if (lngSgn.equals("W"))
+					if (lngSgn.equals("W")) {
 						g *= -1.0;
-
+					}
 					ll = new GeoPos(l, g);
 					k = s.indexOf(",", k + 2);
 					String dateStr = s.substring(k + 1);
-					if (dateStr.indexOf(",") > 0)
+					if (dateStr.indexOf(",") > 0) {
 						dateStr = dateStr.substring(0, dateStr.indexOf(","));
+					}
 					double utc = 0D;
 					try {
 						utc = parseNMEADouble(dateStr);
@@ -1044,8 +1076,9 @@ public class StringParsers {
 		final int HDG_POS = 1;
 		final int MT_POS = 2;
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return -1;
+		}
     /* Structure is
      *  $aaHDT,xxx,M*hh(CR)(LF)
      *         |   |
@@ -1057,12 +1090,14 @@ public class StringParsers {
 		String[] elmts = data.substring(0, data.indexOf("*")).split(",");
 		try {
 			if (elmts[KEY_POS].indexOf("HDT") > -1) {
-				if ("T".equals(elmts[MT_POS]))
+				if ("T".equals(elmts[MT_POS])) {
 					hdg = Math.round(parseNMEAFloat(elmts[HDG_POS]));
-				else
+				} else {
 					throw new RuntimeException("Wrong type [" + elmts[HDG_POS] + "] in parseHDT.");
-			} else
+				}
+			} else {
 				System.err.println("Wrong chain in parseHDT [" + data + "]");
+			}
 		} catch (Exception e) {
 			System.err.println("parseHDT for " + s + ", " + e.toString());
 //    e.printStackTrace();
@@ -1076,8 +1111,9 @@ public class StringParsers {
 		final int HDG_POS = 1;
 		final int MT_POS = 2;
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return -1;
+		}
     /* Structure is
      *  $aaHDM,xxx,M*hh(CR)(LF)
      *         |   |
@@ -1089,12 +1125,14 @@ public class StringParsers {
 		String[] elmts = data.substring(0, data.indexOf("*")).split(",");
 		try {
 			if (elmts[KEY_POS].indexOf("HDM") > -1) {
-				if ("M".equals(elmts[MT_POS]))
+				if ("M".equals(elmts[MT_POS])) {
 					hdg = Math.round(parseNMEAFloat(elmts[HDG_POS]));
-				else
+				} else {
 					throw new RuntimeException("Wrong type [" + elmts[HDG_POS] + "] in parseHDM.");
-			} else
+				}
+			} else {
 				System.err.println("Wrong chain in parseHDM [" + data + "]");
+			}
 		} catch (Exception e) {
 			System.err.println("parseHDM for " + s + ", " + e.toString());
 //    e.printStackTrace();
@@ -1118,9 +1156,9 @@ public class StringParsers {
 	public static double[] parseHDG(String data) {
 		double[] ret = null;
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return ret;
-
+		}
 		double hdg = 0d;
 		double dev = -Double.MAX_VALUE;
 		double var = -Double.MAX_VALUE;
@@ -1191,15 +1229,16 @@ public class StringParsers {
      */
 		RMB rmb = null;
 		String s = str.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return null;
-
+		}
 		try {
 			if (s.indexOf("RMB,") > -1) {
 				rmb = new RMB();
 				String[] data = str.substring(0, str.indexOf("*")).split(",");
-				if (data[1].equals("V")) // Void
+				if (data[1].equals("V")) { // Void
 					return null;
+				}
 				double xte = 0d;
 				try {
 					xte = parseNMEADouble(data[2]);
@@ -1216,14 +1255,18 @@ public class StringParsers {
 				} catch (Exception ex) {
 				}
 				double lat = (int) (_lat / 100d) + ((_lat % 100d) / 60d);
-				if ("S".equals(data[7])) lat = -lat;
+				if ("S".equals(data[7])) {
+					lat = -lat;
+				}
 				double _lng = 0d;
 				try {
 					_lng = parseNMEADouble(data[8]);
 				} catch (Exception ex) {
 				}
 				double lng = (int) (_lng / 100d) + ((_lng % 100d) / 60d);
-				if ("W".equals(data[9])) lng = -lng;
+				if ("W".equals(data[9])) {
+					lng = -lng;
+				}
 				rmb.setDest(new GeoPos(lat, lng));
 				double rtd = 0d;
 				try {
@@ -1255,10 +1298,12 @@ public class StringParsers {
 	public static RMC parseRMC(String str) {
 		RMC rmc = null;
 		String s = str.trim();
-		if (s.length() < 6 || s.indexOf("*") < 0)
+		if (s.length() < 6 || s.indexOf("*") < 0) {
 			return null;
-		if (!validCheckSum(str))
+		}
+		if (!validCheckSum(str)) {
 			return null;
+		}
 		s = s.substring(0, s.indexOf("*"));
     /* Structure is
      *         1      2 3        4 5         6 7     8     9      10    11
@@ -1280,10 +1325,10 @@ public class StringParsers {
 			if (s.indexOf("RMC,") > -1) {
 				rmc = new RMC();
 				String[] data = str.substring(0, str.indexOf("*")).split(",");
-				if (data[2].equals("V")) // Void
+				if (data[2].equals("V")) { // Void
 					return rmc;
-				if (data[1].length() > 0) // Time and Date
-				{
+				}
+				if (data[1].length() > 0) { // Time and Date
 					double utc = 0D;
 					try {
 						utc = parseNMEADouble(data[1]);
@@ -1318,10 +1363,11 @@ public class StringParsers {
 							y = Integer.parseInt(data[9].substring(4));
 						} catch (Exception ex) {
 						}
-						if (y > 50)
+						if (y > 50) {
 							y += 1900;
-						else
+						} else {
 							y += 2_000;
+						}
 						local.set(Calendar.DATE, d);
 						local.set(Calendar.MONTH, mo);
 						local.set(Calendar.YEAR, y);
@@ -1337,13 +1383,15 @@ public class StringParsers {
 					String deg = data[3].substring(0, 2);
 					String min = data[3].substring(2);
 					double l = GeomUtil.sexToDec(deg, min);
-					if ("S".equals(data[4]))
+					if ("S".equals(data[4])) {
 						l = -l;
+					}
 					deg = data[5].substring(0, 3);
 					min = data[5].substring(3);
 					double g = GeomUtil.sexToDec(deg, min);
-					if ("W".equals(data[6]))
+					if ("W".equals(data[6])) {
 						g = -g;
+					}
 					rmc.setGp(new GeoPos(l, g));
 				}
 				if (data[7].length() > 0) {
@@ -1519,11 +1567,15 @@ public class StringParsers {
 
 	private final static double METERS_TO_FEET = 3.28083;
 
+	public static float parseDPT(String data) {
+		return parseDPT(data, DEPTH_IN_METERS);
+	}
 	// Depth
 	public static float parseDPT(String data, short unit) {
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return -1F;
+		}
     /* Structure is
      *  $xxDPT,XX.XX,XX.XX,XX.XX*hh<0D><0A>
      *         |     |     |
@@ -1539,8 +1591,9 @@ public class StringParsers {
 			meters = parseNMEAFloat(array[1]);
 			try {
 				String strOffset = array[2].trim();
-				if (strOffset.startsWith("+"))
+				if (strOffset.startsWith("+")) {
 					strOffset = strOffset.substring(1);
+				}
 				float offset = parseNMEAFloat(strOffset);
 				meters += offset;
 			} catch (Exception ex) {
@@ -1552,21 +1605,26 @@ public class StringParsers {
 			//  e.printStackTrace();
 		}
 
-		if (unit == DEPTH_IN_FEET)
+		if (unit == DEPTH_IN_FEET) {
 			return feet;
-		else if (unit == DEPTH_IN_METERS)
+		} else if (unit == DEPTH_IN_METERS) {
 			return meters;
-		else if (unit == DEPTH_IN_FATHOMS)
+		} else if (unit == DEPTH_IN_FATHOMS) {
 			return fathoms;
-		else
+		} else {
 			return meters;
+		}
 	}
 
+	public static float parseDBT(String data) {
+		return parseDBT(data, DEPTH_IN_METERS);
+	}
 	// Depth Below Transducer
 	public static float parseDBT(String data, short unit) {
 		String s = data.trim();
-		if (s.length() < 6)
+		if (s.length() < 6) {
 			return -1F;
+		}
     /* Structure is
      *  $aaDBT,011.0,f,03.3,M,01.8,F*18(CR)(LF)
      *         |     | |    | |    |
@@ -1586,22 +1644,25 @@ public class StringParsers {
 			first = "DBT,";
 			last = ",f,";
 			if (s.indexOf(first) > -1 && s.indexOf(last) > -1) {
-				if (s.indexOf(first) < s.indexOf(last))
+				if (s.indexOf(first) < s.indexOf(last)) {
 					str = s.substring(s.indexOf(first) + first.length(), s.indexOf(last));
+				}
 			}
 			feet = parseNMEAFloat(str);
 			first = ",f,";
 			last = ",M,";
 			if (s.indexOf(first) > -1 && s.indexOf(last) > -1) {
-				if (s.indexOf(first) < s.indexOf(last))
+				if (s.indexOf(first) < s.indexOf(last)) {
 					str = s.substring(s.indexOf(first) + first.length(), s.indexOf(last));
+				}
 			}
 			meters = parseNMEAFloat(str);
 			first = ",M,";
 			last = ",F";
 			if (s.indexOf(first) > -1 && s.indexOf(last) > -1) {
-				if (s.indexOf(first) < s.indexOf(last))
+				if (s.indexOf(first) < s.indexOf(last)) {
 					str = s.substring(s.indexOf(first) + first.length(), s.indexOf(last));
+				}
 			}
 			fathoms = parseNMEAFloat(str);
 		} catch (Exception e) {
@@ -1609,14 +1670,15 @@ public class StringParsers {
 //    e.printStackTrace();
 		}
 
-		if (unit == DEPTH_IN_FEET)
+		if (unit == DEPTH_IN_FEET) {
 			return feet;
-		else if (unit == DEPTH_IN_METERS)
+		} else if (unit == DEPTH_IN_METERS) {
 			return meters;
-		else if (unit == DEPTH_IN_FATHOMS)
+		} else if (unit == DEPTH_IN_FATHOMS) {
 			return fathoms;
-		else
+		} else {
 			return feet;
+		}
 	}
 
 	public static boolean validCheckSum(String sentence) {
@@ -1628,8 +1690,9 @@ public class StringParsers {
 		boolean b = false;
 		try {
 			int starIndex = sentence.indexOf("*");
-			if (starIndex < 0)
+			if (starIndex < 0) {
 				return false;
+			}
 			String csKey = sentence.substring(starIndex + 1);
 			int csk = Integer.parseInt(csKey, 16);
 //    System.out.println("Checksum  : 0x" + csKey + " (" + csk + ")");
@@ -1653,8 +1716,9 @@ public class StringParsers {
 		int cs = 0;
 		char[] ca = str.toCharArray();
 		cs = ca[0];
-		for (int i = 1; i < ca.length; i++)
+		for (int i = 1; i < ca.length; i++) {
 			cs = cs ^ ca[i]; // XOR
+		}
 		return cs;
 	}
 
@@ -1745,24 +1809,28 @@ public class StringParsers {
 		if (trailer.indexOf("+") >= 0 ||
 						trailer.indexOf("-") >= 0) {
 //    System.out.println(trailer);
-			if (trailer.indexOf("+") >= 0)
+			if (trailer.indexOf("+") >= 0) {
 				trailer = trailer.substring(trailer.indexOf("+") + 1);
-			if (trailer.indexOf("-") >= 0)
+			}
+			if (trailer.indexOf("-") >= 0) {
 				trailer = trailer.substring(trailer.indexOf("-"));
+			}
 			if (trailer.indexOf(":") > -1) {
 				String hours = trailer.substring(0, trailer.indexOf(":"));
 				String mins = trailer.substring(trailer.indexOf(":") + 1);
 				utcOffset = (float) Integer.parseInt(hours) + (float) (Integer.parseInt(mins) / 60f);
-			} else
+			} else {
 				utcOffset = Float.parseFloat(trailer);
+			}
 		}
 //  System.out.println("UTC Offset:" + utcOffset);
 
 		Calendar calendar = Calendar.getInstance();
-		if (utcOffset == 0f && tz != null)
+		if (utcOffset == 0f && tz != null) {
 			calendar.setTimeZone(TimeZone.getTimeZone(tz));
-		else
+		} else {
 			calendar.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+		}
 		try {
 			calendar.set(Integer.parseInt(yyyy),
 							Integer.parseInt(mm) - 1,
@@ -1794,6 +1862,75 @@ public class StringParsers {
 		return result;
 	}
 
+	enum Dispatcher {
+
+		RMC("RMC", "Recommended Minimum Navigation Information, C", StringParsers::parseRMC),
+		GLL("GLL", "Geographical Lat & Long", StringParsers::parseGLL),
+		DBT("DBT", "Depth Below Transducer", StringParsers::parseDBT),
+		DPT("DPT", "Depth of Water", StringParsers::parseDPT),
+		GGA("GGA", "Global Positioning System Fix Data", StringParsers::parseGGA),
+		GSA("GSA", "GPS DOP and active satellites", StringParsers::parseGSA),
+		GSV("GSV", "Satellites in view", StringParsers::parseGSV),
+		HDG("HDG", "Heading - Deviation & Variation", StringParsers::parseHDG),
+		HDM("HDM", "Heading - Magnetic", StringParsers::parseHDM),
+		HDT("HDT", "Heading - True", StringParsers::parseHDT),
+		MDA("MDA", "Meteo Composite", StringParsers::parseMDA),
+		MMB("MMB", "Atm Pressure", StringParsers::parseMMB),
+		MTA("MTA", "Air Temperature, Celcius", StringParsers::parseMTA),
+		MTW("MTW", "Mean Temperature of Water", StringParsers::parseMTW),
+		MWD("MWD", "Wind Direction & Speed", StringParsers::parseMWD),
+		MWV("MWV", "Wind Speed and Angle", StringParsers::parseMWV),
+		RMB("RMB", "Recommended Minimum Navigation Information, B", StringParsers::parseRMB),
+		VDR("VDR", "Set and Drift", StringParsers::parseVDR),
+		VHW("VHW", "Water speed and heading", StringParsers::parseVHW),
+		VLW("VLW", "Distance Traveled through Water", StringParsers::parseVLW),
+		VTG("VTG", "Track made good and Ground speed", StringParsers::parseVTG),
+		VWR("VWR", "Relative Wind Speed and Angle", StringParsers::parseVWR),
+		VWT("VWT", "Wind Data", StringParsers::parseVWT),
+		XDR("XDR", "Transducer Measurement", StringParsers::parseXDR),
+		ZDA("ZDA", "Time & Date - UTC, day, month, year and local time zone", StringParsers::parseZDA);
+
+		private final String key;
+		private final String description;
+		private final Function<String, Object> parser;
+
+		Dispatcher(String key, String description, Function<String, Object> parser) {
+			this.key = key;
+			this.description = description;
+			this.parser = parser;
+		}
+
+		public String key() {
+			return this.key;
+		}
+		public String description() {
+			return this.description;
+		}
+		public Function<String, Object> parser() {
+			return this.parser;
+		}
+	}
+
+	public static Object autoParse(String data) {
+		Object parsed = null;
+		if (!validCheckSum(data)) {
+			throw new RuntimeException(String.format("Invalid NMEA Sentence [%s]", data));
+		}
+		String key = getSentenceID(data);
+		for (Dispatcher dispatcher : Dispatcher.values()) {
+			if (key.equals(dispatcher.key)) {
+				parsed = dispatcher.parser().apply(data);
+				break;
+			}
+		}
+		return parsed;
+	}
+
+	/**
+	 * For tests
+	 *
+	 * @param args
+	 */
 	public static void main(String... args) {
 		String str = "";
 
@@ -2084,7 +2221,6 @@ public class StringParsers {
 			if (x.getTypeNunit().equals(StringGenerator.XDRTypes.HUMIDITY)) {
 				System.out.println("Humidity:" + x.getValue() + "%");
 			}
-			;
 		}
 
 		str = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A";
@@ -2182,5 +2318,26 @@ public class StringParsers {
 
 		System.out.println(String.format("Device ID: %s ", getDeviceID(str)));
 		System.out.println(String.format("Sentence ID: %s ", getSentenceID(str)));
+
+		str = "$GPRMC,143040.000,V,3744.9330,N,12230.4192,W,000.0,000.0,060218,,,N*6A";
+		valid = validCheckSum(str);
+		System.out.println("RMC Chain is " + (valid ? "" : "not ") + "valid");
+		rmc = StringParsers.parseRMC(str);
+		System.out.println("Parsed");
+
+		// Auto parse
+		System.out.println("=============");
+		Arrays.asList(Dispatcher.values()).stream()
+				.forEach(disp -> System.out.println(String.format("%s: %s", disp.key(), disp.description())));
+		System.out.println("=============");
+
+		str = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A";
+		Object auto = autoParse(str);
+		if (auto == null) {
+			System.out.println("AutoParse retgurned null");
+		} else {
+			System.out.println(String.format("AutoParse returned a %s", auto.getClass().getName()));
+		}
+		System.out.println("Done!");
 	}
 }
