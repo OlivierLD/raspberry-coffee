@@ -474,7 +474,8 @@ public class SunFlower implements RESTRequestManager {
 			this.servoBoard = new PCA9685();
 			try {
 				this.servoBoard.setPWMFreq(freq); // Set frequency in Hz
-			} catch (NullPointerException npe) {
+			} catch (Exception npe) {
+//		} catch (NullPointerException npe) {
 				foundPCA9685 = false;
 				System.err.println("+------------------------------------------------------------");
 				System.err.println("| PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");

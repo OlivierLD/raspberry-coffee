@@ -215,7 +215,7 @@ public class SolarPanelOrienter implements Forwarder {
 			sunFlower = new SunFlower(new int[]{headingPin}, new int[]{tiltPin});
 		} catch (Exception ioe) {
 			// No servo board?
-			System.err.println(String.format("Creating SunfFlower, exception is a %s", ioe.getClass().getName()));
+			System.err.println(String.format("Creating SunFlower, exception is a %s", ioe.getClass().getName()));
 			ioe.printStackTrace();
 		}
 		boolean withVoltageADC = "true".equals(props.getProperty("with.adc", "false"));
