@@ -9,7 +9,9 @@ then
 	MACHINE=$1
 fi
 #
-echo -e "Machine is a $MACHINE"
+echo -e "+------------------------------"
+echo -e "| Machine is a $MACHINE"
+echo -e "+------------------------------"
 #
 # MUX_PROP_FILE=nmea.mux.sun.flower.02.properties
 #

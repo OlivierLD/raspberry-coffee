@@ -1,5 +1,6 @@
 package nmea.forwarders;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import calc.GeomUtil;
@@ -157,7 +158,7 @@ public class SolarPanelOrienter implements Forwarder {
 	public void setProperties(Properties props) {
 		/*
 		#
-		http.port=9999
+		http.port=9999 # This is the REST server
 		#
 		Servo pins read here, system variables equivalents
 		--------------------------------------------------
@@ -210,7 +211,13 @@ public class SolarPanelOrienter implements Forwarder {
 			System.setProperty("http.port", props.getProperty("http.port"));
 		}
 
-		sunFlower = new SunFlower(new int [] { headingPin }, new int[] { tiltPin });
+		try {
+			sunFlower = new SunFlower(new int[]{headingPin}, new int[]{tiltPin});
+		} catch (Exception ioe) {
+			// No servo board?
+			System.err.println(String.format("Creating SunfFlower, exception is a %s", ioe.getClass().getName()));
+			ioe.printStackTrace();
+		}
 		boolean withVoltageADC = "true".equals(props.getProperty("with.adc", "false"));
 		sunFlower.setWithAdc(withVoltageADC);
 
