@@ -6,7 +6,7 @@ class BasicCanvas extends HTMLElement {
 
 	constructor() {
 		super();
-		this._shadowRoot = this.attachShadow({mode: 'open'});
+		this._shadowRoot = this.attachShadow({mode: 'open'}); // 'open' means it is accessible from external JavaScript.
 		this.canvas = document.createElement("canvas"); // create and append a <canvas>
 		this.shadowRoot.appendChild(this.canvas);
 
@@ -136,7 +136,7 @@ Support will be introduced in Firefox 59/60.
 
 To do it, enter in the firefox url field: about:config
 
-Even like that, Firefox 58 does not work well...
+Even like that, Firefox 58 sometimes does not work well (as expected)...
 FF 59 to be released on 2018-03-13 (https://wiki.mozilla.org/RapidRelease/Calendar)
  */
 

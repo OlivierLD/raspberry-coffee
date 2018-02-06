@@ -1,23 +1,29 @@
 #!/usr/bin/env bash
 #
 # No properties file name is used as parameter here...
+MACHINE=RPi
 if [ $# -ne 0 ]
 then
-	echo -e ">>> No argument needed (nor taken). Properties file is hard-coded."
+	echo -e ">>> No properties file argument needed (nor taken). Properties file is hard-coded."
+	echo -e "Machine (1st prm) can be Mac or RPi"
+	MACHINE=$1
 fi
 #
-MUX_PROP_FILE=nmea.mux.sun.flower.02.properties
+echo -e "Machine is a $MACHINE"
+#
+# MUX_PROP_FILE=nmea.mux.sun.flower.02.properties
+#
+MUX_PROP_FILE=nmea.mux.sun.flower.03.properties
+echo "With $MUX_PROP_FILE, reach the sun.data.html page, on the appropriate port (see properties files, the sun.flower one)"
 #
 echo Using properties file $MUX_PROP_FILE
-#
-MACHINE=Mac
 #
 JAVA_OPTIONS=
 if [ "$MACHINE" = "Mac" ]
 then
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=./libs"       # for Mac
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=../Serial.IO/libs" # for Mac
 else
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"      # for Raspberry PI
 fi
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.data.verbose=false"
@@ -42,8 +48,12 @@ CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar  # SolarPanelOrient
 CP=$CP:./build/libs/NMEA.multiplexer-1.0-all.jar
 # CP=$CP:../SunFlower/build/libs/SunFlower-1.0-all.jar # Included in GPS.sun.servo-1.0-all.jar
 #
-CP=$CP:./libs/RXTXcomm.jar          # for Mac
-# CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
+if [ "$MACHINE" = "Mac" ]
+then
+  CP=$CP:../Serial.IO/libs/RXTXcomm.jar # for Mac
+else
+  CP=$CP:/usr/share/java/RXTXcomm.jar   # For Raspberry PI
+fi
 #
 # For JFR
 JFR_FLAGS=
