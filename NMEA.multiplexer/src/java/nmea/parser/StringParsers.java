@@ -1325,9 +1325,7 @@ public class StringParsers {
 			if (s.indexOf("RMC,") > -1) {
 				rmc = new RMC();
 				String[] data = str.substring(0, str.indexOf("*")).split(",");
-				if (data[2].equals("V")) { // Void
-					return rmc;
-				}
+				rmc = rmc.setValid(data[2].equals("A"));
 				if (data[1].length() > 0) { // Time and Date
 					double utc = 0D;
 					try {
@@ -1373,10 +1371,10 @@ public class StringParsers {
 						local.set(Calendar.YEAR, y);
 
 						Date rmcDate = local.getTime();
-						rmc.setRmcDate(rmcDate);
+						rmc = rmc.setRmcDate(rmcDate);
 					}
 					Date rmcTime = local.getTime();
-					rmc.setRmcTime(rmcTime);
+					rmc = rmc.setRmcTime(rmcTime);
 //        System.out.println("GPS date:" + rmcDate.toString());
 				}
 				if (data[3].length() > 0 && data[5].length() > 0) {
@@ -1392,7 +1390,7 @@ public class StringParsers {
 					if ("W".equals(data[6])) {
 						g = -g;
 					}
-					rmc.setGp(new GeoPos(l, g));
+					rmc = rmc.setGp(new GeoPos(l, g));
 				}
 				if (data[7].length() > 0) {
 					double speed = 0;
@@ -1418,7 +1416,7 @@ public class StringParsers {
 					}
 					if ("W".equals(data[11]))
 						d = -d;
-					rmc.setDeclination(d);
+					rmc = rmc.setDeclination(d);
 				}
 			}
 		} catch (Exception e) {

@@ -1,6 +1,5 @@
 package nmea.forwarders;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import calc.GeomUtil;

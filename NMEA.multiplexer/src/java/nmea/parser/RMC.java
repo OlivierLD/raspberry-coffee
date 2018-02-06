@@ -12,6 +12,8 @@ public class RMC implements Serializable {
 	private double sog = 0D;
 	private double cog = 0D;
 
+	private boolean valid = false; // False means warning.
+
 	private Date rmcDate = null;
 	private Date rmcTime = null;
 	private double declination = -Double.MAX_VALUE;
@@ -25,33 +27,45 @@ public class RMC implements Serializable {
 	public RMC() {
 	}
 
-	public void setGp(GeoPos gp) {
+	public RMC setGp(GeoPos gp) {
 		this.gp = gp;
+		return this;
 	}
 
 	public GeoPos getGp() {
 		return gp;
 	}
 
-	public void setSog(double sog) {
+	public RMC setSog(double sog) {
 		this.sog = sog;
+		return this;
 	}
 
 	public double getSog() {
 		return sog;
 	}
 
-	public void setCog(double cog) {
+	public RMC setCog(double cog) {
 		this.cog = cog;
+		return this;
 	}
 
 	public double getCog() {
 		return cog;
 	}
 
+	public RMC setValid(boolean b) {
+		this.valid = b;
+		return this;
+	}
+
+	public boolean isValid() {
+		return this.valid;
+	}
+
 	public String toString() {
 		String str = "";
-		str = (gp != null ? gp.toString() : "[no pos]") + ", " + "SOG:" + sog + ", COG:" + cog;
+		str = (gp != null ? gp.toString() : "[no pos]") + (!valid ? "(Warning)" : "") + ", " + "SOG:" + sog + ", COG:" + cog;
 		if (rmcDate != null) {
 			str += (" " + SDF.format(rmcDate) + " ");
 		}
@@ -61,24 +75,27 @@ public class RMC implements Serializable {
 		return str;
 	}
 
-	public void setRmcDate(Date rmcDate) {
+	public RMC setRmcDate(Date rmcDate) {
 		this.rmcDate = rmcDate;
+		return this;
 	}
 
 	public Date getRmcDate() {
 		return rmcDate;
 	}
 
-	public void setDeclination(double declination) {
+	public RMC setDeclination(double declination) {
 		this.declination = declination;
+		return this;
 	}
 
 	public double getDeclination() {
 		return declination;
 	}
 
-	public void setRmcTime(Date rmcTime) {
+	public RMC setRmcTime(Date rmcTime) {
 		this.rmcTime = rmcTime;
+		return this;
 	}
 
 	public Date getRmcTime() {
