@@ -31,7 +31,6 @@ const pluviometerColorConfigBlack = {
 let pluviometerColorConfig = pluviometerColorConfigWhite; // White is the default
 
 /* global HTMLElement */
-
 class Pluviometer extends HTMLElement {
 
 	static get observedAttributes() {
@@ -49,34 +48,40 @@ class Pluviometer extends HTMLElement {
 	constructor() {
 		super();
 		this._shadowRoot = this.attachShadow({mode: 'open'}); // 'open' means it is accessible from external JavaScript.
-		this.canvas = document.createElement("canvas"); // create and append a <canvas>
+		// create and append a <canvas>
+		this.canvas = document.createElement("canvas");
 		this.shadowRoot.appendChild(this.canvas);
 
-		this._value = 0; // Init
-		this._width = 50;
-		this._height = 150;
-		this._min_value = 0;
-		this._max_value = 10;
-		this._major_ticks = 1;
-		this._minor_ticks = 0.25;
+		// Default values
+		this._value       =   0;
+		this._width       =  50;
+		this._height      = 150;
+		this._min_value   =   0;
+		this._max_value   =  10;
+		this._major_ticks =   1;
+		this._minor_ticks =   0.25;
 		if (verbose) {
 			console.log("Data in Constructor:", this._value);
 		}
 	}
 
-	connectedCallback() { // Called whenever the custom element is inserted into the DOM.
+	// Called whenever the custom element is inserted into the DOM.
+	connectedCallback() {
 		if (verbose) {
-			console.log("connectedCallback invoked, 'value' value is [", this.value, "]");
+			console.log("connectedCallback invoked, 'value' is [", this.value, "]");
 		}
 	}
 
-	disconnectedCallback() { // Called whenever the custom element is removed from the DOM.
+	// Called whenever the custom element is removed from the DOM.
+	disconnectedCallback() {
 		if (verbose) {
 			console.log("disconnectedCallback invoked");
 		}
 	}
 
-	attributeChangedCallback(attrName, oldVal, newVal) { // Called whenever an attribute is added, removed or updated. Only attributes listed in the observedAttributes property are affected.
+	// Called whenever an attribute is added, removed or updated.
+	// Only attributes listed in the observedAttributes property are affected.
+	attributeChangedCallback(attrName, oldVal, newVal) {
 		if (verbose) {
 			console.log("attributeChangedCallback invoked on " + attrName + " from " + oldVal + " to " + newVal);
 		}
@@ -108,19 +113,19 @@ class Pluviometer extends HTMLElement {
 		this.paint();
 	}
 
-	adoptedCallback() { // Called whenever the custom element has been moved into a new document.
+	// Called whenever the custom element has been moved into a new document.
+	adoptedCallback() {
 		if (verbose) {
 			console.log("adoptedCallback invoked");
 		}
 	}
 
-	// Set the "data" property
 	set value(option) {
 		this.setAttribute("value", option);
 		if (verbose) {
 			console.log(">> Value option:", option);
 		}
-		this.paint();
+//	this.paint();
 	}
 	set width(val) {
 		this.setAttribute("width", val);
@@ -140,12 +145,10 @@ class Pluviometer extends HTMLElement {
 	set minorTicks(val) {
 		this.setAttribute("minor-ticks", val);
 	}
-
 	set shadowRoot(val) {
 		this._shadowRoot = val;
 	}
 
-	// Get the "open" property
 	get value() {
 		return this._value;
 	}
@@ -323,7 +326,7 @@ class Pluviometer extends HTMLElement {
 			context.font = "bold 10px " + pluviometerColorConfig.font;
 			context.fillStyle = digitColor;
 			let str = i.toString();
-			let len = context.measureText(str).width;
+//		let len = context.measureText(str).width;
 			context.fillText(str, xTo, yTo + 3); // 5: half font size
 		}
 		context.closePath();
@@ -331,10 +334,9 @@ class Pluviometer extends HTMLElement {
 		// Value
 //  this.value = 5.3; // for tests
 		let text = this.value.toFixed(2);
-		let len = 0;
 		context.font = "bold 12px " + pluviometerColorConfig.font;
 		let metrics = context.measureText(text);
-		len = metrics.width;
+		let len = metrics.width;
 
 		context.beginPath();
 		context.fillStyle = pluviometerColorConfig.valueColor;
@@ -346,27 +348,5 @@ class Pluviometer extends HTMLElement {
 	}
 }
 
-/* Note:
-To enable custom elements and shadow DOM in Firefox, set the
-dom.webcomponents.enabled ,
-dom.webcomponents.shadowdom.enabled,
-and dom.webcomponents.customelements.enabled preferences to true.
-Support will be introduced in Firefox 59/60.
-
-To do it, enter in the firefox url field: about:config
-
-Even like that, Firefox 58 sometimes does not work well (as expected)...
-FF 59 to be released on 2018-03-13 (https://wiki.mozilla.org/RapidRelease/Calendar)
- */
-
 // Associate the tag and the class
 window.customElements.define('pluvio-meter', Pluviometer);
-
-/*
-Could also be used like this:
-
-window.customElements.define('basic-canvas', class extends HTMLElement {
-  // Define behaviour here
-});
-
- */

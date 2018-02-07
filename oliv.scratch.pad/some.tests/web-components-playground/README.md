@@ -18,7 +18,7 @@ Then load the pages in a browser, using for example [http://localhost:8080/compo
 
 ---
 
-`WebComponent` allows the definition of custom reusable visual components, used in a web page like any standard component.
+The `WebComponents` standard allows the definition of custom reusable visual components, used in a web page like any standard component.
 
 Example:
 ```hntml
