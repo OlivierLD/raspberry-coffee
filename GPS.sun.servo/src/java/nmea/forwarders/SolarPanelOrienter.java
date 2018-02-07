@@ -156,6 +156,9 @@ public class SolarPanelOrienter implements Forwarder {
 	@Override
 	public void setProperties(Properties props) {
 		/*
+		#
+		http.port=9999 # This is the REST server
+		#
 		Servo pins read here, system variables equivalents
 		--------------------------------------------------
 		heading.servo.id=14
@@ -188,7 +191,7 @@ public class SolarPanelOrienter implements Forwarder {
 		*/
 		int headingPin = parsePropInt(props, "heading.servo.id", 14);
 		int tiltPin = parsePropInt(props, "tilt.servo.id", 15);
-		
+
 		System.setProperty("deltaT", props.getProperty("deltaT", "68.8033"));
 		System.setProperty("smooth.moves", props.getProperty("smooth.moves", "true"));
 		System.setProperty("ansi.console", props.getProperty("ansi.console", "false"));
@@ -203,9 +206,20 @@ public class SolarPanelOrienter implements Forwarder {
 		System.setProperty("one.by.one", props.getProperty("one.by.one", "false"));
 		System.setProperty("time.provided", props.getProperty("time.provided", "false"));
 
-		sunFlower = new SunFlower(new int [] { headingPin }, new int[] { tiltPin });
+		if (props.getProperty("http.port") != null) {
+			System.setProperty("http.port", props.getProperty("http.port"));
+		}
+
+		try {
+			sunFlower = new SunFlower(new int[]{headingPin}, new int[]{tiltPin});
+		} catch (Exception ioe) {
+			// No servo board?
+			System.err.println(String.format("Creating SunFlower, exception is a %s", ioe.getClass().getName()));
+			ioe.printStackTrace();
+		}
 		boolean withVoltageADC = "true".equals(props.getProperty("with.adc", "false"));
 		sunFlower.setWithAdc(withVoltageADC);
+
 		if (withVoltageADC) {
 			String pinStr = props.getProperty("miso");
 			if (pinStr != null) {
@@ -249,14 +263,14 @@ public class SolarPanelOrienter implements Forwarder {
 		// Start with this, in case the GPS is down...
 		String strLat  = props.getProperty("latitude");
 		String strLong =  props.getProperty("longitude");
-		if (!strLat.isEmpty()) {
+		if (strLat != null && !strLat.isEmpty()) {
 			try {
 				sunFlower.setLatitude(Double.parseDouble(strLat));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 		}
-		if (!strLong.isEmpty()) {
+		if (strLong != null && !strLong.isEmpty()) {
 			try {
 				sunFlower.setLongitude(Double.parseDouble(strLong));
 			} catch (NumberFormatException nfe) {
@@ -264,7 +278,7 @@ public class SolarPanelOrienter implements Forwarder {
 			}
 		}
 
-		declination = parsePropDouble(props, "declination", 14.0);
+		declination = parsePropDouble(props, "declination", 14.0); // 14 E
 
 		sunFlower.startWorking();
 	}

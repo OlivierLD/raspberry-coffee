@@ -457,11 +457,16 @@ public class SunFlower implements RESTRequestManager {
 
 		String httpPortStr = System.getProperty("http.port");
 		if (httpPortStr != null) {
+			if (orientationVerbose) {
+				System.out.println(String.format("SunFlower HTTP Port %s", httpPortStr));
+			}
 			try {
 				httpPort = Integer.parseInt(httpPortStr);
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
+		} else if (orientationVerbose) {
+			System.out.println(">> No SunFlower HTTP port.");
 		}
 
 		try {
@@ -469,7 +474,8 @@ public class SunFlower implements RESTRequestManager {
 			this.servoBoard = new PCA9685();
 			try {
 				this.servoBoard.setPWMFreq(freq); // Set frequency in Hz
-			} catch (NullPointerException npe) {
+			} catch (Exception npe) {
+//		} catch (NullPointerException npe) {
 				foundPCA9685 = false;
 				System.err.println("+------------------------------------------------------------");
 				System.err.println("| PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");

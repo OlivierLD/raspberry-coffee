@@ -11,6 +11,7 @@
 
 		.header {
 			display: flex;
+			flex-wrap: nowrap; /* default */
 			background: darkblue;
 			color: white;
 			padding: 20px;
@@ -21,13 +22,13 @@
 			white-space: nowrap;
 			overflow: hidden;
 			text-overflow: ellipsis;
-			border-radius:5px; border:1px solid cyan;
+			border-radius:5px; border:1px solid transparent;
 		}
 
 		.controls {
 			flex: 0 0 auto;
 			display: flex;
-			border-radius:5px; border:1px solid cyan;
+			border-radius:5px; border:1px solid transparent;
 		}
 
 		.button {
@@ -48,8 +49,7 @@
 
 	<div class="header">
 		<div class="title">
-			<div class="title">This is a very very very very very very very very VERY lonnnnnnnnnnnnnnnnnnnng title<span><button>Paf</button></span></div>
-
+			<div class="title">This is a very very very very very very very very VERY lonnnnnnnnnnnnnnnnnnnng title, no?</div>
 		</div>
 		<div class="controls">
 			<button class="button">Button</button>

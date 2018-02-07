@@ -14,6 +14,8 @@ import static utils.StaticUtil.userInput;
  *
  * Along the same lines, position can be provided, from a GPS for example.
  * And instead of using an LSM303, the heading could come from an NMEA Station...
+ *
+ * The "working" class is {@link SunFlower}.
  */
 public class SimplePanelOrienter {
 

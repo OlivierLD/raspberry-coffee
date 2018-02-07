@@ -85,7 +85,7 @@ public class PCA9685 {
 			delay(5);
 			servoDriver.write(MODE1, (byte) (oldmode | 0x80));
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			throw new RuntimeException(ioe);
 		}
 	}
 
