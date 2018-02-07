@@ -1,5 +1,7 @@
 const verbose = false;
 
+/* global HTMLElement */
+
 class BasicCanvas extends HTMLElement {
 
 	static get observedAttributes() { return ["data", "width", "height"]; }
