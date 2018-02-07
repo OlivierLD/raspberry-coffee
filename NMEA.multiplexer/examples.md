@@ -10,6 +10,7 @@
 - [Distinction on the device ID](#inside-and-outside)
 - [Driving and Logging](#driving-and-logging)
 - [Weather Station](#weather-station)
+- [SunFlower](#solar-data)
 
 #### Small external display
 There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
@@ -391,6 +392,8 @@ And then just run it (with the GPS on the right serial port):
 Then the web interface is available on the `http.port` mentioned above, at `sun.data.html`.
 
 ![Web Interface](./docimages/solar.data.png)
+
+Do the test: the Sun crosses the meridian at _exactly_ 12:00 noon Solar (SLR).
 
 ##### And more to come...
 <!--
