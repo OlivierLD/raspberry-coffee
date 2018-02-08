@@ -110,7 +110,7 @@ class Pluviometer extends HTMLElement {
 			default:
 				break;
 		}
-		this.paint();
+		this.repaint();
 	}
 
 	// Called whenever the custom element has been moved into a new document.
@@ -125,7 +125,7 @@ class Pluviometer extends HTMLElement {
 		if (verbose) {
 			console.log(">> Value option:", option);
 		}
-//	this.paint();
+//	this.repaint();
 	}
 	set width(val) {
 		this.setAttribute("width", val);
@@ -176,7 +176,7 @@ class Pluviometer extends HTMLElement {
 	}
 
 	// Component methods
-	paint() {
+	repaint() {
 
 		let digitColor = pluviometerColorConfig.scaleColor;
 		let context = this.canvas.getContext('2d');
