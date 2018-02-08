@@ -35,13 +35,14 @@ class Pluviometer extends HTMLElement {
 
 	static get observedAttributes() {
 		return [
-			"width",
-			"height",
-			"min-value",
-			"max-value",
-			"major-ticks",
-			"minor-ticks",
-			"value"
+			"width",        // Integer. Canvas width
+			"height",       // Integer. Canvas height
+			"min-value",    // Float. Min value for rain amount
+			"max-value",    // Float. Max value foir rain amount
+			"major-ticks",  // Float. value between major ticks (those with labels)
+			"minor-ticks",  // Float. value between minor ticks
+			"value",        // Float. Rain amount to display
+			"animate"       // Boolean. smooth animation between different values, or not.
 		];
 	}
 
@@ -60,6 +61,12 @@ class Pluviometer extends HTMLElement {
 		this._max_value   =  10;
 		this._major_ticks =   1;
 		this._minor_ticks =   0.25;
+		this._animate     = false;
+
+		this._previous_value = 0.0;
+		this._value_to_display = 0.0;
+		this._interval_ID;
+
 		if (verbose) {
 			console.log("Data in Constructor:", this._value);
 		}
@@ -107,6 +114,9 @@ class Pluviometer extends HTMLElement {
 			case "minor-ticks":
 				this._minor_ticks = parseFloat(newVal);
 				break;
+			case "animate":
+				this._animate = (newVal === 'true');
+				break;
 			default:
 				break;
 		}
@@ -145,6 +155,9 @@ class Pluviometer extends HTMLElement {
 	set minorTicks(val) {
 		this.setAttribute("minor-ticks", val);
 	}
+	set animate(val) {
+		this.setAttribute("animate", val);
+	}
 	set shadowRoot(val) {
 		this._shadowRoot = val;
 	}
@@ -170,6 +183,9 @@ class Pluviometer extends HTMLElement {
 	get majorTicks() {
 		return this._major_ticks;
 	}
+	get animate() {
+		return this._animate;
+	}
 
 	get shadowRoot() {
 		return this._shadowRoot;
@@ -177,6 +193,45 @@ class Pluviometer extends HTMLElement {
 
 	// Component methods
 	repaint() {
+		if (this.animate === true && this._value !== this._previous_value) {
+			this.goAnimate(this._value)
+		} else {
+			this.drawPluviometer(this._value);
+		}
+	}
+
+	displayAndIncrement(inc, finalValue) {
+		//console.log('Tic ' + inc + ', ' + finalValue);
+		this.drawPluviometer(this._value_to_display);
+		this._value_to_display += inc;
+		if ((inc > 0 && this._value_to_display > finalValue) || (inc < 0 && this._value_to_display < finalValue)) {
+			//  console.log('Stop!')
+			window.clearInterval(this._interval_ID);
+			this._previous_value = finalValue;
+			this.drawPluviometer(finalValue);
+		}
+	};
+
+	goAnimate(finalValue) {
+		let value = finalValue;
+//  console.log("Reaching Value :" + value + " from " + previousValue);
+		let diff = value - this._previous_value;
+		this._value_to_display = this._previous_value;
+
+//  console.log(canvasName + " going from " + previousValue + " to " + value);
+		let incr = 0;
+		if (diff > 0) {
+			incr = 0.1; // 0.1 * maxValue; // 0.01 is nicer, but too slow...
+		} else {
+			incr = -0.1; // -0.1 * maxValue;
+		}
+		let instance = this;
+		this._interval_ID = window.setInterval(function () {
+			instance.displayAndIncrement(incr, value);
+		}, 50);
+	};
+
+	drawPluviometer(rainValue) {
 
 		let digitColor = pluviometerColorConfig.scaleColor;
 		let context = this.canvas.getContext('2d');
@@ -262,7 +317,7 @@ class Pluviometer extends HTMLElement {
 		context.moveTo(x, y);   // bottom left
 		x = (this.canvas.width / 2) + (0.9 * (tubeWidth / 2));
 		context.lineTo(x, y);   // bottom right
-		y = bottomTube - ((tubeLength) * (this.value / (this.maxValue - this.minValue)));
+		y = bottomTube - ((tubeLength) * (rainValue / (this.maxValue - this.minValue)));
 		context.lineTo(x, y);   // top right
 		x = (this.canvas.width / 2) - (0.9 * (tubeWidth / 2));
 		context.lineTo(x, y);   // top left
@@ -333,7 +388,7 @@ class Pluviometer extends HTMLElement {
 
 		// Value
 //  this.value = 5.3; // for tests
-		let text = this.value.toFixed(2);
+		let text = rainValue.toFixed(2);
 		context.font = "bold 12px " + pluviometerColorConfig.font;
 		let metrics = context.measureText(text);
 		let len = metrics.width;
