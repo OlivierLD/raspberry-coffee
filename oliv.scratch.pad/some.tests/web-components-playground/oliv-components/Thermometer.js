@@ -1,47 +1,49 @@
-const rainVerbose = true;
+const tempVerbose = true;
 
-const pluviometerColorConfigWhite = {
-	withShadow: true,
-	shadowColor: 'LightGrey',
-	scaleColor: 'black',
+const thermometerColorConfigWhite = {
 	bgColor: 'white',
-	majorTickColor: 'LightGrey',
+	digitColor: 'red',
+	withGradient: true,
+	displayBackgroundGradient: {from: 'black', to: 'LightGrey'},
+	withDisplayShadow: true,
+	shadowColor: 'rgba(0, 0, 0, 0.75)',
+	majorTickColor: 'DarkGrey',
 	minorTickColor: 'DarkGrey',
+	valueColor: 'LightRed',
 	valueOutlineColor: 'black',
-	valueColor: 'DarkGrey',
-	tubeOutlineColor: 'pink',
-	hgOutlineColor: 'DarkGrey',
-	font: 'Arial'
+	valueNbDecimal: 2,
+	font: 'Arial' /* 'Source Code Pro' */
 };
 
-const pluviometerColorConfigBlack = {
-	withShadow: true,
-	shadowColor: 'black',
-	scaleColor: 'LightGrey',
+const thermometerColorConfigBlack = {
 	bgColor: 'black',
-	majorTickColor: 'LightGrey',
+	digitColor: 'red',
+	withGradient: true,
+	displayBackgroundGradient: {from: 'black', to: 'LightGrey'},
+	withDisplayShadow: true,
+	shadowColor: 'rgba(0, 0, 0, 0.75)',
+	majorTickColor: 'DarkGrey',
 	minorTickColor: 'DarkGrey',
+	valueColor: 'LightRed',
 	valueOutlineColor: 'black',
-	valueColor: 'LightGrey',
-	tubeOutlineColor: 'pink',
-	hgOutlineColor: 'DarkGrey',
-	font: 'Arial'
+	valueNbDecimal: 2,
+	font: 'Arial' /* 'Source Code Pro' */
 };
 
-let pluviometerColorConfig = pluviometerColorConfigWhite; // White is the default
+let thermometerColorConfig = thermometerColorConfigWhite;
 
 /* global HTMLElement */
-class Pluviometer extends HTMLElement {
+class Thermometer extends HTMLElement {
 
 	static get observedAttributes() {
 		return [
 			"width",        // Integer. Canvas width
 			"height",       // Integer. Canvas height
-			"min-value",    // Float. Min value for rain amount
-			"max-value",    // Float. Max value for rain amount
+			"min-value",    // Float. Min value for temperature
+			"max-value",    // Float. Max value for temperature
 			"major-ticks",  // Float. value between major ticks (those with labels)
 			"minor-ticks",  // Float. value between minor ticks
-			"value",        // Float. Rain amount to display
+			"value",        // Float. Temperature to display
 			"animate"       // Boolean. smooth animation between different values, or not.
 		];
 	}
@@ -67,21 +69,21 @@ class Pluviometer extends HTMLElement {
 		this._value_to_display = 0.0;
 		this._interval_ID;
 
-		if (rainVerbose) {
+		if (tempVerbose) {
 			console.log("Data in Constructor:", this._value);
 		}
 	}
 
 	// Called whenever the custom element is inserted into the DOM.
 	connectedCallback() {
-		if (rainVerbose) {
+		if (tempVerbose) {
 			console.log("connectedCallback invoked, 'value' is [", this.value, "]");
 		}
 	}
 
 	// Called whenever the custom element is removed from the DOM.
 	disconnectedCallback() {
-		if (rainVerbose) {
+		if (tempVerbose) {
 			console.log("disconnectedCallback invoked");
 		}
 	}
@@ -89,7 +91,7 @@ class Pluviometer extends HTMLElement {
 	// Called whenever an attribute is added, removed or updated.
 	// Only attributes listed in the observedAttributes property are affected.
 	attributeChangedCallback(attrName, oldVal, newVal) {
-		if (rainVerbose) {
+		if (tempVerbose) {
 			console.log("attributeChangedCallback invoked on " + attrName + " from " + oldVal + " to " + newVal);
 		}
 		switch (attrName) {
@@ -125,14 +127,14 @@ class Pluviometer extends HTMLElement {
 
 	// Called whenever the custom element has been moved into a new document.
 	adoptedCallback() {
-		if (rainVerbose) {
+		if (tempVerbose) {
 			console.log("adoptedCallback invoked");
 		}
 	}
 
 	set value(option) {
 		this.setAttribute("value", option);
-		if (rainVerbose) {
+		if (tempVerbose) {
 			console.log(">> Value option:", option);
 		}
 //	this.repaint();
@@ -196,19 +198,19 @@ class Pluviometer extends HTMLElement {
 		if (this.animate === true && this._value !== this._previous_value) {
 			this.goAnimate(this._value)
 		} else {
-			this.drawPluviometer(this._value);
+			this.drawThermometer(this._value);
 		}
 	}
 
 	displayAndIncrement(inc, finalValue) {
 		//console.log('Tic ' + inc + ', ' + finalValue);
-		this.drawPluviometer(this._value_to_display);
+		this.drawThermometer(this._value_to_display);
 		this._value_to_display += inc;
 		if ((inc > 0 && this._value_to_display > finalValue) || (inc < 0 && this._value_to_display < finalValue)) {
 			//  console.log('Stop!')
 			window.clearInterval(this._interval_ID);
 			this._previous_value = finalValue;
-			this.drawPluviometer(finalValue);
+			this.drawThermometer(finalValue);
 		}
 	};
 
@@ -231,127 +233,46 @@ class Pluviometer extends HTMLElement {
 		}, 50);
 	};
 
-	drawPluviometer(rainValue) {
+	drawThermometer(tempValue) {
 
-		let digitColor = pluviometerColorConfig.scaleColor;
+		let digitColor = thermometerColorConfig.digitColor;
 		let context = this.canvas.getContext('2d');
 
 		if (this.width === 0 || this.height === 0) { // Not visible
 			return;
 		}
+		let radius = 10; // The ball at the bottom. The tube is (radius / 2) wide.
+
 		// Set the canvas size from its container.
 		this.canvas.width = this.width;
 		this.canvas.height = this.height;
 
 		// Cleanup
-		context.fillStyle = pluviometerColorConfig.bgColor;
 		//context.fillStyle = "#ffffff";
-		//context.fillStyle = "LightBlue";
+		context.fillStyle = thermometerColorConfig.bgColor;
 		//context.fillStyle = "transparent";
 		context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 		//context.fillStyle = 'rgba(255, 255, 255, 0.0)';
 		//context.fillRect(0, 0, canvas.width, canvas.height);
 
-		//context.fillStyle = "transparent";
-		// Bottom of the tube at (canvas.height - 10)
-		let bottomTube = (this.canvas.height - 10);
-		let topTube = 20;// Top of the tube at y = 20
+		// Bottom of the tube at (canvas.height - 10 - radius)
+		let bottomTube = (this.canvas.height - 10 - radius);
+		let topTube = 40;// Top of the tube at y = 20
 
 		let tubeLength = bottomTube - topTube;
-		let tubeWidth = tubeLength / 5;
-		let xFrom, xTo, yFrom, yTo;
-
-		// Tube
-		context.beginPath();
-		//context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);
-		let x = (this.canvas.width / 2) - (1.5 * (tubeWidth / 2));
-		let y = bottomTube;
-		context.moveTo(x, y);    // bottom left
-		x = (this.canvas.width / 2) + (1.5 * (tubeWidth / 2));
-		context.lineTo(x, y); // bottom right
-		x = (this.canvas.width / 2) + (tubeWidth / 2);
-		y = bottomTube - 5;
-		context.lineTo(x, y); // Right, just above the foot
-		y = topTube;
-		context.lineTo(x, y); // Top right
-		x = (this.canvas.width / 2) - (1.5 * (tubeWidth / 2));
-		context.lineTo(x, y); // Top left, with the bill
-		y = topTube + 10;
-		x = (this.canvas.width / 2) - (tubeWidth / 2);
-		context.lineTo(x, y); // Left, under the bill
-		y = bottomTube - 5;
-		context.lineTo(x, y); // Left, just above the foot
-		x = (this.canvas.width / 2) - (1.5 * (tubeWidth / 2));
-		y = bottomTube;
-		context.lineTo(x, y); // Back to base
-
-		context.lineWidth = 1;
-		context.stroke();
-
-		let grd = context.createLinearGradient(0, 5, 0, tubeLength);
-		grd.addColorStop(0, 'LightGrey'); // 0  Beginning. black
-		grd.addColorStop(1, 'white');     // 1  End. LightGrey
-		context.fillStyle = grd;
-
-		if (pluviometerColorConfig.withShadow) {
-			context.shadowOffsetX = 3;
-			context.shadowOffsetY = 3;
-			context.shadowBlur = 3;
-			context.shadowColor = pluviometerColorConfig.shadowColor;
-		}
-
-		context.lineJoin = "round";
-		context.fill();
-		context.strokeStyle = pluviometerColorConfig.tubeOutlineColor; // Tube outline color
-		context.stroke();
-		context.closePath();
-
-		bottomTube -= 5;
-		topTube -= 5;
-		tubeLength -= 10;
-
-		// Liquid in the tube
-		context.beginPath();
-		x = (this.canvas.width / 2) - (0.9 * (tubeWidth / 2));
-		y = bottomTube;
-		context.moveTo(x, y);   // bottom left
-		x = (this.canvas.width / 2) + (0.9 * (tubeWidth / 2));
-		context.lineTo(x, y);   // bottom right
-		y = bottomTube - ((tubeLength) * (rainValue / (this.maxValue - this.minValue)));
-		context.lineTo(x, y);   // top right
-		x = (this.canvas.width / 2) - (0.9 * (tubeWidth / 2));
-		context.lineTo(x, y);   // top left
-
-		context.lineWidth = 1;
-
-		let _grd = context.createLinearGradient(0, topTube, 0, tubeLength);
-		// Colors are hard-coded...
-		_grd.addColorStop(0, 'navy');   // 0  Beginning, top
-		_grd.addColorStop(0.5, 'blue');
-		_grd.addColorStop(1, 'cyan');   // 1  End, bottom
-		context.fillStyle = _grd;
-
-//  context.shadowBlur  = 20;
-//  context.shadowColor = 'black';
-
-		context.lineJoin = "round";
-		context.fill();
-		context.strokeStyle = pluviometerColorConfig.hgOutlineColor;
-		context.stroke();
-		context.closePath();
 
 		// Major Ticks
 		context.beginPath();
-		for (let i = 0; i <= (this.maxValue - this.minValue); i += this.majorTicks) {
-			xFrom = (this.canvas.width / 2) + (tubeWidth / 2);
-			yFrom = bottomTube - ((tubeLength) * (i / (this.maxValue - this.minValue)));
-			xTo = xFrom - 20;
-			yTo = yFrom;
+		for (let i = 0; i <= (this.maxValue -this.minValue); i += this.majorTicks) {
+			let xFrom = (this.canvas.width / 2) - 20;
+			let yFrom = bottomTube - ((tubeLength) * (i / (this.maxValue - this.minValue)));
+			let xTo = (this.canvas.width / 2) + 20;
+			let yTo = yFrom;
 			context.moveTo(xFrom, yFrom);
 			context.lineTo(xTo, yTo);
 		}
 		context.lineWidth = 1;
-		context.strokeStyle = pluviometerColorConfig.majorTickColor;
+		context.strokeStyle = thermometerColorConfig.majorTickColor;
 		context.stroke();
 		context.closePath();
 
@@ -359,49 +280,99 @@ class Pluviometer extends HTMLElement {
 		if (this.minorTicks > 0) {
 			context.beginPath();
 			for (let i = 0; i <= (this.maxValue - this.minValue); i += this.minorTicks) {
-				xFrom = (this.canvas.width / 2) + (tubeWidth / 2);
-				yFrom = bottomTube - ((tubeLength) * (i / (this.maxValue - this.minValue)));
-				xTo = xFrom - 10;
-				yTo = yFrom;
+				let xFrom = (this.canvas.width / 2) - 15;
+				let yFrom = bottomTube - ((tubeLength) * (i / (this.maxValue - this.minValue)));
+				let xTo = (this.canvas.width / 2) + 15;
+				let yTo = yFrom;
 				context.moveTo(xFrom, yFrom);
 				context.lineTo(xTo, yTo);
 			}
 			context.lineWidth = 1;
-			context.strokeStyle = pluviometerColorConfig.minorTickColor;
+			context.strokeStyle = thermometerColorConfig.minorTickColor;
 			context.stroke();
 			context.closePath();
 		}
 
+		// Tube
+		context.beginPath();
+		//context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);
+		context.arc(this.canvas.width / 2, this.canvas.height - 10 - radius, radius, 5 * Math.PI / 4, 7 * Math.PI / 4, true);
+		context.lineTo((this.canvas.width / 2) + (radius * Math.cos(Math.PI / 4)), topTube); // right side of the tube
+		context.arc(this.canvas.width / 2, topTube, (radius / 2), 0, Math.PI, true);
+		context.lineWidth = 1;
+
+		if (thermometerColorConfig.withGradient) {
+			let grd = context.createLinearGradient(0, 5, 0, radius);
+			grd.addColorStop(0, thermometerColorConfig.displayBackgroundGradient.from);// 0  Beginning
+			grd.addColorStop(1, thermometerColorConfig.displayBackgroundGradient.to);// 1  End
+			context.fillStyle = grd;
+		}
+		if (thermometerColorConfig.withDisplayShadow) {
+			context.shadowBlur = 0;
+			context.shadowColor = thermometerColorConfig.shadowColor; // 'black';
+		}
+		context.lineJoin = "round";
+		context.fill();
+		context.strokeStyle = 'DarkGrey';
+		context.stroke();
+		context.closePath();
+
 		// Numbers
 		context.beginPath();
 		for (let i = this.minValue; i <= this.maxValue; i += this.majorTicks) {
-			xTo = (this.canvas.width / 2) + 20;
-			yTo = bottomTube - ((tubeLength) * ((i - this.minValue) / (this.maxValue - this.minValue)));
+			let xTo = (this.canvas.width / 2) + 20;
+			let yTo = bottomTube - ((tubeLength) * ((i - this.minValue) / (this.maxValue - this.minValue)));
 
-			context.font = "bold 10px " + pluviometerColorConfig.font;
+			context.font = "bold 10px Arial";
 			context.fillStyle = digitColor;
 			let str = i.toString();
-//		let len = context.measureText(str).width;
+//		len = context.measureText(str).width;
 			context.fillText(str, xTo, yTo + 3); // 5: half font size
 		}
 		context.closePath();
 
 		// Value
-//  this.value = 5.3; // for tests
-		let text = rainValue.toFixed(2);
-		context.font = "bold 12px " + pluviometerColorConfig.font;
+		let text = tempValue.toFixed(thermometerColorConfig.valueNbDecimal);
+		context.font = "bold 20px Arial";
 		let metrics = context.measureText(text);
 		let len = metrics.width;
 
 		context.beginPath();
-		context.fillStyle = pluviometerColorConfig.valueColor;
-		context.fillText(text, (this.canvas.width / 2) - (len / 2), 10);
+		context.fillStyle = thermometerColorConfig.valueColor;
+		context.fillText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10));
 		context.lineWidth = 1;
-		context.strokeStyle = pluviometerColorConfig.valueOutlineColor;
-		context.strokeText(text, (this.canvas.width / 2) - (len / 2), 10); // Outlined
+		context.strokeStyle = thermometerColorConfig.valueOutlineColor;
+		context.strokeText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined
+		context.closePath();
+
+		// Liquid in the tube
+		context.beginPath();
+		//context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);
+		context.arc(this.canvas.width / 2, this.canvas.height - 10 - (radius * 0.75), (radius * 0.75), 5 * Math.PI / 4, 7 * Math.PI / 4, true);
+		let y = bottomTube - ((tubeLength) * ((tempValue - this.minValue) / (this.maxValue - this.minValue)));
+
+		context.lineTo((this.canvas.width / 2) + ((radius * 0.75) * Math.cos(Math.PI / 4)), y); // right side of the tube
+		context.lineTo((this.canvas.width / 2) - ((radius * 0.75) * Math.cos(Math.PI / 4)), y); // top of the liquid
+
+		context.lineWidth = 1;
+
+		let _grd = context.createLinearGradient(0, topTube, 0, tubeLength);
+		_grd.addColorStop(0, 'red');    // 0  Beginning
+		_grd.addColorStop(0.6, 'red');
+		_grd.addColorStop(0.8, 'blue');
+		_grd.addColorStop(1, 'navy');   // 1  End
+		context.fillStyle = _grd;
+
+		context.shadowBlur = 20;
+		context.shadowColor = 'black';
+
+		context.lineJoin = "round";
+		context.fill();
+		context.strokeStyle = 'DarkGrey';
+		context.stroke();
 		context.closePath();
 	}
 }
 
 // Associate the tag and the class
-window.customElements.define('pluvio-meter', Pluviometer);
+window.customElements.define('thermo-meter', Thermometer);

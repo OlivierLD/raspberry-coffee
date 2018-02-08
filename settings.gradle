@@ -2,7 +2,7 @@ include 'Adafruit.IO.REST'
 include 'ADC'
 include 'AlaMode.101'
 include 'Arduino.RaspberryPI'
-include 'DAC' 
+include 'DAC'
 include 'FONA'
 include 'GPIO.01'
 include 'I2C.SPI'
@@ -39,3 +39,4 @@ include 'RESTImageProcessor'
 include "RESTRouting"
 include "RESTCam"
 include "Camera"
+include "oliv.scrtch.pad/some.tests"

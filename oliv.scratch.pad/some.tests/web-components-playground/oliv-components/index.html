@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="stylesheet.css">
 
 	<script type="text/javascript" src="Pluviometer.js" async></script>
+	<script type="text/javascript" src="Thermometer.js" async></script>
 
 	<style>
 		.black-frame {
@@ -27,14 +28,22 @@
 			let value = document.getElementById("rain-value").value; // value corresponds to the 'set value(val) { ...'
 			elem.value = value;
 		}
+
+		function setTempData() {
+			let elem = document.getElementById("thermometer-01");
+			let value = document.getElementById("temp-value").value; // value corresponds to the 'set value(val) { ...'
+			elem.value = value;
+		}
 	</script>
 </head>
 <body>
 
-	<h2>Web Components - Pluviometer</h2>
+	<h2>Web Components</h2>
+	<h5>Pluviometer</h5>
 
 	<table>
 		<tr>
+
 			<td>
 				<div class="black-frame centered">
 					<pluvio-meter id="pluviometer-01"
@@ -49,8 +58,25 @@
 												height="220"></pluvio-meter>
 				</div>
 			</td>
+
+			<td>
+				<div class="black-frame centered">
+					<thermo-meter id="thermometer-01"
+												title="Celcius"
+												min-value="-10"
+												max-value="60"
+												major-ticks="10"
+												minor-ticks="1"
+												value="12.34"
+												animate="true"
+												width="100"
+												height="360"></thermo-meter>
+				</div>
+			</td>
+
 		</tr>
 		<tr>
+
 			<td>
 				<div class="black-frame centered">
 					Value:
@@ -59,13 +85,32 @@
 								 placeholder="rain"
 					       title="in mm/h"
 								 onblur="setRainData()"
-								 style="width: 30px;"/>
+								 style="width: 32px;"/>
 					<br/>
 					<button onclick="setRainData()"
-					        title="Set Rain value!">Set value</button>
+					        title="Set Rain value in the tube"
+					        style="margin-top: 3px;">Set value</button>
 				</div>
 
 			</td>
+
+			<td>
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="temp-value"
+								 placeholder="temp"
+								 title="in mm/h"
+								 onblur="setTempData()"
+								 style="width: 32px;"/>
+					<br/>
+					<button onclick="setTempData()"
+									title="Set Temp value in the tube"
+									style="margin-top: 3px;">Set value</button>
+				</div>
+
+			</td>
+
 		</tr>
 	</table>
 	<hr/>
