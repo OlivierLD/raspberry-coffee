@@ -23,15 +23,9 @@
 	</style>
 
 	<script type="text/javascript">
-		function setRainData() {
-			let elem = document.getElementById("pluviometer-01");
-			let value = document.getElementById("rain-value").value; // value corresponds to the 'set value(val) { ...'
-			elem.value = value;
-		}
-
-		function setTempData() {
-			let elem = document.getElementById("thermometer-01");
-			let value = document.getElementById("temp-value").value; // value corresponds to the 'set value(val) { ...'
+		function setData(from, to) {
+			let elem = document.getElementById(to);
+			let value = document.getElementById(from).value; // value corresponds to the 'set value(val) { ...'
 			elem.value = value;
 		}
 	</script>
@@ -39,12 +33,18 @@
 <body>
 
 	<h2>Web Components</h2>
-	<h5>Pluviometer</h5>
+	<h5>Pluviometer, Thermometer</h5>
 
 	<table>
 		<tr>
+			<th>Anim.</th>
+			<th>No Anim.</th>
+			<th>Anim.</th>
+			<th>No Anim.</th>
+		</tr>
+		<tr>
 
-			<td>
+			<td valign="bottom">
 				<div class="black-frame centered">
 					<pluvio-meter id="pluviometer-01"
 												title="m/m per hour"
@@ -59,7 +59,22 @@
 				</div>
 			</td>
 
-			<td>
+			<td valign="bottom">
+				<div class="black-frame centered">
+					<pluvio-meter id="pluviometer-02"
+												title="m/m per hour"
+												min-value="0"
+												max-value="10"
+												major-ticks="1"
+												minor-ticks="0.25"
+												value="0"
+												animate="false"
+												width="60"
+												height="220"></pluvio-meter>
+				</div>
+			</td>
+
+			<td valign="bottom">
 				<div class="black-frame centered">
 					<thermo-meter id="thermometer-01"
 												title="Celcius"
@@ -74,6 +89,21 @@
 				</div>
 			</td>
 
+			<td valign="bottom">
+				<div class="black-frame centered">
+					<thermo-meter id="thermometer-02"
+												title="Celcius"
+												min-value="-10"
+												max-value="60"
+												major-ticks="10"
+												minor-ticks="1"
+												value="12.34"
+												animate="false"
+												width="100"
+												height="360"></thermo-meter>
+				</div>
+			</td>
+
 		</tr>
 		<tr>
 
@@ -81,13 +111,13 @@
 				<div class="black-frame centered">
 					Value:
 					<input type="number"
-								 id="rain-value"
+								 id="rain-value-01"
 								 placeholder="rain"
 					       title="in mm/h"
-								 onblur="setRainData()"
+								 onblur="setData('rain-value-01', 'pluviometer-01')"
 								 style="width: 32px;"/>
 					<br/>
-					<button onclick="setRainData()"
+					<button onclick="setData('rain-value-01', 'pluviometer-01')"
 					        title="Set Rain value in the tube"
 					        style="margin-top: 3px;">Set value</button>
 				</div>
@@ -98,13 +128,47 @@
 				<div class="black-frame centered">
 					Value:
 					<input type="number"
-								 id="temp-value"
-								 placeholder="temp"
+								 id="rain-value-02"
+								 placeholder="rain"
 								 title="in mm/h"
-								 onblur="setTempData()"
+								 onblur="setData('rain-value-02', 'pluviometer-02')"
 								 style="width: 32px;"/>
 					<br/>
-					<button onclick="setTempData()"
+					<button onclick="setRainData()"
+									title="Set Rain value in the tube"
+									style="margin-top: 3px;">Set value</button>
+				</div>
+
+			</td>
+
+			<td>
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="temp-value-01"
+								 placeholder="temp"
+								 title="in Celcius"
+								 onblur="setData('temp-value-01', 'thermometer-01')"
+								 style="width: 32px;"/>
+					<br/>
+					<button onclick="setData('temp-value-01', 'thermometer-01')"
+									title="Set Temp value in the tube"
+									style="margin-top: 3px;">Set value</button>
+				</div>
+
+			</td>
+
+			<td>
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="temp-value-02"
+								 placeholder="temp"
+								 title="in Celcius"
+								 onblur="setData('temp-value-02', 'thermometer-02')"
+								 style="width: 32px;"/>
+					<br/>
+					<button onclick="setData('temp-value-02', 'thermometer-02')"
 									title="Set Temp value in the tube"
 									style="margin-top: 3px;">Set value</button>
 				</div>
