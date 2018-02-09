@@ -8,6 +8,7 @@
 
 	<script type="text/javascript" src="Pluviometer.js" async></script>
 	<script type="text/javascript" src="Thermometer.js" async></script>
+	<script type="text/javascript" src="JumboDisplay.js" async></script>
 
 	<style>
 		.black-frame {
@@ -104,6 +105,17 @@
 				</div>
 			</td>
 
+			<td valign="bottom">
+				<div class="black-frame centered">
+					<jumbo-display id="jumbo-01"
+												 value="-12.34"
+												 title="XYZ"
+					               text-color="cyan"
+												 width="180"
+												 height="80"></jumbo-display>
+				</div>
+			</td>
+
 		</tr>
 		<tr>
 
@@ -170,6 +182,23 @@
 					<br/>
 					<button onclick="setData('temp-value-02', 'thermometer-02')"
 									title="Set Temp value in the tube"
+									style="margin-top: 3px;">Set value</button>
+				</div>
+
+			</td>
+
+			<td>
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="jumbo-value-01"
+								 placeholder="val"
+								 title="Jumbo"
+								 onblur="setData('jumbo-value-01', 'jumbo-01')"
+								 style="width: 50px;"/>
+					<br/>
+					<button onclick="setData('jumbo-value-01', 'jumbo-01')"
+									title="Set value for the jumbo"
 									style="margin-top: 3px;">Set value</button>
 				</div>
 
