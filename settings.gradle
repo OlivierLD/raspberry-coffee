@@ -39,4 +39,3 @@ include 'RESTImageProcessor'
 include "RESTRouting"
 include "RESTCam"
 include "Camera"
-include "oliv.scrtch.pad/some.tests"
