@@ -7,25 +7,46 @@
 # value on error.
 #
 # In order to enable or disable this script just change the execution
-# bits.
+# bits. (chmod +x)
 #
 # By default this script does nothing.
+# it lives in the /etc directory
 
 # Print the IP address
 _IP=$(hostname -I) || true
 if [ "$_IP" ]; then
-  printf "My IP address is %s\n" "$_IP"
+  printf ">> IP address is %s\n" "$_IP"
 fi
 #
-_OLED=`i2cdetect -y 1 | grep 3c`
-if [ "$_OLED" ]
-then
+# _OLED=`i2cdetect -y 1 | grep 3c`
+# _PAPIRUS=`i2cdetect -y 1 | grep 48`
+#
+_OLED=$(i2cdetect -y 1 | grep 3c) || true
+_PAPIRUS=$(i2cdetect -y 1 | grep 48) || true
+#
+# echo "OLED: $_OLED"
+# echo "PAPIRUS: $_PAPIRUS"
+#
+if [ "$_OLED" ]; then
   printf "+---------------+\n"
   printf "| OLED Detected |\n"
   printf "+---------------+\n"
-  /home/pi/raspberry-pi4j-samples/I2C.SPI/ssd1306i2cDisplay "$_IP | on PI-Net"
+  cd /home/pi/raspberry-pi4j-samples/I2C.SPI
+  MESS=""
+  if [ "$_IP" ]; then
+    MESS="$_IP|"
+  fi
+  MESS="$MESS on PI-Net| default 192.168.127.1"
+  ./ssd1306i2cDisplay "$MESS"
+elif [ "$_PAPIRUS" ]; then
+  MESS=""
+  if [ "$_IP" ]; then
+    MESS="$_IP,"
+  fi
+  MESS="$MESS on PI-Net, default 192.168.127.1"
+  papirus-write "$MESS" --fsize 16
 else
-  printf "| NO OLED Detected |\n"
+  printf ">> NO Screen Detected <<\n"
 fi
 #
 exit 0

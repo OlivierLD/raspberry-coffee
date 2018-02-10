@@ -2,8 +2,8 @@
 CP=./build/libs/I2C.SPI-1.0-all.jar
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true "
-JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.verbose=true "
+JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false "
+JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.verbose=false "
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmirror.screen=true"
 #
 # Separate the lines with a pipe |
@@ -11,7 +11,8 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dssd1306.verbose=true "
 if [ "$1" = "IP" ]
 then
   _IP=$(hostname -I) || true
-	if [ "$_IP" ]; then
+	if [ "$_IP" ]
+	then
 	  printf "My IP address is %s\n" "$_IP"
 	fi
 	#

@@ -27,7 +27,7 @@
 		function setData(from, to) {
 			let elem = document.getElementById(to);
 			let value = document.getElementById(from).value; // value corresponds to the 'set value(val) { ...'
-			elem.value = value;                              // Same here
+			elem.value = value;                              // Same here. Invokes the setter in the HTMLElement class
 		}
 	</script>
 </head>
