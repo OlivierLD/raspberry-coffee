@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Import Test</title>
+	<link rel="icon" type="image/png" href="../../logo-192x192.png">
+	<script type="module" src="test.js"></script>
+	<script type="text/javascript">
+		console.log("Page is loaded");
+		try {
+			console.log("fullWorldMap is %s", (fullWorldMap === undefined ? "undefined" : "OK!"));
+		} catch (error) {
+			console.log("Oops");
+		}
+
+		function buttonClick() {
+			// Need to use Babel or a transpiler to see the worldMap  ?
+			console.log('Ah!');
+		}
+
+	</script>
+</head>
+<body style="font-family: Arial;">
+	Import Test.
+
+<p>
+	<button onclick="buttonClick()">Click</button>
+</p>
+</body>
+</html>

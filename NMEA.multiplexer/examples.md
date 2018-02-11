@@ -10,6 +10,7 @@
 - [Distinction on the device ID](#inside-and-outside)
 - [Driving and Logging](#driving-and-logging)
 - [Weather Station](#weather-station)
+- [SunFlower](#solar-data)
 
 #### Small external display
 There is a forwarder sample `SSD1306Processor` that uses an oled display to show the True Wind Direction read from the cache:
@@ -317,6 +318,82 @@ I've tried two options:
 Both can provide some free access to an IoT server.
 
 Adafruit-IO supports `MQTT` and `REST` protocols.
+
+#### Solar Data
+That one is a variation of the [`SunFlower`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/SunFlower/README.md) project.
+
+The `SunFlower` project is originally designed to orient a solar panel toward the Sun, to maximize its efficiency.
+The solar panel is driven by two servos or motors, one for the heading (vertical axis), and one for the tilt (horizontal axis).
+
+Based on the device geographical position and the system date, the soft calculates the `altitude` and `azimuth` of the sun,
+and drives the servos (or motors) accordingly.
+
+The idea here is to forget about the solar panel orientation, get the geographical position from a GPS connected on a serial port, do the astronomical calculations,
+and output sevaral data, available through a REST and HTML interface:
+- Position
+- System and Solar Dates
+- Altitude and Azimuth of the Sun
+
+GPS is read from a `channel`, output produced as a `forwarder`:
+```properties
+#
+#  MUX definition.
+#
+with.http.server=yes
+http.port=9999
+#
+# ...
+#
+# Channels (input)
+#
+# GPS, on a Mac
+mux.01.type=serial
+# GPS, on a Mac
+# mux.01.port=/dev/tty.usbserial
+# GPS, on a Raspberry PI
+mux.01.port=/dev/ttyUSB0
+mux.01.baudrate=4800
+mux.01.verbose=false
+mux.01.sentence.filters=RMC,~GSV,~GGA,~GSA
+#
+# Forwarders
+#
+forward.01.cls=nmea.forwarders.SolarPanelOrienter
+forward.01.properties=sunflower.rest.properties
+#
+```
+> Note: this runs on any machine that knows about a serial port, not only a Raspberry PI.  
+
+As seen above, the `forwarder` refers to its own properties file:
+```properties
+#
+# For the SunFlower REST Server (Dates & Co)
+#
+http.port=9090
+#
+...
+```
+The port is the port of a particular REST server used for the Sun data.
+
+The `nmea.forwarders.SolarPanelOrienter` class is part of the `GPS.sun.servo` project. Build all you need this way:
+
+```bash
+ $ cd ../GPS.sun.servo
+ $ ../gradlew shadowJar
+ $ .......
+ $ cd ../NMEA.multiplexer
+ $ ../gradlew shadowJar
+ $ ....... 
+```
+And then just run it (with the GPS on the right serial port):
+```bash
+ $ ./mux.sunflower.sh [Mac]
+```
+Then the web interface is available on the `http.port` mentioned above, at `sun.data.html`.
+
+![Web Interface](./docimages/solar.data.png)
+
+Do the test: the Sun crosses the meridian at _exactly_ 12:00 noon Solar (SLR).
 
 ##### And more to come...
 <!--

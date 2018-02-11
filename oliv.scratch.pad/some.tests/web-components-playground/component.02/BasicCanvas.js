@@ -1,5 +1,7 @@
 const verbose = false;
 
+/* global HTMLElement */
+
 class BasicCanvas extends HTMLElement {
 
 	static get observedAttributes() { return ["data", "width", "height"]; }
@@ -68,7 +70,7 @@ class BasicCanvas extends HTMLElement {
 		}
 	}
 
-	// Get the "open" property
+	// Get the "data" property
 	get data() {
 		return this._data;
 //	return this.hasAttribute("data"); // This one returns a boolean!
