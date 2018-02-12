@@ -21,7 +21,7 @@ Then load the pages in a browser, using for example [http://localhost:8080/compo
 The `WebComponents` standard allows the definition of custom reusable visual components, used in a web page like any standard component.
 
 Example:
-```hntml
+```html
 <pluvio-meter id="pluviometer-01"
               title="m/m per hour"
               min-value="0"
