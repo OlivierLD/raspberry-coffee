@@ -42,4 +42,12 @@ function setData() {
 ```
 ---
 
+## Lessons learned
+
+No animation in the component, `clearInterval` does not clear anything.
+If animation is needed, make it happen outside the component.
+Works OK (~so-so) if there is only one component, it's a mess otherwise.
+
+---
+
 More to come...

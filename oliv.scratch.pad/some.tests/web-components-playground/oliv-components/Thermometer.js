@@ -1,10 +1,13 @@
-const tempVerbose = true;
+const tempVerbose = false;
 
-const thermometerColorConfigWhite = {
+const thermometerColorConfigDefault = {
 	bgColor: 'white',
 	digitColor: 'red',
 	withGradient: true,
-	displayBackgroundGradient: {from: 'black', to: 'LightGrey'},
+	displayBackgroundGradient: {
+		from: 'black',
+		to: 'LightGrey'
+	},
 	withDisplayShadow: true,
 	shadowColor: 'rgba(0, 0, 0, 0.75)',
 	majorTickColor: 'DarkGrey',
@@ -14,23 +17,6 @@ const thermometerColorConfigWhite = {
 	valueNbDecimal: 2,
 	font: 'Arial' /* 'Source Code Pro' */
 };
-
-const thermometerColorConfigBlack = {
-	bgColor: 'black',
-	digitColor: 'red',
-	withGradient: true,
-	displayBackgroundGradient: {from: 'black', to: 'LightGrey'},
-	withDisplayShadow: true,
-	shadowColor: 'rgba(0, 0, 0, 0.75)',
-	majorTickColor: 'DarkGrey',
-	minorTickColor: 'DarkGrey',
-	valueColor: 'LightRed',
-	valueOutlineColor: 'black',
-	valueNbDecimal: 2,
-	font: 'Arial' /* 'Source Code Pro' */
-};
-
-let thermometerColorConfig = thermometerColorConfigWhite;
 
 /* global HTMLElement */
 class Thermometer extends HTMLElement {
@@ -43,8 +29,7 @@ class Thermometer extends HTMLElement {
 			"max-value",    // Float. Max value for temperature
 			"major-ticks",  // Float. value between major ticks (those with labels)
 			"minor-ticks",  // Float. value between minor ticks
-			"value",        // Float. Temperature to display
-			"animate"       // Boolean. smooth animation between different values, or not.
+			"value"         // Float. Temperature to display
 		];
 	}
 
@@ -63,11 +48,9 @@ class Thermometer extends HTMLElement {
 		this._max_value   =  10;
 		this._major_ticks =   1;
 		this._minor_ticks =   0.25;
-		this._animate     = false;
 
-		this._previous_value = 0.0;
-		this._value_to_display = 0.0;
-		this._interval_ID;
+		this._previousClassName = "";
+		this.thermometerColorConfig = thermometerColorConfigDefault; // Init
 
 		if (tempVerbose) {
 			console.log("Data in Constructor:", this._value);
@@ -116,9 +99,6 @@ class Thermometer extends HTMLElement {
 			case "minor-ticks":
 				this._minor_ticks = parseFloat(newVal);
 				break;
-			case "animate":
-				this._animate = (newVal === 'true');
-				break;
 			default:
 				break;
 		}
@@ -157,9 +137,6 @@ class Thermometer extends HTMLElement {
 	set minorTicks(val) {
 		this.setAttribute("minor-ticks", val);
 	}
-	set animate(val) {
-		this.setAttribute("animate", val);
-	}
 	set shadowRoot(val) {
 		this._shadowRoot = val;
 	}
@@ -185,57 +162,107 @@ class Thermometer extends HTMLElement {
 	get majorTicks() {
 		return this._major_ticks;
 	}
-	get animate() {
-		return this._animate;
-	}
 
 	get shadowRoot() {
 		return this._shadowRoot;
 	}
 
 	// Component methods
+	/**
+	 * Recurse from the top down, on styleSheets and cssRules
+	 *
+	 * document.styleSheets[0].cssRules[2].selectorText returns ".analogdisplay"
+	 * document.styleSheets[0].cssRules[2].cssText returns ".analogdisplay { --hand-color: red;  --face-color: white; }"
+	 * document.styleSheets[0].cssRules[2].style.cssText returns "--hand-color: red; --face-color: white;"
+	 *
+	 * spine-case to camelCase
+	 */
+	getColorConfig(cssClassName) {
+		let colorConfig = thermometerColorConfigDefault;
+		for (let s=0; s<document.styleSheets.length; s++) {
+  		// console.log("Walking though ", document.styleSheets[s]);
+			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+  			// console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
+				if (document.styleSheets[s].cssRules[r].selectorText === ('.' + cssClassName)) {
+  				// console.log("  >>> Found it!");
+					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
+					let cssTextElems = cssText.split(";");
+					cssTextElems.forEach(function(elem) {
+						if (elem.trim().length > 0) {
+							let keyValPair = elem.split(":");
+							let key = keyValPair[0].trim();
+							let value = keyValPair[1].trim();
+							switch (key) {
+								case '--bg-color':
+									colorConfig.bgColor = value;
+									break;
+								case '--digit-color':
+									colorConfig.digitColor = value;
+									break;
+								case '--with-gradient':
+									colorConfig.withGradient = (value === 'true');
+									break;
+								case '--display-background-gradient-from':
+									colorConfig.displayBackgroundGradient.from = value;
+									break;
+								case '--display-background-gradient-to':
+									colorConfig.displayBackgroundGradient.to = value;
+									break;
+								case '--with-display-shadow':
+									colorConfig.withDisplayShadow = (value === 'true');
+									break;
+								case '--shadow-color':
+									colorConfig.shadowColor = value;
+									break;
+								case '--outline-color':
+									colorConfig.outlineColor = value;
+									break;
+								case '--major-tick-color':
+									colorConfig.majorTickColor = value;
+									break;
+								case '--minor-tick-color':
+									colorConfig.minorTickColor = value;
+									break;
+								case '--value-color':
+									colorConfig.valueColor = value;
+									break;
+								case '--value-outline-color':
+									colorConfig.valueOutlineColor = value;
+									break;
+								case '--value-nb-decimal':
+									colorConfig.valueNbDecimal = value;
+									break;
+								case '--font':
+									colorConfig.font = value;
+									break;
+								default:
+									break;
+							}
+						}
+					});
+				}
+			}
+		}
+		return colorConfig;
+	};
+
 	repaint() {
-		if (this.animate === true && this._value !== this._previous_value) {
-			this.goAnimate(this._value)
-		} else {
-			this.drawThermometer(this._value);
-		}
+		this.drawThermometer(this._value);
 	}
-
-	displayAndIncrement(inc, finalValue) {
-		//console.log('Tic ' + inc + ', ' + finalValue);
-		this.drawThermometer(this._value_to_display);
-		this._value_to_display += inc;
-		if ((inc > 0 && this._value_to_display > finalValue) || (inc < 0 && this._value_to_display < finalValue)) {
-			//  console.log('Stop!')
-			window.clearInterval(this._interval_ID);
-			this._previous_value = finalValue;
-			this.drawThermometer(finalValue);
-		}
-	};
-
-	goAnimate(finalValue) {
-		let value = finalValue;
-//  console.log("Reaching Value :" + value + " from " + previousValue);
-		let diff = value - this._previous_value;
-		this._value_to_display = this._previous_value;
-
-//  console.log(canvasName + " going from " + previousValue + " to " + value);
-		let incr = 0;
-		if (diff > 0) {
-			incr = 0.1; // 0.1 * maxValue; // 0.01 is nicer, but too slow...
-		} else {
-			incr = -0.1; // -0.1 * maxValue;
-		}
-		let instance = this;
-		this._interval_ID = window.setInterval(function () {
-			instance.displayAndIncrement(incr, value);
-		}, 50);
-	};
 
 	drawThermometer(tempValue) {
 
-		let digitColor = thermometerColorConfig.digitColor;
+		let currentStyle = this.className;
+		if (this._previousClassName !== currentStyle || true) {
+			// Reload
+			console.log("Reloading CSS");
+
+			this.thermometerColorConfig = this.getColorConfig(currentStyle);
+
+			this._previousClassName = currentStyle;
+		}
+
+		let digitColor = this.thermometerColorConfig.digitColor;
 		let context = this.canvas.getContext('2d');
 
 		if (this.width === 0 || this.height === 0) { // Not visible
@@ -249,7 +276,7 @@ class Thermometer extends HTMLElement {
 
 		// Cleanup
 		//context.fillStyle = "#ffffff";
-		context.fillStyle = thermometerColorConfig.bgColor;
+		context.fillStyle = this.thermometerColorConfig.bgColor;
 		//context.fillStyle = "transparent";
 		context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 		//context.fillStyle = 'rgba(255, 255, 255, 0.0)';
@@ -272,7 +299,7 @@ class Thermometer extends HTMLElement {
 			context.lineTo(xTo, yTo);
 		}
 		context.lineWidth = 1;
-		context.strokeStyle = thermometerColorConfig.majorTickColor;
+		context.strokeStyle = this.thermometerColorConfig.majorTickColor;
 		context.stroke();
 		context.closePath();
 
@@ -288,7 +315,7 @@ class Thermometer extends HTMLElement {
 				context.lineTo(xTo, yTo);
 			}
 			context.lineWidth = 1;
-			context.strokeStyle = thermometerColorConfig.minorTickColor;
+			context.strokeStyle = this.thermometerColorConfig.minorTickColor;
 			context.stroke();
 			context.closePath();
 		}
@@ -301,15 +328,15 @@ class Thermometer extends HTMLElement {
 		context.arc(this.canvas.width / 2, topTube, (radius / 2), 0, Math.PI, true);
 		context.lineWidth = 1;
 
-		if (thermometerColorConfig.withGradient) {
+		if (this.thermometerColorConfig.withGradient) {
 			let grd = context.createLinearGradient(0, 5, 0, radius);
-			grd.addColorStop(0, thermometerColorConfig.displayBackgroundGradient.from);// 0  Beginning
-			grd.addColorStop(1, thermometerColorConfig.displayBackgroundGradient.to);// 1  End
+			grd.addColorStop(0, this.thermometerColorConfig.displayBackgroundGradient.from);// 0  Beginning
+			grd.addColorStop(1, this.thermometerColorConfig.displayBackgroundGradient.to);// 1  End
 			context.fillStyle = grd;
 		}
-		if (thermometerColorConfig.withDisplayShadow) {
+		if (this.thermometerColorConfig.withDisplayShadow) {
 			context.shadowBlur = 0;
-			context.shadowColor = thermometerColorConfig.shadowColor; // 'black';
+			context.shadowColor = this.thermometerColorConfig.shadowColor; // 'black';
 		}
 		context.lineJoin = "round";
 		context.fill();
@@ -332,16 +359,16 @@ class Thermometer extends HTMLElement {
 		context.closePath();
 
 		// Value
-		let text = tempValue.toFixed(thermometerColorConfig.valueNbDecimal);
+		let text = tempValue.toFixed(this.thermometerColorConfig.valueNbDecimal);
 		context.font = "bold 20px Arial";
 		let metrics = context.measureText(text);
 		let len = metrics.width;
 
 		context.beginPath();
-		context.fillStyle = thermometerColorConfig.valueColor;
+		context.fillStyle = this.thermometerColorConfig.valueColor;
 		context.fillText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10));
 		context.lineWidth = 1;
-		context.strokeStyle = thermometerColorConfig.valueOutlineColor;
+		context.strokeStyle = this.thermometerColorConfig.valueOutlineColor;
 		context.strokeText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined
 		context.closePath();
 
