@@ -145,7 +145,7 @@ var updateMuxVerbose = function(value) {
 };
 
 var resetDataCache = function() {
-    return getDeferred('/cache', DEFAULT_TIMEOUT, 'DELETE', 204);
+    return getDeferred('/mux/cache', DEFAULT_TIMEOUT, 'DELETE', 204);
 };
 
 var deleteForwarder = function(forwarder) {
