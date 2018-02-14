@@ -12,7 +12,7 @@
     <link rel="icon" type="image/ico" href="icons/jellyfish.ico">
 
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu5cW4UXjXZTswehBdIO8jCZdzUbk2v5o&amp;sensor=false"></script>
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDu5cW4UXjXZTswehBdIO8jCZdzUbk2v5o"></script>
     <script type="text/javascript" src="js/googlemaps.js"></script>
 
     <script type="text/javascript" src="js/jquery-2.1.3.js"></script>
@@ -130,24 +130,35 @@
       };
 
       // Used to eliminate "bad" GPS points.
-      var __50_METERS = 0.050; // In km
-      var _100_METERS = 0.100;
-      var _500_METERS = 0.500;
+			var threshold = {
+				__50_METERS: 0.050, // In km
+				_100_METERS: 0.100,
+      	_200_METERS: 0.200,
+      	_500_METERS: 0.500
+      };
 
       var maxDeltaPos = 0.0;
       // Plot position on the chart
       var plotPositionOnChart = function(val) {
+
+	      if (val.lat === 0 && val.lng === 0) {
+		      return; // To eliminate points where GPS is not connected...
+	      }
+
         var pos = new google.maps.LatLng(val.lat, val.lng);
         if (lastLatlng !== undefined) {
           var dist = haversineKm(lastLatlng.lat(), lastLatlng.lng(), pos.lat(), pos.lng());
-          if (dist > __50_METERS) { // Ignore above this threshold.
-            return;
+          if (dist > threshold._500_METERS) { // Ignore above this threshold. Warning, can depend on replay speed.
+            console.log("Dist %f vs %f", dist, threshold._500_METERS);
+        	  return;
           }
           maxDeltaPos = Math.max(maxDeltaPos, dist);
 //        console.log("Delta pos:" + dist.toFixed(4) + " km, max:" + maxDeltaPos.toFixed(4) + " km.")
         }
       //  new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180);
-        lastLatlng = pos;
+				if (val.lat !== 0 && val.lng !== 0) {
+					lastLatlng = pos;
+				}
 
         if (posMarker !== undefined) {
             posMarker.setMap(null);
@@ -158,6 +169,10 @@
             title: 'GPS Position'
         });
         posMarker.addListener('click', onMarkerClick);
+
+        // console.log("Pushing on track", pos);
+        // console.log("Track is now %d pos long", track.length);
+
         track.push(pos);
 //      track.push(new google.maps.LatLng((Math.random() * 180) - 90, (Math.random() * 360) - 180));
         if (polyline !== undefined) {
