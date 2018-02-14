@@ -44,6 +44,16 @@
 
       var idx2plot;
 
+      // Used to eliminate "bad" GPS points.
+      var threshold = {
+	      __50_METERS: 0.050, // In km
+	      _100_METERS: 0.100,
+	      _200_METERS: 0.200,
+	      _500_METERS: 0.500
+      };
+
+			var maxDelta = threshold._500_METERS;
+
       var graphCallback = function(idx) {
           console.log("Click on pos " + idx + ", flow " + altitudeData[idx].getY());
           idx2plot = idx;
@@ -70,6 +80,7 @@
             max = 15;
             bigTick = 5;
             smallTick = 1;
+	        	maxDelta = threshold.__50_METERS;
         }
 
         displayBSP = // new AnalogDisplay('bspCanvas', 100,   100,  10,  5);
@@ -129,14 +140,6 @@
         return haversineRaw(lat1, long1, lat2, long2) * MILE_EQUATORIAL_EARTH_RADIUS;
       };
 
-      // Used to eliminate "bad" GPS points.
-			var threshold = {
-				__50_METERS: 0.050, // In km
-				_100_METERS: 0.100,
-      	_200_METERS: 0.200,
-      	_500_METERS: 0.500
-      };
-
       var maxDeltaPos = 0.0;
       // Plot position on the chart
       var plotPositionOnChart = function(val) {
@@ -148,8 +151,8 @@
         var pos = new google.maps.LatLng(val.lat, val.lng);
         if (lastLatlng !== undefined) {
           var dist = haversineKm(lastLatlng.lat(), lastLatlng.lng(), pos.lat(), pos.lng());
-          if (dist > threshold._500_METERS) { // Ignore above this threshold. Warning, can depend on replay speed.
-            console.log("Dist %f vs %f", dist, threshold._500_METERS);
+          if (dist > maxDelta) { // Ignore above this threshold. Warning, can depend on replay speed.
+            console.log("Rejected: Dist %f vs %f", dist, maxDelta);
         	  return;
           }
           maxDeltaPos = Math.max(maxDeltaPos, dist);
