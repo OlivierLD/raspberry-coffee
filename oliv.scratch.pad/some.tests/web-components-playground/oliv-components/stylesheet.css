@@ -126,7 +126,7 @@ a:visited { color : #8080FF}
 /* Widget specific */
 .thermometer-day {
   --bg-color: white;
-  --digit-color: red;
+  --digit-color: DarkGrey;
   --with-gradient: true;
   --display-background-gradient-from: black;
   --display-background-gradient-to: LightGrey;

@@ -255,9 +255,13 @@ class Thermometer extends HTMLElement {
 		let currentStyle = this.className;
 		if (this._previousClassName !== currentStyle || true) {
 			// Reload
-			console.log("Reloading CSS");
-
-			this.thermometerColorConfig = this.getColorConfig(currentStyle);
+	//	console.log("Reloading CSS");
+			try {
+				this.thermometerColorConfig = this.getColorConfig(currentStyle);
+			} catch (err) {
+				// Absorb?
+				console.log(err);
+			}
 
 			this._previousClassName = currentStyle;
 		}
