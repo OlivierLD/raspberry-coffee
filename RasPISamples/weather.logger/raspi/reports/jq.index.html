@@ -27,14 +27,14 @@ var getUnits = function(name) {
     }
   }
   return ret;
-}    
+}
     </script>
   </head>
 
   <script type="text/javascript">
 
 var showHideData = function() {
-  var cb = document.getElementById("show-data");  
+  var cb = document.getElementById("show-data");
 //var dataArea =  document.getElementById("content");
   if (cb.checked) {
 //  dataArea.innerHTML = '<pre>' + JSON.stringify(graphData, null, 2) + '</pre>';
@@ -45,12 +45,12 @@ var showHideData = function() {
 //  dataArea.style.display = 'none';
     $("#content").hide(1000);
   }
-};  
+};
 
 /*
  * Data (services) available as json, through PHP:
  *   json.data.php?type=XXX&period=YYY
- */ 
+ */
 var period, type, graphData, graph;
 
 var getData = function(type, period) {
@@ -79,9 +79,9 @@ var getData = function(type, period) {
 };
 
 var go = function() {
-  setTimeout(function() { 
+  setTimeout(function() {
 //  console.log(">>> DEBUG >>> Set busy... (type) " + new Date());
-    $('body').css('cursor', 'progress'); 
+    $('body').css('cursor', 'progress');
   }, 1);
   $("#smooth-width").val("");
   document.getElementById("graphCanvas").width = 800;
@@ -89,7 +89,7 @@ var go = function() {
   var type = $("#data-type").val();
   var period = $("#period").val();
   console.log("Type Selected:" + type + ", period:" + period);
-  $("#data-div").hide();      
+  $("#data-div").hide();
   // Produce data list, the promise
   var fetchData = getData(type, period);
   fetchData.done(function(value) {
@@ -97,7 +97,7 @@ var go = function() {
     if (value !== undefined) {
       graphData = JSON.parse(value);
       displayGraph(type, graphData.data);
-      $("#data-div").show(2000);  
+      $("#data-div").show(2000);
     }
     setTimeout(function() {
 //    console.log(">>> DEBUG >>> Set busy (type), done! " + new Date())
@@ -120,12 +120,12 @@ var displayGraph = function(dataType, data) {
   var innerText = data.length + " element(s), from " + data[0].time + " to " + data[data.length - 1].time;
   document.getElementById("summary").innerText = innerText;
 
-  display = new AnalogDisplay('dataCanvas', 
-                               100 * displayScale,   
+  display = new AnalogDisplay('dataCanvas',
+                               100 * displayScale,
                                unit.maxi, // Max value
                                10,        // major ticks
                                1,         // minor ticks
-                               true,      // with digits 
+                               true,      // with digits
                                50,        // Overlap in degrees
                                unit.mini, // Start value
                                0);        // Nb Decimal
@@ -149,7 +149,8 @@ var setSW = function() {
       return;
     }
   } catch (err) {
-    alert(err);
+  	console.log(err);
+    alert("setSW:" + err);
     return;
   }
   graph.setSmoothWidth(sw);
@@ -204,7 +205,7 @@ $(document).ready(function() {
             <option value="WEEK">Last Week</option>
             <option value="MONTH">Last Month</option>
             <option value="ALL">All</option>
-          </select>         
+          </select>
            &nbsp;&nbsp;
            <button onclick="go();">Go</button>
         </td>
@@ -247,6 +248,6 @@ $(document).ready(function() {
           </div>
         </td>
       </tr>
-    </table>  
-  </body>        
+    </table>
+  </body>
 </html>

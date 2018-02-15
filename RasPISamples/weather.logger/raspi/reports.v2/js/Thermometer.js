@@ -139,12 +139,16 @@ function Thermometer(cName, dSize, minValue, maxValue, majorTicks, minorTicks) {
 	};
 
 	function drawDisplay(displayCanvasName, displayRadius, displayValue) {
-		var schemeColor = getStyleRuleValue('color', '.display-scheme');
+		try {
+			var schemeColor = getStyleRuleValue('color', '.display-scheme');
 //  console.log(">>> DEBUG >>> color:" + schemeColor);
-		if (schemeColor === 'black') {
-			thermometerColorConfig = thermometerColorConfigBlack;
-		} else if (schemeColor === 'white') {
-			thermometerColorConfig = thermometerColorConfigWhite;
+			if (schemeColor === 'black') {
+				thermometerColorConfig = thermometerColorConfigBlack;
+			} else if (schemeColor === 'white') {
+				thermometerColorConfig = thermometerColorConfigWhite;
+			}
+		} catch (err) {
+			console.log(err);
 		}
 
 		var digitColor = thermometerColorConfig.digitColor;
