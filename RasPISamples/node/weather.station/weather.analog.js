@@ -2,7 +2,7 @@
  * @author Olivier Le Diouris
  */
 var displayTWD, displayTWS, displayGUST, thermometer,
-		displayBaro, displayHum, cpuTemp, displayRain;
+		displayBaro, displayHum, displayRain;
 
 var init = function () {
 	displayTWD = new Direction('twdCanvas', 100, 45, 5, true);
@@ -14,7 +14,7 @@ var init = function () {
 	displayBaro = new AnalogDisplay('baroCanvas', 100, 1040, 10, 1, true, 40, 980);
 	displayHum = new AnalogDisplay('humCanvas', 100, 100, 10, 1, true, 40);
 	displayRain = new Pluviometer('rainCanvas');
-	cpuTemp = new Thermometer('cpuCanvas', 200);
+//cpuTemp = new Thermometer('cpuCanvas', 200);
 };
 
 var initWS = function () {
@@ -93,7 +93,7 @@ var resizeDisplays = function (wwidth) {
 	thermometer.setDisplaySize(160 * (Math.min(wwidth, TOTAL_WIDTH) / TOTAL_WIDTH));
 	displayBaro.setDisplaySize(80 * (Math.min(wwidth, TOTAL_WIDTH) / TOTAL_WIDTH));
 	displayHum.setDisplaySize(80 * (Math.min(wwidth, TOTAL_WIDTH) / TOTAL_WIDTH));
-	cpuTemp.setDisplaySize(160 * (Math.min(wwidth, TOTAL_WIDTH) / TOTAL_WIDTH));
+//cpuTemp.setDisplaySize(160 * (Math.min(wwidth, TOTAL_WIDTH) / TOTAL_WIDTH));
 };
 
 var twdArray = [];
@@ -229,17 +229,17 @@ var setValues = function (doc) {
 			displayRain.setValue(0.0);
 			document.getElementById('rain-ok').checked = false;
 		}
-		try {
-			var cpu = parseFloat(json.cputemp.toFixed(1));
-//    thermometer.animate(cpu);
-			cpuTemp.setValue(cpu);
-			document.getElementById('cputemp-ok').checked = true;
-		} catch (err) {
-			errMess += ((errMess.length > 0 ? "\n" : "") + "Problem with CPU temperature...");
-//    thermometer.animate(0.0);
-			cpuTemp.setValue(0.0);
-			document.getElementById('cputemp-ok').checked = false;
-		}
+// 		try {
+// 			var cpu = parseFloat(json.cputemp.toFixed(1));
+// //    thermometer.animate(cpu);
+// 			cpuTemp.setValue(cpu);
+// 			document.getElementById('cputemp-ok').checked = true;
+// 		} catch (err) {
+// 			errMess += ((errMess.length > 0 ? "\n" : "") + "Problem with CPU temperature...");
+// //    thermometer.animate(0.0);
+// 			cpuTemp.setValue(0.0);
+// 			document.getElementById('cputemp-ok').checked = false;
+// 		}
 
 		if (errMess !== undefined) {
 			document.getElementById("err-mess").innerHTML = errMess;
