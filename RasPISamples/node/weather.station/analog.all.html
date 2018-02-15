@@ -63,25 +63,6 @@
     return value;
   };
 
-  var setup = function(b1, b2, b3) {
-    // divs
-    document.getElementById('displays-1').style.display = (b1 === true ? 'inline' : 'none');
-    document.getElementById('displays-2').style.display = (b2 === true ? 'inline' : 'none');
-    document.getElementById('overview').style.display   = (b3 === true ? 'inline' : 'none');
-    // buttons
-    document.getElementById('showDisplays1').className = (b1 === true ? 'selectedButton' : 'unselectedButton');
-    document.getElementById('showDisplays2').className = (b2 === true ? 'selectedButton' : 'unselectedButton');
-    document.getElementById('showOverview').className  = (b3 === true ? 'selectedButton' : 'unselectedButton');
-  };
-
-  var showDisplays = function(tab) {
-  	setup(tab==1?true:false, tab==2?true:false, false);
-  };
-
-  var showOverview = function() {
-  	setup(false, false, true);
-  };
-
   window.onload = function() {
     init();
 
@@ -135,7 +116,6 @@
     var wh = window.innerHeight;
 
     var totalWidth = TOTAL_WIDTH; // in console.js
-
 
     // TWD
     document.getElementById('twdCanvas').width = 192 * (Math.min(ww, totalWidth) / totalWidth);
@@ -210,9 +190,6 @@
   </head>
   <body bgcolor="black">
     <div style="margin-bottom: -4px;">
-      <span id="showDisplays1" onclick="showDisplays(1);" class="selectedButton">Displays 1</span>
-      <span id="showDisplays2" onclick="showDisplays(2);" class="unselectedButton">Displays 2</span>
-      <span id="showOverview" onclick="showOverview();" class="unselectedButton">QR Code</span>
       &nbsp;&nbsp;Color Scheme:&nbsp;
       <input type="radio" name="theme" value="black" checked onclick="changeTheme(this.value);">Night&nbsp;
       <input type="radio" name="theme" value="white" onclick="changeTheme(this.value);">Day&nbsp;
@@ -263,11 +240,6 @@
                   <canvas id="tmpCanvas" width="80" height="176" title="Air Temperature in Celcius"></canvas>
                 </td>
               </tr>
-            </table>
-          </div>
-          <div id="displays-2" style="display: none;">
-            <!-- Analog Displays -->
-            <table align="center" border="0">
               <tr>
                 <td align="center" colspan="4">
                   <table>
@@ -275,7 +247,6 @@
                       <td align="center">Barometer in hPa</td>
                       <td align="center">Rel. Humidity in %</td>
                       <td align="center">Rain in mm/h</td>
-                      <td align="center">CPU Temp&deg;C</td>
                     </tr>
                     <tr>
                       <td align="center" valign="top" rowspan="1">
@@ -287,21 +258,11 @@
                       <td align="center" valign="top">
                         <canvas id="rainCanvas" width="90" height="176" title="Rain"/> <!-- class="displayCanvas"/-->
                       </td>
-                      <td align="center" valign="top" rowspan="1">
-                        <canvas id="cpuCanvas" width="80" height="176" title="CPU Temperature in Celcius"></canvas>
-                      </td>
                     </tr>
                   </table>
                 </td>
               </tr>
             </table>
-          </div>
-          <div id="overview" style="display: none;">
-            <p align="center">
-              Scan this QR code from your smart phone or tablet
-              <br>
-              <img src="weather-pi.att.net.jpg">
-            </p>
           </div>
         </td>
       </tr>
