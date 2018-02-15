@@ -157,8 +157,8 @@
     document.getElementById('humCanvas').width = 192 * (Math.min(ww, totalWidth) / totalWidth);
     document.getElementById('humCanvas').height = 176 * (Math.min(ww, totalWidth) / totalWidth);
     // CPU TEMP
-    document.getElementById('cpuCanvas').width = 80 * (Math.min(ww, totalWidth) / totalWidth);
-    document.getElementById('cpuCanvas').height = 176 * (Math.min(ww, totalWidth) / totalWidth);
+    // document.getElementById('cpuCanvas').width = 80 * (Math.min(ww, totalWidth) / totalWidth);
+    // document.getElementById('cpuCanvas').height = 176 * (Math.min(ww, totalWidth) / totalWidth);
 
     // Displays inside the canvases
     resizeDisplays(ww);
@@ -236,8 +236,8 @@
           <input type="checkbox" id="hum-ok" disabled="true">Humidity
           <br>
           <input type="checkbox" id="rain-ok" disabled="true">Rain
-          <br>
-          <input type="checkbox" id="cputemp-ok" disabled="true">CPU Temp
+          <!--<br>-->
+          <!--<input type="checkbox" id="cputemp-ok" disabled="true">CPU Temp-->
         </td>
         <td>
           <div id="displays-1" style="display: inline;">
@@ -275,7 +275,7 @@
                       <td align="center">Barometer in hPa</td>
                       <td align="center">Rel. Humidity in %</td>
                       <td align="center">Rain in mm/h</td>
-                      <td align="center">CPU Temp&deg;C</td>
+                      <!_-td align="center">CPU Temp&deg;C</td-->
                     </tr>
                     <tr>
                       <td align="center" valign="top" rowspan="1">
@@ -287,9 +287,9 @@
                       <td align="center" valign="top">
                         <canvas id="rainCanvas" width="90" height="176" title="Rain"/> <!-- class="displayCanvas"/-->
                       </td>
-                      <td align="center" valign="top" rowspan="1">
+                      <!--td align="center" valign="top" rowspan="1">
                         <canvas id="cpuCanvas" width="80" height="176" title="CPU Temperature in Celcius"></canvas>
-                      </td>
+                      </td-->
                     </tr>
                   </table>
                 </td>
