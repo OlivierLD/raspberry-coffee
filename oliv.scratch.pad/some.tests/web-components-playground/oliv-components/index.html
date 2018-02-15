@@ -59,11 +59,58 @@
 	</style>
 
 	<script type="text/javascript">
+
+		/**
+		 * Set data to the WebComponents
+		 * Assume that they all have a 'value' member.
+		 *
+		 * @param from The field containing the value to set
+		 * @param to The WebComponent to set the value to
+		 */
 		function setData(from, to) {
 			let elem = document.getElementById(to);
-			let value = document.getElementById(from).value; // value corresponds to the 'set value(val) { ...'
-			elem.value = value;                              // Same here. Invokes the setter in the HTMLElement class
+			let value = document.getElementById(from).value; // Field to read to get the value
+			elem.value = value;                              // value corresponds to the 'set value(val) { ...', invokes the setter in the HTMLElement class
 		}
+
+		let animation = false; // Not more than one animation at a given time, for this demo.
+		let currentValue;
+		let incr;
+		let intervalId;
+
+		function smoothlySet(webComp, from, to) {
+			webComp.value = currentValue;
+//		console.log("From %f to %f, currently %f", from, to, currentValue);
+			currentValue += incr;
+			if ((incr > 0 && currentValue > to) || (incr < 0 && currentValue < to)) {
+				webComp.value = to;
+				window.clearInterval(intervalId);
+				animation = false;
+			}
+		}
+
+		function doAnimate(fromField, toComp) {
+			if (animation) {
+				alert('Already animating, please wait.');
+			} else {
+				let webComp = document.getElementById(toComp);
+				let startFrom = webComp.value;
+				let goTo = parseFloat(document.getElementById(fromField).value);
+				if (startFrom !== goTo) {
+					animation = true;
+					currentValue = startFrom;
+					if (startFrom < goTo) {
+						incr = 0.1;
+					} else {
+						incr = -0.1;
+					}
+					intervalId = window.setInterval(function() {
+						smoothlySet(webComp, startFrom, goTo);
+					}, 50);
+				}
+			}
+		}
+
 	</script>
 </head>
 <body>
@@ -89,7 +136,6 @@
 												major-ticks="1"
 												minor-ticks="0.25"
 												value="0"
-					              animate="true"
 												width="60"
 												height="220"></pluvio-meter>
 				</div>
@@ -104,7 +150,6 @@
 												major-ticks="1"
 												minor-ticks="0.25"
 												value="0"
-												animate="false"
 												width="60"
 												height="220"></pluvio-meter>
 				</div>
@@ -161,10 +206,10 @@
 								 id="rain-value-01"
 								 placeholder="rain"
 					       title="in mm/h"
-								 onblur="setData('rain-value-01', 'pluviometer-01')"
+								 onblur="doAnimate('rain-value-01', 'pluviometer-01')"
 								 style="width: 32px;"/>
 					<br/>
-					<button onclick="setData('rain-value-01', 'pluviometer-01')"
+					<button onclick="doAnimate('rain-value-01', 'pluviometer-01')"
 					        title="Set Rain value in the tube"
 					        style="margin-top: 3px;">Set value</button>
 				</div>
@@ -195,10 +240,10 @@
 								 id="temp-value-01"
 								 placeholder="temp"
 								 title="in Celcius"
-								 onblur="setData('temp-value-01', 'thermometer-01')"
+								 onblur="doAnimate('temp-value-01', 'thermometer-01')"
 								 style="width: 40px;"/>
 					<br/>
-					<button onclick="setData('temp-value-01', 'thermometer-01')"
+					<button onclick="doAnimate('temp-value-01', 'thermometer-01')"
 									title="Set Temp value in the tube"
 									style="margin-top: 3px;">Set value</button>
 				</div>
