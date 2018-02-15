@@ -35,7 +35,7 @@ public class AnalogTemperatureSensorReader {
 				if (inputChannel.equals(channel)) {
 					// Logic here
 					// We use the 3V3 pin for the input.
-					double analogOutputVoltage = newValue * (3300d / 1024d);
+					double analogOutputVoltage = newValue * (3_300d / 1_024d);
 					double temp = (analogOutputVoltage - 500) / 10;
 					System.out.println("Temp:" + NF.format(temp) + " C (" + newValue + ")");
 				}

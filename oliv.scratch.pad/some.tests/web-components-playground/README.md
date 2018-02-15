@@ -21,7 +21,7 @@ Then load the pages in a browser, using for example [http://localhost:8080/compo
 The `WebComponents` standard allows the definition of custom reusable visual components, used in a web page like any standard component.
 
 Example:
-```hntml
+```html
 <pluvio-meter id="pluviometer-01"
               title="m/m per hour"
               min-value="0"
@@ -40,6 +40,14 @@ function setData() {
   elem.value = value;
 }
 ```
+---
+
+## Lessons learned
+
+No animation in the component, `clearInterval` does not clear anything.
+If animation is needed, make it happen outside the component.
+Works OK (~so-so) if there is only one component, it's a mess otherwise.
+
 ---
 
 More to come...

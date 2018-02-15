@@ -165,11 +165,11 @@ public class BatteryMonitor {
 	private final static String LOG_PRM = "-log=";
 
 	private static int minADC = 0;
-	private static int maxADC = 1023;
+	private static int maxADC = 1_023;
 	private static float minVolt = 0f;
 	private static float maxVolt = 15f;
 	private static float tuningVolt = 15f;
-	private static int tuningADC = 1023;
+	private static int tuningADC = 1_023;
 	private static boolean scale = false;
 	private static boolean tuning = false;
 
@@ -187,20 +187,20 @@ public class BatteryMonitor {
 		System.out.println(" -min & -max are required if -tune is not here, and vice versa.");
 		int channel = 0;
 		for (String prm : args) {
-			if (prm.startsWith(CHANNEL_PRM))
+			if (prm.startsWith(CHANNEL_PRM)) {
 				channel = Integer.parseInt(prm.substring(CHANNEL_PRM.length()));
-			else if (prm.startsWith(CALIBRATION_PRM) || prm.startsWith(CAL_PRM)) {
+			} else if (prm.startsWith(CALIBRATION_PRM) || prm.startsWith(CAL_PRM)) {
 				debug = true;
 				calib = true;
-			} else if (!debug && prm.startsWith(DEBUG_PRM))
+			} else if (!debug && prm.startsWith(DEBUG_PRM)) {
 				debug = ("y".equals(prm.substring(DEBUG_PRM.length())) ||
 						"yes".equals(prm.substring(DEBUG_PRM.length())) ||
 						"true".equals(prm.substring(DEBUG_PRM.length())));
-			else if (prm.startsWith(SCALE_PRM))
+			} else if (prm.startsWith(SCALE_PRM)) {
 				scale = ("y".equals(prm.substring(SCALE_PRM.length())));
-			else if (prm.startsWith(LOG_PRM))
+			} else if (prm.startsWith(LOG_PRM)) {
 				logFileName = prm.substring(LOG_PRM.length());
-			else if (prm.startsWith(TUNE_VALUE)) {
+			} else if (prm.startsWith(TUNE_VALUE)) {
 				tuning = true;
 				String val = prm.substring(TUNE_VALUE.length());
 				tuningADC = Integer.parseInt(val.substring(0, val.indexOf(":")));

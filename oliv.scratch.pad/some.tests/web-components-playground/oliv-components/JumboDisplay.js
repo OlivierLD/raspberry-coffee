@@ -1,4 +1,4 @@
-const jumboVerbose = true;
+const jumboVerbose = false;
 
 /* global HTMLElement */
 class JumboDisplay extends HTMLElement {

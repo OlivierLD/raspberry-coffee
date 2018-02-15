@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>WebComponents</title>
 	<link rel="icon" type="image/png" href="../logo-192x192.png">
+
 	<link rel="stylesheet" href="stylesheet.css">
 
 	<script type="text/javascript" src="Pluviometer.js" async></script>
@@ -21,6 +22,40 @@
 		.centered {
 			text-align: center;
 		}
+
+		/* Widget specific */
+		/*.thermometer-day {*/
+			/*--bg-color: white;*/
+			/*--digit-color: DarkGrey;*/
+			/*--with-gradient: true;*/
+			/*--display-background-gradient-from: black;*/
+			/*--display-background-gradient-to: LightGrey;*/
+			/*--with-display-shadow: true;*/
+			/*--shadow-color: rgba(0, 0, 0, 0.75);*/
+			/*--major-tick-color: DarkGrey;*/
+			/*--minor-tick-color: DarkGrey;*/
+			/*--value-color: LightRed;*/
+			/*--value-outline-color: black;*/
+			/*--value-nb-decimal: 2;*/
+			/*--font: 'Arial'; !* 'Source Code Pro' *!*/
+		/*}*/
+
+		/*.thermometer-night {*/
+			/*--bg-color: black;*/
+			/*--digit-color: red;*/
+			/*--with-gradient: true;*/
+			/*--display-background-gradient-from: black;*/
+			/*--display-background-gradient-to: LightGrey;*/
+			/*--with-display-shadow: true;*/
+			/*--shadow-color: rgba(0, 0, 0, 0.75);*/
+			/*--major-tick-color: DarkGrey;*/
+			/*--minor-tick-color: DarkGrey;*/
+			/*--value-color: LightRed;*/
+			/*--value-outline-color: black;*/
+			/*--value-nb-decimal: 2;*/
+			/*--font: 'Arial'; !* 'Source Code Pro' *!*/
+		/*}*/
+
 	</style>
 
 	<script type="text/javascript">
@@ -78,13 +113,13 @@
 			<td valign="bottom">
 				<div class="black-frame centered">
 					<thermo-meter id="thermometer-01"
+					              class="thermometer-day"
 												title="Celcius"
 												min-value="-10"
 												max-value="60"
 												major-ticks="10"
 												minor-ticks="1"
 												value="12.34"
-												animate="true"
 												width="100"
 												height="360"></thermo-meter>
 				</div>
@@ -93,13 +128,13 @@
 			<td valign="bottom">
 				<div class="black-frame centered">
 					<thermo-meter id="thermometer-02"
+					              class="thermometer-night"
 												title="Celcius"
 												min-value="-10"
 												max-value="60"
 												major-ticks="10"
 												minor-ticks="1"
 												value="12.34"
-												animate="false"
 												width="100"
 												height="360"></thermo-meter>
 				</div>
@@ -146,7 +181,7 @@
 								 onblur="setData('rain-value-02', 'pluviometer-02')"
 								 style="width: 32px;"/>
 					<br/>
-					<button onclick="setRainData()"
+					<button onclick="setData('rain-value-02', 'pluviometer-02')"
 									title="Set Rain value in the tube"
 									style="margin-top: 3px;">Set value</button>
 				</div>
@@ -161,7 +196,7 @@
 								 placeholder="temp"
 								 title="in Celcius"
 								 onblur="setData('temp-value-01', 'thermometer-01')"
-								 style="width: 32px;"/>
+								 style="width: 40px;"/>
 					<br/>
 					<button onclick="setData('temp-value-01', 'thermometer-01')"
 									title="Set Temp value in the tube"
@@ -178,7 +213,7 @@
 								 placeholder="temp"
 								 title="in Celcius"
 								 onblur="setData('temp-value-02', 'thermometer-02')"
-								 style="width: 32px;"/>
+								 style="width: 40px;"/>
 					<br/>
 					<button onclick="setData('temp-value-02', 'thermometer-02')"
 									title="Set Temp value in the tube"

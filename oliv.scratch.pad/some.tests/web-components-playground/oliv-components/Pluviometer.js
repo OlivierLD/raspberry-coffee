@@ -1,4 +1,4 @@
-const rainVerbose = true;
+const rainVerbose = false;
 
 const pluviometerColorConfigWhite = {
 	withShadow: true,
