@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="Pluviometer.js" async></script>
 	<script type="text/javascript" src="Thermometer.js" async></script>
 	<script type="text/javascript" src="JumboDisplay.js" async></script>
+	<script type="text/javascript" src="DirectionDisplay.js" async></script>
 
 	<style>
 		.black-frame {
@@ -89,9 +90,9 @@
 			}
 		}
 
-		function doAnimate(fromField, toComp) {
+		function doAnimate(fromField, toComp, increment) {
 			if (animation) {
-				alert('Already animating, please wait.');
+				alert('Already animating, please wait...');
 			} else {
 				let webComp = document.getElementById(toComp);
 				let startFrom = webComp.value;
@@ -99,11 +100,7 @@
 				if (startFrom !== goTo) {
 					animation = true;
 					currentValue = startFrom;
-					if (startFrom < goTo) {
-						incr = 0.1;
-					} else {
-						incr = -0.1;
-					}
+					incr = ((startFrom < goTo) ? 1 : -1) * (increment !== undefined ? increment : 0.1);
 					intervalId = window.setInterval(function() {
 						smoothlySet(webComp, startFrom, goTo);
 					}, 50);
@@ -111,17 +108,28 @@
 			}
 		}
 
+		function setBorder(cb, id) {
+			document.getElementById(id).withBorder = cb.checked;
+		}
+
+		function setRose(cb, id) {
+			document.getElementById(id).withRose = cb.checked;
+		}
+
 	</script>
 </head>
 <body>
 
 	<h2>Web Components</h2>
-	<h5>Pluviometer, Thermometer</h5>
+	<h5>Pluviometer, Thermometer, etc.</h5>
 
 	<table>
 		<tr>
 			<th>Anim.</th>
 			<th>No Anim.</th>
+			<th>Anim.</th>
+			<th>No Anim.</th>
+			<th></th>
 			<th>Anim.</th>
 			<th>No Anim.</th>
 		</tr>
@@ -196,10 +204,38 @@
 				</div>
 			</td>
 
+			<td valign="bottom">
+				<div class="black-frame centered">
+					<direction-display id="compass-01"
+												     value="38"
+														 major-ticks="45"
+														 minor-ticks="5"
+					                   with-rose="true"
+					                   with-border="true"
+					                   label="HDG"
+												     width="200"
+												     height="200"></direction-display>
+				</div>
+			</td>
+
+			<td valign="bottom">
+				<div class="black-frame centered">
+					<direction-display id="compass-02"
+														 value="138"
+														 major-ticks="45"
+														 minor-ticks="5"
+														 with-rose="true"
+														 with-border="true"
+														 label="HDG"
+														 width="200"
+														 height="200"></direction-display>
+				</div>
+			</td>
+
 		</tr>
 		<tr>
 
-			<td>
+			<td valign="top">
 				<div class="black-frame centered">
 					Value:
 					<input type="number"
@@ -216,7 +252,7 @@
 
 			</td>
 
-			<td>
+			<td valign="top">
 				<div class="black-frame centered">
 					Value:
 					<input type="number"
@@ -233,7 +269,7 @@
 
 			</td>
 
-			<td>
+			<td valign="top">
 				<div class="black-frame centered">
 					Value:
 					<input type="number"
@@ -250,7 +286,7 @@
 
 			</td>
 
-			<td>
+			<td valign="top">
 				<div class="black-frame centered">
 					Value:
 					<input type="number"
@@ -267,7 +303,7 @@
 
 			</td>
 
-			<td>
+			<td valign="top">
 				<div class="black-frame centered">
 					Value:
 					<input type="number"
@@ -280,6 +316,46 @@
 					<button onclick="setData('jumbo-value-01', 'jumbo-01')"
 									title="Set value for the jumbo"
 									style="margin-top: 3px;">Set value</button>
+				</div>
+
+			</td>
+
+			<td valign="top">
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="direction-value-01"
+								 placeholder="dir"
+								 title="Direction"
+								 onblur="doAnimate('direction-value-01', 'compass-01', 1)"
+								 style="width: 50px;"/>
+					<br/>
+					<button onclick="doAnimate('direction-value-01', 'compass-01', 1)"
+									title="Set value for the Direction"
+									style="margin-top: 3px;">Set value</button>
+					<br/>
+					<input type="checkbox" onchange="setBorder(this, 'compass-01');" checked>With Border
+					<input type="checkbox" onchange="setRose(this, 'compass-01');" checked>With Rose
+				</div>
+
+			</td>
+
+			<td valign="top">
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="direction-value-02"
+								 placeholder="dir"
+								 title="Direction"
+								 onblur="setData('direction-value-02', 'compass-02')"
+								 style="width: 50px;"/>
+					<br/>
+					<button onclick="setData('direction-value-02', 'compass-02')"
+									title="Set value for the Direction"
+									style="margin-top: 3px;">Set value</button>
+					<br/>
+					<input type="checkbox" onchange="setBorder(this, 'compass-02');" checked>With Border
+					<input type="checkbox" onchange="setRose(this, 'compass-02');" checked>With Rose
 				</div>
 
 			</td>
