@@ -90,14 +90,24 @@
 			}
 		}
 
-		function doAnimate(fromField, toComp, increment) {
+		function doAnimate(fromField, toComp, increment, on360) {
 			if (animation) {
 				alert('Already animating, please wait...');
 			} else {
+				if (on360 === undefined) {
+					on360 = false;
+				}
 				let webComp = document.getElementById(toComp);
 				let startFrom = webComp.value;
 				let goTo = parseFloat(document.getElementById(fromField).value);
 				if (startFrom !== goTo) {
+
+					if (on360 === true) {
+						if (Math.abs(goTo - startFrom) > 180) {
+							goTo -= 360;
+						}
+					}
+
 					animation = true;
 					currentValue = startFrom;
 					incr = ((startFrom < goTo) ? 1 : -1) * (increment !== undefined ? increment : 0.1);
@@ -206,7 +216,8 @@
 
 			<td valign="bottom">
 				<div class="black-frame centered">
-					<direction-display id="compass-01"
+					<direction-display class="analogdisplay-day"
+														 id="compass-01"
 												     value="38"
 														 major-ticks="45"
 														 minor-ticks="5"
@@ -220,7 +231,8 @@
 
 			<td valign="bottom">
 				<div class="black-frame centered">
-					<direction-display id="compass-02"
+					<direction-display class="analogdisplay-monochrome-orange"
+														 id="compass-02"
 														 value="138"
 														 major-ticks="45"
 														 minor-ticks="5"
@@ -327,10 +339,10 @@
 								 id="direction-value-01"
 								 placeholder="dir"
 								 title="Direction"
-								 onblur="doAnimate('direction-value-01', 'compass-01', 1)"
+								 onblur="doAnimate('direction-value-01', 'compass-01', 1, true)"
 								 style="width: 50px;"/>
 					<br/>
-					<button onclick="doAnimate('direction-value-01', 'compass-01', 1)"
+					<button onclick="doAnimate('direction-value-01', 'compass-01', 1, true)"
 									title="Set value for the Direction"
 									style="margin-top: 3px;">Set value</button>
 					<br/>

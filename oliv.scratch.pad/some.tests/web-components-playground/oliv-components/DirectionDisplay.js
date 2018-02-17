@@ -44,8 +44,10 @@ const defaultAnalogColorConfig = {
 	bgColor: 'rgba(0, 0, 0, 0)', /* transparent, 'white', */
 	digitColor: 'black',
 	withGradient: true,
-	displayBackgroundGradientFrom: 'LightGrey', // TODO Make those 2 a single object
-	displayBackgroundGradientTo: 'white',
+	displayBackgroundGradient: {
+		from: 'LightGrey',
+		to: 'white'
+	},
 	displayLineColor: 'rgba(0, 0, 0, 0.5)',
 	labelFillColor: 'rgba(255, 255, 255, 0.5)',
 	withDisplayShadow: true,
@@ -228,13 +230,13 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 		this.drawDisplay(this._value);
 	}
 
-	getColorConfig() {
+	getColorConfig(className) {
 		let colorConfig = defaultAnalogColorConfig;
 		for (let s=0; s<document.styleSheets.length; s++) {
 //		console.log("Walking though ", document.styleSheets[s]);
 			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
 //			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
-				if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
+				if (document.styleSheets[s].cssRules[r].selectorText === '.' + className) {
 //				console.log("  >>> Found it!");
 					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					let cssTextElems = cssText.split(";");
@@ -254,10 +256,10 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 									colorConfig.withGradient = (value === 'true');
 									break;
 								case '--display-background-gradient-from':
-									colorConfig.displayBackgroundGradientFrom = value;
+									colorConfig.displayBackgroundGradient.from = value;
 									break;
 								case '--display-background-gradient-to':
-									colorConfig.displayBackgroundGradientTo = value;
+									colorConfig.displayBackgroundGradient.to = value;
 									break;
 								case '--display-line-color':
 									colorConfig.displayLineColor = value;
@@ -357,11 +359,11 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 		}
 		if (this.directionColorConfig.withGradient) {
 			let grd = context.createLinearGradient(0, 5, 0, radius);
-			grd.addColorStop(0, this.directionColorConfig.displayBackgroundGradientFrom);// 0  Beginning
-			grd.addColorStop(1, this.directionColorConfig.displayBackgroundGradientTo);  // 1  End
+			grd.addColorStop(0, this.directionColorConfig.displayBackgroundGradient.from);// 0  Beginning
+			grd.addColorStop(1, this.directionColorConfig.displayBackgroundGradient.to);  // 1  End
 			context.fillStyle = grd;
 		} else {
-			context.fillStyle = this.directionColorConfig.displayBackgroundGradientTo;
+			context.fillStyle = this.directionColorConfig.displayBackgroundGradient.to;
 		}
 
 		if (this.directionColorConfig.withDisplayShadow) {

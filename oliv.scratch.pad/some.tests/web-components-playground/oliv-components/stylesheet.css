@@ -155,3 +155,127 @@ a:visited { color : #8080FF}
   --value-nb-decimal: 2;
   --font: 'Arial'; /* 'Source Code Pro' */
 }
+
+.analogdisplay-day {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: black;
+	--with-gradient: true;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: white; /* used if --withGradient: false */
+	--display-line-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: rgba(255, 255, 255, 0.5);
+	--with-display-shadow: true;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: DarkGrey;
+	--major-tick-color: black;
+	--minor-tick-color: black;
+	--value-color: grey;
+	--value-outline-color: black;
+	--value-nb-decimal: 1;
+	--hand-color: red;
+	--hand-outline-color: black;
+	--with-hand-shadow: true;
+	--knob-color: DarkGrey;
+	--knob-outline-color: black;
+	--font: Arial;
+}
+
+.analogdisplay-night {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: cyan;
+	--with-gradient: true;
+	--display-background-gradient-from: DarkGrey; /* used if --withGradient: true */
+	--display-background-gradient-to: black;
+	--display-line-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: rgba(255, 255, 255, 0.5);
+	--with-display-shadow: true;
+	--shadow-color: black;
+	--outline-color: DarkGrey;
+	--major-tick-color: red;
+	--minor-tick-color: red;
+	--value-color: red;
+	--value-outline-color: black;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(255, 0, 0, 0.4);
+	--hand-outline-color: red;
+	--with-hand-shadow: true;
+	--knob-color: #8ed6ff;
+	--knob-outline-color: blue;
+	--font: Arial;
+}
+
+/* Monochrome, cyan */
+.analogdisplay-monochrome-cyan {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: cyan;
+	--with-gradient: false;
+	--display-background-gradient-from: LightGrey; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(0, 255, 255, 0.25);
+	--label-fill-color: rgba(0, 0, 0, 0);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: cyan;
+	--major-tick-color: cyan;
+	--minor-tick-color: cyan;
+	--value-color: cyan;
+	--value-outline-color: cyan;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0.0);
+	--hand-outline-color: cyan;
+	--with-hand-shadow: false;
+	--knob-color: cyan;
+	--knob-outline-color: cyan;
+	--font: Arial;
+}
+
+.analogdisplay-monochrome-orange {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: orange;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: black;
+	--display-line-color: rgba(255, 165, 0, 0.5); /* orange */
+	--label-fill-color: rgba(255, 255, 255, 0);
+	--with-display-shadow: false;
+	--shadow-color: black;
+	--outline-color: orange;
+	--major-tick-color: orange;
+	--minor-tick-color: orange;
+	--value-color: orange;
+	--value-outline-color: orange;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0);
+	--hand-outline-color: orange;
+	--with-hand-shadow: false;
+	--knob-color: orange;
+	--knob-outline-color: orange;
+	--index-color: orange; /* Compass rose index */
+	--outlined-port-starboard: true;
+	--font: Arial;
+}
+
+/* Day, flat gray */
+.analogdisplay-flat-gray {
+	--bg-color: rgba(255, 255, 255, 0.0);
+	--digit-color: grey;
+	--with-gradient: true;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: white; /* used if --withGradient: false */
+	--display-line-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: rgba(255, 255, 255, 0.5);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: DarkGrey;
+	--major-tick-color: grey;
+	--minor-tick-color: grey;
+	--value-color: grey;
+	--value-outline-color: black;
+	--value-nb-decimal: 1;
+	--hand-color: red;
+	--hand-outline-color: grey;
+	--with-hand-shadow: true;
+	--knob-color: DarkGrey;
+	--knob-outline-color: black;
+	--font: Arial;
+}
