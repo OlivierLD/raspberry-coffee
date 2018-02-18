@@ -131,6 +131,10 @@
 			document.getElementById(id).withMinMax = cb.checked;
 		}
 
+		function setDigitVal(field, id) {
+			document.getElementById(id).digitalDataVal = field.value;
+		}
+
 	</script>
 </head>
 <body>
@@ -385,6 +389,7 @@
 
 		<tr>
 			<th>Amin.</th>
+			<th>Amin.</th>
 		</tr>
 
 		<tr>
@@ -406,7 +411,23 @@
 				</div>
 			</td>
 
-			<td rowspan="4" class="black-frame centered" >
+			<td valign="top">
+				<div class="black-frame centered" style="background-color: black;">
+					<analog-display class="analogdisplay-monochrome-cyan"
+													title="Humidity in %"
+													id="hum-01"
+													min-value="0"
+													max-value="100"
+													value="75"
+													major-ticks="10"
+													minor-ticks="1"
+													with-border="true"
+													overlap="40"
+													digital-data-len="3"
+													digital-data-val="123"
+													width="200"
+													height="200"></analog-display>
+				</div>
 
 			</td>
 
@@ -449,10 +470,31 @@
 
 			</td>
 
+			<td valign="top">
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="hum-value-01"
+								 placeholder="Hum"
+								 title="Humidity in %"
+								 onblur="doAnimate('hum-value-01', 'hum-01')"
+								 style="width: 50px;"/>
+					<button onclick="doAnimate('hum-value-01', 'hum-01')"
+									title="Set Speed value"
+									style="margin-top: 3px;">Set value</button>
+					<br/>
+					Bottom Val:<input type="number" size="3" onblur="setDigitVal(this, 'hum-01');" placeholder="Bottom Value">
+					<br/>
+					<input type="checkbox" onchange="setBorder(this, 'hum-01');" checked>With Border
+					<input type="checkbox" onchange="setMinMax(this, 'hum-01');">With Min &amp; Max
+				</div>
+
+			</td>
 		</tr>
+
 		<tr>
 
-			<td valign="bottom">
+ 			<td valign="bottom">
 				<div class="black-frame centered">
 					<analog-display class="analogdisplay-day"
 													title="Pressure in hPa"
@@ -468,6 +510,25 @@
 													width="200"
 													height="200"></analog-display>
 				</div>
+			</td>
+
+			<td valign="top">
+				<div class="black-frame centered" style="background-color: black;">
+					<analog-display class="analogdisplay-monochrome-orange"
+													title="True Wind Speed in knots"
+													id="tws-01"
+													min-value="0"
+													max-value="60"
+													value="12"
+													major-ticks="10"
+													minor-ticks="1"
+													with-border="true"
+													overlap="40"
+													label="TWS"
+													width="200"
+													height="200"></analog-display>
+				</div>
+
 			</td>
 
 		</tr>
@@ -488,6 +549,25 @@
 					<br/>
 					<input type="checkbox" onchange="setBorder(this, 'prmsl-01');" checked>With Border
 					<input type="checkbox" onchange="setMinMax(this, 'prmsl-01');">With Min &amp; Max
+				</div>
+
+			</td>
+
+			<td valign="top">
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="tws-value-01"
+								 placeholder="TWS"
+								 title="Wind Speed in knots"
+								 onblur="doAnimate('tws-value-01', 'tws-01')"
+								 style="width: 50px;"/>
+					<button onclick="doAnimate('tws-value-01', 'tws-01')"
+									title="Set Speed value"
+									style="margin-top: 3px;">Set value</button>
+					<br/>
+					<input type="checkbox" onchange="setBorder(this, 'tws-01');" checked>With Border
+					<input type="checkbox" onchange="setMinMax(this, 'tws-01');">With Min &amp; Max
 				</div>
 
 			</td>

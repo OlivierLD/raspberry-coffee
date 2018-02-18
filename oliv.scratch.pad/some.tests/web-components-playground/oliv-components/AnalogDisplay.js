@@ -71,20 +71,20 @@ class AnalogDisplay extends HTMLElement { // WIP
 
 	static get observedAttributes() {
 		return [
-			"width",        // Integer. Canvas width
-			"height",       // Integer. Canvas height
-			"major-ticks",  // Float. value between major ticks (those with labels)
-			"minor-ticks",  // Float. value between minor ticks
-			"min-value",    // Float. Min value. Default 0
-			"max-value",    // Float. Max value.
-			"overlap",      // Integer. Display overlap in degrees. Default 0.
-			"with-min-max", // Boolean, default false
-			"with-digits",  // Boolean, default true. Index Values for major-ticks
-			"with-border",  // Boolean, default true
-			"label",        // String
+			"width",            // Integer. Canvas width
+			"height",           // Integer. Canvas height
+			"major-ticks",      // Float. value between major ticks (those with labels)
+			"minor-ticks",      // Float. value between minor ticks
+			"min-value",        // Float. Min value. Default 0
+			"max-value",        // Float. Max value.
+			"overlap",          // Integer. Display overlap in degrees. Default 0.
+			"with-min-max",     // Boolean, default false
+			"with-digits",      // Boolean, default true. Index Values for major-ticks
+			"with-border",      // Boolean, default true
+			"label",            // String. Ignored if digital-data-* are provided.
 			"digital-data-len", // Integer, optional, to display instead of label, like log value along with BSP. Number of characters to display
 			"digital-data-val", // Float, optional. Must be present idf the above exists.
-			"value"         // Float. Value to display
+			"value"             // Float. Value to display
 		];
 	}
 

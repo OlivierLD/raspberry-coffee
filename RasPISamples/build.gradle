@@ -68,5 +68,6 @@ dependencies {
   compile project(':WeatherStation')
   compile project(':SevenSegDisplay')
   compile project(':Adafruit.IO.REST')
+  compile project(':NMEA.multiplexer')
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }

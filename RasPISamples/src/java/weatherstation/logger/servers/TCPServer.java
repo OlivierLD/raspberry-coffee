@@ -1,4 +1,5 @@
-package nmea.forwarders;
+package weatherstation.logger.servers;
+
 
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
@@ -6,13 +7,12 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-public class TCPServer implements Forwarder {
+public class TCPServer {
 	private TCPServer instance = this;
 	private List<Socket> clientSocketlist = new ArrayList<Socket>(1);
 
-	private int tcpPort = 7001;
+	private int tcpPort;
 	private ServerSocket serverSocket = null;
 
 	public TCPServer(int port) throws Exception {
@@ -34,7 +34,6 @@ public class TCPServer implements Forwarder {
 		this.clientSocketlist.add(skt);
 	}
 
-	@Override
 	public void write(byte[] message) {
 		List<Socket> toRemove = new ArrayList<>();
 		synchronized( clientSocketlist) {
@@ -63,23 +62,16 @@ public class TCPServer implements Forwarder {
 		}
 	}
 
-	private int getNbClients() {
+	public int getNbClients() {
 		return clientSocketlist.size();
 	}
 
-	private String formatByteHexa(byte b) {
-		String s = Integer.toHexString(b).toUpperCase();
-		while (s.length() < 2)
-			s = "0" + s;
-		return s;
-	}
-
-	@Override
 	public void close() {
 		System.out.println("- Stop writing to " + this.getClass().getName());
 		try {
-			for (Socket tcpSocket : clientSocketlist)
+			for (Socket tcpSocket : clientSocketlist) {
 				tcpSocket.close();
+			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -124,9 +116,9 @@ public class TCPServer implements Forwarder {
 				parent.serverSocket = new ServerSocket(tcpPort);
 				while (true) // Wait for the clients
 				{
-          System.out.println(".......... serverSocket waiting (TCP:" + tcpPort + ").");
+					System.out.println(".......... serverSocket waiting (TCP:" + tcpPort + ").");
 					Socket clientSkt = serverSocket.accept();
-          System.out.println(".......... serverSocket accepted (TCP:" + tcpPort + ").");
+					System.out.println(".......... serverSocket accepted (TCP:" + tcpPort + ").");
 					parent.setSocket(clientSkt);
 				}
 			} catch (Exception ex) {
@@ -135,30 +127,5 @@ public class TCPServer implements Forwarder {
 			System.out.println("..... End of TCP SocketThread.");
 		}
 	}
-
-	public static class TCPBean {
-		private String cls;
-		private int port;
-		private String type = "tcp";
-		private int nbClients = 0;
-
-		public int getPort() {
-			return port;
-		}
-
-		public TCPBean(TCPServer instance) {
-			cls = instance.getClass().getName();
-			port = instance.tcpPort;
-			nbClients = instance.getNbClients();
-		}
-	}
-
-	@Override
-	public Object getBean() {
-		return new TCPBean(this);
-	}
-
-	@Override
-	public void setProperties(Properties props) {
-	}
 }
+

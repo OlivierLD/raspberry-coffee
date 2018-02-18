@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+CP=
+CP=$CP:./build/libs/RasPISamples-1.0-all.jar
+#
+JAVA_OPTS=
+# JAVA_OPTS="$JAVA_OPTS -Ddata.logger=weatherstation.logger.DummyLogger"
+JAVA_OPTS="$JAVA_OPTS -Ddata.logger=weatherstation.logger.NMEAOverTCPLogger"
+# JAVA_OPTS="$JAVA_OPTS -Dws.log=true"
+# Also -Dws.uri if needed
+java -cp $CP $JAVA_OPTS weatherstation.ws.HomeWeatherStationSimulator
