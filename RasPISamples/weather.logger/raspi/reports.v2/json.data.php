@@ -32,7 +32,7 @@ if (!empty($_GET['period'])) {
 }
 
 $username = "oliv";
-$password = "xxxxxx";
+$password = "xxxxxxx";
 $database = "sensors";
 
 $link = mysql_connect("mysql", $username, $password);
@@ -62,7 +62,9 @@ if ($period != '' && $period != 'ALL') {
   $nbs = 3600 * 24;
   if ($period == 'DAY') {
     $nbs = 3600 * 24; // DAY, with time offset ??
-   } else if ($period == 'WEEK') {
+  } else if ($period == '2DAYS') {
+    $nbs *= 2;
+  } else if ($period == 'WEEK') {
     $nbs *= 7;
   } else if ($period == 'MONTH') {
     $nbs *= 30;

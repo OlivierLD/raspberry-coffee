@@ -50,4 +50,9 @@ Works OK (~so-so) if there is only one component, it's a mess otherwise.
 
 ---
 
+## Questions
+Observed Attributes. Does a "final" attribute have to be observed?
+
+---
+
 More to come...

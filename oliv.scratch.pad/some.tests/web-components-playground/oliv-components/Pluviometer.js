@@ -28,6 +28,7 @@ const pluviometerColorConfigBlack = {
 	font: 'Arial'
 };
 
+// TODO Add CSS styling
 let pluviometerColorConfig = pluviometerColorConfigWhite; // White is the default
 
 /* global HTMLElement */

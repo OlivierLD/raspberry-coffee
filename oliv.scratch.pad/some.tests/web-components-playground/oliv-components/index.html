@@ -11,6 +11,7 @@
 	<script type="text/javascript" src="Thermometer.js" async></script>
 	<script type="text/javascript" src="JumboDisplay.js" async></script>
 	<script type="text/javascript" src="DirectionDisplay.js" async></script>
+	<script type="text/javascript" src="AnalogDisplay.js" async></script>
 
 	<style>
 		.black-frame {
@@ -126,11 +127,15 @@
 			document.getElementById(id).withRose = cb.checked;
 		}
 
+		function setMinMax(cb, id) {
+			document.getElementById(id).withMinMax = cb.checked;
+		}
+
 	</script>
 </head>
 <body>
 
-	<h2>Web Components</h2>
+	<h2>Web Components Samples</h2>
 	<h5>Pluviometer, Thermometer, etc.</h5>
 
 	<table>
@@ -217,6 +222,7 @@
 			<td valign="bottom">
 				<div class="black-frame centered">
 					<direction-display class="analogdisplay-day"
+					                   title="Heading, animated"
 														 id="compass-01"
 												     value="38"
 														 major-ticks="45"
@@ -230,15 +236,16 @@
 			</td>
 
 			<td valign="bottom">
-				<div class="black-frame centered">
+				<div class="black-frame centered" style="background-color: black;">
 					<direction-display class="analogdisplay-monochrome-orange"
+					                   title="TWD, not animated"
 														 id="compass-02"
 														 value="138"
 														 major-ticks="45"
 														 minor-ticks="5"
 														 with-rose="true"
 														 with-border="true"
-														 label="HDG"
+														 label="TWD"
 														 width="200"
 														 height="200"></direction-display>
 				</div>
@@ -373,6 +380,120 @@
 			</td>
 
 		</tr>
+
+		<!-- Second row of widgets -->
+
+		<tr>
+			<th>Amin.</th>
+		</tr>
+
+		<tr>
+
+			<td valign="bottom">
+				<div class="black-frame centered">
+					<analog-display class="analogdisplay-day"
+													title="Boat Speed in Knots"
+													id="bsp-01"
+													min-value="0"
+													max-value="15"
+													value="6.7"
+													major-ticks="3"
+													minor-ticks="0.25"
+					                overlap="-10"
+													with-border="true"
+													width="200"
+													height="100"></analog-display>
+				</div>
+			</td>
+
+			<td rowspan="4" class="black-frame centered" >
+
+			</td>
+
+			<td rowspan="4" class="black-frame centered" >
+
+			</td>
+			<td rowspan="4" class="black-frame centered" >
+
+			</td>
+			<td rowspan="4" class="black-frame centered" >
+
+			</td>
+			<td rowspan="4" class="black-frame centered" >
+
+			</td>
+
+			<td rowspan="4" class="black-frame centered" >
+
+			</td>
+		</tr>
+
+		<tr>
+			<td valign="top">
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="speed-value-01"
+								 placeholder="speed"
+								 title="BSP in knots"
+								 onblur="doAnimate('speed-value-01', 'bsp-01')"
+								 style="width: 50px;"/>
+					<br/>
+					<button onclick="doAnimate('speed-value-01', 'bsp-01')"
+									title="Set Speed value"
+									style="margin-top: 3px;">Set value</button>
+					<br/>
+					<input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>With Border
+					<input type="checkbox" onchange="setMinMax(this, 'bsp-01');">With Min &amp; Max
+				</div>
+
+			</td>
+
+		</tr>
+		<tr>
+
+			<td valign="bottom">
+				<div class="black-frame centered">
+					<analog-display class="analogdisplay-day"
+													title="Pressure in hPa"
+													id="prmsl-01"
+													min-value="960"
+													max-value="1040"
+													value="1020.8"
+													major-ticks="10"
+													minor-ticks="1"
+													with-border="true"
+													overlap="40"
+													label="PRMSL"
+													width="200"
+													height="200"></analog-display>
+				</div>
+			</td>
+
+		</tr>
+		<tr>
+			<td valign="top">
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="prmsl-value-01"
+								 placeholder="PRMSL"
+								 title="in hPa"
+								 onblur="doAnimate('prmsl-value-01', 'prmsl-01')"
+								 style="width: 50px;"/>
+					<br/>
+					<button onclick="doAnimate('prmsl-value-01', 'prmsl-01')"
+									title="Set PRMSL value"
+									style="margin-top: 3px;">Set value</button>
+					<br/>
+					<input type="checkbox" onchange="setBorder(this, 'prmsl-01');" checked>With Border
+					<input type="checkbox" onchange="setMinMax(this, 'prmsl-01');">With Min &amp; Max
+				</div>
+
+			</td>
+
+		</tr>
+
 	</table>
 	<hr/>
   <span style="font-style: italic;" title="C'est MOI qui l'ai fait.">Oliv did it</span>

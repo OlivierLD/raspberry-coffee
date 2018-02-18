@@ -67,7 +67,7 @@ const defaultAnalogColorConfig = {
 };
 
 /* global HTMLElement */
-class DirectionDisplay extends HTMLElement { // TODO WIP
+class DirectionDisplay extends HTMLElement {
 
 	static get observedAttributes() {
 		return [
@@ -100,7 +100,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 		this._label       = undefined;
 
 		this._previousClassName = "";
-		this.directionColorConfig = defaultAnalogColorConfig; // Init
+		this.analogColorConfig = defaultAnalogColorConfig; // Init
 
 		if (directionVerbose) {
 			console.log("Data in Constructor:", this._value);
@@ -318,7 +318,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 			}
 		}
 		return colorConfig;
-	};
+	}
 
 
 	drawDisplay(directionValue) {
@@ -328,7 +328,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 			// Reload
 			//	console.log("Reloading CSS");
 			try {
-				this.directionColorConfig = this.getColorConfig(currentStyle);
+				this.analogColorConfig = this.getColorConfig(currentStyle);
 			} catch (err) {
 				// Absorb?
 				console.log(err);
@@ -336,7 +336,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 			this._previousClassName = currentStyle;
 		}
 
-		let digitColor = this.directionColorConfig.digitColor;
+		let digitColor = this.analogColorConfig.digitColor;
 
 		let context = this.canvas.getContext('2d');
 		context.clearRect(0, 0, this.width, this.height);
@@ -348,7 +348,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 		this.canvas.height = this.height;
 
 		// Cleanup
-		context.fillStyle = this.directionColorConfig.bgColor;
+		context.fillStyle = this.analogColorConfig.bgColor;
 		context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
 		context.beginPath();
@@ -357,20 +357,20 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 			context.arc(this.canvas.width / 2, radius + 10, radius, 0, 2 * Math.PI, false);
 			context.lineWidth = 5;
 		}
-		if (this.directionColorConfig.withGradient) {
+		if (this.analogColorConfig.withGradient) {
 			let grd = context.createLinearGradient(0, 5, 0, radius);
-			grd.addColorStop(0, this.directionColorConfig.displayBackgroundGradient.from);// 0  Beginning
-			grd.addColorStop(1, this.directionColorConfig.displayBackgroundGradient.to);  // 1  End
+			grd.addColorStop(0, this.analogColorConfig.displayBackgroundGradient.from);// 0  Beginning
+			grd.addColorStop(1, this.analogColorConfig.displayBackgroundGradient.to);  // 1  End
 			context.fillStyle = grd;
 		} else {
-			context.fillStyle = this.directionColorConfig.displayBackgroundGradient.to;
+			context.fillStyle = this.analogColorConfig.displayBackgroundGradient.to;
 		}
 
-		if (this.directionColorConfig.withDisplayShadow) {
+		if (this.analogColorConfig.withDisplayShadow) {
 			context.shadowOffsetX = 3;
 			context.shadowOffsetY = 3;
 			context.shadowBlur = 3;
-			context.shadowColor = this.directionColorConfig.shadowColor;
+			context.shadowColor = this.analogColorConfig.shadowColor;
 		} else {
 			context.shadowOffsetX = 0;
 			context.shadowOffsetY = 0;
@@ -379,7 +379,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 		}
 		context.lineJoin = "round";
 		context.fill();
-		context.strokeStyle = this.directionColorConfig.outlineColor;
+		context.strokeStyle = this.analogColorConfig.outlineColor;
 		context.stroke();
 		context.closePath();
 
@@ -394,7 +394,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 			context.lineTo(xTo, yTo);
 		}
 		context.lineWidth = 3;
-		context.strokeStyle = this.directionColorConfig.majorTickColor;
+		context.strokeStyle = this.analogColorConfig.majorTickColor;
 		context.stroke();
 		context.closePath();
 
@@ -410,7 +410,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 				context.lineTo(xTo, yTo);
 			}
 			context.lineWidth = 1;
-			context.strokeStyle = this.directionColorConfig.minorTickColor;
+			context.strokeStyle = this.analogColorConfig.minorTickColor;
 			context.stroke();
 			context.closePath();
 		}
@@ -476,7 +476,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 			this.drawSpike(radius, outsideRadius * 0.9, insideRadius, SW, context);
 			this.drawSpike(radius, outsideRadius * 0.9, insideRadius, NW, context);
 
-			context.strokeStyle = this.directionColorConfig.displayLineColor;
+			context.strokeStyle = this.analogColorConfig.displayLineColor;
 			context.stroke();
 			context.closePath();
 		}
@@ -494,7 +494,7 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 			let len = context.measureText(str).width;
 			context.fillText(str, -len / 2, (-(radius * .8) + 10));
 			context.lineWidth = 1;
-			context.strokeStyle = this.directionColorConfig.valueOutlineColor;
+			context.strokeStyle = this.analogColorConfig.valueOutlineColor;
 			context.strokeText(str, -len / 2, (-(radius * .8) + 10)); // Outlined
 			context.restore();
 		}
@@ -505,20 +505,20 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 		while (dv > 360) dv -= 360;
 		while (dv < 0) dv += 360;
 		try {
-			text = dv.toFixed(this.directionColorConfig.valueNbDecimal);
+			text = dv.toFixed(this.analogColorConfig.valueNbDecimal);
 		} catch (err) {
 			console.log(err);
 		}
 		let len = 0;
-		context.font = "bold " + Math.round(scale * 40) + "px " + this.directionColorConfig.font; // "bold 40px Arial"
+		context.font = "bold " + Math.round(scale * 40) + "px " + this.analogColorConfig.font; // "bold 40px Arial"
 		let metrics = context.measureText(text);
 		len = metrics.width;
 
 		context.beginPath();
-		context.fillStyle = this.directionColorConfig.valueColor;
+		context.fillStyle = this.analogColorConfig.valueColor;
 		context.fillText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10));
 		context.lineWidth = 1;
-		context.strokeStyle = this.directionColorConfig.valueOutlineColor;
+		context.strokeStyle = this.analogColorConfig.valueOutlineColor;
 		context.strokeText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined
 		context.closePath();
 
@@ -527,23 +527,23 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 			let fontSize = 20;
 			let text = this.label;
 			let len = 0;
-			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.directionColorConfig.font; // "bold 40px Arial"
+			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.analogColorConfig.font; // "bold 40px Arial"
 			let metrics = context.measureText(text);
 			len = metrics.width;
 
 			context.beginPath();
-			context.fillStyle = this.directionColorConfig.labelFillColor;
+			context.fillStyle = this.analogColorConfig.labelFillColor;
 			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)));
 			context.lineWidth = 1;
-			context.strokeStyle = this.directionColorConfig.valueOutlineColor;
+			context.strokeStyle = this.analogColorConfig.valueOutlineColor;
 			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1))); // Outlined
 			context.closePath();
 		}
 
 		// Hand
 		context.beginPath();
-		if (this.directionColorConfig.withHandShadow) {
-			context.shadowColor = this.directionColorConfig.shadowColor;
+		if (this.analogColorConfig.withHandShadow) {
+			context.shadowColor = this.analogColorConfig.shadowColor;
 			context.shadowOffsetX = 3;
 			context.shadowOffsetY = 3;
 			context.shadowBlur = 3;
@@ -564,18 +564,18 @@ class DirectionDisplay extends HTMLElement { // TODO WIP
 		context.lineTo(x, y);
 
 		context.closePath();
-		context.fillStyle = this.directionColorConfig.handColor;
+		context.fillStyle = this.analogColorConfig.handColor;
 		context.fill();
 		context.lineWidth = 1;
-		context.strokeStyle = this.directionColorConfig.handOutlineColor;
+		context.strokeStyle = this.analogColorConfig.handOutlineColor;
 		context.stroke();
 		// Knob
 		context.beginPath();
 		context.arc((this.canvas.width / 2), (radius + 10), 7, 0, 2 * Math.PI, false);
 		context.closePath();
-		context.fillStyle = this.directionColorConfig.knobColor;
+		context.fillStyle = this.analogColorConfig.knobColor;
 		context.fill();
-		context.strokeStyle = this.directionColorConfig.knobOutlineColor;
+		context.strokeStyle = this.analogColorConfig.knobOutlineColor;
 		context.stroke();
 	}
 
