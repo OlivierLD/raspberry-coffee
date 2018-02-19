@@ -1,10 +1,10 @@
 ## Oliv Web Components
 
-- Pluviometer. Done. Add the CSS styling.
+- Pluviometer. Done.
 - Thermometer. Done
 - Jumbo Display. Done
 - Direction Display. Done
-- Analog Display. WIP
+- Analog Display. Done
 - Globe and Map. TODO
 - Compass Rose. TODO
 - Digital Display. TODO
@@ -24,4 +24,4 @@ Define:
 ---
 
 #### CodePen
-- Jumbo DIsplay [here](https://codepen.io/OlivierLD/pen/VQyVjy).
+- Jumbo Display [here](https://codepen.io/OlivierLD/pen/VQyVjy).

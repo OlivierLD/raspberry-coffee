@@ -9,7 +9,7 @@
 
 ---
 
-Use nodeJS to run the pages:
+I use nodeJS to run the pages:
  ```bash
  $ node server.js
 ```
@@ -40,6 +40,11 @@ function setData() {
   elem.value = value;
 }
 ```
+This means that they can be dynamically modified once loaded.
+
+A `WebComponent` extends `HTMLElement`; as such all the properties of an `HTMLElement` are available on a `WebComponent`
+ (such as `class`, `title`, etc).
+ 
 ---
 
 ## Lessons learned
