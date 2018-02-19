@@ -8,4 +8,6 @@ JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Ddata.logger=weatherstation.logger.NMEAOverTCPLogger"
 # JAVA_OPTS="$JAVA_OPTS -Dws.log=true"
 # Also -Dws.uri if needed
+JAVA_OPTS="$JAVA_OPTS -Dstation.lat=37.7489 -Dstation.lng=-122.5070"
+#
 java -cp $CP $JAVA_OPTS weatherstation.ws.HomeWeatherStationSimulator

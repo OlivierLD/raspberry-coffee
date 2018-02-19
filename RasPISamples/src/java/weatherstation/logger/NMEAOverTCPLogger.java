@@ -9,6 +9,7 @@ import weatherstation.logger.servers.TCPServer;
  * Compatible with OpenCPN, NodeRED, NMEA.multiplexer, etc...
  *
  * Expect -Dtcp.port to override default 7001.
+ * Also station.lat, station.lng
  */
 
 public class NMEAOverTCPLogger implements LoggerInterface {
@@ -17,6 +18,9 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 	private boolean verbose = true; // TODO Make this a system variable
 	private TCPServer tcpServer = null;
 
+	private Double stationLatitude  = null;
+	private Double stationLongitude = null;
+
 	private final String DEVICE_PREFIX = "WS";
 
 	public NMEAOverTCPLogger() {
@@ -24,6 +28,22 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 			tcpPort = Integer.parseInt(System.getProperty("tcp.port", String.valueOf(tcpPort)));
 		} catch (Exception ex) {
 			System.err.println(ex.toString());
+		}
+
+		String strLat = System.getProperty("station.lat");
+		String strLng = System.getProperty("station.lng");
+
+		if (strLat != null && strLng != null) {
+			try {
+				stationLatitude = Double.parseDouble(strLat);
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+			try {
+				stationLongitude = Double.parseDouble(strLng);
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
 		}
 		// Open TCP port here
 		try {
@@ -38,12 +58,11 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 	public void pushMessage(JSONObject json)
 			throws Exception {
 		System.out.println(">>> Logging:\n" + json.toString(2)); // TODO Implement!
-
 		convertAndPush(json);
 	}
 
 	/**
-	 * TODO Add position (RMC), TWS, TWD.
+	 * TODO Add position (GLL).
 	 *
 	 * @param json
 	 */
@@ -117,5 +136,24 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 
 		tcpServer.write(nmeaMMB.getBytes());
 
+		String nmeaMWD = StringGenerator.generateMWD(DEVICE_PREFIX, avgdir, speed, 0D);
+		nmeaMWD += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+
+		if (verbose) {
+			System.out.println(String.format(">>> Generated [%s]", nmeaMWD.trim()));
+		}
+
+		tcpServer.write(nmeaMWD.getBytes());
+
+		if (stationLatitude != null && stationLongitude != null) {
+			String nmeaGLL = StringGenerator.generateGLL(DEVICE_PREFIX, null, stationLatitude, stationLongitude);
+			nmeaGLL += NMEAParser.NMEA_SENTENCE_SEPARATOR;
+
+			if (verbose) {
+				System.out.println(String.format(">>> Generated [%s]", nmeaGLL.trim()));
+			}
+
+			tcpServer.write(nmeaGLL.getBytes());
+		}
 	}
 }
