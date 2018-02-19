@@ -1,6 +1,6 @@
 const rainVerbose = false;
 
-const pluviometerColorConfigWhite = {
+const pluviometerDefaultColorConfig = {
 	withShadow: true,
 	shadowColor: 'LightGrey',
 	scaleColor: 'black',
@@ -10,26 +10,9 @@ const pluviometerColorConfigWhite = {
 	valueOutlineColor: 'black',
 	valueColor: 'DarkGrey',
 	tubeOutlineColor: 'pink',
-	hgOutlineColor: 'DarkGrey',
+	rainOutlineColor: 'DarkGrey',
 	font: 'Arial'
 };
-
-const pluviometerColorConfigBlack = {
-	withShadow: true,
-	shadowColor: 'black',
-	scaleColor: 'LightGrey',
-	bgColor: 'black',
-	majorTickColor: 'LightGrey',
-	minorTickColor: 'DarkGrey',
-	valueOutlineColor: 'black',
-	valueColor: 'LightGrey',
-	tubeOutlineColor: 'pink',
-	hgOutlineColor: 'DarkGrey',
-	font: 'Arial'
-};
-
-// TODO Add CSS styling
-let pluviometerColorConfig = pluviometerColorConfigWhite; // White is the default
 
 /* global HTMLElement */
 class Pluviometer extends HTMLElement {
@@ -61,6 +44,9 @@ class Pluviometer extends HTMLElement {
 		this._max_value   =  10;
 		this._major_ticks =   1;
 		this._minor_ticks =   0.25;
+
+		this._previousClassName = "";
+		this.pluviometerColorConfig = pluviometerDefaultColorConfig;
 
 		if (rainVerbose) {
 			console.log("Data in Constructor:", this._value);
@@ -177,13 +163,93 @@ class Pluviometer extends HTMLElement {
 	}
 
 	// Component methods
+	getColorConfig(cssClassName) {
+		let colorConfig = pluviometerDefaultColorConfig;
+		for (let s=0; s<document.styleSheets.length; s++) {
+			// console.log("Walking though ", document.styleSheets[s]);
+			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+				// console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
+				if (document.styleSheets[s].cssRules[r].selectorText === ('.' + cssClassName)) {
+					// console.log("  >>> Found it!");
+					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
+					let cssTextElems = cssText.split(";");
+					cssTextElems.forEach(function(elem) {
+						if (elem.trim().length > 0) {
+							let keyValPair = elem.split(":");
+							let key = keyValPair[0].trim();
+							let value = keyValPair[1].trim();
+							switch (key) {
+								case '--bg-color':
+									colorConfig.bgColor = value;
+									break;
+								case '--with-shadow':
+									colorConfig.withShadow = (value === 'true');
+									break;
+								case '--shadow-color':
+									colorConfig.shadowColor = value;
+									break;
+								case '--outline-color':
+									colorConfig.outlineColor = value;
+									break;
+								case '--major-tick-color':
+									colorConfig.majorTickColor = value;
+									break;
+								case '--minor-tick-color':
+									colorConfig.minorTickColor = value;
+									break;
+								case '--value-color':
+									colorConfig.valueColor = value;
+									break;
+								case '--scale-color':
+									colorConfig.scaleColor = value;
+									break;
+								case '--value-outline-color':
+									colorConfig.valueOutlineColor = value;
+									break;
+								case '--tube-outline-color':
+									colorConfig.tubeOutlineColor = value;
+									break;
+								case '--rain-outline-color':
+									colorConfig.rainOutlineColor = value;
+									break;
+								case '--font':
+									colorConfig.font = value;
+									break;
+								default:
+									break;
+							}
+						}
+					});
+				}
+			}
+		}
+		return colorConfig;
+	};
+
+
+
 	repaint() {
 		this.drawPluviometer(this._value);
 	}
 
 	drawPluviometer(rainValue) {
 
-		let digitColor = pluviometerColorConfig.scaleColor;
+		let currentStyle = this.className;
+		if (this._previousClassName !== currentStyle || true) {
+			// Reload
+			//	console.log("Reloading CSS");
+			try {
+				this.pluviometerColorConfig = this.getColorConfig(currentStyle);
+			} catch (err) {
+				// Absorb?
+				console.log(err);
+			}
+
+			this._previousClassName = currentStyle;
+		}
+
+
+		let digitColor = this.pluviometerColorConfig.scaleColor;
 		let context = this.canvas.getContext('2d');
 
 		if (this.width === 0 || this.height === 0) { // Not visible
@@ -194,7 +260,7 @@ class Pluviometer extends HTMLElement {
 		this.canvas.height = this.height;
 
 		// Cleanup
-		context.fillStyle = pluviometerColorConfig.bgColor;
+		context.fillStyle = this.pluviometerColorConfig.bgColor;
 		//context.fillStyle = "#ffffff";
 		//context.fillStyle = "LightBlue";
 		//context.fillStyle = "transparent";
@@ -243,16 +309,16 @@ class Pluviometer extends HTMLElement {
 		grd.addColorStop(1, 'white');     // 1  End. LightGrey
 		context.fillStyle = grd;
 
-		if (pluviometerColorConfig.withShadow) {
+		if (this.pluviometerColorConfig.withShadow) {
 			context.shadowOffsetX = 3;
 			context.shadowOffsetY = 3;
 			context.shadowBlur = 3;
-			context.shadowColor = pluviometerColorConfig.shadowColor;
+			context.shadowColor = this.pluviometerColorConfig.shadowColor;
 		}
 
 		context.lineJoin = "round";
 		context.fill();
-		context.strokeStyle = pluviometerColorConfig.tubeOutlineColor; // Tube outline color
+		context.strokeStyle = this.pluviometerColorConfig.tubeOutlineColor; // Tube outline color
 		context.stroke();
 		context.closePath();
 
@@ -286,7 +352,7 @@ class Pluviometer extends HTMLElement {
 
 		context.lineJoin = "round";
 		context.fill();
-		context.strokeStyle = pluviometerColorConfig.hgOutlineColor;
+		context.strokeStyle = this.pluviometerColorConfig.hgOutlineColor;
 		context.stroke();
 		context.closePath();
 
@@ -301,7 +367,7 @@ class Pluviometer extends HTMLElement {
 			context.lineTo(xTo, yTo);
 		}
 		context.lineWidth = 1;
-		context.strokeStyle = pluviometerColorConfig.majorTickColor;
+		context.strokeStyle = this.pluviometerColorConfig.majorTickColor;
 		context.stroke();
 		context.closePath();
 
@@ -317,7 +383,7 @@ class Pluviometer extends HTMLElement {
 				context.lineTo(xTo, yTo);
 			}
 			context.lineWidth = 1;
-			context.strokeStyle = pluviometerColorConfig.minorTickColor;
+			context.strokeStyle = this.pluviometerColorConfig.minorTickColor;
 			context.stroke();
 			context.closePath();
 		}
@@ -328,7 +394,7 @@ class Pluviometer extends HTMLElement {
 			xTo = (this.canvas.width / 2) + 20;
 			yTo = bottomTube - ((tubeLength) * ((i - this.minValue) / (this.maxValue - this.minValue)));
 
-			context.font = "bold 10px " + pluviometerColorConfig.font;
+			context.font = "bold 10px " + this.pluviometerColorConfig.font;
 			context.fillStyle = digitColor;
 			let str = i.toString();
 //		let len = context.measureText(str).width;
@@ -339,15 +405,15 @@ class Pluviometer extends HTMLElement {
 		// Value
 //  this.value = 5.3; // for tests
 		let text = rainValue.toFixed(2);
-		context.font = "bold 12px " + pluviometerColorConfig.font;
+		context.font = "bold 12px " + this.pluviometerColorConfig.font;
 		let metrics = context.measureText(text);
 		let len = metrics.width;
 
 		context.beginPath();
-		context.fillStyle = pluviometerColorConfig.valueColor;
+		context.fillStyle = this.pluviometerColorConfig.valueColor;
 		context.fillText(text, (this.canvas.width / 2) - (len / 2), 10);
 		context.lineWidth = 1;
-		context.strokeStyle = pluviometerColorConfig.valueOutlineColor;
+		context.strokeStyle = this.pluviometerColorConfig.valueOutlineColor;
 		context.strokeText(text, (this.canvas.width / 2) - (len / 2), 10); // Outlined
 		context.closePath();
 	}

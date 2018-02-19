@@ -10,6 +10,8 @@ import weatherstation.logger.servers.TCPServer;
  *
  * Expect -Dtcp.port to override default 7001.
  * Also station.lat, station.lng
+ *
+ * Stricly speaking, not a loader, but a fowarder/broadcaster
  */
 
 public class NMEAOverTCPLogger implements LoggerInterface {
@@ -62,8 +64,6 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 	}
 
 	/**
-	 * TODO Add position (GLL).
-	 *
 	 * @param json
 	 */
 	private void convertAndPush(JSONObject json) {

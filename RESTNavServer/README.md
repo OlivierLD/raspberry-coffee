@@ -21,6 +21,8 @@ developed in Java. And actually, this is a general trend in this area, languages
 Java applets are being de-supported in more and more browsers, HTML and connected technologies keep improving
 their graphical capabilities (see [WebGL](http://learningwebgl.com/blog/), really [amazing](http://arodic.github.io/p/jellyfish/)).
 
+For inspiration, check out sites like [CodePen](https://codepen.io/)...
+
 > Just to nail it down: we've all used Integrated Development Environments (IDE), considering that this is (or was) where
 > client side processing capabilities were needed.
 > Well, think again, and look at what [Cloud9](http://c9.io/) is capable of...

@@ -124,6 +124,34 @@ a:active { color: #8080FF}
 a:visited { color : #8080FF}
 
 /* Widget specific */
+.pluviometer-day {
+	--with-shadow: true;
+	--shadow-color: LightGrey;
+	--scale-color: black;
+	--bg-color: white;
+	--major-tick-color: LightGrey;
+	--minor-tick-color: DarkGrey;
+	--value-outline-color: black;
+	--value-color: DarkGrey;
+	--tube-outline-color: pink;
+	--rain-outline-color: DarkGrey;
+	--font: 'Arial'
+}
+
+.pluviometer-night {
+	--with-shadow: false;
+	--shadow-color: LightGrey;
+	--scale-color: pink;
+	--bg-color: transparent;
+	--major-tick-color: LightGrey;
+	--minor-tick-color: DarkGrey;
+	--value-outline-color: red;
+	--value-color: red;
+	--tube-outline-color: lightgrey;
+	--rain-outline-color: DarkGrey;
+	--font: 'Arial'
+}
+
 .thermometer-day {
   --bg-color: white;
   --digit-color: DarkGrey;

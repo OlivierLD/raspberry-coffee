@@ -9,7 +9,7 @@ class JumboDisplay extends HTMLElement {
 			"height",       // Integer. Canvas height
 			"value",        // Float. Rain amount to display
 			"title",        // String, like TWS, AWS, etc
-			"text-color"    // Color
+			"text-color"    // Color. TODO Move to CSS style?
 		];
 	}
 
@@ -178,10 +178,11 @@ class JumboDisplay extends HTMLElement {
 		context.fillText(this.title, 5, 18);
 		// Value
 		context.font = "bold " + Math.round(scale * 60) + "px Arial";
-		let metrics = context.measureText(jumboValue);
+		let strVal = jumboValue.toFixed(2);
+		let metrics = context.measureText(strVal);
 		let len = metrics.width;
 
-		context.fillText(jumboValue, this.canvas.width - len - 5, this.canvas.height - 5);
+		context.fillText(strVal, this.canvas.width - len - 5, this.canvas.height - 5);
 	}
 
 	roundRect(ctx, x, y, width, height, radius, fill, stroke) {

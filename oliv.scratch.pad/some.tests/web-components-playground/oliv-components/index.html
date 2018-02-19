@@ -157,27 +157,29 @@
 			<td valign="bottom">
 				<div class="black-frame centered">
 					<pluvio-meter id="pluviometer-01"
+					              class="pluviometer-day"
 												title="m/m per hour"
 												min-value="0"
 												max-value="10"
 												major-ticks="1"
 												minor-ticks="0.25"
 												value="0"
-												width="60"
+												width="80"
 												height="220"></pluvio-meter>
 				</div>
 			</td>
 
 			<td valign="bottom">
-				<div class="black-frame centered">
+				<div class="black-frame centered" style="background-color: black;">
 					<pluvio-meter id="pluviometer-02"
+												class="pluviometer-night"
 												title="m/m per hour"
 												min-value="0"
 												max-value="10"
 												major-ticks="1"
 												minor-ticks="0.25"
 												value="0"
-												width="60"
+												width="80"
 												height="220"></pluvio-meter>
 				</div>
 			</td>
@@ -266,7 +268,7 @@
 								 placeholder="rain"
 					       title="in mm/h"
 								 onblur="doAnimate('rain-value-01', 'pluviometer-01')"
-								 style="width: 32px;"/>
+								 style="width: 50px;"/>
 					<br/>
 					<button onclick="doAnimate('rain-value-01', 'pluviometer-01')"
 					        title="Set Rain value in the tube"
@@ -283,7 +285,7 @@
 								 placeholder="rain"
 								 title="in mm/h"
 								 onblur="setData('rain-value-02', 'pluviometer-02')"
-								 style="width: 32px;"/>
+								 style="width: 50px;"/>
 					<br/>
 					<button onclick="setData('rain-value-02', 'pluviometer-02')"
 									title="Set Rain value in the tube"
