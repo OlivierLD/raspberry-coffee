@@ -23,5 +23,10 @@ Define:
 
 ---
 
+#### TODO
+JSDoc
+
 #### CodePen
-- Jumbo Display [here](https://codepen.io/OlivierLD/pen/VQyVjy).
+- [Jumbo Display](https://codepen.io/OlivierLD/pen/VQyVjy).
+- [Thermometer](https://codepen.io/OlivierLD/pen/KQQEEp).
+
