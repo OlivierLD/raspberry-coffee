@@ -60,4 +60,6 @@ Observed Attributes. Does a "final" attribute have to be observed?
 
 ---
 
+[Oliv's Components](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/oliv.scratch.pad/some.tests/web-components-playground/oliv-components)
+
 More to come...
