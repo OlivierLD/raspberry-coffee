@@ -39,7 +39,9 @@
 		function setData(from, to) {
 			let elem = document.getElementById(to);
 			let value = document.getElementById(from).value; // Field to read to get the value
-			elem.value = value;                              // value corresponds to the 'set value(val) { ...', invokes the setter in the HTMLElement class
+			if (value.length !== 0) {
+				elem.value = value;                              // value corresponds to the 'set value(val) { ...', invokes the setter in the HTMLElement class
+			}
 		}
 
 		let animation = false; // Not more than one animation at a given time, for this demo.
@@ -67,23 +69,25 @@
 				}
 				let webComp = document.getElementById(toComp);
 				let startFrom = webComp.value;
-				let goTo = parseFloat(document.getElementById(fromField).value);
-				if (startFrom !== goTo) {
-					if (on360 === true) {
-						if (Math.abs(goTo - startFrom) > 180) {
-							if (startFrom < 180) {
-								goTo -= 360;
-							} else {
-								goTo += 360;
+				if (document.getElementById(fromField).value.length !== 0) {
+					let goTo = parseFloat(document.getElementById(fromField).value);
+					if (goTo !== NaN && startFrom !== goTo) {
+						if (on360 === true) {
+							if (Math.abs(goTo - startFrom) > 180) {
+								if (startFrom < 180) {
+									goTo -= 360;
+								} else {
+									goTo += 360;
+								}
 							}
 						}
+						animation = true;
+						currentValue = startFrom;
+						incr = ((startFrom < goTo) ? 1 : -1) * (increment !== undefined ? increment : 0.1);
+						intervalId = window.setInterval(function () {
+							smoothlySet(webComp, startFrom, goTo);
+						}, 50);
 					}
-					animation = true;
-					currentValue = startFrom;
-					incr = ((startFrom < goTo) ? 1 : -1) * (increment !== undefined ? increment : 0.1);
-					intervalId = window.setInterval(function() {
-						smoothlySet(webComp, startFrom, goTo);
-					}, 50);
 				}
 			}
 		}
@@ -116,9 +120,14 @@
 
 	<h2>Web Components Samples</h2>
 	<h5>Pluviometer, Thermometer, etc.</h5>
+	<p>
+		Click on the <b>category titles</b> below, they all represent different configurations of <i>one</i> WebComponent each.
+		<br/>
+		All the different visual configurations are driven by <i>one</i> stylesheet, <code>stylesheet.css</code>.
+	</p>
 
 	<hr/>
-	<div style="cursor: pointer;" onclick="showHide('pluviometer');">Pluviometer</div>
+	<div style="cursor: pointer;" onclick="showHide('pluviometer');"><b>Pluviometer</b></div>
 	<div id="pluviometer" style="display: none;">
 		<table>
 			<tr>
@@ -185,11 +194,12 @@
 		</table>
 	</div>
 	<hr/>
-	<div style="cursor: pointer;" onclick="showHide('thermometer');">Thermometer</div>
+	<div style="cursor: pointer;" onclick="showHide('thermometer');"><b>Thermometer</b></div>
 	<div id="thermometer" style="display: none;">
 		<table>
 			<tr>
 				<td valign="top">
+					Anim.
 					<div class="black-frame centered">
 						<thermo-meter id="thermometer-01"
 													class="thermometer-day"
@@ -218,6 +228,7 @@
 				</td>
 
 				<td valign="top">
+					Direct.
 					<div class="black-frame centered">
 						<thermo-meter id="thermometer-02"
 													class="thermometer-night"
@@ -248,11 +259,12 @@
 		</table>
 	</div>
 	<hr/>
-	<div style="cursor: pointer;" onclick="showHide('direction');">Direction</div>
+	<div style="cursor: pointer;" onclick="showHide('direction');"><b>Direction</b></div>
 	<div id="direction" style="display: none;">
 		<table>
 			<tr>
 				<td valign="top">
+					Anim.
 					<div class="black-frame centered">
 						<direction-display class="analogdisplay-day"
 															 title="Heading, animated"
@@ -285,6 +297,7 @@
 				</td>
 
 				<td valign="top">
+					Direct.
 					<div class="black-frame centered" style="background-color: black;">
 						<direction-display class="analogdisplay-monochrome-orange"
 															 title="TWD, not animated"
@@ -317,6 +330,7 @@
 				</td>
 
 				<td valign="top">
+					Anim.
 					<div class="black-frame centered" style="background-color: black;">
 						<direction-display class="analogdisplay-monochrome-cyan"
 															 title="TWD, not animated"
@@ -349,6 +363,7 @@
 				</td>
 
 				<td valign="top">
+					Anim.
 					<div class="black-frame centered" style="background-color: black;">
 						<direction-display class="analogdisplay-night"
 															 title="Heading, animated"
@@ -383,11 +398,12 @@
 		</table>
 	</div>
 	<hr/>
-	<div style="cursor: pointer;" onclick="showHide('analog');">Analog Displays</div>
+	<div style="cursor: pointer;" onclick="showHide('analog');"><b>Analog Displays</b></div>
 	<div id="analog" style="display: none;">
 		<table>
 			<tr>
 				<td valign="top">
+					Anim.
 					<div class="black-frame centered">
 						<analog-display class="analogdisplay-day"
 														title="Boat Speed in Knots"
@@ -451,6 +467,7 @@
 				</td>
 
 				<td valign="top">
+					Anim.
 					<div class="black-frame centered" style="background-color: black;">
 						<analog-display class="analogdisplay-monochrome-cyan"
 														title="Humidity in %"
@@ -487,6 +504,7 @@
 
 				</td>
 				<td valign="top">
+					Anim.
 					<div class="black-frame centered">
 						<analog-display class="analogdisplay-day"
 														title="Pressure in hPa"
@@ -521,6 +539,7 @@
 				</td>
 
 				<td valign="top">
+					Anim.
 					<div class="black-frame centered" style="background-color: black;">
 						<analog-display class="analogdisplay-monochrome-orange"
 														title="True Wind Speed in knots"
@@ -558,11 +577,12 @@
 		</table>
 	</div>
 	<hr/>
-	<div style="cursor: pointer;" onclick="showHide('jumbo');">Jumbos</div>
+	<div style="cursor: pointer;" onclick="showHide('jumbo');"><b>Jumbos</b></div>
 	<div id="jumbo" style="display: none;">
 		<table>
 			<tr>
 				<td valign="top">
+					Anim.
 					<div class="black-frame centered">
 						<jumbo-display id="jumbo-02"
 													 class="jumbo-02"
@@ -587,6 +607,7 @@
 
 				</td>
 				<td valign="top">
+					Direct.
 					<div class="black-frame centered">
 						<jumbo-display id="jumbo-01"
 													 class="jumbo-01"

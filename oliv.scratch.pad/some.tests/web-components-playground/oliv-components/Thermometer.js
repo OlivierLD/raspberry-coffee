@@ -1,4 +1,5 @@
 const tempVerbose = false;
+const THERMOMETER_TAG_NAME = 'thermo-meter';
 
 const thermometerColorConfigDefault = {
 	bgColor: 'white',
@@ -182,9 +183,10 @@ class Thermometer extends HTMLElement {
 		for (let s=0; s<document.styleSheets.length; s++) {
   		// console.log("Walking though ", document.styleSheets[s]);
 			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
-  			// console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
-				if (document.styleSheets[s].cssRules[r].selectorText === ('.' + cssClassName)) {
-  				// console.log("  >>> Found it!");
+				let selector = document.styleSheets[s].cssRules[r].selectorText;
+//			console.log(">>> ", selector);
+				if (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(THERMOMETER_TAG_NAME) > -1)) { // Cases like "tag-name .className"
+//				console.log("  >>> Found it! [%s]", selector);
 					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					let cssTextElems = cssText.split(";");
 					cssTextElems.forEach(function(elem) {
@@ -406,4 +408,4 @@ class Thermometer extends HTMLElement {
 }
 
 // Associate the tag and the class
-window.customElements.define('thermo-meter', Thermometer);
+window.customElements.define(THERMOMETER_TAG_NAME, Thermometer);

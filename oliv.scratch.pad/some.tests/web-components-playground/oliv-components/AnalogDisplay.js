@@ -1,4 +1,5 @@
 const analogVerbose = false;
+const ANALOG_TAG_NAME = 'analog-display';
 
 /*
 * See custom properties in CSS.
@@ -306,9 +307,10 @@ class AnalogDisplay extends HTMLElement { // WIP
 		for (let s=0; s<document.styleSheets.length; s++) {
 //		console.log("Walking though ", document.styleSheets[s]);
 			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
-//			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
-				if (document.styleSheets[s].cssRules[r].selectorText === '.' + className) {
-//				console.log("  >>> Found it!");
+				let selector = document.styleSheets[s].cssRules[r].selectorText;
+//			console.log(">>> ", selector);
+				if (selector === '.' + className || (selector.indexOf('.' + className) > -1 && selector.indexOf(ANALOG_TAG_NAME) > -1)) { // Cases like "tag-name .className"
+//				console.log("  >>> Found it! [%s]", selector);
 					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					let cssTextElems = cssText.split(";");
 					cssTextElems.forEach(function(elem) {
@@ -680,4 +682,4 @@ class AnalogDisplay extends HTMLElement { // WIP
 }
 
 // Associate the tag and the class
-window.customElements.define('analog-display', AnalogDisplay);
+window.customElements.define(ANALOG_TAG_NAME, AnalogDisplay);
