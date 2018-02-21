@@ -221,7 +221,7 @@ a:visited { color : #8080FF}
 	--minor-tick-color: black;
 	--value-color: grey;
 	--value-outline-color: black;
-	--value-nb-decimal: 0; /* Was 1. 0 is for Direction */
+	--value-nb-decimal: 1;
 	--hand-color: red;
 	--hand-outline-color: black;
 	--with-hand-shadow: true;
@@ -230,7 +230,7 @@ a:visited { color : #8080FF}
 	--font: Arial;
 }
 
-direction-display .analogdisplay-day { /* TODO Fix this in getColorConfig */
+direction-display .analogdisplay-day {
 	--value-nb-decimal: 0;
 }
 
@@ -287,6 +287,10 @@ direction-display .analogdisplay-night {
 	--font: Arial;
 }
 
+direction-display .analogdisplay-monochrome-cyan {
+	--value-nb-decimal: 0;
+}
+
 .analogdisplay-monochrome-orange {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: orange;
@@ -311,6 +315,10 @@ direction-display .analogdisplay-night {
 	--index-color: orange; /* Compass rose index */
 	--outlined-port-starboard: true;
 	--font: Arial;
+}
+
+direction-display .analogdisplay-monochrome-orange {
+	--value-nb-decimal: 0;
 }
 
 /* Day, flat gray */

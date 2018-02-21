@@ -1,10 +1,10 @@
 const directionVerbose = false;
-
+const DIRECTION_TAG_NAME = 'direction-display';
 /*
 * See custom properties in CSS.
 * =============================
 * @see https://developer.mozilla.org/en-US/docs/Web/CSS/
-* Relies on a rule named .graphdisplay, like that:
+* Relies on a rule named .analogdisplay, like that:
 *
 .analogdisplay {
 	--bg-color: rgba(0, 0, 0, 0);
@@ -235,9 +235,10 @@ class DirectionDisplay extends HTMLElement {
 		for (let s=0; s<document.styleSheets.length; s++) {
 //		console.log("Walking though ", document.styleSheets[s]);
 			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
-  			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
-				if (document.styleSheets[s].cssRules[r].selectorText === '.' + className) { // TODO Manage cases like "tag-name .className"
-//				console.log("  >>> Found it!");
+				let selector = document.styleSheets[s].cssRules[r].selectorText;
+				console.log(">>> ", selector);
+				if (selector === '.' + className || (selector.indexOf('.' + className) > -1 && selector.indexOf(DIRECTION_TAG_NAME) > -1)) { // Cases like "tag-name .className"
+					console.log("  >>> Found it! [%s]", selector);
 					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					let cssTextElems = cssText.split(";");
 					cssTextElems.forEach(function(elem) {
@@ -597,4 +598,4 @@ class DirectionDisplay extends HTMLElement {
 }
 
 // Associate the tag and the class
-window.customElements.define('direction-display', DirectionDisplay);
+window.customElements.define(DIRECTION_TAG_NAME, DirectionDisplay);
