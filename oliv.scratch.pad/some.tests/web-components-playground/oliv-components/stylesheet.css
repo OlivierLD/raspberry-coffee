@@ -184,6 +184,28 @@ a:visited { color : #8080FF}
   --font: 'Arial'; /* 'Source Code Pro' */
 }
 
+.jumbo-01 {
+	--bg-color: white;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--grid-color: rgba(255, 255, 255, 0.7);
+	--display-color: cyan;
+	--value-nb-decimal: 2;
+	--label-font: 'Courier New';
+	--value-font: Arial;
+}
+
+.jumbo-02 {
+	--bg-color: black;
+	--display-background-gradient-from: white;
+	--display-background-gradient-to: gray;
+	--grid-color: rgba(0, 0, 0, 0.7);
+	--display-color: navy;
+	--value-nb-decimal: 2;
+	--label-font: 'Courier New';
+	--value-font: 'Helvetica Neue';
+}
+
 .analogdisplay-day {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: black;
@@ -199,13 +221,17 @@ a:visited { color : #8080FF}
 	--minor-tick-color: black;
 	--value-color: grey;
 	--value-outline-color: black;
-	--value-nb-decimal: 1;
+	--value-nb-decimal: 0; /* Was 1. 0 is for Direction */
 	--hand-color: red;
 	--hand-outline-color: black;
 	--with-hand-shadow: true;
 	--knob-color: DarkGrey;
 	--knob-outline-color: black;
 	--font: Arial;
+}
+
+direction-display .analogdisplay-day { /* TODO Fix this in getColorConfig */
+	--value-nb-decimal: 0;
 }
 
 .analogdisplay-night {
@@ -215,7 +241,7 @@ a:visited { color : #8080FF}
 	--display-background-gradient-from: DarkGrey; /* used if --withGradient: true */
 	--display-background-gradient-to: black;
 	--display-line-color: rgba(255, 255, 255, 0.5);
-	--label-fill-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: red;
 	--with-display-shadow: true;
 	--shadow-color: black;
 	--outline-color: DarkGrey;
@@ -230,6 +256,10 @@ a:visited { color : #8080FF}
 	--knob-color: #8ed6ff;
 	--knob-outline-color: blue;
 	--font: Arial;
+}
+
+direction-display .analogdisplay-night {
+	--value-nb-decimal: 0;
 }
 
 /* Monochrome, cyan */

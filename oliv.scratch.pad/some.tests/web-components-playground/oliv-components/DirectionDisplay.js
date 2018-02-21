@@ -235,8 +235,8 @@ class DirectionDisplay extends HTMLElement {
 		for (let s=0; s<document.styleSheets.length; s++) {
 //		console.log("Walking though ", document.styleSheets[s]);
 			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
-//			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
-				if (document.styleSheets[s].cssRules[r].selectorText === '.' + className) {
+  			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
+				if (document.styleSheets[s].cssRules[r].selectorText === '.' + className) { // TODO Manage cases like "tag-name .className"
 //				console.log("  >>> Found it!");
 					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					let cssTextElems = cssText.split(";");

@@ -25,39 +25,6 @@
 			text-align: center;
 		}
 
-		/* Widget specific */
-		/*.thermometer-day {*/
-			/*--bg-color: white;*/
-			/*--digit-color: DarkGrey;*/
-			/*--with-gradient: true;*/
-			/*--display-background-gradient-from: black;*/
-			/*--display-background-gradient-to: LightGrey;*/
-			/*--with-display-shadow: true;*/
-			/*--shadow-color: rgba(0, 0, 0, 0.75);*/
-			/*--major-tick-color: DarkGrey;*/
-			/*--minor-tick-color: DarkGrey;*/
-			/*--value-color: LightRed;*/
-			/*--value-outline-color: black;*/
-			/*--value-nb-decimal: 2;*/
-			/*--font: 'Arial'; !* 'Source Code Pro' *!*/
-		/*}*/
-
-		/*.thermometer-night {*/
-			/*--bg-color: black;*/
-			/*--digit-color: red;*/
-			/*--with-gradient: true;*/
-			/*--display-background-gradient-from: black;*/
-			/*--display-background-gradient-to: LightGrey;*/
-			/*--with-display-shadow: true;*/
-			/*--shadow-color: rgba(0, 0, 0, 0.75);*/
-			/*--major-tick-color: DarkGrey;*/
-			/*--minor-tick-color: DarkGrey;*/
-			/*--value-color: LightRed;*/
-			/*--value-outline-color: black;*/
-			/*--value-nb-decimal: 2;*/
-			/*--font: 'Arial'; !* 'Source Code Pro' *!*/
-		/*}*/
-
 	</style>
 
 	<script type="text/javascript">
@@ -102,13 +69,15 @@
 				let startFrom = webComp.value;
 				let goTo = parseFloat(document.getElementById(fromField).value);
 				if (startFrom !== goTo) {
-
 					if (on360 === true) {
 						if (Math.abs(goTo - startFrom) > 180) {
-							goTo -= 360;
+							if (startFrom < 180) {
+								goTo -= 360;
+							} else {
+								goTo += 360;
+							}
 						}
 					}
-
 					animation = true;
 					currentValue = startFrom;
 					incr = ((startFrom < goTo) ? 1 : -1) * (increment !== undefined ? increment : 0.1);
@@ -135,6 +104,12 @@
 			document.getElementById(id).digitalDataVal = field.value;
 		}
 
+		function showHide(divId) {
+			let elmt = document.getElementById(divId);
+			let status = elmt.style.display;
+			elmt.style.display = (status === 'none' ? 'inline' : 'none');
+		}
+
 	</script>
 </head>
 <body>
@@ -142,441 +117,503 @@
 	<h2>Web Components Samples</h2>
 	<h5>Pluviometer, Thermometer, etc.</h5>
 
-	<table>
-		<tr>
-			<th>Anim.</th>
-			<th>No Anim.</th>
-			<th>Anim.</th>
-			<th>No Anim.</th>
-			<th></th>
-			<th>Anim.</th>
-			<th>No Anim.</th>
-		</tr>
-		<tr>
+	<hr/>
+	<div style="cursor: pointer;" onclick="showHide('pluviometer');">Pluviometer</div>
+	<div id="pluviometer" style="display: none;">
+		<table>
+			<tr>
 
-			<td valign="bottom">
-				<div class="black-frame centered">
-					<pluvio-meter id="pluviometer-01"
-					              class="pluviometer-day"
-												title="m/m per hour"
-												min-value="0"
-												max-value="10"
-												major-ticks="1"
-												minor-ticks="0.25"
-												value="0"
-												width="80"
-												height="220"></pluvio-meter>
-				</div>
-			</td>
-
-			<td valign="bottom">
-				<div class="black-frame centered" style="background-color: black;">
-					<pluvio-meter id="pluviometer-02"
-												class="pluviometer-night"
-												title="m/m per hour"
-												min-value="0"
-												max-value="10"
-												major-ticks="1"
-												minor-ticks="0.25"
-												value="0"
-												width="80"
-												height="220"></pluvio-meter>
-				</div>
-			</td>
-
-			<td valign="bottom">
-				<div class="black-frame centered">
-					<thermo-meter id="thermometer-01"
-					              class="thermometer-day"
-												title="Celcius"
-												min-value="-10"
-												max-value="60"
-												major-ticks="10"
-												minor-ticks="1"
-												value="12.34"
-												width="100"
-												height="360"></thermo-meter>
-				</div>
-			</td>
-
-			<td valign="bottom">
-				<div class="black-frame centered">
-					<thermo-meter id="thermometer-02"
-					              class="thermometer-night"
-												title="Celcius"
-												min-value="-10"
-												max-value="60"
-												major-ticks="10"
-												minor-ticks="1"
-												value="12.34"
-												width="100"
-												height="360"></thermo-meter>
-				</div>
-			</td>
-
-			<td valign="bottom">
-				<div class="black-frame centered">
-					<jumbo-display id="jumbo-01"
-												 value="-12.34"
-												 title="XYZ"
-					               text-color="cyan"
-												 width="180"
-												 height="80"></jumbo-display>
-				</div>
-			</td>
-
-			<td valign="bottom">
-				<div class="black-frame centered">
-					<direction-display class="analogdisplay-day"
-					                   title="Heading, animated"
-														 id="compass-01"
-												     value="38"
-														 major-ticks="45"
-														 minor-ticks="5"
-					                   with-rose="true"
-					                   with-border="true"
-					                   label="HDG"
-												     width="200"
-												     height="200"></direction-display>
-				</div>
-			</td>
-
-			<td valign="bottom">
-				<div class="black-frame centered" style="background-color: black;">
-					<direction-display class="analogdisplay-monochrome-orange"
-					                   title="TWD, not animated"
-														 id="compass-02"
-														 value="138"
-														 major-ticks="45"
-														 minor-ticks="5"
-														 with-rose="true"
-														 with-border="true"
-														 label="TWD"
-														 width="200"
-														 height="200"></direction-display>
-				</div>
-			</td>
-
-		</tr>
-		<tr>
-
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="rain-value-01"
-								 placeholder="rain"
-					       title="in mm/h"
-								 onblur="doAnimate('rain-value-01', 'pluviometer-01')"
-								 style="width: 50px;"/>
-					<br/>
-					<button onclick="doAnimate('rain-value-01', 'pluviometer-01')"
-					        title="Set Rain value in the tube"
-					        style="margin-top: 3px;">Set value</button>
-				</div>
-
-			</td>
-
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="rain-value-02"
-								 placeholder="rain"
-								 title="in mm/h"
-								 onblur="setData('rain-value-02', 'pluviometer-02')"
-								 style="width: 50px;"/>
-					<br/>
-					<button onclick="setData('rain-value-02', 'pluviometer-02')"
-									title="Set Rain value in the tube"
-									style="margin-top: 3px;">Set value</button>
-				</div>
-
-			</td>
-
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="temp-value-01"
-								 placeholder="temp"
-								 title="in Celcius"
-								 onblur="doAnimate('temp-value-01', 'thermometer-01')"
-								 style="width: 40px;"/>
-					<br/>
-					<button onclick="doAnimate('temp-value-01', 'thermometer-01')"
-									title="Set Temp value in the tube"
-									style="margin-top: 3px;">Set value</button>
-				</div>
-
-			</td>
-
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="temp-value-02"
-								 placeholder="temp"
-								 title="in Celcius"
-								 onblur="setData('temp-value-02', 'thermometer-02')"
-								 style="width: 40px;"/>
-					<br/>
-					<button onclick="setData('temp-value-02', 'thermometer-02')"
-									title="Set Temp value in the tube"
-									style="margin-top: 3px;">Set value</button>
-				</div>
-
-			</td>
-
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="jumbo-value-01"
-								 placeholder="val"
-								 title="Jumbo"
-								 onblur="setData('jumbo-value-01', 'jumbo-01')"
-								 style="width: 50px;"/>
-					<br/>
-					<button onclick="setData('jumbo-value-01', 'jumbo-01')"
-									title="Set value for the jumbo"
-									style="margin-top: 3px;">Set value</button>
-				</div>
-
-			</td>
-
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="direction-value-01"
-								 placeholder="dir"
-								 title="Direction"
-								 onblur="doAnimate('direction-value-01', 'compass-01', 1, true)"
-								 style="width: 50px;"/>
-					<br/>
-					<button onclick="doAnimate('direction-value-01', 'compass-01', 1, true)"
-									title="Set value for the Direction"
-									style="margin-top: 3px;">Set value</button>
-					<br/>
-					<input type="checkbox" onchange="setBorder(this, 'compass-01');" checked>With Border
-					<input type="checkbox" onchange="setRose(this, 'compass-01');" checked>With Rose
-				</div>
-
-			</td>
-
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="direction-value-02"
-								 placeholder="dir"
-								 title="Direction"
-								 onblur="setData('direction-value-02', 'compass-02')"
-								 style="width: 50px;"/>
-					<br/>
-					<button onclick="setData('direction-value-02', 'compass-02')"
-									title="Set value for the Direction"
-									style="margin-top: 3px;">Set value</button>
-					<br/>
-					<input type="checkbox" onchange="setBorder(this, 'compass-02');" checked>With Border
-					<input type="checkbox" onchange="setRose(this, 'compass-02');" checked>With Rose
-				</div>
-
-			</td>
-
-		</tr>
-
-		<!-- Second row of widgets -->
-
-		<tr>
-			<th>Amin.</th>
-			<th>Amin.</th>
-		</tr>
-
-		<tr>
-
-			<td valign="bottom">
-				<div class="black-frame centered">
-					<analog-display class="analogdisplay-day"
-													title="Boat Speed in Knots"
-													id="bsp-01"
+				<td valign="top">
+					Anim.
+					<div class="black-frame centered">
+						<pluvio-meter id="pluviometer-01"
+													class="pluviometer-day"
+													title="m/m per hour"
 													min-value="0"
-													max-value="15"
-													value="6.7"
-													major-ticks="3"
+													max-value="10"
+													major-ticks="1"
 													minor-ticks="0.25"
-					                overlap="-10"
-													with-border="true"
-													width="200"
-													height="100"></analog-display>
-				</div>
-			</td>
+													value="0"
+													width="80"
+													height="220"></pluvio-meter>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="rain-value-01"
+									 placeholder="rain"
+									 title="in mm/h"
+									 onblur="doAnimate('rain-value-01', 'pluviometer-01')"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="doAnimate('rain-value-01', 'pluviometer-01')"
+										title="Set Rain value in the tube"
+										style="margin-top: 3px;">Set value</button>
+					</div>
+				</td>
 
-			<td valign="top">
-				<div class="black-frame centered" style="background-color: black;">
-					<analog-display class="analogdisplay-monochrome-cyan"
-													title="Humidity in %"
-													id="hum-01"
+				<td valign="top">
+					Direct
+					<div class="black-frame centered" style="background-color: black;">
+						<pluvio-meter id="pluviometer-02"
+													class="pluviometer-night"
+													title="m/m per hour"
 													min-value="0"
-													max-value="100"
-													value="75"
-													major-ticks="10"
-													minor-ticks="1"
-													with-border="true"
-													overlap="40"
-													digital-data-len="3"
-													digital-data-val="123"
-													width="200"
-													height="200"></analog-display>
-				</div>
+													max-value="10"
+													major-ticks="1"
+													minor-ticks="0.25"
+													value="0"
+													width="80"
+													height="220"></pluvio-meter>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="rain-value-02"
+									 placeholder="rain"
+									 title="in mm/h"
+									 onblur="setData('rain-value-02', 'pluviometer-02')"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="setData('rain-value-02', 'pluviometer-02')"
+										title="Set Rain value in the tube"
+										style="margin-top: 3px;">Set value</button>
+					</div>
+				</td>
 
-			</td>
-
-			<td rowspan="4" class="black-frame centered" >
-
-			</td>
-			<td rowspan="4" class="black-frame centered" >
-
-			</td>
-			<td rowspan="4" class="black-frame centered" >
-
-			</td>
-			<td rowspan="4" class="black-frame centered" >
-
-			</td>
-
-			<td rowspan="4" class="black-frame centered" >
-
-			</td>
-		</tr>
-
-		<tr>
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="speed-value-01"
-								 placeholder="speed"
-								 title="BSP in knots"
-								 onblur="doAnimate('speed-value-01', 'bsp-01')"
-								 style="width: 50px;"/>
-					<br/>
-					<button onclick="doAnimate('speed-value-01', 'bsp-01')"
-									title="Set Speed value"
-									style="margin-top: 3px;">Set value</button>
-					<br/>
-					<input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>With Border
-					<input type="checkbox" onchange="setMinMax(this, 'bsp-01');">With Min &amp; Max
-				</div>
-
-			</td>
-
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="hum-value-01"
-								 placeholder="Hum"
-								 title="Humidity in %"
-								 onblur="doAnimate('hum-value-01', 'hum-01')"
-								 style="width: 50px;"/>
-					<button onclick="doAnimate('hum-value-01', 'hum-01')"
-									title="Set Speed value"
-									style="margin-top: 3px;">Set value</button>
-					<br/>
-					Bottom Val:<input type="number" size="3" onblur="setDigitVal(this, 'hum-01');" placeholder="Bottom Value">
-					<br/>
-					<input type="checkbox" onchange="setBorder(this, 'hum-01');" checked>With Border
-					<input type="checkbox" onchange="setMinMax(this, 'hum-01');">With Min &amp; Max
-				</div>
-
-			</td>
-		</tr>
-
-		<tr>
-
- 			<td valign="bottom">
-				<div class="black-frame centered">
-					<analog-display class="analogdisplay-day"
-													title="Pressure in hPa"
-													id="prmsl-01"
-													min-value="960"
-													max-value="1040"
-													value="1020.8"
-													major-ticks="10"
-													minor-ticks="1"
-													with-border="true"
-													overlap="40"
-													label="PRMSL"
-													width="200"
-													height="200"></analog-display>
-				</div>
-			</td>
-
-			<td valign="top">
-				<div class="black-frame centered" style="background-color: black;">
-					<analog-display class="analogdisplay-monochrome-orange"
-													title="True Wind Speed in knots"
-													id="tws-01"
-													min-value="0"
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<div style="cursor: pointer;" onclick="showHide('thermometer');">Thermometer</div>
+	<div id="thermometer" style="display: none;">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<thermo-meter id="thermometer-01"
+													class="thermometer-day"
+													title="Celcius"
+													min-value="-10"
 													max-value="60"
-													value="12"
 													major-ticks="10"
 													minor-ticks="1"
-													with-border="true"
-													overlap="40"
-													label="TWS"
-													width="200"
-													height="200"></analog-display>
-				</div>
+													value="12.34"
+													width="100"
+													height="360"></thermo-meter>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="temp-value-01"
+									 placeholder="temp"
+									 title="in Celcius"
+									 onblur="doAnimate('temp-value-01', 'thermometer-01')"
+									 style="width: 40px;"/>
+						<br/>
+						<button onclick="doAnimate('temp-value-01', 'thermometer-01')"
+										title="Set Temp value in the tube"
+										style="margin-top: 3px;">Set value</button>
+					</div>
+				</td>
 
-			</td>
+				<td valign="top">
+					<div class="black-frame centered">
+						<thermo-meter id="thermometer-02"
+													class="thermometer-night"
+													title="Celcius"
+													min-value="-10"
+													max-value="60"
+													major-ticks="10"
+													minor-ticks="1"
+													value="12.34"
+													width="100"
+													height="360"></thermo-meter>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="temp-value-02"
+									 placeholder="temp"
+									 title="in Celcius"
+									 onblur="setData('temp-value-02', 'thermometer-02')"
+									 style="width: 40px;"/>
+						<br/>
+						<button onclick="setData('temp-value-02', 'thermometer-02')"
+										title="Set Temp value in the tube"
+										style="margin-top: 3px;">Set value</button>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<div style="cursor: pointer;" onclick="showHide('direction');">Direction</div>
+	<div id="direction" style="display: none;">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<direction-display class="analogdisplay-day"
+															 title="Heading, animated"
+															 id="compass-01"
+															 value="38"
+															 major-ticks="45"
+															 minor-ticks="5"
+															 with-rose="true"
+															 with-border="true"
+															 label="HDG"
+															 width="200"
+															 height="200"></direction-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="direction-value-01"
+									 placeholder="dir"
+									 title="Direction"
+									 onblur="doAnimate('direction-value-01', 'compass-01', 1, true)"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="doAnimate('direction-value-01', 'compass-01', 1, true)"
+										title="Set value for the Direction"
+										style="margin-top: 3px;">Set value</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'compass-01');" checked>With Border
+						<input type="checkbox" onchange="setRose(this, 'compass-01');" checked>With Rose
+					</div>
+				</td>
 
-		</tr>
-		<tr>
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="prmsl-value-01"
-								 placeholder="PRMSL"
-								 title="in hPa"
-								 onblur="doAnimate('prmsl-value-01', 'prmsl-01')"
-								 style="width: 50px;"/>
-					<br/>
-					<button onclick="doAnimate('prmsl-value-01', 'prmsl-01')"
-									title="Set PRMSL value"
-									style="margin-top: 3px;">Set value</button>
-					<br/>
-					<input type="checkbox" onchange="setBorder(this, 'prmsl-01');" checked>With Border
-					<input type="checkbox" onchange="setMinMax(this, 'prmsl-01');">With Min &amp; Max
-				</div>
+				<td valign="top">
+					<div class="black-frame centered" style="background-color: black;">
+						<direction-display class="analogdisplay-monochrome-orange"
+															 title="TWD, not animated"
+															 id="compass-02"
+															 value="138"
+															 major-ticks="45"
+															 minor-ticks="5"
+															 with-rose="true"
+															 with-border="true"
+															 label="TWD"
+															 width="200"
+															 height="200"></direction-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="direction-value-02"
+									 placeholder="dir"
+									 title="Direction"
+									 onblur="setData('direction-value-02', 'compass-02')"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="setData('direction-value-02', 'compass-02')"
+										title="Set value for the Direction"
+										style="margin-top: 3px;">Set value</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'compass-02');" checked>With Border
+						<input type="checkbox" onchange="setRose(this, 'compass-02');" checked>With Rose
+					</div>
+				</td>
 
-			</td>
+				<td valign="top">
+					<div class="black-frame centered" style="background-color: black;">
+						<direction-display class="analogdisplay-monochrome-cyan"
+															 title="TWD, not animated"
+															 id="compass-03"
+															 value="249"
+															 major-ticks="45"
+															 minor-ticks="5"
+															 with-rose="true"
+															 with-border="true"
+															 label="TWD"
+															 width="200"
+															 height="200"></direction-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="direction-value-03"
+									 placeholder="dir"
+									 title="Direction"
+									 onblur="doAnimate('direction-value-03', 'compass-03', 1, true)"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="doAnimate('direction-value-03', 'compass-03', 1, true)"
+										title="Set value for the Direction"
+										style="margin-top: 3px;">Set value</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'compass-03');" checked>With Border
+						<input type="checkbox" onchange="setRose(this, 'compass-03');" checked>With Rose
+					</div>
+				</td>
 
-			<td valign="top">
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="tws-value-01"
-								 placeholder="TWS"
-								 title="Wind Speed in knots"
-								 onblur="doAnimate('tws-value-01', 'tws-01')"
-								 style="width: 50px;"/>
-					<button onclick="doAnimate('tws-value-01', 'tws-01')"
-									title="Set Speed value"
-									style="margin-top: 3px;">Set value</button>
-					<br/>
-					<input type="checkbox" onchange="setBorder(this, 'tws-01');" checked>With Border
-					<input type="checkbox" onchange="setMinMax(this, 'tws-01');">With Min &amp; Max
-				</div>
+				<td valign="top">
+					<div class="black-frame centered" style="background-color: black;">
+						<direction-display class="analogdisplay-night"
+															 title="Heading, animated"
+															 id="compass-04"
+															 value="338"
+															 major-ticks="45"
+															 minor-ticks="5"
+															 with-rose="true"
+															 with-border="true"
+															 label="HDG"
+															 width="200"
+															 height="200"></direction-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="direction-value-04"
+									 placeholder="dir"
+									 title="Direction"
+									 onblur="doAnimate('direction-value-04', 'compass-04', 1, true)"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="doAnimate('direction-value-04', 'compass-04', 1, true)"
+										title="Set value for the Direction"
+										style="margin-top: 3px;">Set value</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'compass-04');" checked>With Border
+						<input type="checkbox" onchange="setRose(this, 'compass-04');" checked>With Rose
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<div style="cursor: pointer;" onclick="showHide('analog');">Analog Displays</div>
+	<div id="analog" style="display: none;">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<analog-display class="analogdisplay-day"
+														title="Boat Speed in Knots"
+														id="bsp-01"
+														min-value="0"
+														max-value="15"
+														value="6.7"
+														major-ticks="3"
+														minor-ticks="0.25"
+														overlap="-10"
+														with-border="true"
+														width="200"
+														height="100"></analog-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="speed-value-01"
+									 placeholder="speed"
+									 title="BSP in knots"
+									 onblur="doAnimate('speed-value-01', 'bsp-01')"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="doAnimate('speed-value-01', 'bsp-01')"
+										title="Set Speed value"
+										style="margin-top: 3px;">Set value</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>With Border
+						<input type="checkbox" onchange="setMinMax(this, 'bsp-01');">With Min &amp; Max
+					</div>
+					<div class="black-frame centered" style="background-color: black;">
+						<analog-display class="analogdisplay-night"
+														title="Boat Speed in Knots"
+														id="bsp-02"
+														min-value="0"
+														max-value="15"
+														value="4.5"
+														major-ticks="3"
+														minor-ticks="0.25"
+														overlap="-10"
+														with-border="true"
+														width="200"
+														height="100"></analog-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="speed-value-02"
+									 placeholder="speed"
+									 title="BSP in knots"
+									 onblur="doAnimate('speed-value-02', 'bsp-02')"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="doAnimate('speed-value-02', 'bsp-02')"
+										title="Set Speed value"
+										style="margin-top: 3px;">Set value</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'bsp-02');" checked>With Border
+						<input type="checkbox" onchange="setMinMax(this, 'bsp-02');">With Min &amp; Max
+					</div>
+				</td>
 
-			</td>
+				<td valign="top">
+					<div class="black-frame centered" style="background-color: black;">
+						<analog-display class="analogdisplay-monochrome-cyan"
+														title="Humidity in %"
+														id="hum-01"
+														min-value="0"
+														max-value="100"
+														value="75"
+														major-ticks="10"
+														minor-ticks="1"
+														with-border="true"
+														overlap="40"
+														digital-data-len="3"
+														digital-data-val="123"
+														width="200"
+														height="200"></analog-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="hum-value-01"
+									 placeholder="hum"
+									 title="Humidity in %"
+									 onblur="doAnimate('hum-value-01', 'hum-01')"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="doAnimate('hum-value-01', 'hum-01')"
+										title="Set Speed value"
+										style="margin-top: 3px;">Set value</button>
+						<br/>
+						Bottom Val:<input type="number" size="3" onblur="setDigitVal(this, 'hum-01');" placeholder="Bottom Value">
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'hum-01');" checked>With Border
+						<input type="checkbox" onchange="setMinMax(this, 'hum-01');">With Min &amp; Max					</div>
 
-		</tr>
+				</td>
+				<td valign="top">
+					<div class="black-frame centered">
+						<analog-display class="analogdisplay-day"
+														title="Pressure in hPa"
+														id="prmsl-01"
+														min-value="960"
+														max-value="1040"
+														value="1020.8"
+														major-ticks="10"
+														minor-ticks="1"
+														with-border="true"
+														overlap="40"
+														label="PRMSL"
+														width="200"
+														height="200"></analog-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="prmsl-value-01"
+									 placeholder="PRMSL"
+									 title="in hPa"
+									 onblur="doAnimate('prmsl-value-01', 'prmsl-01')"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="doAnimate('prmsl-value-01', 'prmsl-01')"
+										title="Set PRMSL value"
+										style="margin-top: 3px;">Set value</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'prmsl-01');" checked>With Border
+						<input type="checkbox" onchange="setMinMax(this, 'prmsl-01');">With Min &amp; Max
+					</div>
+				</td>
 
-	</table>
+				<td valign="top">
+					<div class="black-frame centered" style="background-color: black;">
+						<analog-display class="analogdisplay-monochrome-orange"
+														title="True Wind Speed in knots"
+														id="tws-01"
+														min-value="0"
+														max-value="60"
+														value="12"
+														major-ticks="10"
+														minor-ticks="1"
+														with-border="true"
+														overlap="40"
+														label="TWS"
+														width="200"
+														height="200"></analog-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="tws-value-01"
+									 placeholder="TWS"
+									 title="Wind Speed in knots"
+									 onblur="doAnimate('tws-value-01', 'tws-01')"
+									 style="width: 50px;"/>
+						<button onclick="doAnimate('tws-value-01', 'tws-01')"
+										title="Set Speed value"
+										style="margin-top: 3px;">Set value</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'tws-01');" checked>With Border
+						<input type="checkbox" onchange="setMinMax(this, 'tws-01');">With Min &amp; Max
+					</div>
+
+				</td>
+
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<div style="cursor: pointer;" onclick="showHide('jumbo');">Jumbos</div>
+	<div id="jumbo" style="display: none;">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<jumbo-display id="jumbo-02"
+													 class="jumbo-02"
+													 value="-12.34"
+													 label="OhO!"
+													 width="180"
+													 height="80"></jumbo-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="jumbo-value-02"
+									 placeholder="val"
+									 title="Jumbo"
+									 onblur="doAnimate('jumbo-value-02', 'jumbo-02')"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="doAnimate('jumbo-value-02', 'jumbo-02')"
+										title="Set value for the jumbo"
+										style="margin-top: 3px;">Set value</button>
+					</div>
+
+				</td>
+				<td valign="top">
+					<div class="black-frame centered">
+						<jumbo-display id="jumbo-01"
+													 class="jumbo-01"
+													 value="-12.34"
+													 label="AhA!"
+													 width="180"
+													 height="80"></jumbo-display>
+					</div>
+
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="jumbo-value-01"
+									 placeholder="val"
+									 title="Jumbo"
+									 onblur="setData('jumbo-value-01', 'jumbo-01')"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="setData('jumbo-value-01', 'jumbo-01')"
+										title="Set value for the jumbo"
+										style="margin-top: 3px;">Set value</button>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+
 	<hr/>
   <span style="font-style: italic;" title="C'est MOI qui l'ai fait.">Oliv did it</span>
 </body>

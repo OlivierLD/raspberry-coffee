@@ -1,5 +1,18 @@
 const jumboVerbose = false;
 
+const jumboDefaultColorConfig = {
+	bgColor: 'white',
+	displayBackgroundGradient: {
+		from: 'black',
+		to: 'gray'
+	},
+	gridColor: 'rgba(255, 255, 255, 0.7)',
+	displayColor: 'cyan',
+	valueNbDecimal: 2,
+	labelFont: 'Courier New',
+	valueFont: 'Arial'
+};
+
 /* global HTMLElement */
 class JumboDisplay extends HTMLElement {
 
@@ -7,9 +20,8 @@ class JumboDisplay extends HTMLElement {
 		return [
 			"width",        // Integer. Canvas width
 			"height",       // Integer. Canvas height
-			"value",        // Float. Rain amount to display
-			"title",        // String, like TWS, AWS, etc
-			"text-color"    // Color. TODO Move to CSS style?
+			"value",        // Float. Numeric value to display
+			"label"         // String, like TWS, AWS, etc
 		];
 	}
 
@@ -24,8 +36,10 @@ class JumboDisplay extends HTMLElement {
 		this._value       =   0;
 		this._width       =  50;
 		this._height      = 150;
-		this._title       = "VAL";
-		this._color       = 'white';
+		this._label       = "VAL";
+
+		this._previousClassName = "";
+		this.jumboColorConfig = jumboDefaultColorConfig;
 
 		if (jumboVerbose) {
 			console.log("Data in Constructor:", this._value);
@@ -62,11 +76,8 @@ class JumboDisplay extends HTMLElement {
 			case "height":
 				this._height = parseInt(newVal);
 				break;
-			case "title":
-				this._title = newVal;
-				break;
-			case "text-color":
-				this._color = newVal;
+			case "label":
+				this._label = newVal;
 				break;
 			default:
 				break;
@@ -94,11 +105,8 @@ class JumboDisplay extends HTMLElement {
 	set height(val) {
 		this.setAttribute("height", val);
 	}
-	set title(val) {
-		this.setAttribute("title", val);
-	}
-	set color(val) {
-		this.setAttribute("text-color", val);
+	set label(val) {
+		this.setAttribute("label", val);
 	}
 	set shadowRoot(val) {
 		this._shadowRoot = val;
@@ -113,23 +121,85 @@ class JumboDisplay extends HTMLElement {
 	get height() {
 		return this._height;
 	}
-	get title() {
-		return this._title;
+	get label() {
+		return this._label;
 	}
-	get color() {
-		return this._color;
-	}
-
 	get shadowRoot() {
 		return this._shadowRoot;
 	}
 
 	// Component methods
+	getColorConfig(cssClassName) {
+		let colorConfig = thermometerColorConfigDefault;
+		for (let s=0; s<document.styleSheets.length; s++) {
+			// console.log("Walking though ", document.styleSheets[s]);
+			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+				// console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
+				if (document.styleSheets[s].cssRules[r].selectorText === ('.' + cssClassName)) {
+					// console.log("  >>> Found it!");
+					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
+					let cssTextElems = cssText.split(";");
+					cssTextElems.forEach(function(elem) {
+						if (elem.trim().length > 0) {
+							let keyValPair = elem.split(":");
+							let key = keyValPair[0].trim();
+							let value = keyValPair[1].trim();
+							switch (key) {
+								case '--bg-color':
+									colorConfig.bgColor = value;
+									break;
+								case '--display-background-gradient-from':
+									colorConfig.displayBackgroundGradient.from = value;
+									break;
+								case '--display-background-gradient-to':
+									colorConfig.displayBackgroundGradient.to = value;
+									break;
+								case '--grid-color':
+									colorConfig.gridColor = value;
+									break;
+								case '--display-color':
+									colorConfig.displayColor = value;
+									break;
+								case '--value-nb-decimal':
+									colorConfig.valueNbDecimal = value;
+									break;
+								case '--label-font':
+									colorConfig.labelFont = value;
+									break;
+								case '--value-font':
+									colorConfig.valueFont = value;
+									break;
+								default:
+									break;
+							}
+						}
+					});
+				}
+			}
+		}
+		return colorConfig;
+	};
+
+
 	repaint() {
 		this.drawJumbo(this._value);
 	}
 
 	drawJumbo(jumboValue) {
+
+		let currentStyle = this.className;
+		if (this._previousClassName !== currentStyle || true) {
+			// Reload
+			//	console.log("Reloading CSS");
+			try {
+				this.jumboColorConfig = this.getColorConfig(currentStyle);
+			} catch (err) {
+				// Absorb?
+				console.log(err);
+			}
+
+			this._previousClassName = currentStyle;
+		}
 
 		let context = this.canvas.getContext('2d');
 		let scale = 1.0;
@@ -142,8 +212,8 @@ class JumboDisplay extends HTMLElement {
 		this.canvas.height = this.height;
 
 		var grd = context.createLinearGradient(0, 5, 0, this.height);
-		grd.addColorStop(0, 'black'); // 0  Beginning
-		grd.addColorStop(1, 'gray');  // 1  End
+		grd.addColorStop(0, this.jumboColorConfig.displayBackgroundGradient.from); // 0  Beginning
+		grd.addColorStop(1, this.jumboColorConfig.displayBackgroundGradient.to);  // 1  End
 		context.fillStyle = grd;
 
 		// Background
@@ -151,7 +221,7 @@ class JumboDisplay extends HTMLElement {
 		// Grid
 		//  1 - vertical
 		var nbVert = 5;
-		context.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+		context.strokeStyle = this.jumboColorConfig.gridColor;
 		context.lineWidth = 0.5;
 		for (var i = 1; i < nbVert; i++) {
 			var x = i * (this.canvas.width / nbVert);
@@ -172,13 +242,13 @@ class JumboDisplay extends HTMLElement {
 			context.stroke();
 		}
 
-		context.fillStyle = this.color;
-		// Title
-		context.font = "bold " + Math.round(scale * 16) + "px Courier New"; // "bold 16px Arial"
-		context.fillText(this.title, 5, 18);
+		context.fillStyle = this.jumboColorConfig.displayColor;
+		// Label
+		context.font = "bold " + Math.round(scale * 16) + "px " + this.jumboColorConfig.labelFont;
+		context.fillText(this.label, 5, 18);
 		// Value
-		context.font = "bold " + Math.round(scale * 60) + "px Arial";
-		let strVal = jumboValue.toFixed(2);
+		context.font = "bold " + Math.round(scale * 60) + "px " + this.jumboColorConfig.valueFont;
+		let strVal = jumboValue.toFixed(this.jumboColorConfig.valueNbDecimal);
 		let metrics = context.measureText(strVal);
 		let len = metrics.width;
 
