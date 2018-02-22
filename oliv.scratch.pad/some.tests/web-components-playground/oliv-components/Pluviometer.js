@@ -12,6 +12,10 @@ const pluviometerDefaultColorConfig = {
 	valueColor: 'DarkGrey',
 	tubeOutlineColor: 'pink',
 	rainOutlineColor: 'DarkGrey',
+	insideTube: {
+		from: 'LightGrey',
+		to: 'white'
+	},
 	font: 'Arial'
 };
 
@@ -164,64 +168,74 @@ class Pluviometer extends HTMLElement {
 	}
 
 	// Component methods
-	getColorConfig(cssClassName) {
+	getColorConfig(cssClassNames) {
 		let colorConfig = pluviometerDefaultColorConfig;
-		for (let s=0; s<document.styleSheets.length; s++) {
-			// console.log("Walking though ", document.styleSheets[s]);
-			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
-				let selector = document.styleSheets[s].cssRules[r].selectorText;
-//			console.log(">>> ", selector);
-				if (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(PLUVIOMETER_TAG_NAME) > -1)) { // Cases like "tag-name .className"
-//				console.log("  >>> Found it! [%s]", selector);
-					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
-					let cssTextElems = cssText.split(";");
-					cssTextElems.forEach(function(elem) {
-						if (elem.trim().length > 0) {
-							let keyValPair = elem.split(":");
-							let key = keyValPair[0].trim();
-							let value = keyValPair[1].trim();
-							switch (key) {
-								case '--bg-color':
-									colorConfig.bgColor = value;
-									break;
-								case '--with-shadow':
-									colorConfig.withShadow = (value === 'true');
-									break;
-								case '--shadow-color':
-									colorConfig.shadowColor = value;
-									break;
-								case '--outline-color':
-									colorConfig.outlineColor = value;
-									break;
-								case '--major-tick-color':
-									colorConfig.majorTickColor = value;
-									break;
-								case '--minor-tick-color':
-									colorConfig.minorTickColor = value;
-									break;
-								case '--value-color':
-									colorConfig.valueColor = value;
-									break;
-								case '--scale-color':
-									colorConfig.scaleColor = value;
-									break;
-								case '--value-outline-color':
-									colorConfig.valueOutlineColor = value;
-									break;
-								case '--tube-outline-color':
-									colorConfig.tubeOutlineColor = value;
-									break;
-								case '--rain-outline-color':
-									colorConfig.rainOutlineColor = value;
-									break;
-								case '--font':
-									colorConfig.font = value;
-									break;
-								default:
-									break;
+		let classes = cssClassNames.split(" ");
+		for (let cls=0; cls<classes.length; cls++) {
+			let cssClassName = classes[cls];
+			for (let s=0; s<document.styleSheets.length; s++) {
+				// console.log("Walking though ", document.styleSheets[s]);
+				for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+					let selector = document.styleSheets[s].cssRules[r].selectorText;
+					//			console.log(">>> ", selector);
+					if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(PLUVIOMETER_TAG_NAME) > -1))) { // Cases like "tag-name .className"
+					                                                                                                                                                                 //				console.log("  >>> Found it! [%s]", selector);
+						let cssText = document.styleSheets[s].cssRules[r].style.cssText;
+						let cssTextElems = cssText.split(";");
+						cssTextElems.forEach(function (elem) {
+							if (elem.trim().length > 0) {
+								let keyValPair = elem.split(":");
+								let key = keyValPair[0].trim();
+								let value = keyValPair[1].trim();
+								switch (key) {
+									case '--bg-color':
+										colorConfig.bgColor = value;
+										break;
+									case '--with-shadow':
+										colorConfig.withShadow = (value === 'true');
+										break;
+									case '--shadow-color':
+										colorConfig.shadowColor = value;
+										break;
+									case '--outline-color':
+										colorConfig.outlineColor = value;
+										break;
+									case '--major-tick-color':
+										colorConfig.majorTickColor = value;
+										break;
+									case '--minor-tick-color':
+										colorConfig.minorTickColor = value;
+										break;
+									case '--value-color':
+										colorConfig.valueColor = value;
+										break;
+									case '--scale-color':
+										colorConfig.scaleColor = value;
+										break;
+									case '--value-outline-color':
+										colorConfig.valueOutlineColor = value;
+										break;
+									case '--tube-outline-color':
+										colorConfig.tubeOutlineColor = value;
+										break;
+									case '--inside-tube-from':
+										colorConfig.insideTube.from = value;
+										break;
+									case '--inside-tube-to':
+										colorConfig.insideTube.to = value;
+										break;
+									case '--rain-outline-color':
+										colorConfig.rainOutlineColor = value;
+										break;
+									case '--font':
+										colorConfig.font = value;
+										break;
+									default:
+										break;
+								}
 							}
-						}
-					});
+						});
+					}
 				}
 			}
 		}
@@ -307,8 +321,8 @@ class Pluviometer extends HTMLElement {
 		context.stroke();
 
 		let grd = context.createLinearGradient(0, 5, 0, tubeLength);
-		grd.addColorStop(0, 'LightGrey'); // 0  Beginning. black
-		grd.addColorStop(1, 'white');     // 1  End. LightGrey
+		grd.addColorStop(0, this.pluviometerColorConfig.insideTube.from);
+		grd.addColorStop(1, this.pluviometerColorConfig.insideTube.to);
 		context.fillStyle = grd;
 
 		if (this.pluviometerColorConfig.withShadow) {

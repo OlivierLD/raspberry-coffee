@@ -379,7 +379,7 @@ public class StringGenerator {
 		return "$" + mwd;
 	}
 
-	/* Structure is
+	/* GLL Structure is
 	 *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A*hh
 	 *         |       | |       | |         |
 	 *         |       | |       | |         A:data valid
@@ -389,7 +389,10 @@ public class StringGenerator {
 	 *         |       Lat sign :N/S
 	 *         Latitude
 	 */
-	public static String generateGLL(String devicePrefix, Date date, double lat, double lng) {
+	public static String generateGLL(String devicePrefix, double lat, double lng) {
+		return generateGLL(devicePrefix, lat, lng, -1L);
+	}
+	public static String generateGLL(String devicePrefix, double lat, double lng, long epoch) {
 		String gll = devicePrefix + "GLL,";
 		double absLat = Math.abs(lat);
 		String latStr = LAT_DEG_FMT.format((int)absLat) +
@@ -405,7 +408,14 @@ public class StringGenerator {
 										(lng < 0 ? "W" : "E");
 		gll += lngStr;
 		gll += ",";
-		// TODO UTC Date
+		if (epoch != -1) {
+			Date utc = new Date(epoch);
+			String strUTC = SDF_DATETIME.format(utc); // "20170623194037.845"
+			//                                            Y   M D H M S
+			//                                            012345678901234567
+			//                                            0         1
+			gll += strUTC.substring(8, 17); // Time
+		}
 
 		gll += ",A";
 
@@ -626,7 +636,7 @@ public class StringGenerator {
 		UTCDate utc = StringParsers.parseZDA(zda);
 		System.out.println("ZDA:" + utc.toString());
 
-		String gll = generateGLL("XX", null, 37.7489, -122.5070);
+		String gll = generateGLL("XX", 37.7489, -122.5070, System.currentTimeMillis());
 		System.out.println(gll);
 		Object[] parsedGLL = StringParsers.parseGLL(gll);
 		GeoPos ll = (GeoPos)parsedGLL[0];

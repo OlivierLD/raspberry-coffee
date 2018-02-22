@@ -148,6 +148,8 @@ var handler = function(req, res) {
 		                  contentType = "image/x-icon";
                     } else if (resource.endsWith(".svg")) {
                       contentType = "image/svg+xml";
+                    } else if (resource.endsWith(".ttf")) {
+	                    contentType = "application/x-font-ttf";
                     } else if (resource.endsWith(".woff")) {
                       contentType = "application/x-font-woff";
                     } else {

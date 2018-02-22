@@ -178,70 +178,74 @@ class Thermometer extends HTMLElement {
 	 *
 	 * spine-case to camelCase
 	 */
-	getColorConfig(cssClassName) {
+	getColorConfig(cssClassNames) {
 		let colorConfig = thermometerColorConfigDefault;
-		for (let s=0; s<document.styleSheets.length; s++) {
-  		// console.log("Walking though ", document.styleSheets[s]);
-			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
-				let selector = document.styleSheets[s].cssRules[r].selectorText;
-//			console.log(">>> ", selector);
-				if (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(THERMOMETER_TAG_NAME) > -1)) { // Cases like "tag-name .className"
-//				console.log("  >>> Found it! [%s]", selector);
-					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
-					let cssTextElems = cssText.split(";");
-					cssTextElems.forEach(function(elem) {
-						if (elem.trim().length > 0) {
-							let keyValPair = elem.split(":");
-							let key = keyValPair[0].trim();
-							let value = keyValPair[1].trim();
-							switch (key) {
-								case '--bg-color':
-									colorConfig.bgColor = value;
-									break;
-								case '--digit-color':
-									colorConfig.digitColor = value;
-									break;
-								case '--with-gradient':
-									colorConfig.withGradient = (value === 'true');
-									break;
-								case '--display-background-gradient-from':
-									colorConfig.displayBackgroundGradient.from = value;
-									break;
-								case '--display-background-gradient-to':
-									colorConfig.displayBackgroundGradient.to = value;
-									break;
-								case '--with-display-shadow':
-									colorConfig.withDisplayShadow = (value === 'true');
-									break;
-								case '--shadow-color':
-									colorConfig.shadowColor = value;
-									break;
-								case '--outline-color':
-									colorConfig.outlineColor = value;
-									break;
-								case '--major-tick-color':
-									colorConfig.majorTickColor = value;
-									break;
-								case '--minor-tick-color':
-									colorConfig.minorTickColor = value;
-									break;
-								case '--value-color':
-									colorConfig.valueColor = value;
-									break;
-								case '--value-outline-color':
-									colorConfig.valueOutlineColor = value;
-									break;
-								case '--value-nb-decimal':
-									colorConfig.valueNbDecimal = value;
-									break;
-								case '--font':
-									colorConfig.font = value;
-									break;
-								default:
-									break;
+		let classes = cssClassNames.split(" ");
+		for (let cls=0; cls<classes.length; cls++) {
+			let cssClassName = classes[cls];
+			for (let s=0; s<document.styleSheets.length; s++) {
+	      // console.log("Walking though ", document.styleSheets[s]);
+				for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+					let selector = document.styleSheets[s].cssRules[r].selectorText;
+					//			console.log(">>> ", selector);
+					if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(THERMOMETER_TAG_NAME) > -1))) { // Cases like "tag-name .className"
+					                                                                                                                                                                 //				console.log("  >>> Found it! [%s]", selector);
+						let cssText = document.styleSheets[s].cssRules[r].style.cssText;
+						let cssTextElems = cssText.split(";");
+						cssTextElems.forEach(function (elem) {
+							if (elem.trim().length > 0) {
+								let keyValPair = elem.split(":");
+								let key = keyValPair[0].trim();
+								let value = keyValPair[1].trim();
+								switch (key) {
+									case '--bg-color':
+										colorConfig.bgColor = value;
+										break;
+									case '--digit-color':
+										colorConfig.digitColor = value;
+										break;
+									case '--with-gradient':
+										colorConfig.withGradient = (value === 'true');
+										break;
+									case '--display-background-gradient-from':
+										colorConfig.displayBackgroundGradient.from = value;
+										break;
+									case '--display-background-gradient-to':
+										colorConfig.displayBackgroundGradient.to = value;
+										break;
+									case '--with-display-shadow':
+										colorConfig.withDisplayShadow = (value === 'true');
+										break;
+									case '--shadow-color':
+										colorConfig.shadowColor = value;
+										break;
+									case '--outline-color':
+										colorConfig.outlineColor = value;
+										break;
+									case '--major-tick-color':
+										colorConfig.majorTickColor = value;
+										break;
+									case '--minor-tick-color':
+										colorConfig.minorTickColor = value;
+										break;
+									case '--value-color':
+										colorConfig.valueColor = value;
+										break;
+									case '--value-outline-color':
+										colorConfig.valueOutlineColor = value;
+										break;
+									case '--value-nb-decimal':
+										colorConfig.valueNbDecimal = value;
+										break;
+									case '--font':
+										colorConfig.font = value;
+										break;
+									default:
+										break;
+								}
 							}
-						}
-					});
+						});
+					}
 				}
 			}
 		}
@@ -339,6 +343,8 @@ class Thermometer extends HTMLElement {
 			grd.addColorStop(0, this.thermometerColorConfig.displayBackgroundGradient.from);// 0  Beginning
 			grd.addColorStop(1, this.thermometerColorConfig.displayBackgroundGradient.to);// 1  End
 			context.fillStyle = grd;
+		} else {
+			context.fillStyle = this.thermometerColorConfig.displayBackgroundGradient.to;
 		}
 		if (this.thermometerColorConfig.withDisplayShadow) {
 			context.shadowBlur = 0;

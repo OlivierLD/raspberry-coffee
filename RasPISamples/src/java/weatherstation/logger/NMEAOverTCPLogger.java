@@ -146,7 +146,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 		tcpServer.write(nmeaMWD.getBytes());
 
 		if (stationLatitude != null && stationLongitude != null) {
-			String nmeaGLL = StringGenerator.generateGLL(DEVICE_PREFIX, null, stationLatitude, stationLongitude);
+			String nmeaGLL = StringGenerator.generateGLL(DEVICE_PREFIX, stationLatitude, stationLongitude, System.currentTimeMillis());
 			nmeaGLL += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 
 			if (verbose) {
