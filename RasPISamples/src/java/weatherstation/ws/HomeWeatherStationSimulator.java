@@ -117,7 +117,9 @@ public class HomeWeatherStationSimulator {
 				ex.printStackTrace();
 			}
 		}
-		wsf.shutdown();
+		if (wsf != null) {
+			wsf.shutdown();
+		}
 		System.out.println("Done.");
 	}
 
