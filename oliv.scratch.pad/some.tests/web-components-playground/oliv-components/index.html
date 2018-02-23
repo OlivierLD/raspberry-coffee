@@ -150,6 +150,9 @@
 	</p>
 
 	<hr/>
+	<!--
+			PLUVIOMETER
+	+-->
 	<div style="cursor: pointer;" onclick="showHide('pluviometer');"><b><u>Pluviometer</u></b></div>
 	<div id="pluviometer" class="smooth">
 		<table>
@@ -278,6 +281,9 @@
 		</table>
 	</div>
 	<hr/>
+	<!--
+			THERMOMETER
+	+-->
 	<div style="cursor: pointer;" onclick="showHide('thermometer');"><b><u>Thermometer</u></b></div>
 	<div id="thermometer" class="smooth">
 		<table>
@@ -405,6 +411,9 @@
 		</table>
 	</div>
 	<hr/>
+	<!--
+			DIRECTION
+	+-->
 	<div style="cursor: pointer;" onclick="showHide('direction');"><b><u>Direction</u></b></div>
 	<div id="direction" class="smooth">
 		<table>
@@ -544,10 +553,47 @@
 						<input type="checkbox" onchange="setRose(this, 'compass-04');" checked>With Rose
 					</div>
 				</td>
+
+				<td valign="top">
+					<div class="black-frame centered" style="background-color: white;">
+						<direction-display class="analogdisplay-flat-gray"
+															 title="Heading, animated"
+															 id="compass-05"
+															 value="18"
+															 major-ticks="45"
+															 minor-ticks="5"
+															 with-rose="true"
+															 with-border="true"
+															 label="HDG"
+															 width="200"
+															 height="200"></direction-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="direction-value-05"
+									 placeholder="dir"
+									 title="Direction"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="setData('direction-value-05', 'compass-05')"
+										title="Set value for the Direction"
+										style="margin-top: 3px;">Direct</button>
+						<button onclick="doAnimate('direction-value-05', 'compass-05', 1, true)"
+										title="Set value for the Direction"
+										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'compass-05');" checked>With Border
+						<input type="checkbox" onchange="setRose(this, 'compass-05');" checked>With Rose
+					</div>
+				</td>
 			</tr>
 		</table>
 	</div>
 	<hr/>
+	<!--
+			ANALOG DISPLAY
+	+-->
 	<div style="cursor: pointer;" onclick="showHide('analog');"><b><u>Analog Displays</u></b></div>
 	<div id="analog" class="smooth">
 		<table>
@@ -730,10 +776,50 @@
 
 				</td>
 
+				<td valign="top">
+					<div class="black-frame centered" style="background-color: white;">
+						<analog-display class="analogdisplay-flat-gray"
+														title="True Wind Speed in knots"
+														id="tws-02"
+														min-value="0"
+														max-value="60"
+														value="24"
+														major-ticks="10"
+														minor-ticks="1"
+														with-border="true"
+														overlap="40"
+														label="TWS"
+														width="200"
+														height="200"></analog-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="tws-value-02"
+									 placeholder="TWS"
+									 title="Wind Speed in knots"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="setData('tws-value-02', 'tws-02')"
+										title="Set Speed value"
+										style="margin-top: 3px;">Direct</button>
+						<button onclick="doAnimate('tws-value-02', 'tws-02')"
+										title="Set Speed value"
+										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'tws-02');" checked>With Border
+						<input type="checkbox" onchange="setMinMax(this, 'tws-02');">With Min &amp; Max
+					</div>
+
+				</td>
+
 			</tr>
 		</table>
 	</div>
 	<hr/>
+	<!--
+			JUMBOS
+	+-->
 	<div style="cursor: pointer;" onclick="showHide('jumbo');"><b><u>Jumbos</u></b></div>
 	<div id="jumbo" class="smooth">
 		<table>
