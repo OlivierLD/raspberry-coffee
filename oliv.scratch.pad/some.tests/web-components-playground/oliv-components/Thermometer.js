@@ -385,10 +385,12 @@ class Thermometer extends HTMLElement {
 		context.closePath();
 
 		// Liquid in the tube
+		let valInBoundaries = Math.min(tempValue, this._max_value);
+		valInBoundaries = Math.max(valInBoundaries, this._min_value);
 		context.beginPath();
 		//context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);
 		context.arc(this.canvas.width / 2, this.canvas.height - 10 - (radius * 0.75), (radius * 0.75), 5 * Math.PI / 4, 7 * Math.PI / 4, true);
-		let y = bottomTube - ((tubeLength) * ((tempValue - this.minValue) / (this.maxValue - this.minValue)));
+		let y = bottomTube - ((tubeLength) * ((valInBoundaries - this.minValue) / (this.maxValue - this.minValue)));
 
 		context.lineTo((this.canvas.width / 2) + ((radius * 0.75) * Math.cos(Math.PI / 4)), y); // right side of the tube
 		context.lineTo((this.canvas.width / 2) - ((radius * 0.75) * Math.cos(Math.PI / 4)), y); // top of the liquid

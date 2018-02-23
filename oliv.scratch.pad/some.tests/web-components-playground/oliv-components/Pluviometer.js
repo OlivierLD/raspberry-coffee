@@ -343,13 +343,16 @@ class Pluviometer extends HTMLElement {
 		tubeLength -= 10;
 
 		// Liquid in the tube
+		let valInBoundaries = Math.min(rainValue, this._max_value);
+		valInBoundaries = Math.max(valInBoundaries, this._min_value);
+
 		context.beginPath();
 		x = (this.canvas.width / 2) - (0.9 * (tubeWidth / 2));
 		y = bottomTube;
 		context.moveTo(x, y);   // bottom left
 		x = (this.canvas.width / 2) + (0.9 * (tubeWidth / 2));
 		context.lineTo(x, y);   // bottom right
-		y = bottomTube - ((tubeLength) * (rainValue / (this.maxValue - this.minValue)));
+		y = bottomTube - ((tubeLength) * (valInBoundaries / (this.maxValue - this.minValue)));
 		context.lineTo(x, y);   // top right
 		x = (this.canvas.width / 2) - (0.9 * (tubeWidth / 2));
 		context.lineTo(x, y);   // top left

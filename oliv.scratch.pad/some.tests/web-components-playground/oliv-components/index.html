@@ -666,6 +666,42 @@
 				</td>
 
 				<td valign="top">
+					<div class="black-frame centered">
+						<analog-display class="analogdisplay-day"
+														title="Boat Speed in knots"
+														id="bsp-03"
+														min-value="0"
+														max-value="15"
+														value="6.7"
+														major-ticks="1"
+														minor-ticks="0.1"
+														with-border="true"
+														overlap="40"
+						                label="BSP"
+														width="200"
+														height="200"></analog-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="bsp-value-03"
+									 placeholder="hum"
+									 title="Boat Speed in knots"
+									 style="width: 50px;"/>
+						<br/>
+						<button onclick="setData('bsp-value-03', 'bsp-03')"
+										title="Set Humidity value"
+										style="margin-top: 3px;">Direct</button>
+						<button onclick="doAnimate('bsp-value-03', 'bsp-03')"
+										title="Set Humidity value"
+										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'bsp-03');" checked>With Border
+						<input type="checkbox" onchange="setMinMax(this, 'bsp-03');">With Min &amp; Max
+					</div>
+
+				</td>
+				<td valign="top">
 					<div class="black-frame centered" style="background-color: black;">
 						<analog-display class="analogdisplay-monochrome-cyan"
 														title="Humidity in %"
@@ -678,7 +714,7 @@
 														with-border="true"
 														overlap="40"
 														digital-data-len="3"
-														digital-data-val="123"
+														digital-data-val="78"
 														width="200"
 														height="200"></analog-display>
 					</div>
@@ -691,7 +727,7 @@
 									 style="width: 50px;"/>
 						<br/>
 						<button onclick="setData('hum-value-01', 'hum-01')"
-										title="Set Speed value"
+										title="Set Humidity value"
 										style="margin-top: 3px;">Direct</button>
 						<button onclick="doAnimate('hum-value-01', 'hum-01')"
 										title="Set Speed value"
@@ -708,7 +744,7 @@
 						<analog-display class="analogdisplay-day analog-for-prmsl"
 														title="Pressure in hPa"
 														id="prmsl-01"
-														min-value="960"
+														min-value="980"
 														max-value="1040"
 														value="1020.8"
 														major-ticks="10"

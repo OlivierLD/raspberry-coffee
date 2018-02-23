@@ -4,7 +4,6 @@
 - [Shadow DOM Spec](https://w3c.github.io/webcomponents/spec/shadow/)
 - [HTML imports](http://w3c.github.io/webcomponents/spec/imports/)
 - [HTML templates](https://html.spec.whatwg.org/multipage/webappapis.html)
-
 - [Tutorial](https://auth0.com/blog/web-components-how-to-craft-your-own-custom-components/)
 
 ---
@@ -40,27 +39,31 @@ function setData() {
   elem.value = value;
 }
 ```
-This means that they can be dynamically modified once loaded.
+This means that their properties can be dynamically modified once the component is loaded.
 
 A `WebComponent` extends `HTMLElement`; as such all the properties of an `HTMLElement` are available on a `WebComponent`
- (such as `class`, `title`, etc).
+ (such as - see above - `class`, `title`, etc). _Not_ overriding those properties is probably a good idea.
  
 ---
 
 ## Lessons learned
 
-No animation in the component, `clearInterval` does not clear anything.
+No animation _**in**_ the component, `clearInterval` does not clear anything.
 If animation is needed, make it happen outside the component.
 Works OK (~so-so) if there is only one component, it's a mess otherwise.
 
 ---
 
-## Questions
-- Observed Attributes. Does a "final" attribute have to be observed?
+## Questions to address
+- Observed Attributes. Does a "final" (remaining as-is after being loaded) attribute have to be observed?
 - Extending a WebComponent?
 
 ---
 
+### Good to go
+
 [Oliv's Components](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/oliv.scratch.pad/some.tests/web-components-playground/oliv-components)
+
+--- 
 
 More to come...

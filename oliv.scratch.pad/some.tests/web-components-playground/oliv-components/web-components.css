@@ -220,7 +220,7 @@ direction-display .analogdisplay-night {
 	--with-gradient: false;
 	--display-background-gradient-from: LightGrey; /* used if --withGradient: true */
 	--display-background-gradient-to: rgba(0, 0, 0, 0);
-	--display-line-color: rgba(0, 255, 255, 0.25);
+	--display-line-color: rgba(0, 255, 255, 0.5);
 	--label-fill-color: rgba(0, 0, 0, 0);
 	--with-display-shadow: false;
 	--shadow-color: rgba(0, 0, 0, 0.75);
@@ -237,10 +237,6 @@ direction-display .analogdisplay-night {
 	--knob-outline-color: cyan;
 	--font: Arial;
 	--value-font-size-factor: 1
-}
-
-direction-display .analogdisplay-monochrome-cyan {
-	--value-nb-decimal: 0;
 }
 
 .analogdisplay-monochrome-orange {
@@ -270,10 +266,6 @@ direction-display .analogdisplay-monochrome-cyan {
 	--value-font-size-factor: 1
 }
 
-direction-display .analogdisplay-monochrome-orange {
-	--value-nb-decimal: 0;
-}
-
 /* Day, flat gray */
 .analogdisplay-flat-gray {
 	--bg-color: rgba(255, 255, 255, 0.0);
@@ -281,7 +273,7 @@ direction-display .analogdisplay-monochrome-orange {
 	--with-gradient: true;
 	--display-background-gradient-from: LightGrey;
 	--display-background-gradient-to: white; /* used if --withGradient: false */
-	--display-line-color: rgba(255, 255, 255, 0.5);
+	--display-line-color: rgba(0, 0, 0, 0.5);
 	--label-fill-color: rgba(255, 255, 255, 0.5);
 	--with-display-shadow: false;
 	--shadow-color: rgba(0, 0, 0, 0.75);
@@ -298,6 +290,10 @@ direction-display .analogdisplay-monochrome-orange {
 	--knob-outline-color: black;
 	--font: Arial;
 	--value-font-size-factor: 1
+}
+
+direction-display .analogdisplay-monochrome-cyan .analogdisplay-monochrome-orange .analogdisplay-flat-gray {
+	--value-nb-decimal: 0;
 }
 
 analog-display .analog-for-prmsl {

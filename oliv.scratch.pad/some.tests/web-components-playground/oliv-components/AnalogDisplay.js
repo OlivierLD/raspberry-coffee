@@ -147,8 +147,8 @@ class AnalogDisplay extends HTMLElement { // WIP
 		switch (attrName) {
 			case "value":
 				this._value = parseFloat(newVal);
-				this.miniVal = Math.min(this._value, this.miniVal);
-				this.maxiVal = Math.max(this._value, this.maxiVal);
+				this.miniVal = Math.min(Math.max(this._min_value, this._value), this.miniVal);
+				this.maxiVal = Math.max(Math.min(this._max_value, this._value), this.maxiVal);
 				break;
 			case "width":
 				this._width = parseInt(newVal);
@@ -649,8 +649,10 @@ class AnalogDisplay extends HTMLElement { // WIP
 		}
 		// Center
 		context.moveTo(this.canvas.width / 2, radius + 10);
+		let valInBoundaries = Math.min(analogValue, this._max_value);
+		valInBoundaries = Math.max(valInBoundaries, this._min_value);
 
-		let ___currentAngle = (totalAngle * ((analogValue - this.minValue) / (this.maxValue - this.minValue))) - this.toRadians(this.overlap);
+		let ___currentAngle = (totalAngle * ((valInBoundaries - this.minValue) / (this.maxValue - this.minValue))) - this.toRadians(this.overlap);
 		// Left
 		let x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((___currentAngle - (Math.PI / 2))));
 		let y = (radius + 10) - ((radius * 0.05) * Math.sin((___currentAngle - (Math.PI / 2))));
