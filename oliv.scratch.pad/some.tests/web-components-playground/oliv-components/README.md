@@ -39,9 +39,12 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 - Local `npm` registry
 
 #### CodePen (might not be 100% in sync... But close)
+Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released.
+
 - [Jumbo Display](https://codepen.io/OlivierLD/pen/VQyVjy).
 - [Thermometer](https://codepen.io/OlivierLD/pen/KQQEEp).
 - [Direction](https://codepen.io/OlivierLD/pen/bLjwdj)
+- [Analog Display](https://codepen.io/OlivierLD/pen/QQBYEw)
 
 ---
 &copy; 2018, by Oliv Soft.
