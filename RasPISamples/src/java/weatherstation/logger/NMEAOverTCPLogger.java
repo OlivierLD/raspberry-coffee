@@ -9,9 +9,11 @@ import weatherstation.logger.servers.TCPServer;
  * Compatible with OpenCPN, NodeRED, NMEA.multiplexer, etc...
  *
  * Expect -Dtcp.port to override default 7001.
- * Also station.lat, station.lng
+ * See also station.lat, station.lng
  *
- * Stricly speaking, not a loader, but a fowarder/broadcaster
+ *
+ *
+ * Strictly speaking, not a loader, but a forwarder/broadcaster
  */
 
 public class NMEAOverTCPLogger implements LoggerInterface {
