@@ -26,6 +26,14 @@
 			text-align: center;
 		}
 
+		.smooth {
+			height: 0;
+			visibility: hidden;
+			transition: 0.5s;
+			opacity: 0;
+			transition: visibility 0.5s, height 0.5s, opacity 0.5s linear;
+		}
+
 	</style>
 
 	<script type="text/javascript">
@@ -111,8 +119,22 @@
 
 		function showHide(divId) {
 			let elmt = document.getElementById(divId);
-			let status = elmt.style.display;
-			elmt.style.display = (status === 'none' ? 'inline' : 'none');
+			// let status = elmt.style.display;
+			// elmt.style.display = (status === 'none' ? 'inline' : 'none');
+			let h = elmt.style.height;
+			let newH = '', newV = '', newO = '';
+			if (h === '' || h === '0' || h === '0px') {
+				newH = '100%';
+				newV = 'visible';
+				newO = '1';
+			} else {
+				newH = '0';
+				newV = 'hidden';
+				newO = '0';
+			}
+			elmt.style.height = newH;
+			elmt.style.visibility = newV;
+			elmt.style.opacity = newO;
 		}
 
 	</script>
@@ -120,7 +142,7 @@
 <body>
 
 	<h2>Web Components Samples</h2>
-	<h5>Pluviometer, Thermometer, etc.</h5>
+	<h5>Pluviometer, Thermometer, and other such marvels...</h5>
 	<p>
 		Click on the <b>category titles</b> below, they all represent different configurations of <i>one</i> WebComponent each.
 		<br/>
@@ -129,7 +151,7 @@
 
 	<hr/>
 	<div style="cursor: pointer;" onclick="showHide('pluviometer');"><b><u>Pluviometer</u></b></div>
-	<div id="pluviometer" style="display: none;">
+	<div id="pluviometer" class="smooth">
 		<table>
 			<tr>
 
@@ -257,7 +279,7 @@
 	</div>
 	<hr/>
 	<div style="cursor: pointer;" onclick="showHide('thermometer');"><b><u>Thermometer</u></b></div>
-	<div id="thermometer" style="display: none;">
+	<div id="thermometer" class="smooth">
 		<table>
 			<tr>
 				<td valign="top">
@@ -384,7 +406,7 @@
 	</div>
 	<hr/>
 	<div style="cursor: pointer;" onclick="showHide('direction');"><b><u>Direction</u></b></div>
-	<div id="direction" style="display: none;">
+	<div id="direction" class="smooth">
 		<table>
 			<tr>
 				<td valign="top">
@@ -527,7 +549,7 @@
 	</div>
 	<hr/>
 	<div style="cursor: pointer;" onclick="showHide('analog');"><b><u>Analog Displays</u></b></div>
-	<div id="analog" style="display: none;">
+	<div id="analog" class="smooth">
 		<table>
 			<tr>
 				<td valign="top">
@@ -713,7 +735,7 @@
 	</div>
 	<hr/>
 	<div style="cursor: pointer;" onclick="showHide('jumbo');"><b><u>Jumbos</u></b></div>
-	<div id="jumbo" style="display: none;">
+	<div id="jumbo" class="smooth">
 		<table>
 			<tr>
 				<td valign="top">

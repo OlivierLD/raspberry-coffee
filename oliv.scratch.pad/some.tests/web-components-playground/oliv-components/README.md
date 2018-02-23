@@ -11,6 +11,7 @@
 - Marquee. TODO
 - Evolution Displays. TODO
 - Graphs. TODO
+- Sky Map and Star Finder. TODO.
 
 ---
 
@@ -24,9 +25,10 @@ Define:
 ---
 
 #### TODO
-JSDoc
+- JSDoc
+- Local `npm` registry
 
-#### CodePen
+#### CodePen (might not be 100% in sync... But close)
 - [Jumbo Display](https://codepen.io/OlivierLD/pen/VQyVjy).
 - [Thermometer](https://codepen.io/OlivierLD/pen/KQQEEp).
 
