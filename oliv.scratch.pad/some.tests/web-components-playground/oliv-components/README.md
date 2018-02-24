@@ -15,7 +15,7 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 - Analog Display. &#9989; Done
 - Apparent Wind. TODO
 - Globe and Map. TODO
-- Compass Rose. TODO
+- Compass Rose. &#9989; Done
 - Digital Display. TODO
 - Marquee. TODO
 - Evolution Displays. TODO
@@ -45,6 +45,7 @@ Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released
 - [Thermometer](https://codepen.io/OlivierLD/pen/KQQEEp).
 - [Direction](https://codepen.io/OlivierLD/pen/bLjwdj)
 - [Analog Display](https://codepen.io/OlivierLD/pen/QQBYEw)
+- [Compass Rose](https://codepen.io/OlivierLD/pen/aqaLQq)
 
 ---
 &copy; 2018, by Oliv Soft.
