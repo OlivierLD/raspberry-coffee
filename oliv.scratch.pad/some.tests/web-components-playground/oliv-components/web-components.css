@@ -260,7 +260,6 @@ direction-display .analogdisplay-night {
 	--with-hand-shadow: false;
 	--knob-color: orange;
 	--knob-outline-color: orange;
-	--index-color: orange; /* Compass rose index */
 	--outlined-port-starboard: true;
 	--font: Arial;
 	--value-font-size-factor: 1
@@ -308,7 +307,7 @@ compass-rose .day {
 	--display-background-gradient-from: gray;
 	--display-background-gradient-to: white;
 	--tick-color: darkGray;
-	--value-color: cyan;
+	--value-color: black;
 	--index-color: red;
 	--font: Arial;
 }
@@ -320,7 +319,29 @@ compass-rose .night {
 	--display-background-gradient-from: black;
 	--display-background-gradient-to: gray;
 	--tick-color: lightGray;
-	--value-color: cyan;
+	--value-color: white;
 	--index-color: white;
+	--font: Arial;
+}
+
+compass-rose .orange {
+	--bg-color: black;
+	--digit-color: orange;
+	--with-gradient: false;
+	--display-background-gradient-to: black;
+	--tick-color: orange;
+	--value-color: orange;
+	--index-color: orange;
+	--font: Arial;
+}
+
+compass-rose .cyan {
+	--bg-color: black;
+	--digit-color: cyan;
+	--with-gradient: false;
+	--display-background-gradient-to: black;
+	--tick-color: cyan;
+	--value-color: cyan;
+	--index-color: cyan;
 	--font: Arial;
 }

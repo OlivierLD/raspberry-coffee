@@ -227,7 +227,7 @@ class CompassRose extends HTMLElement {
 
 		// Ticks
 		context.strokeStyle = this.compassRoseColorConfig.tickColor;
-		context.lineWidth   = 0.5;
+		context.lineWidth   = 1;
 
 		let startValue = compassValue - (this.totalViewAngle / 2);
 		let endValue   = compassValue + (this.totalViewAngle / 2);
@@ -274,12 +274,15 @@ class CompassRose extends HTMLElement {
 		while (toDisplay > 360) { toDisplay -= 360; }
 		context.fillText(toDisplay.toFixed(0) + "°", 5, 14);
 
-		context.strokeStyle = this.compassRoseColorConfig.indexColor; // The index
+		// Index
 		context.beginPath();
 		context.moveTo(this.width / 2, 0);
 		context.lineTo(this.width / 2, this.height);
-		context.closePath();
+
+		context.lineWidth   = 2;
+		context.strokeStyle = this.compassRoseColorConfig.indexColor; // The index
 		context.stroke();
+		context.closePath();
 	}
 
 	 roundRect(ctx, x, y, width, height, radius, fill, stroke)  {
@@ -302,13 +305,13 @@ class CompassRose extends HTMLElement {
 		ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
 		ctx.lineTo(x, y + radius);
 		ctx.quadraticCurveTo(x, y, x + radius, y);
-		ctx.closePath();
 		if (stroke) {
 			ctx.stroke();
 		}
 		if (fill) {
 			ctx.fill();
 		}
+		ctx.closePath();
 	}
 }
 

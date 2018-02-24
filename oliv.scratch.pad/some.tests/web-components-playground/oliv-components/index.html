@@ -19,7 +19,7 @@
 		html {
 			height: 100%;
 		}
-		
+
 		body {
 			background-color: black;
 			color: red;
@@ -1027,8 +1027,6 @@
 										style="margin-top: 3px;">Animate</button>
 					</div>
 				</td>
-			</tr>
-			<tr>
 				<td valign="top">
 					<div class="black-frame centered">
 						<compass-rose id="compass-rose-02"
@@ -1050,6 +1048,58 @@
 										title="Set True Heading"
 										style="margin-top: 3px;">Direct</button>
 						<button onclick="doAnimate('compass-value-02', 'compass-rose-02', 1, true)"
+										title="Set True Heading"
+										style="margin-top: 3px;">Animate</button>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<compass-rose id="compass-rose-03"
+													class="orange"
+													title="Heading"
+													value="245"
+													width="500"
+													height="50"></compass-rose>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="compass-value-03"
+									 placeholder="Heading"
+									 title="True Heading"
+									 style="width: 40px;"/>
+						<br/>
+						<button onclick="setData('compass-value-03', 'compass-rose-03')"
+										title="Set True Heading"
+										style="margin-top: 3px;">Direct</button>
+						<button onclick="doAnimate('compass-value-03', 'compass-rose-03', 1, true)"
+										title="Set True Heading"
+										style="margin-top: 3px;">Animate</button>
+					</div>
+				</td>
+				<td valign="top">
+					<div class="black-frame centered">
+						<compass-rose id="compass-rose-04"
+													class="cyan"
+													title="Heading"
+													value="315"
+													width="500"
+													height="50"></compass-rose>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="compass-value-04"
+									 placeholder="Heading"
+									 title="True Heading"
+									 style="width: 40px;"/>
+						<br/>
+						<button onclick="setData('compass-value-04', 'compass-rose-04')"
+										title="Set True Heading"
+										style="margin-top: 3px;">Direct</button>
+						<button onclick="doAnimate('compass-value-04', 'compass-rose-04', 1, true)"
 										title="Set True Heading"
 										style="margin-top: 3px;">Animate</button>
 					</div>
