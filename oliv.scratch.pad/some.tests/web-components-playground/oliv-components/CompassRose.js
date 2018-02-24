@@ -168,7 +168,7 @@ class CompassRose extends HTMLElement {
 										colorConfig.indexColor = value;
 										break;
 									case '--font':
-										colorConfig.Font = value;
+										colorConfig.font = value;
 										break;
 									default:
 										break;
