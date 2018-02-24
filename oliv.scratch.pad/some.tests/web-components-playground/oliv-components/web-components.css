@@ -180,10 +180,6 @@ jumbo-display .digital-font-green {
 	--value-font-size-factor: 1
 }
 
-direction-display .analogdisplay-day {
-	--value-nb-decimal: 0;
-}
-
 .analogdisplay-night {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: cyan;
@@ -207,10 +203,6 @@ direction-display .analogdisplay-day {
 	--knob-outline-color: blue;
 	--font: Arial;
 	--value-font-size-factor: 1
-}
-
-direction-display .analogdisplay-night {
-	--value-nb-decimal: 0;
 }
 
 /* Monochrome, cyan */
@@ -291,7 +283,11 @@ direction-display .analogdisplay-night {
 	--value-font-size-factor: 1
 }
 
-direction-display .analogdisplay-monochrome-cyan .analogdisplay-monochrome-orange .analogdisplay-flat-gray {
+direction-display .analogdisplay-day
+									.analogdisplay-night
+									.analogdisplay-monochrome-cyan
+									.analogdisplay-monochrome-orange
+									.analogdisplay-flat-gray {
 	--value-nb-decimal: 0;
 }
 
