@@ -94,7 +94,7 @@
 				let startFrom = webComp.value;
 				if (document.getElementById(fromField).value.length !== 0) {
 					let goTo = parseFloat(document.getElementById(fromField).value);
-					if (goTo !== NaN && startFrom !== goTo) {
+					if ( !isNaN(goTo) && startFrom !== goTo) {
 						if (on360 === true) {
 							if (Math.abs(goTo - startFrom) > 180) {
 								if (startFrom < 180) {
