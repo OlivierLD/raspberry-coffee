@@ -10,7 +10,7 @@ const compassRoseDefaultColorConfig = {
 		to: 'white'
 	},
 	tickColor:         'darkGray',
-	valueColor:        'blue',
+	valueColor:        'cyan',
 	indexColor:        'red',
 	font:              'Arial'
 };
@@ -22,8 +22,7 @@ class CompassRose extends HTMLElement {
 		return [
 			"width",        // Integer. Canvas width
 			"height",       // Integer. Canvas height
-			"value",        // Float. Numeric value to display
-			"label"         // String, like TWD, HDG, etc
+			"value"         // Float. Numeric value to display
 		];
 	}
 
@@ -38,7 +37,6 @@ class CompassRose extends HTMLElement {
 		this._value       =   0;
 		this._width       =  50;
 		this._height      = 500;
-		this._label       = "VAL";
 
 		this.totalViewAngle = 60; // must be even...
 
@@ -72,16 +70,14 @@ class CompassRose extends HTMLElement {
 		}
 		switch (attrName) {
 			case "value":
-				this._value = parseFloat(newVal);
+				let value = parseFloat(newVal);
+				this._value = parseInt(value.toFixed(0));
 				break;
 			case "width":
 				this._width = parseInt(newVal);
 				break;
 			case "height":
 				this._height = parseInt(newVal);
-				break;
-			case "label":
-				this._label = newVal;
 				break;
 			default:
 				break;
@@ -109,9 +105,6 @@ class CompassRose extends HTMLElement {
 	set height(val) {
 		this.setAttribute("height", val);
 	}
-	set label(val) {
-		this.setAttribute("label", val);
-	}
 	set shadowRoot(val) {
 		this._shadowRoot = val;
 	}
@@ -124,9 +117,6 @@ class CompassRose extends HTMLElement {
 	}
 	get height() {
 		return this._height;
-	}
-	get label() {
-		return this._label;
 	}
 	get shadowRoot() {
 		return this._shadowRoot;
@@ -234,6 +224,7 @@ class CompassRose extends HTMLElement {
 
 		// Background
 		this.roundRect(context, 0, 0, this.width, this.height, 10, true, false);
+
 		// Ticks
 		context.strokeStyle = this.compassRoseColorConfig.tickColor;
 		context.lineWidth   = 0.5;

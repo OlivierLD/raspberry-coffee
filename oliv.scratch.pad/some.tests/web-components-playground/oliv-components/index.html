@@ -983,9 +983,9 @@
 				<td valign="top">
 					<div class="black-frame centered">
 						<compass-rose id="compass-rose-01"
+						              class="day"
 													title="Heading"
 													value="45"
-						              label="HDG"
 													width="500"
 													height="50"></compass-rose>
 					</div>
@@ -1001,6 +1001,33 @@
 										title="Set True Heading"
 										style="margin-top: 3px;">Direct</button>
 						<button onclick="doAnimate('compass-value-01', 'compass-rose-01', 1, true)"
+										title="Set True Heading"
+										style="margin-top: 3px;">Animate</button>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<compass-rose id="compass-rose-02"
+						              class="night"
+													title="Heading"
+													value="135"
+													width="500"
+													height="50"></compass-rose>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="compass-value-02"
+									 placeholder="Heading"
+									 title="True Heading"
+									 style="width: 40px;"/>
+						<br/>
+						<button onclick="setData('compass-value-02', 'compass-rose-02')"
+										title="Set True Heading"
+										style="margin-top: 3px;">Direct</button>
+						<button onclick="doAnimate('compass-value-02', 'compass-rose-02', 1, true)"
 										title="Set True Heading"
 										style="margin-top: 3px;">Animate</button>
 					</div>
