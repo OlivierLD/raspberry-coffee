@@ -109,7 +109,7 @@
 						incr = ((startFrom < goTo) ? 1 : -1) * (increment !== undefined ? increment : 0.1);
 						intervalId = window.setInterval(function () {
 							smoothlySet(webComp, startFrom, goTo);
-						}, 50);
+						}, 10);
 					}
 				}
 			}
@@ -151,6 +151,46 @@
 			elmt.style.opacity = newO;
 		}
 
+		let directionAnimationInterval;
+		let directionValue;
+		function directionAnimation(inc) {
+				if (directionAnimationInterval !== undefined) {
+					window.clearInterval(directionAnimationInterval);
+					directionAnimationInterval = undefined;
+				} else {
+					directionValue = 0;
+					directionAnimationInterval = window.setInterval(function() {
+						document.getElementById('compass-01').value = directionValue;
+						document.getElementById('compass-02').value = directionValue;
+						document.getElementById('compass-03').value = directionValue;
+						document.getElementById('compass-04').value = directionValue;
+						document.getElementById('compass-05').value = directionValue;
+						directionValue += inc;
+						directionValue = directionValue % 360;
+					}, 50);
+				}
+		}
+
+		let roseAnimationInterval;
+		let roseValue;
+		function roseAnimation(inc) {
+			if (roseAnimationInterval !== undefined) {
+				window.clearInterval(roseAnimationInterval);
+				roseAnimationInterval = undefined;
+			} else {
+				roseValue = 0;
+				roseAnimationInterval = window.setInterval(function() {
+					document.getElementById('compass-rose-01').value = roseValue;
+					document.getElementById('compass-rose-02').value = roseValue;
+					document.getElementById('compass-rose-03').value = roseValue;
+					document.getElementById('compass-rose-04').value = roseValue;
+					document.getElementById('compass-rose-05').value = roseValue;
+					roseValue += inc;
+					roseValue = roseValue % 360;
+				}, 50);
+			}
+		}
+
 	</script>
 </head>
 <body>
@@ -169,6 +209,10 @@
 				come up with your own ones.
 			</dd>
 		</dl>
+	  <small>
+		  For animation buttons: in this demo, only <b><i>one</i></b> animation can run at a given time. This is not a limitation of the components, this is just because
+		  this demo is implemented this way.
+	  </small>
 	</p>
 
 	<hr/>
@@ -199,7 +243,8 @@
 									 id="rain-value-01"
 									 placeholder="rain"
 									 title="in mm/h"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="2.3"/>
 						<br/>
 						<button onclick="setData('rain-value-01', 'pluviometer-01')"
 										title="Set Rain value in the tube"
@@ -207,6 +252,8 @@
 						<button onclick="doAnimate('rain-value-01', 'pluviometer-01')"
 										title="Set Rain value in the tube"
 										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="range" min="0" max="10" step="0.1" value="2.3" onchange="document.getElementById('pluviometer-01').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 
@@ -229,7 +276,8 @@
 									 id="rain-value-02"
 									 placeholder="rain"
 									 title="in mm/h"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="4.5"/>
 						<br/>
 						<button onclick="setData('rain-value-02', 'pluviometer-02')"
 										title="Set Rain value in the tube"
@@ -237,6 +285,8 @@
 						<button onclick="doAnimate('rain-value-02', 'pluviometer-02')"
 										title="Set Rain value in the tube"
 										style="margin-top: 3px;">Animate</button>
+										<br/>
+										<input type="range" min="0" max="10" step="0.1" value="4.5" onchange="document.getElementById('pluviometer-02').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 
@@ -259,7 +309,8 @@
 									 id="rain-value-03"
 									 placeholder="rain"
 									 title="in mm/h"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="6.7"/>
 						<br/>
 						<button onclick="setData('rain-value-03', 'pluviometer-03')"
 										title="Set Rain value in the tube"
@@ -267,6 +318,8 @@
 						<button onclick="doAnimate('rain-value-03', 'pluviometer-03')"
 										title="Set Rain value in the tube"
 										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="range" min="0" max="10" step="0.1" value="6.7" onchange="document.getElementById('pluviometer-03').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 
@@ -289,7 +342,8 @@
 									 id="rain-value-04"
 									 placeholder="rain"
 									 title="in mm/h"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="8.9"/>
 						<br/>
 						<button onclick="setData('rain-value-04', 'pluviometer-04')"
 										title="Set Rain value in the tube"
@@ -297,6 +351,8 @@
 						<button onclick="doAnimate('rain-value-04', 'pluviometer-04')"
 										title="Set Rain value in the tube"
 										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="range" min="0" max="10" step="0.1" value="8.9" onchange="document.getElementById('pluviometer-04').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 			</tr>
@@ -329,7 +385,8 @@
 									 id="temp-value-01"
 									 placeholder="temp"
 									 title="in Celcius"
-									 style="width: 40px;"/>
+									 style="width: 40px; text-align: right;"
+									 value="12.34"/>
 						<br/>
 						<button onclick="setData('temp-value-01', 'thermometer-01')"
 										title="Set Temp value in the tube"
@@ -337,6 +394,8 @@
 						<button onclick="doAnimate('temp-value-01', 'thermometer-01')"
 										title="Set Temp value in the tube"
 										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="range" min="-10" max="60" step="0.1" value="12.34" onchange="document.getElementById('thermometer-01').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 
@@ -359,7 +418,8 @@
 									 id="temp-value-02"
 									 placeholder="temp"
 									 title="in Celcius"
-									 style="width: 40px;"/>
+									 style="width: 40px; text-align: right;"
+									 value="23.45"/>
 						<br/>
 						<button onclick="setData('temp-value-02', 'thermometer-02')"
 										title="Set Temp value in the tube"
@@ -367,6 +427,8 @@
 						<button onclick="doAnimate('temp-value-02', 'thermometer-02')"
 										title="Set Temp value in the tube"
 										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="range" min="-10" max="60" step="0.1" value="23.45" onchange="document.getElementById('thermometer-02').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 
@@ -389,7 +451,8 @@
 									 id="temp-value-03"
 									 placeholder="temp"
 									 title="in Celcius"
-									 style="width: 40px;"/>
+									 style="width: 40px; text-align: right;"
+									 value="34.56"/>
 						<br/>
 						<button onclick="setData('temp-value-03', 'thermometer-03')"
 										title="Set Temp value in the tube"
@@ -397,6 +460,8 @@
 						<button onclick="doAnimate('temp-value-03', 'thermometer-03')"
 										title="Set Temp value in the tube"
 										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="range" min="-10" max="60" step="0.1" value="34.56" onchange="document.getElementById('thermometer-03').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 
@@ -419,7 +484,8 @@
 									 id="temp-value-04"
 									 placeholder="temp"
 									 title="in Celcius"
-									 style="width: 40px;"/>
+									 style="width: 40px; text-align: right;"
+									 value="45.67"/>
 						<br/>
 						<button onclick="setData('temp-value-04', 'thermometer-04')"
 										title="Set Temp value in the tube"
@@ -427,6 +493,8 @@
 						<button onclick="doAnimate('temp-value-04', 'thermometer-04')"
 										title="Set Temp value in the tube"
 										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="range" min="-10" max="60" step="0.1" value="45.67" onchange="document.getElementById('thermometer-04').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 			</tr>
@@ -460,7 +528,8 @@
 									 id="direction-value-01"
 									 placeholder="dir"
 									 title="Direction"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="38"/>
 						<br/>
 						<button onclick="setData('direction-value-01', 'compass-01')"
 										title="Set value for the Direction"
@@ -494,7 +563,8 @@
 									 id="direction-value-02"
 									 placeholder="dir"
 									 title="Direction"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="138"/>
 						<br/>
 						<button onclick="setData('direction-value-02', 'compass-02')"
 										title="Set value for the Direction"
@@ -528,7 +598,8 @@
 									 id="direction-value-03"
 									 placeholder="dir"
 									 title="Direction"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="249"/>
 						<br/>
 						<button onclick="setData('direction-value-03', 'compass-03')"
 										title="Set value for the Direction"
@@ -562,7 +633,8 @@
 									 id="direction-value-04"
 									 placeholder="dir"
 									 title="Direction"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="338"/>
 						<br/>
 						<button onclick="setData('direction-value-04', 'compass-04')"
 										title="Set value for the Direction"
@@ -596,7 +668,8 @@
 									 id="direction-value-05"
 									 placeholder="dir"
 									 title="Direction"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="18"/>
 						<br/>
 						<button onclick="setData('direction-value-05', 'compass-05')"
 										title="Set value for the Direction"
@@ -608,6 +681,13 @@
 						<input type="checkbox" onchange="setBorder(this, 'compass-05');" checked>With Border
 						<input type="checkbox" onchange="setRose(this, 'compass-05');" checked>With Rose
 					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5">
+					Start/Stop Animation
+					<button id="direction-anim-button-cw" onclick="directionAnimation(1);">Clockwise</button>
+					<button id="direction-anim-button-ccw" onclick="directionAnimation(-1);">Clockwise</button>
 				</td>
 			</tr>
 		</table>
@@ -641,7 +721,8 @@
 									 id="speed-value-01"
 									 placeholder="speed"
 									 title="BSP in knots"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="6.7"/>
 						<br/>
 						<button onclick="setData('speed-value-01', 'bsp-01')"
 										title="Set Speed value"
@@ -652,6 +733,8 @@
 						<br/>
 						<input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>With Border
 						<input type="checkbox" onchange="setMinMax(this, 'bsp-01');">With Min &amp; Max
+						<br/>
+						<input type="range" min="0" max="15" step="0.1" value="6.7" onchange="document.getElementById('bsp-01').value = this.value;" style="width: 100%;"/>
 					</div>
 					<div class="black-frame centered" style="background-color: black;">
 						<analog-display class="analogdisplay-night"
@@ -673,7 +756,8 @@
 									 id="speed-value-02"
 									 placeholder="speed"
 									 title="BSP in knots"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="4.5"/>
 						<br/>
 						<button onclick="setData('speed-value-02', 'bsp-02')"
 										title="Set Speed value"
@@ -684,6 +768,8 @@
 						<br/>
 						<input type="checkbox" onchange="setBorder(this, 'bsp-02');" checked>With Border
 						<input type="checkbox" onchange="setMinMax(this, 'bsp-02');">With Min &amp; Max
+						<br/>
+						<input type="range" min="0" max="15" step="0.1" value="4.5" onchange="document.getElementById('bsp-02').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 
@@ -709,7 +795,8 @@
 									 id="bsp-value-03"
 									 placeholder="hum"
 									 title="Boat Speed in knots"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="6.7"/>
 						<br/>
 						<button onclick="setData('bsp-value-03', 'bsp-03')"
 										title="Set Humidity value"
@@ -720,6 +807,8 @@
 						<br/>
 						<input type="checkbox" onchange="setBorder(this, 'bsp-03');" checked>With Border
 						<input type="checkbox" onchange="setMinMax(this, 'bsp-03');">With Min &amp; Max
+						<br/>
+						<input type="range" min="0" max="15" step="0.1" value="6.7" onchange="document.getElementById('bsp-03').value = this.value;" style="width: 100%;"/>
 					</div>
 
 				</td>
@@ -746,7 +835,8 @@
 									 id="hum-value-01"
 									 placeholder="hum"
 									 title="Humidity in %"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="75"/>
 						<br/>
 						<button onclick="setData('hum-value-01', 'hum-01')"
 										title="Set Humidity value"
@@ -755,11 +845,13 @@
 										title="Set Speed value"
 										style="margin-top: 3px;">Animate</button>
 						<br/>
-						Bottom Val:<input type="number" size="3" onblur="setDigitVal(this, 'hum-01');" placeholder="Bottom Value">
+						Bottom Val:<input type="number" onblur="setDigitVal(this, 'hum-01');" placeholder="Bottom Value" style="text-align: right; width: 50px;" value="78">
 						<br/>
 						<input type="checkbox" onchange="setBorder(this, 'hum-01');" checked>With Border
-						<input type="checkbox" onchange="setMinMax(this, 'hum-01');">With Min &amp; Max					</div>
-
+						<input type="checkbox" onchange="setMinMax(this, 'hum-01');">With Min &amp; Max
+						<br/>
+						<input type="range" min="0" max="100" step="1" value="75" onchange="document.getElementById('hum-01').value = this.value;" style="width: 100%;"/>
+					</div>
 				</td>
 				<td valign="top">
 					<div class="black-frame centered">
@@ -783,7 +875,8 @@
 									 id="prmsl-value-01"
 									 placeholder="PRMSL"
 									 title="in hPa"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="1020.8"/>
 						<br/>
 						<button onclick="setData('prmsl-value-01', 'prmsl-01')"
 										title="Set PRMSL value"
@@ -794,6 +887,8 @@
 						<br/>
 						<input type="checkbox" onchange="setBorder(this, 'prmsl-01');" checked>With Border
 						<input type="checkbox" onchange="setMinMax(this, 'prmsl-01');">With Min &amp; Max
+						<br/>
+						<input type="range" min="980" max="1040" step="0.1" value="1020.8" onchange="document.getElementById('prmsl-01').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 
@@ -819,7 +914,8 @@
 									 id="tws-value-01"
 									 placeholder="TWS"
 									 title="Wind Speed in knots"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="12"/>
 						<br/>
 						<button onclick="setData('tws-value-01', 'tws-01')"
 										title="Set Speed value"
@@ -830,8 +926,9 @@
 						<br/>
 						<input type="checkbox" onchange="setBorder(this, 'tws-01');" checked>With Border
 						<input type="checkbox" onchange="setMinMax(this, 'tws-01');">With Min &amp; Max
+						<br/>
+						<input type="range" min="0" max="60" step="0.1" value="12" onchange="document.getElementById('tws-01').value = this.value;" style="width: 100%;"/>
 					</div>
-
 				</td>
 
 				<td valign="top">
@@ -856,7 +953,8 @@
 									 id="tws-value-02"
 									 placeholder="TWS"
 									 title="Wind Speed in knots"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="24"/>
 						<br/>
 						<button onclick="setData('tws-value-02', 'tws-02')"
 										title="Set Speed value"
@@ -867,6 +965,8 @@
 						<br/>
 						<input type="checkbox" onchange="setBorder(this, 'tws-02');" checked>With Border
 						<input type="checkbox" onchange="setMinMax(this, 'tws-02');">With Min &amp; Max
+						<br/>
+						<input type="range" min="0" max="60" step="0.1" value="24" onchange="document.getElementById('tws-02').value = this.value;" style="width: 100%;"/>
 					</div>
 
 				</td>
@@ -887,7 +987,7 @@
 						<jumbo-display id="jumbo-02"
 													 class="jumbo-02"
 													 value="-12.34"
-													 label="OhO!"
+													 label="Value-A"
 													 width="180"
 													 height="80"></jumbo-display>
 					</div>
@@ -914,7 +1014,7 @@
 						<jumbo-display id="jumbo-01"
 													 class="jumbo-01"
 													 value="-12.34"
-													 label="AhA!"
+													 label="Value-B"
 													 width="180"
 													 height="80"></jumbo-display>
 					</div>
@@ -1016,7 +1116,8 @@
 									 id="compass-value-01"
 									 placeholder="Heading"
 									 title="True Heading"
-									 style="width: 40px;"/>
+									 style="width: 40px; text-align: right;"
+									 value="45"/>
 						<br/>
 						<button onclick="setData('compass-value-01', 'compass-rose-01')"
 										title="Set True Heading"
@@ -1041,7 +1142,8 @@
 									 id="compass-value-02"
 									 placeholder="Heading"
 									 title="True Heading"
-									 style="width: 40px;"/>
+									 style="width: 40px; text-align: right;"
+									 value="135"/>
 						<br/>
 						<button onclick="setData('compass-value-02', 'compass-rose-02')"
 										title="Set True Heading"
@@ -1068,7 +1170,8 @@
 									 id="compass-value-03"
 									 placeholder="Heading"
 									 title="True Heading"
-									 style="width: 40px;"/>
+									 style="width: 40px; text-align: right;"
+									 value="245"/>
 						<br/>
 						<button onclick="setData('compass-value-03', 'compass-rose-03')"
 										title="Set True Heading"
@@ -1093,7 +1196,8 @@
 									 id="compass-value-04"
 									 placeholder="Heading"
 									 title="True Heading"
-									 style="width: 40px;"/>
+									 style="width: 40px; text-align: right;"
+									 value="315"/>
 						<br/>
 						<button onclick="setData('compass-value-04', 'compass-rose-04')"
 										title="Set True Heading"
@@ -1102,6 +1206,39 @@
 										title="Set True Heading"
 										style="margin-top: 3px;">Animate</button>
 					</div>
+				</td>
+			</tr>
+			<td valign="top">
+				<div class="black-frame centered">
+					<compass-rose id="compass-rose-05"
+												class="gray-flat"
+												title="Heading"
+												value="15"
+												width="500"
+												height="50"></compass-rose>
+				</div>
+				<div class="black-frame centered">
+					Value:
+					<input type="number"
+								 id="compass-value-05"
+								 placeholder="Heading"
+								 title="True Heading"
+								 style="width: 40px; text-align: right;"
+								 value="15"/>
+					<br/>
+					<button onclick="setData('compass-value-05', 'compass-rose-05')"
+									title="Set True Heading"
+									style="margin-top: 3px;">Direct</button>
+					<button onclick="doAnimate('compass-value-05', 'compass-rose-05', 1, true)"
+									title="Set True Heading"
+									style="margin-top: 3px;">Animate</button>
+				</div>
+			</td>
+			<tr>
+				<td colspan="2">
+					Start/Stop Animation
+					<button id="rose-anim-button-cw" onclick="roseAnimation(1);">Clockwise</button>
+					<button id="rose-anim-button-ccw" onclick="roseAnimation(-1);">Counter Clockwise</button>
 				</td>
 			</tr>
 		</table>

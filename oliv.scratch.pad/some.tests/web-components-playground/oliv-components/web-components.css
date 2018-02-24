@@ -341,3 +341,15 @@ compass-rose .cyan {
 	--index-color: cyan;
 	--font: Arial;
 }
+
+compass-rose .gray-flat {
+	--bg-color: black;
+	--digit-color: grey;
+	--with-gradient: true;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: white;
+	--tick-color: darkGray;
+	--value-color: gray;
+	--index-color: grey;
+	--font: Arial;
+}
