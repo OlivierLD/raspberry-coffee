@@ -9,12 +9,13 @@
 	<link rel="stylesheet" href="web-components.css">
 
 	<!-- Firefox does NOT like modules... Safari OK -->
-	<script type="module" src="./Pluviometer.js" async></script>
-	<script type="module" src="./Thermometer.js" async></script>
-	<script type="module" src="./JumboDisplay.js" async></script>
-	<script type="module" src="./DirectionDisplay.js" async></script>
-	<script type="module" src="./AnalogDisplay.js" async></script>
-	<script type="module" src="./CompassRose.js" async></script>
+	<!-- Use 'async' ? -->
+	<script type="module" src="./Pluviometer.js"></script>
+	<script type="module" src="./Thermometer.js"></script>
+	<script type="module" src="./JumboDisplay.js"></script>
+	<script type="module" src="./DirectionDisplay.js"></script>
+	<script type="module" src="./AnalogDisplay.js"></script>
+	<script type="module" src="./CompassRose.js"></script>
 
 	<style>
 		html {
@@ -204,7 +205,7 @@
 		<br/>
 		All the different visual configurations are driven by <i>one</i> stylesheet, <code>web-components.css</code>.
 		<br/>
-		<dl>
+		<dl class="black-frame" style="border: 2px solid cyan;">
 			<dt>Note:</dt>
 			<dd>
 				The stylesheet <code>web-components.css</code> is nothing but an example illustrating <i>some</i> of the widgets' possibilities. Do feel free to

@@ -49,10 +49,11 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released.
 
 - [Jumbo Display](https://codepen.io/OlivierLD/pen/VQyVjy).
+- [Pluviometer](https://codepen.io/OlivierLD/pen/oEPKgg).
 - [Thermometer](https://codepen.io/OlivierLD/pen/KQQEEp).
-- [Direction](https://codepen.io/OlivierLD/pen/bLjwdj)
-- [Analog Display](https://codepen.io/OlivierLD/pen/QQBYEw)
-- [Compass Rose](https://codepen.io/OlivierLD/pen/aqaLQq)
+- [Direction](https://codepen.io/OlivierLD/pen/bLjwdj).
+- [Analog Display](https://codepen.io/OlivierLD/pen/QQBYEw).
+- [Compass Rose](https://codepen.io/OlivierLD/pen/aqaLQq).
 
 ---
 &copy; 2018, by Oliv Soft.
