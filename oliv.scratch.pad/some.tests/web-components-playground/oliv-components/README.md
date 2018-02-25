@@ -1,6 +1,13 @@
 ## Oliv Web Components
 
-To see them at work, start the `node` server from the `web-components-playground` directory, and load `index.html` in a browser:
+_Those components requires absolutely **NO** external library._
+
+They do require a WebComponents-savvy browser though. Most of them are (or will shortly be...).
+
+### Live Demos
+Requires `nodejs` to be available on your system.
+
+To see the components at work, after cloning the repo, start the `node` server _**from the `web-components-playground` directory**_, and load `index.html` in a browser:
 
 ```bash
  $> node server.js
@@ -14,22 +21,22 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 - Direction Display. &#9989; Done
 - Analog Display. &#9989; Done
 - Apparent Wind. TODO
-- Globe and Map. TODO
+- Globe and Map (with `import` and `module`). TODO
 - Compass Rose. &#9989; Done
 - Digital Display. TODO
 - Marquee. TODO
 - Evolution Displays. TODO
 - Graphs. TODO
-- Sky Map and Star Finder. TODO.
+- Sky Map and Star Finder (along with some `REST` service(s)). TODO.
 
 ---
 
 ##### Artifacts
-- Javascript
-- parameters (properties)
-- CSS Rules
-- Examples
-- Animations examples
+- Javascript Modules (careful with Firefox 58 and below...)
+    - defining the component's parameters (properties) and behavior
+- Examples, in `index.html` and on [`CodePen`](http://codepen.io/OlivierLD/).
+    - including animations examples
+- CSS rules and classes (in their own stylesheet, `web-components.css`)
 
 ---
 

@@ -8,21 +8,23 @@
 	<link rel="stylesheet" href="stylesheet.css">
 	<link rel="stylesheet" href="web-components.css">
 
-	<script type="text/javascript" src="Pluviometer.js" async></script>
-	<script type="text/javascript" src="Thermometer.js" async></script>
-	<script type="text/javascript" src="JumboDisplay.js" async></script>
-	<script type="text/javascript" src="DirectionDisplay.js" async></script>
-	<script type="text/javascript" src="AnalogDisplay.js" async></script>
-	<script type="text/javascript" src="CompassRose.js" async></script>
+	<!-- Firefox does NOT like modules... Safari OK -->
+	<script type="module" src="./Pluviometer.js" async></script>
+	<script type="module" src="./Thermometer.js" async></script>
+	<script type="module" src="./JumboDisplay.js" async></script>
+	<script type="module" src="./DirectionDisplay.js" async></script>
+	<script type="module" src="./AnalogDisplay.js" async></script>
+	<script type="module" src="./CompassRose.js" async></script>
 
 	<style>
 		html {
 			height: 100%;
+			background-color: black;
 		}
 
 		body {
 			background-color: black;
-			color: red;
+			color: silver;
 			font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
 			/* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
 			background: radial-gradient(at top, DarkGrey -8%, black 55%);
@@ -997,7 +999,8 @@
 									 id="jumbo-value-02"
 									 placeholder="val"
 									 title="Jumbo"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="-12.34"/>
 						<br/>
 						<button onclick="setData('jumbo-value-02', 'jumbo-02')"
 										title="Set value for the jumbo"
@@ -1025,7 +1028,8 @@
 									 id="jumbo-value-01"
 									 placeholder="val"
 									 title="Jumbo"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="-12.34"/>
 						<br/>
 						<button onclick="setData('jumbo-value-01', 'jumbo-01')"
 										title="Set value for the jumbo"
@@ -1052,7 +1056,8 @@
 									 id="jumbo-value-03"
 									 placeholder="val"
 									 title="Jumbo"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="12.34"/>
 						<br/>
 						<button onclick="setData('jumbo-value-03', 'jumbo-03')"
 										title="Set value for the jumbo"
@@ -1079,7 +1084,8 @@
 									 id="jumbo-value-04"
 									 placeholder="val"
 									 title="Jumbo"
-									 style="width: 50px;"/>
+									 style="width: 50px; text-align: right;"
+									 value="23.45"/>
 						<br/>
 						<button onclick="setData('jumbo-value-04', 'jumbo-04')"
 										title="Set value for the jumbo"
@@ -1095,9 +1101,9 @@
 	</div>
 	<hr/>
 	<!--
-		COMPASS ROSE
+		COMPASS ROSE. CONCAVE.
 	+-->
-	<div style="cursor: pointer;" onclick="showHide('compass-rose');"><b><u>Compass Rose</u></b></div>
+	<div style="cursor: pointer;" onclick="showHide('compass-rose');"><b><u>Compass (concave) Rose</u></b></div>
 	<div id="compass-rose" class="smooth">
 		<table>
 			<tr>
