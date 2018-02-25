@@ -16,6 +16,7 @@
 	<script type="module" src="./DirectionDisplay.js"></script>
 	<script type="module" src="./AnalogDisplay.js"></script>
 	<script type="module" src="./CompassRose.js"></script>
+	<script type="module" src="./WorldMap.js"></script>
 
 	<style>
 		html {
@@ -1251,6 +1252,38 @@
 		</table>
 	</div>
 	<hr/>
+	<!--
+		WORLD MAP
+	+-->
+	<div style="cursor: pointer;" onclick="showHide('world-map');"><b><u>World Map</u></b></div>
+	<div id="world-map" class="smooth">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<world-map id="world-map-01"
+													class="worldmap-display"
+													title="World Map"
+													width="500"
+													height="500"></world-map>
+					</div>
+					<div class="black-frame centered">
+						<button onclick="document.getElementById('world-map-01').setUserPosition({latitude: 37, longitude: -122 }); document.getElementById('world-map-01').repaint();"
+										title="Set True Heading"
+										style="margin-top: 3px;">Pos to SF</button>
+					</div>
+				</td>
+			<tr>
+				<td colspan="1">
+					Start/Stop Animation
+					<!_-button id="rose-anim-button-cw" onclick="roseAnimation(1);">Clockwise</button>
+					<button-- id="rose-anim-button-ccw" onclick="roseAnimation(-1);">Counter Clockwise</button-->
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+
   <span style="font-style: italic;" title="C'est MOI qui l'ai fait.">Oliv did it</span>
 </body>
 </html>

@@ -51,7 +51,7 @@ class Pluviometer extends HTMLElement {
 		this._minor_ticks =   0.25;
 
 		this._previousClassName = "";
-		this.pluviometerColorConfig = pluviometerDefaultColorConfig;
+		this.worldMapColorConfig = pluviometerDefaultColorConfig;
 
 		if (rainVerbose) {
 			console.log("Data in Constructor:", this._value);
@@ -255,7 +255,7 @@ class Pluviometer extends HTMLElement {
 			// Reload
 			//	console.log("Reloading CSS");
 			try {
-				this.pluviometerColorConfig = this.getColorConfig(currentStyle);
+				this.worldMapColorConfig = this.getColorConfig(currentStyle);
 			} catch (err) {
 				// Absorb?
 				console.log(err);
@@ -265,7 +265,7 @@ class Pluviometer extends HTMLElement {
 		}
 
 
-		let digitColor = this.pluviometerColorConfig.scaleColor;
+		let digitColor = this.worldMapColorConfig.scaleColor;
 		let context = this.canvas.getContext('2d');
 
 		if (this.width === 0 || this.height === 0) { // Not visible
@@ -276,7 +276,7 @@ class Pluviometer extends HTMLElement {
 		this.canvas.height = this.height;
 
 		// Cleanup
-		context.fillStyle = this.pluviometerColorConfig.bgColor;
+		context.fillStyle = this.worldMapColorConfig.bgColor;
 		//context.fillStyle = "#ffffff";
 		//context.fillStyle = "LightBlue";
 		//context.fillStyle = "transparent";
@@ -321,20 +321,20 @@ class Pluviometer extends HTMLElement {
 		context.stroke();
 
 		let grd = context.createLinearGradient(0, 5, 0, tubeLength);
-		grd.addColorStop(0, this.pluviometerColorConfig.insideTube.from);
-		grd.addColorStop(1, this.pluviometerColorConfig.insideTube.to);
+		grd.addColorStop(0, this.worldMapColorConfig.insideTube.from);
+		grd.addColorStop(1, this.worldMapColorConfig.insideTube.to);
 		context.fillStyle = grd;
 
-		if (this.pluviometerColorConfig.withShadow) {
+		if (this.worldMapColorConfig.withShadow) {
 			context.shadowOffsetX = 3;
 			context.shadowOffsetY = 3;
 			context.shadowBlur = 3;
-			context.shadowColor = this.pluviometerColorConfig.shadowColor;
+			context.shadowColor = this.worldMapColorConfig.shadowColor;
 		}
 
 		context.lineJoin = "round";
 		context.fill();
-		context.strokeStyle = this.pluviometerColorConfig.tubeOutlineColor; // Tube outline color
+		context.strokeStyle = this.worldMapColorConfig.tubeOutlineColor; // Tube outline color
 		context.stroke();
 		context.closePath();
 
@@ -371,7 +371,7 @@ class Pluviometer extends HTMLElement {
 
 		context.lineJoin = "round";
 		context.fill();
-		context.strokeStyle = this.pluviometerColorConfig.hgOutlineColor;
+		context.strokeStyle = this.worldMapColorConfig.hgOutlineColor;
 		context.stroke();
 		context.closePath();
 
@@ -386,7 +386,7 @@ class Pluviometer extends HTMLElement {
 			context.lineTo(xTo, yTo);
 		}
 		context.lineWidth = 1;
-		context.strokeStyle = this.pluviometerColorConfig.majorTickColor;
+		context.strokeStyle = this.worldMapColorConfig.majorTickColor;
 		context.stroke();
 		context.closePath();
 
@@ -402,7 +402,7 @@ class Pluviometer extends HTMLElement {
 				context.lineTo(xTo, yTo);
 			}
 			context.lineWidth = 1;
-			context.strokeStyle = this.pluviometerColorConfig.minorTickColor;
+			context.strokeStyle = this.worldMapColorConfig.minorTickColor;
 			context.stroke();
 			context.closePath();
 		}
@@ -413,7 +413,7 @@ class Pluviometer extends HTMLElement {
 			xTo = (this.canvas.width / 2) + 20;
 			yTo = bottomTube - ((tubeLength) * ((i - this.minValue) / (this.maxValue - this.minValue)));
 
-			context.font = "bold 10px " + this.pluviometerColorConfig.font;
+			context.font = "bold 10px " + this.worldMapColorConfig.font;
 			context.fillStyle = digitColor;
 			let str = i.toString();
 //		let len = context.measureText(str).width;
@@ -424,15 +424,15 @@ class Pluviometer extends HTMLElement {
 		// Value
 //  this.value = 5.3; // for tests
 		let text = rainValue.toFixed(2);
-		context.font = "bold 12px " + this.pluviometerColorConfig.font;
+		context.font = "bold 12px " + this.worldMapColorConfig.font;
 		let metrics = context.measureText(text);
 		let len = metrics.width;
 
 		context.beginPath();
-		context.fillStyle = this.pluviometerColorConfig.valueColor;
+		context.fillStyle = this.worldMapColorConfig.valueColor;
 		context.fillText(text, (this.canvas.width / 2) - (len / 2), 10);
 		context.lineWidth = 1;
-		context.strokeStyle = this.pluviometerColorConfig.valueOutlineColor;
+		context.strokeStyle = this.worldMapColorConfig.valueOutlineColor;
 		context.strokeText(text, (this.canvas.width / 2) - (len / 2), 10); // Outlined
 		context.closePath();
 	}
