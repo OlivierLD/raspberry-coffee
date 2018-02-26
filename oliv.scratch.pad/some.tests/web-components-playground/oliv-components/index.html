@@ -162,7 +162,9 @@
 					window.clearInterval(directionAnimationInterval);
 					directionAnimationInterval = undefined;
 				} else {
-					directionValue = 0;
+					if (directionValue === undefined) {
+						directionValue = 0;
+					}
 					directionAnimationInterval = window.setInterval(function() {
 						document.getElementById('compass-01').value = directionValue;
 						document.getElementById('compass-02').value = directionValue;
@@ -182,7 +184,9 @@
 				window.clearInterval(roseAnimationInterval);
 				roseAnimationInterval = undefined;
 			} else {
-				roseValue = 0;
+				if (roseValue === undefined) {
+					roseValue = 0;
+				}
 				roseAnimationInterval = window.setInterval(function() {
 					document.getElementById('compass-rose-01').value = roseValue;
 					document.getElementById('compass-rose-02').value = roseValue;
