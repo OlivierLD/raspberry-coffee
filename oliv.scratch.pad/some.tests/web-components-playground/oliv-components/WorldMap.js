@@ -15,7 +15,7 @@ const mapProjections = {
 const tropicLat = 23.43698;
 
 const worldMapDefaultColorConfig = {
-	canvasBackground: "rgba(0, 0, 100, 1.0)",
+	canvasBackground: "rgba(0, 0, 100, 1.0)", // TODO Remove this?
 	defaultPlotPointColor: "red",
 	travelColor: "gray",
 	arrowBodyColor: 'rgba(255, 255, 255, 0.5)',
@@ -832,7 +832,7 @@ class WorldMap extends HTMLElement {
 										colorConfig.globeGradient.from = value;
 										break;
 									case '--globe-gradient-to':
-										colorConfig.globeGradientTo = value;
+										colorConfig.globeGradient.to = value;
 										break;
 									case '--grid-color':
 										colorConfig.gridColor = value;

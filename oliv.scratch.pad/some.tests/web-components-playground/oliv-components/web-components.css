@@ -380,3 +380,30 @@ compass-rose .gray-flat {
 	--night-color: rgba(192, 192, 192, 0.3);
 	--display-position-color: white;
 }
+
+.worldmap-display-02 {
+	--canvas-background: red;
+	--default-plot-point-color: red;
+	--travel-color: gray;
+	--arrow-body-color: rgba(255, 255, 255, 0.5);
+	--globe-background: black;
+	--globe-gradient-from: lightGrey;
+	--globe-gradient-to: white;
+	--grid-color: rgba(244, 246, 246, 1);
+	--tropic-color: LightGrey;
+	--chart-color: grey;
+	--chart-line-width: 1;
+	--user-pos-color: black;
+	--sun-color: yellow;
+	--sun-arrow-color: rgba(255, 255, 0, 0.5);
+	--moon-color: white;
+	--moon-arrowcolor: rgba(255, 255, 255, 0.5);
+	--aries-color: LightGray;
+	--venus-color: orange;
+	--mars-color: red;
+	--jupiter-color: LightPink;
+	--saturn-color: LightYellow;
+	--stars-color: white;
+	--night-color: rgba(192, 192, 192, 0.3);
+	--display-position-color: white;
+}
