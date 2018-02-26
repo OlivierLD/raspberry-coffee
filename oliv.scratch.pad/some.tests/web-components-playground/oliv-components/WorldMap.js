@@ -129,11 +129,11 @@ class WorldMap extends HTMLElement {
 		this._with_grid             = true;
 		this._with_sun              = true;
 		this._with_moon             = true;
-		this._with_sunlight         = true;
-		this._with_moonlight        = true;
-		this._with_wandering_bodies = true;
-		this._with_stars            = true;
-		this._with_tropics          = true;
+		this._with_sunlight         = false;
+		this._with_moonlight        = false;
+		this._with_wandering_bodies = false;
+		this._with_stars            = false;
+		this._with_tropics          = false;
 
 		this._position_label        = "";
 
@@ -367,7 +367,9 @@ class WorldMap extends HTMLElement {
 		return this._shadowRoot;
 	}
 
-	// Component methods
+	/*
+	 * Component methods
+	 */
 	sign(d) {
 		var s = 0;
 		if (d > 0.0) {
@@ -544,6 +546,43 @@ class WorldMap extends HTMLElement {
 	}
 
 	/**
+	 * Get the direction
+	 *
+	 * @param x horizontal displacement
+	 * @param y vertical displacement
+	 * @return the angle, in degrees
+	 */
+	getDir(x, y) {
+		let dir = 0.0;
+		if (y !== 0) {
+			dir = this.toDegrees(Math.atan(x / y));
+		}
+		if (x <= 0 || y <= 0) {
+			if (x > 0 && y < 0) {
+				dir += 180;
+			} else if (x < 0 && y > 0) {
+				dir += 360;
+			} else if (x < 0 && y < 0) {
+				dir += 180;
+			} else if (x === 0) {
+				if (y > 0) {
+					dir = 0.0;
+				} else {
+					dir = 180;
+				}
+			} else if (y === 0) {
+				if (x > 0) {
+					dir = 90;
+				} else {
+					dir = 270;
+				}
+			}
+		}
+		while (dir >= 360) { dir -= 360; }
+		return dir;
+	}
+
+	/**
 	 *
 	 * @param from GeoPoint, L & G in Radians
 	 * @param dist distance in nm
@@ -557,6 +596,91 @@ class WorldMap extends HTMLElement {
 		let finalLng = from.lng + Math.atan2(Math.sin(this.toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
 				Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
 		return ({lat: finalLat, lng: finalLng});
+	}
+
+	drawNight(context, from, user, gha) {
+		const NINETY_DEGREES = 90 * 60; // in nm
+
+		let firstVisible = -1;
+		const VISIBLE = 1;
+		const INVISIBLE = 2;
+		let visibility = 0;
+
+		// context.lineWidth = 1;
+		context.fillStyle = this.worldmapColorConfig.nightColor;
+
+		// find first visible point of the night limb
+		for (let i=0; i<360; i++) {
+			let night = this.deadReckoning(from, NINETY_DEGREES, i);
+			let visible = this.isBehind(night.lat, night.lng - this.toRadians(this.globeViewLngOffset)) ? INVISIBLE : VISIBLE;
+			if (visible === VISIBLE && visibility === INVISIBLE) { // Just became visible
+				firstVisible = i;
+				break;
+			}
+			visibility = visible;
+		}
+
+		context.beginPath();
+		// Night limb
+		let firstPt, lastPt;
+		for (let dir=firstVisible; dir<firstVisible+360; dir++) {
+			let dr = this.deadReckoning(from, NINETY_DEGREES, dir);
+			let borderPt = this.getPanelPoint(this.toDegrees(dr.lat), this.toDegrees(dr.lng));
+			if (dir === firstVisible) {
+				context.moveTo(borderPt.x, borderPt.y);
+				firstPt = borderPt;
+			} else {
+				if (!this.isBehind(dr.lat, dr.lng - this.toRadians(this.globeViewLngOffset))) {
+					lastPt = borderPt;
+					context.lineTo(borderPt.x, borderPt.y);
+				}
+			}
+		}
+		// Earth limb
+		let center = { x: this.width / 2, y: this.height / 2};
+		let startAngle = this.getDir(lastPt.x - center.x, center.y - lastPt.y);
+		let arrivalAngle = this.getDir(firstPt.x - center.x, center.y - firstPt.y);
+
+		let lhaSun = gha + user.longitude;
+		while (lhaSun < 0) { lhaSun += 360; }
+		while (lhaSun > 360) { lhaSun -= 360; }
+
+		let clockwise = true;  // From the bottom
+		if (lhaSun < 90 || lhaSun > 270) {  // Observer in the light
+			clockwise = (lhaSun > 270);
+		} else {                            // Observer in the dark
+			clockwise = (lhaSun > 180);
+		}
+		if ((startAngle > 270 || startAngle < 90) && arrivalAngle > 90 && arrivalAngle < 270) {
+			clockwise = !clockwise;
+		}
+
+		let inc = 1; // Clockwise
+		let firstBoundary, lastBoundary;
+
+		if (clockwise) {
+			firstBoundary = Math.floor(startAngle);
+			lastBoundary = Math.ceil(arrivalAngle);
+			while (lastBoundary < firstBoundary) {
+				lastBoundary += 360;
+			}
+		} else {
+			inc = -1;
+			firstBoundary = Math.ceil(startAngle);
+			lastBoundary = Math.floor(arrivalAngle);
+			while (lastBoundary > firstBoundary) {
+				firstBoundary += 360;
+			}
+		}
+
+		let userPos = { lat: this.toRadians(user.latitude), lng: this.toRadians(user.longitude) };
+		for (let i=firstBoundary; (inc>0 && i<=lastBoundary) || (inc<0 && i>=lastBoundary); i+=inc) {
+			let limb = this.deadReckoning(userPos, NINETY_DEGREES, i);
+			let limbPt = this.getPanelPoint(this.toDegrees(limb.lat), this.toDegrees(limb.lng));
+			context.lineTo(limbPt.x, limbPt.y);
+		}
+		context.closePath();
+		context.fill();
 	}
 
 	/**
@@ -1091,7 +1215,7 @@ class WorldMap extends HTMLElement {
 					// Sunlight
 					if (this.withSunlight) {
 						let from = {lat: this.toRadians(this.astronomicalData.sun.decl), lng: this.toRadians(sunLng)};
-//				drawNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
+						this.drawNight(context, from, this.userPosition, this.astronomicalData.sun.gha);
 					}
 					context.restore();
 				}
@@ -1135,7 +1259,7 @@ class WorldMap extends HTMLElement {
 					// Moonlight
 					if (this.withMoonlight) {
 						let from = {lat: this.toRadians(this.astronomicalData.moon.decl), lng: this.toRadians(moonLng)};
-//					drawNight(canvas, context, from, userPosition, this.astronomicalData.moon.gha);
+						this.drawNight(context, from, this.userPosition, this.astronomicalData.moon.gha);
 					}
 					context.restore();
 				}
