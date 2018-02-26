@@ -150,7 +150,7 @@ class WorldMap extends HTMLElement {
 
 		this.globeViewOffset_X = 0;
 		this.globeViewOffset_Y = 0;
-		this.globeView_ratio = 1;
+		this.globeView_ratio   = 1;
 
 		this._previousClassName = "";
 		this.worldmapColorConfig = worldMapDefaultColorConfig;
@@ -414,6 +414,8 @@ class WorldMap extends HTMLElement {
 	}
 
 	/**
+	 * Can be obtained from a resource like "/astro/positions-in-the-sky?at=2018-02-26T00:49:06&fromL=37.7489&fromG=-122.507"
+	 *
 	 * Angles in degrees
 	 * @param data like described above
 	 */
@@ -753,10 +755,18 @@ class WorldMap extends HTMLElement {
 				let dx = rotated.x;
 				let dy = rotated.y;
 //    console.log("dx:" + dx + ", dy:" + dy);
-				if (dx < minX) { minX = dx; }
-				if (dx > maxX) { maxX = dx; }
-				if (dy < minY) { minY = dy; }
-				if (dy > maxY) { maxY = dy; }
+				if (dx < minX) {
+					minX = dx;
+				}
+				if (dx > maxX) {
+					maxX = dx;
+				}
+				if (dy < minY) {
+					minY = dy;
+				}
+				if (dy > maxY) {
+					maxY = dy;
+				}
 			}
 			gProgress += this.vGrid;
 			if (gProgress > this.east) {
@@ -885,7 +895,7 @@ class WorldMap extends HTMLElement {
 		if (this.withTropics) {
 			// Cancer
 			context.fillStyle = this.worldmapColorConfig.tropicColor;
-			for (let lng = 0; lng<360; lng++) {
+			for (let lng = 0; lng < 360; lng++) {
 				let p = this.getPanelPoint(tropicLat, lng);
 				let thisPointIsBehind = this.isBehind(this.toRadians(tropicLat), this.toRadians(lng - this.globeViewLngOffset));
 
@@ -894,7 +904,7 @@ class WorldMap extends HTMLElement {
 				}
 			}
 			// Capricorn
-			for (let lng = 0; lng<360; lng++) {
+			for (let lng = 0; lng < 360; lng++) {
 				let p = this.getPanelPoint(-tropicLat, lng);
 				let thisPointIsBehind = this.isBehind(this.toRadians(-tropicLat), this.toRadians(lng - this.globeViewLngOffset));
 
@@ -903,7 +913,7 @@ class WorldMap extends HTMLElement {
 				}
 			}
 			// North Polar Circle
-			for (let lng = 0; lng<360; lng++) {
+			for (let lng = 0; lng < 360; lng++) {
 				let p = this.getPanelPoint(90 - tropicLat, lng);
 				let thisPointIsBehind = this.isBehind(this.toRadians(90 - tropicLat), this.toRadians(lng - this.globeViewLngOffset));
 
@@ -912,7 +922,7 @@ class WorldMap extends HTMLElement {
 				}
 			}
 			// South Polar Circle
-			for (let lng = 0; lng<360; lng++) {
+			for (let lng = 0; lng < 360; lng++) {
 				let p = this.getPanelPoint(tropicLat - 90, lng);
 				let thisPointIsBehind = this.isBehind(this.toRadians(tropicLat - 90), this.toRadians(lng - this.globeViewLngOffset));
 
@@ -941,8 +951,12 @@ class WorldMap extends HTMLElement {
 						for (let p = 0; p < point.length; p++) {
 							let lat = parseFloat(point[p].Lat);
 							let lng = parseFloat(point[p].Lng);
-							if (lng < -180) { lng += 360; }
-							if (lng > 180) { lng -= 360; }
+							if (lng < -180) {
+								lng += 360;
+							}
+							if (lng > 180) {
+								lng -= 360;
+							}
 
 							let thisPointIsBehind = this.isBehind(this.toRadians(lat), this.toRadians(lng - this.globeViewLngOffset));
 							let drawIt = true;
@@ -983,135 +997,136 @@ class WorldMap extends HTMLElement {
 			this.plot(context, userPos, this.worldmapColorConfig.userPosColor);
 			context.fillStyle = this.worldmapColorConfig.userPosColor;
 			context.fillText(this.positionLabel, Math.round(userPos.x) + 3, Math.round(userPos.y) - 3);
-		}
-		// Celestial bodies?
-		if (this.astronomicalData !== {}) {
-			if (this.astronomicalData.sun !== undefined && this.withSun) {
-				context.save();
-				let sunLng = this.haToLongitude(this.astronomicalData.sun.gha);
-				let sun = this.getPanelPoint(this.astronomicalData.sun.decl, sunLng);
-				let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.sun.decl), this.toRadians(sunLng - this.globeViewLngOffset));
-				if (!thisPointIsBehind || this.transparentGlobe) {
-					// Draw Sun
-					this.plot(context, sun, this.worldmapColorConfig.sunColor);
-					context.fillStyle = this.worldmapColorConfig.sunColor;
-					context.fillText("Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
-					// Arrow, to the sun
-					context.setLineDash([2]);
-					context.strokeStyle = this.worldmapColorConfig.sunArrowColor;
-					context.beginPath();
-					context.moveTo(userPos.x, userPos.y);
-					context.lineTo(sun.x, sun.y);
-					context.stroke();
-					context.closePath();
-					context.setLineDash([0]); // Reset
-					context.strokeStyle = this.worldmapColorConfig.sunColor;
-					let deltaX = sun.x - userPos.x;
-					let deltaY = sun.y - userPos.y;
-					context.beginPath();
-					context.moveTo(sun.x, sun.y);
-					context.lineTo(sun.x + deltaX, sun.y + deltaY);
-					context.stroke();
-					context.closePath();
-					// if (false) {
-					// 	var img = document.getElementById("sun-png"); // 13x13
-					// 	var direction = getDir(deltaX, -deltaY);
-					// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
-					// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
-					// 	context.drawImage(img, sun.x + deltaX + Math.ceil(imgXOffset), sun.y + deltaY - Math.ceil(imgYOffset));
-					// } else {
-						fillCircle(context, { x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
-					// }
-				}
-				// Route to sun?
-				// context.lineWidth = 1;
-				// context.strokeStyle = "yellow";
-				// drawRhumbline(canvas, context, userPosition, { lat: astronomicalData.sun.decl, lng: sunLng })
-				// Sunlight
-				if (this.withSunlight) {
-					let from = {lat: this.toRadians(this.astronomicalData.sun.decl), lng: this.toRadians(sunLng)};
-//				drawNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
-				}
-				context.restore();
-			}
-			if (this.astronomicalData.moon !== undefined && this.withMoon) {
-				context.save();
-				let moonLng = this.haToLongitude(this.astronomicalData.moon.gha);
-				let moon = this.getPanelPoint(this.astronomicalData.moon.decl, moonLng);
-				let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.moon.decl), this.toRadians(moonLng - this.globeViewLngOffset));
-				if (!thisPointIsBehind || this.transparentGlobe) {
-					// Draw Moon
-					this.plot(context, moon, this.worldmapColorConfig.moonColor);
-					context.fillStyle = this.worldmapColorConfig.moonColor;
-					context.fillText("Moon", Math.round(moon.x) + 3, Math.round(moon.y) - 3);
-					// Arrow, to the moon
-					context.setLineDash([2]);
-					context.strokeStyle = this.worldmapColorConfig.moonArrowColor;
-					context.beginPath();
-					context.moveTo(userPos.x, userPos.y);
-					context.lineTo(moon.x, moon.y);
-					context.stroke();
-					context.closePath();
-					context.setLineDash([0]); // Reset
-					context.strokeStyle = this.worldmapColorConfig.moonColor;
-					var deltaX = moon.x - userPos.x;
-					var deltaY = moon.y - userPos.y;
-					context.beginPath();
-					context.moveTo(moon.x, moon.y);
-					context.lineTo(moon.x + deltaX, moon.y + deltaY);
-					context.stroke();
-					context.closePath();
-					// if (false) {
-					// 	var img = document.getElementById("moon-png");
-					// 	var direction = getDir(deltaX, -deltaY);
-					// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
-					// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
-					// 	context.drawImage(img, moon.x + deltaX + Math.ceil(imgXOffset), moon.y + deltaY - Math.ceil(imgYOffset));
-					// } else {
-						fillCircle(context, { x: moon.x + deltaX, y: moon.y + deltaY}, 5, this.worldmapColorConfig.moonColor);
-					// }
-				}
-				// Moonlight
-				if (this.withMoonlight) {
-					let from = {lat: this.toRadians(this.astronomicalData.moon.decl), lng: this.toRadians(moonLng)};
-					drawNight(canvas, context, from, userPosition, this.astronomicalData.moon.gha);
-				}
-				context.restore();
-			}
-			if (this.astronomicalData.wanderingBodies !== undefined && this.withWanderingBodies) {
-				// 1 - Ecliptic
-				let aries = findInList(astronomicalData.wanderingBodies, "name", "aries");
-				if (aries !== null) {
-					drawEcliptic(canvas, context, aries.gha, astronomicalData.eclipticObliquity);
-					this.positionBody(context, userPos, worldmapColorConfig.ariesColor, "Aries", 0, aries.gha, false);
-					this.positionBody(context, userPos, worldmapColorConfig.ariesColor, "Anti-Aries", 0, aries.gha + 180, false); // Libra?
-				}
-				// 2 - Other planets
-				var venus = findInList(astronomicalData.wanderingBodies, "name", "venus");
-				var mars = findInList(astronomicalData.wanderingBodies, "name", "mars");
-				var jupiter = findInList(astronomicalData.wanderingBodies, "name", "jupiter");
-				var saturn = findInList(astronomicalData.wanderingBodies, "name", "saturn");
-				if (venus !== null) {
-					positionBody(context, userPos, worldmapColorConfig.venusColor, "Venus", venus.decl, venus.gha);
-				}
-				if (mars !== null) {
-					positionBody(context, userPos, worldmapColorConfig.marsColor, "Mars", mars.decl, mars.gha);
-				}
-				if (jupiter !== null) {
-					positionBody(context, userPos, worldmapColorConfig.jupiterColor, "Jupiter", jupiter.decl, jupiter.gha);
-				}
-				if (saturn !== null) {
-					positionBody(context, userPos, worldmapColorConfig.saturnColor, "Saturn", saturn.decl, saturn.gha);
-				}
-			}
 
-			if (this.astronomicalData.stars !== undefined && this.withStars) {
-				this.astronomicalData.stars.forEach(function(star, idx) {
-					this.positionBody(context, userPos, this.worldmapColorConfig.starsColor, star.name, star.decl, star.gha, false, true);
-				});
+			// Celestial bodies?
+			if (this.astronomicalData !== {}) {
+				if (this.astronomicalData.sun !== undefined && this.withSun) {
+					context.save();
+					let sunLng = this.haToLongitude(this.astronomicalData.sun.gha);
+					let sun = this.getPanelPoint(this.astronomicalData.sun.decl, sunLng);
+					let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.sun.decl), this.toRadians(sunLng - this.globeViewLngOffset));
+					if (!thisPointIsBehind || this.transparentGlobe) {
+						// Draw Sun
+						this.plot(context, sun, this.worldmapColorConfig.sunColor);
+						context.fillStyle = this.worldmapColorConfig.sunColor;
+						context.fillText("Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
+						// Arrow, to the sun
+						context.setLineDash([2]);
+						context.strokeStyle = this.worldmapColorConfig.sunArrowColor;
+						context.beginPath();
+						context.moveTo(userPos.x, userPos.y);
+						context.lineTo(sun.x, sun.y);
+						context.stroke();
+						context.closePath();
+						context.setLineDash([0]); // Reset
+						context.strokeStyle = this.worldmapColorConfig.sunColor;
+						let deltaX = sun.x - userPos.x;
+						let deltaY = sun.y - userPos.y;
+						context.beginPath();
+						context.moveTo(sun.x, sun.y);
+						context.lineTo(sun.x + deltaX, sun.y + deltaY);
+						context.stroke();
+						context.closePath();
+						// if (false) {
+						// 	var img = document.getElementById("sun-png"); // 13x13
+						// 	var direction = getDir(deltaX, -deltaY);
+						// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
+						// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
+						// 	context.drawImage(img, sun.x + deltaX + Math.ceil(imgXOffset), sun.y + deltaY - Math.ceil(imgYOffset));
+						// } else {
+						this.fillCircle(context, {x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
+						// }
+					}
+					// Route to sun?
+					// context.lineWidth = 1;
+					// context.strokeStyle = "yellow";
+					// drawRhumbline(canvas, context, userPosition, { lat: astronomicalData.sun.decl, lng: sunLng })
+					// Sunlight
+					if (this.withSunlight) {
+						let from = {lat: this.toRadians(this.astronomicalData.sun.decl), lng: this.toRadians(sunLng)};
+//				drawNight(canvas, context, from, userPosition, astronomicalData.sun.gha);
+					}
+					context.restore();
+				}
+				if (this.astronomicalData.moon !== undefined && this.withMoon) {
+					context.save();
+					let moonLng = this.haToLongitude(this.astronomicalData.moon.gha);
+					let moon = this.getPanelPoint(this.astronomicalData.moon.decl, moonLng);
+					let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.moon.decl), this.toRadians(moonLng - this.globeViewLngOffset));
+					if (!thisPointIsBehind || this.transparentGlobe) {
+						// Draw Moon
+						this.plot(context, moon, this.worldmapColorConfig.moonColor);
+						context.fillStyle = this.worldmapColorConfig.moonColor;
+						context.fillText("Moon", Math.round(moon.x) + 3, Math.round(moon.y) - 3);
+						// Arrow, to the moon
+						context.setLineDash([2]);
+						context.strokeStyle = this.worldmapColorConfig.moonArrowColor;
+						context.beginPath();
+						context.moveTo(userPos.x, userPos.y);
+						context.lineTo(moon.x, moon.y);
+						context.stroke();
+						context.closePath();
+						context.setLineDash([0]); // Reset
+						context.strokeStyle = this.worldmapColorConfig.moonColor;
+						var deltaX = moon.x - userPos.x;
+						var deltaY = moon.y - userPos.y;
+						context.beginPath();
+						context.moveTo(moon.x, moon.y);
+						context.lineTo(moon.x + deltaX, moon.y + deltaY);
+						context.stroke();
+						context.closePath();
+						// if (false) {
+						// 	var img = document.getElementById("moon-png");
+						// 	var direction = getDir(deltaX, -deltaY);
+						// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
+						// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
+						// 	context.drawImage(img, moon.x + deltaX + Math.ceil(imgXOffset), moon.y + deltaY - Math.ceil(imgYOffset));
+						// } else {
+						this.fillCircle(context, {x: moon.x + deltaX, y: moon.y + deltaY}, 5, this.worldmapColorConfig.moonColor);
+						// }
+					}
+					// Moonlight
+					if (this.withMoonlight) {
+						let from = {lat: this.toRadians(this.astronomicalData.moon.decl), lng: this.toRadians(moonLng)};
+//					drawNight(canvas, context, from, userPosition, this.astronomicalData.moon.gha);
+					}
+					context.restore();
+				}
+				if (this.astronomicalData.wanderingBodies !== undefined && this.withWanderingBodies) {
+					// 1 - Ecliptic
+					let aries = findInList(astronomicalData.wanderingBodies, "name", "aries");
+					if (aries !== null) {
+						drawEcliptic(canvas, context, aries.gha, astronomicalData.eclipticObliquity);
+						this.positionBody(context, userPos, worldmapColorConfig.ariesColor, "Aries", 0, aries.gha, false);
+						this.positionBody(context, userPos, worldmapColorConfig.ariesColor, "Anti-Aries", 0, aries.gha + 180, false); // Libra?
+					}
+					// 2 - Other planets
+					var venus = findInList(astronomicalData.wanderingBodies, "name", "venus");
+					var mars = findInList(astronomicalData.wanderingBodies, "name", "mars");
+					var jupiter = findInList(astronomicalData.wanderingBodies, "name", "jupiter");
+					var saturn = findInList(astronomicalData.wanderingBodies, "name", "saturn");
+					if (venus !== null) {
+						positionBody(context, userPos, worldmapColorConfig.venusColor, "Venus", venus.decl, venus.gha);
+					}
+					if (mars !== null) {
+						positionBody(context, userPos, worldmapColorConfig.marsColor, "Mars", mars.decl, mars.gha);
+					}
+					if (jupiter !== null) {
+						positionBody(context, userPos, worldmapColorConfig.jupiterColor, "Jupiter", jupiter.decl, jupiter.gha);
+					}
+					if (saturn !== null) {
+						positionBody(context, userPos, worldmapColorConfig.saturnColor, "Saturn", saturn.decl, saturn.gha);
+					}
+				}
+
+				if (this.astronomicalData.stars !== undefined && this.withStars) {
+					this.astronomicalData.stars.forEach(function (star, idx) {
+						this.positionBody(context, userPos, this.worldmapColorConfig.starsColor, star.name, star.decl, star.gha, false, true);
+					});
+				}
 			}
 		}
-	};
+	}
 
 	drawWorldMap() {
 
@@ -1125,7 +1140,6 @@ class WorldMap extends HTMLElement {
 				// Absorb?
 				console.log(err);
 			}
-
 			this._previousClassName = currentStyle;
 		}
 
@@ -1140,7 +1154,7 @@ class WorldMap extends HTMLElement {
 
 		if (this.projection === mapProjections.globe) {
 			this.drawGlobe(context);
-		}
+		} // TODO else ...
 	}
 }
 
