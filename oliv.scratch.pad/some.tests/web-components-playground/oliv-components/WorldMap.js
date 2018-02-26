@@ -242,6 +242,7 @@ class WorldMap extends HTMLElement {
 				break;
 			case "position-label":
 				this._position_label = newVal;
+				break;
 			default:
 				break;
 		}
