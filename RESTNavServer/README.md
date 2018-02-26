@@ -46,21 +46,21 @@ This clearly divides the problem to address in two distinct parts:
 - The broker (the glue) in-between is relying on the HTTP protocol.
 
 This allows pretty much _any_ device that knows about a network to connect to the Local Area Network (LAN)
-created by the Raspberry PI (or any machine the server runs on) to connect to it and consume the data it produces. 
+created by the Raspberry PI (or any machine the server runs on) to connect to it and consume the data it produces.
 
 The way to go for the front end is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
 Consuming REST services can be done from many frameworks, here we'll use `jQuery`, for its `Promise` (aka `Deferred`) features.
 > The `Promise` aspect might go away, once `EcmaScript6` is more widely supported (in the browsers; it currently requires a transpilation).
 
-For the back end, my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability 
+For the back end, my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability
 and re-usability reasons. I have several other projects (not necessarily dedicated to the Raspberry PI) writen in Java; a `jar` (JAva Archive) generated from those projects can be part of any
-Raspberry PI project as long as it runs on a JVM. 
+Raspberry PI project as long as it runs on a JVM.
 But other options could be considered, the most prominent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
 Front End _and_ the Back End.
 
 Something to think about.
 
-Also, the emergence of container techniques like `Docker` opens the door to other languages, like `Golang`. What's said above about re-usability remains, but this might also be something to take a look at. 
+Also, the emergence of container techniques like `Docker` opens the door to other languages, like `Golang`. What's said above about re-usability remains, but this might also be something to take a look at.
 
 Anyway! For now, the back-end is running on a JVM.
 
@@ -97,7 +97,7 @@ From _any_ device (laptop, tablet, smart-phone) that can run a browser, reach th
 _Your browser needs to support `HTML5` and `CSS3`, but nowadays, less and less browsers do not._
 
 Then you are able to:
-- See the Navigation Console 
+- See the Navigation Console
 - Publish Nautical Almanacs
 - Visualize Tide Curves
 - etc.
@@ -153,13 +153,13 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 ---
 
 ## Various features
-    
+
 **Weather Wizard**:
 
 ![Weather Wizard, early attempt](./docimg/screenshot.08.png)
 
 > A quick note on the Weather Wizard: The faxes can be downloaded from the Internet, from the NOAA web site or its equivalents. At sea, SailMail does the job,
-> I heavily tested it, it does work. 
+> I heavily tested it, it does work.
 >
 > Now, to be able to superimpose faxes as above, you need 2 main things:
 > - turn the white background of the fax into a transparent color
@@ -183,5 +183,5 @@ Faxes and GRIB, together
 - GRIB rendering (in full), coming good.
 - Routing features
 - Use the GRIBs available through [Outernet](https://outernet.is/) (Need more thoughts...) ?
-- Implement visual widgets as `web-components`...
+- Implement visual widgets as `web-components` (see [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/oliv.scratch.pad/some.tests/web-components-playground/oliv-components))...
 

@@ -54,7 +54,7 @@ Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released
 - [Direction](https://codepen.io/OlivierLD/pen/bLjwdj).
 - [Analog Display](https://codepen.io/OlivierLD/pen/QQBYEw).
 - [Compass Rose](https://codepen.io/OlivierLD/pen/aqaLQq).
-- [World Map](https://codepen.io/OlivierLD/pen/xYQbmb)
+- [World Map](https://codepen.io/OlivierLD/pen/xYQbmb).
 
 ---
 &copy; 2018, by Oliv Soft.
