@@ -111,7 +111,7 @@ class WorldMap extends HTMLElement {
 		this.canvas = document.createElement("canvas");
 		this.shadowRoot.appendChild(this.canvas);
 
-		// For tests
+		// For tests of the import
 		// this.dummyDump();
 
 		// Default values
