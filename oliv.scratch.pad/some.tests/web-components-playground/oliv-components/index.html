@@ -203,6 +203,11 @@
 			document.getElementById('world-map-01').repaint();
 		}
 
+		function setTransparency(cb) {
+			document.getElementById('world-map-01').transparentGlobe = (cb.checked ? 'true' : 'false');
+			document.getElementById('world-map-01').repaint();
+		}
+
 	</script>
 </head>
 <body>
@@ -1279,6 +1284,7 @@
 						<button onclick="simulateAstroData();"
 										title="Set True Heading"
 										style="margin-top: 3px;">Pos to SF</button>
+						<input type="checkbox" onchange="setTransparency(this);"/>Transparent
 					</div>
 				</td>
 			<tr>

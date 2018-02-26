@@ -277,7 +277,7 @@ class WorldMap extends HTMLElement {
 		this.setAttribute("projection", val);
 	}
 	set transparentGlobe(val) {
-		this.setAttribute("transparenmt-globe", val);
+		this.setAttribute("transparent-globe", val);
 	}
 	set withGrid(val) {
 		this.setAttribute("with-grid", val);
@@ -512,6 +512,53 @@ class WorldMap extends HTMLElement {
 		}
 	}
 
+	findInList(array, member, value) {
+		for (let idx=0; idx<array.length; idx++) {
+			if (array[idx][member] !== undefined && array[idx][member] === value) {
+				return array[idx];
+			}
+		}
+		return null;
+	}
+
+	drawEcliptic(context, ariesGHA, obl) {
+		let longitude = (ariesGHA < 180) ? -ariesGHA : 360 - ariesGHA;
+		longitude += 90; // Extremum
+		while (longitude > 360) {
+			longitude -= 360;
+		}
+		let aries = { lat: this.toRadians(obl), lng: this.toRadians(longitude) };
+		let eclCenter = this.deadReckoning(aries, 90 * 60, 0); // "Center" of the Ecliptic
+
+		context.fillStyle = this.worldmapColorConfig.tropicColor;
+		for (let hdg=0; hdg<360; hdg++) {
+			let pt = this.deadReckoning(eclCenter, 90 * 60, hdg);
+			let pp = this.getPanelPoint(this.toDegrees(pt.lat), this.toDegrees(pt.lng));
+
+			let thisPointIsBehind = this.isBehind(pt.lat, pt.lng - this.toRadians(this.globeViewLngOffset));
+
+			if (this.transparentGlobe || !thisPointIsBehind) {
+				context.fillRect(pp.x, pp.y, 1, 1);
+			}
+		}
+	}
+
+	/**
+	 *
+	 * @param from GeoPoint, L & G in Radians
+	 * @param dist distance in nm
+	 * @param route route in degrees
+	 * @return DR Position, L & G in Radians
+	 */
+	deadReckoning(from, dist, route) {
+		let radianDistance = this.toRadians(dist / 60);
+		let finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
+				(Math.cos(from.lat) * Math.sin(radianDistance) * Math.cos(this.toRadians(route)))));
+		let finalLng = from.lng + Math.atan2(Math.sin(this.toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
+				Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
+		return ({lat: finalLat, lng: finalLng});
+	}
+
 	/**
 	 * For the Globe projection
 	 *
@@ -594,7 +641,7 @@ class WorldMap extends HTMLElement {
 			}
 			// Arrow, to the body
 			context.setLineDash([2]);
-			context.strokeStyle = worldmapColorConfig.arrowBodyColor;
+			context.strokeStyle = this.worldmapColorConfig.arrowBodyColor;
 			context.beginPath();
 			context.moveTo(userPos.x, userPos.y);
 			context.lineTo(body.x, body.y);
@@ -1094,34 +1141,35 @@ class WorldMap extends HTMLElement {
 				}
 				if (this.astronomicalData.wanderingBodies !== undefined && this.withWanderingBodies) {
 					// 1 - Ecliptic
-					let aries = findInList(astronomicalData.wanderingBodies, "name", "aries");
+					let aries = this.findInList(this.astronomicalData.wanderingBodies, "name", "aries");
 					if (aries !== null) {
-						drawEcliptic(canvas, context, aries.gha, astronomicalData.eclipticObliquity);
-						this.positionBody(context, userPos, worldmapColorConfig.ariesColor, "Aries", 0, aries.gha, false);
-						this.positionBody(context, userPos, worldmapColorConfig.ariesColor, "Anti-Aries", 0, aries.gha + 180, false); // Libra?
+						this.drawEcliptic(context, aries.gha, this.astronomicalData.eclipticObliquity);
+						this.positionBody(context, userPos, this.worldmapColorConfig.ariesColor, "Aries", 0, aries.gha, false);
+						this.positionBody(context, userPos, this.worldmapColorConfig.ariesColor, "Anti-Aries", 0, aries.gha + 180, false); // Libra?
 					}
 					// 2 - Other planets
-					var venus = findInList(astronomicalData.wanderingBodies, "name", "venus");
-					var mars = findInList(astronomicalData.wanderingBodies, "name", "mars");
-					var jupiter = findInList(astronomicalData.wanderingBodies, "name", "jupiter");
-					var saturn = findInList(astronomicalData.wanderingBodies, "name", "saturn");
+					var venus = this.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
+					var mars = this.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
+					var jupiter = this.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
+					var saturn = this.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
 					if (venus !== null) {
-						positionBody(context, userPos, worldmapColorConfig.venusColor, "Venus", venus.decl, venus.gha);
+						this.positionBody(context, userPos, this.worldmapColorConfig.venusColor, "Venus", venus.decl, venus.gha);
 					}
 					if (mars !== null) {
-						positionBody(context, userPos, worldmapColorConfig.marsColor, "Mars", mars.decl, mars.gha);
+						this.positionBody(context, userPos, this.worldmapColorConfig.marsColor, "Mars", mars.decl, mars.gha);
 					}
 					if (jupiter !== null) {
-						positionBody(context, userPos, worldmapColorConfig.jupiterColor, "Jupiter", jupiter.decl, jupiter.gha);
+						this.positionBody(context, userPos, this.worldmapColorConfig.jupiterColor, "Jupiter", jupiter.decl, jupiter.gha);
 					}
 					if (saturn !== null) {
-						positionBody(context, userPos, worldmapColorConfig.saturnColor, "Saturn", saturn.decl, saturn.gha);
+						this.positionBody(context, userPos, this.worldmapColorConfig.saturnColor, "Saturn", saturn.decl, saturn.gha);
 					}
 				}
 
 				if (this.astronomicalData.stars !== undefined && this.withStars) {
+					let instance = this;
 					this.astronomicalData.stars.forEach(function (star, idx) {
-						this.positionBody(context, userPos, this.worldmapColorConfig.starsColor, star.name, star.decl, star.gha, false, true);
+						instance.positionBody(context, userPos, instance.worldmapColorConfig.starsColor, star.name, star.decl, star.gha, false, true);
 					});
 				}
 			}
