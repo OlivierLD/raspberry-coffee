@@ -183,5 +183,5 @@ Faxes and GRIB, together
 - GRIB rendering (in full), coming good.
 - Routing features
 - Use the GRIBs available through [Outernet](https://outernet.is/) (Need more thoughts...) ?
-- Implement visual widgets as `web-components` (see [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/oliv.scratch.pad/some.tests/web-components-playground/oliv-components))...
+- Implement visual widgets as `web-components` (see [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WebComponents/oliv-components))...
 

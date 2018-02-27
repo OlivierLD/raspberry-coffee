@@ -43,7 +43,7 @@ This means that their properties can be dynamically modified once the component 
 
 A `WebComponent` extends `HTMLElement`; as such all the properties of an `HTMLElement` are available on a `WebComponent`
  (such as - see above - `class`, `title`, etc). _Not_ overriding those properties is probably a good idea.
- 
+
 ---
 
 ## Lessons learned
@@ -62,8 +62,8 @@ Works OK (~so-so) if there is only one component, it's a mess otherwise.
 
 ### Good to go
 
-[Oliv's Components](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/oliv.scratch.pad/some.tests/web-components-playground/oliv-components)
+[Oliv's Components](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WebComponents/oliv-components)
 
---- 
+---
 
 More to come...
