@@ -583,6 +583,32 @@ class WorldMap extends HTMLElement {
 		return dir;
 	}
 
+	decToSex(val, ns_ew) {
+		let absVal = Math.abs(val);
+		let intValue = Math.floor(absVal);
+		let dec = absVal - intValue;
+		let i = intValue;
+		dec *= 60;
+//    var s = i + "°" + dec.toFixed(2) + "'";
+//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+		let s = "";
+		if (ns_ew !== undefined) {
+			if (val < 0) {
+				s += (ns_ew === 'NS' ? 'S' : 'W');
+			} else {
+				s += (ns_ew === 'NS' ? 'N' : 'E');
+			}
+			s += " ";
+		} else {
+			if (val < 0) {
+				s += '-'
+			}
+		}
+		s += i + "°" + dec.toFixed(2) + "'";
+
+		return s;
+	}
+
 	/**
 	 *
 	 * @param from GeoPoint, L & G in Radians
@@ -1328,6 +1354,23 @@ class WorldMap extends HTMLElement {
 		if (this.projection === mapProjections.globe) {
 			this.drawGlobe(context);
 		} // TODO else ...
+
+		// Print position
+		if (this.userPosition.latitude !== undefined && this.userPosition.longitude !== undefined) {
+			let strLat = this.decToSex(this.userPosition.latitude, "NS");
+			let strLng = this.decToSex(this.userPosition.longitude, "EW");
+			context.fillStyle = this.worldmapColorConfig.displayPositionColor;
+			context.font = "bold 16px Arial"; // "bold 40px Arial"
+			context.fillText(strLat, 10, 18);
+			context.fillText(strLng, 10, 38);
+		}
+
+		if (this.astronomicalData !== undefined && this.astronomicalData.deltaT !== undefined) {
+			context.fillStyle = this.worldmapColorConfig.displayPositionColor;
+			context.font = "12px Arial"; // "bold 40px Arial"
+			let deltaT = "\u0394T=" + this.astronomicalData.deltaT + " s";
+			context.fillText(deltaT, 10, this.height - 5);
+		}
 	}
 }
 
