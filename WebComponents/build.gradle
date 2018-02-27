@@ -29,8 +29,8 @@ repositories {
 
 minifyJs {
   source = "oliv-components/widgets"
-  dest = file("${buildDir}/all-min.js")
-  sourceMap = file("${buildDir}/all.sourcemap.json")
+  dest = file("oliv-components/minified/all-min.js")
+  sourceMap = file("oliv-components/minified/all.sourcemap.json")
   closure {
     warningLevel = 'QUIET'
     compilerOptions.languageIn = "ECMASCRIPT6"

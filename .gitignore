@@ -49,3 +49,5 @@ C/tools
 snap.jpg
 NMEA.multiplexer/web/leaflet
 Processing/**/*.jar
+.gitignore
+oliv-components/minified/

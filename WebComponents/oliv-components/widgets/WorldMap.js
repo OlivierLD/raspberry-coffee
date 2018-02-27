@@ -44,7 +44,8 @@ const worldMapDefaultColorConfig = {
 };
 
 /* The map data */
-import fullWorldMap from "./world.map/worldmap.data.js"; // minifyJs does NOT like the .js extension
+// import fullWorldMap from "./world.map/worldmap.data.js";
+import fullWorldMap from "./world.map/worldmap.data"; // minifyJs does NOT like the .js extension
 
 // TODO Callbacks (before and after drawing)
 
@@ -1198,47 +1199,49 @@ class WorldMap extends HTMLElement {
 
 			// Celestial bodies?
 			if (this.astronomicalData !== {}) {
-				if (this.astronomicalData.sun !== undefined && this.withSun) {
-					context.save();
+				if (this.astronomicalData.sun !== undefined) {
 					let sunLng = this.haToLongitude(this.astronomicalData.sun.gha);
-					let sun = this.getPanelPoint(this.astronomicalData.sun.decl, sunLng);
-					let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.sun.decl), this.toRadians(sunLng - this.globeViewLngOffset));
-					if (!thisPointIsBehind || this.transparentGlobe) {
-						// Draw Sun
-						this.plot(context, sun, this.worldmapColorConfig.sunColor);
-						context.fillStyle = this.worldmapColorConfig.sunColor;
-						context.fillText("Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
-						// Arrow, to the sun
-						context.setLineDash([2]);
-						context.strokeStyle = this.worldmapColorConfig.sunArrowColor;
-						context.beginPath();
-						context.moveTo(userPos.x, userPos.y);
-						context.lineTo(sun.x, sun.y);
-						context.stroke();
-						context.closePath();
-						context.setLineDash([0]); // Reset
-						context.strokeStyle = this.worldmapColorConfig.sunColor;
-						let deltaX = sun.x - userPos.x;
-						let deltaY = sun.y - userPos.y;
-						context.beginPath();
-						context.moveTo(sun.x, sun.y);
-						context.lineTo(sun.x + deltaX, sun.y + deltaY);
-						context.stroke();
-						context.closePath();
-						// if (false) {
-						// 	var img = document.getElementById("sun-png"); // 13x13
-						// 	var direction = getDir(deltaX, -deltaY);
-						// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
-						// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
-						// 	context.drawImage(img, sun.x + deltaX + Math.ceil(imgXOffset), sun.y + deltaY - Math.ceil(imgYOffset));
-						// } else {
-						this.fillCircle(context, {x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
-						// }
+					context.save();
+					if (this.withSun) {
+						let sun = this.getPanelPoint(this.astronomicalData.sun.decl, sunLng);
+						let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.sun.decl), this.toRadians(sunLng - this.globeViewLngOffset));
+						if (!thisPointIsBehind || this.transparentGlobe) {
+							// Draw Sun
+							this.plot(context, sun, this.worldmapColorConfig.sunColor);
+							context.fillStyle = this.worldmapColorConfig.sunColor;
+							context.fillText("Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
+							// Arrow, to the sun
+							context.setLineDash([2]);
+							context.strokeStyle = this.worldmapColorConfig.sunArrowColor;
+							context.beginPath();
+							context.moveTo(userPos.x, userPos.y);
+							context.lineTo(sun.x, sun.y);
+							context.stroke();
+							context.closePath();
+							context.setLineDash([0]); // Reset
+							context.strokeStyle = this.worldmapColorConfig.sunColor;
+							let deltaX = sun.x - userPos.x;
+							let deltaY = sun.y - userPos.y;
+							context.beginPath();
+							context.moveTo(sun.x, sun.y);
+							context.lineTo(sun.x + deltaX, sun.y + deltaY);
+							context.stroke();
+							context.closePath();
+							// if (false) {
+							// 	var img = document.getElementById("sun-png"); // 13x13
+							// 	var direction = getDir(deltaX, -deltaY);
+							// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
+							// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
+							// 	context.drawImage(img, sun.x + deltaX + Math.ceil(imgXOffset), sun.y + deltaY - Math.ceil(imgYOffset));
+							// } else {
+							this.fillCircle(context, {x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
+							// }
+						}
+						// Route to sun?
+						// context.lineWidth = 1;
+						// context.strokeStyle = "yellow";
+						// drawRhumbline(canvas, context, userPosition, { lat: astronomicalData.sun.decl, lng: sunLng })
 					}
-					// Route to sun?
-					// context.lineWidth = 1;
-					// context.strokeStyle = "yellow";
-					// drawRhumbline(canvas, context, userPosition, { lat: astronomicalData.sun.decl, lng: sunLng })
 					// Sunlight
 					if (this.withSunlight) {
 						let from = {lat: this.toRadians(this.astronomicalData.sun.decl), lng: this.toRadians(sunLng)};
@@ -1246,42 +1249,44 @@ class WorldMap extends HTMLElement {
 					}
 					context.restore();
 				}
-				if (this.astronomicalData.moon !== undefined && this.withMoon) {
-					context.save();
+				if (this.astronomicalData.moon !== undefined) {
 					let moonLng = this.haToLongitude(this.astronomicalData.moon.gha);
-					let moon = this.getPanelPoint(this.astronomicalData.moon.decl, moonLng);
-					let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.moon.decl), this.toRadians(moonLng - this.globeViewLngOffset));
-					if (!thisPointIsBehind || this.transparentGlobe) {
-						// Draw Moon
-						this.plot(context, moon, this.worldmapColorConfig.moonColor);
-						context.fillStyle = this.worldmapColorConfig.moonColor;
-						context.fillText("Moon", Math.round(moon.x) + 3, Math.round(moon.y) - 3);
-						// Arrow, to the moon
-						context.setLineDash([2]);
-						context.strokeStyle = this.worldmapColorConfig.moonArrowColor;
-						context.beginPath();
-						context.moveTo(userPos.x, userPos.y);
-						context.lineTo(moon.x, moon.y);
-						context.stroke();
-						context.closePath();
-						context.setLineDash([0]); // Reset
-						context.strokeStyle = this.worldmapColorConfig.moonColor;
-						var deltaX = moon.x - userPos.x;
-						var deltaY = moon.y - userPos.y;
-						context.beginPath();
-						context.moveTo(moon.x, moon.y);
-						context.lineTo(moon.x + deltaX, moon.y + deltaY);
-						context.stroke();
-						context.closePath();
-						// if (false) {
-						// 	var img = document.getElementById("moon-png");
-						// 	var direction = getDir(deltaX, -deltaY);
-						// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
-						// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
-						// 	context.drawImage(img, moon.x + deltaX + Math.ceil(imgXOffset), moon.y + deltaY - Math.ceil(imgYOffset));
-						// } else {
-						this.fillCircle(context, {x: moon.x + deltaX, y: moon.y + deltaY}, 5, this.worldmapColorConfig.moonColor);
-						// }
+					context.save();
+					if (this.withMoon) {
+						let moon = this.getPanelPoint(this.astronomicalData.moon.decl, moonLng);
+						let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.moon.decl), this.toRadians(moonLng - this.globeViewLngOffset));
+						if (!thisPointIsBehind || this.transparentGlobe) {
+							// Draw Moon
+							this.plot(context, moon, this.worldmapColorConfig.moonColor);
+							context.fillStyle = this.worldmapColorConfig.moonColor;
+							context.fillText("Moon", Math.round(moon.x) + 3, Math.round(moon.y) - 3);
+							// Arrow, to the moon
+							context.setLineDash([2]);
+							context.strokeStyle = this.worldmapColorConfig.moonArrowColor;
+							context.beginPath();
+							context.moveTo(userPos.x, userPos.y);
+							context.lineTo(moon.x, moon.y);
+							context.stroke();
+							context.closePath();
+							context.setLineDash([0]); // Reset
+							context.strokeStyle = this.worldmapColorConfig.moonColor;
+							var deltaX = moon.x - userPos.x;
+							var deltaY = moon.y - userPos.y;
+							context.beginPath();
+							context.moveTo(moon.x, moon.y);
+							context.lineTo(moon.x + deltaX, moon.y + deltaY);
+							context.stroke();
+							context.closePath();
+							// if (false) {
+							// 	var img = document.getElementById("moon-png");
+							// 	var direction = getDir(deltaX, -deltaY);
+							// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
+							// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
+							// 	context.drawImage(img, moon.x + deltaX + Math.ceil(imgXOffset), moon.y + deltaY - Math.ceil(imgYOffset));
+							// } else {
+							this.fillCircle(context, {x: moon.x + deltaX, y: moon.y + deltaY}, 5, this.worldmapColorConfig.moonColor);
+							// }
+						}
 					}
 					// Moonlight
 					if (this.withMoonlight) {
