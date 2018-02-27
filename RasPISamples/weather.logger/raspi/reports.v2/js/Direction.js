@@ -2,7 +2,7 @@
  * @author Olivier Le Diouris
  */
 
-var directionColorConfigWhite = 
+var directionColorConfigWhite =
 {
   bgColor:           'white',
   digitColor:        'black',
@@ -24,7 +24,7 @@ var directionColorConfigWhite =
   font:              'Arial' /* 'Source Code Pro' */
 };
 
-var directionColorConfigBlack = 
+var directionColorConfigBlack =
 {
   bgColor:           'black',
   digitColor:        'cyan',
@@ -44,7 +44,7 @@ var directionColorConfigBlack =
   knobOutlineColor:  'blue',
   font:              'Arial'
 };
-var directionColorConfig = directionColorConfigWhite; 
+var directionColorConfig = directionColorConfigWhite;
 
 function Direction(cName, dSize, majorTicks, minorTicks, withRose)
 {
@@ -67,24 +67,24 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
   this.incr = 1;
   this.busy = false;
   var withBorder = true;
-  
+
   var instance = this;
-  
+
 //try { console.log('in the Direction constructor for ' + cName + " (" + dSize + ")"); } catch (e) {}
-  
+
   this.setDisplaySize = function(ds)
   {
     scale = ds / 100;
     displaySize = ds;
     this.drawDisplay(canvasName, displaySize, instance.previousValue);
   };
-  
-  this.setBorder = function(b) 
+
+  this.setBorder = function(b)
   {
     withBorder = b;
   };
 
-  this.startStop = function (buttonName) 
+  this.startStop = function (buttonName)
   {
 //  console.log('StartStop requested on ' + buttonName);
     var button = document.getElementById(buttonName);
@@ -92,7 +92,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
     button.value = (running ? "Stop" : "Start");
     if (running)
       this.animate();
-    else 
+    else
     {
       window.clearInterval(this.intervalID);
       this.intervalID = 0;
@@ -109,9 +109,9 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
       num -= 360;
     return num;
   };
-  
+
   this.animate = function()
-  {    
+  {
     var value;
     if (arguments.length === 1)
       value = arguments[0];
@@ -132,17 +132,17 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
       diff = value - on360(this.previousValue);
     }
     this.valueToDisplay = on360(this.previousValue);
-    
+
 //  console.log(canvasName + " going from " + this.previousValue + " to " + value);
-    
+
     this.incr = diff / 10;
 //    if (diff < 0)
 //      incr *= -1;
     if (this.intervalID && this.intervalID !== 0)
       window.clearInterval(this.intervalID);
-    if (this.incr !== 0 && !this.busy)  
+    if (this.incr !== 0 && !this.busy)
     {
-      if (canvasName === 'twdCanvas')    
+      if (canvasName === 'twdCanvas')
         console.log('Starting animation between ' + this.previousValue + ' and ' + value + ', step ' + this.incr);
       this.busy = true;
       this.intervalID = window.setTimeout(function () { instance.displayAndIncrement(value); }, 50);
@@ -154,12 +154,12 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
   {
     return Math.PI * d / 180;
   };
-  
+
   var toDegrees = function(d)
   {
     return d * 180 / Math.PI;
-  };    
-  
+  };
+
   this.displayAndIncrement = function(finalValue)
   {
     //console.log('Tic ' + inc + ', ' + finalValue);
@@ -204,32 +204,37 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
 
   this.drawDisplay = function(displayCanvasName, displayRadius, displayValue)
   {
-    var schemeColor = getStyleRuleValue('color', '.display-scheme');
+    try {
+	    var schemeColor = getStyleRuleValue('color', '.display-scheme');
 //  console.log(">>> DEBUG >>> color:" + schemeColor);
-    if (schemeColor === 'black')
-      directionColorConfig = directionColorConfigBlack;
-    else if (schemeColor === 'white')
-      directionColorConfig = directionColorConfigWhite;
+	    if (schemeColor === 'black') {
+		    directionColorConfig = directionColorConfigBlack;
+	    } else if (schemeColor === 'white') {
+		    directionColorConfig = directionColorConfigWhite;
+	    }
+    } catch (err) {
+      console.log(err);
+    }
 
     var digitColor = directionColorConfig.digitColor;
-    
+
     var canvas = document.getElementById(displayCanvasName);
     var context = canvas.getContext('2d');
 
     var radius = displayRadius;
-  
+
     // Cleanup
   //context.fillStyle = "#ffffff";
     context.fillStyle = directionColorConfig.bgColor;
 //  context.fillStyle = "transparent";
-    context.fillRect(0, 0, canvas.width, canvas.height);    
+    context.fillRect(0, 0, canvas.width, canvas.height);
   //context.fillStyle = 'rgba(255, 255, 255, 0.0)';
-  //context.fillRect(0, 0, canvas.width, canvas.height);    
-  
+  //context.fillRect(0, 0, canvas.width, canvas.height);
+
     context.beginPath();
     if (withBorder === true)
     {
-    //context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);      
+    //context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);
       context.arc(canvas.width / 2, radius + 10, radius, 0, 2 * Math.PI, false);
       context.lineWidth = 5;
     }
@@ -242,7 +247,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
     }
     else
       context.fillStyle = directionColorConfig.displayBackgroundGradient.to;
-    
+
     if (directionColorConfig.withDisplayShadow)
     {
       context.shadowOffsetX = 3;
@@ -255,7 +260,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
     context.strokeStyle = directionColorConfig.outlineColor;
     context.stroke();
     context.closePath();
-    
+
     // Major Ticks
     context.beginPath();
     for (i = 0;i < 360 ;i+=majorTicks)
@@ -271,7 +276,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
     context.strokeStyle = directionColorConfig.majorTickColor;
     context.stroke();
     context.closePath();
-  
+
     // Minor Ticks
     if (minorTicks > 0)
     {
@@ -290,7 +295,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
       context.stroke();
       context.closePath();
     }
-    
+
     // with rose?
     if (withRose === true)
     {
@@ -314,35 +319,35 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
       var NW = (315 + 90) % 360;
       var SW = (225 + 90) % 360;
 
-      // N-S 
+      // N-S
       xFrom = (canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (N / 360)));
       yFrom = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (N / 360)));
       xTo   = (canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (S / 360)));
       yTo   = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (S / 360)));
       context.moveTo(xFrom, yFrom);
       context.lineTo(xTo, yTo);
-      // E-W 
+      // E-W
       xFrom = (canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (E / 360)));
       yFrom = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (E / 360)));
       xTo   = (canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (W / 360)));
       yTo   = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (W / 360)));
       context.moveTo(xFrom, yFrom);
       context.lineTo(xTo, yTo);
-      // NE-SW 
+      // NE-SW
       xFrom = (canvas.width / 2) - (outsideRadius * 0.9 * Math.cos(2 * Math.PI * (NE / 360)));
       yFrom = (radius + 10) - (outsideRadius * 0.9 * Math.sin(2 * Math.PI * (NE / 360)));
       xTo   = (canvas.width / 2) - (outsideRadius * 0.9 * Math.cos(2 * Math.PI * (SW / 360)));
       yTo   = (radius + 10) - (outsideRadius * 0.9 * Math.sin(2 * Math.PI * (SW / 360)));
       context.moveTo(xFrom, yFrom);
       context.lineTo(xTo, yTo);
-      // NW-SE 
+      // NW-SE
       xFrom = (canvas.width / 2) - (outsideRadius * 0.9 * Math.cos(2 * Math.PI * (NW / 360)));
       yFrom = (radius + 10) - (outsideRadius * 0.9 * Math.sin(2 * Math.PI * (NW / 360)));
       xTo   = (canvas.width / 2) - (outsideRadius * 0.9 * Math.cos(2 * Math.PI * (SE / 360)));
       yTo   = (radius + 10) - (outsideRadius * 0.9 * Math.sin(2 * Math.PI * (SE / 360)));
       context.moveTo(xFrom, yFrom);
       context.lineTo(xTo, yTo);
-      
+
       this.drawSpike(canvas, radius, outsideRadius, insideRadius, N, context);
       this.drawSpike(canvas, radius, outsideRadius, insideRadius, S, context);
       this.drawSpike(canvas, radius, outsideRadius, insideRadius, E, context);
@@ -372,7 +377,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
       context.fillText(str, - len / 2, (-(radius * .8) + 10));
       context.lineWidth = 1;
       context.strokeStyle = directionColorConfig.valueOutlineColor;
-      context.strokeText(str, - len / 2, (-(radius * .8) + 10)); // Outlined  
+      context.strokeText(str, - len / 2, (-(radius * .8) + 10)); // Outlined
       context.restore();
     }
     context.closePath();
@@ -385,15 +390,15 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
     context.font = "bold " + Math.round(scale * 40) + "px " + directionColorConfig.font; // "bold 40px Arial"
     var metrics = context.measureText(text);
     len = metrics.width;
-  
+
     context.beginPath();
     context.fillStyle = directionColorConfig.valueColor;
     context.fillText(text, (canvas.width / 2) - (len / 2), ((radius * .75) + 10));
     context.lineWidth = 1;
     context.strokeStyle = directionColorConfig.valueOutlineColor;
-    context.strokeText(text, (canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined  
+    context.strokeText(text, (canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined
     context.closePath();
-  
+
     // Hand
     context.beginPath();
     if (directionColorConfig.withHandShadow)
@@ -417,7 +422,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
     x = (canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (displayValue / 360) + (2 * Math.PI / 2))));
     y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (displayValue / 360) + (2 * Math.PI / 2))));
     context.lineTo(x, y);
-  
+
     context.closePath();
     context.fillStyle = directionColorConfig.handColor;
     context.fill();
@@ -437,7 +442,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
   this.drawSpike = function(canvas, radius, outsideRadius, insideRadius, angle, context) {
       var xFrom = (canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (angle / 360)));
       var yFrom = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (angle / 360)));
-      // 
+      //
       var xTo = (canvas.width / 2) - (insideRadius * Math.cos(2 * Math.PI * ((angle - 90)/ 360)));
       var yTo = (radius + 10) - (insideRadius * Math.sin(2 * Math.PI * ((angle - 90) / 360)));
       context.moveTo(xFrom, yFrom);
@@ -449,7 +454,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose)
       context.lineTo(xTo, yTo);
 
   };
-  
+
   this.setValue = function(val)
   {
     instance.drawDisplay(canvasName, displaySize, val);

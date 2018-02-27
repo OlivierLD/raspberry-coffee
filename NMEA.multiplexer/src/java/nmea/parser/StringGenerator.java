@@ -20,6 +20,7 @@ public class StringGenerator {
 	private final static NumberFormat LAT_DEG_FMT = new DecimalFormat("00");
 	private final static NumberFormat LONG_DEG_FMT = new DecimalFormat("000");
 	private final static NumberFormat MIN_FMT = new DecimalFormat("00.000");
+	private final static NumberFormat MIN_FMT_2 = new DecimalFormat("00.00");
 	private final static NumberFormat OG_FMT = new DecimalFormat("000.0");
 	private final static NumberFormat TEMP_FMT = new DecimalFormat("#0.0");
 	private final static NumberFormat PRMSL_FMT = new DecimalFormat("##0.0000");
@@ -378,6 +379,52 @@ public class StringGenerator {
 		return "$" + mwd;
 	}
 
+	/* GLL Structure is
+	 *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A*hh
+	 *         |       | |       | |         |
+	 *         |       | |       | |         A:data valid
+	 *         |       | |       | UTC of position
+	 *         |       | |       Long sign :E/W
+	 *         |       | Longitude
+	 *         |       Lat sign :N/S
+	 *         Latitude
+	 */
+	public static String generateGLL(String devicePrefix, double lat, double lng) {
+		return generateGLL(devicePrefix, lat, lng, -1L);
+	}
+	public static String generateGLL(String devicePrefix, double lat, double lng, long epoch) {
+		String gll = devicePrefix + "GLL,";
+		double absLat = Math.abs(lat);
+		String latStr = LAT_DEG_FMT.format((int)absLat) +
+										MIN_FMT_2.format(60 * (absLat - ((int)absLat))) +
+										"," +
+										(lat < 0 ? "S" : "N");
+		gll += latStr;
+		gll += ",";
+		double absLng = Math.abs(lng);
+		String lngStr = LONG_DEG_FMT.format((int)absLng) +
+										MIN_FMT_2.format(60 * (absLng - ((int)absLng))) +
+										"," +
+										(lng < 0 ? "W" : "E");
+		gll += lngStr;
+		gll += ",";
+		if (epoch != -1) {
+			Date utc = new Date(epoch);
+			String strUTC = SDF_DATETIME.format(utc); // "20170623194037.845"
+			//                                            Y   M D H M S
+			//                                            012345678901234567
+			//                                            0         1
+			gll += strUTC.substring(8, 17); // Time
+		}
+
+		gll += ",A";
+
+		int cs = StringParsers.calculateCheckSum(gll);
+		gll += ("*" + StringUtils.lpad(Integer.toString(cs, 16).toUpperCase(), 2, "0"));
+
+		return "$" + gll;
+	}
+
 	public static String generateRMC(String devicePrefix, Date date, double lat, double lng, double sog, double cog, double d) {
 		String rmc = devicePrefix + "RMC,";
 		rmc += (SDF_TIME.format(date) + ",");
@@ -588,5 +635,11 @@ public class StringGenerator {
 		System.out.println(zda);
 		UTCDate utc = StringParsers.parseZDA(zda);
 		System.out.println("ZDA:" + utc.toString());
+
+		String gll = generateGLL("XX", 37.7489, -122.5070, System.currentTimeMillis());
+		System.out.println(gll);
+		Object[] parsedGLL = StringParsers.parseGLL(gll);
+		GeoPos ll = (GeoPos)parsedGLL[0];
+		System.out.println(String.format(">> Pos %s", ll.toString()));
 	}
 }

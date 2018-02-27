@@ -216,13 +216,16 @@ function AnalogDisplay(cName,                     // Canvas Name
 
   function drawDisplay(displayCanvasName, displayRadius, displayValue)
   {
-    var schemeColor = getStyleRuleValue('color', '.display-scheme');
-//  console.log(">>> DEBUG >>> color:" + schemeColor);
-    if (schemeColor === 'black')
-      analogDisplayColorConfig = analogDisplayColorConfigBlack;
-    else if (schemeColor === 'white')
-      analogDisplayColorConfig = analogDisplayColorConfigWhite;
-
+    try {
+	    var schemeColor = getStyleRuleValue('color', '.display-scheme');
+	    if (schemeColor === 'black') {
+		    analogDisplayColorConfig = analogDisplayColorConfigBlack;
+	    } else if (schemeColor === 'white') {
+		    analogDisplayColorConfig = analogDisplayColorConfigWhite;
+	    }
+    } catch (err) {
+      console.log(err);
+    }
     var digitColor = analogDisplayColorConfig.digitColor;
 
     var canvas = document.getElementById(displayCanvasName);

@@ -1,7 +1,8 @@
 object Fractions {
 
   def main(args:Array[String]):Unit = {
-    val num = Math.PI  // 3.1415926
+//  val num = Math.PI  // 3.1415926
+    val num = 0.515625
     val dec = num.toString.length - num.toString.indexOf('.')
     val den = Math.pow(10, dec).asInstanceOf[Long]
     val frac = reduce((num * den).asInstanceOf[Long], den)

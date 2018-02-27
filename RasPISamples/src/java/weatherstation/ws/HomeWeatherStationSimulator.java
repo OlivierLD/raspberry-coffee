@@ -17,7 +17,7 @@ public class HomeWeatherStationSimulator {
 	public static void main(String... args) throws Exception {
 		final Thread coreThread = Thread.currentThread();
 		WebSocketFeeder wsf = null; // new WebSocketFeeder();
-		if ("true".equals(System.getProperty("ws.log"))) {
+		if ("true".equals(System.getProperty("ws.log"))) { // ws stands for WebSocket (NOT Weather Station)
 			// Uses -Dws.uri
 			wsf = new WebSocketFeeder();
 		}
@@ -117,7 +117,9 @@ public class HomeWeatherStationSimulator {
 				ex.printStackTrace();
 			}
 		}
-		wsf.shutdown();
+		if (wsf != null) {
+			wsf.shutdown();
+		}
 		System.out.println("Done.");
 	}
 

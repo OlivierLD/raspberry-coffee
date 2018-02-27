@@ -182,17 +182,21 @@
   };
 
   var resetTWBuffer = function() {
-    if (twdEvolution !== undefined)
-      twdEvolution.resetTWD();
-    if (twsEvolution !== undefined)
-      twsEvolution.resetTWS();
+    if (twdEvolution !== undefined) {
+	    twdEvolution.resetTWD();
+    }
+    if (twsEvolution !== undefined) {
+	    twsEvolution.resetTWS();
+    }
   };
 
   var resetTW2Buffer = function() {
-    if (twdEvolution !== undefined)
-      twdEvolution.reset2TWD();
-    if (twsEvolution !== undefined)
-      twsEvolution.reset2TWS();
+    if (twdEvolution !== undefined) {
+	    twdEvolution.reset2TWD();
+    }
+    if (twsEvolution !== undefined) {
+	    twsEvolution.reset2TWS();
+    }
   };
 
   var handleRadioValue = function(radio) {

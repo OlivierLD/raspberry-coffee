@@ -39,3 +39,4 @@ include 'RESTImageProcessor'
 include "RESTRouting"
 include "RESTCam"
 include "Camera"
+include "WebComponents"

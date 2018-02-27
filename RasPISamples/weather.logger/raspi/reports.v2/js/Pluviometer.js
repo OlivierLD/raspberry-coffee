@@ -117,25 +117,31 @@ function Pluviometer(cName, minValue, maxValue, majorTicks, minorTicks) {
 		}
 	};
 
-	function drawDisplay(displayCanvasName, displayValue) {
-		var schemeColor;
-		try {
-			schemeColor = getCSSClass(".display-scheme");
-		} catch (err) {
-		}
-		if (schemeColor !== undefined && schemeColor !== null) {
-			var styleElements = schemeColor.split(";");
-			for (var i = 0; i < styleElements.length; i++) {
-				var nv = styleElements[i].split(":");
-				if ("color" === nv[0]) {
-//        console.log("Scheme Color:[" + nv[1].trim() + "]");
-					if (nv[1].trim() === 'black') {
-						pluviometerColorConfig = pluviometerColorConfigBlack;
-					} else if (nv[1].trim() === 'white') {
-						pluviometerColorConfig = pluviometerColorConfigWhite;
-					}
+	function getStyleRuleValue(style, selector, sheet) {
+		var sheets = typeof sheet !== 'undefined' ? [sheet] : document.styleSheets;
+		for (var i = 0, l = sheets.length; i < l; i++) {
+			var sheet = sheets[i];
+			if (!sheet.cssRules) { continue; }
+			for (var j = 0, k = sheet.cssRules.length; j < k; j++) {
+				var rule = sheet.cssRules[j];
+				if (rule.selectorText && rule.selectorText.split(',').indexOf(selector) !== -1) {
+					return rule.style[style];
 				}
 			}
+		}
+		return null;
+	};
+
+	function drawDisplay(displayCanvasName, displayValue) {
+		try {
+			var schemeColor = getStyleRuleValue('color', '.display-scheme');
+			if (schemeColor === 'black') {
+				pluviometerColorConfig = pluviometerColorConfigBlack;
+			} else if (schemeColor === 'white') {
+				pluviometerColorConfig = pluviometerColorConfigWhite;
+			}
+		} catch (err) {
+			console.log(err);
 		}
 
 		var digitColor = pluviometerColorConfig.scaleColor;

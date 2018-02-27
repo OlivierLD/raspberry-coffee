@@ -1305,7 +1305,7 @@ public class StringParsers {
 			return null;
 		}
 		s = s.substring(0, s.indexOf("*"));
-    /* Structure is
+    /* RMC Structure is
      *         1      2 3        4 5         6 7     8     9      10    11
      *  $GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A
      *         |      | |        | |         | |     |     |      |     |

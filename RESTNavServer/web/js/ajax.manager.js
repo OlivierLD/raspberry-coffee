@@ -1,5 +1,6 @@
 /*
  * @author Olivier Le Diouris
+ * Uses jQuery Deferreds
  */
 var initAjax = function () {
 	var interval = setInterval(function () {

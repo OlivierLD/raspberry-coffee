@@ -36,7 +36,7 @@ public class TCPServer implements Forwarder {
 
 	@Override
 	public void write(byte[] message) {
-		List<Socket> toRemove = new ArrayList<Socket>();
+		List<Socket> toRemove = new ArrayList<>();
 		synchronized( clientSocketlist) {
 			clientSocketlist.stream().forEach(tcpSocket -> { // TODO Synchronize the stream?
 				synchronized (tcpSocket) {
