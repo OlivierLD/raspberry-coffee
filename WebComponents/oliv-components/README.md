@@ -24,10 +24,15 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 - Globe and Map (with `import` and `module`). &#10140; WIP
 - Compass Rose. &#9989; Done
 - Digital Display. TODO
+- Date and Time display. TODO
 - Marquee. TODO
 - Evolution Displays. TODO
 - Graphs. TODO
 - Sky Map and Star Finder (along with some `REST` service(s)). TODO.
+- Satellite plotter?
+- Tide Graph?
+- Current Display?
+- Boat Overview?
 
 ---
 
