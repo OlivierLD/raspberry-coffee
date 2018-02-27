@@ -1,0 +1,54 @@
+plugins {
+  id "com.eriwen.gradle.js" version "2.14.1"
+}
+
+group = 'oliv.pi4j.samples'
+version = '1.0'
+
+javascript.source {
+  dev {
+    js {
+      srcDir "oliv-components/widgets"
+      include "*.js"
+      exclude "*.min.js"
+    }
+  }
+  prod {
+    js {
+      srcDir "oliv-components/widgets"
+      include "*.min.js"
+    }
+  }
+}
+
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}
+
+minifyJs {
+  source = "oliv-components/widgets"
+  dest = file("${buildDir}/all-min.js")
+  sourceMap = file("${buildDir}/all.sourcemap.json")
+  closure {
+    warningLevel = 'QUIET'
+    compilerOptions.languageIn = "ECMASCRIPT6"
+    compilerOptions.languageOut = "ECMASCRIPT5"
+  }
+}
+
+//jsdoc {
+//  source = "oliv-components/widgets/*.js"
+//  destinationDir = file("./jsdoc")
+//}
+
+task jsDoc(type: com.eriwen.gradle.js.tasks.JsDocTask){
+    source = "oliv-components/widgets"
+    destinationDir = file("${buildDir}/jsdoc")
+    closure {
+        warningLevel = 'QUIET'
+        compilerOptions.languageIn = "ECMASCRIPT6"
+        compilerOptions.languageOut = "ECMASCRIPT5"
+    }
+}

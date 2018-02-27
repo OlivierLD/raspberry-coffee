@@ -7,7 +7,7 @@ They do require a WebComponents-savvy browser though. Most of them are (or will 
 ### Live Demos
 Requires `nodejs` to be available on your system.
 
-To see the components at work, after cloning the repo, start the `node` server _**from the `web-components-playground` directory**_, and load `index.html` in a browser:
+To see the components at work, after cloning the repo, start the `node` server _**from the `WebComponents` directory**_, and load `index.html` in a browser:
 
 ```bash
  $> node server.js
@@ -42,7 +42,6 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 
 #### TODO
 - JSDoc
-- Minifyier/uglyfier
 - Local `npm` registry
 
 #### CodePen (might not be 100% in sync... But close)
