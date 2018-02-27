@@ -9,7 +9,14 @@
 	<link rel="stylesheet" href="css/web-components.css">
 
 	<!-- Firefox does NOT like modules... Safari OK -->
-	<script type="text/javascript" src=../../build/all-min.js"></script>
+	<!-- Use 'async' ? -->
+	<script type="module" src="widgets/Pluviometer.js"></script>
+	<script type="module" src="widgets/Thermometer.js"></script>
+	<script type="module" src="widgets/JumboDisplay.js"></script>
+	<script type="module" src="widgets/DirectionDisplay.js"></script>
+	<script type="module" src="widgets/AnalogDisplay.js"></script>
+	<script type="module" src="widgets/CompassRose.js"></script>
+	<script type="module" src="widgets/WorldMap.js"></script>
 
 	<style>
 		html {
@@ -278,7 +285,13 @@
 <body>
 
 	<h2>Web Components Samples</h2>
-	<h5>Pluviometer, Thermometer, Displays and other such marvels...</h5>
+	<h5>Runs the minified version of the Web Components.</h5>
+	<small>
+		Make sure you've run
+		<pre>
+ $> ../gradlew minifyJs
+		</pre>
+	</small>
 	<p>
 		Click on the <b>category titles</b> below, they all represent different configurations of <i>one</i> WebComponent each.
 		<br/>
