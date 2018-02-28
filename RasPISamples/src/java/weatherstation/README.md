@@ -4,7 +4,7 @@ Requires `websocket` Node module to be installed:
 ```bash
  $ cd node
  $ npm install websocket
-``` 
+```
 
 Then run the menu:
 ```bash
@@ -13,7 +13,7 @@ Then run the menu:
  W: Start Weather Station reader
  K: Kill them all
  Q: Quit
- You Choose > 
+ You Choose >
 ```
 
 - First, start the node server [`N`]
@@ -22,3 +22,10 @@ Then run the menu:
 Use the [`K`] option to stop everything.
 
 ---
+
+The class `weatherstation.ws.HomeWeatherStation` can take an array (comma-separated) of
+`LoggerInterface` classes as System variable.
+
+See among others `MySQLLoggerImpl` and `NMEAOverTCPLogger`.
+
+`NMEAOverTCPLogger` is compatible with the NMEA Multiplexer project.
