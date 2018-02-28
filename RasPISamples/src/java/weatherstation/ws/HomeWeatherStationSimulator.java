@@ -4,6 +4,9 @@ import org.json.JSONObject;
 
 import weatherstation.logger.LoggerInterface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Use this when the Weather Station is not available (ie you're not on the RPi)
  * There is an optional WebSocket server though. Its default URL is ws://localhost:9876/
@@ -12,7 +15,7 @@ import weatherstation.logger.LoggerInterface;
  */
 public class HomeWeatherStationSimulator {
 	private static boolean go = true;
-	private static LoggerInterface logger = null;
+	private static List<LoggerInterface> loggers = null;
 
 	public static void main(String... args) throws Exception {
 		final Thread coreThread = Thread.currentThread();
@@ -21,13 +24,17 @@ public class HomeWeatherStationSimulator {
 			// Uses -Dws.uri
 			wsf = new WebSocketFeeder();
 		}
-		String loggerClassName = System.getProperty("data.logger", null);
-		if (loggerClassName != null) {
-			try {
-				Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
-				logger = logClass.newInstance();
-			} catch (Exception ex) {
-				ex.printStackTrace();
+		String loggerClassNames = System.getProperty("data.logger", null);
+		if (loggerClassNames != null) {
+			String[] loggerClasses = loggerClassNames.split(",");
+			loggers = new ArrayList<>();
+			for (String loggerClassName : loggerClasses) {
+				try {
+					Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
+					loggers.add(logClass.newInstance());
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
 
@@ -93,12 +100,15 @@ public class HomeWeatherStationSimulator {
 					ex.printStackTrace();
 				}
 			}
-			if (logger != null) {
-				try {
-					logger.pushMessage(windObj);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
+			if (loggers != null) {
+				loggers.stream()
+						.forEach(logger -> {
+							try {
+								logger.pushMessage(windObj);
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						});
 			}
 			windSpeed = ws;
 			windGust = wg;

@@ -61,7 +61,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 	@Override
 	public void pushMessage(JSONObject json)
 			throws Exception {
-		System.out.println(">>> Logging:\n" + json.toString(2)); // TODO Implement!
+		System.out.println(">>> Pushing (NMEA-TCP) :\n" + json.toString(2)); // TODO Implement!
 		convertAndPush(json);
 	}
 
@@ -97,7 +97,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 		nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 
 		if (verbose) {
-			System.out.println(String.format(">>> Generated [%s]", nmeaXDR.trim()));
+			System.out.println(String.format(">>> Generated for TCP [%s]", nmeaXDR.trim()));
 		}
 
 		tcpServer.write(nmeaXDR.getBytes());
@@ -115,7 +115,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 		nmeaMDA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 
 		if (verbose) {
-			System.out.println(String.format(">>> Generated [%s]", nmeaMDA.trim()));
+			System.out.println(String.format(">>> Generated for TCP [%s]", nmeaMDA.trim()));
 		}
 
 		tcpServer.write(nmeaMDA.getBytes());
@@ -124,7 +124,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 		nmeaMTA += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 
 		if (verbose) {
-			System.out.println(String.format(">>> Generated [%s]", nmeaMTA.trim()));
+			System.out.println(String.format(">>> Generated for TCP [%s]", nmeaMTA.trim()));
 		}
 
 		tcpServer.write(nmeaMTA.getBytes());
@@ -133,7 +133,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 		nmeaMMB += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 
 		if (verbose) {
-			System.out.println(String.format(">>> Generated [%s]", nmeaMMB.trim()));
+			System.out.println(String.format(">>> Generated for TCP [%s]", nmeaMMB.trim()));
 		}
 
 		tcpServer.write(nmeaMMB.getBytes());
@@ -142,7 +142,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 		nmeaMWD += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 
 		if (verbose) {
-			System.out.println(String.format(">>> Generated [%s]", nmeaMWD.trim()));
+			System.out.println(String.format(">>> Generated for TCP [%s]", nmeaMWD.trim()));
 		}
 
 		tcpServer.write(nmeaMWD.getBytes());
@@ -152,7 +152,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 			nmeaGLL += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 
 			if (verbose) {
-				System.out.println(String.format(">>> Generated [%s]", nmeaGLL.trim()));
+				System.out.println(String.format(">>> Generated for TCP [%s]", nmeaGLL.trim()));
 			}
 
 			tcpServer.write(nmeaGLL.getBytes());

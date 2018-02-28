@@ -10,8 +10,11 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.log=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dweather.station.verbose=true"
 # data.logger is that class dealing with the read data
-JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.MySQLLoggerImpl -Dws.between.logs=600000"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.MySQLLoggerImpl"
+JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.MySQLLoggerImp,weatherstation.logger.NMEAOverTCPLogger"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dws.between.logs=600000"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dstation.lat=37.7489 -Dstation.lng=-122.5070"
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=1044"
 #

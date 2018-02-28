@@ -52,7 +52,7 @@ import java.util.List;
  */
 public class HomeWeatherStation {
 	private static boolean go = true;
-	private static LoggerInterface logger = null;
+	private static List<LoggerInterface> loggers = null;
 
 	private final static int AVG_BUFFER_SIZE = 100;
 	private static List<Float> avgWD = new ArrayList<>(AVG_BUFFER_SIZE);
@@ -67,13 +67,17 @@ public class HomeWeatherStation {
 			wsf = null;
 		}
 
-		String loggerClassName = System.getProperty("data.logger", null);
-		if (loggerClassName != null) {
-			try {
-				Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
-				logger = logClass.newInstance();
-			} catch (Exception ex) {
-				ex.printStackTrace();
+		String loggerClassNames = System.getProperty("data.logger", null); // comma separated list of LoggerInterface
+		if (loggerClassNames != null) {
+			String[] loggerClasses = loggerClassNames.split(",");
+			loggers = new ArrayList<>();
+			for (String loggerClassName : loggerClasses) {
+				try {
+					Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
+					loggers.add(logClass.newInstance());
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
 
@@ -169,12 +173,15 @@ public class HomeWeatherStation {
 						System.out.println("-> NOT Sending message (wsf)");
 					}
 				}
-				if (logger != null) {
-					try {
-						logger.pushMessage(windObj);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+				if (loggers != null) {
+					loggers.stream()
+							.forEach(logger -> {
+								try {
+									logger.pushMessage(windObj);
+								} catch (Exception ex) {
+									ex.printStackTrace();
+								}
+							});
 				}
 			} catch (NotYetConnectedException nyce) {
 				System.err.println(" ... Not yet connected, check your WebSocket server");
