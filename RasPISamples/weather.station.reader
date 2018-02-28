@@ -8,6 +8,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dweather.station.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.log=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dweather.station.verbose=true"
 # data.logger is that class dealing with the read data
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.MySQLLoggerImpl -Dws.between.logs=600000"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=true"
