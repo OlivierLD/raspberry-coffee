@@ -58,6 +58,11 @@ public class MySQLLoggerImpl implements LoggerInterface {
 	 * WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&CPU=34.56
 	 */
 	private String composeQS(JSONObject json) {
+
+		if ("true".equals(System.getProperty("mysql.logger.verbose", "false"))) {
+			System.out.println(String.format("MySQL Logger received [%s]", json.toString(2)));
+		}
+
 		String qs = "";
 		String s = json2qs(json, "cputemp", "CPU");
 		if (s != null) {
@@ -100,7 +105,7 @@ public class MySQLLoggerImpl implements LoggerInterface {
 	}
 
 	@Override
-	public void pushMessage(JSONObject json)
+	public void pushMessage(JSONObject json )
 			throws Exception {
 		long now = System.currentTimeMillis();
 		if (now - this.lastLogged > betweenLogs) {

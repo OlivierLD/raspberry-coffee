@@ -10,6 +10,8 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.log=true"
 # data.logger is that class dealing with the read data
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.MySQLLoggerImpl -Dws.between.logs=600000"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=true"
+#
 # JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=1044"
 #
 echo JAVA_OPTIONS are $JAVA_OPTIONS
