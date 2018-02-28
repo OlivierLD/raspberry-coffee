@@ -5,11 +5,11 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=0"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dws.log=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dws.log=false"
 # data.logger is that class dealing with the read data
-JAVA_OPTIONS="JAVA_OPTIONS -Ddata.logger=weatherstation.logger.NMEAOverTCPLogger"
-JAVA_OPTIONS="JAVA_OPTIONS -Dstation.lat=37.7489 -Dstation.lng=-122.5070"
+JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.NMEAOverTCPLogger"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dstation.lat=37.7489 -Dstation.lng=-122.5070"
 # JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=1044"
 #
 sudo java $JAVA_OPTIONS -cp $CP weatherstation.ws.HomeWeatherStation
