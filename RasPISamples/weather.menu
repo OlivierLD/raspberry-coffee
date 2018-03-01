@@ -12,13 +12,15 @@ exit=FALSE
 while [ "$exit" = "FALSE" ]
 do
   clear
-  echo -e 'N: Start Node server'
-  echo -e 'W: Start Weather Station reader'
-  echo -e 'D: Start Weather Station dump'
-  echo -e 'T: Start Weather Station and broadcast on TCP'
-  echo -e 'S: Show processes'
-  echo -e 'K: Kill them all'
-  echo -e 'Q: Quit'
+  echo -e "+------------- Weather Station -----------------+"
+  echo -e '| N: Start Node server                          |'
+  echo -e '| W: Start Weather Station reader               |'
+  echo -e '| D: Start Weather Station dump                 |'
+  echo -e '| T: Start Weather Station and broadcast on TCP |'
+  echo -e '| S: Show processes                             |'
+  echo -e '| K: Kill them all                              |'
+  echo -e '| Q: Quit                                       |'
+  echo -e "+-----------------------------------------------+"
   echo -n 'You Choose > '
   read a
   if nocase "$a" "N"
