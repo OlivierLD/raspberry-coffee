@@ -29,3 +29,4 @@ The class `weatherstation.ws.HomeWeatherStation` can take an array (comma-separa
 See among others `MySQLLoggerImpl` and `NMEAOverTCPLogger`.
 
 `NMEAOverTCPLogger` is compatible with the NMEA Multiplexer project.
+Same with [`NodeRED`](https://nodered.org/).
