@@ -62,6 +62,10 @@ Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released
 - [Compass Rose](https://codepen.io/OlivierLD/pen/aqaLQq).
 - [World Map](https://codepen.io/OlivierLD/pen/xYQbmb).
 
+#### Firefox 58
+If you are having trouble running the WebComponents in Firefox 58, see
+[this document](https://www.designedbyaturtle.co.uk/2015/how-to-enable-web-components-in-firefox-shadow-dom/).
+
 #### Transpilation - Warning: could not get it to work correctly.
 Use `babel`, as explained [here](https://babeljs.io/docs/usage/cli/).
 
