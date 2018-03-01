@@ -1420,7 +1420,7 @@ class WorldMap extends HTMLElement {
 			case mapProjections.anaximandre:
 				//	x = (180 + lng) * (canvas.width / 360);
 				x = ((_lng - this._west) * graph2chartRatio);
-				incSouth = _south;
+				incSouth = this._south;
 				incLat = lat;
 				//	y = canvas.height - ((lat + 90) * canvas.height / 180);
 				y = this.height - ((incLat - incSouth) * (this.height / (this._north - this._south)));
@@ -1675,7 +1675,6 @@ class WorldMap extends HTMLElement {
 		context.fillStyle = grd; // "rgba(0, 0, 100, 1.0)"; // Dark blue
 		context.fillRect(0, 0, this.width, this.height);
 
-
 		if (this.withGrid) {
 			this.drawFlatGrid(context);
 		}
@@ -1738,6 +1737,71 @@ class WorldMap extends HTMLElement {
 		this.drawFlatCelestialOptions(context);
 	}
 
+	drawAnaximandreChart(context) {
+		// Square projection, Anaximandre.
+		let grd = context.createLinearGradient(0, 5, 0, this.height);
+		grd.addColorStop(0, this.worldmapColorConfig.globeGradient.from);
+		grd.addColorStop(1, this.worldmapColorConfig.globeGradient.to);
+
+		context.fillStyle = grd; // "rgba(0, 0, 100, 1.0)"; // Dark blue
+		context.fillRect(0, 0, this.width, this.height);
+
+		if (this.withGrid) {
+			this.drawFlatGrid(context);
+		}
+
+		if (this.withTropics) {
+			this.drawFlatTropics(context);
+		}
+		let worldTop = fullWorldMap.top;
+		let section = worldTop.section; // We assume top has been found.
+
+//    console.log("Found " + section.length + " section(s).")
+		for (let i = 0; i < section.length; i++) {
+			let point = section[i].point;
+			let firstPt = null;
+			let previousPt = null;
+			if (point !== undefined) {
+				context.beginPath();
+				for (let p = 0; p < point.length; p++) {
+					let lat = parseFloat(point[p].Lat);
+					let lng = parseFloat(point[p].Lng);
+					if (lng < -180) {
+						lng += 360;
+					}
+					if (lng > 180) {
+						lng -= 360;
+					}
+					let pt = this.posToCanvas(lat, lng);
+					if (p === 0) {
+						context.moveTo(pt.x, pt.y);
+						firstPt = pt;
+						previousPt = pt;
+					} else {
+						if (Math.abs(previousPt.x - pt.x) < (this.width / 2) && Math.abs(previousPt.y - pt.y) < (this.height / 2)) {
+							context.lineTo(pt.x, pt.y);
+							previousPt = pt;
+						}
+					}
+				}
+			}
+			if (firstPt !== null) {
+				context.lineTo(firstPt.x, firstPt.y); // close the loop
+			}
+			context.lineWidth = 1;
+			context.strokeStyle = 'black';
+			context.stroke();
+			context.fillStyle = "goldenrod";
+			context.fill();
+			context.closePath();
+		}
+		// User position
+		if (this.userPosition !== {}) {
+			this.plotPosToCanvas(context, this.userPosition.latitude, this.userPosition.longitude, this.positionLabel, this.worldmapColorConfig.userPosColor);
+		}
+		this.drawFlatCelestialOptions(context);
+	};
+
 	drawWorldMap() {
 
 		let currentStyle = this.className;
@@ -1762,12 +1826,12 @@ class WorldMap extends HTMLElement {
 		this.canvas.width = this.width;
 		this.canvas.height = this.height;
 
-		if (this.projection === mapProjections.globe) {
-			this.drawGlobe(context);
+		if (this.projection === mapProjections.anaximandre) {
+			this.drawAnaximandreChart(context);
 		} else if (this.projection === mapProjections.mercator) {
 			this.drawMercatorChart(context);
-		} else {
-			// TODO ...
+		} else { // Default is globe
+			this.drawGlobe(context);
 		}
 
 		// Print position
