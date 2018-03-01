@@ -44,8 +44,8 @@ const worldMapDefaultColorConfig = {
 };
 
 /* The map data */
-// import fullWorldMap from "./world.map/worldmap.data.js";
-import fullWorldMap from "./world.map/worldmap.data"; // minifyJs does NOT like the .js extension
+import fullWorldMap from "./world.map/worldmap.data.js";
+// import fullWorldMap from "./world.map/worldmap.data"; // minifyJs does NOT like the .js extension
 
 // TODO Callbacks (before and after drawing)
 
