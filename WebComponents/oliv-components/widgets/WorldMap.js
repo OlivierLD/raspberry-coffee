@@ -372,16 +372,6 @@ class WorldMap extends HTMLElement {
 	/*
 	 * Component methods
 	 */
-	sign(d) {
-		var s = 0;
-		if (d > 0.0) {
-			s = 1;
-		} else if (d < 0.0) {
-			s = -1;
-		}
-		return s;
-	}
-
 	toRadians(deg) {
 		return deg * (Math.PI / 180);
 	}
@@ -511,7 +501,7 @@ class WorldMap extends HTMLElement {
 	}
 
 	adjustBoundaries() {
-		if (this.sign(this.east) !== this.sign(this.west) && this.sign(this.east) === -1) {
+		if (Math.sign(this.east) !== Math.sign(this.west) && Math.sign(this.east) === -1) {
 			this.west -= 360;
 		}
 	}
@@ -727,7 +717,7 @@ class WorldMap extends HTMLElement {
 			}
 			let graph2chartRatio = this.width / gAmpl;
 			var _lng = lng;
-			if (Math.abs(this.west) > 180 && this.sign(_lng) !== this.sign(this.west) && this.sign(this.lng) > 0) {
+			if (Math.abs(this.west) > 180 && Math.sign(_lng) !== Math.sign(this.west) && Math.sign(this.lng) > 0) {
 				_lng -= 360;
 			}
 			if (gAmpl > 180 && _lng < 0 && this.west > 0) {
@@ -757,6 +747,10 @@ class WorldMap extends HTMLElement {
 			lng += 360;
 		}
 		return lng;
+	}
+
+	plotPoint(context, pt, color) {
+		this.plot(context, pt, color);
 	}
 
 	plot(context, pt, color) {
@@ -923,7 +917,7 @@ class WorldMap extends HTMLElement {
 	}
 
 	repaint() {
-		this.drawWorldMap(this.userPosition);
+		this.drawWorldMap();
 	}
 
 	// TODO callback 'before'
@@ -1332,6 +1326,418 @@ class WorldMap extends HTMLElement {
 		}
 	}
 
+	getIncLat(lat) {
+		let il = Math.log(Math.tan((Math.PI / 4) + (this.toRadians(lat) / 2)));
+		return this.toDegrees(il);
+	}
+
+	getInvIncLat(il) {
+		let ret = this.toRadians(il);
+		ret = Math.exp(ret);
+		ret = Math.atan(ret);
+		ret -= (Math.PI / 4); // 0.78539816339744828D;
+		ret *= 2;
+		ret = this.toDegrees(ret);
+		return ret;
+	}
+
+	calculateEastG(nLat, sLat, wLong, canvasW, canvasH) {
+		var deltaIncLat =  this.getIncLat(nLat) - this.getIncLat(sLat);
+
+		let graphicRatio = canvasW / canvasH;
+		let deltaG = Math.min(deltaIncLat * graphicRatio, 359);
+		let eLong = wLong + deltaG;
+
+		while (eLong > 180) {
+			eLong -= 360;
+		}
+		return eLong;
+	}
+
+	/**
+	 * For Anaximandre and Mercator
+	 *
+	 * @param lat
+	 * @param lng
+	 * @param label
+	 * @param color
+	 */
+	plotPosToCanvas(context, lat, lng, label, color) {
+
+		let pt = this.posToCanvas(lat, lng);
+		this.plotPoint(context, pt, (color !== undefined ? color : this.worldmapColorConfig.defaultPlotPointColor));
+		if (label !== undefined) {
+			try {
+				// BG
+				let metrics = context.measureText(label);
+				let xLabel = Math.round(pt.x) + 3;
+				let yLabel = Math.round(pt.y) - 3;
+
+				// context.fillStyle = 'yellow'; // worldmapColorConfig.canvasBackground;
+				// context.fillRect( xLabel, yLabel - 14, metrics.width, 14);
+				// Text
+				context.fillStyle = (color !== undefined ? color : this.worldmapColorConfig.defaultPlotPointColor);
+				context.fillText(label, xLabel, yLabel);
+			} catch (err) { // Firefox has some glitches here
+				if (console.log !== undefined) {
+					if (err.message !== undefined && err.name !== undefined) {
+						console.log(err.message + " " + err.name);
+					} else {
+						console.log(err);
+					}
+				}
+			}
+		}
+	}
+
+	posToCanvas(lat, lng) { // Anaximandre and Mercator
+
+		this._east = this.calculateEastG(this._north, this._south, this._west, this.width, this.height);
+		this.adjustBoundaries();
+
+		let x, y;
+
+		let gAmpl = this._east - this._west;
+		while (gAmpl < 0) {
+			gAmpl += 360;
+		}
+		let graph2chartRatio = this.width / gAmpl;
+		let _lng = lng;
+		if (Math.abs(this._west) > 180 && Math.sign(_lng) !== Math.sign(this._west) && Math.sign(_lng) > 0) {
+			_lng -= 360;
+		}
+		if (gAmpl > 180 && _lng < 0 && this._west > 0) {
+			_lng += 360;
+		}
+		if (gAmpl > 180 && _lng >= 0 && this._west > 0 && _lng < this._east) {
+			_lng += (this._west + (gAmpl - this._east));
+		}
+
+		let incSouth = 0, incLat = 0;
+
+		switch (this.projection) {
+			case undefined:
+			case mapProjections.anaximandre:
+				//	x = (180 + lng) * (canvas.width / 360);
+				x = ((_lng - this._west) * graph2chartRatio);
+				incSouth = _south;
+				incLat = lat;
+				//	y = canvas.height - ((lat + 90) * canvas.height / 180);
+				y = this.height - ((incLat - incSouth) * (this.height / (this._north - this._south)));
+				break;
+			case mapProjections.mercator:
+				// Requires _north, _south, _east, _west
+				x = ((_lng - this._west) * graph2chartRatio);
+				incSouth = this.getIncLat(Math.max(this._south, -80));
+				incLat = this.getIncLat(lat);
+				y = this.height - ((incLat - incSouth) * graph2chartRatio);
+				break;
+		}
+
+		return {"x": x, "y": y};
+	}
+
+	drawFlatGrid(context) {
+		context.lineWidth = 1;
+		context.strokeStyle = this.worldmapColorConfig.gridColor; // 'cyan';
+
+		let gstep = 10; //Math.abs(_east - _west) / 60;
+		let lstep = 10;  //Math.abs(_north - _south) / 10;
+
+		// Parallels
+		for (let lat=-80; lat<=80; lat+=lstep) {
+			let y = this.posToCanvas(lat, 0).y;
+			context.beginPath();
+
+			context.moveTo(0, y);
+			context.lineTo(this.width, y);
+
+			context.stroke();
+			context.closePath();
+		}
+		// Meridians
+		for (let lng=-180; lng<180; lng+=gstep) {
+			let x = this.posToCanvas(0, lng).x;
+			context.beginPath();
+
+			context.moveTo(x, 0);
+			context.lineTo(x, this.height);
+
+			context.stroke();
+			context.closePath();
+		}
+	}
+
+	drawFlatTropics(context) {
+		context.lineWidth = 1;
+		context.strokeStyle = this.worldmapColorConfig.tropicColor;
+		// Cancer
+		let y = this.posToCanvas(tropicLat, 0).y;
+		context.beginPath();
+		context.moveTo(0, y);
+		context.lineTo(this.width, y);
+		context.stroke();
+		context.closePath();
+		// Capricorn
+		y = this.posToCanvas(-tropicLat, 0).y;
+		context.beginPath();
+		context.moveTo(0, y);
+		context.lineTo(this.width, y);
+		context.stroke();
+		context.closePath();
+		// North polar circle
+		y = this.posToCanvas(90-tropicLat, 0).y;
+		context.beginPath();
+		context.moveTo(0, y);
+		context.lineTo(this.width, y);
+		context.stroke();
+		context.closePath();
+		// South polar circle
+		y = this.posToCanvas(-90+tropicLat, 0).y;
+		context.beginPath();
+		context.moveTo(0, y);
+		context.lineTo(this.width, y);
+		context.stroke();
+		context.closePath();
+	}
+
+	toRealLng(lng) {
+		let g = lng;
+		while (g > 180) {
+			g -= 360;
+		}
+		while (g < -180) {
+			g += 360;
+		}
+		return g;
+	}
+
+	drawFlatNight(context, from, user, gha) {
+		const NINETY_DEGREES = 90 * 60; // in nm
+
+		// context.lineWidth = 1;
+		context.fillStyle = this.worldmapColorConfig.nightColor;
+
+		let nightRim = [];
+		// Calculate the night rim
+		for (let i=0; i<360; i++) {
+			let night = this.deadReckoning(from, NINETY_DEGREES, i);
+			nightRim.push(night);
+		}
+
+		// Night limb
+		// Find the first point (west) of the rim
+		let first = 0;
+		for (let x=0; x<nightRim.length; x++) {
+			let lng = this.toRealLng(this.toDegrees(nightRim[x].lng));
+//		console.log("Night lng: " + lng);
+			if (lng > this._west) {
+				first = Math.max(0, x - 1);
+				break;
+			}
+		}
+		context.beginPath();
+		let pt = this.posToCanvas(this.toDegrees(nightRim[first].lat), this.toRealLng(this.toDegrees(nightRim[first].lng)));
+		context.moveTo(-10 /*pt.x*/, pt.y); // left++
+
+		let go = true;
+
+//	console.log("_west ", _west, "first", first);
+
+		for (let idx=first; idx<360 && go === true; idx++) {
+			pt = this.posToCanvas(this.toDegrees(nightRim[idx].lat), this.toRealLng(this.toDegrees(nightRim[idx].lng)));
+			context.lineTo(pt.x, pt.y);
+
+			// DEBUG
+			// if (idx % 20 === 0) {
+			// 	context.fillStyle = 'cyan';
+			// 	context.fillText(idx, pt.x, pt.y);
+			// }
+
+			//  if (toRealLng(toDegrees(nightRim[idx].lng)) > _east) {
+			// 	 go = false;
+			//  }
+		}
+		if (go) {
+			for (let idx=0; idx<360 && go === true; idx++) {
+				if (this.toRealLng(this.toDegrees(nightRim[idx].lng)) > this._east) {
+					go = false;
+				} else {
+					pt = this.posToCanvas(this.toDegrees(nightRim[idx].lat), this.toRealLng(this.toDegrees(nightRim[idx].lng)));
+					context.lineTo(pt.x, pt.y);
+					// DEBUG
+					// if (idx % 20 === 0) {
+					// 	context.fillStyle = 'red';
+					// 	context.fillText(idx, pt.x, pt.y);
+					// }
+				}
+			}
+		}
+		context.lineTo(this.width + 10, pt.y); // right most
+
+		// DEBUG
+		// context.fillStyle = 'red';
+		// context.fillText('Last', pt.x - 10, pt.y);
+
+		if (from.lat > 0) { // N Decl, night is south
+			context.lineTo(this.width, this.height); // bottom right
+			context.lineTo(0, this.height);            // bottom left
+		} else {            // S Decl, night is north
+			context.lineTo(this.width, 0);             // top right
+			context.lineTo(0, 0);                        // top left
+		}
+//	context.lineTo(firstPt.x, firstPt.y);
+		context.fillStyle = this.worldmapColorConfig.nightColor;
+		context.closePath();
+		context.fill();
+	}
+
+	drawFlatCelestialOptions(context) {
+		if (this.astronomicalData !== {}) {
+			if (this.astronomicalData.sun !== undefined && this.withSun) { // TODO Separate sun and sunlight
+				context.save();
+				let sunLng = this.haToLongitude(this.astronomicalData.sun.gha);
+				this.plotPosToCanvas(context, this.astronomicalData.sun.decl, sunLng, "Sun", this.worldmapColorConfig.sunColor);
+
+				if (this.withSunlight) {
+					let from = {lat: this.toRadians(this.astronomicalData.sun.decl), lng: this.toRadians(sunLng)};
+					this.drawFlatNight(context, from, this.userPosition, this.astronomicalData.sun.gha);
+				}
+				context.restore();
+			}
+			if (this.astronomicalData.moon !== undefined && this.withMoon) { // TODO Separate moon and moonlight
+				context.save();
+				let moonLng = this.haToLongitude(this.astronomicalData.moon.gha);
+				this.plotPosToCanvas(context, this.astronomicalData.moon.decl, moonLng, "Moon", this.worldmapColorConfig.moonColor);
+				if (this.withMoonlight) {
+					let from = {lat: this.toRadians(this.astronomicalData.moon.decl), lng: this.toRadians(moonLng)};
+					this.drawFlatNight(context, from, this.userPosition, this.astronomicalData.moon.gha);
+				}
+				context.restore();
+			}
+			if (this.astronomicalData.wanderingBodies !== undefined && this.withWanderingBodies) {
+				// 1 - Ecliptic
+				let aries = this.findInList(this.astronomicalData.wanderingBodies, "name", "aries");
+				if (aries !== null) {
+					// 1 - Draw Ecliptic
+					let longitude = (aries.gha < 180) ? -aries.gha : 360 - aries.gha;
+					longitude += 90; // Extremum
+					while (longitude > 360) {
+						longitude -= 360;
+					}
+					let ariesRad = { lat: this.toRadians(this.astronomicalData.eclipticObliquity), lng: this.toRadians(longitude) };
+					let eclCenter = this.deadReckoning(ariesRad, 90 * 60, 0); // "Center" of the Ecliptic
+
+					context.fillStyle = this.worldmapColorConfig.tropicColor;
+					for (let hdg=0; hdg<360; hdg++) {
+						let pt = this.deadReckoning(eclCenter, 90 * 60, hdg);
+						let pp = this.posToCanvas(this.toDegrees(pt.lat), this.toRealLng(this.toDegrees(pt.lng)));
+						context.fillRect(pp.x, pp.y, 1, 1);
+					}
+
+					this.plotPosToCanvas(context, 0, this.haToLongitude(aries.gha), "Aries", this.worldmapColorConfig.ariesColor);
+					this.plotPosToCanvas(context, 0, this.haToLongitude(aries.gha + 180), "Anti-Aries", this.worldmapColorConfig.ariesColor);
+				}
+				// 2 - Other planets
+				let venus = this.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
+				let mars = this.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
+				let jupiter = this.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
+				let saturn = this.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
+				if (venus !== null) {
+					this.plotPosToCanvas(context, venus.decl, this.haToLongitude(venus.gha), "Venus", this.worldmapColorConfig.venusColor);
+				}
+				if (mars !== null) {
+					this.plotPosToCanvas(context, mars.decl, this.haToLongitude(mars.gha), "Mars", this.worldmapColorConfig.marsColor);
+				}
+				if (jupiter !== null) {
+					this.plotPosToCanvas(context, jupiter.decl, this.haToLongitude(jupiter.gha), "Jupiter", this.worldmapColorConfig.jupiterColor);
+				}
+				if (saturn !== null) {
+					this.plotPosToCanvas(context, saturn.decl, this.haToLongitude(saturn.gha), "Saturn", this.worldmapColorConfig.saturnColor);
+				}
+			}
+
+			if (this.astronomicalData.stars !== undefined && this.withStars) {
+				let instance = this;
+				this.astronomicalData.stars.forEach(function(star, idx) {
+					instance.plotPosToCanvas(context, star.decl, instance.haToLongitude(star.gha), star.name, instance.worldmapColorConfig.starsColor);
+				});
+			}
+		}
+	}
+
+	drawMercatorChart(context) {
+
+		let grd = context.createLinearGradient(0, 5, 0, this.height);
+		grd.addColorStop(0, this.worldmapColorConfig.globeGradient.from);
+		grd.addColorStop(1, this.worldmapColorConfig.globeGradient.to);
+
+		context.fillStyle = grd; // "rgba(0, 0, 100, 1.0)"; // Dark blue
+		context.fillRect(0, 0, this.width, this.height);
+
+
+		if (this.withGrid) {
+			this.drawFlatGrid(context);
+		}
+
+		if (this.withTropics) {
+			this.drawFlatTropics(context);
+		}
+
+		let worldTop = fullWorldMap.top;
+		let section = worldTop.section; // We assume top has been found.
+
+//    console.log("Found " + section.length + " section(s).")
+		for (let i = 0; i < section.length; i++) {
+			var point = section[i].point;
+			let firstPt = null;
+			let previousPt = null;
+			if (point !== undefined) {
+				context.beginPath();
+				for (let p = 0; p < point.length; p++) {
+					let lat = parseFloat(point[p].Lat);
+					let lng = parseFloat(point[p].Lng);
+					if (lng < -180) {
+						lng += 360;
+					}
+					if (lng > 180) {
+						lng -= 360;
+					}
+					let pt = this.posToCanvas(lat, lng);
+					if (p === 0) {
+						context.moveTo(pt.x, pt.y);
+						firstPt = pt;
+						previousPt = pt;
+					} else {
+						if (Math.abs(previousPt.x - pt.x) < (this.width / 2) && Math.abs(previousPt.y - pt.y) < (this.height / 2)) {
+							context.lineTo(pt.x, pt.y);
+							previousPt = pt;
+						} else { // Too far apart
+							firstPt = pt;
+							context.moveTo(pt.x, pt.y);
+							previousPt = pt;
+						}
+					}
+				}
+			}
+			if (firstPt !== null && Math.abs(previousPt.x - firstPt.x) < (this.width / 20) && Math.abs(previousPt.y - firstPt.y) < (this.height / 20)) {
+				context.lineTo(firstPt.x, firstPt.y); // close the loop
+			}
+			context.lineWidth = this.worldmapColorConfig.chartLineWidth;
+			context.strokeStyle = this.worldmapColorConfig.chartColor; // 'black';
+			context.stroke();
+			// context.fillStyle = "goldenrod";
+			// context.fill();
+			context.closePath();
+		}
+		// User position
+		if (this.userPosition !== {}) {
+			this.plotPosToCanvas(context, this.userPosition.latitude, this.userPosition.longitude, this.positionLabel, this.worldmapColorConfig.userPosColor);
+		}
+
+		this.drawFlatCelestialOptions(context);
+	}
+
 	drawWorldMap() {
 
 		let currentStyle = this.className;
@@ -1358,7 +1764,11 @@ class WorldMap extends HTMLElement {
 
 		if (this.projection === mapProjections.globe) {
 			this.drawGlobe(context);
-		} // TODO else ...
+		} else if (this.projection === mapProjections.mercator) {
+			this.drawMercatorChart(context);
+		} else {
+			// TODO ...
+		}
 
 		// Print position
 		if (this.userPosition.latitude !== undefined && this.userPosition.longitude !== undefined) {

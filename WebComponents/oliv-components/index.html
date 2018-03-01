@@ -277,7 +277,10 @@
 			}
 		}
 
-
+    function setProjection(id, radio) {
+			document.getElementById(id).projection = radio.value;
+			document.getElementById(id).repaint();
+		}
 
 	</script>
 </head>
@@ -1403,6 +1406,9 @@
 						<input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
 						<br/>
 						Spin <button onclick="spin('world-map-01', 1);">Clockwise</button> <button onclick="spin('world-map-01', -1);">Counter Clockwise</button>
+						<br/>
+						<input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);" checked>Globe
+						<input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
 					</div>
 				</td>
 				<td valign="top">
@@ -1428,6 +1434,9 @@
 						<input type="checkbox" onchange="setTropics('world-map-02', this);"/>Tropics
 						<br/>
 						Spin <button onclick="spin('world-map-02', 1);">Clockwise</button> <button onclick="spin('world-map-02', -1);">Counter Clockwise</button>
+						<br/>
+						<input type="radio" name="proj-02" value="GLOBE" onchange="setProjection('world-map-02', this);" checked>Globe
+						<input type="radio" name="proj-02" value="MERCATOR" onchange="setProjection('world-map-02', this);">Mercator
 					</div>
 				</td>
 			</tr>
