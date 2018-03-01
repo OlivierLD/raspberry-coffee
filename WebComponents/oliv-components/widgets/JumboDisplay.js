@@ -184,7 +184,7 @@ class JumboDisplay extends HTMLElement {
 			}
 		}
 		return colorConfig;
-	};
+	}
 
 
 	repaint() {

@@ -8,7 +8,7 @@ version = '1.0'
 javascript.source {
   dev {
     js {
-      srcDir "out/oliv-components/widgets"
+      srcDir "oliv-components/widgets"
       include "*.js"
       exclude "*.min.js"
       exclude "*.map"
@@ -29,15 +29,38 @@ repositories {
 }
 
 minifyJs {
-  source = "out/oliv-components/widgets"
+  source = "oliv-components/widgets"
+//dest = file("oliv-components/minified")
   dest = file("oliv-components/minified/all-min.js")
   sourceMap = file("oliv-components/minified/all.sourcemap.json")
   closure {
     warningLevel = 'QUIET'
     compilerOptions.languageIn = "ECMASCRIPT6"
-    compilerOptions.languageOut = "ECMASCRIPT5"
+    compilerOptions.languageOut = "ECMASCRIPT5_STRICT"
   }
 }
+
+import com.eriwen.gradle.js.tasks.MinifyJsTask
+task minifyJS
+minifyJS.doLast {
+    fileTree(dir: 'oliv-components/widgets', include: ['*.js'], exclude: ['WorldMap.js', 'minjs/*']).eachWithIndex { file, index ->
+        println ">>> Processing " + file.absoluteFile
+        def dynamicTask = "minify$index"
+        task "${dynamicTask}" (type: MinifyJsTask) {
+            source = file.absolutePath;
+//          dest = "${buildDir}/min.${file.name}"
+            dest = "oliv-components/minified/${file.name}"
+            closure.compilationLevel='SIMPLE_OPTIMIZATIONS'
+            closure {
+                warningLevel = "QUIET"
+                compilerOptions.languageIn = "ECMASCRIPT6"
+                compilerOptions.languageOut = "ECMASCRIPT5_STRICT"
+            }
+        }
+        tasks."$dynamicTask".execute()
+    }
+}
+
 
 //jsdoc {
 //  source = "oliv-components/widgets/*.js"

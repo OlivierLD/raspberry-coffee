@@ -240,7 +240,7 @@ class Pluviometer extends HTMLElement {
 			}
 		}
 		return colorConfig;
-	};
+	}
 
 
 

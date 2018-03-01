@@ -250,7 +250,7 @@ class Thermometer extends HTMLElement {
 			}
 		}
 		return colorConfig;
-	};
+	}
 
 	repaint() {
 		this.drawThermometer(this._value);

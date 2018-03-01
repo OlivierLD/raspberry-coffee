@@ -180,7 +180,7 @@ class CompassRose extends HTMLElement {
 			}
 		}
 		return colorConfig;
-	};
+	}
 
 
 	repaint() {

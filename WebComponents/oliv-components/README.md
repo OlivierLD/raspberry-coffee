@@ -62,6 +62,22 @@ Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released
 - [Compass Rose](https://codepen.io/OlivierLD/pen/aqaLQq).
 - [World Map](https://codepen.io/OlivierLD/pen/xYQbmb).
 
+#### Transpilation - Warning: could not get it to work correctly.
+Use `babel`, as explained [here](https://babeljs.io/docs/usage/cli/).
+
+```bash
+ $ npm install --save-dev babel-cli babel-preset-env
+```
+Create a `.babelrc`
+```bash
+ $ echo '{ "presets": ["env"] }' > .babelrc
+```
+And run the transpilation:
+```bash
+ $ npx babel oliv-components/widgets --out-dir oliv-components/lib
+```
+The `lib` directory now contains the transpiled files.
+
 ---
 &copy; 2018, by Oliv Soft.
 

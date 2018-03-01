@@ -920,7 +920,7 @@ class WorldMap extends HTMLElement {
 			}
 		}
 		return colorConfig;
-	};
+	}
 
 	repaint() {
 		this.drawWorldMap(this.userPosition);
