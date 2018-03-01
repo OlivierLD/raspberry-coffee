@@ -21,7 +21,7 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 - Direction Display. &#9989; Done
 - Analog Display. &#9989; Done
 - Apparent Wind. TODO
-- Globe and Map (with `import` and `module`). &#10140; WIP
+- Globe and Map (with `import` and `module`). &#9989; Done <!-- &#10140; WIP -->
 - Compass Rose. &#9989; Done
 - Digital Display. TODO
 - Date and Time display. TODO
