@@ -1,3 +1,4 @@
 - Schemes (night and day). Done.
 - QR Codes
 - VMG ? Ok.
+- Use Web-Components for the Web UIs.
