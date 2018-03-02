@@ -110,6 +110,8 @@ public class NMEADataCache
 	public static final String SMALL_DISTANCE = "Small Distance"; // For runners
 	public static final String DELTA_ALTITUDE = "Delta Altitude";
 
+	public static final String PRATE = "prate";
+
 	// Damping ArrayList's
 	private transient int dampingSize = 1;
 
@@ -447,9 +449,11 @@ public class NMEADataCache
 								this.put(BARO_PRESS, new Pressure(val * 1_000));
 							} else if (type.equals(StringGenerator.XDRTypes.VOLTAGE)) {
 								this.put(BATTERY, new Float(val));
+							} else if (type.equals(StringGenerator.XDRTypes.GENERIC)) { // Consider it as prate.
+								this.put(PRATE, new Float(val));
 							} else {
 								if ("true".equals(System.getProperty("verbose", "false")))
-									System.out.println("Unmanaged XDR Type:" + type.toString());
+									System.out.println("Un-managed XDR Type:" + type.toString());
 							}
 						}
 					}

@@ -90,7 +90,7 @@ public class TCPClient extends NMEAClient {
 		for (String s : args)
 			System.out.println("CustomTCPClient prm:" + s);
 
-		String serverName = "192.168.1.1";
+		String serverName = "192.168.42.2";
 
 		nmeaClient = new TCPClient();
 

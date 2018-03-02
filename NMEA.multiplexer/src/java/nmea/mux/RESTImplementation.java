@@ -48,6 +48,8 @@ public class RESTImplementation {
 	private List<Computer> nmeaDataComputers;
 	private Multiplexer mux;
 
+	private final static String REST_PREFIX = "/mux";
+
 	public RESTImplementation(List<NMEAClient> nmeaDataClients,
 	                          List<Forwarder> nmeaDataForwarders,
 	                          List<Computer> nmeaDataComputers,
@@ -77,137 +79,137 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 					new Operation(
 									"GET",
-									"/mux/oplist",
+									REST_PREFIX + "/oplist",
 									this::getOperationList,
 									"List of all available operations, on NMEA request manager."),
 					new Operation(
 									"POST",
-									"/mux/terminate",
+									REST_PREFIX + "/terminate",
 									this::stopAll,
 									"Hard stop, shutdown. VERY unusual REST resource..."),
 					new Operation(
 									"GET",
-									"/mux/serial-ports",
+									REST_PREFIX + "/serial-ports",
 									this::getSerialPorts,
 									"Get the list of the available serial ports."),
 					new Operation(
 									"GET",
-									"/mux/channels",
+									REST_PREFIX + "/channels",
 									this::getChannels,
 									"Get the list of the input channels"),
 					new Operation(
 									"GET",
-									"/mux/forwarders",
+									REST_PREFIX + "/forwarders",
 									this::getForwarders,
 									"Get the list of the output channels"),
 					new Operation(
 									"GET",
-									"/mux/computers",
+									REST_PREFIX + "/computers",
 									this::getComputers,
 									"Get the list of the computers"),
 					new Operation(
 									"DELETE",
-									"/mux/forwarders/{id}",
+									REST_PREFIX + "/forwarders/{id}",
 									this::deleteForwarder,
 									"Delete an output channel"),
 					new Operation(
 									"DELETE",
-									"/mux/channels/{id}",
+									REST_PREFIX + "/channels/{id}",
 									this::deleteChannel,
 									"Delete an input channel"),
 					new Operation(
 									"DELETE",
-									"/mux/computers/{id}",
+									REST_PREFIX + "/computers/{id}",
 									this::deleteComputer,
 									"Delete a computer"),
 					new Operation(
 									"POST",
-									"/mux/forwarders",
+									REST_PREFIX + "/forwarders",
 									this::postForwarder,
 									"Creates an output channel"),
 					new Operation(
 									"POST",
-									"/mux/channels",
+									REST_PREFIX + "/channels",
 									this::postChannel,
 									"Creates an input channel"),
 					new Operation(
 									"POST",
-									"/mux/computers",
+									REST_PREFIX + "/computers",
 									this::postComputer,
 									"Creates computer"),
 					new Operation(
 									"PUT",
-									"/mux/channels/{id}",
+									REST_PREFIX + "/channels/{id}",
 									this::putChannel,
 									"Update channel"),
 					new Operation(
 									"PUT",
-									"/mux/forwarders/{id}",
+									REST_PREFIX + "/forwarders/{id}",
 									this::putForwarder,
 									"Update forwarder"),
 					new Operation(
 									"PUT",
-									"/mux/computers/{id}",
+									REST_PREFIX + "/computers/{id}",
 									this::putComputer,
 									"Update computer"),
 					new Operation(
 									"PUT",
-									"/mux/mux-verbose/{state}",
+									REST_PREFIX + "/mux-verbose/{state}",
 									this::putMuxVerbose,
 									"Update Multiplexer verbose"),
 					new Operation(
 									"PUT",
-									"/mux/mux-process/{state}",
+									REST_PREFIX + "/mux-process/{state}",
 									this::putMuxProcess,
 									"Update Multiplexer processing status. Aka enable/disable logging."),
 					new Operation(
 									"GET",
-									"/mux/mux-process",
+									REST_PREFIX + "/mux-process",
 									this::getMuxProcess,
 									"Get the mux process status (on/off)"),
 					new Operation(
 									"GET",
-									"/mux/cache",
+									REST_PREFIX + "/cache",
 									this::getCache,
 									"Get ALL the data in the cache"),
 					new Operation(
 									"DELETE",
-									"/mux/cache",
+									REST_PREFIX + "/cache",
 									this::resetCache,
 									"Reset the cache"),
 					new Operation(
 									"GET",
-									"/mux/distance",
+									REST_PREFIX + "/distance",
 									this::getDistance,
 									"Get distance traveled since last reset"),
 					new Operation(
 									"GET",
-									"/mux/delta-alt",
+									REST_PREFIX + "/delta-alt",
 									this::getDeltaAlt,
 									"Get delta altitude since last reset"),
 					new Operation(
 									"GET",
-									"/mux/nmea-volume",
+									REST_PREFIX + "/nmea-volume",
 									this::getNMEAVolumeStatus,
 									"Get the time elapsed and the NMEA volume managed so far"),
 					new Operation(
 									"GET",
-									"/mux/sog-cog",
+									REST_PREFIX + "/sog-cog",
 									this::getSCOG,
 									"Get Speed and Course Over Ground"),
 					new Operation(
 									"GET",
-									"/mux/run-data",
+									REST_PREFIX + "/run-data",
 									this::getRunData,
 									"Get Speed and Course Over Ground, distance, and delta-altitude, in one shot."),
 					new Operation(
 									"GET",
-									"/mux/log-files/{log-file}",
+									REST_PREFIX + "/log-files/{log-file}",
 									this::getLogFile,
 									"Download the log file"),
 					new Operation(
 									"POST",
-									"/mux/events/{topic}",
+									REST_PREFIX + "/events/{topic}",
 									this::broadcastOnTopic,
 									"Broadcast event (payload in the body) on specific topic. The {topic} can be a regex."),
 					new Operation(
@@ -217,7 +219,7 @@ public class RESTImplementation {
 								"Manage custom protocol"),
 					new Operation(
 									"GET",
-									"/mux/last-sentence",
+									REST_PREFIX + "/last-sentence",
 									this::getLastNMEASentence,
 									"Get the last available inbound sentence"));
 

@@ -35,8 +35,8 @@ do
   then
     echo Make sure you have started the WebSocket server \(Option N\).
     rm weather.station.log
-    ./weather.station.reader > weather.station.log
-    # nohup ./weather.station.reader > weather.station.log &
+    # ./weather.station.reader > weather.station.log
+    nohup ./weather.station.reader > weather.station.log &
     echo .
 		ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
 		echo then from your browser, reach http://$ADDR:9876/data/weather.station/analog.all.html

@@ -23,7 +23,7 @@ import java.util.Properties;
  *   - Rain (precipitation rate)
  * <br>
  * It must be loaded dynamically. As such, it can be set only from the properties file
- * used at startup. It - for now - cannot be managed from the Web UI.
+ * used at startup. It - for now - cannot be managed from the Mux Web UI.
  * The REST api is not aware of it.
  * <br>
  * To load it, use the properties file at startup:

@@ -138,10 +138,10 @@ public class TCPReader extends NMEAReader {
 	public void setTimeout(long timeout) { /* Not used for TCP */ }
 
 	public static void main(String... args) {
-		String host = "192.168.1.1";
+		String host = "192.168.42.2";
 		int port = 7001; // 2947
 		try {
-			List<NMEAListener> ll = new ArrayList<NMEAListener>();
+			List<NMEAListener> ll = new ArrayList<>();
 			NMEAListener nl = new NMEAListener() {
 				@Override
 				public void dataRead(NMEAEvent nmeaEvent) {
