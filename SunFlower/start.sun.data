@@ -1,0 +1,5 @@
+#!/bin/bash
+echo Starting Sun Data REST Server
+nohup ./run resthttp &
+echo Done
+echo try http://$(hostname -I):9997/web/sun.data.html
