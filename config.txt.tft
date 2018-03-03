@@ -62,3 +62,8 @@ dtparam=audio=on
 start_x=1
 gpu_mem=128
 enable_uart=1
+#
+# 1: no rotation, 2: 180 degrees
+#
+lcd_rotate=2
+#

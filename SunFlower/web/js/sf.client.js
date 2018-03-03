@@ -1,6 +1,6 @@
 "use strict";
 
-var SunFlowerClient = function(dataManager, bp){
+var SunFlowerClient = function(dataManager, bp) {
 
     var onMessage = dataManager; // Client function
     var betweenPing = 1000;
