@@ -99,7 +99,9 @@ public class Utilities {
 	}
 
 	public static long currentTimeMicros() {
-		long milli = System.currentTimeMillis();
-		return milli * 1_000;
+//	long milli = System.currentTimeMillis();
+		long nanoTime = System.nanoTime();
+//	return milli * 1_000;
+		return Math.round(nanoTime / 1_000);
 	}
 }

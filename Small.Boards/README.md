@@ -25,7 +25,7 @@ Then
  $ ./install.sh
 ```
 
-### Ardiuno Uno
+### Arduino Uno
 Use a USB-A to USB-B (male-male) cable.
 
 For Arduino Uno, use board `Arduino/Genuino Uno`.

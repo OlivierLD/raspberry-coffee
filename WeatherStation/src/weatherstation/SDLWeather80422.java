@@ -17,6 +17,9 @@ import weatherstation.utils.Utilities;
  * Board from Switch Doc Labs
  */
 public class SDLWeather80422 {
+
+	private final static boolean verbose = "true".equals(System.getProperty("sdl.weather.station.verbose", "false"));
+
 	final GpioController gpio = GpioFactory.getInstance();
 
 	public enum AdcMode {
@@ -67,7 +70,7 @@ public class SDLWeather80422 {
 	// Other I2C Boards (BMP180, HTU21D-F, MOD-1016, etc)
 	private BMP180 bmp180 = null;
 	private HTU21DF htu21df = null;
-	// TODO MOD-1016 (lightning detector)
+	// TODO? MOD-1016 (lightning detector)
 
 	public SDLWeather80422() {
 		this(RaspiPin.GPIO_16, RaspiPin.GPIO_01, AdcMode.SDL_MODE_I2C_ADS1015);
@@ -97,7 +100,7 @@ public class SDLWeather80422 {
 			this.pinAnem.addListener(new GpioPinListenerDigital() {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-					if (event.getState().isHigh() && (System.currentTimeMillis() - lastWindPing) > 300) { // bouncetime{
+					if (event.getState().isHigh() && (System.currentTimeMillis() - lastWindPing) > 300) { // bouncetime
 						long currentTime = Utilities.currentTimeMicros() - lastWindTime;
 						lastWindTime = Utilities.currentTimeMicros();
 						if (currentTime > 1_000) { // debounce
@@ -198,8 +201,7 @@ public class SDLWeather80422 {
 		return voltage;
 	}
 
-	public void setWindMode(SdlMode selectedMode, int sampleTime) // time in seconds
-	{
+	public void setWindMode(SdlMode selectedMode, int sampleTime) { // time in seconds
 		this.sampleTime = sampleTime;
 		this.selectedMode = selectedMode;
 		if (this.selectedMode == SdlMode.SAMPLE) {
@@ -218,13 +220,13 @@ public class SDLWeather80422 {
 			// sample time exceeded, calculate currentWindSpeed
 			long timeSpan = (Utilities.currentTimeMicros() - this.startSampleTime);
 			this.currentWindSpeed = (float) ((this.currentWindCount) / (float) timeSpan) * WIND_FACTOR * wsCoeff * 1_000_000.0;
-      /*
-      System.out.printf("SDL_CWS = %f, shortestWindTime = %d, CWCount=%d TPS=%f\n",
-                        this.currentWindSpeed,
-                        this.shortestWindTime,
-                        this.currentWindCount,
-                        (float)this.currentWindCount/(float)this.sampleTime );
-      */
+      if (verbose) {
+	      System.out.printf("SDL_CWS = %f, shortestWindTime = %d, CWCount=%d TPS=%f\n",
+			      this.currentWindSpeed,
+			      this.shortestWindTime,
+			      this.currentWindCount,
+			      (float) this.currentWindCount / (float) this.sampleTime);
+      }
 			this.currentWindCount = 0;
 			this.startSampleTime = Utilities.currentTimeMicros();
 		}
