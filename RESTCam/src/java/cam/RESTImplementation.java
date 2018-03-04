@@ -31,6 +31,7 @@ public class RESTImplementation {
 	private final static boolean verbose = "true".equals(System.getProperty("cam.verbose", "false"));
 
 	private CamRequestManager camRequestManager;
+	private final static String CAM_PREFIX = "/cam";
 
 	private static boolean foundPCA9685 = true;
 
@@ -104,27 +105,27 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
-					"/cam/oplist",
+					CAM_PREFIX + "/oplist",
 					this::getOperationList,
 					"List of all available operations, on cam request manager."),
 			new Operation(
 					"POST",
-					"/cam/snap",
+					CAM_PREFIX + "/snap",
 					this::takeSnap,
 					"Takes a snapshot. Optional Query String parameters are 'name', 'rot', 'width', 'height'."),
 			new Operation(
 					"GET",
-							"/cam/position",
+							CAM_PREFIX + "/position",
 							this::getCameraPosition,
 					"When the camera can be oriented (2 servos), returns the tilt (up/down) and heading (left/right) values"),
 			new Operation(
 					"POST",
-					"/cam/tilt",
+					CAM_PREFIX + "/tilt",
 					this::setCameraTilt,
 					"When the camera can be oriented (2 servos), sets the tilt value (up/down) [-90..90]"),
 			new Operation(
 					"POST",
-					"/cam/heading",
+					CAM_PREFIX + "/heading",
 					this::setCameraHeading,
 					"When the camera can be oriented (2 servos), sets the heading value (left/right) [-90..90]")
 	);

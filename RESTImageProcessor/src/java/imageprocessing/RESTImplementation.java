@@ -27,6 +27,7 @@ import java.util.*;
 public class RESTImplementation {
 
 	private static boolean verbose = "true".equals(System.getProperty("image.verbose", "false"));
+	private final static String IMG_PREFIX = "/img";
 
 	private ImgRequestManager imgRequestManager;
 
@@ -49,17 +50,17 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
-					"/img/oplist",
+					IMG_PREFIX + "/oplist",
 					this::getOperationList,
 					"List of all available operations on the Img service."),
 			new Operation(
 					"POST",
-					"/img/download-and-transform",
+					IMG_PREFIX + "/download-and-transform",
 					this::requestTransformation,
 					"Request the download and transform of images (faxes) from the web."),
 			new Operation(
 					"POST",
-					"/img/get-from-file-system",
+					IMG_PREFIX + "/get-from-file-system",
 					this::requestTransformation,
 					"Same result as for download-and-transform, but will pick already transformed faxes from the file system.")
 	);

@@ -37,6 +37,7 @@ import java.util.Optional;
 public class RESTImplementation {
 
 	private static boolean verbose = "true".equals(System.getProperty("grib.verbose", "false"));
+	private final static String GRIB_PREFIX = "/grib";
 
 	private GRIBRequestManager gribRequestManager;
 
@@ -59,12 +60,12 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
-					"/grib/oplist",
+					GRIB_PREFIX + "/oplist",
 					this::getOperationList,
 					"List of all available operations on the Img service."),
 			new Operation(
 					"POST",
-					"/grib/get-data",
+					GRIB_PREFIX + "/get-data",
 					this::requestGRIBData,
 					"Request a GRIB download from the web, and return its json representation."));
 

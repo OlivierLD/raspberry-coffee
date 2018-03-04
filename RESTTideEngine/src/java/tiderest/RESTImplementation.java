@@ -36,6 +36,8 @@ public class RESTImplementation {
 
 	private TideRequestManager tideRequestManager;
 
+	private final static String TIDE_PREFIX = "/tide";
+
 	private final static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	private final static SimpleDateFormat TZ_ABR = new SimpleDateFormat("z");
 	private final static SimpleDateFormat DATE_FMT = new SimpleDateFormat("yyyy-MM-dd");
@@ -61,47 +63,47 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
-					"/tide/oplist",
+					TIDE_PREFIX + "/oplist",
 					this::getOperationList,
 					"List of all available operations, on tide request manager."),
 			new Operation(
 					"GET",
-					"/tide/tide-stations",
+					TIDE_PREFIX + "/tide-stations",
 					this::getStationsList,
 					"Get Tide Stations list. Returns an array of Strings containing the Station full names. Paginable, supports 'filter', 'limit' and 'offset' optional query string parameters. Default offset is 0, default limit is 500."),
 			new Operation(
 					"GET",
-					"/tide/coeff-definitions",
+					TIDE_PREFIX + "/coeff-definitions",
 					this::getCoefficients,
 					"Get all the coefficient names and definitions"),
 			new Operation(
 					"GET",
-					"/tide/coeff-definitions/{coeff-name}",
+					TIDE_PREFIX + "/coeff-definitions/{coeff-name}",
 					this::getCoefficient,
 					"Get one coefficient name and definition. {coeff-name} is the name. Returns 'unknown' if not found in the map."),
 			new Operation(
 					"GET",
-					"/tide/tide-stations/{st-regex}",
+					TIDE_PREFIX + "/tide-stations/{st-regex}",
 					this::getStations,
 					"Get Tide Stations matching the regex. Returns all data of the matching stations. Regex might need encoding/escaping."),
 			new Operation(
 					"POST",
-					"/tide/tide-stations/{station-name}/wh",
+					TIDE_PREFIX + "/tide-stations/{station-name}/wh",
 					this::getWaterHeight,
 					"Creates a Water Height request for the {station}. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."),
 			new Operation(
 					"POST",
-					"/tide/publish/{station-name}",
+					TIDE_PREFIX + "/publish/{station-name}",
 					this::publishTideTable,
 					"Generates tide table document (pdf)"),
 			new Operation(
 					"POST",
-					"/tide/publish/{station-name}/moon-cal",
+					TIDE_PREFIX + "/publish/{station-name}/moon-cal",
 					this::publishMoonCalendar,
 					"Generates moon calendar document (pdf), for one year"),
 			new Operation(
 					"POST",
-					"/tide/tide-stations/{station-name}/wh/details",
+					TIDE_PREFIX + "/tide-stations/{station-name}/wh/details",
 					this::getWaterHeightPlus,
 					"Creates a Water Height request for the {station}, with harmonic curves. Requires 2 query params: from, and to, in Duration format. Station Name might need encoding/escaping. Can also take a json body payload."));
 

@@ -40,6 +40,7 @@ public class RESTImplementation {
 	private AstroRequestManager astroRequestManager;
 	private static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
+	private final static String ASTRO_PREFIX = "/astro";
 
 	public RESTImplementation(AstroRequestManager astroRequestManager) {
 		this.astroRequestManager = astroRequestManager;
@@ -59,47 +60,47 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
-					"/astro/oplist",
+					ASTRO_PREFIX + "/oplist",
 					this::getOperationList,
 					"List of all available operations, on astro request manager."),
 			new Operation( // QueryString contains date /positions-in-the-sky?at=2017-09-01T00:00:00
 					"GET",
-					"/astro/positions-in-the-sky",
+					ASTRO_PREFIX + "/positions-in-the-sky",
 					this::getPositionsInTheSky,
 					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optional: 'fromL' and 'fromG', 'wandering' (true|[false])."),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
 					"POST",
-					"/astro/sun-now",
+					ASTRO_PREFIX + "/sun-now",
 					this::getSunDataNow,
 					"Create a request for Sun data now. Requires body payload (GeoPoint)"),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
 					"POST",
-					"/astro/sun-between-dates",
+					ASTRO_PREFIX + "/sun-between-dates",
 					this::getSunDataBetween,
 					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 3 queryString prm : from and to, in DURATION Format, and tz, the timezone name."),
 			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
 					"POST",
-					"/astro/sun-moon-dec-alt",
+					ASTRO_PREFIX + "/sun-moon-dec-alt",
 					this::getSunMoonDecAlt,
 					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 2 queryString prm : from and to, in DURATION Format."),
 			new Operation( // Example: GET /astro/utc?tz=America%2FNome,America%2FNew_York,Europe%2FParis,Pacific%2FMarquesas
 					"GET",
-					"/astro/utc",
+					ASTRO_PREFIX + "/utc",
 					this::getCurrentTime,
 					"Get current UTC Date. Will return UTC time, system time, and optionally, the time(s) at the time zone(s) passed in QS prm 'tz', UTF-8 encoded, comma separated."),
 			new Operation(
 					"POST",
-					"/astro/publish/almanac",
+					ASTRO_PREFIX + "/publish/almanac",
 					this::publishAlmanac,
 					"Generates nautical almanac document (pdf)"),
 			new Operation(
 					"POST",
-					"/astro/publish/lunar",
+					ASTRO_PREFIX + "/publish/lunar",
 					this::publishLunar,
 					"Generates lunar distances document (pdf)"),
 			new Operation(
 					"POST",
-					"/astro/publish/perpetual",
+					ASTRO_PREFIX + "/publish/perpetual",
 					this::publishPerpetual,
 					"Generates perpetual nautical almanac document (pdf)")
 

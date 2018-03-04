@@ -27,6 +27,8 @@ public class RESTImplementation {
 
 	private SunFlower sunFlower;
 
+	private final static String SUN_FLOWER_PREFIX = "/sun-flower";
+
 	public RESTImplementation(SunFlower sf) {
 
 		this.sunFlower = sf;
@@ -48,47 +50,47 @@ public class RESTImplementation {
 	private List<Operation> operations = Arrays.asList(
 			new Operation(
 					"GET",
-					"/sun-flower/oplist",
+					SUN_FLOWER_PREFIX + "/oplist",
 					this::getOperationList,
 					"List of all available operations."),
 			new Operation(
 					"GET",
-					"/sun-flower/position",
+					SUN_FLOWER_PREFIX + "/position",
 					this::getPosition,
 					"Get device position on Earth."),
 			new Operation(
 					"GET",
-					"/sun-flower/device-heading",
+					SUN_FLOWER_PREFIX + "/device-heading",
 					this::getDeviceHeading,
 					"Get device heading."),
 			new Operation(
 					"GET",
-					"/sun-flower/servo-values",
+					SUN_FLOWER_PREFIX + "/servo-values",
 					this::getServoValues,
 					"Get servos values"),
 			new Operation(
 					"GET",
-					"/sun-flower/dates",
+					SUN_FLOWER_PREFIX + "/dates",
 					this::getDates,
 					"Get the dates (System, UTC, Solar"),
 			new Operation(
 					"GET",
-					"/sun-flower/sun-data",
+					SUN_FLOWER_PREFIX + "/sun-data",
 					this::getSunData,
 					"Get the computed Sun data"),
 			new Operation(
 					"GET",
-					"/sun-flower/battery-data",
+					SUN_FLOWER_PREFIX + "/battery-data",
 					this::getBatteryData,
 					"Get the LiPo battery data (voltage)"),
 			new Operation(
 					"GET",
-					"/sun-flower/photo-cell-data",
+					SUN_FLOWER_PREFIX + "/photo-cell-data",
 					this::getPhotoCellData,
 					"Get the photo-cell data (adc [0..1023])"),
 			new Operation(
 					"GET",
-					"/sun-flower/all",
+					SUN_FLOWER_PREFIX + "/all",
 					this::getAll,
 					"Get everything!"));
 

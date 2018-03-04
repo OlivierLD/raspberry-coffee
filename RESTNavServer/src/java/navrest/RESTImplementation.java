@@ -25,6 +25,8 @@ public class RESTImplementation {
 
 	private NavRequestManager navRequestManager;
 
+	private final static String WW_PREFIX = "/ww";
+
 	public RESTImplementation(@Nonnull NavRequestManager restRequestManager) {
 
 		this.navRequestManager = restRequestManager;
@@ -53,7 +55,7 @@ public class RESTImplementation {
 			 */
 			new Operation(
 					"GET",
-					"/ww/composite-hierarchy", // QS Prm: filter
+					WW_PREFIX + "/composite-hierarchy", // QS Prm: filter
 					this::getCompositeHierarchy,
 					"Retrieve the list of the composites already available on the file system")
 	);
