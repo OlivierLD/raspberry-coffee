@@ -24,7 +24,7 @@ import java.util.Properties;
  * <br>
  * It must be loaded dynamically. As such, it can be set only from the properties file
  * used at startup. It - for now - cannot be managed from the Mux Web UI.
- * The REST api is not aware of it.
+ * The REST api (of the /mux resource) is not aware of it.
  * <br>
  * To load it, use the properties file at startup:
  * <pre>
@@ -206,11 +206,11 @@ public class RESTPublisher implements Forwarder {
 						logHumidity(xdr.getValue());
 					} else if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.PRESSURE_P)) {
 						logPressure(xdr.getValue() / 100);
-					} else if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.GENERIC)) { // Gonflé...
+					} else if (xdr.getTypeNunit().equals(StringGenerator.XDRTypes.GENERIC)) { // Consider it as prate...
 						logPRate(xdr.getValue());
 					}
 				});
-			}
+			} // Other sentences ignored (like GLL)
 		}
 	}
 
