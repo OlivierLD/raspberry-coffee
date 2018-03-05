@@ -16,6 +16,7 @@
 	<script type="module" src="widgets/AnalogDisplay.js"></script>
 	<script type="module" src="widgets/CompassRose.js"></script>
 	<script type="module" src="widgets/WorldMap.js"></script>
+	<script type="module" src="widgets/SkyMap.js"></script>
 
 	<style>
 		html {
@@ -1439,6 +1440,24 @@
 						<input type="radio" name="proj-02" value="GLOBE" onchange="setProjection('world-map-02', this);" checked>Globe
 						<input type="radio" name="proj-02" value="MERCATOR" onchange="setProjection('world-map-02', this);">Mercator
 						<input type="radio" name="proj-02" value="ANAXIMANDRE" onchange="setProjection('world-map-02', this);">Square
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<!--
+	  SKY MAPS
+	 +-->
+	<div style="cursor: pointer;" onclick="showHide('sky-map');"><b><u>Sky Map</u></b></div>
+	<div id="sky-map" class="smooth">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<sky-map id="sky-map-01"
+										 width="500"
+										 height="300"/>
 					</div>
 				</td>
 			</tr>
