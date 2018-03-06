@@ -46,7 +46,8 @@ public class RESTPublisher implements Forwarder {
 
 	private final static long ONE_MINUTE = 60 * 1_000;
 
-	private final static long INTERVAL = ONE_MINUTE;
+	private static long pushInterval = ONE_MINUTE;
+
 	private long previousTempLog = 0;
 	private long previousHumLog = 0;
 	private long previousPressLog = 0;
@@ -69,6 +70,10 @@ public class RESTPublisher implements Forwarder {
 		json.put("value", new Double(value));
 		if ("true".equals(this.properties.getProperty("aio.verbose"))) {
 			System.out.println(String.format("->->-> POSTing to feed [%s]: %s to %s", feed, json.toString(2), url));
+			System.out.println("Headers:");
+			headers.forEach((a, b) -> {
+				System.out.println(String.format("%s: %s", a, b));
+			});
 		}
 		if ("true".equals(this.properties.getProperty("aio.push.to.server", "true"))) {
 			HTTPClient.HTTPResponse response = HTTPClient.doPost(url, headers, json.toString());
@@ -82,7 +87,7 @@ public class RESTPublisher implements Forwarder {
 		String feed = AIR_TEMP;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousTempLog) > INTERVAL) {
+		if (Math.abs(now - previousTempLog) > pushInterval) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
 				previousTempLog = now;
@@ -96,7 +101,7 @@ public class RESTPublisher implements Forwarder {
 		String feed = HUMIDITY;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousHumLog) > INTERVAL) {
+		if (Math.abs(now - previousHumLog) > pushInterval) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
 				previousHumLog = now;
@@ -110,7 +115,7 @@ public class RESTPublisher implements Forwarder {
 		String feed = ATM_PRESS;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousPressLog) > INTERVAL) {
+		if (Math.abs(now - previousPressLog) > pushInterval) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
 				previousPressLog = now;
@@ -124,7 +129,7 @@ public class RESTPublisher implements Forwarder {
 		String feed = PRATE;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousPRateLog) > INTERVAL) {
+		if (Math.abs(now - previousPRateLog) > pushInterval) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
 				previousPRateLog = now;
@@ -138,7 +143,7 @@ public class RESTPublisher implements Forwarder {
 		String feed = TWS;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousTWSLog) > INTERVAL) {
+		if (Math.abs(now - previousTWSLog) > pushInterval) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
 				previousTWSLog = now;
@@ -152,7 +157,7 @@ public class RESTPublisher implements Forwarder {
 		String feed = TWD;
 		String url = this.properties.getProperty("aio.url");
 		long now = System.currentTimeMillis();
-		if (Math.abs(now - previousTWDLog) > INTERVAL) {
+		if (Math.abs(now - previousTWDLog) > pushInterval) {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
 				previousTWDLog = now;
@@ -236,5 +241,10 @@ public class RESTPublisher implements Forwarder {
 	@Override
 	public void setProperties(Properties props) {
 		this.properties = props;
+		try {
+			pushInterval = 1_000L * Long.parseLong(this.properties.getProperty("aio.push.interval", "60"));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

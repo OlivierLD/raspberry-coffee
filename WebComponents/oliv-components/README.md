@@ -28,7 +28,7 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 - Marquee. TODO
 - Evolution Displays. TODO
 - Graphs. TODO
-- Sky Map and Star Finder (along with some `REST` service(s)). TODO.
+- Sky Map and Star Finder (along with some `REST` service(s)). &#10140; WIP.
 - Satellite plotter?
 - Tide Graph?
 - Current Display?
