@@ -100,8 +100,18 @@ public class SDLWeather80422 {
 			this.pinAnem.addListener(new GpioPinListenerDigital() {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+
+					long currentTime = Utilities.currentTimeMicros() - lastWindTime;
+
+					if (verbose) {
+						System.out.println(String.format("Anemo Listener => High: %s, debounce: %d, currentTime: %d, windCount: %d",
+								(event.getState().isHigh()?"yes":"no"),
+								(System.currentTimeMillis() - lastWindPing),
+								currentTime,
+								currentWindCount));
+					}
+
 					if (event.getState().isHigh() && (System.currentTimeMillis() - lastWindPing) > 300) { // bouncetime
-						long currentTime = Utilities.currentTimeMicros() - lastWindTime;
 						lastWindTime = Utilities.currentTimeMicros();
 						if (currentTime > 1_000) { // debounce
 							currentWindCount += 1;
