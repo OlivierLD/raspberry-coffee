@@ -139,9 +139,9 @@ class JumboDisplay extends HTMLElement {
 				// console.log("Walking though ", document.styleSheets[s]);
 				for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 					let selector = document.styleSheets[s].cssRules[r].selectorText;
-	//			console.log(">>> ", selector);
+					//			console.log(">>> ", selector);
 					if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(JUMBO_TAG_NAME) > -1))) { // Cases like "tag-name .className"
-	//				console.log("  >>> Found it! [%s]", selector);
+					                                                                                                                                                           //				console.log("  >>> Found it! [%s]", selector);
 						let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 						let cssTextElems = cssText.split(";");
 						cssTextElems.forEach(function (elem) {
@@ -185,7 +185,6 @@ class JumboDisplay extends HTMLElement {
 		}
 		return colorConfig;
 	}
-
 
 	repaint() {
 		this.drawJumbo(this._value);

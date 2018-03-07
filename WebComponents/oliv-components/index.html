@@ -17,6 +17,7 @@
 	<script type="module" src="widgets/CompassRose.js"></script>
 	<script type="module" src="widgets/WorldMap.js"></script>
 	<script type="module" src="widgets/SkyMap.js"></script>
+	<script type="module" src="widgets/MarqueePanel.js"></script>
 
 	<style>
 		html {
@@ -281,6 +282,25 @@
     function setProjection(id, radio) {
 			document.getElementById(id).projection = radio.value;
 			document.getElementById(id).repaint();
+		}
+
+		let marqueeAnimationInterval;
+		function marquee(txtId, marqueeId) {
+			if (marqueeAnimationInterval !== undefined) {
+				window.clearInterval(marqueeAnimationInterval);
+				marqueeAnimationInterval = undefined;
+			} else {
+				let txt = document.getElementById(txtId).value;
+				let marqueeObj = document.getElementById(marqueeId);
+				let x = 1;
+				let y = 12;
+				marqueeAnimationInterval =  window.setInterval(function() {
+					x -= 1;
+					let data = { text: txt, x: x, y: y };
+					marqueeObj.displayData = JSON.stringify(data);
+					marqueeObj.repaint();
+				}, 100);
+			}
 		}
 
 	</script>
@@ -1459,6 +1479,43 @@
 						<sky-map id="sky-map-01"
 										 width="500"
 										 height="300"/>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<!--
+	  MARQUEE PANEL
+	 +-->
+	<div style="cursor: pointer;" onclick="showHide('marquee-panel');"><b><u>Marquee Panel</u></b></div>
+	<div id="marquee-panel" class="smooth">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<marquee-panel id="marquee-panel-01"
+													 width="1000"
+													 height="250"
+													 nb-cols="128"
+													 nb-lines="32"
+													 display-data='{ "text": "Akeu coucou!", "x": 4, "y": 12 }'/>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="black-frame">
+						Text:
+						<input type="text"
+									 id="marquee-text-01"
+									 placeholder="Text"
+									 title="Marquee Text"
+									 style="width: 500px; text-align: left;"
+									 value=""/>
+						<button onclick="marquee('marquee-text-01', 'marquee-panel-01')"
+										title="Go!"
+										style="margin-top: 3px;">Scroll</button>
 					</div>
 				</td>
 			</tr>
