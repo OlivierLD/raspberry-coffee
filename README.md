@@ -9,10 +9,10 @@ Do take a look, it also comes with a readme file.
 
 ---
 _Note:_
-Java code is compiled into `class` files, that run on a Java Virtual Machine (`JVM`). Java is not the only language that runs a `JVM`, this project also contains some small samples of 
+Java code is compiled into `class` files, that run on a Java Virtual Machine (`JVM`). Java is not the only language that runs a `JVM`, this project also contains some small samples of
 other JVM-aware languages, invoking and using the features of this project.
 
-Those samples include Scala, Groovy, Kotlin..., and the list is not closed! 
+Those samples include Scala, Groovy, Kotlin..., and the list is not closed!
 
 See in the [OthetJVM.languages](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/OtherJVM.languages) directory.
 
@@ -24,19 +24,42 @@ it uses the gradle wrapper (`gradlew`).
 `Git` is usually installed on Linux and Mac, but not on Windows. On Windows, you need to install the [`git bash shell`](http://lmgtfy.com/?q=install+git+bash+shell+on+windows), and run in it the commands mentioned in this document.
 
 ---
-To build it, clone this project, make sure the script named `gradlew` is executable, and execute `gradlew`.
+To build it, clone this project (this repo), make sure the script named `gradlew` is executable, and execute `gradlew`.
 ```
+ Prompt> git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
+ Prompt> cd raspberry-pi4j-samples
  Prompt> chmod +x gradlew
- Prompt> ./gradlew --daemon build
+ Prompt> ./gradlew [--daemon] build
 ```
-_Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
+You are expecting an end like that one:
+```
+
+
+BUILD SUCCESSFUL in 55s
+97 actionable tasks: 17 executed, 80 up-to-date
+Prompt>
+```
+See the `gradle` web site for info about Gradle.
+
+We will also be using the `shadowJar` gradle plugin is several projects.
+This plugin is aggregating the required classes _and all their dependencies_ into a single archive, called a `fat Jar`. This simplifies the syntax of the `classpath`.
+
+Typically, this operation will be run like this:
+```
+ Prompt> cd RESTNavServer
+ Prompt> ../gradlew shadowJar
+```
+The expected archive will be produced in the local `build/libs` directory.
+
+
+> _Important_ : If `JAVA_HOME` is not set at the system level, you can set it in `set.gradle.env` and execute it before running `gradlew`:
 ```
  Prompt> . ./set.gradle.env
 ```
 
 <i>Note:</i> If you are behind a firewall, you need a proxy. Mention it in all the files named <code>gradle.propetries</code>, and in <b>all</b> the <code>build.gradle</code> scripts, uncomment the following two lines:
 <pre>
-// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password") 
+// ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password")
 // compileJava.dependsOn(tellMeProxy)
 </pre>
 
@@ -53,16 +76,16 @@ But let us be honest, Integrated Development Environments (IDE) are quite cool.
 In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Smaller ones like GreenFoot, BlueJ are also options to consider.
 
 Those two last ones might be able to run on a Raspberry PI, but forget about the others..., they use way too much RAM.
- The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion 
+ The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion
  and similar features are here to help.
- 
+
  So, as the Raspberry PI is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry PI.
  I found it actually faster and more efficient than developing directly on the Raspberry PI.
- 
+
 ##### Something to keep in mind
- 
+
  Java - and other JVM Languages - implement the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**. In other words, you run the code on the Raspberry PI,
- but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs). 
+ but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs).
  This is specially useful when the code interacts with sensors and other devices that are not supported from the laptop.
 
 ---
