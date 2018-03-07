@@ -81,10 +81,6 @@ Those two last ones might be able to run on a Raspberry PI, but forget about the
  The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion
  and similar features are here to help. And I'm not even talking about the *remote debugging* features they provide as well.
 
- > _About Remote Debugging_: This feature is defined at the Java Virtual Machine (JVM) level, by
- > the Java Platform Debugging Architecture (JPDA). As such it is available for any language running on the JVM (Java, Scala, Groovy, etc).
- > This will make your life considerably easier than if you used another language missing this feature (like Python, C, and many others).
-
  So, as the Raspberry PI is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry PI.
  Worst case scenario, I do a `git push` from the development machine, and a `git pull` from the Raspberry PI.
  I found it actually faster and more efficient than developing directly on the Raspberry PI.
@@ -94,6 +90,8 @@ Those two last ones might be able to run on a Raspberry PI, but forget about the
  Java - and other JVM Languages - implement the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**. In other words, you run the code on the Raspberry PI,
  but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs).
  This is specially useful when the code interacts with sensors and other devices that are not supported from the laptop.
+ This will make your life considerably easier than if you used another language missing it (like Python, C, and many others).
+ It uses TCP between the debugger and the debuggee.
 
 ---
 
