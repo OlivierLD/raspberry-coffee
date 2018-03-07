@@ -6,8 +6,8 @@ import characters from "./character.matrixes/characters.js";
 // import characters from "./character.matrixes/characters"; // minifyJs does NOT like the .js extension
 
 const marqueeDefaultColorConfig = {
-	bgColor: 'white',
-	fgColor: 'green'
+	bgColor: 'gray',
+	fgColor: 'green' // Not used?
 };
 
 const NB_LINES = 32;
@@ -104,6 +104,8 @@ class MarqueePanel extends HTMLElement {
 			default:
 				break;
 		}
+		this.ledRadius = this.width / (2 * this._w);
+		this.initScreenMatrix();
 		this.repaint();
 	}
 
