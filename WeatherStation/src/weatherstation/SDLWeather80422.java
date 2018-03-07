@@ -101,19 +101,26 @@ public class SDLWeather80422 {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 
-					long currentTime = Utilities.currentTimeMicros() - lastWindTime;
 
 					if (verbose) {
-						System.out.println(String.format("Anemo Listener => High: %s, debounce: %d, currentTime: %d, windCount: %d",
+						System.out.println(String.format("Anemo Listener => High: %s, debounce: %d, windCount: %d",
 								(event.getState().isHigh()?"yes":"no"),
 								(System.currentTimeMillis() - lastWindPing),
-								currentTime,
 								currentWindCount));
 					}
 
-					if (event.getState().isHigh() && (System.currentTimeMillis() - lastWindPing) > 300) { // bouncetime
-						lastWindTime = Utilities.currentTimeMicros();
-						if (currentTime > 1_000) { // debounce
+					if (event.getState().isHigh() && (System.currentTimeMillis() - lastWindPing) > 300) { // bouncetime, 300 ms
+						long now = Utilities.currentTimeMicros();
+						long currentTime = now - lastWindTime;
+						lastWindTime = now;
+
+						if (verbose) {
+							System.out.println(String.format("\tcurrentTime: %d us, windCount: %d ticks",
+									currentTime,
+									currentWindCount));
+						}
+
+						if (currentTime > 1_000) { // debounce, 1 ms.
 							currentWindCount += 1;
 							if (currentTime < shortestWindTime) {
 								shortestWindTime = currentTime;
@@ -130,7 +137,7 @@ public class SDLWeather80422 {
 			this.pinRain.addListener(new GpioPinListenerDigital() {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-					if (event.getState().isHigh() && (System.currentTimeMillis() - lastRainPing) > 300) { // bouncetime
+					if (event.getState().isHigh() && (System.currentTimeMillis() - lastRainPing) > 300) { // bouncetime, 300 ms
 						long currentTime = Utilities.currentTimeMicros() - lastRainTime;
 						lastRainTime = Utilities.currentTimeMicros();
 						if (currentTime > 500) { // debounce
