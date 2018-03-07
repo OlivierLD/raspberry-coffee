@@ -41,10 +41,12 @@ public class SDLWeather80422 {
 
 	private int currentWindCount = 0;
 	private float currentRainCount = 0;
-	private long shortestWindTime = 0;
+	private long shortestWindMicroTime = 0;
 
-	private long lastWindPing = 0;
+	private long lastWindMilliSecPing = 0;
 	private long lastRainPing = 0;
+
+	private final static long MINIMUM_DEBOUNCE_TIME_MS = 300L;
 
 	private GpioPinDigitalInput pinAnem;
 	private GpioPinDigitalInput pinRain;
@@ -53,7 +55,7 @@ public class SDLWeather80422 {
 	private double currentWindSpeed = 0.0;
 	private double currentWindDirection = 0.0;
 
-	private long lastWindTime = 0;
+	private long lastWindMicroTime = 0;
 
 	private int sampleTime = 5;
 	private SdlMode selectedMode = SdlMode.SAMPLE;
@@ -101,32 +103,35 @@ public class SDLWeather80422 {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 
+					long nowMilliSec = System.currentTimeMillis();
 
 					if (verbose) {
 						System.out.println(String.format("Anemo Listener => High: %s, debounce: %d, windCount: %d",
 								(event.getState().isHigh()?"yes":"no"),
-								(System.currentTimeMillis() - lastWindPing),
+								(nowMilliSec - lastWindMilliSecPing),
 								currentWindCount));
 					}
 
-					if (event.getState().isHigh() && (System.currentTimeMillis() - lastWindPing) > 300) { // bouncetime, 300 ms
-						long now = Utilities.currentTimeMicros();
-						long currentTime = now - lastWindTime;
-						lastWindTime = now;
+					// Note: This line does not exist on Arduino code... Try to b ring MINIMUM_DEBOUNCE_TIME_MS to 1...
+					if (event.getState().isHigh() && (nowMilliSec - lastWindMilliSecPing) > MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, minimum 300 ms
+						long nowMicroSec = Utilities.currentTimeMicros();
+						long currentMicroTime = nowMicroSec - lastWindMicroTime;
+						lastWindMicroTime = nowMicroSec;
 
 						if (verbose) {
 							System.out.println(String.format("\tcurrentTime: %d us, windCount: %d ticks",
-									currentTime,
+									currentMicroTime,
 									currentWindCount));
 						}
 
-						if (currentTime > 1_000) { // debounce, 1 ms.
-							currentWindCount += 1;
-							if (currentTime < shortestWindTime) {
-								shortestWindTime = currentTime;
-							}
+						if (currentMicroTime > 1_000) { // debounce, 1 ms.
+							currentWindCount += 1;        // Increment Wind tick count
+							shortestWindMicroTime = Math.min(shortestWindMicroTime, currentMicroTime);
+//							if (currentMicroTime < shortestWindMicroTime) {
+//								shortestWindMicroTime = currentMicroTime;
+//							}
 						}
-						lastWindPing = System.currentTimeMillis();
+						lastWindMilliSecPing = nowMilliSec;
 						//      System.out.println(" --> GPIO pin state changed: " + System.currentTimeMillis() + ", " + event.getPin() + " = " + event.getState());
 					}
 				}
@@ -137,7 +142,7 @@ public class SDLWeather80422 {
 			this.pinRain.addListener(new GpioPinListenerDigital() {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-					if (event.getState().isHigh() && (System.currentTimeMillis() - lastRainPing) > 300) { // bouncetime, 300 ms
+					if (event.getState().isHigh() && (System.currentTimeMillis() - lastRainPing) > MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, 300 ms
 						long currentTime = Utilities.currentTimeMicros() - lastRainTime;
 						lastRainTime = Utilities.currentTimeMicros();
 						if (currentTime > 500) { // debounce
@@ -238,9 +243,9 @@ public class SDLWeather80422 {
 			long timeSpan = (Utilities.currentTimeMicros() - this.startSampleTime);
 			this.currentWindSpeed = (float) ((this.currentWindCount) / (float) timeSpan) * WIND_FACTOR * wsCoeff * 1_000_000.0;
       if (verbose) {
-	      System.out.printf("SDL_CWS = %f, shortestWindTime = %d, CWCount=%d TPS=%f\n",
+	      System.out.printf("SDL_CWS = %f, shortestWindMicroTime = %d, CWCount=%d TPS=%f\n",
 			      this.currentWindSpeed,
-			      this.shortestWindTime,
+			      this.shortestWindMicroTime,
 			      this.currentWindCount,
 			      (float) this.currentWindCount / (float) this.sampleTime);
       }
@@ -267,12 +272,12 @@ public class SDLWeather80422 {
 	}
 
 	public void resetWindGust() {
-		this.shortestWindTime = Long.MAX_VALUE;
+		this.shortestWindMicroTime = Long.MAX_VALUE;
 	}
 
 	public double getWindGust() {
-		long latestTime = this.shortestWindTime;
-		this.shortestWindTime = Long.MAX_VALUE;
+		long latestTime = this.shortestWindMicroTime;
+		this.shortestWindMicroTime = Long.MAX_VALUE;
 		double time = latestTime / 1_000_000d;  // in microseconds
 //  System.out.println("WindGust: Latest:" + latestTime + ", time:" + time);
 		if (time == 0d) {
