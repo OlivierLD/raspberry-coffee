@@ -87,7 +87,8 @@ Those two last ones might be able to run on a Raspberry PI, but forget about the
 
 ##### Something to keep in mind
 
- Java - and other JVM Languages - implement the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**. In other words, you run the code on the Raspberry PI,
+ The Java Virtual Machine (JVM) implements the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**.
+ In other words, you run the code on the Raspberry PI,
  but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs).
  This is specially useful when the code interacts with sensors and other devices that are not supported from the laptop.
  This will make your life considerably easier than if you used another language missing it (like Python, C, and many others).
