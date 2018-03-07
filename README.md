@@ -73,13 +73,20 @@ All the code provided here can be built from Gradle (all gradle scripts are prov
 The Raspberry PI is self sufficient, if this is all you have, nothing is preventing you from accessing **_all_** the features presented here.
 
 But let us be honest, Integrated Development Environments (IDE) are quite cool.
-In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Smaller ones like GreenFoot, BlueJ are also options to consider.
+In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Cloud9 provides amazing features, on line.
+Smaller ones like GreenFoot, BlueJ are also options to consider.
+
 
 Those two last ones might be able to run on a Raspberry PI, but forget about the others..., they use way too much RAM.
  The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion
- and similar features are here to help.
+ and similar features are here to help. And I'm not even talking about the *remote debugging* features they provide as well.
+
+ > _About Remote Debugging_: This feature is defined at the Java Virtual Machine (JVM) level, by
+ > the Java Platform Debugging Architecture (JPDA). As such it is available for any language running on the JVM (Java, Scala, Groovy, etc).
+ > This will make your life considerably easier than if you used another language missing this feature (like Python, C, and many others).
 
  So, as the Raspberry PI is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry PI.
+ Worst case scenario, I do a `git push` from the development machine, and a `git pull` from the Raspberry PI.
  I found it actually faster and more efficient than developing directly on the Raspberry PI.
 
 ##### Something to keep in mind
