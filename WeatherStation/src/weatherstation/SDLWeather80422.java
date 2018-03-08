@@ -113,7 +113,7 @@ public class SDLWeather80422 {
 					}
 
 					// Note: This line does not exist on Arduino code... Try to b ring MINIMUM_DEBOUNCE_TIME_MS to 1...
-					if (event.getState().isHigh() && (nowMilliSec - lastWindMilliSecPing) > MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, minimum 300 ms
+					if (event.getState().isHigh() && (nowMilliSec - lastWindMilliSecPing) > 0) { // MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, minimum 300 ms
 						long nowMicroSec = Utilities.currentTimeMicros();
 						long currentMicroTime = nowMicroSec - lastWindMicroTime;
 						lastWindMicroTime = nowMicroSec;
@@ -125,6 +125,9 @@ public class SDLWeather80422 {
 						}
 
 						if (currentMicroTime > 1_000) { // debounce, 1 ms.
+							if (verbose) {
+								System.out.println("\t\tDebounced!");
+							}
 							currentWindCount += 1;        // Increment Wind tick count
 							shortestWindMicroTime = Math.min(shortestWindMicroTime, currentMicroTime);
 //							if (currentMicroTime < shortestWindMicroTime) {
