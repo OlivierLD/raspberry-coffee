@@ -16,7 +16,6 @@ do
   echo -e '| N: Start Node server                          |'
   echo -e '| W: Start Weather Station reader               |'
   echo -e '| D: Start Weather Station dump                 |'
-  echo -e '| T: Start Weather Station and broadcast on TCP |'
   echo -e '| S: Show processes                             |'
   echo -e '| K: Kill them all                              |'
   echo -e '| Q: Quit                                       |'
@@ -36,23 +35,17 @@ do
     echo Make sure you have started the WebSocket server \(Option N\).
     rm weather.station.log
     # ./weather.station.reader > weather.station.log
-    nohup ./weather.station.reader > weather.station.log &
+    nohup ./weather.station.reader.sh > weather.station.log &
     echo .
 		ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
 		echo then from your browser, reach http://$ADDR:9876/data/weather.station/analog.all.html
 		echo IP is $(hostname -I)
     echo -n "Log is in weather.station.log. Hit [return] "
     read dummy
-  elif nocase "$a" "T"
-  then
-    rm weather.station.log
-    nohup ./weather.station.reader.tcp > weather.station.log &
-    echo -n "Hit [return] "
-    read dummy
   elif nocase "$a" "D"
   then
     echo -e "Ctrl+C to stop"
-    ./weather.station.datadump
+    weather.station.datadump.sh
     echo -n "Log is in weather.station.log. Hit [return] "
     read dummy
   elif nocase "$a" "S"

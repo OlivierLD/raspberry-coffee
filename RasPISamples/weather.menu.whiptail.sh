@@ -8,8 +8,7 @@ do
    whiptail --title "Weather Station" --menu "Choose option" 16 100 9 \
 	"1" "Start NodeJS server."   \
 	"2" "Start Weather Station reader."  \
-	"3" "Start Weather Station and broadcast on TCP." \
-	"4" "Show processes." \
+	"3" "Show processes." \
 	"9" "Quit"  3>&2 2>&1 1>&3
   )
 
@@ -25,8 +24,8 @@ do
 	"2")
 	  MESSAGE="Make sure you have started the WebSocket server (Option 1)."
     rm weather.station.log
-    # ./weather.station.reader > weather.station.log
-    nohup ./weather.station.reader > weather.station.log &
+    # ./weather.station.reader.sh > weather.station.log
+    nohup ./weather.station.reader.sh > weather.station.log &
     ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
     MESSAGE="$MESSAGE\nthen from your browser, reach http://$ADDR:9876/data/weather.station/analog.all.html"
     MESSAGE="$MESSAGE\nIP is $(hostname -I)"
@@ -34,12 +33,6 @@ do
 		result=$MESSAGE
 		;;
 	"3")
-	  rm weather.station.log
-    nohup ./weather.station.reader.tcp > weather.station.log &
-    MESSAGE="Log is in weather.station.log."
-		result=$MESSAGE
-    ;;
-	"4")
 		MESSAGE=
 	  PID=`ps -ef | grep -v grep | grep weatherstation.ws.HomeWeatherStation | awk '{ print $2 }'`
     if [ "$PID" != "" ]

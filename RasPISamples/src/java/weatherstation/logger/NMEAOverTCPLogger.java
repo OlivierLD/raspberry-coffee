@@ -158,4 +158,11 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 			tcpServer.write(nmeaGLL.getBytes());
 		}
 	}
+	@Override
+	public void close() {
+		System.out.println("(TCP Logger) Bye!");
+		if (tcpServer != null) {
+			tcpServer.close();
+		}
+	}
 }

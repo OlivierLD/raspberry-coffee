@@ -2,10 +2,8 @@ package weatherstation.ws;
 
 import org.json.JSONObject;
 import weatherstation.SDLWeather80422;
-import weatherstation.http.HTTPServer;
 import weatherstation.logger.LoggerInterface;
 
-import java.nio.channels.NotYetConnectedException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,24 +57,19 @@ public class HomeWeatherStation {
 
 	public static void main(String... args) throws Exception {
 		final Thread coreThread = Thread.currentThread();
-		final WebSocketFeeder wsf;
-		if ("true".equals(System.getProperty("ws.log", "false"))) { // ws stands for WebSocket (NOT Weather Station)
-			// Uses -Dws.uri
-			wsf = new WebSocketFeeder();
-		} else {
-			wsf = null;
-		}
 
 		String loggerClassNames = System.getProperty("data.logger", null); // comma separated list of LoggerInterface
 		if (loggerClassNames != null) {
 			String[] loggerClasses = loggerClassNames.split(",");
 			loggers = new ArrayList<>();
 			for (String loggerClassName : loggerClasses) {
-				try {
-					Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
-					loggers.add(logClass.newInstance());
-				} catch (Exception ex) {
-					ex.printStackTrace();
+				if (loggerClassName.trim().length() > 0) {
+					try {
+						Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
+						loggers.add(logClass.newInstance());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
 			}
 		}
@@ -85,14 +78,12 @@ public class HomeWeatherStation {
 			System.out.println("\nUser interrupted.");
 			go = false;
 			synchronized (coreThread) {
+				if (loggers != null && loggers.size() > 0) {
+					loggers.stream().forEach(logger -> logger.close());
+				}
 				coreThread.notify();
 			}
 		}));
-
-		HTTPServer httpServer = null;
-		if ("true".equals(System.getProperty("weather.station.http", "true"))) {
-			httpServer = new HTTPServer(); // Created and started
-		}
 
 		SDLWeather80422 weatherStation = new SDLWeather80422(); // With default parameters.
 		weatherStation.setWindMode(SDLWeather80422.SdlMode.SAMPLE, 5);
@@ -151,27 +142,12 @@ public class HomeWeatherStation {
 			 *   "rain": 0.1,
 			 *   "press": 101300.00,
 			 *   "temp": 18.34,
-			 *   "hum": 58.5,
-			 *   "cputemp": 34.56 }
+			 *   "hum": 58.5 }
 			 */
 			try {
 				String message = windObj.toString();
 				if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {
 					System.out.println("-> Wind Message:" + message);
-				}
-				if (httpServer != null) {
-					httpServer.setData(message);
-				}
-				if (wsf != null) {
-					if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {
-						System.out.println("-> Sending message (wsf)");
-					}
-					// TODO JSON or NMEA?
-					wsf.pushMessage(message);
-				} else {
-					if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {
-						System.out.println("-> NOT Sending message (wsf)");
-					}
 				}
 				if (loggers != null) {
 					loggers.stream()
@@ -182,13 +158,6 @@ public class HomeWeatherStation {
 									ex.printStackTrace();
 								}
 							});
-				}
-			} catch (NotYetConnectedException nyce) {
-				System.err.println(" ... Not yet connected, check your WebSocket server");
-				try {
-					wsf.initWebSocketConnection();
-				} catch (Exception ex) {
-					ex.printStackTrace();
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -203,9 +172,6 @@ public class HomeWeatherStation {
 			}
 		}
 		weatherStation.shutdown();
-		if (wsf != null) {
-			wsf.shutdown();
-		}
 		System.out.println("Done.");
 	}
 

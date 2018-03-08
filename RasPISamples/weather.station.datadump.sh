@@ -3,13 +3,10 @@
 CP=./build/libs/RasPISamples-1.0-all.jar
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dws.verbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1.0"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dws.http=false"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dws.log=false"
 # data.logger is that class dealing with the read data
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.verbose=true"
-JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.DummyLogger -Dws.between.logs=1000"
+JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.DummyLogger"
 # JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=1044"
 #
 #echo Make sure the server is started \(node/weather.server.js\)

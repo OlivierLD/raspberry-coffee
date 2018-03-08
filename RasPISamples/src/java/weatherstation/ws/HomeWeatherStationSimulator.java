@@ -19,34 +19,33 @@ public class HomeWeatherStationSimulator {
 
 	public static void main(String... args) throws Exception {
 		final Thread coreThread = Thread.currentThread();
-		WebSocketFeeder wsf = null; // new WebSocketFeeder();
-		if ("true".equals(System.getProperty("ws.log"))) { // ws stands for WebSocket (NOT Weather Station)
-			// Uses -Dws.uri
-			wsf = new WebSocketFeeder();
-		}
+
 		String loggerClassNames = System.getProperty("data.logger", null);
 		if (loggerClassNames != null) {
 			String[] loggerClasses = loggerClassNames.split(",");
 			loggers = new ArrayList<>();
 			for (String loggerClassName : loggerClasses) {
-				try {
-					Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
-					loggers.add(logClass.newInstance());
-				} catch (Exception ex) {
-					ex.printStackTrace();
+				if (loggerClassName.trim().length() > 0) {
+					try {
+						Class<? extends LoggerInterface> logClass = Class.forName(loggerClassName).asSubclass(LoggerInterface.class);
+						loggers.add(logClass.newInstance());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
 			}
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("\nUser interrupted.");
-				go = false;
-				synchronized (coreThread) {
-					coreThread.notify();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("\nUser interrupted.");
+			go = false;
+			synchronized (coreThread) {
+				if (loggers != null && loggers.size() > 0) {
+					loggers.stream().forEach(logger -> logger.close());
 				}
+				coreThread.notify();
 			}
-		});
+		}));
 
 		double windSpeed = 0d;
 		double windGust = 0d;
@@ -90,16 +89,6 @@ public class HomeWeatherStationSimulator {
        *   "hum": 58.5 }
        */
 
-			if (wsf != null) {
-				System.out.println("Pushing " + windObj.toString());
-				try {
-					wsf.pushMessage(windObj.toString());
-					System.out.println(">> WS pushed OK");
-				} catch (Exception ex) {
-					System.err.println("WS Push error:");
-					ex.printStackTrace();
-				}
-			}
 			if (loggers != null) {
 				loggers.stream()
 						.forEach(logger -> {
@@ -126,9 +115,6 @@ public class HomeWeatherStationSimulator {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-		}
-		if (wsf != null) {
-			wsf.shutdown();
 		}
 		System.out.println("Done.");
 	}

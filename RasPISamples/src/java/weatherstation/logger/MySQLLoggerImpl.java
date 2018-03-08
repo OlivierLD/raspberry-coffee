@@ -9,6 +9,8 @@ import java.text.NumberFormat;
 
 /**
  * REST Interface to MySQL
+ * It is actually not dealing with MySQL, but with REST.
+ *
  * JSON payload looks like:
  * <p>
  * { "dir": 350.0,
@@ -123,5 +125,9 @@ public class MySQLLoggerImpl implements LoggerInterface {
 			json = new JSONObject(response);
 			System.out.println("Returned\n" + json.toString(2));
 		}
+	}
+	@Override
+	public void close() {
+		System.out.println("(MySQLLogger) Bye!");
 	}
 }

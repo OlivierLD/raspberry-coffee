@@ -44,9 +44,9 @@ public class SDLWeather80422 {
 	private long shortestWindMicroTime = 0;
 
 	private long lastWindMilliSecPing = 0;
-	private long lastRainPing = 0;
+	private long lastRainMilliSecPing = 0;
 
-	private final static long MINIMUM_DEBOUNCE_TIME_MS = 300L;
+	private final static long MINIMUM_DEBOUNCE_TIME_MS = 3L;
 
 	private GpioPinDigitalInput pinAnem;
 	private GpioPinDigitalInput pinRain;
@@ -57,12 +57,12 @@ public class SDLWeather80422 {
 
 	private long lastWindMicroTime = 0;
 
-	private int sampleTime = 5;
+	private int sampleTime = 5; // In seconds
 	private SdlMode selectedMode = SdlMode.SAMPLE;
 	private long startSampleTime = 0L;
 
-	private long currentRainMin = 0;
-	private long lastRainTime = 0;
+	private long currentRainMicroSecMin = 0;
+	private long lastRainMicroSecTime = 0;
 
 	private ADS1x15 ads1015 = null;
 	private final static ADS1x15.ICType ADC_TYPE = ADS1x15.ICType.IC_ADS1015;
@@ -113,7 +113,7 @@ public class SDLWeather80422 {
 					}
 
 					// Note: This line does not exist on Arduino code... Try to b ring MINIMUM_DEBOUNCE_TIME_MS to 1...
-					if (event.getState().isHigh() && (nowMilliSec - lastWindMilliSecPing) > 0) { // MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, minimum 300 ms
+					if (event.getState().isHigh() && (nowMilliSec - lastWindMilliSecPing) > MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, minimum 300 ms
 						long nowMicroSec = Utilities.currentTimeMicros();
 						long currentMicroTime = nowMicroSec - lastWindMicroTime;
 						lastWindMicroTime = nowMicroSec;
@@ -145,16 +145,17 @@ public class SDLWeather80422 {
 			this.pinRain.addListener(new GpioPinListenerDigital() {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-					if (event.getState().isHigh() && (System.currentTimeMillis() - lastRainPing) > MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, 300 ms
-						long currentTime = Utilities.currentTimeMicros() - lastRainTime;
-						lastRainTime = Utilities.currentTimeMicros();
-						if (currentTime > 500) { // debounce
+					long nowMilliSec = System.currentTimeMillis();
+					if (event.getState().isHigh() && (nowMilliSec - lastRainMilliSecPing) > MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, 300 ms
+						lastRainMicroSecTime = Utilities.currentTimeMicros();
+						long currentMicroSecTime = lastRainMicroSecTime - lastRainMicroSecTime;
+						if (currentMicroSecTime > 500) { // debounce
 							currentRainCount += 1;
-							if (currentTime < currentRainMin) {
-								currentRainMin = currentTime;
+							if (currentMicroSecTime < currentRainMicroSecMin) {
+								currentRainMicroSecMin = currentMicroSecTime;
 							}
 						}
-						lastRainPing = System.currentTimeMillis();
+						lastRainMilliSecPing = nowMilliSec;
 						//      System.out.println(" --> GPIO pin state changed: " + System.currentTimeMillis() + ", " + event.getPin() + " = " + event.getState());
 					}
 				}

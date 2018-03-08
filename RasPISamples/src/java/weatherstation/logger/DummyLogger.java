@@ -8,4 +8,8 @@ public class DummyLogger implements LoggerInterface {
 			throws Exception {
 		System.out.println(">>> (Dummy) Logging:\n" + json.toString(2));
 	}
+	@Override
+	public void close() {
+		System.out.println("(DummyLogger) Bye!");
+	}
 }
