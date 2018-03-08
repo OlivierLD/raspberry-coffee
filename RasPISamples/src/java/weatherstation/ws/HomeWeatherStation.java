@@ -49,6 +49,9 @@ import java.util.List;
  * LoggerClassName must implement the LoggerInterface
  */
 public class HomeWeatherStation {
+
+	private static int SAMPLE_TIME = 5; // 5 seconds
+
 	private static boolean go = true;
 	private static List<LoggerInterface> loggers = null;
 
@@ -86,7 +89,7 @@ public class HomeWeatherStation {
 		}));
 
 		SDLWeather80422 weatherStation = new SDLWeather80422(); // With default parameters.
-		weatherStation.setWindMode(SDLWeather80422.SdlMode.SAMPLE, 5);
+		weatherStation.setWindMode(SDLWeather80422.SdlMode.SAMPLE, SAMPLE_TIME);
 
 		while (go) {
 			if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {

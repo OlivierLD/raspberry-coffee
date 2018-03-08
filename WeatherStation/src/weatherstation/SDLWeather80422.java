@@ -253,6 +253,7 @@ public class SDLWeather80422 {
 			      this.currentWindCount,
 			      (float) this.currentWindCount / (float) this.sampleTime);
       }
+      // Reset
 			this.currentWindCount = 0;
 			this.startSampleTime = Utilities.currentTimeMicros();
 		}
