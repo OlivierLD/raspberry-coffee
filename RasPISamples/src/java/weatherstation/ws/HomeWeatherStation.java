@@ -23,7 +23,6 @@ import java.util.List;
  * - Pressure (in Pa)
  * - HTU21DF: (if available)
  * - Relative Humidity (%)
- * - CPU Temperature (in Celcius)
  * <p>
  * if -Dws.log=true
  * Feeds a WebSocket server with a json object like
@@ -35,16 +34,14 @@ import java.util.List;
  * "rain": 0.1,
  * "press": 101300.00,
  * "temp": 18.34,
- * "hum": 58.5,
- * "cputemp": 34.56 }
+ * "hum": 58.5 }
  * <p>
  * - Logging...
  * - Sending Data to some DB (REST interface)
  * TODO
  * - Add orientable camera
  * <p>
- * Use -Dws.verbose=true for more output.
- * Use -Ddata.logger=<LoggerClassName> for logging
+ * Use -Ddata.logger=<LoggerClassName(s)> for logging
  *
  * LoggerClassName must implement the LoggerInterface
  */
