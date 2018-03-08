@@ -79,6 +79,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 		double rain   = json.getDouble("rain");
 		double press  = json.getDouble("press");
 		double temp   = json.getDouble("temp");
+		double dew    = json.getDouble("dew");
 
 		int deviceIdx = 0; // Instead of "BME280" or so...
 		String nmeaXDR = StringGenerator.generateXDR(DEVICE_PREFIX,
@@ -108,7 +109,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 				-Double.MAX_VALUE,  // Water Temp
 				hum,
 				-Double.MAX_VALUE,  // Abs hum
-				-Double.MAX_VALUE,  // dew point
+				dew,  // dew point
 				avgdir,  // TWD
 				-Double.MAX_VALUE,  // TWD (mag)
 				speed); // TWS

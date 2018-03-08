@@ -111,6 +111,7 @@ public class NMEADataCache
 	public static final String DELTA_ALTITUDE = "Delta Altitude";
 
 	public static final String PRATE = "prate";
+	public static final String DEW_POINT_TEMP = "dewpoint";
 
 	// Damping ArrayList's
 	private transient int dampingSize = 1;
@@ -424,14 +425,21 @@ public class NMEADataCache
 					break;
 				case "MDA": // Meteorological composite (Humidity, among others)
 					StringParsers.MDA mda = StringParsers.parseMDA(nmeaSentence);
-					if (mda.airT != null)
+					if (mda.airT != null) {
 						this.put(NMEADataCache.AIR_TEMP, new Temperature(mda.airT));
-					if (mda.waterT != null)
+					}
+					if (mda.waterT != null) {
 						this.put(NMEADataCache.WATER_TEMP, new Temperature(mda.waterT));
-					if (mda.pressBar != null)
+					}
+					if (mda.pressBar != null) {
 						this.put(NMEADataCache.BARO_PRESS, new Pressure(mda.pressBar * 1_000));
-					if (mda.relHum != null)
+					}
+					if (mda.relHum != null) {
 						this.put(NMEADataCache.RELATIVE_HUMIDITY, mda.relHum);
+					}
+					if (mda.dewC != null) {
+						this.put(NMEADataCache.DEW_POINT_TEMP, mda.dewC);
+					}
 					// TODO: More MDA data...
 					break;
 				case "XTE": // Cross Track Error

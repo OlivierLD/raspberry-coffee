@@ -44,6 +44,10 @@
 		  console.log("Precipitation Rate : %f", val);
 		  $("#pr").text(val.toFixed(2));
 	  });
+	  events.subscribe('dew', function(val) {
+		  console.log("Dew Point : %f", val);
+		  $("#dp").text(val.toFixed(2));
+	  });
   };
 
   var displayErr = function(err) {
@@ -74,6 +78,7 @@
 			<tr><td>Atm Pressure</td><td><span id="ap"></span> hPa</td></tr>
 			<tr><td>Relative Humidity</td><td><span id="rh"></span>%</td></tr>
 			<tr><td>Precipitation Rate</td><td><span id="pr"></span> mm/h</td></tr>
+			<tr><td>Dew Point</td><td><span id="dp"></span>&deg;C</td></tr>
 		</table>
 
     <div id="err-mess"></div>

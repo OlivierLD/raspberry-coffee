@@ -3,6 +3,7 @@ package weatherstation.ws;
 import org.json.JSONObject;
 import weatherstation.SDLWeather80422;
 import weatherstation.logger.LoggerInterface;
+import weatherstation.utils.Utilities;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -111,27 +112,35 @@ public class HomeWeatherStation {
 			windObj.put("speed", ws);
 			windObj.put("gust", wg);
 			windObj.put("rain", rain);
-			// Add temperature, pressure, humidity
-			if (weatherStation.isBMP180Available()) {
-				try {
-					float temp = weatherStation.readTemperature();
-					float press = weatherStation.readPressure();
-					windObj.put("temp", temp);
-					windObj.put("press", press);
-				} catch (Exception ex) {
-					ex.printStackTrace();
+
+			// Add temperature, pressure, humidity, dew point
+			if (weatherStation.isBMP180Available() || weatherStation.isHTU21DFAvailable()) {
+				Float hum = null, press = null, temp = null;
+				if (weatherStation.isBMP180Available()) {
+					try {
+						temp = weatherStation.readTemperature();
+						press = weatherStation.readPressure();
+						windObj.put("temp", temp);
+						windObj.put("press", press);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+				if (weatherStation.isHTU21DFAvailable()) {
+					try {
+						hum = weatherStation.readHumidity();
+						windObj.put("hum", hum);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+				if (temp != null && hum != null) {
+					double dew = Utilities.dewPointTemperature(hum, temp);
+					windObj.put("dew", dew);
 				}
 			}
-			if (weatherStation.isHTU21DFAvailable()) {
-				try {
-					float hum = weatherStation.readHumidity();
-					windObj.put("hum", hum);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-			float cpuTemp = 0; // SystemInfo.getCpuTemperature();
-			windObj.put("cputemp", cpuTemp);
+//			float cpuTemp = 0; // SystemInfo.getCpuTemperature();
+//			windObj.put("cputemp", cpuTemp);
 			/*
 			 * Sample message:
 			 * { "dir": 350.0,

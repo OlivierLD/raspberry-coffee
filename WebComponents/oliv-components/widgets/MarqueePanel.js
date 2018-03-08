@@ -63,6 +63,8 @@ class MarqueePanel extends HTMLElement {
 
 		this._displayData = {};
 
+		this._lastUsedColumn;
+
 	}
 
 	// Called whenever the custom element is inserted into the DOM.
@@ -150,6 +152,9 @@ class MarqueePanel extends HTMLElement {
 	}
 	get displayData() {
 		return JSON.parse(this._displayData);
+	}
+	get lastUsedColumn() {
+		return this._lastUsedColumn;
 	}
 
 	get shadowRoot() {
@@ -280,7 +285,7 @@ class MarqueePanel extends HTMLElement {
 		this.clear();
 		if (this._displayData.text !== undefined) {
 			// Fill the screen matrix
-			this.displayText(this._displayData.text, this._displayData.x, this._displayData.y);
+			this._lastUsedColumn = this.displayText(this._displayData.text, this._displayData.x, this._displayData.y);
 		}
 
 		let xStep = Math.round(this.width / this._w);
@@ -295,6 +300,16 @@ class MarqueePanel extends HTMLElement {
 
 	}
 
+	/**
+	 *
+	 * @param txt
+	 * @param xPx
+	 * @param yPx
+	 * @param fontFact
+	 * @param mode
+	 * @param rotate
+	 * @returns {*} The index of the last column used on the panel
+	 */
 	displayText(txt, xPx, yPx, fontFact, mode, rotate) {
 
 		fontFact = fontFact || 1;

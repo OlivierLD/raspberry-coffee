@@ -104,4 +104,30 @@ public class Utilities {
 //	return milli * 1_000;
 		return Math.round(nanoTime / 1_000);
 	}
+
+	/**
+	 *
+	 * @param hum in %
+	 * @param temp in Celcius
+	 * @return in Celcius
+	 */
+	public static double dewPointTemperature(double hum, double temp) {
+		double dewPointTemp = 0d;
+		double c1 = 6.10780;
+		double c2 = (temp > 0) ? 17.08085 : 17.84362;
+		double c3 = (temp > 0) ? 234.175 : 245.425;
+
+		double pz = c1 * Math.exp((c2 * temp) / (c3 + temp));
+		double pd = pz * (hum / 100d);
+
+		dewPointTemp = (- Math.log(pd / c1) * c3) / (Math.log(pd / c1) - c2);
+
+		return dewPointTemp;
+	}
+
+	public static void main(String... args) {
+		double hum = 65.45;
+		double temp = 18.2;
+		System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
+	}
 }

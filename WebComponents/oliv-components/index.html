@@ -287,15 +287,20 @@
 		let marqueeAnimationInterval;
 		function marquee(txtId, marqueeId) {
 			if (marqueeAnimationInterval !== undefined) {
-				window.clearInterval(marqueeAnimationInterval);
+				window.clearInterval(marqueeAnimationInterval); // Stop.
 				marqueeAnimationInterval = undefined;
 			} else {
 				let txt = document.getElementById(txtId).value;
 				let marqueeObj = document.getElementById(marqueeId);
-				let x = 1;
+				let x = marqueeObj.nbCols;
 				let y = 12;
-				marqueeAnimationInterval =  window.setInterval(function() {
-					x -= 1;
+				marqueeAnimationInterval = window.setInterval(function() { // Start
+					let luc = marqueeObj.lastUsedColumn;
+					if (luc > 0) {
+						x -= 1;
+					} else {
+						x = marqueeObj.nbCols; // Reset text on the right.
+					}
 					let data = { text: txt, x: x, y: y };
 					marqueeObj.displayData = JSON.stringify(data);
 					marqueeObj.repaint();

@@ -3,6 +3,7 @@ package weatherstation.ws;
 import org.json.JSONObject;
 
 import weatherstation.logger.LoggerInterface;
+import weatherstation.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,9 @@ public class HomeWeatherStationSimulator {
 			float press = (float) generateRandomValue(pressure, 100, 98_000, 105_000);
 			float hum = (float) generateRandomValue(humidity, 5, 0, 100);
 			float rain = (float) generateRandomValue(rainamount, 1, 0, 3);
+
+			double dew = Utilities.dewPointTemperature(hum, temp);
+
 			JSONObject windObj = new JSONObject();
 			windObj.put("dir", wd);
 			windObj.put("avgdir", mwd);
@@ -76,6 +80,7 @@ public class HomeWeatherStationSimulator {
 			windObj.put("press", press);
 			windObj.put("hum", hum);
 			windObj.put("rain", rain);
+			windObj.put("dew", dew);
 		  /*
        * Sample message:
        * { "dir": 350.0,

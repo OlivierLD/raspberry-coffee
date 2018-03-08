@@ -223,6 +223,13 @@ var onMessage = function (json) {
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "prate");
 		}
+		try {
+			var dew = json.dewpoint;
+			events.publish('dew', dew);
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "dew");
+		}
+
 
 		if (errMess !== undefined && forwardAjaxErrors) {
 			displayErr(errMess);
