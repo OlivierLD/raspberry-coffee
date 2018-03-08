@@ -7,6 +7,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dweather.station.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Ddebounce.time.millisec=30"
 #
 # data.logger is the list of classes dealing with the data read from the Weather Station
 #

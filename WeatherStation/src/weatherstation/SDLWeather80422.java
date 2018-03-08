@@ -46,7 +46,8 @@ public class SDLWeather80422 {
 	private long lastWindMilliSecPing = 0;
 	private long lastRainMilliSecPing = 0;
 
-	private final static long MINIMUM_DEBOUNCE_TIME_MS = 3L;
+	private final static long DEFAULT_MIN_DEBOUNCE_TIME = 3L; // in milli seconds.
+	private static long minimumDebounceTimeMilliSec = DEFAULT_MIN_DEBOUNCE_TIME; // -Ddebounce.time.millisec=30
 
 	private GpioPinDigitalInput pinAnem;
 	private GpioPinDigitalInput pinRain;
@@ -87,6 +88,15 @@ public class SDLWeather80422 {
 //  GPIO.add_event_detect(pinRain, GPIO.RISING, callback=self.serviceInterruptRain, bouncetime=300)
 
 		try {
+			minimumDebounceTimeMilliSec = Long.parseLong(System.getProperty("debounce.time.millisec", String.valueOf(DEFAULT_MIN_DEBOUNCE_TIME)));
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+		}
+		if (verbose) {
+			System.out.println(String.format("Minimum Debounce Time is set to %d millisec.", minimumDebounceTimeMilliSec));
+		}
+
+		try {
 			wsCoeff = Double.parseDouble(System.getProperty("ws.wspeed.coeff", Double.toString(wsCoeff)));
 		} catch (NumberFormatException nfe) {
 			nfe.printStackTrace();
@@ -112,8 +122,8 @@ public class SDLWeather80422 {
 								currentWindCount));
 					}
 
-					// Note: This line does not exist on Arduino code... Try to b ring MINIMUM_DEBOUNCE_TIME_MS to 1...
-					if (event.getState().isHigh() && (nowMilliSec - lastWindMilliSecPing) > MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, minimum 300 ms
+					// Note: This line does not exist on Arduino code...
+					if (event.getState().isHigh() && (nowMilliSec - lastWindMilliSecPing) > minimumDebounceTimeMilliSec) {
 						long nowMicroSec = Utilities.currentTimeMicros();
 						long currentMicroTime = nowMicroSec - lastWindMicroTime;
 						lastWindMicroTime = nowMicroSec;
@@ -146,7 +156,7 @@ public class SDLWeather80422 {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 					long nowMilliSec = System.currentTimeMillis();
-					if (event.getState().isHigh() && (nowMilliSec - lastRainMilliSecPing) > MINIMUM_DEBOUNCE_TIME_MS) { // bouncetime, 300 ms
+					if (event.getState().isHigh() && (nowMilliSec - lastRainMilliSecPing) > minimumDebounceTimeMilliSec) {
 						lastRainMicroSecTime = Utilities.currentTimeMicros();
 						long currentMicroSecTime = lastRainMicroSecTime - lastRainMicroSecTime;
 						if (currentMicroSecTime > 500) { // debounce

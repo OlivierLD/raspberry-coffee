@@ -4,6 +4,7 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1.0"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Ddebounce.time.millisec=30"
 # data.logger is that class dealing with the read data
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=weatherstation.logger.DummyLogger"
