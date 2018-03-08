@@ -13,6 +13,8 @@ import i2c.sensor.BMP180;
 import i2c.sensor.HTU21DF;
 import weatherstation.utils.Utilities;
 
+import java.text.NumberFormat;
+
 /**
  * Board from Switch Doc Labs
  */
@@ -116,21 +118,21 @@ public class SDLWeather80422 {
 					long nowMilliSec = System.currentTimeMillis();
 
 					if (verbose) {
-						System.out.println(String.format("Anemo Listener => High: %s, debounce: %d, windCount: %d",
+						System.out.println(String.format("Anemo Listener => High: %s, debounce: %s ms (compare to %d), windCount: %d",
 								(event.getState().isHigh()?"yes":"no"),
-								(nowMilliSec - lastWindMilliSecPing),
+								NumberFormat.getInstance().format(nowMilliSec - lastWindMilliSecPing),
+								minimumDebounceTimeMilliSec,
 								currentWindCount));
 					}
 
-					// Note: This line does not exist on Arduino code...
 					if (event.getState().isHigh() && (nowMilliSec - lastWindMilliSecPing) > minimumDebounceTimeMilliSec) {
 						long nowMicroSec = Utilities.currentTimeMicros();
 						long currentMicroTime = nowMicroSec - lastWindMicroTime;
 						lastWindMicroTime = nowMicroSec;
 
 						if (verbose) {
-							System.out.println(String.format("\tcurrentTime: %d us, windCount: %d ticks",
-									currentMicroTime,
+							System.out.println(String.format("\tcurrentTime: %s us, windCount: %d ticks",
+									NumberFormat.getInstance().format(currentMicroTime),
 									currentWindCount));
 						}
 
@@ -161,9 +163,10 @@ public class SDLWeather80422 {
 						long currentMicroSecTime = lastRainMicroSecTime - lastRainMicroSecTime;
 						if (currentMicroSecTime > 500) { // debounce
 							currentRainCount += 1;
-							if (currentMicroSecTime < currentRainMicroSecMin) {
-								currentRainMicroSecMin = currentMicroSecTime;
-							}
+							currentRainMicroSecMin = Math.min(currentRainMicroSecMin, currentMicroSecTime);
+//							if (currentMicroSecTime < currentRainMicroSecMin) {
+//								currentRainMicroSecMin = currentMicroSecTime;
+//							}
 						}
 						lastRainMilliSecPing = nowMilliSec;
 						//      System.out.println(" --> GPIO pin state changed: " + System.currentTimeMillis() + ", " + event.getPin() + " = " + event.getState());
