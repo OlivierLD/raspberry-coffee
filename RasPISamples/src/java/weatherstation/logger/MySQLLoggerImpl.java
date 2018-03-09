@@ -21,15 +21,15 @@ import java.text.NumberFormat;
  * "press": 101300.00,
  * "temp": 18.34,
  * "hum": 58.5,
- * "cputemp": 34.56 }
+ * "dew": 34.56 }
  * <p>
  * The DB will take care of a timestamp.
  */
 public class MySQLLoggerImpl implements LoggerInterface {
 	private long lastLogged = 0L; // Time of the last logging
-	private static final long MINIMUM_BETWEEN_LOGS = 5_000L; // A System variable, in ms.
+	private static final long MINIMUM_BETWEEN_LOGS = 5_000L; // A System variable, in ms. "ws.between.logs"
 	private final static NumberFormat DOUBLE_FMT = new DecimalFormat("#0.000");
-	private final static String REST_URL = "http://donpedro.lediouris.net/php/raspi/insert.wd.php"; // A System variable, "ws.rest.url"
+	private final static String REST_URL = "http://donpedro.lediouris.net/php/raspi/insert.wd.php"; // Overridden by a System variable, "ws.rest.url"
 
 	private String restURL = "";
 	private long betweenLogs = MINIMUM_BETWEEN_LOGS;

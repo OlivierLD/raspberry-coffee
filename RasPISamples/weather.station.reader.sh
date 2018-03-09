@@ -5,6 +5,7 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dweather.station.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.verbose=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Ddebounce.time.millisec=30"
