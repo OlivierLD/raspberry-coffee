@@ -103,6 +103,10 @@ public class MySQLLoggerImpl implements LoggerInterface {
 		if (s != null) {
 			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
 		}
+		s = json2qs(json, "dew", "DEW");
+		if (s != null) {
+			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
+		}
 		return qs;
 	}
 

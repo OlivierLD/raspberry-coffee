@@ -5,10 +5,10 @@ header('Content-type: application/json;charset=UTF-8');
 // phpinfo();
 /*
  * Insert weather data in a REST-like (so-so) way, with a GET (POST & PUT are not always supported).
- * http://machine:port/php/raspi/insert.wd.php?WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&CPU=34.56
+ * http://machine:port/php/raspi/insert.wd.php?WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&DEW=34.56
  *
  * URL QS:
- *  like WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&CPU=34.56
+ *  like WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&DEW=34.56
  *
  * Data are inserted in the WEATHER_DATA table.
  */
@@ -34,20 +34,20 @@ $rain   = getPrm('RAIN');
 $press  = getPrm('PRMSL');
 $atemp  = getPrm('ATEMP');
 $hum    = getPrm('HUM');
-$cpu    = getPrm('CPU');
+$dew    = getPrm('DEW');
 
 // App logic
 
 $username="oliv";
-$password="xxxx";
+$password="xxxxxx";
 $database="sensors";
 
 $link = mysql_connect("mysql", $username, $password);
 //$link = mysql_connect("localhost", $username, $password);
 @mysql_select_db($database) or die("Unable to select database $database");
 
-$sql = "INSERT INTO `weather_data` (`wdir`, `wgust`, `wspeed`, `rain`, `press`, `atemp`, `hum`, `cputemp`) "
-                         ."VALUES ('$wdir', '$wgust', '$wspeed', '$rain', '$press', '$atemp', '$hum', '$cpu')";  
+$sql = "INSERT INTO `weather_data` (`wdir`, `wgust`, `wspeed`, `rain`, `press`, `atemp`, `hum`, `dew`) "
+                         ."VALUES ('$wdir', '$wgust', '$wspeed', '$rain', '$press', '$atemp', '$hum', '$dew')";
 
 // $mess = "Record created";
 $mess = '{';
@@ -58,7 +58,7 @@ $mess .= " 'rain': '$rain',";
 $mess .= " 'press': '$press',";
 $mess .= " 'atemp': '$atemp',";
 $mess .= " 'hum': '$hum',";
-$mess .= " 'cputemp': '$cputemp'";
+$mess .= " 'dew': '$dew'";
 $mess .= "}";
 if (!mysql_query($sql)) {
   $mess = mysql_error();

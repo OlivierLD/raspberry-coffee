@@ -32,7 +32,7 @@ if (!empty($_GET['period'])) {
 }
 
 $username = "oliv";
-$password = "xxxxxxx";
+$password = "xxxxxx";
 $database = "sensors";
 
 $link = mysql_connect("mysql", $username, $password);
@@ -51,10 +51,10 @@ if ($type == 'WIND') {
   $sql .= ('atemp AS data_value');
 } else if ($type == 'HUM') {
   $sql .= ('hum AS data_value');
-} else if ($type == 'CPU') {
-  $sql .= ('cputemp AS data_value');
+} else if ($type == 'DEW') {
+  $sql .= ('dew AS data_value');
 } else if ($type == 'ALL') {
-  $sql .= ('cputemp, FORMAT(wdir, 0) as wdir, FORMAT(wgust, 2) as wgust, FORMAT(wspeed, 2) as wspeed, rain, press / 100 as press, atemp, hum');
+  $sql .= ('dew, FORMAT(wdir, 0) as wdir, FORMAT(wgust, 2) as wgust, FORMAT(wspeed, 2) as wspeed, rain, press / 100 as press, atemp, hum');
 }
 // All the data we are interested in are in WEATHER_DATA.
 $sql .=   ' FROM weather_data';
@@ -98,7 +98,7 @@ while ($i < $num) {
                                    .  ', "ws":'    . $array[2]
                                    . ' }');
   } else if ($type == 'ALL') {
-    $cpu   = mysql_result($result, $i, "cputemp");
+    $dew   = mysql_result($result, $i, "dew");
     $wdir  = mysql_result($result, $i, "wdir");
     $wgust = mysql_result($result, $i, "wgust");
     $ws    = mysql_result($result, $i, "wspeed");
@@ -115,7 +115,7 @@ while ($i < $num) {
           .  ', "press":' . $press
           .  ', "atemp":' . $atemp
           .  ', "hum":'   . $hum
-          .  ', "cpu":'   . $cpu
+          .  ', "dew":'   . $dew
           . ' }');
   } else {
     $json .= (($first ? '' : ', ') . '{ "time": "' . $time . '", "value": ' . $value . ' }');

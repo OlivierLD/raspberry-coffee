@@ -28,6 +28,6 @@ CREATE TABLE IF NOT EXISTS `weather_data` (
   `press` decimal(10,3) DEFAULT NULL,
   `atemp` decimal(10,3) DEFAULT NULL,
   `hum` decimal(10,3) DEFAULT NULL,
-  `cputemp` decimal(10,3) DEFAULT NULL,
+  `dew` decimal(10,3) DEFAULT NULL,
   PRIMARY KEY (`log_time`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
