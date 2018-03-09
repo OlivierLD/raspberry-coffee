@@ -430,3 +430,17 @@ compass-rose .gray-flat {
 	--night-color: rgba(192, 192, 192, 0.3);
 	--display-position-color: white;
 }
+
+.marquee-01 {
+	--bg-color-from: gray;
+	--bg-color-to: black;
+	--fg-color-from: red;
+	--fg-color-to: orange;
+}
+
+.marquee-02 {
+	--bg-color-from: gray;
+	--bg-color-to: white;
+	--fg-color-from: green;
+	--fg-color-to: yellow;
+}

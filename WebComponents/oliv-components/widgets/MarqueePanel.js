@@ -6,8 +6,14 @@ import characters from "./character.matrixes/characters.js";
 // import characters from "./character.matrixes/characters"; // minifyJs does NOT like the .js extension
 
 const marqueeDefaultColorConfig = {
-	bgColor: 'gray',
-	fgColor: 'green' // Not used?
+	bgColor: {
+		from: 'gray',
+		to: 'black'
+	},
+	fgColor: {
+		from: 'red',
+		to: 'orange'
+	}
 };
 
 const NB_LINES = 32;
@@ -184,11 +190,17 @@ class MarqueePanel extends HTMLElement {
 								let key = keyValPair[0].trim();
 								let value = keyValPair[1].trim();
 								switch (key) {
-									case '--bg-color':
-										colorConfig.bgColor = value;
+									case '--bg-color-from':
+										colorConfig.bgColor.from = value;
 										break;
-									case '--fg-color':
-										colorConfig.fgColor = value;
+									case '--bg-color-to':
+										colorConfig.bgColor.to = value;
+										break;
+									case '--fg-color-from':
+										colorConfig.fgColor.from = value;
+										break;
+									case '--fg-color-to':
+										colorConfig.fgColor.to = value;
 										break;
 									default:
 										break;
@@ -235,8 +247,8 @@ class MarqueePanel extends HTMLElement {
 
 	fillCircle(context, pt, radius, color) {
 		let grd = context.createRadialGradient(pt.x - (radius / 3), pt.y - (radius / 3), radius / 3, pt.x, pt.y, radius);
-		grd.addColorStop(0, "red");   // TODO css
-		grd.addColorStop(1, "orange");
+		grd.addColorStop(0, this.marqueeColorConfig.fgColor.from);
+		grd.addColorStop(1, this.marqueeColorConfig.fgColor.to);
 
 		context.beginPath();
 		context.fillStyle = grd; // color;
@@ -279,7 +291,10 @@ class MarqueePanel extends HTMLElement {
 		this.canvas.width = this.width;
 		this.canvas.height = this.height;
 
-		context.fillStyle = this.marqueeColorConfig.bgColor;
+		let grd = context.createRadialGradient(this.width / 2, this.height / 2, 5, this.width / 2, this.height / 2, Math.max(this.height, this.width) / 2);
+		grd.addColorStop(0, this.marqueeColorConfig.bgColor.from);
+		grd.addColorStop(1, this.marqueeColorConfig.bgColor.to);
+		context.fillStyle = grd;
 		context.fillRect(0, 0, this.width, this.height);
 
 		this.clear();

@@ -1500,10 +1500,11 @@
 				<td valign="top">
 					<div class="black-frame centered">
 						<marquee-panel id="marquee-panel-01"
+													 class="marquee-01"
 													 width="1000"
-													 height="250"
+													 height="125"
 													 nb-cols="128"
-													 nb-lines="32"
+													 nb-lines="16"
 													 display-data='{ "text": "Hello Web Components!", "x": 4, "y": 12 }'/>
 					</div>
 				</td>
@@ -1519,6 +1520,35 @@
 									 style="width: 500px; text-align: left;"
 									 value=""/>
 						<button onclick="marquee('marquee-text-01', 'marquee-panel-01');"
+										title="Go!"
+										style="margin-top: 3px;">Scroll</button>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<marquee-panel id="marquee-panel-02"
+													 class="marquee-02"
+													 width="1000"
+													 height="125"
+													 nb-cols="128"
+													 nb-lines="16"
+													 display-data='{ "text": "Hello Web Components!", "x": 4, "y": 12 }'/>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="black-frame">
+						Marquee Text:
+						<input type="text"
+									 id="marquee-text-02"
+									 placeholder="Text"
+									 title="Marquee Text"
+									 style="width: 500px; text-align: left;"
+									 value=""/>
+						<button onclick="marquee('marquee-text-02', 'marquee-panel-02');"
 										title="Go!"
 										style="margin-top: 3px;">Scroll</button>
 					</div>

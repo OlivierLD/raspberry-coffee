@@ -1,5 +1,7 @@
 package weatherstation.utils;
 
+import weatherstation.SDLWeather80422;
+
 public class Utilities {
 	private final static double VARY_VALUE = 0.05d;
 	private final static boolean verbose = "true".equals(System.getProperty("fuzzy.verbose", "false"));

@@ -254,13 +254,17 @@ public class SDLWeather80422 {
 	}
 
 	public double getCurrentWindSpeedWhenSampling() {
-		double compareValue = this.sampleTime * 1_000_000;
-		if ((Utilities.currentTimeMicros() - this.startSampleTime) >= compareValue) {
+		double compareValue = this.sampleTime * 1_000_000; // micro-seconds
+		long nowMicro = Utilities.currentTimeMicros();
+		if (verbose) {
+			System.out.println(String.format(">>> method getCurrentWindSpeedWhenSampling, compareValue = %f, nowMicro = %d", compareValue, nowMicro));
+		}
+		if ((nowMicro - this.startSampleTime) >= compareValue) {
 			// sample time exceeded, calculate currentWindSpeed
-			long timeSpan = (Utilities.currentTimeMicros() - this.startSampleTime);
+			long timeSpan = (nowMicro - this.startSampleTime);
 			this.currentWindSpeed = (float) ((this.currentWindCount) / (float) timeSpan) * WIND_FACTOR * wsCoeff * 1_000_000.0;
       if (verbose) {
-	      System.out.printf("SDL_CWS = %f, shortestWindMicroTime = %d, CWCount=%d TPS=%f\n",
+	      System.out.printf(">>> method getCurrentWindSpeedWhenSampling, SDL_CWS = %f, shortestWindMicroTime = %d, CWCount=%d TPS = %f\n",
 			      this.currentWindSpeed,
 			      this.shortestWindMicroTime,
 			      this.currentWindCount,
@@ -268,12 +272,16 @@ public class SDLWeather80422 {
       }
       // Reset
 			this.currentWindCount = 0;
-			this.startSampleTime = Utilities.currentTimeMicros();
+			this.startSampleTime = nowMicro;
 		}
 		return this.currentWindSpeed;
 	}
 
 	public double currentWindSpeed() {
+		if (verbose) {
+			System.out.println(String.format(">>> Method currentWindSpeed >> Mode: %s",
+					this.selectedMode.toString()));
+		}
 		if (this.selectedMode == SdlMode.SAMPLE) {
 			this.currentWindSpeed = this.getCurrentWindSpeedWhenSampling();
 		} else {
@@ -283,6 +291,9 @@ public class SDLWeather80422 {
 				Thread.sleep(Math.round(this.sampleTime * 1_000L));
 			} catch (Exception ex) {
 				ex.printStackTrace();
+			}
+			if (verbose) {
+				System.out.println(String.format("\t>>> Method currentWindSpeed, Count: %d, SampleTime: %d", this.currentWindCount, this.sampleTime));
 			}
 			this.currentWindSpeed = ((float) (this.currentWindCount) / (float) (this.sampleTime)) * WIND_FACTOR * wsCoeff;
 		}

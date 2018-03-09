@@ -56,6 +56,7 @@ public class HomeWeatherStationSimulator {
 		double humidity = 50;
 		double temperature = 15;
 		double rainamount = 0;
+		double dew = 0;
 
 		while (go) {
 			double ws = generateRandomValue(windSpeed, 3, 0, 65);
@@ -67,8 +68,7 @@ public class HomeWeatherStationSimulator {
 			float press = (float) generateRandomValue(pressure, 100, 98_000, 105_000);
 			float hum = (float) generateRandomValue(humidity, 5, 0, 100);
 			float rain = (float) generateRandomValue(rainamount, 1, 0, 3);
-
-			double dew = Utilities.dewPointTemperature(hum, temp);
+			dew = Utilities.dewPointTemperature(hum, temp);
 
 			JSONObject windObj = new JSONObject();
 			windObj.put("dir", wd);
@@ -91,7 +91,8 @@ public class HomeWeatherStationSimulator {
        *   "press": 101300.00,
        *   "temp": 18.34,
        *   "rain": 0.1,
-       *   "hum": 58.5 }
+       *   "hum": 58.5,
+        *  "dew": 9.87 }
        */
 
 			if (loggers != null) {

@@ -278,7 +278,7 @@ public class StringGenerator {
 			mda += ",";
 		}
 		if (dewPointInCelcius != -Double.MAX_VALUE) {
-			mda += (DIR_FMT.format(dewPointInCelcius) + ",C,");
+			mda += (TEMP_FMT.format(dewPointInCelcius) + ",C,");
 		} else {
 			mda += ",,";
 		}

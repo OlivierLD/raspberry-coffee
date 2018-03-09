@@ -436,9 +436,9 @@ var displayData = function() {
       } else if (type === "HUM") {
         graphdata.push(new Tuple(i, parseFloat(nmeaData[i].getNMEAHum())));
         unit = "%";
-      // } else if (type === "CPU") {
-      //   graphdata.push(new Tuple(i, parseFloat(nmeaData[i].getNMEACpu())));
-      //   unit = "\272C";
+      } else if (type === "DEW") {
+        graphdata.push(new Tuple(i, parseFloat(nmeaData[i].getNMEADew())));
+        unit = "\272C";
       }
     }
     var w = document.getElementById("graphCanvas").width;
@@ -656,7 +656,7 @@ var go = function() {
             <option value="PRESS">Pressure</option>
             <option value="HUM">Humidity</option>
             <option value="RAIN">Rain</option>
-            <!--option value="CPU">CPU Temperature</option-->
+            <option value="DEW">Dew Point Temperature</option>
           </select>
           &nbsp;&nbsp;<small>Click on the graph to update the displays.</small>
           &nbsp;&nbsp;<input type="checkbox" id="auto-refresh" onchange="javascript:autoRefresh();" title="Every 10 minutes">Auto refresh
@@ -689,6 +689,7 @@ var go = function() {
         <td align="center">Pressure in hPa</td>
         <td align="center">Air Temp in &deg;C</td>
         <td align="center">Rain in mm/h</td>
+        <!--td align="center">Dew Point Temp in &deg;C</td-->
       </tr>
       <tr>
         <td align="center" valign="top" width="200">
