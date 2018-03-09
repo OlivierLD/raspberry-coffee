@@ -45,7 +45,7 @@ do
   elif nocase "$a" "D"
   then
     echo -e "Ctrl+C to stop"
-    weather.station.datadump.sh
+    ./weather.station.datadump.sh
     echo -n "Log is in weather.station.log. Hit [return] "
     read dummy
   elif nocase "$a" "S"
