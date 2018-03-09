@@ -233,12 +233,12 @@ var setValues = function (doc) {
 			var dew = parseFloat(json.dew.toFixed(1));
 //    thermometer.animate(cpu);
 			dewTemp.setValue(dew);
-			document.getElementById('dewtemp-ok').checked = true;
+			document.getElementById('dew-ok').checked = true;
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? "\n" : "") + "Problem with CPU temperature...");
 //    thermometer.animate(0.0);
 			dewTemp.setValue(0.0);
-			document.getElementById('dewtemp-ok').checked = false;
+			document.getElementById('dew-ok').checked = false;
 		}
 
 		if (errMess !== undefined) {
