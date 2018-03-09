@@ -47,8 +47,17 @@ public class MySQLLoggerImpl implements LoggerInterface {
 				if (o instanceof Double) {
 					double d = ((Double) o).doubleValue();
 					ret = qsName + "=" + DOUBLE_FMT.format(d);
+				} else if (o instanceof Float) {
+					float f = ((Float) o).floatValue();
+					ret = qsName + "=" + DOUBLE_FMT.format(f);
+				} else if (o instanceof Integer) {
+					int i = ((Integer) o).intValue();
+					ret = qsName + "=" + DOUBLE_FMT.format(i);
+				} else if (o instanceof Long) {
+					long l = ((Long) o).longValue();
+					ret = qsName + "=" + DOUBLE_FMT.format(l);
 				} else
-					System.out.println("Got a " + o.getClass().getName());
+					System.out.println(">>> Un-managed type: Got a " + o.getClass().getName());
 			} else
 				System.out.println("No " + jMember);
 		} catch (JSONException je) { /* Not there */ }
@@ -57,7 +66,7 @@ public class MySQLLoggerImpl implements LoggerInterface {
 
 	/**
 	 * Produces a string like
-	 * WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&CPU=34.56
+	 * WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&DEW=34.56
 	 */
 	private String composeQS(JSONObject json) {
 
@@ -122,7 +131,7 @@ public class MySQLLoggerImpl implements LoggerInterface {
 			 * Actual logging goes here.
 			 * And yes, it is an insert, done through a GET. Limitation on Yahoo!'s php.
 			 * URL would be like
-			 * http://donpedro.lediouris.net/php/raspi/insert.wd.php?WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&CPU=34.56
+			 * http://donpedro.lediouris.net/php/raspi/insert.wd.php?WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&DEW=34.56
 			 */
 			System.out.println("REST Request:" + restURL + "?" + queryString);
 			String response = HTTPClient.getContent(restURL + "?" + queryString);
