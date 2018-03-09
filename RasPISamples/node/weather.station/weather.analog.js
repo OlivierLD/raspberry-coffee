@@ -230,7 +230,7 @@ var setValues = function (doc) {
 			document.getElementById('rain-ok').checked = false;
 		}
 		try {
-			var dew = parseFloat(json.dewtemp.toFixed(1));
+			var dew = parseFloat(json.dew.toFixed(1));
 //    thermometer.animate(cpu);
 			dewTemp.setValue(dew);
 			document.getElementById('dewtemp-ok').checked = true;
