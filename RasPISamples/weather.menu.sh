@@ -81,8 +81,8 @@ do
     else
       echo Found no HomeWeatherStation...
     fi
-    echo -n "Hit [return] "
-    read dummy
+#    echo -n "Hit [return] "
+#    read dummy
     PID=`ps -ef | grep -v grep | grep node-weather | awk '{ print $2 }'`
     if [ "$PID" != "" ]
     then
