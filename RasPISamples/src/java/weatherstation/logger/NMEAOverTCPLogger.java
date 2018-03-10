@@ -61,7 +61,9 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 	@Override
 	public void pushMessage(JSONObject json)
 			throws Exception {
-		System.out.println(">>> Pushing (NMEA-TCP) :\n" + json.toString(2)); // TODO Implement!
+		if (verbose) {
+			System.out.println(">>> Pushing (NMEA-TCP) :\n" + json.toString(2));
+		}
 		convertAndPush(json);
 	}
 
