@@ -24,6 +24,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=$DATA_LOGGERS"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.between.logs=600000"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=true"
 # Option for TCP logger
+JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.verbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dstation.lat=37.7489 -Dstation.lng=-122.5070"
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=1044"

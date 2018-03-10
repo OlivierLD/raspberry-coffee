@@ -19,7 +19,7 @@ import weatherstation.logger.servers.TCPServer;
 public class NMEAOverTCPLogger implements LoggerInterface {
 
 	private int tcpPort = 7001;
-	private boolean verbose = true; // TODO Make this a system variable
+	private boolean verbose = "true".equals(System.getProperty("tcp.verbose", "false"));
 	private TCPServer tcpServer = null;
 
 	private Double stationLatitude  = null;

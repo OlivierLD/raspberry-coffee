@@ -14,6 +14,8 @@ import i2c.sensor.HTU21DF;
 import weatherstation.utils.Utilities;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Board from Switch Doc Labs
@@ -21,6 +23,8 @@ import java.text.NumberFormat;
 public class SDLWeather80422 {
 
 	private final static boolean verbose = "true".equals(System.getProperty("sdl.weather.station.verbose", "false"));
+
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 	final GpioController gpio = GpioFactory.getInstance();
 
@@ -118,7 +122,8 @@ public class SDLWeather80422 {
 					long nowMilliSec = System.currentTimeMillis();
 
 					if (verbose) {
-						System.out.println(String.format("Anemo Listener => High: %s, debounce: %s ms (compare to %d), windCount: %d",
+						System.out.println(String.format(">>> [%s] Anemo Listener => High: %s, debounce: %s ms (compare to %d), windCount: %d",
+								SDF.format(new Date()),
 								(event.getState().isHigh()?"yes":"no"),
 								NumberFormat.getInstance().format(nowMilliSec - lastWindMilliSecPing),
 								minimumDebounceTimeMilliSec,
@@ -257,14 +262,17 @@ public class SDLWeather80422 {
 		double compareValue = this.sampleTime * 1_000_000; // micro-seconds
 		long nowMicro = Utilities.currentTimeMicros();
 		if (verbose) {
-			System.out.println(String.format(">>> method getCurrentWindSpeedWhenSampling, compareValue = %f, nowMicro = %d", compareValue, nowMicro));
+			System.out.println(String.format(">>> [%s] method getCurrentWindSpeedWhenSampling, compareValue = %s, nowMicro = %s",
+					SDF.format(new Date()),
+					NumberFormat.getInstance().format(Math.round(compareValue)),
+					NumberFormat.getInstance().format(nowMicro)));
 		}
 		if ((nowMicro - this.startSampleTime) >= compareValue) {
 			// sample time exceeded, calculate currentWindSpeed
 			long timeSpan = (nowMicro - this.startSampleTime);
 			this.currentWindSpeed = (float) ((this.currentWindCount) / (float) timeSpan) * WIND_FACTOR * wsCoeff * 1_000_000.0;
       if (verbose) {
-	      System.out.printf(">>> method getCurrentWindSpeedWhenSampling, SDL_CWS = %f, shortestWindMicroTime = %d, CWCount=%d TPS = %f\n",
+	      System.out.printf(">>>\tmethod getCurrentWindSpeedWhenSampling, SDL_CWS = %f, shortestWindMicroTime = %d, CWCount=%d TPS = %f\n",
 			      this.currentWindSpeed,
 			      this.shortestWindMicroTime,
 			      this.currentWindCount,
@@ -273,13 +281,16 @@ public class SDLWeather80422 {
       // Reset
 			this.currentWindCount = 0;
 			this.startSampleTime = nowMicro;
+		} else if (verbose) {
+			System.out.println(">>>\tgetCurrentWindSpeedWhenSampling still waiting for a bigger sample.");
 		}
 		return this.currentWindSpeed;
 	}
 
 	public double currentWindSpeed() {
 		if (verbose) {
-			System.out.println(String.format(">>> Method currentWindSpeed >> Mode: %s",
+			System.out.println(String.format(">>> [%s] Method currentWindSpeed >> Mode: %s",
+					SDF.format(new Date()),
 					this.selectedMode.toString()));
 		}
 		if (this.selectedMode == SdlMode.SAMPLE) {
