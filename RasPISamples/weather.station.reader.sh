@@ -15,7 +15,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
 DATA_LOGGERS=
 # DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.DummyLogger"
 DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.NMEAOverTCPLogger"
-# DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.HTTPLogger"
+DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.HTTPLogger"
 DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.WebSocketLogger"
 DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.MySQLLoggerImpl"
 #

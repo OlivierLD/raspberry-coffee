@@ -99,6 +99,9 @@ public class HomeWeatherStationSimulator {
 				loggers.stream()
 						.forEach(logger -> {
 							try {
+								if ("true".equals(System.getProperty("simulator.verbose", "false"))) {
+									System.out.println(String.format(">> Pushing %s", windObj));
+								}
 								logger.pushMessage(windObj);
 							} catch (Exception ex) {
 								ex.printStackTrace();

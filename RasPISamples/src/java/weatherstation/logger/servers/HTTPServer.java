@@ -18,13 +18,10 @@ public class HTTPServer {
 
 	public HTTPServer() throws Exception {
 		// Bind the server
-		String machineName = "localhost";
-		String port = "6666";
+		String port = "8080";
 
-		machineName = System.getProperty("http.host", machineName);
 		port = System.getProperty("http.port", port);
 
-		System.out.println("HTTP Host:" + machineName);
 		System.out.println("HTTP Port:" + port);
 
 		JSONObject dummyPayload = new JSONObject( // Free sample
@@ -53,9 +50,17 @@ public class HTTPServer {
 				try {
 					Map<String, String> header = new HashMap<>();
 					ServerSocket ss = new ServerSocket(_port);
-					System.out.println("Port " + _port + " opened successfully.");
+					System.out.println(">>>>>>>>>>>>>");
+					System.out.println(">> Port " + _port + " opened successfully.");
+					System.out.println(">>>>>>>>>>>>>");
 					while (go) {
+						if (verbose) {
+							System.out.println(">>> Top of the loop");
+						}
 						Socket client = ss.accept();
+						if (verbose) {
+							System.out.println(">>> HTTP Server, socket connection accepted");
+						}
 						BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 						PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
 						String line;
@@ -66,11 +71,11 @@ public class HTTPServer {
 							if (line.length() == 0) {
 								break;
 							} else if (line.startsWith("POST /exit") || line.startsWith("GET /exit")) {
-								System.out.println("Received an exit signal");
+								System.out.println(">>> HTTP Server, received an exit signal");
 								go = false;
 							} else if (line.startsWith("POST / ") || line.startsWith("GET / ") || line.startsWith("POST /all") || line.startsWith("GET /all")) {
 								// Usual case, reply
-								System.out.println("Received data request");
+								System.out.println(">>> HTTP Server, received data request <<<");
 							}
 							//          System.out.println("Read:[" + line + "]");
 							if (line.indexOf(":") > -1) { // Header?
@@ -78,6 +83,9 @@ public class HTTPServer {
 								String headerValue = line.substring(line.indexOf(":") + 1);
 								header.put(headerKey, headerValue);
 							}
+						}
+						if (verbose) {
+							System.out.println(">>> HTTP Server, Request has been read.");
 						}
 						String contentType = "text/plain";
 						String content = "exit";
@@ -98,6 +106,9 @@ public class HTTPServer {
 								System.out.println(">>> HTTP Server, content [" + content + "]");
 							}
 						}
+						if (verbose) {
+							System.out.println(">>> HTTP Server, pushing/flushing to client.");
+						}
 						out.flush();
 						out.close();
 						in.close();
@@ -106,22 +117,31 @@ public class HTTPServer {
 							System.out.println(">>> HTTP Server, loop bottom");
 						}
 					}
+					if (verbose) {
+						System.out.println(">>> HTTP Server, exiting");
+					}
 					ss.close();
 				} catch (Exception e) {
 					System.err.println(">>> Port " + _port + ", " + e.toString() + " >>>");
 					e.printStackTrace();
 					System.err.println("<<< Port " + _port + " <<<");
 				} finally {
-					System.out.println("HTTP Server is done.");
+					System.out.println(">>> HTTP Server is done.");
 				}
 			}
 		};
+		if (verbose) {
+			System.out.println(">>> HTTP Server, Starting listener thread");
+		}
 		httpListenerThread.start();
+		if (verbose) {
+			System.out.println(">>> HTTP Server, Listener thread started");
+		}
 	}
 
 	public void setData(String str) {
 		if (verbose) {
-			System.out.println("HTTP Logger, setData:" + str);
+			System.out.println(">>> HTTP Server, setData:" + str);
 		}
 		this.data = str;
 	}

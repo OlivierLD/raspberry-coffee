@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import weatherstation.logger.servers.HTTPServer;
 
 /**
- * Uses -Dhttp.host, -Dhttp.port
+ * Uses -Dhttp.port, default 8080
  */
 
 public class HTTPLogger implements LoggerInterface {
