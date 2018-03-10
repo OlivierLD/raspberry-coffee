@@ -16,6 +16,8 @@ public class HTTPServer {
 	private String data;
 	private int _port = 0;
 
+	private long started = 0L;
+
 	public HTTPServer() throws Exception {
 		// Bind the server
 		String port = "8080";
@@ -99,6 +101,9 @@ public class HTTPServer {
 							out.print("Content-Type: " + contentType + "\r\n");
 							out.print("Content-Length: " + content.length() + "\r\n");
 							out.print("Access-Control-Allow-Origin: *\r\n");
+							// Time running (since started)
+							long now = System.currentTimeMillis();
+							out.print("Time-Up-ms:" + String.valueOf(now - started) + "\r\n"); // Custom Header
 							out.print("\r\n"); // End Of Header
 							//
 							out.println(content);
@@ -137,6 +142,7 @@ public class HTTPServer {
 		if (verbose) {
 			System.out.println(">>> HTTP Server, Listener thread started");
 		}
+		started = System.currentTimeMillis();
 	}
 
 	public void setData(String str) {
