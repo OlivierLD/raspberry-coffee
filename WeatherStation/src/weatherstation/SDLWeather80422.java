@@ -323,12 +323,18 @@ public class SDLWeather80422 {
 		long latestTime = this.shortestWindMicroTime;
 		this.resetWindGust();
 		if (latestTime != Long.MAX_VALUE) {
-			double time = latestTime / 1_000_000d;  // in microseconds
+			double time = latestTime / 1_000_000d;  // in seconds
 //  System.out.println("WindGust: Latest:" + latestTime + ", time:" + time);
 			if (time == 0d) {
 				return 0;
 			} else {
-				return (1.0 / time) * WIND_FACTOR * wsCoeff;
+				double gust = (1.0 / time) * WIND_FACTOR * wsCoeff;
+				if (verbose) {
+					if (gust > 50) { // This is suspicious
+						System.out.println(String.format("Gust-> time: %f, gust: %f", time, gust));
+					}
+				}
+				return gust;
 			}
 		} else {
 			return 0;
