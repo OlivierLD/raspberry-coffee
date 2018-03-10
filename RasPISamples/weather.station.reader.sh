@@ -19,8 +19,8 @@ DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.WebSocketLogger"
 DATA_LOGGERS="$DATA_LOGGERS,weatherstation.logger.MySQLLoggerImpl"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Ddata.logger=$DATA_LOGGERS"
-# Options for MySQL logger. 600_000ms = 10 minutes
-JAVA_OPTIONS="$JAVA_OPTIONS -Dws.between.logs=600000"
+# Options for MySQL logger.
+JAVA_OPTIONS="$JAVA_OPTIONS -Dws.between.logs=600000"  # 600_000ms = 10 minutes
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmysql.logger.verbose=false"
 # Option for TCP logger
 JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.verbose=false"

@@ -47,7 +47,7 @@ public class SDLWeather80422 {
 
 	private int currentWindCount = 0;
 	private float currentRainCount = 0;
-	private long shortestWindMicroTime = 0;
+	private long shortestWindMicroTime = Long.MAX_VALUE;
 
 	private long lastWindMilliSecPing = 0;
 	private long lastRainMilliSecPing = 0;
@@ -321,13 +321,17 @@ public class SDLWeather80422 {
 
 	public double getWindGust() {
 		long latestTime = this.shortestWindMicroTime;
-		this.shortestWindMicroTime = Long.MAX_VALUE;
-		double time = latestTime / 1_000_000d;  // in microseconds
+		this.resetWindGust();
+		if (latestTime != Long.MAX_VALUE) {
+			double time = latestTime / 1_000_000d;  // in microseconds
 //  System.out.println("WindGust: Latest:" + latestTime + ", time:" + time);
-		if (time == 0d) {
-			return 0;
+			if (time == 0d) {
+				return 0;
+			} else {
+				return (1.0 / time) * WIND_FACTOR * wsCoeff;
+			}
 		} else {
-			return (1.0 / time) * WIND_FACTOR * wsCoeff;
+			return 0;
 		}
 	}
 
