@@ -267,22 +267,23 @@ public class SDLWeather80422 {
 					NumberFormat.getInstance().format(Math.round(compareValue)),
 					NumberFormat.getInstance().format(nowMicro)));
 		}
-		if ((nowMicro - this.startSampleTime) >= compareValue) {
+		if ((nowMicro - this.startSampleTime) >= compareValue) { // Sample is now big enough.
 			// sample time exceeded, calculate currentWindSpeed
 			long timeSpan = (nowMicro - this.startSampleTime);
 			this.currentWindSpeed = (float) ((this.currentWindCount) / (float) timeSpan) * WIND_FACTOR * wsCoeff * 1_000_000.0;
       if (verbose) {
-	      System.out.printf(">>>\tmethod getCurrentWindSpeedWhenSampling, SDL_CWS = %f, shortestWindMicroTime = %d, CWCount=%d TPS = %f\n",
+	      System.out.printf(">>>\tmethod getCurrentWindSpeedWhenSampling, WindSpeed = %f, shortestWindMicroTime = %d, CWCount = %d (WindTicks per Sec) = %f\n",
 			      this.currentWindSpeed,
 			      this.shortestWindMicroTime,
 			      this.currentWindCount,
-			      (float) this.currentWindCount / (float) this.sampleTime);
+			      (float) this.currentWindCount / (float) timeSpan);
       }
       // Reset
 			this.currentWindCount = 0;
 			this.startSampleTime = nowMicro;
-		} else if (verbose) {
-			System.out.println(">>>\tgetCurrentWindSpeedWhenSampling still waiting for a bigger sample.");
+		} else if (verbose) { // Sample not big enough yet.
+			System.out.println(String.format(">>>\tgetCurrentWindSpeedWhenSampling still waiting for a bigger sample. WindSpeed currently %f",
+					this.currentWindSpeed));
 		}
 		return this.currentWindSpeed;
 	}
@@ -303,10 +304,13 @@ public class SDLWeather80422 {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			if (verbose) {
-				System.out.println(String.format("\t>>> Method currentWindSpeed, Count: %d, SampleTime: %d", this.currentWindCount, this.sampleTime));
-			}
 			this.currentWindSpeed = ((float) (this.currentWindCount) / (float) (this.sampleTime)) * WIND_FACTOR * wsCoeff;
+			if (verbose) {
+				System.out.println(String.format("\t>>> Method currentWindSpeed, Count: %d, SampleTime: %d, => WindSpeed: %f",
+						this.currentWindCount,
+						this.sampleTime,
+						this.currentWindSpeed));
+			}
 		}
 		return this.currentWindSpeed;
 	}
