@@ -2,6 +2,8 @@ package weatherstation.utils;
 
 import weatherstation.SDLWeather80422;
 
+import java.text.NumberFormat;
+
 public class Utilities {
 	private final static double VARY_VALUE = 0.05d;
 	private final static boolean verbose = "true".equals(System.getProperty("fuzzy.verbose", "false"));
@@ -104,7 +106,7 @@ public class Utilities {
 //	long milli = System.currentTimeMillis();
 		long nanoTime = System.nanoTime();
 //	return milli * 1_000;
-		return Math.round(nanoTime / 1_000);
+		return Math.round(nanoTime / 1_000D);
 	}
 
 	/**
@@ -131,5 +133,12 @@ public class Utilities {
 		double hum = 65.45;
 		double temp = 18.2;
 		System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
+
+		for (int i=0; i<10; i++) {
+			long time = currentTimeMicros();
+			System.out.println(String.format("%s => %d", NumberFormat.getInstance().format(time), time));
+			try { Thread.sleep(1_000L); } catch (Exception ex) {}
+		}
+
 	}
 }
