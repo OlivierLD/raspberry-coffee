@@ -331,7 +331,7 @@ public class SDLWeather80422 {
 				double gust = (1.0 / time) * WIND_FACTOR * wsCoeff;
 				if (verbose) {
 					if (gust > 50) { // This is suspicious
-						System.out.println(String.format("Gust-> time: %f, gust: %f", time, gust));
+						System.out.println(String.format("Gust-> latestTime:%d, time: %f, gust: %f", latestTime, time, gust));
 					}
 				}
 				return gust;
