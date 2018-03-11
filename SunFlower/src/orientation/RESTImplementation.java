@@ -29,9 +29,40 @@ public class RESTImplementation {
 
 	private final static String SUN_FLOWER_PREFIX = "/sun-flower";
 
+	public RESTImplementation() {
+		this(null);
+		SunFlower sunFlower = new SunFlower(null, null);
+		SunFlower.setWithAdc(false);
+	}
 	public RESTImplementation(SunFlower sf) {
 
-		this.sunFlower = sf;
+		if (sf != null) {
+			this.sunFlower = sf;
+		} else { // Most probably no servos, started for Sun data
+			SunFlower sunFlower = new SunFlower(null, null);
+			String strLat = System.getProperty("latitude");
+			if (strLat != null) {
+				try {
+					sunFlower.setLatitude(Double.parseDouble(strLat));
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+					System.exit(1);
+				}
+			}
+			String strLong = System.getProperty("longitude");
+			if (strLong != null) {
+				try {
+					sunFlower.setLongitude(Double.parseDouble(strLong));
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+					System.exit(1);
+				}
+			}
+
+			SunFlower.setWithAdc(false);
+			this.sunFlower = sunFlower;
+			this.sunFlower.startWorking();
+		}
 
 		// Check duplicates in operation list. Barfs if duplicate is found.
 		RESTProcessorUtil.checkDuplicateOperations(operations);

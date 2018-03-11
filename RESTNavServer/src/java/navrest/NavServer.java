@@ -5,6 +5,8 @@ import gribprocessing.GRIBRequestManager;
 import http.HTTPServer;
 import imageprocessing.ImgRequestManager;
 import nmea.mux.GenericNMEAMultiplexer;
+import orientation.SunFlower;
+import orientation.SunFlowerRequestManager;
 import tiderest.TideRequestManager;
 
 import java.util.List;
@@ -47,6 +49,8 @@ public class NavServer {
 		this.httpServer.addRequestManager(new ImgRequestManager());
 		// Add GRIB features
 		this.httpServer.addRequestManager(new GRIBRequestManager());
+		// Add SunFlower, for sun data
+		this.httpServer.addRequestManager(new SunFlowerRequestManager());
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {

@@ -1,12 +1,36 @@
 package orientation;
 
+import analogdigitalconverter.mcp3008.MCP3008Reader;
+import calc.GeomUtil;
+import calculation.AstroComputer;
+import calculation.SightReductionUtil;
+import com.pi4j.io.gpio.Pin;
+import com.pi4j.io.i2c.I2CFactory;
+import http.HTTPServer;
+import http.RESTRequestManager;
+import i2c.servo.pwm.PCA9685;
+import org.fusesource.jansi.AnsiConsole;
+import utils.PinUtil;
+import utils.StringUtils;
+
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.stream.Collectors;
+
 import static ansi.EscapeSeq.ANSI_BOLD;
+import static ansi.EscapeSeq.ANSI_CLS;
 import static ansi.EscapeSeq.ANSI_DEFAULT_BACKGROUND;
 import static ansi.EscapeSeq.ANSI_DEFAULT_TEXT;
 import static ansi.EscapeSeq.ANSI_ERASE_TO_EOL;
 import static ansi.EscapeSeq.ANSI_ITALIC;
 import static ansi.EscapeSeq.ANSI_NORMAL;
-import static ansi.EscapeSeq.ANSI_CLS;
 import static ansi.EscapeSeq.ANSI_REVERSE;
 import static ansi.EscapeSeq.BOTTOM_LEFT_CORNER_BOLD;
 import static ansi.EscapeSeq.BOTTOM_RIGHT_CORNER_BOLD;
@@ -20,30 +44,6 @@ import static ansi.EscapeSeq.TOP_LEFT_CORNER_BOLD;
 import static ansi.EscapeSeq.TOP_RIGHT_CORNER_BOLD;
 import static ansi.EscapeSeq.TOP_T_BOLD;
 import static ansi.EscapeSeq.ansiLocate;
-import calculation.AstroComputer;
-import calculation.SightReductionUtil;
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.i2c.I2CFactory;
-import http.HTTPServer;
-import http.RESTRequestManager;
-import i2c.servo.pwm.PCA9685;
-import analogdigitalconverter.mcp3008.MCP3008Reader;
-
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.stream.Collectors;
-import org.fusesource.jansi.AnsiConsole;
-import calc.GeomUtil;
-import utils.PinUtil;
-import utils.StringUtils;
-
 import static utils.StaticUtil.userInput;
 import static utils.StringUtils.lpad;
 import static utils.StringUtils.rpad;
@@ -529,8 +529,10 @@ public class SunFlower implements RESTRequestManager {
 					if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
 						System.out.println(String.format("H> Setting heading to %.02f, delta=%.02f (target %.02f)", pos, Math.abs(pos - f), f));
 					}
-					for (int id : headingServoID) {
-						setAngle(id, pos);
+					if (headingServoID != null) {
+						for (int id : headingServoID) {
+							setAngle(id, pos);
+						}
 					}
 //				setAngle(headingServoID, pos);
 					pos += (sign * SMOOTH_STEP);
@@ -547,8 +549,10 @@ public class SunFlower implements RESTRequestManager {
 				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.HEADING)) {
 					System.out.println(String.format("H> Abrupt heading set to %.02f", f));
 				}
-				Arrays.stream(headingServoID).forEach(id -> setAngle(id, f));
-//			setAngle(headingServoID, f);
+				if (headingServoID != null) {
+					Arrays.stream(headingServoID).forEach(id -> setAngle(id, f));
+//			  setAngle(headingServoID, f);
+				}
 			}
 		}
 	}
@@ -596,9 +600,11 @@ public class SunFlower implements RESTRequestManager {
 				if (servoSuperVerbose.equals(servoVerboseType.BOTH) || servoSuperVerbose.equals(servoVerboseType.TILT)) {
 					System.out.println(String.format("T> Abrupt tilt set to %.02f (%.02f)", f, goToAngle));
 				}
+				if (tiltServoID !=  null) {
 //			setAngle(tiltServoID, goToAngle);
-				for (int id : tiltServoID) {
-					setAngle(id, goToAngle);
+					for (int id : tiltServoID) {
+						setAngle(id, goToAngle);
+					}
 				}
 			}
 		}
@@ -901,12 +907,12 @@ public class SunFlower implements RESTRequestManager {
 			} else if (servoVerbose) {
 				System.out.println("----------------------------------------------");
 				String posMess = String.format("Position %s / %s, Heading servo: #%s, Tilt servo: #%s, Tilt: limit %d, offset %d",
-								GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS),
-								GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW),
-								Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
-								Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
-								tiltLimit,
-								tiltOffset);
+						GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS),
+						GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW),
+						(headingServoID != null) ? Arrays.stream(headingServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")) : "none",
+						(tiltServoID != null) ? Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")) : "none",
+						tiltLimit,
+						tiltOffset);
 				System.out.println(posMess);
 				System.out.println("----------------------------------------------");
 			}

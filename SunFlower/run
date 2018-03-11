@@ -12,7 +12,7 @@ TILT_SERVO_ID=15    #,1
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
 # JAVA_OPTS="$JAVA_OPTS -Dlatitude=22.0616180555556 -Dlongitude=-159.378951111111" # Kauai.
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.8033" # 01-June-2017
+JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.9677" # 01-Jan-2018
 #
 JAVA_OPTS="$JAVA_OPTS -Dtest.servos=false"
 #
@@ -160,7 +160,9 @@ then
 	ADC_PRM="--with-adc:true --with-photocell:true --miso:$MISO --mosi:$MOSI --clk:$CLK --cs:$CS --battery-channel:$BAT_CHANNEL --photo-cell-channel:$PHOTO_CHANNEL"
 	# sudo is required when running on the RPi.
   # nohup sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID --with-adc:false --with-photocell:false &
-  java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID $ADC_PRM
+  COMMAND="java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID $ADC_PRM"
+  echo -e "Executing $COMMAND"
+  $COMMAND
 else
   opts=$(echo $JAVA_OPTS | tr ";" "\n")
   for opt in $opts

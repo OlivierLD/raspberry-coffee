@@ -26,7 +26,7 @@ GRIB_VERBOSE=false
 #
 CP=./build/libs/RESTNavServer-1.0-all.jar
 JAVA_OPTS=
-JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.8033" # 01-June-2017
+JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.9677" # 01-Jan-2018
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=$TIDE_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=$ASTRO_VERBOSE"
@@ -40,7 +40,11 @@ then
 fi
 #
 # refers to nmea.mux.properties, unless -Dmux.properties is set
-# JAVA_OPTS=""$JAVA_OPTS -Dmux.properties=nmea.mux.properties"
+echo -e ">>> Using nmea.mux.home.properties, TCP input from Weather station"
+JAVA_OPTS="$JAVA_OPTS -Dmux.properties=nmea.mux.home.properties"
+JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
+#
+echo -e "Using properties:$JAVA_OPTS"
 #
 java -cp $CP $JAVA_OPTS navrest.NavServer
 #

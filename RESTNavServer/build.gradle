@@ -16,12 +16,12 @@ sourceSets {
     resources {
       srcDir 'src/resources'
     }
-  }  
+  }
   test {
     java {
       srcDir 'tests/java'
     }
-  }  
+  }
 }
 
 
@@ -41,6 +41,7 @@ dependencies {
   compile project (':RESTImageProcessor')
   compile project (':RESTRouting')
   compile project (':NMEA.multiplexer')
+  compile project (':SunFlower')
 }
 
 import com.eriwen.gradle.js.tasks.MinifyJsTask
