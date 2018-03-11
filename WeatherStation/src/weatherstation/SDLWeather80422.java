@@ -322,7 +322,7 @@ public class SDLWeather80422 {
 	public double getWindGust() {
 		long latestTime = this.shortestWindMicroTime;
 		this.resetWindGust();
-		if (latestTime != Long.MAX_VALUE) {
+		if (latestTime != Long.MAX_VALUE && latestTime > 30_000) { // 30_000: 30ms debounce
 			double time = latestTime / 1_000_000d;  // in seconds
 //  System.out.println("WindGust: Latest:" + latestTime + ", time:" + time);
 			if (time == 0d) {
