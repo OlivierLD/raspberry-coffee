@@ -4,7 +4,7 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dweather.station.verbose=false"       # Home Weather Station
-JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.verbose=true"    # SDL Board
+JAVA_OPTIONS="$JAVA_OPTIONS -Dsdl.weather.station.verbose=false"   # SDL Board
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wspeed.coeff=1"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dws.wdir.offset=30"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Ddebounce.time.millisec=30"
