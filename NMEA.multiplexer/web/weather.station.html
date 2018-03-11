@@ -29,6 +29,10 @@
       console.log("Air Temperature : %f", val);
 	    setData(val, 'thermometer-01');
     });
+	  events.subscribe('dew', function(val) {
+		  console.log("Dew Point Temperature : %f", val);
+		  setData(val, 'thermometer-02');
+	  });
     events.subscribe('prmsl', function(val) {
       console.log("Atm Pressure : %f", val);
 	    setData(val, 'prmsl-01');
@@ -138,7 +142,20 @@
 					<!-- Air Temperature in &deg;C<br/ -->
 					<thermo-meter id="thermometer-01"
 												class="thermometer-orange"
-												title="Celcius"
+												title="Air, Celcius"
+												min-value="-10"
+												max-value="60"
+												major-ticks="10"
+												minor-ticks="1"
+												value="0"
+												width="100"
+												height="220"></thermo-meter>
+				</td>
+				<td align="center">
+					<!-- Dew point Temperature in &deg;C<br/ -->
+					<thermo-meter id="thermometer-02"
+												class="thermometer-orange"
+												title="Dew point, Celcius"
 												min-value="-10"
 												max-value="60"
 												major-ticks="10"
