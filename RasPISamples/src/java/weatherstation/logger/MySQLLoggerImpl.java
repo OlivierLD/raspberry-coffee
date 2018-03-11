@@ -133,10 +133,14 @@ public class MySQLLoggerImpl implements LoggerInterface {
 			 * URL would be like
 			 * http://donpedro.lediouris.net/php/raspi/insert.wd.php?WDIR=350.0&WSPEED=12.345&WGUST=13.456&RAIN=0.1&PRMSL=101300.00&ATEMP=18.34&HUM=58.5&DEW=34.56
 			 */
-			System.out.println("REST Request:" + restURL + "?" + queryString);
+			if ("true".equals(System.getProperty("mysql.logger.verbose", "false"))) {
+				System.out.println("REST Request:" + restURL + "?" + queryString);
+			}
 			String response = HTTPClient.getContent(restURL + "?" + queryString);
 			json = new JSONObject(response);
-			System.out.println("Returned\n" + json.toString(2));
+			if ("true".equals(System.getProperty("mysql.logger.verbose", "false"))) {
+				System.out.println("Returned\n" + json.toString(2));
+			}
 		}
 	}
 	@Override
