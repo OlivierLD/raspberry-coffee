@@ -31,8 +31,6 @@ public class RESTImplementation {
 
 	public RESTImplementation() {
 		this(null);
-		SunFlower sunFlower = new SunFlower(null, null);
-		SunFlower.setWithAdc(false);
 	}
 	public RESTImplementation(SunFlower sf) {
 
@@ -58,7 +56,6 @@ public class RESTImplementation {
 					System.exit(1);
 				}
 			}
-
 			SunFlower.setWithAdc(false);
 			this.sunFlower = sunFlower;
 			this.sunFlower.startWorking();

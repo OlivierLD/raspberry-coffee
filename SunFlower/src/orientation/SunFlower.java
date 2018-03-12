@@ -489,6 +489,8 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println("| Or you don't have enough credentials (sudo?).");
 			System.err.println("| Moving on anyway...");
 			System.err.println("+---------------------------------------------------------------------");
+			System.err.println("Here is the stack, for info:");
+			oops.printStackTrace();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.exit(1);

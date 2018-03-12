@@ -2,7 +2,7 @@
  * @author Olivier Le Diouris
  */
 var thermometerColorConfigWhite = {
-			bgColor: 'transparent',
+			bgColor: 'white',
 			digitColor: 'red',
 			withGradient: true,
 			displayBackgroundGradient: {from: 'black', to: 'LightGrey'},
@@ -17,7 +17,7 @@ var thermometerColorConfigWhite = {
 		};
 
 var thermometerColorConfigBlack = {
-			bgColor: 'transparent',
+			bgColor: 'black',
 			digitColor: 'red',
 			withGradient: true,
 			displayBackgroundGradient: {from: 'black', to: 'LightGrey'},

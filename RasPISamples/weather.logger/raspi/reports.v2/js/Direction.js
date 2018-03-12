@@ -4,7 +4,7 @@
 
 var directionColorConfigWhite =
 {
-  bgColor:           'transparent',
+  bgColor:           'white',
   digitColor:        'black',
   withGradient:      true,
   displayBackgroundGradient: { from: 'LightGrey', to: 'white' },
@@ -26,7 +26,7 @@ var directionColorConfigWhite =
 
 var directionColorConfigBlack =
 {
-  bgColor:           'transparent',
+  bgColor:           'black',
   digitColor:        'cyan',
   withGradient:      true,
   displayBackgroundGradient: { from: 'DarkGrey', to: 'black' },
