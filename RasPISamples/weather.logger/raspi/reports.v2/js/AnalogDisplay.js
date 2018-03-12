@@ -18,7 +18,7 @@
   */
 var analogDisplayColorConfigWhite =
 {
-  bgColor:           'white',
+  bgColor:           'transparent',
   digitColor:        'black',
   withGradient:      true,
   displayBackgroundGradient: { from: 'LightGrey', to: 'white' },
@@ -40,7 +40,7 @@ var analogDisplayColorConfigWhite =
 
 var analogDisplayColorConfigBlack =
 {
-  bgColor:           'black',
+  bgColor:           'transparent',
   digitColor:        'cyan',
   withGradient:      true,
   displayBackgroundGradient: { from: 'DarkGrey', to: 'black' },

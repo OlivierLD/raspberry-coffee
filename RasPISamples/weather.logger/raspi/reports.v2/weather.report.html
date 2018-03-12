@@ -156,7 +156,7 @@ var windArrow;
 
 var displayScale = 0.75;
 
-var displayTWD, displayTWS, displayPRMSL, displayRain, displayTemp, graph, map;
+var displayTWD, displayTWS, displayPRMSL, displayRain, displayTemp, displayDew, graph, map;
 var withTWD = true;
 var dataType = "";
 
@@ -165,6 +165,7 @@ window.onload = function() {
   displayTWS   = new AnalogDisplay('twsCanvas',   100 * displayScale,   50, 10, 1, true, 40);
   displayPRMSL = new AnalogDisplay('prmslCanvas', 100 * displayScale, 1045, 10, 1, true, 50, 985, 0);
   displayTemp  = new Thermometer('tempCanvas', 200);
+	displayDew   = new Thermometer('dewCanvas', 200);
   displayRain  = new Pluviometer('rainCanvas');
 
   loadMap();
@@ -195,7 +196,7 @@ var setDefaultTimeZone = function() {
 
 var ANIMATE = false;
 
-var updateOnClick = function(idx, tws, twd, prmsl, temp, rain) {
+var updateOnClick = function(idx, tws, twd, prmsl, temp, dew, rain) {
   var txtDate = JSONParser.nmeaData[idx].getNMEADate();
 //console.log("Date is : " + reformatDate(txtDate));
   var utc = document.getElementById("tz");
@@ -229,7 +230,14 @@ var updateOnClick = function(idx, tws, twd, prmsl, temp, rain) {
     displayTemp.setValue(tmp);
   }
 
-  var prate = rain;
+	var dewpoint = dew;
+	if (ANIMATE) {
+		displayDew.animate(dewpoint);
+	} else {
+		displayDew.setValue(dewpoint);
+	}
+
+	var prate = rain;
   if (ANIMATE) {
     displayRain.animate(prate);
   } else {
@@ -366,6 +374,7 @@ var mouseMoveOnGraphCallback = function(idx) {
                   data.getNMEATwd(),
                   data.getNMEAPrmsl(),
                   data.getNMEATemp(),
+		              data.getNMEADew(),
                   data.getNMEARain());
   }
 };
@@ -458,6 +467,7 @@ var displayData = function() {
                   data.getNMEATwd(),
                   data.getNMEAPrmsl(),
                   data.getNMEATemp(),
+		              data.getNMEADew(),
                   data.getNMEARain());
   }
 };
@@ -589,7 +599,7 @@ var go = function() {
           <h1 style="margin: 0px;">Weather Report</h1>
           <small>Select your period and click the "Query" button.</small>
         </td>
-        <td valign="top" colspan="2">
+        <td valign="top" colspan="3">
           <small>JQuery, Ajax, JSON &amp; PHP</small>
           <hr/>
           <table width="100%" border="0">
@@ -619,7 +629,7 @@ var go = function() {
         <td rowspan="7" valign="top"><div id="map" style="width: 400px; height: 530px;" title="Click on the Graph to see the wind on the map."></div></td>
       </tr>
       <tr>
-        <td align="left" colspan="5">
+        <td align="left" colspan="6">
           Time zone:
           <select id="tz" style="direction: ltr; font-family: 'Source Code Pro', 'courier new';">
             <option value="-12">UTC-12</option>
@@ -664,7 +674,7 @@ var go = function() {
         </td>
       </tr>
       <tr>
-        <td colspan="5" align="center">
+        <td colspan="6" align="center">
           &nbsp;<input type="checkbox" id="raw-data"    onchange="javascript:onDataChange();">Raw
           &nbsp;<input type="checkbox" id="smooth-data" onchange="javascript:onDataChange();" checked="true">Smoothed
           &nbsp;<input type="checkbox" id="tooltip"     onchange="javascript:onDataChange();" checked="true">Tooltip
@@ -674,12 +684,12 @@ var go = function() {
         </td>
       </tr>
       <tr>
-        <td colspan="5">
+        <td colspan="6">
           <div id="rec-span" title="Selected Data">Span...</div>
         </td>
       </tr>
       <tr>
-        <td colspan="5" title="Clicked on the graph">
+        <td colspan="6" title="Clicked on the graph">
           <div id="recno">Record...</div>
         </td>
       </tr>
@@ -688,6 +698,7 @@ var go = function() {
         <td align="center">Wind Speed in knots</td>
         <td align="center">Pressure in hPa</td>
         <td align="center">Air Temp in &deg;C</td>
+        <td align="center">Dew Point in &deg;C</td>
         <td align="center">Rain in mm/h</td>
         <!--td align="center">Dew Point Temp in &deg;C</td-->
       </tr>
@@ -702,10 +713,13 @@ var go = function() {
           <canvas id="prmslCanvas" width="180" height="165"/> <!-- class="displayCanvas"/-->
         </td>
         <td align="center" valign="top" width="100">
-          <canvas id="tempCanvas" width="90" height="165"/> <!-- class="displayCanvas"/-->
+          <canvas id="tempCanvas" width="60" height="165"/> <!-- class="displayCanvas"/-->
         </td>
         <td align="center" valign="top" width="100">
-          <canvas id="rainCanvas" width="90" height="165"/> <!-- class="displayCanvas"/-->
+          <canvas id="dewCanvas" width="60" height="165"/> <!-- class="displayCanvas"/-->
+        </td>
+        <td align="center" valign="top" width="100">
+          <canvas id="rainCanvas" width="60" height="165"/> <!-- class="displayCanvas"/-->
         </td>
       </tr>
     </table>
