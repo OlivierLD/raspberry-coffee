@@ -21,6 +21,7 @@ import java.util.Properties;
  *   - Wind Speed
  *   - Wind direction
  *   - Rain (precipitation rate)
+ *   - Dew point temperature
  * <br>
  * It must be loaded dynamically. As such, it can be set only from the properties file
  * used at startup. It - for now - cannot be managed from the Mux Web UI.
