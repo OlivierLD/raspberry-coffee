@@ -41,6 +41,7 @@ public class RESTPublisher implements Forwarder {
 	private static String TWS        = "tws";
 	private static String TWD        = "twd";
 	private static String PRATE      = "prate";
+	private static String DEWPOINT   = "dewpoint";
 
 	private Properties properties;
 
@@ -49,6 +50,7 @@ public class RESTPublisher implements Forwarder {
 	private static long pushInterval = ONE_MINUTE;
 
 	private long previousTempLog = 0;
+	private long previousDewLog = 0;
 	private long previousHumLog = 0;
 	private long previousPressLog = 0;
 	private long previousPRateLog = 0;
@@ -91,6 +93,20 @@ public class RESTPublisher implements Forwarder {
 			try {
 				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
 				previousTempLog = now;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	private void logDewTemp(double value) {
+		String feed = DEWPOINT;
+		String url = this.properties.getProperty("aio.url");
+		long now = System.currentTimeMillis();
+		if (Math.abs(now - previousDewLog) > pushInterval) {
+			try {
+				setFeedValue(this.properties.getProperty("aio.key"), url, feed, String.valueOf(value));
+				previousDewLog = now;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -191,6 +207,9 @@ public class RESTPublisher implements Forwarder {
 				}
 				if (mda.airT != null) {
 					logAirTemp(mda.airT);
+				}
+				if (mda.dewC != null) {
+					logDewTemp(mda.dewC);
 				}
 				if (mda.pressBar != null) {
 					logPressure(mda.pressBar * 1_000);
