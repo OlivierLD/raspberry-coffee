@@ -64,13 +64,13 @@ public class RESTPublisher implements Forwarder {
 	}
 
 	private void setFeedValue(String key, String baseUrl, String feed, String value) throws Exception {
-		System.out.println(String.format("URL:%s, key:%s", baseUrl, key));
 		String url = baseUrl + "/api/feeds/" + feed + "/data";
 		Map<String, String> headers = new HashMap<>(1);
 		headers.put("X-AIO-Key", key);
 		JSONObject json = new JSONObject();
 		json.put("value", new Double(value));
 		if ("true".equals(this.properties.getProperty("aio.verbose"))) {
+			System.out.println(String.format("URL:%s, key:%s", baseUrl, key));
 			System.out.println(String.format("->->-> POSTing to feed [%s]: %s to %s", feed, json.toString(2), url));
 			System.out.println("Headers:");
 			headers.forEach((a, b) -> {
