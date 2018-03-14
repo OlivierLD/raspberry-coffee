@@ -22,6 +22,8 @@ import java.util.Date;
  */
 public class SDLWeather80422 {
 
+	private final static boolean verboseWind = "true".equals(System.getProperty("sdl.weather.station.wind.verbose", "false"));
+	private final static boolean verboseRain = "true".equals(System.getProperty("sdl.weather.station.rain.verbose", "false"));
 	private final static boolean verbose = "true".equals(System.getProperty("sdl.weather.station.verbose", "false"));
 
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -121,7 +123,7 @@ public class SDLWeather80422 {
 
 					long nowMilliSec = System.currentTimeMillis();
 
-					if (verbose) {
+					if (verbose || verboseWind) {
 						System.out.println(String.format(">>> [%s] Anemo Listener => High: %s, debounce: %s ms (compare to %d), windCount: %d",
 								SDF.format(new Date()),
 								(event.getState().isHigh()?"yes":"no"),
@@ -135,14 +137,14 @@ public class SDLWeather80422 {
 						long currentMicroTime = nowMicroSec - lastWindMicroTime;
 						lastWindMicroTime = nowMicroSec;
 
-						if (verbose) {
+						if (verbose || verboseWind) {
 							System.out.println(String.format("\tcurrentTime: %s us, windCount: %d ticks",
 									NumberFormat.getInstance().format(currentMicroTime),
 									currentWindCount));
 						}
 
 						if (currentMicroTime > 1_000) { // debounce, 1 ms.
-							if (verbose) {
+							if (verbose || verboseWind) {
 								System.out.println("\t\tDebounced!");
 							}
 							currentWindCount += 1;        // Increment Wind tick count
@@ -163,10 +165,30 @@ public class SDLWeather80422 {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 					long nowMilliSec = System.currentTimeMillis();
+
+					if (verbose || verboseRain) {
+						System.out.println(String.format(">>> [%s] Rain Listener => High: %s, debounce: %s ms (compare to %d), rainCount: %d",
+								SDF.format(new Date()),
+								(event.getState().isHigh()?"yes":"no"),
+								NumberFormat.getInstance().format(nowMilliSec - lastRainMilliSecPing),
+								minimumDebounceTimeMilliSec,
+								currentRainCount));
+					}
+
 					if (event.getState().isHigh() && (nowMilliSec - lastRainMilliSecPing) > minimumDebounceTimeMilliSec) {
 						lastRainMicroSecTime = Utilities.currentTimeMicros();
 						long currentMicroSecTime = lastRainMicroSecTime - lastRainMicroSecTime;
+
+						if (verbose || verboseRain) {
+							System.out.println(String.format("\tcurrentTime: %s us, rainCount: %d ticks",
+									NumberFormat.getInstance().format(currentMicroSecTime),
+									currentRainCount));
+						}
+
 						if (currentMicroSecTime > 500) { // debounce
+							if (verbose || verboseRain) {
+								System.out.println("\t\tDebounced!");
+							}
 							currentRainCount += 1;
 							currentRainMicroSecMin = Math.min(currentRainMicroSecMin, currentMicroSecTime);
 //							if (currentMicroSecTime < currentRainMicroSecMin) {
@@ -209,6 +231,11 @@ public class SDLWeather80422 {
 	}
 
 	public float getCurrentRainTotal() {
+		if (verbose || verboseRain) {
+			System.out.println(String.format(">>> [%s] Method currentRainTotal >> RainAmount: %d",
+					SDF.format(new Date()),
+					currentRainCount));
+		}
 		float rainAmount = 0.2794f * this.currentRainCount / 2f;
 		resetRainTotal();
 		return rainAmount;
@@ -261,7 +288,7 @@ public class SDLWeather80422 {
 	public double getCurrentWindSpeedWhenSampling() {
 		double compareValue = this.sampleTime * 1_000_000; // micro-seconds
 		long nowMicro = Utilities.currentTimeMicros();
-		if (verbose) {
+		if (verbose || verboseWind) {
 			System.out.println(String.format(">>> [%s] method getCurrentWindSpeedWhenSampling, compareValue = %s, nowMicro = %s",
 					SDF.format(new Date()),
 					NumberFormat.getInstance().format(Math.round(compareValue)),
@@ -271,7 +298,7 @@ public class SDLWeather80422 {
 			// sample time exceeded, calculate currentWindSpeed
 			long timeSpan = (nowMicro - this.startSampleTime);
 			this.currentWindSpeed = (float) ((this.currentWindCount) / (float) timeSpan) * WIND_FACTOR * wsCoeff * 1_000_000.0;
-      if (verbose) {
+      if (verbose || verboseWind) {
 	      System.out.printf(">>>\tmethod getCurrentWindSpeedWhenSampling, WindSpeed = %f, shortestWindMicroTime = %d, CWCount = %d (WindTicks per Sec) = %f\n",
 			      this.currentWindSpeed,
 			      this.shortestWindMicroTime,
@@ -281,7 +308,7 @@ public class SDLWeather80422 {
       // Reset
 			this.currentWindCount = 0;
 			this.startSampleTime = nowMicro;
-		} else if (verbose) { // Sample not big enough yet.
+		} else if (verbose || verboseWind) { // Sample not big enough yet.
 			System.out.println(String.format(">>>\tgetCurrentWindSpeedWhenSampling still waiting for a bigger sample. WindSpeed currently %f",
 					this.currentWindSpeed));
 		}
@@ -289,7 +316,7 @@ public class SDLWeather80422 {
 	}
 
 	public double currentWindSpeed() {
-		if (verbose) {
+		if (verbose || verboseWind) {
 			System.out.println(String.format(">>> [%s] Method currentWindSpeed >> Mode: %s",
 					SDF.format(new Date()),
 					this.selectedMode.toString()));
@@ -305,7 +332,7 @@ public class SDLWeather80422 {
 				ex.printStackTrace();
 			}
 			this.currentWindSpeed = ((float) (this.currentWindCount) / (float) (this.sampleTime)) * WIND_FACTOR * wsCoeff;
-			if (verbose) {
+			if (verbose || verboseWind) {
 				System.out.println(String.format("\t>>> Method currentWindSpeed, Count: %d, SampleTime: %d, => WindSpeed: %f",
 						this.currentWindCount,
 						this.sampleTime,
@@ -329,7 +356,7 @@ public class SDLWeather80422 {
 				return 0;
 			} else {
 				double gust = (1.0 / time) * WIND_FACTOR * wsCoeff;
-				if (verbose) {
+				if (verbose || verboseWind) {
 					if (gust > 50) { // This is suspicious
 						System.out.println(String.format("Gust-> latestTime:%d, time: %f, gust: %f", latestTime, time, gust));
 					}
