@@ -573,18 +573,20 @@ public class HTTPServer {
 							} else {
 								if (requestManagers != null) {  // Manage it as a REST Request.
 									boolean unManagedRequest = true;
-									for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
-										try {
-											Response response = reqMgr.onRequest(request); // REST Request, most likely.
-											sendResponse(response, out);
-//								    System.out.println(">> Returned REST response.");
-											unManagedRequest = false; // Found it.
-											break;
-										} catch (UnsupportedOperationException usoe) {
-											// Absorb
-										} catch (Exception ex) {
-											System.err.println("Ooch");
-											ex.printStackTrace();
+									synchronized (requestManagers) {
+										for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
+											try {
+												Response response = reqMgr.onRequest(request); // REST Request, most likely.
+												sendResponse(response, out);
+//								      System.out.println(">> Returned REST response.");
+												unManagedRequest = false; // Found it.
+												break;
+											} catch (UnsupportedOperationException usoe) {
+												// Absorb
+											} catch (Exception ex) {
+												System.err.println("Ooch");
+												ex.printStackTrace();
+											}
 										}
 									}
 									if (unManagedRequest) {

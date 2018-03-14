@@ -22,10 +22,19 @@
 
 		<script type="text/javascript">
 
+	var status = 'tick';
+
   window.onload = function() {
     initAjax(false);
     // Subscribers here
     events.subscribe('at', function(val) {
+    	if (status === 'tick') {
+    		status = 'tock';
+    		document.getElementById('working').style.color = 'red';
+			} else {
+		    status = 'tick';
+		    document.getElementById('working').style.color = 'green';
+			}
       console.log("Air Temperature : %f", val);
 	    setData(val, 'thermometer-01');
     });
@@ -104,8 +113,11 @@
 
   </head>
   <body>
-		<h3>Web Components UI</h3>
 		<table>
+			<tr>
+				<td><h3>Web Components UI&nbsp;&nbsp;&nbsp;</h3></td>
+				<td><span id="working">&#11044;</span></td>
+			</tr>
 			<tr>
 				<td align="center">
 					<!-- True Wind Speed in knots<br/ -->
