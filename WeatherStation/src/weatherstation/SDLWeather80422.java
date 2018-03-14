@@ -232,7 +232,7 @@ public class SDLWeather80422 {
 
 	public float getCurrentRainTotal() {
 		if (verbose || verboseRain) {
-			System.out.println(String.format(">>> [%s] Method currentRainTotal >> RainAmount: %d",
+			System.out.println(String.format(">>> [%s] Method currentRainTotal >> RainAmount: %f",
 					SDF.format(new Date()),
 					currentRainCount));
 		}
