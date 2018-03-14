@@ -47,6 +47,7 @@ function Graph(cName,       // Canvas Name
       var coords = relativeMouseCoords(evt, canvas);
       x = coords.x;
       y = coords.y;
+
 //    console.log("Mouse: x=" + x + ", y=" + y);
 
       var idx = Math.round(x / xScale);
@@ -130,7 +131,7 @@ function Graph(cName,       // Canvas Name
   };
 
   this.maxX = function(data) {
-    var max = Number.MIN_VALUE;
+    var max = -Number.MAX_VALUE;
     for (var i=0; i<data.length; i++) {
       max = Math.max(max, data[i].getX());
     }
@@ -138,7 +139,7 @@ function Graph(cName,       // Canvas Name
   };
 
   this.maxY = function(data) {
-    var max = Number.MIN_VALUE;
+    var max = -Number.MAX_VALUE;
     for (var i=0; i<data.length; i++) {
       max = Math.max(max, data[i].getY());
     }
