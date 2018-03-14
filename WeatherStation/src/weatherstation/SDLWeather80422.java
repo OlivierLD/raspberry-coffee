@@ -167,7 +167,7 @@ public class SDLWeather80422 {
 					long nowMilliSec = System.currentTimeMillis();
 
 					if (verbose || verboseRain) {
-						System.out.println(String.format(">>> [%s] Rain Listener => High: %s, debounce: %s ms (compare to %d), rainCount: %d",
+						System.out.println(String.format(">>> [%s] Rain Listener => High: %s, debounce: %s ms (compare to %d), rainCount: %f",
 								SDF.format(new Date()),
 								(event.getState().isHigh()?"yes":"no"),
 								NumberFormat.getInstance().format(nowMilliSec - lastRainMilliSecPing),

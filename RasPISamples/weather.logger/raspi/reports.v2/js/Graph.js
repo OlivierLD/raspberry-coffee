@@ -40,8 +40,6 @@ function Graph(cName,       // Canvas Name
   }, 0);
 
 
-	var mouseIsIn = false;
-
 	var repaint = function() {
 		instance.drawGraph(cName, graphData, lastClicked, instance.dType);
 		if (withWindDir) {
@@ -50,8 +48,9 @@ function Graph(cName,       // Canvas Name
 	};
 
 	canvas.addEventListener('mouseout', function(evt) {
-		mouseIsIn = false;
-		repaint();
+		if (document.getElementById("tooltip").checked) {
+			repaint(); // To erase the tooltip
+		}
 	});
 
   canvas.addEventListener('mousemove', function(evt) {
