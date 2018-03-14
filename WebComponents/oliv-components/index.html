@@ -308,6 +308,17 @@
 			}
 		}
 
+		function applyClass(id, classList) {
+			let widget = document.getElementById(id);
+			let cssClass = classList.value;
+			widget.className = cssClass;
+			widget.repaint();
+		}
+
+		function applyBackground(id, color) {
+			let cell = document.getElementById(id);
+			cell.style.backgroundColor = color;
+		}
 	</script>
 </head>
 <body>
@@ -965,6 +976,61 @@
 						<input type="checkbox" onchange="setMinMax(this, 'prmsl-01');">With Min &amp; Max
 						<br/>
 						<input type="range" min="980" max="1040" step="0.1" value="1020.8" onchange="document.getElementById('prmsl-01').value = this.value;" style="width: 100%;"/>
+					</div>
+				</td>
+				<td valign="top">
+					<!-- Applying a style, dynamically -->
+					<div class="black-frame centered" id="bg-cell" style="background-color: black;">
+						<small>Try to combine Style, BG, border.</small><br/>
+						Style:
+						<select onchange="applyClass('analog-dyn-01', this);">
+							<option value="analogdisplay-day">Day</option>
+							<option value="analogdisplay-night">Night</option>
+							<option value="analogdisplay-monochrome-cyan">Cyan</option>
+							<option value="analogdisplay-monochrome-orange" selected>Orange</option>
+							<option value="analogdisplay-flat-gray">Flat Gray</option>
+							<option value="analogdisplay-flat-black">Flat Black</option>
+						</select>
+						<br/>
+						BG:
+						<input type="radio" name="bg" value="black" onchange="applyBackground('bg-cell', this.value);" checked>Black</input>
+						<input type="radio" name="bg" value="white" onchange="applyBackground('bg-cell', this.value);">White</input>
+						<input type="radio" name="bg" value="transparent" onchange="applyBackground('bg-cell', this.value);">None</input>
+						<hr/>
+						<analog-display class="analogdisplay-monochrome-orange"
+														title="True Wind Speed in knots"
+														id="analog-dyn-01"
+														min-value="0"
+														max-value="60"
+														value="12.5"
+														major-ticks="10"
+														minor-ticks="1"
+														with-border="true"
+														overlap="40"
+														label="TWS"
+														width="200"
+														height="200"></analog-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="analog-dyn-value-01"
+									 placeholder="TWS"
+									 title="Wind Speed in knots"
+									 style="width: 50px; text-align: right;"
+									 value="12.5"/>
+						<br/>
+						<button onclick="setData('analog-dyn-value-01', 'analog-dyn-01')"
+										title="Set Speed value"
+										style="margin-top: 3px;">Direct</button>
+						<button onclick="doAnimate('analog-dyn-value-01', 'analog-dyn-01')"
+										title="Set Speed value"
+										style="margin-top: 3px;">Animate</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'analog-dyn-01');" checked>With Border
+						<input type="checkbox" onchange="setMinMax(this, 'analog-dyn-01');">With Min &amp; Max
+						<br/>
+						<input type="range" min="0" max="60" step="0.1" value="12" onchange="document.getElementById('analog-dyn-01').value = this.value;" style="width: 100%;"/>
 					</div>
 				</td>
 			</tr>

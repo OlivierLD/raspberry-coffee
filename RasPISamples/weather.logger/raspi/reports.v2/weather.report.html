@@ -182,7 +182,11 @@ var setDefaultTimeZone = function() {
     tzOffset *= -1;
   } else {
     var rightNow = new Date();
-    var today0000 = new Date(rightNow.getFullYear(), rightNow.getMonth(), rightNow.getDay(), 0, 0, 0, 0);
+    var today0000 = new Date(
+    		rightNow.getFullYear(),
+        rightNow.getMonth(),
+        rightNow.getDate(), // Date in the month. getDay returns day of the week
+        0, 0, 0, 0);
 //  console.log("Now:" + today0000.toGMTString());
     var regExp = new RegExp("(\\d{2}):.*");
     var matches = regExp.exec(today0000.toGMTString());
