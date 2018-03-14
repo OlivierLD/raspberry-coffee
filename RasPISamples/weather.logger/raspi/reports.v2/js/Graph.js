@@ -39,6 +39,21 @@ function Graph(cName,       // Canvas Name
       }
   }, 0);
 
+
+	var mouseIsIn = false;
+
+	var repaint = function() {
+		instance.drawGraph(cName, graphData, lastClicked, instance.dType);
+		if (withWindDir) {
+			instance.drawWind(JSONParser.nmeaData);
+		}
+	};
+
+	canvas.addEventListener('mouseout', function(evt) {
+		mouseIsIn = false;
+		repaint();
+	});
+
   canvas.addEventListener('mousemove', function(evt) {
     if (document.getElementById("tooltip").checked) {
       var x = evt.pageX - canvas.offsetLeft;
@@ -70,10 +85,12 @@ function Graph(cName,       // Canvas Name
 
   //    context.fillStyle = '#000';
   //    context.fillRect(0, 0, w, h);
-        instance.drawGraph(cName, graphData, lastClicked, instance.dType);
-        if (withWindDir) {
-          instance.drawWind(JSONParser.nmeaData);
-        }
+	      repaint();
+
+        // instance.drawGraph(cName, graphData, lastClicked, instance.dType);
+        // if (withWindDir) {
+        //   instance.drawWind(JSONParser.nmeaData);
+        // }
         var tooltipW = 120, nblines = str.length;
         context.fillStyle = "rgba(250, 250, 210, .7)";
 //      context.fillStyle = 'yellow';
