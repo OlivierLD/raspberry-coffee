@@ -92,6 +92,99 @@
 		elem.value = val;                            // value corresponds to the 'set value(val) { ...', invokes the setter in the HTMLElement class
   }
 
+  function setElementBorder(display, border) {
+	  display.withBorder = border;
+	  display.repaint();
+	}
+
+  function setBorder(border) {
+		let displays = document.getElementsByTagName('analog-display');
+		for (let i=0; i<displays.length; i++) { // forEach does not work?
+			setElementBorder(displays[i], border);
+		}
+	  displays = document.getElementsByTagName('direction-display');
+	  for (let i=0; i<displays.length; i++) { // forEach does not work?
+		  setElementBorder(displays[i], border);
+	  }
+	}
+
+	function setElementStyle(widget, style) {
+		widget.className = style;
+		widget.repaint();
+	}
+
+	function setElementsStyle(
+			analogStyle,
+			directionStyle,
+			tempStyle,
+			rainStyle) {
+		let displays = document.getElementsByTagName('analog-display');
+		for (let i=0; i<displays.length; i++) { // forEach does not work?
+			setElementStyle(displays[i], analogStyle);
+		}
+		displays = document.getElementsByTagName('direction-display');
+		for (let i=0; i<displays.length; i++) { // forEach does not work?
+			setElementStyle(displays[i], directionStyle);
+		}
+		displays = document.getElementsByTagName('thermo-meter');
+		for (let i=0; i<displays.length; i++) { // forEach does not work?
+			setElementStyle(displays[i], tempStyle);
+		}
+		displays = document.getElementsByTagName('pluvio-meter');
+		for (let i=0; i<displays.length; i++) { // forEach does not work?
+			setElementStyle(displays[i], rainStyle);
+		}
+	}
+
+	function setStyle(style) {
+		console.log("Style:" + style);
+		switch (style) {
+			case 'orange':
+				setElementsStyle(
+						'analogdisplay-monochrome-orange',
+						'analogdisplay-monochrome-orange',
+						'thermometer-orange',
+						'pluviometer-orange');
+				break;
+			case 'cyan':
+				setElementsStyle(
+						'analogdisplay-monochrome-cyan',
+						'analogdisplay-monochrome-cyan',
+						'thermometer-cyan',
+						'pluviometer-cyan');
+				break;
+			case 'day':
+				setElementsStyle(
+						'analogdisplay-day',
+						'analogdisplay-day',
+						'thermometer-day',
+						'pluviometer-day');
+				break;
+			case 'night':
+				setElementsStyle(
+						'analogdisplay-night',
+						'analogdisplay-night',
+						'thermometer-night',
+						'pluviometer-night');
+				break;
+			case 'flat-gray':
+				setElementsStyle(
+						'analogdisplay-flat-gray',
+						'analogdisplay-flat-gray',
+						'thermometer-day',
+						'pluviometer-day');
+				break;
+			case 'flat-black':
+				setElementsStyle(
+						'analogdisplay-flat-black',
+						'analogdisplay-flat-black',
+						'thermometer-night',
+						'pluviometer-night');
+				break;
+			default:
+				break;
+		}
+	}
 		</script>
 		<style>
 			html {
@@ -116,7 +209,24 @@
 		<table>
 			<tr>
 				<td><h3>Web Components UI&nbsp;&nbsp;&nbsp;</h3></td>
-				<td><span id="working">&#11044;</span></td>
+				<td>
+					<!-- Traffic witness -->
+					<span id="working">&#11044;</span>
+				</td>
+				<td>
+					<!-- Display Style -->
+					Style:
+					<select onchange="setStyle(this.value);">
+						<option value="orange" selected>Orange</option>
+						<option value="cyan">Cyan</option>
+						<option value="day">Day</option>
+						<option value="night">Night</option>
+						<option value="flat-gray">Flat gray</option>
+						<option value="flat-black">Flat black</option>
+					</select>
+					<!-- Display Border -->
+					<input type="checkbox" checked onchange="setBorder(this.checked);"/>Border
+				</td>
 			</tr>
 			<tr>
 				<td align="center">
