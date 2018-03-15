@@ -40,7 +40,7 @@ Battery Voltage can be described by a sentence like
 ```
  $AAXDR,U,12.34,V,TRINKET*3C
 ```
-Many NMEA parsers are available. NMEA could be an option to consider, in case the
+Many NMEA parsers are available (mines being the best, of course). NMEA could be an option to consider, in case the
 management of the output of the trinket above was to be automated.
 
 ## Before you run anything
@@ -71,11 +71,13 @@ All you need to add to the diagram above is a network connection.
  ./email.battery -verbose -send:google -sendto:me@home.net,you@yourplace.biz -loop:6h
 ```
 You will receive an email, in this case every 6 hours, containing the expected battery tension.
+
 ![Email](./email.png)
 
 ##### Pros
 - Free
 - Easy
+- All you need is an Internet connection, no server needed
 
 ##### Cons
 - Requires Internet Network connection
