@@ -48,7 +48,7 @@ public class SDLWeather80422 {
 	private static int wdOffset = 0;     // -Dws.wdir.offset=0
 
 	private int currentWindCount = 0;
-	private float currentRainCount = 0;
+	private int currentRainCount = 0;
 	private long shortestWindMicroTime = Long.MAX_VALUE;
 
 	private long lastWindMilliSecPing = 0;
@@ -167,7 +167,7 @@ public class SDLWeather80422 {
 					long nowMilliSec = System.currentTimeMillis();
 
 					if (verbose || verboseRain) {
-						System.out.println(String.format(">>> [%s] Rain Listener => High: %s, debounce: %s ms (compare to %d), rainCount: %f",
+						System.out.println(String.format(">>> [%s] Rain Listener => High: %s, debounce: %s ms (compare to %d), rainCount: %d",
 								SDF.format(new Date()),
 								(event.getState().isHigh()?"yes":"no"),
 								NumberFormat.getInstance().format(nowMilliSec - lastRainMilliSecPing),
@@ -227,16 +227,17 @@ public class SDLWeather80422 {
 	}
 
 	public void resetRainTotal() {
-		this.currentRainCount = 0f;
+		this.currentRainCount = 0;
 	}
 
 	public float getCurrentRainTotal() {
-		if (false && (verbose || verboseRain)) {
-			System.out.println(String.format(">>> [%s] Method currentRainTotal >> RainAmount: %f",
-					SDF.format(new Date()),
-					currentRainCount));
-		}
 		float rainAmount = 0.2794f * this.currentRainCount / 2f;
+		if (this.currentRainCount > 0 && (verbose || verboseRain)) {
+			System.out.println(String.format(">>> [%s] Method currentRainTotal >> RainCount: %d, prate: %f mm/h",
+					SDF.format(new Date()),
+					currentRainCount,
+					rainAmount));
+		}
 		resetRainTotal();
 		return rainAmount;
 	}
@@ -295,7 +296,7 @@ public class SDLWeather80422 {
 					NumberFormat.getInstance().format(nowMicro)));
 		}
 		if ((nowMicro - this.startSampleTime) >= compareValue) { // Sample is now big enough.
-			// sample time exceeded, calculate currentWindSpeed
+			// sample time exceeded, calculate getCurrentWindSpeed
 			long timeSpan = (nowMicro - this.startSampleTime);
 			this.currentWindSpeed = (float) ((this.currentWindCount) / (float) timeSpan) * WIND_FACTOR * wsCoeff * 1_000_000.0;
       if (verbose || verboseWind) {
@@ -315,9 +316,9 @@ public class SDLWeather80422 {
 		return this.currentWindSpeed;
 	}
 
-	public double currentWindSpeed() {
+	public double getCurrentWindSpeed() {
 		if (verbose || verboseWind) {
-			System.out.println(String.format(">>> [%s] Method currentWindSpeed >> Mode: %s",
+			System.out.println(String.format(">>> [%s] Method getCurrentWindSpeed >> Mode: %s",
 					SDF.format(new Date()),
 					this.selectedMode.toString()));
 		}
@@ -333,7 +334,7 @@ public class SDLWeather80422 {
 			}
 			this.currentWindSpeed = ((float) (this.currentWindCount) / (float) (this.sampleTime)) * WIND_FACTOR * wsCoeff;
 			if (verbose || verboseWind) {
-				System.out.println(String.format("\t>>> Method currentWindSpeed, Count: %d, SampleTime: %d, => WindSpeed: %f",
+				System.out.println(String.format("\t>>> Method getCurrentWindSpeed, Count: %d, SampleTime: %d, => WindSpeed: %f",
 						this.currentWindCount,
 						this.sampleTime,
 						this.currentWindSpeed));

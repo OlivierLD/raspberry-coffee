@@ -1,8 +1,5 @@
 package breadboard.button;
 
-import breadboard.game.ReflexGameMaster;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import pushbutton.PushButtonObserver;
 
 import static utils.StaticUtil.userInput;
@@ -56,6 +53,7 @@ public class PushButtonInstance implements PushButtonObserver {
 	@Override
 	public void onButtonReleased() {
 	}
+
 	private static void stateOption() {
 		System.out.println(String.format("Current Option is %s", OPTION_ARRAY[currentOption]));
 	}

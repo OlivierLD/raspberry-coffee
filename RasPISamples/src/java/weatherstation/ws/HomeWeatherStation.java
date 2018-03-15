@@ -94,7 +94,7 @@ public class HomeWeatherStation {
 				System.out.println("-> While go...");
 			}
 
-			double ws = weatherStation.currentWindSpeed();
+			double ws = weatherStation.getCurrentWindSpeed();
 			double wg = weatherStation.getWindGust();
 			float wd = weatherStation.getCurrentWindDirection();
 			float mwd = getAverageWD(wd);
