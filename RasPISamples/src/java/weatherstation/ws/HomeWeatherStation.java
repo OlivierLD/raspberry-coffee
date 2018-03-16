@@ -8,6 +8,7 @@ import weatherstation.utils.Utilities;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The real project
@@ -25,8 +26,7 @@ import java.util.List;
  * - HTU21DF: (if available)
  * - Relative Humidity (%)
  * <p>
- * if -Dws.log=true
- * Feeds a WebSocket server with a json object like
+ * Feeds all the loggers with a json object like
  * { "dir": 350.0,
  * "avgdir": 345.67,
  * "volts": 3.4567,
@@ -35,6 +35,7 @@ import java.util.List;
  * "rain": 0.1,
  * "press": 101300.00,
  * "temp": 18.34,
+ * "dew": 9.87,
  * "hum": 58.5 }
  * <p>
  * - Logging...
@@ -89,11 +90,13 @@ public class HomeWeatherStation {
 		SDLWeather80422 weatherStation = new SDLWeather80422(); // With default parameters.
 		weatherStation.setWindMode(SDLWeather80422.SdlMode.SAMPLE, SAMPLE_TIME);
 
+		int BUFFER_SIZE = 3_600; // Because we loop every second
+		List<Float> prateList = new ArrayList<>(BUFFER_SIZE);
+
 		while (go) {
 			if ("true".equals(System.getProperty("weather.station.verbose", "false"))) {
 				System.out.println("-> While go...");
 			}
-
 			double ws = weatherStation.getCurrentWindSpeed();
 			double wg = weatherStation.getWindGust();
 			float wd = weatherStation.getCurrentWindDirection();
@@ -101,8 +104,17 @@ public class HomeWeatherStation {
 			double volts = weatherStation.getCurrentWindDirectionVoltage();
 			float rain = weatherStation.getCurrentRainTotal();
 
+			// rain is an accumulator, it is in mm, not mm/h
+			prateList.add(rain);
+			while (prateList.size() > BUFFER_SIZE) {
+				prateList.remove(0); // drop if more than 1 hour old
+			}
+			double rainAmountPastHour = prateList.stream().collect(Collectors.summingDouble(rainAmount -> (double)rainAmount));
+			float prate = (float)rainAmountPastHour;
+			prate *= (3_600F / prateList.size());
+
 			if ("true".equals(System.getProperty("show.rain", "false"))) {
-				System.out.println(">> Rain : " + NumberFormat.getInstance().format(rain) + " mm");
+				System.out.println(">> Rain : " + NumberFormat.getInstance().format(rain) + " mm, PRate :" + NumberFormat.getInstance().format(prate) + " mm/h");
 			}
 
 			JSONObject windObj = new JSONObject();
@@ -111,7 +123,7 @@ public class HomeWeatherStation {
 			windObj.put("volts", volts);
 			windObj.put("speed", ws);
 			windObj.put("gust", wg);
-			windObj.put("rain", rain);
+			windObj.put("rain", prate);
 
 			// Add temperature, pressure, humidity, dew point
 			if (weatherStation.isBMP180Available() || weatherStation.isHTU21DFAvailable()) {
@@ -151,7 +163,8 @@ public class HomeWeatherStation {
 			 *   "rain": 0.1,
 			 *   "press": 101300.00,
 			 *   "temp": 18.34,
-			 *   "hum": 58.5 }
+			 *   "hum": 58.5,
+			  *  "dew": 9.87 }
 			 */
 			try {
 				String message = windObj.toString();
@@ -174,7 +187,7 @@ public class HomeWeatherStation {
 
 			try {
 				synchronized (coreThread) {
-					coreThread.wait(1_000L);
+					coreThread.wait(1_000L); // One second delay
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();

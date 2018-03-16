@@ -1,5 +1,5 @@
 
-package weatherstation.samples;
+package weatherstation.tests;
 
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;

@@ -70,9 +70,8 @@ public class SDLWeather80422 {
 	private SdlMode selectedMode = SdlMode.SAMPLE;
 	private long startSampleTime = 0L;
 
-	private long currentRainMicroSecMin = 0;
+//	private long currentRainMicroSecMin = 0;
 	private long lastRainMicroSecTime = 0;
-	private long lastRainReset = 0L;
 
 	private ADS1x15 ads1015 = null;
 	private final static ADS1x15.ICType ADC_TYPE = ADS1x15.ICType.IC_ADS1015;
@@ -163,7 +162,6 @@ public class SDLWeather80422 {
 			});
 		}
 		if (rain != null) {
-			lastRainReset = System.currentTimeMillis();
 			this.pinRain = gpio.provisionDigitalInputPin(rain, "Rainmeter");
 			this.pinRain.addListener(new GpioPinListenerDigital() {
 				@Override
@@ -196,7 +194,7 @@ public class SDLWeather80422 {
 								System.out.println("\t\tDebounced!");
 							}
 							currentRainCount += 1;
-							currentRainMicroSecMin = Math.min(currentRainMicroSecMin, currentMicroSecInterval); // TODO unused?
+//						currentRainMicroSecMin = Math.min(currentRainMicroSecMin, currentMicroSecInterval); // TODO unused?
 //							if (currentMicroSecInterval < currentRainMicroSecMin) {
 //								currentRainMicroSecMin = currentMicroSecInterval;
 //							}
@@ -236,6 +234,10 @@ public class SDLWeather80422 {
 		this.currentRainCount = 0;
 	}
 
+	/**
+	 *
+	 * @return the AMOUNT of rain, in mm since last read. NOT in mm/h
+	 */
 	public float getCurrentRainTotal() {
 		float rainAmount = 0.2794f * this.currentRainCount / 2f;
 		if (this.currentRainCount > 0 && (verbose || verboseRain)) {
@@ -244,10 +246,8 @@ public class SDLWeather80422 {
 					currentRainCount,
 					rainAmount));
 		}
-		if ((System.currentTimeMillis() - this.lastRainReset) > _10_MINUTES) {
-			resetRainTotal(); // Reset when read, and after a given amount of time?
-			this.lastRainReset = System.currentTimeMillis();
-		}
+		resetRainTotal(); // Reset when read.
+
 		return rainAmount;
 	}
 

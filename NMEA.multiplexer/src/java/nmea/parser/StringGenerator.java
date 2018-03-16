@@ -34,7 +34,7 @@ public class StringGenerator {
 
 	private final static NumberFormat PRMSL_FMT_MDA = new DecimalFormat("##0.000");
 
-	private final static NumberFormat GENERIC_1_FMT = new DecimalFormat("##0.0000");
+	private final static NumberFormat GENERIC_1_FMT = new DecimalFormat("##0.00000");
 
 	private final static double KNOTS_TO_KMH = 1.852;
 	private final static double KNOTS_TO_MS  = 1.852 * 0.27777777;
@@ -196,13 +196,13 @@ public class StringGenerator {
 			if (e.getTypeNunit().equals(XDRTypes.TEMPERATURE)) {
 				nf = TEMP_FMT;
 			}
-			if (first.getTypeNunit().equals(XDRTypes.HUMIDITY)) {
+			if (e.getTypeNunit().equals(XDRTypes.HUMIDITY)) {
 				nf = PERCENT_FMT;
 			}
-			if (first.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT)) {
+			if (e.getTypeNunit().equals(XDRTypes.ANGULAR_DISPLACEMENT)) {
 				nf = ANGLE_FMT;
 			}
-			if (first.getTypeNunit().equals(XDRTypes.GENERIC)) {
+			if (e.getTypeNunit().equals(XDRTypes.GENERIC)) {
 				nf = GENERIC_1_FMT;
 			}
 			// TODO More formats...
@@ -571,9 +571,11 @@ public class StringGenerator {
 
 		String xdr = generateXDR("II", new XDRElement(XDRTypes.PRESSURE_B, 1.0136, "BMP180"));
 		System.out.println("Generated XDR:" + xdr);
-		xdr = generateXDR("II", new XDRElement(XDRTypes.PRESSURE_B, 1.0136, "BMP180"),
+		xdr = generateXDR("II",
+						new XDRElement(XDRTypes.PRESSURE_B, 1.0136, "BMP180"),
 						new XDRElement(XDRTypes.TEMPERATURE, 15.5, "BMP180"),
-						new XDRElement(XDRTypes.HUMIDITY, 65.5, "HTU21DF"));
+						new XDRElement(XDRTypes.HUMIDITY, 65.5, "HTU21DF"),
+						new XDRElement(XDRTypes.GENERIC, 0.014270, "PRATE"));
 		System.out.println("Generated XDR:" + xdr);
 
 		xdr = generateXDR("XX", new XDRElement(XDRTypes.VOLTAGE, 12.34, "TRINKET"));

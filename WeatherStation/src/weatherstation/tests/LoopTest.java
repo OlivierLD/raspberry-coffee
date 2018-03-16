@@ -1,4 +1,4 @@
-package weatherstation.samples;
+package weatherstation.tests;
 
 public class LoopTest {
 	private static boolean go = true;
@@ -6,16 +6,14 @@ public class LoopTest {
 	public static void main(String... args) {
 		final Thread coreThread = Thread.currentThread();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("\nUser interrupted.");
-				go = false;
-				synchronized (coreThread) {
-					coreThread.notify();
-				}
-				System.out.println("Unleashed");
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("\nUser interrupted.");
+			go = false;
+			synchronized (coreThread) {
+				coreThread.notify();
 			}
-		});
+			System.out.println("Unleashed");
+		}));
 
 		while (go) {
 			System.out.println("Blah");

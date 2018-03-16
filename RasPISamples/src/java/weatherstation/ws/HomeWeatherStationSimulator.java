@@ -7,6 +7,7 @@ import weatherstation.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Use this when the Weather Station is not available (ie you're not on the RPi)
@@ -58,6 +59,9 @@ public class HomeWeatherStationSimulator {
 		double rainamount = 0;
 		double dew = 0;
 
+		int BUFFER_SIZE = 3_600; // Because we loop every second
+		List<Float> prateList = new ArrayList<>(BUFFER_SIZE);
+
 		while (go) {
 			double ws = generateRandomValue(windSpeed, 3, 0, 65);
 			double wg = generateRandomValue(windGust, 5, 0, 65);
@@ -67,8 +71,17 @@ public class HomeWeatherStationSimulator {
 			float temp = (float) generateRandomValue(temperature, 2, -10, 50);
 			float press = (float) generateRandomValue(pressure, 100, 98_000, 105_000);
 			float hum = (float) generateRandomValue(humidity, 5, 0, 100);
-			float rain = (float) generateRandomValue(rainamount, 1, 0, 3);
+			float rain = (float) generateRandomValue(rainamount, 0.0001, 0, 0.001);
 			dew = Utilities.dewPointTemperature(hum, temp);
+
+			// rain is an accumulator, it is in mm, not mm/h
+			prateList.add(rain);
+			while (prateList.size() > BUFFER_SIZE) {
+				prateList.remove(0); // drop if more than 1 hour old
+			}
+			double rainAmountPastHour = prateList.stream().collect(Collectors.summingDouble(rainAmount -> (double)rainAmount));
+			float prate = (float)rainAmountPastHour;
+			prate *= (3_600F / prateList.size());
 
 			JSONObject windObj = new JSONObject();
 			windObj.put("dir", wd);
@@ -79,7 +92,7 @@ public class HomeWeatherStationSimulator {
 			windObj.put("temp", temp);
 			windObj.put("press", press);
 			windObj.put("hum", hum);
-			windObj.put("rain", rain);
+			windObj.put("rain", prate);
 			windObj.put("dew", dew);
 		  /*
        * Sample message:
@@ -119,7 +132,7 @@ public class HomeWeatherStationSimulator {
 
 			try {
 				synchronized (coreThread) {
-					coreThread.wait(1_000L);
+					coreThread.wait(1_000L); // 1 sec.
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();

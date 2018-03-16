@@ -75,11 +75,7 @@ public class MySQLLoggerImpl implements LoggerInterface {
 		}
 
 		String qs = "";
-		String s = json2qs(json, "cputemp", "CPU");
-		if (s != null) {
-			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
-		}
-		s = json2qs(json, "avgdir", "WDIR");
+		String s = json2qs(json, "avgdir", "WDIR");
 		if (s != null) {
 			qs += ((qs.trim().length() == 0 ? "" : "&") + s);
 		} else {

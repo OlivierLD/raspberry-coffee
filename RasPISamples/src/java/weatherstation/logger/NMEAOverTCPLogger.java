@@ -100,7 +100,7 @@ public class NMEAOverTCPLogger implements LoggerInterface {
 		nmeaXDR += NMEAParser.NMEA_SENTENCE_SEPARATOR;
 
 		if (verbose) {
-			System.out.println(String.format(">>> Generated for TCP [%s]", nmeaXDR.trim()));
+			System.out.println(String.format(">>> Generated for TCP [%s] with rain %f ", nmeaXDR.trim(), rain));
 		}
 
 		tcpServer.write(nmeaXDR.getBytes());
