@@ -136,6 +136,15 @@
 		}
 	}
 
+	function changeBG(value) {
+		let bodyStyle = document.getElementsByTagName("body")[0].style;
+		if (value === 'LIGHT') {
+			bodyStyle.background = 'radial-gradient(at top, white -8%, lightgrey 55%)';
+		} else {
+			bodyStyle.background = 'radial-gradient(at top, DarkGrey -8%, black 55%)';
+		}
+	}
+
 	function setStyle(style) {
 		console.log("Style:" + style);
 		switch (style) {
@@ -229,6 +238,11 @@
 								</select>
 								<!-- Display Border -->
 								<input type="checkbox" checked onchange="setBorder(this.checked);"/>Border
+								&nbsp;&nbsp;
+								<!-- Page BG -->
+								Page Background
+								<input type="radio" name="page-bg" value="DARK" checked onchange="changeBG(this.value);">Dark
+								<input type="radio" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
 							</td>
 						</tr>
 					</table>

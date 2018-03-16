@@ -3,7 +3,7 @@
 	--with-shadow: true;
 	--shadow-color: LightGrey;
 	--scale-color: black;
-	--bg-color: white;
+	--bg-color: rgba(0, 0, 0, 0);
 	--major-tick-color: LightGrey;
 	--minor-tick-color: DarkGrey;
 	--value-outline-color: black;
@@ -57,7 +57,7 @@
 }
 
 .thermometer-day {
-  --bg-color: white;
+  --bg-color: rgba(0, 0, 0, 0);
   --digit-color: DarkGrey;
   --with-gradient: true;
   --display-background-gradient-from: black;
