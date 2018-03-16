@@ -208,130 +208,148 @@
   <body>
 		<table>
 			<tr>
-				<td><h3>Web Components UI&nbsp;&nbsp;&nbsp;</h3></td>
-				<td>
-					<!-- Traffic witness -->
-					<span id="working">&#11044;</span>
-				</td>
-				<td>
-					<!-- Display Style -->
-					Style:
-					<select onchange="setStyle(this.value);">
-						<option value="orange" selected>Orange</option>
-						<option value="cyan">Cyan</option>
-						<option value="day">Day</option>
-						<option value="night">Night</option>
-						<option value="flat-gray">Flat gray</option>
-						<option value="flat-black">Flat black</option>
-					</select>
-					<!-- Display Border -->
-					<input type="checkbox" checked onchange="setBorder(this.checked);"/>Border
+				<td align="left">
+					<table>
+						<tr>
+							<td><h3>Web Components UI&nbsp;&nbsp;&nbsp;</h3></td>
+							<td>
+								<!-- Traffic witness -->
+								<span id="working" title="Traffic">&#11044;</span>
+							</td>
+							<td>
+								<!-- Display Style -->
+								Style:
+								<select onchange="setStyle(this.value);">
+									<option value="orange" selected>Orange</option>
+									<option value="cyan">Cyan</option>
+									<option value="day">Day</option>
+									<option value="night">Night</option>
+									<option value="flat-gray">Flat gray</option>
+									<option value="flat-black">Flat black</option>
+								</select>
+								<!-- Display Border -->
+								<input type="checkbox" checked onchange="setBorder(this.checked);"/>Border
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 			<tr>
 				<td align="center">
-					<!-- True Wind Speed in knots<br/ -->
-					<analog-display class="analogdisplay-monochrome-orange"
-													title="True Wind Speed in knots"
-													id="tws-01"
-													min-value="0"
-													max-value="60"
-													value="0"
-													major-ticks="10"
-													minor-ticks="1"
-													with-border="true"
-													overlap="40"
-													label="TWS"
-													width="200"
-													height="200"></analog-display>
-				</td>
-				<td align="center">
-					<!-- Wind Direction in &deg;<br/ -->
-					<direction-display class="analogdisplay-monochrome-orange"
-														 title="TWD"
-														 id="twd-01"
-														 value="0"
-														 major-ticks="45"
-														 minor-ticks="5"
-														 with-rose="true"
-														 with-border="true"
-														 label="TWD"
-														 width="200"
-														 height="200"></direction-display>
+					<table>
+						<tr>
+							<td align="center">
+								<!-- True Wind Speed in knots<br/ -->
+								<analog-display class="analogdisplay-monochrome-orange"
+																title="True Wind Speed in knots"
+																id="tws-01"
+																min-value="0"
+																max-value="60"
+																value="0"
+																major-ticks="10"
+																minor-ticks="1"
+																with-border="true"
+																overlap="40"
+																label="TWS"
+																width="200"
+																height="200"></analog-display>
+							</td>
+							<td align="center">
+								<!-- Wind Direction in &deg;<br/ -->
+								<direction-display class="analogdisplay-monochrome-orange"
+																	 title="TWD"
+																	 id="twd-01"
+																	 value="0"
+																	 major-ticks="45"
+																	 minor-ticks="5"
+																	 with-rose="true"
+																	 with-border="true"
+																	 label="TWD"
+																	 width="200"
+																	 height="200"></direction-display>
 
-				</td>
-				<td align="center">
-					<!-- Air Temperature in &deg;C<br/ -->
-					<thermo-meter id="thermometer-01"
-												class="thermometer-orange"
-												title="Air, Celcius"
-												min-value="-10"
-												max-value="60"
-												major-ticks="10"
-												minor-ticks="1"
-												value="0"
-												width="100"
-												height="220"></thermo-meter>
-				</td>
-				<td align="center">
-					<!-- Dew point Temperature in &deg;C<br/ -->
-					<thermo-meter id="thermometer-02"
-												class="thermometer-orange"
-												title="Dew point, Celcius"
-												min-value="-10"
-												max-value="60"
-												major-ticks="10"
-												minor-ticks="1"
-												value="0"
-												width="100"
-												height="220"></thermo-meter>
+							</td>
+							<td align="center">
+								<!-- Air Temperature in &deg;C<br/ -->
+								<thermo-meter id="thermometer-01"
+															class="thermometer-orange"
+															title="Air, Celcius"
+															min-value="-10"
+															max-value="60"
+															major-ticks="10"
+															minor-ticks="1"
+															value="0"
+															width="100"
+															height="220"></thermo-meter>
+							</td>
+							<td align="center">
+								<!-- Dew point Temperature in &deg;C<br/ -->
+								<thermo-meter id="thermometer-02"
+															class="thermometer-orange"
+															title="Dew point, Celcius"
+															min-value="-10"
+															max-value="60"
+															major-ticks="10"
+															minor-ticks="1"
+															value="0"
+															width="100"
+															height="220"></thermo-meter>
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 			<tr>
 				<td align="center">
-					<!-- Atm Pressure in hPa<br/ -->
-					<analog-display class="analogdisplay-monochrome-orange analog-for-prmsl"
-													title="Pressure in hPa"
-													id="prmsl-01"
-													min-value="983"
-													max-value="1043"
-													value="1013.6"
-													major-ticks="10"
-													minor-ticks="1"
-													with-border="true"
-													overlap="40"
-													label="PRMSL"
-													width="200"
-													height="200"></analog-display>
-				</td>
-				<td align="center">
-					<!-- Relative Humidity in %<br/ -->
-					<analog-display class="analogdisplay-monochrome-orange"
-													title="Humidity in %"
-													id="hum-01"
-													min-value="0"
-													max-value="100"
-													value="50"
-													major-ticks="10"
-													minor-ticks="1"
-													with-border="true"
-													overlap="40"
-													label="HUM"
-													width="200"
-													height="200"></analog-display>
-				</td>
-				<td align="center">
-					<!-- Precipitation Rate in mm/h<br/ -->
-					<pluvio-meter id="rain-01"
-												class="pluviometer-orange"
-												title="m/m per hour"
-												min-value="0"
-												max-value="10"
-												major-ticks="1"
-												minor-ticks="0.25"
-												value="0"
-												width="80"
-												height="220"></pluvio-meter>
+					<table>
+						<tr>
+							<td align="center">
+								<!-- Atm Pressure in hPa<br/ -->
+								<analog-display class="analogdisplay-monochrome-orange analog-for-prmsl"
+																title="Pressure in hPa"
+																id="prmsl-01"
+																min-value="983"
+																max-value="1043"
+																value="1013.6"
+																major-ticks="10"
+																minor-ticks="1"
+																with-border="true"
+																overlap="40"
+																label="PRMSL"
+																width="200"
+																height="200"></analog-display>
+							</td>
+							<td align="center">
+								<!-- Relative Humidity in %<br/ -->
+								<analog-display class="analogdisplay-monochrome-orange"
+																title="Humidity in %"
+																id="hum-01"
+																min-value="0"
+																max-value="100"
+																value="50"
+																major-ticks="10"
+																minor-ticks="1"
+																with-border="true"
+																overlap="40"
+																label="HUM"
+																width="200"
+																height="200"></analog-display>
+							</td>
+							<td align="center">
+								<!-- Precipitation Rate in mm/h<br/ -->
+								<pluvio-meter id="rain-01"
+															class="pluviometer-orange"
+															title="m/m per hour"
+															min-value="0"
+															max-value="10"
+															major-ticks="1"
+															minor-ticks="0.25"
+															value="0"
+															width="80"
+															height="220"></pluvio-meter>
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 		</table>
