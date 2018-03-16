@@ -164,6 +164,7 @@ public class SDLWeather80422 {
 			this.pinRain.addListener(new GpioPinListenerDigital() {
 				@Override
 				public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+
 					long nowMilliSec = System.currentTimeMillis();
 
 					if (verbose || verboseRain) {
@@ -176,8 +177,9 @@ public class SDLWeather80422 {
 					}
 
 					if (event.getState().isHigh() && (nowMilliSec - lastRainMilliSecPing) > minimumDebounceTimeMilliSec) {
-						lastRainMicroSecTime = Utilities.currentTimeMicros();
-						long currentMicroSecTime = lastRainMicroSecTime - lastRainMicroSecTime;
+						long nowMicroSec = Utilities.currentTimeMicros();
+						long currentMicroSecTime = nowMicroSec - lastRainMicroSecTime;
+						lastRainMicroSecTime = nowMicroSec;
 
 						if (verbose || verboseRain) {
 							System.out.println(String.format("\tcurrentTime: %s us, rainCount: %d ticks",
@@ -238,7 +240,7 @@ public class SDLWeather80422 {
 					currentRainCount,
 					rainAmount));
 		}
-		resetRainTotal();
+		resetRainTotal(); // TODO Reset when read, or after a given amount of time?
 		return rainAmount;
 	}
 
