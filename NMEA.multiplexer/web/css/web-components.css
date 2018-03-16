@@ -73,7 +73,7 @@
 }
 
 .thermometer-night {
-  --bg-color: black;
+  --bg-color: rgba(0, 0, 0, 0);
   --digit-color: red;
   --with-gradient: true;
   --display-background-gradient-from: black;
@@ -89,7 +89,7 @@
 }
 
 .thermometer-cyan {
-	--bg-color: black;
+	--bg-color: transparent;
 	--digit-color: cyan;
 	--with-gradient: false;
 	--display-background-gradient-to: rgba(255, 255, 255, 0.25);
@@ -284,7 +284,7 @@ jumbo-display .digital-font-green {
 }
 
 .analogdisplay-flat-black {
-	--bg-color: black;
+	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: white;
 	--with-gradient: false;
 	--display-background-gradient-to: black; /* used if --withGradient: false */
