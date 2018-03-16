@@ -72,6 +72,7 @@ public class SDLWeather80422 {
 
 	private long currentRainMicroSecMin = 0;
 	private long lastRainMicroSecTime = 0;
+	private long lastRainReset = 0L;
 
 	private ADS1x15 ads1015 = null;
 	private final static ADS1x15.ICType ADC_TYPE = ADS1x15.ICType.IC_ADS1015;
@@ -82,6 +83,8 @@ public class SDLWeather80422 {
 	private BMP180 bmp180 = null;
 	private HTU21DF htu21df = null;
 	// TODO? MOD-1016 (lightning detector)
+
+	private long _10_MINUTES = 10 * 60 * 1_000;
 
 	public SDLWeather80422() {
 		this(RaspiPin.GPIO_16, RaspiPin.GPIO_01, AdcMode.SDL_MODE_I2C_ADS1015);
@@ -134,23 +137,23 @@ public class SDLWeather80422 {
 
 					if (event.getState().isHigh() && (nowMilliSec - lastWindMilliSecPing) > minimumDebounceTimeMilliSec) {
 						long nowMicroSec = Utilities.currentTimeMicros();
-						long currentMicroTime = nowMicroSec - lastWindMicroTime;
+						long currentMicroInterval = nowMicroSec - lastWindMicroTime;
 						lastWindMicroTime = nowMicroSec;
 
 						if (verbose || verboseWind) {
 							System.out.println(String.format("\tcurrentTime: %s us, windCount: %d ticks",
-									NumberFormat.getInstance().format(currentMicroTime),
+									NumberFormat.getInstance().format(currentMicroInterval),
 									currentWindCount));
 						}
 
-						if (currentMicroTime > 1_000) { // debounce, 1 ms.
+						if (currentMicroInterval > 1_000) { // debounce, 1 ms.
 							if (verbose || verboseWind) {
 								System.out.println("\t\tDebounced!");
 							}
 							currentWindCount += 1;        // Increment Wind tick count
-							shortestWindMicroTime = Math.min(shortestWindMicroTime, currentMicroTime);
-//							if (currentMicroTime < shortestWindMicroTime) {
-//								shortestWindMicroTime = currentMicroTime;
+							shortestWindMicroTime = Math.min(shortestWindMicroTime, currentMicroInterval);
+//							if (currentMicroInterval < shortestWindMicroTime) {
+//								shortestWindMicroTime = currentMicroInterval;
 //							}
 						}
 						lastWindMilliSecPing = nowMilliSec;
@@ -160,6 +163,7 @@ public class SDLWeather80422 {
 			});
 		}
 		if (rain != null) {
+			lastRainReset = System.currentTimeMillis();
 			this.pinRain = gpio.provisionDigitalInputPin(rain, "Rainmeter");
 			this.pinRain.addListener(new GpioPinListenerDigital() {
 				@Override
@@ -178,23 +182,23 @@ public class SDLWeather80422 {
 
 					if (event.getState().isHigh() && (nowMilliSec - lastRainMilliSecPing) > minimumDebounceTimeMilliSec) {
 						long nowMicroSec = Utilities.currentTimeMicros();
-						long currentMicroSecTime = nowMicroSec - lastRainMicroSecTime;
+						long currentMicroSecInterval = nowMicroSec - lastRainMicroSecTime;
 						lastRainMicroSecTime = nowMicroSec;
 
 						if (verbose || verboseRain) {
 							System.out.println(String.format("\tcurrentTime: %s us, rainCount: %d ticks",
-									NumberFormat.getInstance().format(currentMicroSecTime),
+									NumberFormat.getInstance().format(currentMicroSecInterval),
 									currentRainCount));
 						}
 
-						if (currentMicroSecTime > 500) { // debounce
+						if (currentMicroSecInterval > 500) { // debounce, 0.5 ms
 							if (verbose || verboseRain) {
 								System.out.println("\t\tDebounced!");
 							}
 							currentRainCount += 1;
-							currentRainMicroSecMin = Math.min(currentRainMicroSecMin, currentMicroSecTime);
-//							if (currentMicroSecTime < currentRainMicroSecMin) {
-//								currentRainMicroSecMin = currentMicroSecTime;
+							currentRainMicroSecMin = Math.min(currentRainMicroSecMin, currentMicroSecInterval); // TODO unused?
+//							if (currentMicroSecInterval < currentRainMicroSecMin) {
+//								currentRainMicroSecMin = currentMicroSecInterval;
 //							}
 						}
 						lastRainMilliSecPing = nowMilliSec;
@@ -240,7 +244,10 @@ public class SDLWeather80422 {
 					currentRainCount,
 					rainAmount));
 		}
-		resetRainTotal(); // TODO Reset when read, or after a given amount of time?
+		if ((System.currentTimeMillis() - this.lastRainReset) > _10_MINUTES) {
+			resetRainTotal(); // Reset when read, and after a given amount of time?
+			this.lastRainReset = System.currentTimeMillis();
+		}
 		return rainAmount;
 	}
 
