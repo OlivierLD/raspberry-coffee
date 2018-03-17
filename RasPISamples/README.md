@@ -55,11 +55,12 @@ See [here](http://raspberrypi.lediouris.net/WeatherStation/readme.html).
 > See also [this document](./src/java/weatherstation/README.md)
 
 This implementation - just an example - uses:
-- a Raspberry PI A+ connected to the weather rack (wind vane, anemometer, rain meter, temperature, pressure)
+- A Raspberry PI A+ connected to the weather rack (wind vane, anemometer, rain meter, temperature, pressure)
 - It runs the scripts and classes mentioned above, along with a `nodejs` WebSocket server
 - It uses several [`Loggers`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RasPISamples/src/java/weatherstation/logger/LoggerInterface.java) to feed:
   - A MySQL database through REST Services developed in `php`
   - An HTTP tiny server that contains the last available data as a `json` object
+  - A WebSocket client pushing the last available data as a `json` object
   - A TCP server that also converts the data in `NMEA` sentences before streaming them on a given TCP port
 
 The TCP channel, conveying NMEA Data, is compatible with the `NMEA.multiplexer` project and `Node-RED`.
@@ -70,7 +71,7 @@ Web Socket Interface
 
 ![Web-Components Interface](./img/WebComponents.png)
 
-Web Component interface, pinging the NMEA Cache (`NMEA.multiplexer`) through REST services.
+Web Component Interface, pinging the NMEA Cache (`NMEA.multiplexer`) through REST services.
 
 ![Web Interface](./img/MySQL.png)
 
