@@ -77,6 +77,10 @@ Web Component Interface, pinging the NMEA Cache (`NMEA.multiplexer`) through RES
 
 Web Interface
 
+![On the roof](./img/OnTheRoof.jpg)
+
+On the roof!
+
 ---
 
 ### <a name="robotonwheels"></a>Robot on wheels
