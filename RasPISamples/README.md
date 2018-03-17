@@ -13,7 +13,7 @@
 ### <a name="weatherstation"></a>Home Weather Station
 This one uses the `SDLWeather80422` class, from the `WeatherStation` project.
 You can
-- Read the data from the station 
+- Read the data from the station
 - Simulate the data read from the station
 
 Those data can then be rendered in different ways, with a Web Interface.
@@ -40,10 +40,10 @@ You can also start a simulator, in case you  are not on the Raspberry PI, and wa
 Prompt> ./weather.simulator
 ```
 
-Then you can visualize the data in a browser, using a URL like 
+Then you can visualize the data in a browser, using a URL like
 `http://raspberrypi:9876/data/weather.station/index.html`
 
-The analog console can be reached from `http://localhost:9876/data/weather.station/analog.html`, 
+The analog console can be reached from `http://localhost:9876/data/weather.station/analog.html`,
 and it supports query string parameters `border` and `theme`.
 
 `border` can be `Y` or `N`, and `theme` can be `black` or `white`.
@@ -52,7 +52,29 @@ _For example_:`http://localhost:9876/data/weather.station/analog.html?border=N&t
 
 See [here](http://raspberrypi.lediouris.net/WeatherStation/readme.html).
 
-> See also [this document](./src/java/weatherstation/README.md) 
+> See also [this document](./src/java/weatherstation/README.md)
+
+This implementation - just an example - uses:
+- a Raspberry PI A+ connected to the weather rack (wind vane, anemometer, rain meter, temperature, pressure)
+- It runs the scripts and classes mentioned above, along with a `nodejs` WebSocket server
+- It uses several [`Loggers`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RasPISamples/src/java/weatherstation/logger/LoggerInterface.java) to feed:
+  - A MySQL database through REST Services developed in `php`
+  - An HTTP tiny server that contains the last available data as a `json` object
+  - A TCP server that also converts the data in `NMEA` sentences before streaming them on a given TCP port
+
+The TCP channel, conveying NMEA Data, is compatible with the `NMEA.multiplexer` project and `Node-RED`.
+
+![WebSocket Interface](./img/WebSocket.png)
+
+Web Socket Interface
+
+![Web-Components Interface](./img/WebComponents.png)
+
+Web Component interface, pinging the NMEA Cache (`NMEA.multiplexer`) through REST services.
+
+![Web Interface](./img/MySQL.png)
+
+Web Interface
 
 ---
 

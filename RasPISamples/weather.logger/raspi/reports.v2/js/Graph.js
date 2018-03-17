@@ -176,6 +176,10 @@ function Graph(cName,       // Canvas Name
           miny =   0;
           maxy = 100;
           break;
+	    case "RAIN":
+		    miny = 0;
+		    maxy = Math.max(3, Math.ceil(this.maxY(data))); // at least 3mm
+		    break;
         default:
           break;
     }

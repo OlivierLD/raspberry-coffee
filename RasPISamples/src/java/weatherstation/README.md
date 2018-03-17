@@ -26,7 +26,7 @@ Use the [`K`] option to stop everything.
 The class `weatherstation.ws.HomeWeatherStation` can take an array (comma-separated) of
 `LoggerInterface` classes as System variable.
 
-See among others `MySQLLoggerImpl` and `NMEAOverTCPLogger`.
+See among others `MySQLLoggerImpl` and `NMEAOverTCPLogger`, and the script `weather.station.reader.sh`.
 
 `NMEAOverTCPLogger` is compatible with the NMEA Multiplexer project.
 
