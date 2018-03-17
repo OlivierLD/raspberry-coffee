@@ -58,7 +58,9 @@ if ($type == 'WIND') {
 }
 // All the data we are interested in are in WEATHER_DATA.
 $sql .=   ' FROM weather_data';
-if ($period != '' && $period != 'ALL') {
+if ($period != '' && $period == 'LAST') {
+  $sql .= (' WHERE log_time = (SELECT MAX(log_time) FROM weather_data)');
+} else if ($period != '' && $period != 'ALL') {
   $nbs = 3600 * 24;
   if ($period == 'DAY') {
     $nbs = 3600 * 24; // DAY, with time offset ??

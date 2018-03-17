@@ -24,4 +24,10 @@ Cleanup:
 ========
 http://donpedro.lediouris.net/php/weather/reports.v2/mysql.cleanup.html
 
+Last Weather Data:
+==================
+GET http://donpedro.lediouris.net/php/weather/reports.v2/json.data.php?type=ALL&period=LAST
+
+
+
 
