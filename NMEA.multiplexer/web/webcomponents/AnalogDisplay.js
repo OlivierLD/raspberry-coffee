@@ -445,7 +445,7 @@ class AnalogDisplay extends HTMLElement { // WIP
 			grd.addColorStop(1, this.analogDisplayColorConfig.displayBackgroundGradient.to);  // 1  End
 			context.fillStyle = grd;
 		} else {
-			context.fillStyle = this.analogDisplayColorConfig.displayBackgroundGradientTo;
+			context.fillStyle = this.analogDisplayColorConfig.displayBackgroundGradient.to;
 		}
 		if (this.analogDisplayColorConfig.withDisplayShadow) {
 			context.shadowOffsetX = 3;
