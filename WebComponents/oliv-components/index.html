@@ -57,6 +57,15 @@
 
 	<script type="text/javascript">
 
+		function changeBG(value) {
+			let bodyStyle = document.getElementsByTagName("body")[0].style;
+			if (value === 'LIGHT') {
+				bodyStyle.background = 'radial-gradient(at top, white -8%, lightgrey 55%)';
+			} else {
+				bodyStyle.background = 'radial-gradient(at top, DarkGrey -8%, black 55%)';
+			}
+		}
+
 		/**
 		 * Set data to the WebComponents
 		 * Assume that they all have a 'value' member.
@@ -325,6 +334,10 @@
 
 	<h2>Web Components Samples</h2>
 	<h5>Pluviometer, Thermometer, Displays and other such marvels...</h5>
+	<!-- Page BG -->
+	Page Background
+	<input type="radio" name="page-bg" value="DARK" checked onchange="changeBG(this.value);">Dark
+	<input type="radio" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
 	<p>
 		Click on the <b>category titles</b> below, they all represent different configurations of <i>one</i> WebComponent each.
 		<br/>

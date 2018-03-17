@@ -210,7 +210,7 @@ jumbo-display .digital-font-green {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: cyan;
 	--with-gradient: false;
-	--display-background-gradient-from: LightGrey; /* used if --withGradient: true */
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
 	--display-background-gradient-to: rgba(0, 0, 0, 0);
 	--display-line-color: rgba(0, 255, 255, 0.5);
 	--label-fill-color: rgba(0, 0, 0, 0);
@@ -236,7 +236,7 @@ jumbo-display .digital-font-green {
 	--digit-color: orange;
 	--with-gradient: false;
 	--display-background-gradient-from: undefined; /* used if --withGradient: true */
-	--display-background-gradient-to: black;
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
 	--display-line-color: rgba(255, 165, 0, 0.5); /* orange */
 	--label-fill-color: rgba(255, 255, 255, 0);
 	--with-display-shadow: false;

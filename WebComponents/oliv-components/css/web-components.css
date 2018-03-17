@@ -3,7 +3,7 @@
 	--with-shadow: true;
 	--shadow-color: LightGrey;
 	--scale-color: black;
-	--bg-color: white;
+	--bg-color: rgba(0, 0, 0, 0);
 	--major-tick-color: LightGrey;
 	--minor-tick-color: DarkGrey;
 	--value-outline-color: black;
@@ -57,7 +57,7 @@
 }
 
 .thermometer-day {
-  --bg-color: white;
+  --bg-color: rgba(0, 0, 0, 0);
   --digit-color: DarkGrey;
   --with-gradient: true;
   --display-background-gradient-from: black;
@@ -73,7 +73,7 @@
 }
 
 .thermometer-night {
-  --bg-color: black;
+  --bg-color: rgba(0, 0, 0, 0);
   --digit-color: red;
   --with-gradient: true;
   --display-background-gradient-from: black;
@@ -89,7 +89,7 @@
 }
 
 .thermometer-cyan {
-	--bg-color: black;
+	--bg-color: transparent;
 	--digit-color: cyan;
 	--with-gradient: false;
 	--display-background-gradient-to: rgba(255, 255, 255, 0.25);
@@ -103,7 +103,7 @@
 }
 
 .thermometer-orange {
-	--bg-color: black;
+	--bg-color: transparent;
 	--digit-color: orange;
 	--with-gradient: false;
 	--display-background-gradient-to: rgba(255, 255, 255, 0.25);
@@ -210,7 +210,7 @@ jumbo-display .digital-font-green {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: cyan;
 	--with-gradient: false;
-	--display-background-gradient-from: LightGrey; /* used if --withGradient: true */
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
 	--display-background-gradient-to: rgba(0, 0, 0, 0);
 	--display-line-color: rgba(0, 255, 255, 0.5);
 	--label-fill-color: rgba(0, 0, 0, 0);
@@ -236,7 +236,7 @@ jumbo-display .digital-font-green {
 	--digit-color: orange;
 	--with-gradient: false;
 	--display-background-gradient-from: undefined; /* used if --withGradient: true */
-	--display-background-gradient-to: black;
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
 	--display-line-color: rgba(255, 165, 0, 0.5); /* orange */
 	--label-fill-color: rgba(255, 255, 255, 0);
 	--with-display-shadow: false;
@@ -284,7 +284,7 @@ jumbo-display .digital-font-green {
 }
 
 .analogdisplay-flat-black {
-	--bg-color: black;
+	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: white;
 	--with-gradient: false;
 	--display-background-gradient-to: black; /* used if --withGradient: false */
