@@ -8,15 +8,23 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
+/**
+ * Very basic HTTP Server
+ */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
 	private String data;
 	private int _port = 0;
 
 	private long started = 0L;
+	private List<Consumer<Request>> callbacks = null;
 
 	public HTTPServer() throws Exception {
 		// Bind the server
@@ -63,6 +71,7 @@ public class HTTPServer {
 						if (verbose) {
 							System.out.println(">>> HTTP Server, socket connection accepted");
 						}
+						Request request = null;
 						BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 						PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
 						String line;
@@ -72,12 +81,20 @@ public class HTTPServer {
 							}
 							if (line.length() == 0) {
 								break;
-							} else if (line.startsWith("POST /exit") || line.startsWith("GET /exit")) {
-								System.out.println(">>> HTTP Server, received an exit signal");
-								go = false;
-							} else if (line.startsWith("POST / ") || line.startsWith("GET / ") || line.startsWith("POST /all") || line.startsWith("GET /all")) {
-								// Usual case, reply
-								System.out.println(">>> HTTP Server, received data request <<<");
+							} else {
+								String firstWord = line.substring(0, line.indexOf(" "));
+								if (Request.VERBS.contains(firstWord)) { // Start Line
+									String[] requestElements = line.split(" ");
+									request = new Request(requestElements[0], requestElements[1], requestElements[2]);
+								}
+
+								if (line.startsWith("POST /exit") || line.startsWith("GET /exit")) {
+									System.out.println(">>> HTTP Server, received an exit signal");
+									go = false;
+								} else if (line.startsWith("POST / ") || line.startsWith("GET / ") || line.startsWith("POST /all") || line.startsWith("GET /all")) {
+									// Usual case, reply
+									System.out.println(">>> HTTP Server, received data request <<<");
+								}
 							}
 							//          System.out.println("Read:[" + line + "]");
 							if (line.indexOf(":") > -1) { // Header?
@@ -89,6 +106,17 @@ public class HTTPServer {
 						if (verbose) {
 							System.out.println(">>> HTTP Server, Request has been read.");
 						}
+
+						if (callbacks != null) {
+							if (request != null) {
+								request.setHeaders(header);
+							}
+							final Request _request = request;
+							callbacks.forEach(listener -> {
+								listener.accept(_request);
+							});
+						}
+
 						String contentType = "text/plain";
 						String content = "exit";
 						if (go) {
@@ -143,6 +171,114 @@ public class HTTPServer {
 			System.out.println(">>> HTTP Server, Listener thread started");
 		}
 		started = System.currentTimeMillis();
+	}
+
+	public static class Request {
+		public final static List<String> VERBS = Arrays.asList(
+				"GET",
+				"POST",
+				"DELETE",
+				"PUT",
+				"PATCH"
+		);
+
+		private String verb;
+		private String path;
+		private String protocol;
+		private byte[] content;
+		private Map<String, String> headers;
+		private String requestPattern;
+
+		private Map<String, String> queryStringParameters;
+
+		public Request() {
+		}
+
+		public Request(String verb, String path, String protocol) {
+			this.verb = verb;
+			String[] pathAndQueryString = path.split("\\?");
+			this.path = pathAndQueryString[0];
+			if (pathAndQueryString.length > 1) {
+				String[] nvPairs = pathAndQueryString[1].split("&");
+				Arrays.asList(nvPairs).stream().forEach(nv -> {
+					if (queryStringParameters == null) {
+						queryStringParameters = new HashMap<>();
+					}
+					String[] nameValue = nv.split("=");
+					queryStringParameters.put(nameValue[0], (nameValue.length > 1 ? nameValue[1] : null));
+				});
+			}
+			this.protocol = protocol;
+		}
+
+		public String getResource() {
+			return getVerb() + " " + getPath();
+		}
+
+		public byte[] getContent() {
+			return content;
+		}
+
+		public void setContent(byte[] content) {
+			this.content = content;
+		}
+
+		public String getVerb() {
+			return verb;
+		}
+
+		public String getPath() {
+			return path;
+		}
+
+		public String getProtocol() {
+			return protocol;
+		}
+
+		public Map<String, String> getHeaders() {
+			return headers;
+		}
+
+		public Map<String, String> getQueryStringParameters() {
+			return queryStringParameters;
+		}
+
+		public void setHeaders(Map<String, String> headers) {
+			this.headers = headers;
+		}
+
+		public String getRequestPattern() {
+			return requestPattern;
+		}
+
+		public void setRequestPattern(String requestPattern) {
+			this.requestPattern = requestPattern;
+		}
+
+		@Override
+		public String toString() {
+			final StringBuffer string = new StringBuffer();
+			string.append(this.verb + " " + this.path + " " + this.protocol);
+
+			if (this.headers != null) {
+				this.headers.keySet().stream()
+						.forEach(k -> {
+							string.append("\n" + k + ":" + this.headers.get(k));
+						});
+			}
+			if (this.content != null) {
+				string.append("\n\n" + new String(this.content));
+			}
+
+			return string.toString();
+		}
+	}
+
+	public void addListener(Consumer<Request> listener) {
+		if (callbacks == null) {
+			callbacks = new ArrayList<>();
+		}
+		callbacks.add(listener);
 	}
 
 	public void setData(String str) {
