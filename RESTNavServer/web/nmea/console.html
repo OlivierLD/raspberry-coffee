@@ -15,7 +15,7 @@
         border: 1px solid #9C9898;
         opacity:0.75;
       }
-      
+
       .selectedButton {
         padding: 5px;
         border-top-right-radius: 10px;
@@ -82,7 +82,7 @@
       }
     }
     return value;
-  };      
+  };
 
   var setup = function(b1, b2, b3, b4, b5) {
     document.getElementById('displays').style.display = (b1 === true ? 'inline' : 'none');
@@ -100,13 +100,13 @@
 
   var showMap = function() {
     setup(false, false, true, false, false);
-  };  
+  };
   var showDisplays = function() {
     setup(true, false, false, false, false);
-  };  
+  };
   var showOverview = function() {
     setup(false, true, false, false, false);
-  };    
+  };
   var showTWDEvolution = function() {
     setup(false, false, false, true, false);
   };
@@ -232,15 +232,15 @@
       displayOverview.setTWS(val);
       jumboTWS.setValue(val.toFixed(1));
       twsEvolution.addSpeed({ "speed": val, "time": (new Date()).getTime() });
-      
+
       var from = twsEvolution.getFromBoundary();
       var to   = twsEvolution.getToBoundary();
-      
+
       var dateFmt = (to - from > (3600000 * 24)) ? "d-M H:i:s" : "H:i:s"; // "d-M-Y H:i:s._ Z";
-      document.getElementById("life-span").innerHTML = twsEvolution.getBufferLength() + " pts<br>" + 
-                                                       "From " + (new Date(from)).format(dateFmt) + "<br>" + 
-                                                       "To " + (new Date(to)).format(dateFmt) + "<br>" + 
-                                                    // "(" + twsEvolution.getLifeSpan() + ")" + "<br>" + 
+      document.getElementById("life-span").innerHTML = twsEvolution.getBufferLength() + " pts<br>" +
+                                                       "From " + (new Date(from)).format(dateFmt) + "<br>" +
+                                                       "To " + (new Date(to)).format(dateFmt) + "<br>" +
+                                                    // "(" + twsEvolution.getLifeSpan() + ")" + "<br>" +
                                                        twsEvolution.getLifeSpanFormatted();
     });
     events.subscribe('wt', function(val) {
@@ -470,7 +470,7 @@
 	  }
 		return value;
 	};
-  
+
   var displayErr = function(err) {
     if (err !== undefined) {
 	    document.getElementById("err-mess").innerHTML = ("<small>" + err + "</small>");
@@ -481,13 +481,13 @@
 //  console.log("Re-evaluating window size");
     resizeComponents();
   };
-  
+
   var resizeComponents = function() {
     var ww = window.innerWidth;
     var wh = window.innerHeight;
-    
+
     var totalWidth = TOTAL_WIDTH; // in console.js
-    
+
     // Canvases & iFrame
     document.getElementById('overviewCanvas').height = wh * 0.8;
     // BSP
@@ -539,9 +539,9 @@
 	  document.getElementById('currentDirEvolutionCanvas10m').height = wh * 0.8;
 	  document.getElementById('currentSpeedEvolutionCanvas10m').height = wh * 0.8;
     // Displays inside the canvases
-    resizeDisplays(ww); 
+    resizeDisplays(ww);
   };
-  
+
   var changeTheme = function(value) {
 
 	  var cssLink = document.getElementById("theme");
@@ -557,12 +557,12 @@
 		  athermometer.repaint();
 	  }, 1000);
   };
-  
+
   var resetTWBuffer = function() {
     if (twdEvolution !== undefined) twdEvolution.resetDirection();
     if (twsEvolution !== undefined) twsEvolution.resetSpeed();
   };
-  
+
   var resetTW2Buffer = function() {
     if (twdEvolution !== undefined) twdEvolution.reset2Direction();
     if (twsEvolution !== undefined) twsEvolution.reset2Speed();
@@ -701,7 +701,7 @@
           <td align="center" valign="top" colspan="3">
             <canvas id="roseCanvas" width="500" height="50" title="True Heading"></canvas>
           </td>
-        </tr>        
+        </tr>
         <tr>
           <td align="center"><div id="display-gdt-title" style="display: inline;">GPS Date / Time</div></td>
           <td align="center" colspan="3"></td>
@@ -727,7 +727,7 @@
             </table>
           </td>
         </tr>
-      </table>   
+      </table>
     </div>
     <div id="overview" style="display: none;">
       <p align="center">
@@ -863,7 +863,7 @@
 				</tr>
 				<tr>
 					<td valign="bottom">
-						<i>Solar Date</i>
+						<i>Solar Date (at your location)</i>
 						<br />
 						<div id="solar-date"></div>
 					</td>
@@ -1018,4 +1018,3 @@
     <address><span id="console-type"></span></address>
   </body>
 </html>
-  
