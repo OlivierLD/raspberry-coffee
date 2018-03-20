@@ -71,7 +71,7 @@ class AnalogWatch extends HTMLElement {
 			"minutes-ticks",  // Integer, minutes ticks.  Default 1
 			"with-second-hand", // Boolean, draw the seconds hand or not.
 			"with-border",  // Boolean
-			"label",        // String, Optiponal.
+			"label",        // String, Optional.
 			"value"         // Float. Time to display, HH:MM:SS format
 		];
 	}
