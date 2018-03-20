@@ -14,6 +14,7 @@
 	<script type="module" src="widgets/JumboDisplay.js"></script>
 	<script type="module" src="widgets/DirectionDisplay.js"></script>
 	<script type="module" src="widgets/AnalogDisplay.js"></script>
+	<script type="module" src="widgets/AnalogWatch.js"></script>
 	<script type="module" src="widgets/CompassRose.js"></script>
 	<script type="module" src="widgets/WorldMap.js"></script>
 	<script type="module" src="widgets/SkyMap.js"></script>
@@ -129,6 +130,57 @@
 			}
 		}
 
+		let watchAnimationInterval;
+		let watchValue;
+
+		function doAnimateWatch() {
+			if (watchAnimationInterval !== undefined) {
+				window.clearInterval(watchAnimationInterval);
+				watchAnimationInterval = undefined;
+			} else {
+				if (watchValue === undefined) {
+					watchValue = 0;
+				}
+				watchAnimationInterval = window.setInterval(function() {
+					// One day = 86,400 sec,
+					let seconds = watchValue % 60;
+					let minutes = ((watchValue - seconds) / 60) % 60;
+					let hours = Math.floor(watchValue / 3600);
+
+					let timeValue = hours.toFixed(0) + ":" + minutes.toFixed(0) + ":" + seconds.toFixed(0);
+
+//				console.log("Time: %d, => %s", watchValue, timeValue);
+
+					document.getElementById('analog-watch-01').value = timeValue;
+					document.getElementById('analog-watch-02').value = timeValue;
+					watchValue += 1;
+				}, 10);
+			}
+		}
+
+		let realTimeInterval;
+		function realTime(id) {
+			if (realTimeInterval !== undefined) {
+				window.clearInterval(realTimeInterval);
+				realTimeInterval = undefined;
+			} else {
+				realTimeInterval = window.setInterval(function() {
+					let date = new Date();
+					let now = (date.getTime() / 1000) % 86400;
+					// One day = 86,400 sec,
+					let seconds = now % 60;
+					let minutes = ((now - seconds) / 60) % 60;
+					let hours = Math.floor(now / 3600);
+
+					let timeValue = hours.toFixed(0) + ":" + minutes.toFixed(0) + ":" + seconds.toFixed(0);
+
+//				console.log("Time: %d, => %s", watchValue, timeValue);
+
+					document.getElementById(id).value = timeValue;
+				}, 1000);
+			}
+		}
+
 		function setBorder(cb, id) {
 			document.getElementById(id).withBorder = cb.checked;
 		}
@@ -168,23 +220,23 @@
 		let directionAnimationInterval;
 		let directionValue;
 		function directionAnimation(inc) {
-				if (directionAnimationInterval !== undefined) {
-					window.clearInterval(directionAnimationInterval);
-					directionAnimationInterval = undefined;
-				} else {
-					if (directionValue === undefined) {
-						directionValue = 0;
-					}
-					directionAnimationInterval = window.setInterval(function() {
-						document.getElementById('compass-01').value = directionValue;
-						document.getElementById('compass-02').value = directionValue;
-						document.getElementById('compass-03').value = directionValue;
-						document.getElementById('compass-04').value = directionValue;
-						document.getElementById('compass-05').value = directionValue;
-						directionValue += inc;
-						directionValue = directionValue % 360;
-					}, 50);
+			if (directionAnimationInterval !== undefined) {
+				window.clearInterval(directionAnimationInterval);
+				directionAnimationInterval = undefined;
+			} else {
+				if (directionValue === undefined) {
+					directionValue = 0;
 				}
+				directionAnimationInterval = window.setInterval(function() {
+					document.getElementById('compass-01').value = directionValue;
+					document.getElementById('compass-02').value = directionValue;
+					document.getElementById('compass-03').value = directionValue;
+					document.getElementById('compass-04').value = directionValue;
+					document.getElementById('compass-05').value = directionValue;
+					directionValue += inc;
+					directionValue = directionValue % 360;
+				}, 50);
+			}
 		}
 
 		let roseAnimationInterval;
@@ -1631,6 +1683,94 @@
 										title="Go!"
 										style="margin-top: 3px;">Scroll</button>
 					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<!--
+		ANALOG WATCH
+	+-->
+	<div style="cursor: pointer;" onclick="showHide('analog-watch');"><b><u>Analog Watch</u></b></div>
+	<div id="analog-watch" class="smooth">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<analog-watch id="analog-watch-01"
+											 		class="analogdisplay-day"
+											 		title="System Time!"
+											 		width="220"
+											 		height="220"
+													major-ticks="1"
+													with-second-hand="true"
+													value="01:20:12"></analog-watch>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="text"
+									 id="watch-value-01"
+									 placeholder="00:00:00"
+									 title="Time to set"
+									 style="width: 80px; text-align: center;"
+									 value="01:20:12"/>
+						<button onclick="setData('watch-value-01', 'analog-watch-01')"
+										title="Set Time on the watch"
+										style="margin-top: 3px;">Set</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>With Border
+					</div>
+				</td>
+				<td valign="top">
+					<div class="black-frame centered">
+						<analog-watch id="analog-watch-02"
+													class="analogdisplay-monochrome-orange"
+													title="System Time!"
+													width="220"
+													height="220"
+													with-second-hand="false"
+													value="01:20:12"></analog-watch>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="text"
+									 id="watch-value-02"
+									 placeholder="00:00:00"
+									 title="Time to set"
+									 style="width: 80px; text-align: center;"
+									 value="01:20:12"/>
+						<button onclick="setData('watch-value-02', 'analog-watch-02')"
+										title="Set Time on the watch"
+										style="margin-top: 3px;">Set</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'analog-watch-02');" checked>With Border
+					</div>
+				</td>
+				<td valign="top">
+					<div class="black-frame centered">
+						<analog-watch id="analog-watch-03"
+													class="analogdisplay-monochrome-cyan"
+													title="System Time!"
+													width="220"
+													height="220"
+													with-second-hand="true"
+													label="UTC"
+													value="01:20:12"></analog-watch>
+					</div>
+					<div class="black-frame centered">
+						<button onclick="realTime('analog-watch-03')"
+										title="Set Time on the watch"
+										style="margin-top: 3px;">Real time</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'analog-watch-03');" checked>With Border
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="center" colspan="2" class="black-frame centered">
+					<button onclick="doAnimateWatch()"
+									title="Time machine!"
+									style="margin-top: 3px;">Animate</button>
 				</td>
 			</tr>
 		</table>

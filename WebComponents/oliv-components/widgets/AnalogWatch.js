@@ -1,5 +1,5 @@
-const directionVerbose = false;
-const DIRECTION_TAG_NAME = 'direction-display';
+const watchVerbose = false;
+const WATCH_TAG_NAME = 'analog-watch';
 /*
 * See custom properties in CSS.
 * =============================
@@ -19,9 +19,6 @@ const DIRECTION_TAG_NAME = 'direction-display';
 	--outline-color: DarkGrey;
 	--major-tick-color: black;
 	--minor-tick-color: black;
-	--value-color: grey;
-	--value-outline-color: black;
-	--value-nb-decimal: 1;
 	--hand-color: red;
 	--hand-outline-color: black;
 	--with-hand-shadow: true;
@@ -40,7 +37,7 @@ const DIRECTION_TAG_NAME = 'direction-display';
  *
  * spine-case to camelCase
  */
-const defaultDirectionColorConfig = {
+const defaultWatchColorConfig = {
 	bgColor: 'rgba(0, 0, 0, 0)', /* transparent, 'white', */
 	digitColor: 'black',
 	withGradient: true,
@@ -55,9 +52,6 @@ const defaultDirectionColorConfig = {
 	outlineColor: 'DarkGrey',
 	majorTickColor: 'black',
 	minorTickColor: 'black',
-	valueColor: 'grey',
-	valueOutlineColor: 'black',
-	valueNbDecimal: 1,
 	handColor: 'red', // 'rgba(0, 0, 100, 0.25)',
 	handOutlineColor: 'black',
 	withHandShadow: true,
@@ -67,18 +61,18 @@ const defaultDirectionColorConfig = {
 };
 
 /* global HTMLElement */
-class DirectionDisplay extends HTMLElement {
+class AnalogWatch extends HTMLElement {
 
 	static get observedAttributes() {
 		return [
 			"width",        // Integer. Canvas width
 			"height",       // Integer. Canvas height
-			"major-ticks",  // Float. value between major ticks (those with labels)
-			"minor-ticks",  // Float. value between minor ticks
-			"with-rose",    // Boolean, draw the rose or not
+			"major-ticks",  // Integer. label of hours. 1: each hour, 3: every 3 hours, etc. Default 3
+			"minor-ticks",  // Integer, minutes ticks.  Default 1
+			"with-second-hand", // Boolean, draw the seconds hand or not.
 			"with-border",  // Boolean
-			"label",        // String
-			"value"         // Float. Heading to display
+			"label",        // String, Optiponal.
+			"value"         // Float. Time to display, HH:MM:SS format
 		];
 	}
 
@@ -90,33 +84,33 @@ class DirectionDisplay extends HTMLElement {
 		this.shadowRoot.appendChild(this.canvas);
 
 		// Default values
-		this._value       =   0;
+		this._value       = '00:00:00';
 		this._width       = 150;
 		this._height      = 150;
-		this._major_ticks =  45;
-		this._minor_ticks =   5;
-		this._with_second_hand   = true;
+		this._major_ticks =   3;
+		this._minor_ticks =   1;
+		this._with_second_hand = false;
 		this._with_border = true;
 		this._label       = undefined;
 
 		this._previousClassName = "";
-		this.watchColorConfig = defaultDirectionColorConfig; // Init
+		this.watchColorConfig = defaultWatchColorConfig; // Init
 
-		if (directionVerbose) {
+		if (watchVerbose) {
 			console.log("Data in Constructor:", this._value);
 		}
 	}
 
 	// Called whenever the custom element is inserted into the DOM.
 	connectedCallback() {
-		if (directionVerbose) {
+		if (watchVerbose) {
 			console.log("connectedCallback invoked, 'value' is [", this.value, "]");
 		}
 	}
 
 	// Called whenever the custom element is removed from the DOM.
 	disconnectedCallback() {
-		if (directionVerbose) {
+		if (watchVerbose) {
 			console.log("disconnectedCallback invoked");
 		}
 	}
@@ -124,12 +118,12 @@ class DirectionDisplay extends HTMLElement {
 	// Called whenever an attribute is added, removed or updated.
 	// Only attributes listed in the observedAttributes property are affected.
 	attributeChangedCallback(attrName, oldVal, newVal) {
-		if (directionVerbose) {
+		if (watchVerbose) {
 			console.log("attributeChangedCallback invoked on " + attrName + " from " + oldVal + " to " + newVal);
 		}
 		switch (attrName) {
 			case "value":
-				this._value = parseFloat(newVal);
+				this._value = newVal;
 				break;
 			case "width":
 				this._width = parseInt(newVal);
@@ -138,12 +132,12 @@ class DirectionDisplay extends HTMLElement {
 				this._height = parseInt(newVal);
 				break;
 			case "major-ticks":
-				this._major_ticks = parseFloat(newVal);
+				this._major_ticks = parseInt(newVal);
 				break;
 			case "minor-ticks":
-				this._minor_ticks = parseFloat(newVal);
+				this._minor_ticks = parseInt(newVal);
 				break;
-			case "with-rose":
+			case "with-second-hand":
 				this._with_second_hand = ("true" === newVal);
 				break;
 			case "with-border":
@@ -160,14 +154,14 @@ class DirectionDisplay extends HTMLElement {
 
 	// Called whenever the custom element has been moved into a new document.
 	adoptedCallback() {
-		if (directionVerbose) {
+		if (watchVerbose) {
 			console.log("adoptedCallback invoked");
 		}
 	}
 
 	set value(option) {
 		this.setAttribute("value", option);
-		if (directionVerbose) {
+		if (watchVerbose) {
 			console.log(">> Value option:", option);
 		}
 //	this.repaint();
@@ -184,8 +178,8 @@ class DirectionDisplay extends HTMLElement {
 	set minorTicks(val) {
 		this.setAttribute("minor-ticks", val);
 	}
-	set withRose(val) {
-		this.setAttribute("with-rose", val);
+	set withSecondHand(val) {
+		this.setAttribute("with-second-hand", val);
 	}
 	set withBorder(val) {
 		this.setAttribute("with-border", val);
@@ -212,7 +206,7 @@ class DirectionDisplay extends HTMLElement {
 	get majorTicks() {
 		return this._major_ticks;
 	}
-	get withRose() {
+	get withSecondHand() {
 		return this._with_second_hand;
 	}
 	get withBorder() {
@@ -231,7 +225,7 @@ class DirectionDisplay extends HTMLElement {
 	}
 
 	getColorConfig(classNames) {
-		let colorConfig = defaultDirectionColorConfig;
+		let colorConfig = defaultWatchColorConfig;
 		let classes = classNames.split(" ");
 		for (let cls=0; cls<classes.length; cls++) {
 			let className = classes[cls];
@@ -240,8 +234,8 @@ class DirectionDisplay extends HTMLElement {
 				for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 					let selector = document.styleSheets[s].cssRules[r].selectorText;
 	//			console.log(">>> ", selector);
-					if (selector !== undefined && (selector === '.' + className || (selector.indexOf('.' + className) > -1 && selector.indexOf(DIRECTION_TAG_NAME) > -1))) { // Cases like "tag-name .className"
-	//				console.log("  >>> Found it! [%s]", selector);
+					if (selector !== undefined && (selector === '.' + className || (selector.indexOf('.' + className) > -1 && selector.indexOf(WATCH_TAG_NAME) > -1))) { // Cases like "tag-name .className"
+					                                                                                                                                                     //				console.log("  >>> Found it! [%s]", selector);
 						let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 						let cssTextElems = cssText.split(";");
 						cssTextElems.forEach(function (elem) {
@@ -286,15 +280,6 @@ class DirectionDisplay extends HTMLElement {
 									case '--minor-tick-color':
 										colorConfig.minorTickColor = value;
 										break;
-									case '--value-color':
-										colorConfig.valueColor = value;
-										break;
-									case '--value-outline-color':
-										colorConfig.valueOutlineColor = value;
-										break;
-									case '--value-nb-decimal':
-										colorConfig.valueNbDecimal = value;
-										break;
 									case '--hand-color':
 										colorConfig.handColor = value;
 										break;
@@ -326,7 +311,11 @@ class DirectionDisplay extends HTMLElement {
 	}
 
 
-	drawDisplay(directionValue) {
+	/**
+	 *
+	 * @param timeValue, format HH:MM:SS
+	 */
+	drawDisplay(timeValue) {
 
 		let currentStyle = this.className;
 		if (this._previousClassName !== currentStyle || true) {
@@ -388,13 +377,13 @@ class DirectionDisplay extends HTMLElement {
 		context.stroke();
 		context.closePath();
 
-		// Major Ticks
+		// Hour ticks
 		context.beginPath();
-		for (let i = 0; i < 360; i += this.majorTicks) {
-			let xFrom = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (i / 360)));
-			let yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(2 * Math.PI * (i / 360)));
-			let xTo = (this.canvas.width / 2) - ((radius * 0.85) * Math.cos(2 * Math.PI * (i / 360)));
-			let yTo = (radius + 10) - ((radius * 0.85) * Math.sin(2 * Math.PI * (i / 360)));
+		for (let i = 0; i < 12; i += 1) {
+			let xFrom = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (i / 12)));
+			let yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(2 * Math.PI * (i / 12)));
+			let xTo = (this.canvas.width / 2) - ((radius * 0.85) * Math.cos(2 * Math.PI * (i / 12)));
+			let yTo = (radius + 10) - ((radius * 0.85) * Math.sin(2 * Math.PI * (i / 12)));
 			context.moveTo(xFrom, yFrom);
 			context.lineTo(xTo, yTo);
 		}
@@ -406,11 +395,11 @@ class DirectionDisplay extends HTMLElement {
 		// Minor Ticks
 		if (this.minorTicks > 0) {
 			context.beginPath();
-			for (let i = 0; i <= 360; i += this.minorTicks) {
-				let xFrom = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (i / 360)));
-				let yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(2 * Math.PI * (i / 360)));
-				let xTo = (this.canvas.width / 2) - ((radius * 0.90) * Math.cos(2 * Math.PI * (i / 360)));
-				let yTo = (radius + 10) - ((radius * 0.90) * Math.sin(2 * Math.PI * (i / 360)));
+			for (let i = 0; i < 60; i += this.minorTicks) {
+				let xFrom = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (i / 60)));
+				let yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(2 * Math.PI * (i / 60)));
+				let xTo = (this.canvas.width / 2) - ((radius * 0.90) * Math.cos(2 * Math.PI * (i / 60)));
+				let yTo = (radius + 10) - ((radius * 0.90) * Math.sin(2 * Math.PI * (i / 60)));
 				context.moveTo(xFrom, yFrom);
 				context.lineTo(xTo, yTo);
 			}
@@ -420,82 +409,16 @@ class DirectionDisplay extends HTMLElement {
 			context.closePath();
 		}
 
-		// with rose?
-		if (this.withRose === true) {
-			context.beginPath();
-
-			context.lineWidth = 1;
-			let outsideRadius = radius * 0.6;
-			let insideRadius = radius * 0.1;
-
-//    context.arc(canvas.width / 2, radius + 10, outsideRadius, 0, 2 * Math.PI, false);
-//    context.arc(canvas.width / 2, radius + 10, insideRadius,  0, 2 * Math.PI, false);
-
-			// NS/EW axis, the origin is -90 (W)
-			let N = (0 + 90) % 360;
-			let S = (180 + 90) % 360;
-			let E = (90 + 90) % 360;
-			let W = (270 + 90) % 360;
-
-			let NE = (45 + 90) % 360;
-			let SE = (135 + 90) % 360;
-			let NW = (315 + 90) % 360;
-			let SW = (225 + 90) % 360;
-
-			// N-S
-			let xFrom = (this.canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (N / 360)));
-			let yFrom = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (N / 360)));
-			let xTo = (this.canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (S / 360)));
-			let yTo = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (S / 360)));
-			context.moveTo(xFrom, yFrom);
-			context.lineTo(xTo, yTo);
-			// E-W
-			xFrom = (this.canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (E / 360)));
-			yFrom = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (E / 360)));
-			xTo = (this.canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (W / 360)));
-			yTo = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (W / 360)));
-			context.moveTo(xFrom, yFrom);
-			context.lineTo(xTo, yTo);
-			// NE-SW
-			xFrom = (this.canvas.width / 2) - (outsideRadius * 0.9 * Math.cos(2 * Math.PI * (NE / 360)));
-			yFrom = (radius + 10) - (outsideRadius * 0.9 * Math.sin(2 * Math.PI * (NE / 360)));
-			xTo = (this.canvas.width / 2) - (outsideRadius * 0.9 * Math.cos(2 * Math.PI * (SW / 360)));
-			yTo = (radius + 10) - (outsideRadius * 0.9 * Math.sin(2 * Math.PI * (SW / 360)));
-			context.moveTo(xFrom, yFrom);
-			context.lineTo(xTo, yTo);
-			// NW-SE
-			xFrom = (this.canvas.width / 2) - (outsideRadius * 0.9 * Math.cos(2 * Math.PI * (NW / 360)));
-			yFrom = (radius + 10) - (outsideRadius * 0.9 * Math.sin(2 * Math.PI * (NW / 360)));
-			xTo = (this.canvas.width / 2) - (outsideRadius * 0.9 * Math.cos(2 * Math.PI * (SE / 360)));
-			yTo = (radius + 10) - (outsideRadius * 0.9 * Math.sin(2 * Math.PI * (SE / 360)));
-			context.moveTo(xFrom, yFrom);
-			context.lineTo(xTo, yTo);
-
-			this.drawSpike(radius, outsideRadius, insideRadius, N, context);
-			this.drawSpike(radius, outsideRadius, insideRadius, S, context);
-			this.drawSpike(radius, outsideRadius, insideRadius, E, context);
-			this.drawSpike(radius, outsideRadius, insideRadius, W, context);
-
-			this.drawSpike(radius, outsideRadius * 0.9, insideRadius, NE, context);
-			this.drawSpike(radius, outsideRadius * 0.9, insideRadius, SE, context);
-			this.drawSpike(radius, outsideRadius * 0.9, insideRadius, SW, context);
-			this.drawSpike(radius, outsideRadius * 0.9, insideRadius, NW, context);
-
-			context.strokeStyle = this.watchColorConfig.displayLineColor;
-			context.stroke();
-			context.closePath();
-		}
-
 		// Numbers
 		context.beginPath();
 		let scale = 1;
-		for (let i = 0; i < 360; i += this.majorTicks) {
+		for (let i = 0; i < 12; i += this.majorTicks) {
 			context.save();
 			context.translate(this.canvas.width / 2, (radius + 10)); // canvas.height);
-			context.rotate((2 * Math.PI * (i / 360)));
+			context.rotate((2 * Math.PI * (i / 12)));
 			context.font = "bold " + Math.round(scale * 15) + "px Arial"; // Like "bold 15px Arial"
 			context.fillStyle = digitColor;
-			let str = i.toString();
+			let str = this.toRomanDigit(i === 0 ? 12 : i);
 			let len = context.measureText(str).width;
 			context.fillText(str, -len / 2, (-(radius * .8) + 10));
 			context.lineWidth = 1;
@@ -505,27 +428,18 @@ class DirectionDisplay extends HTMLElement {
 		}
 		context.closePath();
 		// Value
-		let text;
-		let dv = parseFloat(directionValue);
-		while (dv > 360) dv -= 360;
-		while (dv < 0) dv += 360;
-		try {
-			text = dv.toFixed(this.watchColorConfig.valueNbDecimal);
-		} catch (err) {
-			console.log(err);
-		}
-		let len = 0;
-		context.font = "bold " + Math.round(scale * 40) + "px " + this.watchColorConfig.font; // "bold 40px Arial"
-		let metrics = context.measureText(text);
-		len = metrics.width;
+		let timeElements = timeValue.split(":");
+		let hours = 0, minutes = 0, seconds = 0;
 
-		context.beginPath();
-		context.fillStyle = this.watchColorConfig.valueColor;
-		context.fillText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10));
-		context.lineWidth = 1;
-		context.strokeStyle = this.watchColorConfig.valueOutlineColor;
-		context.strokeText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined
-		context.closePath();
+		if (timeElements[0] !== undefined) {
+			hours = parseInt(timeElements[0]);
+		}
+		if (timeElements[1] !== undefined) {
+			minutes = parseInt(timeElements[1]);
+		}
+		if (timeElements[2] !== undefined) {
+			seconds = parseInt(timeElements[2]);
+		}
 
 		// Label ?
 		if (this.label !== undefined) {
@@ -545,35 +459,108 @@ class DirectionDisplay extends HTMLElement {
 			context.closePath();
 		}
 
-		// Hand
-		context.beginPath();
-		if (this.watchColorConfig.withHandShadow) {
-			context.shadowColor = this.watchColorConfig.shadowColor;
-			context.shadowOffsetX = 3;
-			context.shadowOffsetY = 3;
-			context.shadowBlur = 3;
-		}
-		// Center
-		context.moveTo(this.canvas.width / 2, radius + 10);
-		// Left
-		let x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (directionValue / 360)))); //  - (Math.PI / 2))));
-		let y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (directionValue / 360)))); // - (Math.PI / 2))));
-		context.lineTo(x, y);
-		// Tip
-		x = (this.canvas.width / 2) - ((radius * 0.90) * Math.cos(2 * Math.PI * (directionValue / 360) + (Math.PI / 2)));
-		y = (radius + 10) - ((radius * 0.90) * Math.sin(2 * Math.PI * (directionValue / 360) + (Math.PI / 2)));
-		context.lineTo(x, y);
-		// Right
-		x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (directionValue / 360) + (2 * Math.PI / 2))));
-		y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (directionValue / 360) + (2 * Math.PI / 2))));
-		context.lineTo(x, y);
+		// Hours Hand
+		{
+			let hoursInDegrees = ((hours % 12) * 30) + (((minutes * 6) + (seconds / 10)) / 12);
 
-		context.closePath();
-		context.fillStyle = this.watchColorConfig.handColor;
-		context.fill();
-		context.lineWidth = 1;
-		context.strokeStyle = this.watchColorConfig.handOutlineColor;
-		context.stroke();
+//		console.log("Hours %f, %f, %f in degrees: %f", hours, minutes, seconds, hoursInDegrees);
+
+			context.beginPath();
+			if (this.watchColorConfig.withHandShadow) {
+				context.shadowColor = this.watchColorConfig.shadowColor;
+				context.shadowOffsetX = 3;
+				context.shadowOffsetY = 3;
+				context.shadowBlur = 3;
+			}
+			// Center
+			context.moveTo(this.canvas.width / 2, radius + 10);
+			// Left
+			let x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (hoursInDegrees / 360)))); //  - (Math.PI / 2))));
+			let y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (hoursInDegrees / 360)))); // - (Math.PI / 2))));
+			context.lineTo(x, y);
+			// Tip
+			x = (this.canvas.width / 2) - ((radius * 0.60) * Math.cos(2 * Math.PI * (hoursInDegrees / 360) + (Math.PI / 2)));
+			y = (radius + 10) - ((radius * 0.60) * Math.sin(2 * Math.PI * (hoursInDegrees / 360) + (Math.PI / 2)));
+			context.lineTo(x, y);
+			// Right
+			x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (hoursInDegrees / 360) + (2 * Math.PI / 2))));
+			y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (hoursInDegrees / 360) + (2 * Math.PI / 2))));
+			context.lineTo(x, y);
+
+			context.closePath();
+			context.fillStyle = this.watchColorConfig.handColor;
+			context.fill();
+			context.lineWidth = 1;
+			context.strokeStyle = this.watchColorConfig.handOutlineColor;
+			context.stroke();
+		}
+
+		// Minutes Hand
+		{
+			let minInDegrees = ((minutes * 6) + (seconds / 10));
+
+//		console.log("Minutes %d %d in degrees:%f", minutes, seconds, minInDegrees);
+
+			context.beginPath();
+			if (this.watchColorConfig.withHandShadow) {
+				context.shadowColor = this.watchColorConfig.shadowColor;
+				context.shadowOffsetX = 3;
+				context.shadowOffsetY = 3;
+				context.shadowBlur = 3;
+			}
+			// Center
+			context.moveTo(this.canvas.width / 2, radius + 10);
+			// Left
+			let x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (minInDegrees / 360)))); //  - (Math.PI / 2))));
+			let y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (minInDegrees / 360)))); // - (Math.PI / 2))));
+			context.lineTo(x, y);
+			// Tip
+			x = (this.canvas.width / 2) - ((radius * 0.80) * Math.cos(2 * Math.PI * (minInDegrees / 360) + (Math.PI / 2)));
+			y = (radius + 10) - ((radius * 0.80) * Math.sin(2 * Math.PI * (minInDegrees / 360) + (Math.PI / 2)));
+			context.lineTo(x, y);
+			// Right
+			x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (minInDegrees / 360) + (2 * Math.PI / 2))));
+			y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (minInDegrees / 360) + (2 * Math.PI / 2))));
+			context.lineTo(x, y);
+
+			context.closePath();
+			context.fillStyle = this.watchColorConfig.handColor;
+			context.fill();
+			context.lineWidth = 1;
+			context.strokeStyle = this.watchColorConfig.handOutlineColor;
+			context.stroke();
+		}
+
+		// Second hand
+
+//	console.log("ID:" + this.id + ", with seconds:" + this._with_second_hand);
+		if (this._with_second_hand) {
+			let secInDegrees = (seconds * 6);
+
+//		console.log("Seconds %f in degrees: %f", seconds, secInDegrees);
+
+			context.beginPath();
+			if (this.watchColorConfig.withHandShadow) {
+				context.shadowColor = this.watchColorConfig.shadowColor;
+				context.shadowOffsetX = 3;
+				context.shadowOffsetY = 3;
+				context.shadowBlur = 3;
+			}
+			// Center
+			context.moveTo(this.canvas.width / 2, radius + 10);
+			// Tip
+			let x = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (secInDegrees / 360) + (Math.PI / 2)));
+			let y = (radius + 10) - ((radius * 0.95) * Math.sin(2 * Math.PI * (secInDegrees / 360) + (Math.PI / 2)));
+			context.lineTo(x, y);
+
+			context.closePath();
+			// context.fillStyle = this.watchColorConfig.handColor;
+			// context.fill();
+			context.lineWidth = 2;
+			context.strokeStyle = this.watchColorConfig.handOutlineColor;
+			context.stroke();
+		}
+
 		// Knob
 		context.beginPath();
 		context.arc((this.canvas.width / 2), (radius + 10), 7, 0, 2 * Math.PI, false);
@@ -584,22 +571,49 @@ class DirectionDisplay extends HTMLElement {
 		context.stroke();
 	}
 
-	drawSpike(radius, outsideRadius, insideRadius, angle, context) {
-		let xFrom = (this.canvas.width / 2) - (outsideRadius * Math.cos(2 * Math.PI * (angle / 360)));
-		let yFrom = (radius + 10) - (outsideRadius * Math.sin(2 * Math.PI * (angle / 360)));
-		//
-		let xTo = (this.canvas.width / 2) - (insideRadius * Math.cos(2 * Math.PI * ((angle - 90) / 360)));
-		let yTo = (radius + 10) - (insideRadius * Math.sin(2 * Math.PI * ((angle - 90) / 360)));
-		context.moveTo(xFrom, yFrom);
-		context.lineTo(xTo, yTo);
-		//
-		xTo = (this.canvas.width / 2) - (insideRadius * Math.cos(2 * Math.PI * ((angle + 90) / 360)));
-		yTo = (radius + 10) - (insideRadius * Math.sin(2 * Math.PI * ((angle + 90) / 360)));
-		context.moveTo(xFrom, yFrom);
-		context.lineTo(xTo, yTo);
+	toRomanDigit(num) {
+		let roman = "";
+		switch (num) {
+			case 1:
+				roman = "I";
+				break;
+			case 2:
+				roman = "II";
+				break;
+			case 3:
+				roman = "III";
+				break;
+			case 4:
+				roman = "IIII";
+				break;
+			case 5:
+				roman = "V";
+				break;
+			case 6:
+				roman = "VI";
+				break;
+			case 7:
+				roman = "VII";
+				break;
+			case 8:
+				roman = "VIII";
+				break;
+			case 9:
+				roman = "IX";
+				break;
+			case 10:
+				roman = "X";
+				break;
+			case 11:
+				roman = "XI";
+				break;
+			case 12:
+				roman = "XII";
+				break;
+		}
+		return roman;
 	}
-
 }
 
 // Associate the tag and the class
-window.customElements.define(DIRECTION_TAG_NAME, DirectionDisplay);
+window.customElements.define(WATCH_TAG_NAME, AnalogWatch);

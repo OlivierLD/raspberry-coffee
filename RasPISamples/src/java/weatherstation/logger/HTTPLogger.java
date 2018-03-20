@@ -54,7 +54,7 @@ public class HTTPLogger implements LoggerInterface {
 			// Take a snapshot
 			System.out.println("Snapshot required");
 			try {
-				snap("snap-test", 180, 640, 480);
+				snap("snap-test", 0, 640, 480);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -74,6 +74,7 @@ public class HTTPLogger implements LoggerInterface {
 	public static String snap(String name, int rot, int width, int height)
 			throws Exception {
 		Runtime rt = Runtime.getRuntime();
+		// NOTE: The web directory has to exit on the Raspberry PI
 		String snapshotName = String.format("web/%s.jpg", name);
 		try {
 			String command = String.format(SNAPSHOT_COMMAND_1, rot, width, height, snapshotName);
