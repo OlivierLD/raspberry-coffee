@@ -91,8 +91,8 @@ public class HTTPServer {
 								if (line.startsWith("POST /exit") || line.startsWith("GET /exit")) {
 									System.out.println(">>> HTTP Server, received an exit signal");
 									go = false;
-								} else if (line.startsWith("POST / ") || line.startsWith("GET / ") || line.startsWith("POST /all") || line.startsWith("GET /all")) {
-									// Usual case, reply
+								} else if (line.startsWith("GET / ") || line.startsWith("GET /all ")) {
+									// Usual case, reply.
 									System.out.println(">>> HTTP Server, received data request <<<");
 								}
 							}
@@ -120,10 +120,14 @@ public class HTTPServer {
 						String contentType = "text/plain";
 						String content = "exit";
 						if (go) {
-							contentType = "application/json";
-							content = (generateContent());
+							if (("/all".equals(request.getPath()) || "/".equals(request.getPath())) && "GET".equals(request.getVerb())) {
+								contentType = "application/json";
+								content = (generateContent());
+							} else {
+								content = ""; // Duh...
+							}
 						}
-						if (content.length() > 0) {
+						if (true || content.length() > 0) {
 							// Headers?
 							out.print("HTTP/1.1 200 \r\n");
 							out.print("Content-Type: " + contentType + "\r\n");
