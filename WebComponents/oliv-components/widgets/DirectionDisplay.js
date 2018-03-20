@@ -4,9 +4,9 @@ const DIRECTION_TAG_NAME = 'direction-display';
 * See custom properties in CSS.
 * =============================
 * @see https://developer.mozilla.org/en-US/docs/Web/CSS/
-* Relies on a rule named .analogdisplay, like that:
+* Relies on those elements:
 *
-.analogdisplay {
+.xxxxxxxx {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: black;
 	--with-gradient: true;
