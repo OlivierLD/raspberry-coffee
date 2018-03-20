@@ -901,7 +901,23 @@
 		<table>
 			<tr>
 				<td valign="top">
-					<div class="black-frame centered" style="background-color: white;">
+					<div id="top-cell" class="black-frame centered" style="background-color: white;">
+						<small>Try to combine Style, BG, border.</small><br/>
+						Style:
+						<select onchange="applyClass('bsp-01', this);">
+							<option value="analogdisplay-day" selected>Day</option>
+							<option value="analogdisplay-night">Night</option>
+							<option value="analogdisplay-monochrome-cyan">Cyan</option>
+							<option value="analogdisplay-monochrome-orange">Orange</option>
+							<option value="analogdisplay-flat-gray">Flat Gray</option>
+							<option value="analogdisplay-flat-black">Flat Black</option>
+						</select>
+						<br/>
+						BG:
+						<input type="radio" name="bg1" value="black" onchange="applyBackground('top-cell', this.value);">Black</input>
+						<input type="radio" name="bg1" value="white" onchange="applyBackground('top-cell', this.value);" checked>White</input>
+						<input type="radio" name="bg1" value="transparent" onchange="applyBackground('top-cell', this.value);">None</input>
+						<hr/>
 						<analog-display class="analogdisplay-day"
 														title="Boat Speed in Knots"
 														id="bsp-01"
