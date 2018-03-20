@@ -19,10 +19,30 @@
 		<script type="module" src="webcomponents/Thermometer.js"></script>
 		<script type="module" src="webcomponents/DirectionDisplay.js"></script>
 		<script type="module" src="webcomponents/AnalogDisplay.js"></script>
+		<script type="module" src="webcomponents/AnalogWatch.js"></script>
 
 		<script type="text/javascript">
 
 	var status = 'tick';
+
+	var setCurrentTime = function() {
+		let date = new Date();
+
+		let tzo = date.getTimezoneOffset() / 60; // in hours
+//	console.log("TimeZoneOffset:" + tzo);
+
+		let now = (date.getTime() / 1000) % 86400;
+		// One day = 86,400 sec,
+		let seconds = now % 60;
+		let minutes = ((now - seconds) / 60) % 60;
+		let hours = Math.floor(now / 3600) - tzo;
+		// Compose the string HH:MM:SS
+		let timeValue = hours.toFixed(0) + ":" + minutes.toFixed(0) + ":" + seconds.toFixed(0);
+
+//	console.log("Time: %d, => %s", watchValue, timeValue);
+
+		document.getElementById('watch-01').value = timeValue;
+	};
 
   window.onload = function() {
     initAjax(false);
@@ -37,6 +57,8 @@
 			}
       console.log("Air Temperature : %f", val);
 	    setData(val, 'thermometer-01');
+	    // Set time (from client)
+	    setCurrentTime();
     });
 	  events.subscribe('dew', function(val) {
 		  console.log("Dew Point Temperature : %f", val);
@@ -102,6 +124,10 @@
 		for (let i=0; i<displays.length; i++) { // forEach does not work?
 			setElementBorder(displays[i], border);
 		}
+	  displays = document.getElementsByTagName('analog-watch');
+	  for (let i=0; i<displays.length; i++) { // forEach does not work?
+		  setElementBorder(displays[i], border);
+	  }
 	  displays = document.getElementsByTagName('direction-display');
 	  for (let i=0; i<displays.length; i++) { // forEach does not work?
 		  setElementBorder(displays[i], border);
@@ -125,6 +151,10 @@
 		displays = document.getElementsByTagName('direction-display');
 		for (let i=0; i<displays.length; i++) {
 			setElementStyle(displays[i], directionStyle);
+		}
+		displays = document.getElementsByTagName('analog-watch');
+		for (let i=0; i<displays.length; i++) {
+			setElementStyle(displays[i], analogStyle);
 		}
 		displays = document.getElementsByTagName('thermo-meter');
 		for (let i=0; i<displays.length; i++) {
@@ -308,6 +338,19 @@
 															value="0"
 															width="100"
 															height="220"></thermo-meter>
+							</td>
+							<td align="center">
+								<!-- Station Time<br/ -->
+								<analog-watch class="analogdisplay-monochrome-orange"
+															title="Station Time"
+															id="watch-01"
+															value="00:00:00"
+															hours-ticks="1"
+															minutes-ticks="1"
+															with-second-hand="true"
+															with-border="true"
+															width="200"
+															height="200"></analog-watch>
 							</td>
 						</tr>
 					</table>
