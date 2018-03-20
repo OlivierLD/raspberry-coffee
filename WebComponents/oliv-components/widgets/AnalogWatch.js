@@ -67,8 +67,8 @@ class AnalogWatch extends HTMLElement {
 		return [
 			"width",        // Integer. Canvas width
 			"height",       // Integer. Canvas height
-			"major-ticks",  // Integer. label of hours. 1: each hour, 3: every 3 hours, etc. Default 3
-			"minor-ticks",  // Integer, minutes ticks.  Default 1
+			"hours-ticks",  // Integer. label of hours. 1: each hour, 3: every 3 hours, etc. Default 3
+			"minutes-ticks",  // Integer, minutes ticks.  Default 1
 			"with-second-hand", // Boolean, draw the seconds hand or not.
 			"with-border",  // Boolean
 			"label",        // String, Optiponal.
@@ -87,8 +87,8 @@ class AnalogWatch extends HTMLElement {
 		this._value       = '00:00:00';
 		this._width       = 150;
 		this._height      = 150;
-		this._major_ticks =   3;
-		this._minor_ticks =   1;
+		this._hours_ticks =   3;
+		this._minutes_ticks = 1;
 		this._with_second_hand = false;
 		this._with_border = true;
 		this._label       = undefined;
@@ -131,11 +131,11 @@ class AnalogWatch extends HTMLElement {
 			case "height":
 				this._height = parseInt(newVal);
 				break;
-			case "major-ticks":
-				this._major_ticks = parseInt(newVal);
+			case "hours-ticks":
+				this._hours_ticks = parseInt(newVal);
 				break;
-			case "minor-ticks":
-				this._minor_ticks = parseInt(newVal);
+			case "minutes-ticks":
+				this._minutes_ticks = parseInt(newVal);
 				break;
 			case "with-second-hand":
 				this._with_second_hand = ("true" === newVal);
@@ -172,11 +172,11 @@ class AnalogWatch extends HTMLElement {
 	set height(val) {
 		this.setAttribute("height", val);
 	}
-	set majorTicks(val) {
-		this.setAttribute("major-ticks", val);
+	set hoursTicks(val) {
+		this.setAttribute("hours-ticks", val);
 	}
-	set minorTicks(val) {
-		this.setAttribute("minor-ticks", val);
+	set minutesTicks(val) {
+		this.setAttribute("minutes-ticks", val);
 	}
 	set withSecondHand(val) {
 		this.setAttribute("with-second-hand", val);
@@ -200,11 +200,11 @@ class AnalogWatch extends HTMLElement {
 	get height() {
 		return this._height;
 	}
-	get minorTicks() {
-		return this._minor_ticks;
+	get minutesTicks() {
+		return this._minutes_ticks;
 	}
-	get majorTicks() {
-		return this._major_ticks;
+	get hoursTicks() {
+		return this._hours_ticks;
 	}
 	get withSecondHand() {
 		return this._with_second_hand;
@@ -392,10 +392,10 @@ class AnalogWatch extends HTMLElement {
 		context.stroke();
 		context.closePath();
 
-		// Minor Ticks
-		if (this.minorTicks > 0) {
+		// Minutes Ticks
+		if (this.minutesTicks > 0) {
 			context.beginPath();
-			for (let i = 0; i < 60; i += this.minorTicks) {
+			for (let i = 0; i < 60; i += this.minutesTicks) {
 				let xFrom = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (i / 60)));
 				let yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(2 * Math.PI * (i / 60)));
 				let xTo = (this.canvas.width / 2) - ((radius * 0.90) * Math.cos(2 * Math.PI * (i / 60)));
@@ -412,7 +412,7 @@ class AnalogWatch extends HTMLElement {
 		// Numbers
 		context.beginPath();
 		let scale = 1;
-		for (let i = 0; i < 12; i += this.majorTicks) {
+		for (let i = 0; i < 12; i += this.hoursTicks) {
 			context.save();
 			context.translate(this.canvas.width / 2, (radius + 10)); // canvas.height);
 			context.rotate((2 * Math.PI * (i / 12)));

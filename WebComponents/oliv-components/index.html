@@ -159,19 +159,26 @@
 		}
 
 		let realTimeInterval;
-		function realTime(id) {
+		function realTime(id, utc) {
+			if (utc === undefined) {
+				utc = true;
+			}
 			if (realTimeInterval !== undefined) {
 				window.clearInterval(realTimeInterval);
 				realTimeInterval = undefined;
 			} else {
 				realTimeInterval = window.setInterval(function() {
 					let date = new Date();
+
+					let tzo = date.getTimezoneOffset() / 60; // in hours
+//				console.log("TimeZoneOffset:" + tzo);
+
 					let now = (date.getTime() / 1000) % 86400;
 					// One day = 86,400 sec,
 					let seconds = now % 60;
 					let minutes = ((now - seconds) / 60) % 60;
-					let hours = Math.floor(now / 3600);
-
+					let hours = Math.floor(now / 3600) - (utc === false ? tzo : 0);
+					// Compose the string HH:MM:SS
 					let timeValue = hours.toFixed(0) + ":" + minutes.toFixed(0) + ":" + seconds.toFixed(0);
 
 //				console.log("Time: %d, => %s", watchValue, timeValue);
@@ -1699,10 +1706,11 @@
 					<div class="black-frame centered">
 						<analog-watch id="analog-watch-01"
 											 		class="analogdisplay-day"
-											 		title="System Time!"
+											 		title="Custom Time"
 											 		width="220"
 											 		height="220"
-													major-ticks="1"
+													hours-ticks="1"
+													minutes-ticks="1"
 													with-second-hand="true"
 													value="01:20:12"></analog-watch>
 					</div>
@@ -1725,7 +1733,7 @@
 					<div class="black-frame centered">
 						<analog-watch id="analog-watch-02"
 													class="analogdisplay-monochrome-orange"
-													title="System Time!"
+													title="Custom Time"
 													width="220"
 													height="220"
 													with-second-hand="false"
@@ -1750,7 +1758,7 @@
 					<div class="black-frame centered">
 						<analog-watch id="analog-watch-03"
 													class="analogdisplay-monochrome-cyan"
-													title="System Time!"
+													title="System Time, UTC"
 													width="220"
 													height="220"
 													with-second-hand="true"
@@ -1763,6 +1771,26 @@
 										style="margin-top: 3px;">Real time</button>
 						<br/>
 						<input type="checkbox" onchange="setBorder(this, 'analog-watch-03');" checked>With Border
+					</div>
+				</td>
+				<td valign="top">
+					<div class="black-frame centered">
+						<analog-watch id="analog-watch-04"
+													class="analogdisplay-flat-gray"
+													title="System Time"
+													width="220"
+													height="220"
+													hours-ticks="1"
+													with-second-hand="true"
+													label="Sys"
+													value="01:20:12"></analog-watch>
+					</div>
+					<div class="black-frame centered">
+						<button onclick="realTime('analog-watch-04', false)"
+										title="Set Time on the watch"
+										style="margin-top: 3px;">System time</button>
+						<br/>
+						<input type="checkbox" onchange="setBorder(this, 'analog-watch-04');" checked>With Border
 					</div>
 				</td>
 			</tr>
