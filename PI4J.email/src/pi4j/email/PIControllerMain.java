@@ -53,7 +53,7 @@ public class PIControllerMain implements RaspberryPIEventListener {
 
 		PIControllerMain lmc = new PIControllerMain();
 		GPIOController piController = new GPIOController(lmc);
-		EmailReceiver receiver = new EmailReceiver(providerReceive); // For Google, pop must be explicitely enabled at the account level
+		EmailReceiver receiver = new EmailReceiver(providerReceive); // For Google, pop must be explicitly enabled at the account level
 		try {
 			System.out.println("Waiting for instructions.");
 			boolean keepLooping = true;

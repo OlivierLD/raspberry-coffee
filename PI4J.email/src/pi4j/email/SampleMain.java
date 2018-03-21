@@ -57,12 +57,12 @@ public class SampleMain {
 				dest = sendTo.split(",");
 			} else if ("-help".equals(args[i])) {
 				System.out.println("Usage:");
-				System.out.println("  java pi4j.email.SampleMain -verbose -send:google -receive:yahoo - sendto:me@home.net,you@yourplace.biz -help");
+				System.out.println("  java pi4j.email.SampleMain -verbose -send:google -receive:yahoo -sendto:me@home.net,you@yourplace.biz -help");
 				System.exit(0);
 			}
 		}
 		if (dest == null || dest.length == 0 || dest[0].trim().length() == 0) {
-			throw new RuntimeException("No destination email. Use the help (-help).");
+			throw new RuntimeException("No destination email (use -sendto:). Use the help (-help).");
 		}
 
 		final String[] destEmail = dest;
@@ -71,18 +71,19 @@ public class SampleMain {
 		Thread senderThread = new Thread(() -> {
 				try {
 					System.out.println("Preamble.");
+					// Attachement and content are not compatible.
 					sender.send(destEmail,
-									"PI Request",
-									"{ operation: 'read-loud', content: 'I am reading emails, be prepared.' }",
-									"snap.jpg");
+							"PI Image",
+							"",
+							"image/jpg",
+							"snap.jpg");
 					for (int i = 0; i < emails; i++) {
 						System.out.println(String.format("Sending (%d)...", (i+1)));
 						sender.send(destEmail,
-										"PI Request",
-										"{ operation: 'see-attached-" + Integer.toString(i + 1) + "' }",
-										"snap.jpg");
+								"PI Request",
+								"{ operation: 'read-loud', content: 'I am reading emails, be prepared.' }");
 						System.out.println("Sent.");
-						Thread.sleep(60_000L); // 1 minute
+						Thread.sleep(30_000L); // 30 seconds
 					}
 					System.out.println("Exiting (sending 'exit' email)...");
 					sender.send(destEmail,
@@ -103,25 +104,27 @@ public class SampleMain {
 				System.out.println("Waiting on receive.");
 				List<String> received = receiver.receive();
 				//	if (verbose || received.size() > 0)
+				System.out.println("---------------------------------");
 				System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
+				System.out.println("---------------------------------");
 				for (String s : received) {
 					System.out.println("Received:\n" + s);
 					JSONObject json = null;
 					String operation = "";
 					try {
 						json = new JSONObject(s);
-						operation = json.getString("operation");
+						operation = json.getString("operation"); // Expects a { 'operation': 'Blah' }
 					} catch (Exception ex) {
 						System.err.println(ex.getMessage());
 						System.err.println("Message is [" + s + "]");
 					}
-					if ("exit".equals(operation)) {
+					if ("exit".equals(operation)) {                 // operation = 'exit'
 						keepLooping = false;
 						System.out.println("Will exit next batch.");
 						//  break;
-					} else if ("read-loud".equals(operation)) {
+					} else if ("read-loud".equals(operation)) {    // operation = 'read-loud'
 						if (json != null) {
-							String content = json.getString("content");
+							String content = json.getString("content"); // content member
 							if (content != null) {
 								utils.TextToSpeech.speak(content);
 							} else {
