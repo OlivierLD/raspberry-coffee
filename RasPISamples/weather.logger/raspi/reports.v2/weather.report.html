@@ -434,6 +434,14 @@ var displayData = function() {
     console.log("Type: [" + type + "]");
     var unit = "kt";
 
+    // Calculate total amount of rain on this period
+		var rainAcc = 0;
+		nmeaData.forEach(nmea => {
+			rainAcc += (nmea.getNMEARain() / 6);
+		});
+	  document.getElementById("rain-acc").innerText = rainAcc.toFixed(3);
+
+
     for (var i=0; i<nmeaData.length; i++) {
       if (type === "WIND") {
         graphdata.push(new Tuple(i, parseFloat(nmeaData[i].getNMEATws())));
@@ -725,6 +733,11 @@ var go = function() {
         <td align="center" valign="top" width="100">
           <canvas id="rainCanvas" width="60" height="165"/> <!-- class="displayCanvas"/-->
         </td>
+				<td align="center" valign="top" width="100">
+					<small>Rain on this period</small>
+					<br/>
+					<span id="rain-acc">0.0</span> mm.
+				</td>
       </tr>
     </table>
     <hr/>
