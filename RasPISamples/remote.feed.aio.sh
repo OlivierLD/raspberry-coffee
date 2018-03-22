@@ -14,4 +14,4 @@ PROXY=
 # PROXY="-Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 #
 # Post image to Adafruit.IO
-java -cp $CP $PROXY -Dkey=54c2767878ca793f2e3cae1c45d62aa7ae9f8056 weatherstation.POSTImage web/encoded.txt
+java -cp $CP $PROXY -Dkey=[xxxxxxxxxxxxxxxxxxxxxxxxxx] weatherstation.POSTImage web/encoded.txt
