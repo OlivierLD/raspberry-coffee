@@ -54,21 +54,21 @@ $link = mysql_connect("mysql", $username, $password);
 @mysql_select_db($database) or die("Unable to reach database $database with username $username and provided paswword.");
 
 if (!mysql_query("BEGIN WORK")) {
-    $mess .= ("\n" + mysql_error());
+    $mess .= ("\n" . mysql_error());
     die('BEGIN WORK problem: ' . $mess . '<br><a href="#" onclick="back();">Back</a>');
 } else {
     $mess .= "\nBEGIN WORK Done.";
 }
 
 if (!mysql_query($sql)) {
-  $mess .= ("\n" + mysql_error());
+  $mess .= ("\n" . mysql_error());
   die('Delete from DB problem: ' . $mess . '<br><a href="#" onclick="back();">Back</a>');
 } else {
   $mess .= ("\nDELETE Done, record(s) deleted: " . mysql_affected_rows());
 }
 
 if (!mysql_query("COMMIT")) {
-    $mess .= ("\n" + mysql_error());
+    $mess .= ("\n" . mysql_error());
     die('COMMIT problem: ' . $mess . '<br><a href="#" onclick="back();">Back</a>');
 } else {
     $mess .= "\nCOMMIT Done.";
