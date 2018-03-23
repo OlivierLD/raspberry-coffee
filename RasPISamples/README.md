@@ -103,7 +103,7 @@ $ NMEA.multiplexer> ./mux.sh nmea.mux.weather.station.tcp.properties
 If the Raspberry PI's machine name is `weather-station` and the laptop's name is `home-station`,
 then from anywhere is the house (house LAN), I can reach
 ```
- http://weather=station:9876/data/weather.station/analog.all.html
+ http://weather.station:9876/data/weather.station/analog.all.html
 ```
 
 ```
