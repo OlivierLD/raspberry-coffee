@@ -43,7 +43,7 @@ Prompt> ./weather.simulator
 Then you can visualize the data in a browser, using a URL like
 `http://raspberrypi:9876/data/weather.station/index.html`
 
-The analog console can be reached from `http://localhost:9876/data/weather.station/analog.html`,
+The analog console can be reached from `http://localhost:9876/data/weather.station/analog.all.html`,
 and it supports query string parameters `border` and `theme`.
 
 `border` can be `Y` or `N`, and `theme` can be `black` or `white`.
@@ -80,6 +80,40 @@ Web Interface
 ![On the roof](./img/OnTheRoof.png)
 
 On the roof!
+
+#### My current setting
+- A Raspberry PI A+, connected on the `SDLWeather80422`. To start it,
+run the `weather.menu.sh` script, choose option `N`, and then `W`.
+```
++------------- Weather Station -----------------+
+| N: Start Node server                          |
+| W: Start Weather Station reader               |
+| D: Start Weather Station dump                 |
+| S: Show processes                             |
+| K: Kill them all                              |
+| Q: Quit                                       |
++-----------------------------------------------+
+You Choose >
+```
+- An old laptop inside the house, running a `Raspberry PI desktop` (Debian Stretch) image,
+where I run the following script:
+```
+$ NMEA.multiplexer> ./mux.sh nmea.mux.weather.station.tcp.properties
+```
+If the Raspberry PI's machine name is `weather-station` and the laptop's name is `home-station`,
+then from anywhere is the house (house LAN), I can reach
+```
+ http://weather=station:9876/data/weather.station/analog.all.html
+```
+
+```
+ http://home-station:9998/web/weather.station.html
+```
+as well as
+```
+ http://donpedro.lediouris.net/php/weather/reports.v2/weather.report.html
+```
+This last one can be reached from anywhere. See the screenshots for those URLs above.
 
 ---
 
