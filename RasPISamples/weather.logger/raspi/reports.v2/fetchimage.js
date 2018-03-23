@@ -1,3 +1,4 @@
+/* global $, FEED_NAME */
 var int;
 $(document).ready(function() {
   int = setInterval(getImageBase64String, 1000); // Refresh every second.
