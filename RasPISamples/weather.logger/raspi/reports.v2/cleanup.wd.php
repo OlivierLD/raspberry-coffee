@@ -43,7 +43,9 @@ if ($day == -1) { $day = 01; }
 if ($hour == -1) { $hour = 00; }
 if ($min == -1) { $min = 00; }
 if ($sec == -1) { $sec = 00; }
-$sql = "DELETE FROM `weather_data` WHERE `log_time` < STR_TO_DATE('$day-$month-$year $hour:$min:$sec', '%d-%m-%Y %h:%i:%s')";
+// $sql = "DELETE FROM `weather_data` WHERE `log_time` < STR_TO_DATE('$day-$month-$year $hour:$min:$sec', '%d-%m-%Y %h:%i:%s')";
+// $sql = "DELETE FROM `weather_data` WHERE `log_time` < '2018-03-01 00:00:00'";
+$sql = "DELETE FROM `weather_data` WHERE `log_time` < '$year-$month-$day $hour:$min:$sec'";
 
 $mess = "Deleting with \n[$sql]";
 
