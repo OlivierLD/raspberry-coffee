@@ -76,6 +76,14 @@ var refreshImg = function() {
   }
 };
 
+var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var durationToDate = function(duration) { // like "2018-03-23T13:59:25Z"
+	var dateTime = duration.split("T");
+	var ymd = dateTime[0].split("-");
+//var hms = dateTime[1].split(":");
+	return ymd[0] + ' ' + MONTHS[parseInt(ymd[1]) - 1] + ' ' + ymd[2] + ' at ' + dateTime[1];
+};
+
 var getImageBase64String = function() {
   var k = $("#a-key").val();
 
@@ -99,8 +107,11 @@ var getImageBase64String = function() {
       //  console.log("Done :" + value); // Raw data
       var elapsed = new Date().getMilliseconds() - now;
       // Display it...
-      var img = JSON.parse(value).last_value;
+	    var payload = JSON.parse(value);
+      var img = payload.last_value;
       console.log("Image is in (%d ms)", elapsed);
+      var updated = payload.updated_at; // "2018-03-23T13:59:25Z"
+			$("#updated").text(durationToDate(updated));
    // <img src=”data:image/png;base64,iVBORw0KGgoAAAANS… (see source for full base64 encoded image) …8bgAAAAASUVORK5CYII=”>
    // $("#img-value").slideToggle("slow");
    // $("#img-value").slideUp();
