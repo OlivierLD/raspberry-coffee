@@ -61,7 +61,8 @@ public class HTTPLogger implements LoggerInterface {
 		}
 	}
 
-	private final static String SNAPSHOT_COMMAND_1 = "raspistill -rot %d --width %d --height %d --output %s --nopreview"; // --timeout 1 
+	// The --timeout seem to degrade the quality of the picture...
+	private final static String SNAPSHOT_COMMAND_1 = "raspistill -rot %d --width %d --height %d --output %s --nopreview"; // --timeout 1
 
 	// For a webcam
 	// Requires sudo apt-get install fswebcam
