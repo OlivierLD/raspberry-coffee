@@ -84,6 +84,17 @@ public class PinUtil {
 		}
 		return gpio;
 	}
+	public static GPIOPin findEnumName(String pinName) {
+		GPIOPin gpio = null;
+		for (GPIOPin gpioPin : GPIOPin.values()) {
+			if (pinName != null && pinName.equals(gpioPin.toString())) {
+				gpio = gpioPin;
+				break;
+			}
+		}
+		return gpio;
+	}
+
 
 	public static void print() {
 		GPIOPin[] values = GPIOPin.values();
@@ -113,5 +124,9 @@ public class PinUtil {
 
 	public static void main(String... args) {
 		print();
+		//
+		for (GPIOPin pin : GPIOPin.values()) {
+			System.out.println(pin.toString());
+		}
 	}
 }

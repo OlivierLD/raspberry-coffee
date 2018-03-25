@@ -1,5 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+    id 'java'
+//id 'scala'
+    id 'maven'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+}
 
 group = 'oliv.pi4j.samples'
 version = '1.0'
@@ -7,14 +11,14 @@ version = '1.0'
 sourceSets {
   main {
     java {
-      srcDir 'src'
+      srcDir 'src/java'
     }
-  }  
+  }
   test {
     java {
-      srcDir 'tests'
+      srcDir 'tests/java'
     }
-  }  
+  }
 }
 
 repositories {
@@ -26,4 +30,10 @@ repositories {
 dependencies {
 //compile 'com.pi4j:pi4j-core:1.1'
   compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+  compile project(':common-utils')
+  testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+shadowJar {
+  zip64 true
 }
