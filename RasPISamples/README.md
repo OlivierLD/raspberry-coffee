@@ -152,6 +152,9 @@ dokill navrest.NavServer
 dokill snap.loop.sh
 #
 ```
+
+![Architecture](./img/WeatherStationArchitecture.png)
+
 ---
 
 ### <a name="robotonwheels"></a>Robot on wheels
