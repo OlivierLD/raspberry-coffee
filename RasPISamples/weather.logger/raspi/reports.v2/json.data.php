@@ -66,6 +66,12 @@ if ($period != '' && $period == 'LAST') {
     $nbs = 3600 * 24; // DAY, with time offset ??
   } else if ($period == '2DAYS') {
     $nbs *= 2;
+  } else if ($period == '3DAYS') {
+      $nbs *= 3;
+  } else if ($period == '4DAYS') {
+      $nbs *= 4;
+  } else if ($period == '5DAYS') {
+      $nbs *= 5;
   } else if ($period == 'WEEK') {
     $nbs *= 7;
   } else if ($period == 'MONTH') {

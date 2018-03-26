@@ -10,6 +10,10 @@ import utils.PinUtil;
 
 import java.security.InvalidParameterException;
 
+/**
+ * Good explanation here: https://www.youtube.com/watch?v=yYnX5QodqQ4
+ *
+ */
 public class KeyboardController {
 	private GpioController gpio = null;
 	private GpioPinDigitalMultipurpose[] rowButton = null;
@@ -173,39 +177,39 @@ public class KeyboardController {
 			// Set all column to output low
 			for (int i = 0; i < colButton.length; i++) {
 				colButton[i].setMode(PinMode.DIGITAL_OUTPUT);
-				colButton[i].low();
+				colButton[i].low();                            // set to LOW, very important
 			}
 
 			// All rows as input
 			for (int i = 0; i < rowButton.length; i++) {
 				rowButton[i].setMode(PinMode.DIGITAL_INPUT);
-				rowButton[i].setPullResistance(PinPullResistance.PULL_UP);
+				rowButton[i].setPullResistance(PinPullResistance.PULL_UP); // pull UP
 			}
 			int row = -1, col = -1;
 			// Scan rows for pushed keys
 			for (int i = 0; i < rowButton.length; i++) {
-				if (this.gpio.isLow(rowButton[i])) {
-					row = i;
+				if (this.gpio.isLow(rowButton[i])) {  // Look for the row that is down (low), if any
+					row = i;                            // This row was pushed because it is now LOW
 					break;
 				}
 			}
-			if (row != -1) {
+			if (row != -1) {  // If a row has been touched...
 				// Set (convert) columns to input
 				for (int i = 0; i < colButton.length; i++) {
 					colButton[i].setMode(PinMode.DIGITAL_INPUT);
 					colButton[i].setPullResistance(PinPullResistance.PULL_DOWN);
 				}
 				// Scan cols for pushed keys
-				for (int i = 0; i < kpCol.length; i++) {
+				for (int i = 0; i < kpCol.length; i++) { // If a row has been touched, then, if which column?
 					if (this.gpio.isHigh(colButton[i])) {
-						col = i;
+						col = i;                          // This col was pushed because it is now HIGH
 						break;
 					}
 				}
 				if (col != -1) {
-					c = keypad[row][col];
+					c = keypad[row][col]; // The CHARACTER in the matrix
 					reset();
-					//   System.out.println(" >>> getKey: [" + row + ", " + col + "] = " + c);
+		//    System.out.println(" >>> getKey: [" + row + ", " + col + "] = " + c);
 				} else {
 					reset();
 				}
