@@ -29,7 +29,7 @@ public class MembraneKeyPad1x4 {
 			PinUtil.GPIOPin.GPIO_5.pin(),
 			PinUtil.GPIOPin.GPIO_6.pin()
 	};
-	private Pin common = PinUtil.GPIOPin.GPIO_7.pin(); // TODO customize
+	private Pin common = PinUtil.GPIOPin.GPIO_7.pin();
 
 	public MembraneKeyPad1x4() {
 		this(false);
@@ -40,7 +40,8 @@ public class MembraneKeyPad1x4 {
 		// Default -Dkeypad.cols=GPIO_1,GPIO_4,GPIO_5,GPIO_6
 		// Default -Dcommon.lead=GPIO_7
 		String userProvidedCols = System.getProperty("keypad.cols");
-		if (userProvidedCols != null) {
+		String userProvidedCommon = System.getProperty("common.lead");
+		if (userProvidedCols != null && userProvidedCommon != null) {
 			String[] userCols = userProvidedCols.split(",");
 			if (userCols.length != 4) {
 				throw new InvalidParameterException("keypad.cols should contain 4 elements, comma-separated.");
@@ -51,6 +52,9 @@ public class MembraneKeyPad1x4 {
 					if (userCols[i].trim().equals(userCols[j].trim())) {
 						throw new InvalidParameterException(String.format("[%s] cannot appear more than once", userCols[i]));
 					}
+				}
+				if (userCols[i].trim().equals(userProvidedCommon.trim())){
+					throw new InvalidParameterException(String.format("[%s] cannot appear more than once", userCols[i]));
 				}
 			}
 			// Unicity OK, moving on
@@ -63,22 +67,27 @@ public class MembraneKeyPad1x4 {
 					kpCol[i] = pin.pin();
 				}
 			}
+			PinUtil.GPIOPin pin = PinUtil.findEnumName(userProvidedCommon.trim());
+			common = pin.pin();
 		}
 
-		if (print) { // TODO Do it right
-			System.out.println("     +-----+ +-----+ +-----+");
-			System.out.println("     |  3  | |  2  | |  1  |   <- The keys you see");
-			System.out.println("  +--+-----+-+-----+-+-----+--+");
-			System.out.println("  |          T  O  P          |");
-			System.out.println(" -+--+--+--+--+--+--+--+--+---+-");
-			System.out.println("     |  |  |  |  |  |  |  |");
-			System.out.println("     x  C  C  C  C  ");
-			System.out.println("        1  2  3  4  ");
-			System.out.println("        |  |  |  | ");
-			System.out.println("        |  |  |  Row [1,2,3] " + PinUtil.findByPin(kpCol[3]).toString() + ", " + PinUtil.findByPin(kpCol[3]).pinName());
-			System.out.println("        |  |  Row [4,5,6] " + PinUtil.findByPin(kpCol[2]).toString() + ", " + PinUtil.findByPin(kpCol[2]).pinName());
-			System.out.println("        |  Row [7,8,9] " + PinUtil.findByPin(kpCol[1]).toString() + ", " + PinUtil.findByPin(kpCol[1]).pinName());
-			System.out.println("        Row [*,0,#] " + PinUtil.findByPin(kpCol[0]).toString() + ", " + PinUtil.findByPin(kpCol[0]).pinName());
+		if (print) {
+			System.out.println("       " + PinUtil.findByPin(common).toString() + ", " + PinUtil.findByPin(common).pinName());
+			System.out.println("       |  " + PinUtil.findByPin(kpCol[0]).toString() + ", " + PinUtil.findByPin(kpCol[0]).pinName());
+			System.out.println("       |  |  " + PinUtil.findByPin(kpCol[1]).toString() + ", " + PinUtil.findByPin(kpCol[1]).pinName());
+			System.out.println("       |  |  |  " + PinUtil.findByPin(kpCol[2]).toString() + ", " + PinUtil.findByPin(kpCol[2]).pinName());
+			System.out.println("       |  |  |  |  " + PinUtil.findByPin(kpCol[3]).toString() + ", " + PinUtil.findByPin(kpCol[3]).pinName());
+			System.out.println("       |  |  |  |  | ");
+			System.out.println("       x  C  C  C  C  ");
+			System.out.println("       |  1  2  3  4  ");
+			System.out.println("       |  |  |  |  | ");
+			System.out.println("       |  |  |  |  | ");
+			System.out.println("       |  |  |  |  | ");
+			System.out.println(" +----------------------+");
+			System.out.println(" | +---++---++---++---+ |");
+			System.out.println(" | | 1 || 2 || 3 || 4 | |");
+			System.out.println(" | +---++---++---++---+ |");
+			System.out.println(" +----------------------+");
 			System.out.println();
 			PinUtil.print();
 		}
