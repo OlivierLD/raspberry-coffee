@@ -19,8 +19,7 @@ public class KeyboardController {
 	private GpioPinDigitalMultipurpose[] rowButton = null;
 	private GpioPinDigitalMultipurpose[] colButton = null;
 
-	private final static char[][] keypad = new char[][]
-			{
+	private final static char[][] keypad = new char[][] {
 					{'1', '2', '3'},
 					{'4', '5', '6'},
 					{'7', '8', '9'},

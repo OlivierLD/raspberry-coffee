@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import weatherstation.logger.servers.HTTPServer;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -54,14 +55,25 @@ public class HTTPLogger implements LoggerInterface {
 			// Take a snapshot
 			System.out.println("Snapshot required");
 			try {
-				snap("snap-test", 0, 640, 480);
+				Map<String, String> queryStringParameters = req.getQueryStringParameters();
+				int rot = 0, width = 640, height = 480;
+				if (queryStringParameters.containsKey("rot")) { // For example ?rot=180
+					rot = Integer.parseInt(queryStringParameters.get("rot"));
+				}
+				if (queryStringParameters.containsKey("width")) {
+					width = Integer.parseInt(queryStringParameters.get("width"));
+				}
+				if (queryStringParameters.containsKey("height")) {
+					height = Integer.parseInt(queryStringParameters.get("height"));
+				}
+				snap("snap-test", rot, width, height);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	// The --timeout seem to degrade the quality of the picture...
+	// The --timeout seem to degrade the quality of the picture, specially outside...
 	private final static String SNAPSHOT_COMMAND_1 = "raspistill -rot %d --width %d --height %d --output %s --nopreview"; // --timeout 1
 
 	// For a webcam
@@ -75,7 +87,7 @@ public class HTTPLogger implements LoggerInterface {
 	public static String snap(String name, int rot, int width, int height)
 			throws Exception {
 		Runtime rt = Runtime.getRuntime();
-		// NOTE: The web directory has to exit on the Raspberry PI
+		// NOTE: The web directory has to exist on the Raspberry PI
 		String snapshotName = String.format("web/%s.jpg", name);
 		try {
 			String command = String.format(SNAPSHOT_COMMAND_1, rot, width, height, snapshotName);
