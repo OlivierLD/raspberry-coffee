@@ -72,7 +72,7 @@ public class MembraneKeyPad1x4 {
 		}
 
 		if (print) {
-			System.out.println("       " + PinUtil.findByPin(common).toString() + ", " + PinUtil.findByPin(common).pinName());
+			System.out.println("       Common, " + PinUtil.findByPin(common).toString() + ", " + PinUtil.findByPin(common).pinName());
 			System.out.println("       |  " + PinUtil.findByPin(kpCol[0]).toString() + ", " + PinUtil.findByPin(kpCol[0]).pinName());
 			System.out.println("       |  |  " + PinUtil.findByPin(kpCol[1]).toString() + ", " + PinUtil.findByPin(kpCol[1]).pinName());
 			System.out.println("       |  |  |  " + PinUtil.findByPin(kpCol[2]).toString() + ", " + PinUtil.findByPin(kpCol[2]).pinName());
