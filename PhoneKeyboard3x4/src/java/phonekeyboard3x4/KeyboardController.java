@@ -29,6 +29,9 @@ public class KeyboardController {
 	/*
 	 * Seen from the TOP of the keypad, the 8 pins
 	 * https://www.adafruit.com/products/1824
+	 *
+	 * Should also work for the https://www.adafruit.com/product/419 3x4 keypad. TODO Verify.
+	 *
 	 *     +-----+ +-----+ +-----+
 	 *     |  3  | |  2  | |  1  |   <- The keys you see
 	 *  +--+-----+-+-----+-+-----+--+
@@ -46,12 +49,7 @@ public class KeyboardController {
 	 *        Row [*,0,#]
 	 */
 
-	// 2 arrays, customizable
-	// Names on the cobbler ->                    18                23                24                25
-//private Pin[] kpRow = new Pin[]{RaspiPin.GPIO_01, RaspiPin.GPIO_04, RaspiPin.GPIO_05, RaspiPin.GPIO_06}; // Wiring PI/PI4J
-	// Names on the cobbler ->                     4                17                22
-//private Pin[] kpCol = new Pin[]{RaspiPin.GPIO_07, RaspiPin.GPIO_00, RaspiPin.GPIO_03};                   // Wiring PI/PI4J
-
+	// 2 arrays, customizable through system properties
 	private Pin[] kpRow = new Pin[] {
 		PinUtil.GPIOPin.GPIO_1.pin(),
 		PinUtil.GPIOPin.GPIO_4.pin(),
