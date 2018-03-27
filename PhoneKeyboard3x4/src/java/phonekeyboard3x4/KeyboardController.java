@@ -172,7 +172,7 @@ public class KeyboardController {
 
 	public char getKey() {
 		char c = ' ';
-		while (this.gpio != null && c == ' ') { // this.gpio != null => not teszting
+		while (this.gpio != null && c == ' ') { // this.gpio != null => not testing
 			// Set all column to output low
 			for (int i = 0; i < colButton.length; i++) {
 				colButton[i].setMode(PinMode.DIGITAL_OUTPUT);

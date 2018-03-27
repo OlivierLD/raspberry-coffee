@@ -1,4 +1,6 @@
-package phonekeyboard3x4;
+package membrane;
+
+import phonekeyboard3x4.KeyboardController;
 
 import java.text.NumberFormat;
 
@@ -7,11 +9,11 @@ public class SampleMain {
 		System.out.println("Hit the same key twice to exit");
 		System.out.println("------------------------------");
 
-		KeyboardController kbc = new KeyboardController(true);
+		MembraneKeyPad1x4 membraneKeyPad1x4 = new MembraneKeyPad1x4(true);
 		char prevchar = ' ';
 		boolean go = true;
 		while (go) {
-			char c = kbc.getKey();
+			char c = membraneKeyPad1x4.getKey();
 			System.out.println("At " + NumberFormat.getInstance().format(System.currentTimeMillis()) + ", Char: [" + c + "]");
 			if (c == prevchar) {
 				go = false;
@@ -23,6 +25,6 @@ public class SampleMain {
 			}
 		}
 		System.out.println("Bye");
-		kbc.shutdown();
+		membraneKeyPad1x4.shutdown();
 	}
 }
