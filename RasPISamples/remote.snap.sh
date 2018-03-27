@@ -7,7 +7,9 @@ PATH=$PATH:/usr/local/bin
 # export http_proxy=http://www-proxy.us.oracle.com:80
 # export https_proxy=http://www-proxy.us.oracle.com:80
 #
-curl http://192.168.42.2:8080/snap?rot=90
+# rot: default is 0
+#
+curl http://192.168.42.2:8080/snap?rot=270
 sshpass -p 'pi' scp pi@192.168.42.2:~/raspberry-pi4j-samples/RasPISamples/web/snap-test.jpg ./web
 open web
 #

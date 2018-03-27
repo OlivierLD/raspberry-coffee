@@ -11,7 +11,8 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 #
 while true
 do
-  curl http://192.168.42.2:8080/snap
+  # If needed, add rot parameter (default is 0)
+  curl http://192.168.42.2:8080/snap?rot=270
   NOW=$(date +"%Y_%m_%d_%H_%M_%S")
   IMG_NAME=snap-$NOW.jpg
   sshpass -p 'pi' scp pi@192.168.42.2:~/raspberry-pi4j-samples/RasPISamples/web/snap-test.jpg ./web/$IMG_NAME

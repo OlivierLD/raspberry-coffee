@@ -203,7 +203,7 @@ The device can also be on the go, the code can receive the position and the head
 <img src="./sunflower_bb.png" width="827" height="426">
 
 > _Note_: If you want to power the `PCA9685` from the Raspberry PI (5v, GND), you need a power outlet that feeds around 1A.
-> If you see the Raspberry PI constantly rebooting itself, it is very likely to be a power issue, you do not feed it enough. 
+> If you see the Raspberry PI constantly rebooting itself, it is very likely to be a power issue, you do not feed it enough.
 
 Like here:
 <img src="./sunflower.pwd_bb.png" width="827" height="459">
@@ -251,7 +251,7 @@ This way, position and heading come from an NMEA channel (log file, NMEA Station
 _forwarded_ to the `SunFlower`.
 
 This gives the possibility to have the same orientation features, even if the panel(s) is(are) carried by a vehicle in motion.
-Requires a damping on the heading values (to avoid all the energy gathered by the solar panel to be wasted in 
+Requires a damping on the heading values (to avoid all the energy gathered by the solar panel to be wasted in
 shaking the heading servo).
 > _Note_: It is the `heading` that is required here, not only the Course Over Ground (`COG`), returned by the GPS.
 > In the sample implementation of `GPS.sun.servo` mentioned below, this is why we use an `LSM303` (magnetometer), that will return the heading,
@@ -267,4 +267,8 @@ Monitor the load of the LiPo battery, with an MPC3008.
 
 Add a photocell(s) (read by the MCP3008 as well), to know how sunny it is.
 
-Orienting much bigger panels, using *feedback servos* and *stepper motors*.
+Orienting much bigger panels, using *feedback servos* and *stepper motors*, worm gears, etc.
+- For this last one, the challenge will be to know what the angles set by the motors are.
+    - A way to do it would be to use potentiometers and ADCs (like MCP3008).
+
+---
