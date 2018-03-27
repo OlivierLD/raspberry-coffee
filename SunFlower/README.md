@@ -267,7 +267,7 @@ Monitor the load of the LiPo battery, with an MPC3008.
 
 Add a photocell(s) (read by the MCP3008 as well), to know how sunny it is.
 
-Orienting much bigger panels, using *feedback servos* and *stepper motors*, worm gears, etc.
+Orienting much bigger panels, using *stepper motors*, worm gears, etc.
 - For this last one, the challenge will be to know what the angles set by the motors are.
     - A way to do it would be to use potentiometers and ADCs (like MCP3008).
 
