@@ -18,7 +18,7 @@ public class MembraneKeyPad1x4 {
 	private GpioPinDigitalMultipurpose commonLead = null;
 	private GpioPinDigitalMultipurpose[] colButton = null;
 
-	private final static char[] keypad = new char[]{'1', '2', '3', '4'};
+	private final static char[] keypad = new char[]{'2', '1', '4', '3'};
 
 	/*
 	 * https://www.adafruit.com/products/1332
