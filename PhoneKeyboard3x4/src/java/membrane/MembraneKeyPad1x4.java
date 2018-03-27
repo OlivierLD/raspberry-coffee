@@ -29,7 +29,7 @@ public class MembraneKeyPad1x4 {
 			PinUtil.GPIOPin.GPIO_5.pin(),
 			PinUtil.GPIOPin.GPIO_6.pin()
 	};
-	private Pin common = PinUtil.GPIOPin.GPIO_6.pin(); // TODO customize
+	private Pin common = PinUtil.GPIOPin.GPIO_7.pin(); // TODO customize
 
 	public MembraneKeyPad1x4() {
 		this(false);
