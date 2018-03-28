@@ -41,7 +41,10 @@ public class MembraneKeyPad1x4 {
 		// Default -Dcommon.lead=GPIO_7
 		String userProvidedCols = System.getProperty("keypad.cols");
 		String userProvidedCommon = System.getProperty("common.lead");
-		if (userProvidedCols != null && userProvidedCommon != null) {
+		if (userProvidedCols != null || userProvidedCommon != null) {
+			if (userProvidedCols == null || userProvidedCommon == null) {
+				throw new InvalidParameterException("Please provide both keypad.cols AND common.lead, or none");
+			}
 			String[] userCols = userProvidedCols.split(",");
 			if (userCols.length != 4) {
 				throw new InvalidParameterException("keypad.cols should contain 4 elements, comma-separated.");
@@ -53,7 +56,7 @@ public class MembraneKeyPad1x4 {
 						throw new InvalidParameterException(String.format("[%s] cannot appear more than once", userCols[i]));
 					}
 				}
-				if (userCols[i].trim().equals(userProvidedCommon.trim())){
+				if (userCols[i].trim().equals(userProvidedCommon.trim())) {
 					throw new InvalidParameterException(String.format("[%s] cannot appear more than once", userCols[i]));
 				}
 			}
@@ -67,6 +70,7 @@ public class MembraneKeyPad1x4 {
 					kpCol[i] = pin.pin();
 				}
 			}
+
 			PinUtil.GPIOPin pin = PinUtil.findEnumName(userProvidedCommon.trim());
 			common = pin.pin();
 		}

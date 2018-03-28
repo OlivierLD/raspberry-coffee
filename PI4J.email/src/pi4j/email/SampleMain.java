@@ -71,12 +71,12 @@ public class SampleMain {
 		Thread senderThread = new Thread(() -> {
 				try {
 					System.out.println("Preamble.");
-					// Attachement and content are not compatible.
+					// Attachment and content are not compatible.
 					sender.send(destEmail,
 							"PI Image",
 							"",
 							"image/jpg",
-							"snap.jpg");
+							"bonus.jpg");
 					for (int i = 0; i < emails; i++) {
 						System.out.println(String.format("Sending (%d)...", (i+1)));
 						sender.send(destEmail,
