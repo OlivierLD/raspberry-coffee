@@ -72,21 +72,17 @@ public class EmailWatcher {
 						System.out.println("Will exit next batch.");
 						//  break;
 					} else if ("last-snap".equals(operation)) {    // operation = 'last-snap', last snapshot, returned in the reply, as attachment.
-						if (json != null) {
-							// TODO Find sender, last image
-							String sendTo = "olivier@lediouris.net";
-							String[] dest = sendTo.split(",");
+						// TODO Find sender, last image
+						String sendTo = "olivier@lediouris.net";
+						String[] dest = sendTo.split(",");
 
-							// Attachment and content are not compatible.
-							sender.send(dest,
-									"Weather Snapshot",
-									"",
-									"image/jpg",
-									"bonus.jpg");
+						// Attachment and content are not compatible.
+						sender.send(dest,
+								"Weather Snapshot",
+								"",
+								"image/jpg",
+								"bonus.jpg");
 
-						} else {
-							// Oops
-						}
 					} else {
 						System.out.println("Operation: [" + operation + "], sent for processing.");
 						try {
