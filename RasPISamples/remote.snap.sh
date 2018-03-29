@@ -14,7 +14,7 @@ PATH=$PATH:/usr/local/bin
 ROT=270
 WIDTH=640
 HEIGHT=480
-NAME="snap-ptest"
+NAME="snap-test"
 #
 for prm in $*
 do
@@ -39,5 +39,5 @@ echo "Using rot:$ROT, width=$WIDTH, height=$HEIGHT, name=$NAME"
 #
 curl http://192.168.42.2:8080/snap?rot=$ROT&width=$WIDTH&height=$HEIGHT&name=$NAME
 sshpass -p 'pi' scp pi@192.168.42.2:~/raspberry-pi4j-samples/RasPISamples/web/$NAME.jpg ./web
-open web
+# open web
 #

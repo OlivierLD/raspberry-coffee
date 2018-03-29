@@ -59,16 +59,28 @@ public class HTTPLogger implements LoggerInterface {
 				int rot = 0, width = 640, height = 480;
 				if (queryStringParameters.containsKey("rot")) { // For example ?rot=180
 					rot = Integer.parseInt(queryStringParameters.get("rot"));
+					if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+						System.out.println(String.format(">> rot overridden [%d]", rot));
+					}
 				}
 				if (queryStringParameters.containsKey("width")) {
 					width = Integer.parseInt(queryStringParameters.get("width"));
+					if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+						System.out.println(String.format(">> width overridden [%d]", width));
+					}
 				}
 				if (queryStringParameters.containsKey("height")) {
 					height = Integer.parseInt(queryStringParameters.get("height"));
+					if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+						System.out.println(String.format(">> height overridden [%d]", height));
+					}
 				}
 				String snapName = "snap-test";
 				if (queryStringParameters.containsKey("name")) {
 					snapName = queryStringParameters.get("name");
+					if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+						System.out.println(String.format(">> name overridden [%s]", snapName));
+					}
 				}
 				snap(snapName, rot, width, height);
 			} catch (Exception e) {
@@ -96,7 +108,8 @@ public class HTTPLogger implements LoggerInterface {
 		try {
 			String command = String.format(SNAPSHOT_COMMAND_1, rot, width, height, snapshotName);
 			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
-				System.out.println(String.format("Executing [%s]", command));
+				System.out.println("Snapshot name will be " + snapshotName);
+				System.out.println(String.format("HTTPLogger Executing [%s]", command));
 			}
 			long before = System.currentTimeMillis();
 			Process snap = rt.exec(command);
