@@ -165,7 +165,7 @@ public class EmailReceiver {
 	public List<String> receive(String dir)
 					throws Exception {
 		if (verbose) System.out.println("Receiving...");
-		List<String> messList = new ArrayList<String>();
+		List<String> messList = new ArrayList<>();
 		Store store = null;
 		Folder folder = null;
 		try {

@@ -1,15 +1,16 @@
 package membrane;
 
-import phonekeyboard3x4.KeyboardController;
-
 import java.text.NumberFormat;
 
 public class SampleMain {
 	public static void main(String... args) {
+
+		MembraneKeyPad1x4 membraneKeyPad1x4 = new MembraneKeyPad1x4(true);
+
+		System.out.println("------------------------------");
 		System.out.println("Hit the same key twice to exit");
 		System.out.println("------------------------------");
 
-		MembraneKeyPad1x4 membraneKeyPad1x4 = new MembraneKeyPad1x4(true);
 		char prevchar = ' ';
 		boolean go = true;
 		while (go) {
