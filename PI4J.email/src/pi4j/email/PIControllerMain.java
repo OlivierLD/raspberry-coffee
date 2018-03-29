@@ -58,18 +58,18 @@ public class PIControllerMain implements RaspberryPIEventListener {
 			System.out.println("Waiting for instructions.");
 			boolean keepLooping = true;
 			while (keepLooping) {
-				List<String> received = receiver.receive();
+				List<EmailReceiver.ReceivedMessage> received = receiver.receive();
 				if (verbose || received.size() > 0)
 					System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
-				for (String s : received) {
+				for (EmailReceiver.ReceivedMessage mess : received) {
 					//      System.out.println(s);
 					String operation = "";
 					try {
-						JSONObject json = new JSONObject(s);
+						JSONObject json = new JSONObject(mess.getContent());
 						operation = json.getString("operation");
 					} catch (Exception ex) {
 						System.err.println(ex.getMessage());
-						System.err.println("Message is [" + s + "]");
+						System.err.println("Message is [" + mess.getContent() + "]");
 					}
 					if ("exit".equals(operation)) {
 						keepLooping = false;
