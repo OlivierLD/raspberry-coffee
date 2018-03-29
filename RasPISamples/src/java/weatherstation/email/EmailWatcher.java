@@ -20,19 +20,33 @@ public class EmailWatcher {
 	private static boolean verbose = "true".equals(System.getProperty("mail.verbose", "false"));
 
 	/**
+	 * This is an example of an email interaction.
+	 * A user is sending an email:
+	 * - To: olivier.lediouris@gmail.com
+	 * - Subject: "PI Request"
+	 * - Content (plain): { 'operation': 'last-snap', 'width':480, 'height':640, 'name': 'email-snap' }
+	 *     In the json object above, width, height and name are optional, default values above.
+	 * Then the script `remote.snap.sh` is triggered to:
+	 * - Send an http request is sent to the Raspberry PI to take the snapshot (see {@link weatherstation.logger.HTTPLogger} )
+	 * - Download the corresponding picture
+	 * After that, an email is returned to the requeter, with the snapshot attached to it.
+	 *
+	 * PROs: It does not require a server, just this class running somewhere.
+	 * CONs: It is not synchronous, it can take some time.
+	 *
 	 * Invoked like:
 	 * java weatherstation.email.EmailWatcher [-verbose] -send:google -receive:yahoo
 	 * <p>
 	 * This will send emails using google, and receive using yahoo.
 	 * Do check the file email.properties for the different values associated with email servers.
 	 * <p>
-	 * NO GPIO INTERACTION in this one.
+	 * NO GPIO INTERACTION in this one (no sudo access needed).
 	 * <p>
 	 *   The program stops when the 'exit' email is received by the EmailReceiver.
 	 * </p>
 	 * @param args See above
 	 */
-	public static void main_(String... args) {
+	public static void main(String... args) {
 
 		String providerSend = "yahoo"; // Default
 		String providerReceive = "google"; // Default
@@ -140,13 +154,5 @@ public class EmailWatcher {
 			}
 		}
 		System.out.println("Receiver. Done.");
-	}
-
-	public static void main(String... args) {
-		String jsonStr = "{ 'rot': 123, 'name': 'Akeu' }";
-		JSONObject json = new JSONObject(jsonStr);
-		Integer rot = json.getInt("rot");
-		Integer width = json.getInt("width");
-		System.out.println("Bam");
 	}
 }
