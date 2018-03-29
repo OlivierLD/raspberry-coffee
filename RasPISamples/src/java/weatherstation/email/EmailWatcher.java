@@ -114,7 +114,7 @@ public class EmailWatcher {
 						}
 						String cmd = String.format("./remote.snap.sh -rot:%d -width:%d -height:%d -name:%s", rot, width, height, snapName);
 						if ("true".equals(System.getProperty("email.test.only", "false"))) {
-							System.out.println(String.format("Executing [%s]", cmd));
+							System.out.println(String.format("EmailWatcher Executing [%s]", cmd));
 						} else {
 							Process p = Runtime.getRuntime().exec(cmd);
 							BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -133,7 +133,7 @@ public class EmailWatcher {
 							// Attachment and content are not compatible.
 							sender.send(dest,
 									"Weather Snapshot",
-									"",  // TODO Some content
+									"",  // TODO Some content?
 									"image/jpg",
 									String.format("web/%s.jpg", snapName));
 						}

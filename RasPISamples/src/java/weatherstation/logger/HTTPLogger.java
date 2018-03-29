@@ -96,7 +96,7 @@ public class HTTPLogger implements LoggerInterface {
 		try {
 			String command = String.format(SNAPSHOT_COMMAND_1, rot, width, height, snapshotName);
 			if ("true".equals(System.getProperty("snap.verbose", "false"))) {
-				System.out.println(String.format("Executing [%s]", command));
+				System.out.println(String.format("HTTPLogger Executing [%s]", command));
 			}
 			long before = System.currentTimeMillis();
 			Process snap = rt.exec(command);
