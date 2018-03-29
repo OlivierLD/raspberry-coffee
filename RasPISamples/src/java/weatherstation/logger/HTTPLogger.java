@@ -66,7 +66,11 @@ public class HTTPLogger implements LoggerInterface {
 				if (queryStringParameters.containsKey("height")) {
 					height = Integer.parseInt(queryStringParameters.get("height"));
 				}
-				snap("snap-test", rot, width, height);
+				String snapName = "snap-test";
+				if (queryStringParameters.containsKey("name")) {
+					snapName = queryStringParameters.get("name");
+				}
+				snap(snapName, rot, width, height);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

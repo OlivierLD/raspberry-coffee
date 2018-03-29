@@ -2,11 +2,18 @@ package weatherstation.email;
 
 import email.EmailReceiver;
 import email.EmailSender;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.mail.Address;
+import javax.mail.internet.InternetAddress;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EmailWatcher {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
@@ -25,7 +32,7 @@ public class EmailWatcher {
 	 * </p>
 	 * @param args See above
 	 */
-	public static void main(String... args) {
+	public static void main_(String... args) {
 
 		String providerSend = "yahoo"; // Default
 		String providerReceive = "google"; // Default
@@ -51,37 +58,67 @@ public class EmailWatcher {
 		while (keepLooping) {
 			try {
 				System.out.println("Waiting on receive.");
-				List<String> received = receiver.receive();
+				List<EmailReceiver.ReceivedMessage> received = receiver.receive();
 				//	if (verbose || received.size() > 0)
 				System.out.println("---------------------------------");
 				System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
 				System.out.println("---------------------------------");
-				for (String s : received) {
-					System.out.println("Received:\n" + s);
+				for (EmailReceiver.ReceivedMessage mess : received) {
+					System.out.println("Received:\n" + mess.getContent());
 					JSONObject json = null;
 					String operation = "";
 					try {
-						json = new JSONObject(s);
+						json = new JSONObject(mess.getContent());
 						operation = json.getString("operation"); // Expects a { 'operation': 'Blah' }
 					} catch (Exception ex) {
 						System.err.println(ex.getMessage());
-						System.err.println("Message is [" + s + "]");
+						System.err.println("Error in message payload [" + mess.getContent() + "]");
 					}
 					if ("exit".equals(operation)) {                 // operation = 'exit'
 						keepLooping = false;
 						System.out.println("Will exit next batch.");
 						//  break;
 					} else if ("last-snap".equals(operation)) {    // operation = 'last-snap', last snapshot, returned in the reply, as attachment.
-						// TODO Find sender, last image
-						String sendTo = "olivier@lediouris.net";
-						String[] dest = sendTo.split(",");
+						// Fetch last image
+						int rot = 270, width = 640, height = 480; // Default ones. Taken from payload below
+						String snapName = "email-snap"; // No Extension!
+						try {
+							rot = json.getInt("rot");
+						} catch (JSONException je) {
+						}
+						try {
+							width = json.getInt("width");
+						} catch (JSONException je) {
+						}
+						try {
+							height = json.getInt("height");
+						} catch (JSONException je) {
+						}
+						try {
+							snapName = json.getString("name");
+						} catch (JSONException je) {
+						}
+						String cmd = String.format("./remote.snap.sh -rot:%d -width:%d -height:%d -name:%s", rot, width, height, snapName);
+						Process p = Runtime.getRuntime().exec(cmd);
+						BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
+						String line = null;
+						while ((line = stdout.readLine()) != null) {
+							System.out.println(line);
+						}
+						int exitStatus = p.waitFor();
 
+						Address[] sendTo = mess.getFrom();
+						String[] dest = Arrays.asList(sendTo)
+								.stream()
+								.map(addr -> ((InternetAddress) addr).getAddress())
+								.collect(Collectors.joining(","))
+								.split(",");
 						// Attachment and content are not compatible.
 						sender.send(dest,
 								"Weather Snapshot",
 								"",
 								"image/jpg",
-								"bonus.jpg");
+								String.format("web/%s.jpg", snapName));
 
 					} else {
 						System.out.println("Operation: [" + operation + "], sent for processing.");
@@ -103,5 +140,13 @@ public class EmailWatcher {
 			}
 		}
 		System.out.println("Receiver. Done.");
+	}
+
+	public static void main(String... args) {
+		String jsonStr = "{ 'rot': 123, 'name': 'Akeu' }";
+		JSONObject json = new JSONObject(jsonStr);
+		Integer rot = json.getInt("rot");
+		Integer width = json.getInt("width");
+		System.out.println("Bam");
 	}
 }

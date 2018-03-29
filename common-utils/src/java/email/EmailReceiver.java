@@ -92,8 +92,9 @@ public class EmailReceiver {
 	private static SearchTerm[] buildSearchTerm(String str) {
 		String[] sa = str.split(",");
 		List<SearchTerm> lst = new ArrayList<SearchTerm>();
-		for (String s : sa)
+		for (String s : sa) {
 			lst.add(new FromStringTerm(s.trim()));
+		}
 		SearchTerm[] sta = new SearchTerm[lst.size()];
 		sta = lst.toArray(sta);
 		return sta;
@@ -157,15 +158,15 @@ public class EmailReceiver {
 		return EmailReceiver.outgoing;
 	}
 
-	public List<String> receive()
+	public List<ReceivedMessage> receive()
 					throws Exception {
 		return receive(null);
 	}
 
-	public List<String> receive(String dir)
+	public List<ReceivedMessage> receive(String dir)
 					throws Exception {
 		if (verbose) System.out.println("Receiving...");
-		List<String> messList = new ArrayList<>();
+		List<ReceivedMessage> messList = new ArrayList<>();
 		Store store = null;
 		Folder folder = null;
 		try {
@@ -174,10 +175,13 @@ public class EmailReceiver {
 
 			if (verbose) {
 				Set<Object> keys = props.keySet();
-				for (Object o : keys)
+				for (Object o : keys) {
 					System.out.println(o.toString() + ":" + props.get(o).toString());
+				}
 			}
-			if (verbose) System.out.println("Getting session...");
+			if (verbose) {
+				System.out.println("Getting session...");
+			}
 //    Session session = Session.getInstance(props, null);
 			Session session = Session.getInstance(props,
 							new javax.mail.Authenticator() {
@@ -186,23 +190,30 @@ public class EmailReceiver {
 								}
 							});
 			session.setDebug(verbose);
-			if (verbose) System.out.println("Session established.");
+			if (verbose) {
+				System.out.println("Session established.");
+			}
 			store = session.getStore(EmailReceiver.protocol);
-			if (EmailReceiver.incomingPort == 0)
+			if (EmailReceiver.incomingPort == 0) {
 				store.connect(EmailReceiver.incoming, EmailReceiver.username, EmailReceiver.password);
-			else
+			} else {
 				store.connect(EmailReceiver.incoming, EmailReceiver.incomingPort, EmailReceiver.username, EmailReceiver.password);
-			if (verbose) System.out.println("Connected to store");
+			}
+			if (verbose) {
+				System.out.println("Connected to store");
+			}
 			folder = store.getDefaultFolder();
-			if (folder == null)
+			if (folder == null) {
 				throw new RuntimeException("No default folder");
-
+			}
 			folder = store.getFolder("INBOX");
-			if (folder == null)
+			if (folder == null) {
 				throw new RuntimeException("No INBOX");
-
+			}
 			folder.open(Folder.READ_WRITE);
-			if (verbose) System.out.println("Connected... filtering, please wait.");
+			if (verbose) {
+				System.out.println("Connected... filtering, please wait.");
+			}
 //			SearchTerm st = new AndTerm(new SearchTerm[]{new OrTerm(buildSearchTerm(sendEmailsTo)),
 //							new SubjectTerm(acceptSubject),
 //							new FlagTerm(new Flags(Flags.Flag.SEEN), false)});
@@ -217,7 +228,9 @@ public class EmailReceiver {
 			Message msgs[] = folder.search(st);
 //    Message msgs[] = folder.getMessages();
 
-			if (verbose) System.out.println("Search completed, " + msgs.length + " message(s).");
+			if (verbose) {
+				System.out.println("Search completed, " + msgs.length + " message(s).");
+			}
 			for (int msgNum = 0; msgNum < msgs.length; msgNum++) {
 				try {
 					Message mess = msgs[msgNum];
@@ -230,24 +243,29 @@ public class EmailReceiver {
 					}
 					String subject = mess.getSubject();
 					if (true && subject.equals(acceptSubject)) { // Could not have the SubjectTerm to works properly...
-						if (verbose)
-						  System.out.println("Message from [" + sender + "], subject [" + subject + "], content [" + mess.getContent().toString().trim() + "]");
-						if (!mess.isSet(javax.mail.Flags.Flag.SEEN) &&
-										!mess.isSet(javax.mail.Flags.Flag.DELETED)) {
+						if (verbose) {
+							System.out.println("Message from [" + sender + "], subject [" + subject + "], content [" + mess.getContent().toString().trim() + "]");
+						}
+						if (!mess.isSet(javax.mail.Flags.Flag.SEEN) && !mess.isSet(javax.mail.Flags.Flag.DELETED)) {
 							String txtMess = printMessage(mess, dir);
-							messList.add(txtMess);
+							ReceivedMessage newMess = new ReceivedMessage().content(txtMess).from(from).subject(subject);
+							messList.add(newMess);
 							mess.setFlag(javax.mail.Flags.Flag.SEEN, true);
 							mess.setFlag(javax.mail.Flags.Flag.DELETED, true);
 							// Send an ack - by email.
-							if (this.emailSender == null)
+							if (this.emailSender == null) {
 								this.emailSender = new EmailSender(this.provider);
+							}
 							this.emailSender.send(new String[]{sender},
 											ackSubject,
 											"Your request [" + txtMess.trim() + "] is being taken care of.");
-							if (verbose) System.out.println("Sent an ack to " + sender);
+							if (verbose) {
+								System.out.println("Sent an ack to " + sender);
+							}
 						} else {
-							if (verbose)
+							if (verbose) {
 								System.out.println("Old message in your inbox..., received " + mess.getReceivedDate().toString());
+							}
 						}
 					}
 				} catch (Exception ex) {
@@ -259,10 +277,12 @@ public class EmailReceiver {
 			throw ex;
 		} finally {
 			try {
-				if (folder != null)
+				if (folder != null) {
 					folder.close(true);
-				if (store != null)
+				}
+				if (store != null) {
 					store.close();
+				}
 			} catch (Exception ex2) {
 				System.err.println("Finally ...");
 				ex2.printStackTrace();
@@ -271,13 +291,45 @@ public class EmailReceiver {
 		return messList;
 	}
 
+	public static class ReceivedMessage {
+		String content;
+		String subject;
+		Address[] from;
+
+		public String getContent() {
+			return this.content;
+		}
+		public String getSubject() {
+			return this.subject;
+		}
+		public Address[] getFrom() {
+			return this.from;
+		}
+
+		public ReceivedMessage content(String content) {
+			this.content = content;
+			return this;
+		}
+		public ReceivedMessage subject(String subject) {
+			this.subject = subject;
+			return this;
+		}
+		public ReceivedMessage from(Address[] from) {
+			this.from = from;
+			return this;
+		}
+	}
+
 	public static String printMessage(Message message, String dir) {
 		String ret = "";
 		try {
 			String from = ((InternetAddress) message.getFrom()[0]).getPersonal();
-			if (from == null)
+			if (from == null) {
 				from = ((InternetAddress) message.getFrom()[0]).getAddress();
-			if (verbose) System.out.println("From: " + from);
+			}
+			if (verbose) {
+				System.out.println("From: " + from);
+			}
 			String subject = message.getSubject();
 			if (verbose) System.out.println("Subject: " + subject);
 			Part messagePart = message;
@@ -289,34 +341,45 @@ public class EmailReceiver {
 				for (int i = 0; i < nbParts; i++) {
 					messagePart = ((Multipart) content).getBodyPart(i);
 					if (messagePart.getContentType().toUpperCase().startsWith("APPLICATION/OCTET-STREAM")) {
-						if (verbose) System.out.println(messagePart.getContentType() + ":" + messagePart.getFileName());
+						if (verbose) {
+							System.out.println(messagePart.getContentType() + ":" + messagePart.getFileName());
+						}
 						InputStream is = messagePart.getInputStream();
 						String newFileName = "";
-						if (dir != null)
+						if (dir != null) {
 							newFileName = dir + File.separator;
+						}
 						newFileName += messagePart.getFileName();
 						FileOutputStream fos = new FileOutputStream(newFileName);
 						ret = messagePart.getFileName();
-						if (verbose) System.out.println("Downloading " + messagePart.getFileName() + "...");
+						if (verbose) {
+							System.out.println("Downloading " + messagePart.getFileName() + "...");
+						}
 						copy(is, fos);
 						if (verbose) System.out.println("...done.");
 					} else // text/plain, text/html
 					{
-						if (verbose)
+						if (verbose) {
 							System.out.println("-- Part #" + i + " --, " + messagePart.getContentType().replace('\n', ' ').replace('\r', ' ').replace("\b", "").trim());
+						}
 						InputStream is = messagePart.getInputStream();
 						BufferedReader br = new BufferedReader(new InputStreamReader(is));
 						String line = "";
 						while (line != null) {
 							line = br.readLine();
 							if (line != null) {
-								if (verbose) System.out.println("[" + line + "]");
-								if (messagePart.getContentType().toUpperCase().startsWith("TEXT/PLAIN"))
+								if (verbose) {
+									System.out.println("[" + line + "]");
+								}
+								if (messagePart.getContentType().toUpperCase().startsWith("TEXT/PLAIN")) {
 									ret += line;
+								}
 							}
 						}
 						br.close();
-						if (verbose) System.out.println("-------------------");
+						if (verbose) {
+							System.out.println("-------------------");
+						}
 					}
 				}
 			} else {
@@ -325,7 +388,9 @@ public class EmailReceiver {
 //      System.out.println(content.toString());
 				ret = content.toString();
 			}
-			if (verbose) System.out.println("-----------------------------");
+			if (verbose) {
+				System.out.println("-----------------------------");
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

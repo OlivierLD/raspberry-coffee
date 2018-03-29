@@ -102,21 +102,21 @@ public class SampleMain {
 		while (keepLooping) {
 			try {
 				System.out.println("Waiting on receive.");
-				List<String> received = receiver.receive();
+				List<EmailReceiver.ReceivedMessage> received = receiver.receive();
 				//	if (verbose || received.size() > 0)
 				System.out.println("---------------------------------");
 				System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
 				System.out.println("---------------------------------");
-				for (String s : received) {
-					System.out.println("Received:\n" + s);
+				for (EmailReceiver.ReceivedMessage mess : received) {
+					System.out.println("Received:\n" + mess.toString());
 					JSONObject json = null;
 					String operation = "";
 					try {
-						json = new JSONObject(s);
+						json = new JSONObject(mess.getContent());
 						operation = json.getString("operation"); // Expects a { 'operation': 'Blah' }
 					} catch (Exception ex) {
 						System.err.println(ex.getMessage());
-						System.err.println("Message is [" + s + "]");
+						System.err.println("Message is [" + mess.getContent() + "]");
 					}
 					if ("exit".equals(operation)) {                 // operation = 'exit'
 						keepLooping = false;
