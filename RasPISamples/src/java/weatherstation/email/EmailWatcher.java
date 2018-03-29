@@ -113,27 +113,30 @@ public class EmailWatcher {
 						} catch (JSONException je) {
 						}
 						String cmd = String.format("./remote.snap.sh -rot:%d -width:%d -height:%d -name:%s", rot, width, height, snapName);
-						Process p = Runtime.getRuntime().exec(cmd);
-						BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
-						String line = null;
-						while ((line = stdout.readLine()) != null) {
-							System.out.println(line);
+						if ("true".equals(System.getProperty("email.test.only", "false"))) {
+							System.out.println(String.format("Executing [%s]", cmd));
+						} else {
+							Process p = Runtime.getRuntime().exec(cmd);
+							BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
+							String line = null;
+							while ((line = stdout.readLine()) != null) {
+								System.out.println(line);
+							}
+							int exitStatus = p.waitFor();
+
+							Address[] sendTo = mess.getFrom();
+							String[] dest = Arrays.asList(sendTo)
+									.stream()
+									.map(addr -> ((InternetAddress) addr).getAddress())
+									.collect(Collectors.joining(","))
+									.split(","); // Not nice, I know. A suitable toArray would help.
+							// Attachment and content are not compatible.
+							sender.send(dest,
+									"Weather Snapshot",
+									"",  // TODO Some content
+									"image/jpg",
+									String.format("web/%s.jpg", snapName));
 						}
-						int exitStatus = p.waitFor();
-
-						Address[] sendTo = mess.getFrom();
-						String[] dest = Arrays.asList(sendTo)
-								.stream()
-								.map(addr -> ((InternetAddress) addr).getAddress())
-								.collect(Collectors.joining(","))
-								.split(",");
-						// Attachment and content are not compatible.
-						sender.send(dest,
-								"Weather Snapshot",
-								"",
-								"image/jpg",
-								String.format("web/%s.jpg", snapName));
-
 					} else {
 						System.out.println("Operation: [" + operation + "], sent for processing.");
 						try {
