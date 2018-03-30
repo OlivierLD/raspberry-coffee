@@ -23,6 +23,7 @@ JAVA_OPTS="$JAVA_OPTS -Ddata.logger=$DATA_LOGGERS"
 JAVA_OPTS="$JAVA_OPTS -Dstation.lat=37.7489 -Dstation.lng=-122.5070"
 # JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=true"
 JAVA_OPTS="$JAVA_OPTS -Dtcp.verbose=false"
+JAVA_OPTS="$JAVA_OPTS -Dtrue.verbose=true"
 #
 java -cp $CP $JAVA_OPTS weatherstation.ws.HomeWeatherStationSimulator
 #
