@@ -122,9 +122,11 @@ public class EmailWatcher {
 						} else {
 							Process p = Runtime.getRuntime().exec(cmd);
 							BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
+							StringBuffer output = new StringBuffer();
 							String line = null;
 							while ((line = stdout.readLine()) != null) {
 								System.out.println(line);
+								output.append(line + "\n");
 							}
 							int exitStatus = p.waitFor();
 
@@ -137,7 +139,7 @@ public class EmailWatcher {
 							// Attachment and content are not compatible.
 							sender.send(dest,
 									"Weather Snapshot",
-									String.format("You snapshot requested returned status %d.", exitStatus),
+									String.format("You snapshot request returned status %d.\n%s", exitStatus, output.toString()),
 									"text/plain",
 									String.format("web/%s.jpg", snapName),
 									"image/jpg");
