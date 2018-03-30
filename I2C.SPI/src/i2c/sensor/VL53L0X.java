@@ -11,6 +11,10 @@ import java.io.IOException;
  * I2C Time of Flight distance sensor, 30 to 1000 mm.
  * https://www.adafruit.com/products/3317
  *
+ * Adapted from https://github.com/johnbryanmoore/VL53L0X_rasp_python/blob/master/python_lib/vl53l0x_python.c
+ *
+ * See also https://github.com/pololu/vl53l0x-arduino
+ *
  * Basic implementation
  */
 public class VL53L0X {

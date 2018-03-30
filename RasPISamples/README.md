@@ -152,8 +152,12 @@ dokill navrest.NavServer
 dokill snap.loop.sh
 #
 ```
-
 ![Architecture](./img/WeatherStationArchitecture.png)
+
+##### And more
+- Added a camera
+    - Snapshots posted on Adafruit-IO
+    - Also accessible through email request
 
 ---
 
