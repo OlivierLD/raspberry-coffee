@@ -128,14 +128,15 @@ public class EmailSender {
 	                 String content,
 	                 String mimeType)
 			throws MessagingException, AddressException {
-		send(dest, subject, content, mimeType, null);
+		send(dest, subject, content, mimeType, null, null);
 	}
 
 	public void send(String[] dest,
 	                 String subject,
 	                 String content,
 	                 String mimeType,
-	                 String attachment)
+	                 String attachment,
+	                 String attachementMimeType)
 					throws MessagingException, AddressException {
 		Properties props = setProps();
 
@@ -165,14 +166,17 @@ public class EmailSender {
 		msg.setSubject(subject);
 
 		if (attachment != null) {
+			// 1 - Text Content
 			BodyPart messageBodyPart = new MimeBodyPart();
 			messageBodyPart.setText(content);
 			messageBodyPart.setHeader("Content-Type", (mimeType == null ? "text/plain" : mimeType));
 			Multipart multipart = new MimeMultipart();
 			// Set text message part
 			multipart.addBodyPart(messageBodyPart);
+
 			// Part two is attachment
 			messageBodyPart = new MimeBodyPart();
+			messageBodyPart.setHeader("Content-Type", (attachementMimeType == null ? "text/plain" : attachementMimeType));
 			String filename = attachment;
 			DataSource source = new FileDataSource(filename);
 			messageBodyPart.setDataHandler(new DataHandler(source));

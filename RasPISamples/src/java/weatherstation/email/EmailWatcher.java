@@ -137,12 +137,13 @@ public class EmailWatcher {
 							// Attachment and content are not compatible.
 							sender.send(dest,
 									"Weather Snapshot",
-									"",  // TODO Some content?
-									"image/jpg",
-									String.format("web/%s.jpg", snapName));
+									String.format("You snapshot requested returned status %d.", exitStatus),
+									"text/plain",
+									String.format("web/%s.jpg", snapName),
+									"image/jpg");
 						}
 					} else {
-						System.out.println("Operation: [" + operation + "], sent for processing.");
+						System.out.println("Operation: [" + operation + "], sent for processing...");
 						try {
 							Thread.sleep(1_000L);
 						} catch (InterruptedException ie) {
