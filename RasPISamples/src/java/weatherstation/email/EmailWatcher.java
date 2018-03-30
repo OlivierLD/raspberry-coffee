@@ -136,13 +136,19 @@ public class EmailWatcher {
 									.map(addr -> ((InternetAddress) addr).getAddress())
 									.collect(Collectors.joining(","))
 									.split(","); // Not nice, I know. A suitable toArray would help.
-							// Attachment and content are not compatible.
-							sender.send(dest,
-									"Weather Snapshot",
-									String.format("You snapshot request returned status %d.\n%s", exitStatus, output.toString()),
-									"text/plain",
-									String.format("web/%s.jpg", snapName),
-									"image/jpg");
+							if (exitStatus == 0) { // Ok
+								sender.send(dest,
+										"Weather Snapshot",
+										String.format("You snapshot request returned status %d.\n%s", exitStatus, output.toString()),
+										"text/plain",
+										String.format("web/%s.jpg", snapName),
+										"image/jpg");
+							} else { // Not Ok
+								sender.send(dest,
+										"Weather Snapshot",
+										String.format("You snapshot request returned status %d, a problem might have occurred.\n%s", exitStatus, output.toString()),
+										"text/plain");
+							}
 						}
 					} else {
 						System.out.println("Operation: [" + operation + "], sent for processing...");

@@ -42,7 +42,7 @@ public class SimpleMain {
 
 		sender.send(destEmail,
 				"An Image",
-				"This is a text, and an attachment.",
+				"This is a text, and an attachment.\n\n",
 				"plain/text",
 				"bonus.jpg",
 				"image/jpg");
