@@ -22,18 +22,22 @@ public class EmailWatcher {
 	/**
 	 * This is an example of an email interaction.
 	 * A user is sending an email:
+	 * <pre>
 	 * - To: olivier.lediouris@gmail.com
 	 * - Subject: "PI Request"
 	 * - Content (plain): { 'operation': 'last-snap', 'width':480, 'height':640, 'name': 'email-snap' }
 	 *     In the json object above, width, height and name are optional, default values above.
+	 * </pre>
 	 * Then the script `remote.snap.sh` is triggered to:
+	 * <pre>
 	 * - Send an http request is sent to the Raspberry PI to take the snapshot (see {@link weatherstation.logger.HTTPLogger} )
 	 * - Download the corresponding picture
+	 * </pre>
 	 * After that, an email is returned to the requeter, with the snapshot attached to it.
-	 *
-	 * PROs: It does not require a server, just this class running somewhere.
-	 * CONs: It is not synchronous, it can take some time.
-	 *
+	 * <ul>
+	 *   <li>PROs: It does not require a server, just this class running somewhere.</li>
+	 *   <li>CONs: It is not synchronous, it can take some time.</li>
+	 * </ul>
 	 * Invoked like:
 	 * java weatherstation.email.EmailWatcher [-verbose] -send:google -receive:yahoo
 	 * <p>

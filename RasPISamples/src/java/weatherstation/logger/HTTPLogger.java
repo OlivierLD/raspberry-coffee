@@ -56,6 +56,11 @@ public class HTTPLogger implements LoggerInterface {
 			System.out.println("Snapshot required");
 			try {
 				Map<String, String> queryStringParameters = req.getQueryStringParameters();
+				if ("true".equals(System.getProperty("snap.verbose", "false"))) {
+					queryStringParameters.keySet().stream().forEach(k -> {
+						System.out.println(String.format("prm:%s => %s", k, queryStringParameters.get(k)));
+					});
+				}
 				int rot = 0, width = 640, height = 480;
 				if (queryStringParameters.containsKey("rot")) { // For example ?rot=180
 					rot = Integer.parseInt(queryStringParameters.get("rot"));
