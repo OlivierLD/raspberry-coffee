@@ -136,7 +136,7 @@ public class EmailSender {
 	                 String content,
 	                 String mimeType,
 	                 String attachment,
-	                 String attachementMimeType)
+	                 String attachmentMimeType)
 					throws MessagingException, AddressException {
 		Properties props = setProps();
 
@@ -176,7 +176,7 @@ public class EmailSender {
 
 			// Part two is attachment
 			messageBodyPart = new MimeBodyPart();
-			messageBodyPart.setHeader("Content-Type", (attachementMimeType == null ? "text/plain" : attachementMimeType));
+			messageBodyPart.setHeader("Content-Type", (attachmentMimeType == null ? "text/plain" : attachmentMimeType));
 			String filename = attachment;
 			DataSource source = new FileDataSource(filename);
 			messageBodyPart.setDataHandler(new DataHandler(source));
