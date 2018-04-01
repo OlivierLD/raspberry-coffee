@@ -7,6 +7,10 @@ import i2c.sensor.utils.EndianReaders;
 
 import java.io.IOException;
 
+/**
+ * Adapted from from https://github.com/adafruit/Adafruit_CircuitPython_VL53L0X/blob/master/adafruit_vl53l0x.py
+ * Driver for the VL53L0X https://www.adafruit.com/product/3317
+ */
 public class VL53L0X {
 	public final static int VL53L0X_I2CADDR = 0x29;
 
@@ -76,13 +80,13 @@ public class VL53L0X {
 		return (int)((val &0xFF) * Math.pow(2.0,((val & 0xFF00) >> 8)) + 1);
 	}
 
-	private static int encodeTimeout(int timeout_mclks) {
+	private static int encodeTimeout(int timeoutMclks) {
 		// format: "(LSByte * 2^MSByte) + 1"
-		timeout_mclks = (int)((timeout_mclks) & 0xFFFF);
+		timeoutMclks = (int)((timeoutMclks) & 0xFFFF);
 		int ls_byte = 0;
 		int ms_byte = 0;
-		if (timeout_mclks > 0) {
-			ls_byte = timeout_mclks - 1;
+		if (timeoutMclks > 0) {
+			ls_byte = timeoutMclks - 1;
 			while (ls_byte > 255) {
 				ls_byte >>= 1;
 				ms_byte += 1;
@@ -120,167 +124,166 @@ public class VL53L0X {
 	public VL53L0X(int address, int timeout) throws IOException, I2CFactory.UnsupportedBusNumberException {
 		this.ioTimeout = timeout;
 
-			// Get i2c bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
-			if (verbose) {
-				System.out.println("Connected to bus. OK.");
-			}
-			// Get device itself
-			vl53l0x = bus.getDevice(address);
-			if (verbose) {
-				System.out.println("Connected to device. OK.");
-			}
-			// Check identification registers for expected values.
-			// From section 3.2 of the datasheet.
-			if (this.readU8(0xC0) != 0xEE || this.readU8(0xC1) != 0xAA || this.readU8(0xC2) != 0x10) {
-				throw new RuntimeException("Failed to find expected ID register values. Check wiring!");
-			}
-			// Initialize access to the sensor.  This is based on the logic from:
-			// https://github.com/pololu/vl53l0x-arduino/blob/master/VL53L0X.cpp
-			// Set I2C standard mode.
-			this.vl53l0x.write((byte)0x88, (byte)0x00);
-			this.vl53l0x.write((byte)0x80, (byte)0x01);
-			this.vl53l0x.write((byte)0xFF, (byte)0x01);
-			this.vl53l0x.write((byte)0x00, (byte)0x00);
-			this.stopVariable = this.readU8(0x91);
-			this.vl53l0x.write((byte)0x00, (byte)0x01);
-			this.vl53l0x.write((byte)0xFF, (byte)0x00);
-			this.vl53l0x.write((byte)0x80, (byte)0x00);
+		// Get i2c bus
+		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
+		if (verbose) {
+			System.out.println("Connected to bus. OK.");
+		}
+		// Get device itself
+		vl53l0x = bus.getDevice(address);
+		if (verbose) {
+			System.out.println("Connected to device. OK.");
+		}
+		// Check identification registers for expected values.
+		// From section 3.2 of the datasheet.
+		if (this.readU8(0xC0) != 0xEE || this.readU8(0xC1) != 0xAA || this.readU8(0xC2) != 0x10) {
+			throw new RuntimeException("Failed to find expected ID register values. Check wiring!");
+		}
+		// Initialize access to the sensor.  This is based on the logic from:
+		// https://github.com/pololu/vl53l0x-arduino/blob/master/VL53L0X.cpp
+		// Set I2C standard mode.
+		this.vl53l0x.write((byte) 0x88, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x80, (byte) 0x01);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x00, (byte) 0x00);
+		this.stopVariable = this.readU8(0x91);
+		this.vl53l0x.write((byte) 0x00, (byte) 0x01);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x80, (byte) 0x00);
 
-			// disable SIGNAL_RATE_MSRC (bit 1) and SIGNAL_RATE_PRE_RANGE (bit 4)
-			// limit checks
-			this.configControl = this.readU8(MSRC_CONFIG_CONTROL) | 0x12;
-			this.vl53l0x.write((byte)MSRC_CONFIG_CONTROL, (byte)this.configControl);
-			// set final range signal rate limit to 0.25 MCPS (million counts per second)
-			this.signalRateLimit = 0.25f;
-			this.vl53l0x.write((byte)SYSTEM_SEQUENCE_CONFIG, (byte)0xFF);
+		// disable SIGNAL_RATE_MSRC (bit 1) and SIGNAL_RATE_PRE_RANGE (bit 4) limit checks
+		this.configControl = this.readU8(MSRC_CONFIG_CONTROL) | 0x12;
+		this.vl53l0x.write((byte) MSRC_CONFIG_CONTROL, (byte) this.configControl);
+		// set final range signal rate limit to 0.25 MCPS (million counts per second)
+		this.signalRateLimit = 0.25f;
+		this.vl53l0x.write((byte) SYSTEM_SEQUENCE_CONFIG, (byte) 0xFF);
 
-			SPADInfo spadInfo = getSpadInfo();
-			// The SPAD map (RefGoodSpadMap) is read by
-			// VL53L0X_get_info_from_device() in the API, but the same data seems to
-			// be more easily readable from GLOBAL_CONFIG_SPAD_ENABLES_REF_0 through
-			// _6, so read it from there.
-			byte[] refSpadMap = new byte[7];
-			refSpadMap[0] = (byte)GLOBAL_CONFIG_SPAD_ENABLES_REF_0;
+		SPADInfo spadInfo = getSpadInfo();
+		// The SPAD map (RefGoodSpadMap) is read by VL53L0X_get_info_from_device() in the API, but the same data seems to
+		// be more easily readable from GLOBAL_CONFIG_SPAD_ENABLES_REF_0 through _6, so read it from there.
+		byte[] refSpadMap = new byte[7];
+		refSpadMap[0] = (byte) GLOBAL_CONFIG_SPAD_ENABLES_REF_0;
 
-			this.vl53l0x.write(refSpadMap, 0, 1);
+		this.vl53l0x.write(refSpadMap, 0, 1);
 //		self._device.readinto(ref_spad_map, start=1)
-			this.vl53l0x.read(refSpadMap, 1, 6); // TODO Verify
+		this.vl53l0x.read(refSpadMap, 1, 6); // TODO Verify
 
-			this.vl53l0x.write((byte)0xFF, (byte)0x01);
-			this.vl53l0x.write((byte)DYNAMIC_SPAD_REF_EN_START_OFFSET, (byte)0x00);
-			this.vl53l0x.write((byte)DYNAMIC_SPAD_NUM_REQUESTED_REF_SPAD, (byte)0x2C);
-			this.vl53l0x.write((byte)0xFF, (byte)0x00);
-			this.vl53l0x.write((byte)GLOBAL_CONFIG_REF_EN_START_SELECT, (byte)0xB4);
-			int firstSpadToEnable = spadInfo.isAperture ? 12 : 0;
-			int spadsEnabled = 0;
-			for (int i=0; i<48; i++) {
-				if (i < firstSpadToEnable || spadsEnabled == spadInfo.count) {
-					// This bit is lower than the first one that should be enabled,
-					// or (reference_spad_count) bits have already been enabled, so
-					// zero this bit.
-					refSpadMap[1 + (int)(i / 8)] &= ~(1 << (i % 8));
-				} else {
-					spadsEnabled += 1;
-				}
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x01);
+		this.vl53l0x.write((byte) DYNAMIC_SPAD_REF_EN_START_OFFSET, (byte) 0x00);
+		this.vl53l0x.write((byte) DYNAMIC_SPAD_NUM_REQUESTED_REF_SPAD, (byte) 0x2C);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x00);
+		this.vl53l0x.write((byte) GLOBAL_CONFIG_REF_EN_START_SELECT, (byte) 0xB4);
+		int firstSpadToEnable = spadInfo.isAperture ? 12 : 0;
+		int spadsEnabled = 0;
+		for (int i = 0; i < 48; i++) {
+			// This bit is lower than the first one that should be enabled,
+			// or (reference_spad_count) bits have already been enabled, so zero this bit.
+			if (i < firstSpadToEnable || spadsEnabled == spadInfo.count) {
+				refSpadMap[1 + (int) (i / 8)] &= ~(1 << (i % 8));
+			} else {
+				spadsEnabled += 1;
 			}
+		}
 
-			this.vl53l0x.write(refSpadMap);
+		this.vl53l0x.write(refSpadMap);
 
-			this.vl53l0x.write((byte)0xFF, (byte)0x01);
-			this.vl53l0x.write((byte)0x00, (byte)0x00);
-			this.vl53l0x.write((byte)0xFF, (byte)0x00);
-			this.vl53l0x.write((byte)0x09, (byte)0x00);
-			this.vl53l0x.write((byte)0x10, (byte)0x00);
-			this.vl53l0x.write((byte)0x11, (byte)0x00);
-			this.vl53l0x.write((byte)0x24, (byte)0x01);
-			this.vl53l0x.write((byte)0x25, (byte)0xFF);
-			this.vl53l0x.write((byte)0x75, (byte)0x00);
-			this.vl53l0x.write((byte)0xFF, (byte)0x01);
-			this.vl53l0x.write((byte)0x4E, (byte)0x2C);
-			this.vl53l0x.write((byte)0x48, (byte)0x00);
-			this.vl53l0x.write((byte)0x30, (byte)0x20);
-			this.vl53l0x.write((byte)0xFF, (byte)0x00);
-			this.vl53l0x.write((byte)0x30, (byte)0x09);
-			this.vl53l0x.write((byte)0x54, (byte)0x00);
-			this.vl53l0x.write((byte)0x31, (byte)0x04);
-			this.vl53l0x.write((byte)0x32, (byte)0x03);
-			this.vl53l0x.write((byte)0x40, (byte)0x83);
-			this.vl53l0x.write((byte)0x46, (byte)0x25);
-			this.vl53l0x.write((byte)0x60, (byte)0x00);
-			this.vl53l0x.write((byte)0x27, (byte)0x00);
-			this.vl53l0x.write((byte)0x50, (byte)0x06);
-			this.vl53l0x.write((byte)0x51, (byte)0x00);
-			this.vl53l0x.write((byte)0x52, (byte)0x96);
-			this.vl53l0x.write((byte)0x56, (byte)0x08);
-			this.vl53l0x.write((byte)0x57, (byte)0x30);
-			this.vl53l0x.write((byte)0x61, (byte)0x00);
-			this.vl53l0x.write((byte)0x62, (byte)0x00);
-			this.vl53l0x.write((byte)0x64, (byte)0x00);
-			this.vl53l0x.write((byte)0x65, (byte)0x00);
-			this.vl53l0x.write((byte)0x66, (byte)0xA0);
-			this.vl53l0x.write((byte)0xFF, (byte)0x01);
-			this.vl53l0x.write((byte)0x22, (byte)0x32);
-			this.vl53l0x.write((byte)0x47, (byte)0x14);
-			this.vl53l0x.write((byte)0x49, (byte)0xFF);
-			this.vl53l0x.write((byte)0x4A, (byte)0x00);
-			this.vl53l0x.write((byte)0xFF, (byte)0x00);
-			this.vl53l0x.write((byte)0x7A, (byte)0x0A);
-			this.vl53l0x.write((byte)0x7B, (byte)0x00);
-			this.vl53l0x.write((byte)0x78, (byte)0x21);
-			this.vl53l0x.write((byte)0xFF, (byte)0x01);
-			this.vl53l0x.write((byte)0x23, (byte)0x34);
-			this.vl53l0x.write((byte)0x42, (byte)0x00);
-			this.vl53l0x.write((byte)0x44, (byte)0xFF);
-			this.vl53l0x.write((byte)0x45, (byte)0x26);
-			this.vl53l0x.write((byte)0x46, (byte)0x05);
-			this.vl53l0x.write((byte)0x40, (byte)0x40);
-			this.vl53l0x.write((byte)0x0E, (byte)0x06);
-			this.vl53l0x.write((byte)0x20, (byte)0x1A);
-			this.vl53l0x.write((byte)0x43, (byte)0x40);
-			this.vl53l0x.write((byte)0xFF, (byte)0x00);
-			this.vl53l0x.write((byte)0x34, (byte)0x03);
-			this.vl53l0x.write((byte)0x35, (byte)0x44);
-			this.vl53l0x.write((byte)0xFF, (byte)0x01);
-			this.vl53l0x.write((byte)0x31, (byte)0x04);
-			this.vl53l0x.write((byte)0x4B, (byte)0x09);
-			this.vl53l0x.write((byte)0x4C, (byte)0x05);
-			this.vl53l0x.write((byte)0x4D, (byte)0x04);
-			this.vl53l0x.write((byte)0xFF, (byte)0x00);
-			this.vl53l0x.write((byte)0x44, (byte)0x00);
-			this.vl53l0x.write((byte)0x45, (byte)0x20);
-			this.vl53l0x.write((byte)0x47, (byte)0x08);
-			this.vl53l0x.write((byte)0x48, (byte)0x28);
-			this.vl53l0x.write((byte)0x67, (byte)0x00);
-			this.vl53l0x.write((byte)0x70, (byte)0x04);
-			this.vl53l0x.write((byte)0x71, (byte)0x01);
-			this.vl53l0x.write((byte)0x72, (byte)0xFE);
-			this.vl53l0x.write((byte)0x76, (byte)0x00);
-			this.vl53l0x.write((byte)0x77, (byte)0x00);
-			this.vl53l0x.write((byte)0xFF, (byte)0x01);
-			this.vl53l0x.write((byte)0x0D, (byte)0x01);
-			this.vl53l0x.write((byte)0xFF, (byte)0x00);
-			this.vl53l0x.write((byte)0x80, (byte)0x01);
-			this.vl53l0x.write((byte)0x01, (byte)0xF8);
-			this.vl53l0x.write((byte)0xFF, (byte)0x01);
-			this.vl53l0x.write((byte)0x8E, (byte)0x01);
-			this.vl53l0x.write((byte)0x00, (byte)0x01);
-			this.vl53l0x.write((byte)0xFF, (byte)0x00);
-			this.vl53l0x.write((byte)0x80, (byte)0x00);
-			this.vl53l0x.write((byte)SYSTEM_INTERRUPT_CONFIG_GPIO, (byte)0x04);
-			int gpioHvMuxActiveHigh = this.readU8(GPIO_HV_MUX_ACTIVE_HIGH);
-			this.vl53l0x.write((byte)GPIO_HV_MUX_ACTIVE_HIGH, (byte)(gpioHvMuxActiveHigh & ~0x10)); // active low
-			this.vl53l0x.write((byte)SYSTEM_INTERRUPT_CLEAR, (byte)0x01);
-			this.measurementTimingBudgetMicrosec = this.measurementTimingBudget;
-			this.vl53l0x.write((byte)SYSTEM_SEQUENCE_CONFIG, (byte)0xE8);
-			this.measurementTimingBudget = this.measurementTimingBudgetMicrosec;
-			this.vl53l0x.write((byte)SYSTEM_SEQUENCE_CONFIG, (byte)0x01);
-			this.performSingleRefCalibration(0x40);
-			this.vl53l0x.write((byte)SYSTEM_SEQUENCE_CONFIG, (byte)0x02);
-			this.performSingleRefCalibration(0x00);
-			// restore the previous Sequence Config
-			this.vl53l0x.write((byte)SYSTEM_SEQUENCE_CONFIG, (byte)0xE8);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x00, (byte) 0x00);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x09, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x10, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x11, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x24, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x25, (byte) 0xFF);
+		this.vl53l0x.write((byte) 0x75, (byte) 0x00);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x4E, (byte) 0x2C);
+		this.vl53l0x.write((byte) 0x48, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x30, (byte) 0x20);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x30, (byte) 0x09);
+		this.vl53l0x.write((byte) 0x54, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x31, (byte) 0x04);
+		this.vl53l0x.write((byte) 0x32, (byte) 0x03);
+		this.vl53l0x.write((byte) 0x40, (byte) 0x83);
+		this.vl53l0x.write((byte) 0x46, (byte) 0x25);
+		this.vl53l0x.write((byte) 0x60, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x27, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x50, (byte) 0x06);
+		this.vl53l0x.write((byte) 0x51, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x52, (byte) 0x96);
+		this.vl53l0x.write((byte) 0x56, (byte) 0x08);
+		this.vl53l0x.write((byte) 0x57, (byte) 0x30);
+		this.vl53l0x.write((byte) 0x61, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x62, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x64, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x65, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x66, (byte) 0xA0);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x22, (byte) 0x32);
+		this.vl53l0x.write((byte) 0x47, (byte) 0x14);
+		this.vl53l0x.write((byte) 0x49, (byte) 0xFF);
+		this.vl53l0x.write((byte) 0x4A, (byte) 0x00);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x7A, (byte) 0x0A);
+		this.vl53l0x.write((byte) 0x7B, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x78, (byte) 0x21);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x23, (byte) 0x34);
+		this.vl53l0x.write((byte) 0x42, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x44, (byte) 0xFF);
+		this.vl53l0x.write((byte) 0x45, (byte) 0x26);
+		this.vl53l0x.write((byte) 0x46, (byte) 0x05);
+		this.vl53l0x.write((byte) 0x40, (byte) 0x40);
+		this.vl53l0x.write((byte) 0x0E, (byte) 0x06);
+		this.vl53l0x.write((byte) 0x20, (byte) 0x1A);
+		this.vl53l0x.write((byte) 0x43, (byte) 0x40);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x34, (byte) 0x03);
+		this.vl53l0x.write((byte) 0x35, (byte) 0x44);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x31, (byte) 0x04);
+		this.vl53l0x.write((byte) 0x4B, (byte) 0x09);
+		this.vl53l0x.write((byte) 0x4C, (byte) 0x05);
+		this.vl53l0x.write((byte) 0x4D, (byte) 0x04);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x44, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x45, (byte) 0x20);
+		this.vl53l0x.write((byte) 0x47, (byte) 0x08);
+		this.vl53l0x.write((byte) 0x48, (byte) 0x28);
+		this.vl53l0x.write((byte) 0x67, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x70, (byte) 0x04);
+		this.vl53l0x.write((byte) 0x71, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x72, (byte) 0xFE);
+		this.vl53l0x.write((byte) 0x76, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x77, (byte) 0x00);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x0D, (byte) 0x01);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x80, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x01, (byte) 0xF8);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x8E, (byte) 0x01);
+		this.vl53l0x.write((byte) 0x00, (byte) 0x01);
+		this.vl53l0x.write((byte) 0xFF, (byte) 0x00);
+		this.vl53l0x.write((byte) 0x80, (byte) 0x00);
+		this.vl53l0x.write((byte) SYSTEM_INTERRUPT_CONFIG_GPIO, (byte) 0x04);
+		int gpioHvMuxActiveHigh = this.readU8(GPIO_HV_MUX_ACTIVE_HIGH);
+		this.vl53l0x.write((byte) GPIO_HV_MUX_ACTIVE_HIGH, (byte) (gpioHvMuxActiveHigh & ~0x10)); // active low
+		this.vl53l0x.write((byte) SYSTEM_INTERRUPT_CLEAR, (byte) 0x01);
+		this.measurementTimingBudgetMicrosec = this.measurementTimingBudget;
+		this.vl53l0x.write((byte) SYSTEM_SEQUENCE_CONFIG, (byte) 0xE8);
+		this.measurementTimingBudget = this.measurementTimingBudgetMicrosec;
+		this.vl53l0x.write((byte) SYSTEM_SEQUENCE_CONFIG, (byte) 0x01);
+		this.performSingleRefCalibration(0x40);
+		this.vl53l0x.write((byte) SYSTEM_SEQUENCE_CONFIG, (byte) 0x02);
+		this.performSingleRefCalibration(0x00);
+		// restore the previous Sequence Config
+		this.vl53l0x.write((byte) SYSTEM_SEQUENCE_CONFIG, (byte) 0xE8);
 
+		if (verbose) {
+			System.out.println("Constructor OK.");
+		}
 	}
 
 	private int readU8(int register) throws IOException {
@@ -326,10 +329,13 @@ public class VL53L0X {
 			return this;
 		}
 	}
-	/*
+	/**
 	 * Get reference SPAD count and type, returned as a 2 - tuple of
 	 * count and boolean is_aperture. Based on code from:
 	 * https://github.com/pololu/vl53l0x-arduino/blob/master/VL53L0X.cpp
+	 *
+	 * For this Java version, we use {@link SPADInfo} so much more elegant ;)
+	 * We miss the tuples in Java, though. I'll do a Scala implementation, later.
 	 */
 	private SPADInfo getSpadInfo() throws IOException {
 		this.vl53l0x.write((byte)0x80, (byte)0x01);
@@ -451,8 +457,9 @@ public class VL53L0X {
 		}
 	}
 
-	// based on get_sequence_step_timeout() from ST API but modified by pololu here:
-	//  https://github.com/pololu/vl53l0x-arduino/blob/master/VL53L0X.cpp
+	/* based on get_sequence_step_timeout() from ST API but modified by pololu here:
+	 *    https://github.com/pololu/vl53l0x-arduino/blob/master/VL53L0X.cpp
+	 */
 	private SequenceStepTimeouts getSequenceStepTimeouts(boolean preRange) throws Exception {
 		int preRangeVcselPeriodPclks = this.getVcselPulsePeriod(VCSEL_PERIOD_PRE_RANGE);
 		int msrcDssTccMclks = (this.readU8(MSRC_CONFIG_TIMEOUT_MACROP) + 1) & 0xFF;
@@ -473,8 +480,7 @@ public class VL53L0X {
 				.preRangeMclks(preRangeMclks));
 	}
 
-	// @property
-	// The signal rate limit in mega counts per second.
+	/* The signal rate limit in mega counts per second. */
 	public float getSignalRateLimit() throws Exception {
 		int val = this.readU16BE(FINAL_RANGE_CONFIG_MIN_COUNT_RATE_RTN_LIMIT);
 		// Return value converted from 16 - bit 9.7 fixed point to float.
@@ -482,7 +488,6 @@ public class VL53L0X {
 		return this.signalRateLimit;
 	}
 
-	// @signal_rate_limit.setter
 	public void setSignalRateLimit(float val) throws IOException {
 		assert(0.0 <= val && val <= 511.99);
 		// Convert to 16 - bit 9.7 fixed point value from a float.
@@ -490,8 +495,7 @@ public class VL53L0X {
 		this.writeU16(FINAL_RANGE_CONFIG_MIN_COUNT_RATE_RTN_LIMIT, value);
 	}
 
-	// @property
-	// The measurement timing budget in microseconds.
+	/* The measurement timing budget in microseconds. */
 	public int getMeasurementTimingBudget() throws Exception {
 		int budget_us = 1_910 + 960;  // Start overhead +end overhead.
 		boolean tcc, dss, msrc, pre_range, final_range;
@@ -515,13 +519,10 @@ public class VL53L0X {
 		return budget_us;
 	}
 
-	// @measurement_timing_budget.setter
 	public void setMeasurementTimingBudget(int budgetMicrosec) throws Exception {
 		assert(budgetMicrosec >= 20_000);
 		int usedBudgetMicrosec = 1_320 + 960;  // Start(diff from get) + end overhead
 		SequenceStep sequenceStepEnables = this.getSequenceStepEnables();
-//	tcc, dss, msrc, pre_range, final_range = self._get_sequence_step_enables()
-//	step_timeouts = self._get_sequence_step_timeouts(pre_range)
 		SequenceStepTimeouts sequenceStepTimeouts = this.getSequenceStepTimeouts(sequenceStepEnables.preRange);
 		if (sequenceStepEnables.tcc) {
 			usedBudgetMicrosec += (sequenceStepTimeouts.msrcDssTccMicrosec + 590);
@@ -541,7 +542,7 @@ public class VL53L0X {
 		// budget and the sum of all other timeouts within the sequence.
 		// If there is no room for the final range timeout, then an error
 		// will be set.Otherwise the remaining time will be applied to
-		// the final range. "
+		// the final range.
 		if (usedBudgetMicrosec > budgetMicrosec) {
 			throw new RuntimeException("Requested timeout too big.");
 		}
@@ -554,7 +555,6 @@ public class VL53L0X {
 		this.measurementTimingBudgetMicrosec = budgetMicrosec;
 	}
 
-	// @property
 	/**
 	 * Perform a single reading of the range for an object in front of the sensor and return the distance in millimeters.
 	 *
@@ -584,7 +584,7 @@ public class VL53L0X {
 				throw new RuntimeException("Timeout waiting for VL53L0X!");
 			}
 		}
-		// assumptions: Linearity Corrective Gain is 1000 ( default)
+		// assumptions: Linearity Corrective Gain is 1000 (default)
 		// fractional ranging is not enabled
 		int rangeMm = this.readU16BE(RESULT_RANGE_STATUS + 10);
 		this.vl53l0x.write((byte)SYSTEM_INTERRUPT_CLEAR, (byte)0x01);
