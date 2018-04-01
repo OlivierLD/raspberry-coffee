@@ -595,11 +595,15 @@ public class VL53L0X {
 	public static void main(String... args) {
 		try {
 			VL53L0X vl53l0x = new VL53L0X();
+			int previousDist = -1;
 			while (true) {
 				int mm = vl53l0x.range();
-				System.out.println(String.format("Range: %d mm", mm));
+				if (previousDist != mm) {
+					System.out.println(String.format("Range: %d mm", mm));
+				}
+				previousDist = mm;
 				try {
-					Thread.sleep(500L);
+					Thread.sleep(50L);
 				} catch (InterruptedException iex) {
 
 				}

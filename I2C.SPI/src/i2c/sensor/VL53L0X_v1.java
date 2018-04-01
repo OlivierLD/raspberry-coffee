@@ -7,7 +7,7 @@ import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 import i2c.sensor.utils.EndianReaders;
 import java.io.IOException;
 
-/*
+/**
  * I2C Time of Flight distance sensor, 30 to 1000 mm.
  * https://www.adafruit.com/products/3317
  *
@@ -16,6 +16,8 @@ import java.io.IOException;
  * See also https://github.com/pololu/vl53l0x-arduino
  *
  * Basic implementation
+ *
+ * @deprecated See {@link VL53L0X} instead
  */
 public class VL53L0X_v1 {
 	public final static int VL53L0X_I2CADDR = 0x29;
