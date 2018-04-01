@@ -9,7 +9,7 @@ boolean withSensor = true;
 VL53L0X vl53l0x;
 
 void setup(){
-  size(275, 200);
+  size(300, 300);
   stroke(255);
   noFill();
   textSize(72);
@@ -51,9 +51,12 @@ void draw(){
     }
   }
   // For 1000mm: 1 pixel of radius, for 1mm: height/2 radius.
-  float radius = (height / 2) * (1 / distance); 
+  float ratio = (float)Math.min(distance, 1000) / 1000f;
+  float radius = Math.max(2, (float)(width / 2) * (1f - ratio) * 1.25f);
+//println(String.format("Distance: %d mm, ratio: %f, Radius: %f", distance, ratio, radius));
   fill(128);
   ellipse(width/2, height/2, radius, radius);
   fill(255);
+  textSize(26);
   text(String.format("%d mm", distance), 10, 100);
 }
