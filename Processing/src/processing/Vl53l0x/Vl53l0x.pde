@@ -12,7 +12,7 @@ void setup(){
   size(300, 300);
   stroke(255);
   noFill();
-  textSize(72);
+  textSize(30);
   if (withSensor) {
     try {
       vl53l0x = new VL53L0X();
@@ -44,19 +44,15 @@ void draw(){
     }
   } else {
     int distFromMiddle = Math.abs(mouseX - (width / 2));
-    if (distFromMiddle > 0) {
-     distance = (int)(1000f * (1 / distFromMiddle));
-    } else {
-      distance = 0;
-    }
+    distance = (int)(1000f * ((float)distFromMiddle / (float)(width / 2)));
   }
   // For 1000mm: 1 pixel of radius, for 1mm: height/2 radius.
   float ratio = (float)Math.min(distance, 1000) / 1000f;
-  float radius = Math.max(2, (float)(width / 2) * (1f - ratio) * 1.25f);
-//println(String.format("Distance: %d mm, ratio: %f, Radius: %f", distance, ratio, radius));
+  float radius = Math.max(2, (float)(width / 2) * (1f - ratio) * 1.0f);
+  println(String.format("Distance: %d mm, ratio: %f, Radius: %f", distance, ratio, radius));
   fill(128);
-  ellipse(width/2, height/2, radius, radius);
+  ellipse(width/2, height/2, 2 * radius, 2 * radius);
   fill(255);
-  textSize(26);
+//textSize(26);
   text(String.format("%d mm", distance), 10, 100);
 }
