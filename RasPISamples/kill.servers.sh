@@ -12,7 +12,7 @@ nocase() {
 }
 #
 dokill() {
-	echo "Killing process for $1..."
+	echo "Finding process to kill for $1..."
   ps -ef | grep $1 | grep -v grep | awk '{ print $2 }' > ks
 # ps -ef | grep $1 | grep -v grep | grep -v kill.servers.sh | awk '{ print $2 }' > ks
   for pid in `cat ks`
@@ -21,6 +21,7 @@ dokill() {
     read a
     if nocase "$a" "Y"
     then
+      # Is sudo mandatory?
       sudo kill -15 $pid
     fi
   done
