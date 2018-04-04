@@ -26,9 +26,9 @@ void setup() {
   bg = loadImage("MeArm.jpg");
   imgFactor = Math.max((bg.width / 640f), (bg.height / 320f));
   
-  int left = MeArmPilot.DEFAULT_LEFT_SERVO_CHANNEL;
-  int right = MeArmPilot.DEFAULT_RIGHT_SERVO_CHANNEL;
-  int claw = MeArmPilot.DEFAULT_CLAW_SERVO_CHANNEL;
+  int left   = MeArmPilot.DEFAULT_LEFT_SERVO_CHANNEL;
+  int right  = MeArmPilot.DEFAULT_RIGHT_SERVO_CHANNEL;
+  int claw   = MeArmPilot.DEFAULT_CLAW_SERVO_CHANNEL;
   int bottom = MeArmPilot.DEFAULT_BOTTOM_SERVO_CHANNEL;
 
   try {

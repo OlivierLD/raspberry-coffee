@@ -157,7 +157,7 @@ dokill snap.loop.sh
 ##### And more
 - Added a camera
     - Snapshots posted on Adafruit-IO
-    - Also accessible through email request (See `weatherstation.email.EmailWatcher`). You send a request by email, and receive the snapshot attached to the response.
+    - Also accessible through email request (See `weatherstation.email.EmailWatcher`). You send a request by email, and receive the snapshot attached to the response. About that, do check out the email reader of `Node-RED`, it is really good.
 
 ---
 
