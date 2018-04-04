@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Stop the processes using kill.servers.sh
+#
 cd raspberry-pi4j-samples
 echo Starting multiplexer
 cd NMEA.multiplexer
