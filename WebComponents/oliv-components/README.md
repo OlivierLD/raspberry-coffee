@@ -25,7 +25,7 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 - Compass Rose. &#9989; Done
 - Digital Display. TODO
 - Date and Time display. TODO
-- Watch/Clock (analog). &#10140; WIP
+- Watch/Clock (analog). &#9989; Done
 - Marquee. &#10140; WIP
 - Evolution Displays. TODO
 - Graphs. TODO
