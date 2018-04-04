@@ -507,7 +507,9 @@ public class MeArmPilot {
 
 	public static void validateCommand(String cmd, int lineNo) {
 		String[] cmdAndPrms = cmd.split(":");
-		Optional<Commands> commandOptional = Arrays.stream(Commands.values()).filter(verb -> verb.command().equals(cmdAndPrms[0])).findFirst();
+		Optional<Commands> commandOptional = Arrays.stream(Commands.values())
+				.filter(verb -> verb.command().equals(cmdAndPrms[0]))
+				.findFirst();
 		if (!commandOptional.isPresent()) {
 			throw new RuntimeException(String.format("Line #%d, Command [%s] not found.", lineNo, cmdAndPrms[0]));
 		} else {
@@ -523,7 +525,9 @@ public class MeArmPilot {
 
 	public static void executeCommand(String cmd, int lineNo) {
 		String[] cmdAndPrms = cmd.split(":");
-		Optional<Commands> commandOptional = Arrays.stream(Commands.values()).filter(verb -> verb.command().equals(cmdAndPrms[0])).findFirst();
+		Optional<Commands> commandOptional = Arrays.stream(Commands.values())
+				.filter(verb -> verb.command().equals(cmdAndPrms[0]))
+				.findFirst();
 		if (!commandOptional.isPresent()) {
 			System.err.println(String.format("Line #%d, Command [%s] not found.", lineNo, cmdAndPrms[0]));
 			System.exit(1);
