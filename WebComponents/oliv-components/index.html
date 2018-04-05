@@ -54,6 +54,14 @@
 			transition: visibility 0.5s, height 0.5s, opacity 0.5s linear;
 		}
 
+		.mirror {
+			display: block;
+			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+			-moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+			-o-transform: matrix(-1, 0, 0, 1, 0, 0);
+			transform: matrix(-1, 0, 0, 1, 0, 0);
+		}
+
 	</style>
 
 	<script type="text/javascript">
@@ -369,7 +377,9 @@
 			document.getElementById(id).setDoAfter(function(worldMap, context) {
 				if (Object.keys(worldMap.userPosition).length > 0) {
 					let userPos = worldMap.getPanelPoint(worldMap.userPosition.latitude, worldMap.userPosition.longitude);
-					// Display geostationary satellites. Data provided by the user, below.
+					/*
+					 * Display 4 geostationary satellites. Data provided by the user, below.
+					 */
 					const sats = [
 						{name: "I-4 F1 Asia-Pacific", lng: 143.5},
 						{name: "I-4 F2 EMEA", lng: 63.0},
@@ -448,7 +458,13 @@
 </head>
 <body>
 
-	<h2>Web Components Samples</h2>
+	<table width="100%">
+		<tr>
+			<td><h2>Web Components Samples</h2></td>
+			<td><h2 class="mirror">Web Components Samples</h2></td>
+		</tr>
+	</table>
+	<hr/>
 	<h5>Pluviometer, Thermometer, Displays and other such marvels...</h5>
 	<!-- Page BG -->
 	Page Background
@@ -1880,6 +1896,12 @@
 	</div>
 	<hr/>
 
-  <span style="font-style: italic;" title="C'est MOI qui l'ai fait.">Oliv did it</span>
+	<table width="100%">
+		<tr>
+			<td><span style="font-style: italic;" title="C'est MOI qui l'ai fait.">Oliv did it</span></td>
+			<td><span class="mirror" style="font-style: italic;" title="C'est MOI qui l'ai fait.">Oliv did it</span></td>
+		</tr>
+	</table>
+
 </body>
 </html>
