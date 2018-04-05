@@ -156,6 +156,9 @@ class WorldMap extends HTMLElement {
 		this._previousClassName = "";
 		this.worldmapColorConfig = worldMapDefaultColorConfig;
 
+		this.doBefore = undefined; // Callback, before drawing. Takes 'this' and the context as parameter.
+		this.doAfter = undefined;  // Callback, after drawing. Takes 'this' and the context as parameter.
+
 		if (worldMapVerbose) {
 			console.log("Done with the Constructor");
 		}
@@ -378,6 +381,13 @@ class WorldMap extends HTMLElement {
 
 	toDegrees(rad) {
 		return rad * (180 / Math.PI);
+	}
+
+	setDoBefore(func) {
+		this.doBefore = func;
+	}
+	setDoAfter(func) {
+		this.doAfter = func;
 	}
 
 	setUserPosition(pos) {
@@ -920,7 +930,6 @@ class WorldMap extends HTMLElement {
 		this.drawWorldMap();
 	}
 
-	// TODO callback 'before'
 	drawGlobe(context) {
 		let minX = Number.MAX_VALUE;
 		let maxX = -Number.MAX_VALUE;
@@ -941,6 +950,7 @@ class WorldMap extends HTMLElement {
 		let __south = -90;
 		let __north = 90;
 
+		// Find min and max
 		while (go) {
 			for (let _lat = __south; _lat <= __north; _lat += 5) {
 				let rotated = this.rotateBothWays(this.toRadians(_lat), this.toRadians(gProgress));
@@ -1006,9 +1016,10 @@ class WorldMap extends HTMLElement {
 		context.fillStyle = this.worldmapColorConfig.globeBackground;
 		context.fillRect(0, 0, this.width, this.height);
 
-		// if (before !== undefined) {
-		// 	before(canvas, context);
-		// }
+		// Before (callback)
+		if (this.doBefore !== undefined) {
+			this.doBefore(this, context);
+		}
 
 		// Circle
 		let radius = Math.min(w / 2, h / 2) * this.defaultRadiusRatio;
@@ -1323,6 +1334,10 @@ class WorldMap extends HTMLElement {
 					});
 				}
 			}
+		}
+		// After (callback)
+		if (this.doAfter !== undefined) {
+			this.doAfter(this, context);
 		}
 	}
 
