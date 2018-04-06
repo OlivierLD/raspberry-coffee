@@ -2,9 +2,6 @@ FROM debian
 
 MAINTAINER Olivier LeDiouris <olivier@lediouris.net>
 
-ENV http_proxy http://www-proxy.us.oracle.com:80
-ENV https_proxy http://www-proxy.us.oracle.com:80
-
 # From the host to the image
 # COPY bashrc $HOME/.bashrc
 
@@ -23,13 +20,7 @@ RUN echo "java -version" >> $HOME/.bashrc
 RUN mkdir /workdir
 WORKDIR /workdir
 RUN git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
-WORKDIR /workdir/raspberry-pi4j-samples
-RUN ./gradlew tasks -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
-WORKDIR /workdir/raspberry-pi4j-samples/RESTNavServer
-RUN ../gradlew shadowJar -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
+WORKDIR /workdir/raspberry-pi4j-samples/WebComponents
 
-ENV http_proxy ""
-ENV https_proxy ""
-
-EXPOSE 9999
-CMD ["./runNavServer"]
+EXPOSE 8080
+CMD ["npm", "start"]

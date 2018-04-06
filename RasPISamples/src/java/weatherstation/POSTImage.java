@@ -51,8 +51,9 @@ public class POSTImage {
 
 		String img = sb.toString();
 
-		System.out.println(img);
-
+		if ("true".equals(System.getProperty("base64.verbose", "false"))) {
+			System.out.println(img);
+		}
 		if (key == null) {
 			System.out.println("... Provide a key (see doc).");
 			System.exit(1);
