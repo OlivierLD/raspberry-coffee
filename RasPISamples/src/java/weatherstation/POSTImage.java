@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class POSTImage {
-	private final static boolean DEBUG = true;
+	private final static boolean DEBUG = "true".equals(System.getProperty("base64.verbose", "false"));
 	private final static String FEED_NAME = "picture";
 
 	private static int postImage(String key, String base64) throws Exception {
@@ -51,7 +51,7 @@ public class POSTImage {
 
 		String img = sb.toString();
 
-		if ("true".equals(System.getProperty("base64.verbose", "false"))) {
+		if (DEBUG) {
 			System.out.println(img);
 		}
 		if (key == null) {
