@@ -22,4 +22,5 @@ WORKDIR /workdir
 RUN git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
 WORKDIR /workdir/raspberry-pi4j-samples/WebComponents
 
-CMD [“node server.js"]
+EXPOSE 9999
+CMD ["npm", "start"]
