@@ -3,7 +3,7 @@ FROM debian
 MAINTAINER Olivier LeDiouris <olivier@lediouris.net>
 
 # From the host to the image
-# COPY bashrc .bashrc
+# COPY bashrc $HOME/.bashrc
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 

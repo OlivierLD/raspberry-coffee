@@ -6,7 +6,7 @@ ENV http_proxy http://www-proxy.us.oracle.com:80
 ENV https_proxy http://www-proxy.us.oracle.com:80
 
 # From the host to the image
-# COPY bashrc .bashrc
+# COPY bashrc $HOME/.bashrc
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 

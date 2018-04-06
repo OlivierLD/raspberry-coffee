@@ -44,8 +44,9 @@ $ docker rmi oliv-image
 $ cp Dockerfile.web-components Dockerfile
 $ docker build -t oliv-image .
 $ docker run -p 8081:8080 -it oliv-image /bin/bash
- node server.js
+root@7e754f8732a0:/workdir/raspberry-pi4j-samples/WebComponents# node server.js
 ```
 
 Then reach `http://localhost:8081/oliv-components/index.html`
 
+etc, etc...
