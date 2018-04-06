@@ -2,7 +2,8 @@
   "name": "oliv-web-components",
   "version": "1.0.0",
   "scripts": {
-    "build": "babel oliv-components/widgets -d oliv-components/lib"
+    "build": "babel oliv-components/widgets -d oliv-components/lib",
+    "start": "node server.js"
   },
   "devDependencies": {
     "babel-cli": "^6.0.0",

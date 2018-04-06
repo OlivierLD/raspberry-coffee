@@ -23,7 +23,7 @@ object ScalaSimulator {
             loggers :+= logClass.newInstance
           } catch {
             case ex: Exception =>
-              ex.printStackTrace()
+              ex printStackTrace
           }
         }
       }
