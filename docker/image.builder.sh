@@ -2,18 +2,86 @@
 #
 # Build and run a docker image
 #
-cp Dockerfile.webcomponents Dockerfile
-# cp Dockerfile.navserver Dockerfile
+OK=false
+DOCKER_FILE=
+IMAGE_NAME=
+RUN_CMD=
+MESSAGE="Bye!"
 #
-# Proxies,if needed
-# export HTTP_PROXY=http://www-proxy.us.oracle.com:80
-# export HTTPS_PROXY=http://www-proxy.us.oracle.com:80
+while [ "$OK" = "false" ]
+do
+  # Menu
+  echo -e "1. Nav Server, Debian"
+  echo -e "2. Web Components, Debian"
+  echo -e "3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components"
+  echo -e "4. Node PI, to run on a Raspberry PI"
+  echo -e "5. Node PI, to run on Debian"
+  echo -e "Q. Nothing, thanks."
+  echo -en "You choose > "
+  read a
+  #
+  case "$a" in
+    "Q" | "q")
+      OK=true
+      ;;
+    "1")
+      OK=true
+      DOCKER_FILE=Dockerfile.navserver
+      IMAGE_NAME=oliv-nav
+			RUN_CMD="docker run -p 8081:8080 -d $IMAGE_NAME:latest"
+      MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser."
+      ;;
+    "2")
+      OK=true
+      DOCKER_FILE=Dockerfile.webcomponents
+      IMAGE_NAME=oliv-webcomp
+			RUN_CMD="docker run -p 9999:9999 -d $IMAGE_NAME:latest"
+      MESSAGE="Reach http://localhost:9999/index.html from your browser."
+      ;;
+    "3")
+      OK=true
+      DOCKER_FILE=Dockerfile.rpi
+      IMAGE_NAME=oliv-rpi
+			RUN_CMD="docker run -p 8081:8080 -d $IMAGE_NAME:latest"
+      MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser."
+      ;;
+    "4")
+      OK=true
+      DOCKER_FILE=Dockerfile.node-pi
+      IMAGE_NAME=oliv-nodepi
+	  	RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
+	# 	RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
+      MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
+      ;;
+    "5")
+      OK=true
+      DOCKER_FILE=Dockerfile.node-debian
+      IMAGE_NAME=oliv-nodedebian
+			# RUN_CMD="docker run -p 9876:9876 --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 9876:9876 -d $IMAGE_NAME:latest"
+      MESSAGE="Reach http://localhost:9876/data/demos/gps.demo.html in your browser"
+      ;;
+    *)
+      echo -e "Unknown command [$a]"
+      ;;
+  esac
+  #
+done
 #
-IMAGE_NAME=oliv-image
-# IMAGE_NAME=oliv-nav
 #
-docker build -t $IMAGE_NAME .
-#
-# Now run
-docker run -p 8081:8080 -d $IMAGE_NAME:latest
-echo Reach http://localhost:8081/oliv-components/index.html from your browser.
+if [ "$DOCKER_FILE" != "" ]
+then
+  cp $DOCKER_FILE Dockerfile
+  #
+  # Proxies,if needed
+  # export HTTP_PROXY=http://www-proxy.us.oracle.com:80
+  # export HTTPS_PROXY=http://www-proxy.us.oracle.com:80
+  #
+  echo -e "Generating $IMAGE_NAME"
+  #
+  docker build -t $IMAGE_NAME .
+  #
+  # Now run
+  $RUN_CMD
+fi
+echo $MESSAGE

@@ -1,4 +1,4 @@
-FROM debian
+FROM resin/raspberrypi3-debian:latest
 
 MAINTAINER Olivier LeDiouris <olivier@lediouris.net>
 
