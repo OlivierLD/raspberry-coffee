@@ -11,13 +11,15 @@ MESSAGE="Bye!"
 while [ "$OK" = "false" ]
 do
   # Menu
-  echo -e "1. Nav Server, Debian"
-  echo -e "2. Web Components, Debian"
-  echo -e "3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components"
-  echo -e "4. Node PI, to run on a Raspberry PI"
-  echo -e "5. Node PI, to run on Debian"
-  echo -e "Q. Nothing, thanks."
-  echo -en "You choose > "
+  echo -e "+---------------------- I M A G E   B U I L D E R --------------------+"
+  echo -e "| 1. Nav Server, Debian                                               |"
+  echo -e "| 2. Web Components, Debian                                           |"
+  echo -e "| 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
+  echo -e "| 4. Node PI, to run on a Raspberry PI                                |"
+  echo -e "| 5. Node PI, to run on Debian                                        |"
+  echo -e "| Q. Oops, nothing, thanks.                                           |"
+  echo -e "+---------------------------------------------------------------------+"
+  echo -en "== You choose => "
   read a
   #
   case "$a" in
@@ -49,9 +51,10 @@ do
       OK=true
       DOCKER_FILE=Dockerfile.node-pi
       IMAGE_NAME=oliv-nodepi
-	  	RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
-	# 	RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
-      MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
+			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
+			RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
+      # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
+      MESSAGE="Reach http://localhost:9876/data/demos/gps.demo.html in your browser"
       ;;
     "5")
       OK=true
@@ -62,7 +65,7 @@ do
       MESSAGE="Reach http://localhost:9876/data/demos/gps.demo.html in your browser"
       ;;
     *)
-      echo -e "Unknown command [$a]"
+      echo -e "What? Unknown command [$a]"
       ;;
   esac
   #
