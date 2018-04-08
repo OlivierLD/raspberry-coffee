@@ -54,7 +54,12 @@ do
 			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
 			RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
-      MESSAGE="Reach http://localhost:9876/data/demos/gps.demo.html in your browser"
+			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
+			if [ "$IP_ADDR" = "" ]
+			then
+			  IP_ADDR="localhost"
+			fi
+      MESSAGE="Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser"
       ;;
     "5")
       OK=true
