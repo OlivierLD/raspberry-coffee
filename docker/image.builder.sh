@@ -11,7 +11,7 @@ MESSAGE="Bye!"
 while [ "$OK" = "false" ]
 do
   # Menu
-  echo -e "+---------------------- I M A G E   B U I L D E R --------------------+"
+  echo -e "+-------------- D O C K E R  I M A G E  B U I L D E R ----------------+"
   echo -e "| 1. Nav Server, Debian                                               |"
   echo -e "| 2. Web Components, Debian                                           |"
   echo -e "| 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
@@ -62,7 +62,12 @@ do
       IMAGE_NAME=oliv-nodedebian
 			# RUN_CMD="docker run -p 9876:9876 --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
 			RUN_CMD="docker run -p 9876:9876 -d $IMAGE_NAME:latest"
-      MESSAGE="Reach http://localhost:9876/data/demos/gps.demo.html in your browser"
+			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
+			if [ "$IP_ADDR" = "" ]
+			then
+			  IP_ADDR="localhost"
+			fi
+      MESSAGE="Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser"
       ;;
     *)
       echo -e "What? Unknown command [$a]"
