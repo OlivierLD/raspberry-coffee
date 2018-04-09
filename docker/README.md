@@ -28,7 +28,7 @@ f36550370ea8        445821efd8a0        "/bin/sh -c 'echo “g…"   44 minutes 
 ```
 
 
-Get the CONTAINER ID like a335f585deb0
+Get the CONTAINER ID like `a335f585deb0`
 ```bash
 $ docker stop a335f585deb0
 ```
@@ -50,3 +50,5 @@ root@7e754f8732a0:/workdir/raspberry-pi4j-samples/WebComponents# node server.js
 Then reach `http://localhost:8081/oliv-components/index.html`
 
 etc, etc...
+
+Several images can be built from the script `image.builder.sh`.
