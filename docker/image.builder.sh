@@ -31,6 +31,10 @@ do
       DOCKER_FILE=Dockerfile.navserver
       IMAGE_NAME=oliv-nav
 			RUN_CMD="docker run -p 8081:8080 -d $IMAGE_NAME:latest"
+			#                      |    |
+			#                      |    tcp port used in the image
+			#                      tcp port as seen from outside
+			#
       MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser."
       ;;
     "2")
@@ -38,6 +42,10 @@ do
       DOCKER_FILE=Dockerfile.webcomponents
       IMAGE_NAME=oliv-webcomp
 			RUN_CMD="docker run -p 9999:9999 -d $IMAGE_NAME:latest"
+			#                      |    |
+			#                      |    tcp port used in the image
+			#                      tcp port as seen from outside
+			#
       MESSAGE="Reach http://localhost:9999/index.html from your browser."
       ;;
     "3")
@@ -45,6 +53,10 @@ do
       DOCKER_FILE=Dockerfile.rpi
       IMAGE_NAME=oliv-rpi
 			RUN_CMD="docker run -p 8081:8080 -d $IMAGE_NAME:latest"
+			#                      |    |
+			#                      |    tcp port used in the image
+			#                      tcp port as seen from outside
+			#
       MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser."
       ;;
     "4")
@@ -53,6 +65,13 @@ do
       IMAGE_NAME=oliv-nodepi
 			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
 			RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
+			#                      |    |            |             |             |
+			#                      |    |            |             |             Device IN the docker image
+			#                      |    |            |             Device name in the host (RPi) machine
+			#                      |    |            sudo access to the Serial Port
+			#                      |    tcp port IN the docker image
+			#                      tcp port as seen from outside
+			#
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
 			if [ "$IP_ADDR" = "" ]
@@ -67,6 +86,10 @@ do
       IMAGE_NAME=oliv-nodedebian
 			# RUN_CMD="docker run -p 9876:9876 --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
 			RUN_CMD="docker run -p 9876:9876 -d $IMAGE_NAME:latest"
+			#                      |    |
+			#                      |    tcp port used in the image
+			#                      tcp port as seen from outside
+			#
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
 			if [ "$IP_ADDR" = "" ]
 			then
