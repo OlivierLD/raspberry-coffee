@@ -372,6 +372,133 @@
 			document.getElementById(id).repaint();
 		}
 
+		// Depends on the user position... Would not turn with the globe.
+		const gpsSatelliteData = {
+			"1":{
+				"svID":1,
+				"elevation":26,
+				"azimuth":316,
+				"snr":0
+			},
+			"3":{
+				"svID":3,
+				"elevation":4,
+				"azimuth":284,
+				"snr":0
+			},
+			"8":{
+				"svID":8,
+				"elevation":27,
+				"azimuth":251,
+				"snr":6
+			},
+			"10":{
+				"svID":10,
+				"elevation":43,
+				"azimuth":75,
+				"snr":0
+			},
+			"11":{
+				"svID":11,
+				"elevation":32,
+				"azimuth":303,
+				"snr":0
+			},
+			"14":{
+				"svID":14,
+				"elevation":84,
+				"azimuth":250,
+				"snr":0
+			},
+			"18":{
+				"svID":18,
+				"elevation":16,
+				"azimuth":92,
+				"snr":0
+			},
+			"22":{
+				"svID":22,
+				"elevation":22,
+				"azimuth":291,
+				"snr":0
+			},
+			"24":{
+				"svID":24,
+				"elevation":1,
+				"azimuth":33,
+				"snr":0
+			},
+			"27":{
+				"svID":27,
+				"elevation":16,
+				"azimuth":212,
+				"snr":6
+			},
+			"31":{
+				"svID":31,
+				"elevation":31,
+				"azimuth":157,
+				"snr":0
+			},
+			"32":{
+				"svID":32,
+				"elevation":69,
+				"azimuth":37,
+				"snr":0
+			}
+		};
+
+		function plotSatellite(context, worldMap, userPos, satColor, name, satellite) {
+			let sat = worldMap.getPanelPoint(satellite.lat, satellite.lng);
+			let thisPointIsBehind = worldMap.isBehind(worldMap.toRadians(satellite.lat), worldMap.toRadians(satellite.lng - worldMap.globeViewLngOffset));
+			if (!thisPointIsBehind || worldMap.transparentGlobe) {
+				// Draw Satellite
+				worldMap.plot(context, sat, satColor);
+				context.fillStyle = satColor;
+				context.fillText(name, Math.round(sat.x) + 3, Math.round(sat.y) - 3);
+				// Arrow, to the satellite
+				context.setLineDash([2]);
+				context.strokeStyle = satColor;
+				context.beginPath();
+				context.moveTo(userPos.x, userPos.y);
+				context.lineTo(sat.x, sat.y);
+				context.stroke();
+				context.closePath();
+				context.setLineDash([0]); // Reset
+				context.strokeStyle = satColor;
+				let deltaX = sat.x - userPos.x;
+				let deltaY = sat.y - userPos.y;
+				context.beginPath();
+				context.moveTo(sat.x, sat.y);
+				context.lineTo(sat.x + deltaX, sat.y + deltaY);
+				context.stroke();
+				context.closePath();
+				worldMap.fillCircle(context, {x: sat.x + deltaX, y: sat.y + deltaY}, 6, satColor);
+			}
+		}
+
+		function getSNRColor(snr) {
+			var c = 'lightGray';
+			if (snr !== undefined && snr !== null) {
+				if (snr > 0) {
+					c = 'red';
+				}
+				if (snr > 10) {
+					c = 'orange';
+				}
+				if (snr > 20) {
+					c = 'yellow';
+				}
+				if (snr > 30) {
+					c = 'lightGreen';
+				}
+				if (snr > 40) {
+					c = 'green';
+				}
+			}
+			return c;
+		}
+
 		// Example of callback on WorldMap
 		function callAfter(id) {
 			document.getElementById(id).setDoAfter(function(worldMap, context) {
@@ -387,33 +514,21 @@
 						{name: "Alphasat", lng: 24.9}];
 					let satColor = 'cyan';
 					sats.forEach(gs => {
-						let sat = worldMap.getPanelPoint(0, gs.lng);
-						let thisPointIsBehind = worldMap.isBehind(worldMap.toRadians(0), worldMap.toRadians(gs.lng - worldMap.globeViewLngOffset));
-						if (!thisPointIsBehind || worldMap.transparentGlobe) {
-							// Draw Satellite
-							worldMap.plot(context, sat, satColor);
-							context.fillStyle = satColor;
-							context.fillText(gs.name, Math.round(sat.x) + 3, Math.round(sat.y) - 3);
-							// Arrow, to the satellite
-							context.setLineDash([2]);
-							context.strokeStyle = satColor;
-							context.beginPath();
-							context.moveTo(userPos.x, userPos.y);
-							context.lineTo(sat.x, sat.y);
-							context.stroke();
-							context.closePath();
-							context.setLineDash([0]); // Reset
-							context.strokeStyle = satColor;
-							let deltaX = sat.x - userPos.x;
-							let deltaY = sat.y - userPos.y;
-							context.beginPath();
-							context.moveTo(sat.x, sat.y);
-							context.lineTo(sat.x + deltaX, sat.y + deltaY);
-							context.stroke();
-							context.closePath();
-							worldMap.fillCircle(context, {x: sat.x + deltaX, y: sat.y + deltaY}, 6, satColor);
-						}
+						plotSatellite(context, worldMap, userPos, satColor, gs.name, { lat: 0, lng: gs.lng });
 					})
+
+					// GPS Satellites in view
+					for (var sat in gpsSatelliteData) {
+						let satellite = gpsSatelliteData[sat];
+						let satellitePosition = worldMap.deadReckoning({
+							lat: worldMap.toRadians(worldMap.userPosition.latitude),
+							lng: worldMap.toRadians(worldMap.userPosition.longitude)
+						}, (90 - satellite.elevation) * 60, satellite.azimuth);
+						plotSatellite(context, worldMap, userPos, getSNRColor(satellite.snr), sat, {
+							lat: worldMap.toDegrees(satellitePosition.lat),
+							lng: worldMap.toDegrees(satellitePosition.lng)
+						});
+					}
 				}
 			});
 			document.getElementById(id).repaint();
@@ -454,6 +569,7 @@
 			let cell = document.getElementById(id);
 			cell.style.backgroundColor = color;
 		}
+
 	</script>
 </head>
 <body>
