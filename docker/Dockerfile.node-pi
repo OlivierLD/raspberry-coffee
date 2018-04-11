@@ -6,14 +6,18 @@ MAINTAINER Olivier LeDiouris <olivier@lediouris.net>
 ADD nodepi.banner.sh /
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
-RUN chmod +x /nodepi.banner.sh
-RUN echo "/nodepi.banner.sh" >> $HOME/.bashrc
+# RUN chmod +x /nodepi.banner.sh
+# RUN echo "/nodepi.banner.sh" >> $HOME/.bashrc
 
 RUN apt-get update
+RUN apt-get install sysvbanner
 RUN apt-get install -y curl git build-essential
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y nodejs
 
+RUN useradd -ms /bin/bash oliv
+
+USER oliv
 RUN echo "git --version" >> $HOME/.bashrc
 RUN echo "echo -n 'node:' && node -v" >> $HOME/.bashrc
 RUN echo "echo -n 'npm:' && npm -v" >> $HOME/.bashrc
