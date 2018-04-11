@@ -1,11 +1,16 @@
 FROM debian
 
-MAINTAINER Olivier LeDiouris <olivier@lediouris.net>
+LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
+
+# ENV http_proxy http://www-proxy.us.oracle.com:80
+# ENV https_proxy http://www-proxy.us.oracle.com:80
 
 # From the host to the image
-# COPY bashrc $HOME/.bashrc
+ADD nodepi.banner.sh /
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
+RUN chmod +x /nodepi.banner.sh
+RUN echo "/nodepi.banner.sh" >> $HOME/.bashrc
 
 RUN apt-get update
 RUN apt-get install -y curl git build-essential

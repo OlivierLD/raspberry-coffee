@@ -71,10 +71,10 @@ To enable everything, you need to:
 1. Start the `node` server with the right script
 1. Access the Raspberry PI from another machine on the same network, and reach the right HTML page.
 
-This is certainly not difficult, but there are many ways to make several mistakes at each step
+This is certainly not difficult, but there are many ways to do several mistakes at each step
 of the process.
 
-`Docker` can take care of the stg\eps `3` to `9`.
+`Docker` can take care of the steps `3` to `9`.
 It will build the image, and then run it.
 The image can also be pushed to a repository, so user users would not have to build it.
 Just to run it after downloading it.
@@ -87,7 +87,7 @@ In this case, the full `Docker` image creation (named `oliv-nodepi` below) comes
  $ cp Dockerfile.node-pi Dockerfile
  $ docker build -t oliv-nodepi .
 ```
-The `cp` operation above is required here because we have several `Dockerfile`s avaialbel, to create several different images.
+The `cp` operation above is required here because we have several `Dockerfile`s available, to create several different images.
 
 Once the step above is completed, plug in your GPS, and run
 ```bash
@@ -99,7 +99,7 @@ reach http://raspi:9876/data/demos/gps.demo.wc.html in a browser.
 ![Running](DockerAtWork.png)
 
 The build operation needs to be done once. There is no need to do it again as long as no
-change in the image os required.
+change in the image is required.
 
 
 --------------------------------------------------------------------------
