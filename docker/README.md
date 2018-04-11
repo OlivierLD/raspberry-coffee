@@ -87,6 +87,8 @@ In this case, the full `Docker` image creation (named `oliv-nodepi` below) comes
  $ cp Dockerfile.node-pi Dockerfile
  $ docker build -t oliv-nodepi .
 ```
+The `cp` operation above is required here because we have several `Dockerfile`s avaialbel, to create several different images.
+
 Once the step above is completed, plug in your GPS, and run
 ```bash
  $ docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d oliv-nodepi:latest
