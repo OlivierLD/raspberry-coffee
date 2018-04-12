@@ -1,6 +1,6 @@
 FROM resin/raspberrypi3-debian:latest
 
-MAINTAINER Olivier LeDiouris <olivier@lediouris.net>
+LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
 # From the host to the image
 ADD nodepi.banner.sh /
