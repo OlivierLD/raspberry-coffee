@@ -120,6 +120,7 @@ Removing intermediate container 153bf2ea02ad
 Successfully built 6bf3d76d38ae
 Successfully tagged oliv-nodepi:latest
 ed9a7d9042dddd3939b1788cf0e89d16f5273192a6456266507f072f90ce91bc
+ $
 ```
 The `cp` operation above is required here because we have several `Dockerfile`s available, to create several different images.
 
@@ -132,10 +133,12 @@ reach http://raspi:9876/data/demos/gps.demo.wc.html in a browser.
 
 ![Running](DockerAtWork.png)
 
+This shows you the position the GPS has computed, and the satellites in sight.
+
 You can also login to the image:
 ```bash
  $ docker run -it oliv-nodepi:latest /bin/bash
-hostname: you must be root to change the host name
+
 #     #                                 ######    ###
 ##    #   ####   #####   ######         #     #    #
 # #   #  #    #  #    #  #              #     #    #
@@ -148,6 +151,7 @@ git version 2.1.4
 node:v9.11.1
 npm:5.6.0
 root@b9679d0d65a7:/workdir/node.pi#
+
 ```
 ... and do whatever you like.
 
