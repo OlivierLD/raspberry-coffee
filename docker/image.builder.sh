@@ -107,15 +107,15 @@ done
 #
 if [ "$DOCKER_FILE" != "" ]
 then
-  cp $DOCKER_FILE Dockerfile
+# cp $DOCKER_FILE Dockerfile
   #
   # Proxies,if needed
   # export HTTP_PROXY=http://www-proxy.us.oracle.com:80
   # export HTTPS_PROXY=http://www-proxy.us.oracle.com:80
   #
-  echo -e "Generating $IMAGE_NAME"
+  echo -e "Generating $IMAGE_NAME from $DOCKER_FILE"
   #
-  docker build -t $IMAGE_NAME .
+  docker build -f $DOCKER_FILE -t $IMAGE_NAME .
   #
   # Now run
   $RUN_CMD
