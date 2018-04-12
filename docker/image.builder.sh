@@ -35,7 +35,7 @@ do
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside
 			#
-      MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser."
+      MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
       ;;
     "2")
       OK=true
@@ -46,7 +46,7 @@ do
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside
 			#
-      MESSAGE="Reach http://localhost:9999/index.html from your browser."
+      MESSAGE="Reach http://localhost:9999/index.html from your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
       ;;
     "3")
       OK=true
@@ -57,7 +57,7 @@ do
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside
 			#
-      MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser."
+      MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
       ;;
     "4")
       OK=true
@@ -78,7 +78,7 @@ do
 			then
 			  IP_ADDR="localhost"
 			fi
-      MESSAGE="Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser"
+      MESSAGE="Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
       ;;
     "5")
       OK=true
@@ -95,7 +95,7 @@ do
 			then
 			  IP_ADDR="localhost"
 			fi
-      MESSAGE="Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser"
+      MESSAGE="Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
       ;;
     *)
       echo -e "What? Unknown command [$a]"

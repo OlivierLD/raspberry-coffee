@@ -56,12 +56,12 @@ Several images can be built from the script `image.builder.sh`.
 ### Case Study
 You have a `nodejs` project you want to share with others.
 
-The application read GPS data through a Serial port, and feeds a `WebSocket` server.
-The data can then be visualized thnrough a Web interface.
+The application reads GPS data through a Serial port, and feeds a `WebSocket` server.
+The data can then be visualized through a Web interface.
 
 To enable everything, you need to:
 1. Have a Raspberry PI
-1. Flash its SD card
+1. Flash its SD card and connect it to a network
 1. Install build tools
 1. Install `git`
 1. Install `NodeJS` and `npm`
@@ -76,7 +76,7 @@ of the process.
 
 `Docker` can take care of the steps `3` to `9`.
 It will build the image, and then run it.
-The image can also be pushed to a repository, so user users would not have to build it.
+The image can also be pushed to a repository, so users would not have to build it.
 Just to run it after downloading it.
 
 The only pre-requisite would be to have installed `Docker` on the machine (the Raspberry PI here),
@@ -122,8 +122,6 @@ Successfully tagged oliv-nodepi:latest
 ed9a7d9042dddd3939b1788cf0e89d16f5273192a6456266507f072f90ce91bc
  $
 ```
-The `cp` operation above is required here because we have several `Dockerfile`s available, to create several different images.
-
 Once the step above is completed, plug in your GPS, and run
 ```bash
  $ docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d oliv-nodepi:latest
