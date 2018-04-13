@@ -53,91 +53,95 @@ const tropicLat = 23.43698;
 var getWorldmapColorConfig = function() {
 	var colorConfig = defaultWorldmapColorConfig;
 	for (var s=0; s<document.styleSheets.length; s++) {
-		for (var r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
-			if (document.styleSheets[s].cssRules[r].selectorText === '.worldmapdisplay') {
-				var cssText = document.styleSheets[s].cssRules[r].style.cssText;
-				var cssTextElems = cssText.split(";");
-				cssTextElems.forEach(function(elem) {
-					if (elem.trim().length > 0) {
-						var keyValPair = elem.split(":");
-						var key = keyValPair[0].trim();
-						var value = keyValPair[1].trim();
-						switch (key) {
-							case '--canvasBackground':
-								colorConfig.canvasBackground = value;
-								break;
-							case '--defaultPlotPointColor':
-								colorConfig.defaultPlotPointColor = value;
-								break;
-							case '--travelColor':
-								colorConfig.travelColor = value;
-								break;
-							case '--arrowBodyColor':
-								colorConfig.arrowBodyColor = value;
-								break;
-							case '--globeBackground':
-								colorConfig.globeBackground = value;
-								break;
-							case '--globeGradientFrom':
-								colorConfig.globeGradientFrom = value;
-								break;
-							case '--globeGradientTo':
-								colorConfig.globeGradientTo = value;
-								break;
-							case '--gridColor':
-								colorConfig.gridColor = value;
-								break;
-							case '--tropicColor':
-								colorConfig.tropicColor = value;
-								break;
-							case '--chartLineWidth':
-								colorConfig.chartLineWidth = value;
-								break;
-							case '--chartColor':
-								colorConfig.chartColor = value;
-								break;
-							case '--userPosColor':
-								colorConfig.userPosColor = value;
-								break;
-							case '--sunColor':
-								colorConfig.sunColor = value;
-								break;
-							case '--sunArrowColor':
-								colorConfig.sunArrowColor = value;
-								break;
-							case '--moonArrowColor':
-								colorConfig.moonArrowColor = value;
-								break;
-							case '--ariesColor':
-								colorConfig.ariesColor = value;
-								break;
-							case '--venusColor':
-								colorConfig.venusColor = value;
-								break;
-							case '--marsColor':
-								colorConfig.marsColor = value;
-								break;
-							case '--jupiterColor':
-								colorConfig.jupiterColor = value;
-								break;
-							case '--saturnColor':
-								colorConfig.saturnColor = value;
-								break;
-							case '--starsColor':
-								colorConfig.starsColor = value;
-								break;
-							case '--nightColor':
-								colorConfig.nightColor = value;
-								break;
-							case '--displayPositionColor':
-								colorConfig.displayPositionColor = value;
-								break;
-							default:
-								break;
+		try {
+			for (var r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
+				if (document.styleSheets[s].cssRules[r].selectorText === '.worldmapdisplay') {
+					var cssText = document.styleSheets[s].cssRules[r].style.cssText;
+					var cssTextElems = cssText.split(";");
+					cssTextElems.forEach(function (elem) {
+						if (elem.trim().length > 0) {
+							var keyValPair = elem.split(":");
+							var key = keyValPair[0].trim();
+							var value = keyValPair[1].trim();
+							switch (key) {
+								case '--canvasBackground':
+									colorConfig.canvasBackground = value;
+									break;
+								case '--defaultPlotPointColor':
+									colorConfig.defaultPlotPointColor = value;
+									break;
+								case '--travelColor':
+									colorConfig.travelColor = value;
+									break;
+								case '--arrowBodyColor':
+									colorConfig.arrowBodyColor = value;
+									break;
+								case '--globeBackground':
+									colorConfig.globeBackground = value;
+									break;
+								case '--globeGradientFrom':
+									colorConfig.globeGradientFrom = value;
+									break;
+								case '--globeGradientTo':
+									colorConfig.globeGradientTo = value;
+									break;
+								case '--gridColor':
+									colorConfig.gridColor = value;
+									break;
+								case '--tropicColor':
+									colorConfig.tropicColor = value;
+									break;
+								case '--chartLineWidth':
+									colorConfig.chartLineWidth = value;
+									break;
+								case '--chartColor':
+									colorConfig.chartColor = value;
+									break;
+								case '--userPosColor':
+									colorConfig.userPosColor = value;
+									break;
+								case '--sunColor':
+									colorConfig.sunColor = value;
+									break;
+								case '--sunArrowColor':
+									colorConfig.sunArrowColor = value;
+									break;
+								case '--moonArrowColor':
+									colorConfig.moonArrowColor = value;
+									break;
+								case '--ariesColor':
+									colorConfig.ariesColor = value;
+									break;
+								case '--venusColor':
+									colorConfig.venusColor = value;
+									break;
+								case '--marsColor':
+									colorConfig.marsColor = value;
+									break;
+								case '--jupiterColor':
+									colorConfig.jupiterColor = value;
+									break;
+								case '--saturnColor':
+									colorConfig.saturnColor = value;
+									break;
+								case '--starsColor':
+									colorConfig.starsColor = value;
+									break;
+								case '--nightColor':
+									colorConfig.nightColor = value;
+									break;
+								case '--displayPositionColor':
+									colorConfig.displayPositionColor = value;
+									break;
+								default:
+									break;
+							}
 						}
-					}
-				});
+					});
+				}
 			}
+		} catch (err) {
+			// Absorb?
 		}
 	}
 	return colorConfig;
@@ -172,7 +176,7 @@ var defaultWorldmapColorConfig = {
 
 var worldmapColorConfig = defaultWorldmapColorConfig;
 
-/** 
+/**
  * @param cName
  * @param prj
  * @constructor
