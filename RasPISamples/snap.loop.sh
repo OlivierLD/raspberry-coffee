@@ -9,7 +9,7 @@ PATH=$PATH:/usr/local/bin
 #
 CP=./build/libs/RasPISamples-1.0-all.jar
 #
-WEATHER_STATION_IP=192.168.42.2
+WEATHER_STATION_IP=192.168.42.13
 #
 while true
 do
@@ -31,7 +31,7 @@ do
   # PROXY="-Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
   #
   # Upload encoded image to the IoT server
-  java -cp $CP $PROXY -Dkey=[yada-yada-dead-monkey] weatherstation.POSTImage web/encoded.txt
+  java -cp $CP $PROXY -Dkey=54c2767878ca793f2e3cae1c45d62aa7ae9f8056 weatherstation.POSTImage web/encoded.txt
   #
   sleep 600 # 600s: 10 minutes
 done
