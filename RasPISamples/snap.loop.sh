@@ -9,15 +9,17 @@ PATH=$PATH:/usr/local/bin
 #
 CP=./build/libs/RasPISamples-1.0-all.jar
 #
+WEATHER_STATION_IP=192.168.42.13
+#
 while true
 do
   # If needed, add rot parameter (default is 0)
   # Send HTTP request to take the snapshot
-  curl http://192.168.42.2:8080/snap?rot=270
+  curl http://$WEATHER_STATION_IP:8080/snap?rot=270
   NOW=$(date +"%Y_%m_%d_%H_%M_%S")
   IMG_NAME=snap-$NOW.jpg
   # Download the snapshot from the Raspberry PI
-  sshpass -p 'pi' scp pi@192.168.42.2:~/raspberry-pi4j-samples/RasPISamples/web/snap-test.jpg ./web/$IMG_NAME
+  sshpass -p 'pi' scp pi@$WEATHER_STATION_IP:~/raspberry-pi4j-samples/RasPISamples/web/snap-test.jpg ./web/$IMG_NAME
   # open web
   echo see $IMG_NAME in the 'web' directory.
   #

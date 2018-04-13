@@ -116,8 +116,9 @@ public class HttpClient {
 		}
 		conn.disconnect();
 		String postContent = new String(content);
-		System.out.println(String.format("POST returns %s",  postContent));
-
+		if (DEBUG) {
+			System.out.println(String.format("POST returns %s", postContent));
+		}
 		return responseCode;
 	}
 
