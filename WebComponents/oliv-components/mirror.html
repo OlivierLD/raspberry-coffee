@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Mirror, for Headsup Display</title>
+	<link rel="icon" type="image/png" href="../logo-192x192.png">
+
+	<!--link rel="stylesheet" href="css/stylesheet.css"-->
+	<link rel="stylesheet" href="css/web-components.css">
+	<script type="module" src="widgets/AnalogWatch.js"></script>
+
+	<style>
+		html body {
+			height: 100%;
+			background-color: black;
+		}
+
+		.body-black {
+			color: yellow;
+			font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
+			/* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
+			background: black radial-gradient(at top, DarkGrey -8%, black 55%) no-repeat;
+			background-size: 100% 100%;
+		}
+
+		.body-white {
+			color: black;
+			font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
+			/* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
+			background: white radial-gradient(at top, LightGrey -8%, white 55%) no-repeat;
+			background-size: 100% 100%;
+		}
+
+		.body-black td {
+			border: 2px solid cyan;
+			border-radius: 15px;
+			padding: 10px;
+			vertical-align: top;
+		}
+
+		.body-white td {
+			border: 2px solid gray;
+			border-radius: 15px;
+			padding: 10px;
+			vertical-align: top;
+		}
+
+		.mirror {
+			display: block;
+			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+			-moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+			-o-transform: matrix(-1, 0, 0, 1, 0, 0);
+			transform: matrix(-1, 0, 0, 1, 0, 0);
+		}
+
+		.upside-down {
+			height: 100%;
+			width: 100%;
+			-moz-transform: rotate(180deg);
+			-webkit-transform: rotate(180deg);
+			-ms-transform: rotate(180deg);
+			-o-transform: rotate(180deg);
+			transform: rotate(180deg);
+		}
+
+		.mirror-upside-down {
+			display: block;
+			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg);
+			-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg);
+			-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg);
+			transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg);
+		}
+
+		.nothing {
+			display: block;
+		}
+
+		.big {
+			font-size: 60px;
+			font-weight: bold;
+		}
+
+		.centered {
+			text-align: center;
+		}
+
+		.smooth {
+			height: 0;
+			visibility: hidden;
+			opacity: 0;
+			transition: visibility 0.5s, height 0.5s, opacity 0.5s linear;
+		}
+
+	</style>
+
+	<script type="text/javascript">
+
+		function setStyle(opt) {
+			document.getElementById('the-div').className = opt + ' big';
+		}
+
+		function setColor(opt) {
+			console.log("Choosen:", opt);
+			document.body.className = opt;
+		}
+
+		function setData(from, to) {
+			let elem = document.getElementById(to);
+			let value = document.getElementById(from).value; // Field to read to get the value
+			if (value.length !== 0) {
+				elem.value = value;                            // value corresponds to the 'set value(val) { ...', invokes the setter in the HTMLElement class
+			}
+		}
+
+		function setBorder(cb, id) {
+			document.getElementById(id).withBorder = cb.checked;
+		}
+	</script>
+
+</head>
+
+<body class="body-black">
+
+<div>
+	<span style="font-weight: bold;">Tests for a Headsup Display</span>
+	<span>
+		<select onchange="setColor(this.value);">
+			<option value="body-black">Black Background</option>
+			<option value="body-white">White Background</option>
+		</select>
+		<!--select onchange="setStyle(this.value);">
+			<option value="mirror-upside-down">Mirror &amp; Upside down</option>
+			<option value="upside-down">Upside down</option>
+			<option value="mirror">Mirror</option>
+			<option value="nothing">No Effect</option>
+		</select-->
+		&nbsp;&nbsp;
+		<input name="effect" type="radio" value="nothing" onchange="setStyle(this.value);" checked>No effect&nbsp;&nbsp;
+		<input name="effect" type="radio" value="mirror" onchange="setStyle(this.value);">Mirror&nbsp;&nbsp;
+		<input name="effect" type="radio" value="upside-down" onchange="setStyle(this.value);">Upside down&nbsp;&nbsp;
+		<input name="effect" type="radio" value="mirror-upside-down" onchange="setStyle(this.value);">Mirror &amp; Upside down
+	</span>
+</div>
+
+<div id="the-div" class="nothing big" style="padding: 0px; text-align: center;">
+	<hr/>
+	<table>
+		<tr>
+			<td colspan="2">GPS Data</td>
+		</tr>
+		<tr>
+			<td>
+				<span>Your position:</span>
+				<br/>
+				<span>N 37&deg; 44.93'</span>
+				<br/>
+				<span>W 122&deg;30.42'</span>
+			</td>
+			<td>
+				<span>Your Speed:</span>
+				<br/>
+				<span>12.34 kts</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div class="centered">
+					<analog-watch id="analog-watch-01"
+												class="analogdisplay-day"
+												title="Custom Time"
+												width="220"
+												height="220"
+												hours-ticks="1"
+												minutes-ticks="1"
+												with-second-hand="true"
+												value="01:20:12"></analog-watch>
+				</div>
+				<div class="centered" style="font-size: 16px;">
+					Value:
+					<input type="text"
+								 id="watch-value-01"
+								 placeholder="00:00:00"
+								 title="Time to set"
+								 style="width: 80px; text-align: center;"
+								 value="01:20:12"/>
+					<button onclick="setData('watch-value-01', 'analog-watch-01')"
+									title="Set Time on the watch"
+									style="margin-top: 3px;">Set</button>
+					<br/>
+					<input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>With Border
+				</div>
+			</td>
+		</tr>
+	</table>
+	<hr/>
+</div>
+
+</body>
+</html>

@@ -17,7 +17,7 @@ do
   echo -e "| 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
   echo -e "| 4. Node PI, to run on a Raspberry PI                                |"
   echo -e "| 5. Node PI, to run on Debian                                        |"
-  echo -e "| Q. Oops, nothing, thanks.                                           |"
+  echo -e "| Q. Oops, nothing, thanks, let me out.                               |"
   echo -e "+---------------------------------------------------------------------+"
   echo -en "== You choose => "
   read a

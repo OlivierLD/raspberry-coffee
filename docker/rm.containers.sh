@@ -12,5 +12,6 @@ for cid in `cat containers`
 do
   docker rm $cid
 done
+rm containers > /dev/null
 echo Done.
 
