@@ -65,10 +65,10 @@
 
 		.mirror-upside-down {
 			display: block;
-			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg);
-			-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg);
-			-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg);
-			transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg);
+			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+			-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+			-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+			transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
 		}
 
 		.nothing {
@@ -82,13 +82,6 @@
 
 		.centered {
 			text-align: center;
-		}
-
-		.smooth {
-			height: 0;
-			visibility: hidden;
-			opacity: 0;
-			transition: visibility 0.5s, height 0.5s, opacity 0.5s linear;
 		}
 
 	</style>
@@ -144,7 +137,7 @@
 
 <div id="the-div" class="nothing big" style="padding: 0px; text-align: center;">
 	<hr/>
-	<table>
+	<table style="margin: auto;">
 		<tr>
 			<td colspan="2">GPS Data</td>
 		</tr>
