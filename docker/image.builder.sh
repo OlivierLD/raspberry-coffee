@@ -18,6 +18,7 @@ do
   echo -e "| 4. Node PI, to run on a Raspberry PI                                |"
   echo -e "| 5. Node PI, to run on Debian                                        |"
   echo -e "| 6. GPS-mux, to run on a Raspberry PI                                |"
+  echo -e "| 7. Golang                                                           |"
   echo -e "| Q. Oops, nothing, thanks, let me out.                               |"
   echo -e "+---------------------------------------------------------------------+"
   echo -en "== You choose => "
@@ -118,6 +119,14 @@ do
 			  IP_ADDR="localhost"
 			fi
       MESSAGE="Reach http://$IP_ADDR:9999/web/index.html in your browser. REST operations available: http://localhost:9999/mux/oplist. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      ;;
+    "7")
+      OK=true
+      DOCKER_FILE=Dockerfile.go
+      IMAGE_NAME=oliv-go
+      RUN_CMD="docker run -d $IMAGE_NAME:latest"
+      #
+      MESSAGE="Log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
       ;;
     *)
       echo -e "What? Unknown command [$a]"
