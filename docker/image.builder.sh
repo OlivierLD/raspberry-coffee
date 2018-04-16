@@ -18,7 +18,7 @@ do
   echo -e "| 4. Node PI, to run on a Raspberry PI                                |"
   echo -e "| 5. Node PI, to run on Debian                                        |"
   echo -e "| 6. GPS-mux, to run on a Raspberry PI                                |"
-  echo -e "| 7. Golang                                                           |"
+  echo -e "| 7. Golang, basics                                                   |"
   echo -e "| Q. Oops, nothing, thanks, let me out.                               |"
   echo -e "+---------------------------------------------------------------------+"
   echo -en "== You choose => "
@@ -122,7 +122,7 @@ do
       ;;
     "7")
       OK=true
-      DOCKER_FILE=Dockerfile.go
+      DOCKER_FILE=Dockerfile.golang
       IMAGE_NAME=oliv-go
       RUN_CMD="docker run -d $IMAGE_NAME:latest"
       #
