@@ -1,6 +1,9 @@
 FROM debian
-
-MAINTAINER Olivier LeDiouris <olivier@lediouris.net>
+#
+# To run on a laptop.
+# Demos the WebComponents
+#
+LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
 # From the host to the image
 # COPY bashrc $HOME/.bashrc

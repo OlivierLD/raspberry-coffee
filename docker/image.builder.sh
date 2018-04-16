@@ -17,6 +17,7 @@ do
   echo -e "| 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
   echo -e "| 4. Node PI, to run on a Raspberry PI                                |"
   echo -e "| 5. Node PI, to run on Debian                                        |"
+  echo -e "| 6. GPS-mux, to run on a Raspberry PI                                |"
   echo -e "| Q. Oops, nothing, thanks, let me out.                               |"
   echo -e "+---------------------------------------------------------------------+"
   echo -en "== You choose => "
@@ -96,6 +97,27 @@ do
 			  IP_ADDR="localhost"
 			fi
       MESSAGE="Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      ;;
+    "6")
+      OK=true
+      DOCKER_FILE=Dockerfile.rpi.mux
+      IMAGE_NAME=oliv-node-mux
+			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
+			RUN_CMD="docker run -p 9999:9999 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
+			#                      |    |            |             |             |
+			#                      |    |            |             |             Device IN the docker image
+			#                      |    |            |             Device name in the host (RPi) machine
+			#                      |    |            sudo access to the Serial Port
+			#                      |    tcp port IN the docker image
+			#                      tcp port as seen from outside
+			#
+      # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
+			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
+			if [ "$IP_ADDR" = "" ]
+			then
+			  IP_ADDR="localhost"
+			fi
+      MESSAGE="Reach http://$IP_ADDR:9999/web/index.html in your browser. REST operations available: http://localhost:9999/mux/oplist. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
       ;;
     *)
       echo -e "What? Unknown command [$a]"

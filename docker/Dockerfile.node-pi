@@ -1,5 +1,9 @@
 FROM resin/raspberrypi3-debian:latest
-
+#
+# Clones the node-pi repo
+# Demos GPS reading and data rendering.
+# It's using web components.
+#
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
 # From the host to the image
