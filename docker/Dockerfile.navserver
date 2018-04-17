@@ -1,6 +1,6 @@
 FROM debian
 #
-# To run on a laptop
+# To run on a laptop - not necessaritly on an RPi (hence the default-jdk below)
 # Demos the NavServer (Tide, Almanac, Weather faxes, etc)
 # Clones the repo and recompiles everything.
 # Comment the ENV lines if needed (proxy)
@@ -16,10 +16,10 @@ LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 
 RUN apt-get update
-RUN apt-get install -y curl git build-essential default-jdk
+# RUN apt-get install -y curl git build-essential default-jdk
+RUN apt-get install -y oracle-java8-jdk
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y nodejs
-RUN apt-get install oracle-java8-jdk
 
 RUN echo "git --version" >> $HOME/.bashrc
 RUN echo "echo -n 'node:' && node -v" >> $HOME/.bashrc
