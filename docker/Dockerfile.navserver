@@ -7,8 +7,8 @@ FROM debian
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
-ENV http_proxy http://www-proxy.us.oracle.com:80
-ENV https_proxy http://www-proxy.us.oracle.com:80
+# ENV http_proxy http://www-proxy.us.oracle.com:80
+# ENV https_proxy http://www-proxy.us.oracle.com:80
 
 # From the host to the image
 # COPY bashrc $HOME/.bashrc
@@ -19,6 +19,7 @@ RUN apt-get update
 RUN apt-get install -y curl git build-essential default-jdk
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y nodejs
+RUN apt-get install oracle-java8-jdk
 
 RUN echo "git --version" >> $HOME/.bashrc
 RUN echo "echo -n 'node:' && node -v" >> $HOME/.bashrc
