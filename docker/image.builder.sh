@@ -30,7 +30,7 @@ do
       ;;
     "1")
       OK=true
-      DOCKER_FILE=Dockerfile.navserver
+      DOCKER_FILE=navserver.Dockerfile
       IMAGE_NAME=oliv-nav
 			RUN_CMD="docker run -p 8081:8080 -d $IMAGE_NAME:latest"
 			#                      |    |
@@ -41,7 +41,7 @@ do
       ;;
     "2")
       OK=true
-      DOCKER_FILE=Dockerfile.webcomponents
+      DOCKER_FILE=webcomponents.Dockerfile
       IMAGE_NAME=oliv-webcomp
 			RUN_CMD="docker run -p 9999:9999 -d $IMAGE_NAME:latest"
 			#                      |    |
@@ -52,7 +52,7 @@ do
       ;;
     "3")
       OK=true
-      DOCKER_FILE=Dockerfile.rpi
+      DOCKER_FILE=rpi.Dockerfile
       IMAGE_NAME=oliv-rpi
 			RUN_CMD="docker run -p 8081:8080 -d $IMAGE_NAME:latest"
 			#                      |    |
@@ -63,7 +63,7 @@ do
       ;;
     "4")
       OK=true
-      DOCKER_FILE=Dockerfile.node-pi
+      DOCKER_FILE=node-pi.Dockerfile
       IMAGE_NAME=oliv-nodepi
 			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
 			RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
@@ -101,7 +101,7 @@ do
       ;;
     "6")
       OK=true
-      DOCKER_FILE=Dockerfile.rpi.mux
+      DOCKER_FILE=rpi.mux.Dockerfile
       IMAGE_NAME=oliv-node-mux
 			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
 			RUN_CMD="docker run -p 9999:9999 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
@@ -122,7 +122,7 @@ do
       ;;
     "7")
       OK=true
-      DOCKER_FILE=Dockerfile.golang
+      DOCKER_FILE=golang.Dockerfile
       IMAGE_NAME=oliv-go
       RUN_CMD="docker run -d $IMAGE_NAME:latest"
       #

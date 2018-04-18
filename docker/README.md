@@ -41,8 +41,7 @@ $ docker rmi oliv-image
 ### Examples
 
 ```bash
-$ cp Dockerfile.web-components Dockerfile
-$ docker build -t oliv-image .
+$ docker build -f webcomponents.Dockerfile -t oliv-image .
 $ docker run -p 8081:8080 -it oliv-image /bin/bash
 root@7e754f8732a0:/workdir/raspberry-pi4j-samples/WebComponents# node server.js
 ```
@@ -156,5 +155,13 @@ root@b9679d0d65a7:/workdir/node.pi#
 The build operation needs to be done once. There is no need to do it again as long as no
 change in the image is required.
 
+### Stuff...
+
+```bash
+ $ CID=`docker run -d oliv-go:latest`
+ $ docker logs $CID
+ Hello go world!
+ $
+```
 
 --------------------------------------------------------------------------

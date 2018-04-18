@@ -26,9 +26,10 @@ var http = require('http');
 var fs = require('fs');
 
 var verbose = false;
+var quiet = false;
 
 console.log("----------------------------------------------------");
-console.log("Usage: node " + __filename + " --verbose:true|false --port:XXXX");
+console.log("Usage: node " + __filename + " --verbose:true|false --port:XXXX --quiet ");
 console.log("----------------------------------------------------");
 
 for (var i=0; i<process.argv.length; i++) {
@@ -64,6 +65,8 @@ if (process.argv.length > 2) { // Process user's parameters
         console.log("Invalid integer for port value %s.", value);
         process.exit(1);
       }
+    } else if (process.argv[argc] === "--quiet") {
+    	quiet = true;
     } else {
       console.log("Unsupported parameter %s, ignored.", process.argv[argc]);
     }
@@ -102,7 +105,9 @@ var handler = function(req, res) {
 
       if (exist === true && fs.lstatSync(__dirname + '/' + resource).isDirectory()) {
       	// try adding index.html
-	      console.log('Defaulting to index.html...');
+	      if (!quiet) {
+		      console.log('Defaulting to index.html...');
+	      }
 	      var resourceBackup = resource;
 	      resource += ((resource.endsWith("/") ? "" : "/") + "index.html");
 	      exist = fs.existsSync(__dirname + '/' + resource);
@@ -116,7 +121,9 @@ var handler = function(req, res) {
 		      console.log(__dirname + '/' + resource + " not found");
 	      }
       }
-      console.log((exist === true ? "Loading static " : ">> Warning: not found << ") + req.url + " (" + resource + ")");
+	    if (!quiet) {
+		    console.log((exist === true ? "Loading static " : ">> Warning: not found << ") + req.url + " (" + resource + ")");
+	    }
 
       fs.readFile(__dirname + '/' + resource,
                   function (err, data) {
@@ -177,7 +184,9 @@ var handler = function(req, res) {
                   });
     }
   } else {
-    console.log("Unmanaged request: [" + req.url + "]");
+	  if (!quiet) {
+		  console.log("Unmanaged request: [" + req.url + "]");
+	  }
     respContent = "Response from " + req.url;
     res.writeHead(404, {'Content-Type': 'text/plain'});
     res.end(); // respContent);
