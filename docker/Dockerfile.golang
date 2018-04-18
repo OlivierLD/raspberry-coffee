@@ -1,7 +1,10 @@
 FROM golang:1.8
 
-ENV http_proxy http://www-proxy.us.oracle.com:80
-ENV https_proxy http://www-proxy.us.oracle.com:80
+#
+# Uncomment the ENV lines if a proxy is needed.
+#
+# ENV http_proxy http://www-proxy.us.oracle.com:80
+# ENV https_proxy http://www-proxy.us.oracle.com:80
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 RUN apt-get update
@@ -10,7 +13,11 @@ RUN echo "banner Golang!" >> $HOME/.bashrc
 
 WORKDIR /go/src
 # From local file system to image
-COPY ./app ./app
+COPY ./go/app ./app
+#    |        |
+#    |        In the Docker image
+#    On the host
+#
 WORKDIR /go/src/app
 
 RUN go get -d -v ./...
@@ -18,7 +25,7 @@ RUN go install -v ./...
 #
 RUN go build
 
-ENV http_proxy ""
-ENV https_proxy ""
+# ENV http_proxy ""
+# ENV https_proxy ""
 
 CMD ["app"]

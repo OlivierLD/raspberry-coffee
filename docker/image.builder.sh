@@ -138,7 +138,6 @@ done
 #
 if [ "$DOCKER_FILE" != "" ]
 then
-# cp $DOCKER_FILE Dockerfile
   #
   # Proxies,if needed
   # export HTTP_PROXY=http://www-proxy.us.oracle.com:80
