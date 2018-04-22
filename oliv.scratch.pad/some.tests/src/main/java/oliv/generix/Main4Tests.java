@@ -12,7 +12,6 @@ public class Main4Tests {
 		Map<String, String> map = new HashMap<>();
 		map.put("ONE", "one");
 		map.put("TWO", "two");
-
 		GenericHandler mapHandler = GenericHandler.of(map);
 
 		System.out.println("First handler:" + strHandler.get());

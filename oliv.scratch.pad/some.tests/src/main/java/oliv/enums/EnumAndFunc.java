@@ -2,6 +2,9 @@ package oliv.enums;
 
 import java.util.function.Function;
 
+/**
+ * Functions as member of an enum.
+ */
 public class EnumAndFunc {
 
 	private static String echo(String str) {

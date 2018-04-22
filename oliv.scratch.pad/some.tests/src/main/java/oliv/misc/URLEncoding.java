@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
-public class Encoding {
+public class URLEncoding {
 	public static void main(String... args)
 	throws UnsupportedEncodingException {
 		String encoding = "UTF-8";

@@ -41,7 +41,7 @@ public class EmailReceiver {
 	private static String acceptSubject;
 	private static String ackSubject;
 
-	private static boolean verbose = "true".equals(System.getProperty("verbose", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("email.verbose", "false"));
 
 	private EmailSender emailSender = null; // For Ack
 	private String provider = null;
@@ -160,12 +160,37 @@ public class EmailReceiver {
 
 	public List<ReceivedMessage> receive()
 					throws Exception {
-		return receive(null);
+		return receive(null, null);
 	}
 
 	public List<ReceivedMessage> receive(String dir)
-					throws Exception {
-		if (verbose) System.out.println("Receiving...");
+			throws Exception {
+		return receive(dir, null);
+	}
+
+	public List<ReceivedMessage> receive(List<String> acceptedSubjects)
+			throws Exception {
+		return receive(null, acceptedSubjects);
+	}
+
+	public List<ReceivedMessage> receive(
+			String dir,
+			List<String> acceptedSubjects)
+			throws Exception {
+		return receive(dir, acceptedSubjects, true, true, ackSubject, null);
+	}
+
+	public List<ReceivedMessage> receive(
+			String dir,
+			List<String> acceptedSubjects,
+			boolean sendAck,
+			boolean deleteAfterReading,
+			String ackTopic,
+			List<String> acceptedMimeTypes)
+			throws Exception {
+		if (verbose) {
+			System.out.println("Receiving...");
+		}
 		List<ReceivedMessage> messList = new ArrayList<>();
 		Store store = null;
 		Folder folder = null;
@@ -242,25 +267,31 @@ public class EmailReceiver {
 						exception.printStackTrace();
 					}
 					String subject = mess.getSubject();
-					if (true && subject.equals(acceptSubject)) { // Could not have the SubjectTerm to works properly...
+					if (true && (subject.equals(acceptSubject) || (acceptedSubjects != null && acceptedSubjects.contains(subject)))) { // Could not have the SubjectTerm to works properly...
 						if (verbose) {
 							System.out.println("Message from [" + sender + "], subject [" + subject + "], content [" + mess.getContent().toString().trim() + "]");
+							System.out.println(String.format("Seen   : %s", (mess.isSet(javax.mail.Flags.Flag.SEEN) ? "yes" : "no")));
+							System.out.println(String.format("Deleted: %s", (mess.isSet(javax.mail.Flags.Flag.DELETED) ? "yes" : "no")));
 						}
 						if (!mess.isSet(javax.mail.Flags.Flag.SEEN) && !mess.isSet(javax.mail.Flags.Flag.DELETED)) {
-							String txtMess = printMessage(mess, dir);
+							String txtMess = printMessage(mess, dir, acceptedMimeTypes);
 							ReceivedMessage newMess = new ReceivedMessage().content(txtMess).from(from).subject(subject);
 							messList.add(newMess);
 							mess.setFlag(javax.mail.Flags.Flag.SEEN, true);
-							mess.setFlag(javax.mail.Flags.Flag.DELETED, true);
-							// Send an ack - by email.
-							if (this.emailSender == null) {
-								this.emailSender = new EmailSender(this.provider);
+							if (deleteAfterReading) {
+								mess.setFlag(javax.mail.Flags.Flag.DELETED, true);
 							}
-							this.emailSender.send(new String[]{sender},
-											ackSubject,
-											"Your request [" + txtMess.trim() + "] is being taken care of.");
-							if (verbose) {
-								System.out.println("Sent an ack to " + sender);
+
+							if (sendAck) { // Send an ack - by email.
+								if (this.emailSender == null) {
+									this.emailSender = new EmailSender(this.provider);
+								}
+								this.emailSender.send(new String[]{sender},
+										ackTopic != null ? ackTopic : ackSubject,
+										"Your request [" + txtMess.trim() + "] is being taken care of.");
+								if (verbose) {
+									System.out.println("Sent an ack to " + sender);
+								}
 							}
 						} else {
 							if (verbose) {
@@ -321,6 +352,10 @@ public class EmailReceiver {
 	}
 
 	public static String printMessage(Message message, String dir) {
+		return printMessage(message, dir, null);
+	}
+
+	public static String printMessage(Message message, String dir, List<String> acceptedMimeTypes) {
 		String ret = "";
 		try {
 			String from = ((InternetAddress) message.getFrom()[0]).getPersonal();
@@ -331,13 +366,17 @@ public class EmailReceiver {
 				System.out.println("From: " + from);
 			}
 			String subject = message.getSubject();
-			if (verbose) System.out.println("Subject: " + subject);
+			if (verbose) {
+				System.out.println("Subject: " + subject);
+			}
 			Part messagePart = message;
 			Object content = messagePart.getContent();
-			if (content instanceof Multipart) {
+			if (content instanceof Multipart) { // Attachment(s) ?
 //      messagePart = ((Multipart)content).getBodyPart(0);
 				int nbParts = ((Multipart) content).getCount();
-				if (verbose) System.out.println("[ Multipart Message ], " + nbParts + " part(s).");
+				if (verbose) {
+					System.out.println("[ Multipart Message ], " + nbParts + " part(s).");
+				}
 				for (int i = 0; i < nbParts; i++) {
 					messagePart = ((Multipart) content).getBodyPart(i);
 					if (messagePart.getContentType().toUpperCase().startsWith("APPLICATION/OCTET-STREAM")) {
@@ -353,12 +392,13 @@ public class EmailReceiver {
 						FileOutputStream fos = new FileOutputStream(newFileName);
 						ret = messagePart.getFileName();
 						if (verbose) {
-							System.out.println("Downloading " + messagePart.getFileName() + "...");
+							System.out.println(String.format("Downloading %s into %s...", messagePart.getFileName(), newFileName));
 						}
 						copy(is, fos);
-						if (verbose) System.out.println("...done.");
-					} else // text/plain, text/html
-					{
+						if (verbose) {
+							System.out.println("...done.");
+						}
+					} else { // text/plain, text/html
 						if (verbose) {
 							System.out.println("-- Part #" + i + " --, " + messagePart.getContentType().replace('\n', ' ').replace('\r', ' ').replace("\b", "").trim());
 						}
@@ -371,8 +411,8 @@ public class EmailReceiver {
 								if (verbose) {
 									System.out.println("[" + line + "]");
 								}
-								if (messagePart.getContentType().toUpperCase().startsWith("TEXT/PLAIN")) {
-									ret += line;
+								if (messagePart.getContentType().toUpperCase().startsWith("TEXT/PLAIN") || (acceptedMimeTypes != null && acceptedMimeTypes.contains(messagePart.getContentType()))) {
+									ret += (line + "\n");
 								}
 							}
 						}

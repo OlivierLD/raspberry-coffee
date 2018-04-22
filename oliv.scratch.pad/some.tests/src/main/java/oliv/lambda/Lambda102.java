@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * More specific samples, with REST path matching.
+ */
 public class Lambda102 {
 
 	private static boolean pathMatches(String pattern, String path) {

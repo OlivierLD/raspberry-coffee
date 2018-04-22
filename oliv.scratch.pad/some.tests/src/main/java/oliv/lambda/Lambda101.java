@@ -3,6 +3,9 @@ package oliv.lambda;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+/**
+ * Several lambda samples, with many generics
+ */
 public class Lambda101 {
 
 	private static <T, R> R genericStuff(T id, Function<T, R> fn) {
