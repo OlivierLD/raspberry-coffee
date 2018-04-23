@@ -23,7 +23,7 @@ public class EmailWatcher {
 
 	List<EmailProcessor> processors = Arrays.asList(
 		new EmailProcessor("last-snap", this::snapProcessor),
-		new EmailProcessor("execute", this::cmdProcessor) // TODO With attachments ?
+		new EmailProcessor("execute", this::cmdProcessor) // TODO With attachments
 	);
 
 	/**
@@ -83,10 +83,13 @@ public class EmailWatcher {
 		final EmailSender sender = new EmailSender(providerSend);
 
 		EmailReceiver receiver = new EmailReceiver(providerReceive); // For Google, pop must be explicitly enabled at the account level
+		System.out.println("Start receiving.");
 		boolean keepLooping = true;
 		while (keepLooping) {
 			try {
-				System.out.println("Waiting on receive.");
+				if (verbose) {
+					System.out.println("Waiting on receive.");
+				}
 				List<EmailReceiver.ReceivedMessage> received = receiver.receive(
 						null,
 						Arrays.asList("last-snap", "execute"),
@@ -95,11 +98,13 @@ public class EmailWatcher {
 						"Remote Manager");
 
 				//	if (verbose || received.size() > 0)
-				System.out.println("---------------------------------");
-				System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
-				System.out.println("---------------------------------");
+				if (verbose) {
+					System.out.println("---------------------------------");
+					System.out.println(SDF.format(new Date()) + " - Retrieved " + received.size() + " message(s).");
+					System.out.println("---------------------------------");
+				}
 				for (EmailReceiver.ReceivedMessage mess : received) {
-					if (verbose) {
+					if (true || verbose) {
 						System.out.println("Received:\n" + mess.getContent().getContent());
 						if (mess.getContent().getAttachments() != null && mess.getContent().getAttachments().size() > 0) {
 							System.out.println("With attachments:");
@@ -239,26 +244,40 @@ public class EmailWatcher {
 							"text/plain");
 				}
 			}
+		} catch (JSONException je) {
+			System.err.println("Expected payload in valid JSON format");
+			throw je;
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	// operation = 'execute', execute system command (message payload, for now), returns exit code and command output.
+	// operation = 'execute', execute system command (message payload), returns exit code and command output (stdout, stderr).
 	private void cmdProcessor(MessageContext messContext) {
 		try {
-			String cmd = messContext.message.getContent().getContent();
-			// TODO Loop on lines of cmd
-			Process p = Runtime.getRuntime().exec(cmd);
-			BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
-			StringBuffer output = new StringBuffer();
-			String line;
-			while ((line = stdout.readLine()) != null) {
-				System.out.println(line);
-				output.append(line + "\n");
-			}
-			int exitStatus = p.waitFor(); // Sync call
+			String script = messContext.message.getContent().getContent();
 
+			// Loop on lines of cmd
+			String[] cmds = script.split("\n");
+			StringBuffer output = new StringBuffer();
+			for (String cmd : cmds) {
+				if (!cmd.trim().isEmpty()) {
+					Process p = Runtime.getRuntime().exec(cmd);
+					BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
+					BufferedReader stderr = new BufferedReader(new InputStreamReader(p.getErrorStream())); // stderr
+					String line;
+					while ((line = stdout.readLine()) != null) {
+						System.out.println(line);
+						output.append(line + "\n");
+					}
+					while ((line = stderr.readLine()) != null) {
+						System.out.println(line);
+						output.append(line + "\n");
+					}
+					int exitStatus = p.waitFor(); // Sync call
+					output.append(String.format(">> %s returned status %d\n", cmd.trim(), exitStatus));
+				}
+			}
 			Address[] sendTo = messContext.message.getFrom();
 			String[] dest = Arrays.asList(sendTo)
 					.stream()
@@ -267,7 +286,7 @@ public class EmailWatcher {
 					.split(","); // Not nice, I know. A suitable toArray would help.
 			messContext.sender.send(dest,
 					"Command execution",
-					String.format("cmd [%s] returned status %d.\n%s", cmd, exitStatus, output.toString()),
+					String.format("cmd [%s] returned: \n%s", script, output.toString()),
 					"text/plain");
 
 		} catch (Exception ex) {

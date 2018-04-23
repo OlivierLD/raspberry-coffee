@@ -273,8 +273,8 @@ public class EmailReceiver {
 							System.out.println(String.format("Deleted: %s", (mess.isSet(javax.mail.Flags.Flag.DELETED) ? "yes" : "no")));
 						}
 						if (!mess.isSet(javax.mail.Flags.Flag.SEEN) && !mess.isSet(javax.mail.Flags.Flag.DELETED)) {
-							MessageContent txtMess = printMessage(mess, dir);
-							ReceivedMessage newMess = new ReceivedMessage().content(txtMess).from(from).subject(subject);
+							MessageContent messageContent = printMessage(mess, dir);
+							ReceivedMessage newMess = new ReceivedMessage().content(messageContent).from(from).subject(subject);
 							messList.add(newMess);
 							mess.setFlag(javax.mail.Flags.Flag.SEEN, true);
 							if (deleteAfterReading) {
@@ -419,7 +419,7 @@ public class EmailReceiver {
 					if (verbose) {
 						System.out.println(String.format("Part #%d, Content-Type: %s, file %s", i, messagePart.getContentType(), messagePart.getFileName()));
 					}
-					if (i == 0 && ("text/plain".equals(messagePart.getContentType()) || "text/html".equals(messagePart.getContentType())) && messagePart.getFileName() == null) { // Content?
+					if (i == 0 && messagePart.getContentType() != null && (messagePart.getContentType().startsWith("text/plain") || messagePart.getContentType().startsWith("text/html")) && messagePart.getFileName() == null) { // Content?
 						if (verbose) {
 							System.out.println("-- Part #" + i + " --, " + messagePart.getContentType().replace('\n', ' ').replace('\r', ' ').replace("\b", "").trim());
 						}
@@ -451,7 +451,6 @@ public class EmailReceiver {
 						// TODO Create a unique directory, based on date/time ?
 						newFileName += messagePart.getFileName();
 						FileOutputStream fos = new FileOutputStream(newFileName);
-						messContent = messagePart.getFileName();
 						if (verbose) {
 							System.out.println(String.format("Downloading %s into %s...", messagePart.getFileName(), newFileName));
 						}
