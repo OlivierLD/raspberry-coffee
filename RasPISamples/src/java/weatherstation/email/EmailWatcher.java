@@ -21,9 +21,12 @@ public class EmailWatcher {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
 	private static boolean verbose = "true".equals(System.getProperty("mail.watcher.verbose", "false"));
 
-	List<EmailProcessor> processors = Arrays.asList(
-		new EmailProcessor("last-snap", this::snapProcessor),
-		new EmailProcessor("execute", this::cmdProcessor) // TODO With attachments
+	// Assume the keys are unique in the list
+	static final List<EmailProcessor> processors = Arrays.asList(
+		new EmailProcessor("exit", null),
+		new EmailProcessor("last-snap", EmailWatcher::snapProcessor),
+		new EmailProcessor("execute", EmailWatcher::cmdProcessor),
+		new EmailProcessor("execute-script", EmailWatcher::scriptProcessor)
 	);
 
 	/**
@@ -31,7 +34,7 @@ public class EmailWatcher {
 	 * A user is sending an email:
 	 * <pre>
 	 * - To: olivier.lediouris@gmail.com
-	 * - Subject: "operation"
+	 * - Subject: "last-snap"
 	 * - Content (text/plain): { 'rot':270, 'width':480, 'height':640, 'name': 'email-snap' }
 	 * </pre>
 	 * Then the script `remote.snap.sh` is triggered to:
@@ -91,8 +94,10 @@ public class EmailWatcher {
 					System.out.println("Waiting on receive.");
 				}
 				List<EmailReceiver.ReceivedMessage> received = receiver.receive(
-						null,
-						Arrays.asList("last-snap", "execute"),
+						"attachments",
+						processors.stream()
+								.map(processor -> processor.getKey())
+								.collect(Collectors.toList()),
 						true,
 						false,
 						"Remote Manager");
@@ -187,7 +192,7 @@ public class EmailWatcher {
 	}
 
 	// operation = 'last-snap', last snapshot, returned in the reply, as attachment.
-	private void snapProcessor(MessageContext messContext) {
+	private static void snapProcessor(MessageContext messContext) {
 		// Fetch last image
 		try {
 			JSONObject payload = new JSONObject(messContext.message.getContent().getContent());
@@ -209,7 +214,7 @@ public class EmailWatcher {
 				snapName = payload.getString("name");
 			} catch (JSONException je) {
 			}
-			// Take the snapshot, rotated if needed
+			// Take the snapshot, rotated if needed. Assumes that the address of the RPI (where the camera is) is in the script remote.snap.sh.
 			String cmd = String.format("./remote.snap.sh -rot:%d -width:%d -height:%d -name:%s", rot, width, height, snapName);
 			if ("true".equals(System.getProperty("email.test.only", "false"))) {
 				System.out.println(String.format("EmailWatcher Executing [%s]", cmd));
@@ -253,7 +258,7 @@ public class EmailWatcher {
 	}
 
 	// operation = 'execute', execute system command (message payload), returns exit code and command output (stdout, stderr).
-	private void cmdProcessor(MessageContext messContext) {
+	private static void cmdProcessor(MessageContext messContext) {
 		try {
 			String script = messContext.message.getContent().getContent();
 
@@ -287,6 +292,59 @@ public class EmailWatcher {
 			messContext.sender.send(dest,
 					"Command execution",
 					String.format("cmd [%s] returned: \n%s", script, output.toString()),
+					"text/plain");
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	// operation = 'execute-script', execute attached scripts, returns exit code and command output (stdout, stderr).
+	private static void scriptProcessor(MessageContext messContext) {
+		try {
+			final List<EmailReceiver.Attachment> attachments = messContext.message.getContent().getAttachments();
+
+			// Loop on all the scripts
+			final StringBuffer output = new StringBuffer();
+			attachments.stream()
+					.forEach(attachment -> {
+						String cmd = null;
+						if ("text/x-sh".equals(attachment.getMimeType()) || "text/plain".equals(attachment.getMimeType())) {
+							cmd = "sh ./" + attachment.getFullPath();
+						} else {
+							System.err.println(String.format("Mime-type %s not supported", attachment.getMimeType()));
+						}
+						if (cmd != null) {
+							try {
+								Process p = Runtime.getRuntime().exec(cmd);
+								BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
+								BufferedReader stderr = new BufferedReader(new InputStreamReader(p.getErrorStream())); // stderr
+								String line;
+								while ((line = stdout.readLine()) != null) {
+									System.out.println(line);
+									output.append(line + "\n");
+								}
+								while ((line = stderr.readLine()) != null) {
+									System.out.println(line);
+									output.append(line + "\n");
+								}
+								int exitStatus = p.waitFor(); // Sync call
+								output.append(String.format(">> %s returned status %d\n", cmd.trim(), exitStatus));
+							} catch (Exception ex) {
+								output.append(ex.toString() + "\n");
+							}
+						}
+					});
+
+			Address[] sendTo = messContext.message.getFrom();
+			String[] dest = Arrays.asList(sendTo)
+					.stream()
+					.map(addr -> ((InternetAddress) addr).getAddress())
+					.collect(Collectors.joining(","))
+					.split(","); // Not nice, I know. A suitable toArray would help.
+			messContext.sender.send(dest,
+					"Command execution",
+					String.format("Scripts execution returned: \n%s", output.toString()),
 					"text/plain");
 
 		} catch (Exception ex) {

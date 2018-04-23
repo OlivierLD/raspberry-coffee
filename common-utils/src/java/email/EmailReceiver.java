@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -42,6 +44,7 @@ public class EmailReceiver {
 	private static String ackSubject;
 
 	private static boolean verbose = "true".equals(System.getProperty("email.verbose", "false"));
+	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
 
 	private EmailSender emailSender = null; // For Ack
 	private String provider = null;
@@ -419,6 +422,11 @@ public class EmailReceiver {
 					if (verbose) {
 						System.out.println(String.format("Part #%d, Content-Type: %s, file %s", i, messagePart.getContentType(), messagePart.getFileName()));
 					}
+					String dateBasedDirectoryName = SDF.format(new Date());
+					File storageDir = new File((dir == null ? "." + File.separator : dir + File.separator) + dateBasedDirectoryName);
+					if (!storageDir.exists()) {
+						storageDir.mkdirs();
+					}
 					if (i == 0 && messagePart.getContentType() != null && (messagePart.getContentType().startsWith("text/plain") || messagePart.getContentType().startsWith("text/html")) && messagePart.getFileName() == null) { // Content?
 						if (verbose) {
 							System.out.println("-- Part #" + i + " --, " + messagePart.getContentType().replace('\n', ' ').replace('\r', ' ').replace("\b", "").trim());
@@ -448,7 +456,7 @@ public class EmailReceiver {
 						if (dir != null) {
 							newFileName = dir + File.separator;
 						}
-						// TODO Create a unique directory, based on date/time ?
+						newFileName += (dateBasedDirectoryName + File.separator);
 						newFileName += messagePart.getFileName();
 						FileOutputStream fos = new FileOutputStream(newFileName);
 						if (verbose) {
