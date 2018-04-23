@@ -177,7 +177,7 @@ public class EmailReceiver {
 			String dir,
 			List<String> acceptedSubjects)
 			throws Exception {
-		return receive(dir, acceptedSubjects, true, true, ackSubject, null);
+		return receive(dir, acceptedSubjects, true, true, ackSubject);
 	}
 
 	public List<ReceivedMessage> receive(
@@ -185,8 +185,7 @@ public class EmailReceiver {
 			List<String> acceptedSubjects,
 			boolean sendAck,
 			boolean deleteAfterReading,
-			String ackTopic,
-			List<String> acceptedMimeTypes)
+			String ackTopic)
 			throws Exception {
 		if (verbose) {
 			System.out.println("Receiving...");
@@ -274,7 +273,7 @@ public class EmailReceiver {
 							System.out.println(String.format("Deleted: %s", (mess.isSet(javax.mail.Flags.Flag.DELETED) ? "yes" : "no")));
 						}
 						if (!mess.isSet(javax.mail.Flags.Flag.SEEN) && !mess.isSet(javax.mail.Flags.Flag.DELETED)) {
-							String txtMess = printMessage(mess, dir, acceptedMimeTypes);
+							MessageContent txtMess = printMessage(mess, dir);
 							ReceivedMessage newMess = new ReceivedMessage().content(txtMess).from(from).subject(subject);
 							messList.add(newMess);
 							mess.setFlag(javax.mail.Flags.Flag.SEEN, true);
@@ -288,7 +287,7 @@ public class EmailReceiver {
 								}
 								this.emailSender.send(new String[]{sender},
 										ackTopic != null ? ackTopic : ackSubject,
-										"Your request [" + txtMess.trim() + "] is being taken care of.");
+										"Your request [" + mess.getSubject().trim() + "] is being taken care of.");
 								if (verbose) {
 									System.out.println("Sent an ack to " + sender);
 								}
@@ -322,12 +321,52 @@ public class EmailReceiver {
 		return messList;
 	}
 
-	public static class ReceivedMessage {
+	public static class Attachment {
+		String mimeType;
+		String fullPath;
+
+		public String getFullPath() {
+			return this.fullPath;
+		}
+		public String getMimeType() {
+			return this.mimeType;
+		}
+		public Attachment mimeType(String mimeType) {
+			this.mimeType = mimeType;
+			return this;
+		}
+		public Attachment fullPath(String fullPath) {
+			this.fullPath = fullPath;
+			return this;
+		}
+	}
+	public static class MessageContent {
 		String content;
+		List<Attachment> attachments;
+
+		public String getContent() {
+			return this.content;
+		}
+		public List<Attachment> getAttachments() {
+			return this.attachments;
+		}
+
+		public MessageContent content(String content) {
+			this.content = content;
+			return this;
+		}
+		public MessageContent attachments(List<Attachment> attachments) {
+			this.attachments = attachments;
+			return this;
+		}
+	}
+
+	public static class ReceivedMessage {
+		MessageContent content;
 		String subject;
 		Address[] from;
 
-		public String getContent() {
+		public MessageContent getContent() {
 			return this.content;
 		}
 		public String getSubject() {
@@ -337,7 +376,7 @@ public class EmailReceiver {
 			return this.from;
 		}
 
-		public ReceivedMessage content(String content) {
+		public ReceivedMessage content(MessageContent content) {
 			this.content = content;
 			return this;
 		}
@@ -351,12 +390,9 @@ public class EmailReceiver {
 		}
 	}
 
-	public static String printMessage(Message message, String dir) {
-		return printMessage(message, dir, null);
-	}
-
-	public static String printMessage(Message message, String dir, List<String> acceptedMimeTypes) {
-		String ret = "";
+	public static MessageContent printMessage(Message message, String dir) {
+		String messContent = "";
+		MessageContent fullMessage = new MessageContent();
 		try {
 			String from = ((InternetAddress) message.getFrom()[0]).getPersonal();
 			if (from == null) {
@@ -377,28 +413,13 @@ public class EmailReceiver {
 				if (verbose) {
 					System.out.println("[ Multipart Message ], " + nbParts + " part(s).");
 				}
+				List<Attachment> attachments = new ArrayList<>();
 				for (int i = 0; i < nbParts; i++) {
 					messagePart = ((Multipart) content).getBodyPart(i);
-					if (messagePart.getContentType().toUpperCase().startsWith("APPLICATION/OCTET-STREAM")) {
-						if (verbose) {
-							System.out.println(messagePart.getContentType() + ":" + messagePart.getFileName());
-						}
-						InputStream is = messagePart.getInputStream();
-						String newFileName = "";
-						if (dir != null) {
-							newFileName = dir + File.separator;
-						}
-						newFileName += messagePart.getFileName();
-						FileOutputStream fos = new FileOutputStream(newFileName);
-						ret = messagePart.getFileName();
-						if (verbose) {
-							System.out.println(String.format("Downloading %s into %s...", messagePart.getFileName(), newFileName));
-						}
-						copy(is, fos);
-						if (verbose) {
-							System.out.println("...done.");
-						}
-					} else { // text/plain, text/html
+					if (verbose) {
+						System.out.println(String.format("Part #%d, Content-Type: %s, file %s", i, messagePart.getContentType(), messagePart.getFileName()));
+					}
+					if (i == 0 && ("text/plain".equals(messagePart.getContentType()) || "text/html".equals(messagePart.getContentType())) && messagePart.getFileName() == null) { // Content?
 						if (verbose) {
 							System.out.println("-- Part #" + i + " --, " + messagePart.getContentType().replace('\n', ' ').replace('\r', ' ').replace("\b", "").trim());
 						}
@@ -411,30 +432,55 @@ public class EmailReceiver {
 								if (verbose) {
 									System.out.println("[" + line + "]");
 								}
-								if (messagePart.getContentType().toUpperCase().startsWith("TEXT/PLAIN") || (acceptedMimeTypes != null && acceptedMimeTypes.contains(messagePart.getContentType()))) {
-									ret += (line + "\n");
-								}
+								messContent += (line + "\n");
 							}
 						}
 						br.close();
 						if (verbose) {
 							System.out.println("-------------------");
 						}
+					} else {
+						if (verbose) {
+							System.out.println(messagePart.getContentType() + ":" + messagePart.getFileName());
+						}
+						InputStream is = messagePart.getInputStream();
+						String newFileName = "";
+						if (dir != null) {
+							newFileName = dir + File.separator;
+						}
+						// TODO Create a unique directory, based on date/time ?
+						newFileName += messagePart.getFileName();
+						FileOutputStream fos = new FileOutputStream(newFileName);
+						messContent = messagePart.getFileName();
+						if (verbose) {
+							System.out.println(String.format("Downloading %s into %s...", messagePart.getFileName(), newFileName));
+						}
+						copy(is, fos);
+						if (verbose) {
+							System.out.println("...done.");
+						}
+						attachments.add(new Attachment()
+						.mimeType(messagePart.getContentType())
+						.fullPath(newFileName));
 					}
 				}
+				fullMessage = fullMessage
+						.attachments(attachments);
 			} else {
 //      System.out.println("  .Message is a " + content.getClass().getName());
 //      System.out.println("Content:");
 //      System.out.println(content.toString());
-				ret = content.toString();
+				messContent = content.toString();
 			}
 			if (verbose) {
 				System.out.println("-----------------------------");
 			}
+			fullMessage = fullMessage
+					.content(messContent);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return ret;
+		return fullMessage;
 	}
 
 	private static void copy(InputStream in, OutputStream out)

@@ -65,11 +65,11 @@ public class PIControllerMain implements RaspberryPIEventListener {
 					//      System.out.println(s);
 					String operation = "";
 					try {
-						JSONObject json = new JSONObject(mess.getContent());
+						JSONObject json = new JSONObject(mess.getContent().getContent());
 						operation = json.getString("operation");
 					} catch (Exception ex) {
 						System.err.println(ex.getMessage());
-						System.err.println("Message is [" + mess.getContent() + "]");
+						System.err.println("Message is [" + mess.getContent().getContent() + "]");
 					}
 					if ("exit".equals(operation)) {
 						keepLooping = false;
