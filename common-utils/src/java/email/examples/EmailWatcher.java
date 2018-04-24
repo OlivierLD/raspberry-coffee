@@ -1,9 +1,7 @@
-package weatherstation.email;
+package email.examples;
 
 import email.EmailReceiver;
 import email.EmailSender;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.mail.Address;
 import javax.mail.internet.InternetAddress;
@@ -19,36 +17,38 @@ import java.util.stream.Collectors;
 
 public class EmailWatcher {
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-	private static boolean verbose = "true".equals(System.getProperty("mail.watcher.verbose", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("email.watcher.verbose", "false"));
 
 	// Assume the keys are unique in the list
 	static final List<EmailProcessor> processors = Arrays.asList(
 		new EmailProcessor("exit", null),
-		new EmailProcessor("last-snap", EmailWatcher::snapProcessor),
 		new EmailProcessor("execute", EmailWatcher::cmdProcessor),
 		new EmailProcessor("execute-script", EmailWatcher::scriptProcessor)
 	);
 
 	/**
 	 * This is an example of an email interaction.
+	 *
 	 * A user is sending an email:
 	 * <pre>
 	 * - To: olivier.lediouris@gmail.com
-	 * - Subject: "last-snap"
-	 * - Content (text/plain): { 'rot':270, 'width':480, 'height':640, 'name': 'email-snap' }
+	 * - Subject: "execute"
+	 * - Content (text/plain):
+	 *     whoami
+	 *     ifconfig
+	 *     uname -a
 	 * </pre>
-	 * Then the script `remote.snap.sh` is triggered to:
-	 * <pre>
-	 * - Send an http request is sent to the Raspberry PI to take the snapshot (see {@link weatherstation.logger.HTTPLogger} )
-	 * - Download the corresponding picture
-	 * </pre>
-	 * After that, an email is returned to the requester, with the snapshot attached to it.
+	 * Then the commands are executed, output (stdout & stderr) and status code are rturned
+	 * After that, an email is returned to the requester, containing the result.
+	 *
+	 * Note the <code>processors</code> class member, defining the operation to be performed on received emails.
+	 *
 	 * <ul>
 	 *   <li>PROs: It does not require a server, just this class running somewhere.</li>
 	 *   <li>CONs: It is not synchronous, it can take some time.</li>
 	 * </ul>
 	 * Invoked like:
-	 * java weatherstation.email.EmailWatcher [-verbose] -send:google -receive:yahoo
+	 * java email.examples.EmailWatcher [-verbose] -send:google -receive:yahoo
 	 * <p>
 	 * This will send emails using google, and receive using yahoo.
 	 * Do check the file email.properties for the different values associated with email servers.
@@ -58,13 +58,13 @@ public class EmailWatcher {
 	 *   The program stops when the 'exit' email is received by the EmailReceiver.
 	 * </p>
 	 *
-	 * See also the email-reader node on Node-RED. It implements similar featires.
+	 * See also the email-reader node on Node-RED. It implements similar features.
 	 *
 	 * @param args See above
 	 */
 	public static void main(String... args) {
 
-		String providerSend = "yahoo"; // Default
+		String providerSend    = "yahoo"; // Default
 		String providerReceive = "google"; // Default
 
 		EmailWatcher emailWatcher = new EmailWatcher();
@@ -79,7 +79,7 @@ public class EmailWatcher {
 				providerReceive = args[i].substring("-receive:".length());
 			} else if ("-help".equals(args[i])) {
 				System.out.println("Usage:");
-				System.out.println("  java weatherstation.email.EmailWatcher -verbose -send:google -receive:yahoo -help");
+				System.out.println("  java email.examples.EmailWatcher -verbose -send:google -receive:yahoo -help");
 				System.exit(0);
 			}
 		}
@@ -188,72 +188,6 @@ public class EmailWatcher {
 		}
 		public Consumer<MessageContext> getProcessor() {
 			return this.processor;
-		}
-	}
-
-	// operation = 'last-snap', last snapshot, returned in the reply, as attachment.
-	private static void snapProcessor(MessageContext messContext) {
-		// Fetch last image
-		try {
-			JSONObject payload = new JSONObject(messContext.message.getContent().getContent());
-			int rot = 270, width = 640, height = 480; // Default ones. Taken from payload below
-			String snapName = "email-snap"; // No Extension!
-			try {
-				rot = payload.getInt("rot");
-			} catch (JSONException je) {
-			}
-			try {
-				width = payload.getInt("width");
-			} catch (JSONException je) {
-			}
-			try {
-				height = payload.getInt("height");
-			} catch (JSONException je) {
-			}
-			try {
-				snapName = payload.getString("name");
-			} catch (JSONException je) {
-			}
-			// Take the snapshot, rotated if needed. Assumes that the address of the RPI (where the camera is) is in the script remote.snap.sh.
-			String cmd = String.format("./remote.snap.sh -rot:%d -width:%d -height:%d -name:%s", rot, width, height, snapName);
-			if ("true".equals(System.getProperty("email.test.only", "false"))) {
-				System.out.println(String.format("EmailWatcher Executing [%s]", cmd));
-			} else {
-				Process p = Runtime.getRuntime().exec(cmd);
-				BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
-				StringBuffer output = new StringBuffer();
-				String line;
-				while ((line = stdout.readLine()) != null) {
-					System.out.println(line);
-					output.append(line + "\n");
-				}
-				int exitStatus = p.waitFor(); // Sync call
-
-				Address[] sendTo = messContext.message.getFrom();
-				String[] dest = Arrays.asList(sendTo)
-						.stream()
-						.map(addr -> ((InternetAddress) addr).getAddress())
-						.collect(Collectors.joining(","))
-						.split(","); // Not nice, I know. A suitable toArray would help.
-				if (exitStatus == 0) { // Ok
-					messContext.sender.send(dest,
-							"Weather Snapshot",            // Email topic/subject
-							String.format("You snapshot request returned status %d.\n%s", exitStatus, output.toString()),
-							"text/plain",                      // Email content mime type
-							String.format("web/%s.jpg", snapName),  // Attachment.
-							"image/jpg");                // Attachment mime type.
-				} else { // Not Ok
-					messContext.sender.send(dest,
-							"Weather Snapshot",
-							String.format("You snapshot request returned status %d, a problem might have occurred.\n%s", exitStatus, output.toString()),
-							"text/plain");
-				}
-			}
-		} catch (JSONException je) {
-			System.err.println("Expected payload in valid JSON format");
-			throw je;
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
 		}
 	}
 
