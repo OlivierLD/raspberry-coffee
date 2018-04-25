@@ -36,9 +36,27 @@ var init = function () {
 		if (typeof(message.data) === 'string') {
 			try {
 				json = JSON.parse(message.data);
+				/*
+{
+  avgdir:210,
+  dew:6.273222382523795,
+  dir:210,
+  gust:0,
+  hum:56.568665,
+  press:101630,
+  rain:0,
+  speed:0,
+  temp:14.8,
+  volts:0.9240000247955322
+}				 */
 				var dir = json.dir;
 				var ws = json.speed;
 				var gst = json.gust;
+				var press = json.press;
+				var rain = json.rain;
+				var dew = json.dew;
+				var tempOut = json.temp;
+				var humOut = json.hum;
 
 				twdArray.push(dir);
 				while (twdArray.length > TWD_ARRAY_MAX_LEN) {
@@ -52,6 +70,12 @@ var init = function () {
 				document.getElementById('wind-dir-avg').innerHTML = (avg.toFixed(0)); // + "&deg;");
 				document.getElementById('wind-speed').innerHTML = (ws.toFixed(2)); // + " kt");
 				document.getElementById('wind-gust').innerHTML = (gst.toFixed(2)); // + " kt");
+
+				document.getElementById('prmsl').innerHTML = ((press/100).toFixed(1)); // + "&deg;");
+				document.getElementById('hum-out').innerHTML = (humOut.toFixed(1)); // + "&deg;");
+				document.getElementById('temp-out').innerHTML = (tempOut.toFixed(1)); // + "&deg;");
+				document.getElementById('dew').innerHTML = (dew.toFixed(1)); // + "&deg;");
+				document.getElementById('rain').innerHTML = (rain.toFixed(1)); // + "&deg;");
 			} catch (e) {
 				console.log(e);
 				console.log('This doesn\'t look like a valid JSON: ' + message.data);

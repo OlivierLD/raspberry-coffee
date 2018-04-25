@@ -64,7 +64,7 @@ public class EmailWatcher {
 	 */
 	public static void main(String... args) {
 
-		String providerSend    = "yahoo"; // Default
+		String providerSend    = "yahoo";  // Default
 		String providerReceive = "google"; // Default
 
 		EmailWatcher emailWatcher = new EmailWatcher();

@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Weather Station</title>
     <link rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>
+		<link rel="stylesheet" href="../css/black.css" type="text/css"/>
     <link rel="icon" type="image/ico" href="favicon.ico">
     <style type="text/css">
       @font-face {
@@ -15,15 +16,20 @@
         font-family: "Digi Font", Verdana, Tahoma;
         color: blue;
       }
+
+			body {
+				background-color: black;
+				color: silver;
+			}
     </style>
     <script type="text/javascript">
-      
+
   var URI_SUFFIX = "/";
-  var ws; 
+  var ws;
   var connectionStatus = "Connecting...";
   var calledBy = document.location.toString();
   var machine, port, secured;
-  var regExp = new RegExp("(http|ws)(.?):[/]{2}([^/|^:]*):?(\\d*)/(.*)");  
+  var regExp = new RegExp("(http|ws)(.?):[/]{2}([^/|^:]*):?(\\d*)/(.*)");
   var matches = regExp.exec(calledBy);
 //scheme  = matches[1];
   secured = matches[2];
@@ -34,7 +40,7 @@
   var resetStatus = function() {
     statusFld.innerHTML = "";
   };
-      </script>    
+      </script>
       <script type="text/javascript" src="weather.digital.js"></script> <!-- Application definition -->
       <script type="text/javascript">
   /*
@@ -63,7 +69,7 @@
           alert(mess);
       }
     }
-    init(); // in app.js
+    init(); // in weather.digital.js
   };
     </script>
   </head>
@@ -91,33 +97,86 @@
             </tr>
             <tr>
               <td width="20%" align="center">
-                <div id="wind-dir-avg" class="digifont"
-                     style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
+                <div id="wind-dir-avg"
+                     class="digifont"
+                     style="color: orange; padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
               </td>
               <td width="20%" align="center">
-                <div id="wind-dir"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
+                <div id="wind-dir" class="digifont"
+                     style="color: orange; padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
               </td>
               <td width="30%" align="center">
-                <div id="wind-speed"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
+                <div id="wind-speed"
+                     class="digifont"
+                     style="color: magenta; padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
               </td>
               <td width="30%" align="center">
-                <div id="wind-gust"  class="digifont" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
+                <div id="wind-gust"
+                     class="digifont"
+                     style="color: magenta; padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
               </td>
             </tr>
           </table>
+					<table width="100%">
+						<tr>
+							<td width="20%" align="center">
+								Pressure in hPa
+							</td>
+							<td width="20%" align="center">
+								Humidity in %
+							</td>
+							<td width="20%" align="center">
+								Ext Temperature in &deg;C
+							</td>
+							<td width="20%" align="center">
+								Dew Point in &deg;C
+							</td>
+							<td width="20%" align="center">
+								Rain in mm/h
+							</td>
+						</tr>
+						<tr>
+							<td width="20%" align="center">
+								<div id="prmsl"
+										 class="digifont"
+										 style="color: cyan; padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
+							</td>
+							<td width="20%" align="center">
+								<div id="hum-out"
+										 class="digifont"
+										 style="color: lightgreen; padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
+							</td>
+							<td width="20%" align="center">
+								<div id="temp-out"
+										 class="digifont"
+										 style="color: red; padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
+							</td>
+							<td width="20%" align="center">
+								<div id="dew"
+										 class="digifont"
+										 style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
+							</td>
+							<td width="20%" align="center">
+								<div id="rain"
+										 class="digifont"
+										 style="color: white; padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px; font-size: 80px; ">0</div>
+							</td>
+
+						</tr>
+					</table>
         </td>
       </tr>
       <tr>
         <td align="left" colspan="2">
           <div id="status" style="padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 80px;">
-              <i>Status will go here when needed...</i>
+            <i>Status will go here when needed...</i>
           </div>
         </td>
       </tr>
       <tr>
         <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
       </tr>
-    </table>  
+    </table>
     <hr>
   </body>
 </html>
