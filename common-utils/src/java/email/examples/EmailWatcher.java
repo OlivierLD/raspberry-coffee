@@ -201,7 +201,7 @@ public class EmailWatcher {
 			StringBuffer output = new StringBuffer();
 			for (String cmd : cmds) {
 				if (!cmd.trim().isEmpty()) {
-					Process p = Runtime.getRuntime().exec(cmd);
+					Process p = Runtime.getRuntime().exec(new String[] {"/bin/bash", "-c",  cmd});
 					BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
 					BufferedReader stderr = new BufferedReader(new InputStreamReader(p.getErrorStream())); // stderr
 					String line;
@@ -250,7 +250,7 @@ public class EmailWatcher {
 						}
 						if (cmd != null) {
 							try {
-								Process p = Runtime.getRuntime().exec(cmd);
+								Process p = Runtime.getRuntime().exec(cmd); // ? new String[] {"/bin/bash", "-c",  cmd}
 								BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
 								BufferedReader stderr = new BufferedReader(new InputStreamReader(p.getErrorStream())); // stderr
 								String line;
