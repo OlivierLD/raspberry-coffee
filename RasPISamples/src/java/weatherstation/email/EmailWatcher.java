@@ -23,10 +23,11 @@ public class EmailWatcher {
 
 	// Assume the keys are unique in the list
 	static final List<EmailProcessor> processors = Arrays.asList(
-		new EmailProcessor("exit", null),
-		new EmailProcessor("last-snap", EmailWatcher::snapProcessor),
-		new EmailProcessor("execute", EmailWatcher::cmdProcessor),
-		new EmailProcessor("execute-script", EmailWatcher::scriptProcessor)
+			new EmailProcessor("exit", null),
+			new EmailProcessor("last-snap", EmailWatcher::snapProcessor),
+			new EmailProcessor("execute", EmailWatcher::cmdProcessor),
+			new EmailProcessor("execute-script", EmailWatcher::scriptProcessor),
+			new EmailProcessor("execute-bash", EmailWatcher::bashProcessor)
 	);
 
 	/**
@@ -299,6 +300,48 @@ public class EmailWatcher {
 		}
 	}
 
+	// operation = 'execute-bash', execute system command (message payload), returns exit code and command output (stdout, stderr).
+	private static void bashProcessor(MessageContext messContext) {
+		try {
+			String script = messContext.message.getContent().getContent();
+
+			// Loop on lines of cmd
+			String[] cmds = script.split("\n");
+			StringBuffer output = new StringBuffer();
+			for (String cmd : cmds) {
+				if (!cmd.trim().isEmpty()) {
+					Process p = Runtime.getRuntime().exec(new String[] {"/bin/bash", "-c",  cmd});
+					BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
+					BufferedReader stderr = new BufferedReader(new InputStreamReader(p.getErrorStream())); // stderr
+					String line;
+					while ((line = stdout.readLine()) != null) {
+						System.out.println(line);
+						output.append(line + "\n");
+					}
+					while ((line = stderr.readLine()) != null) {
+						System.out.println(line);
+						output.append(line + "\n");
+					}
+					int exitStatus = p.waitFor(); // Sync call
+					output.append(String.format(">> %s returned status %d\n", cmd.trim(), exitStatus));
+				}
+			}
+			Address[] sendTo = messContext.message.getFrom();
+			String[] dest = Arrays.asList(sendTo)
+					.stream()
+					.map(addr -> ((InternetAddress) addr).getAddress())
+					.collect(Collectors.joining(","))
+					.split(","); // Not nice, I know. A suitable toArray would help.
+			messContext.sender.send(dest,
+					"Command execution",
+					String.format("cmd [%s] returned: \n%s", script, output.toString()),
+					"text/plain");
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
 	// operation = 'execute-script', execute attached scripts, returns exit code and command output (stdout, stderr).
 	private static void scriptProcessor(MessageContext messContext) {
 		try {
@@ -316,7 +359,7 @@ public class EmailWatcher {
 						}
 						if (cmd != null) {
 							try {
-								Process p = Runtime.getRuntime().exec(cmd);  // ? new String[] {"/bin/bash", "-c",  cmd}
+								Process p = Runtime.getRuntime().exec(cmd);
 								BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
 								BufferedReader stderr = new BufferedReader(new InputStreamReader(p.getErrorStream())); // stderr
 								String line;
