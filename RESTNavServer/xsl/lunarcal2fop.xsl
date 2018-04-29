@@ -90,8 +90,8 @@
         <fo:simple-page-master master-name="landscape-page" page-height="8.5in"
                      page-width="11in">
           <!-- Portrait -->
-          <fo:region-body margin="0in"/>
-          <fo:region-after region-name="footer" extent="20mm"/>
+          <fo:region-body margin="0in" background-color="black" color="yellow"/>
+          <fo:region-after region-name="footer" extent="20mm" background-color="black" color="yellow"/>
         </fo:simple-page-master>
       </fo:layout-master-set>
       <fo:page-sequence master-reference="landscape-page">
@@ -99,14 +99,14 @@
           <!--fo:block text-align="center">Page <fo:page-number/> of <fo:page-number-citation ref-id="last-page"/></fo:block-->
           <!--fo:block text-align="center" font-size="8pt">Page <fo:page-number/> of <fo:page-number-citation ref-id="last-page"/></fo:block-->
         </fo:static-content>
-        <fo:flow flow-name="xsl-region-body">
+        <fo:flow flow-name="xsl-region-body" color="white">
 
           <!-- Put a title here, assume the xml data is a one year document -->
-	        <fo:block text-align="center" font-family="Helvetica Neue" font-size="24pt" font-weight="bold" margin="0.25in">
+	        <fo:block text-align="center" font-family="Helvetica Neue" font-size="24pt" font-weight="bold" margin="0.25in" background-color="black" color="yellow">
 		        <xsl:value-of select="concat('Moon Calendar, ', /tide/period[1]/@year )"/>
 	        </fo:block>
 
-          <fo:block margin="0.1in">
+          <fo:block margin="0.1in" background-color="black" color="white">
 
             <fo:table>
 	            <!-- border="0.5pt solid black"> -->
@@ -248,12 +248,12 @@
             </fo:table>
           </fo:block>
           <!--fo:block id="last-page"/-->
-          <fo:block text-align="left" font-family="Book Antiqua" font-size="8pt" font-weight="normal" font-style="italic" margin="0.1in">by OlivSoft</fo:block>
+          <fo:block text-align="left" font-family="Book Antiqua" font-size="8pt" font-weight="normal" font-style="italic" margin="0.1in" background-color="black" color="yellow">by OlivSoft</fo:block>
         </fo:flow>
       </fo:page-sequence>
     </fo:root>
   </xsl:template>
-	
+
   <xsl:template match="period" name="one-month-moon">
     <xsl:for-each select="./date">
       <fo:table-cell padding="medium"

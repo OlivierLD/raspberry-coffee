@@ -310,7 +310,7 @@ public class EmailWatcher {
 			StringBuffer output = new StringBuffer();
 			for (String cmd : cmds) {
 				if (!cmd.trim().isEmpty()) {
-					Process p = Runtime.getRuntime().exec(new String[] {"/bin/bash", "-c",  "\"" + cmd.trim() + "\""});
+					Process p = Runtime.getRuntime().exec(new String[] {"/bin/bash", "-c",  "\"" + cmd.trim() + "\""}); // TODO Check that shit
 					BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream())); // stdout
 					BufferedReader stderr = new BufferedReader(new InputStreamReader(p.getErrorStream())); // stderr
 					String line;
