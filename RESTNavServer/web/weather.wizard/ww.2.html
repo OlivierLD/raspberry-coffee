@@ -482,6 +482,19 @@
 		getExistingComposites(cb, filter);
 	};
 
+	var compositeInterval;
+  var continuousLoad = function(cb) {
+  	if (cb.checked === true) { // Start
+			$("#load-composites").prop("disabled", true);
+		  compositeInterval = setInterval(function() {
+		  	loadComposite();
+			}, 1000 * 3600 * 6); // Every 6 hours
+		} else { // Stop
+		  $("#load-composites").prop("disabled", false);
+  		clearInterval(compositeInterval);
+		}
+	};
+
 	/**
 	 * If existing data is provided, it comes from the file system
 	 */
@@ -876,7 +889,8 @@
 					<input id="grib-checkbox" type="checkbox" onchange="changeGRIB(this);" disabled /> With GRIB Data
 					<hr/>
 					<select id="composites" onchange="updateGRIBRequest(this);"></select>
-					<button onclick="loadComposite();">Load documents</button>
+					<button id="load-composites" onclick="loadComposite();">Load documents</button>
+					<input type="checkbox" onchange="continuousLoad(this);"/>Every 6 hours
 					<hr/>
 					<input type="radio" name="grib-origin" value="web" checked onchange="flipGRIB(this);">From the Web
 					<input type="radio" name="grib-origin" value="json" onchange="flipGRIB(this);">From Storage
