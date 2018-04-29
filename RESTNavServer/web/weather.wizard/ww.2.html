@@ -483,15 +483,50 @@
 	};
 
 	var compositeInterval;
+  var timerInterval;
+	var timeToNextLoad = 0;
+
+	var intervalInSeconds = 3600 * 6;
+
+	var secToHMS = function(nbSec) {
+	  var h = Math.floor(nbSec / 3600);
+	  var m = Math.floor((nbSec - (h * 3600)) / 60);
+	  var s = nbSec % 60;
+
+		var strH = h.toFixed(0);
+		while (strH.length < 2) {
+			strH = '0' + strH;
+		}
+		var strM = m.toFixed(0);
+		while (strM.length < 2) {
+			strM = '0' + strM;
+		}
+		var strS = s.toFixed(0);
+		while (strS.length < 2) {
+			strS = '0' + strS;
+		}
+		return strH + ":" + strM + ":" + strS;
+	};
+
   var continuousLoad = function(cb) {
   	if (cb.checked === true) { // Start
+		  timeToNextLoad = intervalInSeconds; // In seconds
 			$("#load-composites").prop("disabled", true);
 		  compositeInterval = setInterval(function() {
 		  	loadComposite();
-			}, 1000 * 3600 * 6); // Every 6 hours
+			  timeToNextLoad = intervalInSeconds; // In seconds
+			}, 1000 * intervalInSeconds); // Every 6 hours
+			timerInterval = setInterval(function() {
+				timeToNextLoad -= 1; // Decrease
+				var strTime = secToHMS(timeToNextLoad);
+				$("#time-to-next").text(" (in " + strTime + ")");
+			},
+			1000); // Every second
 		} else { // Stop
 		  $("#load-composites").prop("disabled", false);
   		clearInterval(compositeInterval);
+		  clearInterval(timerInterval);
+		  $("#time-to-next").text("");
 		}
 	};
 
@@ -873,7 +908,7 @@
 		</style>
   </head>
   <body>
-    <h2>Weather Wizard in HTML5 - Operations</h2>
+    <h2>Weather Wizard in HTML5 - Operations <span id="time-to-next"></span></h2>
 		<div>
     <table border="0">
       <tr>
