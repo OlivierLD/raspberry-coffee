@@ -164,7 +164,9 @@ public class HomeWeatherStation {
 			 *   "press": 101300.00,
 			 *   "temp": 18.34,
 			 *   "hum": 58.5,
-			  *  "dew": 9.87 }
+			 *   "dew": 9.87 }
+			 *
+			 *   'volts' can be converted using {@link Utilities.voltageToDegrees}
 			 */
 			try {
 				String message = windObj.toString();

@@ -19,6 +19,7 @@ import java.util.Date;
 
 /**
  * Board from Switch Doc Labs
+ * Code "adapted" from https://github.com/switchdoclabs/SDL_Pi_WeatherBoard/blob/master/SDL_Pi_WeatherRack/SDL_Pi_WeatherRack.py
  */
 public class SDLWeather80422 {
 
@@ -254,6 +255,9 @@ public class SDLWeather80422 {
 	// Wind Direction Routines
 	public float getCurrentWindDirection() {
 		double direction = Utilities.voltageToDegrees(getCurrentWindDirectionVoltage(), this.currentWindDirection);
+		if (verbose || verboseWind) {
+			System.out.println(String.format(">>> From Voltage: %.2f (%.2f) - No offset.", direction, this.currentWindDirection));
+		}
 		direction += wdOffset;
 		while (direction > 360) {
 			direction -= 360;

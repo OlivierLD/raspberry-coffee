@@ -47,7 +47,7 @@ var init = function () {
   rain:0,
   speed:0,
   temp:14.8,
-  volts:0.9240000247955322
+  volts:0.9240000247955322 // See voltageToDegrees below
 }				 */
 				var dir = json.dir;
 				var ws = json.speed;
@@ -127,6 +127,77 @@ var averageDir = function (va) {
 	return avg;
 //return sum / len;
 };
+
+var Voltage = {
+	V3_3: {adjustment: 0.66},
+	V5: {adjustment: 1.0}
+};
+const VARY_VALUE = 0.05;
+
+var fuzzyCompare = function(thisValue, thatValue) {
+	var b = false;
+	if (thatValue > (thisValue * (1.0 - VARY_VALUE)) &&
+			thatValue < (thisValue * (1.0 + VARY_VALUE))) {
+		b = true;
+	}
+	return b;
+};
+
+var voltageToDegrees = function(value, v) {
+	if (v === undefined) {
+		v = Voltage.V3_3;
+	}
+	if (fuzzyCompare(3.84 * v.adjustment, value)) {
+		return { val: 0, card: 'N' };
+	}
+	if (fuzzyCompare(1.98 * v.adjustment, value)) {
+		return { val: 22.5, card: 'NNE' };
+	}
+	if (fuzzyCompare(2.25 * v.adjustment, value)) {
+		return { val: 45, card: 'NE' };
+	}
+	if (fuzzyCompare(0.41 * v.adjustment, value)) {
+		return { val: 67.5, card: 'ENE' };
+	}
+	if (fuzzyCompare(0.45 * v.adjustment, value)) {
+		return { val: 90.0, card: 'E' };
+	}
+	if (fuzzyCompare(0.32 * v.adjustment, value)) {
+		return { val: 112.5, card: 'ESE' };
+	}
+	if (fuzzyCompare(0.90 * v.adjustment, value)) {
+		return { val: 135.0, card: 'SE' };
+	}
+	if (fuzzyCompare(0.62 * v.adjustment, value)) {
+		return { val: 157.5, card: 'SSE' };
+	}
+	if (fuzzyCompare(1.40 * v.adjustment, value)) {
+		return { val: 180, card: 'S' };
+	}
+	if (fuzzyCompare(1.19 * v.adjustment, value)) {
+		return { val: 202.5, card: 'SSW' };
+	}
+	if (fuzzyCompare(3.08 * v.adjustment, value)) {
+		return { val: 225, card: 'SW' };
+	}
+	if (fuzzyCompare(2.93 * v.adjustment, value)) {
+		return { val: 247.5, card: 'WSW' };
+	}
+	if (fuzzyCompare(4.62 * v.adjustment, value)) {
+		return { val: 270.0, card: 'W' };
+	}
+	if (fuzzyCompare(4.04 * v.adjustment, value)) {
+		return { val: 292.5, card: 'WNW' };
+	}
+	if (fuzzyCompare(4.34 * v.adjustment, value)) { // chart in manufacturers documentation seems wrong
+		return { val: 315.0, card: 'NW' };
+	}
+	if (fuzzyCompare(3.43 * v.adjustment, value)) {
+		return { val: 337.5, card: 'NNW' };
+	}
+	// Oops
+	return { val: 0, card: '-' };
+}
 
 var getClass = function (obj) {
 	if (obj && typeof obj === 'object' &&

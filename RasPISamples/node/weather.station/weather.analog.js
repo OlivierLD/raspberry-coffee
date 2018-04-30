@@ -43,7 +43,7 @@ var initWS = function () {
 		};
 		connection.onmessage = function (message) {
 			//  console.log('onmessage:' + JSON.stringify(message.data));
-			var data = JSON.parse(message.data);
+			var data = JSON.parse(message.data); // TODO Raw direction voltage?
 			setValues(data);
 		};
 	} catch (err) {
