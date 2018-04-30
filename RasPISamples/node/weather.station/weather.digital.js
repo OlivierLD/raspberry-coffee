@@ -58,6 +58,9 @@ var init = function () {
 				var tempOut = json.temp;
 				var humOut = json.hum;
 
+				var rawWinDir = voltageToDegrees(json.volts);
+				console.log(rawWinDir);
+
 				twdArray.push(dir);
 				while (twdArray.length > TWD_ARRAY_MAX_LEN) {
 					twdArray = twdArray.slice(1); // Drop first element (0).
