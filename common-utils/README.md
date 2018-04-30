@@ -9,7 +9,7 @@ Build it:
 ```
 
 #### Email, remote cmmand line:
-Copy the `email.properties.sample` into `email.properties`, moduify it to fit your account(s), then run:
+Copy the `email.properties.sample` into `email.properties`, modify it to fit your account(s), then run:
 ```bash
  $ java -cp ./build/libs/common-utils-1.0-all.jar email.examples.EmailWatcher -send:google -receive:google
 ```
