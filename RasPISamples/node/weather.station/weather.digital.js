@@ -59,7 +59,10 @@ var init = function () {
 				var humOut = json.hum;
 
 				var rawWinDir = voltageToDegrees(json.volts);
-				console.log(rawWinDir);
+//			console.log(rawWinDir);
+				if (rawWinDir.card !== '-') {
+					document.getElementById('raw-wd').innerHTML = rawWinDir.card;
+				}
 
 				twdArray.push(dir);
 				while (twdArray.length > TWD_ARRAY_MAX_LEN) {
