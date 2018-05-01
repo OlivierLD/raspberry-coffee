@@ -2,7 +2,12 @@
 
 var nbMessReceived = 0;
 
+var displayRawDir;
+
 var init = function () {
+
+	displayRawDir = new Raw16PointsDir('rawDirCanvas', 100);
+
 	ws.onopen = function () {
 		try {
 			var text;
@@ -62,6 +67,7 @@ var init = function () {
 //			console.log(rawWinDir);
 				if (rawWinDir.card !== '-') {
 					document.getElementById('raw-wd').innerHTML = rawWinDir.card;
+					displayRawDir.drawDisplay('rawDirCanvas', 100, { name: rawWinDir.card, value: rawWinDir.val });
 				}
 
 				twdArray.push(dir);

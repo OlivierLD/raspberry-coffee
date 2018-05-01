@@ -22,6 +22,9 @@
 				color: silver;
 			}
     </style>
+
+		<script src="widgets/Raw16PointsDir.js"></script>
+
     <script type="text/javascript">
 
   var URI_SUFFIX = "/";
@@ -70,6 +73,9 @@
       }
     }
     init(); // in weather.digital.js
+
+		// For tests
+	  displayRawDir.drawDisplay('rawDirCanvas', 100, { name: 'NE', value: 45 });
   };
     </script>
   </head>
@@ -173,7 +179,11 @@
 										 class="digifont"
 										 style="color: white; font-size: 80px; ">0</div>
 							</td>
-
+						</tr>
+						<tr> <!-- Temp!!! -->
+							<td>
+								<canvas id="rawDirCanvas" width="200" height="200" title="Raw wind dir"></canvas>
+							</td>
 						</tr>
 					</table>
         </td>

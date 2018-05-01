@@ -263,9 +263,9 @@ function DirectionDig(cName, dSize, ticks)
       context.beginPath();
       context.arc(xTo, yTo, 5, 0, 2 * Math.PI, false);
       context.closePath();
-      context.fillStyle = 'gray'; // directionColorConfig.knobColor;
+      context.fillStyle = 'gray'; // raw16pointsColorConfig.knobColor;
       context.fill();
-      context.strokeStyle = 'black'; // directionColorConfig.knobOutlineColor;
+      context.strokeStyle = 'black'; // raw16pointsColorConfig.knobOutlineColor;
       context.stroke();
     }
 
@@ -273,7 +273,7 @@ function DirectionDig(cName, dSize, ticks)
     var dv = displayValue;
     while (dv > 360) dv -= 360;
     while (dv < 0) dv += 360;
-    text = dv.toFixed(1); // directionColorConfig.valueNbDecimal);
+    text = dv.toFixed(1); // raw16pointsColorConfig.valueNbDecimal);
     len = 0;
     context.font = "bold " + Math.round(scale * 30) + "px " + directionColorConfig.font; // "bold 40px Arial"
     var metrics = context.measureText(text);
@@ -298,9 +298,9 @@ function DirectionDig(cName, dSize, ticks)
       context.beginPath();
       context.arc(xTo, yTo, 5, 0, 2 * Math.PI, false);
       context.closePath();
-      context.fillStyle = (displayValue === (i - 90)) ? 'red' : 'gray'; // directionColorConfig.knobColor;
+      context.fillStyle = (displayValue === (i - 90)) ? 'red' : 'gray'; // raw16pointsColorConfig.knobColor;
       context.fill();
-      context.strokeStyle = 'black'; // directionColorConfig.knobOutlineColor;
+      context.strokeStyle = 'black'; // raw16pointsColorConfig.knobOutlineColor;
       context.stroke();
     }
   };
