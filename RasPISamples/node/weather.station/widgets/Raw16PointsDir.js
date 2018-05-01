@@ -44,14 +44,14 @@ function Raw16PointsDir(cName, dSize) {
 	var canvasName = cName;
 	var displaySize = dSize;
 
-	var scale = dSize / 100;
+	var scale = dSize / 200;
 
 	this.valueToDisplay = 0;
 
 	var instance = this;
 
 	this.setDisplaySize = function (ds) {
-		scale = ds / 100;
+		scale = ds / 200;
 		displaySize = ds;
 		this.drawDisplay(canvasName, displaySize);
 	};

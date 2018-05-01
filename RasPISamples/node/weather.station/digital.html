@@ -75,7 +75,7 @@
     init(); // in weather.digital.js
 
 		// For tests
-	  displayRawDir.drawDisplay('rawDirCanvas', 100, { name: 'NE', value: 45 });
+	  displayRawDir.drawDisplay('rawDirCanvas', 45, { name: 'NE', value: 45 });
   };
     </script>
   </head>
@@ -131,9 +131,7 @@
                      style="color: magenta; font-size: 80px; ">0</div>
               </td>
 							<td width="20%" align="center" style="padding:5px; border-radius:5px; border:1px solid #CCC; margin-top:10px;">
-								<div id="raw-wd"
-										 class="digifont"
-										 style="color: lightgreen; font-size: 80px; ">-</div>
+								<canvas id="rawDirCanvas" width="100" height="100" title="Raw wind dir"></canvas>
 							</td>
             </tr>
 						<tr>
@@ -178,11 +176,6 @@
 								<div id="rain"
 										 class="digifont"
 										 style="color: white; font-size: 80px; ">0</div>
-							</td>
-						</tr>
-						<tr> <!-- Temp!!! -->
-							<td>
-								<canvas id="rawDirCanvas" width="200" height="200" title="Raw wind dir"></canvas>
 							</td>
 						</tr>
 					</table>

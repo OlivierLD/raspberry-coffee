@@ -66,8 +66,8 @@ var init = function () {
 				var rawWinDir = voltageToDegrees(json.volts);
 //			console.log(rawWinDir);
 				if (rawWinDir.card !== '-') {
-					document.getElementById('raw-wd').innerHTML = rawWinDir.card;
-					displayRawDir.drawDisplay('rawDirCanvas', 100, { name: rawWinDir.card, value: rawWinDir.val });
+//				document.getElementById('raw-wd').innerHTML = rawWinDir.card;
+					displayRawDir.drawDisplay('rawDirCanvas', 45, { name: rawWinDir.card, value: rawWinDir.val });
 				}
 
 				twdArray.push(dir);
