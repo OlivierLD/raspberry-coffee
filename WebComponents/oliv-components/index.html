@@ -19,6 +19,7 @@
 	<script type="module" src="widgets/WorldMap.js"></script>
 	<script type="module" src="widgets/SkyMap.js"></script>
 	<script type="module" src="widgets/MarqueePanel.js"></script>
+	<script type="module" src="widgets/Raw16PointsDir.js"></script>
 
 	<style>
 		html {
@@ -192,6 +193,25 @@
 //				console.log("Time: %d, => %s", watchValue, timeValue);
 
 					document.getElementById(id).value = timeValue;
+				}, 1000);
+			}
+		}
+
+		let dir16AnimationIntrerval;
+		let dir16IdxValue;
+
+		const cardVals = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+
+		function animate16Dir(id) {
+			if (dir16AnimationIntrerval !== undefined) {
+				window.clearInterval(dir16AnimationIntrerval);
+				dir16AnimationIntrerval = undefined;
+			} else {
+				dir16IdxValue = 0;
+				dir16AnimationIntrerval = window.setInterval(function() {
+					document.getElementById(id).value = cardVals[dir16IdxValue];
+					dir16IdxValue += 1;
+					dir16IdxValue = dir16IdxValue % cardVals.length;
 				}, 1000);
 			}
 		}
@@ -2006,6 +2026,44 @@
 					<button onclick="doAnimateWatch()"
 									title="Time machine!"
 									style="margin-top: 3px;">Animate</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<!--
+		ANALOG WATCH
+	+-->
+	<div style="cursor: pointer;" onclick="showHide('dir-16-points');"><b><u>Direction, 16 points</u></b></div>
+	<div id="dir-16-points" class="smooth">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<dir-16-points id="dir-16-01"
+													 class="dir-16-day"
+													 title="16 points"
+													 width="220"
+													 height="220"
+													 value="N"></dir-16-points>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="text"
+									 id="v-dir-16-01"
+									 placeholder="SSE"
+									 title="Value to set"
+									 style="width: 80px; text-align: center;"
+									 value="SSE"/>
+						<button onclick="setData('v-dir-16-01', 'dir-16-01')"
+										title="Set 16 value"
+										style="margin-top: 3px;">Set</button>
+						<br/>
+						<button onclick="animate16Dir('dir-16-01')"
+										title="Set 16 value"
+										style="margin-top: 3px;">Animate</button>
+
+					</div>
 				</td>
 			</tr>
 		</table>

@@ -444,3 +444,12 @@ compass-rose .gray-flat {
 	--fg-color-from: green;
 	--fg-color-to: yellow;
 }
+
+.dir-16-day {
+	--bg-color: rgba(0, 0, 0, 0);
+	--with-gradient: true;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: black;
+	--value-color: lightgreen;
+	--font: Arial;
+}
