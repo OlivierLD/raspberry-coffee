@@ -39,8 +39,8 @@ public class TwoSteppersDemo {
 				try {
 					System.out.println(String.format(
 							"-----------------------------------------------------------------------------------\n" +
-									"Motor # %d, RPM set to %f, %d Steps per Rev, %f sec per step, %d steps per move.\n" +
-									"-----------------------------------------------------------------------------------",
+							"Motor # %d, RPM set to %f, %d Steps per Rev, %f sec per step, %d steps per move.\n" +
+							"-----------------------------------------------------------------------------------",
 							this.stepper.getMotorNum(),
 							this.stepper.getRPM(),
 							this.stepper.getStepPerRev(),

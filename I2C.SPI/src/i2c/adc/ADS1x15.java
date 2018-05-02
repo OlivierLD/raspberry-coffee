@@ -134,8 +134,9 @@ public class ADS1x15 {
 				}
 			}
 			if (!found) {
-				if (verbose)
+				if (verbose) {
 					System.out.println("Value [" + val + "] not found, defaulting to [" + def + "]");
+				}
 				// Check if default value is in the list
 				found = false;
 				for (spsADS1115 one : values()) {
@@ -183,14 +184,14 @@ public class ADS1x15 {
 			for (spsADS1015 one : values()) {
 				if (one.meaning() == val) {
 					ret = one.value();
-					;
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				if (verbose)
+				if (verbose) {
 					System.out.println("Value [" + val + "] not found, defaulting to [" + def + "]");
+				}
 				// Check if default value is in the list
 				found = false;
 				for (spsADS1015 one : values()) {
@@ -243,8 +244,9 @@ public class ADS1x15 {
 				}
 			}
 			if (!found) {
-				if (verbose)
+				if (verbose) {
 					System.out.println("Value [" + val + "] not found, defaulting to [" + def + "]");
+				}
 				// Check if default value is in the list
 				found = false;
 				for (pgaADS1x15 one : values()) {
@@ -286,8 +288,9 @@ public class ADS1x15 {
 		try {
 			// Get I2C bus
 			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
-			if (verbose)
+			if (verbose) {
 				System.out.println("Connected to bus. OK.");
+			}
 
 			// Get the device itself
 			adc = bus.getDevice(address);
@@ -346,23 +349,25 @@ public class ADS1x15 {
 		// Set sample per seconds, defaults to 250sps
 		// If sps is in the dictionary (defined in init) it returns the value of the constant
 		// othewise it returns the value for 250sps. This saves a lot of if/elif/else code!
-		if (this.adcType.equals(ICType.IC_ADS1015))
+		if (this.adcType.equals(ICType.IC_ADS1015)) {
 			config |= spsADS1015.setDefault(sps, ADS1015_REG_CONFIG_DR_1600SPS);
-		else
+		} else {
 			config |= spsADS1115.setDefault(sps, ADS1115_REG_CONFIG_DR_250SPS);
+		}
 		// Set PGA/voltage range, defaults to +-6.144V
 		config |= pgaADS1x15.setDefault(pga, ADS1015_REG_CONFIG_PGA_6_144V);
 		this.pga = pga;
 
 		// Set the channel to be converted
-		if (channel == Channels.CHANNEL_3)
+		if (channel == Channels.CHANNEL_3) {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_3;
-		else if (channel == Channels.CHANNEL_2)
+		} else if (channel == Channels.CHANNEL_2) {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_2;
-		else if (channel == Channels.CHANNEL_1)
+		} else if (channel == Channels.CHANNEL_1) {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_1;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
+		}
 
 		// Set 'start single-conversion' bit
 		config |= ADS1015_REG_CONFIG_OS_SINGLE;
@@ -400,10 +405,11 @@ public class ADS1x15 {
 			// Return a mV value for the ADS1115
 			// (Take signed values into account as well)
 			int val = ((result[0] & 0xFF) << 8) | (result[1] & 0xFF);
-			if (val > 0x7FFF)
+			if (val > 0x7FFF) {
 				returnVal = (float) ((val - 0xFFFF) * pga / 32768.0);
-			else
+			} else {
 				returnVal = (float) (val * pga / 32768.0);
+			}
 		}
 		return returnVal;
 	}
@@ -429,15 +435,15 @@ public class ADS1x15 {
 						ADS1015_REG_CONFIG_MODE_SINGLE;
 
 		// Set channels
-		if ((chP == Channels.CHANNEL_0) && (chN == Channels.CHANNEL_1))     // 0 1
+		if ((chP == Channels.CHANNEL_0) && (chN == Channels.CHANNEL_1)) {    // 0 1
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_0_1;
-		else if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_3)) // 0 3
+		} else if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_3)) { // 0 3
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_0_3;
-		else if ((chP == Channels.CHANNEL_2) & (chN == Channels.CHANNEL_3)) // 2 3
+		} else if ((chP == Channels.CHANNEL_2) & (chN == Channels.CHANNEL_3)) { // 2 3
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_2_3;
-		else if ((chP == Channels.CHANNEL_1) & (chN == Channels.CHANNEL_3)) // 1 3
+		} else if ((chP == Channels.CHANNEL_1) & (chN == Channels.CHANNEL_3)) { // 1 3
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_1_3;
-		else {
+		} else {
 			if (verbose) {
 				System.out.printf("ADS1x15: Invalid channels specified: %d, %d\n", chP, chN);
 				return -1;
@@ -446,11 +452,11 @@ public class ADS1x15 {
 		// Set sample per seconds, defaults to 250sps
 		// If sps is in the dictionary (defined in init()) it returns the value of the constant
 		// othewise it returns the value for 250sps. This saves a lot of if/elif/else code!
-		if (this.adcType == ICType.IC_ADS1015)
+		if (this.adcType == ICType.IC_ADS1015) {
 			config |= spsADS1015.setDefault(sps, ADS1015_REG_CONFIG_DR_1600SPS);
-		else
+		} else {
 			config |= spsADS1115.setDefault(sps, ADS1115_REG_CONFIG_DR_250SPS);
-
+		}
 		// Set PGA/voltage range, defaults to +-6.144V
 		config |= pgaADS1x15.setDefault(pga, ADS1015_REG_CONFIG_PGA_6_144V);
 		this.pga = pga;
@@ -486,21 +492,22 @@ public class ADS1x15 {
 		if (this.adcType == ICType.IC_ADS1015) {
 			// Shift right 4 bits for the 12-bit ADS1015 and convert to mV
 			returnVal = ((((result[0] & 0xFF) << 8) | (result[1] & 0xFF)) >> 4);
-			returnVal = (float) (returnVal * pga / 2048.0);
+			returnVal = (float) (returnVal * pga / 2_048.0);
 		} else {
 			// Return a mV value for the ADS1115
 			// (Take signed values into account as well)
 			int val = ((result[0] & 0xFF) << 8) | (result[1] & 0xFF);
-			if (val > 0x7FFF)
-				returnVal = (float) ((val - 0xFFFF) * pga / 32768.0);
-			else
-				returnVal = (float) (val * pga / 32768.0);
+			if (val > 0x7FFF) {
+				returnVal = (float) ((val - 0xFFFF) * pga / 32_768.0);
+			} else {
+				returnVal = (float) (val * pga / 32_768.0);
+			}
 		}
 		return returnVal;
 	}
 
 	public float readADCDifferential01() {
-		return readADCDifferential01(6144, 250);
+		return readADCDifferential01(6_144, 250);
 	}
 
 	/**
@@ -515,7 +522,7 @@ public class ADS1x15 {
 	}
 
 	public float readADCDifferential03() {
-		return readADCDifferential03(6144, 250);
+		return readADCDifferential03(6_144, 250);
 	}
 
 	/**
@@ -530,7 +537,7 @@ public class ADS1x15 {
 	}
 
 	public float readADCDifferential13() {
-		return readADCDifferential13(6144, 250);
+		return readADCDifferential13(6_144, 250);
 	}
 
 	/**
@@ -545,7 +552,7 @@ public class ADS1x15 {
 	}
 
 	public float readADCDifferential23() {
-		return readADCDifferential23(6144, 250);
+		return readADCDifferential23(6_144, 250);
 	}
 
 	/**
@@ -564,7 +571,7 @@ public class ADS1x15 {
 	}
 
 	public float startContinuousConversion(Channels channel) {
-		return startContinuousConversion(channel, 6144, 250);
+		return startContinuousConversion(channel, 6_144, 250);
 	}
 
 	/**
@@ -588,25 +595,26 @@ public class ADS1x15 {
 		// Set sample per seconds, defaults to 250sps
 		// If sps is in the dictionary (defined in init()) it returns the value of the constant
 		// othewise it returns the value for 250sps. This saves a lot of if/elif/else code!
-		if (this.adcType == ICType.IC_ADS1015)
+		if (this.adcType == ICType.IC_ADS1015) {
 			config |= spsADS1015.setDefault(sps, ADS1015_REG_CONFIG_DR_1600SPS);
-		else
+		} else {
 			config |= spsADS1115.setDefault(sps, ADS1115_REG_CONFIG_DR_250SPS);
+		}
 
 		// Set PGA/voltage range, defaults to +-6.144V
 		config |= pgaADS1x15.setDefault(pga, ADS1015_REG_CONFIG_PGA_6_144V);
 		this.pga = pga;
 
 		// Set the channel to be converted
-		if (channel == Channels.CHANNEL_3)
+		if (channel == Channels.CHANNEL_3) {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_3;
-		else if (channel == Channels.CHANNEL_2)
+		} else if (channel == Channels.CHANNEL_2) {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_2;
-		else if (channel == Channels.CHANNEL_1)
+		} else if (channel == Channels.CHANNEL_1) {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_1;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
-
+		}
 		// Set 'start single-conversion' bit to begin conversions
 		// No need to change this for continuous mode!
 		config |= ADS1015_REG_CONFIG_OS_SINGLE;
@@ -684,27 +692,28 @@ public class ADS1x15 {
 		// Set sample per seconds, defaults to 250sps
 		// If sps is in the dictionary (defined in init()) it returns the value of the constant
 		// othewise it returns the value for 250sps. This saves a lot of if/elif/else code!
-		if (this.adcType == ICType.IC_ADS1015)
+		if (this.adcType == ICType.IC_ADS1015) {
 			config |= spsADS1015.setDefault(sps, ADS1015_REG_CONFIG_DR_1600SPS);
-		else
+		} else {
 			config |= spsADS1115.setDefault(sps, ADS1115_REG_CONFIG_DR_250SPS);
-
+		}
 		// Set PGA/voltage range, defaults to +-6.144V
 		config |= pgaADS1x15.setDefault(pga, ADS1015_REG_CONFIG_PGA_6_144V);
 		this.pga = pga;
 
 		// Set channels
-		if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_1))
+		if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_1)) {
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_0_1;
-		else if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_3))
+		} else if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_3)) {
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_0_3;
-		else if ((chP == Channels.CHANNEL_2) & (chN == Channels.CHANNEL_3))
+		} else if ((chP == Channels.CHANNEL_2) & (chN == Channels.CHANNEL_3)) {
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_2_3;
-		else if ((chP == Channels.CHANNEL_1) & (chN == Channels.CHANNEL_3))
+		} else if ((chP == Channels.CHANNEL_1) & (chN == Channels.CHANNEL_3)) {
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_1_3;
-		else {
-			if (verbose)
+		} else {
+			if (verbose) {
 				System.out.printf("ADS1x15: Invalid channels specified: %d, %d", chP, chN);
+			}
 			return -1;
 		}
 		// Set 'start single-conversion' bit to begin conversions
@@ -788,21 +797,22 @@ public class ADS1x15 {
 		if (this.adcType == ICType.IC_ADS1015) {
 			// Shift right 4 bits for the 12-bit ADS1015 and convert to mV
 			returnVal = ((((result[0] & 0xFF) << 8) | (result[1] & 0xFF)) >> 4);
-			returnVal = (float) (returnVal * this.pga / 2048.0);
+			returnVal = (float) (returnVal * this.pga / 2_048.0);
 		} else {
 			// Return a mV value for the ADS1115
 			// (Take signed values into account as well)
 			int val = ((result[0] & 0xFF) << 8) | (result[1] & 0xFF);
-			if (val > 0x7FFF)
-				returnVal = (float) ((val - 0xFFFF) * this.pga / 32768.0);
-			else
-				returnVal = (float) (val * this.pga / 32768.0);
+			if (val > 0x7FFF) {
+				returnVal = (float) ((val - 0xFFFF) * this.pga / 32_768.0);
+			} else {
+				returnVal = (float) (val * this.pga / 32_768.0);
+			}
 		}
 		return returnVal;
 	}
 
 	public void startSingleEndedComparator(Channels channel, int thresholdHigh, int thresholdLow) {
-		startSingleEndedComparator(channel, thresholdHigh, thresholdLow, 6144, 250);
+		startSingleEndedComparator(channel, thresholdHigh, thresholdLow, 6_144, 250);
 	}
 
 	public void startSingleEndedComparator(Channels channel, int thresholdHigh, int thresholdLow, int pga, int sps) {
@@ -822,67 +832,73 @@ public class ADS1x15 {
 	 * This function starts the continuous conversion mode.  The sps controls
 	 * the sample rate and the pga the gain, see datasheet page 13.
 	 */
-	public void startSingleEndedComparator(Channels channel, int thresholdHigh, int thresholdLow,
-	                                       int pga, int sps,
-	                                       boolean activeLow, boolean traditionalMode, boolean latching,
+	public void startSingleEndedComparator(Channels channel,
+	                                       int thresholdHigh,
+	                                       int thresholdLow,
+	                                       int pga,
+	                                       int sps,
+	                                       boolean activeLow,
+	                                       boolean traditionalMode,
+	                                       boolean latching,
 	                                       int numReadings) {
 		// Continuous mode
 		int config = ADS1015_REG_CONFIG_MODE_CONTIN;
 
-		if (!activeLow)
+		if (!activeLow) {
 			config |= ADS1015_REG_CONFIG_CPOL_ACTVHI;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_CPOL_ACTVLOW;
-
-		if (!traditionalMode)
+		}
+		if (!traditionalMode) {
 			config |= ADS1015_REG_CONFIG_CMODE_WINDOW;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_CMODE_TRAD;
-
-		if (latching)
+		}
+		if (latching) {
 			config |= ADS1015_REG_CONFIG_CLAT_LATCH;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_CLAT_NONLAT;
-
-		if (numReadings == 4)
+		}
+		if (numReadings == 4) {
 			config |= ADS1015_REG_CONFIG_CQUE_4CONV;
-		else if (numReadings == 2)
+		} else if (numReadings == 2) {
 			config |= ADS1015_REG_CONFIG_CQUE_2CONV;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_CQUE_1CONV;
-
+		}
 		// Set sample per seconds, defaults to 250sps
 		// If sps is in the dictionary (defined in init()) it returns the value of the constant
 		// othewise it returns the value for 250sps. This saves a lot of if/elif/else code!
-		if (this.adcType == ICType.IC_ADS1015)
+		if (this.adcType == ICType.IC_ADS1015) {
 			config |= spsADS1015.setDefault(sps, ADS1015_REG_CONFIG_DR_1600SPS);
-		else
+		} else {
 			config |= spsADS1115.setDefault(sps, ADS1115_REG_CONFIG_DR_250SPS);
-
+		}
 		// Set PGA/voltage range, defaults to +-6.144V
 		config |= pgaADS1x15.setDefault(pga, ADS1015_REG_CONFIG_PGA_6_144V);
 		this.pga = pga;
 
 		// Set the channel to be converted
-		if (channel == Channels.CHANNEL_3)
+		if (channel == Channels.CHANNEL_3) {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_3;
-		else if (channel == Channels.CHANNEL_2)
+		} else if (channel == Channels.CHANNEL_2) {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_2;
-		else if (channel == Channels.CHANNEL_1)
+		} else if (channel == Channels.CHANNEL_1) {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_1;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_MUX_SINGLE_0;
-
+		}
 		// Set 'start single-conversion' bit to begin conversions
 		config |= ADS1015_REG_CONFIG_OS_SINGLE;
 
 		// Write threshold high and low registers to the ADC
 		// V_digital = (2^(n-1)-1)/pga*V_analog
 		int thresholdHighWORD = 0;
-		if (this.adcType == ICType.IC_ADS1015)
-			thresholdHighWORD = (int) (thresholdHigh * (2048.0 / pga));
-		else
-			thresholdHighWORD = (int) (thresholdHigh * (32767.0 / pga));
+		if (this.adcType == ICType.IC_ADS1015) {
+			thresholdHighWORD = (int) (thresholdHigh * (2_048.0 / pga));
+		} else {
+			thresholdHighWORD = (int) (thresholdHigh * (32_767.0 / pga));
+		}
 		byte[] bytes = {(byte) ((thresholdHighWORD >> 8) & 0xFF), (byte) (thresholdHighWORD & 0xFF)};
 		try {
 			adc.write(ADS1015_REG_POINTER_HITHRESH, bytes, 0, 2);
@@ -891,10 +907,11 @@ public class ADS1x15 {
 		}
 
 		int thresholdLowWORD = 0;
-		if (this.adcType == ICType.IC_ADS1015)
-			thresholdLowWORD = (int) (thresholdLow * (2048.0 / pga));
-		else
-			thresholdLowWORD = (int) (thresholdLow * (32767.0 / pga));
+		if (this.adcType == ICType.IC_ADS1015) {
+			thresholdLowWORD = (int) (thresholdLow * (2_048.0 / pga));
+		} else {
+			thresholdLowWORD = (int) (thresholdLow * (32_767.0 / pga));
+		}
 		bytes = new byte[]{(byte) ((thresholdLowWORD >> 8) & 0xFF), (byte) (thresholdLowWORD & 0xFF)};
 		try {
 			adc.write(ADS1015_REG_POINTER_LOWTHRESH, bytes, 0, 2);
@@ -914,7 +931,7 @@ public class ADS1x15 {
 	}
 
 	public void startDifferentialComparator(Channels chP, Channels chN, int thresholdHigh, int thresholdLow) {
-		startDifferentialComparator(chP, chN, thresholdHigh, thresholdLow, 6144, 250);
+		startDifferentialComparator(chP, chN, thresholdHigh, thresholdLow, 6_144, 250);
 	}
 
 	public void startDifferentialComparator(Channels chP, Channels chN, int thresholdHigh, int thresholdLow, int pga, int sps) {
@@ -934,60 +951,67 @@ public class ADS1x15 {
 	 * This function starts the continuous conversion mode.  The sps controls
 	 * the sample rate and the pga the gain, see datasheet page 13.
 	 */
-	public void startDifferentialComparator(Channels chP, Channels chN, int thresholdHigh, int thresholdLow,
-	                                        int pga, int sps,
-	                                        boolean activeLow, boolean traditionalMode, boolean latching,
+	public void startDifferentialComparator(Channels chP,
+	                                        Channels chN,
+	                                        int thresholdHigh,
+	                                        int thresholdLow,
+	                                        int pga,
+	                                        int sps,
+	                                        boolean activeLow,
+	                                        boolean traditionalMode,
+	                                        boolean latching,
 	                                        int numReadings) {
 
 		// Continuous mode
 		int config = ADS1015_REG_CONFIG_MODE_CONTIN;
 
-		if (!activeLow)
+		if (!activeLow) {
 			config |= ADS1015_REG_CONFIG_CPOL_ACTVHI;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_CPOL_ACTVLOW;
-
-		if (!traditionalMode)
+		}
+		if (!traditionalMode) {
 			config |= ADS1015_REG_CONFIG_CMODE_WINDOW;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_CMODE_TRAD;
-
-		if (latching)
+		}
+		if (latching) {
 			config |= ADS1015_REG_CONFIG_CLAT_LATCH;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_CLAT_NONLAT;
-
-		if (numReadings == 4)
+		}
+		if (numReadings == 4) {
 			config |= ADS1015_REG_CONFIG_CQUE_4CONV;
-		else if (numReadings == 2)
+		} else if (numReadings == 2) {
 			config |= ADS1015_REG_CONFIG_CQUE_2CONV;
-		else
+		} else {
 			config |= ADS1015_REG_CONFIG_CQUE_1CONV;
-
+		}
 		// Set sample per seconds, defaults to 250sps
 		// If sps is in the dictionary (defined in init()) it returns the value of the constant
 		// othewise it returns the value for 250sps. This saves a lot of if/elif/else code!
-		if (this.adcType == ICType.IC_ADS1015)
+		if (this.adcType == ICType.IC_ADS1015) {
 			config |= spsADS1015.setDefault(sps, ADS1015_REG_CONFIG_DR_1600SPS);
-		else
+		} else {
 			config |= spsADS1115.setDefault(sps, ADS1115_REG_CONFIG_DR_250SPS);
-
+		}
 		// Set PGA/voltage range, defaults to +-6.144V
 		config |= pgaADS1x15.setDefault(pga, ADS1015_REG_CONFIG_PGA_6_144V);
 		this.pga = pga;
 
 		// Set channels
-		if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_1))
+		if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_1)) {
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_0_1;
-		else if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_3))
+		} else if ((chP == Channels.CHANNEL_0) & (chN == Channels.CHANNEL_3)) {
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_0_3;
-		else if ((chP == Channels.CHANNEL_2) & (chN == Channels.CHANNEL_3))
+		} else if ((chP == Channels.CHANNEL_2) & (chN == Channels.CHANNEL_3)) {
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_2_3;
-		else if ((chP == Channels.CHANNEL_1) & (chN == Channels.CHANNEL_3))
+		} else if ((chP == Channels.CHANNEL_1) & (chN == Channels.CHANNEL_3)) {
 			config |= ADS1015_REG_CONFIG_MUX_DIFF_1_3;
-		else {
-			if (verbose)
+		} else {
+			if (verbose) {
 				System.out.printf("ADS1x15: Invalid channels specified: %d, %d", chP, chN);
+			}
 			return;
 		}
 		// Set 'start single-conversion' bit to begin conversions
@@ -996,10 +1020,11 @@ public class ADS1x15 {
 		// Write threshold high and low registers to the ADC
 		// V_digital = (2^(n-1)-1)/pga*V_analog
 		int thresholdHighWORD = 0;
-		if (this.adcType == ICType.IC_ADS1015)
-			thresholdHighWORD = (int) (thresholdHigh * (2048.0 / pga));
-		else
-			thresholdHighWORD = (int) (thresholdHigh * (32767.0 / pga));
+		if (this.adcType == ICType.IC_ADS1015) {
+			thresholdHighWORD = (int) (thresholdHigh * (2_048.0 / pga));
+		} else {
+			thresholdHighWORD = (int) (thresholdHigh * (32_767.0 / pga));
+		}
 		byte[] bytes = {(byte) ((thresholdHighWORD >> 8) & 0xFF), (byte) (thresholdHighWORD & 0xFF)};
 		try {
 			adc.write(ADS1015_REG_POINTER_HITHRESH, bytes, 0, 2);
@@ -1008,10 +1033,11 @@ public class ADS1x15 {
 		}
 
 		int thresholdLowWORD = 0;
-		if (this.adcType == ICType.IC_ADS1015)
-			thresholdLowWORD = (int) (thresholdLow * (2048.0 / pga));
-		else
-			thresholdLowWORD = (int) (thresholdLow * (32767.0 / pga));
+		if (this.adcType == ICType.IC_ADS1015) {
+			thresholdLowWORD = (int) (thresholdLow * (2_048.0 / pga));
+		} else {
+			thresholdLowWORD = (int) (thresholdLow * (32_767.0 / pga));
+		}
 		bytes = new byte[]{(byte) ((thresholdLowWORD >> 8) & 0xFF), (byte) (thresholdLowWORD & 0xFF)};
 		try {
 			adc.write(ADS1015_REG_POINTER_LOWTHRESH, bytes, 0, 2);

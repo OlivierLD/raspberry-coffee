@@ -15,20 +15,16 @@ public class ComparatorSample
   public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException
   {
     final ADS1x15 adc = new ADS1x15(ADS1x15.ICType.IC_ADS1115);
-    Runtime.getRuntime().addShutdownHook(new Thread()
-     {
-       public void run()
-       {
-         System.out.println("Stop reading.");
-         adc.stopContinuousConversion();
-         try { Thread.sleep(250L); } catch (Exception ex) {}
-         setGo(false);
-       }
-     });
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      System.out.println("Stop reading.");
+      adc.stopContinuousConversion();
+      try { Thread.sleep(250L); } catch (Exception ex) {}
+      setGo(false);
+    }));
     adc.startSingleEndedComparator(ADS1x15.Channels.CHANNEL_2, 200, 100, 1024, 250);
     while (go)
     {
-      System.out.println("Channel 2:" + adc.getLastConversionResults() / 1000.0);
+      System.out.println("Channel 2:" + adc.getLastConversionResults() / 1_000.0);
       try { Thread.sleep(250L); } catch (Exception ex) {}
     }
   }
