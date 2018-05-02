@@ -211,10 +211,10 @@ public class ADS1x15 {
 
 	// Dictionary with the programmable gains
 	public enum pgaADS1x15 {
-		ADS1015_REG_CONFIG_PGA_6_144V(6144, ADS1x15.ADS1015_REG_CONFIG_PGA_6_144V),
-		ADS1015_REG_CONFIG_PGA_4_096V(4096, ADS1x15.ADS1015_REG_CONFIG_PGA_4_096V),
-		ADS1015_REG_CONFIG_PGA_2_048V(2048, ADS1x15.ADS1015_REG_CONFIG_PGA_2_048V),
-		ADS1015_REG_CONFIG_PGA_1_024V(1024, ADS1x15.ADS1015_REG_CONFIG_PGA_1_024V),
+		ADS1015_REG_CONFIG_PGA_6_144V(6_144, ADS1x15.ADS1015_REG_CONFIG_PGA_6_144V),
+		ADS1015_REG_CONFIG_PGA_4_096V(4_096, ADS1x15.ADS1015_REG_CONFIG_PGA_4_096V),
+		ADS1015_REG_CONFIG_PGA_2_048V(2_048, ADS1x15.ADS1015_REG_CONFIG_PGA_2_048V),
+		ADS1015_REG_CONFIG_PGA_1_024V(1_024, ADS1x15.ADS1015_REG_CONFIG_PGA_1_024V),
 		ADS1015_REG_CONFIG_PGA_0_512V(512, ADS1x15.ADS1015_REG_CONFIG_PGA_0_512V),
 		ADS1015_REG_CONFIG_PGA_0_256V(256, ADS1x15.ADS1015_REG_CONFIG_PGA_0_256V);
 
@@ -287,7 +287,7 @@ public class ADS1x15 {
 
 		try {
 			// Get I2C bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
 			if (verbose) {
 				System.out.println("Connected to bus. OK.");
 			}
@@ -299,7 +299,7 @@ public class ADS1x15 {
 
 			// Set pga value, so that getLastConversionResult() can use it,
 			// any function that accepts a pga value must update this.
-			this.pga = 6144;
+			this.pga = 6_144;
 
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
@@ -322,7 +322,7 @@ public class ADS1x15 {
 	}
 
 	public float readADCSingleEnded(Channels channel) {
-		return readADCSingleEnded(channel, 6144, 250);
+		return readADCSingleEnded(channel, 6_144, 250);
 	}
 
 	/**
@@ -348,7 +348,7 @@ public class ADS1x15 {
 
 		// Set sample per seconds, defaults to 250sps
 		// If sps is in the dictionary (defined in init) it returns the value of the constant
-		// othewise it returns the value for 250sps. This saves a lot of if/elif/else code!
+		// otherwise it returns the value for 250sps. This saves a lot of if/elif/else code!
 		if (this.adcType.equals(ICType.IC_ADS1015)) {
 			config |= spsADS1015.setDefault(sps, ADS1015_REG_CONFIG_DR_1600SPS);
 		} else {
@@ -406,16 +406,16 @@ public class ADS1x15 {
 			// (Take signed values into account as well)
 			int val = ((result[0] & 0xFF) << 8) | (result[1] & 0xFF);
 			if (val > 0x7FFF) {
-				returnVal = (float) ((val - 0xFFFF) * pga / 32768.0);
+				returnVal = (float) ((val - 0xFFFF) * pga / 32_768.0);
 			} else {
-				returnVal = (float) (val * pga / 32768.0);
+				returnVal = (float) (val * pga / 32_768.0);
 			}
 		}
 		return returnVal;
 	}
 
 	public float readADCDifferential() {
-		return readADCDifferential(Channels.CHANNEL_0, Channels.CHANNEL_1, 6144, 250);
+		return readADCDifferential(Channels.CHANNEL_0, Channels.CHANNEL_1, 6_144, 250);
 	}
 
 	/**
@@ -654,10 +654,10 @@ public class ADS1x15 {
 			returnVal = (result[0] << 8) | (result[1]);
 			if (returnVal > 0x7FFF) {
 				returnVal = (returnVal - 0xFFFF);
-				returnVal = (float) (returnVal * pga / 32768.0);
+				returnVal = (float) (returnVal * pga / 32_768.0);
 			} else {
 				returnVal = ((result[0] << 8) | (result[1]));
-				returnVal = (float) (returnVal * pga / 32768.0);
+				returnVal = (float) (returnVal * pga / 32_768.0);
 			}
 		}
 		return returnVal;
@@ -668,7 +668,7 @@ public class ADS1x15 {
 	}
 
 	public float startContinuousDifferentialConversion(Channels chP, Channels chN) {
-		return startContinuousDifferentialConversion(chP, chN, 6144, 250);
+		return startContinuousDifferentialConversion(chP, chN, 6_144, 250);
 	}
 
 	/**
@@ -755,10 +755,10 @@ public class ADS1x15 {
 			returnVal = (result[0] << 8) | (result[1]);
 			if (returnVal > 0x7FFF) {
 				returnVal = (returnVal - 0xFFFF);
-				returnVal = (float) (returnVal * pga / 32768.0);
+				returnVal = (float) (returnVal * pga / 32_768.0);
 			} else {
 				returnVal = ((result[0] << 8) | (result[1]));
-				returnVal = (float) (returnVal * pga / 32768.0);
+				returnVal = (float) (returnVal * pga / 32_768.0);
 			}
 		}
 		return returnVal;

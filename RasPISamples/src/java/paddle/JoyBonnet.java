@@ -21,7 +21,7 @@ public class JoyBonnet {
 
 	private ADS1x15 ads1015 = null;
 	private final static ADS1x15.ICType ADC_TYPE = ADS1x15.ICType.IC_ADS1015;
-	private int gain = 6144;
+	private int gain = 6_144;
 	private int sps = 250;
 
 	// TODO Listen to the buttons (8 buttons)
