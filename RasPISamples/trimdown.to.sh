@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 #
-# Provide the number to trim it down as prm. Default 500
+# Provide the number to trim it down to as prm. Default 500
 #
 echo Working from `pwd`
 #
 function dropFirst() {
   for jpg in `ls web/*.jpg`
   do
+    echo "Dropping $jpg"
     rm $jpg
     break   # Remove just the first one
   done
