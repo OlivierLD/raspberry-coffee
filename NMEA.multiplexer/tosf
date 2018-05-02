@@ -1,0 +1,5 @@
+#!/bin/bash
+cd raspberry-pi4j-samples/SunFlower/
+nohup ./run resthttp &
+echo Done!
+
