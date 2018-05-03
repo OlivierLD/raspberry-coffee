@@ -9,7 +9,9 @@ public class BackendAlgorithm {
 			return;
 		}
 		move(n - 1, from, using, to);
-		System.out.println("Moving from " + from + " to " + to);
+		if ("true".equals(System.getProperty("backend.verbose", "false"))) {
+			System.out.println("Moving from " + from + " to " + to);
+		}
 		HanoiContext.getInstance().fireMoveRequired(from, to); // Tell the UI (whatever it is)
 		move(n - 1, using, to, from);
 	}
@@ -23,6 +25,7 @@ public class BackendAlgorithm {
 				nfe.printStackTrace();
 			}
 		}
+		System.setProperty("backend.verbose", "true");
 		move(nbDisc, "A", "C", "B"); // Moving A to C using B
 	}
 

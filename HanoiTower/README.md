@@ -1,3 +1,100 @@
+## Hanoi Tower Resolution
+
+#### Several User Interfaces
+- Command Line
+- Command Line ++
+- Swing
+
 This is a small graphical (Swing) example of the Hanoi Tower resolution.
 This will be used as a base for a MeArm (or any robotic arm) resolution of the same Hanoi Tower...
 
+Run it like:
+```bash
+ $ ../gradlew runSample
+```
+
+![Screenshot](./screenshot.png)
+
+Click the `Go!` button to start the animation.
+
+Or also
+```bash
+$ ../gradlew clean build
+$ java -cp build/libs/HanoiTower-1.0.jar hanoitower.main.Console 3
+Moving the tower from B to A
+Moving from B to A
+Moving from B to C
+Moving from A to C
+Moving from B to A
+Moving from C to B
+Moving from C to A
+Moving from B to A
+
+$ java -cp build/libs/HanoiTower-1.0.jar hanoitower.main.ConsoleUI 3
+Moving the tower from A to C
+
+   _|_     |      |
+  __|__    |      |
+ ___|___   |      |
+
+    A      B      C
+
+Moving from A to C
+
+    |      |      |
+  __|__    |      |
+ ___|___   |     _|_
+
+    A      B      C
+
+Moving from A to B
+
+    |      |      |
+    |      |      |
+ ___|___ __|__   _|_
+
+    A      B      C
+
+Moving from C to B
+
+    |      |      |
+    |     _|_     |
+ ___|___ __|__    |
+
+    A      B      C
+
+Moving from A to C
+
+    |      |      |
+    |     _|_     |
+    |    __|__ ___|___
+
+    A      B      C
+
+Moving from B to A
+
+    |      |      |
+    |      |      |
+   _|_   __|__ ___|___
+
+    A      B      C
+
+Moving from B to C
+
+    |      |      |
+    |      |    __|__
+   _|_     |   ___|___
+
+    A      B      C
+
+Moving from A to C
+
+    |      |     _|_
+    |      |    __|__
+    |      |   ___|___
+
+    A      B      C
+
+Finished in 7 moves.
+$
+```
