@@ -38,6 +38,7 @@ dependencies {
   compile project(':RESTNauticalAlmanac')
   compile project(':RESTImageProcessor')
   compile project(':JavaSoundDemo')
+  compile project(':HanoiTower')
 }
 
 repositories {
