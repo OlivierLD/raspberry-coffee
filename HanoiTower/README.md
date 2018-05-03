@@ -98,3 +98,11 @@ Moving from A to C
 Finished in 7 moves.
 $
 ```
+
+### Comments
+Interestingly, all the skill - the actual resolution - is in the class `hanoitower.BackendAlgorithm`.
+It is small, and recursive.
+
+All the other classes are here for the graphical rendering.
+
+---
