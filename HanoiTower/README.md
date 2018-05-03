@@ -9,7 +9,7 @@ This is a small graphical (Swing) example of the Hanoi Tower resolution.
 This will be used as a base for a MeArm (or any robotic arm) resolution of the same Hanoi Tower...
 
 Run it like:
-```bash
+```
  $ ../gradlew runSample
 ```
 
@@ -18,9 +18,10 @@ Run it like:
 Click the `Go!` button to start the animation.
 
 Or also
-```bash
+```
 $ ../gradlew clean build
 $ java -cp build/libs/HanoiTower-1.0.jar hanoitower.main.Console 3
+Anticipating 7 moves...
 Moving the tower from B to A
 Moving from B to A
 Moving from B to C
@@ -31,6 +32,7 @@ Moving from C to A
 Moving from B to A
 
 $ java -cp build/libs/HanoiTower-1.0.jar hanoitower.main.ConsoleUI 3
+Anticipating 7 moves...
 Moving the tower from A to C
 
    _|_     |      |
