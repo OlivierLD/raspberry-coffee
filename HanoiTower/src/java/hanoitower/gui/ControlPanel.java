@@ -89,7 +89,7 @@ public class ControlPanel extends JPanel {
 
 	private void nbDiscSpinner_propertyChange(PropertyChangeEvent e) {
 		int nb = ((Integer) nbDiscSpinner.getValue()).intValue();
-		System.out.println("From the spinner");
+//	System.out.println("From the spinner");
 		HanoiContext.getInstance().fireSetNbDisc(nb);
 	}
 

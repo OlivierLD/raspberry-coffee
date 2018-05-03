@@ -188,8 +188,8 @@ public class HanoiPanel extends JPanel {
 		int nbDisc;
 
 		public Stand(String nameOne, String nameTwo, String nameThree) {
-			posts = new LinkedHashMap<>(3);
-			nbDisc = 0;
+			this.posts = new LinkedHashMap<>(3);
+			this.nbDisc = 0;
 			posts.put(nameOne, new Post());
 			posts.put(nameTwo, new Post());
 			posts.put(nameThree, new Post());
@@ -203,25 +203,24 @@ public class HanoiPanel extends JPanel {
 
 	public HanoiPanel(int i) {
 		instance = this;
-		nbDisc = 5;
-		nbMove = 0;
-		gradientPaint = null;
-		discInFlight = null;
-		inFlightX = 0;
-		inFlightY = 0;
-		oneDiscMaxWidth = 0;
-		oneDiscThickness = 0;
-		nbDisc = i;
+		this.nbMove = 0;
+		this.gradientPaint = null;
+		this.discInFlight = null;
+		this.inFlightX = 0;
+		this.inFlightY = 0;
+		this.oneDiscMaxWidth = 0;
+		this.oneDiscThickness = 0;
+		this.nbDisc = i;
 		try {
-			jbInit();
+			this.jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void setNbDisc(int i) {
-		nbDisc = i;
-		initialize();
+		this.nbDisc = i;
+		this.initialize();
 	}
 
 	private void jbInit() throws Exception {
@@ -229,7 +228,8 @@ public class HanoiPanel extends JPanel {
 		HanoiContext.getInstance().addApplicationListener(new HanoiEventListener() {
 
       public void moveRequired(String from, String to) {
-        nbMove++;
+        instance.nbMove++;
+        // TODO Display the step/allSteps
         System.out.println((new StringBuilder()).append("Moving from ").append(from).append(" to ").append(to).toString());
         Post fromPost = HanoiPanel.hanoiStand.getPost(from);
         Post toPost = HanoiPanel.hanoiStand.getPost(to);
@@ -254,8 +254,7 @@ public class HanoiPanel extends JPanel {
             } catch (Exception ex) {
               ex.printStackTrace();
             }
-          }
-          );
+          });
         } catch (Exception ex) {
           ex.printStackTrace();
         }
@@ -290,8 +289,8 @@ public class HanoiPanel extends JPanel {
 				toY = discBaseY;
 			}
 			int postIdx = 0;
-			for (Iterator i$ = keys.iterator(); i$.hasNext(); ) {
-				String k = (String) i$.next();
+			for (Iterator iterator = keys.iterator(); iterator.hasNext(); ) {
+				String k = (String) iterator.next();
 				int postAxisX = (postIdx + 1) * (getWidth() / 4);
 				if (from.equals(hanoiStand.getPosts().get(k))) {
 					fromX = postAxisX;
@@ -338,6 +337,12 @@ public class HanoiPanel extends JPanel {
 			drawStandNames(gr);
 		}
 		drawDiscs(gr);
+
+		if (this.nbMove != 0) {
+			gr.setColor(Color.green);
+			String txt = String.format("Move %d/%d", this.nbMove, (int)(Math.pow(2, this.nbDisc) - 1));
+			gr.drawString(txt, 5, 20);
+		}
 	}
 
 	private void drawStand(Graphics gr) {
@@ -443,12 +448,12 @@ public class HanoiPanel extends JPanel {
 
 	public synchronized void startSolving() {
 		initialize();
-		System.out.println("Starting solving");
-		nbMove = 0;
-		BackendAlgorithm.move(nbDisc, "A", "C", "B");
+		System.out.println(String.format("Starting solving, anticipating %d moves.", (int)(Math.pow(2, this.nbDisc) - 1)));
+		this.nbMove = 0;
+		BackendAlgorithm.move(this.nbDisc, "A", "C", "B");
 		System.out.println((new StringBuilder())
 				.append("Finished in ")
-				.append(nbMove)
+				.append(this.nbMove)
 				.append(" moves.").toString());
 		HanoiContext.getInstance().fireComputationCompleted();
 	}
