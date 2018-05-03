@@ -162,12 +162,15 @@ public class ConsoleUI {
 	public static void main(String... args) {
 		new ConsoleUI();
 		int nbDisc = 5;
-		if (args.length > 0)
+		if (args.length > 0) {
 			try {
 				nbDisc = Integer.parseInt(args[0]);
 			} catch (Exception ex) {
 				System.err.println(ex.toString());
 			}
+		}
+		System.out.println(String.format("Anticipating %d moves...", (int)(Math.pow(2, nbDisc) - 1)));
+
 		hanoiStand = new Stand("A", "B", "C");
 		hanoiStand.initStand(nbDisc, "A");
 		System.out.println("Moving the tower from A to C");

@@ -23,6 +23,7 @@ public class Console {
 				System.err.println(ex.toString());
 			}
 		new Console();
+		System.out.println(String.format("Anticipating %d moves...", (int)(Math.pow(2, nb) - 1)));
 		System.out.println("Moving the tower from B to A");
 		BackendAlgorithm.move(nb, "B", "A", "C");
 	}

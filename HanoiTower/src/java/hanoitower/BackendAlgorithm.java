@@ -10,7 +10,7 @@ public class BackendAlgorithm {
 		}
 		move(n - 1, from, using, to);
 		if ("true".equals(System.getProperty("backend.verbose", "false"))) {
-			System.out.println("Moving from " + from + " to " + to);
+			System.out.println("Move disc from " + from + " to " + to);
 		}
 		HanoiContext.getInstance().fireMoveRequired(from, to); // Tell the UI (whatever it is)
 		move(n - 1, using, to, from);
