@@ -1,0 +1,3 @@
+This is a small graphical (Swing) example of the Hanoi Tower resolution.
+This will be used as a base for a MeArm (or any robotic arm) resolution of the same Hanoi Tower...
+

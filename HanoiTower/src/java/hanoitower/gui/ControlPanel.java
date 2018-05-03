@@ -9,13 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 
 public class ControlPanel extends JPanel {
@@ -40,8 +37,7 @@ public class ControlPanel extends JPanel {
 		}
 	}
 
-	private void jbInit()
-			throws Exception {
+	private void jbInit() throws Exception {
 		HanoiContext.getInstance().addApplicationListener(new HanoiEventListener() {
 
       public void computationCompleted() {
@@ -63,9 +59,9 @@ public class ControlPanel extends JPanel {
 		nbDiscSpinner.setValue(4);
 		goButton.setText("Go!");
 		goButton.addActionListener(e -> goButton_actionPerformed(e));
-		add(nbDiscLabel, new GridBagConstraints(0, 0, 1, 1, 0.0D, 0.0D, 13, 0, new Insets(0, 0, 0, 3), 0, 0));
-		add(nbDiscSpinner, new GridBagConstraints(1, 0, 1, 1, 0.0D, 0.0D, 10, 2, new Insets(0, 0, 0, 0), 0, 0));
-		add(goButton, new GridBagConstraints(2, 0, 1, 1, 0.0D, 0.0D, 10, 0, new Insets(0, 10, 0, 0), 0, 0));
+		add(nbDiscLabel, new GridBagConstraints(0, 0, 1, 1, 0.0D, 0.0D, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 3), 0, 0));
+		add(nbDiscSpinner, new GridBagConstraints(1, 0, 1, 1, 0.0D, 0.0D, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		add(goButton, new GridBagConstraints(2, 0, 1, 1, 0.0D, 0.0D, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
 	}
 
 	private void goButton_actionPerformed(ActionEvent e) {

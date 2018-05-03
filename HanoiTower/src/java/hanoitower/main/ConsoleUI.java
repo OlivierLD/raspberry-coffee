@@ -144,7 +144,11 @@ public class ConsoleUI {
 		HanoiContext.getInstance().addApplicationListener(new HanoiEventListener() {
       public void moveRequired(String from, String to) {
         ConsoleUI.nbMove++;
-        System.out.println((new StringBuilder()).append("Moving from ").append(from).append(" to ").append(to).toString());
+        System.out.println((new StringBuilder())
+		        .append("Moving from ")
+		        .append(from).append(" to ")
+		        .append(to)
+		        .toString());
         Post fromPost = ConsoleUI.hanoiStand.getPost(from);
         Post toPost = ConsoleUI.hanoiStand.getPost(to);
         Integer discToMove = fromPost.getTopDisc();
@@ -169,6 +173,10 @@ public class ConsoleUI {
 		System.out.println("Moving the tower from A to C");
 		System.out.println(hanoiStand.toString());
 		BackendAlgorithm.move(nbDisc, "A", "C", "B");
-		System.out.println((new StringBuilder()).append("Finished in ").append(nbMove).append(" moves.").toString());
+		System.out.println((new StringBuilder())
+				.append("Finished in ")
+				.append(nbMove)
+				.append(" moves.")
+				.toString());
 	}
 }

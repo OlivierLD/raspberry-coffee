@@ -8,7 +8,6 @@ public class BackendAlgorithm {
 		if (n == 0) {
 			return;
 		}
-
 		move(n - 1, from, using, to);
 		System.out.println("Moving from " + from + " to " + to);
 		HanoiContext.getInstance().fireMoveRequired(from, to); // Tell the UI (whatever it is)

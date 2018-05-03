@@ -4,10 +4,7 @@ import hanoitower.BackendAlgorithm;
 
 public class Timer {
 
-	public Timer() {
-	}
-
-	public static void main(String args[]) {
+	public static void main(String... args) {
 		int nbDisc = 1;
 		BackendAlgorithm.move(nbDisc, "B", "A", "C");
 		for (int i = 2; i <= 25; i++) {
