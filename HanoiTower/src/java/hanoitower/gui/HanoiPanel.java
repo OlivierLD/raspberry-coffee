@@ -304,8 +304,9 @@ public class HanoiPanel extends JPanel {
 
 		}
 
-		int nbStep = 20; // Smaller is faster. TODO Make this a user parameter
+		int nbStep = HanoiContext.getInstance().getDiscMoveInterval(); // Smaller is faster. 1..100
 		for (int i = 0; i < nbStep; i++) {
+			nbStep = HanoiContext.getInstance().getDiscMoveInterval();
 			double x = (double) fromX + (double) (i * (toX - fromX)) / (double) nbStep;
 			double y = ((double) fromY + (double) (i * (toY - fromY)) / (double) nbStep) - (double) oneDiscThickness * (double) Math.min(i, nbStep - i) * 0.05D;
 			inFlightX = (int) Math.round(x);

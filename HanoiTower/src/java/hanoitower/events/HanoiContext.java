@@ -7,6 +7,7 @@ public class HanoiContext {
 
 	private static HanoiContext instance = null;
 	private List<HanoiEventListener> applicationListeners;
+	private int discMoveInterval = 50;
 
 	private HanoiContext() {
 		applicationListeners = new ArrayList<>();
@@ -34,33 +35,37 @@ public class HanoiContext {
 
 	public void fireMoveRequired(String from, String to) {
 		for (int i = 0; i < instance.getListeners().size(); i++) {
-			HanoiEventListener l = (HanoiEventListener) instance.getListeners().get(i);
+			HanoiEventListener l = instance.getListeners().get(i);
 			l.moveRequired(from, to);
 		}
-
 	}
 
 	public void fireStartComputation() {
 		for (int i = 0; i < instance.getListeners().size(); i++) {
-			HanoiEventListener l = (HanoiEventListener) instance.getListeners().get(i);
+			HanoiEventListener l = instance.getListeners().get(i);
 			l.startComputation();
 		}
-
 	}
 
 	public void fireComputationCompleted() {
 		for (int i = 0; i < instance.getListeners().size(); i++) {
-			HanoiEventListener l = (HanoiEventListener) instance.getListeners().get(i);
+			HanoiEventListener l = instance.getListeners().get(i);
 			l.computationCompleted();
 		}
-
 	}
 
 	public void fireSetNbDisc(int n) {
 		for (int i = 0; i < instance.getListeners().size(); i++) {
-			HanoiEventListener l = (HanoiEventListener) instance.getListeners().get(i);
+			HanoiEventListener l = instance.getListeners().get(i);
 			l.setNbDisc(n);
 		}
+	}
 
+	public void setDiscMoveInterval(int value) {
+		this.discMoveInterval = value;
+	}
+
+	public int getDiscMoveInterval() {
+		return this.discMoveInterval;
 	}
 }
