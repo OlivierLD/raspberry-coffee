@@ -8,8 +8,6 @@ import i2c.samples.mearm.MeArmPilot;
 
 import javax.swing.JOptionPane;
 
-import java.io.IOException;
-
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_BOTTOM_SERVO_CHANNEL;
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_CLAW_SERVO_CHANNEL;
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_LEFT_SERVO_CHANNEL;
@@ -19,6 +17,12 @@ public class HanoiPilot {
 
 	private static int nbDisc = 4;
 	private static int nbMove = 0;
+
+	private static int
+			left = DEFAULT_LEFT_SERVO_CHANNEL,
+			right = DEFAULT_RIGHT_SERVO_CHANNEL,
+			bottom = DEFAULT_BOTTOM_SERVO_CHANNEL,
+			claw = DEFAULT_CLAW_SERVO_CHANNEL;
 
 	private static HanoiContext.Stand hanoiStand = null;
 	private static Thread me;
@@ -34,14 +38,49 @@ public class HanoiPilot {
 		HanoiContext.getInstance().fireComputationCompleted();
 	}
 
+	private final static String DISCS_PREFIX  = "--discs:";
+	private final static String CLAW_PREFIX   = "--claw:";
+	private final static String LEFT_PREFIX   = "--left:";
+	private final static String RIGHT_PREFIX  = "--right:";
+	private final static String BOTTOM_PREFIX = "--bottom:";
 
 	public static void main(String... args) {
 
-		if (args.length == 1) {
-			try {
-				nbDisc = Integer.parseInt(args[0]);
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
+		if (args.length > 0) {
+			for (String prm : args) {
+				if (prm.startsWith(DISCS_PREFIX)) {
+					try {
+						nbDisc = Integer.parseInt(prm.substring(DISCS_PREFIX.length()));
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else if (prm.startsWith(CLAW_PREFIX)) {
+					try {
+						claw = Integer.parseInt(prm.substring(CLAW_PREFIX.length()));
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else if (prm.startsWith(LEFT_PREFIX)) {
+					try {
+						left = Integer.parseInt(prm.substring(LEFT_PREFIX.length()));
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else if (prm.startsWith(RIGHT_PREFIX)) {
+					try {
+						right = Integer.parseInt(prm.substring(RIGHT_PREFIX.length()));
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else if (prm.startsWith(BOTTOM_PREFIX)) {
+					try {
+						bottom = Integer.parseInt(prm.substring(BOTTOM_PREFIX.length()));
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else {
+					System.out.println("Duh?");
+				}
 			}
 		}
 
@@ -52,7 +91,7 @@ public class HanoiPilot {
 		hanoiStand.initStand(nbDisc, initialPost);
 
 		try {
-			MeArmPilot.initContext(DEFAULT_LEFT_SERVO_CHANNEL, DEFAULT_CLAW_SERVO_CHANNEL, DEFAULT_BOTTOM_SERVO_CHANNEL, DEFAULT_RIGHT_SERVO_CHANNEL);
+			MeArmPilot.initContext(left, claw, bottom, right);
 		} catch (I2CFactory.UnsupportedBusNumberException ex) {
 			System.out.println("Ooops, no I2C bus...");
 		} catch (Exception ioe) {
