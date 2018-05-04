@@ -9,7 +9,8 @@ import java.io.InputStreamReader;
 import static utils.StaticUtil.userInput;
 
 /**
- * Drive a MeArm robotic arm, interactively.
+ * Drive a MeArm robotic arm, interactively, from the CLI
+ *
  * Uses a PCA9685 (I2C) to drive the MeArm's 4 servos.
  * Relies on {@link MeArmPilot}
  *

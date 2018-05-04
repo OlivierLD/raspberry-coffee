@@ -7,7 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * Standard, all the way, clockwise, counterclockwise.
+ * Executes a script containing commands to drive a MeArm robotic arm,
+ * like script.01.mearm
  *
  * Uses a PCA9685 (I2C) to drive a MeArm
  *

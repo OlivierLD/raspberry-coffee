@@ -14,12 +14,14 @@ import static utils.StaticUtil.userInput;
 import static utils.TimeUtil.delay;
 
 /**
- * Standard, all the way, clockwise, counterclockwise.
+ * Refers to a szc ript containing commands to execute to drive e MeArm robotic arm.
  *
  * Uses a PCA9685 (I2C) to drive a MeArm
  *
  * This class refers to a script to know what to do.
  * See the {@link #main} method.
+ *
+ * @deprecated, use {@link MeArmPilotDemo} instead.
  */
 public class MeArmScriptDemo {
 	// Servo MG90S

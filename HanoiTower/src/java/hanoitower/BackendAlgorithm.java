@@ -12,7 +12,10 @@ public class BackendAlgorithm {
 		if ("true".equals(System.getProperty("backend.verbose", "false"))) {
 			System.out.println("Move disc from " + from + " to " + to);
 		}
+//		System.out.println(">>>> Before fireMoveRequired.");
+//		long before = System.currentTimeMillis();
 		HanoiContext.getInstance().fireMoveRequired(from, to); // Tell the UI (whatever it is)
+//		System.out.println(String.format(">>>> After fireMoveRequired (%d ms).", (System.currentTimeMillis() - before)));
 		move(n - 1, using, to, from);
 	}
 

@@ -69,5 +69,6 @@ dependencies {
   compile project(':SevenSegDisplay')
   compile project(':Adafruit.IO.REST')
   compile project(':NMEA.multiplexer')
+  compile project(':HanoiTower')
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
 }

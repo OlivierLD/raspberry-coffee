@@ -7,7 +7,7 @@ import static utils.StaticUtil.userInput;
 import static utils.TimeUtil.delay;
 
 /*
- * Standard, all the way, clockwise, counterclockwise
+ * Executres a given set fo commands to drive a MeArm.
  *
  * Uses a PCA9685 (I2C) to drive a MeArm
  */
