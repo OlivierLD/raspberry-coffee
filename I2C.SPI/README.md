@@ -71,6 +71,7 @@ Requires a `PCA9685`, and 4 servos.
 
 See `i2c.samples.MeArmScriptDemo` and the script `mearm.script`, along with the file `script.01.mearm`.
 
+See [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Processing#mearm-gui) for wiring and more details.
 
 ... More details to come.
 
