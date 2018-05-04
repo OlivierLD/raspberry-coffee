@@ -8,6 +8,8 @@ import i2c.samples.mearm.MeArmPilot;
 
 import javax.swing.JOptionPane;
 
+import java.io.IOException;
+
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_BOTTOM_SERVO_CHANNEL;
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_CLAW_SERVO_CHANNEL;
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_LEFT_SERVO_CHANNEL;
@@ -53,6 +55,8 @@ public class HanoiPilot {
 			MeArmPilot.initContext(DEFAULT_LEFT_SERVO_CHANNEL, DEFAULT_CLAW_SERVO_CHANNEL, DEFAULT_BOTTOM_SERVO_CHANNEL, DEFAULT_RIGHT_SERVO_CHANNEL);
 		} catch (I2CFactory.UnsupportedBusNumberException ex) {
 			System.out.println("Ooops, no I2C bus...");
+		} catch (Exception ioe) {
+			System.out.println("Is the PCA9685 connected?");
 		}
 
 		HanoiContext.getInstance().fireSetNbDisc(nbDisc);
