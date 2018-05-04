@@ -44,6 +44,13 @@ public class HanoiPilot {
 	private final static String RIGHT_PREFIX  = "--right:";
 	private final static String BOTTOM_PREFIX = "--bottom:";
 
+	private final static String[] reset = new String[] {
+			"SET_PWM:LEFT,   0, 0",
+			"SET_PWM:RIGHT,  0, 0",
+			"SET_PWM:CLAW,   0, 0",
+			"SET_PWM:BOTTOM, 0, 0"
+	};
+
 	public static void main(String... args) {
 
 		if (args.length > 0) {
@@ -103,6 +110,7 @@ public class HanoiPilot {
 		int nbCommand = 0;
 
 		// TODO Init and calibrate here
+		MeArmPilot.runMacro(reset);
 
 		String cmd = "PRINT: Ready";
 
@@ -173,16 +181,7 @@ public class HanoiPilot {
 			}
 		}
 
-		/*
-#
-# Stop and Park the servos
-#
-SET_PWM:LEFT,   0, 0
-SET_PWM:RIGHT,  0, 0
-SET_PWM:CLAW,   0, 0
-SET_PWM:BOTTOM, 0, 0
-		 */
-
+		MeArmPilot.runMacro(reset);
 		System.out.println("Done.");
 	}
 }
