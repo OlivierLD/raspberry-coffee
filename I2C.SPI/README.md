@@ -12,7 +12,7 @@ SPI Pressure, Temperature
 I<sup>2</sup>C 3 axis Compass
 
 #### HTU21DF
-I<sup>2</sup>C Humidity & TEmperature
+I<sup>2</sup>C Humidity & Temperature
 
 #### L3GD20
 I<sup>2</sup>C Triple axis Gyroscope
