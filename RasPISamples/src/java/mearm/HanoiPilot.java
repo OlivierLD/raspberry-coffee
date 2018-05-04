@@ -4,11 +4,9 @@ import com.pi4j.io.i2c.I2CFactory;
 import hanoitower.BackendAlgorithm;
 import hanoitower.events.HanoiContext;
 import hanoitower.events.HanoiEventListener;
-import hanoitower.gui.HanoiPanel;
 import i2c.samples.mearm.MeArmPilot;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_BOTTOM_SERVO_CHANNEL;
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_CLAW_SERVO_CHANNEL;
@@ -37,6 +35,16 @@ public class HanoiPilot {
 
 	public static void main(String... args) {
 
+		if (args.length == 1) {
+			try {
+				nbDisc = Integer.parseInt(args[0]);
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
+
+		System.out.println(String.format("With %d discs, from A to C", nbDisc));
+
 		hanoiStand = new HanoiContext.Stand("A", "B", "C");
 		String initialPost = "A";
 		hanoiStand.initStand(nbDisc, initialPost);
@@ -47,14 +55,13 @@ public class HanoiPilot {
 			System.out.println("Ooops, no I2C bus...");
 		}
 
-		nbDisc = 4;
 		HanoiContext.getInstance().fireSetNbDisc(nbDisc);
 
 		int nbCommand = 0;
 
 		// TODO Init and calibrate here
 
-		String cmd = "PRINT: \"Ready\"";
+		String cmd = "PRINT: Ready";
 
 		try {
 			++nbCommand;
