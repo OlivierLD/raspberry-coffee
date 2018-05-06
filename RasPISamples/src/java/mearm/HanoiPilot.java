@@ -51,6 +51,18 @@ public class HanoiPilot {
 			"SET_PWM:BOTTOM, 0, 0"
 	};
 
+	private static void moveDisc(String fromPost, int fromPos, String toPost, int toPos) {
+		String cmd = String.format("PRINT: Moving from %s(%d) to %s(%d)", fromPost, fromPos, toPost, toPos + 1);
+		try {
+//		MeArmPilot.validateCommand(cmd, -1);
+			MeArmPilot.runMacro(cmd); // TODO The actual move
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		// Simulate wait
+		try { Thread.sleep(1000); } catch (Exception ex) {}
+	}
+
 	public static void main(String... args) {
 
 		if (args.length > 0) {
@@ -109,8 +121,8 @@ public class HanoiPilot {
 
 		int nbCommand = 0;
 
-		// TODO Init and calibrate here
 		MeArmPilot.runMacro(reset);
+		// TODO calibrate here
 
 		String cmd = "PRINT: Ready";
 
@@ -154,10 +166,7 @@ public class HanoiPilot {
 						.append(" to ")
 						.append(String.format("%s, currently %d disc(s)", to, toPost.getDiscCount())).toString());
 
-
-				// TODO The actual move...
-				// Simulate wait
-				try { Thread.sleep(1000); } catch (Exception ex) {}
+				moveDisc(from, fromPost.getDiscCount(), to, toPost.getDiscCount());
 
 				fromPost.removeTopDisc();
 				toPost.add(discToMove);

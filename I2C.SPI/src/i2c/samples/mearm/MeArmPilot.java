@@ -123,6 +123,11 @@ public class MeArmPilot {
 	public final static int DEFAULT_BOTTOM_SERVO_CHANNEL = 2; // Right and Left. 130 (all the way right) 675 (all the way left). Center at ~410
 	public final static int DEFAULT_RIGHT_SERVO_CHANNEL = 4; // Back and forth. 130 (too far back, limit to 300) 675 (all the way ahead), standing right at ~430
 
+	public final static String LEFT   = "LEFT";
+	public final static String RIGHT  = "RIGHT";
+	public final static String BOTTOM = "BOTTOM";
+	public final static String CLAW   = "CLAW";
+
 	enum ServoBoundaries {
 		LEFT(135, 350, 230),
 		RIGHT(130, 675, 410),
@@ -436,19 +441,19 @@ public class MeArmPilot {
 		}
 		int servoValue = -1;
 		switch (servoName) {
-			case "LEFT":
+			case LEFT:
 				int deltaL = (value < 0 ? ServoBoundaries.LEFT.center() - ServoBoundaries.LEFT.min() : ServoBoundaries.LEFT.max() - ServoBoundaries.LEFT.center());
 				servoValue = (int)Math.round(ServoBoundaries.LEFT.center() + (deltaL * (value / 100d)));
 				break;
-			case "RIGHT":
+			case RIGHT:
 				int deltaR = (value < 0 ? ServoBoundaries.RIGHT.center() - ServoBoundaries.RIGHT.min() : ServoBoundaries.RIGHT.max() - ServoBoundaries.RIGHT.center());
 				servoValue = (int)Math.round(ServoBoundaries.RIGHT.center() + (deltaR * (value / 100d)));
 				break;
-			case "CLAW":
+			case CLAW:
 				int deltaC = (value < 0 ? ServoBoundaries.CLAW.center() - ServoBoundaries.CLAW.min() : ServoBoundaries.CLAW.max() - ServoBoundaries.CLAW.center());
 				servoValue = (int)Math.round(ServoBoundaries.CLAW.center() + (deltaC * (value / 100d)));
 				break;
-			case "BOTTOM":
+			case BOTTOM:
 				int deltaB = (value < 0 ? ServoBoundaries.BOTTOM.center() - ServoBoundaries.BOTTOM.min() : ServoBoundaries.BOTTOM.max() - ServoBoundaries.BOTTOM.center());
 				servoValue = (int)Math.round(ServoBoundaries.BOTTOM.center() + (deltaB * (value / 100d)));
 				break;
@@ -555,16 +560,16 @@ public class MeArmPilot {
 	private static int getServoNum(String servoId) {
 		int servoNum = -1;
 		switch (servoId) {
-			case "LEFT":
+			case LEFT:
 				servoNum = leftServoChannel;
 				break;
-			case "RIGHT":
+			case RIGHT:
 				servoNum = rightServoChannel;
 				break;
-			case "CLAW":
+			case CLAW:
 				servoNum = clawServoChannel;
 				break;
-			case "BOTTOM":
+			case BOTTOM:
 				servoNum = bottomServoChannel;
 				break;
 			default:

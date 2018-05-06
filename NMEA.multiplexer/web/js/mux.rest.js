@@ -1122,3 +1122,27 @@ var showDivs = function(channels, forwarders, computers) {
       $("#add-computer").hide(1000);
     }
 };
+
+var decToSex = function (val, ns_ew, withDeg) {
+	var absVal = Math.abs(val);
+	var intValue = Math.floor(absVal);
+	var dec = absVal - intValue;
+	var i = intValue;
+	dec *= 60;
+//    var s = i + "°" + dec.toFixed(2) + "'";
+//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+	var s = "";
+	if (val < 0) {
+		s += (ns_ew === 'NS' ? 'S' : 'W');
+	} else {
+		s += (ns_ew === 'NS' ? 'N' : 'E');
+	}
+	s += " ";
+	var sep = " ";
+	if (withDeg === true) {
+		sep = "°";
+	}
+//    s += i + "\"" + dec.toFixed(2) + "'";
+	s += i + sep + dec.toFixed(2) + "'";
+	return s;
+};

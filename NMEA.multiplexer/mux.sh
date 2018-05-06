@@ -3,6 +3,8 @@
 # Note: Serial ports on MacOS:
 # may require Prolific drivers: https://plugable.com/drivers/prolific/
 #
+OS=`uname -a | awk '{ print $1 }'`
+#
 MUX_PROP_FILE=nmea.mux.rpi.demo.properties
 if [ $# -gt 0 ]
 then
@@ -12,8 +14,14 @@ fi
 echo Using properties file $MUX_PROP_FILE
 #
 JAVA_OPTIONS=
-# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
-JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
+if [ "$OS" == "Darwin" ]
+then
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"       # for Mac
+fi
+if [ "$OS" == "Linux" ]
+then
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
+fi
 #
 # This variable is used to set the System variable process.on.start.
 # (See below).
@@ -54,8 +62,14 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #
 CP=./build/libs/NMEA.multiplexer-1.0-all.jar
-CP=$CP:./libs/RXTXcomm.jar          # for Mac
-# CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
+if [ "$OS" == "Darwin" ]
+then
+  CP=$CP:./libs/RXTXcomm.jar          # for Mac
+fi
+if [ "$OS" == "Linux" ]
+then
+  CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
+fi
 #
 # For JFR
 JFR_FLAGS=

@@ -24,6 +24,7 @@ import nmea.forwarders.rmi.RMIServer;
 import nmea.mux.context.Context;
 import nmea.mux.context.Context.StringAndTimeStamp;
 import nmea.parser.Angle360;
+import nmea.parser.GeoPos;
 import nmea.parser.Speed;
 import nmea.utils.NMEAUtils;
 
@@ -1961,6 +1962,7 @@ public class RESTImplementation {
 
 		Speed sog = (Speed)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.SOG);
 		Angle360 cog = (Angle360)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.COG);
+		GeoPos position =(GeoPos)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.POSITION);
 
 		Map<String, Object> map = new HashMap<>(2);
 
@@ -1975,6 +1977,8 @@ public class RESTImplementation {
 
 		map.put("sog", sogMap);
 		map.put("cog", cogMap);
+
+		map.put("pos", position);
 
 		JsonElement jsonElement = null;
 		try {
@@ -1994,7 +1998,7 @@ public class RESTImplementation {
 
 		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 		Speed sog = (Speed)cache.get(NMEADataCache.SOG);
-		Angle360 cog = (Angle360)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.COG);
+		Angle360 cog = (Angle360)cache.get(NMEADataCache.COG);
 
 		Map<String, Object> map = new HashMap<>(5);
 
