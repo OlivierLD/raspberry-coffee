@@ -3,6 +3,9 @@ package utils;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PinUtil {
 	// Disposed as on the board
 	public enum GPIOPin {
@@ -96,16 +99,36 @@ public class PinUtil {
 	}
 
 
-	public static void print() {
+	/**
+	 *
+	 * @param maps string array like "xx:text" where xx is the physical number, and text the label to display (5 letters max)
+	 */
+	public static void print(String... maps) {
+
+		Map<Integer, String> pinMap = null;
+		if (maps.length > 0) {
+			pinMap = new HashMap<>(maps.length);
+			for (String elmt : maps) {
+				String[] tuple = elmt.split(":");
+				try {
+					int pin = Integer.parseInt(tuple[0]);
+					pinMap.put(pin, tuple[1]);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+			}
+		}
+
 		GPIOPin[] values = GPIOPin.values();
-//	String hr =     "|  04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | 15  |";
-		String hr =     "+-----+-----+--------------+-----++-----+--------------+-----+-----+";
-		String header = "| BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |";
+//	String hr =     "       |  04 | 07  | GPCLK0       | #07 || #08 |    UART0_TXD | 14  | 15  |";
+		String hr =     "       +-----+-----+--------------+-----++-----+--------------+-----+-----+";
+		String header = "       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |";
 		System.out.println(hr);
 		System.out.println(header);
 		System.out.println(hr);
 		for (int row=0; row<(values.length / 2); row++) {
-			String line = String.format("|  %s |  %s | %-12s | #%02d || #%02d | %12s | %s  | %s  |",
+			String line = String.format(" %5s |  %s |  %s | %-12s | #%02d || #%02d | %12s | %s  | %s  | %-5s ",
+					(pinMap != null && pinMap.get(values[row * 2].pinNumber()) != null) ? String.valueOf(pinMap.get(values[row * 2].pinNumber())) : " ",
 					values[row * 2].gpio() == -1 ? "  " : String.format("%02d", values[row * 2].gpio()),         // BCM
 					values[row * 2].wiringPi() == -1 ? "  " : String.format("%02d", values[row * 2].wiringPi()), // wPI
 					values[row * 2].pinName(),
@@ -114,7 +137,9 @@ public class PinUtil {
 					values[1 + (row * 2)].pinNumber(),
 					values[1 + (row * 2)].pinName(),
 					values[1 + (row * 2)].wiringPi() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].wiringPi()), // wPI
-					values[1 + (row * 2)].gpio() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].gpio()));        // BCM
+					values[1 + (row * 2)].gpio() == -1 ? "  " : String.format("%02d", values[1 + (row * 2)].gpio()),         // BCM
+					(pinMap != null && pinMap.get(values[1 + (row * 2)].pinNumber()) != null) ? String.valueOf(pinMap.get(values[1 + (row * 2)].pinNumber())) : " ");
+
 			System.out.println(line);
 		}
 		System.out.println(hr);
@@ -128,5 +153,7 @@ public class PinUtil {
 		for (GPIOPin pin : GPIOPin.values()) {
 			System.out.println(pin.toString());
 		}
+
+		print("23:clk", "21:miso", "19:mosi", "24:cs");
 	}
 }

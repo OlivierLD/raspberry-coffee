@@ -136,6 +136,15 @@ public class MainMCP3008Sample {
 		System.out.println(String.format("%s CH7 -+  8   9 +- dGnd ", (adcChannel == 7 ? "*" : " ")));
 		System.out.println("       +--------+ ");
 
+		// Compose mapping for PinUtil
+		String[] map = new String[4];
+		map[0] = String.valueOf(PinUtil.findByPin(clk).pinNumber()) + ":" + "clk";
+		map[1] = String.valueOf(PinUtil.findByPin(miso).pinNumber()) + ":" + "miso";
+		map[2] = String.valueOf(PinUtil.findByPin(mosi).pinNumber()) + ":" + "mosi";
+		map[3] = String.valueOf(PinUtil.findByPin(cs).pinNumber()) + ":" + "cs";
+
+		PinUtil.print(map);
+
 		MCP3008Reader.initMCP3008(miso, mosi, clk, cs);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
