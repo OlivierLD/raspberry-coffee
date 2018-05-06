@@ -154,6 +154,7 @@ public class PinUtil {
 			System.out.println(pin.toString());
 		}
 
-		print("23:clk", "21:miso", "19:mosi", "24:cs");
+		System.out.println("\nAs for an MCP3008:");
+		print("23:CLK", "21:Dout", "19:Din", "24:CS");
 	}
 }

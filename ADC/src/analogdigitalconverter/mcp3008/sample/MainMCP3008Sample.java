@@ -23,8 +23,8 @@ public class MainMCP3008Sample {
 	public static void main(String... args) {
 
 		// Default pins
-		Pin miso = PinUtil.GPIOPin.GPIO_12.pin();
-		Pin mosi = PinUtil.GPIOPin.GPIO_13.pin();
+		Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
+		Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
 		Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
 		Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
@@ -138,10 +138,10 @@ public class MainMCP3008Sample {
 
 		// Compose mapping for PinUtil
 		String[] map = new String[4];
-		map[0] = String.valueOf(PinUtil.findByPin(clk).pinNumber()) + ":" + "clk";
-		map[1] = String.valueOf(PinUtil.findByPin(miso).pinNumber()) + ":" + "miso";
-		map[2] = String.valueOf(PinUtil.findByPin(mosi).pinNumber()) + ":" + "mosi";
-		map[3] = String.valueOf(PinUtil.findByPin(cs).pinNumber()) + ":" + "cs";
+		map[0] = String.valueOf(PinUtil.findByPin(clk).pinNumber()) + ":" + "CLK";
+		map[1] = String.valueOf(PinUtil.findByPin(miso).pinNumber()) + ":" + "Dout";
+		map[2] = String.valueOf(PinUtil.findByPin(mosi).pinNumber()) + ":" + "Din";
+		map[3] = String.valueOf(PinUtil.findByPin(cs).pinNumber()) + ":" + "CS";
 
 		PinUtil.print(map);
 
