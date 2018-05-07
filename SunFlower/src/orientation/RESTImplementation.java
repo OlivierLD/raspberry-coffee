@@ -226,7 +226,7 @@ public class RESTImplementation {
 
 	private Response getPhotoCellData(Request request)  {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		int photoCellData = sunFlower.getPhotocellData();
+		SunFlower.PhotocellData photoCellData = sunFlower.getPhotocellData();
 
 		String content = new Gson().toJson(photoCellData);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
