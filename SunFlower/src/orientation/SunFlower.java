@@ -164,7 +164,7 @@ public class SunFlower implements RESTRequestManager {
 	private static int photocellChannel =
 			MCP3008Reader.MCP3008_input_channels.CH1.ch(); // Between 0 and 7, 8 channels on the MCP3008. Default is 1.
 
-	private static final String WITH_ADC_PREFIX       = "--with-adc:";
+	private static final String WITH_ADC_PREFIX       = "--with-adc:"; // For battery monitoring
 	private static final String WITH_PHOTOCELL_PREFIX = "--with-photocell:";
 
 	private static final String MISO_PRM_PREFIX = "--miso:";
@@ -797,6 +797,31 @@ public class SunFlower implements RESTRequestManager {
 		}
 	}
 
+
+	// TODO Lux values
+	public static class PhotocellData {
+		double volt;
+		double lux;
+		int adc; // 0..1023
+		int volume; // 0..100
+		public PhotocellData lux(double l) {
+			this.lux = l;
+			return this;
+		}
+		public PhotocellData volt(double v) {
+			this.volt = v;
+			return this;
+		}
+		public PhotocellData adc(int adc) {
+			this.adc = adc;
+			return this;
+		}
+		public PhotocellData volume(int volume) {
+			this.volume = volume;
+			return this;
+		}
+	}
+
 	/**
 	 * Requires an MCP3008
 	 * @return the voltage of the LiPo battery
@@ -810,7 +835,7 @@ public class SunFlower implements RESTRequestManager {
 		int adc = 0;
 		if (foundMCP3008) {
 			adc = MCP3008Reader.readMCP3008(adcChannel);
-			// TODO Damping here
+			// TODO Damping here?
 		}
 		if (adcVerbose) {
 			if (foundMCP3008) {
@@ -830,9 +855,20 @@ public class SunFlower implements RESTRequestManager {
 
 	/**
 	 * Requires an MCP3008
+	 * The darker the light, the bigger the resistance.
+	 * +--------------------------------+--------------+---------------+---------+
+	 * | Conditions                     | Light in Lux | Photocell Res | Voltage |
+	 * +--------------------------------+--------------+---------------+---------+
+	 * | Dim hallway                    |    0.1 lux   |  600 kOhm     |  0.1 V  |
+	 * | Moonlight                      |    1 lux     |   70 kOhm     |  0.6 V  |
+	 * | Dark room                      |   10 lux     |   10 kOhm     |  2.5 V  |
+	 * | Bright room, dark overcast day |  100 lux     |    1.5 kOhm   |  4.3 V  |
+	 * | Overcast day                   | 1000 lux     |  300 Ohm      |  5.0 V  |
+	 * +--------------------------------+--------------+---------------+---------+
+	 *
 	 * @return the ADC value of the photocell (photo-resistor)
 	 */
-	public int getPhotocellData() {
+	public PhotocellData getPhotocellData() {
 		int adc = 0;
 		if (foundMCP3008) {
 			adc = MCP3008Reader.readMCP3008(photocellChannel);
@@ -845,7 +881,13 @@ public class SunFlower implements RESTRequestManager {
 				System.out.println("No MCP3008 found.");
 			}
 		}
-		return adc;
+		// TODO Return damped value ?
+		int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
+		PhotocellData photocellData = new PhotocellData()
+				.adc(adc)
+				.volume(volume)
+				.volt(maxBatteryVoltage * ((double)adc / 1023d)); // TODO Lx
+		return photocellData;
 	}
 
 	public SunData getSunData() {
@@ -859,7 +901,7 @@ public class SunFlower implements RESTRequestManager {
 		SunData sunData;
 		double heading;
 		BatteryData lipo;
-		int photocell;
+		PhotocellData photocell;
 		public AllData(
 						GeographicPosition pos,
 						ServoValues servos,
@@ -867,7 +909,7 @@ public class SunFlower implements RESTRequestManager {
 						SunData sunData,
 						double heading,
 						BatteryData lipo,
-						int photoCell) {
+						PhotocellData photoCell) {
 			this.pos = pos;
 			this.servos = servos;
 			this.dates = dates;
@@ -1375,8 +1417,10 @@ public class SunFlower implements RESTRequestManager {
 
 			initADC();
 
+			final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+
+			// Battery Data
 			if ("true".equals(System.getProperty("log.battery.data", "false"))) {
-				final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
 				Thread batteryLogger = new Thread(() -> {
 					while (true) {
 						BatteryData batteryData = instance.getBatteryData();
@@ -1389,6 +1433,23 @@ public class SunFlower implements RESTRequestManager {
 					}
 				});
 				batteryLogger.start();
+			}
+
+			// Photocell Data
+			if ("true".equals(System.getProperty("log.photocell.data", "false"))) {
+				Thread photocellLogger = new Thread(() -> {
+					while (true) {
+						PhotocellData photocellData = instance.getPhotocellData();
+						// TODO Lux
+						System.out.println(String.format(">> LDR: %s, val: %d, %.02f V", SDF.format(new Date()), photocellData.adc, photocellData.volt));
+						try {
+							Thread.sleep(1_000);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				});
+				photocellLogger.start();
 			}
 
 		} else {
