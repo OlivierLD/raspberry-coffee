@@ -4,19 +4,19 @@
 #### To try (for tests, illustration...)
 
 Build it:
-```bash
+```
  $ ../gradlew shadowJar
 ```
 
 #### Email, remote cmmand line:
 Copy the `email.properties.sample` into `email.properties`, modify it to fit your account(s), then run:
-```bash
+```
  $ java -cp ./build/libs/common-utils-1.0-all.jar email.examples.EmailWatcher -send:google -receive:google
 ```
 See [Controlling invisible machines with emails, from Java](http://hocus-blogus.blogspot.com/2018/04/driving-and-monitoring-from-emails.html) for more details.
 
 #### Pins
-```bash
+```
  $ java -cp ./build/libs/common-utils-1.0-all.jar utils.PinUtil
  +-----+-----+--------------+-----++-----+--------------+-----+-----+
  | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |

@@ -564,6 +564,7 @@ Remote access is not a problem on any Raspberry PI, `ssh` does the trick. It can
 In this kind of case, it could be a good idea to have scripts with small names... See `go` and `killmux`, for examples.
 
 The Raspberry PI can also be an hotspot, you connect to its network to be able to access the data. there is a good tutorial for that on the <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">Adafruit website</a>.
+<a href="https://seravo.fi/2014/create-wireless-access-point-hostapd" target="seravo">This one</a> also, is worth a look.
 
 The definition of your network is in `/etc/hostapd/hostapd.conf`.
 
@@ -686,7 +687,7 @@ Thread view, with thread names
 They are [here](./examples.md).
 
 Also see a combination with the `SunFlower` project. This takes the position from a GPS (serial port), and the device heading from an `LSM303`.
-Then it orients a solar panel so it faces the sun. The specific `forwarder` that does the job is the 
+Then it orients a solar panel so it faces the sun. The specific `forwarder` that does the job is the
 [GPS.sun.servo](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/GPS.sun.servo) project.
 
 And there is an integration with the [REST Nav Server](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNavServer).
