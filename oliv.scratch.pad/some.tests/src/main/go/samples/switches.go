@@ -23,7 +23,7 @@ func main() {
 	case grade == "E", grade == "F":
 		fmt.Printf("Better try again.\n")
 	default:
-		fmt.Printf("Inva;id grade\n")
+		fmt.Printf("Invalid grade\n")
 	}
 	fmt.Printf("Your grade is %s\n", grade)
 }
