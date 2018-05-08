@@ -259,13 +259,17 @@ shaking the heading servo).
 
 See the project named `GPS.sun.servo`.
 
----
-
-## Next
-
+# ADC Monitoring
 Monitor the load of the LiPo battery, with an MPC3008.
 
 Add a photocell(s) (read by the MCP3008 as well), to know how sunny it is.
+
+![Monitoring](./sunflower.adc.monitoring_bb.png)
+
+-----
+
+## Next
+
 
 Orienting much bigger panels, using *stepper motors*, worm gears, etc.
 - For this last one, the challenge will be to know what the angles set by the motors are.

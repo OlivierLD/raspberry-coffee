@@ -139,6 +139,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dinteractive=false"
     #
     JAVA_OPTS="$JAVA_OPTS -Dlog.battery.data=true"
+    JAVA_OPTS="$JAVA_OPTS -Dlog.photocell.data=true"
     ;;
   *)
     echo "======================="
