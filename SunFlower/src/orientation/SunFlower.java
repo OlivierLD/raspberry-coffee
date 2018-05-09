@@ -854,7 +854,7 @@ public class SunFlower implements RESTRequestManager {
 	}
 
 	/**
-	 * Requires an MCP3008
+	 * Requires an MCP3008 and a photocell
 	 * The darker the light, the bigger the resistance.
 	 * +--------------------------------+--------------+---------------+---------+
 	 * | Conditions                     | Light in Lux | Photocell Res | Voltage |
@@ -865,6 +865,7 @@ public class SunFlower implements RESTRequestManager {
 	 * | Bright room, dark overcast day |  100 lux     |    1.5 kOhm   |  4.3 V  |
 	 * | Overcast day                   | 1000 lux     |  300 Ohm      |  5.0 V  |
 	 * +--------------------------------+--------------+---------------+---------+
+	 * Also see https://learn.adafruit.com/photocells?view=all and https://en.wikipedia.org/wiki/Lux for more details
 	 *
 	 * @return the ADC value of the photocell (photo-resistor)
 	 */

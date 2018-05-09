@@ -332,7 +332,7 @@ public class ADS1x15 {
 	 * see datasheet page 14 for more info.
 	 * The pga must be given in mV, see page 13 for the supported values.
 	 *
-	 * @param channel 0-3
+	 * @param channel 0..3
 	 * @param pga
 	 * @param sps     Samples per second
 	 * @return
