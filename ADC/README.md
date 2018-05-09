@@ -74,10 +74,10 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
 ![Wiring](./RPi-MCP3008-Pot_bb.png)
 
 On the diagram above,
-- The MCP3008's CLK (#13) is connected on the RPi's PCM_CLK (#12) - Orange wire
-- The MCP3008's Dout (#12) aka MISO, is connected on the RPi's GPIO_4 (#16) - Yellow wire
-- The MCP3008's Din (#11) aka MOSI, is connected on the RPi's GPIO_5 (#18) - Blue wire
-- The MCP3008's CS (#10) is connected on the RPi's GPIO_6 (#22) - Green wire
+- The `MCP3008`'s `CLK` (`#13`) is connected on the RPi's `PCM_CLK` (`#12`) - Orange wire
+- The `MCP3008`'s `Dout` (`#12`) aka `MISO`, is connected on the RPi's `GPIO_4` (`#16`) - Yellow wire
+- The `MCP3008`'s `Din` (`#11`) aka `MOSI`, is connected on the RPi's `GPIO_5` (`#18`) - Blue wire
+- The `MCP3008`'s `CS` (`#10`) is connected on the RPi's `GPIO_6` (`#22`) - Green wire
 
 The `./run` command would be issued like
 ```
