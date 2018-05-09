@@ -9,7 +9,7 @@ $ ../gradlew shadowJar
 $ ./run
 Read an ADC
 Usage is ./run --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
- For miso, mosi, clk & cs, use BCMP pin numbers
+ For miso, mosi, clk & cs, use BCM pin numbers
 Password:
 Usage is java analogdigitalconverter.mcp3008.sample.MainMCP3008Sample --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0
 Values above are default values (GPIO/BCM numbers).
