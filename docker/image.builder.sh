@@ -19,6 +19,8 @@ do
   echo -e "| 5. Node PI, to run on Debian                                        |"
   echo -e "| 6. GPS-mux, to run on a Raspberry PI                                |"
   echo -e "| 7. Golang, basics                                                   |"
+  echo -e "| 8. Raspberry PI, MATE, with java, node, web comps, VNC              |"
+  echo -e "+---------------------------------------------------------------------+"
   echo -e "| Q. Oops, nothing, thanks, let me out.                               |"
   echo -e "+---------------------------------------------------------------------+"
   echo -en "== You choose => "
@@ -127,6 +129,14 @@ do
       RUN_CMD="docker run -d $IMAGE_NAME:latest"
       #
       MESSAGE="Log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      ;;
+    "8")
+      OK=true
+      DOCKER_FILE=rpidesktop.Dockerfile
+      IMAGE_NAME=oliv-pi-vnc
+      RUN_CMD="docker run -d $IMAGE_NAME:latest"
+      #
+      MESSAGE="Log in using: docker run -it --rm -p 5901:5901 -p 8080:8080 -e USER=root $IMAGE_NAME:latest /bin/bash, then run 'vncserver :1 -geometry 1280x800 (or 1440x900, etc) -depth 24', then use a vncviewer on localhost:1, password is 'mate'. then 'node server.js', and reach http://localhost:8080/oliv-components/index.html ..."
       ;;
     *)
       echo -e "What? Unknown command [$a]"
