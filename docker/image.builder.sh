@@ -6,12 +6,12 @@ OK=false
 DOCKER_FILE=
 IMAGE_NAME=
 RUN_CMD=
-MESSAGE="Bye!"
+MESSAGE="Bye!\n"
 #
 while [ "$OK" = "false" ]
 do
   # Menu
-  echo -e "+-------------- D O C K E R  I M A G E  B U I L D E R ----------------+"
+  echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R --------------+"
   echo -e "| 1. Nav Server, Debian                                               |"
   echo -e "| 2. Web Components, Debian                                           |"
   echo -e "| 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
@@ -29,6 +29,7 @@ do
   case "$a" in
     "Q" | "q")
       OK=true
+      printf "You're done.\n   Please come back soon!\n"
       ;;
     "1")
       OK=true
@@ -39,7 +40,10 @@ do
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside
 			#
-      MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Reach http://localhost:8081/oliv-components/index.html from your browser.\n"
+      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "2")
       OK=true
@@ -50,7 +54,10 @@ do
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside
 			#
-      MESSAGE="Reach http://localhost:9999/index.html from your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Reach http://localhost:9999/index.html from your browser.\n"
+      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "3")
       OK=true
@@ -61,7 +68,10 @@ do
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside
 			#
-      MESSAGE="Reach http://localhost:8081/oliv-components/index.html from your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Reach http://localhost:8081/oliv-components/index.html from your browser.\n"
+      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "4")
       OK=true
@@ -82,7 +92,10 @@ do
 			then
 			  IP_ADDR="localhost"
 			fi
-      MESSAGE="Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser.\n"
+      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "5")
       OK=true
@@ -99,7 +112,10 @@ do
 			then
 			  IP_ADDR="localhost"
 			fi
-      MESSAGE="Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Reach http://$IP_ADDR:9876/data/demos/gps.demo.html in your browser.\n"
+      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "6")
       OK=true
@@ -120,7 +136,11 @@ do
 			then
 			  IP_ADDR="localhost"
 			fi
-      MESSAGE="Reach http://$IP_ADDR:9999/web/index.html in your browser. REST operations available: http://localhost:9999/mux/oplist. You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Reach http://$IP_ADDR:9999/web/index.html in your browser.\n"
+      MESSAGE="${MESSAGE}REST operations available: http://localhost:9999/mux/oplist.\n"
+      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "7")
       OK=true
@@ -128,7 +148,9 @@ do
       IMAGE_NAME=oliv-go
       RUN_CMD="docker run -d $IMAGE_NAME:latest"
       #
-      MESSAGE="Log in using: docker run -it $IMAGE_NAME:latest /bin/bash"
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     "8")
       OK=true
@@ -136,7 +158,12 @@ do
       IMAGE_NAME=oliv-pi-vnc
       RUN_CMD="docker run -d $IMAGE_NAME:latest"
       #
-      MESSAGE="Log in using: docker run -it --rm -p 5901:5901 -p 8080:8080 -e USER=root $IMAGE_NAME:latest /bin/bash, then run 'vncserver :1 -geometry 1280x800 (or 1440x900, etc) -depth 24', then use a vncviewer on localhost:1, password is 'mate'. then 'node server.js', and reach http://localhost:8080/oliv-components/index.html ..."
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Log in using: docker run -it --rm -p 5901:5901 -p 8080:8080 -e USER=root $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
+      MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
+      MESSAGE="${MESSAGE}- then 'node server.js', and reach http://localhost:8080/oliv-components/index.html ...\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     *)
       echo -e "What? Unknown command [$a]"
@@ -160,4 +187,4 @@ then
   # Now run
   $RUN_CMD
 fi
-echo $MESSAGE
+printf "%b" "$MESSAGE"

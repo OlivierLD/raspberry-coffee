@@ -15,7 +15,7 @@ then
   if [ "$ONE_BY_ONE" == "true" ]
   then
     echo -en " one by one"
-  fi 
+  fi
   echo -e "..."
 else
   echo -e "Aborting"
@@ -26,15 +26,15 @@ for iid in `cat images`
 do
   if [ "$ONE_BY_ONE" == "true" ]
   then
-    IMG_NAME=`docker images | grep $iid | awk '{ print $1 }' `
+    IMG_NAME=`docker images | grep $iid | awk '{ print $1 ":" $2 }' `
     echo -en ">> Remove image $IMG_NAME ($iid) [n]|y > "
     read resp
 	if [ "$resp" == 'Y' ] || [ "$resp" == 'y' ]
-	then  
+	then
 	  echo -e "... Removing $iid"
-	  docker rmi $iid  
+	  docker rmi $iid
 	else
-	  echo -e "Leaving $IMG_NAME alone"	
+	  echo -e "Leaving $IMG_NAME alone"
 	fi
   else
     docker rmi $iid
