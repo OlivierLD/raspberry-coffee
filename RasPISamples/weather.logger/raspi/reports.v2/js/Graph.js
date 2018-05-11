@@ -6,6 +6,7 @@ function Graph(cName,       // Canvas Name
                cWidth,      // Canvas width
                cHeight,     // Canvas height
                graphData,   // x,y tuple array
+               graphData2,  // same as above, secondary data
                callback,    // Callback on mouseclick
                unit,
                withWindDir,
@@ -41,7 +42,7 @@ function Graph(cName,       // Canvas Name
 
 
 	var repaint = function() {
-		instance.drawGraph(cName, graphData, lastClicked, instance.dType);
+		instance.drawGraph(cName, graphData, graphData2, lastClicked, instance.dType);
 		if (withWindDir) {
 			instance.drawWind(JSONParser.nmeaData);
 		}
@@ -130,52 +131,66 @@ function Graph(cName,       // Canvas Name
     return {x:canvasX, y:canvasY};
   };
 
-  this.minX = function(data) {
+  this.minX = function(data) { // data = array of arrays
     var min = Number.MAX_VALUE;
     for (var i=0; i<data.length; i++) {
-      min = Math.min(min, data[i].getX());
+	    for (var j=0; j<data[i].length; j++) {
+		    min = Math.min(min, data[i][j].getX());
+	    }
     }
     return min;
   };
 
-  this.minY = function(data) {
+  this.minY = function(data) { // data = array of arrays
     var min = Number.MAX_VALUE;
     for (var i=0; i<data.length; i++) {
-      min = Math.min(min, data[i].getY());
+	    for (var j=0; j<data[i].length; j++) {
+		    min = Math.min(min, data[i][j].getY());
+	    }
     }
     return min;
   };
 
-  this.maxX = function(data) {
+  this.maxX = function(data) { // data = array of arrays
     var max = -Number.MAX_VALUE;
     for (var i=0; i<data.length; i++) {
-      max = Math.max(max, data[i].getX());
+	    for (var j=0; j<data[i].length; j++) {
+		    max = Math.max(max, data[i][j].getX());
+	    }
     }
     return max;
   };
 
-  this.maxY = function(data) {
+  this.maxY = function(data) { // data = array of arrays
     var max = -Number.MAX_VALUE;
     for (var i=0; i<data.length; i++) {
-      max = Math.max(max, data[i].getY());
+	    for (var j=0; j<data[i].length; j++) {
+		    max = Math.max(max, data[i][j].getY());
+	    }
     }
     return max;
   };
 
-  this.drawGraph = function(displayCanvasName, data, idx, dataType) {
+  this.drawGraph = function(displayCanvasName, data, data2, idx, dataType) {
     context = canvas.getContext('2d');
 
     this.dType = dataType;
-    init(data);
+    init([ data, data2 ]);
     switch (this.dType) {
-        case "PRESS":
-          miny =  970;
-          maxy = 1040;
-          break;
-        case "HUM":
-          miny =   0;
-          maxy = 100;
-          break;
+      case "PRESS":
+        miny =  970;
+        maxy = 1040;
+        break;
+      case "HUM":
+        miny =   0;
+        maxy = 100;
+        break;
+	    case "DEW":
+	    case "TEMP":
+	    case "TEMP-DEW":
+				miny -= 1;
+				maxy += 1;
+				break;
 	    case "RAIN":
 		    miny = 0;
 		    maxy = Math.max(2.5, Math.ceil(this.maxY(data))); // at least 2mm
@@ -197,8 +212,8 @@ function Graph(cName,       // Canvas Name
 
     // Sort the tuples (on X, time)
     data.sort(sortTupleX);
-
     var smoothData = data;
+	  var smoothData2 = data2;
     var _smoothData = [];
     var smoothWidth = 20;
     for (var i=0; i<smoothData.length; i++) {
@@ -218,11 +233,35 @@ function Graph(cName,       // Canvas Name
       _smoothData.push(new Tuple(smoothData[i].getX(), yAccu));
 //    console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].getY() + " becomes " + yAccu);
     }
-    // Clear
+
+	  var _smoothData2 = [];
+	  if (data2 !== undefined && data2.length > 0) {
+		  data2.sort(sortTupleX);
+		  for (var i=0; i<smoothData2.length; i++) {
+			  var yAccu = 0;
+			  for (var acc=i-(smoothWidth / 2); acc<i+(smoothWidth/2); acc++) {
+				  var y;
+				  if (acc < 0) {
+					  y = smoothData2[0].getY();
+				  } else if (acc > (smoothData2.length - 1)){
+					  y = smoothData2[smoothData2.length - 1].getY();
+				  } else {
+					  y = smoothData2[acc].getY();
+				  }
+				  yAccu += y;
+			  }
+			  yAccu = yAccu / smoothWidth;
+			  _smoothData2.push(new Tuple(smoothData2[i].getX(), yAccu));
+//    console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].getY() + " becomes " + yAccu);
+		  }
+	  }
+
+	  // Clear
     context.fillStyle = "white";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     smoothData = _smoothData;
+	  smoothData2 = _smoothData2;
     if (false) {
       context.fillStyle = "white";
       context.fillRect(0, 0, canvas.width, canvas.height);
@@ -312,10 +351,32 @@ function Graph(cName,       // Canvas Name
       context.stroke();
       context.fillStyle = 'rgba(0, 255, 0, 0.35)';
       context.fill();
+
+      if (data2 !== undefined && data2.length > 0) {
+	      context.beginPath();
+	      context.lineWidth = 1;
+	      context.strokeStyle = 'blue';
+
+	      var previousPoint = data2[0];
+	      context.moveTo((data2[0].getX() - minx) * xScale, cHeight - (data2[0].getY() - miny) * yScale);
+	      for (var i=1; i<data2.length; i++) {
+		      //  context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
+		      context.lineTo((data2[i].getX() - minx) * xScale, cHeight - (data2[i].getY() - miny) * yScale);
+		      //  context.stroke();
+		      previousPoint = data2[i];
+	      }
+	      context.lineTo(context.canvas.width, context.canvas.height);
+	      context.lineTo(0, context.canvas.height);
+	      context.closePath();
+	      context.stroke();
+	      // context.fillStyle = 'rgba(0, 255, 0, 0.35)';
+	      // context.fill();
+      }
     }
 
     if (document.getElementById("smooth-data").checked) { // Smoothed data
       data = smoothData;
+			data2 = smoothData2;
 
       context.beginPath();
       context.lineWidth = 3;
@@ -340,8 +401,29 @@ function Graph(cName,       // Canvas Name
           context.fillStyle = 'rgba(255, 0, 0, 0.35)';
           context.fill();
       }
-    }
+	    if (data2 !== undefined && data2.length > 0) {
+		    context.beginPath();
+		    context.lineWidth = 3;
+		    context.strokeStyle = 'blue';
 
+		    previousPoint = data2[0];
+		    context.moveTo((data2[0].getX() - minx) * xScale, cHeight - (data2[0].getY() - miny) * yScale);
+		    for (var i=1; i<data2.length; i++) {
+//      context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - mini) * yScale);
+			    context.lineTo((data2[i].getX() - minx) * xScale, cHeight - (data2[i].getY() - miny) * yScale);
+//      context.stroke();
+			    previousPoint = data2[i];
+		    }
+		    // Close the shape, bottom
+		    // context.lineTo(context.canvas.width, context.canvas.height);
+		    // context.lineTo(0, context.canvas.height);
+		    // context.closePath();
+
+		    context.stroke();
+	    }
+	  }
+
+	  // Vertical index (click)
     if (idx !== undefined) {
       context.beginPath();
       context.lineWidth = 1;
@@ -382,11 +464,11 @@ function Graph(cName,       // Canvas Name
     }
   };
 
-  var init = function(graphData) {
-    minx = instance.minX(graphData);
-    miny = instance.minY(graphData);
-    maxx = instance.maxX(graphData);
-    maxy = instance.maxY(graphData);
+  var init = function(gd) {
+    minx = instance.minX(gd);
+    miny = instance.minY(gd);
+    maxx = instance.maxX(gd);
+    maxy = instance.maxY(gd);
   };
 
   var scale = function() {
@@ -396,12 +478,12 @@ function Graph(cName,       // Canvas Name
 
   (function() {
     if (graphData !== undefined && graphData.length > 0) {
-        init(graphData);
+        init([ graphData, graphData2 ]);
 //   console.log("MinX:" + minx + ", MaxX:" + maxx + ", MinY:" + miny + ", MaxY:" + maxy);
         scale();
 //  console.log("xScale:" + xScale + ", yScale:" + yScale);
     }
-    instance.drawGraph(cName, graphData);
+    instance.drawGraph(cName, graphData, graphData2);
    })(); // Invoked automatically when new is invoked.
 };
 

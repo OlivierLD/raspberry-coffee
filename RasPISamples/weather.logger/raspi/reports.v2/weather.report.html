@@ -248,7 +248,7 @@ var updateOnClick = function(idx, tws, twd, prmsl, temp, dew, rain) {
     displayRain.setValue(prate);
   }
 
-  graph.drawGraph("graphCanvas", graphdata, idx, dataType);
+  graph.drawGraph("graphCanvas", graphdata, graphdata2, idx, dataType);
 
   clearMarkers();
   if (windArrow !== undefined) {
@@ -383,7 +383,7 @@ var mouseMoveOnGraphCallback = function(idx) {
   }
 };
 
-var graphdata = [];
+var graphdata = [], graphdata2 = [];
 //var rainData = []; // rain
  // Parse the data
 var onDataChange = function() {
@@ -425,7 +425,8 @@ var autoRefresh = function() {
 var displayData = function() {
   var nmeaData = JSONParser.nmeaData;
   if (nmeaData !== null && nmeaData !== undefined && nmeaData.length > 0) {
-    graphdata = []; // TWS
+    graphdata = []; // TWS, Temp, etc
+	  graphdata2 = []; // For Temp & Dew point for example
   //rainData = []; // rain
     var type = $("#data-type").val();
     withTWD = (type === "WIND");
@@ -445,8 +446,11 @@ var displayData = function() {
     for (var i=0; i<nmeaData.length; i++) {
       if (type === "WIND") {
         graphdata.push(new Tuple(i, parseFloat(nmeaData[i].getNMEATws())));
-      } else if (type === "TEMP") {
+      } else if (type === "TEMP" || type === "TEMP-DEW") {
         graphdata.push(new Tuple(i, parseFloat(nmeaData[i].getNMEATemp())));
+        if (type === "TEMP-DEW") {
+	        graphdata2.push(new Tuple(i, parseFloat(nmeaData[i].getNMEADew())));
+        }
         unit = "\272C";
       } else if (type === "PRESS") {
         graphdata.push(new Tuple(i, parseFloat(nmeaData[i].getNMEAPrmsl())));
@@ -463,9 +467,9 @@ var displayData = function() {
       }
     }
     var w = document.getElementById("graphCanvas").width;
-    graph = new Graph("graphCanvas", w, 200, graphdata, mouseMoveOnGraphCallback, unit, withTWD, dataType);
-    var min = graph.minY(graphdata);
-    var max = graph.maxY(graphdata);
+    graph = new Graph("graphCanvas", w, 200, graphdata, graphdata2, mouseMoveOnGraphCallback, unit, withTWD, dataType);
+    var min = graph.minY([ graphdata, graphdata2 ]);
+    var max = graph.maxY([ graphdata, graphdata2 ]);
     var fromDate = nmeaData[0].getNMEADate();
     var toDate   = nmeaData[nmeaData.length - 1].getNMEADate();
     document.getElementById("rec-span").innerHTML = "From " + reformatDate(fromDate, "d-M-Y H:i") +
@@ -679,6 +683,7 @@ var go = function() {
             <option value="WIND">Wind</option>
             <option value="TEMP">Air Temperature</option>
 						<option value="DEW">Dew Point Temperature</option>
+            <option value="TEMP-DEW">Air &amp; Dew Point Temperature</option>
             <option value="PRESS">Pressure</option>
             <option value="HUM">Humidity</option>
             <option value="RAIN">Rain</option>
