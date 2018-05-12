@@ -30,7 +30,7 @@ public class MainADS1015Sample33 {
 					ADS1x15.Channels.CHANNEL_0,
 					gain,
 					sps);
-			System.out.println(String.format("ADC Value: %d, Voltage: %.02f ", (int)value, (value / 1_000f))); // 4_096 to 4.096
+			System.out.println(String.format("ADC Value: %d, Voltage: %.05f ", (int)value, (value / 1_000f))); // 4_096 to 4.096
 		}
 		System.out.println("Bye!");
 	}
