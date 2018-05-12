@@ -25,12 +25,16 @@ public class MainADS1015Sample33 {
 			go = false;
 		}));
 
+		int prevValue = -1;
 		while (go) {
-			float value = ads1015.readADCSingleEnded(
+			int value = (int)ads1015.readADCSingleEnded(
 					ADS1x15.Channels.CHANNEL_0,
 					gain,
 					sps);
-			System.out.println(String.format("ADC Value: %d, Voltage: %.05f ", (int)value, (value / 1_000f))); // 4_096 to 4.096
+			if (prevValue != value) {
+				System.out.println(String.format("ADC Value: %d, Voltage: %.05f ", value, (value / 1_000f))); // 4_096 to 4.096
+			}
+			prevValue = value;
 		}
 		System.out.println("Bye!");
 	}
