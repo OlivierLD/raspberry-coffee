@@ -40,4 +40,4 @@ case "$a" in
     ;;
 esac
 #
-echo Tcho.
+echo Done.
