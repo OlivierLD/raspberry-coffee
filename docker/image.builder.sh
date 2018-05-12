@@ -17,7 +17,7 @@ do
   echo -e "| 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
   echo -e "| 4. Node PI, to run on a Raspberry PI                                |"
   echo -e "| 5. Node PI, to run on Debian                                        |"
-  echo -e "| 6. GPS-mux, to run on a Raspberry PI                                |"
+  echo -e "| 6. GPS-mux, to run on a Raspberry PI (logger)                       |"
   echo -e "| 7. Golang, basics                                                   |"
   echo -e "| 8. Raspberry PI, MATE, with java, node, web comps, VNC              |"
   echo -e "+---------------------------------------------------------------------+"

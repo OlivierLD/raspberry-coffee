@@ -31,7 +31,9 @@ RUN git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
 WORKDIR /workdir/raspberry-pi4j-samples
 RUN ./gradlew tasks
 # RUN ./gradlew tasks -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
+#
 WORKDIR /workdir/raspberry-pi4j-samples/NMEA.multiplexer
+#
 RUN ../gradlew shadowJar
 # RUN ../gradlew shadowJar -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
 
@@ -39,4 +41,5 @@ RUN ../gradlew shadowJar
 # ENV https_proxy ""
 
 EXPOSE 9999
+# We are located in /workdir/raspberry-pi4j-samples/NMEA.multiplexer
 CMD ["./mux.sh", "nmea.mux.gps.log.properties"]
