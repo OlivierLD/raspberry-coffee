@@ -14,6 +14,7 @@ dependencies {
   compile project(':I2C.SPI')
   compile project(':WeatherStation')
   compile project(':ADC')
+  compile project(':ADC-benchmark')
   compile project(':Arduino.RaspberryPI')
   compile project(':DAC')
   compile project(':GPIO.01')

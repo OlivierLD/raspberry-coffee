@@ -3,7 +3,7 @@ FROM debian
 # To run on a laptop - not necessaritly on an RPi (hence the default-jdk below)
 # Demos the NavServer (Tide, Almanac, Weather faxes, etc)
 # Clones the repo and recompiles everything.
-# Comment the ENV lines if needed (proxy)
+# Comment/Uncomment the ENV lines if needed (proxy)
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 

@@ -1,8 +1,10 @@
 FROM resin/raspberrypi3-debian:latest
 #
 # NMEA Multiplexer running on the Raspberry PI.
-# Reads a GPS, forward to a file and a small OLED screen
+# Reads a GPS from serial port, forward to a file and a small OLED screen
 # Web and REST interfaces available.
+#
+# NodeJS is installed, but not used here.
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
@@ -18,6 +20,7 @@ RUN apt-get install -y oracle-java8-jdk
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y nodejs
 RUN apt-get install -y librxtx-java
+# RUN apt-get install -y xvfb procps net-tools wget
 
 RUN echo "banner GPS-PI Mux" >> $HOME/.bashrc
 RUN echo "git --version" >> $HOME/.bashrc
@@ -29,6 +32,7 @@ RUN mkdir /workdir
 WORKDIR /workdir
 RUN git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
 WORKDIR /workdir/raspberry-pi4j-samples
+# Running gradle with 'tasks' will install gradle and required plugins if not there yet.
 RUN ./gradlew tasks
 # RUN ./gradlew tasks -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
 #
@@ -42,4 +46,7 @@ RUN ../gradlew shadowJar
 
 EXPOSE 9999
 # We are located in /workdir/raspberry-pi4j-samples/NMEA.multiplexer
-CMD ["./mux.sh", "nmea.mux.gps.log.properties"]
+# With I2C SSD1306
+# CMD ["./mux.sh", "nmea.mux.gps.log.properties"]
+# Without I2C SSD1306
+CMD ["./mux.sh", "nmea.mux.gps.log.small.properties"]

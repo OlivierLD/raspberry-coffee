@@ -1,5 +1,6 @@
 include 'Adafruit.IO.REST'
 include 'ADC'
+include 'ADC-benchmark'
 include 'AlaMode.101'
 include 'Arduino.RaspberryPI'
 include 'DAC'
