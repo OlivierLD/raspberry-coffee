@@ -2,9 +2,9 @@
 
 We want to compare several Analog to Digital Converters
 
-- MCP3008 (10 bits)
-- ADS1015 (12 bits)
-- ADS1115 (16 bits)
+- MCP3008 (10 bits) $ 3.75
+- ADS1015 (12 bits) $ 9.95
+- ADS1115 (16 bits) $14.95
 
 ### MCP3008
 
