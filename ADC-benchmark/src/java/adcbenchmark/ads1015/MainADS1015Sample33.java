@@ -5,8 +5,6 @@ import i2c.adc.ADS1x15;
 
 public class MainADS1015Sample33 {
 
-	private final static int _2_POW_12 = 4095;
-
 	private static ADS1x15 ads1015 = null;
 
 	private static ADS1x15.pgaADS1x15 gainRef = ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V;
@@ -32,7 +30,7 @@ public class MainADS1015Sample33 {
 					ADS1x15.Channels.CHANNEL_0,
 					gain,
 					sps);
-			System.out.println(String.format("ADC Value: %f, Voltage: %.02f ", value, gain * (value / _2_POW_12)));
+			System.out.println(String.format("ADC Value: %f, Voltage: %.02f ", value, (value / 1_000f))); // 4_096 to 4.096
 		}
 		System.out.println("Bye!");
 	}
