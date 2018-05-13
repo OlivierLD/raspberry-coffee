@@ -11,6 +11,9 @@ import static utils.StringUtils.lpad;
  * To measure a voltage, between 0 and 3.3V
  */
 public class MainMCP3008Sample33 {
+
+	private final static String DEGREE_SYMBOL = "°"; // "\u00b0"; // "\272"
+
 	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
 	private static boolean go = true;
 	private static int adcChannel =
@@ -181,11 +184,12 @@ public class MainMCP3008Sample33 {
 							" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
 							", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
 				}
-				System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V, %+03d\u00b0",
+				System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V, %+03d%s",
 						volume,
 						adc,
 						(3.3 * (volume / 100.0)),
-						((int)Math.round(volume * 3.00) - 150)));
+						((int)Math.round(volume * 3.00) - 150),
+						DEGREE_SYMBOL));
 				lastRead = adc;
 				first = false;
 			}
