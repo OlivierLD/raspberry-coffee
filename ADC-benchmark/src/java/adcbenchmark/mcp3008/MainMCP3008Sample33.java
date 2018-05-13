@@ -152,7 +152,7 @@ public class MainMCP3008Sample33 {
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				System.out.println("Shutting down.");
+				System.out.println("\nShutting down.");
 				go = false;
 				synchronized (Thread.currentThread()) {
 					Thread.currentThread().notify();
@@ -181,7 +181,7 @@ public class MainMCP3008Sample33 {
 							" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
 							", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
 				}
-				System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V, %+03d\272",
+				System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V, %+03d\u00b0",
 						volume,
 						adc,
 						(3.3 * (volume / 100.0)),

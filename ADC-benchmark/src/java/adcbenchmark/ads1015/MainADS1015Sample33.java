@@ -5,7 +5,7 @@ import i2c.adc.ADS1x15;
 
 public class MainADS1015Sample33 {
 
-	private static ADS1x15 ads1015 = null;
+	private static ADS1x15 ads1015 = null; // Device
 
 	private static ADS1x15.pgaADS1x15 gainRef = ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V;
 
@@ -22,6 +22,7 @@ public class MainADS1015Sample33 {
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("\nOut of here.");
 			go = false;
 		}));
 
@@ -32,7 +33,7 @@ public class MainADS1015Sample33 {
 					gain,
 					sps);
 			if (prevValue != value) {
-				System.out.println(String.format("ADC Value: %d, Voltage: %.05f ", value, (value / 1_000f))); // 4_096 to 4.096
+				System.out.println(String.format("ADC Value: %d, Voltage: %.05f ", value, (value / 1_000f))); // 1_000f: 4_096 to 4.096
 			}
 			prevValue = value;
 		}
