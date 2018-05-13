@@ -12,7 +12,7 @@ import static utils.StringUtils.lpad;
  */
 public class MainMCP3008Sample33 {
 
-	private final static String DEGREE_SYMBOL = "°"; // "\u00b0"; // "\272"
+	private final static char DEGREE_SYMBOL = (char)248; // '°'; // '\u00b0'; // '\272'
 
 	private final static boolean DEBUG = "true".equals(System.getProperty("debug", "false"));
 	private static boolean go = true;
@@ -184,7 +184,7 @@ public class MainMCP3008Sample33 {
 							" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
 							", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
 				}
-				System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V, %+03d%s",
+				System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V, %+03d%c",
 						volume,
 						adc,
 						(3.3 * (volume / 100.0)),
