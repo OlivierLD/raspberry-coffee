@@ -101,35 +101,63 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
        +-----+-----+--------------+-----++-----+--------------+-----+-----+
        | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
        +-----+-----+--------------+-----++-----+--------------+-----+-----+
-Volume: 100% (1023) => 3.30 V
-Volume: 099% (1013) => 3.27 V
-Volume: 094% (0969) => 3.10 V
-Volume: 088% (0906) => 2.90 V
-Volume: 082% (0849) => 2.71 V
-Volume: 079% (0813) => 2.61 V
-Volume: 076% (0783) => 2.51 V
-Volume: 074% (0759) => 2.44 V
-Volume: 071% (0732) => 2.34 V
-Volume: 068% (0705) => 2.24 V
-Volume: 068% (0698) => 2.24 V
-Volume: 065% (0673) => 2.15 V
-Volume: 062% (0638) => 2.05 V
-Volume: 059% (0611) => 1.95 V
-Volume: 055% (0572) => 1.82 V
-Volume: 051% (0527) => 1.68 V
-Volume: 047% (0488) => 1.55 V
-Volume: 045% (0464) => 1.48 V
-Volume: 041% (0426) => 1.35 V
-Volume: 039% (0402) => 1.29 V
-Volume: 037% (0386) => 1.22 V
-Volume: 035% (0367) => 1.15 V
-Volume: 035% (0360) => 1.15 V
-Volume: 037% (0382) => 1.22 V
-Volume: 040% (0416) => 1.32 V
-Volume: 043% (0441) => 1.42 V
-Volume: 044% (0452) => 1.45 V
-Volume: 044% (0458) => 1.45 V
-^CShutting down.
+Volume: 050% (0513) => 1.650 V, +00 degree(s)
+Volume: 049% (0505) => 1.617 V, -03 degree(s)
+Volume: 049% (0511) => 1.617 V, -03 degree(s)
+Volume: 051% (0522) => 1.683 V, +03 degree(s)
+Volume: 052% (0539) => 1.716 V, +06 degree(s)
+Volume: 054% (0553) => 1.782 V, +12 degree(s)
+Volume: 054% (0561) => 1.782 V, +12 degree(s)
+Volume: 056% (0573) => 1.848 V, +18 degree(s)
+Volume: 056% (0583) => 1.848 V, +18 degree(s)
+Volume: 057% (0591) => 1.881 V, +21 degree(s)
+Volume: 058% (0603) => 1.914 V, +24 degree(s)
+Volume: 060% (0617) => 1.980 V, +30 degree(s)
+Volume: 062% (0639) => 2.046 V, +36 degree(s)
+Volume: 064% (0660) => 2.112 V, +42 degree(s)
+Volume: 066% (0679) => 2.178 V, +48 degree(s)
+Volume: 067% (0695) => 2.211 V, +51 degree(s)
+Volume: 068% (0705) => 2.244 V, +54 degree(s)
+Volume: 070% (0718) => 2.310 V, +60 degree(s)
+Volume: 071% (0732) => 2.343 V, +63 degree(s)
+Volume: 075% (0769) => 2.475 V, +75 degree(s)
+Volume: 076% (0783) => 2.508 V, +78 degree(s)
+Volume: 080% (0821) => 2.640 V, +90 degree(s)
+Volume: 082% (0840) => 2.706 V, +96 degree(s)
+Volume: 084% (0864) => 2.772 V, +102 degree(s)
+Volume: 086% (0886) => 2.838 V, +108 degree(s)
+Volume: 087% (0893) => 2.871 V, +111 degree(s)
+Volume: 086% (0881) => 2.838 V, +108 degree(s)
+Volume: 085% (0870) => 2.805 V, +105 degree(s)
+Volume: 083% (0850) => 2.739 V, +99 degree(s)
+Volume: 080% (0825) => 2.640 V, +90 degree(s)
+Volume: 077% (0796) => 2.541 V, +81 degree(s)
+Volume: 074% (0767) => 2.442 V, +72 degree(s)
+Volume: 071% (0733) => 2.343 V, +63 degree(s)
+Volume: 069% (0706) => 2.277 V, +57 degree(s)
+Volume: 067% (0687) => 2.211 V, +51 degree(s)
+Volume: 065% (0671) => 2.145 V, +45 degree(s)
+Volume: 065% (0665) => 2.145 V, +45 degree(s)
+Volume: 062% (0640) => 2.046 V, +36 degree(s)
+Volume: 058% (0603) => 1.914 V, +24 degree(s)
+Volume: 055% (0569) => 1.815 V, +15 degree(s)
+Volume: 052% (0534) => 1.716 V, +06 degree(s)
+Volume: 050% (0521) => 1.650 V, +00 degree(s)
+Volume: 050% (0512) => 1.650 V, +00 degree(s)
+Volume: 048% (0492) => 1.584 V, -06 degree(s)
+Volume: 046% (0475) => 1.518 V, -12 degree(s)
+Volume: 045% (0465) => 1.485 V, -15 degree(s)
+Volume: 044% (0457) => 1.452 V, -18 degree(s)
+Volume: 043% (0440) => 1.419 V, -21 degree(s)
+Volume: 039% (0404) => 1.287 V, -33 degree(s)
+Volume: 036% (0375) => 1.188 V, -42 degree(s)
+Volume: 035% (0362) => 1.155 V, -45 degree(s)
+Volume: 034% (0351) => 1.122 V, -48 degree(s)
+Volume: 033% (0345) => 1.089 V, -51 degree(s)
+Volume: 032% (0337) => 1.056 V, -54 degree(s)
+Volume: 033% (0343) => 1.089 V, -51 degree(s)
+^C
+Shutting down.
 Done.
  $
 ```

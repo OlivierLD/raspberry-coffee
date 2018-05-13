@@ -224,6 +224,11 @@
 				break;
 		}
 	}
+
+	function toggleHeadsUp() {
+	  document.body.classList.toggle('mirror-upside-down');
+	}
+
 		</script>
 		<style>
 			html {
@@ -241,11 +246,19 @@
 				background-size: 100% 100%;
 			}
 
+			.mirror-upside-down {
+				display: block;
+				-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+				-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+				-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+				transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(50em) rotateX(-40deg);
+			}
+
 		</style>
 
   </head>
   <body>
-		<table>
+		<table style="margin: auto;">
 			<tr>
 				<td align="left">
 					<table>
@@ -273,6 +286,8 @@
 								Page Background
 								<input type="radio" name="page-bg" value="DARK" checked onchange="changeBG(this.value);">Dark
 								<input type="radio" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
+								&nbsp;&nbsp;
+								<button onclick="toggleHeadsUp();">Heads Up</button>
 							</td>
 						</tr>
 					</table>

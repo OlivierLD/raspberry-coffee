@@ -299,7 +299,7 @@ public class ADS1x15 {
 
 			// Set pga value, so that getLastConversionResult() can use it,
 			// any function that accepts a pga value must update this.
-			this.pga = 6_144;
+			this.pga = ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning();
 
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
@@ -322,7 +322,10 @@ public class ADS1x15 {
 	}
 
 	public float readADCSingleEnded(Channels channel) {
-		return readADCSingleEnded(channel, 6_144, 250);
+		return readADCSingleEnded(
+				channel,
+				ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(),
+				250);
 	}
 
 	/**
@@ -415,7 +418,11 @@ public class ADS1x15 {
 	}
 
 	public float readADCDifferential() {
-		return readADCDifferential(Channels.CHANNEL_0, Channels.CHANNEL_1, 6_144, 250);
+		return readADCDifferential(
+				Channels.CHANNEL_0,
+				Channels.CHANNEL_1,
+				ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(),
+				250);
 	}
 
 	/**
@@ -507,7 +514,7 @@ public class ADS1x15 {
 	}
 
 	public float readADCDifferential01() {
-		return readADCDifferential01(6_144, 250);
+		return readADCDifferential01(ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(), 250);
 	}
 
 	/**
@@ -522,7 +529,7 @@ public class ADS1x15 {
 	}
 
 	public float readADCDifferential03() {
-		return readADCDifferential03(6_144, 250);
+		return readADCDifferential03(ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(), 250);
 	}
 
 	/**
@@ -537,7 +544,7 @@ public class ADS1x15 {
 	}
 
 	public float readADCDifferential13() {
-		return readADCDifferential13(6_144, 250);
+		return readADCDifferential13(ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(), 250);
 	}
 
 	/**
@@ -552,7 +559,7 @@ public class ADS1x15 {
 	}
 
 	public float readADCDifferential23() {
-		return readADCDifferential23(6_144, 250);
+		return readADCDifferential23(ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(), 250);
 	}
 
 	/**
@@ -571,7 +578,7 @@ public class ADS1x15 {
 	}
 
 	public float startContinuousConversion(Channels channel) {
-		return startContinuousConversion(channel, 6_144, 250);
+		return startContinuousConversion(channel, ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(), 250);
 	}
 
 	/**
@@ -668,7 +675,7 @@ public class ADS1x15 {
 	}
 
 	public float startContinuousDifferentialConversion(Channels chP, Channels chN) {
-		return startContinuousDifferentialConversion(chP, chN, 6_144, 250);
+		return startContinuousDifferentialConversion(chP, chN, ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(), 250);
 	}
 
 	/**
@@ -812,7 +819,7 @@ public class ADS1x15 {
 	}
 
 	public void startSingleEndedComparator(Channels channel, int thresholdHigh, int thresholdLow) {
-		startSingleEndedComparator(channel, thresholdHigh, thresholdLow, 6_144, 250);
+		startSingleEndedComparator(channel, thresholdHigh, thresholdLow, ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(), 250);
 	}
 
 	public void startSingleEndedComparator(Channels channel, int thresholdHigh, int thresholdLow, int pga, int sps) {
@@ -931,7 +938,7 @@ public class ADS1x15 {
 	}
 
 	public void startDifferentialComparator(Channels chP, Channels chN, int thresholdHigh, int thresholdLow) {
-		startDifferentialComparator(chP, chN, thresholdHigh, thresholdLow, 6_144, 250);
+		startDifferentialComparator(chP, chN, thresholdHigh, thresholdLow, ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning(), 250);
 	}
 
 	public void startDifferentialComparator(Channels chP, Channels chN, int thresholdHigh, int thresholdLow, int pga, int sps) {
