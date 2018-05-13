@@ -9,13 +9,13 @@
 echo "Starting node server"
 #
 cd node
-rm node.log
+sudo rm node.log
 nohup node weather.server.js > node.log &
 cd ..
 #
 echo "Starting node weather reader"
 #
-rm weather.station.log
+sudo rm weather.station.log
 #
 nohup ./weather.station.reader.sh > weather.station.log &
 ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`

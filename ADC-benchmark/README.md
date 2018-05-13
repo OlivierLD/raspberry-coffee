@@ -162,6 +162,11 @@ Done.
  $
 ```
 
+The quality of the potentiometer seems to be an important parameter here.
+
+![Chart](./chart.png)
+
+
 ### ADS1015
 I<sup><small>2</small></sup>C, 4 channels of 12-bit analog input
 
