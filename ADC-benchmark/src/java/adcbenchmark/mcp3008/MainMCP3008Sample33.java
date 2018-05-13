@@ -162,6 +162,13 @@ public class MainMCP3008Sample33 {
 		int lastRead = 0;
 		int tolerance = 5;
 		boolean first = true;
+
+		/*
+		 *  50% will be 0 degree
+		 *   0% will be -150 degrees,
+		 * 100% will be 150 degrees.
+		 */
+		// Reading loop
 		while (go) {
 	//	System.out.println("Reading channel " + adcChannel);
 			int adc = MCP3008Reader.readMCP3008(adcChannel);
@@ -174,7 +181,11 @@ public class MainMCP3008Sample33 {
 							" (0x" + lpad(Integer.toString(adc, 16).toUpperCase(), 2, "0") +
 							", 0&" + lpad(Integer.toString(adc, 2), 8, "0") + ")");
 				}
-				System.out.println(String.format("Volume: %03d%% (%04d) => %.02f V", volume, adc, (3.3 * (volume / 100.0))));
+				System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V, %+03d\272",
+						volume,
+						adc,
+						(3.3 * (volume / 100.0)),
+						((int)Math.round(volume * 3.00) - 150)));
 				lastRead = adc;
 				first = false;
 			}

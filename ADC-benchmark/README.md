@@ -6,6 +6,21 @@ We want to compare several Analog to Digital Converters
 - ADS1015 (12 bits) $ 9.95
 - ADS1115 (16 bits) $14.95
 
+The final goal will be to evaluate the orientation of a panel (like a solar panel),
+using a potentiometer like [this one](https://www.adafruit.com/product/562).
+
+This potentiometer rotates on a out 300&deg;.
+
+We will call the center (150&deg;) the zero. Thus, reading will got from -150&deg; to +150&deg;.
+
+Servos are _not_ an option here, as the panel we want to orient is too heavy.
+Stepper motors are required.
+
+We will need two potentiometers, one for the tilt (rotation on an horizontal axis),
+and another one for the azimuth (rotation on a vertical axis).
+
+A precision of one degree will happen to be sufficient in this case.
+
 ### MCP3008
 
 SPI, 8 channels of 10-bit analog input
