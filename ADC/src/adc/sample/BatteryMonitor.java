@@ -74,8 +74,12 @@ public class BatteryMonitor {
 		// Log the voltage, along with the date and ADC val.
 		String line = SDF.format(GregorianCalendar.getInstance(HERE).getTime()) + ";" + adcData.newValue + ";" + adcData.volume + ";" + VF.format(adcData.voltage);
 		try {
-			bw.write(line + "\n");
-			bw.flush();
+			if (bw != null) {
+				bw.write(line + "\n");
+				bw.flush();
+			} else {
+				System.out.println(line);
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -142,7 +146,9 @@ public class BatteryMonitor {
 								System.out.println("Volume:" + volume + "% (" + newValue + ") Volt:" + VF.format(voltage));
 							}
 
-							processor.accept(new ADCData(volume, newValue, voltage));
+							if (processor != null) {
+								processor.accept(new ADCData(volume, newValue, voltage));
+							}
 
 							lastLogTimeStamp = now;
 							lastVolumeLogged = volume;
