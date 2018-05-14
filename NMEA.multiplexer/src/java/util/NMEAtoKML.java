@@ -187,7 +187,6 @@ public class NMEAtoKML {
 							"</kml>\n");
 			bw.close();
 
-
 			// Display summary
 			System.out.println(String.format("Started %s", SDF.format(start)));
 			System.out.println(String.format("Arrived %s", SDF.format(arrival)));
@@ -202,6 +201,7 @@ public class NMEAtoKML {
 			System.out.println(String.format("Top-Left    :%s", new GeoPos(maxLat, minLng).toString()));
 			System.out.println(String.format("Bottom-Right:%s", new GeoPos(minLat, maxLng).toString()));
 
+			System.out.println(String.format("\nGenerated file %s is ready.", outputFileName));
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

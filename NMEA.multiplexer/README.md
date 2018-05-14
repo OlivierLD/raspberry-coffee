@@ -713,7 +713,16 @@ And there is an integration with the [REST Nav Server](https://github.com/Olivie
 - A sample of a kml file generator is in `util.NMEAtoKML`:
 ```bash
  $ java -cp ./build/libs/NMEA.multiplexer-1.0-all.jar util.NMEAtoKML sample.data/alcatraz.2018.may.5.nmea --title:Alcatraz --sub-title:"May 5, 2018"
+Started 05-May-2018 10:32:23 PDT
+Arrived 05-May-2018 15:52:31 PDT
+38,426 record(s) out of 76,821. Total distance: 44.222 km, in 5 hour(s) 20 minute(s) 8.0 sec(s). Avg speed:8.288 km/h
+Max Speed: 327.804 km/h
+Min alt: -248.60 m, Max alt: 212.00 m, delta 460.60 m
+Top-Left    :N  37°49.84' / W 122°30.66'
+Bottom-Right:N  37°44.91' / W 122°24.12'
 
+Generated file sample.data/alcatraz.2018.may.5.nmea.kml is ready.
+ $
 ```
 Then open the generated file in Google Earth.
 
