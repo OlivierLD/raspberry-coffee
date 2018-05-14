@@ -9,7 +9,7 @@ We want to compare several Analog to Digital Converters
 The final goal for this case study will be to evaluate the orientation of a panel (like a solar panel),
 using a _linear_ potentiometer like [this one](https://www.adafruit.com/product/562).
 
-This potentiometer rotates on about 300&deg;.
+This potentiometer's knob rotates on about 300&deg;.
 
 We will call the center (150&deg;) the zero. Thus, reading will go from -150&deg; to +150&deg;.
 
@@ -248,7 +248,8 @@ ADC Value: 3240, Voltage: 3.24000
 ADC Value: 3244, Voltage: 3.24400
 ADC Value: 3246, Voltage: 3.24600
 ...
-^CDone.
+^C
+Done.
  $
 ```
 
