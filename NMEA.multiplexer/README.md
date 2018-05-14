@@ -715,6 +715,6 @@ And there is an integration with the [REST Nav Server](https://github.com/Olivie
  $ java -cp ./build/libs/NMEA.multiplexer-1.0-all.jar util.NMEAtoKML ./sample.data/2017.06.17.nmea --title:Alcatraz --sub-title:"May 5, 2018"
 
 ```
-Then open the file in Google Earth.
+Then open the generated file in Google Earth.
 
 -------------------------------
