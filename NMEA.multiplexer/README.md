@@ -712,7 +712,7 @@ And there is an integration with the [REST Nav Server](https://github.com/Olivie
 
 - A sample of a kml file generator is in `util.NMEAtoKML`:
 ```bash
- $ java -cp ./build/libs/NMEA.multiplexer-1.0-all.jar util.NMEAtoKML ./sample.data/2017.06.17.nmea --title:Alcatraz --sub-title:"May 5, 2018"
+ $ java -cp ./build/libs/NMEA.multiplexer-1.0-all.jar util.NMEAtoKML sample.data/alcatraz.2018.may.5.nmea --title:Alcatraz --sub-title:"May 5, 2018"
 
 ```
 Then open the generated file in Google Earth.
