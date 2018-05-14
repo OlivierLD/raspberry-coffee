@@ -266,7 +266,7 @@ three ADCs work in a similar fashion. There is apparently no real advantage in u
 
 The key seems to be more on the potentiometer quality.
 Making sure that we obtain the same readings when the potentiometer is in the same position
-is what will make the difference. The spreadsheet graph above shows thiose values.
+is what will make the difference. The spreadsheet graph above shows those values.
 It is _close_ to being linear.
 
 

@@ -25,7 +25,7 @@ public class LogAnalyzer {
 
 	private final static double KNOTS_TO_KMH = 1.852;
 
-	private final static long SEC  = 1000L;
+	private final static long SEC  = 1_000L;
 	private final static long MIN  = 60 * SEC;
 	private final static long HOUR = 60 * MIN;
 	private final static long DAY  = 24 * HOUR;

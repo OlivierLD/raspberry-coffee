@@ -185,8 +185,8 @@ public class MainMCP3008Sample33 {
 				System.out.println(String.format("Volume: %03d%% (%04d) => %.03f V, %+03d degree(s)",
 						volume,
 						adc,
-						(3.3 * (volume / 100.0)),
-						((int)Math.round(volume * 3.00) - 150)));
+						(3.3 * (adc / 1023.0)),                             // Volts
+						((int)Math.round((adc / 1023.0) * 300.0) - 150)));  // Angle, centered (on 300 degrees)
 				lastRead = adc;
 				first = false;
 			}
