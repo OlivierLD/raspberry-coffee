@@ -2,14 +2,14 @@
 
 We want to compare several Analog to Digital Converters
 
-- MCP3008 (10 bits) $ 3.75
-- ADS1015 (12 bits) $ 9.95
-- ADS1115 (16 bits) $14.95
+- MCP3008 (10 bits) (May 2018: $ 3.75)
+- ADS1015 (12 bits) (May 2018: $ 9.95)
+- ADS1115 (16 bits) (May 2018: $14.95)
 
-The final goal will be to evaluate the orientation of a panel (like a solar panel),
+The final goal for this case study will be to evaluate the orientation of a panel (like a solar panel),
 using a _linear_ potentiometer like [this one](https://www.adafruit.com/product/562).
 
-This potentiometer rotates on a out 300&deg;.
+This potentiometer rotates on about 300&deg;.
 
 We will call the center (150&deg;) the zero. Thus, reading will got from -150&deg; to +150&deg;.
 
@@ -19,11 +19,10 @@ Stepper motors are required.
 We will need two potentiometers, one for the tilt (rotation on an horizontal axis),
 and another one for the azimuth (rotation on a vertical axis).
 
-A precision of one degree will happen to be sufficient in this case.
+A precision of one or two degrees will happen to be sufficient in this case.
 
 ### MCP3008
-
-SPI, 8 channels of 10-bit analog input
+##### SPI, 8 channels of 10-bit analog input
 
 As such, returns values between 0 and 2<sup><small>10</small></sup>, \[0..1023\]
 
@@ -168,7 +167,7 @@ The quality of the potentiometer seems to be _the_ important parameter here.
 
 
 ### ADS1015
-I<sup><small>2</small></sup>C, 4 channels of 12-bit analog input
+##### I<sup><small>2</small></sup>C, 4 channels of 12-bit analog input
 
 As such, returns values between 0 and 2<sup><small>12</small></sup>, \[0..4095\]
 
@@ -254,7 +253,7 @@ ADC Value: 3246, Voltage: 3.24600
 ```
 
 ### ADS1115
-I<sup><small>2</small></sup>C, 4 channels of 16-bit analog input
+##### I<sup><small>2</small></sup>C, 4 channels of 16-bit analog input
 
 As such, returns values between 0 and 2<sup><small>16</small></sup>, \[0..65535\]
 
