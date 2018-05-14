@@ -11,7 +11,7 @@ using a _linear_ potentiometer like [this one](https://www.adafruit.com/product/
 
 This potentiometer rotates on about 300&deg;.
 
-We will call the center (150&deg;) the zero. Thus, reading will got from -150&deg; to +150&deg;.
+We will call the center (150&deg;) the zero. Thus, reading will go from -150&deg; to +150&deg;.
 
 Servos are _not_ an option here, as the panel we want to orient is too heavy.
 Stepper motors are required.
@@ -19,12 +19,12 @@ Stepper motors are required.
 We will need two potentiometers, one for the tilt (rotation on an horizontal axis),
 and another one for the azimuth (rotation on a vertical axis).
 
-A precision of one or two degrees will happen to be sufficient in this case.
+A precision of one or two degrees will happen to be sufficient in this use-case.
 
 ### MCP3008
 ##### SPI, 8 channels of 10-bit analog input
 
-As such, returns values between 0 and 2<sup><small>10</small></sup>, \[0..1023\]
+As such, returns 2<sup><small>10</small></sup> values, in \[0..1023\].
 
 ![MCP3008](./RPi-MCP3008-Pot_bb.png)
 
@@ -169,7 +169,7 @@ The quality of the potentiometer seems to be _the_ important parameter here.
 ### ADS1015
 ##### I<sup><small>2</small></sup>C, 4 channels of 12-bit analog input
 
-As such, returns values between 0 and 2<sup><small>12</small></sup>, \[0..4095\]
+As such, returns 2<sup><small>12</small></sup> values, in \[0..4095\].
 
 ```
  $ ./run
@@ -255,7 +255,7 @@ ADC Value: 3246, Voltage: 3.24600
 ### ADS1115
 ##### I<sup><small>2</small></sup>C, 4 channels of 16-bit analog input
 
-As such, returns values between 0 and 2<sup><small>16</small></sup>, \[0..65535\]
+As such, returns 2<sup><small>16</small></sup> values, inb \[0..65535\].
 
 ![ADS1115](./rpi-ads1115-pot_bb.png)
 
