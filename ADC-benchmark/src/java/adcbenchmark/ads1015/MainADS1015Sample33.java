@@ -34,7 +34,7 @@ public class MainADS1015Sample33 {
 					sps);
 			if (prevValue != value) {
 				double angle = ((((value / 1_000f) / 3.3) * 300) - 150);
-				System.out.println(String.format("ADC Value: %d, Voltage: %.05f V, %.02 degrees.", value, (value / 1_000.0), angle)); // 1_000f: 4_096 to 4.096
+				System.out.println(String.format("ADC Value: %d, Voltage: %.05f V, %.02f degrees.", value, (value / 1_000.0), angle)); // 1_000f: 4_096 to 4.096
 			}
 			prevValue = value;
 		}
