@@ -129,14 +129,26 @@ public class Utilities {
 		return dewPointTemp;
 	}
 
+	/** For tests
+	 *
+	 * @param args unused.
+	 */
 	public static void main(String... args) {
 		double hum = 65.45;
 		double temp = 18.2;
 		System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
 
+		hum = 10.0;
+		temp = 25.0;
+		System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
+
+		hum = 90.0;
+		temp = 50.0;
+		System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
+
 		for (int i=0; i<10; i++) {
 			long time = currentTimeMicros();
-			System.out.println(String.format("%s => %d", NumberFormat.getInstance().format(time), time));
+			System.out.println(String.format("%s => %d (in \u00b5s)", NumberFormat.getInstance().format(time), time));
 			try { Thread.sleep(1_000L); } catch (Exception ex) {}
 		}
 
