@@ -33,7 +33,10 @@ case "$a" in
 		sudo java -cp $CP $JAVA_OPTS adcbenchmark.ads1015.MainADS1015Sample33 $*
     ;;
    "3")
-    echo "Soon"
+		JAVA_OPTS=
+		CP=./build/libs/ADC-benchmark-1.0-all.jar
+		#
+		sudo java -cp $CP $JAVA_OPTS adcbenchmark.ads1115.MainADS1115Sample33 $*
     ;;
   *)
     echo -e "What? Unknown command [$a]"
