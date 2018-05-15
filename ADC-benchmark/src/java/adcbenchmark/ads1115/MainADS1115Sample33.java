@@ -9,7 +9,7 @@ public class MainADS1115Sample33 {
 
 	private static ADS1x15.pgaADS1x15 gainRef = ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V; // +/- 4.096 V
 
-	private static int gain = gainRef.meaning(); // 6_144;
+	private static int gain = gainRef.meaning();
 	private static int sps  = ADS1x15.spsADS1115.ADS1115_REG_CONFIG_DR_250SPS.meaning();
 
 	private static boolean go = true;
