@@ -20,7 +20,8 @@ import utils.StringUtils;
 public class BatteryMonitor {
 	private static boolean debug = false;
 	private static boolean calib = false;
-	private ADCObserver.MCP3008_input_channels channel = null;
+	private static boolean simulate = false;
+ 	private ADCObserver.MCP3008_input_channels channel = null;
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 	private final static TimeZone HERE = TimeZone.getTimeZone("America/Los_Angeles");
 
@@ -88,6 +89,9 @@ public class BatteryMonitor {
 	public void setProcessor(Consumer<ADCData> processor) {
 		this.processor = processor;
 	}
+	public Consumer<ADCData> getProcessor() {
+		return this.processor;
+	}
 
 	public BatteryMonitor(int ch) throws Exception {
 		this(ch, null);
@@ -111,12 +115,17 @@ public class BatteryMonitor {
 			System.out.println("ADC  [" + minADC + ", " + maxADC + "]");
 			System.out.println("a=" + a + ", b=" + b);
 		}
-		System.out.println("Value range: ADC=0 => V=" + b + ", ADC=1023 => V=" + ((a * 1023) + b));
+		System.out.println("Value range: ADC=0 => V=" + b + ", ADC=1023 => V=" + ((a * 1_023) + b));
 		obs = new ADCObserver(channel); // Note: We could instantiate more than one observer (on several channels).
 		bw = new BufferedWriter(new FileWriter(logFileName));
+		if (debug) {
+			System.out.println(String.format("Created log-file [%s]", logFileName));
+		}
 
 		if (processor != null) {
 			this.setProcessor(processor);
+		} else {
+			this.setProcessor(this::defaultProcessor);
 		}
 		ADCContext.getInstance().addListener(new ADCListener() {
 			@Override
@@ -146,8 +155,8 @@ public class BatteryMonitor {
 								System.out.println("Volume:" + volume + "% (" + newValue + ") Volt:" + VF.format(voltage));
 							}
 
-							if (processor != null) {
-								processor.accept(new ADCData(volume, newValue, voltage));
+							if (getProcessor() != null) {
+								getProcessor().accept(new ADCData(volume, newValue, voltage));
 							}
 
 							lastLogTimeStamp = now;
@@ -157,7 +166,16 @@ public class BatteryMonitor {
 				}
 			}
 		});
-		obs.start();
+		if (!simulate) {
+			try {
+				obs.start();
+			} catch (ADCObserver.NotOnARaspberryException error) {
+				System.out.println("Not on a RPi, simulating.");
+				simulate = true;
+			}
+		} else {
+			System.out.println("Simulating data...");
+		}
 	}
 
 	private final static String DEBUG_PRM = "-debug=";
@@ -169,6 +187,7 @@ public class BatteryMonitor {
 	private final static String TUNE_VALUE = "-tune=";
 	private final static String SCALE_PRM = "-scale=";
 	private final static String LOG_PRM = "-log=";
+	private final static String SIMULATE_PRM = "-simulate=";
 
 	private static int minADC = 0;
 	private static int maxADC = 1_023;
@@ -188,6 +207,7 @@ public class BatteryMonitor {
 		System.out.println("  -max=maxADC:maxVolt          - example -min=879:11.25  (default is 1023:15.0)");
 		System.out.println("  -tune=ADC:volt               - example -tune=973:12.6  (default is 1023:15.0)");
 		System.out.println("  -scale=y|n                   - example -scale=y        (default is n)");
+		System.out.println("  -simulate=y|n                - example -simulate=y     (default is n)");
 		System.out.println("  -log=[log-file-name]         - example -log=[batt.csv] (default is battery.log)");
 		System.out.println("");
 		System.out.println(" -min & -max are required if -tune is not here, and vice versa.");
@@ -204,6 +224,8 @@ public class BatteryMonitor {
 						"true".equals(prm.substring(DEBUG_PRM.length())));
 			} else if (prm.startsWith(SCALE_PRM)) {
 				scale = ("y".equals(prm.substring(SCALE_PRM.length())));
+			} else if (prm.startsWith(SIMULATE_PRM)) {
+				simulate = ("y".equals(prm.substring(SIMULATE_PRM.length())));
 			} else if (prm.startsWith(LOG_PRM)) {
 				logFileName = prm.substring(LOG_PRM.length());
 			} else if (prm.startsWith(TUNE_VALUE)) {
@@ -253,8 +275,15 @@ public class BatteryMonitor {
 			System.exit(0);
 		}
 
+		Thread me = Thread.currentThread();
+
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nShutting down");
+			if (debug) {
+				// Who called me
+				Throwable stack = new Throwable();
+				stack.printStackTrace(System.out);
+			}
 			if (bw != null) {
 				System.out.println("Closing log file");
 				try {
@@ -264,10 +293,39 @@ public class BatteryMonitor {
 					ex.printStackTrace();
 				}
 			}
-			if (obs != null)
+			if (obs != null) {
 				obs.stop();
+			}
+			synchronized (me) {
+				try {
+					me.notify();
+				} catch (Exception ex) {
+					// absorb.
+					ex.printStackTrace();
+				}
+			}
 		}));
+
 		new BatteryMonitor(channel);
+
+		if (simulate) {
+			System.out.println("Waiting...");
+
+			final int ch = channel;
+			Thread dataSimulator = new Thread(() -> {
+				while (true) {
+					int adc = (int) Math.round(Math.random() * 1_024);
+					ADCContext.getInstance().fireValueChanged(findChannel(ch), adc);
+					try { Thread.sleep(500L); } catch (InterruptedException ie) {}
+				}
+			});
+			dataSimulator.start();
+
+			synchronized (me) {
+				me.wait();
+				System.out.println("Waking up, exiting.");
+			}
+		}
 	}
 
 	private static ADCObserver.MCP3008_input_channels findChannel(int ch) throws IllegalArgumentException {

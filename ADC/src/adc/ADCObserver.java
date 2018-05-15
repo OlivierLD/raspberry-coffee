@@ -81,15 +81,15 @@ public class ADCObserver {
 		spiCs = cs;
 	}
 
-	public void start() {
+	public void start() throws NotOnARaspberryException {
 		start(DEFAULT_TOL, DEFAULT_PAUSE);
 	}
 
-	public void start(int tol) {
+	public void start(int tol) throws NotOnARaspberryException {
 		start(tol, DEFAULT_PAUSE);
 	}
 
-	public void start(long p) {
+	public void start(long p) throws NotOnARaspberryException {
 		start(DEFAULT_TOL, p);
 	}
 
@@ -100,8 +100,13 @@ public class ADCObserver {
 	 *              Default is 5
 	 * @param pause Pause between loops, in ms
 	 */
-	public void start(int tol, long pause) {
-		GpioController gpio = GpioFactory.getInstance();
+	public void start(int tol, long pause) throws NotOnARaspberryException {
+		GpioController gpio = null;
+		try {
+			gpio = GpioFactory.getInstance();
+		} catch (UnsatisfiedLinkError ule) {
+			throw new NotOnARaspberryException(ule);
+		}
 		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
 		clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
 		chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.LOW);
@@ -109,8 +114,9 @@ public class ADCObserver {
 		misoInput = gpio.provisionDigitalInputPin(spiMiso, "MISO");
 
 		int lastRead[] = new int[adcChannel.length];
-		for (int i = 0; i < lastRead.length; i++)
+		for (int i = 0; i < lastRead.length; i++) {
 			lastRead[i] = 0;
+		}
 		int tolerance = tol;
 		while (go) {
 			for (int i = 0; i < adcChannel.length; i++) {
@@ -190,5 +196,11 @@ public class ADCObserver {
 
 		adcOut >>= 1; // Drop first bit
 		return adcOut;
+	}
+
+	public static class NotOnARaspberryException extends Exception {
+		public NotOnARaspberryException(Throwable cause) {
+			super(cause);
+		}
 	}
 }
