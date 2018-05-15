@@ -76,8 +76,8 @@ public class SDLWeather80422 {
 
 	private ADS1x15 ads1015 = null;
 	private final static ADS1x15.ICType ADC_TYPE = ADS1x15.ICType.IC_ADS1015;
-	private int gain = ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_4_096V.meaning();
-	private int sps  = 250;
+	private int gain = ADS1x15.pgaADS1x15.ADS1015_REG_CONFIG_PGA_6_144V.meaning(); // +/- 6.144 V
+	private int sps  = ADS1x15.spsADS1015.ADS1015_REG_CONFIG_DR_250SPS.meaning();  // 250
 
 	// Other I2C Boards (BMP180, HTU21D-F, MOD-1016, etc)
 	private BMP180 bmp180 = null;
