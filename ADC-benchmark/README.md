@@ -165,6 +165,8 @@ The quality of the potentiometer seems to be _the_ important parameter here.
 
 ![Chart](./chart.png)
 
+### Wiring
+Same for `ADS1015` and `ADS1115`.
 
 ### ADS1015
 ##### I<sup><small>2</small></sup>C, 4 channels of 12-bit analog input
@@ -182,71 +184,25 @@ Read an ADC for 3.3 Volt estimation
 | Q: Bye     |
 +------------+
  You choose > 2
-ADC Value: 0, Voltage: 0.00000
-ADC Value: 2, Voltage: 0.00200
-ADC Value: 6, Voltage: 0.00600
-ADC Value: 12, Voltage: 0.01200
-ADC Value: 14, Voltage: 0.01400
-ADC Value: 20, Voltage: 0.02000
-ADC Value: 24, Voltage: 0.02400
-ADC Value: 28, Voltage: 0.02800
-ADC Value: 32, Voltage: 0.03200
-ADC Value: 36, Voltage: 0.03600
-ADC Value: 40, Voltage: 0.04000
-...
-ADC Value: 134, Voltage: 0.13400
-ADC Value: 140, Voltage: 0.14000
-ADC Value: 146, Voltage: 0.14600
-ADC Value: 154, Voltage: 0.15400
-ADC Value: 160, Voltage: 0.16000
-ADC Value: 162, Voltage: 0.16200
-ADC Value: 172, Voltage: 0.17200
-ADC Value: 174, Voltage: 0.17400
-ADC Value: 176, Voltage: 0.17600
-ADC Value: 182, Voltage: 0.18200
-ADC Value: 190, Voltage: 0.19000
-...
-ADC Value: 308, Voltage: 0.30800
-ADC Value: 310, Voltage: 0.31000
-ADC Value: 314, Voltage: 0.31400
-ADC Value: 318, Voltage: 0.31800
-ADC Value: 320, Voltage: 0.32000
-ADC Value: 324, Voltage: 0.32400
-ADC Value: 328, Voltage: 0.32800
-ADC Value: 330, Voltage: 0.33000
-ADC Value: 334, Voltage: 0.33400
-ADC Value: 336, Voltage: 0.33600
-ADC Value: 338, Voltage: 0.33800
-ADC Value: 342, Voltage: 0.34200
-ADC Value: 346, Voltage: 0.34600
-...
-ADC Value: 1914, Voltage: 1.91400
-ADC Value: 1920, Voltage: 1.92000
-ADC Value: 1926, Voltage: 1.92600
-ADC Value: 1936, Voltage: 1.93600
-ADC Value: 1944, Voltage: 1.94400
-ADC Value: 1950, Voltage: 1.95000
-ADC Value: 1964, Voltage: 1.96400
-ADC Value: 1970, Voltage: 1.97000
-ADC Value: 1980, Voltage: 1.98000
-ADC Value: 1994, Voltage: 1.99400
-ADC Value: 1998, Voltage: 1.99800
-ADC Value: 2008, Voltage: 2.00800
-ADC Value: 2020, Voltage: 2.02000
-ADC Value: 2028, Voltage: 2.02800
-...
-ADC Value: 3230, Voltage: 3.23000
-ADC Value: 3234, Voltage: 3.23400
-ADC Value: 3238, Voltage: 3.23800
-ADC Value: 3236, Voltage: 3.23600
-ADC Value: 3232, Voltage: 3.23200
-ADC Value: 3234, Voltage: 3.23400
-ADC Value: 3232, Voltage: 3.23200
-ADC Value: 3234, Voltage: 3.23400
-ADC Value: 3238, Voltage: 3.23800
-ADC Value: 3240, Voltage: 3.24000
-ADC Value: 3244, Voltage: 3.24400
-ADC Value: 3246, Voltage: 3.24600
+ADC Value: 1676, Voltage: 1.67600 V, 2.36 degrees.
+ADC Value: 1674, Voltage: 1.67400 V, 2.18 degrees.
+ADC Value: 1670, Voltage: 1.67000 V, 1.82 degrees.
+ADC Value: 1662, Voltage: 1.66200 V, 1.09 degrees.
+ADC Value: 1652, Voltage: 1.65200 V, 0.18 degrees.
+ADC Value: 1648, Voltage: 1.64800 V, -0.18 degrees.
+ADC Value: 1642, Voltage: 1.64200 V, -0.73 degrees.
+ADC Value: 1634, Voltage: 1.63400 V, -1.45 degrees.
+ADC Value: 1624, Voltage: 1.62400 V, -2.36 degrees.
+ADC Value: 1618, Voltage: 1.61800 V, -2.91 degrees.
+ADC Value: 1610, Voltage: 1.61000 V, -3.64 degrees.
+ADC Value: 1598, Voltage: 1.59800 V, -4.73 degrees.
+ADC Value: 1592, Voltage: 1.59200 V, -5.27 degrees.
+ADC Value: 1588, Voltage: 1.58800 V, -5.64 degrees.
+ADC Value: 1586, Voltage: 1.58600 V, -5.82 degrees.
+ADC Value: 1582, Voltage: 1.58200 V, -6.18 degrees.
+ADC Value: 1584, Voltage: 1.58400 V, -6.00 degrees.
+ADC Value: 1582, Voltage: 1.58200 V, -6.18 degrees.
+ADC Value: 1584, Voltage: 1.58400 V, -6.00 degrees.
 ...
 ^C
 Done.
@@ -258,7 +214,41 @@ Done.
 
 As such, returns 2<sup><small>16</small></sup> values, inb \[0..65535\].
 
-![ADS1115](./rpi-ads1115-pot_bb.png)
+```
+ $ ./run
+Read an ADC for 3.3 Volt estimation
++------------+
+| 1: MCP3008 |
+| 2: ADS1015 |
+| 3: ADS1115 |
++------------+
+| Q: Bye     |
++------------+
+ You choose > 3
+ADC Value: 1676, Voltage: 1.67600 V, 2.36 degrees.
+ADC Value: 1674, Voltage: 1.67400 V, 2.18 degrees.
+ADC Value: 1670, Voltage: 1.67000 V, 1.82 degrees.
+ADC Value: 1662, Voltage: 1.66200 V, 1.09 degrees.
+ADC Value: 1652, Voltage: 1.65200 V, 0.18 degrees.
+ADC Value: 1648, Voltage: 1.64800 V, -0.18 degrees.
+ADC Value: 1642, Voltage: 1.64200 V, -0.73 degrees.
+ADC Value: 1634, Voltage: 1.63400 V, -1.45 degrees.
+ADC Value: 1624, Voltage: 1.62400 V, -2.36 degrees.
+ADC Value: 1618, Voltage: 1.61800 V, -2.91 degrees.
+ADC Value: 1610, Voltage: 1.61000 V, -3.64 degrees.
+ADC Value: 1598, Voltage: 1.59800 V, -4.73 degrees.
+ADC Value: 1592, Voltage: 1.59200 V, -5.27 degrees.
+ADC Value: 1588, Voltage: 1.58800 V, -5.64 degrees.
+ADC Value: 1586, Voltage: 1.58600 V, -5.82 degrees.
+ADC Value: 1582, Voltage: 1.58200 V, -6.18 degrees.
+ADC Value: 1584, Voltage: 1.58400 V, -6.00 degrees.
+ADC Value: 1582, Voltage: 1.58200 V, -6.18 degrees.
+ADC Value: 1584, Voltage: 1.58400 V, -6.00 degrees.
+...
+^C
+Done.
+ $
+```
 
 ## Discussion
 If the goal here is still to read the orientation of a (solar) panel, it looks like the
