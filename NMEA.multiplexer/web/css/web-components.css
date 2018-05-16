@@ -169,7 +169,7 @@
 
 @font-face {
 	font-family: DigiFont;
-	src: url(./fonts/ds-digi.ttf) format("truetype");
+	src: url(../fonts/ds-digi.ttf) format("truetype");
 }
 
 jumbo-display .digital-font-orange {
