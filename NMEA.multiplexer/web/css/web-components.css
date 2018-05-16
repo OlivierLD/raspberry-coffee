@@ -1,3 +1,11 @@
+/*
+  TODO Replace the cyan, orange, white, etc, with a css var like --widget-color: cyan;
+  --major-tick-color: var(--widget-color);
+ */
+:root {
+	--widget-color: red;
+}
+
 /* Widget specific */
 .pluviometer-day {
 	--with-shadow: true;
@@ -51,6 +59,21 @@
 	--value-color: white;
 	--tube-outline-color: white;
 	--rain-outline-color: white;
+	--inside-tube-from: transparent;
+	--inside-tube-to: transparent;
+	--font: 'Arial'
+}
+
+.pluviometer-yellow {
+	--with-shadow: false;
+	--scale-color: yellow;
+	--bg-color: transparent;
+	--major-tick-color: yellow;
+	--minor-tick-color: yellow;
+	--value-outline-color: yellow;
+	--value-color: yellow;
+	--tube-outline-color: yellow;
+	--rain-outline-color: yellow;
 	--inside-tube-from: transparent;
 	--inside-tube-to: transparent;
 	--font: 'Arial'
@@ -126,6 +149,20 @@
 	--major-tick-color: LightGrey;
 	--minor-tick-color: LightGrey;
 	--value-color: white;
+	--value-outline-color: transparent;
+	--value-nb-decimal: 2;
+	--font: 'Arial'; /* 'Source Code Pro' */
+}
+
+.thermometer-yellow {
+	--bg-color: transparent;
+	--digit-color: yellow;
+	--with-gradient: false;
+	--display-background-gradient-to: rgba(255, 255, 255, 0.25);
+	--with-display-shadow: false;
+	--major-tick-color: LightGrey;
+	--minor-tick-color: LightGrey;
+	--value-color: yellow;
 	--value-outline-color: transparent;
 	--value-nb-decimal: 2;
 	--font: 'Arial'; /* 'Source Code Pro' */
@@ -286,6 +323,32 @@ jumbo-display .digital-font-green {
 	--value-font-size-factor: 1
 }
 
+/* Monochrome, yellow */
+.analogdisplay-monochrome-yellow {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: yellow;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(255, 255, 0, 0.5);
+	--label-fill-color: rgba(0, 0, 0, 0);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: yellow;
+	--major-tick-color: yellow;
+	--minor-tick-color: yellow;
+	--value-color: yellow;
+	--value-outline-color: yellow;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0.0);
+	--hand-outline-color: yellow;
+	--with-hand-shadow: false;
+	--knob-color: yellow;
+	--knob-outline-color: yellow;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
 .analogdisplay-monochrome-orange {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: orange;
@@ -364,6 +427,8 @@ jumbo-display .digital-font-green {
 direction-display .analogdisplay-day
 									.analogdisplay-night
 									.analogdisplay-monochrome-cyan
+									.analogdisplay-monochrome-white
+									.analogdisplay-monochrome-yellow
 									.analogdisplay-monochrome-orange
 									.analogdisplay-flat-gray {
 	--value-nb-decimal: 0;

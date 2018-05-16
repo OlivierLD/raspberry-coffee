@@ -203,6 +203,13 @@
 						'thermometer-white',
 						'pluviometer-white');
 				break;
+			case 'yellow':
+				setElementsStyle(
+						'analogdisplay-monochrome-yellow',
+						'analogdisplay-monochrome-yellow',
+						'thermometer-yellow',
+						'pluviometer-yellow');
+				break;
 			case 'day':
 				setElementsStyle(
 						'analogdisplay-day',
@@ -298,8 +305,9 @@
 								Widget Style:
 								<select onchange="setStyle(this.value);">
 									<option value="orange" selected>Orange</option>
-									<option value="cyan">Cyan</option>
+									<option value="yellow">Yellow</option>
 									<option value="white">White</option>
+									<option value="cyan">Cyan</option>
 									<option value="day">Day</option>
 									<option value="night">Night</option>
 									<option value="flat-gray">Flat gray</option>
