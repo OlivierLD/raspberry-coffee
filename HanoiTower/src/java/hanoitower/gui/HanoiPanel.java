@@ -12,16 +12,13 @@ import javax.swing.SwingUtilities;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Area;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class HanoiPanel extends JPanel {
@@ -239,10 +236,12 @@ public class HanoiPanel extends JPanel {
 				String k = (String) i$.next();
 				Integer d = ((HanoiContext.Post) hanoiStand.getPosts().get(k)).getDiscAt(i);
 				int postAxisX = (postIdx + 1) * (getWidth() / 4);
-				if (d == null)
+				if (d == null) {
 					d = 0;
-				if (d.intValue() > 0)
+				}
+				if (d.intValue() > 0) {
 					drawDisc(gr, d, postAxisX, discBaseY);
+				}
 				postIdx++;
 			}
 
@@ -251,8 +250,9 @@ public class HanoiPanel extends JPanel {
 	}
 
 	private void drawDisc(Graphics gr, Integer disc, int centerX, int bottomY) {
-		if (gradient && gradientPaint == null)
+		if (gradient && gradientPaint == null) {
 			gradientPaint = new GradientPaint(0.0F, 0.0F, Color.blue, getWidth(), getHeight(), Color.yellow);
+		}
 		int discWidth = disc.intValue() * (oneDiscMaxWidth / nbDisc) - disc.intValue();
 		if (discInFlight != null && disc.equals(discInFlight)) {
 			centerX = inFlightX;
@@ -283,14 +283,24 @@ public class HanoiPanel extends JPanel {
 			((Graphics2D) gr).setComposite(AlphaComposite.getInstance(3, 1.0F));
 		}
 		gr.setColor(Color.black);
+		String number = String.valueOf(disc);
+		Font f = gr.getFont();
+		int fontSize = 20;
+		gr.setFont(f.deriveFont((float)fontSize));
+		int numberLen = gr.getFontMetrics(gr.getFont()).stringWidth(number);
 		if (!persp) {
 			gr.drawRect(centerX - discWidth / 2, bottomY - oneDiscThickness, discWidth, oneDiscThickness);
+			// Draw disc #
+			gr.drawString(number, centerX - (numberLen / 2), bottomY);
 		} else {
 			gr.drawOval(centerX - discWidth / 2, bottomY - (int) ((((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness) / 2D) - oneDiscThickness, discWidth, (int) (((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness));
 			gr.drawLine(centerX - discWidth / 2, bottomY - oneDiscThickness, centerX - discWidth / 2, bottomY);
 			gr.drawLine(centerX + discWidth / 2, bottomY - oneDiscThickness, centerX + discWidth / 2, bottomY);
 			gr.drawArc(centerX - discWidth / 2, bottomY - (int) ((((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness) / 2D), discWidth, (int) (((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness), 0, -180);
+			// Draw disc #
+			gr.drawString(number, centerX - (numberLen / 2), bottomY - ((oneDiscThickness - fontSize) / 2) + (int) ((((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness) / 2D));
 		}
+		gr.setFont(f);
 	}
 
 	public void initialize() {

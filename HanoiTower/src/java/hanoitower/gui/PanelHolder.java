@@ -22,7 +22,7 @@ public class PanelHolder extends JPanel {
 
 	private void jbInit() throws Exception {
 		setLayout(new BorderLayout());
-		setSize(new Dimension(628, 300));
+		setSize(new Dimension(630, 300));
 		add(hanoiPanel, BorderLayout.CENTER);
 		if ("true".equals(System.getProperty("with.control", "true"))) {
 			add(controlPanel, BorderLayout.SOUTH);
