@@ -168,10 +168,14 @@
 
 	function changeBG(value) {
 		let bodyStyle = document.getElementsByTagName("body")[0].style;
-		if (value === 'LIGHT') {
+		if (value === 'WHITE') {
+			bodyStyle.background = 'white';
+		} else if (value === 'LIGHT') {
 			bodyStyle.background = 'radial-gradient(at top, white -8%, lightgrey 55%)';
-		} else {
+		} else if (value === 'DARK') {
 			bodyStyle.background = 'radial-gradient(at top, DarkGrey -8%, black 55%)';
+		} else if (value === 'BLACK') {
+			bodyStyle.background = 'black';
 		}
 	}
 
@@ -265,7 +269,7 @@
 
   </head>
   <body>
-		<table style="margin: auto;">
+		<table style="margin: auto; border: 1px solid silver; border-radius: 5px;">
 			<tr>
 				<td align="left">
 					<table>
@@ -291,9 +295,11 @@
 								<input type="checkbox" checked onchange="setBorder(this.checked);"/>Border
 								&nbsp;&nbsp;
 								<!-- Page BG -->
-								Page Background
+								Page Background:
+								<input type="radio" name="page-bg" value="BLACK" onchange="changeBG(this.value);">Black
 								<input type="radio" name="page-bg" value="DARK" checked onchange="changeBG(this.value);">Dark
 								<input type="radio" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
+								<input type="radio" name="page-bg" value="WHITE" onchange="changeBG(this.value);">White
 								&nbsp;&nbsp;
 								<button onclick="toggleHeadsUp();">Heads Up</button>
 							</td>
