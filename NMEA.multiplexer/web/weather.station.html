@@ -192,6 +192,13 @@
 						'thermometer-cyan',
 						'pluviometer-cyan');
 				break;
+			case 'white':
+				setElementsStyle(
+						'analogdisplay-monochrome-white',
+						'analogdisplay-monochrome-white',
+						'thermometer-white',
+						'pluviometer-white');
+				break;
 			case 'day':
 				setElementsStyle(
 						'analogdisplay-day',
@@ -274,6 +281,7 @@
 								<select onchange="setStyle(this.value);">
 									<option value="orange" selected>Orange</option>
 									<option value="cyan">Cyan</option>
+									<option value="white">White</option>
 									<option value="day">Day</option>
 									<option value="night">Night</option>
 									<option value="flat-gray">Flat gray</option>

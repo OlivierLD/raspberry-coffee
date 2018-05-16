@@ -41,6 +41,21 @@
 	--font: 'Arial'
 }
 
+.pluviometer-white {
+	--with-shadow: false;
+	--scale-color: white;
+	--bg-color: transparent;
+	--major-tick-color: white;
+	--minor-tick-color: white;
+	--value-outline-color: white;
+	--value-color: white;
+	--tube-outline-color: white;
+	--rain-outline-color: white;
+	--inside-tube-from: transparent;
+	--inside-tube-to: transparent;
+	--font: 'Arial'
+}
+
 .pluviometer-orange {
 	--with-shadow: false;
 	--scale-color: orange;
@@ -97,6 +112,20 @@
 	--major-tick-color: LightGrey;
 	--minor-tick-color: LightGrey;
 	--value-color: cyan;
+	--value-outline-color: transparent;
+	--value-nb-decimal: 2;
+	--font: 'Arial'; /* 'Source Code Pro' */
+}
+
+.thermometer-white {
+	--bg-color: transparent;
+	--digit-color: white;
+	--with-gradient: false;
+	--display-background-gradient-to: rgba(255, 255, 255, 0.25);
+	--with-display-shadow: false;
+	--major-tick-color: LightGrey;
+	--minor-tick-color: LightGrey;
+	--value-color: white;
 	--value-outline-color: transparent;
 	--value-nb-decimal: 2;
 	--font: 'Arial'; /* 'Source Code Pro' */
@@ -227,6 +256,32 @@ jumbo-display .digital-font-green {
 	--with-hand-shadow: false;
 	--knob-color: cyan;
 	--knob-outline-color: cyan;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
+/* Monochrome, white */
+.analogdisplay-monochrome-white {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: white;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: rgba(0, 0, 0, 0);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: white;
+	--major-tick-color: white;
+	--minor-tick-color: white;
+	--value-color: white;
+	--value-outline-color: white;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0.0);
+	--hand-outline-color: white;
+	--with-hand-shadow: false;
+	--knob-color: white;
+	--knob-outline-color: white;
 	--font: Arial;
 	--value-font-size-factor: 1
 }
