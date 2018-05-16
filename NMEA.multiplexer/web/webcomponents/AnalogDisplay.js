@@ -360,7 +360,12 @@ class AnalogDisplay extends HTMLElement { // WIP
 										colorConfig.minorTickColor = value;
 										break;
 									case '--value-color':
-										colorConfig.valueColor = value;
+										if (/^var\(.*\)/.test(value)) { // There must be a better way...
+											var cssVar = value.trim().split("(")[1].split(")")[0].trim();
+											colorConfig.valueColor = window.getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+										} else {
+											colorConfig.valueColor = value;
+										}
 										break;
 									case '--value-outline-color':
 										colorConfig.valueOutlineColor = value;

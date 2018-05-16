@@ -1,6 +1,13 @@
 /*
   TODO Replace the cyan, orange, white, etc, with a css var like --widget-color: cyan;
   --major-tick-color: var(--widget-color);
+
+  document.documentElement.style.setProperty('--widget-color', 'green');
+  window.getComputedStyle(document.documentElement).getPropertyValue("--widget-color").trim()
+
+  See in AnalogDisplay.js:
+  case '--value-color':
+
  */
 :root {
 	--widget-color: red;
@@ -337,7 +344,7 @@ jumbo-display .digital-font-green {
 	--outline-color: yellow;
 	--major-tick-color: yellow;
 	--minor-tick-color: yellow;
-	--value-color: yellow;
+	--value-color: yellow; /*var(--widget-color);*/
 	--value-outline-color: yellow;
 	--value-nb-decimal: 1;
 	--hand-color: rgba(0, 0, 0, 0.0);
