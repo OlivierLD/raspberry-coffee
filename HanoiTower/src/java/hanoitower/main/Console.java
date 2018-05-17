@@ -4,6 +4,9 @@ import hanoitower.BackendAlgorithm;
 import hanoitower.events.HanoiContext;
 import hanoitower.events.HanoiEventListener;
 
+/**
+ * Use -Dbackend.verbose=true for verbose.
+ */
 public class Console {
 
 	public Console() {

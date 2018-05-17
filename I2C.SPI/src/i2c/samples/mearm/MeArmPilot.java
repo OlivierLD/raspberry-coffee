@@ -123,10 +123,10 @@ public class MeArmPilot {
 	public final static int DEFAULT_BOTTOM_SERVO_CHANNEL = 2; // Right and Left. 130 (all the way right) 675 (all the way left). Center at ~410
 	public final static int DEFAULT_RIGHT_SERVO_CHANNEL = 4; // Back and forth. 130 (too far back, limit to 300) 675 (all the way ahead), standing right at ~430
 
-	public final static String LEFT   = "LEFT";
-	public final static String RIGHT  = "RIGHT";
-	public final static String BOTTOM = "BOTTOM";
-	public final static String CLAW   = "CLAW";
+	public final static String LEFT   = "LEFT";   // Up and Down
+	public final static String RIGHT  = "RIGHT";  // Back and Forth
+	public final static String BOTTOM = "BOTTOM"; // Left and Right
+	public final static String CLAW   = "CLAW";   // Open and Close
 
 	enum ServoBoundaries {
 		LEFT(135, 350, 230),
@@ -163,6 +163,10 @@ public class MeArmPilot {
 			this.full = input;
 			this.command = command;
 			this.args = args;
+		}
+
+		public String toString() {
+			return this.full;
 		}
 	}
 
@@ -262,6 +266,10 @@ public class MeArmPilot {
 						int off = Integer.parseInt(cmd.args[2].trim());
 						if (servoBoard != null) {
 							servoBoard.setPWM(servoNum, on, off);
+						} else {
+							if ("true".equals(System.getProperty("simulation.verbose", "true")))	 {
+								System.out.println(String.format("~~~ Simulating execution of [%s] ~~~", cmd));
+							}
 						}
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
@@ -299,6 +307,10 @@ public class MeArmPilot {
 						int wait = Integer.parseInt(cmd.args[4].trim());
 						if (servoBoard != null) {
 							move(servoNum, from, to, step, wait);
+						} else {
+							if ("true".equals(System.getProperty("simulation.verbose", "true")))	 {
+								System.out.println(String.format("~~~ Simulating execution of [%s] ~~~", cmd));
+							}
 						}
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
@@ -333,6 +345,10 @@ public class MeArmPilot {
 						} else {
 							if (servoBoard != null) {
 								servoBoard.setPWM(servoNum, 0, to);
+							} else {
+								if ("true".equals(System.getProperty("simulation.verbose", "true")))	 {
+									System.out.println(String.format("~~~ Simulating execution of [%s] ~~~", cmd));
+								}
 							}
 						}
 					} catch (NumberFormatException nfe) {
@@ -365,6 +381,10 @@ public class MeArmPilot {
 						int to = Integer.parseInt(cmd.args[1].trim());
 						if (servoBoard != null) {
 							setFromSlider(cmd.args[0].trim(), to);
+						} else {
+							if ("true".equals(System.getProperty("simulation.verbose", "true")))	 {
+								System.out.println(String.format("~~~ Simulating execution of [%s] ~~~", cmd));
+							}
 						}
 					} catch (NumberFormatException nfe) {
 						nfe.printStackTrace();
@@ -412,9 +432,14 @@ public class MeArmPilot {
 	 * @param command
 	 */
 	public static void runMacro(String... command) {
+		int lNo = 1;
 		for (String cmd : command) {
-			MeArmPilot.executeCommand(cmd, -1);
+			MeArmPilot.executeCommand(cmd, lNo++);
 		}
+	}
+
+	public static void runMacro(List<String> command) {
+		command.stream().forEach(MeArmPilot::executeCommand);
 	}
 
 	public static String[] closeClaw() {
@@ -526,6 +551,10 @@ public class MeArmPilot {
 				}
 			}
 		}
+	}
+
+	public static void executeCommand(String cmd) {
+		executeCommand(cmd, 0);
 	}
 
 	public static void executeCommand(String cmd, int lineNo) {

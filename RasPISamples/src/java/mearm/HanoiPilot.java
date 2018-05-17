@@ -7,6 +7,9 @@ import hanoitower.events.HanoiEventListener;
 import i2c.samples.mearm.MeArmPilot;
 
 import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_BOTTOM_SERVO_CHANNEL;
 import static i2c.samples.mearm.MeArmPilot.DEFAULT_CLAW_SERVO_CHANNEL;
@@ -19,10 +22,10 @@ public class HanoiPilot {
 	private static int nbMove = 0;
 
 	private static int
-			left = DEFAULT_LEFT_SERVO_CHANNEL,
-			right = DEFAULT_RIGHT_SERVO_CHANNEL,
-			bottom = DEFAULT_BOTTOM_SERVO_CHANNEL,
-			claw = DEFAULT_CLAW_SERVO_CHANNEL;
+			left = DEFAULT_LEFT_SERVO_CHANNEL,      // up and down
+			right = DEFAULT_RIGHT_SERVO_CHANNEL,    // back and forth
+			bottom = DEFAULT_BOTTOM_SERVO_CHANNEL,  // left and right
+			claw = DEFAULT_CLAW_SERVO_CHANNEL;      // open and close
 
 	private static HanoiContext.Stand hanoiStand = null;
 	private static Thread me;
@@ -39,28 +42,90 @@ public class HanoiPilot {
 	}
 
 	private final static String DISCS_PREFIX  = "--discs:";
-	private final static String CLAW_PREFIX   = "--claw:";
-	private final static String LEFT_PREFIX   = "--left:";
-	private final static String RIGHT_PREFIX  = "--right:";
-	private final static String BOTTOM_PREFIX = "--bottom:";
+	private final static String CLAW_PREFIX   = "--claw:";   // Used to open and close the claw
+	private final static String LEFT_PREFIX   = "--left:";   // Used to move up and down
+	private final static String RIGHT_PREFIX  = "--right:";  // Used to move back and forth
+	private final static String BOTTOM_PREFIX = "--bottom:"; // Used to turn left and right
 
-	private final static String[] reset = new String[] {
+	private final static List<String> RESET = Arrays.asList(
 			"SET_PWM:LEFT,   0, 0",
 			"SET_PWM:RIGHT,  0, 0",
 			"SET_PWM:CLAW,   0, 0",
 			"SET_PWM:BOTTOM, 0, 0"
-	};
+	);
+
+	private static int postALeftRight = -50;
+	private static int postBLeftRight =   0;
+	private static int postCLeftRight =  50;
+
+	private static int getPostLeftRightValue(String post) {
+		switch (post) {
+			case "A":
+				return postALeftRight;
+			case "B":
+				return postBLeftRight;
+			case "C":
+				return postCLeftRight;
+			default:
+				return 0;
+		}
+	}
+
+	/**
+	 *
+	 * @param fromPost A, B, or C
+	 * @param fromPosOnPost Position to move the disc from, on its current post. 1..nbDiscs. 1 is the bottom disc.
+	 * @param toPost A, B, or C
+	 * @param toPosOnPost Position to move the disc to, on its new post. 1 is the bottom disc.
+	 * @return
+	 */
+	private static List<String> generateMove(String fromPost, int fromPosOnPost, String toPost, int toPosOnPost) {
+		List<String> commands = new ArrayList<>();
+
+		// Disc number on the original stack. 1 is the top.
+		Integer d = ((HanoiContext.Post) hanoiStand.getPosts().get(fromPost)).getDiscAt(fromPosOnPost - 1);
+
+		commands.add(String.format("PRINT: --- Now moving disc #%d from %s(%d) to %s(%d) ---", d, fromPost, fromPosOnPost, toPost, toPosOnPost));
+
+		// TODO The actual move
+		commands.add(String.format("PRINT: Open the CLAW"));
+		commands.add("WAIT: 250"); // Simulate wait
+		commands.add(String.format("PRINT: Move above the poles"));
+		commands.add("WAIT: 250"); // Simulate wait
+		commands.add(String.format("PRINT: Rotate above post %s (use SLIDE)", fromPost));
+
+		commands.add(String.format("SLIDE: BOTTOM, %d", getPostLeftRightValue(fromPost)));
+
+		commands.add("WAIT: 250"); // Simulate wait
+		commands.add(String.format("PRINT: Come down to disc #%d in position %d", d, fromPosOnPost));
+		commands.add("WAIT: 250"); // Simulate wait
+
+		commands.add(String.format("PRINT: Close the CLAW on disc #%d", d));
+		commands.add("WAIT: 250"); // Simulate wait
+		commands.add(String.format("PRINT: Move disc #%d UP%%2C above the post %s", d, fromPost));
+		commands.add("WAIT: 250"); // Simulate wait
+		commands.add(String.format("PRINT: Rotate above post %s", toPost));
+		commands.add(String.format("SLIDE: BOTTOM, %d", getPostLeftRightValue(toPost)));
+
+		commands.add("WAIT: 250"); // Simulate wait
+		commands.add(String.format("PRINT: Bring disc #%d down to position %d on post %s", d, toPosOnPost, toPost));
+		commands.add("WAIT: 250"); // Simulate wait
+		commands.add(String.format("PRINT: Open the CLAW"));
+		commands.add("WAIT: 250"); // Simulate wait
+		commands.add(String.format("PRINT: Move UP%%2C above post %s", toPost));
+		commands.add("WAIT: 1000"); // Simulate wait
+
+		return commands;
+	}
 
 	private static void moveDisc(String fromPost, int fromPos, String toPost, int toPos) {
-		String cmd = String.format("PRINT: Moving from %s(%d) to %s(%d)", fromPost, fromPos, toPost, toPos + 1);
 		try {
-//		MeArmPilot.validateCommand(cmd, -1);
-			MeArmPilot.runMacro(cmd); // TODO The actual move
+			MeArmPilot.runMacro(generateMove(fromPost, fromPos, toPost, toPos + 1));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		// Simulate wait
-		try { Thread.sleep(1000); } catch (Exception ex) {}
+		// try { Thread.sleep(1000); } catch (Exception ex) {}
 	}
 
 	public static void main(String... args) {
@@ -103,6 +168,8 @@ public class HanoiPilot {
 			}
 		}
 
+		MeArmPilot.executeCommand("HELP", 0);
+
 		System.out.println(String.format("With %d discs, from A to C", nbDisc));
 
 		hanoiStand = new HanoiContext.Stand("A", "B", "C");
@@ -121,7 +188,7 @@ public class HanoiPilot {
 
 		int nbCommand = 0;
 
-		MeArmPilot.runMacro(reset);
+		MeArmPilot.runMacro(RESET);
 		// TODO calibrate here
 
 		String cmd = "PRINT: Ready";
@@ -190,7 +257,7 @@ public class HanoiPilot {
 			}
 		}
 
-		MeArmPilot.runMacro(reset);
+		MeArmPilot.runMacro(RESET);
 		System.out.println("Done.");
 	}
 }
