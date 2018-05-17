@@ -168,6 +168,8 @@ The quality of the potentiometer seems to be _the_ important parameter here.
 ### Wiring
 Same for `ADS1015` and `ADS1115`.
 
+![ADS1x15](./rpi-ads1115-pot_bb.png)
+
 ### ADS1015
 ##### I<sup><small>2</small></sup>C, 4 channels of 12-bit analog input
 
