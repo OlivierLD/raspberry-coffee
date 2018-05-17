@@ -46,7 +46,9 @@ RUN ../gradlew shadowJar
 
 EXPOSE 9999
 # We are located in /workdir/raspberry-pi4j-samples/NMEA.multiplexer
+#
 # With I2C SSD1306
 # CMD ["./mux.sh", "nmea.mux.gps.log.properties"]
+#
 # Without I2C SSD1306
 CMD ["./mux.sh", "nmea.mux.gps.log.small.properties"]

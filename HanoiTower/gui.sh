@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#
 JAVA_OPTS=
 # JAVA_OPTS="$JAVA_OPTS -Dwith.perspective=false"
 # JAVA_OPTS="$JAVA_OPTS -Dwith.smooth=false"
