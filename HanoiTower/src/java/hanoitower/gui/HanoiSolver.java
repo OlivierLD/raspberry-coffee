@@ -5,6 +5,9 @@ import javax.swing.UIManager;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
+/**
+ * This is the main for the GUI.
+ */
 public class HanoiSolver {
 
 	public HanoiSolver() {
