@@ -12,7 +12,6 @@ import javax.swing.SwingUtilities;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -285,19 +284,21 @@ public class HanoiPanel extends JPanel {
 		gr.setColor(Color.black);
 		String number = String.valueOf(disc);
 		Font f = gr.getFont();
-		int fontSize = 20;
+		int fontSize = (int)Math.round(50 * (4f / nbDisc));
 		gr.setFont(f.deriveFont((float)fontSize));
 		int numberLen = gr.getFontMetrics(gr.getFont()).stringWidth(number);
 		if (!persp) {
 			gr.drawRect(centerX - discWidth / 2, bottomY - oneDiscThickness, discWidth, oneDiscThickness);
 			// Draw disc #
-			gr.drawString(number, centerX - (numberLen / 2), bottomY);
+			gr.setColor(Color.orange);
+			gr.drawString(number, centerX - (numberLen / 2), bottomY- ((oneDiscThickness - fontSize) / 2));
 		} else {
 			gr.drawOval(centerX - discWidth / 2, bottomY - (int) ((((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness) / 2D) - oneDiscThickness, discWidth, (int) (((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness));
 			gr.drawLine(centerX - discWidth / 2, bottomY - oneDiscThickness, centerX - discWidth / 2, bottomY);
 			gr.drawLine(centerX + discWidth / 2, bottomY - oneDiscThickness, centerX + discWidth / 2, bottomY);
 			gr.drawArc(centerX - discWidth / 2, bottomY - (int) ((((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness) / 2D), discWidth, (int) (((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness), 0, -180);
 			// Draw disc #
+			gr.setColor(Color.orange);
 			gr.drawString(number, centerX - (numberLen / 2), bottomY - ((oneDiscThickness - fontSize) / 2) + (int) ((((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness) / 2D));
 		}
 		gr.setFont(f);
