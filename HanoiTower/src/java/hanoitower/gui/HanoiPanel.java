@@ -290,7 +290,7 @@ public class HanoiPanel extends JPanel {
 		if (!persp) {
 			gr.drawRect(centerX - discWidth / 2, bottomY - oneDiscThickness, discWidth, oneDiscThickness);
 			// Draw disc #
-			gr.setColor(Color.orange);
+			gr.setColor(Color.cyan);
 			gr.drawString(number, centerX - (numberLen / 2), bottomY- ((oneDiscThickness - fontSize) / 2));
 		} else {
 			gr.drawOval(centerX - discWidth / 2, bottomY - (int) ((((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness) / 2D) - oneDiscThickness, discWidth, (int) (((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness));
@@ -298,7 +298,7 @@ public class HanoiPanel extends JPanel {
 			gr.drawLine(centerX + discWidth / 2, bottomY - oneDiscThickness, centerX + discWidth / 2, bottomY);
 			gr.drawArc(centerX - discWidth / 2, bottomY - (int) ((((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness) / 2D), discWidth, (int) (((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness), 0, -180);
 			// Draw disc #
-			gr.setColor(Color.orange);
+			gr.setColor(Color.cyan);
 			gr.drawString(number, centerX - (numberLen / 2), bottomY - ((oneDiscThickness - fontSize) / 2) + (int) ((((double) disc.intValue() / (double) nbDisc) * (double) oneDiscThickness) / 2D));
 		}
 		gr.setFont(f);
