@@ -58,6 +58,12 @@ public class HanoiPilot {
 	private static int postBLeftRight =   0;
 	private static int postCLeftRight =  50;
 
+	private static int aboveThePosts  =  50;
+	private static int postsLevelZero = -20;
+	private static int discThickness  =  10;
+
+	private static int clawOpen       =  50;
+
 	private static int getPostLeftRightValue(String post) {
 		switch (post) {
 			case "A":
@@ -71,6 +77,10 @@ public class HanoiPilot {
 		}
 	}
 
+	private static int getDiscZCoordinate(int discPos) {
+		return postsLevelZero + (discThickness * (discPos - 1) + (discThickness / 2));
+	}
+
 	/**
 	 *
 	 * @param fromPost A, B, or C
@@ -82,37 +92,49 @@ public class HanoiPilot {
 	private static List<String> generateMove(String fromPost, int fromPosOnPost, String toPost, int toPosOnPost) {
 		List<String> commands = new ArrayList<>();
 
-		// Disc number on the original stack. 1 is the top.
+		// Disc number on the original stack. 1 is the top (smallest).
 		Integer d = ((HanoiContext.Post) hanoiStand.getPosts().get(fromPost)).getDiscAt(fromPosOnPost - 1);
 
 		commands.add(String.format("PRINT: --- Now moving disc #%d from %s(%d) to %s(%d) ---", d, fromPost, fromPosOnPost, toPost, toPosOnPost));
 
 		// TODO The actual move
-		commands.add(String.format("PRINT: Open the CLAW"));
+//	commands.add(String.format("PRINT: Open the CLAW"));
+		commands.add(String.format("SLIDE: CLAW, %d", clawOpen));
 		commands.add("WAIT: 250"); // Simulate wait
-		commands.add(String.format("PRINT: Move above the poles"));
-		commands.add("WAIT: 250"); // Simulate wait
-		commands.add(String.format("PRINT: Rotate above post %s (use SLIDE)", fromPost));
 
+//	commands.add(String.format("PRINT: Move up above the poles"));
+		commands.add(String.format("SLIDE: LEFT, %d", aboveThePosts));
+		commands.add("WAIT: 250"); // Simulate wait
+
+//	commands.add(String.format("PRINT: Rotate above post %s (use SLIDE)", fromPost));
 		commands.add(String.format("SLIDE: BOTTOM, %d", getPostLeftRightValue(fromPost)));
-
 		commands.add("WAIT: 250"); // Simulate wait
+
 		commands.add(String.format("PRINT: Come down to disc #%d in position %d", d, fromPosOnPost));
+		commands.add(String.format("SLIDE: LEFT, %d", getDiscZCoordinate(fromPosOnPost)));
 		commands.add("WAIT: 250"); // Simulate wait
 
 		commands.add(String.format("PRINT: Close the CLAW on disc #%d", d));
 		commands.add("WAIT: 250"); // Simulate wait
-		commands.add(String.format("PRINT: Move disc #%d UP%%2C above the post %s", d, fromPost));
-		commands.add("WAIT: 250"); // Simulate wait
-		commands.add(String.format("PRINT: Rotate above post %s", toPost));
-		commands.add(String.format("SLIDE: BOTTOM, %d", getPostLeftRightValue(toPost)));
 
+//	commands.add(String.format("PRINT: Move disc #%d UP%%2C above the post %s", d, fromPost));
+		commands.add(String.format("SLIDE: LEFT, %d", aboveThePosts));
 		commands.add("WAIT: 250"); // Simulate wait
+
+//	commands.add(String.format("PRINT: Rotate above post %s", toPost));
+		commands.add(String.format("SLIDE: BOTTOM, %d", getPostLeftRightValue(toPost)));
+		commands.add("WAIT: 250"); // Simulate wait
+
 		commands.add(String.format("PRINT: Bring disc #%d down to position %d on post %s", d, toPosOnPost, toPost));
+		commands.add(String.format("SLIDE: LEFT, %d", getDiscZCoordinate(toPosOnPost)));
 		commands.add("WAIT: 250"); // Simulate wait
-		commands.add(String.format("PRINT: Open the CLAW"));
+
+//	commands.add(String.format("PRINT: Open the CLAW"));
+		commands.add(String.format("SLIDE: CLAW, %d", clawOpen));
 		commands.add("WAIT: 250"); // Simulate wait
-		commands.add(String.format("PRINT: Move UP%%2C above post %s", toPost));
+
+//	commands.add(String.format("PRINT: Move UP%%2C above post %s", toPost));
+		commands.add(String.format("SLIDE: LEFT, %d", aboveThePosts));
 		commands.add("WAIT: 1000"); // Simulate wait
 
 		return commands;
@@ -190,8 +212,14 @@ public class HanoiPilot {
 
 		MeArmPilot.runMacro(RESET);
 		// TODO calibrate here
+		try {
+			++nbCommand;
+			MeArmPilot.executeCommand("PRINT: Will calibrate the MeArm's position here.", nbCommand);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 
-		String cmd = "PRINT: Ready";
+		String cmd = "USER_INPUT: Hit [return] when ready to begin. ";
 
 		try {
 			++nbCommand;

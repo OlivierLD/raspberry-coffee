@@ -227,6 +227,8 @@ public class MeArmPilot {
 	 * Syntax USER_INPUT: "Prompt"
 	 * Warning No comma ",", to columns ":" in the prompt!!
 	 * Encode comma with %2C, column with %3A
+	 *
+	 * Whatever the user enters before [Return] is absorbed.
 	 */
 	private static void servoUserInput(CommandWithArgs cmd) {
 		if (!cmd.command.equals("USER_INPUT")) {
