@@ -255,6 +255,8 @@ public class HanoiPilot {
 		int nbCommand = 0;
 
 		MeArmPilot.runMacro(RESET);
+		// Initial position
+		MeArmPilot.executeCommand("FORK_SLIDE: BOTTOM, 0, LEFT, 0, RIGHT, 0, CLAW, 0");
 		// TODO calibrate here
 
 		try {
@@ -330,9 +332,14 @@ public class HanoiPilot {
 			}
 		}
 
-		// Test ;)
+		// Park everyone ;)
 		MeArmPilot.executeCommand("FORK_SLIDE: BOTTOM, 0, LEFT, 0, RIGHT, 0, CLAW, 0");
 
+		try {
+			Thread.sleep(1_000L); // Wait for the  command above to be completed;
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
+		}
 		MeArmPilot.runMacro(RESET);
 		System.out.println("Done.");
 	}

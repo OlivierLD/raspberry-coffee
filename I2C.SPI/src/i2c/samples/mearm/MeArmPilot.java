@@ -380,6 +380,8 @@ public class MeArmPilot {
 	}
 
 	/**
+	 * Set the servo position from a slider [-100..+100] value.
+	 *
 	 * Syntax SLIDE:BOTTOM, 0
 	 *              |       |
 	 *              |       Value [-100..+100]
@@ -548,7 +550,7 @@ public class MeArmPilot {
 	 */
 	public static void setFromSlider(String servoName, double value) {
 		if (value < -100 || value > 100) {
-			throw new IllegalArgumentException(String.format("Invalid value [-100..100] %f", value));
+			throw new IllegalArgumentException(String.format("Invalid value [-100..+100] %f", value));
 		}
 		int servoValue = -1;
 		switch (servoName) {
