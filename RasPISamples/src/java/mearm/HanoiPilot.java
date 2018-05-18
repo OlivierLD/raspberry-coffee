@@ -100,14 +100,14 @@ public class HanoiPilot {
 			for (int i=_from; i<=value; i+=step) {
 				String command = String.format("SLIDE: %s, %d", servo, i);
 				commands.add(command);
-				commands.add("WAIT: 250");
+				commands.add("WAIT: 5");
 			}
 		} else { // Descending
 			int _from = (int)Math.round(Math.ceil(from));
 			for (int i=_from; i>=value; i-=step) {
 				String command = String.format("SLIDE: %s, %d", servo, i);
 				commands.add(command);
-				commands.add("WAIT: 250");
+				commands.add("WAIT: 5");
 			}
 		}
 		return commands;
@@ -127,7 +127,7 @@ public class HanoiPilot {
 		// Disc number on the original stack. 1 is the top (smallest).
 		Integer d = ((HanoiContext.Post) hanoiStand.getPosts().get(fromPost)).getDiscAt(fromPosOnPost - 1);
 
-		commands.add(String.format("PRINT: --- Now moving disc #%d from %s(%d) to %s(%d) ---", d, fromPost, fromPosOnPost, toPost, toPosOnPost));
+		commands.add(String.format("PRINT: --- Move #%d. Now moving disc #%d from %s(%d) to %s(%d) ---", nbMove, d, fromPost, fromPosOnPost, toPost, toPosOnPost));
 
 		// TODO The actual move
 //	commands.add(String.format("PRINT: Open the CLAW"));
@@ -145,7 +145,7 @@ public class HanoiPilot {
 		commands = Stream.concat(commands.stream(), slideServoToValue("BOTTOM", getPostLeftRightValue(fromPost)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
-		commands.add(String.format("PRINT: Come down to disc #%d in position %d", d, fromPosOnPost));
+//	commands.add(String.format("PRINT: Come down to disc #%d in position %d", d, fromPosOnPost));
 //	commands.add(String.format("SLIDE: LEFT, %d", getDiscZCoordinate(fromPosOnPost)));
 		commands = Stream.concat(commands.stream(), slideServoToValue("LEFT", getDiscZCoordinate(fromPosOnPost)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
@@ -165,7 +165,7 @@ public class HanoiPilot {
 		commands = Stream.concat(commands.stream(), slideServoToValue("BOTTOM", getPostLeftRightValue(toPost)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
-		commands.add(String.format("PRINT: Bring disc #%d down to position %d on post %s", d, toPosOnPost, toPost));
+//	commands.add(String.format("PRINT: Bring disc #%d down to position %d on post %s", d, toPosOnPost, toPost));
 //	commands.add(String.format("SLIDE: LEFT, %d", getDiscZCoordinate(toPosOnPost)));
 		commands = Stream.concat(commands.stream(), slideServoToValue("LEFT", getDiscZCoordinate(toPosOnPost)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
