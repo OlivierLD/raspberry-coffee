@@ -439,7 +439,9 @@ public class MeArmPilot {
 							int to = Integer.parseInt(cmd.args[(2 * thread) + 1].trim());
 							Thread t = new Thread(() -> {
 								if (servoBoard != null) {
-									setFromSlider(cmd.args[2 * _thread].trim(), to);
+									String servo = cmd.args[2 * _thread].trim();
+									System.out.println(String.format("Thread %d, sliding servo %s to %d", _thread, servo, to));
+									setFromSlider(servo, to);
 								} else {
 									if ("true".equals(System.getProperty("simulation.verbose", "true"))) {
 										System.out.println(String.format("~~~ Simulating execution of [%s] ~~~", cmd));

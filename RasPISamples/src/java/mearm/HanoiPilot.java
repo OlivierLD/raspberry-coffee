@@ -129,7 +129,7 @@ public class HanoiPilot {
 
 		commands.add(String.format("PRINT: --- Move #%d. Now moving disc #%d from %s(%d) to %s(%d) ---", nbMove, d, fromPost, fromPosOnPost, toPost, toPosOnPost));
 
-		// TODO The actual move
+		// The actual move
 //	commands.add(String.format("PRINT: Open the CLAW"));
 //	commands.add(String.format("SLIDE: CLAW, %d", clawOpen));
 		commands = Stream.concat(commands.stream(), slideServoToValue("CLAW", clawOpen).stream()).collect(Collectors.toList());
