@@ -572,7 +572,9 @@ public class MeArmPilot {
 		}
 		if (servoValue != -1) {
 			String macro = String.format("DIRECT: %s, %d", servoName, servoValue);
-			System.out.println(String.format("Executing %s", macro));
+			if ("true".equals(System.getProperty("slide.verbose", "false"))) {
+				System.out.println(String.format("Executing %s", macro));
+			}
 			runMacro(macro);
 			sliderValuesPerServo.put(servoName, value); // Update the map.
 		}

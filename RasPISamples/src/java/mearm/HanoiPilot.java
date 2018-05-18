@@ -100,12 +100,14 @@ public class HanoiPilot {
 			for (int i=_from; i<=value; i+=step) {
 				String command = String.format("SLIDE: %s, %d", servo, i);
 				commands.add(command);
+				commands.add("WAIT: 250");
 			}
 		} else { // Descending
 			int _from = (int)Math.round(Math.ceil(from));
 			for (int i=_from; i>=value; i-=step) {
 				String command = String.format("SLIDE: %s, %d", servo, i);
 				commands.add(command);
+				commands.add("WAIT: 250");
 			}
 		}
 		return commands;
