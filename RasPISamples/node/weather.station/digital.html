@@ -8,6 +8,12 @@
 		<link rel="stylesheet" href="../css/black.css" type="text/css"/>
     <link rel="icon" type="image/ico" href="favicon.ico">
     <style type="text/css">
+
+			:root {
+				--perspective: 50em;
+				--rotateX: -40deg;
+			}
+
       @font-face {
         font-family: "Digi Font";
         src: url(fonts/ds-digi.ttf) format("truetype");
@@ -21,6 +27,15 @@
 				background-color: black;
 				color: silver;
 			}
+
+			.mirror-upside-down {
+				display: block;
+				-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+				-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+				-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+				transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+			}
+
     </style>
 
 		<script src="widgets/Raw16PointsDir.js"></script>
@@ -77,12 +92,28 @@
 		// For tests
 	  displayRawDir.drawDisplay('rawDirCanvas', 45, { name: 'NE', value: 45 });
   };
+
+  function toggleHeadsUp() {
+	  document.body.classList.toggle('mirror-upside-down');
+  }
+
+  function setPerspective(e) {
+	  var v = this.value;
+	  document.body.style.setProperty("--perspective", v + "em");
+  }
+
+  function setRotateX(e) {
+	  var v = this.value;
+	  document.body.style.setProperty("--rotateX", v + "deg");
+  }
+
     </script>
   </head>
   <body>
     <table width="100%" border="0">
       <tr>
         <td valign="top"><h2>Weather Station</h2></td>
+				<td align="right"><button onclick="toggleHeadsUp();" style="border-radius: 5px;">Heads Up</button></td>
       </tr>
       <tr>
         <td valign="top" colspan="2">
@@ -181,6 +212,26 @@
 					</table>
         </td>
       </tr>
+			<tr>
+				<td align="center" colspan="2">
+					<!-- Perspective sliders -->
+					<table width="100%">
+						<tr>
+							<td width="50%">
+								<h5>Perspective</h5>
+								<input type="range" value="50" min="0" max="100" style="width: 90%;" oninput="setPerspective.call(this, event); perspective01.value = this.value;" />
+								<output name="perspective" id="perspective01"></output>
+							</td>
+							<td width="50%">
+								<h5>Rotate X</h5>
+								<input type="range" value="-50" min="-100" max="100" style="width: 90%;" oninput="setRotateX.call(this, event); perspective02.value = this.value;" />
+								<output name="perspective" id="perspective02"></output>
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
       <tr>
         <td align="left" colspan="2">
           <div id="status" style="padding:5px; background:#ddd; border-radius:5px; overflow-y: scroll; border:1px solid #CCC; margin-top:10px; height: 40px;">
