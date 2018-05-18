@@ -190,6 +190,7 @@ public class HanoiPilot {
 			}
 		}
 
+		MeArmPilot.executeCommand("BOUNDARIES", 0);
 		MeArmPilot.executeCommand("HELP", 0);
 
 		System.out.println(String.format("With %d discs, from A to C", nbDisc));
@@ -279,11 +280,14 @@ public class HanoiPilot {
 		me = Thread.currentThread();
 		synchronized (me) {
 			try {
-				me.wait();
+				me.wait(); // Released by HanoiEventListener.computationCompleted
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}
+
+		// Test ;)
+		MeArmPilot.executeCommand("FORK_SLIDE: BOTTOM, 0, LEFT, 0, RIGHT, 0, CLAW, 0");
 
 		MeArmPilot.runMacro(RESET);
 		System.out.println("Done.");

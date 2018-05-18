@@ -63,6 +63,14 @@ public class MeArmPilot {
 			"       |       |\n" +
 			"       |       Value [-100..+100]\n" +
 			"       Servo ID";
+	private final static String FORK_SLIDE_HELP =
+			"FORK_SLIDE: BOTTOM, 0 [, LEFT, 50 [, etc]]\n" +
+			"            |       |    |     |\n" +
+			"            |       |    |     Value [-100..+100]\n" +
+			"            |       |    Servo ID\n" +
+			"            |       |\n" +
+			"            |       Value [-100..+100]\n" +
+			"            Servo ID";
 	private final static String USER_INPUT_HELP =
 			"USER_INPUT: \"Prompt\"\n" +
 			"  Resumes after the user hits [Return]\n" +
@@ -83,11 +91,10 @@ public class MeArmPilot {
 		SET_PMW("SET_PWM", 3, MeArmPilot::servoSetPwm, SET_PWM_HELP),
 		PRINT("PRINT", 1, MeArmPilot::servoPrint, PRINT_HELP),
 		MOVE("MOVE", 5, MeArmPilot::servoMove, MOVE_HELP),
-
 		DIRECT("DIRECT", 2, MeArmPilot::servoDirectMove, DIRECT_MOVE_HELP),
 		SLIDE("SLIDE", 2, MeArmPilot::servoSlide, SLIDE_HELP),
+		FORK_SLIDE("FORK_SLIDE", -2, MeArmPilot::servoForkSlide, FORK_SLIDE_HELP),
 		BOUNDARIES("BOUNDARIES", 0, MeArmPilot::showBoundaries, "Just type it"),
-
 		USER_INPUT("USER_INPUT", 1, MeArmPilot::servoUserInput, USER_INPUT_HELP),
 		WAIT("WAIT", 1, MeArmPilot::servoWait, WAIT_HELP);
 
@@ -96,6 +103,13 @@ public class MeArmPilot {
 		private final Consumer<CommandWithArgs> processor;
 		private final String help;
 
+		/**
+		 *
+		 * @param command
+		 * @param nbPrm Number of parameters. Negative numbers: Modulus. Ex: -2 means n sets of 2 parameters.
+		 * @param processor
+		 * @param help
+		 */
 		Commands(String command, int nbPrm, Consumer<CommandWithArgs> processor, String help) {
 			this.command = command;
 			this.nbPrm = nbPrm;
@@ -398,6 +412,61 @@ public class MeArmPilot {
 		}
 	}
 
+	/**
+	 * Syntax FORK_SLIDE:BOTTOM, 0, LEFT, 50, etc
+	 *                   |       |  |     |
+	 *                   |       |  |     Value [-100..+100]
+	 *                   |       |  Servo ID
+	 *                   |       Value [-100..+100]
+	 *                   Servo ID
+	 * @param cmd
+	 */
+	private static void servoForkSlide(CommandWithArgs cmd) {
+		if (!cmd.command.equals("FORK_SLIDE")) {
+			System.err.println(String.format("Unexpected command [%s] in servoSlide.", cmd.command));
+		} else {
+			if (cmd.args.length % 2 != 0) {
+				System.err.println(String.format("Unexpected number of args [%d] in servoSlide. Expected n sets of 2.", cmd.args.length));
+			} else {
+				List<Thread> threads = new ArrayList<>();
+				for (int thread=0; thread<(cmd.args.length/2); thread++) {
+					int servoNum = getServoNum(cmd.args[2 * thread].trim());
+					if (servoNum != -1) {
+						final int _thread = thread;
+						try {
+							int to = Integer.parseInt(cmd.args[(2 * thread) + 1].trim());
+							Thread t = new Thread(() -> {
+								if (servoBoard != null) {
+									setFromSlider(cmd.args[2 * _thread].trim(), to);
+								} else {
+									if ("true".equals(System.getProperty("simulation.verbose", "true"))) {
+										System.out.println(String.format("~~~ Simulating execution of [%s] ~~~", cmd));
+									}
+								}
+							});
+							threads.add(t);
+						} catch (NumberFormatException nfe) {
+							nfe.printStackTrace();
+						}
+					} else {
+						System.err.println(String.format("Unknown servo: [%s]", cmd.args[0].trim()));
+					}
+				}
+				threads.stream().forEach(t -> t.start());
+				// Wait for Merge
+				threads.stream().forEach(t -> {
+					try {
+						t.join();
+					} catch (InterruptedException ie) {
+						ie.printStackTrace();
+					}
+				});
+				// Boom!
+				// System.out.println("Boom!");
+			}
+		}
+	}
+
 	private static boolean validateValue(int servo, int value) {
 		boolean ok = true;
 		if (servo == leftServoChannel) {
@@ -409,7 +478,7 @@ public class MeArmPilot {
 		} else if (servo == clawServoChannel) {
 			ok = !(value < ServoBoundaries.CLAW.min() || value > ServoBoundaries.CLAW.max());
 		} else {
-				ok = false;
+			ok = false;
 		}
 		return ok;
 	}
@@ -546,10 +615,16 @@ public class MeArmPilot {
 			throw new RuntimeException(String.format("Line #%d, Command [%s] not found.", lineNo, cmdAndPrms[0]));
 		} else {
 			Commands command = commandOptional.get();
-			if (command.nbPrm() > 0) {
+			if (command.nbPrm() != 0) {
 				String[] prms = cmdAndPrms[1].split(",");
-				if (command.nbPrm() != prms.length) {
-					throw new RuntimeException(String.format("Command %s expects %d parameters. Found %d in [%s]", command.command(), command.nbPrm(), prms.length, cmd));
+				if (command.nbPrm() >= 0) {
+					if (command.nbPrm() != prms.length) {
+						throw new RuntimeException(String.format("Command %s expects %d parameters. Found %d in [%s]", command.command(), command.nbPrm(), prms.length, cmd));
+					}
+				} else {
+					if (prms.length % (-1 * command.nbPrm()) != 0) {
+						throw new RuntimeException(String.format("Command %s expects n sets of %d parameters. Found %d in [%s]", command.command(), -command.nbPrm(), prms.length, cmd));
+					}
 				}
 			}
 		}
@@ -570,20 +645,28 @@ public class MeArmPilot {
 		} else {
 			Commands command = commandOptional.get();
 			String[] prms = new String[] {};
-			if (command.nbPrm() > 0) {
+			if (command.nbPrm() != 0) {
 				prms = cmdAndPrms[1].split(",");
-			}
-			if (command.nbPrm() != prms.length) {
-				System.err.println(String.format("Command %s expects %d parameters. Found %d in [%s]", command.command(), command.nbPrm(), prms.length, cmd));
-				System.exit(1);
-			} else {
-				Consumer<CommandWithArgs> processor = command.processor();
-				if (processor != null) {
-					CommandWithArgs cna = new CommandWithArgs(cmd, command.command(), prms);
-					processor.accept(cna);
+
+				if (command.nbPrm() > 0) {
+					if (prms.length != command.nbPrm()) {
+						System.err.println(String.format("Command %s expects %d parameters. Found %d in [%s]", command.command(), command.nbPrm(), prms.length, cmd));
+						System.exit(1);
+					}
 				} else {
-					System.out.println(String.format(">>> %s >>> null.", command.command()));
+					if (prms.length % (-command.nbPrm()) != 0) {
+						System.err.println(String.format("Command %s expects n sets of %d parameters. Found %d in [%s]", command.command(), -command.nbPrm(), prms.length, cmd));
+						System.exit(1);
+					}
 				}
+			}
+
+			Consumer<CommandWithArgs> processor = command.processor();
+			if (processor != null) {
+				CommandWithArgs cna = new CommandWithArgs(cmd, command.command(), prms);
+				processor.accept(cna);
+			} else {
+				System.out.println(String.format(">>> %s >>> null.", command.command()));
 			}
 		}
 	}
