@@ -234,7 +234,7 @@ public class HanoiPilot {
 		}
 
 		MeArmPilot.executeCommand("BOUNDARIES", 0);
-		MeArmPilot.executeCommand("HELP", 0);
+//	MeArmPilot.executeCommand("HELP", 0);
 
 		System.out.println(String.format("With %d discs, from A to C", nbDisc));
 
@@ -300,11 +300,11 @@ public class HanoiPilot {
 					}
 				}
 
-				System.out.println((new StringBuilder())
-						.append("Moving from ")
-						.append(String.format("%s pos %d", from, fromPost.getDiscCount()))
-						.append(" to ")
-						.append(String.format("%s, currently %d disc(s)", to, toPost.getDiscCount())).toString());
+//				System.out.println((new StringBuilder())
+//						.append("Moving from ")
+//						.append(String.format("%s pos %d", from, fromPost.getDiscCount()))
+//						.append(" to ")
+//						.append(String.format("%s, currently %d disc(s)", to, toPost.getDiscCount())).toString());
 
 				moveDisc(from, fromPost.getDiscCount(), to, toPost.getDiscCount());
 
