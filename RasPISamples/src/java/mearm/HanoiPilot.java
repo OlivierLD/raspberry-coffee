@@ -54,15 +54,16 @@ public class HanoiPilot {
 			"SET_PWM:BOTTOM, 0, 0"
 	);
 
-	private static int postALeftRight = -50;
+	private static int postALeftRight = -30;
 	private static int postBLeftRight =   0;
-	private static int postCLeftRight =  50;
+	private static int postCLeftRight =  30;
 
 	private static int aboveThePosts  =  50;
-	private static int postsLevelZero = -20;
+	private static int postsLevelZero = -100;
 	private static int discThickness  =  10;
 
-	private static int clawOpen       =  50;
+	private static int clawOpen       = -100;
+	private static int clawClosed     =  100;
 
 	private static int getPostLeftRightValue(String post) {
 		switch (post) {
@@ -114,7 +115,8 @@ public class HanoiPilot {
 		commands.add(String.format("SLIDE: LEFT, %d", getDiscZCoordinate(fromPosOnPost)));
 		commands.add("WAIT: 250"); // Simulate wait
 
-		commands.add(String.format("PRINT: Close the CLAW on disc #%d", d));
+//	commands.add(String.format("PRINT: Close the CLAW on disc #%d", d));
+		commands.add(String.format("SLIDE: CLAW, %d", clawClosed)); // TODO Tweak this
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Move disc #%d UP%%2C above the post %s", d, fromPost));
