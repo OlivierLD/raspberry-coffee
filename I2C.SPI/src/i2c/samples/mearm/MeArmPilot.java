@@ -8,7 +8,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -525,6 +527,17 @@ public class MeArmPilot {
 		};
 	}
 
+	private static Map<String, Double> sliderValuesPerServo = new HashMap<>(4);
+	static {
+		sliderValuesPerServo.put(LEFT, 0d);
+		sliderValuesPerServo.put(RIGHT, 0d);
+		sliderValuesPerServo.put(BOTTOM, 0d);
+		sliderValuesPerServo.put(CLAW, 0d);
+	}
+	public static double getServoSliderValue(String servoName) {
+		return sliderValuesPerServo.get(servoName);
+	}
+
 	/**
 	 * Set the value from a slider. The value MUST be in [-100.0..+100.0]
 	 *
@@ -561,6 +574,7 @@ public class MeArmPilot {
 			String macro = String.format("DIRECT: %s, %d", servoName, servoValue);
 			System.out.println(String.format("Executing %s", macro));
 			runMacro(macro);
+			sliderValuesPerServo.put(servoName, value); // Update the map.
 		}
 	}
 
