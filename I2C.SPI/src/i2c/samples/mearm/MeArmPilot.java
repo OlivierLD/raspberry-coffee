@@ -466,7 +466,7 @@ public class MeArmPilot {
 					}
 				});
 				// Boom!
-				// System.out.println("Boom!");
+				System.out.println("Boom!");
 			}
 		}
 	}
