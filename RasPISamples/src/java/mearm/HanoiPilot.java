@@ -23,6 +23,10 @@ public class HanoiPilot {
 	private static int nbDisc = 4;
 	private static int nbMove = 0;
 
+	private final static String FROM_DISC  = "A";
+	private final static String USING_DISC = "B";
+	private final static String TO_DISC    = "C";
+
 	private static int
 			left = DEFAULT_LEFT_SERVO_CHANNEL,      // up and down
 			right = DEFAULT_RIGHT_SERVO_CHANNEL,    // back and forth
@@ -35,7 +39,7 @@ public class HanoiPilot {
 	private static synchronized void startSolving() {
 		System.out.println(String.format("Starting solving, anticipating %d moves.", (int)(Math.pow(2, nbDisc) - 1)));
 		nbMove = 0;
-		BackendAlgorithm.move(nbDisc, "A", "C", "B");
+		BackendAlgorithm.move(nbDisc, FROM_DISC, TO_DISC, USING_DISC);
 		System.out.println((new StringBuilder())
 				.append("Finished in ")
 				.append(nbMove)
@@ -56,13 +60,13 @@ public class HanoiPilot {
 			"SET_PWM:BOTTOM, 0, 0"
 	);
 
-	private static int postALeftRight = -30;
-	private static int postBLeftRight =   0;
-	private static int postCLeftRight =  30;
+	private static int postALeftRight =  -30;
+	private static int postBLeftRight =    0;
+	private static int postCLeftRight =   30;
 
-	private static int aboveThePosts  =  50;
+	private static int aboveThePosts  =   50;
 	private static int postsLevelZero = -100;
-	private static int discThickness  =  10;
+	private static int discThickness  =   10;
 
 	private static int clawOpen       = -100;
 	private static int clawClosed     =  100;
@@ -233,7 +237,7 @@ public class HanoiPilot {
 		System.out.println(String.format("With %d discs, from A to C", nbDisc));
 
 		hanoiStand = new HanoiContext.Stand("A", "B", "C");
-		String initialPost = "A";
+		String initialPost = FROM_DISC;
 		hanoiStand.initStand(nbDisc, initialPost);
 
 		try {
@@ -250,6 +254,7 @@ public class HanoiPilot {
 
 		MeArmPilot.runMacro(RESET);
 		// TODO calibrate here
+
 		try {
 			++nbCommand;
 			MeArmPilot.executeCommand("PRINT: Will calibrate the MeArm's position here.", nbCommand);

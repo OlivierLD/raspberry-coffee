@@ -94,33 +94,33 @@ public class MainMCP3008Sample {
 		System.out.println(String.format("Reading MCP3008 on channel %d", adcChannel));
 		System.out.println(
 				" Wiring of the MCP3008-SPI (without power supply):\n" +
-						" +---------++-----------------------------------------------+\n" +
-						" | MCP3008 || Raspberry PI                                  |\n" +
-						" +---------++------+------------+------+---------+----------+\n" +
-						" |         || Pin# | Name       | Role | GPIO    | wiringPI |\n" +
-						" |         ||      |            |      | /BCM    | /PI4J    |\n" +
-						" +---------++------+------------+------+---------+----------+");
+						" +---------++-------------------------------------------------+\n" +
+						" | MCP3008 || Raspberry PI                                    |\n" +
+						" +---------++------+--------------+------+---------+----------+\n" +
+						" |         || Pin# | Name         | Role | GPIO    | wiringPI |\n" +
+						" |         ||      |              |      | /BCM    | /PI4J    |\n" +
+						" +---------++------+--------------+------+---------+----------+");
 		System.out.println(String.format(" | CLK (13)|| #%02d  | %s | CLK  | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(clk).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 10, " "),
+				StringUtils.rpad(PinUtil.findByPin(clk).pinName(), 12, " "),
 				PinUtil.findByPin(clk).gpio(),
 				PinUtil.findByPin(clk).wiringPi()));
 		System.out.println(String.format(" | Din (11)|| #%02d  | %s | MOSI | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(mosi).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 10, " "),
+				StringUtils.rpad(PinUtil.findByPin(mosi).pinName(), 12, " "),
 				PinUtil.findByPin(mosi).gpio(),
 				PinUtil.findByPin(mosi).wiringPi()));
 		System.out.println(String.format(" | Dout(12)|| #%02d  | %s | MISO | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(miso).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 10, " "),
+				StringUtils.rpad(PinUtil.findByPin(miso).pinName(), 12, " "),
 				PinUtil.findByPin(miso).gpio(),
 				PinUtil.findByPin(miso).wiringPi()));
 		System.out.println(String.format(" | CS  (10)|| #%02d  | %s | CS   | GPIO_%02d | %02d       |",
 				PinUtil.findByPin(cs).pinNumber(),
-				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 10, " "),
+				StringUtils.rpad(PinUtil.findByPin(cs).pinName(), 12, " "),
 				PinUtil.findByPin(cs).gpio(),
 				PinUtil.findByPin(cs).wiringPi()));
-		System.out.println(" +---------++------+------------+-----+----------+----------+");
+		System.out.println(" +---------++------+--------------+-----+----------+----------+");
 		System.out.println("Raspberry PI is the Master, MCP3008 is the Slave:");
 		System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
 		System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
