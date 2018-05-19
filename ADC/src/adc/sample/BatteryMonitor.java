@@ -224,10 +224,10 @@ public class BatteryMonitor {
 		System.out.println("  -simulate=y|n                - example -simulate=y     (default is n)");
 		System.out.println("  -log=[log-file-name]         - example -log=[batt.csv] (default is battery.log)");
 		System.out.println("");
-		System.out.println("  -miso=XX                     - example -miso=4         (default is GPIO_04)");
-		System.out.println("  -mosi=XX                     - example -mosi=5         (default is GPIO_05)");
-		System.out.println("  -clk=XX                      - example -clk=1          (default is GPIO_01)");
-		System.out.println("  -cs=XX                       - example -cs=6           (default is GPIO_06)");
+		System.out.println("  -miso=XX                     - example -miso=6         (default is BCM 6  => GPIO_22)");
+		System.out.println("  -mosi=XX                     - example -mosi=13        (default is BCM 13 => GPIO_23)");
+		System.out.println("  -clk=XX                      - example -clk=5          (default is BCM 5  => GPIO_21)");
+		System.out.println("  -cs=XX                       - example -cs=19          (default is BCM 19 => GPIO_24)");
 		System.out.println("");
 		System.out.println(" -min & -max are required if -tune is not here, and vice versa.");
 		int channel = 0;
