@@ -117,7 +117,7 @@ public class HanoiPilot {
 
 	/**
 	 * May deserve some polishing...
-	 * 
+	 *
 	 * @param disc 1 is on top (smallest)
 	 * @return
 	 */
@@ -125,8 +125,9 @@ public class HanoiPilot {
 		int pos = clawClosed - minDiscDiameter;
 
 		int availableInterval = Math.abs(clawOpen - clawClosed) - (2 * minDiscDiameter);
-		pos -= (disc * (availableInterval / nbDisc));
+		pos -= ((disc - 1) * (availableInterval / nbDisc));
 
+		System.out.println(String.format("Disc #%d, claw pos: %d", disc, pos));
 		return pos;
 	}
 	/**
