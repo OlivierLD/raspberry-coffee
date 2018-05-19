@@ -294,7 +294,7 @@ public class HanoiPilot {
     String response = utils.StaticUtil.userInput(">> Calibrate MeArm y|[n] ? > ");
     if ("y".equalsIgnoreCase(response)) {
 	    try {
-		    MeArmPilot.executeCommand("PRINT: Calibrating the MeArm's position here.");
+//	    MeArmPilot.executeCommand("PRINT: Calibrating the MeArm's position here.");
 		    MeArmPilot.executeCommand("USER_INPUT: Hit [return] to start calibration. ");
 
 		    MeArmPilot.executeCommand("PRINT: All the way down%2C post A.");
@@ -335,7 +335,6 @@ public class HanoiPilot {
 		    commands.add("WAIT: 250"); // Simulate wait
 
 		    for (int disc = nbDisc; disc > 0; disc--) {
-			    MeArmPilot.executeCommand(String.format("PRINT: Post B%%2C disc %d.", disc));
 			    commands = new ArrayList<>();
 			    // Open
 			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, clawOpen).stream()).collect(Collectors.toList());
@@ -348,6 +347,7 @@ public class HanoiPilot {
 			    commands.add("WAIT: 250"); // Simulate wait
 
 			    MeArmPilot.runMacro(commands);
+			    MeArmPilot.executeCommand(String.format("PRINT: Post B%%2C disc %d.", disc));
 
 			    MeArmPilot.executeCommand("USER_INPUT: Hit [return] when ready for next step. ");
 		    }
