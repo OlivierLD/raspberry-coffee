@@ -207,10 +207,10 @@ public class BatteryMonitor {
 	private static boolean tuning = false;
 
 	// Defaults
-	private static Pin miso = PinUtil.GPIOPin.GPIO_4.pin();
-	private static Pin mosi = PinUtil.GPIOPin.GPIO_5.pin();
-	private static Pin clk  = PinUtil.GPIOPin.GPIO_1.pin();
-	private static Pin cs   = PinUtil.GPIOPin.GPIO_6.pin();
+	private static Pin miso = PinUtil.GPIOPin.GPIO_22.pin();
+	private static Pin mosi = PinUtil.GPIOPin.GPIO_23.pin();
+	private static Pin clk  = PinUtil.GPIOPin.GPIO_21.pin();
+	private static Pin cs   = PinUtil.GPIOPin.GPIO_24.pin();
 
 	public static void main(String... args) throws Exception {
 		System.out.println("Parameters are:");
@@ -317,9 +317,9 @@ public class BatteryMonitor {
 			//  System.out.println("a=" + a + "(" + ((maxVolt - b) / maxADC) + "), b=" + b);
 
 			System.out.println("=== Scale ===");
-			System.out.println("Value range: ADC:0 => V:" + b + ", ADC:1023 => V:" + ((a * 1023) + b));
+			System.out.println("Value range: ADC:0 => V:" + b + ", ADC:1023 => V:" + ((a * 1_023) + b));
 			System.out.println("Coeff A:" + a + ", coeff B:" + b);
-			for (int i = 0; i < 1024; i++) {
+			for (int i = 0; i < 1_024; i++) {
 				System.out.println(i + ";" + ((a * i) + b));
 			}
 			System.out.println("=============");
