@@ -127,7 +127,7 @@ public class HanoiPilot {
 		int availableInterval = Math.abs(clawOpen - clawClosed) - (2 * minDiscDiameter);
 		pos -= ((disc - 1) * (availableInterval / nbDisc));
 
-		System.out.println(String.format("Disc #%d, claw pos: %d", disc, pos));
+//	System.out.println(String.format("Disc #%d, claw pos: %d", disc, pos));
 		return pos;
 	}
 	/**
