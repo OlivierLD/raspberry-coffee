@@ -207,10 +207,10 @@ public class BatteryMonitor {
 	private static boolean tuning = false;
 
 	// Defaults
-	private static Pin miso = PinUtil.GPIOPin.GPIO_4.pin();
-	private static Pin mosi = PinUtil.GPIOPin.GPIO_5.pin();
-	private static Pin clk  = PinUtil.GPIOPin.GPIO_1.pin();
-	private static Pin cs   = PinUtil.GPIOPin.GPIO_6.pin();
+	private static Pin miso = PinUtil.GPIOPin.GPIO_22.pin();
+	private static Pin mosi = PinUtil.GPIOPin.GPIO_23.pin();
+	private static Pin clk  = PinUtil.GPIOPin.GPIO_21.pin();
+	private static Pin cs   = PinUtil.GPIOPin.GPIO_24.pin();
 
 	public static void main(String... args) throws Exception {
 		System.out.println("Parameters are:");
@@ -224,10 +224,10 @@ public class BatteryMonitor {
 		System.out.println("  -simulate=y|n                - example -simulate=y     (default is n)");
 		System.out.println("  -log=[log-file-name]         - example -log=[batt.csv] (default is battery.log)");
 		System.out.println("");
-		System.out.println("  -miso=XX                     - example -miso=4         (default is GPIO_04)");
-		System.out.println("  -mosi=XX                     - example -mosi=5         (default is GPIO_05)");
-		System.out.println("  -clk=XX                      - example -clk=1          (default is GPIO_01)");
-		System.out.println("  -cs=XX                       - example -cs=6           (default is GPIO_06)");
+		System.out.println("  -miso=XX                     - example -miso=6         (default is BCM 6  => GPIO_22)");
+		System.out.println("  -mosi=XX                     - example -mosi=13        (default is BCM 13 => GPIO_23)");
+		System.out.println("  -clk=XX                      - example -clk=5          (default is BCM 5  => GPIO_21)");
+		System.out.println("  -cs=XX                       - example -cs=19          (default is BCM 19 => GPIO_24)");
 		System.out.println("");
 		System.out.println(" -min & -max are required if -tune is not here, and vice versa.");
 		int channel = 0;
@@ -317,9 +317,9 @@ public class BatteryMonitor {
 			//  System.out.println("a=" + a + "(" + ((maxVolt - b) / maxADC) + "), b=" + b);
 
 			System.out.println("=== Scale ===");
-			System.out.println("Value range: ADC:0 => V:" + b + ", ADC:1023 => V:" + ((a * 1023) + b));
+			System.out.println("Value range: ADC:0 => V:" + b + ", ADC:1023 => V:" + ((a * 1_023) + b));
 			System.out.println("Coeff A:" + a + ", coeff B:" + b);
-			for (int i = 0; i < 1024; i++) {
+			for (int i = 0; i < 1_024; i++) {
 				System.out.println(i + ";" + ((a * i) + b));
 			}
 			System.out.println("=============");
@@ -385,6 +385,7 @@ public class BatteryMonitor {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nShutting down");
 			if (debug) {
+				System.out.println("Interrupted from here:");
 				// Who called me
 				Throwable stack = new Throwable();
 				stack.printStackTrace(System.out);
