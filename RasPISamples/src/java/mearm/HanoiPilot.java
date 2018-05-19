@@ -332,6 +332,8 @@ public class HanoiPilot {
 			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, getClosedClawPosOnDisc(disc)).stream()).collect(Collectors.toList());
 			    commands.add("WAIT: 250"); // Simulate wait
 
+			    MeArmPilot.runMacro(commands);
+
 			    MeArmPilot.executeCommand("USER_INPUT: Hit [return] when ready for next step. ");
 		    }
 
