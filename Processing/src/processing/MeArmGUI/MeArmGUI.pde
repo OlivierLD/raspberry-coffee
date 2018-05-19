@@ -70,10 +70,26 @@ void draw() {
   text("Drive a MeArm robotic arm", 10, 25);
 
   fill(0);
-  text(String.format("Up and Down   : %+03.0f", upDownPos / 3.09), 10, (height / 4) - 32);
-  text(String.format("Left and Right: %+03.0f", leftRightPos / 3.09), 10, (height / 2) - 32);
-  text(String.format("Back and Forth: %+03.0f", backForthPos / 3.09), 10, (3 * height / 4) - 32);
-  text(String.format("Open and Close: %+03.0f", openClosePos / 3.09), 10, (height) - 32);
+  textSize(20f);
+  text(String.format("Up and Down   : %+03.0f", upDownPos / 3.09), 100, (height / 4) - 32);
+  textSize(10f);
+  text("Down", 10, (height / 4) - 32);
+  text("Up", width - 40, (height / 4) - 32);
+  textSize(20f);
+  text(String.format("Left and Right: %+03.0f", leftRightPos / 3.09), 100, (height / 2) - 32);
+  textSize(10f);
+  text("Right", 10, (height / 2) - 32);
+  text("Left", width - 40, (height / 2) - 32);
+  textSize(20f);
+  text(String.format("Back and Forth: %+03.0f", backForthPos / 3.09), 100, (3 * height / 4) - 32);
+  textSize(10f);
+  text("Back", 10, (3 * height / 4) - 32);
+  text("Forth", width - 40, (3 * height / 4) - 32);
+  textSize(20f);
+  text(String.format("Open and Close: %+03.0f", openClosePos / 3.09), 100, (height) - 32);
+  textSize(10f);
+  text("Opened", 10, height - 32);
+  text("Closed", width - 40, height - 32);
 
   // Drive the servos here.
   int leftSliderValue = (int)Math.round(upDownPos / 3.09);
