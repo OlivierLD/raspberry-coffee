@@ -269,16 +269,27 @@ public class HanoiPilot {
 
 		HanoiContext.getInstance().fireSetNbDisc(nbDisc);
 
-		int nbCommand = 0;
-
 		MeArmPilot.runMacro(RESET);
 		// Initial position
 		MeArmPilot.executeCommand("FORK_SLIDE: BOTTOM, 0, LEFT, 0, RIGHT, 0, CLAW, 0");
 		// TODO calibrate here
 
 		try {
-			++nbCommand;
-			MeArmPilot.executeCommand("PRINT: Will calibrate the MeArm's position here.", nbCommand);
+			MeArmPilot.executeCommand("PRINT: Calibrating the MeArm's position here.");
+
+			MeArmPilot.executeCommand("PRINT: All the way down%2C post A.");
+			List<String> commands = new ArrayList<>();
+			commands = Stream.concat(commands.stream(), slideServoToValue("LEFT", postsLevelZero).stream()).collect(Collectors.toList());
+			commands.add("WAIT: 250"); // Simulate wait
+			MeArmPilot.runMacro(commands);
+
+			commands = new ArrayList<>();
+			commands = Stream.concat(commands.stream(), slideServoToValue("BOTTOM", getPostLeftRightValue("A")).stream()).collect(Collectors.toList());
+			commands.add("WAIT: 250"); // Simulate wait
+			MeArmPilot.runMacro(commands);
+			String cmd = "USER_INPUT: Hit [return] when ready for next step. ";
+			MeArmPilot.executeCommand(cmd);
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -286,9 +297,8 @@ public class HanoiPilot {
 		String cmd = "USER_INPUT: Hit [return] when ready to begin. ";
 
 		try {
-			++nbCommand;
-			MeArmPilot.validateCommand(cmd, nbCommand);
-			MeArmPilot.executeCommand(cmd, nbCommand);
+			MeArmPilot.validateCommand(cmd);
+			MeArmPilot.executeCommand(cmd);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

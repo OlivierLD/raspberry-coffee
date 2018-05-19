@@ -627,6 +627,9 @@ public class MeArmPilot {
 		servoBoard.setPWMFreq(freq); // Set frequency in Hz
 	}
 
+	public static void validateCommand(String cmd) {
+		validateCommand(cmd, 0);
+	}
 	public static void validateCommand(String cmd, int lineNo) {
 		String[] cmdAndPrms = cmd.split(":");
 		Optional<Commands> commandOptional = Arrays.stream(Commands.values())
