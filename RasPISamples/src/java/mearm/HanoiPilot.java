@@ -60,6 +60,11 @@ public class HanoiPilot {
 			"SET_PWM:BOTTOM, 0, 0"
 	);
 
+	private static final String UP_AND_DOWN    = "LEFT";
+	private static final String LEFT_AND_RIGHT = "BOTTOM";
+	private static final String BACK_AND_FORTH = "RIGHT";
+	private static final String OPEN_AND_CLOSE = "CLAW";
+
 	private static int postALeftRight =  -30;
 	private static int postBLeftRight =    0;
 	private static int postCLeftRight =   30;
@@ -149,52 +154,52 @@ public class HanoiPilot {
 		// The actual move
 //	commands.add(String.format("PRINT: Open the CLAW"));
 //	commands.add(String.format("SLIDE: CLAW, %d", clawOpen));
-		commands = Stream.concat(commands.stream(), slideServoToValue("CLAW", clawOpen).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, clawOpen).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Move up above the poles"));
 //	commands.add(String.format("SLIDE: LEFT, %d", aboveThePosts));
-		commands = Stream.concat(commands.stream(), slideServoToValue("LEFT", aboveThePosts).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, aboveThePosts).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Rotate above post %s (use SLIDE)", fromPost));
 //	commands.add(String.format("SLIDE: BOTTOM, %d", getPostLeftRightValue(fromPost)));
-		commands = Stream.concat(commands.stream(), slideServoToValue("BOTTOM", getPostLeftRightValue(fromPost)).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(LEFT_AND_RIGHT, getPostLeftRightValue(fromPost)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Come down to disc #%d in position %d", d, fromPosOnPost));
 //	commands.add(String.format("SLIDE: LEFT, %d", getDiscZCoordinate(fromPosOnPost)));
-		commands = Stream.concat(commands.stream(), slideServoToValue("LEFT", getDiscZCoordinate(fromPosOnPost)).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, getDiscZCoordinate(fromPosOnPost)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Close the CLAW on disc #%d", d));
 //	commands.add(String.format("SLIDE: CLAW, %d", clawClosed));
-		commands = Stream.concat(commands.stream(), slideServoToValue("CLAW", getClosedClawPosOnDisc(d)).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, getClosedClawPosOnDisc(d)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Move disc #%d UP%%2C above the post %s", d, fromPost));
 //	commands.add(String.format("SLIDE: LEFT, %d", aboveThePosts));
-		commands = Stream.concat(commands.stream(), slideServoToValue("LEFT", aboveThePosts).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, aboveThePosts).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Rotate above post %s", toPost));
 //	commands.add(String.format("SLIDE: BOTTOM, %d", getPostLeftRightValue(toPost)));
-		commands = Stream.concat(commands.stream(), slideServoToValue("BOTTOM", getPostLeftRightValue(toPost)).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(LEFT_AND_RIGHT, getPostLeftRightValue(toPost)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Bring disc #%d down to position %d on post %s", d, toPosOnPost, toPost));
 //	commands.add(String.format("SLIDE: LEFT, %d", getDiscZCoordinate(toPosOnPost)));
-		commands = Stream.concat(commands.stream(), slideServoToValue("LEFT", getDiscZCoordinate(toPosOnPost)).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, getDiscZCoordinate(toPosOnPost)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Open the CLAW"));
 //	commands.add(String.format("SLIDE: CLAW, %d", clawOpen));
-		commands = Stream.concat(commands.stream(), slideServoToValue("CLAW", clawOpen).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, clawOpen).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Move UP%%2C above post %s", toPost));
 //	commands.add(String.format("SLIDE: LEFT, %d", aboveThePosts));
-		commands = Stream.concat(commands.stream(), slideServoToValue("LEFT", aboveThePosts).stream()).collect(Collectors.toList());
+		commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, aboveThePosts).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 1000"); // Simulate wait
 
 		return commands;
@@ -272,27 +277,71 @@ public class HanoiPilot {
 		MeArmPilot.runMacro(RESET);
 		// Initial position
 		MeArmPilot.executeCommand("FORK_SLIDE: BOTTOM, 0, LEFT, 0, RIGHT, 0, CLAW, 0");
-		// TODO calibrate here
 
-		try {
-			MeArmPilot.executeCommand("PRINT: Calibrating the MeArm's position here.");
+		// Calibrate here
+    String response = utils.StaticUtil.userInput(">> Calibrate MeArm y|[n] ? > ");
+    if ("y".equalsIgnoreCase(response)) {
+	    try {
+		    MeArmPilot.executeCommand("PRINT: Calibrating the MeArm's position here.");
+		    MeArmPilot.executeCommand("USER_INPUT: Hit [return] to start calibration. ");
 
-			MeArmPilot.executeCommand("PRINT: All the way down%2C post A.");
-			List<String> commands = new ArrayList<>();
-			commands = Stream.concat(commands.stream(), slideServoToValue("LEFT", postsLevelZero).stream()).collect(Collectors.toList());
-			commands.add("WAIT: 250"); // Simulate wait
-			MeArmPilot.runMacro(commands);
+		    MeArmPilot.executeCommand("PRINT: All the way down%2C post A.");
+		    List<String> commands = new ArrayList<>();
+		    commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, postsLevelZero).stream()).collect(Collectors.toList());
+		    commands.add("WAIT: 250"); // Simulate wait
+		    MeArmPilot.runMacro(commands);
 
-			commands = new ArrayList<>();
-			commands = Stream.concat(commands.stream(), slideServoToValue("BOTTOM", getPostLeftRightValue("A")).stream()).collect(Collectors.toList());
-			commands.add("WAIT: 250"); // Simulate wait
-			MeArmPilot.runMacro(commands);
-			String cmd = "USER_INPUT: Hit [return] when ready for next step. ";
-			MeArmPilot.executeCommand(cmd);
+		    commands = new ArrayList<>();
+		    commands = Stream.concat(commands.stream(), slideServoToValue(LEFT_AND_RIGHT, getPostLeftRightValue("A")).stream()).collect(Collectors.toList());
+		    commands.add("WAIT: 250"); // Simulate wait
+		    MeArmPilot.runMacro(commands);
+		    MeArmPilot.executeCommand("USER_INPUT: Hit [return] when ready for next step. ");
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		    MeArmPilot.executeCommand("PRINT: All the way down%2C post B.");
+		    commands = new ArrayList<>();
+		    commands = Stream.concat(commands.stream(), slideServoToValue(LEFT_AND_RIGHT, getPostLeftRightValue("B")).stream()).collect(Collectors.toList());
+		    commands.add("WAIT: 250"); // Simulate wait
+		    MeArmPilot.runMacro(commands);
+		    MeArmPilot.executeCommand("USER_INPUT: Hit [return] when ready for next step. ");
+
+		    MeArmPilot.executeCommand("PRINT: All the way down%2C post C.");
+		    commands = new ArrayList<>();
+		    commands = Stream.concat(commands.stream(), slideServoToValue(LEFT_AND_RIGHT, getPostLeftRightValue("C")).stream()).collect(Collectors.toList());
+		    commands.add("WAIT: 250"); // Simulate wait
+		    MeArmPilot.runMacro(commands);
+		    MeArmPilot.executeCommand("USER_INPUT: Hit [return] when ready for next step. ");
+
+		    MeArmPilot.executeCommand("PRINT: Moving to Post B.");
+		    commands = Stream.concat(commands.stream(), slideServoToValue(LEFT_AND_RIGHT, getPostLeftRightValue("B")).stream()).collect(Collectors.toList());
+		    commands.add("WAIT: 250"); // Simulate wait
+		    MeArmPilot.runMacro(commands);
+
+		    for (int disc = nbDisc; disc > 0; disc--) {
+			    MeArmPilot.executeCommand(String.format("PRINT: Post B%%2C disc %d.", disc));
+			    commands = new ArrayList<>();
+			    // Up
+			    commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, aboveThePosts).stream()).collect(Collectors.toList());
+			    commands.add("WAIT: 250"); // Simulate wait
+			    // Open
+			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, clawOpen).stream()).collect(Collectors.toList());
+			    commands.add("WAIT: 250"); // Simulate wait
+			    // Z
+			    commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, getDiscZCoordinate(disc)).stream()).collect(Collectors.toList());
+			    commands.add("WAIT: 250"); // Simulate wait
+			    // Close on disc
+			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, getClosedClawPosOnDisc(disc)).stream()).collect(Collectors.toList());
+			    commands.add("WAIT: 250"); // Simulate wait
+
+			    MeArmPilot.executeCommand("USER_INPUT: Hit [return] when ready for next step. ");
+		    }
+
+		    MeArmPilot.executeCommand("FORK_SLIDE: BOTTOM, 0, LEFT, 0, RIGHT, 0, CLAW, 0");
+		    MeArmPilot.executeCommand("PRINT: Calibrating Completed.");
+
+	    } catch (Exception ex) {
+		    ex.printStackTrace();
+	    }
+    }
 
 		String cmd = "USER_INPUT: Hit [return] when ready to begin. ";
 
