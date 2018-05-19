@@ -5,6 +5,7 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Djoystick.verbose=true"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmearm.pilot=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dslide.verbose=true"
 # For remote debugging:
 # JAVA_OPTIONS="$JAVA_OPTIONS -client -agentlib:jdwp=transport=dt_socket,server=y,address=4000"
 # For remote JVM Monitoring

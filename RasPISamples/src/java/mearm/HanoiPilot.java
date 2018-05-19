@@ -71,7 +71,7 @@ public class HanoiPilot {
 
 	private static int aboveThePosts  =   50;
 	private static int postsLevelZero = -100;
-	private static int discThickness  =   10;
+	private static int discThickness  =   30;
 
 	private static int clawOpen       = -100;
 	private static int clawClosed     =  100;
