@@ -343,7 +343,7 @@ public class HanoiPilot {
 			    commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, getDiscZCoordinate(disc)).stream()).collect(Collectors.toList());
 			    commands.add("WAIT: 250"); // Simulate wait
 			    // Close on disc
-			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, getClosedClawPosOnDisc(disc)).stream()).collect(Collectors.toList());
+			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, getClosedClawPosOnDisc(nbDisc - disc + 1)).stream()).collect(Collectors.toList());
 			    commands.add("WAIT: 250"); // Simulate wait
 
 			    MeArmPilot.runMacro(commands);
