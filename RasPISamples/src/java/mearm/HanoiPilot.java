@@ -91,6 +91,11 @@ public class HanoiPilot {
 		}
 	}
 
+	/**
+	 *
+	 * @param discPos [1..nbDisc]. 1 is the bottom one.
+	 * @return
+	 */
 	private static int getDiscZCoordinate(int discPos) {
 		return postsLevelZero + (discThickness * (discPos - 1) + (discThickness / 2));
 	}
@@ -123,7 +128,7 @@ public class HanoiPilot {
 	/**
 	 * May deserve some polishing...
 	 *
-	 * @param disc 1 is on top (smallest)
+	 * @param disc [1..nbDisc]. 1 is on top (smallest)
 	 * @return
 	 */
 	private static int getClosedClawPosOnDisc(int disc) {
@@ -334,20 +339,20 @@ public class HanoiPilot {
 		    commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, aboveThePosts).stream()).collect(Collectors.toList());
 		    commands.add("WAIT: 250"); // Simulate wait
 
-		    for (int disc = nbDisc; disc > 0; disc--) {
+		    for (int disc = 0; disc < nbDisc; disc++) {
 			    commands = new ArrayList<>();
 			    // Open
 			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, clawOpen).stream()).collect(Collectors.toList());
 			    commands.add("WAIT: 250"); // Simulate wait
 			    // Z
-			    commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, getDiscZCoordinate(disc)).stream()).collect(Collectors.toList());
+			    commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, getDiscZCoordinate(disc + 1)).stream()).collect(Collectors.toList());
 			    commands.add("WAIT: 250"); // Simulate wait
 			    // Close on disc
-			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, getClosedClawPosOnDisc(nbDisc - disc + 1)).stream()).collect(Collectors.toList());
+			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, getClosedClawPosOnDisc(nbDisc - disc)).stream()).collect(Collectors.toList());
 			    commands.add("WAIT: 250"); // Simulate wait
 
 			    MeArmPilot.runMacro(commands);
-			    MeArmPilot.executeCommand(String.format("PRINT: Post B%%2C disc %d.", disc));
+			    MeArmPilot.executeCommand(String.format("PRINT: Post B%%2C disc #%d.", (nbDisc - disc)));
 
 			    MeArmPilot.executeCommand("USER_INPUT: Hit [return] when ready for next step. ");
 		    }
