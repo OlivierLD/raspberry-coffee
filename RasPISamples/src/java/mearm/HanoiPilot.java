@@ -274,6 +274,18 @@ public class HanoiPilot {
 
 		HanoiContext.getInstance().fireSetNbDisc(nbDisc);
 
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			// Park everyone ;)
+			MeArmPilot.executeCommand("FORK_SLIDE: BOTTOM, 0, LEFT, 0, RIGHT, 0, CLAW, 0");
+			try {
+				Thread.sleep(1_000L); // Wait for the  command above to be completed;
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+			}
+			MeArmPilot.runMacro(RESET);
+			System.out.println("\nInterrupted.");
+		}));
+
 		MeArmPilot.runMacro(RESET);
 		// Initial position
 		MeArmPilot.executeCommand("FORK_SLIDE: BOTTOM, 0, LEFT, 0, RIGHT, 0, CLAW, 0");
@@ -316,12 +328,15 @@ public class HanoiPilot {
 		    commands.add("WAIT: 250"); // Simulate wait
 		    MeArmPilot.runMacro(commands);
 
+
+		    commands = new ArrayList<>();
+		    // All the way up
+		    commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, aboveThePosts).stream()).collect(Collectors.toList());
+		    commands.add("WAIT: 250"); // Simulate wait
+
 		    for (int disc = nbDisc; disc > 0; disc--) {
 			    MeArmPilot.executeCommand(String.format("PRINT: Post B%%2C disc %d.", disc));
 			    commands = new ArrayList<>();
-			    // Up
-			    commands = Stream.concat(commands.stream(), slideServoToValue(UP_AND_DOWN, aboveThePosts).stream()).collect(Collectors.toList());
-			    commands.add("WAIT: 250"); // Simulate wait
 			    // Open
 			    commands = Stream.concat(commands.stream(), slideServoToValue(OPEN_AND_CLOSE, clawOpen).stream()).collect(Collectors.toList());
 			    commands.add("WAIT: 250"); // Simulate wait
