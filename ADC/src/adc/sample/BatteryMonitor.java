@@ -385,6 +385,7 @@ public class BatteryMonitor {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nShutting down");
 			if (debug) {
+				System.out.println("Interrupted from here:");
 				// Who called me
 				Throwable stack = new Throwable();
 				stack.printStackTrace(System.out);
