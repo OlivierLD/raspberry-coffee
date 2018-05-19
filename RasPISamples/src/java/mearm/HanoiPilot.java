@@ -71,7 +71,7 @@ public class HanoiPilot {
 	private static int clawOpen       = -100;
 	private static int clawClosed     =  100;
 
-	private static int minDiscDiameter = 10;
+	private static int minDiscDiameter = 30;
 
 	private static int getPostLeftRightValue(String post) {
 		switch (post) {
