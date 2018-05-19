@@ -71,6 +71,8 @@ public class HanoiPilot {
 	private static int clawOpen       = -100;
 	private static int clawClosed     =  100;
 
+	private static int minDiscDiameter = 10;
+
 	private static int getPostLeftRightValue(String post) {
 		switch (post) {
 			case "A":
@@ -114,6 +116,20 @@ public class HanoiPilot {
 	}
 
 	/**
+	 * May deserve some polishing...
+	 * 
+	 * @param disc 1 is on top (smallest)
+	 * @return
+	 */
+	private static int getClosedClawPosOnDisc(int disc) {
+		int pos = clawClosed - minDiscDiameter;
+
+		int availableInterval = Math.abs(clawOpen - clawClosed) - (2 * minDiscDiameter);
+		pos -= (disc * (availableInterval / nbDisc));
+
+		return pos;
+	}
+	/**
 	 *
 	 * @param fromPost A, B, or C
 	 * @param fromPosOnPost Position to move the disc from, on its current post. 1..nbDiscs. 1 is the bottom disc.
@@ -151,8 +167,8 @@ public class HanoiPilot {
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Close the CLAW on disc #%d", d));
-//	commands.add(String.format("SLIDE: CLAW, %d", clawClosed)); // TODO Tweak this
-		commands = Stream.concat(commands.stream(), slideServoToValue("CLAW", clawClosed).stream()).collect(Collectors.toList());
+//	commands.add(String.format("SLIDE: CLAW, %d", clawClosed));
+		commands = Stream.concat(commands.stream(), slideServoToValue("CLAW", getClosedClawPosOnDisc(d)).stream()).collect(Collectors.toList());
 		commands.add("WAIT: 250"); // Simulate wait
 
 //	commands.add(String.format("PRINT: Move disc #%d UP%%2C above the post %s", d, fromPost));

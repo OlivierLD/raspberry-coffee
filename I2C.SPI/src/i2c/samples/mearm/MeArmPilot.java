@@ -463,13 +463,13 @@ public class MeArmPilot {
 				threads.stream().forEach(t -> {
 					try {
 						t.join();
-						System.out.println(String.format("Joined thread %s", t.getName()));
+//					System.out.println(String.format("Joined thread %s", t.getName()));
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
 					}
 				});
 				// Boom!
-				System.out.println("Boom!");
+//			System.out.println("Boom!");
 			}
 		}
 	}
