@@ -439,17 +439,17 @@ public class MeArmPilot {
 						final int _thread = thread;
 						try {
 							int to = Integer.parseInt(cmd.args[(2 * thread) + 1].trim());
+							String servo = cmd.args[2 * _thread].trim();
 							Thread t = new Thread(() -> {
 								if (servoBoard != null) {
-									String servo = cmd.args[2 * _thread].trim();
-									System.out.println(String.format("Thread %d, sliding servo %s to %d", _thread, servo, to));
+//								System.out.println(String.format("Thread %d, sliding servo %s to %d", _thread, servo, to));
 									setFromSlider(servo, to);
 								} else {
 									if ("true".equals(System.getProperty("simulation.verbose", "true"))) {
 										System.out.println(String.format("~~~ Simulating execution of [%s] ~~~", cmd));
 									}
 								}
-							});
+							}, servo);
 							threads.add(t);
 						} catch (NumberFormatException nfe) {
 							nfe.printStackTrace();
@@ -463,6 +463,7 @@ public class MeArmPilot {
 				threads.stream().forEach(t -> {
 					try {
 						t.join();
+						System.out.println(String.format("Joined thread %s", t.getName()));
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
 					}
