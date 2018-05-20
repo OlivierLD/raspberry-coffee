@@ -16,7 +16,6 @@ import java.util.TimeZone;
 import java.util.function.Consumer;
 
 import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.RaspiPin;
 import utils.PinUtil;
 import utils.StringUtils;
 
@@ -207,10 +206,10 @@ public class BatteryMonitor {
 	private static boolean tuning = false;
 
 	// Defaults
-	private static Pin miso = PinUtil.GPIOPin.GPIO_22.pin();
-	private static Pin mosi = PinUtil.GPIOPin.GPIO_23.pin();
-	private static Pin clk  = PinUtil.GPIOPin.GPIO_21.pin();
-	private static Pin cs   = PinUtil.GPIOPin.GPIO_24.pin();
+	private static Pin miso = PinUtil.GPIOPin.GPIO_13.pin();
+	private static Pin mosi = PinUtil.GPIOPin.GPIO_12.pin();
+	private static Pin clk  = PinUtil.GPIOPin.GPIO_14.pin();
+	private static Pin cs   = PinUtil.GPIOPin.GPIO_10.pin();
 
 	public static void main(String... args) throws Exception {
 		System.out.println("Parameters are:");
@@ -224,10 +223,10 @@ public class BatteryMonitor {
 		System.out.println("  -simulate=y|n                - example -simulate=y     (default is n)");
 		System.out.println("  -log=[log-file-name]         - example -log=[batt.csv] (default is battery.log)");
 		System.out.println("");
-		System.out.println("  -miso=XX                     - example -miso=6         (default is BCM 6  => GPIO_22)");
-		System.out.println("  -mosi=XX                     - example -mosi=13        (default is BCM 13 => GPIO_23)");
-		System.out.println("  -clk=XX                      - example -clk=5          (default is BCM 5  => GPIO_21)");
-		System.out.println("  -cs=XX                       - example -cs=19          (default is BCM 19 => GPIO_24)");
+		System.out.println("  -miso=XX                     - example -miso=9         (default is BCM  9 => GPIO_13)");
+		System.out.println("  -mosi=XX                     - example -mosi=10        (default is BCM 10 => GPIO_12)");
+		System.out.println("  -clk=XX                      - example -clk=11         (default is BCM 11 => GPIO_14)");
+		System.out.println("  -cs=XX                       - example -cs=8           (default is BCM  8 => GPIO_10)");
 		System.out.println("");
 		System.out.println(" -min & -max are required if -tune is not here, and vice versa.");
 		int channel = 0;
