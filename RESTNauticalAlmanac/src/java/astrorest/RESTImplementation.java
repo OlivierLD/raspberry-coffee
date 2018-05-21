@@ -1,6 +1,7 @@
 package astrorest;
 
 import calc.GeoPoint;
+import calc.GeomUtil;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import com.google.gson.Gson;
@@ -73,7 +74,12 @@ public class RESTImplementation {
 					ASTRO_PREFIX + "/sun-now",
 					this::getSunDataNow,
 					"Create a request for Sun data now. Requires body payload (GeoPoint)"),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
+					"POST",
+					ASTRO_PREFIX + "/sun-path-today",
+					this::getSunPathInTheSky,
+					"Create a request for Sun path today. Requires body payload (GeoPoint)"),
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-path-today?tz=Europe%2FParis
 					"POST",
 					ASTRO_PREFIX + "/sun-between-dates",
 					this::getSunDataBetween,
@@ -235,6 +241,35 @@ public class RESTImplementation {
 		}
 		BodyDataForPos sunData = getSunData(pos.getL(), pos.getG());
 		String content = new Gson().toJson(sunData);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+		return response;
+	}
+
+	private Response getSunPathInTheSky(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		GeoPoint pos = null;
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				Gson gson = new GsonBuilder().create();
+				StringReader stringReader = new StringReader(payload);
+				try {
+					pos = gson.fromJson(stringReader, GeoPoint.class);
+					System.out.println();
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("ASTRO-0004")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		}
+		List<BodyAt> sunPath = getSunDataForAllDay(pos.getL(), pos.getG());
+		String content = new Gson().toJson(sunPath);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 		return response;
@@ -1346,6 +1381,62 @@ public class RESTImplementation {
 				.setTime(set.getTimeInMillis())
 				.riseZ(sunRiseAndSet[AstroComputer.RISE_Z_IDX])
 				.setZ(sunRiseAndSet[AstroComputer.SET_Z_IDX]);
+	}
+
+	private static class BodyAt {
+		long epoch;
+		double alt;
+		double z;
+		public BodyAt(long epoch, double alt, double z) {
+			this.epoch = epoch;
+			this.alt = alt;
+			this.z = z;
+		}
+	}
+
+	private List<BodyAt> getSunDataForAllDay(double lat, double lng) {
+		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+		return getSunDataForAllDay(lat, lng, now);
+	}
+
+	private List<BodyAt> getSunDataForAllDay(double lat, double lng, Calendar today) {
+		BodyDataForPos bodyData = getSunDataForDate(lat, lng, today);
+
+		long from = bodyData.riseTime;
+		long to = bodyData.setTime;
+
+		long _10_MINUTES = 1_000 * 60 * 10; // In ms. TODO Tweak if needed.
+
+		List<BodyAt> posList = new ArrayList<>();
+
+		for (long time=from; time<=to; time += _10_MINUTES) {
+
+			Calendar current = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+			current.setTimeInMillis(time);
+
+			AstroComputer.setDateTime(current.get(Calendar.YEAR),
+					current.get(Calendar.MONTH) + 1,
+					current.get(Calendar.DATE),
+					current.get(Calendar.HOUR_OF_DAY),
+					current.get(Calendar.MINUTE),
+					current.get(Calendar.SECOND));
+			AstroComputer.calculate();
+			SightReductionUtil sru = new SightReductionUtil(AstroComputer.getSunGHA(),
+					AstroComputer.getSunDecl(),
+					lat,
+					lng);
+			sru.calculate();
+			double he = sru.getHe().doubleValue();
+			double z = sru.getZ().doubleValue();
+
+//			System.out.println("Calculating Sun Data at "+ current.getTime() +
+//					" from " + GeomUtil.decToSex(lat, GeomUtil.SWING, GeomUtil.NS, GeomUtil.LEADING_SIGN) +
+//					" / " + GeomUtil.decToSex(lng, GeomUtil.SWING, GeomUtil.EW, GeomUtil.LEADING_SIGN) +
+//			", Alt:" + he + ", Z:" + z);
+
+			posList.add(new BodyAt(time, he, z));
+		}
+		return posList;
 	}
 
 	public enum AlmanacType {
