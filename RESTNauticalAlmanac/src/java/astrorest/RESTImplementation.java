@@ -79,7 +79,7 @@ public class RESTImplementation {
 					ASTRO_PREFIX + "/sun-path-today",
 					this::getSunPathInTheSky,
 					"Create a request for Sun path today. Requires body payload (GeoPoint)"),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-path-today?tz=Europe%2FParis
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-path-today
 					"POST",
 					ASTRO_PREFIX + "/sun-between-dates",
 					this::getSunDataBetween,
@@ -903,10 +903,10 @@ public class RESTImplementation {
 					PerpetualAlmanacOptions options;
 					try {
 						options = gson.fromJson(stringReader, PerpetualAlmanacOptions.class);
-						if (options.from > 2100 || options.from < 1900) {
+						if (options.from > 2_100 || options.from < 1_900) {
 							errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid from year, must be in [1900..2100].");
 						}
-						if (options.to > 2100 || options.to < 1900) {
+						if (options.to > 2_100 || options.to < 1_900) {
 							errMess += ((errMess.length() > 0 ? "\n" : "") + "Invalid to year, must be in [1900..2100].");
 						}
 						if (!errMess.isEmpty()) {
@@ -1429,10 +1429,10 @@ public class RESTImplementation {
 			double he = sru.getHe().doubleValue();
 			double z = sru.getZ().doubleValue();
 
-//			System.out.println("Calculating Sun Data at "+ current.getTime() +
+//		System.out.println("Calculating Sun Data at "+ current.getTime() +
 //					" from " + GeomUtil.decToSex(lat, GeomUtil.SWING, GeomUtil.NS, GeomUtil.LEADING_SIGN) +
 //					" / " + GeomUtil.decToSex(lng, GeomUtil.SWING, GeomUtil.EW, GeomUtil.LEADING_SIGN) +
-//			", Alt:" + he + ", Z:" + z);
+//			    ", Alt:" + he + ", Z:" + z);
 
 			posList.add(new BodyAt(time, he, z));
 		}
