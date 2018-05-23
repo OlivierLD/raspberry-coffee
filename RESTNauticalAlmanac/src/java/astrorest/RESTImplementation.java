@@ -79,7 +79,7 @@ public class RESTImplementation {
 					ASTRO_PREFIX + "/sun-path-today",
 					this::getSunPathInTheSky,
 					"Create a request for Sun path today. Requires body payload (GeoPoint)"),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-path-today
+			new Operation( // Payload like { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 } , Ocean Beach. POST /astro/sun-path-today
 					"POST",
 					ASTRO_PREFIX + "/sun-between-dates",
 					this::getSunDataBetween,
@@ -246,18 +246,22 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private static class PosAndStep {
+		GeoPoint position;
+		Integer step;
+	}
+
 	private Response getSunPathInTheSky(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
-		GeoPoint pos = null;
+		PosAndStep pas = null;
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent());
 			if (!"null".equals(payload)) {
 				Gson gson = new GsonBuilder().create();
 				StringReader stringReader = new StringReader(payload);
 				try {
-					pos = gson.fromJson(stringReader, GeoPoint.class);
-					System.out.println();
+					pas = gson.fromJson(stringReader, PosAndStep.class);
 				} catch (Exception ex) {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
@@ -268,7 +272,7 @@ public class RESTImplementation {
 				}
 			}
 		}
-		List<BodyAt> sunPath = getSunDataForAllDay(pos.getL(), pos.getG());
+		List<BodyAt> sunPath = getSunDataForAllDay(pas.position.getL(), pas.position.getG(), pas.step);
 		String content = new Gson().toJson(sunPath);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
@@ -1394,22 +1398,22 @@ public class RESTImplementation {
 		}
 	}
 
-	private List<BodyAt> getSunDataForAllDay(double lat, double lng) {
+	private List<BodyAt> getSunDataForAllDay(double lat, double lng, Integer step) {
 		Calendar now = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
-		return getSunDataForAllDay(lat, lng, now);
+		return getSunDataForAllDay(lat, lng, step, now);
 	}
 
-	private List<BodyAt> getSunDataForAllDay(double lat, double lng, Calendar today) {
+	private List<BodyAt> getSunDataForAllDay(double lat, double lng, Integer step, Calendar today) {
 		BodyDataForPos bodyData = getSunDataForDate(lat, lng, today);
 
 		long from = bodyData.riseTime;
 		long to = bodyData.setTime;
 
-		long _10_MINUTES = 1_000 * 60 * 10; // In ms. TODO Tweak if needed.
+		long _STEP_MINUTES = 1_000 * 60 * (step == null ? 10 : step); // In ms. Default 10 minutes.
 
 		List<BodyAt> posList = new ArrayList<>();
 
-		for (long time=from; time<=to; time += _10_MINUTES) {
+		for (long time=from; time<=to; time += _STEP_MINUTES) {
 
 			Calendar current = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
 			current.setTimeInMillis(time);

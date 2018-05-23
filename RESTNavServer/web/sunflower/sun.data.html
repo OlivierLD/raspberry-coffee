@@ -299,7 +299,7 @@
       	sunPath = new SunPath('sun-path-canvas', 400);
       	if (lat !== undefined && lng !== undefined) {
 		      getSunData({latitude: lat, longitude: lng});
-		      getSunPath({latitude: lat, longitude: lng});
+		      getSunPath({ position: {latitude: lat, longitude: lng} }); // Default step: 10, sibling of position.
 		      pathAndDataOK = true;
 	      }
 			};
