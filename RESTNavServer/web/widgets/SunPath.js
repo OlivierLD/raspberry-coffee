@@ -16,6 +16,8 @@ function SunPath(cName) {
 	var tilt = -10; // [-90..90], back and forth
 	var side =   0; // Left and right
 
+	// TODO Latitude lower than Sun D
+
 	var addToZ = 180;  // 180 when pointing South (Sun in the South at noon). Combined with left right rotation
 	var invertX =  1;  // +1/-1 . +1 when pointing south
 
