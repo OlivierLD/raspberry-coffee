@@ -13,8 +13,13 @@ function SunPath(cName) {
 
 	var sunHe = undefined, sunZ = undefined;
 
-	var tilt = 10; // [-90..90], back and forth
-	var side =  0; // Left and right
+	var tilt = -10; // [-90..90], back and forth
+	var side =   0; // Left and right
+
+	var addToZ = 180;  // 180 when pointing South (Sun in the South at noon). Combined with left right rotation
+	var invertX =  1;  // +1/-1 . +1 when pointing south
+
+	var rotation = 0;
 
 	/*
 	 * See custom properties in CSS.
@@ -90,6 +95,13 @@ function SunPath(cName) {
 		return tilt;
 	};
 
+	this.setRotation = function(t) {
+		rotation = t;
+	};
+	this.getRotation = function() {
+		return rotation;
+	};
+
 	/**
 	 * Used to draw a globe
 	 * alpha, then beta
@@ -99,6 +111,7 @@ function SunPath(cName) {
 	 * @return x, y, z. Cartesian coordinates.
 	 */
 	function rotateBothWays(lat, lng, rotationAroundY, rotationAroundX, addToLng) {
+
 		var x = Math.cos(toRadians(lat)) * Math.sin(toRadians(lng + addToLng));
 		var y = Math.sin(toRadians(lat));
 		var z = Math.cos(toRadians(lat)) * Math.cos(toRadians(lng + addToLng));
@@ -156,88 +169,115 @@ function SunPath(cName) {
 		// Background
 		context.fillRect(0, 0, canvas.width, canvas.height);
 
+		var center = {
+			x: canvas.width / 2,
+			y: canvas.height / 2
+		};
+
 		// Base
-
-		var addToZ = 180;  // 180 when pointing South (Sun in the South at noon)
-		var invertX =  1;  // +1/-1 . +1 when pointing south
-
 		var minZ = sunNow !== undefined ? 10 * Math.floor(sunNow.riseZ / 10) : 90,
 				maxZ = sunNow !== undefined ? 10 * Math.ceil(sunNow.setZ / 10) : 270;
 
 		context.strokeStyle = 'rgba(0, 205, 205, 0.75)';
 		context.lineWidth = 3;
-		context.beginPath();
-		var center = {
-			x: canvas.width / 2,
-			y: canvas.height / 2  //- 10 - (radius * Math.sin(toRadians(tilt)))  // Tweak that
-		}
-
-		var panelPoint = rotateBothWays(0, minZ, side, tilt, addToZ);
+		var panelPoint = rotateBothWays(0, minZ + rotation, side, tilt, addToZ);
 		// Base
 		context.beginPath();
 		context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
 		for (var alfa=minZ; alfa<=maxZ; alfa += 1) {
-			panelPoint = rotateBothWays(0, alfa, side, tilt, addToZ);
+//		console.log("Base rotation", rotation);
+			panelPoint = rotateBothWays(0, alfa + rotation, side, tilt, addToZ);
 			context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
 		}
 		context.stroke();
 		context.closePath();
 
+		// Close the base
 		context.lineWidth = 1;
-		panelPoint = rotateBothWays(0, minZ, side, tilt, addToZ);
+		panelPoint = rotateBothWays(0, minZ + rotation, side, tilt, addToZ);
 		context.beginPath();
 		context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
 		context.lineTo(center.x, center.y);
-		panelPoint = rotateBothWays(0, maxZ, side, tilt, addToZ);
+		panelPoint = rotateBothWays(0, maxZ + rotation, side, tilt, addToZ);
 		context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
 		context.stroke();
 		context.closePath();
 
-		// Meridians. Pole is at radius * (1 - tilt)
-		var pole = {
-			x: center.x,
-			y: center.y - (radius * (1 - tilt))
-		};
-		for (var alfa = minZ; alfa <= maxZ; alfa += 10) { // Longitude
-			panelPoint = rotateBothWays(0, alfa, side, tilt, addToZ);
-			context.beginPath();
-			context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
-			for (var beta = 0; beta <= 90; beta += 1) { // Latitude
-				panelPoint = rotateBothWays(beta, alfa, side, tilt, addToZ);
-				context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
-			}
-			context.stroke();
-			context.closePath();
-		}
+		// Indicate S (or N: TODO)
+		context.save();
+		var fontSize = 20;
+		context.font = "bold " + Math.round(fontSize) + "px Arial";
+		context.fillStyle = 'white';
+		var len = 0;
 
-		// Parallels
-		for (var alfa=10; alfa<90; alfa+=10) { // Latitude
-			panelPoint = rotateBothWays(alfa, minZ, side, tilt, addToZ);
-			context.beginPath();
-			context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
-			for (var beta = minZ; beta <= maxZ; beta += 1) { // Longitude
-				panelPoint = rotateBothWays(alfa, beta, side, tilt, addToZ);
-				context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
+		panelPoint = rotateBothWays(0, 180 + rotation, side, tilt, addToZ);
+		context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
+		var text = "S";
+		var metrics = context.measureText(text);
+		len = metrics.width;
+		context.fillText(text, center.x + (panelPoint.x * radius * invertX) - (len / 2), center.y - (panelPoint.y * radius));
+
+		panelPoint = rotateBothWays(0, 90 + rotation, side, tilt, addToZ);
+		context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
+		text = "E";
+		metrics = context.measureText(text);
+		len = metrics.width;
+		context.fillText(text, center.x + (panelPoint.x * radius * invertX) - (len / 2), center.y - (panelPoint.y * radius));
+
+		panelPoint = rotateBothWays(0, 270 + rotation, side, tilt, addToZ);
+		context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
+		text = "W";
+		metrics = context.measureText(text);
+		len = metrics.width;
+		context.fillText(text, center.x + (panelPoint.x * radius * invertX) - (len / 2), center.y - (panelPoint.y * radius));
+
+		context.restore();
+
+		if (true) {
+			// Meridians.
+			for (var alfa = minZ; alfa <= maxZ; alfa += 10) { // Longitude
+				panelPoint = rotateBothWays(0, alfa + rotation, side, tilt, addToZ);
+				context.beginPath();
+				context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
+				for (var beta = 0; beta <= 90; beta += 1) { // Latitude
+					panelPoint = rotateBothWays(beta, alfa + rotation, side, tilt, addToZ);
+					context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
+				}
+				context.stroke();
+				context.closePath();
 			}
-			context.stroke();
-			context.closePath();
+
+			// Parallels
+			for (var alfa = 10; alfa < 90; alfa += 10) { // Latitude
+				panelPoint = rotateBothWays(alfa, minZ + rotation, side, tilt, addToZ);
+				context.beginPath();
+				context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
+				for (var beta = minZ; beta <= maxZ; beta += 1) { // Longitude
+					panelPoint = rotateBothWays(alfa, beta + rotation, side, tilt, addToZ);
+					context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
+				}
+				context.stroke();
+				context.closePath();
+			}
 		}
 
 		// Sun Path
 		if (sunPath !== undefined) {
+			context.lineWidth = 3;
 			context.strokeStyle = 'yellow';
-			panelPoint = rotateBothWays(sunPath[0].alt, sunPath[0].z, side, tilt, addToZ);
+			panelPoint = rotateBothWays(sunPath[0].alt, sunPath[0].z + rotation, side, tilt, addToZ);
 			context.beginPath();
 			for (var i = 1; i < sunPath.length; i++) {
-				panelPoint = rotateBothWays(sunPath[i].alt, sunPath[i].z, side, tilt, addToZ);
+				panelPoint = rotateBothWays(sunPath[i].alt, sunPath[i].z + rotation, side, tilt, addToZ);
 				context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
 			}
 			context.stroke();
 			context.closePath();
+			context.lineWidth = 1;
 		}
 		// Current Sun Pos.
 		if (sunHe !== undefined && sunZ !== undefined) {
-			panelPoint = rotateBothWays(0, sunZ, side, tilt, addToZ);
+			panelPoint = rotateBothWays(0, sunZ + rotation, side, tilt, addToZ);
 			// Center to horizon
 			context.beginPath();
 			context.moveTo(center.x, center.y);
@@ -248,10 +288,10 @@ function SunPath(cName) {
 			context.beginPath();
 			context.moveTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
 			for (var alt = 0; alt <= sunHe; alt++) {
-				panelPoint = rotateBothWays(alt, sunZ, side, tilt, addToZ);
+				panelPoint = rotateBothWays(alt, sunZ + rotation, side, tilt, addToZ);
 				context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
 			}
-			panelPoint = rotateBothWays(sunHe, sunZ, side, tilt, addToZ);
+			panelPoint = rotateBothWays(sunHe, sunZ + rotation, side, tilt, addToZ);
 			context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
 			context.stroke();
 			context.closePath();
@@ -271,8 +311,12 @@ function SunPath(cName) {
 			context.closePath();
 			context.restore();
 			// Display values
+			context.save();
+			fontSize = 14;
+			context.font = "" + Math.round(fontSize) + "px Arial";
 			context.fillText("Alt:" + sunHe.toFixed(2) + "\272", 10, 20);
 			context.fillText("Z  :" + sunZ.toFixed(2) + "\272", 10, 40);
+			context.restore();
 		}
 	};
 

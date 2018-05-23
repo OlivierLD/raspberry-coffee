@@ -60,7 +60,21 @@
 			sunPath.setTilt(val);
 			sunPath.repaint();
 		}
-	}
+	};
+
+  var setNewRot = function(range) {
+	  var val = range.value;
+	  if (sunPath !== undefined) {
+		  sunPath.setRotation(val);
+		  sunPath.repaint();
+	  }
+	};
+
+  var refresh = function() {
+	  if (sunPath !== undefined) {
+		  sunPath.repaint();
+	  }
+	};
 
     </script>
   </head>
@@ -142,10 +156,26 @@
 
 			<br/><a href="#" onclick="toggleSunPath();">Sun Path</a>
 			<div id="sun-path" style="display:none; margin: 5px;">
-				<canvas id="sun-path-canvas"
-								width="300"
-								height="600"></canvas>
-				<input type="range" style="-webkit-appearance: slider-vertical; height: 600px; margin-left:5px;" min="-90" max="90" value="10" onchange="setNewTilt(this);">
+				<table border="0">
+					<!--tr>
+						<input type="range" style="width: 400px;" min="-180" max="180" value="0" onchange="setNewRot(this);">
+					</tr-->
+					<tr>
+						<td valign="top">
+							<canvas id="sun-path-canvas"
+											width="400"
+											height="400"
+											title="Where the Sun is on its path"
+											style="border-radius: 5px;"></canvas>
+						</td>
+						<td align="left">
+							<input type="range" style="-webkit-appearance: slider-vertical; width: 8px; height: 400px; margin-left: 0;" min="-90" max="90" value="-10" onchange="setNewTilt(this);">
+						</td>
+					</tr>
+					<!--tr>
+						<td> <button onclick="refresh();">Refresh</button> </td>
+					</tr-->
+				</table>
 			</div>
 
 		</div>
