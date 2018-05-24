@@ -240,7 +240,7 @@
               $("#lon").text(decToSex(lon, 'EW'));
               if (!pathAndDataOK) {
 	              getSunData({latitude: lat, longitude: lng});
-	              getSunPath({latitude: lat, longitude: lng});
+	              getSunPath({ position: {latitude: lat, longitude: lng}});
 	              pathAndDataOK = true;
               }
           }
