@@ -1,6 +1,7 @@
 # Matrix and System resolution
 
 import math
+import datetime
 
 debug = False
 
@@ -163,7 +164,11 @@ constants = [ 234, 98.87, 9.876 ]
 print "Solving:"
 print_system(matrix, constants)
 
+before = datetime.datetime.now()
 result = solve_system(matrix, constants)
+after = datetime.datetime.now()
+print "Done in ", (after - before).seconds, "s :", (after - before).microseconds, ("\u03bc".decode('unicode-escape') + "s")
+
 print "x = ", result[0]
 print "y = ", result[1]
 print "z = ", result[2]
