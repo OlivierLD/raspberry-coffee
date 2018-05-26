@@ -9,6 +9,9 @@
 - and more... This doc is lagging behind.
 
 ---
+- Languages comparison, [solving a system](./LanguageComparison.md).
+
+---
 
 ### <a name="weatherstation"></a>Home Weather Station
 This one uses the `SDLWeather80422` class, from the `WeatherStation` project.

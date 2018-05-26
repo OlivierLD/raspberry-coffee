@@ -198,8 +198,18 @@ var leastSquares = function(requiredDegree, data) {
     return result;
 };
 
+var fromNode = false;
 
-if (false) {
+if (process !== undefined) {
+	for (var i = 0; i < process.argv.length; i++) {
+		console.log("arg #%d: %s", i, process.argv[i]);
+		if (process.argv[i] === 'from-node') {
+			fromNode = true;
+		}
+	}
+}
+
+if (fromNode) {
     /**
      * An example
      */

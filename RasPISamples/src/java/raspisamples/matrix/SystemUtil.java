@@ -118,7 +118,7 @@ public class SystemUtil {
 		before = System.nanoTime();
 		result = solveSystem(squareMatrix, constants);
 		after = System.nanoTime();
-		System.out.println(String.format("\nDone is %s nano sec.", DecimalFormat.getInstance().format(after - before)));
+		System.out.println(String.format("\nDone is %s nano(\u212b) sec.", DecimalFormat.getInstance().format(after - before)));
 
 		System.out.println(String.format("x = %f", result[0]));
 		System.out.println(String.format("y = %f", result[1]));
