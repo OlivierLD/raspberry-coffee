@@ -38,7 +38,7 @@ Run
 
 #### Java
 The sources are in [`src/java/raspisamples/matrix`](./src/java/raspisamples/matrix).
-(See also [this document](.src/java/raspisamples/smoothing/README.md) ).
+(See also [this document](./src/java/raspisamples/smoothing/README.md) ).
 
 To run it:
 ```
