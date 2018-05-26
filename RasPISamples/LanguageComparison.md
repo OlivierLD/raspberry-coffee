@@ -37,7 +37,8 @@ Run
 ```
 
 #### Java
-The sources are in `src/java/raspisamples/matrix`.
+The sources are in [`src/java/raspisamples/matrix`](./src/java/raspisamples/matrix).
+(See also [this document](.src/java/raspisamples/smoothing/README.md) ).
 
 To run it:
 ```
@@ -45,7 +46,7 @@ To run it:
 ```
 
 #### Scala
-The sources are in `src/scala/systems`
+The sources are in [`src/scala/systems`](./src/scala/systems).
 
 To run it:
 ```
@@ -53,7 +54,7 @@ To run it:
 ```
 
 #### Kotlin
-The sources are in `src/kotlin/KtSystemSolver.kt`
+The sources are in [`src/kotlin/KtSystemSolver.kt`](./src/kotlin).
 
 ```
  $ java -cp ./build/libs/RasPISamples-1.0-all.jar systemsKt.KtSystemSolverKt
@@ -65,7 +66,7 @@ or
 
 
 #### JavaScript
-See the sources - and more - in the `smoothing/js` folder, file `matrix.js`.
+See the sources - and more - in the [`smoothing/js`](./smoothing/js) folder, file `matrix.js`.
 
 From `node.js`:
 ```
@@ -76,10 +77,13 @@ From `node.js`:
 Or ust load `smoothing.spray.html` in a browser.
 
 #### Python
-Sources are in `src/python/system.py`.
+Sources are in [`src/python/system.py`](./src/python).
 
 To run it:
 ```
  $ cd src/python
  $ python system.py
 ```
+
+---
+Oliv fecit, A.D. 2018.
