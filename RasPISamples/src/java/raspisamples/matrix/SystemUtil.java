@@ -39,6 +39,9 @@ public class SystemUtil {
 
 		SquareMatrix inv = MatrixUtil.invert(m);
 
+		// Print inverted Matrix
+		// MatrixUtil.printMatrix(inv);
+
 		// Lines * Column
 		for (int row = 0; row < m.getDimension(); row++) {
 			result[row] = 0.0;

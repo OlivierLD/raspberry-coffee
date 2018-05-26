@@ -2,6 +2,20 @@ package raspisamples.matrix;
 
 
 public final class MatrixUtil {
+
+	private static boolean debug = "true".equals(System.getProperty("debug", "false"));
+
+	public static void printMatrix(SquareMatrix m) {
+		for (int row=0; row<m.getDimension(); row++) {
+			String line = "| ";
+			for (int col=0; col<m.getDimension(); col++) {
+				line += (m.getElementAt(row, col) + " ");
+			}
+			line += " |";
+			System.out.println(line);
+		}
+	}
+
 	private static SquareMatrix minor(SquareMatrix m, int row, int col) {
 		SquareMatrix small = new SquareMatrix(m.getDimension() - 1);
 		for (int c = 0; c < m.getDimension(); c++) {
@@ -23,6 +37,10 @@ public final class MatrixUtil {
 				co.setElementAt(r, c, determinant(minor(m, r, c)) * Math.pow((-1), (r + c + 2)));  // r+c+2 = (r+1) + (c+1)...
 			}
 		}
+		if (debug) {
+			System.out.println("Comatrix:");
+			printMatrix(co);
+		}
 		return co;
 	}
 
@@ -34,6 +52,10 @@ public final class MatrixUtil {
 			for (c = 0; c < m.getDimension(); c++) {
 				t.setElementAt(r, c, m.getElementAt(c, r));
 			}
+		}
+		if (debug) {
+			System.out.println("Transposed:");
+			printMatrix(t);
 		}
 		return t;
 	}
@@ -62,6 +84,11 @@ public final class MatrixUtil {
 				double minDet = determinant(minor(m, 0, C));
 				v += (m.getElementAt(0, C) * minDet * Math.pow((-1.0), C + 1 + 1)); // line C, column 1
 			}
+		}
+		if (debug) {
+			System.out.println("Determinant of");
+			printMatrix(m);
+			System.out.println(String.format(" is %f", v));
 		}
 		return v;
 	}
