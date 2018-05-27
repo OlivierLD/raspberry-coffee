@@ -8,12 +8,12 @@ Object oriented languages are not a requirement.
 Functionnal programming is not a requirement.
 
 We will use the following programming languages:
-- Java
-- Scala
-- Kotlin
-- JavaScript
-- Python
-- C
+- [Java](#java)
+- [Scala](#scala)
+- [Kotlin](#kotlin)
+- [JavaScript](#javascript)
+- [Python](#python)
+- [C](#c)
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -30,7 +30,7 @@ All versions of the program pretty much return the same output, like
 ```
 
 #### Compilation
-Java, Scala and Kotlin require a compilation.
+Java, Scala and Kotlin require a compilation. C too, but not from Gradle.
 
 Run
 ```
