@@ -8,7 +8,7 @@ This problem implies recursive algorithms.
 Object oriented languages are not a requirement.
 Functionnal programming is not a requirement.
 
-The idea here is to be able to compare the code corresponding to each language, addressing the exact same problem,
+The idea here is to be able to compare the codes corresponding to each language, addressing the exact same problem,
 and - hopefully - returning the same result.
 
 Comparing the length of the code, its readability, its complexity, its structure, and possibily its beauty
@@ -30,7 +30,7 @@ All versions of the program pretty much return the same output, like
  (1.345000 x A) + (-654.000000 x B) + (0.001000 x C) = 98.870000
  (23.090000 x A) + (5.300000 x B) + (-12.340000 x C) = 9.876000
 
- Done is 114,307 nano(Å) sec.
+ Done in 114,307 Ås (nano).
  A = 6.488222
  B = -0.137817
  C = 11.280925
