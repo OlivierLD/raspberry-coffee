@@ -11,7 +11,7 @@ Functionnal programming is not a requirement.
 The idea here is to be able to compare the code corresponding to each language, addressing the exact same problem,
 and - hopefully - returning the same result.
 
-Comparing the length of the code, its readability, its complexity, and possibily its beauty
+Comparing the length of the code, its readability, its complexity, its structure, and possibily its beauty
 can be an interesting exercise.
 
 We will use the following programming languages:
