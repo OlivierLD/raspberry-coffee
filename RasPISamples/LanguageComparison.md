@@ -13,6 +13,7 @@ We will use the following programming languages:
 - Kotlin
 - JavaScript
 - Python
+- C
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -23,9 +24,9 @@ All versions of the program pretty much return the same output, like
  (23.090000 x A) + (5.300000 x B) + (-12.340000 x C) = 9.876000
 
  Done is 114,307 nano(Å) sec.
- x = 6.488222
- y = -0.137817
- z = 11.280925
+ A = 6.488222
+ B = -0.137817
+ C = 11.280925
 ```
 
 #### Compilation
@@ -83,6 +84,16 @@ To run it:
 ```
  $ cd src/python
  $ python system.py
+```
+
+#### C
+Sources are in [`src/C/system.c`](./src/C).
+
+To compile and run (the compilation is not done by Gradle, and may vary depending on your system):
+```
+ $ cd src/C
+ $ gcc -lm -o system system.c
+ $ ./system
 ```
 
 ---

@@ -40,7 +40,10 @@ public class SystemUtil {
 		SquareMatrix inv = MatrixUtil.invert(m);
 
 		// Print inverted Matrix
-		// MatrixUtil.printMatrix(inv);
+		if ("true".equals(System.getProperty("debug", "false"))) {
+			System.out.println("Inverted:");
+			MatrixUtil.printMatrix(inv);
+		}
 
 		// Lines * Column
 		for (int row = 0; row < m.getDimension(); row++) {
@@ -98,9 +101,9 @@ public class SystemUtil {
 		long after = System.nanoTime();
 		System.out.println(String.format("\nDone is %s nano sec.", DecimalFormat.getInstance().format(after - before)));
 
-		System.out.println(String.format("x = %f", result[0]));
-		System.out.println(String.format("y = %f", result[1]));
-		System.out.println(String.format("z = %f", result[2]));
+		System.out.println(String.format("A = %f", result[0]));
+		System.out.println(String.format("B = %f", result[1]));
+		System.out.println(String.format("C = %f", result[2]));
 		System.out.println();
 		// Proof:
 		double X = (squareMatrix.getElementAt(0, 0) * result[0]) + (squareMatrix.getElementAt(0, 1) * result[1]) + (squareMatrix.getElementAt(0, 2) * result[2]);
@@ -120,8 +123,8 @@ public class SystemUtil {
 		after = System.nanoTime();
 		System.out.println(String.format("\nDone is %s nano(\u212b) sec.", DecimalFormat.getInstance().format(after - before)));
 
-		System.out.println(String.format("x = %f", result[0]));
-		System.out.println(String.format("y = %f", result[1]));
-		System.out.println(String.format("z = %f", result[2]));
+		System.out.println(String.format("A = %f", result[0]));
+		System.out.println(String.format("B = %f", result[1]));
+		System.out.println(String.format("C = %f", result[2]));
 	}
 }
