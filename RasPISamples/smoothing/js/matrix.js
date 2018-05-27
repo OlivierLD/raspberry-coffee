@@ -240,9 +240,9 @@ if (fromNode) {
 
     var result = solveSystem(squareMatrix, constants);
 
-    console.log("x = %d", result[0]);
-    console.log("y = %d", result[1]);
-    console.log("z = %d", result[2]);
+    console.log("A = %d", result[0]);
+    console.log("B = %d", result[1]);
+    console.log("C = %d", result[2]);
     console.log();
     // Proof:
     var X = (squareMatrix.getElementAt(0, 0) * result[0]) + (squareMatrix.getElementAt(0, 1) * result[1]) + (squareMatrix.getElementAt(0, 2) * result[2]);

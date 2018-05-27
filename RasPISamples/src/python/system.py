@@ -169,14 +169,14 @@ result = solve_system(matrix, constants)
 after = datetime.datetime.now()
 print "Done in ", (after - before).seconds, "s :", (after - before).microseconds, ("\u03bc".decode('unicode-escape') + "s")
 
-print "x = ", result[0]
-print "y = ", result[1]
-print "z = ", result[2]
+print "A = ", result[0]
+print "B = ", result[1]
+print "C = ", result[2]
 print ""
 # Proof:
 x = (matrix[0][0] * result[0]) + (matrix[0][1] * result[1]) + (matrix[0][2] * result[2])
 y = (matrix[1][0] * result[0]) + (matrix[1][1] * result[1]) + (matrix[1][2] * result[2])
 z = (matrix[2][0] * result[0]) + (matrix[2][1] * result[1]) + (matrix[2][2] * result[2])
-print "X:", x
-print "Y:", y
-print "Z:", z
+print "Proof X:", x
+print "Proof Y:", y
+print "Proof Z:", z

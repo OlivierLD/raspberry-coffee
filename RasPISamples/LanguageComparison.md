@@ -7,6 +7,12 @@ This problem implies recursive algorithms.
 Object oriented languages are not a requirement.
 Functionnal programming is not a requirement.
 
+The idea here is to be able to compare the code corresponding to each language, addressing the exact same problem,
+and - hopefully - returning the same result.
+
+Comparing the length of the code, its readability, it complexity, and possibily its beauty
+can be an interesting exercise.
+
 We will use the following programming languages:
 - [Java](#java)
 - [Scala](#scala)
@@ -75,7 +81,7 @@ From `node.js`:
  $ node matrix.js from-node
 ```
 
-Or ust load `smoothing.spray.html` in a browser.
+Or just load `smoothing.spray.html` in a browser.
 
 #### Python
 Sources are in [`src/python/system.py`](./src/python).
