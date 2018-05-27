@@ -1,7 +1,8 @@
 ## Comparing several programming languages
 
 ### The problem to solve
-We want to solve a system of `n` equations, with `n` unknowns.
+We want to solve a system of `n` equations, with `n` unknowns. The dimension `n` is dynamic, i.e. _not_ hard-coded,
+provided at runtime.
 
 This problem implies recursive algorithms.
 Object oriented languages are not a requirement.
@@ -10,7 +11,7 @@ Functionnal programming is not a requirement.
 The idea here is to be able to compare the code corresponding to each language, addressing the exact same problem,
 and - hopefully - returning the same result.
 
-Comparing the length of the code, its readability, it complexity, and possibily its beauty
+Comparing the length of the code, its readability, its complexity, and possibily its beauty
 can be an interesting exercise.
 
 We will use the following programming languages:
