@@ -213,9 +213,9 @@ which you can run the programs you need.
 
 In other words, if your program runs on a given Docker image, you will _not_ give the compiled code to whoever
 wants to run it somewhere else, you will provide a copy of the full Docker image. And whoever will
-run it will feel like you did on yours.
+run it will feel like you did on yours. This is not portability anymore, this is virtualization.
 
-`Go` for example, does not care about portability. It can rely on Docker.
+`Go` for example, does not care about portability. It can rely on Docker. Virtually.
 
 ---
 Oliv fecit, A.D. 2018.
