@@ -4,6 +4,7 @@
 We want to solve a system of `n` equations, with `n` unknowns. The dimension `n` is dynamic, i.e. _not_ hard-coded,
 provided at runtime.
 
+This is the kind of problems that do reveal a lot of the features of a language.
 This problem implies recursive algorithms.
 Object oriented languages are not a requirement.
 Functionnal programming is not a requirement.
@@ -12,21 +13,23 @@ The idea here is to be able to compare the codes corresponding to each language,
 and - hopefully - returning the same result.
 
 Comparing the length of the code, its readability, its complexity, its structure, and possibily its beauty
-can be an interesting exercise.
+can be an interesting journey.
 
 We will use the following programming languages:
 - [Java](#java)
     - Uses a Virtual Machine (JVM). Object Oriented, Functional features since Java 8. Requires compilation (`javac`). Strongly typed.
 - [Scala](#scala)
-    - Uses the _same_ Virtual Machine as Java, Object Oroientd _and_ Functional since day one. Extremely well designed, natively implements immutability and other key concepts.
+    - Uses the _same_ Virtual Machine as Java, Object Oriented _and_ Functional since day one. Extremely well designed, natively implements immutability and other key concepts.
     Can sound a bit complex to a beginner, but addicting after that.
     Requires compilation (`scalac`).
 - [Kotlin](#kotlin)
     - Somewhat similar to `Scala`, designed by the JetBrain team (author of the IntelliJ IDE, the best).
     Requires compilation (`kotlinc`).
 - [JavaScript](#javascript)
-    - Has been around for years. Designed _in 10 days_ by a Netscape engineer.
-    Not typed (on purpose), and natively functional. Regained _a lot_ of popularity when Web 2.0 was released, used everywhere a browser runs, to program client-side application (a **lot** of JavaScript frameworks are available). Interestingly, some servers can also be programmed using JavaScript, since the success of [`nodejs`](https://nodejs.org/). `NodeJS` if a JavaScript runtime built on `V8`, Chrome's JavsSCript engine, open source.
+    - Has been around for years 1995). Designed _in 10 days_ by a Netscape engineer (Brendan Eich).
+    Not typed (on purpose), and natively functional. Regained _a lot_ of popularity when Web 2.0 was released, used everywhere a browser runs, to program client-side applications (a **lot** of JavaScript frameworks are available).
+    Interestingly, some server-side code can also be written using JavaScript, since the success of [`nodejs`](https://nodejs.org/).
+    `NodeJS` is a JavaScript runtime built on `V8`, Chrome's JavsSCript engine, open source.
     This is what makes JavaScript one of the very few languages that can be used on the cient as well as on the server.
     Interpreted, does not require compilation.
 - [Python](#python)
@@ -37,7 +40,7 @@ We will use the following programming languages:
     - Immensly adopted on the planet Earth. The oldest of all the others, and still alive and well.
     `C` has no OO features (it avatar `C++` does have some). No Functional Programming features.
     Requires explicit memory allocation and de-allocation (`alloc` and `free`), extensively uses _pointers_,
-    that lead to vast majority of the bugs `C` developers have to deal with. Requires compilation (`gcc`, `cc`, etc, the compilator depends on the machine you are on).
+    which is what leads to vast majority of the bugs `C` developers have to deal with. Requires compilation (`gcc`, `cc`, etc, the compilator depends on the machine you are on).
     Running the same `C` program on different Operating Systems often - if not always - requires a re-compilation of the code.
     The code is compiled natively - hence does not require a Virtual Machine. These two aspects (lack of portability, having to deal with pointers)
     are two of the most important ideas that gave birth to Java (Java has no pointers, and once compiled runs everywhere there is a JVM. The early motto of Java was
@@ -143,6 +146,69 @@ or just
 ```
  $ groovy system
 ```
+
+### Some history, to predict the future
+In the scope we are considering here, the first to emerge was `C`. It is the `native` language of Unix,
+the Unix system is 100% written in C. The sources of Unix were (are) available on the system, this was early open source.
+
+It later gave birth to Linux.
+
+This openness of Unix was probably one of the reasons of the success of `C` - beside its efficiency.
+
+Developpers workin with `C` had to face two major issues:
+###### Portability
+To make a C program run on several systems, you had to re-compile the code on the target system, and you had to tweak the code to fit some system aspects, like endianness, word sizes, and similar features.
+This was implemented using `#define` and `#ifdef` statements in the code, pre-processed before compilation, so the code matches the requirement of the compiler. Like
+```C
+ #define VAX_VMS
+
+ #ifdef VAX_VMS
+   [do this for the VAX]
+ #endif
+ #ifdef WINDOWS
+   [do that for Windows]
+ #endif
+   ... etc
+```
+All the `#define` statements very often make the code difficult to read.
+###### Memory management
+`C` is extensively using pointers. You have to allocate memory to a pointer in order to use it, and free
+it afterwards, for the memory to be released, in order to be re-used.
+More than half the bugs `C` programmers have to deal with are usually pointer-related.
+
+This is what paved to way for Java.
+
+Java is using a syntax similar to C. It used a similar way to declare function and methods, uses curly braces `{}` to define code blocks, *but*:
+- It does not require the programmer to deal with pointers
+- It runs on a Java Virtual Machine. As a result, a `class` compiled on somewhere will run
+_without any modification_ on any other system where a JVM is available. The portability is taken care of by the
+implementation of the virtual machine.
+
+This eliminates a lot of the issues inherent to `C`.
+
+The Virtual Machine that runs your java code (compiled into `class`es) has 3 threads:
+- A runtime - responsible for running the code
+- A finalizer - responsible for flagging any object no one is pointing to any more
+- A garbage collector - responsible for freeing the memory used by the finalized objects.
+
+If you can generate a `class`, running it will come for free if you can find a JVM.
+This is where other JVM-compatible languages emerged.
+
+Scala for example, "only" had to create a compiler that turns Scla code into a `class` - just like the `javac` compiler does.
+Then the class is run by the JVM, that does not even need to know what language this class was
+originally written in.
+
+There are many such languages, `Scala`, `Kotlin`, `Groovy`, `Clojure` being only a few of them.
+
+Then, a un-expected shift happened, the emergence of the Containers, like `Docker`.
+Docker is generating system images. It provides an environment - an operating system - onto
+which you can run the programs you need.
+
+In other words, if your program runs on a given Docker image, you will _not_ give the compiled code to whoever
+want to run it somewhere else, you will provide a copy of the full Docker image. And whoever will
+run it will feel like you did on yours.
+
+`Go` for example, does not care about portability. They can rely on Docker.
 
 ---
 Oliv fecit, A.D. 2018.

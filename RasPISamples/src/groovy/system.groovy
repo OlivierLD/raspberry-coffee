@@ -1,4 +1,4 @@
-// Groovy System resolution. WIP
+// Groovy System resolution.
 
 def matrix = [
   [ 12, 13, 14 ],
