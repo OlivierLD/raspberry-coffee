@@ -12,7 +12,7 @@ This is just an example: for a given problem, provide a solution. Solutions will
 > provided at runtime.
 
 This is - in my opinion - the kind of problems that do reveal a lot of the features of a language.
-This problem implies recursive algorithms.
+This problem implies recursive algorithms, declaring functions, functions admitting arrays (of arrays...) of parameters, etc.
 Object oriented languages are not a requirement.
 Functionnal programming is not a requirement.
 
@@ -59,6 +59,7 @@ We will use the following programming languages:
 
 TODO
 - Go
+- Clojure
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -207,7 +208,7 @@ originally written in.
 
 There are many such languages, `Scala`, `Kotlin`, `Groovy`, `Clojure` being only a few of them.
 
-Then, a un-expected shift happened, the emergence of the Containers, like `Docker`.
+Then, a un-anticipated shift happened: the emergence of the Containers, like `Docker`.
 Docker is generating system images. It provides an environment - an operating system - onto
 which you can run the programs you need.
 
