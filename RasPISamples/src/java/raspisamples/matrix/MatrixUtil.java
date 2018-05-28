@@ -6,13 +6,21 @@ public final class MatrixUtil {
 	private static boolean debug = "true".equals(System.getProperty("debug", "false"));
 
 	public static void printMatrix(SquareMatrix m) {
+		printMatrix(m, true);
+	}
+
+	public static void printMatrix(SquareMatrix m, boolean withCR) {
 		for (int row=0; row<m.getDimension(); row++) {
 			String line = "| ";
 			for (int col=0; col<m.getDimension(); col++) {
 				line += (m.getElementAt(row, col) + " ");
 			}
 			line += " |";
-			System.out.println(line);
+			if (!withCR && row == (m.getDimension() - 1)) { // Last line
+				System.out.print(line);
+			} else {
+				System.out.println(line);
+			}
 		}
 	}
 
@@ -72,6 +80,20 @@ public final class MatrixUtil {
 		return res;
 	}
 
+	public static boolean equals(SquareMatrix a, SquareMatrix b) {
+		if (a.getDimension() != b.getDimension()) {
+			return false;
+		}
+		for (int r=0; r<a.getDimension(); r++) {
+			for (int c=0; c<a.getDimension(); c++) {
+				if (a.getElementAt(r, c) != b.getElementAt(r, c)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public static double determinant(SquareMatrix m) {
 		double v = 0.0;
 
@@ -87,7 +109,7 @@ public final class MatrixUtil {
 		}
 		if (debug) {
 			System.out.println("Determinant of");
-			printMatrix(m);
+			printMatrix(m, false);
 			System.out.println(String.format(" is %f", v));
 		}
 		return v;

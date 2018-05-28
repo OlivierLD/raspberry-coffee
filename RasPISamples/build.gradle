@@ -71,4 +71,5 @@ dependencies {
   compile project(':NMEA.multiplexer')
   compile project(':HanoiTower')
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+  testCompile group: 'junit', name: 'junit', version: '4.11'
 }

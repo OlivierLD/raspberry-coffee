@@ -40,11 +40,14 @@ We will use the following programming languages:
     that lead to vast majority of the bugs `C` developers have to deal with. Requires compilation (`gcc`, `cc`, etc, the compilator depends on the machine you are on).
     Running the same `C` program on different Operating Systems often - if not always - requires a re-compilation of the code.
     The code is compiled natively - hence does not require a Virtual Machine. These two aspects (lack of portability, having to deal with pointers)
-    are two of the most important ideas that gave birth to Java (Java has no pointers, and once compiled runs everywhere there is a JVM. The early moto of Java was
+    are two of the most important ideas that gave birth to Java (Java has no pointers, and once compiled runs everywhere there is a JVM. The early motto of Java was
     _write once, run everywhere_).
+- [Groovy](#groovy)
+    - Runs on a JVM. Much more flexible language than Java, _not_ strongly typed, compatible with Java (i.e you
+    can litterally copy-paste Java code into a Groovy script), but also understands a nice closure-like syntax.
+    Can be compiled, or not. Supports classes definition, can be run as a script.
 
 TODO
-- Groovy
 - Go
 
 #### Output
@@ -126,6 +129,19 @@ To compile and run (the compilation is not done by Gradle, and may vary dependin
  $ cd src/C
  $ gcc -lm -o system system.c
  $ ./system
+```
+
+#### Groovy
+Sources are in [`scr/groovy/system.groovy`](./src/groovy).
+
+To run it, after installing groovy on your machine:
+```
+ $ cd src/groovy
+ $ groovy system.groovy
+```
+or just
+```
+ $ groovy system
 ```
 
 ---
