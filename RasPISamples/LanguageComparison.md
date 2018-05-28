@@ -26,16 +26,16 @@ We will use the following programming languages:
     - Somewhat similar to `Scala`, designed by the JetBrain team (author of the IntelliJ IDE, the best).
     Requires compilation (`kotlinc`).
 - [JavaScript](#javascript)
-    - Has been around for years 1995). Designed _in 10 days_ by a Netscape engineer (Brendan Eich).
+    - Has been around for years (1995). Designed _in 10 days_ by a Netscape engineer (Brendan Eich).
     Not typed (on purpose), and natively functional. Regained _a lot_ of popularity when Web 2.0 was released, used everywhere a browser runs, to program client-side applications (a **lot** of JavaScript frameworks are available).
     Interestingly, some server-side code can also be written using JavaScript, since the success of [`nodejs`](https://nodejs.org/).
-    `NodeJS` is a JavaScript runtime built on `V8`, Chrome's JavsSCript engine, open source.
+    `NodeJS` is a JavaScript runtime built on `V8`, Chrome's JavsScript engine, open source.
     This is what makes JavaScript one of the very few languages that can be used on the cient as well as on the server.
     Interpreted, does not require compilation.
 - [Python](#python)
     - Designed for educational purpose. Easy to use, even if its syntax and structure might not please eveyone.
     No native Object Oriented (OO) features (some exist, but they may look weird to an OO adict).
-    Does not require compilation. Very popular among data scientist, mostly due to its simlicity.
+    Does not require compilation. Very popular among data scientists, mostly due to its simlicity.
 - [C](#c)
     - Immensly adopted on the planet Earth. The oldest of all the others, and still alive and well.
     `C` has no OO features (it avatar `C++` does have some). No Functional Programming features.
@@ -155,7 +155,7 @@ It later gave birth to Linux.
 
 This openness of Unix was probably one of the reasons of the success of `C` - beside its efficiency.
 
-Developpers workin with `C` had to face two major issues:
+Developpers working with `C` had to face two major issues:
 ###### Portability
 To make a C program run on several systems, you had to re-compile the code on the target system, and you had to tweak the code to fit some system aspects, like endianness, word sizes, and similar features.
 This was implemented using `#define` and `#ifdef` statements in the code, pre-processed before compilation, so the code matches the requirement of the compiler. Like
@@ -180,7 +180,7 @@ This is what paved to way for Java.
 
 Java is using a syntax similar to C. It used a similar way to declare function and methods, uses curly braces `{}` to define code blocks, *but*:
 - It does not require the programmer to deal with pointers
-- It runs on a Java Virtual Machine. As a result, a `class` compiled on somewhere will run
+- It runs on a Java Virtual Machine. As a result, a `class` compiled somewhere will run
 _without any modification_ on any other system where a JVM is available. The portability is taken care of by the
 implementation of the virtual machine.
 
@@ -194,7 +194,7 @@ The Virtual Machine that runs your java code (compiled into `class`es) has 3 thr
 If you can generate a `class`, running it will come for free if you can find a JVM.
 This is where other JVM-compatible languages emerged.
 
-Scala for example, "only" had to create a compiler that turns Scla code into a `class` - just like the `javac` compiler does.
+Scala for example, "only" had to create a compiler that turns Scla code into a `class` - just like the `javac` compiler does for Java code.
 Then the class is run by the JVM, that does not even need to know what language this class was
 originally written in.
 
@@ -205,10 +205,10 @@ Docker is generating system images. It provides an environment - an operating sy
 which you can run the programs you need.
 
 In other words, if your program runs on a given Docker image, you will _not_ give the compiled code to whoever
-want to run it somewhere else, you will provide a copy of the full Docker image. And whoever will
+wants to run it somewhere else, you will provide a copy of the full Docker image. And whoever will
 run it will feel like you did on yours.
 
-`Go` for example, does not care about portability. They can rely on Docker.
+`Go` for example, does not care about portability. It can rely on Docker.
 
 ---
 Oliv fecit, A.D. 2018.
