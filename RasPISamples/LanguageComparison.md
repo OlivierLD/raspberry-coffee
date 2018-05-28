@@ -1,10 +1,11 @@
 ## Comparing several programming languages
 
 ### The problem to solve
-We want to solve a system of `n` equations, with `n` unknowns. The dimension `n` is dynamic, i.e. _not_ hard-coded,
-provided at runtime.
 
-This is the kind of problems that do reveal a lot of the features of a language.
+> We want to solve a system of `n` equations, with `n` unknowns. The dimension `n` is dynamic, i.e. _not_ hard-coded,
+> provided at runtime.
+
+This is - in my opinion - the kind of problems that do reveal a lot of the features of a language.
 This problem implies recursive algorithms.
 Object oriented languages are not a requirement.
 Functionnal programming is not a requirement.
