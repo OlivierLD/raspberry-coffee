@@ -156,7 +156,7 @@ or just
 
 ### Some history, to predict the future
 In the scope we are considering here, the first to emerge was `C`. It is the `native` language of Unix,
-the Unix system is 100% written in C. The sources of Unix were (are) available on the system, this was early open source.
+the Unix operating system is 100% written in C. The sources of Unix were (are) available on the system, this was early open source.
 
 It later gave birth to Linux.
 
@@ -170,14 +170,14 @@ This was implemented using `#define` and `#ifdef` statements in the code, pre-pr
  #define VAX_VMS
 
  #ifdef VAX_VMS
-   [do this for the VAX]
+   // [do this for the VAX]
  #endif
  #ifdef WINDOWS
-   [do that for Windows]
+   // [do that for Windows]
  #endif
-   ... etc
+   // ... etc
 ```
-All the `#define` statements very often make the code difficult to read.
+All the `#define` statements very often make the code difficult to read and maintain.
 ###### Memory management
 `C` is extensively using pointers. You have to allocate memory to a pointer in order to use it, and free
 it afterwards, for the memory to be released, in order to be re-used.
