@@ -206,7 +206,7 @@ This was implemented using `#define` and `#ifdef` statements in the code, pre-pr
  #endif
    // ... etc
 ```
-All the `#define` statements very often make the code difficult to read and maintain.
+All the `#define` statements (aka `compilation options`) very often make the code difficult to read and maintain.
 ###### Memory management
 `C` is extensively using pointers. You have to allocate memory to a pointer in order to use it, and free
 it afterwards, for the memory to be released, in order to be re-used.
