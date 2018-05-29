@@ -53,7 +53,7 @@ We will use the following programming languages:
     - Initially designed to run in a browser. Not typed (on purpose), and natively functional. Regained _a lot_ of popularity when Web 2.0 was released, used everywhere a browser runs, to program client-side applications (a **lot** of JavaScript frameworks are available).
     Interestingly, some server-side code can also be written using JavaScript, since the success of [`nodejs`](https://nodejs.org/).
     `NodeJS` is a JavaScript runtime built on `V8`, Chrome's JavsScript engine, open source.
-    This is what makes JavaScript one of the very few languages that can be used on the cient as well as on the server.
+    This is what makes JavaScript one of the very few languages that can be used on the client as well as on the server.
     Interpreted, does not require compilation.
 - [Python](#python)
     - Created by Guido van Rossum, in 1991.
@@ -216,10 +216,12 @@ Also, threads (concurrent programming) management in `C` is not a nightmare. It'
 This is what paved to way for Java.
 
 Java is using a syntax similar to C. It used a similar way to declare function and methods, uses curly braces `{}` to define code blocks, *but*:
+- There is no `#define` statement
 - It does not require the programmer to deal with pointers
 - It runs on a Java Virtual Machine. As a result, a `class` compiled somewhere will run
 _without any modification_ on any other system where a JVM is available. The portability is taken care of by the
 implementation of the virtual machine.
+- Java does not need linkage (link libraries),  the `classpath` takes care of it.
 
 This eliminates a lot of the issues inherent to `C`.
 
