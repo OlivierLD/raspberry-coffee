@@ -319,7 +319,7 @@ This is where other JVM-compatible languages emerged.
 
 ```
 
-Scala for example, "only" had to create a compiler that turns Scla code into a `class` (containing `byte code`) - just like the `javac` compiler does for Java code.
+Scala for example, "only" had to create a compiler that turns Scala code into a `class` (containing `byte code`) - just like the `javac` compiler does for Java code.
 Then the class is run by the JVM, that does not even need to know what language this class was
 originally written in.
 
@@ -354,6 +354,54 @@ With computer languages, you talk, it works or fails (for now).
 But still, they _are_ languages.
 They have rules, vocabulary, syntax, grammar, and even styles. In the team(s) I work in, I can tell by watching the code who wrote it.
 And I am not - by very far - the only one.
+
+#### Docker
+This project contains a module that build Docker images, including one for Go.
+
+See [here](../../../tree/master/docker).
+
+From the `docker` directory, just run
+```
+ $ ./image.builder.sh
+ +-------------- D O C K E R   I M A G E   B U I L D E R --------------+
+ | 1. Nav Server, Debian                                               |
+ | 2. Web Components, Debian                                           |
+ | 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |
+ | 4. Node PI, to run on a Raspberry PI                                |
+ | 5. Node PI, to run on Debian                                        |
+ | 6. GPS-mux, to run on a Raspberry PI (logger)                       |
+ | 7. Golang, basics                                                   |
+ | 8. Raspberry PI, MATE, with java, node, web comps, VNC              |
+ +---------------------------------------------------------------------+
+ | Q. Oops, nothing, thanks, let me out.                               |
+ +---------------------------------------------------------------------+
+ == You choose =>
+```
+and choose option `7`.
+
+Then you can connect to the Docker image:
+```
+ $ docker run -it oliv-go:latest /bin/bash
+ #####                                            ###
+#     #   ####   #         ##    #    #   ####    ###
+#        #    #  #        #  #   ##   #  #    #   ###
+#  ####  #    #  #       #    #  # #  #  #         #
+#     #  #    #  #       ######  #  # #  #  ###
+#     #  #    #  #       #    #  #   ##  #    #   ###
+ #####    ####   ######  #    #  #    #   ####    ###
+
+root@483d4af443bc:/go/src/app# ./app
+Resolving:
+(12 x A) + (13 x B) + (14 x C) = 234
+(1.345 x A) + (-654 x B) + (0.001 x C) = 98.87
+(23.09 x A) + (5.3 x B) + (-12.34 x C) = 9.876
+A = 6.48822194633027
+B = -0.13781660635627724
+C = 11.280925180476313
+root@483d4af443bc:/go/src/app#
+```
+
+
 
 ------------------------------
 _Oliv fecit, A.D. 2018._

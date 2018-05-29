@@ -22,7 +22,7 @@ WORKDIR /go/src/app
 
 RUN go get -d -v ./...
 RUN go install -v ./...
-#
+# run ./app after that go build
 RUN go build
 
 # ENV http_proxy ""
