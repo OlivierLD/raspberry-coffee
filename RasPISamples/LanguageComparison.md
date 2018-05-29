@@ -356,6 +356,8 @@ They have rules, vocabulary, syntax, grammar, and even styles. In the team(s) I 
 And I am not - by very far - the only one.
 
 #### Docker
+Installing Go on the Raspberry PI seems not to be straight forward... It would be worth giving Docker a try.
+
 This project contains a module that build Docker images, including one for Go.
 
 See [here](../../../tree/master/docker).
