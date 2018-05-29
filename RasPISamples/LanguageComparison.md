@@ -12,6 +12,16 @@ This is just an example: for a given problem, provide a solution. Solutions will
 > The dimension `n` is dynamic, i.e. _not_ hard-coded,
 > provided at runtime.
 
+For example, given the system:
+```
+ /
+ |   (12 * X)    + (13 * Y)   + (14 * Z)     = 234
+ +   (1.345 * X) + (-654 * Y) + (0.001 * Z)  = 98.87
+ |   (23.09 * X) + (5.3 * Y)  + (-12.34 * Z) = 9.876
+ \
+```
+The question is: _What are the values of X, Y, and Z?_
+
 This is - in my opinion - the kind of problems that do reveal a lot of the features of a language.
 This problem implies recursive algorithms, declaring functions, functions admitting arrays (of arrays...) of parameters, etc.
 In the context of this document:
