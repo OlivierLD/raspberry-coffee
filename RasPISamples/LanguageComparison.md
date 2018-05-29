@@ -76,10 +76,16 @@ We will use the following programming languages:
     - Runs on a JVM (see above). Much more flexible language than Java, _not_ strongly typed, compatible with Java (i.e you
     can litterally copy-paste Java code into a Groovy script), but also understands a nice closure-like syntax.
     Can be compiled, or not. Supports classes definition, can be run as a script.
+- [Go](#go) (aka Golang)
+    - Created in 2009 by Robert Griesemer, Rob Pike, and Ken Thompson, at Google.
+    - Designed to be the "Language of the Cloud". Interpreted (`go run`) or compiled (`go build`).
+    Looks somewhat like `C` (Ken Thompson was part of Bell Labs,
+    and worked with Dennis Ritchie and Brian Kernighan). _Uses pointers!_
+    Feels a bit like an OVNI here, but very fast and powerful.
+    The `go build` command can build a **native executable**.
+    Portability is to be provided by Containers (like Docker).
 
 TODO
-- Go
-    - Created in 2009 by Robert Griesemer, Rob Pike, and Ken Thompson, at Google.
 - Clojure
     - Created by Rich Hickey, in 2007.
 - and more...
@@ -181,6 +187,20 @@ To run it, after installing groovy on your machine:
 or just
 ```
  $ groovy system
+```
+
+#### Go
+Sources are in [`src/go/system.go`](./src/go).
+
+To run it - after you've installed Go on your machine:
+```
+ $ cd src/go
+ $ go run system.go
+```
+It can be built (compiled) into a native executable:
+```
+ $ go build system.go
+ $ ./system
 ```
 
 ### A bit of history, to predict the future
