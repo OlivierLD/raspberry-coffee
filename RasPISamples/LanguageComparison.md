@@ -186,6 +186,13 @@ To compile and run (the compilation is not done by Gradle, and may vary dependin
  $ ./system
 ```
 
+On the Raspberry PI, use:
+```
+ $ cd src/C
+ $ g++ -Wall -o system system.c
+ $ ./system
+```
+
 #### Groovy
 Sources are in [`scr/groovy/system.groovy`](./src/groovy).
 
