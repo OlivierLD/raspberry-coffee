@@ -379,7 +379,7 @@ From the `docker` directory, just run
 ```
 and choose option `7`.
 
-Then you can connect to the Docker image:
+Then you can connect to the Docker image and run the `./app` executable:
 ```
  $ docker run -it oliv-go:latest /bin/bash
  #####                                            ###
