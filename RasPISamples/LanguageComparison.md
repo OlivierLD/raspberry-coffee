@@ -22,6 +22,8 @@ and - hopefully - returning the same result.
 Comparing the length of the code, its readability, its complexity, its structure, and possibily its beauty
 can be an interesting journey.
 
+<div style="width: 100%; height: 200px; background-image: url('./img/8886.jpg'); overflow-y: scroll;"><div>
+
 We will use the following programming languages:
 - [Java](#java)
     - Uses a Virtual Machine (JVM). Object Oriented, Functional features since Java 8. Requires compilation (`javac`). Strongly typed.
