@@ -288,4 +288,4 @@ They have rules, vocabulary, syntax, grammar, and even styles. In the team(s) I 
 And I am not - by very far - the only one.
 
 ------------------------------
-Oliv fecit, A.D. 2018.
+_Oliv fecit, A.D. 2018._
