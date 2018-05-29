@@ -59,21 +59,21 @@ We will use the following programming languages:
     - Created by the JetBrains team (author of the IntelliJ IDE, the best), in 2011.
     - Somewhat similar to `Scala`, requires compilation (`kotlinc`).
 - [JavaScript](#javascript)
-    - Created in 1995, _in 10 days_ by Brendan Eich, engineer at Netscape.
-    - Initially designed to run in a browser. Not typed (on purpose), and natively functional. Regained _a lot_ of popularity when Web 2.0 was released, used everywhere a browser runs, to program client-side applications (a **lot** of JavaScript frameworks are available).
-    Interestingly, some server-side code can also be written using JavaScript, since the success of [`nodejs`](https://nodejs.org/).
+    - Created in 1995 by Brendan Eich, engineer at Netscape, _in 10 days_!!
+    - Initially designed to run in a browser. Loosely typed (on purpose), and natively functional. Regained _a lot_ of popularity when Web 2.0 was released, used everywhere a browser runs, to program client-side applications (a **lot** of JavaScript frameworks are available).
+    Interestingly, some server-side code can also be written using JavaScript, since the successful release of [`nodejs`](https://nodejs.org/).
     `NodeJS` is a JavaScript runtime built on `V8`, Chrome's JavsScript engine, open source.
     This is what makes JavaScript one of the very few languages that can be used on the client as well as on the server.
     Interpreted, does not require compilation.
 - [Python](#python)
     - Created by Guido van Rossum, in 1991.
     - Designed for educational purpose. Easy to use, even if its syntax and structure might not please eveyone.
-    No native Object Oriented (OO) features (some exist, but they may look weird to an OO adict).
+    No native Object Oriented (OO) features (some exist, but they may look weird to an OO addict).
     Does not require compilation. Very popular among data scientists, mostly due to its simlicity.
 - [C](#c)
     - Created by Dennis Ritchie, between 1969 and 1973, at Bell Labs.
     - Immensly adopted on the planet Earth. The oldest of all the others, and still alive and well.
-    `C` has no OO features (it avatar `C++` does have some). No Functional Programming features.
+    `C` has no OO features (its avatar `C++` does have some). No Functional Programming features.
     Requires explicit memory allocation and de-allocation (`alloc` and `free`), extensively uses _pointers_,
     which is what leads to vast majority of the bugs `C` developers have to deal with. Requires compilation (`gcc`, `cc`, etc, the compilator depends on the machine you are on).
     Running the same `C` program on different Operating Systems often - if not always - requires a re-compilation of the code.
@@ -189,7 +189,7 @@ To compile and run (the compilation is not done by Gradle, and may vary dependin
 #### Groovy
 Sources are in [`scr/groovy/system.groovy`](./src/groovy).
 
-To run it, after installing groovy on your machine:
+To run it, after installing Groovy on your machine:
 ```
  $ cd src/groovy
  $ groovy system.groovy
@@ -245,7 +245,7 @@ Also, threads (concurrent programming) management in `C` is not a nightmare. It'
 
 This is what paved to way for Java.
 
-Java is using a syntax similar to C. It used a similar way to declare function and methods, uses curly braces `{}` to define code blocks, *but*:
+Java is using a syntax similar to C. It uses a similar way to declare function and methods, uses curly braces `{}` to define code blocks, *but*:
 - There is no `#define` statement
 - It does not require the programmer to deal with pointers
 - It runs on a Java Virtual Machine. As a result, a `class` compiled somewhere will run
@@ -263,7 +263,61 @@ The Virtual Machine that runs your java code (compiled into `class`es) has 3 thr
 If you can generate a `class`, running it will come for free if you can find a JVM.
 This is where other JVM-compatible languages emerged.
 
-Scala for example, "only" had to create a compiler that turns Scla code into a `class` - just like the `javac` compiler does for Java code.
+> _Note_: The JVM actually understands some code known as `byte code`, produced by the compiler for the JVM.
+> To see what the `byte code` looks like, use the `javap` utility of the SDK:
+```
+ $ javap -cp build/libs/RasPISamples-1.0-all.jar -c raspisamples.matrix.SystemUtil
+   Compiled from "SystemUtil.java"
+   public class raspisamples.matrix.SystemUtil {
+     public raspisamples.matrix.SystemUtil();
+       Code:
+          0: aload_0
+          1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+          4: return
+
+     public static double[] solveSystem(double[], double[]);
+       Code:
+          0: new           #2                  // class raspisamples/matrix/SquareMatrix
+          3: dup
+          4: aload_1
+          5: arraylength
+          6: invokespecial #3                  // Method raspisamples/matrix/SquareMatrix."<init>":(I)V
+          9: astore_2
+         10: iconst_0
+         11: istore_3
+         12: iload_3
+         13: aload_1
+         14: arraylength
+         15: if_icmpge     56
+         18: iconst_0
+         19: istore        4
+         21: iload         4
+         23: aload_1
+         24: arraylength
+         25: if_icmpge     50
+         28: aload_2
+         29: iload_3
+         30: iload         4
+         32: aload_0
+         33: aload_1
+         34: arraylength
+...
+        621: anewarray     #12                 // class java/lang/Object
+        624: dup
+        625: iconst_0
+        626: aload         5
+        628: iconst_2
+        629: daload
+        630: invokestatic  #16                 // Method java/lang/Double.valueOf:(D)Ljava/lang/Double;
+        633: aastore
+        634: invokestatic  #19                 // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+        637: invokevirtual #23                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        640: return
+}
+
+```
+
+Scala for example, "only" had to create a compiler that turns Scla code into a `class` (containing `byte code`) - just like the `javac` compiler does for Java code.
 Then the class is run by the JVM, that does not even need to know what language this class was
 originally written in.
 
@@ -277,7 +331,7 @@ In other words, if your program runs on a given Docker image, you will _not_ giv
 wants to run it somewhere else, you will provide a copy of the full Docker image. And whoever will
 run it will feel like you did on yours. This is not portability anymore, this is virtualization.
 
-`Go` for example, does not care about portability. It can rely on Docker. Virtually.
+`Go` for example, does not care much about portability. It can rely on Docker. Virtually.
 
 ### So what?
 So yes, what's the point here?
@@ -288,8 +342,10 @@ Right. But here is the thing:
 - Any idiot can write a program a computer will understand. The real challenge is to write programs a _human_ can understand.
 
 And if I may add: a human might be the guy who fixes the bugs (they happens) in your code. Maintainability might be one of the reasons why all those languages exist.
+Code needs to be readable, and understandable by anyone, specially if the guy who wrote it in the first place does not
+work here any more.
 
-And they _are_ real languages. Human languages usually go two ways. You talk, someone talks back.
+Those languages _are real languages_. Human languages usually go two ways. You talk, someone talks back.
 
 With computer languages, you talk, it works or fails (for now).
 
