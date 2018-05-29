@@ -245,7 +245,7 @@ Also, threads (concurrent programming) management in `C` is not a nightmare. It'
 
 This is what paved to way for Java.
 
-Java is using a syntax similar to C. It uses a similar way to declare function and methods, uses curly braces `{}` to define code blocks, *but*:
+Java is using a syntax similar to C. It uses a similar way to declare functions and methods, uses curly braces `{}` to define code blocks, *but*:
 - There is no `#define` statement
 - It does not require the programmer to deal with pointers
 - It runs on a Java Virtual Machine. As a result, a `class` compiled somewhere will run
@@ -263,7 +263,9 @@ The Virtual Machine that runs your java code (compiled into `class`es) has 3 thr
 If you can generate a `class`, running it will come for free if you can find a JVM.
 This is where other JVM-compatible languages emerged.
 
-> _Note_: The JVM actually understands some code known as `byte code`, produced by the compiler for the JVM.
+> _Note_: The JVM actually understands some sort of code known as `byte code`, produced by the compiler for the JVM.
+> As you can tell, it looks nothing like Java (nor anything else).
+>
 > To see what the `byte code` looks like, use the `javap` utility of the SDK:
 ```
  $ javap -cp build/libs/RasPISamples-1.0-all.jar -c raspisamples.matrix.SystemUtil
