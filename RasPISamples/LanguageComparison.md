@@ -12,7 +12,7 @@ This is just an example: for a given problem, provide a solution. Solutions will
 > The dimension `n` is dynamic, i.e. _not_ hard-coded,
 > provided at runtime.
 
-For example, given the system:
+For example, `n` = 3, and given the system:
 ```
  /
  |   (12 * X)    + (13 * Y)   + (14 * Z)     = 234
