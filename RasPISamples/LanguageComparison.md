@@ -81,6 +81,8 @@ We will use the following programming languages:
     are two of the most important ideas that gave birth to Java (Java has no pointers, and once compiled runs everywhere there is a JVM. See above).
     - The book `The C Programming Language` by Brian Kernighan and Dennis Ritchie has been the
     bible of several generations of programmers.
+    > Whoever has ever tried to learn a new language has probably faced an example
+    > printing "`Hello World!`". It comes from this book ;)
 - [Groovy](#groovy)
     - Created by James Strachan, in 2004.
     - Runs on a JVM (see above). Much more flexible language than Java, _not_ strongly typed, compatible with Java (i.e you
