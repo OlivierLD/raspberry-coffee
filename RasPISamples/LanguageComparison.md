@@ -22,11 +22,7 @@ and - hopefully - returning the same result.
 Comparing the length of the code, its readability, its complexity, its structure, and possibily its beauty
 can be an interesting journey.
 
-<div style="width: 100%; height: 200px; background-image: url('./img/8886.jpg'); overflow-y: scroll;">
-
-## Matrix Resolution
-
-<div>
+## System Resolution
 
 We will use the following programming languages:
 - [Java](#java)
@@ -177,10 +173,10 @@ This was implemented using `#define` and `#ifdef` statements in the code, pre-pr
  #define VAX_VMS
 
  #ifdef VAX_VMS
-   // [do this for the VAX]
+   // do this for the VAX
  #endif
  #ifdef WINDOWS
-   // [do that for Windows]
+   // do that for Windows
  #endif
    // ... etc
 ```
