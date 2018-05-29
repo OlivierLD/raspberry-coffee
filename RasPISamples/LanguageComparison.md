@@ -87,7 +87,7 @@ Run
 
 #### A quick note
 The code presented here can certainly be optimized, tweaked, or made nicer, there is no question left about that.
-But it certainly gives a taste of what the different languages can feel like. If anyone has ideas to make the code look nicer, please do use the [`issues`](../issues)
+But it certainly gives a taste of what the different languages can feel like. If anyone has ideas to make the code look nicer, please do use the [`issues section`](../../../issues)
 available in `git`.
 
 #### Java
