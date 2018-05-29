@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <float.h>
 #include <string.h>
 
 #define TRUE 1
@@ -22,13 +21,6 @@ typedef struct ALLOCATED_PTRS {
 } AllocatedPtrs;
 
 #define walkList(a,b) for (b=a;b;b=b->next)
-
-double * minor(int, double *, int, int);
-double determinant(int, double *);
-double * comatrix(int, double *);
-double * transposed(int, double *);
-double * multiply(int, double *, double);
-double * invert(int, double *);
 
 AllocatedPtrs * ptrs = NULL;
 
@@ -79,7 +71,7 @@ void addPtrToList(void * ptr) {
 
 // System & Matrix utilities
 
-double * minor(int dim, double * matrix, int row, int col) {
+double * minorMat(int dim, double * matrix, int row, int col) {
 	double * small = (double *) malloc((dim - 1) * (dim - 1) * sizeof(double));
 	for (int c=0; c<dim; c++) {
 		if (c != col) {
@@ -101,7 +93,7 @@ double determinant(int dim, double * matrix) {
 	} else {
 		// C: column in major
 		for (int C=0; C<dim; C++) { // Walk thru first line
-			double minDet = determinant(dim - 1, minor(dim, matrix, 0, C));
+			double minDet = determinant(dim - 1, minorMat(dim, matrix, 0, C));
 			v += (matrix[C] * minDet * pow(-1, C + 1 + 1));
 		}
 	}
@@ -112,7 +104,7 @@ double * comatrix(int dim, double * matrix) {
 	double * comat = (double *) malloc(dim * dim * sizeof(double));
 	for (int r=0; r<dim; r++) {
 		for (int c=0; c<dim; c++) {
-			comat[(r * dim) + c] = determinant((dim - 1), minor(dim, matrix, r, c)) * pow(-1, (r + c + 2));
+			comat[(r * dim) + c] = determinant((dim - 1), minorMat(dim, matrix, r, c)) * pow(-1, (r + c + 2));
 		}
 	}
 	addPtrToList(comat);
