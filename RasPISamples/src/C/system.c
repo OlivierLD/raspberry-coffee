@@ -23,6 +23,13 @@ typedef struct ALLOCATED_PTRS {
 
 #define walkList(a,b) for (b=a;b;b=b->next)
 
+double * minor(int, double *, int, int);
+double determinant(int, double *);
+double * comatrix(int, double *);
+double * transposed(int, double *);
+double * multiply(int, double *, double);
+double * invert(int, double *);
+
 AllocatedPtrs * ptrs = NULL;
 
 // Alloc/Free utilities
