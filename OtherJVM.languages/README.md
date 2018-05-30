@@ -40,29 +40,29 @@ public class mainRPi extends groovy.lang.Script {
        5: ldc           #28                 // int 0
   ...
 ```
- 
+
 This does not look at all like Java, does it?
 
 From a Java file (with a `.java` extension) you get a `.class` file by using the `javac` compiler.
 
-But here is the trick: you can come up with your own language, and if you can write your own compiler that turns your 
-language-specific files into `.class` files supported by the JVM (a library like [ASM](http://asm.ow2.org/) can help you with that), 
-you can then take advantage of the features of the JVM, big ones of them being its portability and interoperability. No need to mention 
+But here is the trick: you can come up with your own language, and if you can write your own compiler that turns your
+language-specific files into `.class` files supported by the JVM (a library like [ASM](http://asm.ow2.org/) can help you with that),
+you can then take advantage of the features of the JVM, big ones of them being its portability and interoperability. No need to mention
 that it can use at runtime `jars` and other `class` files, whatever language they have originally been written in.
 
 > This is actually mostly what this project is all about. Most of the sibling projects are written in Java, and they contain the code that
- allows you to talk to a varity of boards and sensors. Assuming that this code is reachable form whatever runs on a JVM allows you to use your 
+ allows you to talk to a varity of boards and sensors. Assuming that this code is reachable form whatever runs on a JVM allows you to use your
  favorite language - and mindset - to talk to those boards and sensors. It's just about demonstrating the interoperability between those languages.
- 
 
-Now, not only a given `.class` can be executed across platforms, but also it can come from several different languages. 
 
-That is - in very short - what those JVM-aware languages are doing. 
-We have here snippets of Scala, Groovy, Kotlin and Clojure. The list is not closed, by far. Many other such JVM-aware languages exist, and will exist. 
- 
+Now, not only a given `.class` can be executed across platforms, but also it can come from several different languages.
+
+That is - in very short - what those JVM-aware languages are doing.
+We have here snippets of Scala, Groovy, Kotlin and Clojure. The list is not closed, by far. Many other such JVM-aware languages exist, and will exist.
+
 ### A quick note
 To know how to install those languages on the Raspberry PI (or wherever you want), use any search engine you like. It's out of the scope of this document ;)
- 
+
 ## First
 Before doing what is described below, run a build of the project:
  ```
@@ -73,26 +73,7 @@ Before doing what is described below, run a build of the project:
  :I2C.SPI:classes UP-TO-DATE
  :I2C.SPI:copyResources UP-TO-DATE
  :I2C.SPI:jar UP-TO-DATE
- :Serial.IO:compileJava UP-TO-DATE
- :Serial.IO:compileScala UP-TO-DATE
- :Serial.IO:processResources UP-TO-DATE
- :Serial.IO:classes UP-TO-DATE
- :Serial.IO:jar UP-TO-DATE
- :MindWave:compileJava UP-TO-DATE
- :MindWave:compileScala UP-TO-DATE
- :MindWave:processResources UP-TO-DATE
- :MindWave:classes UP-TO-DATE
- :MindWave:jar UP-TO-DATE
- :SevenSegDisplay:compileJava UP-TO-DATE
- :SevenSegDisplay:processResources UP-TO-DATE
- :SevenSegDisplay:classes UP-TO-DATE
- :SevenSegDisplay:copyResources UP-TO-DATE
- :SevenSegDisplay:jar UP-TO-DATE
- :OtherJVM.languages:compileKotlin UP-TO-DATE
- :OtherJVM.languages:compileJava UP-TO-DATE
- :OtherJVM.languages:compileGroovy UP-TO-DATE
- :OtherJVM.languages:compileScala UP-TO-DATE
- :OtherJVM.languages:processResources UP-TO-DATE
+ ... etc
  :OtherJVM.languages:classes UP-TO-DATE
  :OtherJVM.languages:jar UP-TO-DATE
  :OtherJVM.languages:assemble UP-TO-DATE
@@ -105,21 +86,21 @@ Before doing what is described below, run a build of the project:
  :OtherJVM.languages:test UP-TO-DATE
  :OtherJVM.languages:check UP-TO-DATE
  :OtherJVM.languages:build UP-TO-DATE
- 
+
  BUILD SUCCESSFUL
- 
+
  Total time: 32.911 secs
  $
  ```
- 
-## Scala 
+
+## Scala
 Several examples are provided, along with the way to run them, from a shell, or from Gradle:
 ```
 $ cd scripts/scala
 $ ./hello
 Compiling
 Now running
-Hello, Scalaspberry world! 
+Hello, Scalaspberry world!
 $
 $ ./run.scala.bme280
 Hello, Scala world! Reading sensors.
@@ -135,7 +116,7 @@ hello back at you!
 Unexpected String: buenos dias
 Whatever message : Watafok
 Got an un-managed class Bullshit : Bullshit(Moo!)
->> Result is: Miom Miom Miom Miom 
+>> Result is: Miom Miom Miom Miom
 
 BUILD SUCCESSFUL
 
@@ -243,7 +224,7 @@ groovy:000> \x
 
 ### Groovy Console
 Groovy comes with a graphical console (not exactly a REPL...) that can be launched _from a graphical desktop_ using
-the `groovyConsole` command. You type your commands in the top pane, and then you execute them by hitting the 
+the `groovyConsole` command. You type your commands in the top pane, and then you execute them by hitting the
 `Execute Groovy Script` button:
 ![Groovy console](./RPiDesktop.png)
 
@@ -284,7 +265,7 @@ sudo java -cp $CP KotlinSensorsKt
 Execute it:
 ```
 $ cd script/kotlin
-$ ./runSensor 
+$ ./runSensor
 Temp:23.418814 ºC, Press:1018.09607 hPa, Hum:64.762695 %
 ```
 
@@ -304,7 +285,7 @@ $ CP=../../../I2C.SPI/build/classes/main/
 $ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
 $ sudo `which kotlinc` -cp $CP -script sensors.kts
 Temp= 23.80598 ºC
-$ 
+$
 ```
 
 #### REPL
@@ -324,13 +305,15 @@ Type :help for help, :quit for quit
 >>> println("Temp= $temp \u00baC")
 Temp= 23.80598 ºC
 >>> :quit
-$ 
+$
 ```
 
 Cool, hey?
 
 ## Clojure
 Download and install Clojure as explained at [http://clojure.org/](http://clojure.org/).
+
+[This one](https://gist.github.com/technomancy/2395913) could help too.
 
 ### Example
 #### Read a BME280 from Clojure
@@ -351,7 +334,7 @@ Download and install Clojure as explained at [http://clojure.org/](http://clojur
 
 ```
  $ cd OtherJVM.languages
- 
+
  $ CLOJURE_HOME=~/clojure-1.8.0
  $ PI4J_HOME=/opt/pi4j
  $ CP=$CP:$PI4J_HOME/lib/pi4j-core.jar

@@ -97,10 +97,10 @@ We will use the following programming languages:
     The `go build` command can build a **native executable**.
     Portability is to be provided by Containers (like Docker).
 
-TODO
+<!-- TODO
 - Clojure
     - Created by Rich Hickey, in 2007.
-- and more...
+- and more... -->
 
 #### Output
 All versions of the program pretty much return the same output, like
