@@ -334,6 +334,8 @@ originally written in.
 
 There are many such languages, `Scala`, `Kotlin`, `Groovy`, `Clojure` being only a few of them.
 
+More technical details are available from the module [Other JVM languages](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/OtherJVM.languages), in this project.
+
 Then, a un-anticipated shift happened: the emergence of the Containers, like `Docker`.
 Docker is generating system images. It provides an environment - an operating system - onto
 which you can run the programs you need.
@@ -363,6 +365,14 @@ With computer languages, you talk, it works or fails (for now).
 But still, they _are_ languages.
 They have rules, vocabulary, syntax, grammar, and even styles. In the team(s) I work in, I can tell by watching the code who wrote it.
 And I am not - by very far - the only one.
+
+#### Portability ?
+Let's for get about Virtual Machines for a moment.
+Let's think about browsers...
+
+JavaScript is everything _but_ a standard..., and still it "somehow" runs in all browsers.
+
+
 
 #### Docker
 Installing Go on the Raspberry PI seems not to be straight forward... It would be worth giving Docker a try.
