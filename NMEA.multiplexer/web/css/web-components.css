@@ -330,6 +330,32 @@ jumbo-display .digital-font-green {
 	--value-font-size-factor: 1
 }
 
+/* Monochrome, white, red hand */
+.analogdisplay-monochrome-white-red {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: white;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(255, 255, 255, 0.5);
+	--label-fill-color: rgba(0, 0, 0, 0);
+	--with-display-shadow: false;
+	--shadow-color: rgba(0, 0, 0, 0.75);
+	--outline-color: white;
+	--major-tick-color: white;
+	--minor-tick-color: white;
+	--value-color: white;
+	--value-outline-color: white;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(255, 0, 0, 0.5);
+	--hand-outline-color: red;
+	--with-hand-shadow: false;
+	--knob-color: rgb(64, 64, 64);
+	--knob-outline-color: black;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
 /* Monochrome, yellow */
 .analogdisplay-monochrome-yellow {
 	--bg-color: rgba(0, 0, 0, 0);
