@@ -225,7 +225,7 @@ It can be built (compiled) into a native executable:
 
 Sources are in [`src/clojure`](./src/clojure).
 
-To run it, after [installing Clojure]()http://clojure.org on your machine:
+To run it, after [installing Clojure](http://clojure.org) on your machine:
 ```
  $ cd src/clojure
  $ CLOJURE_JAR=[where-you-put-it]clojure-tools-1.9.0.381.jar
