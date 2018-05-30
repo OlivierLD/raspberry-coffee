@@ -96,11 +96,9 @@ We will use the following programming languages:
     Feels a bit like an OVNI here, but very fast and powerful.
     The `go build` command can build a **native executable**.
     Portability is to be provided by Containers (like Docker).
-
-<!-- TODO
-- Clojure
+- [Clojure](#clojure)
     - Created by Rich Hickey, in 2007.
-- and more... -->
+    - Clojure is a JVM-compatible LISP-like language.
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -220,6 +218,18 @@ It can be built (compiled) into a native executable:
 ```
  $ go build system.go
  $ ./system
+```
+
+#### Clojure (WIP)
+Sources are in [`src/clojure`](./src/clojure).
+
+To run it, after [installing Clojure]()http://clojure.org on your machine:
+```
+ $ cd src/clojure
+ $ CLOJURE_JAR=[where-you-put-it]clojure-tools-1.9.0.381.jar
+ $ CP=.:$CLOJURE_JAR
+ $ java -cp .:$CP clojure.main --main systems.matrix
+
 ```
 
 ### A bit of history, to predict the future
