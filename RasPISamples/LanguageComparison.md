@@ -220,7 +220,9 @@ It can be built (compiled) into a native executable:
  $ ./system
 ```
 
-#### Clojure (WIP)
+#### Clojure
+> This is a Work In Progress
+
 Sources are in [`src/clojure`](./src/clojure).
 
 To run it, after [installing Clojure]()http://clojure.org on your machine:
