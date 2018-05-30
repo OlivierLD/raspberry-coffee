@@ -370,9 +370,17 @@ And I am not - by very far - the only one.
 Let's for get about Virtual Machines for a moment.
 Let's think about browsers...
 
-JavaScript is everything _but_ a standard..., and still it "somehow" runs in all browsers.
+The same JavaScript code is supposed to run the same in all browsers, right?
+It's like if the browser was playing the role of a Virtual Machine, taking care of rendering the same result,
+wherever you run the code from.
 
+Well, this would be in an ideal world... The specification of JavaScript is way more laxist than the JVM one,
+I am not even sure there was one before JavaScript was released for the first time.
+Several ones came after that: ECMA Script, ES5, ES6... And as if it was not enough, the implementation of CSS (Cascading Style Sheets)
+is following a similar pattern, it depends quite a bit of the browser you want to use, they all have their sensibility (IE, Edge, Chrome,
+Opera, Firefox, Safari, you name it) !
 
+This means that there is still a lot of room for inventions!
 
 #### Docker
 Installing Go on the Raspberry PI seems not to be straight forward... It would be worth giving Docker a try.
@@ -400,7 +408,10 @@ From the `docker` directory, just run
 ```
 and choose option `7`.
 
-Then you can connect to the Docker image and run the `./app` executable:
+This will build a Docker image with `Go` installed on it, and the `system.go` code will be copied in the `go/src/app` directory.
+And it runs fine on a Raspberry PI.
+
+Then you can connect to the Docker image and run the `./app` executable to start the system resolution:
 ```
  $ docker run -it oliv-go:latest /bin/bash
  #####                                            ###
@@ -422,7 +433,7 @@ C = 11.280925180476313
 root@483d4af443bc:/go/src/app#
 ```
 
-
+Cool hey?
 
 ------------------------------
 _Oliv fecit, A.D. 2018._
