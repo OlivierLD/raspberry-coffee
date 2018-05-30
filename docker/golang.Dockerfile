@@ -16,7 +16,7 @@ WORKDIR /go/src
 COPY ./go/app ./app
 #    |        |
 #    |        In the Docker image
-#    On the host
+#    On the host (this machine)
 #
 WORKDIR /go/src/app
 

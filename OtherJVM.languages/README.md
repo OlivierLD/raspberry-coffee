@@ -375,6 +375,8 @@ $
 ```
 Yeah!
 
+> May 2018: current release is `1.9`, jar file is named `clojure-tools-1.9.0.381.jar`.
+
 ### JSR223
 This JSR 223 specifies how to run scripts from Java.
 Those script can be written using JavaScript, Groovy.

@@ -62,7 +62,7 @@ We will use the following programming languages:
     - Created in 1995 by Brendan Eich, engineer at Netscape, _in 10 days_!!
     - Initially designed to run in a browser. Loosely typed (on purpose), and natively functional. Regained _a lot_ of popularity when Web 2.0 was released, used everywhere a browser runs, to program client-side applications (a **lot** of JavaScript frameworks are available).
     Interestingly, some server-side code can also be written using JavaScript, since the successful release of [`nodejs`](https://nodejs.org/).
-    `NodeJS` is a JavaScript runtime built on `V8`, Chrome's JavsScript engine, open source.
+    `NodeJS` is a JavaScript runtime built on `V8`, Chrome's JavaScript engine, open source.
     This is what makes JavaScript one of the very few languages that can be used on the client as well as on the server.
     Interpreted, does not require compilation.
 - [Python](#python)
@@ -367,7 +367,7 @@ They have rules, vocabulary, syntax, grammar, and even styles. In the team(s) I 
 And I am not - by very far - the only one.
 
 #### Portability ?
-Let's for get about Virtual Machines for a moment.
+Let's forget about Virtual Machines for a moment.
 Let's think about browsers...
 
 The same JavaScript code is supposed to run the same in all browsers, right?
