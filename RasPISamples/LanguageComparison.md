@@ -93,12 +93,14 @@ We will use the following programming languages:
     - Designed to be the "Language of the Cloud". Interpreted (`go run`) or compiled (`go build`).
     Looks somewhat like `C` (Ken Thompson was part of Bell Labs,
     and worked with Dennis Ritchie and Brian Kernighan). _Uses pointers!_
-    Feels a bit like an OVNI here, but very fast and powerful.
-    The `go build` command can build a **native executable**.
+    Feels a bit like an UFO here, but very fast and powerful.
+    The `go build` command can build a **native executable**, that does not need a Virtual Machine.
     Portability is to be provided by Containers (like Docker).
 - [Clojure](#clojure)
     - Created by Rich Hickey, in 2007.
-    - Clojure is a JVM-compatible LISP-like language.
+    - Clojure is a JVM-compatible LISP-like language. LISP is the ancestor of all Functional Programming languages.
+    If you do not know it yet, do give it a look. There is a good chance that you
+    will be at least surprised... If Go feels a bit like an UFO, that one is an alien!
 
 #### Output
 All versions of the program pretty much return the same output, like
