@@ -344,7 +344,7 @@ jumbo-display .digital-font-green {
 	--outline-color: white;
 	--major-tick-color: white;
 	--minor-tick-color: white;
-	--value-color: rgba(255, 255, 255, 0.75);
+	--value-color: rgba(255, 255, 255, 0.25);
 	--value-outline-color: white;
 	--value-nb-decimal: 1;
 	--hand-color: rgba(255, 0, 0, 0.5);
