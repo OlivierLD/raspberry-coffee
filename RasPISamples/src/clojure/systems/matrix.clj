@@ -1,5 +1,4 @@
-(ns systems.matrix
-  (:use clojure.core.matrix))
+(ns systems.matrix)
 
 ;clojure.core.matrix
 
@@ -37,14 +36,14 @@
   [mat]
   (
     (println "Calculationg determinant matrix dim" (count mat))
-    (let [res 0]
+    (let [res (int 0)]
       (let [dim (count mat)]
         (println "In the loop, looping on" dim "row(s)")
         (let [res (+ res dim)]
         (println "Res is now" res) )
-;        (for [row (range dim)]
-;          ((println "Row" row)
-;            (let [res (+ 1 res)])))
+        (for [row (range dim)]
+          ((println "Row" (int row))
+            (let [res (+ 1 res)])))
         ) res))
   )
 
@@ -54,15 +53,15 @@
 (defn -main
   "Matrix Utilities"
   [& args] ; prms
-  (try
+; (try
     ((println "More soon about matrixes")
       (println "Matrix dim:" (count matrix))
       (println "Transposed" (transpose matrix))
       (let [min (minor matrix 0 0)] ; minor calculated
         ;(println (list-length '(this is a list)) "should be 4")
-  ;     (println "Det:" (determinant matrix))
+        (println "Det:" (determinant matrix))
        ;(println "DetMin:" (determinant min))
         (println "Done")))
-    (catch Exception ex (println (str "Caught this: " (.toString ex)))) ; Fix that
-    (finally (println "Finally"))))
-; )
+;   (catch Exception ex (println (str "Caught this: " (.toString ex)))) ; Fix that
+;   (finally (println "Finally"))))
+  )

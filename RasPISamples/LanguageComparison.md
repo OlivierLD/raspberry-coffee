@@ -34,7 +34,7 @@ and - hopefully - returning the same result.
 Comparing the length of the code, its readability, its complexity, its structure, and possibily _its beauty_
 can be an interesting journey.
 
-This document certainly does not pretend to be exhausive. There are many languages available, I have used several of them,
+This document certainly does not pretend to be exhausive. There are [many languages](https://en.wikipedia.org/wiki/Category:Lists_of_programming_languages) available, I have used several of them,
 but we will not talk about all of those. BASIC, COBOL, FORTRAN, Pascal, etc, are not part of this picture.
 
 This does not mean that those languages are not interesting, this only means that this document is not an anthology of the Computer literacy.
@@ -230,7 +230,7 @@ Sources are in [`src/clojure`](./src/clojure).
 To run it, after [installing Clojure](http://clojure.org) on your machine:
 ```
  $ cd src/clojure
- $ CLOJURE_JAR=[where-you-put-it]clojure-tools-1.9.0.381.jar
+ $ CLOJURE_JAR=[whereever-you-put-it]/clojure-tools-1.9.0.381.jar
  $ CP=.:$CLOJURE_JAR
  $ java -cp .:$CP clojure.main --main systems.matrix
 
