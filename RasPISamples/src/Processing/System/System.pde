@@ -3,7 +3,7 @@
 import java.util.List;
 import java.util.ArrayList;
 
-int REQUITED_SMOOTHING_DEGREE = 2;
+int REQUITED_SMOOTHING_DEGREE = 4;
 
 static class Point {
   int x;

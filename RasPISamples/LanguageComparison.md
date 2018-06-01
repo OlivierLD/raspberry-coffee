@@ -106,6 +106,7 @@ We will use the following programming languages:
     - Amazing graphical capabilities (but not only), with a simple user interface, easy to access. I like it.<br/>
     _A personal note:_ Java code through Processing seems easier (to me) than Python.
     Ramping up from Processing to Java is a natural and smooth move. Ramping up from Python to anything else is not...
+    > _Note:_ Today (June 2018), Processing does not support (yet) Java 8 features (like lambdas, stream apis, etc).
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -242,11 +243,17 @@ To run it, after [installing Clojure](http://clojure.org) on your machine:
 ```
 
 #### Processing
-> This is a Work in Progress. We will provide a GUI similar to the HTML/JavaScript one (spray points, smooth and display).
-
 Sources are in [`src/Processing`](./src/Processing).
 
+It is an interactive curve resolution, using the `least squares` method.
+
+![Processing](./img/least.square.png)
+
+If needed, change the degree of the result polynom in the code.
+See the calculated coefficients in the console output.
+
 Find [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Processing) a bit more about Processing on the Raspberry PI.
+
 
 
 ### A bit of history, to predict the future
