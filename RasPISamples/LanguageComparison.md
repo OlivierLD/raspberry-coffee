@@ -247,7 +247,7 @@ Sources are in [`src/Processing`](./src/Processing).
 
 It is an interactive curve resolution, using the `least squares` method.
 
-![Processing](./img/least.square.png)
+<img src="./img/least.square.png" width="600" height="619" alt="Processing" style="text-align: center;">
 
 If needed, change the degree of the result polynom using the slider at the bottom of the screen.
 
