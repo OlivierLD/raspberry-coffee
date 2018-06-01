@@ -255,6 +255,9 @@ See the calculated coefficients in the console output.
 
 Find [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Processing) a bit more about Processing on the Raspberry PI.
 
+You can generate an executable from your Processing sketch.
+Open your sketch in Processing (here `System.pde`), then go to `File` > `Export Application`.
+Then chosse your OS, and click `Export`. Then you have an executable ready to go!
 
 
 ### A bit of history, to predict the future
