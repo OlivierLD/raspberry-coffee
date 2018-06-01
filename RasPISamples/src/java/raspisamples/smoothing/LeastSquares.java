@@ -114,16 +114,20 @@ public class LeastSquares {
 		double[] sumXArray = new double[(REQUIRED_SMOOTHING_DEGREE * 2) + 1]; // Will fill the matrix
 		double[] sumY      = new double[REQUIRED_SMOOTHING_DEGREE + 1];
 		// Init
-		for (int i=0; i<((REQUIRED_SMOOTHING_DEGREE * 2) + 1); i++)
+		for (int i=0; i<((REQUIRED_SMOOTHING_DEGREE * 2) + 1); i++) {
 			sumXArray[i] = 0.0;
-		for (int i=0; i<(REQUIRED_SMOOTHING_DEGREE + 1); i++)
+		}
+		for (int i=0; i<(REQUIRED_SMOOTHING_DEGREE + 1); i++) {
 			sumY[i] = 0.0;
+		}
 
 		data.stream().forEach(tuple -> {
-			for (int i=0; i<((REQUIRED_SMOOTHING_DEGREE * 2) + 1); i++)
+			for (int i=0; i<((REQUIRED_SMOOTHING_DEGREE * 2) + 1); i++) {
 				sumXArray[i] += Math.pow(tuple.x, i);
-			for (int i=0; i<(REQUIRED_SMOOTHING_DEGREE + 1); i++)
+			}
+			for (int i=0; i<(REQUIRED_SMOOTHING_DEGREE + 1); i++) {
 				sumY[i] += (tuple.y * Math.pow(tuple.x, i));
+			}
 		});
 
 		SquareMatrix squareMatrix = new SquareMatrix(dimension);
