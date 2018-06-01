@@ -257,7 +257,7 @@ Find [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Proc
 
 You can generate an executable from your Processing sketch.
 Open your sketch in Processing (here `System.pde`), then go to `File` > `Export Application`.
-Then chosse your OS, and click `Export`. Then you have an executable ready to go!
+Then choose your OS, and click `Export`. Then you have an executable ready to go!
 
 
 ### A bit of history, to predict the future
