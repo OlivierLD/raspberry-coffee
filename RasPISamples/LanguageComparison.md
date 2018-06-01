@@ -249,9 +249,7 @@ It is an interactive curve resolution, using the `least squares` method.
 
 ![Processing](./img/least.square.png)
 
-If needed, change the degree of the result polynom in the code.
-
-![degree](./img/degree.png)
+If needed, change the degree of the result polynom using the slider at the bottom of the screen.
 
 See the calculated coefficients in the console output.
 

@@ -3,7 +3,7 @@
 import java.util.List;
 import java.util.ArrayList;
 
-int REQUITED_SMOOTHING_DEGREE = 4;
+int requiredSmoothingDegree = 3;
 
 static class Point {
   int x;
@@ -13,6 +13,8 @@ static class Point {
     this.y = y;
   }
 }
+
+HScrollBar hsbDegree;
 
 List<Point> points = new ArrayList<Point>();
 double [] coeffs = null;
@@ -48,16 +50,51 @@ final int buttonClearHeight = buttonFontSize + (2 * buttonTextPadding);
 boolean buttonResolveOver = false;
 boolean buttonClearOver = false;
 
+final int SLIDER_PADDING = 10;
+final int CURSOR_SIZE = 16;
+
 void setup() {
   
   size(640, 640);
-
+  hsbDegree = new HScrollBar(SLIDER_PADDING, height - 10, width - (2 * SLIDER_PADDING), CURSOR_SIZE, CURSOR_SIZE);
+  hsbDegree.setPos(degToSliderPos(requiredSmoothingDegree));
 }
+
+int sliderToDegValue() {
+  float degree = hsbDegree.getPos();
+  degree -= (SLIDER_PADDING);
+  int sliderWidth = width - (2 * SLIDER_PADDING);
+  degree /= sliderWidth;
+  // from 1 to 8
+  int intDeg = 1 + (int)Math.round(degree * 7);
+//println(String.format("From slider: %f", degree));
+  return intDeg;
+}
+
+float degToSliderPos(int d) {
+  int sliderWidth = width - (2 * SLIDER_PADDING);
+  float pos = ((float)(d - 1) / 7f) * (float)sliderWidth;
+//println(String.format("Deg: %d, SPos: %f", d, pos));
+  return pos;
+}
+
+int prevDegree = 0;
 
 void draw() {
   background(WHITE);
   fill(BLACK);
-  text("Drag the mouse to spray points, then click [Resolve]. Degree is " + String.valueOf(REQUITED_SMOOTHING_DEGREE), 10, height - 20); 
+  
+  requiredSmoothingDegree = sliderToDegValue();
+  text("Drag the mouse to spray points, then click [Resolve]. Degree is " + String.valueOf(requiredSmoothingDegree), 10, height - 50); 
+  text("Use the slider to change the degree of the curve to calculate", 10, height - 30); 
+  
+  hsbDegree.update();
+  hsbDegree.display();
+  
+  if (prevDegree != requiredSmoothingDegree && points.size() > 2) { // Then recalculate
+    smooth();
+  }
+  prevDegree = requiredSmoothingDegree;
   
   // Points
   if (points.size() > 0) {
@@ -146,7 +183,7 @@ void mousePressed() {
     println("Clear!");
     points = new ArrayList<Point>();
     coeffs = null;
-  } else { // More here... like dropping points on canvas
+  } else if (!hsbDegree.overEvent()) { // More here... like dropping points on canvas
     points.add(new Point(mouseX, mouseY));
     println(String.format("Now %d point(s) in the buffer", points.size()));
   }
@@ -171,21 +208,21 @@ static double func(double x, double[] coeff) {
  * See http://www.lediouris.net/original/sailing/PolarCO2/index.html
  */
 void smooth() {
-  int dimension = REQUITED_SMOOTHING_DEGREE + 1;
-  double[] sumXArray = new double[(REQUITED_SMOOTHING_DEGREE * 2) + 1]; // Will fill the matrix
-  double[] sumY      = new double[REQUITED_SMOOTHING_DEGREE + 1];
+  int dimension = requiredSmoothingDegree + 1;
+  double[] sumXArray = new double[(requiredSmoothingDegree * 2) + 1]; // Will fill the matrix
+  double[] sumY      = new double[requiredSmoothingDegree + 1];
   // Init
-  for (int i=0; i<((REQUITED_SMOOTHING_DEGREE * 2) + 1); i++) {
+  for (int i=0; i<((requiredSmoothingDegree * 2) + 1); i++) {
     sumXArray[i] = 0.0;
   }
-  for (int i=0; i<(REQUITED_SMOOTHING_DEGREE + 1); i++) {
+  for (int i=0; i<(requiredSmoothingDegree + 1); i++) {
     sumY[i] = 0.0;
   }
   for (Point pt : points) {
-    for (int i=0; i<((REQUITED_SMOOTHING_DEGREE * 2) + 1); i++) {
+    for (int i=0; i<((requiredSmoothingDegree * 2) + 1); i++) {
       sumXArray[i] += Math.pow(pt.x, i);
     }
-    for (int i=0; i<(REQUITED_SMOOTHING_DEGREE + 1); i++) {
+    for (int i=0; i<(requiredSmoothingDegree + 1); i++) {
       sumY[i] += (pt.y * Math.pow(pt.x, i));
     }
   }
@@ -193,7 +230,7 @@ void smooth() {
   SquareMatrix squareMatrix = new SquareMatrix(dimension);
   for (int row=0; row<dimension; row++) {
     for (int col=0; col<dimension; col++) {
-      int powerRnk = (REQUITED_SMOOTHING_DEGREE - row) + (REQUITED_SMOOTHING_DEGREE - col);
+      int powerRnk = (requiredSmoothingDegree - row) + (requiredSmoothingDegree - col);
       println("[" + row + "," + col + ":" + (powerRnk) + "] = " + sumXArray[powerRnk]);
       squareMatrix.setElementAt(row, col, sumXArray[powerRnk]);
     }
@@ -201,8 +238,8 @@ void smooth() {
   // System coeffs
   double[] constants = new double[dimension];
   for (int i=0; i<dimension; i++) {
-    constants[i] = sumY[REQUITED_SMOOTHING_DEGREE - i];
-    println("[" + (REQUITED_SMOOTHING_DEGREE - i) + "] = " + constants[i]);
+    constants[i] = sumY[requiredSmoothingDegree - i];
+    println("[" + (requiredSmoothingDegree - i) + "] = " + constants[i]);
   }
   // Resolution
   println("Resolving:");
@@ -216,5 +253,6 @@ void smooth() {
   }
   out += " ]";
   println(out);
+  println(String.format("From %d points", points.size()));
   coeffs = result; // For the drawing
 }
