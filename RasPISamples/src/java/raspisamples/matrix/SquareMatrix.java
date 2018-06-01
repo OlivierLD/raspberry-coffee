@@ -36,6 +36,10 @@ public final class SquareMatrix {
 		}
 	}
 
+	public static SquareMatrix builder(int dim) {
+		return new SquareMatrix(dim);
+	}
+
 	public int getDimension() {
 		return (this.dimension);
 	}
@@ -55,4 +59,4 @@ public final class SquareMatrix {
 	public void setmatrixElements(double[][] me) {
 		this.matrixElements = me;
 	}
-} 
+}

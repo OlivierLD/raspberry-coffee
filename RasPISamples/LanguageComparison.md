@@ -101,6 +101,11 @@ We will use the following programming languages:
     - Clojure is a JVM-compatible LISP-like language. LISP is the ancestor of all Functional Programming languages.
     If you do not know it yet, do give it a look. There is a good chance that you
     will be at least surprised... If Go feels a bit like an UFO, that one is an alien!
+- [Processing](#processing)
+    - Created by Ben Fry and Casey Reas, based on Java, in 2001. Beautiful. Available (for free) from the [Processing](https://processing.org/) site.
+    - Amazing graphical capabilities (but not only), with a simple user interface, easy to access. I like it.<br/>
+    _A personal note:_ Java code through Processing seems easier (to me) than Python.
+    Ramping up from Processing to Java is a natural and smooth move. Ramping up from Python to anything else is not...
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -235,6 +240,14 @@ To run it, after [installing Clojure](http://clojure.org) on your machine:
  $ java -cp .:$CP clojure.main --main systems.matrix
 
 ```
+
+#### Processing
+> This is a Work in Progress. We will provide a GUI similar to the HTML/JavaScript one (spray points, smooth and display).
+
+Sources are in [`src/Processing`](./src/Processing).
+
+Find [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Processing) a bit more about Processing on the Raspberry PI.
+
 
 ### A bit of history, to predict the future
 In the scope we are considering here, the first to emerge was `C`. It is the `native` language of Unix,
