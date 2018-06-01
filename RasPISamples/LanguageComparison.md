@@ -250,6 +250,9 @@ It is an interactive curve resolution, using the `least squares` method.
 ![Processing](./img/least.square.png)
 
 If needed, change the degree of the result polynom in the code.
+
+![degree](./img/degree.png)
+
 See the calculated coefficients in the console output.
 
 Find [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Processing) a bit more about Processing on the Raspberry PI.
