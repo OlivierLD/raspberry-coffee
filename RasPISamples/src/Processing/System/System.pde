@@ -1,4 +1,4 @@
-// System resolution, with a GUI
+// Interactive system resolution, with a GUI
 
 import java.util.List;
 import java.util.ArrayList;
@@ -54,7 +54,6 @@ final int SLIDER_PADDING = 10;
 final int CURSOR_SIZE = 16;
 
 void setup() {
-  
   size(640, 640);
   hsbDegree = new HScrollBar(SLIDER_PADDING, height - 10, width - (2 * SLIDER_PADDING), CURSOR_SIZE, CURSOR_SIZE);
   hsbDegree.setPos(degToSliderPos(requiredSmoothingDegree));
@@ -120,13 +119,14 @@ void draw() {
   update(mouseX, mouseY);
   
   // Resolve button
+  noStroke();
   fill(buttonResolveColor);
   buttonResolveWidth = (int)(textWidth(BUTTON_RESOLVE_LABEL) + (2 * buttonTextPadding));
   rect(buttonResolvePosX, buttonResolvePosY, buttonResolveWidth, buttonResolveHeight);
   textSize(buttonFontSize);
   fill(WHITE);
   text(BUTTON_RESOLVE_LABEL, buttonResolvePosX + buttonTextPadding, buttonResolvePosY + buttonFontSize + buttonTextPadding);
-  // Button Clear
+  // Clear Button
   fill(buttonClearColor);
   buttonClearWidth = (int)(textWidth(BUTTON_CLEAR_LABEL) + (2 * buttonTextPadding));
   buttonClearPosX = buttonResolvePosX + buttonResolveWidth + buttonMargin;
@@ -141,17 +141,8 @@ void dispose() {
 }
 
 void update(int x, int y) {
-  if ( overResolveButton(buttonResolvePosX, buttonResolvePosY, buttonResolveWidth, buttonResolveHeight) ) {
-    buttonResolveOver = true;
-  } else {
-    buttonResolveOver = false;
-  }
-
-  if ( overClearButton(buttonClearPosX, buttonClearPosY, buttonClearWidth, buttonClearHeight) ) {
-    buttonClearOver = true;
-  } else {
-    buttonClearOver = false;
-  }
+  buttonResolveOver = overResolveButton(buttonResolvePosX, buttonResolvePosY, buttonResolveWidth, buttonResolveHeight);
+  buttonClearOver   = overClearButton(buttonClearPosX, buttonClearPosY, buttonClearWidth, buttonClearHeight);
 }
 
 boolean overResolveButton(int x, int y, int width, int height)  {
@@ -177,8 +168,11 @@ boolean overClearButton(int x, int y, int width, int height)  {
 }
 void mousePressed() {
   if (buttonResolveOver) { // Resolution
- // solveSystem();
-    smooth();
+    if (points.size() >= 2) {
+      smooth();
+    } else {
+      println("Not enough points (yet)");
+    }
   } else if (buttonClearOver) { // Clear
     println("Clear!");
     points = new ArrayList<Point>();
@@ -194,6 +188,7 @@ void mouseDragged() {
   println(String.format("Now %d point(s) in the buffer", points.size()));
 }
 
+// Calculate the result of tyhe function
 static double func(double x, double[] coeff) {
   double d = 0;
   int len = coeff.length;
