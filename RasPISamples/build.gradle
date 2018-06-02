@@ -39,7 +39,7 @@ sourceSets {
       srcDir 'src/kotlin'
     }
     clojure {
-      srcDirs = ['src/clojure']
+      srcDir = 'src/clojure'
     }
   }
   test {
