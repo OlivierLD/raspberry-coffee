@@ -40,6 +40,12 @@ dependencies {
 
 shadowJar {
   zip64 true
+  manifest {
+    attributes(
+      'Main-Class': 'hanoitower.gui.HanoiSolver',
+      'version': project.version
+    )
+  }
 }
 
 task runSample(type: JavaExec, dependsOn: build, description: "Sample calculation, and output.") {
