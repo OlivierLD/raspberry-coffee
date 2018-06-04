@@ -27,10 +27,10 @@ public class KeyboardController {
 			};
 
 	/*
-	 * Seen from the TOP of the keypad, the 8 pins
-	 * https://www.adafruit.com/products/1824
+	 * Seen from the TOP of the keypad, the 8 pins (one is unused).
+	 * Designed fo the keypad at https://www.adafruit.com/products/1824
 	 *
-	 * Should also work for the https://www.adafruit.com/product/419 3x4 keypad. TODO Verify.
+	 * For the https://www.adafruit.com/product/419 3x4 keypad, see Fritzing diagram.
 	 *
 	 *     +-----+ +-----+ +-----+
 	 *     |  3  | |  2  | |  1  |   <- The keys you see
@@ -38,7 +38,7 @@ public class KeyboardController {
 	 *  |          T  O  P          |
 	 * -+--+--+--+--+--+--+--+--+---+-
 	 *     |  |  |  |  |  |  |  |
-	 *     x  25 24 23 18 22 17 4    <- Pin names on the cobbler (col IO in PinUtil)
+	 *     x  25 24 23 18 22 17 4    <- Pin names on the cobbler (col BCM in PinUtil)
 	 *        |  |  |  |  |  |  |
 	 *        |  |  |  |  |  |  Col [1,4,7,*]
 	 *        |  |  |  |  |  Col [2,5,8,0]

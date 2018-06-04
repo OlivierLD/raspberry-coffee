@@ -122,7 +122,7 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=false"
     ;;
   "resthttp") # With smooth moves, non-interactive
-    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=true"
+    JAVA_OPTS="$JAVA_OPTS -Dadc.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Ddisplay.digit=false"
     JAVA_OPTS="$JAVA_OPTS -Dorient.verbose=false"
     JAVA_OPTS="$JAVA_OPTS -Dastro.verbose=false"
@@ -138,8 +138,8 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dhttp.port=9999"
     JAVA_OPTS="$JAVA_OPTS -Dinteractive=false"
     #
-    JAVA_OPTS="$JAVA_OPTS -Dlog.battery.data=true"
-    JAVA_OPTS="$JAVA_OPTS -Dlog.photocell.data=true"
+    JAVA_OPTS="$JAVA_OPTS -Dlog.battery.data=false"   # Console output
+    JAVA_OPTS="$JAVA_OPTS -Dlog.photocell.data=false" # Console output
     ;;
   *)
     echo "======================="
