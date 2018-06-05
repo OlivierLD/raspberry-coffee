@@ -188,7 +188,7 @@ void mouseDragged() {
   println(String.format("Now %d point(s) in the buffer", points.size()));
 }
 
-// Calculate the result of tyhe function
+// Calculate the result of the function
 static double func(double x, double[] coeff) {
   double d = 0;
   int len = coeff.length;
