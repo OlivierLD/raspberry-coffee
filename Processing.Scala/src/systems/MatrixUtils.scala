@@ -188,6 +188,7 @@ object SystemUtils {
     }
   }
 
+  // An example, for tests
   def main(args: Array[String]) {
 
     var sqMat = new SquareMatrix(3, 1, 2, 3, 4, 5, 6, 7, 8, 9)

@@ -1,7 +1,6 @@
 package systems
 
 import processing.core._
-import java.util
 
 object LeastSquares extends PApplet {
 
@@ -10,7 +9,7 @@ object LeastSquares extends PApplet {
   def main(args: Array[String]) = {
 
     import processing.core.PApplet
-    val appletArgs = Array[String]("systems.LeastSquares")
+    val appletArgs = Array[String]("systems.LeastSquares") // Reflection ;) ?
     if (args != null) {
       PApplet.main(appletArgs ++ args)
     } else {
@@ -21,6 +20,8 @@ object LeastSquares extends PApplet {
 
 class LeastSquares extends PApplet {
 
+  var instance = this
+
   var requiredSmoothingDegree = 3
 
   class Point(var _x: Int, var _y: Int) {
@@ -30,7 +31,7 @@ class LeastSquares extends PApplet {
 
   var hsbDegree: HScrollBar = null
 
-  var points = new util.ArrayList[Point]
+  var points: List[Point] = List()
   var coeffs: Array[Double] = null
 
   val WHITE = 255
@@ -85,14 +86,12 @@ class LeastSquares extends PApplet {
     degree /= sliderWidth
     // from 1 to 8
     val intDeg = (1 + degree * 7.round.toInt).asInstanceOf[Int]
-    //println(String.format("From slider: %f", degree));
     intDeg
   }
 
   def degToSliderPos(d: Int): Float = {
     val sliderWidth = width - (2 * SLIDER_PADDING)
     val pos = ((d - 1).toFloat / 7f) * sliderWidth.toFloat
-    //println(String.format("Deg: %d, SPos: %f", d, pos));
     pos
   }
 
@@ -117,7 +116,7 @@ class LeastSquares extends PApplet {
     // Points
     if (points.size > 0) {
       stroke(BLUE)
-      points.forEach(pt => {
+      points.foreach(pt => {
         point(pt.x, pt.y)
       })
     }
@@ -155,9 +154,6 @@ class LeastSquares extends PApplet {
     text(BUTTON_CLEAR_LABEL, buttonClearPosX + buttonTextPadding, buttonClearPosY + buttonFontSize + buttonTextPadding)
   }
 
-  import systems.SquareMatrix
-  import java.util
-
   def update(x: Int, y: Int): Unit = {
     buttonResolveOver = overResolveButton(buttonResolvePosX, buttonResolvePosY, buttonResolveWidth, buttonResolveHeight)
     buttonClearOver = overClearButton(buttonClearPosX, buttonClearPosY, buttonClearWidth, buttonClearHeight)
@@ -166,8 +162,7 @@ class LeastSquares extends PApplet {
   def overResolveButton(x: Int, y: Int, width: Int, height: Int): Boolean = if (mouseX >= x && mouseX <= (x + width) && mouseY >= y && mouseY <= (y + height)) {
     buttonResolveColor = BUTTON_HIGHLIGHT
     true
-  }
-  else {
+  } else {
     buttonResolveColor = BUTTON_COLOR
     false
   }
@@ -175,8 +170,7 @@ class LeastSquares extends PApplet {
   def overClearButton(x: Int, y: Int, width: Int, height: Int): Boolean = if (mouseX >= x && mouseX <= (x + width) && mouseY >= y && mouseY <= (y + height)) {
     buttonClearColor = BUTTON_HIGHLIGHT
     true
-  }
-  else {
+  } else {
     buttonClearColor = BUTTON_COLOR
     false
   }
@@ -188,20 +182,20 @@ class LeastSquares extends PApplet {
       } else {
         println("Not enough points (yet)")
       }
-    }
-    else if (buttonClearOver) { // Clear
+    } else if (buttonClearOver) { // Clear
       println("Clear!")
-      points = new util.ArrayList[Point]
+      points = List()
       coeffs = null
-    }
-    else if (!hsbDegree.overEvent) { // More here... like dropping points on canvas
-      points.add(new Point(mouseX, mouseY))
+    } else if (!hsbDegree.overEvent) { // More here... like dropping points on canvas
+      // points = points :+ new Point(mouseX, mouseY) // equivalent to the below
+      points :+= new Point(mouseX, mouseY)
       println(s"Now ${points.size} point(s) in the buffer")
     }
   }
 
   override def mouseDragged(): Unit = {
-    points.add(new Point(mouseX, mouseY))
+    // points = points :+ new Point(mouseX, mouseY) // equivalent to the below
+    points :+= new Point(mouseX, mouseY)
     println(s"Now ${points.size} point(s) in the buffer")
   }
 
@@ -233,7 +227,7 @@ class LeastSquares extends PApplet {
       sumY(i) = 0.0
     }
 
-    points.forEach(pt => {
+    points.foreach(pt => {
       for (i:Int <- 0 until ((requiredSmoothingDegree * 2) + 1)) {
         sumXArray(i) += Math.pow(pt.x, i)
       }
@@ -269,4 +263,66 @@ class LeastSquares extends PApplet {
     println(s"From ${points.size} points")
     coeffs = result // For the drawing
   }
+
+  class HScrollBar(val xp: Double,
+                   val yp: Double,
+                   val sWidth: Int,
+                   val sHeight: Int, // width and height of bar
+                   val loose: Int)   // how loose/heavy
+  {
+    val widthToHeight: Int = sWidth - sHeight
+    var ratio = sWidth.toFloat / widthToHeight.toFloat
+    var xPos = xp
+    var yPos = yp - sHeight / 2
+    var sPos = xPos + sWidth / 2 - sHeight / 2
+    var newSPos = sPos
+    var sposMin = xPos
+    var sposMax = xPos + sWidth - sHeight
+
+    var over = false // is the mouse over the slider?
+
+    var locked = false
+
+    def update(): Unit = {
+      if (overEvent) {
+        over = true
+      } else {
+        over = false
+      }
+      if (instance.asInstanceOf[PApplet].mousePressed && over) {
+        locked = true
+      }
+      if (!instance.asInstanceOf[PApplet].mousePressed) {
+        locked = false
+      }
+      if (locked) {
+        newSPos = constrain(mouseX - sHeight / 2, sposMin.asInstanceOf[Float], sposMax.asInstanceOf[Float])
+      }
+      if (Math.abs(newSPos - sPos) > 1) {
+        sPos = sPos + (newSPos - sPos) / loose
+      }
+    }
+
+    def constrain(value: Float, minv: Float, maxv: Float): Float = Math.min(Math.max(value, minv), maxv)
+
+    def overEvent: Boolean = (mouseX > xPos && mouseX < xPos + sWidth && mouseY > yPos && mouseY < yPos + sHeight)
+
+    def display(): Unit = {
+      noStroke
+      fill(204, 128)
+      rect(xPos.asInstanceOf[Float], yPos.asInstanceOf[Float], sWidth, sHeight)
+      if (over || locked) fill(0, 0, 0)
+      else fill(102, 102, 102)
+      rect(sPos.asInstanceOf[Float], yPos.asInstanceOf[Float], sHeight, sHeight)
+    }
+
+    def getPos: Double = { // Convert spos to be values between 0 and the total width of the scrollbar
+      sPos * ratio
+    }
+
+    def setPos(pos: Double): Unit = {
+      newSPos = pos
+    }
+  }
+
 }
