@@ -2,8 +2,9 @@ FROM debian
 
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
-ENV http_proxy http://www-proxy.us.oracle.com:80
-ENV https_proxy http://www-proxy.us.oracle.com:80
+# Will set the proxy in the image. Might be needed to set it at the Docker level too (when building the image).
+# ENV http_proxy http://www-proxy.us.oracle.com:80
+# ENV https_proxy http://www-proxy.us.oracle.com:80
 
 ENV SCALA_VERSION 2.12.6
 ENV SCALA_TARBALL http://www.scala-lang.org/files/archive/scala-$SCALA_VERSION.deb
