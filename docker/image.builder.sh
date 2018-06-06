@@ -20,6 +20,7 @@ do
   echo -e "| 6. GPS-mux, to run on a Raspberry PI (logger)                       |"
   echo -e "| 7. Golang, basics                                                   |"
   echo -e "| 8. Raspberry PI, MATE, with java, node, web comps, VNC              |"
+  echo -e "| 9. Debian, Java, Scala, Spark                                       |"
   echo -e "+---------------------------------------------------------------------+"
   echo -e "| Q. Oops, nothing, thanks, let me out.                               |"
   echo -e "+---------------------------------------------------------------------+"
@@ -163,6 +164,16 @@ do
       MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
       MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
       MESSAGE="${MESSAGE}- then 'node server.js', and reach http://localhost:8080/oliv-components/index.html ...\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      ;;
+    "9")
+      OK=true
+      DOCKER_FILE=spark-debian.Dockerfile
+      IMAGE_NAME=oliv-spark
+      RUN_CMD="docker run -d $IMAGE_NAME:latest"
+      #
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Log in using: docker run -it --rm -e USER=root $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     *)
