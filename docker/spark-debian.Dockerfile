@@ -1,10 +1,18 @@
 FROM debian
 
+#
+# Java 8, Scala 2.12.6, and Spark 2.3.0, on Debian
+#
+
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
-# Will set the proxy in the image. Might be needed to set it at the Docker level too (when building the image).
+# Will set the proxy in the image.
+# Might be needed to set it at the Docker level too (when building the image), to pull the base image for example.
+#
 # ENV http_proxy http://www-proxy.us.oracle.com:80
 # ENV https_proxy http://www-proxy.us.oracle.com:80
+# ENV ftp_proxy http://etc...
+# ENV no_proxy "*.oracle.com,.home.net"
 
 ENV SCALA_VERSION 2.12.6
 ENV SCALA_TARBALL http://www.scala-lang.org/files/archive/scala-$SCALA_VERSION.deb
@@ -53,5 +61,13 @@ RUN echo "echo -------------------------" >> $HOME/.bashrc
 # RUN npm install
 # RUN npm install -g node-inspector
 
+#
+# If needed, to unset env vars
+#
+# ENV http_proxy ""
+# ENV https_proxy ""
+# ENV ftp_proxy ""
+# ENV no_proxy ""
+
 # EXPOSE 9876
-CMD ["echo", "Hi there!"]
+CMD ["echo", "Sparkling!"]

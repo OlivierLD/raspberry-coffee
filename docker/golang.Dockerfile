@@ -29,3 +29,6 @@ RUN go build
 # ENV https_proxy ""
 
 CMD ["app"]
+#
+# Result is in the logs -> docker logs <container ID>
+#
