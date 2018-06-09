@@ -101,7 +101,7 @@ We will use the following programming languages:
     - Clojure is a JVM-compatible LISP-like language. LISP is the ancestor of all Functional Programming languages.
     If you do not know it yet, do give it a look. There is a good chance that you
     will be at least surprised... If Go feels a bit like an UFO, that one is an alien!
-    Clojure is _obsesed_ with immutability. You just _cannot_ change the value of a variable. And yes, that can make sense.
+    Clojure is _obsesed_ with immutability. You just _cannot_ assign a new value to a variable. And yes, that can make sense.
 - [Processing](#processing)
     - Created by Ben Fry and Casey Reas, based on Java, in 2001. Beautiful. Available (for free) from the [Processing](https://processing.org/) site.
     - Amazing graphical capabilities (but not only), with a simple user interface, easy to access. I like it.<br/>
