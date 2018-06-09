@@ -103,7 +103,8 @@ We will use the following programming languages:
     will be at least surprised... If Go feels a bit like an UFO, that one is an alien!
     Clojure is _obsesed_ with immutability. You just _cannot_ assign a new value to a variable. And yes, that can make sense.
 - [Processing](#processing)
-    - Created by Ben Fry and Casey Reas, based on Java, in 2001. Beautiful. Available (for free) from the [Processing](https://processing.org/) site.
+    - Created by Ben Fry and Casey Reas, based on Java (not exactly _another_ language in that sense, but it *does* make things a lot simpler), in 2001. Beautiful. Available (for free) from the [Processing](https://processing.org/) site.
+    - It is what inspired the `Arduino` IDE - which uses a language that looks more than `C`.
     - Amazing graphical capabilities (but not only), with a simple user interface, easy to access. I like it.<br/>
     _A personal note:_ Java code through Processing seems easier (to me) than Python.
     Ramping up from Processing to Java is a natural and smooth move. Ramping up from Python to anything else is not...
