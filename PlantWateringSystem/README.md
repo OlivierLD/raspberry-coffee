@@ -6,6 +6,13 @@ We start from an Arduino sketch, that can read the STH10. The 10KOhms resistor i
 
 ![Arduino wiring](./Arduino.STH10_bb.png)
 
+This produces an out put like that:
+
+![Serial console](./serial.console.png)
+
+The idea here is to trigger the valve when the humidity goes below a given threshold.
+The valve opens a pipe connected to a tank of water.
+
 ---
 
 More soon.
