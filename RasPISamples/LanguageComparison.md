@@ -230,9 +230,9 @@ It can be built (compiled) into a native executable:
 ```
 
 #### Clojure
-> This is a Work In Progress
+> This is a Work In Progress, I'm learning (I should have picked up Chinese, that would have been simpler).
 
-Sources are in [`src/clojure`](./src/clojure).
+Sources are (will be) in [`src/clojure`](./src/clojure).
 
 To run it, after [installing Clojure](http://clojure.org) on your machine:
 ```
