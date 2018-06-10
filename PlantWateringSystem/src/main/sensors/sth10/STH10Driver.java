@@ -106,7 +106,10 @@ public class STH10Driver {
 			pin.low();
 		}
 		if (pin.equals(this.clock)) {
-			delay(0L, 1_000);
+			if (DEBUG) {
+				System.out.println("   >> Flipping CLK, delaying");
+			}
+			delay(0L, 10_000);
 		}
 	}
 
