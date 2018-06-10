@@ -94,7 +94,7 @@ public class STH10Driver {
 
 	private void startTx() {
 
-		gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
+		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		this.flipPin(this.data, PinState.HIGH);
