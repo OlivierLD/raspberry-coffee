@@ -158,13 +158,17 @@ public class STH10Driver {
 
 	private void sendByte(byte data) {
 		if (DEBUG) {
-			System.out.println(String.format(">> sendByte"));
+			System.out.println(String.format(">> sendByte %d [%s]", data, StringUtils.lpad(Integer.toBinaryString(data), 8,"0")));
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		for (int i=0; i<8; i++) {
-			if ((data & (1 << (7 -i))) == 0) {
+			int bit = data & (1 << (7 -i));
+			if (DEBUG) {
+				System.out.println(String.format("\t\tBit #%d, %d", i, bit));
+			}
+			if (bit == 0) {
 				this.flipPin(this.data, PinState.LOW);
 			} else {
 				this.flipPin(this.data, PinState.HIGH);
@@ -173,7 +177,7 @@ public class STH10Driver {
 			this.flipPin(this.clock, PinState.LOW);
 		}
 		if (DEBUG) {
-			System.out.println(String.format("<< sendByte"));
+			System.out.println(String.format("<< sendByte << "));
 		}
 	}
 
