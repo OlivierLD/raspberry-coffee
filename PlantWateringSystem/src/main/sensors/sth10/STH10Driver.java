@@ -180,7 +180,7 @@ public class STH10Driver {
 		for (int t=0; t<NB_TRIES; t++) {
 			delay(100L, 0);
 			state = gpio.getState((GpioPinDigital) this.data);
-			if (state == PinState.LOW) {
+			if (state.getValue() == PinState.LOW.getValue()) {
 				// Completed
 				break;
 			}
@@ -258,7 +258,7 @@ public class STH10Driver {
 		if (measurement) {
 			PinState state = gpio.getState((GpioPinDigital) this.data);
 			// SHT1x is taking measurement.
-			if (state == PinState.LOW) {
+			if (state.getValue() == PinState.LOW.getValue()) {
 				throw new RuntimeException("SHT1x is not in the proper measurement state. DATA line is LOW.");
 			}
 			this.waitForResult();
