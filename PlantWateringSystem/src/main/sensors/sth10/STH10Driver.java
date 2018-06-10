@@ -9,6 +9,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -145,7 +146,7 @@ public class STH10Driver {
 		gpio.high((GpioPinDigitalOutput)this.clock);
 		PinState state = gpio.getState((GpioPinDigital) this.data);
 		if (state == PinState.HIGH) {
-			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, %8s]", commandName, Integer.toBinaryString(COMMANDS.get(commandName)).replace(' ', '0')));
+			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
 		}
 		gpio.low((GpioPinDigitalOutput)this.clock);
 	}
@@ -230,7 +231,7 @@ public class STH10Driver {
 	}
 	private void sendCommandSHT(byte command, boolean measurement) {
 		if (!COMMANDS.containsValue(command)) {
-			throw new RuntimeException(String.format("Command %8s not found.", Integer.toBinaryString(command).replace(' ', '0')));
+			throw new RuntimeException(String.format("Command 0b%8s not found.", StringUtils.lpad(Integer.toBinaryString(command), 8, "0")));
 		}
 		String commandName = COMMANDS.keySet()
 				.stream()
