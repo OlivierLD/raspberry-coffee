@@ -166,7 +166,7 @@ public class STH10Driver {
 		for (int i=0; i<8; i++) {
 			int bit = data & (1 << (7 -i));
 			if (DEBUG) {
-				System.out.println(String.format("\t\tBit #%d, %d", i, bit));
+				System.out.println(String.format("\t\tBit #%d, %d", (i + 1), bit));
 			}
 			if (bit == 0) {
 				this.flipPin(this.data, PinState.LOW);
