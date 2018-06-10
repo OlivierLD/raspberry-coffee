@@ -166,14 +166,27 @@ public class STH10Driver {
 	}
 
 	private void getAck(String commandName) {
+		if (DEBUG) {
+			System.out.println(String.format(">> getAck, command %s", commandName));
+			System.out.println(String.format(">> %s INPUT %s OUTPUT", this.data.toString(), this.clock.toString()));
+		}
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
+		if (DEBUG) {
+			System.out.println(String.format(">> getAck, flipping %s to HIGH", this.clock.toString()));
+		}
 		this.flipPin(this.clock, PinState.HIGH);
 //	delay(100L, 0);
-		PinState state = gpio.getState((GpioPinDigital) this.data);
+		PinState state = gpio.getState(this.data);
+		if (DEBUG) {
+			System.out.println(String.format(">> getAck, getState %s = %s", this.data.toString(), state.toString()));
+		}
 		if (state == PinState.HIGH) {
 			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
+		}
+		if (DEBUG) {
+			System.out.println(String.format(">> getAck, flipping %s to LOW", this.clock.toString()));
 		}
 		this.flipPin(this.clock, PinState.LOW);
 	}
