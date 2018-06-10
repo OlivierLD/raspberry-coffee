@@ -47,9 +47,12 @@ Turing machine, using only 8 instructions. This being said, let's move on.
 We will use the following programming languages:
 - [Java](#java)
     - Created by James Gosling, at Sun, in 1995.
-    - Uses a Java Virtual Machine (JVM). 100% Object Oriented, Functional features since Java 8. Requires compilation (`javac`). Strongly typed.
+    - Uses a Java Virtual Machine (JVM). 100% Object Oriented, Functional features since Java 8 (to catch up with Scala, see below). Requires compilation (`javac`). Strongly typed.
     The implementation the JVM is the key to portability. Java motto used to be _write once, run everywhere_. And this is indeed true,
     this **does** work, from single-board computers like the Raspberry PI Zero to big clusters of main-frames. Yes.
+    - Java is not the first language to introduce the concept of Virtual Machine (at least ADA did it before, named afer... guess who?). But Java _specified_ it.
+    This specification also includes the Java Platform Debugging Architecture (JPDA), that is a blessing for developers. _You can debug - including remotely - the same way on all systems_.
+    No language - to my knowledge - ever did that before.
 - [Scala](#scala)
     - Created by Martin Odersky, École Polytechnique Fédérale de Lausanne, in 2003.
     - Uses the _same_ Virtual Machine as Java (and thus gets Java protability for free), Object Oriented _and_ Functional since day one. Extremely well designed, natively implements immutability and other key concepts.
@@ -72,7 +75,7 @@ We will use the following programming languages:
     Does not require compilation. Very popular among data scientists, mostly due to its simlicity.
 - [C](#c)
     - Created by Dennis Ritchie, between 1969 and 1973, at Bell Labs.
-    - Immensly adopted on the planet Earth. The oldest of all the others, and still alive and well.
+    - Immensly adopted on the planet Earth. The oldest of all the ones mentioned here, and still alive and well.
     `C` has no OO features (its avatar `C++` does have some). No Functional Programming features.
     Requires explicit memory allocation and de-allocation (`alloc` and `free`), extensively uses _pointers_,
     which is what leads to vast majority of the bugs `C` developers have to deal with. Requires compilation (`gcc`, `cc`, etc, the compilator depends on the machine you are on).
@@ -82,7 +85,7 @@ We will use the following programming languages:
     - The book `The C Programming Language` by Brian Kernighan and Dennis Ritchie has been the
     bible of several generations of programmers.
     > Whoever has ever tried to learn a new language has probably faced an example
-    > printing "`Hello World!`". It comes from this book ;)
+    > printing something like "`hello, world`" (or "`Hello something`"). It comes from this book; page 5 in mine. ;)
 - [Groovy](#groovy)
     - Created by James Strachan, in 2004.
     - Runs on a JVM (see above). Much more flexible language than Java, _not_ strongly typed, compatible with Java (i.e you

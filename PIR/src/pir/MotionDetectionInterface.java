@@ -1,6 +1,5 @@
 package pir;
 
-public interface MotionDetectionInterface
-{
-  public void motionDetected();
+public interface MotionDetectionInterface {
+	public void motionDetected();
 }

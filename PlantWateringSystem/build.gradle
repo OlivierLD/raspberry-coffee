@@ -7,12 +7,12 @@ version = '1.0'
 sourceSets {
   main {
     java {
-      srcDir 'src'
+      srcDir 'src/main'
     }
   }
   test {
     java {
-      srcDir 'tests'
+      srcDir 'src/tests'
     }
   }
 }
@@ -26,8 +26,4 @@ repositories {
 dependencies {
 //compile 'com.pi4j:pi4j-core:1.1'
   compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
-}
-
-build.doFirst {
-  println ">>> Make sure you've run the jni scripts. See the README.md"
 }
