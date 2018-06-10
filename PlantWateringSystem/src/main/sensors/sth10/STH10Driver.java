@@ -2,9 +2,8 @@ package sensors.sth10;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.GpioPinDigital;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinState;
@@ -41,8 +40,8 @@ public class STH10Driver {
 	private Pin dataPin;
 	private Pin clockPin;
 
-	private GpioPin data;
-	private GpioPin clock;
+	private GpioPinDigitalMultipurpose data;
+	private GpioPinDigitalMultipurpose clock;
 
 	private byte statusRegister = 0x0;
 
@@ -59,8 +58,9 @@ public class STH10Driver {
 	}
 
 	private void resetConnection() {
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.data);
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
+		this.data.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		this.flipPin(this.data, PinState.HIGH);
 		for (int i=0; i<10; i++) {
@@ -81,11 +81,11 @@ public class STH10Driver {
 		this.writeStatusRegister(COMMANDS.get(NO_OP_CMD));
 	}
 
-	private void flipPin(GpioPin pin, PinState state) {
+	private void flipPin(GpioPinDigitalMultipurpose pin, PinState state) {
 		if (state == PinState.HIGH) {
-			gpio.high((GpioPinDigitalOutput)pin);
+			pin.high();
 		} else {
-			gpio.low((GpioPinDigitalOutput)pin);
+			pin.low();
 		}
 		if (pin.equals(this.clock)) {
 			delay(0L, 1_000);
@@ -93,8 +93,9 @@ public class STH10Driver {
 	}
 
 	private void startTx() {
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.data);
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
+
+		gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
+		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.clock, PinState.HIGH);
@@ -109,8 +110,8 @@ public class STH10Driver {
 	}
 
 	private void endTx() {
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.data);
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
+		this.data.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.clock, PinState.HIGH);
@@ -119,8 +120,8 @@ public class STH10Driver {
 	}
 
 	private void sendByte(byte data) {
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.data);
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
+		this.data.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		for (int i=0; i<8; i++) {
 			if ((data & (1 << (7 -i))) == 0) {
@@ -136,8 +137,8 @@ public class STH10Driver {
 	private byte getByte() {
 		byte b = 0x0;
 
-		gpio.setMode(PinMode.DIGITAL_INPUT, this.data);
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
+		this.data.setMode(PinMode.DIGITAL_INPUT);
+		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		for (int i=0; i<8; i++) {
 			this.flipPin(this.clock, PinState.HIGH);
@@ -151,8 +152,8 @@ public class STH10Driver {
 	}
 
 	private void getAck(String commandName) {
-		gpio.setMode(PinMode.DIGITAL_INPUT, this.data);
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
+		this.data.setMode(PinMode.DIGITAL_INPUT);
+		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		this.flipPin(this.clock, PinState.HIGH);
 //	delay(100L, 0);
@@ -164,8 +165,8 @@ public class STH10Driver {
 	}
 
 	private void sendAck() {
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.data);
-		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
+		this.data.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.data, PinState.LOW);
@@ -175,7 +176,7 @@ public class STH10Driver {
 
 	private final static int NB_TRIES = 70; // 35;
 	public void waitForResult() {
-		gpio.setMode(PinMode.DIGITAL_INPUT, this.data);
+		this.data.setMode(PinMode.DIGITAL_INPUT);
 		PinState state = PinState.HIGH;
 		for (int t=0; t<NB_TRIES; t++) {
 			delay(100L, 0);
