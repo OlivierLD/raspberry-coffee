@@ -53,8 +53,8 @@ public class STH10Driver {
 		this.dataPin = _dataPin;
 		this.clockPin = _clockPin;
 
-		this.data = gpio.getProvisionedPin(this.dataPin);
-		this.clock = gpio.getProvisionedPin(this.clockPin);
+		this.data = gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
+		this.clock = gpio.provisionDigitalMultipurposePin(this.clockPin, PinMode.DIGITAL_OUTPUT);
 	}
 
 	private void resetConnection() {
