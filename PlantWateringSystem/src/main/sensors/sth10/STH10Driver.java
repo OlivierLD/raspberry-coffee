@@ -157,9 +157,9 @@ public class STH10Driver {
 		this.flipPin(this.clock, PinState.HIGH);
 //	delay(100L, 0);
 		PinState state = gpio.getState((GpioPinDigital) this.data);
-//		if (state == PinState.HIGH) {
-//			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
-//		}
+		if (state == PinState.HIGH) {
+			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
+		}
 		this.flipPin(this.clock, PinState.LOW);
 	}
 
@@ -173,10 +173,11 @@ public class STH10Driver {
 		this.flipPin(this.clock, PinState.LOW);
 	}
 
+	private final static int NB_TRIES = 70; // 35;
 	public void waitForResult() {
 		gpio.setMode(PinMode.DIGITAL_INPUT, this.data);
 		PinState state = PinState.HIGH;
-		for (int t=0; t<35; t++) {
+		for (int t=0; t<NB_TRIES; t++) {
 			delay(100L, 0);
 			state = gpio.getState((GpioPinDigital) this.data);
 			if (state == PinState.LOW) {
@@ -216,7 +217,7 @@ public class STH10Driver {
 		byte cmd = COMMANDS.get(HUMIDITY_CMD);
 		this.sendCommandSHT(cmd);
 		int value = readMeasurement();
-// TODO Some mgic goes here
+// TODO Some magic goes here
 		return value;
 	}
 	/**
