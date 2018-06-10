@@ -2,6 +2,7 @@ package sensors.sth10;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigital;
 import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
@@ -58,6 +59,10 @@ public class STH10Driver {
 		this.clock = gpio.provisionDigitalMultipurposePin(this.clockPin, PinMode.DIGITAL_OUTPUT);
 	}
 
+	private String pinDisplay(GpioPinDigital pin) {
+		return (String.format("%s [%s]", pin.toString(), pin.equals(this.data) ? "DATA" : (pin.equals(this.clock) ? "CLOCK" : "UNKNOWN")));
+	}
+
 	private void resetConnection() {
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
@@ -93,7 +98,7 @@ public class STH10Driver {
 
 	private void flipPin(GpioPinDigitalMultipurpose pin, PinState state) {
 		if (DEBUG) {
-			System.out.println(String.format(">> flipPin %s to %s", pin.toString(), state.toString()));
+			System.out.println(String.format(">> flipPin %s to %s", pinDisplay(pin), state.toString()));
 		}
 		if (state == PinState.HIGH) {
 			pin.high();
@@ -191,28 +196,28 @@ public class STH10Driver {
 	private void getAck(String commandName) {
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, command %s", commandName));
-			System.out.println(String.format(">> %s INPUT %s OUTPUT", this.data.toString(), this.clock.toString()));
+			System.out.println(String.format(">> %s INPUT %s OUTPUT", pinDisplay(this.data), pinDisplay(this.clock)));
 		}
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		if (DEBUG) {
-			System.out.println(String.format(">> getAck, flipping %s to HIGH", this.clock.toString()));
+			System.out.println(String.format(">> getAck, flipping %s to HIGH", pinDisplay(this.clock)));
 		}
 		this.flipPin(this.clock, PinState.HIGH);
 		if (DEBUG) {
-			System.out.println(String.format("\t>> getAck, >>> getState %s = %s", this.clock.toString(), this.clock.getState().toString()));
+			System.out.println(String.format("\t>> getAck, >>> getState %s = %s", pinDisplay(this.clock), this.clock.getState().toString()));
 		}
 //	delay(100L, 0);
 		PinState state = this.data.getState();
 		if (DEBUG) {
-			System.out.println(String.format(">> getAck, getState %s = %s", this.data.toString(), state.toString()));
+			System.out.println(String.format(">> getAck, getState %s = %s", pinDisplay(this.data), state.toString()));
 		}
 		if (state == PinState.HIGH) {
 			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
 		}
 		if (DEBUG) {
-			System.out.println(String.format(">> getAck, flipping %s to LOW", this.clock.toString()));
+			System.out.println(String.format(">> getAck, flipping %s to LOW", pinDisplay(this.clock)));
 		}
 		this.flipPin(this.clock, PinState.LOW);
 		if (DEBUG) {
