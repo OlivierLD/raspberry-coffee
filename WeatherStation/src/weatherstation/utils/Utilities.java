@@ -1,7 +1,5 @@
 package weatherstation.utils;
 
-import weatherstation.SDLWeather80422;
-
 import java.text.NumberFormat;
 
 public class Utilities {
@@ -110,6 +108,7 @@ public class Utilities {
 	}
 
 	/**
+	 * Compliant with http://www.dpcalc.org/
 	 *
 	 * @param hum in %
 	 * @param temp in Celcius
@@ -138,6 +137,10 @@ public class Utilities {
 		double temp = 18.2;
 		System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
 
+		hum = 30.0;
+		temp = 12.0;
+		System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
+
 		hum = 10.0;
 		temp = 25.0;
 		System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
@@ -145,6 +148,24 @@ public class Utilities {
 		hum = 90.0;
 		temp = 50.0;
 		System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
+
+		boolean go = true;
+		System.out.println("Enter [q] to quit, when prompted for temperature.");
+		while (go) {
+			String one = utils.StaticUtil.userInput(" Temp in Celcius > ");
+			if ("Q".equalsIgnoreCase(one)) {
+				go = false;
+			} else {
+				String two = utils.StaticUtil.userInput(" Rel. Hum in %   > ");
+				try {
+					temp = Double.parseDouble(one);
+					hum = Double.parseDouble(two);
+					System.out.println(String.format("Hum: %.2f%%, Temp: %.2f\u00b0C, Dew Point Temp: %.2f\u00b0C", hum, temp, dewPointTemperature(hum, temp)));
+				} catch (NumberFormatException nfe) {
+					System.err.println(nfe);
+				}
+			}
+		}
 
 		for (int i=0; i<10; i++) {
 			long time = currentTimeMicros();

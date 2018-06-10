@@ -12,7 +12,12 @@ This produces an out put like that:
 
 The idea here is to trigger the valve when the humidity goes below a given threshold.
 The valve opens a pipe connected to a tank of water.
+As the valve requires a 12 Volt power supply, it with be driven by relay.
+
+On the Raspberry PI, the code at https://github.com/drohm/pi-sht1x works fine with the following wiring:
+
+![Raspberry Wiring](./RaspberryPI.STH10_bb.png)
 
 ---
 
-More soon.
+More soon, Java code.
