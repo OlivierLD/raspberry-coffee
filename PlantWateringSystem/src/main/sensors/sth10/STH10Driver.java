@@ -166,13 +166,10 @@ public class STH10Driver {
 		for (int i=0; i<8; i++) {
 			int bit = data & (1 << (7 -i));
 			if (DEBUG) {
-				System.out.println(String.format("\t\tBit #%d, %d", (i + 1), bit));
+				System.out.println(String.format("\t\tBit #%d, %d, %s", (i + 1), bit, (bit == 0 ? "LOW" : "HIGH")));
 			}
-			if (bit == 0) {
-				this.flipPin(this.data, PinState.LOW);
-			} else {
-				this.flipPin(this.data, PinState.HIGH);
-			}
+			this.flipPin(this.data, (bit == 0 ? PinState.LOW : PinState.HIGH));
+
 			this.flipPin(this.clock, PinState.HIGH);
 			this.flipPin(this.clock, PinState.LOW);
 		}
