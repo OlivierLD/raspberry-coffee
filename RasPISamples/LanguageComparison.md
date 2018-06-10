@@ -82,10 +82,10 @@ We will use the following programming languages:
     Running the same `C` program on different Operating Systems often - if not always - requires a re-compilation of the code.
     The code is compiled natively - hence does not require a Virtual Machine. These two aspects (lack of portability, having to deal with pointers)
     are two of the most important ideas that gave birth to Java (Java has no pointers, and once compiled runs everywhere there is a JVM. See above).
-    - The book `The C Programming Language` by Brian Kernighan and Dennis Ritchie has been the
+    - The book `The C Programming Language` by Brian Kernighan and Dennis Ritchie has already been the
     bible of several generations of programmers.
     > Whoever has ever tried to learn a new language has probably faced an example
-    > printing something like "`hello, world`" (or "`Hello something`"). It comes from this book; page 5 in mine. ;)
+    > printing something like "`hello, world`" (or "`hello something`"). It comes from this book; page 5 in mine. ;)
 - [Groovy](#groovy)
     - Created by James Strachan, in 2004.
     - Runs on a JVM (see above). Much more flexible language than Java, _not_ strongly typed, compatible with Java (i.e you
