@@ -62,10 +62,10 @@ public class STH10Driver {
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.data);
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
 
-		gpio.high((GpioPinDigitalOutput)this.data);
+		this.flipPin(this.data, PinState.HIGH);
 		for (int i=0; i<10; i++) {
-			gpio.high((GpioPinDigitalOutput)this.clock);
-			gpio.low((GpioPinDigitalOutput)this.clock);
+			this.flipPin(this.clock, PinState.HIGH);
+			this.flipPin(this.clock, PinState.LOW);
 		}
 	}
 
@@ -81,30 +81,41 @@ public class STH10Driver {
 		this.writeStatusRegister(COMMANDS.get(NO_OP_CMD));
 	}
 
+	private void flipPin(GpioPin pin, PinState state) {
+		if (state == PinState.HIGH) {
+			gpio.high((GpioPinDigitalOutput)pin);
+		} else {
+			gpio.low((GpioPinDigitalOutput)pin);
+		}
+		if (pin.equals(this.clock)) {
+			try { Thread.sleep(0L, 1_000); } catch (Exception ex) { /* Absorb */ }
+		}
+	}
+
 	private void startTx() {
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.data);
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
 
-		gpio.high((GpioPinDigitalOutput)this.data);
-		gpio.high((GpioPinDigitalOutput)this.clock);
+		this.flipPin(this.data, PinState.HIGH);
+		this.flipPin(this.clock, PinState.HIGH);
 
-		gpio.low((GpioPinDigitalOutput)this.data);
-		gpio.low((GpioPinDigitalOutput)this.clock);
+		this.flipPin(this.data, PinState.LOW);
+		this.flipPin(this.clock, PinState.LOW);
 
-		gpio.high((GpioPinDigitalOutput)this.data);
-		gpio.high((GpioPinDigitalOutput)this.clock);
+		this.flipPin(this.data, PinState.HIGH);
+		this.flipPin(this.clock, PinState.HIGH);
 
-		gpio.low((GpioPinDigitalOutput)this.clock);
+		this.flipPin(this.clock, PinState.LOW);
 	}
 
 	private void endTx() {
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.data);
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
 
-		gpio.high((GpioPinDigitalOutput)this.data);
-		gpio.high((GpioPinDigitalOutput)this.clock);
+		this.flipPin(this.data, PinState.HIGH);
+		this.flipPin(this.clock, PinState.HIGH);
 
-		gpio.low((GpioPinDigitalOutput)this.clock);
+		this.flipPin(this.clock, PinState.LOW);
 	}
 
 	private void sendByte(byte data) {
@@ -113,12 +124,12 @@ public class STH10Driver {
 
 		for (int i=0; i<8; i++) {
 			if ((data & (1 << (7 -i))) == 0) {
-				gpio.low((GpioPinDigitalOutput)this.data);
+				this.flipPin(this.data, PinState.LOW);
 			} else {
-				gpio.high((GpioPinDigitalOutput)this.data);
+				this.flipPin(this.data, PinState.HIGH);
 			}
-			gpio.high((GpioPinDigitalOutput)this.clock);
-			gpio.low((GpioPinDigitalOutput)this.clock);
+			this.flipPin(this.clock, PinState.HIGH);
+			this.flipPin(this.clock, PinState.LOW);
 		}
 	}
 
@@ -129,12 +140,12 @@ public class STH10Driver {
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
 
 		for (int i=0; i<8; i++) {
-			gpio.high((GpioPinDigitalOutput)this.clock);
+			this.flipPin(this.clock, PinState.HIGH);
 			PinState state = gpio.getState((GpioPinDigital) this.data);
 			if (state == PinState.HIGH) {
 				b |= (1 << (7 - 1));
 			}
-			gpio.low((GpioPinDigitalOutput)this.clock);
+			this.flipPin(this.clock, PinState.LOW);
 		}
 		return b;
 	}
@@ -143,22 +154,22 @@ public class STH10Driver {
 		gpio.setMode(PinMode.DIGITAL_INPUT, this.data);
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
 
-		gpio.high((GpioPinDigitalOutput)this.clock);
+		this.flipPin(this.clock, PinState.HIGH);
 		PinState state = gpio.getState((GpioPinDigital) this.data);
 		if (state == PinState.HIGH) {
 			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
 		}
-		gpio.low((GpioPinDigitalOutput)this.clock);
+		this.flipPin(this.clock, PinState.LOW);
 	}
 
 	private void sendAck() {
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.data);
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
 
-		gpio.high((GpioPinDigitalOutput)this.data);
-		gpio.low((GpioPinDigitalOutput)this.data);
-		gpio.high((GpioPinDigitalOutput)this.clock);
-		gpio.low((GpioPinDigitalOutput)this.clock);
+		this.flipPin(this.data, PinState.HIGH);
+		this.flipPin(this.data, PinState.LOW);
+		this.flipPin(this.clock, PinState.HIGH);
+		this.flipPin(this.clock, PinState.LOW);
 	}
 
 	public void waitForResult() {
