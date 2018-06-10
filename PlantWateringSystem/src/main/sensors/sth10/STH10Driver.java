@@ -88,7 +88,7 @@ public class STH10Driver {
 			gpio.low((GpioPinDigitalOutput)pin);
 		}
 		if (pin.equals(this.clock)) {
-			try { Thread.sleep(0L, 1_000); } catch (Exception ex) { /* Absorb */ }
+			delay(0L, 1_000);
 		}
 	}
 
@@ -155,6 +155,7 @@ public class STH10Driver {
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
 
 		this.flipPin(this.clock, PinState.HIGH);
+		delay(100L, 0);
 		PinState state = gpio.getState((GpioPinDigital) this.data);
 		if (state == PinState.HIGH) {
 			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
@@ -176,7 +177,7 @@ public class STH10Driver {
 		gpio.setMode(PinMode.DIGITAL_INPUT, this.data);
 		PinState state = PinState.HIGH;
 		for (int t=0; t<35; t++) {
-			try { Thread.sleep(100L); } catch (InterruptedException ie) { /* Abosrb */ }
+			delay(100L, 0);
 			state = gpio.getState((GpioPinDigital) this.data);
 			if (state == PinState.LOW) {
 				// Completed
@@ -260,6 +261,14 @@ public class STH10Driver {
 				throw new RuntimeException("SHT1x is not in the proper measurement state. DATA line is LOW.");
 			}
 			this.waitForResult();
+		}
+	}
+
+	private void delay(long ms, int nano) {
+		try {
+			Thread.sleep(ms, nano);
+		} catch (InterruptedException ie) {
+			// Abosrb
 		}
 	}
 
