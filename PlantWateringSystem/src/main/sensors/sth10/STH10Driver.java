@@ -232,10 +232,9 @@ public class STH10Driver {
 		if (!COMMANDS.containsValue(command)) {
 			throw new RuntimeException(String.format("Command %8s not found.", Integer.toBinaryString(command).replace(' ', '0')));
 		}
-		String commandName = COMMANDS.entrySet()
+		String commandName = COMMANDS.keySet()
 				.stream()
 				.filter(entry -> command == COMMANDS.get(entry))
-				.map(entry -> entry.getKey())
 				.findFirst()
 				.get();
 		this.startTx();
