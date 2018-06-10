@@ -6,7 +6,7 @@ We start from an Arduino sketch, that can read the STH10. The 10KOhms resistor i
 
 ![Arduino wiring](./Arduino.STH10_bb.png)
 
-This produces an out put like that:
+This produces an output like that:
 
 ![Serial console](./serial.console.png)
 

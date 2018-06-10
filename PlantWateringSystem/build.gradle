@@ -1,5 +1,19 @@
+buildscript {
+    ext.shadowVersion='1.2.3'
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:$shadowVersion"
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 group = 'oliv.pi4j.samples'
 version = '1.0'
@@ -26,4 +40,9 @@ repositories {
 dependencies {
 //compile 'com.pi4j:pi4j-core:1.1'
   compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+  compile project(':common-utils')
+}
+
+shadowJar {
+    zip64 true
 }
