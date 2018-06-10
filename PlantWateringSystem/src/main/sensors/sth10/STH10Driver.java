@@ -15,6 +15,8 @@ import java.util.Map;
 
 public class STH10Driver {
 
+	private static boolean DEBUG = "true".equals(System.getProperty("sth.debug", "false"));
+
 	private final static String TEMPERATURE_CMD = "Temperature";
 	private final static String HUMIDITY_CMD = "Humidity";
 	private final static String READ_STATUS_REGISTER_CMD = "ReadStatusRegister";
@@ -70,9 +72,18 @@ public class STH10Driver {
 	}
 
 	private void writeStatusRegister(byte mask) {
+		if (DEBUG) {
+			System.out.println(String.format(">> writeStatusRegister, mask %d", mask));
+		}
 		byte cmd = COMMANDS.get(WRITE_STATUS_REGISTER_CMD);
+		if (DEBUG) {
+			System.out.println(String.format(">> writeStatusRegister, sendCommandSHT, cmd %d", cmd));
+		}
 		this.sendCommandSHT(cmd, false);
 		this.sendByte(mask);
+		if (DEBUG) {
+			System.out.println(String.format(">> writeStatusRegister, getAck, cmd %d", cmd));
+		}
 		this.getAck(WRITE_STATUS_REGISTER_CMD);
 		this.statusRegister = mask;
 	}
@@ -82,6 +93,9 @@ public class STH10Driver {
 	}
 
 	private void flipPin(GpioPinDigitalMultipurpose pin, PinState state) {
+		if (DEBUG) {
+			System.out.println(String.format(">> flipPin %s to %s", pin.toString(), state.toString()));
+		}
 		if (state == PinState.HIGH) {
 			pin.high();
 		} else {
@@ -192,10 +206,16 @@ public class STH10Driver {
 	}
 
 	public void init() {
+		if (DEBUG) {
+			System.out.println(">> Init");
+		}
 		this.resetConnection();
 		byte mask = 0x0;
 		// Other options go here
 
+		if (DEBUG) {
+			System.out.println(String.format(">> Init, writeStatusRegister, mask %d", mask));
+		}
 		this.writeStatusRegister(mask);
 	}
 

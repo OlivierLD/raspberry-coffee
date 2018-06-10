@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 CP=build/libs/PlantWateringSystem-1.0-all.jar
 #
-JAVA_OPTIONS=
+JAVA_OPTIONS="-Dsth.debug=true"
 if [ "$1" == "debug" ]
 then
   # For remote debugging:
