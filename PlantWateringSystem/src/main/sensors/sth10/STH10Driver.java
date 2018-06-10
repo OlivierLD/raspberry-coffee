@@ -2,7 +2,6 @@ package sensors.sth10;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigital;
 import com.pi4j.io.gpio.GpioPinDigitalMultipurpose;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
@@ -108,6 +107,9 @@ public class STH10Driver {
 
 	private void startTx() {
 
+		if (DEBUG) {
+			System.out.println(String.format(">> startTx"));
+		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
@@ -121,9 +123,15 @@ public class STH10Driver {
 		this.flipPin(this.clock, PinState.HIGH);
 
 		this.flipPin(this.clock, PinState.LOW);
+		if (DEBUG) {
+			System.out.println(String.format("<< startTx"));
+		}
 	}
 
 	private void endTx() {
+		if (DEBUG) {
+			System.out.println(String.format(">> endTx"));
+		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
@@ -131,9 +139,15 @@ public class STH10Driver {
 		this.flipPin(this.clock, PinState.HIGH);
 
 		this.flipPin(this.clock, PinState.LOW);
+		if (DEBUG) {
+			System.out.println(String.format("<< endTx"));
+		}
 	}
 
 	private void sendByte(byte data) {
+		if (DEBUG) {
+			System.out.println(String.format(">> sendByte"));
+		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
@@ -146,9 +160,15 @@ public class STH10Driver {
 			this.flipPin(this.clock, PinState.HIGH);
 			this.flipPin(this.clock, PinState.LOW);
 		}
+		if (DEBUG) {
+			System.out.println(String.format("<< sendByte"));
+		}
 	}
 
 	private byte getByte() {
+		if (DEBUG) {
+			System.out.println(String.format(">> getByte"));
+		}
 		byte b = 0x0;
 
 		this.data.setMode(PinMode.DIGITAL_INPUT);
@@ -161,6 +181,9 @@ public class STH10Driver {
 				b |= (1 << (7 - 1));
 			}
 			this.flipPin(this.clock, PinState.LOW);
+		}
+		if (DEBUG) {
+			System.out.println(String.format("<< getByte"));
 		}
 		return b;
 	}
@@ -192,6 +215,9 @@ public class STH10Driver {
 			System.out.println(String.format(">> getAck, flipping %s to LOW", this.clock.toString()));
 		}
 		this.flipPin(this.clock, PinState.LOW);
+		if (DEBUG) {
+			System.out.println(String.format("<< getAck"));
+		}
 	}
 
 	private void sendAck() {
@@ -204,7 +230,7 @@ public class STH10Driver {
 		this.flipPin(this.clock, PinState.LOW);
 	}
 
-	private final static int NB_TRIES = 70; // 35;
+	private final static int NB_TRIES = 35;
 	public void waitForResult() {
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		PinState state = PinState.HIGH;
@@ -216,7 +242,7 @@ public class STH10Driver {
 				break;
 			}
 		}
-		if (state == PinState.HIGH) {
+		if (state.getValue() == PinState.HIGH.getValue()) {
 			throw new RuntimeException("Sensor has not completed measurement within allocated time.");
 		}
 	}
@@ -233,6 +259,9 @@ public class STH10Driver {
 			System.out.println(String.format(">> Init, writeStatusRegister, mask %d", mask));
 		}
 		this.writeStatusRegister(mask);
+		if (DEBUG) {
+			System.out.println("<< Init");
+		}
 	}
 
 	public double readTemperature() {
@@ -280,6 +309,9 @@ public class STH10Driver {
 		sendCommandSHT(command, true);
 	}
 	private void sendCommandSHT(byte command, boolean measurement) {
+		if (DEBUG) {
+			System.out.println(String.format(">> sendCommandSHT %d", command));
+		}
 		if (!COMMANDS.containsValue(command)) {
 			throw new RuntimeException(String.format("Command 0b%8s not found.", StringUtils.lpad(Integer.toBinaryString(command), 8, "0")));
 		}
@@ -293,6 +325,9 @@ public class STH10Driver {
 		this.getAck(commandName);
 
 		if (measurement) {
+			if (DEBUG) {
+				System.out.println(String.format(">> sendCommandSHT with measurement, %d", command));
+			}
 			PinState state = this.data.getState();
 			// SHT1x is taking measurement.
 			if (state.getValue() == PinState.LOW.getValue()) {
@@ -300,13 +335,16 @@ public class STH10Driver {
 			}
 			this.waitForResult();
 		}
+		if (DEBUG) {
+			System.out.println("<< sendCommandSHT");
+		}
 	}
 
 	private void delay(long ms, int nano) {
 		try {
 			Thread.sleep(ms, nano);
 		} catch (InterruptedException ie) {
-			// Abosrb
+			// Absorb
 		}
 	}
 
