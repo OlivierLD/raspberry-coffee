@@ -156,7 +156,7 @@ public class STH10Driver {
 
 		for (int i=0; i<8; i++) {
 			this.flipPin(this.clock, PinState.HIGH);
-			PinState state = gpio.getState((GpioPinDigital) this.data);
+			PinState state = this.data.getState();
 			if (state == PinState.HIGH) {
 				b |= (1 << (7 - 1));
 			}
@@ -178,10 +178,10 @@ public class STH10Driver {
 		}
 		this.flipPin(this.clock, PinState.HIGH);
 		if (DEBUG) {
-			System.out.println(String.format("\t>> getAck, >>> getState %s = %s", this.clock.toString(), gpio.getState(this.clock).toString()));
+			System.out.println(String.format("\t>> getAck, >>> getState %s = %s", this.clock.toString(), this.clock.getState().toString()));
 		}
 //	delay(100L, 0);
-		PinState state = gpio.getState(this.data);
+		PinState state = this.data.getState();
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, getState %s = %s", this.data.toString(), state.toString()));
 		}
@@ -210,7 +210,7 @@ public class STH10Driver {
 		PinState state = PinState.HIGH;
 		for (int t=0; t<NB_TRIES; t++) {
 			delay(100L, 0);
-			state = gpio.getState((GpioPinDigital) this.data);
+			state = this.data.getState();
 			if (state.getValue() == PinState.LOW.getValue()) {
 				// Completed
 				break;
@@ -289,11 +289,11 @@ public class STH10Driver {
 				.findFirst()
 				.get();
 		this.startTx();
-		this.sendByte((byte) command);
+		this.sendByte(command);
 		this.getAck(commandName);
 
 		if (measurement) {
-			PinState state = gpio.getState((GpioPinDigital) this.data);
+			PinState state = this.data.getState();
 			// SHT1x is taking measurement.
 			if (state.getValue() == PinState.LOW.getValue()) {
 				throw new RuntimeException("SHT1x is not in the proper measurement state. DATA line is LOW.");
