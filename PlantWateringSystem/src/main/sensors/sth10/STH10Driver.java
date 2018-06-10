@@ -98,7 +98,7 @@ public class STH10Driver {
 
 	private void flipPin(GpioPinDigitalMultipurpose pin, PinState state) {
 		if (DEBUG) {
-			System.out.println(String.format(">> flipPin %s to %s", pinDisplay(pin), state.toString()));
+			System.out.print(String.format(">> flipPin %s to %s", pinDisplay(pin), state.toString()));
 		}
 		if (state == PinState.HIGH) {
 			pin.high();
@@ -109,7 +109,11 @@ public class STH10Driver {
 			if (DEBUG) {
 				System.out.println("   >> Flipping CLK, delaying");
 			}
-			delay(0L, 10_000);
+			delay(0L, 100_000);
+		} else {
+			if (DEBUG) {
+				System.out.println();
+			}
 		}
 	}
 
