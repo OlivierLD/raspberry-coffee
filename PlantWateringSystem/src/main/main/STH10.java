@@ -4,6 +4,7 @@ import sensors.sth10.STH10Driver;
 
 public class STH10 {
 	public static void main(String... args) {
+
 		STH10Driver probe = new STH10Driver();
 		probe.init();
 
