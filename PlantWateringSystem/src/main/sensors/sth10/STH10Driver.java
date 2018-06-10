@@ -155,11 +155,11 @@ public class STH10Driver {
 		gpio.setMode(PinMode.DIGITAL_OUTPUT, this.clock);
 
 		this.flipPin(this.clock, PinState.HIGH);
-		delay(100L, 0);
+//	delay(100L, 0);
 		PinState state = gpio.getState((GpioPinDigital) this.data);
-		if (state == PinState.HIGH) {
-			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
-		}
+//		if (state == PinState.HIGH) {
+//			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
+//		}
 		this.flipPin(this.clock, PinState.LOW);
 	}
 
