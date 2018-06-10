@@ -177,6 +177,9 @@ public class STH10Driver {
 			System.out.println(String.format(">> getAck, flipping %s to HIGH", this.clock.toString()));
 		}
 		this.flipPin(this.clock, PinState.HIGH);
+		if (DEBUG) {
+			System.out.println(String.format("\t>> getAck, >>> getState %s = %s", this.clock.toString(), gpio.getState(this.clock).toString()));
+		}
 //	delay(100L, 0);
 		PinState state = gpio.getState(this.data);
 		if (DEBUG) {
