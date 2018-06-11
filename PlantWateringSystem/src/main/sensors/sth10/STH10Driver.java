@@ -60,12 +60,11 @@ public class STH10Driver {
 	}
 
 	private String pinDisplay(GpioPinDigital pin) {
-		return (String.format("%s [%s]", pin.toString(), pin.equals(this.data) ? "DATA" : (pin.equals(this.clock) ? "CLOCK" : "UNKNOWN")));
+		return (String.format("%s [%s]", pin.toString(), pin.equals(this.data) ? "DATA" : (pin.equals(this.clock) ? "CLOCK" : "!UNKNOWN!")));
 	}
 
 	private void resetConnection() {
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		this.flipPin(this.data, PinState.HIGH);
@@ -73,6 +72,13 @@ public class STH10Driver {
 			this.flipPin(this.clock, PinState.HIGH);
 			this.flipPin(this.clock, PinState.LOW);
 		}
+	}
+
+	public void softReset() {
+		byte cmd = COMMANDS.get(SOFT_RESET_CMD);
+		this.sendCommandSHT(cmd, false);
+		delay(15L, 0);
+		this.statusRegister = 0x0;
 	}
 
 	private void writeStatusRegister(byte mask) {
@@ -248,11 +254,17 @@ public class STH10Driver {
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		PinState state = PinState.HIGH;
 		for (int t=0; t<NB_TRIES; t++) {
-			delay(100L, 0);
+			delay(10L, 0);
 			state = this.data.getState();
 			if (state.getValue() == PinState.LOW.getValue()) {
-				// Completed
+				if (DEBUG) {
+					System.out.println(String.format(">> waitForResult completed iteration %d", t));
+				}
 				break;
+			} else {
+				if (DEBUG) {
+					System.out.println(String.format(">> waitForResult still waiting - iteration %d", t));
+				}
 			}
 		}
 		if (state.getValue() == PinState.HIGH.getValue()) {
