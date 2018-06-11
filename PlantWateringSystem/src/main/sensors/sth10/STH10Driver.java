@@ -120,9 +120,12 @@ public class STH10Driver {
 		}
 		if (pin.equals(this.clock)) {
 			if (DEBUG) {
-				System.out.println("   >> Flipping CLK, delaying");
+				System.out.print("   >> Flipping CLK, delaying");
 			}
 			delay(0L, 100); // 0.1 * 1E6 sec.
+			if (DEBUG) {
+				System.out.println(String.format("\tpin is now %s", (pin.getState() == PinState.HIGH ? "HIGH" : "LOW")));
+			}
 		} else {
 			if (DEBUG) {
 				System.out.println();
@@ -234,13 +237,13 @@ public class STH10Driver {
 		if (DEBUG) {
 			System.out.println(String.format("\t>> getAck, >>> getState %s = %s", pinDisplay(this.clock), this.clock.getState().toString()));
 		}
-//	delay(100L, 0);
+		delay(100L, 0);
 		PinState state = this.data.getState();
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, getState %s = %s", pinDisplay(this.data), state.toString()));
 		}
 		if (state == PinState.HIGH) {
-			throw new RuntimeException(String.format("SHTx failed to properly receive command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
+			throw new RuntimeException(String.format("SHTx failed to properly receive ack after command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
 		}
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, flipping %s to LOW", pinDisplay(this.clock)));
