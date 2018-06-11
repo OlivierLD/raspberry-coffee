@@ -283,14 +283,14 @@ public class STH10Driver {
 
 	private void init() {
 		if (DEBUG) {
-			System.out.println(">> Init");
+			System.out.println(">> Init >>");
 		}
 		this.resetConnection();
 		byte mask = 0x0;
 		// Other options go here
 
 		if (DEBUG) {
-			System.out.println(String.format(">> Init, writeStatusRegister, mask %d >>", mask));
+			System.out.println(String.format(">> Init, writeStatusRegister, with mask %s >>", StringUtils.lpad(Integer.toBinaryString(mask), 8, "0")));
 		}
 		this.writeStatusRegister(mask);
 		if (DEBUG) {
