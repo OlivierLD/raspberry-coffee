@@ -164,7 +164,7 @@ public class STH10Driver {
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 		for (int i=0; i<8; i++) {
-			int bit = data & (1 << (7 -i));
+			int bit = data & (1 << (7 - i));
 			if (DEBUG) {
 				System.out.println(String.format("\t\tBit #%d, %d, %s", (i + 1), bit, (bit == 0 ? "LOW" : "HIGH")));
 			}

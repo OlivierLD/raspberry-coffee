@@ -3,11 +3,12 @@ This is not Java-related, but Java on the Raspberry PI can communicate with thos
 Several possibilities are available, among them:
 - Serial
 - I2C
+    - About I2C, see how to use those small boards as I<sup><small>2</small></sup>C slaves [here](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/I2C.SPI/src/i2c/comm/README.md).
 
 #### Arduino Uno, Arduino Mini, ESP8266 (Huzzah), Adafruit Trinket, Photon, etc
 
 ###### Universal Serial Bus (USB)
-Universal, but there are at least 3 versions: A, B, C:
+_Universal_, but there are at least 3 versions: A, B, C:
 
 ![USBs](./img/usbs.png)
 
