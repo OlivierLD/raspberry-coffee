@@ -68,7 +68,7 @@ public class STH10Driver {
 	private void resetConnection() {
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.low(); // ??
+//  this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		for (int i=0; i<10; i++) {
@@ -137,7 +137,7 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.low(); // ??
+//  this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.clock, PinState.HIGH);
@@ -160,7 +160,7 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.low(); // ??
+//  this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.clock, PinState.HIGH);
@@ -177,7 +177,7 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.low(); // ??
+//  this.clock.low(); // ??
 
 		for (int i=0; i<8; i++) {
 			int bit = data & (1 << (7 - i));
@@ -202,7 +202,7 @@ public class STH10Driver {
 
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.low(); // ??
+//  this.clock.low(); // ??
 
 		for (int i=0; i<8; i++) {
 			this.flipPin(this.clock, PinState.HIGH);
@@ -225,7 +225,7 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.low(); // ??
+//  this.clock.low(); // ??
 
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, flipping %s to HIGH", pinDisplay(this.clock)));
@@ -254,7 +254,7 @@ public class STH10Driver {
 	private void sendAck() {
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.low(); // ??
+//  this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.data, PinState.LOW);
