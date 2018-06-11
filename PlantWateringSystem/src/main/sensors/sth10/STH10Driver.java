@@ -123,13 +123,9 @@ public class STH10Driver {
 				System.out.print("   >> Flipping CLK, delaying");
 			}
 			delay(0L, 100); // 0.1 * 1E6 sec.
-			if (DEBUG) {
-				System.out.println(String.format("\tpin is now %s", (pin.getState() == PinState.HIGH ? "HIGH" : "LOW")));
-			}
-		} else {
-			if (DEBUG) {
-				System.out.println();
-			}
+		}
+		if (DEBUG) {
+			System.out.println(String.format("\tpin is now %s", (pin.getState() == PinState.HIGH ? "HIGH" : "LOW")));
 		}
 	}
 
