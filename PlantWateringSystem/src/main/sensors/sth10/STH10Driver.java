@@ -68,6 +68,7 @@ public class STH10Driver {
 	private void resetConnection() {
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		for (int i=0; i<10; i++) {
@@ -136,6 +137,7 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.clock, PinState.HIGH);
@@ -158,6 +160,7 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.clock, PinState.HIGH);
@@ -174,7 +177,6 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-
 		this.clock.low(); // ??
 
 		for (int i=0; i<8; i++) {
@@ -200,6 +202,7 @@ public class STH10Driver {
 
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.low(); // ??
 
 		for (int i=0; i<8; i++) {
 			this.flipPin(this.clock, PinState.HIGH);
@@ -251,6 +254,7 @@ public class STH10Driver {
 	private void sendAck() {
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.data, PinState.LOW);
