@@ -57,6 +57,8 @@ public class STH10Driver {
 
 		this.data = gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
 		this.clock = gpio.provisionDigitalMultipurposePin(this.clockPin, PinMode.DIGITAL_OUTPUT);
+		//
+		this.init();
 	}
 
 	private String pinDisplay(GpioPinDigital pin) {
@@ -83,19 +85,23 @@ public class STH10Driver {
 
 	private void writeStatusRegister(byte mask) {
 		if (DEBUG) {
-			System.out.println(String.format(">> writeStatusRegister, mask %d", mask));
+			System.out.println(String.format(">> writeStatusRegister, mask %d >>", mask));
 		}
 		byte cmd = COMMANDS.get(WRITE_STATUS_REGISTER_CMD);
 		if (DEBUG) {
 			System.out.println(String.format(">> writeStatusRegister, sendCommandSHT, cmd %d", cmd));
 		}
 		this.sendCommandSHT(cmd, false);
+		//
 		this.sendByte(mask);
 		if (DEBUG) {
 			System.out.println(String.format(">> writeStatusRegister, getAck, cmd %d", cmd));
 		}
 		this.getAck(WRITE_STATUS_REGISTER_CMD);
 		this.statusRegister = mask;
+		if (DEBUG) {
+			System.out.println(String.format("<< writeStatusRegister, mask %d <<", mask));
+		}
 	}
 
 	private void resetStatusRegister() {
@@ -115,7 +121,7 @@ public class STH10Driver {
 			if (DEBUG) {
 				System.out.println("   >> Flipping CLK, delaying");
 			}
-			delay(0L, 100_000);
+			delay(0L, 100); // 0.1 * 1E6 sec.
 		} else {
 			if (DEBUG) {
 				System.out.println();
@@ -126,7 +132,7 @@ public class STH10Driver {
 	private void startTx() {
 
 		if (DEBUG) {
-			System.out.println(String.format(">> startTx"));
+			System.out.println(String.format(">> startTx >>"));
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
@@ -142,13 +148,13 @@ public class STH10Driver {
 
 		this.flipPin(this.clock, PinState.LOW);
 		if (DEBUG) {
-			System.out.println(String.format("<< startTx"));
+			System.out.println(String.format("<< startTx <<"));
 		}
 	}
 
 	private void endTx() {
 		if (DEBUG) {
-			System.out.println(String.format(">> endTx"));
+			System.out.println(String.format(">> endTx >>"));
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
@@ -158,7 +164,7 @@ public class STH10Driver {
 
 		this.flipPin(this.clock, PinState.LOW);
 		if (DEBUG) {
-			System.out.println(String.format("<< endTx"));
+			System.out.println(String.format("<< endTx <<"));
 		}
 	}
 
@@ -168,6 +174,8 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+
+		this.clock.low(); // ??
 
 		for (int i=0; i<8; i++) {
 			int bit = data & (1 << (7 - i));
@@ -186,7 +194,7 @@ public class STH10Driver {
 
 	private byte getByte() {
 		if (DEBUG) {
-			System.out.println(String.format(">> getByte"));
+			System.out.println(String.format(">> getByte >>"));
 		}
 		byte b = 0x0;
 
@@ -202,18 +210,19 @@ public class STH10Driver {
 			this.flipPin(this.clock, PinState.LOW);
 		}
 		if (DEBUG) {
-			System.out.println(String.format("<< getByte"));
+			System.out.println(String.format("<< getByte <<"));
 		}
 		return b;
 	}
 
 	private void getAck(String commandName) {
 		if (DEBUG) {
-			System.out.println(String.format(">> getAck, command %s", commandName));
+			System.out.println(String.format(">> getAck, command %s >>", commandName));
 			System.out.println(String.format(">> %s INPUT %s OUTPUT", pinDisplay(this.data), pinDisplay(this.clock)));
 		}
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		this.clock.low(); // ??
 
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, flipping %s to HIGH", pinDisplay(this.clock)));
@@ -235,7 +244,7 @@ public class STH10Driver {
 		}
 		this.flipPin(this.clock, PinState.LOW);
 		if (DEBUG) {
-			System.out.println(String.format("<< getAck"));
+			System.out.println(String.format("<< getAck <<"));
 		}
 	}
 
@@ -272,7 +281,7 @@ public class STH10Driver {
 		}
 	}
 
-	public void init() {
+	private void init() {
 		if (DEBUG) {
 			System.out.println(">> Init");
 		}
@@ -281,11 +290,11 @@ public class STH10Driver {
 		// Other options go here
 
 		if (DEBUG) {
-			System.out.println(String.format(">> Init, writeStatusRegister, mask %d", mask));
+			System.out.println(String.format(">> Init, writeStatusRegister, mask %d >>", mask));
 		}
 		this.writeStatusRegister(mask);
 		if (DEBUG) {
-			System.out.println("<< Init");
+			System.out.println("<< Init <<");
 		}
 	}
 
@@ -335,7 +344,7 @@ public class STH10Driver {
 	}
 	private void sendCommandSHT(byte command, boolean measurement) {
 		if (DEBUG) {
-			System.out.println(String.format(">> sendCommandSHT %d", command));
+			System.out.println(String.format(">> sendCommandSHT %d >>", command));
 		}
 		if (!COMMANDS.containsValue(command)) {
 			throw new RuntimeException(String.format("Command 0b%8s not found.", StringUtils.lpad(Integer.toBinaryString(command), 8, "0")));
@@ -361,7 +370,7 @@ public class STH10Driver {
 			this.waitForResult();
 		}
 		if (DEBUG) {
-			System.out.println("<< sendCommandSHT");
+			System.out.println("<< sendCommandSHT <<");
 		}
 	}
 

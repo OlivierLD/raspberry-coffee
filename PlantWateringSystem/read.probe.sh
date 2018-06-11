@@ -4,7 +4,9 @@ CP=build/libs/PlantWateringSystem-1.0-all.jar
 echo "Usage is $0 [debug]"
 echo "   Use 'debug' to remote-debug from another machine."
 #
-JAVA_OPTIONS="-Dsth.debug=true"
+VERBOSE=true
+JAVA_OPTIONS="-Dsth.debug=$VERBOSE"
+#
 if [ "$1" == "debug" ]
 then
   # For remote debugging:
