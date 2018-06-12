@@ -8,6 +8,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinMode;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import utils.PinUtil;
 import utils.StringUtils;
 
 import java.util.HashMap;
@@ -62,7 +63,7 @@ public class STH10Driver {
 	}
 
 	private String pinDisplay(GpioPinDigital pin) {
-		return (String.format("%s [%s]", pin.toString(), pin.equals(this.data) ? "DATA" : (pin.equals(this.clock) ? "CLOCK" : "!UNKNOWN!")));
+		return (String.format("%d [%s]", PinUtil.findByPin((Pin)pin).gpio(), pin.equals(this.data) ? "DATA" : (pin.equals(this.clock) ? "CLOCK" : "!UNKNOWN!")));
 	}
 
 	private void resetConnection() {
