@@ -210,6 +210,9 @@ public class STH10Driver {
 			if (state == PinState.HIGH) {
 				b |= (1 << (7 - 1));
 			}
+			if (DEBUG) {
+				System.out.println(String.format("\tgetting byte %d, byte is %s", i, StringUtils.lpad(Integer.toBinaryString(b), 8,"0")));
+			}
 			this.flipPin(this.clock, PinState.LOW);
 		}
 		if (DEBUG) {
