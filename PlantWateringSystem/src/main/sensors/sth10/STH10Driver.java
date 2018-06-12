@@ -213,7 +213,7 @@ public class STH10Driver {
 			this.flipPin(this.clock, PinState.LOW);
 		}
 		if (DEBUG) {
-			System.out.println(String.format("<< getByte <<"));
+			System.out.println(String.format("<< getByte %d <<", b));
 		}
 		return b;
 	}
