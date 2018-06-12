@@ -145,8 +145,8 @@ public class STH10Driver {
 		this.flipPin(this.data, PinState.LOW);
 		this.flipPin(this.clock, PinState.LOW);
 
-		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.clock, PinState.HIGH);
+		this.flipPin(this.data, PinState.HIGH);
 
 		this.flipPin(this.clock, PinState.LOW);
 		if (DEBUG) {
