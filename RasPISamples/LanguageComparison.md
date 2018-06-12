@@ -406,7 +406,7 @@ Those languages _are real languages_. Human languages usually go two ways. You t
 With computer languages, you talk, it works or fails (for now).
 
 But still, they _are_ languages.
-They have rules, vocabulary, syntax, grammar, and even styles. In the team(s) I work in, I can tell by watching the code who wrote it.
+They have rules, vocabulary, syntax, grammar, and even styles. In the team(s) I work in, I can tell by reading the code who wrote it.
 And I am not - by very far - the only one.
 
 #### Portability ?

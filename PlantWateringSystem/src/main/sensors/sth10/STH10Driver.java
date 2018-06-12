@@ -122,7 +122,7 @@ public class STH10Driver {
 			if (DEBUG) {
 				System.out.print("   >> Flipping CLK, delaying");
 			}
-			delay(0L, 100); // 0.1 * 1E6 sec.
+			delay(0L, 100); // 0.1 * 1E-6 sec. 100 * 1E-9
 		}
 		if (DEBUG) {
 			System.out.println(String.format("\tpin is now %s", (pin.getState() == PinState.HIGH ? "HIGH" : "LOW")));
@@ -233,7 +233,7 @@ public class STH10Driver {
 		if (DEBUG) {
 			System.out.println(String.format("\t>> getAck, >>> getState %s = %s", pinDisplay(this.clock), this.clock.getState().toString()));
 		}
-		delay(100L, 0);
+//	delay(100L, 0);
 		PinState state = this.data.getState();
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, getState %s = %s", pinDisplay(this.data), state.toString()));
@@ -262,6 +262,7 @@ public class STH10Driver {
 	}
 
 	private final static int NB_TRIES = 35;
+
 	public void waitForResult() {
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		PinState state = PinState.HIGH;
@@ -290,7 +291,7 @@ public class STH10Driver {
 		}
 		this.resetConnection();
 		byte mask = 0x0;
-		// Other options go here
+		// Other options may go here
 
 		if (DEBUG) {
 			System.out.println(String.format(">> Init, writeStatusRegister, with mask %s >>", StringUtils.lpad(Integer.toBinaryString(mask), 8, "0")));
