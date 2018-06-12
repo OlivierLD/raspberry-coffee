@@ -208,7 +208,7 @@ public class STH10Driver {
 			this.flipPin(this.clock, PinState.HIGH);
 			PinState state = this.data.getState();
 			if (state == PinState.HIGH) {
-				b |= (1 << (7 - 1));
+				b |= (1 << (7 - i));
 			}
 			if (DEBUG) {
 				System.out.println(String.format("\tgetting byte %d, byte is %s", i, StringUtils.lpad(Integer.toBinaryString(b), 8,"0")));
