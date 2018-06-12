@@ -313,8 +313,8 @@ public class STH10Driver {
 		if (DEBUG) {
 			System.out.println(String.format(">> Read temperature raw value %d", value));
 		}
-
-		return value;
+		double temp = (value * 0.01) + (-39.7);
+		return temp;
 	}
 
 	public double readHumidity() {
