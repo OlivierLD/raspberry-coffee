@@ -28,14 +28,21 @@ Inspired from https://github.com/drohm/pi-sht1x, the Java code is now also avail
 ### Triggering the valve
 https://www.adafruit.com/product/997
 
-A Relay
+With a Relay
 
-### Extra
+##### To determine
+- The humidity threshold beyond which to start watering
+- How long should the watering last
+- How long to wait after watering before re-start measuring
+
+### Extras
 - IoT and stuff...
-- Reading the sensor as an I2C device?
+- Reading the sensor as an I<small><sup>2</sup></small>C device?
 
 ### Power supply
 12 & 5 Volts.
+- 5 for the Raspberry
+- 12 for the valve
 
 ### The Hardware
 The tank, the hoses
