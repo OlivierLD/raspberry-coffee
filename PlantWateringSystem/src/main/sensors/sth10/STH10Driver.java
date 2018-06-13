@@ -323,6 +323,7 @@ public class STH10Driver {
 	public double readHumidity() {
 		return readHumidity(null);
 	}
+
 	public double readHumidity(Double temp) {
 		double t = temp;
 		if (temp == null) {
