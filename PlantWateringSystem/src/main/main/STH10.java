@@ -11,7 +11,7 @@ public class STH10 {
 			double t = probe.readTemperature();
 			double h = probe.readHumidity(t);
 
-			System.out.println(String.format("Temp: %f, Hum: %f", t, h));
+			System.out.println(String.format("Temp: %.02f\272C, Hum: %.02f%%", t, h));
 			try { Thread.sleep(1000); } catch (Exception ex) {}
 		}
 	}
