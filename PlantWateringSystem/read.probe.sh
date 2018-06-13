@@ -22,5 +22,5 @@ fi
 # --resume-after:XX, XX in seconds, default 120
 #
 USER_PRM=
-# USER_PRM="$USER_PRM --water-below:140 --water-during:30 --resume-after:60"
+# USER_PRM="$USER_PRM --water-below:40 --water-during:30 --resume-after:60"
 java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
