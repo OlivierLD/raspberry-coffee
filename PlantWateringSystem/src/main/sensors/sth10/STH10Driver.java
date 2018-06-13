@@ -314,8 +314,8 @@ public class STH10Driver {
 		byte cmd = COMMANDS.get(TEMPERATURE_CMD);
 		this.sendCommandSHT(cmd);
 		int value = this.readMeasurement();
-		if (DEBUG) {
-			System.out.println(String.format(">> Read temperature raw value %d", value));
+		if (true || DEBUG) {
+			System.out.println(String.format(">> Read temperature raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
 		}
 		return (value * 0.01) + (-39.7); // Celcius
 	}
