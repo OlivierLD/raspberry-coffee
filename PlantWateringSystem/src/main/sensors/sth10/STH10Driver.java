@@ -215,7 +215,7 @@ public class STH10Driver {
 				b |= (1 << (7 - i));
 			}
 			if (DEBUG) {
-				System.out.println(String.format("\tgetting byte %d, byte is %s", i, StringUtils.lpad(Integer.toBinaryString(b), 8,"0")));
+				System.out.println(String.format("\tgetting byte %d, byte is %s", i, StringUtils.lpad(Integer.toBinaryString(b & 0xFF), 8,"0")));
 			}
 			this.flipPin(this.clock, PinState.LOW);
 		}
@@ -313,7 +313,7 @@ public class STH10Driver {
 	public double readTemperature() {
 		byte cmd = COMMANDS.get(TEMPERATURE_CMD);
 		this.sendCommandSHT(cmd);
-		int value = readMeasurement();
+		int value = this.readMeasurement();
 		if (DEBUG) {
 			System.out.println(String.format(">> Read temperature raw value %d", value));
 		}
@@ -330,7 +330,7 @@ public class STH10Driver {
 		}
 		byte cmd = COMMANDS.get(HUMIDITY_CMD);
 		this.sendCommandSHT(cmd);
-		int value = readMeasurement();
+		int value = this.readMeasurement();
 		if (DEBUG) {
 			System.out.println(String.format(">> Read humidity raw value %d", value));
 		}
@@ -347,15 +347,15 @@ public class STH10Driver {
 		int value = 0;
 
 		// MSB
-		value = this.getByte();
-		value <<= 8;
+		byte msb = this.getByte();
+		value = (msb << 8);
 		this.sendAck();
 		// LSB
-		value |= this.getByte();
-
+		byte lsb = this.getByte();
+		value |= lsb;
 		this.endTx();
 
-		return value;
+		return (value & 0xFFFF);
 	}
 
 	private void sendCommandSHT(byte command) {
