@@ -1,9 +1,9 @@
 package weatherstation.ws;
 
 import org.json.JSONObject;
+import utils.WeatherUtil;
 import weatherstation.SDLWeather80422;
 import weatherstation.logger.LoggerInterface;
-import weatherstation.utils.Utilities;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public class HomeWeatherStation {
 					}
 				}
 				if (temp != null && hum != null) {
-					double dew = Utilities.dewPointTemperature(hum, temp);
+					double dew = WeatherUtil.dewPointTemperature(hum, temp);
 					windObj.put("dew", dew);
 				}
 			}

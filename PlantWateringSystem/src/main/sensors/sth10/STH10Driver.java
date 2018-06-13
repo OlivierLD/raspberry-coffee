@@ -17,6 +17,10 @@ import java.util.Map;
 /**
  * WARNING:
  *  Only for values: 3.5V, High resolution, no heater, otp_no_reload off
+ *
+ *  Adapted from the python code at https://github.com/drohm/pi-sht1x
+ *
+ *  Datasheet STH1x: https://cdn-shop.adafruit.com/datasheets/Sensirion_Humidity_SHT1x_Datasheet_V5.pdf
  */
 public class STH10Driver {
 
@@ -32,12 +36,12 @@ public class STH10Driver {
 
 	private final static Map<String, Byte> COMMANDS = new HashMap<>();
 	static {
-		COMMANDS.put(TEMPERATURE_CMD, (byte)0b00000011);
-		COMMANDS.put(HUMIDITY_CMD, (byte)0b00000101);
-		COMMANDS.put(READ_STATUS_REGISTER_CMD, (byte)0b00000111);
+		COMMANDS.put(TEMPERATURE_CMD,           (byte)0b00000011);
+		COMMANDS.put(HUMIDITY_CMD,              (byte)0b00000101);
+		COMMANDS.put(READ_STATUS_REGISTER_CMD,  (byte)0b00000111);
 		COMMANDS.put(WRITE_STATUS_REGISTER_CMD, (byte)0b00000110);
-		COMMANDS.put(SOFT_RESET_CMD, (byte)0b00011110);
-		COMMANDS.put(NO_OP_CMD, (byte)0b00000000);
+		COMMANDS.put(SOFT_RESET_CMD,            (byte)0b00011110);
+		COMMANDS.put(NO_OP_CMD,                 (byte)0b00000000);
 	}
 
 	final GpioController gpio = GpioFactory.getInstance();
@@ -86,7 +90,7 @@ public class STH10Driver {
 	public void softReset() {
 		byte cmd = COMMANDS.get(SOFT_RESET_CMD);
 		this.sendCommandSHT(cmd, false);
-		delay(15L, 0);
+		delay(15L, 0); // 15 ms
 		this.statusRegister = 0x0;
 	}
 
@@ -351,21 +355,21 @@ public class STH10Driver {
 		// MSB
 		byte msb = this.getByte();
 		value = (msb << 8);
-		
-		if (DEBUG2) {
+
+		if (DEBUG || DEBUG2) {
 			System.out.println(String.format("\t After MSB: %s", StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
 		}
 		this.sendAck();
 		// LSB
 		byte lsb = this.getByte();
 		value |= (lsb & 0xFF);
-		
-		if (DEBUG2) {
+
+		if (DEBUG || DEBUG2) {
 			System.out.println(String.format("\t After LSB: %s", StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
 		}
 		this.endTx();
 
-		return (value); // & 0x7FFF);
+		return (value);
 	}
 
 	private void sendCommandSHT(byte command) {

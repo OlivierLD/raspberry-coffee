@@ -2,6 +2,7 @@
 We want to interface a Moisture/Humidity/Temperature sensor (https://www.adafruit.com/product/1298) with
 a solenoid valve (https://www.adafruit.com/product/997), to irrigate the plants in need.
 
+### Reading the STH10 Sensor
 We start from an Arduino sketch, that can read the STH10. The 10KOhms resistor is not to be forgotten.
 
 ![Arduino wiring](./Arduino.STH10_bb.png)
@@ -20,4 +21,22 @@ On the Raspberry PI, the code at https://github.com/drohm/pi-sht1x works fine wi
 
 ---
 
-More soon, Java code.
+Inspired from https://github.com/drohm/pi-sht1x, the Java code is now also available.
+
+---
+
+### Triggering the valve
+https://www.adafruit.com/product/997
+
+A Relay
+
+### Extra
+- IoT and stuff...
+- Reading the sensor as an I2C device?
+
+### Power supply
+12 & 5 Volts.
+
+### The Hardware
+The tank, the hoses
+

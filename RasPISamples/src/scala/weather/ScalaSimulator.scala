@@ -1,8 +1,8 @@
 package weather
 
 import org.json.JSONObject
+import utils.WeatherUtil
 import weatherstation.logger.LoggerInterface
-import weatherstation.utils.Utilities
 import weatherstation.ws.HomeWeatherStation
 
 object ScalaSimulator {
@@ -56,7 +56,7 @@ object ScalaSimulator {
       val press = generateRandomValue(pressure, 100, 98000, 105000).toFloat
       val hum = generateRandomValue(humidity, 5, 0, 100).toFloat
       val rain = generateRandomValue(rainamount, 1, 0, 3).toFloat
-      dew = Utilities.dewPointTemperature(hum, temp).toFloat
+      dew = WeatherUtil.dewPointTemperature(hum, temp).toFloat
       val windObj = new JSONObject
       windObj.put("dir", wd)
       windObj.put("avgdir", mwd)

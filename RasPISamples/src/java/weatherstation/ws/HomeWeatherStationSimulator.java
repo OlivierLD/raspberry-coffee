@@ -2,8 +2,8 @@ package weatherstation.ws;
 
 import org.json.JSONObject;
 
+import utils.WeatherUtil;
 import weatherstation.logger.LoggerInterface;
-import weatherstation.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +72,7 @@ public class HomeWeatherStationSimulator {
 			float press = (float) generateRandomValue(pressure, 100, 98_000, 105_000);
 			float hum = (float) generateRandomValue(humidity, 5, 0, 100);
 			float rain = (float) generateRandomValue(rainamount, 0.0001, 0, 0.001);
-			dew = Utilities.dewPointTemperature(hum, temp);
+			dew = WeatherUtil.dewPointTemperature(hum, temp);
 
 			// rain is an accumulator, it is in mm, not mm/h
 			prateList.add(rain);
