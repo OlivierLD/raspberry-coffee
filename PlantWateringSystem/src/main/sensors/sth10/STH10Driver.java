@@ -14,6 +14,10 @@ import utils.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * WARNING:
+ *  Only for values: 3.5V, High resolution, no heater, otp_no_reload off
+ */
 public class STH10Driver {
 
 	private static boolean DEBUG = "true".equals(System.getProperty("sth.debug", "false"));
