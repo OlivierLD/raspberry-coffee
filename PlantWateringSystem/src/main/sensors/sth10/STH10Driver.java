@@ -216,9 +216,9 @@ public class STH10Driver {
 			this.flipPin(this.clock, PinState.LOW);
 		}
 		if (DEBUG) {
-			System.out.println(String.format("<< getByte %d <<", b));
+			System.out.println(String.format("<< getByte %d <<", (b & 0xFF)));
 		}
-		return b;
+		return (byte)(b & 0xFF);
 	}
 
 	private void getAck(String commandName) {
