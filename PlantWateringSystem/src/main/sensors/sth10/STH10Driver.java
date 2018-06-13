@@ -332,8 +332,8 @@ public class STH10Driver {
 		byte cmd = COMMANDS.get(HUMIDITY_CMD);
 		this.sendCommandSHT(cmd);
 		int value = this.readMeasurement();
-		if (DEBUG) {
-			System.out.println(String.format(">> Read humidity raw value %d", value));
+		if (true || DEBUG) {
+			System.out.println(String.format(">> Read humidity raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
 		}
 
 		double linearHumidity = -2.0468 + (0.0367 * value) + (-0.0000015955 * Math.pow(value, 2));
