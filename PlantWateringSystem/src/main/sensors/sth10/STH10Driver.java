@@ -313,8 +313,7 @@ public class STH10Driver {
 		if (DEBUG) {
 			System.out.println(String.format(">> Read temperature raw value %d", value));
 		}
-		double temp = (value * 0.01) + (-39.7);
-		return temp;
+		return (value * 0.01) + (-39.7); // Celcius
 	}
 
 	public double readHumidity() {
@@ -328,8 +327,13 @@ public class STH10Driver {
 		byte cmd = COMMANDS.get(HUMIDITY_CMD);
 		this.sendCommandSHT(cmd);
 		int value = readMeasurement();
-// TODO Some magic goes here
-		return value;
+		if (DEBUG) {
+			System.out.println(String.format(">> Read humidity raw value %d", value));
+		}
+
+		double linearHumidity = -2.0468 + (0.0367 * value) + (-0.0000015955 * Math.pow(value, 2));
+		double humidity = ((t - 25) * (0.01 + (0.00008 * value)) + linearHumidity); // %
+		return humidity;
 	}
 	/**
 	 *
