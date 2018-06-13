@@ -349,14 +349,14 @@ public class STH10Driver {
 
 		// MSB
 		byte msb = this.getByte();
-		value = ((0x7F & msb) << 8);
+		value = (msb << 8);
 		this.sendAck();
 		// LSB
 		byte lsb = this.getByte();
 		value |= lsb;
 		this.endTx();
 
-		return (value & 0xFFFF);
+		return (value & 0x7FFF);
 	}
 
 	private void sendCommandSHT(byte command) {
