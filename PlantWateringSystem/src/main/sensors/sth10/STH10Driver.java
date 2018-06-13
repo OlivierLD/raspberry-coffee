@@ -21,6 +21,7 @@ import java.util.Map;
 public class STH10Driver {
 
 	private static boolean DEBUG = "true".equals(System.getProperty("sth.debug", "false"));
+	private static boolean DEBUG2 = false;
 
 	private final static String TEMPERATURE_CMD = "Temperature";
 	private final static String HUMIDITY_CMD = "Humidity";
@@ -214,15 +215,15 @@ public class STH10Driver {
 			if (state == PinState.HIGH) {
 				b |= (1 << (7 - i));
 			}
-			if (DEBUG) {
-				System.out.println(String.format("\tgetting byte %d, byte is %s", i, StringUtils.lpad(Integer.toBinaryString(b & 0xFF), 8,"0")));
+			if (DEBUG || DEBUG2) {
+				System.out.println(String.format("\tgetting byte %d, byte is %s", i, StringUtils.lpad(Integer.toBinaryString(b & 0x00FF), 8, "0")));
 			}
 			this.flipPin(this.clock, PinState.LOW);
 		}
-		if (DEBUG) {
-			System.out.println(String.format("<< getByte %d <<", (b & 0xFF)));
+		if (DEBUG || DEBUG2) {
+			System.out.println(String.format("<< getByte %d 0b%s <<", (b & 0x00FF), StringUtils.lpad(Integer.toBinaryString(b & 0x00FF), 8, "0")));
 		}
-		return (byte)(b & 0xFF);
+		return (byte)(b & 0x00FF);
 	}
 
 	private void getAck(String commandName) {
@@ -314,7 +315,7 @@ public class STH10Driver {
 		byte cmd = COMMANDS.get(TEMPERATURE_CMD);
 		this.sendCommandSHT(cmd);
 		int value = this.readMeasurement();
-		if (true || DEBUG) {
+		if (DEBUG2 || DEBUG) {
 			System.out.println(String.format(">> Read temperature raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
 		}
 		return (value * 0.01) + (-39.7); // Celcius
@@ -332,7 +333,7 @@ public class STH10Driver {
 		byte cmd = COMMANDS.get(HUMIDITY_CMD);
 		this.sendCommandSHT(cmd);
 		int value = this.readMeasurement();
-		if (true || DEBUG) {
+		if (DEBUG2 || DEBUG) {
 			System.out.println(String.format(">> Read humidity raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
 		}
 
@@ -350,13 +351,21 @@ public class STH10Driver {
 		// MSB
 		byte msb = this.getByte();
 		value = (msb << 8);
+		
+		if (DEBUG2) {
+			System.out.println(String.format("\t After MSB: %s", StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
+		}
 		this.sendAck();
 		// LSB
 		byte lsb = this.getByte();
-		value |= lsb;
+		value |= (lsb & 0xFF);
+		
+		if (DEBUG2) {
+			System.out.println(String.format("\t After LSB: %s", StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
+		}
 		this.endTx();
 
-		return (value & 0x7FFF);
+		return (value); // & 0x7FFF);
 	}
 
 	private void sendCommandSHT(byte command) {
