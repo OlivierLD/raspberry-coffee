@@ -18,11 +18,16 @@ public class STH10 {
 
 	public static void main(String... args) {
 
+		// TODO Override values with system variables
+
 		STH10Driver probe = new STH10Driver();
 		RelayDriver relay = new RelayDriver();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			go = false;
+			if (relay.getState() == PinState.HIGH) {
+				relay.down();
+			}
 			System.out.println("Exiting");
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {}
 		}));
@@ -31,6 +36,7 @@ public class STH10 {
 			double t = probe.readTemperature();
 			double h = probe.readHumidity(t);
 
+			// TODO A screen (Like the SSD1306) ?
 			System.out.println(String.format("Temp: %.02f C, Hum: %.02f%%, dew pt Temp: %.02f", t, h, WeatherUtil.dewPointTemperature(h, t)));
 
 			/*
@@ -57,10 +63,6 @@ public class STH10 {
 				} catch (Exception ex) {
 				}
 			}
-		}
-
-		if (relay.getState() == PinState.HIGH) {
-			relay.down();
 		}
 
 		probe.shutdownGPIO();

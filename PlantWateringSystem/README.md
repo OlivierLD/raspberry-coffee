@@ -33,7 +33,7 @@ With a Relay
 ##### To determine
 - The humidity threshold beyond which to start watering
 - How long should the watering last
-- How long to wait after watering before re-start measuring
+- How long to wait after watering before re-start measurement
 
 ### Extras
 - IoT and stuff...
