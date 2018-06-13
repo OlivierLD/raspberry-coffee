@@ -44,6 +44,15 @@ public class STH10Driver {
 		COMMANDS.put(NO_OP_CMD,                 (byte)0b00000000);
 	}
 
+	private final static double
+			D2_SO_C = 0.01,
+			D1_VDD_C = -39.7,
+			C1_SO = -2.0468,
+			C2_SO = 0.0367,
+			C3_SO = -0.0000015955,
+			T1_S0 = 0.01,
+			T2_SO = 0.00008;
+
 	final GpioController gpio = GpioFactory.getInstance();
 
 	private static final Pin DEFAULT_DATA_PIN =  RaspiPin.GPIO_01; // BCM 18
@@ -78,7 +87,6 @@ public class STH10Driver {
 	private void resetConnection() {
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-//  this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		for (int i=0; i<10; i++) {
@@ -146,7 +154,6 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-//  this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.clock, PinState.HIGH);
@@ -169,7 +176,6 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-//  this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.clock, PinState.HIGH);
@@ -186,7 +192,6 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-//  this.clock.low(); // ??
 
 		for (int i=0; i<8; i++) {
 			int bit = data & (1 << (7 - i));
@@ -211,7 +216,6 @@ public class STH10Driver {
 
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-//  this.clock.low(); // ??
 
 		for (int i=0; i<8; i++) {
 			this.flipPin(this.clock, PinState.HIGH);
@@ -237,7 +241,6 @@ public class STH10Driver {
 		}
 		this.data.setMode(PinMode.DIGITAL_INPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-//  this.clock.low(); // ??
 
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, flipping %s to HIGH", pinDisplay(this.clock)));
@@ -246,7 +249,6 @@ public class STH10Driver {
 		if (DEBUG) {
 			System.out.println(String.format("\t>> getAck, >>> getState %s = %s", pinDisplay(this.clock), this.clock.getState().toString()));
 		}
-//	delay(100L, 0);
 		PinState state = this.data.getState();
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, getState %s = %s", pinDisplay(this.data), state.toString()));
@@ -266,7 +268,6 @@ public class STH10Driver {
 	private void sendAck() {
 		this.data.setMode(PinMode.DIGITAL_OUTPUT);
 		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
-//  this.clock.low(); // ??
 
 		this.flipPin(this.data, PinState.HIGH);
 		this.flipPin(this.data, PinState.LOW);
@@ -322,7 +323,7 @@ public class STH10Driver {
 		if (DEBUG2 || DEBUG) {
 			System.out.println(String.format(">> Read temperature raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
 		}
-		return (value * 0.01) + (-39.7); // Celcius
+		return (value * D2_SO_C) + (D1_VDD_C); // Celcius
 	}
 
 	public double readHumidity() {
@@ -341,8 +342,8 @@ public class STH10Driver {
 			System.out.println(String.format(">> Read humidity raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
 		}
 
-		double linearHumidity = -2.0468 + (0.0367 * value) + (-0.0000015955 * Math.pow(value, 2));
-		double humidity = ((t - 25) * (0.01 + (0.00008 * value)) + linearHumidity); // %
+		double linearHumidity = C1_SO + (C2_SO * value) + (C3_SO * Math.pow(value, 2));
+		double humidity = ((t - 25) * (T1_S0 + (T2_SO * value)) + linearHumidity); // %
 		return humidity;
 	}
 	/**
@@ -412,6 +413,12 @@ public class STH10Driver {
 			Thread.sleep(ms, nano);
 		} catch (InterruptedException ie) {
 			// Absorb
+		}
+	}
+
+	public void shutdownGPIO() {
+		if (!gpio.isShutdown()) {
+			gpio.shutdown();
 		}
 	}
 
