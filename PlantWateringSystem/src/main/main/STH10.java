@@ -24,10 +24,12 @@ public class STH10 {
 
 	public static void main(String... args) {
 
+		// Default values
 		int humidityThreshold = HUMIDITY_THRESHOLD;
 		long wateringDuration = WATERING_DURATION;
 		long resumeSensorWatchAfter = RESUME_SENSOR_WATCH_AFTER;
-		// Override values with system variables
+
+		// Override values with runtime arguments
 		for (String arg : args) {
 			if (arg.startsWith(HUMIDITY_PREFIX)) {
 				String val = arg.substring(HUMIDITY_PREFIX.length());
