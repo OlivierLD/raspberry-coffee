@@ -12,6 +12,10 @@ public class STH10 {
 
 	private static boolean go = true;
 
+	private final static int HUMIDITY_THRESHOLD = 35; // 35 %
+	private final static long WATERING_DURATION = 10_000L; // 10 seconds
+	private final static long RESUME_SENSOR_WATCH_AFTER = 120_000L; // 2 minutes
+
 	public static void main(String... args) {
 
 		STH10Driver probe = new STH10Driver();
@@ -30,10 +34,29 @@ public class STH10 {
 			System.out.println(String.format("Temp: %.02f C, Hum: %.02f%%, dew pt Temp: %.02f", t, h, WeatherUtil.dewPointTemperature(h, t)));
 
 			/*
-			 * TODO Here, test the sensor's values, and make the decision about the valve.
+			 * Here, test the sensor's values, and make the decision about the valve.
 			 */
-
-			try { Thread.sleep(1_000L); } catch (Exception ex) {}
+			if (h < HUMIDITY_THRESHOLD) { // Ah! Need some water
+				// Open the valve
+				relay.up();
+				// Watering time
+				try {
+					Thread.sleep(WATERING_DURATION);
+				} catch (Exception ex) {
+				}
+				// Shut the valve
+				relay.down();
+				// Wait before resuming sensor watching
+				try {
+					Thread.sleep(RESUME_SENSOR_WATCH_AFTER);
+				} catch (Exception ex) {
+				}
+			} else {
+				try {
+					Thread.sleep(1_000L);
+				} catch (Exception ex) {
+				}
+			}
 		}
 
 		if (relay.getState() == PinState.HIGH) {
