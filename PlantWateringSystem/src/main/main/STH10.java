@@ -120,14 +120,13 @@ public class STH10 {
 						System.out.println("... back to work.");
 					}
 					System.out.println("Shutting off the valve.");
-					Thread.sleep(wateringDuration * 1_000L);
 				} catch (Exception ex) {
 				}
 				System.out.println("Done watering.");
 				// Shut the valve
 				relay.down();
 				// Wait before resuming sensor watching
-				System.out.println("Napping a bit...");
+				System.out.println("Napping a bit... Spread the word...");
 				try {
 					Thread.sleep(resumeSensorWatchAfter * 1_000L);
 				} catch (Exception ex) {
