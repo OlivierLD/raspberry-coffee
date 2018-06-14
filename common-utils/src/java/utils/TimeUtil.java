@@ -95,7 +95,7 @@ public class TimeUtil {
 		}
 	}
 
-	private final static long SEC  = 1000L;
+	private final static long SEC  = 1_000L;
 	private final static long MIN  = 60 * SEC;
 	private final static long HOUR = 60 * MIN;
 	private final static long DAY  = 24 * HOUR;
@@ -221,6 +221,5 @@ public class TimeUtil {
 
 		long _now = System.currentTimeMillis();
 		System.out.println(String.format("Now: %s", fmtDHMS(msToHMS(_now))));
-
 	}
 }

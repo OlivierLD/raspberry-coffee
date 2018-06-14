@@ -19,5 +19,5 @@ fi
 # Use program argument --help for help.
 #
 USER_PRM=--verbose:true
-USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:30"
+USER_PRM="$USER_PRM --water-below:35 --water-during:10 --resume-after:120"
 java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
