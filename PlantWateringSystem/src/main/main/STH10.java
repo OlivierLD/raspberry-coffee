@@ -81,7 +81,7 @@ public class STH10 {
 			if (relay.getState() == PinState.HIGH) {
 				relay.down();
 			}
-			System.out.println("Exiting");
+			System.out.println("\nExiting");
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {}
 		}));
 
@@ -122,9 +122,9 @@ public class STH10 {
 					Thread.sleep(wateringDuration * 1_000L);
 				} catch (Exception ex) {
 				}
+				System.out.println("Done watering.");
 				// Shut the valve
 				relay.down();
-				System.out.println("Done watering.");
 				// Wait before resuming sensor watching
 				System.out.println("Napping a bit...");
 				try {
@@ -142,6 +142,6 @@ public class STH10 {
 		probe.shutdownGPIO();
 		relay.shutdownGPIO();
 
-		System.out.println("Bye!");
+		System.out.println("Bye-bye!");
 	}
 }
