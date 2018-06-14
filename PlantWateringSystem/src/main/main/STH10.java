@@ -19,15 +19,22 @@ public class STH10 {
 	private final static long WATERING_DURATION = 10L; // 10 seconds
 	private final static long RESUME_SENSOR_WATCH_AFTER = 120L; // 2 minutes
 
+	// Program arguments
 	private enum ARGUMENTS {
-		HUMIDITY_THRESHOLD("--water-below:", "Integer. Humidity threshold in %, default is --water-below:35, start watering below this value."), // %
-		WATERING_DURATION("--water-during:", "Integer. In seconds, default is --water-during:10. Duration of the watering process."),             // seconds
-		RESUME_AFTER("--resume-after:", "Integer. In seconds, default is --resume-after:120. After watering, resume sensor monitoring after this amount of time."),   // seconds
-
-		VERBOSE("--verbose:", "Boolean. Verbose, default is --verbose:false, values can be 'true' or something else."),              // true|false
-		DATA_PIN("--data-pin:", "Integer. BCM (aka GPIO) pin number of the DATA pin of the sensor. Default is --data-pin:18."),      // default is BCM 18 => GPIO_01
-		CLOCK_PIN("--clock-pin:", "Integer. BCM (aka GPIO) pin number of the CLOCK pin of the sensor. Default is --clock-pin:23."),  // default is BCM 23 => GPIO_04
-		RELAY_PIN("--relay-pin:", "Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17."),  // default is BCM 17 => GPIO_00
+		HUMIDITY_THRESHOLD("--water-below:", // %
+				"Integer. Humidity threshold in %, default is --water-below:35, start watering below this value."),
+		WATERING_DURATION("--water-during:", // seconds
+				"Integer. In seconds, default is --water-during:10. Duration of the watering process."),
+		RESUME_AFTER("--resume-after:", // seconds
+				"Integer. In seconds, default is --resume-after:120. After watering, resume sensor monitoring after this amount of time."),
+		VERBOSE("--verbose:", // true|false
+				"Boolean. Verbose, default is --verbose:false, values can be 'true' or something else."),
+		DATA_PIN("--data-pin:", // default is BCM 18 => GPIO_01
+				"Integer. BCM (aka GPIO) pin number of the DATA pin of the sensor. Default is --data-pin:18."),
+		CLOCK_PIN("--clock-pin:", // default is BCM 23 => GPIO_04
+				"Integer. BCM (aka GPIO) pin number of the CLOCK pin of the sensor. Default is --clock-pin:23."),
+		RELAY_PIN("--relay-pin:",  // default is BCM 17 => GPIO_00
+				"Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17."),
 		HELP("--help", "Display the help and exits.");
 
 		private String prefix, help;
