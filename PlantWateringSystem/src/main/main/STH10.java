@@ -90,7 +90,7 @@ public class STH10 {
 			double h = probe.readHumidity(t);
 
 			// TODO A screen (Like the SSD1306) ?
-			System.out.println(String.format("Temp: %.02f C, Hum: %.02f%%, dew pt Temp: %.02f C", t, h, WeatherUtil.dewPointTemperature(h, t)));
+			System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", t, h, WeatherUtil.dewPointTemperature(h, t)));
 
 			/*
 			 * Here, test the sensor's values, and make the decision about the valve.
@@ -106,10 +106,10 @@ public class STH10 {
 					Thread wateringThread = new Thread(() -> {
 						for (int i=0; i<_waterDuration; i++) {
 							try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
-							System.out.println(String.format("\tgloo... %d", (_waterDuration - i)));
+							System.out.println(String.format("\t... %d", (_waterDuration - i)));
 						}
 						synchronized (mainThread) {
-							System.out.println("Ok! Enough!");
+							System.out.println("Ok! Enough water!");
 							mainThread.notify();
 						}
 					}, "watering-thread");
@@ -117,6 +117,7 @@ public class STH10 {
 
 					synchronized (mainThread) {
 						mainThread.wait();
+						System.out.println("... back to work.");
 					}
 					System.out.println("Shutting off the valve.");
 					Thread.sleep(wateringDuration * 1_000L);
