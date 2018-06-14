@@ -126,7 +126,7 @@ public class STH10 {
 				// Shut the valve
 				relay.down();
 				// Wait before resuming sensor watching
-				System.out.println("Napping a bit... Spread the word...");
+				System.out.println("Napping a bit... Spreading the word...");
 				try {
 					Thread.sleep(resumeSensorWatchAfter * 1_000L);
 				} catch (Exception ex) {
