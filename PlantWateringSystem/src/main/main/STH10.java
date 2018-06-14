@@ -101,6 +101,23 @@ public class STH10 {
 				System.out.println("Watering...");
 				// Watering time
 				try {
+					final Thread mainThread = Thread.currentThread();
+					final long _waterDuration = wateringDuration;
+					Thread wateringThread = new Thread(() -> {
+						for (int i=0; i<_waterDuration; i++) {
+							try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
+							System.out.println("gloo...");
+						}
+						synchronized (mainThread) {
+							mainThread.notify();
+						}
+					}, "watering");
+					wateringThread.start();
+
+					synchronized (mainThread) {
+						mainThread.wait();
+					}
+					System.out.println("Shutting off the valve.");
 					Thread.sleep(wateringDuration * 1_000L);
 				} catch (Exception ex) {
 				}
@@ -108,7 +125,7 @@ public class STH10 {
 				relay.down();
 				System.out.println("Done watering.");
 				// Wait before resuming sensor watching
-				System.out.println("Napping a bit");
+				System.out.println("Napping a bit...");
 				try {
 					Thread.sleep(resumeSensorWatchAfter * 1_000L);
 				} catch (Exception ex) {
