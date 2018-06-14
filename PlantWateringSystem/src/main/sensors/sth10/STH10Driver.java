@@ -25,7 +25,7 @@ import java.util.Map;
 public class STH10Driver {
 
 	private static boolean DEBUG = "true".equals(System.getProperty("sth.debug", "false"));
-	private static boolean DEBUG2 = false;
+	private static boolean DEBUG2 = false; // Freak... ;)
 
 	private final static String TEMPERATURE_CMD = "Temperature";
 	private final static String HUMIDITY_CMD = "Humidity";

@@ -16,11 +16,8 @@ fi
 # For remote JVM Monitoring
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=raspberrypi-boat"
 #
-# Program arguments are
-# --water-below:XX, XX in [0..100], default 35
-# --water-during:XX, XX in seconds, default 10
-# --resume-after:XX, XX in seconds, default 120
+# Use program argument --help for help.
 #
-USER_PRM=
+USER_PRM=--verbose:true
 # USER_PRM="$USER_PRM --water-below:40 --water-during:30 --resume-after:60"
 java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
