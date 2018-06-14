@@ -35,7 +35,7 @@ public class STH10 {
 				"Integer. BCM (aka GPIO) pin number of the CLOCK pin of the sensor. Default is --clock-pin:23."),
 		RELAY_PIN("--relay-pin:",  // default is BCM 17 => GPIO_00
 				"Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17."),
-		HELP("--help", "Display the help and exits.");
+		HELP("--help", "Display the help and exit.");
 
 		private String prefix, help;
 
@@ -69,12 +69,11 @@ public class STH10 {
 		for (String arg : args) {
 			if (arg.startsWith(ARGUMENTS.HELP.prefix())) {
 				// No value, display help
-				System.out.println("Program arguments are:");
-				System.out.println("--------------------------------------");
-				Arrays.stream(ARGUMENTS.values()).forEach(argument -> {
-					System.out.println(argument.prefix() + "\t" + argument.help());
-				});
-				System.out.println("--------------------------------------");
+				System.out.println("+---------------------------------------");
+				System.out.println("| Program arguments are:");
+				System.out.println("+---------------------------------------");
+				Arrays.stream(ARGUMENTS.values()).forEach(argument -> System.out.println("| " +argument.prefix() + "\t" + argument.help()));
+				System.out.println("+---------------------------------------");
 				System.exit(0);
 			} else if (arg.startsWith(ARGUMENTS.VERBOSE.prefix())) {
 				String val = arg.substring(ARGUMENTS.VERBOSE.prefix().length());
@@ -117,7 +116,7 @@ public class STH10 {
 					wateringDuration = Long.parseLong(val);
 					if (wateringDuration < 0) {
 						wateringDuration = WATERING_DURATION;
-						System.err.println(">> Watering duration must be positive");
+						System.err.println(">> Watering duration must be positive. Ignoring.");
 					}
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
@@ -128,7 +127,7 @@ public class STH10 {
 					resumeSensorWatchAfter = Long.parseLong(val);
 					if (resumeSensorWatchAfter < 0) {
 						resumeSensorWatchAfter = RESUME_SENSOR_WATCH_AFTER;
-						System.err.println(">> Resume Watch After must be positive");
+						System.err.println(">> Resume Watch After must be positive. Ignoring.");
 					}
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
@@ -155,7 +154,7 @@ public class STH10 {
 			probe = new STH10Driver(PinUtil.getPinByGPIONumber(dataPin), PinUtil.getPinByGPIONumber(clockPin));
 			relay = new RelayDriver(PinUtil.getPinByGPIONumber(relayPin));
 		} catch (UnsatisfiedLinkError ule) {
-			System.out.println("You're not on a Raspberry PI or your wiring is wrong.");
+			System.out.println("You're not on a Raspberry PI, or your wiring is wrong.");
 			System.out.println("Exiting.");
 			System.exit(1);
 		}
@@ -166,9 +165,14 @@ public class STH10 {
 				relay.down();
 			}
 			System.out.println("\nExiting");
-			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {}
+			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {
+				ie.printStackTrace();
+			}
 		}));
 
+		/*
+		 * This is the main loop
+		 */
 		while (go) {
 			double t = probe.readTemperature();
 			double h = probe.readHumidity(t);
@@ -191,14 +195,19 @@ public class STH10 {
 					final long _waterDuration = wateringDuration;
 					Thread wateringThread = new Thread(() -> {
 						for (int i=0; i<_waterDuration; i++) {
-							try { Thread.sleep(1_000L); } catch (InterruptedException ie) {} // Tick...
+							try {
+								Thread.sleep(1_000L);
+							} catch (InterruptedException ie) {
+								ie.printStackTrace();
+							}
+							// Tick, countdown...
 							System.out.println(String.format("\t... %d", (_waterDuration - i)));
 						}
 						synchronized (mainThread) {
 							if (verbose) {
 								System.out.println("Ok! Enough water!");
 							}
-							mainThread.notify();
+							mainThread.notify(); // Release the wait on main thread.
 						}
 					}, "watering-thread");
 					wateringThread.start();
@@ -213,6 +222,7 @@ public class STH10 {
 						System.out.println("Shutting off the valve.");
 					}
 				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 				if (verbose) {
 					System.out.println("Done watering.");
@@ -226,11 +236,13 @@ public class STH10 {
 				try {
 					Thread.sleep(resumeSensorWatchAfter * 1_000L);
 				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 			} else {
 				try {
 					Thread.sleep(1_000L);
 				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 			}
 		}

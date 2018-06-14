@@ -53,7 +53,7 @@ public class STH10Driver {
 			T1_S0 = 0.01,
 			T2_SO = 0.00008;
 
-	final GpioController gpio = GpioFactory.getInstance();
+	final private GpioController gpio = GpioFactory.getInstance();
 
 	private static final Pin DEFAULT_DATA_PIN =  RaspiPin.GPIO_01; // BCM 18
 	private static final Pin DEFAULT_CLOCK_PIN = RaspiPin.GPIO_04; // BCM 23
