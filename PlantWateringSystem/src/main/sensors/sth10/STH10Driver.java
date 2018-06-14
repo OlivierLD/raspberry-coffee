@@ -13,6 +13,7 @@ import utils.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * WARNING:
@@ -53,7 +54,8 @@ public class STH10Driver {
 			T1_S0 = 0.01,
 			T2_SO = 0.00008;
 
-	final private GpioController gpio = GpioFactory.getInstance();
+	private GpioController gpio = null;
+	private boolean simulating = false;
 
 	private static final Pin DEFAULT_DATA_PIN =  RaspiPin.GPIO_01; // BCM 18
 	private static final Pin DEFAULT_CLOCK_PIN = RaspiPin.GPIO_04; // BCM 23
@@ -66,6 +68,9 @@ public class STH10Driver {
 
 	private byte statusRegister = 0x0;
 
+	private Supplier<Double> temparatureSimulator = null;
+	private Supplier<Double> humiditySimulator = null;
+
 	public STH10Driver() {
 		this(DEFAULT_DATA_PIN, DEFAULT_CLOCK_PIN);
 	}
@@ -74,10 +79,28 @@ public class STH10Driver {
 		this.dataPin = _dataPin;
 		this.clockPin = _clockPin;
 
-		this.data = gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
-		this.clock = gpio.provisionDigitalMultipurposePin(this.clockPin, PinMode.DIGITAL_OUTPUT);
+		try {
+			this.gpio = GpioFactory.getInstance();
+		} catch (UnsatisfiedLinkError ule) {
+			// Simulating
+			this.simulating = true;
+		}
+
+		if (this.gpio != null) {
+			this.data = this.gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
+			this.clock = this.gpio.provisionDigitalMultipurposePin(this.clockPin, PinMode.DIGITAL_OUTPUT);
+		}
 		//
 		this.init();
+	}
+
+	public boolean isSimulating() {
+		return this.simulating;
+	}
+
+	public void setSimulators(Supplier<Double> tSimulator, Supplier<Double> hSimulator) {
+		this.temparatureSimulator = tSimulator;
+		this.humiditySimulator = hSimulator;
 	}
 
 	private String pinDisplay(GpioPinDigital pin) {
@@ -85,13 +108,15 @@ public class STH10Driver {
 	}
 
 	private void resetConnection() {
-		this.data.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		if (!this.simulating) {
+			this.data.setMode(PinMode.DIGITAL_OUTPUT);
+			this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
-		this.flipPin(this.data, PinState.HIGH);
-		for (int i=0; i<10; i++) {
-			this.flipPin(this.clock, PinState.HIGH);
-			this.flipPin(this.clock, PinState.LOW);
+			this.flipPin(this.data, PinState.HIGH);
+			for (int i = 0; i < 10; i++) {
+				this.flipPin(this.clock, PinState.HIGH);
+				this.flipPin(this.clock, PinState.LOW);
+			}
 		}
 	}
 
@@ -131,16 +156,18 @@ public class STH10Driver {
 		if (DEBUG) {
 			System.out.print(String.format(">> flipPin %s to %s", pinDisplay(pin), state.toString()));
 		}
-		if (state == PinState.HIGH) {
-			pin.high();
-		} else {
-			pin.low();
-		}
-		if (pin.equals(this.clock)) {
-			if (DEBUG) {
-				System.out.print("   >> Flipping CLK, delaying");
+		if (!this.simulating) {
+			if (state == PinState.HIGH) {
+				pin.high();
+			} else {
+				pin.low();
 			}
-			delay(0L, 100); // 0.1 * 1E-6 sec. 100 * 1E-9
+			if (pin.equals(this.clock)) {
+				if (DEBUG) {
+					System.out.print("   >> Flipping CLK, delaying");
+				}
+				delay(0L, 100); // 0.1 * 1E-6 sec. 100 * 1E-9
+			}
 		}
 		if (DEBUG) {
 			System.out.println(String.format("\tpin is now %s", (pin.getState() == PinState.HIGH ? "HIGH" : "LOW")));
@@ -152,19 +179,21 @@ public class STH10Driver {
 		if (DEBUG) {
 			System.out.println(String.format(">> startTx >>"));
 		}
-		this.data.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		if (!this.simulating) {
+			this.data.setMode(PinMode.DIGITAL_OUTPUT);
+			this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
-		this.flipPin(this.data, PinState.HIGH);
-		this.flipPin(this.clock, PinState.HIGH);
+			this.flipPin(this.data, PinState.HIGH);
+			this.flipPin(this.clock, PinState.HIGH);
 
-		this.flipPin(this.data, PinState.LOW);
-		this.flipPin(this.clock, PinState.LOW);
+			this.flipPin(this.data, PinState.LOW);
+			this.flipPin(this.clock, PinState.LOW);
 
-		this.flipPin(this.clock, PinState.HIGH); // Clock first
-		this.flipPin(this.data, PinState.HIGH);  // Data 2nd
+			this.flipPin(this.clock, PinState.HIGH); // Clock first
+			this.flipPin(this.data, PinState.HIGH);  // Data 2nd
 
-		this.flipPin(this.clock, PinState.LOW);
+			this.flipPin(this.clock, PinState.LOW);
+		}
 		if (DEBUG) {
 			System.out.println(String.format("<< startTx <<"));
 		}
@@ -174,13 +203,15 @@ public class STH10Driver {
 		if (DEBUG) {
 			System.out.println(String.format(">> endTx >>"));
 		}
-		this.data.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		if (!this.simulating) {
+			this.data.setMode(PinMode.DIGITAL_OUTPUT);
+			this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
-		this.flipPin(this.data, PinState.HIGH);
-		this.flipPin(this.clock, PinState.HIGH);
+			this.flipPin(this.data, PinState.HIGH);
+			this.flipPin(this.clock, PinState.HIGH);
 
-		this.flipPin(this.clock, PinState.LOW);
+			this.flipPin(this.clock, PinState.LOW);
+		}
 		if (DEBUG) {
 			System.out.println(String.format("<< endTx <<"));
 		}
@@ -190,8 +221,10 @@ public class STH10Driver {
 		if (DEBUG) {
 			System.out.println(String.format(">> sendByte %d [%s]", data, StringUtils.lpad(Integer.toBinaryString(data), 8,"0")));
 		}
-		this.data.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		if (!this.simulating) {
+			this.data.setMode(PinMode.DIGITAL_OUTPUT);
+			this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		}
 
 		for (int i=0; i<8; i++) {
 			int bit = data & (1 << (7 - i));
@@ -214,19 +247,21 @@ public class STH10Driver {
 		}
 		byte b = 0x0;
 
-		this.data.setMode(PinMode.DIGITAL_INPUT);
-		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		if (!this.simulating) {
+			this.data.setMode(PinMode.DIGITAL_INPUT);
+			this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
-		for (int i=0; i<8; i++) {
-			this.flipPin(this.clock, PinState.HIGH);
-			PinState state = this.data.getState();
-			if (state == PinState.HIGH) {
-				b |= (1 << (7 - i));
+			for (int i = 0; i < 8; i++) {
+				this.flipPin(this.clock, PinState.HIGH);
+				PinState state = this.data.getState();
+				if (state == PinState.HIGH) {
+					b |= (1 << (7 - i));
+				}
+				if (DEBUG || DEBUG2) {
+					System.out.println(String.format("\tgetting byte %d, byte is %s", i, StringUtils.lpad(Integer.toBinaryString(b & 0x00FF), 8, "0")));
+				}
+				this.flipPin(this.clock, PinState.LOW);
 			}
-			if (DEBUG || DEBUG2) {
-				System.out.println(String.format("\tgetting byte %d, byte is %s", i, StringUtils.lpad(Integer.toBinaryString(b & 0x00FF), 8, "0")));
-			}
-			this.flipPin(this.clock, PinState.LOW);
 		}
 		if (DEBUG || DEBUG2) {
 			System.out.println(String.format("<< getByte %d 0b%s <<", (b & 0x00FF), StringUtils.lpad(Integer.toBinaryString(b & 0x00FF), 8, "0")));
@@ -239,63 +274,69 @@ public class STH10Driver {
 			System.out.println(String.format(">> getAck, command %s >>", commandName));
 			System.out.println(String.format(">> %s INPUT %s OUTPUT", pinDisplay(this.data), pinDisplay(this.clock)));
 		}
-		this.data.setMode(PinMode.DIGITAL_INPUT);
-		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		if (!this.simulating) {
+			this.data.setMode(PinMode.DIGITAL_INPUT);
+			this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
-		if (DEBUG) {
-			System.out.println(String.format(">> getAck, flipping %s to HIGH", pinDisplay(this.clock)));
+			if (DEBUG) {
+				System.out.println(String.format(">> getAck, flipping %s to HIGH", pinDisplay(this.clock)));
+			}
+			this.flipPin(this.clock, PinState.HIGH);
+			if (DEBUG) {
+				System.out.println(String.format("\t>> getAck, >>> getState %s = %s", pinDisplay(this.clock), this.clock.getState().toString()));
+			}
+			PinState state = this.data.getState();
+			if (DEBUG) {
+				System.out.println(String.format(">> getAck, getState %s = %s", pinDisplay(this.data), state.toString()));
+			}
+			if (state == PinState.HIGH) {
+				throw new RuntimeException(String.format("SHTx failed to properly receive ack after command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8, "0")));
+			}
+			if (DEBUG) {
+				System.out.println(String.format(">> getAck, flipping %s to LOW", pinDisplay(this.clock)));
+			}
+			this.flipPin(this.clock, PinState.LOW);
 		}
-		this.flipPin(this.clock, PinState.HIGH);
-		if (DEBUG) {
-			System.out.println(String.format("\t>> getAck, >>> getState %s = %s", pinDisplay(this.clock), this.clock.getState().toString()));
-		}
-		PinState state = this.data.getState();
-		if (DEBUG) {
-			System.out.println(String.format(">> getAck, getState %s = %s", pinDisplay(this.data), state.toString()));
-		}
-		if (state == PinState.HIGH) {
-			throw new RuntimeException(String.format("SHTx failed to properly receive ack after command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8,"0")));
-		}
-		if (DEBUG) {
-			System.out.println(String.format(">> getAck, flipping %s to LOW", pinDisplay(this.clock)));
-		}
-		this.flipPin(this.clock, PinState.LOW);
 		if (DEBUG) {
 			System.out.println(String.format("<< getAck <<"));
 		}
 	}
 
 	private void sendAck() {
-		this.data.setMode(PinMode.DIGITAL_OUTPUT);
-		this.clock.setMode(PinMode.DIGITAL_OUTPUT);
+		if (!this.simulating) {
+			this.data.setMode(PinMode.DIGITAL_OUTPUT);
+			this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
-		this.flipPin(this.data, PinState.HIGH);
-		this.flipPin(this.data, PinState.LOW);
-		this.flipPin(this.clock, PinState.HIGH);
-		this.flipPin(this.clock, PinState.LOW);
+			this.flipPin(this.data, PinState.HIGH);
+			this.flipPin(this.data, PinState.LOW);
+			this.flipPin(this.clock, PinState.HIGH);
+			this.flipPin(this.clock, PinState.LOW);
+		}
 	}
 
 	private final static int NB_TRIES = 35;
 
 	public void waitForResult() {
-		this.data.setMode(PinMode.DIGITAL_INPUT);
 		PinState state = PinState.HIGH;
-		for (int t=0; t<NB_TRIES; t++) {
-			delay(10L, 0);
-			state = this.data.getState();
-			if (state.getValue() == PinState.LOW.getValue()) {
-				if (DEBUG) {
-					System.out.println(String.format(">> waitForResult completed iteration %d", t));
-				}
-				break;
-			} else {
-				if (DEBUG) {
-					System.out.println(String.format(">> waitForResult still waiting - iteration %d", t));
+		if (!this.simulating) {
+			this.data.setMode(PinMode.DIGITAL_INPUT);
+			for (int t = 0; t < NB_TRIES; t++) {
+				delay(10L, 0);
+				state = this.data.getState();
+				if (state.getValue() == PinState.LOW.getValue()) {
+					if (DEBUG) {
+						System.out.println(String.format(">> waitForResult completed iteration %d", t));
+					}
+					break;
+				} else {
+					if (DEBUG) {
+						System.out.println(String.format(">> waitForResult still waiting - iteration %d", t));
+					}
 				}
 			}
-		}
-		if (state.getValue() == PinState.HIGH.getValue()) {
-			throw new RuntimeException("Sensor has not completed measurement within allocated time.");
+			if (state.getValue() == PinState.HIGH.getValue()) {
+				throw new RuntimeException("Sensor has not completed measurement within allocated time.");
+			}
 		}
 	}
 
@@ -319,11 +360,16 @@ public class STH10Driver {
 	public double readTemperature() {
 		byte cmd = COMMANDS.get(TEMPERATURE_CMD);
 		this.sendCommandSHT(cmd);
-		int value = this.readMeasurement();
-		if (DEBUG2 || DEBUG) {
-			System.out.println(String.format(">> Read temperature raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
+		int value = 0;
+		if (!this.simulating) {
+			value = this.readMeasurement();
+			if (DEBUG2 || DEBUG) {
+				System.out.println(String.format(">> Read temperature raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
+			}
+			return (value * D2_SO_C) + (D1_VDD_C); // Celcius
+		} else {
+			return this.temparatureSimulator.get();
 		}
-		return (value * D2_SO_C) + (D1_VDD_C); // Celcius
 	}
 
 	public double readHumidity() {
@@ -337,14 +383,18 @@ public class STH10Driver {
 		}
 		byte cmd = COMMANDS.get(HUMIDITY_CMD);
 		this.sendCommandSHT(cmd);
-		int value = this.readMeasurement();
-		if (DEBUG2 || DEBUG) {
-			System.out.println(String.format(">> Read humidity raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
+		int value = 0;
+		if (!this.simulating) {
+			value = this.readMeasurement();
+			if (DEBUG2 || DEBUG) {
+				System.out.println(String.format(">> Read humidity raw value %d, 0x%s", value, StringUtils.lpad(Integer.toBinaryString(value), 16, "0")));
+			}
+			double linearHumidity = C1_SO + (C2_SO * value) + (C3_SO * Math.pow(value, 2));
+			double humidity = ((t - 25) * (T1_S0 + (T2_SO * value)) + linearHumidity); // %
+			return humidity;
+		} else {
+			return this.humiditySimulator.get();
 		}
-
-		double linearHumidity = C1_SO + (C2_SO * value) + (C3_SO * Math.pow(value, 2));
-		double humidity = ((t - 25) * (T1_S0 + (T2_SO * value)) + linearHumidity); // %
-		return humidity;
 	}
 	/**
 	 *
@@ -396,7 +446,7 @@ public class STH10Driver {
 			if (DEBUG) {
 				System.out.println(String.format(">> sendCommandSHT with measurement, %d", command));
 			}
-			PinState state = this.data.getState();
+			PinState state = (!this.simulating ? this.data.getState() : PinState.HIGH); // TODO Simulate?
 			// SHT1x is taking measurement.
 			if (state.getValue() == PinState.LOW.getValue()) {
 				throw new RuntimeException("SHT1x is not in the proper measurement state. DATA line is LOW.");
@@ -417,8 +467,8 @@ public class STH10Driver {
 	}
 
 	public void shutdownGPIO() {
-		if (!gpio.isShutdown()) {
-			gpio.shutdown();
+		if (this.gpio != null && !this.gpio.isShutdown()) {
+			this.gpio.shutdown();
 		}
 	}
 

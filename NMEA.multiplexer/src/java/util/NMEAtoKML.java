@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 
 import static nmea.parser.StringParsers.GGA_ALT_IDX;
+import static utils.TimeUtil.fmtDHMS;
+import static utils.TimeUtil.msToHMS;
 
 public class NMEAtoKML {
 	private static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
@@ -29,26 +31,6 @@ public class NMEAtoKML {
 
 	private final static String TITLE_PREFIX = "--title:";
 	private final static String SUB_TITLE_PREFIX = "--sub-title:";
-
-	private static String msToHMS(long ms) {
-		String str = "";
-		long remainder = ms;
-		int days = (int) (remainder / DAY);
-		remainder -= (days * DAY);
-		int hours = (int) (remainder / HOUR);
-		remainder -= (hours * HOUR);
-		int minutes = (int) (remainder / MIN);
-		remainder -= (minutes * MIN);
-		float seconds = (float) (remainder / SEC);
-		if (days > 0)
-			str = days + " day(s) ";
-		if (hours > 0 || str.trim().length() > 0)
-			str += hours + " hour(s) ";
-		if (minutes > 0 || str.trim().length() > 0)
-			str += minutes + " minute(s) ";
-		str += seconds + " sec(s)";
-		return str.trim();
-	}
 
 	public static void main(String... args) {
 		if (args.length == 0) {
@@ -194,7 +176,7 @@ public class NMEAtoKML {
 					NumberFormat.getInstance().format(nbRec),
 					NumberFormat.getInstance().format(totalNbRec),
 					distanceInKm,
-					msToHMS(arrival.getTime() - start.getTime()),
+					fmtDHMS(msToHMS(arrival.getTime() - start.getTime())),
 					distanceInKm / ((arrival.getTime() - start.getTime()) / ((double)HOUR))));
 			System.out.println(String.format("Max Speed: %.03f km/h", maxSpeed * KNOTS_TO_KMH));
 			System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));

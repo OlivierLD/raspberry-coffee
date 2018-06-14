@@ -95,6 +95,39 @@ public class TimeUtil {
 		}
 	}
 
+	private final static long SEC  = 1000L;
+	private final static long MIN  = 60 * SEC;
+	private final static long HOUR = 60 * MIN;
+	private final static long DAY  = 24 * HOUR;
+
+	public static int[] msToHMS(long ms) {
+		long remainder = ms;
+		int days = (int) (remainder / DAY);
+		remainder -= (days * DAY);
+		int hours = (int) (remainder / HOUR);
+		remainder -= (hours * HOUR);
+		int minutes = (int) (remainder / MIN);
+		remainder -= (minutes * MIN);
+		int seconds = (int) (remainder / SEC);
+		remainder -= (seconds * SEC);
+		int millis = (int)remainder;
+
+		return new int[] { days, hours, minutes, seconds, millis };
+	}
+
+	public static String fmtDHMS(int[] date) {
+		String str = "";
+		if (date[0] > 0)
+			str = String.format("%d day%s ", date[0], (date[0] > 1 ? "s" : ""));
+		if (date[1] > 0 || str.trim().length() > 0)
+			str += String.format("%d hour%s ", date[1], (date[1] > 1 ? "s" : ""));
+		if (date[2] > 0 || str.trim().length() > 0)
+			str += (String.format("%d minute%s", date[2], (date[2] > 1 ? "s" : "")));
+		if (date[3] > 0 || date[4] > 0) {
+			str += (String.format("%s%d.%03d sec%s", (str.trim().length() > 0 ? " " : ""), date[3], date[4], (date[3] > 1 ? "s" : "")));
+		}
+		return str;
+	}
 
 	public static void main(String args[]) {
 		SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
@@ -185,5 +218,9 @@ public class TimeUtil {
 		System.out.println("GTM :" + (new SimpleDateFormat("yyyy MMMMM dd HH:mm:ss 'GMT'").format(getGMT(now))));
 
 		System.out.println("To DMS:" + decHoursToDMS(13.831260480533272));
+
+		long _now = System.currentTimeMillis();
+		System.out.println(String.format("Now: %s", fmtDHMS(msToHMS(_now))));
+
 	}
 }

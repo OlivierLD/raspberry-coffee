@@ -47,3 +47,101 @@ With a Relay
 ### The Hardware
 The tank, the hoses
 
+### Usage
+
+Run the script named `read.probe.sh`. It contains the program's arguments.
+
+If it is run somewhere else than on a Rapsberry PI, data will be _simulated_.
+
+To see the available program arguments:
+```
+$ java $JAVA_OPTIONS -cp $CP main.STH10 --help
+  +---------------------------------------
+  | Program arguments are:
+  +---------------------------------------
+  | --water-below:	Integer. Humidity threshold in %, default is --water-below:35, start watering below this value.
+  | --water-during:	Integer. In seconds, default is --water-during:10. Duration of the watering process.
+  | --resume-after:	Integer. In seconds, default is --resume-after:120. After watering, resume sensor monitoring after this amount of time.
+  | --verbose:	Boolean. Verbose, default is --verbose:false, values can be 'true' or something else.
+  | --data-pin:	Integer. BCM (aka GPIO) pin number of the DATA pin of the sensor. Default is --data-pin:18.
+  | --clock-pin:	Integer. BCM (aka GPIO) pin number of the CLOCK pin of the sensor. Default is --clock-pin:23.
+  | --relay-pin:	Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17.
+  | --help	Display the help and exit.
+  +---------------------------------------
+```
+
+See below the output of a simulated session (see the `UnsatisfiedLinkError`)
+```
+$ ./read.probe.sh
+Usage is ./read.probe.sh [debug]
+   Use 'debug' to remote-debug from another machine.
++------- P L A N T   W A T E R I N G   S Y S T E M --------
+| Start watering under 50% of humidity.
+| Water during 10.000 secs
+| Resume sensor watch 30.000 secs after watering.
++----------------------------------------------------------
+Wiring:
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+       |     |     | 3v3          | #01 || #02 |          5v0 |     |     |
+       |  02 |  08 | SDA1         | #03 || #04 |          5v0 |     |     |
+       |  03 |  09 | SCL1         | #05 || #06 |          GND |     |     |
+       |  04 |  07 | GPCLK0       | #07 || #08 |    UART0_TXD | 15  | 14  |
+       |     |     | GND          | #09 || #10 |    UART0_RXD | 16  | 15  |
+ RELAY |  17 |  00 | GPIO_0       | #11 || #12 | PCM_CLK/PWM0 | 01  | 18  | DATA
+       |  27 |  02 | GPIO_2       | #13 || #14 |          GND |     |     |
+       |  22 |  03 | GPIO_3       | #15 || #16 |       GPIO_4 | 04  | 23  | CLOCK
+       |     |     | 3v3          | #01 || #18 |       GPIO_5 | 05  | 24  |
+       |  10 |  12 | SPI0_MOSI    | #19 || #20 |          GND |     |     |
+       |  09 |  13 | SPI0_MISO    | #21 || #22 |       GPIO_6 | 06  | 25  |
+       |  11 |  14 | SPI0_CLK     | #23 || #24 |   SPI0_CS0_N | 10  | 08  |
+       |     |     | GND          | #25 || #26 |   SPI0_CS1_N | 11  | 07  |
+       |     |  30 | SDA0         | #27 || #28 |         SCL0 | 31  |     |
+       |  05 |  21 | GPCLK1       | #29 || #30 |          GND |     |     |
+       |  06 |  22 | GPCLK2       | #31 || #32 |         PWM0 | 26  | 12  |
+       |  13 |  23 | PWM1         | #33 || #34 |          GND |     |     |
+       |  19 |  24 | PCM_FS/PWM1  | #35 || #36 |      GPIO_27 | 27  | 16  |
+       |  26 |  25 | GPIO_25      | #37 || #38 |      PCM_DIN | 28  | 20  |
+       |     |     | GND          | #39 || #40 |     PCM_DOUT | 29  | 21  |
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+       | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
+       +-----+-----+--------------+-----++-----+--------------+-----+-----+
+Jun 14, 2018 1:26:09 PM com.pi4j.util.NativeLibraryLoader load
+SEVERE: Unable to load [libpi4j.so] using path: [/lib/raspberrypi/dynamic/libpi4j.so]
+java.lang.UnsatisfiedLinkError: /private/var/folders/x4/l4ndqsqs0xb2gfdj99fl9xd80000gn/T/libpi4j8258820691126203472.so: dlopen(/private/var/folders/x4/l4ndqsqs0xb2gfdj99fl9xd80000gn/T/libpi4j8258820691126203472.so, 1): no suitable image found.  Did find:
+	/private/var/folders/x4/l4ndqsqs0xb2gfdj99fl9xd80000gn/T/libpi4j8258820691126203472.so: unknown file type, first eight bytes: 0x7F 0x45 0x4C 0x46 0x01 0x01 0x01 0x00
+	/private/var/folders/x4/l4ndqsqs0xb2gfdj99fl9xd80000gn/T/libpi4j8258820691126203472.so: stat() failed with errno=38
+	at java.base/java.lang.ClassLoader$NativeLibrary.load(Native Method)
+	at java.base/java.lang.ClassLoader.loadLibrary0(ClassLoader.java:2614)
+	at java.base/java.lang.ClassLoader.loadLibrary(ClassLoader.java:2499)
+	at java.base/java.lang.Runtime.load0(Runtime.java:812)
+	at java.base/java.lang.System.load(System.java:1821)
+	at com.pi4j.util.NativeLibraryLoader.loadLibraryFromClasspath(NativeLibraryLoader.java:159)
+	at com.pi4j.util.NativeLibraryLoader.load(NativeLibraryLoader.java:105)
+	at com.pi4j.wiringpi.Gpio.<clinit>(Gpio.java:189)
+	at com.pi4j.io.gpio.RaspiGpioProvider.<init>(RaspiGpioProvider.java:69)
+	at com.pi4j.io.gpio.RaspiGpioProvider.<init>(RaspiGpioProvider.java:51)
+	at com.pi4j.platform.Platform.getGpioProvider(Platform.java:125)
+	at com.pi4j.platform.Platform.getGpioProvider(Platform.java:118)
+	at com.pi4j.io.gpio.GpioFactory.getDefaultProvider(GpioFactory.java:109)
+	at com.pi4j.io.gpio.impl.GpioControllerImpl.<init>(GpioControllerImpl.java:53)
+	at com.pi4j.io.gpio.GpioFactory.getInstance(GpioFactory.java:91)
+	at sensors.sth10.STH10Driver.<init>(STH10Driver.java:83)
+	at main.STH10.main(STH10.java:186)
+
+>> Will simulate STH10
+>> Will simulate Relay
+Temp: 20.03 C, Hum: 50.41% (dew pt Temp: 9.43 C)
+Temp: 20.77 C, Hum: 51.13% (dew pt Temp: 10.31 C)
+Temp: 19.82 C, Hum: 50.97% (dew pt Temp: 9.40 C)
+
+...
+
+^C>> Relay is DOWN
+
+Exiting
+Simulated temperature between 19.82 and 20.77
+Simulated humidity between 50.00 and 51.13
+Bye-bye!
+```

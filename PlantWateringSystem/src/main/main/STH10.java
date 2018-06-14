@@ -7,6 +7,10 @@ import utils.PinUtil;
 import utils.WeatherUtil;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
+
+import static utils.TimeUtil.fmtDHMS;
+import static utils.TimeUtil.msToHMS;
 
 /**
  * Example / Prototype...
@@ -53,8 +57,36 @@ public class STH10 {
 	}
 
 	private static boolean verbose = false;
+
 	private static STH10Driver probe = null;
 	private static RelayDriver relay = null;
+
+	// Simulators, to run on non-Raspberry PIs - for development.
+	private static Supplier<Double> temperatureSimulator = STH10::simulateTemp;
+	private static Supplier<Double> humiditySimulator = STH10::simulateHum;
+
+	private static double siumlatedTemperature = 20d;
+	private static double siumlatedHumidity = 50d;
+
+	private static double minSimTemp = siumlatedTemperature, maxSimTemp = siumlatedTemperature;
+	private static double minSimHum = siumlatedHumidity, maxSimHum = siumlatedHumidity;
+
+	private static Double simulateTemp() {
+		int sign = (int)System.currentTimeMillis() % 2;
+		double diff = Math.random() * (sign == 0 ? 1 : -1);
+		siumlatedTemperature += diff;
+		minSimTemp = Math.min(minSimTemp, siumlatedTemperature);
+		maxSimTemp = Math.max(maxSimTemp, siumlatedTemperature);
+		return siumlatedTemperature;
+	}
+	private static Double simulateHum() {
+		int sign = (int)System.currentTimeMillis() % 2;
+		double diff = Math.random() * (sign == 0 ? 1 : -1);
+		siumlatedHumidity += diff;
+		minSimHum = Math.min(minSimHum, siumlatedHumidity);
+		maxSimHum = Math.max(maxSimHum, siumlatedHumidity);
+		return siumlatedHumidity;
+	}
 
 	public static void main(String... args) {
 
@@ -137,8 +169,8 @@ public class STH10 {
 		// Print summary
 		System.out.println("+------- P L A N T   W A T E R I N G   S Y S T E M --------");
 		System.out.println(String.format("| Start watering under %d%% of humidity.", humidityThreshold));
-		System.out.println(String.format("| Water during %d seconds.", wateringDuration));
-		System.out.println(String.format("| Resume sensor watch %d seconds after watering.", resumeSensorWatchAfter));
+		System.out.println(String.format("| Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))));
+		System.out.println(String.format("| Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))));
 		System.out.println("+----------------------------------------------------------");
 
 		// Compose mapping for PinUtil, physical numbers.
@@ -152,7 +184,23 @@ public class STH10 {
 
 		try {
 			probe = new STH10Driver(PinUtil.getPinByGPIONumber(dataPin), PinUtil.getPinByGPIONumber(clockPin));
+			if (probe.isSimulating()) {
+				// Provide simulator here
+				System.out.println(">> Will simulate STH10");
+				probe.setSimulators(temperatureSimulator, humiditySimulator);
+			}
+	  } catch (UnsatisfiedLinkError ule) {
+			System.out.println("You're not on a Raspberry PI, or your wiring is wrong.");
+			System.out.println("Exiting.");
+			System.exit(1);
+		}
+		try {
 			relay = new RelayDriver(PinUtil.getPinByGPIONumber(relayPin));
+			if (relay.isSimulating()) {
+				// Provide simulator here
+				System.out.println(">> Will simulate Relay");
+				relay.setSimulator(System.out::println);
+			}
 		} catch (UnsatisfiedLinkError ule) {
 			System.out.println("You're not on a Raspberry PI, or your wiring is wrong.");
 			System.out.println("Exiting.");
@@ -245,6 +293,11 @@ public class STH10 {
 					ex.printStackTrace();
 				}
 			}
+		}
+
+		if (probe.isSimulating()) {
+			System.out.println(String.format("Simulated temperature between %.02f and %.02f", minSimTemp, maxSimTemp));
+			System.out.println(String.format("Simulated humidity between %.02f and %.02f", minSimHum, maxSimHum));
 		}
 
 		probe.shutdownGPIO();
