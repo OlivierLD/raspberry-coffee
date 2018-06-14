@@ -4,6 +4,7 @@ import com.pi4j.io.gpio.PinState;
 import relay.RelayDriver;
 import sensors.sth10.STH10Driver;
 import utils.PinUtil;
+import utils.StaticUtil;
 import utils.WeatherUtil;
 
 import java.util.Arrays;
@@ -62,8 +63,8 @@ public class STH10 {
 	private static RelayDriver relay = null;
 
 	// Simulators, to run on non-Raspberry PIs - for development.
-	private static Supplier<Double> temperatureSimulator = STH10::simulateTemp;
-	private static Supplier<Double> humiditySimulator = STH10::simulateHum;
+	private static Supplier<Double> temperatureSimulator = STH10::simulateUserTemp; // STH10::simulateTemp;
+	private static Supplier<Double> humiditySimulator = STH10::simulateUserHum;     // STH10::simulateHum;
 
 	private static double siumlatedTemperature = 20d;
 	private static double siumlatedHumidity = 50d;
@@ -86,6 +87,31 @@ public class STH10 {
 		minSimHum = Math.min(minSimHum, siumlatedHumidity);
 		maxSimHum = Math.max(maxSimHum, siumlatedHumidity);
 		return siumlatedHumidity;
+	}
+
+	// Interactive simulators, for dev and tests.
+	private static Double simulateUserTemp() {
+		return siumlatedTemperature;
+	}
+	private static Double simulateUserHum() {
+		return siumlatedHumidity;
+	}
+
+	private static void parseUserInput(String str) {
+		// Input can be T:XX or H:xx
+		if (str.startsWith("T:")) {
+			try {
+				siumlatedTemperature = Double.parseDouble(str.substring("T:".length()));
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		} else if (str.startsWith("H:")) {
+			try {
+				siumlatedHumidity = Double.parseDouble(str.substring("H:".length()));
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
 	}
 
 	public static void main(String... args) {
@@ -173,14 +199,15 @@ public class STH10 {
 		System.out.println(String.format("| Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))));
 		System.out.println("+----------------------------------------------------------");
 
-		// Compose mapping for PinUtil, physical numbers.
-		String[] map = new String[3];
-		map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(dataPin)).pinNumber()) + ":" + "DATA";
-		map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clockPin)).pinNumber()) + ":" + "CLOCK";
-		map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
-
-		System.out.println("Wiring:");
-		PinUtil.print(map);
+		if (verbose) {
+			System.out.println("Wiring:");
+			// Compose mapping for PinUtil, physical numbers.
+			String[] map = new String[3];
+			map[0] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(dataPin)).pinNumber()) + ":" + "DATA";
+			map[1] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(clockPin)).pinNumber()) + ":" + "CLOCK";
+			map[2] = String.valueOf(PinUtil.findByPin(PinUtil.getPinByGPIONumber(relayPin)).pinNumber()) + ":" + "RELAY";
+			PinUtil.print(map);
+		}
 
 		try {
 			probe = new STH10Driver(PinUtil.getPinByGPIONumber(dataPin), PinUtil.getPinByGPIONumber(clockPin));
@@ -218,6 +245,15 @@ public class STH10 {
 			}
 		}));
 
+		// Manual input
+		Thread manualThread = new Thread(() -> {
+			while (go) {
+				String userInput = StaticUtil.userInput(" T:XX, H:XX > ");
+				parseUserInput(userInput);
+			}
+		});
+		manualThread.start();
+
 		/*
 		 * This is the main loop
 		 */
@@ -225,7 +261,7 @@ public class STH10 {
 			double t = probe.readTemperature();
 			double h = probe.readHumidity(t);
 
-			// TODO A screen (Like the SSD1306) ?
+			// TODO A screen (Like the SSD1306), ANSI Console ?
 			System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", t, h, WeatherUtil.dewPointTemperature(h, t)));
 
 			/*

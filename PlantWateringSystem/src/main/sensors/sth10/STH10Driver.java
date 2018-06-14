@@ -11,6 +11,10 @@ import com.pi4j.io.gpio.RaspiPin;
 import utils.PinUtil;
 import utils.StringUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -79,11 +83,20 @@ public class STH10Driver {
 		this.dataPin = _dataPin;
 		this.clockPin = _clockPin;
 
+		// Trap stderr output
+		PrintStream console = System.err;
 		try {
-			this.gpio = GpioFactory.getInstance();
-		} catch (UnsatisfiedLinkError ule) {
-			// Simulating
-			this.simulating = true;
+			PrintStream hidden = new PrintStream(new FileOutputStream(new File("hidden.txt")));
+			System.setErr(hidden);
+			try {
+				this.gpio = GpioFactory.getInstance();
+			} catch (UnsatisfiedLinkError ule) {
+				// Simulating
+				this.simulating = true;
+			}
+			System.setErr(console);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
 
 		if (this.gpio != null) {

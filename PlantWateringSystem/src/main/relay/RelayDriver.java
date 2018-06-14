@@ -7,6 +7,10 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.function.Consumer;
 
 public class RelayDriver {
@@ -25,12 +29,21 @@ public class RelayDriver {
 	}
 
 	public RelayDriver(Pin _signalPin) {
+		// Trap stderr output
+		PrintStream console = System.err;
 		try {
-			this.gpio = GpioFactory.getInstance();
-			this.signalPin = _signalPin;
-			this.signal = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Relay", PinState.LOW);
-		} catch (UnsatisfiedLinkError ule) {
-			this.simulating = true;
+			PrintStream hidden = new PrintStream(new FileOutputStream(new File("hidden.txt")));
+			System.setErr(hidden);
+			try {
+				this.gpio = GpioFactory.getInstance();
+				this.signalPin = _signalPin;
+				this.signal = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Relay", PinState.LOW);
+			} catch (UnsatisfiedLinkError ule) {
+				this.simulating = true;
+			}
+			System.setErr(console);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
 	}
 
@@ -46,7 +59,7 @@ public class RelayDriver {
 		if (!this.simulating) {
 			this.signal.high();
 		} else {
-			this.simulator.accept(">> Relay is UP");
+			this.simulator.accept(">> Turning Relay UP");
 		}
 	}
 
@@ -54,7 +67,7 @@ public class RelayDriver {
 		if (!this.simulating) {
 			this.signal.low();
 		} else {
-			this.simulator.accept(">> Relay is DOWN");
+			this.simulator.accept(">> Turning Relay DOWN");
 		}
 	}
 

@@ -3,7 +3,7 @@ We want to interface a Moisture/Humidity/Temperature sensor (https://www.adafrui
 a solenoid valve (https://www.adafruit.com/product/997), to irrigate the plants in need.
 
 The `STH10` is a temperature and humidity sensor that can be stuck in the soil next to a plant.
-The goal here is to read the humidity, and to water the plan when the humidity goes below a given threshold.
+The goal here is to read the humidity of the soil, and to water the plan when the humidity goes below a given threshold.
 
 Watering is done by opening a solenoid valve connected to a tank of water.
 
