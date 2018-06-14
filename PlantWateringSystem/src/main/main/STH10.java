@@ -189,7 +189,7 @@ public class STH10 {
 				System.out.println(">> Will simulate STH10");
 				probe.setSimulators(temperatureSimulator, humiditySimulator);
 			}
-	  } catch (UnsatisfiedLinkError ule) {
+	  } catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of STH10Driver.
 			System.out.println("You're not on a Raspberry PI, or your wiring is wrong.");
 			System.out.println("Exiting.");
 			System.exit(1);
@@ -201,7 +201,7 @@ public class STH10 {
 				System.out.println(">> Will simulate Relay");
 				relay.setSimulator(System.out::println);
 			}
-		} catch (UnsatisfiedLinkError ule) {
+		} catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of RelayDriver.
 			System.out.println("You're not on a Raspberry PI, or your wiring is wrong.");
 			System.out.println("Exiting.");
 			System.exit(1);
@@ -286,6 +286,7 @@ public class STH10 {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				// Resume watching
 			} else {
 				try {
 					Thread.sleep(1_000L);

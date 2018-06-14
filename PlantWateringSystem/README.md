@@ -2,6 +2,11 @@
 We want to interface a Moisture/Humidity/Temperature sensor (https://www.adafruit.com/product/1298) with
 a solenoid valve (https://www.adafruit.com/product/997), to irrigate the plants in need.
 
+The `STH10` is a temperature and humidity sensor that can be stuck in the soil next to a plant.
+The goal here is to read the humidity, and to water the plan when the humidity goes below a given threshold.
+
+Watering is done by opening a solenoid valve connected to a tank of water.
+
 ### Reading the STH10 Sensor
 We start from an Arduino sketch, that can read the STH10. The 10KOhms resistor is not to be forgotten.
 
@@ -21,7 +26,9 @@ On the Raspberry PI, the code at https://github.com/drohm/pi-sht1x works fine wi
 
 ---
 
-Inspired from https://github.com/drohm/pi-sht1x, the Java code is now also available.
+Inspired from https://github.com/drohm/pi-sht1x and the [STH1x Specs](https://cdn-shop.adafruit.com/datasheets/Sensirion_Humidity_SHT1x_Datasheet_V5.pdf), the Java code is now also available in this project.
+It relies on `PI4J`.
+See the class named `sensors.sth10.STH10Driver.java`.
 
 ---
 
