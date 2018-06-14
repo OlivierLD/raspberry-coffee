@@ -106,12 +106,13 @@ public class STH10 {
 					Thread wateringThread = new Thread(() -> {
 						for (int i=0; i<_waterDuration; i++) {
 							try { Thread.sleep(1_000L); } catch (InterruptedException ie) {}
-							System.out.println("gloo...");
+							System.out.println(String.format("\tgloo... %d", (_waterDuration - i)));
 						}
 						synchronized (mainThread) {
+							System.out.println("Ok! Enough!");
 							mainThread.notify();
 						}
-					}, "watering");
+					}, "watering-thread");
 					wateringThread.start();
 
 					synchronized (mainThread) {
