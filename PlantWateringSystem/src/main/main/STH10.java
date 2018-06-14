@@ -98,6 +98,7 @@ public class STH10 {
 			if (h < humidityThreshold) { // Ah! Need some water
 				// Open the valve
 				relay.up();
+				System.out.println("Watering...");
 				// Watering time
 				try {
 					Thread.sleep(wateringDuration * 1_000L);
@@ -105,7 +106,9 @@ public class STH10 {
 				}
 				// Shut the valve
 				relay.down();
+				System.out.println("Done watering.");
 				// Wait before resuming sensor watching
+				System.out.println("Napping a bit");
 				try {
 					Thread.sleep(resumeSensorWatchAfter * 1_000L);
 				} catch (Exception ex) {
