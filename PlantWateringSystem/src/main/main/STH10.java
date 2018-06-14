@@ -90,7 +90,7 @@ public class STH10 {
 			double h = probe.readHumidity(t);
 
 			// TODO A screen (Like the SSD1306) ?
-			System.out.println(String.format("Temp: %.02f C, Hum: %.02f%%, dew pt Temp: %.02f", t, h, WeatherUtil.dewPointTemperature(h, t)));
+			System.out.println(String.format("Temp: %.02f C, Hum: %.02f%%, dew pt Temp: %.02f C", t, h, WeatherUtil.dewPointTemperature(h, t)));
 
 			/*
 			 * Here, test the sensor's values, and make the decision about the valve.
