@@ -350,10 +350,11 @@ public class STH10 {
 		 * This is the main loop
 		 */
 		while (go) {
+
 			temperature = probe.readTemperature();
 			humidity = probe.readHumidity(temperature);
 
-			// TODO A screen (Like the SSD1306), ANSI Console ?
+			// TODO A screen (Like the SSD1306), ANSI Console, log file ?
 			if (verbose != VERBOSE.ANSI) {
 				System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", temperature, humidity, WeatherUtil.dewPointTemperature(humidity, temperature)));
 			} else {
@@ -430,6 +431,7 @@ public class STH10 {
 				// Shut the valve
 				relay.down();
 				// Wait before resuming sensor watching
+
 				message = "Napping a bit... Spreading the word...";
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
@@ -437,9 +439,46 @@ public class STH10 {
 					displayAnsiData();
 				}
 				try {
-					Thread.sleep(resumeSensorWatchAfter * 1_000L);
-				} catch (Exception ex) {
-					ex.printStackTrace();
+					final Thread mainThread = Thread.currentThread();
+					final long _napDuration = resumeSensorWatchAfter;
+					Thread wateringThread = new Thread(() -> {
+						for (int i = 0; i < _napDuration; i++) {
+							try {
+								Thread.sleep(1_000L);
+							} catch (InterruptedException ie) {
+								ie.printStackTrace();
+							}
+							// Tick, countdown...
+							message = String.format("Resuming watching in %s...", fmtDHMS(msToHMS(((_napDuration - i) * 1_000L))));
+							if (verbose == VERBOSE.STDOUT) {
+								System.out.println(message);
+							} else if (verbose == VERBOSE.ANSI) {
+								displayAnsiData();
+							}
+						}
+						synchronized (mainThread) {
+							message = "Resuming watching.";
+							if (verbose == VERBOSE.STDOUT) {
+								System.out.println(message);
+							} else if (verbose == VERBOSE.ANSI) {
+								displayAnsiData();
+							}
+							mainThread.notify(); // Release the wait on main thread.
+						}
+					}, "watering-thread");
+					wateringThread.start();
+
+					synchronized (mainThread) {
+						mainThread.wait();
+						message = "";
+						if (verbose == VERBOSE.STDOUT) {
+							System.out.println(message);
+						} else if (verbose == VERBOSE.ANSI) {
+							displayAnsiData();
+						}
+					}
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
 				}
 				// Resume watching
 				message = "";
