@@ -1,6 +1,5 @@
 package main;
 
-import calc.GeomUtil;
 import com.pi4j.io.gpio.PinState;
 import org.fusesource.jansi.AnsiConsole;
 import relay.RelayDriver;
@@ -81,48 +80,48 @@ public class STH10 {
 	private static Supplier<Double> temperatureSimulator = STH10::simulateUserTemp; // STH10::simulateTemp;
 	private static Supplier<Double> humiditySimulator = STH10::simulateUserHum;     // STH10::simulateHum;
 
-	private static double siumlatedTemperature = 20d;
-	private static double siumlatedHumidity = 50d;
+	private static double temperature = 20d;
+	private static double humidity = 50d;
 
-	private static double minSimTemp = siumlatedTemperature, maxSimTemp = siumlatedTemperature;
-	private static double minSimHum = siumlatedHumidity, maxSimHum = siumlatedHumidity;
+	private static double minSimTemp = temperature, maxSimTemp = temperature;
+	private static double minSimHum = humidity, maxSimHum = humidity;
 
 	private static Double simulateTemp() {
 		int sign = (int)System.currentTimeMillis() % 2;
 		double diff = Math.random() * (sign == 0 ? 1 : -1);
-		siumlatedTemperature += diff;
-		minSimTemp = Math.min(minSimTemp, siumlatedTemperature);
-		maxSimTemp = Math.max(maxSimTemp, siumlatedTemperature);
-		return siumlatedTemperature;
+		temperature += diff;
+		minSimTemp = Math.min(minSimTemp, temperature);
+		maxSimTemp = Math.max(maxSimTemp, temperature);
+		return temperature;
 	}
 	private static Double simulateHum() {
 		int sign = (int)System.currentTimeMillis() % 2;
 		double diff = Math.random() * (sign == 0 ? 1 : -1);
-		siumlatedHumidity += diff;
-		minSimHum = Math.min(minSimHum, siumlatedHumidity);
-		maxSimHum = Math.max(maxSimHum, siumlatedHumidity);
-		return siumlatedHumidity;
+		humidity += diff;
+		minSimHum = Math.min(minSimHum, humidity);
+		maxSimHum = Math.max(maxSimHum, humidity);
+		return humidity;
 	}
 
 	// Interactive simulators, for dev and tests.
 	private static Double simulateUserTemp() {
-		return siumlatedTemperature;
+		return temperature;
 	}
 	private static Double simulateUserHum() {
-		return siumlatedHumidity;
+		return humidity;
 	}
 
 	private static void parseUserInput(String str) {
 		// Input can be T:XX or H:xx
 		if (str.startsWith("T:")) {
 			try {
-				siumlatedTemperature = Double.parseDouble(str.substring("T:".length()));
+				temperature = Double.parseDouble(str.substring("T:".length()));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
 		} else if (str.startsWith("H:")) {
 			try {
-				siumlatedHumidity = Double.parseDouble(str.substring("H:".length()));
+				humidity = Double.parseDouble(str.substring("H:".length()));
 			} catch (NumberFormatException nfe) {
 				nfe.printStackTrace();
 			}
@@ -191,13 +190,10 @@ public class STH10 {
 				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 				RIGHT_T_BOLD +
 				PAD);
-		// Servo info, tilt
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-//				rpad(String.format(" Tilt Servo(s) # %s. limit %d, offset %d",
-//						Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
-//						tiltLimit,
-//						tiltOffset), 45) + SOLID_VERTICAL_BOLD +
-//				PAD);
+		// Sensor Data
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+				rpad(String.format("Temp: %.02f C, Hum: %.02f%%", temperature, humidity), 45) + SOLID_VERTICAL_BOLD +
+				PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				LEFT_T_BOLD +
@@ -275,7 +271,7 @@ public class STH10 {
 				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 				RIGHT_T_BOLD +
 				PAD);
-		// Servos
+		// Sensor data
 //		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Heading Servo ", 15) +
 //				SOLID_VERTICAL_BOLD +
 //				rpad(" " + String.format("%s%s", lpad(String.format("%+02d", ansiHeadingServoAngle), 3, " "), (invert? String.format(" (inverted to %+.0f)",	invertHeading((float) ansiHeadingServoAngle)) :"")), 29) +
@@ -463,16 +459,18 @@ public class STH10 {
 		 * This is the main loop
 		 */
 		while (go) {
-			double t = probe.readTemperature();
-			double h = probe.readHumidity(t);
+			temperature = probe.readTemperature();
+			humidity = probe.readHumidity(temperature);
 
 			// TODO A screen (Like the SSD1306), ANSI Console ?
-			System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", t, h, WeatherUtil.dewPointTemperature(h, t)));
+			if (verbose != VERBOSE.ANSI) {
+				System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", temperature, humidity, WeatherUtil.dewPointTemperature(humidity, temperature)));
+			}
 
 			/*
 			 * Here, test the sensor's values, and make the decision about the valve.
 			 */
-			if (h < humidityThreshold) { // Ah! Need some water
+			if (humidity < humidityThreshold) { // Ah! Need some water
 				// Open the valve
 				relay.up();
 				if (verbose == VERBOSE.STDOUT) {
