@@ -158,7 +158,7 @@ public class STH10 {
 				TOP_RIGHT_CORNER_BOLD +
 				PAD);
 		// Title. Note: The italic escape code is correct. But it does not work on all platforms.
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Plant Watering System ", FRAME_WIDTH) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("              PLANT WATERING SYSTEM ", FRAME_WIDTH) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				LEFT_T_BOLD +
@@ -442,6 +442,10 @@ public class STH10 {
 					ex.printStackTrace();
 				}
 				// Resume watching
+				message = "";
+				if (verbose == VERBOSE.ANSI) {
+					displayAnsiData();
+				}
 			} else {
 				try {
 					Thread.sleep(1_000L);
