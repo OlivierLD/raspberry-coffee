@@ -161,13 +161,33 @@ An ANSI version is available:
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃              PLANT WATERING SYSTEM               ┃
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ Start watering under 50% of humidity.            ┃
+┃ Start watering under 35% of humidity.            ┃
 ┃ Water during 10.000 secs                         ┃
 ┃ Resume sensor watch 2 minutes after watering.    ┃
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ Temp: 20.35 C, Hum: 49.38%                       ┃
+┃ REST Server on port 1234                         ┃
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ Resuming watching in 1 minute 52.000 secs...     ┃
+┃ Temp: 20.17 C, Hum: 30.23%                       ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ Resuming watching in 33.000 secs...              ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+```
 
+### Simulation
+There is a REST server that helps sending value to the program
+- if you are not on a Raspberry PI
+- if you want to enforce simulation (for tests)
+
+```
+$ curl http://localhost:9999/pws/oplist
+```
+
+```
+$ curl -H "Content-Type: application/json" -X POST -d '{"temperature":20.17,"humidity":30.23}' http://localhost:9999/pws/sth10-data
+```
+
+```
+$ curl -X GET http://localhost:1234/pws/sth10-data
+
+{"temperature":20.17,"humidity":30.23}
 ```
