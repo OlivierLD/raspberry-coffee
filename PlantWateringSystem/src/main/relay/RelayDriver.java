@@ -58,17 +58,17 @@ public class RelayDriver {
 		this.relayStatus = relayStatus;
 	}
 
-	public void up() {
+	public void on() {
 		if (!this.simulating) {
-			this.signal.high();
+			this.signal.low();
 		} else {
 			this.simulator.accept(PinState.LOW);
 		}
 	}
 
-	public void down() {
+	public void off() {
 		if (!this.simulating) {
-			this.signal.low();
+			this.signal.high();
 		} else {
 			this.simulator.accept(PinState.HIGH);
 		}
