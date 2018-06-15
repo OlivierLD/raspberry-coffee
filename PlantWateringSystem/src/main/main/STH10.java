@@ -131,9 +131,9 @@ public class STH10 {
 	public static void setRelayState(PinState state) {
 		if (relay != null) {
 			if (state.isHigh()) {
-				relay.down();
+				relay.off();
 			} else {
-				relay.up();
+				relay.on();
 			}
 		}
 	}
@@ -323,7 +323,7 @@ public class STH10 {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			go = false;
 			if (relay.getState() == PinState.LOW) {
-				relay.down();
+				relay.off();
 			}
 			System.out.println("\nExiting");
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {
@@ -366,7 +366,7 @@ public class STH10 {
 			 */
 			if (humidity < humidityThreshold) { // Ah! Need some water
 				// Open the valve
-				relay.up();
+				relay.on();
 				message = "Watering...";
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
@@ -429,7 +429,7 @@ public class STH10 {
 					ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 				}
 				// Shut the valve
-				relay.down();
+				relay.off();
 				// Wait before resuming sensor watching
 
 				message = "Napping a bit... Spreading the word...";
