@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class RelayDriver {
 
@@ -19,10 +20,11 @@ public class RelayDriver {
 
 	private static final Pin DEFAULT_SIGNAL_PIN =  RaspiPin.GPIO_00; // BCM 17
 
-	private Pin signalPin;
+	private Pin signalPin = DEFAULT_SIGNAL_PIN;
 	private GpioPinDigitalOutput signal = null;
 	private boolean simulating = false;
-	private Consumer<String> simulator = null;
+	private Consumer<PinState> simulator = null;
+	private Supplier<PinState> relayStatus = null;
 
 	public RelayDriver() {
 		this(DEFAULT_SIGNAL_PIN);
@@ -37,7 +39,7 @@ public class RelayDriver {
 			try {
 				this.gpio = GpioFactory.getInstance();
 				this.signalPin = _signalPin;
-				this.signal = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Relay", PinState.LOW);
+				this.signal = gpio.provisionDigitalOutputPin(signalPin, "Relay", PinState.LOW);
 			} catch (UnsatisfiedLinkError ule) {
 				this.simulating = true;
 			}
@@ -51,15 +53,16 @@ public class RelayDriver {
 		return this.simulating;
 	}
 
-	public void setSimulator(Consumer<String> simulator) {
+	public void setSimulator(Consumer<PinState> simulator, Supplier<PinState> relayStatus) {
 		this.simulator = simulator;
+		this.relayStatus = relayStatus;
 	}
 
 	public void up() {
 		if (!this.simulating) {
 			this.signal.high();
 		} else {
-			this.simulator.accept(">> Turning Relay UP");
+			this.simulator.accept(PinState.HIGH);
 		}
 	}
 
@@ -67,7 +70,7 @@ public class RelayDriver {
 		if (!this.simulating) {
 			this.signal.low();
 		} else {
-			this.simulator.accept(">> Turning Relay DOWN");
+			this.simulator.accept(PinState.LOW);
 		}
 	}
 
@@ -77,7 +80,7 @@ public class RelayDriver {
 			state = this.signal.getState();
 			return state;
 		} else {
-			return PinState.HIGH; // TODO Provide Simulator (Supplier?)
+			return relayStatus.get();
 		}
 	}
 
