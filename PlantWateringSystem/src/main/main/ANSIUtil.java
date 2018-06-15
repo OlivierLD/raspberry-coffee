@@ -108,8 +108,9 @@ public class ANSIUtil {
 			long resumeSensorWatchAfter,
 			double temperature,
 			double humidity,
-			String message
-	) {
+			String message,
+			boolean withRESTServer,
+			int httpPort) {
 		AnsiConsole.out.println(ANSIUtil.ANSI_CLS);
 		int line = 1; // Start from that line
 		// Frame top
@@ -135,6 +136,16 @@ public class ANSIUtil {
 				PAD);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
 				rpad(String.format(" Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
+				PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
+				RIGHT_T_BOLD +
+				PAD);
+		// REST ?
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" REST Server%s", (withRESTServer ? String.format(" on port %d", httpPort) : ": no")), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
 				PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
