@@ -39,7 +39,7 @@ public class RelayDriver {
 			try {
 				this.gpio = GpioFactory.getInstance();
 				this.signalPin = _signalPin;
-				this.signal = gpio.provisionDigitalOutputPin(signalPin, "Relay", PinState.LOW);
+				this.signal = gpio.provisionDigitalOutputPin(signalPin, "Relay", PinState.HIGH); // HIGH is off
 			} catch (UnsatisfiedLinkError ule) {
 				this.simulating = true;
 			}
@@ -62,7 +62,7 @@ public class RelayDriver {
 		if (!this.simulating) {
 			this.signal.high();
 		} else {
-			this.simulator.accept(PinState.HIGH);
+			this.simulator.accept(PinState.LOW);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class RelayDriver {
 		if (!this.simulating) {
 			this.signal.low();
 		} else {
-			this.simulator.accept(PinState.LOW);
+			this.simulator.accept(PinState.HIGH);
 		}
 	}
 

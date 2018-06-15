@@ -99,7 +99,7 @@ public class STH10 {
 	private static double minSimTemp = temperature, maxSimTemp = temperature;
 	private static double minSimHum = humidity, maxSimHum = humidity;
 
-	private static PinState simulatedPinState = PinState.LOW;
+	private static PinState simulatedPinState = PinState.HIGH;
 	private static Supplier<PinState> relaySignalSimulator = () -> simulatedPinState;
 	private static Consumer<PinState> relayObserver = state -> {
 		System.out.println(">> Relay is now " + state);
@@ -131,9 +131,9 @@ public class STH10 {
 	public static void setRelayState(PinState state) {
 		if (relay != null) {
 			if (state.isHigh()) {
-				relay.up();
-			} else {
 				relay.down();
+			} else {
+				relay.up();
 			}
 		}
 	}
@@ -322,7 +322,7 @@ public class STH10 {
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			go = false;
-			if (relay.getState() == PinState.HIGH) {
+			if (relay.getState() == PinState.LOW) {
 				relay.down();
 			}
 			System.out.println("\nExiting");
