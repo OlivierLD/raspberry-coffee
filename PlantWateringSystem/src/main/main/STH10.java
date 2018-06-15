@@ -82,6 +82,7 @@ public class STH10 {
 
 	private static double temperature = 20d;
 	private static double humidity = 50d;
+	private static String message = "";
 
 	private static double minSimTemp = temperature, maxSimTemp = temperature;
 	private static double minSimHum = humidity, maxSimHum = humidity;
@@ -151,24 +152,16 @@ public class STH10 {
 		// Frame top
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				TOP_LEFT_CORNER_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
 				TOP_RIGHT_CORNER_BOLD +
 				PAD);
 		// Title. Note: The italic escape code is correct. But it does not work on all platforms.
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Plant Watering System ", 45) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				RIGHT_T_BOLD +
+				TOP_LEFT_CORNER_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
+				TOP_RIGHT_CORNER_BOLD +
 				PAD);
 		// Program parameters
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
@@ -182,36 +175,24 @@ public class STH10 {
 				PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				RIGHT_T_BOLD +
+				TOP_LEFT_CORNER_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
+				TOP_RIGHT_CORNER_BOLD +
 				PAD);
 		// Sensor Data
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format("Temp: %.02f C, Hum: %.02f%%", temperature, humidity), 45) + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" Temp: %.02f C, Hum: %.02f%%", temperature, humidity), 45) + SOLID_VERTICAL_BOLD +
 				PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
-				TOP_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				TOP_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				RIGHT_T_BOLD +
+				TOP_LEFT_CORNER_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
+				TOP_RIGHT_CORNER_BOLD +
 				PAD);
-		// Position
-//		String lat = GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS);
-//		String lng = GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW);
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-//				rpad(" Position L/G", 15) + SOLID_VERTICAL_BOLD +
-//				rpad(lpad(" " + lat, 13), 14) + SOLID_VERTICAL_BOLD +
-//				rpad(lpad(" " + lng, 13), 14) + SOLID_VERTICAL_BOLD +
-//				PAD);
+		// Message
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" %s", message), 45) + SOLID_VERTICAL_BOLD +
+				PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				LEFT_T_BOLD +
@@ -222,92 +203,10 @@ public class STH10 {
 				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
 				RIGHT_T_BOLD +
 				PAD);
-		// System date
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" System Date ", 15) +
-//				SOLID_VERTICAL_BOLD +
-//				rpad(" " + (ansiSystemDate != null ? SDF.format(ansiSystemDate) : "null"), 29) +
-//				SOLID_VERTICAL_BOLD +
-//				PAD);
-//		// UTC date
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" UTC ", 15) +
-//				SOLID_VERTICAL_BOLD +
-//				rpad(" " + (ansiSystemDate != null ? SDF_UTC.format(ansiSystemDate) : "null"), 29) +
-//				SOLID_VERTICAL_BOLD +
-//				PAD);
-//		// Solar date
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Solar Date ", 15) +
-//				SOLID_VERTICAL_BOLD +
-//				rpad(" " + (ansiSolarDate != null ? SDF_SOLAR.format(ansiSolarDate) : "null"), 29) +
-//				SOLID_VERTICAL_BOLD +
-//				PAD);
-		// Separator
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
-				CROSS_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				RIGHT_T_BOLD +
-				PAD);
-		// Dead Reckoning
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" He ", 15) +
-//				SOLID_VERTICAL_BOLD +
-//				rpad(" " + String.format("%6.02f\272", he), 29) +
-//				SOLID_VERTICAL_BOLD +
-//				PAD);
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Z ", 15) +
-//				SOLID_VERTICAL_BOLD +
-//				rpad(" " + String.format("%6.02f\272", z) + " true", 29) +
-//				SOLID_VERTICAL_BOLD +
-//				PAD);
-		// Separator
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
-				CROSS_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				RIGHT_T_BOLD +
-				PAD);
-		// Sensor data
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Heading Servo ", 15) +
-//				SOLID_VERTICAL_BOLD +
-//				rpad(" " + String.format("%s%s", lpad(String.format("%+02d", ansiHeadingServoAngle), 3, " "), (invert? String.format(" (inverted to %+.0f)",	invertHeading((float) ansiHeadingServoAngle)) :"")), 29) +
-//				SOLID_VERTICAL_BOLD +
-//				PAD);
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Tilt Servo ", 15) +
-//				SOLID_VERTICAL_BOLD +
-//				rpad(" " + String.format("%s%s%s", lpad(String.format("%+02d", ansiTiltServoAngle), 3, " "),
-//						(invert ? " (inverted)":""),
-//						(ansiTiltServoAngle != applyLimitAndOffset(ansiTiltServoAngle) ? String.format(", limited: %.0f", applyLimitAndOffset(ansiTiltServoAngle)) : "")), 29) +
-//				SOLID_VERTICAL_BOLD +
-//				PAD);
-		// Separator
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
-				CROSS_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				RIGHT_T_BOLD +
-				PAD);
-		// Device heading
-//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Device Hdg ", 15) +
-//				SOLID_VERTICAL_BOLD +
-//				rpad(" " + String.format("%.01f\272", ansiDeviceHeading), 29) +
-//				SOLID_VERTICAL_BOLD +
-//				PAD);
 		// Frame bottom
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				BOTTOM_LEFT_CORNER_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
-				BOTTOM_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				SOLID_HORIZONTAL_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
 				BOTTOM_RIGHT_CORNER_BOLD +
 				PAD);
 	}
@@ -475,8 +374,11 @@ public class STH10 {
 			if (humidity < humidityThreshold) { // Ah! Need some water
 				// Open the valve
 				relay.up();
+				message = "Watering...";
 				if (verbose == VERBOSE.STDOUT) {
-					System.out.println("Watering...");
+					System.out.println(message);
+				} else if (verbose == VERBOSE.ANSI) {
+					displayAnsiData();
 				}
 				// Watering time
 				try {
@@ -490,11 +392,19 @@ public class STH10 {
 								ie.printStackTrace();
 							}
 							// Tick, countdown...
-							System.out.println(String.format("\t... %d", (_waterDuration - i)));
+							message = String.format("\t... %d", (_waterDuration - i));
+							if (verbose == VERBOSE.STDOUT) {
+								System.out.println(message);
+							} else if (verbose == VERBOSE.ANSI) {
+								displayAnsiData();
+							}
 						}
 						synchronized (mainThread) {
+							message = "Ok! Enough water!";
 							if (verbose == VERBOSE.STDOUT) {
-								System.out.println("Ok! Enough water!");
+								System.out.println(message);
+							} else if (verbose == VERBOSE.ANSI) {
+								displayAnsiData();
 							}
 							mainThread.notify(); // Release the wait on main thread.
 						}
@@ -503,24 +413,36 @@ public class STH10 {
 
 					synchronized (mainThread) {
 						mainThread.wait();
+						message = "";
 						if (verbose == VERBOSE.STDOUT) {
-							System.out.println("... back to work.");
+							System.out.println(message);
+						} else if (verbose == VERBOSE.ANSI) {
+							displayAnsiData();
 						}
 					}
+					message = "Shutting off the valve.";
 					if (verbose == VERBOSE.STDOUT) {
-						System.out.println("Shutting off the valve.");
+						System.out.println(message);
+					} else if (verbose == VERBOSE.ANSI) {
+						displayAnsiData();
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				message = "Done watering.";
 				if (verbose == VERBOSE.STDOUT) {
-					System.out.println("Done watering.");
+					System.out.println(message);
+				} else if (verbose == VERBOSE.ANSI) {
+					displayAnsiData();
 				}
 				// Shut the valve
 				relay.down();
 				// Wait before resuming sensor watching
+				message = "Napping a bit... Spreading the word...";
 				if (verbose == VERBOSE.STDOUT) {
-					System.out.println("Napping a bit... Spreading the word...");
+					System.out.println(message);
+				} else if (verbose == VERBOSE.ANSI) {
+					displayAnsiData();
 				}
 				try {
 					Thread.sleep(resumeSensorWatchAfter * 1_000L);
