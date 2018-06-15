@@ -223,3 +223,8 @@ $ curl -X GET http://localhost:1234/pws/sth10-data
 
 {"temperature":20.17,"humidity":30.23}
 ```
+
+### Next
+- Integration with the NMEA.Multiplexer
+
+---
