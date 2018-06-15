@@ -5,7 +5,6 @@ echo "Usage is $0 [debug]"
 echo "   Use 'debug' to remote-debug from another machine."
 #
 VERBOSE=false
-#
 JAVA_OPTIONS="-Dsth.debug=$VERBOSE"
 #
 if [ "$1" == "debug" ]
@@ -18,7 +17,7 @@ fi
 #
 # Use program argument --help for help.
 #
-USER_PRM=--verbose:ANSI
-# USER_PRM="$USER_PRM --water-below:35 --water-during:10 --resume-after:120"
-USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:120"
+USER_PRM="--verbose:ANSI"
+USER_PRM="$USER_PRM --water-below:35 --water-during:10 --resume-after:120"
+# USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:120"
 java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
