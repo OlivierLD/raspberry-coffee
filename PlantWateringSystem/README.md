@@ -73,6 +73,9 @@ $ java $JAVA_OPTIONS -cp $CP main.STH10 --help
 | --data-pin:	Integer. BCM (aka GPIO) pin number of the DATA pin of the sensor. Default is --data-pin:18.
 | --clock-pin:	Integer. BCM (aka GPIO) pin number of the CLOCK pin of the sensor. Default is --clock-pin:23.
 | --relay-pin:	Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17.
+| --with-rest-server:	Boolean. Default 'false', starts a REST server is set to 'true'
+| --http-port	Integer. The HTTP port of the REST Server. Default is 9999.
+| --simulate-sensor-values:	Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'
 | --help	Display the help and exit.
 +---------------------------------------
 ```
@@ -158,13 +161,70 @@ An ANSI version is available:
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃              PLANT WATERING SYSTEM               ┃
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ Start watering under 50% of humidity.            ┃
+┃ Start watering under 35% of humidity.            ┃
 ┃ Water during 10.000 secs                         ┃
 ┃ Resume sensor watch 2 minutes after watering.    ┃
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ Temp: 20.35 C, Hum: 49.38%                       ┃
+┃ REST Server on port 1234                         ┃
 ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ Resuming watching in 1 minute 52.000 secs...     ┃
+┃ Temp: 20.17 C, Hum: 30.23%                       ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ Resuming watching in 33.000 secs...              ┃
 ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+```
+
+### Simulation
+There is a REST server that helps sending values to the program
+- if you are not on a Raspberry PI
+- if you want to enforce simulation (for tests)
 
 ```
+$ curl http://localhost:9999/pws/oplist
+[
+    {
+        "verb": "GET",
+        "path": "/pws/oplist",
+        "description": "List of all available operations.",
+        "fn": {}
+    },
+    {
+        "verb": "GET",
+        "path": "/pws/sth10-data",
+        "description": "Get device Data. Temperature, humidity",
+        "fn": {}
+    },
+    {
+        "verb": "GET",
+        "path": "/pws/relay-state",
+        "description": "Get relay state - ON of OFF.",
+        "fn": {}
+    },
+    {
+        "verb": "POST",
+        "path": "/pws/sth10-data",
+        "description": "Set device Data. Temperature, humidity, for simulation",
+        "fn": {}
+    },
+    {
+        "verb": "PUT",
+        "path": "/pws/relay-state",
+        "description": "Flip the relay - ON of OFF.",
+        "fn": {}
+    }
+]
+```
+
+```
+$ curl -H "Content-Type: application/json" -X POST -d '{"temperature":20.17,"humidity":30.23}' http://localhost:9999/pws/sth10-data
+```
+
+```
+$ curl -X GET http://localhost:1234/pws/sth10-data
+
+{"temperature":20.17,"humidity":30.23}
+```
+
+### Next
+- Integration with the NMEA.Multiplexer
+
+---

@@ -1,6 +1,7 @@
 package main;
 
 import com.pi4j.io.gpio.PinState;
+import http.HTTPServer;
 import org.fusesource.jansi.AnsiConsole;
 import relay.RelayDriver;
 import sensors.sth10.STH10Driver;
@@ -9,12 +10,10 @@ import utils.StaticUtil;
 import utils.WeatherUtil;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
-import static utils.StringUtils.rpad;
 import static utils.TimeUtil.fmtDHMS;
 import static utils.TimeUtil.msToHMS;
-
-import static main.EscapeSeq.*;
 
 /**
  * Example / Prototype...
@@ -32,6 +31,10 @@ public class STH10 {
 	private static long wateringDuration = WATERING_DURATION;
 	private static long resumeSensorWatchAfter = RESUME_SENSOR_WATCH_AFTER;
 
+	private static boolean withRESTServer = false;
+	private static int restServerPort = 9999;
+	private static boolean enforceSensorSimulation = false;
+
 	// Program arguments
 	private enum ARGUMENTS {
 		HUMIDITY_THRESHOLD("--water-below:", // %
@@ -48,6 +51,12 @@ public class STH10 {
 				"Integer. BCM (aka GPIO) pin number of the CLOCK pin of the sensor. Default is --clock-pin:23."),
 		RELAY_PIN("--relay-pin:",  // default is BCM 17 => GPIO_00
 				"Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17."),
+		WITH_REST_SERVER("--with-rest-server:",
+				"Boolean. Default 'false', starts a REST server is set to 'true'"),
+		HTTP_PORT("--http-port:",
+				"Integer. The HTTP port of the REST Server. Default is 9999."),
+		SIMULATE_SENSOR_VALUES("--simulate-sensor-values:",
+				"Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'"),
 		HELP("--help", "Display the help and exit.");
 
 		private String prefix, help;
@@ -71,16 +80,17 @@ public class STH10 {
 		ANSI
 	}
 	private static VERBOSE verbose = VERBOSE.NONE;
-	private final static String PAD = ANSI_ERASE_TO_EOL;
 
 	private static STH10Driver probe = null;
 	private static RelayDriver relay = null;
 
 	// Simulators, to run on non-Raspberry PIs - for development.
-//	private static Supplier<Double> temperatureSimulator = STH10::simulateUserTemp;
-//	private static Supplier<Double> humiditySimulator = STH10::simulateUserHum;
-	private static Supplier<Double> temperatureSimulator = STH10::simulateTemp;
-	private static Supplier<Double> humiditySimulator = STH10::simulateHum;
+	// User manual entry (also suitable for REST)
+	private static Supplier<Double> temperatureSimulator = STH10::simulateUserTemp;
+	private static Supplier<Double> humiditySimulator = STH10::simulateUserHum;
+	// Random values
+//	private static Supplier<Double> temperatureSimulator = STH10::simulateTemp;
+//	private static Supplier<Double> humiditySimulator = STH10::simulateHum;
 
 	private static double temperature = 20d;
 	private static double humidity = 50d;
@@ -88,6 +98,45 @@ public class STH10 {
 
 	private static double minSimTemp = temperature, maxSimTemp = temperature;
 	private static double minSimHum = humidity, maxSimHum = humidity;
+
+	private static PinState simulatedPinState = PinState.LOW;
+	private static Supplier<PinState> relaySignalSimulator = () -> simulatedPinState;
+	private static Consumer<PinState> relayObserver = state -> {
+		System.out.println(">> Relay is now " + state);
+		simulatedPinState = state;
+	};
+
+	private static HTTPServer httpServer = null;
+
+	// Data Getters and Setters, for REST
+	public static void setTemperature(double temp) {
+		temperature = temp;
+	}
+	public static void setHumidity(double hum) {
+		humidity = hum;
+	}
+	public static double getTemperature() {
+		return temperature;
+	}
+	public static double getHumidity() {
+		return humidity;
+	}
+	public static PinState getRelayState() {
+		PinState state = null;
+		if (relay != null) {
+			state = relay.getState();
+		}
+		return state;
+	}
+	public static void setRelayState(PinState state) {
+		if (relay != null) {
+			if (state.isHigh()) {
+				relay.up();
+			} else {
+				relay.down();
+			}
+		}
+	}
 
 	private static Double simulateTemp() {
 		int sign = (int)System.currentTimeMillis() % 2;
@@ -114,6 +163,7 @@ public class STH10 {
 		return humidity;
 	}
 
+	// Parse manual user input, for simulation
 	private static void parseUserInput(String str) {
 		// Input can be T:XX or H:xx
 		if (str.startsWith("T:")) {
@@ -129,80 +179,6 @@ public class STH10 {
 				nfe.printStackTrace();
 			}
 		}
-	}
-
-	/**	/**
-	 * Returns a string of nb times the str parameter.
-	 * @param str the string to use
-	 * @param nb number of times
-	 * @return the expected string.
-	 */
-	private static String drawXChar(String str, int nb) {
-		StringBuffer sb = new StringBuffer();
-		for (int i=0; i<nb; i++) {
-			sb.append(str);
-		}
-		return sb.toString();
-	}
-
-	private final static int FRAME_WIDTH = 50;
-  /**
-	 * Box codes are available at https://en.wikipedia.org/wiki/Box-drawing_character
-	 * Display the data in an ANSI box, refreshed every time is is displayed.
-	 */
-	private static void displayAnsiData() {
-		AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
-		int line = 1; // Start from that line
-		// Frame top
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				TOP_LEFT_CORNER_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
-				TOP_RIGHT_CORNER_BOLD +
-				PAD);
-		// Title. Note: The italic escape code is correct. But it does not work on all platforms.
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("              PLANT WATERING SYSTEM ", FRAME_WIDTH) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
-		// Separator
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
-				RIGHT_T_BOLD +
-				PAD);
-		// Program parameters
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" Start watering under %d%% of humidity.", humidityThreshold), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
-				PAD);
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
-				PAD);
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
-				PAD);
-		// Separator
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
-				RIGHT_T_BOLD +
-				PAD);
-		// Sensor Data
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" Temp: %.02f C, Hum: %.02f%%", temperature, humidity), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
-				PAD);
-		// Separator
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
-				RIGHT_T_BOLD +
-				PAD);
-		// Message
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" %s", message), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
-				PAD);
-		// Frame bottom
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				BOTTOM_LEFT_CORNER_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
-				BOTTOM_RIGHT_CORNER_BOLD +
-				PAD);
 	}
 
 	public static void main(String... args) {
@@ -222,6 +198,19 @@ public class STH10 {
 			} else if (arg.startsWith(ARGUMENTS.VERBOSE.prefix())) {
 				String val = arg.substring(ARGUMENTS.VERBOSE.prefix().length());
 				verbose = VERBOSE.valueOf(val);
+			} else if (arg.startsWith(ARGUMENTS.WITH_REST_SERVER.prefix())) {
+				String val = arg.substring(ARGUMENTS.WITH_REST_SERVER.prefix().length());
+				withRESTServer = "true".equals(val);
+			} else if (arg.startsWith(ARGUMENTS.HTTP_PORT.prefix())) {
+				String val = arg.substring(ARGUMENTS.HTTP_PORT.prefix().length());
+				try {
+					restServerPort = Integer.parseInt(val);
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+			} else if (arg.startsWith(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix())) {
+				String val = arg.substring(ARGUMENTS.SIMULATE_SENSOR_VALUES.prefix().length());
+				enforceSensorSimulation = "true".equals(val);
 			} else if (arg.startsWith(ARGUMENTS.DATA_PIN.prefix())) {
 				String val = arg.substring(ARGUMENTS.DATA_PIN.prefix().length());
 				try {
@@ -280,16 +269,19 @@ public class STH10 {
 		}
 		if (verbose == VERBOSE.ANSI) {
 			AnsiConsole.systemInstall();
-			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
+			AnsiConsole.out.println(ANSIUtil.ANSI_CLS);
 		}
 		// Print summary
 		if (verbose == VERBOSE.ANSI) {
-			displayAnsiData();
+			ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 		} else {
 			System.out.println("+------- P L A N T   W A T E R I N G   S Y S T E M --------");
 			System.out.println(String.format("| Start watering under %d%% of humidity.", humidityThreshold));
 			System.out.println(String.format("| Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))));
 			System.out.println(String.format("| Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))));
+			if (withRESTServer) {
+				System.out.println(String.format("| REST Server running on port %d.", restServerPort));
+			}
 			System.out.println("+----------------------------------------------------------");
 		}
 
@@ -305,7 +297,7 @@ public class STH10 {
 
 		try {
 			probe = new STH10Driver(PinUtil.getPinByGPIONumber(dataPin), PinUtil.getPinByGPIONumber(clockPin));
-			if (probe.isSimulating()) {
+			if (probe.isSimulating() || enforceSensorSimulation) {
 				// Provide simulator here
 				System.out.println(">> Will simulate STH10");
 				probe.setSimulators(temperatureSimulator, humiditySimulator);
@@ -320,7 +312,7 @@ public class STH10 {
 			if (relay.isSimulating()) {
 				// Provide simulator here
 				System.out.println(">> Will simulate Relay");
-				relay.setSimulator(System.out::println);
+				relay.setSimulator(relayObserver, relaySignalSimulator);
 			}
 		} catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of RelayDriver.
 			System.out.println("You're not on a Raspberry PI, or your wiring is wrong.");
@@ -340,7 +332,7 @@ public class STH10 {
 		}));
 
 		// Manual input
-		Thread manualThread = new Thread(() -> { // TODO A REST input
+		Thread manualThread = new Thread(() -> { // There is also a REST input
 			while (go) {
 				String userInput = StaticUtil.userInput(" T:XX, H:XX > ");
 				parseUserInput(userInput);
@@ -348,19 +340,25 @@ public class STH10 {
 		});
 		manualThread.start();
 
+		if (withRESTServer) {
+			httpServer = new RequestManager().startHttpServer(restServerPort);
+		}
+
 		/*
 		 * This is the main loop
 		 */
 		while (go) {
 
-			temperature = probe.readTemperature();
-			humidity = probe.readHumidity(temperature);
+			if (!enforceSensorSimulation) {
+				temperature = probe.readTemperature();
+				humidity = probe.readHumidity(temperature);
+			}
 
-			// TODO A screen (Like the SSD1306), ANSI Console, log file ?
+			// TODO A screen (Like the SSD1306), ANSI Console, log file, IoT server ? (An NMEA forwarder?)
 			if (verbose != VERBOSE.ANSI) {
 				System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", temperature, humidity, WeatherUtil.dewPointTemperature(humidity, temperature)));
 			} else {
-				displayAnsiData();
+				ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 			}
 
 			/*
@@ -373,7 +371,7 @@ public class STH10 {
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
 				} else if (verbose == VERBOSE.ANSI) {
-					displayAnsiData();
+					ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 				}
 				// Watering time
 				try {
@@ -391,7 +389,7 @@ public class STH10 {
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
-								displayAnsiData();
+								ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 							}
 						}
 						synchronized (mainThread) {
@@ -399,7 +397,7 @@ public class STH10 {
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
-								displayAnsiData();
+								ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 							}
 							mainThread.notify(); // Release the wait on main thread.
 						}
@@ -412,14 +410,14 @@ public class STH10 {
 						if (verbose == VERBOSE.STDOUT) {
 							System.out.println(message);
 						} else if (verbose == VERBOSE.ANSI) {
-							displayAnsiData();
+							ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 						}
 					}
 					message = "Shutting off the valve.";
 					if (verbose == VERBOSE.STDOUT) {
 						System.out.println(message);
 					} else if (verbose == VERBOSE.ANSI) {
-						displayAnsiData();
+						ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -428,7 +426,7 @@ public class STH10 {
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
 				} else if (verbose == VERBOSE.ANSI) {
-					displayAnsiData();
+					ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 				}
 				// Shut the valve
 				relay.down();
@@ -438,7 +436,7 @@ public class STH10 {
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
 				} else if (verbose == VERBOSE.ANSI) {
-					displayAnsiData();
+					ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 				}
 				try {
 					final Thread mainThread = Thread.currentThread();
@@ -455,7 +453,7 @@ public class STH10 {
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
-								displayAnsiData();
+								ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 							}
 						}
 						synchronized (mainThread) {
@@ -463,7 +461,7 @@ public class STH10 {
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
-								displayAnsiData();
+								ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 							}
 							mainThread.notify(); // Release the wait on main thread.
 						}
@@ -476,7 +474,7 @@ public class STH10 {
 						if (verbose == VERBOSE.STDOUT) {
 							System.out.println(message);
 						} else if (verbose == VERBOSE.ANSI) {
-							displayAnsiData();
+							ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 						}
 					}
 				} catch (InterruptedException ie) {
@@ -485,7 +483,7 @@ public class STH10 {
 				// Resume watching
 				message = "";
 				if (verbose == VERBOSE.ANSI) {
-					displayAnsiData();
+					ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort);
 				}
 			} else {
 				try {
@@ -493,6 +491,12 @@ public class STH10 {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+			}
+		}
+
+		if (withRESTServer) {
+			if (httpServer.isRunning()) {
+				httpServer.stopRunning();
 			}
 		}
 
