@@ -384,7 +384,7 @@ public class STH10 {
 								ie.printStackTrace();
 							}
 							// Tick, countdown...
-							message = String.format("\t... %d", (_waterDuration - i));
+							message = String.format("Stop watering in %d sec...", (_waterDuration - i));
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
