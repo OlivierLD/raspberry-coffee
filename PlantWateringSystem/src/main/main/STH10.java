@@ -1,6 +1,8 @@
 package main;
 
+import calc.GeomUtil;
 import com.pi4j.io.gpio.PinState;
+import org.fusesource.jansi.AnsiConsole;
 import relay.RelayDriver;
 import sensors.sth10.STH10Driver;
 import utils.PinUtil;
@@ -9,9 +11,11 @@ import utils.WeatherUtil;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
-
+import static utils.StringUtils.rpad;
 import static utils.TimeUtil.fmtDHMS;
 import static utils.TimeUtil.msToHMS;
+
+import static main.EscapeSeq.*;
 
 /**
  * Example / Prototype...
@@ -24,6 +28,11 @@ public class STH10 {
 	private final static long WATERING_DURATION = 10L; // 10 seconds
 	private final static long RESUME_SENSOR_WATCH_AFTER = 120L; // 2 minutes
 
+	// Default values
+	private static int humidityThreshold = HUMIDITY_THRESHOLD;
+	private static long wateringDuration = WATERING_DURATION;
+	private static long resumeSensorWatchAfter = RESUME_SENSOR_WATCH_AFTER;
+
 	// Program arguments
 	private enum ARGUMENTS {
 		HUMIDITY_THRESHOLD("--water-below:", // %
@@ -33,7 +42,7 @@ public class STH10 {
 		RESUME_AFTER("--resume-after:", // seconds
 				"Integer. In seconds, default is --resume-after:120. After watering, resume sensor monitoring after this amount of time."),
 		VERBOSE("--verbose:", // true|false
-				"Boolean. Verbose, default is --verbose:false, values can be 'true' or something else."),
+				"String. Verbose, default is --verbose:NONE, values can be 'NONE', 'STDOUT' or 'ANSI'."),
 		DATA_PIN("--data-pin:", // default is BCM 18 => GPIO_01
 				"Integer. BCM (aka GPIO) pin number of the DATA pin of the sensor. Default is --data-pin:18."),
 		CLOCK_PIN("--clock-pin:", // default is BCM 23 => GPIO_04
@@ -57,7 +66,13 @@ public class STH10 {
 		}
 	}
 
-	private static boolean verbose = false;
+	enum VERBOSE {
+		NONE,
+		STDOUT,
+		ANSI
+	}
+	private static VERBOSE verbose = VERBOSE.NONE;
+	private final static String PAD = ANSI_ERASE_TO_EOL;
 
 	private static STH10Driver probe = null;
 	private static RelayDriver relay = null;
@@ -114,12 +129,194 @@ public class STH10 {
 		}
 	}
 
-	public static void main(String... args) {
+	/**	/**
+	 * Returns a string of nb times the str parameter.
+	 * @param str the string to use
+	 * @param nb number of times
+	 * @return the expected string.
+	 */
+	private static String drawXChar(String str, int nb) {
+		StringBuffer sb = new StringBuffer();
+		for (int i=0; i<nb; i++) {
+			sb.append(str);
+		}
+		return sb.toString();
+	}
+  /**
+	 * Box codes are available at https://en.wikipedia.org/wiki/Box-drawing_character
+	 * Display the data in an ANSI box, refreshed every time is is displayed.
+	 */
+	private static void displayAnsiData() {
+		AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
+		int line = 1; // Start from that line
+		// Frame top
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				TOP_LEFT_CORNER_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				TOP_RIGHT_CORNER_BOLD +
+				PAD);
+		// Title. Note: The italic escape code is correct. But it does not work on all platforms.
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Plant Watering System ", 45) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				RIGHT_T_BOLD +
+				PAD);
+		// Program parameters
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" Start watering under %d%% of humidity.", humidityThreshold), 45) + SOLID_VERTICAL_BOLD +
+				PAD);
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))), 45) + SOLID_VERTICAL_BOLD +
+				PAD);
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))), 45) + SOLID_VERTICAL_BOLD +
+				PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				RIGHT_T_BOLD +
+				PAD);
+		// Servo info, tilt
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+//				rpad(String.format(" Tilt Servo(s) # %s. limit %d, offset %d",
+//						Arrays.stream(tiltServoID).boxed().map(String::valueOf).collect(Collectors.joining(",")),
+//						tiltLimit,
+//						tiltOffset), 45) + SOLID_VERTICAL_BOLD +
+//				PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+				TOP_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				TOP_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				RIGHT_T_BOLD +
+				PAD);
+		// Position
+//		String lat = GeomUtil.decToSex(getLatitude(), GeomUtil.SWING, GeomUtil.NS);
+//		String lng = GeomUtil.decToSex(getLongitude(), GeomUtil.SWING, GeomUtil.EW);
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+//				rpad(" Position L/G", 15) + SOLID_VERTICAL_BOLD +
+//				rpad(lpad(" " + lat, 13), 14) + SOLID_VERTICAL_BOLD +
+//				rpad(lpad(" " + lng, 13), 14) + SOLID_VERTICAL_BOLD +
+//				PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+				CROSS_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				BOTTOM_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				RIGHT_T_BOLD +
+				PAD);
+		// System date
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" System Date ", 15) +
+//				SOLID_VERTICAL_BOLD +
+//				rpad(" " + (ansiSystemDate != null ? SDF.format(ansiSystemDate) : "null"), 29) +
+//				SOLID_VERTICAL_BOLD +
+//				PAD);
+//		// UTC date
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" UTC ", 15) +
+//				SOLID_VERTICAL_BOLD +
+//				rpad(" " + (ansiSystemDate != null ? SDF_UTC.format(ansiSystemDate) : "null"), 29) +
+//				SOLID_VERTICAL_BOLD +
+//				PAD);
+//		// Solar date
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Solar Date ", 15) +
+//				SOLID_VERTICAL_BOLD +
+//				rpad(" " + (ansiSolarDate != null ? SDF_SOLAR.format(ansiSolarDate) : "null"), 29) +
+//				SOLID_VERTICAL_BOLD +
+//				PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+				CROSS_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				RIGHT_T_BOLD +
+				PAD);
+		// Dead Reckoning
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" He ", 15) +
+//				SOLID_VERTICAL_BOLD +
+//				rpad(" " + String.format("%6.02f\272", he), 29) +
+//				SOLID_VERTICAL_BOLD +
+//				PAD);
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Z ", 15) +
+//				SOLID_VERTICAL_BOLD +
+//				rpad(" " + String.format("%6.02f\272", z) + " true", 29) +
+//				SOLID_VERTICAL_BOLD +
+//				PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+				CROSS_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				RIGHT_T_BOLD +
+				PAD);
+		// Servos
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Heading Servo ", 15) +
+//				SOLID_VERTICAL_BOLD +
+//				rpad(" " + String.format("%s%s", lpad(String.format("%+02d", ansiHeadingServoAngle), 3, " "), (invert? String.format(" (inverted to %+.0f)",	invertHeading((float) ansiHeadingServoAngle)) :"")), 29) +
+//				SOLID_VERTICAL_BOLD +
+//				PAD);
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Tilt Servo ", 15) +
+//				SOLID_VERTICAL_BOLD +
+//				rpad(" " + String.format("%s%s%s", lpad(String.format("%+02d", ansiTiltServoAngle), 3, " "),
+//						(invert ? " (inverted)":""),
+//						(ansiTiltServoAngle != applyLimitAndOffset(ansiTiltServoAngle) ? String.format(", limited: %.0f", applyLimitAndOffset(ansiTiltServoAngle)) : "")), 29) +
+//				SOLID_VERTICAL_BOLD +
+//				PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+				CROSS_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				RIGHT_T_BOLD +
+				PAD);
+		// Device heading
+//		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD + lpad(" Device Hdg ", 15) +
+//				SOLID_VERTICAL_BOLD +
+//				rpad(" " + String.format("%.01f\272", ansiDeviceHeading), 29) +
+//				SOLID_VERTICAL_BOLD +
+//				PAD);
+		// Frame bottom
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				BOTTOM_LEFT_CORNER_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
+				BOTTOM_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				SOLID_HORIZONTAL_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				BOTTOM_RIGHT_CORNER_BOLD +
+				PAD);
+	}
 
-		// Default values
-		int humidityThreshold = HUMIDITY_THRESHOLD;
-		long wateringDuration = WATERING_DURATION;
-		long resumeSensorWatchAfter = RESUME_SENSOR_WATCH_AFTER;
+	public static void main(String... args) {
 
 		int dataPin = 18, clockPin = 23, relayPin = 17; // Defaults
 
@@ -135,7 +332,7 @@ public class STH10 {
 				System.exit(0);
 			} else if (arg.startsWith(ARGUMENTS.VERBOSE.prefix())) {
 				String val = arg.substring(ARGUMENTS.VERBOSE.prefix().length());
-				verbose = "true".equals(val);
+				verbose = VERBOSE.valueOf(val);
 			} else if (arg.startsWith(ARGUMENTS.DATA_PIN.prefix())) {
 				String val = arg.substring(ARGUMENTS.DATA_PIN.prefix().length());
 				try {
@@ -192,14 +389,22 @@ public class STH10 {
 				}
 			}
 		}
+		if (verbose == VERBOSE.ANSI) {
+			AnsiConsole.systemInstall();
+			AnsiConsole.out.println(EscapeSeq.ANSI_CLS);
+		}
 		// Print summary
-		System.out.println("+------- P L A N T   W A T E R I N G   S Y S T E M --------");
-		System.out.println(String.format("| Start watering under %d%% of humidity.", humidityThreshold));
-		System.out.println(String.format("| Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))));
-		System.out.println(String.format("| Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))));
-		System.out.println("+----------------------------------------------------------");
+		if (verbose == VERBOSE.ANSI) {
+			displayAnsiData();
+		} else {
+			System.out.println("+------- P L A N T   W A T E R I N G   S Y S T E M --------");
+			System.out.println(String.format("| Start watering under %d%% of humidity.", humidityThreshold));
+			System.out.println(String.format("| Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))));
+			System.out.println(String.format("| Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))));
+			System.out.println("+----------------------------------------------------------");
+		}
 
-		if (verbose) {
+		if (verbose == VERBOSE.STDOUT) {
 			System.out.println("Wiring:");
 			// Compose mapping for PinUtil, physical numbers.
 			String[] map = new String[3];
@@ -246,7 +451,7 @@ public class STH10 {
 		}));
 
 		// Manual input
-		Thread manualThread = new Thread(() -> {
+		Thread manualThread = new Thread(() -> { // TODO A REST input
 			while (go) {
 				String userInput = StaticUtil.userInput(" T:XX, H:XX > ");
 				parseUserInput(userInput);
@@ -270,7 +475,7 @@ public class STH10 {
 			if (h < humidityThreshold) { // Ah! Need some water
 				// Open the valve
 				relay.up();
-				if (verbose) {
+				if (verbose == VERBOSE.STDOUT) {
 					System.out.println("Watering...");
 				}
 				// Watering time
@@ -288,7 +493,7 @@ public class STH10 {
 							System.out.println(String.format("\t... %d", (_waterDuration - i)));
 						}
 						synchronized (mainThread) {
-							if (verbose) {
+							if (verbose == VERBOSE.STDOUT) {
 								System.out.println("Ok! Enough water!");
 							}
 							mainThread.notify(); // Release the wait on main thread.
@@ -298,23 +503,23 @@ public class STH10 {
 
 					synchronized (mainThread) {
 						mainThread.wait();
-						if (verbose) {
+						if (verbose == VERBOSE.STDOUT) {
 							System.out.println("... back to work.");
 						}
 					}
-					if (verbose) {
+					if (verbose == VERBOSE.STDOUT) {
 						System.out.println("Shutting off the valve.");
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				if (verbose) {
+				if (verbose == VERBOSE.STDOUT) {
 					System.out.println("Done watering.");
 				}
 				// Shut the valve
 				relay.down();
 				// Wait before resuming sensor watching
-				if (verbose) {
+				if (verbose == VERBOSE.STDOUT) {
 					System.out.println("Napping a bit... Spreading the word...");
 				}
 				try {
@@ -330,6 +535,10 @@ public class STH10 {
 					ex.printStackTrace();
 				}
 			}
+		}
+
+		if (verbose == VERBOSE.ANSI) {
+			AnsiConsole.systemUninstall();
 		}
 
 		if (probe.isSimulating()) {
