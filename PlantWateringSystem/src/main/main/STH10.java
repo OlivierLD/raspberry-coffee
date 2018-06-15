@@ -142,6 +142,8 @@ public class STH10 {
 		}
 		return sb.toString();
 	}
+
+	private final static int FRAME_WIDTH = 50;
   /**
 	 * Box codes are available at https://en.wikipedia.org/wiki/Box-drawing_character
 	 * Display the data in an ANSI box, refreshed every time is is displayed.
@@ -152,61 +154,51 @@ public class STH10 {
 		// Frame top
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				TOP_LEFT_CORNER_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
+				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
 				TOP_RIGHT_CORNER_BOLD +
 				PAD);
 		// Title. Note: The italic escape code is correct. But it does not work on all platforms.
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Plant Watering System ", 45) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("           Plant Watering System ", FRAME_WIDTH) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				TOP_LEFT_CORNER_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
-				TOP_RIGHT_CORNER_BOLD +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
+				RIGHT_T_BOLD +
 				PAD);
 		// Program parameters
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" Start watering under %d%% of humidity.", humidityThreshold), 45) + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" Start watering under %d%% of humidity.", humidityThreshold), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
 				PAD);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))), 45) + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" Water during %s", fmtDHMS(msToHMS(wateringDuration * 1_000))), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
 				PAD);
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))), 45) + SOLID_VERTICAL_BOLD +
-				PAD);
-		// Separator
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				TOP_LEFT_CORNER_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
-				TOP_RIGHT_CORNER_BOLD +
-				PAD);
-		// Sensor Data
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" Temp: %.02f C, Hum: %.02f%%", temperature, humidity), 45) + SOLID_VERTICAL_BOLD +
-				PAD);
-		// Separator
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
-				TOP_LEFT_CORNER_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
-				TOP_RIGHT_CORNER_BOLD +
-				PAD);
-		// Message
-		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
-				rpad(String.format(" %s", message), 45) + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" Resume sensor watch %s after watering.", fmtDHMS(msToHMS(resumeSensorWatchAfter * 1_000))), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
 				PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				LEFT_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 15) +
-				CROSS_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
-				BOTTOM_T_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 14) +
+				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
 				RIGHT_T_BOLD +
+				PAD);
+		// Sensor Data
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" Temp: %.02f C, Hum: %.02f%%", temperature, humidity), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
+				PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
+				RIGHT_T_BOLD +
+				PAD);
+		// Message
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" %s", message), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
 				PAD);
 		// Frame bottom
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				BOTTOM_LEFT_CORNER_BOLD +
-				drawXChar(SOLID_HORIZONTAL_BOLD, 45) +
+				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
 				BOTTOM_RIGHT_CORNER_BOLD +
 				PAD);
 	}
