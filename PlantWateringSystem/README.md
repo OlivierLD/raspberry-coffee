@@ -174,7 +174,7 @@ An ANSI version is available:
 ```
 
 ### Simulation
-There is a REST server that helps sending value to the program
+There is a REST server that helps sending values to the program
 - if you are not on a Raspberry PI
 - if you want to enforce simulation (for tests)
 
