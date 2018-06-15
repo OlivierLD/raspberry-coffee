@@ -1,6 +1,6 @@
 #!/bin/bash
 echo Driving a relay, pin [0, 20] as parameter.
-CP=./classes:/home/pi/pi4j.2013/pi4j-distribution/target/distro-contents/lib/pi4j-core.jar
+CP=build/libs/Relay-1.0-all.jar
 #
 for i in `seq 0 20`;
 do
