@@ -465,6 +465,8 @@ public class STH10 {
 			// TODO A screen (Like the SSD1306), ANSI Console ?
 			if (verbose != VERBOSE.ANSI) {
 				System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", temperature, humidity, WeatherUtil.dewPointTemperature(humidity, temperature)));
+			} else {
+				displayAnsiData();
 			}
 
 			/*
