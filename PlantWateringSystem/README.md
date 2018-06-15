@@ -63,18 +63,18 @@ If it is run somewhere else than on a Rapsberry PI, data will be _simulated_.
 To see the available program arguments:
 ```
 $ java $JAVA_OPTIONS -cp $CP main.STH10 --help
-  +---------------------------------------
-  | Program arguments are:
-  +---------------------------------------
-  | --water-below:	Integer. Humidity threshold in %, default is --water-below:35, start watering below this value.
-  | --water-during:	Integer. In seconds, default is --water-during:10. Duration of the watering process.
-  | --resume-after:	Integer. In seconds, default is --resume-after:120. After watering, resume sensor monitoring after this amount of time.
-  | --verbose:	Boolean. Verbose, default is --verbose:false, values can be 'true' or something else.
-  | --data-pin:	Integer. BCM (aka GPIO) pin number of the DATA pin of the sensor. Default is --data-pin:18.
-  | --clock-pin:	Integer. BCM (aka GPIO) pin number of the CLOCK pin of the sensor. Default is --clock-pin:23.
-  | --relay-pin:	Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17.
-  | --help	Display the help and exit.
-  +---------------------------------------
++---------------------------------------
+| Program arguments are:
++---------------------------------------
+| --water-below:	Integer. Humidity threshold in %, default is --water-below:35, start watering below this value.
+| --water-during:	Integer. In seconds, default is --water-during:10. Duration of the watering process.
+| --resume-after:	Integer. In seconds, default is --resume-after:120. After watering, resume sensor monitoring after this amount of time.
+| --verbose:	String. Verbose, default is --verbose:NONE, values can be 'NONE', 'STDOUT' or 'ANSI'.
+| --data-pin:	Integer. BCM (aka GPIO) pin number of the DATA pin of the sensor. Default is --data-pin:18.
+| --clock-pin:	Integer. BCM (aka GPIO) pin number of the CLOCK pin of the sensor. Default is --clock-pin:23.
+| --relay-pin:	Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17.
+| --help	Display the help and exit.
++---------------------------------------
 ```
 
 See below the output of a simulated session (see the `UnsatisfiedLinkError`)
@@ -151,4 +151,20 @@ Exiting
 Simulated temperature between 19.82 and 20.77
 Simulated humidity between 50.00 and 51.13
 Bye-bye!
+```
+
+An ANSI version is available:
+```
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃              PLANT WATERING SYSTEM               ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ Start watering under 50% of humidity.            ┃
+┃ Water during 10.000 secs                         ┃
+┃ Resume sensor watch 2 minutes after watering.    ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ Temp: 20.35 C, Hum: 49.38%                       ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ Resuming watching in 1 minute 52.000 secs...     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
 ```

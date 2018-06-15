@@ -77,8 +77,10 @@ public class STH10 {
 	private static RelayDriver relay = null;
 
 	// Simulators, to run on non-Raspberry PIs - for development.
-	private static Supplier<Double> temperatureSimulator = STH10::simulateUserTemp; // STH10::simulateTemp;
-	private static Supplier<Double> humiditySimulator = STH10::simulateUserHum;     // STH10::simulateHum;
+//	private static Supplier<Double> temperatureSimulator = STH10::simulateUserTemp;
+//	private static Supplier<Double> humiditySimulator = STH10::simulateUserHum;
+	private static Supplier<Double> temperatureSimulator = STH10::simulateTemp;
+	private static Supplier<Double> humiditySimulator = STH10::simulateHum;
 
 	private static double temperature = 20d;
 	private static double humidity = 50d;
