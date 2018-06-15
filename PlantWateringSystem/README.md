@@ -180,6 +180,38 @@ There is a REST server that helps sending value to the program
 
 ```
 $ curl http://localhost:9999/pws/oplist
+[
+    {
+        "verb": "GET",
+        "path": "/pws/oplist",
+        "description": "List of all available operations.",
+        "fn": {}
+    },
+    {
+        "verb": "GET",
+        "path": "/pws/sth10-data",
+        "description": "Get device Data. Temperature, humidity",
+        "fn": {}
+    },
+    {
+        "verb": "GET",
+        "path": "/pws/relay-state",
+        "description": "Get relay state - ON of OFF.",
+        "fn": {}
+    },
+    {
+        "verb": "POST",
+        "path": "/pws/sth10-data",
+        "description": "Set device Data. Temperature, humidity, for simulation",
+        "fn": {}
+    },
+    {
+        "verb": "PUT",
+        "path": "/pws/relay-state",
+        "description": "Flip the relay - ON of OFF.",
+        "fn": {}
+    }
+]
 ```
 
 ```
