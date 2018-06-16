@@ -2,6 +2,8 @@ package main;
 
 import org.fusesource.jansi.AnsiConsole;
 
+import java.util.Date;
+
 import static utils.StringUtils.rpad;
 import static utils.TimeUtil.fmtDHMS;
 import static utils.TimeUtil.msToHMS;
@@ -110,7 +112,8 @@ public class ANSIUtil {
 			double humidity,
 			String message,
 			boolean withRESTServer,
-			int httpPort) {
+			int httpPort,
+			Long lastWatering) {
 		AnsiConsole.out.println(ANSIUtil.ANSI_CLS);
 		int line = 1; // Start from that line
 		// Frame top
@@ -156,6 +159,16 @@ public class ANSIUtil {
 		// Sensor Data
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
 				rpad(String.format(" Temp: %.02f C, Hum: %.02f%%", temperature, humidity), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
+				PAD);
+		// Separator
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
+				LEFT_T_BOLD +
+				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
+				RIGHT_T_BOLD +
+				PAD);
+		// Last Watering
+		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD +
+				rpad(String.format(" Last watering: %s", (lastWatering == null ? "none" : new Date(lastWatering).toString())), FRAME_WIDTH) + SOLID_VERTICAL_BOLD +
 				PAD);
 		// Separator
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
