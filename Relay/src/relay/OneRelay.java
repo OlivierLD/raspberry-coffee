@@ -15,14 +15,14 @@ import com.pi4j.io.gpio.RaspiPin;
 public class OneRelay {
 	public static void main(String... args) throws InterruptedException {
 
-		System.out.println("GPIO Control - pin 00/#17 ... started.");
+		System.out.println("GPIO Control - pin 02/#27 ... started.");
 		System.out.println("(Labelled #17 on the cobbler.)");
 
 		// create gpio controller
 		final GpioController gpio = GpioFactory.getInstance();
 
 		// For a relay it seems that HIGH means NC (Normally Closed)...
-		final GpioPinDigitalOutput pin17 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_00, "Relay1", PinState.HIGH);
+		final GpioPinDigitalOutput pin17 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "Relay1", PinState.HIGH);
 		System.out.println(String.format("--> GPIO state should be: HIGH, and it is %s", pin17.getState()));
 
 		Thread.sleep(1_000L);
