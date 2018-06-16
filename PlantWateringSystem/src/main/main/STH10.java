@@ -301,7 +301,7 @@ public class STH10 {
 			probe = new STH10Driver(PinUtil.getPinByGPIONumber(dataPin), PinUtil.getPinByGPIONumber(clockPin));
 			if (probe.isSimulating() || enforceSensorSimulation) {
 				// Provide simulator here
-				System.out.println(">> Will simulate STH10");
+				System.out.println(String.format(">> Will simulate STH10%s", (enforceSensorSimulation ? "(enforced)" : "")));
 				probe.setSimulators(temperatureSimulator, humiditySimulator);
 			}
 	  } catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of STH10Driver.
@@ -327,7 +327,9 @@ public class STH10 {
 			if (relay.getState() == PinState.LOW) {
 				relay.off();
 			}
-			System.out.println("\nExiting");
+			System.out.println("\nExiting (Main Hook)");
+			probe.shutdownGPIO();
+			relay.shutdownGPIO();
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {
 				ie.printStackTrace();
 			}

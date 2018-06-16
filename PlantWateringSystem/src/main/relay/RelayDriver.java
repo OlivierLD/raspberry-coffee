@@ -97,6 +97,10 @@ public class RelayDriver {
 				System.out.println(String.format("GPIO> Shutting down GPIO from %s", this.getClass().getName()));
 			}
 			gpio.shutdown();
+		} else {
+			if ("true".equals(System.getProperty("gpio.verbose"))) {
+				System.out.println(String.format("GPIO> Shutting down GPIO from %s: was down already", this.getClass().getName()));
+			}
 		}
 	}
 }
