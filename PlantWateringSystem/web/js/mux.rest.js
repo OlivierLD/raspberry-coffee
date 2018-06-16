@@ -99,8 +99,8 @@ var sensorData = function() {
     var getData = getSensorData();
     getData.done(function(value) {
       var json = JSON.parse(value);
-	    $("#temp").text(json.temperature);
-	    $("#hum").text(json.humidity);
+	    $("#temp").text(json.temperature.toFixed(2));
+	    $("#hum").text(json.humidity.toFixed(2));
     });
     getData.fail(function(error, errmess) {
         var message;
