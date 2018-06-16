@@ -110,7 +110,7 @@ public class STH10 {
 
 	private static HTTPServer httpServer = null;
 
-	// Data Getters and Setters, for REST
+	// Data Getters and Setters, for (optional) REST
 	public static void setTemperature(double temp) {
 		temperature = temp;
 	}
@@ -356,7 +356,7 @@ public class STH10 {
 				humidity = probe.readHumidity(temperature);
 			}
 
-			// TODO A screen (Like the SSD1306), ANSI Console, log file, IoT server ? (An NMEA forwarder?)
+			// TODO A screen (Like the SSD1306), ANSI Console, log file, IoT server ? (-> An NMEA forwarder?)
 			if (verbose != VERBOSE.ANSI) {
 				System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", temperature, humidity, WeatherUtil.dewPointTemperature(humidity, temperature)));
 			} else {
