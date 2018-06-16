@@ -82,7 +82,9 @@ public class STH10Driver {
 	public STH10Driver(Pin _dataPin, Pin _clockPin) {
 		this.dataPin = _dataPin;
 		this.clockPin = _clockPin;
-
+		if ("true".equals(System.getProperty("gpio.verbose"))) {
+			System.out.println("Opening GPIO");
+		}
 		// Trap stderr output
 		PrintStream console = System.err;
 		try {
@@ -92,6 +94,9 @@ public class STH10Driver {
 				this.gpio = GpioFactory.getInstance();
 			} catch (UnsatisfiedLinkError ule) {
 				// Simulating
+				if ("true".equals(System.getProperty("gpio.verbose"))) {
+					System.out.println("Will simulate.");
+				}
 				this.simulating = true;
 			}
 			System.setErr(console);
@@ -102,6 +107,9 @@ public class STH10Driver {
 		if (this.gpio != null) {
 			this.data = this.gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
 			this.clock = this.gpio.provisionDigitalMultipurposePin(this.clockPin, PinMode.DIGITAL_OUTPUT);
+			if ("true".equals(System.getProperty("gpio.verbose"))) {
+				System.out.println(String.format("Pins BCM #d and #5d provisioned.", PinUtil.findByPin(this.dataPin).gpio(), PinUtil.findByPin(this.clockPin).gpio()));
+			}
 		}
 		//
 		this.init();
@@ -481,6 +489,9 @@ public class STH10Driver {
 
 	public void shutdownGPIO() {
 		if (this.gpio != null && !this.gpio.isShutdown()) {
+			if ("true".equals(System.getProperty("gpio.verbose"))) {
+				System.out.println(String.format("Shutting down GPIO from %s", this.getClass().getName()));
+			}
 			this.gpio.shutdown();
 		}
 	}

@@ -6,6 +6,7 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import utils.PinUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,6 +32,9 @@ public class RelayDriver {
 	}
 
 	public RelayDriver(Pin _signalPin) {
+		if ("true".equals(System.getProperty("gpio.verbose"))) {
+			System.out.println(String.format("Provisioning pin BCM #%d", PinUtil.findByPin(signalPin).gpio()));
+		}
 		// Trap stderr output
 		PrintStream console = System.err;
 		try {
@@ -41,6 +45,9 @@ public class RelayDriver {
 				this.signalPin = _signalPin;
 				this.signal = gpio.provisionDigitalOutputPin(signalPin, "Relay", PinState.HIGH); // HIGH is off
 			} catch (UnsatisfiedLinkError ule) {
+				if ("true".equals(System.getProperty("gpio.verbose"))) {
+					System.out.println(String.format(">> Will simulate pin BCM #%d", PinUtil.findByPin(signalPin).gpio()));
+				}
 				this.simulating = true;
 			}
 			System.setErr(console);
@@ -86,6 +93,9 @@ public class RelayDriver {
 
 	public void shutdownGPIO() {
 		if (this.gpio != null && !gpio.isShutdown()) {
+			if ("true".equals(System.getProperty("gpio.verbose"))) {
+				System.out.println(String.format("Shutting down GPIO from %s", this.getClass().getName()));
+			}
 			gpio.shutdown();
 		}
 	}
