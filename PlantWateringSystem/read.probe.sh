@@ -21,7 +21,7 @@ fi
 USER_PRM="--verbose:ANSI"
 USER_PRM="$USER_PRM --water-below:35 --water-during:10 --resume-after:120"
 USER_PRM="$USER_PRM --with-rest-server:true --http-port:8088"
-# USER_PRM="$USER_PRM --simulate-sensor-values:true"
+USER_PRM="$USER_PRM --simulate-sensor-values:true"
 # USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:120"
 java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
 #

@@ -18,8 +18,10 @@ def relay_off(pin):
 
 if __name__ == '__main__':
 	try:
+		print("Turning relay ON")
 		relay_on(channel)
 		time.sleep(1)
+		print("Turning relay OFF")
 		relay_off(channel)
 		time.sleep(1)
 		GPIO.cleanup()
