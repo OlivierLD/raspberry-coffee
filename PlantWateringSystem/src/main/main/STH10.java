@@ -301,7 +301,7 @@ public class STH10 {
 			probe = new STH10Driver(PinUtil.getPinByGPIONumber(dataPin), PinUtil.getPinByGPIONumber(clockPin));
 			if (probe.isSimulating() || enforceSensorSimulation) {
 				// Provide simulator here
-				System.out.println(String.format(">> Will simulate STH10%s", (enforceSensorSimulation ? "(enforced)" : "")));
+				System.out.println(String.format(">> Will simulate STH10%s", (enforceSensorSimulation ? " (enforced)" : "")));
 				probe.setSimulators(temperatureSimulator, humiditySimulator);
 			}
 	  } catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of STH10Driver.
