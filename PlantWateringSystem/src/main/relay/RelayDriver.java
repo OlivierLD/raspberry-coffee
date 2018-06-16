@@ -33,7 +33,7 @@ public class RelayDriver {
 
 	public RelayDriver(Pin _signalPin) {
 		if ("true".equals(System.getProperty("gpio.verbose"))) {
-			System.out.println(String.format("Provisioning pin BCM #%d", PinUtil.findByPin(signalPin).gpio()));
+			System.out.println(String.format("GPIO> Provisioning pin BCM #%d", PinUtil.findByPin(signalPin).gpio()));
 		}
 		// Trap stderr output
 		PrintStream console = System.err;
@@ -46,7 +46,7 @@ public class RelayDriver {
 				this.signal = gpio.provisionDigitalOutputPin(signalPin, "Relay", PinState.HIGH); // HIGH is off
 			} catch (UnsatisfiedLinkError ule) {
 				if ("true".equals(System.getProperty("gpio.verbose"))) {
-					System.out.println(String.format(">> Will simulate pin BCM #%d", PinUtil.findByPin(signalPin).gpio()));
+					System.out.println(String.format("GPIO> Will simulate pin BCM #%d (for %s)", PinUtil.findByPin(signalPin).gpio(), this.getClass().getName()));
 				}
 				this.simulating = true;
 			}
@@ -94,7 +94,7 @@ public class RelayDriver {
 	public void shutdownGPIO() {
 		if (this.gpio != null && !gpio.isShutdown()) {
 			if ("true".equals(System.getProperty("gpio.verbose"))) {
-				System.out.println(String.format("Shutting down GPIO from %s", this.getClass().getName()));
+				System.out.println(String.format("GPIO> Shutting down GPIO from %s", this.getClass().getName()));
 			}
 			gpio.shutdown();
 		}
