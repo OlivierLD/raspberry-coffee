@@ -77,9 +77,9 @@ var setSensorData = function(data) {
 var relayStatus = function() {
     var getData = getRelayStatus();
     getData.done(function(value) {
-        var json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
+        var json = JSON.parse(value);
         var status = json.processing;
-        $("#forwarders-status").text(status === true ? 'ON' :'Paused');
+        // TODO set the current status
     });
     getData.fail(function(error, errmess) {
         var message;
@@ -91,7 +91,6 @@ var relayStatus = function() {
             }
         }
         errManager.display("Failed to get the relay status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-        $("#forwarders-status").text('-');
     });
 };
 
@@ -111,9 +110,7 @@ var sensorData = function() {
                 message = errmess;
             }
         }
-        errManager.display("Failed to get the flow status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-        pushData(0);
-        $('#flow').css('cursor', 'auto');
+        errManager.display("Failed to get the Sensor data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
     });
 };
 

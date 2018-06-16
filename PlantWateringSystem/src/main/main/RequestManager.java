@@ -48,6 +48,7 @@ public class RequestManager implements RESTRequestManager {
 	public HTTPServer startHttpServer(int port) {
 		HTTPServer newHttpServer = null;
 		try {
+			// HTTP + REST
 			newHttpServer = new HTTPServer(port, this);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -365,6 +365,7 @@ public class STH10 {
 		manualThread.start();
 
 		if (withRESTServer) {
+			// HTTP Server + REST Request Manager
 			httpServer = new RequestManager().startHttpServer(restServerPort);
 		}
 

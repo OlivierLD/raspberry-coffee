@@ -390,6 +390,12 @@ public class HTTPServer {
 		this(defaultPort, requestManager, new Properties());
 	}
 
+	/**
+	 *
+	 * @param port HTTP port
+	 * @param requestManager for the REST Requests
+	 * @throws Exception
+	 */
 	public HTTPServer(int port, RESTRequestManager requestManager) throws Exception {
 		this(port, requestManager, new Properties());
 	}
