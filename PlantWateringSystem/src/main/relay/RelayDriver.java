@@ -44,6 +44,7 @@ public class RelayDriver {
 				this.gpio = GpioFactory.getInstance();
 				this.signalPin = _signalPin;
 				this.signal = gpio.provisionDigitalOutputPin(signalPin, "Relay", PinState.HIGH); // HIGH is off
+				this.signal.setShutdownOptions(true, PinState.LOW);
 			} catch (UnsatisfiedLinkError ule) {
 				if ("true".equals(System.getProperty("gpio.verbose"))) {
 					System.out.println(String.format("GPIO> Will simulate pin BCM #%d (for %s)", PinUtil.findByPin(signalPin).gpio(), this.getClass().getName()));

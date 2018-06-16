@@ -107,6 +107,8 @@ public class STH10Driver {
 		if (this.gpio != null) {
 			this.data = this.gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
 			this.clock = this.gpio.provisionDigitalMultipurposePin(this.clockPin, PinMode.DIGITAL_OUTPUT);
+			this.data.setShutdownOptions(true, PinState.LOW);
+			this.clock.setShutdownOptions(true, PinState.LOW);
 			if ("true".equals(System.getProperty("gpio.verbose"))) {
 				System.out.println(String.format("GPIO> Pins BCM #%d and #%d provisioned.", PinUtil.findByPin(this.dataPin).gpio(), PinUtil.findByPin(this.clockPin).gpio()));
 			}
