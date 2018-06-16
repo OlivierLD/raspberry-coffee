@@ -25,6 +25,7 @@ public class RelayDriver {
 	private GpioPinDigitalOutput signal = null;
 	private boolean simulating = false;
 	private Consumer<PinState> simulator = null;
+	private Consumer<PinState> listener = null;
 	private Supplier<PinState> relayStatus = null;
 
 	public RelayDriver() {
@@ -66,7 +67,14 @@ public class RelayDriver {
 		this.relayStatus = relayStatus;
 	}
 
+	public void setListener(Consumer<PinState> listener) {
+		this.listener = listener;
+	}
+
 	public void on() {
+		if (this.listener != null) {
+			this.listener.accept(PinState.LOW);
+		}
 		if (!this.simulating) {
 			this.signal.low();
 		} else {
@@ -75,6 +83,9 @@ public class RelayDriver {
 	}
 
 	public void off() {
+		if (this.listener != null) {
+			this.listener.accept(PinState.HIGH);
+		}
 		if (!this.simulating) {
 			this.signal.high();
 		} else {

@@ -18,7 +18,7 @@ fi
 # Use program argument --help for help.
 #
 # verbose: ANSI, STDOUT, NONE
-USER_PRM="--verbose:STDOUT"
+USER_PRM="--verbose:ANSI"
 USER_PRM="$USER_PRM --water-below:35 --water-during:10 --resume-after:120"
 USER_PRM="$USER_PRM --with-rest-server:true --http-port:8088"
 USER_PRM="$USER_PRM --simulate-sensor-values:true"

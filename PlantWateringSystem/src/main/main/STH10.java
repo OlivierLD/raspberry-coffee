@@ -102,10 +102,14 @@ public class STH10 {
 	private static double minSimHum = humidity, maxSimHum = humidity;
 
 	private static PinState simulatedPinState = PinState.HIGH;
+	private static PinState actualPinState = PinState.HIGH;
 	private static Supplier<PinState> relaySignalSimulator = () -> simulatedPinState;
 	private static Consumer<PinState> relayObserver = state -> {
 		System.out.println(">> Relay is now " + state);
 		simulatedPinState = state;
+	};
+	private static Consumer<PinState> relayListener = state -> {
+		actualPinState = state;
 	};
 
 	private static HTTPServer httpServer = null;
@@ -157,6 +161,19 @@ public class STH10 {
 		return humidity;
 	}
 
+	private static void displayANSIConsole() {
+		ANSIUtil.displayAnsiData(
+				humidityThreshold,
+				wateringDuration,
+				resumeSensorWatchAfter,
+				temperature,
+				humidity,
+				message,
+				withRESTServer,
+				restServerPort,
+				lastWatering,
+				(relay != null && relay.isSimulating() ? simulatedPinState : actualPinState));
+	}
 	// Interactive simulators, for dev and tests.
 	private static Double simulateUserTemp() {
 		return temperature;
@@ -275,7 +292,7 @@ public class STH10 {
 		}
 		// Print summary
 		if (verbose == VERBOSE.ANSI) {
-			ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+			displayANSIConsole();
 		} else {
 			System.out.println("+------- P L A N T   W A T E R I N G   S Y S T E M --------");
 			System.out.println(String.format("| Start watering under %d%% of humidity.", humidityThreshold));
@@ -315,6 +332,9 @@ public class STH10 {
 				// Provide simulator here
 				System.out.println(">> Will simulate Relay");
 				relay.setSimulator(relayObserver, relaySignalSimulator);
+			} else {
+				// Relay listener
+				relay.setListener(relayListener);
 			}
 		} catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of RelayDriver.
 			System.out.println("You're not on a Raspberry PI, or your wiring is wrong.");
@@ -362,7 +382,7 @@ public class STH10 {
 			if (verbose != VERBOSE.ANSI) {
 				System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", temperature, humidity, WeatherUtil.dewPointTemperature(humidity, temperature)));
 			} else {
-				ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+				displayANSIConsole();
 			}
 
 			/*
@@ -375,7 +395,7 @@ public class STH10 {
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
 				} else if (verbose == VERBOSE.ANSI) {
-					ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+					displayANSIConsole();
 				}
 				// Watering time
 				try {
@@ -393,7 +413,7 @@ public class STH10 {
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
-								ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+								displayANSIConsole();
 							}
 						}
 						synchronized (mainThread) {
@@ -401,7 +421,7 @@ public class STH10 {
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
-								ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+								displayANSIConsole();
 							}
 							mainThread.notify(); // Release the wait on main thread.
 						}
@@ -414,7 +434,7 @@ public class STH10 {
 						if (verbose == VERBOSE.STDOUT) {
 							System.out.println(message);
 						} else if (verbose == VERBOSE.ANSI) {
-							ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+							displayANSIConsole();
 						}
 					}
 					message = "Shutting off the valve.";
@@ -422,7 +442,7 @@ public class STH10 {
 					if (verbose == VERBOSE.STDOUT) {
 						System.out.println(message);
 					} else if (verbose == VERBOSE.ANSI) {
-						ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+						displayANSIConsole();
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -431,7 +451,7 @@ public class STH10 {
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
 				} else if (verbose == VERBOSE.ANSI) {
-					ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+					displayANSIConsole();
 				}
 				// Shut the valve
 				relay.off();
@@ -441,7 +461,7 @@ public class STH10 {
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
 				} else if (verbose == VERBOSE.ANSI) {
-					ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+					displayANSIConsole();
 				}
 				try {
 					final Thread mainThread = Thread.currentThread();
@@ -458,7 +478,7 @@ public class STH10 {
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
-								ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+								displayANSIConsole();
 							}
 						}
 						synchronized (mainThread) {
@@ -466,7 +486,7 @@ public class STH10 {
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
-								ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+								displayANSIConsole();
 							}
 							mainThread.notify(); // Release the wait on main thread.
 						}
@@ -479,7 +499,7 @@ public class STH10 {
 						if (verbose == VERBOSE.STDOUT) {
 							System.out.println(message);
 						} else if (verbose == VERBOSE.ANSI) {
-							ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+							displayANSIConsole();
 						}
 					}
 				} catch (InterruptedException ie) {
@@ -488,7 +508,7 @@ public class STH10 {
 				// Resume watching
 				message = "";
 				if (verbose == VERBOSE.ANSI) {
-					ANSIUtil.displayAnsiData(humidityThreshold, wateringDuration, resumeSensorWatchAfter, temperature, humidity, message, withRESTServer, restServerPort, lastWatering);
+					displayANSIConsole();
 				}
 			} else {
 				try {
