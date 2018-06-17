@@ -39,7 +39,7 @@ See in this project the class named `sensors.sth10.STH10Driver.java`.
 > (surprisingly, it was working OK on a 2-relay board). The relay goes on when the program is started, does not go down until
 > the program terminates with a `gpio.shutdown()`. The reason is that the states `HIGH` and `LOW` is evaluated by
 > compairing the power supply with the signal. As the GPIO header of the Raspberry PI delivers `3.3V`, the comparison with `5V`
-> never finds it eqUAL.
+> never finds it equal.
 >
 > Hooking the relay's power supply to `3.3V` fixes the issue, as the comparison with the power supply and the signal find them equals
 > when the GPIO pin is `ON`.
