@@ -11,7 +11,8 @@ Watering is done by opening a solenoid valve connected to a tank of water.
 The goal here is to finally heave a Java implmentation of the code. See below.
 
 
-We start from an Arduino sketch, that can read the STH10. The 10KOhms resistor is not to be forgotten.
+We start from an Arduino sketch, that can read the STH10.
+> The 10KOhms resistor is not to be forgotten.
 
 ![Arduino wiring](./Arduino.STH10_bb.png)
 
