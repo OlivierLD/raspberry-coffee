@@ -7,8 +7,9 @@ The goal here is to read the humidity of the soil, and to water the plan when th
 
 Watering is done by opening a solenoid valve connected to a tank of water.
 
-### Reading the STH10 Sensor. Getting there...
-The goal here is to finally heave a Java implmentation of the code.
+#### Act 1:  Reading the STH10 Sensor. Getting there...
+The goal here is to finally heave a Java implmentation of the code. See below.
+
 
 We start from an Arduino sketch, that can read the STH10. The 10KOhms resistor is not to be forgotten.
 
