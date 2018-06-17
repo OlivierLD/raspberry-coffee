@@ -7,7 +7,9 @@ The goal here is to read the humidity of the soil, and to water the plan when th
 
 Watering is done by opening a solenoid valve connected to a tank of water.
 
-### Reading the STH10 Sensor
+### Reading the STH10 Sensor. Getting there...
+The goal here is to finally heave a Java implmentation of the code.
+
 We start from an Arduino sketch, that can read the STH10. The 10KOhms resistor is not to be forgotten.
 
 ![Arduino wiring](./Arduino.STH10_bb.png)
@@ -174,9 +176,15 @@ An ANSI version is available:
 ```
 
 ### Simulation
+Can prove useful for testing and calibtrating.
+
 There is a REST server that helps sending values to the program
 - if you are not on a Raspberry PI
 - if you want to enforce simulation (for tests)
+
+Any REST client does the job. Postman, curl, your own cade...
+
+See below (the http port depends on you, see program argument `--http-port:` above)
 
 ```
 $ curl http://localhost:9999/pws/oplist
@@ -223,6 +231,15 @@ $ curl -X GET http://localhost:1234/pws/sth10-data
 
 {"temperature":20.17,"humidity":30.23}
 ```
+
+### External access
+Vast topic... An option to consider is HTTP, on top of which the REST server mentioned above relies.
+
+This will be fleshed out. Eventually, we will fully drive the device.
+
+For now, try this (from your phone, tablet, whatever): `http://Rasp.pi.add.ress:2345/web/index.html`
+
+![Web Interface](./docimg/webindex.png)
 
 ### Next
 - Integration with the NMEA.Multiplexer

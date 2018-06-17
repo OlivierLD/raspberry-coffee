@@ -18,11 +18,11 @@
 
     <div data-role="content">
 
-        <label for="flip-1">Watering valve:</label>
-        <select name="flip-1" id="flip-1" data-role="slider" onchange="setStatus(this.value);">
-            <option value="HIGH">Off</option>
-            <option value="LOW">On</option>
-        </select>
+			<label for="flip-1">Watering valve:</label>
+			<select name="flip-1" id="flip-1" data-role="slider" onchange="setStatus(this.value);">
+				<option value="HIGH">Off</option>
+				<option value="LOW">On</option>
+			</select>
 
 			<div class="ui-grid-a">
 				<div class="ui-block-a">
@@ -33,22 +33,22 @@
 				</div>
 			</div>
 
-        <div class="ui-grid-a">
-            <div class="ui-block-a" style="text-align: center;">
-                <span id="temp" style="font-weight: bold; font-size: 30px;"></span><span style="font-weight: bold; font-size: 30px;">&deg;C</span>
-            </div>
-            <div class="ui-block-b" style="text-align: center;">
-                <span id="hum" style="font-weight: bold; font-size: 30px;"></span><span style="font-weight: bold; font-size: 30px;">%</span>
-            </div>
-        </div>
+			<div class="ui-grid-a">
+					<div class="ui-block-a" style="text-align: center;">
+							<span id="temp" style="font-weight: bold; font-size: 30px;"></span><span style="font-weight: bold; font-size: 30px;">&deg;C</span>
+					</div>
+					<div class="ui-block-b" style="text-align: center;">
+							<span id="hum" style="font-weight: bold; font-size: 30px;"></span><span style="font-weight: bold; font-size: 30px;">%</span>
+					</div>
+			</div>
 
+			<!--div class="ui-body ui-body-b">
+					<fieldset class="ui-grid-a">
+							<div class="ui-block-b"><button data-theme="a" id="b-reset">Reset</button></div>
+							<div class="ui-block-b"><button data-theme="a" id="b-terminate">Terminate</button></div>
+					</fieldset>
+			</div-->
 
-        <div class="ui-body ui-body-b">
-            <fieldset class="ui-grid-a">
-                <div class="ui-block-b"><button data-theme="a" id="b-reset">Reset</button></div>
-                <div class="ui-block-b"><button data-theme="a" id="b-terminate">Terminate</button></div>
-            </fieldset>
-        </div>
     </div>
     <div style="display: none"> <!-- turn display to block or inline for debugging -->
         <textarea id="message" style="width: 98%; height: 150px;"></textarea>
@@ -60,9 +60,11 @@
 		sensorData();
 		relayStatus();
 	};
+
 	$().ready(function () {
 		setInterval(getAllData, 1000);
 	});
+
 </script>
 </body>
 </html>
