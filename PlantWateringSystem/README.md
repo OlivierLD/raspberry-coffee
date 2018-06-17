@@ -183,7 +183,7 @@ There is a REST server that helps sending values to the program
 - if you are not on a Raspberry PI
 - if you want to enforce simulation (for tests)
 
-Any REST client does the job. Postman, curl, your own cade...
+Any REST client does the job. Postman, curl, your own code...
 
 See below (the http port depends on you, see program argument `--http-port:` above)
 
@@ -232,6 +232,10 @@ $ curl -X GET http://localhost:1234/pws/sth10-data
 
 {"temperature":20.17,"humidity":30.23}
 ```
+
+The REST Server is part of this project, it's a very tiny one that runs fine even on the Raspberry PI Zero.
+Details [here](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/common-utils/src/java/http/HTTPServer.java), also
+see the method `addRequestManager`.
 
 ### External access
 Vast topic... An option to consider is HTTP, on top of which the REST server mentioned above relies.
