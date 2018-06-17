@@ -23,7 +23,7 @@ The idea here is to trigger the valve when the humidity goes below a given thres
 The valve opens a pipe connected to a tank of water.
 As the valve requires a 12 Volt power supply, it with be driven by relay.
 
-On the Raspberry PI, the code at https://github.com/drohm/pi-sht1x works fine with the following wiring:
+On the Raspberry PI, the code at https://github.com/drohm/pi-sht1x works fine to read the` STH10`, with the following wiring:
 
 ![Raspberry Wiring](./RaspberryPI.STH10_bb.png)
 
@@ -31,7 +31,19 @@ On the Raspberry PI, the code at https://github.com/drohm/pi-sht1x works fine wi
 
 Inspired from https://github.com/drohm/pi-sht1x and the [STH1x Specs](https://cdn-shop.adafruit.com/datasheets/Sensirion_Humidity_SHT1x_Datasheet_V5.pdf), the Java code is now also available in this project.
 It relies on `PI4J`.
-See the class named `sensors.sth10.STH10Driver.java`.
+See in this project the class named `sensors.sth10.STH10Driver.java`.
+
+> Note on the relay's wiring:
+>
+> The doc of the relay specifies that it should be fed with a `5V` power supply. This did not work for me on a single relay board.
+> (surprisingly, it was working OK on a 2-relay board). The relay goes on when the program is started, does not go down until
+> the program terminates with a `gpio.shutdown()`. The reason is that the states `HIGH` and `LOW` is evaluated by
+> compairing the power supply with the signal. As the GPIO header of the Raspberry PI delivers `3.3V`, the comparison with `5V`
+> never finds it eqUAL.
+>
+> Hooking the relay's power supply to `3.3V` fixes the issue, as the comparison with the power supply and the signal find them equals
+> when the GPIO pin is `ON`.
+
 
 ---
 
