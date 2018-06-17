@@ -93,6 +93,7 @@ public class STH10Driver {
 			try {
 				this.gpio = GpioFactory.getInstance();
 			} catch (UnsatisfiedLinkError ule) {
+				System.out.println(ule.toString());
 				// Simulating
 				if ("true".equals(System.getProperty("gpio.verbose"))) {
 					System.out.println(String.format("GPIO> Will simulate (for %s)", this.getClass().getName()));

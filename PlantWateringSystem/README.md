@@ -132,43 +132,31 @@ Wiring:
        +-----+-----+--------------+-----++-----+--------------+-----+-----+
        | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
        +-----+-----+--------------+-----++-----+--------------+-----+-----+
-Jun 14, 2018 1:26:09 PM com.pi4j.util.NativeLibraryLoader load
-SEVERE: Unable to load [libpi4j.so] using path: [/lib/raspberrypi/dynamic/libpi4j.so]
-java.lang.UnsatisfiedLinkError: /private/var/folders/x4/l4ndqsqs0xb2gfdj99fl9xd80000gn/T/libpi4j8258820691126203472.so: dlopen(/private/var/folders/x4/l4ndqsqs0xb2gfdj99fl9xd80000gn/T/libpi4j8258820691126203472.so, 1): no suitable image found.  Did find:
-	/private/var/folders/x4/l4ndqsqs0xb2gfdj99fl9xd80000gn/T/libpi4j8258820691126203472.so: unknown file type, first eight bytes: 0x7F 0x45 0x4C 0x46 0x01 0x01 0x01 0x00
-	/private/var/folders/x4/l4ndqsqs0xb2gfdj99fl9xd80000gn/T/libpi4j8258820691126203472.so: stat() failed with errno=38
-	at java.base/java.lang.ClassLoader$NativeLibrary.load(Native Method)
-	at java.base/java.lang.ClassLoader.loadLibrary0(ClassLoader.java:2614)
-	at java.base/java.lang.ClassLoader.loadLibrary(ClassLoader.java:2499)
-	at java.base/java.lang.Runtime.load0(Runtime.java:812)
-	at java.base/java.lang.System.load(System.java:1821)
-	at com.pi4j.util.NativeLibraryLoader.loadLibraryFromClasspath(NativeLibraryLoader.java:159)
-	at com.pi4j.util.NativeLibraryLoader.load(NativeLibraryLoader.java:105)
-	at com.pi4j.wiringpi.Gpio.<clinit>(Gpio.java:189)
-	at com.pi4j.io.gpio.RaspiGpioProvider.<init>(RaspiGpioProvider.java:69)
-	at com.pi4j.io.gpio.RaspiGpioProvider.<init>(RaspiGpioProvider.java:51)
-	at com.pi4j.platform.Platform.getGpioProvider(Platform.java:125)
-	at com.pi4j.platform.Platform.getGpioProvider(Platform.java:118)
-	at com.pi4j.io.gpio.GpioFactory.getDefaultProvider(GpioFactory.java:109)
-	at com.pi4j.io.gpio.impl.GpioControllerImpl.<init>(GpioControllerImpl.java:53)
-	at com.pi4j.io.gpio.GpioFactory.getInstance(GpioFactory.java:91)
-	at sensors.sth10.STH10Driver.<init>(STH10Driver.java:83)
-	at main.STH10.main(STH10.java:186)
-
+GPIO> Opening GPIO (sensors.sth10.STH10Driver)
+java.lang.UnsatisfiedLinkError: com.pi4j.wiringpi.Gpio.wiringPiSetup()I
+GPIO> Will simulate (for sensors.sth10.STH10Driver)
 >> Will simulate STH10
+GPIO> Provisioning pin BCM #17
+java.lang.UnsatisfiedLinkError: com.pi4j.wiringpi.Gpio.wiringPiSetup()I
+GPIO> Will simulate pin BCM #17 (for relay.RelayDriver)
 >> Will simulate Relay
-Temp: 20.03 C, Hum: 50.41% (dew pt Temp: 9.43 C)
-Temp: 20.77 C, Hum: 51.13% (dew pt Temp: 10.31 C)
-Temp: 19.82 C, Hum: 50.97% (dew pt Temp: 9.40 C)
-
-...
-
-^C>> Relay is DOWN
-
-Exiting
-Simulated temperature between 19.82 and 20.77
-Simulated humidity between 50.00 and 51.13
+ T:XX, H:XX > Temp: 20.00 C, Hum: 50.00% (dew pt Temp: 9.28 C)
+Temp: 20.00 C, Hum: 50.00% (dew pt Temp: 9.28 C)
+Temp: 20.00 C, Hum: 50.00% (dew pt Temp: 9.28 C)
+^C
+Exiting (Main Hook)
+GPIO> Shutting down GPIO from sensors.sth10.STH10Driver: was down already
+GPIO> Shutting down GPIO from relay.RelayDriver: was down already
+ <- HTTP: Ctrl+C intercepted.
+Received an exit signal (path)
+Bye from HTTP
+Exiting -> Exiting
+Simulated temperature between 20.00 and 20.00
+Simulated humidity between 50.00 and 50.00
+GPIO> Shutting down GPIO from sensors.sth10.STH10Driver: was down already
+GPIO> Shutting down GPIO from relay.RelayDriver: was down already
 Bye-bye!
+Dead.
 ```
 
 An ANSI version is available:
