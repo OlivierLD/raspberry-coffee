@@ -59,7 +59,6 @@ With a Relay
 
 ### Extras
 - IoT and stuff...
-- Reading the sensor as an I<small><sup>2</sup></small>C device?
 
 ### Power supply
 12 & 5 Volts.
@@ -248,5 +247,7 @@ For now, try this (from your phone, tablet, whatever): `http://Rasp.pi.add.ress:
 
 ### Next
 - Integration with the NMEA.Multiplexer
+- Read the `STH10` as an I<small><sup>2</sup></small>C device.
+
 
 ---
