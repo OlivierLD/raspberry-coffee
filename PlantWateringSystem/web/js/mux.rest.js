@@ -105,6 +105,9 @@ var sensorData = function () {
 		var json = JSON.parse(value);
 		$("#temp").text(json.temperature.toFixed(2));
 		$("#hum").text(json.humidity.toFixed(2));
+
+		document.getElementById("hum-01").value = json.humidity.toFixed(2);
+		document.getElementById("hum-01").repaint();
 	});
 	getData.fail(function (error, errmess) {
 		var message;
