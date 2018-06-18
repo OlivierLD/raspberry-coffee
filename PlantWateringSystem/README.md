@@ -244,7 +244,7 @@ This will be fleshed out. Eventually, we will fully drive the device.
 
 For now, try this (from your phone, tablet, whatever): `http://Rasp.pi.add.ress:2345/web/index.html`
 
-<img src="./docimg/webindex.png" width="462" height="722" alt="Web Interface">
+<img src="./docimg/webindex.png" width="459" height="772" alt="Web Interface">
 
 ### Next
 - Integration with the NMEA.Multiplexer

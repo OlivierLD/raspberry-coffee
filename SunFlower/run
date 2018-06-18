@@ -102,6 +102,8 @@ case "$OPTION" in
     JAVA_OPTS="$JAVA_OPTS -Dmanual.entry=false"
     JAVA_OPTS="$JAVA_OPTS -Dansi.console=true"
     #
+    JAVA_OPTS="$JAVA_OPTS -Dlog.battery.data=false"   # Console output
+    JAVA_OPTS="$JAVA_OPTS -Dlog.photocell.data=false" # Console output
     JAVA_OPTS="$JAVA_OPTS -Dsmooth.moves=false"
     JAVA_OPTS="$JAVA_OPTS -Ddemo.mode=true"
     # The 2 following ones are required if demo.mode=true

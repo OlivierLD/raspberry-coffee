@@ -66,6 +66,10 @@ var getSensorData = function () {
 	return getDeferred('/pws/sth10-data', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+var getLastWateringTime = function () {
+	return getDeferred('/pws/last-watering-time', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var setRelayStatus = function (status) {
 	return getDeferred('/pws/relay-state', DEFAULT_TIMEOUT, 'PUT', 200, status); // 200 or 201?
 };
@@ -150,5 +154,24 @@ var setData = function (data) {
 			}
 		}
 		errManager.display("Failed to set sensor data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+var wateringTime = function () {
+	var getData = getLastWateringTime();
+	getData.done(function (value) {
+		var json = JSON.parse(value);
+		$("#lwt").text(new Date(json));
+	});
+	getData.fail(function (error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager.display("Failed to get the last watering time..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };

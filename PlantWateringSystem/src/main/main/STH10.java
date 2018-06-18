@@ -143,6 +143,9 @@ public class STH10 {
 			}
 		}
 	}
+	public static Long getLastWateringTime() {
+		return lastWatering;
+	}
 
 	private static Double simulateTemp() {
 		int sign = (int)System.currentTimeMillis() % 2;

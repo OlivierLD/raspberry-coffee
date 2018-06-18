@@ -42,6 +42,23 @@
 					</div>
 			</div>
 
+			<div style="height: 30px;">
+			</div>
+
+			<div class="ui-grid-solo">
+				<div class="ui-block-a">
+					<div class="ui-bar ui-bar-e" style="height:40px">
+						<span>Last watering time</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="ui-grid-solo">
+				<div class="ui-block-a" style="text-align: center;">
+					<span id="lwt" style="font-weight: bold; font-size: 18px;"></span>
+				</div>
+			</div>
+
 			<!--div class="ui-body ui-body-b">
 					<fieldset class="ui-grid-a">
 							<div class="ui-block-b"><button data-theme="a" id="b-reset">Reset</button></div>
@@ -59,6 +76,7 @@
 	var getAllData = function() {
 		sensorData();
 		relayStatus();
+		wateringTime();
 	};
 
 	$().ready(function () {

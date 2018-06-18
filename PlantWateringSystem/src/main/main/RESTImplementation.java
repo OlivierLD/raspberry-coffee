@@ -78,6 +78,11 @@ public class RESTImplementation {
 					this::getRelayState,
 					"Get relay state - ON of OFF."),
 			new Operation(
+					"GET",
+					PWS_PREFIX + "/last-watering-time",
+					this::getLastWateringTime,
+					"Get last watering time as a long."),
+			new Operation(
 					"POST",
 					PWS_PREFIX + "/sth10-data",
 					this::setSTH10Data,
@@ -179,6 +184,16 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		PinState relayState = STH10.getRelayState();
 		String content = new Gson().toJson(relayState);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private Response getLastWateringTime(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		Long lastWateringTime = STH10.getLastWateringTime();
+		String content = new Gson().toJson(lastWateringTime);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
