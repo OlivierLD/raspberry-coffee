@@ -1,5 +1,5 @@
 buildscript {
-    ext.shadowVersion='1.2.3'
+    ext.shadowVersion = '1.2.3'
     repositories {
         mavenCentral()
         maven {
@@ -12,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'scala'
 apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -19,30 +20,33 @@ group = 'oliv.pi4j.samples'
 version = '1.0'
 
 sourceSets {
-  main {
-    java {
-      srcDir 'src/main'
+    main {
+        java {
+            srcDir 'src/java'
+        }
+        scala {
+            srcDir 'src/scala'
+        }
     }
-  }
-  test {
-    java {
-      srcDir 'src/tests'
+    test {
+        java {
+            srcDir 'src/tests'
+        }
     }
-  }
 }
 
 repositories {
-  mavenCentral()
-  mavenLocal()
-  maven { url "https://oss.sonatype.org/content/groups/public" }
+    mavenCentral()
+    mavenLocal()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
 }
 
 dependencies {
 //compile 'com.pi4j:pi4j-core:1.1'
-  compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
-  compile 'com.google.code.gson:gson:2.8.0'
-  compile 'org.fusesource.jansi:jansi:1.11'
-  compile project(':common-utils')
+    compile 'com.pi4j:pi4j-core:1.2-SNAPSHOT'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'org.fusesource.jansi:jansi:1.11'
+    compile project(':common-utils')
 }
 
 shadowJar {
