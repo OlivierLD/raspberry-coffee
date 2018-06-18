@@ -3,6 +3,10 @@ import time
 
 channel = 17
 
+#
+# To test the relay
+#
+
 # GPIO setup
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(channel, GPIO.OUT) # Assign the pin here
