@@ -53,10 +53,9 @@ var DEFAULT_TIMEOUT = 10000;
  * Required functions:
  * - Relay Status: getter, setter
  * - Sensor Data: getter, setter
- *
+ * - Last watering time
  * TODO
- * Last watering time
- * Status (watering, waiting...)
+ * - Status (watering, waiting...)
  */
 var getRelayStatus = function () {
 	return getDeferred('/pws/relay-state', DEFAULT_TIMEOUT, 'GET', 200, null, false);
@@ -71,7 +70,7 @@ var getLastWateringTime = function () {
 };
 
 var setRelayStatus = function (status) {
-	return getDeferred('/pws/relay-state', DEFAULT_TIMEOUT, 'PUT', 200, status); // 200 or 201?
+	return getDeferred('/pws/relay-state', DEFAULT_TIMEOUT, 'PUT', 200, status);
 };
 
 var setSensorData = function (data) {
@@ -122,6 +121,7 @@ var sensorData = function () {
 	});
 };
 
+// For simulation
 var setStatus = function (state) {
 	var putData = setRelayStatus(state);
 	putData.done(function (value) {
@@ -141,6 +141,7 @@ var setStatus = function (state) {
 	});
 };
 
+// For simulation
 var setData = function (data) {
 	var postData = setSensorData(data);
 	postData.done(function (value) {
