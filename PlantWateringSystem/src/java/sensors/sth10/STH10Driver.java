@@ -401,9 +401,11 @@ public class STH10Driver {
 	}
 
 	public double readHumidity(Double temp) {
-		double t = temp;
+		double t;
 		if (temp == null) {
 			t = this.readTemperature();
+		} else {
+			t = temp;
 		}
 		byte cmd = COMMANDS.get(HUMIDITY_CMD);
 		this.sendCommandSHT(cmd);

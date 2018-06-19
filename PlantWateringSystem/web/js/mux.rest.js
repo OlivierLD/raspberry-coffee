@@ -165,7 +165,7 @@ var wateringTime = function () {
 	var getData = getLastWateringTime();
 	getData.done(function (value) {
 		var json = JSON.parse(value);
-		$("#lwt").text(new Date(json));
+		$("#lwt").text(json !== null ? new Date(json) : "[none]");
 	});
 	getData.fail(function (error, errmess) {
 		var message;

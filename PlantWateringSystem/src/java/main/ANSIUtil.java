@@ -14,7 +14,7 @@ import static utils.TimeUtil.msToHMS;
  */
 public class ANSIUtil {
 
-	private final static boolean BOX_CHARACTERS = false;
+	private final static boolean BOX_CHARACTERS = "true".equals(System.getProperty("ansi.boxes")); // In case special characters do not work
 
 	public final static char ESC = '\u001b'; // (char) 27;
 

@@ -2,6 +2,9 @@ package fromscala
 
 import sensors.sth10._
 
+/**
+  * Just an example...
+  */
 object ScalaMain {
 
   def delay(t: Int): Unit = {
@@ -17,10 +20,14 @@ object ScalaMain {
   def main(args: Array[String]) {
 
     val probe = new STH10Driver
+    if (probe.isSimulating) {
+      println("Will simulate the probe.")
+      probe.setSimulators(() => 20.0, () => 50.0)
+    }
     var go = true
 
     while(go) {
-      println (s"Temperature ${ probe readHumidity }\272C, Humidity ${ probe readHumidity }%")
+      println (s"Temperature ${ probe readTemperature }\272C, Humidity ${ probe readHumidity }%")
       delay(1)
     }
 
