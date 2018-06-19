@@ -102,7 +102,8 @@ class LeastSquares extends PApplet {
     fill(BLACK)
 
     requiredSmoothingDegree = sliderToDegValue
-    text("Drag the mouse to spray points, then click [Resolve]. Degree is " + String.valueOf(requiredSmoothingDegree), 10, height - 50)
+//  text("Drag the mouse to spray points, then click [Resolve]. Degree is " + String.valueOf(requiredSmoothingDegree), 10, height - 50)
+    text(s"Drag the mouse to spray points, then click [Resolve]. Degree is ${requiredSmoothingDegree}", 10, height - 50)
     text("Use the slider to change the degree of the curve to calculate", 10, height - 30)
 
     hsbDegree.update
