@@ -13,6 +13,9 @@ import static utils.TimeUtil.msToHMS;
  * Find more ANSI box drawing codes at https://en.wikipedia.org/wiki/Box-drawing_character
  */
 public class ANSIUtil {
+
+	private final static boolean BOX_CHARACTERS = false;
+
 	public final static char ESC = '\u001b'; // (char) 27;
 
 	public final static String ANSI_BLACK = "0";
@@ -45,28 +48,28 @@ public class ANSIUtil {
 
 	// Unicode box drawing
 	public final static String SOLID_HORIZONTAL = "\u2500";
-	public final static String SOLID_HORIZONTAL_BOLD = "\u2501";
+	public final static String SOLID_HORIZONTAL_BOLD = (BOX_CHARACTERS ? "\u2501" : "-");
 	public final static String SOLID_VERTICAL = "\u2502";
-	public final static String SOLID_VERTICAL_BOLD = "\u2503";
+	public final static String SOLID_VERTICAL_BOLD = (BOX_CHARACTERS ? "\u2503" : "|");
 	public final static String DOTTED_HORIZONTAL = "\u2504";
 	public final static String DOTTED_HORIZONTAL_BOLD = "\u2505";
 	public final static String DOTTED_VERTICAL = "\u2506";
 	public final static String DOTTED_VERTICAL_BOLD = "\u2507";
 
 	public final static String TOP_LEFT_CORNER = "\u250c";
-	public final static String TOP_LEFT_CORNER_BOLD = "\u250f";
+	public final static String TOP_LEFT_CORNER_BOLD = (BOX_CHARACTERS ? "\u250f" : "+");
 	public final static String TOP_RIGHT_CORNER = "\u2510";
-	public final static String TOP_RIGHT_CORNER_BOLD = "\u2513";
+	public final static String TOP_RIGHT_CORNER_BOLD = (BOX_CHARACTERS ? "\u2513" : "+");
 
 	public final static String BOTTOM_LEFT_CORNER = "\u2514";
-	public final static String BOTTOM_LEFT_CORNER_BOLD = "\u2517";
+	public final static String BOTTOM_LEFT_CORNER_BOLD = (BOX_CHARACTERS ? "\u2517" : "+");
 	public final static String BOTTOM_RIGHT_CORNER = "\u2518";
-	public final static String BOTTOM_RIGHT_CORNER_BOLD = "\u251b";
+	public final static String BOTTOM_RIGHT_CORNER_BOLD = (BOX_CHARACTERS ? "\u251b" : "+");
 
 	public final static String LEFT_T = "\u251c";
-	public final static String LEFT_T_BOLD = "\u2523";
+	public final static String LEFT_T_BOLD = (BOX_CHARACTERS ? "\u2523" : "+");
 	public final static String RIGHT_T = "\u2524";
-	public final static String RIGHT_T_BOLD = "\u252b";
+	public final static String RIGHT_T_BOLD = (BOX_CHARACTERS ? "\u252b" : "+");
 	public final static String TOP_T = "\u252c";
 	public final static String TOP_T_BOLD = "\u2533";
 	public final static String BOTTOM_T = "\u2534";
