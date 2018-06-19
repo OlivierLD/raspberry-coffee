@@ -26,7 +26,7 @@ object ScalaMain {
     }
     var go = true
 
-    while(go) {
+    while (go) {
       println (s"Temperature ${ probe readTemperature }\272C, Humidity ${ probe readHumidity }%")
       delay(1)
     }
