@@ -290,7 +290,7 @@ public class EmailReceiver {
 								}
 								this.emailSender.send(new String[]{sender},
 										ackTopic != null ? ackTopic : ackSubject,
-										"Your request [" + mess.getSubject().trim() + "] is being taken care of.");
+										"Your request [" + mess.getSubject().trim() + "] is being taken care of. Content is \n" + messageContent.getContent());
 								if (verbose) {
 									System.out.println("Sent an ack to " + sender);
 								}
