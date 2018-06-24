@@ -157,6 +157,21 @@ dokill snap.loop.sh
 ```
 ![Architecture](./img/WeatherStationArchitecture.png)
 
+##### Quick note
+On another Raspberry PI, with its own 7" screen, I have a permanent display of the data emitted by the station.
+
+To do that, you need to start in Graphical mode, have Chromium installed, and boot to the Graphical Desktop.
+To start Chromium when the Desktop starts, and load one or several URLs (in different tabs), edit the file named
+`~/.config/lxsession/LXDE-pi/autostart`, and add at the end the following lines:
+```
+@chromium-browser --incognito --kiosk http://donpedro.lediouris.net/php/weather/reports.v2/weather.report.html \
+                                      http://donpedro.lediouris.net/php/weather/reports.v2/image.html?key=54c2767878ca793f2e3cae1c45d62aa7ae9f8056 \
+                                      http://192.168.42.13:9876/data/weather.station/analog.all.html \
+                                      http://192.168.42.13:9876/data/weather.station/digital.html \
+                                      http://192.168.42.6:9999/web/samples/now.from.SF.html
+```
+It will start Chromium in `kiosk` (full screen) mode, and load the 5 URL mentioned above.
+
 ##### And more
 - Added a camera
     - Snapshots posted on Adafruit-IO

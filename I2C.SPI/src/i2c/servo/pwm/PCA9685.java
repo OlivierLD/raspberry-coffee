@@ -79,7 +79,7 @@ public class PCA9685 {
 		try {
 			byte oldmode = (byte) servoDriver.read(MODE1);
 			byte newmode = (byte) ((oldmode & 0x7F) | 0x10); // sleep
-			servoDriver.write(MODE1, newmode);              // go to sleep
+			servoDriver.write(MODE1, newmode);               // go to sleep
 			servoDriver.write(PRESCALE, (byte) (Math.floor(preScale)));
 			servoDriver.write(MODE1, oldmode);
 			delay(5);

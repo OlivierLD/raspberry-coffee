@@ -72,7 +72,7 @@ public class STH10Driver {
 
 	private byte statusRegister = 0x0;
 
-	private Supplier<Double> temparatureSimulator = null;
+	private Supplier<Double> temperatureSimulator = null;
 	private Supplier<Double> humiditySimulator = null;
 
 	public STH10Driver() {
@@ -123,7 +123,7 @@ public class STH10Driver {
 	}
 
 	public void setSimulators(Supplier<Double> tSimulator, Supplier<Double> hSimulator) {
-		this.temparatureSimulator = tSimulator;
+		this.temperatureSimulator = tSimulator;
 		this.humiditySimulator = hSimulator;
 	}
 
@@ -160,7 +160,6 @@ public class STH10Driver {
 			System.out.println(String.format(">> writeStatusRegister, sendCommandSHT, cmd %d", cmd));
 		}
 		this.sendCommandSHT(cmd, false);
-		//
 		this.sendByte(mask);
 		if (DEBUG) {
 			System.out.println(String.format(">> writeStatusRegister, getAck, cmd %d", cmd));
@@ -392,7 +391,7 @@ public class STH10Driver {
 			}
 			return (value * D2_SO_C) + (D1_VDD_C); // Celcius
 		} else {
-			return this.temparatureSimulator.get();
+			return this.temperatureSimulator.get();
 		}
 	}
 
@@ -464,6 +463,7 @@ public class STH10Driver {
 				.filter(entry -> command == COMMANDS.get(entry))
 				.findFirst()
 				.get();
+
 		this.startTx();
 		this.sendByte(command);
 		this.getAck(commandName);
