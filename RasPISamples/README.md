@@ -165,7 +165,6 @@ To start Chromium when the Desktop starts, and load one or several URLs (in diff
 `~/.config/lxsession/LXDE-pi/autostart`, and add at the end the following lines:
 ```
 @chromium-browser --incognito --kiosk http://donpedro.lediouris.net/php/weather/reports.v2/weather.report.html \
-                                      http://donpedro.lediouris.net/php/weather/reports.v2/image.html?key=54c2767878ca793f2e3cae1c45d62aa7ae9f8056 \
                                       http://192.168.42.13:9876/data/weather.station/analog.all.html \
                                       http://192.168.42.13:9876/data/weather.station/digital.html \
                                       http://192.168.42.6:9999/web/samples/now.from.SF.html
