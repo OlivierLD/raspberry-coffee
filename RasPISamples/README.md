@@ -169,7 +169,7 @@ To start Chromium when the Desktop starts, and load one or several URLs (in diff
                                       http://192.168.42.13:9876/data/weather.station/digital.html \
                                       http://192.168.42.6:9999/web/samples/now.from.SF.html
 ```
-It will start Chromium in `kiosk` (full screen) mode, and load the 5 URL mentioned above.
+It will start Chromium in `kiosk` (full screen) mode, and load the URLs mentioned above.
 
 ##### And more
 - Added a camera
