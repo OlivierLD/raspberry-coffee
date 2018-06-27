@@ -41,7 +41,7 @@ public class PCA9685 {
 	public PCA9685(int address) throws I2CFactory.UnsupportedBusNumberException {
 		try {
 			// Get I2C bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
 			if (verbose) {
 				System.out.println("Connected to bus. OK.");
 			}
