@@ -128,7 +128,7 @@ public class SimplePanelOrienter {
 					try {
 						Thread.sleep(1_500L);
 					} catch (InterruptedException ie) {
-						System.err.println(ie.getMessage());
+						Thread.currentThread().interrupt();
 					}
 				}
 				instance.setHeadingServoAngle(0f);
@@ -136,7 +136,7 @@ public class SimplePanelOrienter {
 				try {
 					Thread.sleep(1_000L);
 				} catch (InterruptedException ie) {
-					System.err.println(ie.getMessage());
+					Thread.currentThread().interrupt();
 				}
 				if (ansiConsole) {
 					AnsiConsole.systemUninstall();

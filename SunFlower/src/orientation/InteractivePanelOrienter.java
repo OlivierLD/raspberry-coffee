@@ -104,7 +104,7 @@ public class InteractivePanelOrienter {
 		try {
 			Thread.sleep(1_000L);
 		} catch (InterruptedException ie) {
-			System.err.println(ie.getMessage());
+			Thread.currentThread().interrupt();
 		}
 	}
 }

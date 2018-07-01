@@ -195,7 +195,7 @@ public class MainMCP3008Sample33 {
 					Thread.currentThread().wait(100L);
 				}
 			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 		}
 		System.out.println("Bye, freeing resources.");

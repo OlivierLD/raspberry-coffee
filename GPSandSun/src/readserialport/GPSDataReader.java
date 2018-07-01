@@ -89,7 +89,7 @@ public class GPSDataReader {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch (InterruptedException ie) {
-			ie.printStackTrace();
+			Thread.currentThread().interrupt();
 		}
 	}
 }

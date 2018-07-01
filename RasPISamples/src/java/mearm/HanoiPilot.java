@@ -285,7 +285,7 @@ public class HanoiPilot {
 			try {
 				Thread.sleep(1_000L); // Wait for the  command above to be completed;
 			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 			MeArmPilot.runMacro(RESET);
 			System.out.println("\nInterrupted.");
@@ -436,7 +436,7 @@ public class HanoiPilot {
 		try {
 			Thread.sleep(1_000L); // Wait for the  command above to be completed;
 		} catch (InterruptedException ie) {
-			ie.printStackTrace();
+			Thread.currentThread().interrupt();
 		}
 		MeArmPilot.runMacro(RESET);
 		System.out.println("Done.");

@@ -42,6 +42,7 @@ public class Poll {
 			try {
 				Thread.sleep(1_000L);
 			} catch (InterruptedException ie) {
+				Thread.currentThread().interrupt();
 			}
 			String newVal = Poll.getFeedValue(key);
 			same = newVal.equals(val);

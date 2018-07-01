@@ -85,7 +85,7 @@ public class ReflexGameMaster {
 			try {
 				waiter.wait();
 			} catch (InterruptedException ex) {
-				ex.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 		}
 		System.out.println("Good Job!");

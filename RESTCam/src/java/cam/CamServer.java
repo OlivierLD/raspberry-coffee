@@ -38,7 +38,7 @@ public class CamServer {
 					try {
 						Thread.sleep(2_000);
 					} catch (InterruptedException ie) {
-						ie.printStackTrace();
+						Thread.currentThread().interrupt();
 					}
 				}
 			};

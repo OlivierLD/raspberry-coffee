@@ -205,7 +205,10 @@ public class STH10 {
 
 	public static void main(String... args) {
 
-		int dataPin = 18, clockPin = 23, relayPin = 17; // Defaults
+		// Defaults
+		int dataPin = 18,
+				clockPin = 23,
+				relayPin = 17;
 
 		// Override values with runtime arguments
 		for (String arg : args) {
@@ -354,7 +357,7 @@ public class STH10 {
 			probe.shutdownGPIO();
 			relay.shutdownGPIO();
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {
-				ie.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 		}));
 
@@ -410,7 +413,7 @@ public class STH10 {
 							try {
 								Thread.sleep(1_000L);
 							} catch (InterruptedException ie) {
-								ie.printStackTrace();
+								Thread.currentThread().interrupt();
 							}
 							// Tick, countdown...
 							message = String.format("Stop watering in %d sec...", (_waterDuration - i));
@@ -475,7 +478,7 @@ public class STH10 {
 							try {
 								Thread.sleep(1_000L);
 							} catch (InterruptedException ie) {
-								ie.printStackTrace();
+								Thread.currentThread().interrupt();
 							}
 							// Tick, countdown...
 							message = String.format("Resuming watching in %s...", fmtDHMS(msToHMS(((_napDuration - i) * 1_000L))));
@@ -507,7 +510,7 @@ public class STH10 {
 						}
 					}
 				} catch (InterruptedException ie) {
-					ie.printStackTrace();
+					Thread.currentThread().interrupt();
 				}
 				// Resume watching
 				message = "";

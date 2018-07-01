@@ -82,7 +82,7 @@ public class POSTSnapshot {
 			try {
 				Thread.sleep(10_000);
 			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+				Thread.currentThread().interrupt();
 			}
 		}
 	}

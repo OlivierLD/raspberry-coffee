@@ -1162,7 +1162,7 @@ public class SunFlower implements RESTRequestManager {
 				}
 			}
 		} catch (InterruptedException ie) {
-			System.err.println(ie.getMessage());
+			Thread.currentThread().interrupt();
 		}
 		if (httpServer != null) {
 			httpServer.stopRunning();
