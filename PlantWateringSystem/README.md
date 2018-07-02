@@ -12,7 +12,7 @@ The goal here is to finally heave a Java implmentation of the code. See below.
 
 
 We start from an Arduino sketch, that can read the STH10.
-> The 10KOhms resistor is not to be forgotten.
+> _Note_: The 10 K&Omega; resistor is not to be forgotten.
 
 ![Arduino wiring](./Arduino.STH10_bb.png)
 
@@ -177,7 +177,7 @@ An ANSI version is available:
 ```
 
 ### Simulation
-Can prove useful for testing and calibtrating.
+Can prove useful for testing and calibrating.
 
 There is a REST server that helps sending values to the program
 - if you are not on a Raspberry PI
