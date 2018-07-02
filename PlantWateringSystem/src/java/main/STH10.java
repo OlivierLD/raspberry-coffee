@@ -58,7 +58,7 @@ public class STH10 {
 		HTTP_PORT("--http-port:",
 				"Integer. The HTTP port of the REST Server. Default is 9999."),
 		SIMULATE_SENSOR_VALUES("--simulate-sensor-values:",
-				"Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone."),
+				"Boolean. Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone."),
 		HELP("--help", "Display the help and exit.");
 
 		private String prefix, help;
@@ -325,6 +325,13 @@ public class STH10 {
 			if (probe.isSimulating() || enforceSensorSimulation) {
 				// Provide simulator here
 				System.out.println(String.format(">> Will simulate STH10%s", (enforceSensorSimulation ? " (enforced)" : "")));
+				if ("true".equals(System.getProperty("random.simulator"))) {
+					temperatureSimulator = STH10::simulateTemp;
+					humiditySimulator = STH10::simulateHum;
+				} else { // User input
+					temperatureSimulator = STH10::simulateUserTemp;
+					humiditySimulator = STH10::simulateUserHum;
+				}
 				probe.setSimulators(temperatureSimulator, humiditySimulator);
 			}
 	  } catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of STH10Driver.
@@ -361,14 +368,16 @@ public class STH10 {
 			}
 		}));
 
-		// Manual input
-		Thread manualThread = new Thread(() -> { // There is also a REST input
-			while (go) {
-				String userInput = StaticUtil.userInput(" T:XX, H:XX > ");
-				parseUserInput(userInput);
-			}
-		});
-		manualThread.start();
+		if (!"true".equals(System.getProperty("random.simulator"))) {
+			// Manual input
+			Thread manualThread = new Thread(() -> { // There is also a REST input
+				while (go) {
+					String userInput = StaticUtil.userInput(" T:XX, H:XX > ");
+					parseUserInput(userInput);
+				}
+			}, "manual-input");
+			manualThread.start();
+		}
 
 		if (withRESTServer) {
 			// HTTP Server + REST Request Manager
@@ -395,6 +404,7 @@ public class STH10 {
 			/*
 			 * Here, test the sensor's values, and make the decision about the valve.
 			 */
+			message = "Watching the probe..."; // Default value
 			if (humidity < humidityThreshold) { // Ah! Need some water
 				// Open the valve
 				relay.on();

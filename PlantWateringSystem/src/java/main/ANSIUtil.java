@@ -81,6 +81,11 @@ public class ANSIUtil {
 	public final static String DOUBLE_LEFT_T = "\u2560";
 	public final static String DOUBLE_RIGHT_T = "\u2563";
 
+	public final static String TOP_LEFT_ROUND_CORNER = "\u256d";
+	public final static String TOP_RIGHT_ROUND_CORNER = "\u256e";
+	public final static String BOTTOM_RIGHT_ROUND_CORNER = "\u256f";
+	public final static String BOTTOM_LEFT_ROUND_CORNER = "\u2570";
+
 // And there is way more...
 
 	public static String ansiLocate(int x, int y) {
@@ -124,8 +129,10 @@ public class ANSIUtil {
 		// Frame top
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				TOP_LEFT_CORNER_BOLD +
+		//	TOP_LEFT_ROUND_CORNER +
 				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
 				TOP_RIGHT_CORNER_BOLD +
+		//	TOP_RIGHT_ROUND_CORNER +
 				PAD);
 		// Title. Note: The italic escape code is correct. But it does not work on all platforms.
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT + SOLID_VERTICAL_BOLD  + ANSI_BOLD + ANSI_ITALIC + rpad("              PLANT WATERING SYSTEM ", FRAME_WIDTH) + ANSI_NORMAL + SOLID_VERTICAL_BOLD + PAD);
@@ -198,8 +205,10 @@ public class ANSIUtil {
 		// Frame bottom
 		AnsiConsole.out.println(ansiLocate(1, line++) + ANSI_NORMAL + ANSI_DEFAULT_BACKGROUND + ANSI_DEFAULT_TEXT +
 				BOTTOM_LEFT_CORNER_BOLD +
+	//		BOTTOM_LEFT_ROUND_CORNER +
 				drawXChar(SOLID_HORIZONTAL_BOLD, FRAME_WIDTH) +
 				BOTTOM_RIGHT_CORNER_BOLD +
+	//		BOTTOM_RIGHT_ROUND_CORNER +
 				PAD);
 	}
 }

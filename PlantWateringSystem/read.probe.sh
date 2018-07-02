@@ -17,14 +17,25 @@ fi
 #
 # Use program argument --help for help.
 #
+java $JAVA_OPTIONS -cp $CP main.STH10 --help
+#
+echo -n "Hit return... "
+read a
+#
 # verbose: ANSI, STDOUT, NONE
 USER_PRM="--verbose:ANSI"
 USER_PRM="$USER_PRM --water-below:35 --water-during:10 --resume-after:120"
 USER_PRM="$USER_PRM --with-rest-server:true --http-port:8088"
-# USER_PRM="$USER_PRM --simulate-sensor-values:true"
+#
+USER_PRM="$USER_PRM --simulate-sensor-values:true" # Values can be entered from a REST service, POST /pws/sth10-data
+# JAVA_OPTIONS="$JAVA_OPTIONS -Drandom.simulator=true"
 # USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:120"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dgpio.verbose=true -Dansi.boxes=true"
+#
+echo "Running with java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM"
+echo -n "Hit return... "
+read a
 #
 java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
 #

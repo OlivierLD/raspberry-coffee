@@ -24,7 +24,6 @@ import java.util.function.Supplier;
  *  Only for values: 3.5V, High resolution, no heater, otp_no_reload off
  *
  *  Adapted from the python code at https://github.com/drohm/pi-sht1x
- *
  *  Datasheet STH1x: https://cdn-shop.adafruit.com/datasheets/Sensirion_Humidity_SHT1x_Datasheet_V5.pdf
  */
 public class STH10Driver {
