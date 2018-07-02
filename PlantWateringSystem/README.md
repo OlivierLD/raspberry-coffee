@@ -66,6 +66,9 @@ With a Relay
 - 5 for the Raspberry
 - 12 for the valve
 
+We will have one 12V power supply, and use a car cigarette lighter USB adapter to turn it into 5V.
+That seems to be the cheapest approach (< $2.00), and it works well.
+
 ### The Hardware
 The tank, the hoses
 
