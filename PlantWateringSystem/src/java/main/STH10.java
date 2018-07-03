@@ -10,6 +10,7 @@ import utils.StaticUtil;
 import utils.WeatherUtil;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import static utils.TimeUtil.fmtDHMS;
@@ -395,8 +396,12 @@ public class STH10 {
 			}
 
 			// TODO A screen (Like the SSD1306), ANSI Console, log file, IoT server ? (-> An NMEA forwarder?)
-			if (verbose != VERBOSE.ANSI) {
-				System.out.println(String.format("Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)", temperature, humidity, WeatherUtil.dewPointTemperature(humidity, temperature)));
+			if (verbose != VERBOSE.ANSI) { // Can be used for logging
+				System.out.println(String.format("[%s] Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)",
+						new Date().toString(),
+						temperature,
+						humidity,
+						WeatherUtil.dewPointTemperature(humidity, temperature)));
 			} else {
 				displayANSIConsole();
 			}
