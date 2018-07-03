@@ -250,6 +250,7 @@ For now, try this (from your phone, tablet, whatever): `http://Rasp.pi.add.ress:
 <img src="./docimg/webindex.png" width="453" height="777" alt="Web Interface">
 
 ### Next
+- Logging (local, IoT).
 - Integration with the NMEA.Multiplexer
 - Read the `STH10` as an I<small><sup>2</sup></small>C device.
 
