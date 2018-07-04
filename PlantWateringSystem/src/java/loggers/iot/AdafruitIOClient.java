@@ -17,7 +17,7 @@ public class AdafruitIOClient implements Consumer<LogData> {
 	private static boolean DEBUG = "true".equals(System.getProperty("aio.verbose"));
 
 	public void accept(LogData feedData) {
-		String url = "https://io.adafruit.com/api/feeds/" + feedData.feed().value() + "/data";
+		String url = "http://io.adafruit.com/api/feeds/" + feedData.feed().value() + "/data";
 		Map<String, String> headers = new HashMap<>(1);
 		headers.put("X-AIO-Key", AdafruitIOClient.key.trim()); // System property
 		JsonObject json = new JsonObject();
