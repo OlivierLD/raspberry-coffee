@@ -7,11 +7,6 @@ import http.RESTRequestManager;
 import java.util.List;
 
 
-import http.HTTPServer;
-import http.RESTRequestManager;
-
-import java.util.List;
-
 public class RequestManager implements RESTRequestManager {
 
 	private boolean httpVerbose = "true".equals(System.getProperty("http.verbose", "false"));

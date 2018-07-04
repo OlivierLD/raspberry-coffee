@@ -35,6 +35,10 @@ fi
 USER_PRM="$USER_PRM --water-below:35 --water-during:10 --resume-after:120"
 USER_PRM="$USER_PRM --with-rest-server:true --http-port:8088"
 #
+USER_PRM="$USER_PRM --loggers:loggers.iot.AdafruitIOClient"
+JAVA_OPTIONS="$JAVA_OPTIONS -Daio.key=XXXXXXXXXXXXXXXXXXXXXXXXX"
+JAVA_OPTIONS="$JAVA_OPTIONS -Daio.verbose=true"
+#
 # USER_PRM="$USER_PRM --simulate-sensor-values:true" # Values can be entered from a REST service, POST /pws/sth10-data
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drandom.simulator=true"

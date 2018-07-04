@@ -2,6 +2,7 @@ package main;
 
 import com.pi4j.io.gpio.PinState;
 import http.HTTPServer;
+import loggers.LogData;
 import org.fusesource.jansi.AnsiConsole;
 import relay.RelayDriver;
 import sensors.sth10.STH10Driver;
@@ -9,10 +10,13 @@ import utils.PinUtil;
 import utils.StaticUtil;
 import utils.WeatherUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
 import static utils.TimeUtil.fmtDHMS;
 import static utils.TimeUtil.msToHMS;
 
@@ -60,6 +64,8 @@ public class STH10 {
 				"Integer. The HTTP port of the REST Server. Default is 9999."),
 		SIMULATE_SENSOR_VALUES("--simulate-sensor-values:",
 				"Boolean. Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone."),
+		LOGGERS("--loggers:",
+				"Comma-separated list of the loggers. Must implement Consumer<LogData>. Ex: --loggers:loggers.iot.AdafruitIOClient "),
 		HELP("--help", "Display the help and exit.");
 
 		private String prefix, help;
@@ -114,6 +120,9 @@ public class STH10 {
 	};
 
 	private static HTTPServer httpServer = null;
+
+	// Loggers
+	private static List<Consumer<LogData>> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
 
 	// Data Getters and Setters, for (optional) REST
 	public static void setTemperature(double temp) {
@@ -291,6 +300,17 @@ public class STH10 {
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
+			} else if (arg.startsWith(ARGUMENTS.LOGGERS.prefix())) {
+				String val = arg.substring(ARGUMENTS.LOGGERS.prefix().length());
+				String[] logConsumers = val.split(",");
+				for (String oneLogger : logConsumers) {
+					try {
+						Class logClass = Class.forName(oneLogger);
+						loggers.add((Consumer<LogData>) logClass.newInstance());
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
 			}
 		}
 		if (verbose == VERBOSE.ANSI) {
@@ -388,9 +408,9 @@ public class STH10 {
 		/*
 		 * This is the main loop
 		 */
-		if (verbose != VERBOSE.ANSI) { // Can be used for logging
+		if (verbose == VERBOSE.STDOUT) { // Can be used for logging
 			System.out.println("-- LOGGING STARTS HERE --");
-			System.out.println("Epoch(ms);Date;Temp(C);Hum(%);Dew pt Temp(C))");
+			System.out.println("Epoch(ms);Date;Temp(C);Hum(%);Dew pt Temp(C)");
 		}
 		while (go) {
 
@@ -400,14 +420,29 @@ public class STH10 {
 			}
 
 			// TODO A screen (Like the SSD1306), ANSI Console, log file, IoT server ? (-> An NMEA forwarder?)
-			if (verbose != VERBOSE.ANSI) { // Can be used for logging
+			if (loggers.size() > 0) {
+				loggers.forEach(logger -> {
+					try {
+						logger.accept(new LogData().feed(LogData.FEEDS.AIR).value(temperature));
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+					try {
+						logger.accept(new LogData().feed(LogData.FEEDS.HUM).value(humidity));
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				});
+			}
+
+			if (verbose == VERBOSE.STDOUT) { // Can be used for logging
 				System.out.println(String.format("%d;%s;%.02f;%.02f;%.02f",
 						System.currentTimeMillis(),
 						new Date().toString(),
 						temperature,
 						humidity,
 						WeatherUtil.dewPointTemperature(humidity, temperature)));
-			} else {
+			} else if (verbose == VERBOSE.ANSI) {
 				displayANSIConsole();
 			}
 
