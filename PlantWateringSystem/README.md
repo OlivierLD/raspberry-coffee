@@ -254,10 +254,13 @@ First setting:
 
 ![In a box](./docimg/setting.01.jpg)
 
+The probe is in the soil. There is no tank, and the hoses are not connected (yet). This is doing some data logging for now, to
+estimate the right values for humidity.
+
 ### Next
 - Logging (local, IoT).
-- Integration with the NMEA.Multiplexer
-- Read the `STH10` as an I<small><sup>2</sup></small>C device.
+- Integration with the NMEA.Multiplexer ?
+- Read the `STH10` as an I<small><sup>2</sup></small>C device ?
 
 
 ---
