@@ -60,7 +60,9 @@ public class AdafruitIOClient implements Consumer<LogData> {
 					System.out.println("Bye.");
 				} else {
 					String data = str;
-					LogData feedData = new LogData().feed(LogData.FEEDS.HUM).value(Double.parseDouble(data));
+					LogData feedData = new LogData()
+							.feed(LogData.FEEDS.HUM)
+							.value(Double.parseDouble(data));
 					postFeeder.accept(feedData);
 				}
 			}

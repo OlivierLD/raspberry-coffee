@@ -158,6 +158,54 @@ public class STH10 {
 		return lastWatering;
 	}
 
+	public static class PWSParameters {
+		private int humidityThreshold = -1;
+		private long wateringTime = -1;
+		private long resumeWatchAfter = -1;
+
+		public PWSParameters() {}
+		public PWSParameters humidityThreshold(int ht) {
+			this.humidityThreshold = ht;
+			return this;
+		}
+		public PWSParameters wateringTime(long wt) {
+			this.wateringTime = wt;
+			return this;
+		}
+		public PWSParameters resumeWatchAfter(long rwa) {
+			this.resumeWatchAfter = rwa;
+			return this;
+		}
+		public int humidityThreshold() {
+			return this.humidityThreshold;
+		}
+		public long wateringTime() {
+			return this.wateringTime;
+		}
+		public long resumeWatchAfter() {
+			return this.resumeWatchAfter;
+		}
+	}
+
+	public static PWSParameters getPWSParameters() {
+		return new PWSParameters()
+				.humidityThreshold(humidityThreshold)
+				.wateringTime(wateringDuration)
+				.resumeWatchAfter(resumeSensorWatchAfter);
+	}
+
+	public static void setPWSParameters(PWSParameters pwsParameters) {
+		if (pwsParameters.humidityThreshold() != -1) {
+			humidityThreshold = pwsParameters.humidityThreshold();
+		}
+		if (pwsParameters.wateringTime() != -1) {
+			wateringDuration = pwsParameters.wateringTime();
+		}
+		if (pwsParameters.resumeWatchAfter() != -1) {
+			resumeSensorWatchAfter = pwsParameters.resumeWatchAfter();
+		}
+	}
+
 	private static Double simulateTemp() {
 		int sign = (int)System.currentTimeMillis() % 2;
 		double diff = Math.random() * (sign == 0 ? 1 : -1);
@@ -425,12 +473,16 @@ public class STH10 {
 				lastLog = System.currentTimeMillis();
 				loggers.forEach(logger -> {
 					try {
-						logger.accept(new LogData().feed(LogData.FEEDS.AIR).value(temperature));
+						logger.accept(new LogData()
+								.feed(LogData.FEEDS.AIR)
+								.value(temperature));
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
 					try {
-						logger.accept(new LogData().feed(LogData.FEEDS.HUM).value(humidity));
+						logger.accept(new LogData()
+								.feed(LogData.FEEDS.HUM)
+								.value(humidity));
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

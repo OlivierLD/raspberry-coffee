@@ -80,6 +80,11 @@ public class RESTImplementation {
 					this::getLastWateringTime,
 					"Get last watering time as a long."),
 			new Operation(
+					"GET",
+					PWS_PREFIX + "/pws-parameters",
+					this::getPWSParameters,
+					"Get program's parameters."),
+			new Operation(
 					"POST",
 					PWS_PREFIX + "/sth10-data",
 					this::setSTH10Data,
@@ -88,7 +93,12 @@ public class RESTImplementation {
 					"PUT",
 					PWS_PREFIX + "/relay-state",
 					this::setRelayState,
-					"Flip the relay - ON of OFF."));
+					"Flip the relay - ON of OFF."),
+			new Operation(
+					"PUT",
+					PWS_PREFIX + "/pws-parameters",
+					this::setPWSParameters,
+					"Set the Program's parameters"));
 
 	protected List<Operation> getOperations() {
 		return  this.operations;
@@ -183,6 +193,63 @@ public class RESTImplementation {
 		String content = new Gson().toJson(relayState);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private Response getPWSParameters(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		STH10.PWSParameters pwsParameters = STH10.getPWSParameters();
+		String content = new Gson().toJson(pwsParameters);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	/**
+	 * Payload like: {
+	 * 	    "humidityThreshold": 50,
+	 * 	    "wateringTime": 10,
+	 * 	    "resumeWatchAfter": 120
+	 *    }
+	 *  All members are optional.
+ 	 */
+	private Response setPWSParameters(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				Gson gson = new GsonBuilder().create();
+				StringReader stringReader = new StringReader(payload);
+				try {
+					STH10.PWSParameters data = gson.fromJson(stringReader, STH10.PWSParameters.class);
+					STH10.setPWSParameters(data);
+				} catch (Exception ex1) {
+					ex1.printStackTrace();
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("PWS-0007")
+									.errorMessage(ex1.toString()));
+					return response;
+				}
+			} else {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("PWS-0008")
+								.errorMessage("Request payload not found"));
+				return response;
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("PWS-0009")
+							.errorMessage("Request payload not found"));
+			return response;
+		}
 
 		return response;
 	}
