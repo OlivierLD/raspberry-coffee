@@ -123,6 +123,7 @@ public class STH10 {
 
 	// Loggers
 	private static List<Consumer<LogData>> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
+	private static long lastLog = -1;
 
 	// Data Getters and Setters, for (optional) REST
 	public static void setTemperature(double temp) {
@@ -420,7 +421,8 @@ public class STH10 {
 			}
 
 			// TODO A screen (Like the SSD1306), ANSI Console, log file, IoT server ? (-> An NMEA forwarder?)
-			if (loggers.size() > 0) {
+			if (loggers.size() > 0 && (System.currentTimeMillis() - lastLog) > 10_000L) { // Every 10 sec max.
+				lastLog = System.currentTimeMillis();
 				loggers.forEach(logger -> {
 					try {
 						logger.accept(new LogData().feed(LogData.FEEDS.AIR).value(temperature));
