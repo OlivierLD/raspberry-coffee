@@ -249,6 +249,11 @@ For now, try this (from your phone, tablet, whatever): `http://Rasp.pi.add.ress:
 
 <img src="./docimg/webindex.png" width="453" height="777" alt="Web Interface">
 
+### The real device
+First setting:
+
+![In a box](./docimg/setting.01.jpg)
+
 ### Next
 - Logging (local, IoT).
 - Integration with the NMEA.Multiplexer
