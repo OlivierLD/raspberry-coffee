@@ -27,14 +27,14 @@ public class STH10 {
 
 	private static boolean go = true;
 
-	private final static int HUMIDITY_THRESHOLD = 35; // 35 %
-	private final static long WATERING_DURATION = 10L; // 10 seconds
-	private final static long RESUME_SENSOR_WATCH_AFTER = 120L; // 2 minutes
+	private final static int DEFAULT_HUMIDITY_THRESHOLD = 50; // 50 %
+	private final static long DEFAULT_WATERING_DURATION = 10L; // 10 seconds
+	private final static long DEFAULT_RESUME_SENSOR_WATCH_AFTER = 120L; // 2 minutes
 
 	// Default values
-	private static int humidityThreshold = HUMIDITY_THRESHOLD;
-	private static long wateringDuration = WATERING_DURATION;
-	private static long resumeSensorWatchAfter = RESUME_SENSOR_WATCH_AFTER;
+	private static int humidityThreshold = DEFAULT_HUMIDITY_THRESHOLD;
+	private static long wateringDuration = DEFAULT_WATERING_DURATION;
+	private static long resumeSensorWatchAfter = DEFAULT_RESUME_SENSOR_WATCH_AFTER;
 
 	private static boolean withRESTServer = false;
 	private static int restServerPort = 9999;
@@ -45,11 +45,11 @@ public class STH10 {
 	// Program arguments
 	private enum ARGUMENTS {
 		HUMIDITY_THRESHOLD("--water-below:", // %
-				"Integer. Humidity threshold in %, default is --water-below:35, start watering below this value."),
+				String.format("Integer. Humidity threshold in %%, default is --water-below:%d, start watering below this value.", DEFAULT_HUMIDITY_THRESHOLD)),
 		WATERING_DURATION("--water-during:", // seconds
-				"Integer. In seconds, default is --water-during:10. Duration of the watering process."),
+				String.format("Integer. In seconds, default is --water-during:%d. Duration of the watering process.", DEFAULT_WATERING_DURATION)),
 		RESUME_AFTER("--resume-after:", // seconds
-				"Integer. In seconds, default is --resume-after:120. After watering, resume sensor monitoring after this amount of time."),
+				String.format("Integer. In seconds, default is --resume-after:%d. After watering, resume sensor monitoring after this amount of time.", DEFAULT_RESUME_SENSOR_WATCH_AFTER)),
 		VERBOSE("--verbose:", // true|false
 				"String. Verbose, default is --verbose:NONE, values can be 'NONE', 'STDOUT' or 'ANSI'."),
 		DATA_PIN("--data-pin:", // default is BCM 18 => GPIO_01
@@ -102,7 +102,7 @@ public class STH10 {
 //	private static Supplier<Double> humiditySimulator = STH10::simulateHum;
 
 	private static double temperature = 20d;
-	private static double humidity = 50d;
+	private static double humidity = 80d;
 	private static String message = "";
 
 	private static double minSimTemp = temperature, maxSimTemp = temperature;
@@ -273,8 +273,8 @@ public class STH10 {
 				try {
 					humidityThreshold = Integer.parseInt(val);
 					if (humidityThreshold < 0 || humidityThreshold > 100) {
-						humidityThreshold = HUMIDITY_THRESHOLD;
-						System.err.println(String.format(">> Humidity Threshold must be in [0..100]. Reseting to %d ", HUMIDITY_THRESHOLD));
+						humidityThreshold = DEFAULT_HUMIDITY_THRESHOLD;
+						System.err.println(String.format(">> Humidity Threshold must be in [0..100]. Reseting to %d ", DEFAULT_HUMIDITY_THRESHOLD));
 					}
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
@@ -284,7 +284,7 @@ public class STH10 {
 				try {
 					wateringDuration = Long.parseLong(val);
 					if (wateringDuration < 0) {
-						wateringDuration = WATERING_DURATION;
+						wateringDuration = DEFAULT_WATERING_DURATION;
 						System.err.println(">> Watering duration must be positive. Ignoring.");
 					}
 				} catch (NumberFormatException nfe) {
@@ -295,7 +295,7 @@ public class STH10 {
 				try {
 					resumeSensorWatchAfter = Long.parseLong(val);
 					if (resumeSensorWatchAfter < 0) {
-						resumeSensorWatchAfter = RESUME_SENSOR_WATCH_AFTER;
+						resumeSensorWatchAfter = DEFAULT_RESUME_SENSOR_WATCH_AFTER;
 						System.err.println(">> Resume Watch After must be positive. Ignoring.");
 					}
 				} catch (NumberFormatException nfe) {
