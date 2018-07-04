@@ -70,7 +70,7 @@ We will have one 12V power supply, and use a car cigarette lighter USB adapter t
 That seems to be the cheapest approach (< $2.00), and it works well.
 
 ### The Hardware
-The tank, the hoses
+The project box, the tank, the hoses...
 
 ### Usage
 
@@ -254,7 +254,7 @@ First setting:
 
 ![In a box](./docimg/setting.01.jpg)
 
-The probe is in the soil. There is no tank, and the hoses are not connected (yet). This is doing some data logging for now, to
+This one is based on a `Raspberry PI Zero W`. The probe is in the soil. There is no water tank, and the hoses are not connected (yet). This is doing some data logging for now, to
 estimate the right values for humidity.
 
 ### Next
