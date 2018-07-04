@@ -401,7 +401,7 @@ public class STH10 {
 
 			// TODO A screen (Like the SSD1306), ANSI Console, log file, IoT server ? (-> An NMEA forwarder?)
 			if (verbose != VERBOSE.ANSI) { // Can be used for logging
-				System.out.println(String.format("%d;%s;%.02f;%.02f%;%.02f",
+				System.out.println(String.format("%d;%s;%.02f;%.02f;%.02f",
 						System.currentTimeMillis(),
 						new Date().toString(),
 						temperature,
