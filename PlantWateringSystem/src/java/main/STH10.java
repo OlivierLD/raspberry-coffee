@@ -388,6 +388,10 @@ public class STH10 {
 		/*
 		 * This is the main loop
 		 */
+		if (verbose != VERBOSE.ANSI) { // Can be used for logging
+			System.out.println("-- LOGGING STARTS HERE --");
+			System.out.println("Epoch(ms);Date;Temp(C);Hum(%);Dew pt Temp(C))");
+		}
 		while (go) {
 
 			if (!enforceSensorSimulation) {
@@ -397,7 +401,8 @@ public class STH10 {
 
 			// TODO A screen (Like the SSD1306), ANSI Console, log file, IoT server ? (-> An NMEA forwarder?)
 			if (verbose != VERBOSE.ANSI) { // Can be used for logging
-				System.out.println(String.format("[%s] Temp: %.02f C, Hum: %.02f%% (dew pt Temp: %.02f C)",
+				System.out.println(String.format("%d;%s;%.02f;%.02f%;%.02f",
+						System.currentTimeMillis(),
 						new Date().toString(),
 						temperature,
 						humidity,
