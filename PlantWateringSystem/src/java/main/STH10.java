@@ -369,7 +369,7 @@ public class STH10 {
 			}
 		}));
 
-		if (!"true".equals(System.getProperty("random.simulator"))) {
+		if ((probe.isSimulating() || enforceSensorSimulation) && !"true".equals(System.getProperty("random.simulator"))) {
 			// Manual input
 			Thread manualThread = new Thread(() -> { // There is also a REST input
 				while (go) {
