@@ -10,6 +10,7 @@ import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import utils.PinUtil;
 import utils.StringUtils;
+import utils.TimeUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -105,12 +106,27 @@ public class STH10Driver {
 		}
 
 		if (this.gpio != null) {
-			this.data = this.gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
-			this.clock = this.gpio.provisionDigitalMultipurposePin(this.clockPin, PinMode.DIGITAL_OUTPUT);
-			this.data.setShutdownOptions(true, PinState.LOW);
-			this.clock.setShutdownOptions(true, PinState.LOW);
-			if ("true".equals(System.getProperty("gpio.verbose"))) {
-				System.out.println(String.format("GPIO> Pins BCM #%d and #%d provisioned.", PinUtil.findByPin(this.dataPin).gpio(), PinUtil.findByPin(this.clockPin).gpio()));
+			int nbTry = 0;
+			boolean ok = false;
+			Throwable lastError = null;
+			while (!ok && nbTry < 5) {
+				try {
+					this.data = this.gpio.provisionDigitalMultipurposePin(this.dataPin, PinMode.DIGITAL_OUTPUT);
+					this.clock = this.gpio.provisionDigitalMultipurposePin(this.clockPin, PinMode.DIGITAL_OUTPUT);
+					this.data.setShutdownOptions(true, PinState.LOW);
+					this.clock.setShutdownOptions(true, PinState.LOW);
+					if ("true".equals(System.getProperty("gpio.verbose"))) {
+						System.out.println(String.format("GPIO> Pins BCM #%d and #%d provisioned.", PinUtil.findByPin(this.dataPin).gpio(), PinUtil.findByPin(this.clockPin).gpio()));
+					}
+					ok = true;
+				} catch (Exception ex) {
+					lastError = ex;
+					nbTry++;
+					TimeUtil.delay(1_000L);
+				}
+			}
+			if (!ok) { // Could not initialize :(
+				throw new RuntimeException("Could not initialize after 5 attempts.", lastError);
 			}
 		}
 		//

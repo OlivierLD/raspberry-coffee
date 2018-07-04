@@ -16,6 +16,7 @@ public class AdafruitIOClient implements Consumer<LogData> {
 
 	private static boolean DEBUG = "true".equals(System.getProperty("aio.verbose"));
 
+	@Override
 	public void accept(LogData feedData) {
 		String url = "http://io.adafruit.com/api/feeds/" + feedData.feed().value() + "/data";
 		Map<String, String> headers = new HashMap<>(1);
