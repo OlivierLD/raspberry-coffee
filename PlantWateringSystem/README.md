@@ -259,7 +259,6 @@ This one is based on a `Raspberry PI Zero W`. The probe is in the soil. There is
 estimate the right values for humidity.
 
 ### Next
-- Logging (local, IoT).
 - Integration with the NMEA.Multiplexer ?
 - Read the `STH10` as an I<small><sup>2</sup></small>C device ?
 
