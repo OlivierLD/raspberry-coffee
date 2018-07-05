@@ -77,6 +77,7 @@ public class FileLogger implements DataLoggerInterface {
 		this.fileName = System.getProperty("logger.file.name", "logger.log");
 		try {
 			logFile = new BufferedWriter(new FileWriter(this.fileName));
+			logFile.write("epoch;hum;temp\n"); // Header
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
