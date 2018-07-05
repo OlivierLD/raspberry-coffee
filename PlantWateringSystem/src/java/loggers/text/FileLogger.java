@@ -58,7 +58,9 @@ public class FileLogger implements DataLoggerInterface {
 
 	@Override
 	public void close() {
-		System.out.println(String.format("Closing logger [%s]", this.getClass().getName()));
+		if (DEBUG) {
+			System.out.println(String.format("Closing logger [%s]", this.getClass().getName()));
+		}
 		if (logFile != null) {
 			try {
 				logFile.close();
@@ -69,7 +71,9 @@ public class FileLogger implements DataLoggerInterface {
 	}
 
 	public FileLogger() {
-		System.out.println(String.format("Creating logger [%s]", this.getClass().getName()));
+		if (DEBUG) {
+			System.out.println(String.format("Creating logger [%s]", this.getClass().getName()));
+		}
 		this.fileName = System.getProperty("logger.file.name", "logger.log");
 		try {
 			logFile = new BufferedWriter(new FileWriter(this.fileName));

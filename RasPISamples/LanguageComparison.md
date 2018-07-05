@@ -70,7 +70,7 @@ We will use the following programming languages:
     Interpreted, does not require compilation.
 - [Python](#python)
     - Created by Guido van Rossum, in 1991.
-    - Designed for educational purpose. Easy to use, even if its syntax and structure might not please eveyone.
+    - Designed for educational purpose. Easy to use, even if its syntax and structure might not please everyone.
     No native Object Oriented (OO) features (some exist, but they may look weird to an OO addict).
     Does not require compilation. Very popular among data scientists, mostly due to its simlicity.
 - [C](#c)
@@ -78,7 +78,7 @@ We will use the following programming languages:
     - Immensly adopted on the planet Earth. The oldest of all the ones mentioned here, and still alive and well.
     `C` has no OO features (its avatar `C++` does have some). No Functional Programming features.
     Requires explicit memory allocation and de-allocation (`alloc` and `free`), extensively uses _pointers_,
-    which is what leads to vast majority of the bugs `C` developers have to deal with. Requires compilation (`gcc`, `cc`, etc, the compilator depends on the machine you are on).
+    which is what leads to vast majority of the bugs `C` developers have to deal with. Requires compilation (`gcc`, `cc`, etc, the compiler depends on the machine you are on).
     Running the same `C` program on different Operating Systems often - if not always - requires a re-compilation of the code.
     The code is compiled natively - hence does not require a Virtual Machine. These two aspects (lack of portability, having to deal with pointers)
     are two of the most important ideas that gave birth to Java (Java has no pointers, and once compiled runs everywhere there is a JVM. See above).
@@ -104,7 +104,7 @@ We will use the following programming languages:
     - Clojure is a JVM-compatible LISP-like language. LISP is the ancestor of all Functional Programming languages.
     If you do not know it yet, do give it a look. There is a good chance that you
     will be at least surprised... If Go feels a bit like an UFO, that one is an alien!
-    Clojure is _obsesed_ with immutability. You just _cannot_ assign a new value to a variable. And yes, that can make sense.
+    Clojure is _obsessed_ with immutability. You just _cannot_ assign a new value to a variable. And yes, that can make sense.
 - [Processing](#processing)
     - Created by Ben Fry and Casey Reas, based on Java (not exactly _another_ language in that sense, but it *does* make things a lot simpler), in 2001. Beautiful. Available (for free) from the [Processing](https://processing.org/) site.
     - It is what inspired the `Arduino` IDE - which uses a language that looks more like `C`.

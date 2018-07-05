@@ -43,11 +43,15 @@ public class AdafruitIOClient implements DataLoggerInterface {
 
 	@Override
 	public void close() {
-		System.out.println(String.format("Closing logger [%s]", this.getClass().getName()));
+		if (DEBUG) {
+			System.out.println(String.format("Closing logger [%s]", this.getClass().getName()));
+		}
 	}
 
 	public AdafruitIOClient() {
-		System.out.println(String.format("Creating logger [%s]", this.getClass().getName()));
+		if (DEBUG) {
+			System.out.println(String.format("Creating logger [%s]", this.getClass().getName()));
+		}
 	}
 
 	public static void main(String... args) {

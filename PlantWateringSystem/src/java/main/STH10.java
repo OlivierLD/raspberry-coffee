@@ -475,7 +475,7 @@ public class STH10 {
 				humidity = probe.readHumidity(temperature);
 			}
 
-			// TODO A screen (Like the SSD1306), ANSI Console, log file, IoT server ? (-> An NMEA forwarder?)
+			// TODO A logger for a screen (Like the SSD1306)?
 			if (loggers.size() > 0 && (System.currentTimeMillis() - lastLog) > 10_000L) { // Every 10 sec max.
 				lastLog = System.currentTimeMillis();
 				loggers.forEach(logger -> {
