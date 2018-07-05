@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -102,6 +103,7 @@ public class STH10Driver {
 			}
 			System.setErr(console);
 		} catch (IOException ioe) {
+			System.err.println(String.format("At %s :", new Date().toString()));
 			ioe.printStackTrace();
 		}
 
@@ -126,6 +128,7 @@ public class STH10Driver {
 				}
 			}
 			if (!ok) { // Could not initialize :(
+				System.err.println(String.format("At %s :", new Date().toString()));
 				throw new RuntimeException("Could not initialize after 5 attempts.", lastError);
 			}
 		}
@@ -143,7 +146,14 @@ public class STH10Driver {
 	}
 
 	private String pinDisplay(GpioPinDigital pin) {
-		return (String.format("%d [%s]", PinUtil.findByPin(pin.getPin()).gpio(), pin.equals(this.data) ? "DATA" : (pin.equals(this.clock) ? "CLOCK" : "!UNKNOWN!")));
+		return pinDisplay(pin, null);
+	}
+	private String pinDisplay(GpioPinDigital pin, String defaultDisplay) {
+		if (pin != null) {
+			return (String.format("%d [%s]", PinUtil.findByPin(pin.getPin()).gpio(), pin.equals(this.data) ? "DATA" : (pin.equals(this.clock) ? "CLOCK" : "!UNKNOWN!")));
+		} else {
+			return defaultDisplay;
+		}
 	}
 
 	private void resetConnection() {
@@ -192,7 +202,7 @@ public class STH10Driver {
 
 	private void flipPin(GpioPinDigitalMultipurpose pin, PinState state) {
 		if (DEBUG) {
-			System.out.print(String.format(">> flipPin %s to %s", pinDisplay(pin), state.toString()));
+			System.out.print(String.format(">> flipPin %s to %s", pinDisplay(pin, "[simulated]"), state.toString()));
 		}
 		if (!this.simulating) {
 			if (state == PinState.HIGH) {
@@ -206,9 +216,13 @@ public class STH10Driver {
 				}
 				delay(0L, 100); // 0.1 * 1E-6 sec. 100 * 1E-9
 			}
-		}
-		if (DEBUG) {
-			System.out.println(String.format("\tpin is now %s", (pin.getState() == PinState.HIGH ? "HIGH" : "LOW")));
+			if (DEBUG) {
+				System.out.println(String.format("\tpin is now %s", pin.getState() == PinState.HIGH ? "HIGH" : "LOW"));
+			}
+		} else {
+			if (DEBUG) {
+				System.out.println();
+			}
 		}
 	}
 
@@ -310,28 +324,28 @@ public class STH10Driver {
 	private void getAck(String commandName) {
 		if (DEBUG) {
 			System.out.println(String.format(">> getAck, command %s >>", commandName));
-			System.out.println(String.format(">> %s INPUT %s OUTPUT", pinDisplay(this.data), pinDisplay(this.clock)));
+			System.out.println(String.format(">> %s INPUT, %s OUTPUT", pinDisplay(this.data, "DATA"), pinDisplay(this.clock, "CLOCK")));
 		}
 		if (!this.simulating) {
 			this.data.setMode(PinMode.DIGITAL_INPUT);
 			this.clock.setMode(PinMode.DIGITAL_OUTPUT);
 
 			if (DEBUG) {
-				System.out.println(String.format(">> getAck, flipping %s to HIGH", pinDisplay(this.clock)));
+				System.out.println(String.format(">> getAck, flipping %s to HIGH", pinDisplay(this.clock, "CLOCK")));
 			}
 			this.flipPin(this.clock, PinState.HIGH);
 			if (DEBUG) {
-				System.out.println(String.format("\t>> getAck, >>> getState %s = %s", pinDisplay(this.clock), this.clock.getState().toString()));
+				System.out.println(String.format("\t>> getAck, >>> getState %s = %s", pinDisplay(this.clock, "CLOCK"), this.clock != null ? this.clock.getState().toString() : "[simulated]"));
 			}
 			PinState state = this.data.getState();
 			if (DEBUG) {
-				System.out.println(String.format(">> getAck, getState %s = %s", pinDisplay(this.data), state.toString()));
+				System.out.println(String.format(">> getAck, getState %s = %s", pinDisplay(this.data, "DATA"), state.toString()));
 			}
 			if (state == PinState.HIGH) {
 				throw new RuntimeException(String.format("SHTx failed to properly receive ack after command [%s, 0b%8s]", commandName, StringUtils.lpad(Integer.toBinaryString(COMMANDS.get(commandName)), 8, "0")));
 			}
 			if (DEBUG) {
-				System.out.println(String.format(">> getAck, flipping %s to LOW", pinDisplay(this.clock)));
+				System.out.println(String.format(">> getAck, flipping %s to LOW", pinDisplay(this.clock, "CLOCK")));
 			}
 			this.flipPin(this.clock, PinState.LOW);
 		}
@@ -503,7 +517,7 @@ public class STH10Driver {
 		try {
 			Thread.sleep(ms, nano);
 		} catch (InterruptedException ie) {
-			// Absorb
+			Thread.currentThread().interrupt();
 		}
 	}
 

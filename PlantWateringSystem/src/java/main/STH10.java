@@ -22,6 +22,8 @@ import static utils.TimeUtil.msToHMS;
 
 /**
  * Example / Prototype...
+ *
+ * TODO : Time with the Exceptions
  */
 public class STH10 {
 
@@ -61,11 +63,11 @@ public class STH10 {
 		WITH_REST_SERVER("--with-rest-server:",
 				"Boolean. Default 'false', starts a REST server is set to 'true'"),
 		HTTP_PORT("--http-port:",
-				"Integer. The HTTP port of the REST Server. Default is 9999."),
+				String.format("Integer. The HTTP port of the REST Server. Default is %d.", restServerPort)),
 		SIMULATE_SENSOR_VALUES("--simulate-sensor-values:",
 				"Boolean. Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone."),
 		LOGGERS("--loggers:",
-				"Comma-separated list of the loggers. Must implement Consumer<LogData>. Ex: --loggers:loggers.iot.AdafruitIOClient "),
+				"Comma-separated list of the loggers. Loggers must implement Consumer<LogData>. Ex: --loggers:loggers.iot.AdafruitIOClient "),
 		HELP("--help", "Display the help and exit.");
 
 		private String prefix, help;
@@ -355,7 +357,8 @@ public class STH10 {
 				for (String oneLogger : logConsumers) {
 					try {
 						Class logClass = Class.forName(oneLogger);
-						loggers.add((Consumer<LogData>) logClass.newInstance());
+						Consumer<LogData> consumer = (Consumer<LogData>)logClass.getDeclaredConstructor().newInstance();
+						loggers.add(consumer);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -477,14 +480,18 @@ public class STH10 {
 								.feed(LogData.FEEDS.AIR)
 								.value(temperature));
 					} catch (Exception ex) {
-						ex.printStackTrace();
+						System.err.println(String.format("At %s :", new Date().toString()));
+						System.err.println(ex.toString());
+				//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
 					}
 					try {
 						logger.accept(new LogData()
 								.feed(LogData.FEEDS.HUM)
 								.value(humidity));
 					} catch (Exception ex) {
-						ex.printStackTrace();
+						System.err.println(String.format("At %s :", new Date().toString()));
+						System.err.println(ex.toString());
+				//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
 					}
 				});
 			}
@@ -629,8 +636,8 @@ public class STH10 {
 			} else {
 				try {
 					Thread.sleep(1_000L);
-				} catch (Exception ex) {
-					ex.printStackTrace();
+				} catch (InterruptedException ex) {
+					Thread.currentThread().interrupt();
 				}
 			}
 		}

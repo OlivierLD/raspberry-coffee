@@ -733,7 +733,7 @@ public class HTTPServer {
 		} catch (SocketException se) {
 			if (se.getMessage().contains("Broken pipe")) {
 				System.err.println("+-------------------------");
-				System.err.println("| Oops, client hung up!");
+				System.err.println(String.format("| %s - Oops, client hung up!", new Date().toString()));
 				System.err.println("+-------------------------");
 			} else {
 				se.printStackTrace();

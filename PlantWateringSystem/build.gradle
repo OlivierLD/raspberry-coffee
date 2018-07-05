@@ -19,6 +19,11 @@ apply plugin: 'com.github.johnrengelman.shadow'
 group = 'oliv.pi4j.samples'
 version = '1.0'
 
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
 sourceSets {
     main {
         java {

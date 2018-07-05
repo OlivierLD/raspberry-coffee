@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Date;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -55,6 +56,7 @@ public class RelayDriver {
 			}
 			System.setErr(console);
 		} catch (IOException ioe) {
+			System.err.println(String.format("At %s :", new Date().toString()));
 			ioe.printStackTrace();
 		}
 	}
