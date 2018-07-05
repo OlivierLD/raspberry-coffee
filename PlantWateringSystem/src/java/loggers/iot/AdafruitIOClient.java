@@ -2,15 +2,19 @@ package loggers.iot;
 
 import com.google.gson.JsonObject;
 import http.client.HTTPClient;
+import loggers.DataLoggerInterface;
 import loggers.LogData;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static utils.StaticUtil.userInput;
 
-public class AdafruitIOClient implements Consumer<LogData> {
+/**
+ * Requires your Adafruit-IO Key in the System proerty "aio.key" to work properly.
+ * Use -Daio.key=AHGSFHGFHGSFHGFS
+ */
+public class AdafruitIOClient implements DataLoggerInterface {
 
 	private static String key = System.getProperty("aio.key", "");
 
@@ -37,7 +41,13 @@ public class AdafruitIOClient implements Consumer<LogData> {
 		}
 	}
 
+	@Override
+	public void close() {
+		System.out.println(String.format("Closing logger [%s]", this.getClass().getName()));
+	}
+
 	public AdafruitIOClient() {
+		System.out.println(String.format("Creating logger [%s]", this.getClass().getName()));
 	}
 
 	public static void main(String... args) {

@@ -2,6 +2,7 @@ package main;
 
 import com.pi4j.io.gpio.PinState;
 import http.HTTPServer;
+import loggers.DataLoggerInterface;
 import loggers.LogData;
 import org.fusesource.jansi.AnsiConsole;
 import relay.RelayDriver;
@@ -67,7 +68,7 @@ public class STH10 {
 		SIMULATE_SENSOR_VALUES("--simulate-sensor-values:",
 				"Boolean. Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone."),
 		LOGGERS("--loggers:",
-				"Comma-separated list of the loggers. Loggers must implement Consumer<LogData>. Ex: --loggers:loggers.iot.AdafruitIOClient "),
+				"Comma-separated list of the loggers. Loggers must implement DataLoggerInterface. Ex: --loggers:loggers.iot.AdafruitIOClient,loggers.text.FileLogger "),
 		HELP("--help", "Display the help and exit.");
 
 		private String prefix, help;
@@ -124,7 +125,7 @@ public class STH10 {
 	private static HTTPServer httpServer = null;
 
 	// Loggers
-	private static List<Consumer<LogData>> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
+	private static List<DataLoggerInterface> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
 	private static long lastLog = -1;
 
 	// Data Getters and Setters, for (optional) REST
@@ -357,8 +358,8 @@ public class STH10 {
 				for (String oneLogger : logConsumers) {
 					try {
 						Class logClass = Class.forName(oneLogger);
-						Consumer<LogData> consumer = (Consumer<LogData>)logClass.getDeclaredConstructor().newInstance();
-						loggers.add(consumer);
+						Object consumer = logClass.getConstructor().newInstance();
+						loggers.add(DataLoggerInterface.class.cast(consumer));
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -434,6 +435,9 @@ public class STH10 {
 				relay.off();
 			}
 			System.out.println("\nExiting (Main Hook)");
+
+			loggers.forEach(DataLoggerInterface::close);
+
 			probe.shutdownGPIO();
 			relay.shutdownGPIO();
 			try { Thread.sleep(1_500L); } catch (InterruptedException ie) {
@@ -475,24 +479,27 @@ public class STH10 {
 			if (loggers.size() > 0 && (System.currentTimeMillis() - lastLog) > 10_000L) { // Every 10 sec max.
 				lastLog = System.currentTimeMillis();
 				loggers.forEach(logger -> {
-					try {
-						logger.accept(new LogData()
-								.feed(LogData.FEEDS.AIR)
-								.value(temperature));
-					} catch (Exception ex) {
-						System.err.println(String.format("At %s :", new Date().toString()));
-						System.err.println(ex.toString());
-				//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
-					}
-					try {
-						logger.accept(new LogData()
-								.feed(LogData.FEEDS.HUM)
-								.value(humidity));
-					} catch (Exception ex) {
-						System.err.println(String.format("At %s :", new Date().toString()));
-						System.err.println(ex.toString());
-				//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
-					}
+					Thread loggerThread = new Thread(() -> {
+						try {
+							logger.accept(new LogData()
+									.feed(LogData.FEEDS.AIR)
+									.value(temperature));
+						} catch (Exception ex) {
+							System.err.println(String.format("At %s :", new Date().toString()));
+							System.err.println(ex.toString());
+							//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
+						}
+						try {
+							logger.accept(new LogData()
+									.feed(LogData.FEEDS.HUM)
+									.value(humidity));
+						} catch (Exception ex) {
+							System.err.println(String.format("At %s :", new Date().toString()));
+							System.err.println(ex.toString());
+							//	ex.printStackTrace(); // TODO An option to get the full stacktrace?
+						}
+					});
+					loggerThread.start();
 				});
 			}
 

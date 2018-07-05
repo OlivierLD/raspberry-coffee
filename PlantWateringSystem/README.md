@@ -94,7 +94,7 @@ $ java $JAVA_OPTIONS -cp $CP main.STH10 --help
 | --with-rest-server:	Boolean. Default 'false', starts a REST server is set to 'true'
 | --http-port:	Integer. The HTTP port of the REST Server. Default is 9999.
 | --simulate-sensor-values:	Boolean. Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone.
-| --loggers:	Comma-separated list of the loggers. Must implement Consumer<LogData>. Ex: --loggers:loggers.iot.AdafruitIOClient
+| --loggers:	Comma-separated list of the loggers. Loggers must implement DataLoggerInterface. Ex: --loggers:loggers.iot.AdafruitIOClient,loggers.text.FileLogger
 | --help	Display the help and exit.
 +---------------------------------------
 ```
