@@ -48,6 +48,7 @@ public class FileLogger implements DataLoggerInterface {
 						String.valueOf(dataMap.get(LogData.FEEDS.AIR.value())));
 				if (logFile != null) {
 					logFile.write(line + "\n");
+					logFile.flush();
 				}
 				dataMap = null; // Reset
 			}
@@ -78,6 +79,7 @@ public class FileLogger implements DataLoggerInterface {
 		try {
 			logFile = new BufferedWriter(new FileWriter(this.fileName));
 			logFile.write("epoch;hum;temp\n"); // Header
+			logFile.flush();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
