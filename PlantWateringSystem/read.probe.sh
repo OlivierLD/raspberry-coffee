@@ -51,6 +51,7 @@ fi
 USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:120"
 USER_PRM="$USER_PRM --with-rest-server:true --http-port:8088"
 #
+# No space in the logger list!
 USER_PRM="$USER_PRM --loggers:loggers.iot.AdafruitIOClient,loggers.text.FileLogger"
 JAVA_OPTIONS="$JAVA_OPTIONS -Daio.key=54c2767878ca793f2e3cae1c45d62aa7ae9f8056"
 JAVA_OPTIONS="$JAVA_OPTIONS -Daio.verbose=false"
@@ -62,9 +63,12 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Daio.verbose=false"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dgpio.verbose=true -Dansi.boxes=true"
 #
-# echo "Running with java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM"
-# echo -n "Hit return... "
-# read a
+if [ "$DEBUG" == "true" ]
+then
+	 echo "COMMAND is: java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM"
+	 echo -n "Hit return... "
+	 read a
+fi
 #
 java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
 #

@@ -754,11 +754,15 @@ public class FONAManager implements SerialIOCallbacks {
 		}
 	}
 
+	/**
+	 *
+	 * @param delay in seconds.
+	 */
 	public final static void delay(float delay) {
 		try {
 			Thread.sleep(Math.round(delay * 1_000L));
 		} catch (InterruptedException ie) {
-			ie.printStackTrace();
+			Thread.currentThread().interrupt();
 		}
 	}
 
