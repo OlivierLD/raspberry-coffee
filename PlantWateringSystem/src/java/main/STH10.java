@@ -269,6 +269,8 @@ public class STH10 {
 		}
 	}
 
+	private static boolean watchTheProbe = true;
+
 	public static void main(String... args) {
 
 		// Defaults
@@ -531,8 +533,10 @@ public class STH10 {
 			/*
 			 * Here, test the sensor's values, and make the decision about the valve.
 			 */
-			message = "Watching the probe..."; // Default value
-			if (humidity < humidityThreshold) { // Ah! Need some water
+			if (watchTheProbe) {
+				message = "Watching the probe..."; // Default value
+			}
+			if (watchTheProbe && humidity < humidityThreshold) { // Ah! Need some water
 				// Open the valve
 				relay.on();
 				message = "Watering...";
@@ -602,6 +606,7 @@ public class STH10 {
 				// Wait before resuming sensor watching
 
 				message = "Napping a bit... Spreading the word...";
+				watchTheProbe = false;
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
 				} else if (verbose == VERBOSE.ANSI) {
@@ -632,13 +637,14 @@ public class STH10 {
 							} else if (verbose == VERBOSE.ANSI) {
 								displayANSIConsole();
 							}
-							mainThread.notify(); // Release the wait on main thread.
+							watchTheProbe = true; // Resume!
+			//			mainThread.notify(); // Release the wait on main thread.
 						}
-					}, "watering-thread");
+					}, "wait-for-resume-thread");
 					wateringThread.start();
 
 					synchronized (mainThread) {
-						mainThread.wait();
+			//		mainThread.wait(); // Wait for resume (above)
 						message = "";
 						if (verbose == VERBOSE.STDOUT) {
 							System.out.println(message);
@@ -646,8 +652,10 @@ public class STH10 {
 							displayANSIConsole();
 						}
 					}
-				} catch (InterruptedException ie) {
-					Thread.currentThread().interrupt();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+//				} catch (InterruptedException ie) {
+//					Thread.currentThread().interrupt();
 				}
 				// Resume watching
 				message = "";
