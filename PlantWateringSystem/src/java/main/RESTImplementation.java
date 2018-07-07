@@ -81,6 +81,11 @@ public class RESTImplementation {
 					"Get last watering time as a long."),
 			new Operation(
 					"GET",
+					PWS_PREFIX + "/pws-status",
+					this::getPWSStatus,
+					"Get device's status."),
+			new Operation(
+					"GET",
 					PWS_PREFIX + "/pws-parameters",
 					this::getPWSParameters,
 					"Get program's parameters."),
@@ -201,6 +206,16 @@ public class RESTImplementation {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		STH10.PWSParameters pwsParameters = STH10.getPWSParameters();
 		String content = new Gson().toJson(pwsParameters);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private Response getPWSStatus(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		String pwsStatus = STH10.getStatus();
+		String content = new Gson().toJson(pwsStatus);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 

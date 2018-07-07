@@ -211,6 +211,10 @@ public class STH10 {
 		}
 	}
 
+	static String getStatus() {
+		return message;
+	}
+
 	private static double randomDiff() {
 		int sign = (int)System.currentTimeMillis() % 2;
 		return Math.random() * (sign == 0 ? 1 : -1);
