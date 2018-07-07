@@ -150,13 +150,24 @@ public class STH10 {
 		}
 		return state;
 	}
+
 	static void setRelayState(PinState state) {
 		if (relay != null) {
+			Thread relayFlip = null;
 			if (state.isHigh()) {
-				relay.off();
+				relayFlip = new Thread(() -> {
+					synchronized (relay) {
+						relay.off();
+					}
+				});
 			} else {
-				relay.on();
+				relayFlip = new Thread(() -> {
+					synchronized (relay) {
+						relay.on();
+					}
+				});
 			}
+			relayFlip.start();
 		}
 	}
 	static Long getLastWateringTime() {
@@ -498,6 +509,7 @@ public class STH10 {
 					System.err.println(String.format("At %s :", new Date().toString()));
 					ex.printStackTrace();
 					probe.softReset();
+					System.err.println("Device was reset");
 				}
 				try {
 					humidity = probe.readHumidity(temperature);
@@ -505,6 +517,7 @@ public class STH10 {
 					System.err.println(String.format("At %s :", new Date().toString()));
 					ex.printStackTrace();
 					probe.softReset();
+					System.err.println("Device was reset");
 				}
 			}
 
@@ -558,7 +571,12 @@ public class STH10 {
 			 */
 			if (watchTheProbe && humidity < humidityThreshold) { // Ah! Need some water
 				// Open the valve
-				relay.on();
+				Thread waterRelayOn = new Thread(() -> {
+					synchronized (relay) {
+						relay.on();
+					}
+				});
+				waterRelayOn.start();
 				message = "Watering...";
 				if (verbose == VERBOSE.STDOUT) {
 					System.out.println(message);
@@ -622,7 +640,13 @@ public class STH10 {
 					displayANSIConsole();
 				}
 				// Shut the valve
-				relay.off();
+				Thread waterRelayOff = new Thread(() -> {
+					synchronized (relay) {
+						relay.off();
+					}
+				});
+				waterRelayOff.start();
+
 				// Wait before resuming sensor watching
 
 				message = "Napping a bit... Spreading the word...";
