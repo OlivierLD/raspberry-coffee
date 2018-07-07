@@ -467,7 +467,7 @@ public class STH10 {
 		}));
 
 		if ((probe.isSimulating() || enforceSensorSimulation) && !"true".equals(System.getProperty("random.simulator"))) {
-			// Manual input
+			// Manual input, stdin.
 			Thread manualThread = new Thread(() -> { // There is also a REST input
 				while (go) {
 					String userInput = StaticUtil.userInput(" T:XX, H:XX > ");
@@ -492,12 +492,25 @@ public class STH10 {
 		while (go) {
 
 			if (!enforceSensorSimulation) {
-				temperature = probe.readTemperature();
-				humidity = probe.readHumidity(temperature);
+				try {
+					temperature = probe.readTemperature();
+				} catch (Exception ex) {
+					System.err.println(String.format("At %s :", new Date().toString()));
+					ex.printStackTrace();
+					probe.softReset();
+				}
+				try {
+					humidity = probe.readHumidity(temperature);
+				} catch (Exception ex) {
+					System.err.println(String.format("At %s :", new Date().toString()));
+					ex.printStackTrace();
+					probe.softReset();
+				}
 			}
 
-			if (loggers.size() > 0 && (System.currentTimeMillis() - lastLog) > loggingPace) {
-				lastLog = System.currentTimeMillis();
+			long now = System.currentTimeMillis();
+			if (loggers.size() > 0 && (now - lastLog) > loggingPace) {
+				lastLog = now;
 				loggers.forEach(logger -> {
 					Thread loggerThread = new Thread(() -> {
 						try {
@@ -540,6 +553,9 @@ public class STH10 {
 			if (watchTheProbe) {
 				message = "Watching the probe..."; // Default value
 			}
+			/*
+			 * the watchTheProbe variable is used to nap after watering.
+			 */
 			if (watchTheProbe && humidity < humidityThreshold) { // Ah! Need some water
 				// Open the valve
 				relay.on();
@@ -635,7 +651,7 @@ public class STH10 {
 							}
 						}
 						synchronized (mainThread) {
-							message = "Resuming watching.";
+							message = "Resuming watch.";
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
@@ -658,11 +674,11 @@ public class STH10 {
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
-//				} catch (InterruptedException ie) {
-//					Thread.currentThread().interrupt();
+//			} catch (InterruptedException ie) {
+//				Thread.currentThread().interrupt();
 				}
 				// Resume watching
-				message = "";
+				message = "...";
 				if (verbose == VERBOSE.ANSI) {
 					displayANSIConsole();
 				}

@@ -13,6 +13,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'scala'
+apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -31,6 +32,9 @@ sourceSets {
         }
         scala {
             srcDir 'src/scala'
+        }
+        groovy {
+            srcDirs = ['src/groovy']
         }
     }
     test {
@@ -53,6 +57,7 @@ dependencies {
     compile 'org.fusesource.jansi:jansi:1.11'
     compile project(':common-utils')
     compile 'org.scala-lang:scala-library:2.12.3'
+    compile 'org.codehaus.groovy:groovy-all:2.4.6'
 }
 
 shadowJar {
