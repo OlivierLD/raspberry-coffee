@@ -249,7 +249,7 @@ This will be fleshed out. Eventually, we will fully drive the device.
 
 For now, try this (from your phone, tablet, whatever): `http://Rasp.pi.add.ress:2345/web/index.html`
 
-<img src="./docimg/webindex.png" width="453" height="777" alt="Web Interface">
+<img src="./docimg/android.jpg" width="450" height="800" alt="Web Interface">
 
 ### The real device
 First setting:
