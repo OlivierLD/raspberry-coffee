@@ -1,5 +1,5 @@
 # WIP: Plant Watering System
-## A real world project, hardward and software
+## A real world project, hardware _and_ software
 
 We want to interface a Moisture/Humidity/Temperature sensor (https://www.adafruit.com/product/1298) with
 a solenoid valve (https://www.adafruit.com/product/997), to irrigate the plants in need.
@@ -9,11 +9,11 @@ The goal here is to read the humidity of the soil, and to water the plan when th
 
 Watering is done by opening a solenoid valve connected to a tank of water.
 
-#### Act 1:  Reading the STH10 Sensor. Getting there...
+#### History, Act 1:  Reading the STH10 Sensor. Getting there...
 The goal here is to finally heave a Java implmentation of the code. See below.
 
 We start from an Arduino sketch, that can read the STH10.
-> _Note_: The 10 K&Omega; resistor is not to be forgotten.
+> _Important note_: The 10 K&Omega; resistor is not to be forgotten.
 
 ![Arduino wiring](./Arduino.STH10_bb.png)
 
