@@ -128,7 +128,8 @@ var deviceStatus = function() {
 	var getStatus = getPWSStatus();
 	getStatus.done(function (value) {
 		var json = JSON.parse(value);
-		console.log("Status:", json);
+		$("#device-status").text(json);
+//	console.log("Status:", json);
 	});
 	getStatus.fail(function (error, errmess) {
 		var message;
