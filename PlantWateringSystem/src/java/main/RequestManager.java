@@ -1,11 +1,9 @@
 package main;
 
-
 import http.HTTPServer;
 import http.RESTRequestManager;
 
 import java.util.List;
-
 
 public class RequestManager implements RESTRequestManager {
 
@@ -50,6 +48,4 @@ public class RequestManager implements RESTRequestManager {
 		}
 		return newHttpServer;
 	}
-
-
 }

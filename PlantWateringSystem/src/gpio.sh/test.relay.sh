@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Could not get it tio work...
+#
 echo "+-------------------------+"
 echo "| testing relay with gpio |"
 echo "+-------------------------+"
@@ -6,7 +9,7 @@ echo "+-------------------------+"
 gpio -v
 gpio readall
 #
-PIN=0 
+PIN=0
 echo "We will use pin $PIN (column wPi)"
 #
 echo "Enter Q at the prompt to quit"

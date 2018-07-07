@@ -1,7 +1,5 @@
 package loggers.text;
 
-import com.google.gson.JsonObject;
-import http.client.HTTPClient;
 import loggers.DataLoggerInterface;
 import loggers.LogData;
 
@@ -10,9 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
-
-import static utils.StaticUtil.userInput;
 
 /**
  * Generate a log file on the file system. CSV
@@ -23,10 +18,8 @@ public class FileLogger implements DataLoggerInterface {
 
 	private static boolean DEBUG = "true".equals(System.getProperty("file.logger.verbose"));
 
-	private String fileName = "";
-	private BufferedWriter logFile = null;
-
-	Map<String, Double> dataMap = null;
+	private BufferedWriter logFile;
+	private Map<String, Double> dataMap = null;
 
 	@Override
 	public void accept(LogData feedData) {
@@ -75,9 +68,9 @@ public class FileLogger implements DataLoggerInterface {
 		if (DEBUG) {
 			System.out.println(String.format("Creating logger [%s]", this.getClass().getName()));
 		}
-		this.fileName = System.getProperty("logger.file.name", "logger.log");
+		String fileName = System.getProperty("logger.file.name", "logger.log");
 		try {
-			logFile = new BufferedWriter(new FileWriter(this.fileName));
+			logFile = new BufferedWriter(new FileWriter(fileName));
 			logFile.write("epoch;hum;temp\n"); // Header
 			logFile.flush();
 		} catch (IOException ioe) {

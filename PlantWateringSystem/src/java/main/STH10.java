@@ -22,17 +22,17 @@ import static utils.TimeUtil.fmtDHMS;
 import static utils.TimeUtil.msToHMS;
 
 /**
- * Example / Prototype...
- *
- * TODO : Time with the Exceptions
+ * Example / Working prototype...
  */
 public class STH10 {
 
-	private static boolean go = true;
+	private static boolean go = true; // Keep looping.
 
 	private final static int DEFAULT_HUMIDITY_THRESHOLD = 50; // 50 %
 	private final static long DEFAULT_WATERING_DURATION = 10L; // 10 seconds
-	private final static long DEFAULT_RESUME_SENSOR_WATCH_AFTER = 120L; // 2 minutes
+	private final static long DEFAULT_RESUME_SENSOR_WATCH_AFTER = 120L; // 120 seconds, 2 minutes
+
+	private final static long DEFAULT_LOGGING_PACE = 10_000L; // 10 seconds
 
 	// Default values
 	private static int humidityThreshold = DEFAULT_HUMIDITY_THRESHOLD;
@@ -40,8 +40,10 @@ public class STH10 {
 	private static long resumeSensorWatchAfter = DEFAULT_RESUME_SENSOR_WATCH_AFTER;
 
 	private static boolean withRESTServer = false;
-	private static int restServerPort = 9999;
+	private static int restServerPort = 9999; // This is the default value
 	private static boolean enforceSensorSimulation = false;
+
+	private static long loggingPace = DEFAULT_LOGGING_PACE;
 
 	private static Long lastWatering = null;
 
@@ -69,6 +71,8 @@ public class STH10 {
 				"Boolean. Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone."),
 		LOGGERS("--loggers:",
 				"Comma-separated list of the loggers. Loggers must implement DataLoggerInterface. Ex: --loggers:loggers.iot.AdafruitIOClient,loggers.text.FileLogger "),
+		LOGGING_PACE("--logging-pace:",
+				String.format("Long, in milliseconds. The interval between each log entry. Default is %d.", DEFAULT_LOGGING_PACE)),
 		HELP("--help", "Display the help and exit.");
 
 		private String prefix, help;
@@ -96,7 +100,7 @@ public class STH10 {
 	private static STH10Driver probe = null;
 	private static RelayDriver relay = null;
 
-	// Simulators, to run on non-Raspberry PIs - for development.
+	// Simulators, to run on non-Raspberry PIs - for development and tests.
 	// User manual entry (also suitable for REST)
 	private static Supplier<Double> temperatureSimulator = STH10::simulateUserTemp;
 	private static Supplier<Double> humiditySimulator = STH10::simulateUserHum;
@@ -118,9 +122,7 @@ public class STH10 {
 		System.out.println(">> Relay is now " + state);
 		simulatedPinState = state;
 	};
-	private static Consumer<PinState> relayListener = state -> {
-		actualPinState = state;
-	};
+	private static Consumer<PinState> relayListener = state -> actualPinState = state;
 
 	private static HTTPServer httpServer = null;
 
@@ -128,27 +130,27 @@ public class STH10 {
 	private static List<DataLoggerInterface> loggers = new ArrayList<>(); //Arrays.asList(new AdafruitIOClient()); // Example
 	private static long lastLog = -1;
 
-	// Data Getters and Setters, for (optional) REST
-	public static void setTemperature(double temp) {
+	// Sensor data Getters and Setters, for (optional) REST
+	static void setTemperature(double temp) {
 		temperature = temp;
 	}
-	public static void setHumidity(double hum) {
+	static void setHumidity(double hum) {
 		humidity = hum;
 	}
-	public static double getTemperature() {
+	static double getTemperature() {
 		return temperature;
 	}
-	public static double getHumidity() {
+	static double getHumidity() {
 		return humidity;
 	}
-	public static PinState getRelayState() {
+	static PinState getRelayState() {
 		PinState state = null;
 		if (relay != null) {
 			state = relay.getState();
 		}
 		return state;
 	}
-	public static void setRelayState(PinState state) {
+	static void setRelayState(PinState state) {
 		if (relay != null) {
 			if (state.isHigh()) {
 				relay.off();
@@ -157,7 +159,7 @@ public class STH10 {
 			}
 		}
 	}
-	public static Long getLastWateringTime() {
+	static Long getLastWateringTime() {
 		return lastWatering;
 	}
 
@@ -190,14 +192,14 @@ public class STH10 {
 		}
 	}
 
-	public static PWSParameters getPWSParameters() {
+	static PWSParameters getPWSParameters() {
 		return new PWSParameters()
 				.humidityThreshold(humidityThreshold)
 				.wateringTime(wateringDuration)
 				.resumeWatchAfter(resumeSensorWatchAfter);
 	}
 
-	public static void setPWSParameters(PWSParameters pwsParameters) {
+	static void setPWSParameters(PWSParameters pwsParameters) {
 		if (pwsParameters.humidityThreshold() != -1) {
 			humidityThreshold = pwsParameters.humidityThreshold();
 		}
@@ -209,18 +211,20 @@ public class STH10 {
 		}
 	}
 
-	private static Double simulateTemp() {
+	private static double randomDiff() {
 		int sign = (int)System.currentTimeMillis() % 2;
-		double diff = Math.random() * (sign == 0 ? 1 : -1);
-		temperature += diff;
+		return Math.random() * (sign == 0 ? 1 : -1);
+	}
+
+	private static Double simulateTemp() {
+		temperature += randomDiff();
 		minSimTemp = Math.min(minSimTemp, temperature);
 		maxSimTemp = Math.max(maxSimTemp, temperature);
 		return temperature;
 	}
+
 	private static Double simulateHum() {
-		int sign = (int)System.currentTimeMillis() % 2;
-		double diff = Math.random() * (sign == 0 ? 1 : -1);
-		humidity += diff;
+		humidity += randomDiff();
 		minSimHum = Math.min(minSimHum, humidity);
 		maxSimHum = Math.max(maxSimHum, humidity);
 		return humidity;
@@ -364,6 +368,17 @@ public class STH10 {
 						ex.printStackTrace();
 					}
 				}
+			} else if (arg.startsWith(ARGUMENTS.LOGGING_PACE.prefix())) {
+				String val = arg.substring(ARGUMENTS.LOGGING_PACE.prefix().length());
+				try {
+					loggingPace = Long.parseLong(val);
+					if (loggingPace < 0) {
+						loggingPace = DEFAULT_LOGGING_PACE;
+						System.err.println(">> Logging Pace must be positive. Ignoring.");
+					}
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
 			}
 		}
 		if (verbose == VERBOSE.ANSI) {
@@ -466,7 +481,7 @@ public class STH10 {
 		 */
 		if (verbose == VERBOSE.STDOUT) { // Can be used for logging
 			System.out.println("-- LOGGING STARTS HERE --");
-			System.out.println("Epoch(ms);Date;Temp(C);Hum(%);Dew pt Temp(C)");
+			System.out.println("Epoch(ms);Date;Temp(C);Hum(%);Dew-pt Temp(C)");
 		}
 		while (go) {
 
@@ -475,8 +490,7 @@ public class STH10 {
 				humidity = probe.readHumidity(temperature);
 			}
 
-			// TODO A logger for a screen (Like the SSD1306)?
-			if (loggers.size() > 0 && (System.currentTimeMillis() - lastLog) > 10_000L) { // Every 10 sec max.
+			if (loggers.size() > 0 && (System.currentTimeMillis() - lastLog) > loggingPace) {
 				lastLog = System.currentTimeMillis();
 				loggers.forEach(logger -> {
 					Thread loggerThread = new Thread(() -> {

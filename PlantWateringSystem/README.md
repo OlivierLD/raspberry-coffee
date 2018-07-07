@@ -1,4 +1,6 @@
 # WIP: Plant Watering System
+## A real world project, hardward and software
+
 We want to interface a Moisture/Humidity/Temperature sensor (https://www.adafruit.com/product/1298) with
 a solenoid valve (https://www.adafruit.com/product/997), to irrigate the plants in need.
 
@@ -9,7 +11,6 @@ Watering is done by opening a solenoid valve connected to a tank of water.
 
 #### Act 1:  Reading the STH10 Sensor. Getting there...
 The goal here is to finally heave a Java implmentation of the code. See below.
-
 
 We start from an Arduino sketch, that can read the STH10.
 > _Note_: The 10 K&Omega; resistor is not to be forgotten.
@@ -45,7 +46,6 @@ See in this project the class named `sensors.sth10.STH10Driver.java`.
 > Hooking the relay's power supply to `3.3V` fixes the issue, as the comparison with the power supply and the signal find them equals
 > when the GPIO pin is `ON`.
 
-
 ---
 
 ### Triggering the valve
@@ -59,14 +59,14 @@ With a Relay
 - How long to wait after watering before re-start measurement
 
 ### Extras
-- IoT and stuff...
+- IoT and stuff... We'll see.
 
 ### Power supply
 12 & 5 Volts.
 - 5 for the Raspberry
 - 12 for the valve
 
-We will have one 12V power supply, and use a car cigarette lighter USB adapter to turn it into 5V.
+We will have one 12V power supply (I''ve used [this one](https://www.adafruit.com/product/352), [that one](https://www.adafruit.com/product/798) should fit), and use a car cigarette lighter USB adapter to turn it into 5V.
 That seems to be the cheapest approach (< $2.00), and it works well.
 
 ### The Hardware
@@ -95,6 +95,7 @@ $ java $JAVA_OPTIONS -cp $CP main.STH10 --help
 | --http-port:	Integer. The HTTP port of the REST Server. Default is 9999.
 | --simulate-sensor-values:	Boolean. Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone.
 | --loggers:	Comma-separated list of the loggers. Loggers must implement DataLoggerInterface. Ex: --loggers:loggers.iot.AdafruitIOClient,loggers.text.FileLogger
+| --logging-pace:	Long, in milliseconds. The interval between each log entry. Default is 10000.
 | --help	Display the help and exit.
 +---------------------------------------
 ```
@@ -259,8 +260,8 @@ This one is based on a `Raspberry PI Zero W`. The probe is in the soil. There is
 estimate the right values for humidity.
 
 ### Next
+- NODE-Red Integration ?
 - Integration with the NMEA.Multiplexer ?
 - Read the `STH10` as an I<small><sup>2</sup></small>C device ?
-
 
 ---

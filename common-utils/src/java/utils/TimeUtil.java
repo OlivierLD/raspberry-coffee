@@ -91,9 +91,25 @@ public class TimeUtil {
 		try {
 			Thread.sleep(howMuch);
 		} catch (InterruptedException ie) {
-			ie.printStackTrace();
+			Thread.currentThread().interrupt();
 		}
 	}
+	public static void delay(long ms, int nano) {
+		try {
+			Thread.sleep(ms, nano);
+		} catch (InterruptedException ie) {
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	/**
+	 *
+	 * @param sec in seconds
+	 */
+	public static void delay(float sec) {
+		delay(Math.round(sec * 1_000));
+	}
+
 
 	private final static long SEC  = 1_000L;
 	private final static long MIN  = 60 * SEC;

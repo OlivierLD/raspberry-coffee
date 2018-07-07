@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * WARNING:
  *  Only for values: 3.5V, High resolution, no heater, otp_no_reload off
  *
- *  Adapted from the python code at https://github.com/drohm/pi-sht1x
+ *  Adapted from / inspired by the python code at https://github.com/drohm/pi-sht1x
  *  Datasheet STH1x: https://cdn-shop.adafruit.com/datasheets/Sensirion_Humidity_SHT1x_Datasheet_V5.pdf
  */
 public class STH10Driver {
@@ -127,7 +127,7 @@ public class STH10Driver {
 					TimeUtil.delay(1_000L);
 				}
 			}
-			if (!ok) { // Could not initialize :(
+			if (!ok) { // Could not initialize :( Barf.
 				System.err.println(String.format("At %s :", new Date().toString()));
 				throw new RuntimeException("Could not initialize after 5 attempts.", lastError);
 			}
@@ -172,7 +172,7 @@ public class STH10Driver {
 	public void softReset() {
 		byte cmd = COMMANDS.get(SOFT_RESET_CMD);
 		this.sendCommandSHT(cmd, false);
-		delay(15L, 0); // 15 ms
+		TimeUtil.delay(15L, 0); // 15 ms
 		this.statusRegister = 0x0;
 	}
 
@@ -214,7 +214,7 @@ public class STH10Driver {
 				if (DEBUG) {
 					System.out.print("   >> Flipping CLK, delaying");
 				}
-				delay(0L, 100); // 0.1 * 1E-6 sec. 100 * 1E-9
+				TimeUtil.delay(0L, 100); // 0.1 * 1E-6 sec. 100 * 1E-9
 			}
 			if (DEBUG) {
 				System.out.println(String.format("\tpin is now %s", pin.getState() == PinState.HIGH ? "HIGH" : "LOW"));
@@ -373,7 +373,7 @@ public class STH10Driver {
 		if (!this.simulating) {
 			this.data.setMode(PinMode.DIGITAL_INPUT);
 			for (int t = 0; t < NB_TRIES; t++) {
-				delay(10L, 0);
+				TimeUtil.delay(10L, 0);
 				state = this.data.getState();
 				if (state.getValue() == PinState.LOW.getValue()) {
 					if (DEBUG) {
@@ -510,14 +510,6 @@ public class STH10Driver {
 		}
 		if (DEBUG) {
 			System.out.println("<< sendCommandSHT <<");
-		}
-	}
-
-	private void delay(long ms, int nano) {
-		try {
-			Thread.sleep(ms, nano);
-		} catch (InterruptedException ie) {
-			Thread.currentThread().interrupt();
 		}
 	}
 

@@ -5,13 +5,12 @@
 
 SHT1x sht1x(dataPin, clockPin); // instantiate SHT1x object
 
-void setup()
-{
+void setup() {
    Serial.begin(38400); // Open serial connection to report values to host
    Serial.println("Starting up");
 }
-void loop()
-{
+
+void loop() {
   float temp_c;
   float temp_f;
   float humidity;
