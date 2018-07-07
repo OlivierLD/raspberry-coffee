@@ -54,7 +54,6 @@ var DEFAULT_TIMEOUT = 10000;
  * - Relay Status: getter, setter
  * - Sensor Data: getter, setter
  * - Last watering time
- * TODO
  * - Status (watering, waiting...)
  */
 var getRelayStatus = function () {
@@ -75,6 +74,10 @@ var setRelayStatus = function (status) {
 
 var setSensorData = function (data) {
 	return getDeferred('/pws/sth10-data', DEFAULT_TIMEOUT, 'POST', 200, data);
+};
+
+var getPWSStatus = function () {
+	return getDeferred('/pws/pws-status', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
 var relayStatus = function () {
@@ -120,6 +123,25 @@ var sensorData = function () {
 		errManager.display("Failed to get the Sensor data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
 };
+
+var deviceStatus = function() {
+	var getStatus = getPWSStatus();
+	getStatus.done(function (value) {
+		var json = JSON.parse(value);
+		console.log("Status:", json);
+	});
+	getStatus.fail(function (error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager.display("Failed to get the device status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+}
 
 // For simulation
 var setStatus = function (state) {
