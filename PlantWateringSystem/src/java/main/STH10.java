@@ -627,7 +627,7 @@ public class STH10 {
 								Thread.currentThread().interrupt();
 							}
 							// Tick, countdown...
-							message = String.format("Resuming watching in %s...", fmtDHMS(msToHMS(((_napDuration - i) * 1_000L))));
+							message = String.format("Resuming watch in %s...", fmtDHMS(msToHMS(((_napDuration - i) * 1_000L))));
 							if (verbose == VERBOSE.STDOUT) {
 								System.out.println(message);
 							} else if (verbose == VERBOSE.ANSI) {
