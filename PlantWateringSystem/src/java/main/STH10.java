@@ -55,7 +55,7 @@ public class STH10 {
 				String.format("Integer. In seconds, default is --water-during:%d. Duration of the watering process.", DEFAULT_WATERING_DURATION)),
 		RESUME_AFTER("--resume-after:", // seconds
 				String.format("Integer. In seconds, default is --resume-after:%d. After watering, resume sensor monitoring after this amount of time.", DEFAULT_RESUME_SENSOR_WATCH_AFTER)),
-		VERBOSE("--verbose:", // true|false
+		VERBOSE("--verbose:",
 				"String. Verbose, default is --verbose:NONE, values can be 'NONE', 'STDOUT' or 'ANSI'."),
 		DATA_PIN("--data-pin:", // default is BCM 18 => GPIO_01
 				"Integer. BCM (aka GPIO) pin number of the DATA pin of the sensor. Default is --data-pin:18."),

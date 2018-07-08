@@ -16,9 +16,11 @@ import java.io.IOException;
 import static utils.TimeUtil.delay;
 
 /**
- * SSD1306, small OLED screen. SPI and I2C. 128x32
+ * SSD1306, small OLED screen. SPI and I2C. 128x32, 128x64 (2 versions)
+ *
+ * This code is common to both I2C or SPI interface. See the different constructors.
  */
-public class SSD1306 {
+public class  SSD1306 {
 	public final static int SSD1306_I2C_ADDRESS                          = 0x3C; // 011110+SA0+RW - 0x3C or 0x3D
 	public final static int SSD1306_SETCONTRAST                          = 0x81;
 	public final static int SSD1306_DISPLAYALLON_RESUME                  = 0xA4;
@@ -92,6 +94,8 @@ public class SSD1306 {
 	}
 
 	/**
+	 * SPI Interface
+	 *
 	 * @param w Buffer width (pixles).  Default is 128
 	 * @param h Buffer height (pixels). Default is  32
 	 */
@@ -100,10 +104,12 @@ public class SSD1306 {
 	}
 
 	/**
-	 *              | function                     | Wiring/PI4J    |Cobbler | Name      |GPIO
+	 * SPI Interface
+	 *
+	 *              | function                     | Wiring/PI4J    |Cobbler | Name      |GPIO/BCM
 	 * -------------+------------------------------+----------------+--------=-----------+----
 	 * @param clock | Clock Pin.        Default is |RaspiPin.GPIO_14|Pin #23 |SPI0_SCLK  | 11    Clock
-	 * @param mosi, | MOSI Pin.         Default is |RaspiPin.GPIO_12|Pin #19 |SPI0_MOSI  | 10    Master Out Slave In
+	 * @param mosi, | MOSI / Data Pin.  Default is |RaspiPin.GPIO_12|Pin #19 |SPI0_MOSI  | 10    Master Out Slave In
 	 * @param cs,   | CS Pin.           Default is |RaspiPin.GPIO_10|Pin #24 |SPI0_CE0_N |  8    Chip Select
 	 * @param rst,  | RST Pin.          Default is |RaspiPin.GPIO_05|Pin #18 |GPIO_24    | 24    Reset
 	 * @param dc,   | DC Pin.           Default is |RaspiPin.GPIO_04|Pin #16 |GPIO_23    | 23    Data Control (?)
@@ -119,10 +125,12 @@ public class SSD1306 {
 	}
 
 	/**
-	 *              | function                     | Wiring/PI4J    |Cobbler | Name      |GPIO
+	 * SPI Interface
+	 *
+	 *              | function                     | Wiring/PI4J    |Cobbler | Name      |GPIO/BCM
 	 * -------------+------------------------------+----------------+--------=-----------+----
 	 * @param clock | Clock Pin.        Default is |RaspiPin.GPIO_14|Pin #23 |SPI0_SCLK  | 11    Clock
-	 * @param mosi, | MOSI Pin.         Default is |RaspiPin.GPIO_12|Pin #19 |SPI0_MOSI  | 10    Master Out Slave In
+	 * @param mosi, | MOSI / Data Pin.  Default is |RaspiPin.GPIO_12|Pin #19 |SPI0_MOSI  | 10    Master Out Slave In
 	 * @param cs,   | CS Pin.           Default is |RaspiPin.GPIO_10|Pin #24 |SPI0_CE0_N |  8    Chip Select
 	 * @param rst,  | RST Pin.          Default is |RaspiPin.GPIO_05|Pin #18 |GPIO_24    | 24    Reset
 	 * @param dc,   | DC Pin.           Default is |RaspiPin.GPIO_04|Pin #16 |GPIO_23    | 23    Data Control (?)
@@ -139,6 +147,13 @@ public class SSD1306 {
 		initSSD1306(w, h);
 	}
 
+	/**
+	 * I2C Interface
+	 *
+	 * @param i2cAddr
+	 * @throws I2CFactory.UnsupportedBusNumberException
+	 * @throws IOException
+	 */
 	public SSD1306(int i2cAddr) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		// Get i2c bus
 		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
@@ -163,7 +178,7 @@ public class SSD1306 {
 		this.buffer = new int[this.width * this.pages];
 		clear();
 
-		if (bus == null) { // SPI
+		if (bus == null) { // => SPI
 			int fd = Spi.wiringPiSPISetup(SPI_DEVICE, clockHertz);
 			if (fd < 0) {
 				System.err.println("SPI Setup failed");
@@ -338,7 +353,7 @@ public class SSD1306 {
 		this.command(SSD1306_DISPLAYON);
 	}
 
-	private void initialize() { // SPI, 128x32
+	private void initialize() { // SPI, 128x32 or 128x64
 		// 128x32 pixel specific initialization.
 		this.command(SSD1306_DISPLAYOFF);          // 0xAE
 		this.command(SSD1306_SETDISPLAYCLOCKDIV);  // 0xD5
