@@ -80,12 +80,15 @@ var getPWSStatus = function () {
 	return getDeferred('/pws/pws-status', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+var userChange = true;
+
 var relayStatus = function () {
 	var getData = getRelayStatus();
 	getData.done(function (value) {
 		var json = JSON.parse(value);
 		console.log("Relay Status:", json);
 		// Set the current status "LOW" is opened, "HIGH" is closed
+		userChange = false;
 		$("#flip-1").val(json).change();
 	});
 	getData.fail(function (error, errmess) {
@@ -144,24 +147,27 @@ var deviceStatus = function() {
 	});
 }
 
-// For simulation
+// For simulation (force)
 var setStatus = function (state) {
-	var putData = setRelayStatus(state);
-	putData.done(function (value) {
-		// Yo!
-	});
-	putData.fail(function (error, errmess) {
-		document.body.style.cursor = 'default';
-		var message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
+	if (userChange) {
+		var putData = setRelayStatus(state);
+		putData.done(function (value) {
+			// Yo!
+		});
+		putData.fail(function (error, errmess) {
+			document.body.style.cursor = 'default';
+			var message;
+			if (errmess !== undefined) {
+				if (errmess.message !== undefined) {
+					message = errmess.message;
+				} else {
+					message = errmess;
+				}
 			}
-		}
-		errManager.display("Failed to set valve status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-	});
+			errManager.display("Failed to set valve status..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+		});
+	}
+	userChange = true;
 };
 
 // For simulation
