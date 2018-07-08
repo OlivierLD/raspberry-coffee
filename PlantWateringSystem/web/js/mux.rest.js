@@ -3,7 +3,7 @@ $(document).ready(function () {
 });
 
 var errManager = {
-	display: alert
+	display: console.log
 };
 
 var getDeferred = function (
@@ -84,10 +84,9 @@ var relayStatus = function () {
 	var getData = getRelayStatus();
 	getData.done(function (value) {
 		var json = JSON.parse(value);
-		var status = json.processing;
+		console.log("Relay Status:", json);
 		// Set the current status "LOW" is opened, "HIGH" is closed
 		$("#flip-1").val(json);
-
 	});
 	getData.fail(function (error, errmess) {
 		var message;
