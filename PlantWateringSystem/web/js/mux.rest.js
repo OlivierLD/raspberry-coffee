@@ -86,7 +86,7 @@ var relayStatus = function () {
 	var getData = getRelayStatus();
 	getData.done(function (value) {
 		var json = JSON.parse(value);
-		console.log("Relay Status:", json);
+//	console.log("Relay Status:", json);
 		// Set the current status "LOW" is opened, "HIGH" is closed
 		userChange = false;
 		$("#flip-1").val(json).change();
