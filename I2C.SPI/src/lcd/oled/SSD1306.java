@@ -360,6 +360,7 @@ public class  SSD1306 {
 		this.command(0x80);                     // the suggested ratio 0x80
 		this.command(SSD1306_SETMULTIPLEX);        // 0xA8
 		this.command(height == 32 ? 0x1F : 0x3F); // Height -1 : 1F = 31 = 32 - 1, 3F = 63 = 64 - 1
+		System.out.println(String.format(">>> Initialize: %d", height));
 		this.command(SSD1306_SETDISPLAYOFFSET);    // 0xD3
 		this.command(0x0);                         // no offset
 		this.command(SSD1306_SETSTARTLINE | 0x0);  // line //0
