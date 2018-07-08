@@ -15,7 +15,7 @@ public class OLEDSSD1306_128x64_Sample {
 
 	public static void main(String... args) {
 		int WIDTH = 128;
-		int HEIGHT = 64;
+		int HEIGHT = 32;
 
 		boolean onUserReturn = "true".equals(System.getProperty("return.to.move.on"));
 
@@ -37,7 +37,7 @@ public class OLEDSSD1306_128x64_Sample {
 //  oled.display();
 
 		ScreenBuffer sb = new ScreenBuffer(WIDTH, HEIGHT);
-		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
+		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("Screenbuffer ready...");
 		}
@@ -60,6 +60,7 @@ public class OLEDSSD1306_128x64_Sample {
 				} catch (Exception ex) {
 				}
 			}
+			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
 
 		if ("true".equals(System.getProperty("verbose", "false"))) {
