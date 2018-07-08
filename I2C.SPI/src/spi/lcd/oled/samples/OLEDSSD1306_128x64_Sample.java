@@ -17,7 +17,7 @@ public class OLEDSSD1306_128x64_Sample {
 		int WIDTH = 128;
 		int HEIGHT = 64;
 
-		boolean onUserReturn = "true".equals(System.getProperty(".return.to.move.on"));
+		boolean onUserReturn = "true".equals(System.getProperty("return.to.move.on"));
 
 		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("Starting...");
