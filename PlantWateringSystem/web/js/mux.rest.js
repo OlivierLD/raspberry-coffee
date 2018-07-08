@@ -3,7 +3,9 @@ $(document).ready(function () {
 });
 
 var errManager = {
-	display: console.log
+	display: function(mess) {
+		$("#message").text(mess);
+	}
 };
 
 var getDeferred = function (
