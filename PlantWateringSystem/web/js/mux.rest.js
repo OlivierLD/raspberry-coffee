@@ -85,7 +85,8 @@ var relayStatus = function () {
 	getData.done(function (value) {
 		var json = JSON.parse(value);
 		var status = json.processing;
-		// TODO set the current status
+		// Set the current status "LOW" is opened, "HIGH" is closed
+		$("#flip-1").val(json);
 
 	});
 	getData.fail(function (error, errmess) {
