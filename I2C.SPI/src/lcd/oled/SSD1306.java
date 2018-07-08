@@ -354,12 +354,12 @@ public class  SSD1306 {
 	}
 
 	private void initialize() { // SPI, 128x32 or 128x64
-		// 128x32 pixel specific initialization.
+		// 128x(32/64) pixel specific initialization.
 		this.command(SSD1306_DISPLAYOFF);          // 0xAE
 		this.command(SSD1306_SETDISPLAYCLOCKDIV);  // 0xD5
 		this.command(0x80);                     // the suggested ratio 0x80
 		this.command(SSD1306_SETMULTIPLEX);        // 0xA8
-		this.command(0x1F);
+		this.command(height == 32 ? 0x1F : 0x3F); // Height -1 : 1F = 31 = 32 - 1, 3F = 63 = 64 - 1
 		this.command(SSD1306_SETDISPLAYOFFSET);    // 0xD3
 		this.command(0x0);                         // no offset
 		this.command(SSD1306_SETSTARTLINE | 0x0);  // line //0

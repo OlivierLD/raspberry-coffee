@@ -66,6 +66,7 @@ public class OLEDSSD1306_128x64_Sample {
 		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("Let's go...");
 		}
+		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
 		ImgInterface img = new Java32x32();
 		sb.image(img, 0, 0, ScreenBuffer.Mode.BLACK_ON_WHITE);
 		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.BLACK_ON_WHITE);
