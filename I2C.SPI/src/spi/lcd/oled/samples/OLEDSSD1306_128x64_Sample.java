@@ -4,6 +4,7 @@ import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
 import lcd.utils.img.ImgInterface;
 import lcd.utils.img.Java32x32;
+import utils.StaticUtil;
 
 import java.awt.*;
 
@@ -15,6 +16,8 @@ public class OLEDSSD1306_128x64_Sample {
 	public static void main(String... args) {
 		int WIDTH = 128;
 		int HEIGHT = 64;
+
+		boolean onUserReturn = "true".equals(System.getProperty(".return.to.move.on"));
 
 		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("Starting...");
@@ -39,11 +42,14 @@ public class OLEDSSD1306_128x64_Sample {
 			System.out.println("Screenbuffer ready...");
 		}
 
-		if (false) {
+		if (true) {
 			sb.text("ScreenBuffer", 2, 8);
 			sb.text("128 x 64 for OLED", 2, 17);
 			sb.line(0, 19, 131, 19);
 			sb.line(0, 32, 125, 19);
+			if (onUserReturn) {
+				String userInput = StaticUtil.userInput("Hit Return");
+			}
 		}
 
 		if ("true".equals(System.getProperty("verbose", "false"))) {
@@ -55,6 +61,10 @@ public class OLEDSSD1306_128x64_Sample {
 
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
+
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		}
 
 		try {
 			Thread.sleep(2_000);
@@ -69,19 +79,26 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(500);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(500);
+			} catch (Exception ex) {
+			}
 		}
-
 		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
 		sb.image(img, 0, 0, ScreenBuffer.Mode.BLACK_ON_WHITE);
 		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.BLACK_ON_WHITE);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(500);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(500);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
@@ -89,9 +106,13 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.WHITE_ON_BLACK);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(500);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(500);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
@@ -99,9 +120,13 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.text("I speak Java!", 36, 20, ScreenBuffer.Mode.BLACK_ON_WHITE);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(500);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(500);
+			} catch (Exception ex) {
+			}
 		}
 
 		// End blinking
@@ -132,25 +157,37 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.circle(64, 16, 15);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(500);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(500);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.circle(74, 16, 10);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(500);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(500);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.circle(80, 16, 5);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(500);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(500);
+			} catch (Exception ex) {
+			}
 		}
 
 		// Lines
@@ -158,41 +195,61 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.line(1, 1, 126, 30);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.line(126, 1, 1, 30);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.line(1, 25, 120, 10);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.line(10, 5, 10, 30);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.line(1, 5, 120, 5);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		// Rectangles
@@ -200,17 +257,25 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.rectangle(5, 10, 100, 25);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.rectangle(15, 3, 50, 30);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		sb.clear();
@@ -220,9 +285,13 @@ public class OLEDSSD1306_128x64_Sample {
 			oled.display();
 			//  try { Thread.sleep(100); } catch (Exception ex) {}
 		}
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		// Arc & plot
@@ -231,9 +300,13 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.plot(64, 16);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		// Shape
@@ -248,9 +321,13 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.shape(p, true);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		// Centered text
@@ -263,9 +340,13 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.text(txt, 64 - (len / 2), 16);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 		// sb.clear();
 		txt = "A much longer string.";
@@ -273,9 +354,13 @@ public class OLEDSSD1306_128x64_Sample {
 		sb.text(txt, 64 - (len / 2), 26);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
 
 		// Vertical marquee
@@ -353,11 +438,14 @@ public class OLEDSSD1306_128x64_Sample {
 		}
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
-
 		// A curve (progressing)
 		sb.clear();
 		// Axis
@@ -380,11 +468,14 @@ public class OLEDSSD1306_128x64_Sample {
 		}
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
-
 		// Bouncing
 		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("Bouncing...");
@@ -405,11 +496,14 @@ public class OLEDSSD1306_128x64_Sample {
 		}
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
-		try {
-			Thread.sleep(1_000);
-		} catch (Exception ex) {
+		if (onUserReturn) {
+			String userInput = StaticUtil.userInput("Hit Return");
+		} else {
+			try {
+				Thread.sleep(1_000);
+			} catch (Exception ex) {
+			}
 		}
-
 //  sb.dumpScreen();
 
 		try {
