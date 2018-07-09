@@ -14,9 +14,7 @@ import java.util.Set;
 
 import utils.StringUtils;
 
-@SuppressWarnings("oracle.jdeveloper.java.serialversionuid-field-missing")
-public class LedPanelMain2
-		extends java.awt.Frame {
+public class LedPanelMain2 extends java.awt.Frame {
 	private LedPanelMain2 instance = this;
 	private LEDPanel ledPanel;
 	private JPanel bottomPanel;
@@ -28,7 +26,8 @@ public class LedPanelMain2
 	private static int nbCols = -1;
 
 	// SSD1306
-	private final static int NB_LINES = 32;
+//private final static int NB_LINES = 32;
+	private final static int NB_LINES = 64;
 	private final static int NB_COLS = 128;
 	// Nokia
 //  private final static int NB_LINES = 48;
@@ -40,7 +39,7 @@ public class LedPanelMain2
 
 	public LedPanelMain2() {
 		initComponents();
-		this.setSize(new Dimension(1_000, 300));
+		this.setSize(new Dimension(1_000, (NB_LINES == 32 ? 300 : 600)));
 	}
 
 	/**
@@ -49,10 +48,10 @@ public class LedPanelMain2
 	 */
 	private void initComponents() {
 		ledPanel = new LEDPanel(NB_LINES, NB_COLS);
-
 		ledPanel.setWithGrid(false);
+		ledPanel.setLedColor(Color.WHITE);
 
-		setPreferredSize(new Dimension(1_000, 600));
+		setPreferredSize(new Dimension(1_000, (NB_LINES == 32 ? 300 : 600)));
 		setTitle("LCD Screen Buffer");
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -65,25 +64,17 @@ public class LedPanelMain2
 		gridCheckBox = new JCheckBox("With Grid");
 		gridCheckBox.setSelected(false);
 		bottomPanel.add(gridCheckBox, null);
-		gridCheckBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				ledPanel.setWithGrid(gridCheckBox.isSelected());
-				ledPanel.repaint();
-			}
+		gridCheckBox.addActionListener(actionEvent -> {
+			ledPanel.setWithGrid(gridCheckBox.isSelected());
+			ledPanel.repaint();
 		});
 		againButton = new JButton("Play again");
 		bottomPanel.add(againButton, null);
-		againButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent actionEvent) {
-				Thread go = new Thread() {
-					public void run() {
-						instance.doYourJob();
-					}
-				};
-				go.start();
-			}
+		againButton.addActionListener(actionEvent -> {
+			Thread go = new Thread(() -> {
+					instance.doYourJob();
+				});
+			go.start();
 		});
 
 		add(bottomPanel, java.awt.BorderLayout.SOUTH);
@@ -123,11 +114,10 @@ public class LedPanelMain2
 		}
 		// Display the screen matrix, as it should be seen
 		boolean[][] matrix = ledPanel.getLedOnOff();
-		for (int i = 0; i < NB_LINES; i++)
-		// for (int i=31; i>=0; i--)
-		{
-			for (int j = 0; j < NB_COLS; j++)
+		for (int i = 0; i < NB_LINES; i++) {
+			for (int j = 0; j < NB_COLS; j++) {
 				matrix[j][NB_LINES - 1 - i] = (screenMatrix[i][j] == 'X' ? true : false);
+			}
 		}
 		ledPanel.setLedOnOff(matrix);
 	}
@@ -136,7 +126,6 @@ public class LedPanelMain2
 		ledPanel.repaint();
 	}
 
-	@SuppressWarnings("oracle.jdeveloper.java.insufficient-catch-block")
 	public void doYourJob() {
 		LedPanelMain2 lcd = instance;
 		againButton.setEnabled(false);

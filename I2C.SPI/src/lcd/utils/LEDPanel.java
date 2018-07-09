@@ -36,6 +36,10 @@ public class LEDPanel
 		initComponents();
 	}
 
+	public void setLedColor(Color c) {
+		this.ledColor = c;
+	}
+
 	public void setWithGrid(boolean withGrid) {
 		this.withGrid = withGrid;
 	}
@@ -43,8 +47,9 @@ public class LEDPanel
 	private void initLeds() {
 		ledOnOff = new boolean[NB_COLS][NB_LINES];
 		for (int r = 0; r < NB_LINES; r++) {
-			for (int c = 0; c < NB_COLS; c++)
+			for (int c = 0; c < NB_COLS; c++) {
 				ledOnOff[c][r] = false;
+			}
 		}
 	}
 
@@ -58,7 +63,6 @@ public class LEDPanel
 	 * This method is called from within the constructor to
 	 * initialize the form.
 	 */
-	@SuppressWarnings("unchecked")
 	private void initComponents() {
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
 		this.setLayout(layout);
@@ -99,10 +103,12 @@ public class LEDPanel
 		// Grid
 		if (withGrid) {
 			gr.setColor(Color.gray);
-			for (int c = 0; c < NB_COLS; c++)
+			for (int c = 0; c < NB_COLS; c++) {
 				gr.drawLine(c * this.getWidth() / NB_COLS, 0, c * this.getWidth() / NB_COLS, this.getHeight());
-			for (int r = 0; r < NB_LINES; r++)
+			}
+			for (int r = 0; r < NB_LINES; r++) {
 				gr.drawLine(0, r * this.getHeight() / NB_LINES, this.getWidth(), r * this.getHeight() / NB_LINES);
+			}
 		}
 		gr.setColor(ledColor);
 		for (int r = 0; r < NB_LINES; r++) {
