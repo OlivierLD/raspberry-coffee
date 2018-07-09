@@ -298,9 +298,9 @@ public class OLEDSSD1306_128x64_Sample {
 						"More text goes here",
 						"Some crap follows",
 						"We're reaching the end.",
-				    "Long ago, in a galaxy far",
+				    "Long ago, in a galaxy far,",
 				    "far away... Starwars effect",
-						" * The End * "
+						"  * The End *  "
 		};
 		len = 0;
 		sb.clear();
@@ -354,7 +354,7 @@ public class OLEDSSD1306_128x64_Sample {
 
 		Point prev = null;
 		for (int _x = 0; _x < 130; _x++) {
-			double amplitude = 6 * Math.exp((double) (130 - _x) / (13d * 7.5d));
+			double amplitude = 12 * Math.exp((double) (130 - _x) / (13d * 7.5d));
 			//  System.out.println("X:" + x + ", ampl: " + (amplitude));
 			int _y = 32 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 32d)));
 			sb.plot(_x + 2, _y);
@@ -377,14 +377,14 @@ public class OLEDSSD1306_128x64_Sample {
 		// A curve (progressing)
 		sb.clear();
 		// Axis
-		sb.line(0, 16, 128, 16);
-		sb.line(2, 0, 2, 32);
+		sb.line(0, 32, 128, 32);
+		sb.line(2, 0, 2, 64);
 
 		prev = null;
 		for (int _x = 0; _x < 130; _x++) {
-			double amplitude = 6 * Math.exp((double) (130 - _x) / (13d * 7.5d));
+			double amplitude = 12 * Math.exp((double) (130 - _x) / (13d * 7.5d));
 			//  System.out.println("X:" + x + ", ampl: " + (amplitude));
-			int _y = 32 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 16d)));
+			int _y = 32 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 32d)));
 			sb.plot(_x + 2, _y);
 			if (prev != null) {
 				sb.line(prev.x, prev.y, _x + 2, _y);
@@ -411,7 +411,7 @@ public class OLEDSSD1306_128x64_Sample {
 		}
 		for (int _x = 0; _x < 130; _x++) {
 			sb.clear();
-			double amplitude = 6 * Math.exp((double) (130 - _x) / (13d * 7.5d));
+			double amplitude = 12 * Math.exp((double) (130 - _x) / (13d * 7.5d));
 			//  System.out.println("X:" + x + ", ampl: " + (amplitude));
 			int _y = 32 - (int) (amplitude * Math.abs(Math.cos(Math.toRadians(180 * _x / 10d))));
 			sb.plot(_x, _y);
