@@ -39,7 +39,7 @@ public class LedPanelMain2 extends java.awt.Frame {
 
 	public LedPanelMain2() {
 		initComponents();
-		this.setSize(new Dimension(1_000, (NB_LINES == 32 ? 300 : 600)));
+		this.setSize(new Dimension(1_000, (NB_LINES == 32 ? 300 : 600))); // 300 * (NB_LINES / 32) ?
 	}
 
 	/**

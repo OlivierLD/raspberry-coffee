@@ -106,6 +106,18 @@ var relayStatus = function () {
 	});
 };
 
+var status = 'tick';
+// Activity witness
+var flipLight = function() {
+	if (status === 'tick') {
+		status = 'tock';
+		document.getElementById('working').style.color = 'red';
+	} else {
+		status = 'tick';
+		document.getElementById('working').style.color = 'green';
+	}
+};
+
 var sensorData = function () {
 	var getData = getSensorData();
 	getData.done(function (value) {
@@ -115,6 +127,8 @@ var sensorData = function () {
 
 		document.getElementById("hum-01").value = json.humidity.toFixed(2);
 		document.getElementById("hum-01").repaint();
+
+		flipLight();
 	});
 	getData.fail(function (error, errmess) {
 		var message;

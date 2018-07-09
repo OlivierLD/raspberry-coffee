@@ -35,22 +35,10 @@
 		--value-font-size-factor: 1
 	}
 </style>
-<script type="text/javascript">
-	let status = 'tick';
-	function flipLight() {
-		if (status === 'tick') {
-			status = 'tock';
-			document.getElementById('working').style.color = 'red';
-		} else {
-			status = 'tick';
-			document.getElementById('working').style.color = 'green';
-		}
-	}
-</script>
 <body>
 <div data-role="page" id="main">
-    <div data-role="header" class="jqm-header">
-        <h1><span id="working" title="Traffic">&#11044;</span>&nbsp;Plant Watering System</h1>
+    <div class="jqm-header"> <!--  data-role="header" -->
+        <h2><span id="working" title="Traffic">&#11044;</span>&nbsp;Plant Watering System</h2>
 		</div>
 
     <div data-role="content">
@@ -130,7 +118,6 @@
 <script>
 
 	var getAllData = function() {
-		flipLight();
 		sensorData();
 		relayStatus();
 		wateringTime();
