@@ -145,6 +145,15 @@ public class  SSD1306 {
 		spiCs = cs;
 		spiRst = rst;
 		spiDc = dc;
+		if (verbose) {
+			String[] map = new String[5];
+			map[0] = String.valueOf(PinUtil.findByPin(spiMosi).pinNumber()) + ":" + "MOSI";
+			map[1] = String.valueOf(PinUtil.findByPin(spiClk).pinNumber()) + ":" + "CLK";
+			map[2] = String.valueOf(PinUtil.findByPin(spiCs).pinNumber()) + ":" + "CS";
+			map[3] = String.valueOf(PinUtil.findByPin(spiRst).pinNumber()) + ":" + "RST";
+			map[4] = String.valueOf(PinUtil.findByPin(spiDc).pinNumber()) + ":" + "DC";
+			PinUtil.print(map);
+		}
 		initSSD1306(w, h);
 	}
 
@@ -156,6 +165,13 @@ public class  SSD1306 {
 	 * @throws IOException
 	 */
 	public SSD1306(int i2cAddr) throws I2CFactory.UnsupportedBusNumberException, IOException {
+
+		if (verbose) {
+			String[] map = new String[2];
+			map[0] = String.valueOf(PinUtil.findEnumName("SDA1").pinNumber()) + ":" + "SDA";
+			map[1] = String.valueOf(PinUtil.findEnumName("SCL1").pinNumber()) + ":" + "SCL";
+			PinUtil.print(map);
+		}
 		// Get i2c bus
 		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
 		if (verbose) {
@@ -193,15 +209,6 @@ public class  SSD1306 {
 			chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.HIGH);
 			resetOutput = gpio.provisionDigitalOutputPin(spiRst, "RST", PinState.LOW);
 			dcOutput = gpio.provisionDigitalOutputPin(spiDc, "DC", PinState.LOW);
-		}
-		if (verbose) {
-			String[] map = new String[5];
-			map[0] = String.valueOf(PinUtil.findByPin(spiMosi).pinNumber()) + ":" + "MOSI";
-			map[1] = String.valueOf(PinUtil.findByPin(spiClk).pinNumber()) + ":" + "CLK";
-			map[2] = String.valueOf(PinUtil.findByPin(spiCs).pinNumber()) + ":" + "CS";
-			map[3] = String.valueOf(PinUtil.findByPin(spiRst).pinNumber()) + ":" + "RST";
-			map[4] = String.valueOf(PinUtil.findByPin(spiDc).pinNumber()) + ":" + "DC";
-			PinUtil.print(map);
 		}
 	}
 
