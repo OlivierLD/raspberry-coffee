@@ -146,15 +146,6 @@ public class  SSD1306 {
 		spiCs = cs;
 		spiRst = rst;
 		spiDc = dc;
-		if (verbose) {
-			String[] map = new String[5];
-			map[0] = String.valueOf(PinUtil.findByPin(spiMosi).pinNumber()) + ":" + "MOSI";
-			map[1] = String.valueOf(PinUtil.findByPin(spiClk).pinNumber()) + ":" + "CLK";
-			map[2] = String.valueOf(PinUtil.findByPin(spiCs).pinNumber()) + ":" + "CS";
-			map[3] = String.valueOf(PinUtil.findByPin(spiRst).pinNumber()) + ":" + "RST";
-			map[4] = String.valueOf(PinUtil.findByPin(spiDc).pinNumber()) + ":" + "DC";
-			PinUtil.print(map);
-		}
 		initSSD1306(w, h);
 	}
 
@@ -196,6 +187,7 @@ public class  SSD1306 {
 		if (h != 32 && h != 64) {
 			throw new IllegalArgumentException("Height must be 32 or 64");
 		}
+
 		this.width = w;
 		this.height = h;
 		this.pages = this.height / 8; // Number of lines
@@ -216,6 +208,16 @@ public class  SSD1306 {
 			chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.HIGH);
 			resetOutput = gpio.provisionDigitalOutputPin(spiRst, "RST", PinState.LOW);
 			dcOutput = gpio.provisionDigitalOutputPin(spiDc, "DC", PinState.LOW);
+
+			if (verbose) {
+				String[] map = new String[5];
+				map[0] = String.valueOf(PinUtil.findByPin(spiMosi).pinNumber()) + ":" + "MOSI";
+				map[1] = String.valueOf(PinUtil.findByPin(spiClk).pinNumber()) + ":" + "CLK";
+				map[2] = String.valueOf(PinUtil.findByPin(spiCs).pinNumber()) + ":" + "CS";
+				map[3] = String.valueOf(PinUtil.findByPin(spiRst).pinNumber()) + ":" + "RST";
+				map[4] = String.valueOf(PinUtil.findByPin(spiDc).pinNumber()) + ":" + "DC";
+				PinUtil.print(map);
+			}
 		}
 	}
 

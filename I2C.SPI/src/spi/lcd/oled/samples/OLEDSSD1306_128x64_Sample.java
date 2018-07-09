@@ -48,6 +48,9 @@ public class OLEDSSD1306_128x64_Sample {
 			sb.line(0, 19, 131, 19);
 			sb.line(0, 32, 125, 19);
 
+			sb.text("ScreenBuffer on 64 lines", 2, 32);
+			sb.text("128 x 64 for OLED!", 2, 41);
+
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 
