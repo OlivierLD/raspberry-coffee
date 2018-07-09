@@ -408,6 +408,8 @@ public class OLEDSSD1306_128x64_Sample {
 						"More text goes here",
 						"Some crap follows",
 						"We're reaching the end",
+				    "Long ago, in a galacy far",
+				    "far away...",
 						"* The End *"
 		};
 		len = 0;
