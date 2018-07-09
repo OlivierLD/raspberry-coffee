@@ -190,6 +190,12 @@ public class  SSD1306 {
 	}
 
 	private void initSSD1306(int w, int h) {
+		if (w != 128) {
+			throw new IllegalArgumentException("Width cannot be anything but 128");
+		}
+		if (h != 32 && h != 64) {
+			throw new IllegalArgumentException("Height must be 32 or 64");
+		}
 		this.width = w;
 		this.height = h;
 		this.pages = this.height / 8; // Number of lines
