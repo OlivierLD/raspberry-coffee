@@ -413,7 +413,7 @@ public class OLEDSSD1306_128x64_Sample {
 			sb.clear();
 			double amplitude = 12 * Math.exp((double) (130 - _x) / (13d * 7.5d));
 			//  System.out.println("X:" + x + ", ampl: " + (amplitude));
-			int _y = 32 - (int) (amplitude * Math.abs(Math.cos(Math.toRadians(180 * _x / 10d))));
+			int _y = 64 - (int) (amplitude * Math.abs(Math.cos(Math.toRadians(180 * _x / 10d))));
 			sb.plot(_x, _y);
 			sb.plot(_x + 1, _y);
 			sb.plot(_x + 1, _y + 1);
