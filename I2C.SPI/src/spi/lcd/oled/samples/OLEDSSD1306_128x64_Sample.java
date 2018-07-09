@@ -410,7 +410,7 @@ public class OLEDSSD1306_128x64_Sample {
 						"We're reaching the end.",
 				    "Long ago, in a galaxy far",
 				    "far away... Starwars effect",
-						"* The End *"
+						" * The End * "
 		};
 		len = 0;
 		sb.clear();
@@ -442,7 +442,7 @@ public class OLEDSSD1306_128x64_Sample {
 		//    System.out.println(tmp);
 					strOffset = sb.strlen(tmp) + 2;
 				}
-				double virtualAngle = Math.PI * (((c - i) % 32) / 32d);
+				double virtualAngle = Math.PI * (((c - i) % 64) / 64d);
 				int xpos = strOffset - i,
 						ypos = 26 + (int) (16 * Math.sin(virtualAngle));
 //      System.out.println("Displaying " + ca[c] + " at " + x + ", " + y + ", i=" + i + ", strOffset=" + strOffset);
@@ -459,14 +459,14 @@ public class OLEDSSD1306_128x64_Sample {
 		}
 		sb.clear();
 		// Axis
-		sb.line(0, 16, 128, 16);
-		sb.line(2, 0, 2, 32);
+		sb.line(0, 32, 128, 32);
+		sb.line(2, 0, 2, 64);
 
 		Point prev = null;
 		for (int _x = 0; _x < 130; _x++) {
 			double amplitude = 6 * Math.exp((double) (130 - _x) / (13d * 7.5d));
 			//  System.out.println("X:" + x + ", ampl: " + (amplitude));
-			int _y = 16 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 16d)));
+			int _y = 32 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 32d)));
 			sb.plot(_x + 2, _y);
 			if (prev != null) {
 				sb.line(prev.x, prev.y, _x + 2, _y);
