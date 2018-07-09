@@ -156,7 +156,7 @@ public class OLEDSSD1306_128x64_Sample {
 		oled.display();
 		// Marquee
 		if ("true".equals(System.getProperty("verbose", "false"))) {
-			System.out.println("Marquee...");
+			System.out.println("Marquee shifting left...");
 		}
 		for (int i = 0; i < 128; i++) {
 			oled.clear();
@@ -174,7 +174,7 @@ public class OLEDSSD1306_128x64_Sample {
 		}
 		sb.clear();
 
-		sb.circle(64, 16, 15);
+		sb.circle(64, 32, 15);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		if (onUserReturn) {
@@ -187,7 +187,7 @@ public class OLEDSSD1306_128x64_Sample {
 			}
 		}
 
-		sb.circle(74, 16, 10);
+		sb.circle(74, 32, 10);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		if (onUserReturn) {
@@ -200,7 +200,7 @@ public class OLEDSSD1306_128x64_Sample {
 			}
 		}
 
-		sb.circle(80, 16, 5);
+		sb.circle(80, 32, 5);
 		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 		if (onUserReturn) {
@@ -213,124 +213,14 @@ public class OLEDSSD1306_128x64_Sample {
 			}
 		}
 
-		// Lines
-		sb.clear();
-		sb.line(1, 1, 126, 30);
-		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-		oled.display();
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		sb.line(126, 1, 1, 30);
-		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-		oled.display();
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		sb.line(1, 25, 120, 10);
-		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-		oled.display();
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		sb.line(10, 5, 10, 30);
-		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-		oled.display();
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		sb.line(1, 5, 120, 5);
-		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-		oled.display();
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		// Rectangles
-		sb.clear();
-		sb.rectangle(5, 10, 100, 25);
-		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-		oled.display();
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		sb.rectangle(15, 3, 50, 30);
-		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-		oled.display();
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
+		// Nested Rectangles
 		sb.clear();
 		for (int i = 0; i < 8; i++) {
-			sb.rectangle(1 + (i * 2), 1 + (i * 2), 127 - (i * 2), 31 - (i * 2));
+			sb.rectangle(1 + (i * 2), 1 + (i * 2), 127 - (i * 2), 63 - (i * 2));
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 			//  try { Thread.sleep(100); } catch (Exception ex) {}
 		}
-		if (onUserReturn) {
-			sb.dumpScreen();
-			StaticUtil.userInput("Hit Return");
-		} else {
-			try {
-				Thread.sleep(1_000);
-			} catch (Exception ex) {
-			}
-		}
-
-		// Arc & plot
-		sb.clear();
-		sb.arc(64, 16, 10, 20, 90);
-		sb.plot(64, 16);
-		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-		oled.display();
 		if (onUserReturn) {
 			sb.dumpScreen();
 			StaticUtil.userInput("Hit Return");
@@ -444,7 +334,7 @@ public class OLEDSSD1306_128x64_Sample {
 				}
 				double virtualAngle = Math.PI * (((c - i) % 64) / 64d);
 				int xpos = strOffset - i,
-						ypos = 26 + (int) (16 * Math.sin(virtualAngle));
+						ypos = 26 + (int) (32 * Math.sin(virtualAngle));
 //      System.out.println("Displaying " + ca[c] + " at " + x + ", " + y + ", i=" + i + ", strOffset=" + strOffset);
 				sb.text(new String(new char[]{ca[c]}), xpos, ypos);
 			}
@@ -494,7 +384,7 @@ public class OLEDSSD1306_128x64_Sample {
 		for (int _x = 0; _x < 130; _x++) {
 			double amplitude = 6 * Math.exp((double) (130 - _x) / (13d * 7.5d));
 			//  System.out.println("X:" + x + ", ampl: " + (amplitude));
-			int _y = 16 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 16d)));
+			int _y = 32 - (int) (amplitude * Math.cos(Math.toRadians(360 * _x / 16d)));
 			sb.plot(_x + 2, _y);
 			if (prev != null) {
 				sb.line(prev.x, prev.y, _x + 2, _y);
