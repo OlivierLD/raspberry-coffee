@@ -407,9 +407,9 @@ public class OLEDSSD1306_128x64_Sample {
 						"This is line one",
 						"More text goes here",
 						"Some crap follows",
-						"We're reaching the end",
-				    "Long ago, in a galacy far",
-				    "far away...",
+						"We're reaching the end.",
+				    "Long ago, in a galaxy far",
+				    "far away... Starwars effect",
 						"* The End *"
 		};
 		len = 0;
