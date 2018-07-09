@@ -36,6 +36,9 @@ public class AdafruitIOClient implements DataLoggerInterface {
 			if (DEBUG) {
 				System.out.println(String.format("POST Ret: %d, %s", response.getCode(), response.getPayload()));
 			}
+			if (response.getCode() == 403) {
+				System.out.println(String.format("Your request to %s returned a %d, are you sure of your key?", url, 403));
+			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
@@ -54,6 +57,7 @@ public class AdafruitIOClient implements DataLoggerInterface {
 		}
 	}
 
+	// Interactive main, for tests.
 	public static void main(String... args) {
 
 		AdafruitIOClient.key = System.getProperty("aio.key", "").trim();
@@ -73,7 +77,7 @@ public class AdafruitIOClient implements DataLoggerInterface {
 					go = false;
 					System.out.println("Bye.");
 				} else {
-					String data = str;
+					String data = str; // Feed Humidity feed, for tests
 					LogData feedData = new LogData()
 							.feed(LogData.FEEDS.HUM)
 							.value(Double.parseDouble(data));

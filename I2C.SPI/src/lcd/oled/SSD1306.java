@@ -20,6 +20,7 @@ import static utils.TimeUtil.delay;
  * SSD1306, small OLED screen. SPI and I2C. 128x32, 128x64 (2 versions)
  *
  * This code is common to both I2C or SPI interface. See the different constructors.
+ * Adapted from the Arduino code from Adafruit.
  */
 public class  SSD1306 {
 	public final static int SSD1306_I2C_ADDRESS                          = 0x3C; // 011110+SA0+RW - 0x3C or 0x3D
