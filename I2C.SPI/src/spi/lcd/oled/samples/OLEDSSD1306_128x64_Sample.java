@@ -215,7 +215,7 @@ public class OLEDSSD1306_128x64_Sample {
 
 		// Nested Rectangles
 		sb.clear();
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 16; i++) {
 			sb.rectangle(1 + (i * 2), 1 + (i * 2), 127 - (i * 2), 63 - (i * 2));
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
@@ -334,7 +334,7 @@ public class OLEDSSD1306_128x64_Sample {
 				}
 				double virtualAngle = Math.PI * (((c - i) % 64) / 64d);
 				int xpos = strOffset - i,
-						ypos = 26 + (int) (32 * Math.sin(virtualAngle));
+						ypos = 58 + (int) (32 * Math.sin(virtualAngle));
 //      System.out.println("Displaying " + ca[c] + " at " + x + ", " + y + ", i=" + i + ", strOffset=" + strOffset);
 				sb.text(new String(new char[]{ca[c]}), xpos, ypos);
 			}
