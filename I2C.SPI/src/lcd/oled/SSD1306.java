@@ -10,6 +10,7 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
 import com.pi4j.wiringpi.Spi;
+import utils.PinUtil;
 
 import java.io.IOException;
 
@@ -96,7 +97,7 @@ public class  SSD1306 {
 	/**
 	 * SPI Interface
 	 *
-	 * @param w Buffer width (pixles).  Default is 128
+	 * @param w Buffer width (pixels).  Default is 128
 	 * @param h Buffer height (pixels). Default is  32
 	 */
 	public SSD1306(int w, int h) {
@@ -192,6 +193,15 @@ public class  SSD1306 {
 			chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.HIGH);
 			resetOutput = gpio.provisionDigitalOutputPin(spiRst, "RST", PinState.LOW);
 			dcOutput = gpio.provisionDigitalOutputPin(spiDc, "DC", PinState.LOW);
+		}
+		if (verbose) {
+			String[] map = new String[5];
+			map[0] = String.valueOf(PinUtil.findByPin(spiMosi).pinNumber()) + ":" + "MOSI";
+			map[1] = String.valueOf(PinUtil.findByPin(spiClk).pinNumber()) + ":" + "CLK";
+			map[2] = String.valueOf(PinUtil.findByPin(spiCs).pinNumber()) + ":" + "CS";
+			map[3] = String.valueOf(PinUtil.findByPin(spiRst).pinNumber()) + ":" + "RST";
+			map[4] = String.valueOf(PinUtil.findByPin(spiDc).pinNumber()) + ":" + "DC";
+			PinUtil.print(map);
 		}
 	}
 
@@ -358,9 +368,11 @@ public class  SSD1306 {
 		this.command(SSD1306_DISPLAYOFF);          // 0xAE
 		this.command(SSD1306_SETDISPLAYCLOCKDIV);  // 0xD5
 		this.command(0x80);                     // the suggested ratio 0x80
+
 		this.command(SSD1306_SETMULTIPLEX);        // 0xA8
-		this.command(height == 32 ? 0x1F : 0x3F); // Height -1 : 1F = 31 = 32 - 1, 3F = 63 = 64 - 1
+		this.command(height == 32 ? 0x1F : 0x3F); // Height - 1 : 1F = 31 = 32 - 1, 3F = 63 = 64 - 1
 		System.out.println(String.format(">>> Initialize: %d", height));
+
 		this.command(SSD1306_SETDISPLAYOFFSET);    // 0xD3
 		this.command(0x0);                         // no offset
 		this.command(SSD1306_SETSTARTLINE | 0x0);  // line //0
@@ -374,10 +386,19 @@ public class  SSD1306 {
 		this.command(0x00);                     // 0x0 act like ks0108
 		this.command(SSD1306_SEGREMAP | 0x1);
 		this.command(SSD1306_COMSCANDEC);
+
 		this.command(SSD1306_SETCOMPINS);          // 0xDA
-		this.command(0x02);
+		this.command((height == 32) ? 0x02 : 0x12);
 		this.command(SSD1306_SETCONTRAST);         // 0x81
-		this.command(0x8F);
+		if (height == 32) {
+			this.command(0x8F);
+		} else { // 64
+			if (this.vccstate == SSD1306_EXTERNALVCC) {
+				this.command(0x9F);
+			} else {
+				this.command(0xCF);
+			}
+		}
 		this.command(SSD1306_SETPRECHARGE);        // 0xd9
 		if (this.vccstate == SSD1306_EXTERNALVCC) {
 			this.command(0x22);
@@ -388,6 +409,8 @@ public class  SSD1306 {
 		this.command(0x40);
 		this.command(SSD1306_DISPLAYALLON_RESUME); // 0xA4
 		this.command(SSD1306_NORMALDISPLAY);       // 0xA6
+
+//	this.command(SSD1306_DEACTIVATE_SCROLL); // ?
 	}
 
 	public void clear() {

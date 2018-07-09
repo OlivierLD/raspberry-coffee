@@ -3,7 +3,6 @@ package lcd.utils;
 import java.awt.Color;
 import java.awt.Graphics;
 
-@SuppressWarnings("oracle.jdeveloper.java.serialversionuid-field-missing")
 public class LEDPanel
 		extends javax.swing.JPanel {
 	private Color ledColor = Color.red;

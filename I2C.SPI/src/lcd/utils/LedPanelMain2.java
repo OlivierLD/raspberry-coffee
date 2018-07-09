@@ -188,7 +188,7 @@ public class LedPanelMain2
 	/**
 	 * Exit the Application
 	 */
-	private void exitForm(@SuppressWarnings("oracle.jdeveloper.java.unused-parameter") java.awt.event.WindowEvent evt) {
+	private void exitForm(java.awt.event.WindowEvent evt) {
 		System.out.println("Bye");
 		System.exit(0);
 	}
@@ -200,20 +200,23 @@ public class LedPanelMain2
 		// Available characters:
 		Map<String, String[]> characters = CharacterMatrixes.characters;
 		Set<String> keys = characters.keySet();
-		List<String> kList = new ArrayList<String>(keys.size());
-		for (String k : keys)
+		List<String> kList = new ArrayList<>(keys.size());
+		for (String k : keys) {
 			kList.add(k);
+		}
 		// Sort here
 		Collections.sort(kList);
-		for (String k : kList)
+		for (String k : kList) {
 			System.out.print(k + " ");
+		}
 		System.out.println();
 
 		// Params
 		if (args.length > 0) {
 			for (int i = 0; i < args.length; i++) {
-				if ("-col".equals(args[i]))
+				if ("-col".equals(args[i])) {
 					nbCols = Integer.parseInt(args[i + 1]);
+				}
 			}
 		}
 

@@ -24,7 +24,6 @@ import javax.swing.JPanel;
 
 import utils.StringUtils;
 
-@SuppressWarnings("oracle.jdeveloper.java.serialversionuid-field-missing")
 public class LedPanelMain
 		extends java.awt.Frame {
 	private LedPanelMain instance = this;
@@ -146,7 +145,6 @@ public class LedPanelMain
 		ledPanel.repaint();
 	}
 
-	@SuppressWarnings("oracle.jdeveloper.java.insufficient-catch-block")
 	public void doYourJob() {
 		LedPanelMain lcd = instance;
 		againButton.setEnabled(false);
@@ -633,26 +631,29 @@ public class LedPanelMain
 	}
 
 	/**
-	 * @param args the command line arguments
+	 * @param args the command line arguments. Optional: -col XX
 	 */
 	public static void main(String... args) {
 		// Available characters:
 		Map<String, String[]> characters = CharacterMatrixes.characters;
 		Set<String> keys = characters.keySet();
-		List<String> kList = new ArrayList<String>(keys.size());
-		for (String k : keys)
+		List<String> kList = new ArrayList<>(keys.size());
+		for (String k : keys) {
 			kList.add(k);
+		}
 		// Sort here
 		Collections.sort(kList);
-		for (String k : kList)
+		for (String k : kList) {
 			System.out.print(k + " ");
+		}
 		System.out.println();
 
 		// Params
 		if (args.length > 0) {
 			for (int i = 0; i < args.length; i++) {
-				if ("-col".equals(args[i]))
+				if ("-col".equals(args[i])) {
 					nbCols = Integer.parseInt(args[i + 1]);
+				}
 			}
 		}
 
