@@ -37,13 +37,14 @@
 </style>
 <body>
 <div data-role="page" id="main">
-    <div class="jqm-header"> <!--  data-role="header" -->
-        <h2><span id="working" title="Traffic">&#11044;</span>&nbsp;Plant Watering System</h2>
-		</div>
+    <!--div data-role="header" class="jqm-header">
+		</div-->
 
     <div data-role="content">
 
-			<label for="flip-1">Watering valve:</label>
+	    <h2><span id="working" title="Traffic">&#11044;</span>&nbsp;Plant Watering System</h2>
+
+	    <label for="flip-1">Watering valve:</label>
 			<select name="flip-1" id="flip-1" data-role="slider" onchange="setStatus(this.value);">
 				<option value="HIGH">Off</option>
 				<option value="LOW">On</option>

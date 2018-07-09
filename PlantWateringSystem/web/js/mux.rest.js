@@ -90,7 +90,7 @@ var relayStatus = function () {
 		var json = JSON.parse(value);
 //	console.log("Relay Status:", json);
 		// Set the current status "LOW" is opened, "HIGH" is closed
-		userChange = false;
+		userChange = false; // To prevent the onChange function to be triggered.
 		$("#flip-1").val(json).change();
 	});
 	getData.fail(function (error, errmess) {
