@@ -154,6 +154,11 @@ public class PCA9685 {
 		final int CONTINUOUS_SERVO_CHANNEL = 0;
 		final int STANDARD_SERVO_CHANNEL   = 1;
 
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0); // Stop the standard one
+			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
+		}));
+
 		for (int i = 0; true && i < 5; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
