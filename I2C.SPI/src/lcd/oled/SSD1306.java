@@ -21,6 +21,13 @@ import static utils.TimeUtil.delay;
  *
  * This code is common to both I2C or SPI interface. See the different constructors.
  * Adapted from the Arduino code from Adafruit.
+ *
+ * Good and tested for:
+ * https://www.adafruit.com/product/938,
+ * https://www.adafruit.com/product/3527
+ * https://www.adafruit.com/product/326
+ * https://www.adafruit.com/product/931
+ * https://www.adafruit.com/product/661
  */
 public class  SSD1306 {
 	public final static int SSD1306_I2C_ADDRESS                          = 0x3C; // 011110+SA0+RW - 0x3C or 0x3D

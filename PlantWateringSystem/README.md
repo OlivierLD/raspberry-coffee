@@ -251,6 +251,8 @@ For now, try this (from your phone, tablet, whatever): `http://Rasp.pi.add.ress:
 
 <img src="./docimg/android.jpg" width="450" height="800" alt="Web Interface">
 
+The red dot at the top of the page is an activity witness. It blinks red to green and vice-versa whene data are read.
+
 ### The real device
 First setting:
 
@@ -258,6 +260,10 @@ First setting:
 
 This one is based on a `Raspberry PI Zero W`. The probe is in the soil. There is no water tank, and the hoses are not connected (yet). This is doing some data logging for now, to
 estimate the right values for humidity.
+
+In the `loggers` package, there are several examples of loggers. One is feeding two `feeds` on `Adafruit-IO`.
+
+![Adafruit-IO](./docimg/adafruit-io.png)
 
 ### Next
 - NODE-Red Integration ?

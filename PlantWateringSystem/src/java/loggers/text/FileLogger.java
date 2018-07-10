@@ -70,7 +70,7 @@ public class FileLogger implements DataLoggerInterface {
 		}
 		String fileName = System.getProperty("logger.file.name", "logger.log");
 		try {
-			logFile = new BufferedWriter(new FileWriter(fileName));
+			logFile = new BufferedWriter(new FileWriter(fileName)); // TODO append?
 			logFile.write("epoch;hum;temp\n"); // Header
 			logFile.flush();
 		} catch (IOException ioe) {

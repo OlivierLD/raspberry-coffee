@@ -219,7 +219,7 @@ public class OLEDSSD1306_128x64_Sample {
 			sb.rectangle(1 + (i * 2), 1 + (i * 2), 127 - (i * 2), 63 - (i * 2));
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
-			//  try { Thread.sleep(100); } catch (Exception ex) {}
+	//  try { Thread.sleep(100); } catch (Exception ex) {}
 		}
 		if (onUserReturn) {
 			sb.dumpScreen();
