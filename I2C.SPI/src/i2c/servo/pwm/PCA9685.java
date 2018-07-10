@@ -154,7 +154,7 @@ public class PCA9685 {
 		final int CONTINUOUS_SERVO_CHANNEL = 0;
 		final int STANDARD_SERVO_CHANNEL   = 1;
 
-		for (int i = 0; false && i < 5; i++) {
+		for (int i = 0; true && i < 5; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMin);
@@ -184,12 +184,12 @@ public class PCA9685 {
 		for (int i = servoMin; i <= servoMax; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, i);
-			delay(100);
+			delay(10);
 		}
 		for (int i = servoMax; i >= servoMin; i--) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, i);
-			delay(100);
+			delay(10);
 		}
 
 		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
@@ -197,7 +197,7 @@ public class PCA9685 {
 		System.out.println("Done with the demo.");
 
 
-		if (false) {
+		if (true) {
 			System.out.println("Now, servoPulse");
 			servoBoard.setPWMFreq(250);
 			// The same with setServoPulse
