@@ -151,8 +151,8 @@ public class PCA9685 {
 		int servoMin = 122; // 130;   // was 150. Min pulse length out of 4096
 		int servoMax = 615;   // was 600. Max pulse length out of 4096
 
-		final int CONTINUOUS_SERVO_CHANNEL = 14;
-		final int STANDARD_SERVO_CHANNEL = 15;
+		final int CONTINUOUS_SERVO_CHANNEL = 0;
+		final int STANDARD_SERVO_CHANNEL   = 1;
 
 		for (int i = 0; false && i < 5; i++) {
 			System.out.println("i=" + i);
@@ -217,14 +217,27 @@ public class PCA9685 {
 		}
 	}
 
-	public static void main__(String... args) {
+	/**
+	 * Just for display
+	 * @param freq
+	 * @param targetPulse
+	 */
+	public static void servoValue(int freq, float targetPulse) {
 		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
-		pulseLength /= 250;  // 40..1000 Hz
+		pulseLength /= freq;  // 40..1000 Hz
 		pulseLength /= 4_096; // 12 bits of resolution
-		int pulse = (int) (1.5 * 1_000);
+		int pulse = (int) (targetPulse * 1_000); // 1.5 * 1000: 1.5 millisec
 		pulse /= pulseLength;
-		if (verbose) {
-			System.out.println(pulseLength + " us per bit, pulse:" + pulse);
-		}
+		System.out.println(String.format("At %d, pulse length: %f us per bit, for a taget pulse of %.02f\u00b5, servo value is %d", freq, pulseLength, targetPulse, pulse));
+	}
+
+	public static void main__(String... args) {
+		servoValue(60, 1.5f);
+		servoValue(60, 2f);
+		servoValue(60, 1f);
+
+		servoValue(50, 1.5f);
+		servoValue(50, 2f);
+		servoValue(50, 1f);
 	}
 }
