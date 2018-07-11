@@ -14,17 +14,21 @@ import static utils.TimeUtil.delay;
 public class PCA9685 {
 	public final static int PCA9685_ADDRESS = 0x40;
 
+	public final static int MODE1 = 0x00;
+	public final static int MODE2 = 0x01;
+
 	public final static int SUBADR1 = 0x02;
 	public final static int SUBADR2 = 0x03;
 	public final static int SUBADR3 = 0x04;
-	public final static int MODE1 = 0x00;
-	public final static int PRESCALE = 0xFE;
-	public final static int LED0_ON_L = 0x06;
-	public final static int LED0_ON_H = 0x07;
+
+	public final static int PRESCALE   = 0xFE;
+	public final static int LED0_ON_L  = 0x06;
+	public final static int LED0_ON_H  = 0x07;
 	public final static int LED0_OFF_L = 0x08;
 	public final static int LED0_OFF_H = 0x09;
-	public final static int ALL_LED_ON_L = 0xFA;
-	public final static int ALL_LED_ON_H = 0xFB;
+
+	public final static int ALL_LED_ON_L  = 0xFA;
+	public final static int ALL_LED_ON_H  = 0xFB;
 	public final static int ALL_LED_OFF_L = 0xFC;
 	public final static int ALL_LED_OFF_H = 0xFD;
 
@@ -141,7 +145,7 @@ public class PCA9685 {
 	 * 1ms pulse   | -90 deg  | FullSpeed backward
 	 * ------------+----------+-------------------
 	 */
-	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main__(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		int freq = 60;
 		if (args.length > 0) {
 			freq = Integer.parseInt(args[0]);
@@ -170,7 +174,6 @@ public class PCA9685 {
 		}
 		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
 		servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0);   // Stop the standard one
-		System.out.println("Done with the demo.");
 
 		for (int i = servoMin; i <= servoMax; i++) {
 			System.out.println("i=" + i);
@@ -199,8 +202,6 @@ public class PCA9685 {
 
 		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
 		servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0);   // Stop the standard one
-		System.out.println("Done with the demo.");
-
 
 		if (true) {
 			System.out.println("Now, servoPulse");
@@ -220,29 +221,83 @@ public class PCA9685 {
 
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
 		}
+
+		System.out.println("Done with the demo.");
 	}
+
+	private final static float CENTER_PULSE = 1.5f;
+	private final static float MIN_PULSE = 1f;
+	private final static float MAX_PULSE = 2f;
 
 	/**
 	 * Just for display
 	 * @param freq
 	 * @param targetPulse
 	 */
-	public static void servoValue(int freq, float targetPulse) {
-		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
-		pulseLength /= freq;  // 40..1000 Hz
-		pulseLength /= 4_096; // 12 bits of resolution
-		int pulse = (int) (targetPulse * 1_000); // 1.5 * 1000: 1.5 millisec
-		pulse /= pulseLength;
-		System.out.println(String.format("At %d, pulse length: %f us per bit, for a taget pulse of %.02f\u00b5, servo value is %d", freq, pulseLength, targetPulse, pulse));
+	public static void displayServoValue(int freq, float targetPulse) {
+		System.out.println(String.format("At %d Hz, for a target pulse of %.02f \u00b5s, servo value is %d", freq, targetPulse, getServoValue(freq, targetPulse)));
 	}
 
-	public static void main__(String... args) {
-		servoValue(60, 1.5f);
-		servoValue(60, 2f);
-		servoValue(60, 1f);
+	public static int getServoValue(int freq, float targetPulse) {
+		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
+		pulseLength /= freq;  // 40..1000 Hz
+		pulseLength /= 4_096; // 12 bits of resolution. 4096 = 2^12
+		int pulse = (int) (targetPulse * 1_000); // 1.5 * 1000: 1.5 millisec
+		pulse /= pulseLength;
+		return pulse;
+	}
 
-		servoValue(50, 1.5f);
-		servoValue(50, 2f);
-		servoValue(50, 1f);
+	public static int getServoMinValue(int freq) {
+		return getServoValue(freq, MIN_PULSE);
+	}
+	public static int getServoCenterValue(int freq) {
+		return getServoValue(freq, CENTER_PULSE);
+	}
+	public static int getServoMaxValue(int freq) {
+		return getServoValue(freq, MAX_PULSE);
+	}
+
+	public static void main___(String... args) {
+    int[] frequences = new int[] { 60, 50, 250, 1000 };
+
+    for (int freq : frequences) {
+	    System.out.println(String.format("Freq %d", freq));
+	    displayServoValue(freq, 1f);
+	    displayServoValue(freq, 1.5f);
+	    displayServoValue(freq, 2f);
+    }
+	}
+
+	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+		int freq = 60;
+		if (args.length > 0) {
+			freq = Integer.parseInt(args[0]);
+		}
+		PCA9685 servoBoard = new PCA9685();
+		servoBoard.setPWMFreq(freq); // Set frequency to 60 Hz
+		int servoMin = getServoMinValue(freq); // 130;   // was 150. Min pulse length out of 4096
+		int servoMax = getServoMaxValue(freq);   // was 600. Max pulse length out of 4096
+
+		final int CONTINUOUS_SERVO_CHANNEL = 0;
+		final int STANDARD_SERVO_CHANNEL = 1;
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0); // Stop the standard one
+			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
+		}));
+
+		for (int i = 0; true && i < 5; i++) {
+			System.out.println("i=" + i);
+			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
+			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMin);
+			delay(1_000);
+			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMax);
+			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMax);
+			delay(1_000);
+		}
+		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
+		servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0);   // Stop the standard one
+
+		System.out.println("Ouala");
 	}
 }
