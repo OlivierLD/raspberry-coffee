@@ -275,7 +275,7 @@ public class PCA9685 {
 		}
 		PCA9685 servoBoard = new PCA9685();
 		servoBoard.setPWMFreq(freq); // Set frequency to 60 Hz
-		int servoMin = getServoMinValue(freq); // 130;   // was 150. Min pulse length out of 4096
+		int servoMin = getServoMinValue(freq);   // 130;   // was 150. Min pulse length out of 4096
 		int servoMax = getServoMaxValue(freq);   // was 600. Max pulse length out of 4096
 
 		final int CONTINUOUS_SERVO_CHANNEL = 0;
@@ -286,6 +286,7 @@ public class PCA9685 {
 			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
 		}));
 
+		System.out.println(String.format("min: %d, max: %d", servoMin, servoMax));
 		for (int i = 0; true && i < 5; i++) {
 			System.out.println("i=" + i);
 			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
@@ -297,7 +298,23 @@ public class PCA9685 {
 		}
 		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
 		servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0);   // Stop the standard one
+		delay(1_000);
 
+		servoMin = 122;
+		servoMax = 615;
+		System.out.println(String.format("min: %d, max: %d", servoMin, servoMax));
+		for (int i = 0; true && i < 5; i++) {
+			System.out.println("i=" + i);
+			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMin);
+			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMin);
+			delay(1_000);
+			servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, servoMax);
+			servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, servoMax);
+			delay(1_000);
+		}
+
+		servoBoard.setPWM(CONTINUOUS_SERVO_CHANNEL, 0, 0); // Stop the continuous one
+		servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0);   // Stop the standard one
 		System.out.println("Ouala");
 	}
 }
