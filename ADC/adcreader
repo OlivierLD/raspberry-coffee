@@ -1,0 +1,7 @@
+#!/bin/bash
+echo Read an ADC
+#
+JAVA_OPTS=
+CP=./build/libs/ADC-1.0-all.jar
+#
+sudo java -cp $CP $JAVA_OPTS analogdigitalconverter.ADCReader

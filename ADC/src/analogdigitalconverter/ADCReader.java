@@ -20,12 +20,17 @@ public class ADCReader {
 	// 23: DOUT on the ADC is IN on the GPIO. ADC:Slave, GPIO:Master
 	// 24: DIN on the ADC, OUT on the GPIO. Same reason as above.
 	// SPI: Serial Peripheral Interface
-	private static Pin spiClk = RaspiPin.GPIO_01; // Pin #18, clock
-	private static Pin spiMiso = RaspiPin.GPIO_04; // Pin #23, data in.  MISO: Master In Slave Out
-	private static Pin spiMosi = RaspiPin.GPIO_05; // Pin #24, data out. MOSI: Master Out Slave In
-	private static Pin spiCs = RaspiPin.GPIO_06; // Pin #25, Chip Select
+	private final static Pin DEFAULT_CLK = RaspiPin.GPIO_01; // Pin #18, clock
+	private final static Pin DEFAULT_MISO = RaspiPin.GPIO_04; // Pin #23, data in.  MISO: Master In Slave Out
+	private final static Pin DEFAULT_MOSI = RaspiPin.GPIO_05; // Pin #24, data out. MOSI: Master Out Slave In
+	private final static Pin DEFAULT_CS = RaspiPin.GPIO_06; // Pin #25, Chip Select
 
-	private enum MCP3008_input_channels {
+	private Pin spiClk = null;
+	private Pin spiMiso = null;
+	private Pin spiMosi = null;
+	private Pin spiCs = null;
+
+	public enum MCP3008_input_channels {
 		CH0(0),
 		CH1(1),
 		CH2(2),
@@ -46,22 +51,85 @@ public class ADCReader {
 		}
 	}
 
-	private static int ADC_CHANNEL = MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
+	private GpioPinDigitalInput misoInput = null;
+	private GpioPinDigitalOutput mosiOutput = null;
+	private GpioPinDigitalOutput clockOutput = null;
+	private GpioPinDigitalOutput chipSelectOutput = null;
 
-	private static GpioPinDigitalInput misoInput = null;
-	private static GpioPinDigitalOutput mosiOutput = null;
-	private static GpioPinDigitalOutput clockOutput = null;
-	private static GpioPinDigitalOutput chipSelectOutput = null;
+	GpioController gpio = null;
 
+	public ADCReader() {
+		this(DEFAULT_MISO, DEFAULT_MOSI, DEFAULT_CLK, DEFAULT_CS);
+	}
+
+	public ADCReader(Pin miso, Pin mosi, Pin clock, Pin cs) {
+		this.spiMiso = miso;
+		this.spiMosi = mosi;
+		this.spiClk = clock;
+		this.spiCs = cs;
+
+		this.gpio = GpioFactory.getInstance();
+		this.mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
+		this.clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
+		this.chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.LOW);
+
+		this.misoInput = gpio.provisionDigitalInputPin(spiMiso, "MISO");
+	}
+
+	public int readAdc(int channel) {
+		this.chipSelectOutput.high();
+
+		this.clockOutput.low();
+		this.chipSelectOutput.low();
+
+		int adccommand = channel;
+		adccommand |= 0x18; // 0x18: 00011000
+		adccommand <<= 3;
+		// Send 5 bits: 8 - 3. 8 input channels on the MCP3008.
+		for (int i = 0; i < 5; i++) {
+			if ((adccommand & 0x80) != 0x0) { // 0x80 = 0&10000000
+				this.mosiOutput.high();
+			} else {
+				this.mosiOutput.low();
+			}
+			adccommand <<= 1;
+			this.clockOutput.high();
+			this.clockOutput.low();
+		}
+
+		int adcOut = 0;
+		for (int i = 0; i < 12; i++) { // Read in one empty bit, one null bit and 10 ADC bits
+			this.clockOutput.high();
+			this.clockOutput.low();
+			adcOut <<= 1;
+
+			if (this.misoInput.isHigh()) {
+//      System.out.println("    " + misoInput.getName() + " is high (i:" + i + ")");
+				// Shift one bit on the adcOut
+				adcOut |= 0x1;
+			}
+			if (DISPLAY_DIGIT) {
+				System.out.println("ADCOUT: 0x" + Integer.toString(adcOut, 16).toUpperCase() +
+						", 0&" + Integer.toString(adcOut, 2).toUpperCase());
+			}
+		}
+		this.chipSelectOutput.high();
+
+		adcOut >>= 1; // Drop first bit
+		return adcOut;
+	}
+
+	public void closeReader() {
+		if (this.gpio != null) {
+			this.gpio.shutdown();
+		}
+	}
+
+	// Example
 	private static boolean go = true;
-
 	public static void main(String... args) {
-		GpioController gpio = GpioFactory.getInstance();
-		mosiOutput = gpio.provisionDigitalOutputPin(spiMosi, "MOSI", PinState.LOW);
-		clockOutput = gpio.provisionDigitalOutputPin(spiClk, "CLK", PinState.LOW);
-		chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.LOW);
-
-		misoInput = gpio.provisionDigitalInputPin(spiMiso, "MISO");
+		ADCReader mcp3008 = new ADCReader();
+		int ADC_CHANNEL = MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Shutting down.");
@@ -71,7 +139,7 @@ public class ADCReader {
 		int tolerance = 5;
 		while (go) {
 			boolean trimPotChanged = false;
-			int adc = readAdc();
+			int adc = mcp3008.readAdc(ADC_CHANNEL);
 			int postAdjust = Math.abs(adc - lastRead);
 			if (postAdjust > tolerance) {
 				trimPotChanged = true;
@@ -91,51 +159,7 @@ public class ADCReader {
 			}
 		}
 		System.out.println("Bye...");
-		gpio.shutdown();
+		mcp3008.closeReader();
 	}
 
-	private static int readAdc() {
-		chipSelectOutput.high();
-
-		clockOutput.low();
-		chipSelectOutput.low();
-
-		int adccommand = ADC_CHANNEL;
-		adccommand |= 0x18; // 0x18: 00011000
-		adccommand <<= 3;
-		// Send 5 bits: 8 - 3. 8 input channels on the MCP3008.
-		for (int i = 0; i < 5; i++) //
-		{
-			if ((adccommand & 0x80) != 0x0) { // 0x80 = 0&10000000
-				mosiOutput.high();
-			} else {
-				mosiOutput.low();
-			}
-			adccommand <<= 1;
-			clockOutput.high();
-			clockOutput.low();
-		}
-
-		int adcOut = 0;
-		for (int i = 0; i < 12; i++) // Read in one empty bit, one null bit and 10 ADC bits
-		{
-			clockOutput.high();
-			clockOutput.low();
-			adcOut <<= 1;
-
-			if (misoInput.isHigh()) {
-//      System.out.println("    " + misoInput.getName() + " is high (i:" + i + ")");
-				// Shift one bit on the adcOut
-				adcOut |= 0x1;
-			}
-			if (DISPLAY_DIGIT) {
-				System.out.println("ADCOUT: 0x" + Integer.toString(adcOut, 16).toUpperCase() +
-						", 0&" + Integer.toString(adcOut, 2).toUpperCase());
-			}
-		}
-		chipSelectOutput.high();
-
-		adcOut >>= 1; // Drop first bit
-		return adcOut;
-	}
 }
