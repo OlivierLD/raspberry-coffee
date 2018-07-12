@@ -26,10 +26,10 @@ public class ADCReader {
 	private final static Pin DEFAULT_MOSI = RaspiPin.GPIO_12;
 	private final static Pin DEFAULT_CS   = RaspiPin.GPIO_10;
 
-	private Pin spiClk = null;
+	private Pin spiClk  = null;
 	private Pin spiMiso = null;
 	private Pin spiMosi = null;
-	private Pin spiCs = null;
+	private Pin spiCs   = null;
 
 	public enum MCP3008_input_channels {
 		CH0(0),
