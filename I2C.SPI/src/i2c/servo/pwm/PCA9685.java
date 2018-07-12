@@ -247,6 +247,11 @@ public class PCA9685 {
 		return pulse;
 	}
 
+	public static double getPulseFromValue(int freq, int value) {
+		double msPerPeriod = 1000.0 / (double)freq;
+		return msPerPeriod * ((double)value / 4096.0);
+	}
+
 	public static int getServoMinValue(int freq) {
 		return getServoValue(freq, MIN_PULSE);
 	}
@@ -257,18 +262,19 @@ public class PCA9685 {
 		return getServoValue(freq, MAX_PULSE);
 	}
 
-	public static void main___(String... args) {
+	public static void main(String... args) {
     int[] frequences = new int[] { 60, 50, 250, 1000 };
 
     for (int freq : frequences) {
-	    System.out.println(String.format("Freq %d", freq));
-	    displayServoValue(freq, 1f);
-	    displayServoValue(freq, 1.5f);
-	    displayServoValue(freq, 2f);
+	    System.out.println(String.format("For freq %d, min is %d, center is %d, max is %d", freq, getServoMinValue(freq), getServoCenterValue(freq), getServoMaxValue(freq)));
     }
+
+    int min = 122, max = 615;
+    int freq = 60;
+		System.out.println(String.format("At %d Hz, %d pulses %.04f ms, %d pulses %.04f ms", freq, min, getPulseFromValue(freq, min), max, getPulseFromValue(freq, max)));
 	}
 
-	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+	public static void main___(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		int freq = 60;
 		if (args.length > 0) {
 			freq = Integer.parseInt(args[0]);
@@ -300,6 +306,7 @@ public class PCA9685 {
 		servoBoard.setPWM(STANDARD_SERVO_CHANNEL, 0, 0);   // Stop the standard one
 		delay(1_000);
 
+		System.out.println("With hard coded values (Suitable for 60 Hz)");
 		servoMin = 122;
 		servoMax = 615;
 		System.out.println(String.format("min: %d, max: %d", servoMin, servoMax));
