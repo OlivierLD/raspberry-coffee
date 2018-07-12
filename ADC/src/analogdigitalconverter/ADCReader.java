@@ -15,7 +15,7 @@ import static utils.StringUtils.lpad;
  */
 public class ADCReader {
 	private final static boolean DISPLAY_DIGIT = false;
-	private final static boolean DEBUG = false;
+	private final static boolean DEBUG = "true".equals(System.getProperty("adc.verbose"));
 	// Note: "Mismatch" 23-24. The wiring says DOUT->#23, DIN->#24
 	// 23: DOUT on the ADC is IN on the GPIO. ADC:Slave, GPIO:Master
 	// 24: DIN on the ADC, OUT on the GPIO. Same reason as above.
@@ -149,7 +149,7 @@ public class ADCReader {
 			boolean trimPotChanged = false;
 			int adc = mcp3008.readAdc(channel);
 			int postAdjust = Math.abs(adc - lastRead);
-			if (postAdjust > tolerance) {
+			if (DEBUG || postAdjust > tolerance) {
 				trimPotChanged = true;
 				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 				if (DEBUG) {
