@@ -21,10 +21,10 @@ public class ADCReader {
 	// 23: DOUT on the ADC is IN on the GPIO. ADC:Slave, GPIO:Master
 	// 24: DIN on the ADC, OUT on the GPIO. Same reason as above.
 	// SPI: Serial Peripheral Interface
-	private final static Pin DEFAULT_CLK = RaspiPin.GPIO_01; // Pin #18, clock
-	private final static Pin DEFAULT_MISO = RaspiPin.GPIO_04; // Pin #23, data in.  MISO: Master In Slave Out
-	private final static Pin DEFAULT_MOSI = RaspiPin.GPIO_05; // Pin #24, data out. MOSI: Master Out Slave In
-	private final static Pin DEFAULT_CS = RaspiPin.GPIO_06; // Pin #25, Chip Select
+	private final static Pin DEFAULT_CLK  = RaspiPin.GPIO_14;
+	private final static Pin DEFAULT_MISO = RaspiPin.GPIO_13;
+	private final static Pin DEFAULT_MOSI = RaspiPin.GPIO_12;
+	private final static Pin DEFAULT_CS   = RaspiPin.GPIO_10;
 
 	private Pin spiClk = null;
 	private Pin spiMiso = null;
