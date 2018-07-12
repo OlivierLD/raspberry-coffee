@@ -153,14 +153,12 @@ public class ADCReader {
 			go = false;
 		}));
 		int lastRead = 0;
-		int tolerance = 5;
+		int tolerance = 1; // This is used for damping...
 		System.out.println("Reading.");
 		while (go) {
-			boolean trimPotChanged = false;
-			int adc = mcp3008.readAdc(channel);
+			int adc = mcp3008.readAdc(channel); // [0..1023]
 			int postAdjust = Math.abs(adc - lastRead);
 			if (DEBUG || postAdjust > tolerance) {
-				trimPotChanged = true;
 				int volume = (int) (adc / 10.23); // [0, 1023] ~ [0x0000, 0x03FF] ~ [0&0, 0&1111111111]
 				if (DEBUG) {
 					System.out.println("readAdc:" + Integer.toString(adc) +
