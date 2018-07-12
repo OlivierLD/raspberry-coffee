@@ -127,9 +127,16 @@ public class ADCReader {
 
 	// Example
 	private static boolean go = true;
-	public static void main(String... args) {
+	public static void main(String... args) throws Exception {
+
+		int channel = MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
+		if (args.length == 1) {
+			channel = Integer.parseInt(args[0]);
+			if (channel < 0 || channel > 7) {
+				throw new IllegalArgumentException("Channel must be in [0..7]");
+			}
+		}
 		ADCReader mcp3008 = new ADCReader();
-		int ADC_CHANNEL = MCP3008_input_channels.CH0.ch(); // Between 0 and 7, 8 channels on the MCP3008
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("Shutting down.");
@@ -137,9 +144,10 @@ public class ADCReader {
 		}));
 		int lastRead = 0;
 		int tolerance = 5;
+		System.out.println("Reading.");
 		while (go) {
 			boolean trimPotChanged = false;
-			int adc = mcp3008.readAdc(ADC_CHANNEL);
+			int adc = mcp3008.readAdc(channel);
 			int postAdjust = Math.abs(adc - lastRead);
 			if (postAdjust > tolerance) {
 				trimPotChanged = true;
