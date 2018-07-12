@@ -65,38 +65,46 @@ public class ServoAndPotentiometer {
 		return Math.round(min + ((deg + 90) * oneDeg));
 	}
 
-	/**
-	 * To test the servo - namely, the min & max values.
-	 *
-	 * @param args
-	 * @throws Exception
-	 */
+	private final static String ADC_CHANNEL = "--adc-channel:";
+	private final static String PCA9685_SERVO_PORT = "--servo-port:";
+
+	private static boolean loop = true;
 	public static void main(String... args) throws Exception {
-		int channel = 14;
-		if (args.length > 0) {
-			try {
-				channel = Integer.parseInt(args[0]);
-			} catch (Exception e) {
-				throw e;
+		int adcChannel = 0;
+		int servoPort  = 0;
+
+		for (String str : args) {
+			if (str.startsWith(ADC_CHANNEL)) {
+				String s = str.substring(ADC_CHANNEL.length());
+				adcChannel = Integer.parseInt(s);
+			} else if (str.startsWith(PCA9685_SERVO_PORT)) {
+				String s = str.substring(PCA9685_SERVO_PORT.length());
+				servoPort = Integer.parseInt(s);
 			}
 		}
-		System.out.println("Driving Servo on Channel " + channel);
-		ServoAndPotentiometer ss = new ServoAndPotentiometer(channel);
-		ADCReader mcp3008 = new ADCReader();
 
-		boolean loop = true;
-		System.out.println("Enter the angle at the prompt (-90..90), and q to quit.");
+		System.out.println("Driving Servo on Channel " + servoPort);
+		System.out.println("Reading MCP300 on Channel " + adcChannel);
+
+		ServoAndPotentiometer ss = new ServoAndPotentiometer(servoPort);
+		ADCReader mcp3008 = new ADCReader(); // with default wiring
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			loop = false;
+		}));
+
+		int lastRead = 0;
+		int tolerance = 1; // This is used for damping...
 
 		try {
-			ss.stop();
+			ss.stop(); // init
 			while (loop) {
 
-				String userInput = userInput("Angle (or Q) > ");
-				if ("Q".equals(userInput.toUpperCase())) {
-					loop = false;
-				} else {
+				int adc = mcp3008.readAdc(adcChannel); // [0..1023]
+				int potAdjust = Math.abs(adc - lastRead);
+				if (potAdjust > tolerance) {
 					try {
-						float angle = Float.parseFloat(userInput);
+						float angle = (adc * (180f / 1_023f)) - 90f;
 						ss.setAngle(angle);
 					} catch (Exception ex) {
 						ex.printStackTrace();
@@ -105,6 +113,7 @@ public class ServoAndPotentiometer {
 			}
 		} finally {
 			ss.stop();
+			mcp3008.closeReader();
 		}
 		System.out.println("Done.");
 	}
