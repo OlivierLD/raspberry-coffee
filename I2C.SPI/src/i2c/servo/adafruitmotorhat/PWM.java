@@ -127,7 +127,7 @@ public class PWM {
 	public void setPWMFreq(int freq) throws IOException {
 		// Sets the PWM frequency
 		double preScaleVal = 25_000_000.0; // 25MHz
-		preScaleVal /= 4096.0; // 12-bit
+		preScaleVal /= 4_096.0;            // 12-bit
 		preScaleVal /= (float) freq;
 		preScaleVal -= 1.0;
 		if (verbose) {

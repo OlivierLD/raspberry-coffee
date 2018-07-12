@@ -8,8 +8,30 @@ import java.io.IOException;
 
 import static utils.TimeUtil.delay;
 
-/*
- * Servo Driver
+/**
+ * Servo Driver, <a href="https://www.adafruit.com/product/815">https://www.adafruit.com/product/815</a>
+ * <br/>
+ * In theory, PWM servos support those values:
+ *<pre>
+ * Servo       | Standard |   Continuous
+ * ------------+----------+-------------------
+ * 1.5ms pulse |   0 deg  |     Stop
+ * 2ms pulse   |  90 deg  | FullSpeed forward
+ * 1ms pulse   | -90 deg  | FullSpeed backward
+ * ------------+----------+-------------------
+ *</pre>
+ * <b><i>BUT</i></b> this may vary a lot.<br/>
+ * Servos like <a href="https://www.adafruit.com/product/169">https://www.adafruit.com/product/169</a> or <a href="https://www.adafruit.com/product/155">https://www.adafruit.com/product/155</a>
+ * have min and max values like 0.5ms 2.5ms, which is quite different. Servos are analog devices...
+ *
+ * The best is probably to calibrate the servos before using them.<br/>
+ * For that, you can use some utility functions provided below:
+ * <ul>
+ *  <li> {@link PCA9685#getPulseFromValue(int, int)}</li>
+ *  <li> {@link PCA9685#getServoMinValue(int)}</li>
+ *  <li> {@link PCA9685#getServoCenterValue(int)}</li>
+ *  <li> {@link PCA9685#getServoMaxValue(int)}</li>
+ * </ul>
  */
 public class PCA9685 {
 	public final static int PCA9685_ADDRESS = 0x40;
@@ -68,7 +90,7 @@ public class PCA9685 {
 	public void setPWMFreq(int freq) {
 		this.freq = freq;
 		float preScaleVal = 25_000_000.0f; // 25MHz
-		preScaleVal /= 4_096.0;           // 4096: 12-bit
+		preScaleVal /= 4_096.0;            // 4096: 12-bit
 		preScaleVal /= freq;
 		preScaleVal -= 1.0;
 		if (verbose) {
@@ -127,8 +149,8 @@ public class PCA9685 {
 	 */
 	public void setServoPulse(int channel, float pulseMS) {
 		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
-		pulseLength /= this.freq;  // 40..1000 Hz
-		pulseLength /= 4_096;       // 12 bits of resolution
+		pulseLength /= this.freq;       // 40..1000 Hz
+		pulseLength /= 4_096;           // 12 bits of resolution
 		int pulse = (int) (pulseMS * 1_000);
 		pulse /= pulseLength;
 		if (verbose) {
@@ -137,23 +159,15 @@ public class PCA9685 {
 		this.setPWM(channel, 0, pulse);
 	}
 
-	/*
-	 * Servo       | Standard |   Continuous
-	 * ------------+----------+-------------------
-	 * 1.5ms pulse |   0 deg  |     Stop
-	 * 2ms pulse   |  90 deg  | FullSpeed forward
-	 * 1ms pulse   | -90 deg  | FullSpeed backward
-	 * ------------+----------+-------------------
-	 */
 	public static void main__(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		int freq = 60;
 		if (args.length > 0) {
 			freq = Integer.parseInt(args[0]);
 		}
 		PCA9685 servoBoard = new PCA9685();
-		servoBoard.setPWMFreq(freq); // Set frequency to 60 Hz
-		int servoMin = 122; // 130;   // was 150. Min pulse length out of 4096
-		int servoMax = 615;   // was 600. Max pulse length out of 4096
+		servoBoard.setPWMFreq(freq); // Set frequency to 60 Hz by default
+		int servoMin = 122; // min value for servos like https://www.adafruit.com/product/169 or https://www.adafruit.com/product/155
+		int servoMax = 615; // max value for servos like https://www.adafruit.com/product/169 or https://www.adafruit.com/product/155
 
 		final int CONTINUOUS_SERVO_CHANNEL = 0;
 		final int STANDARD_SERVO_CHANNEL   = 1;
@@ -225,6 +239,7 @@ public class PCA9685 {
 		System.out.println("Done with the demo.");
 	}
 
+	// "Theorical" values
 	private final static float CENTER_PULSE = 1.5f;
 	private final static float MIN_PULSE = 1f;
 	private final static float MAX_PULSE = 2f;
@@ -248,8 +263,8 @@ public class PCA9685 {
 	}
 
 	public static double getPulseFromValue(int freq, int value) {
-		double msPerPeriod = 1000.0 / (double)freq;
-		return msPerPeriod * ((double)value / 4096.0);
+		double msPerPeriod = 1_000.0 / (double)freq;
+		return msPerPeriod * ((double)value / 4_096.0);
 	}
 
 	public static int getServoMinValue(int freq) {
@@ -263,13 +278,13 @@ public class PCA9685 {
 	}
 
 	public static void main(String... args) {
-    int[] frequences = new int[] { 60, 50, 250, 1000 };
+    int[] frequences = new int[] { 60, 50, 250, 1_000 };
 
     for (int freq : frequences) {
 	    System.out.println(String.format("For freq %d, min is %d, center is %d, max is %d", freq, getServoMinValue(freq), getServoCenterValue(freq), getServoMaxValue(freq)));
     }
 
-    int min = 122, max = 615;
+    int min = 122, max = 615; // min and max values for servos like https://www.adafruit.com/product/169 or https://www.adafruit.com/product/155 at 60 Hz
     int freq = 60;
 		System.out.println(String.format("At %d Hz, %d pulses %.04f ms, %d pulses %.04f ms", freq, min, getPulseFromValue(freq, min), max, getPulseFromValue(freq, max)));
 	}
