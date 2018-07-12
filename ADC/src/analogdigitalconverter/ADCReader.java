@@ -7,6 +7,7 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import utils.PinUtil;
 
 import static utils.StringUtils.lpad;
 
@@ -74,6 +75,15 @@ public class ADCReader {
 		this.chipSelectOutput = gpio.provisionDigitalOutputPin(spiCs, "CS", PinState.LOW);
 
 		this.misoInput = gpio.provisionDigitalInputPin(spiMiso, "MISO");
+
+		if (DEBUG) {
+			String[] map = new String[4];
+			map[0] = String.valueOf(PinUtil.findByPin(spiMosi).pinNumber()) + ":" + "MOSI";
+			map[1] = String.valueOf(PinUtil.findByPin(spiMiso).pinNumber()) + ":" + "MISO";
+			map[2] = String.valueOf(PinUtil.findByPin(spiClk).pinNumber()) + ":" + "CLK";
+			map[3] = String.valueOf(PinUtil.findByPin(spiCs).pinNumber()) + ":" + "CS";
+			PinUtil.print(map);
+		}
 	}
 
 	public int readAdc(int channel) {
