@@ -31,6 +31,7 @@ import static utils.TimeUtil.delay;
  *  <li> {@link PCA9685#getServoMinValue(int)}</li>
  *  <li> {@link PCA9685#getServoCenterValue(int)}</li>
  *  <li> {@link PCA9685#getServoMaxValue(int)}</li>
+ *  <li> {@link PCA9685#getServoValueFromPulse(int, float)}</li>
  * </ul>
  */
 public class PCA9685 {
@@ -250,10 +251,10 @@ public class PCA9685 {
 	 * @param targetPulse
 	 */
 	public static void displayServoValue(int freq, float targetPulse) {
-		System.out.println(String.format("At %d Hz, for a target pulse of %.02f \u00b5s, servo value is %d", freq, targetPulse, getServoValue(freq, targetPulse)));
+		System.out.println(String.format("At %d Hz, for a target pulse of %.02f \u00b5s, servo value is %d", freq, targetPulse, getServoValueFromPulse(freq, targetPulse)));
 	}
 
-	public static int getServoValue(int freq, float targetPulse) {
+	public static int getServoValueFromPulse(int freq, float targetPulse) {
 		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
 		pulseLength /= freq;  // 40..1000 Hz
 		pulseLength /= 4_096; // 12 bits of resolution. 4096 = 2^12
@@ -268,13 +269,13 @@ public class PCA9685 {
 	}
 
 	public static int getServoMinValue(int freq) {
-		return getServoValue(freq, MIN_PULSE);
+		return getServoValueFromPulse(freq, MIN_PULSE);
 	}
 	public static int getServoCenterValue(int freq) {
-		return getServoValue(freq, CENTER_PULSE);
+		return getServoValueFromPulse(freq, CENTER_PULSE);
 	}
 	public static int getServoMaxValue(int freq) {
-		return getServoValue(freq, MAX_PULSE);
+		return getServoValueFromPulse(freq, MAX_PULSE);
 	}
 
 	public static void main(String... args) {
@@ -287,6 +288,10 @@ public class PCA9685 {
     int min = 122, max = 615; // min and max values for servos like https://www.adafruit.com/product/169 or https://www.adafruit.com/product/155 at 60 Hz
     int freq = 60;
 		System.out.println(String.format("At %d Hz, %d pulses %.04f ms, %d pulses %.04f ms", freq, min, getPulseFromValue(freq, min), max, getPulseFromValue(freq, max)));
+
+		int value_05 = getServoValueFromPulse(freq, 0.5f);
+		int value_25 = getServoValueFromPulse(freq, 2.5f);
+		System.out.println(String.format("At %d Hz, value for 0.5ms is %d, value for 2.5ms is %d", freq, value_05, value_25));
 	}
 
 	public static void main___(String... args) throws I2CFactory.UnsupportedBusNumberException {
