@@ -3,17 +3,12 @@ package raspisamples.servo;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Standard, using I2C and the PCA9685 servo board
  */
 public class StandardServo {
-	public static void waitfor(long howMuch) {
-		try {
-			Thread.sleep(howMuch);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
 
 	private int servo = -1;
 
@@ -71,8 +66,8 @@ public class StandardServo {
 	/**
 	 * To test the servo - namely, the min & max values.
 	 *
-	 * @param args
-	 * @throws Exception
+	 * @param args Servo number to test (int)
+	 * @throws Exception when something goes wrong, like an invalid servo number.
 	 */
 	public static void main(String... args) throws Exception {
 		int channel = 14;
@@ -87,41 +82,41 @@ public class StandardServo {
 		StandardServo ss = new StandardServo(channel);
 		try {
 			ss.stop();
-			waitfor(2_000);
+			delay(2_000);
 			System.out.println("Let's go, 1 by 1 (" + ss.servoMin + " to " + ss.servoMax + ")");
 			for (int i = ss.servoMin; i <= ss.servoMax; i++) {
 				System.out.println("i=" + i + ", " + (-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
 				ss.setPWM(i);
-				waitfor(10);
+				delay(10);
 			}
 			for (int i = ss.servoMax; i >= ss.servoMin; i--) {
 				System.out.println("i=" + i + ", " + (-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
 				ss.setPWM(i);
-				waitfor(10);
+				delay(10);
 			}
 			ss.stop();
-			waitfor(2_000);
+			delay(2_000);
 			System.out.println("Let's go, 1 deg by 1 deg, forward");
 			for (int i = ss.servoMin; i <= ss.servoMax; i += (ss.diff / 180)) {
 				System.out.println("i=" + i + ", " + Math.round(-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
 				ss.setPWM(i);
-				waitfor(10);
+				delay(10);
 			}
 			System.out.println("... backward");
 			for (int i = ss.servoMax; i >= ss.servoMin; i -= (ss.diff / 180)) {
 				System.out.println("i=" + i + ", " + Math.round(-90f + (((float) (i - ss.servoMin) / (float) ss.diff) * 180f)));
 				ss.setPWM(i);
-				waitfor(10);
+				delay(10);
 			}
 			ss.stop();
-			waitfor(2_000);
+			delay(2_000);
 
 			System.out.println("More randomly:");
 			float[] degValues = {-10, 0, -90, 45, -30, 90, 10, 20, 30, 40, 50, 60, 70, 80, 90, 0};
 			for (float f : degValues) {
 				System.out.println("In degrees:" + f);
 				ss.setAngle(f);
-				waitfor(1_500);
+				delay(1_500);
 			}
 		} finally {
 			ss.stop();

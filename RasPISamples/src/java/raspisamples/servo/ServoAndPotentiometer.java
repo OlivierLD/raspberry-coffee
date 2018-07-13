@@ -4,11 +4,14 @@ import analogdigitalconverter.ADCReader;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 
-import static utils.StaticUtil.userInput;
-
-/*
- * Standard, using I2C and the PCA9685 servo board
- * User interface (CLI).
+/**
+ * Standard servo, using I2C and the PCA9685 servo board
+ *
+ * Uses a linear potentiometer to drive a servo.
+ * <br/>
+ * Servos like <a href="https://www.adafruit.com/product/169">https://www.adafruit.com/product/169</a> or <a href="https://www.adafruit.com/product/155">https://www.adafruit.com/product/155</a>
+ * <br/>
+ * Pot like <a href="https://www.adafruit.com/product/3391">https://www.adafruit.com/product/3391</a>
  */
 public class ServoAndPotentiometer {
 
@@ -39,7 +42,6 @@ public class ServoAndPotentiometer {
 
 		this.servo = channel;
 		System.out.println("Channel " + channel + " all set. Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
-
 	}
 
 	public void setAngle(float f) {
@@ -73,6 +75,7 @@ public class ServoAndPotentiometer {
 		int adcChannel = 0;
 		int servoPort  = 0;
 
+		// User prms
 		for (String str : args) {
 			if (str.startsWith(ADC_CHANNEL)) {
 				String s = str.substring(ADC_CHANNEL.length());
@@ -99,7 +102,6 @@ public class ServoAndPotentiometer {
 		try {
 			ss.stop(); // init
 			while (loop) {
-
 				int adc = mcp3008.readAdc(adcChannel); // [0..1023]
 				int potAdjust = Math.abs(adc - lastRead);
 				if (potAdjust > tolerance) {
