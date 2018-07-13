@@ -55,7 +55,7 @@ public class PCA9685 {
 	public final static int ALL_LED_OFF_L = 0xFC;
 	public final static int ALL_LED_OFF_H = 0xFD;
 
-	private static boolean verbose = true;
+	private static boolean verbose = "true".equals(System.getProperty("pca9685.verbose"));
 	private int freq = 60;
 
 	private I2CBus bus;
