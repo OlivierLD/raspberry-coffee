@@ -40,21 +40,34 @@ public class InteractiveServo {
 			ex.printStackTrace();
 			System.exit(1);
 		}
+
+		String entryMethod = userInput("Entry method: T for Ticks (0..4095), P for Pulse (in ms) > ");
 		boolean keepGoing = true;
 		System.out.println("Enter 'quit' to exit.");
 		while (keepGoing) {
-			String s1 = userInput("pulse width in ticks  (0..4095) ? > ");
+			String s1 = userInput("T".equalsIgnoreCase(entryMethod) ? "pulse width in ticks (0..4095) ? > " : "Pulse in ms > ");
 			if ("QUIT".equalsIgnoreCase(s1)) {
 				keepGoing = false;
 			} else {
 				try {
-					int on = Integer.parseInt(s1);
-					if (on < 0 || on > 4_095) {
-						System.out.println("Values between 0 and 4095.");
+					if ("T".equalsIgnoreCase(entryMethod)) {
+						int on = Integer.parseInt(s1);
+						if (on < 0 || on > 4_095) {
+							System.out.println("Values between 0 and 4095.");
+						} else {
+							System.out.println("setPWM(" + servo + ", 0, " + on + ");");
+							servoBoard.setPWM(servo, 0, on);
+							System.out.println("-------------------");
+						}
 					} else {
-						System.out.println("setPWM(" + servo + ", 0, " + on + ");");
-						servoBoard.setPWM(servo, 0, on);
-						System.out.println("-------------------");
+						float pulseMS = Float.parseFloat(s1);
+						if (pulseMS < 0) {
+							System.out.println("Pulse must be positive.");
+						} else {
+							System.out.println("setServoPulse(" + servo + ", " + pulseMS + ")");
+							servoBoard.setServoPulse(servo, pulseMS);
+							System.out.println("-------------------");
+						}
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
