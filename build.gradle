@@ -41,6 +41,7 @@ dependencies {
   compile project(':JavaSoundDemo')
   compile project(':HanoiTower')
   compile project(':PlantWateringSystem')
+  compile project(':TensorFlow')
 }
 
 repositories {
