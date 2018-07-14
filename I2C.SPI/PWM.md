@@ -81,7 +81,7 @@ have values going between `0.5 ms` and `2.5 ms`.
 
 Before using them, servos should be calibrated. You can use the class `i2c.samples.IntercativeServo.java` can be used for that,
 you set the pulse values interactively, and you see what the servo is doing.
-```
+<pre>
 $> ./inter.servo
 Connected to bus. OK.
 Connected to device. OK.
@@ -94,27 +94,27 @@ Entry method: T for Ticks (0..4095), P for Pulse (in ms) > p
 Enter 'quit' to exit.
 Pulse in ms > 1.5
 setServoPulse(1, 1.5)
-4.069010416666667 ?s per bit, pulse:368
+4.0690 &mu;s per bit, pulse:369
 -------------------
 Pulse in ms > 0.5
 setServoPulse(1, 0.5)
-4.069010416666667 ?s per bit, pulse:122
+4.0690 &mu;s per bit, pulse:122
 -------------------
 Pulse in ms > 0.6
 setServoPulse(1, 0.6)
-4.069010416666667 ?s per bit, pulse:147
+4.0690 &mu;s per bit, pulse:147
 -------------------
 Pulse in ms > 2.4
 setServoPulse(1, 2.4)
-4.069010416666667 ?s per bit, pulse:589
+4.0690 &mu;s per bit, pulse:589
 -------------------
 Pulse in ms > 2.5
 setServoPulse(1, 2.5)
-4.069010416666667 ?s per bit, pulse:614
+4.0690 &mu;s per bit, pulse:614
 -------------------
 ... etc.
 
-```
+</pre>
 
 Once you have determined the appropriate min and max values, you also have the `int` values
 to feed the `setPWM` with.

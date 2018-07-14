@@ -66,6 +66,7 @@ setServoPulse(1, 2.7)
  */
 public class InteractiveServo {
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
+
 		PCA9685 servoBoard = new PCA9685();
 		int freq = 60;
 		String sFreq = userInput("freq (40-1000)  ? > ");
