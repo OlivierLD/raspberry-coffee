@@ -72,7 +72,6 @@ public class PCA9685 {
 			if (verbose) {
 				System.out.println("Connected to bus. OK.");
 			}
-
 			// Get the device itself
 			servoDriver = bus.getDevice(address);
 			if (verbose) {
@@ -102,7 +101,6 @@ public class PCA9685 {
 		if (verbose) {
 			System.out.println("Final pre-scale: " + preScale);
 		}
-
 		try {
 			byte oldmode = (byte) servoDriver.read(MODE1);
 			byte newmode = (byte) ((oldmode & 0x7F) | 0x10); // sleep
@@ -240,7 +238,7 @@ public class PCA9685 {
 		System.out.println("Done with the demo.");
 	}
 
-	// "Theorical" values
+	// "Theoretical" values
 	private final static float CENTER_PULSE = 1.5f;
 	private final static float MIN_PULSE = 1f;
 	private final static float MAX_PULSE = 2f;
@@ -254,6 +252,12 @@ public class PCA9685 {
 		System.out.println(String.format("At %d Hz, for a target pulse of %.02f \u00b5s, servo value is %d", freq, targetPulse, getServoValueFromPulse(freq, targetPulse)));
 	}
 
+	/**
+	 *
+	 * @param freq in Hz
+	 * @param targetPulse in ms
+	 * @return the value as an int
+	 */
 	public static int getServoValueFromPulse(int freq, float targetPulse) {
 		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
 		pulseLength /= freq;  // 40..1000 Hz
@@ -279,9 +283,9 @@ public class PCA9685 {
 	}
 
 	public static void main(String... args) {
-    int[] frequences = new int[] { 60, 50, 250, 1_000 };
+    int[] frequencies = new int[] { 60, 50, 250, 1_000 };
 
-    for (int freq : frequences) {
+    for (int freq : frequencies) {
 	    System.out.println(String.format("For freq %d, min is %d, center is %d, max is %d", freq, getServoMinValue(freq), getServoCenterValue(freq), getServoMaxValue(freq)));
     }
 

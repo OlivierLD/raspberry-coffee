@@ -49,6 +49,8 @@ ADS1015 and ADS1115. I<sup>2</sup>C ADCs.
 I<sup>2</sup>C 16-channel 12-bit PWM/Servo driver.
 [from Adafruit](https://www.adafruit.com/product/815)
 
+About servo calibration, read [this](./PWM.md).
+
 #### Adafruit Motor HAT
 I<sup>2</sup>C, DC and Stepper Motors
 [from Adafruit](https://www.adafruit.com/product/2348)

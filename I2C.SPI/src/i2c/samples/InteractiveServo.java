@@ -8,9 +8,61 @@ import java.io.InputStreamReader;
 
 import static utils.StaticUtil.userInput;
 
-/*
- * Two servos - one standard, one continous
+/**
  * Enter all the values from the command line, and see for yourself.
+ *
+ * Note:
+ * This class can be used to calibrate your servos before using them.
+ * Servos theoretically use PWM from 1 to 2ms, but it is not unusual
+ * to get servos using PWM from 0.5 to 2.5ms.
+ *
+ * This class can help to find the right calibration.
+ * Look at your servo, and enter the PWM values. Then see where the servo goes (standard servo).
+ * You need to find the extrema...
+ *
+ * Example:
+$> ./inter.servo
+Connected to bus. OK.
+Connected to device. OK.
+freq (40-1000)  ? > 60
+Setting PWM frequency to 60 Hz
+Estimated pre-scale: 100.72526
+Final pre-scale: 101.0
+Servo Channel (0-15) : 1
+Entry method: T for Ticks (0..4095), P for Pulse (in ms) > p
+Enter 'quit' to exit.
+Pulse in ms > 1.5
+setServoPulse(1, 1.5)
+4.069010416666667 ?s per bit, pulse:368
+-------------------
+Pulse in ms > 0.5
+setServoPulse(1, 0.5)
+4.069010416666667 ?s per bit, pulse:122
+-------------------
+Pulse in ms > 0.6
+setServoPulse(1, 0.6)
+4.069010416666667 ?s per bit, pulse:147
+-------------------
+Pulse in ms > 2.4
+setServoPulse(1, 2.4)
+4.069010416666667 ?s per bit, pulse:589
+-------------------
+Pulse in ms > 2.5
+setServoPulse(1, 2.5)
+4.069010416666667 ?s per bit, pulse:614
+-------------------
+Pulse in ms > 2.6
+setServoPulse(1, 2.6)
+4.069010416666667 ?s per bit, pulse:638
+-------------------
+Pulse in ms > 2.7
+setServoPulse(1, 2.7)
+4.069010416666667 ?s per bit, pulse:663
+-------------------
+ ...etc.
+ *
+ * In the session above, at 60 Hz, extrema values turned out to be 0.52 - 2.5, translated into 127 - 614.
+ *
  */
 public class InteractiveServo {
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException {
@@ -45,7 +97,7 @@ public class InteractiveServo {
 		boolean keepGoing = true;
 		System.out.println("Enter 'quit' to exit.");
 		while (keepGoing) {
-			String s1 = userInput("T".equalsIgnoreCase(entryMethod) ? "pulse width in ticks (0..4095) ? > " : "Pulse in ms > ");
+			String s1 = userInput("T".equalsIgnoreCase(entryMethod) ? "Pulse width in ticks (0..4095) ? > " : "Pulse in ms > ");
 			if ("QUIT".equalsIgnoreCase(s1)) {
 				keepGoing = false;
 			} else {

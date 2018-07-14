@@ -204,7 +204,6 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 
 	@Override
 	public void export(PinMode mode, PinState defaultState) {
-
 	}
 
 	@Override
@@ -254,12 +253,10 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 
 	@Override
 	public void addListener(GpioPinListener... listener) {
-
 	}
 
 	@Override
 	public void addListener(List<? extends GpioPinListener> listeners) {
-
 	}
 
 	@Override
@@ -269,17 +266,14 @@ public class GPIOPinAdapter implements GpioPinDigitalOutput {
 
 	@Override
 	public void removeListener(GpioPinListener... listener) {
-
 	}
 
 	@Override
 	public void removeListener(List<? extends GpioPinListener> listeners) {
-
 	}
 
 	@Override
 	public void removeAllListeners() {
-
 	}
 
 	@Override

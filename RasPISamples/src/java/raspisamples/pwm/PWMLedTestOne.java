@@ -6,6 +6,8 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
+import static utils.TimeUtil.delay;
+
 public class PWMLedTestOne {
 	public static void main(String... args)
 					throws InterruptedException {
@@ -64,7 +66,7 @@ public class PWMLedTestOne {
 				pin.pulse(pwmValueOn, true); // set second argument to 'true' use a blocking call
 				//    waitFor(pwmValueOn);
 				pin.low();
-				waitFor(threshold - pwmValueOn);
+				delay(threshold - pwmValueOn);
 			}
 //    Thread.sleep(500);
 		}
@@ -74,7 +76,7 @@ public class PWMLedTestOne {
 				pin.pulse(pwmValueOn, true); // set second argument to 'true' use a blocking call
 				//    waitFor(pwmValueOn);
 				pin.low();
-				waitFor(threshold - pwmValueOn);
+				delay(threshold - pwmValueOn);
 			}
 			//    Thread.sleep(500);
 		}
@@ -82,13 +84,5 @@ public class PWMLedTestOne {
 		// stop all GPIO activity/threads by shutting down the GPIO controller
 		// (this method will forcefully shutdown all GPIO monitoring threads and scheduled tasks)
 		gpio.shutdown();
-	}
-
-	private static void waitFor(long ms) {
-		try {
-			Thread.sleep(ms);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
 	}
 }
