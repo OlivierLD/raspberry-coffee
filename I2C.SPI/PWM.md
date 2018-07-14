@@ -48,12 +48,14 @@ between `0` and `4095`, corresponding to the pulse in milliseconds we want to si
 In the class `i2c.servo.pwm.PCA9685.java`, this is done in this method:
 ```java
 public static int getServoValueFromPulse(int freq, float targetPulse) {
-    double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
-    pulseLength /= freq;  // 40..1000 Hz
-    pulseLength /= 4_096; // 12 bits of resolution. 4096 = 2^12
-    int pulse = (int) (targetPulse * 1_000); // 1.5 * 1000: 1.5 millisec
-    pulse /= pulseLength;
-    return pulse;
+  double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
+  pulseLength /= freq;  // 40..1000 Hz
+  pulseLength /= 4_096; // 12 bits of resolution. 4096 = 2^12
+  int pulse = (int) Math.round((targetPulse * 1_000) / pulseLength); // in millisec
+  if (verbose) {
+    System.out.println(String.format("%.04f \u00b5s per bit, pulse: %d", pulseLength, pulse));
+  }
+  return pulse;
 }
 ```
 
@@ -114,7 +116,7 @@ setServoPulse(1, 2.5)
 
 ```
 
-Once you have determined the appropriate min and max value, you also have the `int` values
+Once you have determined the appropriate min and max values, you also have the `int` values
 to feed the `setPWM` with.
 
 ---

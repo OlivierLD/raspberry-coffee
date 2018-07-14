@@ -147,14 +147,7 @@ public class PCA9685 {
 	 * @param pulseMS in ms.
 	 */
 	public void setServoPulse(int channel, float pulseMS) {
-		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
-		pulseLength /= this.freq;       // 40..1000 Hz
-		pulseLength /= 4_096;           // 12 bits of resolution
-		int pulse = (int) (pulseMS * 1_000);
-		pulse /= pulseLength;
-		if (verbose) {
-			System.out.println(pulseLength + " \u00b5s per bit, pulse:" + pulse);
-		}
+		int pulse = getServoValueFromPulse(this.freq, pulseMS);
 		this.setPWM(channel, 0, pulse);
 	}
 
@@ -262,8 +255,10 @@ public class PCA9685 {
 		double pulseLength = 1_000_000; // 1s = 1,000,000 us per pulse. "us" is to be read "micro (mu) sec".
 		pulseLength /= freq;  // 40..1000 Hz
 		pulseLength /= 4_096; // 12 bits of resolution. 4096 = 2^12
-		int pulse = (int) (targetPulse * 1_000); // 1.5 * 1000: 1.5 millisec
-		pulse /= pulseLength;
+		int pulse = (int) Math.round((targetPulse * 1_000) / pulseLength); // in millisec
+		if (verbose) {
+			System.out.println(String.format("%.04f \u00b5s per bit, pulse: %d", pulseLength, pulse));
+		}
 		return pulse;
 	}
 
