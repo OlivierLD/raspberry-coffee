@@ -8,6 +8,8 @@ More consistent samples can be found in the RasPISamples project, where several 
 Do take a look, it also comes with a readme file.
 
 ---
+- [Main highlights](./Papers/README.md)
+---
 _Note:_
 Java code is compiled into `class` files, that run on a Java Virtual Machine (`JVM`). Java is not the only language that runs a `JVM`, this project also contains some small samples of
 other JVM-aware languages, invoking and using the features of this project.
