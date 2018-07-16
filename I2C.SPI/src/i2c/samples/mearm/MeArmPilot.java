@@ -26,8 +26,8 @@ import static utils.TimeUtil.delay;
  */
 public class MeArmPilot {
 	// Servo MG90S
-	private static int servoMin = 130; // -90 degrees at 60 Hertz
-	private static int servoMax = 675; //  90 degrees at 60 Hertz
+	private static int servoMin = 122; // 130; // -90 degrees at 60 Hertz
+	private static int servoMax = 615; // 675; //  90 degrees at 60 Hertz
 
 	private final static String DUMMY_HELP = "Duh...";
 
@@ -658,7 +658,15 @@ public class MeArmPilot {
 		executeCommand(cmd, 0);
 	}
 
+	public static void executeCommand(String cmd, boolean inItsOwnThread) {
+		executeCommand(cmd, 0, inItsOwnThread);
+	}
+
 	public static void executeCommand(String cmd, int lineNo) {
+		executeCommand(cmd, lineNo, false);
+	}
+
+	public static void executeCommand(String cmd, int lineNo, boolean inItsOwnThread) {
 		String[] cmdAndPrms = cmd.split(":");
 		Optional<Commands> commandOptional = Arrays.stream(Commands.values())
 				.filter(verb -> verb.command().equals(cmdAndPrms[0]))
@@ -687,8 +695,18 @@ public class MeArmPilot {
 
 			Consumer<CommandWithArgs> processor = command.processor();
 			if (processor != null) {
-				CommandWithArgs cna = new CommandWithArgs(cmd, command.command(), prms);
-				processor.accept(cna);
+				final String[] _prms = prms;
+				Runnable runnable = () -> {
+					CommandWithArgs cna = new CommandWithArgs(cmd, command.command(), _prms);
+					processor.accept(cna);
+				};
+				if (inItsOwnThread) {
+					// TODO might deserve some tweaks, if the servo is busy (queued requests?)
+					Thread thread = new Thread(runnable);
+					thread.start();
+				} else {
+					runnable.run();
+				}
 			} else {
 				System.out.println(String.format(">>> %s >>> null.", command.command()));
 			}

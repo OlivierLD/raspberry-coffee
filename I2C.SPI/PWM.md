@@ -58,6 +58,9 @@ public static int getServoValueFromPulse(int freq, float targetPulse) {
   return pulse;
 }
 ```
+The cycle length - in ms - obviously depends on the frequency.
+
+The pulse required for the servo to react is emitted once per cycle.
 
 ##### Example
 As an example, let us calculate for a `60 Hz` frequency the `pulse` value to send to `setPWM(channel, 0, pulse);`
