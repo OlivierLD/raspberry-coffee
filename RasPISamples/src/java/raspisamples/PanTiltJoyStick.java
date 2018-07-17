@@ -8,6 +8,8 @@ import raspisamples.adc.JoyStickClient;
 
 import raspisamples.servo.StandardServo;
 
+import static utils.TimeUtil.delay;
+
 /**
  * +------------------------------+
  * | JoyStick + MCP3008 + PCA9685 |
@@ -106,7 +108,7 @@ public class PanTiltJoyStick {
 		ssUD.setAngle(0f);
 		ssLR.setAngle(0f);
 
-		StandardServo.waitfor(2_000);
+		delay(2_000);
 
 		JoyStickClient jsc = new JoyStickClient() {
 			@Override
@@ -129,7 +131,7 @@ public class PanTiltJoyStick {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			ssUD.setAngle(0f);
 			ssLR.setAngle(0f);
-			StandardServo.waitfor(500);
+			delay(500);
 			ssUD.stop();
 			ssLR.stop();
 			System.out.println("\nBye (Ctrl+C)");
@@ -142,7 +144,7 @@ public class PanTiltJoyStick {
 		} finally {
 			ssUD.setAngle(0f);
 			ssLR.setAngle(0f);
-			StandardServo.waitfor(500);
+			delay(500);
 			ssUD.stop();
 			ssLR.stop();
 			System.out.println("Bye");

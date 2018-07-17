@@ -13,11 +13,11 @@ import static utils.TimeUtil.delay;
  * <br/>
  * In theory, PWM servos support those values:
  *<pre>
- * Servo       | Standard |   Continuous
+ * Servo Pulse | Standard |   Continuous
  * ------------+----------+-------------------
- * 1.5ms pulse |   0 deg  |     Stop
- * 2ms pulse   |  90 deg  | FullSpeed forward
- * 1ms pulse   | -90 deg  | FullSpeed backward
+ *       1.5ms |   0 deg  |     Stop
+ *       2.0ms |  90 deg  | FullSpeed forward
+ *       1.0ms | -90 deg  | FullSpeed backward
  * ------------+----------+-------------------
  *</pre>
  * <b><i>BUT</i></b> this may vary a lot.<br/>

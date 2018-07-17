@@ -4,6 +4,8 @@ import java.io.InputStream;
 
 import raspisamples.servo.StandardServo;
 
+import static utils.TimeUtil.delay;
+
 /*
  * Driven by keyboard entries.
  * 2 Servos (UP/LR)
@@ -22,7 +24,7 @@ public class PanTilt {
 		ssUD.setAngle(0f);
 		ssLR.setAngle(0f);
 
-		StandardServo.waitfor(2_000);
+		delay(2_000);
 
 		InputStream in = System.in;
 		boolean go = true;
@@ -61,7 +63,7 @@ public class PanTilt {
 		// Reset to 0,0 before shutting down.
 		ssUD.setAngle(0f);
 		ssLR.setAngle(0f);
-		StandardServo.waitfor(2_000);
+		delay(2_000);
 		ssUD.stop();
 		ssLR.stop();
 		System.out.println("Bye");

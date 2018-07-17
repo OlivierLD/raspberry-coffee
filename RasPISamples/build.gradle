@@ -2,7 +2,7 @@
 
 //buildscript {
 //    ext.kotlin_version = '1.0.0'
-//    ext.kotlin_version = '1.1.51'
+//    ext.kotlin_version = '1.2.41'
 //  repositories {
 //    mavenCentral()
 ////  maven { url "https://plugins.gradle.org/m2/" }
@@ -16,7 +16,7 @@
 //plugins {
 //  id 'java'
 //  id 'scala'
-//  id "org.jetbrains.kotlin.jvm" version "1.1.51"
+//  id "org.jetbrains.kotlin.jvm" version "1.2.41"
 //  id 'maven'
 //  id 'com.github.johnrengelman.shadow' version '2.0.1'
 //  id 'groovy'
@@ -25,7 +25,7 @@
 //}
 
 buildscript {
-  ext.kotlin_version = '1.1.51'
+  ext.kotlin_version = '1.2.41'
   ext.shadowVersion='1.2.3'
   repositories {
     mavenCentral()
