@@ -577,7 +577,7 @@ public class HTTPServer {
 								}
 								sendResponse(response, out);
 							} else {
-								if (requestManagers != null) {  // Manage it as a REST Request.
+								if (requestManagers != null) {  // Manage it as a REST Request
 									boolean unManagedRequest = true;
 									synchronized (requestManagers) {
 										for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
@@ -599,9 +599,25 @@ public class HTTPServer {
 										Response response = new Response(request.getProtocol(), Response.NOT_IMPLEMENTED);
 										sendResponse(response, out);
 									}
+								} else {
+									if (verbose) {
+										HTTPContext.getInstance().getLogger().info(">>> REST Request and no RequestManager. Proxy? <<<");
+									}
+									// TODO Implement a 'proxy' option (need all the request, and headers)
+									// An HTTPClient makes the received request, and sends back the response
+									if ("GET".equals(request.getVerb())) {
+										String resp = HTTPClient.doGet(request.getPath(), request.getHeaders());
+										System.out.println("Response:" + resp);
+										// TODO Tweak that (headers, mime type. ...)
+										Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+										String content = resp;
+										RESTProcessorUtil.generateResponseHeaders(response, "application/json", content.length());
+										response.setPayload(content.getBytes());
+										sendResponse(response, out);
+									}
 								}
 							}
-						} else {
+						} else { // Specific. Is that a GPSd request?
 							if (payload != null && payload.length() > 0 && payload.startsWith("?WATCH=")) { // GPSd ?  ?WATCH={...}; ?POLL; ?DEVICE;
 								System.out.println(String.format(">>>>>>>> GPSd: [%s]", payload)); // This is the first embryo of a GPSd implementation...
 								String json = payload.substring("?WATCH=".length());
@@ -618,8 +634,9 @@ public class HTTPServer {
 						out.close();
 						in.close();
 						client.close();
-						if (okToStop)
+						if (okToStop) {
 							stopRunning();
+						}
 					} // while (isRunning())
 					ss.close();
 				} catch (Exception e) {
@@ -748,7 +765,6 @@ public class HTTPServer {
 	 * Called before shutting down.
 	 */
 	public void onExit() {
-
 	}
 
 	private static Thread waiter = null;
@@ -765,7 +781,8 @@ public class HTTPServer {
 					synchronized (this) {
 						try {
 							this.wait();
-						} catch (Exception ex) {
+						} catch (InterruptedException ex) {
+							Thread.currentThread().interrupt();
 						}
 					}
 				}
