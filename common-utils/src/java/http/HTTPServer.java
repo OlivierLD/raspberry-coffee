@@ -3,6 +3,7 @@ package http;
 import com.google.gson.Gson;
 import http.client.HTTPClient;
 import utils.DumpUtil;
+import utils.StringUtils;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -603,17 +604,40 @@ public class HTTPServer {
 									if (verbose) {
 										HTTPContext.getInstance().getLogger().info(">>> REST Request and no RequestManager. Proxy? <<<");
 									}
-									// TODO Implement a 'proxy' option (need all the request, and headers)
+									// TODO Implement a 'proxy' option ?
 									// An HTTPClient makes the received request, and sends back the response
-									if ("GET".equals(request.getVerb())) {
-										String resp = HTTPClient.doGet(request.getPath(), request.getHeaders());
-										System.out.println("Response:" + resp);
-										// TODO Tweak that (headers, mime type. ...)
-										Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-										String content = resp;
-										RESTProcessorUtil.generateResponseHeaders(response, "application/json", content.length());
-										response.setPayload(content.getBytes());
-										sendResponse(response, out);
+									Response response = HTTPClient.doRequest(request);
+									if (verbose) { // Dump response elements
+										System.out.println();
+										final int PAD = 72;
+										String rCode = String.format("%sResponse code: %d", StringUtils.lpad("", PAD), response.getStatus());
+										System.out.println(rCode);
+								//	DumpUtil.displayDualDump(rCode, PAD);
+
+										if (response.getHeaders() != null) {
+											Map<String, String> respHeaders = response.getHeaders();
+											respHeaders.keySet().forEach(k -> DumpUtil.displayDualDump(k + ": " + respHeaders.get(k), PAD));
+											System.out.println();
+										}
+										if (response.getPayload() != null) {
+											String responsePayload = new String(response.getPayload()); // Wow! Careful with that...
+											DumpUtil.displayDualDump(responsePayload, PAD);
+											System.out.println();
+										}
+									}
+									sendResponse(response, out);
+
+									if (false) { // Save it for later
+										if ("GET".equals(request.getVerb())) {
+											String resp = HTTPClient.doGet(request.getPath(), request.getHeaders());
+											System.out.println("Response:" + resp);
+											// TODO Tweak that (headers, mime type. ...)
+											Response response_ = new Response(request.getProtocol(), Response.STATUS_OK);
+											String content = resp;
+											RESTProcessorUtil.generateResponseHeaders(response_, "application/json", content.length());
+											response.setPayload(content.getBytes());
+											sendResponse(response_, out);
+										}
 									}
 								}
 							}

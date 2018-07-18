@@ -14,21 +14,41 @@ public class DumpUtil {
 		displayDualDump(str, null);
 	}
 
+	public static void displayDualDump(String str, int lpad) {
+		displayDualDump(str.getBytes(), null, lpad);
+	}
+
 	public static void displayDualDump(String str, PrintStream ps) {
-		displayDualDump(str.getBytes(), ps);
+		displayDualDump(str.getBytes(), ps, 0);
 	}
 
 	public static void displayDualDump(byte[] ba, PrintStream ps) {
+		displayDualDump(ba, ps, 0);
+	}
+
+	public static void displayDualDump(byte[] ba, PrintStream ps, int lpad) {
 		PrintStream out = (ps != null ? ps : System.out);
-		String[] sa = DumpUtil.dualDump(ba);
+		String[] sa = DumpUtil.dualDump(ba, lpad);
 		if (sa != null) {
-			Arrays.stream(sa).forEach(str -> out.println("\t" + str));
+			Arrays.stream(sa).forEach(str -> out.println(String.format("%s%s", lpad == 0 ? "\t" : pad(lpad), str)));
 		}
 	}
 
 	public static String[] dualDump(String str) {
 		byte[] ba = str.getBytes();
 		return dualDump(ba);
+	}
+
+	private static String pad(int len) {
+		String pad = "";
+		if (len > 0) {
+			StringBuffer sb = new StringBuffer();
+			for (int i=0; i<len; i++) {
+				sb.append(" ");
+			}
+			pad = sb.toString();
+		}
+		return pad;
 	}
 
 	private static String separator() {
@@ -48,7 +68,10 @@ public class DumpUtil {
 	 * @see LINE_LEN member
 	 */
 	public static String[] dualDump(byte[] ba) {
+		return dualDump(ba, 0);
+	}
 
+	public static String[] dualDump(byte[] ba, int lpad) {
 		if (ba == null || ba.length == 0) {
 			return new String[0];
 		}

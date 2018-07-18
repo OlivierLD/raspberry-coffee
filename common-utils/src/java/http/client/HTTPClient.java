@@ -1,5 +1,7 @@
 package http.client;
 
+import http.HTTPServer;
+
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.IOException;
@@ -10,7 +12,11 @@ import java.net.HttpURLConnection;
 import java.net.SocketException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Very limited Java HTTP Client, just suitable for what is
@@ -71,6 +77,46 @@ public class HTTPClient {
 		return getContent;
 	}
 
+	public static HTTPServer.Response doRequest(HTTPServer.Request request) throws Exception {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		URL url = new URL(request.getPath());
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod(request.getVerb());
+		for (String h : request.getHeaders().keySet()) {
+			conn.setRequestProperty(h, request.getHeaders().get(h));
+		}
+		conn.setUseCaches(false);
+		if (!"GET".equals(request.getVerb())) { // TODO May need tweaks
+			conn.setDoOutput(true);
+			OutputStream os = conn.getOutputStream();
+			os.write(request.getContent());
+			os.flush();
+			os.close();
+		}
+		response.setStatus(conn.getResponseCode());
+
+		Map<String, List<String>> headerFields = conn.getHeaderFields();
+		Map<String, String> map = new HashMap<>();
+		headerFields.keySet().forEach(key -> {
+			map.put(key, headerFields.get(key).stream().collect(Collectors.joining(",")));
+		});
+		response.setHeaders(map);
+
+		// Response payload
+		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+		StringBuffer sb = new StringBuffer();
+		String output;
+//	System.out.println("Output from Server .... \n");
+		while ((output = br.readLine()) != null) {
+//		System.out.println(output);
+			sb.append(output);
+		}
+		response.setPayload(sb.toString().getBytes());
+		conn.disconnect();
+
+		return response;
+	}
+
 	public static HTTPResponse doPost(String urlStr, Map<String, String> headers, String payload) throws Exception {
 		int responseCode = 0;
 		URL url = new URL(urlStr);
@@ -82,7 +128,7 @@ public class HTTPClient {
 		for (String h : headers.keySet()) {
 			conn.setRequestProperty(h, headers.get(h));
 		}
-		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("Content-Type", "application/json"); // Uhu ?
 		conn.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes().length));
 		// conn.setRequestProperty("Content-Language", "en-US");
 		conn.setUseCaches(false);
