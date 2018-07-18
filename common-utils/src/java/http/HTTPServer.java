@@ -613,32 +613,27 @@ public class HTTPServer {
 										String rCode = String.format("%sResponse code: %d", StringUtils.lpad("", PAD), response.getStatus());
 										System.out.println(rCode);
 								//	DumpUtil.displayDualDump(rCode, PAD);
-
+										// TODO an option for verbose: simple output, or dual dump
 										if (response.getHeaders() != null) {
 											Map<String, String> respHeaders = response.getHeaders();
 											respHeaders.keySet().forEach(k -> DumpUtil.displayDualDump(k + ": " + respHeaders.get(k), PAD));
 											System.out.println();
 										}
 										if (response.getPayload() != null) {
-											String responsePayload = new String(response.getPayload()); // Wow! Careful with that...
-											DumpUtil.displayDualDump(responsePayload, PAD);
-											System.out.println();
+											if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null && isText(response.getHeaders().get("Content-Type"))) {
+												String responsePayload = new String(response.getPayload()); // Wow! Careful with that... Chek the mime type
+												DumpUtil.displayDualDump(responsePayload, PAD);
+												System.out.println();
+											} else {
+												String mimeType = "-none-";
+												if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null) {
+													mimeType = response.getHeaders().get("Content-Type");
+												}
+												System.out.println(String.format("... No Content-Type, or not text? [%s]", mimeType));
+											}
 										}
 									}
-									sendResponse(response, out);
-
-									if (false) { // Save it for later
-										if ("GET".equals(request.getVerb())) {
-											String resp = HTTPClient.doGet(request.getPath(), request.getHeaders());
-											System.out.println("Response:" + resp);
-											// TODO Tweak that (headers, mime type. ...)
-											Response response_ = new Response(request.getProtocol(), Response.STATUS_OK);
-											String content = resp;
-											RESTProcessorUtil.generateResponseHeaders(response_, "application/json", content.length());
-											response.setPayload(content.getBytes());
-											sendResponse(response_, out);
-										}
-									}
+									sendResponse(response, out); // BAck to caller
 								}
 							}
 						} else { // Specific. Is that a GPSd request?
@@ -744,6 +739,8 @@ public class HTTPServer {
 			contentType = "audio/wav";
 		} else if (f.endsWith(".pdf")) {
 			contentType = "application/pdf";
+		} else if (f.endsWith(".json")) {
+			contentType = "application/json";
 		} else if (f.endsWith(".ttf")) {
 			contentType = "application/x-font-ttf";
 		} else {
@@ -752,6 +749,15 @@ public class HTTPServer {
 					));
 		}
 		return contentType;
+	}
+
+	private boolean isText(String mimeType) { // TODO tweak that one
+		if (mimeType.startsWith("text/") ||
+				mimeType.contains("json") ||
+				mimeType.contains("svg+xml")) {
+			return true;
+		}
+		return false;
 	}
 
 	private void sendResponse(Response response, OutputStream os) {
