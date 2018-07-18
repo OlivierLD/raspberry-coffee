@@ -42,6 +42,7 @@ public class CamServer {
 					}
 				}
 			};
+			newHttpServer.startServer();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

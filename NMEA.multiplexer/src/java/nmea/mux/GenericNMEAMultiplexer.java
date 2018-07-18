@@ -185,6 +185,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 	public void startAdminServer(int port) {
 		try {
 			this.adminServer = new HTTPServer(port, this);
+			this.adminServer.startServer();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

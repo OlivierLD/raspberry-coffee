@@ -1554,6 +1554,7 @@ public class SunFlower implements RESTRequestManager {
 	public void startHttpServer(int port) {
 		try {
 			this.httpServer = new HTTPServer(port, this);
+			this.httpServer.startServer();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

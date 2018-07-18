@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Function;
 import java.util.logging.Level;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -48,11 +47,13 @@ import java.util.stream.Collectors;
  * </p>
  */
 public class HTTPServer {
-	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
-	private boolean verboseDump = "true".equals(System.getProperty("http.verbose.dump", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private static boolean verboseDump = "true".equals(System.getProperty("http.verbose.dump", "false"));
 	private int port = -1;
 
 	private Thread httpListenerThread;
+
+	private Function<HTTPServer.Request, HTTPServer.Response> proxyFunction = null;
 
 	public static class Request {
 		public final static List<String> VERBS = Arrays.asList(
@@ -379,19 +380,35 @@ public class HTTPServer {
 	}
 
 	public HTTPServer() throws Exception {
-		this(defaultPort, null, new Properties());
+		this(defaultPort, null, new Properties(), false);
+	}
+
+	public HTTPServer(boolean startImmediatly) throws Exception {
+		this(defaultPort, null, new Properties(), startImmediatly);
 	}
 
 	public HTTPServer(int port) throws Exception {
-		this(port, null, new Properties());
+		this(port, null, new Properties(), false);
+	}
+
+	public HTTPServer(int port, boolean startImmediatly) throws Exception {
+		this(port, null, new Properties(), startImmediatly);
 	}
 
 	public HTTPServer(Properties properties) throws Exception {
-		this(defaultPort, null, properties);
+		this(defaultPort, null, properties, false);
+	}
+
+	public HTTPServer(Properties properties, boolean startImmediatly) throws Exception {
+		this(defaultPort, null, properties, startImmediatly);
 	}
 
 	public HTTPServer(RESTRequestManager requestManager) throws Exception {
-		this(defaultPort, requestManager, new Properties());
+		this(defaultPort, requestManager, new Properties(), false);
+	}
+
+	public HTTPServer(RESTRequestManager requestManager, boolean startImmediatly) throws Exception {
+		this(defaultPort, requestManager, new Properties(), startImmediatly);
 	}
 
 	/**
@@ -401,7 +418,11 @@ public class HTTPServer {
 	 * @throws Exception
 	 */
 	public HTTPServer(int port, RESTRequestManager requestManager) throws Exception {
-		this(port, requestManager, new Properties());
+		this(port, requestManager, new Properties(), false);
+	}
+
+	public HTTPServer(int port, RESTRequestManager requestManager, boolean startImmediatly) throws Exception {
+		this(port, requestManager, new Properties(), startImmediatly);
 	}
 
 	/**
@@ -412,7 +433,7 @@ public class HTTPServer {
 	 *                   Defaulted to "/web/". Example: "/web/,/admin/docs/,/static/".
 	 * @throws Exception
 	 */
-	public HTTPServer(int port, RESTRequestManager requestManager, Properties properties) throws Exception {
+	public HTTPServer(int port, RESTRequestManager requestManager, Properties properties, boolean startImmediatly) throws Exception {
 		this.port = port;
 		if (properties == null) {
 			throw new RuntimeException("Properties parameter should not be null");
@@ -492,12 +513,12 @@ public class HTTPServer {
 //								System.out.println("======================");
 								if (!inPayload) {
 									if (lineAvailable) {
-										if (verbose) {
+										if (verboseDump) {
 //							      System.out.println("HTTP Request line : " + line);
 											DumpUtil.displayDualDump(line);
 											System.out.println(); // Blank between lines
 										}
-										if (verboseDump) {
+										if (verbose) {
 											System.out.println(line);
 										}
 										if (request != null && line.length() == 0) {
@@ -610,45 +631,11 @@ public class HTTPServer {
 									if (verbose) {
 										HTTPContext.getInstance().getLogger().info(">>> REST Request and no RequestManager. Proxy? <<<");
 									}
-									// TODO Implement a 'proxy' option ?
-									// An HTTPClient makes the received request, and sends back the response
-									Response response = HTTPClient.doRequest(request);
-									if (verbose || verboseDump) { // Dump response elements
-										System.out.println();
-										final int PAD = 72;
-										String rCode = String.format("%sResponse code: %d", StringUtils.lpad("", PAD), response.getStatus());
-										System.out.println(rCode);
-								//	DumpUtil.displayDualDump(rCode, PAD);
-										if (response.getHeaders() != null) {
-											Map<String, String> respHeaders = response.getHeaders();
-											if (verboseDump) {
-												respHeaders.keySet().forEach(k -> DumpUtil.displayDualDump(k + ": " + respHeaders.get(k), PAD));
-												System.out.println();
-											}
-											if (verbose) {
-												respHeaders.keySet().forEach(k -> System.out.println(String.format("%s %d: %s", StringUtils.lpad("", PAD), k, respHeaders.get(k))));
-											}
-										}
-										if (response.getPayload() != null) {
-											if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null && isText(response.getHeaders().get("Content-Type"))) {
-												String responsePayload = new String(response.getPayload()); // Wow! Careful with that... Chek the mime type
-												if (verboseDump) {
-													DumpUtil.displayDualDump(responsePayload, PAD);
-													System.out.println();
-												}
-												if (verbose) {
-													System.out.println(String.format("", StringUtils.lpad("%s %s", PAD), responsePayload));
-												}
-											} else {
-												String mimeType = "-none-";
-												if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null) {
-													mimeType = response.getHeaders().get("Content-Type");
-												}
-												System.out.println(String.format("... No Content-Type, or not text? [%s]", mimeType));
-											}
-										}
+									// explicit 'proxy' implementation
+									if (proxyFunction != null) {
+										Response response = proxyFunction.apply(request);
+										sendResponse(response, out); // Back to caller
 									}
-									sendResponse(response, out); // Back to caller
 								}
 							}
 						} else { // Specific. Is that a GPSd request?
@@ -707,11 +694,21 @@ public class HTTPServer {
 			}
 			System.out.println("Dead.");
 		}));
+		if (startImmediatly) {
+			this.startServer();
+		}
+	}
+
+	public void startServer() {
 		httpListenerThread.start();
 	}
 
 	public Thread getHttpListenerThread() {
 		return this.httpListenerThread;
+	}
+
+	public void setProxyFunction(Function<HTTPServer.Request, HTTPServer.Response> proxyFunction) {
+		this.proxyFunction = proxyFunction;
 	}
 
 	private boolean pathIsStatic(String path) {
@@ -766,7 +763,7 @@ public class HTTPServer {
 		return contentType;
 	}
 
-	private boolean isText(String mimeType) { // TODO tweak that one
+	private static boolean isText(String mimeType) { // May require some tweaks...
 		if (mimeType.startsWith("text/") ||
 				mimeType.contains("json") ||
 				mimeType.contains("xml") ||
@@ -807,6 +804,58 @@ public class HTTPServer {
 	}
 
 	/**
+	 * Default proxy implementation.
+	 * Does only some logging
+	 *
+	 * @param request
+	 * @return
+	 */
+	protected static Response defaultProxy(Request request) {
+		// An HTTPClient makes the received request, and sends back the response
+		Response response = null;
+		try {
+			response = HTTPClient.doRequest(request);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
+		if (verbose || verboseDump) { // Dump response elements
+			System.out.println();
+			final int PAD = 72;
+			String rCode = String.format("%sResponse code: %d", StringUtils.lpad("", PAD), response.getStatus());
+			System.out.println(rCode);
+			if (response.getHeaders() != null) {
+				Map<String, String> respHeaders = response.getHeaders();
+				if (verboseDump) {
+					respHeaders.keySet().forEach(k -> DumpUtil.displayDualDump(k + ": " + respHeaders.get(k), PAD));
+					System.out.println();
+				}
+				if (verbose) {
+					respHeaders.keySet().forEach(k -> System.out.println(String.format("%s%s: %s", StringUtils.lpad("", PAD), k, respHeaders.get(k))));
+				}
+			}
+			if (response.getPayload() != null) {
+				if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null && isText(response.getHeaders().get("Content-Type"))) {
+					String responsePayload = new String(response.getPayload()); // Wow! Careful with that... Chek the mime type
+					if (verboseDump) {
+						DumpUtil.displayDualDump(responsePayload, PAD);
+						System.out.println();
+					}
+					if (verbose) {
+						System.out.println(String.format("%s%s", StringUtils.lpad("", PAD), responsePayload));
+					}
+				} else {
+					String mimeType = "-none-";
+					if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null) {
+						mimeType = response.getHeaders().get("Content-Type");
+					}
+					System.out.println(String.format("... No Content-Type, or not text? [%s]", mimeType));
+				}
+			}
+		}
+		return response;
+	}
+
+	/**
 	 * For possible override.
 	 * Called before shutting down.
 	 */
@@ -819,6 +868,9 @@ public class HTTPServer {
 	public static void main(String... args) throws Exception {
 		//System.setProperty("http.port", "9999");
 		HTTPServer httpServer = new HTTPServer(9999);
+		httpServer.setProxyFunction(HTTPServer::defaultProxy);
+
+		httpServer.startServer();
 		System.out.println("Started");
 
 		if (true) {

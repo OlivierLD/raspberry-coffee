@@ -68,6 +68,7 @@ public class NavServer {
 		HTTPServer newHttpServer = null;
 		try {
 			newHttpServer = new HTTPServer(port, requestManager);
+			newHttpServer.startServer();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

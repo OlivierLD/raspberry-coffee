@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 
 /**
  * Very basic HTTP Server, just an example.
+ * Could eventually be replaced by the http.HTTPServer in common-utils.
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));

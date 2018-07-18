@@ -78,6 +78,7 @@ public class HTTPServerTests {
 		HTTPServer httpServer = null;
 		try {
 			httpServer = new HTTPServer(restServerImplOne);
+			httpServer.startServer();
 		} catch (Exception ex) {
 			fail(ex.toString());
 		}
@@ -149,7 +150,7 @@ public class HTTPServerTests {
 		};
 		HTTPServer httpServer = null;
 		try {
-			httpServer = new HTTPServer(restServerImpl);
+			httpServer = new HTTPServer(restServerImpl, true);
 		} catch (Exception ex) {
 			fail(ex.toString());
 		}

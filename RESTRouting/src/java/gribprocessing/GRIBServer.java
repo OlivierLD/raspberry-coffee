@@ -42,6 +42,7 @@ public class GRIBServer {
 		HTTPServer newHttpServer = null;
 		try {
 			newHttpServer = new HTTPServer(port, requestManager);
+			newHttpServer.stopRunning();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
