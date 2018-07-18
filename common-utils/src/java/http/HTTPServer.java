@@ -18,11 +18,13 @@ import java.util.stream.Collectors;
 
 /**
  * Used for the REST interface of an HTTP Server.
+ * Can also be used as a Proxy
  *
  * GET, POST, DELETE, PUT, no PATCH (for now)
  * <br>
  * Also serves as a regular HTTP server for static documents (in the /web directory).
  * <br>
+ * Has two static resources:
  * Has two static resources:
  * <ul>
  * <li><code>/exit</code> to exit the HTTP server (cannot be restarted).</li>
@@ -47,6 +49,7 @@ import java.util.stream.Collectors;
  */
 public class HTTPServer {
 	private boolean verbose = "true".equals(System.getProperty("http.verbose", "false"));
+	private boolean verboseDump = "true".equals(System.getProperty("http.verbose.dump", "false"));
 	private int port = -1;
 
 	private Thread httpListenerThread;
@@ -494,6 +497,9 @@ public class HTTPServer {
 											DumpUtil.displayDualDump(line);
 											System.out.println(); // Blank between lines
 										}
+										if (verboseDump) {
+											System.out.println(line);
+										}
 										if (request != null && line.length() == 0) {
 											// Payload begins
 											inPayload = true;
@@ -607,23 +613,32 @@ public class HTTPServer {
 									// TODO Implement a 'proxy' option ?
 									// An HTTPClient makes the received request, and sends back the response
 									Response response = HTTPClient.doRequest(request);
-									if (verbose) { // Dump response elements
+									if (verbose || verboseDump) { // Dump response elements
 										System.out.println();
 										final int PAD = 72;
 										String rCode = String.format("%sResponse code: %d", StringUtils.lpad("", PAD), response.getStatus());
 										System.out.println(rCode);
 								//	DumpUtil.displayDualDump(rCode, PAD);
-										// TODO an option for verbose: simple output, or dual dump
 										if (response.getHeaders() != null) {
 											Map<String, String> respHeaders = response.getHeaders();
-											respHeaders.keySet().forEach(k -> DumpUtil.displayDualDump(k + ": " + respHeaders.get(k), PAD));
-											System.out.println();
+											if (verboseDump) {
+												respHeaders.keySet().forEach(k -> DumpUtil.displayDualDump(k + ": " + respHeaders.get(k), PAD));
+												System.out.println();
+											}
+											if (verbose) {
+												respHeaders.keySet().forEach(k -> System.out.println(String.format("%s %d: %s", StringUtils.lpad("", PAD), k, respHeaders.get(k))));
+											}
 										}
 										if (response.getPayload() != null) {
 											if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null && isText(response.getHeaders().get("Content-Type"))) {
 												String responsePayload = new String(response.getPayload()); // Wow! Careful with that... Chek the mime type
-												DumpUtil.displayDualDump(responsePayload, PAD);
-												System.out.println();
+												if (verboseDump) {
+													DumpUtil.displayDualDump(responsePayload, PAD);
+													System.out.println();
+												}
+												if (verbose) {
+													System.out.println(String.format("", StringUtils.lpad("%s %s", PAD), responsePayload));
+												}
 											} else {
 												String mimeType = "-none-";
 												if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null) {
@@ -633,7 +648,7 @@ public class HTTPServer {
 											}
 										}
 									}
-									sendResponse(response, out); // BAck to caller
+									sendResponse(response, out); // Back to caller
 								}
 							}
 						} else { // Specific. Is that a GPSd request?
@@ -754,7 +769,8 @@ public class HTTPServer {
 	private boolean isText(String mimeType) { // TODO tweak that one
 		if (mimeType.startsWith("text/") ||
 				mimeType.contains("json") ||
-				mimeType.contains("svg+xml")) {
+				mimeType.contains("xml") ||
+				mimeType.contains("script")) {
 			return true;
 		}
 		return false;
