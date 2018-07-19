@@ -113,6 +113,7 @@ public class DampingSample {
 			}
 			Double smooth = service.smooth(new SmoothableDouble(0d));
 			System.out.println(String.format("Smoothed in doubles %f", smooth.doubleValue()));
+			System.out.println("If the values are degrees (from 0 to 360), then this value is wrong.");
 		}
 		// Improved average, that works.
 		{
@@ -123,6 +124,7 @@ public class DampingSample {
 			}
 			DegreeAngle smooth = service.smooth(new SmoothableDegreeAngle());
 			System.out.println(String.format("Smoothed in degrees %f", smooth.getAngleInDegrees()));
+			System.out.println("This one is correct.");
 		}
 	}
 }
