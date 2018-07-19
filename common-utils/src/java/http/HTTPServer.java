@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
- * Used for the REST interface of an HTTP Server.
+ * Can be used for the REST interface of an HTTP Server.
  * Can also be used as a Proxy
  *
  * GET, POST, DELETE, PUT, no PATCH (for now)
@@ -36,9 +36,11 @@ import java.util.stream.Collectors;
  * <br>
  * Example: <code>http://localhost:9999/web/admin.html?verbose=on</code>
  * <br>
+ * <p>
  * <em>
- * Warning: This is a <b>very lightweight</b> HTTP server. It is not supposed to scale!!
+ * Warning: This is a <b>very lightweight</b> HTTP server. It is certainly not supposed to scale!!
  * </em>
+ * </p>
  * </p>
  * <p>
  * Logging can be done. See <code>-Djava.util.logging.config.file=[path]/logging.properties</code>
@@ -470,7 +472,7 @@ public class HTTPServer {
 							HTTPContext.getInstance().getLogger().info(">>> HTTP: Top of the loop <<<");
 						}
 						while (keepReading) {
-							if (top) { // Ugly!! Argh! :(
+							if (top) { // Ugly!! Argh! :( I know. Will improve.
 								try {
 									Thread.sleep(100L);
 								} catch (InterruptedException ie) {
@@ -481,8 +483,9 @@ public class HTTPServer {
 								if (in.ready()) {
 									read = in.read();
 								} else {
-									if (verbose)
+									if (verbose) {
 										HTTPContext.getInstance().getLogger().info(">>> End of InputStream <<<");
+									}
 									read = -1;
 								}
 							} catch (IOException ioe) {
@@ -508,6 +511,7 @@ public class HTTPServer {
 								} else {
 									sb.append((char) read);
 								}
+								// Super-DEBUG
 //								System.out.println("======================");
 //								DumpUtil.displayDualDump(sb.toString());
 //								System.out.println("======================");
@@ -725,7 +729,7 @@ public class HTTPServer {
 	 * @param f
 	 * @return
 	 */
-	private static String getContentType(String f) { // TODO add more types, as required
+	private static String getContentType(String f) { // TODO add more types, as/when required
 		String contentType = "text/plain";
 		if (f.endsWith(".html")) {
 			contentType = "text/html";

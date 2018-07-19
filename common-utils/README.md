@@ -89,5 +89,38 @@ The labels are applied to the *physical* pin numbers.
 
 ... and more!
 
-#### HTTP Server
-TODO Document
+#### HTTP Server (WIP)
+Can be used
+- to serve
+    - static HTML (and related) documents
+    - REST requests
+- as an HTTP Proxy
+
+Logging available.
+Some special requests are reserved, like `/exit`, `/test`, feel free to comment them.
+
+The constructor of th `HTTPServer` class can take a `Properties` object as parameter.
+Those properties will be detailed below.
+
+##### Static pages
+Driven by the `static.docs` property, of the `Properties` object mentioned above. Defaulted to `/web/`.
+Whatever request points tio this resource will be treated as a static request.
+
+See the code (comments and javadoc) for more details.
+
+##### REST server
+To serve REST requests, you need to implement a `RESTRequestManager` interface.
+
+##### Proxy
+_If_:
+- a request is not a static request
+- there is no `RESTRequestManager` registered
+
+then the server might be acting as a proxy.
+
+For the server to act as a proxy, you need to register a `proxyFunction`.
+
+If a `proxyFunction` has been registered, then you have a proxy ;)
+
+
+
