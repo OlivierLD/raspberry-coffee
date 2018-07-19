@@ -99,12 +99,12 @@ Can be used
 Logging available.
 Some special requests are reserved, like `/exit`, `/test`, feel free to comment them.
 
-The constructor of th `HTTPServer` class can take a `Properties` object as parameter.
+The constructor of the `HTTPServer` class can take a `Properties` object as parameter.
 Those properties will be detailed below.
 
 ##### Static pages
 Driven by the `static.docs` property, of the `Properties` object mentioned above. Defaulted to `/web/`.
-Whatever request points tio this resource will be treated as a static request.
+Whatever request points to this resource(s) will be treated as a static request.
 
 See the code (comments and javadoc) for more details.
 
