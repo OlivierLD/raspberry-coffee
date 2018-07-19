@@ -839,7 +839,7 @@ public class HTTPServer {
 			}
 			if (response.getPayload() != null) {
 				if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null && isText(response.getHeaders().get("Content-Type"))) {
-					String responsePayload = new String(response.getPayload()); // Wow! Careful with that... Chek the mime type
+					String responsePayload = new String(response.getPayload());
 					if (verboseDump) {
 						DumpUtil.displayDualDump(responsePayload, PAD);
 						System.out.println();
@@ -868,7 +868,7 @@ public class HTTPServer {
 
 	private static Thread waiter = null;
 
-	//  For dev tests
+	//  For dev tests, example.
 	public static void main(String... args) throws Exception {
 		//System.setProperty("http.port", "9999");
 		HTTPServer httpServer = new HTTPServer(9999);
