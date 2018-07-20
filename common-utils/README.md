@@ -8,14 +8,14 @@ Build it:
  $ ../gradlew shadowJar
 ```
 
-#### Email, remote cmmand line:
+## Email, remote command line:
 Copy the `email.properties.sample` into `email.properties`, modify it to fit your account(s), then run:
 ```
  $ java -cp ./build/libs/common-utils-1.0-all.jar email.examples.EmailWatcher -send:google -receive:google
 ```
 See [Controlling invisible machines with emails, from Java](http://hocus-blogus.blogspot.com/2018/04/driving-and-monitoring-from-emails.html) for more details.
 
-#### Pins
+## Pins
 ```
  $ java -cp ./build/libs/common-utils-1.0-all.jar utils.PinUtil
  +-----+-----+--------------+-----++-----+--------------+-----+-----+
@@ -89,7 +89,7 @@ The labels are applied to the *physical* pin numbers.
 
 ... and more!
 
-#### HTTP Server (WIP)
+## HTTP Server (WIP)
 Can be used
 - to serve
     - static HTML (and related) documents
@@ -359,3 +359,5 @@ This produces the same ouput as above in the proxy's console.
 With a Graphical UI, run the class `utils.proxyguisample.ProxyGUI`:
 
 ![Proxy GUI](./ProxyGUI.png)
+
+---
