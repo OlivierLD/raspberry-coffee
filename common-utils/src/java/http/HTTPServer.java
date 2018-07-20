@@ -767,8 +767,8 @@ public class HTTPServer {
 		return contentType;
 	}
 
-	private static boolean isText(String mimeType) { // May require some tweaks...
-		if (mimeType.startsWith("text/") ||
+	public static boolean isText(String mimeType) { // May require some tweaks...
+		if (mimeType.trim().startsWith("text/") ||
 				mimeType.contains("json") ||
 				mimeType.contains("xml") ||
 				mimeType.contains("script")) {
