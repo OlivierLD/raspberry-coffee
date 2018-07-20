@@ -41,7 +41,11 @@ public class TrafficRawPanel
 	}
 
 	public void addData(String line) {
-		textArea.setText(textArea.getText() + "\n" + line);
+		String alreadyThere = textArea.getText();
+		if (alreadyThere.length() > 0) {
+			alreadyThere += "\n";
+		}
+		textArea.setText(alreadyThere + line);
 		textArea.setCaretPosition(textArea.getDocument().getLength());
 	}
 

@@ -84,8 +84,8 @@ public class ProxyGUI extends JFrame{
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}
-		String rCode = String.format("Response code: %d", response.getStatus());
-		responsePanel.addData(rCode);
+//	String rCode = String.format("Response code: %d", response.getStatus());
+//	responsePanel.addData(rCode);
 		if (response.getHeaders() != null) {
 			Map<String, String> respHeaders = response.getHeaders();
 			respHeaders.keySet().forEach(k -> responsePanel.addData(String.format("%s: %s", k, respHeaders.get(k))));
