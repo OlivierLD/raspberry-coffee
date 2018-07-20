@@ -19,13 +19,13 @@ public class TrafficRawPanel
 
 	public TrafficRawPanel(String label) {
 		try {
-			jbInit(label);
+			initUI(label);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void jbInit(String label) {
+	private void initUI(String label) {
 		this.setLayout(borderLayout1);
 		this.setSize(new Dimension(300, 500));
 		this.setPreferredSize(new Dimension(300, 500));
@@ -34,6 +34,7 @@ public class TrafficRawPanel
 		textArea.setFont(new Font("Source Code Pro", 0, 11));
 		textArea.setForeground(Color.green);
 		textArea.setBackground(SystemColor.windowText);
+		textArea.setLineWrap(true);
 		jScrollPane.getViewport().add(textArea, null);
 		this.add(jScrollPane, BorderLayout.CENTER);
 		this.add(new JLabel(label), BorderLayout.NORTH);
