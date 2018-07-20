@@ -1,5 +1,6 @@
 package utils.proxyguisample;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -16,15 +17,15 @@ public class TrafficRawPanel
 	private JScrollPane jScrollPane = new JScrollPane();
 	private JTextArea textArea = new JTextArea();
 
-	public TrafficRawPanel() {
+	public TrafficRawPanel(String label) {
 		try {
-			jbInit();
+			jbInit(label);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void jbInit() {
+	private void jbInit(String label) {
 		this.setLayout(borderLayout1);
 		this.setSize(new Dimension(300, 500));
 		this.setPreferredSize(new Dimension(300, 500));
@@ -35,6 +36,7 @@ public class TrafficRawPanel
 		textArea.setBackground(SystemColor.windowText);
 		jScrollPane.getViewport().add(textArea, null);
 		this.add(jScrollPane, BorderLayout.CENTER);
+		this.add(new JLabel(label), BorderLayout.NORTH);
 	}
 
 	public void addData(String line) {
