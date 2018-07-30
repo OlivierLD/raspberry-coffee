@@ -102,7 +102,7 @@
 		  ledPanel.repaint();
 		}
 
-		let pulsing = [ false, false, false, false ];
+		let pulsing = [ false, false, false, false ]; // All PWMs off
 
     /**
      * led: led index [1..4]
@@ -117,11 +117,11 @@
 				document.getElementById('pwm-percent-0' + (led + 1)).innerText = percent + "%";
 				let pwmVolume = percentToVolume(percent, cycleHz); // in ms
 			  	if (pwmVolume > 0) { // &#013; = CR
-			  		document.getElementById('pwm-button-0' + (led + 1)).title = 
+			  		document.getElementById('pwm-button-0' + (led + 1)).title =
 			  			'At ' + cycleHz + ' Hz\n' +
 			  			'Cycle width ' + hzToMs(cycleHz).toFixed(2) + ' ms\n' +
 			  			'Volume ' + percent + ' %\n' +
-			  			' => ' + pwmVolume.toFixed(2) + ' ms';	
+			  			' => ' + pwmVolume.toFixed(2) + ' ms';
 					pulsing[led] = true;
 					ref = new Date().getTime();
 					if (debug) {
@@ -212,13 +212,15 @@
 	<hr/>
 	This page intends to show how Pulse Width Moduation (aka PWM) works.
 	<br/>
-	PWM is this technique used to <u>simulate</u> <i><b>analog</b></i> output on a <i><b>digital</b></i> device. For example, the GPIO pins of the Raspberry PI are all digital. They only can be on (<code>3V3</code>) or off (<code>0V</code>). 
-	If a Light Emitting Diode (led) is hooked on such a pin, it can only be on or off, with no value in between...
+	PWM is this technique used to <span style="background: yellow;">simulate</span> <i><b>analog</b></i> output on a <i><b>digital</b></i> device. For example, the GPIO pins of the Raspberry PI are all digital. They only can be on (<code>3V3</code>) or off (<code>0V</code>).
+	If a Light Emitting Diode (led) is hooked on such a pin, it can only be on or off, with no value in between (nothing like "half-on")...
+	<br/>
+	We need a way to make it <i>look</i> like it.
 	<dl>
 		<dt>An idea:</dt>
 		<dd>
-			A human eye cannot distinguish images appearing for less than one 10<small><sup>th</sup></small> of a second (this is how movies used to work, back is the days when they where using films). 
-			The idea here is to make the led blink. 
+			A human eye cannot distinguish images appearing for less than one 10<small><sup>th</sup></small> of a second (this is how movies used to work, back is the days when they where using films).
+			The idea here is to make the led blink.
 			<ul>
 				<li>If on a given period of time (called the cycle), the led is on 50% of the time and off 50% of the time, it will result in an illumination of 50% of the maximum light.</li>
 				<li>If it is on 25% of the time and off 75% of the time, it will result in an illumination of 25% of the maximum light.</li>
@@ -227,16 +229,18 @@
 			So, if the cycle is short enough (less than one 10<small><sup>th</sup></small> of a second), a human eye does not see the led blinking, it only "feels" it has been dimmed.
 			<br/>
 			This is what's called PWM.
+			<br/>
+			More details and images available <a href="http://hocus-blogus.blogspot.com/2018/07/raspberry-pi-pwm-servos-and-pca9685.html" target="HB">here</a>.
 		</dd>
 	</dl>
 	<br/>
-	<i>Warning:</i> It does not work <i>as well as on a Raspberry PI</i>, where the only thing the GPIO pins have to do is their job.
+	<i>Warning:</i> This simulation does not work <i>as well as on a Raspberry PI</i>, where the only thing the GPIO pins have to do is their job.
 	On a laptop or desktop, the Graphical Environment has much more things to deal with than just a pin to turn on or off,
-	and the actuall rendering is - by far - not as good as on a Raspberry PI with real leds, it may flicker; but it can give you an idea.
-	<br/>
+	and the actual rendering is - by far - not as good as on a Raspberry PI with real leds, it may flicker; but it can give you an idea.
+	<br/><br/>
 	<b>To make it work:</b>
 	<br/>
-	Choose a frequency (first slider). A frequency of 50 or 60 ms is realistic.
+	Choose a frequency (first slider). A frequency of 50 or 60 Hz is realistic. 60 Hertz (Hz) means 60 cycles per second.
 	<br/>
 	Choose a PWM percentage. 50% - for example would mean that you expect the led to glow at 50% of its full potential.
 	<br/>
