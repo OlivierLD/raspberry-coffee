@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--
- ! TODO Trap the error at cssRules in all WebComponents, in:
- !  for (let r=0; document.styleSheets[s].cssRules !== null && r< ...
- +-->
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -650,7 +646,7 @@
 					matrix[ledRIdx][ledCIdx] = !matrix[ledRIdx][ledCIdx];
 					ledPanel.setLedMatrix(matrix);
 					ledPanel.repaint();
-				}, 200);
+				}, 100);
 			}
 		}
 

@@ -302,7 +302,7 @@ class LedPanel extends HTMLElement {
 				grd.addColorStop(1, this.ledColorConfig.bgColor.to);
 				context.fillStyle = grd;
 			} else {
-				context.fillStyle = 'black'; // grd;
+				context.fillStyle ='transparent'; // 'black'; // grd;
 			}
 			context.fillRect(0, 0, this.width, this.height);
 
