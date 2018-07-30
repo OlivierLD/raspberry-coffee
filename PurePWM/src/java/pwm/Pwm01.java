@@ -15,8 +15,7 @@ import static utils.TimeUtil.delay;
  */
 public class Pwm01 {
 	public static void main(String... args)
-					throws InterruptedException
-	{
+					throws InterruptedException {
 
 		System.out.println("PWM Control - pin 01 ... started.");
 

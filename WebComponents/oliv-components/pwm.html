@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!--
+ | Pulse Width Modulation simulation in HTML/JavaScript
+ |
+ | Not ideal, but is gives an idea.
+ |
+ | The graphical environment of a laptop (or desktop) has too many things to do for this simulation
+ | to be realistic, as opposed to what happens on a Raspberry PI, where the GPIO pins are
+ | the only thing PWM has to deal with.
+ +-->
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>WebComponents - Led panel</title>
+	<link rel="icon" type="image/png" href="../logo-192x192.png">
+
+	<link rel="stylesheet" href="css/stylesheet.css">
+	<link rel="stylesheet" href="css/web-components.css">
+
+	<!-- Firefox does NOT like modules... Safari OK -->
+	<script type="module" src="widgets/LedPanel.js"></script>
+
+	<style>
+
+		html {
+			height: 100%;
+			background-color: black;
+		}
+
+		body {
+			background-color: black;
+			color: gray;
+			font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
+			/* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
+			background: radial-gradient(at top, DarkGrey -8%, black 55%);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+		}
+
+		.black-frame {
+			padding: 3px;
+			margin: 1px;
+			border-radius: 5px;
+			border: 1px solid silver;
+		}
+
+		.centered {
+			text-align: center;
+		}
+
+		.smooth {
+			height: 0;
+			visibility: hidden;
+			opacity: 0;
+			transition: visibility 0.5s, height 0.5s, opacity 0.5s linear;
+		}
+
+		.mirror {
+			display: block;
+			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+			-moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+			-o-transform: matrix(-1, 0, 0, 1, 0, 0);
+			transform: matrix(-1, 0, 0, 1, 0, 0);
+		}
+
+	</style>
+
+	<script type="text/javascript">
+
+		function changeBG(value) {
+			let bodyStyle = document.getElementsByTagName("body")[0].style;
+			let htmlStyle = document.getElementsByTagName("html")[0].style;
+			if (value === 'LIGHT') {
+				bodyStyle.background = 'radial-gradient(at top, grey -8%, white 55%)';
+				htmlStyle.backgroundColor = 'white';
+			} else {
+				bodyStyle.background = 'radial-gradient(at top, DarkGrey -8%, black 55%)';
+				htmlStyle.backgroundColor = 'black';
+			}
+		}
+
+		// LED Specific functions
+		function toggleLed(idx) {
+		  let ledPanel = document.getElementById("led-panel-01");
+		  let array = ledPanel.getLedMatrix();
+		  let matrix = array[0]; // First line, array of arrays
+		  let newLine = [];
+		  for (let i=0; i<matrix.length; i++) {
+		    let val = (i === idx ? !matrix[i] : matrix[i]);
+		    newLine.push(val);
+		  }
+		  ledPanel.setLedMatrix([ newLine ]);
+		  ledPanel.repaint();
+		}
+
+		function setLed(idx, val) {
+		  let ledPanel = document.getElementById("led-panel-01");
+		  let array = ledPanel.getLedMatrix();
+		  let matrix = array[0]; // First line, array of arrays
+		  matrix[idx] = val;
+		  ledPanel.setLedMatrix([ matrix ]);
+		  ledPanel.repaint();
+		}
+
+		let pulsing = [ false, false, false, false ];
+
+    /**
+     * led: led index [1..4]
+     * cycle: width in ms
+     * percent: [0..100]
+     */
+		function setPulse(led, percent) {
+		  	let cycle = Number(document.getElementById('freq-range').value);
+		  	let renderingSpeed = Number(document.getElementById('rendering-speed').value);
+			if (pulsing[led] === false) { // Go
+				let pwmVolume = percentToVolume(percent, cycle); // in ms
+			  	if (pwmVolume > 0) {
+					pulsing[led] = true;
+					ref = new Date().getTime();
+					setPWM(led, cycle, pwmVolume, renderingSpeed);
+				}
+			} else { // Stop
+				pulsing[led] = false;
+				setLed(led, true); // On when stopped
+			}
+		}
+
+		let ref = null;
+		let debug = false;
+
+		function setPWM(led, cycle, volume, renderingSpeed) {
+		  	setLed(led, true);    // On
+	    	window.setTimeout(function() {
+				if (debug) {
+					let now = new Date().getTime();
+					console.log("Started PWM at %d, led ON", (now - ref));
+					ref = now;
+				}
+			  	setLed(led, false); // Off
+				if (pulsing[led] === true) {
+					if (debug) {
+						let now = new Date().getTime();
+						console.log("PWM at %d, led going OFF", (now - ref));
+						ref = now;
+					}
+				  	window.setTimeout(function() {
+						if (debug) {
+							let now = new Date().getTime();
+							console.log("At %d, new PWM cycle", (now - ref));
+							ref = now;
+						}
+						if (pulsing[led]) {
+				    		setPWM(led, cycle, volume, renderingSpeed);
+				    	}
+				  }, (cycle - volume) * renderingSpeed);
+				}
+	    	}, volume * renderingSpeed);
+	  	}
+
+	  	function percentToVolume(percent, cycleWidth) {
+			return percent / (100.0 / cycleWidth);
+		}
+
+		/**
+		 * Totally un-elegant. To avoid, urgently.
+		 */
+		function delay(millis) {
+			let date = new Date();
+			let current = null;
+			do {
+			  current = new Date();
+			} while (current - date < millis);
+		}
+
+	</script>
+</head>
+<body>
+
+	<table width="100%">
+		<tr>
+			<td><h2>Pulse Width Modulation Simulation</h2></td>
+		</tr>
+	</table>
+	<hr/>
+	<!-- Page BG -->
+	Page Background
+	<input type="radio" name="page-bg" value="DARK" checked onchange="changeBG(this.value);">Dark
+	<input type="radio" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
+	<hr/>
+	<!--
+	  LED PANEL
+	 +-->
+	<div id="led-panel"> <!-- class="smooth"> -->
+		<table>
+			<tr>
+				<td valign="top" align="center" colspan="4">
+					Led panel
+					<div class="black-frame centered">
+						<led-panel id="led-panel-01"
+											 class="led-panel-01"
+											 width="100"
+											 height="25"
+											 nb-cols="4"
+											 nb-lines="1"/>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td align="center"><button onclick="toggleLed(0);">Led 1</button></td>
+				<td align="center"><button onclick="toggleLed(1);">Led 2</button></td>
+				<td align="center"><button onclick="toggleLed(2);">Led 3</button></td>
+				<td align="center"><button onclick="toggleLed(3);">Led 4</button></td>
+			</tr>
+			<tr>
+				<td align="center"><button onclick="setPulse(0,  25);">PWM 1</button></td>
+				<td align="center"><button onclick="setPulse(1,  50);">PWM 2</button></td>
+				<td align="center"><button onclick="setPulse(2,  75);">PWM 3</button></td>
+				<td align="center"><button onclick="setPulse(3, 100);">PWM 4</button></td>
+			</tr>
+			<tr>
+				<td align="center">25%</td>
+				<td align="center">50%</td>
+				<td align="center">75%</td>
+				<td align="center">100%</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+				  <input id="freq-range" type="range" min="1" max="100" step="1" value="50" onchange="document.getElementById('freq').innerText = 'Freq ' + this.value + ' ms';" style="width: 100%;"/>
+				</td>
+				<td>
+					<span id="freq">Freq 50 ms</span>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					Rendering speed 1 / <input type="number" id="rendering-speed" style="width: 50px; text-align: right;" value="1"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+
+	<table width="100%">
+		<tr>
+			<td><span style="font-style: italic;" title="C'est MOI qui l'ai fait.">Oliv did it</span></td>
+			<td><span class="mirror" style="font-style: italic;" title="C'est MOI qui l'ai fait.">Oliv did it</span></td>
+		</tr>
+	</table>
+
+</body>
+</html>

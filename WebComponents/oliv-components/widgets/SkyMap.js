@@ -35,7 +35,6 @@ class SkyMap extends HTMLElement {
 		// Default values
 		this._width       = 500;
 		this._height      = 500;
-
 	}
 
 	// Called whenever the custom element is inserted into the DOM.

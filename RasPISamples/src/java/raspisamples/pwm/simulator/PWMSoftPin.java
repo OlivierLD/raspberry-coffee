@@ -1,23 +1,26 @@
-package raspisamples.pwm;
-
-import com.pi4j.io.gpio.Pin;
-import com.pi4j.io.gpio.PinState;
+package raspisamples.pwm.simulator;
 
 import static utils.TimeUtil.delay;
 
 /**
- * Pulse Width Modulation implementation
+ * Pulse Width Modulation soft implementation
+ * http://raspberrypi.lediouris.net/PWM/readme.html
  */
-public class PWMPin extends GPIOPinAdapter {
+public class PWMSoftPin {
 	// 30 seems to be the maximum value. You can really see the led blinking beyond that.
-	private final static int CYCLE_WIDTH = 30;
+	private int cycleWidth = 30; // in milliseconds
 
 	private final Thread mainThread;
 	private final boolean debug = "true".equals(System.getProperty("pwm.debug", "false"));
 
-	public PWMPin(Pin p, String name, PinState originalState) {
-		super(p, name, originalState);
-		mainThread = Thread.currentThread();
+	private String name;
+	private SoftPin pin;
+
+	public PWMSoftPin(SoftPin pin, String name, int cycleWidth) {
+		this.pin = pin;
+		this.name = name;
+		this.cycleWidth = cycleWidth;
+		this.mainThread = Thread.currentThread();
 	}
 
 	private boolean emittingPWM = false;
@@ -28,17 +31,20 @@ public class PWMPin extends GPIOPinAdapter {
 			throw new IllegalArgumentException("Percent MUST be in [0, 100], not [" + percent + "]");
 		}
 		if (debug) {
-			System.out.println("Volume:" + percentToVolume(percent) + "/" + CYCLE_WIDTH);
+			System.out.println("Volume:" + percentToVolume(percent) + "/" + cycleWidth);
 		}
 		Thread pwmThread = new Thread(() -> {
 			emittingPWM = true;
 			pwmVolume = percentToVolume(percent);
 			while (emittingPWM) {
 				if (pwmVolume > 0) {
-					pin.pulse(pwmVolume, true); // 'pin' is defined in the superclass GPIOPinAdapter, set second argument to 'true' makes a blocking call
+		//		System.out.println(String.format("%d%% -> Volume: %d", percent, pwmVolume));
+		//		pin.pulse(pwmVolume, true);
+					pin.high();
+					delay(pwmVolume);  // Wait for the rest of the cycle
 				}
 				pin.low();
-				delay(CYCLE_WIDTH - pwmVolume);  // Wait for the rest of the cycle
+				delay(cycleWidth - pwmVolume);  // Wait for the rest of the cycle
 			}
 			System.out.println("Stopping PWM");
 			// Notify the ones waiting for this thread to end
@@ -59,7 +65,7 @@ public class PWMPin extends GPIOPinAdapter {
 		if (percent < 0 || percent > 100) {
 			throw new IllegalArgumentException("Percent MUST be in [0, 100], not [" + percent + "]");
 		}
-		return percent / (100 / CYCLE_WIDTH);
+		return percent / (100 / cycleWidth);
 	}
 
 	public void adjustPWMVolume(int percent) {
@@ -84,5 +90,23 @@ public class PWMPin extends GPIOPinAdapter {
 			}
 		}
 		pin.low();
+	}
+
+	public static void main(String... args) {
+		SoftPin pin = new SoftPin() {
+			public void high() {
+				System.out.println("Going high");
+			}
+			public void low() {
+				System.out.println("Going low");
+			}
+		};
+
+		PWMSoftPin softPin = new PWMSoftPin(pin, "SoftLED", 30);
+
+		softPin.emitPWM(50);
+		delay(5_000L);
+		softPin.stopPWM();
+
 	}
 }

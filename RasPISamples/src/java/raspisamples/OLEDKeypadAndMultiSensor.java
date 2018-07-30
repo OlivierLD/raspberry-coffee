@@ -27,6 +27,8 @@ import java.util.regex.Pattern;
 
 import phonekeyboard3x4.KeyboardController;
 
+import static utils.TimeUtil.delay;
+
 /*
  * A phone keypad, and a 128x32 oled screen
  *
@@ -66,13 +68,13 @@ public class OLEDKeypadAndMultiSensor {
 			rm.set("off"); // off by default
 			System.out.println("Takatak, pin is " + rm.getStatus());
 			// To make sure it works:
-			waitfor(250);
+			delay(250);
 			rm.set("on");
-			waitfor(250);
+			delay(250);
 			rm.set("off");
-			waitfor(250);
+			delay(250);
 			rm.set("on");
-			waitfor(250);
+			delay(250);
 			rm.set("off");
 			System.out.println("Takatak - Off");
 		} catch (Exception ex) {
@@ -115,45 +117,41 @@ public class OLEDKeypadAndMultiSensor {
 			ioe.printStackTrace();
 		}
 		// Wait...
-		waitfor(2_000);
+		delay(2_000);
 
 		// Start sensor threads
-		Thread ptThread = new Thread() {
-			public void run() {
-				while (keepReading) {
+		Thread ptThread = new Thread(() -> {
+			while (keepReading) {
+				try {
+					float[] data = ptSensor.measure();
+					displayPT(data[MPL115A2.PRESSURE_IDX], data[MPL115A2.TEMPERATURE_IDX]);
 					try {
-						float[] data = ptSensor.measure();
-						displayPT(data[MPL115A2.PRESSURE_IDX], data[MPL115A2.TEMPERATURE_IDX]);
-						try {
-							Thread.sleep(500L);
-						} catch (Exception ex) {
-						}
-					} catch (IOException ioe) {
-						ioe.printStackTrace();
+						Thread.sleep(500L);
+					} catch (Exception ex) {
 					}
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
 				}
-				System.out.println("ptThread completed");
-				ptSensor.close();
 			}
-		};
-		Thread hdgThread = new Thread() {
-			public void run() {
-				while (keepReading) {
+			System.out.println("ptThread completed");
+			ptSensor.close();
+		});
+		Thread hdgThread = new Thread(() -> {
+			while (keepReading) {
+				try {
+					double hdg = magnetometer.getHeading();
+					displayHdg(hdg);
 					try {
-						double hdg = magnetometer.getHeading();
-						displayHdg(hdg);
-						try {
-							Thread.sleep(500L);
-						} catch (Exception ex) {
-						}
-					} catch (Exception ioe) {
-						ioe.printStackTrace();
+						Thread.sleep(500L);
+					} catch (Exception ex) {
 					}
+				} catch (Exception ioe) {
+					ioe.printStackTrace();
 				}
-				System.out.println("hdgThread completed");
+			}
+			System.out.println("hdgThread completed");
 //			magnetometer.close();
-			}
-		};
+		});
 		ptThread.start();
 		hdgThread.start();
 
@@ -235,14 +233,6 @@ public class OLEDKeypadAndMultiSensor {
 		}
 	}
 
-	private static void waitfor(long l) {
-		try {
-			Thread.sleep(l);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-		}
-	}
-
 	public synchronized void display(String txt) {
 		synchronized (sb) {
 			sb.text(txt, 2, 10);
@@ -320,14 +310,14 @@ public class OLEDKeypadAndMultiSensor {
 					}
 				}
 			}
-			waitfor(200); // 200ms between keys
+			delay(200); // 200ms between keys
 		}
 		reset();
 		display("Bye-bye");
 		System.out.println("...Bye");
 		kbc.shutdown();
 		keepReading = false;
-		waitfor(1_000); // Wait for the threads to end properly
+		delay(1_000); // Wait for the threads to end properly
 
 		// Final cleanup.
 		clear();

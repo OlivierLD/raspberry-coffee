@@ -431,6 +431,13 @@ compass-rose .gray-flat {
 	--display-position-color: white;
 }
 
+.led-panel-01 {
+	--bg-color-from: gray;
+	--bg-color-to: black;
+	--fg-color-from: red;
+	--fg-color-to: orange;
+}
+
 .marquee-01 {
 	--bg-color-from: gray;
 	--bg-color-to: black;

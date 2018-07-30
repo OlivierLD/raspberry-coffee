@@ -832,94 +832,98 @@ class WorldMap extends HTMLElement {
 			let cssClassName = classes[cls];
 			for (let s=0; s<document.styleSheets.length; s++) {
 				// console.log("Walking though ", document.styleSheets[s]);
-				for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
-					let selector = document.styleSheets[s].cssRules[r].selectorText;
-					//			console.log(">>> ", selector);
-					if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(WORLD_MAP_TAG_NAME) > -1))) { // Cases like "tag-name .className"
-						//				console.log("  >>> Found it! [%s]", selector);
-						let cssText = document.styleSheets[s].cssRules[r].style.cssText;
-						let cssTextElems = cssText.split(";");
-						cssTextElems.forEach(function (elem) {
-							if (elem.trim().length > 0) {
-								let keyValPair = elem.split(":");
-								let key = keyValPair[0].trim();
-								let value = keyValPair[1].trim();
-								switch (key) {
-									case '--canvas-background':
-										colorConfig.canvasBackground = value;
-										break;
-									case '--default-plot-point-color':
-										colorConfig.defaultPlotPointColor = value;
-										break;
-									case '--travel-color':
-										colorConfig.travelColor = value;
-										break;
-									case '--arrow-body-color':
-										colorConfig.arrowBodyColor = value;
-										break;
-									case '--globe-background':
-										colorConfig.globeBackground = value;
-										break;
-									case '--globe-gradient-from':
-										colorConfig.globeGradient.from = value;
-										break;
-									case '--globe-gradient-to':
-										colorConfig.globeGradient.to = value;
-										break;
-									case '--grid-color':
-										colorConfig.gridColor = value;
-										break;
-									case '--tropic-color':
-										colorConfig.tropicColor = value;
-										break;
-									case '--chart-line-width':
-										colorConfig.chartLineWidth = value;
-										break;
-									case '--chart-color':
-										colorConfig.chartColor = value;
-										break;
-									case '--user-pos-color':
-										colorConfig.userPosColor = value;
-										break;
-									case '--sun-color':
-										colorConfig.sunColor = value;
-										break;
-									case '--sun-arrow-color':
-										colorConfig.sunArrowColor = value;
-										break;
-									case '--moon-arrow-color':
-										colorConfig.moonArrowColor = value;
-										break;
-									case '--aries-color':
-										colorConfig.ariesColor = value;
-										break;
-									case '--venus-color':
-										colorConfig.venusColor = value;
-										break;
-									case '--mars-color':
-										colorConfig.marsColor = value;
-										break;
-									case '--jupiter-cColor':
-										colorConfig.jupiterColor = value;
-										break;
-									case '--saturn-color':
-										colorConfig.saturnColor = value;
-										break;
-									case '--stars-color':
-										colorConfig.starsColor = value;
-										break;
-									case '--night-color':
-										colorConfig.nightColor = value;
-										break;
-									case '--display-position-color':
-										colorConfig.displayPositionColor = value;
-										break;
-									default:
-										break;
+				try {
+					for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+						let selector = document.styleSheets[s].cssRules[r].selectorText;
+						//			console.log(">>> ", selector);
+						if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(WORLD_MAP_TAG_NAME) > -1))) { // Cases like "tag-name .className"
+							//				console.log("  >>> Found it! [%s]", selector);
+							let cssText = document.styleSheets[s].cssRules[r].style.cssText;
+							let cssTextElems = cssText.split(";");
+							cssTextElems.forEach(function (elem) {
+								if (elem.trim().length > 0) {
+									let keyValPair = elem.split(":");
+									let key = keyValPair[0].trim();
+									let value = keyValPair[1].trim();
+									switch (key) {
+										case '--canvas-background':
+											colorConfig.canvasBackground = value;
+											break;
+										case '--default-plot-point-color':
+											colorConfig.defaultPlotPointColor = value;
+											break;
+										case '--travel-color':
+											colorConfig.travelColor = value;
+											break;
+										case '--arrow-body-color':
+											colorConfig.arrowBodyColor = value;
+											break;
+										case '--globe-background':
+											colorConfig.globeBackground = value;
+											break;
+										case '--globe-gradient-from':
+											colorConfig.globeGradient.from = value;
+											break;
+										case '--globe-gradient-to':
+											colorConfig.globeGradient.to = value;
+											break;
+										case '--grid-color':
+											colorConfig.gridColor = value;
+											break;
+										case '--tropic-color':
+											colorConfig.tropicColor = value;
+											break;
+										case '--chart-line-width':
+											colorConfig.chartLineWidth = value;
+											break;
+										case '--chart-color':
+											colorConfig.chartColor = value;
+											break;
+										case '--user-pos-color':
+											colorConfig.userPosColor = value;
+											break;
+										case '--sun-color':
+											colorConfig.sunColor = value;
+											break;
+										case '--sun-arrow-color':
+											colorConfig.sunArrowColor = value;
+											break;
+										case '--moon-arrow-color':
+											colorConfig.moonArrowColor = value;
+											break;
+										case '--aries-color':
+											colorConfig.ariesColor = value;
+											break;
+										case '--venus-color':
+											colorConfig.venusColor = value;
+											break;
+										case '--mars-color':
+											colorConfig.marsColor = value;
+											break;
+										case '--jupiter-cColor':
+											colorConfig.jupiterColor = value;
+											break;
+										case '--saturn-color':
+											colorConfig.saturnColor = value;
+											break;
+										case '--stars-color':
+											colorConfig.starsColor = value;
+											break;
+										case '--night-color':
+											colorConfig.nightColor = value;
+											break;
+										case '--display-position-color':
+											colorConfig.displayPositionColor = value;
+											break;
+										default:
+											break;
+									}
 								}
-							}
-						});
+							});
+						}
 					}
+				} catch (err) {
+				  // Absorb
 				}
 			}
 		}

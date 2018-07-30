@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<!--
+ ! TODO Trap the error at cssRules in all WebComponents, in:
+ !  for (let r=0; document.styleSheets[s].cssRules !== null && r< ...
+ +-->
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -18,10 +22,16 @@
 	<script type="module" src="widgets/CompassRose.js"></script>
 	<script type="module" src="widgets/WorldMap.js"></script>
 	<script type="module" src="widgets/SkyMap.js"></script>
+	<script type="module" src="widgets/LedPanel.js"></script>
 	<script type="module" src="widgets/MarqueePanel.js"></script>
 	<script type="module" src="widgets/Raw16PointsDir.js"></script>
 
 	<style>
+		:root {
+			--perspective: 50em;
+			--rotateX: -40deg;
+		}
+
 		html {
 			height: 100%;
 			background-color: black;
@@ -63,6 +73,14 @@
 			transform: matrix(-1, 0, 0, 1, 0, 0);
 		}
 
+		.mirror-upside-down {
+			display: block;
+			-webkit-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+			-moz-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+			-o-transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+			transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
+		}
+
 	</style>
 
 	<script type="text/javascript">
@@ -74,6 +92,20 @@
 			} else {
 				bodyStyle.background = 'radial-gradient(at top, DarkGrey -8%, black 55%)';
 			}
+		}
+
+		let headUpExpanded = false;
+		function collapseExpandHeadsup() {
+			let cmdElem = document.getElementById("head-up-command");
+			let slidersElem = document.getElementById("heads-up-sliders");
+			if (headUpExpanded) {
+				slidersElem.style.display = 'none';
+				cmdElem.innerText = "+ Heads up";
+			} else {
+				slidersElem.style.display = 'block';
+				cmdElem.innerText = "- Heads up";
+			}
+			headUpExpanded = !headUpExpanded;
 		}
 
 		/**
@@ -590,6 +622,38 @@
 			cell.style.backgroundColor = color;
 		}
 
+		function toggleHeadsUp() {
+		  document.body.classList.toggle('mirror-upside-down');
+		}
+
+		function setPerspective(e) {
+			var v = this.value;
+			document.body.style.setProperty("--perspective", v + "em");
+		}
+
+		function setRotateX(e) {
+			var v = this.value;
+			document.body.style.setProperty("--rotateX", v + "deg");
+		}
+
+		let intervalRandomId = null;
+		function randomLed() {
+			let ledPanel = document.getElementById("led-panel-01");
+			if (intervalRandomId !== null) {
+				window.clearInterval(intervalRandomId);
+				intervalRandomId = null;
+			} else {
+				intervalRandomId = window.setInterval(function() {
+					let matrix = ledPanel.getLedMatrix();
+					let ledRIdx = Math.round(Math.random() * 8);
+					let ledCIdx = Math.round(Math.random() * 8);
+					matrix[ledRIdx][ledCIdx] = !matrix[ledRIdx][ledCIdx];
+					ledPanel.setLedMatrix(matrix);
+					ledPanel.repaint();
+				}, 200);
+			}
+		}
+
 	</script>
 </head>
 <body>
@@ -600,6 +664,26 @@
 			<td><h2 class="mirror">Web Components Samples</h2></td>
 		</tr>
 	</table>
+	<hr/>
+	<!-- Perspective sliders -->
+	<span id="head-up-command" onclick="collapseExpandHeadsup();" style="cursor: pointer;">+ Heads up</span>
+	<div id="heads-up-sliders" style="display: none;">
+		<button onclick="toggleHeadsUp();" style="border-radius: 5px;">Heads Up</button>
+		<table width="100%">
+			<tr>
+				<td width="50%">
+					<h5 style="color: cyan;">Perspective</h5>
+					<input type="range" value="50" min="0" max="100" style="width: 90%;" oninput="setPerspective.call(this, event); perspective01.value = this.value;" />
+					<output name="perspective" id="perspective01" style="color: cyan;"></output>
+				</td>
+				<td width="50%">
+					<h5 style="color: cyan;">Rotate X</h5>
+					<input type="range" value="-50" min="-100" max="100" style="width: 90%;" oninput="setRotateX.call(this, event); perspective02.value = this.value;" />
+					<output name="perspective" id="perspective02" style="color: cyan;"></output>
+				</td>
+			</tr>
+		</table>
+	</div>
 	<hr/>
 	<h5>Pluviometer, Thermometer, Displays and other such marvels...</h5>
 	<!-- Page BG -->
@@ -1850,6 +1934,32 @@
 										 width="500"
 										 height="300"/>
 					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<!--
+	  LED PANEL
+	 +-->
+	<div style="cursor: pointer;" onclick="showHide('led-panel');"><b><u>Led Panel</u></b></div>
+	<div id="led-panel" class="smooth">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<led-panel id="led-panel-01"
+											 class="led-panel-01"
+											 width="200"
+											 height="200"
+											 nb-cols="8"
+											 nb-lines="8"/>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button onclick="randomLed();">Random</button>
 				</td>
 			</tr>
 		</table>

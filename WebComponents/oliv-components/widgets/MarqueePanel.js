@@ -177,37 +177,41 @@ class MarqueePanel extends HTMLElement {
 			let cssClassName = classes[cls];
 			for (let s=0; s<document.styleSheets.length; s++) {
 				// console.log("Walking though ", document.styleSheets[s]);
-				for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
-					let selector = document.styleSheets[s].cssRules[r].selectorText;
-					//			console.log(">>> ", selector);
-					if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(MARQUEE_PANEL_TAG_NAME) > -1))) { // Cases like "tag-name .className"
-					  //				console.log("  >>> Found it! [%s]", selector);
-						let cssText = document.styleSheets[s].cssRules[r].style.cssText;
-						let cssTextElems = cssText.split(";");
-						cssTextElems.forEach(function (elem) {
-							if (elem.trim().length > 0) {
-								let keyValPair = elem.split(":");
-								let key = keyValPair[0].trim();
-								let value = keyValPair[1].trim();
-								switch (key) {
-									case '--bg-color-from':
-										colorConfig.bgColor.from = value;
-										break;
-									case '--bg-color-to':
-										colorConfig.bgColor.to = value;
-										break;
-									case '--fg-color-from':
-										colorConfig.fgColor.from = value;
-										break;
-									case '--fg-color-to':
-										colorConfig.fgColor.to = value;
-										break;
-									default:
-										break;
+				try {
+					for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
+						let selector = document.styleSheets[s].cssRules[r].selectorText;
+						//			console.log(">>> ", selector);
+						if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(MARQUEE_PANEL_TAG_NAME) > -1))) { // Cases like "tag-name .className"
+						  //				console.log("  >>> Found it! [%s]", selector);
+							let cssText = document.styleSheets[s].cssRules[r].style.cssText;
+							let cssTextElems = cssText.split(";");
+							cssTextElems.forEach(function (elem) {
+								if (elem.trim().length > 0) {
+									let keyValPair = elem.split(":");
+									let key = keyValPair[0].trim();
+									let value = keyValPair[1].trim();
+									switch (key) {
+										case '--bg-color-from':
+											colorConfig.bgColor.from = value;
+											break;
+										case '--bg-color-to':
+											colorConfig.bgColor.to = value;
+											break;
+										case '--fg-color-from':
+											colorConfig.fgColor.from = value;
+											break;
+										case '--fg-color-to':
+											colorConfig.fgColor.to = value;
+											break;
+										default:
+											break;
+									}
 								}
-							}
-						});
+							});
+						}
 					}
+				} catch (err) {
+				  // Absorb
 				}
 			}
 		}
