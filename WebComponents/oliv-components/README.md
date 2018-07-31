@@ -37,6 +37,7 @@ After starting the `node` server as mentioned above, you can also reach
 - Graphs. TODO
 - Sky Map and Star Finder (along with some `REST` service(s)). &#10140; WIP.
 
+#### Maybe next?
 - Satellite plotter?
 - Tide Graph?
 - Current Display?
