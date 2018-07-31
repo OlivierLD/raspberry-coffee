@@ -40,10 +40,6 @@ class LedPanel extends HTMLElement {
 		];
 	}
 
-	dummyDump() {
-		console.log('We have %d character(s).', characters.length);
-	}
-
 	constructor() {
 		super();
 		this._shadowRoot = this.attachShadow({mode: 'open'}); // 'open' means it is accessible from external JavaScript.

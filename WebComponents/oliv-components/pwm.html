@@ -118,10 +118,8 @@
 				let pwmVolume = percentToVolume(percent, cycleHz); // in ms
 			  	if (pwmVolume > 0) { // &#013; = CR
 			  		document.getElementById('pwm-button-0' + (led + 1)).title =
-			  			'At ' + cycleHz + ' Hz\n' +
-			  			'Cycle width ' + hzToMs(cycleHz).toFixed(2) + ' ms\n' +
-			  			'Volume ' + percent + ' %\n' +
-			  			' => ' + pwmVolume.toFixed(2) + ' ms';
+			  			'At ' + cycleHz + ' Hz, Cycle Width is ' + hzToMs(cycleHz).toFixed(2) + ' ms.\n' +
+			  			'Volume ' + percent + ' % -> pulse is ' + pwmVolume.toFixed(2) + ' ms.';
 					pulsing[led] = true;
 					ref = new Date().getTime();
 					if (debug) {
