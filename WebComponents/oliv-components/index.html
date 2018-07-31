@@ -83,10 +83,13 @@
 
 		function changeBG(value) {
 			let bodyStyle = document.getElementsByTagName("body")[0].style;
+			let htmlStyle = document.getElementsByTagName("html")[0].style;
 			if (value === 'LIGHT') {
 				bodyStyle.background = 'radial-gradient(at top, white -8%, lightgrey 55%)';
+				htmlStyle.backgroundColor = 'lightgrey';
 			} else {
 				bodyStyle.background = 'radial-gradient(at top, DarkGrey -8%, black 55%)';
+				htmlStyle.backgroundColor = 'black';
 			}
 		}
 

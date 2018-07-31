@@ -204,6 +204,7 @@ var updateOnClick = function(idx, tws, twd, prmsl, temp, dew, rain) {
   var txtDate = JSONParser.nmeaData[idx].getNMEADate();
 //console.log("Date is : " + reformatDate(txtDate));
   var utc = document.getElementById("tz");
+  // TODO Make sure utc.selectedIndex != -1
   document.getElementById("recno").innerHTML = "Record #<b style='color: red;'>" + (idx + 1) + "</b> of " + JSONParser.nmeaData.length + ", " +  reformatDate(txtDate) + " " + utc.options[utc.selectedIndex].text;
 
   var wd = twd;

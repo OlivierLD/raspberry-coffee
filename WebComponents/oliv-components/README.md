@@ -14,6 +14,12 @@ To see the components at work, after cloning the repo, start the `node` server _
 ```
 Then load [http://localhost:8080/oliv-components/index.html](http://localhost:8080/oliv-components/index.html) in a WebComponents-enabled web browser.
 
+#### Also available
+After starting the `node` server as mentioned above, you can also reach
+- [http://localhost:8080/oliv-components/mirror.html](http://localhost:8080/oliv-components/mirror.html), the basis for an Heads Up display application.
+- [http://localhost:8080/oliv-components/pwm.html](http://localhost:8080/oliv-components/pwm.html), for an explanation about how Pulse Width Modulation work.
+
+
 ### Components list
 - Pluviometer. &#9989; Done.
 - Thermometer. &#9989; Done
@@ -30,6 +36,7 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 - Evolution Displays. TODO
 - Graphs. TODO
 - Sky Map and Star Finder (along with some `REST` service(s)). &#10140; WIP.
+
 - Satellite plotter?
 - Tide Graph?
 - Current Display?
