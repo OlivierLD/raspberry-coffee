@@ -2,6 +2,12 @@ ARG cuda_version=9.0
 ARG cudnn_version=7
 FROM nvidia/cuda:${cuda_version}-cudnn${cudnn_version}-devel
 
+# Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
+ENV http_proxy http://www-proxy.us.oracle.com:80
+ENV https_proxy http://www-proxy.us.oracle.com:80
+# # ENV ftp_proxy $http_proxy
+ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
+
 # Install system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
       bzip2 \
@@ -57,7 +63,7 @@ RUN conda install -y python=${python_version} && \
       scikit-learn \
       six \
       theano && \
-    git clone git://github.com/keras-team/keras.git /src && pip install -e /src[tests] && \
+    git clone https://github.com/keras-team/keras.git /src && pip install -e /src[tests] && \
     pip install git+git://github.com/keras-team/keras.git && \
     conda clean -yt
 
