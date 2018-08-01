@@ -11,19 +11,20 @@ MESSAGE="Bye!\n"
 while [ "$OK" = "false" ]
 do
   # Menu
-  echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R --------------+"
-  echo -e "| 1. Nav Server, Debian                                               |"
-  echo -e "| 2. Web Components, Debian                                           |"
-  echo -e "| 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
-  echo -e "| 4. Node PI, to run on a Raspberry PI                                |"
-  echo -e "| 5. Node PI, to run on Debian                                        |"
-  echo -e "| 6. GPS-mux, to run on a Raspberry PI (logger)                       |"
-  echo -e "| 7. Golang, basics                                                   |"
-  echo -e "| 8. Raspberry PI, MATE, with java, node, web comps, VNC              |"
-  echo -e "| 9. Debian, Java, Scala, Spark                                       |"
-  echo -e "+---------------------------------------------------------------------+"
-  echo -e "| Q. Oops, nothing, thanks, let me out.                               |"
-  echo -e "+---------------------------------------------------------------------+"
+  echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R ---------------+"
+  echo -e "|  1. Nav Server, Debian                                               |"
+  echo -e "|  2. Web Components, Debian                                           |"
+  echo -e "|  3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
+  echo -e "|  4. Node PI, to run on a Raspberry PI                                |"
+  echo -e "|  5. Node PI, to run on Debian                                        |"
+  echo -e "|  6. GPS-mux, to run on a Raspberry PI (logger)                       |"
+  echo -e "|  7. Golang, basics                                                   |"
+  echo -e "|  8. Raspberry PI, MATE, with java, node, web comps, VNC              |"
+  echo -e "|  9. Debian, Java, Scala, Spark                                       |"
+  echo -e "| 10. Ubuntu MATE, TensorFlow, Python3, VNC                            |"
+  echo -e "+----------------------------------------------------------------------+"
+  echo -e "| Q. Oops, nothing, thanks, let me out.                                |"
+  echo -e "+----------------------------------------------------------------------+"
   echo -en "== You choose => "
   read a
   #
@@ -174,6 +175,20 @@ do
       #
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Log in using: docker run -it --rm -e USER=root $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      ;;
+    "10")
+      OK=true
+      DOCKER_FILE=tensorflow.Dockerfile
+      IMAGE_NAME=oliv-tf-vnc
+      RUN_CMD="docker run -d $IMAGE_NAME:latest"
+      #
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Log in using: docker run -it --rm -p 5901:5901 [-e USER=root] $IMAGE_NAME:latest /bin/bash -i\n"
+      MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
+      MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
+      MESSAGE="${MESSAGE}- then (for example) python3 examples/mnist_cnn.py ...\n"
+      MESSAGE="${MESSAGE}       or python3 examples/oliv/one.py ...\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     *)
