@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 from keras.datasets import mnist
 import matplotlib.pyplot as plt
 
