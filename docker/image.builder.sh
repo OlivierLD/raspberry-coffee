@@ -184,7 +184,8 @@ do
       RUN_CMD="docker run -d $IMAGE_NAME:latest"
       #
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Log in using: docker run -it --rm -p 5901:5901 [-e USER=root] [-v tensorflow:/root/workdir/shared] $IMAGE_NAME:latest /bin/bash \n"
+      MESSAGE="${MESSAGE}Log in using: docker run --interactive --tty --rm --publish 5901:5901 [--env USER=root] [--volume tensorflow:/root/workdir/shared] $IMAGE_NAME:latest /bin/bash \n"
+      MESSAGE="${MESSAGE}           or docker run -it --rm -p 5901:5901 [-e USER=root] [-v tensorflow:/root/workdir/shared] $IMAGE_NAME:latest /bin/bash \n"
       MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
       MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
       MESSAGE="${MESSAGE}- then (for example) python3 examples/mnist_cnn.py ...\n"

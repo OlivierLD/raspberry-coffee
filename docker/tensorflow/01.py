@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/env python3
 #
 # Run this from the keras directory
-# $ python3 examples/oliv/one.py
+# $ python3 examples/oliv/01.py
 #
 from keras.datasets import mnist
 
