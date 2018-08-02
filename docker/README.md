@@ -27,6 +27,8 @@ Just run:
 
 #### Let's go
 
+`docker`'s run parameters are described [here](https://docs.docker.com/v17.09/edge/engine/reference/commandline/run/#parent-command).
+
 From the directory the `Dockerfile` lives in:
 ```bash
 $ docker build -t oliv-image .
