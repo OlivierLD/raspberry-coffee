@@ -13,6 +13,8 @@ while [ "$OK" = "false" ]
 do
   # Menu
   echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R ---------------+"
+  echo -e "| Build and run a docker image.                                        |"
+  echo -e "+----------------------------------------------------------------------+"
   echo -e "|  1. Nav Server, Debian                                               |"
   echo -e "| 1p. Nav Server, Debian, with proxy                                   |"
   echo -e "|  2. Web Components, Debian                                           |"
@@ -235,7 +237,7 @@ then
   echo -e "---------------------------------------------------"
   echo -e "Generating $IMAGE_NAME from $DOCKER_FILE $EXTRA"
   echo -e "---------------------------------------------------"
-  #
+  # Possibly use --quiet
   docker build -f $DOCKER_FILE -t $IMAGE_NAME $EXTRA_PRM .
   #
   # Now run

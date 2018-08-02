@@ -9,18 +9,23 @@ Look into the script, the images are defined by the files `*.Dockerfile`.
 Just run `image.builder.sh`:
 ```
  $ ./image.builder.sh
- +-------------- D O C K E R   I M A G E   B U I L D E R --------------+
- | 1. Nav Server, Debian                                               |
- | 2. Web Components, Debian                                           |
- | 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |
- | 4. Node PI, to run on a Raspberry PI                                |
- | 5. Node PI, to run on Debian                                        |
- | 6. GPS-mux, to run on a Raspberry PI (logger)                       |
- | 7. Golang, basics                                                   |
- | 8. Raspberry PI, MATE, with java, node, web comps, VNC              |
- +---------------------------------------------------------------------+
- | Q. Oops, nothing, thanks, let me out.                               |
- +---------------------------------------------------------------------+
+ +-------------- D O C K E R   I M A G E   B U I L D E R ---------------+
+ | Build and run a docker image.                                        |
+ +----------------------------------------------------------------------+
+ |  1. Nav Server, Debian                                               |
+ | 1p. Nav Server, Debian, with proxy                                   |
+ |  2. Web Components, Debian                                           |
+ |  3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |
+ |  4. Node PI, to run on a Raspberry PI                                |
+ |  5. Node PI, to run on Debian                                        |
+ |  6. GPS-mux, to run on a Raspberry PI (logger)                       |
+ |  7. Golang, basics                                                   |
+ |  8. Raspberry PI, MATE, with java, node, web comps, VNC              |
+ |  9. Debian, Java, Scala, Spark                                       |
+ | 10. Ubuntu MATE, TensorFlow, Python3, VNC                            |
+ +----------------------------------------------------------------------+
+ | Q. Oops, nothing, thanks, let me out.                                |
+ +----------------------------------------------------------------------+
  == You choose =>
 ```
 This script takes care of building different `docker` images. `docker` commands can be pretty lengthy..., the script takes care of everything.
