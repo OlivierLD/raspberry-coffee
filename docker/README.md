@@ -32,7 +32,7 @@ Look into the script for details.
 
 #### Let's go
 
-`docker`'s run parameters are described [here](https://docs.docker.com/v17.09/edge/engine/reference/commandline/run/#parent-command).
+`docker`'s commands are described [here](https://docs.docker.com/engine/reference/commandline/docker/).
 
 Using `image.builder.sh`, choose option `1`, it takes some time, the server is started by `docker`,
 and you can log on to the image if you want (it's not necessary):

@@ -15,7 +15,7 @@ do
   echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R ---------------+"
   echo -e "+------------------- Build and run a docker image. --------------------+"
   echo -e "|  1. Nav Server, Debian                                               |"
-  echo -e "| 1p. Nav Server, Debian, with proxy                                   |"
+  echo -e "| 1p. Nav Server, Debian, with proxy (as an example)                   |"
   echo -e "|  2. Web Components, Debian                                           |"
   echo -e "|  3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
   echo -e "|  4. Node PI, to run on a Raspberry PI                                |"
