@@ -8,10 +8,10 @@ FROM debian
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 #
 # Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
-ENV http_proxy http://www-proxy.us.oracle.com:80
-ENV https_proxy http://www-proxy.us.oracle.com:80
-# ENV ftp_proxy $http_proxy
-ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
+#ENV http_proxy http://www-proxy.us.oracle.com:80
+#ENV https_proxy http://www-proxy.us.oracle.com:80
+## ENV ftp_proxy $http_proxy
+#ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
 #
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
