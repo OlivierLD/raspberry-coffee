@@ -61,8 +61,7 @@ root@1d4ff153852b:/workdir/raspberry-pi4j-samples/RESTNavServer#
 
 From the host (where the `docker` command was fired), reach for example http://localhost:8080/oplist
 ```
-[
-{
+[{
 "verb": "GET",
 "path": "/oplist",
 "description": "List of all available operations, on all request managers.",
