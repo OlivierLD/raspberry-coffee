@@ -6,7 +6,6 @@ FROM debian
 # Comment/Uncomment the ENV lines if needed (proxy)
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
-
 #
 # Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
 ENV http_proxy http://www-proxy.us.oracle.com:80
@@ -42,9 +41,9 @@ WORKDIR /workdir/raspberry-pi4j-samples/RESTNavServer
 RUN ../gradlew shadowJar
 # RUN ../gradlew shadowJar -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80
 
-ENV http_proxy ""
-ENV https_proxy ""
-ENV no_proxy ""
+#ENV http_proxy ""
+#ENV https_proxy ""
+#ENV no_proxy ""
 
 EXPOSE 9999
-CMD ["./runNavServer"]
+CMD ["./runNavServer.sh"]

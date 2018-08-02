@@ -30,8 +30,8 @@ Look into the script for details.
 
 `docker`'s run parameters are described [here](https://docs.docker.com/v17.09/edge/engine/reference/commandline/run/#parent-command).
 
-Using `image.builder.sh`, choose option `1`, it takes some time,
-and you can log on to the image to start the server:
+Using `image.builder.sh`, choose option `1`, it takes some time, the server is started by `docker`,
+and you can log on to the image if you want (it's not necessary):
 ```bash
 $ docker run -it oliv-nav:latest /bin/bash
 #     #
@@ -56,7 +56,7 @@ npm:5.6.0
 openjdk version "1.8.0_171"
 OpenJDK Runtime Environment (build 1.8.0_171-8u171-b11-1~deb9u1-b11)
 OpenJDK 64-Bit Server VM (build 25.171-b11, mixed mode)
-root@1d4ff153852b:/workdir/raspberry-pi4j-samples/RESTNavServer# ./runNavServer.sh
+root@1d4ff153852b:/workdir/raspberry-pi4j-samples/RESTNavServer#
 ```
 
 From the host (where the `docker` command was fired), reach for example http://localhost:8080/oplist
