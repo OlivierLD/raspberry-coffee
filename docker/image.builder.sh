@@ -6,6 +6,7 @@ OK=false
 DOCKER_FILE=
 IMAGE_NAME=
 RUN_CMD=
+EXTRA_PRM=
 MESSAGE="Bye!\n"
 #
 while [ "$OK" = "false" ]
@@ -13,6 +14,7 @@ do
   # Menu
   echo -e "+-------------- D O C K E R   I M A G E   B U I L D E R ---------------+"
   echo -e "|  1. Nav Server, Debian                                               |"
+  echo -e "| 1p. Nav Server, Debian, with proxy                                   |"
   echo -e "|  2. Web Components, Debian                                           |"
   echo -e "|  3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |"
   echo -e "|  4. Node PI, to run on a Raspberry PI                                |"
@@ -46,6 +48,24 @@ do
       MESSAGE="${MESSAGE}Reach http://localhost:8080/web/index.html from your browser.\n"
       MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      ;;
+    "1p")
+      OK=true
+      DOCKER_FILE=navserver.Dockerfile
+      IMAGE_NAME=oliv-nav
+			RUN_CMD="docker run -p 8080:9999 -d $IMAGE_NAME:latest"
+			#                      |    |
+			#                      |    tcp port used in the image
+			#                      tcp port as seen from outside
+			#
+      MESSAGE="---------------------------------------------------\n"
+      MESSAGE="${MESSAGE}Reach http://localhost:8080/web/index.html from your browser.\n"
+      MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
+      #
+      EXTRA_PRM="--build-arg http_proxy=http://www-proxy.us.oracle.com:80"
+      EXTRA_PRM="$EXTRA_PRM --build-arg https_proxy=http://www-proxy.us.oracle.com:80"
+      EXTRA_PRM="$EXTRA_PRM --build-arg no_proxy=localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
       ;;
     "2")
       OK=true
@@ -207,9 +227,16 @@ then
   # export HTTP_PROXY=http://www-proxy.us.oracle.com:80
   # export HTTPS_PROXY=http://www-proxy.us.oracle.com:80
   #
-  echo -e "Generating $IMAGE_NAME from $DOCKER_FILE"
+  EXTRA=
+  if [ "$EXTRA_PRM" != "" ]
+  then
+    EXTRA="with $EXTRA_PRM"
+  fi
+  echo -e "---------------------------------------------------"
+  echo -e "Generating $IMAGE_NAME from $DOCKER_FILE $EXTRA"
+  echo -e "---------------------------------------------------"
   #
-  docker build -f $DOCKER_FILE -t $IMAGE_NAME .
+  docker build -f $DOCKER_FILE -t $IMAGE_NAME $EXTRA_PRM .
   #
   # Now run
   $RUN_CMD

@@ -1,17 +1,21 @@
+ARG http_proxy=""
+ARG https_proxy=""
+ARG no_proxy=""
+#
 FROM debian
 #
 # To run on a laptop - not necessaritly on an RPi (hence the default-jdk below)
 # Demos the NavServer (Tide, Almanac, Weather faxes, etc)
 # Clones the repo and recompiles everything.
-# Comment/Uncomment the ENV lines if needed (proxy)
+# proxy settings are passed as ARGs
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 #
 # Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
-#ENV http_proxy http://www-proxy.us.oracle.com:80
-#ENV https_proxy http://www-proxy.us.oracle.com:80
-## ENV ftp_proxy $http_proxy
-#ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
+ENV http_proxy ${http_proxy}
+ENV https_proxy ${https_proxy}
+# ENV ftp_proxy $http_proxy
+ENV no_proxy ${no_proxy}
 #
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
