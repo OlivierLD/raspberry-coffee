@@ -30,7 +30,7 @@ Look into the script for details.
 
 `docker`'s run parameters are described [here](https://docs.docker.com/v17.09/edge/engine/reference/commandline/run/#parent-command).
 
-Using `image.builder.sh`, choose option 1, it takes some time,
+Using `image.builder.sh`, choose option `1`, it takes some time,
 and you can log on to the image to start the server:
 ```bash
 $ docker run -it oliv-nav:latest /bin/bash
@@ -129,8 +129,6 @@ root@7e754f8732a0:/workdir/raspberry-pi4j-samples/WebComponents# node server.js
 Then reach `http://localhost:8081/oliv-components/index.html`
 
 etc, etc...
-
-Several images can be built from the script `image.builder.sh`.
 
 ### Case Study
 You have a `nodejs` project you want to share with others.
