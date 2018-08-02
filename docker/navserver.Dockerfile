@@ -7,20 +7,26 @@ FROM debian
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
-# ENV http_proxy http://www-proxy.us.oracle.com:80
-# ENV https_proxy http://www-proxy.us.oracle.com:80
-
-# From the host to the image
-# COPY bashrc $HOME/.bashrc
+#
+# Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
+ENV http_proxy http://www-proxy.us.oracle.com:80
+ENV https_proxy http://www-proxy.us.oracle.com:80
+# ENV ftp_proxy $http_proxy
+ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
+#
 
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bashrc
 
-RUN apt-get update
-# RUN apt-get install -y curl git build-essential default-jdk
-RUN apt-get install -y oracle-java8-jdk
+RUN \
+  apt-get update && \
+  apt-get upgrade -y && \
+  DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y curl git build-essential default-jdk sysvbanner vim && \
+  rm -rf /var/lib/apt/lists/*
+
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash -
 RUN apt-get install -y nodejs
 
+RUN echo "banner Nav Server" >> $HOME/.bashrc
 RUN echo "git --version" >> $HOME/.bashrc
 RUN echo "echo -n 'node:' && node -v" >> $HOME/.bashrc
 RUN echo "echo -n 'npm:' && npm -v" >> $HOME/.bashrc
@@ -38,6 +44,7 @@ RUN ../gradlew shadowJar
 
 ENV http_proxy ""
 ENV https_proxy ""
+ENV no_proxy ""
 
 EXPOSE 9999
 CMD ["./runNavServer"]

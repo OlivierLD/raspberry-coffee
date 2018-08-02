@@ -6,7 +6,7 @@ Get Docker on your system : https://store.docker.com/search?type=edition&offerin
 This project also provides a script that will build pre-defined Docker images (different OS's, with various features).
 Look into the script, the images are defined by the files `*.Dockerfile`.
 
-Just run:
+Just run `image.builder.sh`:
 ```
  $ ./image.builder.sh
  +-------------- D O C K E R   I M A G E   B U I L D E R --------------+
@@ -23,28 +23,79 @@ Just run:
  +---------------------------------------------------------------------+
  == You choose =>
 ```
-
+This script takes care of building different `docker` images. `docker` commands can be pretty lengthy..., the script takes care of everything.
+Look into the script for details.
 
 #### Let's go
 
 `docker`'s run parameters are described [here](https://docs.docker.com/v17.09/edge/engine/reference/commandline/run/#parent-command).
 
-From the directory the `Dockerfile` lives in:
+Using `image.builder.sh`, choose option 1, it takes some time,
+and you can log on to the image to start the server:
 ```bash
-$ docker build -t oliv-image .
-```
-and to log in the image:
-```bash
-$ docker run -it oliv-image /bin/bash
-```
-to start the server:
-```bash
-$ docker run --name rest-nav-server -p 8080:9999 -d oliv-image
+$ docker run -it oliv-nav:latest /bin/bash
+#     #
+##    #    ##    #    #
+# #   #   #  #   #    #
+#  #  #  #    #  #    #
+#   # #  ######  #    #
+#    ##  #    #   #  #
+#     #  #    #    ##
+
+ #####
+#     #  ######  #####   #    #  ######  #####
+#        #       #    #  #    #  #       #    #
+ #####   #####   #    #  #    #  #####   #    #
+      #  #       #####   #    #  #       #####
+#     #  #       #   #    #  #   #       #   #
+ #####   ######  #    #    ##    ######  #    #
+
+git version 2.11.0
+node:v9.11.2
+npm:5.6.0
+openjdk version "1.8.0_171"
+OpenJDK Runtime Environment (build 1.8.0_171-8u171-b11-1~deb9u1-b11)
+OpenJDK 64-Bit Server VM (build 25.171-b11, mixed mode)
+root@1d4ff153852b:/workdir/raspberry-pi4j-samples/RESTNavServer# ./runNavServer.sh
 ```
 
 From the host (where the `docker` command was fired), reach for example http://localhost:8080/oplist
-
+```
+[
+{
+"verb": "GET",
+"path": "/oplist",
+"description": "List of all available operations, on all request managers.",
+"fn": {}
+},
+{
+"verb": "GET",
+"path": "/ww/composite-hierarchy",
+"description": "Retrieve the list of the composites already available on the file system",
+"fn": {}
+},
+{
+"verb": "GET",
+"path": "/astro/oplist",
+"description": "List of all available operations, on astro request manager.",
+"fn": {}
+},
+{
+"verb": "GET",
+"path": "/astro/positions-in-the-sky",
+"description": "Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optional: 'fromL' and 'fromG', 'wandering' (true|[false]).",
+"fn": {}
+},
+{
+"verb": "POST",
+"path": "/astro/sun-now",
+"description": "Create a request for Sun data now. Requires body payload (GeoPoint)",
+"fn": {}
+ ...
+```
 Yeah!
+
+You can also reach http://localhost:8080/web/index.html from a browser.
 
 From another shell:
 ```bash
@@ -65,6 +116,8 @@ To drop the image:
 $ docker rmi oliv-image
 ```
 
+The scripts `rm.container.sh` and `rm.images.sh` are here to help...
+
 ### Examples
 
 ```bash
@@ -83,7 +136,7 @@ Several images can be built from the script `image.builder.sh`.
 You have a `nodejs` project you want to share with others.
 
 The application reads GPS data through a Serial port, and feeds a `WebSocket` server.
-The data can then be visualized through a Web interface.
+The data can then be visualized through a Web interface using Web Component(s).
 
 To enable everything, you need to:
 1. Have a Raspberry PI
@@ -110,7 +163,7 @@ as explained at the top of this document.
 
 In this case, the full `Docker` image creation (named `oliv-nodepi` below) comes down to:
 ```bash
- $ docker build -f Dockerfile.node-pi -t oliv-nodepi .
+ $ docker build -f node-pi.Dockerfile -t oliv-nodepi .
 Sending build context to Docker daemon  752.6kB
 Step 1/20 : FROM resin/raspberrypi3-debian:latest
  ---> c542b8f7a388

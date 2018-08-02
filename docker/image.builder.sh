@@ -37,13 +37,13 @@ do
       OK=true
       DOCKER_FILE=navserver.Dockerfile
       IMAGE_NAME=oliv-nav
-			RUN_CMD="docker run -p 8081:8080 -d $IMAGE_NAME:latest"
+			RUN_CMD="docker run -p 8080:9999 -d $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
 			#                      tcp port as seen from outside
 			#
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Reach http://localhost:8081/oliv-components/index.html from your browser.\n"
+      MESSAGE="${MESSAGE}Reach http://localhost:8080/web/index.html from your browser.\n"
       MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
