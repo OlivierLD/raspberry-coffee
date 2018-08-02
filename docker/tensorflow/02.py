@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 #
 # Run this from the keras directory
 # $ python3 examples/oliv/02.py
