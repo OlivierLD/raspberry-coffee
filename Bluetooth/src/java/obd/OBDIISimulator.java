@@ -42,6 +42,8 @@ public class OBDIISimulator implements SerialIOCallbacks {
 //
 // https://en.wikipedia.org/wiki/OBD-II_PIDs
 
+	private static boolean verbose = "true".equals(System.getProperty("obd.verbose"));
+
 	private static SerialCommunicator serialCommunicator = null;
 
 	// RPM calculation variables
@@ -152,11 +154,9 @@ public class OBDIISimulator implements SerialIOCallbacks {
 		initSensors();
 
 		// Set up the hardware and software serial objects
-		if (SERIAL_DEBUG) {
-//		System.out.begin(BAUDRATE);
-		}
 		TimeUtil.delay(DELAY);
-		openSerial("/dev/tty.Bluetooth-Incoming-Port", BAUDRATE);
+		String serialPort = System.getProperty("serial.port", "/dev/tty.Bluetooth-Incoming-Port");
+		openSerial(serialPort, BAUDRATE);
 	}
 
 	private String OBDRequest = "";
@@ -166,7 +166,7 @@ public class OBDIISimulator implements SerialIOCallbacks {
 		updateSensorValues();
 	}
 
-	// Process the requests (commands) sent from the client app
+// Process the requests (commands) sent from the client app
 // The requests can either be:
 // - AT commands to set up the simulator and perform handshaking
 // - ODBII PID requests to transmit sensor information
@@ -496,7 +496,9 @@ public class OBDIISimulator implements SerialIOCallbacks {
 
 	@Override
 	public void onSerialData(byte b) {
-//	System.out.println(String.format("onSerialData-1 %s", String.valueOf((char)b)));
+		if (verbose) {
+			System.out.println(String.format("onSerialData-1 %s", String.valueOf((char)b)));
+		}
 		// Read one received character at a time
 		char c = (char)b;
 
@@ -523,11 +525,17 @@ public class OBDIISimulator implements SerialIOCallbacks {
 		OBDIISimulator simulator = new OBDIISimulator();
 		simulator.setup();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			System.out.println("\nCtrl+C intercepted");
 			go = false;
 		}));
 		while (go) {
 			simulator.loop();
 		}
 		System.out.println("Done");
+		try {
+			serialCommunicator.disconnect();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
 	}
 }
