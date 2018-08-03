@@ -9,20 +9,22 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
-// On your Mac, choose Apple menu > System Preferences, then click Bluetooth. Your Mac is now discoverable.
+/*
+ * On your Mac, choose Apple menu > System Preferences, then click Bluetooth. Your Mac is now discoverable.
+ * We use here Bluetooth over a Serial connection
+ *
+ * Adapted from the code at https://github.com/dplanella/arduino-odb2sim.git
+ */
 
 public class OBDIISimulator implements SerialIOCallbacks {
 
 // ODBII scan tool simulator. Transmits ODBII PIDs with vehicle sensor
 // information upon request, using the ELM327 protocol.
 //
-// The common setup will be a set of automotive sensors connected to the
-// Arduino microcontroller (MCU) running as the simulator. Equipped with a
-// Bluetooth module, sensor information will be sent to a client when
-// requested. The client will generally be a smart phone running an OBDII app,
+// The client will generally be a smart phone running an OBDII app,
 // such as Torque.
 //
-// This program implements the aqcuisition and calculation of sensor values,
+// This program implements the acquisition and calculation of sensor values,
 // and transmission of those to the client using OBDII PID structures over the
 // ELM327 protocol.
 //
@@ -39,10 +41,6 @@ public class OBDIISimulator implements SerialIOCallbacks {
 //                         simulator)
 //
 // https://en.wikipedia.org/wiki/OBD-II_PIDs
-
-// We use the software serial class so that we can use the
-// hardware UART for debugging purposes and to print the output
-// to a serial monitor
 
 	private static SerialCommunicator serialCommunicator = null;
 
