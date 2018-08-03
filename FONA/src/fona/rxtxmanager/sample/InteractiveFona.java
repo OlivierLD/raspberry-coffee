@@ -146,7 +146,7 @@ public class InteractiveFona implements FONAClient {
 	 * The main.
 	 *
 	 * Supported System variables:
-	 * <b>serial.port</b>: A stgring like "/dev/ttyUSB0". Default is "/dev/ttyUSB0"
+	 * <b>serial.port</b>: A string like "/dev/ttyUSB0". Default is "/dev/ttyUSB0"
 	 * <b>baud.rate</b>: As an integer like 1200, 4800, 9600, etc. Default is 9600.
 	 * <b>verbose</b> "true" or "false", default "false"
 	 *
