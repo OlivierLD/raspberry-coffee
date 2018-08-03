@@ -139,7 +139,7 @@ public class OBDIISimulator implements SerialIOCallbacks {
 			}
 		}
 		try {
-			serialCommunicator.connect(serialPort, "FONA", br); // Other values are defaulted
+			serialCommunicator.connect(serialPort, "OBD", br); // Other values are defaulted
 			boolean b = serialCommunicator.initIOStream();
 			System.out.println("IO Streams " + (b ? "" : "NOT ") + "initialized");
 			serialCommunicator.initListener();
@@ -360,7 +360,6 @@ public class OBDIISimulator implements SerialIOCallbacks {
 	void replyOBD2(String mode_response, String pid, long value, byte reply_bytes) {
 		String modeReply = mode_response + pid + toHexReply(value, reply_bytes);
 
-//	BtSystem.out.println(modeReply);
 		try {
 			serialCommunicator.writeData(modeReply);
 			if (SERIAL_DEBUG) {
