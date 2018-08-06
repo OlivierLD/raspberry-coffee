@@ -13,7 +13,7 @@ I use nodeJS to run the pages:
  $ node server.js
 ```
 
-Then load the pages in a browser, using for example [http://localhost:8080/component.01/index.html](http://localhost:8080/component.01/index.html).
+Then load the pages in a browser, using for example [http://localhost:8080/oliv-components/index.html](http://localhost:8080/component.01/index.html).
 
 ---
 
