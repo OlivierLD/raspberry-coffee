@@ -1,6 +1,12 @@
 const worldMapVerbose = false;
 const WORLD_MAP_TAG_NAME = 'world-map';
 
+/**
+ * TODO:
+ * - Rhumblines & Great Circles.
+ * - document doAfter & doBefore
+ * - document utilities (usable in doBefore & doAfter)
+ */
 const mapProjections = {
 	anaximandre: {
 		type: "ANAXIMANDRE"
@@ -46,8 +52,7 @@ const worldMapDefaultColorConfig = {
 /* The map data */
 import fullWorldMap from "./world.map/worldmap.data.js";
 // import fullWorldMap from "./world.map/worldmap.data"; // minifyJs does NOT like the .js extension
-
-// TODO Callbacks (before and after drawing)
+import * as Utilities from "./utilities/Utilities.js";
 
 /* global HTMLElement */
 class WorldMap extends HTMLElement {
@@ -375,14 +380,6 @@ class WorldMap extends HTMLElement {
 	/*
 	 * Component methods
 	 */
-	toRadians(deg) {
-		return deg * (Math.PI / 180);
-	}
-
-	toDegrees(rad) {
-		return rad * (180 / Math.PI);
-	}
-
 	setDoBefore(func) {
 		this.doBefore = func;
 	}
@@ -438,7 +435,7 @@ class WorldMap extends HTMLElement {
 				let lhaSun = data.sun.gha + this.userPosition.longitude;
 				while (lhaSun > 360) { lhaSun -= 360; }
 				while (lhaSun < 0) { lhaSun += 360; }
-				this.globeViewRightLeftRotation = -(data.sun.decl * Math.sin(this.toRadians(lhaSun)));
+				this.globeViewRightLeftRotation = -(data.sun.decl * Math.sin(Utilities.toRadians(lhaSun)));
 //			console.log("Tilt is now", globeViewRightLeftRotation);
 			}
 		}
@@ -457,8 +454,8 @@ class WorldMap extends HTMLElement {
 		let y = Math.sin(lat);
 		let z = Math.cos(lat) * Math.cos(lng);
 
-		let alfa = this.toRadians(this.globeViewRightLeftRotation); // in plan (x, y), z unchanged, earth inclination on its axis
-		let beta = this.toRadians(this.globeViewForeAftRotation);   // in plan (y, z), x unchanged, latitude of the eye
+		let alfa = Utilities.toRadians(this.globeViewRightLeftRotation); // in plan (x, y), z unchanged, earth inclination on its axis
+		let beta = Utilities.toRadians(this.globeViewForeAftRotation);   // in plan (y, z), x unchanged, latitude of the eye
 		/*
 		 * x is the x of the screen
 		 * y is the y of the screen
@@ -531,15 +528,15 @@ class WorldMap extends HTMLElement {
 		while (longitude > 360) {
 			longitude -= 360;
 		}
-		let aries = { lat: this.toRadians(obl), lng: this.toRadians(longitude) };
+		let aries = { lat: Utilities.toRadians(obl), lng: Utilities.toRadians(longitude) };
 		let eclCenter = this.deadReckoning(aries, 90 * 60, 0); // "Center" of the Ecliptic
 
 		context.fillStyle = this.worldmapColorConfig.tropicColor;
 		for (let hdg=0; hdg<360; hdg++) {
 			let pt = this.deadReckoning(eclCenter, 90 * 60, hdg);
-			let pp = this.getPanelPoint(this.toDegrees(pt.lat), this.toDegrees(pt.lng));
+			let pp = this.getPanelPoint(Utilities.toDegrees(pt.lat), Utilities.toDegrees(pt.lng));
 
-			let thisPointIsBehind = this.isBehind(pt.lat, pt.lng - this.toRadians(this.globeViewLngOffset));
+			let thisPointIsBehind = this.isBehind(pt.lat, pt.lng - Utilities.toRadians(this.globeViewLngOffset));
 
 			if (this.transparentGlobe || !thisPointIsBehind) {
 				context.fillRect(pp.x, pp.y, 1, 1);
@@ -557,7 +554,7 @@ class WorldMap extends HTMLElement {
 	getDir(x, y) {
 		let dir = 0.0;
 		if (y !== 0) {
-			dir = this.toDegrees(Math.atan(x / y));
+			dir = Utilities.toDegrees(Math.atan(x / y));
 		}
 		if (x <= 0 || y <= 0) {
 			if (x > 0 && y < 0) {
@@ -618,10 +615,10 @@ class WorldMap extends HTMLElement {
 	 * @return DR Position, L & G in Radians
 	 */
 	deadReckoning(from, dist, route) {
-		let radianDistance = this.toRadians(dist / 60);
+		let radianDistance = Utilities.toRadians(dist / 60);
 		let finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
-				(Math.cos(from.lat) * Math.sin(radianDistance) * Math.cos(this.toRadians(route)))));
-		let finalLng = from.lng + Math.atan2(Math.sin(this.toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
+				(Math.cos(from.lat) * Math.sin(radianDistance) * Math.cos(Utilities.toRadians(route)))));
+		let finalLng = from.lng + Math.atan2(Math.sin(Utilities.toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
 				Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
 		return ({lat: finalLat, lng: finalLng});
 	}
@@ -640,7 +637,7 @@ class WorldMap extends HTMLElement {
 		// find first visible point of the night limb
 		for (let i=0; i<360; i++) {
 			let night = this.deadReckoning(from, NINETY_DEGREES, i);
-			let visible = this.isBehind(night.lat, night.lng - this.toRadians(this.globeViewLngOffset)) ? INVISIBLE : VISIBLE;
+			let visible = this.isBehind(night.lat, night.lng - Utilities.toRadians(this.globeViewLngOffset)) ? INVISIBLE : VISIBLE;
 			if (visible === VISIBLE && visibility === INVISIBLE) { // Just became visible
 				firstVisible = i;
 				break;
@@ -653,12 +650,12 @@ class WorldMap extends HTMLElement {
 		let firstPt, lastPt;
 		for (let dir=firstVisible; dir<firstVisible+360; dir++) {
 			let dr = this.deadReckoning(from, NINETY_DEGREES, dir);
-			let borderPt = this.getPanelPoint(this.toDegrees(dr.lat), this.toDegrees(dr.lng));
+			let borderPt = this.getPanelPoint(Utilities.toDegrees(dr.lat), Utilities.toDegrees(dr.lng));
 			if (dir === firstVisible) {
 				context.moveTo(borderPt.x, borderPt.y);
 				firstPt = borderPt;
 			} else {
-				if (!this.isBehind(dr.lat, dr.lng - this.toRadians(this.globeViewLngOffset))) {
+				if (!this.isBehind(dr.lat, dr.lng - Utilities.toRadians(this.globeViewLngOffset))) {
 					lastPt = borderPt;
 					context.lineTo(borderPt.x, borderPt.y);
 				}
@@ -701,10 +698,10 @@ class WorldMap extends HTMLElement {
 			}
 		}
 
-		let userPos = { lat: this.toRadians(user.latitude), lng: this.toRadians(user.longitude) };
+		let userPos = { lat: Utilities.toRadians(user.latitude), lng: Utilities.toRadians(user.longitude) };
 		for (let i=firstBoundary; (inc>0 && i<=lastBoundary) || (inc<0 && i>=lastBoundary); i+=inc) {
 			let limb = this.deadReckoning(userPos, NINETY_DEGREES, i);
-			let limbPt = this.getPanelPoint(this.toDegrees(limb.lat), this.toDegrees(limb.lng));
+			let limbPt = this.getPanelPoint(Utilities.toDegrees(limb.lat), Utilities.toDegrees(limb.lng));
 			context.lineTo(limbPt.x, limbPt.y);
 		}
 		context.closePath();
@@ -736,7 +733,7 @@ class WorldMap extends HTMLElement {
 			if (gAmpl > 180 && _lng >= 0 && this.west > 0 && _lng < this.east) {
 				_lng += (this.west + (gAmpl - this.east));
 			}
-			let rotated = this.rotateBothWays(this.toRadians(lat), this.toRadians(_lng - this.globeViewLngOffset));
+			let rotated = this.rotateBothWays(Utilities.toRadians(lat), Utilities.toRadians(_lng - this.globeViewLngOffset));
 			let x = Math.round(this.globeView_ratio * rotated.x);
 			x += this.globeViewOffset_X;
 			let y = Math.round(this.globeView_ratio * rotated.y);
@@ -787,7 +784,7 @@ class WorldMap extends HTMLElement {
 		context.save();
 		let lng = this.haToLongitude(gha);
 		let body = this.getPanelPoint(decl, lng);
-		let thisPointIsBehind = this.isBehind(this.toRadians(decl), this.toRadians(lng - this.globeViewLngOffset));
+		let thisPointIsBehind = this.isBehind(Utilities.toRadians(decl), Utilities.toRadians(lng - this.globeViewLngOffset));
 		if (!thisPointIsBehind || this.transparentGlobe) {
 			// Draw Body
 			this.plot(context, body, color);
@@ -957,7 +954,7 @@ class WorldMap extends HTMLElement {
 		// Find min and max
 		while (go) {
 			for (let _lat = __south; _lat <= __north; _lat += 5) {
-				let rotated = this.rotateBothWays(this.toRadians(_lat), this.toRadians(gProgress));
+				let rotated = this.rotateBothWays(Utilities.toRadians(_lat), Utilities.toRadians(gProgress));
 
 				let dx = rotated.x;
 				let dy = rotated.y;
@@ -988,7 +985,7 @@ class WorldMap extends HTMLElement {
 		}
 		go = true;
 		while (go) {
-			let rotated = this.rotateBothWays(this.toRadians(lProgress), this.toRadians(this.west));
+			let rotated = this.rotateBothWays(Utilities.toRadians(lProgress), Utilities.toRadians(this.west));
 			let dx = rotated.x;
 			let dy = rotated.y;
 //  console.log("dx:" + dx + ", dy:" + dy);
@@ -996,7 +993,7 @@ class WorldMap extends HTMLElement {
 			maxX = Math.max(maxX, dx);
 			minY = Math.min(minY, dy);
 			maxY = Math.max(maxY, dy);
-			rotated = this.rotateBothWays(this.toRadians(lProgress), this.toRadians(this.east));
+			rotated = this.rotateBothWays(Utilities.toRadians(lProgress), Utilities.toRadians(this.east));
 			dx = rotated.x;
 			dy = rotated.y;
 //  console.log("dx:" + dx + ", dy:" + dy);
@@ -1054,7 +1051,7 @@ class WorldMap extends HTMLElement {
 				for (let j = Math.min(this.south, this.north) + (lstep / 5); j < Math.max(this.south, this.north); j += (lstep / 5)) {
 					let p = this.getPanelPoint(j, i);
 
-					let thisPointIsBehind = this.isBehind(this.toRadians(j), this.toRadians(i - this.globeViewLngOffset));
+					let thisPointIsBehind = this.isBehind(Utilities.toRadians(j), Utilities.toRadians(i - this.globeViewLngOffset));
 
 					if (!this.transparentGlobe && thisPointIsBehind) {
 						previous = null;
@@ -1079,7 +1076,7 @@ class WorldMap extends HTMLElement {
 				context.beginPath();
 				for (let i = Math.min(this.east, this.west); i <= Math.max(this.east, this.west); i += gstep) {
 					let p = this.getPanelPoint(j, i);
-					let thisPointIsBehind = this.isBehind(this.toRadians(j), this.toRadians(i - this.globeViewLngOffset));
+					let thisPointIsBehind = this.isBehind(Utilities.toRadians(j), Utilities.toRadians(i - this.globeViewLngOffset));
 
 					if (!this.transparentGlobe && thisPointIsBehind) {
 						previous = null;
@@ -1105,7 +1102,7 @@ class WorldMap extends HTMLElement {
 			context.fillStyle = this.worldmapColorConfig.tropicColor;
 			for (let lng = 0; lng < 360; lng++) {
 				let p = this.getPanelPoint(tropicLat, lng);
-				let thisPointIsBehind = this.isBehind(this.toRadians(tropicLat), this.toRadians(lng - this.globeViewLngOffset));
+				let thisPointIsBehind = this.isBehind(Utilities.toRadians(tropicLat), Utilities.toRadians(lng - this.globeViewLngOffset));
 
 				if (this.transparentGlobe || !thisPointIsBehind) {
 					context.fillRect(p.x, p.y, 1, 1);
@@ -1114,7 +1111,7 @@ class WorldMap extends HTMLElement {
 			// Capricorn
 			for (let lng = 0; lng < 360; lng++) {
 				let p = this.getPanelPoint(-tropicLat, lng);
-				let thisPointIsBehind = this.isBehind(this.toRadians(-tropicLat), this.toRadians(lng - this.globeViewLngOffset));
+				let thisPointIsBehind = this.isBehind(Utilities.toRadians(-tropicLat), Utilities.toRadians(lng - this.globeViewLngOffset));
 
 				if (this.transparentGlobe || !thisPointIsBehind) {
 					context.fillRect(p.x, p.y, 1, 1);
@@ -1123,7 +1120,7 @@ class WorldMap extends HTMLElement {
 			// North Polar Circle
 			for (let lng = 0; lng < 360; lng++) {
 				let p = this.getPanelPoint(90 - tropicLat, lng);
-				let thisPointIsBehind = this.isBehind(this.toRadians(90 - tropicLat), this.toRadians(lng - this.globeViewLngOffset));
+				let thisPointIsBehind = this.isBehind(Utilities.toRadians(90 - tropicLat), Utilities.toRadians(lng - this.globeViewLngOffset));
 
 				if (this.transparentGlobe || !thisPointIsBehind) {
 					context.fillRect(p.x, p.y, 1, 1);
@@ -1132,7 +1129,7 @@ class WorldMap extends HTMLElement {
 			// South Polar Circle
 			for (let lng = 0; lng < 360; lng++) {
 				let p = this.getPanelPoint(tropicLat - 90, lng);
-				let thisPointIsBehind = this.isBehind(this.toRadians(tropicLat - 90), this.toRadians(lng - this.globeViewLngOffset));
+				let thisPointIsBehind = this.isBehind(Utilities.toRadians(tropicLat - 90), Utilities.toRadians(lng - this.globeViewLngOffset));
 
 				if (this.transparentGlobe || !thisPointIsBehind) {
 					context.fillRect(p.x, p.y, 1, 1);
@@ -1166,7 +1163,7 @@ class WorldMap extends HTMLElement {
 								lng -= 360;
 							}
 
-							let thisPointIsBehind = this.isBehind(this.toRadians(lat), this.toRadians(lng - this.globeViewLngOffset));
+							let thisPointIsBehind = this.isBehind(Utilities.toRadians(lat), Utilities.toRadians(lng - this.globeViewLngOffset));
 							let drawIt = true;
 							if (!this.transparentGlobe && thisPointIsBehind) {
 								drawIt = false;
@@ -1213,7 +1210,7 @@ class WorldMap extends HTMLElement {
 					context.save();
 					if (this.withSun) {
 						let sun = this.getPanelPoint(this.astronomicalData.sun.decl, sunLng);
-						let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.sun.decl), this.toRadians(sunLng - this.globeViewLngOffset));
+						let thisPointIsBehind = this.isBehind(Utilities.toRadians(this.astronomicalData.sun.decl), Utilities.toRadians(sunLng - this.globeViewLngOffset));
 						if (!thisPointIsBehind || this.transparentGlobe) {
 							// Draw Sun
 							this.plot(context, sun, this.worldmapColorConfig.sunColor);
@@ -1253,7 +1250,7 @@ class WorldMap extends HTMLElement {
 					}
 					// Sunlight
 					if (this.withSunlight) {
-						let from = {lat: this.toRadians(this.astronomicalData.sun.decl), lng: this.toRadians(sunLng)};
+						let from = {lat: Utilities.toRadians(this.astronomicalData.sun.decl), lng: Utilities.toRadians(sunLng)};
 						this.drawNight(context, from, this.userPosition, this.astronomicalData.sun.gha);
 					}
 					context.restore();
@@ -1263,7 +1260,7 @@ class WorldMap extends HTMLElement {
 					context.save();
 					if (this.withMoon) {
 						let moon = this.getPanelPoint(this.astronomicalData.moon.decl, moonLng);
-						let thisPointIsBehind = this.isBehind(this.toRadians(this.astronomicalData.moon.decl), this.toRadians(moonLng - this.globeViewLngOffset));
+						let thisPointIsBehind = this.isBehind(Utilities.toRadians(this.astronomicalData.moon.decl), Utilities.toRadians(moonLng - this.globeViewLngOffset));
 						if (!thisPointIsBehind || this.transparentGlobe) {
 							// Draw Moon
 							this.plot(context, moon, this.worldmapColorConfig.moonColor);
@@ -1299,7 +1296,7 @@ class WorldMap extends HTMLElement {
 					}
 					// Moonlight
 					if (this.withMoonlight) {
-						let from = {lat: this.toRadians(this.astronomicalData.moon.decl), lng: this.toRadians(moonLng)};
+						let from = {lat: Utilities.toRadians(this.astronomicalData.moon.decl), lng: Utilities.toRadians(moonLng)};
 						this.drawNight(context, from, this.userPosition, this.astronomicalData.moon.gha);
 					}
 					context.restore();
@@ -1346,17 +1343,17 @@ class WorldMap extends HTMLElement {
 	}
 
 	getIncLat(lat) {
-		let il = Math.log(Math.tan((Math.PI / 4) + (this.toRadians(lat) / 2)));
-		return this.toDegrees(il);
+		let il = Math.log(Math.tan((Math.PI / 4) + (Utilities.toRadians(lat) / 2)));
+		return Utilities.toDegrees(il);
 	}
 
 	getInvIncLat(il) {
-		let ret = this.toRadians(il);
+		let ret = Utilities.toRadians(il);
 		ret = Math.exp(ret);
 		ret = Math.atan(ret);
 		ret -= (Math.PI / 4); // 0.78539816339744828D;
 		ret *= 2;
-		ret = this.toDegrees(ret);
+		ret = Utilities.toDegrees(ret);
 		return ret;
 	}
 
@@ -1548,7 +1545,7 @@ class WorldMap extends HTMLElement {
 		// Find the first point (west) of the rim
 		let first = 0;
 		for (let x=0; x<nightRim.length; x++) {
-			let lng = this.toRealLng(this.toDegrees(nightRim[x].lng));
+			let lng = this.toRealLng(Utilities.toDegrees(nightRim[x].lng));
 //		console.log("Night lng: " + lng);
 			if (lng > this._west) {
 				first = Math.max(0, x - 1);
@@ -1556,7 +1553,7 @@ class WorldMap extends HTMLElement {
 			}
 		}
 		context.beginPath();
-		let pt = this.posToCanvas(this.toDegrees(nightRim[first].lat), this.toRealLng(this.toDegrees(nightRim[first].lng)));
+		let pt = this.posToCanvas(Utilities.toDegrees(nightRim[first].lat), this.toRealLng(Utilities.toDegrees(nightRim[first].lng)));
 		context.moveTo(-10 /*pt.x*/, pt.y); // left++
 
 		let go = true;
@@ -1564,7 +1561,7 @@ class WorldMap extends HTMLElement {
 //	console.log("_west ", _west, "first", first);
 
 		for (let idx=first; idx<360 && go === true; idx++) {
-			pt = this.posToCanvas(this.toDegrees(nightRim[idx].lat), this.toRealLng(this.toDegrees(nightRim[idx].lng)));
+			pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), this.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
 			context.lineTo(pt.x, pt.y);
 
 			// DEBUG
@@ -1579,10 +1576,10 @@ class WorldMap extends HTMLElement {
 		}
 		if (go) {
 			for (let idx=0; idx<360 && go === true; idx++) {
-				if (this.toRealLng(this.toDegrees(nightRim[idx].lng)) > this._east) {
+				if (this.toRealLng(Utilities.toDegrees(nightRim[idx].lng)) > this._east) {
 					go = false;
 				} else {
-					pt = this.posToCanvas(this.toDegrees(nightRim[idx].lat), this.toRealLng(this.toDegrees(nightRim[idx].lng)));
+					pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), this.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
 					context.lineTo(pt.x, pt.y);
 					// DEBUG
 					// if (idx % 20 === 0) {
@@ -1619,7 +1616,7 @@ class WorldMap extends HTMLElement {
 				this.plotPosToCanvas(context, this.astronomicalData.sun.decl, sunLng, "Sun", this.worldmapColorConfig.sunColor);
 
 				if (this.withSunlight) {
-					let from = {lat: this.toRadians(this.astronomicalData.sun.decl), lng: this.toRadians(sunLng)};
+					let from = {lat: Utilities.toRadians(this.astronomicalData.sun.decl), lng: Utilities.toRadians(sunLng)};
 					this.drawFlatNight(context, from, this.userPosition, this.astronomicalData.sun.gha);
 				}
 				context.restore();
@@ -1629,7 +1626,7 @@ class WorldMap extends HTMLElement {
 				let moonLng = this.haToLongitude(this.astronomicalData.moon.gha);
 				this.plotPosToCanvas(context, this.astronomicalData.moon.decl, moonLng, "Moon", this.worldmapColorConfig.moonColor);
 				if (this.withMoonlight) {
-					let from = {lat: this.toRadians(this.astronomicalData.moon.decl), lng: this.toRadians(moonLng)};
+					let from = {lat: Utilities.toRadians(this.astronomicalData.moon.decl), lng: Utilities.toRadians(moonLng)};
 					this.drawFlatNight(context, from, this.userPosition, this.astronomicalData.moon.gha);
 				}
 				context.restore();
@@ -1644,13 +1641,13 @@ class WorldMap extends HTMLElement {
 					while (longitude > 360) {
 						longitude -= 360;
 					}
-					let ariesRad = { lat: this.toRadians(this.astronomicalData.eclipticObliquity), lng: this.toRadians(longitude) };
+					let ariesRad = { lat: Utilities.toRadians(this.astronomicalData.eclipticObliquity), lng: Utilities.toRadians(longitude) };
 					let eclCenter = this.deadReckoning(ariesRad, 90 * 60, 0); // "Center" of the Ecliptic
 
 					context.fillStyle = this.worldmapColorConfig.tropicColor;
 					for (let hdg=0; hdg<360; hdg++) {
 						let pt = this.deadReckoning(eclCenter, 90 * 60, hdg);
-						let pp = this.posToCanvas(this.toDegrees(pt.lat), this.toRealLng(this.toDegrees(pt.lng)));
+						let pp = this.posToCanvas(Utilities.toDegrees(pt.lat), this.toRealLng(Utilities.toDegrees(pt.lng)));
 						context.fillRect(pp.x, pp.y, 1, 1);
 					}
 

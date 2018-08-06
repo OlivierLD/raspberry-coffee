@@ -56,6 +56,7 @@ const cardValues = [
 ];
 
 const FONT_SIZE = 60;
+import * as Utilities from "./utilities/Utilities.js";
 
 /* global HTMLElement */
 class Raw16PointsDir extends HTMLElement {
@@ -287,7 +288,7 @@ class Raw16PointsDir extends HTMLElement {
 
 		// LEDs
 		for (var led=0; led<cardValues.length; led++) {
-			let angle = this.toRadians(cardValues[led].value + 90);
+			let angle = Utilities.toRadians(cardValues[led].value + 90);
 			// Led centrer
 			let xLedCenter = (this.width / 2) - ((radius * 0.95) * Math.cos(angle));
 			let yLedCenter = (this.height / 2) - ((radius * 0.95) * Math.sin(angle));
@@ -307,14 +308,6 @@ class Raw16PointsDir extends HTMLElement {
 		context.arc(pt.x, pt.y, radius, 0, radius * Math.PI);
 		context.fill();
 		context.closePath();
-	}
-
-	toRadians(deg) {
-		return deg * (Math.PI / 180);
-	}
-
-	toDegrees(rad) {
-		return rad * (180 / Math.PI);
 	}
 }
 

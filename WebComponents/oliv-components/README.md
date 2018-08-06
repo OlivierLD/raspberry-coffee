@@ -1,6 +1,10 @@
 ## Oliv's Web Components
 
 > Note: _Those components requires **absolutely NO** external library._
+> Some components might require some providecd utilities like
+> - `character.matrixes/characters.js`
+> - `stars.constellation.js`
+> - `utilities/Utilities.js`
 
 They do require a WebComponents-savvy browser though. Most of them are (or will shortly be...).
 
@@ -34,11 +38,11 @@ After starting the `node` server as mentioned above, you can also reach
 - Watch/Clock (analog). &#9989; Done
 - Marquee. &#9989; Done
 - Evolution Displays. TODO
-- Graphs. TODO
+- Generic Graphs. TODO
 - Sky Map and Star Finder (along with some `REST` service(s)). &#10140; WIP, coming good.
 
 #### Maybe next?
-- Satellite plotter? &#10140; See the `after` callback on the Globe examples.
+- Satellite plotter? &#10140; See the `doAfter` callback on the Globe examples.
 - Tide Graph?
 - Current Display?
 - Boat Overview?

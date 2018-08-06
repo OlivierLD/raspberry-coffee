@@ -18,11 +18,18 @@ const SKY_MAP_TAG_NAME = 'sky-map';
  *
  * - Latitude (Observer)
  * - LHA Aries
+ *
+ * TODO:
+ * - Wandering bodies
+ * - Tweaks N/S SkyMap
+ * - Displayable star names
  */
 
 /* The map data */
 import constellations from "./stars/constellations.js";
 // import constellations from "./stars/constellations"; // minifyJs does NOT like the .js extension
+
+import * as Utilities from "./utilities/Utilities.js";
 
 const NORTHERN_HEMISPHERE = 1;
 const SOUTHERN_HEMISPHERE = -1;
@@ -328,7 +335,7 @@ class SkyMap extends HTMLElement {
 			context.beginPath();
 			for (let i = 0; i < 360; i++) {
 				if (i % this.majorTicks === 0) {
-					let currentAngle = - this.toRadians(i + this.LHAAries);
+					let currentAngle = - Utilities.toRadians(i + this.LHAAries);
 					let xFrom = (this.canvas.width / 2) - ((radius * 0.98) * Math.cos(currentAngle));
 					let yFrom = (this.canvas.height / 2) - ((radius * 0.98) * Math.sin(currentAngle));
 					let xTo = (this.canvas.width / 2) - ((radius * 0.92) * Math.cos(currentAngle));
@@ -346,7 +353,7 @@ class SkyMap extends HTMLElement {
 			if (this.minorTicks > 0) {
 				context.beginPath();
 				for (let i = 0; i < 360; i += this.minorTicks) {
-					let _currentAngle = - this.toRadians(i + this.LHAAries);
+					let _currentAngle = - Utilities.toRadians(i + this.LHAAries);
 
 					let xFrom = (this.canvas.width / 2) - ((radius * 0.98) * Math.cos(_currentAngle));
 					let yFrom = (this.canvas.height / 2) - ((radius * 0.98) * Math.sin(_currentAngle));
@@ -367,7 +374,7 @@ class SkyMap extends HTMLElement {
 				if (i % this.majorTicks === 0) {
 					context.save();
 					context.translate(this.canvas.width / 2, (this.canvas.height / 2)); // canvas.height);
-					let __currentAngle = - this.toRadians(i + this.LHAAries);
+					let __currentAngle = - Utilities.toRadians(i + this.LHAAries);
 					context.rotate(__currentAngle - Math.PI);
 					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 					context.fillStyle = 'black';
@@ -391,17 +398,17 @@ class SkyMap extends HTMLElement {
 			for (let day=1; day<=365; day++) {
 				let now = this.findCorrespondingDay(day);
 				let d = 360 * (day - 1) / 365; // The angle in the circle
-				let xFrom = (this.canvas.width / 2) - ((radius * 0.98) * Math.cos(this.toRadians((d - this.LHAAries) * -this._hemisphere)));
-				let yFrom = (this.canvas.height / 2) - ((radius * 0.98) * Math.sin(this.toRadians((d - this.LHAAries) * -this._hemisphere)));
-				let xTo = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(this.toRadians((d - this.LHAAries) * -this._hemisphere)));
-				let yTo = (this.canvas.height / 2) - ((radius * 0.95) * Math.sin(this.toRadians((d - this.LHAAries) * -this._hemisphere)));
+				let xFrom = (this.canvas.width / 2) - ((radius * 0.98) * Math.cos(Utilities.toRadians((d - this.LHAAries) * -this._hemisphere)));
+				let yFrom = (this.canvas.height / 2) - ((radius * 0.98) * Math.sin(Utilities.toRadians((d - this.LHAAries) * -this._hemisphere)));
+				let xTo = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(Utilities.toRadians((d - this.LHAAries) * -this._hemisphere)));
+				let yTo = (this.canvas.height / 2) - ((radius * 0.95) * Math.sin(Utilities.toRadians((d - this.LHAAries) * -this._hemisphere)));
 				context.moveTo(xFrom, yFrom);
 				context.lineTo(xTo, yTo);
 
 				if (now.dayOfMonth % 5 === 0) { // Print the day #
 					context.save();
 					context.translate(this.canvas.width / 2, (this.canvas.height / 2));
-					let __currentAngle = - this.toRadians(d + this.LHAAries);
+					let __currentAngle = - Utilities.toRadians(d + this.LHAAries);
 					context.rotate(__currentAngle - Math.PI);
 					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 					context.fillStyle = 'black';
@@ -413,7 +420,7 @@ class SkyMap extends HTMLElement {
 				if (now.dayOfMonth === Math.round(now.month.nbDays / 2)) { // Print the month name
 					context.save();
 					context.translate(this.canvas.width / 2, (this.canvas.height / 2));
-					let __currentAngle = - this.toRadians(d + this.LHAAries);
+					let __currentAngle = - Utilities.toRadians(d + this.LHAAries);
 					context.rotate(__currentAngle - Math.PI);
 					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 					context.fillStyle = 'red';
@@ -440,7 +447,7 @@ class SkyMap extends HTMLElement {
 		// quarters of hours
 		context.beginPath();
 		for (let i = 0; i < 96; i++) {
-			let currentAngle = this.toRadians(i * (15 / 4));
+			let currentAngle = Utilities.toRadians(i * (15 / 4));
 			let xFrom = (this.canvas.width / 2) - ((radius * 0.92) * Math.cos(currentAngle));
 			let yFrom = (this.canvas.height / 2) - ((radius * 0.92) * Math.sin(currentAngle));
 			let xTo = (this.canvas.width / 2) - ((radius * 0.90) * Math.cos(currentAngle));
@@ -456,7 +463,7 @@ class SkyMap extends HTMLElement {
 		// Hours
 		context.beginPath();
 		for (let i = 0; i < 24; i++) {
-			let currentAngle = this.toRadians(i * 15);
+			let currentAngle = Utilities.toRadians(i * 15);
 			let xFrom = (this.canvas.width / 2) - ((radius * 0.92) * Math.cos(currentAngle));
 			let yFrom = (this.canvas.height / 2) - ((radius * 0.92) * Math.sin(currentAngle));
 			let xTo = (this.canvas.width / 2) - ((radius * 0.88) * Math.cos(currentAngle));
@@ -474,12 +481,12 @@ class SkyMap extends HTMLElement {
 		for (let i = 0; i < 24; i++) {
 			context.save();
 			context.translate(this.canvas.width / 2, (this.canvas.height / 2)); // canvas.height);
-			let __currentAngle = - this.toRadians(i * 15);
+			let __currentAngle = - Utilities.toRadians(i * 15);
 			context.rotate(__currentAngle - Math.PI);
 			context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 			context.fillStyle = 'blue';
 			let hour = (this._hemisphere === NORTHERN_HEMISPHERE  || i === 0 ? i : (24 - i));
-			let str = this.lpad(hour.toString(), 2, '0');
+			let str = Utilities.lpad(hour.toString(), 2, '0');
 			let len = context.measureText(str).width;
 			context.fillText(str, -len / 2, (-(radius * .88) + 10));
 			// context.lineWidth = 1;
@@ -672,13 +679,13 @@ class SkyMap extends HTMLElement {
 	}
 
 	deadReckoning(start, dist, bearing) {
-		let radianDistance = this.toRadians(dist / 60);
-		let finalLat = (Math.asin((Math.sin(this.toRadians(start.lat)) * Math.cos(radianDistance)) +
-				(Math.cos(this.toRadians(start.lat)) * Math.sin(radianDistance) * Math.cos(this.toRadians(bearing)))));
-		let finalLng = this.toRadians(start.lng) + Math.atan2(Math.sin(this.toRadians(bearing)) * Math.sin(radianDistance) * Math.cos(this.toRadians(start.lat)),
-				Math.cos(radianDistance) - Math.sin(this.toRadians(start.lat)) * Math.sin(finalLat));
-		finalLat = this.toDegrees(finalLat);
-		finalLng = this.toDegrees(finalLng);
+		let radianDistance = Utilities.toRadians(dist / 60);
+		let finalLat = (Math.asin((Math.sin(Utilities.toRadians(start.lat)) * Math.cos(radianDistance)) +
+				(Math.cos(Utilities.toRadians(start.lat)) * Math.sin(radianDistance) * Math.cos(Utilities.toRadians(bearing)))));
+		let finalLng = Utilities.toRadians(start.lng) + Math.atan2(Math.sin(Utilities.toRadians(bearing)) * Math.sin(radianDistance) * Math.cos(Utilities.toRadians(start.lat)),
+				Math.cos(radianDistance) - Math.sin(Utilities.toRadians(start.lat)) * Math.sin(finalLat));
+		finalLat = Utilities.toDegrees(finalLat);
+		finalLng = Utilities.toDegrees(finalLng);
 
 		return {lat: finalLat, lng: finalLng};
 	}
@@ -776,31 +783,14 @@ class SkyMap extends HTMLElement {
 
 	plotCoordinates(lat, lng, radius) {
 		let r = (((90 - lat) / 180) * radius);
-		let xOffset = Math.round(r * Math.sin(this.toRadians(lng))) * this._hemisphere;
-		let yOffset = Math.round(r * Math.cos(this.toRadians(lng)));
+		let xOffset = Math.round(r * Math.sin(Utilities.toRadians(lng))) * this._hemisphere;
+		let yOffset = Math.round(r * Math.cos(Utilities.toRadians(lng)));
 		if (this._type === SKYMAP_TYPE) {
 			yOffset *= -1;
 	//	xOffset *= -1;
 		}
 		return {x: xOffset, y: yOffset};
 	}
-
-	lpad(str, len, pad) {
-		let s = str;
-		while (s.length < len) {
-			s = pad + s;
-		}
-		return s;
-	}
-
-	toRadians(deg) {
-		return deg * (Math.PI / 180);
-	}
-
-	toDegrees(rad) {
-		return rad * (180 / Math.PI);
-	}
-
 }
 
 // Associate the tag and the class
