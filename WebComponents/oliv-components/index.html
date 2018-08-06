@@ -585,6 +585,36 @@
 			document.getElementById(id).repaint();
 		}
 
+		function setStarNames(id, cb) {
+			document.getElementById(id).starNames = cb.checked;
+			document.getElementById(id).repaint();
+		}
+
+		function setVisibleSky(id, cb) {
+			document.getElementById(id).visibleSky = cb.checked;
+			document.getElementById(id).repaint();
+		}
+
+		function setHemisphere(id, list) {
+			document.getElementById(id).hemisphere = list.value;
+			document.getElementById(id).repaint();
+		}
+
+		function setMapType(id, list) {
+			document.getElementById(id).type = list.value;
+			document.getElementById(id).repaint();
+		}
+
+		function setLHAAries(id, value) {
+			document.getElementById(id).lhaAries = (parseInt(value) >= 0 ? parseInt(value) : parseInt(value) + 360);
+			document.getElementById(id).repaint();
+		}
+
+		function setObserverLatitude(id, value) {
+			document.getElementById(id).latitude = parseInt(value);
+			document.getElementById(id).repaint();
+		}
+
 		let marqueeAnimationInterval;
 		function marquee(txtId, marqueeId) {
 			if (marqueeAnimationInterval !== undefined) {
@@ -1930,9 +1960,36 @@
 				<td valign="top">
 					<div class="black-frame centered">
 						<sky-map id="sky-map-01"
-										 width="500"
-										 height="300"/>
+										 width="600"
+										 height="600"
+										 latitude="45"/>
 					</div>
+					Type:
+					<select onchange="setMapType('sky-map-01', this);">
+						<option value="STARFINDER" selected>Star Finder</option>
+						<option value="SKYMAP">Sky Map</option>
+					</select>
+					Hemisphere:
+					<select onchange="setHemisphere('sky-map-01', this);">
+						<option value="N" selected>North</option>
+						<option value="S">South</option>
+					</select>
+					<input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>With Star Names.
+					<input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h5 style="color: cyan;">LHA Aries / Date</h5>
+					<input type="range" value="0" min="-180" max="180" style="width: 90%;" oninput="setLHAAries('sky-map-01', this.value); lhaAries.value = (parseInt(this.value) >= 0 ? parseInt(this.value) : parseInt(this.value) + 360);" />
+					<output name="lhaAries" id="lhaAries" style="color: cyan;"></output>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<h5 style="color: cyan;">Latitude</h5>
+					<input type="range" value="45" min="1" max="89" style="width: 90%;" oninput="setObserverLatitude('sky-map-01', this.value); obsLat.value = this.value;" />
+					<output name="obsLat" id="obsLat" style="color: cyan;"></output>
 				</td>
 			</tr>
 		</table>

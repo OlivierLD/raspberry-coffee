@@ -1,4 +1,4 @@
-const marqueePanelVerbose = true;
+const marqueePanelVerbose = false;
 const MARQUEE_PANEL_TAG_NAME = 'marquee-panel';
 
 /* The map data */

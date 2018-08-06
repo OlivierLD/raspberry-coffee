@@ -1,4 +1,4 @@
-const ledPanelVerbose = true;
+const ledPanelVerbose = false;
 const LED_PANEL_TAG_NAME = 'led-panel';
 
 const ledDefaultColorConfig = {
@@ -208,7 +208,9 @@ class LedPanel extends HTMLElement {
 
 	initScreenMatrix() {
 		if (this._connected) {
-		  console.log("Init Matrix");
+		  if (ledPanelVerbose) {
+		  	console.log("Init Matrix");
+		  }
 		  this.screenMatrix = [];
 			for (let y=0; y<this._h; y++) {
 				let line = [];
@@ -217,7 +219,9 @@ class LedPanel extends HTMLElement {
 				}
 				this.screenMatrix.push(line);
 			}
-		  console.log("Init Matrix %d x %d", this._w, this._h);
+		  if (ledPanelVerbose) {
+				console.log("Init Matrix %d x %d", this._w, this._h);
+		  }
 	  }
 	}
 

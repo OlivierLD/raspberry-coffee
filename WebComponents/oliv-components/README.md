@@ -1,6 +1,6 @@
-## Oliv Web Components
+## Oliv's Web Components
 
-_Those components requires absolutely **NO** external library._
+> Note: _Those components requires **absolutely NO** external library._
 
 They do require a WebComponents-savvy browser though. Most of them are (or will shortly be...).
 
@@ -32,13 +32,13 @@ After starting the `node` server as mentioned above, you can also reach
 - Digital Display. TODO
 - Date and Time display. TODO
 - Watch/Clock (analog). &#9989; Done
-- Marquee. &#10140; WIP
+- Marquee. &#9989; Done
 - Evolution Displays. TODO
 - Graphs. TODO
-- Sky Map and Star Finder (along with some `REST` service(s)). &#10140; WIP.
+- Sky Map and Star Finder (along with some `REST` service(s)). &#10140; WIP, coming good.
 
 #### Maybe next?
-- Satellite plotter?
+- Satellite plotter? &#10140; See the `after` callback on the Globe examples.
 - Tide Graph?
 - Current Display?
 - Boat Overview?
@@ -56,7 +56,7 @@ After starting the `node` server as mentioned above, you can also reach
 
 #### TODO
 - JSDoc
-- Local `npm` registry
+- Local `npm` registry?
 
 #### CodePen (might not be 100% in sync... But close)
 The point of truth remains this repo.
