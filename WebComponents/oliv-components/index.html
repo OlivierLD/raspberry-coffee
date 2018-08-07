@@ -18,6 +18,7 @@
 	<script type="module" src="widgets/JumboDisplay.js"></script>
 	<script type="module" src="widgets/DirectionDisplay.js"></script>
 	<script type="module" src="widgets/AnalogDisplay.js"></script>
+	<script type="module" src="widgets/ApparentWindDisplay.js"></script>
 	<script type="module" src="widgets/AnalogWatch.js"></script>
 	<script type="module" src="widgets/CompassRose.js"></script>
 	<script type="module" src="widgets/WorldMap.js"></script>
@@ -1603,6 +1604,77 @@
 						<input type="checkbox" onchange="setMinMax(this, 'tws-03');">With Min &amp; Max
 						<br/>
 						<input type="range" min="0" max="60" step="0.1" value="24" onchange="document.getElementById('tws-03').value = this.value;" style="width: 100%;"/>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<!--
+			APPARENT WIND DISPLAY
+	+-->
+	<div style="cursor: pointer;" onclick="showHide('apparent-wind');"><b><u>Apparent Wind Displays</u></b></div>
+	<div id="apparent-wind" class="smooth">
+		<table border="1">
+			<tr>
+				<td valign="top">
+					<div id="top-cell-aw" class="black-frame centered" style="background-color: white;">
+						<small>Try to combine Style, BG, border.</small><br/>
+						Style:
+						<select onchange="applyClass('aw-01', this);">
+							<option value="analogdisplay-day" selected>Day</option>
+							<option value="analogdisplay-night">Night</option>
+							<option value="analogdisplay-monochrome-cyan">Cyan</option>
+							<option value="analogdisplay-monochrome-orange">Orange</option>
+							<option value="analogdisplay-flat-gray">Flat Gray</option>
+							<option value="analogdisplay-flat-black">Flat Black</option>
+						</select>
+						<br/>
+						BG:
+						<input type="radio" name="bg2" value="black" onchange="applyBackground('top-cell-aw', this.value);">Black</input>
+						<input type="radio" name="bg2" value="white" onchange="applyBackground('top-cell-aw', this.value);" checked>White</input>
+						<input type="radio" name="bg2" value="transparent" onchange="applyBackground('top-cell-aw', this.value);">None</input>
+						<hr/>
+						<apparent-wind-display class="analogdisplay-day"
+																	 title="Apparent Wind Speed in Knots"
+																	 id="aw-01"
+																	 value="{ &quot;awa&quot;: 60, &quot;aws&quot;: 10.2 }"
+																	 major-ticks="45"
+																	 minor-ticks="5"
+																	 with-border="true"
+																	 with-digits="true"
+																	 label="App Wind"
+																	 width="300"
+																	 height="300"></apparent-wind-display>
+					</div>
+					<div class="black-frame centered">
+						<script type="text/javascript">
+							function updateJsonAw() {
+								let aws = document.getElementById('aws-01').value;
+								let awa = document.getElementById('awa-01').value;
+								document.getElementById('json-aw').value = '{ "awa":' + awa + ', "aws":' + aws + '}';
+							}
+						</script>
+						<input type="text" id="json-aw" style="display: none;" value="{ &quot;awa&quot;: 60, &quot;aws&quot;: 10.2 }">
+						AWA:
+						<input type="number"
+									 id="awa-01"
+									 onchange="updateJsonAw();"
+									 placeholder="AWA"
+									 title="AWA in degrees"
+									 style="width: 50px; text-align: right;"
+									 value="60"/>
+						<br/>
+						<button onclick="setData('json-aw', 'aw-01')"
+										title="Set Apparent Wind angle and speed"
+										style="margin-top: 3px;">Direct</button>
+						<!--button onclick="doAnimate('aw-speed-value-01', 'aw-01')"
+										title="Set Speed value"
+										style="margin-top: 3px;">Animate</button-->
+						&nbsp;
+						<input type="checkbox" onchange="setBorder(this, 'aw-01');" checked>With Border
+						<br/>
+						<input id="aws-01" title="AWS" type="range" min="0" max="50" step="0.1" value="10.2" onchange="updateJsonAw();" style="width: 100%;"/>
 					</div>
 				</td>
 			</tr>

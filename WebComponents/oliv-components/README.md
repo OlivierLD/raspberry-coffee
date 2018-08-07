@@ -31,7 +31,7 @@ After starting the `node` server as mentioned above, you can also reach
 - Jumbo Display. &#9989; Done
 - Direction Display. &#9989; Done
 - Analog Display. &#9989; Done
-- Apparent Wind. TODO
+- Apparent Wind. &#9989; Done
 - Globe and Map (with `import` and `module`). &#9989; Done <!-- &#10140; WIP -->
 - Compass Rose. &#9989; Done
 - Digital Display. TODO

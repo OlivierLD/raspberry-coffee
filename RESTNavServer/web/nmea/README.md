@@ -1,2 +1,9 @@
 ## TODO
-- Web-Component console, with mirror/starwars effect for HeadsUp display.
+- Web-Component console, with mirror/starwars effect for HeadsUp display, with at least (to begin with):
+    - TWS, TWD
+    - BSP (+ log), HDG
+    - GPS Time (watch)
+    - World Map
+    - Analog AW
+
+---
