@@ -1,11 +1,12 @@
 const watchVerbose = false;
 const WATCH_TAG_NAME = 'analog-watch';
-/*
-* See custom properties in CSS.
-* =============================
-* @see https://developer.mozilla.org/en-US/docs/Web/CSS/
-* Relies on those elements:
-*
+/**
+ *
+ * See custom properties in CSS.
+ * =============================
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/
+ * Relies on those elements:
+ *
 .xxxxxxxxx {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: black;
@@ -26,7 +27,8 @@ const WATCH_TAG_NAME = 'analog-watch';
 	--knob-outline-color: black;
 	--font: Arial;
 }
-*/
+ */
+import * as Utilities from "./utilities/Utilities.js";
 
 /**
  * Recurse from the top down, on styleSheets and cssRules
@@ -68,9 +70,11 @@ class AnalogWatch extends HTMLElement {
 			"width",        // Integer. Canvas width
 			"height",       // Integer. Canvas height
 			"hours-ticks",  // Integer. label of hours. 1: each hour, 3: every 3 hours, etc. Default 3
+			"hours-flavor", // String. 'roman' or 'arabic'. Default 'roman'
 			"minutes-ticks",  // Integer, minutes ticks.  Default 1
 			"with-second-hand", // Boolean, draw the seconds hand or not.
 			"with-border",  // Boolean
+			"digital-value",// Integer 0, 4 or 6. 0 (default value) means no display, 4 means like 12:34, 6 means like 12:34:56
 			"label",        // String, Optional.
 			"value"         // Float. Time to display, HH:MM:SS format
 		];
@@ -85,6 +89,8 @@ class AnalogWatch extends HTMLElement {
 
 		// Default values
 		this._value       = '00:00:00';
+		this._digital_value = 0;
+		this._hours_flavor = 'roman';
 		this._width       = 150;
 		this._height      = 150;
 		this._hours_ticks =   3;
@@ -124,6 +130,12 @@ class AnalogWatch extends HTMLElement {
 		switch (attrName) {
 			case "value":
 				this._value = newVal;
+				break;
+			case "digital-value":
+				this._digital_value = parseInt(newVal);
+				break;
+			case "hours-flavor":
+				this._hours_flavor = newVal;
 				break;
 			case "width":
 				this._width = parseInt(newVal);
@@ -166,6 +178,12 @@ class AnalogWatch extends HTMLElement {
 		}
 //	this.repaint();
 	}
+	set digitalValue(val) {
+		this._digital_value = val;
+	}
+	set hoursFlavor(val) {
+		this._hours_flavor = val;
+	}
 	set width(val) {
 		this.setAttribute("width", val);
 	}
@@ -193,6 +211,12 @@ class AnalogWatch extends HTMLElement {
 
 	get value() {
 		return this._value;
+	}
+	get digitalValue() {
+		return this._digital_value;
+	}
+	get hoursFlavor() {
+		return this._hours_flavor;
 	}
 	get width() {
 		return this._width;
@@ -422,7 +446,7 @@ class AnalogWatch extends HTMLElement {
 			context.rotate((2 * Math.PI * (i / 12)));
 			context.font = "bold " + Math.round(scale * 15) + "px Arial"; // Like "bold 15px Arial"
 			context.fillStyle = digitColor;
-			let str = this.toRomanDigit(i === 0 ? 12 : i);
+			let str = (this._hours_flavor === 'roman' ? this.toRomanDigit(i === 0 ? 12 : i) : ((i === 0 ? 12 : i).toString()));
 			let len = context.measureText(str).width;
 			context.fillText(str, -len / 2, (-(radius * .8) + 10));
 			context.lineWidth = 1;
@@ -443,6 +467,25 @@ class AnalogWatch extends HTMLElement {
 		}
 		if (timeElements[2] !== undefined) {
 			seconds = parseInt(timeElements[2]);
+		}
+
+		// Digital value
+		if (this._digital_value > 0) {
+			let fontSize = 20;
+			let text = Utilities.lpad(hours.toString(), 2, '0') + ':' + Utilities.lpad(minutes.toString(), 2, '0') + (this._digital_value === 6 ? ':' + Utilities.lpad(seconds.toString(), 2, '0') : '');
+
+			let len = 0;
+			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.watchColorConfig.font; // "bold 40px Arial"
+			let metrics = context.measureText(text);
+			len = metrics.width;
+
+			context.beginPath();
+			context.fillStyle = this.watchColorConfig.labelFillColor;
+			context.fillText(text, (this.canvas.width / 2) - (len / 2), (radius - 10));
+			context.lineWidth = 1;
+			context.strokeStyle = this.watchColorConfig.valueOutlineColor;
+			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (radius - 10)); // Outlined
+			context.closePath();
 		}
 
 		// Label ?

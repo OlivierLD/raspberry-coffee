@@ -529,11 +529,11 @@ class WorldMap extends HTMLElement {
 			longitude -= 360;
 		}
 		let aries = { lat: Utilities.toRadians(obl), lng: Utilities.toRadians(longitude) };
-		let eclCenter = this.deadReckoning(aries, 90 * 60, 0); // "Center" of the Ecliptic
+		let eclCenter = this.deadReckoningRadians(aries, 90 * 60, 0); // "Center" of the Ecliptic
 
 		context.fillStyle = this.worldmapColorConfig.tropicColor;
 		for (let hdg=0; hdg<360; hdg++) {
-			let pt = this.deadReckoning(eclCenter, 90 * 60, hdg);
+			let pt = this.deadReckoningRadians(eclCenter, 90 * 60, hdg);
 			let pp = this.getPanelPoint(Utilities.toDegrees(pt.lat), Utilities.toDegrees(pt.lng));
 
 			let thisPointIsBehind = this.isBehind(pt.lat, pt.lng - Utilities.toRadians(this.globeViewLngOffset));
@@ -607,20 +607,28 @@ class WorldMap extends HTMLElement {
 		return s;
 	}
 
+	toRadians(deg) {
+		return Utilities.toRadians(deg);
+	}
+
+	toDegrees(rad) {
+		return Utilities.toDegrees(rad);
+	}
+
 	/**
 	 *
 	 * @param from GeoPoint, L & G in Radians
 	 * @param dist distance in nm
-	 * @param route route in degrees
+	 * @param route route in Degrees
 	 * @return DR Position, L & G in Radians
 	 */
-	deadReckoning(from, dist, route) {
+	deadReckoningRadians(from, dist, route) {
 		let radianDistance = Utilities.toRadians(dist / 60);
 		let finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
 				(Math.cos(from.lat) * Math.sin(radianDistance) * Math.cos(Utilities.toRadians(route)))));
 		let finalLng = from.lng + Math.atan2(Math.sin(Utilities.toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
 				Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
-		return ({lat: finalLat, lng: finalLng});
+		return {lat: finalLat, lng: finalLng};
 	}
 
 	drawNight(context, from, user, gha) {
@@ -636,7 +644,7 @@ class WorldMap extends HTMLElement {
 
 		// find first visible point of the night limb
 		for (let i=0; i<360; i++) {
-			let night = this.deadReckoning(from, NINETY_DEGREES, i);
+			let night = this.deadReckoningRadians(from, NINETY_DEGREES, i);
 			let visible = this.isBehind(night.lat, night.lng - Utilities.toRadians(this.globeViewLngOffset)) ? INVISIBLE : VISIBLE;
 			if (visible === VISIBLE && visibility === INVISIBLE) { // Just became visible
 				firstVisible = i;
@@ -649,7 +657,7 @@ class WorldMap extends HTMLElement {
 		// Night limb
 		let firstPt, lastPt;
 		for (let dir=firstVisible; dir<firstVisible+360; dir++) {
-			let dr = this.deadReckoning(from, NINETY_DEGREES, dir);
+			let dr = this.deadReckoningRadians(from, NINETY_DEGREES, dir);
 			let borderPt = this.getPanelPoint(Utilities.toDegrees(dr.lat), Utilities.toDegrees(dr.lng));
 			if (dir === firstVisible) {
 				context.moveTo(borderPt.x, borderPt.y);
@@ -700,7 +708,7 @@ class WorldMap extends HTMLElement {
 
 		let userPos = { lat: Utilities.toRadians(user.latitude), lng: Utilities.toRadians(user.longitude) };
 		for (let i=firstBoundary; (inc>0 && i<=lastBoundary) || (inc<0 && i>=lastBoundary); i+=inc) {
-			let limb = this.deadReckoning(userPos, NINETY_DEGREES, i);
+			let limb = this.deadReckoningRadians(userPos, NINETY_DEGREES, i);
 			let limbPt = this.getPanelPoint(Utilities.toDegrees(limb.lat), Utilities.toDegrees(limb.lng));
 			context.lineTo(limbPt.x, limbPt.y);
 		}
@@ -1537,7 +1545,7 @@ class WorldMap extends HTMLElement {
 		let nightRim = [];
 		// Calculate the night rim
 		for (let i=0; i<360; i++) {
-			let night = this.deadReckoning(from, NINETY_DEGREES, i);
+			let night = this.deadReckoningRadians(from, NINETY_DEGREES, i);
 			nightRim.push(night);
 		}
 
@@ -1642,11 +1650,11 @@ class WorldMap extends HTMLElement {
 						longitude -= 360;
 					}
 					let ariesRad = { lat: Utilities.toRadians(this.astronomicalData.eclipticObliquity), lng: Utilities.toRadians(longitude) };
-					let eclCenter = this.deadReckoning(ariesRad, 90 * 60, 0); // "Center" of the Ecliptic
+					let eclCenter = this.deadReckoningRadians(ariesRad, 90 * 60, 0); // "Center" of the Ecliptic
 
 					context.fillStyle = this.worldmapColorConfig.tropicColor;
 					for (let hdg=0; hdg<360; hdg++) {
-						let pt = this.deadReckoning(eclCenter, 90 * 60, hdg);
+						let pt = this.deadReckoningRadians(eclCenter, 90 * 60, hdg);
 						let pp = this.posToCanvas(Utilities.toDegrees(pt.lat), this.toRealLng(Utilities.toDegrees(pt.lng)));
 						context.fillRect(pp.x, pp.y, 1, 1);
 					}

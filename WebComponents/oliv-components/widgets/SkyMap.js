@@ -21,6 +21,7 @@ const SKY_MAP_TAG_NAME = 'sky-map';
  *
  * TODO:
  * - Wandering bodies
+ * - Big Tick for the 1st of the month, in SkyMap
  * - Tweaks N/S SkyMap
  * - Displayable star names
  */
@@ -565,7 +566,7 @@ class SkyMap extends HTMLElement {
 		context.beginPath();
 		context.fillStyle = 'white';
 		for (let z=0; z<=360; z+= 0.25) {
-			let deadReck = this.deadReckoning({lat: this.observerLatitude, lng: 0}, 90 * 60, -z);
+			let deadReck = Utilities.deadReckoning({lat: this.observerLatitude, lng: 0}, 90 * 60, -z);
 			let point = this.plotCoordinates(deadReck.lat, deadReck.lng, radius);
 			if (z === 0) {
 				context.moveTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
@@ -582,7 +583,7 @@ class SkyMap extends HTMLElement {
 		context.strokeStyle = 'blue';
 		context.lineWidth = 2;
 		for (let z=0; z<=360; z+= 0.25) {
-			let deadReck = this.deadReckoning({lat: this.observerLatitude, lng: 0}, 90 * 60, -z);
+			let deadReck = Utilities.deadReckoning({lat: this.observerLatitude, lng: 0}, 90 * 60, -z);
 			let point = this.plotCoordinates(deadReck.lat, deadReck.lng, radius);
 			if (z === 0) {
 				context.moveTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
@@ -612,7 +613,7 @@ class SkyMap extends HTMLElement {
 		for (let dz = 10; dz <= 90; dz += 10) {
 			context.beginPath();
 			for (let z = 0; z <= 360; z += 0.25) {
-				let deadReck = this.deadReckoning({lat: this.observerLatitude, lng: 0}, dz * 60, -z);
+				let deadReck = Utilities.deadReckoning({lat: this.observerLatitude, lng: 0}, dz * 60, -z);
 				let point = this.plotCoordinates(deadReck.lat, deadReck.lng, radius);
 				if (z === 0) {
 					context.moveTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
@@ -665,7 +666,7 @@ class SkyMap extends HTMLElement {
 			}
 			context.beginPath();
 			for (let dz=10; dz<=90; dz++) {
-				let deadReck = this.deadReckoning({lat: this.observerLatitude, lng: 0}, dz * 60, z);
+				let deadReck = Utilities.deadReckoning({lat: this.observerLatitude, lng: 0}, dz * 60, z);
 				let point = this.plotCoordinates(deadReck.lat, deadReck.lng, radius);
 				if (dz === 10) {
 					context.moveTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
@@ -676,18 +677,6 @@ class SkyMap extends HTMLElement {
 			context.stroke();
 			context.closePath();
 		}
-	}
-
-	deadReckoning(start, dist, bearing) {
-		let radianDistance = Utilities.toRadians(dist / 60);
-		let finalLat = (Math.asin((Math.sin(Utilities.toRadians(start.lat)) * Math.cos(radianDistance)) +
-				(Math.cos(Utilities.toRadians(start.lat)) * Math.sin(radianDistance) * Math.cos(Utilities.toRadians(bearing)))));
-		let finalLng = Utilities.toRadians(start.lng) + Math.atan2(Math.sin(Utilities.toRadians(bearing)) * Math.sin(radianDistance) * Math.cos(Utilities.toRadians(start.lat)),
-				Math.cos(radianDistance) - Math.sin(Utilities.toRadians(start.lat)) * Math.sin(finalLat));
-		finalLat = Utilities.toDegrees(finalLat);
-		finalLng = Utilities.toDegrees(finalLng);
-
-		return {lat: finalLat, lng: finalLng};
 	}
 
 	plotBody(context, name, decl, ra) { // TODO Image for wandering bodies

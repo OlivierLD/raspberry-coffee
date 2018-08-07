@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="css/web-components.css">
 
 	<!-- Firefox does NOT like modules... Safari OK -->
+
 	<script type="module" src="widgets/Pluviometer.js"></script>
 	<script type="module" src="widgets/Thermometer.js"></script>
 	<script type="module" src="widgets/JumboDisplay.js"></script>
@@ -571,7 +572,7 @@
 					// GPS Satellites in view
 					for (var sat in gpsSatelliteData) {
 						let satellite = gpsSatelliteData[sat];
-						let satellitePosition = worldMap.deadReckoning({
+						let satellitePosition = worldMap.deadReckoningRadians({
 							lat: worldMap.toRadians(worldMap.userPosition.latitude),
 							lng: worldMap.toRadians(worldMap.userPosition.longitude)
 						}, (90 - satellite.elevation) * 60, satellite.azimuth);
@@ -2104,6 +2105,7 @@
 											 		height="220"
 													hours-ticks="1"
 													minutes-ticks="1"
+													digital-value="6"
 													with-second-hand="true"
 													value="01:20:12"></analog-watch>
 					</div>
@@ -2130,6 +2132,7 @@
 													width="220"
 													height="220"
 													with-second-hand="false"
+													hours-flavor="arabic"
 													value="01:20:12"></analog-watch>
 					</div>
 					<div class="black-frame centered">
@@ -2156,6 +2159,7 @@
 													height="220"
 													with-second-hand="true"
 													label="UTC"
+													digital-value="4"
 													value="01:20:12"></analog-watch>
 					</div>
 					<div class="black-frame centered">
@@ -2174,7 +2178,9 @@
 													width="220"
 													height="220"
 													hours-ticks="1"
+													hours-flavor="arabic"
 													with-second-hand="true"
+													digital-value="6"
 													label="Sys"
 													value="01:20:12"></analog-watch>
 					</div>
