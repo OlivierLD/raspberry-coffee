@@ -40,11 +40,18 @@ then
 fi
 #
 # refers to nmea.mux.properties, unless -Dmux.properties is set
-echo -e "+----------------------------------------------------------------+"
-echo -e "| Using nmea.mux.home.properties, TCP input from Weather station |"
-echo -e "+----------------------------------------------------------------+"
-JAVA_OPTS="$JAVA_OPTS -Dmux.properties=nmea.mux.home.properties"
-JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
+WEATHER_STATION=false
+#
+if [ "$WEATHER_STATION" == "true" ]
+then
+	echo -e "+----------------------------------------------------------------+"
+	echo -e "| Using nmea.mux.home.properties, TCP input from Weather station |"
+	echo -e "+----------------------------------------------------------------+"
+	JAVA_OPTS="$JAVA_OPTS -Dmux.properties=nmea.mux.home.properties"
+	JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
+else
+  JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=false"
+fi
 #
 echo -e "Using properties:$JAVA_OPTS"
 #
