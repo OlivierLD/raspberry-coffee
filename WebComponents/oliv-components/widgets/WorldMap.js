@@ -607,16 +607,18 @@ class WorldMap extends HTMLElement {
 		return s;
 	}
 
+	// Defined this way so it can be invoked on the WorldMap object, from a callback for example.
 	toRadians(deg) {
 		return Utilities.toRadians(deg);
 	}
 
+	// Same as above
 	toDegrees(rad) {
 		return Utilities.toDegrees(rad);
 	}
 
 	/**
-	 *
+	 * Start from 'from', and return the position reached after 'dist' nm in the 'route' bearing.
 	 * @param from GeoPoint, L & G in Radians
 	 * @param dist distance in nm
 	 * @param route route in Degrees
@@ -753,7 +755,7 @@ class WorldMap extends HTMLElement {
 
 	/**
 	 *
-	 * @param ha in degrees
+	 * @param ha Hour Angle in degrees
 	 * @returns {number}
 	 */
 	haToLongitude(ha) {

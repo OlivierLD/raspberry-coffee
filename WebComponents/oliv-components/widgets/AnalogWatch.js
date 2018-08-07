@@ -67,16 +67,16 @@ class AnalogWatch extends HTMLElement {
 
 	static get observedAttributes() {
 		return [
-			"width",        // Integer. Canvas width
-			"height",       // Integer. Canvas height
-			"hours-ticks",  // Integer. label of hours. 1: each hour, 3: every 3 hours, etc. Default 3
-			"hours-flavor", // String. 'roman' or 'arabic'. Default 'roman'
-			"minutes-ticks",  // Integer, minutes ticks.  Default 1
+			"width",            // Integer. Canvas width
+			"height",           // Integer. Canvas height
+			"hours-ticks",      // Integer. label of hours. 1: each hour, 3: every 3 hours, etc. Default 3
+			"hours-flavor",     // String. 'roman' or 'arabic'. Default 'roman'
+			"minutes-ticks",    // Integer, minutes ticks.  Default 1
 			"with-second-hand", // Boolean, draw the seconds hand or not.
-			"with-border",  // Boolean
-			"digital-value",// Integer 0, 4 or 6. 0 (default value) means no display, 4 means like 12:34, 6 means like 12:34:56
-			"label",        // String, Optional.
-			"value"         // Float. Time to display, HH:MM:SS format
+			"with-border",      // Boolean
+			"digital-value",    // Integer 0, 4 or 6. 0 (default value) means no display, 4 means like 12:34, 6 means like 12:34:56
+			"label",            // String, Optional.
+			"value"             // Float. Time to display, HH:MM:SS format
 		];
 	}
 
@@ -88,16 +88,16 @@ class AnalogWatch extends HTMLElement {
 		this.shadowRoot.appendChild(this.canvas);
 
 		// Default values
-		this._value       = '00:00:00';
-		this._digital_value = 0;
-		this._hours_flavor = 'roman';
-		this._width       = 150;
-		this._height      = 150;
-		this._hours_ticks =   3;
-		this._minutes_ticks = 1;
+		this._value            = '00:00:00';
+		this._digital_value    =   0; // none
+		this._hours_flavor     = 'roman';
+		this._width            = 150;
+		this._height           = 150;
+		this._hours_ticks      =   3;
+		this._minutes_ticks    =   1;
 		this._with_second_hand = false;
-		this._with_border = true;
-		this._label       = undefined;
+		this._with_border      = true;
+		this._label            = undefined;
 
 		this._previousClassName = "";
 		this.watchColorConfig = defaultWatchColorConfig; // Init
@@ -337,7 +337,6 @@ class AnalogWatch extends HTMLElement {
 		}
 		return colorConfig;
 	}
-
 
 	/**
 	 *
@@ -654,6 +653,7 @@ class AnalogWatch extends HTMLElement {
 			case 11:
 				roman = "XI";
 				break;
+			case 0:
 			case 12:
 				roman = "XII";
 				break;
