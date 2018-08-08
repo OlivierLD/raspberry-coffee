@@ -231,10 +231,10 @@ class CalendarDisplay extends HTMLElement {
 		if (dateElem[3] !== undefined) {
 			let weekDay = dateElem[3].toUpperCase();
 			context.fillStyle = 'rgba(0, 0, 0, 0.5)'; // this.calendarColorConfig.dayColor;
-			context.font = "bold " + Math.round(scale * 24) + "px " + this.calendarColorConfig.valueFont;
+			context.font = "bold " + Math.round(scale * 16) + "px " + this.calendarColorConfig.valueFont;
 			let metrics = context.measureText(weekDay);
 			let len = metrics.width;
-			context.fillText(weekDay, (this.canvas.width / 2) - (len / 2), (this.canvas.height / 2)  + (Math.round(scale * 24) / 4 ));
+			context.fillText(weekDay, (this.canvas.width / 2) - (len / 2), (this.canvas.height / 2)  + (Math.round(scale * 16) / 4 ));
 		}
 
 		// Month
