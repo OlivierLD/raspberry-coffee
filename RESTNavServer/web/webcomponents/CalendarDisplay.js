@@ -1,4 +1,4 @@
-const calendarVerbose = false;
+const calendarVerbose = true;
 const CALENDAR_TAG_NAME = 'calendar-display';
 
 const calendarDefaultColorConfig = {
@@ -13,10 +13,10 @@ const calendarDefaultColorConfig = {
 };
 
 const MONTH_NAMES = [
-		"January", "February", "March",
-		"April", "May", "June",
-		"July", "August", "September",
-		"October", "November", "December"
+	"January", "February", "March",
+	"April", "May", "June",
+	"July", "August", "September",
+	"October", "November", "December"
 ];
 
 /* global HTMLElement */
@@ -136,7 +136,7 @@ class CalendarDisplay extends HTMLElement {
 						let selector = document.styleSheets[s].cssRules[r].selectorText;
 						//			console.log(">>> ", selector);
 						if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(CALENDAR_TAG_NAME) > -1))) { // Cases like "tag-name .className"
-						                                                                                                                                                           //				console.log("  >>> Found it! [%s]", selector);
+							//				console.log("  >>> Found it! [%s]", selector);
 							let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 							let cssTextElems = cssText.split(";");
 							cssTextElems.forEach(function (elem) {
@@ -171,7 +171,7 @@ class CalendarDisplay extends HTMLElement {
 						}
 					}
 				} catch (err) {
-				  // Absorb
+					// Absorb
 				}
 			}
 		}
@@ -217,6 +217,7 @@ class CalendarDisplay extends HTMLElement {
 		this.roundRect(context, 0, 0, this.canvas.width, this.canvas.height, 10, true, false);
 
 		let dateElem = this._value.split("-");
+
 		// Day
 		let day = parseInt(dateElem[0]);
 		context.fillStyle = this.calendarColorConfig.dayColor;
@@ -225,6 +226,16 @@ class CalendarDisplay extends HTMLElement {
 		let metrics = context.measureText(dayVal);
 		let len = metrics.width;
 		context.fillText(dayVal, (this.canvas.width / 2) - (len / 2), (this.canvas.height / 2) + (Math.round(scale * 130) / 2) - (20 * scale));
+
+		// Week day - optional
+		if (dateElem[3] !== undefined) {
+			let weekDay = dateElem[3].toUpperCase();
+			context.fillStyle = 'rgba(0, 0, 0, 0.5)'; // this.calendarColorConfig.dayColor;
+			context.font = "bold " + Math.round(scale * 24) + "px " + this.calendarColorConfig.valueFont;
+			let metrics = context.measureText(weekDay);
+			let len = metrics.width;
+			context.fillText(weekDay, (this.canvas.width / 2) - (len / 2), (this.canvas.height / 2)  + (Math.round(scale * 24) / 4 ));
+		}
 
 		// Month
 		let month = parseInt(dateElem[1]) - 1;

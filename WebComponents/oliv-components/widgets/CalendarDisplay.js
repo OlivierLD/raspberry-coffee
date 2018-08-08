@@ -217,6 +217,7 @@ class CalendarDisplay extends HTMLElement {
 		this.roundRect(context, 0, 0, this.canvas.width, this.canvas.height, 10, true, false);
 
 		let dateElem = this._value.split("-");
+
 		// Day
 		let day = parseInt(dateElem[0]);
 		context.fillStyle = this.calendarColorConfig.dayColor;
@@ -225,6 +226,16 @@ class CalendarDisplay extends HTMLElement {
 		let metrics = context.measureText(dayVal);
 		let len = metrics.width;
 		context.fillText(dayVal, (this.canvas.width / 2) - (len / 2), (this.canvas.height / 2) + (Math.round(scale * 130) / 2) - (20 * scale));
+
+		// Week day - optional
+		if (dateElem[3] !== undefined) {
+			let weekDay = dateElem[3].toUpperCase();
+			context.fillStyle = 'rgba(0, 0, 0, 0.5)'; // this.calendarColorConfig.dayColor;
+			context.font = "bold " + Math.round(scale * 24) + "px " + this.calendarColorConfig.valueFont;
+			let metrics = context.measureText(weekDay);
+			let len = metrics.width;
+			context.fillText(weekDay, (this.canvas.width / 2) - (len / 2), (this.canvas.height / 2)  + (Math.round(scale * 24) / 4 ));
+		}
 
 		// Month
 		let month = parseInt(dateElem[1]) - 1;

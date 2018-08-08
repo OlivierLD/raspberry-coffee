@@ -381,7 +381,7 @@
 		window.onload = function() {
 			initAjax(); // Default. See later for a WebSocket option
 
-			callAfter('world-map-01'); // Satellites plot.
+			callAfter('world-map-01'); // Adding Satellites plot.
 
 			/**
 			 *  SUBSCRIBERS HERE.
@@ -409,7 +409,7 @@
 				// val.format("Y-M-d H:i:s")
 				let time = new Date(val).format("H:i:s")
 				setData('analog-watch-01', time);
-				let date = new Date(val).format("d-m-Y");
+				let date = new Date(val).format("d-m-Y-l");
 				setData('calendar-01', date);
 				if (gpsPosition !== undefined) {
 					let gpsDate = new Date(val);
@@ -417,7 +417,7 @@
 				}
 			});
 			events.subscribe('gps-sat', function(val) {
-				console.log("Satellite data:", val);
+//			console.log("Satellite data:", val);
 				gpsSatelliteData = val;
 			});
 			events.subscribe('hdg', function(val) {
@@ -442,7 +442,6 @@
 				awa = val;
 				setData('aw-01', JSON.stringify({ ws: aws, wa: awa}));
 			});
-
 		}
 
 		function displayErr(err) {
