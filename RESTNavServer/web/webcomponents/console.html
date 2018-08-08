@@ -192,94 +192,8 @@
 			document.getElementById(id).repaint();
 		}
 
-		// Example of callback on WorldMap
-		function callBefore(id) {
-			document.getElementById(id).setDoBefore(function(worldMap, context) {
-				context.fillStyle = 'pink';
-				let fontBackup = context.font;
-				context.font = "bold 48px Verdana";
-				context.fillText('BEFORE', 10, 24 + (worldMap.height / 2));
-				context.font = fontBackup;
-			});
-			document.getElementById(id).repaint();
-		}
-
 		// Depends on the user position... Would not turn with the globe.
 		let gpsSatelliteData = undefined;
-		// {
-		// 	"1":{
-		// 		"svID":1,
-		// 		"elevation":26,
-		// 		"azimuth":316,
-		// 		"snr":0
-		// 	},
-		// 	"3":{
-		// 		"svID":3,
-		// 		"elevation":4,
-		// 		"azimuth":284,
-		// 		"snr":0
-		// 	},
-		// 	"8":{
-		// 		"svID":8,
-		// 		"elevation":27,
-		// 		"azimuth":251,
-		// 		"snr":6
-		// 	},
-		// 	"10":{
-		// 		"svID":10,
-		// 		"elevation":43,
-		// 		"azimuth":75,
-		// 		"snr":0
-		// 	},
-		// 	"11":{
-		// 		"svID":11,
-		// 		"elevation":32,
-		// 		"azimuth":303,
-		// 		"snr":0
-		// 	},
-		// 	"14":{
-		// 		"svID":14,
-		// 		"elevation":84,
-		// 		"azimuth":250,
-		// 		"snr":0
-		// 	},
-		// 	"18":{
-		// 		"svID":18,
-		// 		"elevation":16,
-		// 		"azimuth":92,
-		// 		"snr":0
-		// 	},
-		// 	"22":{
-		// 		"svID":22,
-		// 		"elevation":22,
-		// 		"azimuth":291,
-		// 		"snr":0
-		// 	},
-		// 	"24":{
-		// 		"svID":24,
-		// 		"elevation":1,
-		// 		"azimuth":33,
-		// 		"snr":0
-		// 	},
-		// 	"27":{
-		// 		"svID":27,
-		// 		"elevation":16,
-		// 		"azimuth":212,
-		// 		"snr":6
-		// 	},
-		// 	"31":{
-		// 		"svID":31,
-		// 		"elevation":31,
-		// 		"azimuth":157,
-		// 		"snr":0
-		// 	},
-		// 	"32":{
-		// 		"svID":32,
-		// 		"elevation":69,
-		// 		"azimuth":37,
-		// 		"snr":0
-		// 	}
-		// };
 
 		function plotSatellite(context, worldMap, userPos, satColor, name, satellite) {
 			let sat = worldMap.getPanelPoint(satellite.lat, satellite.lng);
@@ -338,7 +252,7 @@
 				if (Object.keys(worldMap.userPosition).length > 0) {
 					let userPos = worldMap.getPanelPoint(worldMap.userPosition.latitude, worldMap.userPosition.longitude);
 					/*
-					 * Display 4 geostationary satellites. Data provided by the user, below.
+					 * Display 4 geostationary satellites. Data provided below.
 					 */
 					const sats = [
 						{name: "I-4 F1 Asia-Pacific", lng: 143.5},
@@ -353,7 +267,7 @@
 					}
 
 					// GPS Satellites in view
-					if (document.getElementById('gps-sat-01').checked) {
+					if (document.getElementById('gps-sat-01').checked && gpsSatelliteData !== undefined) {
 						for (var sat in gpsSatelliteData) {
 							let satellite = gpsSatelliteData[sat];
 							let satellitePosition = worldMap.deadReckoningRadians({
@@ -724,9 +638,6 @@
 					<input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);" checked>Globe
 					<input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
 					<input type="radio" name="proj-01" value="ANAXIMANDRE" onchange="setProjection('world-map-01', this);">Square
-					<hr/>
-
-					Callback samples: <button onclick="callBefore('world-map-01')">Before</button>&nbsp;&nbsp;<button onclick="callAfter('world-map-01')">After</button>
 				</div>
 			</div>
 			<!--

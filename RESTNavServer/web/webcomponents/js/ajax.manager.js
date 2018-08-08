@@ -122,7 +122,7 @@ function getAstroData(when, position, wandering, stars, callback) {
 		}
 		errManager("Failed to get the Astro Data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 	});
-};
+}
 
 function getQueryParameterByName(name, url) {
 	if (!url) url = window.location.href;
@@ -132,9 +132,9 @@ function getQueryParameterByName(name, url) {
 	if (!results) return null;
 	if (!results[2]) return '';
 	return decodeURIComponent(results[2].replace(/\+/g, " "));
-};
+}
 
-// Takes care of re-broadcasting the data.
+// Takes care of re-broadcasting the data to whoever subscribed to it.
 function onMessage(json) {
 	try {
 		let errMess = "";
