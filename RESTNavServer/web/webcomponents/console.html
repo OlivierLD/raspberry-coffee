@@ -366,6 +366,58 @@
 			document.getElementById(id).repaint();
 		}
 
+		const DURATION_FMT = "Y-m-dTH:i:s";
+
+		function astroCallback(data) { // Intercepted
+//	console.log("Astro Data:", data);
+			let sunLHA = data.sun.gha + data.from.longitude;
+			while (sunLHA < 0) sunLHA +=360;
+			while (sunLHA > 360) sunLHA -= 360;
+			let moonLHA = data.moon.gha + data.from.longitude;
+			while (moonLHA < 0) moonLHA +=360;
+			while (moonLHA > 360) moonLHA -= 360;
+			// document.getElementById("sun-moon-data").innerHTML =
+			// 		'<table border="0"><tr><td>Sun D:</td><td align="right">' +
+			// 		decToSex(data.sun.decl, "NS") +
+			// 		'</td></tr><tr><td>Sun GHA:</td><td align="right">' +
+			// 		decToSex(data.sun.gha) +
+			// 		'</td><td>&nbsp;LHA:</td><td align="right">' +
+			// 		decToSex(sunLHA) +
+			// 		'</td></tr><tr><td>Sun Alt:</td><td align="right">' +
+			// 		decToSex(data.sunObs.alt) +
+			// 		'</td></tr><tr><td>Sun Z:</td><td align="right">' +
+			// 		decToSex(data.sunObs.z) +
+			//
+			// 		'</td></tr><tr><td>Moon D:</td><td align="right">' +
+			// 		decToSex(data.moon.decl, "NS") +
+			// 		'</td></tr><tr><td>Moon GHA:</td><td align="right">' +
+			// 		decToSex(data.moon.gha) +
+			// 		'</td><td>&nbsp;LHA:</td><td align="right">' +
+			// 		decToSex(moonLHA) +
+			// 		'</td></tr><tr><td>Moon Alt:</td><td align="right">' +
+			// 		decToSex(data.moonObs.alt) +
+			// 		'</td></tr><tr><td>Moon Z:</td><td align="right">' +
+			// 		decToSex(data.moonObs.z) +
+			// 		'</td></tr></table>';
+			//
+			// document.getElementById("solar-date").innerHTML =
+			// 		data.solarDate.year + ' ' +
+			// 		months[data.solarDate.month - 1] + ' ' +
+			// 		(data.solarDate.day < 10 ? '0' : '') + data.solarDate.day + ' ' +
+			// 		(data.solarDate.hour < 10 ? '0' : '') + data.solarDate.hour + ':' +
+			// 		(data.solarDate.min < 10 ? '0' : '') + data.solarDate.min + ':' +
+			// 		(data.solarDate.sec < 10 ? '0' : '') + data.solarDate.sec;
+			//
+			// document.getElementById("sun-meridian").innerHTML =
+			// 		(data.tPass.hour < 10 ? '0' : '') + data.tPass.hour + ':' +
+			// 		(data.tPass.min < 10 ? '0' : '') + data.tPass.min + ':' +
+			// 		(data.tPass.sec < 10 ? '0' : '') + data.tPass.sec + ' ' +
+			// 		data.tPass.tz;
+
+			document.getElementById('world-map-01').setAstronomicalData(data);
+			document.getElementById('world-map-01').repaint();
+		}
+
 		function setTheme(classList) {
 			applyClass('compass-01', classList);
 			applyClass('tw-01', classList);
@@ -403,6 +455,10 @@
 		let tws = 0;
 		let twa = 0;
 
+		let gpsPosition = undefined;
+		let withStars = false;
+		let withWanderingBodies = false;
+
 		window.onload = function() {
 			initAjax(); // Default. See later for a WebSocket option
 
@@ -415,6 +471,7 @@
 			 * Event's definition (topic's name) is in ajax.manager.js, method onMessage
 			 */
 			events.subscribe('pos', function(val) {
+				gpsPosition = val;
 				document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng });
 				document.getElementById('world-map-01').positionLabel = "Position";
 				document.getElementById('world-map-01').repaint();
@@ -433,6 +490,13 @@
 				setData('analog-watch-01', time);
 				let date = new Date(val).format("d-m-Y");
 				setData('calendar-01', date);
+				if (gpsPosition !== undefined) {
+					let gpsDate = new Date(val);
+					getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
+				}
+			});
+			events.subscribe('gps-sat', function(val) {
+				console.log("Satellite data:", val);
 			});
 			events.subscribe('hdg', function(val) {
 				setData('compass-rose-01', val);
@@ -563,12 +627,12 @@
 			+-->
 			<div id="analog-2">
 				<div class="black-frame centered">
+					<!-- Note: No initial 'value' to 0, it would be considered as the miniVal. -->
 					<analog-display class="analogdisplay-day"
 													title="Boat Speed in knots,&#13;Log in nm"
 													id="bsp-01"
 													min-value="0"
 													max-value="15"
-													value="0"
 													major-ticks="1"
 													minor-ticks="0.1"
 													with-border="true"
@@ -642,8 +706,8 @@
 					<input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon
 					<input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight
 					<input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight
-					<input type="checkbox" onchange="setWanderingBodies('world-map-01', this);"/>Wandering bodies
-					<input type="checkbox" onchange="setStars('world-map-01', this);"/>Stars
+					<input type="checkbox" onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>Wandering bodies
+					<input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars
 					<input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
 					<br/>
 					<input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);" checked>Globe

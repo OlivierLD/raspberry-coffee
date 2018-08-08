@@ -8,24 +8,47 @@ function initAjax() {
 	}, 1000);
 };
 
-function getNMEAData() {
-	let deferred = $.Deferred(),  // a jQuery deferred
-			url = '/mux/cache',
-			xhr = new XMLHttpRequest(),
-			TIMEOUT = 10000;
+const DEFAULT_TIMEOUT = 60000;
 
-	xhr.open('GET', url, true);
+function getDeferred(
+		url,                          // full api path
+		timeout,                      // After that, fail.
+		verb,                         // GET, PUT, DELETE, POST, etc
+		happyCode,                    // if met, resolve, otherwise fail.
+		data,                         // payload, when needed (PUT, POST...)
+		show) {                       // Show the traffic [true]|false
+	if (show === undefined) {
+		show = true;
+	}
+	if (show === true) {
+		document.body.style.cursor = 'wait';
+	}
+	let deferred = $.Deferred();  // a jQuery deferred
+	let	xhr = new XMLHttpRequest();
+	let TIMEOUT = timeout;
+
+	let req = verb + " " + url;
+	if (data !== undefined && data !== null) {
+		req += ("\n" + JSON.stringify(data, null, 2));
+	}
+
+	xhr.open(verb, url, true);
 	xhr.setRequestHeader("Content-type", "application/json");
-	xhr.send();
+	if (data === undefined) {
+		xhr.send();
+	} else {
+		xhr.send(JSON.stringify(data));
+	}
 
-	let requestTimer = setTimeout(function () {
+	var requestTimer = setTimeout(function() {
 		xhr.abort();
-		deferred.reject(408, {message: 'Timeout'});
+		var mess = { message: 'Timeout' };
+		deferred.reject(408, mess);
 	}, TIMEOUT);
 
-	xhr.onload = function () {
+	xhr.onload = function() {
 		clearTimeout(requestTimer);
-		if (xhr.status === 200) {
+		if (xhr.status === happyCode) {
 			deferred.resolve(xhr.response);
 		} else {
 			deferred.reject(xhr.status, xhr.response);
@@ -34,12 +57,20 @@ function getNMEAData() {
 	return deferred.promise();
 }
 
+function getNMEAData() {
+	return getDeferred('/mux/cache', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
 function fetch() {
 	let getData = getNMEAData();
 	getData.done(function (value) {
 //      console.log("Done:", value);
-		let json = JSON.parse(value);
-		onMessage(json);
+		try {
+			let json = JSON.parse(value);
+			onMessage(json);
+		} catch (err) {
+			console.log("Error:", err, ("\nfor value [" + value + "]"));
+		}
 	});
 	getData.fail(function (error, errmess) {
 		let message;
@@ -53,6 +84,57 @@ function fetch() {
 	});
 }
 
+function getSkyGP(when, position, wandering, stars) {
+	let url = "/astro/positions-in-the-sky";
+	// Add date
+	url += ("?at=" + when);
+	url += ("&fromL=" + position.lat);
+	url += ("&fromG=" + position.lng);
+	// Wandering bodies
+	if (wandering !== undefined && wandering === true) { // to minimize the size of the payload
+		url += ("&wandering=true");
+	}
+	// Stars
+	if (stars !== undefined && stars === true) { // to minimize the size of the payload
+		url += ("&stars=true");
+	}
+	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
+function getAstroData(when, position, wandering, stars, callback) {
+	let getData = getSkyGP(when, position, wandering, stars);
+	getData.done(function(value) {
+		let json = JSON.parse(value);
+		if (callback !== undefined) {
+			callback(json);
+		} else {
+			console.log(JSON.stringify(json, null, 2));
+		}
+	});
+	getData.fail(function(error, errmess) {
+		let message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed to get the Astro Data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	});
+};
+
+function getQueryParameterByName(name, url) {
+	if (!url) url = window.location.href;
+	name = name.replace(/[\[\]]/g, "\\$&");
+	let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+			results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+};
+
+// Takes care of re-broadcasting the data.
 function onMessage(json) {
 	try {
 		let errMess = "";
@@ -89,6 +171,14 @@ function onMessage(json) {
 			events.publish('gps-time', gpsDate);
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Date (" + err + ")");
+		}
+		try {
+			let gpsSat = json["Satellites in view"];
+			if (gpsSat !== undefined) {
+				events.publish('gps-sat', gpsSat);
+			}
+		} catch (err) {
+			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "GPS Satellites data (" + err + ")");
 		}
 
 		try {
@@ -236,7 +326,7 @@ function onMessage(json) {
 		}
 
 		if (errMess !== undefined) {
-			displayErr(errMess);
+			// displayErr(errMess); // Absorb
 		}
 	} catch (err) {
 		displayErr(err);
