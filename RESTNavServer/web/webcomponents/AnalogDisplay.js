@@ -1,5 +1,5 @@
-const appWindVerbose = true;
-const APP_WIND_TAG_NAME = 'apparent-wind-display';
+const analogVerbose = false;
+const ANALOG_TAG_NAME = 'analog-display';
 
 /*
 * See custom properties in CSS.
@@ -41,8 +41,8 @@ const APP_WIND_TAG_NAME = 'apparent-wind-display';
  *
  * spine-case to camelCase
  */
-const defaultApparentWindDisplayColorConfig = {
-	bgColor: 'rgba(0, 0, 0, 0)', /* transparent, 'white', TODO */
+const defaultAnalogDisplayColorConfig = {
+	bgColor: 'rgba(0, 0, 0, 0)', /* transparent, 'white', TODO*/
 	digitColor: 'black',
 	withGradient: true,
 	displayBackgroundGradient: {
@@ -58,7 +58,7 @@ const defaultApparentWindDisplayColorConfig = {
 	minorTickColor: 'black',
 	valueColor: 'grey',
 	valueOutlineColor: 'black',
-	valueNbDecimal: 0,
+	valueNbDecimal: 1,
 	handColor: 'red', // 'rgba(0, 0, 100, 0.25)',
 	handOutlineColor: 'black',
 	withHandShadow: true,
@@ -71,7 +71,7 @@ const defaultApparentWindDisplayColorConfig = {
 import * as Utilities from "./utilities/Utilities.js";
 
 /* global HTMLElement */
-class ApparentWindDisplay extends HTMLElement {
+class AnalogDisplay extends HTMLElement {
 
 	static get observedAttributes() {
 		return [
@@ -79,10 +79,16 @@ class ApparentWindDisplay extends HTMLElement {
 			"height",           // Integer. Canvas height
 			"major-ticks",      // Float. value between major ticks (those with labels)
 			"minor-ticks",      // Float. value between minor ticks
+			"min-value",        // Float. Min value. Default 0
+			"max-value",        // Float. Max value.
+			"overlap",          // Integer. Display overlap in degrees. Default 0.
+			"with-min-max",     // Boolean, default false
 			"with-digits",      // Boolean, default true. Index Values for major-ticks
 			"with-border",      // Boolean, default true
-			"label",            // String. Displayed under the know (like 'App Wind')
-			"value"             // JSON Obj. Value to display, like { awa: 0, aws: 0 }
+			"label",            // String.
+			"digital-data-len", // Integer, optional, to display instead of label, like log value along with BSP. Number of characters to display
+			"digital-data-val", // Float, optional. Must be present idf the above exists.
+			"value"             // Float. Value to display
 		];
 	}
 
@@ -94,33 +100,42 @@ class ApparentWindDisplay extends HTMLElement {
 		this.shadowRoot.appendChild(this.canvas);
 
 		// Default values
-		this._value            = { awa: 0, aws: 0 };
-		this._width            = 200;
-		this._height           = 200;
-		this._major_ticks      =  45;
-		this._minor_ticks      =   5;
-		this._with_digits      = false;
+		this._value            =   0;
+		this._width            = 150;
+		this._height           = 150;
+		this._major_ticks      =  10;
+		this._minor_ticks      =   1;
+		this._min_value        =   0.0;
+		this._max_value        =   1.0;
+		this._overlap          =   0;
+		this._with_min_max     = false;
+		this._with_digits      = true;
 		this._with_border      = true;
 		this._label            = undefined;
+		this._digital_data_len = undefined;
+		this._digital_data_val = undefined;
+
+		this.miniVal =  10000000;
+		this.maxiVal = -10000000;
 
 		this._previousClassName = "";
-		this.analogDisplayColorConfig = defaultApparentWindDisplayColorConfig; // Init
+		this.analogDisplayColorConfig = defaultAnalogDisplayColorConfig; // Init
 
-		if (appWindVerbose) {
+		if (analogVerbose) {
 			console.log("Data in Constructor:", this._value);
 		}
 	}
 
 	// Called whenever the custom element is inserted into the DOM.
 	connectedCallback() {
-		if (appWindVerbose) {
+		if (analogVerbose) {
 			console.log("connectedCallback invoked, 'value' is [", this.value, "]");
 		}
 	}
 
 	// Called whenever the custom element is removed from the DOM.
 	disconnectedCallback() {
-		if (appWindVerbose) {
+		if (analogVerbose) {
 			console.log("disconnectedCallback invoked");
 		}
 	}
@@ -128,12 +143,14 @@ class ApparentWindDisplay extends HTMLElement {
 	// Called whenever an attribute is added, removed or updated.
 	// Only attributes listed in the observedAttributes property are affected.
 	attributeChangedCallback(attrName, oldVal, newVal) {
-		if (appWindVerbose) {
+		if (analogVerbose) {
 			console.log("attributeChangedCallback invoked on " + attrName + " from " + oldVal + " to " + newVal);
 		}
 		switch (attrName) {
 			case "value":
-				this._value = JSON.parse(newVal);
+				this._value = parseFloat(newVal);
+				this.miniVal = Math.min(Math.max(this._min_value, this._value), this.miniVal);
+				this.maxiVal = Math.max(Math.min(this._max_value, this._value), this.maxiVal);
 				break;
 			case "width":
 				this._width = parseInt(newVal);
@@ -147,14 +164,32 @@ class ApparentWindDisplay extends HTMLElement {
 			case "minor-ticks":
 				this._minor_ticks = parseFloat(newVal);
 				break;
+			case "min-value":
+				this._min_value = parseFloat(newVal);
+				break;
+			case "max-value":
+				this._max_value = parseFloat(newVal);
+				break;
+			case "overlap":
+				this._overlap = parseInt(newVal);
+				break;
 			case "with-digits":
 				this._with_digits = ("true" === newVal);
 				break;
 			case "with-border":
 				this._with_border = ("true" === newVal);
 				break;
+			case "with-min-max":
+				this._with_min_max = ("true" === newVal);
+				break;
 			case "label":
 				this._label = newVal;
+				break;
+			case "digital-data-len":
+				this._digital_data_len = parseInt(newVal);
+				break;
+			case "digital-data-val":
+				this._digital_data_val = parseFloat(newVal);
 				break;
 			default:
 				break;
@@ -164,14 +199,14 @@ class ApparentWindDisplay extends HTMLElement {
 
 	// Called whenever the custom element has been moved into a new document.
 	adoptedCallback() {
-		if (appWindVerbose) {
+		if (analogVerbose) {
 			console.log("adoptedCallback invoked");
 		}
 	}
 
 	set value(option) {
 		this.setAttribute("value", option);
-		if (appWindVerbose) {
+		if (analogVerbose) {
 			console.log(">> Value option:", option);
 		}
 //	this.repaint();
@@ -188,14 +223,32 @@ class ApparentWindDisplay extends HTMLElement {
 	set minorTicks(val) {
 		this.setAttribute("minor-ticks", val);
 	}
+	set withMinMax(val) {
+		this.setAttribute("with-min-max", val);
+	}
 	set withDigits(val) {
 		this.setAttribute("with-digits", val);
 	}
 	set withBorder(val) {
 		this.setAttribute("with-border", val);
 	}
+	set overlap(val) {
+		this.setAttribute("overlap", val);
+	}
+	set minValue(val) {
+		this.setAttribute("min-value", val);
+	}
+	set maxValue(val) {
+		this.setAttribute("max-value", val);
+	}
 	set label(val) {
 		this.setAttribute("label", val);
+	}
+	set digitalDataLen(val) {
+		this.setAttribute("digital-data-len", val);
+	}
+	set digitalDataVal(val) {
+		this.setAttribute("digital-data-val", val);
 	}
 	set shadowRoot(val) {
 		this._shadowRoot = val;
@@ -216,14 +269,32 @@ class ApparentWindDisplay extends HTMLElement {
 	get majorTicks() {
 		return this._major_ticks;
 	}
+	get withMinMax() {
+		return this._with_min_max;
+	}
 	get withDigits() {
 		return this._with_digits;
 	}
 	get withBorder() {
 		return this._with_border;
 	}
+	get minValue() {
+		return this._min_value;
+	}
+	get maxValue() {
+		return this._max_value;
+	}
+	get overlap() {
+		return this._overlap;
+	}
 	get label() {
 		return this._label;
+	}
+	get digitalDataLen() {
+		return this._digital_data_len;
+	}
+	get digitalDataVal() {
+		return this._digital_data_val;
 	}
 	get shadowRoot() {
 		return this._shadowRoot;
@@ -235,7 +306,7 @@ class ApparentWindDisplay extends HTMLElement {
 	}
 
 	getColorConfig(classNames) {
-		let colorConfig = defaultApparentWindDisplayColorConfig;
+		let colorConfig = defaultAnalogDisplayColorConfig;
 		let classes = classNames.split(" ");
 		for (let cls=0; cls<classes.length; cls++) {
 			let className = classes[cls];
@@ -337,7 +408,7 @@ class ApparentWindDisplay extends HTMLElement {
 	}
 
 
-	drawDisplay(awValue) {
+	drawDisplay(analogValue) {
 
 		let currentStyle = this.className;
 		if (this._previousClassName !== currentStyle || true) {
@@ -355,19 +426,22 @@ class ApparentWindDisplay extends HTMLElement {
 		let digitColor = this.analogDisplayColorConfig.digitColor;
 
 		let context = this.canvas.getContext('2d');
-		context.clearRect(0, 0, this._width, this._height);
+		context.clearRect(0, 0, this.width, this.height);
 
-		let radius = 0.9 * Math.min(this._width, this._height) / 2;
+		let radius = (Math.min(this.width, this.height) / (this.overlap > 0 ? 2 : 1)) * 0.90;
 
 		// Set the canvas size from its container.
-		this.canvas.width = this._width;
-		this.canvas.height = this._height;
+		this.canvas.width = this.width;
+		this.canvas.height = this.height;
+
+		let totalAngle = (Math.PI + (2 * (Utilities.toRadians(this.overlap))));
 
 		context.beginPath();
 
-		if (this._with_border === true) {
+		if (this.withBorder === true) {
 			//  context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);
-			context.arc(this.canvas.width / 2, radius + 10, radius, 0, 2 * Math.PI, false);
+//    context.arc(canvas.width / 2, radius + 10, radius, Math.PI - toRadians(overlapOver180InDegree), (2 * Math.PI) + toRadians(overlapOver180InDegree), false);
+			context.arc(this.canvas.width / 2, radius + 10, radius, Math.PI - Utilities.toRadians(this.overlap > 0 ? 90 : 0), (2 * Math.PI) + Utilities.toRadians(this.overlap > 0 ? 90 : 0), false);
 			context.lineWidth = 5;
 		}
 
@@ -396,11 +470,34 @@ class ApparentWindDisplay extends HTMLElement {
 		context.stroke();
 		context.closePath();
 
+		// Min-max?
+		if (this.withMinMax && this.miniVal < this.maxiVal) {
+			context.beginPath();
+
+			let ___minAngle = (totalAngle * ((this.miniVal - this.minValue) / (this.maxValue - this.minValue))) - Utilities.toRadians(this.overlap) - (Math.PI);
+			let ___maxAngle = (totalAngle * ((this.maxiVal - this.minValue) / (this.maxValue - this.minValue))) - Utilities.toRadians(this.overlap) - (Math.PI);
+
+			//Center
+			context.moveTo(this.canvas.width / 2, radius + 10);
+			context.arc(this.canvas.width / 2, radius + 10, radius * 0.75,
+					(___minAngle),
+					(___maxAngle),
+					false);
+
+//    context.arc(288, 75, 70, 0, Math.PI, false);
+			context.closePath();
+			context.lineWidth = 1;
+			context.fillStyle = 'gray';
+			context.fill();
+//    context.strokeStyle = '#550000';
+//    context.stroke();
+		}
+
 		// Major Ticks
 		context.beginPath();
-		for (let i = 0; i <= 360; i++) {
-			if (i % this.majorTicks === 0) {
-				let currentAngle = Utilities.toRadians(i);
+		for (let i = 0; i <= (this.maxValue - this.minValue); i++) {
+			if ((i + this.minValue) % this.majorTicks === 0) {
+				let currentAngle = (totalAngle * (i / (this.maxValue - this.minValue))) - Utilities.toRadians(this.overlap);
 				let xFrom = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(currentAngle));
 				let yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(currentAngle));
 				let xTo = (this.canvas.width / 2) - ((radius * 0.85) * Math.cos(currentAngle));
@@ -417,8 +514,9 @@ class ApparentWindDisplay extends HTMLElement {
 		// Minor Ticks
 		if (this.minorTicks > 0) {
 			context.beginPath();
-			for (let i = 0; i <= 360; i += this.minorTicks) {
-				let _currentAngle = Utilities.toRadians(i);
+			for (let i = 0; i <= (this.maxValue - this.minValue); i += this.minorTicks) {
+				let _currentAngle = (totalAngle * (i / (this.maxValue - this.minValue))) - Utilities.toRadians(this.overlap);
+
 				let xFrom = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(_currentAngle));
 				let yFrom = (radius + 10) - ((radius * 0.95) * Math.sin(_currentAngle));
 				let xTo = (this.canvas.width / 2) - ((radius * 0.90) * Math.cos(_currentAngle));
@@ -434,77 +532,32 @@ class ApparentWindDisplay extends HTMLElement {
 
 		let scale = radius / 100;
 		// Numbers (indexes) on major ticks
-		if (this._with_digits) {
+		if (this.withDigits) {
 			context.beginPath();
-			for (let i = 0; i < 360; i += this.majorTicks) {
-				context.save();
-				context.translate(this.canvas.width / 2, (radius + 10)); // canvas.height);
-				context.rotate((2 * Math.PI * (i / 360)));
-				context.font = "bold " + Math.round(scale * 10) + "px " + this.analogDisplayColorConfig.font; // Like "bold 15px Arial"
-				context.fillStyle = digitColor;
-				let angle = i;
-				if (angle > 180) {// [-180..+180] , with no sign.
-					angle = 360 - angle;
+			for (let i = 0; i <= (this.maxValue - this.minValue); i++) {
+				if ((i + this.minValue) % this.majorTicks === 0) {
+					context.save();
+					context.translate(this.canvas.width / 2, (radius + 10)); // canvas.height);
+					let __currentAngle = (totalAngle * (i / (this.maxValue - this.minValue))) - Utilities.toRadians(this.overlap);
+//      context.rotate((Math.PI * (i / maxValue)) - (Math.PI / 2));
+					context.rotate(__currentAngle - (Math.PI / 2));
+					context.font = "bold " + Math.round(scale * 15) + "px " + this.analogDisplayColorConfig.font; // Like "bold 15px Arial"
+					context.fillStyle = digitColor;
+					let str = (i + this.minValue).toString();
+					let len = context.measureText(str).width;
+					context.fillText(str, -len / 2, (-(radius * .8) + 10));
+					context.lineWidth = 1;
+					context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
+					context.strokeText(str, -len / 2, (-(radius * .8) + 10)); // Outlined
+					context.restore();
 				}
-				let str = angle.toString();
-				let len = context.measureText(str).width;
-				context.fillText(str, -len / 2, (-(radius * .8) + 10));
-				// TODO Make sure we want this
-				context.lineWidth = 1;
-				context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
-				context.strokeText(str, -len / 2, (-(radius * .8) + 10)); // Outlined
-				context.restore();
 			}
 			context.closePath();
 		}
 
-		// Arcs
-		{
-			context.beginPath();
-			let x = this.canvas.width / 2;
-			let y = this.canvas.height / 2;
-			context.lineWidth = 20;
-			let top = 1.5 * Math.PI;
-			let arcWidth = Utilities.toRadians(120);
-
-			// Starboard
-			if (this.analogDisplayColorConfig.outlinedPortStarboard === true) {
-				context.beginPath();
-				context.lineWidth = 2;
-				context.strokeStyle = 'rgba(0, 255, 0, 0.75)';
-				context.arc(x, y, radius * .75, 1.5 * Math.PI, top + arcWidth, false);
-				context.arc(x, y, radius * .55, top + arcWidth, 1.5 * Math.PI, true);
-				context.lineTo(x, y - (radius * .75));
-				context.stroke();
-				context.closePath();
-			} else {
-				context.beginPath();
-				context.strokeStyle = 'rgba(0, 255, 0, 0.25)';
-				context.arc(x, y, radius * .75, 1.5 * Math.PI, top + arcWidth, false);
-				context.stroke();
-				context.closePath();
-			}
-			// Port
-			if (this.analogDisplayColorConfig.outlinedPortStarboard === true) {
-				context.beginPath();
-				context.lineWidth = 2;
-				context.strokeStyle = 'rgba(255, 0, 0, 0.75)';
-				context.arc(x, y, radius * .75, 1.5 * Math.PI, top - arcWidth, true);
-				context.arc(x, y, radius * .55, top - arcWidth, 1.5 * Math.PI, false);
-				context.lineTo(x, y - (radius * .75));
-				context.stroke();
-				context.closePath();
-			} else {
-				context.beginPath();
-				context.strokeStyle = 'rgba(255, 0, 0, 0.25)';
-				context.arc(x, y, radius * .75, 1.5 * Math.PI, top - arcWidth, true);
-				context.stroke();
-				context.closePath();
-			}
-		}
-
 		// Value
-		let text = awValue.aws.toFixed(this.analogDisplayColorConfig.valueNbDecimal);
+		let text = analogValue.toFixed(this.analogDisplayColorConfig.valueNbDecimal);
+//  text = displayValue.toFixed(nbDecimal); // analogDisplayColorConfig.valueNbDecimal);
 		let len = 0;
 		context.font = "bold " + Math.round(scale * 40 * this.analogDisplayColorConfig.valueFontSizeFactor) + "px " + this.analogDisplayColorConfig.font; // "bold 40px Arial"
 		let metrics = context.measureText(text);
@@ -512,10 +565,10 @@ class ApparentWindDisplay extends HTMLElement {
 
 		context.beginPath();
 		context.fillStyle = this.analogDisplayColorConfig.valueColor;
-		context.fillText(text, (this.canvas.width / 2) - (len / 2), ((radius * .85) + 10));
+		context.fillText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10));
 		context.lineWidth = 1;
 		context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
-		context.strokeText(text, (this.canvas.width / 2) - (len / 2), ((radius * .85) + 10)); // Outlined
+		context.strokeText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined
 		context.closePath();
 
 		// Label ?
@@ -529,11 +582,72 @@ class ApparentWindDisplay extends HTMLElement {
 
 			context.beginPath();
 			context.fillStyle = this.analogDisplayColorConfig.labelFillColor;
-			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)));
+			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0));
 			context.lineWidth = 1;
 			context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
-			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1))); // Outlined
+			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)) + (this.digitalDataLen !== undefined ? 15 : 0)); // Outlined
 			context.closePath();
+		}
+
+		// Digits? Note: not compatible with label (above), would hide it. Example: Log Value // TODO Look into this
+		if (this.digitalDataLen !== undefined) {
+			let oneDigitWidth = (this.canvas.width / 3) / this.digitalDataLen;
+			let oneDigitHeight = oneDigitWidth * 1.4;
+
+			if (this.analogDisplayColorConfig.withGradient) {
+				let start = 1.025 * (this.canvas.height / 2);
+				let grd = context.createLinearGradient(0, start, 0, start + oneDigitHeight);
+				grd.addColorStop(0, this.analogDisplayColorConfig.displayBackgroundGradient.to);   // 0  Beginning
+				grd.addColorStop(1, this.analogDisplayColorConfig.displayBackgroundGradient.from); // 1  End
+				context.fillStyle = grd;
+			} else {
+				context.fillStyle = this.analogDisplayColorConfig.displayBackgroundGradient.to;
+			}
+
+			// The rectangles around each digit
+			let distFactor = 1.1;
+			let digitOrigin = (this.canvas.width / 2) - ((this.digitalDataLen * oneDigitWidth) / 2);
+			for (let i = 0; i < this.digitalDataLen; i++) {
+				context.beginPath();
+
+				let x = digitOrigin + (i * oneDigitWidth);
+				let y = distFactor * (this.canvas.height / 2);
+				context.fillRect(x, y, oneDigitWidth, oneDigitHeight);
+				context.lineWidth = 1;
+				context.strokeStyle = this.analogDisplayColorConfig.displayLineColor;
+				context.rect(x, y, oneDigitWidth, oneDigitHeight);
+				context.stroke();
+				context.closePath();
+			}
+
+			context.shadowOffsetX = 0;
+			context.shadowOffsetY = 0;
+			context.shadowBlur = 0;
+
+			// Value
+			if (this.digitalDataVal !== undefined) {
+				let text = this.digitalDataVal.toFixed(0);
+				while (text.length < this.digitalDataLen) {
+					text = '0' + text;
+				}
+				let fontSize = Math.round(scale * 14);
+				for (let i = 0; i < this.digitalDataLen; i++) {
+					len = 0;
+					context.font = "bold " + fontSize + "px Arial"; // "bold 40px Arial"
+					let txt = text.substring(i, i + 1);
+					let metrics = context.measureText(txt);
+					len = metrics.width;
+					let x = digitOrigin + (i * oneDigitWidth);
+					let y = distFactor * (this.canvas.height / 2);
+					context.beginPath();
+					context.fillStyle = this.analogDisplayColorConfig.valueColor;
+					context.fillText(txt, x + (oneDigitWidth / 2) - (len / 2), y + (oneDigitHeight / 2) + (fontSize / 2));
+					context.lineWidth = 1;
+					context.strokeStyle = this.analogDisplayColorConfig.valueOutlineColor;
+					context.strokeText(txt, x + (oneDigitWidth / 2) - (len / 2), y + (oneDigitHeight / 2) + (fontSize / 2)); // Outlined
+					context.closePath();
+				}
+			}
 		}
 
 		// Hand
@@ -546,18 +660,21 @@ class ApparentWindDisplay extends HTMLElement {
 		}
 		// Center
 		context.moveTo(this.canvas.width / 2, radius + 10);
+		let valInBoundaries = Math.min(analogValue, this._max_value);
+		valInBoundaries = Math.max(valInBoundaries, this._min_value);
 
+		let ___currentAngle = (totalAngle * ((valInBoundaries - this.minValue) / (this.maxValue - this.minValue))) - Utilities.toRadians(this.overlap);
 		// Left
-		let x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (awValue.awa / 360)))); //  - (Math.PI / 2))));
-		let y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (awValue.awa / 360)))); // - (Math.PI / 2))));
+		let x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((___currentAngle - (Math.PI / 2))));
+		let y = (radius + 10) - ((radius * 0.05) * Math.sin((___currentAngle - (Math.PI / 2))));
 		context.lineTo(x, y);
 		// Tip
-		x = (this.canvas.width / 2) - ((radius * 0.90) * Math.cos(2 * Math.PI * (awValue.awa / 360) + (Math.PI / 2)));
-		y = (radius + 10) - ((radius * 0.90) * Math.sin(2 * Math.PI * (awValue.awa / 360) + (Math.PI / 2)));
+		x = (this.canvas.width / 2) - ((radius * 0.90) * Math.cos(___currentAngle));
+		y = (radius + 10) - ((radius * 0.90) * Math.sin(___currentAngle));
 		context.lineTo(x, y);
 		// Right
-		x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (awValue.awa / 360) + (2 * Math.PI / 2))));
-		y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (awValue.awa / 360) + (2 * Math.PI / 2))));
+		x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((___currentAngle + (Math.PI / 2))));
+		y = (radius + 10) - ((radius * 0.05) * Math.sin((___currentAngle + (Math.PI / 2))));
 		context.lineTo(x, y);
 
 		context.closePath();
@@ -578,4 +695,4 @@ class ApparentWindDisplay extends HTMLElement {
 }
 
 // Associate the tag and the class
-window.customElements.define(APP_WIND_TAG_NAME, ApparentWindDisplay);
+window.customElements.define(ANALOG_TAG_NAME, AnalogDisplay);

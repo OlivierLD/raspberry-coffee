@@ -18,7 +18,7 @@
 	<script type="module" src="widgets/JumboDisplay.js"></script>
 	<script type="module" src="widgets/DirectionDisplay.js"></script>
 	<script type="module" src="widgets/AnalogDisplay.js"></script>
-	<script type="module" src="widgets/ApparentWindDisplay.js"></script>
+	<script type="module" src="widgets/WindAngleDisplay.js"></script>
 	<script type="module" src="widgets/AnalogWatch.js"></script>
 	<script type="module" src="widgets/CompassRose.js"></script>
 	<script type="module" src="widgets/WorldMap.js"></script>
@@ -1635,24 +1635,24 @@
 						<input type="radio" name="bg2" value="white" onchange="applyBackground('top-cell-aw', this.value);" checked>White</input>
 						<input type="radio" name="bg2" value="transparent" onchange="applyBackground('top-cell-aw', this.value);">None</input>
 						<hr/>
-						<apparent-wind-display class="analogdisplay-day"
-																	 title="Apparent Wind Speed in Knots"
-																	 id="aw-01"
-																	 value="{ &quot;awa&quot;: 60, &quot;aws&quot;: 10.2 }"
-																	 major-ticks="45"
-																	 minor-ticks="5"
-																	 with-border="true"
-																	 with-digits="true"
-																	 label="App Wind"
-																	 width="300"
-																	 height="300"></apparent-wind-display>
+						<wind-angle-display class="analogdisplay-day"
+															  title="Apparent Wind Speed in Knots"
+															  id="aw-01"
+															  value="{ &quot;wa&quot;: 60, &quot;ws&quot;: 10.2 }"
+															  major-ticks="45"
+															  minor-ticks="5"
+															  with-border="true"
+															  with-digits="true"
+															  label="App Wind"
+															  width="300"
+															  height="300"></wind-angle-display>
 					</div>
 					<div class="black-frame centered">
 						<script type="text/javascript">
 							function updateJsonAw() {
 								let aws = document.getElementById('aws-01').value;
 								let awa = document.getElementById('awa-01').value;
-								document.getElementById('json-aw').value = '{ "awa":' + awa + ', "aws":' + aws + '}';
+								document.getElementById('json-aw').value = '{ "wa":' + awa + ', "ws":' + aws + '}';
 							}
 						</script>
 						<input type="text" id="json-aw" style="display: none;" value="{ &quot;awa&quot;: 60, &quot;aws&quot;: 10.2 }">
@@ -1919,32 +1919,34 @@
 					</div>
 				</td>
 			</tr>
-			<td valign="top">
-				<div class="black-frame centered">
-					<compass-rose id="compass-rose-05"
-												class="gray-flat"
-												title="Heading"
-												value="15"
-												width="500"
-												height="50"></compass-rose>
-				</div>
-				<div class="black-frame centered">
-					Value:
-					<input type="number"
-								 id="compass-value-05"
-								 placeholder="Heading"
-								 title="True Heading"
-								 style="width: 40px; text-align: right;"
-								 value="15"/>
-					<br/>
-					<button onclick="setData('compass-value-05', 'compass-rose-05')"
-									title="Set True Heading"
-									style="margin-top: 3px;">Direct</button>
-					<button onclick="doAnimate('compass-value-05', 'compass-rose-05', 1, true)"
-									title="Set True Heading"
-									style="margin-top: 3px;">Animate</button>
-				</div>
-			</td>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<compass-rose id="compass-rose-05"
+													class="gray-flat"
+													title="Heading"
+													value="15"
+													width="500"
+													height="50"></compass-rose>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<input type="number"
+									 id="compass-value-05"
+									 placeholder="Heading"
+									 title="True Heading"
+									 style="width: 40px; text-align: right;"
+									 value="15"/>
+						<br/>
+						<button onclick="setData('compass-value-05', 'compass-rose-05')"
+										title="Set True Heading"
+										style="margin-top: 3px;">Direct</button>
+						<button onclick="doAnimate('compass-value-05', 'compass-rose-05', 1, true)"
+										title="Set True Heading"
+										style="margin-top: 3px;">Animate</button>
+					</div>
+				</td>
+			</tr>
 			<tr>
 				<td colspan="2">
 					Start/Stop Animation
@@ -2279,7 +2281,7 @@
 	</div>
 	<hr/>
 	<!--
-		ANALOG WATCH
+		DIR-16-POINTS
 	+-->
 	<div style="cursor: pointer;" onclick="showHide('dir-16-points');"><b><u>Direction, 16 points</u></b></div>
 	<div id="dir-16-points" class="smooth">
