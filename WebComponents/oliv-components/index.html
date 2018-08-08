@@ -20,6 +20,7 @@
 	<script type="module" src="widgets/AnalogDisplay.js"></script>
 	<script type="module" src="widgets/WindAngleDisplay.js"></script>
 	<script type="module" src="widgets/AnalogWatch.js"></script>
+	<script type="module" src="widgets/CalendarDisplay.js"></script>
 	<script type="module" src="widgets/CompassRose.js"></script>
 	<script type="module" src="widgets/WorldMap.js"></script>
 	<script type="module" src="widgets/SkyMap.js"></script>
@@ -2311,6 +2312,44 @@
 						<button onclick="animate16Dir('dir-16-01')"
 										title="Set 16 value"
 										style="margin-top: 3px;">Animate</button>
+
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<!--
+		CALENDAR
+	+-->
+	<div style="cursor: pointer;" onclick="showHide('calendar');"><b><u>Calendar</u></b></div>
+	<div id="calendar" class="smooth">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<calendar-display id="calendar-01"
+														  class="calendar-01"
+														  title="Day-Month-Year"
+														  width="300"
+														  height="360"
+														  value="28-08-2018"></calendar-display>
+					</div>
+					<div class="black-frame centered">
+						Value:
+						<!--input type="text"
+									 id="v-dir-16-01"
+									 placeholder="SSE"
+									 title="Value to set"
+									 style="width: 80px; text-align: center;"
+									 value="SSE"/>
+						<button onclick="setData('v-dir-16-01', 'dir-16-01')"
+										title="Set 16 value"
+										style="margin-top: 3px;">Set</button>
+						<br/>
+						<button onclick="animate16Dir('dir-16-01')"
+										title="Set 16 value"
+										style="margin-top: 3px;">Animate</button-->
 
 					</div>
 				</td>

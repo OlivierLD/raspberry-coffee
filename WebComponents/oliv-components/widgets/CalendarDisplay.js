@@ -1,28 +1,32 @@
-const jumboVerbose = false;
-const JUMBO_TAG_NAME = 'jumbo-display';
+const calendarVerbose = true;
+const CALENDAR_TAG_NAME = 'calendar-display';
 
-const jumboDefaultColorConfig = {
+const calendarDefaultColorConfig = {
 	bgColor: 'white',
 	displayBackgroundGradient: {
-		from: 'black',
-		to: 'gray'
+		from: 'white',
+		to: 'lightgray'
 	},
-	gridColor: 'rgba(255, 255, 255, 0.7)',
-	displayColor: 'cyan',
-	valueNbDecimal: 2,
-	labelFont: 'Courier New',
+	dayColor: 'red',
+	monthYearColor: 'black',
 	valueFont: 'Arial'
 };
 
+const MONTH_NAMES = [
+		"January", "February", "March",
+		"April", "May", "June",
+		"July", "August", "September",
+		"October", "November", "December"
+];
+
 /* global HTMLElement */
-class JumboDisplay extends HTMLElement {
+class CalendarDisplay extends HTMLElement {
 
 	static get observedAttributes() {
 		return [
 			"width",        // Integer. Canvas width
 			"height",       // Integer. Canvas height
-			"value",        // Float. Numeric value to display
-			"label"         // String, like TWS, AWS, etc
+			"value"         // String, DD-MM-YYYY
 		];
 	}
 
@@ -34,29 +38,28 @@ class JumboDisplay extends HTMLElement {
 		this.shadowRoot.appendChild(this.canvas);
 
 		// Default values
-		this._value       =   0;
-		this._width       =  50;
-		this._height      = 150;
-		this._label       = "VAL";
+		this._value       = '01-01-2018';
+		this._width       = 150;
+		this._height      = 180;
 
 		this._previousClassName = "";
-		this.jumboColorConfig = jumboDefaultColorConfig;
+		this.calendarColorConfig = calendarDefaultColorConfig;
 
-		if (jumboVerbose) {
+		if (calendarVerbose) {
 			console.log("Data in Constructor:", this._value);
 		}
 	}
 
 	// Called whenever the custom element is inserted into the DOM.
 	connectedCallback() {
-		if (jumboVerbose) {
+		if (calendarVerbose) {
 			console.log("connectedCallback invoked, 'value' is [", this.value, "]");
 		}
 	}
 
 	// Called whenever the custom element is removed from the DOM.
 	disconnectedCallback() {
-		if (jumboVerbose) {
+		if (calendarVerbose) {
 			console.log("disconnectedCallback invoked");
 		}
 	}
@@ -64,21 +67,18 @@ class JumboDisplay extends HTMLElement {
 	// Called whenever an attribute is added, removed or updated.
 	// Only attributes listed in the observedAttributes property are affected.
 	attributeChangedCallback(attrName, oldVal, newVal) {
-		if (jumboVerbose) {
+		if (calendarVerbose) {
 			console.log("attributeChangedCallback invoked on " + attrName + " from " + oldVal + " to " + newVal);
 		}
 		switch (attrName) {
 			case "value":
-				this._value = parseFloat(newVal);
+				this._value = newVal;
 				break;
 			case "width":
 				this._width = parseInt(newVal);
 				break;
 			case "height":
 				this._height = parseInt(newVal);
-				break;
-			case "label":
-				this._label = newVal;
 				break;
 			default:
 				break;
@@ -88,14 +88,14 @@ class JumboDisplay extends HTMLElement {
 
 	// Called whenever the custom element has been moved into a new document.
 	adoptedCallback() {
-		if (jumboVerbose) {
+		if (calendarVerbose) {
 			console.log("adoptedCallback invoked");
 		}
 	}
 
 	set value(option) {
 		this.setAttribute("value", option);
-		if (jumboVerbose) {
+		if (calendarVerbose) {
 			console.log(">> Value option:", option);
 		}
 //	this.repaint();
@@ -105,9 +105,6 @@ class JumboDisplay extends HTMLElement {
 	}
 	set height(val) {
 		this.setAttribute("height", val);
-	}
-	set label(val) {
-		this.setAttribute("label", val);
 	}
 	set shadowRoot(val) {
 		this._shadowRoot = val;
@@ -122,16 +119,13 @@ class JumboDisplay extends HTMLElement {
 	get height() {
 		return this._height;
 	}
-	get label() {
-		return this._label;
-	}
 	get shadowRoot() {
 		return this._shadowRoot;
 	}
 
 	// Component methods
 	getColorConfig(classNames) {
-		let colorConfig = jumboDefaultColorConfig;
+		let colorConfig = calendarDefaultColorConfig;
 		let classes = classNames.split(" ");
 		for (let cls=0; cls<classes.length; cls++) {
 			let cssClassName = classes[cls];
@@ -141,7 +135,7 @@ class JumboDisplay extends HTMLElement {
 					for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 						let selector = document.styleSheets[s].cssRules[r].selectorText;
 						//			console.log(">>> ", selector);
-						if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(JUMBO_TAG_NAME) > -1))) { // Cases like "tag-name .className"
+						if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(CALENDAR_TAG_NAME) > -1))) { // Cases like "tag-name .className"
 						                                                                                                                                                           //				console.log("  >>> Found it! [%s]", selector);
 							let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 							let cssTextElems = cssText.split(";");
@@ -160,17 +154,11 @@ class JumboDisplay extends HTMLElement {
 										case '--display-background-gradient-to':
 											colorConfig.displayBackgroundGradient.to = value;
 											break;
-										case '--grid-color':
-											colorConfig.gridColor = value;
+										case '--day-color':
+											colorConfig.dayColor = value;
 											break;
-										case '--display-color':
-											colorConfig.displayColor = value;
-											break;
-										case '--value-nb-decimal':
-											colorConfig.valueNbDecimal = value;
-											break;
-										case '--label-font':
-											colorConfig.labelFont = value;
+										case '--month-year-color':
+											colorConfig.monthYearColor = value;
 											break;
 										case '--value-font':
 											colorConfig.valueFont = value;
@@ -191,17 +179,17 @@ class JumboDisplay extends HTMLElement {
 	}
 
 	repaint() {
-		this.drawJumbo(this._value);
+		this.drawCalendar(this._value);
 	}
 
-	drawJumbo(jumboValue) {
+	drawCalendar(dateValue) {
 
 		let currentStyle = this.className;
 		if (this._previousClassName !== currentStyle || true) {
 			// Reload
 			//	console.log("Reloading CSS");
 			try {
-				this.jumboColorConfig = this.getColorConfig(currentStyle);
+				this.calendarColorConfig = this.getColorConfig(currentStyle);
 			} catch (err) {
 				// Absorb?
 				console.log(err);
@@ -211,57 +199,49 @@ class JumboDisplay extends HTMLElement {
 		}
 
 		let context = this.canvas.getContext('2d');
-		let scale = 1.0;
+		let scale = this._height / 180;
 
-		if (this.width === 0 || this.height === 0) { // Not visible
+		if (this._width === 0 || this._height === 0) { // Not visible
 			return;
 		}
 		// Set the canvas size from its container.
-		this.canvas.width = this.width;
-		this.canvas.height = this.height;
+		this.canvas.width = this._width;
+		this.canvas.height = this._height;
 
 		var grd = context.createLinearGradient(0, 5, 0, this.height);
-		grd.addColorStop(0, this.jumboColorConfig.displayBackgroundGradient.from); // 0  Beginning
-		grd.addColorStop(1, this.jumboColorConfig.displayBackgroundGradient.to);  // 1  End
+		grd.addColorStop(0, this.calendarColorConfig.displayBackgroundGradient.from); // 0  Beginning
+		grd.addColorStop(1, this.calendarColorConfig.displayBackgroundGradient.to);  // 1  End
 		context.fillStyle = grd;
 
 		// Background
 		this.roundRect(context, 0, 0, this.canvas.width, this.canvas.height, 10, true, false);
-		// Grid
-		//  1 - vertical
-		var nbVert = 5;
-		context.strokeStyle = this.jumboColorConfig.gridColor;
-		context.lineWidth = 0.5;
-		for (var i = 1; i < nbVert; i++) {
-			var x = i * (this.canvas.width / nbVert);
-			context.beginPath();
-			context.moveTo(x, 0);
-			context.lineTo(x, this.canvas.height);
-			context.closePath();
-			context.stroke();
-		}
-		// 2 - Horizontal
-		var nbHor = 3;
-		for (var i = 1; i < nbHor; i++) {
-			var y = i * (this.canvas.height / nbHor);
-			context.beginPath();
-			context.moveTo(0, y);
-			context.lineTo(this.canvas.width, y);
-			context.closePath();
-			context.stroke();
-		}
 
-		context.fillStyle = this.jumboColorConfig.displayColor;
-		// Label
-		context.font = "bold " + Math.round(scale * 16) + "px " + this.jumboColorConfig.labelFont;
-		context.fillText(this.label, 5, 18);
-		// Value
-		context.font = "bold " + Math.round(scale * 60) + "px " + this.jumboColorConfig.valueFont;
-		let strVal = jumboValue.toFixed(this.jumboColorConfig.valueNbDecimal);
-		let metrics = context.measureText(strVal);
+		let dateElem = this._value.split("-");
+		// Day
+		let day = parseInt(dateElem[0]);
+		context.fillStyle = this.calendarColorConfig.dayColor;
+		context.font = "bold " + Math.round(scale * 130) + "px " + this.calendarColorConfig.valueFont;
+		let dayVal = day.toString();
+		let metrics = context.measureText(dayVal);
 		let len = metrics.width;
+		context.fillText(dayVal, (this.canvas.width / 2) - (len / 2), (this.canvas.height / 2) + (Math.round(scale * 130) / 2) - (20 * scale));
 
-		context.fillText(strVal, this.canvas.width - len - 5, this.canvas.height - 5);
+		// Month
+		let month = parseInt(dateElem[1]) - 1;
+		context.fillStyle = this.calendarColorConfig.monthYearColor;
+		context.font = "bold " + Math.round(scale * 20) + "px " + this.calendarColorConfig.valueFont;
+		let monthVal = MONTH_NAMES[month];
+		metrics = context.measureText(monthVal);
+		len = metrics.width;
+		context.fillText(monthVal, (this.canvas.width / 2) - (len / 2), this.canvas.height - (scale * 15));
+		// Year
+		let year = parseInt(dateElem[2]);
+		context.fillStyle = this.calendarColorConfig.monthYearColor;
+		context.font = "bold " + Math.round(scale * 20) + "px " + this.calendarColorConfig.valueFont;
+		let yearVal = year.toString();
+		metrics = context.measureText(yearVal);
+		len = metrics.width;
+		context.fillText(yearVal, (this.canvas.width / 2) - (len / 2), (scale * 30));
 	}
 
 	roundRect(ctx, x, y, width, height, radius, fill, stroke) {
@@ -295,4 +275,4 @@ class JumboDisplay extends HTMLElement {
 }
 
 // Associate the tag and the class
-window.customElements.define(JUMBO_TAG_NAME, JumboDisplay);
+window.customElements.define(CALENDAR_TAG_NAME, CalendarDisplay);

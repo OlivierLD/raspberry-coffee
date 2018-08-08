@@ -17,6 +17,7 @@
 	<script type="module" src="./AnalogDisplay.js"></script>
 	<script type="module" src="./WindAngleDisplay.js"></script>
 	<script type="module" src="./AnalogWatch.js"></script>
+	<script type="module" src="./CalendarDisplay.js"></script>
 	<script type="module" src="./CompassRose.js"></script>
 	<script type="module" src="./WorldMap.js"></script>
 
@@ -430,6 +431,8 @@
 				// val.format("Y-M-d H:i:s")
 				let time = new Date(val).format("H:i:s")
 				setData('analog-watch-01', time);
+				let date = new Date(val).format("d-m-Y");
+				setData('calendar-01', date);
 			});
 			events.subscribe('hdg', function(val) {
 				setData('compass-rose-01', val);
@@ -553,7 +556,6 @@
 				</div>
 				<div class="black-frame centered">
 					<input type="checkbox" onchange="setBorder(this, 'tw-01');" checked>With Border
-					<input type="checkbox" onchange="setMinMax(this, 'tw-01');" checked>With Min &amp; Max
 				</div>
 			</div>
 			<!--
@@ -654,23 +656,34 @@
 			<!--
 				ANALOG WATCH
 			+-->
-			<div id="analog-watch">
-				<div class="black-frame centered">
-					<analog-watch id="analog-watch-01"
-												class="analogdisplay-day"
-												title="GPS Time"
-												width="220"
-												height="220"
-												hours-ticks="1"
-												minutes-ticks="1"
-												digital-value="6"
-												with-second-hand="true"
-												hours-flavor="arabic"
-												label="GPS Time"
-												value="00:00:00"></analog-watch>
+			<div style="display: grid; grid-template-columns: auto; padding: 10px;">
+				<div id="analog-watch">
+					<div class="black-frame centered">
+						<analog-watch id="analog-watch-01"
+													class="analogdisplay-day"
+													title="GPS Time"
+													width="220"
+													height="220"
+													hours-ticks="1"
+													minutes-ticks="1"
+													digital-value="6"
+													with-second-hand="true"
+													hours-flavor="arabic"
+													label="GPS Time"
+													value="00:00:00"></analog-watch>
+					</div>
+					<div class="black-frame centered">
+						<input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>With Border
+					</div>
 				</div>
+
 				<div class="black-frame centered">
-					<input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>With Border
+					<calendar-display id="calendar-01"
+														class="calendar-01"
+														title="Day-Month-Year"
+														width="150"
+														height="180"
+														value="01-01-1970"></calendar-display>
 				</div>
 			</div>
 		</div>

@@ -460,3 +460,12 @@ compass-rose .gray-flat {
 	--value-color: lightgreen;
 	--font: Arial;
 }
+
+.calendar-01 {
+	--bg-color: white;
+	--display-background-gradient-from: LightGrey;
+	--display-background-gradient-to: white;
+	--day-color: red;
+	--month-year-color: black;
+	--value-font: Arial;
+}

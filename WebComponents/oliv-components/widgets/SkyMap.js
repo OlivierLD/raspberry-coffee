@@ -1,4 +1,4 @@
-const skyMapVerbose = true;
+const skyMapVerbose = false;
 const SKY_MAP_TAG_NAME = 'sky-map';
 
 /**
