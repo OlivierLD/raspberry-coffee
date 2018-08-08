@@ -205,80 +205,81 @@
 		}
 
 		// Depends on the user position... Would not turn with the globe.
-		const gpsSatelliteData = {
-			"1":{
-				"svID":1,
-				"elevation":26,
-				"azimuth":316,
-				"snr":0
-			},
-			"3":{
-				"svID":3,
-				"elevation":4,
-				"azimuth":284,
-				"snr":0
-			},
-			"8":{
-				"svID":8,
-				"elevation":27,
-				"azimuth":251,
-				"snr":6
-			},
-			"10":{
-				"svID":10,
-				"elevation":43,
-				"azimuth":75,
-				"snr":0
-			},
-			"11":{
-				"svID":11,
-				"elevation":32,
-				"azimuth":303,
-				"snr":0
-			},
-			"14":{
-				"svID":14,
-				"elevation":84,
-				"azimuth":250,
-				"snr":0
-			},
-			"18":{
-				"svID":18,
-				"elevation":16,
-				"azimuth":92,
-				"snr":0
-			},
-			"22":{
-				"svID":22,
-				"elevation":22,
-				"azimuth":291,
-				"snr":0
-			},
-			"24":{
-				"svID":24,
-				"elevation":1,
-				"azimuth":33,
-				"snr":0
-			},
-			"27":{
-				"svID":27,
-				"elevation":16,
-				"azimuth":212,
-				"snr":6
-			},
-			"31":{
-				"svID":31,
-				"elevation":31,
-				"azimuth":157,
-				"snr":0
-			},
-			"32":{
-				"svID":32,
-				"elevation":69,
-				"azimuth":37,
-				"snr":0
-			}
-		};
+		let gpsSatelliteData = undefined;
+		// {
+		// 	"1":{
+		// 		"svID":1,
+		// 		"elevation":26,
+		// 		"azimuth":316,
+		// 		"snr":0
+		// 	},
+		// 	"3":{
+		// 		"svID":3,
+		// 		"elevation":4,
+		// 		"azimuth":284,
+		// 		"snr":0
+		// 	},
+		// 	"8":{
+		// 		"svID":8,
+		// 		"elevation":27,
+		// 		"azimuth":251,
+		// 		"snr":6
+		// 	},
+		// 	"10":{
+		// 		"svID":10,
+		// 		"elevation":43,
+		// 		"azimuth":75,
+		// 		"snr":0
+		// 	},
+		// 	"11":{
+		// 		"svID":11,
+		// 		"elevation":32,
+		// 		"azimuth":303,
+		// 		"snr":0
+		// 	},
+		// 	"14":{
+		// 		"svID":14,
+		// 		"elevation":84,
+		// 		"azimuth":250,
+		// 		"snr":0
+		// 	},
+		// 	"18":{
+		// 		"svID":18,
+		// 		"elevation":16,
+		// 		"azimuth":92,
+		// 		"snr":0
+		// 	},
+		// 	"22":{
+		// 		"svID":22,
+		// 		"elevation":22,
+		// 		"azimuth":291,
+		// 		"snr":0
+		// 	},
+		// 	"24":{
+		// 		"svID":24,
+		// 		"elevation":1,
+		// 		"azimuth":33,
+		// 		"snr":0
+		// 	},
+		// 	"27":{
+		// 		"svID":27,
+		// 		"elevation":16,
+		// 		"azimuth":212,
+		// 		"snr":6
+		// 	},
+		// 	"31":{
+		// 		"svID":31,
+		// 		"elevation":31,
+		// 		"azimuth":157,
+		// 		"snr":0
+		// 	},
+		// 	"32":{
+		// 		"svID":32,
+		// 		"elevation":69,
+		// 		"azimuth":37,
+		// 		"snr":0
+		// 	}
+		// };
 
 		function plotSatellite(context, worldMap, userPos, satColor, name, satellite) {
 			let sat = worldMap.getPanelPoint(satellite.lat, satellite.lng);
@@ -344,22 +345,26 @@
 						{name: "I-4 F2 EMEA", lng: 63.0},
 						{name: "I-4 F3 Americas", lng: -97.6},
 						{name: "Alphasat", lng: 24.9}];
-					let satColor = 'cyan';
-					sats.forEach(gs => {
-						plotSatellite(context, worldMap, userPos, satColor, gs.name, { lat: 0, lng: gs.lng });
-					})
+					if (document.getElementById('geo-sat-01').checked) {
+						let satColor = 'cyan';
+						sats.forEach(gs => {
+							plotSatellite(context, worldMap, userPos, satColor, gs.name, {lat: 0, lng: gs.lng});
+						});
+					}
 
 					// GPS Satellites in view
-					for (var sat in gpsSatelliteData) {
-						let satellite = gpsSatelliteData[sat];
-						let satellitePosition = worldMap.deadReckoningRadians({
-							lat: worldMap.toRadians(worldMap.userPosition.latitude),
-							lng: worldMap.toRadians(worldMap.userPosition.longitude)
-						}, (90 - satellite.elevation) * 60, satellite.azimuth);
-						plotSatellite(context, worldMap, userPos, getSNRColor(satellite.snr), sat, {
-							lat: worldMap.toDegrees(satellitePosition.lat),
-							lng: worldMap.toDegrees(satellitePosition.lng)
-						});
+					if (document.getElementById('gps-sat-01').checked) {
+						for (var sat in gpsSatelliteData) {
+							let satellite = gpsSatelliteData[sat];
+							let satellitePosition = worldMap.deadReckoningRadians({
+								lat: worldMap.toRadians(worldMap.userPosition.latitude),
+								lng: worldMap.toRadians(worldMap.userPosition.longitude)
+							}, (90 - satellite.elevation) * 60, satellite.azimuth);
+							plotSatellite(context, worldMap, userPos, getSNRColor(satellite.snr), sat, {
+								lat: worldMap.toDegrees(satellitePosition.lat),
+								lng: worldMap.toDegrees(satellitePosition.lng)
+							});
+						}
 					}
 				}
 			});
@@ -462,6 +467,8 @@
 		window.onload = function() {
 			initAjax(); // Default. See later for a WebSocket option
 
+			callAfter('world-map-01'); // Satellites plot.
+
 			/**
 			 *  SUBSCRIBERS HERE.
 			 *
@@ -497,6 +504,7 @@
 			});
 			events.subscribe('gps-sat', function(val) {
 				console.log("Satellite data:", val);
+				gpsSatelliteData = val;
 			});
 			events.subscribe('hdg', function(val) {
 				setData('compass-rose-01', val);
@@ -710,10 +718,14 @@
 					<input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars
 					<input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
 					<br/>
+					<input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites
+					<input type="checkbox" id="gps-sat-01"/>GPS Satellites in view
+					<br/>
 					<input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);" checked>Globe
 					<input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
 					<input type="radio" name="proj-01" value="ANAXIMANDRE" onchange="setProjection('world-map-01', this);">Square
 					<hr/>
+
 					Callback samples: <button onclick="callBefore('world-map-01')">Before</button>&nbsp;&nbsp;<button onclick="callAfter('world-map-01')">After</button>
 				</div>
 			</div>
