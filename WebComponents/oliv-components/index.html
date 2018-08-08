@@ -1612,9 +1612,9 @@
 	</div>
 	<hr/>
 	<!--
-			APPARENT WIND DISPLAY
+			WIND ANGLE DISPLAY
 	+-->
-	<div style="cursor: pointer;" onclick="showHide('apparent-wind');"><b><u>Apparent Wind Displays</u></b></div>
+	<div style="cursor: pointer;" onclick="showHide('apparent-wind');"><b><u>Wind Angle Displays</u></b></div>
 	<div id="apparent-wind" class="smooth">
 		<table border="1">
 			<tr>
@@ -2336,21 +2336,44 @@
 														  value="28-08-2018"></calendar-display>
 					</div>
 					<div class="black-frame centered">
-						Value:
-						<!--input type="text"
-									 id="v-dir-16-01"
-									 placeholder="SSE"
-									 title="Value to set"
+						<script type="text/javascript">
+							function updateCalendar() {
+								let d = document.getElementById('calendar-day-01').value;
+								let m = document.getElementById('calendar-month-01').value;
+								let y = document.getElementById('calendar-year-01').value;
+								document.getElementById('calendar-01').value = d + '-' + m + '-' + y;
+								document.getElementById('calendar-01').repaint();
+							}
+						</script>
+						<input type="number"
+									 id="calendar-day-01"
+									 placeholder="DD"
+									 title="Day to set"
+									 style="width: 40px; text-align: center;"
+									 value="28"/>
+						<select id="calendar-month-01">
+							<option value="01">Jan</option>
+							<option value="02">Feb</option>
+							<option value="03">Mar</option>
+							<option value="04">Apr</option>
+							<option value="05">May</option>
+							<option value="06">Jun</option>
+							<option value="07">Jul</option>
+							<option value="08" selected>Aug</option>
+							<option value="09">Sep</option>
+							<option value="10">Oct</option>
+							<option value="11">Nov</option>
+							<option value="12">Dec</option>
+						</select>
+						<input type="number"
+									 id="calendar-year-01"
+									 placeholder="YYYY"
+									 title="Year to set"
 									 style="width: 80px; text-align: center;"
-									 value="SSE"/>
-						<button onclick="setData('v-dir-16-01', 'dir-16-01')"
-										title="Set 16 value"
+									 value="2018"/>
+						<button onclick="updateCalendar()"
+										title="Set date value"
 										style="margin-top: 3px;">Set</button>
-						<br/>
-						<button onclick="animate16Dir('dir-16-01')"
-										title="Set 16 value"
-										style="margin-top: 3px;">Animate</button-->
-
 					</div>
 				</td>
 			</tr>
