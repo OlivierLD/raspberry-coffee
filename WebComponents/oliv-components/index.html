@@ -2378,6 +2378,57 @@
 										style="margin-top: 3px;">Set</button>
 					</div>
 				</td>
+				<td valign="top">
+					<div class="black-frame centered">
+						<calendar-display id="calendar-02"
+															class="calendar-01"
+															title="Day-Month-Year"
+															width="150"
+															height="180"
+															value="28-08-2018-tuesday"></calendar-display>
+					</div>
+					<div class="black-frame centered">
+						<script type="text/javascript">
+							function updateCalendar2() {
+								let d = document.getElementById('calendar-day-02').value;
+								let m = document.getElementById('calendar-month-02').value;
+								let y = document.getElementById('calendar-year-02').value;
+								let date = new Date(y, m - 1, d);
+								document.getElementById('calendar-02').value = d + '-' + m + '-' + y + '-' + WEEK_DAYS[date.getDay()];
+								document.getElementById('calendar-02').repaint();
+							}
+						</script>
+						<input type="number"
+									 id="calendar-day-02"
+									 placeholder="DD"
+									 title="Day to set"
+									 style="width: 30px; text-align: center;"
+									 value="28"/>
+						<select id="calendar-month-02">
+							<option value="01">Jan</option>
+							<option value="02">Feb</option>
+							<option value="03">Mar</option>
+							<option value="04">Apr</option>
+							<option value="05">May</option>
+							<option value="06">Jun</option>
+							<option value="07">Jul</option>
+							<option value="08" selected>Aug</option>
+							<option value="09">Sep</option>
+							<option value="10">Oct</option>
+							<option value="11">Nov</option>
+							<option value="12">Dec</option>
+						</select>
+						<input type="number"
+									 id="calendar-year-02"
+									 placeholder="YYYY"
+									 title="Year to set"
+									 style="width: 40px; text-align: center;"
+									 value="2018"/>
+						<button onclick="updateCalendar2()"
+										title="Set date value"
+										style="margin-top: 3px;">Set</button>
+					</div>
+				</td>
 			</tr>
 		</table>
 	</div>
