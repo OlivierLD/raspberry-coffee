@@ -94,17 +94,6 @@ From _any_ device (laptop, tablet, smart-phone) that can run a browser, reach th
 ```
 > `[host]` is the name or IP of the machine the server runs on.
 
-Work in progress, an NMEA console with Web Components:
-```
- http://[host]:9999/web/webcomponents/console.html
-```
-
-![Web Components](./docimg/screenshot.11.png)
-
-Equiped with Heads up display (reflection in a wind screen, for example).
-
-![HeadsUp display](./docimg/screenshot.12.png)
-
 _Your browser needs to support `HTML5` and `CSS3`, but nowadays, less and less browsers do not._
 
 Then you are able to:
@@ -151,6 +140,19 @@ Actual position, in real time. With sunlight and moonlight options.
 
 The 3D map - beside being an interesting trigonometric exercise - is pinging the REST Astro Service
 to get the real time coordinates of the Sun and the Moon, to display them on the globe.
+
+---
+
+_**Work in progress**_, an NMEA console with Web Components:
+```
+ http://[host]:9999/web/webcomponents/console.html
+```
+
+![Web Components](./docimg/screenshot.11.png)
+
+Equiped with Heads up display features (reflection in a wind screen, for example).
+
+![HeadsUp display](./docimg/screenshot.12.png)
 
 ---
 
