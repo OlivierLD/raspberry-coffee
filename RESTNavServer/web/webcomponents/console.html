@@ -28,8 +28,8 @@
 
 	<style>
 		:root {
-			--perspective: 50em;
-			--rotateX: -40deg;
+			--perspective: 100em;
+			--rotateX: -15deg;
 		}
 
 		html {
@@ -468,13 +468,13 @@
 			<tr>
 				<td width="50%">
 					<h5 style="color: cyan;">Perspective</h5>
-					<input type="range" value="50" min="0" max="100" style="width: 90%;" oninput="setPerspective.call(this, event); perspective01.value = this.value;" />
-					<output name="perspective" id="perspective01" style="color: cyan;"></output>
+					<input type="range" value="100" min="0" max="100" style="width: 90%;" oninput="setPerspective.call(this, event); perspective01.value = this.value;" />
+					<output name="perspective" id="perspective01" style="color: cyan;">100</output>
 				</td>
 				<td width="50%">
 					<h5 style="color: cyan;">Rotate X</h5>
-					<input type="range" value="-50" min="-100" max="100" style="width: 90%;" oninput="setRotateX.call(this, event); perspective02.value = this.value;" />
-					<output name="perspective" id="perspective02" style="color: cyan;"></output>
+					<input type="range" value="-15" min="-100" max="100" style="width: 90%;" oninput="setRotateX.call(this, event); perspective02.value = this.value;" />
+					<output name="perspective" id="perspective02" style="color: cyan;">-15</output>
 				</td>
 			</tr>
 		</table>
