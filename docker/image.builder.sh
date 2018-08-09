@@ -43,7 +43,7 @@ do
 			RUN_CMD="docker run -p 8080:9999 -d $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
-			#                      tcp port as seen from outside
+			#                      tcp port as seen from outside (this machine)
 			#
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://localhost:8080/web/index.html from your browser.\n"
@@ -57,7 +57,7 @@ do
 			RUN_CMD="docker run -p 8080:9999 -d $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
-			#                      tcp port as seen from outside
+			#                      tcp port as seen from outside (this machine)
 			#
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://localhost:8080/web/index.html from your browser.\n"
@@ -75,7 +75,7 @@ do
 			RUN_CMD="docker run -p 9999:9999 -d $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
-			#                      tcp port as seen from outside
+			#                      tcp port as seen from outside (this machine)
 			#
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://localhost:9999/index.html from your browser.\n"
@@ -89,7 +89,7 @@ do
 			RUN_CMD="docker run -p 8081:8080 -d $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
-			#                      tcp port as seen from outside
+			#                      tcp port as seen from outside (this machine)
 			#
       MESSAGE="---------------------------------------------------\n"
       MESSAGE="${MESSAGE}Reach http://localhost:8081/oliv-components/index.html from your browser.\n"
@@ -107,7 +107,7 @@ do
 			#                      |    |            |             Device name in the host (RPi) machine
 			#                      |    |            sudo access to the Serial Port
 			#                      |    tcp port IN the docker image
-			#                      tcp port as seen from outside
+			#                      tcp port as seen from outside (this machine)
 			#
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
@@ -128,7 +128,7 @@ do
 			RUN_CMD="docker run -p 9876:9876 -d $IMAGE_NAME:latest"
 			#                      |    |
 			#                      |    tcp port used in the image
-			#                      tcp port as seen from outside
+			#                      tcp port as seen from outside (this machine)
 			#
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
 			if [ "$IP_ADDR" = "" ]
@@ -151,7 +151,7 @@ do
 			#                      |    |            |             Device name in the host (RPi) machine
 			#                      |    |            sudo access to the Serial Port
 			#                      |    tcp port IN the docker image
-			#                      tcp port as seen from outside
+			#                      tcp port as seen from outside (this machine)
 			#
       # MESSAGE="See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
 			IP_ADDR=`ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{ print $2 }'`
@@ -264,6 +264,6 @@ then
       docker export --output $fName $cid
     fi
   fi
-  echo -e "You can export a running container any time byt running 'docker export --output export.tar [Container ID]'"
+  echo -e "You can export a running container any time by running 'docker export --output export.tar [Container ID]'"
   echo -e "Docker commands are documented at https://docs.docker.com/engine/reference/commandline/docker/"
 fi
