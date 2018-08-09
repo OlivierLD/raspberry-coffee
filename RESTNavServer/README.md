@@ -94,10 +94,16 @@ From _any_ device (laptop, tablet, smart-phone) that can run a browser, reach th
 ```
 > `[host]` is the name or IP of the machine the server runs on.
 
-Work in progress, with Web Components:
+Work in progress, an NMEA console with Web Components:
 ```
  http://[host]:9999/web/webcomponents/console.html
 ```
+
+![Web Components](./docimg/screenshot.11.png)
+
+Equiped with Heads up display (reflection in a wind screen, for example).
+
+![HeadsUp display](./docimg/screenshot.12.png)
 
 _Your browser needs to support `HTML5` and `CSS3`, but nowadays, less and less browsers do not._
 
