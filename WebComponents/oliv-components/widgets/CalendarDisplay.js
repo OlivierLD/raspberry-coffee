@@ -1,4 +1,4 @@
-const calendarVerbose = true;
+const calendarVerbose = false;
 const CALENDAR_TAG_NAME = 'calendar-display';
 
 const calendarDefaultColorConfig = {
