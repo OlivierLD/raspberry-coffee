@@ -2333,15 +2333,17 @@
 														  title="Day-Month-Year"
 														  width="300"
 														  height="360"
-														  value="28-08-2018-DAYNAME"></calendar-display>
+														  value="28-08-2018-tuesday"></calendar-display>
 					</div>
 					<div class="black-frame centered">
 						<script type="text/javascript">
+							const WEEK_DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 							function updateCalendar() {
 								let d = document.getElementById('calendar-day-01').value;
 								let m = document.getElementById('calendar-month-01').value;
 								let y = document.getElementById('calendar-year-01').value;
-								document.getElementById('calendar-01').value = d + '-' + m + '-' + y;
+								let date = new Date(y, m - 1, d);
+								document.getElementById('calendar-01').value = d + '-' + m + '-' + y + '-' + WEEK_DAYS[date.getDay()];
 								document.getElementById('calendar-01').repaint();
 							}
 						</script>
