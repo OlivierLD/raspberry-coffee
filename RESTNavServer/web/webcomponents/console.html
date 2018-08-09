@@ -497,6 +497,11 @@
 	<input type="radio" name="page-bg" value="WHITE" onchange="changeBG(this.value);">White
 	<hr/>
 
+	<!--
+	  Good grid resource at:
+	  https://css-tricks.com/snippets/css/complete-guide-grid/
+	  https://www.w3schools.com/css/css_grid.asp
+	 -->
 	<!-- The NMEA widgets -->
 	<div id="nmea-widgets" style="display: grid; grid-template-columns: auto; padding: 10px; text-align: center;">
 		<div style="display: grid; grid-template-columns: auto auto auto auto; padding: 10px;">
@@ -608,7 +613,7 @@
 					</div>
 			</div>
 		</div>
-		<div style="display: grid; grid-template-columns: auto auto; padding: 10px;">
+		<div style="display: grid; grid-template-columns: auto auto; align-items: start; padding: 10px;">
 			<!--
 				WORLD MAP
 			+-->
@@ -642,7 +647,7 @@
 			<!--
 				ANALOG WATCH
 			+-->
-			<div style="display: grid; grid-template-columns: auto; padding: 10px;">
+			<div style="display: grid; grid-template-columns: auto; padding: 0px;">
 				<div id="analog-watch">
 					<div class="black-frame centered">
 						<analog-watch id="analog-watch-01"
