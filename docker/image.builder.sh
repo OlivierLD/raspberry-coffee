@@ -224,7 +224,7 @@ done
 if [ "$DOCKER_FILE" != "" ]
 then
   #
-  # Proxies,if needed
+  # Proxies, if needed
   # export HTTP_PROXY=http://www-proxy.us.oracle.com:80
   # export HTTPS_PROXY=http://www-proxy.us.oracle.com:80
   #
@@ -243,3 +243,27 @@ then
   $RUN_CMD
 fi
 printf "%b" "$MESSAGE"
+# Prompt for export
+if [ "$DOCKER_FILE" != "" ]
+then
+  echo -en "== Do you want to export this container ? [n]|y > "
+  read a
+  if [ "$a" == "y" ]  || [ "$a" == "y" ]
+  then
+    echo -e "Last generated one is $IMAGE_NAME:latest"
+    echo -e "Containers available for export:"
+    docker ps -a
+    echo -en "== Please enter the ID of the container to export                      > "
+    read cid
+    echo -en "== Please enter the name of the tar file to generate (like export.tar) > "
+    read fName
+    echo -en "Will export container $cid into $fName - Is that correct ? [n]|y > "
+    read a
+    if [ "$a" == "y" ]  || [ "$a" == "y" ]
+    then
+      docker export --output $fName $cid
+    fi
+  fi
+  echo -e "You can export a running container any time byt running 'docker export --output export.tar [Container ID]'"
+  echo -e "Docker commands are documented at https://docs.docker.com/engine/reference/commandline/docker/"
+fi
