@@ -10,7 +10,6 @@ const compassRoseDefaultColorConfig = {
 		to: 'white'
 	},
 	tickColor:         'darkGray',
-	valueColor:        'cyan',
 	indexColor:        'red',
 	font:              'Arial'
 };
@@ -159,9 +158,6 @@ class CompassRose extends HTMLElement {
 										case '--digit-color':
 											colorConfig.digitColor = value;
 											break;
-										case '--value-color':
-											colorConfig.valueColor = value;
-											break;
 										case '--tick-color':
 											colorConfig.tickColor = value;
 											break;
@@ -281,13 +277,13 @@ class CompassRose extends HTMLElement {
 		}
 		this.roundRect(context, 2, 1, 42, 16, 3, true, true);
 
-		context.fillStyle = this.compassRoseColorConfig.valueColor;
+		context.fillStyle = this.compassRoseColorConfig.digitColor;
 		context.font = "bold " + Math.round(scale * 16) + "px Courier New"; // "bold 16px Arial"
 		let toDisplay = compassValue;
 		while (toDisplay < 0) { toDisplay += 360; }
 		while (toDisplay > 360) { toDisplay -= 360; }
 		context.fillText(toDisplay.toFixed(0) + "°", 5, 14);
-
+		context.closePath();
 		// Index
 		context.beginPath();
 		context.moveTo(this.width / 2, 0);

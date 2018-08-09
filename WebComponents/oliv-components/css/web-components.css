@@ -326,7 +326,6 @@ compass-rose .day {
 	--display-background-gradient-from: gray;
 	--display-background-gradient-to: white;
 	--tick-color: darkGray;
-	--value-color: black;
 	--index-color: red;
 	--font: Arial;
 }
@@ -338,7 +337,6 @@ compass-rose .night {
 	--display-background-gradient-from: black;
 	--display-background-gradient-to: gray;
 	--tick-color: lightGray;
-	--value-color: white;
 	--index-color: white;
 	--font: Arial;
 }
@@ -349,7 +347,6 @@ compass-rose .orange {
 	--with-gradient: false;
 	--display-background-gradient-to: black;
 	--tick-color: orange;
-	--value-color: orange;
 	--index-color: orange;
 	--font: Arial;
 }
@@ -360,7 +357,6 @@ compass-rose .cyan {
 	--with-gradient: false;
 	--display-background-gradient-to: black;
 	--tick-color: cyan;
-	--value-color: cyan;
 	--index-color: cyan;
 	--font: Arial;
 }
@@ -372,7 +368,6 @@ compass-rose .gray-flat {
 	--display-background-gradient-from: LightGrey;
 	--display-background-gradient-to: white;
 	--tick-color: darkGray;
-	--value-color: gray;
 	--index-color: grey;
 	--font: Arial;
 }

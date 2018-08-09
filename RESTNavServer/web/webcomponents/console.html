@@ -224,6 +224,7 @@
 			}
 		}
 
+		// More colors at https://www.w3schools.com/colors/colors_picker.asp
 		function getSNRColor(snr) {
 			var c = 'lightGray';
 			if (snr !== undefined && snr !== null) {
@@ -240,7 +241,7 @@
 					c = 'lightGreen';
 				}
 				if (snr > 40) {
-					c = 'green';
+					c = 'lime';
 				}
 			}
 			return c;
@@ -286,55 +287,62 @@
 		}
 
 		const DURATION_FMT = "Y-m-dTH:i:s";
+		const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 
 		function astroCallback(data) { // Intercepted
-//	console.log("Astro Data:", data);
+//		console.log("Astro Data:", data);
+
+			let worldMap = document.getElementById('world-map-01');
+
 			let sunLHA = data.sun.gha + data.from.longitude;
 			while (sunLHA < 0) sunLHA +=360;
 			while (sunLHA > 360) sunLHA -= 360;
 			let moonLHA = data.moon.gha + data.from.longitude;
 			while (moonLHA < 0) moonLHA +=360;
 			while (moonLHA > 360) moonLHA -= 360;
-			// document.getElementById("sun-moon-data").innerHTML =
-			// 		'<table border="0"><tr><td>Sun D:</td><td align="right">' +
-			// 		decToSex(data.sun.decl, "NS") +
-			// 		'</td></tr><tr><td>Sun GHA:</td><td align="right">' +
-			// 		decToSex(data.sun.gha) +
-			// 		'</td><td>&nbsp;LHA:</td><td align="right">' +
-			// 		decToSex(sunLHA) +
-			// 		'</td></tr><tr><td>Sun Alt:</td><td align="right">' +
-			// 		decToSex(data.sunObs.alt) +
-			// 		'</td></tr><tr><td>Sun Z:</td><td align="right">' +
-			// 		decToSex(data.sunObs.z) +
-			//
-			// 		'</td></tr><tr><td>Moon D:</td><td align="right">' +
-			// 		decToSex(data.moon.decl, "NS") +
-			// 		'</td></tr><tr><td>Moon GHA:</td><td align="right">' +
-			// 		decToSex(data.moon.gha) +
-			// 		'</td><td>&nbsp;LHA:</td><td align="right">' +
-			// 		decToSex(moonLHA) +
-			// 		'</td></tr><tr><td>Moon Alt:</td><td align="right">' +
-			// 		decToSex(data.moonObs.alt) +
-			// 		'</td></tr><tr><td>Moon Z:</td><td align="right">' +
-			// 		decToSex(data.moonObs.z) +
-			// 		'</td></tr></table>';
-			//
-			// document.getElementById("solar-date").innerHTML =
-			// 		data.solarDate.year + ' ' +
-			// 		months[data.solarDate.month - 1] + ' ' +
-			// 		(data.solarDate.day < 10 ? '0' : '') + data.solarDate.day + ' ' +
-			// 		(data.solarDate.hour < 10 ? '0' : '') + data.solarDate.hour + ':' +
-			// 		(data.solarDate.min < 10 ? '0' : '') + data.solarDate.min + ':' +
-			// 		(data.solarDate.sec < 10 ? '0' : '') + data.solarDate.sec;
-			//
-			// document.getElementById("sun-meridian").innerHTML =
-			// 		(data.tPass.hour < 10 ? '0' : '') + data.tPass.hour + ':' +
-			// 		(data.tPass.min < 10 ? '0' : '') + data.tPass.min + ':' +
-			// 		(data.tPass.sec < 10 ? '0' : '') + data.tPass.sec + ' ' +
-			// 		data.tPass.tz;
+			document.getElementById("sun-moon-data").innerHTML =
+					'<table border="1"><tr><td align="left">Sun D:</td><td align="right">' +
+					worldMap.decToSex(data.sun.decl, "NS") +
+					'</td></tr><tr><td align="left">Sun GHA:</td><td align="right">' +
+					worldMap.decToSex(data.sun.gha) +
+					'</td><td align="left">&nbsp;LHA:</td><td align="right">' +
+					worldMap.decToSex(sunLHA) +
+					'</td></tr><tr><td align="left">Sun Alt:</td><td align="right">' +
+					worldMap.decToSex(data.sunObs.alt) +
+					'</td></tr><tr><td align="left">Sun Z:</td><td align="right">' +
+					worldMap.decToSex(data.sunObs.z) +
 
-			document.getElementById('world-map-01').setAstronomicalData(data);
-			document.getElementById('world-map-01').repaint();
+					'</td></tr><tr><td align="left">Moon D:</td><td align="right">' +
+					worldMap.decToSex(data.moon.decl, "NS") +
+					'</td></tr><tr><td align="left">Moon GHA:</td><td align="right">' +
+					worldMap.decToSex(data.moon.gha) +
+					'</td><td align="left">&nbsp;LHA:</td><td align="right">' +
+					worldMap.decToSex(moonLHA) +
+					'</td></tr><tr align="left"><td>Moon Alt:</td><td align="right">' +
+					worldMap.decToSex(data.moonObs.alt) +
+					'</td></tr><tr><td align="left">Moon Z:</td><td align="right">' +
+					worldMap.decToSex(data.moonObs.z) +
+					'</td></tr></table>';
+
+			// TODO Send solar time to a watch
+			document.getElementById("solar-date").innerHTML = 'Solar Time: ' +
+					data.solarDate.year + ' ' +
+					months[data.solarDate.month - 1] + ' ' +
+					(data.solarDate.day < 10 ? '0' : '') + data.solarDate.day + ' ' +
+					(data.solarDate.hour < 10 ? '0' : '') + data.solarDate.hour + ':' +
+					(data.solarDate.min < 10 ? '0' : '') + data.solarDate.min + ':' +
+					(data.solarDate.sec < 10 ? '0' : '') + data.solarDate.sec;
+
+			// Display transit time
+			document.getElementById("sun-transit").innerHTML = 'Sun Transit: ' +
+					(data.tPass.hour < 10 ? '0' : '') + data.tPass.hour + ':' +
+					(data.tPass.min < 10 ? '0' : '') + data.tPass.min + ':' +
+					(data.tPass.sec < 10 ? '0' : '') + data.tPass.sec + ' ' +
+					data.tPass.tz;
+
+			worldMap.setAstronomicalData(data);
+			worldMap.repaint();
 		}
 
 		function setTheme(classList) {
@@ -394,7 +402,7 @@
 			events.subscribe('pos', function(val) {
 				gpsPosition = val;
 				document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng });
-				document.getElementById('world-map-01').positionLabel = "Position";
+				document.getElementById('world-map-01').positionLabel = "GPS";
 				document.getElementById('world-map-01').repaint();
 			});
 			events.subscribe('bsp', function(val) {
@@ -677,6 +685,14 @@
 														value="01-01-1970"></calendar-display>
 				</div>
 			</div>
+		</div>
+		<div style="display: grid; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
+			<!--
+			  MISC TEXT DATA
+			+-->
+			<div id="sun-moon-data"></div>
+			<div id="solar-date"></div>
+			<div id="sun-transit"></div>
 		</div>
 	</div>
 

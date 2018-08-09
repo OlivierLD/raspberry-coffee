@@ -26,6 +26,10 @@ GRIB_VERBOSE=false
 #
 CP=./build/libs/RESTNavServer-1.0-all.jar
 JAVA_OPTS=
+# For the value of Delta T, see:
+# - http://maia.usno.navy.mil/ser7/deltat.data
+# - http://maia.usno.navy.mil/
+# Delta T predictions: http://maia.usno.navy.mil/ser7/deltat.preds
 JAVA_OPTS="$JAVA_OPTS -DdeltaT=68.9677" # 01-Jan-2018
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dtide.verbose=$TIDE_VERBOSE"
