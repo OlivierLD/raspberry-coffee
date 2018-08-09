@@ -9,6 +9,14 @@ RUN_CMD=
 EXTRA_PRM=
 MESSAGE="Bye!\n"
 #
+# Make sure docker is available
+DOCKER=`which docker`
+if [ "$DOCKER" == "" ]
+then
+  echo -e "Docker not available on this machine, exiting."
+  exit 1
+fi
+#
 while [ "$OK" = "false" ]
 do
   # Menu
