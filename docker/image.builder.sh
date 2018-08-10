@@ -213,12 +213,13 @@ do
       RUN_CMD="docker run -d $IMAGE_NAME:latest"
       #
       MESSAGE="---------------------------------------------------\n"
-      MESSAGE="${MESSAGE}Log in using: docker run --interactive --tty --rm --publish 5901:5901 [--env USER=root] [--volume tensorflow:/root/workdir/shared] $IMAGE_NAME:latest /bin/bash \n"
-      MESSAGE="${MESSAGE}           or docker run -it --rm -p 5901:5901 [-e USER=root] [-v tensorflow:/root/workdir/shared] $IMAGE_NAME:latest /bin/bash \n"
+      MESSAGE="${MESSAGE}You can log in using: docker run --interactive --tty --rm --publish 5901:5901 [--env USER=root] [--volume tensorflow:/root/workdir/shared] $IMAGE_NAME:latest /bin/bash \n"
+      MESSAGE="${MESSAGE}                   or docker run -it --rm -p 5901:5901 [-e USER=root] [-v tensorflow:/root/workdir/shared] $IMAGE_NAME:latest /bin/bash \n"
       MESSAGE="${MESSAGE}- then run 'vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'\n"
       MESSAGE="${MESSAGE}- then use a vncviewer on localhost:1, password is 'mate'\n"
       MESSAGE="${MESSAGE}- then (for example) python3 examples/mnist_cnn.py ...\n"
-      MESSAGE="${MESSAGE}       or python3 examples/oliv/one.py ...\n"
+      MESSAGE="${MESSAGE}       or python3 examples/oliv/01.py ...\n"
+      MESSAGE="${MESSAGE}  Several samples are available in the examples folder.\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     *)
@@ -248,28 +249,26 @@ then
   docker build -f $DOCKER_FILE -t $IMAGE_NAME $EXTRA_PRM .
   #
   # Now run
-  $RUN_CMD
+  echo -e "Now running $RUN_CMD..."
+  CONTAINER_ID=`$RUN_CMD`
+  echo -e "Running container ID $CONTAINER_ID"
 fi
 printf "%b" "$MESSAGE"
 # Prompt for export
 if [ "$DOCKER_FILE" != "" ]
 then
-  echo -en "== Do you want to export this container ? [n]|y > "
+  echo -en "== Do you want to export this container $CONTAINER_ID ? [n]|y > "
   read a
-  if [ "$a" == "y" ]  || [ "$a" == "y" ]
+  if [ "$a" == "Y" ]  || [ "$a" == "y" ]
   then
-    echo -e "Last generated one is $IMAGE_NAME:latest"
-    echo -e "Containers available for export:"
-    docker ps -a
-    echo -en "== Please enter the ID of the container to export                      > "
-    read cid
+    echo -e "Last generated one is $IMAGE_NAME:latest, its ID is $CONTAINER_ID"
     echo -en "== Please enter the name of the tar file to generate (like export.tar) > "
     read fName
-    echo -en "Will export container $cid into $fName - Is that correct ? [n]|y > "
+    echo -en "Will export container $CONTAINER_ID into $fName - Is that correct ? [n]|y > "
     read a
-    if [ "$a" == "y" ]  || [ "$a" == "y" ]
+    if [ "$a" == "Y" ]  || [ "$a" == "y" ]
     then
-      docker export --output $fName $cid
+      docker export --output $fName $CONTAINER_ID
     fi
   fi
   echo -e "You can export a running container any time by running 'docker export --output export.tar [Container ID]'"

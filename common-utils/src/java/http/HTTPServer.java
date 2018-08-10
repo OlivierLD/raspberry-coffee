@@ -613,6 +613,7 @@ public class HTTPServer {
 									boolean unManagedRequest = true;
 									synchronized (requestManagers) {
 										try {
+											// TODO Randomly raises a java.util.ConcurrentModificationException
 											for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
 												try {
 													Response response = reqMgr.onRequest(request); // REST Request, most likely.

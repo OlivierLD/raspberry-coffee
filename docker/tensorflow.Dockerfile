@@ -65,7 +65,9 @@ RUN echo "java -version" >> $HOME/.bash_aliases
 RUN echo "vncserver -version" >> $HOME/.bash_aliases
 RUN echo "lsb_release -a" >> $HOME/.bash_aliases
 #
-RUN echo "echo 'To start VNCserver, type: vncserver :1 -geometry 1280x800 (or 1440x900, 1680x1050, etc) -depth 24'" >> $HOME/.bash_aliases
+RUN echo "echo 'To start VNCserver, type: vncserver :1 -geometry 1280x800 -depth 24'" >> $HOME/.bash_aliases
+RUN echo "echo '                       or vncserver :1 -geometry 1440x900 -depth 24'" >> $HOME/.bash_aliases
+RUN echo "echo '                       or vncserver :1 -geometry 1680x1050 -depth 24 , ...etc.'" >> $HOME/.bash_aliases
 #
 USER root
 WORKDIR /root

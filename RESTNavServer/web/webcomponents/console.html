@@ -510,9 +510,9 @@
 	  https://css-tricks.com/snippets/css/complete-guide-grid/
 	  https://www.w3schools.com/css/css_grid.asp
 	 -->
-	<!-- The NMEA widgets -->
-	<div id="nmea-widgets" style="display: grid; grid-template-columns: auto; padding: 10px; text-align: center;">
-		<div style="display: grid; grid-template-columns: auto auto auto auto; padding: 10px;">
+	<!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
+	<div id="nmea-widgets" style="display: grid; grid-template-columns: 50px auto 50px; padding: 10px; text-align: center;">
+		<div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto auto auto; padding: 10px;">
 			<!--
 					TWD
 			+-->
@@ -605,7 +605,7 @@
 				</div>
 			</div>
 		</div>
-		<div style="display: grid; grid-template-columns: auto; padding: 10px; text-align: center;">
+		<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px; text-align: center;">
 			<!--
 				COMPASS ROSE. CONCAVE.
 			+-->
@@ -621,7 +621,7 @@
 					</div>
 			</div>
 		</div>
-		<div style="display: grid; grid-template-columns: auto auto; align-items: start; padding: 10px;">
+		<div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; align-items: start; padding: 10px;">
 			<!--
 				WORLD MAP
 			+-->
@@ -686,7 +686,7 @@
 				</div>
 			</div>
 		</div>
-		<div style="display: grid; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
+		<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
 			<!--
 			  MISC TEXT DATA
 			+-->
