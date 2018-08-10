@@ -336,7 +336,7 @@ public class HTTPServer {
 	private List<RESTRequestManager> requestManagers = null;
 
 	public List<RESTRequestManager> getRequestManagers() {
-		return this.requestManagers;
+		synchronized(this.requestManagers) { return this.requestManagers; }
 	}
 
 	public void addRequestManager(RESTRequestManager requestManager) {

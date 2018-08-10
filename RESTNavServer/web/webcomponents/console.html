@@ -28,6 +28,7 @@
 
 	<style>
 		:root {
+			--padding: 50px;
 			--perspective: 100em;
 			--rotateX: -15deg;
 		}
@@ -367,6 +368,11 @@
 		  document.getElementById('nmea-widgets').classList.toggle('mirror-upside-down');
 		}
 
+		function setPadding(e) {
+			var v = this.value;
+			document.getElementById('nmea-widgets').style.setProperty("--padding", v + "px");
+		}
+
 		function setPerspective(e) {
 			var v = this.value;
 			document.getElementById('nmea-widgets').style.setProperty("--perspective", v + "em");
@@ -474,6 +480,13 @@
 		<!--button onclick="toggleHeadsUp();" style="border-radius: 5px;">Heads Up</button-->
 		<table width="100%">
 			<tr>
+				<td colspan="2">
+					Padding
+					<input type="range" value="50" min="0" max="200" style="width: 90%;" oninput="setPadding.call(this, event); padding01.value = (this.value + 'px');" />
+					<output name="padding" id="padding01" style="color: cyan;">50px</output>
+				</td>
+			</tr>
+			<tr>
 				<td width="50%">
 					<h5 style="color: cyan;">Perspective</h5>
 					<input type="range" value="100" min="0" max="100" style="width: 90%;" oninput="setPerspective.call(this, event); perspective01.value = this.value;" />
@@ -511,7 +524,7 @@
 	  https://www.w3schools.com/css/css_grid.asp
 	 -->
 	<!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
-	<div id="nmea-widgets" style="display: grid; grid-template-columns: 50px auto 50px; padding: 10px; text-align: center;">
+	<div id="nmea-widgets" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
 		<div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto auto auto; padding: 10px;">
 			<!--
 					TWD
