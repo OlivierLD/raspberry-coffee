@@ -62,7 +62,7 @@ public class RESTProcessorUtil {
 	 * Compare a path definition with a path occurrence
 	 *
 	 * @param pattern like /first/{val}
-	 * @param path    like /first/a
+	 * @param path    actual path, like /first/a
 	 * @return true if the path matches the pattern
 	 */
 	public static boolean pathMatches(String pattern, String path) {

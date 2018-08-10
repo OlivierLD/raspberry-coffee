@@ -613,22 +613,31 @@ public class HTTPServer {
 									boolean unManagedRequest = true;
 									synchronized (requestManagers) {
 										try {
-											for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
-												synchronized (reqMgr) {
-													try {
-														Response response = reqMgr.onRequest(request); // REST Request, most likely.
-														sendResponse(response, out);
-//								          System.out.println(">> Returned REST response.");
-														unManagedRequest = false; // Found it.
-														break;
-													} catch (UnsupportedOperationException usoe) {
-														// Absorb
-													} catch (Exception ex) {
-														System.err.println("Ooch");
-														ex.printStackTrace();
-													}
-												}
+											final Request _request = request;
+											Optional<RESTRequestManager> restRequestManager = requestManagers.stream().filter(rm -> rm.containsOp(_request.getVerb(), _request.getPath())).findFirst();
+											if (restRequestManager.isPresent()) {
+												unManagedRequest = false;
+												Response response = restRequestManager.get().onRequest(request); // REST Request, most likely.
+												sendResponse(response, out);
+//											} else {
+//												throw new RuntimeException(String.format("Operation not found %s %s", request.getVerb(), request.getPath()));
 											}
+//											for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
+//												synchronized (reqMgr) {
+//													try {
+//														Response response = reqMgr.onRequest(request); // REST Request, most likely.
+//														sendResponse(response, out);
+////								          System.out.println(">> Returned REST response.");
+//														unManagedRequest = false; // Found it.
+//														break;
+//													} catch (UnsupportedOperationException usoe) { // No such operation available, probably no the right RequestManager
+//														// Absorb
+//													} catch (Exception ex) {
+//														System.err.println("Ooch");
+//														ex.printStackTrace();
+//													}
+//												}
+//											}
 										} catch(Exception ooch){
 											// Keep going
 											ooch.printStackTrace();

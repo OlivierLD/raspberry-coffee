@@ -14,6 +14,7 @@
 
 	<!-- Firefox does NOT like modules... Safari OK -->
 
+	<!-- Web Components -->
 	<script type="module" src="./DirectionDisplay.js"></script>
 	<script type="module" src="./AnalogDisplay.js"></script>
 	<script type="module" src="./WindAngleDisplay.js"></script>
@@ -22,6 +23,7 @@
 	<script type="module" src="./CompassRose.js"></script>
 	<script type="module" src="./WorldMap.js"></script>
 
+	<!-- Scripts -->
 	<script type="text/javascript" src="js/jquery-2.1.3.js"></script> <!-- We use JQuery's deferreds for Ajax -->
 	<script type="text/javascript" src="js/date.proto.js"></script>
 	<script type="text/javascript" src="js/pub.sub.js"></script>
@@ -113,10 +115,10 @@
 
 		function openTab(evt, tabNum) {
 			let tablinks = document.getElementsByClassName("tablinks");
-			for (i = 0; i < tablinks.length; i++) {
+			for (i=0; i<tablinks.length; i++) {
 				tablinks[i].className = tablinks[i].className.replace(" active", ""); // Reset
 			}
-			for (let i=0; i<TABS.length; i++) {
+			for (i=0; i<TABS.length; i++) {
 				document.getElementById(TABS[i]).style.display = (i === tabNum) ? 'block' : 'none';
 			}
 			evt.currentTarget.className += " active";
