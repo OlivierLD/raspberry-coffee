@@ -613,22 +613,23 @@ public class HTTPServer {
 									boolean unManagedRequest = true;
 									synchronized (requestManagers) {
 										try {
-											// TODO Randomly raises a java.util.ConcurrentModificationException
 											for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
-												try {
-													Response response = reqMgr.onRequest(request); // REST Request, most likely.
-													sendResponse(response, out);
-//								      System.out.println(">> Returned REST response.");
-													unManagedRequest = false; // Found it.
-													break;
-												} catch (UnsupportedOperationException usoe) {
-													// Absorb
-												} catch (Exception ex) {
-													System.err.println("Ooch");
-													ex.printStackTrace();
+												synchronized (reqMgr) {
+													try {
+														Response response = reqMgr.onRequest(request); // REST Request, most likely.
+														sendResponse(response, out);
+//								          System.out.println(">> Returned REST response.");
+														unManagedRequest = false; // Found it.
+														break;
+													} catch (UnsupportedOperationException usoe) {
+														// Absorb
+													} catch (Exception ex) {
+														System.err.println("Ooch");
+														ex.printStackTrace();
+													}
 												}
 											}
-										} catch (Exception ooch) {
+										} catch(Exception ooch){
 											// Keep going
 											ooch.printStackTrace();
 										}
