@@ -422,20 +422,20 @@
 			document.getElementById('nmea-widgets-2').classList.toggle('mirror-upside-down');
 		}
 
-		function setPadding(e) {
-			var v = this.value;
+		function setPadding(range) {
+			var v = range.value;
 			document.getElementById('nmea-widgets-1').style.setProperty("--padding", v + "px");
 			document.getElementById('nmea-widgets-2').style.setProperty("--padding", v + "px");
 		}
 
-		function setPerspective(e) {
-			var v = this.value;
+		function setPerspective(range) {
+			var v = range.value;
 			document.getElementById('nmea-widgets-1').style.setProperty("--perspective", v + "em");
 			document.getElementById('nmea-widgets-2').style.setProperty("--perspective", v + "em");
 		}
 
-		function setRotateX(e) {
-			var v = this.value;
+		function setRotateX(range) {
+			var v = range.value;
 			document.getElementById('nmea-widgets-1').style.setProperty("--rotateX", v + "deg");
 			document.getElementById('nmea-widgets-2').style.setProperty("--rotateX", v + "deg");
 		}
@@ -531,27 +531,29 @@
 		</tr>
 	</table>
 	<hr/>
-	<!-- Perspective sliders -->
+	<table width="100%">
+		<tr>
+			<td style="color: cyan;">
+				Padding (Left &amp; Right)
+				<input type="range" value="50" min="0" max="200" style="width: 80%;" oninput="setPadding(this); padding01.value = (this.value + 'px');" />
+				<output name="padding" id="padding01" style="color: cyan;">50px</output>
+			</td>
+		</tr>
+	</table>
+		<!-- Perspective sliders -->
 	<span id="head-up-command" onclick="collapseExpandHeadsup(); toggleHeadsUp();" style="cursor: pointer;">+ Heads up</span>
 	<div id="heads-up-sliders" style="display: none;">
 		<!--button onclick="toggleHeadsUp();" style="border-radius: 5px;">Heads Up</button-->
 		<table width="100%">
 			<tr>
-				<td colspan="2">
-					Padding
-					<input type="range" value="50" min="0" max="200" style="width: 90%;" oninput="setPadding.call(this, event); padding01.value = (this.value + 'px');" />
-					<output name="padding" id="padding01" style="color: cyan;">50px</output>
-				</td>
-			</tr>
-			<tr>
 				<td width="50%">
 					<h5 style="color: cyan;">Perspective</h5>
-					<input type="range" value="100" min="0" max="100" style="width: 90%;" oninput="setPerspective.call(this, event); perspective01.value = this.value;" />
+					<input type="range" value="100" min="0" max="100" style="width: 90%;" oninput="setPerspective(this); perspective01.value = this.value;" />
 					<output name="perspective" id="perspective01" style="color: cyan;">100</output>
 				</td>
 				<td width="50%">
 					<h5 style="color: cyan;">Rotate X</h5>
-					<input type="range" value="-15" min="-100" max="100" style="width: 90%;" oninput="setRotateX.call(this, event); perspective02.value = this.value;" />
+					<input type="range" value="-15" min="-100" max="100" style="width: 90%;" oninput="setRotateX(this); perspective02.value = this.value;" />
 					<output name="perspective" id="perspective02" style="color: cyan;">-15</output>
 				</td>
 			</tr>

@@ -619,8 +619,6 @@ public class HTTPServer {
 												unManagedRequest = false;
 												Response response = restRequestManager.get().onRequest(request); // REST Request, most likely.
 												sendResponse(response, out);
-//											} else {
-//												throw new RuntimeException(String.format("Operation not found %s %s", request.getVerb(), request.getPath()));
 											}
 //											for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
 //												synchronized (reqMgr) {
