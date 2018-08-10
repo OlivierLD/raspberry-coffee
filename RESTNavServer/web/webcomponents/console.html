@@ -5,6 +5,7 @@
  +-->
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>WebComponents NMEA Console</title>
 	<link rel="icon" type="image/png" href="./logo-192x192.png">
 
@@ -21,7 +22,7 @@
 	<script type="module" src="./CompassRose.js"></script>
 	<script type="module" src="./WorldMap.js"></script>
 
-	<script type="text/javascript" src="js/jquery-2.1.3.js"></script>
+	<script type="text/javascript" src="js/jquery-2.1.3.js"></script> <!-- We use JQuery's deferreds for Ajax -->
 	<script type="text/javascript" src="js/date.proto.js"></script>
 	<script type="text/javascript" src="js/pub.sub.js"></script>
 	<script type="text/javascript" src="js/ajax.manager.js"></script>
@@ -75,9 +76,51 @@
 			transform: matrix(-1, 0, 0, 1, 0, 0) rotate(180deg) perspective(var(--perspective)) rotateX(var(--rotateX));
 		}
 
+		.tab {
+			overflow: hidden;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			background-color: rgba(241, 241, 241, 0.5);
+		}
+
+		/* Style the buttons inside the tab */
+		.tab button {
+			background-color: inherit;
+			float: left;
+			border: none;
+			outline: none;
+			cursor: pointer;
+			padding: 14px 16px;
+			transition: 0.3s;
+			font-size: 17px;
+		}
+
+		/* Change background color of buttons on hover */
+		.tab button:hover {
+			background-color: #ddd;
+		}
+
+		/* Create an active/current tablink class */
+		.tab button.active {
+			background-color: #ccc;
+		}
+
 	</style>
 
 	<script type="text/javascript">
+
+		const TABS = ['one', 'two'];
+
+		function openTab(evt, tabNum) {
+			let tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", ""); // Reset
+			}
+			for (let i=0; i<TABS.length; i++) {
+				document.getElementById(TABS[i]).style.display = (i === tabNum) ? 'block' : 'none';
+			}
+			evt.currentTarget.className += " active";
+		}
 
 		function changeBG(value) {
 			let bodyStyle = document.getElementsByTagName("body")[0].style;
@@ -104,18 +147,18 @@
 			}
 		}
 
-		let headUpExpanded = false;
+		let headsUpExpanded = false;
 		function collapseExpandHeadsup() {
 			let cmdElem = document.getElementById("head-up-command");
 			let slidersElem = document.getElementById("heads-up-sliders");
-			if (headUpExpanded) {
+			if (headsUpExpanded) {
 				slidersElem.style.display = 'none';
 				cmdElem.innerText = "+ Heads up";
 			} else {
 				slidersElem.style.display = 'block';
 				cmdElem.innerText = "- Heads up";
 			}
-			headUpExpanded = !headUpExpanded;
+			headsUpExpanded = !headsUpExpanded;
 		}
 
 		/**
@@ -326,7 +369,14 @@
 					worldMap.decToSex(data.moonObs.z) +
 					'</td></tr></table>';
 
-			// TODO Send solar time to a watch
+			// Display solar date & time
+			let solarDate = new Date(data.solarDate.year, data.solarDate.month - 1, data.solarDate.day, data.solarDate.hour, data.solarDate.min, data.solarDate.sec);
+			let time = solarDate.format("H:i:s")
+			setData('analog-watch-02', time);
+			let date = solarDate.format("d-m-Y-l");
+			setData('calendar-02', date);
+
+
 			document.getElementById("solar-date").innerHTML = 'Solar Time: ' +
 					data.solarDate.year + ' ' +
 					months[data.solarDate.month - 1] + ' ' +
@@ -353,6 +403,7 @@
 			applyClass('aw-01', classList);
 			applyClass('compass-rose-01', classList);
 			applyClass('analog-watch-01', classList);
+			applyClass('analog-watch-02', classList);
 			// TODO World Map theme worldmap-display-02, worldmap-display
 
 		}
@@ -365,22 +416,26 @@
 		}
 
 		function toggleHeadsUp() {
-		  document.getElementById('nmea-widgets').classList.toggle('mirror-upside-down');
+		  document.getElementById('nmea-widgets-1').classList.toggle('mirror-upside-down');
+			document.getElementById('nmea-widgets-2').classList.toggle('mirror-upside-down');
 		}
 
 		function setPadding(e) {
 			var v = this.value;
-			document.getElementById('nmea-widgets').style.setProperty("--padding", v + "px");
+			document.getElementById('nmea-widgets-1').style.setProperty("--padding", v + "px");
+			document.getElementById('nmea-widgets-2').style.setProperty("--padding", v + "px");
 		}
 
 		function setPerspective(e) {
 			var v = this.value;
-			document.getElementById('nmea-widgets').style.setProperty("--perspective", v + "em");
+			document.getElementById('nmea-widgets-1').style.setProperty("--perspective", v + "em");
+			document.getElementById('nmea-widgets-2').style.setProperty("--perspective", v + "em");
 		}
 
 		function setRotateX(e) {
 			var v = this.value;
-			document.getElementById('nmea-widgets').style.setProperty("--rotateX", v + "deg");
+			document.getElementById('nmea-widgets-1').style.setProperty("--rotateX", v + "deg");
+			document.getElementById('nmea-widgets-2').style.setProperty("--rotateX", v + "deg");
 		}
 
 		let aws = 0;
@@ -523,191 +578,237 @@
 	  https://css-tricks.com/snippets/css/complete-guide-grid/
 	  https://www.w3schools.com/css/css_grid.asp
 	 -->
-	<!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
-	<div id="nmea-widgets" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-		<div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto auto auto; padding: 10px;">
-			<!--
-					TWD
-			+-->
-			<div id="direction">
-				<div class="black-frame centered">
-					<direction-display class="analogdisplay-day"
-														 title="True Wind Direction"
-														 id="compass-01"
-														 value="0"
-														 major-ticks="45"
-														 minor-ticks="5"
-														 with-rose="true"
-														 with-border="true"
-														 label="TWD"
-														 width="200"
-														 height="200"></direction-display>
-				</div>
-				<div class="black-frame centered">
-					<input type="checkbox" onchange="setBorder(this, 'compass-01');" checked>With Border
-					<input type="checkbox" onchange="setRose(this, 'compass-01');" checked>With Rose
-				</div>
-			</div>
-			<!--
-					TRUE WIND DISPLAY
-			+-->
-			<div id="analog">
-				<div class="black-frame centered">
-					<wind-angle-display class="analogdisplay-day"
-															title="True Wind Speed in Knots"
-															id="tw-01"
-															value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-															major-ticks="30"
-															minor-ticks="5"
-															with-border="true"
-															with-digits="true"
-															label="True Wind"
-															width="200"
-															height="200"></wind-angle-display>
-				</div>
-				<div class="black-frame centered">
-					<input type="checkbox" onchange="setBorder(this, 'tw-01');" checked>With Border
-				</div>
-			</div>
-			<!--
-					BSP
-			+-->
-			<div id="analog-2">
-				<div class="black-frame centered">
-					<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
-					<analog-display class="analogdisplay-day"
-													title="Boat Speed in knots,&#13;Log in nm"
-													id="bsp-01"
-													min-value="0"
-													max-value="15"
-													major-ticks="1"
-													minor-ticks="0.1"
-													with-border="true"
-													with-min-max="true"
-													overlap="40"
-													digital-data-len="4"
-													digital-data-val="0"
-													label="BSP"
-													width="200"
-													height="200"></analog-display>
-				</div>
-				<div class="black-frame centered">
-					<input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>With Border
-					<input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>With Min &amp; Max
-				</div>
-			</div>
-			<!--
-					APPARENT WIND DISPLAY
-			+-->
-			<div id="apparent-wind">
-				<div id="top-cell-aw" class="black-frame centered">
-					<wind-angle-display class="analogdisplay-day"
-															title="Apparent Wind Speed in Knots"
-															id="aw-01"
-															value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-															major-ticks="30"
-															minor-ticks="5"
-															with-border="true"
-															with-digits="true"
-															label="App Wind"
-															width="200"
-															height="200"></wind-angle-display>
-				</div>
-				<div class="black-frame centered">
-					<input type="checkbox" onchange="setBorder(this, 'aw-01');" checked>With Border
-				</div>
-			</div>
-		</div>
-		<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px; text-align: center;">
-			<!--
-				COMPASS ROSE. CONCAVE.
-			+-->
-			<div id="compass-rose">
-				<small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was sitting at the center of the rose.</small>
-					<div class="black-frame centered">
-						<compass-rose id="compass-rose-01"
-													class="day"
-													title="True Heading"
-													value="0"
-													width="500"
-													height="50"></compass-rose>
-					</div>
-			</div>
-		</div>
-		<div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; align-items: start; padding: 10px;">
-			<!--
-				WORLD MAP
-			+-->
-			<div id="world-map">
-				<div class="black-frame centered">
-					<world-map id="world-map-01"
-										 class="worldmap-display"
-										 title="World Map"
-										 width="700"
-										 height="500"></world-map>
-				</div>
-				<div class="black-frame centered">
-					<input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent
-					<input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>Grid
-					<input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun
-					<input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon
-					<input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight
-					<input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight
-					<input type="checkbox" onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>Wandering bodies
-					<input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars
-					<input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
-					<br/>
-					<input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites
-					<input type="checkbox" id="gps-sat-01"/>GPS Satellites in view
-					<br/>
-					<input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);" checked>Globe
-					<input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
-					<input type="radio" name="proj-01" value="ANAXIMANDRE" onchange="setProjection('world-map-01', this);">Square
-				</div>
-			</div>
-			<!--
-				ANALOG WATCH
-			+-->
-			<div style="display: grid; grid-template-columns: auto; padding: 0px;">
-				<div id="analog-watch">
-					<div class="black-frame centered">
-						<analog-watch id="analog-watch-01"
-													class="analogdisplay-day"
-													title="GPS Time"
-													width="220"
-													height="220"
-													hours-ticks="1"
-													minutes-ticks="1"
-													digital-value="6"
-													with-second-hand="true"
-													hours-flavor="arabic"
-													label="GPS Time"
-													value="00:00:00"></analog-watch>
-					</div>
-					<div class="black-frame centered">
-						<input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>With Border
-					</div>
-				</div>
 
-				<div class="black-frame centered">
-					<calendar-display id="calendar-01"
-														class="calendar-01"
-														title="Day-Month-Year"
+	<!-- the tabs -->
+	<div class="tab">
+		<button class="tablinks active" onclick="openTab(event, 0)">Overview</button>
+		<button class="tablinks" onclick="openTab(event, 1)">Details</button>
+		<button class="tablinks" onclick="openTab(event, 2)">Raw Data</button>
+	</div>
+
+	<!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
+	<div id="one" style="display: block;">
+		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
+			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto auto auto; padding: 10px;">
+				<!--
+						TWD
+				+-->
+				<div id="direction">
+					<div class="black-frame centered">
+						<direction-display class="analogdisplay-day"
+															 title="True Wind Direction"
+															 id="compass-01"
+															 value="0"
+															 major-ticks="45"
+															 minor-ticks="5"
+															 with-rose="true"
+															 with-border="true"
+															 label="TWD"
+															 width="200"
+															 height="200"></direction-display>
+					</div>
+					<div class="black-frame centered">
+						<input type="checkbox" onchange="setBorder(this, 'compass-01');" checked>With Border
+						<input type="checkbox" onchange="setRose(this, 'compass-01');" checked>With Rose
+					</div>
+				</div>
+				<!--
+						TRUE WIND DISPLAY
+				+-->
+				<div id="analog">
+					<div class="black-frame centered">
+						<wind-angle-display class="analogdisplay-day"
+																title="True Wind Speed in Knots"
+																id="tw-01"
+																value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+																major-ticks="30"
+																minor-ticks="5"
+																with-border="true"
+																with-digits="true"
+																label="True Wind"
+																width="200"
+																height="200"></wind-angle-display>
+					</div>
+					<div class="black-frame centered">
+						<input type="checkbox" onchange="setBorder(this, 'tw-01');" checked>With Border
+					</div>
+				</div>
+				<!--
+						BSP
+				+-->
+				<div id="analog-2">
+					<div class="black-frame centered">
+						<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
+						<analog-display class="analogdisplay-day"
+														title="Boat Speed in knots,&#13;Log in nm"
+														id="bsp-01"
+														min-value="0"
+														max-value="15"
+														major-ticks="1"
+														minor-ticks="0.1"
+														with-border="true"
+														with-min-max="true"
+														overlap="40"
+														digital-data-len="4"
+														digital-data-val="0"
+														label="BSP"
+														width="200"
+														height="200"></analog-display>
+					</div>
+					<div class="black-frame centered">
+						<input type="checkbox" onchange="setBorder(this, 'bsp-01');" checked>With Border
+						<input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>With Min &amp; Max
+					</div>
+				</div>
+				<!--
+						APPARENT WIND DISPLAY
+				+-->
+				<div id="apparent-wind">
+					<div id="top-cell-aw" class="black-frame centered">
+						<wind-angle-display class="analogdisplay-day"
+																title="Apparent Wind Speed in Knots"
+																id="aw-01"
+																value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+																major-ticks="30"
+																minor-ticks="5"
+																with-border="true"
+																with-digits="true"
+																label="App Wind"
+																width="200"
+																height="200"></wind-angle-display>
+					</div>
+					<div class="black-frame centered">
+						<input type="checkbox" onchange="setBorder(this, 'aw-01');" checked>With Border
+					</div>
+				</div>
+			</div>
+			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px; text-align: center;">
+				<!--
+					COMPASS ROSE. CONCAVE.
+				+-->
+				<div id="compass-rose">
+					<small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was sitting at the center of the rose.</small>
+						<div class="black-frame centered">
+							<compass-rose id="compass-rose-01"
+														class="day"
+														title="True Heading"
+														value="0"
+														width="500"
+														height="50"></compass-rose>
+						</div>
+				</div>
+			</div>
+			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; align-items: start; padding: 10px;">
+				<!--
+					WORLD MAP
+				+-->
+				<div id="world-map">
+					<div class="black-frame centered">
+						<world-map id="world-map-01"
+											 class="worldmap-display"
+											 title="World Map"
+											 width="700"
+											 height="500"></world-map>
+					</div>
+					<div class="black-frame centered">
+						<input type="checkbox" onchange="setTransparency('world-map-01', this);"/>Transparent
+						<input type="checkbox" onchange="setGrid('world-map-01', this);" checked/>Grid
+						<input type="checkbox" onchange="setSun('world-map-01', this);" checked/>Sun
+						<input type="checkbox" onchange="setMoon('world-map-01', this);" checked/>Moon
+						<input type="checkbox" onchange="setSunlight('world-map-01', this);"/>Sunlight
+						<input type="checkbox" onchange="setMoonlight('world-map-01', this);"/>Moonlight
+						<input type="checkbox" onchange="withWanderingBodies = this.checked; setWanderingBodies('world-map-01', this);"/>Wandering bodies
+						<input type="checkbox" onchange="withStars = this.checked; setStars('world-map-01', this);"/>Stars
+						<input type="checkbox" onchange="setTropics('world-map-01', this);"/>Tropics
+						<br/>
+						<input type="checkbox" id="geo-sat-01"/>GeoStationary Satellites
+						<input type="checkbox" id="gps-sat-01"/>GPS Satellites in view
+						<br/>
+						<input type="radio" name="proj-01" value="GLOBE" onchange="setProjection('world-map-01', this);" checked>Globe
+						<input type="radio" name="proj-01" value="MERCATOR" onchange="setProjection('world-map-01', this);">Mercator
+						<input type="radio" name="proj-01" value="ANAXIMANDRE" onchange="setProjection('world-map-01', this);">Square
+					</div>
+				</div>
+				<!--
+					ANALOG WATCH
+				+-->
+				<div style="display: grid; grid-template-columns: auto auto; padding: 0px;">
+
+					<div id="analog-watch-gps">
+						<div class="black-frame centered">
+							<analog-watch id="analog-watch-01"
+														class="analogdisplay-day"
+														title="GPS Time"
 														width="150"
-														height="180"
-														value="01-01-1970"></calendar-display>
+														height="150"
+														hours-ticks="1"
+														minutes-ticks="1"
+														digital-value="6"
+														with-second-hand="true"
+														hours-flavor="arabic"
+														label="GPS Time"
+														value="00:00:00"></analog-watch>
+						</div>
+						<div class="black-frame centered">
+							<input type="checkbox" onchange="setBorder(this, 'analog-watch-01');" checked>With Border
+						</div>
+					</div>
+
+					<div id="analog-watch-solar">
+						<div class="black-frame centered">
+							<analog-watch id="analog-watch-02"
+														class="analogdisplay-day"
+														title="Solar Time"
+														width="150"
+														height="150"
+														hours-ticks="1"
+														minutes-ticks="1"
+														digital-value="6"
+														with-second-hand="true"
+														hours-flavor="arabic"
+														label="Solar Time"
+														value="00:00:00"></analog-watch>
+						</div>
+						<div class="black-frame centered">
+							<input type="checkbox" onchange="setBorder(this, 'analog-watch-02');" checked>With Border
+						</div>
+					</div>
+
+					<div class="black-frame centered">
+						<calendar-display id="calendar-01"
+															class="calendar-01"
+															title="GPS Date"
+															width="140"
+															height="168"
+															value="01-01-1970"></calendar-display>
+					</div>
+
+					<div class="black-frame centered">
+						<calendar-display id="calendar-02"
+															class="calendar-02"
+															title="Solar Date"
+															width="140"
+															height="168"
+															value="01-01-1970"></calendar-display>
+					</div>
+
 				</div>
 			</div>
 		</div>
-		<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
-			<!--
-			  MISC TEXT DATA
-			+-->
-			<div id="sun-moon-data"></div>
-			<div id="solar-date"></div>
-			<div id="sun-transit"></div>
+	</div> <!-- End of Tab 1 -->
+
+	<div id="two" style="display: none;">
+		<div id="nmea-widgets-2" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
+			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; justify-items: start; align-items: start; padding: 10px;">
+				<!--
+					MISC TEXT DATA
+				+-->
+				<div id="sun-moon-data"></div>
+				<div id="solar-date"></div>
+				<div id="sun-transit"></div>
+			</div>
 		</div>
-	</div>
+	</div> <!-- End of Tab 2 -->
 
 </body>
 </html>

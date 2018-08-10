@@ -7,7 +7,7 @@ const WATCH_TAG_NAME = 'analog-watch';
  * @see https://developer.mozilla.org/en-US/docs/Web/CSS/
  * Relies on those elements:
  *
-.xxxxxxxxx {
+ .xxxxxxxxx {
 	--bg-color: rgba(0, 0, 0, 0);
 	--digit-color: black;
 	--with-gradient: true;
@@ -254,13 +254,13 @@ class AnalogWatch extends HTMLElement {
 		for (let cls=0; cls<classes.length; cls++) {
 			let className = classes[cls];
 			for (let s=0; s<document.styleSheets.length; s++) {
-	//		console.log("Walking though ", document.styleSheets[s]);
+				//		console.log("Walking though ", document.styleSheets[s]);
 				try {
 					for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 						let selector = document.styleSheets[s].cssRules[r].selectorText;
-		//			console.log(">>> ", selector);
+						//			console.log(">>> ", selector);
 						if (selector !== undefined && (selector === '.' + className || (selector.indexOf('.' + className) > -1 && selector.indexOf(WATCH_TAG_NAME) > -1))) { // Cases like "tag-name .className"
-						                                                                                                                                                     //				console.log("  >>> Found it! [%s]", selector);
+							//				console.log("  >>> Found it! [%s]", selector);
 							let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 							let cssTextElems = cssText.split(";");
 							cssTextElems.forEach(function (elem) {
@@ -331,7 +331,7 @@ class AnalogWatch extends HTMLElement {
 						}
 					}
 				} catch (err) {
-				  // Absorb
+					// Absorb
 				}
 			}
 		}
@@ -368,6 +368,7 @@ class AnalogWatch extends HTMLElement {
 		this.canvas.width = this.width;
 		this.canvas.height = this.height;
 
+		let scale = radius / 100;
 		// Cleanup
 		context.fillStyle = this.watchColorConfig.bgColor;
 		context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -438,7 +439,6 @@ class AnalogWatch extends HTMLElement {
 
 		// Numbers
 		context.beginPath();
-		let scale = 1;
 		for (let i = 0; i < 12; i += this.hoursTicks) {
 			context.save();
 			context.translate(this.canvas.width / 2, (radius + 10)); // canvas.height);
@@ -480,10 +480,10 @@ class AnalogWatch extends HTMLElement {
 
 			context.beginPath();
 			context.fillStyle = this.watchColorConfig.labelFillColor;
-			context.fillText(text, (this.canvas.width / 2) - (len / 2), (radius - 10));
+			context.fillText(text, (this.canvas.width / 2) - (len / 2), (radius - (scale * 10)));
 			context.lineWidth = 1;
 			context.strokeStyle = this.watchColorConfig.valueOutlineColor;
-			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (radius - 10)); // Outlined
+			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (radius - (scale * 10))); // Outlined
 			context.closePath();
 		}
 
