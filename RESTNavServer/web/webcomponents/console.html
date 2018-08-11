@@ -124,6 +124,24 @@
 			evt.currentTarget.className += " active";
 		}
 
+		function getQSPrm(prm) {
+			let value;
+			let loc = document.location.toString();
+			if (loc.indexOf("?") > -1) {
+				let qs = loc.substring(loc.indexOf("?") + 1);
+				let prms = qs.split('&');
+				for (i=0; i<prms.length; i++) {
+					let nv = prms[i].split('=');
+					if (nv.length === 2) {
+						if (nv[0] === prm) {
+							return nv[1];
+						}
+					}
+				}
+			}
+			return value;
+		}
+
 		function changeBG(value) {
 			let bodyStyle = document.getElementsByTagName("body")[0].style;
 			let htmlStyle = document.getElementsByTagName("html")[0].style;
@@ -398,22 +416,21 @@
 			worldMap.repaint();
 		}
 
-		function setTheme(classList) {
-			applyClass('compass-01', classList);
-			applyClass('tw-01', classList);
-			applyClass('bsp-01', classList);
-			applyClass('aw-01', classList);
-			applyClass('compass-rose-01', classList);
-			applyClass('analog-watch-01', classList);
-			applyClass('analog-watch-02', classList);
+		function setTheme(className) {
+			applyClass('compass-01', className);
+			applyClass('tw-01', className);
+			applyClass('bsp-01', className);
+			applyClass('aw-01', className);
+			applyClass('compass-rose-01', className);
+			applyClass('analog-watch-01', className);
+			applyClass('analog-watch-02', className);
 			// TODO World Map theme worldmap-display-02, worldmap-display
 
 		}
 
-		function applyClass(id, classList) {
+		function applyClass(id, className) {
 			let widget = document.getElementById(id);
-			let cssClass = classList.value;
-			widget.className = cssClass;
+			widget.className = className;
 			widget.repaint();
 		}
 
@@ -449,10 +466,53 @@
 		let withStars = false;
 		let withWanderingBodies = false;
 
+		const THEMES = {
+			"day": "analogdisplay-day",
+			"night": "analogdisplay-night",
+			"cyan": "analogdisplay-monochrome-cyan",
+			"orange": "analogdisplay-monochrome-orange",
+			"flat-gray": "analogdisplay-flat-gray",
+			"flat-black": "analogdisplay-flat-black"
+		};
+		const DISPLAYS = [
+			'compass-01',
+			'tw-01',
+			'bsp-01',
+			'aw-01',
+			'analog-watch-01',
+			'analog-watch-02'
+		];
 		window.onload = function() {
 			initAjax(); // Default. See later for a WebSocket option
 
 			callAfter('world-map-01'); // Adding Satellites plot.
+
+			// Query String prms, border, bg, style, like ?border=n&bg=black&style=orange
+			let style = getQSPrm('style');
+			let border = getQSPrm('border');
+			let bg = getQSPrm('bg');
+
+			if (style === 'day' || style === 'night' || style === 'cyan' || style === 'orange' || style === 'flat-gray' || style === 'flat-black') {
+				setTheme(THEMES[style]);
+				// TODO Set selected value
+			} else {
+				console.log("Unknown style", style);
+			}
+
+			if (bg === 'black' || bg === 'dark' || bg === 'light' || bg === 'white') {
+				changeBG(bg.toUpperCase());
+				// TODO set radio button
+			} else {
+				console.log("Unknown background", bg);
+			}
+
+			if (border === 'y' || border === 'n') {
+				DISPLAYS.forEach(function(id, idx) {
+					document.getElementById(id).withBorder = (border === 'y');
+				});
+			} else {
+				console.log("Unknown border", border);
+			}
 
 			/**
 			 *  SUBSCRIBERS HERE.
@@ -562,7 +622,7 @@
 	<hr/>
 	<!-- Page BG -->
 	Widget's Style:
-	<select onchange="setTheme(this);">
+	<select onchange="setTheme(this.value);">
 		<option value="analogdisplay-day" selected>Day</option>
 		<option value="analogdisplay-night">Night</option>
 		<option value="analogdisplay-monochrome-cyan">Cyan</option>
