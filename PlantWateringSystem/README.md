@@ -265,6 +265,20 @@ In the `loggers` package, there are several examples of loggers. One is feeding 
 
 ![Adafruit-IO](./docimg/adafruit-io.png)
 
+### To install
+- Flash an SD card with the lastest Raspian
+- Clone the repo and build the application:
+```
+ $ git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
+ $ cd raspberry-pi4j-samples/PlantWateringSystem
+ $ ../gradlew shadowJar
+```
+- Copy the `rc.local` into the `/etc` directory
+- Use `raspi-config` to change the machine name (like `pws-rpi`)
+- Hook up the probe and relay
+- Reboot!
+- You should be able to reach the Web UI from another machine on the same network.
+
 ### Next
 - NODE-Red Integration ?
 - Integration with the NMEA.Multiplexer ?
