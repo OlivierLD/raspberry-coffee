@@ -257,6 +257,32 @@ jumbo-display .digital-font-green {
 	--value-font-size-factor: 1
 }
 
+.analogdisplay-monochrome-yellow {
+	--bg-color: rgba(0, 0, 0, 0);
+	--digit-color: yellow;
+	--with-gradient: false;
+	--display-background-gradient-from: undefined; /* used if --withGradient: true */
+	--display-background-gradient-to: rgba(0, 0, 0, 0);
+	--display-line-color: rgba(255, 165, 0, 0.5); /* orange */
+	--label-fill-color: rgba(255, 255, 255, 0);
+	--with-display-shadow: false;
+	--shadow-color: black;
+	--outline-color: yellow;
+	--major-tick-color: yellow;
+	--minor-tick-color: yellow;
+	--value-color: yellow;
+	--value-outline-color: yellow;
+	--value-nb-decimal: 1;
+	--hand-color: rgba(0, 0, 0, 0);
+	--hand-outline-color: yellow;
+	--with-hand-shadow: false;
+	--knob-color: yellow;
+	--knob-outline-color: yellow;
+	--outlined-port-starboard: true;
+	--font: Arial;
+	--value-font-size-factor: 1
+}
+
 /* Day, flat gray */
 .analogdisplay-flat-gray {
 	--bg-color: rgba(255, 255, 255, 0.0);

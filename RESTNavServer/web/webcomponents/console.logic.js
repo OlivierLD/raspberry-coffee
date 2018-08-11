@@ -359,6 +359,7 @@ const THEMES = {
 	"night":      "analogdisplay-night",
 	"cyan":       "analogdisplay-monochrome-cyan",
 	"orange":     "analogdisplay-monochrome-orange",
+	"yellow":     "analogdisplay-monochrome-yellow",
 	"flat-gray":  "analogdisplay-flat-gray",
 	"flat-black": "analogdisplay-flat-black"
 };
@@ -380,7 +381,7 @@ window.onload = function() {
 	let border = getQSPrm('border');
 	let bg = getQSPrm('bg');
 
-	if (style === 'day' || style === 'night' || style === 'cyan' || style === 'orange' || style === 'flat-gray' || style === 'flat-black') {
+	if (style === 'day' || style === 'night' || style === 'cyan' || style === 'orange' || style === 'yellow' || style === 'flat-gray' || style === 'flat-black') {
 		setTheme(THEMES[style]);
 		// Set selected value
 		document.getElementById("widgets-style").value = THEMES[style];
