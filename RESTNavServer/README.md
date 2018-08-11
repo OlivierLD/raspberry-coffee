@@ -18,7 +18,7 @@ The GUI is dedicated to `HTML5` and `CSS3`, rendered in the browser of any devic
 
 > Interestingly, graphical user interfaces happen to be quite demanding (specific processors called GPU - Graphical Processing Units - have been created for GUI-demanding apps, like video games). Not using them is a substantial relief for the machine we run the server on.
 > As a matter of fact, for now (Aug-2018), whatever in mentioned below runs *fine* on a $10 `Raspberry PI Zero W`.
-> And this deos not prevent the Raspberry PI from serving web pages taking care of the GUI. The Raspberry PI runs 24x7, and you connect to it
+> And this does not prevent the Raspberry PI from serving web pages taking care of the GUI. The Raspberry PI runs 24x7, and you connect to it
 > from a GUI-savvy device to see your data in a good looking User Interface (UI).
 
 An application like `OpenCPN` seems (to me) too demanding for the Raspberry PI. Same for all `Swing` applications
