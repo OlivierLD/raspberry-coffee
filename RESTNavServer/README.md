@@ -16,6 +16,11 @@ In addition, I'll be attempting to implement the features of the Weather Wizard 
 The idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry PI, where the server is running.
 The GUI is dedicated to `HTML5` and `CSS3`, rendered in the browser of any device connected to the Raspberry PI's network (laptop, tablet, smartphone, etc).
 
+> Interestingly, graphical user interfaces happen to be quite demanding (specific processors called GPU - Graphical Processing Units - have been created for GUI-demanding apps, like video games). Not using them is a substantial relief for the machine we run the server on.
+> As a matter of fact, for now (Aug-2018), whatever in mentioned below runs *fine* on a $10 `Raspberry PI Zero W`.
+> And this deos not prevent the Raspberry PI from serving web pages taking care of the GUI. The Raspberry PI runs 24x7, and you connect to it
+> from a GUI-savvy device to see your data in a good looking User Interface (UI).
+
 An application like `OpenCPN` seems (to me) too demanding for the Raspberry PI. Same for all `Swing` applications
 developed in Java. And actually, this is a general trend in this area, languages like Java are clearly moving to the back-end side of the story.
 Java applets are being de-supported in more and more browsers, HTML and connected technologies keep improving
@@ -145,7 +150,7 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 
 _**Work in progress**_, an NMEA console with Web Components:
 Web Component is [a standard](https://www.webcomponents.org/specs), being more and more adopted.
-It does indeed make the HTML pages much simpler. We'll move to it. For exmple, the dynamic world map below is invoked from html with this kind of snippet:
+It does indeed make the HTML pages much simpler. We'll move to it. For example, the dynamic world map below is invoked from html with this kind of snippet:
 ```html
 <world-map id="world-map-01"
            class="worldmap-display"
