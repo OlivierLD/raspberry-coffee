@@ -144,13 +144,26 @@ to get the real time coordinates of the Sun and the Moon, to display them on the
 ---
 
 _**Work in progress**_, an NMEA console with Web Components:
+Web Component is [a standard](https://www.webcomponents.org/specs), being more and more adopted.
+It does indeed make the HTML pages much simpler. We'll move to it. For exmple, the dynamic world map below is invoked from html with this kind of snippet:
+```html
+<world-map id="world-map-01"
+           class="worldmap-display"
+           title="World Map"
+           width="700"
+           height="500"></world-map>
+
+```
+It can also be driven by JavaScript.
+For now, it's "pure" WebComponents (no Polyfill). If your browser does not support native WebComponents..., you'll have to wait for it to.
+
 ```
  http://[host]:9999/web/webcomponents/console.html
 ```
 
 ![Web Components](./docimg/screenshot.11.png)
 
-Equiped with Heads up display features (reflection in a wind screen, for example).
+Equiped with Heads up display features (reflection in a wind shield, for example).
 
 ![HeadsUp display](./docimg/screenshot.12.png)
 
