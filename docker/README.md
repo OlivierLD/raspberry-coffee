@@ -1,5 +1,7 @@
 ### Docker
 
+![Container Ship](./Container_ship.jpg)
+
 Get Docker on your system : https://store.docker.com/search?type=edition&offering=community
 
 #### Pre-defined Docker images
