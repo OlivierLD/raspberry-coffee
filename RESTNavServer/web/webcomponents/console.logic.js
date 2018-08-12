@@ -280,6 +280,10 @@ function astroCallback(data) { // Intercepted
 			worldMap.decToSex(data.moonObs.alt) +
 			'</td></tr><tr><td align="left">Moon Z:</td><td align="right">' +
 			worldMap.decToSex(data.moonObs.z) +
+			'</td></tr><tr><td align="left">Aries &gamma; GHA:</td><td align="right">' +
+			worldMap.decToSex(data.ghaAries) +
+			'</td><td align="left">&nbsp;LHA:</td><td align="right">' +
+			worldMap.decToSex(lhaAries) +
 			'</td></tr></table>';
 
 	// Display solar date & time
