@@ -4,6 +4,10 @@ const SKY_MAP_TAG_NAME = 'sky-map';
 /**
  * WIP!!!
  *
+ * Quick hints for the Sky Map:
+ * - Put it OVER your head (look at it from underneath).
+ * - Align date and SOLAR time of the day to see the visible sky.
+ *
  * Parameters:
  * - North or South
  * - With stars
@@ -396,10 +400,11 @@ class SkyMap extends HTMLElement {
 			for (let day=1; day<=365; day++) {
 				let now = this.findCorrespondingDay(day);
 				let d = 360 * (day - 1) / 365; // The angle in the circle
+//			console.log("Day " + day + " => " + JSON.stringify(now) + ", angle:" + d);
 				let xFrom = (this.canvas.width / 2) - ((radius * 0.98) * Math.cos(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
 				let yFrom = (this.canvas.height / 2) - ((radius * 0.98) * Math.sin(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
-				let xTo = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
-				let yTo = (this.canvas.height / 2) - ((radius * 0.95) * Math.sin(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
+				let xTo = (this.canvas.width / 2) - ((radius * (now.dayOfMonth === 1 || now.dayOfMonth % 5 === 0 ? 0.92 : 0.95)) * Math.cos(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
+				let yTo = (this.canvas.height / 2) - ((radius * (now.dayOfMonth === 1 || now.dayOfMonth % 5 === 0 ? 0.92 : 0.95)) * Math.sin(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
 				context.moveTo(xFrom, yFrom);
 				context.lineTo(xTo, yTo);
 
