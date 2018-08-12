@@ -267,6 +267,12 @@ In the `loggers` package, there are several examples of loggers. One is feeding 
 
 ### To install
 - Flash an SD card with the lastest Raspian
+- Possibly run
+```
+ $ sudo apt-get update
+ $ sudo apt-get upgrade
+ $ sudo apt-get dist-upgrade
+```
 - Clone the repo and build the application:
 ```
  $ git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
