@@ -1,5 +1,5 @@
 
-const TABS = ['one', 'two'];
+const TABS = ['one', 'two', 'three'];
 
 function openTab(evt, tabNum) {
 	let tablinks = document.getElementsByClassName("tablinks");
@@ -246,6 +246,11 @@ function astroCallback(data) { // Intercepted
 //		console.log("Astro Data:", data);
 
 	let worldMap = document.getElementById('world-map-01');
+	let skyMap = document.getElementById('sky-map-01');
+
+	let lhaAries = data.ghaAries + data.from.longitude;
+	while (lhaAries < 0) lhaAries +=360;
+	while (lhaAries > 360) lhaAries -= 360;
 
 	let sunLHA = data.sun.gha + data.from.longitude;
 	while (sunLHA < 0) sunLHA +=360;
@@ -284,7 +289,6 @@ function astroCallback(data) { // Intercepted
 	let date = solarDate.format("d-m-Y-l");
 	setData('calendar-02', date);
 
-
 	document.getElementById("solar-date").innerHTML = 'Solar Time: ' +
 			data.solarDate.year + ' ' +
 			months[data.solarDate.month - 1] + ' ' +
@@ -302,6 +306,11 @@ function astroCallback(data) { // Intercepted
 
 	worldMap.setAstronomicalData(data);
 	worldMap.repaint();
+
+	skyMap.hemisphere = (data.from.latitude > 0 ? 'N' : 'S');
+	skyMap.lhaAries = lhaAries;
+	skyMap.latitude = Math.abs(data.from.latitude);
+	skyMap.repaint();
 }
 
 function setTheme(className) {

@@ -48,6 +48,8 @@ The sample web pages presented below are relying on HTML5 and CSS3.
 This clearly divides the problem to address in two distinct parts:
 - Back end computation, providing the data to render in some agnostic format like `json` or `XML` (we'll use `json` here), exposed as REST services.
 - Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface (GUI).
+
+And
 - The broker (the glue) in-between is relying on the HTTP protocol.
 
 This allows pretty much _any_ device that knows about a network to connect to the Local Area Network (LAN)
@@ -157,7 +159,6 @@ It does indeed make the HTML pages much simpler. We'll move to it. For example, 
            title="World Map"
            width="700"
            height="500"></world-map>
-
 ```
 It can also be driven by JavaScript.
 For now, it's "pure" WebComponents (no Polyfill). If your browser does not support native WebComponents..., you'll have to wait for it to.

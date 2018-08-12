@@ -614,12 +614,15 @@ public class HTTPServer {
 									synchronized (requestManagers) {
 										try {
 											final Request _request = request;
-											Optional<RESTRequestManager> restRequestManager = requestManagers.stream().filter(rm -> rm.containsOp(_request.getVerb(), _request.getPath())).findFirst();
+											Optional<RESTRequestManager> restRequestManager = requestManagers.stream()
+													.filter(rm -> rm.containsOp(_request.getVerb(), _request.getPath()))
+													.findFirst();
 											if (restRequestManager.isPresent()) {
 												unManagedRequest = false;
 												Response response = restRequestManager.get().onRequest(request); // REST Request, most likely.
 												sendResponse(response, out);
 											}
+											// Old implementation
 //											for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
 //												synchronized (reqMgr) {
 //													try {

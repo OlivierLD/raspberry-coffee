@@ -2041,7 +2041,7 @@
 						<sky-map id="sky-map-01"
 										 width="600"
 										 height="600"
-										 latitude="45"/>
+										 latitude="35"/>
 					</div>
 					Type:
 					<select onchange="setMapType('sky-map-01', this);">
@@ -2061,14 +2061,14 @@
 				<td>
 					<h5 style="color: cyan;">LHA Aries / Date</h5>
 					<input type="range" value="0" min="-180" max="180" style="width: 90%;" oninput="setLHAAries('sky-map-01', this.value); lhaAries.value = (parseInt(this.value) >= 0 ? parseInt(this.value) : parseInt(this.value) + 360);" />
-					<output name="lhaAries" id="lhaAries" style="color: cyan;"></output>
+					<output name="lhaAries" id="lhaAries" style="color: cyan;">0</output>
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<h5 style="color: cyan;">Latitude</h5>
-					<input type="range" value="45" min="1" max="89" style="width: 90%;" oninput="setObserverLatitude('sky-map-01', this.value); obsLat.value = this.value;" />
-					<output name="obsLat" id="obsLat" style="color: cyan;"></output>
+					<input type="range" value="35" min="1" max="89" style="width: 90%;" oninput="setObserverLatitude('sky-map-01', this.value); obsLat.value = this.value;" />
+					<output name="obsLat" id="obsLat" style="color: cyan;">35</output>
 				</td>
 			</tr>
 		</table>

@@ -1,24 +1,35 @@
-function getSum(n1, n2) { // this function returns a Promise
-	var isAnyNegative = function() {
-		return n1 < 0 || n2 < 0;
-	};
+// Good resource at https://www.datchley.name/es6-promises/
 
-	var promise = new Promise(function(resolve, reject) {
+// this function returns a Promise
+function getSum(n1, n2) {
+
+	function isAnyNegative() {
+		return n1 < 0 || n2 < 0;
+	}
+
+	let promise = new Promise(function(resolve, reject) {
 		if (isAnyNegative()) {
 			reject(Error("Negative numbers not supported"));
 		}
 		resolve(n1 + n2);
 	});
 	return promise;
-};
+}
 
 function testIt(a, b) {
-	getSum(a, b).then(function (result) { // this is the resolve function
-		console.log("Result is ", result);
-	}, function (error) {                 // this is the reject function
-		console.log("Oops:", error);
-	});
-};
+	getSum(a, b)
+			.then(
+					function (result) { // this is the resolve function
+						console.log("---- S U C C E S S ----");
+						console.log("Success: Result is ", result);
+						console.log("-----------------------");
+					},
+					function (error) { // this is the reject function
+						console.log("--- R E J E C T E D ---");
+						console.log("Oops:", error);
+						console.log("-----------------------");
+					});
+}
 
 testIt(5, 6);
 

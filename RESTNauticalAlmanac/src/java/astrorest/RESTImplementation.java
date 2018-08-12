@@ -452,6 +452,7 @@ public class RESTImplementation {
 				PositionsInTheSky data = new PositionsInTheSky()
 						.epoch(date.getTimeInMillis())
 						.deltaT(AstroComputer.getDeltaT())
+						.ghaAries(AstroComputer.getAriesGHA())
 						.sun(new GP().gha(AstroComputer.getSunGHA())
 								.decl(AstroComputer.getSunDecl()))
 						.moon(new GP().gha(AstroComputer.getMoonGHA())
@@ -1135,6 +1136,7 @@ public class RESTImplementation {
 		double deltaT;
 		GP sun;
 		GP moon;
+		double ghaAries;
 		List<GP> wanderingBodies;
 		List<GP> stars;
 		double eclipticObliquity; // Mean
@@ -1151,6 +1153,10 @@ public class RESTImplementation {
 		}
 		public PositionsInTheSky deltaT(double deltaT) {
 			this.deltaT = deltaT;
+			return this;
+		}
+		public PositionsInTheSky ghaAries(double gha) {
+			this.ghaAries = gha;
 			return this;
 		}
 		public PositionsInTheSky sun(GP sun) {
