@@ -756,19 +756,6 @@ class SkyMap extends HTMLElement {
 		return star;
 	}
 
-	/**
-	 *
-	 * @param ha Hour Angle in degrees
-	 * @returns {number}
-	 */
-	haToLongitude(ha) {
-		var lng = - ha;
-		if (lng < -180) {
-			lng += 360;
-		}
-		return lng;
-	}
-
 	drawStars(context, radius) {
 		for (let i=0; i<constellations.length; i++) {
 			// Constellation?
@@ -857,17 +844,11 @@ class SkyMap extends HTMLElement {
 			let ghaAries = this.findGHAAries(this._wanderingBodiesData);
 			this._wanderingBodiesData.forEach(function(body, idx) {
 				let dec = body.decl * self._hemisphere;
-//			let lng = self.haToLongitude(body.gha - ghaAries);
 				let lng = body.gha - ghaAries;
 				lng += (/*this._hemisphere * */self.LHAAries);
 				if (lng > 180) {
 					lng -= 360;
 				}
-
-				if (body.name.toUpperCase() === 'VENUS') {
-					console.log("SKY => Positioning " + body.name + ", decl:" + dec + ", GHA:" + body.gha + ", lng:" + lng + ", LHAAries:" + self.LHAAries);
-				}
-
 				let p = self.plotCoordinates(dec, lng, radius);
 				context.beginPath();
 				context.fillStyle = 'pink';
