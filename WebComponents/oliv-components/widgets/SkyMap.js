@@ -859,9 +859,9 @@ class SkyMap extends HTMLElement {
 				context.lineWidth = 0.5;
 				context.stroke();
 
-				context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
+				context.font = "bold " + Math.round(12) + "px Arial"; // Like "bold 15px Arial"
 				context.fillStyle = 'red';
-				let str = body.name;
+				let str = body.name.toUpperCase();
 				let len = context.measureText(str).width;
 				context.fillText(str, (self.canvas.width / 2) - p.x - (len / 2), (self.canvas.height / 2) + p.y - 2);
 
