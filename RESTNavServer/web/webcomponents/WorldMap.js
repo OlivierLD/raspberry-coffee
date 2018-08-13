@@ -793,6 +793,9 @@ class WorldMap extends HTMLElement {
 		isStar = isStar || false;
 		context.save();
 		let lng = this.haToLongitude(gha);
+
+		console.log("World => Positioning " + name + ", decl:" + decl + ", GHA:" + gha + ", lng:" + lng);
+
 		let body = this.getPanelPoint(decl, lng);
 		let thisPointIsBehind = this.isBehind(Utilities.toRadians(decl), Utilities.toRadians(lng - this.globeViewLngOffset));
 		if (!thisPointIsBehind || this.transparentGlobe) {
