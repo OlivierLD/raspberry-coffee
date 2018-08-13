@@ -157,6 +157,22 @@ function setProjection(id, radio) {
 	document.getElementById(id).repaint();
 }
 
+function setMapType(id, list) {
+	document.getElementById(id).type = list.value;
+	document.getElementById(id).repaint();
+}
+
+function setStarNames(id, cb) {
+	document.getElementById(id).starNames = cb.checked;
+	document.getElementById(id).repaint();
+}
+
+function setVisibleSky(id, cb) {
+	document.getElementById(id).visibleSky = cb.checked;
+	document.getElementById(id).repaint();
+}
+
+
 // Depends on the user position... Would not turn with the globe.
 let gpsSatelliteData = undefined;
 
