@@ -6,7 +6,7 @@ function initAjax() {
 	let interval = setInterval(function () {
 		fetch();
 	}, 1000);
-};
+}
 
 const DEFAULT_TIMEOUT = 60000;
 
@@ -40,9 +40,9 @@ function getDeferred(
 		xhr.send(JSON.stringify(data));
 	}
 
-	var requestTimer = setTimeout(function() {
+	let requestTimer = setTimeout(function() {
 		xhr.abort();
-		var mess = { message: 'Timeout' };
+		let mess = { message: 'Timeout' };
 		deferred.reject(408, mess);
 	}, TIMEOUT);
 
@@ -99,7 +99,7 @@ function getSkyGP(when, position, wandering, stars) {
 		url += ("&stars=true");
 	}
 	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
-};
+}
 
 function getAstroData(when, position, wandering, stars, callback) {
 	let getData = getSkyGP(when, position, wandering, stars);
@@ -285,7 +285,7 @@ function onMessage(json) {
 			let buffered = json['Current calculated with damping'];
 			if (buffered !== undefined) {
 				let keys = Object.keys(buffered);
-				for (let i=0; i<keys.length; i++) {
+				for (i=0; i<keys.length; i++) {
 					let k = keys[i];
 //				console.log("K:" + k);
 					let damp = buffered[k];

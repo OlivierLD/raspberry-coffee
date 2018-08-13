@@ -242,7 +242,7 @@ const DURATION_FMT = "Y-m-dTH:i:s";
 const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 
-function astroCallback(data) { // Intercepted
+function astroCallback(data) {
 //		console.log("Astro Data:", data);
 
 	let worldMap = document.getElementById('world-map-01');

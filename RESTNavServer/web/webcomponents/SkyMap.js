@@ -829,7 +829,7 @@ class SkyMap extends HTMLElement {
 				context.lineWidth = 0.5;
 				context.stroke();
 
-				if (s === 0 && this._starNames) { // Star name
+				if (constellations[i].stars[s].name.charAt(0) === constellations[i].stars[s].name.charAt(0).toUpperCase() && this._starNames) { // Star name
 					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 					context.fillStyle = 'blue';
 					let str = constellations[i].stars[s].name;
