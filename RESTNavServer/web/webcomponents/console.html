@@ -410,6 +410,13 @@
 	<div id="three" style="display: none;">
 		<div id="sky-maps-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
 			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px;">
+				Type:
+				<select onchange="setMapType('sky-map-01', this);">
+					<option value="STARFINDER" selected>Star Finder</option>
+					<option value="SKYMAP">Sky Map</option>
+				</select>
+				<input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>With Star Names.
+				<input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.
 				<!--
 				SKY MAP
 				+-->
