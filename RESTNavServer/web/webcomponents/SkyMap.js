@@ -830,7 +830,7 @@ class SkyMap extends HTMLElement {
 
 	findGHAAries(wBodies) {
 		let ghaA = undefined;
-		for (i=0; i<wBodies.length; i++) {
+		for (let i=0; i<wBodies.length; i++) {
 			if (wBodies[i].name === "aries") {
 				return wBodies[i].gha;
 			}
