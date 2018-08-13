@@ -4,7 +4,7 @@
 
 > Some components might require some provided utilities like
 > - `character.matrixes/characters.js`
-> - `stars.constellation.js`
+> - `stars/constellation.js`
 > - `utilities/Utilities.js`
 
 They do require a WebComponents-savvy browser though. Most of them are (or will shortly be...).
