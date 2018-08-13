@@ -841,16 +841,27 @@ class SkyMap extends HTMLElement {
 		}
 	}
 
+	findGHAAries(wBodies) {
+		let ghaA = undefined;
+		for (i=0; i<wBodies.length; i++) {
+			if (wBodies[i].name === "aries") {
+				return wBodies[i].gha;
+			}
+		}
+		return ghaA;
+	}
+
 	drawWanderingBodies(context, radius) {
 		if (this._wanderingBodiesData !== undefined) {
 			let self = this;
+			let ghaAries = this.findGHAAries(this._wanderingBodiesData);
 			this._wanderingBodiesData.forEach(function(body, idx) {
 				let dec = body.decl * self._hemisphere;
-				let lng = self.haToLongitude(body.gha);
+				let lng = self.haToLongitude(body.gha - ghaAries);
 
 				console.log("SKY => Positioning " + body.name + ", decl:" + dec + ", GHA:" + body.gha + ", lng:" + lng);
 
-				lng -= (/*this._hemisphere * */self.LHAAries);
+//			lng -= (/*this._hemisphere * */self.LHAAries);
 				if (lng > 180) {
 					lng -= 360;
 				}
