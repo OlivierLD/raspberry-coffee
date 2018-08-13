@@ -59,7 +59,9 @@ const SKY_MAP_TAG_NAME = 'sky-map';
  *
  * - Latitude (Observer)
  * - LHA Aries
- * - Displayable star names (InitCaps)
+ *
+ * TODO:
+ * - Displayable star names
  */
 
 /* The map data */
@@ -754,19 +756,6 @@ class SkyMap extends HTMLElement {
 		return star;
 	}
 
-	/**
-	 *
-	 * @param ha Hour Angle in degrees
-	 * @returns {number}
-	 */
-	haToLongitude(ha) {
-		var lng = - ha;
-		if (lng < -180) {
-			lng += 360;
-		}
-		return lng;
-	}
-
 	drawStars(context, radius) {
 		for (let i=0; i<constellations.length; i++) {
 			// Constellation?
@@ -839,12 +828,23 @@ class SkyMap extends HTMLElement {
 		}
 	}
 
+	findGHAAries(wBodies) {
+		let ghaA = undefined;
+		for (i=0; i<wBodies.length; i++) {
+			if (wBodies[i].name === "aries") {
+				return wBodies[i].gha;
+			}
+		}
+		return ghaA;
+	}
+
 	drawWanderingBodies(context, radius) {
 		if (this._wanderingBodiesData !== undefined) {
 			let self = this;
+			let ghaAries = this.findGHAAries(this._wanderingBodiesData);
 			this._wanderingBodiesData.forEach(function(body, idx) {
 				let dec = body.decl * self._hemisphere;
-				let lng = self.haToLongitude(body.gha);
+				let lng = body.gha - ghaAries;
 				lng += (/*this._hemisphere * */self.LHAAries);
 				if (lng > 180) {
 					lng -= 360;
@@ -879,7 +879,7 @@ class SkyMap extends HTMLElement {
 		let yOffset = Math.round(r * Math.cos(Utilities.toRadians(lng)));
 		if (this._type === SKYMAP_TYPE) {
 			yOffset *= -1;
-	//	xOffset *= -1;
+			//	xOffset *= -1;
 		}
 		return {x: xOffset, y: yOffset};
 	}
