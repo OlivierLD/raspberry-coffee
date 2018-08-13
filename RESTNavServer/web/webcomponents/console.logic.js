@@ -311,6 +311,16 @@ function astroCallback(data) { // Intercepted
 	worldMap.setAstronomicalData(data);
 	worldMap.repaint();
 
+	if (data.wanderingBodies !== undefined) {
+		let wb = data.wanderingBodies;
+		wb.push({ name: "sun", decl: data.sun.decl, gha: data.sun.gha});
+		wb.push({ name: "moon", decl: data.moon.decl, gha: data.moon.gha});
+		skyMap.wanderingBodies = true;
+		skyMap.wanderingBodiesData = wb;
+	} else {
+		skyMap.withWanderingBodies = false;
+	}
+
 	skyMap.hemisphere = (data.from.latitude > 0 ? 'N' : 'S');
 	skyMap.lhaAries = lhaAries;
 	skyMap.latitude = Math.abs(data.from.latitude);

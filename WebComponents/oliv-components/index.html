@@ -601,6 +601,14 @@
 			document.getElementById(id).repaint();
 		}
 
+		function setWanderingBodiesSM(id, cb) {
+			document.getElementById(id).wanderingBodies = cb.checked;
+			if (cb.checked === true) {
+				document.getElementById(id).wanderingBodiesData = [{"name":"sun","decl":-20.04044686148565,"gha":155.6529121226147},{"name":"moon","decl":23.16309834765886,"gha":333.80030094991827},{"name":"aries","decl":0,"gha":32.94240012811581},{"name":"venus","decl":-11.050714772347902,"gha":187.22301328597055},{"name":"mars","decl":-23.63545138636733,"gha":136.0959874339015},{"name":"jupiter","decl":-3.8939103945425586,"gha":38.329413872258606},{"name":"saturn","decl":-3.333562139273032,"gha":199.44442264190673}];
+			}
+			document.getElementById(id).repaint();
+		}
+
 		function setHemisphere(id, list) {
 			document.getElementById(id).hemisphere = list.value;
 			document.getElementById(id).repaint();
@@ -2055,6 +2063,7 @@
 					</select>
 					<input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>With Star Names.
 					<input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.
+					<input type="checkbox" onchange="setWanderingBodiesSM('sky-map-01', this);">Wandering bodies.
 				</td>
 			</tr>
 			<tr>

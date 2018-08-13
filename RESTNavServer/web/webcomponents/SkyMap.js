@@ -4,13 +4,54 @@ const SKY_MAP_TAG_NAME = 'sky-map';
 /**
  * WIP!!!
  *
+ * Quick hints for the Sky Map:
+ * - Put it OVER your head (look at it from underneath).
+ * - Align date and SOLAR time of the day to see the visible sky.
+ *
  * Parameters:
  * - North or South
  * - With stars
  * - With star names
  * - visible sky
  * - Full sphere
- * - Wandering bodies -> requires a REST service
+ * - Wandering bodies -> requires a REST service, JSON data like
+ * [
+ {
+	 "name": "sun",
+	 "decl": -20.04044686148565,
+	 "gha": 155.6529121226147
+ },
+ {
+	 "name": "moon",
+	 "decl": 23.16309834765886,
+	 "gha": 333.80030094991827
+ },
+ {
+	 "name": "aries",
+	 "decl": 0,
+	 "gha": 32.94240012811581
+ },
+ {
+	 "name": "venus",
+	 "decl": -11.050714772347902,
+	 "gha": 187.22301328597055
+ },
+ {
+	 "name": "mars",
+	 "decl": -23.63545138636733,
+	 "gha": 136.0959874339015
+ },
+ {
+	 "name": "jupiter",
+	 "decl": -3.8939103945425586,
+	 "gha": 38.329413872258606
+ },
+ {
+	 "name": "saturn",
+	 "decl": -3.333562139273032,
+	 "gha": 199.44442264190673
+ }
+ ]
  * - Constellations
  * - Constellation names
  * - Star Finder or Sky Map
@@ -20,9 +61,6 @@ const SKY_MAP_TAG_NAME = 'sky-map';
  * - LHA Aries
  *
  * TODO:
- * - Wandering bodies
- * - Big Tick for the 1st of the month, in SkyMap
- * - Tweaks N/S SkyMap
  * - Displayable star names
  */
 
@@ -103,6 +141,7 @@ class SkyMap extends HTMLElement {
 			"constellation-names",    // boolean. Default false
 			"constellations",         // boolean. Default true
 			"visible-sky",            // boolean. Default true
+			"wandering-bodies",       // boolean. Default false
 			"latitude",               // Number [0..90], default 45, no sign! -> see hemisphere
 			"lha-aries"               // Number, Default 0.
 
@@ -148,6 +187,8 @@ class SkyMap extends HTMLElement {
 		this._constellationNames = false;
 		this._withConstellations = true;
 		this._withVisibleSky = true;
+		this._withWanderingBodies = false;
+		this._wanderingBodiesData = undefined;
 	}
 
 	// Called whenever the custom element is inserted into the DOM.
@@ -199,6 +240,9 @@ class SkyMap extends HTMLElement {
 			case "visible-sky":
 				this._withVisibleSky = (newVal === 'true');
 				break;
+			case "wandering-bodies":
+				this._withWanderingBodies = (newVal === 'true');
+				break;
 			case "latitude":
 				this.observerLatitude = parseFloat(newVal);
 				break;
@@ -245,6 +289,12 @@ class SkyMap extends HTMLElement {
 	set visibleSky(val) {
 		this._withVisibleSky = val;
 	}
+	set wanderingBodies(val) {
+		this._withWanderingBodies = val;
+	}
+	set wanderingBodiesData(json) {
+		this._wanderingBodiesData = json;
+	}
 	set latitude(val) {
 		this.observerLatitude = val;
 	}
@@ -282,6 +332,12 @@ class SkyMap extends HTMLElement {
 	}
 	get visibleSky() {
 		return this._withVisibleSky;
+	}
+	get wanderingBodies() {
+		return this._withWanderingBodies;
+	}
+	get wanderingBodiesData() {
+		return this._wanderingBodiesData;
 	}
 	get latitude() {
 		return this.observerLatitude;
@@ -396,10 +452,11 @@ class SkyMap extends HTMLElement {
 			for (let day=1; day<=365; day++) {
 				let now = this.findCorrespondingDay(day);
 				let d = 360 * (day - 1) / 365; // The angle in the circle
+//			console.log("Day " + day + " => " + JSON.stringify(now) + ", angle:" + d);
 				let xFrom = (this.canvas.width / 2) - ((radius * 0.98) * Math.cos(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
 				let yFrom = (this.canvas.height / 2) - ((radius * 0.98) * Math.sin(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
-				let xTo = (this.canvas.width / 2) - ((radius * 0.95) * Math.cos(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
-				let yTo = (this.canvas.height / 2) - ((radius * 0.95) * Math.sin(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
+				let xTo = (this.canvas.width / 2) - ((radius * (now.dayOfMonth === 1 || now.dayOfMonth % 5 === 0 ? 0.92 : 0.95)) * Math.cos(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
+				let yTo = (this.canvas.height / 2) - ((radius * (now.dayOfMonth === 1 || now.dayOfMonth % 5 === 0 ? 0.92 : 0.95)) * Math.sin(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
 				context.moveTo(xFrom, yFrom);
 				context.lineTo(xTo, yTo);
 
@@ -527,6 +584,10 @@ class SkyMap extends HTMLElement {
 
 		if (this._withStars) {
 			this.drawStars(context, radius * 0.92);
+		}
+
+		if (this._withWanderingBodies) {
+			this.drawWanderingBodies(context, radius * 0.92);
 		}
 	}
 
@@ -695,6 +756,19 @@ class SkyMap extends HTMLElement {
 		return star;
 	}
 
+	/**
+	 *
+	 * @param ha Hour Angle in degrees
+	 * @returns {number}
+	 */
+	haToLongitude(ha) {
+		var lng = - ha;
+		if (lng < -180) {
+			lng += 360;
+		}
+		return lng;
+	}
+
 	drawStars(context, radius) {
 		for (let i=0; i<constellations.length; i++) {
 			// Constellation?
@@ -767,13 +841,47 @@ class SkyMap extends HTMLElement {
 		}
 	}
 
+	drawWanderingBodies(context, radius) {
+		if (this._wanderingBodiesData !== undefined) {
+			let self = this;
+			this._wanderingBodiesData.forEach(function(body, idx) {
+				let dec = body.decl * self._hemisphere;
+				let lng = self.haToLongitude(body.gha);
+				lng += (/*this._hemisphere * */self.LHAAries);
+				if (lng > 180) {
+					lng -= 360;
+				}
+				let p = self.plotCoordinates(dec, lng, radius);
+				context.beginPath();
+				context.fillStyle = 'pink';
+				const starRadius = 4;
+				context.arc((self.canvas.width / 2) - p.x, (self.canvas.height / 2) + p.y, starRadius, 0, 2 * Math.PI, false);
+				context.fill();
+				context.strokeStyle = 'black';
+				context.lineWidth = 0.5;
+				context.stroke();
+
+				context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
+				context.fillStyle = 'red';
+				let str = body.name;
+				let len = context.measureText(str).width;
+				context.fillText(str, (self.canvas.width / 2) - p.x - (len / 2), (self.canvas.height / 2) + p.y - 2);
+
+				context.closePath();
+
+			});
+		} else {
+			console.log("No wandering bodies data available");
+		}
+	}
+
 	plotCoordinates(lat, lng, radius) {
 		let r = (((90 - lat) / 180) * radius);
 		let xOffset = Math.round(r * Math.sin(Utilities.toRadians(lng))) * this._hemisphere;
 		let yOffset = Math.round(r * Math.cos(Utilities.toRadians(lng)));
 		if (this._type === SKYMAP_TYPE) {
 			yOffset *= -1;
-	//	xOffset *= -1;
+			//	xOffset *= -1;
 		}
 		return {x: xOffset, y: yOffset};
 	}

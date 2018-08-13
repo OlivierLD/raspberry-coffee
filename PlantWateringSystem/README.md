@@ -270,6 +270,7 @@ In the `loggers` package, there are several examples of loggers. One is feeding 
 - Possibly run
 ```
  $ sudo apt-get update
+ $ sudo apt-get autoremove
  $ sudo apt-get upgrade
  $ sudo apt-get dist-upgrade
 ```
@@ -279,7 +280,7 @@ In the `loggers` package, there are several examples of loggers. One is feeding 
  $ cd raspberry-pi4j-samples/PlantWateringSystem
  $ ../gradlew shadowJar
 ```
-- Copy the `rc.local` into the `/etc` directory
+- Copy the `rc.local` into the `/etc` directory (careful with that, hey?)
 - Use `raspi-config` to change the machine name (like `pws-rpi`)
 - Hook up the probe and relay
 - Reboot!
