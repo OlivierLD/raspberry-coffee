@@ -859,7 +859,9 @@ class SkyMap extends HTMLElement {
 				let dec = body.decl * self._hemisphere;
 				let lng = self.haToLongitude(body.gha - ghaAries);
 
-				console.log("SKY => Positioning " + body.name + ", decl:" + dec + ", GHA:" + body.gha + ", lng:" + lng);
+				if (body.name.toUpperCase() === 'VENUS') {
+					console.log("SKY => Positioning " + body.name + ", decl:" + dec + ", GHA:" + body.gha + ", lng:" + lng + ", LHAAries:" + self.LHAAries);
+				}
 
 				lng += (/*this._hemisphere * */self.LHAAries);
 				if (lng > 180) {
