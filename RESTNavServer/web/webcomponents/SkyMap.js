@@ -861,7 +861,7 @@ class SkyMap extends HTMLElement {
 
 				console.log("SKY => Positioning " + body.name + ", decl:" + dec + ", GHA:" + body.gha + ", lng:" + lng);
 
-//			lng -= (/*this._hemisphere * */self.LHAAries);
+				lng += (/*this._hemisphere * */self.LHAAries);
 				if (lng > 180) {
 					lng -= 360;
 				}
