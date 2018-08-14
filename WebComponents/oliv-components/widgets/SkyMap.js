@@ -699,7 +699,6 @@ class SkyMap extends HTMLElement {
 		// Zenith
 		context.beginPath();
 		let zenith = Math.round(((radius / 2)) * ((90 - this.observerLatitude) / 90));
-		console.log("Zenith:" + zenith + ", ObsLat:" + this.observerLatitude);
 		if (this._type === SKYMAP_TYPE) {
 			zenith *= -1;
 		}
