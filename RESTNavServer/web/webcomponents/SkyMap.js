@@ -59,8 +59,6 @@ const SKY_MAP_TAG_NAME = 'sky-map';
  *
  * - Latitude (Observer)
  * - LHA Aries
- *
- * TODO:
  * - Displayable star names
  */
 
@@ -149,7 +147,7 @@ class SkyMap extends HTMLElement {
 		];
 	}
 
-	dummyDump() {
+	static dummyDump() {
 		console.log('We have %d constellation(s).', constellations.length);
 		for (let i=0; i<constellations.length; i++) {
 			console.log("- %s: %d star(s)", constellations[i].name, constellations[i].stars.length);
@@ -173,8 +171,8 @@ class SkyMap extends HTMLElement {
 		this._width       = 500;
 		this._height      = 500;
 
-		this.majorTicks = 5; // TODO prm ?
-		this.minorTicks = 1; // TODO prm ?
+		this.majorTicks = 5; // prm ?
+		this.minorTicks = 1; // prm ?
 
 		this.LHAAries = 0;
 		this._hemisphere = NORTHERN_HEMISPHERE;
@@ -461,7 +459,7 @@ class SkyMap extends HTMLElement {
 			context.beginPath();
 			// 0 is 21 Sept.
 			for (let day=1; day<=365; day++) {
-				let now = this.findCorrespondingDay(day);
+				let now = SkyMap.findCorrespondingDay(day);
 				let d = 360 * (day - 1) / 365; // The angle in the circle
 //			console.log("Day " + day + " => " + JSON.stringify(now) + ", angle:" + d);
 				let xFrom = (this.canvas.width / 2) - ((radius * 0.98) * Math.cos(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
@@ -602,7 +600,7 @@ class SkyMap extends HTMLElement {
 		}
 	}
 
-	nextMonth(month) {
+	static nextMonth(month) {
 		let nextMonth = Month.JANUARY;
 		let bool = false;
 		for (let k in Month) {
@@ -615,16 +613,15 @@ class SkyMap extends HTMLElement {
 		return nextMonth;
 	}
 
-	findCorrespondingDay(d) {
+	static findCorrespondingDay(d) {
 		// Day 1 is September 21st.
 		let currMonth = Month.SEPTEMBER;
-		let day = 21;
-		let currDay = day;
+		let currDay = 21;
 		for (let i = 1; i < d; i++) {
 			currDay++;
 			if (currDay > currMonth.nbDays) {
 				currDay = 1;
-				currMonth = this.nextMonth(currMonth);
+				currMonth = SkyMap.nextMonth(currMonth);
 			}
 		}
 		return { month: currMonth, dayOfMonth: currDay};
@@ -749,7 +746,7 @@ class SkyMap extends HTMLElement {
 		}
 	}
 
-	findStar(starArray, starName) {
+	static findStar(starArray, starName) {
 		let star = {};
 		for (let i=0; i<starArray.length; i++) {
 			if (starArray[i].name === starName) {
@@ -764,9 +761,9 @@ class SkyMap extends HTMLElement {
 			// Constellation?
 			if (this._withConstellations) {
 				let constellation = constellations[i].lines;
-				for (let l = 0; l < constellations[i].lines.length; l++) {
-					let starFrom = this.findStar(constellations[i].stars, constellations[i].lines[l].from);
-					let starTo = this.findStar(constellations[i].stars, constellations[i].lines[l].to);
+				for (let l = 0; l < constellation.length; l++) {
+					let starFrom = SkyMap.findStar(constellations[i].stars, constellations[i].lines[l].from);
+					let starTo = SkyMap.findStar(constellations[i].stars, constellations[i].lines[l].to);
 					if (starFrom !== {} && starTo !== {}) {
 						context.beginPath();
 						let dec = starFrom.d * this._hemisphere;
@@ -858,7 +855,7 @@ class SkyMap extends HTMLElement {
 		}
 	}
 
-	findGHAAries(wBodies) {
+	static findGHAAries(wBodies) {
 		let ghaA = undefined;
 		for (let i=0; i<wBodies.length; i++) {
 			if (wBodies[i].name === "aries") {
@@ -876,10 +873,10 @@ class SkyMap extends HTMLElement {
 	 * Jupiter \u2643
 	 * Saturn \u2644
 	 */
-	findSymbol(bodyName) {
-		switch (bodyName) {
+	static findSymbol(bodyName) {
+		switch (bodyName.toUpperCase()) {
 			case 'ARIES':
-				return '\u03b3'
+				return '\u03b3';
 			case 'SUN':
 				return '\u2609';
 			case 'MOON':
@@ -900,8 +897,8 @@ class SkyMap extends HTMLElement {
 	drawWanderingBodies(context, radius) {
 		if (this._wanderingBodiesData !== undefined) {
 			let self = this;
-			let ghaAries = this.findGHAAries(this._wanderingBodiesData);
-			this._wanderingBodiesData.forEach(function(body, idx) {
+			let ghaAries = SkyMap.findGHAAries(this._wanderingBodiesData);
+			this._wanderingBodiesData.forEach(function(body) {
 				let dec = body.decl * self._hemisphere;
 				let lng = body.gha - ghaAries;
 				lng += (/*this._hemisphere * */self.LHAAries);
@@ -920,12 +917,11 @@ class SkyMap extends HTMLElement {
 
 				context.font = "bold " + Math.round(24) + "px Arial"; // Like "bold 15px Arial"
 				context.fillStyle = 'red';
-				let str = self.findSymbol(body.name.toUpperCase());
+				let str = SkyMap.findSymbol(body.name);
 				let len = context.measureText(str).width;
 				context.fillText(str, (self.canvas.width / 2) - p.x - (len / 2), (self.canvas.height / 2) + p.y - 4);
 
 				context.closePath();
-
 			});
 		} else {
 			console.log("No wandering bodies data available");
