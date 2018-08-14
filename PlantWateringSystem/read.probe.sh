@@ -69,6 +69,7 @@ then
 	 echo -n "Hit return... "
 	 read a
 fi
+JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 #
 java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
 #

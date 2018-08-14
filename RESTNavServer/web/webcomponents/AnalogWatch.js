@@ -600,7 +600,7 @@ class AnalogWatch extends HTMLElement {
 			context.lineTo(x, y);
 
 			context.closePath();
-			// context.fillStyle = this.watchColorConfig.handColor;
+			// context.fillStyle = this.directionColorConfig.handColor;
 			// context.fill();
 			context.lineWidth = 2;
 			context.strokeStyle = this.watchColorConfig.handOutlineColor;

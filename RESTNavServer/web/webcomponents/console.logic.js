@@ -167,6 +167,11 @@ function setStarNames(id, cb) {
 	document.getElementById(id).repaint();
 }
 
+function setConstNames(id, cb) {
+	document.getElementById(id).constellationNames = cb.checked;
+	document.getElementById(id).repaint();
+}
+
 function setVisibleSky(id, cb) {
 	document.getElementById(id).visibleSky = cb.checked;
 	document.getElementById(id).repaint();
@@ -436,37 +441,50 @@ window.onload = function() {
 
 	callAfter('world-map-01'); // Adding Satellites plot.
 
-	// Query String prms, border, bg, style, like ?border=n&bg=black&style=orange
+	// Query String prms, border, bg, style, like ?border=n&bg=black&style=orange&boat-data=n
 	let style = getQSPrm('style');
 	let border = getQSPrm('border');
 	let bg = getQSPrm('bg');
+	let boatData = getQSPrm('boat-data');
 
-	if (style === 'day' || style === 'night' || style === 'cyan' || style === 'orange' || style === 'yellow' || style === 'flat-gray' || style === 'flat-black') {
-		setTheme(THEMES[style]);
-		// Set selected value
-		document.getElementById("widgets-style").value = THEMES[style];
-	} else {
-		console.log("Unknown style", style);
-	}
-
-	if (bg === 'black' || bg === 'dark' || bg === 'light' || bg === 'white') {
-		changeBG(bg.toUpperCase());
-		document.getElementById(bg).checked = true;
-	} else {
-		console.log("Unknown background", bg);
-	}
-
-	if (border === 'y' || border === 'n') {
-		DISPLAYS.forEach(function(id, idx) {
-			document.getElementById(id).withBorder = (border === 'y');
-		});
-		// Check/uncheck boxes
-		let cbs = document.getElementsByClassName('border-cb');
-		for (i=0; i<cbs.length; i++) {
-			cbs[i].checked = (border === 'y');
+	if (style !== undefined) {
+		if (style === 'day' || style === 'night' || style === 'cyan' || style === 'orange' || style === 'yellow' || style === 'flat-gray' || style === 'flat-black') {
+			setTheme(THEMES[style]);
+			// Set selected value
+			document.getElementById("widgets-style").value = THEMES[style];
+		} else {
+			console.log("Unknown style", style);
 		}
-	} else {
-		console.log("Unknown border", border);
+	}
+
+	if (bg !== undefined) {
+		if (bg === 'black' || bg === 'dark' || bg === 'light' || bg === 'white') {
+			changeBG(bg.toUpperCase());
+			document.getElementById(bg).checked = true;
+		} else {
+			console.log("Unknown background", bg);
+		}
+	}
+
+	if (border !== undefined) {
+		if (border === 'y' || border === 'n') {
+			DISPLAYS.forEach(function (id, idx) {
+				document.getElementById(id).withBorder = (border === 'y');
+			});
+			// Check/uncheck boxes
+			let cbs = document.getElementsByClassName('border-cb');
+			for (i = 0; i < cbs.length; i++) {
+				cbs[i].checked = (border === 'y');
+			}
+		} else {
+			console.log("Unknown border", border);
+		}
+	}
+
+	if (boatData !== undefined) {
+		if (boatData === 'y' || boatData === 'n') {
+			expandCollapseBoatData();
+		}
 	}
 
 	/**

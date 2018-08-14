@@ -493,6 +493,20 @@ public class STH10 {
 			httpServer = new RequestManager().startHttpServer(restServerPort);
 		}
 
+		// Open/Close valve, for test
+		if ("true".equals(System.getProperty("valve.test"))) {
+			System.out.println("Testing the valve");
+			synchronized (relay) {
+				relay.on();
+				try {
+					Thread.sleep(1_000L);
+				} catch (InterruptedException ie) {
+				}
+				relay.off();
+			}
+			System.out.println("Valve test completed.");
+		}
+
 		/*
 		 * This is the main loop
 		 */

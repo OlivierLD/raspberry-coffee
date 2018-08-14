@@ -40,7 +40,20 @@ After starting the `node` server as mentioned above, you can also reach
 - Marquee. &#9989; Done
 - Evolution Displays. TODO
 - Generic Graphs. TODO
-- Sky Map and Star Finder (along with some `REST` service(s)). &#10140; WIP, coming good.
+- Sky Map and Star Finder (along with some `REST` service(s)). &#9989; Done
+
+#### Screenshots, as they appear from the Demo page
+World Map it is `globe` configuration:
+
+![World Map](./images/worldmap.png)
+
+SkyMap in its `Star Finder` configuration:
+
+![Star Finder](./images/starfinder.png)
+
+SkyMap in its `Sky Map` configuration:
+
+![Sky Map](./images/skymap.png)
 
 #### Maybe next?
 - Satellite plotter? &#10140; See the `doAfter` callback on the Globe examples.
@@ -75,7 +88,7 @@ Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released
 - [Analog Display](https://codepen.io/OlivierLD/pen/QQBYEw).
 - [Compass Rose](https://codepen.io/OlivierLD/pen/aqaLQq).
 - [World Map](https://codepen.io/OlivierLD/pen/xYQbmb).
-- [Calendar Display](https://codepen.io/OlivierLD/pen/PBxqLb).
+- [Calendar Display](https://codepen.io/OlivierLD/pen/EpOJEW).
 
 #### Firefox 58
 If you are having trouble running the WebComponents in Firefox 58, see

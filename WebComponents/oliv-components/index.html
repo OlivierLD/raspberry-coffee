@@ -596,6 +596,11 @@
 			document.getElementById(id).repaint();
 		}
 
+		function setConstNames(id, cb) {
+			document.getElementById(id).constellationNames = cb.checked;
+			document.getElementById(id).repaint();
+		}
+
 		function setVisibleSky(id, cb) {
 			document.getElementById(id).visibleSky = cb.checked;
 			document.getElementById(id).repaint();
@@ -2066,7 +2071,8 @@
 						<option value="N" selected>North</option>
 						<option value="S">South</option>
 					</select>
-					<input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>With Star Names.
+					<input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>Star Names.
+					<input type="checkbox" onchange="setConstNames('sky-map-01', this);">Const Names.
 					<input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.
 					<input type="checkbox" onchange="setSkyGrid('sky-map-01', this);" checked>Sky grid.
 					<input type="checkbox" onchange="setWanderingBodiesSM('sky-map-01', this);">Wandering bodies.

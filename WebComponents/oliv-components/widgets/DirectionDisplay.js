@@ -95,12 +95,12 @@ class DirectionDisplay extends HTMLElement {
 		this._height      = 150;
 		this._major_ticks =  45;
 		this._minor_ticks =   5;
-		this._with_second_hand   = true;
+		this._with_rose   = true;
 		this._with_border = true;
 		this._label       = undefined;
 
 		this._previousClassName = "";
-		this.watchColorConfig = defaultDirectionColorConfig; // Init
+		this.directionColorConfig = defaultDirectionColorConfig; // Init
 
 		if (directionVerbose) {
 			console.log("Data in Constructor:", this._value);
@@ -144,7 +144,7 @@ class DirectionDisplay extends HTMLElement {
 				this._minor_ticks = parseFloat(newVal);
 				break;
 			case "with-rose":
-				this._with_second_hand = ("true" === newVal);
+				this._with_rose = ("true" === newVal);
 				break;
 			case "with-border":
 				this._with_border = ("true" === newVal);
@@ -213,7 +213,7 @@ class DirectionDisplay extends HTMLElement {
 		return this._major_ticks;
 	}
 	get withRose() {
-		return this._with_second_hand;
+		return this._with_rose;
 	}
 	get withBorder() {
 		return this._with_border;
@@ -236,13 +236,13 @@ class DirectionDisplay extends HTMLElement {
 		for (let cls=0; cls<classes.length; cls++) {
 			let className = classes[cls];
 			for (let s=0; s<document.styleSheets.length; s++) {
-	//		console.log("Walking though ", document.styleSheets[s]);
+				//		console.log("Walking though ", document.styleSheets[s]);
 				try {
 					for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 						let selector = document.styleSheets[s].cssRules[r].selectorText;
-		//			console.log(">>> ", selector);
+						//			console.log(">>> ", selector);
 						if (selector !== undefined && (selector === '.' + className || (selector.indexOf('.' + className) > -1 && selector.indexOf(DIRECTION_TAG_NAME) > -1))) { // Cases like "tag-name .className"
-		//				console.log("  >>> Found it! [%s]", selector);
+							//				console.log("  >>> Found it! [%s]", selector);
 							let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 							let cssTextElems = cssText.split(";");
 							cssTextElems.forEach(function (elem) {
@@ -322,7 +322,7 @@ class DirectionDisplay extends HTMLElement {
 						}
 					}
 				} catch (err) {
-				  // Absorb
+					// Absorb
 				}
 			}
 		}
@@ -337,7 +337,7 @@ class DirectionDisplay extends HTMLElement {
 			// Reload
 			//	console.log("Reloading CSS");
 			try {
-				this.watchColorConfig = this.getColorConfig(currentStyle);
+				this.directionColorConfig = this.getColorConfig(currentStyle);
 			} catch (err) {
 				// Absorb?
 				console.log(err);
@@ -345,7 +345,7 @@ class DirectionDisplay extends HTMLElement {
 			this._previousClassName = currentStyle;
 		}
 
-		let digitColor = this.watchColorConfig.digitColor;
+		let digitColor = this.directionColorConfig.digitColor;
 
 		let context = this.canvas.getContext('2d');
 		context.clearRect(0, 0, this.width, this.height);
@@ -357,7 +357,7 @@ class DirectionDisplay extends HTMLElement {
 		this.canvas.height = this.height;
 
 		// Cleanup
-		context.fillStyle = this.watchColorConfig.bgColor;
+		context.fillStyle = this.directionColorConfig.bgColor;
 		context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
 		context.beginPath();
@@ -366,20 +366,20 @@ class DirectionDisplay extends HTMLElement {
 			context.arc(this.canvas.width / 2, radius + 10, radius, 0, 2 * Math.PI, false);
 			context.lineWidth = 5;
 		}
-		if (this.watchColorConfig.withGradient) {
+		if (this.directionColorConfig.withGradient) {
 			let grd = context.createLinearGradient(0, 5, 0, radius);
-			grd.addColorStop(0, this.watchColorConfig.displayBackgroundGradient.from);// 0  Beginning
-			grd.addColorStop(1, this.watchColorConfig.displayBackgroundGradient.to);  // 1  End
+			grd.addColorStop(0, this.directionColorConfig.displayBackgroundGradient.from);// 0  Beginning
+			grd.addColorStop(1, this.directionColorConfig.displayBackgroundGradient.to);  // 1  End
 			context.fillStyle = grd;
 		} else {
-			context.fillStyle = this.watchColorConfig.displayBackgroundGradient.to;
+			context.fillStyle = this.directionColorConfig.displayBackgroundGradient.to;
 		}
 
-		if (this.watchColorConfig.withDisplayShadow) {
+		if (this.directionColorConfig.withDisplayShadow) {
 			context.shadowOffsetX = 3;
 			context.shadowOffsetY = 3;
 			context.shadowBlur = 3;
-			context.shadowColor = this.watchColorConfig.shadowColor;
+			context.shadowColor = this.directionColorConfig.shadowColor;
 		} else {
 			context.shadowOffsetX = 0;
 			context.shadowOffsetY = 0;
@@ -388,7 +388,7 @@ class DirectionDisplay extends HTMLElement {
 		}
 		context.lineJoin = "round";
 		context.fill();
-		context.strokeStyle = this.watchColorConfig.outlineColor;
+		context.strokeStyle = this.directionColorConfig.outlineColor;
 		context.stroke();
 		context.closePath();
 
@@ -403,7 +403,7 @@ class DirectionDisplay extends HTMLElement {
 			context.lineTo(xTo, yTo);
 		}
 		context.lineWidth = 3;
-		context.strokeStyle = this.watchColorConfig.majorTickColor;
+		context.strokeStyle = this.directionColorConfig.majorTickColor;
 		context.stroke();
 		context.closePath();
 
@@ -419,7 +419,7 @@ class DirectionDisplay extends HTMLElement {
 				context.lineTo(xTo, yTo);
 			}
 			context.lineWidth = 1;
-			context.strokeStyle = this.watchColorConfig.minorTickColor;
+			context.strokeStyle = this.directionColorConfig.minorTickColor;
 			context.stroke();
 			context.closePath();
 		}
@@ -485,7 +485,7 @@ class DirectionDisplay extends HTMLElement {
 			this.drawSpike(radius, outsideRadius * 0.9, insideRadius, SW, context);
 			this.drawSpike(radius, outsideRadius * 0.9, insideRadius, NW, context);
 
-			context.strokeStyle = this.watchColorConfig.displayLineColor;
+			context.strokeStyle = this.directionColorConfig.displayLineColor;
 			context.stroke();
 			context.closePath();
 		}
@@ -503,7 +503,7 @@ class DirectionDisplay extends HTMLElement {
 			let len = context.measureText(str).width;
 			context.fillText(str, -len / 2, (-(radius * .8) + 10));
 			context.lineWidth = 1;
-			context.strokeStyle = this.watchColorConfig.valueOutlineColor;
+			context.strokeStyle = this.directionColorConfig.valueOutlineColor;
 			context.strokeText(str, -len / 2, (-(radius * .8) + 10)); // Outlined
 			context.restore();
 		}
@@ -514,20 +514,20 @@ class DirectionDisplay extends HTMLElement {
 		while (dv > 360) dv -= 360;
 		while (dv < 0) dv += 360;
 		try {
-			text = dv.toFixed(this.watchColorConfig.valueNbDecimal);
+			text = dv.toFixed(this.directionColorConfig.valueNbDecimal);
 		} catch (err) {
 			console.log(err);
 		}
 		let len = 0;
-		context.font = "bold " + Math.round(scale * 40) + "px " + this.watchColorConfig.font; // "bold 40px Arial"
+		context.font = "bold " + Math.round(scale * 40) + "px " + this.directionColorConfig.font; // "bold 40px Arial"
 		let metrics = context.measureText(text);
 		len = metrics.width;
 
 		context.beginPath();
-		context.fillStyle = this.watchColorConfig.valueColor;
+		context.fillStyle = this.directionColorConfig.valueColor;
 		context.fillText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10));
 		context.lineWidth = 1;
-		context.strokeStyle = this.watchColorConfig.valueOutlineColor;
+		context.strokeStyle = this.directionColorConfig.valueOutlineColor;
 		context.strokeText(text, (this.canvas.width / 2) - (len / 2), ((radius * .75) + 10)); // Outlined
 		context.closePath();
 
@@ -536,23 +536,23 @@ class DirectionDisplay extends HTMLElement {
 			let fontSize = 20;
 			let text = this.label;
 			let len = 0;
-			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.watchColorConfig.font; // "bold 40px Arial"
+			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.directionColorConfig.font; // "bold 40px Arial"
 			let metrics = context.measureText(text);
 			len = metrics.width;
 
 			context.beginPath();
-			context.fillStyle = this.watchColorConfig.labelFillColor;
+			context.fillStyle = this.directionColorConfig.labelFillColor;
 			context.fillText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1)));
 			context.lineWidth = 1;
-			context.strokeStyle = this.watchColorConfig.valueOutlineColor;
+			context.strokeStyle = this.directionColorConfig.valueOutlineColor;
 			context.strokeText(text, (this.canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1))); // Outlined
 			context.closePath();
 		}
 
 		// Hand
 		context.beginPath();
-		if (this.watchColorConfig.withHandShadow) {
-			context.shadowColor = this.watchColorConfig.shadowColor;
+		if (this.directionColorConfig.withHandShadow) {
+			context.shadowColor = this.directionColorConfig.shadowColor;
 			context.shadowOffsetX = 3;
 			context.shadowOffsetY = 3;
 			context.shadowBlur = 3;
@@ -573,18 +573,18 @@ class DirectionDisplay extends HTMLElement {
 		context.lineTo(x, y);
 
 		context.closePath();
-		context.fillStyle = this.watchColorConfig.handColor;
+		context.fillStyle = this.directionColorConfig.handColor;
 		context.fill();
 		context.lineWidth = 1;
-		context.strokeStyle = this.watchColorConfig.handOutlineColor;
+		context.strokeStyle = this.directionColorConfig.handOutlineColor;
 		context.stroke();
 		// Knob
 		context.beginPath();
 		context.arc((this.canvas.width / 2), (radius + 10), 7, 0, 2 * Math.PI, false);
 		context.closePath();
-		context.fillStyle = this.watchColorConfig.knobColor;
+		context.fillStyle = this.directionColorConfig.knobColor;
 		context.fill();
-		context.strokeStyle = this.watchColorConfig.knobOutlineColor;
+		context.strokeStyle = this.directionColorConfig.knobOutlineColor;
 		context.stroke();
 	}
 
