@@ -40,7 +40,7 @@ After starting the `node` server as mentioned above, you can also reach
 - Marquee. &#9989; Done
 - Evolution Displays. TODO
 - Generic Graphs. TODO
-- Sky Map and Star Finder (along with some `REST` service(s)). &#10140; WIP, coming good.
+- Sky Map and Star Finder (along with some `REST` service(s)). &#9989; Done
 
 #### Maybe next?
 - Satellite plotter? &#10140; See the `doAfter` callback on the Globe examples.

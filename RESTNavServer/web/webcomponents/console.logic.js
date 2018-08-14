@@ -167,6 +167,11 @@ function setStarNames(id, cb) {
 	document.getElementById(id).repaint();
 }
 
+function setConstNames(id, cb) {
+	document.getElementById(id).constellationNames = cb.checked;
+	document.getElementById(id).repaint();
+}
+
 function setVisibleSky(id, cb) {
 	document.getElementById(id).visibleSky = cb.checked;
 	document.getElementById(id).repaint();

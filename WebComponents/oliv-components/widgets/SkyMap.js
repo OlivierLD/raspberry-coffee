@@ -749,15 +749,6 @@ class SkyMap extends HTMLElement {
 		}
 	}
 
-	plotBody(context, name, decl, ra) { // TODO Image for wandering bodies
-		let lng = ra;
-		lng += this.LHAAries;
-		if (lng > 180) {
-			lng -= 360;
-		}
-		let D = decl * this._hemisphere;
-	}
-
 	findStar(starArray, starName) {
 		let star = {};
 		for (let i=0; i<starArray.length; i++) {
@@ -805,7 +796,34 @@ class SkyMap extends HTMLElement {
 					}
 				}
 				if (this._constellationNames) {
-					// TODO
+					// Calculate the center of the constellation
+					let minD = undefined, maxD = undefined, minRA = undefined, maxRA = undefined;
+					for (let s=0; s<constellations[i].stars.length; s++) {
+						if (s === 0) {
+							minD = constellations[i].stars[s].d;
+							maxD = constellations[i].stars[s].d;
+							minRA = constellations[i].stars[s].ra;
+							maxRA = constellations[i].stars[s].ra;
+						} else {
+							minD = Math.min(constellations[i].stars[s].d, minD);
+							maxD = Math.max(constellations[i].stars[s].d, maxD);
+							minRA = Math.min(constellations[i].stars[s].ra, minRA);
+							maxRA = Math.max(constellations[i].stars[s].ra, maxRA);
+						}
+					}
+					let centerDec = this._hemisphere * (maxD + minD) / 2;
+					let centerRA = (maxRA + minRA) / 2;
+					let lng = (360 - (centerRA * 360 / 24));
+					lng += (/*this._hemisphere * */this.LHAAries);
+					if (lng > 180) {
+						lng -= 360;
+					}
+					let p = this.plotCoordinates(centerDec, lng, radius);
+					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
+					context.fillStyle = 'blue';
+					let str = constellations[i].name;
+					let len = context.measureText(str).width;
+					context.fillText(str, (this.canvas.width / 2) - p.x - (len / 2), (this.canvas.height / 2) + p.y - 2);
 				}
 			}
 
