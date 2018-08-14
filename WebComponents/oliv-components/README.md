@@ -42,6 +42,19 @@ After starting the `node` server as mentioned above, you can also reach
 - Generic Graphs. TODO
 - Sky Map and Star Finder (along with some `REST` service(s)). &#9989; Done
 
+#### Screenshots, as they appear from the Demo page
+World Map it is `globe` configuration:
+
+![World Map](./images/worldmap.png)
+
+SkyMap in its `Star Finder` configuration:
+
+![Star Finder](./images/starfinder.png)
+
+SkyMap in its `Sky Map` configuration:
+
+![Sky Map](./images/skymap.png)
+
 #### Maybe next?
 - Satellite plotter? &#10140; See the `doAfter` callback on the Globe examples.
 - Tide Graph?
