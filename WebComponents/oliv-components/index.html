@@ -601,6 +601,11 @@
 			document.getElementById(id).repaint();
 		}
 
+		function setSkyGrid(id, cb) {
+			document.getElementById(id).skyGrid = cb.checked;
+			document.getElementById(id).repaint();
+		}
+
 		function setWanderingBodiesSM(id, cb) {
 			document.getElementById(id).wanderingBodies = cb.checked;
 			if (cb.checked === true) {
@@ -2063,6 +2068,7 @@
 					</select>
 					<input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>With Star Names.
 					<input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.
+					<input type="checkbox" onchange="setSkyGrid('sky-map-01', this);" checked>Sky grid.
 					<input type="checkbox" onchange="setWanderingBodiesSM('sky-map-01', this);">Wandering bodies.
 				</td>
 			</tr>

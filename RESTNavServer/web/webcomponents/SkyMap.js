@@ -141,6 +141,7 @@ class SkyMap extends HTMLElement {
 			"constellation-names",    // boolean. Default false
 			"constellations",         // boolean. Default true
 			"visible-sky",            // boolean. Default true
+			"sky-grid",               // boolean. Default true
 			"wandering-bodies",       // boolean. Default false
 			"latitude",               // Number [0..90], default 45, no sign! -> see hemisphere
 			"lha-aries"               // Number, Default 0.
@@ -187,6 +188,7 @@ class SkyMap extends HTMLElement {
 		this._constellationNames = false;
 		this._withConstellations = true;
 		this._withVisibleSky = true;
+		this._withSkyGrid = true;
 		this._withWanderingBodies = false;
 		this._wanderingBodiesData = undefined;
 	}
@@ -240,6 +242,9 @@ class SkyMap extends HTMLElement {
 			case "visible-sky":
 				this._withVisibleSky = (newVal === 'true');
 				break;
+			case "sky-grid":
+				this._withSkyGrid = (newVal === 'true');
+				break;
 			case "wandering-bodies":
 				this._withWanderingBodies = (newVal === 'true');
 				break;
@@ -289,6 +294,9 @@ class SkyMap extends HTMLElement {
 	set visibleSky(val) {
 		this._withVisibleSky = val;
 	}
+	set skyGrid(val) {
+		this._withSkyGrid = val;
+	}
 	set wanderingBodies(val) {
 		this._withWanderingBodies = val;
 	}
@@ -332,6 +340,9 @@ class SkyMap extends HTMLElement {
 	}
 	get visibleSky() {
 		return this._withVisibleSky;
+	}
+	get skyGrid() {
+		return this._withSkyGrid;
 	}
 	get wanderingBodies() {
 		return this._withWanderingBodies;
@@ -648,6 +659,38 @@ class SkyMap extends HTMLElement {
 			} else {
 				context.lineTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
 			}
+			if (z % 90 === 0) { // Cardinal points
+				context.save();
+				context.font = "bold 12px Arial"; // Like "bold 15px Arial"
+				context.fillStyle = 'red';
+				let str = "";
+				let len = 0;
+				switch (z) {
+					case 0:
+						str = (this._hemisphere === NORTHERN_HEMISPHERE ? "N" : "S");
+						len = context.measureText(str).width;
+						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2), (this.canvas.height / 2) + point.y + (this._type === STARFINDER_TYPE ? -2 : 12));
+						break;
+					case 90:
+						str = "E";
+						len = context.measureText(str).width;
+						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2) + (this._hemisphere === NORTHERN_HEMISPHERE ? 8 : -12), (this.canvas.height / 2) + point.y + 6);
+						break;
+					case 180:
+						str = (this._hemisphere === NORTHERN_HEMISPHERE ? "S" : "N");
+						len = context.measureText(str).width;
+						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2), (this.canvas.height / 2) + point.y + (this._type === STARFINDER_TYPE ? 12 : -2));
+						break;
+					case 270:
+						str = "W";
+						len = context.measureText(str).width;
+						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2) + (this._hemisphere === NORTHERN_HEMISPHERE ? -12 : 8), (this.canvas.height / 2) + point.y + 6);
+						break;
+					default:
+						break;
+				}
+				context.restore();
+			}
 		}
 		context.closePath();
 		context.stroke();
@@ -655,7 +698,8 @@ class SkyMap extends HTMLElement {
 
 		// Zenith
 		context.beginPath();
-		let zenith = Math.round(((radius / 2)) * ((90 - this.observerLatitude * this._hemisphere) / 90));
+		let zenith = Math.round(((radius / 2)) * ((90 - this.observerLatitude) / 90));
+		console.log("Zenith:" + zenith + ", ObsLat:" + this.observerLatitude);
 		if (this._type === SKYMAP_TYPE) {
 			zenith *= -1;
 		}
@@ -665,68 +709,37 @@ class SkyMap extends HTMLElement {
 		context.fill();
 		context.closePath();
 
-		// Altitudes
-		context.strokeStyle = 'blue';
-		context.lineWidth = 0.5;
-		for (let dz = 10; dz <= 90; dz += 10) {
-			context.beginPath();
-			for (let z = 0; z <= 360; z += 0.25) {
-				let deadReck = Utilities.deadReckoning({lat: this.observerLatitude, lng: 0}, dz * 60, -z);
-				let point = this.plotCoordinates(deadReck.lat, deadReck.lng, radius);
-				if (z === 0) {
-					context.moveTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
-				} else {
-					context.lineTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
-				}
-				if (dz === 90 && z % 90 === 0) { // Cardinal points
-					context.save();
-					context.font = "bold 12px Arial"; // Like "bold 15px Arial"
-					context.fillStyle = 'red';
-					let str = "";
-					let len = 0;
-					switch (z) {
-						case 0:
-							str = (this._hemisphere === NORTHERN_HEMISPHERE ? "N" : "S");
-							len = context.measureText(str).width;
-							context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2), (this.canvas.height / 2) + point.y + (this._type === STARFINDER_TYPE ? -2 : 12));
-							break;
-						case 90:
-							str = "E";
-							len = context.measureText(str).width;
-							context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2) + (this._hemisphere === NORTHERN_HEMISPHERE ? 8 : -12), (this.canvas.height / 2) + point.y + 6);
-							break;
-						case 180:
-							str = (this._hemisphere === NORTHERN_HEMISPHERE ? "S" : "N");
-							len = context.measureText(str).width;
-							context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2), (this.canvas.height / 2) + point.y + (this._type === STARFINDER_TYPE ? 12 : -2));
-							break;
-						case 270:
-							str = "W";
-							len = context.measureText(str).width;
-							context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2) + (this._hemisphere === NORTHERN_HEMISPHERE ? -12 : 8), (this.canvas.height / 2) + point.y + 6);
-							break;
-						default:
-							break;
+		if (this._withSkyGrid) {
+			// Altitudes
+			context.strokeStyle = 'blue';
+			context.lineWidth = 0.5;
+			for (let dz = 10; dz <= 90; dz += 10) {
+				context.beginPath();
+				for (let z = 0; z <= 360; z += 0.25) {
+					let deadReck = Utilities.deadReckoning({lat: this.observerLatitude, lng: 0}, dz * 60, -z);
+					let point = this.plotCoordinates(deadReck.lat, deadReck.lng, radius);
+					if (z === 0) {
+						context.moveTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
+					} else {
+						context.lineTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
 					}
-					context.restore();
 				}
+				context.closePath();
+				context.stroke();
 			}
-			context.closePath();
-			context.stroke();
 		}
-
 		// Azimuths in visible sky
-		for (let z=0; z<360; z+=5) {
+		for (let z=0; z<360; z+=(this._withSkyGrid ? 5 : 90)) {
 			if (z % 90 === 0) {
 				context.lineWidth = 2;
 			} else {
 				context.lineWidth = 0.5;
 			}
 			context.beginPath();
-			for (let dz=10; dz<=90; dz++) {
+			for (let dz = (this._withSkyGrid ? 10 : 0); dz <= 90; dz++) {
 				let deadReck = Utilities.deadReckoning({lat: this.observerLatitude, lng: 0}, dz * 60, z);
 				let point = this.plotCoordinates(deadReck.lat, deadReck.lng, radius);
-				if (dz === 10) {
+				if (dz === (this._withSkyGrid ? 10 : 0)) {
 					context.moveTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
 				} else {
 					context.lineTo((this.canvas.width / 2) - point.x, (this.canvas.height / 2) + point.y);
@@ -816,7 +829,7 @@ class SkyMap extends HTMLElement {
 				context.lineWidth = 0.5;
 				context.stroke();
 
-				if (constellations[i].stars[s].name.charAt(0) === constellations[i].stars[s].name.charAt(0).toUpperCase() && this._starNames) { // Star name
+				if (constellations[i].stars[s].name.charAt(0) === constellations[i].stars[s].name.charAt(0).toUpperCase() && this._starNames) { // Star name, starts with uppercase
 					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 					context.fillStyle = 'blue';
 					let str = constellations[i].stars[s].name;
@@ -838,6 +851,35 @@ class SkyMap extends HTMLElement {
 		return ghaA;
 	}
 
+	/*
+	 * Sun \u2609
+	 * Moon \u263D, \u263E
+	 * Venus \u2640
+	 * Mars \u2642
+	 * Jupiter \u2643
+	 * Saturn \u2644
+	 */
+	findSymbol(bodyName) {
+		switch (bodyName) {
+			case 'ARIES':
+				return '\u03b3'
+			case 'SUN':
+				return '\u2609';
+			case 'MOON':
+				return '\u263D';
+			case 'VENUS':
+				return '\u2640';
+			case 'MARS':
+				return '\u2642';
+			case 'JUPITER':
+				return '\u2643';
+			case 'SATURN':
+				return '\u2644';
+			default:
+				return bodyName;
+		}
+	}
+
 	drawWanderingBodies(context, radius) {
 		if (this._wanderingBodiesData !== undefined) {
 			let self = this;
@@ -851,7 +893,7 @@ class SkyMap extends HTMLElement {
 				}
 				let p = self.plotCoordinates(dec, lng, radius);
 				context.beginPath();
-				context.fillStyle = 'pink';
+				context.fillStyle = 'cyan';
 				const starRadius = 4;
 				context.arc((self.canvas.width / 2) - p.x, (self.canvas.height / 2) + p.y, starRadius, 0, 2 * Math.PI, false);
 				context.fill();
@@ -859,11 +901,11 @@ class SkyMap extends HTMLElement {
 				context.lineWidth = 0.5;
 				context.stroke();
 
-				context.font = "bold " + Math.round(12) + "px Arial"; // Like "bold 15px Arial"
+				context.font = "bold " + Math.round(24) + "px Arial"; // Like "bold 15px Arial"
 				context.fillStyle = 'red';
-				let str = body.name.toUpperCase();
+				let str = self.findSymbol(body.name.toUpperCase());
 				let len = context.measureText(str).width;
-				context.fillText(str, (self.canvas.width / 2) - p.x - (len / 2), (self.canvas.height / 2) + p.y - 2);
+				context.fillText(str, (self.canvas.width / 2) - p.x - (len / 2), (self.canvas.height / 2) + p.y - 4);
 
 				context.closePath();
 
@@ -879,7 +921,6 @@ class SkyMap extends HTMLElement {
 		let yOffset = Math.round(r * Math.cos(Utilities.toRadians(lng)));
 		if (this._type === SKYMAP_TYPE) {
 			yOffset *= -1;
-			//	xOffset *= -1;
 		}
 		return {x: xOffset, y: yOffset};
 	}
