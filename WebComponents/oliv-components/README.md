@@ -61,9 +61,9 @@ After starting the `node` server as mentioned above, you can also reach
 
 #### TODO
 - JSDoc
-- Local `npm` registry?
+- Local `npm` registry? ... to avoid having to copy code across modules.
 
-#### CodePen (might not be 100% in sync... But close)
+#### CodePen (might not be 100% in sync... But close'ish)
 The point of truth remains this repo.
 
 Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released.

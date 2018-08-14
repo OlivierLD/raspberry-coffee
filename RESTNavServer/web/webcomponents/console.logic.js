@@ -172,6 +172,10 @@ function setVisibleSky(id, cb) {
 	document.getElementById(id).repaint();
 }
 
+function setSkyGrid(id, cb) {
+	document.getElementById(id).skyGrid = cb.checked;
+	document.getElementById(id).repaint();
+}
 
 // Depends on the user position... Would not turn with the globe.
 let gpsSatelliteData = undefined;
