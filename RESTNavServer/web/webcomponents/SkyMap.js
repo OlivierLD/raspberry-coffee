@@ -2,8 +2,6 @@ const skyMapVerbose = false;
 const SKY_MAP_TAG_NAME = 'sky-map';
 
 /**
- * WIP!!!
- *
  * Quick hints for the Sky Map:
  * - Put it OVER your head (look at it from underneath).
  * - Align date and SOLAR time of the day to see the visible sky.
@@ -68,11 +66,15 @@ import constellations from "./stars/constellations.js";
 
 import * as Utilities from "./utilities/Utilities.js";
 
-const NORTHERN_HEMISPHERE = 1;
-const SOUTHERN_HEMISPHERE = -1;
+const Hemispheres = {
+	NORTHERN_HEMISPHERE: 1,
+	SOUTHERN_HEMISPHERE: -1
+};
 
-const STARFINDER_TYPE = 'STARFINDER';
-const SKYMAP_TYPE = 'SKYMAP';
+const MapType = {
+	STARFINDER_TYPE: 'STARFINDER',
+	SKYMAP_TYPE: 'SKYMAP'
+};
 
 const Month = {
 	JANUARY: {
@@ -175,11 +177,11 @@ class SkyMap extends HTMLElement {
 		this.minorTicks = 1; // prm ?
 
 		this.LHAAries = 0;
-		this._hemisphere = NORTHERN_HEMISPHERE;
+		this._hemisphere = Hemispheres.NORTHERN_HEMISPHERE;
 
 		this.observerLatitude = 45;
 
-		this._type = STARFINDER_TYPE; // SKYMAP_TYPE;
+		this._type = MapType.STARFINDER_TYPE; // SKYMAP_TYPE;
 		this._starNames = true;
 		this._withStars = true;
 		this._withStars = true;
@@ -220,7 +222,7 @@ class SkyMap extends HTMLElement {
 				this._height = parseInt(newVal);
 				break;
 			case "hemisphere":
-				this._hemisphere = (newVal === 'S' ? SOUTHERN_HEMISPHERE : NORTHERN_HEMISPHERE);
+				this._hemisphere = (newVal === 'S' ? Hemispheres.SOUTHERN_HEMISPHERE : Hemispheres.NORTHERN_HEMISPHERE);
 				break;
 			case "type":
 				this._type = newVal;
@@ -272,7 +274,7 @@ class SkyMap extends HTMLElement {
 		this.setAttribute("height", val);
 	}
 	set hemisphere(val) {
-		this._hemisphere = (val === 'S' ? SOUTHERN_HEMISPHERE : NORTHERN_HEMISPHERE);
+		this._hemisphere = (val === 'S' ? Hemispheres.SOUTHERN_HEMISPHERE : Hemispheres.NORTHERN_HEMISPHERE);
 	}
 	set type(val) {
 		this._type = val;
@@ -396,7 +398,7 @@ class SkyMap extends HTMLElement {
 		context.closePath();
 
 
-		if (this._type === STARFINDER_TYPE) { // OPTION StarFinder
+		if (this._type === MapType.STARFINDER_TYPE) { // OPTION StarFinder
 			// Major ticks
 			context.beginPath();
 			for (let i = 0; i < 360; i++) {
@@ -444,7 +446,7 @@ class SkyMap extends HTMLElement {
 					context.rotate(__currentAngle - Math.PI);
 					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 					context.fillStyle = 'black';
-					let lha = (this._hemisphere === NORTHERN_HEMISPHERE || i === 0 ? i : (360 - i));
+					let lha = (this._hemisphere === Hemispheres.NORTHERN_HEMISPHERE || i === 0 ? i : (360 - i));
 					let str = lha.toString() + '°';
 					let len = context.measureText(str).width;
 					context.fillText(str, -len / 2, (-(radius * .98) + 10));
@@ -455,7 +457,7 @@ class SkyMap extends HTMLElement {
 				}
 			}
 			context.closePath();
-		} else if (this._type === SKYMAP_TYPE) {
+		} else if (this._type === MapType.SKYMAP_TYPE) {
 			context.beginPath();
 			// 0 is 21 Sept.
 			for (let day=1; day<=365; day++) {
@@ -549,7 +551,7 @@ class SkyMap extends HTMLElement {
 			context.rotate(__currentAngle - Math.PI);
 			context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 			context.fillStyle = 'blue';
-			let hour = (this._hemisphere === NORTHERN_HEMISPHERE  || i === 0 ? i : (24 - i));
+			let hour = (this._hemisphere === Hemispheres.NORTHERN_HEMISPHERE  || i === 0 ? i : (24 - i));
 			let str = Utilities.lpad(hour.toString(), 2, '0');
 			let len = context.measureText(str).width;
 			context.fillText(str, -len / 2, (-(radius * .88) + 10));
@@ -664,24 +666,24 @@ class SkyMap extends HTMLElement {
 				let len = 0;
 				switch (z) {
 					case 0:
-						str = (this._hemisphere === NORTHERN_HEMISPHERE ? "N" : "S");
+						str = (this._hemisphere === Hemispheres.NORTHERN_HEMISPHERE ? "N" : "S");
 						len = context.measureText(str).width;
-						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2), (this.canvas.height / 2) + point.y + (this._type === STARFINDER_TYPE ? -2 : 12));
+						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2), (this.canvas.height / 2) + point.y + (this._type === MapType.STARFINDER_TYPE ? -2 : 12));
 						break;
 					case 90:
 						str = "E";
 						len = context.measureText(str).width;
-						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2) + (this._hemisphere === NORTHERN_HEMISPHERE ? 8 : -12), (this.canvas.height / 2) + point.y + 6);
+						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2) + (this._hemisphere === Hemispheres.NORTHERN_HEMISPHERE ? 8 : -12), (this.canvas.height / 2) + point.y + 6);
 						break;
 					case 180:
-						str = (this._hemisphere === NORTHERN_HEMISPHERE ? "S" : "N");
+						str = (this._hemisphere === Hemispheres.NORTHERN_HEMISPHERE ? "S" : "N");
 						len = context.measureText(str).width;
-						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2), (this.canvas.height / 2) + point.y + (this._type === STARFINDER_TYPE ? 12 : -2));
+						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2), (this.canvas.height / 2) + point.y + (this._type === MapType.STARFINDER_TYPE ? 12 : -2));
 						break;
 					case 270:
 						str = "W";
 						len = context.measureText(str).width;
-						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2) + (this._hemisphere === NORTHERN_HEMISPHERE ? -12 : 8), (this.canvas.height / 2) + point.y + 6);
+						context.fillText(str, (this.canvas.width / 2) - point.x - (len / 2) + (this._hemisphere === Hemispheres.NORTHERN_HEMISPHERE ? -12 : 8), (this.canvas.height / 2) + point.y + 6);
 						break;
 					default:
 						break;
@@ -696,7 +698,7 @@ class SkyMap extends HTMLElement {
 		// Zenith
 		context.beginPath();
 		let zenith = Math.round(((radius / 2)) * ((90 - this.observerLatitude) / 90));
-		if (this._type === SKYMAP_TYPE) {
+		if (this._type === MapType.SKYMAP_TYPE) {
 			zenith *= -1;
 		}
 		context.fillStyle = 'blue';
@@ -784,7 +786,7 @@ class SkyMap extends HTMLElement {
 						let p2 = this.plotCoordinates(dec, lng, radius);
 						context.strokeStyle = 'black';
 						context.lineWidth = 0.5;
-						// (this._type === STARFINDER_TYPE ? 1 : -1 )
+						// (this._type === MapType.STARFINDER_TYPE ? 1 : -1 )
 						context.moveTo((this.canvas.width / 2) - p1.x, (this.canvas.height / 2) + p1.y);
 						context.lineTo((this.canvas.width / 2) - p2.x, (this.canvas.height / 2) + p2.y);
 
@@ -908,8 +910,8 @@ class SkyMap extends HTMLElement {
 				let p = self.plotCoordinates(dec, lng, radius);
 				context.beginPath();
 				context.fillStyle = 'cyan';
-				const starRadius = 4;
-				context.arc((self.canvas.width / 2) - p.x, (self.canvas.height / 2) + p.y, starRadius, 0, 2 * Math.PI, false);
+				const bodyRadius = 4;
+				context.arc((self.canvas.width / 2) - p.x, (self.canvas.height / 2) + p.y, bodyRadius, 0, 2 * Math.PI, false);
 				context.fill();
 				context.strokeStyle = 'black';
 				context.lineWidth = 0.5;
@@ -932,7 +934,7 @@ class SkyMap extends HTMLElement {
 		let r = (((90 - lat) / 180) * radius);
 		let xOffset = Math.round(r * Math.sin(Utilities.toRadians(lng))) * this._hemisphere;
 		let yOffset = Math.round(r * Math.cos(Utilities.toRadians(lng)));
-		if (this._type === SKYMAP_TYPE) {
+		if (this._type === MapType.SKYMAP_TYPE) {
 			yOffset *= -1;
 		}
 		return {x: xOffset, y: yOffset};
