@@ -591,6 +591,16 @@
 			document.getElementById(id).repaint();
 		}
 
+		function setWithStars(id, cb) {
+			document.getElementById(id).stars = cb.checked;
+			document.getElementById(id).repaint();
+		}
+
+		function setWithConst(id, cb) {
+			document.getElementById(id).constellations = cb.checked;
+			document.getElementById(id).repaint();
+		}
+
 		function setStarNames(id, cb) {
 			document.getElementById(id).starNames = cb.checked;
 			document.getElementById(id).repaint();
@@ -2071,6 +2081,8 @@
 						<option value="N" selected>North</option>
 						<option value="S">South</option>
 					</select>
+					<input type="checkbox" onchange="setWithStars('sky-map-01', this);" checked>Stars.
+					<input type="checkbox" onchange="setWithConst('sky-map-01', this);" checked>Const.
 					<input type="checkbox" onchange="setStarNames('sky-map-01', this);" checked>Star Names.
 					<input type="checkbox" onchange="setConstNames('sky-map-01', this);">Const Names.
 					<input type="checkbox" onchange="setVisibleSky('sky-map-01', this);" checked>Visible sky.

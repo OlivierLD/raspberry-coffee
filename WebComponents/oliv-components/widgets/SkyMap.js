@@ -184,7 +184,6 @@ class SkyMap extends HTMLElement {
 		this._type = MapType.STARFINDER_TYPE; // SKYMAP_TYPE;
 		this._starNames = true;
 		this._withStars = true;
-		this._withStars = true;
 		this._constellationNames = false;
 		this._withConstellations = true;
 		this._withVisibleSky = true;
@@ -593,7 +592,7 @@ class SkyMap extends HTMLElement {
 		}
 		context.restore();
 
-		if (this._withStars) {
+		if (this._withStars || this._withConstellations) {
 			this.drawStars(context, radius * 0.92);
 		}
 
@@ -797,7 +796,7 @@ class SkyMap extends HTMLElement {
 				if (this._constellationNames) {
 					// Calculate the center of the constellation
 					let minD = undefined, maxD = undefined, minRA = undefined, maxRA = undefined;
-					for (let s=0; s<constellations[i].stars.length; s++) {
+					for (let s = 0; s < constellations[i].stars.length; s++) {
 						if (s === 0) {
 							minD = constellations[i].stars[s].d;
 							maxD = constellations[i].stars[s].d;
@@ -827,32 +826,34 @@ class SkyMap extends HTMLElement {
 			}
 
 			// Stars
-			for (let s=0; s<constellations[i].stars.length; s++) {
-				let dec = constellations[i].stars[s].d * this._hemisphere;
-				let ra = constellations[i].stars[s].ra;
-				let lng = (360 - (ra * 360 / 24));
-				lng += (/*this._hemisphere * */this.LHAAries);
-				if (lng > 180) {
-					lng -= 360;
-				}
-				let p = this.plotCoordinates(dec, lng, radius);
-				context.beginPath();
-				context.fillStyle = 'gold';
-				const starRadius = 2;
-				context.arc((this.canvas.width / 2) - p.x, (this.canvas.height / 2) + p.y, starRadius, 0, 2 * Math.PI, false);
-				context.fill();
-				context.strokeStyle = 'black';
-				context.lineWidth = 0.5;
-				context.stroke();
+			if (this._withStars) {
+					for (let s = 0; s < constellations[i].stars.length; s++) {
+						let dec = constellations[i].stars[s].d * this._hemisphere;
+						let ra = constellations[i].stars[s].ra;
+						let lng = (360 - (ra * 360 / 24));
+						lng += (/*this._hemisphere * */this.LHAAries);
+						if (lng > 180) {
+							lng -= 360;
+						}
+						let p = this.plotCoordinates(dec, lng, radius);
+						context.beginPath();
+						context.fillStyle = 'gold';
+						const starRadius = 2;
+						context.arc((this.canvas.width / 2) - p.x, (this.canvas.height / 2) + p.y, starRadius, 0, 2 * Math.PI, false);
+						context.fill();
+						context.strokeStyle = 'black';
+						context.lineWidth = 0.5;
+						context.stroke();
 
-				if (constellations[i].stars[s].name.charAt(0) === constellations[i].stars[s].name.charAt(0).toUpperCase() && this._starNames) { // Star name, starts with uppercase
-					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
-					context.fillStyle = 'blue';
-					let str = constellations[i].stars[s].name;
-					let len = context.measureText(str).width;
-					context.fillText(str, (this.canvas.width / 2) - p.x - (len / 2), (this.canvas.height / 2) + p.y - 2);
-				}
-				context.closePath();
+						if (constellations[i].stars[s].name.charAt(0) === constellations[i].stars[s].name.charAt(0).toUpperCase() && this._starNames) { // Star name, starts with uppercase
+							context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
+							context.fillStyle = 'blue';
+							let str = constellations[i].stars[s].name;
+							let len = context.measureText(str).width;
+							context.fillText(str, (this.canvas.width / 2) - p.x - (len / 2), (this.canvas.height / 2) + p.y - 2);
+						}
+						context.closePath();
+					}
 			}
 		}
 	}
