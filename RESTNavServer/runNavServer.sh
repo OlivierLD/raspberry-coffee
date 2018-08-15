@@ -11,7 +11,7 @@ USE_PROXY=false
 #
 if [ $# -gt 0 ]
 then
-  if [ $1 == y ]
+  if [ "$1" == "y" ]
   then
     echo Will use a proxy
     USE_PROXY=true

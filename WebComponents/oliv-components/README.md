@@ -89,6 +89,7 @@ Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released
 - [Compass Rose](https://codepen.io/OlivierLD/pen/aqaLQq).
 - [World Map](https://codepen.io/OlivierLD/pen/xYQbmb).
 - [Calendar Display](https://codepen.io/OlivierLD/pen/EpOJEW).
+- [SkyMap/StarFinder](https://codepen.io/OlivierLD/project/full/APNqRk).
 
 #### Firefox 58
 If you are having trouble running the WebComponents in Firefox 58, see

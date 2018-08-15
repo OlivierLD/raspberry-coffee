@@ -449,7 +449,7 @@ class SkyMap extends HTMLElement {
 					let lha = (this._hemisphere === Hemispheres.NORTHERN_HEMISPHERE || i === 0 ? i : (360 - i));
 					let str = lha.toString() + '°';
 					let len = context.measureText(str).width;
-					context.fillText(str, -len / 2, (-(radius * .98) + 10));
+					context.fillText(str, -len / 2, (-(radius * 0.98) + 10));
 					// context.lineWidth = 1;
 					// context.strokeStyle = 'black';
 					// context.strokeText(str, -len / 2, (-(radius * .8) + 10)); // Outlined
@@ -480,7 +480,7 @@ class SkyMap extends HTMLElement {
 					context.fillStyle = 'black';
 					let str = now.dayOfMonth.toString();
 					let len = context.measureText(str).width;
-					context.fillText(str, -len / 2, (-(radius * .98) + 10));
+					context.fillText(str, -len / 2, (-(radius * 0.98) + 10));
 					context.restore();
 				}
 				if (now.dayOfMonth === Math.round(now.month.nbDays / 2)) { // Print the month name
