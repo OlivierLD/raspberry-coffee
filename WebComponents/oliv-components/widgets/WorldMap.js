@@ -608,6 +608,10 @@ class WorldMap extends HTMLElement {
 		return s;
 	}
 
+	decToSex(val, ns_ew) {
+		return WorldMap.decToSex(val, ns_ew);
+	}
+
 	// Defined this way so it can be invoked on the WorldMap object (instance), from a callback for example.
 	toRadians(deg) {
 		return Utilities.toRadians(deg);
