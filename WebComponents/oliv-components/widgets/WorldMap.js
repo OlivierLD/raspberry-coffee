@@ -1406,7 +1406,7 @@ class WorldMap extends HTMLElement {
 	plotPosToCanvas(context, lat, lng, label, color) {
 
 		let pt = this.posToCanvas(lat, lng);
-		WorldMap.plotPoint(context, pt, (color !== undefined ? color : this.worldmapColorConfig.defaultPlotPointColor));
+		this.plotPoint(context, pt, (color !== undefined ? color : this.worldmapColorConfig.defaultPlotPointColor));
 		if (label !== undefined) {
 			try {
 				// BG
@@ -1433,7 +1433,7 @@ class WorldMap extends HTMLElement {
 
 	posToCanvas(lat, lng) { // Anaximandre and Mercator
 
-		this._east = this.calculateEastG(this._north, this._south, this._west, this.width, this.height);
+		this._east = WorldMap.calculateEastG(this._north, this._south, this._west, this.width, this.height);
 		this.adjustBoundaries();
 
 		let x, y;
@@ -1469,8 +1469,8 @@ class WorldMap extends HTMLElement {
 			case mapProjections.mercator:
 				// Requires _north, _south, _east, _west
 				x = ((_lng - this._west) * graph2chartRatio);
-				incSouth = this.getIncLat(Math.max(this._south, -80));
-				incLat = this.getIncLat(lat);
+				incSouth = WorldMap.getIncLat(Math.max(this._south, -80));
+				incLat = WorldMap.getIncLat(lat);
 				y = this.height - ((incLat - incSouth) * graph2chartRatio);
 				break;
 		}
@@ -1570,7 +1570,7 @@ class WorldMap extends HTMLElement {
 		// Find the first point (west) of the rim
 		let first = 0;
 		for (let x=0; x<nightRim.length; x++) {
-			let lng = this.toRealLng(Utilities.toDegrees(nightRim[x].lng));
+			let lng = WorldMap.toRealLng(Utilities.toDegrees(nightRim[x].lng));
 //		console.log("Night lng: " + lng);
 			if (lng > this._west) {
 				first = Math.max(0, x - 1);
@@ -1578,7 +1578,7 @@ class WorldMap extends HTMLElement {
 			}
 		}
 		context.beginPath();
-		let pt = this.posToCanvas(Utilities.toDegrees(nightRim[first].lat), this.toRealLng(Utilities.toDegrees(nightRim[first].lng)));
+		let pt = this.posToCanvas(Utilities.toDegrees(nightRim[first].lat), WorldMap.toRealLng(Utilities.toDegrees(nightRim[first].lng)));
 		context.moveTo(-10 /*pt.x*/, pt.y); // left++
 
 		let go = true;
@@ -1586,7 +1586,7 @@ class WorldMap extends HTMLElement {
 //	console.log("_west ", _west, "first", first);
 
 		for (let idx=first; idx<360 && go === true; idx++) {
-			pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), this.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
+			pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), WorldMap.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
 			context.lineTo(pt.x, pt.y);
 
 			// DEBUG
@@ -1601,10 +1601,10 @@ class WorldMap extends HTMLElement {
 		}
 		if (go) {
 			for (let idx=0; idx<360 && go === true; idx++) {
-				if (this.toRealLng(Utilities.toDegrees(nightRim[idx].lng)) > this._east) {
+				if (WorldMap.toRealLng(Utilities.toDegrees(nightRim[idx].lng)) > this._east) {
 					go = false;
 				} else {
-					pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), this.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
+					pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), WorldMap.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
 					context.lineTo(pt.x, pt.y);
 					// DEBUG
 					// if (idx % 20 === 0) {
@@ -1672,7 +1672,7 @@ class WorldMap extends HTMLElement {
 					context.fillStyle = this.worldmapColorConfig.tropicColor;
 					for (let hdg=0; hdg<360; hdg++) {
 						let pt = WorldMap.deadReckoningRadians(eclCenter, 90 * 60, hdg);
-						let pp = this.posToCanvas(Utilities.toDegrees(pt.lat), this.toRealLng(Utilities.toDegrees(pt.lng)));
+						let pp = this.posToCanvas(Utilities.toDegrees(pt.lat), WorldMap.toRealLng(Utilities.toDegrees(pt.lng)));
 						context.fillRect(pp.x, pp.y, 1, 1);
 					}
 
@@ -1701,7 +1701,7 @@ class WorldMap extends HTMLElement {
 			if (this.astronomicalData.stars !== undefined && this.withStars) {
 				let instance = this;
 				this.astronomicalData.stars.forEach(function(star, idx) {
-					instance.plotPosToCanvas(context, star.decl, instance.haToLongitude(star.gha), star.name, instance.worldmapColorConfig.starsColor);
+					instance.plotPosToCanvas(context, star.decl, WorldMap.haToLongitude(star.gha), star.name, instance.worldmapColorConfig.starsColor);
 				});
 			}
 		}
