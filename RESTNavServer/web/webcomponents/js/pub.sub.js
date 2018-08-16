@@ -8,20 +8,20 @@
  events.publish('topic', val);
  */
 let events = {
-    listener: [],
+	listener: [],
 
-    subscribe: function (topic, action) {
-        this.listener.push({
-            'topic': topic,
-            'actionListener': action
-        });
-    },
+	subscribe: function (topic, action) {
+		this.listener.push({
+			'topic': topic,
+			'actionListener': action
+		});
+	},
 
-    publish: function (topic, value) {
-        for (i = 0; i < this.listener.length; i++) {
-            if (this.listener[i].topic === topic) {
-                this.listener[i].actionListener(value);
-            }
-        }
-    }
+	publish: function (topic, value) {
+		for (let i = 0; i < this.listener.length; i++) {
+			if (this.listener[i].topic === topic) {
+				this.listener[i].actionListener(value);
+			}
+		}
+	}
 };

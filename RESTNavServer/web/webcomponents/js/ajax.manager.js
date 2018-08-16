@@ -9,7 +9,10 @@ function initAjax() {
 }
 
 const DEFAULT_TIMEOUT = 60000;
-
+/* global $ */
+/* global events */
+/* global errManager */
+/* global displayErr */
 function getDeferred(
 		url,                          // full api path
 		timeout,                      // After that, fail.
@@ -289,7 +292,7 @@ function onMessage(json) {
 			let buffered = json['Current calculated with damping'];
 			if (buffered !== undefined) {
 				let keys = Object.keys(buffered);
-				for (i=0; i<keys.length; i++) {
+				for (let i=0; i<keys.length; i++) {
 					let k = keys[i];
 //				console.log("K:" + k);
 					let damp = buffered[k];

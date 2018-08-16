@@ -3,10 +3,10 @@ const TABS = ['one', 'two', 'three'];
 
 function openTab(evt, tabNum) {
 	let tablinks = document.getElementsByClassName("tablinks");
-	for (i=0; i<tablinks.length; i++) {
+	for (let i=0; i<tablinks.length; i++) {
 		tablinks[i].className = tablinks[i].className.replace(" active", ""); // Reset
 	}
-	for (i=0; i<TABS.length; i++) {
+	for (let i=0; i<TABS.length; i++) {
 		document.getElementById(TABS[i]).style.display = (i === tabNum) ? 'block' : 'none';
 	}
 	evt.currentTarget.className += " active";
@@ -18,7 +18,7 @@ function getQSPrm(prm) {
 	if (loc.indexOf("?") > -1) {
 		let qs = loc.substring(loc.indexOf("?") + 1);
 		let prms = qs.split('&');
-		for (i=0; i<prms.length; i++) {
+		for (let i=0; i<prms.length; i++) {
 			let nv = prms[i].split('=');
 			if (nv.length === 2) {
 				if (nv[0] === prm) {
@@ -326,7 +326,7 @@ function astroCallback(data) {
 
 	// Display solar date & time
 	let solarDate = new Date(data.solarDate.year, data.solarDate.month - 1, data.solarDate.day, data.solarDate.hour, data.solarDate.min, data.solarDate.sec);
-	let time = solarDate.format("H:i:s")
+	let time = solarDate.format("H:i:s");
 	setData('analog-watch-02', time);
 	let date = solarDate.format("d-m-Y-l");
 	setData('calendar-02', date);
@@ -437,6 +437,7 @@ const DISPLAYS = [
 	'analog-watch-02'
 ];
 window.onload = function() {
+	/* global initAjax */
 	initAjax(); // Default. See later for a WebSocket option
 
 	callAfter('world-map-01'); // Adding Satellites plot.
@@ -473,7 +474,7 @@ window.onload = function() {
 			});
 			// Check/uncheck boxes
 			let cbs = document.getElementsByClassName('border-cb');
-			for (i = 0; i < cbs.length; i++) {
+			for (let i = 0; i < cbs.length; i++) {
 				cbs[i].checked = (border === 'y');
 			}
 		} else {
@@ -495,6 +496,7 @@ window.onload = function() {
 	 *
 	 * Event's definition (topic's name) is in ajax.manager.js, method onMessage
 	 */
+	/* global events */
 	events.subscribe('pos', function(val) {
 		gpsPosition = val;
 		document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng });
@@ -517,6 +519,7 @@ window.onload = function() {
 		setData('calendar-01', date);
 		if (gpsPosition !== undefined) {
 			let gpsDate = new Date(val);
+			/* global getAstroData */
 			getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
 		}
 	});

@@ -96,20 +96,20 @@ Date.prototype.getWeekOfYear = function () {
 // Provide if it is a leap year or not
 Date.prototype.isLeapYear = function () {
 	let yr = this.getFullYear();
-	if ((parseInt(yr) % 4) === 0) {
-		if (parseInt(yr) % 100 === 0) {
-			if (parseInt(yr) % 400 !== 0) {
+	if ((parseInt(yr, 10) % 4) === 0) {
+		if (parseInt(yr, 10) % 100 === 0) {
+			if (parseInt(yr, 10) % 400 !== 0) {
 				return false;
 			}
-			if (parseInt(yr) % 400 === 0) {
+			if (parseInt(yr, 10) % 400 === 0) {
 				return true;
 			}
 		}
-		if (parseInt(yr) % 100 !== 0) {
+		if (parseInt(yr, 10) % 100 !== 0) {
 			return true;
 		}
 	}
-	if ((parseInt(yr) % 4) !== 0) {
+	if ((parseInt(yr, 10) % 4) !== 0) {
 		return false;
 	}
 };
@@ -154,7 +154,7 @@ Date.prototype.format = function (dateFormat) {
 			str = w + str;
 		}
 		return str;
-	};
+	}
 
 	// get all date properties ( based on PHP date object functionality )
 	const date_props = {
