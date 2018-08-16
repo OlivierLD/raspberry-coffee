@@ -60,7 +60,7 @@ Consuming REST services can be done from many frameworks, here we'll use `jQuery
 > The `Promise` aspect might go away, once `EcmaScript6` is more widely supported (in the browsers; it currently requires a transpilation).
 
 For the back end, my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability
-and re-usability reasons. I have several other projects (not necessarily dedicated to the Raspberry PI) writen in Java; a `jar` (JAva Archive) generated from those projects can be part of any
+and re-usability reasons. I have several other projects (not necessarily dedicated to the Raspberry PI) writen in Java; a `jar` (Java ARchive) generated from those projects can be part of any
 Raspberry PI project as long as it runs on a JVM.
 But other options could be considered, the most prominent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
 Front End _and_ the Back End.
@@ -92,7 +92,7 @@ You will see it displays operations from three services.
 ## Use it
 
 The web pages mentioned below are provided _as examples_ of the way to consume the REST services provided on the Raspberry PI.
-The snapshots might be a little obsolete, this iks a work in porigress, constantly evolving.
+The snapshots might be a little obsolete, this iks a work in progress, constantly evolving.
 But this will give you an idea.
 
 From _any_ device (laptop, tablet, smart-phone) that can run a browser, reach this url:
@@ -162,6 +162,7 @@ It does indeed make the HTML pages much simpler. We'll move to it. For example, 
 ```
 It can also be driven by JavaScript.
 For now, it's "pure" WebComponents (no Polyfill). If your browser does not support native WebComponents..., you'll have to wait for it to.
+Also, we do not use here the `JQuery Deferred`, we use pure ES6 Promises to get to Ajax (and REST).
 
 ```
  http://[host]:9999/web/webcomponents/console.html
@@ -169,7 +170,7 @@ For now, it's "pure" WebComponents (no Polyfill). If your browser does not suppo
 
 ![Web Components](./docimg/screenshot.11.png)
 
-Equiped with Heads up display features (reflection in a wind shield, for example).
+Equipped with Heads up display features (for reflection in a wind shield, for example).
 
 ![HeadsUp display](./docimg/screenshot.12.png)
 

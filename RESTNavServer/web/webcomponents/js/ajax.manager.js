@@ -62,7 +62,6 @@ function getPromise(
 			}
 		};
 	});
-
 	return promise;
 }
 
