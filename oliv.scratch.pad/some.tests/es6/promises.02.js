@@ -19,12 +19,14 @@ function getSum(n1, n2) {
 function testIt(a, b) {
 	getSum(a, b)
 			.then(
-					function (result) { // this is the resolve function
+					// this is the resolve function
+					function (result) { 
 						console.log("---- S U C C E S S ----");
 						console.log("Success: Result is ", result);
 						console.log("-----------------------");
 					},
-					function (error) { // this is the reject function
+					// this is the reject function
+					function (error) {
 						console.log("--- R E J E C T E D ---");
 						console.log("Oops:", error);
 						console.log("-----------------------");

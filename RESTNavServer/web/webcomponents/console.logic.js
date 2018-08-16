@@ -374,7 +374,6 @@ function setTheme(className) {
 	applyClass('analog-watch-01', className);
 	applyClass('analog-watch-02', className);
 	// TODO World Map theme worldmap-display-02, worldmap-display
-
 }
 
 function applyClass(id, className) {

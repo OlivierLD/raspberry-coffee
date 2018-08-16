@@ -1,6 +1,6 @@
 /*
  * @author Olivier Le Diouris
- * Uses jQuery Deferreds
+ * Uses ES6 Promises for Ajax.
  */
 function initAjax() {
 	let interval = setInterval(function () {
@@ -8,12 +8,11 @@ function initAjax() {
 	}, 1000);
 }
 
-const DEFAULT_TIMEOUT = 60000;
-/* global $ */
+const DEFAULT_TIMEOUT = 60000; // 1 minute
 /* global events */
-/* global errManager */
-/* global displayErr */
-function getDeferred(
+
+/* Uses ES6 Promises */
+function getPromise(
 		url,                          // full api path
 		timeout,                      // After that, fail.
 		verb,                         // GET, PUT, DELETE, POST, etc
@@ -26,68 +25,63 @@ function getDeferred(
 	if (show === true) {
 		document.body.style.cursor = 'wait';
 	}
-	let deferred = $.Deferred();  // a jQuery deferred
-	let	xhr = new XMLHttpRequest();
-	let TIMEOUT = timeout;
 
-	let req = verb + " " + url;
-	if (data !== undefined && data !== null) {
-		req += ("\n" + JSON.stringify(data, null, 2));
-	}
+	let promise = new Promise(function (resolve, reject) {
+		let xhr = new XMLHttpRequest();
+		let TIMEOUT = timeout;
 
-	xhr.open(verb, url, true);
-	xhr.setRequestHeader("Content-type", "application/json");
-	if (data === undefined) {
-		xhr.send();
-	} else {
-		xhr.send(JSON.stringify(data));
-	}
-
-	let requestTimer = setTimeout(function() {
-		xhr.abort();
-		let mess = { message: 'Timeout' };
-		deferred.reject(408, mess);
-	}, TIMEOUT);
-
-	xhr.onload = function() {
-		clearTimeout(requestTimer);
-		if (xhr.status === happyCode) {
-			deferred.resolve(xhr.response);
-		} else {
-			deferred.reject(xhr.status, xhr.response);
+		let req = verb + " " + url;
+		if (data !== undefined && data !== null) {
+			req += ("\n" + JSON.stringify(data, null, 2));
 		}
-	};
-	return deferred.promise();
+
+		xhr.open(verb, url, true);
+		xhr.setRequestHeader("Content-type", "application/json");
+		try {
+			if (data === undefined || data === null) {
+				xhr.send();
+			} else {
+				xhr.send(JSON.stringify(data));
+			}
+		} catch (err) {
+			console.log("Send Error ", err);
+		}
+
+		let requestTimer = setTimeout(function () {
+			xhr.abort();
+			let mess = { code: 408, message: 'Timeout' };
+			reject(mess);
+		}, TIMEOUT);
+
+		xhr.onload = function () {
+			clearTimeout(requestTimer);
+			if (xhr.status === happyCode) {
+				resolve(xhr.response);
+			} else {
+				reject({ code: xhr.status, message: xhr.response });
+			}
+		};
+	});
+
+	return promise;
 }
 
 function getNMEAData() {
-	return getDeferred('/mux/cache', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+	return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 }
 
 function fetch() {
 	let getData = getNMEAData();
-	getData.done(function (value) {
-//      console.log("Done:", value);
+	getData.then(function (value) { // Resolve
+//  console.log("Done:", value);
 		try {
 			let json = JSON.parse(value);
 			onMessage(json);
 		} catch (err) {
 			console.log("Error:", err, ("\nfor value [" + value + "]"));
 		}
-	});
-	getData.fail(function (error, errmess) {
-		let message ;
-		if (errmess !== undefined) {
-			if (typeof(errmess) === "string") {
-				message = errmess;
-			} else {
-				let mess = JSON.parse(errmess);
-				if (mess.message !== undefined) {
-					message = mess.message;
-				}
-			}
-		}
-		alert("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	}, function (error) { // Reject
+		console.log("Failed to get NMEA data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
 
@@ -105,29 +99,20 @@ function getSkyGP(when, position, wandering, stars) {
 	if (stars !== undefined && stars === true) { // to minimize the size of the payload
 		url += ("&stars=true");
 	}
-	return getDeferred(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+	return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 }
 
 function getAstroData(when, position, wandering, stars, callback) {
 	let getData = getSkyGP(when, position, wandering, stars);
-	getData.done(function(value) {
+	getData.then(function (value) { // resolve
 		let json = JSON.parse(value);
 		if (callback !== undefined) {
 			callback(json);
 		} else {
 			console.log(JSON.stringify(json, null, 2));
 		}
-	});
-	getData.fail(function(error, errmess) {
-		let message;
-		if (errmess !== undefined) {
-			if (errmess.message !== undefined) {
-				message = errmess.message;
-			} else {
-				message = errmess;
-			}
-		}
-		errManager("Failed to get the Astro Data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+	}, function (error) { // reject
+		console.log("Failed to get the Astro Data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
 
@@ -333,9 +318,9 @@ function onMessage(json) {
 		}
 
 		if (errMess !== undefined) {
-			// displayErr(errMess); // Absorb
+			// console.log(errMess); // Absorb
 		}
 	} catch (err) {
-		displayErr(err);
+		console.log(err);
 	}
 }

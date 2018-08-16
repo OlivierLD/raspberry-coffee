@@ -2,6 +2,8 @@
 
 > Note: _Those components requires **absolutely NO** external library._
 
+> But EcmaScript6 (ES6) is required.
+
 > Some components might require some provided utilities like
 > - `character.matrixes/characters.js`
 > - `stars/constellation.js`
