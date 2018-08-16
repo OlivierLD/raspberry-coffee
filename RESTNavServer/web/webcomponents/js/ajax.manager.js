@@ -73,11 +73,15 @@ function fetch() {
 		}
 	});
 	getData.fail(function (error, errmess) {
-		let message;
+		let message ;
 		if (errmess !== undefined) {
-			let mess = JSON.parse(errmess);
-			if (mess.message !== undefined) {
-				message = mess.message;
+			if (typeof(errmess) === "string") {
+				message = errmess;
+			} else {
+				let mess = JSON.parse(errmess);
+				if (mess.message !== undefined) {
+					message = mess.message;
+				}
 			}
 		}
 		alert("Failed to get nmea data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
