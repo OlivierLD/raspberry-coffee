@@ -84,7 +84,7 @@ class WorldMap extends HTMLElement {
 		];
 	}
 
-	dummyDump() {
+	static dummyDump() {
 		let minLat = 100, maxLat = -100, minLng = 200, maxLng = -200;
 
 		for (let key in fullWorldMap) {
@@ -174,6 +174,7 @@ class WorldMap extends HTMLElement {
 		if (worldMapVerbose) {
 			console.log("connectedCallback invoked");
 		}
+		this.repaint();
 	}
 
 	// Called whenever the custom element is removed from the DOM.
@@ -513,7 +514,7 @@ class WorldMap extends HTMLElement {
 		}
 	}
 
-	findInList(array, member, value) {
+	static findInList(array, member, value) {
 		for (let idx=0; idx<array.length; idx++) {
 			if (array[idx][member] !== undefined && array[idx][member] === value) {
 				return array[idx];
@@ -529,11 +530,11 @@ class WorldMap extends HTMLElement {
 			longitude -= 360;
 		}
 		let aries = { lat: Utilities.toRadians(obl), lng: Utilities.toRadians(longitude) };
-		let eclCenter = this.deadReckoningRadians(aries, 90 * 60, 0); // "Center" of the Ecliptic
+		let eclCenter = WorldMap.deadReckoningRadians(aries, 90 * 60, 0); // "Center" of the Ecliptic
 
 		context.fillStyle = this.worldmapColorConfig.tropicColor;
 		for (let hdg=0; hdg<360; hdg++) {
-			let pt = this.deadReckoningRadians(eclCenter, 90 * 60, hdg);
+			let pt = WorldMap.deadReckoningRadians(eclCenter, 90 * 60, hdg);
 			let pp = this.getPanelPoint(Utilities.toDegrees(pt.lat), Utilities.toDegrees(pt.lng));
 
 			let thisPointIsBehind = this.isBehind(pt.lat, pt.lng - Utilities.toRadians(this.globeViewLngOffset));
@@ -551,7 +552,7 @@ class WorldMap extends HTMLElement {
 	 * @param y vertical displacement
 	 * @return the angle, in degrees
 	 */
-	getDir(x, y) {
+	static getDir(x, y) {
 		let dir = 0.0;
 		if (y !== 0) {
 			dir = Utilities.toDegrees(Math.atan(x / y));
@@ -581,7 +582,7 @@ class WorldMap extends HTMLElement {
 		return dir;
 	}
 
-	decToSex(val, ns_ew) {
+	static decToSex(val, ns_ew) {
 		let absVal = Math.abs(val);
 		let intValue = Math.floor(absVal);
 		let dec = absVal - intValue;
@@ -607,7 +608,7 @@ class WorldMap extends HTMLElement {
 		return s;
 	}
 
-	// Defined this way so it can be invoked on the WorldMap object, from a callback for example.
+	// Defined this way so it can be invoked on the WorldMap object (instance), from a callback for example.
 	toRadians(deg) {
 		return Utilities.toRadians(deg);
 	}
@@ -624,13 +625,17 @@ class WorldMap extends HTMLElement {
 	 * @param route route in Degrees
 	 * @return DR Position, L & G in Radians
 	 */
-	deadReckoningRadians(from, dist, route) {
+	static deadReckoningRadians(from, dist, route) {
 		let radianDistance = Utilities.toRadians(dist / 60);
 		let finalLat = (Math.asin((Math.sin(from.lat) * Math.cos(radianDistance)) +
 				(Math.cos(from.lat) * Math.sin(radianDistance) * Math.cos(Utilities.toRadians(route)))));
 		let finalLng = from.lng + Math.atan2(Math.sin(Utilities.toRadians(route)) * Math.sin(radianDistance) * Math.cos(from.lat),
 				Math.cos(radianDistance) - Math.sin(from.lat) * Math.sin(finalLat));
 		return {lat: finalLat, lng: finalLng};
+	}
+
+	deadReckoningRadians(from, dist, route) {
+		return WorldMap.deadReckoningRadians(from, dist, route);
 	}
 
 	drawNight(context, from, user, gha) {
@@ -646,7 +651,7 @@ class WorldMap extends HTMLElement {
 
 		// find first visible point of the night limb
 		for (let i=0; i<360; i++) {
-			let night = this.deadReckoningRadians(from, NINETY_DEGREES, i);
+			let night = WorldMap.deadReckoningRadians(from, NINETY_DEGREES, i);
 			let visible = this.isBehind(night.lat, night.lng - Utilities.toRadians(this.globeViewLngOffset)) ? INVISIBLE : VISIBLE;
 			if (visible === VISIBLE && visibility === INVISIBLE) { // Just became visible
 				firstVisible = i;
@@ -659,7 +664,7 @@ class WorldMap extends HTMLElement {
 		// Night limb
 		let firstPt, lastPt;
 		for (let dir=firstVisible; dir<firstVisible+360; dir++) {
-			let dr = this.deadReckoningRadians(from, NINETY_DEGREES, dir);
+			let dr = WorldMap.deadReckoningRadians(from, NINETY_DEGREES, dir);
 			let borderPt = this.getPanelPoint(Utilities.toDegrees(dr.lat), Utilities.toDegrees(dr.lng));
 			if (dir === firstVisible) {
 				context.moveTo(borderPt.x, borderPt.y);
@@ -673,8 +678,8 @@ class WorldMap extends HTMLElement {
 		}
 		// Earth limb
 		let center = { x: this.width / 2, y: this.height / 2};
-		let startAngle = this.getDir(lastPt.x - center.x, center.y - lastPt.y);
-		let arrivalAngle = this.getDir(firstPt.x - center.x, center.y - firstPt.y);
+		let startAngle = WorldMap.getDir(lastPt.x - center.x, center.y - lastPt.y);
+		let arrivalAngle = WorldMap.getDir(firstPt.x - center.x, center.y - firstPt.y);
 
 		let lhaSun = gha + user.longitude;
 		while (lhaSun < 0) { lhaSun += 360; }
@@ -710,7 +715,7 @@ class WorldMap extends HTMLElement {
 
 		let userPos = { lat: Utilities.toRadians(user.latitude), lng: Utilities.toRadians(user.longitude) };
 		for (let i=firstBoundary; (inc>0 && i<=lastBoundary) || (inc<0 && i>=lastBoundary); i+=inc) {
-			let limb = this.deadReckoningRadians(userPos, NINETY_DEGREES, i);
+			let limb = WorldMap.deadReckoningRadians(userPos, NINETY_DEGREES, i);
 			let limbPt = this.getPanelPoint(Utilities.toDegrees(limb.lat), Utilities.toDegrees(limb.lng));
 			context.lineTo(limbPt.x, limbPt.y);
 		}
@@ -758,7 +763,7 @@ class WorldMap extends HTMLElement {
 	 * @param ha Hour Angle in degrees
 	 * @returns {number}
 	 */
-	haToLongitude(ha) {
+	static haToLongitude(ha) {
 		var lng = - ha;
 		if (lng < -180) {
 			lng += 360;
@@ -767,10 +772,10 @@ class WorldMap extends HTMLElement {
 	}
 
 	plotPoint(context, pt, color) {
-		this.plot(context, pt, color);
+		WorldMap.plot(context, pt, color);
 	}
 
-	plot(context, pt, color) {
+	static plot(context, pt, color) {
 		context.beginPath();
 		context.fillStyle = color;
 		context.arc(pt.x, pt.y, 2, 0, 2 * Math.PI);
@@ -779,7 +784,12 @@ class WorldMap extends HTMLElement {
 		context.closePath();
 	}
 
-	fillCircle(context, pt, radius, color) {
+	// For external calls, on an instance of the component.
+	plot(context, pt, color) {
+		WorldMap.plot(context, pt, color);
+	}
+
+	static fillCircle(context, pt, radius, color) {
 		context.beginPath();
 		context.fillStyle = color;
 		context.arc(pt.x, pt.y, radius, 0, radius * Math.PI);
@@ -788,16 +798,21 @@ class WorldMap extends HTMLElement {
 		context.closePath();
 	}
 
+	// For external calls, on an instance of the component.
+	fillCircle(context, pt, radius, color) {
+		WorldMap.fillCircle(context, pt, radius, color);
+	}
+
 	/* TODO userPos from this.userPosition? */
 	positionBody(context, userPos, color, name, decl, gha, drawCircle, isStar) {
 		isStar = isStar || false;
 		context.save();
-		let lng = this.haToLongitude(gha);
+		let lng = WorldMap.haToLongitude(gha);
 		let body = this.getPanelPoint(decl, lng);
 		let thisPointIsBehind = this.isBehind(Utilities.toRadians(decl), Utilities.toRadians(lng - this.globeViewLngOffset));
 		if (!thisPointIsBehind || this.transparentGlobe) {
 			// Draw Body
-			this.plot(context, body, color);
+			WorldMap.plot(context, body, color);
 			context.fillStyle = color;
 			if (!isStar) { // Body name, on the ground
 				context.fillText(name, Math.round(body.x) + 3, Math.round(body.y) - 3);
@@ -826,13 +841,13 @@ class WorldMap extends HTMLElement {
 			}
 			context.closePath();
 			if (drawCircle === undefined && drawCircle !== false) {
-				this.fillCircle(context, { x: body.x + deltaX, y: body.y + deltaY}, 3, color);
+				WorldMap.fillCircle(context, { x: body.x + deltaX, y: body.y + deltaY}, 3, color);
 			}
 		}
 		context.restore();
 	}
 
-	getColorConfig(cssClassNames) {
+	static getColorConfig(cssClassNames) {
 		let colorConfig = worldMapDefaultColorConfig;
 		let classes = cssClassNames.split(" ");
 		for (let cls=0; cls<classes.length; cls++) {
@@ -930,7 +945,7 @@ class WorldMap extends HTMLElement {
 						}
 					}
 				} catch (err) {
-				  // Absorb
+					// Absorb
 				}
 			}
 		}
@@ -1209,21 +1224,21 @@ class WorldMap extends HTMLElement {
 		// User position
 		if (this.userPosition !== {}) {
 			let userPos = this.getPanelPoint(this.userPosition.latitude, this.userPosition.longitude);
-			this.plot(context, userPos, this.worldmapColorConfig.userPosColor);
+			WorldMap.plot(context, userPos, this.worldmapColorConfig.userPosColor);
 			context.fillStyle = this.worldmapColorConfig.userPosColor;
 			context.fillText(this.positionLabel, Math.round(userPos.x) + 3, Math.round(userPos.y) - 3);
 
 			// Celestial bodies?
 			if (this.astronomicalData !== {}) {
 				if (this.astronomicalData.sun !== undefined) {
-					let sunLng = this.haToLongitude(this.astronomicalData.sun.gha);
+					let sunLng = WorldMap.haToLongitude(this.astronomicalData.sun.gha);
 					context.save();
 					if (this.withSun) {
 						let sun = this.getPanelPoint(this.astronomicalData.sun.decl, sunLng);
 						let thisPointIsBehind = this.isBehind(Utilities.toRadians(this.astronomicalData.sun.decl), Utilities.toRadians(sunLng - this.globeViewLngOffset));
 						if (!thisPointIsBehind || this.transparentGlobe) {
 							// Draw Sun
-							this.plot(context, sun, this.worldmapColorConfig.sunColor);
+							WorldMap.plot(context, sun, this.worldmapColorConfig.sunColor);
 							context.fillStyle = this.worldmapColorConfig.sunColor;
 							context.fillText("Sun", Math.round(sun.x) + 3, Math.round(sun.y) - 3);
 							// Arrow, to the sun
@@ -1250,7 +1265,7 @@ class WorldMap extends HTMLElement {
 							// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
 							// 	context.drawImage(img, sun.x + deltaX + Math.ceil(imgXOffset), sun.y + deltaY - Math.ceil(imgYOffset));
 							// } else {
-							this.fillCircle(context, {x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
+							WorldMap.fillCircle(context, {x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
 							// }
 						}
 						// Route to sun?
@@ -1266,14 +1281,14 @@ class WorldMap extends HTMLElement {
 					context.restore();
 				}
 				if (this.astronomicalData.moon !== undefined) {
-					let moonLng = this.haToLongitude(this.astronomicalData.moon.gha);
+					let moonLng = WorldMap.haToLongitude(this.astronomicalData.moon.gha);
 					context.save();
 					if (this.withMoon) {
 						let moon = this.getPanelPoint(this.astronomicalData.moon.decl, moonLng);
 						let thisPointIsBehind = this.isBehind(Utilities.toRadians(this.astronomicalData.moon.decl), Utilities.toRadians(moonLng - this.globeViewLngOffset));
 						if (!thisPointIsBehind || this.transparentGlobe) {
 							// Draw Moon
-							this.plot(context, moon, this.worldmapColorConfig.moonColor);
+							WorldMap.plot(context, moon, this.worldmapColorConfig.moonColor);
 							context.fillStyle = this.worldmapColorConfig.moonColor;
 							context.fillText("Moon", Math.round(moon.x) + 3, Math.round(moon.y) - 3);
 							// Arrow, to the moon
@@ -1300,7 +1315,7 @@ class WorldMap extends HTMLElement {
 							// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
 							// 	context.drawImage(img, moon.x + deltaX + Math.ceil(imgXOffset), moon.y + deltaY - Math.ceil(imgYOffset));
 							// } else {
-							this.fillCircle(context, {x: moon.x + deltaX, y: moon.y + deltaY}, 5, this.worldmapColorConfig.moonColor);
+							WorldMap.fillCircle(context, {x: moon.x + deltaX, y: moon.y + deltaY}, 5, this.worldmapColorConfig.moonColor);
 							// }
 						}
 					}
@@ -1313,17 +1328,17 @@ class WorldMap extends HTMLElement {
 				}
 				if (this.astronomicalData.wanderingBodies !== undefined && this.withWanderingBodies) {
 					// 1 - Ecliptic
-					let aries = this.findInList(this.astronomicalData.wanderingBodies, "name", "aries");
+					let aries = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "aries");
 					if (aries !== null) {
 						this.drawEcliptic(context, aries.gha, this.astronomicalData.eclipticObliquity);
 						this.positionBody(context, userPos, this.worldmapColorConfig.ariesColor, "Aries", 0, aries.gha, false);
 						this.positionBody(context, userPos, this.worldmapColorConfig.ariesColor, "Anti-Aries", 0, aries.gha + 180, false); // Libra?
 					}
 					// 2 - Other planets
-					var venus = this.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
-					var mars = this.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
-					var jupiter = this.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
-					var saturn = this.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
+					var venus = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
+					var mars = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
+					var jupiter = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
+					var saturn = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
 					if (venus !== null) {
 						this.positionBody(context, userPos, this.worldmapColorConfig.venusColor, "Venus", venus.decl, venus.gha);
 					}
@@ -1352,12 +1367,12 @@ class WorldMap extends HTMLElement {
 		}
 	}
 
-	getIncLat(lat) {
+	static getIncLat(lat) {
 		let il = Math.log(Math.tan((Math.PI / 4) + (Utilities.toRadians(lat) / 2)));
 		return Utilities.toDegrees(il);
 	}
 
-	getInvIncLat(il) {
+	static getInvIncLat(il) {
 		let ret = Utilities.toRadians(il);
 		ret = Math.exp(ret);
 		ret = Math.atan(ret);
@@ -1367,8 +1382,8 @@ class WorldMap extends HTMLElement {
 		return ret;
 	}
 
-	calculateEastG(nLat, sLat, wLong, canvasW, canvasH) {
-		var deltaIncLat =  this.getIncLat(nLat) - this.getIncLat(sLat);
+	static calculateEastG(nLat, sLat, wLong, canvasW, canvasH) {
+		var deltaIncLat =  WorldMap.getIncLat(nLat) - WorldMap.getIncLat(sLat);
 
 		let graphicRatio = canvasW / canvasH;
 		let deltaG = Math.min(deltaIncLat * graphicRatio, 359);
@@ -1418,7 +1433,7 @@ class WorldMap extends HTMLElement {
 
 	posToCanvas(lat, lng) { // Anaximandre and Mercator
 
-		this._east = this.calculateEastG(this._north, this._south, this._west, this.width, this.height);
+		this._east = WorldMap.calculateEastG(this._north, this._south, this._west, this.width, this.height);
 		this.adjustBoundaries();
 
 		let x, y;
@@ -1454,8 +1469,8 @@ class WorldMap extends HTMLElement {
 			case mapProjections.mercator:
 				// Requires _north, _south, _east, _west
 				x = ((_lng - this._west) * graph2chartRatio);
-				incSouth = this.getIncLat(Math.max(this._south, -80));
-				incLat = this.getIncLat(lat);
+				incSouth = WorldMap.getIncLat(Math.max(this._south, -80));
+				incLat = WorldMap.getIncLat(lat);
 				y = this.height - ((incLat - incSouth) * graph2chartRatio);
 				break;
 		}
@@ -1527,7 +1542,7 @@ class WorldMap extends HTMLElement {
 		context.closePath();
 	}
 
-	toRealLng(lng) {
+	static toRealLng(lng) {
 		let g = lng;
 		while (g > 180) {
 			g -= 360;
@@ -1547,7 +1562,7 @@ class WorldMap extends HTMLElement {
 		let nightRim = [];
 		// Calculate the night rim
 		for (let i=0; i<360; i++) {
-			let night = this.deadReckoningRadians(from, NINETY_DEGREES, i);
+			let night = WorldMap.deadReckoningRadians(from, NINETY_DEGREES, i);
 			nightRim.push(night);
 		}
 
@@ -1555,7 +1570,7 @@ class WorldMap extends HTMLElement {
 		// Find the first point (west) of the rim
 		let first = 0;
 		for (let x=0; x<nightRim.length; x++) {
-			let lng = this.toRealLng(Utilities.toDegrees(nightRim[x].lng));
+			let lng = WorldMap.toRealLng(Utilities.toDegrees(nightRim[x].lng));
 //		console.log("Night lng: " + lng);
 			if (lng > this._west) {
 				first = Math.max(0, x - 1);
@@ -1563,7 +1578,7 @@ class WorldMap extends HTMLElement {
 			}
 		}
 		context.beginPath();
-		let pt = this.posToCanvas(Utilities.toDegrees(nightRim[first].lat), this.toRealLng(Utilities.toDegrees(nightRim[first].lng)));
+		let pt = this.posToCanvas(Utilities.toDegrees(nightRim[first].lat), WorldMap.toRealLng(Utilities.toDegrees(nightRim[first].lng)));
 		context.moveTo(-10 /*pt.x*/, pt.y); // left++
 
 		let go = true;
@@ -1571,7 +1586,7 @@ class WorldMap extends HTMLElement {
 //	console.log("_west ", _west, "first", first);
 
 		for (let idx=first; idx<360 && go === true; idx++) {
-			pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), this.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
+			pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), WorldMap.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
 			context.lineTo(pt.x, pt.y);
 
 			// DEBUG
@@ -1586,10 +1601,10 @@ class WorldMap extends HTMLElement {
 		}
 		if (go) {
 			for (let idx=0; idx<360 && go === true; idx++) {
-				if (this.toRealLng(Utilities.toDegrees(nightRim[idx].lng)) > this._east) {
+				if (WorldMap.toRealLng(Utilities.toDegrees(nightRim[idx].lng)) > this._east) {
 					go = false;
 				} else {
-					pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), this.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
+					pt = this.posToCanvas(Utilities.toDegrees(nightRim[idx].lat), WorldMap.toRealLng(Utilities.toDegrees(nightRim[idx].lng)));
 					context.lineTo(pt.x, pt.y);
 					// DEBUG
 					// if (idx % 20 === 0) {
@@ -1622,7 +1637,7 @@ class WorldMap extends HTMLElement {
 		if (this.astronomicalData !== {}) {
 			if (this.astronomicalData.sun !== undefined && this.withSun) { // TODO Separate sun and sunlight
 				context.save();
-				let sunLng = this.haToLongitude(this.astronomicalData.sun.gha);
+				let sunLng = WorldMap.haToLongitude(this.astronomicalData.sun.gha);
 				this.plotPosToCanvas(context, this.astronomicalData.sun.decl, sunLng, "Sun", this.worldmapColorConfig.sunColor);
 
 				if (this.withSunlight) {
@@ -1633,7 +1648,7 @@ class WorldMap extends HTMLElement {
 			}
 			if (this.astronomicalData.moon !== undefined && this.withMoon) { // TODO Separate moon and moonlight
 				context.save();
-				let moonLng = this.haToLongitude(this.astronomicalData.moon.gha);
+				let moonLng = WorldMap.haToLongitude(this.astronomicalData.moon.gha);
 				this.plotPosToCanvas(context, this.astronomicalData.moon.decl, moonLng, "Moon", this.worldmapColorConfig.moonColor);
 				if (this.withMoonlight) {
 					let from = {lat: Utilities.toRadians(this.astronomicalData.moon.decl), lng: Utilities.toRadians(moonLng)};
@@ -1643,7 +1658,7 @@ class WorldMap extends HTMLElement {
 			}
 			if (this.astronomicalData.wanderingBodies !== undefined && this.withWanderingBodies) {
 				// 1 - Ecliptic
-				let aries = this.findInList(this.astronomicalData.wanderingBodies, "name", "aries");
+				let aries = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "aries");
 				if (aries !== null) {
 					// 1 - Draw Ecliptic
 					let longitude = (aries.gha < 180) ? -aries.gha : 360 - aries.gha;
@@ -1652,41 +1667,41 @@ class WorldMap extends HTMLElement {
 						longitude -= 360;
 					}
 					let ariesRad = { lat: Utilities.toRadians(this.astronomicalData.eclipticObliquity), lng: Utilities.toRadians(longitude) };
-					let eclCenter = this.deadReckoningRadians(ariesRad, 90 * 60, 0); // "Center" of the Ecliptic
+					let eclCenter = WorldMap.deadReckoningRadians(ariesRad, 90 * 60, 0); // "Center" of the Ecliptic
 
 					context.fillStyle = this.worldmapColorConfig.tropicColor;
 					for (let hdg=0; hdg<360; hdg++) {
-						let pt = this.deadReckoningRadians(eclCenter, 90 * 60, hdg);
-						let pp = this.posToCanvas(Utilities.toDegrees(pt.lat), this.toRealLng(Utilities.toDegrees(pt.lng)));
+						let pt = WorldMap.deadReckoningRadians(eclCenter, 90 * 60, hdg);
+						let pp = this.posToCanvas(Utilities.toDegrees(pt.lat), WorldMap.toRealLng(Utilities.toDegrees(pt.lng)));
 						context.fillRect(pp.x, pp.y, 1, 1);
 					}
 
-					this.plotPosToCanvas(context, 0, this.haToLongitude(aries.gha), "Aries", this.worldmapColorConfig.ariesColor);
-					this.plotPosToCanvas(context, 0, this.haToLongitude(aries.gha + 180), "Anti-Aries", this.worldmapColorConfig.ariesColor);
+					this.plotPosToCanvas(context, 0, WorldMap.haToLongitude(aries.gha), "Aries", this.worldmapColorConfig.ariesColor);
+					this.plotPosToCanvas(context, 0, WorldMap.haToLongitude(aries.gha + 180), "Anti-Aries", this.worldmapColorConfig.ariesColor);
 				}
 				// 2 - Other planets
-				let venus = this.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
-				let mars = this.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
-				let jupiter = this.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
-				let saturn = this.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
+				let venus = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
+				let mars = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
+				let jupiter = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
+				let saturn = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
 				if (venus !== null) {
-					this.plotPosToCanvas(context, venus.decl, this.haToLongitude(venus.gha), "Venus", this.worldmapColorConfig.venusColor);
+					this.plotPosToCanvas(context, venus.decl, WorldMap.haToLongitude(venus.gha), "Venus", this.worldmapColorConfig.venusColor);
 				}
 				if (mars !== null) {
-					this.plotPosToCanvas(context, mars.decl, this.haToLongitude(mars.gha), "Mars", this.worldmapColorConfig.marsColor);
+					this.plotPosToCanvas(context, mars.decl, WorldMap.haToLongitude(mars.gha), "Mars", this.worldmapColorConfig.marsColor);
 				}
 				if (jupiter !== null) {
-					this.plotPosToCanvas(context, jupiter.decl, this.haToLongitude(jupiter.gha), "Jupiter", this.worldmapColorConfig.jupiterColor);
+					this.plotPosToCanvas(context, jupiter.decl, WorldMap.haToLongitude(jupiter.gha), "Jupiter", this.worldmapColorConfig.jupiterColor);
 				}
 				if (saturn !== null) {
-					this.plotPosToCanvas(context, saturn.decl, this.haToLongitude(saturn.gha), "Saturn", this.worldmapColorConfig.saturnColor);
+					this.plotPosToCanvas(context, saturn.decl, WorldMap.haToLongitude(saturn.gha), "Saturn", this.worldmapColorConfig.saturnColor);
 				}
 			}
 
 			if (this.astronomicalData.stars !== undefined && this.withStars) {
 				let instance = this;
 				this.astronomicalData.stars.forEach(function(star, idx) {
-					instance.plotPosToCanvas(context, star.decl, instance.haToLongitude(star.gha), star.name, instance.worldmapColorConfig.starsColor);
+					instance.plotPosToCanvas(context, star.decl, WorldMap.haToLongitude(star.gha), star.name, instance.worldmapColorConfig.starsColor);
 				});
 			}
 		}
@@ -1835,7 +1850,7 @@ class WorldMap extends HTMLElement {
 			// Reload
 			//	console.log("Reloading CSS");
 			try {
-				this.worldmapColorConfig = this.getColorConfig(currentStyle);
+				this.worldmapColorConfig = WorldMap.getColorConfig(currentStyle);
 			} catch (err) {
 				// Absorb?
 				console.log(err);
@@ -1862,8 +1877,8 @@ class WorldMap extends HTMLElement {
 
 		// Print position
 		if (this.userPosition.latitude !== undefined && this.userPosition.longitude !== undefined) {
-			let strLat = this.decToSex(this.userPosition.latitude, "NS");
-			let strLng = this.decToSex(this.userPosition.longitude, "EW");
+			let strLat = WorldMap.decToSex(this.userPosition.latitude, "NS");
+			let strLng = WorldMap.decToSex(this.userPosition.longitude, "EW");
 			context.fillStyle = this.worldmapColorConfig.displayPositionColor;
 			context.font = "bold 16px Arial"; // "bold 40px Arial"
 			context.fillText(strLat, 10, 18);

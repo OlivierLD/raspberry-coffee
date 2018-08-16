@@ -2,6 +2,8 @@ const skyMapVerbose = false;
 const SKY_MAP_TAG_NAME = 'sky-map';
 
 /**
+ * Renders a StarFinder (2102-D) or a Sky Map (like Sirius).
+ *
  * Quick hints for the Sky Map:
  * - Put it OVER your head (look at it from underneath).
  * - Align date and SOLAR time of the day to see the visible sky.
@@ -62,9 +64,8 @@ const SKY_MAP_TAG_NAME = 'sky-map';
 
 /* The map data */
 import constellations from "./stars/constellations.js";
-// import constellations from "./stars/constellations"; // minifyJs does NOT like the .js extension
-
 import * as Utilities from "./utilities/Utilities.js";
+// import constellations from "./stars/constellations"; // minifyJs does NOT like the .js extension
 
 const Hemispheres = {
 	NORTHERN_HEMISPHERE: 1,
@@ -869,12 +870,14 @@ class SkyMap extends HTMLElement {
 	}
 
 	/*
-	 * Sun \u2609
-	 * Moon \u263D, \u263E
-	 * Venus \u2640
-	 * Mars \u2642
+	 * Sun     \u2609
+	 * Moon    \u263D, \u263E
+	 * Venus   \u2640
+	 * Mars    \u2642
 	 * Jupiter \u2643
-	 * Saturn \u2644
+	 * Saturn  \u2644
+	 *
+	 * Aries (Gamma) \u03b3
 	 */
 	static findSymbol(bodyName) {
 		switch (bodyName.toUpperCase()) {
