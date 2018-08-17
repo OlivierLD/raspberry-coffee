@@ -174,6 +174,10 @@ Equipped with Heads up display features (for reflection in a wind shield, for ex
 
 ![HeadsUp display](./docimg/screenshot.12.png)
 
+Heads Up display, from a smartphone:
+
+![HeadsUp display](./docimg/headsup.01.jpg)
+
 ---
 
 ## Notice
