@@ -54,7 +54,7 @@ boolean buttonClearOver = false;
 final int SLIDER_PADDING = 10;
 final int CURSOR_SIZE = 16;
 
-final int HALF_SLOPE = 60;
+final int HALF_TG = 60;
 
 void setup() {
   size(640, 640);
@@ -117,14 +117,13 @@ void draw() {
       prevPt = new Point(x, y);
     }
     // Derivative? at mouseX
-    double[] derCoeffs = derivative(coeffs);
-    double alpha = func(mouseX, derCoeffs);
+    double alpha = func(mouseX, derivative(coeffs));
     // Get the pt on the curve:
     int y = (int)func(mouseX, coeffs);
     stroke(GREEN);
     double angle = Math.atan(alpha);
-    double deltaY = HALF_SLOPE * Math.sin(angle);
-    double deltaX = HALF_SLOPE * Math.cos(angle);
+    double deltaY = HALF_TG * Math.sin(angle);
+    double deltaX = HALF_TG * Math.cos(angle);
     line(Math.round(mouseX - deltaX), Math.round(y - deltaY), Math.round(mouseX + deltaX), Math.round(y + deltaY));
   }
 
@@ -179,6 +178,7 @@ boolean overClearButton(int x, int y, int width, int height)  {
     return false;
   }
 }
+
 void mousePressed() {
   if (buttonResolveOver) { // Resolution
     if (points.size() >= 2) {
