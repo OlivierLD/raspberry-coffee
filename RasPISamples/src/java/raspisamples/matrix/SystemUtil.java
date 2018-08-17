@@ -2,6 +2,7 @@ package raspisamples.matrix;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class SystemUtil {
 	public static double[] solveSystem(double[] m,
@@ -59,15 +60,14 @@ public class SystemUtil {
 
 	public static void printSystem(SquareMatrix squareMatrix, double[] constants) {
 		String unknowns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		int dimension = squareMatrix.getDimension();
-		for (int row=0; row<dimension; row++) {
-			String line = "";
-			for (int col=0; col<dimension; col++) {
-				line += String.format("%s(%f x %c)", (line.trim().length() > 0 ? " + " : ""), squareMatrix.getElementAt(row, col), unknowns.charAt(col));
-			}
-			line += String.format(" = %f", constants[row]);
-			System.out.println(line);
-		}
+		IntStream.range(0, squareMatrix.getDimension()).forEach(row -> {
+			final StringBuffer sb = new StringBuffer();
+			IntStream.range(0, squareMatrix.getDimension()).forEach(col -> {
+				sb.append(String.format("%s(%f x %c)", (sb.toString().trim().length() > 0 ? " + " : ""), squareMatrix.getElementAt(row, col), unknowns.charAt(col)));
+			});
+			sb.append(String.format(" = %f", constants[row]));
+			System.out.println(sb.toString());
+		});
 	}
 
 	public static double[] derivative(double[] coeff) {
