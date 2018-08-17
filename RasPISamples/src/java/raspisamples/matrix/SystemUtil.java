@@ -9,8 +9,9 @@ public class SystemUtil {
 		SquareMatrix sma = new SquareMatrix(c.length);
 
 		for (int i = 0; i < c.length; i++) {
-			for (int j = 0; j < c.length; j++)
+			for (int j = 0; j < c.length; j++) {
 				sma.setElementAt(i, j, m[(c.length * i) + j]);
+			}
 		}
 		return solveSystem(sma, c);
 	}
@@ -49,8 +50,9 @@ public class SystemUtil {
 		// Lines * Column
 		for (int row = 0; row < m.getDimension(); row++) {
 			result[row] = 0.0;
-			for (int col = 0; col < m.getDimension(); col++)
+			for (int col = 0; col < m.getDimension(); col++) {
 				result[row] += (inv.getElementAt(row, col) * c[col]);
+			}
 		}
 		return result;
 	}
@@ -72,7 +74,7 @@ public class SystemUtil {
 		int dim = coeff.length - 1;
 		double derCoeff[] = new double[dim];
 		for (int i=0; i<dim; i++) {
-			derCoeff[i] = (dim -i) * coeff[i];
+			derCoeff[i] = (dim - i) * coeff[i];
 		}
 		return derCoeff;
 	}

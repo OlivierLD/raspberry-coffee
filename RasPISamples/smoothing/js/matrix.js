@@ -1,5 +1,6 @@
 /**
  * Utilities for system resolution, least squares, etc.
+ * This follows the ES5 standard.
  *
  * @param dim
  * @constructor
@@ -132,7 +133,7 @@ var solveSystem = function(m, c) {
         }
     }
     return result;
-}
+};
 
 var printSystem = function(squareMatrix, constants) {
     var unknowns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -145,7 +146,7 @@ var printSystem = function(squareMatrix, constants) {
         line += (" = " + constants[row]);
         console.log(line);
     }
-}
+};
 
 var f = function(x, coeffs) {
     var result = 0.0;
