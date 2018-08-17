@@ -155,6 +155,16 @@ var f = function(x, coeffs) {
     return result;
 };
 
+var derivative = function(coeff) {
+	var dim = coeff.length - 1;
+	var derCoeff = [];
+	for (var i=0; i<dim; i++) {
+		derCoeff.push((dim -i) * coeff[i]);
+	}
+	return derCoeff;
+};
+
+
 // Least Squares
 var leastSquares = function(requiredDegree, data) {
     var dimension = requiredDegree + 1;

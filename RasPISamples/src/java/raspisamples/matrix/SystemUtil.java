@@ -1,6 +1,7 @@
 package raspisamples.matrix;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 public class SystemUtil {
 	public static double[] solveSystem(double[] m,
@@ -67,6 +68,15 @@ public class SystemUtil {
 		}
 	}
 
+	public static double[] derivative(double[] coeff) {
+		int dim = coeff.length - 1;
+		double derCoeff[] = new double[dim];
+		for (int i=0; i<dim; i++) {
+			derCoeff[i] = (dim -i) * coeff[i];
+		}
+		return derCoeff;
+	}
+
 	/**
 	 * An example
 	 * @param args unused.
@@ -126,5 +136,10 @@ public class SystemUtil {
 		System.out.println(String.format("A = %f", result[0]));
 		System.out.println(String.format("B = %f", result[1]));
 		System.out.println(String.format("C = %f", result[2]));
+
+		// Test derivative
+		double[] der = derivative(new double[] { 3d, 2d, 1d, 6d});
+		Arrays.stream(der).forEach(c -> System.out.print(String.format("%f ", c)));
+		System.out.println();
 	}
 }

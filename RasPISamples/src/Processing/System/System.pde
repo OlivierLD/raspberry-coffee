@@ -23,6 +23,7 @@ final int WHITE = 255;
 final int BLACK =   0;
 final int BLUE = color(0, 0, 255);
 final int RED = color(255, 0, 0);
+final int GREEN = color(0, 102, 0); // It's a dark green.
 
 final int BUTTON_COLOR = BLACK;
 final int BUTTON_HIGHLIGHT = color(128);
@@ -53,6 +54,8 @@ boolean buttonClearOver = false;
 final int SLIDER_PADDING = 10;
 final int CURSOR_SIZE = 16;
 
+final int HALF_SLOPE = 60;
+
 void setup() {
   size(640, 640);
   hsbDegree = new HScrollBar(SLIDER_PADDING, height - 10, width - (2 * SLIDER_PADDING), CURSOR_SIZE, CURSOR_SIZE);
@@ -82,19 +85,19 @@ int prevDegree = 0;
 void draw() {
   background(WHITE);
   fill(BLACK);
-  
+
   requiredSmoothingDegree = sliderToDegValue();
-  text("Drag the mouse to spray points, then click [Resolve]. Degree is " + String.valueOf(requiredSmoothingDegree), 10, height - 50); 
-  text("Use the slider to change the degree of the curve to calculate", 10, height - 30); 
-  
+  text("Drag the mouse to spray points, then click [Resolve]. Degree is " + String.valueOf(requiredSmoothingDegree), 10, height - 50);
+  text("Use the slider to change the degree of the curve to calculate", 10, height - 30);
+
   hsbDegree.update();
   hsbDegree.display();
-  
+
   if (prevDegree != requiredSmoothingDegree && points.size() > 2) { // Then recalculate
     smooth();
   }
   prevDegree = requiredSmoothingDegree;
-  
+
   // Points
   if (points.size() > 0) {
     stroke(BLUE);
@@ -113,11 +116,21 @@ void draw() {
       }
       prevPt = new Point(x, y);
     }
+    // Derivative? at mouseX
+    double[] derCoeffs = derivative(coeffs);
+    double alpha = func(mouseX, derCoeffs);
+    // Get the pt on the curve:
+    int y = (int)func(mouseX, coeffs);
+    stroke(GREEN);
+    double angle = Math.atan(alpha);
+    double deltaY = HALF_SLOPE * Math.sin(angle);
+    double deltaX = HALF_SLOPE * Math.cos(angle);
+    line(Math.round(mouseX - deltaX), Math.round(y - deltaY), Math.round(mouseX + deltaX), Math.round(y + deltaY));
   }
-  
+
   // Button states
   update(mouseX, mouseY);
-  
+
   // Resolve button
   noStroke();
   fill(buttonResolveColor);
@@ -146,7 +159,7 @@ void update(int x, int y) {
 }
 
 boolean overResolveButton(int x, int y, int width, int height)  {
-  if (mouseX >= x && mouseX <= (x + width) && 
+  if (mouseX >= x && mouseX <= (x + width) &&
       mouseY >= y && mouseY <= (y + height)) {
     buttonResolveColor = BUTTON_HIGHLIGHT;
     return true;
@@ -157,7 +170,7 @@ boolean overResolveButton(int x, int y, int width, int height)  {
 }
 
 boolean overClearButton(int x, int y, int width, int height)  {
-  if (mouseX >= x && mouseX <= (x + width) && 
+  if (mouseX >= x && mouseX <= (x + width) &&
       mouseY >= y && mouseY <= (y + height)) {
     buttonClearColor = BUTTON_HIGHLIGHT;
     return true;
@@ -193,10 +206,20 @@ static double func(double x, double[] coeff) {
   double d = 0;
   int len = coeff.length;
   for (int i=0; i<len; i++) {
-    d += (coeff[i] * Math.pow(x, (len - 1 - i))); 
+    d += (coeff[i] * Math.pow(x, (len - 1 - i)));
   }
   return d;
 }
+
+static double[] derivative(double[] coeff) {
+  int dim = coeff.length - 1;
+  double derCoeff[] = new double[dim];
+  for (int i=0; i<dim; i++) {
+    derCoeff[i] = (dim -i) * coeff[i];
+  }
+  return derCoeff;
+}
+
 /**
  * For details on the least squares method:
  * See http://www.efunda.com/math/leastsquares/leastsquares.cfm

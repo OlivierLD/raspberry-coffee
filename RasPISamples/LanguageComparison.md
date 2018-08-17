@@ -417,16 +417,16 @@ The same JavaScript code is supposed to run the same in all browsers, right?
 It's like if the browser was playing the role of a Virtual Machine, taking care of rendering the same result,
 wherever you run the code from.
 
-Well, this would be in an ideal world... The specification of JavaScript is way more laxist than the JVM one,
+Well, this would be in an ideal world... The specification of JavaScript is way more laxist than the JVM's one,
 I am not even sure there was one before JavaScript was released for the first time.
 Several ones came after that: ECMA Script, ES5, ES6... And as if it was not enough, the implementation of CSS (Cascading Style Sheets)
-is following a similar pattern, it depends quite a bit of the browser you want to use, they all have their sensibility (IE, Edge, Chrome,
+is following a similar pattern, it depends quite a bit on the browser you want to use, they all have their sensibility (IE, Edge, Chrome,
 Opera, Firefox, Safari, you name it) !
 
 This means that there is still a lot of room for inventions!
 
 #### Docker
-Installing Go on the Raspberry PI seems not to be straight forward... It would be worth giving Docker a try.
+Installing Go on the Raspberry PI happens not to be as straightforward as anyone would expect... It would be worth giving Docker a try.
 
 This project contains a module that build Docker images, including one for Go.
 
