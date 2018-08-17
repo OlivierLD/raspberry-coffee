@@ -20,19 +20,41 @@ function testIt(a, b) {
 	getSum(a, b)
 			.then(
 					// this is the resolve function
-					function (result) { 
-						console.log("---- S U C C E S S ----");
+					function (result) {
+						console.log("---- 1 - S U C C E S S ----");
 						console.log("Success: Result is ", result);
 						console.log("-----------------------");
 					},
 					// this is the reject function
 					function (error) {
-						console.log("--- R E J E C T E D ---");
+						console.log("--- 1 - R E J E C T E D ---");
 						console.log("Oops:", error);
 						console.log("-----------------------");
 					});
 }
 
-testIt(5, 6);
+function testIt_2(a, b) {
+	getSum(a, b)
+			.then(
+					// this is the resolve function
+					function (result) {
+						console.log("---- 2 - S U C C E S S ----");
+						console.log("Success: Result is ", result);
+						console.log("-----------------------");
+					})
+			.catch (
+					// this is the reject function
+					function (error) {
+						console.log("--- 2 - R E J E C T E D ---");
+						console.log("Oops:", error);
+						console.log("-----------------------");
+					});
+}
 
+console.log("--- RESOLVE / REJECT ---");
+testIt(5, 6);
 testIt(5, -6);
+
+console.log("--- THEN.CATCH ---");
+testIt_2(5, 6);
+testIt_2(5, -6);
