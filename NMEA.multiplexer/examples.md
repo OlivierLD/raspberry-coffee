@@ -243,7 +243,7 @@ A small [I2C OLED display](https://www.adafruit.com/product/3527) attached to th
 
 #### Weather Station
 Feed the NMEA Multiplexer with the Weather Station from SwitchDoc labs.
-The code of the project is [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WeatherStation), 
+The code of the project is [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WeatherStation),
 and an implementation is available [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RasPISamples#weatherstation).
 
 There is a  `custom channel` (aka `consumers`) made out of
@@ -270,7 +270,7 @@ the properties file mentioned in the `channel` definition:
 mux.01.cls=nmea.consumers.client.WeatherStationWSClient
 mux.01.reader=nmea.consumers.reader.WeatherStationWSReader
 mux.01.properties=weather.station.properties
-``` 
+```
 
 ```properties
 ws.uri=ws://192.168.127.127:9876/
@@ -279,7 +279,7 @@ ws.uri=ws://192.168.127.127:9876/
 ##### Further: IoT
 
 Now the Weather Station is being read, we could forward its data somewhere else, like on an IoT server.
- 
+
 ###### Summary
 From the `RasPISamples` directory, on its own machine (or not...), use `weather.menu`:
 ```javascript
@@ -290,7 +290,7 @@ From the `RasPISamples` directory, on its own machine (or not...), use `weather.
  S: Show processes
  K: Kill them all
  Q: Quit
- You Choose > 
+ You Choose >
 ```
 - Start the node server (including the `WebSocket` server)
 - Then start the Weather Station Reader
@@ -303,7 +303,7 @@ The `Raspberry PI` and the `Other machine` are on the same Local Area Network (L
 
 The `IoT server` and the `php/MySQL` are hosted on the Internet.
 
-See it live [here](http://donpedro.lediouris.net/php/weather/reports.v2/weather.report.html). 
+See it live [here](http://donpedro.lediouris.net/php/weather/reports.v2/weather.report.html).
 This renders the data inserted in MySQL.
 
 See those documents for more details:
@@ -362,7 +362,7 @@ forward.01.cls=nmea.forwarders.SolarPanelOrienter
 forward.01.properties=sunflower.rest.properties
 #
 ```
-> Note: this runs on any machine that knows about a serial port, not only a Raspberry PI.  
+> Note: this runs on any machine that knows about a serial port, not only a Raspberry PI.
 
 As seen above, the `forwarder` refers to its own properties file:
 ```properties
@@ -383,7 +383,7 @@ The `nmea.forwarders.SolarPanelOrienter` class is part of the `GPS.sun.servo` pr
  $ .......
  $ cd ../NMEA.multiplexer
  $ ../gradlew shadowJar
- $ ....... 
+ $ .......
 ```
 And then just run it (with the GPS on the right serial port):
 ```bash
@@ -395,7 +395,16 @@ Then the web interface is available on the `http.port` mentioned above, at `sun.
 
 Do the test: the Sun crosses the meridian at _exactly_ 12:00 noon Solar (SLR).
 
-##### And more to come...
+#### And more to come...
+##### Ideas
+- Another logger, suitable for kayaking:
+  - transparent box
+  - bigger display (like the [Nokia](https://www.adafruit.com/product/338) one)
+  - with external GPS (outside the box)
+  - User Interface:
+    - a [touchpad](https://www.adafruit.com/product/1332)?
+    - A Pebble App?
+
 <!--
 ### TODO...
 [Todo next](./web/TODO.md "What's next")
