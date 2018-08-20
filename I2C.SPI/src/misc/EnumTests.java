@@ -8,9 +8,9 @@ public class EnumTests {
 		ADS1015_REG_CONFIG_DR_250SPS(250),
 		ADS1015_REG_CONFIG_DR_490SPS(490),
 		ADS1015_REG_CONFIG_DR_920SPS(920),
-		ADS1015_REG_CONFIG_DR_1600SPS(1600),
-		ADS1015_REG_CONFIG_DR_2400SPS(2400),
-		ADS1015_REG_CONFIG_DR_3300SPS(3300);
+		ADS1015_REG_CONFIG_DR_1600SPS(1_600),
+		ADS1015_REG_CONFIG_DR_2400SPS(2_400),
+		ADS1015_REG_CONFIG_DR_3300SPS(3_300);
 
 		private final int value;
 
@@ -64,11 +64,11 @@ public class EnumTests {
 	}
 
 	public static void main(String... args) {
-		System.out.println("Value:" + defaultSpsADS1015(2400, 1234));
-		System.out.println("Value:" + defaultSpsADS1015(7890, 1234));
+		System.out.println("Value:" + defaultSpsADS1015(2_400, 1_234));
+		System.out.println("Value:" + defaultSpsADS1015(7_890, 1_234));
 
-		System.out.println("DefValue:" + spsADS1015.defaultVal(2400, 1234));
-		System.out.println("DefValue:" + spsADS1015.defaultVal(6789, 1234));
+		System.out.println("DefValue:" + spsADS1015.defaultVal(2_400, 1_234));
+		System.out.println("DefValue:" + spsADS1015.defaultVal(6_789, 1_234));
 
 		System.out.println("Done");
 	}

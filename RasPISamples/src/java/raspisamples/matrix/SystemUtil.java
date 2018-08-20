@@ -60,6 +60,7 @@ public class SystemUtil {
 
 	public static void printSystem(SquareMatrix squareMatrix, double[] constants) {
 		String unknowns = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		// Nice IntStream s !
 		IntStream.range(0, squareMatrix.getDimension()).forEach(row -> {
 			final StringBuffer sb = new StringBuffer();
 			IntStream.range(0, squareMatrix.getDimension()).forEach(col -> {

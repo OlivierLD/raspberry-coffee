@@ -19,12 +19,13 @@ public class Console {
 
 	public static void main(String... args) {
 		int nb = 5;
-		if (args.length > 0)
+		if (args.length > 0) {
 			try {
 				nb = Integer.parseInt(args[0]);
 			} catch (Exception ex) {
 				System.err.println(ex.toString());
 			}
+		}
 		new Console();
 		System.out.println(String.format("Anticipating %d moves...", (int)(Math.pow(2, nb) - 1)));
 		System.out.println("Moving the tower from B to A");

@@ -1,22 +1,12 @@
 #!/bin/bash
-YES=
-if [ "$1" == "-y" ]
-then
-  YES=1
-fi
 cd raspberry-pi4j-samples/NMEA.multiplexer
-a=
-if [ "$YES" == "1" ]
+#
+if [ -f ./data.nmea ]
 then
-  a=y
-else 
-  echo -en "Remove data.nmea ? y|n > "
-  read a
-fi
-if [ "$a" = "y" ]
-then
-  echo -e "Removing previous data file"
-  sudo rm data.nmea
+  # If exits, rename it
+  now=`date +%Y-%m-%d.%H:%M:%S`
+  echo -e "Renaming previous data file to ${now}_data.nmea"
+  sudo mv data.nmea ${now}_data.nmea
 fi
 nohup ./mux.sh nmea.mux.gps.log.properties &
 echo On its way!
