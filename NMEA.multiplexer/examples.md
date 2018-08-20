@@ -189,7 +189,7 @@ The Raspberry PI, its battery bank and the GPS were sitting in a plastic box, ne
 ![In a box](./docimages/in.a.box.jpg "In a box")
 
 The Raspberry PI generates its own WiFi hotspot (with `hostapd`, see [here](./README.md#note-access-point-and-internet-access)), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
-the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details). Even the admin web console works fine in thsi configuration.
+the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details). Even the admin web console works fine in this configuration.
 
 The properties files used with `mux.sh` just looks like this:
 ```properties
@@ -393,7 +393,7 @@ Then the web interface is available on the `http.port` mentioned above, at `sun.
 
 ![Web Interface](./docimages/solar.data.png)
 
-Do the test: the Sun crosses the meridian at _exactly_ 12:00 noon Solar (SLR).
+Do the test: the Sun crosses the meridian at _exactly_ 12:00:00 noon Solar (SLR).
 
 #### And more to come...
 ##### Ideas
