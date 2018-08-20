@@ -151,7 +151,7 @@ do
     "6")
       OK=true
       DOCKER_FILE=rpi.mux.Dockerfile
-      IMAGE_NAME=oliv-node-mux
+      IMAGE_NAME=oliv-nmea-mux
 			# RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 $IMAGE_NAME:latest /bin/bash"
 			RUN_CMD="docker run -p 9999:9999 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d $IMAGE_NAME:latest"
 			#                      |    |            |             |             |

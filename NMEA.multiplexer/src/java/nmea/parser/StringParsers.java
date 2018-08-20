@@ -1325,7 +1325,7 @@ public class StringParsers {
 			if (s.indexOf("RMC,") > -1) {
 				rmc = new RMC();
 				String[] data = str.substring(0, str.indexOf("*")).split(",");
-				rmc = rmc.setValid(data[2].equals("A"));
+				rmc = rmc.setValid(data[2].equals("A")); // Active
 				if (data[1].length() > 0) { // Time and Date
 					double utc = 0D;
 					try {

@@ -495,8 +495,14 @@ public class MuxInitializer {
 						case "file":
 							String fName = muxProps.getProperty(String.format("forward.%s.filename", MUX_IDX_FMT.format(fwdIdx)));
 							boolean append = "true".equals(muxProps.getProperty(String.format("forward.%s.append", MUX_IDX_FMT.format(fwdIdx)), "false"));
+							String propFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
 							try {
 								Forwarder fileForwarder = new DataFileWriter(fName, append);
+								if (propFile != null) {
+									Properties forwarderProps = new Properties();
+									forwarderProps.load(new FileReader(propFile));
+									fileForwarder.setProperties(forwarderProps);
+								}
 								nmeaDataForwarders.add(fileForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
