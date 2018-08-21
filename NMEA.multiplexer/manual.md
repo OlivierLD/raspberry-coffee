@@ -56,7 +56,7 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
 - `bmp180`
     - Temperature, pressure
 
-You can also define you own channels (extending `NMEAClient` and with a `reader` attribute).
+You can also define your own channels (extending `NMEAClient` and with a `reader` attribute).
 
 Look for `mux.01.cls=nmea.consumers.client.WeatherStationWSClient`.
 
@@ -93,7 +93,7 @@ The lines above means that:
 - `rmi`
     - RMI Server
 
-You can also implement you own forwarder (implementing the `Forwarder` interface).
+You can also implement your own forwarder (implementing the `Forwarder` interface).
 
 Look for `forward.02.cls=nmea.forwarders.RESTPublisher`
 
