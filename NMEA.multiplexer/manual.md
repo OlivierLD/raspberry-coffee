@@ -102,6 +102,9 @@ Look for `forward.02.cls=nmea.forwarders.RESTPublisher`
 - `tw-current`
     - One computer, to calculate both True Wind and Current (GPS Based, with possibly several time buffers).
 
+> _Important_: Computer may need data coming from the various channels. Those data will
+be stored in a cache _if the property `init.cache` is set to `true`. See below.
+
 You can also define your own computers (extending `Computer`).
 
 Look for `computer.02.cls=nmea.computers.ComputerSkeleton`
