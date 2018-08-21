@@ -129,3 +129,21 @@ default.declination=14
 damping=30
 ```
 
+`with.http.server` is set to `false` by default. `true` means that you will have access to
+some `REST` services, for admin an other purposes.
+
+If `with.http.server` is set to `true`, the default http port is `9999`. It can be overridden by `http.port` if needed.
+
+`init.cache` is set to `false` by default. A cache - accessible by `Computers` will be initialized if
+`init.cache` is set to `true`.
+The cache is a `Map<String, Object>`, see `context.NMEADataCache` for details.
+
+If `init.cache` is set to `true`, the following parameters will be taken in account when inserting data in the cache:
+- `bsp.factor` Boat Speed Factor, number, `0` to `n`
+- `aws.factor` Apparent Wind Speed Factor, number, `0` to `n`
+- `awa.offset` Apparent Wind Angle offset in degrees, from `-180` to `180`
+- `hdg.offset` Heading offset in degrees, from `-180` to `180`
+
+`default.declination` will be used if not returned by the GPS (as it could, depends on your GPS). `E` is `+`, `W` is `-`.
+
+`damping` (default is `1`) unused for now (Aug-2018), but will be.
