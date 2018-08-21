@@ -3,10 +3,17 @@ cd raspberry-pi4j-samples/NMEA.multiplexer
 #
 if [ -f ./data.nmea ]
 then
-  # If exits, rename it
+  # If data.nmea exits, rename it
   now=`date +%Y-%m-%d.%H:%M:%S`
   echo -e "Renaming previous data file to ${now}_data.nmea"
   sudo mv data.nmea ${now}_data.nmea
+fi
+if [ -f ./nohup.out ]
+then
+  # If nohup.out exits, rename it
+  now=`date +%Y-%m-%d.%H:%M:%S`
+  echo -e "Renaming previous data file to ${now}_data.nmea"
+  sudo mv nohup.out ${now}_nohup.out
 fi
 nohup ./mux.sh nmea.mux.gps.log.small.properties &
 echo On its way!

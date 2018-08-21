@@ -7,6 +7,8 @@ import java.util.Properties;
 
 /**
  * Example: How to override a Forwarder
+ *
+ * This one does not log any data until a valid RMC has been received.
  */
 public class ExtendedDataFileWriter extends DataFileWriter {
 	private boolean ok2log = true; // Possibly overridden by property 'wait.for.active.RMC', see below.
