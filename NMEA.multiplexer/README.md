@@ -152,7 +152,7 @@ To run it, modify `mux.sh` to fit your environment, and run
  $> ./mux.sh
 ```
 
-##### Properties
+### Properties
 Here is a brief description of the properties managed by the `nmea.mux.GenericNMEAMultiplexer`, the ones
 present in the file `nmea.mux.properties`, or set in the System variable `mux.properties`.
 
@@ -175,42 +175,97 @@ after that incremented by `1`.
 
 For example, `mux.01.xxx`, followed by `mux.02.yyy`.
 
-> Quick explanation: To find the first channel, the program looks for a `mux.01.*`.
+> _Quick explanation_: To find the first channel, the program looks for a `mux.01.*`.
 > If no such entry is found, that would mean for the program that there is no channel to deal with.
 > After finding and evaluating `mux.01.xxx`, the program looks for `mux.02.*`. If no
 > such channel is found, the program understands that the list of the channels is terminated.
 > This is the same for channels, forwarders and computers.
 
 The third part of the property name (the `type` in `mux.0X.type` for example) is the attribute.
-_**ALL**_ elements _have_ a `type` attribute, the other attributes depend on this `type`.
+_**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes depend on this `type`.
 
-**Pre-defined channels**
+**Pre-defined channel types**
 
 - `serial`
+    - Serial port input.
 - `tcp`
+    - TCP input
 - `file`
+    - Log file replay
 - `ws`
+    - WebSocket input
 - `htu21df`
+    - Temperature, humidity
 - `rnd`
+    - Random data generator (for debug)
 - `zda`
+    - ZDA Sentence generator (UTC day, month, and year, and local time zone offset)
 - `lsm303`
+    - Triple axis accelerometer and magnetometer
 - `bme280`
+    - Humidity, pressure, temperature
 - `bmp180`
+    - Temperature, pressure
 
-**Pre-defined forwarders**
+You can also define you own channels (extending `NMEAClient` and with a `reader` attribute).
+
+**Pre-defined forwarder types**
+
+_**ALL**_ forwarders can use 2 optional attributes, `subclass` and `properties`:
+```properties
+forward.XX.type=file
+forward.XX.subclass=nmea.forwarders.ExtendedDataFileWriter
+forward.XX.properties=validlogger.properties
+```
+The lines above means that:
+- The `nmea.forwarders.ExtendedDataFileWriter` extends `DataFileWriter`
+- Required extra properties are in a file named `validlogger.properties`.
 
 - `serial`
+    - Write to a serial port
 - `tcp`
+    - TCP Server
 - `gpsd`
+    - GPSD Server
 - `file`
+    - Log file output
 - `ws`
+    - WebSocket server
 - `wsp`
+    - WebSocket Processor
 - `console`
+    - Console output
 - `rmi`
+    - RMI Server
 
-**Pre-defined computers**
+You can also implement you own forwarder (implementing the `Forwarder` interface).
+
+**Pre-defined computer type(s)**
 
 - `tw-current`
+    - One computer, to calculate both True Wind and Current (GPS Based, with possibly several time buffers).
+
+You can also define your own computers (extending `Computer`).
+
+**Other properties**
+
+```properties
+with.http.server=yes
+http.port=9999
+#
+init.cache=true
+deviation.file.name=dp_2011_04_15.csv
+# Leeway = max.leeway * cos(awa)
+max.leeway=10
+#
+bsp.factor=1.0
+aws.factor=1.0
+awa.offset=0
+hdg.offset=0
+#
+default.declination=14
+damping=30
+```
 
 ##### Filtering
 The Channels - aka Consumers - support sentence filtering.
