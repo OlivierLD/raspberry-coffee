@@ -35,33 +35,9 @@ public class ExtendedDataFileWriter extends DataFileWriter {
 		}
 	}
 
-
-//	public String getLog() {
-//		return this.log;
-//	}
-
-//	public static class DataFileBean {
-//		private String cls;
-//		private String log;
-//		private boolean append;
-//		private String type = "file";
-//
-//		public DataFileBean(ExtendedDataFileWriter instance) {
-//			cls = instance.getClass().getName();
-//			log = instance.log;
-//			append = instance.append;
-//		}
-//
-//		public String getLog() {
-//			return log;
-//		}
-//		public boolean append() { return append; }
-//	}
-
-//	@Override
-//	public Object getBean() {
-//		return new DataFileBean(this);
-//	}
+	/*
+	 * getBean() will return (contains) the name of the extended class, if it is.
+	 */
 
 	@Override
 	public void setProperties(Properties props) {
