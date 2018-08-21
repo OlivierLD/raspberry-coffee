@@ -134,8 +134,9 @@ It is feeding an RMI server that can then be accessed by an RMI client.
 See an example of such a client in `samples.rmi.client.SampleRMIClient`.
 
 ### To see it at work (aka Get Started)
-See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broacdast it to.
+See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broadcast it to.
 See it to understand its content (should be clear enough).
+<!-- TODO Document the properties -->
 
 Those settings can be modified once the mux is started, throught the REST API.
 

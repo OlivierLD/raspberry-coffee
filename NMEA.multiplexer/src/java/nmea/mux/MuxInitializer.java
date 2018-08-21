@@ -467,8 +467,20 @@ public class MuxInitializer {
 						case "serial":
 							String serialPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
 							int baudrate = Integer.parseInt(muxProps.getProperty(String.format("forward.%s.baudrate", MUX_IDX_FMT.format(fwdIdx))));
+							String propFileSerial = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
+							String serialSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
 							try {
-								Forwarder serialForwarder = new SerialWriter(serialPort, baudrate);
+								Forwarder serialForwarder;
+								if (serialSubClass == null) {
+									serialForwarder = new SerialWriter(serialPort, baudrate);
+								} else {
+									serialForwarder = (Forwarder)Class.forName(serialSubClass.trim()).getConstructor(String.class, Integer.class).newInstance(serialPort, baudrate);
+								}
+								if (propFileSerial != null) {
+									Properties forwarderProps = new Properties();
+									forwarderProps.load(new FileReader(propFileSerial));
+									serialForwarder.setProperties(forwarderProps);
+								}
 								nmeaDataForwarders.add(serialForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -476,8 +488,20 @@ public class MuxInitializer {
 							break;
 						case "tcp":
 							String tcpPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+							String tcpPropFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
+							String tcpSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
 							try {
-								Forwarder tcpForwarder = new TCPServer(Integer.parseInt(tcpPort));
+								Forwarder tcpForwarder;
+								if (tcpSubClass == null) {
+									tcpForwarder = new TCPServer(Integer.parseInt(tcpPort));
+								} else {
+									tcpForwarder = (Forwarder)Class.forName(tcpSubClass.trim()).getConstructor(Integer.class).newInstance(tcpPort);
+								}
+								if (tcpPropFile != null) {
+									Properties forwarderProps = new Properties();
+									forwarderProps.load(new FileReader(tcpPropFile));
+									tcpForwarder.setProperties(forwarderProps);
+								}
 								nmeaDataForwarders.add(tcpForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -485,8 +509,20 @@ public class MuxInitializer {
 							break;
 						case "gpsd":
 							String gpsdPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
+							String gpsdPropFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
+							String gpsdSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
 							try {
-								Forwarder gpsdForwarder = new GPSdServer(Integer.parseInt(gpsdPort));
+								Forwarder gpsdForwarder;
+								if (gpsdSubClass == null) {
+									gpsdForwarder = new GPSdServer(Integer.parseInt(gpsdPort));
+								} else {
+									gpsdForwarder = (Forwarder)Class.forName(gpsdSubClass.trim()).getConstructor(Integer.class).newInstance(gpsdPort);
+								}
+								if (gpsdPropFile != null) {
+									Properties forwarderProps = new Properties();
+									forwarderProps.load(new FileReader(gpsdPropFile));
+									gpsdForwarder.setProperties(forwarderProps);
+								}
 								nmeaDataForwarders.add(gpsdForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -496,8 +532,14 @@ public class MuxInitializer {
 							String fName = muxProps.getProperty(String.format("forward.%s.filename", MUX_IDX_FMT.format(fwdIdx)));
 							boolean append = "true".equals(muxProps.getProperty(String.format("forward.%s.append", MUX_IDX_FMT.format(fwdIdx)), "false"));
 							String propFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
+							String fSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx))); // TODO Same for the others
 							try {
-								Forwarder fileForwarder = new DataFileWriter(fName, append);
+								Forwarder fileForwarder;
+								if (fSubClass == null) {
+									fileForwarder = new DataFileWriter(fName, append);
+								} else {
+									fileForwarder = (Forwarder)Class.forName(fSubClass.trim()).getConstructor(String.class, Boolean.class).newInstance(fName, append);
+								}
 								if (propFile != null) {
 									Properties forwarderProps = new Properties();
 									forwarderProps.load(new FileReader(propFile));
@@ -510,8 +552,20 @@ public class MuxInitializer {
 							break;
 						case "ws":
 							String wsUri = muxProps.getProperty(String.format("forward.%s.wsuri", MUX_IDX_FMT.format(fwdIdx)));
+							String wsPropFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
+							String wsSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
 							try {
-								Forwarder wsForwarder = new WebSocketWriter(wsUri);
+								Forwarder wsForwarder;
+								if (wsSubClass == null) {
+									wsForwarder = new WebSocketWriter(wsUri);
+								} else {
+									wsForwarder = (Forwarder)Class.forName(wsSubClass.trim()).getConstructor(String.class).newInstance(wsUri);
+								}
+								if (wsPropFile != null) {
+									Properties forwarderProps = new Properties();
+									forwarderProps.load(new FileReader(wsPropFile));
+									wsForwarder.setProperties(forwarderProps);
+								}
 								nmeaDataForwarders.add(wsForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -519,16 +573,40 @@ public class MuxInitializer {
 							break;
 						case "wsp":
 							String wspUri = muxProps.getProperty(String.format("forward.%s.wsuri", MUX_IDX_FMT.format(fwdIdx)));
+							String wspPropFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
+							String wspSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
 							try {
-								Forwarder wsForwarder = new WebSocketProcessor(wspUri);
-								nmeaDataForwarders.add(wsForwarder);
+								Forwarder wspForwarder;
+								if (wspSubClass == null) {
+									wspForwarder = new WebSocketProcessor(wspUri);
+								} else {
+									wspForwarder = (Forwarder)Class.forName(wspSubClass.trim()).getConstructor(String.class).newInstance(wspUri);
+								}
+								if (wspPropFile != null) {
+									Properties forwarderProps = new Properties();
+									forwarderProps.load(new FileReader(wspPropFile));
+									wspForwarder.setProperties(forwarderProps);
+								}
+								nmeaDataForwarders.add(wspForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
 							}
 							break;
 						case "console":
 							try {
+								String consolePropFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
+								String consoleSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
 								Forwarder consoleForwarder = new ConsoleWriter();
+								if (consoleSubClass == null) {
+									consoleForwarder = new ConsoleWriter();
+								} else {
+									consoleForwarder = (Forwarder)Class.forName(consoleSubClass.trim()).getConstructor().newInstance();
+								}
+								if (consolePropFile != null) {
+									Properties forwarderProps = new Properties();
+									forwarderProps.load(new FileReader(consolePropFile));
+									consoleForwarder.setProperties(forwarderProps);
+								}
 								nmeaDataForwarders.add(consoleForwarder);
 							} catch (Exception ex) {
 								ex.printStackTrace();
@@ -537,12 +615,19 @@ public class MuxInitializer {
 						case "rmi":
 							String rmiPort = muxProps.getProperty(String.format("forward.%s.port", MUX_IDX_FMT.format(fwdIdx)));
 							String rmiName = muxProps.getProperty(String.format("forward.%s.name", MUX_IDX_FMT.format(fwdIdx)));
+							String rmiPropFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
+							String subClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx))); // TODO Manage that one...
 							try {
 								Forwarder rmiServerForwarder;
 								if (rmiName != null && rmiName.trim().length() > 0) {
 									rmiServerForwarder = new RMIServer(Integer.parseInt(rmiPort), rmiName);
 								} else {
 									rmiServerForwarder = new RMIServer(Integer.parseInt(rmiPort));
+								}
+								if (rmiPropFile != null) {
+									Properties forwarderProps = new Properties();
+									forwarderProps.load(new FileReader(rmiPropFile));
+									rmiServerForwarder.setProperties(forwarderProps);
 								}
 								nmeaDataForwarders.add(rmiServerForwarder);
 							} catch (Exception ex) {

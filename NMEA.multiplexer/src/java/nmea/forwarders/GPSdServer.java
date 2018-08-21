@@ -18,7 +18,8 @@ import java.util.Properties;
 
 public class GPSdServer implements Forwarder {
 	private GPSdServer instance = this;
-	private List<Socket> clientSocketlist = new ArrayList<Socket>(1);
+	private List<Socket> clientSocketlist = new ArrayList<>(1);
+	private Properties props = null;
 
 	private int tcpPort = 2947;
 	private ServerSocket serverSocket = null;
@@ -230,5 +231,6 @@ public class GPSdServer implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		this.props = props;
 	}
 }

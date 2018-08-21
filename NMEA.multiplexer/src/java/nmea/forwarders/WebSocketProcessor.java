@@ -35,6 +35,7 @@ public class WebSocketProcessor implements Forwarder {
 	private WebSocketClient wsClient = null;
 	private boolean isConnected = false;
 	private String wsUri;
+	private Properties props = null;
 
 	private boolean keepWorking = true;
 
@@ -326,5 +327,6 @@ public class WebSocketProcessor implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		this.props = props;
 	}
 }

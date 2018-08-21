@@ -9,6 +9,7 @@ import java.util.Properties;
 public class UDPServer implements Forwarder {
 	private int udpPort = 8001;
 	private InetAddress address = null;
+	private Properties props = null;
 
 	private final static String DEFAULT_HOST = "127.0.0.1"; // "230.0.0.1"
 	private String hostName = DEFAULT_HOST;
@@ -80,6 +81,7 @@ public class UDPServer implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		this.props = props;
 	}
 }
 

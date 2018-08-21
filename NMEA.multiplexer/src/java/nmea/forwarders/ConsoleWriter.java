@@ -3,6 +3,8 @@ package nmea.forwarders;
 import java.util.Properties;
 
 public class ConsoleWriter implements Forwarder {
+	private Properties props = null;
+
 	public ConsoleWriter() throws Exception {
 	}
 
@@ -35,5 +37,6 @@ public class ConsoleWriter implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		this.props = props;
 	}
 }

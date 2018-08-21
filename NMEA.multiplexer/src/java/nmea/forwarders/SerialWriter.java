@@ -15,6 +15,7 @@ public class SerialWriter implements Forwarder {
 	private String comPort = "/dev/ttyUSB1"; // "COM1";
 	private int br = 4800;
 	private SerialPort serialPort;
+	private Properties props = null;
 
 	private OutputStream out = null;
 
@@ -129,5 +130,6 @@ public class SerialWriter implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		this.props = props;
 	}
 }

@@ -1,8 +1,5 @@
 package nmea.forwarders;
 
-import nmea.parser.RMC;
-import nmea.parser.StringParsers;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,8 +10,6 @@ public class DataFileWriter implements Forwarder {
 	private String log;
 	private boolean append = false;
 	private Properties props = null;
-
-	private boolean ok2log = true;
 
 	public DataFileWriter(String fName) throws Exception {
 		this(fName, false);
@@ -34,19 +29,8 @@ public class DataFileWriter implements Forwarder {
 	public void write(byte[] message) {
 		try {
 			String mess = new String(message).trim(); // trim removes \r\n
-
-			if (!ok2log) {
-				if (mess.substring(3).startsWith("RMC,")) { // Wait for Active RMC (Valid)
-					RMC rmc = StringParsers.parseRMC(mess);
-					if (rmc.isValid()) {
-						ok2log = true;
-					}
-				}
-			}
-			if (ok2log) {
-				if (!mess.isEmpty()) {
-					this.dataFile.write(mess + '\n');
-				}
+			if (!mess.isEmpty()) {
+				this.dataFile.write(mess + '\n');
 			}
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
@@ -92,9 +76,5 @@ public class DataFileWriter implements Forwarder {
 	@Override
 	public void setProperties(Properties props) {
 		this.props = props;
-
-		if ("true".equals(props.getProperty("wait.for.active.RMC"))) { // true | false
-			ok2log = false;
-		}
 	}
 }

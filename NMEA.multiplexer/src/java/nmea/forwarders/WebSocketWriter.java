@@ -10,6 +10,7 @@ public class WebSocketWriter implements Forwarder {
 	private WebSocketClient wsClient = null;
 	private boolean isConnected = false;
 	private String wsUri;
+	private Properties props = null;
 
 	/**
 	 * @param serverURL like ws://hostname:port/
@@ -96,5 +97,6 @@ public class WebSocketWriter implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		this.props = props;
 	}
 }

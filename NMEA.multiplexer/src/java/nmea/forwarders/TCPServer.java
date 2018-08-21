@@ -10,7 +10,8 @@ import java.util.Properties;
 
 public class TCPServer implements Forwarder {
 	private TCPServer instance = this;
-	private List<Socket> clientSocketlist = new ArrayList<Socket>(1);
+	private List<Socket> clientSocketlist = new ArrayList<>(1);
+	private Properties props = null;
 
 	private int tcpPort = 7001;
 	private ServerSocket serverSocket = null;
@@ -160,5 +161,6 @@ public class TCPServer implements Forwarder {
 
 	@Override
 	public void setProperties(Properties props) {
+		this.props = props;
 	}
 }

@@ -22,6 +22,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 	private int registryPort      = 1099;
 	private String serverAddress  = "";
 	private String bindingName    = DEFAULT_NAME;
+	private Properties props = null;
 
 	private boolean verbose = false;
 
@@ -158,6 +159,7 @@ public class RMIServer extends UnicastRemoteObject implements ServerInterface, F
 
 	@Override
 	public void setProperties(Properties props) {
+		this.props = props;
 	}
 
 	// For standalone tests
