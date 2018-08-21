@@ -966,7 +966,7 @@ public class StringParsers {
     /* Structure is
      *  $aaGLL,llll.ll,a,gggg.gg,a,hhmmss.ss,A*hh
      *         |       | |       | |         |
-     *         |       | |       | |         A:data valid
+     *         |       | |       | |         A:data valid (Active), V: void
      *         |       | |       | UTC of position
      *         |       | |       Long sign :E/W
      *         |       | Longitude

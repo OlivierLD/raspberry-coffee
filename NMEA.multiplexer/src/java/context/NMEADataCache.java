@@ -249,7 +249,7 @@ public class NMEADataCache
 					break;
 				case "RMC":
 					RMC rmc = StringParsers.parseRMC(nmeaSentence);
-					if (rmc != null) {
+					if (rmc != null && rmc.isValid()) {
 						this.put(POSITION, rmc.getGp());
 						if (this.previousPosition != null) {
 							double smallDist = feedSmallDistance(rmc.getGp());
