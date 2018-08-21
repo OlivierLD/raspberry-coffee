@@ -207,6 +207,8 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
 
 You can also define you own channels (extending `NMEAClient` and with a `reader` attribute).
 
+Look for `mux.01.cls=nmea.consumers.client.WeatherStationWSClient`.
+
 **Forwarders**
 
 _**ALL**_ forwarders can use 2 _optional_ attributes, `subclass` and `properties`:
@@ -218,6 +220,8 @@ forward.XX.properties=validlogger.properties
 The lines above means that:
 - The `nmea.forwarders.ExtendedDataFileWriter` extends `DataFileWriter`
 - Required extra properties are in a file named `validlogger.properties`.
+
+> See `ExtendedDataFileWriter.java` for details.
 
 **Pre-defined forwarder types**
 
@@ -240,12 +244,16 @@ The lines above means that:
 
 You can also implement you own forwarder (implementing the `Forwarder` interface).
 
+Look for `forward.02.cls=nmea.forwarders.RESTPublisher`
+
 **Pre-defined computer type(s)**
 
 - `tw-current`
     - One computer, to calculate both True Wind and Current (GPS Based, with possibly several time buffers).
 
 You can also define your own computers (extending `Computer`).
+
+Look for `computer.02.cls=nmea.computers.ComputerSkeleton`
 
 **Other properties**
 
