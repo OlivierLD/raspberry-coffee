@@ -161,9 +161,7 @@ Property names of channels, forwarders and computers follow this pattern:
  [element-type].[index].[attribute]
 ```
 
-**Element type**
-
-Can take three values: `mux`, `forward`, or `computer`:
+Element types can take three values: `mux`, `forward`, or `computer`:
 
 - Whatever begins with `mux.` is a channel
 - Whatever begins with `forward.` is a forwarder
@@ -209,9 +207,9 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
 
 You can also define you own channels (extending `NMEAClient` and with a `reader` attribute).
 
-**Pre-defined forwarder types**
+**Forwarders**
 
-_**ALL**_ forwarders can use 2 optional attributes, `subclass` and `properties`:
+_**ALL**_ forwarders can use 2 _optional_ attributes, `subclass` and `properties`:
 ```properties
 forward.XX.type=file
 forward.XX.subclass=nmea.forwarders.ExtendedDataFileWriter
@@ -220,6 +218,8 @@ forward.XX.properties=validlogger.properties
 The lines above means that:
 - The `nmea.forwarders.ExtendedDataFileWriter` extends `DataFileWriter`
 - Required extra properties are in a file named `validlogger.properties`.
+
+**Pre-defined forwarder types**
 
 - `serial`
     - Write to a serial port
