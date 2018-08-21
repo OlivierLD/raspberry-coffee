@@ -136,7 +136,10 @@ See an example of such a client in `samples.rmi.client.SampleRMIClient`.
 ### To see it at work (aka Get Started)
 See the class `nmea.mux.GenericNMEAMultiplexer`, it uses the file `nmea.mux.properties` to define what to read, and what to re-broadcast it to.
 See it to understand its content (should be clear enough).
-<!-- TODO Document the properties -->
+The properties file used by the `nmea.mux.GenericNMEAMultiplexer` can be overridden by the System property named `mux.properties`, like in
+```
+-Dmux.properties=nmea.mux.gps.log.small.properties
+```
 
 Those settings can be modified once the mux is started, throught the REST API.
 
@@ -148,6 +151,66 @@ To run it, modify `mux.sh` to fit your environment, and run
 ```
  $> ./mux.sh
 ```
+
+##### Properties
+Here is a brief description of the properties managed by the `nmea.mux.GenericNMEAMultiplexer`, the ones
+present in the file `nmea.mux.properties`, or set in the System variable `mux.properties`.
+
+Property names of channels, forwarders and computers follow this pattern:
+```
+ [element-type].[index].[attribute]
+```
+
+**Element type**
+
+Can take three values: `mux`, `forward`, or `computer`:
+
+- Whatever begins with `mux.` is a channel
+- Whatever begins with `forward.` is a forwarder
+- Whatever begins with `computer.` is a computer
+
+For the three categories above, the next element is the index of the element.
+Indexes are numbers, mentioned on two digits. Indexes _must_ start at `01` and be
+after that incremented by `1`.
+
+For example, `mux.01.xxx`, followed by `mux.02.yyy`.
+
+> Quick explanation: To find the first channel, the program looks for a `mux.01.*`.
+> If no such entry is found, that would mean for the program that there is no channel to deal with.
+> After finding and evaluating `mux.01.xxx`, the program looks for `mux.02.*`. If no
+> such channel is found, the program understands that the list of the channels is terminated.
+> This is the same for channels, forwarders and computers.
+
+The third part of the property name (the `type` in `mux.0X.type` for example) is the attribute.
+_**ALL**_ elements _have_ a `type` attribute, the other attributes depend on this `type`.
+
+**Pre-defined channels**
+
+- `serial`
+- `tcp`
+- `file`
+- `ws`
+- `htu21df`
+- `rnd`
+- `zda`
+- `lsm303`
+- `bme280`
+- `bmp180`
+
+**Pre-defined forwarders**
+
+- `serial`
+- `tcp`
+- `gpsd`
+- `file`
+- `ws`
+- `wsp`
+- `console`
+- `rmi`
+
+**Pre-defined computers**
+
+- `tw-current`
 
 ##### Filtering
 The Channels - aka Consumers - support sentence filtering.
