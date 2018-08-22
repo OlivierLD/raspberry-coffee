@@ -171,3 +171,36 @@ Each line contains two fields, the first one is the **Compass** Heading, the sec
 Such a file can be rendered like this:
 
 <img src="./docimages/deviation.curve.png" title="deviation curve" width="318" height="440">
+
+### Example
+Here is an example of a simple properties file:
+```properties
+#
+#  MUX definition.
+#
+with.http.server=yes
+http.port=9999
+#
+# Channels (input)
+#
+mux.01.type=serial
+mux.01.port=/dev/ttyUSB0
+mux.01.baudrate=4800
+mux.01.verbose=false
+#
+# Forwarders
+#
+forward.01.type=tcp
+forward.01.port=7001
+#
+forward.02.type=file
+forward.02.filename=./data.nmea
+#
+init.cache=true
+```
+This file tells the Multiplexer to:
+- Read the Serial port `/dev/ttyUSB0` with a baud rate of `4800` bauds
+- Forward the NMEA data on `tcp` port `7001`
+- Log the data into a file named `data.nmea`.
+
+As `init.cache` is set to `true`, an `admin` web page will be available on port `9999` (at http://localhost:9999/web/admin.html).
