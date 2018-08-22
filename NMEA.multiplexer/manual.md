@@ -170,4 +170,4 @@ The format of this Comma-Separated-Value (CSV) file is the following one:
 Each line contains two fields, the first one is the **Compass** Heading, the second one is the corresponding deviation.
 Such a file can be rendered like this:
 
-<img src="./docimages/deviation.curve.png" title="deviatiopn curve" width="318" height="440">
+<img src="./docimages/deviation.curve.png" title="deviation curve" width="318" height="440">
