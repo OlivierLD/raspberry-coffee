@@ -153,3 +153,21 @@ If `init.cache` is set to `true`, the following parameters will be taken in acco
 ```
 
 `damping` (default is `1`) unused for now (Aug-2018), but will be.
+
+`deviation.file.name` mentions the name of a CSV file, like - for example - `dp_2011_04_15.csv`. The
+default value is `zero-deviation.csv`.
+
+The format of this Comma-Separated-Value (CSV) file is the following one:
+```csv
+0.0,-0.9830777902388692
+5.0,-0.011026572256005562
+10.0,0.9376226337606713
+15.0,1.8481417760529473
+20.0,2.706968419259063
+25.0,3.502010498068172
+...
+```
+Each line contains two fields, the first one is the **Compass** Heading, the second one is the corresponding deviation.
+Such a file can be rendered like this:
+
+![Deviation Curve](./docimages/deviation.curve.png)
