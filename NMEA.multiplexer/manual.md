@@ -138,7 +138,7 @@ If `with.http.server` is set to `true`, the default http port is `9999`. It can 
 `init.cache` is set to `true`.
 The cache is a `Map<String, Object>`, see `context.NMEADataCache` for details.
 
-If `init.cache` is set to `true`, the following parameters will be taken in account when inserting data in the cache: <!-- TODO Make sure it's true -->
+If `init.cache` is set to `true`, the following parameters will be taken in account when inserting data in the cache:
 - `bsp.factor` Boat Speed Factor, number, `0` to `n`
 - `aws.factor` Apparent Wind Speed Factor, number, `0` to `n`
 - `awa.offset` Apparent Wind Angle offset in degrees, from `-180` to `180`
@@ -147,7 +147,9 @@ If `init.cache` is set to `true`, the following parameters will be taken in acco
 `default.declination` will be used if not returned by the GPS (as it could, depends on your GPS). `E` is `+`, `W` is `-`.
 
 `max.leeway` is used to calculate the leeway. The formula used here is:
-- If `awa` > 90 and `awa` < 270 then `leeway` = 0
-- Otherwise, `leeway` = `max.leeway` * `cos(awa)`
+```
+ if awa > 90 and awa < 270 then leeway = 0
+ otherwise, leeway = max.leeway * cos(awa)
+```
 
 `damping` (default is `1`) unused for now (Aug-2018), but will be.
