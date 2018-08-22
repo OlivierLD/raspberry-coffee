@@ -1,21 +1,7 @@
 package nmea.utils;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import context.ApplicationContext;
 import context.NMEADataCache;
-import java.util.logging.Level;
 import nmea.mux.context.Context;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
@@ -28,6 +14,20 @@ import nmea.parser.StringParsers;
 import nmea.parser.TrueWindDirection;
 import nmea.parser.TrueWindSpeed;
 import utils.StringUtils;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
 
 public class NMEAUtils {
 	public final static int ALL_IN_HEXA = 0;
@@ -141,7 +141,7 @@ public class NMEAUtils {
 			awaOffset = ((Double) cache.get(NMEADataCache.AWA_OFFSET)).doubleValue();
 		} catch (Exception ex) {
 		}
-		double bspCoeff = 0d;
+		double bspCoeff = 1d;
 		try {
 			bspCoeff = ((Double) cache.get(NMEADataCache.BSP_FACTOR)).doubleValue();
 		} catch (Exception ex) {
@@ -185,16 +185,16 @@ public class NMEAUtils {
 		cache.put(NMEADataCache.CMG, new Angle360(cmg));
 
 		try {
-			bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue() * ((Double) cache.get(NMEADataCache.BSP_FACTOR)).doubleValue();
+			bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
 		} catch (Exception ex) {
 		}
 		double[] cr = calculateCurrent(bsp,
-						1.0,
-						heading,
-						0.0,
-						leeway,
-						sog,
-						cog);
+				bspCoeff,
+				heading,
+				hdgOffset,
+				leeway,
+				sog,
+				cog);
 		cache.put(NMEADataCache.CDR, new Angle360(cr[0]));
 		cache.put(NMEADataCache.CSP, new Speed(cr[1]));
 	}
