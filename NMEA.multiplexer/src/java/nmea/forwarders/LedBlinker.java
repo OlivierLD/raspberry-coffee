@@ -9,7 +9,7 @@ import java.util.Properties;
 import nmea.parser.StringParsers;
 
 /**
- * This is a {@link Forwarder}, blinking a led everytime a valid message is received.
+ * This is a {@link Forwarder}, blinking a led every time a valid message is received.
  * <br>
  * It can be loaded dynamically. From the properties file used at startup, or the Web UI.
  * <br>

@@ -35,6 +35,16 @@ For example, `mux.01.xxx`, followed by `mux.02.yyy`.
 The third part of the property name (the `type` in `mux.0X.type` for example) is the attribute.
 _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes depend on this `type`.
 
+> _**Exception**_: if an element does _not_ have a `type` attribute, then it is a custom element, it _must_ have a _cls_ attribute
+> containing the name of the Java `class` to load dynamically.
+> For example, a line like that one
+```properties
+ forward.02.cls=nmea.forwarders.LedBlinker
+```
+> would tell the Multiplexer to load a forwarder defined in the class `nmea.forwarders.LedBlinker`.
+> It the loaded class does not extend the right `superclass` or implement the right `interface`, an error
+> will be raised.
+
 **Pre-defined channel types**
 
 - `serial`
