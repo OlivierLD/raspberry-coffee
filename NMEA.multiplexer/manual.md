@@ -149,7 +149,7 @@ damping=30
 ```
 
 `with.http.server` is set to `false` by default. `true` means that you will have access to
-some `REST` services, for admin an other purposes.
+some `REST` services, for admin and other purposes.
 
 If `with.http.server` is set to `true`, the default http port is `9999`. It can be overridden by `http.port` if needed.
 
