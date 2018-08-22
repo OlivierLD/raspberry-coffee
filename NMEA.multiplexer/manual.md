@@ -20,7 +20,7 @@ Element types can take three values: `mux`, `forward`, or `computer`:
 - Whatever begins with `forward.` is a forwarder
 - Whatever begins with `computer.` is a computer
 
-For the three categories above, the next element is the index of the element.
+For the three categories above, the second item is the index of the element.
 Indexes are numbers, mentioned on two digits. Indexes _must_ start at `01` and be
 after that incremented by `1`.
 
