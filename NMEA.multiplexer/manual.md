@@ -151,10 +151,10 @@ default.declination=14
 damping=30
 ```
 
-`with.http.server` is set to `false` by default. `true` means that you will have access to
+`with.http.server` is set to `no` by default. `yes` means that you will have access to
 some `REST` services, for admin and other purposes.
 
-If `with.http.server` is set to `true`, the default http port is `9999`. It can be overridden by `http.port` if needed.
+If `with.http.server` is set to `yes`, the default http port is `9999`. It can be overridden by `http.port` if needed.
 
 `init.cache` is set to `false` by default. A cache - accessible by `Computers` will be initialized if
 `init.cache` is set to `true`.
@@ -225,4 +225,6 @@ This file tells the Multiplexer to:
 - Forward the NMEA data on `tcp` port `7001`
 - Log the data into a file named `data.nmea`.
 
-As `init.cache` is set to `true`, an `admin` web page will be available on port `9999` (at http://localhost:9999/web/admin.html).
+As `with.http.server` is set to `yes`, an `admin` web page will be available on port `9999` (at http://localhost:9999/web/admin.html).
+
+And `init.cache` is set to `true`, meaning that a Computer (not mentioned here) would be able to pick up data from the NMEA Cache.
