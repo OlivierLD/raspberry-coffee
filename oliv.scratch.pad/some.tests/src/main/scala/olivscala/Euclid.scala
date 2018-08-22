@@ -1,4 +1,6 @@
-object EuclidAlgorithm {
+package olivscala
+
+object Euclid {
 
   private def greatestCommonDivisor(u: Int, v: Int) = { // PGCD
     var t = 0

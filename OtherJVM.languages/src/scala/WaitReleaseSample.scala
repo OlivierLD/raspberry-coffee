@@ -12,7 +12,7 @@ object WaitReleaseSample {
     // Not too exciting, the result will always be 42. but more importantly, when?
     println("1 - starting calculation ...")
     val f = Future {
-      sleep(Random.nextInt(5000))
+      sleep(Random.nextInt(5000)) // Increment this one to see the job NOT completed in time.
       completed = true
       me synchronized {
         me notify
@@ -42,7 +42,7 @@ object WaitReleaseSample {
     }
     println("Loop bottom")
     if (completed) {
-      println("Work is completed in time")
+      println("Work is completed, in time!")
       me synchronized({
         try {
           me wait(1000) // Just to finish the printouts
