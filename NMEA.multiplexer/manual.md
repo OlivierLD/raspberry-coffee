@@ -2,7 +2,7 @@
 
 [<< Back](./README.md)
 
-The following section will make references to several resources (Java classes, properties files, etc).
+The following sections will make references to several resources (Java classes, properties files, etc).
 They are all part of this project, so you can refer to them if needed for more details.
 
 The program to start is `nmea.mux.GenericNMEAMultiplexer`, it is driven by a `properties` file,
@@ -195,7 +195,7 @@ Such a file can be rendered like this:
 <img src="./docimages/deviation.curve.png" title="deviation curve" width="318" height="440">
 
 ### Example
-Here is an example of a simple properties file:
+Here is an example of a simple properties file driving the Multiplexer:
 ```properties
 #
 #  MUX definition.
