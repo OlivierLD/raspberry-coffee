@@ -157,7 +157,7 @@ If `init.cache` is set to `true`, the following parameters will be taken in acco
 `deviation.file.name` mentions the name of a CSV file, like - for example - `dp_2011_04_15.csv`. The
 default value is `zero-deviation.csv`.
 
-The format of this Comma-Separated-Value (CSV) file is the following one:
+The format of this Comma-Separated-Values (CSV) file is the following one:
 ```csv
 0.0,-0.9830777902388692
 5.0,-0.011026572256005562
