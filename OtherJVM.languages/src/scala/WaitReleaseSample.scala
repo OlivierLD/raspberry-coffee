@@ -9,13 +9,14 @@ object WaitReleaseSample {
     val me = Thread currentThread
 
     var completed = false
+    var inTime = false
     // Not too exciting, the result will always be 42. but more importantly, when?
     println("1 - starting calculation ...")
     val f = Future {
-      sleep(Random.nextInt(5000)) // Increment this one to see the job NOT completed in time.
+      sleep(Random.nextInt(7500)) // Increment this one to see the job NOT completed in time.
       completed = true
       me synchronized {
-        me notify
+        me notify // Wake up the sleeper in his loop
       }
       println("Work is completed")
       42 // Hard coded returned value
@@ -23,7 +24,9 @@ object WaitReleaseSample {
 
     println("2 - before onComplete")
     f.onComplete {
-      case Success(value) => println(s"Got the callback, meaning = $value")
+      case Success(value) => {
+        println(s"Got the callback${ if (inTime) "" else " (finally!)"}, meaning = $value")
+      }
       case Failure(e) => e.printStackTrace
     }
 
@@ -42,6 +45,7 @@ object WaitReleaseSample {
     }
     println("Loop bottom")
     if (completed) {
+      inTime = true
       println("Work is completed, in time!")
       me synchronized({
         try {
@@ -62,6 +66,7 @@ object WaitReleaseSample {
         }
       }
     }
+    println("Bye now")
   }
 
   def sleep(duration: Long) { Thread sleep(duration) }

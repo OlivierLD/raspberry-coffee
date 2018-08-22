@@ -1,6 +1,9 @@
-# Technical Manual (WIP)
+# Technical Manual
 
 [<< Back](./README.md)
+
+The following section will make references to several resources (Java classes, properties files, etc).
+They are all part of this project, so you can refer to them if needed for more details.
 
 The program to start is `nmea.mux.GenericNMEAMultiplexer`, it is driven by a `properties` file,
 describing the features required by an instance of the Multiplexer (channels, forwarders, computers, http server, etc).
