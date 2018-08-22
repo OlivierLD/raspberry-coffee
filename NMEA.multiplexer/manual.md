@@ -1,5 +1,7 @@
 # Technical Manual (WIP)
 
+[<< Back](./README.md)
+
 The program to start is `nmea.mux.GenericNMEAMultiplexer`, it is driven by a `properties` file,
 describing the features of the Multiplexer (channels, forwardsers, computers, http server, etc).
 
