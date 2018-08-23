@@ -172,8 +172,12 @@ If `init.cache` is set to `true`, the following parameters will be taken in acco
 
 `max.leeway` is used to calculate the leeway. The formula used here is:
 ```
- if awa > 90 and awa < 270 then leeway = 0
+ if awa > 90 and awa < 270 (i.e. cos(awa) < 0) then leeway = 0
  otherwise, leeway = max.leeway * cos(awa)
+```
+can also be more simply expressed as
+```
+ leeway = max.leeway * max(0, cos(awa))
 ```
 
 `damping` (default is `1`) unused for now (Aug-2018), but will be.
