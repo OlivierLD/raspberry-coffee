@@ -87,11 +87,11 @@ The lines above means that:
 - The `nmea.forwarders.ExtendedDataFileWriter` is a `file` Forwarder (it extends `DataFileWriter`)
 - Required extra properties are in a file named `validlogger.properties`.
 
-> _Note_: if `ExtendedDataFileWriter` happens not to extend the class anticipated by the `type`, an runtime error will be raised.
+> _Note_: if `ExtendedDataFileWriter` happens not to extend the class anticipated by the `type`, a runtime error will be raised.
 
 > _**Dynamic loading versus sub-classing**_:
 > We've seen before that you have the possibility - using a `cls` attribute - to define your own
-> elements (Channel, Forwarder or Computer). Here we see the possibility to `extend` a given element type.
+> elements (Channel, Forwarder or Computer) and dynamically load it at runtime. Here we see the possibility to `extend` a given element type.
 > A dynamically loaded element gives the programmer more flexibility and room for invention, but it _cannot_
 > be managed by the `admin` web page. A sub-class of a given type of element can be much lighter to write,
 > and _is_ manageable by the `admin` web page.
