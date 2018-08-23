@@ -81,15 +81,15 @@ public class MuxInitializer {
 		// 1 - Input channels
 		while (thereIsMore) {
 			String classProp = String.format("mux.%s.cls", MUX_IDX_FMT.format(muxIdx));
-			String cls = muxProps.getProperty(classProp);
-			if (cls != null) { // Dynamic loading
+			String clss = muxProps.getProperty(classProp);
+			if (clss != null) { // Dynamic loading
 				try {
 					// Devices and Sentences filters.
 					String deviceFilters = "";
 					String sentenceFilters = "";
 					deviceFilters = muxProps.getProperty(String.format("mux.%s.device.filters", MUX_IDX_FMT.format(muxIdx)), "");
 					sentenceFilters = muxProps.getProperty(String.format("mux.%s.sentence.filters", MUX_IDX_FMT.format(muxIdx)), "");
-					Object dynamic = Class.forName(cls)
+					Object dynamic = Class.forName(clss)
 									.getDeclaredConstructor(String[].class, String[].class, Multiplexer.class)
 									.newInstance(
 													deviceFilters.trim().length() > 0 ? deviceFilters.split(",") : null,
@@ -432,10 +432,10 @@ public class MuxInitializer {
 		// 2 - Output channels, aka forwarders
 		while (thereIsMore) {
 			String classProp = String.format("forward.%s.cls", MUX_IDX_FMT.format(fwdIdx));
-			String cls = muxProps.getProperty(classProp);
-			if (cls != null) { // Dynamic loading
+			String clss = muxProps.getProperty(classProp);
+			if (clss != null) { // Dynamic loading
 				try {
-					Object dynamic = Class.forName(cls).newInstance();
+					Object dynamic = Class.forName(clss).newInstance();
 					if (dynamic instanceof Forwarder) {
 						Forwarder forwarder = (Forwarder)dynamic;
 						String propProp = String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx));
@@ -650,10 +650,10 @@ public class MuxInitializer {
 				// 3 - Computers
 				while (thereIsMore) {
 					String classProp = String.format("computer.%s.cls", MUX_IDX_FMT.format(cptrIdx));
-					String cls = muxProps.getProperty(classProp);
-					if (cls != null) { // Dynamic loading
+					String clss = muxProps.getProperty(classProp);
+					if (clss != null) { // Dynamic loading
 						try {
-							Object dynamic = Class.forName(cls).getDeclaredConstructor(Multiplexer.class).newInstance(mux);
+							Object dynamic = Class.forName(clss).getDeclaredConstructor(Multiplexer.class).newInstance(mux);
 							if (dynamic instanceof Computer) {
 								Computer computer = (Computer)dynamic;
 								String propProp = String.format("computer.%s.properties", MUX_IDX_FMT.format(cptrIdx));
