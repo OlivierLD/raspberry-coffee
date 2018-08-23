@@ -81,6 +81,7 @@
 			events.subscribe('twd', function(val) {
 				setData('compass-01', val);
 			});
+			/* global twa tws awa aws */
 			events.subscribe('twa', function(val) {
 				twa = val;
 				setData('tw-01', JSON.stringify({ ws: tws, wa: twa}));
