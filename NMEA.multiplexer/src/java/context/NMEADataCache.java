@@ -140,7 +140,7 @@ public class NMEADataCache
 	public NMEADataCache() {
 		super();
 		started = System.currentTimeMillis();
-		if (System.getProperty("verbose", "false").equals("true")) {
+		if (System.getProperty("nmea.cache.verbose", "false").equals("true")) {
 			System.out.println("+=================================+");
 			System.out.println("| Instantiating an NMEADataCache. |");
 			System.out.println("+=================================+");
@@ -235,9 +235,11 @@ public class NMEADataCache
 						}
 						this.previousPosition = ggaPos;
 					}
-					UTC ggaDate = (UTC)gga.get(StringParsers.GGA_UTC_IDX);
-					if (ggaDate != null) {
-						this.put(GPS_DATE_TIME, new UTCDate(ggaDate.getDate()));
+					if (!"true".equals(System.getProperty("do.not.use.GGA.date.time"))) { // Not good when replaying, contains only H:M:S, no Y:N:D
+						UTC ggaDate = (UTC) gga.get(StringParsers.GGA_UTC_IDX);
+						if (ggaDate != null) {
+							this.put(GPS_DATE_TIME, new UTCDate(ggaDate.getDate()));
+						}
 					}
 			//	int ggaNbSat = (Integer)gga.get(StringParsers.GGA_NBSAT_IDX);
 					double ggaAlt = (Double)gga.get(StringParsers.GGA_ALT_IDX);
@@ -249,31 +251,37 @@ public class NMEADataCache
 					break;
 				case "RMC":
 					RMC rmc = StringParsers.parseRMC(nmeaSentence);
-					if (rmc != null && rmc.isValid()) {
-						this.put(POSITION, rmc.getGp());
-						if (this.previousPosition != null) {
-							double smallDist = feedSmallDistance(rmc.getGp());
-							this.put(SMALL_DISTANCE, smallDist);
-						}
-						this.previousPosition = rmc.getGp();
-						this.put(COG, new Angle360(rmc.getCog()));
-						this.put(SOG, new Speed(rmc.getSog()));
-						this.put(DECLINATION, new Angle180EW(rmc.getDeclination()));
-						if (rmc.getRmcDate() != null) {
-							this.put(GPS_DATE_TIME, new UTCDate(rmc.getRmcDate()));
-						}
-						if (rmc.getRmcTime() != null) {
-							this.put(GPS_TIME, new UTCTime(rmc.getRmcTime()));
-						}
-						if ((rmc.getRmcDate() != null || rmc.getRmcTime() != null) && rmc.getGp() != null)
-						{
-							long solarTime = -1L;
-							if (rmc.getRmcDate() != null)
-								solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
-							else
-								solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
-							Date solarDate = new Date(solarTime);
-							this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+					if (rmc != null) {
+						if (rmc.isValid()) {
+							this.put(POSITION, rmc.getGp());
+							if (this.previousPosition != null) {
+								double smallDist = feedSmallDistance(rmc.getGp());
+								this.put(SMALL_DISTANCE, smallDist);
+							}
+							this.previousPosition = rmc.getGp();
+							this.put(COG, new Angle360(rmc.getCog()));
+							this.put(SOG, new Speed(rmc.getSog()));
+							this.put(DECLINATION, new Angle180EW(rmc.getDeclination()));
+							if (rmc.getRmcDate() != null) {
+								this.put(GPS_DATE_TIME, new UTCDate(rmc.getRmcDate()));
+							}
+							if (rmc.getRmcTime() != null) {
+								this.put(GPS_TIME, new UTCTime(rmc.getRmcTime()));
+							}
+							if ((rmc.getRmcDate() != null || rmc.getRmcTime() != null) && rmc.getGp() != null) {
+								long solarTime = -1L;
+								if (rmc.getRmcDate() != null)
+									solarTime = rmc.getRmcDate().getTime() + longitudeToTime(rmc.getGp().lng);
+								else
+									solarTime = rmc.getRmcTime().getTime() + longitudeToTime(rmc.getGp().lng);
+								Date solarDate = new Date(solarTime);
+								this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+							}
+						} else {
+							if (System.getProperty("nmea.cache.verbose", "false").equals("true")) {
+								System.out.println(String.format("RMC not valid yet [%s]", nmeaSentence));
+
+							}
 						}
 					}
 					break;
@@ -363,12 +371,14 @@ public class NMEADataCache
 								}
 								this.previousPosition = pos;
 							}
-							Date date = (Date)obj[StringParsers.DATE_in_GLL];
-							if (date != null) {
-								this.put(GPS_TIME, new UTCTime(date));
-								long solarTime = date.getTime() + longitudeToTime(pos.lng);
-								Date solarDate = new Date(solarTime);
-								this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+							if (!"true".equals(System.getProperty("do.not.use.GLL.date.time"))) { // Not good when replaying, contains only H:M:S, no Y:N:D
+								Date date = (Date) obj[StringParsers.DATE_in_GLL];
+								if (date != null) {
+									this.put(GPS_TIME, new UTCTime(date));
+									long solarTime = date.getTime() + longitudeToTime(pos.lng);
+									Date solarDate = new Date(solarTime);
+									this.put(GPS_SOLAR_TIME, new SolarDate(solarDate));
+								}
 							}
 						}
 					break;

@@ -66,6 +66,11 @@ else
     JAVA_OPTS="$JAVA_OPTS -Dmux.properties=$PROP_FILE"
   fi
 fi
+# Specific/Temporary
+# JAVA_OPTS="$JAVA_OPTS -Dnmea.cache.verbose=true"
+# When re-playing GPS data. Those date will not go in the cache.
+JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GGA.date.time=true"
+JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GLL.date.time=true"
 #
 echo -e "Using properties:$JAVA_OPTS"
 #

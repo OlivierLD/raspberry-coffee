@@ -106,6 +106,7 @@ public class StringParsers {
 	private final static int WS_KNOTS = 17;
 	private final static int WS_MS = 19;
 
+	// MDA Meteorological Composite
 	public static MDA parseMDA(String data) {
 	  /*
      * $--MDA,x.x,I,x.x,B,x.x,C,x.x,C,x.x,x.x,x.x,C,x.x,T,x.x,M,x.x,N,x.x,M*hh<CR><LF>
@@ -178,6 +179,7 @@ public class StringParsers {
 	}
 
 	/**
+	 * MMB Atmospheric pressure
 	 * @param data the one to parse
 	 * @return Pressure in Mb / hPa
 	 */
@@ -200,6 +202,7 @@ public class StringParsers {
 		return d;
 	}
 
+	// MTA Air Temperature
 	public static double parseMTA(String data) {
     /*
      * Structure is $IIMTA,020.5,C*30
@@ -216,6 +219,7 @@ public class StringParsers {
 		return d;
 	}
 
+	// VDR Current Speed and Direction
 	public static Current parseVDR(String data) {
     /*
      * Structure is $IIVDR,00.0,T,00.0,M,00.0,N*XX
@@ -273,6 +277,7 @@ public class StringParsers {
 		return age;
 	}
 
+	// GSV Detailed Satellite data
 	public static Map<Integer, SVData> parseGSV(String data) {
 		String s = data.trim();
 		if (s.length() < 6) {
@@ -361,6 +366,7 @@ public class StringParsers {
 	public static final int GGA_NBSAT_IDX = 2;
 	public static final int GGA_ALT_IDX = 3;
 
+	// GGA Global Positioning System Fix Data. Time, Position and fix related data for a GPS receiver
 	public static List<Object> parseGGA(String data) {
 		final int KEY_POS = 0;
 		final int UTC_POS = 1;
@@ -452,6 +458,7 @@ public class StringParsers {
 		return al;
 	}
 
+	// GSA GPS DOP and active satellites
 	public static GSA parseGSA(String data) {
     /*
      * $GPGSA,A,3,19,28,14,18,27,22,31,39,,,,,1.7,1.0,1.3*35
@@ -507,6 +514,7 @@ public class StringParsers {
 	public final static int HDM_in_VHW = 1;
 	public final static int HDG_in_VHW = 2;
 
+	// VHW Water speed and heading
 	public static double[] parseVHW(String data) {
 		return parseVHW(data, 0d);
 	}
@@ -564,6 +572,7 @@ public class StringParsers {
 	public final static int LOG_in_VLW = 0;
 	public final static int DAILYLOG_in_VLW = 1;
 
+	// VLW Distance Traveled through Water
 	public static double[] parseVLW(String data) {
 		String s = data.trim();
 		if (s.length() < 6) {
@@ -591,6 +600,7 @@ public class StringParsers {
 		return new double[]{cumulative, sinceReset};
 	}
 
+	// MTW Water Temperature
 	public static double parseMTW(String data) {
     /* Structure
      * $xxMTW,+18.0,C*hh
@@ -619,6 +629,7 @@ public class StringParsers {
 	public static final int TRUE_WIND = 0;
 	public static final int APPARENT_WIND = 1;
 
+	// MWV Wind Speed and Angle
 	// AWA, AWS (R), possibly TWA, TWS (T)
 	public static Wind parseMWV(String data) {
 		int flavor = -1;
@@ -684,6 +695,7 @@ public class StringParsers {
 		return aw;
 	}
 
+	// MWD Wind Direction & Speed
 	public static Wind parseMWD(String data) {
 			/* $WIMWD,<1>,<2>,<3>,<4>,<5>,<6>,<7>,<8>*hh
 	     *
@@ -715,6 +727,7 @@ public class StringParsers {
 	}
 
 	/*
+	 * VWT True Windspeed and Angle (obsolete)
 	 * $--VWT,x.x,a,x.x,N,x.x,M,x.x,K*hh<CR><LF>
 	 *        |     |     |     |
 	 *        |     |     |     Wind speed, Km/Hr
@@ -768,6 +781,7 @@ public class StringParsers {
 		return aws;
 	}
 
+	// VWR Relative Wind Speed and Angle
 	// AWA, AWS
 	// Example: VWR,148.,L,02.4,N,01.2,M,04.4,K*XX
 	public static Wind parseVWR(String data) {
@@ -860,6 +874,7 @@ public class StringParsers {
 		return aws;
 	}
 
+	// VTG Track made good and Ground speed
 	public static OverGround parseVTG(String data) {
 		String s = data.trim();
 		OverGround og = null;
@@ -957,7 +972,7 @@ public class StringParsers {
 	public final static int GP_in_GLL = 0;
 	public final static int DATE_in_GLL = 1;
 
-	// Geographical Latitude & Longitude
+	// GLL Geographical Latitude & Longitude
 	public static Object[] parseGLL(String data) {
 		String s = data.trim();
 		if (s.length() < 6) {
@@ -1071,6 +1086,7 @@ public class StringParsers {
 		return result;
 	}
 
+	// HDT Heading - True
 	public static int parseHDT(String data) {
 		final int KEY_POS = 0;
 		final int HDG_POS = 1;
@@ -1105,7 +1121,7 @@ public class StringParsers {
 		return hdg;
 	}
 
-	// Heading (Mag.)
+	// HDM Heading (Mag.)
 	public static int parseHDM(String data) {
 		final int KEY_POS = 0;
 		final int HDG_POS = 1;
@@ -1153,6 +1169,7 @@ public class StringParsers {
 	public final static int DEV_in_HDG = 1;
 	public final static int VAR_in_HDG = 2;
 
+	// HDG - Magnetic heading, deviation, variation
 	public static double[] parseHDG(String data) {
 		double[] ret = null;
 		String s = data.trim();
@@ -1208,7 +1225,7 @@ public class StringParsers {
 		return ret;
 	}
 
-	// Recommended Minimum Navigation Information
+	// RMB Recommended Minimum Navigation Information
 	public static RMB parseRMB(String str) {
     /*        1 2   3 4    5    6       7 8        9 10  11  12  13
      * $GPRMB,A,x.x,a,c--c,d--d,llll.ll,e,yyyyy.yy,f,g.g,h.h,i.i,j*kk
@@ -1294,7 +1311,7 @@ public class StringParsers {
 		return rmb;
 	}
 
-	// Recommended minimum specific GPS/Transit data
+	// RMC Recommended minimum specific GPS/Transit data
 	public static RMC parseRMC(String str) {
 		RMC rmc = null;
 		String s = str.trim();
@@ -1503,6 +1520,7 @@ public class StringParsers {
 		return new int[]{mn, nbm};
 	}
 
+	// ZDA Time & Date - UTC, day, month, year and local time zone
 	public static UTCDate parseZDA(String str) {
     /* Structure is
      * $GPZDA,hhmmss.ss,dd,mm,yyyy,xx,yy*CC
@@ -1565,6 +1583,7 @@ public class StringParsers {
 
 	private final static double METERS_TO_FEET = 3.28083;
 
+	// DBT Depth of Water
 	public static float parseDPT(String data) {
 		return parseDPT(data, DEPTH_IN_METERS);
 	}
@@ -1614,6 +1633,7 @@ public class StringParsers {
 		}
 	}
 
+	// Depth Below Transducer
 	public static float parseDBT(String data) {
 		return parseDBT(data, DEPTH_IN_METERS);
 	}
