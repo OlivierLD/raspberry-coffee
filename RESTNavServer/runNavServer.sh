@@ -13,7 +13,7 @@ PROP_FILE=
 #
 for ARG in "$@"
 do
-	echo "Managing prm $ARG"
+	# echo "Managing prm $ARG"
   if [ "$ARG" == "-p" ] || [ "$ARG" == "--proxy" ]
   then
     USE_PROXY=true
@@ -68,7 +68,7 @@ else
 fi
 # Specific/Temporary
 # JAVA_OPTS="$JAVA_OPTS -Dnmea.cache.verbose=true"
-# When re-playing GPS data. Those date will not go in the cache.
+# To use when re-playing GPS data. Those dates will not go in the cache.
 JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GGA.date.time=true"
 JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GLL.date.time=true"
 #
