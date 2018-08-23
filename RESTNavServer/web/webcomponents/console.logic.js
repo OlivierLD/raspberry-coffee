@@ -378,8 +378,10 @@ function setTheme(className) {
 
 function applyClass(id, className) {
 	let widget = document.getElementById(id);
-	widget.className = className;
-	widget.repaint();
+	if (widget !== null) {
+		widget.className = className;
+		widget.repaint();
+	}
 }
 
 function toggleHeadsUp() {
@@ -469,7 +471,10 @@ window.onload = function() {
 	if (border !== undefined) {
 		if (border === 'y' || border === 'n') {
 			DISPLAYS.forEach(function (id, idx) {
-				document.getElementById(id).withBorder = (border === 'y');
+				let element = document.getElementById(id);
+				if (element !== null) {
+					element.withBorder = (border === 'y');
+				}
 			});
 			// Check/uncheck boxes
 			let cbs = document.getElementsByClassName('border-cb');
@@ -487,67 +492,6 @@ window.onload = function() {
 		}
 	}
 
-	/**
-	 *  SUBSCRIBERS HERE.
-	 *
-	 * The following subscriptions make the distinction between Ajax & WebSockets
-	 * (See the initAjax & initWS methods)
-	 *
-	 * Event's definition (topic's name) is in ajax.manager.js, method onMessage
-	 */
-	/* global events */
-	events.subscribe('pos', function(val) {
-		gpsPosition = val;
-		document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng });
-		document.getElementById('world-map-01').positionLabel = "GPS";
-		document.getElementById('world-map-01').repaint();
-	});
-	events.subscribe('bsp', function(val) {
-		setData('bsp-01', val);
-	});
-	events.subscribe('log', function(val) {
-		let elem = document.getElementById('bsp-01');
-		elem.digitalDataVal = val;
-		elem.repaint();
-	});
-	events.subscribe('gps-time', function(val) {
-		// val.format("Y-M-d H:i:s")
-		let time = new Date(val).format("H:i:s")
-		setData('analog-watch-01', time);
-		let date = new Date(val).format("d-m-Y-l");
-		setData('calendar-01', date);
-		if (gpsPosition !== undefined) {
-			let gpsDate = new Date(val);
-			/* global getAstroData */
-			getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
-		}
-	});
-	events.subscribe('gps-sat', function(val) {
-//			console.log("Satellite data:", val);
-		gpsSatelliteData = val;
-	});
-	events.subscribe('hdg', function(val) {
-		setData('compass-rose-01', val);
-	});
-	events.subscribe('twd', function(val) {
-		setData('compass-01', val);
-	});
-	events.subscribe('twa', function(val) {
-		twa = val;
-		setData('tw-01', JSON.stringify({ ws: tws, wa: twa}));
-	});
-	events.subscribe('tws', function(val) {
-		tws = val;
-		setData('tw-01', JSON.stringify({ ws: tws, wa: twa}));
-	});
-	events.subscribe('aws', function(val) {
-		aws = val;
-		setData('aw-01', JSON.stringify({ ws: aws, wa: awa}));
-	});
-	events.subscribe('awa', function(val) {
-		awa = val;
-		setData('aw-01', JSON.stringify({ ws: aws, wa: awa}));
-	});
 }
 
 function displayErr(err) {

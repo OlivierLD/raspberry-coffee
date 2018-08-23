@@ -2,21 +2,27 @@
 # Navigation REST server
 #
 echo -e "----------------------------"
-echo -e "Usage is $0 [y]"
-echo -e "     [y] means with a proxy"
+echo -e "Usage is $0 [-p|--proxy] [-m:propertiesfile|--mux:propertiesfile]"
+echo -e "     -p or --proxy means with a proxy"
+echo -e "     -m or --mux points to the properties file to use for the Multiplexer, default is nmea.mux.properties"
 echo -e "----------------------------"
 #
 echo -e "Starting the Navigation Rest Server"
 USE_PROXY=false
+PROP_FILE=
 #
-if [ $# -gt 0 ]
-then
-  if [ "$1" == "y" ]
+for ARG in "$@"
+do
+	echo "Managing prm $ARG"
+  if [ "$ARG" == "-p" ] || [ "$ARG" == "--proxy" ]
   then
-    echo Will use a proxy
     USE_PROXY=true
+  elif [[ $ARG == -m:* ]] || [[ $ARG == --mux:* ]] # !! No quotes !!
+  then
+    PROP_FILE=${ARG#*:}
+    echo -e "Detected properties file $PROP_FILE"
   fi
-fi
+done
 #
 HTTP_VERBOSE=false
 TIDE_VERBOSE=false
@@ -44,7 +50,7 @@ then
 fi
 #
 # refers to nmea.mux.properties, unless -Dmux.properties is set
-WEATHER_STATION=false
+WEATHER_STATION=false # Hard coded...
 #
 if [ "$WEATHER_STATION" == "true" ]
 then
@@ -55,6 +61,10 @@ then
 	JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
 else
   JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=false"
+  if [ "$PROP_FILE" != "" ]
+  then
+    JAVA_OPTS="$JAVA_OPTS -Dmux.properties=$PROP_FILE"
+  fi
 fi
 #
 echo -e "Using properties:$JAVA_OPTS"

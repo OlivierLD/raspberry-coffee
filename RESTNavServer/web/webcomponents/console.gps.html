@@ -10,7 +10,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>WebComponents NMEA Console</title>
+	<title>WebComponents NMEA/GPS Console</title>
 	<link rel="icon" type="image/png" href="./logo-192x192.png">
 
 	<link rel="stylesheet" href="css/stylesheet.css">
@@ -51,13 +51,8 @@
 				document.getElementById('world-map-01').positionLabel = "GPS";
 				document.getElementById('world-map-01').repaint();
 			});
-			events.subscribe('bsp', function(val) {
+			events.subscribe('sog', function(val) {
 				setData('bsp-01', val);
-			});
-			events.subscribe('log', function(val) {
-				let elem = document.getElementById('bsp-01');
-				elem.digitalDataVal = val;
-				elem.repaint();
 			});
 			events.subscribe('gps-time', function(val) {
 				// val.format("Y-M-d H:i:s")
@@ -75,27 +70,9 @@
 //			console.log("Satellite data:", val);
 				gpsSatelliteData = val;
 			});
-			events.subscribe('hdg', function(val) {
+			events.subscribe('cog', function(val) {
 				setData('compass-rose-01', val);
-			});
-			events.subscribe('twd', function(val) {
 				setData('compass-01', val);
-			});
-			events.subscribe('twa', function(val) {
-				twa = val;
-				setData('tw-01', JSON.stringify({ ws: tws, wa: twa}));
-			});
-			events.subscribe('tws', function(val) {
-				tws = val;
-				setData('tw-01', JSON.stringify({ ws: tws, wa: twa}));
-			});
-			events.subscribe('aws', function(val) {
-				aws = val;
-				setData('aw-01', JSON.stringify({ ws: aws, wa: awa}));
-			});
-			events.subscribe('awa', function(val) {
-				awa = val;
-				setData('aw-01', JSON.stringify({ ws: aws, wa: awa}));
 			});
 		};
 	</script>
@@ -187,7 +164,7 @@
 
 	<table width="100%">
 		<tr>
-			<td><h2>Web Components NMEA Console</h2></td>
+			<td><h2>Web Components NMEA/GPS Console</h2></td>
 		</tr>
 	</table>
 	<hr/>
@@ -255,21 +232,21 @@
 	<div id="one" style="display: block;">
 		<span id="boat-data-switch" onclick="expandCollapseBoatData();" style="cursor: pointer; padding-left: 40px;">- Boat Data</span>
 		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-			<div id="row-1" style="display: grid; grid-column-start: 2; grid-template-columns: auto auto auto auto; padding: 10px;">
+			<div id="row-1" style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; padding: 10px;">
 				<!--
-						TWD
+						COG
 				+-->
 				<div id="direction">
 					<div class="black-frame centered">
 						<direction-display class="analogdisplay-day"
-															 title="True Wind Direction"
+															 title="Course Over Ground"
 															 id="compass-01"
 															 value="0"
 															 major-ticks="45"
 															 minor-ticks="5"
 															 with-rose="true"
 															 with-border="true"
-															 label="TWD"
+															 label="COG"
 															 width="200"
 															 height="200"></direction-display>
 					</div>
@@ -279,34 +256,13 @@
 					</div>
 				</div>
 				<!--
-						TRUE WIND DISPLAY
-				+-->
-				<div id="analog">
-					<div class="black-frame centered">
-						<wind-angle-display class="analogdisplay-day"
-																title="True Wind Speed in Knots"
-																id="tw-01"
-																value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-																major-ticks="30"
-																minor-ticks="5"
-																with-border="true"
-																with-digits="true"
-																label="True Wind"
-																width="200"
-																height="200"></wind-angle-display>
-					</div>
-					<div class="black-frame centered">
-						<input type="checkbox" class="border-cb" onchange="setBorder(this, 'tw-01');" checked>With Border
-					</div>
-				</div>
-				<!--
-						BSP
+						SOG
 				+-->
 				<div id="analog-2">
 					<div class="black-frame centered">
 						<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
 						<analog-display class="analogdisplay-day"
-														title="Boat Speed in knots,&#13;Log in nm"
+														title="Speed Over Ground in knots"
 														id="bsp-01"
 														min-value="0"
 														max-value="15"
@@ -315,36 +271,13 @@
 														with-border="true"
 														with-min-max="true"
 														overlap="40"
-														digital-data-len="4"
-														digital-data-val="0"
-														label="BSP"
+														label="SOG"
 														width="200"
 														height="200"></analog-display>
 					</div>
 					<div class="black-frame centered">
 						<input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked>With Border
 						<input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>With Min &amp; Max
-					</div>
-				</div>
-				<!--
-						APPARENT WIND DISPLAY
-				+-->
-				<div id="apparent-wind">
-					<div id="top-cell-aw" class="black-frame centered">
-						<wind-angle-display class="analogdisplay-day"
-																title="Apparent Wind Speed in Knots"
-																id="aw-01"
-																value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-																major-ticks="30"
-																minor-ticks="5"
-																with-border="true"
-																with-digits="true"
-																label="App Wind"
-																width="200"
-																height="200"></wind-angle-display>
-					</div>
-					<div class="black-frame centered">
-						<input type="checkbox" class="border-cb" onchange="setBorder(this, 'aw-01');" checked>With Border
 					</div>
 				</div>
 			</div>
@@ -357,7 +290,7 @@
 						<div class="black-frame centered">
 							<compass-rose id="compass-rose-01"
 														class="day"
-														title="True Heading"
+														title="Course Over Ground"
 														value="0"
 														width="500"
 														height="50"></compass-rose>
