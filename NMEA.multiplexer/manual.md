@@ -1,4 +1,4 @@
-# Technical Manual
+# NMEA Multiplexer - Technical Manual
 
 [<< Back](./README.md)
 
