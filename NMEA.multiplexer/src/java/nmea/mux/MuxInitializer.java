@@ -474,7 +474,7 @@ public class MuxInitializer {
 								if (serialSubClass == null) {
 									serialForwarder = new SerialWriter(serialPort, baudrate);
 								} else {
-									serialForwarder = (Forwarder)Class.forName(serialSubClass.trim()).getConstructor(String.class, Integer.class).newInstance(serialPort, baudrate);
+									serialForwarder = (SerialWriter)Class.forName(serialSubClass.trim()).getConstructor(String.class, Integer.class).newInstance(serialPort, baudrate);
 								}
 								if (propFileSerial != null) {
 									Properties forwarderProps = new Properties();
@@ -495,7 +495,7 @@ public class MuxInitializer {
 								if (tcpSubClass == null) {
 									tcpForwarder = new TCPServer(Integer.parseInt(tcpPort));
 								} else {
-									tcpForwarder = (Forwarder)Class.forName(tcpSubClass.trim()).getConstructor(Integer.class).newInstance(tcpPort);
+									tcpForwarder = (TCPServer)Class.forName(tcpSubClass.trim()).getConstructor(Integer.class).newInstance(tcpPort);
 								}
 								if (tcpPropFile != null) {
 									Properties forwarderProps = new Properties();
@@ -516,7 +516,7 @@ public class MuxInitializer {
 								if (gpsdSubClass == null) {
 									gpsdForwarder = new GPSdServer(Integer.parseInt(gpsdPort));
 								} else {
-									gpsdForwarder = (Forwarder)Class.forName(gpsdSubClass.trim()).getConstructor(Integer.class).newInstance(gpsdPort);
+									gpsdForwarder = (GPSdServer)Class.forName(gpsdSubClass.trim()).getConstructor(Integer.class).newInstance(gpsdPort);
 								}
 								if (gpsdPropFile != null) {
 									Properties forwarderProps = new Properties();
@@ -532,13 +532,13 @@ public class MuxInitializer {
 							String fName = muxProps.getProperty(String.format("forward.%s.filename", MUX_IDX_FMT.format(fwdIdx)));
 							boolean append = "true".equals(muxProps.getProperty(String.format("forward.%s.append", MUX_IDX_FMT.format(fwdIdx)), "false"));
 							String propFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
-							String fSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx))); // TODO Same for the others
+							String fSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
 							try {
 								Forwarder fileForwarder;
 								if (fSubClass == null) {
 									fileForwarder = new DataFileWriter(fName, append);
 								} else {
-									fileForwarder = (Forwarder)Class.forName(fSubClass.trim()).getConstructor(String.class, Boolean.class).newInstance(fName, append);
+									fileForwarder = (DataFileWriter)Class.forName(fSubClass.trim()).getConstructor(String.class, Boolean.class).newInstance(fName, append);
 								}
 								if (propFile != null) {
 									Properties forwarderProps = new Properties();
@@ -559,7 +559,7 @@ public class MuxInitializer {
 								if (wsSubClass == null) {
 									wsForwarder = new WebSocketWriter(wsUri);
 								} else {
-									wsForwarder = (Forwarder)Class.forName(wsSubClass.trim()).getConstructor(String.class).newInstance(wsUri);
+									wsForwarder = (WebSocketWriter)Class.forName(wsSubClass.trim()).getConstructor(String.class).newInstance(wsUri);
 								}
 								if (wsPropFile != null) {
 									Properties forwarderProps = new Properties();
@@ -580,7 +580,7 @@ public class MuxInitializer {
 								if (wspSubClass == null) {
 									wspForwarder = new WebSocketProcessor(wspUri);
 								} else {
-									wspForwarder = (Forwarder)Class.forName(wspSubClass.trim()).getConstructor(String.class).newInstance(wspUri);
+									wspForwarder = (WebSocketProcessor)Class.forName(wspSubClass.trim()).getConstructor(String.class).newInstance(wspUri);
 								}
 								if (wspPropFile != null) {
 									Properties forwarderProps = new Properties();
@@ -600,7 +600,7 @@ public class MuxInitializer {
 								if (consoleSubClass == null) {
 									consoleForwarder = new ConsoleWriter();
 								} else {
-									consoleForwarder = (Forwarder)Class.forName(consoleSubClass.trim()).getConstructor().newInstance();
+									consoleForwarder = (ConsoleWriter)Class.forName(consoleSubClass.trim()).getConstructor().newInstance();
 								}
 								if (consolePropFile != null) {
 									Properties forwarderProps = new Properties();
