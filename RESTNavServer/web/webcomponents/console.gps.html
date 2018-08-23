@@ -44,7 +44,7 @@
 			 *
 			 * Event's definition (topic's name) is in ajax.manager.js, method onMessage
 			 */
-			/* global events */
+			/* global events gpsPosition setData gpsSatelliteData */
 			events.subscribe('pos', function(val) {
 				gpsPosition = val;
 				document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng });
@@ -62,7 +62,7 @@
 				setData('calendar-01', date);
 				if (gpsPosition !== undefined) {
 					let gpsDate = new Date(val);
-					/* global getAstroData */
+					/* global getAstroData DURATION_FMT withWanderingBodies withStars astroCallback */
 					getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
 				}
 			});
