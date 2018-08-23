@@ -82,6 +82,7 @@ _**ALL**_ forwarders can use 2 _optional_ attributes, `subclass` and `properties
 forward.XX.type=file
 forward.XX.subclass=nmea.forwarders.ExtendedDataFileWriter
 forward.XX.properties=validlogger.properties
+...
 ```
 The lines above means that:
 - The `nmea.forwarders.ExtendedDataFileWriter` is a `file` Forwarder (it extends `DataFileWriter`)
