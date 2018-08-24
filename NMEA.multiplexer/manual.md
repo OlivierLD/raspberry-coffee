@@ -9,11 +9,11 @@ The program to start is `nmea.mux.GenericNMEAMultiplexer`, it is driven by a `pr
 describing the features required by an instance of the Multiplexer (channels, forwarders, computers, http server, etc).
 
 - [Properties](#properties)
-- [Pre-defined channel types]()
-- [Forwarders]()
-- [Pre-defined forwarder types]()
-- [Pre-defined computer type]()
-- [Other properties]()
+- [Pre-defined channel types](#pre-defined-channel-types)
+- [Forwarders](#forwarders)
+- [Pre-defined forwarder types](#pre-defined-forwarder-types)
+- [Pre-defined computer type](#pre-defined-computer-types)
+- [Other properties](#other-properties)
 - [Example](#example)
 - [Minimal](#minimal)
 
