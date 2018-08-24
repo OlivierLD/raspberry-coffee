@@ -264,3 +264,5 @@ init.cache=true
 can be accessed from a Web UI (http://localhost:9999/web/webcomponents/console.gps.html?style=orange&bg=black&border=n&boat-data=n), to render astronomical data.
 
 ![Web UI](./docimages/minimal.png)
+
+All you need to know in this case is your location, all the rest is taken care of.
