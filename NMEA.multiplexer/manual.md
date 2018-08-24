@@ -276,4 +276,10 @@ can be accessed from a Web UI (http://localhost:9999/web/webcomponents/console.g
 
 ![Web UI](./docimages/minimal.png)
 
+In this case:
+- there is only one channel (`zda`) providing the date and time (UT)
+- the position is provided by the user at runtime
+- the data are pushed to the cache
+- the cache is accessed from the Web UI through REST services
+
 All you need to know in this case is your location, all the rest is taken care of.
