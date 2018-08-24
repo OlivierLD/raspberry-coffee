@@ -8,6 +8,15 @@ They are all part of this project, so you can refer to them if needed for more d
 The program to start is `nmea.mux.GenericNMEAMultiplexer`, it is driven by a `properties` file,
 describing the features required by an instance of the Multiplexer (channels, forwarders, computers, http server, etc).
 
+- [Properties](#properties)
+- [Pre-defined channel types]()
+- [Forwarders]()
+- [Pre-defined forwarder types]()
+- [Pre-defined computer type]()
+- [Other properties]()
+- [Example](#example)
+- [Minimal](#minimal)
+
 ### Properties
 Here is a brief description of the properties managed by the `nmea.mux.GenericNMEAMultiplexer`, the ones
 present in the file `nmea.mux.properties`, or in the file named as set in the System variable `mux.properties`.
@@ -48,7 +57,7 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
 > If the loaded class does not extend the right `superclass` or implement the right `interface`, an error
 > will be raised.
 
-**Pre-defined channel types**
+#### Pre-defined channel types
 
 - `serial`
     - Serial port input.
@@ -75,7 +84,7 @@ You can also define your own channels (extending `NMEAClient` and with a `reader
 
 Look for `mux.01.cls=nmea.consumers.client.WeatherStationWSClient`.
 
-**Forwarders**
+#### Forwarders
 
 _**ALL**_ forwarders can use 2 _optional_ attributes, `subclass` and `properties`:
 ```properties
@@ -99,7 +108,7 @@ The lines above means that:
 
 > See `ExtendedDataFileWriter.java` for details.
 
-**Pre-defined forwarder types**
+#### Pre-defined forwarder types
 
 - `serial`
     - Write to a serial port
@@ -122,7 +131,7 @@ You can also implement your own forwarder (implementing the `Forwarder` interfac
 
 Look for `forward.02.cls=nmea.forwarders.RESTPublisher`
 
-**Pre-defined computer type(s)**
+#### Pre-defined computer type(s)
 
 - `tw-current`
     - One computer, to calculate both True Wind and Current (GPS Based, with possibly several time buffers).
@@ -134,7 +143,7 @@ You can also define your own computers (extending `Computer`).
 
 Look for `computer.02.cls=nmea.computers.ComputerSkeleton`
 
-**Other properties**
+#### Other properties
 
 ```properties
 with.http.server=yes
