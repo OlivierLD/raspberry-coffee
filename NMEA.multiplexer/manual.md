@@ -235,3 +235,32 @@ This file tells the Multiplexer to:
 As `with.http.server` is set to `yes`, an `admin` web page will be available on port `9999` (at http://localhost:9999/web/admin.html).
 
 And `init.cache` is set to `true`, meaning that a Computer (not mentioned here) would be able to pick up data from the NMEA Cache.
+
+#### Minimal
+_Note_: Two system variables can be used to set the default position (in case no GPS is available) at runtime:
+```
+...
+JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
+java -cp $CP $JAVA_OPTS navrest.NavServer
+```
+A ZDA Sentence can be generated from the system time. A multiplexer driven by
+this minimal properties file:
+```properties
+with.http.server=yes
+http.port=9999
+#
+# Channels (input)
+#
+mux.01.type=zda
+#
+#
+# No Forwarders
+#
+#############################################################
+#
+init.cache=true
+#
+```
+can be accessed from a Web UI (http://localhost:9999/web/webcomponents/console.gps.html?style=orange&bg=black&border=n&boat-data=n), to render astronomical data.
+
+![Web UI](./docimages/minimal.png)
