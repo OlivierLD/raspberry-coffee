@@ -71,6 +71,8 @@ fi
 # To use when re-playing GPS data. Those dates will not go in the cache.
 JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GGA.date.time=true"
 JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GLL.date.time=true"
+# Default position
+JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
 #
 echo -e "Using properties:$JAVA_OPTS"
 #

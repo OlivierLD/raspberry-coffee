@@ -166,6 +166,18 @@ public class NMEADataCache
 		dampingMap.put(SOG, new ArrayList<Object>());
 		dampingMap.put(LEEWAY, new ArrayList<Object>());
 
+		String strLat  = System.getProperty("default.mux.latitude");
+		String strLong =  System.getProperty("default.mux.longitude");
+		if (strLat != null && !strLat.isEmpty() && strLong != null && !strLong.isEmpty()) {
+			try {
+				double lat = Double.parseDouble(strLat);
+				double lng = Double.parseDouble(strLong);
+				GeoPos defaultPos = new GeoPos(lat, lng);
+				this.put(POSITION, defaultPos);
+			} catch (NumberFormatException nfe) {
+				nfe.printStackTrace();
+			}
+		}
 		// Initialization
 		this.put(CALCULATED_CURRENT, new HashMap<Long, CurrentDefinition>());
 	}
