@@ -252,6 +252,8 @@ _Note_: Two system variables can be used to set the default position (in case no
 JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
 java -cp $CP $JAVA_OPTS navrest.NavServer
 ```
+> `navrest.NavServer` is an example - part of this project - involving the `NMEA.Multiplexer`.
+
 A ZDA Sentence can be generated from the system time. A multiplexer driven by
 this minimal properties file:
 ```properties
