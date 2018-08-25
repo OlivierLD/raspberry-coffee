@@ -603,10 +603,9 @@ class SkyMap extends HTMLElement {
 
 		// Display LHA Aries as text
 		let strAries = Utilities.decToSex(this.LHAAries);
-		context.fillStyle = 'white'; // this.worldmapColorConfig.displayPositionColor; TODO Get color from CSS
+		context.fillStyle = 'silver'; // this.worldmapColorConfig.displayPositionColor; TODO Get color from CSS
 		context.font = "bold 16px Arial"; // "bold 40px Arial"
 		context.fillText('LHA Aries: ' + strAries, 10, 18);
-
 	}
 
 	static nextMonth(month) {
