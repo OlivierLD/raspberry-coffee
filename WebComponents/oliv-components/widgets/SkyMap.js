@@ -600,6 +600,13 @@ class SkyMap extends HTMLElement {
 		if (this._withWanderingBodies) {
 			this.drawWanderingBodies(context, radius * 0.92);
 		}
+
+		// Display LHA Aries as text
+		let strAries = Utilities.decToSex(this.LHAAries);
+		context.fillStyle = 'white'; // this.worldmapColorConfig.displayPositionColor; TODO Get color from CSS
+		context.font = "bold 16px Arial"; // "bold 40px Arial"
+		context.fillText('LHA Aries: ' + strAries, 10, 18);
+
 	}
 
 	static nextMonth(month) {
@@ -925,7 +932,7 @@ class SkyMap extends HTMLElement {
 				context.fillStyle = 'red';
 				let str = SkyMap.findSymbol(body.name);
 				let len = context.measureText(str).width;
-  			context.fillText(str, (self.canvas.width / 2) - p.x - (len / 2), (self.canvas.height / 2) + p.y - 4);
+				context.fillText(str, (self.canvas.width / 2) - p.x - (len / 2), (self.canvas.height / 2) + p.y - 4);
 
 				context.closePath();
 			});
