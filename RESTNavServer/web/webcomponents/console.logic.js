@@ -280,8 +280,56 @@ const DURATION_FMT = "Y-m-dTH:i:s";
 const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 
+const BODIES = [{
+		name: "sun",
+		display: {
+			name: "Sun",
+			symbol: "\u2609"
+		}
+	},{
+		name: "moon",
+		display: {
+			name: "Moon",
+			symbol: "\u263D"
+		}
+	},{
+		name: "venus",
+		display: {
+			name: "Venus",
+			symbol: "\u2640"
+		}
+	},
+	{
+		name: "mars",
+		display: {
+			name: "Mars",
+			symbol: "\u2642"
+		}
+	}, {
+		name: "jupiter",
+		display: {
+			name: "Jupiter",
+			symbol: "\u2643"
+		}
+	}, {
+		name: "saturn",
+		display: {
+			name: "Saturn",
+			symbol: "\u2644"
+		}
+	}];
+
+function bodyName(name) {
+	for (let i=0; i<BODIES.length; i++) {
+		if (name === BODIES[i].name) {
+			return BODIES[i].display.name + ' ' + BODIES[i].display.symbol;
+		}
+	}
+	return name;
+}
+
 function astroCallback(data) {
-//		console.log("Astro Data:", data);
+//console.log("Astro Data:", data);
 
 	let worldMap = document.getElementById('world-map-01');
 	let skyMap = document.getElementById('sky-map-01');
@@ -296,35 +344,26 @@ function astroCallback(data) {
 	let moonLHA = data.moon.gha + data.from.longitude;
 	while (moonLHA < 0) moonLHA +=360;
 	while (moonLHA > 360) moonLHA -= 360;
-	document.getElementById("sun-moon-data").innerHTML =
-			'<table border="1"><tr><td align="left">Sun D:</td><td align="right">' +
-			worldMap.decToSex(data.sun.decl, "NS") +
-			'</td></tr><tr><td align="left">Sun GHA:</td><td align="right">' +
-			worldMap.decToSex(data.sun.gha) +
-			'</td><td align="left">&nbsp;LHA:</td><td align="right">' +
-			worldMap.decToSex(sunLHA) +
-			'</td></tr><tr><td align="left">Sun Alt:</td><td align="right">' +
-			worldMap.decToSex(data.sunObs.alt) +
-			'</td></tr><tr><td align="left">Sun Z:</td><td align="right">' +
-			worldMap.decToSex(data.sunObs.z) +
+	let dataTable =
+			'<table border="1">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Alt</th><th>Z</th></tr>' +
+			'<tr><td align="left">' + bodyName("sun") + '</td><td>' + worldMap.decToSex(data.sun.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.sun.gha) + '</td><td align="right">' + worldMap.decToSex(sunLHA) + '</td><td align="right">' +	worldMap.decToSex(data.sunObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.sunObs.z) + '</td></tr>' +
+			'<tr><td align="left">' + bodyName("moon") + '</td><td>' + worldMap.decToSex(data.moon.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.moon.gha) + '</td><td align="right">' + worldMap.decToSex(moonLHA) + '</td><td align="right">' +	worldMap.decToSex(data.moonObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.moonObs.z) + '</td></tr>';
 
-			'</td></tr><tr><td align="left">Moon D:</td><td align="right">' +
-			worldMap.decToSex(data.moon.decl, "NS") +
-			'</td></tr><tr><td align="left">Moon GHA:</td><td align="right">' +
-			worldMap.decToSex(data.moon.gha) +
-			'</td><td align="left">&nbsp;LHA:</td><td align="right">' +
-			worldMap.decToSex(moonLHA) +
-			'</td></tr><tr align="left"><td>Moon Alt:</td><td align="right">' +
-			worldMap.decToSex(data.moonObs.alt) +
-			'</td></tr><tr><td align="left">Moon Z:</td><td align="right">' +
-			worldMap.decToSex(data.moonObs.z) +
-			'</td></tr><tr><td align="left">Aries &gamma; GHA:</td><td align="right">' +
-			worldMap.decToSex(data.ghaAries) +
-			'</td><td align="left">&nbsp;LHA:</td><td align="right">' +
-			worldMap.decToSex(lhaAries) +
-			'</td></tr></table>';
+	if (data.wanderingBodies !== undefined) {
+		for (let i=0; i<data.wanderingBodies.length; i++) {
+			if (data.wanderingBodies[i].name !== "aries") {
+				dataTable +=
+				'<tr><td align="left">' + bodyName(data.wanderingBodies[i].name) + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].gha) + '</td><td></td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].fromPos.observed.alt) + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].fromPos.observed.z) + '</td></tr>';
+			}
+		}
+	}
 
-	// Display solar date & time
+	dataTable +=
+			'<tr><td align="left">Aries &gamma;</td><td></td><td align="right">' + worldMap.decToSex(data.ghaAries) + '</td><td align="right">' + worldMap.decToSex(lhaAries) + '</td></tr>' + '</table>';
+
+	document.getElementById("sun-moon-data").innerHTML = dataTable;
+
+			// Display solar date & time
 	let solarDate = new Date(data.solarDate.year, data.solarDate.month - 1, data.solarDate.day, data.solarDate.hour, data.solarDate.min, data.solarDate.sec);
 	let time = solarDate.format("H:i:s");
 	setData('analog-watch-02', time);

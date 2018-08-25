@@ -22,7 +22,6 @@ public class StressTest {
 					headers.put("Content-Type", "application/json");
 					while (go) {
 						try {
-
 							System.out.println(String.format("%s >> %d", this.getName(), HTTPClient.doPost(url, headers, payload)));
 						} catch (Exception e) {
 							e.printStackTrace();

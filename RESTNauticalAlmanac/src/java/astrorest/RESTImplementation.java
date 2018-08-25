@@ -1,7 +1,6 @@
 package astrorest;
 
 import calc.GeoPoint;
-import calc.GeomUtil;
 import calculation.AstroComputer;
 import calculation.SightReductionUtil;
 import com.google.gson.Gson;
@@ -18,11 +17,23 @@ import nauticalalmanac.Core;
 import nauticalalmanac.Star;
 import utils.TimeUtil;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 /**
@@ -458,8 +469,8 @@ public class RESTImplementation {
 						.moon(new GP().gha(AstroComputer.getMoonGHA())
 								.decl(AstroComputer.getMoonDecl()));
 
+				double lat = 0d, lng = 0d;
 				if (prms.get("fromL") != null && prms.get("fromG") != null) {
-					double lat = 0d, lng = 0d;
 					try {
 						lat = Double.parseDouble(prms.get("fromL"));
 						lng = Double.parseDouble(prms.get("fromG"));
@@ -501,35 +512,69 @@ public class RESTImplementation {
 					SightReductionUtil sru = new SightReductionUtil();
 					sru.calculate(lat, lng, AstroComputer.getSunGHA(), AstroComputer.getSunDecl());
 					data = data.sunObs(new OBS()
-					.alt(sru.getHe())
-					.z(sru.getZ()));
+							.alt(sru.getHe())
+							.z(sru.getZ()));
 					sru.calculate(lat, lng, AstroComputer.getMoonGHA(), AstroComputer.getMoonDecl());
 					data = data.moonObs(new OBS()
 							.alt(sru.getHe())
 							.z(sru.getZ()));
 				}
 				// Wandering bodies
-				if (wandering) {
+				if (wandering) { // TODO Add He and Z
 					List<GP> wanderingBodies = new ArrayList<>();
 					wanderingBodies.add(new GP()
 							.name("aries")
 							.gha(AstroComputer.getAriesGHA()));
+					SightReductionUtil sru = new SightReductionUtil();
+					// Calculate Venus observed prms
+					sru.calculate(lat, lng, AstroComputer.getVenusGHA(), AstroComputer.getVenusDecl());
 					wanderingBodies.add(new GP()
 						.name("venus")
 						.decl(AstroComputer.getVenusDecl())
-						.gha(AstroComputer.getVenusGHA()));
+						.gha(AstroComputer.getVenusGHA())
+					  .bodyFromPos(new BodyFromPos()
+							  .observer(new Pos()
+									  .latitude(lat)
+									  .longitude(lng))
+							  .observed(new OBS()
+									  .alt(sru.getHe())
+									  .z(sru.getZ()))));
+					// Calculate Mars observed prms
+					sru.calculate(lat, lng, AstroComputer.getMarsGHA(), AstroComputer.getMarsDecl());
 					wanderingBodies.add(new GP()
 							.name("mars")
 							.decl(AstroComputer.getMarsDecl())
-							.gha(AstroComputer.getMarsGHA()));
+							.gha(AstroComputer.getMarsGHA()).bodyFromPos(new BodyFromPos()
+									.observer(new Pos()
+											.latitude(lat)
+											.longitude(lng))
+									.observed(new OBS()
+											.alt(sru.getHe())
+											.z(sru.getZ()))));
+					// Calculate Jupiter observed prms
+					sru.calculate(lat, lng, AstroComputer.getJupiterGHA(), AstroComputer.getJupiterDecl());
 					wanderingBodies.add(new GP()
 							.name("jupiter")
 							.decl(AstroComputer.getJupiterDecl())
-							.gha(AstroComputer.getJupiterGHA()));
+							.gha(AstroComputer.getJupiterGHA()).bodyFromPos(new BodyFromPos()
+									.observer(new Pos()
+											.latitude(lat)
+											.longitude(lng))
+									.observed(new OBS()
+											.alt(sru.getHe())
+											.z(sru.getZ()))));
+					// Calculate Saturn observed prms
+					sru.calculate(lat, lng, AstroComputer.getSaturnGHA(), AstroComputer.getSaturnDecl());
 					wanderingBodies.add(new GP()
 							.name("saturn")
 							.decl(AstroComputer.getSaturnDecl())
-							.gha(AstroComputer.getSaturnGHA()));
+							.gha(AstroComputer.getSaturnGHA()).bodyFromPos(new BodyFromPos()
+									.observer(new Pos()
+											.latitude(lat)
+											.longitude(lng))
+									.observed(new OBS()
+											.alt(sru.getHe())
+											.z(sru.getZ()))));
 					data = data.wandering(wanderingBodies)
 							.meanObliquity(AstroComputer.getMeanObliquityOfEcliptic());
 				}
@@ -1040,6 +1085,7 @@ public class RESTImplementation {
 		String name;
 		double decl;
 		double gha;
+		BodyFromPos fromPos;
 
 		public GP name(String body) {
 			this.name = body;
@@ -1053,6 +1099,11 @@ public class RESTImplementation {
 
 		public GP gha(double d) {
 			this.gha = d;
+			return this;
+		}
+
+		public GP bodyFromPos(BodyFromPos fromPos) {
+			this.fromPos = fromPos;
 			return this;
 		}
 	}
@@ -1083,6 +1134,20 @@ public class RESTImplementation {
 
 		public Pos longitude(double lng) {
 			this.longitude = lng;
+			return this;
+		}
+	}
+
+	public static class BodyFromPos {
+		Pos observer;
+		OBS observed;
+
+		public BodyFromPos observer(Pos from) {
+			this.observer = from;
+			return this;
+		}
+		public BodyFromPos observed(OBS asSeen) {
+			this.observed = asSeen;
 			return this;
 		}
 	}

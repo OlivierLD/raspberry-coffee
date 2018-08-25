@@ -78,7 +78,6 @@ public class SightReductionUtil {
 		this.G = dG;
 	}
 
-
 	public void calculate(double ahg, double d) {
 		setAHG(ahg);
 		setD(d);
@@ -224,7 +223,7 @@ public class SightReductionUtil {
 	public static double getRefr(double alt) // Works, according to the Correction Tables...
 	{
 		return 0.97127 * Math.tan(Math.toRadians(90.0 - alt)) -
-				0.00137 * Math.pow(Math.tan(Math.toRadians(90.0 - alt)), 3.0);
+					 0.00137 * Math.pow(Math.tan(Math.toRadians(90.0 - alt)), 3.0);
 	}
 
 //  public static double getRefr(double alt)

@@ -120,8 +120,12 @@ function getQueryParameterByName(name, url) {
 	name = name.replace(/[\[\]]/g, "\\$&");
 	let regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
 			results = regex.exec(url);
-	if (!results) return null;
-	if (!results[2]) return '';
+	if (!results) {
+		return null;
+	}
+	if (!results[2]) {
+		return '';
+	}
 	return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
@@ -132,9 +136,9 @@ function onMessage(json) {
 
 		try {
 			let latitude = json.Position.lat;
-//          console.log("latitude:" + latitude)
+//    console.log("latitude:" + latitude)
 			let longitude = json.Position.lng;
-//          console.log("Pt:" + latitude + ", " + longitude);
+//    console.log("Pt:" + latitude + ", " + longitude);
 			events.publish('pos', {
 				'lat': latitude,
 				'lng': longitude
@@ -304,6 +308,7 @@ function onMessage(json) {
 				'b2wp': b2wp
 			});
 		} catch (err) {
+//		console.log(err); // Absorb?
 		}
 
 		try {
@@ -311,7 +316,6 @@ function onMessage(json) {
 				'onwind': json["VMG on Wind"],
 				'onwp': json["VMG to Waypoint"]
 			});
-
 		} catch (err) {
 			errMess += ((errMess.length > 0 ? ", " : "Cannot read ") + "VMG");
 		}
