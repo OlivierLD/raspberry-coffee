@@ -328,22 +328,23 @@ function bodyName(name) {
 	return name;
 }
 
+function getLHA(gha, longitude) {
+	let lha = gha + longitude;
+	while (lha < 0) lha +=360;
+	while (lha > 360) lha -= 360;
+	return lha;
+}
+
 function astroCallback(data) {
 //console.log("Astro Data:", data);
 
 	let worldMap = document.getElementById('world-map-01');
 	let skyMap = document.getElementById('sky-map-01');
 
-	let lhaAries = data.ghaAries + data.from.longitude;
-	while (lhaAries < 0) lhaAries +=360;
-	while (lhaAries > 360) lhaAries -= 360;
+	let lhaAries = getLHA(data.ghaAries, data.from.longitude);
 
-	let sunLHA = data.sun.gha + data.from.longitude;
-	while (sunLHA < 0) sunLHA +=360;
-	while (sunLHA > 360) sunLHA -= 360;
-	let moonLHA = data.moon.gha + data.from.longitude;
-	while (moonLHA < 0) moonLHA +=360;
-	while (moonLHA > 360) moonLHA -= 360;
+	let sunLHA = getLHA(data.sun.gha, data.from.longitude);
+	let moonLHA = getLHA(data.moon.gha, data.from.longitude);
 	let dataTable =
 			'<table border="1">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Alt</th><th>Z</th></tr>' +
 			'<tr><td align="left">' + bodyName("sun") + '</td><td>' + worldMap.decToSex(data.sun.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.sun.gha) + '</td><td align="right">' + worldMap.decToSex(sunLHA) + '</td><td align="right">' +	worldMap.decToSex(data.sunObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.sunObs.z) + '</td></tr>' +
@@ -353,7 +354,7 @@ function astroCallback(data) {
 		for (let i=0; i<data.wanderingBodies.length; i++) {
 			if (data.wanderingBodies[i].name !== "aries") {
 				dataTable +=
-				'<tr><td align="left">' + bodyName(data.wanderingBodies[i].name) + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].gha) + '</td><td></td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].fromPos.observed.alt) + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].fromPos.observed.z) + '</td></tr>';
+				'<tr><td align="left">' + bodyName(data.wanderingBodies[i].name) + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].gha) + '</td><td>' + worldMap.decToSex(getLHA(data.wanderingBodies[i].gha, data.from.longitude)) + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].fromPos.observed.alt) + '</td><td align="right">' + worldMap.decToSex(data.wanderingBodies[i].fromPos.observed.z) + '</td></tr>';
 			}
 		}
 	}
