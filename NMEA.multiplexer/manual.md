@@ -309,3 +309,6 @@ function getNMEAData() {
 ```
 
 All you need to know in this case is your location, all the rest is taken care of.
+
+---
+See the code for more details. _This_ is Open Source ;)
