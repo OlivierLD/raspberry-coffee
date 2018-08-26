@@ -84,7 +84,7 @@ You can also define your own channels (extending `NMEAClient` and with a `reader
 
 Look for `mux.01.cls=nmea.consumers.client.WeatherStationWSClient`.
 
-Channels can use a those three attribiutes: `properties`, `device.filters`, `sentence.filters`:
+Channels can use a those three attributes: `properties`, `device.filters`, `sentence.filters`:
 ```properties
 mux.01.properties=weather.station.properties
 mux.01.device.filters=II, GP
