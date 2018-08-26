@@ -75,7 +75,7 @@ function expandCollapseBoatData() {
 	if (boatDataExpanded) {
 		document.getElementById('row-1').style.display = 'grid';
 		document.getElementById('row-2').style.display = 'grid';
-		document.getElementById('boat-data-switch').innerText = '- Boat Data';
+		document.getElementById('boat-data-switch').innerText = ' - Boat Data';
 	} else {
 		document.getElementById('row-1').style.display = 'none';
 		document.getElementById('row-2').style.display = 'none';
