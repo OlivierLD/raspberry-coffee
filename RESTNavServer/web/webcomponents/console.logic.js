@@ -371,6 +371,16 @@ function astroCallback(data) {
 	let date = solarDate.format("d-m-Y-l");
 	setData('calendar-02', date);
 
+	// utc-date
+	let utcDate = new Date(data.epoch);
+	document.getElementById("utc-date").innerHTML = 'UTC: ' +
+			utcDate.getUTCFullYear() + ' ' +
+			months[utcDate.getUTCMonth()] + ' ' +
+			(utcDate.getUTCDate() < 10 ? '0' : '') + utcDate.getUTCDate() + ' ' +
+			(utcDate.getUTCHours() < 10 ? '0' : '') + utcDate.getUTCHours() + ':' +
+			(utcDate.getUTCMinutes() < 10 ? '0' : '') + utcDate.getUTCMinutes() + ':' +
+			(utcDate.getUTCSeconds() < 10 ? '0' : '') + utcDate.getUTCSeconds();
+
 	document.getElementById("solar-date").innerHTML = 'Solar Time: ' +
 			data.solarDate.year + ' ' +
 			months[data.solarDate.month - 1] + ' ' +
