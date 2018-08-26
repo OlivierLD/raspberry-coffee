@@ -23,7 +23,7 @@ Then load [http://localhost:8080/oliv-components/index.html](http://localhost:80
 
 #### Also available
 After starting the `node` server as mentioned above, you can also reach
-- [http://localhost:8080/oliv-components/mirror.html](http://localhost:8080/oliv-components/mirror.html), the basis for an Heads Up display application.
+- [http://localhost:8080/oliv-components/mirror.html](http://localhost:8080/oliv-components/mirror.html), the basis for an Head-Up Display (HUD) application.
 - [http://localhost:8080/oliv-components/pwm.html](http://localhost:8080/oliv-components/pwm.html), for an explanation about how Pulse Width Modulation works.
 
 

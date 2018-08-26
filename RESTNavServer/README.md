@@ -170,7 +170,7 @@ Also, we do not use here the `JQuery Deferred`, we use pure ES6 Promises to get 
 
 ![Web Components](./docimg/screenshot.11.png)
 
-Equipped with Heads up display features (for reflection in a wind shield, for example).
+Equipped with Head-Up Display (HUD) features (for reflection in a wind shield, for example).
 
 ![HeadsUp display](./docimg/screenshot.12.png)
 
