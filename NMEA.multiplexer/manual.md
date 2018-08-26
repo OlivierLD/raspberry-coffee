@@ -99,7 +99,7 @@ mux.01.sentence.filters=~MMB, ~GGA, ~GSV
 ```
 means everything but no MMB, no GGA, no GSV.
 
-A line line
+A line like
 ```properties
 mux.01.sentence.filters=RMC, XDR, MDA
 ```
