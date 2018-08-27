@@ -5,7 +5,7 @@
  ! Get the data from navrest.NavServer, started for example by ./runNavServer.sh
  ! Uses ES6 Promises to get to Ajax
  !
- ! Try query string like that ?style=orange&bg=black&border=n&boat-data=n
+ ! Try query string like that console.gps.html?style=orange&bg=black&border=n&boat-data=n
  +-->
 <head>
 	<meta charset="UTF-8">
@@ -55,7 +55,7 @@
 		});
 		events.subscribe('gps-time', function(val) {
 			// val.format("Y-M-d H:i:s")
-			let time = new Date(val).format("H:i:s")
+			let time = new Date(val).format("H:i:s");
 			setData('analog-watch-01', time);
 			let date = new Date(val).format("d-m-Y-l");
 			setData('calendar-01', date);
