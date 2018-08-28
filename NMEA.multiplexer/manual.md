@@ -310,5 +310,15 @@ function getNMEAData() {
 
 All you need to know in this case is your location, all the rest is taken care of.
 
+##### Bonus
+You can even have _no_ `channel` at all.
+In this case, you have the possibility to provide the UTC time to the cache using a service like
+```
+ PUT /mux/utc { epoch: 1535491435769 }
+```
+In this case, the cache will reflect this `epoch`, and all celectial data will be computed accordingly, from the position
+supplied as above. This allows you to see what the celestial configuration looks like
+at any point in time.
+
 ---
 See the code for more details. _This_ is Open Source ;)

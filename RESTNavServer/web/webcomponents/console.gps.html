@@ -82,7 +82,7 @@
 
 		function updateCalendar() {
 			let year = document.getElementById('calendar-year-01').value;
-			let month = document.getElementById('calendar-month-01').value;
+			let month = parseInt(document.getElementById('calendar-month-01').value);
 			let day = document.getElementById('calendar-day-01').value;
 			let time = document.getElementById('watch-value-01').value.split(':');
 			let date = new Date();
@@ -101,13 +101,16 @@
 				vrooming = undefined;
 				document.getElementById('button-now').disabled = false;
 				document.getElementById('update-calendar').disabled = false;
+				document.getElementById('calendar-increment-01').disabled = false;
 			} else {
+				let increment = parseInt(document.getElementById('calendar-increment-01').value);
 				vrooming = window.setInterval(function () {
 					document.getElementById('button-now').disabled = true;
 					document.getElementById('update-calendar').disabled = true;
+					document.getElementById('calendar-increment-01').disabled = true;
 
 					let year = document.getElementById('calendar-year-01').value;
-					let month = document.getElementById('calendar-month-01').value;
+					let month = parseInt(document.getElementById('calendar-month-01').value);
 					let day = document.getElementById('calendar-day-01').value;
 					let time = document.getElementById('watch-value-01').value.split(':');
 					let date = new Date();
@@ -117,7 +120,7 @@
 					date.setUTCHours(time[0], time[1], time[2]);
 					let epoch = date.getTime();
 
-					epoch += 60000; // 1 minute
+					epoch += increment;
 					let newDate = new Date(epoch);
 
 					year = newDate.getUTCFullYear();
@@ -260,7 +263,7 @@
 			background-color: #ccc;
 		}
 
-		table {
+		.raw-table {
 			border-color: cyan;
 			font-family: "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
 			font-size: 20px;
@@ -407,6 +410,14 @@
 			<button onclick="vroom()"
 							title="Simulate"
 							style="margin-top: 3px;">Vroom!</button>
+			Each second, increment by
+			<select id="calendar-increment-01">
+				<option value="10000" selected>10 seconds</option>
+				<option value="60000">1 minute</option>
+				<option value="600000">10 minutes</option>
+				<option value="3600000">1 hour</option>
+				<option value="86400000">1 day</option>
+			</select>
 		</div>
 	</div>
 

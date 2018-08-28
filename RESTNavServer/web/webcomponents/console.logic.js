@@ -346,7 +346,7 @@ function astroCallback(data) {
 	let sunLHA = getLHA(data.sun.gha, data.from.longitude);
 	let moonLHA = getLHA(data.moon.gha, data.from.longitude);
 	let dataTable =
-			'<table border="1">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Alt</th><th>Z</th></tr>' +
+			'<table border="1" class="raw-table">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Alt</th><th>Z</th></tr>' +
 			'<tr><td align="left">' + bodyName("sun") + '</td><td>' + worldMap.decToSex(data.sun.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.sun.gha) + '</td><td align="right">' + worldMap.decToSex(sunLHA) + '</td><td align="right">' +	worldMap.decToSex(data.sunObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.sunObs.z) + '</td></tr>' +
 			'<tr><td align="left">' + bodyName("moon") + '</td><td>' + worldMap.decToSex(data.moon.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.moon.gha) + '</td><td align="right">' + worldMap.decToSex(moonLHA) + '</td><td align="right">' +	worldMap.decToSex(data.moonObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.moonObs.z) + '</td></tr>';
 
