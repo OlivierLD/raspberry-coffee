@@ -35,6 +35,112 @@
 
 	<script type="text/javascript">
 		// For this Console.
+		let userTimeDataExpanded = false;
+		function expandCollapseSetTimeData() {
+			let messZone = document.getElementById('message-zone');
+			if (userTimeDataExpanded) {
+				document.getElementById('user-time-widgets').style.display = 'none';
+				document.getElementById('user-time-switch').innerText = '+ Set Time';
+				messZone.style.visibility = "hidden";
+				messZone.style.height = '0';
+				messZone.style.opacity = '0';
+			} else {
+				document.getElementById('user-time-widgets').style.display = 'block';
+				document.getElementById('user-time-switch').innerText = '- Set Time';
+				// Make sure nothing is feeding the cache with time.
+				messZone.innerText = 'Make sure nothing is feeding the cache with time.';
+				messZone.style.visibility = "visible";
+				messZone.style.height = '30px';
+				messZone.style.opacity = '1';
+				window.setTimeout(() => {
+					console.log("Hiding message");
+					messZone.style.visibility = "hidden";
+					messZone.style.height = '0';
+					messZone.style.opacity = '0';
+				}, 5000);
+			}
+			userTimeDataExpanded = !userTimeDataExpanded;
+		}
+
+		function updateFieldToNow() {
+			let now = new Date();
+			let year = now.getUTCFullYear();
+			let month = now.getUTCMonth() + 1;
+			let day = now.getUTCDate();
+			let hours = now.getUTCHours();
+			let minutes = now.getUTCMinutes();
+			let seconds = now.getUTCSeconds();
+
+			document.getElementById('calendar-year-01').value = year;
+			document.getElementById('calendar-month-01').value = (month < 10 ? '0' + month : month);
+			document.getElementById('calendar-day-01').value = day;
+			document.getElementById('watch-value-01').value =
+					(hours < 10 ? '0' + hours : hours) + ':' +
+					(minutes < 10 ? '0' + minutes : minutes) + ':' +
+					(seconds < 10 ? '0' + seconds : seconds);
+		}
+
+		function updateCalendar() {
+			let year = document.getElementById('calendar-year-01').value;
+			let month = document.getElementById('calendar-month-01').value;
+			let day = document.getElementById('calendar-day-01').value;
+			let time = document.getElementById('watch-value-01').value.split(':');
+			let date = new Date();
+			date.setUTCFullYear(year);
+			date.setUTCMonth(month - 1);
+			date.setUTCDate(day);
+			date.setUTCHours(time[0], time[1], time[2]);
+			let epoch = date.getTime();
+			setUTCTime(epoch); // There is also room for a callback (2nd prm).
+		}
+
+		let vrooming = undefined;
+		function vroom() {
+			if (vrooming !== undefined) {
+				window.clearInterval(vrooming);
+				vrooming = undefined;
+				document.getElementById('button-now').disabled = false;
+				document.getElementById('update-calendar').disabled = false;
+			} else {
+				vrooming = window.setInterval(function () {
+					document.getElementById('button-now').disabled = true;
+					document.getElementById('update-calendar').disabled = true;
+
+					let year = document.getElementById('calendar-year-01').value;
+					let month = document.getElementById('calendar-month-01').value;
+					let day = document.getElementById('calendar-day-01').value;
+					let time = document.getElementById('watch-value-01').value.split(':');
+					let date = new Date();
+					date.setUTCFullYear(year);
+					date.setUTCMonth(month - 1);
+					date.setUTCDate(day);
+					date.setUTCHours(time[0], time[1], time[2]);
+					let epoch = date.getTime();
+
+					epoch += 60000; // 1 minute
+					let newDate = new Date(epoch);
+
+					year = newDate.getUTCFullYear();
+					month = newDate.getUTCMonth() + 1;
+					day = newDate.getUTCDate();
+					let hours = newDate.getUTCHours();
+					let minutes = newDate.getUTCMinutes();
+					let seconds = newDate.getUTCSeconds();
+
+					document.getElementById('calendar-year-01').value = year;
+					document.getElementById('calendar-month-01').value = (month < 10 ? '0' + month : month);
+					document.getElementById('calendar-day-01').value = day;
+					document.getElementById('watch-value-01').value =
+							(hours < 10 ? '0' + hours : hours) + ':' +
+							(minutes < 10 ? '0' + minutes : minutes) + ':' +
+							(seconds < 10 ? '0' + seconds : seconds);
+
+					updateCalendar();
+
+				}, 1000);
+			}
+		}
+
 		/**
 		 *  SUBSCRIBERS HERE.
 		 *
@@ -170,6 +276,14 @@
 			font-size: inherit;
 			padding: 5px;
 		}
+
+		.smooth {
+			height: 0;
+			visibility: hidden;
+			opacity: 0;
+			transition: visibility 0.5s, height 0.5s, opacity 0.5s linear;
+		}
+
 	</style>
 
 	<!-- All logic in the script below -->
@@ -213,21 +327,30 @@
 	</div>
 	<hr/>
 	<!-- Page BG -->
-	Widget's Style:
-	<select id="widgets-style" onchange="setTheme(this.value);">
-		<option value="analogdisplay-day" selected>Day</option>
-		<option value="analogdisplay-night">Night</option>
-		<option value="analogdisplay-monochrome-cyan">Cyan</option>
-		<option value="analogdisplay-monochrome-orange">Orange</option>
-		<option value="analogdisplay-monochrome-yellow">Yellow</option>
-		<option value="analogdisplay-flat-gray">Flat Gray</option>
-		<option value="analogdisplay-flat-black">Flat Black</option>
-	</select>
-	Page Background
-	<input type="radio" id="black" name="page-bg" value="BLACK" onchange="changeBG(this.value);">Black
-	<input type="radio" id="dark" name="page-bg" value="DARK" onchange="changeBG(this.value);" checked>Dark
-	<input type="radio" id="light" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
-	<input type="radio" id="white" name="page-bg" value="WHITE" onchange="changeBG(this.value);">White
+	<table width="98%">
+		<tr>
+			<td>
+				Widget's Style:
+				<select id="widgets-style" onchange="setTheme(this.value);">
+					<option value="analogdisplay-day" selected>Day</option>
+					<option value="analogdisplay-night">Night</option>
+					<option value="analogdisplay-monochrome-cyan">Cyan</option>
+					<option value="analogdisplay-monochrome-orange">Orange</option>
+					<option value="analogdisplay-monochrome-yellow">Yellow</option>
+					<option value="analogdisplay-flat-gray">Flat Gray</option>
+					<option value="analogdisplay-flat-black">Flat Black</option>
+				</select>
+				Page Background
+				<input type="radio" id="black" name="page-bg" value="BLACK" onchange="changeBG(this.value);">Black
+				<input type="radio" id="dark" name="page-bg" value="DARK" onchange="changeBG(this.value);" checked>Dark
+				<input type="radio" id="light" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
+				<input type="radio" id="white" name="page-bg" value="WHITE" onchange="changeBG(this.value);">White
+			</td>
+			<td align="right">
+				<span id="user-time-switch" onclick="expandCollapseSetTimeData();" style="cursor: pointer; padding-left: 40px;">+ Set time</span>
+			</td>
+		</tr>
+	</table>
 	<hr/>
 
 	<!--
@@ -235,6 +358,57 @@
 	  https://css-tricks.com/snippets/css/complete-guide-grid/
 	  https://www.w3schools.com/css/css_grid.asp
 	 -->
+	<!-- A div for the user to set the UTC time -->
+	<div id="user-time-set">
+		<div id="message-zone" style="visibility: hidden; color: blue; background-color: silver; border-radius: 5px; padding: 5px; font-size: 24px;" class="smooth"></div>
+		<div id="user-time-widgets" style="display: none; padding: 10px;">
+			<button id="button-now"
+							onclick="updateFieldToNow()"
+							title="Set date value"
+							style="margin-top: 3px;">Now</button>
+			UTC Date to set:
+			<input type="number"
+						 id="calendar-day-01"
+						 placeholder="DD"
+						 title="Day to set"
+						 style="width: 40px; text-align: center;"
+						 value="01"/>
+			<select id="calendar-month-01">
+				<option value="01" selected>Jan</option>
+				<option value="02">Feb</option>
+				<option value="03">Mar</option>
+				<option value="04">Apr</option>
+				<option value="05">May</option>
+				<option value="06">Jun</option>
+				<option value="07">Jul</option>
+				<option value="08">Aug</option>
+				<option value="09">Sep</option>
+				<option value="10">Oct</option>
+				<option value="11">Nov</option>
+				<option value="12">Dec</option>
+			</select>
+			<input type="number"
+						 id="calendar-year-01"
+						 placeholder="YYYY"
+						 title="Year to set"
+						 style="width: 80px; text-align: center;"
+						 value="1970"/>
+			<input type="text"
+						 id="watch-value-01"
+						 placeholder="00:00:00"
+						 title="Time to set"
+						 style="width: 80px; text-align: center;"
+						 value="00:00:00"/>
+			<button id="update-calendar"
+							onclick="updateCalendar()"
+							title="Set date value"
+							style="margin-top: 3px;">Set UTC</button>
+			&nbsp;&nbsp;
+			<button onclick="vroom()"
+							title="Simulate"
+							style="margin-top: 3px;">Vroom!</button>
+		</div>
+	</div>
 
 	<!-- the tabs -->
 	<div class="tab">

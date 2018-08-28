@@ -26,6 +26,7 @@ import nmea.mux.context.Context.StringAndTimeStamp;
 import nmea.parser.Angle360;
 import nmea.parser.GeoPos;
 import nmea.parser.Speed;
+import nmea.parser.UTCDate;
 import nmea.utils.NMEAUtils;
 
 import java.io.*;
@@ -218,6 +219,11 @@ public class RESTImplementation {
 								"/custom-protocol/{content}", // ?uri={content}
 								this::customProtocolManager,
 								"Manage custom protocol"),
+					new Operation( // Example: PUT /astro/utc
+							"PUT",
+							REST_PREFIX + "/utc",
+							this::setCurrentTime,
+							"Set 'current' UTC Date."),
 					new Operation(
 									"GET",
 									REST_PREFIX + "/last-sentence",
@@ -2142,6 +2148,42 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private Response setCurrentTime(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		EpochHolder epoch = null;
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				Gson gson = new GsonBuilder().create();
+				StringReader stringReader = new StringReader(payload);
+				try {
+					epoch = gson.fromJson(stringReader, EpochHolder.class); // Expect an epoch
+				} catch (Exception ex) {
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("MUX-0004")
+									.errorMessage(ex.toString()));
+					return response;
+				}
+			}
+		}
+		// Push UTC Date in the cache
+		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
+		if (cache == null) {
+			// Error!
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("MUX-0005")
+							.errorMessage("Cache not initialized!"));
+		} else {
+			cache.put(NMEADataCache.GPS_DATE_TIME, new UTCDate(new Date(epoch.epoch)));
+		}
+		return response;
+	}
+
 	/**
 	 * Dynamically composed, based on the <code>operations</code> List.
 	 * @param request
@@ -2278,5 +2320,14 @@ public class RESTImplementation {
 
 	private List<Object> getComputerList() {
 		return nmeaDataComputers.stream().map(cptr -> cptr.getBean()).collect(Collectors.toList());
+	}
+
+	public static class EpochHolder {
+		long epoch;
+
+		public EpochHolder epoch(long epoch) {
+			this.epoch = epoch;
+			return this;
+		}
 	}
 }

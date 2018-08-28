@@ -84,6 +84,14 @@ function fetch() {
 	});
 }
 
+/**
+ *
+ * @param when UTC, Duration format: like /home/olediour/.cache/yarn/v1
+ * @param position { lat: 37.7489, lng: -122.507 }
+ * @param wandering true|false
+ * @param stars true|false
+ * @returns {Promise<any>}
+ */
 function getSkyGP(when, position, wandering, stars) {
 	let url = "/astro/positions-in-the-sky";
 	// Add date
@@ -101,6 +109,14 @@ function getSkyGP(when, position, wandering, stars) {
 	return getPromise(url, DEFAULT_TIMEOUT, 'GET', 200, null, false);
 }
 
+/**
+ *
+ * @param when UTC, Duration format: like /home/olediour/.cache/yarn/v1
+ * @param position { lat: 37.7489, lng: -122.507 }
+ * @param wandering true|false
+ * @param stars true|false
+ * @returns {Promise<any>}
+ */
 function getAstroData(when, position, wandering, stars, callback) {
 	let getData = getSkyGP(when, position, wandering, stars);
 	getData.then(function (value) { // resolve
@@ -112,6 +128,28 @@ function getAstroData(when, position, wandering, stars, callback) {
 		}
 	}, function (error) { // reject
 		console.log("Failed to get the Astro Data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+	});
+}
+
+function setUTC(epoch) {
+	let url = "/mux/utc";
+	let obj = { epoch: epoch };
+	return getPromise(url, DEFAULT_TIMEOUT, 'PUT', 200, obj, false);
+}
+
+function setUTCTime(epoch, callback) {
+	let setData = setUTC(epoch);
+	setData.then(function (value) { // resolve
+		if (value !== undefined && value !== null && value.length > 0) {
+			let json = JSON.parse(value);
+			if (callback !== undefined) {
+				callback(json);
+			} else {
+				console.log(JSON.stringify(json, null, 2));
+			}
+		}
+	}, function (error) { // reject
+		console.log("Failed to set the UTC date and time..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
 

@@ -158,7 +158,6 @@ public class RESTImplementation {
 		return response;
 	}
 
-
 	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z z");
 
 	private Response getCurrentTime(Request request) {
