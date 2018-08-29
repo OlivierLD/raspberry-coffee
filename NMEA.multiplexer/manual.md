@@ -320,5 +320,34 @@ In this case, the cache will reflect this `epoch`, and all celestial data will b
 supplied as above. This allows you to see what the celestial configuration looks like
 at any point in time.
 
----
+### And then...
+An example of an implementation the `NMEA.Multiplexer` along with several chunks of REST Services can be found
+in the module `RESTNavServer`, part of this project.
+
+This is typically what makes a Web page like the above available.
+The data like `position` and `time` can come from an NMEA data source (they can be emulated, as we've seen), and the astronomical data
+would be computed by such REST services, based on the time and position coming from the NMEA cache.
+
+Along the same lines, you can have (and you _have_ those in the `RESTNavServer`) services to
+- compute tide curves
+- publish nautical almanacs
+- compute astronomical data
+- compute routing
+- etc...
+
+Once again, the idea (if not the goal) here is to _totally_ de-couple data from their rendition.
+NMEA.Multiplexer and REST Services provide all the server side data and abstraction,
+all the Graphical User Interface (GUI) can then be provided by Web Pages, using technologies like HTML5, CCS3, WebComponents, WebGL, etc, all of tghose allowing
+_local_ as well as _remote_ access from laptops, tablets, smartphones, character consoles, etc.
+The _only_ requirement for a client is a network access (with obvious fluency with protocols like HTTP or TCP).
+
+#### To summarize
+The NMEA.Multiplexer pull data from `channels`, possibly computes some using `computers`, and forwards (broadcasts) them through `forwarders`.
+
+All those data are represented using the NMEA format.
+
+In addition, those data can be injected in a cache (using - for now - a `json` format), so they can be accessed through REST services. The
+HTTP server serving the REST requests can also serve HTML request, behaving like a web server.
+
+-----------------
 See the code for more details. _This_ is Open Source ;)
