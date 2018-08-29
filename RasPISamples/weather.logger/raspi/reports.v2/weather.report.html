@@ -467,7 +467,26 @@ var displayData = function() {
         unit = "\272C";
       }
     }
-    var w = document.getElementById("graphCanvas").width;
+    var w = document.getElementById("graph-container").clientWidth;
+    var period = document.getElementById("period").value;
+    console.log("Period:", period);
+    switch (period) {
+      case "DAY":
+      	break;
+			case "2DAYS":
+			case "3DAYS":
+				w *= 1.5;
+				break;
+			case "4DAYS":
+			case "5DAYS":
+      case "WEEK":
+      	w *= 2;
+      	break;
+      default:
+      	w *= 3;
+      	break;
+    }
+
     graph = new Graph("graphCanvas", w, 200, graphdata, graphdata2, mouseMoveOnGraphCallback, unit, withTWD, dataType);
     var min = graph.minY([ graphdata, graphdata2 ]);
     var max = graph.maxY([ graphdata, graphdata2 ]);
@@ -701,7 +720,9 @@ var go = function() {
           &nbsp;<input type="checkbox" id="tooltip"     onchange="javascript:onDataChange();" checked="true">Tooltip
           &nbsp;<input type="checkbox" id="utc-display" onchange="javascript:onDataChange();">UTC
           <br>
+          <div id="graph-container" style="width: 950px; height: 200px; overflow-y: auto;">
           <canvas id="graphCanvas" width="950" height="200" class="displayCanvas"/> <!-- style="width: 98%;"/ -->
+					</div>
         </td>
       </tr>
       <tr>

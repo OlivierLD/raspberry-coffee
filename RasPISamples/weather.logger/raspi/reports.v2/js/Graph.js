@@ -22,6 +22,9 @@ function Graph(cName,       // Canvas Name
   this.dType = dataType;
 
   var canvas = document.getElementById(cName);
+  canvas.width = cWidth;
+  canvas.height = cHeight;
+
   canvas.addEventListener('click', function(evt) {
       var x = evt.pageX - canvas.offsetLeft;
       var y = evt.pageY - canvas.offsetTop;
