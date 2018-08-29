@@ -117,19 +117,27 @@ function Graph(cName,       // Canvas Name
   }, 0);
 
   var relativeMouseCoords = function (event, element) {
-    var totalOffsetX = 0;
-    var totalOffsetY = 0;
+    // var totalOffsetX = 0;
+    // var totalOffsetY = 0;
     var canvasX = 0;
     var canvasY = 0;
-    var currentElement = element;
+    // var currentElement = element;
+    //
+    // do {
+    //   totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+    //   totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+    // } while (currentElement = currentElement.offsetParent)
+    //
+    // canvasX = event.pageX - totalOffsetX;
+    // canvasY = event.pageY - totalOffsetY;
 
-    do {
-      totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-      totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-    } while (currentElement = currentElement.offsetParent)
+	  var bcr = element.getBoundingClientRect();
 
-    canvasX = event.pageX - totalOffsetX;
-    canvasY = event.pageY - totalOffsetY;
+	  canvasX = event.clientX;
+	  canvasY = event.clientY;
+
+	  canvasX -= bcr.left;
+	  canvasY -= bcr.top;
 
     return {x:canvasX, y:canvasY};
   };
