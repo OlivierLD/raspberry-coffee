@@ -316,7 +316,7 @@ In this case, you have the possibility to provide the UTC time to the cache usin
 ```
  PUT /mux/utc { epoch: 1535491435769 }
 ```
-In this case, the cache will reflect this `epoch`, and all celectial data will be computed accordingly, from the position
+In this case, the cache will reflect this `epoch`, and all celestial data will be computed accordingly, from the position
 supplied as above. This allows you to see what the celestial configuration looks like
 at any point in time.
 
