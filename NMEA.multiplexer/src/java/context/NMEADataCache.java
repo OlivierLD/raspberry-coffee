@@ -248,7 +248,6 @@ public class NMEADataCache
 					break;
 			}
 //		this.put(NMEA_AS_IS, asIsMap);
-
 			this.put(LAST_NMEA_SENTENCE, nmeaSentence);
 
 			String id = StringParsers.getSentenceID(nmeaSentence);

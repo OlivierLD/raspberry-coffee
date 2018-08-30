@@ -18,10 +18,10 @@ let events = {
 	},
 
 	publish: function (topic, value) {
-		for (let i = 0; i < this.listener.length; i++) {
-			if (this.listener[i].topic === topic) {
-				this.listener[i].actionListener(value);
+		this.listener.forEach((lsn, idx) => {
+			if (lsn.topic === topic) {
+				lsn.actionListener(value);
 			}
-		}
+		});
 	}
 };
