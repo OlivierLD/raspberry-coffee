@@ -18,6 +18,7 @@ describing the features required by an instance of the Multiplexer (channels, fo
 - [Minimal](#minimal)
 - [And then...](#and-then)
 - [To summarize](#to-summarize)
+- [Other resources](#other-resources)
 
 
 ### Properties
