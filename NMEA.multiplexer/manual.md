@@ -16,6 +16,9 @@ describing the features required by an instance of the Multiplexer (channels, fo
 - [Other properties](#other-properties)
 - [Example](#example)
 - [Minimal](#minimal)
+- [And then...](#and-then)
+- [To summarize](#to-summarize)
+
 
 ### Properties
 Here is a brief description of the properties managed by the `nmea.mux.GenericNMEAMultiplexer`, the ones
