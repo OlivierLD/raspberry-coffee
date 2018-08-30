@@ -332,7 +332,7 @@ This is typically what makes a Web page like the above available.
 The data like `position` and `time` can come from an NMEA data source (they can be emulated, as we've seen), and the astronomical data
 would be computed by REST services, based on the time and position coming from the NMEA cache.
 
-Along the same lines, you can have (and you _have_ those in the `RESTNavServer`) services to
+Along the same lines, you can have (and you _have_ in the `RESTNavServer`) services to
 - compute tide curves
 - publish nautical almanacs
 - compute astronomical data
@@ -340,7 +340,7 @@ Along the same lines, you can have (and you _have_ those in the `RESTNavServer`)
 - etc...
 
 Once again, the idea (if not the goal) here is to _totally_ de-couple data from their rendition.
-NMEA.Multiplexer and REST Services provide all the server side data and abstraction,
+NMEA Multiplexer and REST Services provide all the server side data and abstraction,
 all the Graphical User Interface (GUI) can then be provided by Web Pages, using technologies like HTML5, CSS3, WebComponents, WebGL, etc, all of those allowing
 _local_ as well as _remote_ access from laptops, tablets, smartphones, character consoles, etc.
 The _only_ requirement for a client is a network access (with obvious fluency with protocols like HTTP or TCP).

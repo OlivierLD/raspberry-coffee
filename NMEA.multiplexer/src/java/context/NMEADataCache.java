@@ -247,7 +247,7 @@ public class NMEADataCache
 					asIsMap.put(sentenceId, nmeaSentence);
 					break;
 			}
-			this.put(NMEA_AS_IS, asIsMap);
+//		this.put(NMEA_AS_IS, asIsMap);
 
 			this.put(LAST_NMEA_SENTENCE, nmeaSentence);
 
