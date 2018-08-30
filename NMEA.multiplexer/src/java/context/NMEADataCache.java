@@ -113,6 +113,9 @@ public class NMEADataCache
 	public static final String PRATE = "prate";
 	public static final String DEW_POINT_TEMP = "dewpoint";
 
+	public static final String NMEA_AS_IS = "NMEA_AS_IS";
+
+
 	// Damping ArrayList's
 	private transient int dampingSize = 1;
 
@@ -180,6 +183,7 @@ public class NMEADataCache
 		}
 		// Initialization
 		this.put(CALCULATED_CURRENT, new HashMap<Long, CurrentDefinition>());
+		this.put(NMEA_AS_IS, new HashMap<String, Object>()); // Data is String (regular sentence) or List (like for GSV, List<String>))
 	}
 
 	public void reset() {
@@ -231,6 +235,19 @@ public class NMEADataCache
 
 	public void parseAndFeed(String nmeaSentence) {
 		if (StringParsers.validCheckSum(nmeaSentence)) {
+
+			// Feed pure NMEA cache (NMEA sentences, as they are)
+			String sentenceId = StringParsers.getSentenceID(nmeaSentence);
+			Map<String, Object> asIsMap = (Map<String, Object>)this.get(NMEA_AS_IS);
+			switch(sentenceId) {
+				case "GSV":
+					asIsMap.put(sentenceId, StringParsers.getGSVList());
+					break;
+				default:
+					asIsMap.put(sentenceId, nmeaSentence);
+					break;
+			}
+			this.put(NMEA_AS_IS, asIsMap);
 
 			this.put(LAST_NMEA_SENTENCE, nmeaSentence);
 

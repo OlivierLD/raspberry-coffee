@@ -277,6 +277,10 @@ public class StringParsers {
 		return age;
 	}
 
+	private static List<String> gsvData = new ArrayList<>();
+	public static List<String> getGSVList() {
+		return gsvData;
+	}
 	// GSV Detailed Satellite data
 	public static Map<Integer, SVData> parseGSV(String data) {
 		String s = data.trim();
@@ -309,8 +313,10 @@ public class StringParsers {
 			messNum = Integer.parseInt(sa[2]);
 			int nbSVinView = Integer.parseInt(sa[3]);
 			if (messNum == 1) { // Reset
-				gsvMap = new HashMap<Integer, SVData>(nbSVinView);
+				gsvMap = new HashMap<>(nbSVinView);
+				gsvData = new ArrayList<>();
 			}
+			gsvData.add(s);
 
 			for (int indexInSentence = 1; indexInSentence <= 4; indexInSentence++) {
 				int rnkInView = ((messNum - 1) * NB_DATA) + (indexInSentence);
@@ -336,7 +342,9 @@ public class StringParsers {
 					} catch (Exception pex) {
 					}
 					SVData svd = new SVData(svNum, elev, z, snr);
-					if (gsvMap != null) gsvMap.put(svNum, svd);
+					if (gsvMap != null) {
+						gsvMap.put(svNum, svd);
+					}
 //        System.out.println("SV #" + rnkInView + ", SV:" + svNum + " H:"+ elev + ", Z:" + z + ", snr:" + snr);
 				}
 			}
