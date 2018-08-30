@@ -352,7 +352,7 @@ HTTP server serving the REST requests can also serve HTML requests, and behave l
 `channels`, `computers` and `forwarders` are defined by some configuration (`properties`) files used when starting the Multiplexer, and they can also be later on added, modified or removed when the Multiplexer is running, through some admin REST services. Along the exact same lines, there is an Admin Web UI also available.
 
 #### Other resources
-[Case Study](./casestudy.md)
+- [Case Study](./casestudy.md)
 
 -----------------
 See the code for more details. _This_ is Open Source ;)
