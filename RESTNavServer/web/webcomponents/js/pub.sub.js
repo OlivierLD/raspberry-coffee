@@ -20,7 +20,11 @@ let events = {
 	publish: function (topic, value) {
 		this.listener.forEach((lsn, idx) => {
 			if (lsn.topic === topic) {
-				lsn.actionListener(value);
+				try {
+					lsn.actionListener(value);
+				} catch (err) {
+					console.log("Topic %s, index %d, err: %s", topic, idx, err);
+				}
 			}
 		});
 	}
