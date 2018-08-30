@@ -346,7 +346,7 @@ The NMEA.Multiplexer pulls data from `channels`, possibly computes some using `c
 
 All those data are represented using the NMEA format.
 
-In addition, those data can be injected in a cache (using - for now - a `json` format), so they can be accessed through REST services. The
+In addition, those data can be injected in a cache (as they are - NMEA - and in a `json` format, to avoid re-parsing on the client side), so they can be accessed through REST services. The
 HTTP server serving the REST requests can also serve HTML requests, and behave like a web server.
 
 `channels`, `computers` and `forwarders` are defined by some configuration (`properties`) files used when starting the Multiplexer, and they can also be later on added, modified or removed when the Multiplexer is running, through some admin REST services. Along the exact same lines, there is an Admin Web UI also available.
