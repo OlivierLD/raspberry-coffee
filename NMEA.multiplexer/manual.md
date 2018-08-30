@@ -337,7 +337,7 @@ Along the same lines, you can have (and you _have_ those in the `RESTNavServer`)
 
 Once again, the idea (if not the goal) here is to _totally_ de-couple data from their rendition.
 NMEA.Multiplexer and REST Services provide all the server side data and abstraction,
-all the Graphical User Interface (GUI) can then be provided by Web Pages, using technologies like HTML5, CCS3, WebComponents, WebGL, etc, all of those allowing
+all the Graphical User Interface (GUI) can then be provided by Web Pages, using technologies like HTML5, CSS3, WebComponents, WebGL, etc, all of those allowing
 _local_ as well as _remote_ access from laptops, tablets, smartphones, character consoles, etc.
 The _only_ requirement for a client is a network access (with obvious fluency with protocols like HTTP or TCP).
 
