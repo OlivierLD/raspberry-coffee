@@ -1,9 +1,12 @@
 package olivscala
 
-object Euclid {
+object Euclid2 {
+
+  private def swap(u: Int, v: Int): (Int, Int) = {
+    return (v, u)
+  }
 
   private def greatestCommonDivisor(u: Int, v: Int) = { // PGCD
-    var t = 0
     var _u = u
     var _v = v
 
@@ -12,9 +15,9 @@ object Euclid {
     while (_u > 0) {
       if (_u < _v) {
         println(s"Swapping U:${_u} and V:${_v}")
-        t = _u
-        _u = _v
-        _v = t
+        val tuple = swap(_u, _v)
+        _u = tuple._1
+        _v = tuple._2
         println(s"    >>> U:${_u} and V:${_v}")
       }
       _u -= _v
