@@ -13,15 +13,15 @@ let events = {
 	subscribe: function (topic, action) {
 		this.listener.push({
 			'topic': topic,
-			'actionListener': action
+			'action': action
 		});
 	},
 
 	publish: function (topic, value) {
-		this.listener.forEach((lsn, idx) => {
-			if (lsn.topic === topic) {
+		this.listener.forEach((lsnr, idx) => {
+			if (lsnr.topic === topic) {
 				try {
-					lsn.actionListener(value);
+					lsnr.action(value);
 				} catch (err) {
 					console.log("Topic %s, index %d, err: %s", topic, idx, err);
 				}
