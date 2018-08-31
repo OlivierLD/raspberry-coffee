@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Scratch Pad</title>
+	<link rel="icon" type="image/png" href="../logo-192x192.png">
+
+	<link rel="stylesheet" href="../oliv-components/css/stylesheet.css">
+	<link rel="stylesheet" href="../oliv-components/css/web-components.css">
+
+	<!-- Firefox does NOT like modules... Safari OK -->
+
+	<script type="module" src="./WebComp.01.js"></script>
+
+	<script type="text/javascript">
+		window.onload = function() {
+			document.getElementById('web-comp-01').action = () => {
+				console.log("Akeu coucou!");
+			};
+		};
+	</script>
+</head>
+<body>
+  <h3>One</h3>
+	<div>
+		<web-comp-01 id="web-comp-00"
+								 style="border: 2px solid red;"
+							   title="All default"/>
+	</div>
+	<div>
+		<web-comp-01 id="web-comp-01"
+								 style="border: 2px solid green;"
+								 width="100"
+								 height="30"
+								 value="Click"
+								 title="Overridden"/>
+	</div>
+</body>
+</html>
