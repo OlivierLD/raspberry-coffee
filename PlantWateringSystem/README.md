@@ -286,6 +286,15 @@ In the `loggers` package, there are several examples of loggers. One is feeding 
 - Reboot!
 - You should be able to reach the Web UI from another machine on the same network.
 
+Another possibility is to start it remotely from `ssh`:
+```
+ $ ssh pi@192.168.42.17
+ ...
+ $ cd raspberry-pi4j-samples/PlantWateringSystem
+ $ sudo -H -u pi nohup ./read.probe.sh &
+ $
+```
+
 ### Next
 - NODE-Red Integration ?
 - Integration with the NMEA.Multiplexer ?
