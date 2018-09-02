@@ -27,6 +27,7 @@
 	<script type="module" src="widgets/LedPanel.js"></script>
 	<script type="module" src="widgets/MarqueePanel.js"></script>
 	<script type="module" src="widgets/Raw16PointsDir.js"></script>
+	<script type="module" src="widgets/SplitFlapDisplay.js"></script>
 
 	<style>
 		:root {
@@ -2460,6 +2461,37 @@
 						<button onclick="updateCalendar2()"
 										title="Set date value"
 										style="margin-top: 3px;">Set</button>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<!--
+			SPLIT-FLAP
+	+-->
+	<div style="cursor: pointer;" onclick="showHide('split-flap');"><b><u>Split-Flap Display</u></b></div>
+	<div id="split-flap" class="smooth">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<split-flap-display id="split-flap-display-01"
+																nb-char="24"
+																font-size="60"
+													 			value="02-sep-2018 10:19:00"></split-flap-display>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<div class="black-frame centered">
+						<split-flap-display id="split-flap-display-02"
+																class="split-flap-02"
+																nb-char="30"
+																font-size="40"
+																justified="RIGHT"
+																value="02-sep-2018 10:19:00"></split-flap-display>
 					</div>
 				</td>
 			</tr>
