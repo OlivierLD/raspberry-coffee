@@ -246,7 +246,7 @@ class SplitFlapDisplay extends HTMLElement {
 		context.strokeStyle = this.splitFlapColorConfig.frameColor;
 		context.lineWidth = 0.5;
 		// Background
-		this.roundRect(context, x, y, w, h, 10, true, false);
+		this.roundRect(context, x, y, w, h, 1, true, false);
 
 		context.beginPath();
 		context.moveTo(x, y + (h / 2));

@@ -718,6 +718,34 @@
 			}
 		}
 
+		function setSplitFlapValue(id, value) {
+			let elem = document.getElementById(id);
+			// Character by character, flap-flap-flap
+			let original = elem.paddedValue;
+			let newPaddedValue = elem.getPaddedValue(value);
+			console.log("Old [%s], new [%s]", original, newPaddedValue);
+	//	assert(old.length === new.length);
+			for (let idx=0; idx<original.length; idx++) {
+				while (original.charAt(idx) !== newPaddedValue.charAt(idx)) {
+
+					console.log("index %d, %s != %s", idx, original.charAt(idx), newPaddedValue.charAt(idx));
+
+//				let interval = window.setInterval(() => { // See https://stackoverflow.com/questions/37728184/settimeout-method-inside-a-while-loop
+						let next = elem.getNextChar(original.charAt(idx));
+						elem.setCharAt(idx, next);
+						original = elem.paddedValue;
+						// if (original.charAt(idx) === newPaddedValue.charAt(idx)) {
+						// 	window.clearInterval(interval);
+						// }
+//				}, 250);
+
+					console.log("Padded value now %s", original);
+				}
+			}
+//		elem.value = value;
+//		elem.repaint();
+		}
+
 	</script>
 </head>
 <body>
@@ -2475,7 +2503,7 @@
 		<table>
 			<tr>
 				<td valign="top">
-					<div class="black-frame centered">
+					<div class="black-frame">
 						<split-flap-display id="split-flap-display-01"
 																nb-char="24"
 																font-size="60"
@@ -2485,13 +2513,15 @@
 			</tr>
 			<tr>
 				<td valign="top">
-					<div class="black-frame centered">
+					<div class="black-frame">
 						<split-flap-display id="split-flap-display-02"
 																class="split-flap-02"
 																nb-char="30"
 																font-size="40"
 																justified="RIGHT"
 																value="02-sep-2018 10:19:00"></split-flap-display>
+						<br/>
+						<input type="text" size="40" value="02-sep-2018 10:19:00" onblur="setSplitFlapValue('split-flap-display-02', this.value);">
 					</div>
 				</td>
 			</tr>

@@ -27,6 +27,7 @@
 	<script type="module" src="./CompassRose.js"></script>
 	<script type="module" src="./WorldMap.js"></script>
 	<script type="module" src="./SkyMap.js"></script>
+	<script type="module" src="./SplitFlapDisplay.js"></script>
 
 	<!-- Scripts -->
 	<script type="text/javascript" src="js/date.proto.js"></script>
@@ -501,6 +502,28 @@
 						</div>
 				</div>
 			</div>
+			<div id="row-X" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px;">
+				<div style="display: grid; justify-self: start; grid-template-columns: auto; padding: 0px;">
+					<!--
+						SYSTEM TIME
+					+-->
+					<div>
+					<split-flap-display id="split-flap-display-00"
+															class="split-flap-night"
+															nb-char="18"
+															font-size="20"
+															justified="LEFT"
+															value="System Time"></split-flap-display>
+					<split-flap-display id="split-flap-display-01"
+															class="split-flap-night"
+															nb-char="31"
+															font-size="20"
+															justified="RIGHT"
+															value="Tue 01-Jan-1970 00:00:00 UTC+00"></split-flap-display>
+					</div>
+				</div>
+			</div>
+
 			<div style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; align-items: start; padding: 10px;">
 				<!--
 					WORLD MAP
@@ -532,11 +555,11 @@
 						<input type="radio" name="proj-01" value="ANAXIMANDRE" onchange="setProjection('world-map-01', this);">Square
 					</div>
 				</div>
-				<!--
-					ANALOG WATCH
-				+-->
-				<div style="display: grid; grid-template-columns: auto auto; padding: 0px;">
 
+				<div style="display: grid; grid-template-columns: auto auto; padding: 0px;">
+					<!--
+						ANALOG WATCH
+					+-->
 					<div id="analog-watch-gps">
 						<div class="black-frame centered">
 							<analog-watch id="analog-watch-01"
@@ -576,7 +599,9 @@
 							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'analog-watch-02');" checked>With Border
 						</div>
 					</div>
-
+					<!--
+					  CALENDARS
+					+-->
 					<div class="black-frame centered">
 						<calendar-display id="calendar-01"
 															class="calendar-01"
@@ -594,7 +619,6 @@
 															height="168"
 															value="01-01-1970"></calendar-display>
 					</div>
-
 				</div>
 			</div>
 		</div>
