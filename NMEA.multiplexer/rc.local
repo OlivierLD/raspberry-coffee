@@ -55,7 +55,8 @@ then
   printf "+----------------------+\n"
   printf "| Starting Multiplexer |\n"
   printf "+----------------------+\n"
-  ./tomux -y
+  # See the script for option details
+  ./tomux -n
 fi
 cd -
 #
