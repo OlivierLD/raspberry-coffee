@@ -722,25 +722,24 @@
 			let elem = document.getElementById(id);
 			// Character by character, flap-flap-flap
 			let original = elem.paddedValue;
-			let newPaddedValue = elem.getPaddedValue(value);
-			console.log("Old [%s], new [%s]", original, newPaddedValue);
+			let newPaddedValue = elem.getPaddedValue(elem.cleanString(value));
+	//	console.log("Old [%s], new [%s]", original, newPaddedValue);
 	//	assert(old.length === new.length);
-			for (let idx=0; idx<original.length; idx++) {
-				while (original.charAt(idx) !== newPaddedValue.charAt(idx)) {
 
-					console.log("index %d, %s != %s", idx, original.charAt(idx), newPaddedValue.charAt(idx));
-
-//				let interval = window.setInterval(() => { // See https://stackoverflow.com/questions/37728184/settimeout-method-inside-a-while-loop
+			function updateFlap(idx) { // THIS is balaise.
+				if (original.charAt(idx).toUpperCase() !== newPaddedValue.charAt(idx).toUpperCase()) {
+					setTimeout(() => {
 						let next = elem.getNextChar(original.charAt(idx));
+//					console.log("Updating %s with %s", original, next);
 						elem.setCharAt(idx, next);
 						original = elem.paddedValue;
-						// if (original.charAt(idx) === newPaddedValue.charAt(idx)) {
-						// 	window.clearInterval(interval);
-						// }
-//				}, 250);
-
-					console.log("Padded value now %s", original);
+						updateFlap(idx);
+					}, 50);
 				}
+			};
+
+			for (let idx=0; idx<original.length; idx++) {
+				updateFlap(idx);
 			}
 //		elem.value = value;
 //		elem.repaint();

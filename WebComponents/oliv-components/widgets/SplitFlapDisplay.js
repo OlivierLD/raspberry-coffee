@@ -237,6 +237,18 @@ class SplitFlapDisplay extends HTMLElement {
 		this.drawPaddedString();
 	}
 
+	cleanString(str) {
+		let clean = str;
+		let cleanArr = clean.split('');
+		for (let i=0; i<cleanArr.length; i++) {
+			cleanArr[i] = cleanArr[i].toUpperCase();
+			if (!SPLIT_FLAP_CHARACTERS.includes(cleanArr[i])) {
+				cleanArr[i] = ' ';
+			}
+		}
+		return cleanArr.join('');
+	}
+
 	drawOneFlap(context, char, x, y, w, h, scale) {
 		var grd = context.createLinearGradient(x, y, x + w, y + h);
 		grd.addColorStop(0, this.splitFlapColorConfig.displayBackgroundGradient.from); // 0  Beginning
