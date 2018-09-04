@@ -18,7 +18,7 @@ public class SampleMain {
 			System.out.println("Long click");
 		};
 
-		PushButtonMaster pbm = new PushButtonMaster(onClick, onDoubleClick, onLongClick);
+		PushButtonMaster pbm = new PushButtonMaster("ForTest", onClick, onDoubleClick, onLongClick);
 		pbm.initCtx(RaspiPin.GPIO_01);
 
 		final Thread me = Thread.currentThread();

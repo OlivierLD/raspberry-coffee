@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  * Invoke the initCtx method
  * Invoke the freeResources method
  *
- * TODO: Need to manage
+ * Need to manage
  * - Click
  * - Double Click
  * - Long Click
@@ -26,7 +26,8 @@ import java.util.function.Consumer;
  *
  * Note: System.currentTimeMillis returns values like
  *   1,536,096,764,842
- *
+ *               |
+ *               seconds
  */
 public class PushButtonMaster {
 	private GpioController gpio = null;
@@ -38,6 +39,9 @@ public class PushButtonMaster {
 		LONG_CLICK
 	};
 
+	private String buttonName = "Default";
+	private boolean verbose = "true".equals(System.getProperty("button.verbose"));
+
 	private Consumer<Void> onClick;
 	private Consumer<Void> onDoubleClick;
 	private Consumer<Void> onLongClick;
@@ -45,6 +49,15 @@ public class PushButtonMaster {
 	public PushButtonMaster(Consumer<Void> onClick,
 	                        Consumer<Void> onDoubleClick,
 	                        Consumer<Void> onLongClick) {
+		this(null, onClick, onDoubleClick, onLongClick);
+	}
+	public PushButtonMaster(String buttonName,
+	                        Consumer<Void> onClick,
+	                        Consumer<Void> onDoubleClick,
+	                        Consumer<Void> onLongClick) {
+		if (buttonName != null) {
+			this.buttonName = buttonName;
+		}
 		try {
 			this.gpio = GpioFactory.getInstance();
 		} catch (UnsatisfiedLinkError ule) {
@@ -57,7 +70,7 @@ public class PushButtonMaster {
 	}
 
 	public void initCtx() {
-		initCtx(RaspiPin.GPIO_02);
+		initCtx(RaspiPin.GPIO_01);
 	}
 
 	private long pushedTime = 0L;
@@ -73,10 +86,12 @@ public class PushButtonMaster {
 			this.button.addListener((GpioPinListenerDigital) event -> {
 				if (event.getState().isHigh()) { // Button pressed
 					this.pushedTime = System.currentTimeMillis();
-					System.out.println(String.format("Since last release: %s ms.", NumberFormat.getInstance().format(this.pushedTime - this.releasedTime)));
+					if (verbose) {
+						System.out.println(String.format("Since last release of [%s]: %s ms.", this.buttonName, NumberFormat.getInstance().format(this.pushedTime - this.releasedTime)));
+					}
 				} else if (event.getState().isLow()) { // Button released
 					this.releasedTime = System.currentTimeMillis();
-					System.out.println(String.format("Button was down for %s ms.", NumberFormat.getInstance().format(this.releasedTime - this.pushedTime)));
+					System.out.println(String.format("Button [%s] was down for %s ms.", this.buttonName, NumberFormat.getInstance().format(this.releasedTime - this.pushedTime)));
 				}
 				// Test the click type here, and take action
 				if ((this.releasedTime - this.pushedTime) < DOUBLE_CLICK_DELAY) {
