@@ -33,12 +33,6 @@ public class PushButtonMaster {
 	private GpioController gpio = null;
 	private GpioPinDigitalInput button = null;
 
-	public enum ClickType {
-		SINGLE_CLICK,
-		DOUBLE_CLICK,
-		LONG_CLICK
-	};
-
 	private String buttonName = "Default";
 	private boolean verbose = "true".equals(System.getProperty("button.verbose"));
 
@@ -94,9 +88,9 @@ public class PushButtonMaster {
 					System.out.println(String.format("Button [%s] was down for %s ms.", this.buttonName, NumberFormat.getInstance().format(this.releasedTime - this.pushedTime)));
 				}
 				// Test the click type here, and take action
-				if ((this.releasedTime - this.pushedTime) < DOUBLE_CLICK_DELAY) {
+				if ((this.pushedTime - this.releasedTime) < DOUBLE_CLICK_DELAY) {
 					this.onDoubleClick.accept(null);
-				} else if ((this.pushedTime - this.releasedTime) > LONG_CLICK_DELAY) {
+				} else if ((this.releasedTime - this.pushedTime) > LONG_CLICK_DELAY) {
 					this.onLongClick.accept(null);
 				} else {
 					this.onClick.accept(null);
