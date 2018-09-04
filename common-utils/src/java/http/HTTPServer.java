@@ -620,7 +620,14 @@ public class HTTPServer {
 											if (restRequestManager.isPresent()) {
 												unManagedRequest = false;
 												Response response = restRequestManager.get().onRequest(request); // REST Request, most likely.
-												sendResponse(response, out);
+												try {
+													sendResponse(response, out);
+												} catch (Exception err) {
+													System.err.println("+-----------------------------------------------");
+													System.err.println(String.format("| Caught error sending back response:\n%s", response.toString()));
+													System.err.println("+-----------------------------------------------");
+													err.printStackTrace();
+												}
 											}
 											// Old implementation
 //											for (RESTRequestManager reqMgr : requestManagers) { // Loop on requestManagers
@@ -814,7 +821,7 @@ public class HTTPServer {
 		} catch (SocketException se) {
 			if (se.getMessage().contains("Broken pipe")) {
 				System.err.println("+-------------------------");
-				System.err.println(String.format("| %s - Oops, client hung up!", new Date().toString()));
+				System.err.println(String.format("| %s - Oops, client hung up! Response was:\n%s", new Date().toString(), response.toString()));
 				System.err.println("+-------------------------");
 			} else {
 				se.printStackTrace();

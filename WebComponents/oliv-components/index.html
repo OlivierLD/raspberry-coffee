@@ -27,6 +27,7 @@
 	<script type="module" src="widgets/LedPanel.js"></script>
 	<script type="module" src="widgets/MarqueePanel.js"></script>
 	<script type="module" src="widgets/Raw16PointsDir.js"></script>
+	<script type="module" src="widgets/SplitFlapDisplay.js"></script>
 
 	<style>
 		:root {
@@ -715,6 +716,33 @@
 					ledPanel.repaint();
 				}, 100);
 			}
+		}
+
+		function setSplitFlapValue(id, value) {
+			let elem = document.getElementById(id);
+			// Character by character, flap-flap-flap
+			let original = elem.paddedValue;
+			let newPaddedValue = elem.getPaddedValue(elem.cleanString(value));
+	//	console.log("Old [%s], new [%s]", original, newPaddedValue);
+	//	assert(old.length === new.length);
+
+			function updateFlap(idx) { // THIS is balaise.
+				if (original.charAt(idx).toUpperCase() !== newPaddedValue.charAt(idx).toUpperCase()) {
+					setTimeout(() => {
+						let next = elem.getNextChar(original.charAt(idx));
+//					console.log("Updating %s with %s", original, next);
+						elem.setCharAt(idx, next);
+						original = elem.paddedValue;
+						updateFlap(idx);
+					}, 50);
+				}
+			};
+
+			for (let idx=0; idx<original.length; idx++) {
+				updateFlap(idx);
+			}
+//		elem.value = value;
+//		elem.repaint();
 		}
 
 	</script>
@@ -2460,6 +2488,39 @@
 						<button onclick="updateCalendar2()"
 										title="Set date value"
 										style="margin-top: 3px;">Set</button>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<hr/>
+	<!--
+			SPLIT-FLAP
+	+-->
+	<div style="cursor: pointer;" onclick="showHide('split-flap');"><b><u>Split-Flap Display</u></b></div>
+	<div id="split-flap" class="smooth">
+		<table>
+			<tr>
+				<td valign="top">
+					<div class="black-frame">
+						<split-flap-display id="split-flap-display-01"
+																nb-char="24"
+																font-size="60"
+													 			value="02-sep-2018 10:19:00"></split-flap-display>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<div class="black-frame">
+						<split-flap-display id="split-flap-display-02"
+																class="split-flap-02"
+																nb-char="30"
+																font-size="40"
+																justified="RIGHT"
+																value="02-sep-2018 10:19:00"></split-flap-display>
+						<br/>
+						<input type="text" size="40" value="02-sep-2018 10:19:00" onblur="setSplitFlapValue('split-flap-display-02', this.value);">
 					</div>
 				</td>
 			</tr>

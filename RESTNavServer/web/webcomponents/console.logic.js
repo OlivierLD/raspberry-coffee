@@ -53,6 +53,21 @@ function changeBG(value) {
 		default:
 			break;
 	}
+	// World Map theme worldmap-display-02, worldmap-display, split-flap-display
+	switch (value) {
+		case "BLACK":
+		case "DARK":
+			applyClass('world-map-01', 'worldmap-display');
+			applyClass('split-flap-display-00', 'split-flap-night');
+			applyClass('split-flap-display-01', 'split-flap-night');
+			break;
+		case "LIGHT":
+		case "WHITE":
+			applyClass('world-map-01', 'worldmap-display-02');
+			applyClass('split-flap-display-00', 'split-flap-day');
+			applyClass('split-flap-display-01', 'split-flap-day');
+			break;
+	}
 }
 
 let headsUpExpanded = false;
@@ -364,15 +379,22 @@ function astroCallback(data) {
 
 	document.getElementById("sun-moon-data").innerHTML = dataTable;
 
-			// Display solar date & time
+	// Display solar date & time
 	let solarDate = new Date(data.solarDate.year, data.solarDate.month - 1, data.solarDate.day, data.solarDate.hour, data.solarDate.min, data.solarDate.sec);
 	let time = solarDate.format("H:i:s");
 	setData('analog-watch-02', time);
 	let date = solarDate.format("d-m-Y-l");
 	setData('calendar-02', date);
 
-	// utc-date
 	let utcDate = new Date(data.epoch);
+
+	let sysDateFmt = utcDate.format('D d-M-Y H:i:s Z');
+//console.log("Ststem date %s", sysDateFmt);
+
+	document.getElementById("split-flap-display-01")
+			.value = sysDateFmt;
+
+	// utc-date
 	document.getElementById("utc-date").innerHTML = 'UTC: ' +
 			utcDate.getUTCFullYear() + ' ' +
 			months[utcDate.getUTCMonth()] + ' ' +
@@ -423,7 +445,6 @@ function setTheme(className) {
 	applyClass('compass-rose-01', className);
 	applyClass('analog-watch-01', className);
 	applyClass('analog-watch-02', className);
-	// TODO World Map theme worldmap-display-02, worldmap-display
 }
 
 function applyClass(id, className) {

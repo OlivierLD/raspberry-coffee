@@ -43,6 +43,7 @@ After starting the `node` server as mentioned above, you can also reach
 - Evolution Displays. TODO
 - Generic Graphs. TODO
 - Sky Map and Star Finder (along with some `REST` service(s)). &#9989; Done
+- Split-flap Display. &#9989; Done
 
 #### Screenshots, as they appear from the Demo page
 World Map it is `globe` configuration:
@@ -92,6 +93,7 @@ Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released
 - [World Map](https://codepen.io/OlivierLD/pen/xYQbmb).
 - [Calendar Display](https://codepen.io/OlivierLD/pen/EpOJEW).
 - [SkyMap/StarFinder](https://codepen.io/OlivierLD/project/full/APNqRk).
+- [Split-Flap Display](https://codepen.io/OlivierLD/pen/LJLbeQ).
 
 #### Firefox 58
 If you are having trouble running the WebComponents in Firefox 58, see

@@ -10,6 +10,14 @@ export function lpad(str, len, pad) {
 	return s;
 }
 
+export function rpad(str, len, pad) {
+	let s = str;
+	while (s.length < len) {
+		s += (pad === undefined ? ' ' : pad);
+	}
+	return s;
+}
+
 export function toRadians(deg) {
 	return deg * (Math.PI / 180);
 }

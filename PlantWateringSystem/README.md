@@ -66,7 +66,7 @@ With a Relay
 - 5 for the Raspberry
 - 12 for the valve
 
-We will have one 12V power supply (I''ve used [this one](https://www.adafruit.com/product/352), [that one](https://www.adafruit.com/product/798) should fit), and use a car cigarette lighter USB adapter to turn it into 5V.
+We will have one 12V power supply (I've used [this one](https://www.adafruit.com/product/352), [that one](https://www.adafruit.com/product/798) should fit), and use a car cigarette lighter USB adapter to turn it into 5V.
 That seems to be the cheapest approach (< $2.00), and it works well.
 
 ### The Hardware
@@ -285,6 +285,15 @@ In the `loggers` package, there are several examples of loggers. One is feeding 
 - Hook up the probe and relay
 - Reboot!
 - You should be able to reach the Web UI from another machine on the same network.
+
+Another possibility is to start it remotely from `ssh`:
+```
+ $ ssh pi@192.168.42.17
+ ...
+ $ cd raspberry-pi4j-samples/PlantWateringSystem
+ $ sudo -H -u pi nohup ./read.probe.sh &
+ $
+```
 
 ### Next
 - NODE-Red Integration ?

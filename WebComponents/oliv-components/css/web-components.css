@@ -464,3 +464,21 @@ compass-rose .gray-flat {
 	--month-year-color: black;
 	--value-font: Arial;
 }
+
+.split-flap-01 {
+	--bg-color: transparent;
+	--display-background-gradient-from: black;
+	--display-background-gradient-to: gray;
+	--display-color: white;
+	--frame-color: silver;
+	--value-font: Arial;
+}
+
+.split-flap-02 {
+	--bg-color: transparent;
+	--display-background-gradient-from: white;
+	--display-background-gradient-to: lightgray;
+	--display-color: black;
+	--frame-color: silver;
+	--value-font: Verdana;
+}
