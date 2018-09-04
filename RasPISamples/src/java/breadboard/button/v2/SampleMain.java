@@ -8,6 +8,8 @@ public class SampleMain {
 
 	public static void main(String... args) {
 
+		utils.PinUtil.print();
+
 		Consumer<Void> onClick = (Void v) -> {
 			System.out.println("Single click");
 		};
