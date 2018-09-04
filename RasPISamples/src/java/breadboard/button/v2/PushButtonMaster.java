@@ -88,12 +88,14 @@ public class PushButtonMaster {
 					System.out.println(String.format("Button [%s] was down for %s ms.", this.buttonName, NumberFormat.getInstance().format(this.releasedTime - this.pushedTime)));
 				}
 				// Test the click type here, and take action
-				if ((this.pushedTime - this.releasedTime) < DOUBLE_CLICK_DELAY) {
-					this.onDoubleClick.accept(null);
-				} else if ((this.releasedTime - this.pushedTime) > LONG_CLICK_DELAY) {
-					this.onLongClick.accept(null);
-				} else {
-					this.onClick.accept(null);
+				if (this.button.isLow()) { // Event on release only
+					if ((this.pushedTime - this.releasedTime) > 0 && (this.pushedTime - this.releasedTime) < DOUBLE_CLICK_DELAY) {
+						this.onDoubleClick.accept(null);
+					} else if ((this.releasedTime - this.pushedTime) > LONG_CLICK_DELAY) {
+						this.onLongClick.accept(null);
+					} else {
+						this.onClick.accept(null);
+					}
 				}
 			});
 		}
