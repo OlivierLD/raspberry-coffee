@@ -144,7 +144,9 @@ public class PushButtonMaster {
 								this.maybeDoubleClick = false; // Reset
 								this.onClick.run();
 							} else {
-								System.out.println("++++ maybeDoubleClick found false, it WAS a double click");
+								if (verbose) {
+									System.out.println("++++ maybeDoubleClick found false, it WAS a double click");
+								}
 							}
 						} catch (InterruptedException ie) {
 							// Absorb
