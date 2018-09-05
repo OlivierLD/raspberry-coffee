@@ -39,23 +39,37 @@ public class PushButtonMaster {
 	private Runnable onDoubleClick;
 	private Runnable onLongClick;
 
-	public PushButtonMaster(Runnable onClick,
-	                        Runnable onDoubleClick,
-	                        Runnable onLongClick) {
-		this(null, onClick, onDoubleClick, onLongClick);
+	public PushButtonMaster() {
 	}
-	public PushButtonMaster(String buttonName,
+
+	public PushButtonMaster(Pin pin,
 	                        Runnable onClick,
 	                        Runnable onDoubleClick,
 	                        Runnable onLongClick) {
+		this(null, pin, onClick, onDoubleClick, onLongClick);
+	}
+	public PushButtonMaster(String buttonName,
+	                        Pin pin,
+	                        Runnable onClick,
+	                        Runnable onDoubleClick,
+	                        Runnable onLongClick) {
+		update(buttonName, pin, onClick, onDoubleClick, onLongClick);
+	}
+
+	public void update(Pin pin,
+	                   Runnable onClick,
+	                   Runnable onDoubleClick,
+	                   Runnable onLongClick) {
+		this.update(null, pin, onClick, onDoubleClick, onLongClick);
+	}
+
+	public void update(String buttonName,
+	                   Pin pin,
+	                   Runnable onClick,
+	                   Runnable onDoubleClick,
+	                   Runnable onLongClick) {
 		if (buttonName != null) {
 			this.buttonName = buttonName;
-		}
-		try {
-			this.gpio = GpioFactory.getInstance();
-		} catch (UnsatisfiedLinkError ule) {
-			// Absorb. You're not on a Pi.
-			System.err.println("Not on a PI? Moving on.");
 		}
 		this.onClick = onClick;
 		this.onDoubleClick = onDoubleClick;
@@ -69,10 +83,15 @@ public class PushButtonMaster {
 			this.onLongClick.run();
 			System.out.println("------- End of tests ------");
 		}
-	}
 
-	public void initCtx() {
-		initCtx(RaspiPin.GPIO_01);
+		try {
+			this.gpio = GpioFactory.getInstance();
+		} catch (UnsatisfiedLinkError ule) {
+			// Absorb. You're not on a Pi.
+			System.err.println("Not on a PI? Moving on.");
+		}
+
+		initCtx(pin);
 	}
 
 	private long pushedTime = 0L;
@@ -92,7 +111,7 @@ public class PushButtonMaster {
 	 */
 	private boolean maybeDoubleClick = false; // To be read as 'may be the first click of a double-click'.
 
-	public void initCtx(Pin buttonPin) {
+	private void initCtx(Pin buttonPin) {
 		if (this.gpio != null) {
 			// provision gpio pin as an output pin and turn it off
 			this.button = gpio.provisionDigitalInputPin(buttonPin, PinPullResistance.PULL_DOWN);
