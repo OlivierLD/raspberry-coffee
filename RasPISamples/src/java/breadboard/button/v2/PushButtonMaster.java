@@ -75,15 +75,6 @@ public class PushButtonMaster {
 		this.onDoubleClick = onDoubleClick;
 		this.onLongClick = onLongClick;
 
-		if (verbose) {
-			// Test the methods
-			System.out.println("-- Testing the callbacks --");
-			this.onClick.run();
-			this.onDoubleClick.run();
-			this.onLongClick.run();
-			System.out.println("------- End of tests ------");
-		}
-
 		try {
 			this.gpio = GpioFactory.getInstance();
 		} catch (UnsatisfiedLinkError ule) {
