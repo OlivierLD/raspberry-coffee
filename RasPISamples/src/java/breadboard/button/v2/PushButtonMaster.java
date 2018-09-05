@@ -96,23 +96,26 @@ public class PushButtonMaster {
 				// Test the click type here, and take action
 				if (this.button.isLow()) { // Event on release only
 					if (verbose) {
-						System.out.println(String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s ",
+						System.out.println(String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, previousReleaseTime: %s ",
 								this.buttonName,
 								NumberFormat.getInstance().format(this.betweenClicks),
 								NumberFormat.getInstance().format(this.pushedTime),
-								NumberFormat.getInstance().format(this.releaseTime)));
+								NumberFormat.getInstance().format(this.releaseTime),
+								NumberFormat.getInstance().format(this.previousReleaseTime)));
 					}
 					if (this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
 						this.onDoubleClick.accept(null);
 					} else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
 						this.onLongClick.accept(null);
 					} else {
-						try { // Mmmmh...
-							Thread.sleep(DOUBLE_CLICK_DELAY);
-						} catch (InterruptedException ie) {
-
-						}
+//						try { // Mmmmh...
+//							Thread.sleep(DOUBLE_CLICK_DELAY);
+//						} catch (InterruptedException ie) {
+//						}
 						long now = System.currentTimeMillis();
+						if (verbose) {
+							System.out.println(String.format("Button [%s]: (now - previousReleaseTime): %s ", NumberFormat.getInstance().format(now - this.previousReleaseTime)));
+						}
 						if (now - this.previousReleaseTime > DOUBLE_CLICK_DELAY) { // Not to take the first click of a double click as a single click.
 							this.onClick.accept(null);
 						}
