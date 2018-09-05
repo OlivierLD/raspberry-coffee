@@ -93,13 +93,21 @@ public class PushButtonMaster {
 				}
 				// Test the click type here, and take action
 				if (this.button.isLow()) { // Event on release only
+					long now = System.currentTimeMillis();
+					if (verbose) {
+						System.out.println(String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releasedTime: %s, now - release: %s ",
+								this.buttonName,
+								NumberFormat.getInstance().format(this.betweenClicks),
+								NumberFormat.getInstance().format(this.pushedTime),
+								NumberFormat.getInstance().format(this.releasedTime),
+								NumberFormat.getInstance().format(now - this.releasedTime)));
+					}
 					if (this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
 						this.onDoubleClick.accept(null);
 					} else if ((this.releasedTime - this.pushedTime) > LONG_CLICK_DELAY) {
 						this.onLongClick.accept(null);
 					} else {
-						long now = System.currentTimeMillis();
-						if (now - releasedTime > DOUBLE_CLICK_DELAY) {
+						if (now - this.releasedTime > DOUBLE_CLICK_DELAY) { // Not to take the first click of a double click as a single click.
 							this.onClick.accept(null);
 						}
 					}
