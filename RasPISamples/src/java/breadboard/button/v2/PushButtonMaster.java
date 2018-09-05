@@ -95,7 +95,7 @@ public class PushButtonMaster {
 				if (this.button.isLow()) { // Event on release only
 					long now = System.currentTimeMillis();
 					if (verbose) {
-						System.out.println(String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releasedTime: %s, now - release: %s ",
+						System.out.println(String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releasedTime: %s, (now - release): %s ",
 								this.buttonName,
 								NumberFormat.getInstance().format(this.betweenClicks),
 								NumberFormat.getInstance().format(this.pushedTime),
