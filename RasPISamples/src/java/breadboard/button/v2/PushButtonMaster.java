@@ -87,7 +87,9 @@ public class PushButtonMaster {
 					}
 				} else if (event.getState().isLow()) { // Button released
 					this.releasedTime = System.currentTimeMillis();
-					System.out.println(String.format("Button [%s] was down for %s ms.", this.buttonName, NumberFormat.getInstance().format(this.releasedTime - this.pushedTime)));
+					if (verbose) {
+						System.out.println(String.format("Button [%s] was down for %s ms.", this.buttonName, NumberFormat.getInstance().format(this.releasedTime - this.pushedTime)));
+					}
 				}
 				// Test the click type here, and take action
 				if (this.button.isLow()) { // Event on release only
