@@ -9,7 +9,6 @@ import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 import java.text.NumberFormat;
-import java.util.function.Consumer;
 
 /**
  * Implements the nuts and bolts of the push button interaction.
@@ -36,19 +35,19 @@ public class PushButtonMaster {
 	private String buttonName = "Default";
 	private boolean verbose = "true".equals(System.getProperty("button.verbose"));
 
-	private Consumer<Void> onClick;
-	private Consumer<Void> onDoubleClick;
-	private Consumer<Void> onLongClick;
+	private Runnable onClick;
+	private Runnable onDoubleClick;
+	private Runnable onLongClick;
 
-	public PushButtonMaster(Consumer<Void> onClick,
-	                        Consumer<Void> onDoubleClick,
-	                        Consumer<Void> onLongClick) {
+	public PushButtonMaster(Runnable onClick,
+	                        Runnable onDoubleClick,
+	                        Runnable onLongClick) {
 		this(null, onClick, onDoubleClick, onLongClick);
 	}
 	public PushButtonMaster(String buttonName,
-	                        Consumer<Void> onClick,
-	                        Consumer<Void> onDoubleClick,
-	                        Consumer<Void> onLongClick) {
+	                        Runnable onClick,
+	                        Runnable onDoubleClick,
+	                        Runnable onLongClick) {
 		if (buttonName != null) {
 			this.buttonName = buttonName;
 		}
@@ -61,6 +60,15 @@ public class PushButtonMaster {
 		this.onClick = onClick;
 		this.onDoubleClick = onDoubleClick;
 		this.onLongClick = onLongClick;
+
+		if (verbose) {
+			// Test the methods
+			System.out.println("-- Testing the callbacks --");
+			this.onClick.run();
+			this.onDoubleClick.run();
+			this.onLongClick.run();
+			System.out.println("------- End of tests ------");
+		}
 	}
 
 	public void initCtx() {
@@ -73,7 +81,16 @@ public class PushButtonMaster {
 	private long betweenClicks = 0L;
 
 	private final static long DOUBLE_CLICK_DELAY = 200L; // Less than 2 10th of sec between clicks
-	private final static long LONG_CLICK_DELAY   = 500L; // Long: more than half a second
+	private final static long LONG_CLICK_DELAY   = 500L; // Long click: more than half a second
+
+	/*
+	 * This boolean is here not to take the first click of a double click as a single click.
+	 * When a click (not a long click) happens, maybeDoubleClick is set to true.
+	 * Then the thread waits for DOUBLE_CLICK_DELAY ms.
+	 * If after that, maybeDoubleClick is still true, it was NOT a double click.
+	 * If maybeDoubleClick is now false, it means it has been reset by a double-click. In which case the single-click event is not fired.
+	 */
+	private boolean maybeDoubleClick = false; // To be read as 'may be the first click of a double-click'.
 
 	public void initCtx(Pin buttonPin) {
 		if (this.gpio != null) {
@@ -94,8 +111,7 @@ public class PushButtonMaster {
 					}
 				}
 				// Test the click type here, and take action
-				if (this.button.isLow()) { // Event on release only
-					boolean maybeDoubleClick = false;
+				if (this.button.isLow()) { // Event callbacks on release only
 					if (verbose) {
 						System.out.println(
 							String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, previousReleaseTime: %s ",
@@ -105,34 +121,28 @@ public class PushButtonMaster {
 								NumberFormat.getInstance().format(this.releaseTime),
 								NumberFormat.getInstance().format(this.previousReleaseTime)));
 					}
+					// Double, long or single click?
 					if (this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
-						maybeDoubleClick = false;
+						this.maybeDoubleClick = false; // Done with 2nd click of a double-click.
 						if (verbose) {
 							System.out.println("++++ Setting maybeDoubleClick to false");
 						}
-						this.onDoubleClick.accept(null);
+						this.onDoubleClick.run();
 					} else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
-						this.onLongClick.accept(null);
+						this.onLongClick.run();
 					} else { // Single click
-						maybeDoubleClick = true;
-//						long now = System.currentTimeMillis();
-//						if (verbose) {
-//							System.out.println(String.format("Button [%s]: (now - previousReleaseTime): %s ", this.buttonName, NumberFormat.getInstance().format(now - this.previousReleaseTime)));
-//						}
-//						if (now - this.previousReleaseTime > DOUBLE_CLICK_DELAY) { // Not to take the first click of a double click as a single click.
-//							maybeDoubleClick = true;
-//							this.onClick.accept(null);
-//						}
+						this.maybeDoubleClick = true;
 					}
-					if (maybeDoubleClick) {
+					// If single-click... May be the first of a double-click
+					if (this.maybeDoubleClick) {
 						try {
 							Thread.sleep(DOUBLE_CLICK_DELAY);
-							if (maybeDoubleClick) {
+							if (this.maybeDoubleClick) { // Can have been set to false by a double-click
 								if (verbose) {
-									System.out.println("++++ maybeDoubleClick now true");
+									System.out.println("++++ maybeDoubleClick still true");
 								}
-								maybeDoubleClick = false;
-								this.onClick.accept(null);
+								this.maybeDoubleClick = false; // Reset
+								this.onClick.run();
 							} else {
 								System.out.println("++++ maybeDoubleClick found false, it WAS a double click");
 							}
@@ -145,6 +155,7 @@ public class PushButtonMaster {
 		}
 	}
 
+	// Use for shift-like operations
 	public boolean isPushed() {
 		return this.button.isHigh();
 	}
@@ -156,6 +167,5 @@ public class PushButtonMaster {
 			}
 			this.gpio.shutdown();
 		}
-//	System.exit(0);
 	}
 }
