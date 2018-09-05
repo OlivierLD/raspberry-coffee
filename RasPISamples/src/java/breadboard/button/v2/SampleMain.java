@@ -23,7 +23,7 @@ public class SampleMain {
 
 		String[] map = new String[2];
 		map[0] = String.valueOf(PinUtil.findByPin(pin).pinNumber()) + ":" + "BUTTON Hot Wire";
-		map[1] = String.valueOf(PinUtil.GPIOPin.GRND_1.pinNumber()) + ":" + "BUTTON GND";
+		map[1] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "3v3";
 
 		utils.PinUtil.print(map);
 

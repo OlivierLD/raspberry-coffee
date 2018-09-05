@@ -21,7 +21,7 @@ public class PinUtil {
 		GPIO_0("GPIO_0",       11, 17,  0, RaspiPin.GPIO_00), GPIO_1("PCM_CLK/PWM0", 12, 18,  1, RaspiPin.GPIO_01),
 		GPIO_2("GPIO_2",       13, 27,  2, RaspiPin.GPIO_02), GRND_3("GND",          14, -1, -1, null),
 		GPIO_3("GPIO_3",       15, 22,  3, RaspiPin.GPIO_03), GPIO_4("GPIO_4",       16, 23,  4, RaspiPin.GPIO_04),
-		PWR_4("3v3",            1, -1, -1, null),             GPIO_5("GPIO_5",       18, 24,  5, RaspiPin.GPIO_05),
+		PWR_4("3v3",           17, -1, -1, null),             GPIO_5("GPIO_5",       18, 24,  5, RaspiPin.GPIO_05),
 		GPIO_12("SPI0_MOSI",   19, 10, 12, RaspiPin.GPIO_12), GRND_4("GND",          20, -1, -1, null),
 		GPIO_13("SPI0_MISO",   21,  9, 13, RaspiPin.GPIO_13), GPIO_6("GPIO_6",       22, 25,  6, RaspiPin.GPIO_06),
 		GPIO_14("SPI0_CLK",    23, 11, 14, RaspiPin.GPIO_14), GPIO_10("SPI0_CS0_N",  24,  8, 10, RaspiPin.GPIO_10),
