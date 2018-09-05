@@ -69,6 +69,7 @@ public class PushButtonMaster {
 
 	private long pushedTime = 0L;
 	private long releasedTime = 0L;
+	private long betweenClicks = 0L;
 
 	private final static long DOUBLE_CLICK_DELAY = 200L; // Less than 2 10th of sec between clicks
 	private final static long LONG_CLICK_DELAY   = 500L; // Long: more than half a second
@@ -80,8 +81,9 @@ public class PushButtonMaster {
 			this.button.addListener((GpioPinListenerDigital) event -> {
 				if (event.getState().isHigh()) { // Button pressed
 					this.pushedTime = System.currentTimeMillis();
+					this.betweenClicks = this.pushedTime - this.releasedTime;
 					if (verbose) {
-						System.out.println(String.format("Since last release of [%s]: %s ms.", this.buttonName, NumberFormat.getInstance().format(this.pushedTime - this.releasedTime)));
+						System.out.println(String.format("Since last release of [%s]: %s ms.", this.buttonName, NumberFormat.getInstance().format(this.betweenClicks)));
 					}
 				} else if (event.getState().isLow()) { // Button released
 					this.releasedTime = System.currentTimeMillis();
@@ -89,7 +91,7 @@ public class PushButtonMaster {
 				}
 				// Test the click type here, and take action
 				if (this.button.isLow()) { // Event on release only
-					if ((this.pushedTime - this.releasedTime) > 0 && (this.pushedTime - this.releasedTime) < DOUBLE_CLICK_DELAY) {
+					if (this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
 						this.onDoubleClick.accept(null);
 					} else if ((this.releasedTime - this.pushedTime) > LONG_CLICK_DELAY) {
 						this.onLongClick.accept(null);
@@ -107,6 +109,9 @@ public class PushButtonMaster {
 
 	public void freeResources() {
 		if (this.gpio != null) {
+			if (verbose) {
+				System.out.println("Freeing resources");
+			}
 			this.gpio.shutdown();
 		}
 //	System.exit(0);
