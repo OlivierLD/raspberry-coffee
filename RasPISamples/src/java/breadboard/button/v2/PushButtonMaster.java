@@ -124,6 +124,7 @@ public class PushButtonMaster {
 						try {
 							Thread.sleep(DOUBLE_CLICK_DELAY);
 							if (maybeDoubleClick) {
+								maybeDoubleClick = false;
 								this.onClick.accept(null);
 							}
 						} catch (InterruptedException ie) {
