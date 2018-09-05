@@ -111,14 +111,15 @@ public class PushButtonMaster {
 					} else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
 						this.onLongClick.accept(null);
 					} else {
-						long now = System.currentTimeMillis();
-						if (verbose) {
-							System.out.println(String.format("Button [%s]: (now - previousReleaseTime): %s ", this.buttonName, NumberFormat.getInstance().format(now - this.previousReleaseTime)));
-						}
-						if (now - this.previousReleaseTime > DOUBLE_CLICK_DELAY) { // Not to take the first click of a double click as a single click.
-							maybeDoubleClick = true;
-//						this.onClick.accept(null);
-						}
+						maybeDoubleClick = true;
+//						long now = System.currentTimeMillis();
+//						if (verbose) {
+//							System.out.println(String.format("Button [%s]: (now - previousReleaseTime): %s ", this.buttonName, NumberFormat.getInstance().format(now - this.previousReleaseTime)));
+//						}
+//						if (now - this.previousReleaseTime > DOUBLE_CLICK_DELAY) { // Not to take the first click of a double click as a single click.
+//							maybeDoubleClick = true;
+//							this.onClick.accept(null);
+//						}
 					}
 					if (maybeDoubleClick) {
 						try {
