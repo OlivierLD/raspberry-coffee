@@ -107,10 +107,13 @@ public class PushButtonMaster {
 					}
 					if (this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
 						maybeDoubleClick = false;
+						if (verbose) {
+							System.out.println("++++ Setting maybeDoubleClick to false");
+						}
 						this.onDoubleClick.accept(null);
 					} else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
 						this.onLongClick.accept(null);
-					} else {
+					} else { // Single click
 						maybeDoubleClick = true;
 //						long now = System.currentTimeMillis();
 //						if (verbose) {
@@ -125,8 +128,13 @@ public class PushButtonMaster {
 						try {
 							Thread.sleep(DOUBLE_CLICK_DELAY);
 							if (maybeDoubleClick) {
+								if (verbose) {
+									System.out.println("++++ maybeDoubleClick now true");
+								}
 								maybeDoubleClick = false;
 								this.onClick.accept(null);
+							} else {
+								System.out.println("++++ maybeDoubleClick found false, it WAS a double click");
 							}
 						} catch (InterruptedException ie) {
 							// Absorb
