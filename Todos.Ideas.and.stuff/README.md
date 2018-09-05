@@ -21,7 +21,7 @@ Those functions above can be performed by 4 distinct buttons, or just 2, `Button
 - Select: Double Click on `Button2`
 - Down: Long Click on `Button2`
 
-We even have room available for:
+We even have room available for operations triggered by:
 - Double Click on `Button1`
 - Long Click on `Button1`
 - `Button1` pressed and Single Click on `Button2`
