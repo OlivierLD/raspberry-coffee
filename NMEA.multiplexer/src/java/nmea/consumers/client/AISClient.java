@@ -10,11 +10,16 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class AISClient {
+	/*
+	 * Set proxy at runtime if needed -Dhttp.proxyHost, -Dhttp.proxyPort
+	 */
 	public static void main(String... args) {
 		try {
 			Map<Integer, AISParser.AISRecord> map = new HashMap<>();
 
-			URL aisSFBayURL = new URL("http://207.7.148.216:9009");
+			String aisUrl = "http://ais.exploratorium.edu:80";
+			// "http://207.7.148.216:9009"
+			URL aisSFBayURL = new URL(aisUrl);
 			InputStream aisIS = aisSFBayURL.openStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(aisIS));
 			String line = "";
