@@ -6,7 +6,7 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.io.gpio.event.GpioPinListenerDigital;import pushbutton.PushButtonObserver;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 import java.text.NumberFormat;
 import java.util.function.Consumer;
@@ -68,7 +68,8 @@ public class PushButtonMaster {
 	}
 
 	private long pushedTime = 0L;
-	private long releasedTime = 0L;
+	private long previousReleaseTime = 0L;
+	private long releaseTime = 0L;
 	private long betweenClicks = 0L;
 
 	private final static long DOUBLE_CLICK_DELAY = 200L; // Less than 2 10th of sec between clicks
@@ -81,33 +82,34 @@ public class PushButtonMaster {
 			this.button.addListener((GpioPinListenerDigital) event -> {
 				if (event.getState().isHigh()) { // Button pressed
 					this.pushedTime = System.currentTimeMillis();
-					this.betweenClicks = this.pushedTime - this.releasedTime;
+					this.betweenClicks = this.pushedTime - this.releaseTime;
 					if (verbose) {
 						System.out.println(String.format("Since last release of [%s]: %s ms.", this.buttonName, NumberFormat.getInstance().format(this.betweenClicks)));
 					}
 				} else if (event.getState().isLow()) { // Button released
-					this.releasedTime = System.currentTimeMillis();
+					this.previousReleaseTime = this.releaseTime;
+					this.releaseTime = System.currentTimeMillis();
 					if (verbose) {
-						System.out.println(String.format("Button [%s] was down for %s ms.", this.buttonName, NumberFormat.getInstance().format(this.releasedTime - this.pushedTime)));
+						System.out.println(String.format("Button [%s] was down for %s ms.", this.buttonName, NumberFormat.getInstance().format(this.releaseTime - this.pushedTime)));
 					}
 				}
 				// Test the click type here, and take action
 				if (this.button.isLow()) { // Event on release only
 					long now = System.currentTimeMillis();
 					if (verbose) {
-						System.out.println(String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releasedTime: %s, (now - release): %s ",
+						System.out.println(String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, (now - release): %s ",
 								this.buttonName,
 								NumberFormat.getInstance().format(this.betweenClicks),
 								NumberFormat.getInstance().format(this.pushedTime),
-								NumberFormat.getInstance().format(this.releasedTime),
-								NumberFormat.getInstance().format(now - this.releasedTime)));
+								NumberFormat.getInstance().format(this.releaseTime),
+								NumberFormat.getInstance().format(now - this.previousReleaseTime)));
 					}
 					if (this.betweenClicks > 0 && this.betweenClicks < DOUBLE_CLICK_DELAY) {
 						this.onDoubleClick.accept(null);
-					} else if ((this.releasedTime - this.pushedTime) > LONG_CLICK_DELAY) {
+					} else if ((this.releaseTime - this.pushedTime) > LONG_CLICK_DELAY) {
 						this.onLongClick.accept(null);
 					} else {
-						if (now - this.releasedTime > DOUBLE_CLICK_DELAY) { // Not to take the first click of a double click as a single click.
+						if (now - this.previousReleaseTime > DOUBLE_CLICK_DELAY) { // Not to take the first click of a double click as a single click.
 							this.onClick.accept(null);
 						}
 					}
