@@ -1,14 +1,12 @@
 package breadboard.button.v2;
 
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
-
-import java.util.function.Consumer;
+import utils.PinUtil;
 
 public class SampleMain {
 
 	public static void main(String... args) {
-
-		utils.PinUtil.print();
 
 		Runnable onClick = () -> {
 			System.out.println(">> Single click");
@@ -20,12 +18,16 @@ public class SampleMain {
 			System.out.println(">> Long click");
 		};
 
-		Runnable vroom = () -> {
-			System.out.println("Pouet!");
-		};
+		Pin pin = RaspiPin.GPIO_01;
+
+		String[] map = new String[2];
+		map[0] = String.valueOf(PinUtil.findByPin(pin).pinNumber()) + ":" + "BUTTON Hot Wire";
+		map[1] = String.valueOf(PinUtil.GPIOPin.GRND_1.pinNumber()) + ":" + "BUTTON GND";
+
+		utils.PinUtil.print(map);
 
 		PushButtonMaster pbm = new PushButtonMaster("ForTest", onClick, onDoubleClick, onLongClick);
-		pbm.initCtx(RaspiPin.GPIO_01);
+		pbm.initCtx(pin);
 
 		final Thread me = Thread.currentThread();
 

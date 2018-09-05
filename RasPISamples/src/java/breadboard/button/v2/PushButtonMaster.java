@@ -61,12 +61,14 @@ public class PushButtonMaster {
 		this.onDoubleClick = onDoubleClick;
 		this.onLongClick = onLongClick;
 
-		// Test the methods
-		System.out.println("-- Testing the callbacks --");
-		this.onClick.run();
-		this.onDoubleClick.run();
-		this.onLongClick.run();
-		System.out.println("------- End of tests ------");
+		if (verbose) {
+			// Test the methods
+			System.out.println("-- Testing the callbacks --");
+			this.onClick.run();
+			this.onDoubleClick.run();
+			this.onLongClick.run();
+			System.out.println("------- End of tests ------");
+		}
 	}
 
 	public void initCtx() {
@@ -165,6 +167,5 @@ public class PushButtonMaster {
 			}
 			this.gpio.shutdown();
 		}
-//	System.exit(0);
 	}
 }
