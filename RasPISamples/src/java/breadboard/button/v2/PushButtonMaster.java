@@ -98,7 +98,10 @@ public class PushButtonMaster {
 					} else if ((this.releasedTime - this.pushedTime) > LONG_CLICK_DELAY) {
 						this.onLongClick.accept(null);
 					} else {
-						this.onClick.accept(null);
+						long now = System.currentTimeMillis();
+						if (now - releasedTime > DOUBLE_CLICK_DELAY) {
+							this.onClick.accept(null);
+						}
 					}
 				}
 			});
