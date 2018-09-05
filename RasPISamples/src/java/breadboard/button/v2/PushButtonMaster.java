@@ -96,7 +96,7 @@ public class PushButtonMaster {
 				// Test the click type here, and take action
 				if (this.button.isLow()) { // Event on release only
 					if (verbose) {
-						System.out.println(String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s, (now - release): %s ",
+						System.out.println(String.format("Button [%s]: betweenClicks: %s ms, pushedTime: %s ms, releaseTime: %s ",
 								this.buttonName,
 								NumberFormat.getInstance().format(this.betweenClicks),
 								NumberFormat.getInstance().format(this.pushedTime),
