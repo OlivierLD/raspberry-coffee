@@ -11,13 +11,13 @@ public class SampleMain {
 		utils.PinUtil.print();
 
 		Consumer<Void> onClick = (Void v) -> {
-			System.out.println("Single click");
+			System.out.println(">> Single click");
 		};
 		Consumer<Void> onDoubleClick = (Void v) -> {
-			System.out.println("Double click");
+			System.out.println(">> Double click");
 		};
 		Consumer<Void> onLongClick = (Void v) -> {
-			System.out.println("Long click");
+			System.out.println(">> Long click");
 		};
 
 		PushButtonMaster pbm = new PushButtonMaster("ForTest", onClick, onDoubleClick, onLongClick);
