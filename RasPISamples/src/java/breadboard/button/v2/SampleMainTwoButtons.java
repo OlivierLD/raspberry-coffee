@@ -31,7 +31,7 @@ public class SampleMainTwoButtons {
 
 		String[] map = new String[3];
 		map[0] = String.valueOf(PinUtil.findByPin(appPin).pinNumber()) + ":" + "BUTTON Hot Wire";
-		map[1] = String.valueOf(PinUtil.GPIOPin.GRND_1.pinNumber()) + ":" + "BUTTON(s) GND";
+		map[1] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "3v3";
 		map[2] = String.valueOf(PinUtil.findByPin(shiftPin).pinNumber()) + ":" + "Shft";
 
 		PinUtil.print(map);
