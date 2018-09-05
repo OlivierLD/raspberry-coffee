@@ -8,6 +8,7 @@ public class SampleMain {
 
 	public static void main(String... args) {
 
+		// Action to take depending on the type of click.
 		Runnable onClick = () -> {
 			System.out.println(">> Single click");
 		};
@@ -18,7 +19,7 @@ public class SampleMain {
 			System.out.println(">> Long click");
 		};
 
-		Pin pin = RaspiPin.GPIO_01;
+		Pin pin = RaspiPin.GPIO_01; // The hot pin for this button. The other is GND.
 
 		String[] map = new String[2];
 		map[0] = String.valueOf(PinUtil.findByPin(pin).pinNumber()) + ":" + "BUTTON Hot Wire";
@@ -26,8 +27,12 @@ public class SampleMain {
 
 		utils.PinUtil.print(map);
 
-		PushButtonMaster pbm = new PushButtonMaster("ForTest", onClick, onDoubleClick, onLongClick);
-		pbm.initCtx(pin);
+		PushButtonMaster pbm = new PushButtonMaster(
+				"ForTest",
+				pin,
+				onClick,
+				onDoubleClick,
+				onLongClick);
 
 		final Thread me = Thread.currentThread();
 
@@ -44,7 +49,7 @@ public class SampleMain {
 				me.interrupt();
 			}
 		}
-
+		// Cleanup
 		pbm.freeResources();
 		System.out.println("\nBye!");
 	}
