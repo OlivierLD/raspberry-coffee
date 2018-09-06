@@ -28,5 +28,7 @@ We even have room available for operations triggered by:
 - `Button1` pressed and Double Click on `Button2`
 - `Button1` pressed and Long Click on `Button2`
 
----
+&#9989; Integrated in `RasPISamples`.
+
+-------------
 
