@@ -22,6 +22,8 @@ public class AISParser {
    */
 
   /*
+   * AIS: Automatic Identification System
+   *
    * See http://gpsd.berlios.de/AIVDM.html
    *
 AIS Message Type 1:
@@ -79,7 +81,6 @@ AIS Message type 2:
 		HDG(128, 137, "True Heading"),
 		TIME_STAMP(137, 143, "Time Stamp (UTC Seconds)");
 
-		@SuppressWarnings("compatibility:-6815213573434389704")
 		private static final long serialVersionUID = 1L;
 
 		private final int from;          // start offset
@@ -112,15 +113,17 @@ AIS Message type 2:
 
 	public static AISRecord parseAIS(String sentence) throws Exception {
 		boolean valid = StringParsers.validCheckSum(sentence);
-		if (!valid)
+		if (!valid) {
 			throw new RuntimeException("Invalid AIS Data (Bad checksum) for [" + sentence + "]");
-
+		}
 		String[] dataElement = sentence.split(",");
-		if (!dataElement[PREFIX_POS].equals(AIS_PREFIX))
+		if (!dataElement[PREFIX_POS].equals(AIS_PREFIX)) {
 			throw new RuntimeException("Unmanaged AIS Prefix [" + dataElement[PREFIX_POS] + "].");
+		}
 
-		if (!dataElement[NB_SENTENCES_POS].equals("1")) // More than 1 message: Not Managed
+		if (!dataElement[NB_SENTENCES_POS].equals("1")) { // More than 1 message: Not Managed
 			return null;
+		}
 
 		AISRecord aisRecord = new AISRecord(System.currentTimeMillis());
 		String aisData = dataElement[AIS_DATA_POS];
@@ -137,12 +140,14 @@ AIS Message type 2:
 					intValue = -Integer.parseInt(neg(binStr), 2);
 				}
 			} else if (a.equals(AISData.ROT)) {
-				if (intValue > 128)
+				if (intValue > 128) {
 					intValue = -Integer.parseInt(neg(binStr), 2);
+				}
 			}
 			setAISData(a, aisRecord, intValue);
-			if (verbose)
+			if (verbose) {
 				System.out.println(a + " [" + binStr + "] becomes [" + intValue + "]");
+			}
 		}
 		return aisRecord;
 	}
@@ -155,36 +160,38 @@ AIS Message type 2:
 	 */
 	private static String neg(String binStr) {
 		String s = "";
-		for (int i = 0; i < binStr.length(); i++)
+		for (int i = 0; i < binStr.length(); i++) {
 			s += (binStr.charAt(i) == '0' ? '1' : '0');
+		}
 		return s;
 	}
 
 	private static void setAISData(AISData a, AISRecord ar, int value) {
-		if (a.equals(AISData.MESSAGE_TYPE))
+		if (a.equals(AISData.MESSAGE_TYPE)) {
 			ar.setMessageType(value);
-		else if (a.equals(AISData.REPEAT_INDICATOR))
+		} else if (a.equals(AISData.REPEAT_INDICATOR)) {
 			ar.setRepeatIndicator(value);
-		else if (a.equals(AISData.MMSI))
+		} else if (a.equals(AISData.MMSI)) {
 			ar.setMmsi(value);
-		else if (a.equals(AISData.NAV_STATUS))
+		} else if (a.equals(AISData.NAV_STATUS)) {
 			ar.setNavstatus(value);
-		else if (a.equals(AISData.ROT))
+		} else if (a.equals(AISData.ROT)) {
 			ar.setRot(value);
-		else if (a.equals(AISData.SOG))
+		} else if (a.equals(AISData.SOG)) {
 			ar.setSog(value);
-		else if (a.equals(AISData.POS_ACC))
+		} else if (a.equals(AISData.POS_ACC)) {
 			ar.setPosAcc(value);
-		else if (a.equals(AISData.LONGITUDE))
+		} else if (a.equals(AISData.LONGITUDE)) {
 			ar.setLongitude(value);
-		else if (a.equals(AISData.LATITUDE))
+		} else if (a.equals(AISData.LATITUDE)) {
 			ar.setLatitude(value);
-		else if (a.equals(AISData.COG))
+		} else if (a.equals(AISData.COG)) {
 			ar.setCog(value);
-		else if (a.equals(AISData.HDG))
+		} else if (a.equals(AISData.HDG)) {
 			ar.setHdg(value);
-		else if (a.equals(AISData.TIME_STAMP))
+		} else if (a.equals(AISData.TIME_STAMP)) {
 			ar.setUtc(value);
+		}
 	}
 
 	private static String encodedAIStoBinaryString(String encoded) {
@@ -192,12 +199,14 @@ AIS Message type 2:
 		for (int i = 0; i < encoded.length(); i++) {
 			int c = encoded.charAt(i);
 			c -= 48;
-			if (c > 40)
+			if (c > 40) {
 				c -= 8;
+			}
 			String bin = StringUtils.lpad(Integer.toBinaryString(c), 6, "0");
 			sb.append(bin);
-			if (verbose)
+			if (verbose) {
 				System.out.println(encoded.charAt(i) + " becomes " + bin + " (" + c + ")");
+			}
 //    sb.append(" ");
 		}
 		return sb.toString();
@@ -392,11 +401,11 @@ AIS Message type 2:
 		}
 	}
 
-	public static void main_(String... args) throws Exception {
-		String ais;
-		if (args.length > 0)
+	public static void main(String... args) throws Exception {
+		String ais; // Error in !AIVDM,1,1,,B,?03Ovk1E6T50D00,2*1E
+		if (args.length > 0) {
 			System.out.println(parseAIS(args[0]));
-		else {
+		} else {
 			ais = "!AIVDM,1,1,,A,14eG;o@034o8sd<L9i:a;WF>062D,0*7D";
 			System.out.println(parseAIS(ais));
 
@@ -408,11 +417,11 @@ AIS Message type 2:
 		}
 	}
 
-	public static void main(String... args) throws Exception {
+	public static void main__(String... args) throws Exception {
 		String dataFileName = "sample.data/nais400-merrimac.log";
-		if (args.length > 0)
+		if (args.length > 0) {
 			dataFileName = args[0];
-
+		}
 		BufferedReader br = new BufferedReader(new FileReader(dataFileName));
 		String line = "";
 		while (line != null) {

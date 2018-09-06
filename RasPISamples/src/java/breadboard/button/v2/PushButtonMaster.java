@@ -5,7 +5,6 @@ import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
-import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 import java.text.NumberFormat;
@@ -32,14 +31,22 @@ public class PushButtonMaster {
 	private GpioController gpio = null;
 	private GpioPinDigitalInput button = null;
 
-	private String buttonName = "Default";
+	private String buttonName = "Button";
 	private boolean verbose = "true".equals(System.getProperty("button.verbose"));
 
-	private Runnable onClick;
-	private Runnable onDoubleClick;
-	private Runnable onLongClick;
+	private Runnable onClick = () -> {};       // Empty, NoOp
+	private Runnable onDoubleClick = () -> {}; // Empty, NoOp
+	private Runnable onLongClick = () -> {};   // Empty, NoOp
 
-	public PushButtonMaster() {
+	public PushButtonMaster() {}
+
+	public PushButtonMaster(Pin pin) {
+		this(null, pin);
+	}
+
+	public PushButtonMaster(String buttonName,
+	                        Pin pin) {
+		this(buttonName, pin, null, null, null);
 	}
 
 	public PushButtonMaster(Pin pin,
@@ -53,16 +60,22 @@ public class PushButtonMaster {
 	                        Runnable onClick,
 	                        Runnable onDoubleClick,
 	                        Runnable onLongClick) {
-		update(buttonName, pin, onClick, onDoubleClick, onLongClick);
+		this.update(buttonName, pin, onClick, onDoubleClick, onLongClick);
 	}
 
+	public void update(Pin pin) {
+		this.update(null, pin);
+	}
 	public void update(Pin pin,
 	                   Runnable onClick,
 	                   Runnable onDoubleClick,
 	                   Runnable onLongClick) {
 		this.update(null, pin, onClick, onDoubleClick, onLongClick);
 	}
-
+	public void update(String buttonName,
+	                   Pin pin) {
+		this.update(buttonName, pin, null, null, null);
+	}
 	public void update(String buttonName,
 	                   Pin pin,
 	                   Runnable onClick,
@@ -71,9 +84,15 @@ public class PushButtonMaster {
 		if (buttonName != null) {
 			this.buttonName = buttonName;
 		}
-		this.onClick = onClick;
-		this.onDoubleClick = onDoubleClick;
-		this.onLongClick = onLongClick;
+		if (onClick != null) {
+			this.onClick = onClick;
+		}
+		if (onDoubleClick != null) {
+			this.onDoubleClick = onDoubleClick;
+		}
+		if (onLongClick != null) {
+			this.onLongClick = onLongClick;
+		}
 
 		try {
 			this.gpio = GpioFactory.getInstance();
@@ -81,7 +100,6 @@ public class PushButtonMaster {
 			// Absorb. You're not on a Pi.
 			System.err.println("Not on a PI? Moving on.");
 		}
-
 		initCtx(pin);
 	}
 

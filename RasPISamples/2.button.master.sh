@@ -12,5 +12,9 @@ JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=raspberrypi-boat"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dbutton.verbose=true"
+#
+# Physical pin numbers.
+PRMS="--button:16 --shift:11"
+#
 echo Running...
-sudo java $JAVA_OPTIONS -cp $CP breadboard.button.v2.SampleMainTwoButtons
+sudo java $JAVA_OPTIONS -cp $CP breadboard.button.v2.SampleMainTwoButtons $PRMS

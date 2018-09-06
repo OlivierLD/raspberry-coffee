@@ -28,8 +28,9 @@ public class DataFileClient extends NMEAClient {
 
 	@Override
 	public void dataDetectedEvent(NMEAEvent e) {
-		if (verbose)
+		if (verbose) {
 			System.out.println(">> DataFileClient >> Received from File:" + e.getContent());
+		}
 		if (multiplexer != null) {
 			multiplexer.onData(e.getContent());
 		}

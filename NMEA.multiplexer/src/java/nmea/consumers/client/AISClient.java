@@ -9,6 +9,12 @@ import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * Not a Consumer, just a sample.
+ * Any regular one is AIS-aware (Serial, File, TCP, etc).
+ *
+ * See System variable -Dno.ais
+ */
 public class AISClient {
 	/*
 	 * Set proxy at runtime if needed -Dhttp.proxyHost, -Dhttp.proxyPort

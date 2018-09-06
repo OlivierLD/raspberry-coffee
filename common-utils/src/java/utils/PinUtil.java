@@ -55,6 +55,17 @@ public class PinUtil {
 		public Pin pin() { return this.pin; }
 	};
 
+	public static Pin getPinByPhysicalNumber(int n) {
+		Pin pin = null;
+		for (GPIOPin gpioPin : GPIOPin.values()) {
+			if (gpioPin.pinNumber() == n) {
+				pin = gpioPin.pin();
+				break;
+			}
+		}
+		return pin;
+	}
+
 	public static Pin getPinByWiringPiNumber(int n) {
 		Pin pin = null;
 		for (GPIOPin gpioPin : GPIOPin.values()) {

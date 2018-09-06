@@ -45,8 +45,9 @@ public class DataFileReader extends NMEAReader {
 //      System.out.println("Read " + l);
 				if (l != -1 && dim > 0) {
 					String nmeaContent = new String(ba);
-					if (verbose)
+					if (verbose) {
 						System.out.println("Spitting out [" + nmeaContent + "]");
+					}
 					fireDataRead(new NMEAEvent(this, nmeaContent));
 					try {
 						Thread.sleep(this.betweenRecords);
