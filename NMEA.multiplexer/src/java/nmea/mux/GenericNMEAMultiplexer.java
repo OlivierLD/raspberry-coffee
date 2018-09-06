@@ -123,7 +123,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 		Runtime.getRuntime().exit(0); // Ctrl-C for the HTTP Server
 	}
 
-	private boolean verbose = false;
+	private boolean verbose = "true".equals(System.getProperty("rest.verbose"));
 	private boolean process = true; // onData, forward to computers and forwarders
 
 	private boolean softStop = false;

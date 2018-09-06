@@ -52,12 +52,13 @@ fi
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drnd.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dzda.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
-# JAVA_OPTIONS="$JAVA_OPTIONS -Drest.verbose=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Drest.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=false"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dno.ais=false" # Accept AIS Strings
 #
 # JAVA_OPTIONS="$JAVA_OPTONS -Dpi4j.debug -Dpi4j.linking=dynamic"
 #

@@ -75,11 +75,12 @@ public class TCPReader extends NMEAReader {
 					}
 
 					byte toPrint[] = new byte[nn];
-					for (int i = 0; i < nn; i++)
+					for (int i = 0; i < nn; i++) {
 						toPrint[i] = buffer[i];
+					}
 
 					s = new String(toPrint) + NMEAParser.NMEA_SENTENCE_SEPARATOR;
-					//      System.out.println("TCP:" + s);
+	//      System.out.println("TCP:" + s);
 					NMEAEvent n = new NMEAEvent(this, s);
 					super.fireDataRead(n);
 				}
@@ -91,19 +92,29 @@ public class TCPReader extends NMEAReader {
 			be.printStackTrace();
 			manageError(be);
 		} catch (final SocketException se) {
-//    se.printStackTrace();
-			if (se.getMessage().indexOf("Connection refused") > -1)
+//			if ("true".equals(System.getProperty("tcp.data.verbose"))) {
+//		    se.printStackTrace();
+//			}
+			if (se.getMessage().indexOf("Connection refused") > -1) {
 				System.out.println("Refused (1)");
-			else if (se.getMessage().indexOf("Connection reset") > -1)
+			} else if (se.getMessage().indexOf("Connection reset") > -1) {
 				System.out.println("Reset (2)");
-			else {
+			} else {
 				boolean tryAgain = false;
-				if (se instanceof ConnectException && "Connection timed out: connect".equals(se.getMessage()))
+				if (se instanceof ConnectException && "Connection timed out: connect".equals(se.getMessage())) {
+					if ("true".equals(System.getProperty("tcp.data.verbose"))) {
+						System.out.println("Will try again (1)");
+					}
 					tryAgain = true;
-				else if (se instanceof ConnectException && "Network is unreachable: connect".equals(se.getMessage()))
+					if ("true".equals(System.getProperty("tcp.data.verbose"))) {
+						System.out.println("Will try again (2)");
+					}
+				} else if (se instanceof SocketException && se.getMessage().startsWith("Network is unreachable (connect ")) {
+					if ("true".equals(System.getProperty("tcp.data.verbose"))) {
+						System.out.println("Will try again (3)");
+					}
 					tryAgain = true;
-				else if (se instanceof ConnectException) // Et hop!
-				{
+				} else if (se instanceof ConnectException) { // Et hop!
 					tryAgain = false;
 					System.err.println("TCP :" + se.getMessage());
 				} else {
@@ -138,14 +149,25 @@ public class TCPReader extends NMEAReader {
 	public void setTimeout(long timeout) { /* Not used for TCP */ }
 
 	public static void main(String... args) {
-		String host = "192.168.42.2";
-		int port = 7001; // 2947
+		/*
+		-Dtcp.data.verbose=true
+		-Dtcp.proxyHost=www-proxy.us.oracle.com
+		-Dtcp.proxyPort=80
+		-Dhttp.proxyHost=www-proxy.us.oracle.com
+		-Dhttp.proxyPort=80
+		-DsocksProxyHost=www-proxy.us.oracle.com
+		-DsocksProxyPort=80
+		 */
+
+		String host = // "192.168.42.2";
+									"ais.exploratorium.edu";
+		int port = 80; // 7001; // 2947
 		try {
 			List<NMEAListener> ll = new ArrayList<>();
 			NMEAListener nl = new NMEAListener() {
 				@Override
 				public void dataRead(NMEAEvent nmeaEvent) {
-					System.out.println(nmeaEvent.getContent()); // TODO Send to the GUI?
+					System.out.println(nmeaEvent.getContent()); // TODO Send to a GUI?
 				}
 			};
 			ll.add(nl);
@@ -165,6 +187,7 @@ public class TCPReader extends NMEAReader {
 					try {
 						Thread.sleep(howMuch);
 					} catch (InterruptedException ie) {
+						Thread.currentThread().interrupt();
 					}
 				}
 			}

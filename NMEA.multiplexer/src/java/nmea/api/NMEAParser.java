@@ -18,6 +18,10 @@ import java.util.List;
  *
  * The NMEAListeners to register are sent to the constructor. They can also be added later on.
  *
+ * Uses System variables:
+ *  no.ais true|false
+ *  nmea.parser.verbose true|false
+ *
  * @author Olivier Le Diouris
  * @version 1.0
  * @see nmea.api.NMEAReader
@@ -44,8 +48,9 @@ public final class NMEAParser extends Thread {
 	 */
 
 	public NMEAParser(List<NMEAListener> al) {
-		if (System.getProperty("verbose", "false").equals("true"))
+		if (System.getProperty("nmea.parser.verbose", "false").equals("true")) {
 			System.out.println(this.getClass().getName() + ":Creating parser");
+		}
 		instance = this;
 		NMEAListeners = al;
 		this.addNMEAListener(new NMEAListener() {
@@ -57,7 +62,7 @@ public final class NMEAParser extends Thread {
 				try {
 					while (s != null) {
 						s = instance.detectSentence();
-						if (s != null && s.length() > 6 && s.startsWith("$")) { // Potentially valid
+						if (s != null && s.length() > 6 && (s.startsWith("$") || s.startsWith("!AIVDM"))) { // Potentially valid
 							// TODO ? RegExp on the full sentence. Maybe not too user friendly...
 							boolean broadcast = true;
 							if (nmeaPrefix != null) {
@@ -172,32 +177,37 @@ public final class NMEAParser extends Thread {
 
 //  int beginIdx = nmeaStream.indexOf("$" + this.nmeaPrefix);
 		int beginIdx = nmeaStream.indexOf("$");
+		// With AIS?
+		if (beginIdx == -1 && !"true".equals(System.getProperty("no.ais"))) { // Fallback on AIS, condition on system variable "no.ais"
+			beginIdx = nmeaStream.indexOf("!AIVDM,");
+		}
 		int endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 
-		if (beginIdx == -1 && endIdx == -1)
+		if (beginIdx == -1 && endIdx == -1) {
 			return false; // No beginning, no end !
-
+		}
 		if (endIdx > -1 && endIdx < beginIdx) { // Seek the beginning of a sentence
 			nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
 //    beginIdx = nmeaStream.indexOf("$" + this.nmeaPrefix);
 			beginIdx = nmeaStream.indexOf("$");
 		}
 
-		if (beginIdx == -1)
+		if (beginIdx == -1) {
 			return false;
-		else {
+		} else {
 			while (true) {
 				try {
 					// The stream should here begin with $XX
-					if (nmeaStream.length() > 6) { // "$" + prefix + XXX
+					if (nmeaStream.length() > 6) { // "$" + prefix + XXX, or "!AIVDM"
 						endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 						if (endIdx > -1) {
 							return true; // Take all
 						} else {
 							return false; // unfinished sentence
 						}
-					} else
+					} else {
 						return false; // Not long enough - Not even sentence ID
+					}
 				} catch (Exception e) {
 					System.err.println("Oooch!");
 					e.printStackTrace();
@@ -222,7 +232,8 @@ public final class NMEAParser extends Thread {
 	}
 
 	public void run() {
-		if (System.getProperty("verbose", "false").equals("true"))
+		if (System.getProperty("nmea.parser.verbose", "false").equals("true")) {
 			System.out.println(this.getClass().getName() + ":Parser Running");
+		}
 	}
 }

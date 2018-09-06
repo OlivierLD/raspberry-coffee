@@ -240,7 +240,7 @@ Run
 Then just run the script named `pushbutton`.
 
 #### An interesting question
-What would the minimal UI for a hardware project, toallow the user to interact with the device?
+What would the minimal UI for a hardware project, to allow the user to interact with the device?
 
 How many buttons do we need?
 
