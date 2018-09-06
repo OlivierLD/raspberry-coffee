@@ -258,7 +258,7 @@ public class NMEADataCache
 			this.put(LAST_NMEA_SENTENCE, nmeaSentence);
 
 			// AIS
-			if (nmeaSentence.startsWith("!AIVDM")) {
+			if (nmeaSentence.startsWith(AISParser.AIS_PREFIX)) {
 				try {
 					AISParser.AISRecord rec = AISParser.parseAIS(nmeaSentence);
 					if (rec != null) {

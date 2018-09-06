@@ -79,7 +79,6 @@ AIS Message type 2:
 		HDG(128, 137, "True Heading"),
 		TIME_STAMP(137, 143, "Time Stamp (UTC Seconds)");
 
-		@SuppressWarnings("compatibility:-6815213573434389704")
 		private static final long serialVersionUID = 1L;
 
 		private final int from;          // start offset

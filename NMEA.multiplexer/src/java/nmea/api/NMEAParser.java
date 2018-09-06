@@ -1,11 +1,11 @@
 package nmea.api;
 
+import nmea.ais.AISParser;
 import utils.DumpUtil;
 import nmea.parser.StringParsers;
 
 import java.util.Arrays;
 import java.util.List;
-
 
 /**
  * A Controller. Common to everyone, final class.
@@ -179,7 +179,7 @@ public final class NMEAParser extends Thread {
 		int beginIdx = nmeaStream.indexOf("$");
 		// With AIS?
 		if (beginIdx == -1 && !"true".equals(System.getProperty("no.ais"))) { // Fallback on AIS, condition on system variable "no.ais"
-			beginIdx = nmeaStream.indexOf("!AIVDM,");
+			beginIdx = nmeaStream.indexOf(AISParser.AIS_PREFIX);
 		}
 		int endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 
