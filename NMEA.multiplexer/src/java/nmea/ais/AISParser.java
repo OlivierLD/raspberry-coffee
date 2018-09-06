@@ -23,7 +23,7 @@ public class AISParser {
 
   /*
    * AIS: Automatic Identification System
-   * 
+   *
    * See http://gpsd.berlios.de/AIVDM.html
    *
 AIS Message Type 1:
