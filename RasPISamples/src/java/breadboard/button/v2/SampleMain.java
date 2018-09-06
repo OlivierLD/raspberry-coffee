@@ -6,6 +6,7 @@ import utils.PinUtil;
 
 public class SampleMain {
 
+	// TODO Button pins as parameters
 	public static void main(String... args) {
 
 		// Action to take depending on the type of click.
@@ -19,7 +20,7 @@ public class SampleMain {
 			System.out.println(">> Long click");
 		};
 
-		Pin pin = RaspiPin.GPIO_01; // The hot pin for this button. The other is GND.
+		Pin pin = RaspiPin.GPIO_01; // The hot pin for this button. The other is 3v3.
 
 		String[] map = new String[2];
 		map[0] = String.valueOf(PinUtil.findByPin(pin).pinNumber()) + ":" + "BUTTON Hot Wire";

@@ -4,7 +4,16 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.RaspiPin;
 import utils.PinUtil;
 
+import java.util.Arrays;
+
 public class SampleMainTwoButtons {
+
+	private final static String BUTTON_PREFIX = "--button:";
+	private final static String SHIFT_PREFIX  = "--shift:";
+
+	// Default button pins
+	private static Pin appPin   = RaspiPin.GPIO_01; // The hot pin for this button. The other is 3v3.
+	private static Pin shiftPin = RaspiPin.GPIO_02; // The hot pin for this button. The other is 3v3.
 
 	public static void main(String... args) {
 
@@ -21,13 +30,33 @@ public class SampleMainTwoButtons {
 		Runnable onLongClick = () -> {
 			System.out.println(String.format(">> %sLong click", (pbmShift.isPushed() ? "[Shft] + " : "")));
 		};
+		/**
+		 *  For the Shift button, no operation needed. We only need if it is up or down.
+		 *  See {@link PushButtonMaster#isPushed()}
+ 		 */
 
-		Runnable noOp = () -> {
-			System.out.println("Duh.");
-		};
-
-		Pin appPin   = RaspiPin.GPIO_01; // The hot pin for this button. The other is GND.
-		Pin shiftPin = RaspiPin.GPIO_02; // The hot pin for this button. The other is GND.
+		// Pins as program argument. Physical pins [1..40]
+		if (args.length > 0) {
+			Arrays.stream(args).forEach(arg -> {
+				if (arg.startsWith(BUTTON_PREFIX)) {
+					String bStrPin = arg.substring(BUTTON_PREFIX.length());
+					try {
+						int bPin = Integer.parseInt(bStrPin);
+						appPin = PinUtil.getPinByPhysicalNumber(bPin);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				} else if (arg.startsWith(SHIFT_PREFIX)) {
+					String shStrPin = arg.substring(SHIFT_PREFIX.length());
+					try {
+						int shPin = Integer.parseInt(shStrPin);
+						shiftPin = PinUtil.getPinByPhysicalNumber(shPin);
+					} catch (NumberFormatException nfe) {
+						nfe.printStackTrace();
+					}
+				}
+			});
+		}
 
 		String[] map = new String[3];
 		map[0] = String.valueOf(PinUtil.findByPin(appPin).pinNumber()) + ":" + "BUTTON Hot Wire";
@@ -45,10 +74,7 @@ public class SampleMainTwoButtons {
 
 		pbmShift.update(
 				"Shift-Button",
-				shiftPin,
-				noOp,
-				noOp,
-				noOp);
+				shiftPin);
 
 		final Thread me = Thread.currentThread();
 
