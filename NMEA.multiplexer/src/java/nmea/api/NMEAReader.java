@@ -40,8 +40,9 @@ public abstract class NMEAReader extends Thread {
 
 	public NMEAReader(List<NMEAListener> al, boolean verbose) {
 		this.verbose = verbose;
-		if (verbose)
+		if (verbose) {
 			System.out.println(this.getClass().getName() + ":Creating reader");
+		}
 		NMEAListeners = al;
 		this.addNMEAListener(new NMEAListener() {
 			public void stopReading(NMEAEvent e) {

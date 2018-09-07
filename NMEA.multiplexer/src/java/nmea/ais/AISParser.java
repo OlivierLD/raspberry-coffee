@@ -136,7 +136,7 @@ AIS Message type 2:
 			int intValue = Integer.parseInt(binStr, 2);
 			if (a.equals(AISData.LATITUDE) || a.equals(AISData.LONGITUDE)) {
 				if ((a.equals(AISData.LATITUDE) && intValue != (91 * 600_000) && intValue > (90 * 600_000)) ||
-								(a.equals(AISData.LONGITUDE) && intValue != (181 * 600_000) && intValue > (180 * 600_000))) {
+						(a.equals(AISData.LONGITUDE) && intValue != (181 * 600_000) && intValue > (180 * 600_000))) {
 					intValue = -Integer.parseInt(neg(binStr), 2);
 				}
 			} else if (a.equals(AISData.ROT)) {

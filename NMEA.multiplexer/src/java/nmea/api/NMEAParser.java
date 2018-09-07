@@ -33,7 +33,7 @@ public final class NMEAParser extends Thread {
 	protected String[] nmeaPrefix = null;
 	private String[] nmeaSentence = null;
 
-	private String nmeaStream = "";
+	private StringBuffer nmeaStream = new StringBuffer();
 	private final static long MAX_STREAM_SIZE = 2048;
 	public final static String STANDARD_NMEA_EOS = new String(new char[]{0x0D, 0x0A}); // "\r\n";
 
@@ -56,20 +56,20 @@ public final class NMEAParser extends Thread {
 		this.addNMEAListener(new NMEAListener() {
 			public void dataRead(NMEAEvent e) {
 //        System.out.println("Receieved Data:" + e.getContent());
-				nmeaStream += e.getContent();
+				nmeaStream.append(e.getContent());
 				// Send to parser
 				String s = "";
 				try {
 					while (s != null) {
 						s = instance.detectSentence();
-						if (s != null && s.length() > 6 && (s.startsWith("$") || s.startsWith("!AIVDM"))) { // Potentially valid
+						if (s != null && s.length() > 6 && (s.startsWith("$") || s.startsWith(AISParser.AIS_PREFIX))) { // Potentially valid
 							// TODO ? RegExp on the full sentence. Maybe not too user friendly...
 							boolean broadcast = true;
 							if (nmeaPrefix != null) {
 								for (String device : nmeaPrefix) {
 									if (device.trim().length() > 0 &&
 													( (!device.startsWith("~") && !device.equals(StringParsers.getDeviceID(s))) ||
-																	device.startsWith("~") && device.substring(1).equals(StringParsers.getDeviceID(s)))) {
+															device.startsWith("~") && device.substring(1).equals(StringParsers.getDeviceID(s)))) {
 										broadcast = false;
 										break;
 									}
@@ -136,11 +136,11 @@ public final class NMEAParser extends Thread {
 		}
 	}
 
-	public String getNmeaStream() {
+	public StringBuffer getNmeaStream() {
 		return this.nmeaStream;
 	}
 
-	public void setNmeaStream(String s) {
+	public void setNmeaStream(StringBuffer s) {
 		this.nmeaStream = s;
 	}
 
@@ -153,10 +153,12 @@ public final class NMEAParser extends Thread {
 //			DumpUtil.displayDualDump(nmeaStream);
 				int end = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 				ret = nmeaStream.substring(0, end);
-				nmeaStream = nmeaStream.substring(end + NMEA_SENTENCE_SEPARATOR.length());
+//			nmeaStream = nmeaStream.substring(end + NMEA_SENTENCE_SEPARATOR.length());
+				nmeaStream.delete(0, end + NMEA_SENTENCE_SEPARATOR.length());
 			} else {
-				if (nmeaStream.length() > MAX_STREAM_SIZE)
-					nmeaStream = ""; // Reset to avoid OutOfMemoryException
+				if (nmeaStream.length() > MAX_STREAM_SIZE) {
+					nmeaStream = new StringBuffer(); // Reset to avoid OutOfMemoryException
+				}
 				return null; // Not enough info
 			}
 		} catch (NMEAException e) {
@@ -165,6 +167,24 @@ public final class NMEAParser extends Thread {
 		return ret;
 	}
 
+	private static int getSentenceStartIndex(StringBuffer sb) {
+		int beginIdx = -1;
+		int beginIdxNMEA = sb.indexOf("$");
+		// With AIS?
+		if (!"true".equals(System.getProperty("no.ais"))) { // Fallback on AIS, condition on system variable "no.ais"
+			int beginIdxAIS = sb.indexOf(AISParser.AIS_PREFIX);
+			if (beginIdxNMEA == -1) {
+				beginIdx = beginIdxAIS;
+			} else if (beginIdxAIS == -1) {
+				beginIdx = beginIdxNMEA;
+			} else {
+				beginIdx = Math.min(beginIdxNMEA, beginIdxAIS);
+			}
+		} else {
+			beginIdx = beginIdxNMEA;
+		}
+		return beginIdx;
+	}
 	/**
 	 * Detects a potentially valid NMEA Sentence
 	 * @return tgrue if a potential sentence is detected.
@@ -176,20 +196,16 @@ public final class NMEAParser extends Thread {
 //      throw new NMEAException("NMEA Prefix is not set");
 
 //  int beginIdx = nmeaStream.indexOf("$" + this.nmeaPrefix);
-		int beginIdx = nmeaStream.indexOf("$");
-		// With AIS?
-		if (beginIdx == -1 && !"true".equals(System.getProperty("no.ais"))) { // Fallback on AIS, condition on system variable "no.ais"
-			beginIdx = nmeaStream.indexOf(AISParser.AIS_PREFIX);
-		}
+		int beginIdx = getSentenceStartIndex(nmeaStream);
 		int endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
 
 		if (beginIdx == -1 && endIdx == -1) {
 			return false; // No beginning, no end !
 		}
 		if (endIdx > -1 && endIdx < beginIdx) { // Seek the beginning of a sentence
-			nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
-//    beginIdx = nmeaStream.indexOf("$" + this.nmeaPrefix);
-			beginIdx = nmeaStream.indexOf("$");
+//		nmeaStream = nmeaStream.substring(endIdx + NMEA_SENTENCE_SEPARATOR.length());
+			nmeaStream.delete(0, endIdx + NMEA_SENTENCE_SEPARATOR.length());
+			beginIdx = getSentenceStartIndex(nmeaStream);
 		}
 
 		if (beginIdx == -1) {
