@@ -34,7 +34,7 @@ public final class NMEAParser extends Thread {
 	private String[] nmeaSentence = null;
 
 	private StringBuffer nmeaStream = new StringBuffer();
-	private final static long MAX_STREAM_SIZE = 2048;
+	private final static long MAX_STREAM_SIZE = 2_048;
 	public final static String STANDARD_NMEA_EOS = new String(new char[]{0x0D, 0x0A}); // "\r\n";
 
 	public final static String NMEA_SENTENCE_SEPARATOR = "\n";
@@ -151,8 +151,9 @@ public final class NMEAParser extends Thread {
 				// DEBUG
 //			System.out.println("=== NMEAParser ===");
 //			DumpUtil.displayDualDump(nmeaStream);
-				int end = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
-				ret = nmeaStream.substring(0, end);
+				int start = getSentenceStartIndex(nmeaStream);
+				int end = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR, start);
+				ret = nmeaStream.substring(start, end);
 //			nmeaStream = nmeaStream.substring(end + NMEA_SENTENCE_SEPARATOR.length());
 				nmeaStream.delete(0, end + NMEA_SENTENCE_SEPARATOR.length());
 			} else {
@@ -187,7 +188,7 @@ public final class NMEAParser extends Thread {
 	}
 	/**
 	 * Detects a potentially valid NMEA Sentence
-	 * @return tgrue if a potential sentence is detected.
+	 * @return true if a potential sentence is detected.
 	 * @throws NMEAException
 	 */
 	private boolean interesting()
@@ -197,7 +198,7 @@ public final class NMEAParser extends Thread {
 
 //  int beginIdx = nmeaStream.indexOf("$" + this.nmeaPrefix);
 		int beginIdx = getSentenceStartIndex(nmeaStream);
-		int endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
+		int endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR, (beginIdx > -1 ? beginIdx : 0));
 
 		if (beginIdx == -1 && endIdx == -1) {
 			return false; // No beginning, no end !
@@ -215,7 +216,7 @@ public final class NMEAParser extends Thread {
 				try {
 					// The stream should here begin with $XX
 					if (nmeaStream.length() > 6) { // "$" + prefix + XXX, or "!AIVDM"
-						endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR);
+						endIdx = nmeaStream.indexOf(NMEA_SENTENCE_SEPARATOR, beginIdx);
 						if (endIdx > -1) {
 							return true; // Take all
 						} else {
