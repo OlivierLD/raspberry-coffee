@@ -2,6 +2,7 @@ package raspisamples.matrix;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 
 public class SystemUtil {
@@ -71,13 +72,58 @@ public class SystemUtil {
 		});
 	}
 
-	public static double[] derivative(double[] coeff) {
-		int dim = coeff.length - 1;
-		double derCoeff[] = new double[dim];
-		for (int i=0; i<dim; i++) {
-			derCoeff[i] = (dim - i) * coeff[i];
+	public static String funcToString(String prefix, double curveCoeff[]) {
+		String str = prefix + " = ";
+		for (int degree=0; degree<curveCoeff.length; degree++) {
+			int exp = curveCoeff.length - 1 - degree;
+			str += (String.format("%+f %s ", curveCoeff[degree], (exp == 0 ? "" : (exp == 1 ? "* x" : (String.format("* x^%d", exp))))));
 		}
-		return derCoeff;
+		return str;
+	}
+
+	/**
+	 * Distance to each point of the curve y=f(x) is [(x - ptX)^2 + (f(x) - ptY)^2] ^ (1/2)
+	 * To get rid of the sqrt:
+	 * dist^2 = (x - ptX)^2 + (f(x) - ptY)^2
+	 * For the minimal distance, we are looking for roots of the derivative of the above.
+	 *
+	 * [f o g (x)]' = f(g(x))' = f'(g(x)) x g'(x)
+	 *
+	 * @param curve highest degree first
+	 * @param ptX
+	 * @param ptY
+	 * @return
+	 */
+	public static double minDistanceToCurve(double curve[], double ptX, double ptY) {
+		double dist = Double.MAX_VALUE;
+
+		// distance pt = curve = distance between (x, f(x)) and (0, 3)
+		// = (deltaX^2 + deltaY^2)^(1/2)
+		//<=> distance^2 = (deltaX^2 + deltaY^2)
+		// = (x - ptX)^2 + (f(x) - ptY)^2
+		// Derivative: [2*(x-ptX)] + [2*(f(x) - ptY)*(f'(x))]
+		//              |             |  |            |
+		//              |             |  |            2-2
+		//              |             |  2-1
+		//              |             Part 2
+		//              Part 1
+		// Needed: polynomial addition, multiplication
+
+		double[] part1 = PolynomUtil.multiply(new double[] { 1, -ptX }, new double[] { 2 });
+
+		double[] part21 = PolynomUtil.add(curve, new double[] { -ptY });
+		double[] part22 = PolynomUtil.derivative(curve);
+		double[] part2 = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
+		double[] full = PolynomUtil.add(part1, part2);
+		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(full);
+		if (polynomRoots.size() == 0) {
+			System.out.println("no root"); // TODO Throw exceptipon
+		} else {
+			for (double r : polynomRoots) {
+				dist = Math.min(dist, PolynomUtil.dist(curve, r, ptX, ptY));
+			}
+		}
+		return dist;
 	}
 
 	/**
@@ -134,15 +180,68 @@ public class SystemUtil {
 		before = System.nanoTime();
 		result = solveSystem(squareMatrix, constants);
 		after = System.nanoTime();
-		System.out.println(String.format("\nDone in %s \u212bs (nano).", DecimalFormat.getInstance().format(after - before)));
+		System.out.println(String.format("\nDone in %s \u212bs (nano-sec).", DecimalFormat.getInstance().format(after - before)));
 
 		System.out.println(String.format("A = %f", result[0]));
 		System.out.println(String.format("B = %f", result[1]));
 		System.out.println(String.format("C = %f", result[2]));
 
 		// Test derivative
-		double[] der = derivative(new double[] { 3d, 2d, 1d, 6d});
+		double[] der = PolynomUtil.derivative(new double[] { 3d, 2d, 1d, 6d});
 		Arrays.stream(der).forEach(c -> System.out.print(String.format("%f ", c)));
 		System.out.println();
+
+		System.out.println();
+		// Function y = f(x)
+		double[] coeff = new double[] {-6, 4, 3};
+		System.out.println(funcToString("y", coeff));
+		double x = 3.4;
+		System.out.println(String.format("for %s, x=%f, f(x)=%f", funcToString("f(x)", coeff).trim(), x, PolynomUtil.f(coeff, x)));
+		List<Double> roots = PolynomUtil.getPolynomRoots(coeff);
+		if (roots.size() == 0) {
+			System.out.println("no root");
+		} else {
+			System.out.println("roots:");
+			for (double r : roots) {
+				System.out.println(String.format("\t%+f, f(x) = %f", r, PolynomUtil.f(coeff, r)));
+			}
+		}
+
+		// Minimal distance between point and curve
+		System.out.println("Minimal distance:");
+		double[] curve = new double[] { -1, 0, 6 };
+		double ptX = 0, ptY = 3;
+		// distance pt = curve = distance between (x, f(x)) and (0, 3)
+		// = (deltaX^2 + deltaY^2)^(1/2)
+		//<=> distance^2 = (deltaX^2 + deltaY^2)
+		// = (x - ptX)^2 + (f(x) - ptY)^2
+		// Derivative: [2*(x-ptX)] + [2*(f(x) - ptY)*(f'(x))]
+		//              |             |  |            |
+		//              |             |  |            2-2
+		//              |             |  2-1
+		//              |             Part 2
+		//              Part 1
+		// Needed: polynomial addition, multiplication
+
+		double[] part1 = PolynomUtil.multiply(new double[] { 1, -ptX }, new double[] { 2 });
+
+		double[] part21 = PolynomUtil.add(curve, new double[] { -ptY });
+		double[] part22 = PolynomUtil.derivative(curve);
+		double[] part2 = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
+		double[] full = PolynomUtil.add(part1, part2);
+		System.out.println("Resolving: " + PolynomUtil.display(full));
+		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(full);
+		if (polynomRoots.size() == 0) {
+			System.out.println("no root");
+		} else {
+			System.out.println("roots:");
+			for (double r : polynomRoots) {
+				System.out.println(String.format("\t%+f, f(x) = %f, dist=%f", r, PolynomUtil.f(curve, r), PolynomUtil.dist(curve, r, ptX, ptY)));
+			}
+		}
+		// Min dist to curve
+		System.out.println();
+		double minDist = minDistanceToCurve(curve, ptX, ptY);
+		System.out.println(String.format("Minimal distance from (%f, %f) to curve %s is %f", ptX, ptY, PolynomUtil.display(curve), minDist));
 	}
 }

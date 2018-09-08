@@ -383,6 +383,9 @@ Then, a un-anticipated shift happened: the emergence of the Containers, like `Do
 Docker is generating system images. It provides an environment - an operating system - onto
 which you can run the programs you need.
 
+And communication between machines is less and less a problem (this has not always been the case... Back in the days, Microsoft and Apple had different ways to format their floppies,
+making them un-readable by another OS). REST, HTTP, TCP, etc, are - so far - OS agnostic.
+
 In other words, if your program runs on a given Docker image, you will _not_ give the compiled code to whoever
 wants to run it somewhere else, you will provide a copy of the full Docker image. And whoever will
 run it will feel like you did on yours. This is not portability anymore, this is virtualization.
