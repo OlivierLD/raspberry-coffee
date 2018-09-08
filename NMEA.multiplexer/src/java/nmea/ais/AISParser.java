@@ -7,8 +7,11 @@ import java.io.FileReader;
 import nmea.parser.StringParsers;
 import utils.StringUtils;
 
+/**
+ * Work in Progress
+ */
 public class AISParser {
-	public final static boolean verbose = false;
+	public final static boolean verbose = "true".equals(System.getProperty("ais.verbose"));
 	/*
    * !AIVDM,1,1,,A,15NB>cP03jG?l`<EaV0`MFO000S>,0*39
    * ^      ^ ^  ^ ^                            ^ ^
@@ -25,6 +28,7 @@ public class AISParser {
    * AIS: Automatic Identification System
    *
    * See http://gpsd.berlios.de/AIVDM.html
+   *     http://catb.org/gpsd/AIVDM.html
    *
 AIS Message Type 1:
   1-6     Message Type
@@ -47,15 +51,15 @@ AIS Message Type 1:
   155-168 SOTDMA Slot Offset
 
 AIS Message type 2:
-  1-6    Message Type
-  7-8    Repeat Indicator
-  9-38   userID (MMSI)
-  39-42  Navigation Satus
-  43-50  Rate of Turn (ROT)
-  51-60  Speed Over Ground (SOG)
-  61-61  Position Accuracy
-  62-89  Longitude
-  90-116 latitude
+  1-6     Message Type
+  7-8     Repeat Indicator
+  9-38    userID (MMSI)
+  39-42   Navigation Satus
+  43-50   Rate of Turn (ROT)
+  51-60   Speed Over Ground (SOG)
+  61-61   Position Accuracy
+  62-89   Longitude
+  90-116  latitude
   117-128 Course Over Ground (COG)
   129-137 True Heading (HDG)
   138-143 Time Stamp (UTC Seconds)
@@ -136,7 +140,7 @@ AIS Message type 2:
 			int intValue = Integer.parseInt(binStr, 2);
 			if (a.equals(AISData.LATITUDE) || a.equals(AISData.LONGITUDE)) {
 				if ((a.equals(AISData.LATITUDE) && intValue != (91 * 600_000) && intValue > (90 * 600_000)) ||
-								(a.equals(AISData.LONGITUDE) && intValue != (181 * 600_000) && intValue > (180 * 600_000))) {
+						(a.equals(AISData.LONGITUDE) && intValue != (181 * 600_000) && intValue > (180 * 600_000))) {
 					intValue = -Integer.parseInt(neg(binStr), 2);
 				}
 			} else if (a.equals(AISData.ROT)) {
@@ -149,6 +153,10 @@ AIS Message type 2:
 				System.out.println(a + " [" + binStr + "] becomes [" + intValue + "]");
 			}
 		}
+//		if (aisRecord.getMmsi() == 368031880) {
+//			System.out.println("AIS:" + aisData);
+//			System.out.println(aisRecord.toString());
+//		}
 		return aisRecord;
 	}
 
@@ -388,7 +396,6 @@ AIS Message type 2:
 			String str = "";
 			str = "Type:" + messageType + ", Repeat:" + repeatIndicator + ", MMSI:" + mmsi + ", status:" + decodeStatus(navstatus) + ", rot:" + rot +
 							", Pos:" + latitude + "/" + longitude + " (Acc:" + posAcc + "), COG:" + cog + ", SOG:" + sog + ", HDG:" + hdg;
-
 			return str;
 		}
 

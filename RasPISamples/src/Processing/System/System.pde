@@ -148,6 +148,19 @@ void draw() {
   text(BUTTON_CLEAR_LABEL, buttonClearPosX + buttonTextPadding, buttonClearPosY + buttonFontSize + buttonTextPadding);
 }
 
+void keyPressed() {
+  if (key == CODED) {
+    if (keyCode == LEFT) {
+      println("LEFT");
+      requiredSmoothingDegree = Math.max(1, requiredSmoothingDegree - 1);
+    } else if (keyCode == RIGHT) {
+      println("RIGHT");
+      requiredSmoothingDegree += 1;
+    } 
+    hsbDegree.setPos(degToSliderPos(requiredSmoothingDegree));
+  }
+}
+
 void dispose() {
   println("Bye now.");
 }
@@ -273,4 +286,11 @@ void smooth() {
   println(out);
   println(String.format("From %d points", points.size()));
   coeffs = result; // For the drawing
+  // TODO Compute the sum of the min dist from points to the curve
+  double acc = 0;
+  for (int i=0; i<points.size(); i++) {
+    double dist = PolynomialUtil.minDistanceToCurve(coeffs, points.get(i).x, points.get(i).y);
+    acc += dist;
+  }
+  println(String.format("MinDistAcc:%f", acc));
 }
