@@ -7,7 +7,34 @@ import java.util.List;
 
 public class PolynomUtil {
 
-	private final static double precision = 1E-15;
+	private final static double precision = 1E-15; // Ca ira...
+
+	public static class Point {
+		double x;
+		double y;
+
+		public Point() {}
+		public Point(double x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		public Point x(double x) {
+			this.x = x;
+			return this;
+		}
+		public Point y(double y) {
+			this.y = y;
+			return this;
+		}
+
+		public double getX() {
+			return this.x;
+		}
+		public double getY() {
+			return this.y;
+		}
+	}
 
 	// Equation solving method
 	private static List<Double> getRoots(double... coef) {
@@ -264,9 +291,9 @@ public class PolynomUtil {
 		}
 	}
 
-	public static double dist(double[] coeff, double x, double ptX, double ptY) {
+	public static double dist(double[] coeff, double x, Point pt) {
 		double y = f(reduce(coeff), x);
-		return Math.sqrt(Math.pow(x - ptX, 2) + Math.pow(y - ptY, 2));
+		return Math.sqrt(Math.pow(x - pt.x, 2) + Math.pow(y - pt.y, 2));
 	}
 
 	public static String display(double[] p) {

@@ -2,6 +2,7 @@
 
 import java.util.List;
 import java.util.ArrayList;
+import java.text.NumberFormat;
 
 int requiredSmoothingDegree = 3;
 
@@ -292,5 +293,6 @@ void smooth() {
     double dist = PolynomialUtil.minDistanceToCurve(coeffs, points.get(i).x, points.get(i).y);
     acc += dist;
   }
-  println(String.format("MinDistAcc:%f", acc));
+  println(String.format("(canvas is %dx%d) Deg %d, MinDistAcc: %s", width, height, requiredSmoothingDegree, NumberFormat.getInstance().format(acc)));
+  println(String.format("Avg min distance: %f", acc / points.size()));  
 }

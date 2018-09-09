@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class SystemUtil {
+
 	public static double[] solveSystem(double[] m,
 	                                   double[] c) {
 		SquareMatrix sma = new SquareMatrix(c.length);
@@ -90,11 +91,10 @@ public class SystemUtil {
 	 * [f o g (x)]' = f(g(x))' = f'(g(x)) x g'(x)
 	 *
 	 * @param curve highest degree first
-	 * @param ptX
-	 * @param ptY
+	 * @param pt
 	 * @return
 	 */
-	public static double minDistanceToCurve(double curve[], double ptX, double ptY) {
+	public static double minDistanceToCurve(double curve[], PolynomUtil.Point pt) {
 		double dist = Double.MAX_VALUE;
 
 		// distance pt = curve = distance between (x, f(x)) and (0, 3)
@@ -109,9 +109,9 @@ public class SystemUtil {
 		//              Part 1
 		// Needed: polynomial addition, multiplication
 
-		double[] part1 = PolynomUtil.multiply(new double[] { 1, -ptX }, new double[] { 2 });
+		double[] part1 = PolynomUtil.multiply(new double[] { 1, -pt.x }, new double[] { 2 });
 
-		double[] part21 = PolynomUtil.add(curve, new double[] { -ptY });
+		double[] part21 = PolynomUtil.add(curve, new double[] { -pt.y });
 		double[] part22 = PolynomUtil.derivative(curve);
 		double[] part2 = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
 		double[] full = PolynomUtil.add(part1, part2);
@@ -120,10 +120,49 @@ public class SystemUtil {
 			System.out.println("no root"); // TODO Throw exceptipon
 		} else {
 			for (double r : polynomRoots) {
-				dist = Math.min(dist, PolynomUtil.dist(curve, r, ptX, ptY));
+				dist = Math.min(dist, PolynomUtil.dist(curve, r, pt));
 			}
 		}
 		return dist;
+	}
+
+	public static double[] smooth(List<PolynomUtil.Point> data, int requiredDegree) {
+		int dimension = requiredDegree + 1;
+		double[] sumXArray = new double[(requiredDegree * 2) + 1]; // Will fill the matrix
+		double[] sumY      = new double[requiredDegree + 1];
+		// Init
+		for (int i=0; i<((requiredDegree * 2) + 1); i++) {
+			sumXArray[i] = 0.0;
+		}
+		for (int i=0; i<(requiredDegree + 1); i++) {
+			sumY[i] = 0.0;
+		}
+
+		data.stream().forEach(point -> {
+			for (int i=0; i<((requiredDegree * 2) + 1); i++) {
+				sumXArray[i] += Math.pow(point.x, i);
+			}
+			for (int i=0; i<(requiredDegree + 1); i++) {
+				sumY[i] += (point.y * Math.pow(point.x, i));
+			}
+		});
+
+		SquareMatrix squareMatrix = new SquareMatrix(dimension);
+		for (int row=0; row<dimension; row++) {
+			for (int col=0; col<dimension; col++) {
+				int powerRnk = (requiredDegree - row) + (requiredDegree - col);
+//			System.out.println("[" + row + "," + col + ":" + (powerRnk) + "] = " + sumXArray[powerRnk]);
+				squareMatrix.setElementAt(row, col, sumXArray[powerRnk]);
+			}
+		}
+		double[] constants = new double[dimension];
+		for (int i=0; i<dimension; i++) {
+			constants[i] = sumY[requiredDegree - i];
+//		System.out.println("[" + (requiredDegree - i) + "] = " + constants[i]);
+		}
+
+		double[] result = SystemUtil.solveSystem(squareMatrix, constants);
+		return result;
 	}
 
 	/**
@@ -210,7 +249,7 @@ public class SystemUtil {
 		// Minimal distance between point and curve
 		System.out.println("Minimal distance:");
 		double[] curve = new double[] { -1, 0, 6 };
-		double ptX = 0, ptY = 3;
+		PolynomUtil.Point pt = new PolynomUtil.Point().x(0).y(3);
 		// distance pt = curve = distance between (x, f(x)) and (0, 3)
 		// = (deltaX^2 + deltaY^2)^(1/2)
 		//<=> distance^2 = (deltaX^2 + deltaY^2)
@@ -223,12 +262,12 @@ public class SystemUtil {
 		//              Part 1
 		// Needed: polynomial addition, multiplication
 
-		double[] part1 = PolynomUtil.multiply(new double[] { 1, -ptX }, new double[] { 2 });
+		double[] part1 = PolynomUtil.multiply(new double[] { 1, -pt.x }, new double[] { 2 });
 
-		double[] part21 = PolynomUtil.add(curve, new double[] { -ptY });
+		double[] part21 = PolynomUtil.add(curve, new double[] { -pt.y });
 		double[] part22 = PolynomUtil.derivative(curve);
-		double[] part2 = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
-		double[] full = PolynomUtil.add(part1, part2);
+		double[] part2  = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
+		double[] full   = PolynomUtil.add(part1, part2);
 		System.out.println("Resolving: " + PolynomUtil.display(full));
 		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(full);
 		if (polynomRoots.size() == 0) {
@@ -236,12 +275,12 @@ public class SystemUtil {
 		} else {
 			System.out.println("roots:");
 			for (double r : polynomRoots) {
-				System.out.println(String.format("\t%+f, f(x) = %f, dist=%f", r, PolynomUtil.f(curve, r), PolynomUtil.dist(curve, r, ptX, ptY)));
+				System.out.println(String.format("\t%+f, f(x) = %f, dist=%f", r, PolynomUtil.f(curve, r), PolynomUtil.dist(curve, r, pt)));
 			}
 		}
 		// Min dist to curve
 		System.out.println();
-		double minDist = minDistanceToCurve(curve, ptX, ptY);
-		System.out.println(String.format("Minimal distance from (%f, %f) to curve %s is %f", ptX, ptY, PolynomUtil.display(curve), minDist));
+		double minDist = minDistanceToCurve(curve, pt);
+		System.out.println(String.format("Minimal distance from (%f, %f) to curve %s is %f", pt.x, pt.y, PolynomUtil.display(curve), minDist));
 	}
 }

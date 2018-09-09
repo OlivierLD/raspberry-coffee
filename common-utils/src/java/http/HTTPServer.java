@@ -304,7 +304,7 @@ public class HTTPServer {
 		return response;
 	}
 
-	public static List<String> dumpException(Exception ex) {
+	public static List<String> dumpException(Throwable ex) {
 		return Arrays.stream(ex.getStackTrace())
 				.map(ste -> String.format(
 						"from %s.%s [%s:%d]",
