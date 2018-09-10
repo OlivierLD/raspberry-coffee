@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Using a template</title>
+
+	<link rel="icon" type="image/png" href="../logo-192x192.png">
+
+	<link rel="stylesheet" href="css/stylesheet.css">
+	<link rel="stylesheet" href="css/web-components.css">
+
+	<script type="module" src="widgets/WorldMap.js"></script>
+
+	<link rel="import" href="templates/world.map.template.html">
+
+</head>
+<body>
+
+ <div id="world-map-placeholder"></div>
+
+
+ <script>
+	 var link = document.querySelector('link[rel="import"]');
+	 var content = link.import;
+
+	 // Grab DOM from world.map.tempate.html's document.
+	 var el = content.querySelector('#world-map-id');
+	 document.getElementById("world-map-placeholder").appendChild(el.cloneNode(true));
+ </script>
+</body>
+</html>
