@@ -58,7 +58,7 @@ boolean buttonClearOver = false;
 final int SLIDER_PADDING = 10;
 final int CURSOR_SIZE = 16;
 
-final int HALF_TG = 60;
+final int HALF_TG = 100;
 
 void setup() {
   size(640, 640);
@@ -123,7 +123,7 @@ void draw() {
       }
       prevPt = new Point(x, y);
     }
-    // Derivative? at mouseX
+    // Derivative? at mouseX. Tangent.
     double alpha = func(mouseX, derivative(coeffs));
     // Get the pt on the curve:
     int y = (int)func(mouseX, coeffs);

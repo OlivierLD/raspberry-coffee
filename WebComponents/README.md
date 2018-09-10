@@ -5,6 +5,8 @@
 - [HTML imports](http://w3c.github.io/webcomponents/spec/imports/)
 - [HTML templates](https://html.spec.whatwg.org/multipage/webappapis.html)
 - [Tutorial](https://auth0.com/blog/web-components-how-to-craft-your-own-custom-components/)
+- [Good resource](https://developers.google.com/web/fundamentals/web-components/customelements) also showing how to extend a WebComponent
+- [Templates & Imports](https://www.html5rocks.com/en/tutorials/webcomponents/imports/)
 
 ---
 
