@@ -86,7 +86,7 @@ function fetch() {
 
 /**
  *
- * @param when UTC, Duration format: like /home/olediour/.cache/yarn/v1
+ * @param when UTC, Duration format: like "Y-m-dTH:i:s" -> 2018-09-10T10:09:00
  * @param position { lat: 37.7489, lng: -122.507 }
  * @param wandering true|false
  * @param stars true|false
@@ -111,7 +111,7 @@ function getSkyGP(when, position, wandering, stars) {
 
 /**
  *
- * @param when UTC, Duration format: like /home/olediour/.cache/yarn/v1
+ * @param when UTC, Duration format: like "Y-m-dTH:i:s" -> 2018-09-10T10:09:00
  * @param position { lat: 37.7489, lng: -122.507 }
  * @param wandering true|false
  * @param stars true|false
