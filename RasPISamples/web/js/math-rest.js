@@ -4,14 +4,22 @@
 const DEFAULT_TIMEOUT = 60000; // 1 minute
 /* global events */
 
+function postSmooth(payload) {
+	return getPromise('/math/smooth', DEFAULT_TIMEOUT, 'POST', 201, payload, false);
+}
+
 /* Uses ES6 Promises */
-function getPromise(
-		url,                          // full api path
-		timeout,                      // After that, fail.
-		verb,                         // GET, PUT, DELETE, POST, etc
-		happyCode,                    // if met, resolve, otherwise fail.
-		data,                         // payload, when needed (PUT, POST...)
-		show) {                       // Show the traffic [true]|false
+/**
+ *
+ * @param url full api path
+ * @param timeout After that, fail.
+ * @param verb GET, PUT, DELETE, POST, etc
+ * @param happyCode if met, resolve, otherwise fail.
+ * @param data payload, when needed (PUT, POST...)
+ * @param show Show the traffic [true]|false
+ * @returns {Promise<any>}
+ */
+function getPromise(url, timeout, verb, happyCode, data, show) {
 	if (show === undefined) {
 		show = true;
 	}
@@ -58,10 +66,6 @@ function getPromise(
 	return promise;
 }
 
-function postSmooth(payload) {
-	return getPromise('/math/smooth', DEFAULT_TIMEOUT, 'POST', 201, payload, false);
-}
-
 function smooth(payload, cb) {
 	let requestSmoothing = postSmooth(payload);
 	requestSmoothing.then(function (value) { // Resolve
@@ -82,7 +86,7 @@ function smooth(payload, cb) {
 }
 
 function postGuessSmooth(payload) {
-	return getPromise('/math/intelligent-smooth', 1000 * DEFAULT_TIMEOUT, 'POST', 201, payload, true); // give it some time...
+	return getPromise('/math/intelligent-smooth', 10 * DEFAULT_TIMEOUT, 'POST', 201, payload, true); // give it some time...
 }
 
 function guessSmooth(payload, cb) {
