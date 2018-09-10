@@ -102,6 +102,8 @@ If you are having trouble running the WebComponents in Firefox 58, see
 #### Transpilation - Warning: could not get it to work correctly.
 Use `babel`, as explained [here](https://babeljs.io/docs/usage/cli/).
 
+Also, there is a [transpiler on-line](http://babeljs.io/en/repl.html), that works correctly.
+
 ```bash
  $ npm install --save-dev babel-cli babel-preset-env
 ```

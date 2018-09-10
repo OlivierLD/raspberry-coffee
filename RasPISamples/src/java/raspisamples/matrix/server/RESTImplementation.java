@@ -95,7 +95,7 @@ public class RESTImplementation {
 			// For dev phase
 			new Operation(
 					"GET",
-					MATH_PREFIX + "/random-system-input", // QS Prm: dim
+					MATH_PREFIX + "/random-system-input",
 					this::getRandomSystemInput,
 					"Return a randomly generated system input. 'dim' as QueryString parameter.")
 	);

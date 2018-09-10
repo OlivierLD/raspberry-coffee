@@ -25,6 +25,9 @@ final int BLACK =   0;
 final int BLUE = color(0, 0, 255);
 final int RED = color(255, 0, 0);
 final int GREEN = color(0, 102, 0); // It's a dark green.
+final int CYAN = color(0, 255, 255);
+
+final int TG_COLOR = GREEN;
 
 final int BUTTON_COLOR = BLACK;
 final int BUTTON_HIGHLIGHT = color(128);
@@ -84,8 +87,11 @@ float degToSliderPos(int d) {
 int prevDegree = 0;
 
 void draw() {
-  background(WHITE);
-  fill(BLACK);
+//background(WHITE);
+//fill(BLACK);
+
+  background(color(200));
+  fill(WHITE);
 
   requiredSmoothingDegree = sliderToDegValue();
   text("Drag the mouse to spray points, then click [Resolve]. Degree is " + String.valueOf(requiredSmoothingDegree), 10, height - 50);
@@ -121,7 +127,7 @@ void draw() {
     double alpha = func(mouseX, derivative(coeffs));
     // Get the pt on the curve:
     int y = (int)func(mouseX, coeffs);
-    stroke(GREEN);
+    stroke(TG_COLOR);
     double angle = Math.atan(alpha);
     double deltaY = HALF_TG * Math.sin(angle);
     double deltaX = HALF_TG * Math.cos(angle);
