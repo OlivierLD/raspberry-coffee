@@ -80,7 +80,7 @@ function smooth(payload, cb) {
 }
 
 function postGuessSmooth(payload) {
-	return getPromise('/math/intelligent-smooth', 1000 * DEFAULT_TIMEOUT, 'POST', 201, payload, false); // give it some time...
+	return getPromise('/math/intelligent-smooth', 1000 * DEFAULT_TIMEOUT, 'POST', 201, payload, true); // give it some time...
 }
 
 function guessSmooth(payload, cb) {
@@ -91,14 +91,18 @@ function guessSmooth(payload, cb) {
 			let json = JSON.parse(value);
 			if (cb !== undefined) {
 				cb(json);
+				document.body.style.cursor = 'default';
 			} else {
 				console.log("Smoothing result:", json);
+				document.body.style.cursor = 'default';
 			}
 		} catch (err) {
 			console.log("Error:", err, ("\nfor value [" + value + "]"));
+			document.body.style.cursor = 'default';
 		}
 	}, function (error) { // Reject
 		console.log("Failed to get smoothed data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+		document.body.style.cursor = 'default';
 	});
 }
 

@@ -162,13 +162,34 @@ public class PolynomUtil {
 
 	/**
 	 *
+	 * First this program receives coefficients.
+	 * Then it divides all the coefficients with the coefficient of the highest degree.
+	 *
+	 * Then this gets the derivative of the given equation
+	 * until this gets the linear equation.
+	 *
+	 * With the root of linear equation, this separates the set of real number
+	 * into two parts.
+	 * Then this approximates the root of primitive equation (quadratic)
+	 *
+	 * With the root of quadratic equation, this separates the set of real number
+	 * into three parts.
+	 * Then this approximates the root of primitive equation (cubic)
+	 *
+	 * (some repetitions...)
+	 *
+	 * With the root of (n-1)th degree equation, this separates the set of real number
+	 * into n parts.
+	 * Then this approximate the root of the original equation (nth degree)
+	 *
 	 * @param coeff highest degree first
 	 * @return
 	 */
 	public static List<Double> getPolynomRoots(double[] coeff) {
 		double[] pCoeff = new double[coeff.length - 1];
+		assert(coeff.length > 0 && coeff[0] != 0);
 		for (int i=1; i<coeff.length; i++) {
-			pCoeff[i-1] = coeff[i] / coeff[0]; // TODO Check/assert if coeff[0] != 0
+			pCoeff[i-1] = coeff[i] / coeff[0];
 		}
 		List<Double> roots = new ArrayList<>();
 
@@ -307,7 +328,7 @@ public class PolynomUtil {
 	public static void main(String[] args) {
 		double[] polynomial = new double[] { -1, -1, 12.34, 6 };
 		System.out.println(String.format("Roots of %s:", display(polynomial)));
-		List<Double> roots = getPolynomRoots(polynomial);
+		List<Double> roots = getPolynomRoots(reduce(polynomial));
 		if (roots.size() == 0) {
 			System.out.println("no root");
 		} else {

@@ -24,10 +24,12 @@ do
 done
 #
 HTTP_VERBOSE=false
+MATH_REST_VERBOSE=true
 #
 CP=./build/libs/RasPISamples-1.0-all.jar
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
+JAVA_OPTS="$JAVA_OPTS -Dmath.rest.verbose=$MATH_REST_VERBOSE"
 #
 if [ "$USE_PROXY" == "true" ]
 then
@@ -40,6 +42,7 @@ then
 fi
 #
 echo -e "Using properties:$JAVA_OPTS"
+echo -e "Try to run http://localhost:1234/web/smoothing.rest.html from a browser"
 #
 java -cp $CP $JAVA_OPTS raspisamples.matrix.server.MathServer
 #

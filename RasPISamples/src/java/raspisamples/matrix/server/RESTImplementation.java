@@ -12,9 +12,9 @@ import raspisamples.matrix.SquareMatrix;
 import raspisamples.matrix.SystemUtil;
 
 import java.io.StringReader;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,17 +25,13 @@ import java.util.concurrent.atomic.AtomicReference;
  * This class defines the REST operations supported by the HTTP Server.
  * <p>
  * This list is defined in the <code>List&lt;Operation&gt;</code> named <code>operations</code>.
- * <br>
- * Those operation mostly retrieve the state of the SunFlower class, and device.
- * <br>
- * The SunFlower will use the {@link #processRequest(Request)} method of this class to
- * have the required requests processed.
  * </p>
  */
 public class RESTImplementation {
 
-	private MathRequestManager mathRequestManager;
+	private boolean verbose = "true".equals(System.getProperty("math.rest.verbose"));
 
+	private MathRequestManager mathRequestManager;
 	private final static String MATH_PREFIX = "/math";
 
 	public RESTImplementation(MathRequestManager restRequestManager) {
@@ -425,18 +421,39 @@ public class RESTImplementation {
 			BestSmoothRequest options;
 			try {
 				options = gson.fromJson(stringReader, BestSmoothRequest.class);
-//				double minX = options.points.stream().min(Comparator.comparing(PolynomUtil.Point::getX)).get().getX();
-//				double maxX = options.points.stream().max(Comparator.comparing(PolynomUtil.Point::getX)).get().getX();
 				Map<Integer, Double> minimalDistances = new HashMap<>();
 				Map<Integer, double[]> coeffs = new HashMap<>();
+				long before = 0L;
 				for (int degree=options.degreeMin; degree<=options.degreeMax; degree++) {
+					if (verbose) {
+						System.out.println(String.format("------------- D E G R E E  %d ---------------------", degree));
+						System.out.println(String.format("IntelligentSmooth: Smoothing, degree %d, %d points.", degree, options.points.size()));
+						before = System.currentTimeMillis();
+					}
 					double[] solution = SystemUtil.smooth(options.points, degree);
+					if (verbose) {
+						System.out.println(String.format("IntelligentSmooth: Smooth took %s ms. Calculating minimal distances, degree %d, %d points.",
+								NumberFormat.getInstance().format(System.currentTimeMillis() - before),
+								degree,
+								options.points.size()));
+						before = System.currentTimeMillis();
+					}
 					AtomicReference<Double> acc = new AtomicReference<>(0d);
 					options.points.stream().forEach(pt -> {
 						acc.getAndAccumulate(SystemUtil.minDistanceToCurve(solution, pt), Double::sum);
 					});
+					if (verbose) {
+						System.out.println(String.format("IntelligentSmooth: MinDist took %s ms. Degree %d, min Acc: %f, AVG: %f",
+								NumberFormat.getInstance().format(System.currentTimeMillis() - before),
+								degree,
+								acc.get(),
+								(acc.get() / options.points.size())));
+					}
 					minimalDistances.put(degree, acc.get());
 					coeffs.put(degree, solution);
+				}
+				if (verbose) {
+					System.out.println("----------------------------------------------------");
 				}
 				// Find smallest dist
 				Map.Entry<Integer, Double> min = null;

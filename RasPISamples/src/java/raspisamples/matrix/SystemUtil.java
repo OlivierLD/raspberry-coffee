@@ -115,7 +115,7 @@ public class SystemUtil {
 		double[] part22 = PolynomUtil.derivative(curve);
 		double[] part2 = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
 		double[] full = PolynomUtil.add(part1, part2);
-		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(full);
+		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(PolynomUtil.reduce(full));
 		if (polynomRoots.size() == 0) {
 			System.out.println("no root"); // TODO Throw exceptipon
 		} else {
@@ -236,7 +236,7 @@ public class SystemUtil {
 		System.out.println(funcToString("y", coeff));
 		double x = 3.4;
 		System.out.println(String.format("for %s, x=%f, f(x)=%f", funcToString("f(x)", coeff).trim(), x, PolynomUtil.f(coeff, x)));
-		List<Double> roots = PolynomUtil.getPolynomRoots(coeff);
+		List<Double> roots = PolynomUtil.getPolynomRoots(PolynomUtil.reduce(coeff));
 		if (roots.size() == 0) {
 			System.out.println("no root");
 		} else {
@@ -269,7 +269,7 @@ public class SystemUtil {
 		double[] part2  = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
 		double[] full   = PolynomUtil.add(part1, part2);
 		System.out.println("Resolving: " + PolynomUtil.display(full));
-		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(full);
+		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(PolynomUtil.reduce(full));
 		if (polynomRoots.size() == 0) {
 			System.out.println("no root");
 		} else {
