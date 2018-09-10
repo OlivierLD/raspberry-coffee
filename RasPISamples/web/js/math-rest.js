@@ -1,4 +1,6 @@
-
+/**
+ * @author Olivier LeDiouris
+ */
 const DEFAULT_TIMEOUT = 60000; // 1 minute
 /* global events */
 

@@ -102,22 +102,32 @@ public class SystemUtil {
 		//<=> distance^2 = (deltaX^2 + deltaY^2)
 		// = (x - ptX)^2 + (f(x) - ptY)^2
 		// Derivative: [2*(x-ptX)] + [2*(f(x) - ptY)*(f'(x))]
+		//              |-------|     |--+--------+---+--+-|
+		//              |             |  |--------|   |--|
 		//              |             |  |            |
 		//              |             |  |            2-2
 		//              |             |  2-1
 		//              |             Part 2
 		//              Part 1
-		// Needed: polynomial addition, multiplication
+		// Minimal distance is the smallest of the roots of the derivative above.
 
+		// 2*(x-ptX)
 		double[] part1 = PolynomUtil.multiply(new double[] { 1, -pt.x }, new double[] { 2 });
 
+		// (f(x) - ptY)
 		double[] part21 = PolynomUtil.add(curve, new double[] { -pt.y });
+		// f'(x)
 		double[] part22 = PolynomUtil.derivative(curve);
+		// 2 * (f(x) - ptY) * (f'(x))
 		double[] part2 = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
-		double[] full = PolynomUtil.add(part1, part2);
-		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(PolynomUtil.reduce(full));
+		// [2 * (x-ptX)] + [2 * (f(x) - ptY) * (f'(x))]
+		double[] full = PolynomUtil.reduce(PolynomUtil.add(part1, part2));
+		if ("true".equals(System.getProperty("system.verbose"))) {
+			System.out.println(String.format(">> minDistanceToCurve, resolving %s", PolynomUtil.display(full)));
+		}
+		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(full);
 		if (polynomRoots.size() == 0) {
-			System.out.println("no root"); // TODO Throw exceptipon
+			throw new RuntimeException("no root");
 		} else {
 			for (double r : polynomRoots) {
 				dist = Math.min(dist, PolynomUtil.dist(curve, r, pt));
@@ -250,16 +260,17 @@ public class SystemUtil {
 		System.out.println("Minimal distance:");
 		double[] curve = new double[] { -1, 0, 6 };
 		PolynomUtil.Point pt = new PolynomUtil.Point().x(0).y(3);
-		// distance pt = curve = distance between (x, f(x)) and (0, 3)
+		// distance pt - curve = distance between (x, f(x)) and (0, 3)
 		// = (deltaX^2 + deltaY^2)^(1/2)
 		//<=> distance^2 = (deltaX^2 + deltaY^2)
 		// = (x - ptX)^2 + (f(x) - ptY)^2
 		// Derivative: [2*(x-ptX)] + [2*(f(x) - ptY)*(f'(x))]
 		//              |             |  |            |
-		//              |             |  |            2-2
-		//              |             |  2-1
+		//              |             |  |            Part 2-2
+		//              |             |  Part 2-1
 		//              |             Part 2
 		//              Part 1
+		// Minimal distance is the smallest of the roots of the derivative above.
 		// Needed: polynomial addition, multiplication
 
 		double[] part1 = PolynomUtil.multiply(new double[] { 1, -pt.x }, new double[] { 2 });
@@ -281,6 +292,21 @@ public class SystemUtil {
 		// Min dist to curve
 		System.out.println();
 		double minDist = minDistanceToCurve(curve, pt);
-		System.out.println(String.format("Minimal distance from (%f, %f) to curve %s is %f", pt.x, pt.y, PolynomUtil.display(curve), minDist));
+		System.out.println(String.format("Minimal distance from %s to curve %s is %f", formatPoint(pt), PolynomUtil.display(curve), minDist));
+	}
+
+	private static String formatPoint(PolynomUtil.Point pt) {
+		String formatted = "";
+		if (pt.x == (long)pt.x) {
+			formatted += String.format("(%d, ", (long)pt.x);
+		} else {
+			formatted += String.format("(%f, ", pt.x);
+		}
+		if (pt.y == (long)pt.y) {
+			formatted += String.format("%d)", (long)pt.y);
+		} else {
+			formatted += String.format("%f)", pt.y);
+		}
+		return formatted;
 	}
 }

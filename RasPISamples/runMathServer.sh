@@ -8,7 +8,7 @@ echo -e "----------------------------"
 #
 echo -e "Starting the Math Rest Server"
 USE_PROXY=false
-HTTP_PORT=
+HTTP_PORT=1234
 #
 for ARG in "$@"
 do
@@ -25,11 +25,13 @@ done
 #
 HTTP_VERBOSE=false
 MATH_REST_VERBOSE=true
+SYSTEM_VERBOSE=true
 #
 CP=./build/libs/RasPISamples-1.0-all.jar
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dhttp.verbose=$HTTP_VERBOSE"
 JAVA_OPTS="$JAVA_OPTS -Dmath.rest.verbose=$MATH_REST_VERBOSE"
+JAVA_OPTS="$JAVA_OPTS -Dsystem.verbose=$SYSTEM_VERBOSE"
 #
 if [ "$USE_PROXY" == "true" ]
 then
@@ -42,7 +44,7 @@ then
 fi
 #
 echo -e "Using properties:$JAVA_OPTS"
-echo -e "Try to run http://localhost:1234/web/smoothing.rest.html from a browser"
+echo -e "Try to run http://localhost:$HTTP_PORT/web/smoothing.rest.html from a browser"
 #
 java -cp $CP $JAVA_OPTS raspisamples.matrix.server.MathServer
 #

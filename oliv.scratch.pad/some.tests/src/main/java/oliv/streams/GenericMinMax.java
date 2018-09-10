@@ -44,7 +44,7 @@ public class GenericMinMax {
 
 		double minX = pointList
 				.stream()
-				.min(Comparator.comparing(Point::getX)) // Compare on that method's output. No AtomicXXX needed.
+				.min(Comparator.comparing(Point::getX)) // Compare on that method's output.
 				.get()
 				.getX();
 

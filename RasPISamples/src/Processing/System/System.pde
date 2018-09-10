@@ -89,7 +89,7 @@ void draw() {
 
   requiredSmoothingDegree = sliderToDegValue();
   text("Drag the mouse to spray points, then click [Resolve]. Degree is " + String.valueOf(requiredSmoothingDegree), 10, height - 50);
-  text("Use the slider to change the degree of the curve to calculate", 10, height - 30);
+  text("Use the slider (or left and right arrows) to change the degree of the curve to calculate", 10, height - 30);
 
   hsbDegree.update();
   hsbDegree.display();
@@ -210,8 +210,13 @@ void mousePressed() {
   }
 }
 
+int sprayRadius = 10;
 void mouseDragged() {
-  points.add(new Point(mouseX, mouseY));
+  for (int i=0; i<20; i++) {
+    int offsetX = (int)Math.round(sprayRadius * Math.random()) * (millis() % 2 == 0 ? 1 : -1);
+    int offsetY = (int)Math.round(sprayRadius * Math.random()) * (millis() % 2 == 0 ? 1 : -1);
+    points.add(new Point(mouseX + offsetX, mouseY + offsetY));
+  }
   println(String.format("Now %d point(s) in the buffer", points.size()));
 }
 
@@ -287,12 +292,16 @@ void smooth() {
   println(out);
   println(String.format("From %d points", points.size()));
   coeffs = result; // For the drawing
-  // TODO Compute the sum of the min dist from points to the curve
-  double acc = 0;
-  for (int i=0; i<points.size(); i++) {
-    double dist = PolynomialUtil.minDistanceToCurve(coeffs, points.get(i).x, points.get(i).y);
-    acc += dist;
+  
+  boolean withMinDist = false;
+  if (withMinDist) {
+    // Compute the sum of the min dist from points to the curve
+    double acc = 0;
+    for (int i=0; i<points.size(); i++) {
+      double dist = PolynomialUtil.minDistanceToCurve(coeffs, points.get(i).x, points.get(i).y);
+      acc += dist;
+    }
+    println(String.format("(canvas is %dx%d) Deg %d, MinDistAcc: %s", width, height, requiredSmoothingDegree, NumberFormat.getInstance().format(acc)));
+    println(String.format("Avg min distance: %f", acc / points.size()));
   }
-  println(String.format("(canvas is %dx%d) Deg %d, MinDistAcc: %s", width, height, requiredSmoothingDegree, NumberFormat.getInstance().format(acc)));
-  println(String.format("Avg min distance: %f", acc / points.size()));  
 }

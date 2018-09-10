@@ -83,11 +83,9 @@ public class PolynomUtil {
 			return roots;
 		}
 
-		// # There must be a unique root in an open interval
-		// # if the signs of both ends are different
-		// # by Intermediate Value Theorem
-		// # There are n+1 open intervals,
-		// # and each interval can have one or zero root.
+		// There must be a unique root in an open interval if the signs of both ends are different
+		// by Intermediate Value Theorem
+		// There are n+1 open intervals, and each interval can have one or zero root.
 		// Find root in each interval
 		double[] x = new double[n];
 		double[] fx = new double[n];
@@ -219,7 +217,7 @@ public class PolynomUtil {
 	}
 
 	/**
-	 *
+	 * Add two polynomials
 	 * @param a highest degree first
 	 * @param b highest degree first
 	 * @return
@@ -236,7 +234,7 @@ public class PolynomUtil {
 	}
 
 	/**
-	 *
+	 * Multiply two polynomials.
 	 * @param a highest degree first
 	 * @param b highest degree first
 	 * @return
@@ -260,8 +258,8 @@ public class PolynomUtil {
 
 	/**
 	 * Derivative of a polynomial function
-	 * @param coeff
-	 * @return
+	 * @param coeff highest degree first
+	 * @return derivative's coeffs.
 	 */
 	public static double[] derivative(double[] coeff) {
 		int dim = coeff.length - 1;
@@ -276,7 +274,7 @@ public class PolynomUtil {
 	 * y = f(x)
 	 * @param curveCoeff highest degree first
 	 * @param x
-	 * @return
+	 * @return f(x)
 	 */
 	public static double f(double curveCoeff[], double x) {
 		double y = 0;
@@ -312,6 +310,13 @@ public class PolynomUtil {
 		}
 	}
 
+	/**
+	 * Distance between a point and a curve fior a given abscissa.
+	 * @param coeff curve's coeffs, highest degree first
+	 * @param x abscissa
+	 * @param pt point
+	 * @return
+	 */
 	public static double dist(double[] coeff, double x, Point pt) {
 		double y = f(reduce(coeff), x);
 		return Math.sqrt(Math.pow(x - pt.x, 2) + Math.pow(y - pt.y, 2));
@@ -320,7 +325,11 @@ public class PolynomUtil {
 	public static String display(double[] p) {
 		String display = "";
 		for (int i=0; i<p.length; i++) {
-			display += (String.format("%+f%s ", p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i))))));
+			if (p[i] == (long)p[i]) {
+				display += (String.format("%+d%s ", (long)p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i))))));
+			} else {
+				display += (String.format("%+f%s ", p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i))))));
+			}
 		}
 		return display;
 	}
@@ -357,7 +366,7 @@ public class PolynomUtil {
 		// Reduce
 		System.out.println("Reduced: " + display(reduce(new double[] { 0, 1, 2, 3 })));
 		try {
-			System.out.println("Reduced: " + display(reduce(new double[] { 0, 0, 0, 0 })));
+			System.out.println("Reduced: " + display(reduce(new double[] { 0, 0, 0, 0 }))); // Throws Exception
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
