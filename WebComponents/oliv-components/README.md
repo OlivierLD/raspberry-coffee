@@ -1,3 +1,5 @@
+[<< Back](../README.md)
+
 ## Oliv's Web Components
 
 > Note: _Those components requires **absolutely NO** external library._
@@ -27,6 +29,8 @@ After starting the `node` server as mentioned above, you can also reach
 - [http://localhost:8080/oliv-components/mirror.html](http://localhost:8080/oliv-components/mirror.html), the basis for an Head-Up Display (HUD) application.
 - [http://localhost:8080/oliv-components/pwm.html](http://localhost:8080/oliv-components/pwm.html), for an explanation about how Pulse Width Modulation works.
 
+### Hosted
+- See it live [here](http://raspberrypi.lediouris.net/webcomponents/index.html).
 
 ### Components list
 - Pluviometer. &#9989; Done.
