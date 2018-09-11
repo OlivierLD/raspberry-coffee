@@ -1,6 +1,7 @@
 ## Oliv's Web Components
 
 > Note: _Those components requires **absolutely NO** external library._
+> (No Knockout, Require, jQuery, etc).
 
 > But EcmaScript6 (ES6) is required.
 
