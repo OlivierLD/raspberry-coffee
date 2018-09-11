@@ -1,0 +1,50 @@
+<script>
+	// Define and register <say-hi>.
+	let proto = Object.create(HTMLElement.prototype);
+
+	proto.createdCallback = function() {
+		this.innerHTML = 'Hello, <b>' +
+				(this.getAttribute('name') || '?') + '</b>';
+	};
+
+	document.registerElement('say-hi', {prototype: proto});
+</script>
+
+<!--
+ | The ::content pseudo-element is being replaced in future implementations of Web Components / Shadow DOM with the ::slotted.
+ | Likewise, the element targeted by this pseudo-element has changed from <content to <slot> in the latest version of the Shadow DOM specification.
+ |
+ | Currently browsers still support <content> and ::content.
+ +-->
+<template id="t">
+	<style>
+		::content > * {
+			color: red;
+		}
+	</style>
+	<span>, I'm a shadow-element using Shadow DOM!</span>
+	<content></content>
+</template>
+
+<script>
+	(function() {
+		let importDoc = document.currentScript.ownerDocument; // importee
+
+		// Define and register <shadow-element>
+		// that uses Shadow DOM and a template.
+		let proto2 = Object.create(HTMLElement.prototype);
+
+		proto2.createdCallback = function() {
+			// get template in import
+			let template = importDoc.querySelector('#t');
+
+			// import template into
+			let clone = document.importNode(template.content, true);
+
+			let root = this.createShadowRoot();
+			root.appendChild(clone);
+		};
+
+		document.registerElement('shadow-element', {prototype: proto2});
+	})();
+</script>
