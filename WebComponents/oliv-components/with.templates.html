@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Using templates</title>
+
+	<link rel="icon" type="image/png" href="../logo-192x192.png">
+
+	<link rel="stylesheet" href="css/stylesheet.css">
+	<link rel="stylesheet" href="css/web-components.css">
+
+	<script type="module" src="widgets/WorldMap.js"></script>
+	<script type="module" src="widgets/SplitFlapDisplay.js"></script>
+
+	<link id="import-01" rel="import" href="templates/world.map.template.html">
+	<link id="import-02" rel="import" href="templates/split.flap.template.html">
+
+	<style>
+		html {
+			height: 100%;
+		}
+
+		body {
+			color: gray;
+			font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
+			/* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
+			background: radial-gradient(at top, red -8%, orange 55%);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+		}
+
+		.black-frame {
+			padding: 3px;
+			margin: 1px;
+			border-radius: 5px;
+			border: 1px solid silver;
+			box-shadow: 3px 3px #ccc;
+		}
+
+		.centered {
+			text-align: center;
+		}
+
+	</style>
+</head>
+<body>
+
+	<h1 class="black-frame">This is a Web Component in an HTML Template</h1>
+
+  <div id="world-map-placeholder"></div>
+
+	<div id="split-flap-placeholder"></div>
+
+  <script>
+//  var link = document.querySelector('link[rel="import"]'); // OK when there is only one...
+		var linkWM = document.querySelector('link[rel="import"][id="import-01"]');
+		var contentWM = linkWM.import;
+
+		var linkSF = document.querySelector('link[rel="import"][id="import-02"]');
+		var contentSF = linkSF.import;
+
+		// Grab DOMs from the templates.
+		var wm = contentWM.querySelector('#world-map-id');
+		document.getElementById("world-map-placeholder").appendChild(wm.cloneNode(true));
+
+		var sf = contentSF.querySelector('#split-flap-id');
+		document.getElementById("split-flap-placeholder").appendChild(sf.cloneNode(true));
+  </script>
+	<hr/>
+	<small>
+		Take a look at the page source, it's really worth it.
+	</small>
+
+</body>
+</html>
