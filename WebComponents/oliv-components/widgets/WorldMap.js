@@ -588,8 +588,8 @@ class WorldMap extends HTMLElement {
 		let dec = absVal - intValue;
 		let i = intValue;
 		dec *= 60;
-//    var s = i + "°" + dec.toFixed(2) + "'";
-//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+//    let s = i + "°" + dec.toFixed(2) + "'";
+//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
 		let s = "";
 		if (ns_ew !== undefined) {
 			if (val < 0) {
@@ -742,7 +742,7 @@ class WorldMap extends HTMLElement {
 				gAmpl += 360;
 			}
 			let graph2chartRatio = this.width / gAmpl;
-			var _lng = lng;
+			let _lng = lng;
 			if (Math.abs(this.west) > 180 && Math.sign(_lng) !== Math.sign(this.west) && Math.sign(this.lng) > 0) {
 				_lng -= 360;
 			}
@@ -768,7 +768,7 @@ class WorldMap extends HTMLElement {
 	 * @returns {number}
 	 */
 	static haToLongitude(ha) {
-		var lng = - ha;
+		let lng = - ha;
 		if (lng < -180) {
 			lng += 360;
 		}
@@ -1263,10 +1263,10 @@ class WorldMap extends HTMLElement {
 							context.stroke();
 							context.closePath();
 							// if (false) {
-							// 	var img = document.getElementById("sun-png"); // 13x13
-							// 	var direction = getDir(deltaX, -deltaY);
-							// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
-							// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
+							// 	let img = document.getElementById("sun-png"); // 13x13
+							// 	let direction = getDir(deltaX, -deltaY);
+							// 	let imgXOffset = 7 * Math.sin(toRadians(direction));
+							// 	let imgYOffset = 7 * Math.cos(toRadians(direction));
 							// 	context.drawImage(img, sun.x + deltaX + Math.ceil(imgXOffset), sun.y + deltaY - Math.ceil(imgYOffset));
 							// } else {
 							WorldMap.fillCircle(context, {x: sun.x + deltaX, y: sun.y + deltaY}, 6, this.worldmapColorConfig.sunColor);
@@ -1305,18 +1305,18 @@ class WorldMap extends HTMLElement {
 							context.closePath();
 							context.setLineDash([0]); // Reset
 							context.strokeStyle = this.worldmapColorConfig.moonColor;
-							var deltaX = moon.x - userPos.x;
-							var deltaY = moon.y - userPos.y;
+							let deltaX = moon.x - userPos.x;
+							let deltaY = moon.y - userPos.y;
 							context.beginPath();
 							context.moveTo(moon.x, moon.y);
 							context.lineTo(moon.x + deltaX, moon.y + deltaY);
 							context.stroke();
 							context.closePath();
 							// if (false) {
-							// 	var img = document.getElementById("moon-png");
-							// 	var direction = getDir(deltaX, -deltaY);
-							// 	var imgXOffset = 7 * Math.sin(toRadians(direction));
-							// 	var imgYOffset = 7 * Math.cos(toRadians(direction));
+							// 	let img = document.getElementById("moon-png");
+							// 	let direction = getDir(deltaX, -deltaY);
+							// 	let imgXOffset = 7 * Math.sin(toRadians(direction));
+							// 	let imgYOffset = 7 * Math.cos(toRadians(direction));
 							// 	context.drawImage(img, moon.x + deltaX + Math.ceil(imgXOffset), moon.y + deltaY - Math.ceil(imgYOffset));
 							// } else {
 							WorldMap.fillCircle(context, {x: moon.x + deltaX, y: moon.y + deltaY}, 5, this.worldmapColorConfig.moonColor);
@@ -1339,10 +1339,10 @@ class WorldMap extends HTMLElement {
 						this.positionBody(context, userPos, this.worldmapColorConfig.ariesColor, "Anti-Aries", 0, aries.gha + 180, false); // Libra?
 					}
 					// 2 - Other planets
-					var venus = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
-					var mars = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
-					var jupiter = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
-					var saturn = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
+					let venus = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
+					let mars = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
+					let jupiter = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
+					let saturn = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
 					if (venus !== null) {
 						this.positionBody(context, userPos, this.worldmapColorConfig.venusColor, "Venus", venus.decl, venus.gha);
 					}
@@ -1387,7 +1387,7 @@ class WorldMap extends HTMLElement {
 	}
 
 	static calculateEastG(nLat, sLat, wLong, canvasW, canvasH) {
-		var deltaIncLat =  WorldMap.getIncLat(nLat) - WorldMap.getIncLat(sLat);
+		let deltaIncLat =  WorldMap.getIncLat(nLat) - WorldMap.getIncLat(sLat);
 
 		let graphicRatio = canvasW / canvasH;
 		let deltaG = Math.min(deltaIncLat * graphicRatio, 359);
@@ -1733,7 +1733,7 @@ class WorldMap extends HTMLElement {
 
 //    console.log("Found " + section.length + " section(s).")
 		for (let i = 0; i < section.length; i++) {
-			var point = section[i].point;
+			let point = section[i].point;
 			let firstPt = null;
 			let previousPt = null;
 			if (point !== undefined) {

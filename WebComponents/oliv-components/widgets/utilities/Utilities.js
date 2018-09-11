@@ -51,8 +51,8 @@ export function decToSex(val, ns_ew) {
 	let dec = absVal - intValue;
 	let i = intValue;
 	dec *= 60;
-//    var s = i + "°" + dec.toFixed(2) + "'";
-//    var s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
+//    let s = i + "°" + dec.toFixed(2) + "'";
+//    let s = i + String.fromCharCode(176) + dec.toFixed(2) + "'";
 	let s = "";
 	if (ns_ew !== undefined) {
 		if (val < 0) {

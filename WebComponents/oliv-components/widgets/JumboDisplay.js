@@ -220,7 +220,7 @@ class JumboDisplay extends HTMLElement {
 		this.canvas.width = this.width;
 		this.canvas.height = this.height;
 
-		var grd = context.createLinearGradient(0, 5, 0, this.height);
+		let grd = context.createLinearGradient(0, 5, 0, this.height);
 		grd.addColorStop(0, this.jumboColorConfig.displayBackgroundGradient.from); // 0  Beginning
 		grd.addColorStop(1, this.jumboColorConfig.displayBackgroundGradient.to);  // 1  End
 		context.fillStyle = grd;
@@ -229,11 +229,11 @@ class JumboDisplay extends HTMLElement {
 		this.roundRect(context, 0, 0, this.canvas.width, this.canvas.height, 10, true, false);
 		// Grid
 		//  1 - vertical
-		var nbVert = 5;
+		let nbVert = 5;
 		context.strokeStyle = this.jumboColorConfig.gridColor;
 		context.lineWidth = 0.5;
-		for (var i = 1; i < nbVert; i++) {
-			var x = i * (this.canvas.width / nbVert);
+		for (let i = 1; i < nbVert; i++) {
+			let x = i * (this.canvas.width / nbVert);
 			context.beginPath();
 			context.moveTo(x, 0);
 			context.lineTo(x, this.canvas.height);
@@ -241,9 +241,9 @@ class JumboDisplay extends HTMLElement {
 			context.stroke();
 		}
 		// 2 - Horizontal
-		var nbHor = 3;
-		for (var i = 1; i < nbHor; i++) {
-			var y = i * (this.canvas.height / nbHor);
+		let nbHor = 3;
+		for (let i = 1; i < nbHor; i++) {
+			let y = i * (this.canvas.height / nbHor);
 			context.beginPath();
 			context.moveTo(0, y);
 			context.lineTo(this.canvas.width, y);
