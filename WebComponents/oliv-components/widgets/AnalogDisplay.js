@@ -573,7 +573,7 @@ class AnalogDisplay extends HTMLElement {
 
 		// Label ?
 		if (this.label !== undefined) {
-			var fontSize = 20;
+			let fontSize = 20;
 			text = this.label;
 			len = 0;
 			context.font = "bold " + Math.round(scale * fontSize) + "px " + this.analogDisplayColorConfig.font; // "bold 40px Arial"

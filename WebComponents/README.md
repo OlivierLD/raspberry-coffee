@@ -1,6 +1,7 @@
 ## Bits and Pieces for WebComponents
 
 - [W3C Reference](http://w3c.github.io/webcomponents/spec/custom/)
+- [DOM Elements](https://www.w3.org/TR/DOM-Level-2-HTML/html.html)
 - [Shadow DOM Spec](https://w3c.github.io/webcomponents/spec/shadow/)
 - [HTML imports](http://w3c.github.io/webcomponents/spec/imports/)
 - [HTML templates](https://html.spec.whatwg.org/multipage/webappapis.html)

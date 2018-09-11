@@ -1,6 +1,9 @@
+[<< Back](../README.md)
+
 ## Oliv's Web Components
 
 > Note: _Those components requires **absolutely NO** external library._
+> (No Knockout, Require, jQuery, etc).
 
 > But EcmaScript6 (ES6) is required.
 
@@ -26,6 +29,8 @@ After starting the `node` server as mentioned above, you can also reach
 - [http://localhost:8080/oliv-components/mirror.html](http://localhost:8080/oliv-components/mirror.html), the basis for an Head-Up Display (HUD) application.
 - [http://localhost:8080/oliv-components/pwm.html](http://localhost:8080/oliv-components/pwm.html), for an explanation about how Pulse Width Modulation works.
 
+### Hosted
+- See it live [here](http://raspberrypi.lediouris.net/webcomponents/index.html).
 
 ### Components list
 - Pluviometer. &#9989; Done.
@@ -103,11 +108,12 @@ See the examples in this module.
 If you are having trouble running the WebComponents in Firefox 58, see
 [this document](https://www.designedbyaturtle.co.uk/2015/how-to-enable-web-components-in-firefox-shadow-dom/).
 
-#### Transpilation - Warning: could not get it to work correctly.
+#### Transpilation
 Use `babel`, as explained [here](https://babeljs.io/docs/usage/cli/).
 
-Also, there is a [transpiler on-line](http://babeljs.io/en/repl.html), that works correctly.
+There is also a [transpiler on-line](http://babeljs.io/en/repl.html), that works correctly.
 
+##### Scripted Transpilation
 ```bash
  $ npm install --save-dev babel-cli babel-preset-env
 ```
@@ -120,6 +126,8 @@ And run the transpilation:
  $ npx babel oliv-components/widgets --out-dir oliv-components/lib
 ```
 The `lib` directory now contains the transpiled files.
+
+> Warning: I could not get the Scripted Transpilation to work correctly.
 
 ---
 &copy; 2018, by Oliv Soft.

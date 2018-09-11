@@ -112,6 +112,9 @@ We will use the following programming languages:
     _A personal note:_ Java code through Processing seems easier (to me) than Python.
     Ramping up from Processing to Java is a natural and smooth move. Ramping up from Python to anything else is not...
     > _Note:_ Today (June 2018), Processing does not support (yet) Java 8 features (like lambdas, stream apis, etc).
+- [Mathematica](#mathematica)
+    - Not exactly a language, more like a computing environment, but definitely worth a look.
+    - Created by Stephen Wolfram, starting in 1986.
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -264,6 +267,8 @@ You can generate an executable from your Processing sketch.
 Open your sketch in Processing (here `System.pde`), then go to `File` > `Export Application`.
 Then choose your OS, and click `Export`. Then you have an executable ready to go!
 
+#### Mathematica
+TODO
 
 ### A bit of history, to predict the future
 In the scope we are considering here, the first to emerge was `C`. It is the `native` language of Unix,

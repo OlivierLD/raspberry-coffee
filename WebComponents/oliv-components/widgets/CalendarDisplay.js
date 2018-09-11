@@ -208,7 +208,7 @@ class CalendarDisplay extends HTMLElement {
 		this.canvas.width = this._width;
 		this.canvas.height = this._height;
 
-		var grd = context.createLinearGradient(0, 5, 0, this.height);
+		let grd = context.createLinearGradient(0, 5, 0, this.height);
 		grd.addColorStop(0, this.calendarColorConfig.displayBackgroundGradient.from); // 0  Beginning
 		grd.addColorStop(1, this.calendarColorConfig.displayBackgroundGradient.to);  // 1  End
 		context.fillStyle = grd;

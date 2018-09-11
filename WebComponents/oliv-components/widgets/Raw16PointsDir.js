@@ -113,7 +113,7 @@ class Raw16PointsDir extends HTMLElement {
 		}
 		switch (attrName) {
 			case "value":
-				for (var i=0; i<cardValues.length; i++) {
+				for (let i=0; i<cardValues.length; i++) {
 					if (cardValues[i].name === newVal) {
 						this._value = cardValues[i];
 						break;
@@ -287,7 +287,7 @@ class Raw16PointsDir extends HTMLElement {
 		context.closePath();
 
 		// LEDs
-		for (var led=0; led<cardValues.length; led++) {
+		for (let led=0; led<cardValues.length; led++) {
 			let angle = Utilities.toRadians(cardValues[led].value + 90);
 			// Led centrer
 			let xLedCenter = (this.width / 2) - ((radius * 0.95) * Math.cos(angle));

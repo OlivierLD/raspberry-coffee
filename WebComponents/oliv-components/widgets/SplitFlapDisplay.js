@@ -250,7 +250,7 @@ class SplitFlapDisplay extends HTMLElement {
 	}
 
 	drawOneFlap(context, char, x, y, w, h, scale) {
-		var grd = context.createLinearGradient(x, y, x + w, y + h);
+		let grd = context.createLinearGradient(x, y, x + w, y + h);
 		grd.addColorStop(0, this.splitFlapColorConfig.displayBackgroundGradient.from); // 0  Beginning
 		grd.addColorStop(1, this.splitFlapColorConfig.displayBackgroundGradient.to);   // 1  End
 
