@@ -7,7 +7,34 @@ import java.util.List;
 
 public class PolynomUtil {
 
-	private final static double precision = 1E-15;
+	private final static double precision = 1E-15; // Ca ira...
+
+	public static class Point {
+		double x;
+		double y;
+
+		public Point() {}
+		public Point(double x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		public Point x(double x) {
+			this.x = x;
+			return this;
+		}
+		public Point y(double y) {
+			this.y = y;
+			return this;
+		}
+
+		public double getX() {
+			return this.x;
+		}
+		public double getY() {
+			return this.y;
+		}
+	}
 
 	// Equation solving method
 	private static List<Double> getRoots(double... coef) {
@@ -56,11 +83,9 @@ public class PolynomUtil {
 			return roots;
 		}
 
-		// # There must be a unique root in an open interval
-		// # if the signs of both ends are different
-		// # by Intermediate Value Theorem
-		// # There are n+1 open intervals,
-		// # and each interval can have one or zero root.
+		// There must be a unique root in an open interval if the signs of both ends are different
+		// by Intermediate Value Theorem
+		// There are n+1 open intervals, and each interval can have one or zero root.
 		// Find root in each interval
 		double[] x = new double[n];
 		double[] fx = new double[n];
@@ -135,13 +160,34 @@ public class PolynomUtil {
 
 	/**
 	 *
+	 * First this program receives coefficients.
+	 * Then it divides all the coefficients with the coefficient of the highest degree.
+	 *
+	 * Then this gets the derivative of the given equation
+	 * until this gets the linear equation.
+	 *
+	 * With the root of linear equation, this separates the set of real number
+	 * into two parts.
+	 * Then this approximates the root of primitive equation (quadratic)
+	 *
+	 * With the root of quadratic equation, this separates the set of real number
+	 * into three parts.
+	 * Then this approximates the root of primitive equation (cubic)
+	 *
+	 * (some repetitions...)
+	 *
+	 * With the root of (n-1)th degree equation, this separates the set of real number
+	 * into n parts.
+	 * Then this approximate the root of the original equation (nth degree)
+	 *
 	 * @param coeff highest degree first
 	 * @return
 	 */
 	public static List<Double> getPolynomRoots(double[] coeff) {
 		double[] pCoeff = new double[coeff.length - 1];
+		assert(coeff.length > 0 && coeff[0] != 0);
 		for (int i=1; i<coeff.length; i++) {
-			pCoeff[i-1] = coeff[i] / coeff[0]; // TODO Check/assert if coeff[0] != 0
+			pCoeff[i-1] = coeff[i] / coeff[0];
 		}
 		List<Double> roots = new ArrayList<>();
 
@@ -171,7 +217,7 @@ public class PolynomUtil {
 	}
 
 	/**
-	 *
+	 * Add two polynomials
 	 * @param a highest degree first
 	 * @param b highest degree first
 	 * @return
@@ -188,7 +234,7 @@ public class PolynomUtil {
 	}
 
 	/**
-	 *
+	 * Multiply two polynomials.
 	 * @param a highest degree first
 	 * @param b highest degree first
 	 * @return
@@ -212,8 +258,8 @@ public class PolynomUtil {
 
 	/**
 	 * Derivative of a polynomial function
-	 * @param coeff
-	 * @return
+	 * @param coeff highest degree first
+	 * @return derivative's coeffs.
 	 */
 	public static double[] derivative(double[] coeff) {
 		int dim = coeff.length - 1;
@@ -228,7 +274,7 @@ public class PolynomUtil {
 	 * y = f(x)
 	 * @param curveCoeff highest degree first
 	 * @param x
-	 * @return
+	 * @return f(x)
 	 */
 	public static double f(double curveCoeff[], double x) {
 		double y = 0;
@@ -264,15 +310,26 @@ public class PolynomUtil {
 		}
 	}
 
-	public static double dist(double[] coeff, double x, double ptX, double ptY) {
+	/**
+	 * Distance between a point and a curve fior a given abscissa.
+	 * @param coeff curve's coeffs, highest degree first
+	 * @param x abscissa
+	 * @param pt point
+	 * @return
+	 */
+	public static double dist(double[] coeff, double x, Point pt) {
 		double y = f(reduce(coeff), x);
-		return Math.sqrt(Math.pow(x - ptX, 2) + Math.pow(y - ptY, 2));
+		return Math.sqrt(Math.pow(x - pt.x, 2) + Math.pow(y - pt.y, 2));
 	}
 
 	public static String display(double[] p) {
 		String display = "";
 		for (int i=0; i<p.length; i++) {
-			display += (String.format("%+f%s ", p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i))))));
+			if (p[i] == (long)p[i]) {
+				display += (String.format("%+d%s ", (long)p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i))))));
+			} else {
+				display += (String.format("%+f%s ", p[i], (i == (p.length - 1) ? "" : (i == (p.length - 2) ? " * x" : String.format(" * x^%d", (p.length - 1 - i))))));
+			}
 		}
 		return display;
 	}
@@ -280,7 +337,7 @@ public class PolynomUtil {
 	public static void main(String[] args) {
 		double[] polynomial = new double[] { -1, -1, 12.34, 6 };
 		System.out.println(String.format("Roots of %s:", display(polynomial)));
-		List<Double> roots = getPolynomRoots(polynomial);
+		List<Double> roots = getPolynomRoots(reduce(polynomial));
 		if (roots.size() == 0) {
 			System.out.println("no root");
 		} else {
@@ -309,7 +366,7 @@ public class PolynomUtil {
 		// Reduce
 		System.out.println("Reduced: " + display(reduce(new double[] { 0, 1, 2, 3 })));
 		try {
-			System.out.println("Reduced: " + display(reduce(new double[] { 0, 0, 0, 0 })));
+			System.out.println("Reduced: " + display(reduce(new double[] { 0, 0, 0, 0 }))); // Throws Exception
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

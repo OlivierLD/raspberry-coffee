@@ -2,6 +2,7 @@
 
 import java.util.List;
 import java.util.ArrayList;
+import java.text.NumberFormat;
 
 int requiredSmoothingDegree = 3;
 
@@ -24,6 +25,9 @@ final int BLACK =   0;
 final int BLUE = color(0, 0, 255);
 final int RED = color(255, 0, 0);
 final int GREEN = color(0, 102, 0); // It's a dark green.
+final int CYAN = color(0, 255, 255);
+
+final int TG_COLOR = GREEN;
 
 final int BUTTON_COLOR = BLACK;
 final int BUTTON_HIGHLIGHT = color(128);
@@ -54,7 +58,7 @@ boolean buttonClearOver = false;
 final int SLIDER_PADDING = 10;
 final int CURSOR_SIZE = 16;
 
-final int HALF_TG = 60;
+final int HALF_TG = 100;
 
 void setup() {
   size(640, 640);
@@ -83,12 +87,15 @@ float degToSliderPos(int d) {
 int prevDegree = 0;
 
 void draw() {
-  background(WHITE);
-  fill(BLACK);
+//background(WHITE);
+//fill(BLACK);
+
+  background(color(200));
+  fill(WHITE);
 
   requiredSmoothingDegree = sliderToDegValue();
   text("Drag the mouse to spray points, then click [Resolve]. Degree is " + String.valueOf(requiredSmoothingDegree), 10, height - 50);
-  text("Use the slider to change the degree of the curve to calculate", 10, height - 30);
+  text("Use the slider (or left and right arrows) to change the degree of the curve to calculate", 10, height - 30);
 
   hsbDegree.update();
   hsbDegree.display();
@@ -116,11 +123,11 @@ void draw() {
       }
       prevPt = new Point(x, y);
     }
-    // Derivative? at mouseX
+    // Derivative? at mouseX. Tangent.
     double alpha = func(mouseX, derivative(coeffs));
     // Get the pt on the curve:
     int y = (int)func(mouseX, coeffs);
-    stroke(GREEN);
+    stroke(TG_COLOR);
     double angle = Math.atan(alpha);
     double deltaY = HALF_TG * Math.sin(angle);
     double deltaX = HALF_TG * Math.cos(angle);
@@ -209,8 +216,13 @@ void mousePressed() {
   }
 }
 
+int sprayRadius = 10;
 void mouseDragged() {
-  points.add(new Point(mouseX, mouseY));
+  for (int i=0; i<20; i++) {
+    int offsetX = (int)Math.round(sprayRadius * Math.random()) * (millis() % 2 == 0 ? 1 : -1);
+    int offsetY = (int)Math.round(sprayRadius * Math.random()) * (millis() % 2 == 0 ? 1 : -1);
+    points.add(new Point(mouseX + offsetX, mouseY + offsetY));
+  }
   println(String.format("Now %d point(s) in the buffer", points.size()));
 }
 
@@ -286,11 +298,16 @@ void smooth() {
   println(out);
   println(String.format("From %d points", points.size()));
   coeffs = result; // For the drawing
-  // TODO Compute the sum of the min dist from points to the curve
-  double acc = 0;
-  for (int i=0; i<points.size(); i++) {
-    double dist = PolynomialUtil.minDistanceToCurve(coeffs, points.get(i).x, points.get(i).y);
-    acc += dist;
+  
+  boolean withMinDist = false;
+  if (withMinDist) {
+    // Compute the sum of the min dist from points to the curve
+    double acc = 0;
+    for (int i=0; i<points.size(); i++) {
+      double dist = PolynomialUtil.minDistanceToCurve(coeffs, points.get(i).x, points.get(i).y);
+      acc += dist;
+    }
+    println(String.format("(canvas is %dx%d) Deg %d, MinDistAcc: %s", width, height, requiredSmoothingDegree, NumberFormat.getInstance().format(acc)));
+    println(String.format("Avg min distance: %f", acc / points.size()));
   }
-  println(String.format("MinDistAcc:%f", acc));
 }

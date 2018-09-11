@@ -186,20 +186,20 @@ public class InFlightCompilation {
 
 	private static final String SAMPLE_CODE =
 			"package test;\n\n" +
-					"public class OlivTest {\n" +
-					"   public static void main(String... args) {\n" +
-					"      System.out.println(\"Output of program:\");\n" +
-					"      for (int i=0; i<10; i++) {\n" +
-					"         System.out.print(i + \" \");\n" +
-					"      }\n" +
-					"      System.out.println();\n" +
-					"      System.out.println(\"End of output.\");\n" +
-					"   }\n" +
-					"\n" +
-					"   public void sayHi(String name) {\n" +
-					"     System.out.println(\"Hi \" + name);\n" +
-					"   }\n" +
-					"}";
+			"public class OlivTest {\n" +
+			"   public static void main(String... args) {\n" +
+			"      System.out.println(\"Output of program:\");\n" +
+			"      for (int i=0; i<10; i++) {\n" +
+			"         System.out.print(i + \" \");\n" +
+			"      }\n" +
+			"      System.out.println();\n" +
+			"      System.out.println(\"End of output.\");\n" +
+			"   }\n" +
+			"\n" +
+			"   public void sayHi(String name) {\n" +
+			"     System.out.println(\"Hi \" + name);\n" +
+			"   }\n" +
+			"}";
 
 	public static void main(String... args) throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -281,17 +281,22 @@ public class InFlightCompilation {
 		// Override
 		String newCode =
 				"package test;\n" +
-						"\n" +
-						"public class extendedTest extends " + newClass.getName() + " {\n" +
-						//  "public class extendedTest extends test.MyClass\n" +
-						"  public void sayHi(String name) {\n" +
-						"    System.out.println(\"Hello Mr \" + name);\n" +
-						"  }\n" +
-						"  public String greetings(String name) {\n" +
-						"    return(\"Hello Mr \" + name);\n" +
-						"  }\n" +
-						"}";
+				"\n" +
+				"public class extendedTest extends " + newClass.getName() + " {\n" +
+		//  "public class extendedTest extends test.MyClass\n" +
+				"  public void sayHi(String name) {\n" +
+				"    System.out.println(\"Hello Mr \" + name);\n" +
+				"  }\n" +
+				"  public String greetings(String name) {\n" +
+				"    return(\"Hello Mr \" + name);\n" +
+				"  }\n" +
+				"}";
 		System.out.println("Compiling:\n" + newCode);
+
+		System.out.println();
+		System.out.println("+----------------------------------+");
+		System.out.println("| The following error is expected! |");
+		System.out.println("+----------------------------------+");
 
 		System.setOut(new PrintStream(baos));
 //  Class extendedClass = compileFromStringAndLoad("test", "extendedTest", "generated" + File.separator + "classes", newCode, null, true);

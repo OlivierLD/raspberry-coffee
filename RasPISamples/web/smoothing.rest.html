@@ -4,7 +4,7 @@
  +-->
 <html>
   <head>
-    <title>Smoothing ...</title>
+    <title>REST Smoothing ...</title>
     <script type="text/javascript" src="js/Graph.js"></script>
     <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
     <style>
@@ -63,11 +63,11 @@
       }
 
     </style>
-    <script type="text/javascript" src="js/matrix.js"></script>
+    <script type="text/javascript" src="js/math-rest.js"></script>
     <script type="text/javascript">
 
-        var dataGraph; // The graph itself.
-        var graphData = [];
+        let dataGraph; // The graph itself.
+        let graphData = [];
 //      var GRAPH_MAX_LEN = 300; // 60 = 1 minute
 
         window.onload = function() {
@@ -77,61 +77,93 @@
           dataGraph.drawPoints("dataCanvas", graphData);
         };
 
-        var goDrawing = function() {
-                var degreeStr = document.getElementById("degree").value;
+        function goDrawing() {
+                let degreeStr = document.getElementById("degree").value;
                 if (degreeStr.trim().length === 0) {
                    alert("Please provide the degree of the polynomial to find (as a positive integer)");
                 } else {
                     try {
-                        var degree = parseInt(degreeStr);
+                        let degree = parseInt(degreeStr);
                         if (degree < 1) {
                             alert("Degree must be a positive integer");
 
                         } else {
-                            var graphData = dataGraph.getData();
-                            var coeffData = leastSquares(degree, graphData);
-                            dataGraph.drawPoints("dataCanvas", graphData, coeffData);
+                            let graphData = dataGraph.getData();
+                            let payload = { points: graphData, degree: degree };
+                            smooth(payload, function(data) {  // REST Service
+															dataGraph.drawPoints("dataCanvas", graphData, data);
+                            });
                         }
                     } catch (err) {
                         alert(err);
                     }
                 }
-        };
+        }
 
-        var setSpray = function(cb) {
+				function goGuess() {
+					let degreeMinStr = document.getElementById("degree-min").value;
+					let degreeMaxStr = document.getElementById("degree-max").value;
+					if (degreeMinStr.trim().length === 0 || degreeMaxStr.trim().length === 0) {
+						alert("Please provide the degree-min of the polynomial to find (as a positive integer)");
+					} else {
+						try {
+							let degreeMin = parseInt(degreeMinStr);
+							let degreeMax = parseInt(degreeMaxStr);
+							if (degreeMin < 1 || degreeMax < 1) {
+								alert("Degrees must be a positive integer");
+							} else {
+								let graphData = dataGraph.getData();
+								let payload = { points: graphData, degreeMin: degreeMin, degreeMax: degreeMax };
+								guessSmooth(payload, function(data) {  // REST Service
+									dataGraph.drawPoints("dataCanvas", graphData, data);
+								});
+
+							}
+						} catch (err) {
+							alert(err);
+						}
+					}
+				}
+
+				function setSpray(cb) {
             dataGraph.setSprayPoints(cb.checked);
         };
 
-        var setTooltip = function(cb) {
+        function setTooltip(cb) {
             dataGraph.setTooltip(cb.checked);
-        };
+        }
 
     </script>
   </head>
   <body>
     <table width="100%">
       <tr>
-        <td colspan="2">
-          <h2>Polynomial Smoothing</h2>
-          Standalone. Does not require a server to be running. Can be used as a static page.
-        </td>
+        <td colspan="1"><h2>Polynomial Smoothing</h2></td>
+	      <td colspan="3" align="right"><h4>Requires the REST Math server to be running</h4></td>
       </tr>
       <tr>
-        <td valign="top" align="left" valign="top">
+        <td colspan="1" valign="top" align="left" valign="top">
           Required Degree : <input id="degree" type="number" style="text-align: right; width: 40px;" placeholder="Degree" size="3" value="3">
+					<button onclick="goDrawing();">Smooth</button>
           <br>
-          <input type="checkbox" id="with-spray" onchange="setSpray(this);" checked>Spray points
-          <!--br>
-          <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">With tooltip -->
+					<small>Spray points on the canvas below (click and drag the mouse), and click [Smooth]</small>
+        </td>
+	      <td valign="middle" align="center">or</td>
+				<td colspan="1" valign="top" align="left" valign="top">
+					Guess best degree between <input id="degree-min" type="number" style="text-align: right; width: 40px;" placeholder="Degree" size="3" value="1">
+					and <input id="degree-max" type="number" style="text-align: right; width: 40px;" placeholder="Degree" size="3" value="6">
+					<button onclick="goGuess();">Smooth &amp; Guess</button>
+					<br>
+					<small>Spray points on the canvas below (click and drag the mouse), and click [Smooth &amp; Guess]</small>
+				</td>
+      </tr>
+      <tr>
+        <td colspan="3">
+					<input type="checkbox" id="with-spray" onchange="setSpray(this);" checked>Spray points
         </td>
       </tr>
       <tr>
-        <td colspan="1">
-          <small>Spray points on the canvas below (click and drag the mouse), and click </small><button onclick="goDrawing();">Display</button>
-        </td>
-      </tr>
-      <tr>
-        <td align="center" colspan="1">
+        <td align="center" colspan="3">
           <canvas id="dataCanvas" height="500" title="Points and curves"></canvas>
         </td>
       </tr>
@@ -139,6 +171,6 @@
 
     <div id="err-mess" style="color: red;"></div>
     <hr/>
-    <address>Oliv fecit, AD 2017.</address>
+    <address>Oliv fecit, AD 2018.</address>
   </body>
 </html>

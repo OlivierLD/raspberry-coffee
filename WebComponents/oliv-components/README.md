@@ -95,12 +95,18 @@ Components above, live at [CodePen](http://codepen.io/OlivierLD/), when released
 - [SkyMap/StarFinder](https://codepen.io/OlivierLD/project/full/APNqRk).
 - [Split-Flap Display](https://codepen.io/OlivierLD/pen/LJLbeQ).
 
+#### HTML Templates &amp; Imports
+Along the same lines as Web Components, for re-usability, modularity, etc.
+See the examples in this module.
+
 #### Firefox 58
 If you are having trouble running the WebComponents in Firefox 58, see
 [this document](https://www.designedbyaturtle.co.uk/2015/how-to-enable-web-components-in-firefox-shadow-dom/).
 
 #### Transpilation - Warning: could not get it to work correctly.
 Use `babel`, as explained [here](https://babeljs.io/docs/usage/cli/).
+
+Also, there is a [transpiler on-line](http://babeljs.io/en/repl.html), that works correctly.
 
 ```bash
  $ npm install --save-dev babel-cli babel-preset-env

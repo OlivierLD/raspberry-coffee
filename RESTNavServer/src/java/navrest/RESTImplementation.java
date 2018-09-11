@@ -113,7 +113,6 @@ public class RESTImplementation {
 							.errorMessage(ex.toString())
 							.errorStack(HTTPServer.dumpException(ex)));
 			return response;
-
 		}
 		return response;
 	}
