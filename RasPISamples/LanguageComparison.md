@@ -272,7 +272,30 @@ Open your sketch in Processing (here `System.pde`), then go to `File` > `Export 
 Then choose your OS, and click `Export`. Then you have an executable ready to go!
 
 #### Mathematica
-TODO
+Look at that:
+- 1. Define the procedure (called a `Module`):
+```
+In[23]:= system[matrix_, coeff_] :=
+
+ Module[{solution}, solution = Inverse[matrix] . coeff]
+```
+- 2. Now, ot can be invoked:
+```
+In[24]:= system[
+   {
+     {12, 13, 14},
+     {1.345, -654, 0.001},
+     {23.09, 5.3, -12.34}
+   },
+   { 234, 98.87, 9.876 }
+ ]
+```
+- 3. And the result is
+```
+Out[24]= {6.48822, -0.137817, 11.2809}
+
+```
+
 
 ### A bit of history, to predict the future
 In the scope we are considering here, the first to emerge was `C`. It is the `native` language of Unix,
