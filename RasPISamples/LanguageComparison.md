@@ -113,8 +113,12 @@ We will use the following programming languages:
     Ramping up from Processing to Java is a natural and smooth move. Ramping up from Python to anything else is not...
     > _Note:_ Today (June 2018), Processing does not support (yet) Java 8 features (like lambdas, stream apis, etc).
 - [Mathematica](#mathematica)
+    - [Mathematica](https://www.wolfram.com/mathematica/) comes _for free_ on the Raspberry Pi.
     - Not exactly a language, more like a computing environment, but definitely worth a look.
     - Created by Stephen Wolfram, starting in 1986.
+    - The system above can be resolved very quickly in just a couple of lines:
+
+    ![Mathematica](./img/Mathematica.png)
 
 #### Output
 All versions of the program pretty much return the same output, like
@@ -257,7 +261,7 @@ It is an interactive curve resolution, using the `least squares` method.
 
 <img src="./img/least.square.png" width="600" height="619" alt="Processing" style="text-align: center;">
 
-If needed, change the degree of the result polynom using the slider at the bottom of the screen.
+If needed, change the degree of the result polynom using the slider at the bottom of the screen. You can also use the left and right arrows of the keyboard.
 
 See the calculated coefficients in the console output.
 
@@ -268,7 +272,28 @@ Open your sketch in Processing (here `System.pde`), then go to `File` > `Export 
 Then choose your OS, and click `Export`. Then you have an executable ready to go!
 
 #### Mathematica
-TODO
+Look at that:
+- 1. Define the procedure (called a `Module`):
+```
+In[23]:= system[matrix_, coeff_] :=
+     Module[{solution}, solution = Inverse[matrix] . coeff]
+```
+This defines a function taking a matrix and a vector as parameters.
+- 2. Now, it can be invoked:
+```
+In[24]:= system[
+   {{12, 13, 14},
+     {1.345, -654, 0.001},
+     {23.09, 5.3, -12.34}},
+   { 234, 98.87, 9.876 }
+ ]
+```
+- 3. And the result is
+```
+Out[24]= {6.48822, -0.137817, 11.2809}
+```
+Again, Mathematica is not a programming language. But as it is able to provide the answer to our problem
+in so few lines..., it had to be mentioned here.
 
 ### A bit of history, to predict the future
 In the scope we are considering here, the first to emerge was `C`. It is the `native` language of Unix,
@@ -278,7 +303,7 @@ It later gave birth to Linux.
 
 This openness of Unix was probably one of the reasons of the success of `C` - beside its efficiency.
 
-Developpers working with `C` had to face two major issues:
+Developers working with `C` had to face two major issues:
 ###### Portability
 To make a C program run on several systems, you had to re-compile the code on the target system, and you had to tweak the code to fit some system aspects, like endianness, word sizes, and similar features.
 This was implemented using `#define` and `#ifdef` statements in the code, pre-processed before compilation, so the code matches the requirements of the compiler. Like

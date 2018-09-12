@@ -258,7 +258,7 @@ public class SystemUtil {
 
 		// Minimal distance between point and curve
 		System.out.println("Minimal distance:");
-		double[] curve = new double[] { -1, 0, 6 };
+		double[] curve = new double[] { -1, 0, 6, 10 };
 		PolynomUtil.Point pt = new PolynomUtil.Point().x(0).y(3);
 		// distance pt - curve = distance between (x, f(x)) and (0, 3)
 		// = (deltaX^2 + deltaY^2)^(1/2)
@@ -279,6 +279,8 @@ public class SystemUtil {
 		double[] part22 = PolynomUtil.derivative(curve);
 		double[] part2  = PolynomUtil.multiply(PolynomUtil.multiply(part21, part22), new double[] { 2 });
 		double[] full   = PolynomUtil.add(part1, part2);
+
+		System.out.println("For curve: " + PolynomUtil.display(curve));
 		System.out.println("Resolving: " + PolynomUtil.display(full));
 		List<Double> polynomRoots = PolynomUtil.getPolynomRoots(PolynomUtil.reduce(full));
 		if (polynomRoots.size() == 0) {
@@ -291,6 +293,7 @@ public class SystemUtil {
 		}
 		// Min dist to curve
 		System.out.println();
+		System.setProperty("system.verbose", "true");
 		double minDist = minDistanceToCurve(curve, pt);
 		System.out.println(String.format("Minimal distance from %s to curve %s is %f", formatPoint(pt), PolynomUtil.display(curve), minDist));
 	}
