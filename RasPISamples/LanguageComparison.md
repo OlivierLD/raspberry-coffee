@@ -115,6 +115,9 @@ We will use the following programming languages:
 - [Mathematica](#mathematica)
     - Not exactly a language, more like a computing environment, but definitely worth a look.
     - Created by Stephen Wolfram, starting in 1986.
+    - The system above can be resolved in just a couple of lines:
+
+    ![Mathematica](./img/mathematica.png)
 
 #### Output
 All versions of the program pretty much return the same output, like
