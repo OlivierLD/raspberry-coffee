@@ -303,7 +303,7 @@ It later gave birth to Linux.
 
 This openness of Unix was probably one of the reasons of the success of `C` - beside its efficiency.
 
-Developpers working with `C` had to face two major issues:
+Developers working with `C` had to face two major issues:
 ###### Portability
 To make a C program run on several systems, you had to re-compile the code on the target system, and you had to tweak the code to fit some system aspects, like endianness, word sizes, and similar features.
 This was implemented using `#define` and `#ifdef` statements in the code, pre-processed before compilation, so the code matches the requirements of the compiler. Like
