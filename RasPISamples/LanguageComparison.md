@@ -113,9 +113,10 @@ We will use the following programming languages:
     Ramping up from Processing to Java is a natural and smooth move. Ramping up from Python to anything else is not...
     > _Note:_ Today (June 2018), Processing does not support (yet) Java 8 features (like lambdas, stream apis, etc).
 - [Mathematica](#mathematica)
+    - Mathematica comes _for free_ on the Raspberry Pi.
     - Not exactly a language, more like a computing environment, but definitely worth a look.
     - Created by Stephen Wolfram, starting in 1986.
-    - The system above can be resolved in just a couple of lines:
+    - The system above can be resolved very quickly in just a couple of lines:
 
     ![Mathematica](./img/Mathematica.png)
 
