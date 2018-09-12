@@ -261,7 +261,7 @@ It is an interactive curve resolution, using the `least squares` method.
 
 <img src="./img/least.square.png" width="600" height="619" alt="Processing" style="text-align: center;">
 
-If needed, change the degree of the result polynom using the slider at the bottom of the screen.
+If needed, change the degree of the result polynom using the slider at the bottom of the screen. You can also use the left and right arrows of the keyboard.
 
 See the calculated coefficients in the console output.
 
