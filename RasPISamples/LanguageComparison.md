@@ -117,7 +117,7 @@ We will use the following programming languages:
     - Created by Stephen Wolfram, starting in 1986.
     - The system above can be resolved in just a couple of lines:
 
-    ![Mathematica](./img/mathematica.png)
+    ![Mathematica](./img/Mathematica.png)
 
 #### Output
 All versions of the program pretty much return the same output, like
