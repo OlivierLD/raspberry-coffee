@@ -2,7 +2,6 @@
  * @author Olivier LeDiouris
  */
 const DEFAULT_TIMEOUT = 60000; // 1 minute
-/* global events */
 
 function postSmooth(payload) {
 	return getPromise('/math/smooth', DEFAULT_TIMEOUT, 'POST', 201, payload, false);
