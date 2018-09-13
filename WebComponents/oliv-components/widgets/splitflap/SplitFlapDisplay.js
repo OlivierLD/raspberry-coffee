@@ -18,7 +18,7 @@ const splitFlapDefaultColorConfig = {
 	valueFont: 'Arial'
 };
 
-import * as Utilities from "./utilities/Utilities.js";
+import * as Utilities from "../utilities/Utilities.js";
 
 /* global HTMLElement */
 class SplitFlapDisplay extends HTMLElement {

@@ -64,7 +64,7 @@ const SKY_MAP_TAG_NAME = 'sky-map';
 
 /* The map data */
 import constellations from "./stars/constellations.js";
-import * as Utilities from "./utilities/Utilities.js";
+import * as Utilities from "../utilities/Utilities.js";
 // import constellations from "./stars/constellations"; // minifyJs does NOT like the .js extension
 
 const Hemispheres = {

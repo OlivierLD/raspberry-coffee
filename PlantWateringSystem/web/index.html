@@ -118,12 +118,12 @@
 </div>
 <script>
 
-	var getAllData = function() {
+	function getAllData() {
 		sensorData();
 		relayStatus();
 		wateringTime();
 		deviceStatus();
-	};
+	}
 
 	$().ready(function () {
 		setInterval(getAllData, 1000);

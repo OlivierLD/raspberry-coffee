@@ -109,13 +109,15 @@ var relayStatus = function () {
 var status = 'tick';
 // Activity witness
 var flipLight = function() {
+	var element = document.getElementById('working');
 	if (status === 'tick') {
 		status = 'tock';
-		document.getElementById('working').style.color = 'red';
+		element.style.color = 'red';
 	} else {
 		status = 'tick';
-		document.getElementById('working').style.color = 'green';
+		element.style.color = 'green';
 	}
+	element.title = new Date().toString();
 };
 
 var sensorData = function () {
