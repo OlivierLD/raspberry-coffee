@@ -56,7 +56,7 @@ const cardValues = [
 ];
 
 const FONT_SIZE = 60;
-import * as Utilities from "./utilities/Utilities.js";
+import * as Utilities from "../utilities/Utilities.js";
 
 /* global HTMLElement */
 class Raw16PointsDir extends HTMLElement {

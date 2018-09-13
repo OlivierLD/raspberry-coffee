@@ -28,7 +28,7 @@ const WATCH_TAG_NAME = 'analog-watch';
 	--font: Arial;
 }
  */
-import * as Utilities from "./utilities/Utilities.js";
+import * as Utilities from "../utilities/Utilities.js";
 
 /**
  * Recurse from the top down, on styleSheets and cssRules

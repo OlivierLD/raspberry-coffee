@@ -291,7 +291,7 @@ public class SystemUtil {
 				System.out.println(String.format("\t%+f, f(x) = %f, dist=%f", r, PolynomUtil.f(curve, r), PolynomUtil.dist(curve, r, pt)));
 			}
 		}
-		// Min dist to curve
+		// Min dist from one pt to curve
 		System.out.println();
 		System.setProperty("system.verbose", "true");
 		double minDist = minDistanceToCurve(curve, pt);
