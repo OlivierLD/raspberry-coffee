@@ -14,7 +14,7 @@
 #  http://localhost:5080/_browse
 #
 echo -e "+-------------------------+"
-echo -e "| - P U B L I S H I N G - |"
+echo -e "+-- P U B L I S H I N G --+"
 echo -e "+-------------------------+"
 echo -e "| 1. AnalogDisplay        |"
 echo -e "| 2. AnalogWatch          |"
@@ -22,7 +22,7 @@ echo -e "| 3. CalendarDisplay      |"
 echo -e "+-------------------------+"
 echo -e "| Q to quit               |"
 echo -e "+-------------------------+"
-echo -en "You choose > "
+echo -en "- You choose > "
 read response
 #
 npm config list
@@ -37,6 +37,6 @@ case "$response" in
   "q" | "Q")
     ;;
    *)
-    echo -e "What? Unknown command [$response]"
+    echo -e "What? Unknown or un-implemented command [$response]"
     ;;
 esac
