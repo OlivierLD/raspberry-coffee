@@ -5,7 +5,7 @@
   "description": "Analog Display",
   "main": "AnalogDisplay.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --env dev && webpack --env build"
   },
   "repository": {
     "type": "git",
@@ -16,13 +16,29 @@
     "display",
     "webcomp"
   ],
-  "dependencies" : {
-    "utilities" : "latest"
+  "dependencies": {
+    "utilities": "latest"
   },
   "author": "Olivier LeDiouris",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/OlivierLD/raspberry-pi4j-samples/issues"
   },
-  "homepage": "https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WebComponents"
+  "homepage": "https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WebComponents",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.1",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "babel-eslint": "^9.0.0",
+    "babel-loader": "^8.0.0",
+    "babel-plugin-add-module-exports": "^1.0.0",
+    "eslint": "^5.5.0",
+    "eslint-loader": "^2.1.0",
+    "jsdom": "^12.0.0",
+    "jsdom-global": "^3.0.2",
+    "uglifyjs-webpack-plugin": "^1.3.0",
+    "webpack-cli": "^3.1.0",
+    "yargs": "^12.0.2"
+  }
 }

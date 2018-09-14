@@ -10,7 +10,7 @@
 # Make sure you've set the registry to the local one:
 # $ npm set registry http://127.0.0.1:5080
 # To switch back to what it was :
-# $ npm set registry https://registry.npmjs.org (or whatever it was)
+# $ npm set registry https://registry.npmjs.org (or whatever it was, like "http://artifactory-slc.oraclecorp.com/artifactory/api/npm/npm-virtual")
 #
 # To browse the local registry:
 #  http://localhost:5080/_browse
