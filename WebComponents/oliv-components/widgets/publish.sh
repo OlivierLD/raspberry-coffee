@@ -3,7 +3,7 @@
 # To generate a package.json, 'npm init' is an option
 # To get your own local npm registry\ (https://www.npmjs.com/package/local-npm) :
 # $ npm install -g local-npm
-# The localk registry must be running:
+# The local registry must be running:
 # $ local-npm
 # Make sure you've set the registry to the local one:
 # $ npm set registry http://127.0.0.1:5080

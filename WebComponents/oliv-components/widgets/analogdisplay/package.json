@@ -1,0 +1,28 @@
+{
+  "name": "analog-display",
+  "private": false,
+  "version": "0.5.0",
+  "description": "Analog Display",
+  "main": "AnalogDisplay.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
+  },
+  "keywords": [
+    "analog",
+    "display",
+    "webcomp"
+  ],
+  "dependencies" : {
+    "utilities" : "latest"
+  },
+  "author": "Olivier LeDiouris",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OlivierLD/raspberry-pi4j-samples/issues"
+  },
+  "homepage": "https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WebComponents"
+}
