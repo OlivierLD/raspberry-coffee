@@ -19,10 +19,10 @@ if (env === 'build') {
 
 const config = {
   mode: mode,
-  entry: __dirname + '/AnalogDisplay.js',
+  entry: __dirname + '/SkyMap.js',
   devtool: 'source-map',
   output: {
-    path: __dirname + '../../../lib/analogdisplay',
+    path: __dirname + '../../../lib/skymap',
     filename: outputFile,
     library: libraryName,
     libraryTarget: 'umd',

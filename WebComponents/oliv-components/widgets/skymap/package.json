@@ -1,9 +1,9 @@
 {
-  "name": "analog-display",
+  "name": "sky-map",
   "private": false,
   "version": "0.5.0",
-  "description": "Analog Display",
-  "main": "AnalogDisplay.js",
+  "description": "Sky Map, or Star Finder",
+  "main": "SkydMap.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build"
   },
@@ -12,13 +12,10 @@
     "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
   },
   "keywords": [
-    "analog",
-    "display",
+    "skymap",
+    "starfinder",
     "webcomp"
   ],
-  "XXdependencies": {
-    "utilities": "latest"
-  },
   "author": "Olivier LeDiouris",
   "license": "ISC",
   "bugs": {
