@@ -19,10 +19,10 @@ if (env === 'build') {
 
 const config = {
   mode: mode,
-  entry: __dirname + '/AnalogDisplay.js',
+  entry: __dirname + '/AnalogWatch.js',
   devtool: 'source-map',
   output: {
-    path: __dirname + '../../../lib/analogdisplay',
+    path: __dirname + '../../../lib/analogwatch',
     filename: outputFile,
     library: libraryName,
     libraryTarget: 'umd',
