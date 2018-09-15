@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Example</title>
+	<link rel="icon" type="image/png" href="../logo-192x192.png">
+
+	<link rel="stylesheet" href="../oliv-components/css/stylesheet.css">
+	<link rel="stylesheet" href="../oliv-components/css/web-components.css">
+
+	<!--script type="module" src="analogwatch/analog-watch.min.js"></script>
+	<script type="module" src="calendar/calendar-display.min.js"></script>
+	<script type="module" src="worldmap/world-map.min.js"></script-->
+
+	<script type="text/javascript" src="analogwatch/analog-watch.min.js" async></script>
+	<script type="text/javascript" src="calendar/calendar-display.min.js" async></script>
+	<script type="text/javascript" src="worldmap/world-map.min.js" async></script>
+</head>
+<body style="background-color: black;">
+
+<h2>Web Component Examples</h2>
+<div style="display: grid; grid-template-columns: auto auto;">
+	<div class="black-frame centered">
+		<calendar-display id="calendar-01"
+											class="calendar-01"
+											title="Day-Month-Year"
+											width="300"
+											height="360"
+											value="28-08-2018-tuesday"></calendar-display>
+	</div>
+	<div class="black-frame centered">
+		<analog-watch id="analog-watch-01"
+									class="analogdisplay-day"
+									title="Custom Time"
+									width="220"
+									height="220"
+									hours-ticks="1"
+									minutes-ticks="1"
+									digital-value="6"
+									with-second-hand="true"
+									value="01:20:12"></analog-watch>
+	</div>
+</div>
+<div style="display: grid; grid-template-columns: auto;">
+	<div class="black-frame centered">
+		<world-map id="world-map-01"
+							 class="worldmap-display"
+							 title="World Map"
+							 width="700"
+							 height="500"></world-map>
+	</div>
+</div>
+
+</body>
+</html>
