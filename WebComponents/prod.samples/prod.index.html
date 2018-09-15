@@ -19,16 +19,24 @@
 <body style="background-color: black;">
 
 <h2>Web Component Examples</h2>
-<div style="display: grid; grid-template-columns: auto auto;">
-	<div class="black-frame centered">
+<h3>Hard-coded values for the widgets</h3>
+<div style="display: grid; grid-template-areas: 'top top' 'left right'; grid-gap: 10px; width: 500px;">
+	<div class="black-frame centered" style="grid-area: top; text-align: center; border: 1px solid silver; border-radius: 6px;">
+		<world-map id="world-map-01"
+							 class="worldmap-display"
+							 title="World Map"
+							 width="400"
+							 height="400"></world-map>
+	</div>
+	<div class="black-frame" style="grid-area: left; text-align: center;">
 		<calendar-display id="calendar-01"
 											class="calendar-01"
 											title="Day-Month-Year"
-											width="300"
-											height="360"
+											width="150"
+											height="180"
 											value="28-08-2018-tuesday"></calendar-display>
 	</div>
-	<div class="black-frame centered">
+	<div class="black-frame" style="grid-area: right; text-align: center;">
 		<analog-watch id="analog-watch-01"
 									class="analogdisplay-day"
 									title="Custom Time"
@@ -39,15 +47,6 @@
 									digital-value="6"
 									with-second-hand="true"
 									value="01:20:12"></analog-watch>
-	</div>
-</div>
-<div style="display: grid; grid-template-columns: auto;">
-	<div class="black-frame centered">
-		<world-map id="world-map-01"
-							 class="worldmap-display"
-							 title="World Map"
-							 width="700"
-							 height="500"></world-map>
 	</div>
 </div>
 
