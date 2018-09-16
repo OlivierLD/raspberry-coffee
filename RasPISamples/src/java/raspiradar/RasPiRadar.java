@@ -2,6 +2,8 @@ package raspiradar;
 
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
+import raspisamples.util.Utilities;
+import utils.TimeUtil;
 
 /**
  * One servo (PCA9685) [-90..90] to orient the Sonic Sensor
@@ -62,8 +64,10 @@ public class RasPiRadar {
 	}
 
 	private final static String PCA9685_SERVO_PORT = "--servo-port:";
+	private final static String DELAY = "--delay:";
 
 	private static boolean loop = true;
+	private static long delay = 100L;
 
 	public static void main(String... args) throws Exception {
 		int servoPort  = 0;
@@ -73,6 +77,10 @@ public class RasPiRadar {
 			if (str.startsWith(PCA9685_SERVO_PORT)) {
 				String s = str.substring(PCA9685_SERVO_PORT.length());
 				servoPort = Integer.parseInt(s);
+			}
+			if (str.startsWith(DELAY)) {
+				String s = str.substring(DELAY.length());
+				delay = Long.parseLong(s);
 			}
 		}
 
@@ -110,7 +118,8 @@ public class RasPiRadar {
 						bearing += (2 * inc);
 					}
 					System.out.println(String.format("Bearing now %+d", bearing));
-					// TODO Sleep here?
+					// Sleep here
+					TimeUtil.delay(delay);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
