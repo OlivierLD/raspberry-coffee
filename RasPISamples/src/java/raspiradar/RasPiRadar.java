@@ -52,6 +52,7 @@ public class RasPiRadar {
 
 	public void stop() { // Set to 0
 		servoBoard.setPWM(servo, 0, 0);
+		servoBoard.close();
 	}
 
 	/*
@@ -84,11 +85,12 @@ public class RasPiRadar {
 			}
 		}
 
-		System.out.println("Driving Servo on Channel " + servoPort);
+		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
+		System.out.println(String.format("Wait when scanning %d ms", delay));
 
-		RasPiRadar ss = null;
+		RasPiRadar rr = null;
 		try {
-			ss = new RasPiRadar(servoPort);
+			rr = new RasPiRadar(servoPort);
 		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
 			System.out.println("Not on a Pi? Moving on...");
 		}
@@ -100,15 +102,15 @@ public class RasPiRadar {
 		}));
 
 		try {
-			if (ss != null) {
-				ss.stop(); // init
+			if (rr != null) {
+				rr.stop(); // init
 			}
 			int inc = 1;
 			int bearing = 0;
 			while (loop) {
 				try {
-					if (ss != null) {
-						ss.setAngle(bearing);
+					if (rr != null) {
+						rr.setAngle(bearing);
 					}
 					// Measure distance here
 
@@ -125,8 +127,8 @@ public class RasPiRadar {
 				}
 			}
 		} finally {
-			if (ss != null) {
-				ss.stop();
+			if (rr != null) {
+				rr.stop();
 			}
 		}
 		System.out.println("Done.");
