@@ -50,4 +50,3 @@ cat prod.index.html
 # 4. Run
 echo -e "When the server is started, reach http://localhost:8080/prod.samples/prod.index.html in a browser"
 node ../server.js --wdir:../
-

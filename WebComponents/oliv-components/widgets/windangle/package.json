@@ -1,9 +1,9 @@
 {
-  "name": "analog-watch",
+  "name": "wind-angle",
   "private": false,
   "version": "0.5.0",
-  "description": "Analog Watch",
-  "main": "AnalogWatch.js",
+  "description": "Wind Angle display in degrees, port and starboard, based on the boat axis.",
+  "main": "WindAngleDisplay.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build"
   },
@@ -12,11 +12,14 @@
     "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
   },
   "keywords": [
-    "watch",
-    "face",
+    "wind angle",
+    "boat",
     "display",
     "webcomp"
   ],
+  "XXdependencies": {
+    "utilities": "latest"
+  },
   "author": "Olivier LeDiouris",
   "license": "ISC",
   "bugs": {

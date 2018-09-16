@@ -12,7 +12,8 @@
     "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
   },
   "keywords": [
-    "analog",
+    "compass",
+    "rose",
     "display",
     "webcomp"
   ],
