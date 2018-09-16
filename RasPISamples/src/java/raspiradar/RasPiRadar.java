@@ -64,8 +64,10 @@ public class RasPiRadar {
 	}
 
 	private final static String PCA9685_SERVO_PORT = "--servo-port:";
+	private final static String DELAY = "--delay:";
 
 	private static boolean loop = true;
+	private static long delay = 100L;
 
 	public static void main(String... args) throws Exception {
 		int servoPort  = 0;
@@ -75,6 +77,10 @@ public class RasPiRadar {
 			if (str.startsWith(PCA9685_SERVO_PORT)) {
 				String s = str.substring(PCA9685_SERVO_PORT.length());
 				servoPort = Integer.parseInt(s);
+			}
+			if (str.startsWith(DELAY)) {
+				String s = str.substring(DELAY.length());
+				delay = Long.parseLong(s);
 			}
 		}
 
@@ -113,7 +119,7 @@ public class RasPiRadar {
 					}
 					System.out.println(String.format("Bearing now %+d", bearing));
 					// Sleep here
-					TimeUtil.delay(100L);
+					TimeUtil.delay(delay);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
