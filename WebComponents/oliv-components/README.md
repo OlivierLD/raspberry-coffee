@@ -114,20 +114,7 @@ Use `babel`, as explained [here](https://babeljs.io/docs/usage/cli/). Also see
 There is also a [transpiler on-line](http://babeljs.io/en/repl.html), that works correctly.
 
 ##### Scripted Transpilation
-```bash
- $ npm install --save-dev babel-cli babel-preset-env
-```
-Create a `.babelrc`
-```bash
- $ echo '{ "presets": ["env"] }' > .babelrc
-```
-And run the transpilation:
-```bash
- $ npx babel oliv-components/widgets --out-dir oliv-components/lib
-```
-The `lib` directory now contains the transpiled files.
-
-> Warning: I could not get the Scripted Transpilation to work correctly.
+See [this document](widgets/README.md).
 
 ---
 &copy; 2018, by Oliv Soft.
