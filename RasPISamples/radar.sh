@@ -12,7 +12,7 @@ JAVA_OPTIONS=
 #
 # Physical pin numbers.
 PRMS=
-# PRMS="--servo-port:"
+PRMS="--servo-port:15"
 #
 echo Running...
-sudo java $JAVA_OPTIONS -cp $CP raspiradar.SampleMainRasPiRadarTwoButtons $PRMS
+sudo java $JAVA_OPTIONS -cp $CP raspiradar.RasPiRadar $PRMS
