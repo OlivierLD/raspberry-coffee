@@ -6,6 +6,7 @@ FROM debian
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
+# Following lines may be commented.
 ENV http_proxy http://www-proxy.us.oracle.com:80
 ENV https_proxy http://www-proxy.us.oracle.com:80
 ## ENV ftp_proxy $http_proxy

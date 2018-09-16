@@ -14,10 +14,10 @@ FROM x11docker/mate
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 #
 # Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
-# ENV http_proxy http://www-proxy.us.oracle.com:80
-# ENV https_proxy http://www-proxy.us.oracle.com:80
-# # ENV ftp_proxy $http_proxy
-# ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
+#ENV http_proxy http://www-proxy.us.oracle.com:80
+#ENV https_proxy http://www-proxy.us.oracle.com:80
+## ENV ftp_proxy $http_proxy
+#ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
 #
 RUN \
   apt-get update && \
@@ -88,5 +88,9 @@ COPY ./tensorflow ./examples/oliv
 ENV http_proxy ""
 ENV https_proxy ""
 ENV no_proxy ""
+#ENV http_proxy http://www-proxy.us.oracle.com:80
+#ENV https_proxy http://www-proxy.us.oracle.com:80
+## ENV ftp_proxy $http_proxy
+#ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
 #
 CMD ["echo", "Happy TensorFlowing!"]

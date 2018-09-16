@@ -1,9 +1,9 @@
 {
-  "name": "analog-display",
+  "name": "compass-rose",
   "private": false,
   "version": "0.5.0",
-  "description": "Analog Display",
-  "main": "AnalogDisplay.js",
+  "description": "Compass Rose",
+  "main": "CompassRose.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build"
   },
@@ -12,7 +12,8 @@
     "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
   },
   "keywords": [
-    "analog",
+    "compass",
+    "rose",
     "display",
     "webcomp"
   ],

@@ -1,9 +1,9 @@
 {
-  "name": "analog-display",
+  "name": "calendar-display",
   "private": false,
   "version": "0.5.0",
-  "description": "Analog Display",
-  "main": "AnalogDisplay.js",
+  "description": "Calendar Display",
+  "main": "CalendarDisplay.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build"
   },
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
   },
   "keywords": [
-    "analog",
+    "calendar",
     "display",
     "webcomp"
   ],

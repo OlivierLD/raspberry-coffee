@@ -1,9 +1,9 @@
 {
-  "name": "analog-display",
+  "name": "jumbo-display",
   "private": false,
   "version": "0.5.0",
-  "description": "Analog Display",
-  "main": "AnalogDisplay.js",
+  "description": "Jumbo digital display",
+  "main": "JumboDisplay.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build"
   },
@@ -12,7 +12,8 @@
     "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
   },
   "keywords": [
-    "analog",
+    "jumbo",
+    "digital",
     "display",
     "webcomp"
   ],

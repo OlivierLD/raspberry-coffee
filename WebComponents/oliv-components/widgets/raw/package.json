@@ -1,9 +1,9 @@
 {
-  "name": "analog-display",
+  "name": "dir-16-points",
   "private": false,
   "version": "0.5.0",
-  "description": "Analog Display",
-  "main": "AnalogDisplay.js",
+  "description": "Raw direction, 16 points",
+  "main": "Raw16PointsDir.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build"
   },
@@ -12,8 +12,9 @@
     "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
   },
   "keywords": [
-    "analog",
-    "display",
+    "16 leds",
+    "direction",
+    "raw",
     "webcomp"
   ],
   "XXdependencies": {

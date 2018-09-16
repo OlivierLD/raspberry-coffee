@@ -1,9 +1,9 @@
 {
-  "name": "analog-display",
+  "name": "thermo-meter",
   "private": false,
   "version": "0.5.0",
-  "description": "Analog Display",
-  "main": "AnalogDisplay.js",
+  "description": "Thermometer",
+  "main": "Thermometer.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build"
   },
@@ -12,7 +12,8 @@
     "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
   },
   "keywords": [
-    "analog",
+    "temperature",
+    "tube",
     "display",
     "webcomp"
   ],

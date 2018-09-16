@@ -1,9 +1,9 @@
 {
-  "name": "analog-display",
+  "name": "direction-display",
   "private": false,
   "version": "0.5.0",
-  "description": "Analog Display",
-  "main": "AnalogDisplay.js",
+  "description": "Direction on 360 degrees",
+  "main": "DirectionDisplay.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build"
   },
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/OlivierLD/raspberry-pi4j-samples.git"
   },
   "keywords": [
-    "analog",
+    "direction",
     "display",
     "webcomp"
   ],

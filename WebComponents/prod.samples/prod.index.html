@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Example</title>
+	<link rel="icon" type="image/png" href="../logo-192x192.png">
+
+	<link rel="stylesheet" href="../oliv-components/css/stylesheet.css">
+	<link rel="stylesheet" href="../oliv-components/css/web-components.css">
+
+	<script type="module" src="analogwatch/analog-watch.min.js"></script>
+	<script type="module" src="calendar/calendar-display.min.js"></script>
+	<script type="module" src="worldmap/world-map.min.js"></script>
+
+	<!--script type="text/javascript" src="analogwatch/analog-watch.min.js" async></script>
+	<script type="text/javascript" src="calendar/calendar-display.min.js" async></script>
+	<script type="text/javascript" src="worldmap/world-map.min.js" async></script-->
+</head>
+<body style="background-color: black;">
+
+<h2>Web Component Examples</h2>
+<h3>Position set to SF, date and time to current value</h3>
+<hr/>
+<div style="display: grid; grid-template-areas: 'top top' 'left right'; grid-gap: 10px; width: 500px;">
+	<div class="black-frame centered" style="grid-area: top; text-align: center; border: 1px solid silver; border-radius: 6px;">
+		<world-map id="world-map-01"
+							 class="worldmap-display"
+							 title="World Map"
+							 width="400"
+							 height="400"></world-map>
+	</div>
+	<div class="black-frame" style="grid-area: left; text-align: center;">
+		<calendar-display id="calendar-01"
+											class="calendar-01"
+											title="Day-Month-Year"
+											width="150"
+											height="180"
+											value="28-08-2018-tuesday"></calendar-display>
+	</div>
+	<div class="black-frame" style="grid-area: right; text-align: center;">
+		<analog-watch id="analog-watch-01"
+									class="analogdisplay-day"
+									title="Custom Time"
+									width="220"
+									height="220"
+									hours-ticks="1"
+									hours-flavor="arabic"
+									minutes-ticks="1"
+									digital-value="6"
+									with-second-hand="true"
+									value="01:20:12"></analog-watch>
+	</div>
+</div>
+<button onclick="updateCalendar();">Now</button>
+<script type="text/javascript">
+
+	const WEEK_DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+	function updateCalendar() {
+		let date = new Date();
+
+		let d = date.getDate();
+		let m = date.getMonth() + 1;
+		let y = date.getFullYear();
+		document.getElementById('calendar-01').value = d + '-' + m + '-' + y + '-' + WEEK_DAYS[date.getDay()];
+		document.getElementById('calendar-01').repaint();
+
+		let h = date.getHours();
+		let M = date.getMinutes();
+		let s = date.getSeconds();
+		document.getElementById('analog-watch-01').value = h + ':' + M + ':' + s;
+		document.getElementById('analog-watch-01').repaint();
+	}
+
+	window.onload = () => {
+		// Set globe pos to SF
+		let globe = document.getElementById("world-map-01");
+		globe.setUserPosition({ latitude: 37.7489, longitude: -122.507 });
+		globe.repaint();
+		// Time & Date
+		updateCalendar();
+	}
+
+</script>
+<hr/>
+<small style="font-style: italic;">Optimized Web Components</small>
+
+</body>
+</html>

@@ -190,7 +190,7 @@
 					case 'htsgw':
 						displayType = 'WAVES';
 						if (oneDateGRIB.typedData[idx].data[0].length !== oneDateGRIB.gribDate.width) {
-							// Re-adjust. Not very elegant...
+							// Re-adjust. Not very elegant... TODO See when/why this happens
 							xCell *= Math.floor(oneDateGRIB.typedData[idx].data[0].length / oneDateGRIB.gribDate.width);
 							value = oneDateGRIB.typedData[idx].data[yCell][xCell];
 						}

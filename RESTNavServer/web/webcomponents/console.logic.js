@@ -60,12 +60,16 @@ function changeBG(value) {
 			applyClass('world-map-01', 'worldmap-display');
 			applyClass('split-flap-display-00', 'split-flap-night');
 			applyClass('split-flap-display-01', 'split-flap-night');
+			applyClass('split-flap-display-02', 'split-flap-night');
+			applyClass('split-flap-display-03', 'split-flap-night');
 			break;
 		case "LIGHT":
 		case "WHITE":
 			applyClass('world-map-01', 'worldmap-display-02');
 			applyClass('split-flap-display-00', 'split-flap-day');
 			applyClass('split-flap-display-01', 'split-flap-day');
+			applyClass('split-flap-display-02', 'split-flap-day');
+			applyClass('split-flap-display-03', 'split-flap-day');
 			break;
 	}
 }

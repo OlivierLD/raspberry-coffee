@@ -82,7 +82,6 @@ SkyMap in its `Sky Map` configuration:
 
 #### TODO
 - JSDoc
-- Local `npm` registry? ... to avoid having to copy code across modules.
 
 #### CodePen (might not be 100% in sync... But close'ish)
 The point of truth remains this repo.
@@ -109,25 +108,13 @@ If you are having trouble running the WebComponents in Firefox 58, see
 [this document](https://www.designedbyaturtle.co.uk/2015/how-to-enable-web-components-in-firefox-shadow-dom/).
 
 #### Transpilation
-Use `babel`, as explained [here](https://babeljs.io/docs/usage/cli/).
+Use `babel`, as explained [here](https://babeljs.io/docs/usage/cli/). Also see
+[this document](widgets/README.md) in the same project.
 
 There is also a [transpiler on-line](http://babeljs.io/en/repl.html), that works correctly.
 
 ##### Scripted Transpilation
-```bash
- $ npm install --save-dev babel-cli babel-preset-env
-```
-Create a `.babelrc`
-```bash
- $ echo '{ "presets": ["env"] }' > .babelrc
-```
-And run the transpilation:
-```bash
- $ npx babel oliv-components/widgets --out-dir oliv-components/lib
-```
-The `lib` directory now contains the transpiled files.
-
-> Warning: I could not get the Scripted Transpilation to work correctly.
+See [this document](widgets/README.md).
 
 ---
 &copy; 2018, by Oliv Soft.
