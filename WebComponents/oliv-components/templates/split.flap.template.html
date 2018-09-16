@@ -9,14 +9,15 @@
 			//	console.log("Old [%s], new [%s]", original, newPaddedValue);
 			//	assert(old.length === new.length);
 
-			function updateFlap(idx) { // THIS is balaise.
+			// Flap-flap-flap
+			function updateFlap(idx) { // THIS is balaise. Function in a function.
 				if (original.charAt(idx).toUpperCase() !== newPaddedValue.charAt(idx).toUpperCase()) {
 					setTimeout(() => {
 						let next = elem.getNextChar(original.charAt(idx));
 //					console.log("Updating %s with %s", original, next);
 						elem.setCharAt(idx, next);
 						original = elem.paddedValue;
-						updateFlap(idx);
+						updateFlap(idx); // Recurse
 					}, 50);
 				}
 			};

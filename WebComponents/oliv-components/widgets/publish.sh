@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# Publish to an npm registry
+#
 # To generate a package.json, 'npm init' is an option
 # To get your own local npm registry (https://www.npmjs.com/package/local-npm) :
 # $ npm set registry https://registry.npmjs.org

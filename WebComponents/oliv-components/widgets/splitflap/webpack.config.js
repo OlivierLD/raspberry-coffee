@@ -19,7 +19,7 @@ if (env === 'build') {
 
 const config = {
   mode: mode,
-  entry: __dirname + '/SplitFlatDisplay.js',
+  entry: __dirname + '/SplitFlapDisplay.js',
   devtool: 'source-map',
   output: {
     path: __dirname + '../../../lib/splitflap',

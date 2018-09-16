@@ -3,7 +3,7 @@
   "private": false,
   "version": "0.5.0",
   "description": "Split Flap Display",
-  "main": "SplitFlatDisplay.js",
+  "main": "SplitFlapDisplay.js",
   "scripts": {
     "build": "webpack --env dev && webpack --env build"
   },
