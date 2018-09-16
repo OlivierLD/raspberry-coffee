@@ -151,6 +151,19 @@ public class PCA9685 {
 		this.setPWM(channel, 0, pulse);
 	}
 
+	/**
+	 * Free resources
+	 */
+	public void close() {
+		if (this.bus != null) {
+			try {
+				this.bus.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
 	public static void main__(String... args) throws I2CFactory.UnsupportedBusNumberException {
 		int freq = 60;
 		if (args.length > 0) {

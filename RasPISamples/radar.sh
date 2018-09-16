@@ -10,9 +10,10 @@ JAVA_OPTIONS=
 #
 JAVA_OPTIONS=
 #
-# Physical pin numbers.
+# Physical pin numbers, delay.
 PRMS=
-PRMS="--servo-port:15"
+PRMS="$PRMS --servo-port:15"
+PRMS="$PRMS --delay:100"
 #
 echo Running...
 sudo java $JAVA_OPTIONS -cp $CP raspiradar.RasPiRadar $PRMS
