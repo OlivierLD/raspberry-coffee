@@ -50,8 +50,11 @@ public class RasPiRadar {
 		servoBoard.setPWM(servo, 0, pwm);
 	}
 
-	public void stop() { // Set to 0
+	public void stop() { // Set (back) to 0, free resources
 		servoBoard.setPWM(servo, 0, 0);
+	}
+
+	public void free() {
 		servoBoard.close();
 	}
 
@@ -129,6 +132,7 @@ public class RasPiRadar {
 		} finally {
 			if (rr != null) {
 				rr.stop();
+				rr.free();
 			}
 		}
 		System.out.println("Done.");
