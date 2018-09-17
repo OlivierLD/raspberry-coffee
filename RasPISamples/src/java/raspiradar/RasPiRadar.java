@@ -140,7 +140,8 @@ public class RasPiRadar {
 	private static boolean loop = true;
 	private static long delay = 100L;
 
-	public static void main(String... args) throws Exception {
+	public static void main(String... args) {
+
 		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
 			System.out.println(String.format("Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
 		};
@@ -159,7 +160,7 @@ public class RasPiRadar {
 				String s = str.substring(DELAY.length());
 				delay = Long.parseLong(s);
 			}
-			// Trig & Echo pin PHYSICAL numbers
+			// Trig & Echo pin PHYSICAL numbers (1..40)
 			if (str.startsWith(TRIGGER_PIN)) {
 				String s = str.substring(TRIGGER_PIN.length());
 				trig = Integer.parseInt(s);
@@ -176,12 +177,12 @@ public class RasPiRadar {
 		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
 		System.out.println(String.format("Wait when scanning %d ms", delay));
 
-		RasPiRadar rr = null;
+		RasPiRadar rpr = null;
 		try {
 			if (echo == null && trig == null) {
-				rr = new RasPiRadar(servoPort);
+				rpr = new RasPiRadar(servoPort);
 			} else {
-				rr = new RasPiRadar(servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
+				rpr = new RasPiRadar(servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");
@@ -192,20 +193,20 @@ public class RasPiRadar {
 		}));
 
 		try {
-			if (rr != null) {
-				rr.stop(); // init
+			if (rpr != null) {
+				rpr.stop(); // init
 			}
 			int inc = 1;
 			int bearing = 0;
 			double dist = 0;
 			while (loop) {
 				try {
-					if (rr != null) {
-						rr.setAngle(bearing);
+					if (rpr != null) {
+						rpr.setAngle(bearing);
 						// Measure distance here, broadcast it witdouble dist = h bearing.
-						dist = rr.readDistance();
+						dist = rpr.readDistance();
 						// Consumer
-						rr.consumeData(new DirectionAndRange(bearing, dist));
+						rpr.consumeData(new DirectionAndRange(bearing, dist));
 					} else { // For dev...
 						defaultDataConsumer.accept(new DirectionAndRange(bearing, dist));
 					}
@@ -222,10 +223,10 @@ public class RasPiRadar {
 				}
 			}
 		} finally {
-			if (rr != null) {
-				rr.stop();
+			if (rpr != null) {
+				rpr.stop();
 				TimeUtil.delay(500L); // Before freeing, get some time to get back to zero.
-				rr.free();
+				rpr.free();
 			}
 		}
 		System.out.println("Done.");
