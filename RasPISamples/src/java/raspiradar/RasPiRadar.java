@@ -133,7 +133,7 @@ public class RasPiRadar {
 			}
 		}
 		if (echo != null ^ trig != null) {
-			throw new RuntimeException("Echo & Trigger pin numbers must be provided together, ot not at all.");
+			throw new RuntimeException("Echo & Trigger pin numbers must be provided together, or not at all.");
 		}
 
 		System.out.println(String.format("Driving Servo on Channel %d", servoPort));

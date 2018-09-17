@@ -95,7 +95,7 @@ repositories {
 
 dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
   compile 'org.codehaus.groovy:groovy-all:2.4.6'
   compile 'org.codehaus.groovy:http-builder:0.4.0'
   compile "com.netflix.nebula:nebula-clojure-plugin:4.3.1"
