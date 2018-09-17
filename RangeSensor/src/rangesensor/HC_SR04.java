@@ -66,7 +66,9 @@ public class HC_SR04 {
 		if ((System.currentTimeMillis() - startedAt) < MAX_WAIT) {
 			return false;
 		} else {
-			// TODO Honk!
+			if (verbose) {
+				System.out.println("Echo took too long!!");
+			}
 			return true;
 		}
 	}
