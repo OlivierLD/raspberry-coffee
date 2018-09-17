@@ -61,6 +61,16 @@ public class HC_SR04 {
 		return this.echoPin.getPin();
 	}
 
+	private final static long MAX_WAIT = 100; // 1 10th of sec.
+	private static boolean tooLong(long startedAt) {
+		if ((System.currentTimeMillis() - startedAt) < MAX_WAIT) {
+			return false;
+		} else {
+			// TODO Honk!
+			return true;
+		}
+	}
+
 	public double readDistance() {
 		double distance = -1L;
 		trigPin.low();
@@ -77,10 +87,12 @@ public class HC_SR04 {
 		trigPin.low();
 
 		// Wait for the signal to return
-		while (echoPin.isLow()); // && (start == 0 || (start != 0 && (start - top) < BILLION)))
+		long now = System.currentTimeMillis();
+		while (echoPin.isLow() && !tooLong(now)); // && (start == 0 || (start != 0 && (start - top) < BILLION)))
 		long start = System.nanoTime();
 		// There it is, the echo comes back.
-		while (echoPin.isHigh());
+		now = System.currentTimeMillis();
+		while (echoPin.isHigh() && !tooLong(now));
 		long end = System.nanoTime();
 
 		//  System.out.println(">>> TOP: start=" + start + ", end=" + end);
