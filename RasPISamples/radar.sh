@@ -14,7 +14,7 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dradar.verbose=true"
 # Physical pin numbers, delay.
 PRMS=
 PRMS="$PRMS --servo-port:15"
-PRMS="$PRMS --delay:100"
+PRMS="$PRMS --delay:50"
 PRMS="$PRMS --trigger-pin:16" # GPIO_04
 PRMS="$PRMS --echo-pin:18"    # GPIO_05
 #

@@ -1,5 +1,12 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+plugins {
+  id 'java'
+  id 'maven'
+  id 'com.github.johnrengelman.shadow' version '2.0.1'
+}
+
+shadowJar {
+  zip64 true
+}
 
 group = 'oliv.pi4j.samples'
 version = '1.0'
