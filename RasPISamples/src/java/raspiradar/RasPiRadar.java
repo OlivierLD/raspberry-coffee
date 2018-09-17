@@ -225,11 +225,10 @@ public class RasPiRadar {
 		} finally {
 			if (rpr != null) {
 				rpr.stop();
-				TimeUtil.delay(500L); // Before freeing, get some time to get back to zero.
+				TimeUtil.delay(1_000L); // Before freeing, get some time to get back to zero.
 				rpr.free();
 			}
 		}
 		System.out.println("Done.");
 	}
-
 }

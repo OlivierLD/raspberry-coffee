@@ -64,7 +64,7 @@ public class HC_SR04 {
 	public double readDistance() {
 		double distance = -1L;
 		trigPin.low();
-		TimeUtil.delay(500L);
+//	TimeUtil.delay(500L);
 
 		// Just to check...
 		if (echoPin.isHigh()) {
