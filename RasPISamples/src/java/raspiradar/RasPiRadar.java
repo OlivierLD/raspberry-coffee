@@ -2,7 +2,7 @@ package raspiradar;
 
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
-import raspisamples.util.Utilities;
+import rangesensor.HC_SR04;
 import utils.TimeUtil;
 
 /**
@@ -21,6 +21,7 @@ public class RasPiRadar {
 	private int diff = servoMax - servoMin;
 
 	private PCA9685 servoBoard = null;
+	private HC_SR04 hcSR04 = null;
 
 	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException {
 		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX);
@@ -28,6 +29,7 @@ public class RasPiRadar {
 
 	public RasPiRadar(int channel, int servoMin, int servoMax) throws I2CFactory.UnsupportedBusNumberException {
 		this.servoBoard = new PCA9685();
+		this.hcSR04 = new HC_SR04();
 
 		this.servoMin = servoMin;
 		this.servoMax = servoMax;
@@ -50,12 +52,17 @@ public class RasPiRadar {
 		servoBoard.setPWM(servo, 0, pwm);
 	}
 
+	public double readDistance() {
+		return hcSR04.readDistance();
+	}
+
 	public void stop() { // Set (back) to 0, free resources
 		servoBoard.setPWM(servo, 0, 0);
 	}
 
 	public void free() {
 		servoBoard.close();
+		hcSR04.stop();
 	}
 
 	/*
@@ -86,6 +93,7 @@ public class RasPiRadar {
 				String s = str.substring(DELAY.length());
 				delay = Long.parseLong(s);
 			}
+			// TODO Trig & Echo pin numbers
 		}
 
 		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
@@ -98,8 +106,6 @@ public class RasPiRadar {
 			System.out.println("Not on a Pi? Moving on...");
 		}
 
-		// ADCReader mcp3008 = new ADCReader(); // with default wiring
-
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			loop = false;
 		}));
@@ -110,19 +116,22 @@ public class RasPiRadar {
 			}
 			int inc = 1;
 			int bearing = 0;
+			double dist = 0;
 			while (loop) {
 				try {
 					if (rr != null) {
 						rr.setAngle(bearing);
+						// Measure distance here, broadcast it witdouble dist = h bearing.
+						dist = rr.readDistance();
 					}
-					// Measure distance here
+
+					System.out.println(String.format("Bearing %s%02d, distance %.02f m", (bearing < 0 ? "-" : "+"), Math.abs(bearing), dist));
 
 					bearing += inc;
-					if (bearing > 90 || bearing < -90) {
+					if (bearing > 90 || bearing < -90) { // then flip
 						inc *= -1;
 						bearing += (2 * inc);
 					}
-					System.out.println(String.format("Bearing now %+d", bearing));
 					// Sleep here
 					TimeUtil.delay(delay);
 				} catch (Exception ex) {
@@ -132,6 +141,7 @@ public class RasPiRadar {
 		} finally {
 			if (rr != null) {
 				rr.stop();
+				TimeUtil.delay(500L); // Before freeing, get some time to get back to zero.
 				rr.free();
 			}
 		}

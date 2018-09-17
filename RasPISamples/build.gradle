@@ -107,6 +107,7 @@ dependencies {
   compile 'org.scala-lang:scala-library:2.12.3'
 //compile 'org.java-websocket:Java-WebSocket:1.3.7' // Already in ADC
   compile project(':common-utils')
+  compile project(':RangeSensor')
   compile project(':I2C.SPI')
   compile project(':PhoneKeyboard3x4')
   compile project(':ADC')

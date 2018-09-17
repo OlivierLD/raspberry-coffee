@@ -4,12 +4,12 @@ import javax.sound.midi.Instrument;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Synthesizer;
-import rangesensor.HC_SR04;
+import rangesensor.StandaloneHC_SR04;
 import rangesensor.JNI_HC_SR04;
 
 /**
  * Uses WiringPI, bridged with javah.
- * The pure Java implementation (see {@link HC_SR04}.java) seems to have problems
+ * The pure Java implementation (see {@link StandaloneHC_SR04}.java) seems to have problems
  * with the nano seconds required here.
  */
 public class Theremin {

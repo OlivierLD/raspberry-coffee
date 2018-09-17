@@ -20,8 +20,7 @@
     <script type="text/javascript" src="level.analog.js"></script>
     <script type="text/javascript">
 
-  var getQSPrm = function(prm)
-  {
+  var getQSPrm = function(prm) {
     var value;
     var loc = document.location.toString();
     if (loc.indexOf("?") > -1) {
@@ -37,7 +36,7 @@
       }
     }
     return value;
-  };      
+  };
 
   window.onload = function()
   {
@@ -51,27 +50,27 @@
       cb.checked = (border === 'Y');
     }
   };
-  
+
   window.onresize = function()
   {
 //  console.log("Re-evaluating window size");
     resizeComponents();
   };
-  
+
   var resizeComponents = function()
   {
     var ww = window.innerWidth;
     var wh = window.innerHeight;
-    
+
     var totalWidth = TOTAL_WIDTH; // in console.js
-    
+
     // levelCanvas
     document.getElementById('levelCanvas').width = 480 * (Math.min(ww, totalWidth) / totalWidth);
     document.getElementById('levelCanvas').height = 440 * (Math.min(ww, totalWidth) / totalWidth);
-    // Displays inside the canvases        
-    resizeDisplays(ww); 
+    // Displays inside the canvases
+    resizeDisplays(ww);
   };
-  
+
     </script>
   </head>
   <body bgcolor="black">
@@ -87,7 +86,7 @@
           <canvas id="levelCanvas" width="480" height="440" title="Level"></canvas>
         </td>
       </tr>
-    </table>   
+    </table>
     <div id="err-mess"></div>
     <address>The HTML5 Level Console</address>
   </body>

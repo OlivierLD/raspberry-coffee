@@ -4,12 +4,13 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import utils.TimeUtil;
 
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.text.NumberFormat;
 
 /**
  * See https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi
@@ -26,8 +27,72 @@ public class HC_SR04 {
 	private final static long BILLION = (long) 1E9;
 	private final static int TEN_MICRO_SEC = 10_000; // In Nano secs
 
-	public static void main(String... args)
-			throws InterruptedException {
+	private GpioController gpio;
+
+	private GpioPinDigitalOutput trigPin;
+	private GpioPinDigitalInput echoPin;
+
+	public HC_SR04() {
+		this(RaspiPin.GPIO_04, RaspiPin.GPIO_05);
+	}
+
+	public HC_SR04(Pin trig, Pin echo) {
+		init(trig, echo);
+	}
+	private void init(Pin trig, Pin echo) {
+		// create gpio controller
+		gpio = GpioFactory.getInstance();
+		// 2 pins
+		trigPin = gpio.provisionDigitalOutputPin(trig, "Trig", PinState.LOW);
+		echoPin = gpio.provisionDigitalInputPin(echo, "Echo");
+	}
+
+	public void stop() {
+		trigPin.low(); // Off
+		gpio.shutdown();
+	}
+
+	public double readDistance() {
+		double distance = -1L;
+		trigPin.low();
+		TimeUtil.delay(500L);
+
+		// Just to check...
+		if (echoPin.isHigh()) {
+			System.out.println(">>> !! Before sending signal, echo PIN is " + (echoPin.isHigh() ? "High" : "Low"));
+		}
+		trigPin.high();
+		// 10 microsec to trigger the module  (8 ultrasound bursts at 40 kHz)
+		// https://www.dropbox.com/s/615w1321sg9epjj/hc-sr04-ultrasound-timing-diagram.png
+		TimeUtil.delay(0, TEN_MICRO_SEC);
+		trigPin.low();
+
+		// Wait for the signal to return
+		while (echoPin.isLow()); // && (start == 0 || (start != 0 && (start - top) < BILLION)))
+		long start = System.nanoTime();
+		// There it is, the echo comes back.
+		while (echoPin.isHigh());
+		long end = System.nanoTime();
+
+		//  System.out.println(">>> TOP: start=" + start + ", end=" + end);
+		//  System.out.println("Nb Low Check:" + nbLowCheck + ", Nb High Check:" + nbHighCheck);
+
+		if (end > start) { //  && start > 0)
+			double pulseDuration = (double) (end - start) / (double) BILLION; // in seconds
+//      System.out.println("Duration:" + (end - start) + " nanoS"); // DF_N.format(pulseDuration));
+			distance = pulseDuration * DIST_FACT;
+			if (distance < 1_000) { // Less than 10 meters
+				System.out.println("Distance: " + DF22.format(distance) + " cm. (" + distance + "), Duration:" + (end - start) + " nanoS"); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
+			} else {
+				System.out.println("   >>> Too far:" + DF22.format(distance) + " cm.");
+			}
+		} else {
+			throw new RuntimeException("Hiccup! start:" + start + ", end:" + end);
+		}
+		return distance;
+	}
+
+	public static void main(String... args) {
 
 //	System.out.println("BILLION:" + NumberFormat.getInstance().format(BILLION));
 
@@ -36,88 +101,40 @@ public class HC_SR04 {
 
 		verbose = "true".equals(System.getProperty("verbose", "false"));
 
-		// create gpio controller
-		final GpioController gpio = GpioFactory.getInstance();
-
-		final GpioPinDigitalOutput trigPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_04, "Trig", PinState.LOW);
-		final GpioPinDigitalInput echoPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_05, "Echo");
+		HC_SR04 hcSR04 = new HC_SR04();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nOops!");
-			gpio.shutdown();
+			hcSR04.stop();
 			System.out.println("Exiting nicely.");
 		}));
 
 		System.out.println(">>> Waiting for the sensor to be ready (2s)...");
-		Thread.sleep(2_000L);
+		TimeUtil.delay(2_000L);
 
 		boolean go = true;
 		System.out.println("Looping until the distance is less than " + MIN_DIST + " cm");
 		while (go) {
-			trigPin.low();
+			double distance = 0;
 			try {
-				Thread.sleep(500L);
+				distance = hcSR04.readDistance();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				System.out.println(ex.toString());
+				TimeUtil.delay(500L);
 			}
-
-			// Just to check...
-			if (echoPin.isHigh()) {
-				System.out.println(">>> !! Before sending signal, echo PIN is " + (echoPin.isHigh() ? "High" : "Low"));
-			}
-			trigPin.high();
-			// 10 microsec to trigger the module  (8 ultrasound bursts at 40 kHz)
-			// https://www.dropbox.com/s/615w1321sg9epjj/hc-sr04-ultrasound-timing-diagram.png
-			try {
-				Thread.sleep(0, TEN_MICRO_SEC);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-			trigPin.low();
-
-			// Wait for the signal to return
-			while (echoPin.isLow()); // && (start == 0 || (start != 0 && (start - top) < BILLION)))
-			long start = System.nanoTime();
-			// There it is, the echo comes back.
-			while (echoPin.isHigh());
-			long end = System.nanoTime();
-
-			//  System.out.println(">>> TOP: start=" + start + ", end=" + end);
-			//  System.out.println("Nb Low Check:" + nbLowCheck + ", Nb High Check:" + nbHighCheck);
-
-			if (end > start) { //  && start > 0)
-				double pulseDuration = (double) (end - start) / (double) BILLION; // in seconds
-//      System.out.println("Duration:" + (end - start) + " nanoS"); // DF_N.format(pulseDuration));
-				double distance = pulseDuration * DIST_FACT;
-				if (distance < 1_000) { // Less than 10 meters
-					System.out.println("Distance: " + DF22.format(distance) + " cm. (" + distance + "), Duration:" + (end - start) + " nanoS"); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
-				} else {
-					System.out.println("   >>> Too far:" + DF22.format(distance) + " cm.");
-				}
-				if (distance > 0 && distance < MIN_DIST) {
-					go = false;
-				} else {
-					if (distance < 0 && verbose) {
-						System.out.println("Dist:" + distance + ", start:" + start + ", end:" + end);
-					}
-					try {
-						Thread.sleep(1_000L);
-					} catch (Exception ex) {
-					}
-				}
+			if (distance > 0 && distance < MIN_DIST) {
+				go = false;
 			} else {
-				if (verbose) {
-					System.out.println("Hiccup! start:" + start + ", end:" + end);
+				if (distance < 0 && verbose) {
+					System.out.println("Dist:" + distance);
 				}
 				try {
-					Thread.sleep(500L);
+					TimeUtil.delay(1_000L);
 				} catch (Exception ex) {
 				}
 			}
 		}
 		System.out.println("Done.");
-		trigPin.low(); // Off
-
-		gpio.shutdown();
+		hcSR04.stop();
 	}
 }

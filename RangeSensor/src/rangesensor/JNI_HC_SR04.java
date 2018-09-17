@@ -2,7 +2,7 @@ package rangesensor;
 
 /**
  * Uses WiringPI, bridged with javah.
- * The pure Java implementation (see {@link HC_SR04}.java) seems to have problems
+ * The pure Java implementation (see {@link StandaloneHC_SR04}.java) seems to have problems
  * with the nano seconds required here.
  */
 public class JNI_HC_SR04 {
