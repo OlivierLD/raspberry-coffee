@@ -1,9 +1,13 @@
 package raspiradar;
 
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
-import raspisamples.util.Utilities;
+import rangesensor.HC_SR04;
+import utils.PinUtil;
 import utils.TimeUtil;
+
+import java.util.function.Consumer;
 
 /**
  * One servo (PCA9685) [-90..90] to orient the Sonic Sensor
@@ -11,6 +15,7 @@ import utils.TimeUtil;
  */
 public class RasPiRadar {
 
+	private boolean verbose = "true".equals(System.getProperty("radar.verbose"));
 	private int servo = -1;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
@@ -21,13 +26,60 @@ public class RasPiRadar {
 	private int diff = servoMax - servoMin;
 
 	private PCA9685 servoBoard = null;
+	private HC_SR04 hcSR04 = null;
 
-	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException {
-		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX);
+	public static class DirectionAndRange {
+		double range;
+		int direction;
+
+		public DirectionAndRange() { }
+		public DirectionAndRange(int direction, double range) {
+			this.direction = direction;
+			this.range = range;
+		}
+		public DirectionAndRange direction(int direction) {
+			this.direction = direction;
+			return this;
+		}
+		public DirectionAndRange range(double range) {
+			this.range = range;
+			return this;
+		}
 	}
 
-	public RasPiRadar(int channel, int servoMin, int servoMax) throws I2CFactory.UnsupportedBusNumberException {
-		this.servoBoard = new PCA9685();
+	private Consumer<DirectionAndRange> dataConsumer = (data) -> {
+		System.out.println(String.format("Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+	};
+
+	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
+	}
+
+	public RasPiRadar(int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
+	}
+
+	public RasPiRadar(int channel, int servoMin, int servoMax, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	  this.servoBoard = new PCA9685();
+
+		try {
+			if (trig != null && echo != null) {
+				this.hcSR04 = new HC_SR04(trig, echo);
+			} else {
+				this.hcSR04 = new HC_SR04();
+			}
+		} catch (UnsatisfiedLinkError usle) {
+			throw usle;
+		}
+
+		if (verbose) {
+			System.out.println("HC_SR04 wiring:");
+			String[] map = new String[2];
+			map[0] = String.valueOf(PinUtil.findByPin(this.hcSR04.getTrigPin()).pinNumber()) + ":" + "Trigger";
+			map[1] = String.valueOf(PinUtil.findByPin(this.hcSR04.getEchoPin()).pinNumber()) + ":" + "Echo";
+
+			PinUtil.print(map);
+		}
 
 		this.servoMin = servoMin;
 		this.servoMax = servoMax;
@@ -40,6 +92,14 @@ public class RasPiRadar {
 		System.out.println("Channel " + channel + " all set. Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
 	}
 
+	public void setDataConsumer(Consumer<DirectionAndRange> dataConsumer) {
+		this.dataConsumer = dataConsumer;
+	}
+
+	public void consumeData(DirectionAndRange dar) {
+		this.dataConsumer.accept(dar);
+	}
+
 	public void setAngle(float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
 		// System.out.println(f + " degrees (" + pwm + ")");
@@ -50,12 +110,17 @@ public class RasPiRadar {
 		servoBoard.setPWM(servo, 0, pwm);
 	}
 
+	public double readDistance() {
+		return hcSR04.readDistance();
+	}
+
 	public void stop() { // Set (back) to 0, free resources
 		servoBoard.setPWM(servo, 0, 0);
 	}
 
 	public void free() {
 		servoBoard.close();
+		hcSR04.stop();
 	}
 
 	/*
@@ -68,13 +133,22 @@ public class RasPiRadar {
 	}
 
 	private final static String PCA9685_SERVO_PORT = "--servo-port:";
-	private final static String DELAY = "--delay:";
+	private final static String DELAY              = "--delay:";
+	private final static String TRIGGER_PIN        = "--trigger-pin:";
+	private final static String ECHO_PIN           = "--echo-pin:";
 
 	private static boolean loop = true;
 	private static long delay = 100L;
 
-	public static void main(String... args) throws Exception {
+	public static void main(String... args) {
+
+		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
+			System.out.println(String.format("Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+		};
+
 		int servoPort  = 0;
+
+		Integer trig = null, echo = null;
 
 		// User prms
 		for (String str : args) {
@@ -86,43 +160,62 @@ public class RasPiRadar {
 				String s = str.substring(DELAY.length());
 				delay = Long.parseLong(s);
 			}
+			// Trig & Echo pin PHYSICAL numbers (1..40)
+			if (str.startsWith(TRIGGER_PIN)) {
+				String s = str.substring(TRIGGER_PIN.length());
+				trig = Integer.parseInt(s);
+			}
+			if (str.startsWith(ECHO_PIN)) {
+				String s = str.substring(ECHO_PIN.length());
+				echo = Integer.parseInt(s);
+			}
+		}
+		if (echo != null ^ trig != null) {
+			throw new RuntimeException("Echo & Trigger pin numbers must be provided together, or not at all.");
 		}
 
 		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
 		System.out.println(String.format("Wait when scanning %d ms", delay));
 
-		RasPiRadar rr = null;
+		RasPiRadar rpr = null;
 		try {
-			rr = new RasPiRadar(servoPort);
-		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
+			if (echo == null && trig == null) {
+				rpr = new RasPiRadar(servoPort);
+			} else {
+				rpr = new RasPiRadar(servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
+			}
+		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");
 		}
-
-		// ADCReader mcp3008 = new ADCReader(); // with default wiring
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			loop = false;
 		}));
 
 		try {
-			if (rr != null) {
-				rr.stop(); // init
+			if (rpr != null) {
+				rpr.stop(); // init
 			}
 			int inc = 1;
 			int bearing = 0;
+			double dist = 0;
 			while (loop) {
 				try {
-					if (rr != null) {
-						rr.setAngle(bearing);
+					if (rpr != null) {
+						rpr.setAngle(bearing);
+						// Measure distance here, broadcast it witdouble dist = h bearing.
+						dist = rpr.readDistance();
+						// Consumer
+						rpr.consumeData(new DirectionAndRange(bearing, dist));
+					} else { // For dev...
+						defaultDataConsumer.accept(new DirectionAndRange(bearing, dist));
 					}
-					// Measure distance here
 
 					bearing += inc;
-					if (bearing > 90 || bearing < -90) {
+					if (bearing > 90 || bearing < -90) { // then flip
 						inc *= -1;
 						bearing += (2 * inc);
 					}
-					System.out.println(String.format("Bearing now %+d", bearing));
 					// Sleep here
 					TimeUtil.delay(delay);
 				} catch (Exception ex) {
@@ -130,9 +223,10 @@ public class RasPiRadar {
 				}
 			}
 		} finally {
-			if (rr != null) {
-				rr.stop();
-				rr.free();
+			if (rpr != null) {
+				rpr.stop();
+				TimeUtil.delay(500L); // Before freeing, get some time to get back to zero.
+				rpr.free();
 			}
 		}
 		System.out.println("Done.");
