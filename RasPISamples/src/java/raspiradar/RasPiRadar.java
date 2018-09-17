@@ -48,7 +48,7 @@ public class RasPiRadar {
 	}
 
 	private Consumer<DirectionAndRange> dataConsumer = (data) -> {
-		System.out.println(String.format("Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+		System.out.println(String.format("Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
 	};
 
 	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
@@ -143,7 +143,7 @@ public class RasPiRadar {
 	public static void main(String... args) {
 
 		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
-			System.out.println(String.format("Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+			System.out.println(String.format("Default>> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
 		};
 
 		int servoPort  = 0;
