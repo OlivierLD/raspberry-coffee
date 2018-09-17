@@ -7,6 +7,8 @@ import rangesensor.HC_SR04;
 import utils.PinUtil;
 import utils.TimeUtil;
 
+import java.util.function.Consumer;
+
 /**
  * One servo (PCA9685) [-90..90] to orient the Sonic Sensor
  * One HC-SR04 to measure the distance
@@ -25,6 +27,29 @@ public class RasPiRadar {
 
 	private PCA9685 servoBoard = null;
 	private HC_SR04 hcSR04 = null;
+
+	public static class DirectionAndRange {
+		double range;
+		int direction;
+
+		public DirectionAndRange() { }
+		public DirectionAndRange(int direction, double range) {
+			this.direction = direction;
+			this.range = range;
+		}
+		public DirectionAndRange direction(int direction) {
+			this.direction = direction;
+			return this;
+		}
+		public DirectionAndRange range(double range) {
+			this.range = range;
+			return this;
+		}
+	}
+
+	private Consumer<DirectionAndRange> dataConsumer = (data) -> {
+		System.out.println(String.format("Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+	};
 
 	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
@@ -65,6 +90,14 @@ public class RasPiRadar {
 
 		this.servo = channel;
 		System.out.println("Channel " + channel + " all set. Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
+	}
+
+	public void setDataConsumer(Consumer<DirectionAndRange> dataConsumer) {
+		this.dataConsumer = dataConsumer;
+	}
+
+	public void consumeData(DirectionAndRange dar) {
+		this.dataConsumer.accept(dar);
 	}
 
 	public void setAngle(float f) {
@@ -108,6 +141,10 @@ public class RasPiRadar {
 	private static long delay = 100L;
 
 	public static void main(String... args) throws Exception {
+		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
+			System.out.println(String.format("Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+		};
+
 		int servoPort  = 0;
 
 		Integer trig = null, echo = null;
@@ -167,9 +204,11 @@ public class RasPiRadar {
 						rr.setAngle(bearing);
 						// Measure distance here, broadcast it witdouble dist = h bearing.
 						dist = rr.readDistance();
+						// Consumer
+						rr.consumeData(new DirectionAndRange(bearing, dist));
+					} else { // For dev...
+						defaultDataConsumer.accept(new DirectionAndRange(bearing, dist));
 					}
-
-					System.out.println(String.format("Bearing %s%02d, distance %.02f m", (bearing < 0 ? "-" : "+"), Math.abs(bearing), dist));
 
 					bearing += inc;
 					if (bearing > 90 || bearing < -90) { // then flip

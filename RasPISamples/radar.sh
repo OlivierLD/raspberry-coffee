@@ -9,6 +9,7 @@ JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=raspberrypi-boat"
 #
 JAVA_OPTIONS=
+JAVA_OPTIONS="$JAVA_OPTIONS -Dradar.verbose=true"
 #
 # Physical pin numbers, delay.
 PRMS=
