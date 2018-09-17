@@ -136,9 +136,11 @@ public class RasPiRadar {
 	private final static String DELAY              = "--delay:";
 	private final static String TRIGGER_PIN        = "--trigger-pin:";
 	private final static String ECHO_PIN           = "--echo-pin:";
+	private final static String JUST_RESET         = "--just-reset";
 
 	private static boolean loop = true;
 	private static long delay = 100L;
+	private static boolean justReset = false;
 
 	public static void main(String... args) {
 
@@ -169,6 +171,9 @@ public class RasPiRadar {
 				String s = str.substring(ECHO_PIN.length());
 				echo = Integer.parseInt(s);
 			}
+			if (str.equals(JUST_RESET)) {
+				justReset = true;
+			}
 		}
 		if (echo != null ^ trig != null) {
 			throw new RuntimeException("Echo & Trigger pin numbers must be provided together, or not at all.");
@@ -196,6 +201,10 @@ public class RasPiRadar {
 			if (rpr != null) {
 				rpr.stop(); // init
 			}
+			if (justReset) {
+				loop = false;
+			}
+
 			int inc = 1;
 			int bearing = 0;
 			double dist = 0;
