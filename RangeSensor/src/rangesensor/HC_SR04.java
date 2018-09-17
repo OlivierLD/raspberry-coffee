@@ -61,7 +61,7 @@ public class HC_SR04 {
 		return this.echoPin.getPin();
 	}
 
-	private final static long MAX_WAIT = 100; // 1 10th of sec.
+	private final static long MAX_WAIT = 100; // 100ms = 1/10 of sec.
 	private static boolean tooLong(long startedAt) {
 		if ((System.currentTimeMillis() - startedAt) < MAX_WAIT) {
 			return false;
