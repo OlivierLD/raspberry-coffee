@@ -52,6 +52,14 @@ public class HC_SR04 {
 		gpio.shutdown();
 	}
 
+	public Pin getTrigPin() {
+		return this.trigPin.getPin();
+	}
+
+	public Pin getEchoPin() {
+		return this.echoPin.getPin();
+	}
+
 	public double readDistance() {
 		double distance = -1L;
 		trigPin.low();

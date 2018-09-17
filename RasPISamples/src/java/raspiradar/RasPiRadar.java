@@ -1,8 +1,10 @@
 package raspiradar;
 
+import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 import rangesensor.HC_SR04;
+import utils.PinUtil;
 import utils.TimeUtil;
 
 /**
@@ -11,6 +13,7 @@ import utils.TimeUtil;
  */
 public class RasPiRadar {
 
+	private boolean verbose = "true".equals(System.getProperty("radar.verbose"));
 	private int servo = -1;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
@@ -23,13 +26,35 @@ public class RasPiRadar {
 	private PCA9685 servoBoard = null;
 	private HC_SR04 hcSR04 = null;
 
-	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException {
-		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX);
+	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
 	}
 
-	public RasPiRadar(int channel, int servoMin, int servoMax) throws I2CFactory.UnsupportedBusNumberException {
-		this.servoBoard = new PCA9685();
-		this.hcSR04 = new HC_SR04();
+	public RasPiRadar(int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
+	}
+
+	public RasPiRadar(int channel, int servoMin, int servoMax, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	  this.servoBoard = new PCA9685();
+
+		try {
+			if (trig != null && echo != null) {
+				this.hcSR04 = new HC_SR04(trig, echo);
+			} else {
+				this.hcSR04 = new HC_SR04();
+			}
+		} catch (UnsatisfiedLinkError usle) {
+			throw usle;
+		}
+
+		if (verbose) {
+			System.out.println("HC_SR04 wiring:");
+			String[] map = new String[2];
+			map[0] = String.valueOf(PinUtil.findByPin(this.hcSR04.getTrigPin()).pinNumber()) + ":" + "Trigger";
+			map[1] = String.valueOf(PinUtil.findByPin(this.hcSR04.getEchoPin()).pinNumber()) + ":" + "Echo";
+
+			PinUtil.print(map);
+		}
 
 		this.servoMin = servoMin;
 		this.servoMax = servoMax;
@@ -75,13 +100,17 @@ public class RasPiRadar {
 	}
 
 	private final static String PCA9685_SERVO_PORT = "--servo-port:";
-	private final static String DELAY = "--delay:";
+	private final static String DELAY              = "--delay:";
+	private final static String TRIGGER_PIN        = "--trigger-pin:";
+	private final static String ECHO_PIN           = "--echo-pin:";
 
 	private static boolean loop = true;
 	private static long delay = 100L;
 
 	public static void main(String... args) throws Exception {
 		int servoPort  = 0;
+
+		Integer trig = null, echo = null;
 
 		// User prms
 		for (String str : args) {
@@ -93,7 +122,18 @@ public class RasPiRadar {
 				String s = str.substring(DELAY.length());
 				delay = Long.parseLong(s);
 			}
-			// TODO Trig & Echo pin numbers
+			// Trig & Echo pin PHYSICAL numbers
+			if (str.startsWith(TRIGGER_PIN)) {
+				String s = str.substring(TRIGGER_PIN.length());
+				trig = Integer.parseInt(s);
+			}
+			if (str.startsWith(ECHO_PIN)) {
+				String s = str.substring(ECHO_PIN.length());
+				echo = Integer.parseInt(s);
+			}
+		}
+		if (echo != null ^ trig != null) {
+			throw new RuntimeException("Echo & Trigger pin numbers must be provided together, ot not at all.");
 		}
 
 		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
@@ -101,8 +141,12 @@ public class RasPiRadar {
 
 		RasPiRadar rr = null;
 		try {
-			rr = new RasPiRadar(servoPort);
-		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
+			if (echo == null && trig == null) {
+				rr = new RasPiRadar(servoPort);
+			} else {
+				rr = new RasPiRadar(servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
+			}
+		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");
 		}
 
