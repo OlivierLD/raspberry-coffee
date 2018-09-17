@@ -22,7 +22,7 @@ public class StandaloneHC_SR04 {
 	private final static double DIST_FACT = SOUND_SPEED / 2; // round trip
 	private final static int MIN_DIST = 3; // in cm
 
-	private static boolean verbose = false;
+	private static boolean verbose = "true".equals(System.getProperty("hc_sr04.verbose"));
 	private final static long BILLION = (long) 1E9;
 	private final static int TEN_MICRO_SEC = 10_000; // In Nano secs
 
@@ -89,10 +89,12 @@ public class StandaloneHC_SR04 {
 				double pulseDuration = (double) (end - start) / (double) BILLION; // in seconds
 //      System.out.println("Duration:" + (end - start) + " nanoS"); // DF_N.format(pulseDuration));
 				double distance = pulseDuration * DIST_FACT;
-				if (distance < 1_000) { // Less than 10 meters
-					System.out.println("Distance: " + DF22.format(distance) + " cm. (" + distance + "), Duration:" + (end - start) + " nanoS"); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
-				} else {
-					System.out.println("   >>> Too far:" + DF22.format(distance) + " cm.");
+				if (verbose) {
+					if (distance < 1_000) { // Less than 10 meters
+						System.out.println("Distance: " + DF22.format(distance) + " cm. (" + distance + "), Duration:" + NumberFormat.getInstance().format(end - start) + " nanoS"); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
+					} else {
+						System.out.println("   >>> Too far:" + DF22.format(distance) + " cm.");
+					}
 				}
 				if (distance > 0 && distance < MIN_DIST) {
 					go = false;
