@@ -1,5 +1,5 @@
 #!/bin/bash
-CP=./build/libs/RasPISamples-1.0-all.jar
+CP=./build/libs/RasPIRadar-1.0-all.jar
 #
 JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"

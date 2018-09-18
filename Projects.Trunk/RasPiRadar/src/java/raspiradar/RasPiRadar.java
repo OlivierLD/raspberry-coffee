@@ -28,6 +28,10 @@ public class RasPiRadar {
 	private PCA9685 servoBoard = null;
 	private HC_SR04 hcSR04 = null;
 
+	/**
+	 * The class emitted when data are read.
+	 * This is what the consumer is fed with (See {@link #dataConsumer})
+	 */
 	public static class DirectionAndRange {
 		double range;
 		int direction;
@@ -45,9 +49,19 @@ public class RasPiRadar {
 			this.range = range;
 			return this;
 		}
+		public int direction() {
+			return this.direction;
+		}
+		public double range() {
+			return this.range;
+		}
 	}
 
-	private Consumer<DirectionAndRange> dataConsumer = (data) -> {
+	/**
+	 * When data are read, they're sent to this Consumer.
+	 * Can be used for user interface.
+	 */
+	private Consumer<DirectionAndRange> dataConsumer = data -> {
 		System.out.println(String.format("Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
 	};
 
