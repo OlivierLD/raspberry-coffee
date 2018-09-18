@@ -5,12 +5,14 @@ import java.util.Map;
 /**
  * Warning:
  * Imported libraries must be compiled with 'sourceCompatibility = 1.8'
+ *
+ * See raspiradar.RasPiRadar
  */
 
 RasPiRadar radar = null;
 Map<Integer, Double> echos = new HashMap<Integer, Double>(181);
 
-// Processing does not support lambdas (yet)
+// Processing does not support lambdas (yet)...
 class DataConsumer implements Consumer<RasPiRadar.DirectionAndRange> {  
   void accept(RasPiRadar.DirectionAndRange data) {
     // Build a map of echos here
@@ -28,12 +30,12 @@ int hitExtremity = 0;
 
 long delay = 100L;
 
-color bgcolor = color (0,0,0);
-color gridcolor = color (0,0,0);
-color sweepercolor = color (102,250,81);
+color bgcolor = color (0, 0, 0);
+color gridcolor = color (0, 0, 0);
+color sweepercolor = color (102, 250, 81);
 
 void setup() {
-  size(640, 320);
+  size(960, 480);
   try {
    radar = new RasPiRadar(true, 15);
    radar.setDataConsumer(dataConsumer);
@@ -71,21 +73,22 @@ void draw() {
     int y = (int)(Math.round(range * Math.sin(Math.toRadians(key) + 90) * scale));
     plotEcho((width / 2) + x, height - y);
   }
-  textSize(18);
+  textSize(16);
   fill(255);
   text(String.format("%s%02d\272, range %.02f cm", (bearing < 0 ? "-" : "+"), Math.abs(bearing), dist), 10, 20);
 }
 
+// Fill the circle
 void circle(){
-  fill(color (102, 250, 81, 60));
+  fill(color(102, 250, 81, 60));
   ellipse(width/2, height, width, 2 * height);
 }
  
 void grid(){
-  stroke(#faf7f7);
+  stroke(color(250, 247, 247, 50)); // color(250, 247, 247, 50) = #faf7f7, .5 
   strokeWeight(2);
-  line(width/2, height, width/2, 0);       // verticlal grid
-  line(0, height - 1, width, height - 1);  // horizontal grid
+  line(width/2, height, width/2, 0);       // verticlal axis
+  line(0, height - 1, width, height - 1);  // horizontal axis
   strokeWeight(1);
   noFill();
   for (int i = 1; i <=10; i++) {
@@ -99,7 +102,7 @@ void sweeper(){
   float f = 0.01;
   for (int i=38; i>=1; i--) {
     stroke(sweepercolor, 2*i);
-    line(width/2, height, (width/2 + cos(beam - (f / 2)) * 300), (height - sin(beam - (f / 2)) * 300));
+    line(width/2, height, (width/2 + cos(beam - (f / 2)) * (height * 0.98)), (height - sin(beam - (f / 2)) * (height * 0.98)));
     f += 0.01; 
   }
 }
