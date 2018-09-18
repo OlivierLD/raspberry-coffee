@@ -176,7 +176,7 @@ public class RasPiRadar {
 			if (str.equals(JUST_RESET)) {
 				justReset = true;
 			}
-			if (str.equals(JUST_ONE_LOOP) {
+			if (str.equals(JUST_ONE_LOOP)) {
 				justOneLoop = true;
 			}
 		}
