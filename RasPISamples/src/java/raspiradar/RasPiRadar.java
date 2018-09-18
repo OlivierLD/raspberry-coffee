@@ -137,10 +137,12 @@ public class RasPiRadar {
 	private final static String TRIGGER_PIN        = "--trigger-pin:";
 	private final static String ECHO_PIN           = "--echo-pin:";
 	private final static String JUST_RESET         = "--just-reset";
+	private final static String JUST_ONE_LOOP      = "--just-one-loop";
 
 	private static boolean loop = true;
 	private static long delay = 100L;
 	private static boolean justReset = false;
+	private static boolean justOneLoop = false;
 
 	public static void main(String... args) {
 
@@ -173,6 +175,9 @@ public class RasPiRadar {
 			}
 			if (str.equals(JUST_RESET)) {
 				justReset = true;
+			}
+			if (str.equals(JUST_ONE_LOOP) {
+				justOneLoop = true;
 			}
 		}
 		if (echo != null ^ trig != null) {
@@ -209,6 +214,7 @@ public class RasPiRadar {
 			int inc = 1;
 			int bearing = 0;
 			double dist = 0;
+			int hitExtremity = 0;
 			while (loop) {
 				try {
 					if (rpr != null) {
@@ -220,9 +226,13 @@ public class RasPiRadar {
 					} else { // For dev...
 						defaultDataConsumer.accept(new DirectionAndRange(bearing, dist));
 					}
+					if (justOneLoop && hitExtremity == 2 && bearing == 0) {
+						loop = false;
+					}
 
 					bearing += inc;
 					if (bearing > 90 || bearing < -90) { // then flip
+						hitExtremity += 1;
 						inc *= -1;
 						bearing += (2 * inc);
 					}
