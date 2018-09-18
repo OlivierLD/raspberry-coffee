@@ -6,6 +6,7 @@ import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import utils.TimeUtil;
 
 import java.text.DecimalFormat;
 import java.text.Format;
@@ -25,6 +26,18 @@ public class StandaloneHC_SR04 {
 	private static boolean verbose = "true".equals(System.getProperty("hc_sr04.verbose"));
 	private final static long BILLION = (long) 1E9;
 	private final static int TEN_MICRO_SEC = 10_000; // In Nano secs
+
+	private final static long MAX_WAIT = 100; // 100ms = 1/10 of sec.
+	private static boolean tooLong(long startedAt) {
+		if ((System.currentTimeMillis() - startedAt) < MAX_WAIT) {
+			return false;
+		} else {
+			if (verbose) {
+				System.out.println("Echo took too long!!");
+			}
+			return true;
+		}
+	}
 
 	public static void main(String... args)
 			throws InterruptedException {
@@ -49,17 +62,13 @@ public class StandaloneHC_SR04 {
 		}));
 
 		System.out.println(">>> Waiting for the sensor to be ready (2s)...");
-		Thread.sleep(2_000L);
+		TimeUtil.delay(2_000L);
 
 		boolean go = true;
 		System.out.println("Looping until the distance is less than " + MIN_DIST + " cm");
 		while (go) {
 			trigPin.low();
-			try {
-				Thread.sleep(500L);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+			TimeUtil.delay(500L);
 
 			// Just to check...
 			if (echoPin.isHigh()) {
@@ -68,18 +77,16 @@ public class StandaloneHC_SR04 {
 			trigPin.high();
 			// 10 microsec to trigger the module  (8 ultrasound bursts at 40 kHz)
 			// https://www.dropbox.com/s/615w1321sg9epjj/hc-sr04-ultrasound-timing-diagram.png
-			try {
-				Thread.sleep(0, TEN_MICRO_SEC);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+			TimeUtil.delay(0, TEN_MICRO_SEC);
 			trigPin.low();
 
 			// Wait for the signal to return
-			while (echoPin.isLow()); // && (start == 0 || (start != 0 && (start - top) < BILLION)))
+			long now = System.currentTimeMillis();
+			while (echoPin.isLow() && !tooLong(now)); // && (start == 0 || (start != 0 && (start - top) < BILLION)))
 			long start = System.nanoTime();
 			// There it is, the echo comes back.
-			while (echoPin.isHigh());
+			now = System.currentTimeMillis();
+			while (echoPin.isHigh() && !tooLong(now));
 			long end = System.nanoTime();
 
 			//  System.out.println(">>> TOP: start=" + start + ", end=" + end);
@@ -100,21 +107,15 @@ public class StandaloneHC_SR04 {
 					go = false;
 				} else {
 					if (distance < 0 && verbose) {
-						System.out.println("Dist:" + distance + ", start:" + start + ", end:" + end);
+						throw new RuntimeException("Hiccup! start:" + NumberFormat.getInstance().format(start) + ", end:" + NumberFormat.getInstance().format(end));
 					}
-					try {
-						Thread.sleep(1_000L);
-					} catch (Exception ex) {
-					}
+					TimeUtil.delay(1_000L);
 				}
 			} else {
 				if (verbose) {
 					System.out.println("Hiccup! start:" + start + ", end:" + end);
 				}
-				try {
-					Thread.sleep(500L);
-				} catch (Exception ex) {
-				}
+				TimeUtil.delay(500L);
 			}
 		}
 		System.out.println("Done.");

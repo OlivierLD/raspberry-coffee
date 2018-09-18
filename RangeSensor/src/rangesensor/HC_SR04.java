@@ -112,7 +112,7 @@ public class HC_SR04 {
 				}
 			}
 		} else {
-			throw new RuntimeException("Hiccup! start:" + start + ", end:" + end);
+			throw new RuntimeException("Hiccup! start:" + NumberFormat.getInstance().format(start) + ", end:" + NumberFormat.getInstance().format(end));
 		}
 		return distance;
 	}
