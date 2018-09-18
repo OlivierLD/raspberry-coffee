@@ -5,7 +5,7 @@ This folder contains projects involving the components available in other module
 There are several of them - as opposed to just a big one - to minimize the number
 of dependencies for each example.
 
-They all come with a `build.gradle`, and the example are built by a
+They all come with a `build.gradle`, and the examples are built by a
 ```
  $ ../../gradlew shadowJar
 ```
