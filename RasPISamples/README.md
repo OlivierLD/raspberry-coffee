@@ -316,7 +316,9 @@ Wiring:
 ![Radar](./rpi.radar_bb.png)
 
 Hardware setting:
-![Radar](./radar.jpg)
+![Radar](./radar.png)
 
 Servo enclosure [here](https://www.thingiverse.com/thing:1679838),
 HC_SR04 enclosure [here](https://www.thingiverse.com/thing:452720).
+
+Graphical User Interface will follow.
