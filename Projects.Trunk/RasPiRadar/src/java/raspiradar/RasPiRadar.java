@@ -8,6 +8,7 @@ import utils.PinUtil;
 import utils.TimeUtil;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * One servo (PCA9685) [-90..90] to orient the Sonic Sensor
@@ -57,24 +58,54 @@ public class RasPiRadar {
 		}
 	}
 
+	// For simulation
+	private static double range = 10D;
+	private static Double simulateUserRange() {
+		double inc = Math.random();
+		int sign = System.nanoTime() % 2 == 0 ? +1 : -1;
+		range += (sign * inc);
+		if (range < 0 || range > 100) {
+			range -= (2 * (sign * inc));
+		}
+		return range;
+	}
+
 	/**
 	 * When data are read, they're sent to this Consumer.
-	 * Can be used for user interface.
+	 * Can be used for user interface. REST, Serial, etc.
 	 */
 	private Consumer<DirectionAndRange> dataConsumer = data -> {
-		System.out.println(String.format("Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+		System.out.println(String.format("Default ObjectDataConsumer -> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
 	};
 
+	private Supplier<Double> rangeSimulator = null;
+	public void setRangeSimulator(Supplier<Double> rangeSimulator) {
+		this.rangeSimulator = rangeSimulator;
+	}
+
 	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
-		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
+		this(false, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
+	}
+	public RasPiRadar(boolean moveOn, int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+		this(moveOn, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
+	}
+
+	public RasPiRadar(boolean moveOn, int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+		this(moveOn, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
 	}
 
 	public RasPiRadar(int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
-		this(channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
+		this(false, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
 	}
 
-	public RasPiRadar(int channel, int servoMin, int servoMax, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
-	  this.servoBoard = new PCA9685();
+	public RasPiRadar(boolean moveOn, int channel, int servoMin, int servoMax, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	  try {
+	  	this.servoBoard = new PCA9685();
+	  } catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError ex) {
+	  	if (!moveOn) {
+	  		throw ex;
+		  }
+	  }
 
 		try {
 			if (trig != null && echo != null) {
@@ -83,7 +114,11 @@ public class RasPiRadar {
 				this.hcSR04 = new HC_SR04();
 			}
 		} catch (UnsatisfiedLinkError usle) {
-			throw usle;
+	  	if (!moveOn) {
+			  throw usle;
+		  } else {
+			  this.setRangeSimulator(RasPiRadar::simulateUserRange);
+		  }
 		}
 
 		if (verbose) {
@@ -99,8 +134,10 @@ public class RasPiRadar {
 		this.servoMax = servoMax;
 		this.diff = servoMax - servoMin;
 
-		int freq = 60;
-		servoBoard.setPWMFreq(freq); // Set frequency in Hz
+		if (servoBoard != null) {
+			int freq = 60;
+			servoBoard.setPWMFreq(freq); // Set frequency in Hz
+		}
 
 		this.servo = channel;
 		System.out.println("Channel " + channel + " all set. Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
@@ -117,24 +154,42 @@ public class RasPiRadar {
 	public void setAngle(float f) {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
 		// System.out.println(f + " degrees (" + pwm + ")");
-		servoBoard.setPWM(servo, 0, pwm);
+		if (servoBoard != null) {
+			servoBoard.setPWM(servo, 0, pwm);
+		}
 	}
 
 	public void setPWM(int pwm) {
-		servoBoard.setPWM(servo, 0, pwm);
+		if (servoBoard != null) {
+			servoBoard.setPWM(servo, 0, pwm);
+		}
 	}
 
 	public double readDistance() {
-		return hcSR04.readDistance();
+		if (hcSR04 != null) {
+			return hcSR04.readDistance();
+		} else {
+			if (this.rangeSimulator != null) {
+				return this.rangeSimulator.get();
+			} else {
+				return 0;
+			}
+		}
 	}
 
 	public void stop() { // Set (back) to 0, free resources
-		servoBoard.setPWM(servo, 0, 0);
+		if (servoBoard != null) {
+			servoBoard.setPWM(servo, 0, 0);
+		}
 	}
 
 	public void free() {
-		servoBoard.close();
-		hcSR04.stop();
+		if (servoBoard != null) {
+			servoBoard.close();
+		}
+		if (hcSR04 != null) {
+			hcSR04.stop();
+		}
 	}
 
 	/*
@@ -161,7 +216,7 @@ public class RasPiRadar {
 	public static void main(String... args) {
 
 		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
-			System.out.println(String.format("Default>> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+			System.out.println(String.format("Default RasPiRadar Consumer >> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
 		};
 
 		int servoPort  = 0;
@@ -204,9 +259,9 @@ public class RasPiRadar {
 		RasPiRadar rpr = null;
 		try {
 			if (echo == null && trig == null) {
-				rpr = new RasPiRadar(servoPort);
+				rpr = new RasPiRadar(true, servoPort);
 			} else {
-				rpr = new RasPiRadar(servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
+				rpr = new RasPiRadar(true, servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");
@@ -215,6 +270,12 @@ public class RasPiRadar {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			loop = false;
 		}));
+
+		rpr.setDataConsumer((data) -> {
+			System.out.println(String.format("Injected Data Consumer >> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+		});
+		// For simulation, override if needed
+//	rpr.setRangeSimulator(RasPiRadar::simulateUserRange);
 
 		try {
 			if (rpr != null) {

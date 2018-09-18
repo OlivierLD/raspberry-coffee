@@ -8,6 +8,8 @@ shadowJar {
   zip64 true
 }
 
+sourceCompatibility = 1.8
+
 group = 'oliv.pi4j.samples'
 version = '1.0'
 
