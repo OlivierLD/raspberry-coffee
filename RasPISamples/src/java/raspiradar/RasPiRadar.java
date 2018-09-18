@@ -203,6 +203,7 @@ public class RasPiRadar {
 			}
 			if (justReset) {
 				loop = false;
+				TimeUtil.delay(1_000L);
 			}
 
 			int inc = 1;
