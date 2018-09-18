@@ -14,12 +14,12 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Dradar.verbose=true"
 # Physical pin numbers, delay.
 PRMS=
 PRMS="$PRMS --servo-port:15"
-PRMS="$PRMS --delay:50"
+PRMS="$PRMS --delay:20"
 PRMS="$PRMS --trigger-pin:16" # GPIO_04
 PRMS="$PRMS --echo-pin:18"    # GPIO_05
 #
 # PRMS="$PRMS --just-reset"
-PRMS="$PRMS --just-one-loop"
+# PRMS="$PRMS --just-one-loop" # For position calibration
 #
 echo Running...
 sudo java $JAVA_OPTIONS -cp $CP raspiradar.RasPiRadar $PRMS
