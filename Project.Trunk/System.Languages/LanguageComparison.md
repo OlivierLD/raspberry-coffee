@@ -463,7 +463,7 @@ Installing Go on the Raspberry PI happens not to be as straightforward as anyone
 
 This project contains a module that build Docker images, including one for Go.
 
-See [here](../../../tree/master/docker).
+See [here](../../../../tree/master/docker).
 
 From the `docker` directory, just run
 ```
