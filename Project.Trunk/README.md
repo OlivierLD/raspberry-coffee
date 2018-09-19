@@ -11,7 +11,8 @@ They all come with a `build.gradle`, and the examples are built by a
 ```
 and a script to run the example should be available as well.
 
-### Radar
-[Radar](RasPiRadar)
+- [Buttons, Reflex Game](Button.Reflex)
+- [PurePWM](PurePWM)
+- [Radar](RasPiRadar)
 
 ---

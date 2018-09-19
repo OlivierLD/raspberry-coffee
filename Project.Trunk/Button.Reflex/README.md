@@ -11,7 +11,7 @@
 
 Run
 ```bash
- $> ../gradlew clean shadowJar
+ $> ../../gradlew clean shadowJar
 ```
 Then just run the script named `pushbutton`.
 
@@ -54,7 +54,7 @@ Hit the button when the light goes on, and see how long it took you to react.
 
 Run
 ```bash
- $> ../gradlew clean shadowJar
+ $> ../../gradlew clean shadowJar
 ```
 Then just run the script named `reflex`.
 
