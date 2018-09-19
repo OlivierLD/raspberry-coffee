@@ -5,6 +5,7 @@ import java.util.Map;
 /**
  * Warning:
  * Imported libraries must be compiled with 'sourceCompatibility = 1.8'
+ * JNI lib (*.so) can be added using Sketch > Add File... as well
  *
  * See raspiradar.RasPiRadar
  */
@@ -16,7 +17,7 @@ Map<Integer, Double> echos = new HashMap<Integer, Double>(181);
 class DataConsumer implements Consumer<RasPiJNIRadar.DirectionAndRange> {  
   void accept(RasPiJNIRadar.DirectionAndRange data) {
     // Build a map of echos here
-    println(String.format("Processing >> Bearing %s%02d, distance %.02f cm", (data.direction() < 0 ? "-" : "+"), Math.abs(data.direction()), data.range()));
+    println(String.format("Processing >> Bearing %s%02d, distance %.02f m", (data.direction() < 0 ? "-" : "+"), Math.abs(data.direction()), data.range()));
     echos.put(data.direction(), data.range());
   }
 }
@@ -35,17 +36,13 @@ color gridcolor = color (0, 0, 0);
 color sweepercolor = color (102, 250, 81);
 
 void setup() {
-  
-  System.setProperty("java.library.path", "../C");
-  
-  println(String.format("Running from [%s]", System.getProperty("user.dir")));
-  
   size(960, 480);
   try {
-   radar = new RasPiJNIRadar(true, 15);
+   radar = new RasPiJNIRadar(false, 15);
    radar.setDataConsumer(dataConsumer);
-  } catch (Exception ex) {
+  } catch (Throwable ex) {
     ex.printStackTrace();
+    println(String.format("LibPath: [%s]", System.getProperty("java.library.path")));
   }
   frameRate(20f); // 10 per second
 }
@@ -73,14 +70,14 @@ void draw() {
   circle();
   for (Integer key : echos.keySet()) {
     double range = echos.get(key);
-    double scale = (height / 100.0); // cm
+    double scale = (height / 0.1); // m to 10cm
     int x = (int)(Math.round(range * Math.cos(Math.toRadians(key) + 90) * scale));
     int y = (int)(Math.round(range * Math.sin(Math.toRadians(key) + 90) * scale));
     plotEcho((width / 2) + x, height - y);
   }
   textSize(16);
   fill(255);
-  text(String.format("%s%02d\272, range %.02f cm", (bearing < 0 ? "-" : "+"), Math.abs(bearing), dist), 10, 20);
+  text(String.format("%s%02d\272, range %.02f m", (bearing < 0 ? "-" : "+"), Math.abs(bearing), dist), 10, 20);
 }
 
 // Fill the circle

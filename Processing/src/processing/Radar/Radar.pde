@@ -47,7 +47,7 @@ void setup() {
   } catch (Exception ex) {
     ex.printStackTrace();
   }
-  frameRate(20f); // 10 per second
+  frameRate(20f); // 20 per second
 }
 
 void draw() {
@@ -73,7 +73,7 @@ void draw() {
   circle();
   for (Integer key : echos.keySet()) {
     double range = echos.get(key);
-    double scale = (height / 100.0); // cm
+    double scale = (height / 10.0); // cm
     int x = (int)(Math.round(range * Math.cos(Math.toRadians(key) + 90) * scale));
     int y = (int)(Math.round(range * Math.sin(Math.toRadians(key) + 90) * scale));
     plotEcho((width / 2) + x, height - y);
