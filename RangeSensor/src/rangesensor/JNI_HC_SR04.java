@@ -7,7 +7,6 @@ package rangesensor;
  */
 public class JNI_HC_SR04 {
 
-  public native void init();
   /*
   Default pins, in the C code:
 
@@ -19,6 +18,7 @@ using namespace std;
 static int trigger = GPIO23;
 static int echo    = GPIO24;
    */
+  public native void init();
   public native void init(int trigPin, int echoPin); // Uses the WiringPi numbers. See default above.
   public native double readRange();
 
