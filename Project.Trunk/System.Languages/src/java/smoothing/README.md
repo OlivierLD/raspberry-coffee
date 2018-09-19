@@ -1,8 +1,8 @@
 ## Smoothing, rendering.
-The class in this package `raspisamples.smoothing.LeastSquares.java` is using the Least Squares method to find the coefficients of a polynomial, so the difference between
+The class in this package `raspisamples.smoothing.LeastSquaresMethod.java` is using the Least Squares method to find the coefficients of a polynomial, so the difference between
 the point of the curve (at a given abscise) and the points of the cloud is as small as possible.
 
-There is a Scala equivalent of this class, in `smoothing.LeastSquares.scala`.
+There is a Scala equivalent of this class, in `smoothing.LeastSquaresMethod.scala`.
 
 For details on this method, see [here](http://www.efunda.com/math/leastsquares/leastsquares.cfm) and [here](http://www.lediouris.net/original/sailing/PolarCO2/index.html).
 
@@ -63,12 +63,12 @@ See the calculated coefficients (you required a degree 2 for the polynomial), pu
 Now, load the web page (available in this project) `smoothing/smoothing.html` in your browser,
 paste the content of `cloud.json` in the box on the top left, paste the coefficient array in the box on the right,
 and click the `Display` button:
-![Smoothing](../../../../smoothing.png)
+![Smoothing](../../../img/smoothing.png)
 
 ---
 
 There is also a pure `JavaScript` implementation that allows you to spray the points on the canvas, and then calculate the smoothed curve.
 Just load `smoothing/smoothing.spray.html` in your browser.
-![Spraying](../../../../smoothing.02.png)
+![Spraying](../../../img/smoothing.02.png)
 
 ---

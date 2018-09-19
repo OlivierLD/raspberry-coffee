@@ -17,7 +17,7 @@ import matrix.SystemUtil;
  * See http://www.efunda.com/math/leastsquares/leastsquares.cfm
  * See http://www.lediouris.net/original/sailing/PolarCO2/index.html
  */
-public class LeastSquares {
+public class LeastSquaresMethod {
 
 	private static double f(double x, double... coeffs) {
 		double result = 0.0;

@@ -20,7 +20,7 @@ object LeastSquares {
   }
 
   def main(args:Array[String]): Unit = {
-    // Read the data generated in Java (see raspisamples.smoothing.LeastSquares.java)
+    // Read the data generated in Java (see raspisamples.smoothing.LeastSquaresMethod.java)
     var data = List.empty[(Double, Double)]
     try {
       var br = new BufferedReader(new FileReader("cloud.csv"))
