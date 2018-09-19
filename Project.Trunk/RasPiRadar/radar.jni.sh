@@ -18,8 +18,8 @@ JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=$LD_LIBRARY_PATH"
 PRMS=
 PRMS="$PRMS --servo-port:15"
 PRMS="$PRMS --delay:20"
-PRMS="$PRMS --trigger-pin:16" # GPIO_04
-PRMS="$PRMS --echo-pin:18"    # GPIO_05
+# PRMS="$PRMS --trigger-pin:16" # GPIO_04
+# PRMS="$PRMS --echo-pin:18"    # GPIO_05
 #
 # PRMS="$PRMS --just-reset"
 # PRMS="$PRMS --just-one-loop" # For position calibration & tuning
