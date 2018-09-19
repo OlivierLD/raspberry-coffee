@@ -1,4 +1,4 @@
-import raspiradar.RasPiRadar;
+import raspiradar.RasPiJNIRadar;
 import java.util.function.Consumer;
 import java.util.Map;
 
@@ -9,19 +9,19 @@ import java.util.Map;
  * See raspiradar.RasPiRadar
  */
 
-RasPiRadar radar = null;
+RasPiJNIRadar radar = null;
 Map<Integer, Double> echos = new HashMap<Integer, Double>(181);
 
 // Processing does not support lambdas (yet)...
-class DataConsumer implements Consumer<RasPiRadar.DirectionAndRange> {  
-  void accept(RasPiRadar.DirectionAndRange data) {
+class DataConsumer implements Consumer<RasPiJNIRadar.DirectionAndRange> {  
+  void accept(RasPiJNIRadar.DirectionAndRange data) {
     // Build a map of echos here
     println(String.format("Processing >> Bearing %s%02d, distance %.02f cm", (data.direction() < 0 ? "-" : "+"), Math.abs(data.direction()), data.range()));
     echos.put(data.direction(), data.range());
   }
 }
 
-Consumer<RasPiRadar.DirectionAndRange> dataConsumer = new DataConsumer();
+Consumer<RasPiJNIRadar.DirectionAndRange> dataConsumer = new DataConsumer();
 
 int inc = 1;
 int bearing = 0;
@@ -42,7 +42,7 @@ void setup() {
   
   size(960, 480);
   try {
-   radar = new RasPiRadar(true, 15);
+   radar = new RasPiJNIRadar(true, 15);
    radar.setDataConsumer(dataConsumer);
   } catch (Exception ex) {
     ex.printStackTrace();
@@ -56,7 +56,7 @@ void draw() {
     // Measure distance here, broadcast it witdouble dist = h bearing.
     dist = radar.readDistance();
     // Consumer
-    radar.consumeData(new RasPiRadar.DirectionAndRange(bearing, dist));
+    radar.consumeData(new RasPiJNIRadar.DirectionAndRange(bearing, dist));
 
     bearing += inc;
     if (bearing > 90 || bearing < -90) { // then flip
