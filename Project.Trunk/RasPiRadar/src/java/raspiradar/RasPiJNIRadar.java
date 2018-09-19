@@ -4,6 +4,7 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.servo.pwm.PCA9685;
 import rangesensor.HC_SR04;
+import rangesensor.JNI_HC_SR04;
 import utils.PinUtil;
 import utils.TimeUtil;
 
@@ -12,9 +13,9 @@ import java.util.function.Supplier;
 
 /**
  * One servo (PCA9685) [-90..90] to orient the Sonic Sensor
- * One HC-SR04 to measure the distance
+ * One HC-SR04 (JNI version) to measure the distance
  */
-public class RasPiRadar {
+public class RasPiJNIRadar {
 
 	private boolean verbose = "true".equals(System.getProperty("radar.verbose"));
 	private int servo = -1;
@@ -27,7 +28,7 @@ public class RasPiRadar {
 	private int diff = servoMax - servoMin;
 
 	private PCA9685 servoBoard = null;
-	private HC_SR04 hcSR04 = null;
+	private JNI_HC_SR04 hcSR04 = null;
 
 	/**
 	 * The class emitted when data are read.
@@ -83,22 +84,22 @@ public class RasPiRadar {
 		this.rangeSimulator = rangeSimulator;
 	}
 
-	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	public RasPiJNIRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 		this(false, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
 	}
-	public RasPiRadar(boolean moveOn, int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	public RasPiJNIRadar(boolean moveOn, int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 		this(moveOn, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
 	}
 
-	public RasPiRadar(boolean moveOn, int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	public RasPiJNIRadar(boolean moveOn, int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 		this(moveOn, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
 	}
 
-	public RasPiRadar(int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	public RasPiJNIRadar(int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 		this(false, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
 	}
 
-	public RasPiRadar(boolean moveOn, int channel, int servoMin, int servoMax, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	public RasPiJNIRadar(boolean moveOn, int channel, int servoMin, int servoMax, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 	  try {
 	  	this.servoBoard = new PCA9685();
 	  } catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError ex) {
@@ -108,24 +109,25 @@ public class RasPiRadar {
 	  }
 
 		try {
+			this.hcSR04 = new JNI_HC_SR04();
 			if (trig != null && echo != null) {
-				this.hcSR04 = new HC_SR04(trig, echo);
+				this.hcSR04.init(PinUtil.getWiringPiNumber(trig), PinUtil.getWiringPiNumber(echo));
 			} else {
-				this.hcSR04 = new HC_SR04();
+				this.hcSR04.init();
 			}
 		} catch (UnsatisfiedLinkError usle) {
 	  	if (!moveOn) {
 			  throw usle;
 		  } else {
-			  this.setRangeSimulator(RasPiRadar::simulateUserRange);
+			  this.setRangeSimulator(RasPiJNIRadar::simulateUserRange);
 		  }
 		}
 
 		if (verbose) {
 			System.out.println("HC_SR04 wiring:");
 			String[] map = new String[2];
-			map[0] = String.valueOf(PinUtil.findByPin(this.hcSR04.getTrigPin()).pinNumber()) + ":" + "Trigger";
-			map[1] = String.valueOf(PinUtil.findByPin(this.hcSR04.getEchoPin()).pinNumber()) + ":" + "Echo";
+			map[0] = String.valueOf(trig != null ? PinUtil.findByPin(trig).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(4)).pinNumber()) + ":" + "Trigger";
+			map[1] = String.valueOf(echo != null ? PinUtil.findByPin(echo).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(5)).pinNumber()) + ":" + "Echo";
 
 			PinUtil.print(map);
 		}
@@ -167,7 +169,7 @@ public class RasPiRadar {
 
 	public double readDistance() {
 		if (hcSR04 != null) {
-			return hcSR04.readDistance();
+			return hcSR04.readRange();
 		} else {
 			if (this.rangeSimulator != null) {
 				return this.rangeSimulator.get();
@@ -188,7 +190,7 @@ public class RasPiRadar {
 			servoBoard.close();
 		}
 		if (hcSR04 != null) {
-			hcSR04.stop();
+//		hcSR04.stop();
 		}
 	}
 
@@ -256,12 +258,12 @@ public class RasPiRadar {
 		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
 		System.out.println(String.format("Wait when scanning %d ms", delay));
 
-		RasPiRadar rpr = null;
+		RasPiJNIRadar rpr = null;
 		try {
 			if (echo == null && trig == null) {
-				rpr = new RasPiRadar(true, servoPort);
+				rpr = new RasPiJNIRadar(true, servoPort);
 			} else {
-				rpr = new RasPiRadar(true, servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
+				rpr = new RasPiJNIRadar(true, servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");

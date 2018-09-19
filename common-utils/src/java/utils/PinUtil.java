@@ -77,6 +77,16 @@ public class PinUtil {
 		return pin;
 	}
 
+	public static int getWiringPiNumber(Pin p) {
+		int wpi = -1;
+		for (GPIOPin gpioPin : GPIOPin.values()) {
+			if (gpioPin.pin().equals(p)) {
+				wpi = gpioPin.wiringPi();
+			}
+		}
+		return wpi;
+	}
+
 	public static Pin getPinByGPIONumber(int n) {
 		Pin pin = null;
 		for (GPIOPin gpioPin : GPIOPin.values()) {
