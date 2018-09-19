@@ -209,7 +209,7 @@ public class RasPiRadar {
 	private final static String JUST_ONE_LOOP      = "--just-one-loop";
 
 	private static boolean loop = true;
-	private static long delay = 100L;
+	private static long delay = 20L;
 	private static boolean justReset = false;
 	private static boolean justOneLoop = false;
 
