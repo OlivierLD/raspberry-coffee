@@ -13,6 +13,7 @@ and a script to run the example should be available as well.
 
 - [Buttons, Reflex Game](Button.Reflex)
 - [PurePWM](PurePWM)
+- [System resolution, in several languages](System.Languages/LanguageComparison.md)
 - [Radar](RasPiRadar)
 
 ---
