@@ -44,8 +44,11 @@ include "HanoiTower"
 include "PlantWateringSystem"
 include "TensorFlow"
 include "Bluetooth"
+// Project.Trunk sub-projects
 include "Project.Trunk:RasPiRadar"
 include "Project.Trunk:PurePWM"
 include "Project.Trunk:Button.Reflex"
 include "Project.Trunk:System.Languages"
+include "Project.Trunk:Weather.Station"
+// Scratch pad
 include "oliv.scratch.pad:some.tests"
