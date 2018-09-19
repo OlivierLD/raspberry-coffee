@@ -148,8 +148,8 @@ But it certainly gives a taste of what the different languages can feel like. If
 available in `git`.
 
 #### Java
-The sources are in [`src/java/raspisamples/matrix`](./src/java/raspisamples/matrix).
-(See also [this document](./src/java/raspisamples/smoothing/README.md) ).
+The sources are in [`src/java/raspisamples/matrix`](./src/java/matrix).
+(See also [this document](./src/java/smoothing/README.md) ).
 
 To run it:
 ```

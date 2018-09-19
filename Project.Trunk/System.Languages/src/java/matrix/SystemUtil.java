@@ -1,4 +1,4 @@
-package raspisamples.matrix;
+package matrix;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;

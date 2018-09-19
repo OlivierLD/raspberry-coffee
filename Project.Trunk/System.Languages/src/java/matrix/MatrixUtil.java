@@ -1,4 +1,4 @@
-package raspisamples.matrix;
+package matrix;
 
 
 public final class MatrixUtil {

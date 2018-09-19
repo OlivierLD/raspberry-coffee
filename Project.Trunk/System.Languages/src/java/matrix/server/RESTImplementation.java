@@ -1,4 +1,4 @@
-package raspisamples.matrix.server;
+package matrix.server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,9 +7,9 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
-import raspisamples.matrix.PolynomUtil;
-import raspisamples.matrix.SquareMatrix;
-import raspisamples.matrix.SystemUtil;
+import matrix.PolynomUtil;
+import matrix.SquareMatrix;
+import matrix.SystemUtil;
 
 import java.io.StringReader;
 import java.text.NumberFormat;

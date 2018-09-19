@@ -1,4 +1,4 @@
-package raspisamples.matrix.server;
+package matrix.server;
 
 import http.HTTPServer;
 

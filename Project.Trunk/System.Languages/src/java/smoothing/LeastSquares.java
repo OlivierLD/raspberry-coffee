@@ -1,4 +1,4 @@
-package raspisamples.smoothing;
+package smoothing;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import raspisamples.matrix.SquareMatrix;
-import raspisamples.matrix.SystemUtil;
+import matrix.SquareMatrix;
+import matrix.SystemUtil;
 
 /**
  * For details on the least squares method:
