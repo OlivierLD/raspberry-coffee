@@ -67,7 +67,7 @@ public class HC_SR04 {
 			return false;
 		} else {
 			if (verbose) {
-				System.out.println("Echo took too long!!");
+				System.out.println(String.format("Echo took too long!! (more than %d \u03bcs", MAX_WAIT));
 			}
 			return true;
 		}
@@ -98,11 +98,12 @@ public class HC_SR04 {
 		long end = System.nanoTime();
 
 		//  System.out.println(">>> TOP: start=" + start + ", end=" + end);
-		//  System.out.println("Nb Low Check:" + nbLowCheck + ", Nb High Check:" + nbHighCheck);
 
 		if (end > start) { //  && start > 0)
 			double pulseDuration = (double) (end - start) / (double) BILLION; // in seconds
-//      System.out.println("Duration:" + (end - start) + " nanoS"); // DF_N.format(pulseDuration));
+			if (verbose) {
+	      System.out.println(String.format("Duration: %f \u00e5s (nano sec), pulseDuration: %s", (end - start), DF_N.format(pulseDuration)));
+			}
 			distance = pulseDuration * DIST_FACT;
 			if (verbose) {
 				if (distance < 1_000) { // Less than 10 meters

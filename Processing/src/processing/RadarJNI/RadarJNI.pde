@@ -5,16 +5,16 @@ import java.util.Map;
 /**
  * Warning:
  * Imported libraries must be compiled with 'sourceCompatibility = 1.8'
- * JNI lib (*.so) can be added using Sketch > Add File... as well
+ * Note: JNI lib (*.so) can be added using Sketch > Add File... as well
  *
- * See raspiradar.RasPiRadar
+ * See raspiradar.RasPiJNIRadar
  */
 
 RasPiJNIRadar radar = null;
 Map<Integer, Double> echos = new HashMap<Integer, Double>(181);
 
 // Processing does not support lambdas (yet)...
-class DataConsumer implements Consumer<RasPiJNIRadar.DirectionAndRange> {  
+class DataConsumer implements Consumer<RasPiJNIRadar.DirectionAndRange> {
   void accept(RasPiJNIRadar.DirectionAndRange data) {
     // Build a map of echos here
     println(String.format("Processing >> Bearing %s%02d, distance %.02f m", (data.direction() < 0 ? "-" : "+"), Math.abs(data.direction()), data.range()));
@@ -49,8 +49,13 @@ void setup() {
 
 void draw() {
   try {
-    radar.setAngle(bearing);
-    // Measure distance here, broadcast it witdouble dist = h bearing.
+    Thread bearingThread = new Thread() {
+      public void run() {
+        radar.setAngle(bearing);
+      }
+    };
+    bearingThread.start();
+    // Measure distance here, broadcast it with bearing.
     dist = radar.readDistance();
     // Consumer
     radar.consumeData(new RasPiJNIRadar.DirectionAndRange(bearing, dist));
@@ -65,7 +70,7 @@ void draw() {
     ex.printStackTrace();
   }
   background(bgcolor);
-  grid(); 
+  grid();
   sweeper();
   circle();
   for (Integer key : echos.keySet()) {
@@ -85,9 +90,9 @@ void circle(){
   fill(color(102, 250, 81, 60));
   ellipse(width/2, height, width, 2 * height);
 }
- 
+
 void grid(){
-  stroke(color(250, 247, 247, 50)); // color(250, 247, 247, 50) = #faf7f7, .5 
+  stroke(color(250, 247, 247, 50)); // color(250, 247, 247, 50) = #faf7f7, .5
   strokeWeight(2);
   line(width/2, height, width/2, 0);       // verticlal axis
   line(0, height - 1, width, height - 1);  // horizontal axis
@@ -105,10 +110,10 @@ void sweeper(){
   for (int i=38; i>=1; i--) {
     stroke(sweepercolor, 2*i);
     line(width/2, height, (width/2 + cos(beam - (f / 2)) * (height * 0.98)), (height - sin(beam - (f / 2)) * (height * 0.98)));
-    f += 0.01; 
+    f += 0.01;
   }
 }
- 
+
 void plotEcho(int x, int y){
   ellipse(x, y, 10, 10);
 }

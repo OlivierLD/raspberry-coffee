@@ -1,7 +1,16 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <jni.h>
 #include <iostream>
 #include <wiringPi.h>
 #include "rangesensor_JNI_HC_SR04.h"
+
+#ifndef TRUE
+#define TRUE 1
+#define FALSE 0
+#endif
 
 // For the pinout, see https://pi.gadgetoid.com/pinout
 
@@ -36,7 +45,7 @@ double readRange();
 
 JNIEXPORT void JNICALL Java_rangesensor_JNI_1HC_1SR04_init__ (JNIEnv * env, jobject obj)
 {
-  init();  
+  init();
 }
 
 JNIEXPORT void JNICALL Java_rangesensor_JNI_1HC_1SR04_init__II (JNIEnv * env, jobject obj, jint trigPin, jint echoPin)
@@ -52,6 +61,17 @@ JNIEXPORT jdouble JNICALL Java_rangesensor_JNI_1HC_1SR04_readRange (JNIEnv * env
   return readRange();
 }
 
+int nativeDebugEnabled() {
+  char * nativeDebug = "NATIVEDEBUG";
+  int debug = FALSE;
+  if (getenv(nativeDebug)) {
+    if (strcmp("true", getenv(nativeDebug)) == 0) {
+      debug = TRUE;
+    }
+  }
+  return debug;
+}
+
 void recordPulseLength (void) {
   startTimeUsec = micros();
   while ( digitalRead(echo) == HIGH );
@@ -63,7 +83,7 @@ void init()
   wiringPiSetup();
 
   pinMode(trigger, OUTPUT);
-  pinMode(echo,    INPUT);    
+  pinMode(echo,    INPUT);
 }
 
 double readRange()
@@ -87,7 +107,13 @@ double readRange()
   recordPulseLength();
 
   long travelTimeUsec = endTimeUsec - startTimeUsec;
-  double distanceMeters = ((travelTimeUsec / 1000000.0) * speedOfSoundMetersPerSecond) / 2;
+
+  if (nativeDebugEnabled())
+  {
+    fprintf(stdout, "Start %d, End %d, TravelTime %d", startTimeUsec, endTimeUsec, travelTimeUsec);
+  }
+
+  double distanceMeters = ((travelTimeUsec / 1000000.0) * speedOfSoundMetersPerSecond) / 2; // 2: Round trip
   return distanceMeters;
 }
 
