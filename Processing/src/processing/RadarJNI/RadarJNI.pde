@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Warning:
  * Imported libraries must be compiled with 'sourceCompatibility = 1.8'
- * Note: JNI lib (*.so) can be added using Sketch > Add File... as well
+ * Note: JNI libs (*.so) can be added using "Sketch > Add File..." as well, no need to mess with the -Djava.library.path.
  *
  * See raspiradar.RasPiJNIRadar
  */

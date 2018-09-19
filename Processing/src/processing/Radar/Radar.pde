@@ -28,8 +28,6 @@ int bearing = 0;
 double dist = 0;
 int hitExtremity = 0;
 
-long delay = 100L;
-
 color bgcolor = color (0, 0, 0);
 color gridcolor = color (0, 0, 0);
 color sweepercolor = color (102, 250, 81);
