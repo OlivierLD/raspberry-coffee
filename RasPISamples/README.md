@@ -307,9 +307,3 @@ Then from a browser, reach the machine where `node` is running:
 
 ![WebGL UI](./pitchroll.png)
 
-### Radar
-With a `PCA9685` and a `HC_SR04` (ultrasound distance sensor).
-A servo connected to the `PCA9685` rotates degree by degree from -90&deg; to +90&deg;. It supports the
-`HC_SR04` that measures the distance for each position of the servo.
-
-![Radar](./rpi.radar_bb.png)
