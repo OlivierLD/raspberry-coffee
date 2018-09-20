@@ -20,7 +20,8 @@ public class HC_SR04 {
 	private final static Format DF22 = new DecimalFormat("#0.00");
 	private final static Format DF_N = new DecimalFormat("#.##########################");
 
-	private final static double SOUND_SPEED = 34_029d;       // in cm, 340.29 m/s
+//private final static double SOUND_SPEED = 34_029d;       // in cm, 340.29 m/s
+	private final static double SOUND_SPEED = 34_300d;       // in cm, 343.00 m/s
 	private final static double DIST_FACT = SOUND_SPEED / 2; // round trip
 	private final static int MIN_DIST = 3; // in cm
 
@@ -98,16 +99,14 @@ public class HC_SR04 {
 		long end = System.nanoTime();
 
 		//  System.out.println(">>> TOP: start=" + start + ", end=" + end);
-
-		if (end > start) { //  && start > 0)
-			double pulseDuration = (double) (end - start) / (double) BILLION; // in seconds
-			if (verbose) {
-	      System.out.println(String.format("Duration: %f \u00e5s (nano sec), pulseDuration: %s", (end - start), DF_N.format(pulseDuration)));
-			}
+		double travelTime = (end - start);
+		if (travelTime > 0) { //  && start > 0)
+			double pulseDuration = travelTime / (double) BILLION; // in seconds
 			distance = pulseDuration * DIST_FACT;
 			if (verbose) {
+				System.out.println(String.format("TravelTime: %d \u00e5s (nano sec), pulseDuration: %s", travelTime, DF_N.format(pulseDuration)));
 				if (distance < 1_000) { // Less than 10 meters
-					System.out.println("Distance: " + DF22.format(distance) + " cm. (" + distance + "), Duration:" + NumberFormat.getInstance().format(end - start) + " nanoS"); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
+					System.out.println("Distance: " + DF22.format(distance) + " cm. (" + distance + "), Duration:" + NumberFormat.getInstance().format(travelTime) + " nanoS"); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
 				} else {
 					System.out.println("   >>> Too far:" + DF22.format(distance) + " cm.");
 				}
@@ -124,8 +123,6 @@ public class HC_SR04 {
 
 		System.out.println("GPIO Control - Range Sensor HC-SR04.");
 		System.out.println("Will stop is distance is smaller than " + MIN_DIST + " cm");
-
-		verbose = "true".equals(System.getProperty("verbose", "false"));
 
 		HC_SR04 hcSR04 = new HC_SR04();
 

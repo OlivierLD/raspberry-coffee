@@ -38,7 +38,7 @@ static volatile long startTimeUsec;
 static volatile long endTimeUsec;
 
 // static double speedOfSoundMetersPerSecond = 340.29;
-static double speedOfSoundMetersPerSecond = 343.00;
+static double speedOfSoundMetersPerSecond = 343.00; // at 20 deg C
 
 void init();
 double readRange();
@@ -114,7 +114,7 @@ double readRange()
 
   if (nativeDebugEnabled())
   {
-    fprintf(stdout, "Start %ld, End %ld, TravelTime %ld\n", startTimeUsec, endTimeUsec, travelTimeUsec);
+    fprintf(stdout, "Start %ld, End %ld, TravelTime %ld μs\n", startTimeUsec, endTimeUsec, travelTimeUsec);
   }
 
   double distanceMeters = ((travelTimeUsec / 1000000.0) * speedOfSoundMetersPerSecond) / 2; // 2: Round trip

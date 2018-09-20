@@ -19,7 +19,7 @@ public class StandaloneHC_SR04 {
 	private final static Format DF22 = new DecimalFormat("#0.00");
 	private final static Format DF_N = new DecimalFormat("#.##########################");
 
-	private final static double SOUND_SPEED = 34_029d;       // in cm, 340.29 m/s
+	private final static double SOUND_SPEED = 34_300d;       // in cm, 340.29 m/s
 	private final static double DIST_FACT = SOUND_SPEED / 2; // round trip
 	private final static int MIN_DIST = 3; // in cm
 

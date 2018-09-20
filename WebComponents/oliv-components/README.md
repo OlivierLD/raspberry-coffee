@@ -50,6 +50,9 @@ After starting the `node` server as mentioned above, you can also reach
 - Sky Map and Star Finder (along with some `REST` service(s)). &#9989; Done
 - Split-flap Display. &#9989; Done
 
+#### TODO
+- &#x1F6A7; Replace canveses with SVGs 🚧
+
 #### Screenshots, as they appear from the Demo page
 World Map it is `globe` configuration:
 
