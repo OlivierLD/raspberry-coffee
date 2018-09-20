@@ -110,7 +110,7 @@ double readRange()
 
   if (nativeDebugEnabled())
   {
-    fprintf(stdout, "Start %d, End %d, TravelTime %d", startTimeUsec, endTimeUsec, travelTimeUsec);
+    fprintf(stdout, "Start %ld, End %ld, TravelTime %ld", startTimeUsec, endTimeUsec, travelTimeUsec);
   }
 
   double distanceMeters = ((travelTimeUsec / 1000000.0) * speedOfSoundMetersPerSecond) / 2; // 2: Round trip
