@@ -7,5 +7,6 @@ echo Uses WiringPI
 echo \>\> Now running the class invoking the native lib:
 export LD_LIBRARY_PATH=./C
 # ls -l $LD_LIBRARY_PATH/*.so
+export NATIVEDEBUG=true
 sudo java -Djava.library.path=$LD_LIBRARY_PATH -cp ./classes rangesensor.JNI_HC_SR04
 echo \>\> Done.
