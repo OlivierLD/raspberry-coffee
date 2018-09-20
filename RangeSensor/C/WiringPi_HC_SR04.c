@@ -62,13 +62,17 @@ JNIEXPORT jdouble JNICALL Java_rangesensor_JNI_1HC_1SR04_readRange (JNIEnv * env
 }
 
 int nativeDebugEnabled() {
-  char * nativeDebug = "NATIVEDEBUG";
+  const char * nativeDebug = getenv("NATIVEDEBUG");
   int debug = FALSE;
-  if (getenv(nativeDebug)) {
-    if (strcmp("true", getenv(nativeDebug)) == 0) {
+  if (nativeDebug != NULL) {
+    fprintf(stdout, "--> %s\n", nativeDebug);
+    if (strcmp("true", nativeDebug) == 0) {
       debug = TRUE;
     }
+  } else {
+    fprintf(stdout, "NATIVEDEBUG not set\n");
   }
+  fprintf(stdout, "NATIVEDEBUG is %s\n", (debug ? "true" : "false"));
   return debug;
 }
 
@@ -110,7 +114,7 @@ double readRange()
 
   if (nativeDebugEnabled())
   {
-    fprintf(stdout, "Start %ld, End %ld, TravelTime %ld", startTimeUsec, endTimeUsec, travelTimeUsec);
+    fprintf(stdout, "Start %ld, End %ld, TravelTime %ld\n", startTimeUsec, endTimeUsec, travelTimeUsec);
   }
 
   double distanceMeters = ((travelTimeUsec / 1000000.0) * speedOfSoundMetersPerSecond) / 2; // 2: Round trip
