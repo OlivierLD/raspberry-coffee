@@ -19,10 +19,10 @@ class JumboDisplay extends HTMLElement {
 
 	static get observedAttributes() {
 		return [
-			"width",        // Integer. Canvas width
-			"height",       // Integer. Canvas height
-			"value",        // Float. Numeric value to display
-			"label"         // String, like TWS, AWS, etc
+			"width",  // Integer. Canvas width
+			"height", // Integer. Canvas height
+			"value",  // Float. Numeric value to display
+			"label"   // String, like TWS, AWS, etc
 		];
 	}
 
@@ -34,10 +34,10 @@ class JumboDisplay extends HTMLElement {
 		this.shadowRoot.appendChild(this.canvas);
 
 		// Default values
-		this._value       =   0;
-		this._width       =  50;
-		this._height      = 150;
-		this._label       = "VAL";
+		this._value = 0;
+		this._width = 50;
+		this._height = 150;
+		this._label = "VAL";
 
 		this._previousClassName = "";
 		this.jumboColorConfig = jumboDefaultColorConfig;
@@ -100,15 +100,19 @@ class JumboDisplay extends HTMLElement {
 		}
 //	this.repaint();
 	}
+
 	set width(val) {
 		this.setAttribute("width", val);
 	}
+
 	set height(val) {
 		this.setAttribute("height", val);
 	}
+
 	set label(val) {
 		this.setAttribute("label", val);
 	}
+
 	set shadowRoot(val) {
 		this._shadowRoot = val;
 	}
@@ -116,15 +120,19 @@ class JumboDisplay extends HTMLElement {
 	get value() {
 		return this._value;
 	}
+
 	get width() {
 		return this._width;
 	}
+
 	get height() {
 		return this._height;
 	}
+
 	get label() {
 		return this._label;
 	}
+
 	get shadowRoot() {
 		return this._shadowRoot;
 	}
@@ -133,16 +141,16 @@ class JumboDisplay extends HTMLElement {
 	getColorConfig(classNames) {
 		let colorConfig = jumboDefaultColorConfig;
 		let classes = classNames.split(" ");
-		for (let cls=0; cls<classes.length; cls++) {
+		for (let cls = 0; cls < classes.length; cls++) {
 			let cssClassName = classes[cls];
-			for (let s=0; s<document.styleSheets.length; s++) {
+			for (let s = 0; s < document.styleSheets.length; s++) {
 				// console.log("Walking though ", document.styleSheets[s]);
 				try {
 					for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 						let selector = document.styleSheets[s].cssRules[r].selectorText;
 						//			console.log(">>> ", selector);
 						if (selector !== undefined && (selector === '.' + cssClassName || (selector.indexOf('.' + cssClassName) > -1 && selector.indexOf(JUMBO_TAG_NAME) > -1))) { // Cases like "tag-name .className"
-						                                                                                                                                                           //				console.log("  >>> Found it! [%s]", selector);
+							//				console.log("  >>> Found it! [%s]", selector);
 							let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 							let cssTextElems = cssText.split(";");
 							cssTextElems.forEach(function (elem) {
@@ -183,7 +191,7 @@ class JumboDisplay extends HTMLElement {
 						}
 					}
 				} catch (err) {
-				  // Absorb
+					// Absorb
 				}
 			}
 		}
@@ -222,7 +230,7 @@ class JumboDisplay extends HTMLElement {
 
 		let grd = context.createLinearGradient(0, 5, 0, this.height);
 		grd.addColorStop(0, this.jumboColorConfig.displayBackgroundGradient.from); // 0  Beginning
-		grd.addColorStop(1, this.jumboColorConfig.displayBackgroundGradient.to);  // 1  End
+		grd.addColorStop(1, this.jumboColorConfig.displayBackgroundGradient.to); // 1  End
 		context.fillStyle = grd;
 
 		// Background
