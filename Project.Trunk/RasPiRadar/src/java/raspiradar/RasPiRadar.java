@@ -13,6 +13,8 @@ import java.util.function.Supplier;
 /**
  * One servo (PCA9685) [-90..90] to orient the Sonic Sensor
  * One HC-SR04 to measure the distance
+ *
+ * Works as expected in standlone, not that well from Processing on the Pi (too demanding?)
  */
 public class RasPiRadar {
 

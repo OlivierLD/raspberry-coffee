@@ -112,7 +112,7 @@ double readRange()
 
   long travelTimeUsec = endTimeUsec - startTimeUsec;
 
-  if (TRUE || nativeDebugEnabled()) // Remove the TRUE
+  if (nativeDebugEnabled()) // nativeDebugEnabled does not work from JNI...
   {
     fprintf(stdout, "Start %ld, End %ld, TravelTime %ld μs\n", startTimeUsec, endTimeUsec, travelTimeUsec);
   }

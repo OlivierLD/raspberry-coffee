@@ -116,6 +116,7 @@ class WorldMap extends HTMLElement {
 		// create and append a <canvas>
 		this.canvas = document.createElement("canvas");
 		let fallbackElemt = document.createElement("h1");
+		fallbackElemt.setAttribute("tabindex", "0");
 		let content = document.createTextNode("This is a World Map, on an HTML5 canvas");
 		fallbackElemt.appendChild(content);
 		this.canvas.appendChild(fallbackElemt);
