@@ -104,9 +104,9 @@ public class HC_SR04 {
 			double pulseDuration = travelTime / (double) BILLION; // in seconds
 			distance = pulseDuration * DIST_FACT;
 			if (verbose) {
-				System.out.println(String.format("TravelTime: %d \u00e5s (nano sec), pulseDuration: %s", travelTime, DF_N.format(pulseDuration)));
+//			System.out.println(String.format("TravelTime: %d \u00e5s (nano sec), pulseDuration: %s", travelTime, DF_N.format(pulseDuration)));
 				if (distance < 1_000) { // Less than 10 meters
-					System.out.println("Distance: " + DF22.format(distance) + " cm. (" + distance + "), Duration:" + NumberFormat.getInstance().format(travelTime) + " nanoS"); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
+					System.out.println(String.format("Distance: %s cm. Duration: %s \u00e5s", DF22.format(distance), NumberFormat.getInstance().format(travelTime))); // + " (" + pulseDuration + " = " + end + " - " + start + ")");
 				} else {
 					System.out.println("   >>> Too far:" + DF22.format(distance) + " cm.");
 				}
