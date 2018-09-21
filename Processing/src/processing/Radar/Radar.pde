@@ -34,8 +34,6 @@ color sweepercolor = color (102, 250, 81);
 
 void setup() {
   
-  System.setProperty("java.library.path", "../C");
-  
   println(String.format("Running from [%s]", System.getProperty("user.dir")));
   
   size(960, 480);
@@ -71,7 +69,7 @@ void draw() {
   circle();
   for (Integer key : echos.keySet()) {
     double range = echos.get(key);
-    double scale = (height / 10.0); // cm
+    double scale = (height / 100.0); // full radius: 100 cm
     int x = (int)(Math.round(range * Math.cos(Math.toRadians(key) + 90) * scale));
     int y = (int)(Math.round(range * Math.sin(Math.toRadians(key) + 90) * scale));
     plotEcho((width / 2) + x, height - y);
@@ -90,7 +88,7 @@ void circle(){
 void grid(){
   stroke(color(250, 247, 247, 50)); // color(250, 247, 247, 50) = #faf7f7, .5 
   strokeWeight(2);
-  line(width/2, height, width/2, 0);       // verticlal axis
+  line(width/2, height, width/2, 0);       // vertical axis
   line(0, height - 1, width, height - 1);  // horizontal axis
   strokeWeight(1);
   noFill();
