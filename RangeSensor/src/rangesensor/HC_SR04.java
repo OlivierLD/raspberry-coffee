@@ -149,10 +149,10 @@ public class HC_SR04 {
 				go = false;
 			} else {
 				if (distance < 0 && verbose) {
-					System.out.println("Dist:" + distance);
+					System.out.println("Oops! Dist:" + distance);
 				}
 				try {
-					TimeUtil.delay(1_000L);
+//				TimeUtil.delay(1_000L);
 				} catch (Exception ex) {
 				}
 			}
