@@ -65,14 +65,14 @@ int nativeDebugEnabled() {
   const char * nativeDebug = getenv("NATIVEDEBUG");
   int debug = FALSE;
   if (nativeDebug != NULL) {
-    fprintf(stdout, "--> %s\n", nativeDebug);
+//  fprintf(stdout, "--> %s\n", nativeDebug);
     if (strcmp("true", nativeDebug) == 0) {
       debug = TRUE;
     }
-  } else {
-    fprintf(stdout, "NATIVEDEBUG not set\n");
+//  } else {
+//    fprintf(stdout, "NATIVEDEBUG not set\n");
   }
-  fprintf(stdout, "NATIVEDEBUG is %s\n", (debug ? "true" : "false"));
+//  fprintf(stdout, "NATIVEDEBUG is %s\n", (debug ? "true" : "false"));
   return debug;
 }
 
@@ -112,7 +112,7 @@ double readRange()
 
   long travelTimeUsec = endTimeUsec - startTimeUsec;
 
-  if (nativeDebugEnabled())
+  if (TRUE || nativeDebugEnabled())
   {
     fprintf(stdout, "Start %ld, End %ld, TravelTime %ld μs\n", startTimeUsec, endTimeUsec, travelTimeUsec);
   }
