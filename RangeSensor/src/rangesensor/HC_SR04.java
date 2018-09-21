@@ -152,7 +152,7 @@ public class HC_SR04 {
 					System.out.println("Oops! Dist:" + distance);
 				}
 				try {
-//				TimeUtil.delay(1_000L);
+					TimeUtil.delay(200L);
 				} catch (Exception ex) {
 				}
 			}
