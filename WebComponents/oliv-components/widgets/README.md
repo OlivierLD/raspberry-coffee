@@ -16,7 +16,7 @@ For now (Sep-2018), build the components one by one.
 We are using `webpack` to bundle _all_ the required resources into a _single_ file, minimized, uglified, etc., to minimize
 the IOs and the size of the HTTP response.
 
-> Note: No `lint` here. Maybe later...
+> <img src="../images/cone.png" alt="WIP" width="48" height="48" align="middle">  TODO: `lint` to implement everywhere.
 
 Requires `node` and `npm`. `yarn` if you want.
 

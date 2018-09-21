@@ -28,7 +28,7 @@ const worldMapDefaultColorConfig = {
 	globeBackground: "black",
 	globeGradient: {
 		from: "navy",
-		to: "blue",
+		to: "blue"
 	},
 	gridColor: 'rgba(0, 255, 255, 0.3)',
 	tropicColor: 'LightGray',
@@ -94,7 +94,7 @@ class WorldMap extends HTMLElement {
 				console.log(">> Key [%s]", sectionK);
 				let section = top[sectionK];
 				for (let key3 in section) {
-					console.log(">> >> Key [%s], type %s", key3, typeof(section[key3]));
+					console.log(">> >> Key [%s], type %s", key3, typeof section[key3]);
 					if (section[key3].point !== undefined) {
 						console.log("An array of %d points", section[key3].point.length);
 						for (let p=0; p<section[key3].point.length; p++) {
@@ -115,6 +115,10 @@ class WorldMap extends HTMLElement {
 		this._shadowRoot = this.attachShadow({mode: 'open'}); // 'open' means it is accessible from external JavaScript.
 		// create and append a <canvas>
 		this.canvas = document.createElement("canvas");
+		let fallbackElemt = document.createElement("h1");
+		let content = document.createTextNode("This is a World Map, on an HTML5 canvas");
+		fallbackElemt.appendChild(content);
+		this.canvas.appendChild(fallbackElemt);
 		this.shadowRoot.appendChild(this.canvas);
 
 		// For tests of the import
@@ -768,7 +772,7 @@ class WorldMap extends HTMLElement {
 	 * @returns {number}
 	 */
 	static haToLongitude(ha) {
-		let lng = - ha;
+		let lng = -ha;
 		if (lng < -180) {
 			lng += 360;
 		}

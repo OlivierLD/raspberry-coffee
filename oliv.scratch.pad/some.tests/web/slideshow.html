@@ -46,7 +46,7 @@
 			font-size: 15px;
 			padding: 8px 12px;
 			position: absolute;
-			bottom: 8px;
+			bottom: 50px;
 			width: 100%;
 			text-align: center;
 		}
@@ -62,7 +62,7 @@
 
 		/* The dots/bullets/indicators */
 		.dot {
-			cursor:pointer;
+			cursor: pointer;
 			height: 13px;
 			width: 13px;
 			margin: 0 2px;
@@ -74,6 +74,12 @@
 
 		.active, .dot:hover {
 			background-color: #717171;
+		}
+
+		.dots {
+			position: relative;
+			text-align: center;
+			bottom: 30px;
 		}
 
 		/* Fading animation */
@@ -163,10 +169,22 @@
 	<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
 	<a class="next" onclick="plusSlides(1)">&#10095;</a>
 
+	<div class="dots">
+		<span class="dot" onclick="currentSlide(1)"></span>
+		<span class="dot" onclick="currentSlide(2)"></span>
+		<span class="dot" onclick="currentSlide(3)"></span>
+		<span class="dot" onclick="currentSlide(4)"></span>
+		<span class="dot" onclick="currentSlide(5)"></span>
+		<span class="dot" onclick="currentSlide(6)"></span>
+		<span class="dot" onclick="currentSlide(7)"></span>
+		<span class="dot" onclick="currentSlide(8)"></span>
+		<span class="dot" onclick="currentSlide(9)"></span>
+	</div>
 </div>
 <br>
 
-<div style="text-align:center">
+<!-- dots below the image -->
+<!--div style="text-align:center">
 	<span class="dot" onclick="currentSlide(1)"></span>
 	<span class="dot" onclick="currentSlide(2)"></span>
 	<span class="dot" onclick="currentSlide(3)"></span>
@@ -176,7 +194,7 @@
 	<span class="dot" onclick="currentSlide(7)"></span>
 	<span class="dot" onclick="currentSlide(8)"></span>
 	<span class="dot" onclick="currentSlide(9)"></span>
-</div>
+</div-->
 
 <script>
 	var auto = false;
@@ -220,7 +238,7 @@
 				slideIndex = 1
 			}
 			slides[slideIndex - 1].style.display = "block";
-			setTimeout(showSlides, 5000); // Change image every 2 seconds
+			setTimeout(showSlides, 5000); // Change image every 5 seconds
 		}
 	}
 </script>

@@ -48,12 +48,23 @@ void setup() {
 
 void draw() {
   try {
-    radar.setAngle(bearing);
-    // Measure distance here, broadcast it witdouble dist = h bearing.
-    dist = radar.readDistance();
-    // Consumer
-    radar.consumeData(new RasPiRadar.DirectionAndRange(bearing, dist));
-
+    // 2 separate threads for setting the angle and reading the distance
+    Thread setter = new Thread() {
+      public void run() {
+       radar.setAngle(bearing);
+      }
+    };
+    setter.start();
+    Thread getter = new Thread() {
+      public void run() {
+        // Measure distance here, broadcast it witdouble dist = h bearing.
+        dist = radar.readDistance();
+        // Consumer
+        radar.consumeData(new RasPiRadar.DirectionAndRange(bearing, dist));
+      }
+    };
+    getter.start();
+    
     bearing += inc;
     if (bearing > 90 || bearing < -90) { // then flip
       hitExtremity += 1;
