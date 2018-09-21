@@ -284,7 +284,12 @@ public class RasPiRadar {
 		}));
 
 		rpr.setDataConsumer((data) -> {
-			System.out.println(String.format("Injected Data Consumer >> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+			buffer.add(data.range());
+			while (buffer.size() > BUFFER_LENGTH) {
+				buffer.remove(0);
+			}
+			double avg = buffer.stream().mapToDouble(d -> d).average().getAsDouble();
+			System.out.println(String.format("Injected Data Consumer >> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), avg));
 		});
 		// For simulation, override if needed
 //	rpr.setRangeSimulator(RasPiRadar::simulateUserRange);
