@@ -7,6 +7,8 @@ import rangesensor.HC_SR04;
 import utils.PinUtil;
 import utils.TimeUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -30,6 +32,9 @@ public class RasPiRadar {
 
 	private PCA9685 servoBoard = null;
 	private HC_SR04 hcSR04 = null;
+
+	private static final int BUFFER_LENGTH = 10;
+	private static List<Double> buffer = new ArrayList<>(BUFFER_LENGTH);
 
 	/**
 	 * The class emitted when data are read.
@@ -61,7 +66,7 @@ public class RasPiRadar {
 	}
 
 	// For simulation
-	private static double range = 10D;
+	private static double range = 100D;
 	private static Double simulateUserRange() {
 		double inc = Math.random();
 		int sign = System.nanoTime() % 2 == 0 ? +1 : -1;
@@ -145,7 +150,7 @@ public class RasPiRadar {
 		System.out.println("Channel " + channel + " all set. Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
 	}
 
-	public void setDataConsumer(Consumer<DirectionAndRange> dataConsumer) {
+	private void setDataConsumer(Consumer<DirectionAndRange> dataConsumer) {
 		this.dataConsumer = dataConsumer;
 	}
 
@@ -218,7 +223,12 @@ public class RasPiRadar {
 	public static void main(String... args) {
 
 		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
-			System.out.println(String.format("Default RasPiRadar Consumer >> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+			buffer.add(data.range());
+			while (buffer.size() > BUFFER_LENGTH) {
+				buffer.remove(0);
+			}
+			double avg = buffer.stream().mapToDouble(d -> d).average().getAsDouble();
+			System.out.println(String.format("Default RasPiRadar Consumer >> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), avg));
 		};
 
 		int servoPort  = 0;
