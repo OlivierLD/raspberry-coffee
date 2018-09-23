@@ -29,6 +29,8 @@ It appeared that running the Processing UI on the Raspberry Pi itself was a bit 
 That's actually why we came up with the Serial, TCP and REST versions, that allow
 _another machine_ to listen to the data flow emitted by the Raspberry Pi.
 
+![Serial](./rpi.radar.serial_bb.png)
+
 That seems to be the right solution for this problem.
 
 ### Processing UI
