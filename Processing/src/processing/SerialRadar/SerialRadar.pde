@@ -4,8 +4,11 @@ import processing.serial.*;
 
 /**
  * Reads serial input, from RasPiSerialRadar
+ * Change the SERIAL_PORT variable below to match your context.
  *
  * Ascii table at http://www.asciitable.com/
+ *
+ * The serial read happens in its own thread, see the serialReader variable.
  */
 final int NEW_LINE = 10;
 final int BAUD_RATE = 9600;
@@ -62,7 +65,7 @@ void setup() {
                 sentence = sb.toString();
               }
             } else {
-              if (true || verbose) {
+              if (true || verbose) { // Enforced
                 println(""); // "\t\tWaiting...");
               }
             }
