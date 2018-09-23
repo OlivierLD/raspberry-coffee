@@ -38,4 +38,5 @@ dependencies {
   compile project(':common-utils')
   compile project(':I2C.SPI')
   compile project(':RangeSensor')
+  compile project(':Serial.IO')
 }

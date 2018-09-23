@@ -10,12 +10,16 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Connect an Arduino Uno with its USB cable.
- * Serial port (ttyUSB0 below) may vary.
- *
+ * Connect an Arduino Uno with its USB cable.<br/>
+ * Serial port (ttyUSB0 below) may vary.<br/>
+ *<br/>
  * See system properties:
- * "serial.port", default "/dev/ttyUSB0"
- * "baud.rate", default "9600"
+ * <ul>
+ * <li><code>"serial.port"</code>, default <code>"/dev/ttyUSB0"</code></li>
+ * <li><code>"baud.rate"</code>, default <code>"9600"</code></li>
+ * </ul>
+ *
+ * Read & write to the Serial Port
  */
 public class ArduinoEchoClient implements SerialIOCallbacks {
 	@Override
@@ -27,17 +31,20 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 	private int bufferIdx = 0;
 	private byte[] serialBuffer = new byte[256];
 
+	/**
+	 * Receiver
+	 * @param b one byte at a time
+	 */
 	@Override
 	public void onSerialData(byte b) {
 //  System.out.println("\t\tReceived character [0x" + Integer.toHexString(b) + "]");
 		serialBuffer[bufferIdx++] = (byte) (b & 0xFF);
-		if (b == 0xA) { // \n
-			// Message completed
+		if (b == 0xA) { // \n, NL => Message completed
 			byte[] mess = new byte[bufferIdx];
 			for (int i = 0; i < bufferIdx; i++) {
 				mess[i] = serialBuffer[i];
 			}
-			arduinoOutput(mess);
+			arduinoOutput(mess); // See below
 			// Reset
 			lenToRead = 0;
 			bufferIdx = 0;
@@ -48,6 +55,11 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 	public void onSerialData(byte[] b, int len) {
 	}
 
+	/**
+	 * Invoked by {@link #onSerialData(byte)}
+	 *
+	 * @param mess
+	 */
 	public void arduinoOutput(byte[] mess) {
 		if (true) { // verbose...
 			try {
@@ -64,6 +76,7 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 		}
 	}
 
+	// Sample data
 	private final static String[] LOREM_IPSUM = {
 			"Lorem ipsum dolor sit amet, consectetuer adipiscing elit, ",
 			"sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. ",
@@ -106,7 +119,9 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 			System.out.println(String.format("Port %s not found, aborting", serialPortName));
 			System.exit(1);
 		}
+		System.out.println("---------------------");
 		System.out.println("Lorem ipsum, inverted");
+		System.out.println("---------------------");
 		try {
 			sc.connect(arduinoPort, "Arduino", Integer.parseInt(baudRateStr));
 			boolean b = sc.initIOStream();
@@ -114,11 +129,12 @@ public class ArduinoEchoClient implements SerialIOCallbacks {
 			sc.initListener();
 
 			Thread.sleep(500L);
-			// Wake up!
+			// Wake up! 5 CR
 			for (int i = 0; i < 5; i++) {
 				sc.writeData("\n");
 			}
 			Thread.sleep(1_000L);
+
 			System.out.println("Writing to the serial port.");
 			for (String str : LOREM_IPSUM) {
 				sc.writeData(str + "\n");

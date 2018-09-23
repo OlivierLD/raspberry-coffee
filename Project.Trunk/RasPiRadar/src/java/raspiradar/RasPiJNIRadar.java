@@ -218,7 +218,7 @@ public class RasPiJNIRadar {
 	public static void main(String... args) {
 
 		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
-			System.out.println(String.format("Default RasPiRadar Consumer >> Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
+			System.out.println(String.format("Default (static) RasPiRadar Consumer >> Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
 		};
 
 		int servoPort  = 0;
@@ -274,6 +274,7 @@ public class RasPiJNIRadar {
 		}));
 
 		rpr.setDataConsumer((data) -> {
+			// TODO Damping?
 			System.out.println(String.format("Injected Data Consumer >> Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
 		});
 		// For simulation, override if needed

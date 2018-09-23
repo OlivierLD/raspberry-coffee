@@ -2,24 +2,38 @@ package raspiradar;
 
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CFactory;
+import gnu.io.CommPortIdentifier;
 import i2c.servo.pwm.PCA9685;
 import rangesensor.HC_SR04;
+import serial.io.SerialCommunicator;
+import serial.io.SerialIOCallbacks;
 import utils.PinUtil;
 import utils.TimeUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * One servo (PCA9685) [-90..90] to orient the Sonic Sensor
- * One HC-SR04 to measure the distance
+ * One servo (PCA9685) [-90..90] to orient the Sonic Sensor<br/>
+ * One HC-SR04 to measure the distance<br/>
+ *<br/>
+ * Connect another machine with a USB cable.<br/>
+ * Serial port (ttyUSB0 below) may vary.<br/>
+ *<br/>
+ * See system properties:
+ * <ul>
+ * <li><code>"serial.port"</code>, default <code>"/dev/ttyUSB0"</code></li>
+ * <li><code>"baud.rate"</code>, default <code>"9600"</code></li>
+ * </ul>
  *
- * Works as expected in standlone, not that well from Processing on the Pi (too demanding?)
+ * Read & write (mostly) to the Serial Port
  */
-public class RasPiRadar {
+public class RasPiSerialRadar implements SerialIOCallbacks {
 
 	private boolean verbose = "true".equals(System.getProperty("radar.verbose"));
 	private int servo = -1;
@@ -91,24 +105,91 @@ public class RasPiRadar {
 		this.rangeSimulator = rangeSimulator;
 	}
 
-	public RasPiRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	public RasPiSerialRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 		this(false, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
 	}
-	public RasPiRadar(boolean moveOn, int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	public RasPiSerialRadar(boolean moveOn, int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 		this(moveOn, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
 	}
 
-	public RasPiRadar(boolean moveOn, int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	public RasPiSerialRadar(boolean moveOn, int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 		this(moveOn, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
 	}
 
-	public RasPiRadar(int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	public RasPiSerialRadar(int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 		this(false, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
 	}
 
-	public RasPiRadar(boolean moveOn, int channel, int servoMin, int servoMax, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
+	@Override
+	public void connected(boolean b) {
+
+	}
+
+	@Override
+	public void onSerialData(byte b) {
+
+	}
+
+	@Override
+	public void onSerialData(byte[] ba, int len) {
+
+	}
+
+	private SerialCommunicator sc;
+
+	private void initSerialComm() {
+		sc = new SerialCommunicator(this);
+		sc.setVerbose(false); // TODO System variable
+
+		Map<String, CommPortIdentifier> pm = sc.getPortList();
+		Set<String> ports = pm.keySet();
+		if (ports.size() == 0) {
+			System.out.println("No serial port found.");
+			System.out.println("Did you run as administrator (sudo) ?");
+		}
+		System.out.println("== Serial Port List ==");
+		for (String port : ports) {
+			System.out.println("-> " + port);
+		}
+		System.out.println("======================");
+
+		String serialPortName = System.getProperty("serial.port", "/dev/ttyUSB0");
+		String baudRateStr = System.getProperty("baud.rate", "9600");
+		System.out.println(String.format("Opening port %s:%s", serialPortName, baudRateStr));
+		CommPortIdentifier serialOutPort = pm.get(serialPortName);
+		if (serialOutPort == null) {
+			System.out.println(String.format("Port %s not found, aborting", serialPortName));
+			System.exit(1);
+		}
+		try {
+			sc.connect(serialOutPort, "RadarOut", Integer.parseInt(baudRateStr));
+			boolean b = sc.initIOStream();
+			System.out.println("IO Streams " + (b ? "" : "NOT ") + "initialized");
+			sc.initListener();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	private void serialOutput(String sentence) throws IOException {
+		try {
+			sc.writeData(sentence + "\n");
+		} catch (IOException ioe) {
+			throw ioe;
+		}
+	}
+
+	private void shutdownSerialComm() {
+		try {
+			sc.disconnect();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+	public RasPiSerialRadar(boolean moveOn, int channel, int servoMin, int servoMax, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
 	  try {
 	  	this.servoBoard = new PCA9685();
+	  	this.initSerialComm();
 	  } catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError ex) {
 	  	if (!moveOn) {
 	  		throw ex;
@@ -125,12 +206,12 @@ public class RasPiRadar {
 	  	if (!moveOn) {
 			  throw usle;
 		  } else {
-			  this.setRangeSimulator(RasPiRadar::simulateUserRange);
+			  this.setRangeSimulator(RasPiSerialRadar::simulateUserRange);
 		  }
 		}
 
 		if (verbose) {
-			System.out.println("HC_SR04 wiring:");
+			System.out.println("HC-SR04 wiring:");
 			String[] map = new String[2];
 			map[0] = String.valueOf(PinUtil.findByPin(this.hcSR04.getTrigPin()).pinNumber()) + ":" + "Trigger";
 			map[1] = String.valueOf(PinUtil.findByPin(this.hcSR04.getEchoPin()).pinNumber()) + ":" + "Echo";
@@ -198,6 +279,7 @@ public class RasPiRadar {
 		if (hcSR04 != null) {
 			hcSR04.stop();
 		}
+		this.shutdownSerialComm();
 	}
 
 	/*
@@ -222,6 +304,8 @@ public class RasPiRadar {
 	private static boolean justOneLoop = false;
 
 	public static void main(String... args) {
+
+		// TODO a help (System variables and program parameters)
 
 		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
 			buffer.add(data.range());
@@ -269,12 +353,12 @@ public class RasPiRadar {
 		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
 		System.out.println(String.format("Wait when scanning %d ms", delay));
 
-		RasPiRadar rpr = null;
+		RasPiSerialRadar rpr = null;
 		try {
 			if (echo == null && trig == null) {
-				rpr = new RasPiRadar(true, servoPort);
+				rpr = new RasPiSerialRadar(true, servoPort);
 			} else {
-				rpr = new RasPiRadar(true, servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
+				rpr = new RasPiSerialRadar(true, servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");
@@ -284,13 +368,20 @@ public class RasPiRadar {
 			loop = false;
 		}));
 
-		rpr.setDataConsumer((data) -> {
+		final RasPiSerialRadar self = rpr;
+		rpr.setDataConsumer(data -> {
+			// Injected Consumer -> CSV: direction;range\n
 			buffer.add(data.range());
 			while (buffer.size() > BUFFER_LENGTH) {
 				buffer.remove(0);
 			}
 			double avg = buffer.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
-			System.out.println(String.format("Injected Data Consumer >> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), avg));
+			String serialSentence = String.format("%s%02d;%.02f", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), avg);
+			try {
+				self.serialOutput(serialSentence);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
 		});
 		// For simulation, override if needed
 //	rpr.setRangeSimulator(RasPiRadar::simulateUserRange);
