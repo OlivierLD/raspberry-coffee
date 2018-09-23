@@ -1,7 +1,10 @@
 ### Radar
+
+> Radar is an acronym, meaning **RA**dio **D**irection **A**nd **R**ange.
+
 With a `PCA9685` and a `HC-SR04` (ultrasound distance sensor).
 A servo connected to the `PCA9685` rotates degree by degree from -90&deg; to +90&deg;. It supports the
-`HC_SR04` that measures the distance for each position of the servo.
+`HC-SR04` that measures the distance for each position of the servo.
 
 Wiring:
 ![Radar](./rpi.radar_bb.png)
@@ -24,6 +27,12 @@ Graphical User Interface will follow.
 
 > Note: All the required components are part of this project (Serial Port interface, TCP Reader, REST server).
 
+Serial version requires extra hardware (USB cable), TCP and REST do not.
+
+There is a Console Interface - spitting out the data read by the device, direction and range.
+
+Graphical User Interfaces are done with Processing.
+
 ### Comments
 It appeared that running the Processing UI on the Raspberry Pi itself was a bit too demanding (see the Processing sketches named `Radar` and `RadarJNI`).
 That's actually why we came up with the Serial, TCP and REST versions, that allow
@@ -37,5 +46,8 @@ That seems to be the right solution for this problem.
 ![Processing](./radar.UI.png)
 
 See in the `Processing` module the sketch named `SerialRadar`.
+
+### TODO
+The same, but with a `VL53L0X`, more accurate.
 
 ---
