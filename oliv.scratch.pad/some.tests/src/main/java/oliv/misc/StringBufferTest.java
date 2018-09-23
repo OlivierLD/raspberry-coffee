@@ -10,5 +10,19 @@ public class StringBufferTest {
 		System.out.println(String.format("[%s], len:%d ", sb.toString(), sb.length()));
 		sb.append("Tagada");
 		System.out.println(String.format("[%s], len:%d ", sb.toString(), sb.length()));
+
+		sb = new StringBuffer();
+		sb.append((char)65);
+		sb.append((char)107);
+		sb.append((char)101);
+		sb.append((char)117);
+		sb.append((char)32);
+		sb.append((char)99);
+		sb.append((char)111);
+		sb.append((char)117);
+		sb.append((char)99);
+		sb.append((char)111);
+		sb.append((char)117);
+		System.out.println(String.format("[%s], len:%d ", sb.toString(), sb.length()));
 	}
 }

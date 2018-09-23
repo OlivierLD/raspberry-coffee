@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  */
 public class RasPiSerialRadar implements SerialIOCallbacks {
 
-	private boolean verbose = "true".equals(System.getProperty("radar.verbose"));
+	private static boolean verbose = "true".equals(System.getProperty("radar.verbose"));
 	private int servo = -1;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
@@ -377,6 +377,9 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 			}
 			double avg = buffer.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
 			String serialSentence = String.format("%s%02d;%.02f", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), avg);
+			if (verbose) {
+				System.out.println(String.format("Emitting [%s]", serialSentence));
+			}
 			try {
 				self.serialOutput(serialSentence);
 			} catch (IOException ioe) {
