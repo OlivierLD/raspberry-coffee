@@ -19,9 +19,21 @@ Graphical User Interface will follow.
 - Standalone
     Radar reading and User Interface on the Raspberry PI
 - Serial interface
-- TCP interface
-- REST Interface
+- TCP interface. TODO
+- REST Interface. TODO
 
 > Note: All the required components are part of this project (Serial Port interface, TCP Reader, REST server).
+
+### Comments
+It appeared that running the Processing UI on the Raspberry Pi itself was a bit too demanding (see the Processing sketches named `Radar` and `RadarJNI`).
+That's actually why we came up with the Serial, TCP and REST versions, that allows
+_another machine_ to listen to the data flow emitted by the Raspberry Pi.
+
+That seems to be the right solution for this problem.
+
+### Processing UI
+![Processing](./radar.UI.png)
+
+See in the `Processing` module the sketch named `SerialRadar`.
 
 ---

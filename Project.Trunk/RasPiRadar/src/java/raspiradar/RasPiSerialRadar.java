@@ -212,9 +212,12 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 
 		if (verbose) {
 			System.out.println("HC-SR04 wiring:");
-			String[] map = new String[2];
+			String[] map = new String[4];
 			map[0] = String.valueOf(PinUtil.findByPin(this.hcSR04.getTrigPin()).pinNumber()) + ":" + "Trigger";
 			map[1] = String.valueOf(PinUtil.findByPin(this.hcSR04.getEchoPin()).pinNumber()) + ":" + "Echo";
+
+			map[2] = String.valueOf(8) + ":" + "TX, white";
+			map[3] = String.valueOf(10) + ":" + "RX, green";
 
 			PinUtil.print(map);
 		}
