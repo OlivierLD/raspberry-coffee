@@ -26,7 +26,7 @@ Graphical User Interface will follow.
 
 ### Comments
 It appeared that running the Processing UI on the Raspberry Pi itself was a bit too demanding (see the Processing sketches named `Radar` and `RadarJNI`).
-That's actually why we came up with the Serial, TCP and REST versions, that allows
+That's actually why we came up with the Serial, TCP and REST versions, that allow
 _another machine_ to listen to the data flow emitted by the Raspberry Pi.
 
 That seems to be the right solution for this problem.
