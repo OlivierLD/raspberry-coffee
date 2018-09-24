@@ -14,11 +14,11 @@ This is just an example: for a given problem, provide a solution. Solutions will
 
 For example, `n` = 3, and given the system:
 ```
- /
- |   (12 * X)    + (13 * Y)   + (14 * Z)     = 234
- +   (1.345 * X) + (-654 * Y) + (0.001 * Z)  = 98.87
- |   (23.09 * X) + (5.3 * Y)  + (-12.34 * Z) = 9.876
- \
+  /
+  |   (12 * X)    + (13 * Y)   + (14 * Z)     = 234
+ <    (1.345 * X) + (-654 * Y) + (0.001 * Z)  = 98.87
+  |   (23.09 * X) + (5.3 * Y)  + (-12.34 * Z) = 9.876
+  \
 ```
 The question is: _What are the values of X, Y, and Z?_
 
