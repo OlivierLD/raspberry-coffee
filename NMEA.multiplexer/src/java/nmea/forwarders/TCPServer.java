@@ -123,8 +123,7 @@ public class TCPServer implements Forwarder {
 		public void run() {
 			try {
 				parent.serverSocket = new ServerSocket(tcpPort);
-				while (true) // Wait for the clients
-				{
+				while (true) { // Wait for the clients
           System.out.println(".......... serverSocket waiting (TCP:" + tcpPort + ").");
 					Socket clientSkt = serverSocket.accept();
           System.out.println(".......... serverSocket accepted (TCP:" + tcpPort + ").");

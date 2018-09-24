@@ -76,8 +76,8 @@ void draw() {
   for (Integer key : echos.keySet()) {
     double range = echos.get(key);
     double scale = (height / 0.1); // m to 10cm
-    int x = (int)(Math.round(range * Math.cos(Math.toRadians(key) + 90) * scale));
-    int y = (int)(Math.round(range * Math.sin(Math.toRadians(key) + 90) * scale));
+    int x = (int)(Math.round(range * Math.cos(Math.toRadians(key + 90)) * scale));
+    int y = (int)(Math.round(range * Math.sin(Math.toRadians(key + 90)) * scale));
     plotEcho((width / 2) + x, height - y);
   }
   textSize(16);

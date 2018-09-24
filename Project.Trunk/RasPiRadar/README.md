@@ -22,8 +22,10 @@ Graphical User Interface will follow.
 - Standalone
     Radar reading and User Interface on the Raspberry PI
 - Serial interface
-- TCP interface. TODO
+- TCP interface.
 - REST Interface. TODO
+
+The different flavors are done thnrouyfgh a `Consumer<DirectionAndRange>`.
 
 > Note: All the required components are part of this project (Serial Port interface, TCP Reader, REST server).
 
@@ -96,10 +98,9 @@ That seems to be the right solution for this problem.
 ### Processing UI
 ![Processing](./radar.UI.png)
 
-See in the `Processing` module the sketch named `SerialRadar`.
+See in the `Processing` module the sketches named `SerialRadar`, `TCPRadar`.
 
 ### TODO
-- Unify Standalone, Serial, REST, TCP, etc, with the Consumer.
 - The same, but with a `VL53L0X`, more accurate.
 - Direct Servo, _without_ the `PCA9685`.
 

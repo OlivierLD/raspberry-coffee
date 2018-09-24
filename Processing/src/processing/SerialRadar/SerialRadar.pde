@@ -33,18 +33,18 @@ Thread serialReader = null;
 boolean verbose = false;
 
 void setup() {
-  
+
   println(String.format("Running from [%s]", System.getProperty("user.dir")));
-  
+
   size(960, 480);
   // List all the available serial ports:
   printArray(Serial.list());
-  
+
   String portName = SERIAL_PORT; // Serial.list()[0];
   println(String.format("Port is %s", portName));
   serialPort = new Serial(this, portName, BAUD_RATE);
   frameRate(20f); // 20 per second
-  
+
   // Start serial reader thread
   serialReader = new Thread() {
     public void run() {
@@ -52,7 +52,7 @@ void setup() {
       while (keepReadingSerialPort) {
         if ( serialPort.available() > 0) {  // If data is available,
           StringBuffer sb = new StringBuffer();
-          String sentence = null;   
+          String sentence = null;
           boolean keepReading = true;
           while (keepReading) {
             int character = serialPort.read();
@@ -102,15 +102,15 @@ void setup() {
 
 void draw() {
   background(bgcolor);
-  grid(); 
+  grid();
   sweeper();
   circle();
   synchronized (echos) {
     for (Integer key : echos.keySet()) {
       double range = echos.get(key);
       double scale = (height / (double)MAX_RANGE); // full radius: MAX_RANGE
-      int x = (int)(Math.round(range * Math.cos(Math.toRadians(key) + 90) * scale));
-      int y = (int)(Math.round(range * Math.sin(Math.toRadians(key) + 90) * scale));
+      int x = (int)(Math.round(range * Math.cos(Math.toRadians(key + 90)) * scale));
+      int y = (int)(Math.round(range * Math.sin(Math.toRadians(key + 90)) * scale));
       plotEcho((width / 2) + x, height - y);
     }
   }
@@ -124,9 +124,9 @@ void circle(){
   fill(color(102, 250, 81, 60));
   ellipse(width/2, height, width, 2 * height);
 }
- 
+
 void grid(){
-  stroke(color(250, 247, 247, 50)); // color(250, 247, 247, 50) = #faf7f7, .5 
+  stroke(color(250, 247, 247, 50)); // color(250, 247, 247, 50) = #faf7f7, .5
   strokeWeight(2);
   line(width/2, height, width/2, 0);       // vertical axis
   line(0, height - 1, width, height - 1);  // horizontal axis
@@ -144,10 +144,10 @@ void sweeper(){
   for (int i=38; i>=1; i--) {
     stroke(sweepercolor, 2*i);
     line(width/2, height, (width/2 + cos(beam - (f / 2)) * (height * 0.98)), (height - sin(beam - (f / 2)) * (height * 0.98)));
-    f += 0.01; 
+    f += 0.01;
   }
 }
- 
+
 void plotEcho(int x, int y){
   ellipse(x, y, 10, 10);
 }
