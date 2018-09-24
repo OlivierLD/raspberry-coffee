@@ -21,9 +21,7 @@ PRMS="$PRMS --echo-pin:18"    # GPIO_05
 # PRMS="$PRMS --just-reset"
 # PRMS="$PRMS --just-one-loop" # For position calibration & tuning
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.port=/dev/ttyAMA0"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=9600"
-#
+JAVA_OPTIONS="$JAVA_OPTIONS -Dtcp.port=7002"
 #
 echo -e "Running... 📡, prms are $PRMS"
 sudo java $JAVA_OPTIONS -cp $CP raspiradar.RasPiTCPRadar $PRMS
