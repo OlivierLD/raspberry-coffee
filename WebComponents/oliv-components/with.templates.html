@@ -16,8 +16,8 @@
 	<script type="module" src="widgets/worldmap/WorldMap.js"></script>
 	<script type="module" src="widgets/splitflap/SplitFlapDisplay.js"></script>
 
-	<link id="import-01" rel="import" href="templates/world.map.template.html">
-	<link id="import-02" rel="import" href="templates/split.flap.template.html">
+	<link rel="import" id="import-01" href="templates/world.map.template.html">
+	<link rel="import" id="import-02" href="templates/split.flap.template.html">
 
 	<style>
 		html {
@@ -57,7 +57,7 @@
 
   <script>
 //  var link = document.querySel ector('link[rel="import"]'); // OK when there is only one...
-		var linkWM = document.querySelector('link[rel="import"][id="import-01"]');
+		var linkWM = document.querySelector('link[rel="import"][id="import-01"]'); // Simplify this, is [rel="import"] necessary?
 		var contentWM = linkWM.import;
 
 		var linkSF = document.querySelector('link[rel="import"][id="import-02"]');
@@ -72,9 +72,7 @@
   </script>
 
 	<hr/>
-	<small>
-		Take a look at the page source, it's really worth it.
-	</small>
+	<small>Take a look at the page source, it's really worth it.</small>
 
 </body>
 </html>

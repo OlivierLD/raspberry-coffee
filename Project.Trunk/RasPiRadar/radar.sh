@@ -21,5 +21,5 @@ PRMS="$PRMS --echo-pin:18"    # GPIO_05
 # PRMS="$PRMS --just-reset"
 # PRMS="$PRMS --just-one-loop" # For position calibration & tuning
 #
-echo Running...
+echo -e "Running... 📡"
 sudo java $JAVA_OPTIONS -cp $CP raspiradar.RasPiRadar $PRMS

@@ -139,6 +139,7 @@ That seems to be the right solution for this problem.
 See in the `Processing` module the sketch named `SerialRadar`.
 
 ### TODO
+- Unify Standalone, Serial, REST, TCP, etc, with the Consumer.
 - The same, but with a `VL53L0X`, more accurate.
 - Direct Servo, _without_ the `PCA9685`.
 

@@ -1,10 +1,7 @@
 package raspiradar;
 
-import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.i2c.I2CFactory;
 import gnu.io.CommPortIdentifier;
-import i2c.servo.pwm.PCA9685;
-import rangesensor.HC_SR04;
 import serial.io.SerialCommunicator;
 import serial.io.SerialIOCallbacks;
 import utils.PinUtil;
@@ -16,12 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
- * One servo (PCA9685) [-90..90] to orient the Sonic Sensor<br/>
- * One HC-SR04 to measure the distance<br/>
- *<br/>
  * Connect another machine with a USB cable.<br/>
  * Serial port (ttyUSB0 below) may vary.<br/>
  *<br/>
@@ -36,89 +29,10 @@ import java.util.function.Supplier;
 public class RasPiSerialRadar implements SerialIOCallbacks {
 
 	private static boolean verbose = "true".equals(System.getProperty("radar.verbose"));
-	private int servo = -1;
-
-	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
-	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
-
-	private int servoMin = DEFAULT_SERVO_MIN;
-	private int servoMax = DEFAULT_SERVO_MAX;
-	private int diff = servoMax - servoMin;
-
-	private PCA9685 servoBoard = null;
-	private HC_SR04 hcSR04 = null;
 
 	private static final int BUFFER_LENGTH = 10;
 	private static List<Double> buffer = new ArrayList<>(BUFFER_LENGTH);
 
-	/**
-	 * The class emitted when data are read.
-	 * This is what the consumer is fed with (See {@link #dataConsumer})
-	 */
-	public static class DirectionAndRange {
-		double range;
-		int direction;
-
-		public DirectionAndRange() { }
-		public DirectionAndRange(int direction, double range) {
-			this.direction = direction;
-			this.range = range;
-		}
-		public DirectionAndRange direction(int direction) {
-			this.direction = direction;
-			return this;
-		}
-		public DirectionAndRange range(double range) {
-			this.range = range;
-			return this;
-		}
-		public int direction() {
-			return this.direction;
-		}
-		public double range() {
-			return this.range;
-		}
-	}
-
-	// For simulation
-	private static double range = 100D;
-	private static Double simulateUserRange() {
-		double inc = Math.random();
-		int sign = System.nanoTime() % 2 == 0 ? +1 : -1;
-		range += (sign * inc);
-		if (range < 0 || range > 100) {
-			range -= (2 * (sign * inc));
-		}
-		return range;
-	}
-
-	/**
-	 * When data are read, they're sent to this Consumer.
-	 * Can be used for user interface. REST, Serial, etc.
-	 */
-	private Consumer<DirectionAndRange> dataConsumer = data -> {
-		System.out.println(String.format("Default ObjectDataConsumer -> Bearing %s%02d, distance %.02f cm", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
-	};
-
-	private Supplier<Double> rangeSimulator = null;
-	public void setRangeSimulator(Supplier<Double> rangeSimulator) {
-		this.rangeSimulator = rangeSimulator;
-	}
-
-	public RasPiSerialRadar(int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
-		this(false, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
-	}
-	public RasPiSerialRadar(boolean moveOn, int channel) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
-		this(moveOn, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, null, null);
-	}
-
-	public RasPiSerialRadar(boolean moveOn, int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
-		this(moveOn, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
-	}
-
-	public RasPiSerialRadar(int channel, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
-		this(false, channel, DEFAULT_SERVO_MIN, DEFAULT_SERVO_MAX, trig, echo);
-	}
 
 	@Override
 	public void connected(boolean b) {
@@ -139,7 +53,7 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 
 	private void initSerialComm() {
 		sc = new SerialCommunicator(this);
-		sc.setVerbose(false); // TODO System variable
+		sc.setVerbose(verbose);
 
 		Map<String, CommPortIdentifier> pm = sc.getPortList();
 		Set<String> ports = pm.keySet();
@@ -172,11 +86,7 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 	}
 
 	private void serialOutput(String sentence) throws IOException {
-		try {
-			sc.writeData(sentence + "\n");
-		} catch (IOException ioe) {
-			throw ioe;
-		}
+		sc.writeData(sentence + "\n");
 	}
 
 	private void shutdownSerialComm() {
@@ -185,113 +95,6 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-	}
-	public RasPiSerialRadar(boolean moveOn, int channel, int servoMin, int servoMax, Pin trig, Pin echo) throws I2CFactory.UnsupportedBusNumberException, UnsatisfiedLinkError {
-	  try {
-	  	this.servoBoard = new PCA9685();
-	  	this.initSerialComm();
-	  } catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError ex) {
-	  	if (!moveOn) {
-	  		throw ex;
-		  }
-	  }
-
-		try {
-			if (trig != null && echo != null) {
-				this.hcSR04 = new HC_SR04(trig, echo);
-			} else {
-				this.hcSR04 = new HC_SR04();
-			}
-		} catch (UnsatisfiedLinkError usle) {
-	  	if (!moveOn) {
-			  throw usle;
-		  } else {
-			  this.setRangeSimulator(RasPiSerialRadar::simulateUserRange);
-		  }
-		}
-
-		if (verbose) {
-			System.out.println("HC-SR04 wiring:");
-			String[] map = new String[4];
-			map[0] = String.valueOf(PinUtil.findByPin(this.hcSR04.getTrigPin()).pinNumber()) + ":" + "Trigger";
-			map[1] = String.valueOf(PinUtil.findByPin(this.hcSR04.getEchoPin()).pinNumber()) + ":" + "Echo";
-
-			map[2] = String.valueOf(8) + ":" + "TX, white";
-			map[3] = String.valueOf(10) + ":" + "RX, green";
-
-			PinUtil.print(map);
-		}
-
-		this.servoMin = servoMin;
-		this.servoMax = servoMax;
-		this.diff = servoMax - servoMin;
-
-		if (servoBoard != null) {
-			int freq = 60;
-			servoBoard.setPWMFreq(freq); // Set frequency in Hz
-		}
-
-		this.servo = channel;
-		System.out.println("Channel " + channel + " all set. Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
-	}
-
-	private void setDataConsumer(Consumer<DirectionAndRange> dataConsumer) {
-		this.dataConsumer = dataConsumer;
-	}
-
-	public void consumeData(DirectionAndRange dar) {
-		this.dataConsumer.accept(dar);
-	}
-
-	public void setAngle(float f) {
-		int pwm = degreeToPWM(servoMin, servoMax, f);
-		// System.out.println(f + " degrees (" + pwm + ")");
-		if (servoBoard != null) {
-			servoBoard.setPWM(servo, 0, pwm);
-		}
-	}
-
-	public void setPWM(int pwm) {
-		if (servoBoard != null) {
-			servoBoard.setPWM(servo, 0, pwm);
-		}
-	}
-
-	public double readDistance() {
-		if (hcSR04 != null) {
-			return hcSR04.readDistance();
-		} else {
-			if (this.rangeSimulator != null) {
-				return this.rangeSimulator.get();
-			} else {
-				return 0;
-			}
-		}
-	}
-
-	public void stop() { // Set (back) to 0, free resources
-		if (servoBoard != null) {
-			servoBoard.setPWM(servo, 0, 0);
-		}
-	}
-
-	public void free() {
-		if (servoBoard != null) {
-			servoBoard.close();
-		}
-		if (hcSR04 != null) {
-			hcSR04.stop();
-		}
-		this.shutdownSerialComm();
-	}
-
-	/*
-	 * deg in [-90..90]
-	 */
-	private static int degreeToPWM(int min, int max, float deg) {
-		int diff = max - min;
-		float oneDeg = diff / 180f;
-		return Math.round(min + ((deg + 90) * oneDeg));
 	}
 
 	private final static String PCA9685_SERVO_PORT = "--servo-port:";
@@ -310,7 +113,7 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 
 		// TODO a help (System variables and program parameters)
 
-		Consumer<DirectionAndRange> defaultDataConsumer = (data) -> {
+		Consumer<RasPiRadar.DirectionAndRange> defaultDataConsumer = (data) -> {
 			buffer.add(data.range());
 			while (buffer.size() > BUFFER_LENGTH) {
 				buffer.remove(0);
@@ -356,22 +159,34 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 		System.out.println(String.format("Driving Servo on Channel %d", servoPort));
 		System.out.println(String.format("Wait when scanning %d ms", delay));
 
-		RasPiSerialRadar rpr = null;
+		RasPiSerialRadar serialRadar = new RasPiSerialRadar();
+		serialRadar.initSerialComm();
+		RasPiRadar rpr = null;
 		try {
 			if (echo == null && trig == null) {
-				rpr = new RasPiSerialRadar(true, servoPort);
+				rpr = new RasPiRadar(true, servoPort);
 			} else {
-				rpr = new RasPiSerialRadar(true, servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
+				rpr = new RasPiRadar(true, servoPort, PinUtil.getPinByPhysicalNumber(trig), PinUtil.getPinByPhysicalNumber(echo));
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError notOnAPi) {
 			System.out.println("Not on a Pi? Moving on...");
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			loop = false;
-		}));
+		if (verbose && rpr != null && rpr.getHcSR04() != null) {
+			System.out.println("HC-SR04 & Serial wiring:");
+			String[] map = new String[4];
+			map[0] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getTrigPin()).pinNumber()) + ":" + "Trigger";
+			map[1] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getEchoPin()).pinNumber()) + ":" + "Echo";
 
-		final RasPiSerialRadar self = rpr;
+			map[2] = String.valueOf(8) + ":" + "TX, white";
+			map[3] = String.valueOf(10) + ":" + "RX, green";
+
+			PinUtil.print(map);
+		}
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> loop = false));
+
+		// Will take care of sending data to the serial port.
 		rpr.setDataConsumer(data -> {
 			// Injected Consumer -> CSV: direction;range\n
 			buffer.add(data.range());
@@ -384,7 +199,7 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 				System.out.println(String.format("Emitting [%s]", serialSentence));
 			}
 			try {
-				self.serialOutput(serialSentence);
+				serialRadar.serialOutput(serialSentence);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
@@ -412,9 +227,9 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 						// Measure distance here, broadcast it witdouble dist = h bearing.
 						dist = rpr.readDistance();
 						// Consumer
-						rpr.consumeData(new DirectionAndRange(bearing, dist));
+						rpr.consumeData(new RasPiRadar.DirectionAndRange(bearing, dist));
 					} else { // For dev...
-						defaultDataConsumer.accept(new DirectionAndRange(bearing, dist));
+						defaultDataConsumer.accept(new RasPiRadar.DirectionAndRange(bearing, dist));
 					}
 					if (justOneLoop && hitExtremity == 2 && bearing == 0) {
 						loop = false;
@@ -438,6 +253,7 @@ public class RasPiSerialRadar implements SerialIOCallbacks {
 				TimeUtil.delay(1_000L); // Before freeing, get some time to get back to zero.
 				rpr.free();
 			}
+			serialRadar.shutdownSerialComm();
 		}
 		System.out.println("Done.");
 	}

@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  */
 public class RasPiRadar {
 
-	private boolean verbose = "true".equals(System.getProperty("radar.verbose"));
+	private static boolean verbose = "true".equals(System.getProperty("radar.verbose"));
 	private int servo = -1;
 
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
@@ -129,15 +129,6 @@ public class RasPiRadar {
 		  }
 		}
 
-		if (verbose) {
-			System.out.println("HC_SR04 wiring:");
-			String[] map = new String[2];
-			map[0] = String.valueOf(PinUtil.findByPin(this.hcSR04.getTrigPin()).pinNumber()) + ":" + "Trigger";
-			map[1] = String.valueOf(PinUtil.findByPin(this.hcSR04.getEchoPin()).pinNumber()) + ":" + "Echo";
-
-			PinUtil.print(map);
-		}
-
 		this.servoMin = servoMin;
 		this.servoMax = servoMax;
 		this.diff = servoMax - servoMin;
@@ -151,7 +142,11 @@ public class RasPiRadar {
 		System.out.println("Channel " + channel + " all set. Min:" + servoMin + ", Max:" + servoMax + ", diff:" + diff);
 	}
 
-	private void setDataConsumer(Consumer<DirectionAndRange> dataConsumer) {
+	public HC_SR04 getHcSR04() {
+	  return this.hcSR04;
+	}
+
+	public void setDataConsumer(Consumer<DirectionAndRange> dataConsumer) {
 		this.dataConsumer = dataConsumer;
 	}
 
@@ -280,9 +275,16 @@ public class RasPiRadar {
 			System.out.println("Not on a Pi? Moving on...");
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			loop = false;
-		}));
+		if (rpr != null && rpr.getHcSR04() != null && verbose) {
+			System.out.println("HC_SR04 wiring:");
+			String[] map = new String[2];
+			map[0] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getTrigPin()).pinNumber()) + ":" + "Trigger";
+			map[1] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getEchoPin()).pinNumber()) + ":" + "Echo";
+
+			PinUtil.print(map);
+		}
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> loop = false));
 
 		rpr.setDataConsumer((data) -> {
 			buffer.add(data.range());
