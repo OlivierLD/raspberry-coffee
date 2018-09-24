@@ -24,5 +24,7 @@ PRMS="$PRMS --echo-pin:18"    # GPIO_05
 JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.port=/dev/ttyAMA0"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=9600"
 #
-echo -e "Running... 📡"
+PRMS="$PRMS --help"
+#
+echo -e "Running... 📡, prms are $PRMS"
 sudo java $JAVA_OPTIONS -cp $CP raspiradar.RasPiSerialRadar $PRMS

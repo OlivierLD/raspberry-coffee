@@ -27,4 +27,4 @@ PRMS="$PRMS --delay:20"
 # PRMS="$PRMS --just-one-loop" # For position calibration & tuning
 #
 echo -e "Running... 📡"
-sudo NATIVEDEBUG=$NATIVEDEBUG java $JAVA_OPTIONS -cp $CP raspiradar.RasPiJNIRadar $PRMS
+sudo NATIVEDEBUG=$NATIVEDEBUG java $JAVA_OPTIONS -cp $CP raspiradar.jni.RasPiJNIRadar $PRMS
