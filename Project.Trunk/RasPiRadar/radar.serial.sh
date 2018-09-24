@@ -9,7 +9,7 @@ JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dcom.sun.management.jmxremote.port=1234 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Djava.rmi.server.hostname=raspberrypi-boat"
 #
 JAVA_OPTIONS=
-JAVA_OPTIONS="$JAVA_OPTIONS -Dradar.verbose=true"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dradar.verbose=false"
 #
 # Physical pin numbers, delay.
 PRMS=
@@ -25,7 +25,7 @@ PRMS="$PRMS --echo-pin:18"    # GPIO_05
 JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.port=/dev/ttyS0"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=9600"
 #
-PRMS="$PRMS --help"
+# PRMS="$PRMS --help"
 #
 echo -e "Running... 📡, prms are $PRMS"
 sudo java $JAVA_OPTIONS -cp $CP raspiradar.RasPiSerialRadar $PRMS
