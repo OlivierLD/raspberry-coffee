@@ -123,7 +123,7 @@ public class RasPiJNIRadar {
 		}
 
 		if (verbose) {
-			System.out.println("HC_SR04 wiring:");
+			System.out.println("HC-SR04 wiring:");
 			String[] map = new String[2];
 			map[0] = String.valueOf(trig != null ? PinUtil.findByPin(trig).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(4)).pinNumber()) + ":" + "Trigger";
 			map[1] = String.valueOf(echo != null ? PinUtil.findByPin(echo).pinNumber() : PinUtil.findByPin(PinUtil.getPinByWiringPiNumber(5)).pinNumber()) + ":" + "Echo";

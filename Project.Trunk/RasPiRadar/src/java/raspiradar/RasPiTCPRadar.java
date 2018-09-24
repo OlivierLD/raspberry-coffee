@@ -187,7 +187,7 @@ public class RasPiTCPRadar {
 		}
 
 		if (rpr != null && rpr.getHcSR04() != null && verbose) {
-			System.out.println("HC_SR04 wiring:");
+			System.out.println("HC-SR04 wiring:");
 			String[] map = new String[2];
 			map[0] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getTrigPin()).pinNumber()) + ":" + "Trigger";
 			map[1] = String.valueOf(PinUtil.findByPin(rpr.getHcSR04().getEchoPin()).pinNumber()) + ":" + "Echo";

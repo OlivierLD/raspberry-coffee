@@ -37,7 +37,7 @@ $ ./radar.sh
 Running...
 Driving Servo on Channel 15
 Wait when scanning 20 ms
-HC_SR04 wiring:
+HC-SR04 wiring:
        +-----+-----+--------------+-----++-----+--------------+-----+-----+
        | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
        +-----+-----+--------------+-----++-----+--------------+-----+-----+
