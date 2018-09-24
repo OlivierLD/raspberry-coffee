@@ -8,9 +8,11 @@ import processing.net.*;
  *
  * The tcp read happens in its own thread, see the tcpReader variable.
  */
-final int NEW_LINE = 10;
+// Tweak the 2 follwing variables if needed 
+final int MAX_RANGE = 50; // Max range on the display, in cm.
 final int TCP_PORT = 7002;
-final int MAX_RANGE = 150; // Max range on the display, in cm.
+
+final int NEW_LINE = 10;
 
 Map<Integer, Double> echos = new HashMap<Integer, Double>(181);
 Client tcpClient;
@@ -27,7 +29,7 @@ color sweepercolor = color (102, 250, 81);
 
 boolean keepReadingTCPPort = true;
 
-boolean verbose = true;
+boolean verbose = false;
 
 void setup() {
 
@@ -35,7 +37,7 @@ void setup() {
 
   size(960, 480);
   // List all the available serial ports:
-  tcpClient = new Client(this, "localhost", TCP_PORT);
+  tcpClient = new Client(this, "192.168.42.8", TCP_PORT);
   tcpClient.write("GET / HTTP/1.0\r\n"); // Use the HTTP "GET" command to ask for a Web page
   tcpClient.write("\r\n");
   frameRate(20f); // 20 per second
