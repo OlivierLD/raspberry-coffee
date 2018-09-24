@@ -81,7 +81,7 @@ public class RasPiTCPRadar {
 	public void write(byte[] message) {
 		List<Socket> toRemove = new ArrayList<>();
 		synchronized( clientSocketlist) {
-			clientSocketlist.stream().forEach(tcpSocket -> { // TODO Synchronize the stream?
+			clientSocketlist.stream().forEach(tcpSocket -> { // TODO Synchronize the stream itself?
 				synchronized (tcpSocket) {
 					try {
 						DataOutputStream out = null;
@@ -92,7 +92,7 @@ public class RasPiTCPRadar {
 					} catch (SocketException se) {
 						toRemove.add(tcpSocket);
 					} catch (Exception ex) {
-						System.err.println("TCPWriter.write:" + ex.getLocalizedMessage());
+						System.err.println("RasPiTCPRadar.write:" + ex.getLocalizedMessage());
 						ex.printStackTrace();
 					}
 				}
@@ -112,8 +112,9 @@ public class RasPiTCPRadar {
 
 	private String formatByteHexa(byte b) {
 		String s = Integer.toHexString(b).toUpperCase();
-		while (s.length() < 2)
+		while (s.length() < 2) {
 			s = "0" + s;
+		}
 		return s;
 	}
 

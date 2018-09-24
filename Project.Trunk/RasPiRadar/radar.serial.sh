@@ -21,7 +21,8 @@ PRMS="$PRMS --echo-pin:18"    # GPIO_05
 # PRMS="$PRMS --just-reset"
 # PRMS="$PRMS --just-one-loop" # For position calibration & tuning
 #
-JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.port=/dev/ttyAMA0"
+# JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.port=/dev/ttyAMA0"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.port=/dev/ttyS0"
 JAVA_OPTIONS="$JAVA_OPTIONS -Dbaud.rate=9600"
 #
 PRMS="$PRMS --help"

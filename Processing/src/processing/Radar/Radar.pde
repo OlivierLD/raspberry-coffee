@@ -78,12 +78,14 @@ void draw() {
   grid();
   sweeper();
   circle();
-  for (Integer key : echos.keySet()) {
-    double range = echos.get(key);
-    double scale = (height / 100.0); // full radius: 100 cm
-    int x = (int)(Math.round(range * Math.cos(Math.toRadians(key + 90)) * scale));
-    int y = (int)(Math.round(range * Math.sin(Math.toRadians(key + 90)) * scale));
-    plotEcho((width / 2) + x, height - y);
+  synchronized (echos) {
+    for (Integer key : echos.keySet()) {
+      double range = echos.get(key);
+      double scale = (height / 100.0); // full radius: 100 cm
+      int x = (int)(Math.round(range * Math.cos(Math.toRadians(key + 90)) * scale));
+      int y = (int)(Math.round(range * Math.sin(Math.toRadians(key + 90)) * scale));
+      plotEcho((width / 2) + x, height - y);
+    }
   }
   textSize(16);
   fill(255);

@@ -272,7 +272,7 @@ public class RasPiJNIRadar {
 			loop = false;
 		}));
 
-		rpr.setDataConsumer((data) -> {
+		rpr.setDataConsumer(data -> {
 			// TODO Damping?
 			System.out.println(String.format("Injected Data Consumer >> Bearing %s%02d, distance %.02f m", (data.direction < 0 ? "-" : "+"), Math.abs(data.direction), data.range));
 		});
