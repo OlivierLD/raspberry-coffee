@@ -25,7 +25,7 @@ Graphical User Interface will follow.
 - TCP interface.
 - REST Interface. TODO
 
-The different flavors are done thnrouyfgh a `Consumer<DirectionAndRange>`.
+The different flavors are implemented through a `Consumer<DirectionAndRange>`.
 
 > Note: All the required components are part of this project (Serial Port interface, TCP Reader, REST server).
 
