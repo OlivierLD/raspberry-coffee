@@ -92,12 +92,24 @@ let boatDataExpanded = true;
 function expandCollapseBoatData() {
 	boatDataExpanded = !boatDataExpanded;
 	if (boatDataExpanded) {
-		document.getElementById('row-1').style.display = 'grid';
-		document.getElementById('row-2').style.display = 'grid';
+		document.getElementById('row-1').style.height = 'auto';
+		document.getElementById('row-1').style.opacity = '1';
+		document.getElementById('row-1').style.visibility = 'visible';
+		document.getElementById('row-2').style.height = 'auto';
+		document.getElementById('row-2').style.opacity = '1';
+		document.getElementById('row-2').style.visibility = 'visible';
+		// document.getElementById('row-1').style.display = 'grid';
+		// document.getElementById('row-2').style.display = 'grid';
 		document.getElementById('boat-data-switch').innerText = ' - Boat Data';
 	} else {
-		document.getElementById('row-1').style.display = 'none';
-		document.getElementById('row-2').style.display = 'none';
+		document.getElementById('row-1').style.height = '0';
+		document.getElementById('row-1').style.opacity = '0';
+		document.getElementById('row-1').style.visibility = 'hidden';
+		document.getElementById('row-2').style.height = '0';
+		document.getElementById('row-2').style.opacity = '0';
+		document.getElementById('row-2').style.visibility = 'hidden';
+//	document.getElementById('row-1').style.display = 'none';
+//	document.getElementById('row-2').style.display = 'none';
 		document.getElementById('boat-data-switch').innerText = ' + Boat Data';
 	}
 }

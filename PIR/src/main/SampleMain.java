@@ -6,12 +6,7 @@ import pir.MotionDetector;
 
 public class SampleMain {
 	public static void main(String... args) {
-		final MotionDetector md = new MotionDetector(RaspiPin.GPIO_05, new MotionDetectionInterface() {
-			@Override
-			public void motionDetected() {
-				System.out.println("Something is moving!!");
-			}
-		});
+		final MotionDetector md = new MotionDetector(RaspiPin.GPIO_05, () -> System.out.println("Something is moving!!"));
 		final Thread coreThread = Thread.currentThread();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {

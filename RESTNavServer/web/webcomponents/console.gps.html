@@ -288,7 +288,11 @@
 			height: 0;
 			visibility: hidden;
 			opacity: 0;
-			transition: visibility 0.5s, height 0.5s, opacity 0.5s linear;
+			transition: height 0.5s, visibility 0.5s, opacity 0.5s linear;
+		}
+
+		.boat-data { /* Order is important */
+			transition:  height 0.5s, visibility 0.5s, opacity 0.5s linear;
 		}
 
 	</style>
@@ -438,7 +442,7 @@
 	<div id="one" style="display: block;">
 		<span id="boat-data-switch" onclick="expandCollapseBoatData();" style="cursor: pointer; padding-left: 40px;">- Boat Data</span>
 		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-			<div id="row-1" style="display: grid; grid-column-start: 2; grid-template-columns: auto auto; padding: 10px;">
+			<div id="row-1" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto auto; padding: 10px;" class="boat-data">
 				<!--
 						COG
 				+-->
@@ -487,7 +491,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="row-2" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px; text-align: center;">
+			<div id="row-2" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px; text-align: center;" class="boat-data">
 				<!--
 					COMPASS ROSE. CONCAVE.
 				+-->

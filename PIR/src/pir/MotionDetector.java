@@ -10,6 +10,7 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 /*
  * PIR: PyroElectric Infra Red
+ * Motion Sensor
  */
 public class MotionDetector {
 	final GpioController gpio = GpioFactory.getInstance();

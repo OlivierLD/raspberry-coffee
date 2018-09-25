@@ -19,7 +19,7 @@ dependencies {
   compile project(':DAC')
   compile project(':GPIO.01')
   compile project(':PhoneKeyboard3x4')
-  compile project(':RangeSensor')
+  compile project(':HC-SR04')
   compile project(':PIR')
   compile project(':PI4J.email')
   compile project(':Relay')

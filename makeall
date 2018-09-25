@@ -19,7 +19,7 @@ buildProject GPIO.01
 # buildProject GPS.sun.servo
 buildProject PhoneKeyboard3x4
 buildProject Arduino.RaspberryPI
-buildProject RangeSensor
+buildProject HC-SR04
 buildProject PIR
 buildProject FONA
 buildProject Relay

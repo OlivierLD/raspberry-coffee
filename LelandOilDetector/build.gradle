@@ -17,12 +17,12 @@ sourceSets {
     java {
       srcDir 'src'
     }
-  }  
+  }
   test {
     java {
       srcDir 'tests'
     }
-  }  
+  }
 }
 
 compileJava.options.compilerArgs += ["-Xlint:none"]
@@ -42,7 +42,7 @@ dependencies {
   compile project(':I2C.SPI')
   compile project(':FONA')
   compile project(':ADC')
-  compile project(':RangeSensor')
+  compile project(':HC-SR04')
 }
 
 task runNodeServer(type: NodeTask) {
@@ -55,7 +55,7 @@ task runNodeServer(type: NodeTask) {
 }
 
 task run(type: JavaExec, dependsOn: [ build, runNodeServer ], description: "Run it.") {
-  main = 'adc.levelreader.main.LelandPrototype'   
+  main = 'adc.levelreader.main.LelandPrototype'
 //classpath project.configurations.default
   classpath sourceSets.main.runtimeClasspath
 //classpath sourceSets.main.output.classesDir

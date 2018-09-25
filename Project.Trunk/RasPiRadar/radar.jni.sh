@@ -11,7 +11,7 @@ JAVA_OPTIONS=
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dradar.verbose=true"
 #
-export LD_LIBRARY_PATH=../../RangeSensor/C
+export LD_LIBRARY_PATH=../../HC-SR04/C
 JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=$LD_LIBRARY_PATH"
 # For the C part
 NATIVEDEBUG=true
