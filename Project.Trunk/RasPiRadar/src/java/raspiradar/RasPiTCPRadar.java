@@ -85,8 +85,9 @@ public class RasPiTCPRadar {
 				synchronized (tcpSocket) {
 					try {
 						DataOutputStream out = null;
-						if (out == null)
+						if (out == null) {
 							out = new DataOutputStream(tcpSocket.getOutputStream());
+						}
 						out.write(message);
 						out.flush();
 					} catch (SocketException se) {
@@ -121,8 +122,9 @@ public class RasPiTCPRadar {
 	public void close() {
 		System.out.println("- Stop writing to " + this.getClass().getName());
 		try {
-			for (Socket tcpSocket : clientSocketlist)
+			for (Socket tcpSocket : clientSocketlist) {
 				tcpSocket.close();
+			}
 		} catch (Exception ex) {
 			throw new RuntimeException(ex);
 		}

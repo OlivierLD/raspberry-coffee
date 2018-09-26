@@ -123,8 +123,8 @@ class BasicCanvas extends HTMLElement {
 		// Text
 		context.font = "bold 10px Arial";
 		context.fillStyle = "blue";
-		var str = this.data;
-		var len = context.measureText(str).width;
+		let str = this.data;
+		let len = context.measureText(str).width;
 		context.fillText(str, (this.width / 2) - (len / 2), (this.height / 2) + (10 / 2));
 	}
 }

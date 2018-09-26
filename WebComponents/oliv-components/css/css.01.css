@@ -1,0 +1,37 @@
+html {
+	height: 100%;
+}
+
+body {
+	color: gray;
+	font-family: "Helvetica Neue", Verdana, Arial, Helvetica, sans-serif;
+	/* background-image: linear-gradient(to bottom right, #4d4d4d, black); */
+	/*background-image: url("images/arches.jpeg");*/
+	/*background: radial-gradient(at top, blue -8%, cyan 55%);*/
+	/*background-repeat: no-repeat;*/
+	/*background-size: 100% 100%;*/
+}
+
+.bg-img {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	/* #027bc7 -8%, #014372 55% */
+	background: radial-gradient(at top, rgba(200, 123, 199, 0.5) 20%, rgba(1, 67, 114, 0.75) 55%), url("../images/arches.jpeg") no-repeat center;
+	background-size: cover;
+}
+
+.black-frame {
+	padding: 3px;
+	margin: 1px;
+}
+
+.centered {
+	text-align: center;
+}
+
+.outline {
+	color: #fff;
+	text-shadow: #000 0px 0px 1px;
+	-webkit-font-smoothing: antialiased;
+}

@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>SVG Clock</title>
-</head>
-<body>
+<div id="svg-clock-id">
 
 	<svg xmlns="http://www.w3.org/2000/svg"
 			 version="1.1"
@@ -123,7 +117,7 @@
 					this.o.setAttributeNS(null, "r", "5");
 					this.o.setAttributeNS(null, "opacity", "1.0");
 				} else {
-					this.o.setAttributeNS(null, "fill", "#00ff00");
+					this.o.setAttributeNS(null, "fill", "#d9d9d9"); // "#00ff00");
 					this.o.setAttributeNS(null, "cx", x);
 					this.o.setAttributeNS(null, "cy", y);
 					this.o.setAttributeNS(null, "r", "5");
@@ -178,7 +172,7 @@
 			function dayDisplay() {
 				var dayName = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
 				var monthName = new Array("January", "February", "March", "April", "May", "June",
-								"July", "August", "September", "October", "November", "December");
+																  "July", "August", "September", "October", "November", "December");
 
 				var today = new Date();
 
@@ -209,11 +203,11 @@
 					fill="white"
 					aria-label="Current date and time"
 					style='font-family: "text-align: center;'>
-			date
+			- - -
 			<animate attributeName="opacity" dur="5s"
 							 values="1;0;1" repeatCount="indefinite"/>
 		</text>
 
 	</svg>
-</body>
-</html>
+
+</div>

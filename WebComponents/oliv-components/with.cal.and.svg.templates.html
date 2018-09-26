@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Using templates</title>
+
+	<link rel="icon" type="image/png" href="../logo-192x192.png">
+
+	<link rel="stylesheet" href="css/stylesheet.css">
+	<link rel="stylesheet" href="css/web-components.css">
+	<link rel="stylesheet" href="css/css.01.css">
+
+	<!-- Debug -->
+	<script type="module" src="widgets/calendar/CalendarDisplay.js"></script>
+	<script type="module" src="widgets/splitflap/SplitFlapDisplay.js"></script>
+
+	<link rel="import" id="import-01" href="templates/calendar.template.html">
+	<link rel="import" id="import-02" href="templates/split.flap.template.html">
+	<link rel="import" id="import-03" href="templates/svg.clock.template.html">
+
+</head>
+<body class="bg-img">
+
+	<h1 class="black-frame outline">These are Web Components in HTML Templates</h1>
+
+	<div style="display: grid; grid-template-areas: 'left right' 'bottom bottom'; grid-gap: 10px;">
+	  <div id="calendar-placeholder" style="grid-area: left; vertical-align: top; text-align: center; padding-top: 55px;"></div>
+		<div id="svg-clock-placeholder" style="grid-area: right; vertical-align: top;"></div>
+		<div id="split-flap-placeholder" style="grid-area: bottom;"></div>
+	</div>
+
+  <script>
+//  let link = document.querySel ector('link[rel="import"]'); // OK when there is only one...
+		let linkCal = document.querySelector('link[rel="import"][id="import-01"]'); // Simplify this, is [rel="import"] necessary?
+		let contentCal = linkCal.import;
+
+		let linkSF = document.querySelector('link[rel="import"][id="import-02"]');
+		let contentSF = linkSF.import;
+
+		let linkClk = document.querySelector('link[rel="import"][id="import-03"]');
+		let contentClk = linkClk.import;
+
+		// Grab DOMs from the templates.
+		let cal = contentCal.querySelector('#calendar-id');
+		document.getElementById("calendar-placeholder").appendChild(cal.cloneNode(true));
+
+		let sf = contentSF.querySelector('#split-flap-id');
+		document.getElementById("split-flap-placeholder").appendChild(sf.cloneNode(true));
+
+		let sc = contentClk.querySelector('#svg-clock-id');
+		document.getElementById("svg-clock-placeholder").appendChild(sc.cloneNode(true));
+
+		window.onload = function() {
+			updateCalendar();
+		};
+  </script>
+
+	<hr/>
+	<small>Take a look at the page source, it's really worth it.</small>
+
+</body>
+</html>
