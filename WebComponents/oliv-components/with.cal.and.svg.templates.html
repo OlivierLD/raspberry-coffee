@@ -24,36 +24,35 @@
 	<h1 class="black-frame outline">These are Web Components in HTML Templates</h1>
 
 	<div style="display: grid; grid-template-areas: 'left right' 'bottom bottom'; grid-gap: 10px;">
-	  <div id="calendar-placeholder" style="grid-area: left; vertical-align: top; text-align: center; padding-top: 55px;"></div>
+		<div id="calendar-placeholder" style="grid-area: left; vertical-align: top; text-align: center; padding-top: 55px;"></div>
 		<div id="svg-clock-placeholder" style="grid-area: right; vertical-align: top;"></div>
 		<div id="split-flap-placeholder" style="grid-area: bottom;"></div>
 	</div>
 
-  <script>
-//  let link = document.querySel ector('link[rel="import"]'); // OK when there is only one...
-		let linkCal = document.querySelector('link[rel="import"][id="import-01"]'); // Simplify this, is [rel="import"] necessary?
-		let contentCal = linkCal.import;
+	<script>
+let linkCal = document.querySelector('link[rel="import"][id="import-01"]'); // Simplify this, is [rel="import"] necessary?
+let contentCal = linkCal.import;
 
-		let linkSF = document.querySelector('link[rel="import"][id="import-02"]');
-		let contentSF = linkSF.import;
+let linkSF = document.querySelector('link[rel="import"][id="import-02"]');
+let contentSF = linkSF.import;
 
-		let linkClk = document.querySelector('link[rel="import"][id="import-03"]');
-		let contentClk = linkClk.import;
+let linkClk = document.querySelector('link[rel="import"][id="import-03"]');
+let contentClk = linkClk.import;
 
-		// Grab DOMs from the templates.
-		let cal = contentCal.querySelector('#calendar-id');
-		document.getElementById("calendar-placeholder").appendChild(cal.cloneNode(true));
+// Grab DOMs from the templates.
+let cal = contentCal.querySelector('#calendar-id');
+document.getElementById("calendar-placeholder").appendChild(cal.cloneNode(true));
 
-		let sf = contentSF.querySelector('#split-flap-id');
-		document.getElementById("split-flap-placeholder").appendChild(sf.cloneNode(true));
+let sf = contentSF.querySelector('#split-flap-id');
+document.getElementById("split-flap-placeholder").appendChild(sf.cloneNode(true));
 
-		let sc = contentClk.querySelector('#svg-clock-id');
-		document.getElementById("svg-clock-placeholder").appendChild(sc.cloneNode(true));
+let sc = contentClk.querySelector('#svg-clock-id');
+document.getElementById("svg-clock-placeholder").appendChild(sc.cloneNode(true));
 
-		window.onload = function() {
-			updateCalendar();
-		};
-  </script>
+window.onload = function() {
+	updateCalendar();
+};
+	</script>
 
 	<hr/>
 	<small>Take a look at the page source, it's really worth it.</small>

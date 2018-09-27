@@ -26,7 +26,7 @@
 			var A = 1000;
 
 
-			var digits = [
+			const digits = [
 				" ###   #  #### #### #   ###### ### ##### ###  ###      ",
 				"#   #  #      #    ##   ##    #   #    ##   ##   #     ",
 				"#   #  #      #    ##   ##    #        ##   ##   #  #  ",
@@ -39,11 +39,11 @@
 
 			function startUp() {
 
-				var myBack = document.getElementById("backGround");
-				backX0 = myBack.getAttributeNS(null, "x");
-				backY0 = myBack.getAttributeNS(null, "y");
-				backWidth = myBack.getAttributeNS(null, "width");
-				backHeight = myBack.getAttributeNS(null, "height");
+				let bg = document.getElementById("backGround");
+				backX0 = bg.getAttributeNS(null, "x");
+				backY0 = bg.getAttributeNS(null, "y");
+				backWidth = bg.getAttributeNS(null, "width");
+				backHeight = bg.getAttributeNS(null, "height");
 
 				dayDisplay();
 				timer();
@@ -53,8 +53,8 @@
 					display   *  *  :  *  *  :  *  *   -> 2nd args of Cdigit
 																								('10' for ':')
 				*/
-				var k = 0;
-				for (var i = 0; i < 6; i++) {
+				let k = 0;
+				for (let i = 0; i < 6; i++) {
 					O[k] = new Cdigit(k++, TM[i]);
 					if (i == 1 || i == 3) O[k] = new Cdigit(k++, 10);
 				}
@@ -68,15 +68,12 @@
 			function Cdigit(N, d) {
 				// digit prototype: 5 x 7 dots for each of digit from 0 to 9
 				this.O = [];
-				for (var i = 0; i < 7; i++) {
-					for (var j = 0; j < 5; j++) {
+				for (let i = 0; i < 7; i++) {
+					for (let j = 0; j < 5; j++) {
 						if (digits[i].charAt(5 * d + j) != " ") {
 							this.O.push(
 									// COjb(this.a, this.z)
-									new CObj((
-											(28 * N) + (j * 5)) / (180 / Math.PI),
-											-42 + i * 12
-									)
+									new CObj(((28 * N) + (j * 5)) / (180 / Math.PI), -42 + i * 12)
 							);
 						}
 					}
@@ -97,15 +94,15 @@
 			// main 3D function
 			CObj.prototype.anim = function () {
 				// z axis rotation
-				var x = Math.sin(A + this.a) * 100;
-				var y = Math.cos(A + this.a) * 100;
+				let x = Math.sin(A + this.a) * 100;
+				let y = Math.cos(A + this.a) * 100;
 				// simple 3D
-				var x1 = y;
-				var zz = this.z;
-				var y1 = -zz;
+				let x1 = y;
+				let zz = this.z;
+				let y1 = -zz;
 				zz = x;
 				// 2D projection
-				var r = 396 / (396 + zz);
+				let r = 396 / (396 + zz);
 				x = Math.round(backWidth / 2 - x1 / r) + parseFloat(backX0);
 				y = Math.round(backHeight / 2 - y1 / r) + parseFloat(backY0);
 
@@ -130,11 +127,13 @@
 				A -= Math.PI / 120;
 				// refresh time
 				k = 0;
-				for (var i = 0; i < 6; i++) {
+				for (let i = 0; i < 6; i++) {
 					if (TM[i] != Tm[i]) {
 						Tm[i] = TM[i];
 						// destroy objects
-						for (var j in O[k].O) document.getElementById("clock3D").removeChild(O[k].O[j].o);
+						for (let j in O[k].O) {
+							document.getElementById("clock3D").removeChild(O[k].O[j].o);
+						}
 						delete O[k];
 						// create new digit
 						O[k] = new Cdigit(k, TM[i]);
@@ -143,8 +142,8 @@
 					k += (i == 1 || i == 3) ? 2 : 1;
 				}
 				// call animation
-				for (var i in O) {
-					for (var j in O[i].O) {
+				for (let i in O) {
+					for (let j in O[i].O) {
 						O[i].O[j].anim();
 					}
 				}
@@ -170,12 +169,10 @@
 			}
 
 			function dayDisplay() {
-				var dayName = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-				var monthName = new Array("January", "February", "March", "April", "May", "June",
+				let dayName = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
+				let monthName = new Array("January", "February", "March", "April", "May", "June",
 																  "July", "August", "September", "October", "November", "December");
-
-				var today = new Date();
-
+				let today = new Date();
 				document.getElementById("date").firstChild.nodeValue =
 						dayName[today.getDay()] + ", "
 						+ monthName[today.getMonth()] + " "

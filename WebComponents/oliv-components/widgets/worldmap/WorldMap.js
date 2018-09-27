@@ -18,7 +18,7 @@ const mapProjections = {
 		type: "GLOBE"
 	}
 };
-const tropicLat = 23.43698;
+const tropicLat = 23.43686;
 
 const worldMapDefaultColorConfig = {
 	canvasBackground: "rgba(0, 0, 100, 1.0)", // TODO Remove this?
