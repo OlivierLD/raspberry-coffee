@@ -85,7 +85,7 @@ Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clock
        |  17 |  00 | GPIO_0       | #11 || #12 | PCM_CLK/PWM0 | 01  | 18  |
        |  27 |  02 | GPIO_2       | #13 || #14 |          GND |     |     |
        |  22 |  03 | GPIO_3       | #15 || #16 |       GPIO_4 | 04  | 23  |
-       |     |     | 3v3          | #01 || #18 |       GPIO_5 | 05  | 24  |
+       |     |     | 3v3          | #17 || #18 |       GPIO_5 | 05  | 24  |
    Din |  10 |  12 | SPI0_MOSI    | #19 || #20 |          GND |     |     |
   Dout |  09 |  13 | SPI0_MISO    | #21 || #22 |       GPIO_6 | 06  | 25  |
    CLK |  11 |  14 | SPI0_CLK     | #23 || #24 |   SPI0_CS0_N | 10  | 08  | CS
