@@ -24,7 +24,7 @@ $ cd ..
 $ ./robot.pilot.sh
 ```
 
-Finally, from your browser (laptop, tablet, smartphgone), reach
+Finally, from your browser (laptop, tablet, smartphone), reach
 `http://[server-name]:9876/data/robot.pilot.html`.
 
 
