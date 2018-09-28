@@ -1,6 +1,7 @@
-package raspisamples.pwm.simulator;
+package pwm.simulator;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 
 public class LEDPanel
 		extends javax.swing.JPanel {

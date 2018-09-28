@@ -1,15 +1,11 @@
-package raspisamples;
+package tests;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import raspisamples.pwm.PWMPin;
+import pwm.PWMPin;
 
 import static utils.StaticUtil.userInput;
 

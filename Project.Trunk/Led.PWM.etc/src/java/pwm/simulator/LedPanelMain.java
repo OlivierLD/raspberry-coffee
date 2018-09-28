@@ -1,4 +1,4 @@
-package raspisamples.pwm.simulator;
+package pwm.simulator;
 
 import javax.swing.*;
 import java.awt.*;

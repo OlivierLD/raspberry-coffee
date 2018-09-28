@@ -45,8 +45,8 @@ public class HC_SR04 {
 		// create gpio controller
 		gpio = GpioFactory.getInstance();
 		// 2 pins
-		trigPin = gpio.provisionDigitalOutputPin(trig, "Trig", PinState.LOW);
-		echoPin = gpio.provisionDigitalInputPin(echo, "Echo");
+		trigPin = gpio.provisionDigitalOutputPin(trig, "Trig", PinState.LOW); // Output
+		echoPin = gpio.provisionDigitalInputPin(echo, "Echo");                // Input
 	}
 
 	public void stop() {
@@ -76,26 +76,26 @@ public class HC_SR04 {
 
 	public double readDistance() {
 		double distance = -1L;
-		trigPin.low();
+		this.trigPin.low();
 //	TimeUtil.delay(500L);
 
 		// Just to check...
-		if (echoPin.isHigh()) {
+		if (this.echoPin.isHigh()) {
 			System.out.println(">>> !! Before sending signal, echo PIN is " + (echoPin.isHigh() ? "High" : "Low"));
 		}
-		trigPin.high();
+		this.trigPin.high();
 		// 10 microsec to trigger the module  (8 ultrasound bursts at 40 kHz)
 		// https://www.dropbox.com/s/615w1321sg9epjj/hc-sr04-ultrasound-timing-diagram.png
 		TimeUtil.delay(0, TEN_MICRO_SEC);
-		trigPin.low();
+		this.trigPin.low();
 
 		// Wait for the signal to return
 		long now = System.currentTimeMillis();
-		while (echoPin.isLow() && !tooLong(now)); // && (start == 0 || (start != 0 && (start - top) < BILLION)))
+		while (this.echoPin.isLow() && !tooLong(now)); // && (start == 0 || (start != 0 && (start - top) < BILLION)))
 		long start = System.nanoTime();
 		// There it is, the echo comes back.
 		now = System.currentTimeMillis();
-		while (echoPin.isHigh() && !tooLong(now));
+		while (this.echoPin.isHigh() && !tooLong(now));
 		long end = System.nanoTime();
 
 		//  System.out.println(">>> TOP: start=" + start + ", end=" + end);

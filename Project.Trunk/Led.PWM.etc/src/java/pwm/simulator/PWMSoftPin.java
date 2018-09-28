@@ -1,4 +1,4 @@
-package raspisamples.pwm.simulator;
+package pwm.simulator;
 
 import static utils.TimeUtil.delay;
 

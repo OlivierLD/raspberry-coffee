@@ -1,4 +1,4 @@
-package raspisamples.pwm;
+package pwm;
 
 import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinState;

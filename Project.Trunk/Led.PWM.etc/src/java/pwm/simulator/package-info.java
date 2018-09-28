@@ -1,4 +1,4 @@
-package raspisamples.pwm.simulator;
+package pwm.simulator;
 /**
  * This is intended to be a Pulse Width Modulation simulation.
  *

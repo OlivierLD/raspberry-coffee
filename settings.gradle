@@ -50,5 +50,6 @@ include "Project.Trunk:PurePWM"
 include "Project.Trunk:Button.Reflex"
 include "Project.Trunk:System.Languages"
 include "Project.Trunk:Weather.Station"
+include "Project.Trunk:Led.PWM.etc"
 // Scratch pad
 include "oliv.scratch.pad:some.tests"

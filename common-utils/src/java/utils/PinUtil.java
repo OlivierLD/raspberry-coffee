@@ -9,7 +9,7 @@ import java.util.Map;
 public class PinUtil {
 	// Disposed as on the board
 	public enum GPIOPin {
-		// IO: BCM, JavaHard, gpio, onoff.js
+		// IO: BCM, JOB, gpio, onoff.js
 		// WiPi: WiringPI, Pi4J
 		//
 		//      Name            #  IO WiPi                            Name            #  IO WiPi
@@ -35,7 +35,7 @@ public class PinUtil {
 		GRND_8("GND",          39, -1, -1, null),             GPIO_29("PCM_DOUT",    40, 21, 29, RaspiPin.GPIO_29);
 
 		private String pinName; // Pin name
-		private int pinNumber;  // Physical
+		private int pinNumber;  // Physical, [1..40]
 		private int gpio;       // Used by onoff (nodejs), BCM in 'gpio readall', and Javah-io
 		private int wiringPi;   // Also used by PI4J
 		private Pin pin;

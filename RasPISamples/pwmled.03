@@ -1,4 +1,0 @@
-#!/bin/bash
-CP=./build/libs/RasPISamples-1.0-all.jar
-#
-sudo $JAVA_HOME/bin/java -cp $CP raspisamples.Real4PWMLed

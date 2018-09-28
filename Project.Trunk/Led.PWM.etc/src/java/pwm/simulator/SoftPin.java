@@ -1,4 +1,4 @@
-package raspisamples.pwm.simulator;
+package pwm.simulator;
 
 public interface SoftPin {
 	void high();
