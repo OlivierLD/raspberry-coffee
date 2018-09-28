@@ -1,8 +1,5 @@
 #!/bin/bash
-# PI4J_HOME=/opt/pi4j
-# CP=./classes
-# CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
-CP=./build/libs/RasPISamples-1.0-all.jar
+CP=./build/libs/Button.Reflex-1.0-all.jar
 #
 JAVA_OPTIONS=
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=true"

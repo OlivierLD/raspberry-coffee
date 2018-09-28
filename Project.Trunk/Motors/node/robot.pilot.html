@@ -24,25 +24,25 @@
       sendMessage(JSON.stringify({
         "command": "forward",
         "speed": $("#slider").slider("value")
-      })); 
+      }));
     });
     $("#down").mousedown(function() {
       sendMessage(JSON.stringify({
         "command": "backward",
         "speed": $("#slider").slider("value")
-      })); 
+      }));
     });
     $("#right").mousedown(function() {
       sendMessage(JSON.stringify({
         "command": "right",
         "speed": $("#slider").slider("value")
-      })); 
+      }));
     });
     $("#left").mousedown(function() {
       sendMessage(JSON.stringify({
         "command": "left",
         "speed": $("#slider").slider("value")
-      })); 
+      }));
     });
     $("#up").mouseup(function() {
       sendMessage(JSON.stringify({"command": "stop"}));

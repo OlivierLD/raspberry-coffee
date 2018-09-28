@@ -3,7 +3,7 @@
 var connection;
 
 (function () {
-  var ws = window.WebSocket || window.MozWebSocket;  
+  var ws = window.WebSocket || window.MozWebSocket;
   if (!ws) {
     displayMessage('Sorry, but your browser does not support WebSockets.');
     return;
@@ -27,7 +27,7 @@ var connection;
   // most important part - incoming messages
   connection.onmessage = function (message) {
  // console.log('onmessage:' + message);
-    // try to parse JSON message. 
+    // try to parse JSON message.
     try {
       var json = JSON.parse(message.data);
     } catch (e) {
@@ -37,12 +37,12 @@ var connection;
 
     // NOTE: if you're not sure about the JSON structure
     // check the server source code above
-    if (json.type === 'message') { 
+    if (json.type === 'message') {
       try {
         var command = JSON.parse(json.data.text);
       } catch (err) {
-        console.log("Err:" + err + " for " + json.data.text);        
-      }      
+        console.log("Err:" + err + " for " + json.data.text);
+      }
     } else {
       displayMessage('Hmm..., I\'ve never seen JSON like this: ' + json);
     }
@@ -68,11 +68,15 @@ var sendMessage = function(msg) {
   // send the message as an ordinary text
   connection.send(msg);
 };
- 
+
 var displayMessage = function(mess) {
-  var messList = statusFld.innerHTML;
-  messList = (((messList !== undefined && messList.length) > 0 ? messList + '<br>' : '') + mess);
-  statusFld.innerHTML = messList;
+  if (statusFld !== undefined) {
+	  var messList = statusFld.innerHTML;
+	  messList = (((messList !== undefined && messList.length) > 0 ? messList + '<br>' : '') + mess);
+	  statusFld.innerHTML = messList;
+  } else {
+    console.log(mess);
+  }
 };
 
 var resetStatus = function() {

@@ -16,8 +16,9 @@ public class ServoHat {
 	private static Thread me = null;
 
 	public ServoHat() throws I2CFactory.UnsupportedBusNumberException {
-		if (!"true".equals(System.getProperty("no.robot", "false")))
+		if (!"true".equals(System.getProperty("no.robot", "false"))) {
 			robot = new Robot();
+		}
 		me = Thread.currentThread();
 		String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
 		initWebSocketConnection(wsUri);
@@ -36,8 +37,7 @@ public class ServoHat {
 	private void initWebSocketConnection(String serverURI) {
 		try {
 			System.out.println("Connecting to " + serverURI);
-			webSocketClient = new WebSocketClient(new URI(serverURI)) //, (Draft)null)
-			{
+			webSocketClient = new WebSocketClient(new URI(serverURI)) { //, (Draft)null)
 				@Override
 				public void onMessage(String mess) {
 					//    System.out.println("onMessage");
@@ -49,36 +49,42 @@ public class ServoHat {
 					System.out.println("Command Value:" + value);
 					if ("close".equals(value)) {
 						bye();
-						if (robot != null)
+						if (robot != null) {
 							robot.stop();
+						}
 					} else {
 						// Drive the robot here
 						if (robot != null) {
 							try {
 								if ("forward".equals(value)) {
 									int speed = (new JSONObject(command)).getInt("speed");
-									if ("true".equals(System.getProperty("robot.verbose", "false")))
+									if ("true".equals(System.getProperty("robot.verbose", "false"))) {
 										System.out.println(String.format("%s, %d", value, speed));
+									}
 									robot.forward(speed);
 								} else if ("backward".equals(value)) {
 									int speed = (new JSONObject(command)).getInt("speed");
-									if ("true".equals(System.getProperty("robot.verbose", "false")))
+									if ("true".equals(System.getProperty("robot.verbose", "false"))) {
 										System.out.println(String.format("%s, %d", value, speed));
+									}
 									robot.backward(speed);
 								} else if ("left".equals(value)) {
 									int speed = (new JSONObject(command)).getInt("speed");
-									if ("true".equals(System.getProperty("robot.verbose", "false")))
+									if ("true".equals(System.getProperty("robot.verbose", "false"))) {
 										System.out.println(String.format("%s, %d", value, speed));
+									}
 									robot.left(speed);
 								} else if ("right".equals(value)) {
 									int speed = (new JSONObject(command)).getInt("speed");
-									if ("true".equals(System.getProperty("robot.verbose", "false")))
+									if ("true".equals(System.getProperty("robot.verbose", "false"))) {
 										System.out.println(String.format("%s, %d", value, speed));
+									}
 									robot.right(speed);
-								} else if ("stop".equals(value))
+								} else if ("stop".equals(value)) {
 									robot.stop();
-								else
+								} else {
 									System.out.println("Unsupported command [" + value + "]");
+								}
 							} catch (IOException ioe) {
 								ioe.printStackTrace();
 							}
@@ -193,14 +199,12 @@ public class ServoHat {
 			test(proto);
 		} else {
 			System.out.println("Driving the robot.");
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				public void run() {
-					proto.bye();
-					synchronized (me) {
-						me.notify();
-					}
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				proto.bye();
+				synchronized (me) {
+					me.notify();
 				}
-			});
+			}));
 			synchronized (me) {
 				try {
 					me.wait();

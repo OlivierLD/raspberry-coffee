@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-CP=./build/libs/RasPISamples-1.0-all.jar
+CP=./build/libs/Motors-1.0-all.jar
 #
 JAVA_OPTIONS=
 #
