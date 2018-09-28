@@ -17,5 +17,6 @@ and a script to run the example should be available as well.
     - [System resolution, in several languages](System.Languages/LanguageComparison.md)
 - [Weather Station](Weather.Station)
 - [Radar](RasPiRadar)
+- [Robot on wheels](Motors)
 
 ---
