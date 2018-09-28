@@ -28,9 +28,9 @@ export function toDegrees(rad) {
 
 /**
  *
- * @param from GeoPoint, L & G in Degrees
+ * @param start { lat: xx, lng: xx }, L & G in Degrees
  * @param dist distance in nm
- * @param route route in Degrees
+ * @param bearing route in Degrees
  * @return DR Position, L & G in Degrees
  */
 export function deadReckoning(start, dist, bearing) {
@@ -43,6 +43,120 @@ export function deadReckoning(start, dist, bearing) {
 	finalLng = toDegrees(finalLng);
 
 	return {lat: finalLat, lng: finalLng};
+}
+
+const TO_NORTH = 0;
+const TO_SOUTH = 1;
+const TO_EAST = 2;
+const TO_WEST = 3;
+
+/**
+ * All in Radians
+ *
+ * @param start
+ * @param arrival
+ * @param nbPoints
+ * @returns {Array}
+ */
+export function calculateGreatCircle(start, arrival, nbPoints) {
+	var ewDir;
+	var nsDir;
+
+	if (arrival.lat > start.lat) {
+		nsDir = TO_NORTH;
+	} else {
+		nsDir = TO_SOUTH;
+	}
+	if (arrival.lng > start.lng) {
+		ewDir = TO_EAST;
+	} else {
+		ewDir = TO_WEST;
+	}
+	if (Math.abs(arrival.lng - start.lng) > Math.PI) {
+		if (ewDir == TO_EAST) {
+			ewDir = TO_WEST;
+			arrival.lng = (arrival.lng - (2 * Math.PI));
+		} else {
+			ewDir = TO_EAST;
+			arrival.lng = ((2 * Math.PI) + arrival.lng);
+		}
+	}
+	let deltaG = arrival.lng - start.lng;
+	let route = [];
+	let interval = deltaG / nbPoints;
+	let smallStart = { lat: start.lat, lng: start.lng };
+
+	for (let g = start.lng; route.length <= nbPoints; g += interval) {
+		let deltag = arrival.lng - g;
+		let tanStartAngle = Math.sin(deltag) / (Math.cos(smallStart.lat) * Math.tan(arrival.lat) - Math.sin(smallStart.lat) * Math.cos(deltag));
+		let smallL = Math.atan(Math.tan(smallStart.lat) * Math.cos(interval) + Math.sin(interval) / (tanStartAngle * Math.cos(smallStart.lat)));
+		let rpG = g + interval;
+		if (rpG > Math.PI) {
+			rpG -= (2 * Math.PI);
+		}
+		if (rpG < -Math.PI) {
+			rpG = (2 * Math.PI) + rpG;
+		}
+		let routePoint = { lat: smallL, lng: rpG };
+		let ari = toDegrees(Math.atan(tanStartAngle));
+		if (ari < 0.0) {
+			ari = Math.abs(ari);
+		}
+		var _nsDir;
+		if (routePoint.lat > smallStart.lat) {
+			_nsDir = TO_NORTH;
+		} else {
+			_nsDir = TO_SOUTH;
+		}
+		let arrG = routePoint.lng;
+		let staG = smallStart.lng;
+		if (Math.sign(arrG) != Math.sign(staG)) {
+			if (Math.sign(arrG) > 0) {
+				arrG -= (2 * Math.PI);
+			} else {
+				arrG = Math.PI - arrG;
+			}
+		}
+		var _ewDir;
+		if (arrG > staG) {
+			_ewDir = TO_EAST;
+		} else {
+			_ewDir = TO_WEST;
+		}
+		let _start = 0.0;
+		if (_nsDir == TO_SOUTH) {
+			_start = 180;
+			if (_ewDir == TO_EAST) {
+				ari = _start - ari;
+			} else {
+				ari = _start + ari;
+			}
+		} else {
+			if (_ewDir == TO_EAST) {
+				ari = _start + ari;
+			} else {
+				ari = _start - ari;
+			}
+		}
+		while (ari < 0.0) {
+			ari += 360;
+		}
+		route.push({ pos: smallStart, z: (arrival === smallStart) ? null : ari });
+		smallStart = routePoint;
+	}
+	return route;
+}
+
+export function calculateGreatCircleInDegrees(start, arrival, nbPoints) {
+	let radRoute = calculateGreatCircle(
+			{ lat: toRadians(start.lat), lng: toRadians(start.lng) },
+			{ lat: toRadians(arrival.lat), lng: toRadians(arrival.lng) },
+			nbPoints);
+	let degRoute = [];
+	radRoute.forEach(pt => {
+		degRoute.push({ pos: { lat: toDegrees(pt.pos.lat), lng: toDegrees(pt.pos.lng) }, z: pt.z });
+	});
+	return degRoute;
 }
 
 export function decToSex(val, ns_ew) {

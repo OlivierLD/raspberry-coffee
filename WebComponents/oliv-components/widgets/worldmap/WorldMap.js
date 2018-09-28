@@ -3,7 +3,7 @@ const WORLD_MAP_TAG_NAME = 'world-map';
 
 /**
  * TODO:
- * - Rhumblines & Great Circles.
+ * - Rhumblines.
  * - document doAfter & doBefore
  * - document utilities (usable in doBefore & doAfter)
  */
@@ -625,6 +625,10 @@ class WorldMap extends HTMLElement {
 	// Same as above
 	toDegrees(rad) {
 		return Utilities.toDegrees(rad);
+	}
+
+	computeGreatCircle(from, to, nb) {
+		return Utilities.calculateGreatCircleInDegrees(from, to, nb);
 	}
 
 	/**

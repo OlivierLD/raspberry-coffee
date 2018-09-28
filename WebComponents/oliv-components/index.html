@@ -508,6 +508,36 @@
 			}
 		};
 
+		function plotGreatCircle(context, worldMap, from, to) {
+			let gc = worldMap.computeGreatCircle(from, to, 50);
+			if (false) { // DEBUG
+				gc.forEach(gcp => {
+					console.log("Z: %s\272, %s / %s", gcp.z.toFixed(1), worldMap.decToSex(gcp.pos.lat, "NS"), worldMap.decToSex(gcp.pos.lng, "EW"));
+				});
+			}
+
+			let lastPointToPlot = null;
+			for (let i=0; i<gc.length; i++) {
+				let panelPoint = worldMap.getPanelPoint(gc[i].pos.lat, gc[i].pos.lng);
+				let thisPointIsBehind = worldMap.isBehind(worldMap.toRadians(gc[i].pos.lat), worldMap.toRadians(gc[i].pos.lng - worldMap.globeViewLngOffset));
+				if (!thisPointIsBehind || worldMap.transparentGlobe) {
+					// Draw segment
+					if (lastPointToPlot !== null) {
+//					console.log("Plotting from ", lastPointToPlot, " to ", panelPoint);
+						context.strokeStyle = 'lime';
+						context.beginPath();
+						context.moveTo(lastPointToPlot.x, lastPointToPlot.y);
+						context.lineTo(panelPoint.x, panelPoint.y);
+						context.stroke();
+						context.closePath();
+					}
+					lastPointToPlot = panelPoint;
+				} else {
+					lastPointToPlot = null;
+				}
+			}
+		}
+
 		function plotSatellite(context, worldMap, userPos, satColor, name, satellite) {
 			let sat = worldMap.getPanelPoint(satellite.lat, satellite.lng);
 			let thisPointIsBehind = worldMap.isBehind(worldMap.toRadians(satellite.lat), worldMap.toRadians(satellite.lng - worldMap.globeViewLngOffset));
@@ -589,6 +619,8 @@
 							lng: worldMap.toDegrees(satellitePosition.lng)
 						});
 					}
+					// Plot great-circle between Paris & Hawaii (Hilo Bay)
+					plotGreatCircle(context, worldMap, { lat: 49.01500, lng: 2.5423080 }, { lat: 19.7373, lng: -155.0668648 });
 				}
 			});
 			document.getElementById(id).repaint();
