@@ -18,10 +18,11 @@ const mapProjections = {
 		type: "GLOBE"
 	}
 };
+
 const tropicLat = 23.43686;
 
 const worldMapDefaultColorConfig = {
-	canvasBackground: "rgba(0, 0, 100, 1.0)", // TODO Remove this?
+	canvasBackground: "rgba(0, 0, 100, 1.0)",  // Remove this?
 	defaultPlotPointColor: "red",
 	travelColor: "gray",
 	arrowBodyColor: 'rgba(255, 255, 255, 0.5)',
@@ -51,7 +52,6 @@ const worldMapDefaultColorConfig = {
 
 /* The map data */
 import fullWorldMap from "./world.map/worldmap.data.js";
-// import fullWorldMap from "./world.map/worldmap.data"; // minifyJs does NOT like the .js extension
 import * as Utilities from "../utilities/Utilities.js";
 
 /* global HTMLElement */

@@ -28,6 +28,7 @@ public class HC_SR04 {
 	private static boolean verbose = "true".equals(System.getProperty("hc_sr04.verbose"));
 	private final static long BILLION = (long) 1E9;
 	private final static int TEN_MICRO_SEC = 10_000; // In Nano secs
+	private final static int TWO_MICRO_SEC =  2_000; // In Nano secs
 
 	private GpioController gpio;
 
@@ -78,6 +79,7 @@ public class HC_SR04 {
 		double distance = -1L;
 		this.trigPin.low();
 //	TimeUtil.delay(500L);
+		TimeUtil.delay(0, TWO_MICRO_SEC);
 
 		// Just to check...
 		if (this.echoPin.isHigh()) {
@@ -99,7 +101,7 @@ public class HC_SR04 {
 		long end = System.nanoTime();
 
 		//  System.out.println(">>> TOP: start=" + start + ", end=" + end);
-		double travelTime = (end - start);
+		double travelTime = (end - start); // In nano seconds.
 		if (travelTime > 0) { //  && start > 0)
 			double pulseDuration = travelTime / (double) BILLION; // in seconds
 			distance = pulseDuration * DIST_FACT;
