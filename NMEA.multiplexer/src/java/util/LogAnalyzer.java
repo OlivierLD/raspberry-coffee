@@ -23,8 +23,6 @@ public class LogAnalyzer {
 
 	private static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 
-	private final static double KNOTS_TO_KMH = 1.852;
-
 	private final static long SEC  = 1_000L;
 	private final static long MIN  = 60 * SEC;
 	private final static long HOUR = 60 * MIN;
@@ -50,7 +48,44 @@ public class LogAnalyzer {
 		return str.trim();
 	}
 
+	enum SpeedUnit {
+		KN(1, "kn"),
+		KMH(1.852f, "km/h");
+
+		private final float knToUnit;
+		private final String unitLabel;
+
+		SpeedUnit(float adjust, String label) {
+			this.knToUnit = adjust;
+			this.unitLabel = label;
+		}
+
+		public float convert() {
+			return this.knToUnit;
+		}
+		public String label() { return this.unitLabel; }
+	}
+
+	private static SpeedUnit unitToUse = SpeedUnit.KMH;
+
 	public static void main(String... args) {
+
+		String speedUnit = System.getProperty("speed.unit");
+		if (speedUnit != null) {
+			switch (speedUnit) {
+				case "KMH":
+					unitToUse = SpeedUnit.KMH;
+					break;
+				case "KN":
+					unitToUse = SpeedUnit.KN;
+					break;
+				default:
+					System.out.println(String.format("Unknown unit [%s], defaulting to knots.", speedUnit));
+					unitToUse = SpeedUnit.KN;
+					break;
+			}
+		}
+
 		if (args.length == 0) {
 			throw new IllegalArgumentException("Please provide the name of the file to analyze as first parameter");
 		}
@@ -132,7 +167,7 @@ public class LogAnalyzer {
 							distanceInKm,
 							msToHMS(arrival.getTime() - start.getTime()),
 							distanceInKm / ((arrival.getTime() - start.getTime()) / ((double)HOUR))));
-			System.out.println(String.format("Max Speed: %.03f km/h", maxSpeed * KNOTS_TO_KMH));
+			System.out.println(String.format("Max Speed: %.03f %s", maxSpeed * unitToUse.convert(), unitToUse.label() ));
 			System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));
 			System.out.println(String.format("Top-Left    :%s", new GeoPos(maxLat, minLng).toString()));
 			System.out.println(String.format("Bottom-Right:%s", new GeoPos(minLat, maxLng).toString()));
