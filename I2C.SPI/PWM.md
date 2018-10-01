@@ -23,6 +23,10 @@ of the resulting brightness.
 
 ---
 
+Same article on [Hocus-Blogus](http://hocus-blogus.blogspot.com/2018/07/raspberry-pi-pwm-servos-and-pca9685.html), with a small video showing how to dim leds with PWM.
+
+---
+
 The Raspberry PI does not have analog pins, we need to use Pulse Width Modulation to simulate
 analog values, a servo is an analog device.
 
