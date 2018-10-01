@@ -8,6 +8,52 @@ More consistent samples can be found in the RasPISamples project, where several 
 Do take a look, it also comes with a readme file.
 
 ---
+To get started as quickly as possible, and not only for this project, from scratch:
+
+#### Setup a brand new Raspberry Pi
+- Install Raspian (not NOOBS) as explained at https://www.raspberrypi.org/learning/software-guide/quickstart/, and burn your SD card
+- Boot on the Raspberry with the new SD card, USB keyboard and HDMI screen attached to it (if this is an old RPi, use a USB wiFi dongle too)
+    - It should boot to the Graphical Desktop.
+- Connect to your local network
+- Use RPi-Config (from the GUI) to:
+    - enable interfaces (ssh, serial, spi, i2c, VNC, etc)
+    - setup config (keyboard, locale, etc)
+    - change pswd, hostname
+- Reboot (and now, you can use `ssh`) and reconnect
+
+- Run the following commands:
+```
+$ sudo apt-get update
+$ sudo apt-get install vim
+```
+- setup your `.bashrc` as needed, adding for example lines like
+```
+alias ll="ls -lisah"
+```
+
+```
+#  Optional: sudo apt-get install -y curl git build-essential default-jdk
+#  Optional too, to install nodejs and npm:
+$ sudo su
+root# curl -sL https://deb.nodesource.com/setup_9.x | bash -
+root# exit
+$ sudo apt-get install -y nodejs
+```
+- make sure what you might need is installed, by typing:
+```
+$ java -version
+$ javac -version
+$ git --version
+$ python3
+>>> exit()
+$ node -v
+$ npm -v
+```
+- You can use VNC (if enabled in the config above)
+
+You're ready to rock!
+
+--------------
 - [Main highlights](./Papers/README.md)
 ---
 _Note:_
