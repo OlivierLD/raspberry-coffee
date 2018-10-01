@@ -1,6 +1,11 @@
 # A Web Socket Robot on wheels
 
-Drive a robot from a browser
+The chassis and Motor HAT come from [Adafruit](https://learn.adafruit.com/simple-raspberry-pi-robot).
+
+The code for the Motor HAT is all in Java, the web part (user interface)
+runs on `NodeJS`.
+
+Drive a robot from a browser.
 
 ---
 

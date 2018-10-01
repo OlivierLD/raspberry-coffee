@@ -10,9 +10,9 @@
 - [Plant Watering System](../PlantWateringSystem/README.md)
 - [Small Boards](../Small.Boards/README.md)
 - Examples
-    - [Weather Station](../RasPISamples#home-weather-station)
+    - [Weather Station](../Project.Trunk/Weather.Station/README.md)
 - [REST Nav Server](../RESTNavServer/README.md), gathering artifacts from several other projects (Nautical Almanac, Tide Computer, NMEA Multiplexer, ...)
-- [Languages Comparison](../RasPISamples/LanguageComparison.md)
+- [Languages Comparison](../Project.Trunk/System.Languages/LanguageComparison.md)
 - Processing
     - [ADC and potentiometer](../Processing#to-run-the-sketch)
     - [Pitch and Roll](../Processing#pitchrollpde)
