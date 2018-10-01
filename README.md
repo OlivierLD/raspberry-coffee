@@ -12,14 +12,15 @@ To get started as quickly as possible, and not only for this project, from scrat
 
 #### Setup a brand new Raspberry Pi
 - Install Raspian (not NOOBS) as explained at https://www.raspberrypi.org/learning/software-guide/quickstart/, and burn your SD card
-- Boot on the Raspberry with the new SD card, USB keyboard and HDMI screen attached to it (if this is an old RPi, use a USB wiFi dongle too)
+    - Depending on the OS you burn the SD card from, the procedure varies. Well documented in the link above.
+- Boot on the Raspberry with the new SD card, USB keyboard and HDMI screen attached to it (if this is an old RPi, use a USB WiFi dongle too)
     - It should boot to the Graphical Desktop.
 - Connect to your local network
-- Use RPi-Config (from the GUI) to:
+- Use RPi-Config (from the Desktop GUI, Menu > Preferences > Raspberry Pi Configuration) to:
     - enable interfaces (ssh, serial, spi, i2c, VNC, etc)
     - setup config (keyboard, locale, etc)
     - change pswd, hostname
-- Reboot (and now, you can use `ssh`) and reconnect
+- Reboot (and now, you can use `ssh` if it has been enabled above) and reconnect
 
 - From a terminal, run the following commands:
 ```
@@ -30,6 +31,11 @@ $ sudo apt-get install vim
 ```
 alias ll="ls -lisah"
 ```
+- recent Raspian's come with a development environment that includes
+    - JRE & JDK
+    - git
+    - python
+    - C Compiler
 
 ```
 #  Optional: sudo apt-get install -y curl git build-essential default-jdk
