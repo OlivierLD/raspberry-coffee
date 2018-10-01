@@ -21,7 +21,7 @@ To get started as quickly as possible, and not only for this project, from scrat
     - change pswd, hostname
 - Reboot (and now, you can use `ssh`) and reconnect
 
-- Run the following commands:
+- From a terminal, run the following commands:
 ```
 $ sudo apt-get update
 $ sudo apt-get install vim
