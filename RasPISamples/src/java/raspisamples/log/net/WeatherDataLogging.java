@@ -13,7 +13,7 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
-import raspisamples.util.HTTPClient;
+import http.client.HTTPClient;
 
 /**
  * Log weather data with php/MySQL over the net

@@ -11,13 +11,7 @@ import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-import java.text.SimpleDateFormat;
-
-import java.util.Date;
-
 import org.json.JSONObject;
-
-import raspisamples.util.HTTPClient;
 
 /**
  * Log weather data in a file

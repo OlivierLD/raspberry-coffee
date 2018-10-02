@@ -12,7 +12,7 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
-import raspisamples.util.HTTPClient;
+import http.client.HTTPClient;
 
 public class BMP180Logging
 {
