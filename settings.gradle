@@ -51,7 +51,7 @@ include "Project.Trunk:System.Languages"
 include "Project.Trunk:Weather.Station"
 include "Project.Trunk:Led.PWM.etc"
 include "Project.Trunk:Motors"
-include "Project.Trunk:ADCs"
+include "Project.Trunk:ADCs.Servos.Joysticks"
 include "Project.Trunk:PlantWateringSystem"
 // Scratch pad
 include "oliv.scratch.pad:some.tests"
