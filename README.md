@@ -63,7 +63,7 @@ $ which curl
 $ which wget
 ```
 - You can use VNC (if enabled in the config above)
-    - Run `vncserver` from a terminal, and use `VNC Viewer` fromn another machine to connect.
+    - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
 
 You're ready to rock!
 
