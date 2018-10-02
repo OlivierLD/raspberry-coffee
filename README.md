@@ -35,7 +35,7 @@ alias ll="ls -lisah"
     - JRE & JDK
     - git
     - python
-    - C Compiler
+    - C Compiler (gcc, g++)
 
 ```
 #  Optional: sudo apt-get install -y curl git build-essential default-jdk
@@ -50,12 +50,20 @@ $ sudo apt-get install -y nodejs
 $ java -version
 $ javac -version
 $ git --version
-$ python3
->>> exit()
+$ python --version
+$ python3 --version
+$ gcc -v
 $ node -v
 $ npm -v
 ```
+- some utilities:
+```
+$ which scp
+$ which curl
+$ which wget
+```
 - You can use VNC (if enabled in the config above)
+    - Run `vncserver` from a terminal, and use `VNC Viewer` fromn another machine to connect.
 
 You're ready to rock!
 
