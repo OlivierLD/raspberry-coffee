@@ -18,5 +18,6 @@ and a script to run the example should be available as well.
 - [Weather Station](Weather.Station)
 - [Radar](RasPiRadar)
 - [Robot on wheels](Motors)
+- [Plant watering system](PlantWateringSystem)
 
 ---
