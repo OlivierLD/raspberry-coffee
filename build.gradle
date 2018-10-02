@@ -40,7 +40,10 @@ dependencies {
   compile project(':RESTImageProcessor')
   compile project(':JavaSoundDemo')
   compile project(':HanoiTower')
-  compile project(':PlantWateringSystem')
+  compile project(':Project.Trunk:PlantWateringSystem')
+  compile project(':Project.Trunk:Motors')
+  compile project(':Project.Trunk:Weather.Station')
+  compile project(':Project.Trunk:RasPiRadar')
   compile project(':TensorFlow')
   compile project(':Bluetooth')
 }

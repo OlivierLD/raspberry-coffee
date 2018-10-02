@@ -4,6 +4,8 @@
 We want to interface a Moisture/Humidity/Temperature sensor (https://www.adafruit.com/product/1298) with
 a solenoid valve (https://www.adafruit.com/product/997), to irrigate the plants in need.
 
+TODO: Try a peristaltic pump: https://www.adafruit.com/product/1150
+
 The `STH10` is a temperature and humidity sensor that can be stuck in the soil next to a plant.
 The goal here is to read the humidity of the soil, and to water the plan when the humidity goes below a given threshold.
 
@@ -277,8 +279,8 @@ In the `loggers` package, there are several examples of loggers. One is feeding 
 - Clone the repo and build the application:
 ```
  $ git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
- $ cd raspberry-pi4j-samples/PlantWateringSystem
- $ ../gradlew shadowJar
+ $ cd raspberry-pi4j-samples/Project.Trunk/PlantWateringSystem
+ $ ../../gradlew shadowJar
 ```
 - Copy the `rc.local` into the `/etc` directory (careful with that, hey?)
 - Use `raspi-config` to change the machine name (like `pws-rpi`)
@@ -290,7 +292,7 @@ Another possibility is to start it remotely from `ssh`:
 ```
  $ ssh pi@192.168.42.17
  ...
- $ cd raspberry-pi4j-samples/PlantWateringSystem
+ $ cd raspberry-pi4j-samples/Project.Trunk/PlantWateringSystem
  $ sudo -H -u pi nohup ./read.probe.sh &
  $
 ```

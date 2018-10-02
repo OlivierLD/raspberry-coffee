@@ -4,7 +4,7 @@ Java interface for [SwitchDoc Labs Weather PI](http://www.switchdoc.com/weatherp
 
 Adapted from the Python code from [here](https://github.com/switchdoclabs/RaspberryPi-WeatherPiArduino).
 
-Also see in `RasPISamples`, for a real world (full) implementation.
+Also see in `Project.Trunk:Weather.Station`, for a real world (full) implementation.
 
 There is also a channel in the `NMEA.multiplexer`, with an IoT forwarder.
 

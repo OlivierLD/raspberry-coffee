@@ -7,7 +7,7 @@
 - [Monitor a Battery](../Monitor.Battery/README.md)
 - [NMEA Multiplexer](../NMEA.Multilexer/README.md)
     - Case study: [Comparison with Node-RED](../NMEA.multiplexer/casestudy.md)
-- [Plant Watering System](../PlantWateringSystem/README.md)
+- [Plant Watering System](../Project.Trunk/PlantWateringSystem/README.md)
 - [Small Boards](../Small.Boards/README.md)
 - Examples
     - [Weather Station](../Project.Trunk/Weather.Station/README.md)
