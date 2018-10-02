@@ -10,7 +10,7 @@ var connection;
   }
 
   // open connection
-  var rootUri = "ws://" + (document.location.hostname === "" ? "localhost" : document.location.hostname) + ":" +
+  let rootUri = "ws://" + (document.location.hostname === "" ? "localhost" : document.location.hostname) + ":" +
                           (document.location.port === "" ? "9876" : document.location.port);
   console.log(rootUri);
   connection = new WebSocket(rootUri); // 'ws://localhost:9876');
@@ -61,24 +61,24 @@ var connection;
 
 })();
 
-var sendMessage = function(msg) {
+function sendMessage(msg) {
   if (!msg) {
     return;
   }
   // send the message as an ordinary text
   connection.send(msg);
-};
+}
 
-var displayMessage = function(mess) {
+function displayMessage(mess) {
   if (statusFld !== undefined) {
-	  var messList = statusFld.innerHTML;
+	  let messList = statusFld.innerHTML;
 	  messList = (((messList !== undefined && messList.length) > 0 ? messList + '<br>' : '') + mess);
 	  statusFld.innerHTML = messList;
   } else {
     console.log(mess);
   }
-};
+}
 
-var resetStatus = function() {
+function resetStatus() {
   statusFld.innerHTML = "";
-};
+}
