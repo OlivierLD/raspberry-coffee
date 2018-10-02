@@ -2,9 +2,8 @@ package paddle.buttons;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.Pin;
-import pushbutton.PushButtonObserver;
-
 import java.util.function.Consumer;
+import pushbutton.PushButtonObserver;
 
 /**
  * This shows how to hide the "complexity" of the PushButtonMaster
