@@ -1,4 +1,4 @@
-package samples.log.net;
+package samples.net;
 
 import com.pi4j.io.i2c.I2CFactory;
 import i2c.sensor.BMP180;

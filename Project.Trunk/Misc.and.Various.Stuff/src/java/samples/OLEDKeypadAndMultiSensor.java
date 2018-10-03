@@ -276,7 +276,6 @@ public class OLEDKeypadAndMultiSensor {
 	/*
 	 * Reads user input from the keypad
 	 */
-	@SuppressWarnings("oracle.jdeveloper.java.insufficient-catch-block")
 	public void userInput() {
 		StringBuffer charBuff = new StringBuffer();
 		boolean go = true;

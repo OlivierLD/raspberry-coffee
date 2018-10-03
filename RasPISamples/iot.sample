@@ -1,7 +1,0 @@
-#!/bin/bash
-CP=./build/libs/RasPISamples-1.0-all.jar
-#
-# OPTS=-Dbme280.debug=true
-OPTS=-Dkey=54c2767878ca793f2e3cae1c45d62aa7ae9f8056
-#
-sudo java -cp $CP $OPTS iot.TemperatureRelaySample

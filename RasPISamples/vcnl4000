@@ -1,3 +1,0 @@
-#!/bin/bash
-CP=./build/libs/RasPISamples-1.0-all.jar
-sudo java -cp $CP i2c.sensor.VCNL4000

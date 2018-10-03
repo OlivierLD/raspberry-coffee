@@ -1,4 +1,4 @@
-package samples.log.net;
+package samples.net;
 
 import i2c.sensor.BMP180;
 
