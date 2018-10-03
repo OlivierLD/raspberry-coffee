@@ -1,4 +1,4 @@
-package raspisamples;
+package samples;
 
 import com.pi4j.io.gpio.RaspiPin;
 import lcd.ScreenBuffer;

@@ -1,4 +1,4 @@
-package raspisamples;
+package samples;
 
 import i2c.sensor.VCNL4000;
 
@@ -23,15 +23,11 @@ public class VCNL4000ProximityWithDisplay
     int prox    = 0;
     int ambient = 0;
 
-    Runtime.getRuntime().addShutdownHook(new Thread()
-                                         {
-                                           public void run()
-                                           {
-                                             go = false;
-                                             try { display.clear(); } catch (IOException ioe) { ioe.printStackTrace(); }
-                                             System.out.println("\nBye");
-                                           }
-                                         });
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      go = false;
+      try { display.clear(); } catch (IOException ioe) { ioe.printStackTrace(); }
+      System.out.println("\nBye");
+    }));
     while (go) //  && i++ < 5)
     {
       try

@@ -53,5 +53,6 @@ include "Project.Trunk:Led.PWM.etc"
 include "Project.Trunk:Motors"
 include "Project.Trunk:ADCs.Servos.Joysticks"
 include "Project.Trunk:PlantWateringSystem"
+include "Project.Trunk:Misc.and.Various.Stuff"
 // Scratch pad
 include "oliv.scratch.pad:some.tests"

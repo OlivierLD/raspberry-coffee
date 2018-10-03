@@ -1,4 +1,4 @@
-package raspisamples;
+package samples;
 
 import i2c.sensor.VCNL4000;
 

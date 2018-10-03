@@ -1,10 +1,8 @@
-package raspisamples.wp;
+package samples.wp;
 
 import com.pi4j.wiringpi.Gpio;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.SoftPwm;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 import static utils.StaticUtil.userInput;
 

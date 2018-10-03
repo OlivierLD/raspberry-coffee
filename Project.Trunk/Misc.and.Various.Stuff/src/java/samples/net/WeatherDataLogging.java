@@ -1,4 +1,4 @@
-package raspisamples.log.net;
+package samples.log.net;
 
 import i2c.sensor.BMP180;
 
