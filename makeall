@@ -1,6 +1,7 @@
 #!/bin/bash
 echo ---------------------------------------------------------------------
 echo This will work, but you\'d better run ./gradlew clean build [install]
+echo Might not be 100% up-to-dcate...
 echo ---------------------------------------------------------------------
 #
 buildProject() {

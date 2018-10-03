@@ -16,7 +16,9 @@ public class WiringPiSoftPWMExample {
 					throws InterruptedException {
 		// initialize wiringPi library
 		int ret = Gpio.wiringPiSetup();
+		System.out.println(String.format("Gpio.wiringPiSetup() returned %d", ret));
 		int pinAddress = RaspiPin.GPIO_01.getAddress();
+		System.out.println(String.format("RaspiPin.GPIO_01.getAddress()=%d", pinAddress));
 		// create soft-pwm pins (min=0 ; max=100)
 		SoftPwm.softPwmCreate(pinAddress, 0, 100);
 
@@ -25,24 +27,22 @@ public class WiringPiSoftPWMExample {
 			try { Thread.sleep(1_000L); } catch (Exception ignore) {}
 		}));
 
-		// continuous loop
-	//while (go) {
-			for (int idx = 0; idx < 3; idx++) {
-				System.out.println(">> 0");
-				// fade LED to fully ON
-				for (int i = 0; i <= 100; i++) {
-					SoftPwm.softPwmWrite(pinAddress, i);
-					Thread.sleep(10);
-				}
-				System.out.println(">> 100");
-				// fade LED to fully OFF
-				for (int i = 100; i >= 0; i--) {
-					SoftPwm.softPwmWrite(pinAddress, i);
-					Thread.sleep(10);
-				}
-				System.out.println(">> 0");
+		for (int idx = 0; idx < 3; idx++) {
+			System.out.println(">> 0");
+			// fade LED to fully ON
+			for (int i = 0; i <= 100; i++) {
+				SoftPwm.softPwmWrite(pinAddress, i);
+				Thread.sleep(10);
 			}
-	//}
+			System.out.println(">> 100");
+			// fade LED to fully OFF
+			for (int i = 100; i >= 0; i--) {
+				SoftPwm.softPwmWrite(pinAddress, i);
+				Thread.sleep(10);
+			}
+			System.out.println(">> 0");
+		}
+
 		// Interactive?
 		System.out.println("Enter [Q] at the prompt to quit.");
 		go = true;
