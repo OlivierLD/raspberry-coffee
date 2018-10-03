@@ -72,7 +72,7 @@ We will use the following programming languages:
     - Created by Guido van Rossum, in 1991.
     - Designed for educational purpose. Easy to use, even if its syntax and structure might not please everyone.
     No native Object Oriented (OO) features (some exist, but they may look weird to an OO addict).
-    Does not require compilation. Very popular among data scientists, mostly due to its simlicity.
+    Does not require compilation. Very popular among data scientists, mostly due to its simplicity.
 - [C](#c)
     - Created by Dennis Ritchie, between 1969 and 1973, at Bell Labs.
     - Immensly adopted on the planet Earth. The oldest of all the ones mentioned here, and still alive and well.
