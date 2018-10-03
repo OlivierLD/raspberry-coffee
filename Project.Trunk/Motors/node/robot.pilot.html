@@ -7,9 +7,6 @@
   * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
   p { line-height:18px; }
     </style>
-    <script type="text/javascript" src="jquery/jquery-2.2.3.min.js"></script>
-    <script type="text/javascript" src="jquery-ui-1.12.0-rc.2/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="jquery-ui-1.12.0-rc.2/jquery-ui.min.css">
     <script type="text/javascript" src="qrcodejs/qrcode.js"></script>
     <script type="text/javascript">
   var statusFld;
@@ -18,67 +15,26 @@
     statusFld = document.getElementById("status");
   };
 
-  $(document).ready(function() {
-    $("#up").mousedown(function() {
-      sendMessage(JSON.stringify({
-        "command": "forward",
-        "speed": $("#slider").slider("value")
-      }));
-    });
-    $("#down").mousedown(function() {
-      sendMessage(JSON.stringify({
-        "command": "backward",
-        "speed": $("#slider").slider("value")
-      }));
-    });
-    $("#right").mousedown(function() {
-      sendMessage(JSON.stringify({
-        "command": "right",
-        "speed": $("#slider").slider("value")
-      }));
-    });
-    $("#left").mousedown(function() {
-      sendMessage(JSON.stringify({
-        "command": "left",
-        "speed": $("#slider").slider("value")
-      }));
-    });
-    $("#up").mouseup(function() {
-      sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#down").mouseup(function() {
-      sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#right").mouseup(function() {
-      sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#left").mouseup(function() {
-      sendMessage(JSON.stringify({"command": "stop"}));
-    });
+  function mousedown(cmd) {
+	  sendMessage(JSON.stringify({
+		  "command": cmd,
+		  "speed": $("#speedvalue")
+	  }));
+  }
 
-    $(function() {
-      $("#slider").slider({
-        range: "max",
-        min: 0,
-        max: 255,
-        value: 100,
-        slide: function(event, ui) {
-          $("#speed").val(ui.value);
-        }
-      });
-      $("#speed").val($("#slider").slider("value"));
-    });
-  });
+  function mouseup() {
+	  sendMessage(JSON.stringify({"command": "stop"}));
+  }
 
-  var closeRobot = function() {
+  function closeRobot() {
     sendMessage(JSON.stringify({"command":"close"}));
   };
 
   var qrCodeVisible = false;
-  var qrCode = function() {
+  function qrCode() {
     qrCodeVisible = !qrCodeVisible;
     document.getElementById("qrcode").style.display = (qrCodeVisible ? "inline" : "none");
-  };
+  }
     </script>
   </head>
   <body>
@@ -121,15 +77,15 @@ makeCode();
           <td align="center" colspan="2">
             <table>
               <tr>
-                <td></td><td><button id="up" title="Forward" style="width: 50px; height: 50px;">&#8593;</button></td><td></td>
+                <td></td><td><button id="up" title="Forward" style="width: 50px; height: 50px;" onmousedown="mousedown('forward');" onmouseup="mouseup();">&#8593;</button></td><td></td>
               </tr>
               <tr>
-                <td><button id="left" title="Left"  style="width: 50px; height: 50px;">&#8592;</button></td>
+                <td><button id="left" title="Left"  style="width: 50px; height: 50px;" onmousedown="mousedown('left');" onmouseup="mouseup();">&#8592;</button></td>
                 <td><!--button id="reset" title="Reset" style="width: 50px; height: 50px;">stop</button--></td>
-                <td><button id="right" title="Right" style="width: 50px; height: 50px;">&#8594;</button></td>
+                <td><button id="right" title="Right" style="width: 50px; height: 50px;" onmousedown="mousedown('right');" onmouseup="mouseup();">&#8594;</button></td>
               </tr>
               <tr>
-                <td></td><td><button id="down" title="Backward" style="width: 50px; height: 50px;">&#8595;</button></td><td></td>
+                <td></td><td><button id="down" title="Backward" style="width: 50px; height: 50px;" onmousedown="mousedown('backward');" onmouseup="mouseup();">&#8595;</button></td><td></td>
               </tr>
             </table>
           </td>
@@ -138,7 +94,8 @@ makeCode();
           <td colspan="2">
             <p>
               <label for="speed">Robot Speed:</label>
-              <input type="text" id="speed" readonly style="border:0; color:#f6931f; font-weight:bold;">
+              <input id="speed" type="range" value="100" min="0" max="255" style="width: 80%;" oninput="speedvalue.value = this.value;" />
+              <output name="speed-value" id="speedvalue" style="color: silver;">100</output>
             </p>
             <div id="slider"></div>
           </td>
