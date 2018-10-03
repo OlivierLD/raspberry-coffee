@@ -6,7 +6,6 @@ import com.pi4j.io.gpio.Pin;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
-import pushbutton.PushButtonObserver;
 
 public class PushButtonMaster {
 	private GpioPinDigitalInput button = null;

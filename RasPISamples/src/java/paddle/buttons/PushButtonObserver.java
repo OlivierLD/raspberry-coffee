@@ -1,4 +1,4 @@
-package pushbutton;
+package paddle.buttons;
 
 public interface PushButtonObserver {
 	void onButtonPressed();
