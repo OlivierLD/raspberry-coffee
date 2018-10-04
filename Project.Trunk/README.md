@@ -19,5 +19,27 @@ and a script to run the example should be available as well.
 - [Radar](RasPiRadar)
 - [Robot on wheels](Motors)
 - [Plant watering system](PlantWateringSystem)
+- ... and more.
+
+### Node JS
+Some of the projects in this folder require `NodeJS` (and its Node Package Manager aka `npm`) to be installed, some times with extra nodules.
+
+#### To install NodeJS on the Raspberry Pi (Oct 2018)
+```
+ $ sudo su
+ root# curl -sL https://deb.nodesource.com/setup_9.x | bash -
+ root# exit
+ $ sudo apt-get install -y nodejs
+```
+
+> Note: I've add problems running `node` on the Raspberry Pi Zero (Segmentation Fault)...
+> Other models are OK.
+
+When an extra module is required, then there is a `package.json` in the `node ` folder, `cd` to it, and
+ just run
+```
+ $ npm install
+```
+Explanations about how to run the different node servers are given in the `README.md` inside each project.
 
 ---
