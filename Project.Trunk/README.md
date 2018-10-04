@@ -22,7 +22,7 @@ and a script to run the example should be available as well.
 - ... and more.
 
 ### Node JS
-Some of the projects in this folder require `NodeJS` (and its Node Package Manager aka `npm`) to be installed, some times with extra nodules.
+Some of the projects in this folder require `NodeJS` (and its Node Package Manager aka `npm`) to be installed, some times with extra modules.
 
 #### To install NodeJS on the Raspberry Pi (Oct 2018)
 ```
@@ -32,7 +32,7 @@ Some of the projects in this folder require `NodeJS` (and its Node Package Manag
  $ sudo apt-get install -y nodejs
 ```
 
-> Note: I've add problems running `node` on the Raspberry Pi Zero (Segmentation Fault)...
+> Note: I've had problems running `node` on the Raspberry Pi Zero (Segmentation Fault)...
 > Other models are OK.
 
 When an extra module is required, then there is a `package.json` in the `node ` folder, `cd` to it, and
