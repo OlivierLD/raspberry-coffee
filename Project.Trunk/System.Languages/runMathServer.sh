@@ -36,7 +36,7 @@ JAVA_OPTS="$JAVA_OPTS -Dsystem.verbose=$SYSTEM_VERBOSE"
 if [ "$USE_PROXY" == "true" ]
 then
   echo Using proxy
-  JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80"
+  JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80"
 fi
 if [ "$HTTP_PORT" != "" ]
 then
