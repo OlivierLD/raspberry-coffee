@@ -1,6 +1,8 @@
 import java.util.function.Consumer;
 import java.util.Map;
 
+boolean WITH_BEEP = false;
+
 public static class DirectionAndRange {
   double range;
   int direction;
@@ -86,6 +88,9 @@ void draw() {
     };
     getter.start();
 
+    if (WITH_BEEP && bearing % 30 == 0) {
+      java.awt.Toolkit.getDefaultToolkit().beep();
+    }
     bearing += inc;
     if (bearing > 90 || bearing < -90) { // then flip
       hitExtremity += 1;
