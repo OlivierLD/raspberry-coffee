@@ -1,6 +1,11 @@
-### Raspberry Coffee ###
+![Raspberry Coffee](./raspberryCoffee.png)
+### Raspberry Coffee
 #### Java code and wiring for the Raspberry PI, featuring reusable libraries and snippets ####
 It uses the [PI4J library](http://pi4j.com).
+
+```
+$ curl -s get.pi4j.com | sudo bash
+```
 
 ---
 This project contains Java code, mostly translated from Python, dedicated to usually *one* board (like BMP180, LSM303, etc).
