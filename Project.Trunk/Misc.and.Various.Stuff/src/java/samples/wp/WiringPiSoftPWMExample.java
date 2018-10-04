@@ -9,6 +9,11 @@ import static utils.StaticUtil.userInput;
 /*
  * PWM with WiringPi.
  * Works with a led, or with a servo.
+ *
+ * For a standard servo:
+ * 0..25
+ * 15 is the middle...
+ *
  */
 public class WiringPiSoftPWMExample {
 	private static boolean go = true;
@@ -21,7 +26,8 @@ public class WiringPiSoftPWMExample {
 		int pinAddress = RaspiPin.GPIO_01.getAddress();
 		System.out.println(String.format("RaspiPin.GPIO_01.getAddress()=%d", pinAddress));
 		// create soft-pwm pins (min=0 ; max=100)
-		SoftPwm.softPwmCreate(pinAddress, 0, 100);
+		int what = SoftPwm.softPwmCreate(pinAddress, 0, 100);
+		System.out.println(String.format("SoftPwm.softPwmCreate() returned %d", what));
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			go = false;

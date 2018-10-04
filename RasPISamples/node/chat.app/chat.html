@@ -1,18 +1,25 @@
 <!DOCTYPE html>
+<!--
+ ! Start the node server:
+ ! $ cd ..
+ ! $ node server.js
+ ! Then from several browsers, reach
+ ! http://localhost:9876/data/chat.app/chat.html
+ +-->
 <html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>WebSocket 101</title>
-    <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>   
+    <link rel="stylesheet" href="../css/stylesheet.css" type="text/css"/>
     <script type="text/javascript">
-      
+
   var URI_SUFFIX = "/websocket-101/ws-101-app";
-  var ws; 
+  var ws;
   var connectionStatus = "Connecting...";
   var calledBy = document.location.toString();
   var machine, port, secured;
-  var regExp = new RegExp("(http|ws)(.?):[/]{2}([^/|^:]*):?(\\d*)/(.*)");  
+  var regExp = new RegExp("(http|ws)(.?):[/]{2}([^/|^:]*):?(\\d*)/(.*)");
   var matches = regExp.exec(calledBy);
 //scheme  = matches[1];
   secured = matches[2];
@@ -29,7 +36,7 @@
   {
     statusFld.innerHTML = "";
   };
-      </script>    
+      </script>
       <script type="text/javascript" src="chat.client.js"></script> <!-- Application definition -->
       <script type="text/javascript">
   /*
@@ -69,7 +76,7 @@
     init(); // in app.js
     promptFld.innerHTML = connectionStatus;
   };
-  
+
   var setConfig = function()
   {
     var config, enforceTransport, debugLevel;
@@ -130,7 +137,7 @@
       <tr>
         <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
       </tr>
-    </table>  
+    </table>
     <hr>
   </body>
 </html>
