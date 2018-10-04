@@ -73,22 +73,22 @@ int sliderToDegValue() {
   degree /= sliderWidth;
   // from 1 to 8
   int intDeg = 1 + (int)Math.round(degree * 7);
-//println(String.format("From slider: %f", degree));
+  //println(String.format("From slider: %f", degree));
   return intDeg;
 }
 
 float degToSliderPos(int d) {
   int sliderWidth = width - (2 * SLIDER_PADDING);
   float pos = ((float)(d - 1) / 7f) * (float)sliderWidth;
-//println(String.format("Deg: %d, SPos: %f", d, pos));
+  //println(String.format("Deg: %d, SPos: %f", d, pos));
   return pos;
 }
 
 int prevDegree = 0;
 
 void draw() {
-//background(WHITE);
-//fill(BLACK);
+  //background(WHITE);
+  //fill(BLACK);
 
   background(color(200));
   fill(WHITE);
@@ -114,6 +114,15 @@ void draw() {
   }
   // Curve?
   if (coeffs != null) {
+    // Display coeffs
+    textSize(buttonFontSize);
+    fill(BLACK);
+    for (int i=0; i<coeffs.length; i++) {
+      text(String.format("Deg %d: %f", (coeffs.length - 1 - i), coeffs[i]), 
+        10, 
+        24 + buttonFontSize + buttonTextPadding + buttonMargin + (i * 16));
+    }
+
     stroke(RED);
     Point prevPt = null;
     for (int x=0; x<width; x++) {
@@ -177,9 +186,9 @@ void update(int x, int y) {
   buttonClearOver   = overClearButton(buttonClearPosX, buttonClearPosY, buttonClearWidth, buttonClearHeight);
 }
 
-boolean overResolveButton(int x, int y, int width, int height)  {
+boolean overResolveButton(int x, int y, int width, int height) {
   if (mouseX >= x && mouseX <= (x + width) &&
-      mouseY >= y && mouseY <= (y + height)) {
+    mouseY >= y && mouseY <= (y + height)) {
     buttonResolveColor = BUTTON_HIGHLIGHT;
     return true;
   } else {
@@ -188,9 +197,9 @@ boolean overResolveButton(int x, int y, int width, int height)  {
   }
 }
 
-boolean overClearButton(int x, int y, int width, int height)  {
+boolean overClearButton(int x, int y, int width, int height) {
   if (mouseX >= x && mouseX <= (x + width) &&
-      mouseY >= y && mouseY <= (y + height)) {
+    mouseY >= y && mouseY <= (y + height)) {
     buttonClearColor = BUTTON_HIGHLIGHT;
     return true;
   } else {
@@ -298,7 +307,7 @@ void smooth() {
   println(out);
   println(String.format("From %d points", points.size()));
   coeffs = result; // For the drawing
-  
+
   boolean withMinDist = false;
   if (withMinDist) {
     // Compute the sum of the min dist from points to the curve
