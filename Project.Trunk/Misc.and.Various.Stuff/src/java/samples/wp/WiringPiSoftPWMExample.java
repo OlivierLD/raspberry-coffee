@@ -7,7 +7,8 @@ import com.pi4j.wiringpi.SoftPwm;
 import static utils.StaticUtil.userInput;
 
 /*
- * PWM with WiringPi. Works with a led, or with a standard servo.
+ * PWM with WiringPi.
+ * Works with a led, or with a servo.
  */
 public class WiringPiSoftPWMExample {
 	private static boolean go = true;
@@ -28,12 +29,13 @@ public class WiringPiSoftPWMExample {
 		}));
 
 		for (int idx = 0; idx < 3; idx++) {
-                               			System.out.println(">> 0");
+			System.out.println(">> 0");
 			// fade LED to fully ON
 			for (int i = 0; i <= 100; i++) {
 				SoftPwm.softPwmWrite(pinAddress, i);
 				Thread.sleep(10);
 			}
+			Thread.sleep(1_000);
 			System.out.println(">> 100");
 			// fade LED to fully OFF
 			for (int i = 100; i >= 0; i--) {
@@ -41,9 +43,11 @@ public class WiringPiSoftPWMExample {
 				Thread.sleep(10);
 			}
 			System.out.println(">> 0");
+			Thread.sleep(1_000);
 		}
 
 		// Interactive?
+		int previousValue = 0;
 		System.out.println("Enter [Q] at the prompt to quit.");
 		go = true;
 		while (go) {
@@ -53,7 +57,19 @@ public class WiringPiSoftPWMExample {
 			} else {
 				try {
 					int pwm = Integer.parseInt(s);
-					SoftPwm.softPwmWrite(pinAddress, pwm);
+					System.out.println(String.format(">> Setting servo to %d", pwm));
+					if (pwm > previousValue) {
+						for (int x=previousValue; x<=pwm; x++) {
+							SoftPwm.softPwmWrite(pinAddress, x);
+							Thread.sleep(10);
+						}
+					} else if (pwm < previousValue) {
+						for (int x=previousValue; x>=pwm; x--) {
+							SoftPwm.softPwmWrite(pinAddress, x);
+							Thread.sleep(10);
+						}
+					}
+					previousValue = pwm;
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
