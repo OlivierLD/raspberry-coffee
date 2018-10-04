@@ -28,7 +28,7 @@ public class WiringPiSoftPWMExample {
 		}));
 
 		for (int idx = 0; idx < 3; idx++) {
-			System.out.println(">> 0");
+                               			System.out.println(">> 0");
 			// fade LED to fully ON
 			for (int i = 0; i <= 100; i++) {
 				SoftPwm.softPwmWrite(pinAddress, i);
