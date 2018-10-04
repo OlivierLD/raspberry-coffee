@@ -1,3 +1,5 @@
+Does not require any specific hardware. Just a Chat WS demo.
+
 Start the node server:
 ```
  $ cd ..

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Leap Motion / WebSockets</title>
-    <script type="text/javascript" src="widgets/AnalogDisplay.js"></script>
+    <script type="text/javascript" src="../widgets/AnalogDisplay.js"></script>
     <style>
   * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
   p { line-height:18px; }
@@ -14,13 +14,13 @@
   var displayPitch;
   var displayYaw;
   var statusFld;
-  
+
   window.onload = function() {
     displayRoll  = new AnalogDisplay('rollCanvas',  100, 90,  30,  1, true, 40, -90);
     displayPitch = new AnalogDisplay('pitchCanvas', 100, 90,  30,  1, true, 40, -90);
     displayYaw   = new AnalogDisplay('yawCanvas',   100, 90,  30,  1, true, 40, -90);
     statusFld = document.getElementById("status");
-    
+
     displayRoll.setValue(0);
     displayPitch.setValue(0);
     displayYaw.setValue(0);
@@ -59,7 +59,7 @@
           <td align="center" valign="top">Pitch</td>
           <td align="center" valign="top">Yaw</td>
         </tr>
-      </table>  
+      </table>
     </div>
     <hr>
     <script src="./lm.client.js"></script>

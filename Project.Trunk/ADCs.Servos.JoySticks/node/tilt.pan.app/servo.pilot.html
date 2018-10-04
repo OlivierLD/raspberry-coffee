@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>TiltPan Camera / WebSockets</title>
-    <script type="text/javascript" src="widgets/AnalogDisplay.js"></script>
+    <script type="text/javascript" src="../widgets/AnalogDisplay.js"></script>
     <style>
   * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
   p { line-height:18px; }
@@ -13,15 +13,16 @@
   var displayPitch;
   var displayYaw;
   var statusFld;
-  
+
   var ud = 0;
   var lr = 0;
 
   window.onload = function() {
+  	// TODO Move that to WebComponents
     displayPitch = new AnalogDisplay('pitchCanvas', 100, 90,  30,  1, true, 40, -90);
     displayYaw   = new AnalogDisplay('yawCanvas',   100, 90,  30,  1, true, 40, -90);
     statusFld = document.getElementById("status");
-    
+
     displayPitch.setValue(ud);
     displayYaw.setValue(lr);
   };
@@ -29,7 +30,7 @@
   var buildMessage = function() { // pitch & roll and not right, I know.
     var mess = {
       pitch: 0,
-      yaw: -lr,     
+      yaw: -lr,
       roll: ud
     };
     return JSON.stringify(mess);
@@ -112,7 +113,7 @@
             </table>
           </td>
         </tr>
-      </table>  
+      </table>
     </div>
     <hr>
     <script src="./tilt.pan.client.js"></script>

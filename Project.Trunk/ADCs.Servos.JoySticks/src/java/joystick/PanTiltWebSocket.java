@@ -1,27 +1,27 @@
 package joystick;
 
-import java.net.URI;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
 import servo.StandardServo;
 
+import java.net.URI;
+
 import static utils.TimeUtil.delay;
 
 /*
- * Driven by WesbSocket server
+ * Driven by WesbSocket server. Listen to messages, and drive 2 servos accordingly.
  * See in node/server.js
  *
  * 2 Servos (UP/LR)
  *
- * Web interface available, see in node/servo.pilot.html
+ * Web interface available, see in node/tilt.pan.app/servo.pilot.html
  *
  * Start the WebSocket node server,
  * Start the script named pantilt.ws
  */
 public class PanTiltWebSocket {
-	private static StandardServo ssUD = null,
-					ssLR = null;
+	private static StandardServo ssUD = null, ssLR = null;
 
 	private static WebSocketClient webSocketClient = null;
 
@@ -35,11 +35,7 @@ public class PanTiltWebSocket {
 		ssUD.setAngle(0f);
 		ssLR.setAngle(0f);
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				close();
-			}
-		});
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> close()));
 
 		delay(2_000);
 
@@ -58,8 +54,9 @@ public class PanTiltWebSocket {
 
 				@Override
 				public void onMessage(String string) {
-					if ("true".equals(System.getProperty("verbose", "false")))
+					if ("true".equals(System.getProperty("verbose", "false"))) {
 						System.out.println("WS On Message:" + string);
+					}
 					JSONObject message = new JSONObject(string);
 					JSONObject motion = new JSONObject(message.getJSONObject("data").getString("text"));
 					float roll = 0f; // (float)motion.getDouble("roll");
@@ -81,10 +78,12 @@ public class PanTiltWebSocket {
 						withYaw = false;
 					}
 					System.out.println("Roll:" + roll + ", pitch:" + pitch + ", yaw:" + yaw);
-					if (withYaw)
+					if (withYaw) {
 						ssLR.setAngle(yaw);
-					if (withRoll)
+					}
+					if (withRoll) {
 						ssUD.setAngle(-roll); // Actually pitch...
+					}
 				}
 
 				@Override
