@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-CP=./build/libs/Weather.Station-1.0-all.jar
+CP=../build/libs/Weather.Station-1.0-all.jar
 #
 JAVA_OPTIONS=
 JAVA_OPTIONS="$JAVA_OPTIONS -Dweather.station.verbose=false"       # Home Weather Station
