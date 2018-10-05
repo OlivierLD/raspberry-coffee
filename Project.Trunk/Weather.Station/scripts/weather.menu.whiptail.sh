@@ -15,18 +15,25 @@ do
   result=$(whoami)
   case $CHOICE in
 	"1")
-		cd node
-    rm node.log
+		cd ../node
+		if [ -f node.log ]
+		then
+      rm node.log
+    fi
     nohup node weather.server.js > node.log &
     cd ..
 		result="Log is node/node.log."
 		;;
 	"2")
 	  MESSAGE="Make sure you have started the WebSocket server (Option 1)."
-    rm weather.station.log
+	  if [ -f weather.station.log ]
+	  then
+      rm weather.station.log
+    fi
     # ./weather.station.reader.sh > weather.station.log
     nohup ./weather.station.reader.sh > weather.station.log &
-    ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
+    # ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
+    ADDR=`hostname -I`
     MESSAGE="$MESSAGE\nthen from your browser, reach http://$ADDR:9876/data/weather.station/analog.all.html"
     MESSAGE="$MESSAGE\nIP is $(hostname -I)"
     MESSAGE="$MESSAGE\nLog is in weather.station.log."

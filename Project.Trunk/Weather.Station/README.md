@@ -1,4 +1,3 @@
-
 ## Weather Station
 ---
 
@@ -13,7 +12,8 @@ They are - for now - using a nodejs server and its WebSocket module, running on 
 
 After installing NodeJS (try [this](http://www.lmgtfy.com/?q=install+node+js+raspberry+pi)) on the Raspberry PI, in the `node` directory, install the WebSocket module:
 ```
-Prompt> npm install websocket
+Prompt> cd node
+Prompt> npm install
 ```
 
 Then you can start the node server:
