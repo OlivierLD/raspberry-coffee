@@ -201,6 +201,8 @@ public class SystemUtil {
 
 		double[] constants = new double[]{234, 98.87, 9.876};
 
+		System.out.println(String.format("Matrix Determinant: %f", MatrixUtil.determinant(squareMatrix)));
+
 		System.out.println("Solving:");
 		printSystem(squareMatrix, constants);
 

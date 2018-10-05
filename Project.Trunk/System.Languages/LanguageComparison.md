@@ -86,10 +86,14 @@ We will use the following programming languages:
     bible of several generations of programmers.
     > Whoever has ever tried to learn a new language has probably faced an example
     > printing something like "`hello, world`" (or "`hello something`"). It comes from this book; page 5 in mine. ;)
+- [PHP](#php)
+    - Created in 1994 by Rasmus Lerdorf.
+    - The very first incarnation of PHP was a simple set of Common Gateway Interface (CGI) binaries written in the C programming language.
+    - It is now widely adopted by many web sites.
 - [Groovy](#groovy)
     - Created by James Strachan, in 2004.
     - Runs on a JVM (see above). Much more flexible language than Java, _not_ strongly typed, compatible with Java (i.e you
-    can litterally copy-paste Java code into a Groovy script), but also understands a nice closure-like syntax.
+    can literally copy-paste Java code into a Groovy script), but also understands a nice closure-like syntax.
     Can be compiled, or not. Supports classes definition, can be run as a script.
 - [Go](#go) (aka Golang)
     - Created in 2009 by Robert Griesemer, Rob Pike, and Ken Thompson, at Google.
@@ -212,6 +216,11 @@ On the Raspberry PI, use:
  $ g++ -Wall -o system system.c
  $ ./system
 ```
+
+#### PHP
+Sources are in [`src/php/AlgebraUtil.php`](./src/php).
+
+See instructions at [src/php/README.md](src/php/README.md).
 
 #### Groovy
 Sources are in [`scr/groovy/system.groovy`](./src/groovy).

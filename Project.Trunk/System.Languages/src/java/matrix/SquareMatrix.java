@@ -52,11 +52,11 @@ public final class SquareMatrix {
 		return matrixElements[row][col];
 	}
 
-	public double[][] getmatrixElements() {
+	public double[][] getMatrixElements() {
 		return this.matrixElements;
 	}
 
-	public void setmatrixElements(double[][] me) {
+	public void setMatrixElements(double[][] me) {
 		this.matrixElements = me;
 	}
 }
