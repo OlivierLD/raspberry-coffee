@@ -1,6 +1,6 @@
 ## Project Trunk
 This folder contains projects involving the components available in other modules of this project.
-> Note: Will eventually replace the content of `RasPISamples`.
+> Note: Replaces the content of `RasPISamples`.
 
 There are several of them - as opposed to just a big one - to minimize the number
 of dependencies for each example.
@@ -17,7 +17,7 @@ and a script to run the example should be available as well.
     - [System resolution, in several languages](System.Languages/LanguageComparison.md)
 - [Weather Station](Weather.Station)
 - [Radar](RasPiRadar)
-- [Robot on wheels](Motors)
+- [Robots and WebSockets](Motors)
 - [Plant watering system](PlantWateringSystem)
 - [Pitch and Roll](LSM303)
 - ... and more.
@@ -29,7 +29,6 @@ and a script to run the example should be available as well.
     - For LEDs
     - For Servos
 - FONA
-- Document the MeArm interface in `ADCs.Servos.JoySticks` or `Motors`.
 
 ### Node JS
 Some of the projects in this folder require `NodeJS` (and its `N`ode `P`ackage `M`anager aka `npm`) to be installed, some times with extra modules.
