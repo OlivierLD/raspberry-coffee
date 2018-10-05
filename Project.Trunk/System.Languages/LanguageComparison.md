@@ -26,21 +26,21 @@ This is - in my opinion - the kind of problems that do reveal a lot of the featu
 This problem implies recursive algorithms, declaring functions, functions admitting arrays (of arrays...) of parameters, etc.
 In the context of this document:
 - Being Object Oriented (OO) is not a requirement.
-- Functionnal Programming is not a requirement.
+- Functional Programming is not a requirement.
 
 The idea here is to be able to compare the different source codes corresponding to each language, addressing the exact same problem,
 and - hopefully - returning the same result.
 
-Comparing the length of the code, its readability, its complexity, its structure, and possibily _its beauty_
+Comparing the length of the code, its readability, its complexity, its structure, and possibly _its beauty_
 can be an interesting journey.
 
-This document certainly does not pretend to be exhausive. There are [many languages](https://en.wikipedia.org/wiki/Category:Lists_of_programming_languages) available, I have used several of them,
+This document certainly does not pretend to be exhaustive. There are [many languages](https://en.wikipedia.org/wiki/Category:Lists_of_programming_languages) available, I have used several of them,
 but we will not talk about all of those. BASIC, COBOL, FORTRAN, Pascal, etc, are not part of this picture.
 
 This does not mean that those languages are not interesting, this only means that this document is not an anthology of the Computer literacy.
 
 > One of those languages though, could deserve some interest, [brainfuck](https://en.wikipedia.org/wiki/Brainfuck). It is a complete
-Turing machine, using only 8 instructions. This being said, let's move on.
+Turing machine, _using only 8 instructions_. This being said, let's move on.
 
 ## System Resolution
 
@@ -50,12 +50,12 @@ We will use the following programming languages:
     - Uses a Java Virtual Machine (JVM). 100% Object Oriented, Functional features since Java 8 (to catch up with Scala, see below). Requires compilation (`javac`). Strongly typed.
     The implementation the JVM is the key to portability. Java motto used to be _write once, run everywhere_. And this is indeed true,
     this **does** work, from single-board computers like the Raspberry PI Zero to big clusters of main-frames. Yes.
-    - Java is not the first language to introduce the concept of Virtual Machine (at least ADA did it before, named afer... guess who?). But Java _specified_ it.
+    - Java is not the first language to introduce the concept of Virtual Machine (at least ADA did it before, named after... guess who?). But Java _specified_ it.
     This specification also includes the Java Platform Debugging Architecture (JPDA), that is a blessing for developers. _You can debug - including remotely - the same way on all systems_.
     No language - to my knowledge - ever did that before.
 - [Scala](#scala)
     - Created by Martin Odersky, École Polytechnique Fédérale de Lausanne, in 2003.
-    - Uses the _same_ Virtual Machine as Java (and thus gets Java protability for free), Object Oriented _and_ Functional since day one. Extremely well designed, natively implements immutability and other key concepts.
+    - Uses the _same_ Virtual Machine as Java (and thus gets Java portability for free), Object Oriented _and_ Functional since day one. Extremely well designed, natively implements immutability and other key concepts.
     Can sound a bit complex to a beginner, but addicting after that.
     Requires compilation (`scalac`).
 - [Kotlin](#kotlin)
@@ -75,7 +75,7 @@ We will use the following programming languages:
     Does not require compilation. Very popular among data scientists, mostly due to its simplicity.
 - [C](#c)
     - Created by Dennis Ritchie, between 1969 and 1973, at Bell Labs.
-    - Immensly adopted on the planet Earth. The oldest of all the ones mentioned here, and still alive and well.
+    - Immensely adopted on the planet Earth. The oldest of all the ones mentioned here, and still alive and well.
     `C` has no OO features (its avatar `C++` does have some). No Functional Programming features.
     Requires explicit memory allocation and de-allocation (`alloc` and `free`), extensively uses _pointers_,
     which is what leads to vast majority of the bugs `C` developers have to deal with. Requires compilation (`gcc`, `cc`, etc, the compiler depends on the machine you are on).
@@ -203,7 +203,7 @@ To run it:
 #### C
 Sources are in [`src/C/system.c`](./src/C).
 
-To compile and run (the compilation is not done by Gradle, and may vary depending on your system):
+To compile and run (the compilation is _not_ done by Gradle, and may vary depending on your system):
 ```
  $ cd src/C
  $ gcc -lm -o system system.c
@@ -270,7 +270,7 @@ It is an interactive curve resolution, using the `least squares` method.
 
 <img src="./img/least.square.png" width="600" height="619" alt="Processing" style="text-align: center;">
 
-If needed, change the degree of the result polynom using the slider at the bottom of the screen. You can also use the left and right arrows of the keyboard.
+If needed, change the degree of the result polynomial using the slider at the bottom of the screen. You can also use the left and right arrows of the keyboard.
 
 See the calculated coefficients in the console output.
 
@@ -329,7 +329,7 @@ This was implemented using `#define` and `#ifdef` statements in the code, pre-pr
 ```
 All the `#define` statements (aka `compilation options`) very often make the code difficult to read and maintain.
 ###### Memory management
-`C` is extensively using pointers. You have to allocate memory to a pointer in order to use it, and free
+`C` is extensively using pointers. _You have to allocate memory_ to a pointer in order to use it, and free
 it afterwards, for the memory to be released, in order to be re-used.
 More than half the bugs `C` programmers have to deal with are usually pointer-related.
 Also, threads (concurrent programming) management in `C` is not a nightmare. It's worse.
