@@ -37,4 +37,4 @@ echo "My first PHP script!";
 ... And reach http://localhost:3000/index.php
 
 ## System Resolution
-The code is in `AlgebraUtils.php`, runnable as explained above, using http://localhost:3000/AlgebraUtils.php
+The code is in `AlgebraUtils.php`, runnable as explained above, using http://localhost:3000/System.php
