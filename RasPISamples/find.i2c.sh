@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
+# For JNI...
 echo pi | sudo -S find / -name i2c.h -print

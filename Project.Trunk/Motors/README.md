@@ -1,4 +1,6 @@
-# A Web Socket Robot on wheels
+# Web Sockets and Robots
+
+## Robot on wheels
 
 The chassis and Motor HAT come from [Adafruit](https://learn.adafruit.com/simple-raspberry-pi-robot).
 
@@ -29,7 +31,7 @@ $ cd ..
 $ ./robot.pilot.sh
 ```
 
-Finally, from a browser (laptop, tablet, smartphone), reach
+Finally, from a browser (laptop, tablet, smart-phone), reach
 `http://[server-name]:9876/data/robot.pilot.html`.
 
 
@@ -63,3 +65,12 @@ The `JSON` message look like this
 }
 ```
 See the code for details.
+
+## MeArm Robotic Arm
+Same as above, but reach `http://[server-name]:9876/data/mearm.pilot.html`.
+
+![MeArm](img/MeArm.jpg)
+
+![Wiring](img/MeArm_bb.png)
+
+---

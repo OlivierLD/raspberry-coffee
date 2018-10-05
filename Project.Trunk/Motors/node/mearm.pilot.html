@@ -3,24 +3,20 @@
   <head>
     <meta charset="utf-8">
     <title>Raspberry Robot / WebSockets</title>
-    <link rel="icon" type="../image/png" href="ws.png">
+    <link rel="icon" type="image/png" href="ws.png">
     <style>
   * { font-family:tahoma; font-size:12px; padding:0px; margin:0px; }
   p { line-height:18px; }
     </style>
-    <script type="text/javascript" src="../jquery/jquery-2.2.3.min.js"></script>
-    <script type="text/javascript" src="../jquery-ui-1.12.0-rc.2/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="../jquery-ui-1.12.0-rc.2/jquery-ui.min.css">
     <script type="text/javascript" src="./qrcodejs/qrcode.js"></script>
     <script type="text/javascript">
-  var response = {};
   var statusFld;
 
   window.onload = function() {
     statusFld = document.getElementById("status");
   };
 
-  var forward = false,
+  let forward = false,
       backward = false,
       left = false,
       right = false,
@@ -29,158 +25,156 @@
       open = false,
       close = false;
 
-  $(document).ready(function() {
-    $("#forward").mousedown(function() {
-      forward = true;
-      var mf = function() {
-          sendMessage(JSON.stringify({
-              "command": "forward",
-              "speed": $("#slider").slider("value")
-          }));
-          if (forward) {
-            setTimeout(mf, 500);
-          }
-      };
-      mf();
-    });
-    $("#backward").mousedown(function() {
-      backward = true;
-      var mb = function() {
-          sendMessage(JSON.stringify({
-              "command": "backward",
-              "speed": $("#slider").slider("value")
-          }));
-          if (backward) {
-              setTimeout(mb, 500);
-          }
-      };
-      mb();
-    });
-    $("#right").mousedown(function() {
-      right = true;
-      var mr = function() {
-          sendMessage(JSON.stringify({
-              "command": "right",
-              "speed": $("#slider").slider("value")
-          }));
-          if (right) {
-              setTimeout(mr, 500);
-          }
-      };
-      mr();
-    });
-    $("#left").mousedown(function() {
-      left = true;
-      var ml = function() {
-          sendMessage(JSON.stringify({
-              "command": "left",
-              "speed": $("#slider").slider("value")
-          }));
-          if (left) {
-              setTimeout(ml, 500);
-          }
-      };
-      ml;
-    });
+  function forwardMouseDown() {
+	  forward = true;
+	  function mf() {
+		  sendMessage(JSON.stringify({
+			  "command": "forward",
+			  "speed": document.getElementById("speedvalue").value
+		  }));
+		  if (forward) {
+			  setTimeout(mf, 500);
+		  }
+	  };
+	  mf();
+	}
 
-    $("#up").mousedown(function() {
-        up = true;
-        var mu = function() {
-            sendMessage(JSON.stringify({
-                "command": "up",
-                "speed": $("#slider").slider("value")
-            }));
-            if (up) {
-                setTimeout(mu, 500);
-            }
-        };
-        mu();
-    });
-    $("#down").mousedown(function() {
-        down = true;
-        var md = function() {
-            sendMessage(JSON.stringify({
-                "command": "down",
-                "speed": $("#slider").slider("value")
-            }));
-            if (down) {
-                setTimeout(md, 500);
-            }
-        };
-        md();
-    });
-    $("#open").mousedown(function() {
-        open = true;
-        while (open) {
-            sendMessage(JSON.stringify({
-                "command": "open",
-                "speed": $("#slider").slider("value")
-            }));
-        }
-    });
-    $("#close").mousedown(function() {
-        close = true;
-        while (close) {
-            sendMessage(JSON.stringify({
-                "command": "close",
-                "speed": $("#slider").slider("value")
-            }));
-        }
-    });
+	function backwardMouseDown() {
+		backward = true;
+		function mb() {
+			sendMessage(JSON.stringify({
+				"command": "backward",
+				"speed": document.getElementById("speedvalue").value
+			}));
+			if (backward) {
+				setTimeout(mb, 500);
+			}
+		};
+		mb();
+	}
 
-    $("#up").mouseup(function() {
-        up = false;
-        // sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#down").mouseup(function() {
-        down = false;
-        // sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#right").mouseup(function() {
-        right = false;
-        // sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#left").mouseup(function() {
-        left = false;
-        // sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#forward").mouseup(function() {
-        forward = false;
-        // sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#backward").mouseup(function() {
-        backward = false;
-        // sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#open").mouseup(function() {
-        open = false;
-        // sendMessage(JSON.stringify({"command": "stop"}));
-    });
-    $("#close").mouseup(function() {
-        close = false;
-        // sendMessage(JSON.stringify({"command": "stop"}));
-    });
+	function rightMouseDown() {
+		right = true;
+		function mr() {
+			sendMessage(JSON.stringify({
+				"command": "right",
+				"speed": document.getElementById("speedvalue").value
+			}));
+			if (right) {
+				setTimeout(mr, 500);
+			}
+		};
+		mr();
+	}
 
-    $(function() {
-      $("#slider").slider({
-        range: "max",
-        min: 1,
-        max: 20,
-        value: 10,
-        slide: function(event, ui) {
-          $("#speed").val(ui.value);
-        }
-      });
-      $("#speed").val($("#slider").slider("value"));
-    });
-  });
+	function leftMouseDown() {
+		left = true;
+		function ml() {
+			sendMessage(JSON.stringify({
+				"command": "left",
+				"speed": document.getElementById("speedvalue").value
+			}));
+			if (left) {
+				setTimeout(ml, 500);
+			}
+		};
+		ml();
+	}
 
-  var closeRobot = function() {
+  function upMouseDown() {
+	  up = true;
+	  function mu() {
+		  sendMessage(JSON.stringify({
+			  "command": "up",
+			  "speed": document.getElementById("speedvalue").value
+		  }));
+		  if (up) {
+			  setTimeout(mu, 500);
+		  }
+	  };
+	  mu();
+  }
+
+  function downMouseDown() {
+	  down = true;
+	  function md() {
+		  sendMessage(JSON.stringify({
+			  "command": "down",
+			  "speed": document.getElementById("speedvalue").value
+		  }));
+		  if (down) {
+			  setTimeout(md, 500);
+		  }
+	  };
+	  md();
+	}
+
+	function openMouseDown() {
+		open = true;
+		function od() {
+			sendMessage(JSON.stringify({
+				"command": "open",
+				"speed": document.getElementById("speedvalue").value
+			}));
+			if (down) {
+				setTimeout(od, 500);
+			}
+		};
+		od();
+  }
+
+	function closeMouseDown() {
+		close = true;
+		function cd() {
+			sendMessage(JSON.stringify({
+				"command": "close",
+				"speed": document.getElementById("speedvalue").value
+			}));
+			if (down) {
+				setTimeout(cd, 500);
+			}
+		};
+		cd();
+	}
+
+	function upMouseUp() {
+  	up = false;
+	}
+
+	function downMouseUp() {
+  	down = false;
+	}
+
+	function rightMouseUp() {
+  	right = false;
+	}
+
+	function leftMouseUp() {
+  	left = false;
+	}
+
+	function forwardMouseUp() {
+  	forward = false;
+	}
+
+	function backwardMouseUp() {
+  	backward = false;
+	}
+
+	function openMouseUp() {
+  	open = false;
+	}
+
+	function closeMouseUp() {
+  	close = false;
+	}
+
+  function closeRobot() {
     sendMessage(JSON.stringify({"command":"stop"}));
-  };
+  }
 
-  var qrCodeVisible = false;
-  var qrCode = function() {
+  let qrCodeVisible = false;
+  function qrCode() {
     qrCodeVisible = !qrCodeVisible;
     document.getElementById("qrcode").style.display = (qrCodeVisible ? "inline" : "none");
   };
@@ -190,8 +184,8 @@
     <div style="margin: 10px;">
       <table style="margin: auto; width: 90%;" border="0">
         <tr>
-          <td valign="top"><h2>MeArm pilot, JQuery, WebSockets</h2></td>
-          <td align="right"><a href="" onclick="javascript:qrCode(); return false;" title="Show hide QR code"><small>QR Code</small></a></td>
+          <td valign="top"><h2>MeArm pilot, WebSockets</h2></td>
+          <td align="right"><a href="" onclick="qrCode(); return false;" title="Show hide QR code"><small>QR Code</small></a></td>
         </tr>
         <tr>
           <td colspan="2" align="center">
@@ -226,30 +220,30 @@ makeCode();
           <td align="center" colspan="1">
             <table>
               <tr>
-                <td></td><td align="center"><small>forward</small><br/><button id="forward" title="Forward" style="width: 50px; height: 50px;">&#8593;</brbutton></td><td></td>
+                <td></td><td align="center"><small>forward</small><br/><button id="forward" title="Forward" style="width: 50px; height: 50px;" onmousedown="forwardMouseDown()" onmouseup="forwardMouseUp()">&#8593;</button></td><td></td>
               </tr>
               <tr>
-                <td valign="middle"><small>left</small>&nbsp;<button id="left" title="Left"  style="width: 50px; height: 50px;">&#8592;</button></td>
+                <td valign="middle"><small>left</small>&nbsp;<button id="left" title="Left"  style="width: 50px; height: 50px;" onmousedown="leftMouseDown()" onmouseup="leftMouseUp()">&#8592;</button></td>
                 <td><!--button id="reset" title="Reset" style="width: 50px; height: 50px;">stop</button--></td>
-                <td valign="middle"><button id="right" title="Right" style="width: 50px; height: 50px;">&#8594;</button>&nbsp;<small>right</small></td>
+                <td valign="middle"><button id="right" title="Right" style="width: 50px; height: 50px;" onmousedown="rightMouseDown()" onmouseup="rightMouseUp()">&#8594;</button>&nbsp;<small>right</small></td>
               </tr>
               <tr>
-                <td></td><td align="center"><button id="backward" title="Backward" style="width: 50px; height: 50px;">&#8595;</button><br/><small>backward</small></td><td></td>
+                <td></td><td align="center"><button id="backward" title="Backward" style="width: 50px; height: 50px;" onmouseup="backwardMouseUp()" onmousedown="backwardMouseDown()">&#8595;</button><br/><small>backward</small></td><td></td>
               </tr>
             </table>
           </td>
           <td align="center" colspan="1">
             <table>
               <tr>
-                <td></td><td align="center"><small>up</small><br/><button id="up" title="Up" style="width: 50px; height: 50px;">&#8593;</button></td><td></td>
+                <td></td><td align="center"><small>up</small><br/><button id="up" title="Up" style="width: 50px; height: 50px;" onmousedown="upMouseDown()" onmouseup="upMouseUp()">&#8593;</button></td><td></td>
               </tr>
               <tr>
-                <td valign="middle"><small>close</small>&nbsp;<button id="close" title="Close"  style="width: 50px; height: 50px;">&#8592;</button></td>
+                <td valign="middle"><small>close</small>&nbsp;<button id="close" title="Close"  style="width: 50px; height: 50px;" onmouseup="closeMouseUp()" onmousedown="closeMouseDown()">&#8592;</button></td>
                 <td><!--button id="reset" title="Reset" style="width: 50px; height: 50px;">stop</button--></td>
-                <td valign="middle"><button id="open" title="Open" style="width: 50px; height: 50px;">&#8594;</button>&nbsp;<small>open</small></td>
+                <td valign="middle"><button id="open" title="Open" style="width: 50px; height: 50px;" onmousedown="openMouseDown()" onmouseup="openMouseUp()">&#8594;</button>&nbsp;<small>open</small></td>
               </tr>
               <tr>
-                <td></td><td align="center"><button id="down" title="Down" style="width: 50px; height: 50px;">&#8595;</button><br/><small>down</small></td><td></td>
+                <td></td><td align="center"><button id="down" title="Down" style="width: 50px; height: 50px;" onmousedown="downMouseDown()" onmouseup="downMouseUp()">&#8595;</button><br/><small>down</small></td><td></td>
               </tr>
             </table>
           </td>
@@ -257,14 +251,16 @@ makeCode();
         <tr>
           <td colspan="2">
             <p>
-              <label for="speed">Robot Speed:</label>
-              <input type="text" id="speed" readonly style="border:0; color:#f6931f; font-weight:bold;">
-            </p>
+							<label for="speed">Robot Speed:</label>
+							<input id="speed" type="range" value="100" min="0" max="255" style="width: 80%;" oninput="speedvalue.value = this.value;" />
+							<output name="speed-value" id="speedvalue" style="color: silver;">100</output>
+
+						</p>
             <div id="slider"></div>
           </td>
         </tr>
         <tr>
-          <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:closeRobot(); return false;" title="Turn the robot off"><small>Close</small></a></td>
+          <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:closeRobot(); return false;" title="Turn the robot off"><small>Turn Robot Off</small></a></td>
         </tr>
       </table>
     </div>

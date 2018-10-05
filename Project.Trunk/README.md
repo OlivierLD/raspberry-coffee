@@ -19,10 +19,20 @@ and a script to run the example should be available as well.
 - [Radar](RasPiRadar)
 - [Robot on wheels](Motors)
 - [Plant watering system](PlantWateringSystem)
+- [Pitch and Roll](LSM303)
 - ... and more.
 
+#### TODO
+- Stepper Motors with the Motor HAT
+- Arduino Communication
+- Pure PWM
+    - For LEDs
+    - For Servos
+- FONA
+- Document the MeArm interface in `ADCs.Servos.JoySticks` or `Motors`.
+
 ### Node JS
-Some of the projects in this folder require `NodeJS` (and its Node Package Manager aka `npm`) to be installed, some times with extra modules.
+Some of the projects in this folder require `NodeJS` (and its `N`ode `P`ackage `M`anager aka `npm`) to be installed, some times with extra modules.
 
 #### To install NodeJS on the Raspberry Pi (Oct 2018)
 ```

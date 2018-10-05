@@ -25,7 +25,7 @@
   function mousedown(cmd) {
 	  sendMessage(JSON.stringify({
 		  "command": cmd,
-		  "speed": $("#speedvalue")
+		  "speed": document.getElementById("speedvalue").value
 	  }));
   }
 
@@ -48,7 +48,7 @@
     <div style="margin: 10px;">
       <table style="margin: auto; width: 90%;" border="0">
         <tr>
-          <td valign="top"><h2>Robot pilot, JQuery, WebSockets</h2></td>
+          <td valign="top"><h2>Robot pilot, WebSockets</h2></td>
           <td align="right"><a href="" onclick="javascript:qrCode(); return false;" title="Show hide QR code"><small>QR Code</small></a></td>
         </tr>
         <tr>
@@ -56,15 +56,15 @@
             <div id="qrcode" style="width:250px; height:250px; margin-top:15px; display: none;"></div>
             <script type="text/javascript">
 
-var qrcode = new QRCode(document.getElementById("qrcode"), {
+let qrcode = new QRCode(document.getElementById("qrcode"), {
   width:  250,
   height: 250
 });
 
-var makeCode = function() {
+function makeCode() {
   console.log("Location:", document.location.href);
   qrcode.makeCode(document.location.href);
-};
+}
 
 makeCode();
             </script>
