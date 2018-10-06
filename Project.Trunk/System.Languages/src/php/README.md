@@ -1,5 +1,5 @@
 ## Run a PHP server locally
-The is a `NodeJS` module that allows you to run a `PHP` server:
+There is a `NodeJS` module that allows you to run a local `PHP` server, good for tests and development:
 ```
 $ npm i php-server-manager
 ```
