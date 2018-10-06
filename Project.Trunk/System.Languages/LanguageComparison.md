@@ -218,7 +218,7 @@ On the Raspberry PI, use:
 ```
 
 #### PHP
-Sources are in [`src/php/System.php`](./src/php).
+Sources are in [`src/php/system.php`](./src/php).
 
 See instructions at [src/php/README.md](src/php/README.md).
 

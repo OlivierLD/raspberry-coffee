@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-</head>
-<body style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva">
- <h1>Matrix Utils tests</h1>
-
 <?php
 /**
  * Author: Olivier LeDiouris
  * Date: 10/5/18
  * Time: 9:13 AM
  */
+
+function console_log($data){
+    echo '<script>';
+    echo 'console.log('. json_encode( $data ) .')';
+    echo '</script>';
+}
 
 class SquareMatrix {
     private $dimension = 0;
@@ -98,8 +96,8 @@ class MatrixUtil {
 			}
 		}
 		if (self::DEBUG) {
-            echo "Determinant of ", MatrixUtil::printMatrix($m), " is ", $v, "<br/>";
-        }
+    	echo "Determinant of ", MatrixUtil::printMatrix($m), " is ", $v, "<br/>";
+    }
 
 		return $v;
 	}
@@ -159,8 +157,10 @@ class MatrixUtil {
 		return MatrixUtil::multiply(MatrixUtil::transposed(MatrixUtil::comatrix($m)), (1.0 / MatrixUtil::determinant($m)));
 	}
 
-	public static function solveSystem($m,
-	                                   $c) {
+	public static function solveSystem($m, $c) {
+    console_log("Solving:");
+      console_log($m);
+      console_log($c);
 		$result = array();
 
 		$inv = MatrixUtil::invert($m);
@@ -181,42 +181,4 @@ class MatrixUtil {
 	}
 }
 
-echo "<hr/>";
-
-$matrix = new SquareMatrix(3, true);
-$matrix->setElementAt(0, 0, 12);
-$matrix->setElementAt(0, 1, 13);
-$matrix->setElementAt(0, 2, 14);
-
-$matrix->setElementAt(1, 0, 1.345);
-$matrix->setElementAt(1, 1, -654);
-$matrix->setElementAt(1, 2, 0.001);
-
-$matrix->setElementAt(2, 0, 23.09);
-$matrix->setElementAt(2, 1, 5.3);
-$matrix->setElementAt(2, 2, -12.34);
-
-echo "Matrix dim: ", $matrix->getDim();
-echo "<br/>";
-$elements = $matrix->getElements();
-echo "<br/>";
-echo "Det: ", MatrixUtil::determinant($matrix);
-echo "<br/>";
-
-echo "<hr/>";
-echo "Matrix";
-echo MatrixUtil::printMatrix($matrix);
-echo "<hr/>";
-$constants = array(234, 98.87, 9.876);
-$coeffs = MatrixUtil::solveSystem($matrix, $constants);
-
-// Results
-echo "System Resolution:<br/>";
-for ($i=0; $i<count($coeffs); $i++) {
-    echo "Coeff, deg ", (count($coeffs) - 1 - $i), " : ", $coeffs[$i], "<br/>";
-}
-
 ?>
-
-</body>
-</html>

@@ -21,7 +21,7 @@ This server can be run like this:
 ```
 $ node server.js
 ```
-Drop an `index.php` in the directory you started the server from:
+Drop a `sample.php` in the directory you started the server from:
 ```
 <!DOCTYPE html>
 <html>
@@ -34,7 +34,7 @@ echo "My first PHP script!";
 </body>
 </html>
 ```
-... And reach http://localhost:3000/index.php
+... And reach http://localhost:3000/sample.php
 
 ## System Resolution
-The code is in `System.php`, runnable as explained above, using http://localhost:3000/System.php
+The code is in `system.php`, runnable as explained above, using interactive web interface at http://localhost:3000/index.php
