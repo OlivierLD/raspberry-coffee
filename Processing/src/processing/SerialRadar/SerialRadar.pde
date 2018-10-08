@@ -12,7 +12,8 @@ import processing.serial.*;
  */
 final int NEW_LINE = 10;
 final int BAUD_RATE = 9600;
-final String SERIAL_PORT = "/dev/tty.usbserial";
+// final String SERIAL_PORT = "/dev/tty.usbserial";
+final String SERIAL_PORT = "/dev/cu.wchusbserial1420";
 final int MAX_RANGE = 150; // Max range on the display, in cm.
 
 Map<Integer, Double> echos = new HashMap<Integer, Double>(181);

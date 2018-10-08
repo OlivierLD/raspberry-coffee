@@ -88,6 +88,16 @@
 
 	<script type="text/javascript">
 
+		function showHideSiblingWidget(node) {
+			let status = node.parentNode.parentNode.parentNode.childNodes[2].style.display;
+			console.log('Status:', status);
+			if (status === 'none') {
+				node.parentNode.parentNode.parentNode.childNodes[2].style.display = 'block';
+			} else {
+				node.parentNode.parentNode.parentNode.childNodes[2].style.display = 'none';
+			}
+		}
+
 		function changeBG(value) {
 			let bodyStyle = document.getElementsByTagName("body")[0].style;
 			let htmlStyle = document.getElementsByTagName("html")[0].style;
@@ -2056,6 +2066,18 @@
 	<div id="world-map" class="smooth">
 		<table>
 			<tr>
+				<td>
+					<pre style="font-weight: bold; text-align: left; color: white; vertical-align: top;">
+&lt;world-map id="world-map-01"
+           class="worldmap-display"
+           title="World Map"
+           width="700"
+           height="500">&lt;/world-map>
+					</pre>
+					<button onclick="showHideSiblingWidget(this);">Show/Hide widget</button>
+				</td>
+			</tr>
+			<tr style="display: none;">
 				<td valign="top">
 					<div class="black-frame centered">
 						<world-map id="world-map-01"
@@ -2127,6 +2149,17 @@
 	<div id="sky-map" class="smooth">
 		<table>
 			<tr>
+				<td>
+					<pre style="font-weight: bold; text-align: left; color: white; vertical-align: top;">
+&lt;sky-map id="sky-map-01"
+          width="600"
+          height="600"
+          latitude="35"/>
+					</pre>
+					<button onclick="showHideSiblingWidget(this);">Show/Hide widget</button>
+				</td>
+			</tr>
+			<tr style="display: none;">
 				<td valign="top">
 					<div class="black-frame centered">
 						<sky-map id="sky-map-01"

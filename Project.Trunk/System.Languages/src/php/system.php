@@ -15,6 +15,11 @@ class SquareMatrix {
     private $dimension = 0;
     private $matrixElements = array();
 
+    /**
+     * SquareMatrix constructor.
+     * @param $dim integer, greater than 1 TODO Throw exception if dim < 2.
+     * @param $init boolean: true means initialize all elements to zero.
+     */
     function SquareMatrix($dim, $init) {
         $this->dimension = $dim;
         if ($init) {
@@ -68,6 +73,13 @@ class MatrixUtil {
         return $elem;
     }
 
+    /**
+     * Minor of a SquareMatrix
+     * @param $m the original SquareMatrix
+     * @param $row the row to exclude (zero based)
+     * @param $col the column to exclude (zero based)
+     * @return SquareMatrix The required minor, for (row, col).
+     */
     public static function minor($m, $row, $col) {
         $small = new SquareMatrix($m->getDim() - 1, true);
         for ($c=0; $c<$m->getDim(); $c++) {
@@ -82,6 +94,11 @@ class MatrixUtil {
         return $small;
     }
 
+    /**
+     * Determinant of a SquareMatrix. Recursive method.
+     * @param $m the SquareMatrix to get the determinant of
+     * @return float The value of the Determinant
+     */
     public static function determinant($m) {
 		$v = 0.0;
 
@@ -95,14 +112,20 @@ class MatrixUtil {
 				$v += ($m->getElementAt(0, $C) * $minDet * ((-1.0) ** ($C + 1 + 1))); // line C, column 1
 			}
 		}
-		if (self::DEBUG) {
-    	echo "Determinant of ", MatrixUtil::printMatrix($m), " is ", $v, "<br/>";
-    }
-
+        if (self::DEBUG) {
+            echo "Determinant of ", MatrixUtil::printMatrix($m), " is ", $v, "<br/>";
+        }
 		return $v;
 	}
 
-	public static function comatrix($m) {
+    /**
+     * CoMatrix of a SquareMatrix.
+     * Each term is replaced with the determinant of its minor.
+     *
+     * @param $m The original SquareMatrix
+     * @return SquareMatrix The CoMatrix
+     */
+	public static function coMatrix($m) {
         $co = new SquareMatrix($m->getDim(), true);
         for ($r = 0; $r < $m->getDim(); $r++) {
             for ($c = 0; $c < $m->getDim(); $c++) {
@@ -110,11 +133,18 @@ class MatrixUtil {
             }
 		}
 		if (self::DEBUG) {
-            echo "Comatrix:", MatrixUtil::printMatrix($co);
+            echo "CoMatrix:", MatrixUtil::printMatrix($co);
         }
 		return $co;
     }
 
+    /**
+     * Transpose a SquareMatrix.
+     * Flip columns and rows
+     *
+     * @param $m The SquareMatrix to transpose
+     * @return SquareMatrix The transposed one.
+     */
     public static function transposed($m) {
 		$t = new SquareMatrix($m->getDim(), true);
 		// Replace line with columns.
@@ -129,6 +159,13 @@ class MatrixUtil {
 		return $t;
 	}
 
+    /**
+     * Multiply a SquareMatrix by a number
+     *
+     * @param $m SquareMatrix
+     * @param $n Number
+     * @return SquareMatrix
+     */
 	public static function multiply($m, $n) {
 		$res = new SquareMatrix($m->getDim(), false);
 		for ($r = 0; $r < $m->getDim(); $r++) {
@@ -139,6 +176,13 @@ class MatrixUtil {
 		return $res;
 	}
 
+    /**
+     * Matrix equality
+     *
+     * @param $a SquareMatrix
+     * @param $b SquareMatrix
+     * @return bool true if equal, false if not
+     */
 	public static function equals($a, $b) {
 		if ($a->getDim() != $b->getDim()) {
 			return false;
@@ -153,10 +197,22 @@ class MatrixUtil {
 		return true;
 	}
 
+    /**
+     * Matrix inversion.
+     * The inverse of a Matrix is the Transposed of the CoMatrix, multiplied by the inverse of its determinant (that needs NOT to be null).
+     * TODO Throw Exception if det = 0
+     * @param $m SquareMatrix to invert
+     * @return SquareMatrix, the inverted one.
+     */
 	public static function invert($m) {
-		return MatrixUtil::multiply(MatrixUtil::transposed(MatrixUtil::comatrix($m)), (1.0 / MatrixUtil::determinant($m)));
+		return MatrixUtil::multiply(MatrixUtil::transposed(MatrixUtil::coMatrix($m)), (1.0 / MatrixUtil::determinant($m)));
 	}
 
+    /**
+     * @param $m SquareMatrix, see above
+     * @param $c Array of constants
+     * @return array Result coefficients
+     */
 	public static function solveSystem($m, $c) {
     console_log("Solving:");
       console_log($m);

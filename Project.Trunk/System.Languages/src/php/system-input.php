@@ -12,33 +12,34 @@ echo "Dim=", $dim;
 
     <?php
 
-		$varNames = array('A', 'B', 'C', 'D', 'E', 'F', 'G', "H", 'I', 'J', 'K', 'L', 'M',
-				              'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+    $varNames = array(
+    		'A', 'B', 'C', 'D', 'E', 'F', 'G', "H", 'I', 'J', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 
     echo "<input type='hidden' name='dim' value='", $dim, "'>";
     ?>
-    <table>
-        <?php
+	<table>
+      <?php
 
-        for ($col = 0; $col < $dim; $col++) {
-            echo "<th>", $varNames[$col], "</th>";
-        }
-        echo "<th>&nbsp;</th>";
-        echo "<th>const</td>";
+      for ($col = 0; $col < $dim; $col++) {
+          echo "<th>", $varNames[$col], "</th>";
+      }
+      echo "<th>&nbsp;</th>";
+      echo "<th>const</td>";
 
-        for ($row = 0; $row < $dim; $row++) {
-            echo "<tr>";
-            for ($col = 0; $col < $dim; $col++) {
-                echo "<td><input type='number' step='0.000001' name='row-" . $row . "-col-" . $col . "' placeholder='" , ($row . "x" . $col), "' style=\"width: 80px; text-align: right;\"/></td>";
-            }
-            echo "<td>&nbsp;:&nbsp;</td>";
-            echo "<td><input type='number' step='0.000001' name='coeff-" . $row ."' placeholder='" , $row, "' style=\"width: 80px; text-align: right;\"/></td>";
-            echo "</tr>";
-        }
-        ?>
-    </table>
+      for ($row = 0; $row < $dim; $row++) {
+          echo "<tr>";
+          for ($col = 0; $col < $dim; $col++) {
+              echo "<td><input type='number' step='0.000001' name='row-" . $row . "-col-" . $col . "' placeholder='", ($row . "x" . $col), "' style=\"width: 80px; text-align: right;\"/></td>";
+          }
+          echo "<td>&nbsp;:&nbsp;</td>";
+          echo "<td><input type='number' step='0.000001' name='coeff-" . $row . "' placeholder='", $row, "' style=\"width: 80px; text-align: right;\"/></td>";
+          echo "</tr>";
+      }
+      ?>
+	</table>
 
-    <input type="submit" value="Solve it!"/>
+	<input type="submit" value="Solve it!"/>
 
 </form>
 

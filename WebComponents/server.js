@@ -166,6 +166,8 @@ var handler = function(req, res) {
 							contentType = "image/svg+xml";
 						} else if (resource.endsWith(".woff")) {
 							contentType = "application/x-font-woff";
+						} else if (resource.endsWith(".ttf")) {
+							contentType = "application/octet-stream";
 						} else {
 							console.log("+-------------------------------------------")
 							console.log("| Un-managed content type for " + resource);
