@@ -52,16 +52,20 @@ try {
     echo "Constants: ", implode(", ", $constants);
     echo "<hr/>";
 
-    $coeffs = MatrixUtil::solveSystem($matrix, $constants);
+    try {
+        $coeffs = MatrixUtil::solveSystem($matrix, $constants);
 
-    $coeffNames = array('A', 'B', 'C', 'D', 'E', 'F', 'G', "H", 'I', 'J', 'K', 'L', 'M',
-        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+        $coeffNames = array('A', 'B', 'C', 'D', 'E', 'F', 'G', "H", 'I', 'J', 'K', 'L', 'M',
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 
 // Results
-    echo "System Solution:<br/>";
-    for ($i = 0; $i < count($coeffs); $i++) {
-        echo $coeffNames[$i], " : ", $coeffs[$i], "<br/>";
-    }
+        echo "System Solution:<br/>";
+        for ($i = 0; $i < count($coeffs); $i++) {
+            echo $coeffNames[$i], " : ", $coeffs[$i], "<br/>";
+        }
+    } catch (Exception $ex) {
+    	echo "System resolution: ", $ex->getMessage(), "\n";
+		}
 } catch (Exception $ex) {
     echo 'Caught exception: ',  $ex->getMessage(), "\n";
 }

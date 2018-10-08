@@ -17,10 +17,15 @@ class SquareMatrix {
 
     /**
      * SquareMatrix constructor.
-     * @param $dim integer, greater than 1 TODO Throw exception if dim < 2.
+     * @param $dim integer, greater than 1
      * @param $init boolean: true means initialize all elements to zero.
+     *
+     * Throw exception if dim < 1.
      */
     function SquareMatrix($dim, $init) {
+        if ($dim < 1) {
+            throw new Exception('Dimension must be at least 1');
+        }
         $this->dimension = $dim;
         if ($init) {
             $this->matrixElements = array();
@@ -75,9 +80,9 @@ class MatrixUtil {
 
     /**
      * Minor of a SquareMatrix
-     * @param $m the original SquareMatrix
-     * @param $row the row to exclude (zero based)
-     * @param $col the column to exclude (zero based)
+     * @param $m SquareMatrix. The original SquareMatrix
+     * @param $row int. The row to exclude (zero based)
+     * @param $col int. The column to exclude (zero based)
      * @return SquareMatrix The required minor, for (row, col).
      */
     public static function minor($m, $row, $col) {
@@ -200,18 +205,26 @@ class MatrixUtil {
     /**
      * Matrix inversion.
      * The inverse of a Matrix is the Transposed of the CoMatrix, multiplied by the inverse of its determinant (that needs NOT to be null).
-     * TODO Throw Exception if det = 0
+     *
      * @param $m SquareMatrix to invert
      * @return SquareMatrix, the inverted one.
+     *
+     * Throw Exception if det = 0
      */
 	public static function invert($m) {
-		return MatrixUtil::multiply(MatrixUtil::transposed(MatrixUtil::coMatrix($m)), (1.0 / MatrixUtil::determinant($m)));
+	    $det = MatrixUtil::determinant($m);
+	    if ($det == 0) {
+            throw new Exception('No solution, determinant = 0.');
+        }
+		return MatrixUtil::multiply(MatrixUtil::transposed(MatrixUtil::coMatrix($m)), (1.0 / $det));
 	}
 
     /**
      * @param $m SquareMatrix, see above
      * @param $c Array of constants
      * @return array Result coefficients
+     *
+     * Throws Exception when no solution.
      */
 	public static function solveSystem($m, $c) {
     console_log("Solving:");
@@ -219,20 +232,24 @@ class MatrixUtil {
       console_log($c);
 		$result = array();
 
-		$inv = MatrixUtil::invert($m);
+		try {
+            $inv = MatrixUtil::invert($m);
 
-		// Print inverted Matrix
-		if (self::DEBUG) {
-			echo "Inverted:", MatrixUtil::printMatrix($inv);
-		}
+            // Print inverted Matrix
+            if (self::DEBUG) {
+                echo "Inverted:", MatrixUtil::printMatrix($inv);
+            }
 
-		// Lines * Column
-		for ($row = 0; $row < $m->getDim(); $row++) {
-			$result[$row] = 0.0;
-			for ($col = 0; $col < $m->getDim(); $col++) {
-				$result[$row] += ($inv->getElementAt($row, $col) * $c[$col]);
-			}
-		}
+            // Lines * Column
+            for ($row = 0; $row < $m->getDim(); $row++) {
+                $result[$row] = 0.0;
+                for ($col = 0; $col < $m->getDim(); $col++) {
+                    $result[$row] += ($inv->getElementAt($row, $col) * $c[$col]);
+                }
+            }
+        } catch (Exception $ex) {
+		    throw $ex;
+        }
 		return $result;
 	}
 }
