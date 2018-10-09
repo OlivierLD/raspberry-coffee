@@ -3,7 +3,7 @@
 #
 echo -e "----------------------------"
 echo -e "Usage is $0 [-px|--proxy] [-p:|--port:1234] "
-echo -e "     -p or --proxy means with a proxy"
+echo -e "     -px or --proxy means with a proxy"
 echo -e "----------------------------"
 #
 echo -e "Starting the Math Rest Server"

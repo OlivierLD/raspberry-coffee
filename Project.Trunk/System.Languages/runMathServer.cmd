@@ -1,4 +1,4 @@
-@setlocal
+@setLocal EnableDelayedExpansion
 @echo on
 set CP=.\build\libs\System.Languages-1.0-all.jar
 ::
@@ -10,7 +10,7 @@ echo ---------------------------------
 set USE_PROXY=false
 set HTTP_PORT=1234
 ::
-:looptop
+:loopTop
 set PRM=%1
 echo PRM="%PRM%"
 if "%PRM%" == "" (
@@ -27,7 +27,7 @@ if "%PRM%" == "" (
     set HTTP_PORT=%PRM:~7%
   )
   shift /1
-  goto looptop
+  goto loopTop
 )
 :next
 echo Let us go
@@ -46,4 +46,4 @@ if "%USE_PROXY%" == "true" (
 )
 java -cp %CP% %JAVA_OPTS% matrix.server.MathServer
 ::
-@endlocal
+@endLocal
