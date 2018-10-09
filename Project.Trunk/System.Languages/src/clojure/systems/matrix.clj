@@ -35,7 +35,7 @@
   "Calculate the determinant of a matrix"
   [mat]
   (
-    (println "Calculationg determinant matrix dim" (count mat))
+    (println "Calculating determinant matrix dim" (count mat))
     (let [res (int 0)]
       (let [dim (count mat)]
         (println "In the loop, looping on" dim "row(s)")

@@ -61,7 +61,7 @@ $ gcc -v
 $ node -v
 $ npm -v
 ```
-- some utilities:
+- some utilities, to make sure they are present, type:
 ```
 $ which scp
 $ which curl
@@ -69,6 +69,8 @@ $ which wget
 ```
 - You can use VNC (if enabled in the config above)
     - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
+
+- If you need AI and Deep Learning (Anaconda, Jupyter notebooks, TensorFlow, Keras), follow [this link](https://medium.com/@margaretmz/anaconda-jupyter-notebook-tensorflow-and-keras-b91f381405f8).
 
 You're ready to rock!
 

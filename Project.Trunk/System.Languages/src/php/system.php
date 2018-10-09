@@ -20,7 +20,7 @@ class SquareMatrix {
      * @param $dim integer, greater than 1
      * @param $init boolean: true means initialize all elements to zero.
      *
-     * Throw exception if dim < 1.
+     * Throws exception if dim < 1.
      */
     function SquareMatrix($dim, $init) {
         if ($dim < 1) {
@@ -209,7 +209,7 @@ class MatrixUtil {
      * @param $m SquareMatrix to invert
      * @return SquareMatrix, the inverted one.
      *
-     * Throw Exception if det = 0
+     * Throws Exception if det = 0
      */
 	public static function invert($m) {
 	    $det = MatrixUtil::determinant($m);
@@ -224,7 +224,7 @@ class MatrixUtil {
      * @param $c Array of constants
      * @return array Result coefficients
      *
-     * Throws Exception when no solution.
+     * Throws Exception when no solution (det = 0).
      */
 	public static function solveSystem($m, $c) {
     console_log("Solving:");
