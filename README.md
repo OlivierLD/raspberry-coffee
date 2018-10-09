@@ -22,7 +22,9 @@ To get started as quickly as possible, and not only for this project, from scrat
     - It should boot to the Graphical Desktop.
 - Connect to your local network
 - Use RPi-Config (from the Desktop GUI, Menu > Preferences > Raspberry Pi Configuration) to:
-    - enable interfaces (ssh, serial, spi, i2c, VNC, etc)
+    - enable needed interfaces (ssh, serial, spi, i2c, VNC, etc)
+        - `ssh` and `VNC` will allow remote access to your Raspberry Pi, the others depend on the projects you want to work on.
+        - This can be modified or reverted at any time.
     - setup config (keyboard, locale, etc)
     - change pswd, hostname
 - Reboot (and now, you can use `ssh` if it has been enabled above) and reconnect
@@ -90,7 +92,9 @@ _Note:_
 This project uses `gradle` and `git`. `Gradle` will be installed automatically if it is not present on your system,
 it uses the gradle wrapper (`gradlew`).
 
-`Git` is usually installed on Linux and Mac, but not on Windows. On Windows, you need to install the [`git bash shell`](http://lmgtfy.com/?q=install+git+bash+shell+on+windows), and run in it the commands mentioned in this document.
+`Git` is usually installed on Linux and Mac, but not on all versions of Windows. On Windows, you need to install the [`git bash shell`](http://lmgtfy.com/?q=install+git+bash+shell+on+windows), and run _in it_ the commands mentioned in this document.
+Recent versions of Windows (like Windows 10) seem to come with a git command available in  a Terminal. But this forward-slash/back-slash story
+remains in your way, I have not tested it.
 
 ---
 To build it, clone this project (this repo), make sure the script named `gradlew` is executable, and execute `gradlew`.
