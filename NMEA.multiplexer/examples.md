@@ -329,7 +329,7 @@ Based on the device geographical position and the system date, the soft calculat
 and drives the servos (or motors) accordingly.
 
 The idea here is to forget about the solar panel orientation, get the geographical position from a GPS connected on a serial port, do the astronomical calculations,
-and output sevaral data, available through a REST and HTML interface:
+and output several data, available through a REST and HTML interface:
 - Position
 - System and Solar Dates
 - Altitude and Azimuth of the Sun
