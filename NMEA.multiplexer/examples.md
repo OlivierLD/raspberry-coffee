@@ -320,7 +320,7 @@ Both can provide some free access to an IoT server.
 Adafruit-IO supports `MQTT` and `REST` protocols.
 
 #### Solar Data
-That one is a variation of the [`SunFlower`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/SunFlower/README.md) project.
+That one is a variation of the [`SunFlower`](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Project.Trunk/SunFlower/README.md) project.
 
 The `SunFlower` project is originally designed to orient a solar panel toward the Sun, to maximize its efficiency.
 The solar panel is driven by two servos or motors, one for the heading (vertical axis), and one for the tilt (horizontal axis).

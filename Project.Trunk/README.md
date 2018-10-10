@@ -20,6 +20,7 @@ and a script to run the example should be available as well.
 - [Robots and WebSockets](Motors)
 - [Plant watering system](PlantWateringSystem)
 - [Pitch and Roll](LSM303)
+- [SunFlower](SunFlower)
 - ... and more.
 
 #### TODO
