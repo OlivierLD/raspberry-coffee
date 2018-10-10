@@ -12,7 +12,7 @@ The goal here is to read the humidity of the soil, and to water the plan when th
 Watering is done by opening a solenoid valve connected to a tank of water.
 
 #### History, Act 1:  Reading the STH10 Sensor. Getting there...
-The goal here is to finally heave a Java implmentation of the code. See below.
+The goal here is to finally heave a Java implementation of the code. See below.
 
 We start from an Arduino sketch, that can read the STH10.
 > _Important note_: The 10 K&Omega; resistor is not to be forgotten.
@@ -42,7 +42,7 @@ See in this project the class named `sensors.sth10.STH10Driver.java`.
 > The doc of the relay specifies that it should be fed with a `5V` power supply. This did not work for me on a single relay board.
 > (surprisingly, it was working OK on a 2-relay board). The relay goes on when the program is started, does not go down until
 > the program terminates with a `gpio.shutdown()`. The reason is that the states `HIGH` and `LOW` is evaluated by
-> compairing the power supply with the signal. As the GPIO header of the Raspberry PI delivers `3.3V`, the comparison with `5V`
+> comparing the power supply with the signal. As the GPIO header of the Raspberry PI delivers `3.3V`, the comparison with `5V`
 > never finds it equal.
 >
 > Hooking the relay's power supply to `3.3V` fixes the issue, as the comparison with the power supply and the signal find them equals
@@ -268,7 +268,7 @@ In the `loggers` package, there are several examples of loggers. One is feeding 
 ![Adafruit-IO](./docimg/adafruit-io.png)
 
 ### To install
-- Flash an SD card with the lastest Raspian
+- Flash an SD card with the latest Raspian
 - Possibly run
 ```
  $ sudo apt-get update
