@@ -3,7 +3,7 @@
 - [Pulse Width Modulation for PCA9685](../I2C.SPI/PWM.md)
 - [ADC Benchmark](../ADC-benchmark/README.md)
 - [Other JVM Languages](../OtherJVM.languages/README.md)
-- [SunFlower](../SunFlower/README.md)
+- [SunFlower](../Project.Trunk/SunFlower/README.md)
 - [Monitor a Battery](../Monitor.Battery/README.md)
 - [NMEA Multiplexer](../NMEA.Multilexer/README.md)
     - Case study: [Comparison with Node-RED](../NMEA.multiplexer/casestudy.md)
