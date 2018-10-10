@@ -25,7 +25,6 @@ and a script to run the example should be available as well.
 
 #### TODO
 - Stepper Motors with the Motor HAT
-- Arduino Communication
 - Pure PWM
     - For LEDs
     - For Servos
