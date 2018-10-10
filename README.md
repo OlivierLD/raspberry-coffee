@@ -73,6 +73,10 @@ $ which wget
     - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
 
 - If you need AI and Deep Learning (Anaconda, Jupyter notebooks, TensorFlow, Keras), follow [this link](https://medium.com/@margaretmz/anaconda-jupyter-notebook-tensorflow-and-keras-b91f381405f8).
+    - or type:
+    ```
+    $ wget https://repo.anaconda.com/archive/Anaconda3-5.3.0-Linux-x86_64.sh
+    ```
 
 You're ready to rock!
 

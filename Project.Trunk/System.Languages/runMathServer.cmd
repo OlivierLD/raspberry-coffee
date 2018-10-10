@@ -7,6 +7,7 @@ set CP=.\build\libs\System.Languages-1.0-all.jar
 echo ---------------------------------
 echo Usage is %0 [-px^|--proxy] [-p^|--port 1234]
 echo       -px or --proxy means with a proxy
+echo       -p 1243 or --port 1234 overrides the HTTP port \(default is 1234\)
 echo ---------------------------------
 ::
 set USE_PROXY=false
@@ -44,7 +45,7 @@ set JAVA_OPTS=%JAVA_OPTS% -Dhttp.verbose=%HTTP_VERBOSE%
 set JAVA_OPTS=%JAVA_OPTS% -Dmath.rest.verbose=%MATH_REST_VERBOSE%
 set JAVA_OPTS=%JAVA_OPTS% -Dsystem.verbose=%SYSTEM_VERBOSE%
 ::
-if "%USE_PROXY%" == "true" (
+if [%USE_PROXY%] == [true] (
   set JAVA_OPTS=%JAVA_OPTS% -Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80
 )
 java -cp %CP% %JAVA_OPTS% matrix.server.MathServer
