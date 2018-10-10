@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# SunFlower launching script
+#
 CP=./build/libs/SunFlower-1.0-all.jar
 #
 echo Try $0 -help or $0 --help

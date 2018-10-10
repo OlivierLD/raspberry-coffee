@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# NMEA Version. Position, heading, etc, come from an NMEA input strem.
+# NMEA Version. Position, heading, etc, come from an NMEA input stream.
 #
 echo Read serial port
 echo Usage $0 [BaudRate] \(default 4800\)
