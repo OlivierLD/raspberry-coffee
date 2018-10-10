@@ -1,9 +1,11 @@
-@setLocal EnableDelayedExpansion
-@echo on
+@setLocal
+:: EnableDelayedExpansion
+@echo off
 set CP=.\build\libs\System.Languages-1.0-all.jar
 ::
+:: No column (:) in the arguments, they make a mess, confused with substrings
 echo ---------------------------------
-echo Usage is %0 [-px^|--proxy] [-p:^|--port:1234]
+echo Usage is %0 [-px^|--proxy] [-p^|--port 1234]
 echo       -px or --proxy means with a proxy
 echo ---------------------------------
 ::
@@ -12,31 +14,32 @@ set HTTP_PORT=1234
 ::
 :loopTop
 set PRM=%1
-echo PRM="%PRM%"
+:: echo PRM="%PRM%"
 if "%PRM%" == "" (
-  echo No more parameter
+::echo No more parameter
   goto next
 ) else (
-  if "%PRM%" == "-px" (
+  if [%PRM%] == [-px] (
     set USE_PROXY=true
-  ) else if "%PRM%" == "--proxy" (
+  ) else if [%PRM%] == [--proxy] (
     set USE_PROXY=true
-  ) else if "%PRM:~0,3%" == "-p:" (
-    set HTTP_PORT=%PRM:~3%
-  ) else if "%PRM:~0,7%" == "--port:" (
-    set HTTP_PORT=%PRM:~7%
+  ) else if [%PRM%] == [-p] (
+    set HTTP_PORT=%2
+  ) else if [%PRM%] == [--port] (
+    set HTTP_PORT=%2
   )
   shift /1
   goto loopTop
 )
 :next
 echo Let us go
+echo USE_PROXY=%USE_PROXY%, HTTP_PORT=%HTTP_PORT%
 ::
 set HTTP_VERBOSE=false
 set MATH_REST_VERBOSE=true
 set SYSTEM_VERBOSE=true
 ::
-set JAVA_OPTS=
+set JAVA_OPTS=-Dhttp.port=%HTTP_PORT%
 set JAVA_OPTS=%JAVA_OPTS% -Dhttp.verbose=%HTTP_VERBOSE%
 set JAVA_OPTS=%JAVA_OPTS% -Dmath.rest.verbose=%MATH_REST_VERBOSE%
 set JAVA_OPTS=%JAVA_OPTS% -Dsystem.verbose=%SYSTEM_VERBOSE%
