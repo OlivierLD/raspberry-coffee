@@ -29,7 +29,6 @@ and a script to run the example should be available as well.
 - Pure PWM
     - For LEDs
     - For Servos
-- FONA
 
 ### Node JS
 Some of the projects in this folder require `NodeJS` (and its `N`ode `P`ackage `M`anager aka `npm`) to be installed, some times with extra modules.
