@@ -16,6 +16,13 @@ Do take a look, it also comes with a readme file.
 To get started as quickly as possible, and not only for this project, from scratch:
 
 #### Setup a brand new Raspberry Pi
+###### Foundation Software
+The goal here is to get ready with the minimal configuration you will be able to use to clone a git repository and start working on it.
+
+Typically, you will need to have the minimal git tools and the right compilers. The code contained in the repo(s) will be responsible for
+downloading the right dependencies at build time (`gradle` is definitely good at that).
+
+###### Minimal setup
 - Install Raspian (not NOOBS) as explained at https://www.raspberrypi.org/learning/software-guide/quickstart/, and burn your SD card
     - Depending on the OS you burn the SD card from, the procedure varies. Well documented in the link above.
 - Boot on the Raspberry with the new SD card, USB keyboard and HDMI screen attached to it (if this is an old RPi, use a USB WiFi dongle too)
