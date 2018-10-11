@@ -167,8 +167,7 @@ public class StaticUtil {
 		try {
 			//  System.out.println("Opening in browser:[" + uri.toString() + "]");
 			Desktop.getDesktop().browse(uri);
-		} catch (Exception ex) // UnsupportedOperationException ex)
-		{
+		} catch (Exception ex) { // UnsupportedOperationException ex)
 			String mess = ex.getMessage();
 			mess += ("\n\nUnsupported operation on your system. URL [" + uri.toString() + "] is in the clipboard.\nOpen your browser manually, and paste it in there (Ctrl+V).");
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -220,8 +219,7 @@ public class StaticUtil {
 		} else if (os.indexOf("Linux") > -1) {
 			Runtime.getRuntime().exec("nautilus " + where);
 		} else if (os.indexOf("Mac") > -1) {
-			String[] applScriptCmd =
-					{
+			String[] applScriptCmd = {
 							"osascript",
 							"-e", "tell application \"Finder\"",
 							"-e", "activate",

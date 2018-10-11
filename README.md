@@ -45,7 +45,7 @@ $ sudo apt-get install vim
 ```
 alias ll="ls -lisah"
 ```
-- recent Raspian's come with a development environment that includes
+- recent Raspian releases come with a development environment that includes
     - JRE & JDK
     - git
     - python
