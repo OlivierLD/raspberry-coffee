@@ -73,10 +73,12 @@ $ which wget
     - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
 
 - If you need AI and Deep Learning (Anaconda, Jupyter notebooks, TensorFlow, Keras), follow [this link](https://medium.com/@margaretmz/anaconda-jupyter-notebook-tensorflow-and-keras-b91f381405f8).
-    - or type:
+    - or type (not suitable for the Raspberry Pi):
     ```
     $ wget https://repo.anaconda.com/archive/Anaconda3-5.3.0-Linux-x86_64.sh
     ```
+    - [Anaconda on Raspberry Pi](https://qiita.com/jpena930/items/eac02cb4e635bfba83d8)
+    - [Jupyter Notebooks on Raspberry Pi](https://www.instructables.com/id/Jupyter-Notebook-on-Raspberry-Pi/)
 
 You're ready to rock!
 

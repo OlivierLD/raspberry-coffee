@@ -93,69 +93,63 @@ public class PWM3ColorLed {
 			}
 		}
 
-		Thread one = new Thread() {
-			public void run() {
-				while (true) {
-					final int sleep = (int) (20 * Math.random());
-					for (int vol = 0; vol < 100; vol++) {
-						pin00.adjustPWMVolume(vol);
-						try {
-							Thread.sleep(sleep);
-						} catch (Exception ex) {
-						}
+		Thread one = new Thread(() -> {
+			while (true) {
+				final int sleep = (int) (20 * Math.random());
+				for (int vol = 0; vol < 100; vol++) {
+					pin00.adjustPWMVolume(vol);
+					try {
+						Thread.sleep(sleep);
+					} catch (Exception ex) {
 					}
-					for (int vol = 100; vol >= 0; vol--) {
-						pin00.adjustPWMVolume(vol);
-						try {
-							Thread.sleep(sleep);
-						} catch (Exception ex) {
-						}
+				}
+				for (int vol = 100; vol >= 0; vol--) {
+					pin00.adjustPWMVolume(vol);
+					try {
+						Thread.sleep(sleep);
+					} catch (Exception ex) {
 					}
 				}
 			}
-		};
-		Thread two = new Thread() {
-			public void run() {
-				while (true) {
-					final int sleep = (int) (20 * Math.random());
-					for (int vol = 0; vol < 100; vol++) {
-						pin01.adjustPWMVolume(vol);
-						try {
-							Thread.sleep(sleep);
-						} catch (Exception ex) {
-						}
+		});
+		Thread two = new Thread(() -> {
+			while (true) {
+				final int sleep = (int) (20 * Math.random());
+				for (int vol = 0; vol < 100; vol++) {
+					pin01.adjustPWMVolume(vol);
+					try {
+						Thread.sleep(sleep);
+					} catch (Exception ex) {
 					}
-					for (int vol = 100; vol >= 0; vol--) {
-						pin01.adjustPWMVolume(vol);
-						try {
-							Thread.sleep(sleep);
-						} catch (Exception ex) {
-						}
+				}
+				for (int vol = 100; vol >= 0; vol--) {
+					pin01.adjustPWMVolume(vol);
+					try {
+						Thread.sleep(sleep);
+					} catch (Exception ex) {
 					}
 				}
 			}
-		};
-		Thread three = new Thread() {
-			public void run() {
-				while (true) {
-					final int sleep = (int) (20 * Math.random());
-					for (int vol = 0; vol < 100; vol++) {
-						pin02.adjustPWMVolume(vol);
-						try {
-							Thread.sleep(sleep);
-						} catch (Exception ex) {
-						}
+		});
+		Thread three = new Thread(() -> {
+			while (true) {
+				final int sleep = (int) (20 * Math.random());
+				for (int vol = 0; vol < 100; vol++) {
+					pin02.adjustPWMVolume(vol);
+					try {
+						Thread.sleep(sleep);
+					} catch (Exception ex) {
 					}
-					for (int vol = 100; vol >= 0; vol--) {
-						pin02.adjustPWMVolume(vol);
-						try {
-							Thread.sleep(sleep);
-						} catch (Exception ex) {
-						}
+				}
+				for (int vol = 100; vol >= 0; vol--) {
+					pin02.adjustPWMVolume(vol);
+					try {
+						Thread.sleep(sleep);
+					} catch (Exception ex) {
 					}
 				}
 			}
-		};
+		});
 
 		one.start();
 		two.start();

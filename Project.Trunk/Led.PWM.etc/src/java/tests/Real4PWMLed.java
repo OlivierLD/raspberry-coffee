@@ -53,134 +53,126 @@ public class Real4PWMLed {
 		};
 		monitor.start();
 
-		Thread one = new Thread() {
-			public void run() {
-				for (int vol = 0; vol < 100; vol++) {
-					pin00.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(10);
-					} catch (Exception ex) {
-					}
-				}
-				for (int vol = 100; vol >= 0; vol--) {
-					pin00.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(10);
-					} catch (Exception ex) {
-					}
-				}
-				synchronized (monitor) {
-					System.out.println("Thread One finishing");
-					monitor.notify();
-				}
-			}
-		};
-		Thread two = new Thread() {
-			public void run() {
-				for (int vol = 100; vol > 0; vol--) {
-					pin01.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(10);
-					} catch (Exception ex) {
-					}
-				}
-				for (int vol = 0; vol <= 100; vol++) {
-					pin01.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(10);
-					} catch (Exception ex) {
-					}
-				}
+		Thread one = new Thread(() -> {
+			for (int vol = 0; vol < 100; vol++) {
+				pin00.adjustPWMVolume(vol);
 				try {
-					Thread.sleep(100);
+					Thread.sleep(10);
 				} catch (Exception ex) {
 				}
-				synchronized (monitor) {
-					System.out.println("Thread Two finishing");
-					monitor.notify();
-				}
 			}
-		};
-		Thread three = new Thread() {
-			public void run() {
-				for (int vol = 0; vol < 100; vol++) {
-					pin02.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(5);
-					} catch (Exception ex) {
-					}
-				}
-				for (int vol = 100; vol >= 0; vol--) {
-					pin02.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(5);
-					} catch (Exception ex) {
-					}
-				}
-				for (int vol = 0; vol < 100; vol++) {
-					pin02.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(5);
-					} catch (Exception ex) {
-					}
-				}
-				for (int vol = 100; vol >= 0; vol--) {
-					pin02.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(5);
-					} catch (Exception ex) {
-					}
-				}
+			for (int vol = 100; vol >= 0; vol--) {
+				pin00.adjustPWMVolume(vol);
 				try {
-					Thread.sleep(200);
+					Thread.sleep(10);
 				} catch (Exception ex) {
 				}
-				synchronized (monitor) {
-					System.out.println("Thread Three finishing");
-					monitor.notify();
-				}
 			}
-		};
-		Thread four = new Thread() {
-			public void run() {
-				for (int vol = 100; vol > 0; vol--) {
-					pin03.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(5);
-					} catch (Exception ex) {
-					}
-				}
-				for (int vol = 0; vol <= 100; vol++) {
-					pin03.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(5);
-					} catch (Exception ex) {
-					}
-				}
-				for (int vol = 100; vol > 0; vol--) {
-					pin03.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(5);
-					} catch (Exception ex) {
-					}
-				}
-				for (int vol = 0; vol <= 100; vol++) {
-					pin03.adjustPWMVolume(vol);
-					try {
-						Thread.sleep(5);
-					} catch (Exception ex) {
-					}
-				}
+			synchronized (monitor) {
+				System.out.println("Thread One finishing");
+				monitor.notify();
+			}
+		});
+		Thread two = new Thread(() -> {
+			for (int vol = 100; vol > 0; vol--) {
+				pin01.adjustPWMVolume(vol);
 				try {
-					Thread.sleep(300);
+					Thread.sleep(10);
 				} catch (Exception ex) {
 				}
-				synchronized (monitor) {
-					System.out.println("Thread Four finishing");
-					monitor.notify();
+			}
+			for (int vol = 0; vol <= 100; vol++) {
+				pin01.adjustPWMVolume(vol);
+				try {
+					Thread.sleep(10);
+				} catch (Exception ex) {
 				}
 			}
-		};
+			try {
+				Thread.sleep(100);
+			} catch (Exception ex) {
+			}
+			synchronized (monitor) {
+				System.out.println("Thread Two finishing");
+				monitor.notify();
+			}
+		});
+		Thread three = new Thread(() -> {
+			for (int vol = 0; vol < 100; vol++) {
+				pin02.adjustPWMVolume(vol);
+				try {
+					Thread.sleep(5);
+				} catch (Exception ex) {
+				}
+			}
+			for (int vol = 100; vol >= 0; vol--) {
+				pin02.adjustPWMVolume(vol);
+				try {
+					Thread.sleep(5);
+				} catch (Exception ex) {
+				}
+			}
+			for (int vol = 0; vol < 100; vol++) {
+				pin02.adjustPWMVolume(vol);
+				try {
+					Thread.sleep(5);
+				} catch (Exception ex) {
+				}
+			}
+			for (int vol = 100; vol >= 0; vol--) {
+				pin02.adjustPWMVolume(vol);
+				try {
+					Thread.sleep(5);
+				} catch (Exception ex) {
+				}
+			}
+			try {
+				Thread.sleep(200);
+			} catch (Exception ex) {
+			}
+			synchronized (monitor) {
+				System.out.println("Thread Three finishing");
+				monitor.notify();
+			}
+		});
+		Thread four = new Thread(() -> {
+			for (int vol = 100; vol > 0; vol--) {
+				pin03.adjustPWMVolume(vol);
+				try {
+					Thread.sleep(5);
+				} catch (Exception ex) {
+				}
+			}
+			for (int vol = 0; vol <= 100; vol++) {
+				pin03.adjustPWMVolume(vol);
+				try {
+					Thread.sleep(5);
+				} catch (Exception ex) {
+				}
+			}
+			for (int vol = 100; vol > 0; vol--) {
+				pin03.adjustPWMVolume(vol);
+				try {
+					Thread.sleep(5);
+				} catch (Exception ex) {
+				}
+			}
+			for (int vol = 0; vol <= 100; vol++) {
+				pin03.adjustPWMVolume(vol);
+				try {
+					Thread.sleep(5);
+				} catch (Exception ex) {
+				}
+			}
+			try {
+				Thread.sleep(300);
+			} catch (Exception ex) {
+			}
+			synchronized (monitor) {
+				System.out.println("Thread Four finishing");
+				monitor.notify();
+			}
+		});
 
 		one.start();
 		two.start();
