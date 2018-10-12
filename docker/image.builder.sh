@@ -14,6 +14,7 @@ DOCKER=`which docker`
 if [ "$DOCKER" == "" ]
 then
   echo -e "Docker not available on this machine, exiting."
+  echo -e "To install Docker, see https://store.docker.com/search?type=edition&offering=community"
   exit 1
 fi
 #
@@ -32,7 +33,7 @@ do
   echo -e "|  7. Golang, basics                                                   |"
   echo -e "|  8. Raspberry PI, MATE, with java, node, web comps, VNC              |"
   echo -e "|  9. Debian, Java, Scala, Spark                                       |"
-  echo -e "| 10. Ubuntu MATE, TensorFlow, Python3, Jupyter, VNC                   |"
+  echo -e "| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, VNC            |"
   echo -e "+----------------------------------------------------------------------+"
   echo -e "| Q. Oops, nothing, thanks, let me out.                                |"
   echo -e "+----------------------------------------------------------------------+"
@@ -72,8 +73,8 @@ do
       MESSAGE="${MESSAGE}You can also log in using: docker run -it $IMAGE_NAME:latest /bin/bash\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
       #
-      EXTRA_PRM="--build-arg http_proxy=http://www-proxy.us.oracle.com:80"
-      EXTRA_PRM="$EXTRA_PRM --build-arg https_proxy=http://www-proxy.us.oracle.com:80"
+      EXTRA_PRM="--build-arg http_proxy=http://www-proxy-hqdc.us.oracle.com:80"
+      EXTRA_PRM="$EXTRA_PRM --build-arg https_proxy=http://www-proxy-hqdc.us.oracle.com:80"
       EXTRA_PRM="$EXTRA_PRM --build-arg no_proxy=localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
       ;;
     "2")
