@@ -7,7 +7,7 @@ echo -e "     -p or --proxy means with a proxy"
 echo -e "     -m or --mux points to the properties file to use for the Multiplexer, default is nmea.mux.properties"
 echo -e "----------------------------"
 #
-echo -e "Starting the Navigation Rest Server 🌴"
+echo -e "⚓ Starting the Navigation Rest Server 🌴"
 USE_PROXY=false
 PROP_FILE=
 #
