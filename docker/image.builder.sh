@@ -222,6 +222,9 @@ do
       MESSAGE="${MESSAGE}       or python3 examples/oliv/01.py ...\n"
       MESSAGE="${MESSAGE}  Several samples are available in the examples folder.\n"
       MESSAGE="${MESSAGE}---------------------------------------------------\n"
+			MESSAGE="${MESSAGE}To start Jupyter Notebook, type: jupyter notebook --allow-root --ip 0.0.0.0 --no-browser\n"
+			MESSAGE="${MESSAGE}  - Default port 8888 is exposed, you can use from the host http://localhost:8888/?token=6c95d878c045212bxxxxxx\n"
+      MESSAGE="${MESSAGE}---------------------------------------------------\n"
       ;;
     *)
       echo -e "What? Unknown command [$a]"

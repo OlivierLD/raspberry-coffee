@@ -1,6 +1,6 @@
 ![Raspberry Coffee](./raspberryCoffee.png)
 ### Raspberry Coffee
-#### Java code and wiring for the Raspberry PI, featuring reusable libraries and snippets ####
+#### Java code and wiring for the Raspberry Pi, featuring reusable libraries and snippets ####
 It uses the [PI4J library](http://pi4j.com).
 
 ```
@@ -54,7 +54,7 @@ alias ll="ls -lisah"
 ```
 #  Optional: sudo apt-get install -y curl git build-essential default-jdk
 #  Optional too, to install nodejs and npm:
-$ sudo su
+$ sudo su -
 root# curl -sL https://deb.nodesource.com/setup_9.x | bash -
 root# exit
 $ sudo apt-get install -y nodejs
@@ -80,12 +80,16 @@ $ which wget
     - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
 
 - If you need AI and Deep Learning (Anaconda, Jupyter notebooks, TensorFlow, Keras), follow [this link](https://medium.com/@margaretmz/anaconda-jupyter-notebook-tensorflow-and-keras-b91f381405f8).
-    - or type (not suitable for the Raspberry Pi):
+    - or type:
     ```
     $ wget https://repo.anaconda.com/archive/Anaconda3-5.3.0-Linux-x86_64.sh
     ```
     - [Anaconda on Raspberry Pi](https://qiita.com/jpena930/items/eac02cb4e635bfba83d8)
     - [Jupyter Notebooks on Raspberry Pi](https://www.instructables.com/id/Jupyter-Notebook-on-Raspberry-Pi/)
+        - Start Jupyter Notebooks by typing `jupyter notebook [--allow-root] --ip 0.0.0.0 --no-browser`
+        - Then the command to use to reach Jupyter would show up in the console.
+    - _Note:_ Training a Neural Network is a very demanding operation, that requires computing resources not granted on a Raspberry Pi. Installing Keras on a Raspberry Pi might not be relevant. OpenCV, though, would be an option to consider. Google it ;).
+
 
 You're ready to rock!
 
@@ -143,38 +147,38 @@ The expected archive will be produced in the local `build/libs` directory.
  Prompt> . ./set.gradle.env
 ```
 
-<i>Note:</i> If you are behind a firewall, you need a proxy. Mention it in all the files named <code>gradle.propetries</code>, and in <b>all</b> the <code>build.gradle</code> scripts, uncomment the following two lines:
+> _Note:_ If you are behind a firewall, you need a proxy. Mention it in all the files named <code>gradle.propetries</code>, and in <b>all</b> the <code>build.gradle</code> scripts, uncomment the following two lines:
 <pre>
 // ant.setproxy(proxyhost: "$proxyHost", proxyport: "$proxyPort") //, proxyuser="user", proxypassword="password")
 // compileJava.dependsOn(tellMeProxy)
 </pre>
 
 ---
-### Developing **on** the Raspberry PI, or Developing **for** the Raspberry PI ?
+### Developing _on_ the Raspberry Pi, or Developing _for_ the Raspberry Pi ?
 
 To write code, the simplest editor is enough. I have used `vi` for ages, mostly because this was the only one available, but also because it _**is**_ indeed good enough.
-`vi` is available on the Raspberry PI, `nano` too, graphical editors like `gedit`, `geany` are even easier to use, on a grahical desktop.
+`vi` (and `vim`) is (are) available on the Raspberry Pi, `nano` too, graphical editors like `gedit`, `geany` are even easier to use, on a grahical desktop.
 
-All the code provided here can be built from Gradle (all gradle scripts are provided), _**on the Raspberry PI**_ itself.
-The Raspberry PI is self sufficient, if this is all you have, nothing is preventing you from accessing **_all_** the features presented here.
+All the code provided here can be built from Gradle (all gradle scripts are provided), _**on the Raspberry Pi**_ itself.
+The Raspberry Pi is self sufficient, if this is all you have, nothing is preventing you from accessing **_all_** the features presented here.
 
 But let us be honest, Integrated Development Environments (IDE) are quite cool.
 In my opinion, IntelliJ leads the pack, and Eclipse, JDeveloper, NetBeans follow. Cloud9 provides amazing features, on line.
 Smaller ones like GreenFoot, BlueJ are also options to consider.
 
 
-Those two last ones might be able to run on a Raspberry PI, but forget about the others..., they use way too much RAM.
+Those two last ones might be able to run on a Raspberry Pi, but forget about the others..., they use way too much RAM.
  The features they provide definitely increase productivity, and when you use them, you learn as you code. Code-insight, auto-completion
  and similar features are here to help. And I'm not even talking about the *remote debugging* features they provide as well.
 
- So, as the Raspberry PI is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry PI.
- Worst case scenario, I do a `git push` from the development machine, and a `git pull` from the Raspberry PI.
- I found it actually faster and more efficient than developing directly on the Raspberry PI.
+ So, as the Raspberry Pi is not the only machine on my desk, I develop on a laptop using IntelliJ (with several GigaBytes of RAM, like 8, 16, ...), and I use `scp` to transfer the code to (and possibly from) the Raspberry Pi.
+ Worst case scenario, I do a `git push` from the development machine, and a `git pull` from the Raspberry Pi.
+ I found it actually faster and more efficient than developing directly on the Raspberry Pi.
 
 ##### Something to keep in mind
 
  The Java Virtual Machine (JVM) implements the Java Platform Debugging Architecture (JPDA). This allows **_remote debugging_**.
- In other words, you run the code on the Raspberry PI,
+ In other words, you run the code on the Raspberry Pi,
  but you debug it (set breakpoints, introspect variable values, etc) on another machine (the one where the IDE runs).
  This is specially useful when the code interacts with sensors and other devices that are not supported from the laptop.
  This will make your life considerably easier than if you used another language missing it (like Python, C, and many others).
@@ -182,11 +186,11 @@ Those two last ones might be able to run on a Raspberry PI, but forget about the
 
 ---
 
-### Raspberry PI, a possible thing of the Internet of things... ###
-  * The Raspberry PI is a fully featured Linux computer, which can - as such - connect to the Internet.
-  * The Raspberry PI has a General Purpose Input Output (GPIO) interface that allows it to drive all kind of electronic components, from a simple LED to a complex robot, and including all kind of sensors (GPS, light resistors, pressure sensors, temperature sensors, all kinds!).
+### Raspberry Pi, a possible thing of the Internet of Things...
+  * The Raspberry Pi is a fully featured Linux computer, which can - as such - connect to the Internet.
+  * The Raspberry Pi has a General Purpose Input Output (GPIO) interface that allows it to drive all kind of electronic components, from a simple LED to a complex robot, and including all kind of sensors (GPS, light resistors, pressure sensors, temperature sensors, all kinds!).
 None of the above is new. Connecting to the Internet does not impress anyone anymore. Driving a robot, modern kitchens are full of robots, cars are loaded with electronic components...
-**But** what if we put those two together, with the Raspberry PI sitting in between.
+**But** what if we put those two together, with the Raspberry Pi sitting in between.
 **Then**, we can drive a robot over the Internet. And **this** is not that usual (yet).
 
 ---
@@ -198,7 +202,7 @@ The snippets provided in this project are here to help in this kind of context. 
 Several projects are featured here:
   * Basic GPIO interaction
   * Two Leds
-  * Use the Raspberry PI to turn LEDs on and off, **through email** ([with doc](http://www.lediouris.net/RaspberryPI/email/readme.html))
+  * Use the Raspberry Pi to turn LEDs on and off, **through email** ([with doc](http://www.lediouris.net/RaspberryPI/email/readme.html))
   * Read Serial Port ([with doc](http://www.lediouris.net/RaspberryPI/serial/readme.html))
   * Read _and parse_ NMEA Data from a GPS ([with doc](http://www.lediouris.net/RaspberryPI/GPS/readme.html))
   * Read analog data with an Analog Digital Converter (ADC). ([with doc](http://www.lediouris.net/RaspberryPI/ADC/readme.html), with [node.js and WebSocket](http://www.lediouris.net/RaspberryPI/ADC/adc-websocket.html))
