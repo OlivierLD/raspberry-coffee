@@ -274,7 +274,7 @@ To restore your container:
 Terminal-X$ docker import myarchive.tar restored:new
 ```
 
-Then you
+This creates a new docker image, named `restored`, with the label `new`. Then you
 ```
 Terminal-X$ docker run -it --rm -p 5901:5901 -p 8888:8888 -e USER=root -v tensorflow:/root/workdir/shared restored:new /bin/bash
 ```
