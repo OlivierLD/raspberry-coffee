@@ -213,7 +213,7 @@ To compile and run (the compilation is _not_ done by Gradle, and may vary depend
 On the Raspberry PI, use:
 ```
  $ cd src/C
- $ g++ -Wall -o system system.c
+ $ g++ -Wall -o system system.
  $ ./system
 ```
 
@@ -418,7 +418,7 @@ There are many such languages, `Scala`, `Kotlin`, `Groovy`, `Clojure` being only
 
 More technical details are available from the module [Other JVM languages](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/OtherJVM.languages), in this project.
 
-Then, a un-anticipated shift happened: the emergence of the Containers, like `Docker`.
+Then, an un-anticipated shift happened: the emergence of the Containers, like `Docker`.
 Docker is generating system images. It provides an environment - an operating system - onto
 which you can run the programs you need.
 
