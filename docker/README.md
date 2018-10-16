@@ -247,4 +247,31 @@ change in the image is required.
  $
 ```
 
---------------------------------------------------------------------------
+##### Save, and re-use
+Let's say you run a container, you make modification to the hosted system, you exit, but you want to later on reconnect and find the modifications you did before.
+
+You run a new container:
+```
+$ docker run --interactive --tty --rm --publish 5901:5901 --publish 8888:8888 --env USER=root --volume tensorflow:/root/workdir/shared oliv-tf-vnc:latest /bin/bash
+```
+You make your modifications.
+
+_From another terminal_:
+```
+$ docker export --output myarchive.tar [CONTAINER-ID]
+```
+Then you can exit your docker session above.
+
+To restore your container:
+```
+$ docker import myarchive.tar restored:new
+```
+
+Then you
+```
+$ docker run -it --rm -p 5901:5901 -p 8888:8888 -e USER=root -v tensorflow:/root/workdir/shared restored:new /bin/bash
+```
+
+The docker image you're now on reflects the changes done before the container was exported.
+
+-------------------------------
