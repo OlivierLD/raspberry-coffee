@@ -11,4 +11,9 @@ const server = new PHPServer({
 	}
 });
 
+console.log("-----------------------------------");
+console.log("Starting PHP server...");
 server.run();
+
+console.log("Once started, reach http://localhost:3000/index.html from your browser.");
+console.log("-----------------------------------");

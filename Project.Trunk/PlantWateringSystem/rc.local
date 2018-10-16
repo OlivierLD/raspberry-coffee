@@ -20,7 +20,7 @@ fi
 #
 cd /home/pi/raspberry-pi4j-samples/PlantWateringSystem
 printf "Start reading the probe"
-nohup ./read.probe.sh &
+nohup ./read.probe.sh wait &
 #
 exit 0
 

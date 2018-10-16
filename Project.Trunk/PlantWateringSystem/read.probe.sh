@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 CP=build/libs/PlantWateringSystem-1.0-all.jar
 #
-echo "Usage is $0 [debug|remote-debug|verbose]"
+echo "Usage is $0 [debug|remote-debug|verbose|wait]"
 echo "   Use 'remote-debug' to remote-debug from another machine."
 echo "   Use 'verbose' for a regular look on what's going on."
 echo "   Use 'debug' for a close look on what's going on."
@@ -9,9 +9,14 @@ echo "   Use 'debug' for a close look on what's going on."
 VERBOSE=false
 DEBUG=false
 REMOTE_DEBUG=false
+WAIT=false
 if [ "$1" == "verbose" ]
 then
   VERBOSE=true
+fi
+if [ "$1" == "wait" ]
+then
+  WAIT=true
 fi
 if [ "$1" == "debug" ]
 then
@@ -69,6 +74,12 @@ then
 	 echo -n "Hit return... "
 	 read a
 fi
+if [ "$WAIT" == "true" ]
+then
+	echo Waiting 10 sec
+  sleep 10
+fi
+#
 JAVA_OPTIONS="$JAVA_OPTIONS -Dvalve.test=true"
 #
 java $JAVA_OPTIONS -cp $CP main.STH10 $USER_PRM
