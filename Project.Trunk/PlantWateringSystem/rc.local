@@ -18,7 +18,7 @@ if [ "$_IP" ]; then
   printf ">> IP address is %s\n" "$_IP"
 fi
 #
-cd /home/pi/raspberry-pi4j-samples/PlantWateringSystem
+cd /home/pi/raspberry-pi4j-samples/Project.Trunk/PlantWateringSystem
 printf "Start reading the probe"
 nohup ./read.probe.sh wait &
 #
