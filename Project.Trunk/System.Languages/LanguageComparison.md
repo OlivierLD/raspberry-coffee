@@ -213,7 +213,7 @@ To compile and run (the compilation is _not_ done by Gradle, and may vary depend
 On the Raspberry PI, use:
 ```
  $ cd src/C
- $ g++ -Wall -o system system.
+ $ g++ -Wall -o system system.c
  $ ./system
 ```
 
