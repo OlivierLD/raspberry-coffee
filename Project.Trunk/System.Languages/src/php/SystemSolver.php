@@ -22,7 +22,6 @@ class SystemSolver {
      */
     public static function solveSystem(SquareMatrix $m, array $c): array {
         $result = [];
-
         try {
             $inv = $m->invert();
             // Lines * Column

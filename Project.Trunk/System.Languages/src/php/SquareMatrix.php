@@ -46,7 +46,7 @@ class SquareMatrix {
         return $this->debugMode === true;
     }
 
-    public function init(): void {
+    public function init() {
         $this->elements = [];
         for ($row = 0; $row < $this->dimension; $row++) {
             $this->elements[$row] = [];
@@ -105,7 +105,6 @@ class SquareMatrix {
      */
     public function determinant(): float {
         $v = 0.0;
-
         if ($this->dimension === 1) {
             $v = $this->getElementAt(0, 0);
         } else {
@@ -116,11 +115,9 @@ class SquareMatrix {
                 $v += ($this->getElementAt(0, $C) * $minDet * ((-1.0) ** ($C + 1 + 1))); // line C, column 1
             }
         }
-
         if ($this->isDebugMode()) {
             echo "Determinant of {$this} is {$v}<br/>";
         }
-
         return $v;
     }
 
