@@ -19,10 +19,11 @@ do
 	echo -e "+------------------------------ D E M O   L A U N C H E R  🚀 ----------------------------+"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |"
-	echo -e "|  2. Home Weather Station data                                                           |"
-	echo -e "|  3. With GPS, waits for the RMC sentence to be active                                   |"
+	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
+	echo -e "|  3. Home Weather Station data                                                           |"
+	echo -e "|  4. With GPS, waits for the RMC sentence to be active                                   |"
 	echo -e "|  ... TODO: more.                                                                        |"
-	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanachs, etc              |"
+	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc               |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  S. Show NavServer process(es)                                                          |"
 	echo -e "|  Q. Quit                                                                                |"
@@ -41,6 +42,15 @@ do
 	    GO=false
 	    ;;
 	  "2")
+	    PROP_FILE=nmea.mux.interactive.time.properties
+	    echo -e "Launching Nav Server with $PROP_FILE"
+	    ./runNavServer.sh --mux:$PROP_FILE --no-date &
+	    echo -e "Waiting for the server to start..."
+	    sleep 5 # Wait for the server to be operational
+	    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	    GO=false
+	    ;;
+	  "3")
 	    PROP_FILE=nmea.mux.home.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE &
@@ -48,7 +58,7 @@ do
 	#   openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    GO=false
 	    ;;
-	  "3")
+	  "4")
 	    PROP_FILE=nmea.mux.gps.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE &
