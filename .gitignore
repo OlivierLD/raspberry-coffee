@@ -15,10 +15,14 @@
 # *.py
 # *.png
 *.iml
+yarn.lock
 gen/
 classes/
 /classes/*.properties
 classes/*
+Library
+*.min.js
+*.min.js.map
 doc/
 I2C/src/misc
 */email.properties
