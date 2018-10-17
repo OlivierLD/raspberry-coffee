@@ -4,6 +4,7 @@
 
 </head>
 <body style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva">
+<h4>Input System and Constants</h4>
 <?php
 $dim = $_POST["dim"];
 echo "Dim={$dim}";

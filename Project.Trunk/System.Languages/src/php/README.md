@@ -29,7 +29,7 @@ echo "My first PHP script!";
 ... And reach http://localhost:3000/sample.php
 
 ## System Resolution
-The core code is in `system.php`, runnable as explained above, using interactive web interface at http://localhost:3000/index.html
+The core code is in `SystemSolver.php` and `SquareMatrix.php`, runnable as explained above, using interactive web interface at http://localhost:3000/index.html
 
 #### To run the System Resolution example
 From the `php` directory (where the `index.html` is), run

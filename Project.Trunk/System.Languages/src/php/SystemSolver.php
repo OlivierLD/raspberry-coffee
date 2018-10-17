@@ -11,7 +11,7 @@ declare(strict_types=1);
 /**
  * Class MatrixSolver
  */
-class MatrixSolver {
+class SystemSolver {
     /**
      * @param SquareMatrix $m
      * @param array        $c Array of constants

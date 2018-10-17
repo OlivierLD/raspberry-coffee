@@ -48,7 +48,7 @@ try {
     echo "<hr/>";
 
     try {
-        $coeffs = MatrixSolver::solveSystem($matrix, $constants);
+        $coeffs = SystemSolver::solveSystem($matrix, $constants);
 
         $coeffNames = [
             'A', 'B', 'C', 'D', 'E', 'F', 'G', "H", 'I', 'J', 'K', 'L', 'M',

@@ -29,7 +29,7 @@ $elements = $matrix->getElements();
 echo "Det: {$matrix->determinant()} <br />";
 echo "<hr/> == Matrix == <br />{$matrix}<br />";
 $constants = [234, 98.87, 9.876];
-$coeffs    = MatrixSolver::solveSystem($matrix, $constants);
+$coeffs    = SystemSolver::solveSystem($matrix, $constants);
 echo "<hr />System Resolution:<br/>";
 $count = count($coeffs);
 
