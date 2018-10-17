@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+	<title>System input</title>
+	<link rel="shortcut icon" type="image/png" href="php.png">
 </head>
 <body style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva">
 <h4>Input System and Constants</h4>

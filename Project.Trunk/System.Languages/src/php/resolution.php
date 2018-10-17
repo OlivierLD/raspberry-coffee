@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+	<title>System resolution</title>
+	<link rel="shortcut icon" type="image/png" href="php.png">
 </head>
 <body style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva">
 <h2>Solution</h2>

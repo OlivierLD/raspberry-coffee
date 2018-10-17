@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+	<link rel="shortcut icon" type="image/png" href="php.png">
 </head>
 <body style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva">
 <h1>Matrix Utils tests</h1>
