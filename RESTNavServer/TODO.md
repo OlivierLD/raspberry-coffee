@@ -4,6 +4,7 @@
 - Extended to any celestial body, any hemisphere, tropical zone(s).
 
 ### Rhumblines and Great Circles on the WorldMap
+- Great Circle OK (with doAfter)
 
 ### A logger like the runner - for Kayaking.
 - Transparent top

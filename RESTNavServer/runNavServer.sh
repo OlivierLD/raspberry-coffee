@@ -2,13 +2,15 @@
 # Navigation REST server
 #
 echo -e "----------------------------"
-echo -e "Usage is $0 [-p|--proxy] [-m:propertiesfile|--mux:propertiesfile]"
+echo -e "Usage is $0 [-p|--proxy] [-m:propertiesfile|--mux:propertiesfile] [--no-date]"
 echo -e "     -p or --proxy means with a proxy"
 echo -e "     -m or --mux points to the properties file to use for the Multiplexer, default is nmea.mux.properties"
+echo -e "     --no-date does not put any GPS date or time (replayed or live) in the cache"
 echo -e "----------------------------"
 #
 echo -e "⚓ Starting the Navigation Rest Server 🌴"
 USE_PROXY=false
+NO_DATE=false
 PROP_FILE=
 #
 for ARG in "$@"
@@ -17,6 +19,9 @@ do
   if [ "$ARG" == "-p" ] || [ "$ARG" == "--proxy" ]
   then
     USE_PROXY=true
+  elif [ "$ARG" == "--no-date" ]
+  then
+    NO_DATE=true
   elif [[ $ARG == -m:* ]] || [[ $ARG == --mux:* ]] # !! No quotes !!
   then
     PROP_FILE=${ARG#*:}
@@ -46,11 +51,11 @@ JAVA_OPTS="$JAVA_OPTS -Dgrib.verbose=$GRIB_VERBOSE"
 if [ "$USE_PROXY" == "true" ]
 then
   echo Using proxy
-  JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80"
+  JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80"
 fi
 #
 # refers to nmea.mux.properties, unless -Dmux.properties is set
-WEATHER_STATION=false # Hard coded...
+WEATHER_STATION=false # Hard coded, for now...
 #
 if [ "$WEATHER_STATION" == "true" ]
 then
@@ -68,9 +73,12 @@ else
 fi
 # Specific/Temporary
 # JAVA_OPTS="$JAVA_OPTS -Dnmea.cache.verbose=true"
-# To use when re-playing GPS data. Those dates will not go in the cache.
-JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GGA.date.time=true"
-JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GLL.date.time=true"
+if [ "$NO_DATE" == "true" ]
+then
+	# To use when re-playing GPS data. Those dates will not go in the cache.
+	JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GGA.date.time=true"
+	JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GLL.date.time=true"
+fi
 # Default position
 JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.
 #
