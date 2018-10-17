@@ -11,8 +11,7 @@ declare(strict_types=1);
 /**
  * Class MatrixSolver
  */
-class MatrixSolver
-{
+class MatrixSolver {
     /**
      * @param SquareMatrix $m
      * @param array        $c Array of constants
@@ -21,13 +20,11 @@ class MatrixSolver
      *
      * Throws Exception when no solution (det = 0).
      */
-    public static function solveSystem(SquareMatrix $m, array $c): array
-    {
+    public static function solveSystem(SquareMatrix $m, array $c): array {
         $result = [];
 
         try {
             $inv = $m->invert();
-
             // Lines * Column
             for ($row = 0; $row < $m->getDimension(); $row++) {
                 $result[$row] = 0.0;
@@ -38,7 +35,6 @@ class MatrixSolver
         } catch (Exception $ex) {
             throw $ex;
         }
-
         return $result;
     }
 }

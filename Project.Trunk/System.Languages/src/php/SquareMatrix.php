@@ -4,8 +4,7 @@ declare(strict_types=1);
 /**
  * Class SquareMatrix
  */
-class SquareMatrix
-{
+class SquareMatrix {
     /**
      * @var int
      */
@@ -24,13 +23,12 @@ class SquareMatrix
     /**
      * SquareMatrix constructor.
      *
-     * @param int  $dim  greater than 1
+     * @param int $dim greater than 1
      * @param bool $init true means initialize all elements to zero.
      *
      * Throws exception if dim < 1.
      */
-    public function __construct(int $dim, bool $init = true)
-    {
+    public function __construct(int $dim, bool $init = true) {
         if ($dim < 1) {
             throw new Exception('Dimension must be at least 1');
         }
@@ -40,18 +38,15 @@ class SquareMatrix
         }
     }
 
-    public function setDebugMode(bool $mode): void
-    {
+    public function setDebugMode(bool $mode): void {
         $this->debugMode = $mode;
     }
 
-    public function isDebugMode(): bool
-    {
+    public function isDebugMode(): bool {
         return $this->debugMode === true;
     }
 
-    public function init(): void
-    {
+    public function init(): void {
         $this->elements = [];
         for ($row = 0; $row < $this->dimension; $row++) {
             $this->elements[$row] = [];
@@ -61,23 +56,19 @@ class SquareMatrix
         }
     }
 
-    public function getDimension(): int
-    {
+    public function getDimension(): int {
         return $this->dimension;
     }
 
-    public function getElements(): array
-    {
+    public function getElements(): array {
         return $this->elements;
     }
 
-    public function setElementAt(int $row, int $col, float $val): void
-    {
+    public function setElementAt(int $row, int $col, float $val): void {
         $this->elements[$row][$col] = $val;
     }
 
-    public function getElementAt(int $row, int $col): float
-    {
+    public function getElementAt(int $row, int $col): float {
         return $this->elements[$row][$col];
     }
 
@@ -89,8 +80,7 @@ class SquareMatrix
      *
      * @return self The required minor, for (row, col).
      */
-    public function minor(int $row, int $col): self
-    {
+    public function minor(int $row, int $col): self {
         $small = new static($this->dimension - 1);
         for ($c = 0; $c < $this->dimension; $c++) {
             if ($c != $col) {
@@ -105,7 +95,6 @@ class SquareMatrix
                 }
             }
         }
-
         return $small;
     }
 
@@ -114,8 +103,7 @@ class SquareMatrix
      *
      * @return float The value of the Determinant
      */
-    public function determinant(): float
-    {
+    public function determinant(): float {
         $v = 0.0;
 
         if ($this->dimension === 1) {
@@ -125,7 +113,7 @@ class SquareMatrix
             for ($C = 0; $C < $this->dimension; $C++) { // Walk thru first line
                 // Minor's determinant
                 $minDet = $this->minor(0, $C)->determinant();
-                $v      += ($this->getElementAt(0, $C) * $minDet * ((-1.0) ** ($C + 1 + 1))); // line C, column 1
+                $v += ($this->getElementAt(0, $C) * $minDet * ((-1.0) ** ($C + 1 + 1))); // line C, column 1
             }
         }
 
@@ -142,8 +130,7 @@ class SquareMatrix
      *
      * @return self The CoMatrix
      */
-    public function coMatrix(): self
-    {
+    public function coMatrix(): self {
         $co = new static($this->dimension);
         for ($r = 0; $r < $this->dimension; $r++) {
             for ($c = 0; $c < $this->dimension; $c++) {
@@ -157,7 +144,6 @@ class SquareMatrix
         if ($this->isDebugMode()) {
             echo "CoMatrix {$co}<br />";
         }
-
         return $co;
     }
 
@@ -167,8 +153,7 @@ class SquareMatrix
      *
      * @return self The transposed one.
      */
-    public function transposed(): self
-    {
+    public function transposed(): self {
         $t = new static($this->dimension);
         // Replace line with columns.
         for ($r = 0; $r < $this->dimension; $r++) {
@@ -179,7 +164,6 @@ class SquareMatrix
         if ($this->isDebugMode()) {
             echo "Transposed: {$t}<br />";
         }
-
         return $t;
     }
 
@@ -190,19 +174,16 @@ class SquareMatrix
      *
      * @return self
      */
-    public function multiply(float $n): self
-    {
+    public function multiply(float $n): self {
         $res = new static($this->dimension, false);
         for ($r = 0; $r < $this->dimension; $r++) {
             for ($c = 0; $c < $this->dimension; $c++) {
                 $res->setElementAt($r, $c, $this->getElementAt($r, $c) * $n);
             }
         }
-
         if ($this->isDebugMode()) {
             echo "Multiplied by {$n}: {$res}<br />";
         }
-
         return $res;
     }
 
@@ -214,8 +195,7 @@ class SquareMatrix
      *
      * @return bool true if equal, false if not
      */
-    public static function equals(self $a, self $b): bool
-    {
+    public static function equals(self $a, self $b): bool {
         if ($a->getDimension() != $b->getDimension()) {
             return false;
         }
@@ -226,7 +206,6 @@ class SquareMatrix
                 }
             }
         }
-
         return true;
     }
 
@@ -239,8 +218,7 @@ class SquareMatrix
      *
      * Throws Exception if det = 0
      */
-    public function invert(): self
-    {
+    public function invert(): self {
         $det = $this->determinant();
         if ($det === 0) {
             throw new Exception('No solution, determinant = 0.');
@@ -257,11 +235,10 @@ class SquareMatrix
     public function toHTML(): string
     {
         //@todo: the __toString should not return HTML.. but for now that is fine
-        return (string) $this;
+        return (string)$this;
     }
 
-    public function __toString()
-    {
+    public function __toString() {
         $elem = "";
         $elem .= "<table>";
 

@@ -1,3 +1,14 @@
+### Install php server
+To know if a php server is installed, type
+```
+ $ which php
+```
+If no php server is available, you can install one.
+#### On Raspberry Pi
+```
+ $ sudo apt-get install php libapache2-mod-php
+```
+
 ## Run a PHP server locally
 
 `$ php -S localhost:3000`
