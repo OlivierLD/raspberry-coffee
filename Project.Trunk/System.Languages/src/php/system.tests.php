@@ -4,12 +4,12 @@
 
 </head>
 <body style="font-family: 'Source Code Pro', 'Courier New', Helvetica, Geneva">
- <h1>Matrix Utils tests</h1>
- <h2>System Resolution</h2>
+<h1>Matrix Utils tests</h1>
+<h2>System Resolution</h2>
 
 <?php
 
-include 'system.php';
+include __DIR__.'/autoload.php';
 
 $matrix = new SquareMatrix(3, true);
 $matrix->setElementAt(0, 0, 12);
@@ -24,24 +24,17 @@ $matrix->setElementAt(2, 0, 23.09);
 $matrix->setElementAt(2, 1, 5.3);
 $matrix->setElementAt(2, 2, -12.34);
 
-echo "Matrix dim: ", $matrix->getDim();
-echo "<br/>";
+echo "Matrix dim: {$matrix->getDimension()} <br />";
 $elements = $matrix->getElements();
-echo "<br/>";
-echo "Det: ", MatrixUtil::determinant($matrix);
-echo "<br/>";
+echo "Det: {$matrix->determinant()} <br />";
+echo "<hr/> == Matrix == <br />{$matrix}<br />";
+$constants = [234, 98.87, 9.876];
+$coeffs    = MatrixSolver::solveSystem($matrix, $constants);
+echo "<hr />System Resolution:<br/>";
+$count = count($coeffs);
 
-echo "<hr/>";
-echo "Matrix";
-echo MatrixUtil::printMatrix($matrix);
-echo "<hr/>";
-$constants = array(234, 98.87, 9.876);
-$coeffs = MatrixUtil::solveSystem($matrix, $constants);
-
-// Results
-echo "System Resolution:<br/>";
-for ($i=0; $i<count($coeffs); $i++) {
-    echo "Coeff, deg ", (count($coeffs) - 1 - $i), " : ", $coeffs[$i], "<br/>";
+for ($i = 0; $i < $count; $i++) {
+    echo "Coeff, deg ", ($count - 1 - $i), " : ", $coeffs[$i], "<br/>";
 }
 
 ?>
