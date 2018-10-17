@@ -38,7 +38,7 @@ class SquareMatrix {
         }
     }
 
-    public function setDebugMode(bool $mode): void {
+    public function setDebugMode(bool $mode) {
         $this->debugMode = $mode;
     }
 
@@ -64,7 +64,7 @@ class SquareMatrix {
         return $this->elements;
     }
 
-    public function setElementAt(int $row, int $col, float $val): void {
+    public function setElementAt(int $row, int $col, float $val) {
         $this->elements[$row][$col] = $val;
     }
 

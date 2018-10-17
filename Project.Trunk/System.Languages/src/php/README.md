@@ -3,6 +3,13 @@ To know if a php server is installed, type
 ```
  $ which php
 ```
+or
+```
+ $ php -v
+   PHP 7.1.16 (cli) (built: Mar 31 2018 02:59:59) ( NTS )
+   Copyright (c) 1997-2018 The PHP Group
+   Zend Engine v3.1.0, Copyright (c) 1998-2018 Zend Technologies
+```
 If no php server is available, you can install one.
 #### On Raspberry Pi
 ```
