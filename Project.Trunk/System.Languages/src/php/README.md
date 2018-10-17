@@ -18,7 +18,9 @@ If no php server is available, you can install one.
 
 ## Run a PHP server locally
 
-`$ php -S localhost:3000`
+```
+$ php -S localhost:3000
+```
 
 Drop a `sample.php` in the directory you started the server from:
 ```
