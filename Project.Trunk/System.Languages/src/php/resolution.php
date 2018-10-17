@@ -8,7 +8,7 @@
 
 <?php
 
-include __DIR__.'/autoload.php';
+include __DIR__ . '/autoload.php';
 
 try {
     $dim            = $_POST["dim"];

@@ -9,7 +9,7 @@
 
 <?php
 
-include __DIR__.'/autoload.php';
+include __DIR__ . '/autoload.php';
 
 $matrix = new SquareMatrix(3, true);
 $matrix->setElementAt(0, 0, 12);

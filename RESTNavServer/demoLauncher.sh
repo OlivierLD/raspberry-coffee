@@ -3,7 +3,7 @@
 # Uses runNavServer.sh
 #
 echo -e "+-----------------------------------------------------------------------------------------+"
-echo -e "+------------------------------ D E M O   L A U N C H E R -------------------------------+"
+echo -e "+------------------------------- D E M O   L A U N C H E R -------------------------------+"
 echo -e "+-----------------------------------------------------------------------------------------+"
 echo -e "|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |"
 echo -e "|  2. Home Weather Station data                                                           |"
