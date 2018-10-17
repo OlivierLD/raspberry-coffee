@@ -2,6 +2,15 @@
 # Describes the different scenarios
 # Uses runNavServer.sh
 #
+function openBrowser() {
+  if [[ `uname -a` == *Linux* ]]
+  then
+    sensible-browser "$1"
+  else
+    open "$1"
+  fi
+}
+#
 GO=true
 while [ "$GO" == "true" ]
 do
@@ -28,7 +37,7 @@ do
 	    ./runNavServer.sh --mux:$PROP_FILE --no-date &
 	    echo -e "Waiting for the server to start..."
 	    sleep 5 # Wait for the server to be operational
-	    open "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    GO=false
 	    ;;
 	  "2")
@@ -36,7 +45,7 @@ do
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE &
 	#   sleep 5 # Wait for the server to be operational
-	#   open "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	#   openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    GO=false
 	    ;;
 	  "3")
@@ -45,7 +54,7 @@ do
 	    ./runNavServer.sh --mux:$PROP_FILE &
 	    echo -e "Waiting for the server to start..."
 	    sleep 5 # Wait for the server to be operational
-	    open "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
+	    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
 	    GO=false
 	    ;;
 	  "10")
@@ -54,7 +63,7 @@ do
 	    ./runNavServer.sh --mux:$PROP_FILE &
 	    echo -e "Waiting for the server to start..."
 	    sleep 5 # Wait for the server to be operational
-	    open "http://localhost:9999/web/index.html"
+	    openBrowser "http://localhost:9999/web/index.html"
 	    GO=false
 	    ;;
 	  "S" | "s")
