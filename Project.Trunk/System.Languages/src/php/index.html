@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>PHP System Resolution</title>
-	<link rel="icon" type="image/jpg" href="./php.jpeg">
+    <meta charset="UTF-8">
+    <title>PHP System Resolution</title>
+    <link rel="icon" type="image/jpg" href="php.jpeg">
 </head>
 <body>
 
-<iframe src="input-dim.html" style="width: 98%; height: 400px;"></iframe>
+<form method="post" action="system-input.php">
+    <label for="dim">System dimension:</label>
+    <input type="number" placeholder="Dim." value="3" id="dim" name="dim" style="width: 40px; text-align: right;"/>
 
+    <input type="submit" value="Next"/>
+</form>
 </body>
 </html>
