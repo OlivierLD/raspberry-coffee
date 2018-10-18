@@ -508,6 +508,8 @@ const THEMES = {
 	"day":        "analogdisplay-day",
 	"night":      "analogdisplay-night",
 	"cyan":       "analogdisplay-monochrome-cyan",
+	"black":      "analogdisplay-monochrome-black",
+	"white":      "analogdisplay-monochrome-white",
 	"orange":     "analogdisplay-monochrome-orange",
 	"yellow":     "analogdisplay-monochrome-yellow",
 	"flat-gray":  "analogdisplay-flat-gray",
@@ -534,7 +536,7 @@ window.onload = function() {
 	let boatData = getQSPrm('boat-data');
 
 	if (style !== undefined) {
-		if (style === 'day' || style === 'night' || style === 'cyan' || style === 'orange' || style === 'yellow' || style === 'flat-gray' || style === 'flat-black') {
+		if (style === 'day' || style === 'night' || style === 'cyan' || style === 'black' || style === 'white' || style === 'orange' || style === 'yellow' || style === 'flat-gray' || style === 'flat-black') {
 			setTheme(THEMES[style]);
 			// Set selected value
 			document.getElementById("widgets-style").value = THEMES[style];
