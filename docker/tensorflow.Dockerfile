@@ -14,10 +14,10 @@ FROM x11docker/mate
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 #
 # Uncomment if running behind a firewall (also set the proxies at the Docker level to the values below)
-#ENV http_proxy http://www-proxy-hqdc.us.oracle.com:80
-#ENV https_proxy http://www-proxy-hqdc.us.oracle.com:80
-## ENV ftp_proxy $http_proxy
-#ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
+ENV http_proxy http://www-proxy-hqdc.us.oracle.com:80
+ENV https_proxy http://www-proxy-hqdc.us.oracle.com:80
+# ENV ftp_proxy $http_proxy
+ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
 #
 RUN \
   apt-get update && \
@@ -59,6 +59,10 @@ EXPOSE 8888
 #
 RUN pip install keras
 #
+# Install PyCharm community edition
+RUN wget --quiet https://download.jetbrains.com/python/pycharm-community-2018.2.4.tar.gz
+RUN tar xfz pycharm-community-2018.2.4.tar.gz -C /opt/
+#
 RUN echo "alias ll='ls -lisah'" >> $HOME/.bash_aliases
 #
 RUN echo "banner TensorFlow" >> $HOME/.bash_aliases
@@ -77,6 +81,9 @@ RUN echo "echo '                       or vncserver :1 -geometry 1680x1050 -dept
 RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bash_aliases
 RUN echo "echo 'To start Jupyter, type: jupyter notebook --allow-root --ip 0.0.0.0 --no-browser'" >> $HOME/.bash_aliases
 RUN echo "echo '  - Default port 8888 is exposed, you can use from the host http://localhost:8888/?token=6c95d878c045212bxxxxxx'" >> $HOME/.bash_aliases
+RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bash_aliases
+RUN echo "echo 'To run PyCharm: cd /opt/pycharm-community-2018.2.4/bin and run ./pycharm.sh'"  >> $HOME/.bash_aliases
+RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bash_aliases
 #
 USER root
 WORKDIR /root

@@ -39,6 +39,8 @@ but we will not talk about all of those. BASIC, COBOL, FORTRAN, Pascal, etc, are
 
 This does not mean that those languages are not interesting, this only means that this document is not an anthology of the Computer literacy.
 
+See languages popularity on [Tiobe](https://www.tiobe.com/tiobe-index/).
+
 > One of those languages though, could deserve some interest, [brainfuck](https://en.wikipedia.org/wiki/Brainfuck). It is a complete
 Turing machine, _using only 8 instructions_. This being said, let's move on.
 

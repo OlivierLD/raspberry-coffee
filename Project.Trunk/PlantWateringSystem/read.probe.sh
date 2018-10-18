@@ -57,7 +57,9 @@ USER_PRM="$USER_PRM --water-below:50 --water-during:10 --resume-after:120"
 USER_PRM="$USER_PRM --with-rest-server:true --http-port:8088"
 #
 # No space in the logger list!
-USER_PRM="$USER_PRM --loggers:loggers.iot.AdafruitIOClient,loggers.text.FileLogger"
+LOGGERS="loggers.iot.AdafruitIOClient"
+LOGGERS="$LOGGERS,loggers.text.FileLogger"
+USER_PRM="$USER_PRM --loggers:$LOGGERS"
 #
 now=`date +%Y-%m-%d.%H:%M:%S`
 JAVA_OPTIONS="$JAVA_OPTIONS -Dlogger.file.name=${now}_log.log"
