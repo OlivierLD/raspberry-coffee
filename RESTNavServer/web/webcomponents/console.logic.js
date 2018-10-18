@@ -577,7 +577,6 @@ window.onload = function() {
 			expandCollapseBoatData();
 		}
 	}
-
 }
 
 function displayErr(err) {

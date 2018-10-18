@@ -26,6 +26,7 @@ public class RESTImplementation {
 	private NavRequestManager navRequestManager;
 
 	private final static String WW_PREFIX = "/ww";
+	private final static String NAV_PREFIX = "/nav";
 
 	public RESTImplementation(@Nonnull NavRequestManager restRequestManager) {
 

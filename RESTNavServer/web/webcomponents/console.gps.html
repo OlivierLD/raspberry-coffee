@@ -65,6 +65,34 @@
 			userTimeDataExpanded = !userTimeDataExpanded;
 		}
 
+		// expandCollapseSetPosData
+		let userPosDataExpanded = false;
+		function expandCollapseSetPosData() {
+			let messZone = document.getElementById('message-zone');
+			if (userPosDataExpanded) {
+				document.getElementById('user-pos-widgets').style.display = 'none';
+				document.getElementById('user-pos-switch').innerText = '+ Set Pos';
+				messZone.style.visibility = "hidden";
+				messZone.style.height = '0';
+				messZone.style.opacity = '0';
+			} else {
+				document.getElementById('user-pos-widgets').style.display = 'block';
+				document.getElementById('user-pos-switch').innerText = '- Set Pos';
+				// Make sure nothing is feeding the cache with time.
+				messZone.innerText = 'Make sure nothing is feeding the cache with position.';
+				messZone.style.visibility = "visible";
+				messZone.style.height = '30px';
+				messZone.style.opacity = '1';
+				window.setTimeout(() => {
+					console.log("Hiding message");
+					messZone.style.visibility = "hidden";
+					messZone.style.height = '0';
+					messZone.style.opacity = '0';
+				}, 5000);
+			}
+			userPosDataExpanded = !userPosDataExpanded;
+		}
+
 		function updateFieldToNow() {
 			let now = new Date();
 			let year = now.getUTCFullYear();
@@ -95,6 +123,21 @@
 			date.setUTCHours(time[0], time[1], time[2]);
 			let epoch = date.getTime();
 			setUTCTime(epoch); // There is also room for a callback (2nd prm).
+		}
+
+		function updatePosition() {
+			let sgnLat = document.getElementById("pos-lat-sign-01").value;
+			let degLat = parseInt(document.getElementById("pos-lat-deg-01").value);
+			let minLat = parseFloat(document.getElementById("pos-lat-min-01").value);
+			let lat = (degLat + (minLat / 60.0)) * (sgnLat === 'N' ? 1 : -1);
+
+			let sgnLng = document.getElementById("pos-lng-sign-01").value;
+			let degLng = parseInt(document.getElementById("pos-lng-deg-01").value);
+			let minLng = parseFloat(document.getElementById("pos-lng-min-01").value);
+			let lng = (degLng + (minLng / 60.0)) * (sgnLng === 'E' ? 1 : -1);
+
+			console.log("Setting pos to " + lat + "/" + lng);
+			setUserPos(lat, lng);
 		}
 
 		let vrooming = undefined;
@@ -359,8 +402,10 @@
 				<input type="radio" id="light" name="page-bg" value="LIGHT" onchange="changeBG(this.value);">Light
 				<input type="radio" id="white" name="page-bg" value="WHITE" onchange="changeBG(this.value);">White
 			</td>
-			<td align="right">
-				<span id="user-time-switch" onclick="expandCollapseSetTimeData();" style="cursor: pointer; padding-left: 40px;">+ Set time</span>
+			<td align="left">
+				<span id="user-time-switch" onclick="expandCollapseSetTimeData();" style="cursor: pointer; padding-left: 40px;">+ Set Time</span>
+				<br/>
+				<span id="user-pos-switch" onclick="expandCollapseSetPosData();" style="cursor: pointer; padding-left: 40px;">+ Set Pos</span>
 			</td>
 		</tr>
 	</table>
@@ -430,6 +475,59 @@
 				<option value="43200000">12 hours</option>
 				<option value="86400000">1 day</option>
 			</select>
+		</div>
+		<div id="user-pos-widgets" style="display: none; padding: 10px;">
+			Latitude:
+			<select id="pos-lat-sign-01">
+				<option value="N" selected>N</option>
+				<option value="S">S</option>
+			</select>
+			<input type="number"
+						 id="pos-lat-deg-01"
+						 placeholder="Deg"
+						 title="Lat degrees to set"
+						 style="width: 40px; text-align: center;"
+						 min="0"
+						 max="90"
+						 step="1"
+						 value="0"/>
+			<input type="number"
+						 id="pos-lat-min-01"
+						 placeholder="Minutes"
+						 title="Lat minutes to set"
+						 style="width: 60px; text-align: center;"
+						 min="0"
+						 max="59.99"
+						 step="0.01"
+						 value="00.00"/>
+			&nbsp;&nbsp;Longitude:
+			<select id="pos-lng-sign-01">
+				<option value="E" selected>E</option>
+				<option value="W">W</option>
+			</select>
+			<input type="number"
+						 id="pos-lng-deg-01"
+						 placeholder="Deg"
+						 title="Lng degrees to set"
+						 style="width: 40px; text-align: center;"
+						 min="0"
+						 max="180"
+						 step="1"
+						 value="0"/>
+			<input type="number"
+						 id="pos-lng-min-01"
+						 placeholder="Minutes"
+						 title="Lng minutes to set"
+						 style="width: 60px; text-align: center;"
+						 min="0"
+						 max="59.99"
+						 step="0.01"
+						 value="00.00"/>
+			&nbsp;&nbsp;
+			<button id="update-position"
+							onclick="updatePosition()"
+							title="Set position value"
+							style="margin-top: 3px;">Set Position</button>
 		</div>
 	</div>
 

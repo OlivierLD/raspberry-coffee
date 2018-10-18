@@ -137,8 +137,30 @@ function setUTC(epoch) {
 	return getPromise(url, DEFAULT_TIMEOUT, 'PUT', 200, obj, false);
 }
 
+function setPosition(lat, lng) {
+	let url = "/mux/position";
+	let obj = { lat: lat, lng: lng };
+	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, obj, false);
+}
+
 function setUTCTime(epoch, callback) {
 	let setData = setUTC(epoch);
+	setData.then(function (value) { // resolve
+		if (value !== undefined && value !== null && value.length > 0) {
+			let json = JSON.parse(value);
+			if (callback !== undefined) {
+				callback(json);
+			} else {
+				console.log(JSON.stringify(json, null, 2));
+			}
+		}
+	}, function (error) { // reject
+		console.log("Failed to set the UTC date and time..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+	});
+}
+
+function setUserPos(lat, lng, callback) {
+	let setData = setPosition(lat, lng);
 	setData.then(function (value) { // resolve
 		if (value !== undefined && value !== null && value.length > 0) {
 			let json = JSON.parse(value);

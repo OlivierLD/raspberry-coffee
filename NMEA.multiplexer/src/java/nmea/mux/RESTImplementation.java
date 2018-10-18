@@ -17,9 +17,34 @@ import nmea.api.NMEAClient;
 import nmea.api.NMEAReader;
 import nmea.computers.Computer;
 import nmea.computers.ExtraDataComputer;
-import nmea.consumers.client.*;
-import nmea.consumers.reader.*;
-import nmea.forwarders.*;
+import nmea.consumers.client.BME280Client;
+import nmea.consumers.client.BMP180Client;
+import nmea.consumers.client.DataFileClient;
+import nmea.consumers.client.HTU21DFClient;
+import nmea.consumers.client.LSM303Client;
+import nmea.consumers.client.RandomClient;
+import nmea.consumers.client.SerialClient;
+import nmea.consumers.client.TCPClient;
+import nmea.consumers.client.WebSocketClient;
+import nmea.consumers.client.ZDAClient;
+import nmea.consumers.reader.BME280Reader;
+import nmea.consumers.reader.BMP180Reader;
+import nmea.consumers.reader.DataFileReader;
+import nmea.consumers.reader.HTU21DFReader;
+import nmea.consumers.reader.LSM303Reader;
+import nmea.consumers.reader.RandomReader;
+import nmea.consumers.reader.SerialReader;
+import nmea.consumers.reader.TCPReader;
+import nmea.consumers.reader.WebSocketReader;
+import nmea.consumers.reader.ZDAReader;
+import nmea.forwarders.ConsoleWriter;
+import nmea.forwarders.DataFileWriter;
+import nmea.forwarders.Forwarder;
+import nmea.forwarders.GPSdServer;
+import nmea.forwarders.SerialWriter;
+import nmea.forwarders.TCPServer;
+import nmea.forwarders.WebSocketProcessor;
+import nmea.forwarders.WebSocketWriter;
 import nmea.forwarders.rmi.RMIServer;
 import nmea.mux.context.Context;
 import nmea.mux.context.Context.StringAndTimeStamp;
@@ -29,9 +54,23 @@ import nmea.parser.Speed;
 import nmea.parser.UTCDate;
 import nmea.utils.NMEAUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -179,6 +218,16 @@ public class RESTImplementation {
 									REST_PREFIX + "/cache",
 									this::resetCache,
 									"Reset the cache"),
+					new Operation(
+							"GET",
+							REST_PREFIX + "/position",
+							this::getPosition,
+							"Get position from the cache"),
+					new Operation(
+							"POST",
+							REST_PREFIX + "/position",
+							this::setPosition,
+							"Set position in the cache"),
 					new Operation(
 									"GET",
 									REST_PREFIX + "/distance",
@@ -1960,6 +2009,54 @@ public class RESTImplementation {
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 
+		return response;
+	}
+
+	private HTTPServer.Response getPosition(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		GeoPos position =(GeoPos)ApplicationContext.getInstance().getDataCache().get(NMEADataCache.POSITION);
+
+		JsonElement jsonElement = null;
+		try {
+			jsonElement = new Gson().toJsonTree(position);
+		} catch (Exception ex) {
+			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> Get Position", ex);
+		}
+		String content = jsonElement != null ? jsonElement.toString() : "";
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+
+		return response;
+	}
+
+	private HTTPServer.Response setPosition(HTTPServer.Request request) {
+
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		String payload = new String(request.getContent());
+		if (!"null".equals(payload)) {
+			Gson gson = new GsonBuilder().create();
+			StringReader stringReader = new StringReader(payload);
+			try {
+				GeoPos position = gson.fromJson(stringReader, GeoPos.class);
+				ApplicationContext.getInstance().getDataCache().put(NMEADataCache.POSITION, position);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("MUX-1003")
+								.errorMessage(ex.toString()));
+				return response;
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("MUX-1002")
+							.errorMessage("Request payload not found"));
+			return response;
+		}
 		return response;
 	}
 
