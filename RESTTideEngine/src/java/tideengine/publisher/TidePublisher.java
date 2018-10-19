@@ -16,6 +16,7 @@ import java.util.Optional;
 
 public class TidePublisher {
 
+	// TODO Script names in a System variable
 	public final static String TIDE_TABLE = "publishtide";
 	public final static String MOON_CALENDAR = "publishlunarcalendar";
 

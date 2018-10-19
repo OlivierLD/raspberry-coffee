@@ -141,11 +141,11 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 //		System.out.println("Done waiting");
 		}
 		nmeaDataClients.stream()
-						.forEach(client -> client.stopDataRead());
+						.forEach(NMEAClient::stopDataRead);
 		nmeaDataForwarders.stream()
-						.forEach(fwd -> fwd.close());
+						.forEach(Forwarder::close);
 		nmeaDataComputers.stream()
-						.forEach(comp -> comp.close());
+						.forEach(Computer::close);
 		if (adminServer != null) {
 			synchronized (adminServer) {
 				System.out.println("Mux Stopping Admin server");

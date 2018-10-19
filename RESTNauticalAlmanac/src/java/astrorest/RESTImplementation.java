@@ -805,6 +805,7 @@ public class RESTImplementation {
 					try {
 						String tempPdfFileName = File.createTempFile("almanac", ".pdf").getAbsolutePath();
 						String almanacTxPrm = String.format("%s %s %s %s", options.language, options.withStars ? "true" : "false", tempFileName, tempPdfFileName);
+						// TODO Script name in a System variable
 						String cmd = "." + File.separator + "xsl" + File.separator + "publishalmanac " + almanacTxPrm;
 						System.out.println("Tx Command:" + cmd);
 						Process p = Runtime.getRuntime().exec(cmd);
@@ -878,6 +879,7 @@ public class RESTImplementation {
 					try {
 						String tempPdfFileName = File.createTempFile("lunar", ".pdf").getAbsolutePath();
 						String almanacTxPrm = String.format("%s %s %s", options.language, tempFileName, tempPdfFileName);
+						// TODO Script name in a System variable
 						String cmd = "." + File.separator + "xsl" + File.separator + "publishlunar " + almanacTxPrm;
 						System.out.println("Tx Command:" + cmd);
 						Process p = Runtime.getRuntime().exec(cmd);
@@ -993,6 +995,7 @@ public class RESTImplementation {
 						try {
 							String tempPdfFileName = File.createTempFile("perpetual", ".pdf").getAbsolutePath();
 							String almanacTxPrm = String.format("%s %s", tempFileName, tempPdfFileName);
+							// TODO Script name in a System variable
 							String cmd = "." + File.separator + "xsl" + File.separator + "publishperpetual " + almanacTxPrm;
 							System.out.println("Tx Command:" + cmd);
 							Process p = Runtime.getRuntime().exec(cmd);

@@ -79,6 +79,7 @@ Build it:
 
 Then run the server
 ```bash
+ $ cd launchers
  $ ./runNavServer
 ```
 

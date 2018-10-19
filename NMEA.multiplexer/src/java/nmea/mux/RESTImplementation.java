@@ -118,166 +118,166 @@ public class RESTImplementation {
 	 * See {@link HTTPServer}
 	 */
 	private List<Operation> operations = Arrays.asList(
-					new Operation(
-									"GET",
-									REST_PREFIX + "/oplist",
-									this::getOperationList,
-									"List of all available operations, on NMEA request manager."),
-					new Operation(
-									"POST",
-									REST_PREFIX + "/terminate",
-									this::stopAll,
-									"Hard stop, shutdown. VERY unusual REST resource..."),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/serial-ports",
-									this::getSerialPorts,
-									"Get the list of the available serial ports."),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/channels",
-									this::getChannels,
-									"Get the list of the input channels"),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/forwarders",
-									this::getForwarders,
-									"Get the list of the output channels"),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/computers",
-									this::getComputers,
-									"Get the list of the computers"),
-					new Operation(
-									"DELETE",
-									REST_PREFIX + "/forwarders/{id}",
-									this::deleteForwarder,
-									"Delete an output channel"),
-					new Operation(
-									"DELETE",
-									REST_PREFIX + "/channels/{id}",
-									this::deleteChannel,
-									"Delete an input channel"),
-					new Operation(
-									"DELETE",
-									REST_PREFIX + "/computers/{id}",
-									this::deleteComputer,
-									"Delete a computer"),
-					new Operation(
-									"POST",
-									REST_PREFIX + "/forwarders",
-									this::postForwarder,
-									"Creates an output channel"),
-					new Operation(
-									"POST",
-									REST_PREFIX + "/channels",
-									this::postChannel,
-									"Creates an input channel"),
-					new Operation(
-									"POST",
-									REST_PREFIX + "/computers",
-									this::postComputer,
-									"Creates computer"),
-					new Operation(
-									"PUT",
-									REST_PREFIX + "/channels/{id}",
-									this::putChannel,
-									"Update channel"),
-					new Operation(
-									"PUT",
-									REST_PREFIX + "/forwarders/{id}",
-									this::putForwarder,
-									"Update forwarder"),
-					new Operation(
-									"PUT",
-									REST_PREFIX + "/computers/{id}",
-									this::putComputer,
-									"Update computer"),
-					new Operation(
-									"PUT",
-									REST_PREFIX + "/mux-verbose/{state}",
-									this::putMuxVerbose,
-									"Update Multiplexer verbose"),
-					new Operation(
-									"PUT",
-									REST_PREFIX + "/mux-process/{state}",
-									this::putMuxProcess,
-									"Update Multiplexer processing status. Aka enable/disable logging."),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/mux-process",
-									this::getMuxProcess,
-									"Get the mux process status (on/off)"),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/cache",
-									this::getCache,
-									"Get ALL the data in the cache"),
-					new Operation(
-									"DELETE",
-									REST_PREFIX + "/cache",
-									this::resetCache,
-									"Reset the cache"),
-					new Operation(
-							"GET",
-							REST_PREFIX + "/position",
-							this::getPosition,
-							"Get position from the cache"),
-					new Operation(
-							"POST",
-							REST_PREFIX + "/position",
-							this::setPosition,
-							"Set position in the cache"),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/distance",
-									this::getDistance,
-									"Get distance traveled since last reset"),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/delta-alt",
-									this::getDeltaAlt,
-									"Get delta altitude since last reset"),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/nmea-volume",
-									this::getNMEAVolumeStatus,
-									"Get the time elapsed and the NMEA volume managed so far"),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/sog-cog",
-									this::getSCOG,
-									"Get Speed and Course Over Ground"),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/run-data",
-									this::getRunData,
-									"Get Speed and Course Over Ground, distance, and delta-altitude, in one shot."),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/log-files/{log-file}",
-									this::getLogFile,
-									"Download the log file"),
-					new Operation(
-									"POST",
-									REST_PREFIX + "/events/{topic}",
-									this::broadcastOnTopic,
-									"Broadcast event (payload in the body) on specific topic. The {topic} can be a regex."),
-					new Operation(
-								"GET",
-								"/custom-protocol/{content}", // ?uri={content}
-								this::customProtocolManager,
-								"Manage custom protocol"),
-					new Operation( // Example: PUT /astro/utc
-							"PUT",
-							REST_PREFIX + "/utc",
-							this::setCurrentTime,
-							"Set 'current' UTC Date."),
-					new Operation(
-									"GET",
-									REST_PREFIX + "/last-sentence",
-									this::getLastNMEASentence,
-									"Get the last available inbound sentence"));
+			new Operation(
+					"GET",
+					REST_PREFIX + "/oplist",
+					this::getOperationList,
+					"List of all available operations, on NMEA request manager."),
+			new Operation(
+					"POST",
+					REST_PREFIX + "/terminate",
+					this::stopAll,
+					"Hard stop, shutdown. VERY unusual REST resource..."),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/serial-ports",
+					this::getSerialPorts,
+					"Get the list of the available serial ports."),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/channels",
+					this::getChannels,
+					"Get the list of the input channels"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/forwarders",
+					this::getForwarders,
+					"Get the list of the output channels"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/computers",
+					this::getComputers,
+					"Get the list of the computers"),
+			new Operation(
+					"DELETE",
+					REST_PREFIX + "/forwarders/{id}",
+					this::deleteForwarder,
+					"Delete an output channel"),
+			new Operation(
+					"DELETE",
+					REST_PREFIX + "/channels/{id}",
+					this::deleteChannel,
+					"Delete an input channel"),
+			new Operation(
+					"DELETE",
+					REST_PREFIX + "/computers/{id}",
+					this::deleteComputer,
+					"Delete a computer"),
+			new Operation(
+					"POST",
+					REST_PREFIX + "/forwarders",
+					this::postForwarder,
+					"Creates an output channel"),
+			new Operation(
+					"POST",
+					REST_PREFIX + "/channels",
+					this::postChannel,
+					"Creates an input channel"),
+			new Operation(
+					"POST",
+					REST_PREFIX + "/computers",
+					this::postComputer,
+					"Creates computer"),
+			new Operation(
+					"PUT",
+					REST_PREFIX + "/channels/{id}",
+					this::putChannel,
+					"Update channel"),
+			new Operation(
+					"PUT",
+					REST_PREFIX + "/forwarders/{id}",
+					this::putForwarder,
+					"Update forwarder"),
+			new Operation(
+					"PUT",
+					REST_PREFIX + "/computers/{id}",
+					this::putComputer,
+					"Update computer"),
+			new Operation(
+					"PUT",
+					REST_PREFIX + "/mux-verbose/{state}",
+					this::putMuxVerbose,
+					"Update Multiplexer verbose"),
+			new Operation(
+					"PUT",
+					REST_PREFIX + "/mux-process/{state}",
+					this::putMuxProcess,
+					"Update Multiplexer processing status. Aka enable/disable logging."),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/mux-process",
+					this::getMuxProcess,
+					"Get the mux process status (on/off)"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/cache",
+					this::getCache,
+					"Get ALL the data in the cache"),
+			new Operation(
+					"DELETE",
+					REST_PREFIX + "/cache",
+					this::resetCache,
+					"Reset the cache"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/position",
+					this::getPosition,
+					"Get position from the cache"),
+			new Operation(
+					"POST",
+					REST_PREFIX + "/position",
+					this::setPosition,
+					"Set position in the cache"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/distance",
+					this::getDistance,
+					"Get distance traveled since last reset"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/delta-alt",
+					this::getDeltaAlt,
+					"Get delta altitude since last reset"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/nmea-volume",
+					this::getNMEAVolumeStatus,
+					"Get the time elapsed and the NMEA volume managed so far"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/sog-cog",
+					this::getSCOG,
+					"Get Speed and Course Over Ground"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/run-data",
+					this::getRunData,
+					"Get Speed and Course Over Ground, distance, and delta-altitude, in one shot."),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/log-files/{log-file}",
+					this::getLogFile,
+					"Download the log file"),
+			new Operation(
+					"POST",
+					REST_PREFIX + "/events/{topic}",
+					this::broadcastOnTopic,
+					"Broadcast event (payload in the body) on specific topic. The {topic} can be a regex."),
+			new Operation(
+					"GET",
+					"/custom-protocol/{content}", // ?uri={content}
+					this::customProtocolManager,
+					"Manage custom protocol"),
+			new Operation( // Example: PUT /astro/utc
+					"PUT",
+					REST_PREFIX + "/utc",
+					this::setCurrentTime,
+					"Set 'current' UTC Date."),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/last-sentence",
+					this::getLastNMEASentence,
+					"Get the last available inbound sentence"));
 
 	protected List<Operation> getOperations() {
 		return  this.operations;

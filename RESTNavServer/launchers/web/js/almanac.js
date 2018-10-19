@@ -1,4 +1,5 @@
 "use strict";
+// TODO Move to ES6
 
 var DEFAULT_TIMEOUT = 60000;
 

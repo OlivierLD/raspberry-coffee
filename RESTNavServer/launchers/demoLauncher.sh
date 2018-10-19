@@ -16,7 +16,7 @@ while [ "$GO" == "true" ]
 do
 	clear
 	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "+------------------------------ D E M O   L A U N C H E R  🚀 ----------------------------+"
+	echo -e "+----------- N A V   S E R V E R - D E M O   L A U N C H E R  🚀 -------------------------+"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |"
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
@@ -36,7 +36,7 @@ do
 	    PROP_FILE=nmea.mux.no.gps.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE --no-date &
-	    echo -e "Waiting for the server to start..."
+	    echo -e ">>> Waiting for the server to start..."
 	    sleep 5 # Wait for the server to be operational
 	    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    GO=false
@@ -45,7 +45,7 @@ do
 	    PROP_FILE=nmea.mux.interactive.time.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE --no-date &
-	    echo -e "Waiting for the server to start..."
+	    echo -e ">>> Waiting for the server to start..."
 	    sleep 5 # Wait for the server to be operational
 	    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 	    GO=false
@@ -62,7 +62,7 @@ do
 	    PROP_FILE=nmea.mux.gps.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE &
-	    echo -e "Waiting for the server to start..."
+	    echo -e ">>> Waiting for the server to start..."
 	    sleep 5 # Wait for the server to be operational
 	    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
 	    GO=false
@@ -71,7 +71,7 @@ do
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE &
-	    echo -e "Waiting for the server to start..."
+	    echo -e ">>> Waiting for the server to start..."
 	    sleep 5 # Wait for the server to be operational
 	    openBrowser "http://localhost:9999/web/index.html"
 	    GO=false

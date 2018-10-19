@@ -35,7 +35,7 @@ ASTRO_VERBOSE=false
 IMAGE_VERBOSE=false
 GRIB_VERBOSE=false
 #
-CP=./build/libs/RESTNavServer-1.0-all.jar
+CP=../build/libs/RESTNavServer-1.0-all.jar
 JAVA_OPTS=
 # For the value of Delta T, see:
 # - http://maia.usno.navy.mil/ser7/deltat.data
