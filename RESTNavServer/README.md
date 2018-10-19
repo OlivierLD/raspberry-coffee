@@ -3,6 +3,7 @@
 An illustration of the way to gather several REST Services all in one place.
 This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md).
 
+It uses:
 - [Tide](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RESTTideEngine/README.md) REST Service
 - [Astro](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNauticalAlmanac) REST Service
 - [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md) REST Service
@@ -42,7 +43,7 @@ I'd rather spend time learning how use HTML5's canvases, or WebGL.
 > - REST services written in Java, running on the Raspberry PI (or any other machine)
 > - Web pages, to be rendered on any device that can reach the Raspberry PI's network
 
-The sample web pages presented below are relying on HTML5 and CSS3.
+The sample web pages presented below are relying on HTML5 and CSS3. The JavaScript code will be migrated to ES6.
 
 #### Two languages?
 This clearly divides the problem to address in two distinct parts:
@@ -80,7 +81,7 @@ Build it:
 Then run the server
 ```bash
  $ cd launchers
- $ ./runNavServer
+ $ ./runNavServer.sh
 ```
 
 Finally, use `Postman`, any `REST` client, or your browser, and reach
@@ -89,6 +90,13 @@ Finally, use `Postman`, any `REST` client, or your browser, and reach
 ```
 
 You will see it displays operations from three services.
+
+Another option is to start this script:
+```
+ $ cd launchers
+ $ ./demoLauncher.sh
+```
+This latter one will start the server and open the appropriate Web UI.
 
 ## Use it
 
