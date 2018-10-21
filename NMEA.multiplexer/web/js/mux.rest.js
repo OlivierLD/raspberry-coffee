@@ -161,7 +161,7 @@ var deleteChannel = function(channel) {
 };
 
 var setSpeedUnit = function(speedUnit) {
-    return getDeferred('/events/change-speed-unit', DEFAULT_TIMEOUT, 'POST', 200, { "speed-unit": speedUnit }, false);
+    return getDeferred('/mux/events/change-speed-unit', DEFAULT_TIMEOUT, 'POST', 200, { "speed-unit": speedUnit }, false);
 };
 
 var pushData = function(flow) {

@@ -39,7 +39,7 @@ import calc.GeomUtil;
  * used at startup. It - for now - cannot be managed from the Web UI.
  * The REST api is not aware of it.
  *
- * It auto-scrolls across available vlues.
+ * It auto-scrolls across available values.
  */
 public class SSD1306ProcessorI2C implements Forwarder {
 	private boolean keepWorking = true;
@@ -102,6 +102,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 	private SwingLedPanel substitute;
 
 	private boolean mirror = "true".equals(System.getProperty("mirror.screen", "false")); // Screen is to be seen in a mirror.
+	private boolean verbose = "true".equals(System.getProperty("screen.verbose", "false"));
 
 	private final static int TWD_OPTION =  0;
 	private final static int BSP_OPTION =  1;
@@ -181,7 +182,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 
 		Context.getInstance().addTopicListener(new Context.TopicListener("change-speed-unit") {
 			/**
-			 * Speed Unit can be changed with a REST call: POST /events/change-speed-unit with a payload like
+			 * Speed Unit can be changed with a REST call: POST /mux/events/change-speed-unit with a payload like
 			 * { "speed-unit": "kmh" }
 			 * @param topic <code>change-speed-unit</code> for this to work, or a regex matching it.
 			 * @param payload one of { "speed-unit": "kmh" }, { "speed-unit": "mph" }, { "speed-unit": "ms" }, or { "speed-unit": "kts" }
@@ -193,7 +194,9 @@ public class SSD1306ProcessorI2C implements Forwarder {
 					Map<String, Object> map = (Map) payload;
 					Object unit = map.get("speed-unit");
 					if (unit != null) {
-//				  System.out.println("Changing Speed Unit to " + unit.toString());
+						if (verbose) {
+						  System.out.println("Changing Speed Unit to " + unit.toString());
+						}
 						switch (unit.toString()) {
 							case "kmh":
 								speedUnit = SpeedUnit.KMH;

@@ -268,7 +268,7 @@ public class RESTImplementation {
 					"/custom-protocol/{content}", // ?uri={content}
 					this::customProtocolManager,
 					"Manage custom protocol"),
-			new Operation( // Example: PUT /astro/utc
+			new Operation( // Example: PUT /mux/utc
 					"PUT",
 					REST_PREFIX + "/utc",
 					this::setCurrentTime,
@@ -280,6 +280,9 @@ public class RESTImplementation {
 					"Get the last available inbound sentence"));
 
 	protected List<Operation> getOperations() {
+		if (restVerbose()) {
+			System.out.println(String.format("%s => %d operations", this.getClass().getName(), this.operations.size()));
+		}
 		return  this.operations;
 	}
 
@@ -2311,17 +2314,17 @@ public class RESTImplementation {
 	/**
 	 * Used to broadcast an event a component would be listening to.
 	 * <p>
-	 *   This service can be used to brodcast any payload, on any topic.
+	 *   This service can be used to broadcast any payload, on any topic.
 	 *   Whatever component that has subscribed to the topic will receive the event.
 	 * </p>
 	 * <p>
 	 *   See {@link Context#addTopicListener(Context.TopicListener)}
 	 *   <br/>
-	 *   See {@link nmea.forwarders.SSD1306ProcessorI2C} for a usage example.
+	 *   See {@link nmea.forwarders.SSD1306ProcessorI2C} for a usage example on the server side.
 	 * </p>
 	 * <p>
 	 *   {@link nmea.forwarders.SSD1306ProcessorI2C} displays several data, including the speed.
-	 *   This service can be used to change the speed unit (knots, m/s, km/h, mph). DEtails are give in the code.
+	 *   This operation can be used to change the speed unit (knots, m/s, km/h, mph). Details are give in the code.
 	 * </p>
 	 *
 	 * @param request the REST/HTTP request.
@@ -2329,7 +2332,7 @@ public class RESTImplementation {
 	 */
 	private HTTPServer.Response broadcastOnTopic(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath()); // Path parameters, in the request's url
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
 			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {topic}");
@@ -2344,7 +2347,7 @@ public class RESTImplementation {
 			} catch (Exception ex) {
 				// No payload
 			}
-			// Broadcast
+			// Broadcast, the actual job
 			Context.getInstance().broadcastOnTopic(topic, payload);
 		} else {
 			response = new HTTPServer.Response(request.getProtocol(), Response.BAD_REQUEST);

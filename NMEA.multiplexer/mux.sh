@@ -55,6 +55,8 @@ fi
 # JAVA_OPTIONS="$JAVA_OPTIONS -Drest.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.data.verbose=true"
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dverbose=false"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dscreen.verbose=true" # Unit changes for SSD1306 (I2C)
+#
 JAVA_OPTIONS="$JAVA_OPTIONS -Dprocess.on.start=$PROCESS_ON_START"
 #
 JAVA_OPTIONS="$JAVA_OPTIONS -Dmux.properties=$MUX_PROP_FILE"
