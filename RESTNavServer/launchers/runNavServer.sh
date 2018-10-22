@@ -5,7 +5,7 @@ echo -e "----------------------------"
 echo -e "Usage is $0 [-p|--proxy] [-m:propertiesfile|--mux:propertiesfile] [--no-date]"
 echo -e "     -p or --proxy means with a proxy"
 echo -e "     -m or --mux points to the properties file to use for the Multiplexer, default is nmea.mux.properties"
-echo -e "     --no-date does not put any GPS date or time (replayed or live) in the cache"
+echo -e "     --no-date does not put any GPS date or time (replayed or live) in the cache (allows you to use a ZDA generator)"
 echo -e "----------------------------"
 #
 echo -e "⚓ Starting the Navigation Rest Server 🌴"

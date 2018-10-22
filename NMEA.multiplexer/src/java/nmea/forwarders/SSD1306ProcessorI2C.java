@@ -180,7 +180,10 @@ public class SSD1306ProcessorI2C implements Forwarder {
 			}
 		}
 
-		Context.getInstance().addTopicListener(new Context.TopicListener("change-speed-unit") {
+		final String REST_CLIENT_EVENT_NAME = "change-speed-unit";
+		final String SPEED_UNIT = "speed-unit";
+
+		Context.getInstance().addTopicListener(new Context.TopicListener(REST_CLIENT_EVENT_NAME) {
 			/**
 			 * Speed Unit can be changed with a REST call: POST /mux/events/change-speed-unit with a payload like
 			 * { "speed-unit": "kmh" }
@@ -192,7 +195,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 //			System.out.println("Topic:" + topic + ", payload:" + payload);
 				if (payload instanceof Map) {
 					Map<String, Object> map = (Map) payload;
-					Object unit = map.get("speed-unit");
+					Object unit = map.get(SPEED_UNIT);
 					if (unit != null) {
 						if (verbose) {
 						  System.out.println("Changing Speed Unit to " + unit.toString());
