@@ -21,7 +21,7 @@ do
 	echo -e "|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |"
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
 	echo -e "|  3. Home Weather Station data                                                           |"
-	echo -e "|  4. With GPS, waits for the RMC sentence to be active                                   |"
+	echo -e "|  4. With GPS and NMEA, waits for the RMC sentence to be active                          |"
 	echo -e "|  ... TODO: more.                                                                        |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc               |"
 	echo -e "+-----------------------------------------------------------------------------------------+"

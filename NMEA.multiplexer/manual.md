@@ -137,20 +137,69 @@ The lines above means that:
 
 - `serial`
     - Write to a serial port
+    ```properties
+    forward.02.type=serial
+    forward.02.port=/dev/ttyS88
+    forward.02.baudrate=9600
+    ```
 - `tcp`
     - TCP Server
+    ```properties
+    forward.01.type=tcp
+    forward.01.port=7001
+    ```
 - `gpsd`
     - GPSD Server
+    ```properties
+    forward.06.type=gpsd
+    forward.06.port=2947
+    ```
 - `file`
     - Log file output
+    ```properties
+    forward.XX.type=file
+    # Option 1
+    forward.XX.filename=./data.nmea
+    # Option 2
+    forward.XX.timebase.filename=true
+    forward.XX.filename.radix=_LOG
+    forward.XX.log.dir=logged
+    forward.XX.split=min|hour|day|week|month|year
+    #
+    forward.XX.append=true
+    ```
+    >Explanations:
+    > - `timebase.filename` default value is `false`
+    > - if `timebase.filename` is `false` then a `filename` is expected to be provided (default is `data.nmea`).
+    > - if `timebase.filename` is `true` then log file name will be based on the time the logging was started, like `2018-10-22_20:04:00_UTC.nmea`.
+    >   - if `filename.radix` exists (default is an empty string) like `LOG_`, then log file name will be `LOG_2018-10-22_20:04:00_UTC.nmea`.
+    >   - if `log.dir` exists (default is `.`) log files will be generated in this directory (located under the working directory).
+    >   - if `split` exists (default is `null`) and one of `day`, `week`, `month`, `year`, then a new log file will generated every `day`, `week`, `month`, or `year`.
+
 - `ws`
     - WebSocket server
+    ```properties
+    forward.07.type=ws
+    forward.07.wsuri=ws://localhost:9876/
+    ```
 - `wsp`
     - WebSocket Processor
+    ```properties
+    forward.07.type=wsp
+    forward.07.wsuri=ws://localhost:9876/
+    ```
 - `console`
     - Console output
+    ```properties
+    forward.01.type=console
+    ```
 - `rmi`
     - RMI Server
+    ```properties
+    forward.05.type=rmi
+    forward.05.port=1099
+    forward.05.name=RMI-NMEA
+    ```
 
 You can also implement your own forwarder (implementing the `Forwarder` interface).
 

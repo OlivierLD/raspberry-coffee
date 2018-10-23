@@ -529,16 +529,22 @@ public class MuxInitializer {
 							}
 							break;
 						case "file":
-							String fName = muxProps.getProperty(String.format("forward.%s.filename", MUX_IDX_FMT.format(fwdIdx)));
+							String fName = muxProps.getProperty(String.format("forward.%s.filename", MUX_IDX_FMT.format(fwdIdx)), "data.nmea");
 							boolean append = "true".equals(muxProps.getProperty(String.format("forward.%s.append", MUX_IDX_FMT.format(fwdIdx)), "false"));
+							boolean timeBased = "true".equals(muxProps.getProperty(String.format("forward.%s.timebase.filename", MUX_IDX_FMT.format(fwdIdx)), "false"));
 							String propFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
 							String fSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
+							String radix = muxProps.getProperty(String.format("forward.%s.filename.radix", MUX_IDX_FMT.format(fwdIdx)));
+							String logDir = muxProps.getProperty(String.format("forward.%s.log.dir", MUX_IDX_FMT.format(fwdIdx)));
+							String split = muxProps.getProperty(String.format("forward.%s.split", MUX_IDX_FMT.format(fwdIdx)));
 							try {
 								Forwarder fileForwarder;
 								if (fSubClass == null) {
-									fileForwarder = new DataFileWriter(fName, append);
+									fileForwarder = new DataFileWriter(fName, append, timeBased, radix, logDir, split);
 								} else {
-									fileForwarder = (DataFileWriter)Class.forName(fSubClass.trim()).getConstructor(String.class, Boolean.class).newInstance(fName, append);
+									fileForwarder = (DataFileWriter)Class.forName(fSubClass.trim())
+											.getConstructor(String.class, Boolean.class, Boolean.class, String.class, String.class, String.class)
+											.newInstance(fName, append, timeBased, radix, logDir, split);
 								}
 								if (propFile != null) {
 									Properties forwarderProps = new Properties();
