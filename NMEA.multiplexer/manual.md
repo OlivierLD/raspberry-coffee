@@ -174,7 +174,7 @@ The lines above means that:
     > - if `timebase.filename` is `true` then log file name will be based on the time the logging was started, like `2018-10-22_20:04:00_UTC.nmea`.
     >   - if `filename.radix` exists (default is an empty string) like `LOG_`, then log file name will be `LOG_2018-10-22_20:04:00_UTC.nmea`.
     >   - if `log.dir` exists (default is `.`) log files will be generated in this directory (located under the working directory).
-    >   - if `split` exists (default is `null`) and one of `day`, `week`, `month`, `year`, then a new log file will generated every `day`, `week`, `month`, or `year`.
+    >   - if `split` exists (default is `null`) and one of `min`, `hour`, `day`, `week`, `month`, `year`, then a new log file will generated every `min`, `hour`, `day`, `week`, `month`, or `year`.
 
 - `ws`
     - WebSocket server
