@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
  * Also serves as a regular HTTP server for static documents (in the /web directory).
  * <br>
  * Has two static resources:
- * Has two static resources:
  * <ul>
  * <li><code>/exit</code> to exit the HTTP server (cannot be restarted).</li>
  * <li><code>/test</code> to test the HTTP server availability</li>
@@ -434,9 +433,17 @@ public class HTTPServer {
 	 * @param properties can contain a static.docs properties, comma-separated list of the directories considered as containing static documents.
 	 *                   Defaulted to "/web/". Example: "/web/,/admin/docs/,/static/".
 	 * @throws Exception
+	 *
+	 * Port can be overridden by -Dhttp.port. Takes precedence on anything else.
 	 */
 	public HTTPServer(int port, RESTRequestManager requestManager, Properties properties, boolean startImmediatly) throws Exception {
-		this.port = port;
+		String httpPort = System.getProperty("http.port", String.valueOf(port));
+		try {
+			this.port = Integer.parseInt(httpPort);
+		} catch (NumberFormatException nfe) {
+			throw new RuntimeException(nfe);
+		}
+
 		if (properties == null) {
 			throw new RuntimeException("Properties parameter should not be null");
 		}
@@ -542,9 +549,13 @@ public class HTTPServer {
 										}
 										if (request != null && !inPayload) {
 											if (line.indexOf(":") > -1) { // Header?
-												String headerKey = line.substring(0, line.indexOf(":"));
-												String headerValue = line.substring(line.indexOf(":") + 1);
-												headers.put(headerKey, headerValue);
+												if (line.indexOf(" ") > 0 && line.indexOf(" ") < line.indexOf(":") ) { // TODO: Not start with Verb
+													// No a GET http://machine HTTP/1.1	, with the protocol in the request
+												} else {
+													String headerKey = line.substring(0, line.indexOf(":"));
+													String headerValue = line.substring(line.indexOf(":") + 1);
+													headers.put(headerKey, headerValue);
+												}
 											}
 										}
 									}
@@ -892,10 +903,15 @@ public class HTTPServer {
 
 	private static Thread waiter = null;
 
-	//  For dev tests, example.
+	//  For dev tests, example, default proxy.
 	public static void main(String... args) throws Exception {
-		//System.setProperty("http.port", "9999");
-		HTTPServer httpServer = new HTTPServer(9999);
+		int port = 9999;
+		try {
+			port = Integer.parseInt(System.setProperty("http.port", String.valueOf(port)));
+		} catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+		}
+		HTTPServer httpServer = new HTTPServer(port);
 		httpServer.setProxyFunction(HTTPServer::defaultProxy);
 
 		httpServer.startServer();

@@ -12,11 +12,15 @@ function openBrowser() {
 }
 #
 GO=true
+#
 while [ "$GO" == "true" ]
 do
 	clear
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "+----------- N A V   S E R V E R - D E M O   L A U N C H E R  🚀 -------------------------+"
+	echo -e "+-----------------------------------------------------------------------------------------+"
+	echo -e "|  P. Launch proxy CLI, to visualize HTTP & REST traffic                                  |"
+	echo -e "| PG. Launch proxy GUI, to visualize HTTP & REST traffic                                  |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |"
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
@@ -26,12 +30,35 @@ do
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc               |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  S. Show NavServer process(es)                                                          |"
+	echo -e "| SP. Show proxy process(es)                                                              |"
 	echo -e "|  Q. Quit                                                                                |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -en " ==> You choose: "
 	read option
 	echo -e " >> Hint: use 'killns.sh' to stop any running NavServer"
 	case "$option" in
+	  "PG" | "pg")
+	    export HTTP_PROXY_PORT=9876
+	    export HTTP_PROXY_HOST=localhost
+	    java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=$HTTP_PROXY_PORT utils.proxyguisample.ProxyGUI &
+	    echo -e "Make sure you use a proxy from your browser(s): Host: this machine, Port: $HTTP_PROXY_PORT"
+	    echo -en "Hit [Return]"
+	    read a
+	    ;;
+	  "P" | "p")
+	    export HTTP_PROXY_PORT=9876
+			JAVA_OPTIONS=
+			JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose=true"
+			JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.verbose.dump=true"
+			JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.client.verbose=true"
+			#
+			# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.util.logging.config.file=logging.properties"
+			#
+			java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=$HTTP_PROXY_PORT $JAVA_OPTIONS http.HTTPServer &
+	    echo -e "Make sure you use a proxy from your browser(s): Host: this machine, Port: $HTTP_PROXY_PORT"
+	    echo -en "Hit [Return]"
+	    read a
+	    ;;
 	  "1")
 	    PROP_FILE=nmea.mux.no.gps.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
@@ -78,8 +105,8 @@ do
 	    ;;
 	  "S" | "s")
 	    echo -e "Nav Server processes:"
-	    ps -ef | grep NavServer | grep -v grep
-	    ps -ef | grep NavServer | grep -v grep | grep -v killns | awk '{ print $2 }' > km
+	    ps -ef | grep navrest.NavServer | grep -v grep
+	    ps -ef | grep navrest.NavServer | grep -v grep | grep -v killns | awk '{ print $2 }' > km
 			NB_L=`cat km | wc -l`
 			if [ $NB_L == 0 ]
 			then
@@ -93,6 +120,14 @@ do
 			  echo -e "------------------------------------------"
 				rm km
 			fi
+	    echo -en "Hit [return]"
+	    read ret
+	    ;;
+	  "SP" | "sp")
+	    echo -e "Proxy processes:"
+	    ps -ef | grep ProxyGUI | grep -v grep
+	    ps -ef | grep HTTPServer | grep -v grep
+	    #
 	    echo -en "Hit [return]"
 	    read ret
 	    ;;

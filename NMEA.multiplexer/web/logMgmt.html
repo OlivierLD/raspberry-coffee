@@ -97,21 +97,28 @@
 			let tableHtml = '';
 			document.getElementById("count").innerText = "Found " + fileArray.length + " log file(s)";
 			fileArray.forEach(lf => {
-
+				let isActive = false;
+				activeLogFile.forEach(fname => {
+					if (lf.indexOf(fname) > -1) {
+						isActive = true;
+					}
+				});
 //			console.log("List", activeLogFile, "lf", lf);
 				tableHtml +=
 						'<tr>\n' +
 						'  <td><div class="scrollable-file-name"><a href="/mux/log-files/' + encodeURIComponent(lf) + '" target="ext" title="Click to download">' + lf + '</a></div></td>\n' +
-						// 9989: check, 9995: open hand, 10006: Heavy cross
-						(activeLogFile.indexOf(lf.substring(2)) > -1 ? '  <td title="File is active!">&#10006;</td>\n' : '  <td></td>\n' ) +
-						'  <td><button onclick="deleteLog(\'' + encodeURIComponent(lf) + '\');" title="Delete log file" style="width: 24px; height: 24px; border-radius: 12px; padding: 0;"><img src="icons/delete.png" width="16" height="16" style="vertical-align: middle;"></button></td>\n' +
+						// 9989: check, 9995: open hand, 10006: Heavy cross. All dingbats at https://www.w3schools.com/charsets/ref_utf_dingbats.asp
+						(isActive ? '  <td title="File is active!">&#10006;</td>\n' : '  <td></td>\n' ) +
+						(isActive ? '  <td></td>\n' : '  <td><button onclick="deleteLog(\'' + encodeURIComponent(lf) + '\');" title="Delete log file" style="width: 24px; height: 24px; border-radius: 12px; padding: 0;"><img src="icons/delete.png" width="16" height="16" style="vertical-align: middle;"></button></td>\n' ) +
 						'</tr>\n';
 			});
 
 			document.getElementById("table-body").innerHTML = tableHtml;
 		}
 
-		window.onload = function() { getLogFilesList(); };
+		window.onload = function() {
+			getLogFilesList();
+		};
 		</script>
 </head>
 <body>
@@ -122,7 +129,6 @@
 
     <div id="file-table">
 			<div id="count" style="margin-left: 10px;"></div>
-			<!--table data-role="table" id="files-table" data-mode="reflow" class="ui-responsive"-->
 			<table id="log-files-table" style="margin: auto;">
 				<!--thead>
 				<tr>

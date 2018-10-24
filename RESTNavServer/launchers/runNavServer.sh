@@ -52,6 +52,12 @@ if [ "$USE_PROXY" == "true" ]
 then
   echo Using proxy
   JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=www-proxy-hqdc.us.oracle.com -Dhttp.proxyPort=80"
+else
+  if [ "$HTTP_PROXY_HOST" != "" ] && [ "$HTTP_PROXY_PORT" != "" ]
+  then
+    echo -e "Setting proxy to $HTTP_PROXY_HOST port $HTTP_PROXY_PORT"
+    JAVA_OPTS="$JAVA_OPTS -Dhttp.proxyHost=$HTTP_PROXY_HOST -Dhttp.proxyPort=$HTTP_PROXY_PORT"
+  fi
 fi
 #
 # refers to nmea.mux.properties, unless -Dmux.properties is set

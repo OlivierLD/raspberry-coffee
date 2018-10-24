@@ -14,15 +14,17 @@ import javax.swing.JPanel;
 /**
  * Minimal Swing GUI for a proxy
  */
-public class ProxyGUI extends JFrame{
+public class ProxyGUI extends JFrame {
 
 	TrafficRawPanel requestPanel = null;
 	TrafficRawPanel responsePanel = null;
 
-	public static void main(String... args) throws Exception {
-		ProxyGUI proxyGui = new ProxyGUI();
+	static int port = 9999; // Default
 
-		HTTPServer httpServer = new HTTPServer(9999);
+	public static void main(String... args) throws Exception {
+		port = Integer.parseInt(System.getProperty("http.port", String.valueOf(port)));
+		ProxyGUI proxyGui = new ProxyGUI();
+		HTTPServer httpServer = new HTTPServer(port);
 
 		httpServer.setProxyFunction(proxyGui::proxyImpl);
 
@@ -33,7 +35,7 @@ public class ProxyGUI extends JFrame{
 	public ProxyGUI(){
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(600, 500);
-		this.setTitle("HTTP Traffic");
+		this.setTitle(String.format("HTTP Proxy, port %d", port));
 		this.setLayout(new BorderLayout());
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -51,9 +53,6 @@ public class ProxyGUI extends JFrame{
 		requestPanel = new TrafficRawPanel("Request");
 		responsePanel = new TrafficRawPanel("Response");
 
-//		requestPanel.addData("Requests");
-//		responsePanel.addData("Responses");
-
 		container.setLayout(new GridLayout(1,2));
 		container.add(requestPanel);
 		container.add(responsePanel);
@@ -62,14 +61,23 @@ public class ProxyGUI extends JFrame{
 		this.pack();
 	}
 
-	private HTTPServer.Response proxyImpl(HTTPServer.Request request) {
+	private HTTPServer.Response proxyImpl(HTTPServer.Request request) { // assume request is not null
 
 		// Dump the request in its frame
 		// headers
 		if (request.getHeaders() != null) {
-			Map<String, String> respHeaders = request.getHeaders();
-			respHeaders.keySet().forEach(k -> requestPanel.addData(String.format("%s: %s", k, respHeaders.get(k))));
+			Map<String, String> requestHeaders = request.getHeaders();
+			requestHeaders.keySet().forEach(k -> {
+//			System.out.println(String.format("%s: %s", k, requestHeaders.get(k)));
+				requestPanel.addData(String.format("%s: %s", k, requestHeaders.get(k)));
+			});
 		}
+
+		String requestStr = String.format("%s %s %s", request.getVerb(), request.getPath(), request.getProtocol());
+		requestPanel.addData("------ R e q u e s t --------");
+		requestPanel.addData(requestStr);
+		requestPanel.addData("-----------------------------");
+
 		// content?
 		if (request.getContent() != null && request.getContent().length > 0) {
 			if (request.getHeaders() != null && request.getHeaders().get("Content-Type") != null && HTTPServer.isText(request.getHeaders().get("Content-Type"))) {
@@ -82,15 +90,16 @@ public class ProxyGUI extends JFrame{
 		try {
 			response = HTTPClient.doRequest(request);
 		} catch (Exception ex) {
-			throw new RuntimeException(ex);
+//		throw new RuntimeException(ex);
+			ex.printStackTrace();
 		}
 //	String rCode = String.format("Response code: %d", response.getStatus());
 //	responsePanel.addData(rCode);
-		if (response.getHeaders() != null) {
+		if (response != null && response.getHeaders() != null) {
 			Map<String, String> respHeaders = response.getHeaders();
 			respHeaders.keySet().forEach(k -> responsePanel.addData(String.format("%s: %s", k, respHeaders.get(k))));
 		}
-		if (response.getPayload() != null) {
+		if (response != null && response.getPayload() != null) {
 			if (response.getHeaders() != null && response.getHeaders().get("Content-Type") != null && HTTPServer.isText(response.getHeaders().get("Content-Type"))) {
 				String responsePayload = new String(response.getPayload());
 				responsePanel.addData(String.format("%s", responsePayload));
