@@ -21,64 +21,97 @@
 	</style>
 	<script type="text/javascript">
 
-	var getLogFilesList = function() {
-    var getData = getLogFiles(); // A promise
-    getData.done(function(value) {
-	    var json = JSON.parse(value);
-//    console.log("Log files", json);
-	    buildFileList(json);
-    });
-    getData.fail(function(error, errmess) {
-        var message;
-        if (errmess !== undefined) {
-            if (errmess.message !== undefined) {
-                message = errmess.message;
-            } else {
-                message = errmess;
-            }
-        }
-        console.log("Failed to get the log files list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-    });
-  };
+		var getLogFilesList = function () {
+			var self = this;
+			var getData = getLogFiles(); // A promise
+			getData.done(function (value) {
+				var logFiles = JSON.parse(value);
+//      console.log("Log files", json);
+				// get active file forwarder lo file name
+				var typeOfFunc = typeof getForwarders;
+				console.log("Type of Function", typeOfFunc);
 
-	var deleteLog = function(fName) {
-		var deleteData = deleteLogFile(fName); // A promise
-		deleteData.done(function(value) {
+				var getForwarders = self.getForwarders(); // Another promise
+				getForwarders.done(function (value) {
+					document.body.style.cursor = 'default';
+					var fwdrs = JSON.parse(value);
+					buildFileList(logFiles, fwdrs);
+				});
+				getForwarders.fail(function (error, errmess) {
+					document.body.style.cursor = 'default';
+					var message;
+					if (errmess !== undefined) {
+						if (errmess.message !== undefined) {
+							message = errmess.message;
+						} else {
+							message = errmess;
+						}
+					}
+					console.log("Failed to get the forwarders list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+				});
+			});
+			getData.fail(function (error, errmess) {
+				var message;
+				if (errmess !== undefined) {
+					if (errmess.message !== undefined) {
+						message = errmess.message;
+					} else {
+						message = errmess;
+					}
+				}
+				console.log("Failed to get the log files list..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+			});
+		};
+
+		var deleteLog = function (fName) {
+			var deleteData = deleteLogFile(fName); // A promise
+			deleteData.done(function (value) {
 //		var json = JSON.parse(value);
-	    console.log("Delete log file OK");
-	    // Rebuild the list
-			getLogFilesList();
-		});
-		deleteData.fail(function(error, errmess) {
-			var message;
-			if (errmess !== undefined) {
-				if (errmess.message !== undefined) {
-					message = errmess.message;
-				} else {
-					message = errmess;
+				console.log("Delete log file OK");
+				// Rebuild the list
+				getLogFilesList();
+			});
+			deleteData.fail(function (error, errmess) {
+				var message;
+				if (errmess !== undefined) {
+					if (errmess.message !== undefined) {
+						message = errmess.message;
+					} else {
+						message = errmess;
+					}
+				}
+				console.log("Failed to delete the log file..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+			});
+		};
+
+
+		function buildFileList(fileArray, forwarders) {
+
+			var activeLogFile = [];
+			for (var i=0; i<forwarders.length; i++) {
+				if (forwarders[i].type === 'file') {
+					activeLogFile.push(forwarders[i].log);
 				}
 			}
-			console.log("Failed to delete the log file..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
-		});
-	};
 
+			let tableHtml = '';
+			document.getElementById("count").innerText = "Found " + fileArray.length + " log file(s)";
+			fileArray.forEach(lf => {
 
-	function buildFileList(fileArray) {
-		let tableHtml = '';
-		document.getElementById("count").innerText = "Found " + fileArray.length + " log file(s)";
-		fileArray.forEach(lf => {
-			tableHtml +=
-					'<tr>\n' +
-					'  <td><div class="scrollable-file-name"><a href="/mux/log-files/' + encodeURIComponent(lf) + '" target="ext" title="Click to download">' + lf + '</a></div></td>\n' +
-					'  <td><button onclick="deleteLog(\'' + encodeURIComponent(lf) + '\');" title="Delete log file" style="width: 24px; height: 24px; border-radius: 12px; padding: 0;"><img src="icons/delete.png" width="16" height="16" style="vertical-align: middle;"></button></td>\n' +
-					'</tr>\n';
-		});
+//			console.log("List", activeLogFile, "lf", lf);
+				tableHtml +=
+						'<tr>\n' +
+						'  <td><div class="scrollable-file-name"><a href="/mux/log-files/' + encodeURIComponent(lf) + '" target="ext" title="Click to download">' + lf + '</a></div></td>\n' +
+						// 9989: check, 9995: open hand, 10006: Heavy cross
+						(activeLogFile.indexOf(lf.substring(2)) > -1 ? '  <td title="File is active!">&#10006;</td>\n' : '  <td></td>\n' ) +
+						'  <td><button onclick="deleteLog(\'' + encodeURIComponent(lf) + '\');" title="Delete log file" style="width: 24px; height: 24px; border-radius: 12px; padding: 0;"><img src="icons/delete.png" width="16" height="16" style="vertical-align: middle;"></button></td>\n' +
+						'</tr>\n';
+			});
 
-		document.getElementById("table-body").innerHTML = tableHtml;
+			document.getElementById("table-body").innerHTML = tableHtml;
+		}
 
-	}
-  window.onload = getLogFilesList();
-
+		window.onload = function() { getLogFilesList(); };
 		</script>
 </head>
 <body>
@@ -91,32 +124,14 @@
 			<div id="count" style="margin-left: 10px;"></div>
 			<!--table data-role="table" id="files-table" data-mode="reflow" class="ui-responsive"-->
 			<table id="log-files-table" style="margin: auto;">
-				<thead>
+				<!--thead>
 				<tr>
 					<th>File Name</th>
+					<th title="Active log file">A</th>
 					<th></th>
 				</tr>
-				</thead>
-				<tbody id="table-body">
-
-				<!--tr>
-					<td><a href="/mux/log-files/data.nmea" target="ext">./data.nmea</a></td>
-					<td>Delete</td>
-				</tr>
-				<tr>
-					<td><a href="/mux/log-files/tomales%2Fdata.shrinked.nmea" target="ext">./tomales/data.shrinked.nmea</a></td>
-					<td>Delete</td>
-				</tr>
-				<tr>
-					<td><a href="/mux/log-files/tomales%2Fdata.ais.shrinked.nmea" target="ext">./tomales/data.ais.shrinked.nmea</a></td>
-					<td>Delete</td>
-				</tr>
-				<tr>
-					<td><a href="/mux/log-files/logged%2F2018-10-23_15:56:00_UTC_LOG.nmea" target="ext">./logged/2018-10-23_15:56:00_UTC_LOG.nmea</a></td>
-					<td>Delete</td>
-				</tr-->
-
-				</tbody>
+				</thead-->
+				<tbody id="table-body"></tbody>
 			</table>
 
 		</div>
