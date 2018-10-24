@@ -80,6 +80,19 @@ var getForwarderStatus = function() {
     return getDeferred('/mux/mux-process', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };
 
+var getLogFiles = function() {
+	return getDeferred('/mux/log-files', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
+// Should be useless..., invoke it directly (no promise required) to download.
+var getLogFile = function(fileName) {
+	return getDeferred('/mux/log-files/' + fileName, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
+var deleteLogFile = function(logFile) {
+	return getDeferred('/mux/log-files/' + logFile, DEFAULT_TIMEOUT, 'DELETE', 200, null, false);
+};
+
 var getVolume = function() {
     return getDeferred('/mux/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };

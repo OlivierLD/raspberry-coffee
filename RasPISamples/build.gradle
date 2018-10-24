@@ -99,10 +99,10 @@ dependencies {
   compile project(':PhoneKeyboard3x4')
   compile project(':ADC')
   compile project(':Arduino.RaspberryPI')
-  compile project(':WeatherStation')
+//compile project(':WeatherStation')
   compile project(':SevenSegDisplay')
   compile project(':Adafruit.IO.REST')
-  compile project(':NMEA.multiplexer')
+//compile project(':NMEA.multiplexer')
   compile project(':HanoiTower')
   testCompile group: 'junit', name: 'junit', version: '4.11'
 }

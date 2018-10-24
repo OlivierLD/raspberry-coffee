@@ -59,6 +59,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -255,9 +256,19 @@ public class RESTImplementation {
 					"Get Speed and Course Over Ground, distance, and delta-altitude, in one shot."),
 			new Operation(
 					"GET",
+					REST_PREFIX + "/log-files",
+					this::getLogFiles,
+					"Download the log files list"),
+			new Operation(
+					"GET",
 					REST_PREFIX + "/log-files/{log-file}",
 					this::getLogFile,
 					"Download the log file"),
+			new Operation(
+					"DELETE",
+					REST_PREFIX + "/log-files/{log-file}",
+					this::deleteLogFile,
+					"Delete a given log file"),
 			new Operation(
 					"POST",
 					REST_PREFIX + "/events/{topic}",
@@ -1878,6 +1889,44 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private HTTPServer.Response getLogFiles(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+//	String findCommand = String.format("find %s -name '*.nmea'", System.getProperty("user.dir", "."));
+		String findCommand = "find . -name '*.nmea'";
+		try {
+			Process process = Runtime.getRuntime().exec(new String[] { "bash", "-c", findCommand });
+			int exitStatus = process.waitFor();
+
+			BufferedReader stdout = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			List<String> list = new ArrayList<>();
+			String line = null;
+			while ((line = stdout.readLine()) != null) {
+				list.add(line);
+			}
+			stdout.close();
+			System.out.println(String.format("Find script completed, status %d, found %d files", exitStatus, list.size()));
+
+			String content = new Gson().toJson(list);
+			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
+			response.setPayload(content.getBytes());
+		} catch (IOException | InterruptedException ex) {
+			ex.printStackTrace();
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("MUX-2003")
+							.errorMessage(ex.toString()));
+			return response;
+		}
+		return response;
+	}
+
+	/**
+	 *
+	 * @param request file name is the first (only) request prm. MUST be URLEncoded, specially if it contains slashes ('/' => %2F)
+	 * @return
+	 */
 	private HTTPServer.Response getLogFile(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
@@ -1886,7 +1935,12 @@ public class RESTImplementation {
 			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {log-file-name}");
 			return response;
 		}
-		String logFileName = prmValues.get(0);
+		String logFileName = prmValues.get(0); // Slashes are escaped, as %2F
+		try {
+			logFileName = URLDecoder.decode(logFileName, "UTF-8");
+		} catch (UnsupportedEncodingException uee) {
+			uee.printStackTrace();
+		}
 		File file = new File(logFileName);
 		if (!file.exists()) {
 			response.setStatus(HTTPServer.Response.NOT_FOUND);
@@ -1913,9 +1967,50 @@ public class RESTImplementation {
 			ioe.printStackTrace();
 		}
 		String content = sb.toString();
-		RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
+		// Force application/octet-stream to download file. text/plain from HTML page displays the content
+		RESTProcessorUtil.generateResponseHeaders(response, "application/octet-stream", content.length());
 		response.setPayload(content.getBytes());
 
+		return response;
+	}
+
+	/**
+	 *
+	 * @param request file name is the first (only) request prm. MUST be URLEncoded, specially if it contains slashes ('/' => %2F)
+	 * @return
+	 */
+	private HTTPServer.Response deleteLogFile(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		if (prmValues.size() != 1) {
+			response.setStatus(HTTPServer.Response.BAD_REQUEST);
+			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {log-file-name}");
+			return response;
+		}
+		String logFileName = prmValues.get(0); // Slashes are escaped, as %2F
+		try {
+			logFileName = URLDecoder.decode(logFileName, "UTF-8");
+		} catch (UnsupportedEncodingException uee) {
+			uee.printStackTrace();
+		}
+		File file = new File(logFileName);
+		if (!file.exists()) {
+			response.setStatus(HTTPServer.Response.NOT_FOUND);
+			RESTProcessorUtil.addErrorMessageToResponse(response, String.format("File %s was not found.", logFileName));
+			return response;
+		} else {
+			try {
+				file.delete();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("MUX-2004")
+								.errorMessage(ex.toString()));
+				return response;
+			}
+		}
 		return response;
 	}
 

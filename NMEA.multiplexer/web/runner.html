@@ -231,9 +231,10 @@
         </div>
 
         <div class="ui-body ui-body-b">
-            <fieldset class="ui-grid-a">
-                <div class="ui-block-b"><button data-theme="a" id="b-reset">Reset</button></div>
-                <div class="ui-block-b"><button data-theme="a" id="b-terminate">Terminate</button></div>
+            <fieldset class="ui-grid-b">
+                <div class="ui-block-a"><button data-theme="a" id="b-reset">Reset</button></div>
+								<div class="ui-block-b"><button data-theme="a" id="b-log-mgmt">Log Mgmt</button></div>
+                <div class="ui-block-c"><button data-theme="a" id="b-terminate">Terminate</button></div>
             </fieldset>
         </div>
 
@@ -291,6 +292,11 @@
           console.log("reset");
           resetDataCache();
         });
+
+	      $("#b-log-mgmt").click(function() {
+		      console.log("Log Management");
+		      document.location = "logMgmt.html";
+	      });
 
         setInterval(getTravelData, 1000); // Distance and delta-alt
       });

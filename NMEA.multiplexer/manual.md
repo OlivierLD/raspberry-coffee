@@ -65,24 +65,73 @@ _**ALL**_ elements _have_ a mandatory `type` attribute, the other attributes dep
 
 - `serial`
     - Serial port input.
+    ```properties
+    mux.01.type=serial
+    mux.01.port=/dev/ttyUSB0
+    mux.01.baudrate=4800
+    mux.01.verbose=false
+    ```
 - `tcp`
     - TCP input
+    ```properties
+    mux.01.type=tcp
+    mux.01.server=ais.exploratorium.edu
+    mux.01.port=80
+    mux.01.verbose=false
+    ```
 - `file`
     - Log file replay
+    ```properties
+    mux.01.type=file
+    mux.01.filename=./sample.data/2010-11-08.Nuku-Hiva-Tuamotu.nmea
+    ```
 - `ws`
     - WebSocket input
+    ```properties
+    mux.02.type=ws
+    mux.02.wsuri=ws://192.168.1.136:9876/
+    ```
 - `htu21df`
     - Temperature, humidity
+    ```properties
+    mux.02.type=htu21df
+    mux.02.device.prefix=01
+    mux.02.verbose=false
+    ```
 - `rnd`
     - Random data generator (for debug)
+    ```properties
+    mux.04.type=rnd
+    ```
 - `zda`
     - ZDA Sentence generator (UTC day, month, and year, and local time zone offset)
+    ```properties
+    mux.01.type=zda
+    ```
 - `lsm303`
     - Triple axis accelerometer and magnetometer
+    ```properties
+    mux.01.type=lsm303
+    mux.01.device.prefix=II
+    mux.01.verbose=false
+    mux.01.sentence.filters=HDM,XDR
+    mux.01.heading.offset=0
+    mux.01.read.frequency=1000
+    ```
 - `bme280`
     - Humidity, pressure, temperature
+    ```properties
+    mux.01.type=bme280
+    mux.01.device.prefix=02
+    mux.01.verbose=false
+    ```
 - `bmp180`
     - Temperature, pressure
+    ```properties
+    mux.01.type=bmp180
+    mux.01.device.prefix=01
+    mux.01.verbose=false
+    ```
 
 You can also define your own channels (extending `NMEAClient` and with a `reader` attribute).
 
