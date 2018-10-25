@@ -10,6 +10,10 @@
 	<script src="./js/jquery.mobile-1.3.2.min.js"></script>
 	<script type="text/javascript" src="js/mux.rest.js"></script>
 	<style>
+		th {
+			font-size: 8px;
+		}
+
 		.scrollable-file-name {
 			width: 350px;
 			border: 1px solid silver;
@@ -110,7 +114,7 @@
 //			console.log("List", activeLogFile, "lf", lf);
 				tableHtml +=
 						'<tr>\n' +
-						(isTotal ? '<td>total</td>\n' : '  <td><div class="scrollable-file-name"><a href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
+						(isTotal ? '<td style="font-style: italic;">total</td>\n' : '  <td><div class="scrollable-file-name"><a href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
 						'  <td style="text-align: right;">' + formatter.format(lf.split(' ')[0]) + '</td>\n' +
 						// 9989: check, 9995: open hand, 10006: Heavy cross. All dingbats at https://www.w3schools.com/charsets/ref_utf_dingbats.asp
 						(isActive ? '  <td title="File is active!">&#10006;</td>\n' : '  <td></td>\n' ) +
@@ -135,13 +139,14 @@
     <div id="file-table">
 			<div id="count" style="margin-left: 10px;"></div>
 			<table id="log-files-table" style="margin: auto;">
-				<!--thead>
+				<thead>
 				<tr>
 					<th>File Name</th>
-					<th title="Active log file">A</th>
-					<th></th>
+					<th>Nb Lines</th>
+					<th title="Active log file">Act?</th>
+					<th>Del.</th>
 				</tr>
-				</thead-->
+				</thead>
 				<tbody id="table-body"></tbody>
 			</table>
 
