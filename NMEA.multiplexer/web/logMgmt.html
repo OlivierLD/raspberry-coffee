@@ -28,9 +28,6 @@
 				var logFiles = JSON.parse(value);
 //      console.log("Log files", json);
 				// get active file forwarder lo file name
-				var typeOfFunc = typeof getForwarders;
-				console.log("Type of Function", typeOfFunc);
-
 				var getForwarders = self.getForwarders(); // Another promise
 				getForwarders.done(function (value) {
 					document.body.style.cursor = 'default';
@@ -84,6 +81,9 @@
 			});
 		};
 
+		const formatter = new Intl.NumberFormat('en-US', {
+			minimumFractionDigits: 0
+		});
 
 		function buildFileList(fileArray, forwarders) {
 
@@ -98,18 +98,23 @@
 			document.getElementById("count").innerText = "Found " + fileArray.length + " log file(s)";
 			fileArray.forEach(lf => {
 				let isActive = false;
+				let isTotal = false;
 				activeLogFile.forEach(fname => {
-					if (lf.indexOf(fname) > -1) {
+					if (lf.split(' ')[1].indexOf(fname) > -1) {
 						isActive = true;
 					}
 				});
+				if (lf.split(' ')[1] === 'total') {
+					isTotal = true;
+				}
 //			console.log("List", activeLogFile, "lf", lf);
 				tableHtml +=
 						'<tr>\n' +
-						'  <td><div class="scrollable-file-name"><a href="/mux/log-files/' + encodeURIComponent(lf) + '" target="ext" title="Click to download">' + lf + '</a></div></td>\n' +
+						(isTotal ? '<td>total</td>\n' : '  <td><div class="scrollable-file-name"><a href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
+						'  <td style="text-align: right;">' + formatter.format(lf.split(' ')[0]) + '</td>\n' +
 						// 9989: check, 9995: open hand, 10006: Heavy cross. All dingbats at https://www.w3schools.com/charsets/ref_utf_dingbats.asp
 						(isActive ? '  <td title="File is active!">&#10006;</td>\n' : '  <td></td>\n' ) +
-						(isActive ? '  <td></td>\n' : '  <td><button onclick="deleteLog(\'' + encodeURIComponent(lf) + '\');" title="Delete log file" style="width: 24px; height: 24px; border-radius: 12px; padding: 0;"><img src="icons/delete.png" width="16" height="16" style="vertical-align: middle;"></button></td>\n' ) +
+						(isActive || isTotal ? '  <td></td>\n' : '  <td><button onclick="deleteLog(\'' + encodeURIComponent(lf.split(' ')[1]) + '\');" title="Delete log file" style="width: 24px; height: 24px; border-radius: 12px; padding: 0;"><img src="icons/delete.png" width="16" height="16" style="vertical-align: middle;"></button></td>\n' ) +
 						'</tr>\n';
 			});
 

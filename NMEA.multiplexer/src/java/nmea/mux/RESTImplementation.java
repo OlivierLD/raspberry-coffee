@@ -1893,7 +1893,7 @@ public class RESTImplementation {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
 //	String findCommand = String.format("find %s -name '*.nmea'", System.getProperty("user.dir", "."));
-		String findCommand = "find . -name '*.nmea'";
+		String findCommand = "find . -name '*.nmea' | xargs wc -l";
 		try {
 			Process process = Runtime.getRuntime().exec(new String[] { "bash", "-c", findCommand });
 			int exitStatus = process.waitFor();
@@ -1902,7 +1902,7 @@ public class RESTImplementation {
 			List<String> list = new ArrayList<>();
 			String line = null;
 			while ((line = stdout.readLine()) != null) {
-				list.add(line);
+				list.add(line.trim());
 			}
 			stdout.close();
 			System.out.println(String.format("Find script completed, status %d, found %d files", exitStatus, list.size()));

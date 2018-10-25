@@ -2,6 +2,9 @@
  * @author Olivier Le Diouris
  * Uses ES6 Promises for Ajax.
  */
+
+const DEBUG = false;
+
 function initAjax() {
 	let interval = setInterval(function () {
 		fetch();
@@ -17,13 +20,15 @@ function getPromise(
 		timeout,                      // After that, fail.
 		verb,                         // GET, PUT, DELETE, POST, etc
 		happyCode,                    // if met, resolve, otherwise fail.
-		data,                         // payload, when needed (PUT, POST...)
-		show) {                       // Show the traffic [true]|false
-	if (show === undefined) {
-		show = true;
-	}
+		data = null,                  // payload, when needed (PUT, POST...)
+		show = true) {                // Show the traffic [true]|false
+
 	if (show === true) {
 		document.body.style.cursor = 'wait';
+	}
+
+	if (DEBUG) {
+		console.log(">>> Promise", verb, url);
 	}
 
 	let promise = new Promise(function (resolve, reject) {
