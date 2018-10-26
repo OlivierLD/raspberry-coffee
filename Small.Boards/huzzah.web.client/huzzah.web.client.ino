@@ -1,5 +1,6 @@
 /*
- *  Simple HTTP get webclient test
+ * Simple HTTP get webclient test
+ * for Huzzah/ESP8266
  */
 
 #include <ESP8266WiFi.h>

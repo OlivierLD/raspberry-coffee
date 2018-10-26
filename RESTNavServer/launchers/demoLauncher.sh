@@ -25,7 +25,7 @@ do
 	echo -e "|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |"
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
 	echo -e "|  3. Home Weather Station data                                                           |"
-	echo -e "|  4. With GPS and NMEA, waits for the RMC sentence to be active                          |"
+	echo -e "|  4. With GPS and NMEA data, waits for the RMC sentence to be active to begin logging    |"
 	echo -e "|  ... TODO: more.                                                                        |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc               |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
@@ -40,7 +40,6 @@ do
 	case "$option" in
 	  "PG" | "pg")
 	    export HTTP_PROXY_PORT=9876
-	    export HTTP_PROXY_HOST=localhost
 	    java -cp ../build/libs/RESTNavServer-1.0-all.jar -Dhttp.port=$HTTP_PROXY_PORT utils.proxyguisample.ProxyGUI &
 	    echo -e "Make sure you use a proxy from your browser(s): Host: this machine, Port: $HTTP_PROXY_PORT"
 	    echo -en "Hit [Return]"
