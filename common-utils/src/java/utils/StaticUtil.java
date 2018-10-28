@@ -31,7 +31,9 @@ import java.util.regex.Pattern;
 
 public class StaticUtil {
 
-	private static final BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+	private static final InputStreamReader inputStream = new InputStreamReader(System.in);
+	private static final BufferedReader stdin = new BufferedReader(inputStream);
+
 	public static String userInput(String prompt) {
 		String retString = "";
 		System.err.print(prompt);
@@ -248,7 +250,7 @@ public class StaticUtil {
 		System.out.println(akeu);
 //  System.setProperty("os.name", "Mac OS X");
 //  showFileSystem(System.getProperty("user.dir"));
-		long elapsed = 231234567890L; // 123456L; //
+		long elapsed = 231_234_567_890L; // 123456L; //
 		System.out.println("Readable time (" + elapsed + ") : " + readableTime(elapsed));
 	}
 

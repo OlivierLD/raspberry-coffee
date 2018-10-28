@@ -1,6 +1,6 @@
 FROM resin/raspberrypi3-debian:latest
 #
-# WebComponents running on the Raspberry PI.
+# WebComponents, running on the Raspberry PI.
 # Uses NodeJS
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
@@ -22,8 +22,8 @@ RUN echo "java -version" >> $HOME/.bashrc
 
 RUN mkdir /workdir
 WORKDIR /workdir
-RUN git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
-WORKDIR /workdir/raspberry-pi4j-samples/WebComponents
+RUN git clone https://github.com/OlivierLD/WebComponents.git
+WORKDIR /workdir/WebComponents
 
 EXPOSE 8080
 CMD ["npm", "start"]

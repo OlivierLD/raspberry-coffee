@@ -1,6 +1,8 @@
 ## Project Trunk
+#### a.k.a. "la caisse &agrave; glingues".
+---
 This folder contains projects involving the components available in other modules of this project.
-> Note: Replaces the content of `RasPISamples`.
+> Note: Replaces the content of what was `RasPISamples`.
 
 There are several of them - as opposed to just a big one - to minimize the number
 of dependencies for each example.

@@ -1,9 +1,11 @@
 /*
- * Simple HTTP get webclient test
- * for Huzzah/ESP8266
- */
+   Simple HTTP get webclient test
+   for Huzzah/ESP8266
+*/
 
 #include <ESP8266WiFi.h>
+
+// Network and Host definitions
 
 const char* ssid     = "Sonic-00e0";
 const char* password = "67369c7831";
@@ -11,11 +13,10 @@ const char* password = "67369c7831";
 const char* host = "wifitest.adafruit.com";
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(115200); // Console output
   delay(100);
 
   // We start by connecting to a WiFi network
-
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
@@ -42,7 +43,7 @@ int value = 0;
 
 void loop() {
   delay(5000);
-  ++value;
+  ++value; // Not used
 
   Serial.print("connecting to ");
   Serial.println(host);
@@ -61,9 +62,11 @@ void loop() {
   Serial.println(url);
 
   // This will send the request to the server
-  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" +
-               "Connection: close\r\n\r\n");
+  // TODO Make it more generic, like a REST request
+  //  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+  //               "Host: " + host + "\r\n" +
+  //               "Connection: close\r\n\r\n");
+  sendRequest(client, "GET", url, "HTTP/1.1", host);
   delay(500);
 
   // Read all the lines of the reply from server and print them to Serial
@@ -75,3 +78,12 @@ void loop() {
   Serial.println();
   Serial.println("closing connection");
 }
+
+void sendRequest(WiFiClient client, String verb, String url, String protocol, String host) {
+  String request = verb + " " + url + " " + protocol + "\r\n" +
+                   "Host: " + host + "\r\n" +
+                   "Connection: close\r\n" +
+                   "\r\n";
+  client.print(request);
+}
+

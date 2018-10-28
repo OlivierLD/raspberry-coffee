@@ -1,6 +1,7 @@
 # Navigation Server
+#### Prolongation of the NMEA.Multiplexer
 
-An illustration of the way to gather several REST Services all in one place.
+An illustration of the way to gather or aggregate several REST Services all in one place.
 This project is an extension/prolongation of the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/NMEA.multiplexer/README.md).
 
 It uses:
@@ -96,7 +97,30 @@ Another option is to start this script:
  $ cd launchers
  $ ./demoLauncher.sh
 ```
-This latter one will start the server and open the appropriate Web UI.
+This latter one will start the server and open the appropriate Web UI, from a console interface like this:
+```
++-----------------------------------------------------------------------------------------+
+|               N A V   S E R V E R - D E M O   L A U N C H E R  🚀                       |
++-----------------------------------------------------------------------------------------+
+|  P. Launch proxy CLI, to visualize HTTP & REST traffic                                  |
+| PG. Launch proxy GUI, to visualize HTTP & REST traffic                                  |
++-----------------------------------------------------------------------------------------+
+|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |
+|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |
+|  3. Home Weather Station data                                                           |
+|  4. With GPS and NMEA data, waits for the RMC sentence to be active to begin logging    |
+|  ... TODO: more.                                                                        |
+| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc               |
++-----------------------------------------------------------------------------------------+
+|  S. Show NavServer process(es)                                                          |
+| SP. Show proxy process(es)                                                              |
++-----------------------------------------------------------------------------------------+
+|  Q. Quit                                                                                |
++-----------------------------------------------------------------------------------------+
+ ==> You choose:
+```
+
+> About the proxies, see the note [here](../common-utils/README.md#HTTP Server WIP).
 
 ## Use it
 
@@ -224,8 +248,8 @@ Faxes and GRIB, together
 
 ## TODOs, next...
 
-- `npm` for non-java resource sharing
-- Minify JavaScript resources
+- `npm` for non-java resource sharing (local registry)
+- Minify JavaScript resources (Done, see WebComponents repo).
 - GRIB rendering (in full), coming good.
 - Routing features
 - Use the GRIBs available through [Outernet](https://outernet.is/) (Need more thoughts...) ?
