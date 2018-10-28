@@ -1,5 +1,10 @@
 package util;
 
+import calc.GeomUtil;
+import nmea.parser.GeoPos;
+import nmea.parser.RMC;
+import nmea.parser.StringParsers;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,11 +12,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import nmea.parser.GeoPos;
-import nmea.parser.RMC;
-import nmea.parser.StringParsers;
-import calc.GeomUtil;
 
 import static nmea.parser.StringParsers.GGA_ALT_IDX;
 
@@ -23,10 +23,10 @@ public class LogAnalyzer {
 
 	private static SimpleDateFormat SDF = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss z");
 
-	private final static long SEC  = 1_000L;
-	private final static long MIN  = 60 * SEC;
+	private final static long SEC = 1_000L;
+	private final static long MIN = 60 * SEC;
 	private final static long HOUR = 60 * MIN;
-	private final static long DAY  = 24 * HOUR;
+	private final static long DAY = 24 * HOUR;
 
 	private static String msToHMS(long ms) {
 		String str = "";
@@ -63,7 +63,10 @@ public class LogAnalyzer {
 		public float convert() {
 			return this.knToUnit;
 		}
-		public String label() { return this.unitLabel; }
+
+		public String label() {
+			return this.unitLabel;
+		}
 	}
 
 	private static SpeedUnit unitToUse = SpeedUnit.KMH;
@@ -114,38 +117,40 @@ public class LogAnalyzer {
 						if (id.equals("RMC")) {
 							nbRec++;
 							RMC rmc = StringParsers.parseRMC(line);
-							// Get date, speed, position (for distance)
-							Date rmcDate = rmc.getRmcDate();
-							Date rmcTime = rmc.getRmcTime();
+							if (rmc.isValid()) {
+								// Get date, speed, position (for distance)
+								Date rmcDate = rmc.getRmcDate();
+								Date rmcTime = rmc.getRmcTime();
 
-							if (start == null) {
-								start = rmcTime;
-							} else {
-								arrival = rmcTime;
-							}
-							GeoPos gp = rmc.getGp();
-							if (gp != null) {
-								minLat = Math.min(minLat, gp.lat);
-								maxLat = Math.max(maxLat, gp.lat);
-								minLng = Math.min(minLng, gp.lng);
-								maxLng = Math.max(maxLng, gp.lng);
-								if (previousPos != null) {
-									double distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
+								if (start == null) {
+									start = rmcTime;
+								} else {
+									arrival = rmcTime;
+								}
+								GeoPos gp = rmc.getGp();
+								if (gp != null) {
+									minLat = Math.min(minLat, gp.lat);
+									maxLat = Math.max(maxLat, gp.lat);
+									minLng = Math.min(minLng, gp.lng);
+									maxLng = Math.max(maxLng, gp.lng);
+									if (previousPos != null) {
+										double distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
 //									System.out.println(String.format("Step: %.03f km between %s and %s (%s)",
 //													distance,
 //													previousPos.toString(),
 //													gp.toString(),
 //													SDF.format(rmcTime)));
-									distanceInKm += distance;
+										distanceInKm += distance;
+									}
+									previousPos = gp;
 								}
-								previousPos = gp;
+								maxSpeed = Math.max(maxSpeed, rmc.getSog());
 							}
-							maxSpeed = Math.max(maxSpeed, rmc.getSog());
 						} else if (id.equals("GGA")) {
 							nbRec++;
 							List<Object> gga = StringParsers.parseGGA(line);
 							if (gga != null) {
-								double alt = (Double)gga.get(GGA_ALT_IDX);
+								double alt = (Double) gga.get(GGA_ALT_IDX);
 								maxAlt = Math.max(maxAlt, alt);
 								minAlt = Math.min(minAlt, alt);
 							}
@@ -162,12 +167,12 @@ public class LogAnalyzer {
 			System.out.println(String.format("Started %s", SDF.format(start)));
 			System.out.println(String.format("Arrived %s", SDF.format(arrival)));
 			System.out.println(String.format("%s record(s) out of %s. Total distance: %.03f km, in %s. Avg speed:%.03f km/h",
-							NumberFormat.getInstance().format(nbRec),
-							NumberFormat.getInstance().format(totalNbRec),
-							distanceInKm,
-							msToHMS(arrival.getTime() - start.getTime()),
-							distanceInKm / ((arrival.getTime() - start.getTime()) / ((double)HOUR))));
-			System.out.println(String.format("Max Speed: %.03f %s", maxSpeed * unitToUse.convert(), unitToUse.label() ));
+					NumberFormat.getInstance().format(nbRec),
+					NumberFormat.getInstance().format(totalNbRec),
+					distanceInKm,
+					msToHMS(arrival.getTime() - start.getTime()),
+					distanceInKm / ((arrival.getTime() - start.getTime()) / ((double) HOUR))));
+			System.out.println(String.format("Max Speed: %.03f %s", maxSpeed * unitToUse.convert(), unitToUse.label()));
 			System.out.println(String.format("Min alt: %.02f m, Max alt: %.02f m, delta %.02f m", minAlt, maxAlt, (maxAlt - minAlt)));
 			System.out.println(String.format("Top-Left    :%s", new GeoPos(maxLat, minLng).toString()));
 			System.out.println(String.format("Bottom-Right:%s", new GeoPos(minLat, maxLng).toString()));

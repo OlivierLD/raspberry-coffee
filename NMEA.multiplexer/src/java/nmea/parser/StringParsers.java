@@ -422,8 +422,9 @@ public class StringParsers {
 			double m = ((l / 100.0) - intL) * 100.0;
 			m *= (100.0 / 60.0);
 			lat = intL + (m / 100.0);
-			if ("S".equals(sa[LAT_SGN_POS]))
+			if ("S".equals(sa[LAT_SGN_POS])) {
 				lat = -lat;
+			}
 		} catch (Exception ex) {
 		}
 		try {

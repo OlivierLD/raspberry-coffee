@@ -117,37 +117,39 @@ public class NMEAtoKML {
 						if (id.equals("RMC")) {
 							nbRec++;
 							RMC rmc = StringParsers.parseRMC(line);
-							// Get date, speed, position (for distance)
-							Date rmcDate = rmc.getRmcDate();
-							Date rmcTime = rmc.getRmcTime();
+							if (rmc.isValid()) {
+								// Get date, speed, position (for distance)
+								Date rmcDate = rmc.getRmcDate();
+								Date rmcTime = rmc.getRmcTime();
 
-							if (start == null) {
-								start = rmcTime;
-							} else {
-								arrival = rmcTime;
-							}
-							GeoPos gp = rmc.getGp();
-							if (gp != null) {
+								if (start == null) {
+									start = rmcTime;
+								} else {
+									arrival = rmcTime;
+								}
+								GeoPos gp = rmc.getGp();
+								if (gp != null) {
 
-								String coordinates = String.format("%f,%f,%f", gp.lng, gp.lat, (alt != -Double.MAX_VALUE ? alt : 0d));
-								bw.write(coordinates + "\n");
+									String coordinates = String.format("%f,%f,%f", gp.lng, gp.lat, (alt != -Double.MAX_VALUE ? alt : 0d));
+									bw.write(coordinates + "\n");
 
-								minLat = Math.min(minLat, gp.lat);
-								maxLat = Math.max(maxLat, gp.lat);
-								minLng = Math.min(minLng, gp.lng);
-								maxLng = Math.max(maxLng, gp.lng);
-								if (previousPos != null) {
-									double distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
+									minLat = Math.min(minLat, gp.lat);
+									maxLat = Math.max(maxLat, gp.lat);
+									minLng = Math.min(minLng, gp.lng);
+									maxLng = Math.max(maxLng, gp.lng);
+									if (previousPos != null) {
+										double distance = GeomUtil.haversineKm(previousPos.lat, previousPos.lng, gp.lat, gp.lng);
 //									System.out.println(String.format("Step: %.03f km between %s and %s (%s)",
 //													distance,
 //													previousPos.toString(),
 //													gp.toString(),
 //													SDF.format(rmcTime)));
-									distanceInKm += distance;
+										distanceInKm += distance;
+									}
+									previousPos = gp;
 								}
-								previousPos = gp;
+								maxSpeed = Math.max(maxSpeed, rmc.getSog());
 							}
-							maxSpeed = Math.max(maxSpeed, rmc.getSog());
 						} else if (id.equals("GGA")) {
 							nbRec++;
 							List<Object> gga = StringParsers.parseGGA(line);

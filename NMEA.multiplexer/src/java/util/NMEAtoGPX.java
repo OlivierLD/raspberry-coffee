@@ -58,7 +58,7 @@ public class NMEAtoGPX {
 					if ("RMC".equals(prefix)) {
 						if (StringParsers.validCheckSum(line)) {
 							RMC rmc = StringParsers.parseRMC(line);
-							if (rmc != null && rmc.getRmcTime() != null) {
+							if (rmc != null && rmc.getRmcTime() != null && rmc.isValid()) {
 								bw.write("      <trkpt lat=\"" + rmc.getGp().lat + "\" lon=\"" + rmc.getGp().lng + "\">\n" +
 										"        <time>" + UTC_MASK.format(rmc.getRmcTime()) + "</time>\n" +
 										"      </trkpt>\n");

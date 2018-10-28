@@ -120,7 +120,7 @@ This latter one will start the server and open the appropriate Web UI, from a co
  ==> You choose:
 ```
 
-> About the proxies, see the note [here](../common-utils/README.md#HTTP Server WIP).
+> About the proxies, see the note [here](../common-utils/README.md#http-server-wip).
 
 ## Use it
 
