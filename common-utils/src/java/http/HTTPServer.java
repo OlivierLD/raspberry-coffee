@@ -672,8 +672,13 @@ public class HTTPServer {
 									}
 									// explicit 'proxy' implementation
 									if (proxyFunction != null) {
-										Response response = proxyFunction.apply(request);
-										sendResponse(response, out); // Back to caller
+										// In a Thread, not to block
+										final Request req = request;
+										Thread proxyThread = new Thread(() -> {
+											Response response = proxyFunction.apply(req);
+											sendResponse(response, out); // Back to caller
+										});
+										proxyThread.start();
 									}
 								}
 							}
