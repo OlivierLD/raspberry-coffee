@@ -22,6 +22,9 @@ do
 	echo -e "|  P. Launch proxy CLI, to visualize HTTP & REST traffic                                  |"
 	echo -e "| PG. Launch proxy GUI, to visualize HTTP & REST traffic                                  |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
+	echo -e "| >> Hint: use 'killns.sh' to stop any running NavServer                                  |"
+	echo -e "| >> Hint: use 'killproxy.sh' to stop any running Proxy Server                            |"
+	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |"
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
 	echo -e "|  3. Home Weather Station data                                                           |"
@@ -36,7 +39,6 @@ do
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -en " ==> You choose: "
 	read option
-	echo -e " >> Hint: use 'killns.sh' to stop any running NavServer"
 	case "$option" in
 	  "PG" | "pg")
 	    export HTTP_PROXY_PORT=9876
