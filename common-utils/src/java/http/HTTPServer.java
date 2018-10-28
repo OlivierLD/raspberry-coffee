@@ -675,8 +675,12 @@ public class HTTPServer {
 										// In a Thread, not to block
 										final Request req = request;
 										Thread proxyThread = new Thread(() -> {
-											Response response = proxyFunction.apply(req);
-											sendResponse(response, out); // Back to caller
+											try {
+												Response response = proxyFunction.apply(req);
+												sendResponse(response, out); // Back to caller
+											} catch (Exception ex) {
+												ex.printStackTrace();
+											}
 										});
 										proxyThread.start();
 									}

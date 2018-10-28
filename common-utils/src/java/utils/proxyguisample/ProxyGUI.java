@@ -91,6 +91,7 @@ public class ProxyGUI extends JFrame {
 			response = HTTPClient.doRequest(request);
 		} catch (Exception ex) {
 //		throw new RuntimeException(ex);
+			System.err.println(String.format(">>> For request %s %s", request.getVerb(), request.getPath()));
 			ex.printStackTrace();
 		}
 //	String rCode = String.format("Response code: %d", response.getStatus());
