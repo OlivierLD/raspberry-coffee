@@ -13,10 +13,13 @@
 		/* TODO Needs some love... */
 		th {
 			font-size: 8px;
+			border: 1px solid silver;
+			border-radius: 3px;
 		}
 
 		.scrollable-file-name {
-			/*width: 350px;*/
+			min-width: 300px;
+			width: 300px;
 			border: 1px solid silver;
 			border-radius: 5px;
 			white-space: nowrap;
@@ -155,7 +158,7 @@
 						(isTotal ? '<td style="font-style: italic;">total</td>\n' : '  <td><div class="scrollable-file-name"><a href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
 // Flex			(isTotal ? '<td style="font-style: italic;">total</td>\n' : '  <td class="file-name-content"><div class="flex-parent"><a class="flex-child" href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
 // Raw				(isTotal ? '<td style="font-style: italic;">total</td>\n' : '  <td style="min-width: 5px;"><div><a href="/mux/log-files/' + encodeURIComponent(lf.split(' ')[1]) + '" target="ext" title="Click to download">' + lf.split(' ')[1] + '</a></div></td>\n') +
-						'  <td style="text-align: right;">' + formatter.format(lf.split(' ')[0]) + '</td>\n' +
+						'  <td style="text-align: right; font-style: italic;">' + formatter.format(lf.split(' ')[0]) + '</td>\n' +
 						// 9989: check, 9995: open hand, 10006: Heavy cross. All dingbats at https://www.w3schools.com/charsets/ref_utf_dingbats.asp
 						(isActive ? '  <td class="active-file" title="File is active!">&#10006;</td>\n' : '  <td></td>\n' ) +
 						(isActive || isTotal ? '  <td></td>\n' : '  <td class="delete-file"><button onclick="deleteLog(\'' + encodeURIComponent(lf.split(' ')[1]) + '\');" title="Delete log file" style="width: 24px; height: 24px; border-radius: 12px; padding: 0;"><img src="icons/delete.png" width="16" height="16" style="vertical-align: middle;"></button></td>\n' ) +

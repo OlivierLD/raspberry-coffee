@@ -1893,6 +1893,7 @@ public class RESTImplementation {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 
 //	String findCommand = String.format("find %s -name '*.nmea'", System.getProperty("user.dir", "."));
+		// find . -name '*.nmea' -print0 | xargs -0 ls -lisah | awk '{ print $7, $8, $9, $10, $11 }'
 		String findCommand = "find . -name '*.nmea' | xargs wc -l";
 		try {
 			Process process = Runtime.getRuntime().exec(new String[] { "bash", "-c", findCommand });
