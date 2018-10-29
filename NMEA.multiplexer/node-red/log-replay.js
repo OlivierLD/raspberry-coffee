@@ -1,28 +1,28 @@
 module.exports = function (RED) {
     function LogReplayNode(config) {
         RED.nodes.createNode(this, config);
-        var node = this;
+        let node = this;
 
-        var filename = config.path;
-        var freq = config.freq; // Default 1
-        var loop = config.loop; // default true;
-        var verbose = config.verbose; // default false;
+        const filename = config.path;
+        const freq = config.freq; // Default 1
+        const loop = config.loop; // default true;
+        const verbose = config.verbose; // default false;
 
         if (verbose === true) {
             console.log(">> Will " + (loop ? "" : "not ") + "loop.");
         }
-        var fs = require('fs'),
+        let fs = require('fs'),
             lineByLine = require('n-readlines');
 
         var reader;
 
         function readNext() {
-            var ok = true;
-            var line = reader.next();
+            let ok = true;
+            let line = reader.next();
             if (line !== undefined && line !== null && line !== false) {
 //              console.log(">>> Read " + line);
                 try {
-                    var str = Buffer.from(line);
+                    let str = Buffer.from(line);
                     node.send({'payload': str.toString(), 'verbose': verbose});
                 } catch (err) {
                     console.log(err);
