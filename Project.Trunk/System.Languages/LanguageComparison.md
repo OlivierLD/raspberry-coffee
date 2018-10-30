@@ -55,14 +55,20 @@ We will use the following programming languages:
     - Java is not the first language to introduce the concept of Virtual Machine (at least ADA did it before, named after... guess who?). But Java _specified_ it.
     This specification also includes the Java Platform Debugging Architecture (JPDA), that is a blessing for developers. _You can debug - including remotely - the same way on all systems_.
     No language - to my knowledge - ever did that before.
+    - Since version 9, Java now has a `REPL` (Read-Evaluate-Print-Loop). Type `jshell` to launch it.
 - [Scala](#scala)
     - Created by Martin Odersky, École Polytechnique Fédérale de Lausanne, in 2003.
     - Uses the _same_ Virtual Machine as Java (and thus gets Java portability for free), Object Oriented _and_ Functional since day one. Extremely well designed, natively implements immutability and other key concepts.
     Can sound a bit complex to a beginner, but addicting after that.
     Requires compilation (`scalac`).
+    - Has a `REPL`. Type `scala` to launch it.
 - [Kotlin](#kotlin)
     - Created by the JetBrains team (author of the IntelliJ IDE, the best), in 2011.
+    - Uses JVM at run time.
     - Somewhat similar to `Scala`, requires compilation (`kotlinc`).
+        - Kotlin's syntax is simpler than Scala's one. Kotlin seems to gain more and more popularity, as big guys like Google now support it.
+    - Has a `REPL`. Type `kotlinc` to launch it.
+    - See [this](https://kotlinlang.org/docs/tutorials/command-line.html).
 - [JavaScript](#javascript)
     - Created in 1995 by Brendan Eich, engineer at Netscape, _in 10 days_!!
     - Initially designed to run in a browser. Loosely typed (on purpose), and natively functional. Regained _a lot_ of popularity when Web 2.0 was released, used everywhere a browser runs, to program client-side applications (a **lot** of JavaScript frameworks are available).
@@ -70,11 +76,13 @@ We will use the following programming languages:
     `NodeJS` is a JavaScript runtime built on `V8`, Chrome's JavaScript engine, open source.
     This is what makes JavaScript one of the very few languages that can be used on the client as well as on the server.
     Interpreted, does not require compilation.
+    - `NodeJS` can be used as a `REPL`. Type `node` to launch it.
 - [Python](#python)
     - Created by Guido van Rossum, in 1991.
     - Designed for educational purpose. Easy to use, even if its syntax and structure might not please everyone.
     No native Object Oriented (OO) features (some exist, but they may look weird to an OO addict).
     Does not require compilation. Very popular among data scientists, mostly due to its simplicity.
+    - Has a `REPL`. Type `python` or `python3` to launch it.
 - [C](#c)
     - Created by Dennis Ritchie, between 1969 and 1973, at Bell Labs.
     - Immensely adopted on the planet Earth. The oldest of all the ones mentioned here, and still alive and well.
@@ -97,6 +105,7 @@ We will use the following programming languages:
     - Runs on a JVM (see above). Much more flexible language than Java, _not_ strongly typed, compatible with Java (i.e you
     can literally copy-paste Java code into a Groovy script), but also understands a nice closure-like syntax.
     Can be compiled, or not. Supports classes definition, can be run as a script.
+    - The `Groovy Console` can be used as a `REPL`. Type `groovysh` to launch it.
 - [Go](#go) (aka Golang)
     - Created in 2009 by Robert Griesemer, Rob Pike, and Ken Thompson, at Google.
     - Designed to be the "Language of the Cloud". Interpreted (`go run`) or compiled (`go build`).
@@ -111,6 +120,7 @@ We will use the following programming languages:
     If you do not know it yet, do give it a look. There is a good chance that you
     will be at least surprised... If Go feels a bit like an UFO, that one is an alien!
     Clojure is _obsessed_ with immutability. You just _cannot_ assign a new value to a variable. And yes, that can make sense.
+    - Has a `REPL`. Type `clj` to launch it.
 - [Processing](#processing)
     - Created by Ben Fry and Casey Reas, based on Java (not exactly _another_ language in that sense, but it *does* make things a lot simpler), in 2001. Beautiful. Available (for free) from the [Processing](https://processing.org/) site.
     - It is what inspired the `Arduino` IDE - which uses a language that looks more like `C`.

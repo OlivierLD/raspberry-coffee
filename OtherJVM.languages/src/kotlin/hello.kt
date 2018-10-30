@@ -10,6 +10,7 @@ fun main(args: Array<String>) {
     println(when (language) {
         "EN" -> "Hello${name}!"
         "FR" -> "Salut${name}!"
+        "ES" -> "\u00A1Hola${name}!"
         "IT" -> "Ciao${name}!"
         else -> "Sorry${name}, I can't greet you in $language yet"
     })
