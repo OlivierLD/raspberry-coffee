@@ -29,6 +29,7 @@
 #include <Wire.h>
 #include "font.h"
 
+const int DISPLAY_ON            = 0xAF;
 const int DISPLAY_OFF           = 0xAE;
 const int NORMAL_DISPLAY        = 0xA6;
 const int INVERSE_DISPLAY       = 0xA7;
@@ -76,15 +77,15 @@ void SSD1306::reconnect() {
 }
 
 void SSD1306::displayOn(void) {
-  sendCommand(0xaf);        //display on
+  sendCommand(DISPLAY_ON);
 }
 
 void SSD1306::displayOff(void) {
-  sendCommand(0xae);		//display off
+  sendCommand(DISPLAY_OFF);
 }
 
 void SSD1306::setContrast(char contrast) {
-  sendCommand(0x81);
+  sendCommand(SET_CONTRAST);
   sendCommand(contrast);
 }
 void SSD1306::flipScreenVertically() {
