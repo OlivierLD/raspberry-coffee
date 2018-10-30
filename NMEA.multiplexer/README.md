@@ -730,6 +730,8 @@ Bottom-Right:N  37°44.91' / W 122°24.12'
 Generated file sample.data/alcatraz.2018.may.5.nmea.kml is ready.
  $
 ```
-Then open the generated file in Google Earth.
+Then open the generated file in Google Map or Google Earth.
+
+- The same feature is also available for GPX (for navigation software like OpenCPON), from `util.NMEAtoGPX`.
 
 -------------------------------
