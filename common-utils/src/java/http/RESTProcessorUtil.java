@@ -23,7 +23,7 @@ public class RESTProcessorUtil {
 							.boxed()
 							.forEach(j -> {
 								if (opList.get(i).getVerb().equals(opList.get(j).getVerb()) &&
-										RESTProcessorUtil.pathsAreIndentical(opList.get(i).getPath(), opList.get(j).getPath())) {
+										RESTProcessorUtil.pathsAreIdentical(opList.get(i).getPath(), opList.get(j).getPath())) {
 									throw new RuntimeException(String.format("Duplicate entry in operations list %s %s", opList.get(i).getVerb(), opList.get(i).getPath()));
 								}
 							});
@@ -38,7 +38,7 @@ public class RESTProcessorUtil {
 	 * @param two path to compare with one
 	 * @return true if paths match.
 	 */
-	public static boolean pathsAreIndentical(String one, String two) {
+	public static boolean pathsAreIdentical(String one, String two) {
 		boolean match = true;
 		String[] oneElem = one.split("/");
 		String[] twoElem = two.split("/");

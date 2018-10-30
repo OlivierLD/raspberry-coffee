@@ -392,7 +392,6 @@ public class RESTImplementation {
 		SDF_SOLAR.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
 	}
 
-
 	/**
 	 * Computes sun's and moon's Declination and GHA at a given (UTC) time.
 	 * Also, optionally:

@@ -353,7 +353,7 @@ public class HTTPServer {
 					List<Operation> dups = opList.stream()
 							.filter(op -> requestManager.getRESTOperationList().stream()
 									.filter(newOp -> (newOp.getVerb().equals(op.getVerb()) &&
-											              RESTProcessorUtil.pathsAreIndentical(newOp.getPath(), op.getPath())))
+											              RESTProcessorUtil.pathsAreIdentical(newOp.getPath(), op.getPath())))
 									.collect(Collectors.counting()) > 0)
 							.collect(Collectors.toList());
 					if (dups.size() > 0) {

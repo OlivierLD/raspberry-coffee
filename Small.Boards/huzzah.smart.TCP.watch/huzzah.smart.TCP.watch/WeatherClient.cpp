@@ -26,35 +26,32 @@ See more at http://blog.squix.ch
 #include "WeatherClient.h"
 #include <ESP8266WiFi.h>
 
-void WeatherClient::updateWeatherData(String domainName, String apiKey, double lat, double lon) {
+void WeatherClient::updateData(String serverName, int port, String restRequest) {
   WiFiClient client;
-  const int httpPort = 80;
+  const int httpPort = port;
 
   Serial.print("Connecting to server: ");
-  Serial.println(domainName);
-
+  Serial.println(serverName);
+  
   // connnect to our server
-  while (!client.connect(domainName.c_str(), httpPort)) {
+  while (!client.connect(serverName.c_str(), httpPort)) {
     Serial.println("connection failed, retrying...");
     delay(10000);
   }
-
-  // We now create a URI for the request
-  String url = "http://" + domainName + "/weather.php?apiKey=" + apiKey + "&lat=" + String(lat) + "&lon=" + String(lon) + "&units=" + myUnits;
-
+  
   Serial.print("Requesting URL: ");
-  Serial.println(url);
-
+  Serial.println(restRequest);
+  
   // This will send the request to the server
-  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-               "Host: YOURDOMAINNAME\r\n" +
+  client.print(String("GET ") + restRequest + " HTTP/1.1\r\n" +
+               "Host: " + serverName + "\r\n" + 
                "Connection: close\r\n\r\n");
 
   // wait for response from server
   while (!client.available()) {
-    delay(200);
+    delay(200); 
   }
-
+  
   // Read all the lines of the reply from server and print them to Serial
   while (client.available()) {
     String line = client.readStringUntil('\n');
@@ -62,46 +59,46 @@ void WeatherClient::updateWeatherData(String domainName, String apiKey, double l
     String key = getKey(line);
     if (key.length() > 0) {
       String value = getValue(line);
-        if (key=="CURRENT_TEMP") {
-         currentTemp = value.toInt();
-        } else if(key =="CURRENT_HUMIDITY") {
-         currentHumidity = value.toInt();
-        } else if (key =="CURRENT_ICON") {
-         currentIcon = value;
-        } else if (key =="CURRENT_SUMMARY") {
-         currentSummary = value;
-        } else if (key =="MAX_TEMP_TODAY") {
-         maxTempToday = value.toInt();
-        } else if (key =="MIN_TEMP_TODAY") {
-         minTempToday = value.toInt();
-        } else if (key =="ICON_TODAY") {
-         iconToday = value;
-        } else if (key =="SUMMARY_TODAY") {
-         summaryToday = value;
-        } else if (key =="MAX_TEMP_TOMORROW") {
-         maxTempTomorrow = value.toInt();
-        } else if (key =="ICON_TOMORROW") {
-         iconTomorrow = value;
-        } else if (key =="MIN_TEMP_TOMORROW") {
-         minTempTomorrow = value.toInt();
-        } else if (key =="SUMMARY_TODAY") {
-         summaryTomorrow = value;
-        }
+      if (key=="CURRENT_TEMP") {
+       currentTemp = value.toInt();
+      } else if(key =="CURRENT_HUMIDITY") {
+       currentHumidity = value.toInt();
+      } else if (key =="CURRENT_ICON") {
+       currentIcon = value;
+      } else if (key =="CURRENT_SUMMARY") {
+       currentSummary = value;
+      } else if (key =="MAX_TEMP_TODAY") {
+       maxTempToday = value.toInt();
+      } else if (key =="MIN_TEMP_TODAY") {
+       minTempToday = value.toInt();
+      } else if (key =="ICON_TODAY") {
+       iconToday = value;
+      } else if (key =="SUMMARY_TODAY") {
+       summaryToday = value;
+      } else if (key =="MAX_TEMP_TOMORROW") {
+       maxTempTomorrow = value.toInt();
+      } else if (key =="ICON_TOMORROW") {
+       iconTomorrow = value;
+      } else if (key =="MIN_TEMP_TOMORROW") {
+       minTempTomorrow = value.toInt();
+      } else if (key =="SUMMARY_TODAY") {
+       summaryTomorrow = value;
+      } 
     }
   }
   Serial.println();
-  Serial.println("closing connection");
+  Serial.println("closing connection");    
 }
 
 void WeatherClient::setUnits(String units) {
-   myUnits = units;
+   myUnits = units; 
 }
 
 String WeatherClient::getKey(String line) {
   int separatorPosition = line.indexOf("=");
   if (separatorPosition == -1) {
     return "";
-  }
+  }  
   return line.substring(0, separatorPosition);
 }
 
@@ -109,54 +106,44 @@ String WeatherClient::getValue(String line) {
   int separatorPosition = line.indexOf("=");
   if (separatorPosition == -1) {
     return "";
-  }
+  }  
   return line.substring(separatorPosition + 1);
 }
+
 
 int WeatherClient::getCurrentTemp(void) {
   return currentTemp;
 }
-
 int WeatherClient::getCurrentHumidity(void) {
   return currentHumidity;
 }
-
 String WeatherClient::getCurrentIcon(void) {
   return currentIcon;
 }
-
 String WeatherClient::getCurrentSummary(void) {
   return currentSummary;
 }
-
 String WeatherClient::getIconToday(void) {
   return iconToday;
 }
-
 int WeatherClient::getMaxTempToday(void) {
   return maxTempToday;
 }
-
 int WeatherClient::getMinTempToday(void) {
   return minTempToday;
 }
-
 String WeatherClient::getSummaryToday(void) {
   return summaryToday;
 }
-
 int WeatherClient::getMaxTempTomorrow(void) {
   return maxTempTomorrow;
 }
-
 int WeatherClient::getMinTempTomorrow(void) {
   return minTempTomorrow;
 }
-
 String WeatherClient::getIconTomorrow(void) {
   return iconTomorrow;
 }
-
 String WeatherClient::getSummaryTomorrow(void) {
   return summaryTomorrow;
 }

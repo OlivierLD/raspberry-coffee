@@ -43,12 +43,12 @@ class WeatherClient {
     String domainName;
     String myUnits = "us";
     String myLanguage;
-
+    
     String getValue(String line);
     String getKey(String line);
-
+  
   public:
-    void updateWeatherData(String domainName, String apiKey, double lat, double lon);
+    void updateData(String serverName, int port, String restRequest); 
     void setUnits(String units);
     int getCurrentTemp(void);
     int getCurrentHumidity(void);
@@ -62,5 +62,6 @@ class WeatherClient {
     int getMinTempTomorrow(void);
     String getIconTomorrow(void);
     String getSummaryTomorrow(void);
-
+    
+  
 };

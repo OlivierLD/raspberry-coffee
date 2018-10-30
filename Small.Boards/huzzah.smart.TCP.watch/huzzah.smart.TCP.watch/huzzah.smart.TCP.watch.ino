@@ -3,6 +3,9 @@
 #include "ssd1306_i2c.h"
 #include "icons.h"
 
+// Need ArduinoJson, see https://arduinojson.org/
+#include <ArduinoJson.h>
+
 #include <ESP8266WiFi.h>
 #include "WeatherClient.h"
 
@@ -12,22 +15,18 @@
 
 #define I2C 0x3D
 
-#define WIFISSID "RPi-Net"
-#define PASSWORD "raspberrypi"
+#define WIFISSID "Sonic-00e0" // "RPi-Net"
+#define PASSWORD "67369c7831" // "raspberrypi"
 
-#define FORECASTAPIKEY "YOUR_FORECAST_API_KEY"
-#define DOMAINNAME "YOUR_DOMAIN_NAME"
-
-// New York City
-#define LATITUDE 40.71
-#define LONGITUDE -74
+#define MULTIPLEXER_SERVER_NAME "192.168.42.4"
+#define REST_RESOURCE "/mux/cache?option=tiny"
 
 // Initialize the oled display for address 0x3c
 // 0x3D is the adafruit address....
 // sda-pin=14 and sdc-pin=12
 SSD1306 display(I2C, SDA, SCL);
 WeatherClient weather;
-Ticker ticker;
+Ticker ticker; // Invokes a method at a given interval
 
 void drawFrame1(int x, int y) {
   display.setFontScale2x2(false);
@@ -72,19 +71,10 @@ char ssid[] = WIFISSID;
 // your network password
 char pass[] = PASSWORD;
 
-// Go to forecast.io and register for an API KEY
-String forecastApiKey = FORECASTAPIKEY;
-
-// website domain name
-String webDomain = DOMAINNAME;
-
-// Coordinates of the place you want
-// weather information for
-double latitude = LATITUDE;
-double longitude = LONGITUDE;
+String serverName = MULTIPLEXER_SERVER_NAME;
 
 // flag changed in the ticker function every 10 minutes
-bool readyForWeatherUpdate = true;
+bool readyForUpdate = true;
 
 void setup() {
   delay(500);
@@ -133,22 +123,23 @@ void setup() {
 
   // update the weather information every 10 mintues only
   // forecast.io only allows 1000 calls per day
-  ticker.attach(60 * 10, setReadyForWeatherUpdate);
+  ticker.attach(60 * 10, setReadyForUpdate);
   //ESP.wdtEnable();
 }
 
 void loop() {
-  if (readyForWeatherUpdate && display.getFrameState() == display.FRAME_STATE_FIX) {
-    readyForWeatherUpdate = false;
-    weather.updateWeatherData(webDomain, forecastApiKey, latitude, longitude);
+  if (readyForUpdate && display.getFrameState() == display.FRAME_STATE_FIX) {
+    readyForUpdate = false;
+    weather.updateData(serverName, 80, REST_RESOURCE);
   }
+
   display.clear();
   display.nextFrameTick();
   display.display();
 }
 
-void setReadyForWeatherUpdate() {
-  readyForWeatherUpdate = true;
+void setReadyForUpdate() {
+  readyForUpdate = true;
 }
 
 const char* getIconFromString(String icon) {

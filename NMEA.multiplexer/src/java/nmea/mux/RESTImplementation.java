@@ -213,7 +213,7 @@ public class RESTImplementation {
 					"GET",
 					REST_PREFIX + "/cache",
 					this::getCache,
-					"Get ALL the data in the cache"),
+					"Get ALL the data in the cache. QS prm: option=tiny"),
 			new Operation(
 					"DELETE",
 					REST_PREFIX + "/cache",
@@ -314,7 +314,7 @@ public class RESTImplementation {
 						.findFirst();
 		if (opOp.isPresent()) {
 			Operation op = opOp.get();
-			request.setRequestPattern(op.getPath()); // To get the prms later on.
+			request.setRequestPattern(op.getPath()); // To get the path parameters later on.
 			HTTPServer.Response processed = op.getFn().apply(request); // Execute here.
 			return processed;
 		} else {
@@ -2087,8 +2087,80 @@ public class RESTImplementation {
 		return response;
 	}
 
+	private transient static List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[] {
+			NMEADataCache.LAST_NMEA_SENTENCE,
+			NMEADataCache.GPS_DATE_TIME,
+			NMEADataCache.GPS_SOLAR_TIME,
+			NMEADataCache.DECLINATION,
+			NMEADataCache.LOG,
+			NMEADataCache.DAILY_LOG,
+			NMEADataCache.WATER_TEMP,
+			NMEADataCache.AIR_TEMP,
+			NMEADataCache.BARO_PRESS,
+			NMEADataCache.RELATIVE_HUMIDITY,
+			NMEADataCache.AWA,
+			NMEADataCache.AWS,
+			NMEADataCache.HDG_COMPASS,
+			NMEADataCache.HDG_MAG,
+			NMEADataCache.HDG_TRUE,
+			NMEADataCache.DEVIATION,
+			NMEADataCache.VARIATION,
+			NMEADataCache.TWA,
+			NMEADataCache.TWS,
+			NMEADataCache.TWD,
+			NMEADataCache.CSP,
+			NMEADataCache.CDR,
+			NMEADataCache.XTE,
+			NMEADataCache.FROM_WP,
+			NMEADataCache.TO_WP,
+			NMEADataCache.WP_POS,
+			NMEADataCache.DBT,
+			NMEADataCache.D2WP,
+			NMEADataCache.B2WP,
+			NMEADataCache.S2WP,
+			NMEADataCache.S2STEER,
+			NMEADataCache.LEEWAY,
+			NMEADataCache.CMG,
+			NMEADataCache.SAT_IN_VIEW,
+
+			NMEADataCache.BATTERY,
+			NMEADataCache.CALCULATED_CURRENT,
+			NMEADataCache.VDR_CURRENT,
+
+			NMEADataCache.BSP_FACTOR,
+			NMEADataCache.AWS_FACTOR,
+			NMEADataCache.AWA_OFFSET,
+			NMEADataCache.HDG_OFFSET,
+			NMEADataCache.MAX_LEEWAY,
+
+			NMEADataCache.DEVIATION_FILE,
+			NMEADataCache.DEVIATION_DATA,
+			NMEADataCache.DEFAULT_DECLINATION,
+			NMEADataCache.DAMPING,
+
+			NMEADataCache.VMG_ON_WIND,
+			NMEADataCache.VMG_ON_WP,
+
+			NMEADataCache.ALTITUDE,
+			NMEADataCache.SMALL_DISTANCE,
+			NMEADataCache.DELTA_ALTITUDE,
+
+			NMEADataCache.PRATE,
+			NMEADataCache.DEW_POINT_TEMP,
+
+			NMEADataCache.NMEA_AS_IS,
+
+			NMEADataCache.AIS
+	});
+
 	private HTTPServer.Response getCache(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		// Tiny object option
+		boolean tiny = false;
+		Map<String, String> qsPrms = request.getQueryStringParameters();
+		if (qsPrms != null && qsPrms.get("option") != null) {
+			tiny = qsPrms.get("option").equals("tiny");
+		}
 
 		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
 
@@ -2097,9 +2169,14 @@ public class RESTImplementation {
 			// Calculate VMG(s)
 			synchronized (cache) {
 				NMEAUtils.calculateVMGs(cache);
-				jsonElement = new Gson().toJsonTree(cache);
-				String str = new Gson().toJson(cache); // TODO What's that one?
-				((JsonObject) jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client, drop it.
+				final JsonElement _jsonElement = new Gson().toJsonTree(cache);
+		//	String str = new Gson().toJson(cache);
+				((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client, drop it.
+				if (tiny) {
+					REMOVE_WHEN_TINY.stream()
+							.forEach(member -> ((JsonObject) _jsonElement).remove(member));
+				}
+				jsonElement = _jsonElement;
 			}
 		} catch (Exception ex) {
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
