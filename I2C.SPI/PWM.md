@@ -43,7 +43,7 @@ An instruction like `setPWM(channel, 0, pulse);` means:
 The frequency is provided in Hertz (Hz).
 A frequency of 60 means 60 cycles per second.
 
-At 60 Hz, a cycle will be `1 / 60` second, which is `0.01666666` second, or `16.66666` milli-second (ms).
+At 60 Hz, a cycle will be `1 / 60` second, which is `0.01666666` second, or `16.66666` milli-seconds (ms).
 
 #### The pulse
 For _each of the cycles_ set above by setting the frequency, we need to determine the `int` value,
