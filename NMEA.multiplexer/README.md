@@ -732,6 +732,6 @@ Generated file sample.data/alcatraz.2018.may.5.nmea.kml is ready.
 ```
 Then open the generated file in Google Map or Google Earth.
 
-- The same feature is also available for GPX (for navigation software like OpenCPON), from `util.NMEAtoGPX`.
+- The same feature is also available for GPX (for navigation software like OpenCPN), from `util.NMEAtoGPX`.
 
 -------------------------------
