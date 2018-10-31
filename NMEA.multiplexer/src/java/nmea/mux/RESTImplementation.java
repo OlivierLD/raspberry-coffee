@@ -386,7 +386,8 @@ public class RESTImplementation {
 		Optional<Forwarder> opFwd = null;
 		Gson gson = null;
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), 204);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+//	List<String> prmValues = RESTProcessorUtil.getPathPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() == 1) {
 			String id = prmValues.get(0);
 			switch (id) {
@@ -529,7 +530,7 @@ public class RESTImplementation {
 		Optional<NMEAClient> opClient = null;
 		Gson gson = null;
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NO_CONTENT);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() == 1) {
 			String id = prmValues.get(0);
 			switch (id) {
@@ -654,7 +655,7 @@ public class RESTImplementation {
 		Optional<Computer> opComputer = null;
 		Gson gson = null;
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.NO_CONTENT);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() == 1) {
 			String id = prmValues.get(0);
 			switch (id) {
@@ -1547,7 +1548,7 @@ public class RESTImplementation {
 			if (bean instanceof Map) {
 				type = ((Map<String, String>) bean).get("type");
 			}
-			List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+			List<String> prmValues = request.getPathParameters();
 			if (prmValues.size() == 1) {
 				String id = prmValues.get(0);
 				if (!type.equals(id)) {
@@ -1763,7 +1764,7 @@ public class RESTImplementation {
 			if (bean instanceof Map) {
 				type = ((Map<String, String>) bean).get("type");
 			}
-			List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+			List<String> prmValues = request.getPathParameters();
 			if (prmValues.size() == 1) {
 				String id = prmValues.get(0);
 				if (!type.equals(id)) {
@@ -1798,7 +1799,7 @@ public class RESTImplementation {
 			if (bean instanceof Map) {
 				type = ((Map<String, String>) bean).get("type");
 			}
-			List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+			List<String> prmValues = request.getPathParameters();
 			if (prmValues.size() == 1) {
 				String id = prmValues.get(0);
 				if (!type.equals(id)) {
@@ -1855,7 +1856,7 @@ public class RESTImplementation {
 
 	private HTTPServer.Response putMuxVerbose(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
 			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter");
@@ -1873,7 +1874,7 @@ public class RESTImplementation {
 
 	private HTTPServer.Response putMuxProcess(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
 			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter");
@@ -1930,7 +1931,7 @@ public class RESTImplementation {
 	 */
 	private HTTPServer.Response getLogFile(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
 			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {log-file-name}");
@@ -1982,7 +1983,7 @@ public class RESTImplementation {
 	 */
 	private HTTPServer.Response deleteLogFile(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
 			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {log-file-name}");
@@ -2017,7 +2018,7 @@ public class RESTImplementation {
 
 	private HTTPServer.Response customProtocolManager(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters();
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
 			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {content}");
@@ -2505,7 +2506,7 @@ public class RESTImplementation {
 	 */
 	private HTTPServer.Response broadcastOnTopic(HTTPServer.Request request) {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath()); // Path parameters, in the request's url
+		List<String> prmValues = request.getPathParameters(); // Path parameters, in the request's url
 		if (prmValues.size() != 1) {
 			response.setStatus(HTTPServer.Response.BAD_REQUEST);
 			RESTProcessorUtil.addErrorMessageToResponse(response, "missing path parameter {topic}");

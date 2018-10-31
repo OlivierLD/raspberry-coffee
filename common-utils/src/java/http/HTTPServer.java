@@ -126,6 +126,10 @@ public class HTTPServer {
 			return queryStringParameters;
 		}
 
+		public List<String> getPathParameters() {
+			return RESTProcessorUtil.getPathPrmValues(this.getRequestPattern(), this.getPath());
+		}
+
 		public void setHeaders(Map<String, String> headers) {
 			this.headers = headers;
 		}

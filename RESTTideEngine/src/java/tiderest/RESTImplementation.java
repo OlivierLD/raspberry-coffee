@@ -171,7 +171,7 @@ public class RESTImplementation {
 	 */
 	private Response getCoefficient(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters(); // RESTProcessorUtil.getPathPrmValues(request.getRequestPattern(), request.getPath());
 		String coeffName = "";
 		if (prmValues.size() == 1) {
 			String param = prmValues.get(0);
@@ -297,7 +297,7 @@ public class RESTImplementation {
 	 */
 	private Response getWaterHeightWithDetails(@Nonnull Request request, boolean withDetails) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK); // Happy response
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters(); // RESTProcessorUtil.getPathPrmValues(request.getRequestPattern(), request.getPath());
 		String stationFullName = "";
 		Calendar calFrom = null, calTo = null;
 		String fromPrm = null, toPrm = null;
@@ -562,7 +562,7 @@ public class RESTImplementation {
 
 	private Response getStations(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters(); // RESTProcessorUtil.getPathPrmValues(request.getRequestPattern(), request.getPath());
 		final Pattern pattern;
 		if (prmValues.size() == 1) {
 			String nameRegex = prmValues.get(0);
@@ -632,7 +632,7 @@ public class RESTImplementation {
 
 	private Response publishTideDocument(@Nonnull Request request, String script) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
-		List<String> prmValues = RESTProcessorUtil.getPrmValues(request.getRequestPattern(), request.getPath());
+		List<String> prmValues = request.getPathParameters(); // RESTProcessorUtil.getPathPrmValues(request.getRequestPattern(), request.getPath());
 		String stationFullName = "";
 		if (prmValues.size() == 1) {
 			String param = prmValues.get(0);

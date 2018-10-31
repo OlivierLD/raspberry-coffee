@@ -91,7 +91,7 @@ public class RESTProcessorUtil {
 	 * @param path    /one/x/two/y
 	 * @return x, y
 	 */
-	public static List<String> getPrmValues(String pattern, String path) {
+	public static List<String> getPathPrmValues(String pattern, String path) {
 		List<String> returned = new ArrayList<>();
 		String[] patternElem = pattern.split("/");
 		String[] pathElem = path.split("/");
