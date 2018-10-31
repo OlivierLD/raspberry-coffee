@@ -1,6 +1,7 @@
 /*
    Simple HTTP get webclient REST test
-   for Huzzah/ESP8266
+   for Huzzah/ESP8266.
+   That one spits out data oin the Serial console (no oled screen).
 */
 
 #include <ESP8266WiFi.h>
@@ -120,7 +121,10 @@ void loop() {
   char dataBuffer[128];
   sprintf(dataBuffer, "Bsp=%f, Lat=%f, Lng=%f", bsp, lat, lng);
   Serial.println(dataBuffer);
-  Serial.println();
+  sprintf(dataBuffer, "SOG=%f, COG=%d", sog, cog);
+  Serial.println(dataBuffer);
+  sprintf(dataBuffer, "Date=%s", date);
+  Serial.println(dataBuffer);
   Serial.println("closing connection");
 }
 
