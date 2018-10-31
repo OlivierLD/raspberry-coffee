@@ -128,7 +128,7 @@ The scripts `rm.container.sh` and `rm.images.sh` are here to help...
 ```bash
 $ docker build -f webcomponents.Dockerfile -t oliv-image .
 $ docker run -p 8081:8080 -it oliv-image /bin/bash
-root@7e754f8732a0:/workdir/raspberry-pi4j-samples/WebComponents# node server.js
+root@7e754f8732a0:/workdir/WebComponents# node server.js
 ```
 
 Then reach `http://localhost:8081/oliv-components/index.html`

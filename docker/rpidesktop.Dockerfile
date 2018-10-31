@@ -7,8 +7,8 @@ FROM debian
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"
 
 # Following lines may be commented.
-ENV http_proxy http://www-proxy.us.oracle.com:80
-ENV https_proxy http://www-proxy.us.oracle.com:80
+ENV http_proxy http://www-proxy-hqdc.us.oracle.com:80
+ENV https_proxy http://www-proxy-hqdc.us.oracle.com:80
 ## ENV ftp_proxy $http_proxy
 ENV no_proxy "localhost,127.0.0.1,orahub.oraclecorp.com,artifactory-slc.oraclecorp.com"
 
@@ -48,7 +48,8 @@ WORKDIR /home/root
 RUN mkdir workdir
 WORKDIR workdir
 RUN git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
-WORKDIR raspberry-pi4j-samples/WebComponents
+RUN git clone https://github.com/OlivierLD/WebComponents.git
+WORKDIR WebComponents
 
 EXPOSE 8080
 CMD ["npm", "start"]
