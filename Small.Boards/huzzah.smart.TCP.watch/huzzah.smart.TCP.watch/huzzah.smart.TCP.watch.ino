@@ -7,7 +7,6 @@
 #include <ArduinoJson.h>
 
 #include <ESP8266WiFi.h>
-#include "WeatherClient.h"
 
 #define SDA 14
 #define SCL 12
@@ -25,17 +24,16 @@
 // 0x3D is the adafruit address....
 // sda-pin=14 and sdc-pin=12
 SSD1306 display(I2C, SDA, SCL);
-WeatherClient weather;
 Ticker ticker; // Invokes a method at a given interval
 
 void drawFrame1(int x, int y) {
   display.setFontScale2x2(false);
   display.drawString(65 + x, 8 + y, "Now");
-  display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getCurrentIcon()));
+//display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getCurrentIcon()));
   display.setFontScale2x2(true);
-  display.drawString(64 + x, 20 + y, String(weather.getCurrentTemp()) + "F");
+//display.drawString(64 + x, 20 + y, String(weather.getCurrentTemp()) + "F");
   display.setFontScale2x2(false);
-  display.drawString(64 + x, 40 + y, String(weather.getCurrentSummary()));
+//display.drawString(64 + x, 40 + y, String(weather.getCurrentSummary()));
 }
 
 void drawFrame2(int x, int y) {
@@ -43,17 +41,17 @@ void drawFrame2(int x, int y) {
   display.drawString(65 + x, 0 + y, "Today");
   display.drawXbm(x, y, 60, 60, xbmtemp);
   display.setFontScale2x2(true);
-  display.drawString(64 + x, 14 + y, String(weather.getCurrentTemp()) + "F");
+//display.drawString(64 + x, 14 + y, String(weather.getCurrentTemp()) + "F");
   display.setFontScale2x2(false);
-  display.drawString(66 + x, 40 + y, String(weather.getMinTempToday()) + "F/" + String(weather.getMaxTempToday()) + "F");
+//display.drawString(66 + x, 40 + y, String(weather.getMinTempToday()) + "F/" + String(weather.getMaxTempToday()) + "F");
 }
 
 void drawFrame3(int x, int y) {
-  display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getIconTomorrow()));
+//display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getIconTomorrow()));
   display.setFontScale2x2(false);
   display.drawString(65 + x, 7 + y, "Tomorrow");
   display.setFontScale2x2(true);
-  display.drawString(64 + x, 20 + y, String(weather.getMaxTempTomorrow()) + "F");
+//display.drawString(64 + x, 20 + y, String(weather.getMaxTempTomorrow()) + "F");
 }
 
 // this array keeps function pointers to all frames
@@ -120,6 +118,10 @@ void setup() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
+  Serial.print("Netmask: ");
+  Serial.println(WiFi.subnetMask());
+  Serial.print("Gateway: ");
+  Serial.println(WiFi.gatewayIP());
 
   // update the weather information every 10 mintues only
   // forecast.io only allows 1000 calls per day
@@ -130,9 +132,41 @@ void setup() {
 void loop() {
   if (readyForUpdate && display.getFrameState() == display.FRAME_STATE_FIX) {
     readyForUpdate = false;
-    weather.updateData(serverName, 80, REST_RESOURCE);
-  }
 
+    Serial.print("connecting to ");
+    Serial.println(serverName);
+
+    // Use WiFiClient class to create TCP connections
+    WiFiClient client;
+    const int httpPort = 80;
+    if (!client.connect(serverName, httpPort)) {
+      Serial.println("connection failed");
+      return;
+    }
+
+    // We now create a URI for the request
+    String url = REST_RESOURCE;
+    Serial.print("Requesting URL: ");
+    Serial.println(url);
+
+    // This will send the request to the server
+    // TODO Make it more generic, like a REST request
+    //  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+    //               "Host: " + host + "\r\n" +
+    //               "Connection: close\r\n\r\n");
+    sendRequest(client, "GET", url, "HTTP/1.1", serverName);
+    delay(500);
+
+    // Read all the lines of the reply from server and print them to Serial
+    while (client.available()) {
+      String line = client.readStringUntil('\r');
+      Serial.print(line); // Output here
+    }
+
+    Serial.println();
+    Serial.println("closing connection");
+
+  }
   display.clear();
   display.nextFrameTick();
   display.display();
@@ -179,4 +213,13 @@ void drawSpinner(int count, int active) {
     display.drawXbm(64 - (12 * count / 2) + 12 * i, 56, 8, 8, xbm);
   }
 }
+
+void sendRequest(WiFiClient client, String verb, String url, String protocol, String host) {
+  String request = verb + " " + url + " " + protocol + "\r\n" +
+                   "Host: " + host + "\r\n" +
+                   "Connection: close\r\n" +
+                   "\r\n";
+  client.print(request);
+}
+
 
