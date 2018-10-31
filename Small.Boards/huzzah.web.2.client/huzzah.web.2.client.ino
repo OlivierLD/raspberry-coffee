@@ -5,18 +5,13 @@
 */
 
 #include <ESP8266WiFi.h>
-// Need ArduinoJson to parse a Json object, see https://arduinojson.org/
-// #include <ArduinoJson.h>
 
 // Network and Host definitions
-
 const char* ssid     = "Sonic-00e0";
 const char* password = "67369c7831";
 
 const char* host = "192.168.42.4";
 const int httpPort = 9998;
-
-// StaticJsonBuffer<1024> jsonBuffer;
 
 void setup() {
   Serial.begin(115200); // Console output
@@ -123,8 +118,8 @@ void loop() {
   Serial.println(dataBuffer);
   sprintf(dataBuffer, "SOG=%f, COG=%d", sog, cog);
   Serial.println(dataBuffer);
-  sprintf(dataBuffer, "Date=%s", date);
-  Serial.println(dataBuffer);
+  Serial.print("Date=");
+  Serial.println(date);
   Serial.println("closing connection");
 }
 
