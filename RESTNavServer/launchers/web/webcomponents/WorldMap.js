@@ -115,6 +115,11 @@ class WorldMap extends HTMLElement {
 		this._shadowRoot = this.attachShadow({mode: 'open'}); // 'open' means it is accessible from external JavaScript.
 		// create and append a <canvas>
 		this.canvas = document.createElement("canvas");
+		let fallbackElemt = document.createElement("h1");
+		fallbackElemt.setAttribute("tabindex", "0");
+		let content = document.createTextNode("This is a World Map, on an HTML5 canvas");
+		fallbackElemt.appendChild(content);
+		this.canvas.appendChild(fallbackElemt);
 		this.shadowRoot.appendChild(this.canvas);
 
 		// For tests of the import
@@ -161,6 +166,7 @@ class WorldMap extends HTMLElement {
 		this._previousClassName = "";
 		this.worldmapColorConfig = worldMapDefaultColorConfig;
 
+		this.doFirst = undefined; // Callback, before drawing, before painting anything. Takes 'this' and the context as parameter.
 		this.doBefore = undefined; // Callback, before drawing. Takes 'this' and the context as parameter.
 		this.doAfter = undefined;  // Callback, after drawing. Takes 'this' and the context as parameter.
 
@@ -381,6 +387,9 @@ class WorldMap extends HTMLElement {
 	/*
 	 * Component methods
 	 */
+	setDoFirst(func) {
+		this.doFirst = func;
+	}
 	setDoBefore(func) {
 		this.doBefore = func;
 	}
@@ -622,6 +631,10 @@ class WorldMap extends HTMLElement {
 		return Utilities.toDegrees(rad);
 	}
 
+	computeGreatCircle(from, to, nb) {
+		return Utilities.calculateGreatCircleInDegrees(from, to, nb);
+	}
+
 	/**
 	 * Start from 'from', and return the position reached after 'dist' nm in the 'route' bearing.
 	 * @param from GeoPoint, L & G in Radians
@@ -742,7 +755,7 @@ class WorldMap extends HTMLElement {
 				gAmpl += 360;
 			}
 			let graph2chartRatio = this.width / gAmpl;
-			var _lng = lng;
+			let _lng = lng;
 			if (Math.abs(this.west) > 180 && Math.sign(_lng) !== Math.sign(this.west) && Math.sign(this.lng) > 0) {
 				_lng -= 360;
 			}
@@ -768,7 +781,7 @@ class WorldMap extends HTMLElement {
 	 * @returns {number}
 	 */
 	static haToLongitude(ha) {
-		var lng = - ha;
+		let lng = -ha;
 		if (lng < -180) {
 			lng += 360;
 		}
@@ -1042,6 +1055,10 @@ class WorldMap extends HTMLElement {
 		let opHeight = Math.abs(maxY - minY);
 		this.globeView_ratio = Math.min(w / opWidth, h / opHeight) * this.defaultRadiusRatio; // 0.9, not to take all the space...
 
+		// First (callback)
+		if (this.doFirst !== undefined) {
+			this.doFirst(this, context);
+		}
 		// Black background.
 		context.fillStyle = this.worldmapColorConfig.globeBackground;
 		context.fillRect(0, 0, this.width, this.height);
@@ -1305,8 +1322,8 @@ class WorldMap extends HTMLElement {
 							context.closePath();
 							context.setLineDash([0]); // Reset
 							context.strokeStyle = this.worldmapColorConfig.moonColor;
-							var deltaX = moon.x - userPos.x;
-							var deltaY = moon.y - userPos.y;
+							let deltaX = moon.x - userPos.x;
+							let deltaY = moon.y - userPos.y;
 							context.beginPath();
 							context.moveTo(moon.x, moon.y);
 							context.lineTo(moon.x + deltaX, moon.y + deltaY);
@@ -1339,10 +1356,10 @@ class WorldMap extends HTMLElement {
 						this.positionBody(context, userPos, this.worldmapColorConfig.ariesColor, "Anti-Aries", 0, aries.gha + 180, false); // Libra?
 					}
 					// 2 - Other planets
-					var venus = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
-					var mars = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
-					var jupiter = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
-					var saturn = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
+					let venus = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "venus");
+					let mars = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "mars");
+					let jupiter = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "jupiter");
+					let saturn = WorldMap.findInList(this.astronomicalData.wanderingBodies, "name", "saturn");
 					if (venus !== null) {
 						this.positionBody(context, userPos, this.worldmapColorConfig.venusColor, "Venus", venus.decl, venus.gha);
 					}
@@ -1387,7 +1404,7 @@ class WorldMap extends HTMLElement {
 	}
 
 	static calculateEastG(nLat, sLat, wLong, canvasW, canvasH) {
-		var deltaIncLat =  WorldMap.getIncLat(nLat) - WorldMap.getIncLat(sLat);
+		let deltaIncLat =  WorldMap.getIncLat(nLat) - WorldMap.getIncLat(sLat);
 
 		let graphicRatio = canvasW / canvasH;
 		let deltaG = Math.min(deltaIncLat * graphicRatio, 359);
@@ -1733,7 +1750,7 @@ class WorldMap extends HTMLElement {
 
 //    console.log("Found " + section.length + " section(s).")
 		for (let i = 0; i < section.length; i++) {
-			var point = section[i].point;
+			let point = section[i].point;
 			let firstPt = null;
 			let previousPt = null;
 			if (point !== undefined) {

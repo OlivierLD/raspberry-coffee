@@ -304,6 +304,27 @@ function callAfter(id) {
 	document.getElementById(id).repaint();
 }
 
+// Example of callback on WorldMap
+function callFirst(id) {
+	document.getElementById(id).setDoFirst(function(worldMap, context) {
+//	console.log("Sun altitude:", sunAltitude);
+		if (sunAltitude > -5 && sunAltitude < 5) { // Then change bg color
+			let gradientRadius = ((5 - Math.abs(sunAltitude)) / 5) * Math.min(worldMap.height, worldMap.width) / 2;
+			let grd = context.createRadialGradient(worldMap.width / 2, worldMap.height / 2, 0.000, worldMap.width / 2, worldMap.height / 2, gradientRadius);
+			// Add colors
+			grd.addColorStop(0.000, 'rgba(34, 10, 10, 1.000)');
+			grd.addColorStop(0.330, 'rgba(34, 10, 10, 1.000)');
+			grd.addColorStop(0.340, 'rgba(255, 255, 255, 1.000)');
+			grd.addColorStop(0.600, 'rgba(234, 189, 12, 1.000)');
+			grd.addColorStop(1.000, 'rgba(35, 1, 4, 1.000)');
+			worldMap.worldmapColorConfig.globeBackground = grd; // instead of black
+		} else {
+			worldMap.worldmapColorConfig.globeBackground = 'black';
+		}
+	});
+	document.getElementById(id).repaint();
+}
+
 const DURATION_FMT = "Y-m-dTH:i:s";
 const months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
@@ -363,6 +384,8 @@ function getLHA(gha, longitude) {
 	return lha;
 }
 
+let sunAltitude = -90;
+
 function astroCallback(data) {
 //console.log("Astro Data:", data);
 
@@ -373,6 +396,8 @@ function astroCallback(data) {
 
 	let sunLHA = getLHA(data.sun.gha, data.from.longitude);
 	let moonLHA = getLHA(data.moon.gha, data.from.longitude);
+
+	sunAltitude = data.sunObs.alt; // For the doBefore method
 	let dataTable =
 			'<table border="1" class="raw-table">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Alt</th><th>Z</th></tr>' +
 			'<tr><td align="left">' + bodyName("sun") + '</td><td>' + worldMap.decToSex(data.sun.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.sun.gha) + '</td><td align="right">' + worldMap.decToSex(sunLHA) + '</td><td align="right">' +	worldMap.decToSex(data.sunObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.sunObs.z) + '</td></tr>' +
@@ -402,7 +427,7 @@ function astroCallback(data) {
 	let utcDate = new Date(data.epoch);
 
 	let sysDateFmt = utcDate.format('D d-M-Y H:i:s Z');
-//console.log("Ststem date %s", sysDateFmt);
+//console.log("System date %s", sysDateFmt);
 
 	document.getElementById("split-flap-display-01")
 			.value = sysDateFmt;
@@ -527,6 +552,7 @@ window.onload = function() {
 	/* global initAjax */
 	initAjax(); // Default. See later for a WebSocket option
 
+	callFirst("world-map-01"); // Will change the background, based on the Sun's altitude
 	callAfter('world-map-01'); // Adding Satellites plot.
 
 	// Query String prms, border, bg, style, like ?border=n&bg=black&style=orange&boat-data=n
