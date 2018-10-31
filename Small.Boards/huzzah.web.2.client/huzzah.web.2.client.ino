@@ -1,5 +1,5 @@
 /*
-   Simple HTTP get webclient test
+   Simple HTTP get webclient REST test
    for Huzzah/ESP8266
 */
 
@@ -14,7 +14,6 @@ const char* password = "67369c7831";
 
 const char* host = "192.168.42.4";
 const int httpPort = 9998;
-
 
 StaticJsonBuffer<1024> jsonBuffer;
 
@@ -63,7 +62,7 @@ void loop() {
   }
 
   // Now create a URI for the request
-  String url = "/mux/cache?option=tiny"; 
+  String url = "/mux/cache?option=tiny";
   Serial.print("Requesting URL: ");
   Serial.println(url);
 
