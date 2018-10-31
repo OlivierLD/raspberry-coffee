@@ -309,14 +309,15 @@ function callFirst(id) {
 	document.getElementById(id).setDoFirst(function(worldMap, context) {
 //	console.log("Sun altitude:", sunAltitude);
 		if (sunAltitude > -5 && sunAltitude < 5) { // Then change bg color
-			let gradientRadius = ((5 - Math.abs(sunAltitude)) / 5) * Math.min(worldMap.height, worldMap.width) / 2;
+			let gradientRadius = 120 + ((5 - Math.abs(sunAltitude)) / 5) * ((Math.min(worldMap.height, worldMap.width) / 2) - 120);
+//		console.log("Gradient Radius:", gradientRadius);
 			let grd = context.createRadialGradient(worldMap.width / 2, worldMap.height / 2, 0.000, worldMap.width / 2, worldMap.height / 2, gradientRadius);
 			// Add colors
 			grd.addColorStop(0.000, 'rgba(34, 10, 10, 1.000)');
 			grd.addColorStop(0.330, 'rgba(34, 10, 10, 1.000)');
 			grd.addColorStop(0.340, 'rgba(255, 255, 255, 1.000)');
 			grd.addColorStop(0.600, 'rgba(234, 189, 12, 1.000)');
-			grd.addColorStop(1.000, 'rgba(35, 1, 4, 1.000)');
+			grd.addColorStop(1.000, 'rgba(0, 0, 0, 1.000)'); // 'rgba(35, 1, 4, 1.000)');
 			worldMap.worldmapColorConfig.globeBackground = grd; // instead of black
 		} else {
 			worldMap.worldmapColorConfig.globeBackground = 'black';

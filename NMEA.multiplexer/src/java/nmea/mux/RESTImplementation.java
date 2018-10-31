@@ -2090,7 +2090,7 @@ public class RESTImplementation {
 
 	private transient static List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[] {
 			NMEADataCache.LAST_NMEA_SENTENCE,
-			NMEADataCache.GPS_DATE_TIME,
+			NMEADataCache.GPS_TIME,
 			NMEADataCache.GPS_SOLAR_TIME,
 			NMEADataCache.DECLINATION,
 			NMEADataCache.LOG,
@@ -2158,9 +2158,11 @@ public class RESTImplementation {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		// Tiny object option
 		boolean tiny = false;
+		boolean txt = false;
 		Map<String, String> qsPrms = request.getQueryStringParameters();
 		if (qsPrms != null && qsPrms.get("option") != null) {
 			tiny = qsPrms.get("option").equals("tiny");
+			txt = qsPrms.get("option").equals("txt");
 		}
 
 		NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
@@ -2173,7 +2175,7 @@ public class RESTImplementation {
 				final JsonElement _jsonElement = new Gson().toJsonTree(cache);
 		//	String str = new Gson().toJson(cache);
 				((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client, drop it.
-				if (tiny) {
+				if (tiny || txt) {
 					REMOVE_WHEN_TINY.stream()
 							.forEach(member -> ((JsonObject) _jsonElement).remove(member));
 				}
@@ -2182,7 +2184,37 @@ public class RESTImplementation {
 		} catch (Exception ex) {
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
 		}
-		String content = jsonElement != null ? jsonElement.toString() : ""; // was toString()
+		String content = "";
+		if (txt) { // Transformation into text
+			double bsp = 0;
+			try { bsp = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.BSP).get("speed").getAsDouble(); } catch (Exception absorb) {}
+			double latitude = 0, longitude = 0;
+			try {
+				latitude = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.POSITION).get("lat").getAsDouble();
+				longitude = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.POSITION).get("lng").getAsDouble();
+			} catch (Exception absorb) {}
+			double sog = 0; int cog = 0;
+			try {
+				sog = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.SOG).get("speed").getAsDouble();
+				cog = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.COG).get("angle").getAsInt();
+			} catch (Exception absorb) {}
+			String date = "";
+			int year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0;
+			try {
+				date = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("date").getAsString();
+				year = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("year").getAsInt();
+				month = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("month").getAsInt();
+				day = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("day").getAsInt();
+				hours = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("hour").getAsInt();
+				mins = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("min").getAsInt();
+				secs = ((JsonObject)((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.GPS_DATE_TIME).get("fmtDate")).get("sec").getAsInt();
+			} catch (Exception absorb) {}
+
+			content = String.format("BSP=%.2f\nLAT=%f\nLNG=%f\nSOG=%.2f\nCOG=%d\nDATE=%s\nYEAR=%d\nMONTH=%d\nDAY=%d\nHOUR=%d\nMIN=%d\nSEC=%d\n",
+					bsp, latitude, longitude, sog, cog, date, year, month, day, hours, mins, secs);
+		} else {
+			content = jsonElement != null ? jsonElement.toString() : ""; // was toString()
+		}
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
 		response.setPayload(content.getBytes());
 

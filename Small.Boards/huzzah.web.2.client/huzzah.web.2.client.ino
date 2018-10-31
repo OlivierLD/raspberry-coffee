@@ -4,8 +4,8 @@
 */
 
 #include <ESP8266WiFi.h>
-// Need ArduinoJson, see https://arduinojson.org/
-#include <ArduinoJson.h>
+// Need ArduinoJson to parse a Json object, see https://arduinojson.org/
+// #include <ArduinoJson.h>
 
 // Network and Host definitions
 
@@ -15,15 +15,13 @@ const char* password = "67369c7831";
 const char* host = "192.168.42.4";
 const int httpPort = 9998;
 
-StaticJsonBuffer<1024> jsonBuffer;
+// StaticJsonBuffer<1024> jsonBuffer;
 
 void setup() {
   Serial.begin(115200); // Console output
   delay(100);
 
   // Start by connecting to a WiFi network
-  Serial.println();
-  Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.begin(ssid, password);
@@ -43,11 +41,25 @@ void setup() {
   Serial.println(WiFi.gatewayIP());
 }
 
-int value = 0;
+const String BSP = "BSP";
+const String LAT = "LAT";
+const String LNG = "LNG";
+const String SOG = "SOG";
+const String COG = "COG";
+const String DATE = "DATE";
+const String YEAR = "YEAR";
+const String MONTH = "MONTH";
+const String DAY = "DAY";
+const String HOUR = "HOUR";
+const String MIN = "MIN";
+const String SEC = "SEC";
+
+float bsp, lat, lng, sog;
+int cog, year, month, day, hour, mins, sec;
+String date;
 
 void loop() {
-  delay(5000);
-  ++value; // Not used
+  delay(5000); // 5 seconds?
 
   Serial.print("connecting to ");
   Serial.print(host);
@@ -61,8 +73,8 @@ void loop() {
     return;
   }
 
-  // Now create a URI for the request
-  String url = "/mux/cache?option=tiny";
+  // Now create a URI for the REST request
+  String url = "/mux/cache?option=txt"; // txt, not json.
   Serial.print("Requesting URL: ");
   Serial.println(url);
 
@@ -71,19 +83,43 @@ void loop() {
   delay(500);
 
   // Read all the lines of the reply from server and print them to Serial
+  // Keys are BSP, LAT, LNG, SOG, COG, DATE, YEAR, MONTH, DAY, HOUR, MIN, SEC
   while (client.available()) {
-    String line = client.readStringUntil('\r');
-    Serial.print("Raw Json:"); Serial.println(line); // Output here
-    JsonObject& root = jsonBuffer.parseObject(line);
-    if (!root.success()) {
-      Serial.println("<< JSON parseObject failed");
-    } else {
-      Serial.println(">> Good!");
-      const char* bsp = root["BSP"];
-      Serial.print("BSP:");
-      Serial.println(bsp);
+	  String line = client.readStringUntil('\n');
+    // Serial.println(line);
+    String key = getKey(line);
+    if (key.length() > 0) {
+      String value = getValue(line);
+      if (key == BSP) {
+        bsp = value.toFloat();
+      } else if (key == LAT) {
+        lat = value.toFloat();
+      } else if (key == LNG) {
+        lng = value.toFloat();
+      } else if (key == SOG) {
+        sog = value.toFloat();
+      } else if (key == DATE) {
+        date = value;
+      } else if (key == COG) {
+        cog = value.toInt();
+      } else if (key == YEAR) {
+        year = value.toInt();
+      } else if (key == MONTH) {
+        month = value.toInt();
+      } else if (key == DAY) {
+        day = value.toInt();
+      } else if (key == HOUR) {
+        hour = value.toInt();
+      } else if (key == MIN) {
+        mins = value.toInt();
+      } else if (key == SEC) {
+        sec = value.toInt();
+			}
     }
   }
+  char dataBuffer[128];
+  sprintf(dataBuffer, "Bsp=%f, Lat=%f, Lng=%f", bsp, lat, lng);
+  Serial.println(dataBuffer);
   Serial.println();
   Serial.println("closing connection");
 }
@@ -94,5 +130,21 @@ void sendRequest(WiFiClient client, String verb, String url, String protocol, St
                    "Connection: close\r\n" +
                    "\r\n";
   client.print(request);
+}
+
+String getKey(String line) {
+  int separatorPosition = line.indexOf("=");
+  if (separatorPosition == -1) {
+    return "";
+  }
+  return line.substring(0, separatorPosition);
+}
+
+String getValue(String line) {
+  int separatorPosition = line.indexOf("=");
+  if (separatorPosition == -1) {
+    return "";
+  }
+  return line.substring(separatorPosition + 1);
 }
 
