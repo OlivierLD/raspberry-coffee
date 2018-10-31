@@ -1,12 +1,12 @@
 #include <Wire.h>
 #include <Ticker.h>
-#include "ssd1306_i2c.h"
-#include "icons.h"
-
 // Need ArduinoJson, see https://arduinojson.org/
 #include <ArduinoJson.h>
 
 #include <ESP8266WiFi.h>
+
+#include "ssd1306_i2c.h"
+#include "icons.h"
 
 #define SDA 14
 #define SCL 12
@@ -14,43 +14,43 @@
 
 #define I2C 0x3D
 
-#define WIFISSID "Sonic-00e0" // "RPi-Net"
-#define PASSWORD "67369c7831" // "raspberrypi"
+const char* ssid = "Sonic-00e0"; // "RPi-Net"
+const char* password = "67369c7831"; // "raspberrypi"
 
-#define MULTIPLEXER_SERVER_NAME "192.168.42.4"
-#define REST_RESOURCE "/mux/cache?option=tiny"
+const char* MULTIPLEXER_SERVER_NAME = "192.168.42.4";
+const char* REST_RESOURCE = "/mux/cache?option=tiny";
 
 // Initialize the oled display for address 0x3c
 // 0x3D is the adafruit address....
 // sda-pin=14 and sdc-pin=12
-SSD1306 display(I2C, SDA, SCL);
+//SSD1306 display(I2C, SDA, SCL);
 Ticker ticker; // Invokes a method at a given interval
 
 void drawFrame1(int x, int y) {
-  display.setFontScale2x2(false);
-  display.drawString(65 + x, 8 + y, "Now");
+//display.setFontScale2x2(false);
+//display.drawString(65 + x, 8 + y, "Now");
 //display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getCurrentIcon()));
-  display.setFontScale2x2(true);
+//display.setFontScale2x2(true);
 //display.drawString(64 + x, 20 + y, String(weather.getCurrentTemp()) + "F");
-  display.setFontScale2x2(false);
+//display.setFontScale2x2(false);
 //display.drawString(64 + x, 40 + y, String(weather.getCurrentSummary()));
 }
 
 void drawFrame2(int x, int y) {
-  display.setFontScale2x2(false);
-  display.drawString(65 + x, 0 + y, "Today");
-  display.drawXbm(x, y, 60, 60, xbmtemp);
-  display.setFontScale2x2(true);
+//display.setFontScale2x2(false);
+//display.drawString(65 + x, 0 + y, "Today");
+//display.drawXbm(x, y, 60, 60, xbmtemp);
+//display.setFontScale2x2(true);
 //display.drawString(64 + x, 14 + y, String(weather.getCurrentTemp()) + "F");
-  display.setFontScale2x2(false);
+//display.setFontScale2x2(false);
 //display.drawString(66 + x, 40 + y, String(weather.getMinTempToday()) + "F/" + String(weather.getMaxTempToday()) + "F");
 }
 
 void drawFrame3(int x, int y) {
 //display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getIconTomorrow()));
-  display.setFontScale2x2(false);
-  display.drawString(65 + x, 7 + y, "Tomorrow");
-  display.setFontScale2x2(true);
+//display.setFontScale2x2(false);
+//display.drawString(65 + x, 7 + y, "Tomorrow");
+//display.setFontScale2x2(true);
 //display.drawString(64 + x, 20 + y, String(weather.getMaxTempTomorrow()) + "F");
 }
 
@@ -63,14 +63,6 @@ int frameCount = 3;
 // on frame is currently displayed
 int currentFrame = 0;
 
-// your network SSID (name)
-char ssid[] = WIFISSID;
-
-// your network password
-char pass[] = PASSWORD;
-
-String serverName = MULTIPLEXER_SERVER_NAME;
-
 // flag changed in the ticker function every 10 minutes
 bool readyForUpdate = true;
 
@@ -79,15 +71,15 @@ void setup() {
   //ESP.wdtDisable();
 
   // initialize display
-  display.init();
-  display.flipScreenVertically();
+//display.init();
+//display.flipScreenVertically();
   // set the drawing functions
-  display.setFrameCallbacks(3, frameCallbacks);
+//display.setFrameCallbacks(3, frameCallbacks);
   // how many ticks does a slide of frame take?
-  display.setFrameTransitionTicks(10);
+//display.setFrameTransitionTicks(10);
 
-  display.clear();
-  display.display();
+//display.clear();
+//display.display();
 
   Serial.begin(115200);
   delay(500);
@@ -97,20 +89,20 @@ void setup() {
   // We start by connecting to a WiFi network
   Serial.print("Connecting to ");
   Serial.println(ssid);
-  WiFi.begin(ssid, pass);
+  WiFi.begin(ssid, password);
 
   int counter = 0;
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
 
-    display.clear();
-    display.drawXbm(34, 10, 60, 36, WiFi_Logo_bits);
-    display.setColor(INVERSE);
-    display.fillRect(10, 10, 108, 44);
-    display.setColor(WHITE);
-    drawSpinner(3, counter % 3);
-    display.display();
+//  display.clear();
+//  display.drawXbm(34, 10, 60, 36, WiFi_Logo_bits);
+//  display.setColor(INVERSE);
+//  display.fillRect(10, 10, 108, 44);
+//  display.setColor(WHITE);
+//  drawSpinner(3, counter % 3);
+//  display.display();
 
     counter++;
   }
@@ -130,16 +122,16 @@ void setup() {
 }
 
 void loop() {
-  if (readyForUpdate && display.getFrameState() == display.FRAME_STATE_FIX) {
+  if (readyForUpdate /*&& display.getFrameState() == display.FRAME_STATE_FIX*/) {
     readyForUpdate = false;
 
     Serial.print("connecting to ");
-    Serial.println(serverName);
+    Serial.println(MULTIPLEXER_SERVER_NAME);
 
     // Use WiFiClient class to create TCP connections
     WiFiClient client;
     const int httpPort = 80;
-    if (!client.connect(serverName, httpPort)) {
+    if (!client.connect(MULTIPLEXER_SERVER_NAME, httpPort)) {
       Serial.println("connection failed");
       return;
     }
@@ -154,7 +146,7 @@ void loop() {
     //  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
     //               "Host: " + host + "\r\n" +
     //               "Connection: close\r\n\r\n");
-    sendRequest(client, "GET", url, "HTTP/1.1", serverName);
+    sendRequest(client, "GET", url, "HTTP/1.1", MULTIPLEXER_SERVER_NAME);
     delay(500);
 
     // Read all the lines of the reply from server and print them to Serial
@@ -167,9 +159,9 @@ void loop() {
     Serial.println("closing connection");
 
   }
-  display.clear();
-  display.nextFrameTick();
-  display.display();
+//display.clear();
+//display.nextFrameTick();
+//display.display();
 }
 
 void setReadyForUpdate() {
@@ -210,7 +202,7 @@ void drawSpinner(int count, int active) {
     } else {
       xbm = inactive_bits;
     }
-    display.drawXbm(64 - (12 * count / 2) + 12 * i, 56, 8, 8, xbm);
+//  display.drawXbm(64 - (12 * count / 2) + 12 * i, 56, 8, 8, xbm);
   }
 }
 
