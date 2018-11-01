@@ -165,6 +165,10 @@ class SkyMap extends HTMLElement {
 		this._shadowRoot = this.attachShadow({mode: 'open'}); // 'open' means it is accessible from external JavaScript.
 		// create and append a <canvas>
 		this.canvas = document.createElement("canvas");
+		let fallbackElemt = document.createElement("h1");
+		let content = document.createTextNode("This is a SkyMap or StarFinder, on an HTML5 canvas");
+		fallbackElemt.appendChild(content);
+		this.canvas.appendChild(fallbackElemt);
 		this.shadowRoot.appendChild(this.canvas);
 
 		// For tests of the import
@@ -384,7 +388,7 @@ class SkyMap extends HTMLElement {
 		context.arc(this.canvas.width / 2, this.canvas.height / 2, radius, 0, 2 * Math.PI, false);
 		context.fill();
 		context.closePath();
-		// 2 circles for LHA
+		// 2 circles for LHA/Dates
 		context.beginPath();
 		context.lineWidth = 1;
 		context.strokeStyle = 'gray';
@@ -460,21 +464,22 @@ class SkyMap extends HTMLElement {
 		} else if (this._type === MapType.SKYMAP_TYPE) {
 			context.beginPath();
 			// 0 is 21 Sept.
-			for (let day=1; day<=365; day++) {
+			for (let day=1; day<=365; day++) { // No leap year
 				let now = SkyMap.findCorrespondingDay(day);
-				let d = 360 * (day - 1) / 365; // The angle in the circle
-//			console.log("Day " + day + " => " + JSON.stringify(now) + ", angle:" + d);
-				let xFrom = (this.canvas.width / 2) - ((radius * 0.98) * Math.cos(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
-				let yFrom = (this.canvas.height / 2) - ((radius * 0.98) * Math.sin(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
-				let xTo = (this.canvas.width / 2) - ((radius * (now.dayOfMonth === 1 || now.dayOfMonth % 5 === 0 ? 0.92 : 0.95)) * Math.cos(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
-				let yTo = (this.canvas.height / 2) - ((radius * (now.dayOfMonth === 1 || now.dayOfMonth % 5 === 0 ? 0.92 : 0.95)) * Math.sin(Utilities.toRadians((d - this.LHAAries) * this._hemisphere)));
+				let angleOnDisk = 360 * ((day - 1) / 365); // The angle in the circle
+//			console.log("Day ", day, " => now", JSON.stringify(now), " angle:", angleOnDisk);
+				let rad = Utilities.toRadians((angleOnDisk - this.LHAAries) * this._hemisphere);
+				let xFrom = (this.canvas.width / 2) - ((radius * 0.98) * Math.cos(rad - (Math.PI / 2)));
+				let yFrom = (this.canvas.height / 2) - ((radius * 0.98) * Math.sin(rad - (Math.PI / 2)));
+				let xTo = (this.canvas.width / 2) - ((radius * ((now.dayOfMonth === 1 || now.dayOfMonth % 5 === 0) ? 0.92 : 0.95)) * Math.cos(rad - (Math.PI / 2)));
+				let yTo = (this.canvas.height / 2) - ((radius * ((now.dayOfMonth === 1 || now.dayOfMonth % 5 === 0) ? 0.92 : 0.95)) * Math.sin(rad - (Math.PI / 2)));
 				context.moveTo(xFrom, yFrom);
 				context.lineTo(xTo, yTo);
-
+//			console.log("Day ", day, " => now", JSON.stringify(now), " angle:", angleOnDisk, "Rad", rad, "LHA Aries", this.LHAAries, "Hem.", this._hemisphere);
 				if (now.dayOfMonth % 5 === 0) { // Print the day #
 					context.save();
 					context.translate(this.canvas.width / 2, (this.canvas.height / 2));
-					let __currentAngle = this._hemisphere * Utilities.toRadians(d - this.LHAAries);
+					let __currentAngle = rad;
 					context.rotate(__currentAngle - Math.PI);
 					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 					context.fillStyle = 'black';
@@ -486,7 +491,7 @@ class SkyMap extends HTMLElement {
 				if (now.dayOfMonth === Math.round(now.month.nbDays / 2)) { // Print the month name
 					context.save();
 					context.translate(this.canvas.width / 2, (this.canvas.height / 2));
-					let __currentAngle = this._hemisphere * Utilities.toRadians(d - this.LHAAries);
+					let __currentAngle = rad;
 					context.rotate(__currentAngle - Math.PI);
 					context.font = "bold " + Math.round(10) + "px Arial"; // Like "bold 15px Arial"
 					context.fillStyle = 'red';
@@ -632,6 +637,7 @@ class SkyMap extends HTMLElement {
 				currMonth = SkyMap.nextMonth(currMonth);
 			}
 		}
+//	console.log("Day", d, "becomes", currMonth, currDay);
 		return { month: currMonth, dayOfMonth: currDay};
 	}
 
