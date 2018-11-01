@@ -1,7 +1,7 @@
 ### TCP Smart Watch
 The idea is to have a watch-like device that does _not_ need a smart phone to connect to a network.
 
-It will be using TCP.
+It will be using REST over HTTP, TCP will come later.
 
 The ESP8266/Huzzah has built-in WiFi capabilities, and can deal with an OLED screen like the `SSD1306`.
 
