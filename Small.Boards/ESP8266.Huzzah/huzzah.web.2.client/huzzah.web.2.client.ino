@@ -1,7 +1,7 @@
 /*
    Simple HTTP get webclient REST test
    for Huzzah/ESP8266.
-   That one spits out data oin the Serial console (no oled screen).
+   That one spits out data on the Serial console (no oled screen).
 */
 
 #include <ESP8266WiFi.h>

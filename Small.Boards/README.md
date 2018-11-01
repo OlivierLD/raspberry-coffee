@@ -4,8 +4,10 @@ Several possibilities are available, among them:
 - Serial
 - I2C
     - About I2C, see how to use those small boards as I<sup><small>2</small></sup>C slaves [here](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/I2C.SPI/src/i2c/comm/README.md).
+- In some cases (i.e. when the PCB has WiFi capabilities), REST over HTTP, TCP, can be used too.
 
 #### Arduino Uno, Arduino Mini, ESP8266 (Huzzah), Adafruit Trinket, Photon, etc
+Examples of code are provided in the sub-directories of this project.
 
 ###### Universal Serial Bus (USB)
 _Universal_, but there are at least 3 versions: A, B, C:

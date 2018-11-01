@@ -40,7 +40,7 @@ void setup() {
 }
 
 void loop() {
-  delay(5000);
+  delay(5000); // Ping the server every 5 seconds.
 
   Serial.print("connecting to ");
   Serial.println(host);

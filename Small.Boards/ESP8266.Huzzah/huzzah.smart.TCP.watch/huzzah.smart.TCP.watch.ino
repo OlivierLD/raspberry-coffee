@@ -9,7 +9,7 @@
 #include <ESP8266WiFi.h>
 
 // Network, Host and request definitions, customize if necessary
-const char* SSID     = "Sonic-00e0"; // "RPi-Net";
+const char* SSID     = "Sonic-00e0"; // "Pi-Net";
 const char* PASSWORD = "67369c7831"; // "raspberrypi";
 
 const char* HOST = "192.168.42.4"; // "192.168.127.1";
@@ -103,8 +103,10 @@ float bsp, lat, lng, sog;
 int cog, year, month, day, hour, mins, sec;
 String date;
 
+const int BETWEEN_LOOPS = 5000; // 5 sec.
+
 void loop() {
-  delay(5000); // 5 seconds?
+  delay(BETWEEN_LOOPS); 
 
   Serial.print(">> connecting to ");
   Serial.print(HOST);
