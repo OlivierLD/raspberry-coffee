@@ -114,7 +114,7 @@ public class RESTProcessorUtil {
 
 	public static void generateResponseHeaders(HTTPServer.Response response, String contentType, int contentLength) {
 		Map<String, String> responseHeaders = new HashMap<>();
-		responseHeaders.put("Content-Type", contentType);
+		responseHeaders.put("Content-Type", (contentType != null ? contentType : "application/json"));
 		responseHeaders.put("Content-Length", String.valueOf(contentLength));
 		responseHeaders.put("Access-Control-Allow-Origin", "*");
 		response.setHeaders(responseHeaders);

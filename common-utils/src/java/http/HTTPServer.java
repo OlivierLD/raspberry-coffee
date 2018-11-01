@@ -388,24 +388,24 @@ public class HTTPServer {
 		this(defaultPort, null, new Properties(), false);
 	}
 
-	public HTTPServer(boolean startImmediatly) throws Exception {
-		this(defaultPort, null, new Properties(), startImmediatly);
+	public HTTPServer(boolean startImmediately) throws Exception {
+		this(defaultPort, null, new Properties(), startImmediately);
 	}
 
 	public HTTPServer(int port) throws Exception {
 		this(port, null, new Properties(), false);
 	}
 
-	public HTTPServer(int port, boolean startImmediatly) throws Exception {
-		this(port, null, new Properties(), startImmediatly);
+	public HTTPServer(int port, boolean startImmediately) throws Exception {
+		this(port, null, new Properties(), startImmediately);
 	}
 
 	public HTTPServer(Properties properties) throws Exception {
 		this(defaultPort, null, properties, false);
 	}
 
-	public HTTPServer(Properties properties, boolean startImmediatly) throws Exception {
-		this(defaultPort, null, properties, startImmediatly);
+	public HTTPServer(Properties properties, boolean startImmediately) throws Exception {
+		this(defaultPort, null, properties, startImmediately);
 	}
 
 	public HTTPServer(RESTRequestManager requestManager) throws Exception {
@@ -426,8 +426,8 @@ public class HTTPServer {
 		this(port, requestManager, new Properties(), false);
 	}
 
-	public HTTPServer(int port, RESTRequestManager requestManager, boolean startImmediatly) throws Exception {
-		this(port, requestManager, new Properties(), startImmediatly);
+	public HTTPServer(int port, RESTRequestManager requestManager, boolean startImmediately) throws Exception {
+		this(port, requestManager, new Properties(), startImmediately);
 	}
 
 	/**
@@ -440,7 +440,7 @@ public class HTTPServer {
 	 *
 	 * Port can be overridden by -Dhttp.port. Takes precedence on anything else.
 	 */
-	public HTTPServer(int port, RESTRequestManager requestManager, Properties properties, boolean startImmediatly) throws Exception {
+	public HTTPServer(int port, RESTRequestManager requestManager, Properties properties, boolean startImmediately) throws Exception {
 		String httpPort = System.getProperty("http.port", String.valueOf(port));
 		try {
 			this.port = Integer.parseInt(httpPort);
@@ -554,7 +554,7 @@ public class HTTPServer {
 										if (request != null && !inPayload) {
 											if (line.indexOf(":") > -1) { // Header?
 												if (line.indexOf(" ") > 0 && line.indexOf(" ") < line.indexOf(":") ) { // TODO: Not start with Verb
-													// No a GET http://machine HTTP/1.1	, with the protocol in the request
+													// Not a GET http://machine HTTP/1.1	, with the protocol in the request
 												} else {
 													String headerKey = line.substring(0, line.indexOf(":"));
 													String headerValue = line.substring(line.indexOf(":") + 1);
@@ -746,7 +746,7 @@ public class HTTPServer {
 			}
 			System.out.println("Dead.");
 		}));
-		if (startImmediatly) {
+		if (startImmediately) {
 			this.startServer();
 		}
 	}

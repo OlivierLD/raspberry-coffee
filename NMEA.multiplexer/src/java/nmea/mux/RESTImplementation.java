@@ -213,7 +213,7 @@ public class RESTImplementation {
 					"GET",
 					REST_PREFIX + "/cache",
 					this::getCache,
-					"Get ALL the data in the cache. QS prm: option=tiny"),
+					"Get ALL the data in the cache. QS prm: option=tiny|txt"),
 			new Operation(
 					"DELETE",
 					REST_PREFIX + "/cache",
@@ -2088,7 +2088,7 @@ public class RESTImplementation {
 		return response;
 	}
 
-	private transient static List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[] {
+	private transient static final List<String> REMOVE_WHEN_TINY = Arrays.asList(new String[] {
 			NMEADataCache.LAST_NMEA_SENTENCE,
 			NMEADataCache.GPS_TIME,
 			NMEADataCache.GPS_SOLAR_TIME,
@@ -2172,20 +2172,22 @@ public class RESTImplementation {
 			// Calculate VMG(s)
 			synchronized (cache) {
 				NMEAUtils.calculateVMGs(cache);
-				final JsonElement _jsonElement = new Gson().toJsonTree(cache);
+				final JsonElement _jsonElement = new Gson().toJsonTree(cache); // I know, ah shit!
 		//	String str = new Gson().toJson(cache);
 				((JsonObject) _jsonElement).remove(NMEADataCache.DEVIATION_DATA); // Useless for the client, drop it.
 				if (tiny || txt) {
 					REMOVE_WHEN_TINY.stream()
 							.forEach(member -> ((JsonObject) _jsonElement).remove(member));
 				}
-				jsonElement = _jsonElement;
+				jsonElement = _jsonElement; // Same as above
 			}
 		} catch (Exception ex) {
 			Context.getInstance().getLogger().log(Level.INFO, "Managed >>> getCache", ex);
 		}
 		String content = "";
+		String specialContentType = null;
 		if (txt) { // Transformation into text
+			specialContentType = "application/text";
 			double bsp = 0;
 			try { bsp = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.BSP).get("speed").getAsDouble(); } catch (Exception absorb) {}
 			double latitude = 0, longitude = 0;
@@ -2213,9 +2215,9 @@ public class RESTImplementation {
 			content = String.format("BSP=%.2f\nLAT=%f\nLNG=%f\nSOG=%.2f\nCOG=%d\nDATE=%s\nYEAR=%d\nMONTH=%d\nDAY=%d\nHOUR=%d\nMIN=%d\nSEC=%d\n",
 					bsp, latitude, longitude, sog, cog, date, year, month, day, hours, mins, secs);
 		} else {
-			content = jsonElement != null ? jsonElement.toString() : ""; // was toString()
+			content = jsonElement != null ? jsonElement.toString() : "";
 		}
-		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		RESTProcessorUtil.generateResponseHeaders(response, specialContentType, content.length());
 		response.setPayload(content.getBytes());
 
 		return response;

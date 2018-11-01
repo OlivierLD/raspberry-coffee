@@ -77,7 +77,7 @@ public class GenericNMEAMultiplexer  implements RESTRequestManager, Multiplexer 
 			ApplicationContext.getInstance().getDataCache().parseAndFeed(mess);
 		}
 		if (this.process) {
-			// Computers. Must go first, as a computer may refeed the present onData method.
+			// Computers. Must go first, as a computer may re-feed the present onData method.
 			synchronized (nmeaDataComputers) {
 			 	nmeaDataComputers.stream()
 								.forEach(computer -> {

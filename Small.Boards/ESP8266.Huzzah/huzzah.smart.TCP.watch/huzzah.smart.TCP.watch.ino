@@ -4,27 +4,76 @@
    That one spits out data oin the Serial console (no oled screen).
 */
 
+#include <Wire.h>
+#include "ssd1306_i2c.h"
 #include <ESP8266WiFi.h>
 
-// Network and Host definitions
-const char* ssid     = "Sonic-00e0";
-const char* password = "67369c7831";
+// Network, Host and request definitions, customize if necessary
+const char* SSID     = "Sonic-00e0"; // "RPi-Net";
+const char* PASSWORD = "67369c7831"; // "raspberrypi";
 
-const char* host = "192.168.42.4";
-const int httpPort = 9998;
+const char* HOST = "192.168.42.4"; // "192.168.127.1";
+const int HTTP_PORT = 9998;        // 8080
+
+const char* REST_REQUEST = "/mux/cache?option=txt"; // txt, not json.
+
+// OLED Display connections and wiring
+#define SDA 14
+#define SCL 12
+//#define RST 2
+
+const int I2C = 0x3D;
+
+// Initialize the oled display for address 0x3c
+// 0x3D is the adafruit address....
+// sda-pin=14 and sdc-pin=12
+SSD1306 ssd1306(I2C, SDA, SCL);
+
+void drawDisplay(int x, int y) {
+  ssd1306.setFontScale2x2(false);
+  ssd1306.drawString(65 + x, 8 + y, "Now");
+  /*
+  display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getCurrentIcon()));
+  display.setFontScale2x2(true);
+  display.drawString(64 + x, 20 + y, String(weather.getCurrentTemp()) + "F");
+  display.setFontScale2x2(false);
+  display.drawString(64 + x, 40 + y, String(weather.getCurrentSummary()));
+  */
+}
 
 void setup() {
+
+  // initialize display
+  ssd1306.init();
+  ssd1306.flipScreenVertically();
+  
+  // set the drawing functions
+  // ssd1306.setFrameCallbacks(3, frameCallbacks);
+  // how many ticks does a slide of frame take?
+  // ssd1306.setFrameTransitionTicks(10);
+
+  ssd1306.clear();
+  ssd1306.display();
+  
   Serial.begin(115200); // Console output
   delay(100);
 
   // Start by connecting to a WiFi network
   Serial.print("Connecting to ");
-  Serial.println(ssid);
-  WiFi.begin(ssid, password);
+  Serial.println(SSID);
+  WiFi.begin(SSID, PASSWORD);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+    
+    ssd1306.clear();
+//  ssd1306.drawXbm(34, 10, 60, 36, WiFi_Logo_bits);
+    ssd1306.setColor(INVERSE);
+    ssd1306.fillRect(10, 10, 108, 44);
+    ssd1306.setColor(WHITE);
+//  drawSpinner(3, counter % 3);
+    ssd1306.display();
   }
 
   Serial.println("");
@@ -57,25 +106,25 @@ String date;
 void loop() {
   delay(5000); // 5 seconds?
 
-  Serial.print("connecting to ");
-  Serial.print(host);
+  Serial.print(">> connecting to ");
+  Serial.print(HOST);
   Serial.print(":");
-  Serial.println(httpPort);
+  Serial.println(HTTP_PORT);
 
   // Use WiFiClient class to create TCP connections
   WiFiClient client;
-  if (!client.connect(host, httpPort)) {
-    Serial.println("connection failed");
+  if (!client.connect(HOST, HTTP_PORT)) {
+    Serial.println("!! connection failed");
     return;
   }
 
   // Now create a URI for the REST request
-  String url = "/mux/cache?option=txt"; // txt, not json.
+  String url = REST_REQUEST;
   Serial.print("Requesting URL: ");
   Serial.println(url);
 
   // This will send the request to the server
-  sendRequest(client, "GET", url, "HTTP/1.1", host);
+  sendRequest(client, "GET", url, "HTTP/1.1", HOST);
   delay(500);
 
   // Read all the lines of the reply from server and print them to Serial
@@ -120,7 +169,7 @@ void loop() {
   Serial.println(dataBuffer);
   Serial.print("Date=");
   Serial.println(date);
-  Serial.println("closing connection");
+  Serial.println("<< closing connection");
 }
 
 void sendRequest(WiFiClient client, String verb, String url, String protocol, String host) {
@@ -146,4 +195,3 @@ String getValue(String line) {
   }
   return line.substring(separatorPosition + 1);
 }
-

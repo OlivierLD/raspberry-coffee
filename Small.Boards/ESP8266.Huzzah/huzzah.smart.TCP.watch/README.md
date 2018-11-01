@@ -7,6 +7,8 @@ The ESP8266/Huzzah has built-in WiFi capabilities, and can deal with an OLED scr
 
 The starting point was [this document](https://learn.adafruit.com/huzzah-weather-display?view=all).
 
-The ESP8266 will ping the [NavServer/NMEA.multiplexer](https://github.com/OlivierLD/raspberry-coffee/blob/master/NMEA.multiplexer/README.md) with a request like `GET /mux/cache/`.
+The ESP8266 will ping the [NavServer/NMEA.multiplexer](https://github.com/OlivierLD/raspberry-coffee/blob/master/NMEA.multiplexer/README.md) with a request like `GET /mux/cache?option=txt`.
+
+![Wiring](./TCP.watch_bb.png)
 
 ---

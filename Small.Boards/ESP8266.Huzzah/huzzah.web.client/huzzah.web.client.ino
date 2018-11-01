@@ -39,11 +39,8 @@ void setup() {
   Serial.println(WiFi.gatewayIP());
 }
 
-int value = 0;
-
 void loop() {
   delay(5000);
-  ++value; // Not used
 
   Serial.print("connecting to ");
   Serial.println(host);
@@ -62,10 +59,6 @@ void loop() {
   Serial.println(url);
 
   // This will send the request to the server
-  // TODO Make it more generic, like a REST request
-  //  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-  //               "Host: " + host + "\r\n" +
-  //               "Connection: close\r\n\r\n");
   sendRequest(client, "GET", url, "HTTP/1.1", host);
   delay(500);
 
