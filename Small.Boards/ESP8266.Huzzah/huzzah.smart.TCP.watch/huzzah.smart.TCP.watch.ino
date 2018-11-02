@@ -1,21 +1,33 @@
-/*
+/**
    Simple HTTP get webclient REST test
    for Huzzah/ESP8266.
+   Sends REST requests to the NavServer to get navigation data.
    That one spits out data on the Serial console, and on an oled screen.
+   
+   @author Olivier LeDiouris
 */
-
 #include <Wire.h>
 #include "ssd1306_i2c.h"
 #include <ESP8266WiFi.h>
 
+/* ----- Customizable Data ----- */
 // Network, Host and request definitions, customize if necessary
-const char* SSID     = "Sonic-00e0"; // "Pi-Net";
-const char* PASSWORD = "67369c7831"; // "raspberrypi";
+const char* SSID     = "Sonic-00e0"; 
+const char* PASSWORD = "67369c7831"; 
 
-const char* HOST = "192.168.42.4"; // "192.168.127.1";
-const int HTTP_PORT = 9998;        // 9999
+const char* HOST = "192.168.42.4";
+const int HTTP_PORT = 9998;
+
+//const char* SSID     = "Pi-Net";
+//const char* PASSWORD = "raspberrypi";
+//
+//const char* HOST = "192.168.127.1";
+//const int HTTP_PORT = 9999;
 
 const char* REST_REQUEST = "/mux/cache?option=txt"; // txt, not json.
+
+const int BETWEEN_LOOPS = 1000; // in milli-sec.
+/* ----- End of Customizable Data ----- */
 
 // OLED Display connections and wiring
 #define SDA 14
@@ -62,22 +74,24 @@ void repaint(int x, int y) {
 
   char dataBuffer[128];
   int yOffset = 8;
-  sprintf(dataBuffer, "BSP %.2f kts", bsp);
+  ssd1306.drawString(1 + x, 0, "--- Nav Data ---");
+//  sprintf(dataBuffer, "BSP: %.2f kts", bsp);
+//  ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
+//  yOffset += 8;
+  sprintf(dataBuffer, "L: %s", toDegMin(lat, NS));
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
   yOffset += 8;
-  sprintf(dataBuffer, "L %s", toDegMin(lat, NS));
-  ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
-  yOffset += 8;
-  sprintf(dataBuffer, "G %s", toDegMin(lng, EW));
+  sprintf(dataBuffer, "G: %s", toDegMin(lng, EW));
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
 
   yOffset += 8;
-  sprintf(dataBuffer, "SOG %.2f", sog);
+  sprintf(dataBuffer, "SOG: %.2f kts", sog);
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
   yOffset += 8;
-  sprintf(dataBuffer, "COG %d", cog);
+  sprintf(dataBuffer, "COG: %d", cog);
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
-  // sprintf(dataBuffer, "SOG=%f, COG=%d", sog, cog);
+  yOffset += 8;
+  ssd1306.drawString(1 + x, yOffset + y, "----------------");
 
   ssd1306.display();
 }
@@ -173,8 +187,6 @@ const String DAY = "DAY";
 const String HOUR = "HOUR";
 const String MIN = "MIN";
 const String SEC = "SEC";
-
-const int BETWEEN_LOOPS = 5000; // 5 sec.
 
 void loop() {
   delay(BETWEEN_LOOPS);
