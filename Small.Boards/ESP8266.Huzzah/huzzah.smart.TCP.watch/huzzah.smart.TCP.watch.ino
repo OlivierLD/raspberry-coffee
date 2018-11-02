@@ -71,6 +71,12 @@ void repaint(int x, int y) {
   sprintf(dataBuffer, "G %s", toDegMin(lng, EW));
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
 
+  yOffset += 8;
+  sprintf(dataBuffer, "SOG %.2f", sog);
+  ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
+  yOffset += 8;
+  sprintf(dataBuffer, "COG %d", cog);
+  ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
   // sprintf(dataBuffer, "SOG=%f, COG=%d", sog, cog);
 
   ssd1306.display();
