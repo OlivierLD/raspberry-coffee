@@ -13,7 +13,7 @@ const char* SSID     = "Sonic-00e0"; // "Pi-Net";
 const char* PASSWORD = "67369c7831"; // "raspberrypi";
 
 const char* HOST = "192.168.42.4"; // "192.168.127.1";
-const int HTTP_PORT = 9998;        // 8080
+const int HTTP_PORT = 9998;        // 9999
 
 const char* REST_REQUEST = "/mux/cache?option=txt"; // txt, not json.
 
