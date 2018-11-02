@@ -476,7 +476,7 @@ class SkyMap extends HTMLElement {
 				context.moveTo(xFrom, yFrom);
 				context.lineTo(xTo, yTo);
 //			console.log("Day ", day, " => now", JSON.stringify(now), " angle:", angleOnDisk, "Rad", rad, "LHA Aries", this.LHAAries, "Hem.", this._hemisphere);
-				if (now.dayOfMonth % 5 === 0) { // Print the day #
+				if (now.dayOfMonth === 1 || now.dayOfMonth % 5 === 0) { // Print the day #
 					context.save();
 					context.translate(this.canvas.width / 2, (this.canvas.height / 2));
 					let __currentAngle = rad;

@@ -66,6 +66,8 @@ const defaultDirectionColorConfig = {
 	font: 'Arial' /* 'Source Code Pro' */
 };
 
+import * as Utilities from "./utilities/Utilities.js";
+
 /* global HTMLElement */
 class DirectionDisplay extends HTMLElement {
 
@@ -78,6 +80,7 @@ class DirectionDisplay extends HTMLElement {
 			"with-rose",    // Boolean, draw the rose or not
 			"with-border",  // Boolean
 			"label",        // String
+			"hand",         // String. 'regular' (default) or 'wind'
 			"value"         // Float. Heading to display
 		];
 	}
@@ -87,6 +90,10 @@ class DirectionDisplay extends HTMLElement {
 		this._shadowRoot = this.attachShadow({mode: 'open'}); // 'open' means it is accessible from external JavaScript.
 		// create and append a <canvas>
 		this.canvas = document.createElement("canvas");
+		let fallbackElemt = document.createElement("h1");
+		let content = document.createTextNode("This is a DirectionDisplay, on an HTML5 canvas");
+		fallbackElemt.appendChild(content);
+		this.canvas.appendChild(fallbackElemt);
 		this.shadowRoot.appendChild(this.canvas);
 
 		// Default values
@@ -97,6 +104,7 @@ class DirectionDisplay extends HTMLElement {
 		this._minor_ticks =   5;
 		this._with_rose   = true;
 		this._with_border = true;
+		this._hand        = 'regular';
 		this._label       = undefined;
 
 		this._previousClassName = "";
@@ -152,6 +160,9 @@ class DirectionDisplay extends HTMLElement {
 			case "label":
 				this._label = newVal;
 				break;
+			case "hand":
+				this._hand = (newVal === 'wind' ? 'wind' : 'regular');
+				break;
 			default:
 				break;
 		}
@@ -193,6 +204,9 @@ class DirectionDisplay extends HTMLElement {
 	set label(val) {
 		this.setAttribute("label", val);
 	}
+	set hand(val) {
+		this.setAttribute("hand", val);
+	}
 	set shadowRoot(val) {
 		this._shadowRoot = val;
 	}
@@ -220,6 +234,9 @@ class DirectionDisplay extends HTMLElement {
 	}
 	get label() {
 		return this._label;
+	}
+	get hand() {
+		return this._hand;
 	}
 	get shadowRoot() {
 		return this._shadowRoot;
@@ -558,18 +575,53 @@ class DirectionDisplay extends HTMLElement {
 			context.shadowBlur = 3;
 		}
 		// Center
-		context.moveTo(this.canvas.width / 2, radius + 10);
+		let centerX = this.canvas.width / 2;
+		let centerY = radius + 10;
+		context.moveTo(centerX, centerY);
+
 		// Left
-		let x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (directionValue / 360)))); //  - (Math.PI / 2))));
-		let y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (directionValue / 360)))); // - (Math.PI / 2))));
+		let x = centerX - ((radius * 0.05) * Math.cos(Utilities.toRadians(dv))); //  - (Math.PI / 2))));
+		let y = centerY - ((radius * 0.05) * Math.sin(Utilities.toRadians(dv))); // - (Math.PI / 2))));
 		context.lineTo(x, y);
-		// Tip
-		x = (this.canvas.width / 2) - ((radius * 0.90) * Math.cos(2 * Math.PI * (directionValue / 360) + (Math.PI / 2)));
-		y = (radius + 10) - ((radius * 0.90) * Math.sin(2 * Math.PI * (directionValue / 360) + (Math.PI / 2)));
-		context.lineTo(x, y);
+		if (this.hand !== 'wind') { // Regular needle
+			// Tip
+			x = centerX - ((radius * 0.90) * Math.cos(Utilities.toRadians(dv) + (Math.PI / 2)));
+			y = centerY - ((radius * 0.90) * Math.sin(Utilities.toRadians(dv) + (Math.PI / 2)));
+			context.lineTo(x, y);
+		} else {                    // Then draw wind arrow
+			/*
+			    +-+
+			    | |
+			    | |
+			  +-+ +-+
+			   \   /
+			    + +
+			    | |
+			    | |
+			    +-+
+			 */
+
+			let arrowPoints = [
+				{ x: - radius * 0.04, y: - radius * 0.30 }, // Left pointy side of the arrow head
+				{ x: - radius * 0.20, y: - radius * 0.60 }, // Left back fat side of the arrow head
+				{ x: - radius * 0.04, y: - radius * 0.60 }, // Left back narrow side of the arrow head
+				{ x: - radius * 0.04, y: - radius * 0.90 }, // Left tip
+				{ x: + radius * 0.04, y: - radius * 0.90 }, // Right tip
+				{ x: + radius * 0.04, y: - radius * 0.60 }, // Right back narrow side of the arrow head
+				{ x: + radius * 0.20, y: - radius * 0.60 }, // Right back fat side of the arrow head
+				{ x: + radius * 0.04, y: - radius * 0.30 }  // Right pointy side of the arrow head
+			];
+			let radAngle = Utilities.toRadians(dv); // + (Math.PI / 2);
+			// Apply rotation to the points of the needle
+			arrowPoints.forEach(pt => {
+				x = centerX + ((pt.x * Math.cos(radAngle)) - (pt.y * Math.sin(radAngle)));
+				y = centerY + ((pt.x * Math.sin(radAngle)) + (pt.y * Math.cos(radAngle)));
+				context.lineTo(x, y);
+			});
+		}
 		// Right
-		x = (this.canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (directionValue / 360) + (2 * Math.PI / 2))));
-		y = (radius + 10) - ((radius * 0.05) * Math.sin((2 * Math.PI * (directionValue / 360) + (2 * Math.PI / 2))));
+		x = centerX - ((radius * 0.05) * Math.cos(Utilities.toRadians(dv) + (2 * Math.PI / 2)));
+		y = centerY - ((radius * 0.05) * Math.sin(Utilities.toRadians(dv) + (2 * Math.PI / 2)));
 		context.lineTo(x, y);
 
 		context.closePath();
