@@ -47,7 +47,7 @@ char* toDegMin(float data, int type) {
   //  Serial.print("MinSec:"); Serial.println(minSec);
 
   char degMinVal[64];
-  sprintf(degMinVal, "%c %d\272%.2f'", (type == NS ? (sign == 1 ? 'N' : 'S') : (sign == 1 ? 'E' : 'W')), intPart, minSec);
+  sprintf(degMinVal, "%c %d %.2f'", (type == NS ? (sign == 1 ? 'N' : 'S') : (sign == 1 ? 'E' : 'W')), intPart, minSec);
   //  Serial.print("Deg Minutes:");
   //  Serial.println(degMinVal);
   return degMinVal;
