@@ -47,7 +47,7 @@ char* toDegMin(float data, int type) {
   //  Serial.print("MinSec:"); Serial.println(minSec);
 
   char degMinVal[64];
-  sprintf(degMinVal, "%c %d %.2f'", (type == NS ? (sign == 1 ? 'N' : 'S') : (sign == 1 ? 'E' : 'W')), intPart, minSec);
+  sprintf(degMinVal, "%c %d\272%.2f'", (type == NS ? (sign == 1 ? 'N' : 'S') : (sign == 1 ? 'E' : 'W')), intPart, minSec);
   //  Serial.print("Deg Minutes:");
   //  Serial.println(degMinVal);
   return degMinVal;
@@ -62,13 +62,13 @@ void repaint(int x, int y) {
 
   char dataBuffer[128];
   int yOffset = 8;
-  sprintf(dataBuffer, "Bsp=%f", bsp);
+  sprintf(dataBuffer, "BSP %.2f kts", bsp);
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
   yOffset += 8;
-  sprintf(dataBuffer, "Lat=%f", lat);
+  sprintf(dataBuffer, "L %s", toDegMin(lat, NS));
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
   yOffset += 8;
-  sprintf(dataBuffer, "Lng=%f", lng);
+  sprintf(dataBuffer, "G %s", toDegMin(lng, EW));
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
 
   // sprintf(dataBuffer, "SOG=%f, COG=%d", sog, cog);
