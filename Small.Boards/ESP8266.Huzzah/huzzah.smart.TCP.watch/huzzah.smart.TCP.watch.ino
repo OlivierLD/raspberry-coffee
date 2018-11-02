@@ -34,17 +34,32 @@ float bsp, lat, lng, sog;
 int cog, year, month, day, hour, mins, sec;
 String date;
 
+const int NS = 1;
+const int EW = 2;
+
+char* toDegMin(float data, int type) {
+  int sign = (data >= 0) ? 1 : -1;
+  float absData = data >= 0 ? data : -data; // abs returns an int...
+  int intPart = (int)absData;
+  float minSec = (absData - intPart) * 60;
+  //  Serial.print("Raw:"); Serial.print(data);Serial.print(" -> "); Serial.println(absData);
+  //  Serial.print("Int:"); Serial.println(intPart);
+  //  Serial.print("MinSec:"); Serial.println(minSec);
+
+  char degMinVal[64];
+  sprintf(degMinVal, "%c %d %.2f'", (type == NS ? (sign == 1 ? 'N' : 'S') : (sign == 1 ? 'E' : 'W')), intPart, minSec);
+  //  Serial.print("Deg Minutes:");
+  //  Serial.println(degMinVal);
+  return degMinVal;
+}
+
 void repaint(int x, int y) {
   ssd1306.clear();
+  ssd1306.setColor(BLACK);
+  ssd1306.fillRect(1, 1, 128, 64);
+  ssd1306.setColor(WHITE);
   ssd1306.setFontScale2x2(false);
-//ssd1306.drawString(1 + x, 8 + y, "Now");
-  /*
-    display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getCurrentIcon()));
-    display.setFontScale2x2(true);
-    display.drawString(64 + x, 20 + y, String(weather.getCurrentTemp()) + "F");
-    display.setFontScale2x2(false);
-    display.drawString(64 + x, 40 + y, String(weather.getCurrentSummary()));
-  */
+
   char dataBuffer[128];
   int yOffset = 8;
   sprintf(dataBuffer, "Bsp=%f", bsp);
@@ -56,7 +71,7 @@ void repaint(int x, int y) {
   sprintf(dataBuffer, "Lng=%f", lng);
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
 
-// sprintf(dataBuffer, "SOG=%f, COG=%d", sog, cog);
+  // sprintf(dataBuffer, "SOG=%f, COG=%d", sog, cog);
 
   ssd1306.display();
 }
@@ -82,24 +97,48 @@ void setup() {
   Serial.println(SSID);
   WiFi.begin(SSID, PASSWORD);
 
+  int count = 0;
+  char dataBuffer[128];
+
+  // Testing the screen
+  ssd1306.clear();
+  ssd1306.setColor(BLACK);
+  ssd1306.fillRect(1, 1, 128, 64);
+  ssd1306.setColor(WHITE);
+  ssd1306.setFontScale2x2(false);
+  //  for (int line = 0; line < 8; line++) {
+  //    sprintf(dataBuffer, "Line #%d. For tests", (line + 1));
+  //    ssd1306.drawString(0, line * 8, dataBuffer);
+  //  }
+  ssd1306.drawString(0, 8, "Test:");
+  sprintf(dataBuffer, "L:%s", toDegMin(37.7489, NS));
+  ssd1306.drawString(0, 16, dataBuffer);
+  sprintf(dataBuffer, "G:%s", toDegMin(-122.5070, EW));
+  ssd1306.drawString(0, 24, dataBuffer);
+
+  ssd1306.display();
+  delay(5000);
+
+  // Trying to connect to the server
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
 
     ssd1306.clear();
-    //  ssd1306.drawXbm(34, 10, 60, 36, WiFi_Logo_bits);
-    ssd1306.setColor(INVERSE);
-    ssd1306.fillRect(10, 10, 108, 44);
+    ssd1306.setColor(BLACK);
+    ssd1306.fillRect(1, 1, 128, 64);
     ssd1306.setColor(WHITE);
-    //  drawSpinner(3, counter % 3);
+    ssd1306.setFontScale2x2(false);
+    sprintf(dataBuffer, "%d. %s...", count, SSID);
+    ssd1306.drawString(count % 56, (count % 56)/* + 8*/, dataBuffer); // "Connecting...");
     ssd1306.display();
+    count++;
   }
-
+  // Connected!
   ssd1306.clear();
-  ssd1306.setColor(INVERSE);
+  ssd1306.setColor(BLACK);
   ssd1306.fillRect(1, 1, 128, 64);
-  ssd1306.setColor(BLACK); // ?? Make sure that's right...
-  //  drawSpinner(3, counter % 3);
+  ssd1306.setColor(WHITE);
   ssd1306.setFontScale2x2(false);
   ssd1306.drawString(1, 8, "Ready");
   ssd1306.display();
