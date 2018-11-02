@@ -146,7 +146,9 @@ void setup() {
   ssd1306.fillRect(1, 1, 128, 64);
   ssd1306.setColor(WHITE);
   ssd1306.setFontScale2x2(false);
-  ssd1306.drawString(1, 8, "Ready");
+  ssd1306.drawString(1, 8, "Connection to");
+  ssd1306.drawString(1, 16, SSID);
+  ssd1306.drawString(1, 24, "Ready");
   ssd1306.display();
 
   Serial.println("");
