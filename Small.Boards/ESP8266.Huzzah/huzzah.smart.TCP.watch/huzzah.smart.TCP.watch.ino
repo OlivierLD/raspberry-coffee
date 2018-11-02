@@ -46,7 +46,7 @@ void setup() {
   // initialize display
   ssd1306.init();
   ssd1306.flipScreenVertically();
-  
+
   // set the drawing functions
   // ssd1306.setFrameCallbacks(3, frameCallbacks);
   // how many ticks does a slide of frame take?
@@ -54,7 +54,7 @@ void setup() {
 
   ssd1306.clear();
   ssd1306.display();
-  
+
   Serial.begin(115200); // Console output
   delay(100);
 
@@ -66,7 +66,7 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
-    
+
     ssd1306.clear();
 //  ssd1306.drawXbm(34, 10, 60, 36, WiFi_Logo_bits);
     ssd1306.setColor(INVERSE);
@@ -78,12 +78,13 @@ void setup() {
 
   Serial.println("");
   Serial.println("WiFi connected");
-  Serial.println("IP address: ");
+  Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
   Serial.print("Netmask: ");
   Serial.println(WiFi.subnetMask());
   Serial.print("Gateway: ");
   Serial.println(WiFi.gatewayIP());
+  Serial.println("------------------------------------");
 }
 
 const String BSP = "BSP";
@@ -106,7 +107,7 @@ String date;
 const int BETWEEN_LOOPS = 5000; // 5 sec.
 
 void loop() {
-  delay(BETWEEN_LOOPS); 
+  delay(BETWEEN_LOOPS);
 
   Serial.print(">> connecting to ");
   Serial.print(HOST);
