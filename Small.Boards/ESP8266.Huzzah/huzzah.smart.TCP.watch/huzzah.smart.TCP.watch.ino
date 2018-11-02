@@ -1,7 +1,7 @@
 /*
    Simple HTTP get webclient REST test
    for Huzzah/ESP8266.
-   That one spits out data oin the Serial console (no oled screen).
+   That one spits out data on the Serial console, and on an oled screen.
 */
 
 #include <Wire.h>
@@ -25,32 +25,43 @@ const char* REST_REQUEST = "/mux/cache?option=txt"; // txt, not json.
 const int I2C = 0x3D;
 
 // Initialize the oled display for address 0x3c
-// 0x3D is the adafruit address...
+// 0x3D is the adafruit address....
 // sda-pin=14 and sdc-pin=12
 SSD1306 ssd1306(I2C, SDA, SCL);
 
+// Data from REST server
 float bsp, lat, lng, sog;
 int cog, year, month, day, hour, mins, sec;
 String date;
 
-void drawDisplay(int x, int y) {
-  Serial.print("Displaying...");
+void repaint(int x, int y) {
   ssd1306.clear();
   ssd1306.setFontScale2x2(false);
-  ssd1306.setColor(BLACK);
-  ssd1306.drawString(x + 1, y + 8, date); // was "Now"
+//ssd1306.drawString(1 + x, 8 + y, "Now");
   /*
-  display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getCurrentIcon()));
-  display.setFontScale2x2(true);
-  display.drawString(64 + x, 20 + y, String(weather.getCurrentTemp()) + "F");
-  display.setFontScale2x2(false);
-  display.drawString(64 + x, 40 + y, String(weather.getCurrentSummary()));
+    display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getCurrentIcon()));
+    display.setFontScale2x2(true);
+    display.drawString(64 + x, 20 + y, String(weather.getCurrentTemp()) + "F");
+    display.setFontScale2x2(false);
+    display.drawString(64 + x, 40 + y, String(weather.getCurrentSummary()));
   */
+  char dataBuffer[128];
+  int yOffset = 8;
+  sprintf(dataBuffer, "Bsp=%f", bsp);
+  ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
+  yOffset += 8;
+  sprintf(dataBuffer, "Lat=%f", lat);
+  ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
+  yOffset += 8;
+  sprintf(dataBuffer, "Lng=%f", lng);
+  ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
+
+// sprintf(dataBuffer, "SOG=%f, COG=%d", sog, cog);
+
   ssd1306.display();
 }
 
 void setup() {
-
   // initialize display
   ssd1306.init();
   ssd1306.flipScreenVertically();
@@ -76,44 +87,45 @@ void setup() {
     Serial.print(".");
 
     ssd1306.clear();
-//  ssd1306.drawXbm(34, 10, 60, 36, WiFi_Logo_bits);
+    //  ssd1306.drawXbm(34, 10, 60, 36, WiFi_Logo_bits);
     ssd1306.setColor(INVERSE);
-//  ssd1306.fillRect(10, 10, 108, 44); // ?? values ?
-    ssd1306.fillRect(0, 0, 128, 64); 
+    ssd1306.fillRect(10, 10, 108, 44);
     ssd1306.setColor(WHITE);
-//  drawSpinner(3, counter % 3);
-    ssd1306.drawString(1, 8, "Connecting");
+    //  drawSpinner(3, counter % 3);
     ssd1306.display();
   }
 
-  ssd1306.setColor(BLACK);
+  ssd1306.clear();
+  ssd1306.setColor(INVERSE);
+  ssd1306.fillRect(1, 1, 128, 64);
+  ssd1306.setColor(BLACK); // ?? Make sure that's right...
+  //  drawSpinner(3, counter % 3);
+  ssd1306.setFontScale2x2(false);
   ssd1306.drawString(1, 8, "Ready");
   ssd1306.display();
 
   Serial.println("");
   Serial.println("WiFi connected");
-  Serial.print("IP address: ");
+  Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   Serial.print("Netmask: ");
   Serial.println(WiFi.subnetMask());
   Serial.print("Gateway: ");
   Serial.println(WiFi.gatewayIP());
-  Serial.println("------------------------------------");
 }
 
-// For the REST response parsing
-const String BSP   = "BSP";
-const String LAT   = "LAT";
-const String LNG   = "LNG";
-const String SOG   = "SOG";
-const String COG   = "COG";
-const String DATE  = "DATE";
-const String YEAR  = "YEAR";
+const String BSP = "BSP";
+const String LAT = "LAT";
+const String LNG = "LNG";
+const String SOG = "SOG";
+const String COG = "COG";
+const String DATE = "DATE";
+const String YEAR = "YEAR";
 const String MONTH = "MONTH";
-const String DAY   = "DAY";
-const String HOUR  = "HOUR";
-const String MIN   = "MIN";
-const String SEC   = "SEC";
+const String DAY = "DAY";
+const String HOUR = "HOUR";
+const String MIN = "MIN";
+const String SEC = "SEC";
 
 const int BETWEEN_LOOPS = 5000; // 5 sec.
 
@@ -144,7 +156,7 @@ void loop() {
   // Read all the lines of the reply from server and print them to Serial
   // Keys are BSP, LAT, LNG, SOG, COG, DATE, YEAR, MONTH, DAY, HOUR, MIN, SEC
   while (client.available()) {
-	  String line = client.readStringUntil('\n');
+    String line = client.readStringUntil('\n');
     // Serial.println(line);
     String key = getKey(line);
     if (key.length() > 0) {
@@ -173,7 +185,7 @@ void loop() {
         mins = value.toInt();
       } else if (key == SEC) {
         sec = value.toInt();
-			}
+      }
     }
   }
   char dataBuffer[128];
@@ -185,7 +197,7 @@ void loop() {
   Serial.println(date);
   Serial.println("<< closing connection");
 
-  drawDisplay(0, 0);
+  repaint(0, 0); // Display data on screen
 }
 
 void sendRequest(WiFiClient client, String verb, String url, String protocol, String host) {

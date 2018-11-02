@@ -106,6 +106,10 @@ We will use the following programming languages:
     can literally copy-paste Java code into a Groovy script), but also understands a nice closure-like syntax.
     Can be compiled, or not. Supports classes definition, can be run as a script.
     - The `Groovy Console` can be used as a `REPL`. Type `groovysh` to launch it.
+- [Ruby](#ruby)
+    - Ruby is a dynamic, interpreted, reflective, object-oriented, general-purpose programming language.
+    - It was designed and developed in the mid-1990s by Yukihiro "Matz" Matsumoto in Japan.
+    - It has an interactive console. Type `irb` to launch it.
 - [Go](#go) (aka Golang)
     - Created in 2009 by Robert Griesemer, Rob Pike, and Ken Thompson, at Google.
     - Designed to be the "Language of the Cloud". Interpreted (`go run`) or compiled (`go build`).
@@ -245,6 +249,15 @@ To run it, after installing Groovy on your machine:
 or just
 ```
  $ groovy system
+```
+
+#### Ruby
+Sources are in [`src/ruby/matrix.rb`](./src/ruby)
+
+To run the system resolution, type
+```
+ $ cd src/ruby
+ $ irb matrix.rb
 ```
 
 #### Go
