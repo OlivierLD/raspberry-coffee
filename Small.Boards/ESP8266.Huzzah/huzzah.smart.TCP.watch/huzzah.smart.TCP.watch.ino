@@ -25,13 +25,20 @@ const char* REST_REQUEST = "/mux/cache?option=txt"; // txt, not json.
 const int I2C = 0x3D;
 
 // Initialize the oled display for address 0x3c
-// 0x3D is the adafruit address....
+// 0x3D is the adafruit address...
 // sda-pin=14 and sdc-pin=12
 SSD1306 ssd1306(I2C, SDA, SCL);
 
+float bsp, lat, lng, sog;
+int cog, year, month, day, hour, mins, sec;
+String date;
+
 void drawDisplay(int x, int y) {
+  Serial.print("Displaying...");
+  ssd1306.clear();
   ssd1306.setFontScale2x2(false);
-  ssd1306.drawString(65 + x, 8 + y, "Now");
+  ssd1306.setColor(BLACK);
+  ssd1306.drawString(x + 1, y + 8, date); // was "Now"
   /*
   display.drawXbm(x + 7, y + 7, 50, 50, getIconFromString(weather.getCurrentIcon()));
   display.setFontScale2x2(true);
@@ -39,6 +46,7 @@ void drawDisplay(int x, int y) {
   display.setFontScale2x2(false);
   display.drawString(64 + x, 40 + y, String(weather.getCurrentSummary()));
   */
+  ssd1306.display();
 }
 
 void setup() {
@@ -70,11 +78,17 @@ void setup() {
     ssd1306.clear();
 //  ssd1306.drawXbm(34, 10, 60, 36, WiFi_Logo_bits);
     ssd1306.setColor(INVERSE);
-    ssd1306.fillRect(10, 10, 108, 44);
+//  ssd1306.fillRect(10, 10, 108, 44); // ?? values ?
+    ssd1306.fillRect(0, 0, 128, 64); 
     ssd1306.setColor(WHITE);
 //  drawSpinner(3, counter % 3);
+    ssd1306.drawString(1, 8, "Connecting");
     ssd1306.display();
   }
+
+  ssd1306.setColor(BLACK);
+  ssd1306.drawString(1, 8, "Ready");
+  ssd1306.display();
 
   Serial.println("");
   Serial.println("WiFi connected");
@@ -87,22 +101,19 @@ void setup() {
   Serial.println("------------------------------------");
 }
 
-const String BSP = "BSP";
-const String LAT = "LAT";
-const String LNG = "LNG";
-const String SOG = "SOG";
-const String COG = "COG";
-const String DATE = "DATE";
-const String YEAR = "YEAR";
+// For the REST response parsing
+const String BSP   = "BSP";
+const String LAT   = "LAT";
+const String LNG   = "LNG";
+const String SOG   = "SOG";
+const String COG   = "COG";
+const String DATE  = "DATE";
+const String YEAR  = "YEAR";
 const String MONTH = "MONTH";
-const String DAY = "DAY";
-const String HOUR = "HOUR";
-const String MIN = "MIN";
-const String SEC = "SEC";
-
-float bsp, lat, lng, sog;
-int cog, year, month, day, hour, mins, sec;
-String date;
+const String DAY   = "DAY";
+const String HOUR  = "HOUR";
+const String MIN   = "MIN";
+const String SEC   = "SEC";
 
 const int BETWEEN_LOOPS = 5000; // 5 sec.
 
@@ -173,6 +184,8 @@ void loop() {
   Serial.print("Date=");
   Serial.println(date);
   Serial.println("<< closing connection");
+
+  drawDisplay(0, 0);
 }
 
 void sendRequest(WiFiClient client, String verb, String url, String protocol, String host) {
