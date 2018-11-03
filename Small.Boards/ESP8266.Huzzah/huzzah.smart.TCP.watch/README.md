@@ -4,7 +4,7 @@ The idea is to have a watch-like device that does _not_ need a smart phone to co
 For now, it seems that _all_ so-called smart watches need a cell-phone to connect to (with BlueTooth) to get to the net.
 Ah yes, and why not a dish-washer, or a police car, or an helicopter 🚁 ???
 
-Boards like the ESP8266 (and similar, like the Adafruit Huzzah - less than $10, Nov-2018, Adafruit Feather Huzzah, etc) have WiFi capabilities that allow you to skip the need for a
+Boards like the ESP8266 (and similar, like the Adafruit Huzzah - less than $10 in Nov-2018, Adafruit Feather Huzzah, etc) have WiFi capabilities that allow you to skip the need for a
 cell-phone between you and the network.
 
 OK, the app running on the ESP8266 might need some parameters, some customization, some configuration... fine.
