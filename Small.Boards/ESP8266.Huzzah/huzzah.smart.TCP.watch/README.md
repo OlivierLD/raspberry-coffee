@@ -1,7 +1,7 @@
 ### TCP Smart Watch - WIP 🚧.
 The idea is to have a watch-like device that does _not_ need a smart phone to connect to a network.
 
-For now, it seems that _all_ so-called smart watches need a cell-phone to connect to (with BlueTooth) to get to the net.
+For now, it seems that _all_ so-called smart watches need a cell-phone to connect to (via BlueTooth) to get to the net.
 Ah yes, and why not a dish-washer, or a police car, or an helicopter 🚁 ???
 
 Boards like the ESP8266 (and similar, like the Adafruit Huzzah - less than $10 in Nov-2018, Adafruit Feather Huzzah, etc) have WiFi capabilities that allow you to skip the need for a
