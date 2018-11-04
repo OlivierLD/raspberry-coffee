@@ -17,8 +17,10 @@
 
 /* ----- Customizable Data ----- */
 // Network and Host Names definitions, customize if necessary
-// #define __RASPI_LOGGER__  // 192.168.127.1 on Pi-Net
-#undef __RASPI_LOGGER__      // 192.168.42.4 on Sonic-00e0
+// #define __PI_NET__       // 192.168.127.1 on Pi-Net
+#undef __PI_NET__
+#define __SONIC_AT_HOME__   // 192.168.42.4 on Sonic-00e0
+// #undef __SONIC_AT_HOME__
 
 #include "custom_values.h" // Contains _SSID, _PASSWORD, _HOST, _HTTP_PORT
 
@@ -82,8 +84,7 @@ void repaint(int x, int y) {
   char dataBuffer[128];
   int yOffset = 8;
 
-  sprintf(dataBuffer, "Net:%s", SSID);
-  ssd1306.drawString(1 + x, 0, dataBuffer);
+  ssd1306.drawString(1 + x, 0, strcat("Net:", SSID));
   ssd1306.drawString(1 + x, yOffset + y, "--- Nav Data ---");
   yOffset += 8;
 //  sprintf(dataBuffer, "BSP: %.2f kts", bsp);

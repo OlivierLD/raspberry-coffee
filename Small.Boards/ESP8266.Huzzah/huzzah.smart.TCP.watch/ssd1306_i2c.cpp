@@ -1,5 +1,6 @@
 /**
   Adapted from the code by Daniel Eichhorn, at http://blog.squix.ch
+  TODO Some cleanup, also in the header file.
 */
 
 #include "ssd1306_i2c.h"
