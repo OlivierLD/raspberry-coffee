@@ -59,7 +59,7 @@ EXPOSE 8888
 #
 RUN pip install keras
 #
-# Install PyCharm community edition
+# Install PyCharm community edition. Comment the 2 following lines if not needed.
 RUN wget --quiet https://download.jetbrains.com/python/pycharm-community-2018.2.4.tar.gz
 RUN tar xfz pycharm-community-2018.2.4.tar.gz -C /opt/
 #
@@ -71,7 +71,9 @@ RUN echo "echo -n 'node:' && node -v" >> $HOME/.bash_aliases
 RUN echo "echo -n 'npm:' && npm -v" >> $HOME/.bash_aliases
 RUN echo "java -version" >> $HOME/.bash_aliases
 RUN echo "vncserver -version" >> $HOME/.bash_aliases
+# lsb_release: Full Linux version with details.
 RUN echo "lsb_release -a" >> $HOME/.bash_aliases
+RUN echo "echo -n 'Python3:' && python3 -V" >> $HOME/.bash_aliases
 RUN echo "echo -n 'Keras:' && python3 -c 'import keras; print(keras.__version__)'" >> $HOME/.bash_aliases
 RUN echo "echo -n 'Jupyter:' && jupyter --version" >> $HOME/.bash_aliases
 RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bash_aliases

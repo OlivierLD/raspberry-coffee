@@ -17,7 +17,7 @@ while [ "$GO" == "true" ]
 do
 	clear
 	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "|               N A V   S E R V E R - D E M O   L A U N C H E R  🚀                       |"
+	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  P. Launch proxy CLI, to visualize HTTP & REST traffic                                  |"
 	echo -e "| PG. Launch proxy GUI, to visualize HTTP & REST traffic                                  |"

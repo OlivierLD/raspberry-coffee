@@ -31,7 +31,6 @@ void chainAppend (AllocatedPtrs * head, AllocatedPtrs * pt) {
   while (structPt->next) {
     structPt = structPt->next;
   }
-
   structPt->next = pt;
 }
 

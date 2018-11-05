@@ -22,7 +22,7 @@
 #define __SONIC_AT_HOME__   // 192.168.42.4 on Sonic-00e0
 // #undef __SONIC_AT_HOME__
 
-#include "custom_values.h" // Contains _SSID, _PASSWORD, _HOST, _HTTP_PORT
+#include "custom_values.h" // Contains _SSID, _PASSWORD, _HOST, _HTTP_PORT, used below.
 
 const char* SSID     = _SSID;
 const char* PASSWORD = _PASSWORD;

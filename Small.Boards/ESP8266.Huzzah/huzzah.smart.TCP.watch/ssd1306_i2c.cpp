@@ -1,6 +1,5 @@
 /**
   Adapted from the code by Daniel Eichhorn, at http://blog.squix.ch
-  TODO Some cleanup, also in the header file.
 */
 
 #include "ssd1306_i2c.h"
@@ -31,13 +30,13 @@ const int COM_SCAN_DEC          = 0xC8;
 const int DEACTIVATE_SCROLL     = 0x2E;
 
 SSD1306::SSD1306(int i2cAddress, int sda, int sdc) {
-  myI2cAddress = i2cAddress;
-  mySda = sda;
-  mySdc = sdc;
+  I2CAddress = i2cAddress;
+  sda = sda;
+  sdc = sdc;
 }
 
 void SSD1306::init() {
-  Wire.begin(mySda, mySdc);
+  Wire.begin(sda, sdc);
   Wire.setClock(250000);
   sendInitCommands();
   resetDisplay();
@@ -77,7 +76,7 @@ void SSD1306::clear(void) {
 void SSD1306::display(void) {
   for (uint16_t i = 0; i < (128 * 64 / 8); i++) {
     // send a bunch of data in one xmission
-    Wire.beginTransmission(myI2cAddress);
+    Wire.beginTransmission(I2CAddress);
     Wire.write(0x40);
     for (uint8_t x = 0; x < 16; x++) {
       Wire.write(buffer[i]);
@@ -91,7 +90,7 @@ void SSD1306::display(void) {
 
 void SSD1306::setPixel(int x, int y) {
   if (x >= 0 && x < 128 && y >= 0 && y < 64) {
-    switch (myColor) {
+    switch (color) {
       case WHITE:
         buffer[x + (y / 8) * 128] |=  (1 << (y & 7));
         break;
@@ -119,7 +118,7 @@ void SSD1306::drawString(int x, int y, String text) {
       unsigned char charColumn = pgm_read_byte(myFont[text.charAt(j) - 0x20] + i);
       for (int pixel = 0; pixel < 8; pixel++) {
         if (bitRead(charColumn, pixel)) {
-          if (myIsFontScaling2x2) {
+          if (isFontScaling2x2) {
             setPixel(x + 2 * (j * 8 + i), y + 2 * pixel);
             setPixel(x + 2 * (j * 8 + i) + 1, y + 2 * pixel + 1);
             setPixel(x + 2 * (j * 8 + i) + 1, y + 2 * pixel);
@@ -134,7 +133,7 @@ void SSD1306::drawString(int x, int y, String text) {
 }
 
 void SSD1306::setFontScale2x2(bool isFontScaling2x2) {
-  myIsFontScaling2x2 = isFontScaling2x2;
+  isFontScaling2x2 = isFontScaling2x2;
 }
 
 void SSD1306::drawBitmap(int x, int y, int width, int height, const char *bitmap) {
@@ -151,7 +150,7 @@ void SSD1306::drawBitmap(int x, int y, int width, int height, const char *bitmap
 }
 
 void SSD1306::setColor(int color) {
-  myColor = color;
+  color = color;
 }
 
 void SSD1306::drawRect(int x, int y, int width, int height) {
@@ -190,8 +189,8 @@ void SSD1306::drawXbm(int x, int y, int width, int height, const char *xbm) {
 }
 
 void SSD1306::sendCommand(unsigned char com) {
-  // Wire.begin(mySda, mySdc);
-  Wire.beginTransmission(myI2cAddress);      // begin transmitting
+  // Wire.begin(sda, sdc);
+  Wire.beginTransmission(I2CAddress);        // begin transmitting
   Wire.write(0x80);                          // command mode
   Wire.write(com);
   Wire.endTransmission();                    // stop transmitting
@@ -246,23 +245,23 @@ void SSD1306::sendInitCommands(void) {
 }
 
 void SSD1306::nextFrameTick() {
-  myFrameTick++;
-  if (myFrameTick == myFrameWaitTicks && myFrameState == 0 || myFrameTick == myFrameTransitionTicks && myFrameState == 1) {
-    myFrameState = (myFrameState + 1) %  2;
-    if (myFrameState == FRAME_STATE_FIX) {
-      myCurrentFrame = (myCurrentFrame + 1) % myFrameCount;
+  frameTick++;
+  if (frameTick == frameWaitTicks && frameState == 0 || frameTick == frameTransitionTicks && frameState == 1) {
+    frameState = (frameState + 1) %  2;
+    if (frameState == FRAME_STATE_FIX) {
+      currentFrame = (currentFrame + 1) % frameCount;
     }
-    myFrameTick = 0;
+    frameTick = 0;
   }
-  drawIndicators(myFrameCount, myCurrentFrame);
+  drawIndicators(frameCount, currentFrame);
 
-  switch (myFrameState) {
+  switch (frameState) {
     case 0:
-      (*myFrameCallbacks[myCurrentFrame])(0, 0);
+      (*frameCallbacks[currentFrame])(0, 0);
       break;
     case 1:
-      (*myFrameCallbacks[myCurrentFrame])(-128 * myFrameTick / myFrameTransitionTicks, 0);
-      (*myFrameCallbacks[(myCurrentFrame + 1) % myFrameCount])(-128 * myFrameTick / myFrameTransitionTicks + 128, 0);
+      (*frameCallbacks[currentFrame])(-128 * frameTick / frameTransitionTicks, 0);
+      (*frameCallbacks[(currentFrame + 1) % frameCount])(-128 * frameTick / frameTransitionTicks + 128, 0);
       break;
   }
 }
@@ -280,19 +279,19 @@ void SSD1306::drawIndicators(int frameCount, int activeFrame) {
 }
 
 void SSD1306::setFrameCallbacks(int frameCount, void (*frameCallbacks[])(int x, int y)) {
-  myFrameCount = frameCount;
-  myFrameCallbacks = frameCallbacks;
+  frameCount = frameCount;
+  frameCallbacks = frameCallbacks;
 }
 
 void SSD1306::setFrameWaitTicks(int frameWaitTicks) {
-  myFrameWaitTicks = frameWaitTicks;
+  frameWaitTicks = frameWaitTicks;
 }
 
 void SSD1306::setFrameTransitionTicks(int frameTransitionTicks) {
-  myFrameTransitionTicks = frameTransitionTicks;
+  frameTransitionTicks = frameTransitionTicks;
 }
 
 int SSD1306::getFrameState() {
-  return myFrameState;
+  return frameState;
 }
 
