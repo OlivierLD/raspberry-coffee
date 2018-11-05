@@ -24,11 +24,13 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +121,23 @@ public class RESTImplementation {
 					"POST",
 					ASTRO_PREFIX + "/publish/perpetual",
 					this::publishPerpetual,
-					"Generates perpetual nautical almanac document (pdf)")
+					"Generates perpetual nautical almanac document (pdf)"),
+
+			new Operation(
+					"GET",
+					ASTRO_PREFIX + "/sight-reduction",
+					this::getSightReductionUserData,
+					"Sight reduction user data sample (for development)"),
+			new Operation(
+					"POST",
+					ASTRO_PREFIX + "/sight-reduction",
+					this::sightReduction,
+					"Sight reduction"),
+			new Operation(
+					"POST",
+					ASTRO_PREFIX + "/reverse-sight",
+					this::emptyOperation,
+					"Reverse Sight reduction")
 
 	);
 
@@ -1049,6 +1067,187 @@ public class RESTImplementation {
 								.errorMessage("Required payload not found."));
 				return response;
 			}
+		}
+		return response;
+	}
+
+
+	public static class CelestialBodyData {
+		String name; // Sun, Moon, Planet, or star.
+		double instrumentalAltitude;
+		enum Limb {
+			NONE, LOWER, UPPER
+		}
+		Limb limb = Limb.NONE;
+		double eyeHeight;
+
+		public CelestialBodyData name(String name) {
+			this.name = name;
+			return this;
+		}
+		public CelestialBodyData instrumentalAltitude(double instrumentalAltitude) {
+			this.instrumentalAltitude = instrumentalAltitude;
+			return this;
+		}
+		public CelestialBodyData limb(Limb limb) {
+			this.limb = limb;
+			return this;
+		}
+		public CelestialBodyData eyeHeight(double eyeHeight) {
+			this.eyeHeight = eyeHeight;
+			return this;
+		}
+	}
+	public static class SightReductionData {
+		Pos estimatedPosition;
+		String utcDate; // Duration Format
+		CelestialBodyData cbd;
+
+		public SightReductionData estimatedPosition(Pos position) {
+			this.estimatedPosition = position;
+			return this;
+		}
+		public SightReductionData utcDate(String date) {
+			this.utcDate = date;
+			return this;
+		}
+		public SightReductionData celestialBodyData(CelestialBodyData cbd) {
+			this.cbd = cbd;
+			return this;
+		}
+	}
+
+	private Response getSightReductionUserData(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		SightReductionData userData = new SightReductionData()
+				.utcDate("2018-11-05T20:50:52")
+				.estimatedPosition(new Pos().latitude(37.4090).longitude(-122.7654))
+				.celestialBodyData(new CelestialBodyData()
+																.name("Sun")
+																.eyeHeight(1.8)
+																.instrumentalAltitude(35.0740)
+																.limb(CelestialBodyData.Limb.LOWER));
+		String content = new Gson().toJson(userData);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+		return response;
+	}
+
+	/**
+	 * Expects a json payload containing:
+	 * - Observation date and time (UTC)
+	 * - Estimated position
+	 * - Observed body
+	 *    - Name
+	 *    - Sextant altitude (instrumental)
+	 *    - Upper/Lower limb
+	 *    Eye height (meters)
+	 *
+	 *    Looks like this in JSON:
+	 *    {
+	 *     "estimatedPosition": {
+	 *         "latitude": 37.409,
+	 *         "longitude": -122.7654
+	 *     },
+	 *     "utcDate": "2018-11-05T20:50:52",
+	 *     "cbd": {
+	 *         "name": "Sun",
+	 *         "instrumentalAltitude": 35.074,
+	 *         "limb": "LOWER",
+	 *         "eyeHeight": 1.8
+	 *     }
+	 *  }
+	 * @param request
+	 * @return
+	 */
+	private HTTPServer.Response sightReduction(HTTPServer.Request request) {
+
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		String payload = new String(request.getContent());
+		if (!"null".equals(payload)) {
+			Gson gson = new GsonBuilder().create();
+			StringReader stringReader = new StringReader(payload);
+			try {
+				SightReductionData userData = gson.fromJson(stringReader, SightReductionData.class);
+				// Validate the body name
+				String bodyName = userData.cbd.name;
+				if (!bodyName.equals("Sun") &&
+						!bodyName.equals("Moon") &&
+						!bodyName.equals("Venus") &&
+						!bodyName.equals("Mars") &&
+						!bodyName.equals("Jupiter") &&
+						!bodyName.equals("Saturn") &&
+						Star.getStar(bodyName) == null) {
+					// Body not recognized
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("NAV-0003")
+									.errorMessage(String.format("Body [%s] unknown.", bodyName)));
+					return response;
+				} else { // Proceed
+					DURATION_FMT.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+					try {
+						Date from = DURATION_FMT.parse(userData.utcDate);
+						Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
+						current.setTime(from);
+						if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+							System.out.println("Starting SunData calculation at " + current.getTime() + " (" + userData.utcDate + ")");
+						}
+						AstroComputer.calculate(
+								current.get(Calendar.YEAR),
+								current.get(Calendar.MONTH) + 1,
+								current.get(Calendar.DAY_OF_MONTH),
+								current.get(Calendar.HOUR_OF_DAY), // and not HOUR !!!!
+								current.get(Calendar.MINUTE),
+								current.get(Calendar.SECOND));
+
+						double gha = 0, decl = 0;
+
+						// Depends on the body
+						gha = AstroComputer.getSunGHA();
+						decl = AstroComputer.getSunDecl();
+						SightReductionUtil sru = new SightReductionUtil();
+						sru.calculate(userData.estimatedPosition.latitude, userData.estimatedPosition.longitude, gha, decl);
+
+						double estimatedAltitude = sru.getHe();
+						double z = sru.getZ();
+
+						Map<String, Double> reduced = new HashMap<>();
+						reduced.put("estimated-altitude", estimatedAltitude);
+						reduced.put("z", z);
+
+						String content = new Gson().toJson(reduced);
+						RESTProcessorUtil.generateResponseHeaders(response, content.length());
+						response.setPayload(content.getBytes());
+//					return response;
+					} catch (ParseException pe) {
+						response = HTTPServer.buildErrorResponse(response,
+								Response.BAD_REQUEST,
+								new HTTPServer.ErrorPayload()
+										.errorCode("NAV-0004")
+										.errorMessage(pe.toString()));
+						return response;
+					}
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("NAV-0001")
+								.errorMessage(ex.toString()));
+				return response;
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("NAV-0002")
+							.errorMessage("Request payload not found"));
+			return response;
 		}
 		return response;
 	}

@@ -18,7 +18,7 @@ public class AstroServer {
 				System.err.println(nfe.toString());
 			}
 		}
-		System.out.println(String.format("Running on port %d", port));
+		System.out.println(String.format("Running on port %d", httpPort));
 		requestManager = new AstroRequestManager();
 		this.httpServer = startHttpServer(httpPort);
 	}

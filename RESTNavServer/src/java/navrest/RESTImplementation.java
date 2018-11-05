@@ -1,13 +1,18 @@
 package navrest;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import context.ApplicationContext;
+import context.NMEADataCache;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import nmea.parser.GeoPos;
 
 import javax.annotation.Nonnull;
+import java.io.StringReader;
 import java.util.*;
 
 /**
@@ -59,6 +64,7 @@ public class RESTImplementation {
 					WW_PREFIX + "/composite-hierarchy", // QS Prm: filter
 					this::getCompositeHierarchy,
 					"Retrieve the list of the composites already available on the file system")
+
 	);
 
 	protected List<Operation> getOperations() {
