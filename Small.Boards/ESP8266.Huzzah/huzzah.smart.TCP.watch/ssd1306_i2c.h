@@ -12,19 +12,19 @@
 class SSD1306 {
 
 private:
-   int I2CAddress;
-   int sda;
-   int sdc;
+   int myI2cAddress;
+   int mySda;
+   int mySdc;
    uint8_t buffer[128 * 64 / 8];
-   bool isFontScaling2x2 = false;
-   int frameState = 0;
-   int frameTick = 0;
-   int currentFrame = 0;
-   int frameCount = 0;
-   int frameWaitTicks = 80;
-   int frameTransitionTicks = 25;
-   int color = WHITE;
-   void (**frameCallbacks)(int x, int y);
+   bool myIsFontScaling2x2 = false;
+   int myFrameState = 0;
+   int myFrameTick = 0;
+   int myCurrentFrame = 0;
+   int myFrameCount = 0;
+   int myFrameWaitTicks = 80;
+   int myFrameTransitionTicks = 25;
+   int myColor = WHITE;
+   void (**myFrameCallbacks)(int x, int y);
 
 
 public:
