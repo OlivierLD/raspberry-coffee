@@ -146,13 +146,22 @@ void setup() {
     ssd1306.drawString(0, line * 8, dataBuffer);
   }
 #endif
-	// TODO A banner, like TCP Smart watch, double size characters.
+
+#ifdef LINE_TEST_2
   ssd1306.drawString(0, 8, "Test:");
   sprintf(dataBuffer, "L:%s", toDegMin(37.7489, NS));
   ssd1306.drawString(0, 16, dataBuffer);
   sprintf(dataBuffer, "G:%s", toDegMin(-122.5070, EW));
   ssd1306.drawString(0, 24, dataBuffer);
-
+#endif
+	// A banner, like TCP Smart watch, double size characters.
+#ifndef LINE_TEST
+#ifndef LINE_TEST_2
+	ssd1306.setFontScale2x2(true);
+  ssd1306.drawString(0, 16, "Smart TCP Watch");
+	ssd1306.setFontScale2x2(false);
+#endif
+#endif
   ssd1306.display();
   delay(5000);
 
