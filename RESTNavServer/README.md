@@ -243,6 +243,10 @@ Heads Up display, from a smartphone:
 ![GRIB Rendering](./docimg/screenshot.09.png)
 Faxes and GRIB, together
 
+**Sight Reduction**
+
+![Sight Reduction](./docimg/sight.reduction.01.png)
+
 ## Server Remote access
 > See [this document](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA.multiplexer#remote-access).
 
