@@ -132,7 +132,7 @@
 				fmtDisplay += ("<br>Estimated Altitude (at estimated pos):" + decToSex(result['estimated-altitude-degrees']));
 				fmtDisplay += ("<br>Total correction in minutes:" + result['total-correction-minutes'].toFixed(4));
 				fmtDisplay += ("<hr/>");
-				fmtDisplay += ("<i>Calculated with DeltaT = " + result['delta-t'] + ' s');
+				fmtDisplay += ("<i>Calculated with DeltaT = " + result['delta-t'] + ' s</i>');
 				fmtDisplay += ("<hr/>");
 
 				document.getElementById("result").innerHTML = fmtDisplay;
@@ -192,7 +192,7 @@
 			<button id="button-now"
 							onclick="updateFieldToNow()"
 							title="Set date value to current time"
-							style="margin-top: 3px;">Now</button>
+							style="margin-top: 3px; border-radius: 3px; box-shadow: 2px 2px silver;">Now</button>
 		</div>
 		<div id="user-pos-widgets" style="display: block; padding: 10px;">
 			<table>
@@ -388,7 +388,7 @@
 			</table>
 		</div>
 		<div>
-			<button onclick="calculate();">Calculate</button>
+			<button onclick="calculate();" style="border-radius: 3px; box-shadow: 2px 2px silver;">Calculate</button>
 		</div>
 		<div id="result" style="margin: 10px;	"></div>
 	</div>
