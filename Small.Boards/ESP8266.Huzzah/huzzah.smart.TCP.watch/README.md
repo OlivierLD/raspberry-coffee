@@ -24,7 +24,12 @@ The ESP8266 will ping the [NavServer/NMEA.multiplexer](https://github.com/Olivie
 ![Wiring](./TCP.watch_bb.png)
 
 ##### Prototyping with an Huzzah/ESP8266
-![Proto](./prototyping.jpg)
+![Proto](./prototyping.01.jpg)
 
+![Proto](./prototyping.02.jpg)
+
+![Proto](./prototyping.03.jpg)
+
+![Proto](./prototyping.04.jpg)
 
 ---
