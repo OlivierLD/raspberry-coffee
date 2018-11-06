@@ -74,6 +74,9 @@ char* toDegMin(float data, int type) {
   return degMinVal;
 }
 
+int ping = 0;
+char spin[] = { '/', '-', '\\', '|' };
+
 void repaint(int x, int y) {
   ssd1306.clear();
   ssd1306.setColor(BLACK);
@@ -103,9 +106,12 @@ void repaint(int x, int y) {
   sprintf(dataBuffer, "COG: %d", cog);
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
   yOffset += 8;
+  sprintf(dataBuffer, "-------- %c ------", spin[ping++ % 4]);
+  //                  "----------------"
   ssd1306.drawString(1 + x, yOffset + y, "----------------");
 
   ssd1306.display();
+  if (ping >= 4) { ping = 0; }
 }
 
 void setup() {
