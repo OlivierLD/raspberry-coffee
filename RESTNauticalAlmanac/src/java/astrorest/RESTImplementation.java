@@ -1120,6 +1120,13 @@ public class RESTImplementation {
 		}
 	}
 
+	/**
+	 * Used to see what the data will look like in JSON.
+	 * No other reason to exist.
+	 *
+	 * @param request
+	 * @return
+	 */
 	private Response getSightReductionUserData(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
@@ -1305,6 +1312,7 @@ public class RESTImplementation {
 						reduced.put("semi-diameter-minutes", sd * 60); // In minutes of arc
 						reduced.put("refraction-minutes", refr); // In minutes of arc
 						reduced.put("intercept-degrees", intercept); // In degrees
+						reduced.put("delta-t", AstroComputer.getDeltaT()); // In seconds
 
 						if ("true".equals(System.getProperty("astro.verbose", "false"))) {
 							System.out.println("For eye height " + DF22.format(userData.cbd.eyeHeight) + " m, horizon dip = " + DF22.format(hDip) + "'");
