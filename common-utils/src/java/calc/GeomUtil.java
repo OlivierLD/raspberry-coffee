@@ -216,7 +216,7 @@ public final class GeomUtil {
 		} else if (output == GeomUtil.NO_DEG) {
 			s = Integer.toString(i) + ' ' + df.format(dec) + "'";
 		} else {
-			s = Integer.toString(i) + '\370' + df.format(dec) + "'";
+			s = Integer.toString(i) + '\272' + df.format(dec) + "'";
 		}
 		if (v < 0.0D) {
 			switch (displayType) {
