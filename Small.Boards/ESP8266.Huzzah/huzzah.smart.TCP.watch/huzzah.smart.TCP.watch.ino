@@ -158,8 +158,11 @@ void setup() {
 #ifndef LINE_TEST
 #ifndef LINE_TEST_2
 	ssd1306.setFontScale2x2(true);
-  ssd1306.drawString(0, 16, "Smart TCP Watch");
+  ssd1306.drawString(0,  0, "Smart");
+  ssd1306.drawString(0, 16, " TCP");
+  ssd1306.drawString(0, 32, "Watch!");
 	ssd1306.setFontScale2x2(false);
+  ssd1306.drawString(0, 50, "By OlivSoft");
 #endif
 #endif
   ssd1306.display();

@@ -1,6 +1,6 @@
 void setup() {
   pinMode(0, OUTPUT);
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Setup OK");
 }
 
