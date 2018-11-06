@@ -59,7 +59,7 @@ created by the Raspberry PI (or any machine the server runs on) to connect to it
 
 The way to go for the front end is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
 Consuming REST services can be done from many frameworks, here we'll use `jQuery`, for its `Promise` (aka `Deferred`) features.
-> The `Promise` aspect might go away, once `EcmaScript6` is more widely supported (in the browsers; it currently requires a transpilation).
+> _Summer 2018_: I'll be moving away from `JQuery Deferred`, `EcmaScript6` comes with `Promises` that work fine. `JQuery` is a great tool, but not required here any more.
 
 For the back end, my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability
 and re-usability reasons. I have several other projects (not necessarily dedicated to the Raspberry PI) writen in Java; a `jar` (Java ARchive) generated from those projects can be part of any
