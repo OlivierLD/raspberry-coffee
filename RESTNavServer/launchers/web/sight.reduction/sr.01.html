@@ -9,14 +9,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Sight Reduction</title>
 	<link rel="icon" type="image/gif" href="./sextant.gif">
-
 	<link rel="stylesheet" href="./stylesheet.css">
-
-	<!-- Firefox does NOT like modules... Safari OK -->
-
 	<!-- Scripts -->
 	<script type="text/javascript" src="./ajax.manager.js"></script>
-
 	<script type="text/javascript">
 
 		function decToSex(val, ns_ew) {
@@ -112,7 +107,7 @@
 				}
 			};
 			// Create and invoke promise
-			let callback = function(result) {
+			let srCallback = function(result) {
 				/*
 				Result looks like: {
 					estimated-altitude-degrees: 25.311551122752217
@@ -142,7 +137,7 @@
 
 				document.getElementById("result").innerHTML = fmtDisplay;
 			};
-			calculateSightReduction(requestPayload, callback);
+			calculateSightReduction(requestPayload, srCallback);
 		}
 
 	</script>
@@ -185,7 +180,7 @@
 						 id="calendar-year-01"
 						 placeholder="YYYY"
 						 title="Year to set"
-						 style="width: 80px; text-align: center;"
+						 style="width: 60px; text-align: center;"
 						 value="1970"/>
 			<input type="text"
 						 id="watch-value-01"
