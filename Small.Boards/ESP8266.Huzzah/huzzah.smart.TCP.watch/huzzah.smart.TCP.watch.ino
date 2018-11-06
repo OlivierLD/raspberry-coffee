@@ -146,6 +146,7 @@ void setup() {
     ssd1306.drawString(0, line * 8, dataBuffer);
   }
 #endif
+	// TODO A banner, like TCP Smart watch, double size characters.
   ssd1306.drawString(0, 8, "Test:");
   sprintf(dataBuffer, "L:%s", toDegMin(37.7489, NS));
   ssd1306.drawString(0, 16, dataBuffer);

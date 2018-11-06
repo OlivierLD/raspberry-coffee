@@ -1196,7 +1196,7 @@ public class RESTImplementation {
 						Calendar current = Calendar.getInstance(TimeZone.getTimeZone("etc/UTC"));
 						current.setTime(from);
 						if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-							System.out.println("Starting SunData calculation at " + current.getTime() + " (" + userData.utcDate + ")");
+							System.out.println("Starting Sight Reduction calculation at " + current.getTime() + " (" + userData.utcDate + ")");
 						}
 						AstroComputer.calculate(
 								current.get(Calendar.YEAR),
@@ -1304,7 +1304,7 @@ public class RESTImplementation {
 						reduced.put("parallax-minutes", parallax * 60d); // In minutes of arc
 						reduced.put("semi-diameter-minutes", sd * 60); // In minutes of arc
 						reduced.put("refraction-minutes", refr); // In minutes of arc
-						reduced.put("intercept-minutes", intercept); // In minutes of arc
+						reduced.put("intercept-degrees", intercept); // In degrees
 
 						if ("true".equals(System.getProperty("astro.verbose", "false"))) {
 							System.out.println("For eye height " + DF22.format(userData.cbd.eyeHeight) + " m, horizon dip = " + DF22.format(hDip) + "'");
@@ -1315,7 +1315,6 @@ public class RESTImplementation {
 							System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
 							System.out.println("Semi-diameter: " + DF22.format(sd * 60d) + "'");
 							System.out.println("Intercept:" + DF22.format(Math.abs(intercept) * 60d) + "' " + (intercept<0?"away from":"towards") + " " + bodyName );
-							System.out.println(DF22.format(Math.abs(intercept) * 60d) + "' " + (intercept<0?"away from":"towards") + " " + bodyName );
 						}
 
 						String content = new Gson().toJson(reduced);
@@ -1331,7 +1330,6 @@ public class RESTImplementation {
 						return response;
 					}
 				}
-
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				response = HTTPServer.buildErrorResponse(response,
