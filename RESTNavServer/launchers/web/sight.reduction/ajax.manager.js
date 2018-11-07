@@ -81,3 +81,22 @@ function calculateSightReduction(payload, callback) {
 		console.log("Failed to get the Sight Reduction result..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
+
+function getReverseSRPromise(payload) {
+	return getPromise('/astro/reverse-sight', DEFAULT_TIMEOUT, 'POST', 200, payload, false);
+}
+
+function calculateReverseSight(payload, callback) {
+	let getData = getReverseSRPromise(payload);
+	getData.then(function (value) { // resolve
+		let json = JSON.parse(value);
+		if (callback !== undefined) {
+			callback(json);
+		} else {
+			console.log(JSON.stringify(json, null, 2));
+		}
+	}, function (error) { // reject
+		console.log("Failed to get the Reverse Sight Reduction result..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+	});
+}
+

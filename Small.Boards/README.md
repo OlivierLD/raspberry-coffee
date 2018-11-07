@@ -65,6 +65,8 @@ To upload a sketch:
 
 The red led should be dimmed, the board is ready to receive the sketch, you can upload it from the IDE.
 
+> _Note_: The `Adafruit Feather HUZZAH with ESP8266` has similar capabilities, but automatically uploads your sketches,
+> you do not need to juggle with the `GPIO0` and `Reset` buttons like above.
 
 ### Adafruit 5v Trinket
 Programmer: `USBtinyISP`.

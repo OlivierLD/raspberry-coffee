@@ -247,6 +247,8 @@ Faxes and GRIB, together
 
 ![Sight Reduction](./docimg/sight.reduction.01.png)
 
+![Reverse Sight Reduction](./docimg/sight.reduction.02.png)
+
 Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 
 > Note: The `DeltaT` used for the celestial calculations is provided when starting the server.

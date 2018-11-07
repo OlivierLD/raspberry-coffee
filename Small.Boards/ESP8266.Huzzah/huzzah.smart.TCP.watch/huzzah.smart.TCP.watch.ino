@@ -89,7 +89,7 @@ void repaint(int x, int y) {
 
 	sprintf(dataBuffer, "Net: %s", SSID);
   ssd1306.drawString(1 + x, 0, dataBuffer);
-  ssd1306.drawString(1 + x, yOffset + y, "--- Nav Data ---");
+  ssd1306.drawString(1 + x, yOffset + y, "--- Nav Data ---"); // Max 16 characters
   yOffset += 8;
 //  sprintf(dataBuffer, "BSP: %.2f kts", bsp);
 //  ssd1306.drawString(1 + x, yOffset + y, dataBuffer);

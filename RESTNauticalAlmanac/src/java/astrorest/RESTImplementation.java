@@ -139,7 +139,7 @@ public class RESTImplementation {
 			new Operation(
 					"POST",
 					ASTRO_PREFIX + "/reverse-sight",
-					this::emptyOperation,
+					this::reverseSightReduction,
 					"Reverse Sight reduction")
 
 	);
@@ -1175,6 +1175,21 @@ public class RESTImplementation {
 
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
 		String payload = new String(request.getContent());
+
+		return sightReductionImplementation(response, payload, false);
+	}
+
+
+	private HTTPServer.Response reverseSightReduction(HTTPServer.Request request) {
+
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+		String payload = new String(request.getContent());
+
+		return sightReductionImplementation(response, payload, true);
+	}
+
+	private HTTPServer.Response sightReductionImplementation(HTTPServer.Response response, String payload, boolean reverse) {
+
 		if (!"null".equals(payload)) {
 			Gson gson = new GsonBuilder().create();
 			StringReader stringReader = new StringReader(payload);
@@ -1222,6 +1237,8 @@ public class RESTImplementation {
 						double obsAlt = 0;
 						double totalCorrection = 0d;
 
+						double lunar = -1;
+
 						// Depends on the body
 						switch (bodyName) {
 							case "Sun":
@@ -1229,6 +1246,7 @@ public class RESTImplementation {
 								decl = AstroComputer.getSunDecl();
 								hp  = Context.HPsun / 3600d;
 								sd  = Context.SDsun / 3600d;
+								lunar = Context.LDist;
 								break;
 							case "Moon":
 								gha = AstroComputer.getMoonGHA();
@@ -1241,24 +1259,28 @@ public class RESTImplementation {
 								decl = AstroComputer.getVenusDecl();
 								hp  = Context.HPvenus / 3600d;
 								sd  = Context.SDvenus / 3600d;
+								lunar = Context.moonVenusDist;
 								break;
 							case "Mars":
 								gha = AstroComputer.getMarsGHA();
 								decl = AstroComputer.getMarsDecl();
 								hp  = Context.HPmars / 3600d;
 								sd  = Context.SDmars / 3600d;
+								lunar = Context.moonMarsDist;
 								break;
 							case "Jupiter":
 								gha = AstroComputer.getJupiterGHA();
 								decl = AstroComputer.getJupiterDecl();
 								hp  = Context.HPjupiter / 3600d;
 								sd  = Context.SDjupiter / 3600d;
+								lunar = Context.moonJupiterDist;
 								break;
 							case "Saturn":
 								gha = AstroComputer.getSaturnGHA();
 								decl = AstroComputer.getSaturnDecl();
 								hp  = Context.HPsaturn / 3600d;
 								sd  = Context.SDsaturn / 3600d;
+								lunar = Context.moonSaturnDist;
 								break;
 							default: // Stars
 								Core.starPos(bodyName);
@@ -1266,63 +1288,124 @@ public class RESTImplementation {
 								decl = Context.DECstar;
 								hp = 0d;
 								sd = 0d;
+								lunar = Context.starMoonDist;
 								break;
 						}
 
-						obsAlt = SightReductionUtil.observedAltitude(userData.cbd.instrumentalAltitude,
-								userData.cbd.eyeHeight,
-								hp,    // Returned in seconds, sent in degrees
-								sd,    // Returned in seconds, sent in degrees
-								userData.cbd.limb.equals(CelestialBodyData.Limb.LOWER) ? SightReductionUtil.LOWER_LIMB : SightReductionUtil.UPPER_LIMB,
-								"true".equals(System.getProperty("astro.verbose", "false")));
+						Map<String, Double> reduced = new HashMap<>();
+						if (lunar != -1) { // i.e. not shooting the moon
+							reduced.put("lunar-distance", lunar);
+						}
+						reduced.put("gha", gha);
+						reduced.put("decl", decl);
+						reduced.put("sd", sd);
+						reduced.put("hp", hp);
 
 						SightReductionUtil sru = new SightReductionUtil();
 
-						hDip = sru.getHorizonDip();
-						refr = sru.getRefr();
-						parallax = sru.getPa();
+						sru.setL(userData.estimatedPosition.latitude);
+						sru.setG(userData.estimatedPosition.longitude);
 
-						totalCorrection = 0d;
-						totalCorrection -= (hDip / 60D);
-						totalCorrection -= (refr / 60D);
-						totalCorrection += (parallax);
-						if (userData.cbd.limb.equals(CelestialBodyData.Limb.UPPER)) {
-							sd = -sd;
-						} else if (userData.cbd.limb.equals(CelestialBodyData.Limb.NONE)) {
-							sd = 0;
-						}
-						totalCorrection += sd;
+						sru.setAHG(gha);
+						sru.setD(decl);
+						sru.calculate();
 
-						sru.calculate(userData.estimatedPosition.latitude, userData.estimatedPosition.longitude, gha, decl);
+						if (!reverse) {
+							obsAlt = SightReductionUtil.observedAltitude(userData.cbd.instrumentalAltitude,
+									userData.cbd.eyeHeight,
+									hp,    // Returned in seconds, sent in degrees
+									sd,    // Returned in seconds, sent in degrees
+									userData.cbd.limb.equals(CelestialBodyData.Limb.LOWER) ? SightReductionUtil.LOWER_LIMB : SightReductionUtil.UPPER_LIMB,
+									"true".equals(System.getProperty("astro.verbose", "false")));
 
-						double estimatedAltitude = sru.getHe();
-						double z = sru.getZ();
+							hDip = sru.getHorizonDip();
+							refr = sru.getRefr();
+							parallax = sru.getPa();
 
-						double intercept = obsAlt - estimatedAltitude;
+							totalCorrection = 0d;
+							totalCorrection -= (hDip / 60D);
+							totalCorrection -= (refr / 60D);
+							totalCorrection += (parallax);
+							if (userData.cbd.limb.equals(CelestialBodyData.Limb.UPPER)) {
+								sd = -sd;
+							} else if (userData.cbd.limb.equals(CelestialBodyData.Limb.NONE)) {
+								sd = 0;
+							}
+							totalCorrection += sd;
 
-						Map<String, Double> reduced = new HashMap<>();
-						reduced.put("observed-altitude-degrees", obsAlt);
-						reduced.put("estimated-altitude-degrees", estimatedAltitude);
-						reduced.put("z", z);
+							sru.calculate(userData.estimatedPosition.latitude, userData.estimatedPosition.longitude, gha, decl);
 
-						reduced.put("horizon-depression-minutes", hDip); // In minutes of arc
-						reduced.put("total-correction-minutes", totalCorrection * 60); // In minutes of arc
-						reduced.put("horizontal-parallax-minutes", hp * 60d); // In minutes of arc
-						reduced.put("parallax-minutes", parallax * 60d); // In minutes of arc
-						reduced.put("semi-diameter-minutes", sd * 60); // In minutes of arc
-						reduced.put("refraction-minutes", refr); // In minutes of arc
-						reduced.put("intercept-degrees", intercept); // In degrees
-						reduced.put("delta-t", AstroComputer.getDeltaT()); // In seconds
+							double estimatedAltitude = sru.getHe();
+							double z = sru.getZ();
 
-						if ("true".equals(System.getProperty("astro.verbose", "false"))) {
-							System.out.println("For eye height " + DF22.format(userData.cbd.eyeHeight) + " m, horizon dip = " + DF22.format(hDip) + "'");
-							System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-							System.out.println("Refraction " + DF22.format(refr) + "'");
-							System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-							System.out.println("For hp " + DF22.format(hp * 60d) + "', parallax " + DF22.format(parallax * 60d) + "'");
-							System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
-							System.out.println("Semi-diameter: " + DF22.format(sd * 60d) + "'");
-							System.out.println("Intercept:" + DF22.format(Math.abs(intercept) * 60d) + "' " + (intercept<0?"away from":"towards") + " " + bodyName );
+							double intercept = obsAlt - estimatedAltitude;
+
+							reduced.put("observed-altitude-degrees", obsAlt);
+							reduced.put("estimated-altitude-degrees", estimatedAltitude);
+							reduced.put("z", z);
+
+							reduced.put("horizon-depression-minutes", hDip); // In minutes of arc
+							reduced.put("total-correction-minutes", totalCorrection * 60); // In minutes of arc
+							reduced.put("horizontal-parallax-minutes", hp * 60d); // In minutes of arc
+							reduced.put("parallax-minutes", parallax * 60d); // In minutes of arc
+							reduced.put("semi-diameter-minutes", sd * 60); // In minutes of arc
+							reduced.put("refraction-minutes", refr); // In minutes of arc
+							reduced.put("intercept-degrees", intercept); // In degrees
+							reduced.put("delta-t", AstroComputer.getDeltaT()); // In seconds
+
+							if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+								System.out.println("For eye height " + DF22.format(userData.cbd.eyeHeight) + " m, horizon dip = " + DF22.format(hDip) + "'");
+								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
+								System.out.println("Refraction " + DF22.format(refr) + "'");
+								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
+								System.out.println("For hp " + DF22.format(hp * 60d) + "', parallax " + DF22.format(parallax * 60d) + "'");
+								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
+								System.out.println("Semi-diameter: " + DF22.format(sd * 60d) + "'");
+								System.out.println("Intercept:" + DF22.format(Math.abs(intercept) * 60d) + "' " + (intercept < 0 ? "away from" : "towards") + " " + bodyName);
+							}
+						} else { // Reverse sight
+							obsAlt = sru.getHe();
+							hDip = SightReductionUtil.getHorizonDip(userData.cbd.eyeHeight);
+							// sd, we have already
+							parallax = SightReductionUtil.getParallax(hp, obsAlt);
+							refr = SightReductionUtil.getRefr(obsAlt - parallax);
+							double hi = obsAlt;
+							if (userData.cbd.limb.equals(CelestialBodyData.Limb.UPPER)) {
+								sd = -sd;
+							} else if (userData.cbd.limb.equals(CelestialBodyData.Limb.NONE)) {
+								sd = 0;
+							}
+							totalCorrection = 0d;
+							totalCorrection -= (hDip / 60D);
+							totalCorrection -= (refr / 60D);
+							totalCorrection += (parallax);
+							totalCorrection += sd;
+							hi -= sd;
+							hi += (hDip / 60d);
+							hi -= parallax;
+							hi += (refr / 60d);
+
+							if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+								System.out.println("For eye height " + DF22.format(userData.cbd.eyeHeight) + " m, horizon dip = " + DF22.format(hDip) + "'");
+								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
+								System.out.println("Refraction " + DF22.format(refr) + "'");
+								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
+								System.out.println("For hp " + DF22.format(hp * 60d) + "', parallax " + DF22.format(parallax * 60d) + "'");
+								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
+								System.out.println("Semi-diameter: " + DF22.format(sd * 60d) + "'");
+								System.out.println("  - Total Corr. :" + DF22.format(totalCorrection * 60d) + "'");
+								System.out.println("Hi " + hi);
+							}
+
+							reduced.put("instrumental-altitude", hi);
+							reduced.put("observed-altitude-degrees", obsAlt); // To observe... (hi, with corrections)
+							reduced.put("horizon-depression-minutes", hDip); // In minutes of arc
+							reduced.put("total-correction-minutes", totalCorrection * 60); // In minutes of arc
+							reduced.put("horizontal-parallax-minutes", hp * 60d); // In minutes of arc
+							reduced.put("parallax-minutes", parallax * 60d); // In minutes of arc
+							reduced.put("semi-diameter-minutes", sd * 60); // In minutes of arc
+							reduced.put("refraction-minutes", refr); // In minutes of arc
+							reduced.put("delta-t", AstroComputer.getDeltaT()); // In seconds
 						}
 
 						String content = new Gson().toJson(reduced);

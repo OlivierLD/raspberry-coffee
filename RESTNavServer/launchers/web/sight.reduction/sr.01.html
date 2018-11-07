@@ -67,7 +67,7 @@
 			}
 		}
 		 */
-		function calculate() {
+		function calculateSR(reverse) {
 			// Gather data
 			let day = document.getElementById('calendar-day-01').value;
 			let utcDate =
@@ -110,34 +110,140 @@
 			let srCallback = function(result) {
 				/*
 				Result looks like: {
-					estimated-altitude-degrees: 25.311551122752217
-					horizon-depression-minutes: 2.361287784239778
-					horizontal-parallax-minutes: 0.14786556508924234
-					intercept-degrees: 0.2529271027923592
-					observed-altitude-degrees: 25.564478225544576
-					parallax-minutes: 0.13369003931944906
-					refraction-minutes: 2.0392820936344154
-					semi-diameter-minutes: 16.135573371229203
-					total-correction-minutes: 11.868693532674458
-					z: 138.96942242930982,
+					decl: -16.40498367695131
 					delta-t: 68.9677
+					estimated-altitude-degrees: 25.317291337175323
+					gha: 84.8538302416593
+					horizon-depression-minutes: 2.361287784239778
+					horizontal-parallax-minutes: 0.1479020927681669
+					hp: 0.0024650348794694483
+					intercept-degrees: -0.0002860101440127494
+					lunar-distance: 4.873968467166731
+					observed-altitude-degrees: 25.31700532703131
+					parallax-minutes: 0.13399483310705615
+					refraction-minutes: 2.061946817836327
+					sd: 0.2689926565141308
+					semi-diameter-minutes: 16.139559390847847
+					total-correction-minutes: 11.850319621878798
+					z: 139.58829918131767
 				}
 				*/
 		//	console.log("Result:", result);
 
 				let fmtDisplay = "<hr/>";
-				fmtDisplay += ("Intercept: " + Math.abs(result['intercept-degrees'] * 60).toFixed(2) + "' " + (result['intercept-degrees']<0?"away from":"towards") + " " + body);
-				fmtDisplay += ("<br>Z:" + result['z'].toFixed(2) + '&deg;');
-				fmtDisplay += ("<br>Observed Altitude (corrected):" + decToSex(result['observed-altitude-degrees']));
-				fmtDisplay += ("<br>Estimated Altitude (at estimated pos):" + decToSex(result['estimated-altitude-degrees']));
-				fmtDisplay += ("<br>Total correction in minutes:" + result['total-correction-minutes'].toFixed(4));
+
+				let sdCorrected = result['semi-diameter-minutes'] * (limb === 'LOWER' ? 1 : -1);
+				let appCorrection = sdCorrected - result['horizon-depression-minutes'];
+				let appToObsCorrection = result['parallax-minutes'] - result['refraction-minutes'];
+				fmtDisplay += ("<table>");
+				fmtDisplay += ("<tr><th style='text-align: left;' colspan='2'>Almanac:</th><th style='text-align: left;' colspan='4'>Corrections:</th></tr>");
+				// Line 1
+				fmtDisplay += ("<tr><td style='text-align: right;'>GHA</td><td style='text-align: right;'>" + decToSex(result['gha']) + "</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Horizon Dip</td><td style='text-align: right;'>" + (- result['horizon-depression-minutes']).toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Parallax</td><td style='text-align: right;'>" + result['parallax-minutes'].toFixed(2) + "'</td></tr>");
+				// Line 2
+				fmtDisplay += ("<tr><td style='text-align: right;'>Dec</td><td style='text-align: right;'>" + decToSex(result['decl'], 'NS') + "</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Semi-diameter</td><td style='text-align: right;'>" + sdCorrected.toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Refraction</td><td style='text-align: right;'>" + (- result['refraction-minutes']).toFixed(2) + "'</td></tr>");
+				// Line 3
+				fmtDisplay += ("<tr><td style='text-align: right;'>Semi-diameter</td><td style='text-align: right;'>" + result['semi-diameter-minutes'].toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Apparent Altitude</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees'] - (appToObsCorrection / 60)) + "</b></td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Observed Altitude</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees']) + "</b></td></tr>");
+				// Line 4
+				fmtDisplay += ("<tr><td style='text-align: right;'>Horizontal Parallax</td><td style='text-align: right;'>" + (result['hp'] * 60).toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Apparent Correction</td><td style='text-align: right;'>" + appCorrection.toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Total Correction</td><td style='text-align: right;'>" + result['total-correction-minutes'].toFixed(2) + "'</td></tr>");
+				if (result['lunar-distance'] !== undefined) {
+					// Line 5
+					fmtDisplay += ("<tr><td style='text-align: right;'>Lunar Distance</td><td style='text-align: right;'>" + decToSex(result['lunar-distance']) + "</td></tr>");
+				}
+				fmtDisplay += ("<tr><th style='text-align: left;' colspan='6'>Dead Reckoning:</th></tr>");
+				// Line 6
+				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Observed Altitude</td><td style='text-align: left;' colspan='3'>" + decToSex(result['observed-altitude-degrees']) + "</td></tr>");
+				// Line 7
+				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Z</td><td style='text-align: left;' colspan='3'>" + decToSex(result['z']) + "</td></tr>");
+				// Line 8
+				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Estimated Altitude</td><td style='text-align: left;' colspan='3'>" + decToSex(result['estimated-altitude-degrees']) + "</td></tr>");
+				// Line 9
+				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Intercept</td><td style='text-align: left;' colspan='3'>" + Math.abs(result['intercept-degrees'] * 60).toFixed(2) + "' " + (result['intercept-degrees']<0?"away from":"towards") + " " + body + "</td></tr>");
+
+				fmtDisplay += ("</table>");
 				fmtDisplay += ("<hr/>");
 				fmtDisplay += ("<i>Calculated with DeltaT = " + result['delta-t'] + ' s</i>');
 				fmtDisplay += ("<hr/>");
 
 				document.getElementById("result").innerHTML = fmtDisplay;
 			};
-			calculateSightReduction(requestPayload, srCallback);
+
+			let reverseCallback = function(result) {
+				/*
+				Result looks like: {
+					decl: -16.40498367695131
+					delta-t: 68.9677
+					gha: 84.8538302416593
+					horizon-depression-minutes: 2.361287784239778
+					horizontal-parallax-minutes: 0.1479020927681669
+					hp: 0.0024650348794694483
+					instrumental-altitude: 25.119431796329224
+					lunar-distance: 4.873968467166731
+					observed-altitude-degrees: 25.317291337175323
+					parallax-minutes: 0.13369661970764085
+					refraction-minutes: 2.040395775549588
+					sd: 0.2689926565141308
+					semi-diameter-minutes: 16.139559390847847
+					total-correction-minutes: 11.871572450766122
+				}
+				*/
+				//	console.log("Result:", result);
+
+				let hi = result['instrumental-altitude'];
+				let degPart = hi.toFixed(0);
+				let minPart = ((hi - degPart) * 60).toFixed(2);
+
+				document.getElementById("sextant-degrees").value = degPart;
+				document.getElementById("sextant-minutes").value = minPart;
+
+				let fmtDisplay = "<hr/>";
+
+				let sdCorrected = result['semi-diameter-minutes'] * (limb === 'LOWER' ? 1 : -1);
+				let appCorrection = sdCorrected - result['horizon-depression-minutes'];
+				let appToObsCorrection = result['parallax-minutes'] - result['refraction-minutes'];
+				fmtDisplay += ("<table>");
+				fmtDisplay += ("<tr><th style='text-align: left;' colspan='2'>Almanac:</th><th style='text-align: left;' colspan='4'>Corrections:</th></tr>");
+				// Line 1
+				fmtDisplay += ("<tr><td style='text-align: right;'>GHA</td><td style='text-align: right;'>" + decToSex(result['gha']) + "</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Horizon Dip</td><td style='text-align: right;'>" + (- result['horizon-depression-minutes']).toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Parallax</td><td style='text-align: right;'>" + result['parallax-minutes'].toFixed(2) + "'</td></tr>");
+				// Line 2
+				fmtDisplay += ("<tr><td style='text-align: right;'>Dec</td><td style='text-align: right;'>" + decToSex(result['decl'], 'NS') + "</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Semi-diameter</td><td style='text-align: right;'>" + sdCorrected.toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Refraction</td><td style='text-align: right;'>" + (- result['refraction-minutes']).toFixed(2) + "'</td></tr>");
+				// Line 3
+				fmtDisplay += ("<tr><td style='text-align: right;'>Semi-diameter</td><td style='text-align: right;'>" + result['semi-diameter-minutes'].toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Apparent Altitude</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees'] - (appToObsCorrection / 60)) + "</b></td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Observed Altitude</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees']) + "</b></td></tr>");
+				// Line 4
+				fmtDisplay += ("<tr><td style='text-align: right;'>Horizontal Parallax</td><td style='text-align: right;'>" + (result['hp'] * 60).toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Apparent Correction</td><td style='text-align: right;'>" + appCorrection.toFixed(2) + "'</td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Total Correction</td><td style='text-align: right;'>" + result['total-correction-minutes'].toFixed(2) + "'</td></tr>");
+				if (result['lunar-distance'] !== undefined) {
+					fmtDisplay += ("<tr><td style='text-align: right;'>Lunar Distance</td><td style='text-align: right;'>" + decToSex(result['lunar-distance']) + "</td></tr>");
+				}
+
+				fmtDisplay += ("</table>");
+				fmtDisplay += ("<hr/>");
+				fmtDisplay += ("<i>Calculated with DeltaT = " + result['delta-t'] + ' s</i>');
+				fmtDisplay += ("<hr/>");
+
+				document.getElementById("result").innerHTML = fmtDisplay;
+			};
+
+			if (reverse === undefined || reverse === false) {
+				calculateSightReduction(requestPayload, srCallback);
+			}
+			if (reverse !== undefined && reverse === true) {
+				calculateReverseSight(requestPayload, reverseCallback);
+			}
 		}
 
 	</script>
@@ -388,7 +494,8 @@
 			</table>
 		</div>
 		<div>
-			<button onclick="calculate();" style="border-radius: 3px; box-shadow: 2px 2px silver;">Calculate</button>
+			<button onclick="calculateSR();" style="border-radius: 3px; box-shadow: 2px 2px silver;" title="Sight Reduction">Calculate</button>
+			<button onclick="calculateSR(true);" style="border-radius: 3px; box-shadow: 2px 2px silver;" title="Calculate the Sextant altitude for your time and position">Reverse</button>
 		</div>
 		<div id="result" style="margin: 10px;	"></div>
 	</div>
