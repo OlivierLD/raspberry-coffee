@@ -32,7 +32,7 @@ const int HTTP_PORT = _HTTP_PORT;
 
 const char* REST_REQUEST = "/mux/cache?option=txt"; // txt, not json.
 
-const int BETWEEN_LOOPS = 1000; // in milli-sec.
+const int BETWEEN_LOOPS = 500; // in milli-sec.
 /* ----- End of Customizable Data ----- */
 
 // SSD1306 OLED Display connections and wiring
@@ -107,8 +107,8 @@ void repaint(int x, int y) {
   sprintf(dataBuffer, "COG: %d", cog);
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
   yOffset += 8;
-  sprintf(dataBuffer, "-------- %c ------", spin[ping++ % 4]);
-  //                  "----------------"
+  sprintf(dataBuffer, "------- %c ------", spin[ping++ % 4]);
+  //                  "------- + ------"
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
 
   ssd1306.display();
