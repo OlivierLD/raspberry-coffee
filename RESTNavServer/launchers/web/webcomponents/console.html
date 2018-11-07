@@ -178,6 +178,10 @@
 			background-color: #ccc;
 		}
 
+		.boat-data { /* Order is important */
+			transition: visibility 0.5s, opacity 0.5s linear, height 0.5s;
+		}
+
 		.raw-table {
 			border-color: cyan;
 			font-family: "Helvetica Neue", "Lato", Verdana, Helvetica, Geneva, sans-serif;
@@ -271,113 +275,118 @@
 	<div id="one" style="display: block;">
 		<span id="boat-data-switch" onclick="expandCollapseBoatData();" style="cursor: pointer; padding-left: 40px;">- Boat Data</span>
 		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 10px; text-align: center;">
-			<div id="row-1" style="display: grid; grid-column-start: 2; grid-template-columns: auto auto auto auto; padding: 10px;">
-				<!--
-						TWD
-				+-->
-				<div id="direction">
-					<div class="black-frame centered">
-						<direction-display class="analogdisplay-day"
-															 title="True Wind Direction"
-															 id="compass-01"
-															 value="0"
-															 major-ticks="45"
-															 minor-ticks="5"
-															 with-rose="true"
-															 with-border="true"
-															 label="TWD"
-															 width="200"
-															 height="200"></direction-display>
-					</div>
-					<div class="black-frame centered">
-						<input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked>With Border
-						<input type="checkbox" onchange="setRose(this, 'compass-01');" checked>With Rose
-					</div>
-				</div>
-				<!--
-						TRUE WIND DISPLAY
-				+-->
-				<div id="analog">
-					<div class="black-frame centered">
-						<wind-angle-display class="analogdisplay-day"
-																title="True Wind Speed in Knots"
-																id="tw-01"
-																value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-																major-ticks="30"
-																minor-ticks="5"
-																with-border="true"
-																with-digits="true"
-																label="True Wind"
-																width="200"
-																height="200"></wind-angle-display>
-					</div>
-					<div class="black-frame centered">
-						<input type="checkbox" class="border-cb" onchange="setBorder(this, 'tw-01');" checked>With Border
-					</div>
-				</div>
-				<!--
-						BSP
-				+-->
-				<div id="analog-2">
-					<div class="black-frame centered">
-						<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
-						<analog-display class="analogdisplay-day"
-														title="Boat Speed in knots,&#13;Log in nm"
-														id="bsp-01"
-														min-value="0"
-														max-value="15"
-														major-ticks="1"
-														minor-ticks="0.1"
-														with-border="true"
-														with-min-max="true"
-														overlap="40"
-														digital-data-len="4"
-														digital-data-val="0"
-														label="BSP"
-														width="200"
-														height="200"></analog-display>
-					</div>
-					<div class="black-frame centered">
-						<input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked>With Border
-						<input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>With Min &amp; Max
-					</div>
-				</div>
-				<!--
-						APPARENT WIND DISPLAY
-				+-->
-				<div id="apparent-wind">
-					<div id="top-cell-aw" class="black-frame centered">
-						<wind-angle-display class="analogdisplay-day"
-																title="Apparent Wind Speed in Knots"
-																id="aw-01"
-																value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
-																major-ticks="30"
-																minor-ticks="5"
-																with-border="true"
-																with-digits="true"
-																label="App Wind"
-																width="200"
-																height="200"></wind-angle-display>
-					</div>
-					<div class="black-frame centered">
-						<input type="checkbox" class="border-cb" onchange="setBorder(this, 'aw-01');" checked>With Border
-					</div>
-				</div>
-			</div>
-			<div id="row-2" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px; text-align: center;">
-				<!--
-					COMPASS ROSE. CONCAVE.
-				+-->
-				<div id="compass-rose">
-					<small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was sitting at the center of the rose.</small>
+			<div id="boat-data" class="boat-data" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
+				<div id="row-1" style="display: grid; grid-column-start: 2; grid-template-columns: auto auto auto auto; padding: 10px;">
+					<!--
+							TWD
+					+-->
+					<div id="direction">
 						<div class="black-frame centered">
-							<compass-rose id="compass-rose-01"
-														class="day"
-														title="True Heading"
-														value="0"
-														width="500"
-														height="50"></compass-rose>
+							<direction-display class="analogdisplay-day"
+																 title="True Wind Direction"
+																 id="compass-01"
+																 value="0"
+																 major-ticks="45"
+																 minor-ticks="5"
+																 with-rose="true"
+																 with-border="true"
+																 label="TWD"
+																 hand="wind"
+																 width="200"
+																 height="200"></direction-display>
 						</div>
+						<div class="black-frame centered">
+							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-01');" checked>With Border
+							<input type="checkbox" onchange="setRose(this, 'compass-01');" checked>With Rose
+						</div>
+					</div>
+					<!--
+							TRUE WIND DISPLAY
+					+-->
+					<div id="analog">
+						<div class="black-frame centered">
+							<wind-angle-display class="analogdisplay-day"
+																	title="True Wind Speed in Knots"
+																	id="tw-01"
+																	value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+																	major-ticks="30"
+																	minor-ticks="5"
+																	with-border="true"
+																	with-digits="true"
+																	label="True Wind"
+																	hand="wind"
+																	width="200"
+																	height="200"></wind-angle-display>
+						</div>
+						<div class="black-frame centered">
+							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'tw-01');" checked>With Border
+						</div>
+					</div>
+					<!--
+							BSP
+					+-->
+					<div id="analog-2">
+						<div class="black-frame centered">
+							<!-- Note: No initial value="0" attribute, it would be considered as the miniVal. -->
+							<analog-display class="analogdisplay-day"
+															title="Boat Speed in knots,&#13;Log in nm"
+															id="bsp-01"
+															min-value="0"
+															max-value="15"
+															major-ticks="1"
+															minor-ticks="0.1"
+															with-border="true"
+															with-min-max="true"
+															overlap="40"
+															digital-data-len="4"
+															digital-data-val="0"
+															label="BSP"
+															width="200"
+															height="200"></analog-display>
+						</div>
+						<div class="black-frame centered">
+							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'bsp-01');" checked>With Border
+							<input type="checkbox" onchange="setMinMax(this, 'bsp-01');" checked>With Min &amp; Max
+						</div>
+					</div>
+					<!--
+							APPARENT WIND DISPLAY
+					+-->
+					<div id="apparent-wind">
+						<div id="top-cell-aw" class="black-frame centered">
+							<wind-angle-display class="analogdisplay-day"
+																	title="Apparent Wind Speed in Knots"
+																	id="aw-01"
+																	value="{ &quot;wa&quot;: 0, &quot;ws&quot;: 0.0 }"
+																	major-ticks="30"
+																	minor-ticks="5"
+																	with-border="true"
+																	with-digits="true"
+																	label="App Wind"
+																	hand="wind"
+																	width="200"
+																	height="200"></wind-angle-display>
+						</div>
+						<div class="black-frame centered">
+							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'aw-01');" checked>With Border
+						</div>
+					</div>
+				</div>
+				<div id="row-2" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px; text-align: center;">
+					<!--
+						COMPASS ROSE. CONCAVE.
+					+-->
+					<div id="compass-rose">
+						<small>Warning: The rose in <i>concave</i>. This means that it has to be seen as if the user was sitting at the center of the rose.</small>
+							<div class="black-frame centered">
+								<compass-rose id="compass-rose-01"
+															class="day"
+															title="True Heading"
+															value="0"
+															width="500"
+															height="50"></compass-rose>
+							</div>
+					</div>
 				</div>
 			</div>
 			<div id="row-X" style="display: grid; grid-column-start: 2; grid-template-columns: auto; padding: 10px;">

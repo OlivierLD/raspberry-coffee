@@ -24,20 +24,35 @@ void setup() {
   Serial.println(SSID);
   WiFi.begin(SSID, PASSWORD);
 
-  while (WiFi.status() != WL_CONNECTED) {
+  int count = 0;
+  while (WiFi.status() != WL_CONNECTED && count++ < 256) {
     delay(500);
     Serial.print(".");
+    if (count % 64 == 0) {
+      Serial.print(" ");
+      Serial.print(count);
+      Serial.println(" trials");
+    }
   }
 
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-  Serial.print("Netmask: ");
-  Serial.println(WiFi.subnetMask());
-  Serial.print("Gateway: ");
-  Serial.println(WiFi.gatewayIP());
-  Serial.println("------------------------------------");
+  Serial.println();
+  Serial.print("Tried to connect ");
+  Serial.print(count - 1);
+  Serial.println(" time(s).");
+
+  if (count > 256) {
+    Serial.println("Connection seems not to be completed...");
+  } else {
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+    Serial.print("Netmask: ");
+    Serial.println(WiFi.subnetMask());
+    Serial.print("Gateway: ");
+    Serial.println(WiFi.gatewayIP());
+    Serial.println("------------------------------------");
+  }
 }
 
 const String BSP = "BSP";
@@ -84,7 +99,7 @@ void loop() {
   // Read all the lines of the reply from server and print them to Serial
   // Keys are BSP, LAT, LNG, SOG, COG, DATE, YEAR, MONTH, DAY, HOUR, MIN, SEC
   while (client.available()) {
-	  String line = client.readStringUntil('\n');
+    String line = client.readStringUntil('\n');
     // Serial.println(line);
     String key = getKey(line);
     if (key.length() > 0) {
@@ -113,7 +128,7 @@ void loop() {
         mins = value.toInt();
       } else if (key == SEC) {
         sec = value.toInt();
-			}
+      }
     }
   }
   char dataBuffer[128];
