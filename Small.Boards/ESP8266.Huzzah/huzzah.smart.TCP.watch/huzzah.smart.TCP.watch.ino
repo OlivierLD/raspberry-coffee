@@ -107,8 +107,8 @@ void repaint(int x, int y) {
   sprintf(dataBuffer, "COG: %d", cog);
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
   yOffset += 8;
-  sprintf(dataBuffer, "-------- %c ------", spin[ping++ % 4]);
-  //                  "----------------"
+  sprintf(dataBuffer, "------- %c ------", spin[ping++ % 4]);
+  //                  "------- + ------"
   ssd1306.drawString(1 + x, yOffset + y, dataBuffer);
 
   ssd1306.display();
