@@ -249,6 +249,8 @@ Faxes and GRIB, together
 
 ![Reverse Sight Reduction](./docimg/sight.reduction.02.png)
 
+The `Reverse Sight Reduction` calculates what you should observe from your position, at the time you provided.
+
 Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 
 > Note: The `DeltaT` used for the celestial calculations is provided when starting the server.
