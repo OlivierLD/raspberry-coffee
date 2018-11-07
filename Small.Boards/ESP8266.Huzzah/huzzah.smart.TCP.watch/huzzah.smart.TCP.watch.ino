@@ -32,7 +32,7 @@ const int HTTP_PORT = _HTTP_PORT;
 
 const char* REST_REQUEST = "/mux/cache?option=txt"; // txt, not json.
 
-const int BETWEEN_LOOPS = 1000; // in milli-sec.
+const int BETWEEN_LOOPS = 500; // in milli-sec.
 /* ----- End of Customizable Data ----- */
 
 // SSD1306 OLED Display connections and wiring
