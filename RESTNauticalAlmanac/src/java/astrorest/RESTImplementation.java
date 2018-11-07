@@ -1122,7 +1122,7 @@ public class RESTImplementation {
 
 	/**
 	 * Used to see what the data will look like in JSON.
-	 * No other reason to exist.
+	 * No other reason to exist, will eventually disappear.
 	 *
 	 * @param request
 	 * @return
