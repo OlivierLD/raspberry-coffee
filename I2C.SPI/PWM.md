@@ -75,7 +75,7 @@ for a `1.5` millisecond PWM:
 - the solution is provided by a rule of three: `value` = `4096` * (`pulse` / `16.66666`), which is `368.64`, rounded to `369`.
 
 #### A comment about servos
-Theoretically, servos follow those rules:
+_**Theoretically**_, servos follow those rules:
 
 | Pulse | Standard | Continuous |
 |------:|---------:|:----------:|

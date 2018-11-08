@@ -307,6 +307,14 @@ public class SunFlower implements RESTRequestManager {
 
 	private static boolean invert = false; // Used when the angle for the headingServoID is lower than -90 or greater than +90
 
+	/*
+	For servo calibration, see http://hocus-blogus.blogspot.com/2018/07/raspberry-pi-pwm-servos-and-pca9685.html and
+	https://github.com/OlivierLD/raspberry-coffee/blob/master/I2C.SPI/PWM.md
+
+	For the values below:
+	- 122 corresponds to a 0.5 us pulse
+	- 614 corresponds to a 2.5 us pulse
+	 */
 	private final static int DEFAULT_SERVO_MIN = 122; // Value for Min position (-90, unit is [0..1023])
 	private final static int DEFAULT_SERVO_MAX = 615; // Value for Max position (+90, unit is [0..1023])
 
