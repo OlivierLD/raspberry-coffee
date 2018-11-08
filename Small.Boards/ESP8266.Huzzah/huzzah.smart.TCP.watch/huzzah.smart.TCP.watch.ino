@@ -4,7 +4,7 @@
 
    Main class of what will be the TCP watch.
 
-   Sends REST requests to the NavServer to get navigation data.
+   Sends REST requests to the NavServer to get navigation data (see REST_REQUEST variable)
    That one spits out data on the Serial console, and on an oled screen SSD1306 124x68.
 
    @author Olivier LeDiouris

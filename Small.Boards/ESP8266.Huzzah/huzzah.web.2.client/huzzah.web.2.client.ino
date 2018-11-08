@@ -37,7 +37,7 @@ void setup() {
 
   Serial.println();
   Serial.print("Tried to connect ");
-  Serial.print(count - 1);
+  Serial.print(min(count, 256));
   Serial.println(" time(s).");
 
   if (count > 256) {
@@ -73,7 +73,7 @@ int cog, year, month, day, hour, mins, sec;
 String date;
 
 void loop() {
-  delay(5000); // 5 seconds?
+  delay(500); // 5 seconds?
 
   Serial.print(">> connecting to ");
   Serial.print(HOST);

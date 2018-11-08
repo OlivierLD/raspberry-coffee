@@ -20,8 +20,11 @@ The starting point was [this document](https://learn.adafruit.com/huzzah-weather
 
 The ESP8266 will ping the [NavServer/NMEA.multiplexer](https://github.com/OlivierLD/raspberry-coffee/blob/master/NMEA.multiplexer/README.md) with a request like `GET /mux/cache?option=txt`.
 
-##### Wiring
+##### Wiring with the Adafruit Huzzah
 ![Wiring](./TCP.watch_bb.png)
+
+##### Wiring with the Adafruit Feather Huzzah
+![Wiring](./TCP.watch.feather_bb.png)
 
 ##### Prototyping with an Huzzah/ESP8266
 ![Proto](./prototyping.01.jpg)
@@ -31,5 +34,8 @@ The ESP8266 will ping the [NavServer/NMEA.multiplexer](https://github.com/Olivie
 ![Proto](./prototyping.03.jpg)
 
 ![Proto](./prototyping.04.jpg)
+
+##### Prototyping with an Adafruit Feather Huzzah/ESP8266
+![Proto](./prototyping.feather.01.jpg)
 
 ---
