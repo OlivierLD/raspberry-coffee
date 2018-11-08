@@ -86,6 +86,8 @@ RUN echo "echo '  - Default port 8888 is exposed, you can use from the host http
 RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bash_aliases
 RUN echo "echo 'To run PyCharm: cd /opt/pycharm-community-2018.2.4/bin and run ./pycharm.sh'"  >> $HOME/.bash_aliases
 RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bash_aliases
+RUN echo "echo '>> Warning: To run Chrome: $ chromium --no-sandbox '"  >> $HOME/.bash_aliases
+RUN echo "echo '---------------------------------------------------------------------'" >> $HOME/.bash_aliases
 #
 USER root
 WORKDIR /root
