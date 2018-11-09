@@ -6,11 +6,14 @@ Polars are those curves predicting the speed of the boat (Boat SPeed **BSP** or 
 
 The tool presented here can help you elaborate your own polars. It's written in Java, using Swing. It needs to run in a graphical environment.
 
-You can run it from gradle:
+You can run it from `gradle`:
 ```
  $ ../../gradlew runSmoother
 ```
-
+or after a `$ ../../gradlew shadowJar`, run the script named `smoother.sh`
+```
+ $./smoother.sh
+```
 You can create new files or use already existing ones, change smoothing parameters, drag points directly on the graph (right pane), etc.
 
 Menu bar will give you access to the various feature, as well as contextual popup menus in the left pane.

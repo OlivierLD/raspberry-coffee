@@ -25,7 +25,7 @@ import java.util.Set;
  * Smoothes polars.
  * <p>
  * Files with extension .polar-data are the data (logged points) used for the smoothing.
- * Files with extension .polar-coeff contain the smoothed curves coefficients, used by the Weather Wizard
+ * Files with extension .polar-coeff contain the smoothed curves coefficients, used to calculate routing(s).
  * <b>Files with extension .pol are the polars use by MaxSea and LogiSail.</b>
  * Files with extension .obj are used to visualize the .pol in 3D.
  * <p>
@@ -40,7 +40,6 @@ public class PolarSmoother {
 	public final static String VERSION_NUMBER = "4.0.0.0"; // Apr-20, 2016
 
 	public final static String PRODUCT_ID = "polar_smoother." + VERSION_NUMBER;
-	public final static String STRUCTURE_FILE_NAME = "." + File.separator + "config" + File.separator + "structure.xml";
 
 	private static final String SCHEMA_LOCATION = "polar-data.xsd";
 	private final static DOMParser parser = new DOMParser();
@@ -55,8 +54,9 @@ public class PolarSmoother {
 	 */
 	public static final double f(double x, double[] coeff) {
 		double y = 0.0;
-		for (int i = 0; i < coeff.length; i++)
+		for (int i = 0; i < coeff.length; i++) {
 			y += (coeff[i] * Math.pow(x, (coeff.length - (i + 1))));
+		}
 		return y;
 	}
 

@@ -1,6 +1,6 @@
 <polar-data xmlns="http://www.olivsoft.com/polar-data"
             model="Cheoy Lee 42">
-  <polar-section name="upwind"
+  <polar-section name="01.upwind"
                  polar-degree="5"
                  coeff-degree="3"
                  from-twa="20"
@@ -96,7 +96,7 @@
     <twa value="120" bsp="9.0"/>
     </tws>
   </polar-section>
-  <polar-section name="downwind"
+  <polar-section name="02.downwind"
                  polar-degree="5"
                  coeff-degree="3"
                  from-twa="100"
