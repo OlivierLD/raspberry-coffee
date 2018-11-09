@@ -12,6 +12,11 @@ public final class GreatCirclePoint
 		longitude = g;
 	}
 
+	public GreatCirclePoint(GeoPoint gp) {
+		latitude = gp.getL();
+		longitude = gp.getG();
+	}
+
 	public double getL() {
 		return latitude;
 	}

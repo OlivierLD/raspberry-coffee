@@ -2,7 +2,6 @@ package gribprocessing.utils;
 
 import utils.StaticUtil;
 
-import javax.swing.JOptionPane;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,7 +15,7 @@ import java.util.Date;
 
 public class GRIBUtils {
 
-	private final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_z");
+	public final static SimpleDateFormat SDF = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss_z");
 
 	/**
 	 * For SailMail requests
@@ -24,30 +23,29 @@ public class GRIBUtils {
 	 * @param gribRequest, like "GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"
 	 * @return
 	 */
-	public static String generateGRIBRequest(String gribRequest)
-	{
+	public static String generateGRIBRequest(String gribRequest) {
 		String request = "";
-		try
-		{
+		try {
 			String inputString = gribRequest + " LeDiouris/6ce9Ci7t";
 
 			MessageDigest digest = MessageDigest.getInstance("MD5");
 			byte[] buff = new byte[inputString.length()];
-			for (int i=0; i<inputString.length(); i++)
-				buff[i] = (byte)inputString.charAt(i);
+			for (int i = 0; i < inputString.length(); i++) {
+				buff[i] = (byte) inputString.charAt(i);
+			}
 			digest.update(buff, 0, inputString.length());
 
 			String s = "";
 			byte[] md5encoded = digest.digest();
 			//    System.out.println("Final len:" + md5encoded.length);
-			for (int i=0; i<md5encoded.length; i++)
-			{
-				char c = (char)md5encoded[i];
+			for (int i = 0; i < md5encoded.length; i++) {
+				char c = (char) md5encoded[i];
 				String str = Integer.toString(c, 16);
-				if (str.length() == 4)
+				if (str.length() == 4) {
 					str = str.substring(2, 4);
-				else if (str.length() == 1)
+				} else if (str.length() == 1) {
 					str = "0" + str;
+				}
 				//      System.out.print(str + " ");
 
 				s += str;
@@ -58,9 +56,7 @@ public class GRIBUtils {
 
 			//    System.out.println("Final Request: [http://saildocs.com/fetch?" + gribRequest + "&3=" + s.substring(0, 10) + "&u]" );
 			request = "http://saildocs.com/fetch?" + gribRequest + "&3=" + s.substring(0, 10) + "&u";
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 		return request;
@@ -91,8 +87,7 @@ public class GRIBUtils {
 				InputStream dis = connection.getInputStream();
 
 				long waiting = 0L;
-				while (dis.available() == 0 && waiting < 30L) // 30s Timeout...
-				{
+				while (dis.available() == 0 && waiting < 30L) { // 30s Timeout...
 					Thread.sleep(1000L);
 					waiting += 1L;
 				}
@@ -131,8 +126,9 @@ public class GRIBUtils {
 	public static void main(String... args) {
 		String request = "GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN";
 
-		try { getGRIB(generateGRIBRequest(request), ".", "grib.grb", true); }
-		catch (Exception ex) {
+		try {
+			getGRIB(generateGRIBRequest(request), ".", "grib.grb", true);
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
