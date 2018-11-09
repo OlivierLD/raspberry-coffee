@@ -1828,7 +1828,12 @@ public class StringParsers {
 		String hh = duration.substring(11, 13);
 		String mi = duration.substring(14, 16);
 		String ss = duration.substring(17, 19);
-		String ms = duration.substring(20, 23);
+		String ms = "0";
+		try {
+			ms = duration.substring(20, 23);
+		} catch (IndexOutOfBoundsException iobe) {
+			// Absorb;
+		}
 
 		float utcOffset = 0F;
 

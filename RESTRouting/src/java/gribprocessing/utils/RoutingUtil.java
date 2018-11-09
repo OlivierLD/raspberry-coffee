@@ -1,31 +1,22 @@
 package gribprocessing.utils;
 
 import calc.GeoPoint;
+import calc.GeomUtil;
 import calc.GreatCircle;
 import calc.GreatCirclePoint;
 
-import javax.swing.JOptionPane;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -76,25 +67,38 @@ public class RoutingUtil {
 		return brg;
 	}
 
-	//
+	public static class RoutingResult {
+		RoutingPoint closest;
+		List<List<RoutingPoint>> isochronals;
 
-	public static List<List<RoutingPoint>> calculateIsochrons(RoutingClientInterface caller,
-	                                                          RoutingPoint startFrom,
-	                                                          RoutingPoint destination,
-	                                                          List<RoutingPoint> intermediateWP,
-	                                                          Date fromDate,
-	                                                          GribHelper.GribConditionData[] gribData,
-	                                                          double timeInterval,
-	                                                          int routingForkWidth,
-	                                                          int routingStep,
-	                                                          int maxTWS,
-	                                                          int minTWA,
-	                                                          boolean stopIfGRIB2old,
-	                                                          double speedCoeff,
-	                                                          boolean avoidLand,
-	                                                          double proximity) {
+		public RoutingResult closest(RoutingPoint closest) {
+			this.closest = closest;
+			return this;
+		}
+		public RoutingResult isochronals(List<List<RoutingPoint>> isochronals) {
+			this.isochronals = isochronals;
+			return this;
+		}
+	}
+
+	public static RoutingResult calculateIsochrons(String polarFileName,
+	                                               RoutingPoint startFrom,
+	                                               RoutingPoint destination,
+	                                               List<RoutingPoint> intermediateWP,
+	                                               Date fromDate,
+	                                               GribHelper.GribConditionData[] gribData,
+	                                               double timeInterval,
+	                                               int routingForkWidth,
+	                                               int routingStep,
+	                                               int maxTWS,
+	                                               int minTWA,
+	                                               boolean stopIfGRIB2old,
+	                                               double speedCoeff,
+	                                               boolean avoidLand,
+	                                               double proximity) {
 		smallestDist = Double.MAX_VALUE; // Reset, for the next leg
-		return calculateIsochrons(caller,
+		return calculateIsochrons(
+				polarFileName,
 				startFrom,
 				destination,
 				intermediateWP,
@@ -112,22 +116,23 @@ public class RoutingUtil {
 				proximity);
 	}
 
-	private static List<List<RoutingPoint>> calculateIsochrons(RoutingClientInterface caller,
-	                                                           RoutingPoint startFrom,
-	                                                           RoutingPoint destination,
-	                                                           List<RoutingPoint> intermediateWP,
-	                                                           List<RoutingPoint> bestRoute,
-	                                                           Date fromDate,
-	                                                           GribHelper.GribConditionData[] gribData,
-	                                                           double timeInterval,
-	                                                           int routingForkWidth,
-	                                                           int routingStep,
-	                                                           int maxTWS,
-	                                                           int minTWA,
-	                                                           boolean stopIfGRIB2old,
-	                                                           double speedCoeff,
-	                                                           boolean avoidLand,
-	                                                           double proximity) {
+	private static RoutingResult calculateIsochrons(String polarFileName,
+	                                                RoutingPoint startFrom,
+	                                                RoutingPoint destination,
+	                                                List<RoutingPoint> intermediateWP,
+	                                                List<RoutingPoint> bestRoute,
+	                                                Date fromDate,
+	                                                GribHelper.GribConditionData[] gribData,
+	                                                double timeInterval,
+	                                                int routingForkWidth,
+	                                                int routingStep,
+	                                                int maxTWS,
+	                                                int minTWA,
+	                                                boolean stopIfGRIB2old,
+	                                                double speedCoeff,
+	                                                boolean avoidLand,
+	                                                double proximity) {
+		PolarHelper polarHelper = new PolarHelper(polarFileName);
 		wgd = gribData;
 		finalDestination = destination; // By default
 		timeStep = timeInterval;
@@ -150,21 +155,21 @@ public class RoutingUtil {
 
 //  System.out.println("Starting routing from " + center.getPosition().toString() + " to " + destination.getPosition().toString());
 
-		// Calcutate bearing to detination (from start)
+		// Calculate bearing to destination (from start)
 		if (aimFor == null)
 			brg = getBearing(center);
 		else
 			brg = getBearingTo(center, aimFor);
 
-		List<List<RoutingPoint>> allIsochrons = new ArrayList<List<RoutingPoint>>();
+		List<List<RoutingPoint>> allIsochrons = new ArrayList<>();
 
 		// Initialization
 		interruptRouting = false;
 		timer = System.currentTimeMillis();
 
 		smallestDist = Double.MAX_VALUE;
-		List<List<RoutingPoint>> data = new ArrayList<List<RoutingPoint>>(1);
-		ArrayList<RoutingPoint> one = new ArrayList<RoutingPoint>(1);
+		List<List<RoutingPoint>> data = new ArrayList<>(1);
+		ArrayList<RoutingPoint> one = new ArrayList<>(1);
 		center.setDate(fromDate);
 		GribHelper.GribCondition wind = GribHelper.gribLookup(center.getPosition(), wgd, fromDate);
 		boolean keepLooping = true;
@@ -264,7 +269,7 @@ public class RoutingUtil {
 							} else {
 //              if (minTWA > -1)
 //                System.out.println(".", LoggingPanel.GREEN_STYLE); // Takes a long time!
-								speed = PolarHelper.getSpeed(wSpeed, twa, speedCoeff);
+								speed = polarHelper.getSpeed(wSpeed, twa, speedCoeff);
 							}
 
 							if (speed < 0.0D)
@@ -318,7 +323,7 @@ public class RoutingUtil {
 				}
 				long after = System.currentTimeMillis();
 //      System.out.println("Isochron calculated in " + Long.toString(after - before) + " ms.");
-				// Start from the finalCurve, the previous enveloppe, for the next calculation
+				// Start from the finalCurve, the previous envelope, for the next calculation
 				// Flip data
 //      timer = logDiffTime(timer, "Milestone 8");
 				data = temp;
@@ -437,16 +442,16 @@ public class RoutingUtil {
 						}
 						if (nbNonZeroSpeed == 0) {
 							if (interruptedBecauseTooOld) {
-								JOptionPane.showMessageDialog(null, WWGnlUtilities.buildMessage("grib-exhausted", new String[]{Integer.toString(allIsochrons.size())}), WWGnlUtilities.buildMessage("routing"), JOptionPane.WARNING_MESSAGE);
+								System.out.println(String.format("GRIB exhausted, %d isochrons", allIsochrons.size()));
 							} else {
-								JOptionPane.showMessageDialog(null, "(2) " + WWGnlUtilities.buildMessage("routing-aborted", new String[]{Integer.toString(allIsochrons.size())}), WWGnlUtilities.buildMessage("routing"), JOptionPane.WARNING_MESSAGE);
+								System.out.println(String.format("Routing aborted after %d isochnrons", allIsochrons.size()));
 							}
 						}
 					} else {
 						if (interruptedBecauseTooOld) {
-							JOptionPane.showMessageDialog(null, WWGnlUtilities.buildMessage("grib-exhausted", new String[]{Integer.toString(allIsochrons.size())}), WWGnlUtilities.buildMessage("routing"), JOptionPane.WARNING_MESSAGE);
+							System.out.println(String.format("GRIB exhausted, %d isochrons", allIsochrons.size()));
 						} else {
-							JOptionPane.showMessageDialog(null, "(3) " + WWGnlUtilities.buildMessage("routing-aborted", new String[]{Integer.toString(allIsochrons.size())}), WWGnlUtilities.buildMessage("routing"), JOptionPane.WARNING_MESSAGE);
+							System.out.println(String.format("Routing aborted after %d isochnrons", allIsochrons.size()));
 						}
 					}
 				}
@@ -462,8 +467,6 @@ public class RoutingUtil {
 				System.out.println("Isochrone # " + Integer.toString(allIsochrons.size()) + ", smallest distance to arrival:" + smallestDist + " nm. Still processing:" + keepLooping);
 				System.out.println("Isochrone # " + Integer.toString(allIsochrons.size()) + "...");
 
-				if (caller != null)
-					caller.routingNotification(allIsochrons, finalClosest);
 //      timer = logDiffTime(timer, "Milestone 13");
 			}
 			if (interruptRouting) {
@@ -473,10 +476,11 @@ public class RoutingUtil {
 			}
 		}
 //  timer = logDiffTime(timer, "Milestone 14");
-		return allIsochrons;
+		return new RoutingResult().isochronals(allIsochrons).closest(finalClosest);
 	}
 
-	public static List<List<RoutingPoint>> refineRouting(RoutingClientInterface caller,
+	// TODO See when this is used
+	public static List<List<RoutingPoint>> refineRouting(String polarFileName,
 	                                                     RoutingPoint startFrom,
 	                                                     RoutingPoint destination,
 	                                                     List<List<RoutingPoint>> previousIsochrons,
@@ -499,7 +503,8 @@ public class RoutingUtil {
 //    for (RoutingPoint rp : bestRoute)
 //      System.out.println("Best : " + rp.getPosition().toString());
 
-		return calculateIsochrons(caller,
+		return calculateIsochrons(
+				polarFileName,
 				startFrom,
 				destination,
 				intermediateWP,
@@ -514,7 +519,7 @@ public class RoutingUtil {
 				stopIfGRIB2old,
 				speedCoeff,
 				false,                     // TASK Tossion.
-				25.0);
+				25.0).isochronals;
 	}
 
 	public static <T> List<T> revertList(List<T> list) {
@@ -645,23 +650,16 @@ public class RoutingUtil {
 
 	// TODO What-If routing
 
-	public static void outputRouting(CommandPanel instance, GeoPoint from, GeoPoint to, RoutingPoint closestPoint, List<List<RoutingPoint>> allCalculatedIsochrons) {
-		outputRouting(instance, from, to, closestPoint, allCalculatedIsochrons, false);
-	}
+	public enum OutputOption {
+		CSV, GPX, TXT, KML, JSON
+	};
+	public final static SimpleDateFormat SDF_DMY  = new SimpleDateFormat("d MMM yyyy");
+	public final static DecimalFormat DF2    = new DecimalFormat("00");
+	public final static DecimalFormat DF3    = new DecimalFormat("000");
+	public final static DecimalFormat XX22   = new DecimalFormat("##00.00");
+	public final static DecimalFormat XXX12  = new DecimalFormat("###0.00");
 
-	public static void outputRouting(CommandPanel instance, GeoPoint from, GeoPoint to, RoutingPoint closestPoint, List<List<RoutingPoint>> allCalculatedIsochrons, boolean doAsk) {
-		int clipboardOption = Integer.parseInt(((ParamPanel.RoutingOutputList) (ParamPanel.data[ParamData.ROUTING_OUTPUT_FLAVOR][ParamData.VALUE_INDEX])).getStringIndex());
-		String fileOutput = null;
-		if (doAsk || clipboardOption == ParamPanel.RoutingOutputList.ASK) {
-			try {
-				Thread.sleep(500L);
-			} catch (InterruptedException ie) {
-			} // Pas joli...
-			RoutingOutputFlavorPanel rofp = new RoutingOutputFlavorPanel();
-			JOptionPane.showMessageDialog(instance, rofp, "Routing output", JOptionPane.QUESTION_MESSAGE);
-			clipboardOption = rofp.getSelectedOption();
-			fileOutput = rofp.getFileOutput();
-		}
+	public static StringBuffer outputRouting(GeoPoint from, GeoPoint to, RoutingPoint closestPoint, List<List<RoutingPoint>> allCalculatedIsochrons, OutputOption clipboardOption) {
 
 		String kmlPlaces = "";
 		String kmlRoute = "";
@@ -669,23 +667,23 @@ public class RoutingUtil {
 
 		// Reverse, for the clipboard
 		boolean generateGPXRoute = true;
-		String clipboardContent = "";
+		StringBuffer output = new StringBuffer();
 		// Opening tags
-		if (clipboardOption == ParamPanel.RoutingOutputList.CSV)
-			clipboardContent = "L;(dec L);G;(dec G);Date;UTC;TWS;TWD;BSP;HDG\n";
-		else if (clipboardOption == ParamPanel.RoutingOutputList.GPX) {
-			clipboardContent =
+		if (clipboardOption == OutputOption.CSV) {
+			output.append("L;(dec L);G;(dec G);Date;UTC;TWS;TWD;BSP;HDG\n");
+		} else if (clipboardOption == OutputOption.GPX) {
+			output.append(
 					"<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +
 							"<gpx version=\"1.1\" \n" +
 							"     creator=\"OpenCPN\" \n" +
 							"  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n" +
 							"  xmlns=\"http://www.topografix.com/GPX/1/1\" \n" +
 							"  xsi:schemaLocation=\"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd\" \n" +
-							"  xmlns:opencpn=\"http://www.opencpn.org\">\n";
+							"  xmlns:opencpn=\"http://www.opencpn.org\">\n");
 			if (generateGPXRoute) {
 				Date d = new Date();
-				clipboardContent += ("  <rte>\n" +
-						"    <name>Weather Wizard route (" + WWGnlUtilities.SDF_DMY.format(d) + ")</name>\n" +
+				output.append("  <rte>\n" +
+						"    <name>Weather Wizard route (" + SDF_DMY.format(d) + ")</name>\n" +
 						"    <extensions>\n" +
 						"      <opencpn:start>" + from.toString() + "</opencpn:start>\n" +
 						"      <opencpn:end>" + to.toString() + "</opencpn:end>\n" +
@@ -696,43 +694,41 @@ public class RoutingUtil {
 						"    <desc>Routing from Weather Wizard (generated " + d.toString() + ")</desc>\n" +
 						"    <number>" + (d.getTime()) + "</number>\n");
 			}
-		} else if (clipboardOption == ParamPanel.RoutingOutputList.TXT) {
+		} else if (clipboardOption == OutputOption.TXT) {
 			Date d = new Date();
-			clipboardContent += ("Weather Wizard route (" + WWGnlUtilities.SDF_DMY.format(d) + ") generated " + d.toString() + ")\n");
-		} else if (clipboardOption == ParamPanel.RoutingOutputList.KML) {
+			output.append("Weather Wizard route (" + SDF_DMY.format(d) + ") generated " + d.toString() + ")\n");
+		} else if (clipboardOption == OutputOption.KML) {
 			Date d = new Date();
-			clipboardContent +=
+			output.append(
 					"<?xml version = '1.0' encoding = 'UTF-8'?>\n" +
 							"<kml xmlns=\"http://earth.google.com/kml/2.0\" \n" +
 							"     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
 							"     xsi:schemaLocation=\"http://earth.google.com/kml/2.0 ../xsd/kml21.xsd\">\n" +
 							"   <Document>\n" +
-							"      <name>Weather Wizard route (" + WWGnlUtilities.SDF_DMY.format(d) + ")</name>\n"; // TASK Add from/to
-		} else if (clipboardOption == ParamPanel.RoutingOutputList.JSON) {
-			clipboardContent +=
-					("{\n" +
-							"  \"waypoints\": [\n");
+							"      <name>Weather Wizard route (" + SDF_DMY.format(d) + ")</name>\n"); // TASK Add from/to
+		} else if (clipboardOption == OutputOption.JSON) {
+			output.append("{\n" +
+							      "  \"waypoints\": [\n");
 		}
 
 		if (closestPoint != null && allCalculatedIsochrons != null) {
 			Calendar cal = new GregorianCalendar();
 			List<RoutingPoint> bestRoute = RoutingUtil.getBestRoute(closestPoint, allCalculatedIsochrons);
-			int routesize = bestRoute.size();
+			int routeSize = bestRoute.size();
 			String date = "", time = "";
 			RoutingPoint rp = null;
 			RoutingPoint ic = null; // Isochron Center
-//    for (int r=0; r<routesize; r++) // 0 is the closest point, the last calculated
-			for (int r = routesize - 1; r >= 0; r--) // 0 is the closest point, the last calculated
-			{
+//    for (int r=0; r<routeSize; r++) // 0 is the closest point, the last calculated
+			for (int r = routeSize - 1; r >= 0; r--) { // 0 is the closest point, the last calculated
 				rp = bestRoute.get(r);
-				if (r == 0) // Last one
+				if (r == 0) { // Last one
 					ic = rp;
-				else
+				} else {
 					ic = bestRoute.get(r - 1);
-
-				if (rp.getDate() == null)
+				}
+				if (rp.getDate() == null) {
 					date = time = "";
-				else {
+				} else {
 					cal.setTime(rp.getDate());
 
 					int year = cal.get(Calendar.YEAR);
@@ -741,37 +737,37 @@ public class RoutingUtil {
 					int hours = cal.get(Calendar.HOUR_OF_DAY);
 					int minutes = cal.get(Calendar.MINUTE);
 					int seconds = cal.get(Calendar.SECOND);
-					if (clipboardOption == ParamPanel.RoutingOutputList.CSV) {
-						date = WWGnlUtilities.DF2.format(month + 1) + "/" + WWGnlUtilities.DF2.format(day) + "/" + Integer.toString(year);
-						time = WWGnlUtilities.DF2.format(hours) + ":" + WWGnlUtilities.DF2.format(minutes);
-					} else if (clipboardOption == ParamPanel.RoutingOutputList.GPX) {
+					if (clipboardOption == OutputOption.CSV) {
+						date = DF2.format(month + 1) + "/" + DF2.format(day) + "/" + Integer.toString(year);
+						time = DF2.format(hours) + ":" + DF2.format(minutes);
+					} else if (clipboardOption == OutputOption.GPX) {
 						date = Integer.toString(year) + "-" +
-								WWGnlUtilities.DF2.format(month + 1) + "-" +
-								WWGnlUtilities.DF2.format(day) + "T" +
-								WWGnlUtilities.DF2.format(hours) + ":" +
-								WWGnlUtilities.DF2.format(minutes) + ":" +
-								WWGnlUtilities.DF2.format(seconds) + "Z";
-					} else if (clipboardOption == ParamPanel.RoutingOutputList.TXT || clipboardOption == ParamPanel.RoutingOutputList.KML) {
+								DF2.format(month + 1) + "-" +
+								DF2.format(day) + "T" +
+								DF2.format(hours) + ":" +
+								DF2.format(minutes) + ":" +
+								DF2.format(seconds) + "Z";
+					} else if (clipboardOption == OutputOption.TXT || clipboardOption == OutputOption.KML) {
 						date = rp.getDate().toString();
-					} else if (clipboardOption == ParamPanel.RoutingOutputList.JSON) {
+					} else if (clipboardOption == OutputOption.JSON) {
 						date = Integer.toString(year) + "-" +
-								WWGnlUtilities.DF2.format(month + 1) + "-" +
-								WWGnlUtilities.DF2.format(day) + "T" +
-								WWGnlUtilities.DF2.format(hours) + ":" +
-								WWGnlUtilities.DF2.format(minutes) + ":" +
-								WWGnlUtilities.DF2.format(seconds) + "Z";
+								DF2.format(month + 1) + "-" +
+								DF2.format(day) + "T" +
+								DF2.format(hours) + ":" +
+								DF2.format(minutes) + ":" +
+								DF2.format(seconds) + "Z";
 					}
 				}
 				// Route points
-				if (clipboardOption == ParamPanel.RoutingOutputList.CSV) {
+				if (clipboardOption == OutputOption.CSV) {
 					String lat = GeomUtil.decToSex(rp.getPosition().getL(), GeomUtil.SWING, GeomUtil.NS);
 					String lng = GeomUtil.decToSex(rp.getPosition().getG(), GeomUtil.SWING, GeomUtil.EW);
-					String tws = WWGnlUtilities.XX22.format(ic.getTws());
+					String tws = XX22.format(ic.getTws());
 					String twd = Integer.toString(ic.getTwd());
-					String bsp = WWGnlUtilities.XX22.format(ic.getBsp());
+					String bsp = XX22.format(ic.getBsp());
 					String hdg = Integer.toString(ic.getHdg());
 
-					clipboardContent += (lat + ";" +
+					output.append(lat + ";" +
 							Double.toString(rp.getPosition().getL()) + ";" +
 							lng + ";" +
 							Double.toString(rp.getPosition().getG()) + ";" +
@@ -781,14 +777,14 @@ public class RoutingUtil {
 							twd + ";" +
 							bsp + ";" +
 							hdg + "\n");
-				} else if (clipboardOption == ParamPanel.RoutingOutputList.GPX) {
+				} else if (clipboardOption == OutputOption.GPX) {
 					if (generateGPXRoute) {
 						NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
 						nf.setMaximumFractionDigits(2);
-						clipboardContent +=
-								("       <rtept lat=\"" + rp.getPosition().getL() + "\" lon=\"" + rp.getPosition().getG() + "\">\n" +
-										"            <name>" + WWGnlUtilities.DF3.format(routesize - r) + "_WW</name>\n" +
-										"            <desc>Waypoint " + Integer.toString(routesize - r) + ";VMG=" + nf.format(ic.getBsp()) + ";</desc>\n" +
+						output.append(
+								 "       <rtept lat=\"" + rp.getPosition().getL() + "\" lon=\"" + rp.getPosition().getG() + "\">\n" +
+										"            <name>" + DF3.format(routeSize - r) + "_WW</name>\n" +
+										"            <desc>Waypoint " + Integer.toString(routeSize - r) + ";VMG=" + nf.format(ic.getBsp()) + ";</desc>\n" +
 										//  "            <sym>triangle</sym>\n" +
 										"            <sym>empty</sym>\n" +
 										"            <type>WPT</type>\n" +
@@ -799,10 +795,10 @@ public class RoutingUtil {
 										"            </extensions>\n" +
 										"        </rtept>\n");
 					} else {
-						clipboardContent +=
-								("  <wpt lat=\"" + rp.getPosition().getL() + "\" lon=\"" + rp.getPosition().getG() + "\">\n" +
+						output.append(
+								 "  <wpt lat=\"" + rp.getPosition().getL() + "\" lon=\"" + rp.getPosition().getG() + "\">\n" +
 										"    <time>" + date + "</time>\n" +
-										"    <name>" + WWGnlUtilities.DF3.format(r) + "_WW</name>\n" +
+										"    <name>" + DF3.format(r) + "_WW</name>\n" +
 										"    <sym>triangle</sym>\n" +
 										"    <type>WPT</type>\n" +
 										"    <extensions>\n" +
@@ -813,24 +809,23 @@ public class RoutingUtil {
 										"    </extensions>\n" +
 										"  </wpt>\n");
 					}
-				} else if (clipboardOption == ParamPanel.RoutingOutputList.TXT) {
-					String tws = WWGnlUtilities.XX22.format(ic.getTws());
+				} else if (clipboardOption == OutputOption.TXT) {
+					String tws = XX22.format(ic.getTws());
 					String twd = Integer.toString(ic.getTwd());
-					String bsp = WWGnlUtilities.XX22.format(ic.getBsp());
+					String bsp = XX22.format(ic.getBsp());
 					String hdg = Integer.toString(ic.getHdg());
-					clipboardContent +=
-							(rp.getPosition().toString() + " : " + date + ", tws:" + tws + ", twd:" + twd + ", bsp:" + bsp + ", hdg:" + hdg + "\n");
-				} else if (clipboardOption == ParamPanel.RoutingOutputList.KML) {
+					output.append(rp.getPosition().toString() + " : " + date + ", tws:" + tws + ", twd:" + twd + ", bsp:" + bsp + ", hdg:" + hdg + "\n");
+				} else if (clipboardOption == OutputOption.KML) {
 					if (firstKMLHeading == -1)
 						firstKMLHeading = ic.getHdg();
 					kmlRoute += (rp.getPosition().getG() + "," + rp.getPosition().getL() + ",0\n");
-					String tws = WWGnlUtilities.XX22.format(ic.getTws());
+					String tws = XX22.format(ic.getTws());
 					String twd = Integer.toString(ic.getTwd());
-					String bsp = WWGnlUtilities.XX22.format(ic.getBsp());
+					String bsp = XX22.format(ic.getBsp());
 					String hdg = Integer.toString(ic.getHdg());
 					kmlPlaces +=
 							("         <Placemark>\n" +
-									"           <name>WayPoint " + Integer.toString(routesize - r) + "</name>\n" +
+									"           <name>WayPoint " + Integer.toString(routeSize - r) + "</name>\n" +
 									"           <description>\n" +
 									"            <![CDATA[\n" +
 									"              <b>" + date + "</b>\n" +
@@ -853,13 +848,13 @@ public class RoutingUtil {
 									"             <coordinates>" + rp.getPosition().getG() + "," + rp.getPosition().getL() + ",0 </coordinates>\n" +
 									"           </Point>\n" +
 									"         </Placemark>\n");
-				} else if (clipboardOption == ParamPanel.RoutingOutputList.JSON) {
-					String tws = WWGnlUtilities.XXX12.format(ic.getTws());
+				} else if (clipboardOption == OutputOption.JSON) {
+					String tws = XXX12.format(ic.getTws());
 					String twd = Integer.toString(ic.getTwd());
-					String bsp = WWGnlUtilities.XXX12.format(ic.getBsp());
+					String bsp = XXX12.format(ic.getBsp());
 					String hdg = Integer.toString(ic.getHdg());
-					clipboardContent +=
-							("    {\n" +
+					output.append(
+							 "    {\n" +
 									"      \"datetime\":\"" + date + "\",\n" +
 									"      \"position\": {\n" +
 									"                  \"latitude\":\"" + rp.getPosition().getL() + "\",\n" +
@@ -873,19 +868,19 @@ public class RoutingUtil {
 				}
 			}
 			// Closing tags
-			if (clipboardOption == ParamPanel.RoutingOutputList.GPX) {
-				if (generateGPXRoute)
-					clipboardContent += "  </rte>\n";
-				clipboardContent +=
-						("</gpx>");
-			} else if (clipboardOption == ParamPanel.RoutingOutputList.KML) {
-				clipboardContent +=
-						("      <Folder>\n" +
+			if (clipboardOption == OutputOption.GPX) {
+				if (generateGPXRoute) {
+					output.append("  </rte>\n");
+				}
+				output.append("</gpx>");
+			} else if (clipboardOption == OutputOption.KML) {
+				output.append(
+						 "      <Folder>\n" +
 								"         <name>Waypoints</name>\n" +
 								kmlPlaces +
 								"      </Folder>\n");
-				clipboardContent +=
-						("      <Placemark>\n" +
+				output.append(
+						 "      <Placemark>\n" +
 								"          <name>Suggested route</name>\n" +
 								"          <LookAt>\n" +
 								"             <longitude>" + from.getG() + "</longitude>\n" +
@@ -914,61 +909,15 @@ public class RoutingUtil {
 								"             </coordinates>\n" +
 								"          </LineString>\n" +
 								"       </Placemark>\n");
-				clipboardContent +=
-						("       <Snippet><![CDATA[created by <a href=\"http://code.google.com/p/weatherwizard/\">The Weather Wizard</a>]]></Snippet>\n" +
+				output.append(
+						 "       <Snippet><![CDATA[created by <a href=\"http://code.google.com/p/weatherwizard/\">The Weather Wizard</a>]]></Snippet>\n" +
 								"   </Document>\n" +
 								"</kml>");
-			} else if (clipboardOption == ParamPanel.RoutingOutputList.JSON) {
-				clipboardContent +=
-						("  ]\n" +
-								"}\n");
+			} else if (clipboardOption == OutputOption.JSON) {
+				output.append("  ]\n" +
+											"}\n");
 			}
-
-			if (fileOutput != null && fileOutput.trim().length() > 0) {
-				try {
-					BufferedWriter bw = new BufferedWriter(new FileWriter(fileOutput));
-					bw.write(clipboardContent + "\n");
-					bw.close();
-					if (clipboardOption == ParamPanel.RoutingOutputList.JSON) // Suggest view in Google maps
-					{
-						int resp = JOptionPane.showConfirmDialog(instance, "See in Google maps?", "Routing", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-						if (resp == JOptionPane.YES_OPTION) {
-							File f = new File("routing/googlemaprouting.html");
-							if (f.exists()) {
-								BufferedWriter bwjs = new BufferedWriter(new FileWriter("routing" + File.separator + "routing.js"));
-								bwjs.write("var routing = " + clipboardContent + "\n");
-								bwjs.close();
-
-//              String whatToOpen = f.toURI().toURL().toString() + "?data=" + new File(fileOutput).toURI().toURL().toString();
-								String whatToOpen = f.toURI().toURL().toString();
-								System.out.println("Opening:" + whatToOpen);
-								try {
-									Utilities.openInBrowser(whatToOpen);
-									Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-									StringSelection stringSelection = new StringSelection(whatToOpen);
-									clipboard.setContents(stringSelection, null);
-									JOptionPane.showMessageDialog(instance, "In case there is a problem,\nthe URL to open is in the clipboard.\nCtrl+V in your browser...", "Google Routing", JOptionPane.INFORMATION_MESSAGE);
-								} catch (Exception ex) {
-									String message = "Running in " + System.getProperty("user.dir") + "\n" + ex.getLocalizedMessage();
-									JOptionPane.showMessageDialog(instance, message, "Routing in GoogleMaps", JOptionPane.ERROR_MESSAGE);
-								}
-							} else
-								JOptionPane.showMessageDialog(instance, "File routing/googlemaprouting.html not found on your system...", "Google Routing", JOptionPane.WARNING_MESSAGE);
-						}
-					}
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-				WWContext.getInstance().fireSetStatus(WWGnlUtilities.buildMessage("routing-in-file", new String[]{fileOutput}));
-			} else {
-				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-				StringSelection stringSelection = new StringSelection(clipboardContent);
-				clipboard.setContents(stringSelection, null);
-				//          JOptionPane.showMessageDialog(null, "Routing is in the clipboard\n(Ctrl+V in any editor...)", "Routing completed", JOptionPane.INFORMATION_MESSAGE);
-				WWContext.getInstance().fireSetStatus(WWGnlUtilities.buildMessage("routing-in-clip"));
-			}
-			WWContext.getInstance().fireRoutingAvailable(true, bestRoute);
-			// End of the Routing.
 		}
+		return output;
 	}
 }

@@ -11,22 +11,25 @@ import java.io.File;
 import java.util.List;
 
 public class PolarHelper {
-	private static double coeff[][] = null;
-	private static List<CoeffForPolars> coeffList = null;
+	private double coeff[][] = null;
+	private List<CoeffForPolars> coeffList = null;
 
 	private static int polarVersion = 0;
 
 	public final static int POLAR_V1 = 1;
 	public final static int POLAR_V2 = 2;
 
-	private static DOMParser parser = new DOMParser();
+	private static DOMParser parser = new DOMParser(); // TODO In a static context?
+	private String polarFileName;
 
-	public static void refreshCoeffs() {
-		System.out.println(">>> Hard-coded Polar Coeff file name <<<");
-		String fName = "/Users/olediour/repos/raspberry-pi4j-samples/Project.Trunk/PolarSmoother/sample-files/CheoyLee42.polar-coeff"; // ((ParamPanel.DataFile) ParamPanel.data[ParamData.POLAR_FILE_LOC][ParamData.VALUE_INDEX]).toString();
-		if (fName.toLowerCase().endsWith(".xml")) {
+	public PolarHelper(String polarCoeffFileName) {
+		this.polarFileName = polarCoeffFileName;
+	}
+
+	private void refreshCoeffs() {
+		if (this.polarFileName.toLowerCase().endsWith(".xml")) {
 			polarVersion = POLAR_V1;
-		} else if (fName.toLowerCase().endsWith(".polar-coeff")) {
+		} else if (this.polarFileName.toLowerCase().endsWith(".polar-coeff")) {
 			polarVersion = POLAR_V2;
 		}
 
@@ -34,7 +37,7 @@ public class PolarHelper {
 		try {
 			synchronized (parser) {
 				parser.setValidationMode(XMLParser.NONVALIDATING);
-				parser.parse(new File(fName).toURI().toURL());
+				parser.parse(new File(this.polarFileName).toURI().toURL());
 				XMLDocument doc = parser.getDocument();
 
 				if (polarVersion == POLAR_V1) {
@@ -62,11 +65,11 @@ public class PolarHelper {
 		}
 	}
 
-	public static double getSpeed(double tws, double twa) {
+	public double getSpeed(double tws, double twa) {
 		return getSpeed(tws, twa, 1D);
 	}
 
-	public static double getSpeed(double tws, double twa, double speedCoeff) {
+	public double getSpeed(double tws, double twa, double speedCoeff) {
 		if (coeff == null && coeffList == null) {
 			refreshCoeffs();
 		}
@@ -104,17 +107,19 @@ public class PolarHelper {
 	}
 
 	public static void main(String args[]) {
-		refreshCoeffs();
+		String fName = "/Users/olediour/repos/raspberry-pi4j-samples/Project.Trunk/PolarSmoother/sample-files/CheoyLee42.polar-coeff"; // ((ParamPanel.DataFile) ParamPanel.data[ParamData.POLAR_FILE_LOC][ParamData.VALUE_INDEX]).toString();
 
-		System.out.println("Speed for TWS:6 , TWA=52 = " + getSpeed(6D, 52D));
-		System.out.println("Speed for TWS:10, TWA=52 = " + getSpeed(10D, 52D));
-		System.out.println("Speed for TWS:20, TWA=52 = " + getSpeed(20D, 52D));
-		System.out.println("Speed for TWS:6 , TWA=90 = " + getSpeed(6D, 90D));
-		System.out.println("Speed for TWS:10, TWA=90 = " + getSpeed(10D, 90D));
-		System.out.println("Speed for TWS:20, TWA=90 = " + getSpeed(20D, 90D));
-		System.out.println("Speed for TWS:6 , TWA=150 = " + getSpeed(6D, 150D));
-		System.out.println("Speed for TWS:10, TWA=150 = " + getSpeed(10D, 150D));
-		System.out.println("Speed for TWS:20, TWA=150 = " + getSpeed(20D, 150D));
-		System.out.println("Speed for TWS:20, TWA=250 = " + getSpeed(20D, 250D));
+		PolarHelper ph = new PolarHelper(fName);
+
+		System.out.println("Speed for TWS:6 , TWA=52 = " + ph.getSpeed(6D, 52D));
+		System.out.println("Speed for TWS:10, TWA=52 = " + ph.getSpeed(10D, 52D));
+		System.out.println("Speed for TWS:20, TWA=52 = " + ph.getSpeed(20D, 52D));
+		System.out.println("Speed for TWS:6 , TWA=90 = " + ph.getSpeed(6D, 90D));
+		System.out.println("Speed for TWS:10, TWA=90 = " + ph.getSpeed(10D, 90D));
+		System.out.println("Speed for TWS:20, TWA=90 = " + ph.getSpeed(20D, 90D));
+		System.out.println("Speed for TWS:6 , TWA=150 = " + ph.getSpeed(6D, 150D));
+		System.out.println("Speed for TWS:10, TWA=150 = " + ph.getSpeed(10D, 150D));
+		System.out.println("Speed for TWS:20, TWA=150 = " + ph.getSpeed(20D, 150D));
+		System.out.println("Speed for TWS:20, TWA=250 = " + ph.getSpeed(20D, 250D));
 	}
 }
