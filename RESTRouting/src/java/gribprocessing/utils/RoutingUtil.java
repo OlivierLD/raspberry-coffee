@@ -17,6 +17,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,7 +96,8 @@ public class RoutingUtil {
 	                                               boolean stopIfGRIB2old,
 	                                               double speedCoeff,
 	                                               boolean avoidLand,
-	                                               double proximity) {
+	                                               double proximity,
+	                                               boolean verbose) {
 		smallestDist = Double.MAX_VALUE; // Reset, for the next leg
 		return calculateIsochrons(
 				polarFileName,
@@ -113,7 +115,8 @@ public class RoutingUtil {
 				stopIfGRIB2old,
 				speedCoeff,
 				avoidLand,
-				proximity);
+				proximity,
+				verbose);
 	}
 
 	private static RoutingResult calculateIsochrons(String polarFileName,
@@ -131,7 +134,8 @@ public class RoutingUtil {
 	                                                boolean stopIfGRIB2old,
 	                                                double speedCoeff,
 	                                                boolean avoidLand,
-	                                                double proximity) {
+	                                                double proximity,
+	                                                boolean verbose) {
 		PolarHelper polarHelper = new PolarHelper(polarFileName);
 		wgd = gribData;
 		finalDestination = destination; // By default
@@ -333,7 +337,7 @@ public class RoutingUtil {
 //        System.out.println("Reducing...");
 //        System.out.print("Reducing...");
 //        before = System.currentTimeMillis();
-					finalCurve = calculateEnveloppe(data, center);
+					finalCurve = calculateEnveloppe(data, center, verbose);
 					if (aimFor != null) {
 						if (isPointIn(aimFor, finalCurve, center)) {
 							try {
@@ -397,12 +401,16 @@ public class RoutingUtil {
 					System.out.println("Not progressing (stuck at " + smallestDist + " nm), aborting.");
 				} else if (Math.abs(localSmallOne - smallestDist) < (smallestDist * 0.9)) {
 					// When tacking for example... TODO Explore that one.
-					System.out.println("Corner case... localSmallOne:" + localSmallOne + ", smallesrDist:" + smallestDist);
+					if (verbose) {
+						System.out.println("Corner case... localSmallOne:" + localSmallOne + ", smallesrDist:" + smallestDist);
+					}
 				} else {
 					keepLooping = false;
-					System.out.println("Destination reached? aiming WP [" + (aimFor != null ? aimFor.getPosition().toString() : "none") + "] finalDestination [" + finalDestination.getPosition().toString() + "]");
-					System.out.println("LocalSmallOne:" + localSmallOne);
-					System.out.println("SmallestDistance:" + smallestDist);
+					if (verbose) {
+						System.out.println("Destination reached? aiming WP [" + (aimFor != null ? aimFor.getPosition().toString() : "none") + "] finalDestination [" + finalDestination.getPosition().toString() + "]");
+						System.out.println("LocalSmallOne:" + localSmallOne);
+						System.out.println("SmallestDistance:" + smallestDist);
+					}
 					if ((allowOtherRoute && nbNonZeroSpeed == 0) || metLand) {
 						keepLooping = true; // Try again, even if the distance was not shrinking
 //          smallestDist = localSmallOne;
@@ -433,25 +441,27 @@ public class RoutingUtil {
 									finalDestination = destination;
 								else {
 									keepLooping = false;
-									System.out.println("Destination reached, aiming (inter-WP) [" + (aimFor != null ? aimFor.getPosition().toString() : "none") + "] finalDestination [" + finalDestination.getPosition().toString() + "]");
+									if (verbose) {
+										System.out.println("Destination reached, aiming (inter-WP) [" + (aimFor != null ? aimFor.getPosition().toString() : "none") + "] finalDestination [" + finalDestination.getPosition().toString() + "]");
+									}
 								}
 							}
 						}
-						if (!keepLooping) {// End of Routing
-							System.out.println("Finished (" + smallestDist + " vs " + localSmallOne + ").\n(Non Zero Speed:" + nbNonZeroSpeed + ")");
+						if (!keepLooping && verbose) {// End of Routing
+							System.out.println("Finished (" + smallestDist + " vs " + localSmallOne + ").\n(Nb Non Zero Speed points:" + nbNonZeroSpeed + ")");
 						}
 						if (nbNonZeroSpeed == 0) {
 							if (interruptedBecauseTooOld) {
 								System.out.println(String.format("GRIB exhausted, %d isochrons", allIsochrons.size()));
 							} else {
-								System.out.println(String.format("Routing aborted after %d isochnrons", allIsochrons.size()));
+								System.out.println(String.format("Routing aborted after %d isochrons", allIsochrons.size()));
 							}
 						}
 					} else {
 						if (interruptedBecauseTooOld) {
 							System.out.println(String.format("GRIB exhausted, %d isochrons", allIsochrons.size()));
 						} else {
-							System.out.println(String.format("Routing aborted after %d isochnrons", allIsochrons.size()));
+							System.out.println(String.format("Routing aborted after %d isochrons", allIsochrons.size()));
 						}
 					}
 				}
@@ -464,8 +474,9 @@ public class RoutingUtil {
 					data.add(finalCurve);
 					currentDate = arrivalDate;
 				}
-				System.out.println("Isochrone # " + Integer.toString(allIsochrons.size()) + ", smallest distance to arrival:" + smallestDist + " nm. Still processing:" + keepLooping);
-				System.out.println("Isochrone # " + Integer.toString(allIsochrons.size()) + "...");
+				if (verbose) {
+					System.out.println("Isochrone # " + Integer.toString(allIsochrons.size()) + ", smallest distance to arrival:" + smallestDist + " nm. Still processing:" + keepLooping);
+				}
 
 //      timer = logDiffTime(timer, "Milestone 13");
 			}
@@ -494,7 +505,8 @@ public class RoutingUtil {
 	                                                     int maxTWS,
 	                                                     int minTWA,
 	                                                     boolean stopIfGRIB2old,
-	                                                     double speedCoeff) {
+	                                                     double speedCoeff,
+	                                                     boolean verbose) {
 		smallestDist = Double.MAX_VALUE; // Reset, for the next leg
 		List<RoutingPoint> bestRoute = RoutingUtil.getBestRoute(closestPoint, previousIsochrons);
 		// The route goes from destination to origin. Revert it.
@@ -519,7 +531,8 @@ public class RoutingUtil {
 				stopIfGRIB2old,
 				speedCoeff,
 				false,                     // TASK Tossion.
-				25.0).isochronals;
+				25.0,
+				verbose).isochronals;
 	}
 
 	public static <T> List<T> revertList(List<T> list) {
@@ -575,7 +588,7 @@ public class RoutingUtil {
 	}
 
 	// Possible optimization ?
-	private static List<RoutingPoint> calculateEnveloppe(List<List<RoutingPoint>> bulkPoints, RoutingPoint center) {
+	private static List<RoutingPoint> calculateEnveloppe(List<List<RoutingPoint>> bulkPoints, RoutingPoint center, boolean verbose) {
 		List<RoutingPoint> returnCurve = new ArrayList<RoutingPoint>();
 		long before = System.currentTimeMillis();
 		// Put ALL the points in the finalCurve
@@ -624,8 +637,9 @@ public class RoutingUtil {
 		long after = System.currentTimeMillis();
 		int finalNum = returnCurve.size();
 		float ratio = 100f * (float) (origNum - finalNum) / (float) origNum;
-		System.out.println(mess + "to " + returnCurve.size() + " point(s) (gained " + ratio + "%), curve reduction calculated in " + Long.toString(after - before) + " ms");
-		System.out.println(mess + "to " + returnCurve.size() + " point(s) (gained " + ratio + "%), curve reduction calculated in " + Long.toString(after - before) + " ms");
+		if (verbose) {
+			System.out.println(mess + "to " + returnCurve.size() + " point(s) (gained " + ratio + "%), curve reduction calculated in " + Long.toString(after - before) + " ms");
+		}
 
 		return returnCurve;
 	}
@@ -659,6 +673,10 @@ public class RoutingUtil {
 	public final static DecimalFormat XX22   = new DecimalFormat("##00.00");
 	public final static DecimalFormat XXX12  = new DecimalFormat("###0.00");
 
+	static {
+		SDF_DMY.setTimeZone(TimeZone.getTimeZone("etc/UTC"));
+	}
+
 	public static StringBuffer outputRouting(GeoPoint from, GeoPoint to, RoutingPoint closestPoint, List<List<RoutingPoint>> allCalculatedIsochrons, OutputOption clipboardOption) {
 
 		String kmlPlaces = "";
@@ -670,7 +688,7 @@ public class RoutingUtil {
 		StringBuffer output = new StringBuffer();
 		// Opening tags
 		if (clipboardOption == OutputOption.CSV) {
-			output.append("L;(dec L);G;(dec G);Date;UTC;TWS;TWD;BSP;HDG\n");
+			output.append("L;(dec L);G;(dec G);Date(MDY);UTC;TWS;TWD;BSP;HDG\n");
 		} else if (clipboardOption == OutputOption.GPX) {
 			output.append(
 					"<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +

@@ -45,8 +45,7 @@ public class BlindRouting {
 		String startTime = "";
 		String gribName = "";
 		String polarFile = "";
-		String outputFile = "";
-
+		String outputType = "";
 		double timeInterval = 24d;
 		int routingForkWidth = 140;
 		int routingStep = 10;
@@ -78,7 +77,7 @@ public class BlindRouting {
 				polarFile = args[i + 1];
 			}
 			if ("-output".equals(args[i])) {
-				outputFile = args[i + 1];
+				outputType = args[i + 1];
 			}
 			if ("-speedCoeff".equals(args[i])) {
 				speedCoeff = Double.parseDouble(args[i + 1]);
@@ -128,9 +127,8 @@ public class BlindRouting {
 			}
 		}
 
-
 		BlindRouting br = new BlindRouting();
-		br.calculate(
+		String content = br.calculate(
 				fromL,
 				fromG,
 				toL,
@@ -138,28 +136,35 @@ public class BlindRouting {
 				startTime,
 				gribName,
 				polarFile,
-				outputFile,
+				outputType,
 				timeInterval,
 				routingForkWidth,
 				routingStep,
 				limitTWS,
 				limitTWA,
 				speedCoeff,
+				25.0,
 				verb);
+		System.out.println(content);
+		System.out.println("Done!");
 	}
 
-	private void calculate(double fromL, double fromG, double toL, double toG,
-	                       String startTime,
-	                       String gribName,
-	                       String polarFile,
-	                       String outputFile,
-	                       double timeInterval,
-	                       int routingForkWidth,
-	                       int routingStep,
-	                       int limitTWS,
-	                       int limitTWA,
-	                       double speedCoeff,
-	                       boolean verbose) throws Exception {
+	private String calculate(double fromL,
+	                         double fromG,
+	                         double toL,
+	                         double toG,
+	                         String startTime,
+	                         String gribName,
+	                         String polarFile,
+	                         String outputType,
+	                         double timeInterval,
+	                         int routingForkWidth,
+	                         int routingStep,
+	                         int limitTWS,
+	                         int limitTWA,
+	                         double speedCoeff,
+	                         double proximity,
+	                         boolean verbose) throws Exception {
 
 		this.verbose = verbose;
 		GeoPoint from = new GeoPoint(fromL, fromG);
@@ -231,10 +236,18 @@ public class BlindRouting {
 				stopIfTooOld,
 				speedCoeff,
 				"true".equals(System.getProperty("avoid.land", "false")),
-				25.0);
+				proximity,
+				verbose);
 
-		StringBuffer bestRoute = RoutingUtil.outputRouting(center.getPosition(), destination.getPosition(), routingResult.closest, routingResult.isochronals, RoutingUtil.OutputOption.JSON);
-		// TODO Improve that
-		System.out.println(bestRoute.toString());
+		RoutingUtil.OutputOption outputFmt = RoutingUtil.OutputOption.JSON;
+		for (RoutingUtil.OutputOption fmt : RoutingUtil.OutputOption.values()) {
+			if (fmt.name().equals(outputType)) {
+				outputFmt = fmt;
+				break;
+			}
+		}
+
+		StringBuffer bestRoute = RoutingUtil.outputRouting(center.getPosition(), destination.getPosition(), routingResult.closest, routingResult.isochronals, outputFmt);
+		return bestRoute.toString();
 	}
 }
