@@ -4,6 +4,20 @@
 
 Polars are those curves predicting the speed of the boat (Boat SPeed **BSP** or Speed Through Water **STW**) for given true wind speed (TWS) and true wind angle (TWA). Without the polars of your boat, there is no way to compute any routing, it is as simple as that.
 
+The tool presented here can help you elaborate your own polars. It's written in Java, using Swing. It needs to run in a graphical environment.
+
+You can run it from gradle:
+```
+ $ ../../gradlew runSmoother
+```
+
+You can create new files or use already existing ones, change smoothing parameters, drag points directly on the graph (right pane), etc.
+
+Menu bar will give you access to the various feature, as well as contextual popup menus in the left pane.
+
+The files the tool rely on (`*.polar-data` and `*.polar-coeff`) are XML files, they can be edited as any text document. But the graphical interface
+provided here is usually easier to deal with.
+
 | Polars for all TWS | Polars for TWS = 20 knots |
 |:------------------:|:-------------------------:|
 |![All TWS](./docimg/screenshot.01.png)|![TWS=20](./docimg/screenshot.02.png)|
@@ -45,7 +59,9 @@ The smoothing is done section by section, the parameters of the smoothing are se
 
 ![Edit Node](./docimg/screenshot.03.png)
 
-Notice the two degrees, one for the polar curves, and another one used to smooth the coefficients of the curves. The sections are sorted in the tree by name. It is your responsibility to name them so they're displayed in a significant order.
+Notice the two degrees, one for the polar curves, and another one used to smooth the coefficients of the curves.
+The sections are sorted in the tree by name.
+It is your responsibility to name them so they're displayed in a significant order.
 
 Two kinds of files are managed by this tool.
 
@@ -58,6 +74,11 @@ Those two sorts of files are XML files, and can be read and edited in any text e
 To produce the `polar-coeff` file, ultimately used to calculate the routing, you modify the points and parameters of the smoothing until you are happy with the representation, and you use the menu `File > Generate Polar Coeff...`
 
 You will be prompted to give this file a name, and then you will need to mention this file when computing the routing.
+
+Ultimately, you will end up with a 3D smoothed polar surface, you will be able to find the Boat Speed for any wind speed, at any angle,
+as illustrated by the 3D view in the tool.
+
+![3D View](./docimg/screenshot.04.png)
 
 👉 This tool also understands the format used by MaxSea, the files with a `.pol` extension. The can be read (`File > Import from MaxSea...`), or produced (`File > Export to MaxSea...`).
 
