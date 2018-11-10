@@ -89,14 +89,15 @@ public class InteractiveServoTester {
 						break;
 				}
 			}
-			String input = userInput(String.format("Enter servo's angle [0..180], now %.02f > ", servoAngle));
+			setAngle(servo, 0f); // init position
+			String input = userInput(String.format("Enter servo's angle [-90..90], now %.02f > ", servoAngle));
 			if ("Q".equalsIgnoreCase(input.trim())) {
 				read = false;
 			} else {
 				try {
 					float newAngle = Float.parseFloat(input);
-					if (newAngle < 0 || newAngle > 180) {
-						System.out.println("Bad range [0..180]");
+					if (newAngle < -90 || newAngle > 90) {
+						System.out.println("Bad range [-90..90]");
 					} else {
 						servoAngle = newAngle;
 						setAngle(servo, servoAngle);
@@ -108,7 +109,8 @@ public class InteractiveServoTester {
 		}
 		System.out.println("Bye.");
 
-		setAngle(servo, 90f);
+		setAngle(servo, 0f);
+		stop(servo);
 		if (servoBoard != null) {
 			servoBoard.close();
 		}
@@ -123,7 +125,7 @@ public class InteractiveServoTester {
 	private static int degreeToPWM(int min, int max, float deg) {
 		int diff = max - min;
 		float oneDeg = diff / 180f;
-		return Math.round(min + ((deg + 90) * oneDeg));
+		return Math.round(min + ((deg + 90) * oneDeg)); // -90..90
 	}
 
 	private static void setAngle(int servo, float f) {
