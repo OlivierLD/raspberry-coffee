@@ -23,7 +23,7 @@ public class GRIBServer {
 			}
 		}
 
-		System.out.println(String.format("Running on port %d", httpPort));
+		System.out.println(String.format(">>> Running on port %d", httpPort));
 		this.httpServer = startHttpServer(httpPort, new GRIBRequestManager(this));
 	}
 
@@ -42,7 +42,8 @@ public class GRIBServer {
 		HTTPServer newHttpServer = null;
 		try {
 			newHttpServer = new HTTPServer(port, requestManager);
-			newHttpServer.stopRunning();
+			newHttpServer.startServer();
+//		newHttpServer.stopRunning();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

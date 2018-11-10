@@ -63,8 +63,13 @@ public class RESTImplementation {
 					"GET",
 					WW_PREFIX + "/composite-hierarchy", // QS Prm: filter
 					this::getCompositeHierarchy,
-					"Retrieve the list of the composites already available on the file system")
+					"Retrieve the list of the composites already available on the file system"),
 
+			new Operation(
+					"GET",
+					NAV_PREFIX + "/polar-file-location",
+					this::getPolarFileLocation,
+					"Returns the polar file location passed as System variable.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -117,6 +122,24 @@ public class RESTImplementation {
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
 							.errorCode("COMP-0001")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
+
+	private Response getPolarFileLocation(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String content = System.getProperty("polar.file.location");
+			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("NAV-0001")
 							.errorMessage(ex.toString())
 							.errorStack(HTTPServer.dumpException(ex)));
 			return response;

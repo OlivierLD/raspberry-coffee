@@ -18,9 +18,11 @@
 - WIP, more to come.
 
 ### Elaborate a deviation curve
-- From a Web/JavaScrip UI
+- From a Web/JavaScript UI?
 
 ### Elaborate polars
-(See polar-tool from OlivSoft)
+- See Project.Trunk/PolarSmoother, Swing UI, and doc.
 
 ### Routing
+- In progress. Best route OK
+- Get all isochronals, TODO

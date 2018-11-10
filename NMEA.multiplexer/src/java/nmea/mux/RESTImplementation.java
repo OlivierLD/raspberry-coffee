@@ -2187,7 +2187,7 @@ public class RESTImplementation {
 		String content = "";
 		String specialContentType = null;
 		if (txt) { // Transformation into text
-			specialContentType = "application/text";
+			specialContentType = "text/plain";
 			double bsp = 0;
 			try { bsp = ((JsonObject)jsonElement).getAsJsonObject(NMEADataCache.BSP).get("speed").getAsDouble(); } catch (Exception absorb) {}
 			double latitude = 0, longitude = 0;

@@ -2,6 +2,13 @@
 # Describes the different scenarios
 # Uses runNavServer.sh
 #
+# If first param is 'N', do not launch browsers after starting the server
+LAUNCH_BROWSER=Y
+if [ $# -gt 0 ]
+then
+  LAUNCH_BROWSER=$1
+fi
+#
 function openBrowser() {
   if [[ `uname -a` == *Linux* ]]
   then
@@ -16,6 +23,8 @@ GO=true
 while [ "$GO" == "true" ]
 do
 	clear
+	echo -e ">> Note 📝 : pass 'N' as parameter to this script NOT to launch a browser after "
+	echo -e "             starting the server"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
@@ -66,18 +75,24 @@ do
 	    PROP_FILE=nmea.mux.no.gps.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE --no-date &
-	    echo -e ">>> Waiting for the server to start..."
-	    sleep 5 # Wait for the server to be operational
-	    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	    fi
 	    GO=false
 	    ;;
 	  "2")
 	    PROP_FILE=nmea.mux.interactive.time.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE --no-date &
-	    echo -e ">>> Waiting for the server to start..."
-	    sleep 5 # Wait for the server to be operational
-	    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+	    fi
 	    GO=false
 	    ;;
 	  "3")
@@ -92,18 +107,24 @@ do
 	    PROP_FILE=nmea.mux.gps.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE &
-	    echo -e ">>> Waiting for the server to start..."
-	    sleep 5 # Wait for the server to be operational
-	    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
+	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
+	    fi
 	    GO=false
 	    ;;
 	  "10")
 	    PROP_FILE=nmea.mux.properties
 	    echo -e "Launching Nav Server with $PROP_FILE"
 	    ./runNavServer.sh --mux:$PROP_FILE &
-	    echo -e ">>> Waiting for the server to start..."
-	    sleep 5 # Wait for the server to be operational
-	    openBrowser "http://localhost:9999/web/index.html"
+	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/index.html"
+	    fi
 	    GO=false
 	    ;;
 	  "S" | "s")

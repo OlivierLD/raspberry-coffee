@@ -20,25 +20,44 @@ public class BlindRouting {
 	/*
 	 * Mandatory prms:
 	 * ---------------
-	 * -fromL     Start latitude, decimal format
-	 * -fromG     Start longitude, decimal format
-	 * -toL       Arrival latitude, decimal format
-	 * -toG       Arrival longitude, decimal format
-	 * -startTime Start date, xsd:duration format, like 2012-03-13T12:00:00, UTC time
-	 * -grib      [gribFileName]
-	 * -polars    [polarFileName]
-	 * -output    [outputFileName]. Supported extensions are gpx, csv, txt.
+	 * --from-lat      Start latitude, decimal format
+	 * --from-lng      Start longitude, decimal format
+	 * --to-lat        Arrival latitude, decimal format
+	 * --to-lng        Arrival longitude, decimal format
+	 * --start-time    Start date, xsd:duration format, like 2012-03-13T12:00:00, UTC time
+	 * --grib-file     [gribFileName]
+	 * --polar-file    [polarFileName]
+	 * --output-type   [typeName]. JSON, CSV, KML, GPX, TXT
 	 *
 	 * Optional prms:
 	 * --------------
-	 * -verbose          default false (set to true, y, or yes)
-	 * -timeInterval     default 24 (in hours)
-	 * -routingForkWidth default 140 (in degrees)
-	 * -routingStep      default 10 (in degrees)
-	 * -limitTWS         default -1 (in knots. -1 means no limit)
-	 * -limitTWA         default -1 (in degrees. -1 means no limit)
-	 * -speedCoeff       default 1.0 used to multiply the speed computed with the polars.
+	 * --verbose            default false (set to true, y, or yes)
+	 * --time-interval      default 24 (in hours)
+	 * --fork-width         default 140 (in degrees)
+	 * --routing-angle-step default 10 (in degrees)
+	 * --limit-tws          default -1 (in knots. -1 means no limit)
+	 * --limit-twa          default -1 (in degrees. -1 means no limit)
+	 * --speedC-Coeff       default 1.0 used to multiply the speed computed with the polars.
+	 * --avoid-land         default false (set to true, y, or yes)
 	 */
+
+	private static final String FROM_L = "--from-lat";
+	private static final String FROM_G = "--from-lng";
+	private static final String TO_L = "--to-lat";
+	private static final String TO_G = "--to-lat";
+	private static final String START_TIME = "--start-time";
+	private static final String POLAR_FILE = "--polar-file";
+	private static final String GRIB_FILE = "--grib-file";
+	private static final String OUTPUT_TYPE = "--output-type";
+	private static final String TIME_INTERVAL = "--time-interval";
+	private static final String FORK_WIDTH = "--fork-width";
+	private static final String ROUTING_STEP = "--routing-angle-step";
+	private static final String LIMIT_TWS = "--limit-tws";
+	private static final String LIMIT_TWA = "--limit-twa";
+	private static final String SPEED_COEFF = "--speed-coeff";
+	private static final String AVOID_LAND = "--avoid-land";
+	private static final String VERBOSE = "--verbose";
+	private static final String HELP = "--help";
 
 	public static void main(String[] args) throws Exception {
 		double fromL = 0, fromG = 0, toL = 0, toG = 0;
@@ -52,76 +71,83 @@ public class BlindRouting {
 		int limitTWS = -1;
 		int limitTWA = -1;
 		double speedCoeff = 1.0;
+		boolean avoidLand = false;
 		boolean verb = false;
 
 		for (int i = 0; i < args.length; i++) {
-			if ("-fromG".equals(args[i])) {
+			if (FROM_G.equals(args[i])) {
 				fromG = Double.parseDouble(args[i + 1]);
 			}
-			if ("-fromL".equals(args[i])) {
+			if (FROM_L.equals(args[i])) {
 				fromL = Double.parseDouble(args[i + 1]);
 			}
-			if ("-toG".equals(args[i])) {
+			if (TO_G.equals(args[i])) {
 				toG = Double.parseDouble(args[i + 1]);
 			}
-			if ("-toL".equals(args[i])) {
+			if (TO_L.equals(args[i])) {
 				toL = Double.parseDouble(args[i + 1]);
 			}
-			if ("-startTime".equals(args[i])) {
+			if (START_TIME.equals(args[i])) {
 				startTime = args[i + 1];
 			}
-			if ("-grib".equals(args[i])) {
+			if (GRIB_FILE.equals(args[i])) {
 				gribName = args[i + 1];
 			}
-			if ("-polars".equals(args[i])) {
+			if (POLAR_FILE.equals(args[i])) {
 				polarFile = args[i + 1];
 			}
-			if ("-output".equals(args[i])) {
+			if (OUTPUT_TYPE.equals(args[i])) {
 				outputType = args[i + 1];
 			}
-			if ("-speedCoeff".equals(args[i])) {
+			if (SPEED_COEFF.equals(args[i])) {
 				speedCoeff = Double.parseDouble(args[i + 1]);
 			}
-			if ("-timeInterval".equals(args[i])) {
+			if (TIME_INTERVAL.equals(args[i])) {
 				timeInterval = Double.parseDouble(args[i + 1]);
 			}
-			if ("-routingForkWidth".equals(args[i])) {
+			if (FORK_WIDTH.equals(args[i])) {
 				routingForkWidth = Integer.parseInt(args[i + 1]);
 			}
-			if ("-routingStep".equals(args[i])) {
+			if (ROUTING_STEP.equals(args[i])) {
 				routingStep = Integer.parseInt(args[i + 1]);
 			}
-			if ("-limitTWS".equals(args[i])) {
+			if (LIMIT_TWS.equals(args[i])) {
 				limitTWS = Integer.parseInt(args[i + 1]);
 			}
-			if ("-limitTWA".equals(args[i])) {
+			if (LIMIT_TWA.equals(args[i])) {
 				limitTWA = Integer.parseInt(args[i + 1]);
 			}
-			if ("-verbose".equals(args[i])) {
+			if (VERBOSE.equals(args[i])) {
 				verb = (args[i + 1].trim().toUpperCase().equals("Y") ||
 						args[i + 1].trim().toUpperCase().equals("TRUE") ||
 						args[i + 1].trim().toUpperCase().equals("YES"));
 			}
-			if ("-help".equals(args[i])) {
+			if (AVOID_LAND.equals(args[i])) {
+				avoidLand = (args[i + 1].trim().toUpperCase().equals("Y") ||
+						args[i + 1].trim().toUpperCase().equals("TRUE") ||
+						args[i + 1].trim().toUpperCase().equals("YES"));
+			}
+			if (HELP.equals(args[i])) {
 				BlindRouting br = new BlindRouting();
 				System.out.println("Usage:");
-				System.out.println("java " + br.getClass().getName() + " -option value -option value ...");
+				System.out.println("java " + br.getClass().getName() + " --option value --option value ...");
 				System.out.println("Mandatory options:");
-				System.out.println("-fromL -fromG -toL -toG -startTime -grib -polars -output");
+				System.out.println(String.format("%s %s %s %s %s %s %s %s", FROM_L, FROM_G, TO_L, TO_G, START_TIME, GRIB_FILE, POLAR_FILE, OUTPUT_TYPE));
 				System.out.println("Optional:");
-				System.out.println("-verbose default false");
-				System.out.println("-timeInterval default 24");
-				System.out.println("-routingForkWidth default 140");
-				System.out.println("-routingStep default 10");
-				System.out.println("-limitTWS default -1");
-				System.out.println("-limitTWA default -1");
-				System.out.println("-speedCoeff default 1.0");
+				System.out.println(String.format("%s default false", VERBOSE));
+				System.out.println(String.format("%s default 24", TIME_INTERVAL));
+				System.out.println(String.format("%s default 140", FORK_WIDTH));
+				System.out.println(String.format("%s default 10", ROUTING_STEP));
+				System.out.println(String.format("%s default -1", LIMIT_TWS));
+				System.out.println(String.format("%s default -1", LIMIT_TWA));
+				System.out.println(String.format("%s default 1.0", SPEED_COEFF));
+				System.out.println(String.format("%s default 1.0", AVOID_LAND));
 				System.out.println("-----------------------");
 				System.out.println("Example: java " + br.getClass().getName() +
-						" -fromL 37.122 -fromG -122.5 -toL -9.75 -toG -139.10 -startTime \"2012-03-10T12:00:00\" -grib \"." +
+						FROM_L + " 37.122 " + FROM_G + " -122.5 " + TO_L + " -9.75 " + TO_G + " -139.10 " + START_TIME + " \"2012-03-10T12:00:00\" " + GRIB_FILE + " \"." +
 						File.separator + "GRIBFiles" + File.separator + "2012" + File.separator + "03" + File.separator +
-						"GRIB_2012_03_01_08_22_55_PST.grb\" -polars \"." + File.separator + "polars" + File.separator +
-						"cheoy-lee-42.polar-coeff\" -output \"my.routing.gpx\" -speedCoeff 0.75");
+						"GRIB_2012_03_01_08_22_55_PST.grb\" " + POLAR_FILE + " \"." + File.separator + "polars" + File.separator +
+						"cheoy-lee-42.polar-coeff\" " + OUTPUT_TYPE + " \"GPX\" " + SPEED_COEFF + " 0.75");
 
 				System.exit(0);
 			}
@@ -144,27 +170,29 @@ public class BlindRouting {
 				limitTWA,
 				speedCoeff,
 				25.0,
+				avoidLand,
 				verb);
 		System.out.println(content);
 		System.out.println("Done!");
 	}
 
-	private String calculate(double fromL,
-	                         double fromG,
-	                         double toL,
-	                         double toG,
-	                         String startTime,
-	                         String gribName,
-	                         String polarFile,
-	                         String outputType,
-	                         double timeInterval,
-	                         int routingForkWidth,
-	                         int routingStep,
-	                         int limitTWS,
-	                         int limitTWA,
-	                         double speedCoeff,
-	                         double proximity,
-	                         boolean verbose) throws Exception {
+	public String calculate(double fromL,
+	                        double fromG,
+	                        double toL,
+	                        double toG,
+	                        String startTime,
+	                        String gribName,
+	                        String polarFile,
+	                        String outputType,
+	                        double timeInterval,
+	                        int routingForkWidth,
+	                        int routingStep,
+	                        int limitTWS,
+	                        int limitTWA,
+	                        double speedCoeff,
+	                        double proximity,
+	                        boolean avoidLand,
+	                        boolean verbose) throws Exception {
 
 		this.verbose = verbose;
 		GeoPoint from = new GeoPoint(fromL, fromG);
@@ -175,14 +203,32 @@ public class BlindRouting {
 		try {
 			File f = new File(gribName);
 			if (!f.exists()) {
-				System.out.println("GRIB file [" + gribName + "] not found, exiting.");
-				System.exit(1);
+				throw new RuntimeException(String.format("GRIB file [%s] not found in [%s]", gribName, System.getProperty("user.dir")));
 			}
 			FileInputStream fis = new FileInputStream(f);
 			gf = new GribFile(fis);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.exit(1);
+			throw ex;
+		}
+
+		if (verbose) {
+			System.out.println("-- Starting Routing computation --");
+			System.out.println(String.format("From %f/%f to %f/%f, at %s, grib %s, with polars %s, output %s\n" +
+							"every %f hours, width %d, limitTWS %s, limitTWA %s, speedCoeff %f, prox: %f, avoid land: %s",
+					fromL, fromG,
+					toL, toG,
+					startTime,
+					gribName,
+					polarFile,
+					outputType,
+					timeInterval,
+					routingForkWidth,
+					(limitTWS == -1 ? "none" : String.valueOf(limitTWS)),
+					(limitTWA == -1 ? "none" : String.valueOf(limitTWA)),
+					speedCoeff,
+					proximity,
+					avoidLand ? "yes" : "no"
+			));
 		}
 		List<GribHelper.GribConditionData> agcd = GribHelper.dumper(gf, "");
 		GribHelper.GribConditionData gribData[] = agcd.toArray(new GribHelper.GribConditionData[agcd.size()]);
@@ -192,7 +238,7 @@ public class BlindRouting {
 		startCal.setTime(new Date(_time));
 		Date startDate = startCal.getTime();
 
-		boolean stopIfTooOld = false;
+		boolean stopIfTooOld = false; // TODO A Parameter
 
 		GeoPoint isoFrom = from;
 		GeoPoint isoTo = to;
@@ -233,9 +279,9 @@ public class BlindRouting {
 				routingStep,
 				limitTWS,
 				limitTWA,
-				stopIfTooOld,
+				stopIfTooOld, // hard-coded to false
 				speedCoeff,
-				"true".equals(System.getProperty("avoid.land", "false")),
+				avoidLand,
 				proximity,
 				verbose);
 

@@ -3,6 +3,7 @@ package gribprocessing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import gribprocessing.utils.BlindRouting;
 import gribprocessing.utils.GRIBUtils;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
@@ -67,7 +68,17 @@ public class RESTImplementation {
 					"POST",
 					GRIB_PREFIX + "/get-data",
 					this::requestGRIBData,
-					"Request a GRIB download from the web, and return its json representation."));
+					"Request a GRIB download from the web, and return its json representation."),
+			new Operation(
+					"GET",
+					GRIB_PREFIX + "/routing-request",
+					this::getRoutingRequest,
+					"For development."),
+			new Operation(
+					"POST",
+					GRIB_PREFIX + "/routing",
+					this::requestRouting,
+					"Request the best route, and return its json representation."));
 
 	protected List<Operation> getOperations() {
 		return this.operations;
@@ -188,6 +199,140 @@ public class RESTImplementation {
 			return response;
 		}
 
+		return response;
+	}
+
+	private static class RoutingRequest {
+		double fromL;
+		double fromG;
+		double toL;
+		double toG;
+		String startTime;
+		String gribName;
+		String polarFile;
+		String outputType;
+		double timeInterval;
+		int routingForkWidth;
+		int routingStep;
+		int limitTWS;
+		int limitTWA;
+		double speedCoeff;
+		double proximity;
+		boolean avoidLand;
+		boolean verbose;
+	}
+
+	private Response getRoutingRequest(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		RoutingRequest rr = new RoutingRequest();
+		rr.fromL = 37.122;
+		rr.fromG = -122.5;
+		rr.toL = -9.75;
+		rr.toG = -139.10;
+		rr.startTime = "2017-10-16T07:00:00";
+		rr.gribName = "./GRIB_2017_10_16_07_31_47_PDT.grb";
+
+		rr.polarFile = "./samples/CheoyLee42.polar-coeff";
+		rr.outputType = "JSON";
+		rr.speedCoeff = 0.75;
+		rr.proximity = 25.0;
+
+		rr.timeInterval = 24;
+		rr.routingForkWidth = 140;
+		rr.routingStep = 10;
+		rr.limitTWS = -1;
+		rr.limitTWA = -1;
+
+		rr.verbose = false;
+
+		String content = new Gson().toJson(rr);
+		RESTProcessorUtil.generateResponseHeaders(response, content.length());
+		response.setPayload(content.getBytes());
+		return response;
+	}
+
+	/**
+	 *
+	 * @param request payload like
+	 *  {
+	 *     "fromL": 37.122,
+	 *     "fromG": -122.5,
+	 *     "toL": -9.75,
+	 *     "toG": -139.1,
+	 *     "startTime": "2017-10-16T07:00:00",
+	 *     "gribName": "./GRIB_2017_10_16_07_31_47_PDT.grb",
+	 *     "polarFile": "./samples/CheoyLee42.polar-coeff",
+	 *     "outputType": "JSON",
+	 *     "timeInterval": 24,
+	 *     "routingForkWidth": 140,
+	 *     "routingStep": 10,
+	 *     "limitTWS": -1,
+	 *     "limitTWA": -1,
+	 *     "speedCoeff": 0.75,
+	 *     "proximity": 25,
+	 *     "avoidLand": false,
+	 *     "verbose": false
+	 *  }
+	 * @return
+	 */
+	private Response requestRouting(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				if (verbose) {
+					System.out.println(String.format("Tx Request: %s", payload));
+				}
+				Gson gson = new GsonBuilder().create();
+				StringReader stringReader = new StringReader(payload);
+				try {
+					RoutingRequest routingRequest = gson.fromJson(stringReader, RoutingRequest.class);
+					String content = new BlindRouting().calculate(routingRequest.fromL,
+							routingRequest.fromG,
+							routingRequest.toL,
+							routingRequest.toG,
+							routingRequest.startTime,
+							routingRequest.gribName,
+							routingRequest.polarFile,
+							"JSON",
+							routingRequest.timeInterval,
+							routingRequest.routingForkWidth,
+							routingRequest.routingStep,
+							routingRequest.limitTWS,
+							routingRequest.limitTWA,
+							routingRequest.speedCoeff,
+							routingRequest.proximity,
+							routingRequest.avoidLand,
+							routingRequest.verbose
+					);
+					RESTProcessorUtil.generateResponseHeaders(response, content.length());
+					response.setPayload(content.getBytes());
+				} catch (Exception ex1) {
+//				ex1.printStackTrace();
+					response = HTTPServer.buildErrorResponse(response,
+							Response.BAD_REQUEST,
+							new HTTPServer.ErrorPayload()
+									.errorCode("GRIB-0103")
+									.errorMessage(ex1.toString()));
+					return response;
+				}
+			} else {
+				response = HTTPServer.buildErrorResponse(response,
+						Response.BAD_REQUEST,
+						new HTTPServer.ErrorPayload()
+								.errorCode("GRIB-0102")
+								.errorMessage("Request payload not found"));
+				return response;
+			}
+		} else {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("GRIB-0101")
+							.errorMessage("Request payload not found"));
+			return response;
+		}
 		return response;
 	}
 

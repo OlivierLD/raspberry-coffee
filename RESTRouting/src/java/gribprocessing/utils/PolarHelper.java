@@ -26,7 +26,7 @@ public class PolarHelper {
 		this.polarFileName = polarCoeffFileName;
 	}
 
-	private void refreshCoeffs() {
+	private void refreshCoeffs() throws Exception {
 		if (this.polarFileName.toLowerCase().endsWith(".xml")) {
 			polarVersion = POLAR_V1;
 		} else if (this.polarFileName.toLowerCase().endsWith(".polar-coeff")) {
@@ -61,15 +61,15 @@ public class PolarHelper {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			throw ex;
 		}
 	}
 
-	public double getSpeed(double tws, double twa) {
+	public double getSpeed(double tws, double twa) throws Exception {
 		return getSpeed(tws, twa, 1D);
 	}
 
-	public double getSpeed(double tws, double twa, double speedCoeff) {
+	public double getSpeed(double tws, double twa, double speedCoeff) throws Exception {
 		if (coeff == null && coeffList == null) {
 			refreshCoeffs();
 		}
@@ -106,7 +106,7 @@ public class PolarHelper {
 		return y;
 	}
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws Exception {
 		String fName = "/Users/olediour/repos/raspberry-pi4j-samples/Project.Trunk/PolarSmoother/sample-files/CheoyLee42.polar-coeff"; // ((ParamPanel.DataFile) ParamPanel.data[ParamData.POLAR_FILE_LOC][ParamData.VALUE_INDEX]).toString();
 
 		PolarHelper ph = new PolarHelper(fName);
