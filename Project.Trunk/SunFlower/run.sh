@@ -6,6 +6,20 @@ CP=./build/libs/SunFlower-1.0-all.jar
 #
 echo Try $0 -help or $0 --help
 #
+echo -en "Date is "
+date
+echo -en "Is that OK [Y]|n ? > "
+read resp
+if [ "$resp" == "n" ] || [ "$resp" == "N" ]
+then
+  echo -en "Enter new date, format '10 NOV 2018 08:55:00' > "
+  read newDate
+  if [ "$newDate" != "" ]
+  then
+    sudo date -s "$newDate"
+   fi
+fi
+#
 # You can use several servos for heading, several servos for tilt,
 # in case you need to orient several solar panels. Use a comma-separated list of channels.
 #
