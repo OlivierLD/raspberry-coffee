@@ -182,7 +182,7 @@ then
   # nohup sudo java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID --with-adc:false --with-photocell:false &
   COMMAND="java -cp $CP $JAVA_OPTS orientation.SunFlower --heading:$HEADING_SERVO_ID --tilt:$TILT_SERVO_ID $ADC_PRM"
   echo -e "Executing $COMMAND"
-  $COMMAND
+  sudo $COMMAND
 else
   opts=$(echo $JAVA_OPTS | tr ";" "\n")
   for opt in $opts
