@@ -89,7 +89,7 @@ public class InteractiveServoTester {
 						break;
 				}
 			}
-			setAngle(servo, 0f); // init position
+//		setAngle(servo, 0f); // init position
 			String input = userInput(String.format("Enter servo's angle [-90..90], now %.02f > ", servoAngle));
 			if ("Q".equalsIgnoreCase(input.trim())) {
 				read = false;
@@ -110,7 +110,7 @@ public class InteractiveServoTester {
 		System.out.println("Bye.");
 
 		setAngle(servo, 0f);
-		stop(servo);
+		stop(servo); // Release
 		if (servoBoard != null) {
 			servoBoard.close();
 		}
@@ -134,7 +134,7 @@ public class InteractiveServoTester {
 			if (servoBoard != null) {
 				servoBoard.setPWM(servo, 0, pwm);
 			} else {
-				System.out.println(String.format("Simulating pwm=%d", pwm));
+				System.out.println(String.format("Simulating pwm = %d", pwm));
 			}
 		} catch (IllegalArgumentException iae) {
 			System.err.println(String.format("Cannot set servo %d to PWM %d", servo, pwm));
@@ -142,7 +142,7 @@ public class InteractiveServoTester {
 		}
 	}
 
-	private static void stop(int servo) { // Set to 0
+	private static void stop(int servo) { // Set to 0, and release
 		servoBoard.setPWM(servo, 0, 0);
 	}
 }
