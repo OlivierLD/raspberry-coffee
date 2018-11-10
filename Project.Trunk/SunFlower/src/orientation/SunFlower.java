@@ -1144,7 +1144,11 @@ public class SunFlower implements RESTRequestManager {
 		this.keepWorking = false;
 
 		if (foundMCP3008) {
-			MCP3008Reader.shutdownMCP3008();
+			try {
+				MCP3008Reader.shutdownMCP3008();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 
 		for (int id : headingServoID) {

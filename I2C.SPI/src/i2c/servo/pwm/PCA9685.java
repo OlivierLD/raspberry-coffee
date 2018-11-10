@@ -270,7 +270,7 @@ public class PCA9685 {
 		pulseLength /= 4_096; // 12 bits of resolution. 4096 = 2^12
 		int pulse = (int) Math.round((targetPulse * 1_000) / pulseLength); // in millisec
 		if (verbose) {
-			System.out.println(String.format("%.04f \u00b5s per bit, pulse: %d", pulseLength, pulse));
+			System.out.println(String.format("%.04f \u00b5s per bit, pulse: %d", pulseLength, pulse)); // bit? cycle?
 		}
 		return pulse;
 	}
