@@ -132,6 +132,7 @@ public class InteractiveServoTester {
 		int pwm = degreeToPWM(servoMin, servoMax, f);
 		try {
 			if (servoBoard != null) {
+				System.out.println(String.format(">> Setting pwm = %d, for angle %f (min %d, max %d)", pwm, f, servoMin, servoMax));
 				servoBoard.setPWM(servo, 0, pwm);
 			} else {
 				System.out.println(String.format("Simulating pwm = %d", pwm));
