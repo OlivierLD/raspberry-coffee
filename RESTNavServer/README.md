@@ -268,3 +268,4 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 - Implement visual widgets as `web-components` (see [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WebComponents/oliv-components),
 and [here](http://raspberrypi.lediouris.net/webcomponents/index.html))...
 
+- Link to other page, explaining all the relations between deviation, polars, current calculations, etc.

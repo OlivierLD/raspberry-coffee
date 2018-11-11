@@ -18,7 +18,7 @@
 - WIP, more to come.
 
 ### Elaborate a deviation curve
-- From a Web/JavaScript UI?
+- From a Web/JavaScript UI, maybe?
 
 ### Elaborate polars
 - See Project.Trunk/PolarSmoother, Swing UI, and doc.

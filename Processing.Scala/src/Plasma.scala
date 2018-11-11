@@ -22,7 +22,6 @@ object Plasma extends PApplet {
       PApplet.main(appletArgs)
     }
   }
-
 }
 
 class Plasma extends PApplet {

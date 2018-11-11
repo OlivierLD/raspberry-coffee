@@ -22,13 +22,17 @@ public class Pwm01 {
 		// create gpio controller
 		final GpioController gpio = GpioFactory.getInstance();
 
-		GpioPinPwmOutput pin = gpio.provisionSoftPwmOutputPin(RaspiPin.GPIO_01); // , "Standard-Servo");
+//	GpioPinPwmOutput pin = gpio.provisionSoftPwmOutputPin(RaspiPin.GPIO_01); // , "Standard-Servo");
+		GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(RaspiPin.GPIO_01); // , "Standard-Servo");
 //	pin.setMode(PinMode.PWM_OUTPUT);
 		pin.setPwmRange(100);
+		System.out.println("Setting PWM to 100");
 		pin.setPwm(100);
 		delay(1_000L);
+		System.out.println("Setting PWM to 50");
 		pin.setPwm(50);
 		delay(1_000L);
+		System.out.println("Setting PWM to 0");
 		pin.setPwm(0);
 
 		// stop all GPIO activity/threads by shutting down the GPIO controller
