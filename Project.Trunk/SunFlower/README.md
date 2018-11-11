@@ -56,7 +56,7 @@ After that, the build of this project should work:
 ```
 You can test the Almanac behavior by running
 ```bash
- $ ./run.test
+ $ ./run.test.sh
  -- Sun Jan 01 00:00:00 PST 2017, Mean:23.43708019254589, True:23.434571047530458, Aries GHA:221.1648583732534
     Polaris D:89.33854067501603, Z:177.55048918730466
     Sun Decl:-22.971192378129572
@@ -78,9 +78,9 @@ There seems to be a problem with the heading when pitch and/or roll are not equa
 -->
 
 ## Tests
-To run a first version of the program, start the script named `run`:
+To run a first version of the program, start the script named `run.sh` with the `resthttp` argument:
 ```bash
- $ ./run
+ $ ./run.sh resthttp
 ```
 This runs the class named `orientation.SunFlower`.
 
@@ -136,7 +136,7 @@ Once this is done, Sun's position is calculate every second, and the 2 servos ar
 Set `interactive` to false to avoid the program asking the user to orient the device before beginning to work. Useful in batch mode.
 
 If the `http.port` variable is here and greater than 0, an HTTP Server - with REST Services - is started, and can be reached from any REST Client. A Web page is provided, as an example,
-`web/sample.html`.
+`web/index.html`.
 
 Here is an example of a REST request, that returns the list of available operations:
 ```
@@ -214,7 +214,7 @@ _Note_: The diagram above features a Raspberry PI 3, but they all work well, inc
 ## At work
 A snapshot of the (optional) ANSI console (look into the script named `run` for details):
 ```bash
- $> ./run smooth
+ $> ./run.sh smooth
 ```
 
 <img src="./doc/ansi.console.png" alt="ANSI Console" width="339" height="285">
@@ -270,9 +270,10 @@ Add a photocell(s) (read by the MCP3008 as well), to know how sunny it is.
 
 ## Next
 
+- Try a "direct" servo approach, without a PCA9685.
 
-Orienting much bigger panels, using *stepper motors*, worm gears, etc.
-- For this last one, the challenge will be to know what the angles set by the motors are.
-    - A way to do it would be to use potentiometers and ADCs (like MCP3008).
+- Orienting much bigger panels, using *stepper motors*, worm gears, etc.
+    - For this last one, the challenge will be to know what the angles set by the motors are.
+        - A way to do it would be to use linear potentiometers and ADCs (like MCP3008).
 
 ---
