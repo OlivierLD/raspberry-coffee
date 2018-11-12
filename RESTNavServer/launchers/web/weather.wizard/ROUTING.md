@@ -6,19 +6,9 @@ This will be integrated in teh Weather Wizard GUI.
 - Can be retrieved from the server with a `GET /nav/polar-file-location`.
 
 ##### GRIB File
-- The GRIB file list (the ones stored on the server) can be obtained via a `GET /ww/composite-hierarchy`, it returns a response like taht:
+- The GRIB file list (the ones stored on the server) can be obtained via a `GET /ww/composite-hierarchy`, it returns a response like that:
 ```json
 {
-    "2017": {
-        "12": {
-            "15": [
-                {
-                    "name": "PAC-0001_131502",
-                    "compositeElements": []
-                }
-            ]
-        }
-    },
     "2018": {
         "11": {
             "12": [
@@ -101,7 +91,7 @@ This will be integrated in teh Weather Wizard GUI.
 ```
 
 ##### Routing Request
-- `POST /grib/routing` with a payload like
+- To get the best route, `POST /grib/routing` with a payload like
 ```json
 {
     "fromL": 37.122,
@@ -124,7 +114,7 @@ This will be integrated in teh Weather Wizard GUI.
 }
 ```
 
-- Returns (for now, Nov 2018) a response like
+- Returns the best route only, no isochronals (for now, Nov 2018) in a response like
 ```json
 {
     "waypoints": [
