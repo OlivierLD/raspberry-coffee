@@ -71,6 +71,7 @@ public class RoutingUtil {
 	public static class RoutingResult {
 		RoutingPoint closest;
 		List<List<RoutingPoint>> isochronals;
+		String bestRoute; // Depends on the required output type (TXT, CSV, KML, GPX, JSON).
 
 		public RoutingResult closest(RoutingPoint closest) {
 			this.closest = closest;
@@ -79,6 +80,16 @@ public class RoutingUtil {
 		public RoutingResult isochronals(List<List<RoutingPoint>> isochronals) {
 			this.isochronals = isochronals;
 			return this;
+		}
+		public RoutingResult bestRoute(String bestRoute) {
+			this.bestRoute = bestRoute;
+			return this;
+		}
+		public List<List<RoutingPoint>> isochronals() {
+			return this.isochronals;
+		}
+		public String bestRoute() {
+			return this.bestRoute;
 		}
 	}
 
