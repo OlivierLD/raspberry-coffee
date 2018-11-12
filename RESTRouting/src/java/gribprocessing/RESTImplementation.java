@@ -12,18 +12,13 @@ import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import jgrib.GribFile;
 import poc.GRIBDump;
-import poc.data.GribDate;
-import poc.data.GribType;
 
 import java.io.File;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -119,9 +114,7 @@ public class RESTImplementation {
 	/**
 	 * The payload is a list of requests, like this
 	 *
-	 * {
-	 *   "request": "GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"
-	 * }
+	 * { "request": "GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN" }
 	 *
 	 * @param request
 	 * @return
@@ -223,6 +216,11 @@ public class RESTImplementation {
 		boolean verbose;
 	}
 
+	/**
+	 * For dev.
+	 * @param request
+	 * @return
+	 */
 	private Response getRoutingRequest(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		RoutingRequest rr = new RoutingRequest();

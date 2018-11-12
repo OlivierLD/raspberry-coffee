@@ -178,3 +178,38 @@ var renderGRIBData = function(canvas, context) {
 		drawGrib(canvas, context, gribData, date, type);
 	}
 };
+
+// Routing features
+
+var routingPromise = function(payload) {
+	var url = "/grib/routing";
+	return getDeferred(url, DEFAULT_TIMEOUT, 'POST', 200, payload, false);
+};
+
+var getBestRoute = function(payload, callback) {
+	var getData = routingPromise(payload);
+	getData.done(function(value) {
+		if (callback === undefined) {
+			try {
+				// Do something smart
+				console.log(value);
+			} catch (err) {
+				errManager(err + '\nFor\n' + value);
+			}
+		} else {
+			callback(value);
+		}
+	});
+	getData.fail(function(error, errmess) {
+		var message;
+		if (errmess !== undefined) {
+			if (errmess.message !== undefined) {
+				message = errmess.message;
+			} else {
+				message = errmess;
+			}
+		}
+		errManager("Failed to get best route..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined
+				? message : ' - '));
+	});
+};
