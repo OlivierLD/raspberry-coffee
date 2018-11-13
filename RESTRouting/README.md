@@ -11,6 +11,5 @@ Run `./runGRIBserver`:
 ![Test API](./screenshot.00.png)
 
 ### TODO
-- GRIB Request generator
-- GRIB rendering
+- GRIB Request generator ?
 - Routing

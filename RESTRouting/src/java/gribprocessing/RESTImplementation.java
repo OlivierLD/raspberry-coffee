@@ -13,7 +13,9 @@ import http.RESTProcessorUtil;
 import jgrib.GribFile;
 import poc.GRIBDump;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URL;
@@ -305,6 +307,13 @@ public class RESTImplementation {
 							routingRequest.avoidLand,
 							routingRequest.verbose
 					);
+					if (true) {
+						Gson niceGson = new GsonBuilder().setPrettyPrinting().create();
+						String theFullStuff = niceGson.toJson(routing);
+						BufferedWriter br = new BufferedWriter(new FileWriter("fullrouting.json"));
+						br.write(theFullStuff);
+						br.close();
+					}
 					String content = routing.bestRoute(); //  new Gson().toJson(routing); - The full object is way too big !!
 					String contentType = "application/json";
 					switch (routingRequest.outputType) {

@@ -257,6 +257,29 @@ var getBGColor = function(value, type) {
 	return color;
 };
 
+var bestRouteToPlot = undefined;
+var plotBestRoute = function(canvas, context) {
+//console.log("Plotting the best computed route: ", bestRouteToPlot);
+	var waypoints = bestRouteToPlot.waypoints;
+	context.save();
+	context.strokeStyle = 'orange';
+	context.lineWidth = 3;
+	context.beginPath();
+	for (var i=0; i<waypoints.length; i++) {
+//	console.log("Plot", waypoints[i].position.latitude + " / " + waypoints[i].position.longitude);
+		var canvasPt = worldMap.getCanvasLocation(canvas, waypoints[i].position.latitude, waypoints[i].position.longitude);
+		console.log();
+		if (i === 0) {
+			context.lineTo(canvasPt.x, canvasPt.y);
+		} else {
+			context.lineTo(canvasPt.x, canvasPt.y);
+		}
+	}
+	context.stroke();
+	context.closePath();
+	context.restore();
+};
+
 // Invoked by the callback
 var drawGrib = function(canvas, context, gribData, date, type) {
 	var oneDateGRIB = gribData[0]; // Default
@@ -373,6 +396,10 @@ var drawGrib = function(canvas, context, gribData, date, type) {
 		}
 	}
 //console.log("Max TWS: %d kn", maxTWS);
+	// Is there a route to draw here?
+	if (bestRouteToPlot !== undefined) {
+		plotBestRoute(canvas, context);
+	}
 };
 
 // For tests

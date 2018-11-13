@@ -7,9 +7,10 @@
 - [NMEA Multiplexer](../NMEA.Multilexer/README.md)
     - Case study: [Comparison with Node-RED](../NMEA.multiplexer/casestudy.md)
 - [REST Nav Server](../RESTNavServer/README.md), gathering artifacts from several other projects (Nautical Almanac, Tide Computer, NMEA Multiplexer, ...)
+    - Quick summary of the [problems to address](./happy.navserver/HappyNavServer.md) for a happy NavServer. 😊
 - [SunFlower](../Project.Trunk/SunFlower/README.md)
 - [Plant Watering System](../Project.Trunk/PlantWateringSystem/README.md)
-- [Small Boards](../Small.Boards/README.md)
+- [Small Boards](../Small.Boards/README.md), moved [here](https://github.com/OlivierLD/small-boards).
     - With examples (on Arduino IDE).
 - Examples
     - [Weather Station](../Project.Trunk/Weather.Station/README.md)
