@@ -23,7 +23,7 @@ GO=true
 while [ "$GO" == "true" ]
 do
 	clear
-	echo -e ">> Note 📝 : pass 'N' as parameter to this script NOT to launch a browser after "
+	echo -e ">> Note 🛑 : pass 'N' as parameter to this script NOT to launch a browser after "
 	echo -e "             starting the server"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
