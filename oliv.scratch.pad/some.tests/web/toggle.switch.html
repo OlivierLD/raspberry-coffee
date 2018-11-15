@@ -8,6 +8,7 @@
 	<title>Toggle Switch</title>
 </head>
 <style type="text/css">
+
 	html {
 		box-sizing: border-box;
 		font-family: 'Arial', sans-serif;
@@ -24,7 +25,6 @@
 		justify-content: center;
 		padding-top:1em;
 	}
-
 
 	/* Switch starts here */
 	.rocker {
@@ -51,6 +51,11 @@
 
 	.rocker-small {
 		font-size: 0.75em; /* Sizes the switch */
+		margin: 1em;
+	}
+
+	.rocker-tiny {
+		font-size: 0.20em; /* Sizes the switch */
 		margin: 1em;
 	}
 
@@ -174,7 +179,7 @@
 </script>
 <body>
 <div class="mid">
-
+	First Rocker:
 	<label class="rocker">
 		<input type="checkbox" id="rocker-one" onchange="tellMe(this);" checked>
 		<span class="switch-left">On</span>
@@ -192,6 +197,12 @@
 
 	<label class="rocker rocker-small">
 		<input type="checkbox" id="rocker-three" onchange="tellMe(this);">
+		<span class="switch-left">Yes</span>
+		<span class="switch-right">No</span>
+	</label>
+
+	<label class="rocker rocker-tiny">
+		<input type="checkbox" id="rocker-four" onchange="tellMe(this);">
 		<span class="switch-left">Yes</span>
 		<span class="switch-right">No</span>
 	</label>
