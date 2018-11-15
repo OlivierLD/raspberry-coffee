@@ -10,7 +10,7 @@ You can
 Those data can then be rendered in different ways, with a Web Interface.
 They are - for now - using a nodejs server and its WebSocket module, running on the Raspberry Pi.
 
-After installing NodeJS (try [this](http://www.lmgtfy.com/?q=install+node+js+raspberry+pi)) on the Raspberry PI, in the `node` directory, install the WebSocket module:
+After installing Node.js (try [this](http://www.lmgtfy.com/?q=install+node+js+raspberry+pi)) on the Raspberry PI, in the `node` directory, install the WebSocket module:
 ```
 Prompt> cd node
 Prompt> npm install

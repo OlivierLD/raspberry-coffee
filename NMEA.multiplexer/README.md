@@ -458,7 +458,7 @@ where `machine-name` is the name of the machine where the multiplexer is running
 
 ![Admin Web UI](./docimages/AdminSnapshot.png "Admin GUI")
 
-And any REST client (NodeJS, Postman, curl, your own code, ...) does the job.
+And any REST client (Node.js, Postman, curl, your own code, ...) does the job.
 
 Example with `curl`:
 ```
