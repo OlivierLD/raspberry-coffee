@@ -55,7 +55,7 @@
 	}
 
 	.rocker-tiny {
-		font-size: 0.20em; /* Sizes the switch */
+		font-size: 0.50em; /* Sizes the switch */
 		margin: 1em;
 	}
 
@@ -174,12 +174,13 @@
 </style>
 <script type="text/javascript">
 	function tellMe(obj) {
-		console.log(obj.id, "is now", obj.checked);
+		let message = obj.id + " is now " + obj.checked;
+		console.log(message);
+		document.getElementById("message").innerText = message;
 	}
 </script>
 <body>
 <div class="mid">
-	First Rocker:
 	<label class="rocker">
 		<input type="checkbox" id="rocker-one" onchange="tellMe(this);" checked>
 		<span class="switch-left">On</span>
@@ -208,5 +209,6 @@
 	</label>
 
 </div>
+<div style="margin: auto; width: 90%; height: 100px; border: 1px solid silver; border-radius: 5px;" id="message"></div>
 </body>
 </html>
