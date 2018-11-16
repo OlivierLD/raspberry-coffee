@@ -9,20 +9,20 @@ set DOCKER_FILE=
 set IMAGE_NAME=
 set RUN_CMD=
 set EXTRA_PRM=
-set echo Bye! ✋
+set MESSAGE=Bye!
 ::
 :: Make sure docker is available
 docker --version 1> nul 2>&1
 if ERRORLEVEL 1 (
   echo Docker not available on this machine, exiting.
-  echo To install Docker, see https://store.docker.com/search?type=edition&offering=community
-  goto eos
+  echo To install Docker, see https://store.docker.com/search?type=edition^&offering=community
+  REM goto eos
 )
 ::
 :menutop
   :: Menu
   echo +-------------- D O C K E R   I M A G E   B U I L D E R ---------------+
-  echo +----------------- Build 🏗️  and run 🏃 a docker image. ----------------+
+  echo +-------------------- Build and run a docker image. -------------------+
   echo ^|  1. Nav Server, Debian                                               ^|
   echo ^| 1p. Nav Server, Debian, with proxy (as an example)                   ^|
   echo ^|  2. Web Components, Debian                                           ^|
@@ -48,8 +48,7 @@ if ERRORLEVEL 1 (
     set DOCKER_FILE=navserver.Dockerfile
     set IMAGE_NAME=oliv-nav
 		set RUN_CMD="docker run -p 8080:9999 -d %IMAGE_NAME%:latest"
-		::                       |    |
-		::                       |    tcp port used in the image
+		::                            tcp port used in the image
 		::                       tcp port as seen from outside (this machine)
 		::
     echo ---------------------------------------------------
@@ -61,8 +60,7 @@ if ERRORLEVEL 1 (
     set DOCKER_FILE=navserver.Dockerfile
     set IMAGE_NAME=oliv-nav
 		set RUN_CMD="docker run -p 8080:9999 -d %IMAGE_NAME%:latest"
-		::                         |    |
-		::                         |    tcp port used in the image
+		::                              tcp port used in the image
 		::                         tcp port as seen from outside (this machine)
 		::
     echo ---------------------------------------------------
@@ -78,8 +76,7 @@ if ERRORLEVEL 1 (
     set DOCKER_FILE=webcomponents.Dockerfile
     set IMAGE_NAME=oliv-webcomp
 		set RUN_CMD="docker run -p 9999:9999 -d %IMAGE_NAME%:latest"
-		::                         |    |
-		::                         |    tcp port used in the image
+		::                              tcp port used in the image
 		::                         tcp port as seen from outside (this machine)
 		::
     echo ---------------------------------------------------
@@ -91,8 +88,7 @@ if ERRORLEVEL 1 (
     set DOCKER_FILE=rpi.Dockerfile
     set IMAGE_NAME=oliv-rpi
 		set RUN_CMD="docker run -p 8081:8080 -d %IMAGE_NAME%:latest"
-		::                         |    |
-		::                         |    tcp port used in the image
+		::                              tcp port used in the image
 		::                         tcp port as seen from outside (this machine)
 		::
     echo ---------------------------------------------------
@@ -105,14 +101,13 @@ if ERRORLEVEL 1 (
     set IMAGE_NAME=oliv-nodepi
 		:: RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 %IMAGE_NAME%:latest /bin/bash"
 		set RUN_CMD="docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d %IMAGE_NAME%:latest"
-		::                         |    |            |             |             |
-		::                         |    |            |             |             Device IN the docker image
-		::                         |    |            |             Device name in the host (RPi) machine
-		::                         |    |            sudo access to the Serial Port
-		::                         |    tcp port IN the docker image
+		::                                                                       Device IN the docker image
+		::                                                         Device name in the host (RPi) machine
+		::                                           sudo access to the Serial Port
+		::                              tcp port IN the docker image
 		::                         tcp port as seen from outside (this machine)
 		::
-    :: echo See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
+    :: echo See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md
 		ipconfig
     echo ---------------------------------------------------
     echo Reach http://[your-ip]:9876/data/demos/gps.demo.html in your browser.
@@ -124,8 +119,7 @@ if ERRORLEVEL 1 (
     set IMAGE_NAME=oliv-nodedebian
 		:: RUN_CMD="docker run -p 9876:9876 --privileged -v /dev/tty.usbserial:/dev/ttyUSB0 -d %IMAGE_NAME%:latest"
 		set RUN_CMD="docker run -p 9876:9876 -d %IMAGE_NAME%:latest"
-		::                      |    |
-		::                      |    tcp port used in the image
+		::                           tcp port used in the image
 		::                      tcp port as seen from outside (this machine)
 		::
 		ipconfig
@@ -139,14 +133,13 @@ if ERRORLEVEL 1 (
     set IMAGE_NAME=oliv-nmea-mux
 		:: RUN_CMD="docker run -p 9876:9876 -t -i --device=/dev/ttyUSB0 %IMAGE_NAME%:latest /bin/bash"
 		set RUN_CMD="docker run -p 9999:9999 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d %IMAGE_NAME%:latest"
-		::                      |    |            |             |             |
-		::                      |    |            |             |             Device IN the docker image
-		::                      |    |            |             Device name in the host (RPi) machine
-		::                      |    |            sudo access to the Serial Port
-		::                      |    tcp port IN the docker image
+ 		::                                                                    Device IN the docker image
+		::                                                      Device name in the host (RPi) machine
+		::                                        sudo access to the Serial Port
+		::                           tcp port IN the docker image
 		::                      tcp port as seen from outside (this machine)
 		::
-    :: echo See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md"
+    :: echo See doc at https://github.com/OlivierLD/node.pi/blob/master/README.md
 		ipconfig
     echo ---------------------------------------------------
     echo Reach http://[your-ip]:9999/web/index.html in your browser.
