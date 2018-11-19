@@ -17,7 +17,7 @@ docker --version 1> nul 2>&1
 if ERRORLEVEL 1 (
   echo Docker not available on this machine, exiting.
   echo To install Docker, see https://store.docker.com/search?type=edition^&offering=community
-  REM goto eos
+  goto eos
 )
 ::
 :menutop

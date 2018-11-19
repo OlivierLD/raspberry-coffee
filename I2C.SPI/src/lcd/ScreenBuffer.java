@@ -211,7 +211,7 @@ public class ScreenBuffer {
 					screenMatrix[fromy][x] = (mode == Mode.WHITE_ON_BLACK ? 'X' : ' ');
 				}
 			}
-		} else if (Math.abs(deltaX) > Math.abs(deltaY)) { // [-45, +45]
+		} else if (Math.abs(deltaX) >= Math.abs(deltaY)) { // [-45, +45]
 			if (deltaX < 0) {
 				int X = fromx;
 				int Y = fromy;

@@ -1,18 +1,13 @@
 package navrest;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import context.ApplicationContext;
-import context.NMEADataCache;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
-import nmea.parser.GeoPos;
 
 import javax.annotation.Nonnull;
-import java.io.StringReader;
 import java.util.*;
 
 /**
@@ -32,6 +27,7 @@ public class RESTImplementation {
 
 	private final static String WW_PREFIX = "/ww";
 	private final static String NAV_PREFIX = "/nav";
+	private final static String FEATHER_PREFIX = "/feather";
 
 	public RESTImplementation(@Nonnull NavRequestManager restRequestManager) {
 
@@ -69,7 +65,18 @@ public class RESTImplementation {
 					"GET",
 					NAV_PREFIX + "/polar-file-location",
 					this::getPolarFileLocation,
-					"Returns the polar file location passed as System variable.")
+					"Returns the polar file location passed as System variable."),
+
+			new Operation(
+					"POST",
+					FEATHER_PREFIX + "/lifespan",
+					this::setFeatherLifespan,
+					"A small utility used to evaluate the lifespan of a feather running on a LiPo battery."),
+			new Operation(
+					"GET",
+					FEATHER_PREFIX + "/lifespan",
+					this::getFeatherLifespan,
+					"Get the last value set by the above.")
 	);
 
 	protected List<Operation> getOperations() {
@@ -146,6 +153,41 @@ public class RESTImplementation {
 		}
 		return response;
 	}
+
+	private Response setFeatherLifespan(Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+
+		if (request.getContent() != null && request.getContent().length > 0) {
+			String payload = new String(request.getContent());
+			if (!"null".equals(payload)) {
+				System.out.println("Feather Service received:" + payload);
+				NavServerContext.getInstance().put("FEATHER_LIFESPAN", payload);
+			}
+		}
+		String content = "OK";
+		RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
+		response.setPayload(content.getBytes());
+		return response;
+	}
+
+	private Response getFeatherLifespan(@Nonnull Request request) {
+		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
+		try {
+			String content = NavServerContext.getInstance().get("FEATHER_LIFESPAN").toString();
+			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("FEATHER-0001")
+							.errorMessage(ex.toString())
+							.errorStack(HTTPServer.dumpException(ex)));
+			return response;
+		}
+		return response;
+	}
+
 
 	/**
 	 * Can be used as a temporary placeholder when creating a new operation.
