@@ -542,9 +542,15 @@ public class MuxInitializer {
 								if (fSubClass == null) {
 									fileForwarder = new DataFileWriter(fName, append, timeBased, radix, logDir, split);
 								} else {
-									fileForwarder = (DataFileWriter)Class.forName(fSubClass.trim())
-											.getConstructor(String.class, Boolean.class, Boolean.class, String.class, String.class, String.class)
-											.newInstance(fName, append, timeBased, radix, logDir, split);
+									try {
+										fileForwarder = (DataFileWriter) Class.forName(fSubClass.trim())
+												.getConstructor(String.class, Boolean.class, Boolean.class, String.class, String.class, String.class)
+												.newInstance(fName, append, timeBased, radix, logDir, split);
+									} catch (NoSuchMethodException nsme) {
+										fileForwarder = (DataFileWriter) Class.forName(fSubClass.trim()) // Fallback on previous constructor
+												.getConstructor(String.class, Boolean.class)
+												.newInstance(fName, append);
+									}
 								}
 								if (propFile != null) {
 									Properties forwarderProps = new Properties();

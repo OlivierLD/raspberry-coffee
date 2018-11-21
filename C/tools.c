@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <strings.h>
 
+/*
+ Chain Lists and Friends
+ */
 #define NULL 0
 #define TRUE 1
 #define FALSE 0
@@ -28,7 +31,7 @@ void freeChain (Head)
   StrPt * ThisOne;
 
   ThisOne = Head;
-  while (ThisOne) { 
+  while (ThisOne) {
     NextOne = ThisOne->Next;
     free((char *)ThisOne);
     ThisOne = NextOne;
@@ -50,13 +53,39 @@ void chainRemove (Head, Pt)
   }
 }
 
-void main () {
+StrPt * dropHead (Head)
+  StrPt * Head;
+{
+	if (Head != NULL) {
+		if (Head->Next != NULL) {
+			StrPt * newHead = Head->Next;
+			free((char*)Head);
+			return newHead;
+		}
+	}
+	return NULL;
+}
+
+int listLength(Head)
+  StrPt * Head;
+{
+	int len = 0;
+	StrPt * LocPt;
+
+  walkList(Head, LocPt) {
+    len += 1;
+  }
+
+	return len;
+}
+
+int main () {
   typedef struct LOC {
     struct LOC * Next; // Match the SMALL one (StrPt)
     int a;
     char str[20];
   } LocStruct;
-  
+
   LocStruct * StA;
   LocStruct * StB;
   LocStruct * StC;
@@ -101,6 +130,16 @@ void main () {
     fprintf(stdout, "str = %s\n", MyStr->str);
   }
 
+	StA = dropHead((StrPt *)StA);
+  fprintf (stdout, "After dropHead\n");
+  walkList(StA, MyStr) {
+    fprintf(stdout, "a = %d\t", MyStr->a);
+    fprintf(stdout, "str = %s\n", MyStr->str);
+  }
+	fprintf(stdout, "List length is now %d\n", listLength(StA));
+
   freeChain (StA);
   fprintf (stdout, "Space is now free !\n");
+
+  return 0;
 }

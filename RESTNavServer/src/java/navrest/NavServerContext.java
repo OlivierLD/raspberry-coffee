@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A Singleton, used to store whatever value in the NavServer context
+ * A Singleton, used to store whatever value in the NavServer context.
+ * aka a Dump.
  */
 public class NavServerContext {
 
