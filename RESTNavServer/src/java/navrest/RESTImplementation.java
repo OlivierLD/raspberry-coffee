@@ -173,7 +173,13 @@ public class RESTImplementation {
 	private Response getFeatherLifespan(@Nonnull Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		try {
-			String content = NavServerContext.getInstance().get("FEATHER_LIFESPAN").toString();
+			String content = "";
+			try {
+				content = NavServerContext.getInstance().get("FEATHER_LIFESPAN").toString();
+			} catch (NullPointerException npe) {
+				// Missing, no worries.
+				content = "null";
+			}
 			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
 			response.setPayload(content.getBytes());
 		} catch (Exception ex) {
