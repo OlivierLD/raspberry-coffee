@@ -111,8 +111,8 @@ public class NMEAUtils {
 		int twd = 0;
 
 		double sog = 0d,
-						cog = 0d,
-						aws = -1d;
+					 cog = 0d,
+					 aws = -1d;
 		int awa = 0;
 		try {
 			sog = ((Speed) cache.get(NMEADataCache.SOG)).getValue();
@@ -154,14 +154,15 @@ public class NMEAUtils {
 
 		if (aws != -Double.MAX_VALUE) {
 			//    System.out.println("Using the GOOD method");
-			double[] tw = calculateTWwithGPS(aws,
-							awsCoeff,
-							awa,
-							awaOffset,
-							heading,
-							hdgOffset,
-							sog,
-							cog);
+			double[] tw = calculateTWwithGPS(
+					aws,
+					awsCoeff,
+					awa,
+					awaOffset,
+					heading,
+					hdgOffset,
+					sog,
+					cog);
 			twa = tw[0];
 			tws = tw[1];
 			twd = (int) tw[2];
@@ -222,20 +223,24 @@ public class NMEAUtils {
 			double h = ((aws * awsCoeff) * Math.sin(Math.toRadians(awaOnCOG)));
 			tws = Math.sqrt((d * d) + (h * h));
 			double twaOnCOG = Math.toDegrees(Math.acos(d / tws));
-			if (Double.compare(Double.NaN, twaOnCOG) == 0)
+			if (Double.compare(Double.NaN, twaOnCOG) == 0) {
 				twaOnCOG = 0d;
-			if (Math.abs(awaOnCOG) > 180 || awaOnCOG < 0)
+			}
+			if (Math.abs(awaOnCOG) > 180 || awaOnCOG < 0) {
 				twaOnCOG = 360 - twaOnCOG;
-			if (sog > 0)
+			}
+			if (sog > 0) {
 				twd = (int) (cog) + (int) twaOnCOG;
-			else
+			} else {
 				twd = (int) (hdg) + (int) twaOnCOG;
+			}
 			while (twd > 360) twd -= 360;
 			while (twd < 0) twd += 360;
 
 			twa = twaOnCOG + diffCogHdg;
-			if (twa > 180)
+			if (twa > 180) {
 				twa -= 360;
+			}
 			//    System.out.println("DiffCOG-HDG:" + diffCogHdg + ", AWA on COG:" + awaOnCOG + ", TWAonCOG:" + twaOnCOG);
 		} catch (Exception oops) {
 			oops.printStackTrace();
@@ -267,42 +272,48 @@ public class NMEAUtils {
 
 	public static double getDir(float x, float y) {
 		double dir = 0.0D;
-		if (y != 0)
+		if (y != 0) {
 			dir = Math.toDegrees(Math.atan((double) x / (double) y));
+		}
 		if (x <= 0 || y <= 0) {
-			if (x > 0 && y < 0)
+			if (x > 0 && y < 0) {
 				dir += 180D;
-			else if (x < 0 && y > 0)
+			} else if (x < 0 && y > 0) {
 				dir += 360D;
-			else if (x < 0 && y < 0)
+			} else if (x < 0 && y < 0) {
 				dir += 180D;
-			else if (x == 0) {
-				if (y > 0)
+			} else if (x == 0) {
+				if (y > 0) {
 					dir = 0.0D;
-				else
+				} else {
 					dir = 180D;
+				}
 			} else if (y == 0) {
-				if (x > 0)
+				if (x > 0) {
 					dir = 90D;
-				else
+				} else {
 					dir = 270D;
+				}
 			}
 		}
 		dir += 180D;
-		while (dir >= 360D)
+		while (dir >= 360D) {
 			dir -= 360D;
+		}
 		return dir;
 	}
 
 	public static double getLeeway(double awa, double maxLeeway) {
 		double _awa = awa;
-		if (_awa < 0)
+		if (_awa < 0) {
 			_awa += 360;
+		}
 		double leeway = 0D;
 		if (_awa < 90 || _awa > 270) {
 			double leewayAngle = maxLeeway * Math.cos(Math.toRadians(awa));
-			if (_awa < 90)
+			if (_awa < 90) {
 				leewayAngle = -leewayAngle;
+			}
 			leeway = leewayAngle;
 		}
 //  System.out.println("For AWA:" + awa + ", leeway:" + leeway);
@@ -483,14 +494,13 @@ public class NMEAUtils {
 				System.out.println(k + " " + counter.get(k).intValue());
 			if (counter.get("RMC").intValue() == 0 &&
 							counter.get("GLL").intValue() == 0 &&
-							counter.get("VTG").intValue() == 0)
+							counter.get("VTG").intValue() == 0) {
 				System.err.println("No RMC, GLL, or VTG!");
-			else if (counter.get("HDG").intValue() == 0 &&
+			} else if (counter.get("HDG").intValue() == 0 &&
 							counter.get("HDM").intValue() == 0 &&
-							counter.get("VHW").intValue() == 0)
+							counter.get("VHW").intValue() == 0) {
 				System.err.println("No HDM, HDG or VHW!");
-			else // Proceed
-			{
+			} else { // Proceed
 				System.out.println("Proceeding...");
 				// Ideal: RMC + HDG
 				if (counter.get("RMC").intValue() > 0 &&
@@ -506,23 +516,24 @@ public class NMEAUtils {
 						keepLooping = true;
 						while (keepLooping) {
 							line = br.readLine();
-							if (line == null)
+							if (line == null) {
 								keepLooping = false;
-							else {
-								if (line.startsWith("$") && line.length() > 7) // then let's try
-								{
+							} else {
+								if (line.startsWith("$") && line.length() > 7) { // then let's try
 									String key = line.substring(3, 6);
 									if ("HDG".equals(key)) {
 										try {
 											double[] val = StringParsers.parseHDG(line);
 											if (val[StringParsers.DEV_in_HDG] != -Double.MAX_VALUE ||
-															val[StringParsers.VAR_in_HDG] != -Double.MAX_VALUE)
+															val[StringParsers.VAR_in_HDG] != -Double.MAX_VALUE) {
 												decl = Math.max(val[StringParsers.DEV_in_HDG], val[StringParsers.VAR_in_HDG]);
+											}
 											hdg = val[StringParsers.HDG_in_HDG];
-											if (decl != -Double.MAX_VALUE)
+											if (decl != -Double.MAX_VALUE) {
 												hdg += decl;
-											else
+											} else {
 												hdg += ((Angle180EW) ApplicationContext.getInstance().getDataCache().get(NMEADataCache.DEFAULT_DECLINATION)).getValue();
+											}
 											// Write data here
 											if (cog != -Double.MAX_VALUE) {
 												ret.add(new double[]{hdg, cog});
@@ -532,10 +543,11 @@ public class NMEAUtils {
 									} else if ("HDM".equals(key) && counter.get("HDG").intValue() == 0) {
 										try {
 											double hdm = StringParsers.parseHDM(line);
-											if (decl != -Double.MAX_VALUE)
+											if (decl != -Double.MAX_VALUE) {
 												hdg = hdm + decl;
-											else
+											} else {
 												hdg = hdm;
+											}
 											// Write data here
 											if (cog != -Double.MAX_VALUE) {
 												ret.add(new double[]{hdg, cog});
@@ -545,8 +557,9 @@ public class NMEAUtils {
 									} else if ("RMC".equals(key)) {
 										try {
 											RMC rmc = StringParsers.parseRMC(line);
-											if (rmc.getDeclination() != -Double.MAX_VALUE)
+											if (rmc.getDeclination() != -Double.MAX_VALUE) {
 												decl = rmc.getDeclination();
+											}
 											cog = rmc.getCog();
 										} catch (Exception ex) {
 										}
@@ -557,8 +570,9 @@ public class NMEAUtils {
 						br.close();
 						if (decl == -Double.MAX_VALUE) {
 							System.out.println("No declination found.");
-						} else
+						} else {
 							System.out.println("Declination is :" + new Angle180EW(decl).toFormattedString());
+						}
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -576,18 +590,18 @@ public class NMEAUtils {
 						keepLooping = true;
 						while (keepLooping) {
 							line = br.readLine();
-							if (line == null)
+							if (line == null) {
 								keepLooping = false;
-							else {
-								if (line.startsWith("$") && line.length() > 7) // then let's try
-								{
+							} else {
+								if (line.startsWith("$") && line.length() > 7) { // then let's try
 									String key = line.substring(3, 6);
 									if ("HDG".equals(key)) {
 										try {
 											double[] val = StringParsers.parseHDG(line);
 											if (val[StringParsers.DEV_in_HDG] != -Double.MAX_VALUE ||
-															val[StringParsers.VAR_in_HDG] != -Double.MAX_VALUE)
+															val[StringParsers.VAR_in_HDG] != -Double.MAX_VALUE) {
 												decl = Math.max(val[StringParsers.DEV_in_HDG], val[StringParsers.VAR_in_HDG]);
+											}
 											hdg = val[StringParsers.HDG_in_HDG];
 										} catch (Exception ex) {
 										}
@@ -606,8 +620,9 @@ public class NMEAUtils {
 											cog = og.getCourse();
 										} catch (Exception ex) {
 										}
-										if (og == null)
+										if (og == null) {
 											System.out.println("Null for VTG [" + line + "]");
+										}
 									}
 								}
 							}
@@ -615,8 +630,9 @@ public class NMEAUtils {
 						br.close();
 						if (decl == -Double.MAX_VALUE) {
 							System.out.println("No declination found.");
-						} else
+						} else {
 							System.out.println("Declination is :" + new Angle180EW(decl).toFormattedString());
+						}
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -649,14 +665,15 @@ public class NMEAUtils {
 				double cog = ((Angle360) cache.get(NMEADataCache.COG)).getValue();
 				double twd = (((Angle360) cache.get(NMEADataCache.TWD)).getValue());
 				double twa = twd - cog;
-				if (sog > 0) // Try with GPS Data first
+				if (sog > 0) { // Try with GPS Data first
 					vmg = sog * Math.cos(Math.toRadians(twa));
-				else {
+				} else {
 					try {
 						twa = ((Angle180) cache.get(NMEADataCache.TWA)).getValue();
 						double bsp = ((Speed) cache.get(NMEADataCache.BSP)).getValue();
-						if (bsp > 0)
+						if (bsp > 0) {
 							vmg = bsp * Math.cos(Math.toRadians(twa));
+						}
 					} catch (Exception e) {
 						vmg = 0;
 					}
