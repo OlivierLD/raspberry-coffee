@@ -20,5 +20,15 @@
     - [Pitch and Roll](../Processing#pitchrollpde)
     - [SSD1306](../Processing#ssd1306-oled-display)
     - [MeArm GUI](../Processing#mearm-gui)
+
+
+### Note about HTML pages hosted on Github
+Github is well equipped to render markdown (md) documents. If you navigate to an HTML page, what you would see is the HTML code, not its rendering.
+
+To render an HTML page hosted on `github` as your browser would, just use a URL like this:
+```
+https://htmlpreview.github.io/?https://github.com/OlivierLD/OlivierLD.github.io/blob/master/first.test.html
+```
+
 ---
 
