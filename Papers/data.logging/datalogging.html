@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Efficient Data Logging</title>
@@ -262,7 +263,7 @@
 						<th style="border: 1px solid silver; border-radius: 3px;">d (from dev curve)</th>
 					</tr>
 					<tr>
-						<td style="border: 1px solid silver; border-radius: 3px;">
+						<td style="border: 1px solid orange; border-radius: 3px;">
 							<select id="01-Decl-sign" onchange="updateBoatContext('01');">
 								<option value="E" selected>E</option>
 								<option value="W">W</option>
@@ -272,7 +273,7 @@
 							<input type="number" id="01-Decl-min" min="0" max="59" step="0.1" title="minutes" placeholder="D min"
 										 value="0.0" style="width: 50px; text-align: right;" onchange="updateBoatContext('01');"/>'
 						</td>
-						<td style="border: 1px solid silver; border-radius: 3px;">
+						<td style="border: 1px solid orange; border-radius: 3px;">
 							<select id="01-dev-sign" onchange="updateBoatContext('01');">
 								<option value="E">E</option>
 								<option value="W" selected>W</option>
@@ -283,6 +284,8 @@
 										 value="0.0" style="width: 50px; text-align: right;" onchange="updateBoatContext('01');"/>'
 						</td>
 					</tr>
+				</table>
+				<table>
 					<tr>
 						<td><span title="Compass Heading">HDC:</span></td>
 						<td style="width: 500px;">
@@ -363,7 +366,8 @@
 							<output name="awa" id="awa02" style="color: cyan;">100</output>
 						</td>
 					</tr>
-
+				</table>
+				<table>
 					<tr>
 						<td>
 							<label for="02-mlwy">Max Leeway</label>
@@ -497,7 +501,7 @@
 						<td colspan="2"><hr/></td>
 					</tr>
 					<tr>
-						<td>
+						<td colspan="2">
 							<label for="03-mlwy">Max Leeway</label>
 							<input type="number" id="03-mlwy" min="0" step="0.1" placeholder="Max Leeway" value="10.0"
 										 style="width: 50px; text-align: right;" onchange="updateBoatContext('03');"/>
@@ -608,7 +612,7 @@
 						<td colspan="2"><hr/></td>
 					</tr>
 					<tr>
-						<td>
+						<td colspan="2">
 							<label for="04-mlwy">Max Leeway</label>
 							<input type="number" id="04-mlwy" min="0" step="0.1" placeholder="Max Leeway" value="10.0"
 										 style="width: 50px; text-align: right;" onchange="updateBoatContext('04');"/>

@@ -1065,8 +1065,8 @@ function (_HTMLElement) {
   }, {
     key: "getCanvasCenter",
     value: function getCanvasCenter() {
-      var cw = this.width;
-      var ch = this.height;
+      var cw = this._width;
+      var ch = this._height;
       var distFromRight = Math.min(cw, ch) / 2;
       return {
         x: cw - distFromRight,
@@ -1076,16 +1076,16 @@ function (_HTMLElement) {
   }, {
     key: "drawTrueWind",
     value: function drawTrueWind(context) {
-      var cWidth = this.width;
-      var cHeight = this.height;
+      var cWidth = this._width;
+      var cHeight = this._height;
 
-      var _twd = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.twd);
+      var _twd = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._twd);
 
       context.beginPath();
       var center = this.getCanvasCenter();
       var x = center.x;
       var y = center.y;
-      var windLength = this._zoom * this.tws * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var windLength = this._zoom * this._tws * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dX = windLength * Math.sin(_twd);
       var dY = -windLength * Math.cos(_twd); // create a new line object
 
@@ -1100,16 +1100,16 @@ function (_HTMLElement) {
       if (this._withLabels) {
         context.font = "bold 12px Arial";
         context.fillStyle = this.boatOverviewColorConfig.twArrowColor;
-        context.fillText("TWS:" + this.tws.toFixed(2) + " kts", x + dX, y + dY);
-        context.fillText("TWA:" + this.twa + "°", x + dX, y + dY + 14);
+        context.fillText("TWS:" + this._tws.toFixed(2) + " kts", x + dX, y + dY);
+        context.fillText("TWA:" + this._twa + "°", x + dX, y + dY + 14);
       }
     }
   }, {
     key: "drawAppWind",
     value: function drawAppWind(context) {
-      var cWidth = this.width;
-      var cHeight = this.height;
-      var wd = this._hdg + this.awa; // Direction the wind is blowing TO
+      var cWidth = this._width;
+      var cHeight = this._height;
+      var wd = this._hdg + this._awa; // Direction the wind is blowing TO
 
       while (wd > 360) {
         wd -= 360;
@@ -1121,7 +1121,7 @@ function (_HTMLElement) {
       var center = this.getCanvasCenter();
       var x = center.x;
       var y = center.y;
-      var windLength = this._zoom * this.aws * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var windLength = this._zoom * this._aws * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dX = windLength * Math.sin(_awd);
       var dY = -windLength * Math.cos(_awd); // create a new line object
 
@@ -1136,8 +1136,8 @@ function (_HTMLElement) {
       if (this._withLabels) {
         context.font = "bold 12px Arial";
         context.fillStyle = this.boatOverviewColorConfig.awArrowColor;
-        context.fillText("AWS:" + this.aws + " kts", x + dX, y + dY);
-        context.fillText("AWA:" + this.awa + "°", x + dX, y + dY + 14);
+        context.fillText("AWS:" + this._aws + " kts", x + dX, y + dY);
+        context.fillText("AWA:" + this._awa + "°", x + dX, y + dY + 14);
       }
     }
   }, {
@@ -1147,8 +1147,8 @@ function (_HTMLElement) {
         return;
       }
 
-      var cWidth = this.width;
-      var cHeight = this.height;
+      var cWidth = this._width;
+      var cHeight = this._height;
 
       var _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._hdg);
 
@@ -1178,12 +1178,12 @@ function (_HTMLElement) {
   }, {
     key: "drawCMG",
     value: function drawCMG(context) {
-      if (this._bsp === 0 || this.lwy === 0) {
+      if (this._bsp === 0 || this._lwy === 0) {
         return;
       }
 
-      var cWidth = this.width;
-      var cHeight = this.height;
+      var cWidth = this._width;
+      var cHeight = this._height;
 
       var _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._cmg);
 
@@ -1216,8 +1216,8 @@ function (_HTMLElement) {
         return;
       }
 
-      var cWidth = this.width;
-      var cHeight = this.height; // Warning: Represent the Norths, not the headings!!!
+      var cWidth = this._width;
+      var cHeight = this._height; // Warning: Represent the Norths, not the headings!!!
 
       var magNorth = this._Decl;
       var compassNorth = magNorth + this._dev;
@@ -1290,20 +1290,20 @@ function (_HTMLElement) {
   }, {
     key: "drawSOG",
     value: function drawSOG(context) {
-      if (this.sog === 0) {
+      if (this._sog === 0) {
         return;
       }
 
-      var cWidth = this.width;
-      var cHeight = this.height;
+      var cWidth = this._width;
+      var cHeight = this._height;
 
-      var _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.cog);
+      var _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._cog);
 
       context.beginPath();
       var center = this.getCanvasCenter();
       var x = center.x;
       var y = center.y;
-      var bspLength = this._zoom * this.sog * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var bspLength = this._zoom * this._sog * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dX = bspLength * Math.sin(_hdg);
       var dY = -bspLength * Math.cos(_hdg); // create a new line object
 
@@ -1318,16 +1318,16 @@ function (_HTMLElement) {
       if (this._withLabels) {
         context.font = "bold 12px Arial";
         context.fillStyle = this.boatOverviewColorConfig.gpsWsArrowColor;
-        context.fillText("SOG:" + this.sog + " kts", x + dX, y + dY);
-        context.fillText("COG:" + this.cog + "°", x + dX, y + dY + 14);
+        context.fillText("SOG:" + this._sog + " kts", x + dX, y + dY);
+        context.fillText("COG:" + this._cog + "°", x + dX, y + dY + 14);
         context.lineWidth = 1;
       }
     }
   }, {
     key: "drawVMG",
     value: function drawVMG(context) {
-      var cWidth = this.width;
-      var cHeight = this.height;
+      var cWidth = this._width;
+      var cHeight = this._height;
       var _hdg = 0;
       context.beginPath();
       var center = this.getCanvasCenter();
@@ -1335,9 +1335,9 @@ function (_HTMLElement) {
       var y = center.y;
 
       if (this.vmgOnWind) {
-        _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.twd);
+        _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._twd);
       } else {
-        _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.b2wp); // Display WP direction
+        _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._b2wp); // Display WP direction
 
         context.strokeStyle = this.boatOverviewColorConfig.vmgArrowColor;
         context.fillStyle = this.boatOverviewColorConfig.vmgArrowColor;
@@ -1353,7 +1353,7 @@ function (_HTMLElement) {
         context.fillText(this._wpName, x + _dX, y + _dY);
       }
 
-      var bspLength = this._zoom * this.vmg * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var bspLength = this._zoom * this._vmg * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dX = bspLength * Math.sin(_hdg);
       var dY = -bspLength * Math.cos(_hdg); // create a new line object
 
@@ -1369,7 +1369,7 @@ function (_HTMLElement) {
         context.save();
         context.font = "bold 12px Arial";
         context.fillStyle = this.boatOverviewColorConfig.vmgArrowColor;
-        context.fillText("VMG:" + this.vmg.toFixed(2) + " kts", x + dX, y + dY);
+        context.fillText("VMG:" + this._vmg.toFixed(2) + " kts", x + dX, y + dY);
         context.restore();
       }
 
@@ -1377,9 +1377,9 @@ function (_HTMLElement) {
         context.setLineDash([5]);
         context.moveTo(x + dX, y + dY);
 
-        var _cog = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.cog);
+        var _cog = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._cog);
 
-        var sogLength = this._zoom * this.sog * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+        var sogLength = this._zoom * this._sog * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
         dX = sogLength * Math.sin(_cog);
         dY = -sogLength * Math.cos(_cog);
         context.lineTo(x + dX, y + dY);
@@ -1392,12 +1392,12 @@ function (_HTMLElement) {
   }, {
     key: "drawCurrent",
     value: function drawCurrent(context) {
-      if (this.csp === 0) {
+      if (this._csp === 0) {
         return;
       }
 
-      var cWidth = this.width;
-      var cHeight = this.height;
+      var cWidth = this._width;
+      var cHeight = this._height;
       var center = this.getCanvasCenter();
       var x = center.x;
       var y = center.y;
@@ -1408,9 +1408,9 @@ function (_HTMLElement) {
       var dXcmg = bspLength * Math.sin(_cmg);
       var dYcmg = -bspLength * Math.cos(_cmg);
 
-      var _cog = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.cog);
+      var _cog = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._cog);
 
-      var sogLength = this._zoom * this.sog * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var sogLength = this._zoom * this._sog * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dXcog = sogLength * Math.sin(_cog);
       var dYcog = -sogLength * Math.cos(_cog);
       context.beginPath(); // create a new line object
@@ -1426,25 +1426,25 @@ function (_HTMLElement) {
       if (this._withLabels) {
         context.font = "bold 12px Arial";
         context.fillStyle = this.boatOverviewColorConfig.currentArrowColor;
-        context.fillText("CSP:" + this.csp.toFixed(2) + " kts", x + dXcog, y + dYcog + 28); // + 14 not to overlap the SOG/COG
+        context.fillText("CSP:" + this._csp.toFixed(2) + " kts", x + dXcog, y + dYcog + 28); // + 14 not to overlap the SOG/COG
 
-        context.fillText("CDR:" + this.cdr.toFixed(0) + "°", x + dXcog, y + dYcog + 42);
+        context.fillText("CDR:" + this._cdr.toFixed(0) + "°", x + dXcog, y + dYcog + 42);
       }
     }
   }, {
     key: "drawVW",
     value: function drawVW(context) {
       // Velocity Wind
-      if (this.sog === 0) {
+      if (this._sog === 0) {
         return;
       }
 
-      var cWidth = this.width;
-      var cHeight = this.height;
+      var cWidth = this._width;
+      var cHeight = this._height;
       var center = this.getCanvasCenter();
       var x = center.x;
       var y = center.y;
-      var wd = this._hdg + this.awa; // Direction the wind is blowing TO
+      var wd = this._hdg + this._awa; // Direction the wind is blowing TO
 
       while (wd > 360) {
         wd -= 360;
@@ -1453,13 +1453,13 @@ function (_HTMLElement) {
       var _awd = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](wd);
 
       context.beginPath();
-      var awLength = this._zoom * this.aws * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var awLength = this._zoom * this._aws * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dXaw = awLength * Math.sin(_awd);
       var dYaw = -awLength * Math.cos(_awd);
 
-      var _twd = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.twd);
+      var _twd = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._twd);
 
-      var twLength = this._zoom * this.tws * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var twLength = this._zoom * this._tws * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dXtw = twLength * Math.sin(_twd);
       var dYtw = -twLength * Math.cos(_twd);
       context.beginPath(); // create a new line object
@@ -1480,7 +1480,7 @@ function (_HTMLElement) {
 
       var boatLength = this.BOAT_LENGTH * this._zoom;
 
-      if (this.boatShape === 'MONO') {
+      if (this._boatShape === 'MONO') {
         // Width
         x.push(this.WL_RATIO_COEFF * 0); // Bow
         //     Starboard
@@ -1509,7 +1509,7 @@ function (_HTMLElement) {
         y.push(1 * boatLength / 7);
         y.push(-1 * boatLength / 7);
         y.push(-3 * boatLength / 7);
-      } else if (this.boatShape === 'CATA') {
+      } else if (this._boatShape === 'CATA') {
         x.push(this.WL_RATIO_COEFF * 0); // Arm, front, center
         // Starboard
 
@@ -1562,7 +1562,7 @@ function (_HTMLElement) {
         y.push(-1 * boatLength / 7);
         y.push(-4 * boatLength / 7);
         y.push(-1 * boatLength / 7);
-      } else if (this.boatShape === 'TRI') {
+      } else if (this._boatShape === 'TRI') {
         // Width
         x.push(this.WL_RATIO_COEFF * 0); // Bow, center hull
         // Starboard
@@ -1637,7 +1637,7 @@ function (_HTMLElement) {
         y.push(-1 * boatLength / 7);
         y.push(-1 * boatLength / 7);
         y.push(-3 * boatLength / 7);
-      } else if (this.boatShape === 'PLANE') {
+      } else if (this._boatShape === 'PLANE') {
         // Width
         x.push(this.WL_RATIO_COEFF * 0); // Nose
         // Starboard
@@ -1754,7 +1754,7 @@ function (_HTMLElement) {
 
       var context = this.canvas.getContext('2d');
 
-      if (this.width === 0 || this.height === 0) {
+      if (this._width === 0 || this._height === 0) {
         // Not visible
         return;
       } // Set the canvas size from its container.
@@ -1763,28 +1763,28 @@ function (_HTMLElement) {
       this.canvas.width = this._width;
       this.canvas.height = this._height; // Background
 
-      var grd = context.createLinearGradient(0, 5, 0, this.height);
+      var grd = context.createLinearGradient(0, 5, 0, this._height);
       grd.addColorStop(0, this.boatOverviewColorConfig.displayBackgroundGradient.from); // 0  Beginning
 
       grd.addColorStop(1, this.boatOverviewColorConfig.displayBackgroundGradient.to); // 1  End
 
       context.fillStyle = grd;
-      context.fillRect(0, 0, this.width, this.height); // The actual Graph:
+      context.fillRect(0, 0, this._width, this._height); // The actual Graph:
 
       var maxSpeed = 5;
 
       if (this._withGPS) {
-        maxSpeed = Math.max(maxSpeed, this.sog);
+        maxSpeed = Math.max(maxSpeed, this._sog);
       }
 
       maxSpeed = Math.max(maxSpeed, this._bsp);
 
       if (this._withGPS && this._withWind && this._withTrueWind) {
-        maxSpeed = Math.max(maxSpeed, this.tws);
+        maxSpeed = Math.max(maxSpeed, this._tws);
       }
 
       if (this._withWind) {
-        maxSpeed = Math.max(maxSpeed, this.aws);
+        maxSpeed = Math.max(maxSpeed, this._aws);
       }
 
       this.speedScale = 5 * Math.ceil(maxSpeed / 5);
@@ -1861,20 +1861,20 @@ function (_HTMLElement) {
       if (this._withWind) {
         txtY += space;
         context.fillText("AWS", col1, txtY);
-        context.fillText(this.aws + " kts", col2, txtY);
+        context.fillText(this._aws + " kts", col2, txtY);
         txtY += space;
         context.fillText("AWA", col1, txtY);
-        context.fillText(this.awa + "°", col2, txtY);
+        context.fillText(this._awa + "°", col2, txtY);
       }
 
       if (this._withGPS) {
         context.fillStyle = this.boatOverviewColorConfig.gpsWsArrowColor;
         txtY += space;
         context.fillText("COG", col1, txtY);
-        context.fillText(this.cog.toFixed(0) + "°", col2, txtY);
+        context.fillText(this._cog.toFixed(0) + "°", col2, txtY);
         txtY += space;
         context.fillText("SOG", col1, txtY);
-        context.fillText(this.sog.toFixed(2) + " kts", col2, txtY);
+        context.fillText(this._sog.toFixed(2) + " kts", col2, txtY);
       }
 
       context.fillStyle = this.boatOverviewColorConfig.calculatedDataDisplayColor;
@@ -1882,27 +1882,27 @@ function (_HTMLElement) {
       if (this._withWind && this._withTrueWind && this._withGPS) {
         txtY += space;
         context.fillText("TWS", col1, txtY);
-        context.fillText(this.tws.toFixed(2) + " kts", col2, txtY);
+        context.fillText(this._tws.toFixed(2) + " kts", col2, txtY);
         txtY += space;
         context.fillText("TWA", col1, txtY);
-        context.fillText(this.twa + "°", col2, txtY);
+        context.fillText(this._twa + "°", col2, txtY);
         txtY += space;
         context.fillText("TWD", col1, txtY);
-        context.fillText(this.twd + "°", col2, txtY);
+        context.fillText(this._twd + "°", col2, txtY);
       }
 
       if (this._withCurrent && this._withGPS) {
         txtY += space;
         context.fillText("CDR", col1, txtY);
-        context.fillText(this.cdr.toFixed(0) + "°", col2, txtY);
+        context.fillText(this._cdr.toFixed(0) + "°", col2, txtY);
         txtY += space;
         context.fillText("CSP", col1, txtY);
-        context.fillText(this.csp.toFixed(2) + " kts", col2, txtY);
+        context.fillText(this._csp.toFixed(2) + " kts", col2, txtY);
       }
 
       txtY += space;
       context.fillText("leeway", col1, txtY);
-      context.fillText(this.lwy.toFixed(2) + "°", col2, txtY);
+      context.fillText(this._lwy.toFixed(2) + "°", col2, txtY);
       txtY += space;
       context.fillText("CMG", col1, txtY);
       context.fillText(this._cmg.toFixed(0) + "°", col2, txtY);
@@ -1910,7 +1910,7 @@ function (_HTMLElement) {
       if (this._withVMG && this._withGPS) {
         var mess = ", ";
 
-        if (this.vmgOnWind) {
+        if (this._vmgOnWind) {
           mess += "on wind";
         } else {
           mess += "on WP [" + this._wpName + "]";
@@ -1919,7 +1919,7 @@ function (_HTMLElement) {
         context.fillStyle = this.boatOverviewColorConfig.vmgDataDisplayColor;
         txtY += space;
         context.fillText("VMG", col1, txtY);
-        context.fillText(this.vmg.toFixed(2) + " kts" + mess, col2, txtY);
+        context.fillText(this._vmg.toFixed(2) + " kts" + mess, col2, txtY);
       }
 
       if (this._withW) {
@@ -1937,13 +1937,13 @@ function (_HTMLElement) {
         context.fillStyle = this.boatOverviewColorConfig.dDWDataDisplayColor;
         txtY += space;
         context.fillText("D", col1, txtY);
-        context.fillText(this.Decl.toFixed(1) + "°", col2, txtY);
+        context.fillText(this._Decl.toFixed(1) + "°", col2, txtY);
         txtY += space;
         context.fillText("d", col1, txtY);
-        context.fillText(this.dev.toFixed(1) + "°", col2, txtY);
+        context.fillText(this._dev.toFixed(1) + "°", col2, txtY);
         txtY += space;
         context.fillText("W", col1, txtY);
-        context.fillText((this.Decl + this.dev).toFixed(1) + "°", col2, txtY);
+        context.fillText((this._Decl + this._dev).toFixed(1) + "°", col2, txtY);
         txtY += space;
         context.fillText("HDM", col1, txtY);
         context.fillText(hdm.toFixed(1) + "°", col2, txtY);
