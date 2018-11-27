@@ -1731,7 +1731,6 @@ function (_HTMLElement) {
       }
 
       var context = this.canvas.getContext('2d');
-      var scale = 1.0;
 
       if (this.width === 0 || this.height === 0) {
         // Not visible
@@ -1739,8 +1738,8 @@ function (_HTMLElement) {
       } // Set the canvas size from its container.
 
 
-      this.canvas.width = this.width;
-      this.canvas.height = this.height; // Background
+      this.canvas.width = this._width;
+      this.canvas.height = this._height; // Background
 
       var grd = context.createLinearGradient(0, 5, 0, this.height);
       grd.addColorStop(0, this.boatOverviewColorConfig.displayBackgroundGradient.from); // 0  Beginning
@@ -1751,13 +1750,24 @@ function (_HTMLElement) {
       context.fillRect(0, 0, this.width, this.height); // The actual Graph:
 
       var maxSpeed = 5;
-      maxSpeed = Math.max(maxSpeed, this.sog);
+
+      if (this._withGPS) {
+        maxSpeed = Math.max(maxSpeed, this.sog);
+      }
+
       maxSpeed = Math.max(maxSpeed, this.bsp);
-      maxSpeed = Math.max(maxSpeed, this.tws);
-      maxSpeed = Math.max(maxSpeed, this.aws);
+
+      if (this._withGPS && this._withWind && this._withTrueWind) {
+        maxSpeed = Math.max(maxSpeed, this.tws);
+      }
+
+      if (this._withWind) {
+        maxSpeed = Math.max(maxSpeed, this.aws);
+      }
+
       this.speedScale = 5 * Math.ceil(maxSpeed / 5);
-      var cWidth = this.width;
-      var cHeight = this.height; // Circles
+      var cWidth = this._width;
+      var cHeight = this._height; // Circles
 
       var center = this.getCanvasCenter();
       var x = center.x;
@@ -1825,9 +1835,9 @@ function (_HTMLElement) {
       txtY += space;
       context.fillText("HDG", col1, txtY);
       context.fillText(this.hdg.toFixed(0) + "° True", col2, txtY);
-      txtY += space;
 
       if (this._withWind) {
+        txtY += space;
         context.fillText("AWS", col1, txtY);
         context.fillText(this.aws + " kts", col2, txtY);
         txtY += space;
@@ -1835,10 +1845,20 @@ function (_HTMLElement) {
         context.fillText(this.awa + "°", col2, txtY);
       }
 
+      if (this._withGPS) {
+        context.fillStyle = this.boatOverviewColorConfig.gpsWsArrowColor;
+        txtY += space;
+        context.fillText("COG", col1, txtY);
+        context.fillText(this.cog.toFixed(0) + "°", col2, txtY);
+        txtY += space;
+        context.fillText("SOG", col1, txtY);
+        context.fillText(this.sog.toFixed(2) + " kts", col2, txtY);
+      }
+
       context.fillStyle = this.boatOverviewColorConfig.calculatedDataDisplayColor;
-      txtY += space;
 
       if (this._withWind && this._withTrueWind && this._withGPS) {
+        txtY += space;
         context.fillText("TWS", col1, txtY);
         context.fillText(this.tws.toFixed(2) + " kts", col2, txtY);
         txtY += space;
@@ -1847,10 +1867,10 @@ function (_HTMLElement) {
         txtY += space;
         context.fillText("TWD", col1, txtY);
         context.fillText(this.twd + "°", col2, txtY);
-        txtY += space;
       }
 
       if (this._withCurrent && this._withGPS) {
+        txtY += space;
         context.fillText("CDR", col1, txtY);
         context.fillText(this.cdr.toFixed(0) + "°", col2, txtY);
         txtY += space;
