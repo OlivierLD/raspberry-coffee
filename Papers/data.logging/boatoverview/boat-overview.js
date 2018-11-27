@@ -1109,7 +1109,7 @@ function (_HTMLElement) {
     value: function drawAppWind(context) {
       var cWidth = this.width;
       var cHeight = this.height;
-      var wd = this.hdg + this.awa; // Direction the wind is blowing TO
+      var wd = this._hdg + this.awa; // Direction the wind is blowing TO
 
       while (wd > 360) {
         wd -= 360;
@@ -1143,20 +1143,20 @@ function (_HTMLElement) {
   }, {
     key: "drawBSP",
     value: function drawBSP(context) {
-      if (this.bsp === 0) {
+      if (this._bsp === 0) {
         return;
       }
 
       var cWidth = this.width;
       var cHeight = this.height;
 
-      var _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.hdg);
+      var _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._hdg);
 
       context.beginPath();
       var center = this.getCanvasCenter();
       var x = center.x;
       var y = center.y;
-      var bspLength = this._zoom * this.bsp * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var bspLength = this._zoom * this._bsp * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dX = bspLength * Math.sin(_hdg);
       var dY = -bspLength * Math.cos(_hdg); // create a new line object
 
@@ -1171,27 +1171,27 @@ function (_HTMLElement) {
       if (this._withLabels) {
         context.font = "bold 12px Arial";
         context.fillStyle = this.boatOverviewColorConfig.bspArrowColor;
-        context.fillText("BSP:" + this.bsp.toFixed(2) + " kts", x + dX, y + dY);
-        context.fillText("HDG:" + this.hdg.toFixed(0) + "°", x + dX, y + dY + 14);
+        context.fillText("BSP:" + this._bsp.toFixed(2) + " kts", x + dX, y + dY);
+        context.fillText("HDG:" + this._hdg.toFixed(0) + "°", x + dX, y + dY + 14);
       }
     }
   }, {
     key: "drawCMG",
     value: function drawCMG(context) {
-      if (this.bsp === 0 || this.lwy === 0) {
+      if (this._bsp === 0 || this.lwy === 0) {
         return;
       }
 
       var cWidth = this.width;
       var cHeight = this.height;
 
-      var _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.cmg);
+      var _hdg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._cmg);
 
       context.beginPath();
       var center = this.getCanvasCenter();
       var x = center.x;
       var y = center.y;
-      var bspLength = this._zoom * this.bsp * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var bspLength = this._zoom * this._bsp * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dX = bspLength * Math.sin(_hdg);
       var dY = -bspLength * Math.cos(_hdg); // create a new line object
 
@@ -1206,35 +1206,57 @@ function (_HTMLElement) {
       if (this._withLabels) {
         context.font = "bold 12px Arial";
         context.fillStyle = this.boatOverviewColorConfig.calculatedDataDisplayColor;
-        context.fillText("CMG:" + this.cmg.toFixed(0) + "°", x + dX, y + dY);
+        context.fillText("CMG:" + this._cmg.toFixed(0) + "°", x + dX, y + dY);
       }
     }
   }, {
-    key: "drawW",
-    value: function drawW(context) {
-      if (this.bsp === 0 || this.Decl === 0 && this.dev === 0) {
+    key: "drawNorths",
+    value: function drawNorths(context) {
+      if (this._bsp === 0 || this._Decl === 0 && this._dev === 0) {
         return;
       }
 
       var cWidth = this.width;
-      var cHeight = this.height;
-      var hdm = this.hdg + this.Decl;
-      var hdc = hdm + this.dev;
+      var cHeight = this.height; // Warning: Represent the Norths, not the headings!!!
 
-      var _hdm = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](hdm);
+      var magNorth = this._Decl;
+      var compassNorth = magNorth + this._dev;
 
-      context.beginPath();
+      while (magNorth < 0) {
+        magNorth += 360;
+      }
+
+      while (compassNorth < 0) {
+        compassNorth += 360;
+      }
+
+      var _magNorth = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](magNorth);
+
       var center = this.getCanvasCenter();
       var x = center.x;
       var y = center.y;
-      var bspLength = this._zoom * this.bsp * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
-      var dX = bspLength * Math.sin(_hdm);
-      var dY = -bspLength * Math.cos(_hdm); // create a new line object
+      var bspLength = this._zoom * this._bsp * (Math.min(cHeight, cWidth) / 2 / this.speedScale); // True North first
 
-      var line = new Line(x, y, x + dX, y + dY); // draw the line
-
+      var line = new Line(x, y, x, y - bspLength * 1.1);
+      context.beginPath();
       context.strokeStyle = this.boatOverviewColorConfig.dDWArrowColor;
       context.fillStyle = this.boatOverviewColorConfig.dDWArrowColor;
+      context.lineWidth = 1;
+      line.drawWithArrowhead(context);
+      context.closePath();
+
+      if (this._withLabels) {
+        context.font = "12px Arial";
+        context.fillStyle = this.boatOverviewColorConfig.dDWDataDisplayColor;
+        context.fillText("N", x, y - bspLength * 1.1);
+      }
+
+      context.beginPath();
+      var dX = bspLength * Math.sin(_magNorth);
+      var dY = -bspLength * Math.cos(_magNorth); // create a new line object
+
+      line = new Line(x, y, x + dX, y + dY); // draw the line
+
       context.lineWidth = 5;
       line.drawWithArrowhead(context);
       context.closePath();
@@ -1242,14 +1264,14 @@ function (_HTMLElement) {
       if (this._withLabels) {
         context.font = "bold 12px Arial";
         context.fillStyle = this.boatOverviewColorConfig.dDWDataDisplayColor;
-        context.fillText("HDM:" + hdm.toFixed(0) + "°", x + dX, y + dY);
+        context.fillText("Mag N:" + magNorth.toFixed(0) + "°", x + dX, y + dY);
       }
 
-      var _hdc = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](hdc);
+      var _compassNorth = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](compassNorth);
 
       context.beginPath();
-      dX = bspLength * Math.sin(_hdc);
-      dY = -bspLength * Math.cos(_hdc); // create a new line object
+      dX = bspLength * 0.8 * Math.sin(_compassNorth);
+      dY = -bspLength * 0.8 * Math.cos(_compassNorth); // create a new line object
 
       line = new Line(x, y, x + dX, y + dY); // draw the line
 
@@ -1262,7 +1284,7 @@ function (_HTMLElement) {
       if (this._withLabels) {
         context.font = "bold 12px Arial";
         context.fillStyle = this.boatOverviewColorConfig.dDWDataDisplayColor;
-        context.fillText("HDC:" + hdc.toFixed(0) + "°", x + dX, y + dY);
+        context.fillText("Compass N:" + compassNorth.toFixed(0) + "°", x + dX, y + dY);
       }
     }
   }, {
@@ -1380,9 +1402,9 @@ function (_HTMLElement) {
       var x = center.x;
       var y = center.y;
 
-      var _cmg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this.cmg);
+      var _cmg = _utilities_Utilities_js__WEBPACK_IMPORTED_MODULE_0__["toRadians"](this._cmg);
 
-      var bspLength = this._zoom * this.bsp * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
+      var bspLength = this._zoom * this._bsp * (Math.min(cHeight, cWidth) / 2 / this.speedScale);
       var dXcmg = bspLength * Math.sin(_cmg);
       var dYcmg = -bspLength * Math.cos(_cmg);
 
@@ -1422,7 +1444,7 @@ function (_HTMLElement) {
       var center = this.getCanvasCenter();
       var x = center.x;
       var y = center.y;
-      var wd = this.hdg + this.awa; // Direction the wind is blowing TO
+      var wd = this._hdg + this.awa; // Direction the wind is blowing TO
 
       while (wd > 360) {
         wd -= 360;
@@ -1755,7 +1777,7 @@ function (_HTMLElement) {
         maxSpeed = Math.max(maxSpeed, this.sog);
       }
 
-      maxSpeed = Math.max(maxSpeed, this.bsp);
+      maxSpeed = Math.max(maxSpeed, this._bsp);
 
       if (this._withGPS && this._withWind && this._withTrueWind) {
         maxSpeed = Math.max(maxSpeed, this.tws);
@@ -1789,7 +1811,7 @@ function (_HTMLElement) {
         context.stroke();
       }
 
-      this.drawBoat(context, this.hdg);
+      this.drawBoat(context, this._hdg);
 
       if (this._withWind && this._withTrueWind) {
         if (this._withGPS) {
@@ -1805,7 +1827,7 @@ function (_HTMLElement) {
       this.drawBSP(context);
 
       if (this._withW) {
-        this.drawW(context);
+        this.drawNorths(context);
       }
 
       this.drawCMG(context);
@@ -1831,10 +1853,10 @@ function (_HTMLElement) {
       var col1 = 10,
           col2 = 90;
       context.fillText("BSP", col1, txtY);
-      context.fillText(this.bsp + " kts", col2, txtY);
+      context.fillText(this._bsp + " kts", col2, txtY);
       txtY += space;
       context.fillText("HDG", col1, txtY);
-      context.fillText(this.hdg.toFixed(0) + "° True", col2, txtY);
+      context.fillText(this._hdg.toFixed(0) + "° True", col2, txtY);
 
       if (this._withWind) {
         txtY += space;
@@ -1883,7 +1905,7 @@ function (_HTMLElement) {
       context.fillText(this.lwy.toFixed(2) + "°", col2, txtY);
       txtY += space;
       context.fillText("CMG", col1, txtY);
-      context.fillText(this.cmg.toFixed(0) + "°", col2, txtY);
+      context.fillText(this._cmg.toFixed(0) + "°", col2, txtY);
 
       if (this._withVMG && this._withGPS) {
         var mess = ", ";
@@ -1901,8 +1923,17 @@ function (_HTMLElement) {
       }
 
       if (this._withW) {
-        var hdm = this.hdg + this.Decl;
-        var hdc = hdm + this.dev;
+        var hdm = this._hdg - this._Decl;
+        var hdc = hdm - this._dev;
+
+        while (hdm < 0) {
+          hdm += 360;
+        }
+
+        while (hdc < 0) {
+          hdc += 360;
+        }
+
         context.fillStyle = this.boatOverviewColorConfig.dDWDataDisplayColor;
         txtY += space;
         context.fillText("D", col1, txtY);

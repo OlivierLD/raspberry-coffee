@@ -15,8 +15,6 @@
  *  - Declination (possibly from RMC), deviation, from the dev curve
  */
 
-// TODO VMGs
-
 if (Math.toRadians === undefined) {
 	Math.toRadians = function(deg) {
 		return deg * (Math.PI / 180);
@@ -155,7 +153,7 @@ let NavigationHelper = {
 	},
 
 	hdgFromHdc: function (hdc, D, d) {
-		let hdg = (hdc - this.variationCalculator(D, d)) % 360;
+		let hdg = (hdc + this.variationCalculator(D, d)) % 360;
 		while (hdg < 0) {
 			hdg += 360;
 		}

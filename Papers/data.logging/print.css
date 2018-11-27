@@ -30,8 +30,8 @@ a:visited { color : #000000}
 	--nmea-display-color: navy;
 	--calculated-color: blue;
 	--vmg-display-color: green;
-	--variation-display-color: lightpink;
-	--variation-arrow-color: lightpink;
+	--variation-display-color: black;
+	--variation-arrow-color: black;
 }
 
 .boat-overview-02 {
@@ -53,3 +53,4 @@ a:visited { color : #000000}
 	--variation-display-color: lightpink;
 	--variation-arrow-color: lightpink;
 }
+
