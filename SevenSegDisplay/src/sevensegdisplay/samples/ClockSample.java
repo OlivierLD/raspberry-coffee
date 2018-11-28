@@ -13,16 +13,14 @@ public class ClockSample {
 		final SevenSegment segment = new SevenSegment(0x70, true);
 
 		System.out.println("Press CTRL+C to exit");
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				try {
-					segment.clear();
-					System.out.println("\nBye");
-				} catch (IOException ioe) {
-					ioe.printStackTrace();
-				}
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			try {
+				segment.clear();
+				System.out.println("\nBye");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
 			}
-		});
+		}));
 
 		// Continually update the time on a 4 char, 7-segment display
 		while (true) {
