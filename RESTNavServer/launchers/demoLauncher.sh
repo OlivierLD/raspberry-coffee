@@ -2,8 +2,8 @@
 # Describes the different scenarios
 # Uses runNavServer.sh
 #
-# If first param is 'N', do not launch browsers after starting the server
-LAUNCH_BROWSER=Y
+# If first param is 'Y', launch a browser after starting the server
+LAUNCH_BROWSER=N
 if [ $# -gt 0 ]
 then
   LAUNCH_BROWSER=$1
@@ -23,7 +23,7 @@ GO=true
 while [ "$GO" == "true" ]
 do
 	clear
-	echo -e ">> Note 🛑 : pass 'N' as parameter to this script NOT to launch a browser after "
+	echo -e ">> Note 🛑 : pass 'Y' as parameter to this script to launch a browser after "
 	echo -e "             starting the server"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
