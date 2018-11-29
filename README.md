@@ -90,6 +90,7 @@ $ which wget
     - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
 
 - You may also remove unwanted softwares, just in case you don't need them:
+    - `$ sudo apt-get purge wolfram-engine`
     - `$ sudo apt-get purge minecraft-pi`
     - `$ sudo apt-get purge sonic-pi`
     - `$ sudo apt-get purge libreoffice*`
