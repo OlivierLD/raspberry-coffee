@@ -106,7 +106,7 @@ For that, you need 2 WiFi adapters (yes, you could also use an Ethernet connecti
 Recent Raspberry Pis are WiFi-enabled, you just need a WiFi dongle, that would fit on a USB port.
 On older Raspberry Pis (not WiFi-enabled), you need 2 USB dongles.
 
-As we said above, to enable `hostapd` to have you Raspberry PI acting as a WiFi hotspot, you can follow
+As we said above, to enable `hostapd` to have your Raspberry PI acting as a WiFi hotspot, you can follow
 <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
 
 > Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver:
@@ -118,7 +118,7 @@ As we said above, to enable `hostapd` to have you Raspberry PI acting as a WiFi 
 <!-- TODO
   Can the the network address translation be skipped ?
  -->
-The Raspberry PI 3 and the Zero W already have one embedded, I just added another one, the small USB WiFi dongle I used to use
+The Raspberry PI 3 and the Zero W already have one embedded WiFi port, I just added another one, the small USB WiFi dongle I used to use
 on the other Raspberry PIs.
 This one becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
 
