@@ -80,6 +80,13 @@ $ which wget
 - You can use VNC (if enabled in the config above)
     - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
 
+- You may also remove unwanted softwares, just in case you don't need them:
+    - `$ sudo apt-get purge minecraft-pi`
+    - `$ sudo apt-get purge sonic-pi`
+    - `$ sudo apt-get purge libreoffice*`
+    - `$ sudo apt-get clean`
+    - `$ sudo apt-get autoremove`
+
 - If you need AI and Deep Learning (Anaconda, Jupyter notebooks, TensorFlow, Keras), follow [this link](https://medium.com/@margaretmz/anaconda-jupyter-notebook-tensorflow-and-keras-b91f381405f8).
     - or type:
     ```
