@@ -589,15 +589,24 @@ This is Jessie/Pixel running on a Raspberry PI Zero.
 
 #### Note: Access point _and_ Internet access
 To enable `hostapd` to have you Raspberry PI acting as a WiFi hotspot, as we said, you can follow
-<a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those instructions</a> from the Adafruit website.
+<a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
 
+> Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver
+```
+# driver=rtl871xdrv
+```
+> The name and password of the network created by the Access Point is in the same file, `/etc/hostapd/hostapd.conf`.
+
+<!-- TODO
+  Can the the network address translation be skipped ?
+ -->
 The thing is that when the Raspberry PI becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
-`git pull origin master`, etc, that can rapidely become quite frustrating.
+`git pull origin master`, etc, that can rapidly become quite frustrating.
 
 In the past, I had written a couple of scripts to juggle with the various configuration files (`hostapd.conf`, `wpa_supplicant.conf`, `/etc/network/interfaces`, etc).
 This worked for a while, then after an `apt-get upgrade`, it stopped working, some config files had changed... Bummer.
 
-A much better approach seems to be to have 2 WiFi adpaters. The Rasberry PI 3 and the Zero W already have one embedded, I just added another one, the small USB WiFi dongle I used to use
+A much better approach seems to be to have 2 WiFi adapters. The Raspberry PI 3 and the Zero W already have one embedded, I just added another one, the small USB WiFi dongle I used to use
 on the other Raspberry PIs.
 This one becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
 
@@ -629,6 +638,21 @@ wpa-ssid "ATT856"
 wpa-psk "<your network passphrase>"
 ```
 See the 4 lines at the bottom of the file, that's it!
+
+> Note: above, `192.168.42.1` will be the address of your hotspot, aka gateway. Feel free to change it to anything else, like `192.168.127.1`...
+> If that was the case, you also need to make sure that the entry you've added in `/etc/dhcp/dhcpd.conf` matches this address range:
+```
+subnet 192.168.127.0 netmask 255.255.255.0 {
+  range 192.168.127.10 192.168.127.50;
+  option broadcast-address 192.168.127.255;
+  option routers 192.168.127.1;
+  default-lease-time: 600;
+  max-lease-time: 7200;
+  option domain-name "local-pi";
+  option domain-name-servers 8.8.8.8 8.8.4.4;
+}
+```
+The lines to pay attention to are the ones with a `127` in it...
 
 Now, when the `wlan1` is plugged in, this Raspberry PI is a WiFi hotspot, *_and_* has Internet access.
 
