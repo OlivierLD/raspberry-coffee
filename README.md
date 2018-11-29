@@ -17,8 +17,10 @@ Do take a look, it also comes with a readme file.
 
 **Summary**
 - [Setup a brand new Raspberry Pi](#setup-a-brand-new-raspberry-pi)
+- [How to build and run](#how-to-build-and-run)
 - [Developing on the Raspberry Pi, or Developing for the Raspberry Pi ?](#developing-on-the-raspberry-pi-or-developing-for-the-raspberry-pi-)
 - [Raspberry Pi, a possible thing of the Internet of Things...](#raspberry-pi-a-possible-thing-of-the-internet-of-things)
+- [Project list, growing](#project-list-growing)
 
 #### Setup a brand new Raspberry Pi
 To get started as quickly as possible, and not only for this project, from scratch.
