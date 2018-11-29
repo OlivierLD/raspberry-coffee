@@ -224,7 +224,6 @@ To build it, clone this project (this repo), make sure the script named `gradlew
 You are expecting an end like that one:
 ```
 
-
 BUILD SUCCESSFUL in 55s
 97 actionable tasks: 17 executed, 80 up-to-date
 Prompt>

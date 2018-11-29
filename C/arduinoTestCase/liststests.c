@@ -9,6 +9,11 @@
 #define max(x, y) (((x) > (y)) ? (x) : (y))
 #define min(x, y) (((x) < (y)) ? (x) : (y))
 
+/*
+ * Shows how to maintain a list acting as a vector.
+ * Limited number of entries, added at the end, head is cut on demand.
+ */
+
 typedef struct SMALL {
   struct SMALL * next;
 } StrPt;
