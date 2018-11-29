@@ -534,7 +534,7 @@ public class MuxInitializer {
 							boolean timeBased = "true".equals(muxProps.getProperty(String.format("forward.%s.timebase.filename", MUX_IDX_FMT.format(fwdIdx)), "false"));
 							String propFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
 							String fSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
-							String radix = muxProps.getProperty(String.format("forward.%s.filename.radix", MUX_IDX_FMT.format(fwdIdx)));
+							String radix = muxProps.getProperty(String.format("forward.%s.filename.suffix", MUX_IDX_FMT.format(fwdIdx)));
 							String logDir = muxProps.getProperty(String.format("forward.%s.log.dir", MUX_IDX_FMT.format(fwdIdx)));
 							String split = muxProps.getProperty(String.format("forward.%s.split", MUX_IDX_FMT.format(fwdIdx)));
 							try {
