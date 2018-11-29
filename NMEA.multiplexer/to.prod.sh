@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # WIP
+# Warning: Run the process on the target machine. That will avoid unwanted version mismatch (java class version...)
 #
 echo -e "This is an example showing how to generate a 'production' version, without all the github repo"
 echo -e "just what is needed to run the NMEA Multiplexer - in several configurations - and its web clients"
@@ -12,8 +13,9 @@ echo -e "just what is needed to run the NMEA Multiplexer - in several configurat
 # 2 - Create new dir
 #
 echo -en "Where should we create the distribution ? > "
+# Directory name, that will become the archive name.
 read distdir
-echo -e "Creating $distdir"
+echo -e "Creating folder $distdir"
 mkdir $distdir
 mkdir $distdir/build
 mkdir $distdir/build/libs

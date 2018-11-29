@@ -16,13 +16,13 @@ Do take a look, it also comes with a readme file.
 To get started as quickly as possible, and not only for this project, from scratch:
 
 #### Setup a brand new Raspberry Pi
-###### Foundation Software
+##### Foundation Software
 The goal here is to get ready with the minimal configuration you will be able to use to clone a git repository and start working on it.
 
 Typically, you will need to have the minimal git tools and the right compilers. The code contained in the repo(s) will be responsible for
 downloading the right dependencies at build time (`gradle` is definitely good at that).
 
-###### Minimal setup
+##### Minimal setup
 - Install Raspian (not NOOBS) as explained at https://www.raspberrypi.org/learning/software-guide/quickstart/, and burn your SD card
     - Depending on the OS you burn the SD card from, the procedure varies. Well documented in the link above.
 - Boot on the Raspberry with the new SD card, USB keyboard and HDMI screen attached to it (if this is an old RPi, use a USB WiFi dongle too)
@@ -34,6 +34,7 @@ downloading the right dependencies at build time (`gradle` is definitely good at
         - This can be modified or reverted at any time.
     - setup config (keyboard, locale, etc)
     - change pswd, hostname
+        - for the hostname, you might need to go a Terminal, reach `sudo raspi-config`, anf use `Network > Hostname`.
 - Reboot (and now, you can use `ssh` if it has been enabled above) and reconnect
 
 - From a terminal, run the following commands:
@@ -90,8 +91,90 @@ $ which wget
         - Then the command to use to reach Jupyter would show up in the console.
     - _Note:_ Training a Neural Network is a very demanding operation, that requires computing resources not granted on a Raspberry Pi. Installing Keras on a Raspberry Pi might not be relevant. OpenCV, though, would be an option to consider. Google it ;).
 
+###### Raspberry Pi as an Access Point _and_ Internet access.
+Your Raspberry Pi can be turned into an Access Point, this means that it generates its own network, so you can connect to it from other devices (other Raspberry Pis, laptops, tablets, smart-phones, ESP8266, etc).
+It can be appropriate when there is no network in the area you ar in, for example when sailing in the middle of the ocean, kayaking in a remote place, hiking in the boonies, etc.
 
-You're ready to rock!
+Setting up the Raspberry Pi to be an access point is well documented on the [Adafruit website](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
+
+The thing is that when the Raspberry PI becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
+`git pull origin master`, etc, that can rapidly become quite frustrating.
+
+Now, for development purpose, you may very well need to have an Access Point **_and_** an Internet access (i.e. access to your local or wide area network).
+
+For that, you need 2 WiFi adapters (yes, you could also use an Ethernet connection, which is a no brainer, we talk about WiFi here).
+Recent Raspberry Pis are WiFi-enabled, you just need a WiFi dongle, that would fit on a USB port.
+On older Raspberry Pis (not WiFi-enabled), you need 2 USB dongles.
+
+As we said above, to enable `hostapd` to have you Raspberry PI acting as a WiFi hotspot, you can follow
+<a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
+
+> Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver
+```
+# driver=rtl871xdrv
+```
+> The name and password of the network created by the Access Point is in the same file, `/etc/hostapd/hostapd.conf`.
+
+<!-- TODO
+  Can the the network address translation be skipped ?
+ -->
+The Raspberry PI 3 and the Zero W already have one embedded, I just added another one, the small USB WiFi dongle I used to use
+on the other Raspberry PIs.
+This one becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
+
+```
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+auto lo
+iface lo inet loopback
+
+iface eth0 inet manual
+
+allow-hotplug wlan0
+iface wlan0 inet static
+  address 192.168.42.1
+  netmask 255.255.255.0
+
+#iface wlan0 inet manual
+#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+allow-hotplug wlan1
+iface wlan1 inet dhcp
+wpa-ssid "ATT856"
+wpa-psk "<your network passphrase>"
+```
+See the 4 lines at the bottom of the file, that's it!
+
+> Note: above, `192.168.42.1` will be the address of your hotspot, aka gateway. Feel free to change it to anything else, like `192.168.127.1`...
+> If that was the case, you also need to make sure that the entry you've added in `/etc/dhcp/dhcpd.conf` matches this address range:
+```
+subnet 192.168.127.0 netmask 255.255.255.0 {
+  range 192.168.127.10 192.168.127.50;
+  option broadcast-address 192.168.127.255;
+  option routers 192.168.127.1;
+  default-lease-time: 600;
+  max-lease-time: 7200;
+  option domain-name "local-pi";
+  option domain-name-servers 8.8.8.8 8.8.4.4;
+}
+```
+The lines to pay attention to are the ones with a `127` in it...
+
+Now, when the `wlan1` is plugged in, this Raspberry PI is a WiFi hotspot, *_and_* has Internet access.
+
+This means that when you are on a Raspberry Pi with one WiFi adapters (the Raspberry Pi 3 with an extra dongle, where you do you developments from for example), you
+have 2 WiFi interfaces, `wlan0` and `wlan1`.
+
+When the same SD card runs on a Raspberry Pi with only one WiFi adapter (the Raspberry Pi Zero W you use to do some logging, when kayaking in the boonies for example),
+you have only one WiFi interface `wlan0`, and the Raspberry Pi is a hotspot generating its own network, as defined by you in `/etc/hostapd/hostapd.conf`.
+
+Now you're ready to rock!
 
 --------------
 - [Main highlights](./Papers/README.md)
