@@ -6,16 +6,23 @@ It uses the [PI4J library](http://pi4j.com).
 ```
 $ curl -s get.pi4j.com | sudo bash
 ```
-
 ---
 This project contains Java code, mostly translated from Python, dedicated to usually *one* board (like BMP180, LSM303, etc).
-More consistent samples can be found in the RasPISamples project, where several components have been assembled together.
+More consistent samples can be found in the RasPISamples module (being moved to the Project.Trunk module), where several components have been assembled together.
 Do take a look, it also comes with a readme file.
 
 ---
-To get started as quickly as possible, and not only for this project, from scratch:
+- [Main highlights](./Papers/README.md)
+---
+
+**Summary**
+- [Setup a brand new Raspberry Pi](#setup-a-brand-new-raspberry-pi)
+- [Developing on the Raspberry Pi, or Developing for the Raspberry Pi ?](#developing-on-the-raspberry-pi-or-developing-for-the-raspberry-pi-)
+- [Raspberry Pi, a possible thing of the Internet of Things...](#raspberry-pi-a-possible-thing-of-the-internet-of-things)
 
 #### Setup a brand new Raspberry Pi
+To get started as quickly as possible, and not only for this project, from scratch.
+
 ##### Foundation Software
 The goal here is to get ready with the minimal configuration you will be able to use to clone a git repository and start working on it.
 
@@ -183,18 +190,18 @@ you have only **one** WiFi interface `wlan0`, and the Raspberry Pi is a hotspot 
 
 Now you're ready to rock!
 
---------------
-- [Main highlights](./Papers/README.md)
----
 _Note:_
 Java code is compiled into `class` files, that run on a Java Virtual Machine (`JVM`). Java is not the only language that runs a `JVM`, this project also contains some small samples of
 other JVM-aware languages, invoking and using the features of this project.
 
 Those samples include Scala, Groovy, Kotlin..., and the list is not closed!
 
-See in the [OthetJVM.languages](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/OtherJVM.languages) directory.
+See in the [OthetJVM.languages](https://github.com/OlivierLD/raspberry-coffee/tree/master/OtherJVM.languages) directory.
 
 ---
+
+#### How to build and run
+
 _Note:_
 This project uses `gradle` and `git`. `Gradle` will be installed automatically if it is not present on your system,
 it uses the gradle wrapper (`gradlew`).
@@ -206,8 +213,8 @@ remains in your way, I have not tested it.
 ---
 To build it, clone this project (this repo), make sure the script named `gradlew` is executable, and execute `gradlew`.
 ```
- Prompt> git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
- Prompt> cd raspberry-pi4j-samples
+ Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
+ Prompt> cd raspberry-coffee
  Prompt> chmod +x gradlew
  Prompt> ./gradlew [--daemon] build
 ```
@@ -288,6 +295,8 @@ None of the above is new. Connecting to the Internet does not impress anyone any
 The snippets provided in this project are here to help in this kind of context. Some will use the network aspect of the story, some others will interact with electronic components. The two aspects should be easy to bridge, that is the goal. If that was not the case, please let me know (email address of the left side).
 
 ---
+
+#### Project list, growing...
 
 Several projects are featured here:
   * Basic GPIO interaction
