@@ -34,7 +34,7 @@ downloading the right dependencies at build time (`gradle` is definitely good at
         - This can be modified or reverted at any time.
     - setup config (keyboard, locale, etc)
     - change pswd, hostname
-        - for the hostname, you might need to go a Terminal, reach `sudo raspi-config`, anf use `Network > Hostname`.
+        - for the hostname, you might need to go a Terminal, reach `sudo raspi-config`, and use `Network > Hostname`.
 - Reboot (and now, you can use `ssh` if it has been enabled above) and reconnect
 
 - From a terminal, run the following commands:
@@ -93,7 +93,7 @@ $ which wget
 
 ###### Raspberry Pi as an Access Point _and_ Internet access.
 Your Raspberry Pi can be turned into an Access Point, this means that it generates its own network, so you can connect to it from other devices (other Raspberry Pis, laptops, tablets, smart-phones, ESP8266, etc).
-It can be appropriate when there is no network in the area you ar in, for example when sailing in the middle of the ocean, kayaking in a remote place, hiking in the boonies, etc.
+It can be appropriate when there is no network in the area you are in, for example when sailing in the middle of the ocean, kayaking in a remote place, hiking in the boonies, etc.
 
 Setting up the Raspberry Pi to be an access point is well documented on the [Adafruit website](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
 
@@ -109,7 +109,7 @@ On older Raspberry Pis (not WiFi-enabled), you need 2 USB dongles.
 As we said above, to enable `hostapd` to have you Raspberry PI acting as a WiFi hotspot, you can follow
 <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
 
-> Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver
+> Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver:
 ```
 # driver=rtl871xdrv
 ```
@@ -168,11 +168,11 @@ The lines to pay attention to are the ones with a `127` in it...
 
 Now, when the `wlan1` is plugged in, this Raspberry PI is a WiFi hotspot, *_and_* has Internet access.
 
-This means that when you are on a Raspberry Pi with one WiFi adapters (the Raspberry Pi 3 with an extra dongle, where you do you developments from for example), you
-have 2 WiFi interfaces, `wlan0` and `wlan1`.
+This means that when you are on a Raspberry Pi with **two** WiFi adapters (the Raspberry Pi 3 with an extra dongle, where you do you developments from for example), you
+have **two** WiFi interfaces, `wlan0` and `wlan1`.
 
-When the same SD card runs on a Raspberry Pi with only one WiFi adapter (the Raspberry Pi Zero W you use to do some logging, when kayaking in the boonies for example),
-you have only one WiFi interface `wlan0`, and the Raspberry Pi is a hotspot generating its own network, as defined by you in `/etc/hostapd/hostapd.conf`.
+When the same SD card runs on a Raspberry Pi with only **one** WiFi adapter (the Raspberry Pi Zero W you use to do some logging, when kayaking in the boonies for example),
+you have only **one** WiFi interface `wlan0`, and the Raspberry Pi is a hotspot generating its own network, as defined by you in `/etc/hostapd/hostapd.conf`.
 
 Now you're ready to rock!
 
