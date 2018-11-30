@@ -128,13 +128,25 @@ As we said above, to enable `hostapd` to have your Raspberry PI acting as a WiFi
 
 > Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver:
 ```
+interface=wlan0
 # driver=rtl871xdrv
+ssid=Pi-Net-2
+country_code=US
+hw_mode=g
+channel=6
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=<network-password-here>
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=CCMP
+wpa_group_rekey=86400
+ieee80211n=1
+wme_enabled=1
 ```
-> The name and password of the network created by the Access Point is in the same file, `/etc/hostapd/hostapd.conf`.
+> The name and password of the network created by the Access Point is in the same file, `/etc/hostapd/hostapd.conf`, as well as the association between the network and the interface (`wlan0` here).
 
-<!-- TODO
-  Can the the network address translation be skipped ?
- -->
 The Raspberry PI 3 and the Zero W already have one embedded WiFi port, I just added another one, the small USB WiFi dongle I used to use
 on the other Raspberry PIs.
 This one becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
