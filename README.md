@@ -1,4 +1,4 @@
-<h1 style="vertical-align: middle;"><img alt="Raspberry Coffee" src="./raspberryCoffee.png"> Raspberry Coffee</h1>
+<h1><img align="middle" alt="Raspberry Coffee" src="./raspberryCoffee.png"> Raspberry Coffee</h1>
 
 #### Java code and wiring for the Raspberry Pi, featuring reusable libraries and snippets ####
 It uses the [PI4J library](http://pi4j.com).
