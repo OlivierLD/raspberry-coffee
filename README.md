@@ -145,7 +145,7 @@ wpa_group_rekey=86400
 ieee80211n=1
 wme_enabled=1
 ```
-> The name and password of the network created by the Access Point is in the same file, `/etc/hostapd/hostapd.conf`, as well as the association between the network and the interface (`wlan0` here).
+> The name (`ssid`) and password (`wpa_passphrase`) of the network created by the Access Point is in the same file, `/etc/hostapd/hostapd.conf`, as well as the association between the network and the interface (`wlan0` here).
 
 The Raspberry PI 3 and the Zero W already have one embedded WiFi port, I just added another one, the small USB WiFi dongle I used to use
 on the other Raspberry PIs.
