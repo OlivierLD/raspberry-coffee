@@ -205,13 +205,16 @@ you have only **one** WiFi interface `wlan0`, and the Raspberry Pi is a hotspot 
 
 Now you're ready to rock!
 
+---
+#### Java Virtual Machine (JVM)
+
 _Note:_
 Java code is compiled into `class` files, that run on a Java Virtual Machine (`JVM`). Java is not the only language that runs a `JVM`, this project also contains some small samples of
 other JVM-aware languages, invoking and using the features of this project.
 
 Those samples include Scala, Groovy, Kotlin..., and the list is not closed!
 
-See in the [OthetJVM.languages](https://github.com/OlivierLD/raspberry-coffee/tree/master/OtherJVM.languages) directory.
+See in the [OthetJVM.languages](https://github.com/OlivierLD/raspberry-coffee/tree/master/OtherJVM.languages) directory, there is more about that.
 
 ---
 
