@@ -2,6 +2,7 @@ package nmea.mux;
 
 import context.ApplicationContext;
 import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -437,7 +438,7 @@ public class MuxInitializer {
 				try {
 					Object dynamic = Class.forName(clss).newInstance();
 					if (dynamic instanceof Forwarder) {
-						Forwarder forwarder = (Forwarder)dynamic;
+						Forwarder forwarder = (Forwarder) dynamic;
 						String propProp = String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx));
 						String propFileName = muxProps.getProperty(propProp);
 						if (propFileName != null) {
@@ -453,9 +454,16 @@ public class MuxInitializer {
 					} else {
 						throw new RuntimeException(String.format("Expected a Forwarder, found a [%s]", dynamic.getClass().getName()));
 					}
-				} catch (Exception ex) {
+				} catch (Exception ioe) {
+					// Some I2C device was not found?
+					System.err.println("---------------------------");
+					ioe.printStackTrace();
+					System.err.println("---------------------------");
+				} catch (Throwable ex) {
+					System.err.println("===========================");
 					System.err.println("Classpath: " + System.getProperty("java.class.path"));
 					ex.printStackTrace();
+					System.err.println("===========================");
 				}
 			} else {
 				String typeProp = String.format("forward.%s.type", MUX_IDX_FMT.format(fwdIdx));

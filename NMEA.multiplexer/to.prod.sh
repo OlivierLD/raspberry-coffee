@@ -55,6 +55,7 @@ rm -rf $distdir
 echo -e "------------------------------------------------------------------------------------------------"
 echo -e "Archive $PWD/$distdir.tar.gz ready for deployment. "
 echo -e "Send it to another machine, and un-archive it."
+echo -e "Use tar -xzvf $distdir.tar.gz' to un-archive."
 echo -e "External dependencies like librxtx-java may be needed if you intend to use a serial port,"
 echo -e "in which case you may need to run a 'sudo apt-get install librxtx-java' ."
 echo -e "The script to launch will be 'mux.sh'"
