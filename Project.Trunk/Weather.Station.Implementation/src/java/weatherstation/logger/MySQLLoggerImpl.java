@@ -14,14 +14,14 @@ import java.text.NumberFormat;
  * JSON payload looks like:
  * <p>
  * { "dir": 350.0,
- * "volts": 3.4567,
- * "speed": 12.345,
- * "gust": 13.456,
- * "rain": 0.1,
- * "press": 101300.00,
- * "temp": 18.34,
- * "hum": 58.5,
- * "dew": 34.56 }
+ *   "volts": 3.4567,
+ *   "speed": 12.345,
+ *   "gust": 13.456,
+ *   "rain": 0.1,
+ *   "press": 101300.00,
+ *   "temp": 18.34,
+ *   "hum": 58.5,
+ *   "dew": 34.56 }
  * <p>
  * The DB will take care of a timestamp.
  */
@@ -36,7 +36,7 @@ public class MySQLLoggerImpl implements LoggerInterface {
 
 	public MySQLLoggerImpl() {
 		restURL = System.getProperty("ws.rest.url", REST_URL);
-		betweenLogs = Long.parseLong(System.getProperty("ws.between.logs", Long.toString(MINIMUM_BETWEEN_LOGS)));
+		betweenLogs = Long.parseLong(System.getProperty("ws.between.logs", Long.toString(betweenLogs)));
 	}
 
 	private String json2qs(JSONObject json, String jMember, String qsName) {
@@ -115,11 +115,19 @@ public class MySQLLoggerImpl implements LoggerInterface {
 		return qs;
 	}
 
+	private double maxGust = 0D;
+	// TODO Same pattern for all data, smooth speeds, angles,...
+
 	@Override
 	public void pushMessage(JSONObject json )
 			throws Exception {
 		long now = System.currentTimeMillis();
+		// Record MaxGust here
+		this.maxGust = Math.max(this.maxGust, json.getDouble("gust"));
 		if (now - this.lastLogged > betweenLogs) {
+			json.put("gust", maxGust); // Replace with maxGust
+			// Reset MaxGust here
+			this.maxGust = 0D;
 //    System.out.print(" >>> Logging... ");
 			String queryString = composeQS(json);
 			this.lastLogged = now;

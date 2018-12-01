@@ -127,11 +127,18 @@ On older Raspberry Pis (not WiFi-enabled), you need 2 USB dongles.
 As we said above, to enable `hostapd` to have your Raspberry PI acting as a WiFi hotspot, you can follow
 <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
 
-> Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver:
+>  Note: during the steps above, I had to change the file `/etc/default/isc-dhcp-server`, at the end, for the `isc-dhcp-server` service to start:
+```properties
+# INTERFACESv4="wlan0"
+# INTERFACESv6="wlan0"
+INTERFACES="wlan0"
 ```
+
+> Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver:
+```properties
 interface=wlan0
 # driver=rtl871xdrv
-ssid=Pi-Net-2
+ssid=Pi-Net2
 country_code=US
 hw_mode=g
 channel=6
