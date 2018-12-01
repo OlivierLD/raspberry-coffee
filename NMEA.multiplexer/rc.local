@@ -50,13 +50,13 @@ else
 fi
 #
 cd ~pi
-if [ -f "tomux" ]
+if [ -f "tomux.sh" ]
 then
   printf "+----------------------+\n"
   printf "| Starting Multiplexer |\n"
   printf "+----------------------+\n"
   # See the script for option details
-  ./tomux -n
+  ./tomux.sh -n
 fi
 cd -
 #

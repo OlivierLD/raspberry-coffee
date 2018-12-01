@@ -93,6 +93,10 @@ var deleteLogFile = function(logFile) {
 	return getDeferred('/mux/log-files/' + logFile, DEFAULT_TIMEOUT, 'DELETE', 200, null, false);
 };
 
+var getSystemTime = function() {
+	return getDeferred('/mux/system-time?fmt=date', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+};
+
 var getVolume = function() {
     return getDeferred('/mux/nmea-volume', DEFAULT_TIMEOUT, 'GET', 200, null, false);
 };

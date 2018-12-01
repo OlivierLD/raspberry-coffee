@@ -41,6 +41,8 @@ cp -R web $distdir
 cp *.properties $distdir
 # If needed, more resources would go here (like dev curves, etc)
 cp mux.sh $distdir
+cp tomux.sh $distdir
+cp killmux.sh $distdir
 #
 # 4 - Archiving
 #
