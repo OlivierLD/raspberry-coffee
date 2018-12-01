@@ -211,6 +211,9 @@ have **two** WiFi interfaces, `wlan0` and `wlan1`.
 When the same SD card runs on a Raspberry Pi with only **one** WiFi adapter (the Raspberry Pi Zero W you use to do some logging, when kayaking in the boonies for example),
 you have only **one** WiFi interface `wlan0`, and the Raspberry Pi is a hotspot generating its own network, as defined by you in `/etc/hostapd/hostapd.conf`.
 
+> Note: In some cases, I was not able to have `hostapd` to start at boot time... It was working fine from the command line though.
+> I've cheated by putting an `hostapd /etc/hostapd/hostapd.conf &` in `/etc/rc.local`. It's not elegant, but it works.
+
 Now you're ready to rock!
 
 ---
