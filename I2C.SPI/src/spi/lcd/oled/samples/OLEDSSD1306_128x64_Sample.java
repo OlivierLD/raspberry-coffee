@@ -13,7 +13,7 @@ import java.awt.*;
  */
 public class OLEDSSD1306_128x64_Sample {
 
-	public static void main(String... args) {
+	public static void main(String... args) throws Exception {
 		int WIDTH = 128;
 		int HEIGHT = 64;
 

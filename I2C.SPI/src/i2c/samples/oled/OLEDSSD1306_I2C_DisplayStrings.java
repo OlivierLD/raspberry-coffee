@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class OLEDSSD1306_I2C_DisplayStrings {
 
-	public static void main(String... args) throws UnsupportedBusNumberException, IOException {
+	public static void main(String... args) throws UnsupportedBusNumberException, IOException, Exception {
 
 		if (args.length == 0) {
 			return;

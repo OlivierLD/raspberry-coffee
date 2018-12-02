@@ -326,7 +326,7 @@ public class  SSD1306 {
 		}
 	}
 
-	private void command(int c) {
+	private void command(int c) throws Exception {
 		if (dcOutput != null) {
 			dcOutput.low();
 //    try { spiDevice.write((byte)c); }
@@ -337,6 +337,7 @@ public class  SSD1306 {
 				this.ssd1306.write(SSD1306_SETLOWCOLUMN, (byte) c);
 			} catch (Exception ex) {
 				ex.printStackTrace();
+				throw ex;
 			}
 		}
 	}
@@ -372,11 +373,11 @@ public class  SSD1306 {
 	/**
 	 * Initialize display
 	 */
-	public void begin() {
+	public void begin() throws Exception {
 		begin(SSD1306_SWITCHCAPVCC);
 	}
 
-	public void begin(int vcc) {
+	public void begin(int vcc) throws Exception {
 		// Save vcc state.
 		this.vccstate = vcc;
 		// Reset and initialize display.
@@ -386,7 +387,7 @@ public class  SSD1306 {
 		this.command(SSD1306_DISPLAYON);
 	}
 
-	private void initialize() { // SPI, 128x32 or 128x64
+	private void initialize() throws Exception { // SPI, 128x32 or 128x64
 		// 128x(32/64) pixel specific initialization.
 		this.command(SSD1306_DISPLAYOFF);          // 0xAE
 		this.command(SSD1306_SETDISPLAYCLOCKDIV);  // 0xD5
@@ -443,7 +444,7 @@ public class  SSD1306 {
 	}
 
 	public void setContrast(int contrast)
-					throws IllegalArgumentException {
+					throws IllegalArgumentException, Exception {
 		if (contrast < 0 || contrast > 255) {
 			throw new IllegalArgumentException("Contrast must be a value in [0, 255]");
 		}
@@ -454,7 +455,7 @@ public class  SSD1306 {
 	/**
 	 * Write display buffer to physical display.
 	 */
-	public void display() {
+	public void display() throws Exception {
 		this.command(SSD1306_COLUMNADDR);
 		this.command(0); // Column start address. (0 = reset)
 		this.command(this.width - 1); // Column end address.
