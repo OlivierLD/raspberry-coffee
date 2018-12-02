@@ -692,4 +692,22 @@ Then open the generated file in Google Map or Google Earth.
 
 - The same feature is also available for GPX (for navigation software like OpenCPN), from `util.NMEAtoGPX`.
 
+## Builder
+As an example, there is a script called `to.prod.sh` that shows a way to
+build the soft for distribution without the full git repository.
+
+Just run
+```
+ $ ./to.prod.sh
+```
+It will:
+- Start a gradle build
+- Put all the required resources into a new directory (provided at runtime)
+- Archive the directory into a `tar.gz` file
+- Drop the directory.
+
+Then you can distribute the archive.
+
+All the user has to do it to un-archive it and run the `mux.sh` script.
+
 -------------------------------
