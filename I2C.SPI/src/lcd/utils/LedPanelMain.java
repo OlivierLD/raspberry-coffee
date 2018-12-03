@@ -169,7 +169,7 @@ public class LedPanelMain
 				} catch (Exception ex) {
 				}
 
-				int[] mirror = SSD1306.mirror(sb.getScreenBuffer(), NB_COLS, NB_LINES);
+				int[] mirror = ScreenBuffer.mirror(sb.getScreenBuffer(), NB_COLS, NB_LINES);
 
 				lcd.setBuffer(mirror);
 

@@ -3,12 +3,12 @@ package nmea.forwarders.substitute;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import lcd.ScreenBuffer;
@@ -16,7 +16,6 @@ import lcd.utils.CharacterMatrixes;
 import lcd.utils.LEDPanel;
 import utils.StringUtils;
 
-@SuppressWarnings("oracle.jdeveloper.java.serialversionuid-field-missing")
 public class SwingLedPanel
 				extends java.awt.Frame {
 	private SwingLedPanel instance = this;
@@ -26,22 +25,54 @@ public class SwingLedPanel
 
 	private transient ScreenBuffer sb;
 
-	private static int nbCols = -1;
+	// private static int nbCols = -1;
 
-	// SSD1306
-	private final static int NB_LINES = 32;
-	private final static int NB_COLS = 128;
-	// Nokia
-//  private final static int NB_LINES = 48;
-//  private final static int NB_COLS  = 84;
+	public enum ScreenDefinition {
 
-	private final static int BUFFER_SIZE = (NB_COLS * NB_LINES) / 8;
+		SSD1306_128x32(128, 32),
+		SSD1306_128x64(128, 64),
+		NOKIA5110(84, 48);
 
-	private static int[] buffer = new int[BUFFER_SIZE];
+		private int width;
+		private int height;
+		ScreenDefinition(int width, int height) {
+			this.width = width;
+			this.height = height;
+		}
+
+		public int width() {
+			return this.width;
+		}
+		public int height() {
+			return this.height;
+		}
+	}
+
+	ScreenDefinition config;
+	// Default SSD1306
+	private int nbLines = 32;
+	private int nbCols = 128;
+
+	private int bufferSize = (nbCols * nbLines) / 8;
+
+	private int[] buffer = null; // new int[bufferSize];
 
 	public SwingLedPanel() {
+		this(ScreenDefinition.SSD1306_128x32); // Default
+	}
+
+	public SwingLedPanel(ScreenDefinition config) {
+		this.config = config;
+		this.nbLines = this.config.height();
+		this.nbCols = this.config.width();
+		this.bufferSize = (this.nbCols * this.nbLines) / 8;
+		this.buffer = new int[this.bufferSize];
+
 		initComponents();
-		this.setSize(new Dimension(1_000, 300));
+		int panelWidth = Math.round(1_000f * (this.nbCols / 128f));
+		int panelHeight = Math.round(300f * (this.nbLines / 32f));
+
+		this.setSize(new Dimension(panelWidth, panelHeight));
 	}
 
 	/**
@@ -49,13 +80,16 @@ public class SwingLedPanel
 	 * initialize the form.
 	 */
 	private void initComponents() {
-		ledPanel = new LEDPanel(NB_LINES, NB_COLS);
+		ledPanel = new LEDPanel(nbLines, nbCols);
 
 		ledPanel.setWithGrid(false);
 
-		setPreferredSize(new Dimension(1_000, 600));
+		int panelWidth = Math.round(1_000f * (this.nbCols / 128f));
+		int panelHeight = Math.round(300f * (this.nbLines / 32f));
+
+		setPreferredSize(new Dimension(panelWidth, panelHeight));
 		setTitle("LCD Screen Buffer");
-		addWindowListener(new java.awt.event.WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
 				exitForm(evt);
 			}
@@ -85,18 +119,18 @@ public class SwingLedPanel
 	 */
 	public void setBuffer(int[] screenbuffer) {
 		// This displays the buffer top to bottom, instead of left to right
-		char[][] screenMatrix = new char[NB_LINES][NB_COLS];
-		for (int i = 0; i < NB_COLS; i++) {
-			// Line is a vertical line, its length is NB_LINES / 8
-			String line = ""; /*lpad(Integer.toBinaryString(screenbuffer[i + (3 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
-	                  lpad(Integer.toBinaryString(screenbuffer[i + (2 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
-                    lpad(Integer.toBinaryString(screenbuffer[i + (1 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
-                    lpad(Integer.toBinaryString(screenbuffer[i + (0 * NB_COLS)]), "0", 8).replace('0', ' ').replace('1', 'X'); */
-			for (int l = (NB_LINES / 8) - 1; l >= 0; l--)
-				line += StringUtils.lpad(Integer.toBinaryString(screenbuffer[i + (l * NB_COLS)]), 8, "0").replace('0', ' ').replace('1', 'X');
+		char[][] screenMatrix = new char[nbLines][nbCols];
+		for (int i = 0; i < nbCols; i++) {
+			// Line is a vertical line, its length is nbLines / 8
+			String line = ""; /*lpad(Integer.toBinaryString(screenbuffer[i + (3 * nbCols)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
+	                  lpad(Integer.toBinaryString(screenbuffer[i + (2 * nbCols)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
+                    lpad(Integer.toBinaryString(screenbuffer[i + (1 * nbCols)]), "0", 8).replace('0', ' ').replace('1', 'X') + // " " +
+                    lpad(Integer.toBinaryString(screenbuffer[i + (0 * nbCols)]), "0", 8).replace('0', ' ').replace('1', 'X'); */
+			for (int l = (nbLines / 8) - 1; l >= 0; l--)
+				line += StringUtils.lpad(Integer.toBinaryString(screenbuffer[i + (l * nbCols)]), 8, "0").replace('0', ' ').replace('1', 'X');
 
 //    System.out.println(line);
-//    for (int c=0; c<Math.min(line.length(), NB_COLS); c++)
+//    for (int c=0; c<Math.min(line.length(), nbCols); c++)
 			for (int c = 0; c < line.length(); c++) {
 				try {
 					char mc = line.charAt(c);
@@ -110,11 +144,11 @@ public class SwingLedPanel
 		}
 		// Display the screen matrix, as it should be seen
 		boolean[][] matrix = ledPanel.getLedOnOff();
-		for (int i = 0; i < NB_LINES; i++)
+		for (int i = 0; i < nbLines; i++)
 		// for (int i=31; i>=0; i--)
 		{
-			for (int j = 0; j < NB_COLS; j++)
-				matrix[j][NB_LINES - 1 - i] = (screenMatrix[i][j] == 'X' ? true : false);
+			for (int j = 0; j < nbCols; j++)
+				matrix[j][nbLines - 1 - i] = (screenMatrix[i][j] == 'X' ? true : false);
 		}
 		ledPanel.setLedOnOff(matrix);
 	}
@@ -126,12 +160,12 @@ public class SwingLedPanel
 	public void displayTest() {
 		SwingLedPanel lcd = instance;
 		if (sb == null) {
-			sb = new ScreenBuffer(NB_COLS, NB_LINES);
+			sb = new ScreenBuffer(nbCols, nbLines);
 			sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
 		}
 
 		sb.text("ScreenBuffer", 2, 9, ScreenBuffer.Mode.BLACK_ON_WHITE);
-		sb.text(NB_COLS + " x " + NB_LINES + " for LCD", 2, 19, ScreenBuffer.Mode.BLACK_ON_WHITE);
+		sb.text(nbCols + " x " + nbLines + " for LCD", 2, 19, ScreenBuffer.Mode.BLACK_ON_WHITE);
 		sb.text("I speak Java!", 2, 29, ScreenBuffer.Mode.BLACK_ON_WHITE);
 
 		lcd.setBuffer(sb.getScreenBuffer());
@@ -148,30 +182,24 @@ public class SwingLedPanel
 	}
 
 	/**
-	 * @param args the command line arguments
+	 * @param args the command line arguments (unused)
 	 */
 	public static void main(String... args) {
 		// Available characters:
 		Map<String, String[]> characters = CharacterMatrixes.characters;
 		Set<String> keys = characters.keySet();
-		List<String> kList = new ArrayList<String>(keys.size());
-		for (String k : keys)
+		List<String> kList = new ArrayList<>(keys.size());
+		for (String k : keys) {
 			kList.add(k);
+		}
 		// Sort here
 		Collections.sort(kList);
-		for (String k : kList)
+		for (String k : kList) {
 			System.out.print(k + " ");
+		}
 		System.out.println();
 
-		// Params
-		if (args.length > 0) {
-			for (int i = 0; i < args.length; i++) {
-				if ("-col".equals(args[i]))
-					nbCols = Integer.parseInt(args[i + 1]);
-			}
-		}
-
-		SwingLedPanel lp = new SwingLedPanel();
+		SwingLedPanel lp = new SwingLedPanel(ScreenDefinition.NOKIA5110);
 		lp.setVisible(true);
 		lp.displayTest();
 	}
