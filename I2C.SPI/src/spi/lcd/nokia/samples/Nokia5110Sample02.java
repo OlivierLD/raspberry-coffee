@@ -37,7 +37,7 @@ public class Nokia5110Sample02 {
 			sb.text(speed, 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			lcd.setScreenBuffer(sb.getScreenBuffer());
 			lcd.display();
-			TimeUtil.delay(100);
+			TimeUtil.delay(500);
 		}
 	}
 }

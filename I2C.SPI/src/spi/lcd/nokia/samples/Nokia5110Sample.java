@@ -32,9 +32,9 @@ public class Nokia5110Sample {
 //	map[7] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "LED and VCC";
 
 		PinUtil.print(map);
-		System.out.println("VCC and LED are connected (on the RPi). Tnis is also where a pot would go.");
+		System.out.println("VCC and LED are connected. This is also where a pot would go.");
 		System.out.println();
-		
+
 		System.out.println("Starting");
 		Nokia5110 lcd = new Nokia5110();
 		lcd.begin();
