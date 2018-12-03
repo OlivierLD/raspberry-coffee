@@ -130,6 +130,14 @@ public class Nokia5110Sample {
 			ex.printStackTrace();
 		}
 
+		lcd.setScreenBuffer(PELICAN_LOGO);
+		lcd.display();
+		try {
+			Thread.sleep(5_000L);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
 		ScreenBuffer sb = new ScreenBuffer(84, 48);
 		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
 		sb.text("Hello Nokia!", 5, 20, ScreenBuffer.Mode.BLACK_ON_WHITE);
