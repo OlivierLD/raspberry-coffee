@@ -589,7 +589,7 @@ public class SSD1306ProcessorI2C implements Forwarder {
 		}
 	}
 
-	private void display() {
+	private void display() throws Exception {
 		if (oled != null) {
 			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();

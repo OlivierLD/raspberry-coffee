@@ -180,12 +180,12 @@ In our case, we would have:
 - All the clients having subscribed to those events would be notified
 
 It obviously requires a WebSocket Server.
- NodeJS can be one.
+ Node.js can be one.
 
  Could be very convenient for a Local Area Network (LAN), like between devices within the same home for example.
 
 ###### To run it on your LAN
-You need to have installed NodeJS on the Raspberry PI (Google it if needed, you'll find how).
+You need to have installed Node.js on the Raspberry PI (Google it if needed, you'll find how).
 
  First time installation (local WebSocket server):
 ```bash
@@ -205,7 +205,7 @@ After that you start the script named `ws.publish.battery`
 ```bash
  ./ws.publish.battery
 ```
-and from a browser, go to `http://localhost:9876/web/adc.one.html`. NodeJS is hosting both the WebSocket server and an http server.
+and from a browser, go to `http://localhost:9876/web/adc.one.html`. Node.js is hosting both the WebSocket server and an http server.
 If you access the page remotely, replace `localhost` with the address of the Raspberry PI.
 
 <!-- ![WebSockets](./ws.battery.png "WebSocket") -->

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 #
+# Standalone test (no server)
+#
 CP=./build/libs/RESTRouting-1.0-all.jar
 #
 # Example:

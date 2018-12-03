@@ -25,9 +25,9 @@ public class AllCharInteractiveSample {
 				for (int i = 0; i < Math.min(input.length(), 4); i++) {
 					String one = input.substring(i, i + 1);
 					Byte b = SevenSegment.ALL_CHARS.get(one);
-					if (b != null)
+					if (b != null) {
 						row[i] = one;
-					else {
+					} else {
 						System.out.println(one + " not in the list.");
 						row[i] = " ";
 					}

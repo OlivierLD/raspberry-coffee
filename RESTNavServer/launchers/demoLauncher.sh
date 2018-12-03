@@ -2,8 +2,8 @@
 # Describes the different scenarios
 # Uses runNavServer.sh
 #
-# If first param is 'N', do not launch browsers after starting the server
-LAUNCH_BROWSER=Y
+# If first param is 'Y', launch a browser after starting the server
+LAUNCH_BROWSER=N
 if [ $# -gt 0 ]
 then
   LAUNCH_BROWSER=$1
@@ -23,16 +23,16 @@ GO=true
 while [ "$GO" == "true" ]
 do
 	clear
-	echo -e ">> Note 📝 : pass 'N' as parameter to this script NOT to launch a browser after "
+	echo -e ">> Note 🛑 : pass 'Y' as parameter to this script to launch a browser after "
 	echo -e "             starting the server"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "|  P. Launch proxy CLI, to visualize HTTP & REST traffic                                  |"
-	echo -e "| PG. Launch proxy GUI, to visualize HTTP & REST traffic                                  |"
+	echo -e "|  P. Launch proxy CLI, to visualize HTTP & REST traffic 🔎                               |"
+	echo -e "| PG. Launch proxy GUI, to visualize HTTP & REST traffic 🕵️‍                                |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "| >> Hint: use 'killns.sh' to stop any running NavServer                                  |"
-	echo -e "| >> Hint: use 'killproxy.sh' to stop any running Proxy Server                            |"
+	echo -e "| >> Hint: use 'killns.sh' to stop any running NavServer 🔫                               |"
+	echo -e "| >> Hint: use 'killproxy.sh' to stop any running Proxy Server 🔫                         |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |"
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
@@ -42,10 +42,10 @@ do
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "|  S. Show NavServer process(es)                                                          |"
-	echo -e "| SP. Show proxy process(es)                                                              |"
+	echo -e "|  S. Show NavServer process(es) ⚙️                                                        |"
+	echo -e "| SP. Show proxy process(es) ⚙️                                                            |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "|  Q. Quit                                                                                |"
+	echo -e "|  Q. Quit ✋                                                                             |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -en " ==> You choose: "
 	read option

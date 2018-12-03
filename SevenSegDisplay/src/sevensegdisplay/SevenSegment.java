@@ -3,7 +3,6 @@ package sevensegdisplay;
 import com.pi4j.io.i2c.I2CFactory;
 
 import java.io.IOException;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ public class SevenSegment
   private final static int[] digits = { 0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F, // 0..9
                                         0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71 };                       // A..F
 
-  public final static Map<String, Byte> ALL_CHARS = new HashMap<>(); 
+  public final static Map<String, Byte> ALL_CHARS = new HashMap<>();
   //  0x00, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x02, /*   ! " # $ % & '  */
   //  0x80, 0x0f, 0x80, 0x80, 0x04, 0x40, 0x80, 0x80, /* ( ) * + , - . /  */
   //  0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, /* 0 1 2 3 4 5 6 7  */
@@ -51,10 +50,9 @@ public class SevenSegment
   //  0x74, 0x30, 0x0E, 0x76, 0x06, 0x15, 0x54, 0x5c, /* h i j k l m n o  */
   //  0x73, 0x67, 0x50, 0x6d, 0x78, 0x1c, 0x1c, 0x2A, /* p q r s t u v w  */
   //  0x76, 0x6e, 0x5b, 0x39, 0x80, 0x0F, 0x80, 0x08  /* x y z { | } ~    */
-  
 
-  static
-  { // FYI, 0x80 is the dot, displayed instead of "undisplayable" characters.
+
+  static { // FYI, 0x80 is the dot, displayed instead of "undisplayable" characters.
     ALL_CHARS.put(" ",  (byte)0x00);
     ALL_CHARS.put("!",  DOT);
     ALL_CHARS.put("\"", DOT);
@@ -148,39 +146,39 @@ public class SevenSegment
     ALL_CHARS.put("{",  (byte)0x39);
     ALL_CHARS.put("|",  (byte)0x30);
     ALL_CHARS.put("}",  (byte)0x0f);
-    ALL_CHARS.put("~",  DOT);                       
+    ALL_CHARS.put("~",  DOT);
   }
-  
-  public SevenSegment() throws I2CFactory.UnsupportedBusNumberException
-  {
+
+  public SevenSegment() throws I2CFactory.UnsupportedBusNumberException {
     display = new LEDBackPack(0x70);
   }
-  public SevenSegment(int addr) throws I2CFactory.UnsupportedBusNumberException
-  {
+
+  public SevenSegment(int addr) throws I2CFactory.UnsupportedBusNumberException {
     display = new LEDBackPack(addr, false);
   }
-  public SevenSegment(int addr, boolean b) throws I2CFactory.UnsupportedBusNumberException
-  {
+
+  public SevenSegment(int addr, boolean b) throws I2CFactory.UnsupportedBusNumberException {
     display = new LEDBackPack(addr, b);
   }
 
   /*
    * Sets a digit using the raw 16-bit value
    */
-  public void writeDigitRaw(int charNumber, int value) throws IOException
-  {
-    if (charNumber > 7)
+  public void writeDigitRaw(int charNumber, int value) throws IOException {
+    if (charNumber > 7) {
       return;
+    }
     // Set the appropriate digit
     this.display.setBufferRow(charNumber, value);
   }
 
-  public void writeDigitRaw(int charNumber, String value) throws IOException
-  {
-    if (charNumber > 7)
-      return;
-    if (value.trim().length() > 1)
-      return;
+  public void writeDigitRaw(int charNumber, String value) throws IOException {
+    if (charNumber > 7) {
+	    return;
+    }
+    if (value.trim().length() > 1) {
+	    return;
+    }
     // Set the appropriate digit
     int byteValue = ALL_CHARS.get(value);
     this.display.setBufferRow(charNumber, byteValue);
@@ -189,40 +187,40 @@ public class SevenSegment
   /*
    * Sets a single decimal or hexademical value (0..9 and A..F)
    */
-  public void writeDigit(int charNumber, int value) throws IOException 
-  {
+  public void writeDigit(int charNumber, int value) throws IOException {
     writeDigit(charNumber, value, false);
   }
-  public void writeDigit(int charNumber, int value, boolean dot) throws IOException 
-  {
-    if (charNumber > 7)
-      return;
-    if (value > 0xF)
-      return;
+
+  public void writeDigit(int charNumber, int value, boolean dot) throws IOException {
+    if (charNumber > 7) {
+	    return;
+    }
+    if (value > 0xF) {
+	    return;
+    }
     // Set the appropriate digit
     this.display.setBufferRow(charNumber, digits[value] | (dot ? 0x01 << 7 : 0x00));
   }
-  
+
   /*
    * Enables or disables the colon character
    */
-  public void setColon() throws IOException
-  {
+  public void setColon() throws IOException {
     setColon(true);
   }
-  public void setColon(boolean state) throws IOException
-  {
+
+  public void setColon(boolean state) throws IOException {
     // Warning: This function assumes that the colon is character '2',
     // which is the case on 4 char displays, but may need to be modified
     // if another display type is used
-    if (state)
-      this.display.setBufferRow(2, 0xFFFF);
-    else
-      this.display.setBufferRow(2, 0);
+    if (state) {
+	    this.display.setBufferRow(2, 0xFFFF);
+    } else {
+	    this.display.setBufferRow(2, 0);
+    }
   }
-  
-  public void clear() throws IOException
-  {
+
+  public void clear() throws IOException {
     this.display.clear();
   }
 }

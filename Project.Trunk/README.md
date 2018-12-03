@@ -32,9 +32,9 @@ and a script to run the example should be available as well.
     - For Servos
 
 ### Node JS
-Some of the projects in this folder require `NodeJS` (and its `N`ode `P`ackage `M`anager aka `npm`) to be installed, some times with extra modules.
+Some of the projects in this folder require `Node.js` (and its `N`ode `P`ackage `M`anager aka `npm`) to be installed, some times with extra modules.
 
-#### To install NodeJS on the Raspberry Pi (Oct 2018)
+#### To install Node.js on the Raspberry Pi (Oct 2018)
 ```
  $ sudo su
  root# curl -sL https://deb.nodesource.com/setup_9.x | bash -

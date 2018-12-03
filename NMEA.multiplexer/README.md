@@ -118,7 +118,7 @@ A basic approach to compute the current would be to do it by instant triangulati
 and comparing it with the GPS Data (Course and Speed Over Ground).
 A better approach turned out to compute the current over a given period of time.
 For example, you can perform this calculation by comparing the position you should be at with the CMG only (i.e. as if there was no current)
- and the one given by the GPS, over periods like 30 seconds, 1 minute, 10 minutesFSupporte, etc, using a smoothing of the Boat Speed (BSP) and the CMG.
+ and the one given by the GPS, over periods like 30 seconds, 1 minute, 10 minutes, etc, using a smoothing of the Boat Speed (BSP) and the CMG.
  The cache is designed to manage several such computations in parallel, they are discriminated by the length of their time-buffer (30 seconds, 5 minutes, etc).
 The accuracy of such a computations is _much higher_ than the instant triangulation.
 See [this article](http://www.lediouris.net/RaspberryPI/_Articles/readme.html) for details.
@@ -458,7 +458,7 @@ where `machine-name` is the name of the machine where the multiplexer is running
 
 ![Admin Web UI](./docimages/AdminSnapshot.png "Admin GUI")
 
-And any REST client (NodeJS, Postman, curl, your own code, ...) does the job.
+And any REST client (Node.js, Postman, curl, your own code, ...) does the job.
 
 Example with `curl`:
 ```
@@ -588,49 +588,7 @@ Along the same lines - even if it can sound a bit disproportionate - `VNC` works
 This is Jessie/Pixel running on a Raspberry PI Zero.
 
 #### Note: Access point _and_ Internet access
-To enable `hostapd` to have you Raspberry PI acting as a WiFi hotspot, as we said, you can follow
-<a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those instructions</a> from the Adafruit website.
-
-The thing is that when the Raspberry PI becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
-`git pull origin master`, etc, that can rapidely become quite frustrating.
-
-In the past, I had written a couple of scripts to juggle with the various configuration files (`hostapd.conf`, `wpa_supplicant.conf`, `/etc/network/interfaces`, etc).
-This worked for a while, then after an `apt-get upgrade`, it stopped working, some config files had changed... Bummer.
-
-A much better approach seems to be to have 2 WiFi adpaters. The Rasberry PI 3 and the Zero W already have one embedded, I just added another one, the small USB WiFi dongle I used to use
-on the other Raspberry PIs.
-This one becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
-
-```
-# interfaces(5) file used by ifup(8) and ifdown(8)
-
-# Please note that this file is written to be used with dhcpcd
-# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
-
-# Include files from /etc/network/interfaces.d:
-source-directory /etc/network/interfaces.d
-
-auto lo
-iface lo inet loopback
-
-iface eth0 inet manual
-
-allow-hotplug wlan0
-iface wlan0 inet static
-  address 192.168.42.1
-  netmask 255.255.255.0
-
-#iface wlan0 inet manual
-#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
-
-allow-hotplug wlan1
-iface wlan1 inet dhcp
-wpa-ssid "ATT856"
-wpa-psk "<your network passphrase>"
-```
-See the 4 lines at the bottom of the file, that's it!
-
-Now, when the `wlan1` is plugged in, this Raspberry PI is a WiFi hotspot, *_and_* has Internet access.
+Instructions were moved [here](../README.md#raspberry-pi-as-an-access-point-and-internet-access).
 
 ## Start / Stop all forwarders
 In some cases, you might want to start and stop the forwarders (doing logging for example) on demand.
@@ -733,5 +691,23 @@ Generated file sample.data/alcatraz.2018.may.5.nmea.kml is ready.
 Then open the generated file in Google Map or Google Earth.
 
 - The same feature is also available for GPX (for navigation software like OpenCPN), from `util.NMEAtoGPX`.
+
+## Builder
+As an example, there is a script called `to.prod.sh` that shows a way to
+build the soft for distribution without the full git repository.
+
+Just run
+```
+ $ ./to.prod.sh
+```
+It will:
+- Start a gradle build
+- Put all the required resources into a new directory (provided at runtime)
+- Archive the directory into a `tar.gz` file
+- Drop the directory.
+
+Then you can distribute the archive.
+
+All the user has to do it to un-archive it and run the `mux.sh` script.
 
 -------------------------------

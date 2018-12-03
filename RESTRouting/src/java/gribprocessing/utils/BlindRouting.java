@@ -154,7 +154,7 @@ public class BlindRouting {
 		}
 
 		BlindRouting br = new BlindRouting();
-		String content = br.calculate(
+		RoutingUtil.RoutingResult content = br.calculate(
 				fromL,
 				fromG,
 				toL,
@@ -172,27 +172,27 @@ public class BlindRouting {
 				25.0,
 				avoidLand,
 				verb);
-		System.out.println(content);
+		System.out.println(content.bestRoute);
 		System.out.println("Done!");
 	}
 
-	public String calculate(double fromL,
-	                        double fromG,
-	                        double toL,
-	                        double toG,
-	                        String startTime,
-	                        String gribName,
-	                        String polarFile,
-	                        String outputType,
-	                        double timeInterval,
-	                        int routingForkWidth,
-	                        int routingStep,
-	                        int limitTWS,
-	                        int limitTWA,
-	                        double speedCoeff,
-	                        double proximity,
-	                        boolean avoidLand,
-	                        boolean verbose) throws Exception {
+	public RoutingUtil.RoutingResult calculate(double fromL,
+	                                           double fromG,
+	                                           double toL,
+	                                           double toG,
+	                                           String startTime,
+	                                           String gribName,
+	                                           String polarFile,
+	                                           String outputType,
+	                                           double timeInterval,
+	                                           int routingForkWidth,
+	                                           int routingStep,
+	                                           int limitTWS,
+	                                           int limitTWA,
+	                                           double speedCoeff,
+	                                           double proximity,
+	                                           boolean avoidLand,
+	                                           boolean verbose) throws Exception {
 
 		this.verbose = verbose;
 		GeoPoint from = new GeoPoint(fromL, fromG);
@@ -294,6 +294,7 @@ public class BlindRouting {
 		}
 
 		StringBuffer bestRoute = RoutingUtil.outputRouting(center.getPosition(), destination.getPosition(), routingResult.closest, routingResult.isochronals, outputFmt);
-		return bestRoute.toString();
+		routingResult.bestRoute(bestRoute.toString());
+		return routingResult;
 	}
 }

@@ -12,7 +12,8 @@ import static utils.TimeUtil.delay;
 
 /**
  * see https://learn.adafruit.com/nokia-5110-3310-monochrome-lcd?view=all
- * see https://learn.adafruit.com/nokia-5110-3310-lcd-python-library?view=all
+ * see https://learn.adafruit.com/nokia-5110-3310-lcd-python-library?view=all for the wiring
+ *
  */
 public class Nokia5110 {
 	public final static int LCDWIDTH = 84;

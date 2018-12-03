@@ -6,7 +6,7 @@ while [ 1 ]
 do
   CHOICE=$(
    whiptail --title "Weather Station" --menu "Choose option" 16 100 9 \
-	"1" "Start NodeJS server."   \
+	"1" "Start Node.js server."   \
 	"2" "Start Weather Station reader."  \
 	"3" "Show processes." \
 	"9" "Quit"  3>&2 2>&1 1>&3

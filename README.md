@@ -1,28 +1,38 @@
-![Raspberry Coffee](./raspberryCoffee.png)
-### Raspberry Coffee
+<h1><img align="middle" alt="Raspberry Coffee" src="./raspberryCoffee.png"> Raspberry Coffee</h1>
+
 #### Java code and wiring for the Raspberry Pi, featuring reusable libraries and snippets ####
 It uses the [PI4J library](http://pi4j.com).
 
 ```
 $ curl -s get.pi4j.com | sudo bash
 ```
-
 ---
 This project contains Java code, mostly translated from Python, dedicated to usually *one* board (like BMP180, LSM303, etc).
-More consistent samples can be found in the RasPISamples project, where several components have been assembled together.
+More consistent samples can be found in the RasPISamples module (being moved to the Project.Trunk module), where several components have been assembled together.
 Do take a look, it also comes with a readme file.
 
 ---
-To get started as quickly as possible, and not only for this project, from scratch:
+- [Main highlights](./Papers/README.md)
+---
+
+**Summary**
+- [Setup a brand new Raspberry Pi](#setup-a-brand-new-raspberry-pi)
+- [Java Virtual Machine](#java-virtual-machine-jvm)
+- [How to build and run](#how-to-build-and-run)
+- [Developing on the Raspberry Pi, or Developing for the Raspberry Pi ?](#developing-on-the-raspberry-pi-or-developing-for-the-raspberry-pi-)
+- [Raspberry Pi, a possible thing of the Internet of Things...](#raspberry-pi-a-possible-thing-of-the-internet-of-things)
+- [Project list, growing](#project-list-growing)
 
 #### Setup a brand new Raspberry Pi
-###### Foundation Software
+To get started as quickly as possible, and not only for this project, from scratch.
+
+##### Foundation Software
 The goal here is to get ready with the minimal configuration you will be able to use to clone a git repository and start working on it.
 
 Typically, you will need to have the minimal git tools and the right compilers. The code contained in the repo(s) will be responsible for
 downloading the right dependencies at build time (`gradle` is definitely good at that).
 
-###### Minimal setup
+##### Minimal setup
 - Install Raspian (not NOOBS) as explained at https://www.raspberrypi.org/learning/software-guide/quickstart/, and burn your SD card
     - Depending on the OS you burn the SD card from, the procedure varies. Well documented in the link above.
 - Boot on the Raspberry with the new SD card, USB keyboard and HDMI screen attached to it (if this is an old RPi, use a USB WiFi dongle too)
@@ -34,6 +44,7 @@ downloading the right dependencies at build time (`gradle` is definitely good at
         - This can be modified or reverted at any time.
     - setup config (keyboard, locale, etc)
     - change pswd, hostname
+        - for the hostname, you might need to go a Terminal, reach `sudo raspi-config`, and use `Network > Hostname`.
 - Reboot (and now, you can use `ssh` if it has been enabled above) and reconnect
 
 - From a terminal, run the following commands:
@@ -79,6 +90,14 @@ $ which wget
 - You can use VNC (if enabled in the config above)
     - Run `vncserver` from a terminal, and use `VNC Viewer` from another machine to connect.
 
+- You may also remove unwanted softwares, just in case you don't need them:
+    - `$ sudo apt-get purge wolfram-engine`
+    - `$ sudo apt-get purge minecraft-pi`
+    - `$ sudo apt-get purge sonic-pi`
+    - `$ sudo apt-get purge libreoffice*`
+    - `$ sudo apt-get clean`
+    - `$ sudo apt-get autoremove`
+
 - If you need AI and Deep Learning (Anaconda, Jupyter notebooks, TensorFlow, Keras), follow [this link](https://medium.com/@margaretmz/anaconda-jupyter-notebook-tensorflow-and-keras-b91f381405f8).
     - or type:
     ```
@@ -90,21 +109,128 @@ $ which wget
         - Then the command to use to reach Jupyter would show up in the console.
     - _Note:_ Training a Neural Network is a very demanding operation, that requires computing resources not granted on a Raspberry Pi. Installing Keras on a Raspberry Pi might not be relevant. OpenCV, though, would be an option to consider. Google it ;).
 
+###### Raspberry Pi as an Access Point _and_ Internet access.
+Your Raspberry Pi can be turned into an Access Point, this means that it generates its own network, so you can connect to it from other devices (other Raspberry Pis, laptops, tablets, smart-phones, ESP8266, etc).
+It can be appropriate when there is no network in the area you are in, for example when sailing in the middle of the ocean, kayaking in a remote place, hiking in the boonies, etc.
 
-You're ready to rock!
+Setting up the Raspberry Pi to be an access point is well documented on the [Adafruit website](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
 
---------------
-- [Main highlights](./Papers/README.md)
+The thing is that when the Raspberry PI becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
+`git pull origin master`, etc, that can rapidly become quite frustrating.
+
+Now, for development purpose, you may very well need to have an Access Point **_and_** an Internet access (i.e. access to your local or wide area network).
+
+For that, you need 2 WiFi adapters (yes, you could also use an Ethernet connection, which is a no brainer, we talk about WiFi here).
+Recent Raspberry Pis are WiFi-enabled, you just need a WiFi dongle, that would fit on a USB port.
+On older Raspberry Pis (not WiFi-enabled), you need 2 USB dongles.
+
+As we said above, to enable `hostapd` to have your Raspberry PI acting as a WiFi hotspot, you can follow
+<a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
+
+>  Note: during the steps above, I had to change the file `/etc/default/isc-dhcp-server`, at the end, for the `isc-dhcp-server` service to start:
+```properties
+# INTERFACESv4="wlan0"
+# INTERFACESv6="wlan0"
+INTERFACES="wlan0"
+```
+
+> Note: On recent Raspberry Pi models (including the Zero W), you can comment the line of `/etc/hostapd/hostapd.conf` that mentions a driver:
+```properties
+interface=wlan0
+# driver=rtl871xdrv
+ssid=Pi-Net2
+country_code=US
+hw_mode=g
+channel=6
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=<network-password-here>
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=CCMP
+wpa_group_rekey=86400
+ieee80211n=1
+wme_enabled=1
+```
+> The name (`ssid`) and password (`wpa_passphrase`) of the network created by the Access Point is in the same file, `/etc/hostapd/hostapd.conf`, as well as the association between the network and the interface (`wlan0` here).
+
+The Raspberry PI 3 and the Zero W already have one embedded WiFi port, I just added another one, the small USB WiFi dongle I used to use
+on the other Raspberry PIs.
+This one becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
+
+```
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+auto lo
+iface lo inet loopback
+
+iface eth0 inet manual
+
+allow-hotplug wlan0
+iface wlan0 inet static
+  address 192.168.42.1
+  netmask 255.255.255.0
+
+#iface wlan0 inet manual
+#    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+allow-hotplug wlan1
+iface wlan1 inet dhcp
+wpa-ssid "ATT856"
+wpa-psk "<your network passphrase>"
+```
+See the 4 lines at the bottom of the file, that's it!
+
+> Note: above, `192.168.42.1` will be the address of your hotspot, aka gateway. Feel free to change it to anything else, like `192.168.127.1`...
+> If that was the case, you also need to make sure that the entry you've added in `/etc/dhcp/dhcpd.conf` matches this address range:
+```
+subnet 192.168.127.0 netmask 255.255.255.0 {
+  range 192.168.127.10 192.168.127.50;
+  option broadcast-address 192.168.127.255;
+  option routers 192.168.127.1;
+  default-lease-time: 600;
+  max-lease-time: 7200;
+  option domain-name "local-pi";
+  option domain-name-servers 8.8.8.8 8.8.4.4;
+}
+```
+The lines to pay attention to are the ones with a `127` in it...
+
+Now, when the `wlan1` is plugged in, this Raspberry PI is a WiFi hotspot, *_and_* has Internet access.
+
+This means that when you are on a Raspberry Pi with **two** WiFi adapters (the Raspberry Pi 3 with an extra dongle, where you do you developments from for example), you
+have **two** WiFi interfaces, `wlan0` and `wlan1`.
+
+When the same SD card runs on a Raspberry Pi with only **one** WiFi adapter (the Raspberry Pi Zero W you use to do some logging, when kayaking in the boonies for example),
+you have only **one** WiFi interface `wlan0`, and the Raspberry Pi is a hotspot generating its own network, as defined by you in `/etc/hostapd/hostapd.conf`.
+
+> Note: In some cases, I was not able to have `hostapd` to start at boot time... It was working fine from the command line though.
+> I've cheated by putting an `hostapd /etc/hostapd/hostapd.conf &` in `/etc/rc.local`. It's not elegant, but it works.
+
+Now you're ready to rock!
+
 ---
+#### Java Virtual Machine (JVM)
+
 _Note:_
 Java code is compiled into `class` files, that run on a Java Virtual Machine (`JVM`). Java is not the only language that runs a `JVM`, this project also contains some small samples of
 other JVM-aware languages, invoking and using the features of this project.
 
 Those samples include Scala, Groovy, Kotlin..., and the list is not closed!
 
-See in the [OthetJVM.languages](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/OtherJVM.languages) directory.
+See in the [OthetJVM.languages](https://github.com/OlivierLD/raspberry-coffee/tree/master/OtherJVM.languages) directory, there is more about that.
 
 ---
+
+#### How to build and run
+
 _Note:_
 This project uses `gradle` and `git`. `Gradle` will be installed automatically if it is not present on your system,
 it uses the gradle wrapper (`gradlew`).
@@ -116,14 +242,13 @@ remains in your way, I have not tested it.
 ---
 To build it, clone this project (this repo), make sure the script named `gradlew` is executable, and execute `gradlew`.
 ```
- Prompt> git clone https://github.com/OlivierLD/raspberry-pi4j-samples.git
- Prompt> cd raspberry-pi4j-samples
+ Prompt> git clone https://github.com/OlivierLD/raspberry-coffee.git
+ Prompt> cd raspberry-coffee
  Prompt> chmod +x gradlew
  Prompt> ./gradlew [--daemon] build
 ```
 You are expecting an end like that one:
 ```
-
 
 BUILD SUCCESSFUL in 55s
 97 actionable tasks: 17 executed, 80 up-to-date
@@ -198,6 +323,8 @@ None of the above is new. Connecting to the Internet does not impress anyone any
 The snippets provided in this project are here to help in this kind of context. Some will use the network aspect of the story, some others will interact with electronic components. The two aspects should be easy to bridge, that is the goal. If that was not the case, please let me know (email address of the left side).
 
 ---
+
+#### Project list, growing...
 
 Several projects are featured here:
   * Basic GPIO interaction

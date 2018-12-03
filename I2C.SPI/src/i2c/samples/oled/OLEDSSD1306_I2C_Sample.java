@@ -14,7 +14,7 @@ import lcd.utils.img.Java32x32;
  */
 public class OLEDSSD1306_I2C_Sample {
 
-	public static void main(String... args) throws UnsupportedBusNumberException, IOException {
+	public static void main(String... args) throws Exception {
 		if ("true".equals(System.getProperty("verbose", "false"))) {
 			System.out.println("Starting...");
 		}

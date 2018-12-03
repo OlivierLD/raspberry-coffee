@@ -146,7 +146,7 @@ To enable everything, you need to:
 1. Flash its SD card and connect it to a network
 1. Install build tools
 1. Install `git`
-1. Install `NodeJS` and `npm`
+1. Install `Node.js` and `npm`
 1. Clone the right `git` repository
 1. Install *_all_* the required `node` modules
 1. Drill down into the right directory

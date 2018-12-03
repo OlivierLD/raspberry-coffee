@@ -9,7 +9,7 @@ The Raspberry PI Zero W is a small single-board computer that
 - Costs $10.
 
 As a Linux machine, it runs whatever a Linux machine can run (Python, Java and other JVM-based languages,
-NodeJS, Node-RED, etc).
+Node., Node-RED, etc).
 
 We want to compare here the behavior of an NMEA Multiplexer based on Java (this project), and another
 one - a prototype - based on Node-RED, specially the memory footprint.
@@ -20,7 +20,7 @@ If not already there, Install [Node-RED](http://nodered.org/) on the Raspberry P
 Installation instructions for your platform are available [here](http://nodered.org/docs/getting-started/installation.html), and it comes
 with Raspberry PI goodies.
 
-_March 2017_: Node-RED is already installed on the NOOBS Image. It also had some cool Nodes already available. A little drawback though: the version of NodeJS is not a recent one.
+_March 2017_: Node-RED is already installed on the NOOBS Image. It also had some cool Nodes already available. A little drawback though: the version of Node.js is not a recent one.
 I upgraded mine (Node v6.10.1, Npm 3.10.10, Node-RED core 0.16.2).
 
 Among others:
@@ -29,8 +29,8 @@ Among others:
 - Sense HAT
 - ...
 
-Node-RED is based on NodeJS, itself based on V8, the Google Chrome's OpenSource JavaScript engine.
-As such, NodeJS - and thus Node-RED - is programmable in JavaScript.
+Node-RED is based on Node.js, itself based on V8, the Google Chrome's OpenSource JavaScript engine.
+As such, Node.js - and thus Node-RED - is programmable in JavaScript.
 For those wondering, Java & Javascript are as related to each other as Ham & Hamburger (said _John Resig_).
 
 To enable the replay of NMEA log file, we've created an extra node, available [here](https://github.com/OlivierLD/node.pi/tree/master/node-red).
@@ -247,7 +247,7 @@ The memory and resource footprint seem to be smaller in the Java case, which is 
 Node-RED being way more generic.
 
 ###### Installation
- One `jar-file` for the Java version (requires `Java`), a couple of `npm` commands for Node-RED (requires `NodeJS`).
+ One `jar-file` for the Java version (requires `Java`), a couple of `npm` commands for Node-RED (requires `Node.js`).
 
 ###### Debugging Capabilities
  The Java version has all the debugging features that come with Java. Node-RED does not have much.

@@ -5,7 +5,7 @@
 The chassis and Motor HAT come from [Adafruit](https://learn.adafruit.com/simple-raspberry-pi-robot).
 
 The code for the Motor HAT is all in Java, the web part (user interface)
-runs on `NodeJS`.
+runs on `Node.js`.
 
 Drive a robot from a browser.
 
@@ -23,7 +23,7 @@ Compile the Java code:
 $ ../../gradlew shadowJar
 ```
 
-Then start tghe node server and run the java code
+Then start the node server and run the java code
 ```
 $ cd node
 $ node robot.server.js &

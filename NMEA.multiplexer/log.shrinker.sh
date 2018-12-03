@@ -8,3 +8,5 @@ JAVA_OPTIONS=
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 java $JAVA_OPTIONS -cp $CP util.LogShrinker $1
 #
+echo -e "Note >> It is your job to remove unwanted records mentioned above, if you want."
+#

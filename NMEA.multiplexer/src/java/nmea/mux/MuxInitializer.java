@@ -2,6 +2,7 @@ package nmea.mux;
 
 import context.ApplicationContext;
 import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -437,7 +438,7 @@ public class MuxInitializer {
 				try {
 					Object dynamic = Class.forName(clss).newInstance();
 					if (dynamic instanceof Forwarder) {
-						Forwarder forwarder = (Forwarder)dynamic;
+						Forwarder forwarder = (Forwarder) dynamic;
 						String propProp = String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx));
 						String propFileName = muxProps.getProperty(propProp);
 						if (propFileName != null) {
@@ -453,9 +454,16 @@ public class MuxInitializer {
 					} else {
 						throw new RuntimeException(String.format("Expected a Forwarder, found a [%s]", dynamic.getClass().getName()));
 					}
-				} catch (Exception ex) {
+				} catch (Exception ioe) {
+					// Some I2C device was not found?
+					System.err.println("---------------------------");
+					ioe.printStackTrace();
+					System.err.println("---------------------------");
+				} catch (Throwable ex) {
+					System.err.println("===========================");
 					System.err.println("Classpath: " + System.getProperty("java.class.path"));
 					ex.printStackTrace();
+					System.err.println("===========================");
 				}
 			} else {
 				String typeProp = String.format("forward.%s.type", MUX_IDX_FMT.format(fwdIdx));
@@ -534,7 +542,7 @@ public class MuxInitializer {
 							boolean timeBased = "true".equals(muxProps.getProperty(String.format("forward.%s.timebase.filename", MUX_IDX_FMT.format(fwdIdx)), "false"));
 							String propFile = muxProps.getProperty(String.format("forward.%s.properties", MUX_IDX_FMT.format(fwdIdx)));
 							String fSubClass = muxProps.getProperty(String.format("forward.%s.subclass", MUX_IDX_FMT.format(fwdIdx)));
-							String radix = muxProps.getProperty(String.format("forward.%s.filename.radix", MUX_IDX_FMT.format(fwdIdx)));
+							String radix = muxProps.getProperty(String.format("forward.%s.filename.suffix", MUX_IDX_FMT.format(fwdIdx)));
 							String logDir = muxProps.getProperty(String.format("forward.%s.log.dir", MUX_IDX_FMT.format(fwdIdx)));
 							String split = muxProps.getProperty(String.format("forward.%s.split", MUX_IDX_FMT.format(fwdIdx)));
 							try {
@@ -542,9 +550,15 @@ public class MuxInitializer {
 								if (fSubClass == null) {
 									fileForwarder = new DataFileWriter(fName, append, timeBased, radix, logDir, split);
 								} else {
-									fileForwarder = (DataFileWriter)Class.forName(fSubClass.trim())
-											.getConstructor(String.class, Boolean.class, Boolean.class, String.class, String.class, String.class)
-											.newInstance(fName, append, timeBased, radix, logDir, split);
+									try {
+										fileForwarder = (DataFileWriter) Class.forName(fSubClass.trim())
+												.getConstructor(String.class, Boolean.class, Boolean.class, String.class, String.class, String.class)
+												.newInstance(fName, append, timeBased, radix, logDir, split);
+									} catch (NoSuchMethodException nsme) {
+										fileForwarder = (DataFileWriter) Class.forName(fSubClass.trim()) // Fallback on previous constructor
+												.getConstructor(String.class, Boolean.class)
+												.newInstance(fName, append);
+									}
 								}
 								if (propFile != null) {
 									Properties forwarderProps = new Properties();

@@ -107,11 +107,11 @@ public class ExtraDataComputer extends Computer {
 							rmcMap.put(NMEADataCache.SOG, new Speed(rmc.getSog()));
 							rmcMap.put(NMEADataCache.POSITION, rmc.getGp());
 							Date date = rmc.getRmcDate();
-							if (date != null)
+							if (date != null) {
 								rmcMap.put(NMEADataCache.GPS_DATE_TIME, new UTCDate(date));
-							else
+							} else {
 								rmcMap.put(NMEADataCache.GPS_DATE_TIME, null);
-
+							}
 							Date time = rmc.getRmcTime();
 							if (time != null) {
 								rmcMap.put(NMEADataCache.GPS_TIME, new UTCTime(time));
@@ -123,10 +123,11 @@ public class ExtraDataComputer extends Computer {
 							try {
 								if (rmc != null && (rmc.getRmcDate() != null || rmc.getRmcTime() != null) && rmc.getGp() != null) {
 									long solarTime = -1L;
-									if (rmc.getRmcDate() != null)
+									if (rmc.getRmcDate() != null) {
 										solarTime = rmc.getRmcDate().getTime() + NMEAUtils.longitudeToTime(rmc.getGp().lng);
-									else
+									} else {
 										solarTime = rmc.getRmcTime().getTime() + NMEAUtils.longitudeToTime(rmc.getGp().lng);
+									}
 									Date solarDate = new Date(solarTime);
 									rmcMap.put(NMEADataCache.GPS_SOLAR_TIME, new SolarDate(solarDate));
 								}
@@ -164,10 +165,11 @@ public class ExtraDataComputer extends Computer {
 							cache.put(NMEADataCache.HDG_COMPASS, new Angle360(hdg));
 						} else {
 							double dec = 0d;
-							if (dev != -Double.MAX_VALUE)
+							if (dev != -Double.MAX_VALUE) {
 								dec = dev;
-							else
+							} else {
 								dec = var;
+							}
 							cache.put(NMEADataCache.DECLINATION, new Angle180EW(dec));
 							cache.put(NMEADataCache.HDG_COMPASS, new Angle360(hdg /* - dec */));
 						}
@@ -185,8 +187,9 @@ public class ExtraDataComputer extends Computer {
 							Map<String, Object> map = new HashMap<>(2);
 							map.put(NMEADataCache.AWS, new Speed(mwv.speed));
 							int awa = mwv.angle;
-							if (awa > 180)
+							if (awa > 180) {
 								awa -= 360;
+							}
 							map.put(NMEADataCache.AWA, new Angle180(awa));
 							cache.putAll(map);
 						}
@@ -197,8 +200,9 @@ public class ExtraDataComputer extends Computer {
 							Map<String, Object> map = new HashMap<>(2);
 							map.put(NMEADataCache.AWS, new Speed(vwr.speed));
 							int awa = vwr.angle;
-							if (awa > 180)
+							if (awa > 180) {
 								awa -= 360;
+							}
 							map.put(NMEADataCache.AWA, new Angle180(awa));
 							cache.putAll(map);
 						}
@@ -245,8 +249,9 @@ public class ExtraDataComputer extends Computer {
 						Map<Long, NMEADataCache.CurrentDefinition> currentMap =
 										((Map<Long, NMEADataCache.CurrentDefinition>) cache.get(NMEADataCache.CALCULATED_CURRENT));
 						Set<Long> keys = currentMap.keySet();
-					  if (this.verbose && keys.size() != 1)
-					    System.out.println("1 - Nb entry(ies) in Calculated Current Map:" + keys.size());
+					  if (this.verbose && keys.size() != 1) {
+						  System.out.println("1 - Nb entry(ies) in Calculated Current Map:" + keys.size());
+					  }
 						for (Long l : keys) {
 							int tbl = (int) (l / (60_000));
 							if (tbl > currentTimeBuffer) { // Take the bigger one.

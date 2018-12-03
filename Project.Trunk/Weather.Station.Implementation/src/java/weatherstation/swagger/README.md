@@ -16,11 +16,11 @@ Then, as explained in the README.md generated in the `generated` directory:
 
 #### If you are not 100% familiar with `Swagger`
 Go to the [Swagger](http://swagger.io/) web site.
-Swagger allows you to define the structure of your REST API (in `JSON`, or even better: in `yaml`). 
-Then you can generate your code (client side, server side) in the language of your choice. 
+Swagger allows you to define the structure of your REST API (in `JSON`, or even better: in `yaml`).
+Then you can generate your code (client side, server side) in the language of your choice.
 
 #### After running the generation above
-The command `./gradlew swagger` generated the NodeJS server side artifacts for you to implement your code.
+The command `./gradlew swagger` generated the Node.js server side artifacts for you to implement your code.
 To actually hook up the server-side code and the actually expected data, you just need to implement the required methods.
 
 Example:
@@ -54,7 +54,7 @@ exports.readADC = function(args, res, next) {
 ```
 
 After implementing the required methods, your server is ready for duty, and can be reached by any REST client (your application, curl, PostMan, ... whatever!).
- 
+
 #### Hooking up the sensors
 To be able to read the sensor data, you need to hook p the code we've used so far.
 In `controllers.SensorsService.js`, add a line like this:

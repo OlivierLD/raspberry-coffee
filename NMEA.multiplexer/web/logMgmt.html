@@ -66,6 +66,27 @@
 	</style>
 	<script type="text/javascript">
 
+		var getSystemDate = function(cb) {
+			var getTime = getSystemTime(); // A promise
+			getTime.done(function (value) {
+				console.log("System date:", value);
+				if (cb !== undefined) {
+					cb(value);
+				}
+			});
+			getTime.fail(function (error, errmess) {
+				var message;
+				if (errmess !== undefined) {
+					if (errmess.message !== undefined) {
+						message = errmess.message;
+					} else {
+						message = errmess;
+					}
+				}
+				console.log("GetSystemTime failed..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
+			});
+		};
+
 		var getLogFilesList = function () {
 			var self = this;
 			var getData = getLogFiles(); // A promise
@@ -170,15 +191,18 @@
 
 		window.onload = function() {
 			getLogFilesList();
+			getSystemDate(function(date) {
+				document.getElementById("syst-date").innerHTML = '<b>System Date: ' + date + '</b>';
+			});
 		};
 		</script>
 </head>
 <body>
 <div id="main">
-    <div >
+    <div>
 			<h1 style="margin-left: 10px;"><span onclick="window.history.back();" title="Go back">&#8678;&nbsp;</span> Log Manager <img src="icons/reload.png" title="reload page" width="36" height="36" style="vertical-align: middle; margin-left: 20px;" onclick="location.reload();"></h1>
     </div>
-
+		<div id="syst-date" style="margin: 10px;"></div>
     <div id="file-table">
 			<div id="count" style="margin-left: 10px;"></div>
 			<table id="log-files-table" class="data-table">

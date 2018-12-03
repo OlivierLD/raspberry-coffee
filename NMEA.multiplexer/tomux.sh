@@ -8,7 +8,8 @@ if [ "$1" == "-n" ]
 then
   YES=0
 fi
-cd raspberry-pi4j-samples/NMEA.multiplexer
+# Change directory below as needed.
+cd raspberry-coffee/NMEA.multiplexer
 a=
 if [ "$YES" == "1" ]
 then

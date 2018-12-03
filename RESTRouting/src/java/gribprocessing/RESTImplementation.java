@@ -2,9 +2,9 @@ package gribprocessing;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import gribprocessing.utils.BlindRouting;
 import gribprocessing.utils.GRIBUtils;
+import gribprocessing.utils.RoutingUtil;
 import http.HTTPServer;
 import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
@@ -12,18 +12,15 @@ import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
 import jgrib.GribFile;
 import poc.GRIBDump;
-import poc.data.GribDate;
-import poc.data.GribType;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -63,7 +60,7 @@ public class RESTImplementation {
 					"GET",
 					GRIB_PREFIX + "/oplist",
 					this::getOperationList,
-					"List of all available operations on the Img service."),
+					"List of all available operations on the GRIB service."),
 			new Operation(
 					"POST",
 					GRIB_PREFIX + "/get-data",
@@ -73,12 +70,13 @@ public class RESTImplementation {
 					"GET",
 					GRIB_PREFIX + "/routing-request",
 					this::getRoutingRequest,
-					"For development."),
+					"For development. 100% useless otherwise."),
 			new Operation(
 					"POST",
 					GRIB_PREFIX + "/routing",
 					this::requestRouting,
-					"Request the best route, and return its json representation."));
+					"Request the best route, and return its json (or other) representations.")
+	);
 
 	protected List<Operation> getOperations() {
 		return this.operations;
@@ -118,9 +116,7 @@ public class RESTImplementation {
 	/**
 	 * The payload is a list of requests, like this
 	 *
-	 * {
-	 *   "request": "GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN"
-	 * }
+	 * { "request": "GFS:65N,45S,130E,110W|2,2|0,6..24|PRMSL,WIND,HGT500,TEMP,WAVES,RAIN" }
 	 *
 	 * @param request
 	 * @return
@@ -222,6 +218,11 @@ public class RESTImplementation {
 		boolean verbose;
 	}
 
+	/**
+	 * For dev.
+	 * @param request
+	 * @return
+	 */
 	private Response getRoutingRequest(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 		RoutingRequest rr = new RoutingRequest();
@@ -288,14 +289,14 @@ public class RESTImplementation {
 				StringReader stringReader = new StringReader(payload);
 				try {
 					RoutingRequest routingRequest = gson.fromJson(stringReader, RoutingRequest.class);
-					String content = new BlindRouting().calculate(routingRequest.fromL,
+					RoutingUtil.RoutingResult routing = new BlindRouting().calculate(routingRequest.fromL,
 							routingRequest.fromG,
 							routingRequest.toL,
 							routingRequest.toG,
 							routingRequest.startTime,
 							routingRequest.gribName,
 							routingRequest.polarFile,
-							"JSON",
+							routingRequest.outputType, // "JSON",
 							routingRequest.timeInterval,
 							routingRequest.routingForkWidth,
 							routingRequest.routingStep,
@@ -306,7 +307,35 @@ public class RESTImplementation {
 							routingRequest.avoidLand,
 							routingRequest.verbose
 					);
-					RESTProcessorUtil.generateResponseHeaders(response, content.length());
+					if (true) {
+						Gson niceGson = new GsonBuilder().setPrettyPrinting().create();
+						String theFullStuff = niceGson.toJson(routing);
+						BufferedWriter br = new BufferedWriter(new FileWriter("fullrouting.json"));
+						br.write(theFullStuff);
+						br.close();
+					}
+					String content = routing.bestRoute(); //  new Gson().toJson(routing); - The full object is way too big !!
+					String contentType = "application/json";
+					switch (routingRequest.outputType) {
+						case "TXT":
+							contentType = "text/plain";
+							break;
+						case "CSV":
+							contentType = "text/csv";
+							break;
+						case "KML":
+							contentType = "application/vnd.google-earth.kml+xml";
+							break;
+						case "GPX":
+							contentType = "application/gpx+xml";
+							break;
+						case "JSON":
+						default:
+							break;
+					}
+//					System.out.println(String.format("Content-type: %s", contentType));
+//					System.out.println(String.format("Content:\n%s", content));
+					RESTProcessorUtil.generateResponseHeaders(response, contentType, content.length());
 					response.setPayload(content.getBytes());
 				} catch (Exception ex1) {
 //				ex1.printStackTrace();

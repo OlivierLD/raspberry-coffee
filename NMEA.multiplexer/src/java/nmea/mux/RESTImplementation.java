@@ -63,6 +63,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -91,6 +92,7 @@ public class RESTImplementation {
 	private Multiplexer mux;
 
 	private final static String REST_PREFIX = "/mux";
+	private final static SimpleDateFormat DURATION_FMT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	public RESTImplementation(List<NMEAClient> nmeaDataClients,
 	                          List<Forwarder> nmeaDataForwarders,
@@ -259,6 +261,11 @@ public class RESTImplementation {
 					REST_PREFIX + "/log-files",
 					this::getLogFiles,
 					"Download the log files list"),
+			new Operation(
+					"GET",
+					REST_PREFIX + "/system-time",
+					this::getSystemTime,
+					"Get the system time as a long. Optional QS prm 'fmt': date | duration"),
 			new Operation(
 					"GET",
 					REST_PREFIX + "/log-files/{log-file}",
@@ -1918,6 +1925,38 @@ public class RESTImplementation {
 					Response.BAD_REQUEST,
 					new HTTPServer.ErrorPayload()
 							.errorCode("MUX-2003")
+							.errorMessage(ex.toString()));
+			return response;
+		}
+		return response;
+	}
+
+	private HTTPServer.Response getSystemTime(HTTPServer.Request request) {
+		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
+
+		Map<String, String> qsPrms = request.getQueryStringParameters();
+		String fmt = null;
+		if (qsPrms != null && qsPrms.get("fmt") != null) {
+			fmt = qsPrms.get("fmt");
+		}
+		String content = "";
+		try {
+			if (fmt == null) {
+				long systemTime = System.currentTimeMillis();
+				content = String.valueOf(systemTime);
+			} else if (fmt.equals("date")) {
+				content = new Date().toString();
+			} else if (fmt.equals("duration")) {
+				content = DURATION_FMT.format(new Date());
+			}
+			RESTProcessorUtil.generateResponseHeaders(response, "text/plain", content.length());
+			response.setPayload(content.getBytes());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("MUX-3003")
 							.errorMessage(ex.toString()));
 			return response;
 		}
