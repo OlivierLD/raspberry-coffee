@@ -382,7 +382,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.line(centerX, centerY, toX, toY);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 
 		} catch (Exception ex) {
@@ -401,7 +401,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.text(_22.format(value) + unit, 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 
 		} catch (Exception ex) {
@@ -428,7 +428,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.text(longitude, 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 
 		} catch (Exception ex) {
@@ -446,7 +446,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.text(speedStr, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 
 		} catch (Exception ex) {
@@ -462,7 +462,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			sb.text(_X1.format(value) + " mb", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 
 		} catch (Exception ex) {
@@ -484,7 +484,7 @@ public class SSD1306Processor implements Forwarder, PushButtonObserver {
 			try { Thread.sleep(2_000L); } catch (Exception ex) {}
 			sb.clear();
 			oled.clear(); // Blank screen
-			oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			oled.display();
 
 			oled.shutdown();

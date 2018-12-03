@@ -352,4 +352,29 @@ public class ScreenBuffer {
 		}
 		return len;
 	}
+
+	/**
+	 * Use if the screen is to be seen in a mirror.
+	 * Left and right are inverted.
+	 *
+	 * @param buff the screen buffer to invert
+	 * @param w    width (in pixels) of the above
+	 * @param h    height (in pixels) of the above. One row has 8 pixels.
+	 * @return the mirrored buffer.
+	 */
+	public static int[] mirror(int[] buff, int w, int h) {
+		int len = buff.length;
+		if (len != w * (h / 8)) {
+			throw new RuntimeException(String.format("Invalid buffer length %d, should be %d (%d * %d)", len, (w * (h / 8)), w, h));
+		}
+		int[] mirror = new int[len];
+		for (int row = 0; row < (h / 8); row++) {
+			for (int col = 0; col < w; col++) {
+				int buffIdx = (row * w) + col;
+				int mirrorBuffIdx = (row * w) + (w - col - 1);
+				mirror[mirrorBuffIdx] = buff[buffIdx];
+			}
+		}
+		return mirror;
+	}
 }

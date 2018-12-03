@@ -45,7 +45,7 @@ public class OLEDSSD1306_I2C_DisplayStrings {
 		for (int i=0; i<buffer.length; i++) {
 			sb.text(buffer[i], 2, 10 + (i * 10), ScreenBuffer.Mode.WHITE_ON_BLACK);
 		}
-		oled.setBuffer(mirror ? SSD1306.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+		oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 		oled.display();
 
 		oled.shutdown();

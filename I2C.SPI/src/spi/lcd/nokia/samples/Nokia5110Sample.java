@@ -33,6 +33,7 @@ public class Nokia5110Sample {
 
 		PinUtil.print(map);
 		System.out.println("VCC and LED are connected. This is also where a pot would go.");
+		// For the pot: See https://learn.adafruit.com/nokia-5110-3310-monochrome-lcd?view=all#dimmable-backlight-option-3-12
 		System.out.println();
 
 		System.out.println("Starting");
@@ -102,7 +103,7 @@ public class Nokia5110Sample {
 
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 		sb.text("Pi=", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK, true);
-		sb.text("3.1415926", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK, true);
+		sb.text("3.1415926", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK, true); // true: ROTATE
 		lcd.setScreenBuffer(sb.getScreenBuffer());
 		lcd.display();
 		//  sb.dumpScreen();

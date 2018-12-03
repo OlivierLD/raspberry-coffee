@@ -39,10 +39,10 @@ public class Nokia5110 {
 	private int[] buffer = new int[LCDWIDTH * ROWPIXELS];
 
 	// SPI: Serial Peripheral Interface. Default pin values.
-	private static Pin spiDc = RaspiPin.GPIO_04; // Pin #16, GPIO_23
-	private static Pin spiRst = RaspiPin.GPIO_05; // Pin #18, GPIO_24
-	private static Pin spiCs = RaspiPin.GPIO_10; // Pin #24, SPI0_CE0_N
-	private static Pin spiClk = RaspiPin.GPIO_14; // Pin #23, SCLK, GPIO_11
+	private static Pin spiDc = RaspiPin.GPIO_04;   // Pin #16, GPIO_23
+	private static Pin spiRst = RaspiPin.GPIO_05;  // Pin #18, GPIO_24
+	private static Pin spiCs = RaspiPin.GPIO_10;   // Pin #24, SPI0_CE0_N
+	private static Pin spiClk = RaspiPin.GPIO_14;  // Pin #23, SCLK, GPIO_11
 	private static Pin spiMosi = RaspiPin.GPIO_12; // Pin #19, SPI0_MOSI
 
 	private final static int SPI_DEVICE = Spi.CHANNEL_0; // 0
