@@ -19,19 +19,22 @@ public class Nokia5110Sample {
 		System.out.println("       | | CS");
 		System.out.println("       | RST");
 		System.out.println("       LED");
+		System.out.println();
 
 		String[] map = new String[7];
-		map[0] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.PWR_1.pin()).pinNumber()) + ":" + "VCC and LED";
-		map[1] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GRND_1.pin()).pinNumber()) + ":" + "GND";
-		map[2] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_4.pin()).pinNumber()) + ":" + "D/C";
-		map[3] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_5.pin()).pinNumber()) + ":" + "RST";
-		map[4] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_10.pin()).pinNumber()) + ":" + "CS";
-		map[5] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_14.pin()).pinNumber()) + ":" + "CLK";
-		map[6] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_12.pin()).pinNumber()) + ":" + "DIN";
-//	map[7] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.PWR_1.pin()).pinNumber()) + ":" + "LED and VCC";
+		map[0] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "VCC";
+		map[1] = String.valueOf(PinUtil.GPIOPin.GRND_1.pinNumber()) + ":" + "GND";
+		map[2] = String.valueOf(PinUtil.GPIOPin.GPIO_4.pinNumber()) + ":" + "D/C";
+		map[3] = String.valueOf(PinUtil.GPIOPin.GPIO_5.pinNumber()) + ":" + "RST";
+		map[4] = String.valueOf(PinUtil.GPIOPin.GPIO_10.pinNumber()) + ":" + "CS";
+		map[5] = String.valueOf(PinUtil.GPIOPin.GPIO_14.pinNumber()) + ":" + "CLK";
+		map[6] = String.valueOf(PinUtil.GPIOPin.GPIO_12.pinNumber()) + ":" + "DIN";
+//	map[7] = String.valueOf(PinUtil.GPIOPin.PWR_1.pinNumber()) + ":" + "LED and VCC";
 
 		PinUtil.print(map);
-
+		System.out.println("VCC and LED are connected (on the RPi). Tnis is also where a pot would go.");
+		System.out.println();
+		
 		System.out.println("Starting");
 		Nokia5110 lcd = new Nokia5110();
 		lcd.begin();
