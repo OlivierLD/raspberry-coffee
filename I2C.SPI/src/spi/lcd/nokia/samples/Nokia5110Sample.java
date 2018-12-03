@@ -2,9 +2,36 @@ package spi.lcd.nokia.samples;
 
 import lcd.ScreenBuffer;
 import spi.lcd.nokia.Nokia5110;
+import utils.PinUtil;
 
 public class Nokia5110Sample {
 	public static void main(String... args) {
+
+		System.out.println("Nokia pins - from the TOP (seeing the screen), bottom pins (P1):");
+		System.out.println("|                           |");
+		System.out.println("+------o-o-o-o-o-o-o-o------+");
+		System.out.println("       | | | | | | | |");
+		System.out.println("       | | | | | | | GND");
+		System.out.println("       | | | | | | VCC");
+		System.out.println("       | | | | | CLK");
+		System.out.println("       | | | | DIN");
+		System.out.println("       | | | D/C");
+		System.out.println("       | | CS");
+		System.out.println("       | RST");
+		System.out.println("       LED");
+
+		String[] map = new String[7];
+		map[0] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.PWR_1.pin()).pinNumber()) + ":" + "VCC and LED";
+		map[1] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GRND_1.pin()).pinNumber()) + ":" + "GND";
+		map[2] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_4.pin()).pinNumber()) + ":" + "D/C";
+		map[3] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_5.pin()).pinNumber()) + ":" + "RST";
+		map[4] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_10.pin()).pinNumber()) + ":" + "CS";
+		map[5] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_14.pin()).pinNumber()) + ":" + "CLK";
+		map[6] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.GPIO_12.pin()).pinNumber()) + ":" + "DIN";
+//	map[7] = String.valueOf(PinUtil.findByPin(PinUtil.GPIOPin.PWR_1.pin()).pinNumber()) + ":" + "LED and VCC";
+
+		PinUtil.print(map);
+
 		System.out.println("Starting");
 		Nokia5110 lcd = new Nokia5110();
 		lcd.begin();
