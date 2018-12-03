@@ -95,8 +95,8 @@ public class ScreenBuffer {
 		text(txt, xPx, yPx, 1, mode, false);
 	}
 
-	public void text(String txt, int xPx, int yPx, Mode mode, boolean b) {
-		text(txt, xPx, yPx, 1, mode, b);
+	public void text(String txt, int xPx, int yPx, Mode mode, boolean rotate) {
+		text(txt, xPx, yPx, 1, mode, rotate);
 	}
 
 	public void text(String txt, int xPx, int yPx, int fontFact, Mode mode) {

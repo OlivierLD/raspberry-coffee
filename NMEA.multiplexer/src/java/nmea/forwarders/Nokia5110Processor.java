@@ -451,7 +451,7 @@ public class Nokia5110Processor implements Forwarder {
 	}
 
 	private void displayAngleAndValue(String label, int value) {
-		int centerX = 80, centerY = 16, radius = 15;
+		int centerX = 80, centerY = 16, radius = 15; // TODO Tweak position on screen
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
