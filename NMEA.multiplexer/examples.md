@@ -241,8 +241,11 @@ A small [I2C OLED display](https://www.adafruit.com/product/3527) attached to th
 ![](./docimages/oled.01.jpg)
 ![](./docimages/oled.02.jpg)
 
-Yet another one, with a Nokia-5110 small screen
+Yet another one, with a Nokia-5110 small screen, fed from another forwarder.
+
 ![](./docimages/Nokia5110.jpg)
+
+Notice the small potentiometer to dim the display's light.
 
 #### Weather Station
 Feed the NMEA Multiplexer with the Weather Station from SwitchDoc labs.
