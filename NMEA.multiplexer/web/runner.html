@@ -234,13 +234,13 @@
 		<div class="ui-body ui-body-b">
 			<fieldset class="ui-grid-b">
 				<div class="ui-block-a">
-					<button data-theme="a" id="b-reset">Reset</button>
+					<button data-theme="a" id="b-reset" title="Reset Dist & Alt">Reset</button>
 				</div>
 				<div class="ui-block-b">
-					<button data-theme="a" id="b-log-mgmt">Log</button>
+					<button data-theme="a" id="b-log-mgmt" title="Log Management">Log</button>
 				</div>
 				<div class="ui-block-c">
-					<button data-theme="a" id="b-terminate">Kill</button>
+					<button data-theme="a" id="b-terminate" title="Stop the server">Kill</button>
 				</div>
 			</fieldset>
 		</div>
@@ -305,11 +305,27 @@
         	console.log('Terminate was clicked');
 
         	document.body.innerHTML =
+							'<style>button {\n' +
+			        'padding: 4px 20px;\n' +
+			        '/* give the background a gradient */\n' +
+			        'background: darkorange; /*linear-gradient(top, #ffae00, #d67600);*/\n' +
+			        'border:2px outset #dad9d8;\n' +
+			        '/* style the text */\n' +
+			        'font-family:Lato, Verdana, Arial, sans-serif;\n' +
+			        'font-size:1.1em;\n' +
+			        'letter-spacing:0.05em;\n' +
+			        'text-transform:uppercase;\n' +
+			        'color:#fff;\n' +
+			        'text-shadow: 0px 1px 10px #000;\n' +
+			        '/* add to small curve to the corners of the button */\n' +
+			        'border-radius: 15px;\n' +
+			        '/* give the button a drop shadow */\n' +
+			        'box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;\n' +
+			        '}</style>' +
 							'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">Confirm server shutdown</h1>' +
 							'<p align="center">' +
-							'<button onclick="terminateOK();" style="height: 30px; width: 100px; font-size: 22px;">OK</button> &nbsp;' +
-							'<button onclick="document.location.reload();" style="height: 30px; width: 100px; font-size: 22px;">Cancel</button></p>';
-
+							'<button onclick="terminateOK();">OK</button> &nbsp;' +
+							'<button onclick="document.location.reload();">Cancel</button></p>';
         });
 
         $("#b-reset").click(function() {
