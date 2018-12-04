@@ -34,6 +34,8 @@ import java.util.Properties;
  *
  * WIP!!!!!
  *
+ * TODO Check all the data displays.
+ *
  * This is an example of a <b>transformer</b>.
  * <br>
  * To be used with other apps.
@@ -99,8 +101,8 @@ public class Nokia5110Processor implements Forwarder {
 		private double hum;
 	}
 
-	private int WIDTH = 84; // 128;
-	private int HEIGHT = 48; // 64;
+	private int WIDTH  = 84; // 128;
+	private int HEIGHT = 48; //  64;
 
 	private Nokia5110 nokiaScreen;
 	private ScreenBuffer sb;
@@ -451,7 +453,7 @@ public class Nokia5110Processor implements Forwarder {
 	}
 
 	private void displayAngleAndValue(String label, int value) {
-		int centerX = 80, centerY = 16, radius = 15; // TODO Tweak position on screen
+		int centerX = 65, centerY = 21, radius = 15; // TODO Tweak position on screen
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
@@ -481,8 +483,8 @@ public class Nokia5110Processor implements Forwarder {
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-			sb.text(label, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(_22.format(value) + unit, 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(label + "in" + unit, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(_22.format(value), 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			display();
