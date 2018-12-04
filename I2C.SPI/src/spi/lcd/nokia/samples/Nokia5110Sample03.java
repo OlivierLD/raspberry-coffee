@@ -39,9 +39,9 @@ public class Nokia5110Sample03 {
 		sb.clear(ScreenBuffer.Mode.BLACK_ON_WHITE);
 		while (go) {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text("Time", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text("Time:", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			String speed = HMS.format(new Date());
-			sb.text(speed, 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(speed, 0, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 			lcd.setScreenBuffer(sb.getScreenBuffer());
 			lcd.display();
 			TimeUtil.delay(500);
