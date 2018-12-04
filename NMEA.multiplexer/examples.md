@@ -241,6 +241,9 @@ A small [I2C OLED display](https://www.adafruit.com/product/3527) attached to th
 ![](./docimages/oled.01.jpg)
 ![](./docimages/oled.02.jpg)
 
+Yet another one, with a Nokia-5110 small screen
+![](./docimages/Nokia5110.jpg)
+
 #### Weather Station
 Feed the NMEA Multiplexer with the Weather Station from SwitchDoc labs.
 The code of the project is [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WeatherStation),
