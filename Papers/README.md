@@ -14,7 +14,7 @@
 - [Small Boards](../Small.Boards/README.md), moved [here](https://github.com/OlivierLD/small-boards).
     - With examples (on Arduino IDE).
 - Examples
-    - [Weather Station](../Project.Trunk/Weather.Station/README.md)
+    - [Weather Station](../Project.Trunk/Weather.Station.Implementation/README.md)
 - [Languages Comparison](../Project.Trunk/System.Languages/LanguageComparison.md)
 - Processing
     - [ADC and potentiometer](../Processing#to-run-the-sketch)
