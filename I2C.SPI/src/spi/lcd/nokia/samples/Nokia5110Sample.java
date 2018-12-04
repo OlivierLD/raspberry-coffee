@@ -116,6 +116,7 @@ public class Nokia5110Sample {
 		lcd.clear();
 		lcd.setScreenBuffer(PELICAN_LOGO);
 		lcd.display();
+		System.out.println("Pelican Displayed");
 		try {
 			Thread.sleep(5_000L);
 		} catch (Exception ex) {
