@@ -12,13 +12,15 @@
 	<script type="text/javascript" src="js/mux.rest.js"></script>
 	<script type="text/javascript">
 
-		var logEnabled = function(cb) {
+		/* global $ */
+
+	var logEnabled = function(cb) {
     if ("on" === cb.value) {
       console.log('On');
-      enableLogging(true)
+      enableLogging(true);
     } else {
       console.log('Off');
-      enableLogging(false)
+      enableLogging(false);
     }
   };
 
@@ -273,73 +275,73 @@
 
 </div>
 <script>
-      var getTravelData = function() {
-        getDistanceTraveled();
-        getDeltaAltitude();
-        speedAndCourse();
-      };
+	var getTravelData = function() {
+		getDistanceTraveled();
+		getDeltaAltitude();
+		speedAndCourse();
+	};
 
-      var appendMess = function(txt) {
-        var content = $('#message').text();
-        content += ((content.length > 0 ? '\n' : '') + txt);
-        $('#message').text(content);
-      };
+	var appendMess = function(txt) {
+		var content = $('#message').text();
+		content += ((content.length > 0 ? '\n' : '') + txt);
+		$('#message').text(content);
+	};
 
-      var terminateOK = function() {
-	      terminate();
-	      $("#b-terminate").prop('disabled', true);
-	      // Say bye-bye...
-	      document.body.innerHTML =
-	      		'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">&nbsp;Bye-bye...</h1>' +
-	      		'<h2 style="color: navy; font-family: Verdana, Helvetica, Geneva;">&nbsp;🏴‍☠️&nbsp;Server is going down upon your request.</h2>' +
-	      		'<p style="color: gray; font-family: Verdana, Helvetica, Geneva;">&nbsp;Restart the server from a terminal to continue.</p>' +
-	      		'<hr/>' +
-	      		'<i style="font-family: Verdana, Helvetica, Geneva;">&nbsp;&copy; OlivSoft, 2017</i>';
-			};
+	var terminateOK = function() {
+		terminate();
+		$("#b-terminate").prop('disabled', true);
+		// Say bye-bye...
+		document.body.innerHTML =
+				'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">&nbsp;Bye-bye...</h1>' +
+				'<h2 style="color: navy; font-family: Verdana, Helvetica, Geneva;">&nbsp;🏴‍☠️&nbsp;Server is going down upon your request.</h2>' +
+				'<p style="color: gray; font-family: Verdana, Helvetica, Geneva;">&nbsp;Restart the server from a terminal to continue.</p>' +
+				'<hr/>' +
+				'<i style="font-family: Verdana, Helvetica, Geneva;">&nbsp;&copy; OlivSoft, 2017</i>';
+	};
 
-      $().ready(function() {
+	$().ready(function() {
 
-        forwarderStatus();
+		forwarderStatus();
 
-        $("#b-terminate").click(function() {
-        	console.log('Terminate was clicked');
+		$("#b-terminate").click(function() {
+			console.log('Terminate was clicked');
 
-        	document.body.innerHTML =
-							'<style>button {\n' +
-			        'padding: 4px 20px;\n' +
-			        '/* give the background a gradient */\n' +
-			        'background: darkorange; /*linear-gradient(top, #ffae00, #d67600);*/\n' +
-			        'border:2px outset #dad9d8;\n' +
-			        '/* style the text */\n' +
-			        'font-family:Lato, Verdana, Arial, sans-serif;\n' +
-			        'font-size:1.1em;\n' +
-			        'letter-spacing:0.05em;\n' +
-			        'text-transform:uppercase;\n' +
-			        'color:#fff;\n' +
-			        'text-shadow: 0px 1px 10px #000;\n' +
-			        '/* add to small curve to the corners of the button */\n' +
-			        'border-radius: 15px;\n' +
-			        '/* give the button a drop shadow */\n' +
-			        'box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;\n' +
-			        '}</style>' +
-							'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">Confirm server shutdown</h1>' +
-							'<p align="center">' +
-							'<button onclick="terminateOK();">OK</button> &nbsp;' +
-							'<button onclick="document.location.reload();">Cancel</button></p>';
-        });
+			document.body.innerHTML =
+					'<style>button {\n' +
+					'padding: 4px 20px;\n' +
+					'/* give the background a gradient */\n' +
+					'background: darkorange; /*linear-gradient(top, #ffae00, #d67600);*/\n' +
+					'border:2px outset #dad9d8;\n' +
+					'/* style the text */\n' +
+					'font-family:Lato, Verdana, Arial, sans-serif;\n' +
+					'font-size:1.1em;\n' +
+					'letter-spacing:0.05em;\n' +
+					'text-transform:uppercase;\n' +
+					'color:#fff;\n' +
+					'text-shadow: 0px 1px 10px #000;\n' +
+					'/* add to small curve to the corners of the button */\n' +
+					'border-radius: 15px;\n' +
+					'/* give the button a drop shadow */\n' +
+					'box-shadow: rgba(0, 0, 0, .55) 0 1px 6px;\n' +
+					'}</style>' +
+					'<h1 style="color: blue; font-family: Verdana, Helvetica, Geneva;">Confirm server shutdown</h1>' +
+					'<p align="center">' +
+					'<button onclick="terminateOK();">OK</button> &nbsp;' +
+					'<button onclick="document.location.reload();">Cancel</button></p>';
+		});
 
-        $("#b-reset").click(function() {
-          console.log("reset");
-          resetDataCache();
-        });
+		$("#b-reset").click(function() {
+			console.log("reset");
+			resetDataCache();
+		});
 
-	      $("#b-log-mgmt").click(function() {
-		      console.log("Log Management");
-		      document.location = "logMgmt.html";
-	      });
+		$("#b-log-mgmt").click(function() {
+			console.log("Log Management");
+			document.location = "logMgmt.html";
+		});
 
-        setInterval(getTravelData, 1000); // Distance and delta-alt
-      });
-    </script>
+		setInterval(getTravelData, 1000); // Distance and delta-alt
+	});
+</script>
 </body>
 </html>
