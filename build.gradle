@@ -34,6 +34,7 @@ dependencies {
   compile project(':RMI.sample')
   compile project(':NMEA.multiplexer')
   compile project(':NMEA.mux.extensions')
+  compile project(':NMEA.mux.WebUI')
   compile project(':RESTCam')
   compile project(':RESTNavServer')
   compile project(':RESTTideEngine')
