@@ -23,7 +23,6 @@
     - [SSD1306](../Processing#ssd1306-oled-display)
     - [MeArm GUI](../Processing#mearm-gui)
 
-
 ### Note about HTML pages hosted on Github
 Github is well equipped to render markdown (md) documents. If you navigate to an HTML page, what you would see is the HTML code, not its rendering.
 

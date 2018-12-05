@@ -42,14 +42,16 @@ For a given TWS, the STW is given for any TWA by a polynomial function like
 where f<small><sup>TWS</sup></small> is a polynomial function of degree `n`, like
 > f<small><sup>TWS</sup></small>(TWA) = (Coeff<small><sub>0</sub></small> * TWA<small><sup>0</sup></small>) + (Coeff<small><sub>1</sub></small> * TWA<small><sup>1</sup></small>) + (Coeff<small><sub>2</sub></small> * TWA<small><sup>2</sup></small>) + ... + (Coeff<small><sub>n</sub></small> * TWA<small><sup>n</sup></small>)
 
-also written
+also written ![f(TWA)](./docimg/ftwa.gif)
 
+
+<!--
 |  |    |  |
 |--:|:--:|:--|
 |                                      |   <small>n</small>     |                                                    |
 |f<small><sup>TWS</sup></small>(TWA) = | &Sigma; | Coeff<small><sub>i</sub></small> * TWA<small><sup>i</sup></small> |
 |                                      |  <small>i=0</small>    |                                                    |
-
+-->
 Those coefficients are obtained from raw data, by using the least squares method.
 
 Those coefficients can themselves be smoothed across the true wind speed, with the same least square method, to obtain a function that would compute the coefficients for any TWS.
