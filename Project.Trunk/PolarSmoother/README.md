@@ -42,7 +42,9 @@ For a given TWS, the STW is given for any TWA by a polynomial function like
 where f<small><sup>TWS</sup></small> is a polynomial function of degree `n`, like
 > f<small><sup>TWS</sup></small>(TWA) = (Coeff<small><sub>0</sub></small> * TWA<small><sup>0</sup></small>) + (Coeff<small><sub>1</sub></small> * TWA<small><sup>1</sup></small>) + (Coeff<small><sub>2</sub></small> * TWA<small><sup>2</sup></small>) + ... + (Coeff<small><sub>n</sub></small> * TWA<small><sup>n</sup></small>)
 
-also written ![f(TWA)](./docimg/ftwa.gif)
+also written
+
+![f(TWA)](./docimg/ftwa.gif)
 
 
 <!--
