@@ -9,6 +9,7 @@
 - [REST Nav Server](../RESTNavServer/README.md), gathering artifacts from several other projects (Nautical Almanac, Tide Computer, NMEA Multiplexer, ...)
     - Quick summary of the [problems to address](./happy.navserver/HappyNavserver.md) for a happy NavServer. 😊
     - [Boat Data 101](http://raspberrypi.lediouris.net/_Articles/data.logging/datalogging.html). In progress.
+    - Sample [Calibration session](http://logisail.lediouris.net/documents/calibration.session.html).
 - [SunFlower](../Project.Trunk/SunFlower/README.md)
 - [Plant Watering System](../Project.Trunk/PlantWateringSystem/README.md)
 - [Small Boards](../Small.Boards/README.md), moved [here](https://github.com/OlivierLD/small-boards).
