@@ -5,8 +5,7 @@ import context.ApplicationContext;
 import context.NMEADataCache;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import nmea.forwarders.pushbutton.PushButtonMaster;
-import nmea.forwarders.pushbutton.PushButtonObserver;
+
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
 import nmea.parser.Angle180LR;
@@ -23,6 +22,8 @@ import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
 import lcd.ScreenBuffer;
 import lcd.oled.SSD1306;
+import nmea.forwarders.pushbutton.PushButtonObserver;
+import nmea.forwarders.pushbutton.PushButtonMaster;
 
 import java.util.Properties;
 import calc.GeomUtil;

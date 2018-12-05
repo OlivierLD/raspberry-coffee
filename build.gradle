@@ -3,7 +3,7 @@ compileJava.options.encoding = 'ISO-8859-1'
 compileJava.options.compilerArgs += ["-Xlint:unchecked"]
 apply plugin: 'maven'
 
-group = 'oliv.pi4j.samples'
+group = 'oliv.raspi.coffee'
 version = '1.0'
 
 dependencies {
@@ -33,6 +33,7 @@ dependencies {
   compile project(':GPS.read')
   compile project(':RMI.sample')
   compile project(':NMEA.multiplexer')
+  compile project(':NMEA.mux.extensions')
   compile project(':RESTCam')
   compile project(':RESTNavServer')
   compile project(':RESTTideEngine')

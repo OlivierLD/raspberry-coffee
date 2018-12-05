@@ -11,3 +11,7 @@ Contains custom (dynamic) forwarders, consumers, computers, etc.
 - SpeakingThermometer
 
 ---
+
+### TODO
+Move the associated properties files
+Move the associated web resources

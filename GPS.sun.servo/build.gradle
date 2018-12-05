@@ -4,7 +4,7 @@ plugins {
   id 'maven'
   id 'com.github.johnrengelman.shadow' version '4.0.2'
 }
-group = 'oliv.pi4j.samples'
+group = 'oliv.raspi.coffee'
 version = '1.0'
 
 sourceSets {

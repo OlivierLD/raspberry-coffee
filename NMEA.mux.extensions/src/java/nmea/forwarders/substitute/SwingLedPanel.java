@@ -27,7 +27,7 @@ public class SwingLedPanel
 
 	// private static int nbCols = -1;
 
-	public enum ScreenDefinition {
+	 public enum ScreenDefinition {
 
 		SSD1306_128x32(128, 32),
 		SSD1306_128x64(128, 64),

@@ -1,10 +1,13 @@
 package nmea.forwarders;
 
-import calc.GeomUtil;
 import context.ApplicationContext;
 import context.NMEADataCache;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.*;
+
 import lcd.ScreenBuffer;
-import nmea.forwarders.substitute.SwingLedPanel;
+import lcd.oled.SSD1306;
 import nmea.mux.context.Context;
 import nmea.parser.Angle180;
 import nmea.parser.Angle180EW;
@@ -20,21 +23,16 @@ import nmea.parser.Speed;
 import nmea.parser.Temperature;
 import nmea.parser.UTCDate;
 import nmea.parser.UTCTime;
-import spi.lcd.nokia.Nokia5110;
-
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import calc.GeomUtil;
+import nmea.forwarders.substitute.SwingLedPanel;
 
 /**
  * This is an example of a <b>transformer</b>.
  * <br>
  * To be used with other apps.
- * This transformer displays the TWD on a Nokia5110 small screen
+ * This transformer displays the TWD on an OLED display (SSD1306), in its I2C version
+ * <br>
+ * See http://raspberrypi.lediouris.net/SSD1306/readme.html
  *
  * <br>
  * This is JUST an example. As such, it can be set only from the properties file
@@ -43,7 +41,7 @@ import java.util.Properties;
  *
  * It auto-scrolls across available values.
  */
-public class Nokia5110Processor implements Forwarder {
+public class SSD1306ProcessorI2C implements Forwarder {
 	private boolean keepWorking = true;
 
 	private static class CacheBean {
@@ -96,10 +94,10 @@ public class Nokia5110Processor implements Forwarder {
 		private double hum;
 	}
 
-	private int WIDTH  = 84; // 128;
-	private int HEIGHT = 48; //  64;
+	private int WIDTH = 128;
+	private int HEIGHT = 32;
 
-	private Nokia5110 nokiaScreen;
+	private SSD1306 oled;
 	private ScreenBuffer sb;
 	private SwingLedPanel substitute;
 
@@ -164,7 +162,7 @@ public class Nokia5110Processor implements Forwarder {
 	/*
 	 * @throws Exception
 	 */
-	public Nokia5110Processor() throws Exception {
+	public SSD1306ProcessorI2C() throws Exception {
 
 		int nbTry = 0;
 		boolean ok = false;
@@ -229,14 +227,14 @@ public class Nokia5110Processor implements Forwarder {
 		});
 
 		try {
-			nokiaScreen = new Nokia5110();
-			nokiaScreen.begin();
-			nokiaScreen.clear();
+			oled = new SSD1306(SSD1306.SSD1306_I2C_ADDRESS); // I2C Config
+			oled.begin();
+			oled.clear();
 		} catch (Throwable error) {
 			// Not on a RPi? Try JPanel.
-			nokiaScreen = null;
+			oled = null;
 			System.out.println("Displaying substitute Swing Led Panel");
-			substitute = new SwingLedPanel(SwingLedPanel.ScreenDefinition.NOKIA5110);
+			substitute = new SwingLedPanel();
 			substitute.setVisible(true);
 		}
 		sb = new ScreenBuffer(WIDTH, HEIGHT);
@@ -252,7 +250,7 @@ public class Nokia5110Processor implements Forwarder {
 		};
 		scrollThread.start();
 
-		Thread cacheThread = new Thread("Nokia5110Processor CacheThread") {
+		Thread cacheThread = new Thread("SSD1306Processor CacheThread") {
 			public void run() {
 				while (keepWorking) {
 					NMEADataCache cache = ApplicationContext.getInstance().getDataCache();
@@ -397,10 +395,10 @@ public class Nokia5110Processor implements Forwarder {
 								displaySpeed("TWS ", bean.tws);
 								break;
 							case TWA_OPTION:
-								displayAngleAndValue("TWA ", bean.twa, 1);
+								displayAngleAndValue("TWA ", bean.twa);
 								break;
 							case AWA_OPTION:
-								displayAngleAndValue("AWA ", bean.awa, 1);
+								displayAngleAndValue("AWA ", bean.awa);
 								break;
 							case AWS_OPTION:
 								displaySpeed("AWS ", bean.aws);
@@ -448,15 +446,12 @@ public class Nokia5110Processor implements Forwarder {
 	}
 
 	private void displayAngleAndValue(String label, int value) {
-		displayAngleAndValue(label, value, 2);
-	}
-	private void displayAngleAndValue(String label, int value, int fontFact) {
-		int centerX = 65, centerY = 21, radius = 15;
+		int centerX = 80, centerY = 16, radius = 15;
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			sb.text(label, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(String.valueOf(value) + "\u00b0", 2, 19, fontFact, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(String.valueOf(value) + "\u00b0", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Circle
 			sb.circle(centerX, centerY, radius);
@@ -481,8 +476,8 @@ public class Nokia5110Processor implements Forwarder {
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-			sb.text(label + "in" + unit, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(_22.format(value), 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(label, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(_22.format(value) + unit, 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			display();
@@ -537,17 +532,13 @@ public class Nokia5110Processor implements Forwarder {
 	}
 
 	private void displayCurrent(int dir, double speed) {
-		String direction = "CUR. DIR in \u00b0";
-		String dirValue = String.valueOf(dir);
-		String speedStr = "CUR. SPD in kts";
-		String speedValue = _22.format(speed);
+		String direction = "CURRENT DIR " + String.valueOf(dir) + "\u00b0";
+		String speedStr = "CURRENT SPEED " + _22.format(speed) + " kts";
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			sb.text(direction, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(dirValue, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(speedStr, 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(speedValue, 2, 39, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(speedStr, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			display();
@@ -561,8 +552,8 @@ public class Nokia5110Processor implements Forwarder {
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-			sb.text("PRMSL in mb", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(_X1.format(value), 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text("PRMSL ", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(_X1.format(value) + " mb", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			display();
@@ -585,11 +576,11 @@ public class Nokia5110Processor implements Forwarder {
 			keepWorking = false;
 			try { Thread.sleep(2_000L); } catch (Exception ex) {}
 			sb.clear();
-			if (nokiaScreen != null) {
-				nokiaScreen.clear(); // Blank screen
-				nokiaScreen.setScreenBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-				nokiaScreen.display(); // Display blank screen
-				nokiaScreen.shutdown();
+			if (oled != null) {
+				oled.clear(); // Blank screen
+				oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+				oled.display(); // Display blank screen
+				oled.shutdown();
 			} else {
 				substitute.setVisible(false);
 			}
@@ -599,27 +590,27 @@ public class Nokia5110Processor implements Forwarder {
 	}
 
 	private void display() throws Exception {
-		if (nokiaScreen != null) {
-			nokiaScreen.setScreenBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
-			nokiaScreen.display();
+		if (oled != null) {
+			oled.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
+			oled.display();
 		} else {
 			substitute.setBuffer(mirror ? ScreenBuffer.mirror(sb.getScreenBuffer(), WIDTH, HEIGHT) : sb.getScreenBuffer());
 			substitute.display();
 		}
 	}
 
-	public static class NokiaBean {
+	public static class OLEDI2CBean {
 		private String cls;
-		private String type = "nokia";
+		private String type = "oled-i2c";
 
-		public NokiaBean(Nokia5110Processor instance) {
+		public OLEDI2CBean(SSD1306ProcessorI2C instance) {
 			cls = instance.getClass().getName();
 		}
 	}
 
 	@Override
 	public Object getBean() {
-		return new NokiaBean(this);
+		return new OLEDI2CBean(this);
 	}
 
 	@Override

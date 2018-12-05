@@ -15,7 +15,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-group = 'oliv.pi4j.samples'
+group = 'oliv.raspi.coffee'
 version = '1.0'
 
 compileJava {

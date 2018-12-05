@@ -18,7 +18,7 @@ apply plugin: 'groovy'
 apply plugin: 'scala'
 apply plugin: "nebula.clojure"
 
-group = 'oliv.pi4j.samples'
+group = 'oliv.raspi.coffee'
 version = '1.0'
 
 repositories {
