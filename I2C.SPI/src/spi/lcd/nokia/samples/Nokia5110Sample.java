@@ -137,8 +137,8 @@ public class Nokia5110Sample {
 		}
 
 		sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
-		sb.text("Pi=", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK, true); // true: ROTATE
-		sb.text("3.1415926", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK, true); // true: ROTATE
+		sb.text("Pi=", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK, ScreenBuffer.Orientation.PORTRAIT);
+		sb.text("3.1415926", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK, ScreenBuffer.Orientation.PORTRAIT);
 		lcd.setScreenBuffer(sb.getScreenBuffer());
 		lcd.display();
 		//  sb.dumpScreen();

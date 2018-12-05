@@ -20,6 +20,11 @@ public class ScreenBuffer {
 		BLACK_ON_WHITE
 	}
 
+	public enum Orientation {
+		LANDSCAPE,
+		PORTRAIT
+	}
+
 	private int w = WIDTH, // Actual values, defaulted to SSD1306
 							h = HEIGHT;
 	// This is the buffer that will be pushed on the device
@@ -84,23 +89,27 @@ public class ScreenBuffer {
 	 * @param yPx Bottom left Y origin in Pixels (top left is 0,0)
 	 */
 	public void text(String txt, int xPx, int yPx) {
-		text(txt, xPx, yPx, 1, Mode.WHITE_ON_BLACK, false);
+		text(txt, xPx, yPx, 1, Mode.WHITE_ON_BLACK, Orientation.LANDSCAPE);
+	}
+
+	public void text(String txt, int xPx, int yPx, Orientation orientation) {
+		text(txt, xPx, yPx, 1, Mode.WHITE_ON_BLACK, orientation);
 	}
 
 	public void text(String txt, int xPx, int yPx, int fontFact) {
-		text(txt, xPx, yPx, fontFact, Mode.WHITE_ON_BLACK, false);
+		text(txt, xPx, yPx, fontFact, Mode.WHITE_ON_BLACK, Orientation.LANDSCAPE);
 	}
 
 	public void text(String txt, int xPx, int yPx, Mode mode) {
-		text(txt, xPx, yPx, 1, mode, false);
+		text(txt, xPx, yPx, 1, mode, Orientation.LANDSCAPE);
 	}
 
-	public void text(String txt, int xPx, int yPx, Mode mode, boolean rotate) {
+	public void text(String txt, int xPx, int yPx, Mode mode, Orientation rotate) {
 		text(txt, xPx, yPx, 1, mode, rotate);
 	}
 
 	public void text(String txt, int xPx, int yPx, int fontFact, Mode mode) {
-		text(txt, xPx, yPx, fontFact, mode, false);
+		text(txt, xPx, yPx, fontFact, mode, Orientation.LANDSCAPE);
 	}
 
 	/**
@@ -116,7 +125,7 @@ public class ScreenBuffer {
 	 * @param rotate   if true, rotate 90 degrees counter-clockwise. Default false
 	 * @see Mode
 	 */
-	public void text(String txt, int xPx, int yPx, int fontFact, Mode mode, boolean rotate) {
+	public void text(String txt, int xPx, int yPx, int fontFact, Mode mode, Orientation rotate) {
 		int xProgress = xPx;
 		for (int i = 0; i < txt.length(); i++) {         // For each character of the string to display
 			String c = new String(new char[]{txt.charAt(i)});
@@ -136,11 +145,11 @@ public class ScreenBuffer {
 						// screenMatrix[line][col]
 						for (int y = 0; y < (fontFact * CharacterMatrixes.FONT_SIZE); y++) {
 							int l = (y + yPx - (CharacterMatrixes.FONT_SIZE - 1));
-							if (!rotate) {
+							if (rotate == Orientation.LANDSCAPE) {
 								if (l >= 0 && l < this.h && xProgress >= 0 && xProgress < this.w) {
 									screenMatrix[l][xProgress] = (mode == Mode.WHITE_ON_BLACK ? verticalBitmap[y] : invert(verticalBitmap[y]));
 								}
-							} else { // 90 deg counter-clockwise
+							} else { // PORTRAIT, 90 deg counter-clockwise
 								if (l >= 0 && l < this.w && xProgress >= 0 && xProgress < this.h) {
 									screenMatrix[this.h - xProgress][l] = (mode == Mode.WHITE_ON_BLACK ? verticalBitmap[y] : invert(verticalBitmap[y]));
 								}

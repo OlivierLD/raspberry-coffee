@@ -31,11 +31,6 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- *
- * WIP!!!!!
- *
- * TODO Check all the data displays.
- *
  * This is an example of a <b>transformer</b>.
  * <br>
  * To be used with other apps.
@@ -402,10 +397,10 @@ public class Nokia5110Processor implements Forwarder {
 								displaySpeed("TWS ", bean.tws);
 								break;
 							case TWA_OPTION:
-								displayAngleAndValue("TWA ", bean.twa);
+								displayAngleAndValue("TWA ", bean.twa, 1);
 								break;
 							case AWA_OPTION:
-								displayAngleAndValue("AWA ", bean.awa);
+								displayAngleAndValue("AWA ", bean.awa, 1);
 								break;
 							case AWS_OPTION:
 								displaySpeed("AWS ", bean.aws);
@@ -453,12 +448,15 @@ public class Nokia5110Processor implements Forwarder {
 	}
 
 	private void displayAngleAndValue(String label, int value) {
-		int centerX = 65, centerY = 21, radius = 15; // TODO Tweak position on screen
+		displayAngleAndValue(label, value, 2);
+	}
+	private void displayAngleAndValue(String label, int value, int fontFact) {
+		int centerX = 65, centerY = 21, radius = 15;
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			sb.text(label, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(String.valueOf(value) + "\u00b0", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(String.valueOf(value) + "\u00b0", 2, 19, fontFact, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Circle
 			sb.circle(centerX, centerY, radius);
@@ -539,13 +537,17 @@ public class Nokia5110Processor implements Forwarder {
 	}
 
 	private void displayCurrent(int dir, double speed) {
-		String direction = "CURRENT DIR " + String.valueOf(dir) + "\u00b0";
-		String speedStr = "CURRENT SPEED " + _22.format(speed) + " kts";
+		String direction = "CUR. DIR in \u00b0";
+		String dirValue = String.valueOf(dir);
+		String speedStr = "CUR. SPD in kts";
+		String speedValue = _22.format(speed);
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			sb.text(direction, 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(speedStr, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(dirValue, 2, 19, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(speedStr, 2, 29, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(speedValue, 2, 39, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			display();
@@ -559,8 +561,8 @@ public class Nokia5110Processor implements Forwarder {
 		try {
 			sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 
-			sb.text("PRMSL ", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
-			sb.text(_X1.format(value) + " mb", 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text("PRMSL in mb", 2, 9, 1, ScreenBuffer.Mode.WHITE_ON_BLACK);
+			sb.text(_X1.format(value), 2, 19, 2, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 			// Display
 			display();
