@@ -54,7 +54,7 @@ also written
 |f<small><sup>TWS</sup></small>(TWA) = | &Sigma; | Coeff<small><sub>i</sub></small> * TWA<small><sup>i</sup></small> |
 |                                      |  <small>i=0</small>    |                                                    |
 -->
-Those coefficients are obtained from raw data, by using the least squares method.
+Those coefficients can be obtained from raw data, by using the least squares method.
 
 Those coefficients can themselves be smoothed across the true wind speed, with the same least square method, to obtain a function that would compute the coefficients for any TWS.
 
