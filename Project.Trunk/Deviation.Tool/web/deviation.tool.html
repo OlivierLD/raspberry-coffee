@@ -72,30 +72,38 @@
 
         window.onload = function() {
           dataGraph = new Graph("dataCanvas", graphData, null, null);
-          dataGraph.setSprayPoints(true);
-          dataGraph.setBoundaries(-20, 20, 0, 360);
+          dataGraph.setSprayPoints(false);
+          dataGraph.setBoundaries(0, 360, -20, 20);
           dataGraph.drawPoints("dataCanvas", graphData);
         };
 
-        var goDrawing = function() {
-                var degreeStr = document.getElementById("degree").value;
-                if (degreeStr.trim().length === 0) {
-                   alert("Please provide the degree of the polynomial to find (as a positive integer)");
-                } else {
-                    try {
-                        var degree = parseInt(degreeStr);
-                        if (degree < 1) {
-                            alert("Degree must be a positive integer");
+        var onDataChange = function() {
+	        var text = document.getElementById("json-dev").value;
 
-                        } else {
-                            var graphData = dataGraph.getData();
-                            var coeffData = leastSquares(degree, graphData);
-                            dataGraph.drawPoints("dataCanvas", graphData, coeffData);
-                        }
-                    } catch (err) {
-                        alert(err);
-                    }
-                }
+	        if (text.length > 0) {
+		        try {
+			        var devArray = JSON.parse(text);
+			        devArray.forEach(tuple => {
+			        	if (Math.abs(tuple.dev) < 20) { // TODO A Filter
+					        graphData.push({x: tuple.hdm, y: tuple.dev});
+				        }
+							});
+			        dataGraph.drawPoints("dataCanvas", graphData);
+
+		        } catch (err) {
+			        alert("Error:" + err);
+		        }
+	        }
+        };
+
+        var goDrawing = function () {
+	        try {
+		        var graphData = dataGraph.getData();
+		        var coeffData = smoothDevCurve(graphData);
+		        dataGraph.drawPoints("dataCanvas", graphData, coeffData);
+	        } catch (err) {
+		        alert(err);
+	        }
         };
 
         var setSpray = function(cb) {
@@ -111,27 +119,30 @@
   <body>
     <table width="100%">
       <tr>
-        <td colspan="2">
+        <td colspan="1">
           <h2>Deviation Curve Smoothing</h2>
           Standalone. Does not require a server to be running. Can be used as a static page.
+        </td>
+        <td rowspan="2" width="50%">
+          <textarea id="json-dev" style="margin: 2px; height: 50px; width: 98%;" onchange="javascript:onDataChange();"></textarea>
+					<br/>
+					<small>Paste your JSON data &#8679; in the box above ...</small>
         </td>
       </tr>
       <tr>
         <td valign="top" align="left" valign="top">
-          Required Degree : <input id="degree" type="number" style="text-align: right; width: 40px;" placeholder="Degree" size="3" value="3">
-          <br>
-          <input type="checkbox" id="with-spray" onchange="setSpray(this);" checked>Spray points
+          <input type="checkbox" id="with-spray" onchange="setSpray(this);">Spray points
           <!--br>
           <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">With tooltip -->
         </td>
       </tr>
       <tr>
-        <td colspan="1">
+        <td colspan="2">
           <small>Spray points on the canvas below (click and drag the mouse), and click </small><button onclick="goDrawing();">Display</button>
         </td>
       </tr>
       <tr>
-        <td align="center" colspan="1">
+        <td align="center" colspan="2">
           <canvas id="dataCanvas" height="500" title="Points and curves"></canvas>
         </td>
       </tr>

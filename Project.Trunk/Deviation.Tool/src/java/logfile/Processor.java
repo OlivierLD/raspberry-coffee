@@ -62,7 +62,14 @@ public class Processor {
 					}
 				}
 				if (standingCOG != -Double.MAX_VALUE && standingHDM != -Double.MAX_VALUE) {
-					out.print(String.format("%s{ \"hdm\": %f, \"dev\": %f }", (nbRec > 0 ? "," : ""), standingHDM, (standingCOG - standingHDM)));
+					double dev = standingHDM - standingCOG;
+					while (dev > 180) {
+						dev -= 360;
+					}
+					while (dev < -180) {
+						dev += 360;
+					}
+					out.print(String.format("%s{ \"hdm\": %f, \"dev\": %f }", (nbRec > 0 ? "," : ""), standingHDM, dev));
 					standingCOG = -Double.MAX_VALUE;
 					standingHDM = -Double.MAX_VALUE;
 					nbRec++;

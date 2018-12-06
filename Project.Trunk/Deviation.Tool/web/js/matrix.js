@@ -1,3 +1,15 @@
+if (Math.toRadians === undefined) {
+	Math.toRadians = function(deg) {
+		return deg * (Math.PI / 180);
+	};
+}
+
+if (Math.toDegrees === undefined) {
+	Math.toDegrees = function(rad) {
+		return rad * (180 / Math.PI);
+	};
+}
+
 /**
  * Utilities for system resolution, least squares, etc.
  * This follows the ES5 standard.
@@ -209,60 +221,83 @@ var leastSquares = function(requiredDegree, data) {
     return result;
 };
 
-var fromNode = false;
+var smoothDevCurve = function(data) {
+	var dimension = 5;
+	var n = 0, sinR = 0, cosR = 0, sin2R = 0, cos2R = 0,
+			sinR2 = 0, sinRcosR = 0, sin2RsinR = 0, cos2RsinR = 0,
+			cosR2 = 0, sin2RcosR = 0, cos2RcosR = 0, sin2R2 = 0,
+			cos2Rsin2R = 0, cos2R2 = 0;
+	var d = 0, dSinR = 0, dCosR = 0, dSin2R = 0, dCos2R = 0;
 
-if (process !== undefined) {
-	for (var i = 0; i < process.argv.length; i++) {
-		console.log("arg #%d: %s", i, process.argv[i]);
-		if (process.argv[i] === 'from-node') {
-			fromNode = true;
-		}
-	}
-}
+	data.forEach(point => {
+		n += 1;
+		sinR += Math.sin(Math.toRadians(point.x));
+		cosR += Math.cos(Math.toRadians(point.x));
+		sin2R += Math.sin(2 * Math.toRadians(point.x));
+		cos2R += Math.cos(2 * Math.toRadians(point.x));
+		sinR2 += Math.pow(Math.sin(Math.toRadians(point.x)), 2);
+		sinRcosR += (Math.sin(Math.toRadians(point.x)) * Math.cos(Math.toRadians(point.x)));
+		sin2RsinR += (Math.sin(2 * Math.toRadians(point.x)) * Math.sin(Math.toRadians(point.x)));
+		cos2RsinR += (Math.cos(2 * Math.toRadians(point.x)) * Math.sin(Math.toRadians(point.x)));
+		cosR2 += Math.pow(Math.cos(Math.toRadians(point.x)), 2);
+		sin2RcosR += (Math.sin(2 * Math.toRadians(point.x)) * Math.cos(Math.toRadians(point.x)));
+		cos2RcosR += (Math.cos(2 * Math.toRadians(point.x)) * Math.cos(Math.toRadians(point.x)));
+		sin2R2 += Math.pow(Math.sin(2 * Math.toRadians(point.x)), 2);
+		cos2Rsin2R += (Math.cos(2 * Math.toRadians(point.x)) * Math.sin(2 * Math.toRadians(point.x)));
+		cos2R2 += Math.pow(Math.cos(2 * Math.toRadians(point.x)), 2);
 
-if (fromNode) {
-    /**
-     * An example
-     */
-    var squareMatrix = new SquareMatrix(3);
+		d += point.y;
+		dSinR += (point.y * Math.sin(Math.toRadians(point.x)));
+		dCosR += (point.y * Math.cos(Math.toRadians(point.x)));
+		dSin2R += (point.y * Math.sin(2 * Math.toRadians(point.x)));
+		dCos2R += (point.y * Math.cos(2 * Math.toRadians(point.x)));
+	});
 
-    /*
-     Resolution of:
-     12x    +  13y +    14z = 234
-     1.345x - 654y + 0.001z = 98.87
-     23.09x + 5.3y - 12.34z = 9.876
-     */
-    squareMatrix.setElementAt(0, 0, 12);
-    squareMatrix.setElementAt(0, 1, 13);
-    squareMatrix.setElementAt(0, 2, 14);
+	var squareMatrix = new SquareMatrix(dimension);
+	// Line 1
+	squareMatrix.setElementAt(0, 0, n);
+	squareMatrix.setElementAt(0, 1, sinR);
+	squareMatrix.setElementAt(0, 2, cosR);
+	squareMatrix.setElementAt(0, 3, sin2R);
+	squareMatrix.setElementAt(0, 4, cos2R);
+	// Line 2
+	squareMatrix.setElementAt(1, 0, sinR);
+	squareMatrix.setElementAt(1, 1, sinR2);
+	squareMatrix.setElementAt(1, 2, sinRcosR);
+	squareMatrix.setElementAt(1, 3, sin2RsinR);
+	squareMatrix.setElementAt(1, 4, cos2RsinR);
+	// Line 3
+	squareMatrix.setElementAt(2, 0, cosR);
+	squareMatrix.setElementAt(2, 1, sinRcosR);
+	squareMatrix.setElementAt(2, 2, cosR2);
+	squareMatrix.setElementAt(2, 3, sin2RcosR);
+	squareMatrix.setElementAt(2, 4, cos2RcosR);
+	// Line 4
+	squareMatrix.setElementAt(3, 0, sin2R);
+	squareMatrix.setElementAt(3, 1, sin2RsinR);
+	squareMatrix.setElementAt(3, 2, sin2RcosR);
+	squareMatrix.setElementAt(3, 3, sin2R2);
+	squareMatrix.setElementAt(3, 4, cos2Rsin2R);
+	// Line 4
+	squareMatrix.setElementAt(4, 0, cos2R);
+	squareMatrix.setElementAt(4, 1, cos2RsinR);
+	squareMatrix.setElementAt(4, 2, cos2RcosR);
+	squareMatrix.setElementAt(4, 3, cos2Rsin2R);
+	squareMatrix.setElementAt(4, 4, cos2R2);
 
-    squareMatrix.setElementAt(1, 0, 1.345);
-    squareMatrix.setElementAt(1, 1, -654);
-    squareMatrix.setElementAt(1, 2, 0.001);
+	var constants = []; // new double[dimension];
+	constants.push(d);
+	constants.push(dSinR);
+	constants.push(dCosR);
+	constants.push(dSin2R);
+	constants.push(dCos2R);
 
-    squareMatrix.setElementAt(2, 0, 23.09);
-    squareMatrix.setElementAt(2, 1, 5.3);
-    squareMatrix.setElementAt(2, 2, -12.34);
+//  console.log("Resolving:");
+//  printSystem(squareMatrix, constants);
 
-    var constants = [234, 98.87, 9.876];
-
-    console.log("Solving:");
-    printSystem(squareMatrix, constants);
-
-    var result = solveSystem(squareMatrix, constants);
-
-    console.log("A = %d", result[0]);
-    console.log("B = %d", result[1]);
-    console.log("C = %d", result[2]);
-    console.log();
-    // Proof:
-    var X = (squareMatrix.getElementAt(0, 0) * result[0]) + (squareMatrix.getElementAt(0, 1) * result[1]) + (squareMatrix.getElementAt(0, 2) * result[2]);
-    console.log("Proof X: %d", X);
-    var Y = (squareMatrix.getElementAt(1, 0) * result[0]) + (squareMatrix.getElementAt(1, 1) * result[1]) + (squareMatrix.getElementAt(1, 2) * result[2]);
-    console.log("Proof Y: %d", Y);
-    var Z = (squareMatrix.getElementAt(2, 0) * result[0]) + (squareMatrix.getElementAt(2, 1) * result[1]) + (squareMatrix.getElementAt(2, 2) * result[2]);
-    console.log("Proof Z: %d", Z);
-}
+	var result = solveSystem(squareMatrix, constants);
+	return result;
+};
 
 if (false) { // Example
     var REQUIRED_SMOOTHING_DEGREE = 3;
