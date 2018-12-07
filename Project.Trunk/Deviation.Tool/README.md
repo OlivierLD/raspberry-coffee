@@ -22,6 +22,8 @@ like `(Z, diff)`, representing a cloud of points.
 
 We will use the Least Square method to come up with the expected coefficients.
 
+> Lor the east Square method, see [this document](http://www.lediouris.net/original/sailing/PolarCO2/index.html) (it's in French, ask Google to translate).
+
 We will have a dimension 5 square matrix, and a dimension 1 array of 5 coefficients.
 <!--
  Formula below done with https://www.codecogs.com/latex/eqneditor.php
@@ -104,3 +106,8 @@ Those data are raw NMEA Data.
 ![The curve](./screenshot.01.png)
 
 ---
+
+## TODO
+- csv file generation
+- Inverted (hdt -> dev)
+- Document the least square method
