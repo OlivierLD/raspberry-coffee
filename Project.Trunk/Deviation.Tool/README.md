@@ -86,3 +86,18 @@ The specification of RMC is the following one:
 Notice that the `HDM` and `RMC` sentences _may_ return the Variation (`W` equals to `D + d`).
 In the samples above, this is obviously only the Magnetic Declination (`D`).
 
+### Example
+The data file provided here as an example was done motoring in an anchorage, in [Taiohae, Nuku-Hiva](https://drive.google.com/open?id=1ZbZm1G1fODnCzGFsiip7Hf2SFc_gNRzX&usp=sharing).
+Those data are raw NMEA Data.
+
+#### Step by step
+- Transform the NMEA data file into a json document:
+  - run `./process.log.sh 2010-11-03.Taiohae.nmea`, this generates a `data.json` (default name).
+- Open `deviation.tool.html` in a browser (it does not need a server to run).
+- Paste the content of the `data.json` in the top right text box
+- Click the [`Display`] button
+- See the curve, along with its coefficients
+
+![The curve](./screenshot.01.png)
+
+---

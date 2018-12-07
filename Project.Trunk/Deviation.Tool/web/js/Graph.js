@@ -395,8 +395,8 @@ function Graph(cName,       // Canvas Name
 		return value;
 	};
 
-	this.drawPoints = function (displayCanvasName, data, coeffs) {
-		console.log("Drawing");
+	this.drawPoints = function (displayCanvasName, data, coeffs, decompose) {
+
 		context = canvas.getContext('2d');
 
 		var width = context.canvas.clientWidth;
@@ -415,8 +415,8 @@ function Graph(cName,       // Canvas Name
 			canvas.height = height;
 
 			document.getElementById(displayCanvasName).title = data.length + " elements, X:[" + minx + ", " + maxx + "] Y:[" + miny + ", " + maxy + "]";
-			var gridXStep = (maxx - minx) < 5 ? 1 : Math.round((maxx - minx) / 5);
-			var gridYStep = (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
+			var gridXStep = 45; // (maxx - minx) < 5 ? 1 : Math.round((maxx - minx) / 5);
+			var gridYStep = 1.0; // (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
 
 			// Clear
 			context.fillStyle = "white";
@@ -424,7 +424,7 @@ function Graph(cName,       // Canvas Name
 			// Horizontal grid (Data Unit)
 			for (var i = Math.round(miny); gridYStep > 0 && i < maxy; i += gridYStep) {
 				context.beginPath();
-				context.lineWidth = 1;
+				context.lineWidth = (i === 0) ? 2 : 1;
 				context.strokeStyle = graphColorConfig.horizontalGridColor;
 				context.moveTo(0, height - (i - miny) * yScale);
 				context.lineTo(width, height - (i - miny) * yScale);
@@ -474,7 +474,80 @@ function Graph(cName,       // Canvas Name
 			context.fillRect((data[i].x - minx) * xScale, height - (data[i].y - miny) * yScale, 1, 1);
 		}
 
-		if (coeffs !== undefined) {
+		if (coeffs !== undefined) { // Then draw curve
+			if (decompose !== undefined && decompose === true) {
+				// coeffs[0]
+				context.beginPath();
+				context.lineWidth = 1;
+				context.strokeStyle = 'orange';
+				context.moveTo(0, height - ((coeffs[0] - miny) * yScale));
+				context.lineTo((maxx - minx) * xScale, height - ((coeffs[0] - miny) * yScale));
+				context.closePath();
+				context.stroke();
+
+				var stepX = (maxx - minx) / 1000;
+				// coeffs[1]
+				var previousPoint = null;
+				context.strokeStyle = 'green';
+				context.beginPath();
+				for (var x = minx; x < maxx; x += stepX) {
+					var y = coeffs[1] * Math.sin(Math.toRadians(x));
+					if (previousPoint === null) {
+						context.moveTo((x - minx) * xScale, height - ((y - miny) * yScale));
+					} else {
+						context.lineTo((x - minx) * xScale, height - ((y - miny) * yScale));
+					}
+					previousPoint = {x: x, y: y};
+				}
+        context.closePath();
+				context.stroke();
+				// coeffs[2]
+				previousPoint = null;
+				context.strokeStyle = 'red';
+				context.beginPath();
+				for (var x = minx; x < maxx; x += stepX) {
+					var y = coeffs[2] * Math.sin(Math.toRadians(x));
+					if (previousPoint === null) {
+						context.moveTo((x - minx) * xScale, height - ((y - miny) * yScale));
+					} else {
+						context.lineTo((x - minx) * xScale, height - ((y - miny) * yScale));
+					}
+					previousPoint = {x: x, y: y};
+				}
+				context.closePath();
+				context.stroke();
+				// coeffs[3]
+				previousPoint = null;
+				context.strokeStyle = 'gray';
+				context.beginPath();
+				for (var x = minx; x < maxx; x += stepX) {
+					var y = coeffs[3] * Math.sin(2 * Math.toRadians(x));
+					if (previousPoint === null) {
+						context.moveTo((x - minx) * xScale, height - ((y - miny) * yScale));
+					} else {
+						context.lineTo((x - minx) * xScale, height - ((y - miny) * yScale));
+					}
+					previousPoint = {x: x, y: y};
+				}
+				context.closePath();
+				context.stroke();
+				// coeffs[4]
+				previousPoint = null;
+				context.strokeStyle = 'darkred';
+				context.beginPath();
+				for (var x = minx; x < maxx; x += stepX) {
+					var y = coeffs[4] * Math.sin(2 * Math.toRadians(x));
+					if (previousPoint === null) {
+						context.moveTo((x - minx) * xScale, height - ((y - miny) * yScale));
+					} else {
+						context.lineTo((x - minx) * xScale, height - ((y - miny) * yScale));
+					}
+					previousPoint = {x: x, y: y};
+				}
+				context.closePath();
+				context.stroke();
+			}
+			// Main curve
 			context.beginPath();
 			context.lineWidth = 3;
 			context.strokeStyle = 'blue'; // graphColorConfig.smoothDataLineColor;

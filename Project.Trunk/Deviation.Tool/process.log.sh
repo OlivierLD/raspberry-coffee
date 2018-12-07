@@ -2,9 +2,30 @@
 #
 CP=./build/libs/Deviation.Tool-1.0-all.jar
 #
-JAVA_OPTIONS="-Ddefault.declination=14"
-JAVA_OPTIONS="$JAVA_OPTIONS -Dlog.file.name=2010-11-03.Taiohae.nmea"
-JAVA_OPTIONS="$JAVA_OPTIONS -Doutput.file.name=data.json"
+echo -e "Usage is $0 [log.life [json.file [declination.to.use]]]"
+#
+FILE_NAME="2010-11-03.Taiohae.nmea"
+OUTPUT="data.json"
+DECLINATION="14"
+#
+if [ $# -gt 0 ]
+then
+  FILE_NAME=$1
+fi
+#
+if [ $# -gt 1 ]
+then
+  OUTPUT=$2
+fi
+#
+if [ $# -gt 2 ]
+then
+  DECLINATION=$3
+fi
+#
+JAVA_OPTIONS="-Ddefault.declination=$DECLINATION"
+JAVA_OPTIONS="$JAVA_OPTIONS -Dlog.file.name=$FILE_NAME"
+JAVA_OPTIONS="$JAVA_OPTIONS -Doutput.file.name=$OUTPUT"
 #
 java -cp $CP $JAVA_OPTIONS logfile.Processor
 #

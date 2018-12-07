@@ -100,7 +100,8 @@
 	        try {
 		        var graphData = dataGraph.getData();
 		        var coeffData = smoothDevCurve(graphData);
-		        dataGraph.drawPoints("dataCanvas", graphData, coeffData);
+		        var decompose = document.getElementById('decompose-cb').checked === true;
+		        dataGraph.drawPoints("dataCanvas", graphData, coeffData, decompose);
 	        } catch (err) {
 		        alert(err);
 	        }
@@ -124,7 +125,7 @@
           Standalone. Does not require a server to be running. Can be used as a static page.
         </td>
         <td rowspan="2" width="50%">
-          <textarea id="json-dev" style="margin: 2px; height: 50px; width: 98%;" onchange="javascript:onDataChange();"></textarea>
+          <textarea id="json-dev" style="margin: 2px; height: 50px; width: 98%;" onchange="javascript:onDataChange();" placeholder="Drop JSON data here"></textarea>
 					<br/>
 					<small>Paste your JSON data &#8679; in the box above ...</small>
         </td>
@@ -139,6 +140,8 @@
       <tr>
         <td colspan="2">
           <small>Spray points on the canvas below (click and drag the mouse), and click </small><button onclick="goDrawing();">Display</button>
+					&nbsp;
+					<input type="checkbox" id="decompose-cb" onchange="goDrawing();"> Decompose.
         </td>
       </tr>
       <tr>
