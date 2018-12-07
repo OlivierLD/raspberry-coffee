@@ -28,6 +28,29 @@ The value of the **deviation (d)** is an important parameter, directly impacting
 - Course Made Good
 - Course Over Ground
 
+> Angles are positive in the East, negative in the West: example, D=14&deg;W will be considered as -14&deg;.
+>
+> Leeway is left or right (port or starboard). Left is negative, right is positive.
+>
+> This being said, we can come up with the following formulas:
+> ```
+> W = D + d
+> HDG = HDC + W
+> HDM = HDC + d
+> HDG = HDM + D
+>
+> CMG = HDG + Leeway
+> ```
+
+**Reminder**
+- `D`: Declination (magnetic).
+- `d`: deviation (magnetic).
+- `W`: Variation (magnetic).
+- `HDG`: True Heading, based on the True North.
+- `HDM`: Magnetic Heading, based on the Magnetic North.
+- `HDC`: Compass Heading, based on the Compass' North.
+- `CMG`: Course Made Good, the route on the water.
+
 Elaborating the right deviation curve is an important step of the calibration.
 
 It is _**not**_ possible to come up with an accurate computation of the current _without_ the right estimation of the leeway.
