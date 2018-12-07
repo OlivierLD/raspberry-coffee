@@ -87,7 +87,7 @@ Notice that the `HDM` and `RMC` sentences _may_ return the Variation (`W` equals
 In the samples above, this is obviously only the Magnetic Declination (`D`).
 
 ### Example
-The data file provided here as an example was done motoring in an anchorage, in [Taiohae, Nuku-Hiva](https://drive.google.com/open?id=1ZbZm1G1fODnCzGFsiip7Hf2SFc_gNRzX&usp=sharing).
+The data file provided here as an example was done motoring in an anchorage, in [Taiohae, Nuku-Hiva](https://www.google.com/maps/d/u/0/viewer?mid=1ZbZm1G1fODnCzGFsiip7Hf2SFc_gNRzX&ll=-8.917066504857377%2C-140.0999415&z=18).
 Those data are raw NMEA Data.
 
 #### Step by step
