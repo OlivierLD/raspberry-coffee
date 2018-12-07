@@ -61,6 +61,7 @@ In practice, it is much more accurate over time.
 <p style="text-align: center;">
   <img src="img/current.png" width="634" height="424" alt="Current over Time" title="Current over Time">
 </p>
+
 On the figure above:
 - The left pane shows the triangulation
 - The middle pane compares the Course Over Ground (from the GPS) and the estimated position based on all the parameters above **on a 1 minute period**
