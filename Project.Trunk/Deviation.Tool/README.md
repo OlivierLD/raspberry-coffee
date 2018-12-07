@@ -1,4 +1,7 @@
 # Deviation Curve
+Here is a tool allowing you to elaborate your own deviation curve.
+
+## How it works
 The generic format of a deviation curve is
 ```
 dev(Z) = a + (b . sin(Z)) + (c . cos(Z)) + (d . sin(2.Z)) + (e . cos(2.Z))
