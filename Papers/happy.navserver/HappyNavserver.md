@@ -101,13 +101,13 @@ Think about it.
 This obviously requires the knowledge of SOG &amp; COG, returned by a GPS.
 
 
-When the boat is moving, that eventually means that an accurate TWA and TWS (and TWD) is elaborated by a accurate knowledge of
+When the boat is moving, that eventually means that an accurate TWA and TWS (and TWD) is elaborated by an accurate knowledge of
 - COG
 - SOG
 - AWA
 - AWS
 - CMG
 
-In short: this is not trivial. At all, by far, mostly because of CMG (see above for details).
+In short: this is not trivial at all, by far, mostly because of CMG (see above for details).
 
 You will notice that in the Console, you have the possibility to compute the True Wind from (BSP, CMG), or from (SOG, COG). This way you can have an idea of the difference it generates...
