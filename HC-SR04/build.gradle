@@ -10,7 +10,7 @@ shadowJar {
 
 sourceCompatibility = 1.8
 
-group = 'oliv.pi4j.samples'
+group = 'oliv.raspi.coffee'
 version = '1.0'
 
 sourceSets {

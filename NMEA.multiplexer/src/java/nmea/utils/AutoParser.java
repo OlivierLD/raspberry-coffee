@@ -14,9 +14,9 @@ public class AutoParser {
 					.forEach(nmea -> {
 						try {
 							System.out.println(String.format("Parsing [%s]", nmea));
-							Object obj = StringParsers.autoParse(nmea);
+							StringParsers.ParsedData obj = StringParsers.autoParse(nmea);
 							if (obj != null) {
-								System.out.println(String.format(">> Parsed >> %s", obj.toString()));
+								System.out.println(String.format(">> Parsed >> %s", obj.getParsedData().toString()));
 							} else {
 								System.out.println(">> null");
 							}

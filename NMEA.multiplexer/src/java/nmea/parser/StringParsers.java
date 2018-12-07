@@ -1750,7 +1750,7 @@ public class StringParsers {
 	}
 
 	/**
-	 * @param sentence a VALID NMEA Semtence
+	 * @param sentence a VALID NMEA Sentence
 	 * @return the device ID
 	 */
 	public static String getDeviceID(String sentence) {
@@ -1894,7 +1894,7 @@ public class StringParsers {
 		return result;
 	}
 
-	enum Dispatcher {
+	public enum Dispatcher {
 
 		RMC("RMC", "Recommended Minimum Navigation Information, C", StringParsers::parseRMC),
 		GLL("GLL", "Geographical Lat & Long", StringParsers::parseGLL),
@@ -1943,19 +1943,58 @@ public class StringParsers {
 		}
 	}
 
-	public static Object autoParse(String data) {
-		Object parsed = null;
+	public static class ParsedData {
+		private String deviceID;
+		private String sentenceId;
+		private String fullSentence;
+		private Object parsedData;
+
+		public ParsedData deviceID(String deviceID) {
+			this.deviceID = deviceID;
+			return this;
+		}
+		public ParsedData sentenceId(String sentenceId) {
+			this.sentenceId = sentenceId;
+			return this;
+		}
+		public ParsedData fullSentence(String fullSentence) {
+			this.fullSentence = fullSentence;
+			return this;
+		}
+		public ParsedData parsedData(Object parsedData) {
+			this.parsedData = parsedData;
+			return this;
+		}
+		public String getDeviceId() {
+			return this.deviceID;
+		}
+		public String getSentenceId() {
+			return this.sentenceId;
+		}
+		public String getFullSentence() {
+			return this.fullSentence;
+		}
+		public Object getParsedData() {
+			return this.parsedData;
+		}
+	}
+
+	public static ParsedData autoParse(String data) {
+		ParsedData parsedData = null;
 		if (!validCheckSum(data)) {
 			throw new RuntimeException(String.format("Invalid NMEA Sentence [%s]", data));
 		}
+		parsedData = new ParsedData().fullSentence(data);
 		String key = getSentenceID(data);
+		parsedData.sentenceId(key).deviceID(getDeviceID(data));
 		for (Dispatcher dispatcher : Dispatcher.values()) {
 			if (key.equals(dispatcher.key)) {
-				parsed = dispatcher.parser().apply(data);
+				Object parsed = dispatcher.parser().apply(data);
+				parsedData.parsedData(parsed);
 				break;
 			}
 		}
-		return parsed;
+		return parsedData;
 	}
 
 	/**
@@ -2364,11 +2403,11 @@ public class StringParsers {
 		System.out.println("=============");
 
 		str = "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A";
-		Object auto = autoParse(str);
+		ParsedData auto = autoParse(str);
 		if (auto == null) {
-			System.out.println("AutoParse retgurned null");
+			System.out.println("AutoParse returned null");
 		} else {
-			System.out.println(String.format("AutoParse returned a %s", auto.getClass().getName()));
+			System.out.println(String.format("AutoParse returned a %s", auto.getParsedData().getClass().getName()));
 			System.out.println(auto.toString());
 		}
 		System.out.println("Done!");

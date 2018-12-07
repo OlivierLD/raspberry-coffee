@@ -9,6 +9,7 @@
 - [REST Nav Server](../RESTNavServer/README.md), gathering artifacts from several other projects (Nautical Almanac, Tide Computer, NMEA Multiplexer, ...)
     - Quick summary of the [problems to address](./happy.navserver/HappyNavserver.md) for a happy NavServer. 😊
     - [Boat Data 101](http://raspberrypi.lediouris.net/_Articles/data.logging/datalogging.html). In progress.
+    - Sample [Calibration session](http://logisail.lediouris.net/documents/calibration.session.html).
 - [SunFlower](../Project.Trunk/SunFlower/README.md)
 - [Plant Watering System](../Project.Trunk/PlantWateringSystem/README.md)
 - [Small Boards](../Small.Boards/README.md), moved [here](https://github.com/OlivierLD/small-boards).
@@ -21,7 +22,6 @@
     - [Pitch and Roll](../Processing#pitchrollpde)
     - [SSD1306](../Processing#ssd1306-oled-display)
     - [MeArm GUI](../Processing#mearm-gui)
-
 
 ### Note about HTML pages hosted on Github
 Github is well equipped to render markdown (md) documents. If you navigate to an HTML page, what you would see is the HTML code, not its rendering.

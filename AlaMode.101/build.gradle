@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group = 'oliv.pi4j.samples'
+group = 'oliv.raspi.coffee'
 version = '1.0'
 
 sourceSets {

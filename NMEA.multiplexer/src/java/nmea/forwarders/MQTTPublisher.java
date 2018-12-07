@@ -31,6 +31,7 @@ public class MQTTPublisher implements Forwarder {
 	public static final String TOPIC_POSITION = "nmea/position";
 
 	public MQTTPublisher() throws Exception {
+		super();
 	}
 
 	/*

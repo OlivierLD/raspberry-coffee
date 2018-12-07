@@ -2566,12 +2566,6 @@ public class RESTImplementation {
 	 * </p>
 	 * <p>
 	 *   See {@link Context#addTopicListener(Context.TopicListener)}
-	 *   <br/>
-	 *   See {@link nmea.forwarders.SSD1306ProcessorI2C} for a usage example on the server side.
-	 * </p>
-	 * <p>
-	 *   {@link nmea.forwarders.SSD1306ProcessorI2C} displays several data, including the speed.
-	 *   This operation can be used to change the speed unit (knots, m/s, km/h, mph). Details are give in the code.
 	 * </p>
 	 *
 	 * @param request the REST/HTTP request.

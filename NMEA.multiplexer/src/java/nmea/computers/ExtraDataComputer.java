@@ -148,8 +148,9 @@ public class ExtraDataComputer extends Computer {
 						break;
 					case "VHW":
 						double[] vhw = StringParsers.parseVHW(sentence);
-						if (vhw == null)
+						if (vhw == null) {
 							return;
+						}
 						double bsp = vhw[StringParsers.BSP_in_VHW];
 				//	double hdm = vhw[StringParsers.HDM_in_VHW];
 						if (bsp != -Double.MAX_VALUE) {
