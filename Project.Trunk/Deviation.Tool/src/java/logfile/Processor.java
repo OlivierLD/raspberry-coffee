@@ -18,20 +18,22 @@ public class Processor {
 
 		PrintStream out = System.out;
 
-		String systPropDecl = System.getProperty("default.declination");
+		String systemPropDecl = System.getProperty("default.declination");
 		String fName = System.getProperty("log.file.name", "2010-11-03.Taiohae.nmea");
 		String outputStr = System.getProperty("output.file.name");
 		if (outputStr != null) {
 			out = new PrintStream(outputStr);
 		}
 
-		if (systPropDecl != null) {
-			decl = Double.parseDouble(systPropDecl);
+		if (systemPropDecl != null) {
+			decl = Double.parseDouble(systemPropDecl);
 		}
 		out.print("[");
 
 		double standingHDM = -Double.MAX_VALUE;
 		double standingCOG = -Double.MAX_VALUE;
+
+		boolean boatIsMoving = false;
 
 		BufferedReader br = new BufferedReader(new FileReader(fName));
 		String line = "";
@@ -59,9 +61,11 @@ public class Processor {
 							decl = rmcDecl;
 						}
 						standingCOG = cog;
+						double sog = rmc.getSog();
+						boatIsMoving = (sog > 0);
 					}
 				}
-				if (standingCOG != -Double.MAX_VALUE && standingHDM != -Double.MAX_VALUE) {
+				if (boatIsMoving && standingCOG != -Double.MAX_VALUE && standingHDM != -Double.MAX_VALUE) {
 					double dev = standingHDM - standingCOG;
 					while (dev > 180) {
 						dev -= 360;

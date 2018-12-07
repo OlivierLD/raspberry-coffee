@@ -280,7 +280,7 @@ function Graph(cName,       // Canvas Name
 				var str = [];
 				try {
 					str.push("Pos:" + idx);
-					str.push(graphData[idx].getY() + " " + unit);
+					str.push(graphData[idx].y + " " + unit);
 					//      console.log("Bubble:" + str);
 				} catch (err) {
 					console.log(JSON.stringify(err));
@@ -332,7 +332,7 @@ function Graph(cName,       // Canvas Name
 	this.minX = function (data) {
 		var min = Number.MAX_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			min = Math.min(min, (data[i].getX !== undefined ? data[i].getX() : data[i].x));
+			min = Math.min(min, (data[i].getX !== undefined ? data[i].x : data[i].x));
 		}
 		return min;
 	};
@@ -340,7 +340,7 @@ function Graph(cName,       // Canvas Name
 	this.minY = function (data) {
 		var min = Number.MAX_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			min = Math.min(min, (data[i].getY !== undefined ? data[i].getY() : data[i].y));
+			min = Math.min(min, (data[i].getY !== undefined ? data[i].y : data[i].y));
 		}
 		return min;
 	};
@@ -348,7 +348,7 @@ function Graph(cName,       // Canvas Name
 	this.maxX = function (data) {
 		var max = Number.MIN_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			max = Math.max(max, (data[i].getX !== undefined ? data[i].getX() : data[i].x));
+			max = Math.max(max, (data[i].getX !== undefined ? data[i].x : data[i].x));
 		}
 		return max;
 	};
@@ -356,7 +356,7 @@ function Graph(cName,       // Canvas Name
 	this.maxY = function (data) {
 		var max = Number.MIN_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			max = Math.max(max, (data[i].getY !== undefined ? data[i].getY() : data[i].y));
+			max = Math.max(max, (data[i].getY !== undefined ? data[i].y : data[i].y));
 		}
 		return max;
 	};
@@ -471,7 +471,7 @@ function Graph(cName,       // Canvas Name
 		context.fillStyle = '#ff0000';
 		for (var i = 0; i < data.length; i++) {
 //        console.log("Plotting x:" + data[i].x + ", y:" + data[i].y + " to " + (data[i].x - minx) * xScale + ":" + (height - (data[i].y - miny) * yScale));
-			context.fillRect((data[i].x - minx) * xScale, height - (data[i].y - miny) * yScale, 1, 1);
+			context.fillRect((data[i].x - minx) * xScale, height - (data[i].y - miny) * yScale, 2, 2);
 		}
 
 		if (coeffs !== undefined) { // Then draw curve
@@ -482,7 +482,7 @@ function Graph(cName,       // Canvas Name
 				context.strokeStyle = 'orange';
 				context.moveTo(0, height - ((coeffs[0] - miny) * yScale));
 				context.lineTo((maxx - minx) * xScale, height - ((coeffs[0] - miny) * yScale));
-				context.closePath();
+//			context.closePath();
 				context.stroke();
 
 				var stepX = (maxx - minx) / 1000;
@@ -497,9 +497,10 @@ function Graph(cName,       // Canvas Name
 					} else {
 						context.lineTo((x - minx) * xScale, height - ((y - miny) * yScale));
 					}
+					console.log("Coeff 1, x:" + x);
 					previousPoint = {x: x, y: y};
 				}
-        context.closePath();
+//      context.closePath();
 				context.stroke();
 				// coeffs[2]
 				previousPoint = null;
@@ -514,7 +515,7 @@ function Graph(cName,       // Canvas Name
 					}
 					previousPoint = {x: x, y: y};
 				}
-				context.closePath();
+//			context.closePath();
 				context.stroke();
 				// coeffs[3]
 				previousPoint = null;
@@ -529,7 +530,7 @@ function Graph(cName,       // Canvas Name
 					}
 					previousPoint = {x: x, y: y};
 				}
-				context.closePath();
+//			context.closePath();
 				context.stroke();
 				// coeffs[4]
 				previousPoint = null;
@@ -544,7 +545,7 @@ function Graph(cName,       // Canvas Name
 					}
 					previousPoint = {x: x, y: y};
 				}
-				context.closePath();
+//			context.closePath();
 				context.stroke();
 			}
 			// Main curve
@@ -563,7 +564,7 @@ function Graph(cName,       // Canvas Name
 				}
 				previousPoint = {x: x, y: y};
 			}
-//        context.closePath();
+//    context.closePath();
 			context.stroke();
 
 			context.font = "bold 14px Arial";
@@ -620,17 +621,17 @@ function Graph(cName,       // Canvas Name
 				for (var acc = i - (smoothWidth / 2); acc < i + (smoothWidth / 2); acc++) {
 					var y;
 					if (acc < 0) {
-						y = smoothData[0].getY();
+						y = smoothData[0].y;
 					} else if (acc > (smoothData.length - 1)) {
-						y = smoothData[smoothData.length - 1].getY();
+						y = smoothData[smoothData.length - 1].y;
 					} else {
-						y = smoothData[acc].getY();
+						y = smoothData[acc].y;
 					}
 					yAccu += y;
 				}
 				yAccu = yAccu / smoothWidth;
 				_smoothData.push(new Tuple(i, yAccu));
-//          console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].getY() + " becomes " + yAccu);
+//          console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].y + " becomes " + yAccu);
 			}
 		}
 		// Clear
@@ -696,10 +697,10 @@ function Graph(cName,       // Canvas Name
 			context.strokeStyle = graphColorConfig.rawDataLineColor;
 
 			var previousPoint = data[0];
-			context.moveTo((0 - minx) * xScale, height - (data[0].getY() - miny) * yScale);
+			context.moveTo((0 - minx) * xScale, height - (data[0].y - miny) * yScale);
 			for (var i = 1; i < data.length; i++) {
-				//  context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
-				context.lineTo((i - minx) * xScale, height - (data[i].getY() - miny) * yScale);
+				//  context.moveTo((previousPoint.x - minx) * xScale, cHeight - (previousPoint.y - miny) * yScale);
+				context.lineTo((i - minx) * xScale, height - (data[i].y - miny) * yScale);
 				//  context.stroke();
 				previousPoint = data[i];
 			}
@@ -721,10 +722,10 @@ function Graph(cName,       // Canvas Name
 				context.lineWidth = 3;
 				context.strokeStyle = graphColorConfig.smoothDataLineColor;
 				previousPoint = data[0];
-				context.moveTo((0 - minx) * xScale, height - (data[0].getY() - miny) * yScale);
+				context.moveTo((0 - minx) * xScale, height - (data[0].y - miny) * yScale);
 				for (var i = 1; i < data.length; i++) {
-//              context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
-					context.lineTo((i - minx) * xScale, height - (data[i].getY() - miny) * yScale);
+//              context.moveTo((previousPoint.x - minx) * xScale, cHeight - (previousPoint.y - miny) * yScale);
+					context.lineTo((i - minx) * xScale, height - (data[i].y - miny) * yScale);
 //              context.stroke();
 					previousPoint = data[i];
 				}

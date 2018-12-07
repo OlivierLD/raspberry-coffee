@@ -100,6 +100,13 @@
 	        try {
 		        var graphData = dataGraph.getData();
 		        var coeffData = smoothDevCurve(graphData);
+		        var result = document.getElementById('coeff-list');
+		        var content = 'a = ' + coeffData[0] + '<br/>' +
+				        'b = ' + coeffData[1] + '<br/>' +
+				        'c = ' + coeffData[2] + '<br/>' +
+				        'd = ' + coeffData[3] + '<br/>' +
+				        'e = ' + coeffData[4];
+		        result.innerHTML = content;
 		        var decompose = document.getElementById('decompose-cb').checked === true;
 		        dataGraph.drawPoints("dataCanvas", graphData, coeffData, decompose);
 	        } catch (err) {
@@ -120,32 +127,35 @@
   <body>
     <table width="100%">
       <tr>
-        <td colspan="1">
+        <td colspan="1" with="30%">
           <h2>Deviation Curve Smoothing</h2>
           Standalone. Does not require a server to be running. Can be used as a static page.
         </td>
-        <td rowspan="2" width="50%">
+        <td rowspan="2" width="40%" valign="top">
           <textarea id="json-dev" style="margin: 2px; height: 50px; width: 98%;" onchange="javascript:onDataChange();" placeholder="Drop JSON data here"></textarea>
 					<br/>
 					<small>Paste your JSON data &#8679; in the box above ...</small>
         </td>
+				<td rowspan="2" width="30%" valign="top"> <!-- Result will go here -->
+					<div id="coeff-list"></div>
+				</td>
       </tr>
       <tr>
         <td valign="top" align="left" valign="top">
-          <input type="checkbox" id="with-spray" onchange="setSpray(this);">Spray points
-          <!--br>
-          <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">With tooltip -->
+          <input type="checkbox" id="with-spray" onchange="setSpray(this);" title="Add to the logging...">Spray points
+          <br>
+          <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">With tooltip
         </td>
       </tr>
       <tr>
-        <td colspan="2">
+        <td colspan="3">
           <small>Spray points on the canvas below (click and drag the mouse), and click </small><button onclick="goDrawing();">Display</button>
 					&nbsp;
 					<input type="checkbox" id="decompose-cb" onchange="goDrawing();"> Decompose.
         </td>
       </tr>
       <tr>
-        <td align="center" colspan="2">
+        <td align="center" colspan="3">
           <canvas id="dataCanvas" height="500" title="Points and curves"></canvas>
         </td>
       </tr>

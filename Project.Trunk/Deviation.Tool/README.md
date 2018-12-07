@@ -110,4 +110,4 @@ Those data are raw NMEA Data.
 ## TODO
 - csv file generation
 - Inverted (hdt -> dev)
-- Document the least square method
+- Document the least square method and the full rationale leading to the system to solve.
