@@ -22,7 +22,7 @@ like `(Z, diff)`, representing a cloud of points.
 
 We will use the Least Square method to come up with the expected coefficients.
 
-> For details on the least Square method, see [this document](https://htmlpreview.github.io/?https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/Deviation.Tool/README.html).
+> For details on the Least Square method, for this specific case, see [this document](https://htmlpreview.github.io/?https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/Deviation.Tool/README.html).
 
 For each point, for each `HDM`, we want the calculated deviation to be as close as possible to the measured deviation.
 
@@ -111,7 +111,7 @@ Those data are raw NMEA Data.
 - Transform the NMEA data file into a json document:
   - run `./process.log.sh 2010-11-03.Taiohae.nmea`, this generates a `data.json` (default name).
 - Open `deviation.tool.html` in a browser (it does not need a server to run).
-- Paste the content of the `data.json` in the top right text box
+- Paste the content of the `data.json` in the top text box
 - Click the [`Display`] button
 - See the curve, along with its coefficients
 
@@ -121,4 +121,3 @@ Those data are raw NMEA Data.
 
 ## TODO
 - Inverted (hdt -> dev)
-- Document the least square method and the full rationale leading to the system to solve.
