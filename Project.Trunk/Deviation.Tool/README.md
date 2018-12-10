@@ -31,7 +31,7 @@ To get rid of the sign, we will use the square of the difference.
 What will want then becomes:
 For each point, for each `HDM`, we want the square of the difference between calculated and measured deviations to be as small as possible.
 
-This means that the first derivative pf the function expressing this difference tio be equal to zero.
+This means that the first derivative of the function expressing this difference to be equal to zero.
 
 The function to derive is:
 
@@ -125,6 +125,5 @@ Those data are raw NMEA Data.
 ---
 
 ## TODO
-- csv file generation
 - Inverted (hdt -> dev)
 - Document the least square method and the full rationale leading to the system to solve.
