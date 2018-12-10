@@ -5,6 +5,11 @@
 	<title>Principle</title>
 	<link rel="stylesheet" href="web/css/stylesheet.css" type="text/css"/>
 </head>
+<style>
+	table td {
+		font-family: "Source Code Pro", "Courier New", Helvetica, Geneva;
+	}
+</style>
 <body>
 
 The generic equation of a deviation curve is
@@ -20,12 +25,13 @@ For each point, for each <code>HDM</code>, we want the calculated deviation to b
 To get rid of the sign, we will use the square of the difference.
 <br/>
 What will want then becomes:
+<ul>
+	<li>For each point, for each <code>HDM</code>, we want the square of the difference between calculated and measured deviations to be as small as possible.</li>
+</ul>
 <br/>
-For each point, for each <code>HDM</code>, we want the square of the difference between calculated and measured deviations to be as small as possible.
+This means that the first derivative of the function expressing this difference has to be equal to zero.
 <br/>
-This means that the first derivative of the function expressing this difference to be equal to zero.
-<br/>
-If we say that headings are noted <code>x</code> and the corresponding deviation is note <code>y</code>, then the function to derive is:
+If we say that headings are noted <code>x</code> and the corresponding deviation is noted <code>y</code> (aka <code>dev(x)</code>), then the function to derive is:
 <pre>
 	 S = [ a&Sigma; + b&Sigma;sin(x) + c&Sigma;cos(x) + d&Sigma;sin(2.x) + e&Sigma;cos(2.x) - &Sigma;y ]<sup>2</sup>
 </pre>
@@ -36,13 +42,13 @@ Developed:
 	    ac&Sigma;cos(x) + bc&Sigma;sin(x).cos(x) + c<sup>2</sup>&Sigma;cos(x)<sup>2</sup> + cd&Sigma;cos(x).sin(2x) + ce&Sigma;cos(x).cos(2x) - c&Sigma;y.cos(x) +
 	    ad&Sigma;sin(2x) + bd&Sigma;sin(x).sin(2x) + cd&Sigma;cos(x).sin(2x) + d<sup>2</sup>&Sigma;sin(2x)<sup>2</sup> + de&Sigma;sin(2x).cos(2x) - d&Sigma;y.sin(2x) +
 	    ae&Sigma;cos(2x) + be&Sigma;sin(x).cos(2x) + ce&Sigma;cos(x).cos(2x) + de&Sigma;sin(2x).cos(2x) - e&Sigma;y.cos(2x) -
-	    a&Sigma;a - b&Sigma;y.sin(x) - c&Sigma;y.cos(x) - d&Sigma;y.sin(2x) - e&Sigma;y.cos(2x) + &Sigma;y<sup>2</sup>
+	    a&Sigma;y - b&Sigma;y.sin(x) - c&Sigma;y.cos(x) - d&Sigma;y.sin(2x) - e&Sigma;y.cos(2x) + &Sigma;y<sup>2</sup>
 </pre>
 <dl>
-	<dt>Note</dt>
+	<dt>Note:</dt>
 	<dd>
-		In the above, in <code>a<sup>2</sup>&Sigma;</code>, <code>&Sigma;</code> is the number of points. Could also be noted <code>n</code>. This would eventually be
-		<code>na<sup>2</sup></code>
+		In the above, in <code>a<sup>2</sup>&Sigma;</code>, <code>&Sigma;</code> is the number of logged points. Could also be noted <code>n</code>. This would eventually become
+		<code>na<sup>2</sup></code>.
 	</dd>
 </dl>
 Regrouped:
@@ -55,7 +61,7 @@ Regrouped:
 Derivations:
 <hr/>
 <!-- coeff a -->
-<table style="font-family: 'Courier New';">
+<table>
 	<td>
 		<td>
 &#8706;S<br/>
@@ -69,7 +75,7 @@ Derivations:
 </table>
 <hr/>
 <!-- coeff b -->
-<table style="font-family: 'Courier New';">
+<table>
 	<td>
 		<td>
 &#8706;S<br/>
@@ -83,7 +89,7 @@ Derivations:
 </table>
 <hr/>
 <!-- coeff c -->
-<table style="font-family: 'Courier New';">
+<table>
 	<td>
 		<td>
 &#8706;S<br/>
@@ -97,7 +103,7 @@ Derivations:
 </table>
 <hr/>
 <!-- coeff d -->
-<table style="font-family: 'Courier New';">
+<table>
 	<td>
 		<td>
 &#8706;S<br/>
@@ -111,7 +117,7 @@ Derivations:
 </table>
 <hr/>
 <!-- coeff e -->
-<table style="font-family: 'Courier New';">
+<table>
 	<td>
 		<td>
 &#8706;S<br/>
@@ -124,11 +130,11 @@ Derivations:
 	</tr>
 </table>
 <hr/>
-Then simplify by 2, move the <code>y</code> temrs on the right, and you end up with the following matrixes:
+Then simplify by 2, move the <code>y</code> terms on the right, and you end up with the following matrixes:
 <table border="0" style="font-family: 'Courier New';" cellpadding="3">
 	<tr>
 		<td rowspan="5">| a, b, c, d, e | = </td>
-    <td>|</td><td>n</td><td>&Sigma;sin(x)</td><td>&Sigma;cos(x)</td><td>&Sigma;sin(2x)</td><td>&Sigma;cos(2x)</td><td>|</td><td rowspan="5" valign="top">-1</td><td rowspan="5">*</td><td>|</td><td>&Sigma;y</td><td>|</td>
+    <td>|</td><td>n</td><td>&Sigma;sin(x)</td><td>&Sigma;cos(x)</td><td>&Sigma;sin(2x)</td><td>&Sigma;cos(2x)</td><td>|</td><td rowspan="5" valign="top">-1</td><td rowspan="5">&times;</td><td>|</td><td>&Sigma;y</td><td>|</td>
 	</tr>
 	<tr>
 		<td>|</td><td>&Sigma;sin(x)</td><td>&Sigma;sin(x)<sup>2</sup></td><td>&Sigma;sin(x).cos(x)</td><td>&Sigma;sin(2x).sin(x)</td><td>&Sigma;cos(2x).sin(x)</td><td>|</td><td>|</td><td>&Sigma;y.sin(x)</td><td>|</td>

@@ -22,7 +22,7 @@ like `(Z, diff)`, representing a cloud of points.
 
 We will use the Least Square method to come up with the expected coefficients.
 
-> For the east Square method, see [this document](http://www.lediouris.net/original/sailing/PolarCO2/index.html) (it's in French, ask Google to translate).
+> For details on the least Square method, see [this document](https://htmlpreview.github.io/?https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/Deviation.Tool/README.html).
 
 For each point, for each `HDM`, we want the calculated deviation to be as close as possible to the measured deviation.
 
@@ -31,12 +31,7 @@ To get rid of the sign, we will use the square of the difference.
 What will want then becomes:
 For each point, for each `HDM`, we want the square of the difference between calculated and measured deviations to be as small as possible.
 
-This means that the first derivative of the function expressing this difference to be equal to zero.
-
-The function to derive is:
-
-<!-- S = [(a*n) + b\sum sin(x) + c\sum cos(x) + d\sum sin(2.x) + e\sum cos(2.x) - dev(x)]^2 -->
-<a href="https://www.codecogs.com/eqnedit.php?latex=\inline&space;S&space;=&space;[(a*n)&space;&plus;&space;b\sum&space;sin(x)&space;&plus;&space;c\sum&space;cos(x)&space;&plus;&space;d\sum&space;sin(2.x)&space;&plus;&space;e\sum&space;cos(2.x)&space;-&space;dev(x)]^2" target="_blank"><img src="https://latex.codecogs.com/png.latex?\inline&space;S&space;=&space;[(a*n)&space;&plus;&space;b\sum&space;sin(x)&space;&plus;&space;c\sum&space;cos(x)&space;&plus;&space;d\sum&space;sin(2.x)&space;&plus;&space;e\sum&space;cos(2.x)&space;-&space;dev(x)]^2" title="S = [(a*n) + b\sum sin(x) + c\sum cos(x) + d\sum sin(2.x) + e\sum cos(2.x) - dev(x)]^2" /></a>
+This means that the first derivative of the function expressing this difference has to be equal to zero.
 
 We will have a dimension 5 square matrix, and a dimension 1 array of 5 coefficients.
 <!--

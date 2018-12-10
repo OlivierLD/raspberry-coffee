@@ -69,7 +69,8 @@ li {
 }
 dt {
   font-size: 10pt;
-  font-weight: bold;
+  font-weight: normal;
+  font-style: italic;
   font-family: Verdana, Arial, Helvetica, Geneva;
 }
 dd {
