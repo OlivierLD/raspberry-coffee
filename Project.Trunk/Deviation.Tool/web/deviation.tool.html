@@ -77,20 +77,23 @@
           dataGraph.drawPoints("dataCanvas", graphData);
         };
 
-        var onDataChange = function() {
+        var onDataChange = function () {
 	        var text = document.getElementById("json-dev").value;
 
 	        if (text.length > 0) {
 		        try {
 			        var devArray = JSON.parse(text);
 			        var filter = 20;
-			        try { filter = parseInt(document.getElementById('dev-filter').value); }
-			        catch (err) {}
+			        try {
+				        filter = parseInt(document.getElementById('dev-filter').value);
+			        }
+			        catch (err) { // Absorb
+			        }
 			        devArray.forEach(tuple => {
-			        	if (Math.abs(tuple.dev) < filter) {
+				        if (Math.abs(tuple.dev) < filter) {
 					        graphData.push({x: tuple.hdm, y: tuple.dev});
 				        }
-							});
+			        });
 			        dataGraph.drawPoints("dataCanvas", graphData);
 
 		        } catch (err) {
