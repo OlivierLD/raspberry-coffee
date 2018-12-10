@@ -404,6 +404,10 @@ function Graph(cName,       // Canvas Name
 		return value;
 	};
 
+	var coeffColors = [
+			'orange', 'green', 'red', 'gray', 'darkred'
+	];
+
 	this.drawPoints = function (displayCanvasName, data, coeffs, decompose) {
 
 		context = canvas.getContext('2d');
@@ -425,8 +429,11 @@ function Graph(cName,       // Canvas Name
 			// Set the canvas size from its container.
 			canvas.width = width;
 			canvas.height = height;
-
-			document.getElementById(displayCanvasName).title = data.length + " elements, X:[" + minx + ", " + maxx + "] Y:[" + miny + ", " + maxy + "]";
+			if (!withTooltip) {
+				document.getElementById(displayCanvasName).title = data.length + " elements, X:[" + minx + ", " + maxx + "] Y:[" + miny + ", " + maxy + "]";
+			} else {
+				document.getElementById(displayCanvasName).title = '';
+			}
 			var gridXStep = 45; // (maxx - minx) < 5 ? 1 : Math.round((maxx - minx) / 5);
 			var gridYStep = 1.0; // (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
 
@@ -491,7 +498,7 @@ function Graph(cName,       // Canvas Name
 				// coeffs[0]
 				context.beginPath();
 				context.lineWidth = 1;
-				context.strokeStyle = 'orange';
+				context.strokeStyle = coeffColors[0];
 				context.moveTo(0, height - ((coeffs[0] - miny) * yScale));
 				context.lineTo((maxx - minx) * xScale, height - ((coeffs[0] - miny) * yScale));
 //			context.closePath();
@@ -500,7 +507,7 @@ function Graph(cName,       // Canvas Name
 				var stepX = (maxx - minx) / 1000;
 				// coeffs[1]
 				var previousPoint = null;
-				context.strokeStyle = 'green';
+				context.strokeStyle = coeffColors[1];
 				context.beginPath();
 				for (var x = minx; x < maxx; x += stepX) {
 					var y = coeffs[1] * Math.sin(Math.toRadians(x));
@@ -516,7 +523,7 @@ function Graph(cName,       // Canvas Name
 				context.stroke();
 				// coeffs[2]
 				previousPoint = null;
-				context.strokeStyle = 'red';
+				context.strokeStyle = coeffColors[2];
 				context.beginPath();
 				for (var x = minx; x < maxx; x += stepX) {
 					var y = coeffs[2] * Math.sin(Math.toRadians(x));
@@ -531,7 +538,7 @@ function Graph(cName,       // Canvas Name
 				context.stroke();
 				// coeffs[3]
 				previousPoint = null;
-				context.strokeStyle = 'gray';
+				context.strokeStyle = coeffColors[3];
 				context.beginPath();
 				for (var x = minx; x < maxx; x += stepX) {
 					var y = coeffs[3] * Math.sin(2 * Math.toRadians(x));
@@ -546,7 +553,7 @@ function Graph(cName,       // Canvas Name
 				context.stroke();
 				// coeffs[4]
 				previousPoint = null;
-				context.strokeStyle = 'darkred';
+				context.strokeStyle = coeffColors[4];
 				context.beginPath();
 				for (var x = minx; x < maxx; x += stepX) {
 					var y = coeffs[4] * Math.sin(2 * Math.toRadians(x));
@@ -581,13 +588,35 @@ function Graph(cName,       // Canvas Name
 
 			context.font = "bold 14px Arial";
 			context.fillStyle = 'black';
-			var str =
-					"a = " + coeffs[0] +
-					", b = " + coeffs[1] +
-					", c = " + coeffs[2] +
-					", d = " + coeffs[3] +
-					", e = " + coeffs[4];
-			context.fillText(str, 10, 16);
+			var xProgress = 10;
+
+			context.fillStyle = coeffColors[0];
+			var str = "a = " + coeffs[0] + ", ";
+			context.fillText(str, xProgress, 16);
+
+			var len = context.measureText(str).width;
+			xProgress += len;
+			context.fillStyle = coeffColors[1];
+			str = "b = " + coeffs[1] + ", ";
+			context.fillText(str, xProgress, 16);
+
+			len = context.measureText(str).width;
+			xProgress += len;
+			context.fillStyle = coeffColors[2];
+			str = "c = " + coeffs[2] + ", ";
+			context.fillText(str, xProgress, 16);
+
+			len = context.measureText(str).width;
+			xProgress += len;
+			context.fillStyle = coeffColors[3];
+			str = "d = " + coeffs[3] + ", ";
+			context.fillText(str, xProgress, 16);
+
+			len = context.measureText(str).width;
+			xProgress += len;
+			context.fillStyle = coeffColors[4];
+			str = "e = " + coeffs[4];
+			context.fillText(str, xProgress, 16);
 		}
 	};
 

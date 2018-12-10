@@ -83,8 +83,11 @@
 	        if (text.length > 0) {
 		        try {
 			        var devArray = JSON.parse(text);
+			        var filter = 20;
+			        try { filter = parseInt(document.getElementById('dev-filter').value); }
+			        catch (err) {}
 			        devArray.forEach(tuple => {
-			        	if (Math.abs(tuple.dev) < 20) { // TODO A Filter
+			        	if (Math.abs(tuple.dev) < filter) {
 					        graphData.push({x: tuple.hdm, y: tuple.dev});
 				        }
 							});
@@ -144,38 +147,50 @@
   <body>
     <table width="100%">
       <tr>
-        <td colspan="1" with="33%">
+        <td colspan="1" with="33%" valign="top">
           <h2>Deviation Curve Smoothing</h2>
-          Standalone. Does not require a server to be running. Can be used as a static page.
+					<small>Standalone. Does not require a server to be running. Can be used as a static page.</small>
+					<br/>
+					Equation's shape is <b>a + b sin(Z) + c cos(Z) + d sin(2.Z) + e cos(2.Z)</b>
         </td>
         <td rowspan="2" width="34%" valign="top">
-          <textarea id="json-dev" style="margin: 2px; height: 50px; width: 98%;" onchange="javascript:onDataChange();" placeholder="Drop JSON data here"></textarea>
-					<br/>
-					<small>Paste your JSON data &#8679; in the box above ...</small>
+          <textarea id="json-dev" style="color: darkgrey; border: none; margin: 2px; height: 50px; width: 98%; height: 120px;" onchange="javascript:onDataChange();" placeholder="Paste JSON data here"></textarea>
+					<!--br/>
+					<small>Paste your JSON data &#8679; in the box above ...</small-->
         </td>
 				<td rowspan="2" width="33%" valign="top"> <!-- Result will go here -->
 					<table width="100%">
 						<tr>
 							<td width="50%" height="100%">
-								<div id="coeff-list" style="height: 120px;"></div>
+								<div id="coeff-list" style="height: 120px;"><span style="color: silver; font-style: italic;">Coefficient will show up here</span></div>
 							</td>
 							<td width="50%" height="100%">
-								<div id="csv" style="height: 120px; overflow-x: auto; overflow-y: auto;"></div>
+								<div id="csv" style="height: 120px; overflow-x: auto; overflow-y: auto;"><span style="color: silver; font-style: italic;">CSV data will show up here</span></div>
 							</td>
 						</tr>
 					</table>
 				</td>
       </tr>
       <tr>
-        <td valign="top" align="left" valign="top">
-          <input type="checkbox" id="with-spray" onchange="setSpray(this);" title="Add to the logging...">Spray points
-          <br>
-          <input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">With tooltip
-        </td>
+				<td>
+				<table width="100%">
+					<tr>
+						<td valign="top" align="left" width="50%">
+							<input type="checkbox" id="with-spray" onchange="setSpray(this);" title="Add to the logging...">Spray points
+							<br>
+							<input type="checkbox" id="with-tooltip" onchange="setTooltip(this);">With tooltip
+						</td>
+						<td valign="top" align="left" >
+							Do not use data points where dev is greater than:
+							<input type="number" value="20" id="dev-filter" style="width: 40px;"> &deg;
+						</td>
+					</tr>
+				</table>
+				</td>
       </tr>
       <tr>
         <td colspan="3">
-          <small>Spray points on the canvas below (click and drag the mouse), and click </small><button onclick="goDrawing();">Display</button>
+          <small>If needed, spray points on the canvas below (click and drag the mouse), and click </small><button onclick="goDrawing();" style="border-radius: 3px; box-shadow: 2px 2px 18px #888888;">Compute &amp; Display</button>
 					&nbsp;
 					<input type="checkbox" id="decompose-cb" onchange="goDrawing();"> Decompose.
         </td>
