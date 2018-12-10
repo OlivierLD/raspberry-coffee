@@ -147,6 +147,11 @@ var defaultGraphColorConfig = {
 };
 var graphColorConfig = defaultGraphColorConfig;
 
+var contextData = {
+	coeffs: undefined,
+	decompose: undefined
+};
+
 function Graph(cName,       // Canvas Name
                graphData,   // x,y tuple array
                callback,    // Callback on mouseclick
@@ -279,16 +284,20 @@ function Graph(cName,       // Canvas Name
 			if (idx < graphData.length) {
 				var str = [];
 				try {
-					str.push("Pos:" + idx);
-					str.push(graphData[idx].y + " " + unit);
+					str.push("HDM:" + idx);
+					var d = 0;
+					if (contextData.coeffs !== undefined) {
+						d = deviation(idx, contextData.coeffs);
+					}
+					str.push("d=" + Math.abs(d).toFixed(1) + "\272" + (d<0 ? "W" : "E"));
 					//      console.log("Bubble:" + str);
 				} catch (err) {
 					console.log(JSON.stringify(err));
 				}
 
-				//    context.fillStyle = '#000';
-				//    context.fillRect(0, 0, w, h);
-				instance.drawGraph(cName, graphData, lastClicked);
+		//	instance.drawGraph(cName, graphData, lastClicked);
+				instance.drawPoints(cName, graphData, contextData.coeffs, contextData.decompose);
+
 				var tooltipW = 80, nblines = str.length;
 				context.fillStyle = graphColorConfig.tooltipColor;
 //      context.fillStyle = 'yellow';
@@ -399,6 +408,9 @@ function Graph(cName,       // Canvas Name
 
 		context = canvas.getContext('2d');
 
+		contextData.coeffs = coeffs;
+		contextData.decompose = decompose;
+
 		var width = context.canvas.clientWidth;
 		var height = context.canvas.clientHeight;
 
@@ -470,7 +482,7 @@ function Graph(cName,       // Canvas Name
 		// Plot points here
 		context.fillStyle = '#ff0000';
 		for (var i = 0; i < data.length; i++) {
-//        console.log("Plotting x:" + data[i].x + ", y:" + data[i].y + " to " + (data[i].x - minx) * xScale + ":" + (height - (data[i].y - miny) * yScale));
+//    console.log("Plotting x:" + data[i].x + ", y:" + data[i].y + " to " + (data[i].x - minx) * xScale + ":" + (height - (data[i].y - miny) * yScale));
 			context.fillRect((data[i].x - minx) * xScale, height - (data[i].y - miny) * yScale, 2, 2);
 		}
 
@@ -497,7 +509,7 @@ function Graph(cName,       // Canvas Name
 					} else {
 						context.lineTo((x - minx) * xScale, height - ((y - miny) * yScale));
 					}
-					console.log("Coeff 1, x:" + x);
+//				console.log("Coeff 1, x:" + x);
 					previousPoint = {x: x, y: y};
 				}
 //      context.closePath();
@@ -631,7 +643,7 @@ function Graph(cName,       // Canvas Name
 				}
 				yAccu = yAccu / smoothWidth;
 				_smoothData.push(new Tuple(i, yAccu));
-//          console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].y + " becomes " + yAccu);
+//      console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].y + " becomes " + yAccu);
 			}
 		}
 		// Clear
@@ -754,6 +766,7 @@ function Graph(cName,       // Canvas Name
 	};
 
 	var setScales = function () {
+//	console.log("minX %d, maxX %d, minY %d, maxY %d", minx, maxx, miny, maxy);
 		if (maxx !== minx) {
 			xScale = canvas.getContext('2d').canvas.clientWidth / (maxx - minx);
 		}
@@ -793,6 +806,7 @@ function Graph(cName,       // Canvas Name
 				minx = 0; // instance.minX(dataArray);
 				maxx = dataArray.length - 1; //instance.maxX(dataArray);
 			}
+			maxx = Math.min(maxx, 360);
 			setScales();
 		}
 	};

@@ -96,6 +96,19 @@
 	        }
         };
 
+        var generateCSV = function(coeff) {
+        	var content = "";
+        	for (var i=0; i<=360; i+=5) {
+        		var d = coeff[0] +
+								(coeff[1] * Math.sin(Math.toRadians(i))) +
+				        (coeff[2] * Math.cos(Math.toRadians(i))) +
+				        (coeff[3] * Math.sin(2 * Math.toRadians(i))) +
+				        (coeff[4] * Math.cos(2 * Math.toRadians(i)));
+        		content += (i.toFixed(1) + "," + d + "\n");
+					}
+					return content;
+				};
+
         var goDrawing = function () {
 	        try {
 		        var graphData = dataGraph.getData();
@@ -107,6 +120,10 @@
 				        'd = ' + coeffData[3] + '<br/>' +
 				        'e = ' + coeffData[4];
 		        result.innerHTML = content;
+
+		        var csv = document.getElementById('csv');
+		        csv.innerText = generateCSV(coeffData);
+
 		        var decompose = document.getElementById('decompose-cb').checked === true;
 		        dataGraph.drawPoints("dataCanvas", graphData, coeffData, decompose);
 	        } catch (err) {
@@ -127,17 +144,26 @@
   <body>
     <table width="100%">
       <tr>
-        <td colspan="1" with="30%">
+        <td colspan="1" with="33%">
           <h2>Deviation Curve Smoothing</h2>
           Standalone. Does not require a server to be running. Can be used as a static page.
         </td>
-        <td rowspan="2" width="40%" valign="top">
+        <td rowspan="2" width="34%" valign="top">
           <textarea id="json-dev" style="margin: 2px; height: 50px; width: 98%;" onchange="javascript:onDataChange();" placeholder="Drop JSON data here"></textarea>
 					<br/>
 					<small>Paste your JSON data &#8679; in the box above ...</small>
         </td>
-				<td rowspan="2" width="30%" valign="top"> <!-- Result will go here -->
-					<div id="coeff-list"></div>
+				<td rowspan="2" width="33%" valign="top"> <!-- Result will go here -->
+					<table width="100%">
+						<tr>
+							<td width="50%" height="100%">
+								<div id="coeff-list" style="height: 120px;"></div>
+							</td>
+							<td width="50%" height="100%">
+								<div id="csv" style="height: 120px; overflow-x: auto; overflow-y: auto;"></div>
+							</td>
+						</tr>
+					</table>
 				</td>
       </tr>
       <tr>
