@@ -117,8 +117,8 @@ But again, this is just an example, showing how to use the tool this document is
   - run `./process.log.sh 2010-11-03.Taiohae.nmea`, this generates a `data.json` (default name).
 - Open `deviation.tool.html` in a browser (it does not need a server to run).
 - Paste the content of the `data.json` in the top text box
-- Click the [`Display`] button
-- See the curve, along with its coefficients
+- Click the [`Compute & Display`] button
+- See the curve, along with its coefficients, and a generated `CSV` file content.
 
 ![The curve](./screenshot.01.png)
 
