@@ -107,6 +107,11 @@ In the samples above, this is obviously only the Magnetic Declination (`D`).
 The data file provided here as an example was done motoring in an anchorage, in [Taiohae, Nuku-Hiva](https://www.google.com/maps/d/u/0/viewer?mid=1ZbZm1G1fODnCzGFsiip7Hf2SFc_gNRzX&ll=-8.917066504857377%2C-140.0999415&z=18).
 Those data are raw NMEA Data.
 
+This sample data file is not ideal, the boat's path should be as round as possible, to have data on 360&deg;.
+The circle (the path) should be as big as possible, to allow the COG to be in sync with the HDG.
+
+But again, this is just an example, showing how to use the tool this document is about.
+
 #### Step by step
 - Transform the NMEA data file into a json document:
   - run `./process.log.sh 2010-11-03.Taiohae.nmea`, this generates a `data.json` (default name).
