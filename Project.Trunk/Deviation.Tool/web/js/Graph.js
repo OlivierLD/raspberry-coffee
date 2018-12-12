@@ -250,14 +250,14 @@ function Graph(cName,       // Canvas Name
 
 			var coords = relativeMouseCoords(evt, canvas);
 			x = coords.x;
-			y = coords.y; // - 30; // TODO Find where this 30 comes from...
+			y = coords.y;
 
-//       console.log("Spraying at x=" + x + ", " + (minx + (x / xScale)) + ", y=" + y + ", " + (maxy - (y / yScale)) + ", xScale:" + xScale + ", yScale:" + yScale);
+//    console.log("Spraying at x=" + x + ", " + (minx + (x / xScale)) + ", y=" + y + ", " + (maxy - (y / yScale)) + ", xScale:" + xScale + ", yScale:" + yScale);
 			var centerX = (minx + (x / xScale));
 			var centerY = (maxy - (y / yScale));
 
 			var nbPointsInSpray = 30;
-			var sprayRadius = .25;
+			var sprayRadius = 1; // .25; // To tweak, based on the graph scale.
 			for (var i = 0; i < nbPointsInSpray; i++) {
 				var direction = Math.random() * 360;
 				var radius = sprayRadius * Math.random();
