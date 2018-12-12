@@ -106,6 +106,24 @@ public class RESTProcessorUtil {
 		return returned;
 	}
 
+	/**
+	 * Extract parameter(s) name(s) from a path occurrence
+	 *
+	 * @param pattern /one/{a}/two/{b}
+	 * @return a, b
+	 */
+	public static List<String> getPathPrmNames(String pattern) {
+		List<String> returned = new ArrayList<>();
+		String[] patternElem = pattern.split("/");
+
+		for (int i = 0; i < patternElem.length; i++) {
+			if (patternElem[i].startsWith("{") && patternElem[i].endsWith("}")) {
+				returned.add(patternElem[i]);
+			}
+		}
+		return returned;
+	}
+
 	/* Utility(ies) */
 
 	public static void generateResponseHeaders(HTTPServer.Response response, int contentLength) {

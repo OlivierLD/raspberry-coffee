@@ -130,6 +130,10 @@ public class HTTPServer {
 			return RESTProcessorUtil.getPathPrmValues(this.getRequestPattern(), this.getPath());
 		}
 
+		public List<String> getPathParameterNames() {
+			return RESTProcessorUtil.getPathPrmNames(this.getRequestPattern());
+		}
+
 		public void setHeaders(Map<String, String> headers) {
 			this.headers = headers;
 		}
