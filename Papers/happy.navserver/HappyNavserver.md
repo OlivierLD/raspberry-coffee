@@ -28,6 +28,29 @@ The value of the **deviation (d)** is an important parameter, directly impacting
 - Course Made Good
 - Course Over Ground
 
+> Angles are positive in the East, negative in the West: example, D=14&deg;W will be considered as -14&deg;.
+>
+> Leeway is left or right (port or starboard). Left is negative, right is positive.
+>
+> This being said, we can come up with the following formulas:
+> ```
+> W = D + d
+> HDG = HDC + W
+> HDM = HDC + d
+> HDG = HDM + D
+>
+> CMG = HDG + Leeway
+> ```
+
+**Reminder**
+- `D`: Declination (magnetic).
+- `d`: deviation (magnetic).
+- `W`: Variation (magnetic).
+- `HDG`: True Heading, based on the True North.
+- `HDM`: Magnetic Heading, based on the Magnetic North.
+- `HDC`: Compass Heading, based on the Compass' North.
+- `CMG`: Course Made Good, the route on the water.
+
 Elaborating the right deviation curve is an important step of the calibration.
 
 It is _**not**_ possible to come up with an accurate computation of the current _without_ the right estimation of the leeway.
@@ -38,6 +61,7 @@ In practice, it is much more accurate over time.
 <p style="text-align: center;">
   <img src="img/current.png" width="634" height="424" alt="Current over Time" title="Current over Time">
 </p>
+
 On the figure above:
 - The left pane shows the triangulation
 - The middle pane compares the Course Over Ground (from the GPS) and the estimated position based on all the parameters above **on a 1 minute period**
@@ -77,13 +101,13 @@ Think about it.
 This obviously requires the knowledge of SOG &amp; COG, returned by a GPS.
 
 
-When the boat is moving, that eventually means that an accurate TWA and TWS (and TWD) is elaborated by a accurate knowledge of
+When the boat is moving, that eventually means that an accurate TWA and TWS (and TWD) is elaborated by an accurate knowledge of
 - COG
 - SOG
 - AWA
 - AWS
 - CMG
 
-In short: this is not trivial. At all, by far, mostly because of CMG (see above for details).
+In short: this is not trivial at all, by far, mostly because of CMG (see above for details).
 
 You will notice that in the Console, you have the possibility to compute the True Wind from (BSP, CMG), or from (SOG, COG). This way you can have an idea of the difference it generates...

@@ -147,6 +147,11 @@ var defaultGraphColorConfig = {
 };
 var graphColorConfig = defaultGraphColorConfig;
 
+var contextData = {
+	coeffs: undefined,
+	decompose: undefined
+};
+
 function Graph(cName,       // Canvas Name
                graphData,   // x,y tuple array
                callback,    // Callback on mouseclick
@@ -245,14 +250,14 @@ function Graph(cName,       // Canvas Name
 
 			var coords = relativeMouseCoords(evt, canvas);
 			x = coords.x;
-			y = coords.y; // - 30; // TODO Find where this 30 comes from...
+			y = coords.y;
 
-//       console.log("Spraying at x=" + x + ", " + (minx + (x / xScale)) + ", y=" + y + ", " + (maxy - (y / yScale)) + ", xScale:" + xScale + ", yScale:" + yScale);
+//    console.log("Spraying at x=" + x + ", " + (minx + (x / xScale)) + ", y=" + y + ", " + (maxy - (y / yScale)) + ", xScale:" + xScale + ", yScale:" + yScale);
 			var centerX = (minx + (x / xScale));
 			var centerY = (maxy - (y / yScale));
 
 			var nbPointsInSpray = 30;
-			var sprayRadius = .25;
+			var sprayRadius = 1; // .25; // To tweak, based on the graph scale.
 			for (var i = 0; i < nbPointsInSpray; i++) {
 				var direction = Math.random() * 360;
 				var radius = sprayRadius * Math.random();
@@ -279,16 +284,20 @@ function Graph(cName,       // Canvas Name
 			if (idx < graphData.length) {
 				var str = [];
 				try {
-					str.push("Pos:" + idx);
-					str.push(graphData[idx].getY() + " " + unit);
+					str.push("HDM:" + idx);
+					var d = 0;
+					if (contextData.coeffs !== undefined) {
+						d = deviation(idx, contextData.coeffs);
+					}
+					str.push("d=" + Math.abs(d).toFixed(1) + "\272" + (d<0 ? "W" : "E"));
 					//      console.log("Bubble:" + str);
 				} catch (err) {
 					console.log(JSON.stringify(err));
 				}
 
-				//    context.fillStyle = '#000';
-				//    context.fillRect(0, 0, w, h);
-				instance.drawGraph(cName, graphData, lastClicked);
+		//	instance.drawGraph(cName, graphData, lastClicked);
+				instance.drawPoints(cName, graphData, contextData.coeffs, contextData.decompose);
+
 				var tooltipW = 80, nblines = str.length;
 				context.fillStyle = graphColorConfig.tooltipColor;
 //      context.fillStyle = 'yellow';
@@ -332,7 +341,7 @@ function Graph(cName,       // Canvas Name
 	this.minX = function (data) {
 		var min = Number.MAX_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			min = Math.min(min, (data[i].getX !== undefined ? data[i].getX() : data[i].x));
+			min = Math.min(min, (data[i].getX !== undefined ? data[i].x : data[i].x));
 		}
 		return min;
 	};
@@ -340,7 +349,7 @@ function Graph(cName,       // Canvas Name
 	this.minY = function (data) {
 		var min = Number.MAX_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			min = Math.min(min, (data[i].getY !== undefined ? data[i].getY() : data[i].y));
+			min = Math.min(min, (data[i].getY !== undefined ? data[i].y : data[i].y));
 		}
 		return min;
 	};
@@ -348,7 +357,7 @@ function Graph(cName,       // Canvas Name
 	this.maxX = function (data) {
 		var max = Number.MIN_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			max = Math.max(max, (data[i].getX !== undefined ? data[i].getX() : data[i].x));
+			max = Math.max(max, (data[i].getX !== undefined ? data[i].x : data[i].x));
 		}
 		return max;
 	};
@@ -356,7 +365,7 @@ function Graph(cName,       // Canvas Name
 	this.maxY = function (data) {
 		var max = Number.MIN_VALUE;
 		for (var i = 0; i < data.length; i++) {
-			max = Math.max(max, (data[i].getY !== undefined ? data[i].getY() : data[i].y));
+			max = Math.max(max, (data[i].getY !== undefined ? data[i].y : data[i].y));
 		}
 		return max;
 	};
@@ -395,9 +404,16 @@ function Graph(cName,       // Canvas Name
 		return value;
 	};
 
+	var coeffColors = [
+			'orange', 'green', 'red', 'gray', 'darkred'
+	];
+
 	this.drawPoints = function (displayCanvasName, data, coeffs, decompose) {
 
 		context = canvas.getContext('2d');
+
+		contextData.coeffs = coeffs;
+		contextData.decompose = decompose;
 
 		var width = context.canvas.clientWidth;
 		var height = context.canvas.clientHeight;
@@ -413,8 +429,11 @@ function Graph(cName,       // Canvas Name
 			// Set the canvas size from its container.
 			canvas.width = width;
 			canvas.height = height;
-
-			document.getElementById(displayCanvasName).title = data.length + " elements, X:[" + minx + ", " + maxx + "] Y:[" + miny + ", " + maxy + "]";
+			if (!withTooltip) {
+				document.getElementById(displayCanvasName).title = data.length + " elements, X:[" + minx + ", " + maxx + "] Y:[" + miny + ", " + maxy + "]";
+			} else {
+				document.getElementById(displayCanvasName).title = '';
+			}
 			var gridXStep = 45; // (maxx - minx) < 5 ? 1 : Math.round((maxx - minx) / 5);
 			var gridYStep = 1.0; // (maxy - miny) < 5 ? 1 : Math.round((maxy - miny) / 5);
 
@@ -470,8 +489,8 @@ function Graph(cName,       // Canvas Name
 		// Plot points here
 		context.fillStyle = '#ff0000';
 		for (var i = 0; i < data.length; i++) {
-//        console.log("Plotting x:" + data[i].x + ", y:" + data[i].y + " to " + (data[i].x - minx) * xScale + ":" + (height - (data[i].y - miny) * yScale));
-			context.fillRect((data[i].x - minx) * xScale, height - (data[i].y - miny) * yScale, 1, 1);
+//    console.log("Plotting x:" + data[i].x + ", y:" + data[i].y + " to " + (data[i].x - minx) * xScale + ":" + (height - (data[i].y - miny) * yScale));
+			context.fillRect((data[i].x - minx) * xScale, height - (data[i].y - miny) * yScale, 2, 2);
 		}
 
 		if (coeffs !== undefined) { // Then draw curve
@@ -479,16 +498,16 @@ function Graph(cName,       // Canvas Name
 				// coeffs[0]
 				context.beginPath();
 				context.lineWidth = 1;
-				context.strokeStyle = 'orange';
+				context.strokeStyle = coeffColors[0];
 				context.moveTo(0, height - ((coeffs[0] - miny) * yScale));
 				context.lineTo((maxx - minx) * xScale, height - ((coeffs[0] - miny) * yScale));
-				context.closePath();
+//			context.closePath();
 				context.stroke();
 
 				var stepX = (maxx - minx) / 1000;
 				// coeffs[1]
 				var previousPoint = null;
-				context.strokeStyle = 'green';
+				context.strokeStyle = coeffColors[1];
 				context.beginPath();
 				for (var x = minx; x < maxx; x += stepX) {
 					var y = coeffs[1] * Math.sin(Math.toRadians(x));
@@ -497,13 +516,14 @@ function Graph(cName,       // Canvas Name
 					} else {
 						context.lineTo((x - minx) * xScale, height - ((y - miny) * yScale));
 					}
+//				console.log("Coeff 1, x:" + x);
 					previousPoint = {x: x, y: y};
 				}
-        context.closePath();
+//      context.closePath();
 				context.stroke();
 				// coeffs[2]
 				previousPoint = null;
-				context.strokeStyle = 'red';
+				context.strokeStyle = coeffColors[2];
 				context.beginPath();
 				for (var x = minx; x < maxx; x += stepX) {
 					var y = coeffs[2] * Math.sin(Math.toRadians(x));
@@ -514,11 +534,11 @@ function Graph(cName,       // Canvas Name
 					}
 					previousPoint = {x: x, y: y};
 				}
-				context.closePath();
+//			context.closePath();
 				context.stroke();
 				// coeffs[3]
 				previousPoint = null;
-				context.strokeStyle = 'gray';
+				context.strokeStyle = coeffColors[3];
 				context.beginPath();
 				for (var x = minx; x < maxx; x += stepX) {
 					var y = coeffs[3] * Math.sin(2 * Math.toRadians(x));
@@ -529,11 +549,11 @@ function Graph(cName,       // Canvas Name
 					}
 					previousPoint = {x: x, y: y};
 				}
-				context.closePath();
+//			context.closePath();
 				context.stroke();
 				// coeffs[4]
 				previousPoint = null;
-				context.strokeStyle = 'darkred';
+				context.strokeStyle = coeffColors[4];
 				context.beginPath();
 				for (var x = minx; x < maxx; x += stepX) {
 					var y = coeffs[4] * Math.sin(2 * Math.toRadians(x));
@@ -544,7 +564,7 @@ function Graph(cName,       // Canvas Name
 					}
 					previousPoint = {x: x, y: y};
 				}
-				context.closePath();
+//			context.closePath();
 				context.stroke();
 			}
 			// Main curve
@@ -563,18 +583,40 @@ function Graph(cName,       // Canvas Name
 				}
 				previousPoint = {x: x, y: y};
 			}
-//        context.closePath();
+//    context.closePath();
 			context.stroke();
 
 			context.font = "bold 14px Arial";
 			context.fillStyle = 'black';
-			var str =
-					"a = " + coeffs[0] +
-					", b = " + coeffs[1] +
-					", c = " + coeffs[2] +
-					", d = " + coeffs[3] +
-					", e = " + coeffs[4];
-			context.fillText(str, 10, 16);
+			var xProgress = 10;
+
+			context.fillStyle = coeffColors[0];
+			var str = "a = " + coeffs[0] + ", ";
+			context.fillText(str, xProgress, 16);
+
+			var len = context.measureText(str).width;
+			xProgress += len;
+			context.fillStyle = coeffColors[1];
+			str = "b = " + coeffs[1] + ", ";
+			context.fillText(str, xProgress, 16);
+
+			len = context.measureText(str).width;
+			xProgress += len;
+			context.fillStyle = coeffColors[2];
+			str = "c = " + coeffs[2] + ", ";
+			context.fillText(str, xProgress, 16);
+
+			len = context.measureText(str).width;
+			xProgress += len;
+			context.fillStyle = coeffColors[3];
+			str = "d = " + coeffs[3] + ", ";
+			context.fillText(str, xProgress, 16);
+
+			len = context.measureText(str).width;
+			xProgress += len;
+			context.fillStyle = coeffColors[4];
+			str = "e = " + coeffs[4];
+			context.fillText(str, xProgress, 16);
 		}
 	};
 
@@ -620,17 +662,17 @@ function Graph(cName,       // Canvas Name
 				for (var acc = i - (smoothWidth / 2); acc < i + (smoothWidth / 2); acc++) {
 					var y;
 					if (acc < 0) {
-						y = smoothData[0].getY();
+						y = smoothData[0].y;
 					} else if (acc > (smoothData.length - 1)) {
-						y = smoothData[smoothData.length - 1].getY();
+						y = smoothData[smoothData.length - 1].y;
 					} else {
-						y = smoothData[acc].getY();
+						y = smoothData[acc].y;
 					}
 					yAccu += y;
 				}
 				yAccu = yAccu / smoothWidth;
 				_smoothData.push(new Tuple(i, yAccu));
-//          console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].getY() + " becomes " + yAccu);
+//      console.log("I:" + smoothData[i].getX() + " y from " + smoothData[i].y + " becomes " + yAccu);
 			}
 		}
 		// Clear
@@ -696,10 +738,10 @@ function Graph(cName,       // Canvas Name
 			context.strokeStyle = graphColorConfig.rawDataLineColor;
 
 			var previousPoint = data[0];
-			context.moveTo((0 - minx) * xScale, height - (data[0].getY() - miny) * yScale);
+			context.moveTo((0 - minx) * xScale, height - (data[0].y - miny) * yScale);
 			for (var i = 1; i < data.length; i++) {
-				//  context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
-				context.lineTo((i - minx) * xScale, height - (data[i].getY() - miny) * yScale);
+				//  context.moveTo((previousPoint.x - minx) * xScale, cHeight - (previousPoint.y - miny) * yScale);
+				context.lineTo((i - minx) * xScale, height - (data[i].y - miny) * yScale);
 				//  context.stroke();
 				previousPoint = data[i];
 			}
@@ -721,10 +763,10 @@ function Graph(cName,       // Canvas Name
 				context.lineWidth = 3;
 				context.strokeStyle = graphColorConfig.smoothDataLineColor;
 				previousPoint = data[0];
-				context.moveTo((0 - minx) * xScale, height - (data[0].getY() - miny) * yScale);
+				context.moveTo((0 - minx) * xScale, height - (data[0].y - miny) * yScale);
 				for (var i = 1; i < data.length; i++) {
-//              context.moveTo((previousPoint.getX() - minx) * xScale, cHeight - (previousPoint.getY() - miny) * yScale);
-					context.lineTo((i - minx) * xScale, height - (data[i].getY() - miny) * yScale);
+//              context.moveTo((previousPoint.x - minx) * xScale, cHeight - (previousPoint.y - miny) * yScale);
+					context.lineTo((i - minx) * xScale, height - (data[i].y - miny) * yScale);
 //              context.stroke();
 					previousPoint = data[i];
 				}
@@ -753,6 +795,7 @@ function Graph(cName,       // Canvas Name
 	};
 
 	var setScales = function () {
+//	console.log("minX %d, maxX %d, minY %d, maxY %d", minx, maxx, miny, maxy);
 		if (maxx !== minx) {
 			xScale = canvas.getContext('2d').canvas.clientWidth / (maxx - minx);
 		}
@@ -792,6 +835,7 @@ function Graph(cName,       // Canvas Name
 				minx = 0; // instance.minX(dataArray);
 				maxx = dataArray.length - 1; //instance.maxX(dataArray);
 			}
+			maxx = Math.min(maxx, 360);
 			setScales();
 		}
 	};

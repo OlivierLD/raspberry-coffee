@@ -38,6 +38,7 @@ include "RESTNauticalAlmanac"
 include 'RESTImageProcessor'
 include "RESTRouting"
 include "RESTCam"
+include "RESTRelay"
 include "Camera"
 include "WebComponents"
 include "HanoiTower"

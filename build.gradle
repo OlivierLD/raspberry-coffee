@@ -23,6 +23,7 @@ dependencies {
   compile project(':PIR')
   compile project(':PI4J.email')
   compile project(':Relay')
+  compile project(':RESTRelay')
   compile project(':FONA')
   compile project(':RasPISamples')
   compile project(':LelandOilDetector')

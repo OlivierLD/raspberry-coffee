@@ -22,8 +22,22 @@ like `(Z, diff)`, representing a cloud of points.
 
 We will use the Least Square method to come up with the expected coefficients.
 
+> For details on the Least Square method, for this specific case, see [this document](https://htmlpreview.github.io/?https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/Deviation.Tool/README.html).
+
+For each point, for each `HDM`, we want the calculated deviation to be as close as possible to the measured deviation.
+
+To get rid of the sign, we will use the square of the difference.
+
+What will want then becomes:
+For each point, for each `HDM`, we want the square of the difference between calculated and measured deviations to be as small as possible.
+
+This means that the first derivative of the function expressing this difference has to be equal to zero.
+
 We will have a dimension 5 square matrix, and a dimension 1 array of 5 coefficients.
 <!--
+ On line derivative calculator:
+ https://www.symbolab.com/solver/derivative-calculator
+
  Formula below done with https://www.codecogs.com/latex/eqneditor.php
 
  \begin{bmatrix}
@@ -93,14 +107,22 @@ In the samples above, this is obviously only the Magnetic Declination (`D`).
 The data file provided here as an example was done motoring in an anchorage, in [Taiohae, Nuku-Hiva](https://www.google.com/maps/d/u/0/viewer?mid=1ZbZm1G1fODnCzGFsiip7Hf2SFc_gNRzX&ll=-8.917066504857377%2C-140.0999415&z=18).
 Those data are raw NMEA Data.
 
+This sample data file is not ideal, the boat's path should be as round as possible, to have data on 360&deg;.
+The circle (the path) should be as big as possible, to allow the COG to be in sync with the HDG.
+
+But again, this is just an example, showing how to use the tool this document is about.
+
 #### Step by step
 - Transform the NMEA data file into a json document:
   - run `./process.log.sh 2010-11-03.Taiohae.nmea`, this generates a `data.json` (default name).
 - Open `deviation.tool.html` in a browser (it does not need a server to run).
-- Paste the content of the `data.json` in the top right text box
-- Click the [`Display`] button
-- See the curve, along with its coefficients
+- Paste the content of the `data.json` in the top text box
+- Click the [`Compute & Display`] button
+- See the curve, along with its coefficients, and a generated `CSV` file content.
 
 ![The curve](./screenshot.01.png)
 
 ---
+
+## TODO
+- Inverted (hdt -> dev)

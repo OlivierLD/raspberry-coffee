@@ -31,6 +31,13 @@ import utils.StringUtils;
  * And they both have different endianness.
  * <br>
  * It took me a while to figure this all out...
+ *
+ * Magnetometer calibration see
+ * https://forum.sparkfun.com/viewtopic.php?t=32575
+ * https://github.com/praneshkmr/node-lsm303/wiki/Understanding-the-calibration-of-the-LSM303-magnetometer-(compass)
+ * http://www.varesano.net/blog/fabio/freeimu-magnetometer-and-accelerometer-calibration-gui-alpha-version-out
+ * https://learn.adafruit.com/lsm303-accelerometer-slash-compass-breakout/calibration
+ *
  */
 public class LSM303 {
 	/*
