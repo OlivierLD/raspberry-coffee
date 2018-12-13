@@ -20,7 +20,7 @@ public class RelayRequestManager implements RESTRequestManager {
 	private RelayServer relayServer = null;
 	private RelayManager relayManager = null; // Physical
 
-	public RelayRequestManager() {
+	public RelayRequestManager() throws Exception {
 		this(null);
 	}
 
@@ -28,7 +28,7 @@ public class RelayRequestManager implements RESTRequestManager {
 	 *
 	 * @param parent to be able to refer to all the request managers
 	 */
-	public RelayRequestManager(RelayServer parent) {
+	public RelayRequestManager(RelayServer parent) throws Exception {
 		// Relay map
 		String mapStr = System.getProperty("relay.map", "1:11,2:12");
 		//                                                         | |  | |
@@ -40,8 +40,7 @@ public class RelayRequestManager implements RESTRequestManager {
 		try {
 			relayMap = buildRelayMap(mapStr);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.exit(1);
+			throw ex;
 		}
 		this.relayManager = new RelayManager(relayMap);
 		this.relayServer = parent;
@@ -49,24 +48,24 @@ public class RelayRequestManager implements RESTRequestManager {
 		restImplementation.setRelayManager(this.relayManager);
 	}
 
-	private Map<Integer, Pin> buildRelayMap(String strMap) throws Exception {
+	private Map<Integer, Pin> buildRelayMap(String strMap) {
 		Map<Integer, Pin> map = new HashMap<>();
 		String[] array = strMap.split(",");
 		Arrays.stream(array).forEach(relayPrm -> {
 			String[] tuple = relayPrm.split(":");
 			if (tuple == null || tuple.length != 2) {
-				throw new RuntimeException(String.format("In [%s], bad element [%s]", strMap, tuple));
+				throw new RuntimeException(String.format("In [%s], bad element [%s]", strMap, relayPrm));
 			}
 			try {
 				int relayNum = Integer.parseInt(tuple[0]);
 				int pinNum = Integer.parseInt(tuple[1]);
 				Pin physicalNumber = PinUtil.getPinByPhysicalNumber(pinNum);
 				if (physicalNumber == null) {
-					throw new RuntimeException(String.format("In [%s], element [%s], pin #%d does not exist", strMap, tuple, pinNum));
+					throw new RuntimeException(String.format("In [%s], element [%s], pin #%d does not exist", strMap, relayPrm, pinNum));
 				}
 				map.put(relayNum, physicalNumber);
 			} catch (NumberFormatException nfe) {
-				throw new RuntimeException(String.format("In [%s], element [%s], bad numbers", strMap, tuple));
+				throw new RuntimeException(String.format("In [%s], element [%s], bad numbers", strMap, relayPrm));
 			}
 		});
 

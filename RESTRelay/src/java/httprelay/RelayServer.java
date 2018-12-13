@@ -24,7 +24,12 @@ public class RelayServer {
 		}
 
 		System.out.println(String.format(">>> Running on port %d", httpPort));
-		this.httpServer = startHttpServer(httpPort, new RelayRequestManager(this));
+		try {
+			this.httpServer = startHttpServer(httpPort, new RelayRequestManager(this));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	protected List<HTTPServer.Operation> getAllOperationList() {
