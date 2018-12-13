@@ -2,23 +2,36 @@
 <html>
   <head>
     <title>Relay over the Internet</title>
-    <link rel="stylesheet" href="./stylesheet.css" type="text/css"/>   
+    <link rel="stylesheet" href="./stylesheet.css" type="text/css"/>
+    <link rel="stylesheet" href="./rocker.css" type="text/css"/>
     <script type="text/javascript" src="relay.js"></script>
+    <style>
+      html {display:table; width:100%;}
+      body {display:table-cell; text-align:center; vertical-align:middle;}
+    </style>
   </head>
   <body>
-    <h1>Home Automation <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShXziEYSrwRD_qhgn29_PZsGBBTcrqty5O3dTViH1OpylgCpiQBg" alt="Raspberry PI" style="vertical-align:middle;" width="51" height="62"></h1>
-    Choose below.
-    <p>
-      <table style="margin-left: auto; margin-right: auto;" cellspacing="10"> <!-- style="margin: auto;" -->
-        <tr>
-          <td><button onClick="set('01', 'on');">1 - On</button></td>
-          <td><button onClick="set('01', 'off');">1 - Off</button></td>
-          <td><button onClick="set('02', 'on');">2 - On</button></td>
-          <td><button onClick="set('02', 'off');">2 - Off</button></td>
-        </tr>
-      </table>
+    <h1>Home Automation</h1>
+    <p style="margin-top: 10px;">
+      <!--
+				See https://unicodepowersymbol.com/
+			-->
+      <label class="rocker">
+        <input type="checkbox" onchange="setRelay('01', this);" id="rocker-switch" checked>
+        <span class="switch-left">I</span>  <!-- ON -->
+        <span class="switch-right">O</span> <!-- OFF -->
+      </label>
     </p>
-    <hr>
-    <address>Oliv did it</address>
+    <!--hr>
+    <address>Oliv did it</address-->
   </body>
+  <script type="text/javascript">
+    function setOriginalStatus(status) {
+      console.log('Set original status to', status);
+      document.getElementById('rocker-switch').checked = status.status;
+    }
+    window.onload = () => {
+      getStatus(1, setOriginalStatus);
+    };
+  </script>
 </html>

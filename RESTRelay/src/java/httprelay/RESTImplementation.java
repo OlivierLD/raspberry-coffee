@@ -7,6 +7,7 @@ import http.HTTPServer.Operation;
 import http.HTTPServer.Request;
 import http.HTTPServer.Response;
 import http.RESTProcessorUtil;
+import relay.RelayManager;
 
 import java.io.StringReader;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ public class RESTImplementation {
 	private final static String RELAY_PREFIX = "/relay";
 
 	private RelayRequestManager relayRequestManager;
+	private RelayManager physicalRelayManager = null;
 
 	public RESTImplementation(RelayRequestManager restRequestManager) {
 
@@ -33,6 +35,9 @@ public class RESTImplementation {
 		RESTProcessorUtil.checkDuplicateOperations(operations);
 	}
 
+	public void setRelayManager(RelayManager relayManager) {
+		this.physicalRelayManager = relayManager;
+	}
 	/**
 	 * Define all the REST operations to be managed
 	 * by the HTTP server.
@@ -127,8 +132,11 @@ public class RESTImplementation {
 				try {
 					RelayStatus relayStatus = gson.fromJson(stringReader, RelayStatus.class);
 					int relayNum = Integer.parseInt(pathParameters.get(0));
-					// TODO Set Relay status here
-
+					// Set Relay status here
+			//	System.out.println(String.format("Setting relay #%d %s", relayNum, (relayStatus.status ? "ON" : "OFF")));
+					if (this.physicalRelayManager != null) {
+						this.physicalRelayManager.set(relayNum, (relayStatus.status ? "on" : "off")); // TODO an enum
+					}
 					String content = new Gson().toJson(relayStatus);
 					RESTProcessorUtil.generateResponseHeaders(response, content.length());
 					response.setPayload(content.getBytes());
@@ -172,11 +180,11 @@ public class RESTImplementation {
 		List<String> pathParameters = request.getPathParameters();
 
 		RelayStatus rs = new RelayStatus();
-		// TODO Get status here
+		// Get status here
 		try {
 			int relayNum = Integer.parseInt(pathParameters.get(0));
-
-			rs.status = false;
+			boolean onOff = this.physicalRelayManager.get(relayNum);
+			rs.status = onOff;
 			String content = new Gson().toJson(rs);
 			RESTProcessorUtil.generateResponseHeaders(response, content.length());
 			response.setPayload(content.getBytes());
