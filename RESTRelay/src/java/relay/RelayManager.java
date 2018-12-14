@@ -43,6 +43,9 @@ public class RelayManager {
 			Optional<GpioPinDigitalOutput> oPin = relays.stream().filter(pinOut -> pinOut.getName().equals(String.valueOf(device))).findFirst();
 			if (oPin.isPresent()) {
 				GpioPinDigitalOutput pin = oPin.get();
+				if ("true".equals(System.getProperty("relay.verbose", "false"))) {
+					System.out.println(String.format("Setting Relay#%d %s", device, status));
+				}
 				if ("on".equals(status)) {
 					pin.low();
 				} else {
@@ -51,7 +54,7 @@ public class RelayManager {
 			} else {
 				System.out.println(String.format("Relay %d not found...", device));
 			}
-		} else{
+		} else {
 			System.out.println(String.format("Setting relay #%d %s", device, status));
 		}
 	}
@@ -66,7 +69,7 @@ public class RelayManager {
 			} else {
 				System.out.println(String.format("Relay %d not found...", device));
 			}
-		} else{
+		} else {
 			status = (System.currentTimeMillis() % 2) == 0;
 			System.out.println(String.format("Getting status for relay #%d: %s", device, status));
 		}
