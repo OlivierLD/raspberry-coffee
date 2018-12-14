@@ -41,7 +41,7 @@ public class RelayRequestManager implements RESTRequestManager {
 			relayMap = buildRelayMap(mapStr);
 			if ("true".equals(System.getProperty("relay.verbose", "false"))) {
 				relayMap.entrySet().forEach(entry -> {
-					System.out.println(String.format("Relay #%d mapped to pin %d (%s) ", entry.getKey(), entry.getValue(), PinUtil.findByPin(entry.getValue()).pinNumber(), PinUtil.findByPin(entry.getValue()).pinName() ));
+					System.out.println(String.format("Relay #%d mapped to pin %d (%s) ", entry.getKey(), PinUtil.findByPin(entry.getValue()).pinNumber(), PinUtil.findByPin(entry.getValue()).pinName() ));
 				});
 			}
 		} catch (Exception ex) {
