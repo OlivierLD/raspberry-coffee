@@ -16,7 +16,7 @@ Wiring between the Raspberry Pi and the Relay.
 
 ![Relay wiring](./setup.png)
 
-How to hook up the power to the relay.
+How to hook up the power and appliance to the relay.
 
 ### Relay mapping
 The code in this project can drive several relays.
@@ -26,7 +26,7 @@ The limit is the number of GPIO pins available on the Raspberry Pi header.
 The relays will be identified by an integer.
 
 The `RelayRequestManager` will establish the mapping between the relay number (`id`) and
-the GPIO pin driving it. The "map" is provided as a System Property provided at runtime:
+the GPIO pin driving it. The "map" is provided as a System Property provided at runtime, like in `start.server.sh`:
 
 ```
  -Drelay.map=1:11,2:12
@@ -46,7 +46,7 @@ The semantic is the following one:
               Relay num for this app
 ```
 
-The default value for this `relay,map` is the one above: `1:11,2:12`.
+The default value for this `relay.map` variable is the one above: `1:11,2:12`.
 
 This means that
 - Relay `1` will be driven by the `GPIO_0` pin
@@ -58,7 +58,7 @@ The REST requests are defined `RESTImplementation` :
 
 The `{relay-id}` is the ID of the relay (`1` or `2` in the above), it is provided as a path parameter in the REST request.
 
-#### Header
+#### GPIO Header
 See below:
 
 The pin #11 is BCM 17, and GPIO_0.
@@ -93,10 +93,12 @@ The pin #11 is BCM 17, and GPIO_0.
 ```
 
 ## Run it!
-- Hook up you relay to the Raspberry Pi and the appliance to the relay (a lamp is a good appliance 👍).
-- Modify `start.server.sh` to map the relay correctly, and set the HTTP port
+- Hook up your relay to the Raspberry Pi and the appliance to the relay (a lamp is a good appliance 👍).
+- Modify `start.server.sh` to map the relay accordingly, and set the HTTP port.
 - Then, from any browser on a laptop, tablet, cellphone..., reach `http://192.168.42.9:9876/web/index.2.html` (`192.168.42.9` is the address of the Raspberry Pi the server runs on).
 
 ![Web UI](./WebUI.png)
 
----
+And flip the switch! 💡
+
+--------------------
