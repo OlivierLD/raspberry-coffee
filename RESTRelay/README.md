@@ -91,4 +91,12 @@ The pin #11 is BCM 17, and GPIO_0.
        | BCM | wPi | Name         |  Physical  |         Name | wPi | BCM |
        +-----+-----+--------------+-----++-----+--------------+-----+-----+
 ```
+
+## Run it!
+- Hook up you relay to the Raspberry Pi and the appliance to the relay (a lamp is a good appliance 👍).
+- Modify `start.server.sh` to map the relay correctly, and set the HTTP port
+- Then, from any browser on a laptop, tablet, cellphone..., reach `http://192.168.42.9:9876/web/index.2.html` (`192.168.42.9` is the address of the Raspberry Pi the server runs on).
+
+![Web UI](./WebUI.png)
+
 ---
