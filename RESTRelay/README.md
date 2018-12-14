@@ -46,6 +46,18 @@ The semantic is the following one:
               Relay num for this app
 ```
 
+The default value for this `relay,map` is the one above: `1:11,2:12`.
+
+This means that
+- Relay `1` will be driven by the `GPIO_0` pin
+- Relay `2` will be driven by the `GPIO_1` pin
+
+The REST requests are defined `RESTImplementation` :
+- `GET` `/relay/status/{relay-id}`
+- `POST` `/relay/status/{relay-id}`
+
+The `{relay-id}` is the ID of the relay (`1` or `2` in the above), it is provided as a path parameter in the REST request.
+
 #### Header
 See below:
 
