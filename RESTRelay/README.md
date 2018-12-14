@@ -97,6 +97,8 @@ The pin #11 is BCM 17, and GPIO_0.
 - Modify `start.server.sh` to map the relay accordingly, and set the HTTP port.
 - Then, from any browser on a laptop, tablet, cellphone..., reach `http://192.168.42.9:9876/web/index.2.html` (`192.168.42.9` is the address of the Raspberry Pi the server runs on).
 
+The switch is mapped to the relay `1`.
+
 ![Web UI](./WebUI.png)
 
 And flip the switch! 💡
