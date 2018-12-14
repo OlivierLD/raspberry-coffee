@@ -87,7 +87,7 @@ function getStatus(relay, callback) {
 			console.log("Error:", err, ("\nfor value [" + value + "]"));
 		}
 	}, function (error) { // Reject
-		console.log("Failed to get NMEA data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+		console.log("Failed to get Status..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
 
