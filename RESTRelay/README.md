@@ -103,4 +103,12 @@ The switch is mapped to the relay `1`.
 
 And flip the switch! 💡
 
+### Watch interface
+Samsung Frontier (Emulator screenshots):
+
+|    First Screen     |   Working Screen    |
+| ------------------- | ------------------- |
+| ![](./watch.01.png) | ![](./watch.02.png) |
+
+
 --------------------
