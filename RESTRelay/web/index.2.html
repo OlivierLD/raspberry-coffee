@@ -31,6 +31,14 @@
         transform: scaleY(0);
         overflow: hidden;
       }
+
+      .visible-title {
+        transition: max-height 1s ease-in-out, opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        opacity: 1;
+        max-height: 50px;
+        transform: scaleY(1);
+        overflow: hidden;
+      }
     </style>
     <script type="text/javascript">
       function setSplitFlapValue(id, value) {
@@ -65,18 +73,25 @@
         elem.style.opacity = 1;
         elem.style.maxHeight = '600px';
         elem.style.transform = 'scaleY(1)';
+
+        let title = document.getElementById('tap-to-start');
+        title.style.opacity = 0;
+        title.style.maxHeight = '0';
+        title.style.transform = 'scaleY(0)';
       }
     </script>
   </head>
   <body onclick="showSwitch();">
-    <p style="margin-top: 20px;">
+    <div style="margin-top: 20px;">
       <split-flap-display id="split-flap-display-01"
                           nb-char="15"
                           font-size="30"
                           value="   Welcome !"></split-flap-display>
 
-    </p>
-    <h3>Tap to Start</h3>
+    </div>
+    <div style="margin-top: 20px;" id="tap-to-start" class="visible-title">
+      <h3>Tap Screen to Start</h3>
+    </div>
     <div id="switch-container" class="hidden-switch">
       <p style="margin-top: 10px;">
         <!--
