@@ -18,6 +18,10 @@ Wiring between the Raspberry Pi and the Relay.
 
 How to hook up the power and appliance to the relay.
 
+> Note:
+> - On a one-relay board, I use the 3V3 power supply from the Raspberry Pi.
+> - On a two-relay board, I use the 5V power supply from the Raspberry Pi.
+
 ### Relay mapping
 The code in this project can drive several relays.
 

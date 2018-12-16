@@ -2,23 +2,33 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Multi-Screen</title>
 	<style>
+		html {
+			display: table;
+			width: 100%;
+			height: 100%;
+		}
+
 		* {
 			box-sizing: border-box
 		}
 
 		body {
+			display: table-cell;
+			text-align: center;
+			vertical-align: top;
 			font-family: Verdana, sans-serif;
-			margin: 0
+			/*margin: 0*/
 		}
 
-		.theSlides {
+		.the-slides {
 			display: none
 		}
 
 		/* Slideshow container */
 		.slideshow-container {
-			max-width: 1000px;
+			max-width: 400px;
 			position: relative;
 			margin: auto;
 		}
@@ -29,9 +39,10 @@
 			position: absolute;
 			top: 50%;
 			width: auto;
-			padding: 16px;
+			width: 100%;
+			/*padding: 16px;*/
 			margin-top: -22px;
-			color: cyan; /* white; */
+			color: black; /* white; */
 			font-weight: bold;
 			font-size: 18px;
 			transition: 0.6s ease;
@@ -46,12 +57,13 @@
 
 		/* On hover, add a black background color with a little bit see-through */
 		.prev:hover, .next:hover {
+			border-radius: 60px;
 			background-color: rgba(0, 0, 0, 0.3);
 		}
 
 		/* Caption text */
 		.text {
-			color: cyan; /*#f2f2f2; */
+			color: black; /*#f2f2f2; */
 			font-size: 15px;
 			padding: 8px 12px;
 			position: absolute;
@@ -61,8 +73,8 @@
 		}
 
 		/* Number text (1/3 etc) */
-		.numbertext {
-			color: cyan; /*  #f2f2f2; */
+		.number-text {
+			color: black; /*  #f2f2f2; */
 			font-size: 12px;
 			padding: 8px 12px;
 			position: absolute;
@@ -123,6 +135,13 @@
 				font-size: 11px
 			}
 		}
+
+		.display {
+			width: 200px;
+			height: 300px;
+			border: 4px solid black;
+			border-radius: 10px;
+		}
 	</style>
 </head>
 <body>
@@ -131,58 +150,58 @@
 
 <div class="slideshow-container">
 
-	<div class="mySlides fade">
-		<div class="numbertext">1 / 9</div>
-		<img src="img/en.route.JPG" style="width:100%">
-		<div class="text">En route</div>
+	<div class="the-slides fade">
+		<div class="number-text">1 / 9</div>
+		<div class="display"></div>
+		<div class="text">BSP</div>
 	</div>
 
-	<div class="mySlides fade">
-		<div class="numbertext">2 / 9</div>
-		<img src="img/lambi.JPG" style="width:100%">
-		<div class="text">Lambi, Moorea</div>
+	<div class="the-slides fade">
+		<div class="number-text">2 / 9</div>
+		<div class="display"></div>
+		<div class="text">AWS</div>
 	</div>
 
-	<div class="mySlides fade">
-		<div class="numbertext">3 / 9</div>
-		<img src="img/huahine.JPG" style="width:100%">
-		<div class="text">Huahine</div>
+	<div class="the-slides fade">
+		<div class="number-text">3 / 9</div>
+		<div class="display"></div>
+		<div class="text">AWA</div>
 	</div>
 
-	<div class="mySlides fade">
-		<div class="numbertext">4 / 9</div>
-		<img src="img/tahaa.JPG" style="width:100%">
-		<div class="text">Taha'a</div>
+	<div class="the-slides fade">
+		<div class="number-text">4 / 9</div>
+		<div class="display"></div>
+		<div class="text">TWS</div>
 	</div>
 
-	<div class="mySlides fade">
-		<div class="numbertext">5 / 9</div>
-		<img src="img/tapuamu.JPG" style="width:100%">
-		<div class="text">Tapuamu, Taha'a</div>
+	<div class="the-slides fade">
+		<div class="number-text">5 / 9</div>
+		<div class="display"></div>
+		<div class="text">TWD</div>
 	</div>
 
-	<div class="mySlides fade">
-		<div class="numbertext">6 / 9</div>
-		<img src="img/raiatea.JPG" style="width:100%">
-		<div class="text">Raiatea</div>
+	<div class="the-slides fade">
+		<div class="number-text">6 / 9</div>
+		<div class="display"></div>
+		<div class="text">TWA</div>
 	</div>
 
-	<div class="mySlides fade">
-		<div class="numbertext">7 / 9</div>
-		<img src="img/bora.JPG" style="width:100%">
-		<div class="text">Bora-Bora</div>
+	<div class="the-slides fade">
+		<div class="number-text">7 / 9</div>
+		<div class="display"></div>
+		<div class="text">HDG</div>
 	</div>
 
-	<div class="mySlides fade">
-		<div class="numbertext">8 / 9</div>
-		<img src="img/bora.bora.JPG" style="width:100%">
-		<div class="text">Bora-Bora</div>
+	<div class="the-slides fade">
+		<div class="number-text">8 / 9</div>
+		<div class="display"></div>
+		<div class="text">COG</div>
 	</div>
 
-	<div class="mySlides fade">
-		<div class="numbertext">9 / 9</div>
-		<img src="img/tongareva.JPG" style="width:100%">
-		<div class="text">Tongareva</div>
+	<div class="the-slides fade">
+		<div class="number-text">9 / 9</div>
+		<div class="display"></div>
+		<div class="text">SOG</div>
 	</div>
 
 	<a class="prev" onclick="plusSlides(-1);">&#10094;</a>
@@ -238,7 +257,7 @@
 
 	function showSlides(n) {
 		var i;
-		var slides = document.getElementsByClassName("theSlides");
+		var slides = document.getElementsByClassName("the-slides");
 		var dots = document.getElementsByClassName("dot");
 		if (n > slides.length) {slideIndex = 1}
 		if (n < 1) {slideIndex = slides.length}
