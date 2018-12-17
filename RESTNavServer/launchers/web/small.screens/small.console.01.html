@@ -48,7 +48,7 @@
 			text-align: center;
 			display: grid;
 			grid-template-areas:
-			    'left center right';
+					'left center right';
 			grid-gap: 0;
 			padding: 0;
 		}
@@ -196,6 +196,51 @@
 			font-size: 14px;
 		}
 	</style>
+
+	<script type="text/javascript" src="js/pub.sub.js"></script>
+	<script type="text/javascript" src="js/ajax.manager.js"></script>
+
+	<script type="text/javascript">
+		/**
+		 *  SUBSCRIBERS HERE.
+		 *
+		 * The following subscriptions make the distinction between Ajax & WebSockets
+		 * (See the initAjax & initWS methods)
+		 *
+		 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
+		 */
+		events.subscribe('sog', function(val) {
+			document.getElementById('sog').innerText = val.toFixed(2);
+		});
+		events.subscribe('cog', function(val) {
+			document.getElementById('cog').innerText = val.toFixed(0);
+		});
+		events.subscribe('bsp', function(val) {
+			document.getElementById('bsp').innerText = val.toFixed(2);
+		});
+		events.subscribe('awa', function(val) {
+			document.getElementById('awa').innerText = val.toFixed(0);
+		});
+		events.subscribe('aws', function(val) {
+			document.getElementById('aws').innerText = val.toFixed(2);
+		});
+		events.subscribe('twa', function(val) {
+			document.getElementById('twa').innerText = val.toFixed(0);
+		});
+		events.subscribe('tws', function(val) {
+			document.getElementById('tws').innerText = val.toFixed(2);
+		});
+		events.subscribe('twd', function(val) {
+			document.getElementById('twd').innerText = val.toFixed(0);
+		});
+		events.subscribe('hdg', function(val) {
+			document.getElementById('hdg').innerText = val.toFixed(0);
+		});
+
+		window.onload = () => {
+			initAjax();
+		}
+	</script>
 </head>
 <body>
 
@@ -207,7 +252,7 @@
 		<div class="number-text">1 / 9</div>
 		<div class="display">
 			<span class="display-title">Boat Speed</span>
-			<span class="display-data">12.34</span>
+			<span class="display-data" id="bsp"></span>
 			<span class="display-unit">knots</span>
 		</div>
 		<div class="text">BSP</div>
@@ -217,7 +262,7 @@
 		<div class="number-text">2 / 9</div>
 		<div class="display">
 			<span class="display-title">Apparent Wind Speed</span>
-			<span class="display-data">23.45</span>
+			<span class="display-data" id="aws"></span>
 			<span class="display-unit">knots</span>
 		</div>
 		<div class="text">AWS</div>
@@ -227,7 +272,7 @@
 		<div class="number-text">3 / 9</div>
 		<div class="display">
 			<span class="display-title">Apparent Wind Angle</span>
-			<span class="display-data">-130</span>
+			<span class="display-data" id="awa"></span>
 			<span class="display-unit">degrees</span>
 		</div>
 		<div class="text">AWA</div>
@@ -237,7 +282,7 @@
 		<div class="number-text">4 / 9</div>
 		<div class="display">
 			<span class="display-title">True Wind Speed</span>
-			<span class="display-data">34.56</span>
+			<span class="display-data" id="tws"></span>
 			<span class="display-unit">knots</span>
 		</div>
 		<div class="text">TWS</div>
@@ -247,7 +292,7 @@
 		<div class="number-text">5 / 9</div>
 		<div class="display">
 			<span class="display-title">True Wind Dir</span>
-			<span class="display-data">289</span>
+			<span class="display-data" id="twd"></span>
 			<span class="display-unit">degrees</span>
 		</div>
 		<div class="text">TWD</div>
@@ -257,7 +302,7 @@
 		<div class="number-text">6 / 9</div>
 		<div class="display">
 			<span class="display-title">True Wind Angle</span>
-			<span class="display-data">-147</span>
+			<span class="display-data" id="twa"></span>
 			<span class="display-unit">degrees</span>
 		</div>
 		<div class="text">TWA</div>
@@ -267,7 +312,7 @@
 		<div class="number-text">7 / 9</div>
 		<div class="display">
 			<span class="display-title">True Heading</span>
-			<span class="display-data">48</span>
+			<span class="display-data" id="hdg"></span>
 			<span class="display-unit">degrees</span>
 		</div>
 		<div class="text">HDG</div>
@@ -277,7 +322,7 @@
 		<div class="number-text">8 / 9</div>
 		<div class="display">
 			<span class="display-title">Course Over Ground</span>
-			<span class="display-data">52</span>
+			<span class="display-data" id="cog"></span>
 			<span class="display-unit">degrees</span>
 		</div>
 		<div class="text">COG</div>
@@ -287,7 +332,7 @@
 		<div class="number-text">9 / 9</div>
 		<div class="display">
 			<span class="display-title">Speed Over Ground</span>
-			<span class="display-data">13.14</span>
+			<span class="display-data" id="sog"></span>
 			<span class="display-unit">knots</span>
 		</div>
 		<div class="text">SOG</div>
@@ -341,7 +386,7 @@
 			slideIndex = slides.length;
 		}
 		for (let i = 0; i < slides.length; i++) { // Hide them all
-	//	slides[i].style.display = "none";
+		                                          //	slides[i].style.display = "none";
 			slides[i].classList.remove("visible-slide");
 		}
 
