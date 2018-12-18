@@ -20,7 +20,7 @@ Compass Heading (`HDG`) corrected with the Magnetic Declination (`D`).
 Then for each `HDM`, we establish the difference with `COG`, so we end up with `n` tuples
 like `(Z, diff)`, representing a cloud of points.
 
-We will use the Least Square method to come up with the expected coefficients.
+We will use the [Least Square method](https://en.wikipedia.org/wiki/Least_squares) to come up with the expected coefficients.
 
 > For details on the Least Square method, for this specific case, see [this document](https://htmlpreview.github.io/?https://github.com/OlivierLD/raspberry-coffee/blob/master/Project.Trunk/Deviation.Tool/README.html).
 

@@ -3,9 +3,18 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-		* {box-sizing:border-box}
-		body {font-family: Verdana,sans-serif;margin:0}
-		.mySlides {display:none}
+		* {
+			box-sizing: border-box
+		}
+
+		body {
+			font-family: Verdana, sans-serif;
+			margin: 0
+		}
+
+		.theSlides {
+			display: none
+		}
 
 		/* Slideshow container */
 		.slideshow-container {
@@ -37,7 +46,7 @@
 
 		/* On hover, add a black background color with a little bit see-through */
 		.prev:hover, .next:hover {
-			background-color: rgba(0,0,0,0.8);
+			background-color: rgba(0, 0, 0, 0.3);
 		}
 
 		/* Caption text */
@@ -91,18 +100,28 @@
 		}
 
 		@-webkit-keyframes fade {
-			from {opacity: .4}
-			to {opacity: 1}
+			from {
+				opacity: .4
+			}
+			to {
+				opacity: 1
+			}
 		}
 
 		@keyframes fade {
-			from {opacity: .4}
-			to {opacity: 1}
+			from {
+				opacity: .4
+			}
+			to {
+				opacity: 1
+			}
 		}
 
 		/* On smaller screens, decrease text size */
 		@media only screen and (max-width: 300px) {
-			.prev, .next,.text {font-size: 11px}
+			.prev, .next, .text {
+				font-size: 11px
+			}
 		}
 	</style>
 </head>
@@ -166,34 +185,34 @@
 		<div class="text">Tongareva</div>
 	</div>
 
-	<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-	<a class="next" onclick="plusSlides(1)">&#10095;</a>
+	<a class="prev" onclick="plusSlides(-1);">&#10094;</a>
+	<a class="next" onclick="plusSlides(1);">&#10095;</a>
 
 	<div class="dots">
-		<span class="dot" onclick="currentSlide(1)"></span>
-		<span class="dot" onclick="currentSlide(2)"></span>
-		<span class="dot" onclick="currentSlide(3)"></span>
-		<span class="dot" onclick="currentSlide(4)"></span>
-		<span class="dot" onclick="currentSlide(5)"></span>
-		<span class="dot" onclick="currentSlide(6)"></span>
-		<span class="dot" onclick="currentSlide(7)"></span>
-		<span class="dot" onclick="currentSlide(8)"></span>
-		<span class="dot" onclick="currentSlide(9)"></span>
+		<span class="dot" onclick="currentSlide(1);"></span>
+		<span class="dot" onclick="currentSlide(2);"></span>
+		<span class="dot" onclick="currentSlide(3);"></span>
+		<span class="dot" onclick="currentSlide(4);"></span>
+		<span class="dot" onclick="currentSlide(5);"></span>
+		<span class="dot" onclick="currentSlide(6);"></span>
+		<span class="dot" onclick="currentSlide(7);"></span>
+		<span class="dot" onclick="currentSlide(8);"></span>
+		<span class="dot" onclick="currentSlide(9);"></span>
 	</div>
 </div>
 <br>
 
 <!-- dots below the image -->
 <!--div style="text-align:center">
-	<span class="dot" onclick="currentSlide(1)"></span>
-	<span class="dot" onclick="currentSlide(2)"></span>
-	<span class="dot" onclick="currentSlide(3)"></span>
-	<span class="dot" onclick="currentSlide(4)"></span>
-	<span class="dot" onclick="currentSlide(5)"></span>
-	<span class="dot" onclick="currentSlide(6)"></span>
-	<span class="dot" onclick="currentSlide(7)"></span>
-	<span class="dot" onclick="currentSlide(8)"></span>
-	<span class="dot" onclick="currentSlide(9)"></span>
+	<span class="dot" onclick="currentSlide(1);"></span>
+	<span class="dot" onclick="currentSlide(2);"></span>
+	<span class="dot" onclick="currentSlide(3);"></span>
+	<span class="dot" onclick="currentSlide(4);"></span>
+	<span class="dot" onclick="currentSlide(5);"></span>
+	<span class="dot" onclick="currentSlide(6);"></span>
+	<span class="dot" onclick="currentSlide(7);"></span>
+	<span class="dot" onclick="currentSlide(8);"></span>
+	<span class="dot" onclick="currentSlide(9);"></span>
 </div-->
 
 <script>
@@ -219,7 +238,7 @@
 
 	function showSlides(n) {
 		var i;
-		var slides = document.getElementsByClassName("mySlides");
+		var slides = document.getElementsByClassName("theSlides");
 		var dots = document.getElementsByClassName("dot");
 		if (n > slides.length) {slideIndex = 1}
 		if (n < 1) {slideIndex = slides.length}

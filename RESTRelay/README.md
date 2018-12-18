@@ -18,6 +18,10 @@ Wiring between the Raspberry Pi and the Relay.
 
 How to hook up the power and appliance to the relay.
 
+> Note:
+> - On a one-relay board, I use the 3V3 power supply from the Raspberry Pi.
+> - On a two-relay board, I use the 5V power supply from the Raspberry Pi.
+
 ### Relay mapping
 The code in this project can drive several relays.
 
@@ -102,5 +106,13 @@ The switch is mapped to the relay `1`.
 ![Web UI](./WebUI.png)
 
 And flip the switch! 💡
+
+### Watch interface
+Samsung Frontier (Emulator screenshots):
+
+|    First Screen     |   Working Screen    |
+| ------------------- | ------------------- |
+| ![](./watch.01.png) | ![](./watch.02.png) |
+
 
 --------------------
