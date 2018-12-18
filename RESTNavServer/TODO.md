@@ -13,12 +13,13 @@
 - 4-button interface: Back, Yes, Select, No.
 
 ### Lightweight TCP client
-- Like a _really_ smart watch, no Bluetooth required.
+- Like a _really_ smart watch, no Bluetooth required, no phone required.
 - Possibly ESP8266 based, with an OLED screen and a LiPo battery.
 - WIP, more to come.
 
 ### Elaborate a deviation curve
-- From a Web/JavaScript UI, maybe?
+- From a Web/JavaScript UI, maybe? DONE.
+  - - See Project.Trunk/Deviation.Tool
 
 ### Elaborate polars
 - See Project.Trunk/PolarSmoother, Swing UI, and doc.
