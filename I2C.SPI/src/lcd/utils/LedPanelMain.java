@@ -625,7 +625,7 @@ public class LedPanelMain
 	/**
 	 * Exit the Application
 	 */
-	private void exitForm(@SuppressWarnings("oracle.jdeveloper.java.unused-parameter") java.awt.event.WindowEvent evt) {
+	private void exitForm(java.awt.event.WindowEvent evt) {
 		System.out.println("Bye");
 		System.exit(0);
 	}

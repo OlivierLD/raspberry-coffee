@@ -108,14 +108,25 @@ The switch is mapped to the relay `1`.
 And flip the switch! 💡
 
 ### Watch interface
+The project is [here](https://github.com/OlivierLD/SmartWatches/tree/master/SamsungFrontier/RESTSwitch30).
+> Note:
+> - Requires the Tizen IDE (free).
+> - The server URL is hard-coded.
+
 Samsung Frontier (Emulator screenshots):
 
 |    First Screen     |   Working Screen    |
-| ------------------- | ------------------- |
+|:------------------- |:------------------- |
 | ![](./watch.01.png) | ![](./watch.02.png) |
 
 ### ESP8266 (Adafruit Feather Huzzah)
+The project is [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/feather.ssd1306.home.automation.client).
+> Note: The server URL is hard coded in the sketch.
 
-TODO Screenshots.
+| Welcome Screen |
+|:-------------- |
+| ![Welcome](./ESP8266.01.png) |
+| Operations     |
+| ![Operations](./ESP8266.02.png) |
 
 --------------------
