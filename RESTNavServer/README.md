@@ -16,7 +16,7 @@ In addition, I'll be attempting to implement the features of the Weather Wizard 
 ### Rationale
 
 The idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry PI, where the server is running.
-The GUI is dedicated to `HTML5` and `CSS3`, rendered in the browser of any device connected to the Raspberry PI's network (laptop, tablet, smartphone, etc).
+The GUI is dedicated to `HTML5` and `CSS3`, rendered in the browser of any device connected to the Raspberry PI's network (laptop, tablet, smart-phone, smart-watch, etc).
 
 > Interestingly, graphical user interfaces happen to be quite demanding (specific processors called GPU - Graphical Processing Units - have been created for GUI-demanding apps, like video games). Not using them is a substantial relief for the machine we run the server on.
 > As a matter of fact, for now (Aug-2018), whatever in mentioned below runs *fine* on a $10 `Raspberry PI Zero W`.
@@ -128,7 +128,7 @@ The web pages mentioned below are provided _as examples_ of the way to consume t
 The snapshots might be a little obsolete, this iks a work in progress, constantly evolving.
 But this will give you an idea.
 
-From _any_ device (laptop, tablet, smart-phone) that can run a browser, reach this url:
+From _any_ device (laptop, tablet, smart-phone or smart-watch) that can run a browser, reach this url:
 ```
  http://[host]:9999/web/index.html
 ```
@@ -207,7 +207,7 @@ Equipped with Head-Up Display (HUD) features (for reflection in a wind shield, f
 
 ![HeadsUp display](./docimg/screenshot.12.png)
 
-Heads Up display, from a smartphone:
+Heads Up display, from a smart-phone:
 
 ![HeadsUp display](./docimg/headsup.01.jpg)
 

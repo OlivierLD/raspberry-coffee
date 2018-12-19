@@ -17,7 +17,7 @@ and a script to run the example should be available as well.
 - [PurePWM](PurePWM)
 - [System resolution](System.Languages)
     - [System resolution, in several languages](System.Languages/LanguageComparison.md)
-- [Weather Station](Weather.Station)
+- [Weather Station](Weather.Station.Implementation)
 - [Radar](RasPiRadar)
 - [Robots and WebSockets](Motors)
 - [Plant watering system](PlantWateringSystem)
