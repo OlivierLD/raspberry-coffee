@@ -258,6 +258,10 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 ## Server Remote access
 > See [this document](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA.multiplexer#remote-access).
 
+### More resources
+- [Happy Nav Server](https://github.com/OlivierLD/raspberry-coffee/blob/master/Papers/happy.navserver/HappyNavserver.md)
+- [Boat Data 101](http://raspberrypi.lediouris.net/_Articles/data.logging/datalogging.html)
+
 ## TODOs, next...
 
 - `npm` for non-java resource sharing (local registry)
@@ -268,4 +272,3 @@ Works for Sun, Moon, Venus, Mars, Jupiter, Saturn, and 58 stars.
 - Implement visual widgets as `web-components` (see [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/WebComponents/oliv-components),
 and [here](http://raspberrypi.lediouris.net/webcomponents/index.html))...
 
-- Link to other page, explaining all the relations between deviation, polars, current calculations, etc.
