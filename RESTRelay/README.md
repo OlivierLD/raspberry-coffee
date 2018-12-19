@@ -108,9 +108,9 @@ The switch is mapped to the relay `1`.
 And flip the switch! 💡
 
 ### Watch interface
-The project is [here](https://github.com/OlivierLD/SmartWatches/tree/master/SamsungFrontier/RESTSwitch30).
+The watch project's code is [here](https://github.com/OlivierLD/SmartWatches/tree/master/SamsungFrontier/RESTSwitch30).
 > Note:
-> - Requires the Tizen IDE (free).
+> - Requires a Samsung Frontier watch (~$200) the Tizen IDE (free).
 > - The server URL is hard-coded.
 
 Samsung Frontier (Emulator screenshots):
@@ -120,7 +120,14 @@ Samsung Frontier (Emulator screenshots):
 | ![](./watch.01.png) | ![](./watch.02.png) |
 
 ### ESP8266 (Adafruit Feather Huzzah)
-The project is [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/feather.ssd1306.home.automation.client).
+ESP8266 is a Wi-Fi aware PCB, programmable with the Arduino IDE.
+
+Adafruit provide the `Huzzah` PCB, that implements an `ESP8266`, and the Feather, even easier to use.
+
+- [Feather](https://www.adafruit.com/product/2821)
+- [SSD1306 Oled](https://www.adafruit.com/product/2900)
+
+The project's code is [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/feather.ssd1306.home.automation.client).
 > Note: The server URL is hard coded in the sketch.
 
 | Welcome Screen |
