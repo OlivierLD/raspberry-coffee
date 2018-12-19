@@ -128,5 +128,7 @@ The project is [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8
 | ![Welcome](./ESP8266.01.png) |
 | Operations     |
 | ![Operations](./ESP8266.02.png) |
+| The real one   |
+| ![Look at the buttons](./Huzzah.jpg) |
 
 --------------------
