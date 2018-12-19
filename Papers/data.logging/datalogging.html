@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Efficient Data Logging</title>
+	<title>Boat Data 101</title>
 	<link type="text/css" rel="stylesheet"
 				href="./print.css"/>
 	<script type="module" src="boatoverview/boat-overview.min.js"></script>
@@ -78,6 +78,8 @@
 
 		function updateBoatContext(section) {
 
+			console.log('Updating section ' + section);
+
 			let bo = document.getElementById('boat-overview-' + section);
 
 			let bsp = bo.bsp;
@@ -122,25 +124,29 @@
 			let Decl = bo.Decl;
 			try {
 				Decl = (parseInt(document.getElementById(section + '-Decl-deg').value) +
-						(parseFloat(document.getElementById(section + '-Decl-min').value) / 60)) * (document.getElementById(section + 'Decl-sign').value === 'E' ? 1 : -1);
+						(parseFloat(document.getElementById(section + '-Decl-min').value) / 60)) * (document.getElementById(section + '-Decl-sign').value === 'E' ? 1 : -1);
 			} catch (err) {
+				console.debug("1 - Argh!", err);
 			}
 			let dev = bo.dev;
 			try {
 				dev = (parseInt(document.getElementById(section + '-dev-deg').value) +
-						(parseFloat(document.getElementById(section + '-dev-min').value) / 60)) * (document.getElementById(section + 'dev-sign').value === 'E' ? 1 : -1);
+						(parseFloat(document.getElementById(section + '-dev-min').value) / 60)) * (document.getElementById(section + '-dev-sign').value === 'E' ? 1 : -1);
 			} catch (err) {
+				console.debug("2 - Argh!", err);
 			}
 			// Calculation
 			try {
 				lwy = NavigationHelper.leewayEvaluator(awa, maxLeeway);
 			} catch (err) {
+				console.debug("3 - Argh!", err);
 			}
 			let hdg = bo.hdg;
 			if (hdc !== undefined) {
 				try {
 					hdg = NavigationHelper.hdgFromHdc(hdc, Decl, dev);
 				} catch (err) {
+					console.debug("4 - Argh!", err);
 				}
 			}
 			let tw = NavigationHelper.twCalculator(
@@ -155,6 +161,7 @@
 			try {
 				b2wpVal = document.getElementById(section + '-b2wp').value;
 			} catch (err) {
+				console.debug("5 - Argh!", err);
 			}
 			if (b2wpVal.length > 0) {
 				b2wp = parseInt(b2wpVal);
@@ -178,6 +185,7 @@
 			try {
 				wpName = document.getElementById(section + '-wpname').value;
 			} catch (err) {
+				console.debug("6 - Argh!", err);
 			}
 
 			// Update graph here
