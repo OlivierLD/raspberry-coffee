@@ -97,7 +97,7 @@ The pin #11 is BCM 17, and GPIO_0.
 ```
 
 ## Run it!
-- Hook up your relay to the Raspberry Pi and the appliance to the relay (a lamp is a good appliance 👍).
+- Hook up your relay to the Raspberry Pi and the appliance to the relay (a desk lamp is a good appliance 👍).
 - Modify `start.server.sh` to map the relay accordingly, and set the HTTP port.
 - Then, from any browser on a laptop, tablet, cellphone..., reach `http://192.168.42.9:9876/web/index.2.html` (`192.168.42.9` is the address of the Raspberry Pi the server runs on).
 
@@ -108,9 +108,9 @@ The switch is mapped to the relay `1`.
 And flip the switch! 💡
 
 ### Watch interface
-The project is [here](https://github.com/OlivierLD/SmartWatches/tree/master/SamsungFrontier/RESTSwitch30).
+The watch project's code is [here](https://github.com/OlivierLD/SmartWatches/tree/master/SamsungFrontier/RESTSwitch30).
 > Note:
-> - Requires the Tizen IDE (free).
+> - Requires a Samsung Frontier watch (~$200) the Tizen IDE (free).
 > - The server URL is hard-coded.
 
 Samsung Frontier (Emulator screenshots):
@@ -120,7 +120,14 @@ Samsung Frontier (Emulator screenshots):
 | ![](./watch.01.png) | ![](./watch.02.png) |
 
 ### ESP8266 (Adafruit Feather Huzzah)
-The project is [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/feather.ssd1306.home.automation.client).
+ESP8266 is a Wi-Fi aware PCB, programmable with the Arduino IDE.
+
+Adafruit provide the `Huzzah` PCB, that implements an `ESP8266`, and the Feather, even easier to use.
+
+- [Feather](https://www.adafruit.com/product/2821)
+- [SSD1306 Oled](https://www.adafruit.com/product/2900)
+
+The project's code is [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8266.Huzzah/feather.ssd1306.home.automation.client).
 > Note: The server URL is hard coded in the sketch.
 
 | Welcome Screen |
@@ -128,5 +135,7 @@ The project is [here](https://github.com/OlivierLD/small-boards/tree/master/ESP8
 | ![Welcome](./ESP8266.01.png) |
 | Operations     |
 | ![Operations](./ESP8266.02.png) |
+| The real one   |
+| ![Look at the buttons](./Huzzah.jpg) |
 
 --------------------
