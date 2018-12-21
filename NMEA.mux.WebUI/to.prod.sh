@@ -4,7 +4,7 @@
 # Warning: Run the process on the target machine. That will avoid unwanted version mismatch (java class version...)
 #
 echo -e "+----------------------------------------------------------------------------------------------------+"
-echo -e "|                       N M E A   M U L T I P L E X E R   D I S T R I B U T I O N                    |"
+echo -e "|                          P A C K A G E   f o r   D I S T R I B U T I O N                           |"
 echo -e "+----------------------------------------------------------------------------------------------------+"
 echo -e "| This is an example showing how to generate a 'production' version, without the full github repo,   |"
 echo -e "| just what is needed to run the NMEA Multiplexer - in several configurations - and its web clients. |"
@@ -58,7 +58,7 @@ echo -e "+----------------------------------------------------------------------
 echo -e " >> Archive $distdir.tar.gz ready for deployment."
 echo -e "+--------------------------------------------------------------------------------------------------+"
 echo -e "| Send it to another machine, and un-archive it.                                                   |"
-echo -e "| Use tar -xzvf $distdir.tar.gz' to un-archive.                                                    |"
+echo -e "| Use 'tar -xzvf $distdir.tar.gz' to un-archive.                                                   |"
 echo -e "| External dependencies like librxtx-java may be needed if you intend to use a serial port,        |"
 echo -e "| in which case you may need to run a 'sudo apt-get install librxtx-java' .                        |"
 echo -e "| The script to launch will be 'mux.sh'                                                            |"
