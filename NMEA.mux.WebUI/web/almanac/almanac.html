@@ -41,7 +41,7 @@
 		}
 	</style>
 	<script type="text/javascript">
-		window.onload = function() {
+		window.onload = () => {
 			// Load the current date
 			var year = new Date().getFullYear();
 			$('#p-from-year').val(year);
@@ -71,7 +71,7 @@
 		var typeToPublish;
 		var almanacFlavor = "period";
 
-		var publish = function() {
+		function publish() {
 			document.body.style.cursor = 'wait';
 			if (typeToPublish !== undefined) {
 				switch (typeToPublish) {

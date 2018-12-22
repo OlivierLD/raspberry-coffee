@@ -110,6 +110,74 @@ function getSunPos() {
   }
 }
 
+function enableLogging(b) {
+	return getPromise('/mux/mux-process/' + (b === true ? 'on' : 'off'), DEFAULT_TIMEOUT, 'PUT', 200, null, false);
+}
+
+function setSpeedUnit(speedUnit) {
+	return getPromise('/mux/events/change-speed-unit', DEFAULT_TIMEOUT, 'POST', 200, { "speed-unit": speedUnit }, false);
+}
+
+function forwarderStatus(callback) {
+	let getData = getForwarderStatus();
+	getData.then(function(value) {
+		let json = JSON.parse(value); // Like {"processing":false,"started":1501082121336}
+		let status = json.processing;
+		if (callback !== undefined) {
+			callback(status);
+		} else {
+			console.info("Forwarder status", status);
+		}
+	}, function(error) {
+		if (callback !== undefined) {
+			callback(error);
+		} else {
+			console.log("Failed to get Forwarder status..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+		}
+	});
+}
+
+function resetDataCache() {
+	return getPromise('/mux/cache', DEFAULT_TIMEOUT, 'DELETE', 204);
+};
+
+function getForwarders() {
+	return getPromise('/mux/forwarders', DEFAULT_TIMEOUT, 'GET', 200);
+}
+
+function getLogFiles() {
+	return getPromise('/mux/log-files', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
+// Should be useless..., invoke it directly (no promise required) to download.
+function getLogFile(fileName) {
+	return getPromise('/mux/log-files/' + fileName, DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
+function deleteLogFile(logFile) {
+	return getPromise('/mux/log-files/' + logFile, DEFAULT_TIMEOUT, 'DELETE', 200, null, false);
+}
+
+function getSystemTime() {
+	return getPromise('/mux/system-time?fmt=date', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
+function getForwarderStatus() {
+	return getPromise('/mux/mux-process', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
+function getSOGCOG() {
+	return getPromise('/mux/sog-cog', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
+function getDistance() {
+	return getPromise('/mux/distance', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
+function getDeltaAlt() {
+	return getPromise('/mux/delta-alt', DEFAULT_TIMEOUT, 'GET', 200, null, false);
+}
+
 /**
  *
  * @param when UTC, Duration format: like "Y-m-dTH:i:s" -> 2018-09-10T10:09:00
