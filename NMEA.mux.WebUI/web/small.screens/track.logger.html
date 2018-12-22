@@ -168,6 +168,10 @@
 
 	</script>
 	<style>
+		:root {
+			--ref-size: 20px;
+		}
+
 		html {
 			display: table;
 			width: 100%;
@@ -182,7 +186,7 @@
 			display: table-cell;
 			/*text-align: center;*/
 			vertical-align: top;
-			font-size: 40px;
+			font-size: calc(var(--ref-size));
 			font-family: Verdana, sans-serif;
 			color: white;
 			background: black;
