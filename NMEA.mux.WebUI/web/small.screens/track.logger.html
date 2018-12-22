@@ -129,7 +129,11 @@
 						default:
 							break;
 					}
-					document.getElementById("delta-alt-val").innerText = ((json["delta-altitude"] * unitFactor).toFixed(2) + " " + unitStr);
+					let val = "-";
+					if (json["delta-altitude"] !== undefined) {
+						val = ((json["delta-altitude"] * unitFactor).toFixed(2) + " " + unitStr);
+					}
+					document.getElementById("delta-alt-val").innerText = val;
 				}
 			}, function (error) {
 				console.log("Failed to get Delta Altitude..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
