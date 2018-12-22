@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# Logger / Runner / Kayak, etc.
+#
 YES=
 if [ "$1" == "-y" ]
 then

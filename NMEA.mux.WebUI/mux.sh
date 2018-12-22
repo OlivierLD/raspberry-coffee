@@ -5,7 +5,7 @@
 #
 OS=`uname -a | awk '{ print $1 }'`
 #
-MUX_PROP_FILE=nmea.mux.rpi.demo.properties
+MUX_PROP_FILE=nmea.mux.gps.log.properties
 if [ $# -gt 0 ]
 then
   MUX_PROP_FILE=$1
@@ -87,5 +87,5 @@ LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
 # use sudo on Raspberry PI
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
-java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
+java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP navrest.NavServer
 #

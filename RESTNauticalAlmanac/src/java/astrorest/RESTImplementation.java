@@ -418,7 +418,7 @@ public class RESTImplementation {
 	 * Also, optionally:
 	 * - wandering bodies
 	 * - stars
-	 * @param request
+	 * @param request require query string parameters at (duration fmt), fromL, fromG, optional wandering=true|false, stars=true|false
 	 * @return
 	 */
 	private Response getPositionsInTheSky(Request request) {
@@ -443,7 +443,7 @@ public class RESTImplementation {
 							Response.BAD_REQUEST,
 							new HTTPServer.ErrorPayload()
 									.errorCode("ASTRO-0402")
-									.errorMessage("Query parameters 'fromL' and 'fromG' must both be here, or missing. Just one of them does not work."));
+									.errorMessage("Query parameters 'fromL' and 'fromG' must both be here, or none. Just one of them does not work."));
 					return response;
 				}
 			}

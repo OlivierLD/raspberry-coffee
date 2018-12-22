@@ -13,7 +13,7 @@ repositories {
     mavenLocal()
     maven { url "https://oss.sonatype.org/content/groups/public" }
     maven { url "http://www.datanucleus.org/downloads/maven2" }
-//  maven { url "http://lediouris.net/maven2" }
+    maven { url "http://lediouris.net/maven2" }
 }
 
 sourceSets {
@@ -36,6 +36,7 @@ compileJava.options.compilerArgs += ["-Xlint:none"]
 
 dependencies {
     compile project(':NMEA.mux.extensions')
+    compile project(':RESTNavServer')
 }
 
 shadowJar {

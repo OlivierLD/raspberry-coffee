@@ -1,3 +1,4 @@
+"use strict";
 /*
  * @author Olivier Le Diouris
  * Uses ES6 Promises for Ajax.
