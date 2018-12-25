@@ -2,15 +2,17 @@
 # Navigation REST server
 #
 echo -e "----------------------------"
-echo -e "Usage is $0 [-p|--proxy] [-m:propertiesfile|--mux:propertiesfile] [--no-date]"
+echo -e "Usage is $0 [-p|--proxy] [-m:propertiesfile|--mux:propertiesfile] [--no-date] [--sun-flower]"
 echo -e "     -p or --proxy means with a proxy"
 echo -e "     -m or --mux points to the properties file to use for the Multiplexer, default is nmea.mux.properties"
+echo -e "     -sf or --sun-flower means with Sun Flower option (extra Request Manager)"
 echo -e "     --no-date does not put any GPS date or time (replayed or live) in the cache (allows you to use a ZDA generator)"
 echo -e "----------------------------"
 #
 echo -e "⚓ Starting the Navigation Rest Server 🌴"
 USE_PROXY=false
 NO_DATE=false
+SUN_FLOWER=false
 PROP_FILE=
 #
 for ARG in "$@"
@@ -22,6 +24,9 @@ do
   elif [ "$ARG" == "--no-date" ]
   then
     NO_DATE=true
+  elif [ "$ARG" == "-sf" ] || [ "$ARG" == "--sun-flower" ]
+  then
+    SUN_FLOWER=true
   elif [[ $ARG == -m:* ]] || [[ $ARG == --mux:* ]] # !! No quotes !!
   then
     PROP_FILE=${ARG#*:}
@@ -71,6 +76,13 @@ else
     JAVA_OPTS="$JAVA_OPTS -Dmux.properties=$PROP_FILE"
   fi
 fi
+#
+if [ "$WEATHER_STATION" == "false" ] && [ "$SUN_FLOWER" == "true" ]
+then
+  JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=true"
+	JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
+fi
+#
 # Specific/Temporary
 # JAVA_OPTS="$JAVA_OPTS -Dnmea.cache.verbose=true"
 if [ "$NO_DATE" == "true" ]

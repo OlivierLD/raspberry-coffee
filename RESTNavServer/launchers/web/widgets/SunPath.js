@@ -194,6 +194,9 @@ function SunPath(cName) {
 		}
 		context.stroke();
 		context.closePath();
+		// Fill the base
+		context.fillStyle = 'rgba(0, 205, 205, 0.5)';
+		context.fill();
 
 		// Close the base
 		context.lineWidth = 1;
@@ -205,6 +208,10 @@ function SunPath(cName) {
 		context.lineTo(center.x + (panelPoint.x * radius * invertX), center.y - (panelPoint.y * radius));
 		context.stroke();
 		context.closePath();
+		// Fill the base
+		context.fillStyle = 'rgba(0, 205, 205, 0.5)';
+		context.fill();
+
 
 		// Indicate S (or N: TODO)
 		context.save();
