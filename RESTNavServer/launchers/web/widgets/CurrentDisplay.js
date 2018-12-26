@@ -466,7 +466,6 @@ function CurrentDisplay(cName, dSize, majorTicks, minorTicks, withDigits) {
 
 		// Hand
 		context.beginPath();
-		context.beginPath();
 		if (currentDisplayColorConfig.withHandShadow) {
 			context.shadowColor = currentDisplayColorConfig.shadowColor;
 			context.shadowOffsetX = 3;

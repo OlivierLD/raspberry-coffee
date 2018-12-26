@@ -38,6 +38,7 @@ do
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
 	echo -e "|  3. Home Weather Station data                                                           |"
 	echo -e "|  4. With GPS and NMEA data, waits for the RMC sentence to be active to begin logging    |"
+	echo -e "|  5. Like '1', with 'Sun Flower' option                                                  |"
 	echo -e "|  ... TODO: more.                                                                        |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
@@ -112,6 +113,19 @@ do
 		    echo -e ">>> Waiting for the server to start..."
 		    sleep 5 # Wait for the server to be operational
 		    openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y"
+	    fi
+	    GO=false
+	    ;;
+	  "5")
+	    PROP_FILE=nmea.mux.no.gps.properties
+	    echo -e "Launching Nav Server with $PROP_FILE"
+	    ./runNavServer.sh --mux:$PROP_FILE --no-date --sun-flower &
+	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    # openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
+		    openBrowser "http://localhost:9999/web/sunflower/sun.data.html"
 	    fi
 	    GO=false
 	    ;;
