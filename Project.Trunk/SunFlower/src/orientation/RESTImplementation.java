@@ -38,7 +38,7 @@ public class RESTImplementation {
 			this.sunFlower = sf;
 		} else { // Most probably no servos, started for Sun data
 			SunFlower sunFlower = new SunFlower(null, null);
-			String strLat = System.getProperty("latitude");
+			String strLat = System.getProperty("default.sf.latitude");
 			if (strLat != null) {
 				try {
 					sunFlower.setLatitude(Double.parseDouble(strLat));
@@ -47,7 +47,7 @@ public class RESTImplementation {
 					System.exit(1);
 				}
 			}
-			String strLong = System.getProperty("longitude");
+			String strLong = System.getProperty("default.sf.longitude");
 			if (strLong != null) {
 				try {
 					sunFlower.setLongitude(Double.parseDouble(strLong));

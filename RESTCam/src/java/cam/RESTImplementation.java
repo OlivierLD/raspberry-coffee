@@ -77,7 +77,7 @@ public class RESTImplementation {
 			} catch (NullPointerException npe) {
 				foundPCA9685 = false;
 				System.err.println("+------------------------------------------------------------");
-				System.err.println("| PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");
+				System.err.println("| (RESTCam) PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}

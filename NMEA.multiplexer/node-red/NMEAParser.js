@@ -842,7 +842,7 @@ function sexToDec(deg, min) {
 }
 
 /**
- * Converts decimal degrees inot Deg Min.dd
+ * Converts decimal degrees into Deg Min.dd
  * @param val value in decimal degrees
  * @param ns_ew 'NS' or 'EW'
  * @returns {string}

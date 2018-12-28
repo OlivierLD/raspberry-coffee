@@ -486,7 +486,7 @@ public class SunFlower implements RESTRequestManager {
 //		} catch (NullPointerException npe) {
 				foundPCA9685 = false;
 				System.err.println("+------------------------------------------------------------");
-				System.err.println("| PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");
+				System.err.println("| (SunFlower) PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}
@@ -1470,7 +1470,7 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println(">>> No ADC");
 		}
 
-		String strLat = System.getProperty("latitude");
+		String strLat = System.getProperty("default.sf.latitude");
 		if (strLat != null) {
 			try {
 				instance.setLatitude(Double.parseDouble(strLat));
@@ -1479,7 +1479,7 @@ public class SunFlower implements RESTRequestManager {
 				System.exit(1);
 			}
 		}
-		String strLong = System.getProperty("longitude");
+		String strLong = System.getProperty("default.sf.longitude");
 		if (strLong != null) {
 			try {
 				instance.setLongitude(Double.parseDouble(strLong));

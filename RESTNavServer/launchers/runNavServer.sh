@@ -10,6 +10,10 @@ echo -e "     --no-date does not put any GPS date or time (replayed or live) in 
 echo -e "----------------------------"
 #
 echo -e "⚓ Starting the Navigation Rest Server 🌴"
+echo -e "----------------------------------------"
+echo -e "Args are $@"
+echo -e "----------------------------------------"
+#
 USE_PROXY=false
 NO_DATE=false
 SUN_FLOWER=false
@@ -17,7 +21,7 @@ PROP_FILE=
 #
 for ARG in "$@"
 do
-	# echo "Managing prm $ARG"
+	echo -e "Managing prm $ARG"
   if [ "$ARG" == "-p" ] || [ "$ARG" == "--proxy" ]
   then
     USE_PROXY=true
@@ -27,6 +31,7 @@ do
   elif [ "$ARG" == "-sf" ] || [ "$ARG" == "--sun-flower" ]
   then
     SUN_FLOWER=true
+    echo -e "SUN_FLOWER is now $SUN_FLOWER"
   elif [[ $ARG == -m:* ]] || [[ $ARG == --mux:* ]] # !! No quotes !!
   then
     PROP_FILE=${ARG#*:}
@@ -68,9 +73,9 @@ then
 	echo -e "| Using nmea.mux.home.properties, TCP input from Weather station |"
 	echo -e "+----------------------------------------------------------------+"
 	JAVA_OPTS="$JAVA_OPTS -Dmux.properties=nmea.mux.home.properties"
-	JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
+	JAVA_OPTS="$JAVA_OPTS -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
 else
-  JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=false"
+  JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=$SUN_FLOWER"
   if [ "$PROP_FILE" != "" ]
   then
     JAVA_OPTS="$JAVA_OPTS -Dmux.properties=$PROP_FILE"
@@ -79,8 +84,8 @@ fi
 #
 if [ "$WEATHER_STATION" == "false" ] && [ "$SUN_FLOWER" == "true" ]
 then
-  JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=true"
-	JAVA_OPTS="$JAVA_OPTS -Dlatitude=37.7489 -Dlongitude=-122.5070" # SF.
+  JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=$SUN_FLOWER"
+	JAVA_OPTS="$JAVA_OPTS -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
 fi
 #
 # Specific/Temporary
