@@ -73,6 +73,36 @@ Also, the emergence of container techniques like `Docker` opens the door to othe
 
 Anyway! For now, the back-end is running on a JVM.
 
+## NMEA.multiplexer, plus REST
+_To summarize_, this project runs the `NMEA.multiplexer`.
+
+The `NMEA.multiplexer` can
+- get its input from a variety of channels
+    - Serial ports
+    - TCP ports
+    - Custom sensors
+    - and much more
+- compute extra data
+    - like current, very useful
+- rebroadcast data on a variety of channels
+    - like above
+- wrap/embed a REST-enabled HTTP Server
+    - to serve static HTML pages or integrate several REST `RequestManager`s (see examples above).
+
+As a REST interface is available, pretty much any component with WiFi capabilities can reach the server.
+This include
+- Web pages (potentially hosted by the REST server itself)
+    - accessed by laptops, tablets, smart-phones
+- Smart watches (REST enabled, as they all are)
+- `ESP8266` devices
+- etc...
+
+Again, no UI will **ever** be rendered on/by the server (here the Raspberry Pi, that may serve web pages, though).
+But the actual UI rendering will **always** be done on a REST or HTTP client, in the (incomplete) list mentioned above.
+
+For now (Dec 2018), the Web pages we use here are using HTML5, CSS3, JavaScript (ES5 & 6), WebComponents...
+Later, we might as well provide some WebGL examples.
+
 ## Try it
 Build it:
 ```bash
