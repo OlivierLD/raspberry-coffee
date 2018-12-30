@@ -108,7 +108,7 @@ You can see the `RequestManager`s as components handling extra REST requests. Fo
 - a request like `POST /tide/tide-stations/Ocean%20Beach/wh` will be handled by the `Tide REST Request Manager`
 - a request like `POST /astro/sun-moon-dec-alt` will be managed by the `Astro REST Request Manager`
 - other requests could be considered (see the HTTP server's code to understand how) as static HTTP requests, and render the resources of the `web` (or any other name you can choose) folder for that.
-  > Note: a `static` web document can very well perform a dynamic REST requests, bringing live data to the web interface.
+  > Note: a `static` web document can very well perform `dynamic` REST requests, bringing live data to the web interface.
 
 The `NMEA.multiplexer` embedded in the `REST/HTTP Server` gathers data from NMEA station(s), sensors, other channels, computes and process other data, and can feed other programs (`OpenCPN`, `SeaWi`, etc) through the channel(s) of your choice.
 
