@@ -74,6 +74,8 @@ Also, the emergence of container techniques like `Docker` opens the door to othe
 Anyway! For now, the back-end is running on a JVM.
 
 ## NMEA.multiplexer, plus REST
+#### Flexibility and modularity
+
 _To summarize_, this project runs the `NMEA.multiplexer`.
 
 The `NMEA.multiplexer` can
@@ -101,7 +103,7 @@ This include
 Again, no UI will **ever** be rendered on/by the server (here the Raspberry Pi, that may serve web pages, though).
 But the actual UI rendering will **always** be done on a REST or HTTP client, in the (incomplete) list mentioned above.
 
-![Nav Server](./docimg/NavServer.png)
+![The big picture](./docimg/NavServer.png)
 
 You can see the `RequestManager`s as components handling extra REST requests. For example:
 - a request `GET /mux/cache` will be handled by the `NMEA.multiplexer`
@@ -110,7 +112,7 @@ You can see the `RequestManager`s as components handling extra REST requests. Fo
 - other requests could be considered (see the HTTP server's code to understand how) as static HTTP requests, and render the resources of the `web` (or any other name you can choose) folder for that.
   > Note: a `static` web document can very well perform `dynamic` REST requests, bringing live data to the web interface.
 
-The `NMEA.multiplexer` embedded in the `REST/HTTP Server` gathers data from NMEA station(s), sensors, other channels, computes and process other data, and can feed other programs (`OpenCPN`, `SeaWi`, etc) through the channel(s) of your choice.
+The `NMEA.multiplexer` embedded in the `REST/HTTP Server` gathers data from NMEA station(s), sensors, other channels, possibly logs them, computes and process other data, and can feed other programs (`OpenCPN`, `SeaWi`, etc) through the channel(s) of your choice.
 
 For now (Dec 2018), the Web pages we use here are using HTML5, CSS3, JavaScript (ES5 & 6), WebComponents...
 Later, we might as well provide some WebGL examples.
