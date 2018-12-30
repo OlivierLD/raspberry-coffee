@@ -92,7 +92,7 @@ The `NMEA.multiplexer` can
 
 As a REST interface is available, pretty much any component with WiFi capabilities can reach the server.
 This include
-- Web pages (potentially hosted by the REST server itself)
+- Web pages (potentially hosted by the REST/HTTP server itself)
     - accessed by laptops, tablets, smart-phones
 - Smart watches (REST enabled, as they all are)
 - `ESP8266` devices
