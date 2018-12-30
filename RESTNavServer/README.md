@@ -88,6 +88,7 @@ The `NMEA.multiplexer` can
     - like above
 - wrap/embed a REST-enabled HTTP Server
     - to serve static HTML pages or integrate several REST `RequestManager`s (see examples above).
+    > _Note_: The HTTP server we talk about here is a tiny one, written in Java (but **not** JEE compliant, by far), that runs fine on small boards like the Raspberry Pi. It is part of this project too.
 
 As a REST interface is available, pretty much any component with WiFi capabilities can reach the server.
 This include
