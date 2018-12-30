@@ -32,20 +32,23 @@ public class LedPanelScratchPad
 
 	private static int nbCols = -1;
 
-	// SSD1306
-	private final static int NB_LINES = 32;
+	// SSD1306 128x32
+//	private final static int NB_LINES = 32;
+//	private final static int NB_COLS = 128;
+	// SSD1306 128x64
+	private final static int NB_LINES = 64;
 	private final static int NB_COLS = 128;
 	// Nokia
 //  private final static int NB_LINES = 48;
 //  private final static int NB_COLS  = 84;
 
-	private final static int BUFFER_SIZE = (NB_COLS * NB_LINES) / 8;
+	private final static int BUFFER_SIZE = (NB_COLS * NB_LINES) / 32;
 
 	private static int[] buffer = new int[BUFFER_SIZE];
 
 	public LedPanelScratchPad() {
 		initComponents();
-		this.setSize(new Dimension(1_000, 300));
+		this.setSize(new Dimension(1_000, (300 * (NB_LINES / 32))));
 	}
 
 	/**
@@ -151,13 +154,26 @@ public class LedPanelScratchPad
 				sb.clear(ScreenBuffer.Mode.WHITE_ON_BLACK);
 			}
 
-			if (true) {
+			if (false) { // 128 x 32
 				sb.text("<- A - Relay status", 2, 9, ScreenBuffer.Mode.WHITE_ON_BLACK);
 				sb.text("<- B - Relay ON", 2, 19, ScreenBuffer.Mode.WHITE_ON_BLACK);
 				sb.text("<- C - Relay OFF", 2, 29, ScreenBuffer.Mode.WHITE_ON_BLACK);
 
 				lcd.setBuffer(sb.getScreenBuffer());
+				lcd.display();
+				//     sb.dumpScreen();
+			}
 
+			if (true) { // 128 x 64
+				sb.text("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 1, 8, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text("abcdfeghijklmnopqrstuvwxyz", 1, 16, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text("012345678901234567890", 1, 25, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text("!\"#$%&'()*+,-./:;<=>?@[\\]^_{|}", 1, 33, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text(":;<=>?@[\\]^_{|}", 1, 43, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text("012345678901234567890", 1, 53, ScreenBuffer.Mode.WHITE_ON_BLACK);
+				sb.text("Hello SSD1306 world!..", 1, 62, ScreenBuffer.Mode.WHITE_ON_BLACK);
+
+				lcd.setBuffer(sb.getScreenBuffer());
 				lcd.display();
 				//     sb.dumpScreen();
 			}

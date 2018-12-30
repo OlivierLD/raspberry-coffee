@@ -84,7 +84,7 @@ The `NMEA.multiplexer` can
     - and much more
 - compute extra data
     - like current, very useful
-- rebroadcast data on a variety of channels
+- rebroadcast data on a variety of channels (called forwarders)
     - like above
 - wrap/embed a REST-enabled HTTP Server
     - to serve static HTML pages or integrate several REST `RequestManager`s (see examples above).
@@ -101,8 +101,23 @@ This include
 Again, no UI will **ever** be rendered on/by the server (here the Raspberry Pi, that may serve web pages, though).
 But the actual UI rendering will **always** be done on a REST or HTTP client, in the (incomplete) list mentioned above.
 
+![Nav Server](./docimg/NavServer.png)
+
+You can see the `RequestManager`s as components handling extra REST requests. For example:
+- a request `GET /mux/cache` will be handled by the `NMEA.multiplexer`
+- a request like `POST /tide/tide-stations/Ocean%20Beach/wh` will be handled by the `Tide REST Request Manager`
+- a request like `POST /astro/sun-moon-dec-alt` will be managed by the `Astro REST Request Manager`
+- other requests could be considered (see the HTTP server's code to understand how) as static HTTP requests, and render the resources of the `web` (or any other name you can choose) folder for that.
+  > Note: a `static` web document can very well perform a dynamic REST requests, bringing live data to the web interface.
+
+The `NMEA.multiplexer` embedded in the `REST/HTTP Server` gathers data from NMEA station(s), sensors, other channels, computes and process other data, and can feed other programs (`OpenCPN`, `SeaWi`, etc) through the channel(s) of your choice.
+
 For now (Dec 2018), the Web pages we use here are using HTML5, CSS3, JavaScript (ES5 & 6), WebComponents...
 Later, we might as well provide some WebGL examples.
+
+This way, you can "compose" the Navigation Server you need, by adding or removing REST Request Managers, adding or removing channels or forwarders, adding or removing computers, adding or removing web resources, most (if not all) of the components are extendable.
+
+The module `NMEA.mux.WebUI` in this project is a playground for this kind of custom composition.
 
 ## Try it
 Build it:
