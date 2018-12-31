@@ -37,3 +37,4 @@ ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr
 echo -e "then from your browser, reach http://$ADDR:9876/data/weather.station/analog.all.html"
 #
 sudo java $JAVA_OPTIONS -cp $CP weatherstation.ws.HomeWeatherStation
+# java $JAVA_OPTIONS -cp $CP weatherstation.ws.HomeWeatherStation

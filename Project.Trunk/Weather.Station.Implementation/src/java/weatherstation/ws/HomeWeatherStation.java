@@ -7,6 +7,7 @@ import weatherstation.logger.LoggerInterface;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -179,6 +180,7 @@ public class HomeWeatherStation {
 								try {
 									logger.pushMessage(windObj);
 								} catch (Exception ex) {
+									System.err.println(String.format("At %s:", (new Date()).toString()));
 									ex.printStackTrace();
 								}
 							});

@@ -15,15 +15,21 @@ In addition, I'll be attempting to implement the features of the Weather Wizard 
 
 ### Rationale
 
-The idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry PI, where the server is running.
-The GUI is dedicated to `HTML5` and `CSS3`, rendered in the browser of any device connected to the Raspberry PI's network (laptop, tablet, smart-phone, smart-watch, etc).
+Even small boards like the Raspberry Pi can swallow heavy data computing.
 
-> Interestingly, graphical user interfaces happen to be quite demanding (specific processors called GPU - Graphical Processing Units - have been created for GUI-demanding apps, like video games). Not using them is a substantial relief for the machine we run the server on.
-> As a matter of fact, for now (Aug-2018), whatever in mentioned below runs *fine* on a $10 `Raspberry PI Zero W`.
-> And this does not prevent the Raspberry PI from serving web pages taking care of the GUI. The Raspberry PI runs 24x7, and you connect to it
+Graphical User Interfaces (GUIs) are not falling in the same bucket, they can be very demanding, special processors (called GPU, for Graphical Processing Units) have been developed for GUI-demanding applications (like video-games...),
+as regular CPUs (Computing Processing Units) are not fitted for those too GUI demanding situations.
+
+That is why we will stick to the Command Line Interface (CLI) on the Raspberry Pi. You can still start the Raspian Graphical Desktop, but this will never be required.
+
+So, the idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry Pi, where the server is running.
+The GUI is dedicated to `HTML5`, `JS` and `CSS3`, rendered in the browser of any device connected to the Raspberry Pi's network (laptop, tablet, smart-phone, smart-watch, etc).
+
+> As a matter of fact, for now (Aug-2018), whatever in mentioned below runs *fine* on a $10 `Raspberry Pi Zero W`.
+> And this does not prevent the Raspberry Pi from serving web pages taking care of the GUI. The Raspberry Pi runs 24x7, and you connect to it
 > from a GUI-savvy device to see your data in a good looking User Interface (UI).
 
-An application like `OpenCPN` seems (to me) too demanding for the Raspberry PI. Same for all `Swing` applications
+An application like `OpenCPN` seems (to me) too demanding for the Raspberry Pi. Same for all `Swing` applications
 developed in Java. And actually, this is a general trend in this area, languages like Java are clearly moving to the back-end side of the story.
 Java applets are being de-supported in more and more browsers, HTML and connected technologies keep improving
 their graphical capabilities (see [WebGL](http://learningwebgl.com/blog/), really [amazing](http://arodic.github.io/p/jellyfish/)).
@@ -40,38 +46,88 @@ a full re-write of your application.
 
 I'd rather spend time learning how use HTML5's canvases, or WebGL.
 
-> This project has two distinct aspects:
-> - REST services written in Java, running on the Raspberry PI (or any other machine)
-> - Web pages, to be rendered on any device that can reach the Raspberry PI's network
+> This project has three distinct aspects:
+> - Pure computing, serving requests like "give me the coordinates of the Sun **now**"
+> - REST services written in Java, running on the Raspberry Pi (or any other machine), those _services_ know how to translate the above into what's expected below.
+> - Web pages, to be rendered on any device that can reach the Raspberry Pi's network. Those pages may very well invoke the REST services mentioned one step above, the get to the data mentioned two steps above.
 
 The sample web pages presented below are relying on HTML5 and CSS3. The JavaScript code will be migrated to ES6.
 
-#### Two languages?
-This clearly divides the problem to address in two distinct parts:
-- Back end computation, providing the data to render in some agnostic format like `json` or `XML` (we'll use `json` here), exposed as REST services.
-- Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface (GUI).
+#### Three domains
+This clearly divides the problem to address in several distinct domains:
+- Back end computation, returning the raw data to render as some Java object. Also known as **the model**.
+- Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface (GUI). Also known as **the view**.
+- The broker (the glue) in-between is relying on the HTTP protocol, transforming the back-end data into a format known by the front-end, like `json` or `XML` (we'll use `json` here, the power of `XML` is not required, except in the almanacs publishing part). Exposes its features as REST services. Also known as **the controller**.
 
-And
-- The broker (the glue) in-between is relying on the HTTP protocol.
+This is what's called an **Model-View-Controller (MVC)** architecture.
 
-This allows pretty much _any_ device that knows about a network to connect to the Local Area Network (LAN)
-created by the Raspberry PI (or any machine the server runs on) to connect to it and consume the data it produces.
+This allows pretty much _any_ network-aware device to connect to the Local Area Network (LAN)
+created by the Raspberry Pi (or any machine the server runs on) to connect to it and consume the data it produces.
 
-The way to go for the front end is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
+The way to go for the front end (view) is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
 Consuming REST services can be done from many frameworks, here we'll use `jQuery`, for its `Promise` (aka `Deferred`) features.
 > _Summer 2018_: I'll be moving away from `JQuery Deferred`, `EcmaScript6` comes with `Promises` that work fine. `JQuery` is a great tool, but not required here any more.
 
-For the back end, my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability
-and re-usability reasons. I have several other projects (not necessarily dedicated to the Raspberry PI) writen in Java; a `jar` (Java ARchive) generated from those projects can be part of any
-Raspberry PI project as long as it runs on a JVM.
+For the back end (model and controller), my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability,
+re-usability and extensibility reasons. I have several other projects (not necessarily dedicated to the Raspberry Pi) writen in Java; a `jar` (**J**ava **AR**chive) generated from those projects can be part of **any**
+Raspberry Pi project as long as it runs on a JVM.
+
 But other options could be considered, the most prominent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
-Front End _and_ the Back End.
+Front End _and_ the Back End. The [Pi.js](https://github.com/OlivierLD/node.pi) project illustrates how to deal with sensors on a Raspberry Pi, using JavaScript, on Node-JS.
 
-Something to think about.
+Something to think about 😜 !
 
-Also, the emergence of container techniques like `Docker` opens the door to other languages, like `Golang`. What's said above about re-usability remains, but this might also be something to take a look at.
+Also, the emergence of container techniques like `Docker` opens the door to other languages, like `Golang`. What's said above about re-usability remains, but this might also be something to take a look at. And `Docker` runs just fine on the Raspberry Pi.
 
-Anyway! For now, the back-end is running on a JVM.
+Anyway! For now and until further notice, the back-end is running on a JVM.
+
+## NMEA.multiplexer, plus REST
+### Flexibility and modularity
+
+_To summarize_, this project runs the `NMEA.multiplexer`.
+
+The `NMEA.multiplexer` can
+- get its input from a variety of channels
+    - Serial ports
+    - TCP ports
+    - Custom sensors
+    - and much more
+- compute extra data
+    - like current, very useful
+- rebroadcast data on a variety of channels (called forwarders)
+    - like above
+- wrap/embed a REST-enabled HTTP Server
+    - to serve static HTML pages or integrate several REST `RequestManager`s (see examples above).
+    > _Note_: The HTTP server we talk about here is a tiny one, written in Java (but **not** JEE compliant, by far), that runs fine on small boards like the Raspberry Pi. It is part of this project too.
+
+As a REST interface is available, pretty much any component with WiFi capabilities can reach the server.
+This include
+- Web pages (potentially hosted by the REST/HTTP server itself)
+    - accessed by laptops, tablets, smart-phones
+- Smart watches (REST enabled, as they all are)
+- `ESP8266` devices
+- etc...
+
+Again, no UI will **ever** be rendered on/by the server (here the Raspberry Pi, that may serve web pages, though).
+But the actual UI rendering will **always** be done on a REST or HTTP client, in the (incomplete) list mentioned above.
+
+![The big picture](./docimg/NavServer.png)
+
+You can see the `RequestManager`s as components handling extra REST requests. For example:
+- a request `GET /mux/cache` will be handled by the `NMEA.multiplexer`
+- a request like `POST /tide/tide-stations/Ocean%20Beach/wh` will be handled by the `Tide REST Request Manager`
+- a request like `POST /astro/sun-moon-dec-alt` will be managed by the `Astro REST Request Manager`
+- other requests could be considered (see the HTTP server's code to understand how) as static HTTP requests, and render the resources of the `web` (or any other name you can choose) folder for that.
+  > Note: a `static` web document can very well perform `dynamic` REST requests, bringing live data to the web interface.
+
+The `NMEA.multiplexer` embedded in the `REST/HTTP Server` gathers data from NMEA station(s), sensors, other channels, possibly logs them, computes and process other data, and can feed other programs (`OpenCPN`, `SeaWi`, etc) through the channel(s) of your choice.
+
+For now (Dec 2018), the Web pages we use here are using HTML5, CSS3, JavaScript (ES5 & 6), WebComponents...
+Later, we might as well provide some WebGL examples.
+
+This way, you can "compose" the Navigation Server you need, by adding or removing REST Request Managers, adding or removing channels or forwarders, adding or removing computers, adding or removing web resources, most (if not all) of the components are extendable.
+
+The module `NMEA.mux.WebUI` in this project is a playground for this kind of custom compositions.
 
 ## Try it
 Build it:
@@ -124,7 +180,7 @@ This latter one will start the server and open the appropriate Web UI, from a co
 
 ## Use it
 
-The web pages mentioned below are provided _as examples_ of the way to consume the REST services provided on the Raspberry PI.
+The web pages mentioned below are provided _as examples_ of the way to consume the REST services provided on the Raspberry Pi.
 The snapshots might be a little obsolete, this iks a work in progress, constantly evolving.
 But this will give you an idea.
 
@@ -238,7 +294,7 @@ Heads Up display, from a smart-phone:
 > I was not able to find a way to do this in JavaScript (JavaScript in the browser, hey, some `nodejs` library do it, but they run on a server side - aka dark side).
 > That's where the `RESTImageProcessor` comes in. This is the one transforming the images (faxes) into what's expected.
 >
-> Again, all this runs _fine_ on a Raspberry PI Zero.
+> Again, all this runs _fine_ on a Raspberry Pi Zero.
 
 ![GRIB Rendering](./docimg/screenshot.09.png)
 Faxes and GRIB, together
