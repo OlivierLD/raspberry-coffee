@@ -15,10 +15,16 @@ In addition, I'll be attempting to implement the features of the Weather Wizard 
 
 ### Rationale
 
-The idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry PI, where the server is running.
-The GUI is dedicated to `HTML5` and `CSS3`, rendered in the browser of any device connected to the Raspberry PI's network (laptop, tablet, smart-phone, smart-watch, etc).
+Even small boards like the Raspberry Pi can swallow heavy data computing.
 
-> Interestingly, graphical user interfaces happen to be quite demanding (specific processors called GPU - Graphical Processing Units - have been created for GUI-demanding apps, like video games). Not using them is a substantial relief for the machine we run the server on.
+Graphical User Interfaces (GUIs) are not falling in the same bucket, they can be very demanding, special processors (called GPU, for Graphical Processing Units) have been developed for GUI-demanding applications (like video-games...),
+as regular CPUs (Computing Processing Units) are not fitted for those too GUI demanding situations.
+
+That is why we will stick to the Command Line Interface (CLI) on the Raspberry Pi. You can still start the Raspian Graphical Desktop, but this will never be required.
+
+So, the idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry PI, where the server is running.
+The GUI is dedicated to `HTML5`, `JS` and `CSS3`, rendered in the browser of any device connected to the Raspberry PI's network (laptop, tablet, smart-phone, smart-watch, etc).
+
 > As a matter of fact, for now (Aug-2018), whatever in mentioned below runs *fine* on a $10 `Raspberry PI Zero W`.
 > And this does not prevent the Raspberry PI from serving web pages taking care of the GUI. The Raspberry PI runs 24x7, and you connect to it
 > from a GUI-savvy device to see your data in a good looking User Interface (UI).
@@ -46,35 +52,36 @@ I'd rather spend time learning how use HTML5's canvases, or WebGL.
 
 The sample web pages presented below are relying on HTML5 and CSS3. The JavaScript code will be migrated to ES6.
 
-#### Two languages?
-This clearly divides the problem to address in two distinct parts:
-- Back end computation, providing the data to render in some agnostic format like `json` or `XML` (we'll use `json` here), exposed as REST services.
-- Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface (GUI).
+#### Three domains
+This clearly divides the problem to address in several distinct domains:
+- Back end computation, returning the raw data to render as some Java object. Also known as **the model**.
+- Front end rendering, consuming the data provided by the back end to display them in a Graphical User Interface (GUI). Also known as **the view**.
+- The broker (the glue) in-between is relying on the HTTP protocol, transforming the back-end data into a format known by the front-end, like `json` or `XML` (we'll use `json` here, the power of `XML` is not required, except in the almanacs publishing part). Exposes its features as REST services. Also known as **the controller**.
 
-And
-- The broker (the glue) in-between is relying on the HTTP protocol.
+This is what's called an **Model-View-Controller (MVC)** architecture.
 
-This allows pretty much _any_ device that knows about a network to connect to the Local Area Network (LAN)
+This allows pretty much _any_ network-aware device to connect to the Local Area Network (LAN)
 created by the Raspberry PI (or any machine the server runs on) to connect to it and consume the data it produces.
 
-The way to go for the front end is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
+The way to go for the front end (view) is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
 Consuming REST services can be done from many frameworks, here we'll use `jQuery`, for its `Promise` (aka `Deferred`) features.
 > _Summer 2018_: I'll be moving away from `JQuery Deferred`, `EcmaScript6` comes with `Promises` that work fine. `JQuery` is a great tool, but not required here any more.
 
-For the back end, my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability
-and re-usability reasons. I have several other projects (not necessarily dedicated to the Raspberry PI) writen in Java; a `jar` (Java ARchive) generated from those projects can be part of any
+For the back end (model and controller), my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability,
+re-usability and extensibility reasons. I have several other projects (not necessarily dedicated to the Raspberry PI) writen in Java; a `jar` (**J**ava **AR**chive) generated from those projects can be part of **any**
 Raspberry PI project as long as it runs on a JVM.
+
 But other options could be considered, the most prominent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
-Front End _and_ the Back End.
+Front End _and_ the Back End. The [Pi.js](https://github.com/OlivierLD/node.pi) project illustrates how to deal with sensors on a Raspberry Pi, using JavaScript, on Node-JS.
 
-Something to think about.
+Something to think about 😜 !
 
-Also, the emergence of container techniques like `Docker` opens the door to other languages, like `Golang`. What's said above about re-usability remains, but this might also be something to take a look at.
+Also, the emergence of container techniques like `Docker` opens the door to other languages, like `Golang`. What's said above about re-usability remains, but this might also be something to take a look at. And `Docker` runs just fine on the Raspberry Pi.
 
-Anyway! For now, the back-end is running on a JVM.
+Anyway! For now and until further notice, the back-end is running on a JVM.
 
 ## NMEA.multiplexer, plus REST
-#### Flexibility and modularity
+### Flexibility and modularity
 
 _To summarize_, this project runs the `NMEA.multiplexer`.
 
