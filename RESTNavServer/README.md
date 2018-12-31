@@ -22,14 +22,14 @@ as regular CPUs (Computing Processing Units) are not fitted for those too GUI de
 
 That is why we will stick to the Command Line Interface (CLI) on the Raspberry Pi. You can still start the Raspian Graphical Desktop, but this will never be required.
 
-So, the idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry PI, where the server is running.
-The GUI is dedicated to `HTML5`, `JS` and `CSS3`, rendered in the browser of any device connected to the Raspberry PI's network (laptop, tablet, smart-phone, smart-watch, etc).
+So, the idea here is _not_ to display _any_ Graphical User Interface (GUI) on the Raspberry Pi, where the server is running.
+The GUI is dedicated to `HTML5`, `JS` and `CSS3`, rendered in the browser of any device connected to the Raspberry Pi's network (laptop, tablet, smart-phone, smart-watch, etc).
 
-> As a matter of fact, for now (Aug-2018), whatever in mentioned below runs *fine* on a $10 `Raspberry PI Zero W`.
-> And this does not prevent the Raspberry PI from serving web pages taking care of the GUI. The Raspberry PI runs 24x7, and you connect to it
+> As a matter of fact, for now (Aug-2018), whatever in mentioned below runs *fine* on a $10 `Raspberry Pi Zero W`.
+> And this does not prevent the Raspberry Pi from serving web pages taking care of the GUI. The Raspberry Pi runs 24x7, and you connect to it
 > from a GUI-savvy device to see your data in a good looking User Interface (UI).
 
-An application like `OpenCPN` seems (to me) too demanding for the Raspberry PI. Same for all `Swing` applications
+An application like `OpenCPN` seems (to me) too demanding for the Raspberry Pi. Same for all `Swing` applications
 developed in Java. And actually, this is a general trend in this area, languages like Java are clearly moving to the back-end side of the story.
 Java applets are being de-supported in more and more browsers, HTML and connected technologies keep improving
 their graphical capabilities (see [WebGL](http://learningwebgl.com/blog/), really [amazing](http://arodic.github.io/p/jellyfish/)).
@@ -46,9 +46,10 @@ a full re-write of your application.
 
 I'd rather spend time learning how use HTML5's canvases, or WebGL.
 
-> This project has two distinct aspects:
-> - REST services written in Java, running on the Raspberry PI (or any other machine)
-> - Web pages, to be rendered on any device that can reach the Raspberry PI's network
+> This project has three distinct aspects:
+> - Pure computing, serving requests like "give me the coordinates of the Sun **now**"
+> - REST services written in Java, running on the Raspberry Pi (or any other machine), those _services_ know how to translate the above into what's expected below.
+> - Web pages, to be rendered on any device that can reach the Raspberry Pi's network. Those pages may very well invoke the REST services mentioned one step above, the get to the data mentioned two steps above.
 
 The sample web pages presented below are relying on HTML5 and CSS3. The JavaScript code will be migrated to ES6.
 
@@ -61,15 +62,15 @@ This clearly divides the problem to address in several distinct domains:
 This is what's called an **Model-View-Controller (MVC)** architecture.
 
 This allows pretty much _any_ network-aware device to connect to the Local Area Network (LAN)
-created by the Raspberry PI (or any machine the server runs on) to connect to it and consume the data it produces.
+created by the Raspberry Pi (or any machine the server runs on) to connect to it and consume the data it produces.
 
 The way to go for the front end (view) is - at least for now - quite obvious, it is the combination of HTML5, CSS3, and JavaScript.
 Consuming REST services can be done from many frameworks, here we'll use `jQuery`, for its `Promise` (aka `Deferred`) features.
 > _Summer 2018_: I'll be moving away from `JQuery Deferred`, `EcmaScript6` comes with `Promises` that work fine. `JQuery` is a great tool, but not required here any more.
 
 For the back end (model and controller), my current choice would be to go for a Java Virtual Machine (JVM) supported language, like Java (this is by far not the only JVM-supported language, see Scala, Groovy, Clojure...), mostly for portability,
-re-usability and extensibility reasons. I have several other projects (not necessarily dedicated to the Raspberry PI) writen in Java; a `jar` (**J**ava **AR**chive) generated from those projects can be part of **any**
-Raspberry PI project as long as it runs on a JVM.
+re-usability and extensibility reasons. I have several other projects (not necessarily dedicated to the Raspberry Pi) writen in Java; a `jar` (**J**ava **AR**chive) generated from those projects can be part of **any**
+Raspberry Pi project as long as it runs on a JVM.
 
 But other options could be considered, the most prominent one being probably `nodejs`. This could be quite interesting too, as the same language could be used to write the
 Front End _and_ the Back End. The [Pi.js](https://github.com/OlivierLD/node.pi) project illustrates how to deal with sensors on a Raspberry Pi, using JavaScript, on Node-JS.
@@ -179,7 +180,7 @@ This latter one will start the server and open the appropriate Web UI, from a co
 
 ## Use it
 
-The web pages mentioned below are provided _as examples_ of the way to consume the REST services provided on the Raspberry PI.
+The web pages mentioned below are provided _as examples_ of the way to consume the REST services provided on the Raspberry Pi.
 The snapshots might be a little obsolete, this iks a work in progress, constantly evolving.
 But this will give you an idea.
 
@@ -293,7 +294,7 @@ Heads Up display, from a smart-phone:
 > I was not able to find a way to do this in JavaScript (JavaScript in the browser, hey, some `nodejs` library do it, but they run on a server side - aka dark side).
 > That's where the `RESTImageProcessor` comes in. This is the one transforming the images (faxes) into what's expected.
 >
-> Again, all this runs _fine_ on a Raspberry PI Zero.
+> Again, all this runs _fine_ on a Raspberry Pi Zero.
 
 ![GRIB Rendering](./docimg/screenshot.09.png)
 Faxes and GRIB, together
