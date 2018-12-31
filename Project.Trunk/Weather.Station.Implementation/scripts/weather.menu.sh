@@ -35,19 +35,20 @@ do
     read dummy
   elif nocase "$a" "W"
   then
-    echo Make sure you have started the WebSocket server \(Option N\).
+    echo -e "Make sure you have started the WebSocket server (Option N)."
     if [ -f weather.station.log ]
     then
       rm weather.station.log
     fi
     # ./weather.station.reader > weather.station.log
+    echo -e "Running weather.station.reader.sh..."
     nohup ./weather.station.reader.sh > weather.station.log &
     echo .
 		# ADDR=`ifconfig wlan0 2> /dev/null  | awk '/inet addr:/ {print $2}' | sed 's/addr://'`
 		ADDR=`hostname -I`
-		echo then from your browser, reach http://$ADDR:9876/data/weather.station/analog.all.html
-		echo IP is $(hostname -I)
-    echo -n "Log is in weather.station.log. Hit [return] "
+		echo -e "then from your browser, reach http://$ADDR:9876/data/weather.station/analog.all.html"
+		echo -e "IP is $(hostname -I)"
+    echo -en "Log is in weather.station.log. Hit [return] "
     read dummy
   elif nocase "$a" "D"
   then
