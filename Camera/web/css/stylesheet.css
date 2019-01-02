@@ -18,6 +18,7 @@ h1 {
   padding-bottom: 1pt;
   padding-top: 1pt;
 }
+
 h2 {
   color: silver;
   font-size: 12pt;
@@ -26,6 +27,7 @@ h2 {
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
+
 h3 {
   color: silver;
   font-style: italic;
@@ -36,6 +38,7 @@ h3 {
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
+
 h4 {
   color: silver;
   font-style: italic;
@@ -46,6 +49,7 @@ h4 {
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
+
 h5 {
   color: silver;
   font-style: normal;
@@ -56,6 +60,7 @@ h5 {
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
+
 h6 {
   font-style: italic;
   font-weight: normal;
@@ -65,58 +70,70 @@ h6 {
   margin-bottom: 1pt;
   margin-top: 1pt;
 }
+
 li {
   font-weight: normal;
   font-size: 10pt;
 /*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
+
 dt {
   font-size: 10pt;
   font-weight: bold;
 /*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
+
 dd {
   font-size: 10pt;
   font-weight: normal;
 /*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
+
 p {
   font-size: 10pt;
   font-weight: normal;
 /*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
+
 td {
   font-size: 10pt;
 /*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
+
 small {
   font-size: 8pt;
 /*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
+
 blockquote {
   font-style: italic;
   font-size: 10pt;
 /*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
+
 em {
   font-size: 10pt;
   font-style: italic;
   font-weight: bold;
 /*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
+
 pre {
   margin-top: 0px;
   font-size: 9pt;
   font-family: "Source Code Pro", "Courier New", Helvetica, Geneva;
 /*background-color: #d3d3d3;*/
 }
+
 address {
   font-size: 8pt;
 /*font-family: Verdana, Arial, Helvetica, Geneva;*/
 }
+
 img {
   vertical-align: middle;
 }
+
 .red {
   color:red;
 }
