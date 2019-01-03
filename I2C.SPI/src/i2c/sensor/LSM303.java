@@ -32,12 +32,13 @@ import utils.StringUtils;
  * <br>
  * It took me a while to figure this all out...
  *
- * Magnetometer calibration see
+ * Magnetometer/accelerometer calibration see
  * https://forum.sparkfun.com/viewtopic.php?t=32575
- * https://github.com/praneshkmr/node-lsm303/wiki/Understanding-the-calibration-of-the-LSM303-magnetometer-(compass)
  * http://www.varesano.net/blog/fabio/freeimu-magnetometer-and-accelerometer-calibration-gui-alpha-version-out
  * https://learn.adafruit.com/lsm303-accelerometer-slash-compass-breakout/calibration
  *
+ * Good doc, explaining the problem:
+ * https://github.com/praneshkmr/node-lsm303/wiki/Understanding-the-calibration-of-the-LSM303-magnetometer-(compass)
  */
 public class LSM303 {
 	/*
@@ -99,6 +100,8 @@ public class LSM303 {
 
 	private static boolean useLowPassFilter = "true".equals(System.getProperty("lsm303.low.pass.filter", "true")); // default true
 
+	private static boolean logForCalibration = "true".equals(System.getProperty("lsm303.log.for.calibration", "false"));
+
 	private double pitch = 0D, roll = 0D, heading = 0D;
 
 	private long wait = 1_000L;
@@ -146,10 +149,14 @@ public class LSM303 {
 	}
 
 	public LSM303() throws I2CFactory.UnsupportedBusNumberException, IOException {
-		this(EnabledFeature.BOTH);
+		this(EnabledFeature.BOTH, true);
 	}
 
-	public LSM303(EnabledFeature feature) throws I2CFactory.UnsupportedBusNumberException, IOException {
+	public LSM303(boolean startOnLoad) throws I2CFactory.UnsupportedBusNumberException, IOException {
+		this(EnabledFeature.BOTH, true);
+	}
+
+	public LSM303(EnabledFeature feature, boolean startOnLoad) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		if (verbose) {
 			System.out.println("Starting sensors reading:");
 		}
@@ -190,8 +197,9 @@ public class LSM303 {
 				System.out.println("Magnetometer OK.");
 			}
 		}
-
-		startReading();
+		if (startOnLoad) {
+			startReading();
+		}
 	}
 
 	public void setDataListener(LSM303Listener dataListener) {
@@ -249,6 +257,10 @@ public class LSM303 {
 
 	private void readingSensors()
 			throws IOException {
+		if (logForCalibration) {
+			System.out.println("%accX;accY;accZ;magX;magY;magZ");
+		}
+
 		while (keepReading) {
 			accelData = new byte[6];
 			magData = new byte[6];
@@ -386,6 +398,9 @@ public class LSM303 {
 							Z_FMT.format(roll)));
 				}
 			}
+			if (logForCalibration) {
+				System.out.println(String.format("%d;%d;%d;%d;%d;%d", accelX, accelY, accelZ, magneticX, magneticY, magneticZ));
+			}
 			try {
 				Thread.sleep(this.wait);
 			} catch (InterruptedException ie) {
@@ -425,15 +440,20 @@ public class LSM303 {
 	 */
 	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
-		System.out.println("Verbose: " + verbose);
-		LSM303 sensor = new LSM303();
+//	System.out.println("Verbose: " + verbose);
+
+		System.setProperty("lsm303.log.for.calibration", "true");
+
+		LSM303 sensor = new LSM303(false);
+		sensor.setWait(250); // 1/4 sec
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("\nBye.");
+			System.out.println("\nQuitting...");
 			synchronized (sensor) {
 				sensor.setKeepReading(false);
 				try {
-					Thread.sleep(sensor.wait);
+					Thread.sleep(2 * sensor.wait);
+					System.out.println("Bye.");
 				} catch (InterruptedException ie) {
 					System.err.println(ie.getMessage());
 				}
