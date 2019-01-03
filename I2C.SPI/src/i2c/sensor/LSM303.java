@@ -199,6 +199,8 @@ public class LSM303 {
 		}
 		if (startOnLoad) {
 			startReading();
+		} else {
+			System.out.println("Not starting from the constructor");
 		}
 	}
 
@@ -298,9 +300,14 @@ public class LSM303 {
 
 				norm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
 
-				accX /= norm;
-				accY /= norm;
-				accZ /= norm;
+				if (verboseAcc) {
+					System.out.println(String.format("Acc norm: %f", norm));
+				}
+				if (norm != 0) {
+					accX /= norm;
+					accY /= norm;
+					accZ /= norm;
+				}
 
 				if (useLowPassFilter) {
 					accXfiltered = (float)((accX * ALPHA) + (accXfiltered * (1d - ALPHA)));
@@ -347,9 +354,15 @@ public class LSM303 {
 				magneticY = mag16(magData, 4); // Then Y
 
 				norm = Math.sqrt((magneticX * magneticX) + (magneticY * magneticY) + (magneticZ * magneticZ));
-				magX = (float)magneticX / (float)norm;
-				magY = (float)magneticY / (float)norm;
-				magZ = (float)magneticZ / (float)norm;
+				if (norm != 0) {
+					magX = (float) magneticX / (float) norm;
+					magY = (float) magneticY / (float) norm;
+					magZ = (float) magneticZ / (float) norm;
+				} else {
+					magX = (float) magneticX;
+					magY = (float) magneticY;
+					magZ = (float) magneticZ;
+				}
 
 				if (useLowPassFilter) {
 					magXfiltered = (float)((magX * ALPHA) + (magXfiltered * (1d - ALPHA)));
@@ -445,7 +458,7 @@ public class LSM303 {
 		verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 //	System.out.println("Verbose: " + verbose);
 
-		System.setProperty("lsm303.log.for.calibration", "true");
+//	System.setProperty("lsm303.log.for.calibration", "true");
 
 		LSM303 sensor = new LSM303(false);
 		sensor.setWait(250); // 1/4 sec
