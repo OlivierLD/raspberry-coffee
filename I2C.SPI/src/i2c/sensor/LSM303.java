@@ -258,7 +258,7 @@ public class LSM303 {
 	private void readingSensors()
 			throws IOException {
 		if (logForCalibration) {
-			System.out.println("%accX;accY;accZ;magX;magY;magZ");
+			System.out.println("accX;accY;accZ;magX;magY;magZ");
 		}
 
 		while (keepReading) {
@@ -399,7 +399,10 @@ public class LSM303 {
 				}
 			}
 			if (logForCalibration) {
-				System.out.println(String.format("%d;%d;%d;%d;%d;%d", accelX, accelY, accelZ, magneticX, magneticY, magneticZ));
+				// Raw data
+	//		System.out.println(String.format("%d;%d;%d;%d;%d;%d", accelX, accelY, accelZ, magneticX, magneticY, magneticZ));
+				// Filtered (smoothed)
+				System.out.println(String.format("%.2f;%.2f;%.2f;%.2f;%.2f;%.2f", accXfiltered, accYfiltered, accZfiltered, magXfiltered, magYfiltered, magZfiltered));
 			}
 			try {
 				Thread.sleep(this.wait);
