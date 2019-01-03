@@ -303,7 +303,7 @@ public class LSM303 {
 				if (verboseAcc) {
 					System.out.println(String.format("Acc norm: %f", norm));
 				}
-				if (norm != 0) {
+				if (false && norm != 0) {
 					accX /= norm;
 					accY /= norm;
 					accZ /= norm;
@@ -354,7 +354,7 @@ public class LSM303 {
 				magneticY = mag16(magData, 4); // Then Y
 
 				norm = Math.sqrt((magneticX * magneticX) + (magneticY * magneticY) + (magneticZ * magneticZ));
-				if (norm != 0) {
+				if (false && norm != 0) {
 					magX = (float) magneticX / (float) norm;
 					magY = (float) magneticY / (float) norm;
 					magZ = (float) magneticZ / (float) norm;
