@@ -9,11 +9,11 @@ NMEA channels management, in and out.
 --------
 Any input (File, Serial, TCP, UDP, WebSocket, Sensors, Computations, ...), any output (File, Serial, TCP, UDP, WebSockets...), and a REST API on top of that.
 
-Designed to run on _very small_ boards, like a Raspberry PI Zero, and with possibly _no_ Internet access.
+Designed to run on _very small_ boards, like a Raspberry Pi Zero, and with possibly _no_ Internet access.
 > Warning: It is not designed to scale as an enterprise server!
 
 The operations on the Serial port require `libRxTx`. This is included in the gradle dependencies.
-To be able to use it outside gradle, run (on Linux/Debian/Raspberry PI):
+To be able to use it outside gradle, run (on Linux/Debian/Raspberry Pi):
 ```bash
  sudo apt-get install librxtx-java
 ```
@@ -311,7 +311,7 @@ Same if you want the HTTP server to be started or not.
 with.http.server=yes
 http.port=9999
 ```
-> This HTTP Server is designed and written to run on small computers (like the Raspberry PI Zero).
+> This HTTP Server is designed and written to run on small computers (like the Raspberry Pi Zero).
 > It is **_NOT_** an enterprise server, and it will **_NOT_** scale as one.
 
 ### Supported REST end-points
@@ -496,7 +496,7 @@ _Note_: Don't be alarmed by the colors of the graph, they all rely on their own 
 > The cool thing in this context is that whatever complex the rendering (what the user sees) looks like, the complexity
 > belongs to the renderer (i.e. the client, the web browser in this case). The server is only responsible for providing the _raw_ data
 > the graph is based on; and typically here, providing the data is certainly not the most complex part, pinging the server does the job...
-> As a matter of fact, a small board like a Raspberry PI Zero can **_totally_** assume it, without noticing.
+> As a matter of fact, a small board like a Raspberry Pi Zero can **_totally_** assume it, without noticing.
 
 ## Dynamic loading
 You have the possibility to dynamically load Channels, Forwarders and Computers.
@@ -563,13 +563,13 @@ As you must have seen, we use `Gradle` here, along with the `ShadowJar` plugin. 
   - Needs some cleanup...
 
 ## Remote access
-Remote access is not a problem on any Raspberry PI, `ssh` does the trick. It can even be done from phone or other small devices. For example, several `ssh` clients are available on Android, here is a screenshot from a phone:
+Remote access is not a problem on any Raspberry Pi, `ssh` does the trick. It can even be done from phone or other small devices. For example, several `ssh` clients are available on Android, here is a screenshot from a phone:
 
 ![SSH Console](./docimages/android.ssh.png "SSH Console")
 
 In this kind of case, it could be a good idea to have scripts with small names... See `go` and `killmux`, for examples.
 
-The Raspberry PI can also be an hotspot, you connect to its network to be able to access the data. there is a good tutorial for that on the <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">Adafruit website</a>.
+The Raspberry Pi can also be an hotspot, you connect to its network to be able to access the data. there is a good tutorial for that on the <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">Adafruit website</a>.
 <a href="https://seravo.fi/2014/create-wireless-access-point-hostapd" target="seravo">This one</a> also, is worth a look.
 
 The definition of your network is in `/etc/hostapd/hostapd.conf`.
@@ -577,15 +577,15 @@ The definition of your network is in `/etc/hostapd/hostapd.conf`.
 `scp` and other such tools are also conveniently available.
 
 This can prove to be particularly convenient when you want to log data away from a stable Internet connection (in your car, in a plane, on a boat, etc).
- You start the Raspberry PI, with a hotspot generating its own network.
+ You start the Raspberry Pi, with a hotspot generating its own network.
  Then you can connect on that network, and you can drive the Multiplexer application (start, stop, monitor, etc).
 
 
-Along the same lines - even if it can sound a bit disproportionate - `VNC` works just fine, even on the Raspberry PI Zero (see below)
+Along the same lines - even if it can sound a bit disproportionate - `VNC` works just fine, even on the Raspberry Pi Zero (see below)
 
 ![VNC Viewer](./docimages/vnc.png "VNC Viewer")
 
-This is Jessie/Pixel running on a Raspberry PI Zero.
+This is Jessie/Pixel running on a Raspberry Pi Zero.
 
 #### Note: Access point _and_ Internet access
 Instructions were moved [here](../README.md#raspberry-pi-as-an-access-point-and-internet-access).
@@ -630,7 +630,7 @@ Here is a use case:
 > You start from your home for a run, you want to log the data from a GPS.
 > You start everything at home before you go, with `process.on.start=false`.
 > All the stuff (Raspberry Pi Zero W, battery, GPS) is in a plastic box in your backpack, a Nalgene canteen, or something similar.
-> You get out, and when you're about to start running, you connect to the Raspberry PI from your cell phone,
+> You get out, and when you're about to start running, you connect to the Raspberry Pi from your cell phone,
 > and from the UI above, you start the recording.
 > Once done, you stop it the same way. The data have been collected only when you were running.
 > Then you can even stop the Multiplexer, before going home to download and visualize your data file.
@@ -657,7 +657,7 @@ Then it orients a solar panel so it faces the sun. The specific `forwarder` that
 And there is an integration with the [REST Nav Server](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/RESTNavServer).
 
 ## Case Studies
-- [NMEA Multiplexer on a Raspberry PI Zero W](./casestudy.md). Compared with Node-RED.
+- [NMEA Multiplexer on a Raspberry Pi Zero W](./casestudy.md). Compared with Node-RED.
 
 ## Bonus
 - A sample of a log file analyzer is in `util.LogAnalyzer`:

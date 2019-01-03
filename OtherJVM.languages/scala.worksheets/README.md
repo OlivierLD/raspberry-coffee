@@ -9,7 +9,7 @@ For example, you setup the following components:
 <!-- ![Red Green](./red.green_bb.png) -->
 <img src="./red.green_bb.png" width="345" height="564">
 
-And from a Terminal running on the Raspberry PI, you can drive the leds plugged on the breadboard.
+And from a Terminal running on the Raspberry Pi, you can drive the leds plugged on the breadboard.
 
 ```bash
 $> sudo scala

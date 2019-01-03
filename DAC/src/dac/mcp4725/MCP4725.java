@@ -14,21 +14,21 @@ public class MCP4725
   public final static int MCP4725_REG_WRITEDACEEPROM = 0x60;
 
   private static boolean verbose = true;
-  
+
   private I2CBus bus;
   private I2CDevice mcp4725;
-  
+
   public MCP4725() throws I2CFactory.UnsupportedBusNumberException
   {
     this(MCP4725_ADDRESS);
   }
-  
+
   public MCP4725(int address) throws I2CFactory.UnsupportedBusNumberException
   {
     try
     {
       // Get i2c bus
-      bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
+      bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
       if (verbose)
         System.out.println("Connected to bus. OK.");
 
@@ -42,7 +42,7 @@ public class MCP4725
       System.err.println(e.getMessage());
     }
   }
-  
+
   // Set the voltage, readable on the VOUT terminal
   public void setVoltage(int voltage) // throws IOException
   {
@@ -56,7 +56,7 @@ public class MCP4725
       npe.printStackTrace();
     }
   }
-  
+
   public void setVoltage(int voltage, boolean persist) throws IOException, NullPointerException
   {
     voltage = Math.min(voltage, 4095);  // 4096 = 2^12

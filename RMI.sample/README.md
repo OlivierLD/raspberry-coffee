@@ -1,6 +1,6 @@
 # RMI in Java
-Communication between Raspberry PI and other machines (...like Raspberry PI) using Remote Method Invocation (RMI).
- 
+Communication between Raspberry Pi and other machines (...like Raspberry Pi) using Remote Method Invocation (RMI).
+
 See [this](https://docs.oracle.com/javase/tutorial/rmi/overview.html).
 
 ## RMI on RPi
@@ -23,7 +23,7 @@ Server classes
 Client classes
 $
 ```
- 
+
 ### Start the server
 _Important_: Modify the script named `start.server`, set the variable named `java.rmi.server.hostname`:
 ```
@@ -35,9 +35,9 @@ An IP address works fine too.
 $ ./start.server &
 Server address : RPiZero/127.0.0.1, port 1099
 
-``` 
- 
-### Start the client 
+```
+
+### Start the client
 
 The second parameter to send to the script is the value set above, in `java.rmi.server.hostname`.
 #### Linux and Mac
@@ -47,7 +47,7 @@ $ ./start.pi.client RPiZero 1099 50
  Looking up [Compute on RPiZero.att.net:1099]
  3.14159265358979323846264338327950288419716939937511
 $
-``` 
+```
 
 #### Windows
 ```
@@ -55,7 +55,7 @@ Win> client.pi RPiZero 1099 50
  Looking up [Compute on RPiZero:1099]
  3.14159265358979323846264338327950288419716939937511
 Win>
-``` 
+```
 
 Something showed up in the server console:
 ```
@@ -70,7 +70,7 @@ You can send messages (texts) to the server, and `espeak` will read them loud fo
 
 Imagine coupling that with the `FONA`, when a message is received, it is read ;)
 
-On the server (the Raspberry PI):
+On the server (the Raspberry Pi):
 ```
  $ sudo apt-get install espeak
 ```
@@ -84,7 +84,7 @@ $ ./start.speak.client RPiZero 1099 "The Raspberry Pi can speak remotely"
  Looking up [Compute on RPiZero:1099]
  ...
 $
-``` 
+```
 
 #### Windows
 ```
@@ -92,5 +92,5 @@ Win> client.speak RPiZero 1099 "The Raspberry Pi can speak remotely"
  Looking up [Compute on RPiZero:1099]
  ...
 Win>
-``` 
+```
 

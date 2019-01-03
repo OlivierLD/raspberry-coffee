@@ -8,7 +8,7 @@ import com.pi4j.io.gpio.exception.UnsupportedPinPullResistanceException;
 import paddle.buttons.PushButtonInstance;
 
 /**
- * Adafruit JoyBonnet for the Raspberry PI
+ * Adafruit JoyBonnet for the Raspberry Pi
  * https://www.adafruit.com/product/3464
  * <p>
  * Use this class to see what button is connected, and where.

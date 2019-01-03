@@ -27,7 +27,7 @@ Same article on [Hocus-Blogus](http://hocus-blogus.blogspot.com/2018/07/raspberr
 
 ---
 
-The Raspberry PI does not have analog pins, we need to use Pulse Width Modulation to simulate
+The Raspberry Pi does not have analog pins, we need to use Pulse Width Modulation to simulate
 analog values, a servo is an analog device.
 
 We use for that the method `setPWM(channel, 0, pulse);`, that will eventually write to the registers

@@ -68,7 +68,7 @@ public class STH10 {
 		HTTP_PORT("--http-port:",
 				String.format("Integer. The HTTP port of the REST Server. Default is %d.", restServerPort)),
 		SIMULATE_SENSOR_VALUES("--simulate-sensor-values:",
-				"Boolean. Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone."),
+				"Boolean. Enforce sensor values simulation, even if running on a Raspberry Pi. Default is 'false'. Note: Relay is left alone."),
 		LOGGERS("--loggers:",
 				"Comma-separated list of the loggers. Loggers must implement DataLoggerInterface. Ex: --loggers:loggers.iot.AdafruitIOClient,loggers.text.FileLogger "),
 		LOGGING_PACE("--logging-pace:",
@@ -100,7 +100,7 @@ public class STH10 {
 	private static STH10Driver probe = null;
 	private static RelayDriver relay = null;
 
-	// Simulators, to run on non-Raspberry PIs - for development and tests.
+	// Simulators, to run on non-Raspberry Pis - for development and tests.
 	// User manual entry (also suitable for REST)
 	private static Supplier<Double> temperatureSimulator = STH10::simulateUserTemp;
 	private static Supplier<Double> humiditySimulator = STH10::simulateUserHum;
@@ -441,7 +441,7 @@ public class STH10 {
 				probe.setSimulators(temperatureSimulator, humiditySimulator);
 			}
 	  } catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of STH10Driver.
-			System.out.println("You're not on a Raspberry PI, or your wiring is wrong.");
+			System.out.println("You're not on a Raspberry Pi, or your wiring is wrong.");
 			System.out.println("Exiting.");
 			System.exit(1);
 		}
@@ -456,7 +456,7 @@ public class STH10 {
 				relay.setListener(relayListener);
 			}
 		} catch (UnsatisfiedLinkError ule) { // That one is trapped in the constructor of RelayDriver.
-			System.out.println("You're not on a Raspberry PI, or your wiring is wrong.");
+			System.out.println("You're not on a Raspberry Pi, or your wiring is wrong.");
 			System.out.println("Exiting.");
 			System.exit(1);
 		}

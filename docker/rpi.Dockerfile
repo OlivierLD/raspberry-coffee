@@ -1,6 +1,6 @@
 FROM resin/raspberrypi3-debian:latest
 #
-# WebComponents running on the Raspberry PI.
+# WebComponents running on the Raspberry Pi.
 # Uses NodeJS
 #
 LABEL maintainer="Olivier LeDiouris <olivier@lediouris.net>"

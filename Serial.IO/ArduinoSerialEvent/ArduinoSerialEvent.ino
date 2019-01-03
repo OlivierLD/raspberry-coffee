@@ -1,12 +1,12 @@
 /**
  * Serial Event example, demonstrating the Serial communication
- * with the Raspberry PI.
- * 
- * Receives a String from the Raspberry PI (on the Serial port),
+ * with the Raspberry Pi.
+ *
+ * Receives a String from the Raspberry Pi (on the Serial port),
  * Returns it reversed (on the Serial port).
- * 
+ *
  * Both baud rates (Arduino & RPi0 have to be the same.
- * 
+ *
  * For dev, from the Arduino Console: use "Both NL & CR"
  */
 
@@ -35,7 +35,7 @@ void loop() {
       st[i] = st[l-1-i];
       st[l-1-i] = ch;
     }
-    
+
     Serial.println(st);
     // clear the string:
     inputString = "";

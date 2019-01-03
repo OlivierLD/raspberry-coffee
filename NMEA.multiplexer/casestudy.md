@@ -1,7 +1,7 @@
-# Raspberry PI Zero W
+# Raspberry Pi Zero W
 ## Java Custom NMEA Multiplexer, or Node-RED ?
 
-The Raspberry PI Zero W is a small single-board computer that
+The Raspberry Pi Zero W is a small single-board computer that
 - Runs Linux (Pixel, a clone of Jessie)
 - Has 512 Mb of RAM
 - Has a 40-pin GPIO Header
@@ -16,9 +16,9 @@ one - a prototype - based on Node-RED, specially the memory footprint.
 
 ## Multiplexer on Node-RED.
 
-If not already there, Install [Node-RED](http://nodered.org/) on the Raspberry PI.
+If not already there, Install [Node-RED](http://nodered.org/) on the Raspberry Pi.
 Installation instructions for your platform are available [here](http://nodered.org/docs/getting-started/installation.html), and it comes
-with Raspberry PI goodies.
+with Raspberry Pi goodies.
 
 _March 2017_: Node-RED is already installed on the NOOBS Image. It also had some cool Nodes already available. A little drawback though: the version of Node.js is not a recent one.
 I upgraded mine (Node v6.10.1, Npm 3.10.10, Node-RED core 0.16.2).
@@ -49,7 +49,7 @@ Manually, for now. There is a way to package all that, I'll look into it later.
 $> scp NMEAParser.js pi@192.168.1.136:./.node-red
 ```
 
-- On the Raspberry PI where you have installed `Node-RED`, install `n-readlines`
+- On the Raspberry Pi where you have installed `Node-RED`, install `n-readlines`
 ```bash
  $> cd /usr/lib/node_modules/node-red
  $> sudo npm install n-readlines

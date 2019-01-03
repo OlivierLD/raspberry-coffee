@@ -12,7 +12,7 @@ CP=./build/libs/Serial.IO-1.0-all.jar
 #
 JAVA_OPTIONS=
 #
-# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
+# JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 #
 # For Mac
 JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/Library/Java/Extensions"

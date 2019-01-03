@@ -2,7 +2,7 @@
 
 [Processing](http://processing.org) is a framework that considerably simplifies Java development.
 
-> See how to install it on the Raspberry PI [here](https://www.raspberrypi.org/blog/now-available-for-download-processing/).
+> See how to install it on the Raspberry Pi [here](https://www.raspberrypi.org/blog/now-available-for-download-processing/).
 
 It seems to be compatible with the projects of this repository.
 
@@ -19,7 +19,7 @@ void setup() {
   size(200, 200);
   stroke(255);
   noFill();
-  textSize(72);  
+  textSize(72);
   MCP3008Reader.initMCP3008();
 }
 void draw() { // Draw the value of the ADC (MCP3008) at each repaint
@@ -69,13 +69,13 @@ Actually, the Processing Development Environment (aka `PDE`) wraps the code with
 If you have for example a sketch like that one:
 ```java
 void setup() {
-  size(200, 200); 
+  size(200, 200);
   stroke(255);
   noFill();
-  textSize(72);  
+  textSize(72);
 }
 
-void draw() { 
+void draw() {
   background(0);
   fill(255);
   int value = (int)Math.floor(1023 * Math.random());  // Simulation
@@ -90,10 +90,10 @@ import processing.core.PApplet;
 
 public class Sketch extends PApplet {
   public void setup() {
-    size(200, 200); 
+    size(200, 200);
     stroke(255);
     noFill();
-    textSize(72);  
+    textSize(72);
   }
 
   public void draw() {
@@ -103,7 +103,7 @@ public class Sketch extends PApplet {
     text(String.format("%04d", value), 10, 100);
   }
 }
-``` 
+```
 
 ## PitchRoll.pde
 

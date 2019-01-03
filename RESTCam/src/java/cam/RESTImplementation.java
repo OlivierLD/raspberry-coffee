@@ -77,14 +77,14 @@ public class RESTImplementation {
 			} catch (NullPointerException npe) {
 				foundPCA9685 = false;
 				System.err.println("+------------------------------------------------------------");
-				System.err.println("| (RESTCam) PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");
+				System.err.println("| (RESTCam) PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry Pi...");
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}
 		} catch (I2CFactory.UnsupportedBusNumberException | UnsatisfiedLinkError usle) {
 			foundPCA9685 = false;
 			System.err.println("+---------------------------------------------------------------------");
-			System.err.println("| You might not be on a Raspberry PI, or PI4J/WiringPi is not there...");
+			System.err.println("| You might not be on a Raspberry Pi, or PI4J/WiringPi is not there...");
 			System.err.println("| Moving on anyway...");
 			System.err.println("+---------------------------------------------------------------------");
 		} catch (Exception ex) {

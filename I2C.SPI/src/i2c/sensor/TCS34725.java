@@ -142,7 +142,7 @@ public class TCS34725 {
 		verbose = v;
 		try {
 			// Get i2c bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPi version
 			if (verbose) {
 				System.out.println("Connected to bus. OK.");
 			}

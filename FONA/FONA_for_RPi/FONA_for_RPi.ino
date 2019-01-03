@@ -4,7 +4,7 @@
   and Adafruit_FONA.cpp
 
  Communicates through structured sentences.
- Suitable for the Raspberry PI. 
+ Suitable for the Raspberry Pi.
 
  Commands are:
 
@@ -18,7 +18,7 @@
   r|x Read SMS # x
   d|x Delete SMS # x
   s|<dest number>|<mess payload> Send SMS  to <dest number>
-  
+
  ****************************************************/
 
 #include "Adafruit_FONA.h"
@@ -60,7 +60,7 @@ void setup() {
 
   if (! fona.begin(*fonaSerial)) {
     Serial.println(F("Couldn't find FONA"));
-    printMenu(); 
+    printMenu();
     while (1);
   }
 //Serial.println(F("FONA is OK"));
@@ -102,7 +102,7 @@ void loop() {
   // Command input
   char queryString[128];
   readline(queryString, 128);
-  // Parse the received command here, see if it means anything.  
+  // Parse the received command here, see if it means anything.
   String query = String(queryString);
   String meaning = "";
   if (query.equals("a"))
@@ -139,9 +139,9 @@ void loop() {
     String mess = getElem(query, '|', 2);
     sendSMS(to, mess);
   }
-  else 
+  else
     meaning = "Unknown";
-  if (meaning.length() > 0)  
+  if (meaning.length() > 0)
     Serial.println(meaning);
 }
 
@@ -149,7 +149,7 @@ String getElem(String str, char sep, int idx)
 {
   String ret = "";
 
-  int start = -1, end = -1;  
+  int start = -1, end = -1;
   int nbSep = 0;
   for (int i=0; i<str.length(); i++)
   {
@@ -181,7 +181,7 @@ void readADC()
   if (! fona.getADCVoltage(&adc)) {
     Serial.println(F(">> ADC FAILED"));
   } else {
-    Serial.print(">> ADC:"); 
+    Serial.print(">> ADC:");
     Serial.println(adc); // mV
   }
 }
@@ -210,7 +210,7 @@ void readBattery()
 void readCCID()
 {
   fona.getSIMCCID(replybuffer);  // make sure replybuffer is at least 21 bytes!
-  Serial.print(">> CCID:"); 
+  Serial.print(">> CCID:");
   Serial.println(replybuffer);
 }
 
@@ -248,7 +248,7 @@ void readNumberOfMessages()
   if (smsnum < 0) {
     Serial.println(F(">> NUMMESS FAILED"));
   } else {
-    Serial.print(">> MESS:"); 
+    Serial.print(">> MESS:");
     Serial.println(smsnum);
   }
 }

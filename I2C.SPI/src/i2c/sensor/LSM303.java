@@ -73,8 +73,8 @@ public class LSM303 {
 	public final static int LSM303_MAGGAIN_8_1 = 0xE0; // +/- 8.1
 
 	private final static float _lsm303Accel_MG_LSB = 0.001F; // 1, 2, 4 or 12 mg per lsb
-	private static float _lsm303Mag_Gauss_LSB_XY = 1100.0F;  // Varies with gain
-	private static float _lsm303Mag_Gauss_LSB_Z = 980.0F;  // Varies with gain
+	private static float _lsm303Mag_Gauss_LSB_XY = 1_100.0F; // Varies with gain
+	private static float _lsm303Mag_Gauss_LSB_Z = 980.0F;    // Varies with gain
 
 	private float SENSORS_GRAVITY_EARTH = 9.80665f;        // < Earth's gravity in m/s^2
 	private float SENSORS_GRAVITY_MOON = 1.6f;             // < The moon's gravity in m/s^2
@@ -82,7 +82,7 @@ public class LSM303 {
 	private float SENSORS_GRAVITY_STANDARD = SENSORS_GRAVITY_EARTH;
 	private float SENSORS_MAGFIELD_EARTH_MAX = 60.0f;      // < Maximum magnetic field on Earth's surface
 	private float SENSORS_MAGFIELD_EARTH_MIN = 30.0f;      // < Minimum magnetic field on Earth's surface
-	private float SENSORS_PRESSURE_SEALEVELHPA = 1013.25f; // < Average sea level pressure is 1013.25 hPa
+	private float SENSORS_PRESSURE_SEALEVELHPA = 1_013.25f;// < Average sea level pressure is 1013.25 hPa
 	private float SENSORS_DPS_TO_RADS = 0.017453293f;      // < Degrees/s to rad/s multiplier
 	private float SENSORS_GAUSS_TO_MICROTESLA = 100;       // < Gauss to micro-Tesla multiplier
 
@@ -96,6 +96,8 @@ public class LSM303 {
 
 	private static boolean verboseAcc = "true".equals(System.getProperty("lsm303.verbose.acc", "false"));
 	private static boolean verboseMag = "true".equals(System.getProperty("lsm303.verbose.mag", "false"));
+
+	private static boolean useLowPassFilter = "true".equals(System.getProperty("lsm303.low.pass.filter", "true")); // default true
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
 
@@ -151,9 +153,8 @@ public class LSM303 {
 		if (verbose) {
 			System.out.println("Starting sensors reading:");
 		}
-//		try {
 		// Get i2c bus
-		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
+		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
 		if (verbose) {
 			System.out.println("Connected to bus. OK.");
 		}
@@ -191,9 +192,6 @@ public class LSM303 {
 		}
 
 		startReading();
-//		} catch (IOException e) {
-//			System.err.println(e.getMessage());
-//		}
 	}
 
 	public void setDataListener(LSM303Listener dataListener) {
@@ -202,15 +200,12 @@ public class LSM303 {
 
 	// Create a separate thread to read the sensors
 	public void startReading() {
-		Runnable task = new Runnable() {
-			@Override
-			public void run() {
-				try {
-					readingSensors();
-				} catch (IOException ioe) {
-					System.err.println("Reading thread:");
-					ioe.printStackTrace();
-				}
+		Runnable task = () -> {
+			try {
+				readingSensors();
+			} catch (IOException ioe) {
+				System.err.println("Reading thread:");
+				ioe.printStackTrace();
 			}
 		};
 		new Thread(task).start();
@@ -250,6 +245,8 @@ public class LSM303 {
 		this.keepReading = keepReading;
 	}
 
+	private final float ALPHA = 0.15f; // For the low pass filter (smoothing)
+
 	private void readingSensors()
 			throws IOException {
 		while (keepReading) {
@@ -257,10 +254,15 @@ public class LSM303 {
 			magData = new byte[6];
 
 			int accelX = 0, accelY = 0, accelZ = 0;
-			float accX = 0, accY = 0, accZ = 0;
-			int magX = 0, magY = 0, magZ = 0;
-			double pitchDegrees = 0d, rollDegrees = 0d;
-			float heading = 0;
+			float accX = 0f, accY = 0f, accZ = 0f;
+			float accXfiltered = 0f, accYfiltered = 0f, accZfiltered = 0f;
+			int magneticX = 0, magneticY = 0, magneticZ = 0;
+			float magX = 0f, magY = 0f, magZ = 0f;
+			float magXfiltered = 0f, magYfiltered = 0f, magZfiltered = 0f;
+
+			double pitchDegrees = -Double.MAX_VALUE, rollDegrees = -Double.MAX_VALUE;
+			float heading = 0f;
+			double norm = 0d;
 
 			if (accelerometer != null) {
 				accelerometer.write((byte) (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80));
@@ -282,19 +284,38 @@ public class LSM303 {
 				accY = (float) accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 				accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
+				norm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
+
+				accX /= norm;
+				accY /= norm;
+				accZ /= norm;
+
+				if (useLowPassFilter) {
+					accXfiltered = (float)((accX * ALPHA) + (accXfiltered * (1d - ALPHA)));
+					accYfiltered = (float)((accY * ALPHA) + (accYfiltered * (1d - ALPHA)));
+					accZfiltered = (float)((accZ * ALPHA) + (accZfiltered * (1d - ALPHA)));
+				} else {
+					accXfiltered = accX;
+					accYfiltered = accY;
+					accZfiltered = accZ;
+				}
 			/*
 				pitch = atan (x / sqrt(y^2 + z^2));
 				roll  = atan (y / sqrt(x^2 + z^2));
 			 */
-				pitchDegrees = Math.toDegrees(Math.atan(accX / Math.sqrt((accY * accY) + (accZ * accZ))));
-				rollDegrees = Math.toDegrees(Math.atan(accY / Math.sqrt((accX * accX) + (accZ * accZ))));
+				pitchDegrees = Math.toDegrees(Math.atan(accXfiltered / Math.sqrt((accYfiltered * accYfiltered) + (accZfiltered * accZfiltered))));
+				rollDegrees = Math.toDegrees(Math.atan(accYfiltered / Math.sqrt((accXfiltered * accXfiltered) + (accZfiltered * accZfiltered))));
+
+				// Other option for pitch & roll. TODO Sort this out.
+				pitchDegrees = Math.toDegrees(Math.asin((double)accXfiltered));
+				rollDegrees = Math.toDegrees(- Math.asin((double)accYfiltered));
 
 				setPitch(pitchDegrees); // TODO make sure the range is [-180..180]
 				setRoll(rollDegrees);   // TODO make sure the range is [-180..180]
 
 				if (verboseAcc) {
 					System.out.println("Pitch & Roll with Accelerometer:");
-					System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accX, accY, accZ));
+					System.out.println(String.format("\tX:%f, Y:%f, Z:%f", accXfiltered, accYfiltered, accZfiltered));
 					System.out.println(String.format("\tPitch:%f, Roll:%f", pitchDegrees, rollDegrees));
 				}
 			}
@@ -309,31 +330,54 @@ public class LSM303 {
 					dumpBytes(magData, 6);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
-				magX = mag16(magData, 0); // TODO * 0.92 ?
-				magZ = mag16(magData, 2); // Yes, Z
-				magY = mag16(magData, 4); // Then Y
+				magneticX = mag16(magData, 0); // TODO * 0.92 ?
+				magneticZ = mag16(magData, 2); // Yes, Z
+				magneticY = mag16(magData, 4); // Then Y
 
+				norm = Math.sqrt((magneticX * magneticX) + (magneticY * magneticY) + (magneticZ * magneticZ));
+				magX = (float)magneticX / (float)norm;
+				magY = (float)magneticY / (float)norm;
+				magZ = (float)magneticZ / (float)norm;
+
+				if (useLowPassFilter) {
+					magXfiltered = (float)((magX * ALPHA) + (magXfiltered * (1d - ALPHA)));
+					magYfiltered = (float)((magY * ALPHA) + (magYfiltered * (1d - ALPHA)));
+					magZfiltered = (float)((magZ * ALPHA) + (magZfiltered * (1d - ALPHA)));
+				} else {
+					magXfiltered = magX;
+					magYfiltered = magY;
+					magZfiltered = magZ;
+				}
+
+				double magXcomp = magXfiltered;
+				double magYcomp = magYfiltered;
+				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
+					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
+					magYcomp = (magYfiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZfiltered * Math.sin(Math.toRadians(rollDegrees)));
+				}
 				// TODO See that...
-//		  float magneticX = (float) magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//		  float magneticY = (float) magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//		  float magneticZ = (float) magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
-//		  float heading = - (float) Math.toDegrees(Math.atan2(magneticY, magneticX)); // Same as below (the ratio remains the same).
-				heading = (float) Math.toDegrees(Math.atan2((double) magY, (double) magX));
-				while (heading < 0) heading += 360f;
-
+//		  float magneticX_ = (float) magneticX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//		  float magneticY_ = (float) magneticY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//		  float magneticZ_ = (float) magneticZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
+				// TODO Compensate with pitch & roll
+//		  heading = - (float) Math.toDegrees(Math.atan2(magneticY_, magneticX_)); // Same as below (the ratio remains the same).
+				heading = (float) Math.toDegrees(Math.atan2(magYcomp, magXcomp)); // TODO Watch the sign of the first term?
+				while (heading < 0) {
+					heading += 360f;
+				}
 				setHeading(heading);
 			}
 			if (verboseMag) {
-				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magX, magY, magZ, magX & 0xFFFF, magY & 0xFFFF, magZ & 0xFFFF, heading));
+				System.out.println(String.format("Raw(int)Mag XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X), HDG:%f", magneticX, magneticY, magneticZ, magneticX & 0xFFFF, magneticY & 0xFFFF, magneticZ & 0xFFFF, heading));
 			}
 
 			if (verboseRaw) {
-				System.out.println(String.format("RawAcc (XYZ) (%d, %d, %d)\tRawMag (XYZ) (%d, %d, %d)", accelX, accelY, accelZ, magX, magY, magZ));
+				System.out.println(String.format("RawAcc (XYZ) (%d, %d, %d)\tRawMag (XYZ) (%d, %d, %d)", accelX, accelY, accelZ, magneticX, magneticY, magneticZ));
 			}
 
 			if (dataListener != null) {
 				// Use the values as you want here.
-				dataListener.dataDetected(accX, accY, accZ, magX, magY, magZ, heading, (float) pitchDegrees, (float) rollDegrees);
+				dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, (float) pitchDegrees, (float) rollDegrees);
 			} else {
 				if (verbose) {
 					System.out.println(String.format("heading: %s (mag), pitch: %s, roll: %s",
@@ -353,15 +397,15 @@ public class LSM303 {
 	private static int accel12(byte[] list, int idx) {
 //	int n = (list[idx] & 0xFF) | ((list[idx + 1] & 0xFF) << 8); // Low, high bytes
 		int n = ((list[idx + 1] & 0xFF) << 8) | (list[idx] & 0xFF); // Low, high bytes
-		if (n > 32767) {
-			n -= 65536;              // 2's complement signed
+		if (n > 32_767) {
+			n -= 65_536;              // 2's complement signed
 		}
-		return n >> 4;                          // 12-bit resolution
+		return n >> 4;              // 12-bit resolution
 	}
 
 	private static int mag16(byte[] list, int idx) {
 		int n = ((list[idx] & 0xFF) << 8) | (list[idx + 1] & 0xFF);   // High, low bytes
-		return (n < 32768 ? n : n - 65536);                           // 2's complement signed
+		return (n < 32_768 ? n : n - 65_536);                         // 2's complement signed
 	}
 
 	private static void dumpBytes(byte[] ba, int len) {

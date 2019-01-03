@@ -1,7 +1,7 @@
 # JVM-aware languages
 
 ### Quick preamble
-Java runs on the Raspberry PI.
+Java runs on the Raspberry Pi.
 One big asset of Java is its portability, its "write-once-run-everywhere" feature.
 Running Java means that there is a Java Virtual Machine (JVM) that can take a `.class` file and execute it.
 The JVM does not care about the machine or OS a `.class` has been generated (compiled) on, it will just work if it is valid at least somewhere.
@@ -61,7 +61,7 @@ That is - in very short - what those JVM-aware languages are doing.
 We have here snippets of Scala, Groovy, Kotlin and Clojure. The list is not closed, by far. Many other such JVM-aware languages exist, and will exist.
 
 ### A quick note
-To know how to install those languages on the Raspberry PI (or wherever you want), use any search engine you like. It's out of the scope of this document ;)
+To know how to install those languages on the Raspberry Pi (or wherever you want), use any search engine you like. It's out of the scope of this document ;)
 
 ## First
 Before doing what is described below, run a build of the project:
@@ -185,7 +185,7 @@ scala>
 ```
 
 ## Groovy on Pi
-This is a small Groovy project that shows how to use Java classes written for the `Raspberry PI`
+This is a small Groovy project that shows how to use Java classes written for the `Raspberry Pi`
 from a Groovy script.
 
 Groovy is similar to Scala in the sense that

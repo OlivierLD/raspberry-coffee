@@ -40,7 +40,7 @@ public class EmailWatcher {
 	 * </pre>
 	 * Then the script `remote.snap.sh` is triggered to:
 	 * <pre>
-	 * - Send an http request is sent to the Raspberry PI to take the snapshot (see {@link weatherstation.logger.HTTPLogger} )
+	 * - Send an http request is sent to the Raspberry Pi to take the snapshot (see {@link weatherstation.logger.HTTPLogger} )
 	 * - Download the corresponding picture
 	 * </pre>
 	 * After that, an email is returned to the requester, with the snapshot attached to it.

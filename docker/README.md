@@ -16,12 +16,12 @@ Just run `image.builder.sh`:
 |  1. Nav Server, Debian                                               |
 | 1p. Nav Server, Debian, with proxy                                   |
 |  2. Web Components, Debian                                           |
-|  3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |
-|  4. Node PI, to run on a Raspberry PI                                |
+|  3. To run on a Raspberry Pi, Java, Raspberry Coffee, Web Components |
+|  4. Node PI, to run on a Raspberry Pi                                |
 |  5. Node PI, to run on Debian                                        |
-|  6. GPS-mux, to run on a Raspberry PI (logger)                       |
+|  6. GPS-mux, to run on a Raspberry Pi (logger)                       |
 |  7. Golang, basics                                                   |
-|  8. Raspberry PI, MATE, with java, node, web comps, VNC              |
+|  8. Raspberry Pi, MATE, with java, node, web comps, VNC              |
 |  9. Debian, Java, Scala, Spark                                       |
 | 10. Ubuntu MATE, TensorFlow, Python3, VNC                            |
 +----------------------------------------------------------------------+
@@ -142,7 +142,7 @@ The application reads GPS data through a Serial port, and feeds a `WebSocket` se
 The data can then be visualized through a Web interface using Web Component(s).
 
 To enable everything, you need to:
-1. Have a Raspberry PI
+1. Have a Raspberry Pi
 1. Flash its SD card and connect it to a network
 1. Install build tools
 1. Install `git`
@@ -151,7 +151,7 @@ To enable everything, you need to:
 1. Install *_all_* the required `node` modules
 1. Drill down into the right directory
 1. Start the `node` server with the right script
-1. Access the Raspberry PI from another machine on the same network, and reach the right HTML page.
+1. Access the Raspberry Pi from another machine on the same network, and reach the right HTML page.
 
 This is certainly not difficult, but there are many ways to do several mistakes at each step
 of the process.
@@ -161,7 +161,7 @@ It will build the image, and then run it.
 The image can also be pushed to a repository, so users would not have to build it.
 Just to run it after downloading it.
 
-The only pre-requisite would be to have installed `Docker` on the machine (the Raspberry PI here),
+The only pre-requisite would be to have installed `Docker` on the machine (the Raspberry Pi here),
 as explained at the top of this document.
 
 In this case, the full `Docker` image creation (named `oliv-nodepi` below) comes down to:
@@ -208,7 +208,7 @@ Once the step above is completed, plug in your GPS, and run
 ```bash
  $ docker run -p 9876:9876 -t -i --privileged -v /dev/ttyUSB0:/dev/ttyUSB0 -d oliv-nodepi:latest
 ```
-Then from a machine seeing the Raspberry PI on its network (it can be the Raspberry PI itself),
+Then from a machine seeing the Raspberry Pi on its network (it can be the Raspberry Pi itself),
 reach http://raspi:9876/data/demos/gps.demo.wc.html in a browser.
 
 ![Running](DockerAtWork.png)

@@ -20,7 +20,7 @@ Graphical User Interface will follow.
 
 ### Several Flavors
 - Standalone
-    Radar reading and User Interface on the Raspberry PI
+    Radar reading and User Interface on the Raspberry Pi
 - Serial interface
 - TCP interface.
 - REST Interface. TODO

@@ -1,6 +1,6 @@
 FROM resin/raspberrypi3-debian:latest
 #
-# NMEA Multiplexer running on the Raspberry PI.
+# NMEA Multiplexer running on the Raspberry Pi.
 # Reads a GPS from serial port, forward to a file and a small OLED screen
 # Web and REST interfaces available.
 #

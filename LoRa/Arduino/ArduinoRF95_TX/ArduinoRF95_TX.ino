@@ -71,11 +71,11 @@ void setup() {
 int startsWith(const char *pre, const char *str) {
   return strncmp(pre, str, strlen(pre)) == 0;
 }
-          
+
 void loop() {
-  
+
   if (stringComplete) {
-    // Return the string coming from the Serial Port (Raspberry PI ?)
+    // Return the string coming from the Serial Port (Raspberry Pi ?)
     String st = inputString;
   // DATA Payload: read from the RaspberryPI, Serial port.
     inputString = "";       // Reset - 1
@@ -83,18 +83,18 @@ void loop() {
 
     Serial.println("LORA-0010: Transmitting..."); // Send a message to rf95_server (receiver)
 
-    Serial.print("LORA-0011: Sending {"); 
-    Serial.print(st); 
+    Serial.print("LORA-0011: Sending {");
+    Serial.print(st);
     Serial.print(" (");
     Serial.print(st.length());
     Serial.println(")}");
-  
+
     delay(10);
 
 //  Serial.print(">> "); Serial.println(st);
     char charBuf[st.length() + 1];
     st.toCharArray(charBuf, st.length());
-    rf95.send((uint8_t *)charBuf, st.length());     
+    rf95.send((uint8_t *)charBuf, st.length());
 
     Serial.println("LORA-0012: Waiting for packet (send) to complete...");
     delay(10);
@@ -102,7 +102,7 @@ void loop() {
     // Now wait for a reply
     uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
     uint8_t len = sizeof(buf);
-  
+
     Serial.println("LORA-0013: Waiting for reply...");
     if (rf95.waitAvailableTimeout(1000)) { // Wait 1s max.
       // Should be a reply message for us now

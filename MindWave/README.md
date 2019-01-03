@@ -1,7 +1,7 @@
 ## NeuroSky MindWave
 See the [NeuroSky](http://neurosky.com/) web site.
 
-Just plug the dongle in one of the USB ports of the Raspberry PI, and it just works. I used `/dev/ttyUSB0` with a
+Just plug the dongle in one of the USB ports of the Raspberry Pi, and it just works. I used `/dev/ttyUSB0` with a
 baud rate of `115200` in the samples of this project.
 
 There is _asolutely no need_ for BlueTooth or any such technology, all you need is to read the serial port the
@@ -25,7 +25,7 @@ The most important thing to make it work is to implement the `mindwave.MindWaveC
 
 See how it is done in `ClientOne` and `ClientTwo`.
 
-There is also a rough Swing GUI - a bit too demanding for the Raspberry PI - that shows what's going on.
+There is also a rough Swing GUI - a bit too demanding for the Raspberry Pi - that shows what's going on.
 <p align="center">
   <img src="blink.jpg">
 </p>

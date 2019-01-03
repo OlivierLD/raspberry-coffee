@@ -49,7 +49,7 @@ public class VL53L0X_v1 {
 	public VL53L0X_v1(int address) throws I2CFactory.UnsupportedBusNumberException {
 		try {
 			// Get i2c bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
 			if (verbose) {
 				System.out.println("Connected to bus. OK.");
 			}

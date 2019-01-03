@@ -2,7 +2,7 @@
 #include "HttpClient/HttpClient.h"
 
 /**
-* This one pings the weather station app (running on the Raspberry PI)
+* This one pings the weather station app (running on the Raspberry Pi)
 * to get the json object that will be used to feed the IoT server on
 * a regular base, for "real-time" data.
 */

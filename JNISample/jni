@@ -18,8 +18,8 @@ echo \>\> Compiling C
 RPI=`uname -a | grep arm`
 if [ "$RPI" != "" ]
 then
-  # For Raspberry PI. -lwiringPi is not mandatory in this case...
-  echo C compilation on the Raspberry PI
+  # For Raspberry Pi. -lwiringPi is not mandatory in this case...
+  echo C compilation on the Raspberry Pi
   g++ -Wall -shared -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -lwiringPi -o libHelloWorld.so
 else
   DARWIN=`uname -a | grep Darwin`
@@ -30,7 +30,7 @@ else
     gcc -Wall -shared -fPIC -I$JAVA_HOME/include -I$JAVA_HOME/include/darwin HelloWorld.c -o libHelloWorld.jnilib
   else
     # For Linux Debian
-    echo C Compilation on Linux \(Not Raspberry PI\)
+    echo C Compilation on Linux \(Not Raspberry Pi\)
     g++ -Wall -shared -fPIC -I$JAVA_HOME/include -I$JAVA_HOME/include/linux HelloWorld.c -o libHelloWorld.so
   fi
 fi

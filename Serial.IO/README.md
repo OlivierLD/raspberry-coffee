@@ -1,6 +1,6 @@
 ## Lib RxTx, Serial communication.
 This involves the classes located in the package `gnu.io`.
-To install this package (on Raspberry PI, or more generally on Ubuntu), type
+To install this package (on Raspberry Pi, or more generally on Ubuntu), type
 ```
 $> sudo apt-get install librxtx-java
 ```
@@ -18,15 +18,15 @@ It requires:
 ```
 
 ### To run the example
-The example illustrates a Serial communication between the Raspberry PI (or any other machine) and an Arduino Uno.
+The example illustrates a Serial communication between the Raspberry Pi (or any other machine) and an Arduino Uno.
 
 To proceed:
 - Upload the sketch `ArduinoSerialEvent.ino` on the Arduino Uno
-- Connect the USB cable, between the Arduino and the Raspberry PI
+- Connect the USB cable, between the Arduino and the Raspberry Pi
 - Make sure the Serial port names match in the `ArduinoEchoClient.java` (or use the System variable named `serial.port`)
-    
+
 The example send several sentences to the Arduino, the Arduino sends the sentences back to the
-Raspberry PI, in reverse order. A string like 'arduino' will be sent back as 'oniudra'. 
+Raspberry Pi, in reverse order. A string like 'arduino' will be sent back as 'oniudra'.
 The example is reversing the sentences of a `Lorem ipsum` paragraph (look in the code for details).
 
 ```
@@ -48,9 +48,9 @@ Writing to the serial port.
 	>>> [From Arduino] Received:
 		0A                                                  .
 	>>> [From Arduino] Received:
-		20 2E 74 61 70 74 75 6C 6F 76 20 74 61 72 65 20      .taptulov tare 
+		20 2E 74 61 70 74 75 6C 6F 76 20 74 61 72 65 20      .taptulov tare
 		6D 61 75 71 69 6C 61 20 61 6E 67 61 6D 20 65 72     mauqila angam er
-		6F 6C 6F 64 20 74 65 65 72 6F 61 6C 20 74 75 20     olod teeroal tu 
+		6F 6C 6F 64 20 74 65 65 72 6F 61 6C 20 74 75 20     olod teeroal tu
 		74 6E 75 64 69 63 6E 69 74 20 64 6F 6D 73 69 75     tnudicnit domsiu
 		65 20 68 62 69 6E 20 79 6D 6D 75 6E 6F 6E 20 6D     e hbin ymmunon m
 		61 69 64 20 64 65 73 0D 0A                          aid des..
@@ -70,15 +70,15 @@ Writing to the serial port.
 		0A                                                  .
 	>>> [From Arduino] Received:
 		20 2C 74 61 75 71 65 73 6E 6F 63 20 65 69 74 73      ,tauqesnoc eits
-		65 6C 6F 6D 20 65 73 73 65 20 74 69 6C 65 76 20     elom esse tilev 
+		65 6C 6F 6D 20 65 73 73 65 20 74 69 6C 65 76 20     elom esse tilev
 		65 74 61 74 75 70 6C 75 76 20 6E 69 20 74 69 72     etatupluv ni tir
-		65 72 64 6E 65 68 20 6E 69 20 72 6F 6C 6F 64 20     erdneh ni rolod 
+		65 72 64 6E 65 68 20 6E 69 20 72 6F 6C 6F 64 20     erdneh ni rolod
 		65 72 75 69 72 69 20 6D 75 65 20 6C 65 76 20 6D     eruiri mue lev m
 		65 74 75 61 20 73 69 75 44 0D 0A                    etua siuD..
 	>>> [From Arduino] Received:
 		0A                                                  .
 	>>> [From Arduino] Received:
-		20 6D 69 73 73 69 6E 67 69 64 20 6F 69 64 6F 20      missingid oido 
+		20 6D 69 73 73 69 6E 67 69 64 20 6F 69 64 6F 20      missingid oido
 		6F 74 73 75 69 20 74 65 20 6E 61 73 6D 75 63 63     otsui te nasmucc
 		61 20 74 65 20 73 6F 72 65 20 6F 72 65 76 20 74     a te sore orev t
 		61 20 73 69 73 69 6C 69 63 61 66 20 61 6C 6C 75     a sisilicaf allu
@@ -87,7 +87,7 @@ Writing to the serial port.
 	>>> [From Arduino] Received:
 		0A                                                  .
 	>>> [From Arduino] Received:
-		2E 69 73 69 6C 69 63 61 66 20 61 6C 6C 75 6E 20     .isilicaf allun 
+		2E 69 73 69 6C 69 63 61 66 20 61 6C 6C 75 6E 20     .isilicaf allun
 		74 69 61 67 75 65 66 20 65 74 20 65 72 6F 6C 6F     tiaguef et erolo
 		64 20 73 69 75 64 20 65 75 67 75 61 20 74 69 6E     d siud eugua tin
 		65 6C 65 64 20 6C 69 72 7A 7A 20 6D 75 74 61 74     eled lirzz mutat
@@ -96,7 +96,7 @@ Writing to the serial port.
 	>>> [From Arduino] Received:
 		0A                                                  .
 	>>> [From Arduino] Received:
-		20 74 61 72 65 63 61 6C 70 20 6D 69 7A 61 6D 20      tarecalp mizam 
+		20 74 61 72 65 63 61 6C 70 20 6D 69 7A 61 6D 20      tarecalp mizam
 		64 6F 75 71 20 64 69 20 67 6E 69 6D 6F 64 20 74     douq di gnimod t
 		65 69 64 72 65 70 6D 69 20 6C 69 68 69 6E 20 65     eidrepmi lihin e
 		75 67 6E 6F 63 20 6E 6F 69 74 70 6F 20 64 6E 65     ugnoc noitpo dne
@@ -107,7 +107,7 @@ Writing to the serial port.
 		0A                                                  .
 	>>> [From Arduino] Received:
 		20 3B 6D 61 74 69 73 6E 69 20 6D 65 74 61 74 69      ;matisni metati
-		72 61 6C 63 20 74 6E 65 62 61 68 20 6E 6F 6E 20     ralc tnebah non 
+		72 61 6C 63 20 74 6E 65 62 61 68 20 6E 6F 6E 20     ralc tnebah non
 		69 70 79 54 20 2E 6D 75 73 73 61 20 6D 69 73 73     ipyT .mussa miss
 		6F 70 20 72 65 63 61 66 0D 0A                       op recaf..
 	>>> [From Arduino] Received:
@@ -131,7 +131,7 @@ Writing to the serial port.
 	>>> [From Arduino] Received:
 		20 2E 6D 75 72 6F 74 63 65 6C 20 6D 75 69 64 75      .murotcel muidu
 		74 65 75 73 6E 6F 63 20 6D 65 6E 6F 69 74 61 74     teusnoc menoitat
-		75 6D 20 72 75 74 69 75 71 65 73 20 69 75 71 20     um rutiuqes iuq 
+		75 6D 20 72 75 74 69 75 71 65 73 20 69 75 71 20     um rutiuqes iuq
 		2C 73 75 63 69 6D 61 6E 79 64 20 73 75 73 73 65     ,sucimanyd susse
 		63 6F 72 70 20 6D 61 69 74 65 20 74 73 65 20 73     corp maite tse s
 		61 74 69 72 61 6C 43 0D 0A                          atiralC..
@@ -146,10 +146,10 @@ Writing to the serial port.
 	>>> [From Arduino] Received:
 		0A                                                  .
 	>>> [From Arduino] Received:
-		20 2E 61 6D 69 63 65 64 20 61 74 6E 69 75 71 20      .amiced atniuq 
+		20 2E 61 6D 69 63 65 64 20 61 74 6E 69 75 71 20      .amiced atniuq
 		74 65 20 61 6D 69 63 65 64 20 61 74 72 61 75 71     te amiced atrauq
 		20 61 6C 75 63 61 65 73 20 72 65 70 20 73 69 74      alucaes rep sit
-		61 74 69 6E 61 6D 75 68 20 73 61 6D 72 6F 66 20     atinamuh samrof 
+		61 74 69 6E 61 6D 75 68 20 73 61 6D 72 6F 66 20     atinamuh samrof
 		6D 75 72 61 72 65 74 74 69 6C 20 74 69 72 65 75     murarettil tireu
 		73 6F 70 65 74 6E 61 0D 0A                          sopetna..
 	>>> [From Arduino] Received:
@@ -167,9 +167,9 @@ Done.
 
 Process finished with exit code 0
 ```
-If you are running from a Raspberry PI, you need sudo access. Run the script named `runArduinoSample` instead.
+If you are running from a Raspberry Pi, you need sudo access. Run the script named `runArduinoSample` instead.
 
-On the Raspberry PI, the Serial port needs to be accessed as `root`. In case Gradle cannot do that, you can use the provided script named `runArduionoSample`.
+On the Raspberry Pi, the Serial port needs to be accessed as `root`. In case Gradle cannot do that, you can use the provided script named `runArduionoSample`.
 ```
 $ ./runArduinoSample
 ```

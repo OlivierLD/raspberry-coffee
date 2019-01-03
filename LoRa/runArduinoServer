@@ -13,7 +13,7 @@ CP=./build/libs/LoRa-1.0-all.jar
 JAVA_OPTIONS=
 SERIAL_PRMS=
 #
-# for Raspberry PI
+# for Raspberry Pi
 # JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"
 # SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyUSB0"
 # SERIAL_PRMS="$SERIAL_PRMS -Dserial.port=/dev/ttyACM0"

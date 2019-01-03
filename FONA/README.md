@@ -24,7 +24,7 @@ The code above works as expected. The `delay` method is defined in the code, it 
 
 ### Two approaches
 This project contains two parts, each of them illustrating a way to access the FONA:
-* One is using the Serial connection between the Raspberry PI and the Arduino where the FONA is connected
+* One is using the Serial connection between the Raspberry Pi and the Arduino where the FONA is connected
 * One is using the Serial connection directly to the FONA.
 
 For the first approach, see the package named `fona.arduino`, for the second one, see the package named `fona.manager`.
@@ -41,7 +41,7 @@ to implement the `fona.pi4jmanager.FONAClient` interface, mostly for the callbac
 
 ##### December 2017
 Adding the possibility to access the FONA from the `LibRxTx` API.
-This allows other machines than the Raspberry PI to access the FONA.
+This allows other machines than the Raspberry Pi to access the FONA.
 
 > Quick note: on a Mac, you might need to install [Prolific drivers](https://plugable.com/drivers/prolific/).
 

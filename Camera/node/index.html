@@ -5,12 +5,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="Pragma" content="no-cache, must-revalidate">
     <title>RasPi Camera</title>
-    <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>   
+    <link rel="stylesheet" href="css/stylesheet.css" type="text/css"/>
     <script type="text/javascript">
-      
+
   var calledBy = document.location.toString();
   var machine, port, secured;
-  var regExp = new RegExp("(http|ws)(.?):[/]{2}([^/|^:]*):?(\\d*)/(.*)");  
+  var regExp = new RegExp("(http|ws)(.?):[/]{2}([^/|^:]*):?(\\d*)/(.*)");
   var matches = regExp.exec(calledBy);
   try {
   //scheme  = matches[1];
@@ -27,7 +27,7 @@
   var resetStatus = function() {
     statusFld.innerHTML = "";
   };
-      </script>    
+      </script>
       <script type="text/javascript">
   /*
    * Init the App here
@@ -44,7 +44,7 @@
 
 //  setInterval(updateImage, 2000);
   };
-  
+
   var updateImage = function() {
     console.log('Refreshing...');
     document.getElementById("snap").src.reload();
@@ -57,13 +57,13 @@
   <body>
     <table width="100%" border="0">
       <tr>
-        <td valign="top"><h2>RasPI Camera</h2></td>
+        <td valign="top"><h2>RasPi Camera</h2></td>
         <td align="right" valign="bottom"><a href="" onclick="javascript:reset(); return false;" title="Clear messages"><small>Reset</small></a></td>
       </tr>
       <tr>
         <td valign="top" colspan="2" align="center">
           <iframe id="snap" src="snap.html" width="640" height="480" frameborder="0" scrolling="no">What?</iframe>
-        </td>        
+        </td>
       </tr>
       <tr>
         <td valign="top" colspan="2">
@@ -87,7 +87,7 @@
       <tr>
         <td valign="top" align="right" colspan="2"><a href="" onclick="javascript:resetStatus(); return false;" title="Clear status board"><small>Reset Status</small></a></td>
       </tr>
-    </table>  
+    </table>
     <hr>
   </body>
 </html>

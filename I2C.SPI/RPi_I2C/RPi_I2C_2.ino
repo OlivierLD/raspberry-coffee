@@ -1,10 +1,10 @@
-/* 
- * Sample. 
- * For I2C communication with the Raspberry PI.
+/*
+ * Sample.
+ * For I2C communication with the Raspberry Pi.
  * Arduino is a SLAVE
- * 
+ *
  * Wiring:
- * RasPI    Arduino
+ * RasPi    Arduino
  * ----------------
  * GND #9   GND
  * SDA #3   SDA (or A4, before Rev3)
@@ -35,7 +35,7 @@ boolean incomingStringMessage = false;
 void setup() {
   Serial.begin(9600);
   Serial.println("We're in");
-  
+
   Wire.begin(SLAVE_ADDRESS);
   Wire.onReceive(processMessage); // Received from master
   Wire.onRequest(sendReply);      // Master is reading

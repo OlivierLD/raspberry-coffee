@@ -2,7 +2,7 @@
  * Arduino is a SLAVE
  *
  * Wiring:
- * RasPI  | Arduino
+ * RasPi  | Arduino
  * -------+--------
  * GND #9 | GND
  * SDA #3 | SDA (or A4, before Rev3)
@@ -20,7 +20,7 @@ boolean ledOn = false;
 void setup() {
   Serial.begin(9600);
   Serial.println("We're in");
-  
+
   pinMode(ledPin, OUTPUT);
   Wire.begin(SLAVE_ADDRESS);
   Wire.onReceive(processMessage);
@@ -36,7 +36,7 @@ void processMessage(int n) {
   Serial.print("Read from Wire:"); Serial.println(ch);
   if (ch == 'l') { // Lowercase L
     Serial.println("Toggling LED");
-    toggleLED(); 
+    toggleLED();
   } else {
     Serial.println("... Doing nothing");
   }

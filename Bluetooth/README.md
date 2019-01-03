@@ -18,7 +18,7 @@ On your Mac, choose Apple menu > System Preferences, then click Bluetooth. Your 
 https://www.piborg.org/blog/pi-zero-wifi-bluetooth
 
 
-### On the Raspberry PI
+### On the Raspberry Pi
 ```
  $ lsusb
 ```
