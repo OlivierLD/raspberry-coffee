@@ -415,7 +415,7 @@ public class LSM303 {
 				// Raw data
 	//		System.out.println(String.format("%d;%d;%d;%d;%d;%d", accelX, accelY, accelZ, magneticX, magneticY, magneticZ));
 				// Filtered (smoothed)
-				System.out.println(String.format("%.2f;%.2f;%.2f;%.2f;%.2f;%.2f", accXfiltered, accYfiltered, accZfiltered, magXfiltered, magYfiltered, magZfiltered));
+				System.out.println(String.format("%f;%f;%f;%f;%f;%f", accXfiltered, accYfiltered, accZfiltered, magXfiltered, magYfiltered, magZfiltered));
 			}
 			try {
 				Thread.sleep(this.wait);
