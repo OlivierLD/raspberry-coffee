@@ -153,7 +153,7 @@ public class LSM303 {
 	}
 
 	public LSM303(boolean startOnLoad) throws I2CFactory.UnsupportedBusNumberException, IOException {
-		this(EnabledFeature.BOTH, true);
+		this(EnabledFeature.BOTH, startOnLoad);
 	}
 
 	public LSM303(EnabledFeature feature, boolean startOnLoad) throws I2CFactory.UnsupportedBusNumberException, IOException {
