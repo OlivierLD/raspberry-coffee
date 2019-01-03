@@ -64,7 +64,7 @@ I<sup>2</sup>C, DC and Stepper Motors
 SPI 84x48 Monochrome LCD. https://www.adafruit.com/product/338
 
 ## Miscellaneous
-I<sup>2</sup>C communication between Raspberry PI and Arduino.
+I<sup>2</sup>C communication between Raspberry Pi and Arduino.
 Package `i2c.comm`.
 
 ## Examples

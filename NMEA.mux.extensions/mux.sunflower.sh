@@ -25,7 +25,7 @@ if [ "$MACHINE" = "Mac" ]
 then
   JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=../Serial.IO/libs" # for Mac
 else
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"      # for Raspberry PI
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni"      # for Raspberry Pi
 fi
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dserial.data.verbose=false"
@@ -54,7 +54,7 @@ if [ "$MACHINE" = "Mac" ]
 then
   CP=$CP:../Serial.IO/libs/RXTXcomm.jar # for Mac
 else
-  CP=$CP:/usr/share/java/RXTXcomm.jar   # For Raspberry PI
+  CP=$CP:/usr/share/java/RXTXcomm.jar   # For Raspberry Pi
 fi
 #
 # For JFR
@@ -72,7 +72,7 @@ then
   # No need to use sudo on Mac
   java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 else
-  # use sudo on Raspberry PI
+  # use sudo on Raspberry Pi
   sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 fi
 #

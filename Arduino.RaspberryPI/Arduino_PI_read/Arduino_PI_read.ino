@@ -1,5 +1,5 @@
 /*
- * Uses the Serial port to communicate with the Raspberry PI
+ * Uses the Serial port to communicate with the Raspberry Pi
  * Read from the Serial port
  * Write to the Serial port
  *
@@ -22,14 +22,14 @@ void setup()
   Serial.begin(9600);
 }
 
-int val = 0, 
+int val = 0,
     previous = 0;
 const String PREFIX =  "OS"; // Device Prefix
 const String ID     = "MSG"; // Sentence ID
 
 void loop()
 {
-  if (Serial.available())  
+  if (Serial.available())
   {
     int fromRPI = Serial.read(); // Read one character
     fromRPI -= '0'; // Possibly comes from the key-pad connected to the RPi
@@ -38,15 +38,15 @@ void loop()
     else
       digitalWrite(LED, HIGH);
   }
-  
+
   val = analogRead(A0);
-  
+
   if (abs(previous - val) > 3)
   {
     String payload = "LR," + String(val); // LR: Light Resistor
     String nmea = generateNMEAString(payload, PREFIX, ID);
     Serial.println(nmea);
-    
+
     if (val < THRESHOLD)
       digitalWrite(LED, HIGH);
     else

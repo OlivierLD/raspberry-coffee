@@ -52,13 +52,13 @@ public class InteractiveServoTester {
 			} catch (Exception npe) {
 //		} catch (NullPointerException npe) {
 				System.err.println("+------------------------------------------------------------");
-				System.err.println("| (InteractiveServoTester) PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");
+				System.err.println("| (InteractiveServoTester) PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry Pi...");
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}
 		} catch (UnsatisfiedLinkError | I2CFactory.UnsupportedBusNumberException oops) {
 			System.err.println("+---------------------------------------------------------------------");
-			System.err.println("| You might not be on a Raspberry PI, or PI4J/WiringPi is not there...");
+			System.err.println("| You might not be on a Raspberry Pi, or PI4J/WiringPi is not there...");
 			System.out.println("| Or you don't have enough credentials (sudo?).");
 			System.err.println("| Moving on anyway...");
 			System.err.println("+---------------------------------------------------------------------");

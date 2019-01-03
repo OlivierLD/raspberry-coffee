@@ -27,7 +27,7 @@ The idea here is to trigger the valve when the humidity goes below a given thres
 The valve opens a pipe connected to a tank of water.
 As the valve requires a 12 Volt power supply, it will be driven by relay.
 
-On the Raspberry PI, the code at https://github.com/drohm/pi-sht1x works fine to read the `STH10`, with the following wiring:
+On the Raspberry Pi, the code at https://github.com/drohm/pi-sht1x works fine to read the `STH10`, with the following wiring:
 
 ![Raspberry Wiring](./RaspberryPI.STH10_bb.png)
 
@@ -42,7 +42,7 @@ See in this project the class named `sensors.sth10.STH10Driver.java`.
 > The doc of the relay specifies that it should be fed with a `5V` power supply. This did not work for me on a single relay board.
 > (surprisingly, it was working OK on a 2-relay board). The relay goes on when the program is started, does not go down until
 > the program terminates with a `gpio.shutdown()`. The reason is that the states `HIGH` and `LOW` is evaluated by
-> comparing the power supply with the signal. As the GPIO header of the Raspberry PI delivers `3.3V`, the comparison with `5V`
+> comparing the power supply with the signal. As the GPIO header of the Raspberry Pi delivers `3.3V`, the comparison with `5V`
 > never finds it equal.
 >
 > Hooking the relay's power supply to `3.3V` fixes the issue, as the comparison with the power supply and the signal find them equals
@@ -95,7 +95,7 @@ $ java $JAVA_OPTIONS -cp $CP main.STH10 --help
 | --relay-pin:	Integer. BCM (aka GPIO) pin number of the SIGNAL pin of the RELAY. Default is --relay-pin:17.
 | --with-rest-server:	Boolean. Default 'false', starts a REST server is set to 'true'
 | --http-port:	Integer. The HTTP port of the REST Server. Default is 9999.
-| --simulate-sensor-values:	Boolean. Enforce sensor values simulation, even if running on a Raspberry PI. Default is 'false'. Note: Relay is left alone.
+| --simulate-sensor-values:	Boolean. Enforce sensor values simulation, even if running on a Raspberry Pi. Default is 'false'. Note: Relay is left alone.
 | --loggers:	Comma-separated list of the loggers. Loggers must implement DataLoggerInterface. Ex: --loggers:loggers.iot.AdafruitIOClient,loggers.text.FileLogger
 | --logging-pace:	Long, in milliseconds. The interval between each log entry. Default is 10000.
 | --help	Display the help and exit.
@@ -187,7 +187,7 @@ An ANSI version is available:
 Can prove useful for testing and calibrating.
 
 There is a REST server that helps sending values to the program
-- if you are not on a Raspberry PI
+- if you are not on a Raspberry Pi
 - if you want to enforce simulation (for tests)
 
 Any REST client does the job. Postman, curl, your own code...
@@ -240,7 +240,7 @@ $ curl -X GET http://localhost:1234/pws/sth10-data
 {"temperature":20.17,"humidity":30.23}
 ```
 
-The REST Server is part of this project, it's a very tiny one that runs fine even on the Raspberry PI Zero.
+The REST Server is part of this project, it's a very tiny one that runs fine even on the Raspberry Pi Zero.
 Details [here](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/common-utils/src/java/http/HTTPServer.java), also
 see the method `addRequestManager`.
 
@@ -260,7 +260,7 @@ First setting:
 
 ![In a box](./docimg/setting.01.jpg)
 
-This one is based on a `Raspberry PI Zero W`. The probe is in the soil. There is no water tank, and the hoses are not connected (yet). This is doing some data logging for now, to
+This one is based on a `Raspberry Pi Zero W`. The probe is in the soil. There is no water tank, and the hoses are not connected (yet). This is doing some data logging for now, to
 estimate the right values for humidity.
 
 In the `loggers` package, there are several examples of loggers. One is feeding two `feeds` on `Adafruit-IO`.

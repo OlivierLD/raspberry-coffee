@@ -95,7 +95,7 @@ public class MainMCP3008Sample {
 		System.out.println(
 				" Wiring of the MCP3008-SPI (without power supply):\n" +
 						" +---------++-------------------------------------------------+\n" +
-						" | MCP3008 || Raspberry PI                                    |\n" +
+						" | MCP3008 || Raspberry Pi                                    |\n" +
 						" +---------++------+--------------+------+---------+----------+\n" +
 						" |         || Pin# | Name         | Role | GPIO    | wiringPI |\n" +
 						" |         ||      |              |      | /BCM    | /PI4J    |\n" +
@@ -121,7 +121,7 @@ public class MainMCP3008Sample {
 				PinUtil.findByPin(cs).gpio(),
 				PinUtil.findByPin(cs).wiringPi()));
 		System.out.println(" +---------++------+--------------+-----+----------+----------+");
-		System.out.println("Raspberry PI is the Master, MCP3008 is the Slave:");
+		System.out.println("Raspberry Pi is the Master, MCP3008 is the Slave:");
 		System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
 		System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 		System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");

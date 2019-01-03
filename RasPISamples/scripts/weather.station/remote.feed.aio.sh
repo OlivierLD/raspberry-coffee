@@ -4,7 +4,7 @@ CP=./build/libs/RasPISamples-1.0-all.jar
 #
 # To invoke after running ./remote.snap.sh
 #
-# ./remote.snap.sh sends an HTTP request to the Raspberry PI where the camera is connected, to take the picture.
+# ./remote.snap.sh sends an HTTP request to the Raspberry Pi where the camera is connected, to take the picture.
 # Then it downloads the snapshot.
 # From there, it can be processed as below
 #

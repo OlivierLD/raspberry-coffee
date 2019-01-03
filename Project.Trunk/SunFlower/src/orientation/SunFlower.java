@@ -486,14 +486,14 @@ public class SunFlower implements RESTRequestManager {
 //		} catch (NullPointerException npe) {
 				foundPCA9685 = false;
 				System.err.println("+------------------------------------------------------------");
-				System.err.println("| (SunFlower) PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry PI...");
+				System.err.println("| (SunFlower) PCA9685 was NOT initialized.\n| Check your wiring, or make sure you are on a Raspberry Pi...");
 				System.err.println("| Moving on anyway...");
 				System.err.println("+------------------------------------------------------------");
 			}
 		} catch (UnsatisfiedLinkError | I2CFactory.UnsupportedBusNumberException oops) {
 			foundPCA9685 = false;
 			System.err.println("+---------------------------------------------------------------------");
-			System.err.println("| You might not be on a Raspberry PI, or PI4J/WiringPi is not there...");
+			System.err.println("| You might not be on a Raspberry Pi, or PI4J/WiringPi is not there...");
 			System.out.println("| Or you don't have enough credentials (sudo?).");
 			System.err.println("| Moving on anyway...");
 			System.err.println("+---------------------------------------------------------------------");
@@ -1387,7 +1387,7 @@ public class SunFlower implements RESTRequestManager {
 			System.out.println(
 					" Wiring of the MCP3008-SPI (without power supply):\n" +
 							" +---------++-----------------------------------------------+\n" +
-							" | MCP3008 || Raspberry PI                                  |\n" +
+							" | MCP3008 || Raspberry Pi                                  |\n" +
 							" +---------++------+------------+------+---------+----------+\n" +
 							" |         || Pin# | Name       | Role | GPIO    | wiringPI |\n" +
 							" |         ||      |            |      | /BCM    | /PI4J    |\n" +
@@ -1413,7 +1413,7 @@ public class SunFlower implements RESTRequestManager {
 					PinUtil.findByPin(cs).gpio(),
 					PinUtil.findByPin(cs).wiringPi()));
 			System.out.println(" +---------++------+------------+-----+----------+----------+");
-			System.out.println("Raspberry PI is the Master, MCP3008 is the Slave:");
+			System.out.println("Raspberry Pi is the Master, MCP3008 is the Slave:");
 			System.out.println("- Dout on the MCP3008 goes to MISO on the RPi");
 			System.out.println("- Din on the MCP3008 goes to MOSI on the RPi");
 			System.out.println("Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.");

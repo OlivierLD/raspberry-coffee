@@ -1,4 +1,4 @@
-### Quick Java Native Interface (JNI) Sample on the Raspberry PI
+### Quick Java Native Interface (JNI) Sample on the Raspberry Pi
 
 The Java Development Kit comes with the `javah` utility, this is the one you will use to generate a Java Native Interface (JNI).
 

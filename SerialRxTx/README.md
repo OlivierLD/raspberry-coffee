@@ -3,7 +3,7 @@ This is a Java implementation of a Serial client for the `raspi-serial-console`.
 
 This involves the `RxTx` classes located in the package `gnu.io`.
 
-To install this package (on Raspberry PI, or more generally on Ubuntu), type
+To install this package (on Raspberry Pi, or more generally on Ubuntu), type
 ```
 $> sudo apt-get install librxtx-java
 ```
@@ -13,26 +13,26 @@ For other Operating Systems, just use your favorite search engine.
 It runs the same - hopefully - on Windows, Mac, Linux, no need for `screen` or `PuTTY`...
 
 Next, we'll see how to transfer files (text and binaries).
- 
+
 ### Enable / disable the serial console.
 The serial-console must have been enabled for this to work.
 ```bash
  $ sudo raspi-config
-``` 
+```
 Go to **“9 Advanced Function menu”**, then **“A8.Serial”** and select **“No”** to disable shell terminal on the serial port, **"Yes"** to enable it.
 
 See [this document](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-5-using-a-console-cable/enabling-serial-console) for more details.
- 
+
 ### Build
-On the machine you want to connect to the Raspberry PI from, just run
+On the machine you want to connect to the Raspberry Pi from, just run
 ```bash
  $ cd SerialRxTx
- $ ../gradlew clean build 
+ $ ../gradlew clean build
 ```
  This will generate a jar file `build/libs/SerialRxTx-1.0.jar`, required by the scripts mentioned below.
- 
+
 ### Examples
-The most important is probably to set the `java.library.path` to its right value. `RXTXcomm.jar` uses Java Native Interface (`JNI`), to invoke 
+The most important is probably to set the `java.library.path` to its right value. `RXTXcomm.jar` uses Java Native Interface (`JNI`), to invoke
 some native library(ies). The `java.library.path` tells Java where to look for them.
 
 Moreover, the library in the directory pointed to by `java.library.path` and `RXTXcomm.jar` must match. If this is not the case,
@@ -43,7 +43,7 @@ you get a warning like this when launching the scripts:
         native lib Version = RXTX-2.2pre2
  ```
 
-If those values are set, and if you get a privilege related error message when accessing your serial port, it probably comes 
+If those values are set, and if you get a privilege related error message when accessing your serial port, it probably comes
 from a severe mismatch between your system libraries and the version of `RXTXcomm.jar`.
 
 #### From a Mac
@@ -79,7 +79,7 @@ $> ./run.mac
    Opening port /dev/tty.usbserial:115200 ...
    Serial port connected: true
    IO Streams initialized
-   
+
    Raspbian GNU/Linux 8 RPiZero ttyAMA0
    RPiZero login: pi
    pi
@@ -131,7 +131,7 @@ $> ./run.mac
     80533     4 -rw-------  1 pi   pi        108 Oct 22 01:37 .Xauthority
     11389     4 -rw-------  1 pi   pi        353 Oct 22 01:37 .xsession-errors
      1790     4 -rw-------  1 pi   pi        353 Oct 22 01:31 .xsession-errors.old
-   pi@RPiZero:~$ 
+   pi@RPiZero:~$
 ```
 
 ### From Windows

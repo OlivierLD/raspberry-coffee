@@ -2,7 +2,7 @@
 #
 # Starts a SunFlower server for a looooong run.
 #
-# This can be run on any Linux machine, not only a Raspberry PI.
+# This can be run on any Linux machine, not only a Raspberry Pi.
 # If not on a Raspberry Pi, then the servo part will be ignored,
 # but the Sun data [art remains (hence its interest).
 #

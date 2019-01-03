@@ -12,7 +12,7 @@ Camera can be oriented with a PCA9685 connected on a [pan-tilt](https://www.adaf
  $ ../gradlew [--no-daemon] shadowJar
 ```
 
-### To run, on the Raspberry PI
+### To run, on the Raspberry Pi
 ```bash
  $ ./runCamServer
 ```

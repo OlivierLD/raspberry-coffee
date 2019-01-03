@@ -115,7 +115,7 @@ It can be appropriate when there is no network in the area you are in, for examp
 
 Setting up the Raspberry Pi to be an access point is well documented on the [Adafruit website](https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software).
 
-The thing is that when the Raspberry PI becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
+The thing is that when the Raspberry Pi becomes a WiFi hotspot, you cannot use it to access the Internet, cannot use `apt-get install`, cannot use
 `git pull origin master`, etc, that can rapidly become quite frustrating.
 
 Now, for development purpose, you may very well need to have an Access Point **_and_** an Internet access (i.e. access to your local or wide area network).
@@ -124,7 +124,7 @@ For that, you need 2 WiFi adapters (yes, you could also use an Ethernet connecti
 Recent Raspberry Pis are WiFi-enabled, you just need a WiFi dongle, that would fit on a USB port.
 On older Raspberry Pis (not WiFi-enabled), you need 2 USB dongles.
 
-As we said above, to enable `hostapd` to have your Raspberry PI acting as a WiFi hotspot, you can follow
+As we said above, to enable `hostapd` to have your Raspberry Pi acting as a WiFi hotspot, you can follow
 <a href="https://learn.adafruit.com/setting-up-a-raspberry-pi-as-a-wifi-access-point/install-software" target="adafruit">those good instructions</a> from the Adafruit website.
 
 >  Note: during the steps above, I had to change the file `/etc/default/isc-dhcp-server`, at the end, for the `isc-dhcp-server` service to start:
@@ -155,8 +155,8 @@ wme_enabled=1
 ```
 > The name (`ssid`) and password (`wpa_passphrase`) of the network created by the Access Point is in the same file, `/etc/hostapd/hostapd.conf`, as well as the association between the network and the interface (`wlan0` here).
 
-The Raspberry PI 3 and the Zero W already have one embedded WiFi port, I just added another one, the small USB WiFi dongle I used to use
-on the other Raspberry PIs.
+The Raspberry Pi 3 and the Zero W already have one embedded WiFi port, I just added another one, the small USB WiFi dongle I used to use
+on the other Raspberry Pis.
 This one becomes named `wlan1`. All I had to do was to modify `/etc/network/interfaces`:
 
 ```
@@ -203,7 +203,7 @@ subnet 192.168.127.0 netmask 255.255.255.0 {
 ```
 The lines to pay attention to are the ones with a `127` in it...
 
-Now, when the `wlan1` is plugged in, this Raspberry PI is a WiFi hotspot, *_and_* has Internet access.
+Now, when the `wlan1` is plugged in, this Raspberry Pi is a WiFi hotspot, *_and_* has Internet access.
 
 This means that when you are on a Raspberry Pi with **two** WiFi adapters (the Raspberry Pi 3 with an extra dongle, where you do you developments from for example), you
 have **two** WiFi interfaces, `wlan0` and `wlan1`.

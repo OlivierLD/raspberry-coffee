@@ -18,7 +18,7 @@ do
   curl http://$WEATHER_STATION_IP:8080/snap?rot=270
   NOW=$(date +"%Y_%m_%d_%H_%M_%S")
   IMG_NAME=snap-$NOW.jpg
-  # Download the snapshot from the Raspberry PI
+  # Download the snapshot from the Raspberry Pi
   sshpass -p 'pi' scp pi@$WEATHER_STATION_IP:~/raspberry-pi4j-samples/RasPISamples/web/snap-test.jpg ./web/$IMG_NAME
   # open web
   echo see $IMG_NAME in the 'web' directory.

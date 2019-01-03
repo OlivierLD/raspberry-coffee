@@ -31,16 +31,13 @@
     // So the cube isn't visible yet. Hence, we move the camera towards 5 units along the +ve direction in z-axis.
     camera.position.z = 5;
 
-
-
-
     // Similar to the cube, here we create a sphere.
     // The THREE.SphereGeometry method takes 4 arguments.
     // 1. radius - sets the radius of the sphere.
     // 2. segmentsWidth - increasing this will result in a smoother sphere at the cost of performance.
     // 3. segmentsHeight - same as segmentsWidth
     var spheregeometry = new THREE.SphereGeometry(0.8, 16, 16);
-    var spherematerial = new THREE.MeshBasicMaterial({wireframe: true, color: 0x000000});
+    var spherematerial = new THREE.MeshBasicMaterial({ wireframe: true, color: 0xff0000 });
     var sphere = new THREE.Mesh(spheregeometry, spherematerial);
 
     // As earlier, at this point, the creates sphere will be at (0,0,0), which is where the cube lies.
@@ -49,7 +46,6 @@
 
     // Now, we add the sphere to the scene.
     scene.add(sphere);
-
 
     // The cylinder is created in this section.
     // The THREE.CylinderGeometry method takes 5 arguments.

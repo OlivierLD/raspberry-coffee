@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Important: On the Raspberry PI, make sure you've run
+ * Important: On the Raspberry Pi, make sure you've run
  * Prompt> rpi-serial-console disable (or its equivalent)
  * and re-booted.
  * =====================================
@@ -47,7 +47,7 @@ import java.util.Set;
  * IMPORTANT:
  * ==========
  * This version uses Lib-RxTx for Java, and <b>not</b> the com.pi4j.io.serial package of PI4J.
- * As such, it could possibly run on other machines than the Raspberry PI.
+ * As such, it could possibly run on other machines than the Raspberry Pi.
  *
  */
 public class FONAManager implements SerialIOCallbacks {

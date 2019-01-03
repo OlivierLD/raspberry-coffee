@@ -51,7 +51,7 @@ The code for the Java Motor HAT is in the [I2C.SPI project](https://github.com/O
 
 The `node` server is also an HTTP server, that serves the web pages used by the clients at the left of the diagram.
 
-The `node` server can run on the Raspberry PI , or on another machine (in which case the `ws.uri` System variable in the Java code must be tweaked to point to it).
+The `node` server can run on the Raspberry Pi , or on another machine (in which case the `ws.uri` System variable in the Java code must be tweaked to point to it).
 
 The actions (buttons pushed and released, etc) on the user interface (browser) are translated into `JSON` objects sent to the
 WebSocket server. When receiving a message, the server re-broadcasts it to the connected client(s).

@@ -74,7 +74,7 @@ Honestly, **no** embarqued electronic station can come up with a right evaluatio
 - The leeway
 - The current
 
-Being able to _compute_ those data, and then _inject_ them in the NMEA stream is a real asset (current will be `VDR` - Set and Drift). The Raspberry PI is perfectly equipped to take care of all that, and for a ridiculous energy consumption.
+Being able to _compute_ those data, and then _inject_ them in the NMEA stream is a real asset (current will be `VDR` - Set and Drift). The Raspberry Pi is perfectly equipped to take care of all that, and for a ridiculous energy consumption.
 
 ### What to calculate True Wind with?
 

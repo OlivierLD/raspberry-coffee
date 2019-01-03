@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# For the RasPI connected to an Arduino
+# For the RasPi connected to an Arduino
 #
 if [ "$PI4J_HOME" = "" ]
 then

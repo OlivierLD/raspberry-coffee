@@ -14,7 +14,7 @@
  - [MQTT](#using-mqtt)
  - [REST](#using-rest)
 
- This is a _functioning_ example intending to demonstrate how to publish information gathered from the Raspberry PI.
+ This is a _functioning_ example intending to demonstrate how to publish information gathered from the Raspberry Pi.
  The information here is the tension (aka voltage) of a battery.
  The battery can be in a remote place, and from wherever you are, you want to make sure its level does not
  drop below a given threshold.
@@ -22,7 +22,7 @@
  All the code - mentioned below and contained in this project - can be run for real.
 
 ##### Read the tension (get the data to emit).
- As the Raspberry PI's GPIO pins are all digital ones, to read the battery's tension, you need an Analog to Digital Converter (ADC).
+ As the Raspberry Pi's GPIO pins are all digital ones, to read the battery's tension, you need an Analog to Digital Converter (ADC).
  As you can see in the Fritzing diagram below, we will use here an MCP3008. It is cheap, and good enough for our purpose.
 
 ##### Publish it
@@ -57,7 +57,7 @@ if you have an email account, then sending the battery voltage by email could be
 that it is not a _real time_ communication, there is always a delay between the moment when an email
 is sent and the moment when it is received.
 
-It can go both ways though. The Raspberry PI can send emails, and receive some (by polling the INBOX).
+It can go both ways though. The Raspberry Pi can send emails, and receive some (by polling the INBOX).
 As long as the _received_ email complies with a given format, it can be parsed and then managed accordingly.
 
 #### Example
@@ -176,7 +176,7 @@ event like `flight-status-update`, and whenever such an update happens on the se
 corresponding message would be sent to your browser, without you having to request it.
 
 In our case, we would have:
-- The Raspberry PI publishing events to a WebSocket server
+- The Raspberry Pi publishing events to a WebSocket server
 - All the clients having subscribed to those events would be notified
 
 It obviously requires a WebSocket Server.
@@ -185,7 +185,7 @@ It obviously requires a WebSocket Server.
  Could be very convenient for a Local Area Network (LAN), like between devices within the same home for example.
 
 ###### To run it on your LAN
-You need to have installed Node.js on the Raspberry PI (Google it if needed, you'll find how).
+You need to have installed Node.js on the Raspberry Pi (Google it if needed, you'll find how).
 
  First time installation (local WebSocket server):
 ```bash
@@ -206,7 +206,7 @@ After that you start the script named `ws.publish.battery`
  ./ws.publish.battery
 ```
 and from a browser, go to `http://localhost:9876/web/adc.one.html`. Node.js is hosting both the WebSocket server and an http server.
-If you access the page remotely, replace `localhost` with the address of the Raspberry PI.
+If you access the page remotely, replace `localhost` with the address of the Raspberry Pi.
 
 <!-- ![WebSockets](./ws.battery.png "WebSocket") -->
 <img src="./ws.battery.png" alt="WebSocket" title="WebSocket" width="876" height="507">
@@ -231,10 +231,10 @@ flows naturally. MQTT (Message Queuing Telemetry Transport) implements a pure pu
 There is [here](http://www.hivemq.com/) a lot of good readings about MQTT.
 
 It also requires a server - which we will call an IoT server - where events will be published,
-from the Raspberry PI in our case. Then whatever client understanding the protocol(s) available on
+from the Raspberry Pi in our case. Then whatever client understanding the protocol(s) available on
 the server can read those events, and get the corresponding data.
 More and more IoT servers support the MQTT protocol.
-`Mosquitto` runs fine on the Raspberry PI, look [here](http://hackaday.com/2016/05/09/minimal-mqtt-building-a-broker/) to see how to install it.
+`Mosquitto` runs fine on the Raspberry Pi, look [here](http://hackaday.com/2016/05/09/minimal-mqtt-building-a-broker/) to see how to install it.
 
 Several IoT servers are free to access, like [Adafruit.IO](https://io.adafruit.com/). You
 just need to create your free account, and remember your Token.
@@ -367,7 +367,7 @@ For all the samples below, you do *not* need a FONA. Just a connection to the In
  ./aio.battery.publish olivierld 54x2x6yy78cazz3f2e3aa45bb2accaedd8056
 ```
 
-You would see the widget above reacting as the tension is read from the Raspberry PI.
+You would see the widget above reacting as the tension is read from the Raspberry Pi.
 ###### REST
 ```bash
  ./aio.battery.post 54x2x6yy78cazz3f2e3aa45bb2accaedd8056

@@ -26,12 +26,12 @@ if ERRORLEVEL 1 (
   echo ^|  1. Nav Server, Debian                                               ^|
   echo ^| 1p. Nav Server, Debian, with proxy (as an example)                   ^|
   echo ^|  2. Web Components, Debian                                           ^|
-  echo ^|  3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components ^|
-  echo ^|  4. Node PI, to run on a Raspberry PI                                ^|
+  echo ^|  3. To run on a Raspberry Pi, Java, Raspberry Coffee, Web Components ^|
+  echo ^|  4. Node PI, to run on a Raspberry Pi                                ^|
   echo ^|  5. Node PI, to run on Debian                                        ^|
-  echo ^|  6. GPS-mux, to run on a Raspberry PI (logger)                       ^|
+  echo ^|  6. GPS-mux, to run on a Raspberry Pi (logger)                       ^|
   echo ^|  7. Golang, basics                                                   ^|
-  echo ^|  8. Raspberry PI, MATE, with java, node, web comps, VNC              ^|
+  echo ^|  8. Raspberry Pi, MATE, with java, node, web comps, VNC              ^|
   echo ^|  9. Debian, Java, Scala, Spark                                       ^|
   echo ^| 10. Ubuntu MATE, TensorFlow, Keras, Python3, Jupyter, PyCharm, VNC   ^|
   echo +----------------------------------------------------------------------+

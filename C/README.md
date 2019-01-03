@@ -4,16 +4,16 @@
 ### SatelliteFinder, find your best geo-stationary satellite
 For Outernet, helps you to find the satellite to aim for, and where it is in the sky.
 
-The Raspberry PI and the C.H.I.P. have a similar processors, what is compiled on the Raspberry PI runs on the C.H.I.P.
+The Raspberry Pi and the C.H.I.P. have a similar processors, what is compiled on the Raspberry Pi runs on the C.H.I.P.
 
-##### From the Raspberry PI
+##### From the Raspberry Pi
 Compile the C code:
 ```bash
  $> gcc -lm -o SatelliteFinder SatelliteFinder.c
 ```
 
 ##### From your dev machine (your laptop)
-Bring the executable on board (`192.168.1.172` is the address of the Raspberry PI):
+Bring the executable on board (`192.168.1.172` is the address of the Raspberry Pi):
 ```bash
 [raspberry-pi4j-samples/C]scp pi@192.168.1.172:raspberry-pi4j-samples/C/SatelliteFinder .
 pi@192.168.1.172's password:

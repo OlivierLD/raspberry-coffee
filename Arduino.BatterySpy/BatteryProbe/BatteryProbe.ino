@@ -4,7 +4,7 @@
   and Adafruit_FONA.cpp
 
  Communicates through structured sentences.
- Suitable for the Raspberry PI. 
+ Suitable for the Raspberry Pi.
 
  Commands are:
 
@@ -18,7 +18,7 @@
   r|x Read SMS # x
   d|x Delete SMS # x
   s|<dest number>|<mess payload> Send SMS  to <dest number>
-  
+
  ****************************************************/
 
 #include "Adafruit_FONA.h"
@@ -73,7 +73,7 @@ void setup() {
 
   if (! fona.begin(*fonaSerial)) {
     Serial.println(F("Couldn't find FONA"));
-//  printMenu(); 
+//  printMenu();
 //  while (1);
   } else {
     fonaOK = true;
@@ -115,7 +115,7 @@ void loop() {
   voltage = val * DATA_TO_VOLTS;
 
 //Serial.print("Voltage:"); Serial.print(voltage); Serial.println(" V");
-  
+
   char smsQueryString[128];
   for (int i=0; i<128; i++) {
     smsQueryString[i] = '\0';
@@ -143,7 +143,7 @@ void loop() {
     Serial.print("Received from Serial:"); Serial.println(smsQueryString);
     command = String(smsQueryString);
   }
-  
+
   if (command.length() > 0) {
     appLogic(command);
   } else {
@@ -155,7 +155,7 @@ void appLogic(String command) {
   Serial.println("-- App Logic ---");
   Serial.println(command);
   Serial.println("----------------");
-  // Parse the received command here, see if it means anything.  
+  // Parse the received command here, see if it means anything.
   String query = command; // String(smsQueryString);
   String QUERY = String(query);
   QUERY.toUpperCase();
@@ -207,7 +207,7 @@ void appLogic(String command) {
       sendSMS(to, payload);
     }
     Serial.println("Bat, done.");
-  } else { 
+  } else {
     if (query.length() > 0) {
       meaning = query + ":Unknown";
     }
@@ -220,7 +220,7 @@ void appLogic(String command) {
 String getElem(String str, char sep, int idx) {
   String ret = "";
 
-  int start = -1, end = -1;  
+  int start = -1, end = -1;
   int nbSep = 0;
   for (int i=0; i<str.length(); i++) {
     if (str.charAt(i) == sep) {
@@ -249,7 +249,7 @@ void readADC() {
   if (! fona.getADCVoltage(&adc)) {
     Serial.println(F(">> ADC FAILED"));
   } else {
-    Serial.print(">> ADC:"); 
+    Serial.print(">> ADC:");
     Serial.println(adc); // mV
   }
 }
@@ -276,7 +276,7 @@ void readBattery() {
 
 void readCCID() {
   fona.getSIMCCID(replybuffer);  // make sure replybuffer is at least 21 bytes!
-  Serial.print(">> CCID:"); 
+  Serial.print(">> CCID:");
   Serial.println(replybuffer);
 }
 
@@ -311,7 +311,7 @@ void readNumberOfMessages() {
   if (smsnum < 0) {
     Serial.println(F(">> NUMMESS FAILED"));
   } else {
-    Serial.print(">> MESS:"); 
+    Serial.print(">> MESS:");
     Serial.println(smsnum);
   }
 }
@@ -326,7 +326,7 @@ void readMessNum(int smsn) {
   }
   Serial.print(">> MESSNUM:"); Serial.print(smsn); Serial.print(F("|FROM:")); Serial.print(replybuffer);
   String sender = replybuffer;
-  
+
   // Retrieve SMS value.
   uint16_t smslen;
   if (! fona.readSMS(smsn, replybuffer, 250, &smslen)) { // pass in buffer and max len!
@@ -340,7 +340,7 @@ void readMessNum(int smsn) {
 
   String command = content + "|" + sender;
   Serial.print("After reading, sending command to process: ["); Serial.print(command); Serial.println("]");
-  
+
   appLogic(command);
 }
 

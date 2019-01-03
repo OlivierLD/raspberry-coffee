@@ -17,7 +17,7 @@ Values above are default values (GPIO/BCM numbers).
 Reading MCP3008 on channel 0
  Wiring of the MCP3008-SPI (without power supply):
  +---------++-----------------------------------------------+
- | MCP3008 || Raspberry PI                                  |
+ | MCP3008 || Raspberry Pi                                  |
  +---------++------+------------+------+---------+----------+
  |         || Pin# | Name       | Role | GPIO    | wiringPI |
  |         ||      |            |      | /BCM    | /PI4J    |
@@ -27,7 +27,7 @@ Reading MCP3008 on channel 0
  | Dout(12)|| #21  | SPI0_MISO  | MISO | GPIO_09 | 13       |
  | CS  (10)|| #24  | SPI0_CS0_N | CS   | GPIO_08 | 10       |
  +---------++------+------------+-----+----------+----------+
-Raspberry PI is the Master, MCP3008 is the Slave:
+Raspberry Pi is the Master, MCP3008 is the Slave:
 - Dout on the MCP3008 goes to MISO on the RPi
 - Din on the MCP3008 goes to MOSI on the RPi
 Pins on the MCP3008 are numbered from 1 to 16, beginning top left, counter-clockwise.

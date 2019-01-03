@@ -10,7 +10,7 @@ You can
 Those data can then be rendered in different ways, with a Web Interface.
 They are - for now - using a nodejs server and its WebSocket module, running on the Raspberry Pi.
 
-After installing Node.js (try [this](http://www.lmgtfy.com/?q=install+node+js+raspberry+pi)) on the Raspberry PI, in the `node` directory, install the WebSocket module:
+After installing Node.js (try [this](http://www.lmgtfy.com/?q=install+node+js+raspberry+pi)) on the Raspberry Pi, in the `node` directory, install the WebSocket module:
 ```
 Prompt> cd node
 Prompt> npm install
@@ -27,7 +27,7 @@ From another console, then start the process that will read the `SDLWeather80422
 Prompt> ./weather.station.reader.sh
 ```
 
-You can also start a simulator, in case you  are not on the Raspberry PI, and want to make some tests:
+You can also start a simulator, in case you  are not on the Raspberry Pi, and want to make some tests:
 ```
 Prompt> ./weather.simulator.sh
 ```
@@ -47,7 +47,7 @@ See [here](http://raspberrypi.lediouris.net/WeatherStation/readme.html).
 > See also [this document](./src/java/weatherstation/README.md)
 
 This implementation - just an example - uses:
-- A Raspberry PI A+ connected to the weather rack (wind vane, anemometer, rain meter, temperature, pressure)
+- A Raspberry Pi A+ connected to the weather rack (wind vane, anemometer, rain meter, temperature, pressure)
 - It runs the scripts and classes mentioned above, along with a `nodejs` WebSocket server
 - It uses several [`Loggers`](https://github.com/OlivierLD/raspberry-pi4j-samples/blob/master/RasPISamples/src/java/weatherstation/logger/LoggerInterface.java) to feed:
   - A MySQL database through REST Services developed in `php`
@@ -74,7 +74,7 @@ Web Interface
 On the roof!
 
 #### My current setting
-- A Raspberry PI A+, connected on the `SDLWeather80422`. To start it,
+- A Raspberry Pi A+, connected on the `SDLWeather80422`. To start it,
 run the `weather.menu.sh` script, choose option `N`, and then `W`.
 ```
 +------------- Weather Station -----------------+
@@ -87,12 +87,12 @@ run the `weather.menu.sh` script, choose option `N`, and then `W`.
 +-----------------------------------------------+
 You Choose >
 ```
-- An old laptop inside the house, running a `Raspberry PI desktop` (Debian Stretch) image,
+- An old laptop inside the house, running a `Raspberry Pi desktop` (Debian Stretch) image,
 where I run the following script:
 ```
 $ NMEA.multiplexer> ./mux.sh nmea.mux.weather.station.tcp.properties
 ```
-If the Raspberry PI's machine name is `weather-station` and the laptop's name is `home-station`,
+If the Raspberry Pi's machine name is `weather-station` and the laptop's name is `home-station`,
 then from anywhere is the house (house LAN), I can reach
 ```
  http://weather-station:9876/data/weather.station/analog.all.html
@@ -147,7 +147,7 @@ dokill snap.loop.sh
 ![Architecture](./img/WeatherStationArchitecture.png)
 
 ##### Quick note
-On another Raspberry PI, with its own 7" screen, I have a permanent display of the data emitted by the station.
+On another Raspberry Pi, with its own 7" screen, I have a permanent display of the data emitted by the station.
 
 To do that, you need to start in Graphical mode, have Chromium installed, and boot to the Graphical Desktop.
 To start Chromium when the Desktop starts, and load one or several URLs (in different tabs), edit the file named

@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: RPi Environment Sensors Reader
-  description: Sensor reader for the Raspberry PI
+  description: Sensor reader for the Raspberry Pi
   version: "0.0.1"
 host: localhost:8765
 schemes:

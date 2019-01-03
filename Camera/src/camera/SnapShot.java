@@ -2,7 +2,7 @@ package camera;
 
 public class SnapShot
 {
-  // Snaspshot with the Raspberry PI camera board
+  // Snaspshot with the Raspberry Pi camera board
 //private final static String SNAPSHOT_COMMAND = "raspistill -rot 180 --width 200 --height 150 --timeout 1 --output snap" + i + ".jpg --nopreview";
 
   // For a webcam

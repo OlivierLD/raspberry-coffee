@@ -33,7 +33,7 @@ public class MeArmPilotInteractiveDemo {
 	 * The numbers are the IDs (0..15) of the channels of the PCA9685. The numbers above are the default channels.
 	 *
 	 * @param args -left:X -right:X -bottom:X -claw:X. See above
-	 * @throws I2CFactory.UnsupportedBusNumberException when I2C bus is not found (if you're not on a Raspberry PI)
+	 * @throws I2CFactory.UnsupportedBusNumberException when I2C bus is not found (if you're not on a Raspberry Pi)
 	 */
 	public static void main(String... args)
 					throws I2CFactory.UnsupportedBusNumberException {

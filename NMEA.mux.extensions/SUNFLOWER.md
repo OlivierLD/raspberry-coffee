@@ -65,7 +65,7 @@ The last line creates a duplicate of the script that runs the multiplexer, edit 
 CP=./build/libs/NMEA.multiplexer-1.0-all.jar
 CP=$CP:../GPS.sun.servo/build/libs/GPS.sun.servo-1.0-all.jar
 # CP=$CP:./libs/RXTXcomm.jar          # for Mac
-CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
+CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
 #
 ```
 You can use the file `nmea.mux.sun.flower.properties` to start the multiplexer, is uses a log file as input, and drives the solar panel according to the Position and Heading, provided as NMEA Srings.

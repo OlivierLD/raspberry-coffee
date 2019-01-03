@@ -108,7 +108,7 @@ public class HTTPLogger implements LoggerInterface {
 	public static String snap(String name, int rot, int width, int height)
 			throws Exception {
 		Runtime rt = Runtime.getRuntime();
-		// NOTE: The web directory has to exist on the Raspberry PI
+		// NOTE: The web directory has to exist on the Raspberry Pi
 		String snapshotName = String.format("web/%s.jpg", name);
 		try {
 			String command = String.format(SNAPSHOT_COMMAND_1, rot, width, height, snapshotName);

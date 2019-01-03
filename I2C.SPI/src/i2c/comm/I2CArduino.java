@@ -17,7 +17,7 @@ import java.text.NumberFormat;
  * See the Arduino sketch named RPi_I2C_2.ino
  *
  * Wiring:
- * RasPI    Arduino
+ * RasPi    Arduino
  * ----------------
  * GND #9   GND
  * SDA #3   SDA (or A4, before Rev3)
@@ -47,7 +47,7 @@ public class I2CArduino {
 	public I2CArduino(int address) throws I2CFactory.UnsupportedBusNumberException {
 		try {
 			// Get i2c bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPI version
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends onthe RasPi version
 			if (verbose) {
 				System.out.println("Connected to bus. OK.");
 			}
@@ -151,7 +151,7 @@ public class I2CArduino {
 			sensor.writeArduino(STRING_RECEIVE);
 			System.out.println("STRING_RECEIVE sent to Arduino.");
 			delay(1f);
-			String masterMessage = "From the Raspberry PI"; // Hard coded (this is an example)
+			String masterMessage = "From the Raspberry Pi"; // Hard coded (this is an example)
 			byte[] ba = masterMessage.getBytes();
 			for (byte b : ba) {
 				sensor.writeArduino(b);

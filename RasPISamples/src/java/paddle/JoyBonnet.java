@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import paddle.buttons.PushButtonInstance;
 
 /**
- * Adafruit JoyBonnet for the Raspberry PI
+ * Adafruit JoyBonnet for the Raspberry Pi
  * https://www.adafruit.com/product/3464
  *
  * This is a work in progress... Far from completed.

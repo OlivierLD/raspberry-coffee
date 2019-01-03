@@ -544,7 +544,7 @@ public class NMEADataCache
 							}
 						}
 						break;
-					case "BAT":     // Battery Voltage. Not Standard, from the Raspberry PI. There is an XDR Voltage...
+					case "BAT":     // Battery Voltage. Not Standard, from the Raspberry Pi. There is an XDR Voltage...
 						float volt = StringParsers.parseBAT(nmeaSentence);
 						if (volt > -1) {
 							this.put(BATTERY, new Float(volt));

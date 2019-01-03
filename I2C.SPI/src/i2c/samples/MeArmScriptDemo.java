@@ -275,7 +275,7 @@ public class MeArmScriptDemo {
 	 * </pre>
 	 *
 	 * @param args None required.
-	 * @throws I2CFactory.UnsupportedBusNumberException when I2C bus is not found (if you're not on a Raspberry PI)
+	 * @throws I2CFactory.UnsupportedBusNumberException when I2C bus is not found (if you're not on a Raspberry Pi)
 	 * @throws IOException                              when the script cannot be read, for example. File not found or so.
 	 */
 	public static void main(String... args)

@@ -3,7 +3,7 @@
 This project intends to be a Proof of Concept.
 
 This is a tentative Tide Application, based on Server-Side Java implementing REST APIs for a Tide Computer.
-The rendering will be done through HTML5 and JavaScript querying the REST APIs.  
+The rendering will be done through HTML5 and JavaScript querying the REST APIs.
 
 If that one works, then we can really move away from Swing.
 
@@ -16,17 +16,17 @@ If that one works, then we can really move away from Swing.
  ... etc
 
 ```
-> Warning: In the project described here, we use a REST server. It works like a REST server, but it will _not_ scale like an enterprise one. It has been designed to run on _small_ boards like the Raspberry PI Zero, it has some limits.
+> Warning: In the project described here, we use a REST server. It works like a REST server, but it will _not_ scale like an enterprise one. It has been designed to run on _small_ boards like the Raspberry Pi Zero, it has some limits.
 > It's written in Java, but it is not a JEE Server...
 
 #### Rationale
-This starts from a simple observation. A Raspberry PI can run on a boat, and consumes
+This starts from a simple observation. A Raspberry Pi can run on a boat, and consumes
 a very small amount of energy. It can do a lot of computations, logging, and multiplexing, among many others.
-It can run 24x7, without you noticing. It makes _no noise_, almost no light, and requires ridiculous amount of energy to run. 
-Even a Raspberry PI Zero does this kind of job (for even less power), successfully.
+It can run 24x7, without you noticing. It makes _no noise_, almost no light, and requires ridiculous amount of energy to run.
+Even a Raspberry Pi Zero does this kind of job (for even less power), successfully.
 
 One thing it is not good at is graphical UI. A graphical desktop is often too demanding on a
-small board like the Raspberry PI Zero. It becomes sometime really slow, and cumbersome.
+small board like the Raspberry Pi Zero. It becomes sometime really slow, and cumbersome.
 
 Running on it a program like [`OpenCPN`](https://opencpn.org/) seems absurd to me.
 Such a program runs fine on a bigger device, with several gigabytes of RAM available.
@@ -35,9 +35,9 @@ Such a program runs fine on a bigger device, with several gigabytes of RAM avail
 
 I observed that at sea, I spend only a couple hours a day in front of the laptop, but it is often running by itself, doing some logging or calculations.
 
-This is where it comes together, you could have a Raspberry PI Zero doing logging, multiplexing and what not,
-broadcasting require data on its own network (see the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA.multiplexer) about that), 
-then you would use a laptop whenever necessary, connecting on the Raspberry PI's network to get NMEA Data and more.
+This is where it comes together, you could have a Raspberry Pi Zero doing logging, multiplexing and what not,
+broadcasting require data on its own network (see the [NMEA Multiplexer](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/NMEA.multiplexer) about that),
+then you would use a laptop whenever necessary, connecting on the Raspberry Pi's network to get NMEA Data and more.
 
 **In addition**, you can also use tablets and smart-phones, those devices know how to connect to a network, and have great
 rendering capabilities.
@@ -50,22 +50,22 @@ _**A solution**_ would be to write the UI part of the applications using HTML. W
 runs on your laptop, tablet or smartphone (`Windows`, `MacOS`, `iOS`, `Linux`, `Android`, etc), you have
 a browser available, supporting `HTML5` (if it does not, you should really upgrade it).
 
-`HTML5` and `JavaScript` have been gaining a lot of momentum in the recent years, new frameworks like 
+`HTML5` and `JavaScript` have been gaining a lot of momentum in the recent years, new frameworks like
 `jQuery`, `ionic`, `ReactJS`, ...) appear every day, and provide really rich and nice UI.
 
 My feeling would be to go down this route whenever possible, that would save a lot of efforts, and provide a pretty cool
 Graphical User Interface (GUI). I have written a lot of GUI in Swing. It would be now time to upgrade it.
-Re-writing them using JavaFX does not sound like the right choice. If I have to learn a new language to build 
+Re-writing them using JavaFX does not sound like the right choice. If I have to learn a new language to build
 a modern GUI, for now I'd rather use `JavaScript` and `HTML5`. This way, the same code runs whenever a browser exists...
-You have REST APIs available on the server (again, a Raspberry PI, even the Zero does the job well), and you use AJAX and Promises to get to them from the Web UI
-(WebSockets are also a realistic option, tested). The computation required to produce the payload returned by the REST services 
-(often in `json` format) is easily supported by a Raspberry PI, and the complexity of the UI rendering is 100% taken care of by the browser, running
+You have REST APIs available on the server (again, a Raspberry Pi, even the Zero does the job well), and you use AJAX and Promises to get to them from the Web UI
+(WebSockets are also a realistic option, tested). The computation required to produce the payload returned by the REST services
+(often in `json` format) is easily supported by a Raspberry Pi, and the complexity of the UI rendering is 100% taken care of by the browser, running
 on a more powerful device.
-  
+
 After a 3-day week-end of work, I was able to produce a tidal graph like that one:
 ![Tide at Ocean Beach](./docimg/first.glimpse.png)
 
-This is not finished, but that looks promising... 
+This is not finished, but that looks promising...
 
 ### Features
 - Web UI for tidal curves
@@ -94,8 +94,8 @@ Implements **two** REST Request Managers.
 The format of the harmonic files is a proprietary format. To be used efficiently, the file has to
 be parsed and loaded in memory for the data it contains to be available in a timely manner.
 
-This could be quite demanding for a small machine like the Raspberry PI (the`Zero` has "only" 512 Mb of RAM), even the generation of the XML files
-can be challenging for the Raspberry PI.
+This could be quite demanding for a small machine like the Raspberry Pi (the`Zero` has "only" 512 Mb of RAM), even the generation of the XML files
+can be challenging for the Raspberry Pi.
 
 Using a SAX Parser allows the amount of required memory to substantially shrink.
 As opposed to a DOM Parser that loads the DOM representation of the document in memory,
@@ -114,7 +114,7 @@ the SAX parser scans it until the expected data are found.
 - Then start then server
 ```bash
  $ ./runTideServ
- 
+
  _/\\\\\\\\\___/\\\\\\\\___/\\\\\\\\__/\\\\\\\\\\
  _\/\\\////\\\_\/\\\////___\/\\\////__\////\\\///_
   _\/\\\___\\\__\/\\\_______\/\\\_________\/\\\____
@@ -182,7 +182,7 @@ You need to proceed in two steps:
 - Download it
 
 #### REST Clients
-Any REST Client can access the services. Postman, node-red, anyone! 
+Any REST Client can access the services. Postman, node-red, anyone!
 
 ![Node-red](./docimg/node-red.png)
 
@@ -208,7 +208,7 @@ Look into the code for details.
 ```bash
  $ curl -H "Content-Type: application/json" -X POST -d '{"startYear":2017,"startMonth":8,"nb":1,"quantity":"MONTH"}' http://192.168.42.1:9999/publish/Ocean%20Beach%2C%20California
 ```
-This returns a text response like `./tide.data.2396101885014681306.pdf`, which is the name of the 
+This returns a text response like `./tide.data.2396101885014681306.pdf`, which is the name of the
 temporary document generated by the command. This is the one you'll need to download next.
 
 ###### Download
@@ -222,4 +222,4 @@ Use the filename above, the `-o` switch gives the name of the file you want to s
 ````
 The expected file is on your machine, named `tide.pdf`.
 
----  
+---

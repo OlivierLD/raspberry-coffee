@@ -51,7 +51,7 @@ We will use the following programming languages:
     - Created by James Gosling, at Sun, in 1995.
     - Uses a Java Virtual Machine (JVM). 100% Object Oriented, Functional features since Java 8 (to catch up with Scala, see below). Requires compilation (`javac`). Strongly typed.
     The implementation the JVM is the key to portability. Java motto used to be _write once, run everywhere_. And this is indeed true,
-    this **does** work, from single-board computers like the Raspberry PI Zero to big clusters of main-frames. Yes.
+    this **does** work, from single-board computers like the Raspberry Pi Zero to big clusters of main-frames. Yes.
     - Java is not the first language to introduce the concept of Virtual Machine (at least ADA did it before, named after... guess who?). But Java _specified_ it.
     This specification also includes the Java Platform Debugging Architecture (JPDA), that is a blessing for developers. _You can debug - including remotely - the same way on all systems_.
     No language - to my knowledge - ever did that before.
@@ -226,7 +226,7 @@ To compile and run (the compilation is _not_ done by Gradle, and may vary depend
  $ ./system
 ```
 
-On the Raspberry PI, use:
+On the Raspberry Pi, use:
 ```
  $ cd src/C
  $ g++ -Wall -o system system.c
@@ -299,7 +299,7 @@ If needed, change the degree of the result polynomial using the slider at the bo
 
 See the calculated coefficients in the console output.
 
-Find [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Processing) a bit more about Processing on the Raspberry PI.
+Find [here](https://github.com/OlivierLD/raspberry-pi4j-samples/tree/master/Processing) a bit more about Processing on the Raspberry Pi.
 
 You can generate an executable from your Processing sketch.
 Open your sketch in Processing (here `System.pde`), then go to `File` > `Export Application`.
@@ -493,7 +493,7 @@ Opera, Firefox, Safari, you name it) !
 This means that there is still a lot of room for inventions!
 
 #### Docker
-Installing Go on the Raspberry PI happens not to be as straightforward as anyone would expect... It would be worth giving Docker a try.
+Installing Go on the Raspberry Pi happens not to be as straightforward as anyone would expect... It would be worth giving Docker a try.
 
 This project contains a module that build Docker images, including one for Go.
 
@@ -505,12 +505,12 @@ From the `docker` directory, just run
  +-------------- D O C K E R   I M A G E   B U I L D E R --------------+
  | 1. Nav Server, Debian                                               |
  | 2. Web Components, Debian                                           |
- | 3. To run on a Raspberry PI, Java, Raspberry Coffee, Web Components |
- | 4. Node PI, to run on a Raspberry PI                                |
+ | 3. To run on a Raspberry Pi, Java, Raspberry Coffee, Web Components |
+ | 4. Node PI, to run on a Raspberry Pi                                |
  | 5. Node PI, to run on Debian                                        |
- | 6. GPS-mux, to run on a Raspberry PI (logger)                       |
+ | 6. GPS-mux, to run on a Raspberry Pi (logger)                       |
  | 7. Golang, basics                                                   |
- | 8. Raspberry PI, MATE, with java, node, web comps, VNC              |
+ | 8. Raspberry Pi, MATE, with java, node, web comps, VNC              |
  +---------------------------------------------------------------------+
  | Q. Oops, nothing, thanks, let me out.                               |
  +---------------------------------------------------------------------+
@@ -519,7 +519,7 @@ From the `docker` directory, just run
 and choose option `7`.
 
 This will build a Docker image with `Go` installed on it, and the `system.go` code will be copied in the `go/src/app` directory.
-And it runs fine on a Raspberry PI.
+And it runs fine on a Raspberry Pi.
 
 Then you can connect to the Docker image and run the `./app` executable to start the system resolution:
 ```

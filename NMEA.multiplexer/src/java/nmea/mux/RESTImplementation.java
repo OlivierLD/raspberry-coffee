@@ -1135,7 +1135,7 @@ public class RESTImplementation {
 						ex.printStackTrace();
 					} catch (Error error) {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
-						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry Pi...");
 						error.printStackTrace();
 					}
 				} else {
@@ -1179,7 +1179,7 @@ public class RESTImplementation {
 						ex.printStackTrace();
 					} catch (Error error) {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
-						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry Pi...");
 						error.printStackTrace();
 					}
 				} else {
@@ -1217,7 +1217,7 @@ public class RESTImplementation {
 						ex.printStackTrace();
 					} catch (Error error) {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
-						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry Pi...");
 						error.printStackTrace();
 					}
 				} else {
@@ -1255,7 +1255,7 @@ public class RESTImplementation {
 						ex.printStackTrace();
 					} catch (Error error) {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
-						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry Pi...");
 						error.printStackTrace();
 					}
 				} else {
@@ -1293,7 +1293,7 @@ public class RESTImplementation {
 						ex.printStackTrace();
 					} catch (Error error) {
 						response.setStatus(HTTPServer.Response.BAD_REQUEST);
-						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry PI...");
+						RESTProcessorUtil.addErrorMessageToResponse(response, "Maybe you are not on a Raspberry Pi...");
 						error.printStackTrace();
 					}
 				} else {

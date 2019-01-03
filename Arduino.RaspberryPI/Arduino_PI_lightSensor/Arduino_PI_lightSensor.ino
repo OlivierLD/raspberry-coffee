@@ -3,14 +3,14 @@
  * See circuit in the book, p63.
  * "Getting started with Arduino"
  * Generates NMEA-like messages, emitted on the Serial port
- * A Raspberry PI is at the other end of the serial cable.
+ * A Raspberry Pi is at the other end of the serial cable.
  */
 void setup()
 {
   Serial.begin(9600);
 }
 
-int val      = 0, 
+int val      = 0,
     previous = 0;
 
 const String PREFIX =  "OS"; // Device Prefix

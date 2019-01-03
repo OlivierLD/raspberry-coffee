@@ -8,7 +8,7 @@ import java.net.URI;
 
 /**
  * SIMULATES water level.
- * Can run off line, not on a RasPI
+ * Can run off line, not on a RasPi
  * Sends WS Messages (see level.server.js)
  */
 public class LevelSimulator implements LevelListenerInterface {

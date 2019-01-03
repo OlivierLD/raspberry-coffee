@@ -1,4 +1,4 @@
-# Send Emails from the Raspberry PI
+# Send Emails from the Raspberry Pi
 This is a quick example, in order to present the way to use it in other projects.
 
 ### To build it
@@ -12,7 +12,7 @@ This is a quick example, in order to present the way to use it in other projects
 ### Run the example
 This shows how to send emails, and how to _listen_ to emails, expecting a special one to stop the program.
 
-The example provided here assumes that you have enabled the camera on the Raspberry PI,
+The example provided here assumes that you have enabled the camera on the Raspberry Pi,
 and started the script named `motion.sh` as follow:
 ```bash
  sudo ./motion.sh &
@@ -33,9 +33,9 @@ This will send several emails to the `google` account (as defined in your `email
 The sent emails will have the `snap.jpg` attached to it.
 
 The program is finally sending an `exit` email, that terminates the program, managed by the `EmailReceiver`.
-The first email is a `read-loud` one, that will be read out loud if you have installed `espeak` and connected a loudspeaker on the Raspberry PI.
+The first email is a `read-loud` one, that will be read out loud if you have installed `espeak` and connected a loudspeaker on the Raspberry Pi.
 
-To install `espeak` on the Raspberry PI:
+To install `espeak` on the Raspberry Pi:
 ```
  $ sudo apt-get install espeak
 ```

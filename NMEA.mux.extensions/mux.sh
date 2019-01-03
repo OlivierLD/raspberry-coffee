@@ -20,7 +20,7 @@ then
 fi
 if [ "$OS" == "Linux" ]
 then
-  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry PI
+  JAVA_OPTIONS="$JAVA_OPTIONS -Djava.library.path=/usr/lib/jni" # for Raspberry Pi
 fi
 #
 # This variable is used to set the System variable process.on.start.
@@ -71,7 +71,7 @@ then
 fi
 if [ "$OS" == "Linux" ]
 then
-  CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry PI
+  CP=$CP:/usr/share/java/RXTXcomm.jar # For Raspberry Pi
 fi
 #
 # For JFR
@@ -85,7 +85,7 @@ LOGGING_FLAG=
 LOGGING_FLAG=-Djava.util.logging.config.file=./logging.properties
 #
 # JAVA_OPTIONS="$JAVA_OPTIONS -Dhttp.proxyHost=www-proxy.us.oracle.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=www-proxy.us.oracle.com -Dhttps.proxyPort=80"
-# use sudo on Raspberry PI
+# use sudo on Raspberry Pi
 # sudo java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 java $JAVA_OPTIONS $LOGGING_FLAG $JFR_FLAGS $REMOTE_DEBUG_FLAGS -cp $CP nmea.mux.GenericNMEAMultiplexer
 #

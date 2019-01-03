@@ -18,7 +18,7 @@ There is a forwarder sample `SSD1306Processor` that uses an oled display to show
 
 ![oled](./docimages/oled.2.jpg "OLED Display")
 
-The OLED display in connected to the Raspberry PI using an SPI interface.
+The OLED display in connected to the Raspberry Pi using an SPI interface.
 
 The SSD1306 display is quite small. In the pictures above, there is a Fresnel lens in front of it.
 
@@ -36,11 +36,11 @@ The push button is used to scroll through the data available to display (True Wi
 As it is an example, it is a dynamically loaded `forwarder`.
 
 #### Small display "On Top"
-Same as above (SSD1306), but attached on top of the Raspberry PI. Using here the I<small><sup>2</sup></small>C interface.
+Same as above (SSD1306), but attached on top of the Raspberry Pi. Using here the I<small><sup>2</sup></small>C interface.
 
   ![Small Screen](./docimages/small.screen.jpg)
 
- _Another interesting feature_: In case you want to run - for tests for example - somewhere else than on the Raspberry PI, then the OLED Display would not work.
+ _Another interesting feature_: In case you want to run - for tests for example - somewhere else than on the Raspberry Pi, then the OLED Display would not work.
   In this case, it is automatically substituted to a Swing panel:
 
   ![Substituted Swing Led Panel](./docimages/substitute.png)
@@ -63,9 +63,9 @@ This example involves 2 (or 3) machines.
    - A thermometer inside (BMP180 or BME280), forwarding on TCP, device ID set to `01`
    - A thermometer outside (BMP180 or BME280), forwarding on TCP, device ID set to `02`
    - A MUX reading the 2 TCP streams, and displaying (like with an HTML Interface) the right data in the right place, even if the Sentence IDs of the two streams are identical.
-![2 Raspberry PI Zero](./docimages/Two.RPi.Zero_bb.png "Two thermometers")
+![2 Raspberry Pi Zero](./docimages/Two.RPi.Zero_bb.png "Two thermometers")
 
-##### On the first Raspberry PI
+##### On the first Raspberry Pi
 Let's say its IP address is `192.168.1.166`.
 We have a BMP180, and an HTU21D-F.
 
@@ -92,7 +92,7 @@ forward.01.port=7001
 #
 ```
 
-##### On the second Raspberry PI
+##### On the second Raspberry Pi
 Let's say its IP address is `192.168.1.136`.
 We have a BME280.
 
@@ -116,7 +116,7 @@ forward.01.port=7001
 #
 ```
 
-##### On a third machine, Raspberry PI, or not.
+##### On a third machine, Raspberry Pi, or not.
 We read the two TCP streams from the machines above.
 Its properties file looks like
 ```properties
@@ -126,7 +126,7 @@ Its properties file looks like
 with.http.server=yes
 http.port=9999
 #
-# Reads 2 Raspberry PIs:
+# Reads 2 Raspberry Pis:
 # First one  reads a BMP180 and an HTU21DF, forwarded on TCP port 7001.
 # Second one reads a BME280, forwarded on its port 7001 too.
 #
@@ -179,17 +179,17 @@ In other words, the `MUX-3` just feeds the cache, and the `Web-UI` reads it. Tho
 #### Driving and Logging
 This is a small exercise, logging GPS Data when driving from San Francisco to Palo-Alto.
 
-The Multiplexer runs on a Raspberry PI Zero W, with a cheap GPS (USB GPS, less than $20 - June 2017) connected on it. It logs data in a file.
-Many options are available to power the Raspberry PI on the go (Lipo batteries, battery bank, USB cable on a cigarette lighter adapter, etc). I've used a battery bank here.
+The Multiplexer runs on a Raspberry Pi Zero W, with a cheap GPS (USB GPS, less than $20 - June 2017) connected on it. It logs data in a file.
+Many options are available to power the Raspberry Pi on the go (Lipo batteries, battery bank, USB cable on a cigarette lighter adapter, etc). I've used a battery bank here.
 
 ![Connections](./docimages/gps.battery.bank.jpg "Connections")
 
-The Raspberry PI, its battery bank and the GPS were sitting in a plastic box, next to the driver's seat.
+The Raspberry Pi, its battery bank and the GPS were sitting in a plastic box, next to the driver's seat.
 
 ![In a box](./docimages/in.a.box.jpg "In a box")
 
-The Raspberry PI generates its own WiFi hotspot (with `hostapd`, see [here](./README.md#note-access-point-and-internet-access)), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
-the Multiplexer, also to shutdown the Raspberry PI (see [here](./README.md#remote-access) for details). Even the admin web console works fine in this configuration.
+The Raspberry Pi generates its own WiFi hotspot (with `hostapd`, see [here](./README.md#note-access-point-and-internet-access)), and it can be driven remotely through `ssh`, I used an Android phone for that, to start and stop
+the Multiplexer, also to shutdown the Raspberry Pi (see [here](./README.md#remote-access) for details). Even the admin web console works fine in this configuration.
 
 The properties files used with `mux.sh` just looks like this:
 ```properties
@@ -305,7 +305,7 @@ Then the NMEA Multiplexer will be able to listen to the WebSocket topic.
 
 ![Weather Station](./docimages/weather.station.nmea.png)
 
-The `Raspberry PI` and the `Other machine` are on the same Local Area Network (LAN).
+The `Raspberry Pi` and the `Other machine` are on the same Local Area Network (LAN).
 
 The `IoT server` and the `php/MySQL` are hosted on the Internet.
 
@@ -356,7 +356,7 @@ http.port=9999
 mux.01.type=serial
 # GPS, on a Mac
 # mux.01.port=/dev/tty.usbserial
-# GPS, on a Raspberry PI
+# GPS, on a Raspberry Pi
 mux.01.port=/dev/ttyUSB0
 mux.01.baudrate=4800
 mux.01.verbose=false
@@ -368,7 +368,7 @@ forward.01.cls=nmea.forwarders.SolarPanelOrienter
 forward.01.properties=sunflower.rest.properties
 #
 ```
-> Note: this runs on any machine that knows about a serial port, not only a Raspberry PI.
+> Note: this runs on any machine that knows about a serial port, not only a Raspberry Pi.
 
 As seen above, the `forwarder` refers to its own properties file:
 ```properties

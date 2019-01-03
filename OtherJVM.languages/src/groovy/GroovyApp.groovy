@@ -46,7 +46,7 @@ class GroovyApp {
             println ">>> Exception is a " + all.getClass().getName()
             if (all instanceof IOException) {
                 if (all.getMessage().startsWith("Cannot run program")) {
-                    println("You need to run this from a Raspberry PI...")
+                    println("You need to run this from a Raspberry Pi...")
                 } else {
                     all printStackTrace
                 }

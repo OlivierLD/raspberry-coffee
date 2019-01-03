@@ -287,7 +287,7 @@ public class ADS1x15 {
 
 		try {
 			// Get I2C bus
-			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPI version
+			bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
 			if (verbose) {
 				System.out.println("Connected to bus. OK.");
 			}
