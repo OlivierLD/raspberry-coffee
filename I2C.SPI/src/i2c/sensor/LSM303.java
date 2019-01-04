@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import utils.StringUtils;
 
@@ -37,7 +39,7 @@ import utils.StringUtils;
  * http://www.varesano.net/blog/fabio/freeimu-magnetometer-and-accelerometer-calibration-gui-alpha-version-out
  * https://learn.adafruit.com/lsm303-accelerometer-slash-compass-breakout/calibration
  *
- * Good doc, explaining the problem:
+ * Very good doc, explaining the calibration problem:
  * https://github.com/praneshkmr/node-lsm303/wiki/Understanding-the-calibration-of-the-LSM303-magnetometer-(compass)
  */
 public class LSM303 {
@@ -104,13 +106,51 @@ public class LSM303 {
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
 
-	private long wait = 1_000L;
+	private long wait = 1_000L; // Default
 	private LSM303Listener dataListener = null;
+
+	public final static String MAG_X_OFFSET = "MagXOffset";
+	public final static String MAG_Y_OFFSET = "MagYOffset";
+	public final static String MAG_Z_OFFSET = "MagZOffset";
+
+	public final static String MAG_X_COEFF = "MagXCoeff";
+	public final static String MAG_Y_COEFF = "MagYCoeff";
+	public final static String MAG_Z_COEFF = "MagZCoeff";
+
+	public final static String ACC_X_OFFSET = "AccXOffset";
+	public final static String ACC_Y_OFFSET = "AccYOffset";
+	public final static String ACC_Z_OFFSET = "AccZOffset";
+
+	public final static String ACC_X_COEFF = "AccXCoeff";
+	public final static String ACC_Y_COEFF = "AccYCoeff";
+	public final static String ACC_Z_COEFF = "AccZCoeff";
+
+	private final static Map<String, Double> DEFAULT_MAP = new HashMap<>();
+	static {
+		DEFAULT_MAP.put(MAG_X_OFFSET, 0d);
+		DEFAULT_MAP.put(MAG_Y_OFFSET, 0d);
+		DEFAULT_MAP.put(MAG_Z_OFFSET, 0d);
+		DEFAULT_MAP.put(MAG_X_COEFF, 1d);
+		DEFAULT_MAP.put(MAG_Y_COEFF, 1d);
+		DEFAULT_MAP.put(MAG_Z_COEFF, 1d);
+		DEFAULT_MAP.put(ACC_X_OFFSET, 0d);
+		DEFAULT_MAP.put(ACC_Y_OFFSET, 0d);
+		DEFAULT_MAP.put(ACC_Z_OFFSET, 0d);
+		DEFAULT_MAP.put(ACC_X_COEFF, 1d);
+		DEFAULT_MAP.put(ACC_Y_COEFF, 1d);
+		DEFAULT_MAP.put(ACC_Z_COEFF, 1d);
+	}
+
+	private Map<String, Double> calibrationMap = new HashMap<>(DEFAULT_MAP);
 
 	public enum EnabledFeature {
 		MAGNETOMETER,
 		ACCELEROMETER,
 		BOTH
+	}
+
+	public void setCalibrationValue(String key, double val) {
+		calibrationMap.put(key, val);
 	}
 
 	private void setMagGain(int gain) throws IOException {
@@ -298,6 +338,10 @@ public class LSM303 {
 				accY = (float) accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 				accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
+				accX = (float)(calibrationMap.get(ACC_X_OFFSET) + (accX * calibrationMap.get(ACC_X_COEFF)));
+				accY = (float)(calibrationMap.get(ACC_Y_OFFSET) + (accY * calibrationMap.get(ACC_Y_COEFF)));
+				accZ = (float)(calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF)));
+
 				norm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
 
 				if (verboseAcc) {
@@ -349,19 +393,24 @@ public class LSM303 {
 					dumpBytes(magData, 6);
 				}
 				// Mag raw data. !!! Warning !!! Order here is X, Z, Y
-				magneticX = mag16(magData, 0); // TODO * 0.92 ?
+				magneticX = mag16(magData, 0); // X
 				magneticZ = mag16(magData, 2); // Yes, Z
 				magneticY = mag16(magData, 4); // Then Y
 
-				norm = Math.sqrt((magneticX * magneticX) + (magneticY * magneticY) + (magneticZ * magneticZ));
+				magX = magneticX;
+				magY = magneticY;
+				magZ = magneticZ;
+
+				magX = (float)(calibrationMap.get(MAG_X_OFFSET) + (magX * calibrationMap.get(MAG_X_COEFF)));
+				magY = (float)(calibrationMap.get(MAG_Y_OFFSET) + (magY * calibrationMap.get(MAG_Y_COEFF)));
+				magZ = (float)(calibrationMap.get(MAG_Z_OFFSET) + (magZ * calibrationMap.get(MAG_Z_COEFF)));
+
+				norm = Math.sqrt((magX * magX) + (magY * magY) + (magZ * magZ));
+
 				if (false && norm != 0) {
 					magX = (float) magneticX / (float) norm;
 					magY = (float) magneticY / (float) norm;
 					magZ = (float) magneticZ / (float) norm;
-				} else {
-					magX = (float) magneticX;
-					magY = (float) magneticY;
-					magZ = (float) magneticZ;
 				}
 
 				if (useLowPassFilter) {
@@ -384,9 +433,9 @@ public class LSM303 {
 //		  float magneticX_ = (float) magneticX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //		  float magneticY_ = (float) magneticY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //		  float magneticZ_ = (float) magneticZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
-				// TODO Compensate with pitch & roll
+				// _TODO_ Compensate with pitch & roll
 //		  heading = - (float) Math.toDegrees(Math.atan2(magneticY_, magneticX_)); // Same as below (the ratio remains the same).
-				heading = (float) Math.toDegrees(Math.atan2(magYcomp, magXcomp)); // TODO Watch the sign of the first term?
+				heading = (float) Math.toDegrees(Math.atan2(magYcomp, magXcomp));
 				while (heading < 0) {
 					heading += 360f;
 				}
@@ -462,6 +511,10 @@ public class LSM303 {
 
 		LSM303 sensor = new LSM303(false);
 		sensor.setWait(250); // 1/4 sec
+
+		// Calibration values
+		sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 9);
+		sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -16);
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			System.out.println("\nQuitting...");
