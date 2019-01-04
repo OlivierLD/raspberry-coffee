@@ -14,7 +14,7 @@
 <script>
     // create scene and camera
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 2000);
 
     // create a renderer, set its size, append it to the document.
     var renderer = new THREE.WebGLRenderer({ alpha: false }); // true/false will also change the background
@@ -41,8 +41,10 @@
         // resource URL
     //  './Trimaran.obj',
     //  './cube.obj',
-		    './paperboat.obj',                                            // use -10 for z
-    //  './simple.boat.obj',                                            // use -10 for z
+		//  './paperboat.obj',                                            // use -10 for z
+    //  './simple.boat.obj',                                          // use -10 for z
+    //  './lego-man/lego.obj',                                        // use -250 for z
+        './Wakeboard_Boat_v1/Wakeboard_v1.obj',                       // use -1000 for z
 		//  './js/three.js-master/examples/models/obj/cerberus/Cerberus.obj',
 		//  './js/three.js-master/examples/models/obj/vive-controller/vr_controller_vive_1_5.obj',
 		//  './js/three.js-master/examples/models/obj/walt/WaltHead.obj', // use -150 for z
@@ -56,7 +58,7 @@
 		        object.children[0].material.color = new THREE.Color(0x6893DE); // Some kind of blue
 	        }
 
-          var z = -10;
+          var z = -1000;
 
           objectToLoad = object;
 			    objectToLoad.position.set(0, 0, z); // This may change depending the the obj you use...
