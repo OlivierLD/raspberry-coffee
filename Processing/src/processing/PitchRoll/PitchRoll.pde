@@ -37,7 +37,7 @@ int pts = keel.length; // TODO Verify they all have the same length
 // for shaded or wireframe rendering 
 boolean isWireFrame = false;
 
-boolean withSensor = true;
+boolean withSensor = false;
 
 LSM303 lsm303;
 

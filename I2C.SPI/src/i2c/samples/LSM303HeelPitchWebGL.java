@@ -62,7 +62,8 @@ public class LSM303HeelPitchWebGL {
 		System.out.println("Verbose: " + verbose);
 		LSM303 sensor = new LSM303(); // TODO See with LSM303.EnabledFeature.MAGNETOMETER);
 		LSM303Listener dataListener = new LSM303Listener() {
-			public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
+			@Override
+			public void dataDetected(double accX, double accY, double accZ, double magX, double magY, double magZ, double heading, double pitch, double roll) {
 				try {
 					JSONObject json = new JSONObject();
 					json.put("heading", heading);

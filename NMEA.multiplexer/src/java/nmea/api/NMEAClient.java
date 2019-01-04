@@ -98,6 +98,7 @@ public abstract class NMEAClient {
 
 	public void initClient() {
 		this.addNMEAListener(new NMEAListener() {
+			@Override
 			public void dataDetected(NMEAEvent e) {
 				dataDetectedEvent(e);
 			}

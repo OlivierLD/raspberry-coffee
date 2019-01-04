@@ -28,7 +28,7 @@ public class LSM303Reader {
 
 	public LSM303Reader() {
 		try {
-			this.lsm303 = new LSM303();
+			this.lsm303 = new LSM303(); // TODO Calibration parameters!
 
 			String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
 			initWebSocketConnection(wsUri);

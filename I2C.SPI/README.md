@@ -20,6 +20,16 @@ I<sup>2</sup>C Triple axis Gyroscope
 #### LSM303
 I<sup>2</sup>C Accelerometer + Magnetometer
 
+There is this [good paper](https://github.com/praneshkmr/node-lsm303/wiki/Understanding-the-calibration-of-the-LSM303-magnetometer-(compass)) about the LSM303 calibration.
+Run the `i2c.sensor.LSM303` with `-Dlsm303.log.for.calibration=true` (see in the script `lsm303`), this will generate a CSV log file you can use in a spreadsheet (like in the document above),
+to get the calibration offsets and coefficients.
+
+Also see in the code (`i2c.sensor.LSM303.java`) how to apply those calibration parameters:
+```java
+  sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 9);
+  sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -16);
+```
+
 #### MPC9808
 I<sup>2</sup>C Temperature
 

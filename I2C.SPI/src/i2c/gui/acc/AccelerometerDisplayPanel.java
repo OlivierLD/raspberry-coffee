@@ -1,15 +1,9 @@
 package i2c.gui.acc;
 
-
-import i2c.gui.utils.Point3D;
-
 import i2c.sensor.LSM303;
-import i2c.sensor.listener.L3GD20Listener;
 import i2c.sensor.listener.LSM303Listener;
-import i2c.sensor.listener.SensorL3GD20Context;
 
 import i2c.sensor.listener.SensorLSM303Context;
-import i2c.sensor.main.SampleL3GD20RealReader;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -19,20 +13,17 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 
-import java.lang.reflect.InvocationTargetException;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 // This class listens to the  LSM303 (acc + mag)
 public class AccelerometerDisplayPanel
 				extends JPanel {
-	@SuppressWarnings("compatibility:5286281276243161150")
+
 	public final static long serialVersionUID = 1L;
 
 	protected transient Stroke thick = new BasicStroke(2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
@@ -41,19 +32,19 @@ public class AccelerometerDisplayPanel
 
 	private transient LSM303 sensor = null;
 
-	private List<Float> accXList = new ArrayList<>();
-	private List<Float> accYList = new ArrayList<>();
-	private List<Float> accZList = new ArrayList<>();
-	private List<Float> magXList = new ArrayList<>();
-	private List<Float> magYList = new ArrayList<>();
-	private List<Float> magZList = new ArrayList<>();
-	private List<Float> headingList = new ArrayList<>();
+	private List<Double> accXList = new ArrayList<>();
+	private List<Double> accYList = new ArrayList<>();
+	private List<Double> accZList = new ArrayList<>();
+	private List<Double> magXList = new ArrayList<>();
+	private List<Double> magYList = new ArrayList<>();
+	private List<Double> magZList = new ArrayList<>();
+	private List<Double> headingList = new ArrayList<>();
 
-	private float headingDegrees = 0f, pitchDegrees = 0f, rollDegrees = 0f;
+	private double headingDegrees = 0f, pitchDegrees = 0f, rollDegrees = 0f;
 
-	private float minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE;
-	private float minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
-	private float minZ = Integer.MAX_VALUE, maxZ = Integer.MIN_VALUE;
+	private double minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE;
+	private double minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
+	private double minZ = Integer.MAX_VALUE, maxZ = Integer.MIN_VALUE;
 
 	private final double DELTA_T = 0.05;
 
@@ -76,7 +67,8 @@ public class AccelerometerDisplayPanel
 				sensor = new LSM303();
 				System.out.println("...Adding listener");
 				LSM303Listener dataListener = new LSM303Listener() {
-					public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
+					@Override
+					public void dataDetected(double accX, double accY, double accZ, double magX, double magY, double magZ, double heading, double pitch, double roll) {
 						maxX = Math.max(maxX, accX);
 						minX = Math.min(minX, accX);
 						maxY = Math.max(maxY, accX);
@@ -181,12 +173,12 @@ public class AccelerometerDisplayPanel
 		gr.drawString(str, 10, 20);
 	}
 
-	private void drawData(int idx, Graphics gr, List<Float> data, float min, float max) {
+	private void drawData(int idx, Graphics gr, List<Double> data, double min, double max) {
 		double xRatio = (double) this.getWidth() / (double) data.size();
 		double yRatio = (double) (this.getHeight() / 3) / ((double) (max - min));
 		int _x = 0;
 		Point previous = null;
-		for (Float x : data) {
+		for (Double x : data) {
 			int xPt = (int) (_x * xRatio);
 			int yPt = (idx * (this.getHeight() / 3)) + (int) ((x.intValue() - min) * yRatio);
 			_x++;
