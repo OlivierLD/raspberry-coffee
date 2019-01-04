@@ -81,12 +81,11 @@ public class SimplePanelOrienter {
 		instance.servosZero();
 		instance.setCalibrating(false);
 
-
 		try {
-			sensor = new LSM303();
+			sensor = new LSM303(); // TODO Calibration parameters!
 			lsm303Listener = new LSM303Listener() {
 				@Override
-				public void dataDetected(float accX, float accY, float accZ, float magX, float magY, float magZ, float heading, float pitch, float roll) {
+				public void dataDetected(double accX, double accY, double accZ, double magX, double magY, double magZ, double heading, double pitch, double roll) {
 					instance.setDeviceHeading(heading + declination);
 				}
 

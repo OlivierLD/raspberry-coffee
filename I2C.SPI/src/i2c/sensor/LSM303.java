@@ -1,19 +1,16 @@
 package i2c.sensor;
 
-import i2c.sensor.listener.LSM303Listener;
-
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
+import i2c.sensor.listener.LSM303Listener;
+import utils.StringUtils;
 
 import java.io.IOException;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
-
-import utils.StringUtils;
 
 /**
  * LSM303: Accelerometer + Magnetometer
@@ -33,12 +30,12 @@ import utils.StringUtils;
  * And they both have different endianness.
  * <br>
  * It took me a while to figure this all out...
- *
+ * <p>
  * Magnetometer/accelerometer calibration see
  * https://forum.sparkfun.com/viewtopic.php?t=32575
  * http://www.varesano.net/blog/fabio/freeimu-magnetometer-and-accelerometer-calibration-gui-alpha-version-out
  * https://learn.adafruit.com/lsm303-accelerometer-slash-compass-breakout/calibration
- *
+ * <p>
  * Very good doc, explaining the calibration problem:
  * https://github.com/praneshkmr/node-lsm303/wiki/Understanding-the-calibration-of-the-LSM303-magnetometer-(compass)
  */
@@ -57,7 +54,7 @@ public class LSM303 {
    */
 	// Those 2 next addresses are returned by "sudo i2cdetect -y 1", see above.
 	public final static int LSM303_ADDRESS_ACCEL = (0x32 >> 1); // 0011001x, 0x19
-	public final static int LSM303_ADDRESS_MAG   = (0x3C >> 1); // 0011110x, 0x1E <- that is an HMC5883L !
+	public final static int LSM303_ADDRESS_MAG = (0x3C >> 1); // 0011110x, 0x1E <- that is an HMC5883L !
 	// Default    Type
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG1_A = 0x20; // 00000111   rw
 	public final static int LSM303_REGISTER_ACCEL_CTRL_REG4_A = 0x23; // 00000000   rw
@@ -79,29 +76,28 @@ public class LSM303 {
 	private static float _lsm303Mag_Gauss_LSB_XY = 1_100.0F; // Varies with gain
 	private static float _lsm303Mag_Gauss_LSB_Z = 980.0F;    // Varies with gain
 
-	private float SENSORS_GRAVITY_EARTH = 9.80665f;        // < Earth's gravity in m/s^2
-	private float SENSORS_GRAVITY_MOON = 1.6f;             // < The moon's gravity in m/s^2
-	private float SENSORS_GRAVITY_SUN = 275.0f;            // < The sun's gravity in m/s^2
+	private float SENSORS_GRAVITY_EARTH = 9.80665f;        // Earth's gravity in m/s^2
+	private float SENSORS_GRAVITY_MOON = 1.6f;             // The moon's gravity in m/s^2
+	private float SENSORS_GRAVITY_SUN = 275.0f;            // The sun's gravity in m/s^2
 	private float SENSORS_GRAVITY_STANDARD = SENSORS_GRAVITY_EARTH;
-	private float SENSORS_MAGFIELD_EARTH_MAX = 60.0f;      // < Maximum magnetic field on Earth's surface
-	private float SENSORS_MAGFIELD_EARTH_MIN = 30.0f;      // < Minimum magnetic field on Earth's surface
-	private float SENSORS_PRESSURE_SEALEVELHPA = 1_013.25f;// < Average sea level pressure is 1013.25 hPa
-	private float SENSORS_DPS_TO_RADS = 0.017453293f;      // < Degrees/s to rad/s multiplier
-	private float SENSORS_GAUSS_TO_MICROTESLA = 100;       // < Gauss to micro-Tesla multiplier
+	private float SENSORS_MAGFIELD_EARTH_MAX = 60.0f;      // Maximum magnetic field on Earth's surface
+	private float SENSORS_MAGFIELD_EARTH_MIN = 30.0f;      // Minimum magnetic field on Earth's surface
+	private float SENSORS_PRESSURE_SEALEVELHPA = 1_013.25f;// Average sea level pressure is 1013.25 hPa
+	private float SENSORS_DPS_TO_RADS = 0.017453293f;      // Degrees/s to rad/s multiplier
+	private float SENSORS_GAUSS_TO_MICROTESLA = 100;       // Gauss to micro-Tesla multiplier
 
 	private I2CBus bus;
 	private I2CDevice accelerometer = null, magnetometer = null;
 	private byte[] accelData, magData;
 
 	private final static NumberFormat Z_FMT = new DecimalFormat("000");
-	private static boolean verbose    = "true".equals(System.getProperty("lsm303.verbose", "false"));
+	private static boolean verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 	private static boolean verboseRaw = "true".equals(System.getProperty("lsm303.verbose.raw", "false"));
 
 	private static boolean verboseAcc = "true".equals(System.getProperty("lsm303.verbose.acc", "false"));
 	private static boolean verboseMag = "true".equals(System.getProperty("lsm303.verbose.mag", "false"));
 
 	private static boolean useLowPassFilter = "true".equals(System.getProperty("lsm303.low.pass.filter", "true")); // default true
-
 	private static boolean logForCalibration = "true".equals(System.getProperty("lsm303.log.for.calibration", "false"));
 
 	private double pitch = 0D, roll = 0D, heading = 0D;
@@ -109,6 +105,7 @@ public class LSM303 {
 	private long wait = 1_000L; // Default
 	private LSM303Listener dataListener = null;
 
+	// Keys for the calibration map
 	public final static String MAG_X_OFFSET = "MagXOffset";
 	public final static String MAG_Y_OFFSET = "MagYOffset";
 	public final static String MAG_Z_OFFSET = "MagZOffset";
@@ -126,6 +123,7 @@ public class LSM303 {
 	public final static String ACC_Z_COEFF = "AccZCoeff";
 
 	private final static Map<String, Double> DEFAULT_MAP = new HashMap<>();
+
 	static {
 		DEFAULT_MAP.put(MAG_X_OFFSET, 0d);
 		DEFAULT_MAP.put(MAG_Y_OFFSET, 0d);
@@ -150,7 +148,12 @@ public class LSM303 {
 	}
 
 	public void setCalibrationValue(String key, double val) {
+		// WARNING!! The values depend heavily on USE_NORM value.
 		calibrationMap.put(key, val);
+	}
+
+	public Map<String, Double> getCalibrationMap() {
+		return calibrationMap;
 	}
 
 	private void setMagGain(int gain) throws IOException {
@@ -192,13 +195,13 @@ public class LSM303 {
 		this(EnabledFeature.BOTH, true);
 	}
 
-	public LSM303(boolean startOnLoad) throws I2CFactory.UnsupportedBusNumberException, IOException {
-		this(EnabledFeature.BOTH, startOnLoad);
+	public LSM303(boolean autoStart) throws I2CFactory.UnsupportedBusNumberException, IOException {
+		this(EnabledFeature.BOTH, autoStart);
 	}
 
-	public LSM303(EnabledFeature feature, boolean startOnLoad) throws I2CFactory.UnsupportedBusNumberException, IOException {
+	public LSM303(EnabledFeature feature, boolean autoStart) throws I2CFactory.UnsupportedBusNumberException, IOException {
 		if (verbose) {
-			System.out.println("Starting sensors reading:");
+			System.out.println("Starting sensors reading.");
 		}
 		// Get i2c bus
 		bus = I2CFactory.getInstance(I2CBus.BUS_1); // Depends on the RasPi version
@@ -207,17 +210,25 @@ public class LSM303 {
 		}
 		// Get device itself
 		if (feature.equals(EnabledFeature.ACCELEROMETER) || feature.equals(EnabledFeature.BOTH)) {
-			accelerometer = bus.getDevice(LSM303_ADDRESS_ACCEL);
+			try {
+				accelerometer = bus.getDevice(LSM303_ADDRESS_ACCEL);
+			} catch (IOException ioe) {
+				throw new IOException("Error getting the Accelerometer device", ioe);
+			}
 		}
 		if (feature.equals(EnabledFeature.MAGNETOMETER) || feature.equals(EnabledFeature.BOTH)) {
-			magnetometer = bus.getDevice(LSM303_ADDRESS_MAG);
+			try {
+				magnetometer = bus.getDevice(LSM303_ADDRESS_MAG);
+			} catch (IOException ioe) {
+				throw new IOException("Error getting the Magnetometer device", ioe);
+			}
 		}
 		if (verbose) {
 			System.out.println("Connected to devices. OK.");
 		}
-      /*
-       * Start sensing
-       */
+		/*
+		 * Start sensing
+		 */
 		// Enable accelerometer
 		if (accelerometer != null) {
 			accelerometer.write(LSM303_REGISTER_ACCEL_CTRL_REG1_A, (byte) 0x27); // 00100111
@@ -237,9 +248,9 @@ public class LSM303 {
 				System.out.println("Magnetometer OK.");
 			}
 		}
-		if (startOnLoad) {
+		if (autoStart) {
 			startReading();
-		} else {
+		} else if (verbose) {
 			System.out.println("Not starting from the constructor");
 		}
 	}
@@ -297,10 +308,12 @@ public class LSM303 {
 
 	private final float ALPHA = 0.15f; // For the low pass filter (smoothing)
 
+	private final static boolean USE_NORM = true; // TODO See what the default should be...
+
 	private void readingSensors()
 			throws IOException {
 		if (logForCalibration) {
-			System.out.println("accX;accY;accZ;magX;magY;magZ;accNorm;magNorm");
+			System.out.println("rawAccX;rawAccY;rawAccZ;rawMagX;rawMagY;rawMagZ;accX;accY;accZ;magX;magY;magZ;accNorm;magNorm");
 		}
 
 		while (keepReading) {
@@ -308,14 +321,14 @@ public class LSM303 {
 			magData = new byte[6];
 
 			int accelX = 0, accelY = 0, accelZ = 0;
-			float accX = 0f, accY = 0f, accZ = 0f;
-			float accXfiltered = 0f, accYfiltered = 0f, accZfiltered = 0f;
+			double accX = 0d, accY = 0d, accZ = 0d;
+			double accXfiltered = 0d, accYfiltered = 0d, accZfiltered = 0d;
 			int magneticX = 0, magneticY = 0, magneticZ = 0;
-			float magX = 0f, magY = 0f, magZ = 0f;
-			float magXfiltered = 0f, magYfiltered = 0f, magZfiltered = 0f;
+			double magX = 0d, magY = 0d, magZ = 0d;
+			double magXfiltered = 0d, magYfiltered = 0d, magZfiltered = 0d;
 
 			double pitchDegrees = -Double.MAX_VALUE, rollDegrees = -Double.MAX_VALUE;
-			float heading = 0f;
+			double heading = 0f;
 			double magNorm = 0d, accNorm = 0d;
 
 			if (accelerometer != null) {
@@ -334,46 +347,41 @@ public class LSM303 {
 					System.out.println(String.format("Raw(int)Acc XYZ %d %d %d (0x%04X, 0x%04X, 0x%04X)", accelX, accelY, accelZ, accelX & 0xFFFF, accelY & 0xFFFF, accelZ & 0xFFFF));
 				}
 
-				accX = (float) accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
-				accY = (float) accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
-				accZ = (float) accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+				accX = accelX * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+				accY = accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+				accZ = accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
-				accX = (float)(calibrationMap.get(ACC_X_OFFSET) + (accX * calibrationMap.get(ACC_X_COEFF)));
-				accY = (float)(calibrationMap.get(ACC_Y_OFFSET) + (accY * calibrationMap.get(ACC_Y_COEFF)));
-				accZ = (float)(calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF)));
+				accX = calibrationMap.get(ACC_X_OFFSET) + (accX * calibrationMap.get(ACC_X_COEFF));
+				accY = calibrationMap.get(ACC_Y_OFFSET) + (accY * calibrationMap.get(ACC_Y_COEFF));
+				accZ = calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF));
 
 				accNorm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
 
 				if (verboseAcc) {
 					System.out.println(String.format("Acc norm: %f", accNorm));
 				}
-				if (false && accNorm != 0) {
+				if (USE_NORM && accNorm != 0) {
 					accX /= accNorm;
 					accY /= accNorm;
 					accZ /= accNorm;
 				}
 
 				if (useLowPassFilter) {
-					accXfiltered = (float)((accX * ALPHA) + (accXfiltered * (1d - ALPHA)));
-					accYfiltered = (float)((accY * ALPHA) + (accYfiltered * (1d - ALPHA)));
-					accZfiltered = (float)((accZ * ALPHA) + (accZfiltered * (1d - ALPHA)));
+					accXfiltered = lowPass(ALPHA, accX, accXfiltered);
+					accYfiltered = lowPass(ALPHA, accY, accYfiltered);
+					accZfiltered = lowPass(ALPHA, accZ, accZfiltered);
 				} else {
 					accXfiltered = accX;
 					accYfiltered = accY;
 					accZfiltered = accZ;
 				}
-				if (true) {
-			/*
-				pitch = atan (x / sqrt(y^2 + z^2));
-				roll  = atan (y / sqrt(x^2 + z^2));
-			 */
-					pitchDegrees = Math.toDegrees(Math.atan(accXfiltered / Math.sqrt((accYfiltered * accYfiltered) + (accZfiltered * accZfiltered))));
-					rollDegrees = Math.toDegrees(Math.atan(accYfiltered / Math.sqrt((accXfiltered * accXfiltered) + (accZfiltered * accZfiltered))));
-				} else {
-					// Other option for pitch & roll.
-					pitchDegrees = Math.toDegrees(Math.asin((double) accXfiltered));
-					rollDegrees = Math.toDegrees(Math.asin((double) accYfiltered));
-				}
+				/*
+					pitch = atan (x / sqrt(y^2 + z^2));
+					roll  = atan (y / sqrt(x^2 + z^2));
+				 */
+				pitchDegrees = Math.toDegrees(Math.atan(accXfiltered / Math.sqrt((accYfiltered * accYfiltered) + (accZfiltered * accZfiltered))));
+				rollDegrees = Math.toDegrees(Math.atan(accYfiltered / Math.sqrt((accXfiltered * accXfiltered) + (accZfiltered * accZfiltered))));
+
 				setPitch(pitchDegrees);
 				setRoll(rollDegrees);
 
@@ -402,22 +410,27 @@ public class LSM303 {
 				magY = magneticY;
 				magZ = magneticZ;
 
-				magX = (float)(calibrationMap.get(MAG_X_OFFSET) + (magX * calibrationMap.get(MAG_X_COEFF)));
-				magY = (float)(calibrationMap.get(MAG_Y_OFFSET) + (magY * calibrationMap.get(MAG_Y_COEFF)));
-				magZ = (float)(calibrationMap.get(MAG_Z_OFFSET) + (magZ * calibrationMap.get(MAG_Z_COEFF)));
+				magX = (calibrationMap.get(MAG_X_OFFSET) + (magX * calibrationMap.get(MAG_X_COEFF)));
+				magY = (calibrationMap.get(MAG_Y_OFFSET) + (magY * calibrationMap.get(MAG_Y_COEFF)));
+				magZ = (calibrationMap.get(MAG_Z_OFFSET) + (magZ * calibrationMap.get(MAG_Z_COEFF)));
+
+				// TODO See that...
+//		  magX = magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//		  magY = magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//		  magZ = magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
 
 				magNorm = Math.sqrt((magX * magX) + (magY * magY) + (magZ * magZ));
 
-				if (false && magNorm != 0) {
-					magX = (float) magneticX / (float) magNorm;
-					magY = (float) magneticY / (float) magNorm;
-					magZ = (float) magneticZ / (float) magNorm;
+				if (USE_NORM && magNorm != 0) {
+					magX /= magNorm;
+					magY /= magNorm;
+					magZ /= magNorm;
 				}
 
 				if (useLowPassFilter) {
-					magXfiltered = (float)((magX * ALPHA) + (magXfiltered * (1d - ALPHA)));
-					magYfiltered = (float)((magY * ALPHA) + (magYfiltered * (1d - ALPHA)));
-					magZfiltered = (float)((magZ * ALPHA) + (magZfiltered * (1d - ALPHA)));
+					magXfiltered = lowPass(ALPHA, magX, magXfiltered);
+					magYfiltered = lowPass(ALPHA, magY, magYfiltered);
+					magZfiltered = lowPass(ALPHA, magZ, magZfiltered);
 				} else {
 					magXfiltered = magX;
 					magYfiltered = magY;
@@ -430,13 +443,7 @@ public class LSM303 {
 					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
 					magYcomp = (magYfiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZfiltered * Math.sin(Math.toRadians(rollDegrees)));
 				}
-				// TODO See that...
-//		  float magneticX_ = (float) magneticX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//		  float magneticY_ = (float) magneticY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//		  float magneticZ_ = (float) magneticZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
-				// _TODO_ Compensate with pitch & roll
-//		  heading = - (float) Math.toDegrees(Math.atan2(magneticY_, magneticX_)); // Same as below (the ratio remains the same).
-				heading = (float) Math.toDegrees(Math.atan2(magYcomp, magXcomp));
+				heading = Math.toDegrees(Math.atan2(magYcomp, magXcomp));
 				while (heading < 0) {
 					heading += 360f;
 				}
@@ -452,27 +459,49 @@ public class LSM303 {
 
 			if (dataListener != null) {
 				// Use the values as you want here.
-				dataListener.dataDetected(accX, accY, accZ, magneticX, magneticY, magneticZ, heading, (float) pitchDegrees, (float) rollDegrees);
+				dataListener.dataDetected(accelX, accelY, accelZ, magneticX, magneticY, magneticZ, heading, pitchDegrees, rollDegrees);
 			} else {
 				if (verbose) {
-					System.out.println(String.format("heading: %s (mag), pitch: %s, roll: %s",
-							Z_FMT.format(heading),
-							Z_FMT.format(pitch),
-							Z_FMT.format(roll)));
+					System.out.println(
+							String.format("heading: %s (mag), pitch: %s, roll: %s",
+									Z_FMT.format(heading),
+									Z_FMT.format(pitch),
+									Z_FMT.format(roll)));
 				}
 			}
 			if (logForCalibration) {
-				// Raw data
-	//		System.out.println(String.format("%d;%d;%d;%d;%d;%d", accelX, accelY, accelZ, magneticX, magneticY, magneticZ));
-				// Filtered (smoothed)
-				System.out.println(String.format("%f;%f;%f;%f;%f;%f;%f;%f", accXfiltered, accYfiltered, accZfiltered, magXfiltered, magYfiltered, magZfiltered, accNorm, magNorm));
+				System.out.println(
+						String.format("%d;%d:%d;%d;%d;%d;%f;%f;%f;%f;%f;%f;%f;%f",
+								accelX,       // Raw data
+								accelY,
+								accelZ,
+								magneticX,
+								magneticY,
+								magneticZ,
+								accXfiltered, // filtered (smoothed, low pass filter)
+								accYfiltered,
+								accZfiltered,
+								magXfiltered,
+								magYfiltered,
+								magZfiltered,
+								accNorm,      // norms
+								magNorm));
 			}
 			try {
-				Thread.sleep(this.wait);
+				if (this.wait > 0) {
+					Thread.sleep(this.wait);
+				}
 			} catch (InterruptedException ie) {
 				System.err.println(ie.getMessage());
 			}
 		}
+		if (verbose) {
+			System.out.println("Exiting LSM303 reading thread");
+		}
+	}
+
+	private static double lowPass(double alpha, double value, double acc) {
+		return (value * alpha) + (acc * (1d - alpha));
 	}
 
 	private static int accel12(byte[] list, int idx) {
@@ -504,31 +533,47 @@ public class LSM303 {
 	 * @param args
 	 * @throws I2CFactory.UnsupportedBusNumberException
 	 */
-	public static void main(String... args) throws I2CFactory.UnsupportedBusNumberException, IOException {
-		verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
+	public static void main(String... args) {
+//	verbose = "true".equals(System.getProperty("lsm303.verbose", "false"));
 //	System.out.println("Verbose: " + verbose);
 
 //	System.setProperty("lsm303.log.for.calibration", "true");
 
-		LSM303 sensor = new LSM303(false);
-		sensor.setWait(250); // 1/4 sec
+		try {
+			LSM303 sensor = new LSM303(false);
+			sensor.setWait(250); // 1/4 sec
 
-		// Calibration values
-		sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 9);
-		sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -16);
+			// Calibration values
+			if (!"true".equals(System.getProperty("lsm303.log.for.calibration"))) {
+				sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 9);
+				sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -16);
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			System.out.println("\nQuitting...");
-			synchronized (sensor) {
-				sensor.setKeepReading(false);
-				try {
-					Thread.sleep(2 * sensor.wait);
-					System.out.println("Bye.");
-				} catch (InterruptedException ie) {
-					System.err.println(ie.getMessage());
-				}
+				System.out.println(sensor.getCalibrationMap());
 			}
-		}));
-		sensor.startReading();
+
+			Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+				if (verbose) {
+					System.out.println("\nQuitting...");
+				}
+				synchronized (sensor) {
+					sensor.setKeepReading(false);
+					try {
+						Thread.sleep(2 * sensor.wait);
+						if (verbose) {
+							System.out.println("Bye.");
+						}
+					} catch (InterruptedException ie) {
+						System.err.println(ie.getMessage());
+					}
+				}
+			}));
+			sensor.startReading();
+		} catch (I2CFactory.UnsupportedBusNumberException ubne) {
+			System.err.println("Bad bus. Not on a Raspberry Pi?");
+			ubne.printStackTrace();
+		} catch (IOException ioe) {
+			System.err.println("IO Error");
+			ioe.printStackTrace();
+		}
 	}
 }

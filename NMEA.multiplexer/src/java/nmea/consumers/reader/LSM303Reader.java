@@ -40,7 +40,7 @@ public class LSM303Reader extends NMEAReader {
 		this.setVerbose("true".equals(System.getProperty("lsm303.data.verbose", "false")));
 		this.dampingService = new DampingService<>(damping);
 		try {
-			this.lsm303 = new LSM303();
+			this.lsm303 = new LSM303(); // TODO Calibration parameters!!
 		} catch (I2CFactory.UnsupportedBusNumberException e) {
 			e.printStackTrace();
 		} catch (IOException ioe) {
@@ -93,6 +93,7 @@ public class LSM303Reader extends NMEAReader {
 		// Start a thread that will broadcast the *damped* values, every second.
 		final LSM303Reader instance = this;
 		Thread feeder = new Thread("lsm303.nmea.feeder") {
+			@Override
 			public void run() {
 				while (instance.canRead()) {
 					DegreeAngle smooth = null;
