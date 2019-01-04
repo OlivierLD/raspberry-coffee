@@ -1,6 +1,4 @@
 #!/bin/bash
-PI4J_HOME=/opt/pi4j
-CP=./classes
-CP=$CP:$PI4J_HOME/lib/pi4j-core.jar
+CP=./build/libs/I2C.SPI-1.0-all.jar
 OPT=-Darduino.verbose=true
 sudo java -cp $CP $OPT i2c.comm.I2CArduino

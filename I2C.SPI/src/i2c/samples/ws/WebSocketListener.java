@@ -1,107 +1,89 @@
 package i2c.samples.ws;
 
 import i2c.servo.pwm.PCA9685;
-
-import java.net.URI;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
-
 import org.json.JSONObject;
 
-public class WebSocketListener
-{
-  private final static boolean DEBUG = false;
+import java.net.URI;
 
-  private boolean keepWorking = true;
-  private WebSocketClient webSocketClient = null;
+public class WebSocketListener {
+	private final static boolean DEBUG = false;
 
-  PCA9685 servoBoard = null;
-  private final int freq = 60;
-  // For the TowerPro SG-5010
-  private final static int servoMin = 150;   // -90 deg
-  private final static int servoMax = 600;   // +90 deg
+	private boolean keepWorking = true;
+	private WebSocketClient webSocketClient = null;
 
-  private final static int STANDARD_SERVO_CHANNEL   = 15;
+	PCA9685 servoBoard = null;
+	private final int freq = 60;
+	// For the TowerPro SG-5010
+	private final static int servoMin = 150;   // -90 deg
+	private final static int servoMax = 600;   // +90 deg
 
-  private int servo = STANDARD_SERVO_CHANNEL;
+	private final static int STANDARD_SERVO_CHANNEL = 15;
 
-  public WebSocketListener() throws Exception
-  {
-    try
-    {
-      servoBoard = new PCA9685();
-      servoBoard.setPWMFreq(freq); // Set frequency in Hz
-    }
-    catch (UnsatisfiedLinkError ule)
-    {
-      System.err.println("You're not on the PI, are you?");
-    }
+	private int servo = STANDARD_SERVO_CHANNEL;
 
-    String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
+	public WebSocketListener() throws Exception {
+		try {
+			servoBoard = new PCA9685();
+			servoBoard.setPWMFreq(freq); // Set frequency in Hz
+		} catch (UnsatisfiedLinkError ule) {
+			System.err.println("You're not on the Pi, are you?");
+		}
 
-    initWebSocketConnection(wsUri);
-  }
+		String wsUri = System.getProperty("ws.uri", "ws://localhost:9876/");
 
-  private void initWebSocketConnection(String serverURI)
-  {
-    try
-    {
-      webSocketClient = new WebSocketClient(new URI(serverURI), (Draft)null)
-        {
-          @Override
-          public void onMessage(String mess)
-          {
-        //  System.out.println("    . Text message :[" + mess + "]");
-            JSONObject json = new JSONObject(mess);
-            String valueContent = ((JSONObject)json.get("data")).get("text").toString().replace("&quot;", "\"");
-            JSONObject valueObj = new JSONObject(valueContent);
-        //  System.out.println("    . Mess content:[" + ((JSONObject)json.get("data")).get("text") + "]");
-            int servoValue = valueObj.getInt("value");
-            System.out.println("Servo Value:" + servoValue);
-            // TODO Drive the servo here
-            if (servoBoard != null)
-            {
-              System.out.println("Setting the servo to " + servoValue);
-              if (servoValue < -90 || servoValue > 90)
-                System.err.println("Between -90 and 90 only");
-              else
-              {
-                int on = 0;
-                int off = (int)(servoMin + (((double)(servoValue + 90) / 180d) * (servoMax - servoMin)));
-                System.out.println("setPWM(" + servo + ", " + on + ", " + off + ");");
-                servoBoard.setPWM(servo, on, off);
-                System.out.println("-------------------");
-              }
-            }
-          }
+		initWebSocketConnection(wsUri);
+	}
 
-          @Override
-          public void onOpen( ServerHandshake handshake )
-          {
-          }
+	private void initWebSocketConnection(String serverURI) {
+		try {
+			webSocketClient = new WebSocketClient(new URI(serverURI), (Draft) null) {
+				@Override
+				public void onMessage(String mess) {
+					//  System.out.println("    . Text message :[" + mess + "]");
+					JSONObject json = new JSONObject(mess);
+					String valueContent = ((JSONObject) json.get("data")).get("text").toString().replace("&quot;", "\"");
+					JSONObject valueObj = new JSONObject(valueContent);
+					//  System.out.println("    . Mess content:[" + ((JSONObject)json.get("data")).get("text") + "]");
+					int servoValue = valueObj.getInt("value");
+					System.out.println("Servo Value:" + servoValue);
+					// TODO Drive the servo here
+					if (servoBoard != null) {
+						System.out.println("Setting the servo to " + servoValue);
+						if (servoValue < -90 || servoValue > 90) {
+							System.err.println("Between -90 and 90 only");
+						} else {
+							int on = 0;
+							int off = (int) (servoMin + (((double) (servoValue + 90) / 180d) * (servoMax - servoMin)));
+							System.out.println("setPWM(" + servo + ", " + on + ", " + off + ");");
+							servoBoard.setPWM(servo, on, off);
+							System.out.println("-------------------");
+						}
+					}
+				}
 
-          @Override
-          public void onClose( int code, String reason, boolean remote )
-          {
-          }
+				@Override
+				public void onOpen(ServerHandshake handshake) {
+				}
 
-          @Override
-          public void onError( Exception ex )
-          {
-          }
-      };
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-    }
-  }
+				@Override
+				public void onClose(int code, String reason, boolean remote) {
+				}
 
-  public static void main(String... args) throws Exception
-  {
-    System.out.println("System variable ws.uri can be used if the URL is not ws://localhost:9876/");
-    new WebSocketListener();
-  }
+				@Override
+				public void onError(Exception ex) {
+				}
+			};
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public static void main(String... args) throws Exception {
+		System.out.println("System variable ws.uri can be used if the URL is not ws://localhost:9876/");
+		new WebSocketListener();
+	}
 }
 
