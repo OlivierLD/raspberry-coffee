@@ -471,7 +471,7 @@ public class LSM303 {
 			}
 			if (logForCalibration) {
 				System.out.println(
-						String.format("%d;%d:%d;%d;%d;%d;%f;%f;%f;%f;%f;%f;%f;%f",
+						String.format("%d;%d;%d;%d;%d;%d;%f;%f;%f;%f;%f;%f;%f;%f",
 								accelX,       // Raw data
 								accelY,
 								accelZ,
