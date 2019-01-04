@@ -362,19 +362,20 @@ public class LSM303 {
 					accYfiltered = accY;
 					accZfiltered = accZ;
 				}
+				if (true) {
 			/*
 				pitch = atan (x / sqrt(y^2 + z^2));
 				roll  = atan (y / sqrt(x^2 + z^2));
 			 */
-				pitchDegrees = Math.toDegrees(Math.atan(accXfiltered / Math.sqrt((accYfiltered * accYfiltered) + (accZfiltered * accZfiltered))));
-				rollDegrees = Math.toDegrees(Math.atan(accYfiltered / Math.sqrt((accXfiltered * accXfiltered) + (accZfiltered * accZfiltered))));
-
-				// Other option for pitch & roll. TODO Sort this out.
-				pitchDegrees = Math.toDegrees(Math.asin((double)accXfiltered));
-				rollDegrees = Math.toDegrees(- Math.asin((double)accYfiltered));
-
-				setPitch(pitchDegrees); // TODO make sure the range is [-180..180]
-				setRoll(rollDegrees);   // TODO make sure the range is [-180..180]
+					pitchDegrees = Math.toDegrees(Math.atan(accXfiltered / Math.sqrt((accYfiltered * accYfiltered) + (accZfiltered * accZfiltered))));
+					rollDegrees = Math.toDegrees(Math.atan(accYfiltered / Math.sqrt((accXfiltered * accXfiltered) + (accZfiltered * accZfiltered))));
+				} else {
+					// Other option for pitch & roll.
+					pitchDegrees = Math.toDegrees(Math.asin((double) accXfiltered));
+					rollDegrees = Math.toDegrees(Math.asin((double) accYfiltered));
+				}
+				setPitch(pitchDegrees);
+				setRoll(rollDegrees);
 
 				if (verboseAcc) {
 					System.out.println("Pitch & Roll with Accelerometer:");
