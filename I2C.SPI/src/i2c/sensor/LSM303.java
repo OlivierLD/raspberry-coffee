@@ -351,10 +351,6 @@ public class LSM303 {
 				accY = accelY * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 				accZ = accelZ * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
-				accX = calibrationMap.get(ACC_X_OFFSET) + (accX * calibrationMap.get(ACC_X_COEFF));
-				accY = calibrationMap.get(ACC_Y_OFFSET) + (accY * calibrationMap.get(ACC_Y_COEFF));
-				accZ = calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF));
-
 				accNorm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
 
 				if (verboseAcc) {
@@ -365,6 +361,10 @@ public class LSM303 {
 					accY /= accNorm;
 					accZ /= accNorm;
 				}
+
+				accX = calibrationMap.get(ACC_X_OFFSET) + (accX * calibrationMap.get(ACC_X_COEFF));
+				accY = calibrationMap.get(ACC_Y_OFFSET) + (accY * calibrationMap.get(ACC_Y_COEFF));
+				accZ = calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF));
 
 				if (useLowPassFilter) {
 					accXfiltered = lowPass(ALPHA, accX, accXfiltered);
@@ -410,10 +410,6 @@ public class LSM303 {
 				magY = magneticY;
 				magZ = magneticZ;
 
-				magX = (calibrationMap.get(MAG_X_OFFSET) + (magX * calibrationMap.get(MAG_X_COEFF)));
-				magY = (calibrationMap.get(MAG_Y_OFFSET) + (magY * calibrationMap.get(MAG_Y_COEFF)));
-				magZ = (calibrationMap.get(MAG_Z_OFFSET) + (magZ * calibrationMap.get(MAG_Z_COEFF)));
-
 				// TODO See that...
 //		  magX = magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
 //		  magY = magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
@@ -426,6 +422,10 @@ public class LSM303 {
 					magY /= magNorm;
 					magZ /= magNorm;
 				}
+
+				magX = (calibrationMap.get(MAG_X_OFFSET) + (magX * calibrationMap.get(MAG_X_COEFF)));
+				magY = (calibrationMap.get(MAG_Y_OFFSET) + (magY * calibrationMap.get(MAG_Y_COEFF)));
+				magZ = (calibrationMap.get(MAG_Z_OFFSET) + (magZ * calibrationMap.get(MAG_Z_COEFF)));
 
 				if (useLowPassFilter) {
 					magXfiltered = lowPass(ALPHA, magX, magXfiltered);
