@@ -300,7 +300,7 @@ public class LSM303 {
 	private void readingSensors()
 			throws IOException {
 		if (logForCalibration) {
-			System.out.println("accX;accY;accZ;magX;magY;magZ");
+			System.out.println("accX;accY;accZ;magX;magY;magZ;accNorm;magNorm");
 		}
 
 		while (keepReading) {
@@ -316,7 +316,7 @@ public class LSM303 {
 
 			double pitchDegrees = -Double.MAX_VALUE, rollDegrees = -Double.MAX_VALUE;
 			float heading = 0f;
-			double norm = 0d;
+			double magNorm = 0d, accNorm = 0d;
 
 			if (accelerometer != null) {
 				accelerometer.write((byte) (LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80));
@@ -342,15 +342,15 @@ public class LSM303 {
 				accY = (float)(calibrationMap.get(ACC_Y_OFFSET) + (accY * calibrationMap.get(ACC_Y_COEFF)));
 				accZ = (float)(calibrationMap.get(ACC_Z_OFFSET) + (accZ * calibrationMap.get(ACC_Z_COEFF)));
 
-				norm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
+				accNorm = Math.sqrt((accX * accX) + (accY * accY) + (accZ * accZ));
 
 				if (verboseAcc) {
-					System.out.println(String.format("Acc norm: %f", norm));
+					System.out.println(String.format("Acc norm: %f", accNorm));
 				}
-				if (false && norm != 0) {
-					accX /= norm;
-					accY /= norm;
-					accZ /= norm;
+				if (false && accNorm != 0) {
+					accX /= accNorm;
+					accY /= accNorm;
+					accZ /= accNorm;
 				}
 
 				if (useLowPassFilter) {
@@ -405,12 +405,12 @@ public class LSM303 {
 				magY = (float)(calibrationMap.get(MAG_Y_OFFSET) + (magY * calibrationMap.get(MAG_Y_COEFF)));
 				magZ = (float)(calibrationMap.get(MAG_Z_OFFSET) + (magZ * calibrationMap.get(MAG_Z_COEFF)));
 
-				norm = Math.sqrt((magX * magX) + (magY * magY) + (magZ * magZ));
+				magNorm = Math.sqrt((magX * magX) + (magY * magY) + (magZ * magZ));
 
-				if (false && norm != 0) {
-					magX = (float) magneticX / (float) norm;
-					magY = (float) magneticY / (float) norm;
-					magZ = (float) magneticZ / (float) norm;
+				if (false && magNorm != 0) {
+					magX = (float) magneticX / (float) magNorm;
+					magY = (float) magneticY / (float) magNorm;
+					magZ = (float) magneticZ / (float) magNorm;
 				}
 
 				if (useLowPassFilter) {
@@ -464,7 +464,7 @@ public class LSM303 {
 				// Raw data
 	//		System.out.println(String.format("%d;%d;%d;%d;%d;%d", accelX, accelY, accelZ, magneticX, magneticY, magneticZ));
 				// Filtered (smoothed)
-				System.out.println(String.format("%f;%f;%f;%f;%f;%f", accXfiltered, accYfiltered, accZfiltered, magXfiltered, magYfiltered, magZfiltered));
+				System.out.println(String.format("%f;%f;%f;%f;%f;%f;%f;%f", accXfiltered, accYfiltered, accZfiltered, magXfiltered, magYfiltered, magZfiltered, accNorm, magNorm));
 			}
 			try {
 				Thread.sleep(this.wait);
