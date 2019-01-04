@@ -545,8 +545,8 @@ public class LSM303 {
 
 			// Calibration values
 			if (!"true".equals(System.getProperty("lsm303.log.for.calibration"))) {
-				sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 9);
-				sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -16);
+				sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 0.008);
+				sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -0.0275);
 
 				System.out.println(sensor.getCalibrationMap());
 			}
@@ -572,7 +572,7 @@ public class LSM303 {
 			System.err.println("Bad bus. Not on a Raspberry Pi?");
 			ubne.printStackTrace();
 		} catch (IOException ioe) {
-			System.err.println("IO Error");
+			System.err.println("IO Error, device not found?");
 			ioe.printStackTrace();
 		}
 	}
