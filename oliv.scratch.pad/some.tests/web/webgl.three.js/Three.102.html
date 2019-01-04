@@ -31,14 +31,14 @@
     }
 
     // create scene and camera
-    var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+    let scene = new THREE.Scene();
+    let camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
 
     // create a renderer, set its size, append it to the document.
-    var renderer = new THREE.WebGLRenderer({ alpha: false }); // true/false will also change the background
+    let renderer = new THREE.WebGLRenderer({ alpha: false }); // true/false will also change the background
     renderer.setSize(800, 600);
 //  renderer.setClearColor(0xffffff, 1);
-    var axes = new THREE.AxisHelper(20);
+    let axes = new THREE.AxisHelper(20);
     scene.add(axes);
 
     document.getElementById("wow").appendChild(renderer.domElement);
@@ -47,7 +47,7 @@
 
     // See https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj.html
     // instantiate a loader
-    var loader = new THREE.OBJLoader(); // See https://threejs.org/docs/#examples/loaders/OBJLoader
+    let loader = new THREE.OBJLoader(); // See https://threejs.org/docs/#examples/loaders/OBJLoader
 //  var loader = new THREE.ObjectLoader(); // See https://threejs.org/docs/#examples/loaders/OBJLoader
 
     // var meshMaterial = new THREE.MeshDepthMaterial({ wireframe: true, color: 0xff0000 });
@@ -58,13 +58,13 @@
         // resource URL
     //  './Trimaran.obj',
     //  './cube.obj',
-		//  './paperboat.obj',                                            // use -10 for z
-        './simple.boat.obj',                                            // use -10 for z
+		//  './paperboat.obj',                                            // use -10 for zPosition
+        './simple.boat.obj',                                          // use -10 for zPosition
 		//  './js/three.js-master/examples/models/obj/cerberus/Cerberus.obj',
 		//  './js/three.js-master/examples/models/obj/vive-controller/vr_controller_vive_1_5.obj',
-		//  './js/three.js-master/examples/models/obj/walt/WaltHead.obj', // use -150 for z
-		//  './js/three.js-master/examples/models/obj/emerald.obj',       // use -20 for z
-    // './js/three.js-master/examples/models/obj/tree.obj',           // use +3 for z
+		//  './js/three.js-master/examples/models/obj/walt/WaltHead.obj', // use -150 for zPosition
+		//  './js/three.js-master/examples/models/obj/emerald.obj',       // use -20 for zPosition
+    // './js/three.js-master/examples/models/obj/tree.obj',           // use +3 for zPosition
 
         // called when resource is loaded
 		    function (object) {
@@ -73,10 +73,10 @@
 		        object.children[0].material.color = new THREE.Color(0x6893DE); // Some kind of blue
 	        }
 
-          var z = -10;
+            let zPosition = -10;
 
           objectToLoad = object;
-			    objectToLoad.position.set(0, 0, z); // This may change depending the the obj you use...
+			    objectToLoad.position.set(0, 0, zPosition); // This may change depending the the obj you use...
 			    /*                        |  |  |
 			     *                        |  |  z: minus: toward the screen, plus: from the screen to the user
 			     *                        |  y: screen vertical
