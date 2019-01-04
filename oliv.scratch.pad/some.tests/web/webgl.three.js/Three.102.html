@@ -38,8 +38,9 @@
     let renderer = new THREE.WebGLRenderer({ alpha: false }); // true/false will also change the background
     renderer.setSize(800, 600);
 //  renderer.setClearColor(0xffffff, 1);
-    let axes = new THREE.AxisHelper(20);
-    scene.add(axes);
+
+    // let axes = new THREE.AxisHelper(20);
+    // scene.add(axes);
 
     document.getElementById("wow").appendChild(renderer.domElement);
 
