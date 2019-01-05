@@ -423,9 +423,9 @@ public class LSM303 {
 				magZ = (calibrationMap.get(MAG_Z_OFFSET) + (magZ * calibrationMap.get(MAG_Z_COEFF)));
 
 				// TODO See that..., optional?
-				magX = magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-				magY = magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-				magZ = magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
+//				magX = magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//				magY = magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+//				magZ = magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
 
 				if (useLowPassFilter) {
 					magXfiltered = lowPass(ALPHA, magX, magXfiltered);
@@ -439,10 +439,10 @@ public class LSM303 {
 
 				double magXcomp = magXfiltered;
 				double magYcomp = magYfiltered;
-				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
-					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
-					magYcomp = (magYfiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZfiltered * Math.sin(Math.toRadians(rollDegrees)));
-				}
+//				if (pitchDegrees != -Double.MAX_VALUE && rollDegrees != -Double.MAX_VALUE) {
+//					magXcomp = (magXfiltered * Math.cos(Math.toRadians(pitchDegrees))) + (magZfiltered * Math.sin(Math.toRadians(pitchDegrees)));
+//					magYcomp = (magYfiltered * Math.cos(Math.toRadians(rollDegrees))) + (magZfiltered * Math.sin(Math.toRadians(rollDegrees)));
+//				}
 				heading = Math.toDegrees(Math.atan2(magYcomp, magXcomp));
 				while (heading < 0) {
 					heading += 360f;
