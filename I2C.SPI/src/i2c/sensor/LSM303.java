@@ -308,7 +308,7 @@ public class LSM303 {
 
 	private final float ALPHA = 0.15f; // For the low pass filter (smoothing)
 
-	private final static boolean USE_NORM = true; // TODO See what the default should be...
+	private final static boolean USE_NORM = false; // TODO See what the default should be...
 
 	private void readingSensors()
 			throws IOException {
