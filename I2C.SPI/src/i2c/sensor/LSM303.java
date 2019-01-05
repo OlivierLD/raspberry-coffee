@@ -410,11 +410,6 @@ public class LSM303 {
 				magY = magneticY;
 				magZ = magneticZ;
 
-				// TODO See that...
-//		  magX = magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//		  magY = magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-//		  magZ = magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
-
 				magNorm = Math.sqrt((magX * magX) + (magY * magY) + (magZ * magZ));
 
 				if (USE_NORM && magNorm != 0) {
@@ -426,6 +421,11 @@ public class LSM303 {
 				magX = (calibrationMap.get(MAG_X_OFFSET) + (magX * calibrationMap.get(MAG_X_COEFF)));
 				magY = (calibrationMap.get(MAG_Y_OFFSET) + (magY * calibrationMap.get(MAG_Y_COEFF)));
 				magZ = (calibrationMap.get(MAG_Z_OFFSET) + (magZ * calibrationMap.get(MAG_Z_COEFF)));
+
+				// TODO See that..., optional?
+				magX = magX / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+				magY = magY / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+				magZ = magZ / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
 
 				if (useLowPassFilter) {
 					magXfiltered = lowPass(ALPHA, magX, magXfiltered);
