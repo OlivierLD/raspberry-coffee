@@ -545,8 +545,14 @@ public class LSM303 {
 
 			// Calibration values
 			if (!"true".equals(System.getProperty("lsm303.log.for.calibration"))) {
-				sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 0.008);
-				sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -0.0275);
+				sensor.setCalibrationValue(LSM303.MAG_X_OFFSET, 12);
+				sensor.setCalibrationValue(LSM303.MAG_Y_OFFSET, -18.5);
+				sensor.setCalibrationValue(LSM303.MAG_Z_OFFSET, -5);
+
+				sensor.setCalibrationValue(LSM303.MAG_Y_COEFF, 1.05);
+				sensor.setCalibrationValue(LSM303.MAG_Z_COEFF, 1.05);
+
+				sensor.setCalibrationValue(LSM303.ACC_X_OFFSET, 0.05);
 
 				System.out.println(sensor.getCalibrationMap());
 			}
