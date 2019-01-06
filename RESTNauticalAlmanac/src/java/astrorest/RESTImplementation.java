@@ -90,12 +90,12 @@ public class RESTImplementation {
 					ASTRO_PREFIX + "/sun-now",
 					this::getSunDataNow,
 					"Create a request for Sun data now. Requires body payload (GeoPoint)"),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 }
 					"POST",
 					ASTRO_PREFIX + "/sun-path-today",
 					this::getSunPathInTheSky,
 					"Create a request for Sun path today. Requires body payload (GeoPoint)"),
-			new Operation( // Payload like { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 } , Ocean Beach. POST /astro/sun-path-today
+			new Operation( // Payload like { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 } . POST /astro/sun-path-today
 					"POST",
 					ASTRO_PREFIX + "/sun-between-dates",
 					this::getSunDataBetween,
@@ -244,13 +244,14 @@ public class RESTImplementation {
 
 	/**
 	 *
-	 * @param request MUST contain a GeoPoint payload (observer's position)
+	 * @param request MUST contain a GeoPoint payload (observer's position). If not present, will try default.mx.latitude & longitude
 	 * @return
 	 */
 	private Response getSunDataNow(Request request) {
 		Response response = new Response(request.getProtocol(), Response.STATUS_OK);
 
 		GeoPoint pos = null;
+		boolean tryDefaultPos = false;
 
 		if (request.getContent() != null && request.getContent().length > 0) {
 			String payload = new String(request.getContent());
@@ -259,7 +260,6 @@ public class RESTImplementation {
 				StringReader stringReader = new StringReader(payload);
 				try {
 					pos = gson.fromJson(stringReader, GeoPoint.class);
-					System.out.println();
 				} catch (Exception ex) {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
@@ -268,8 +268,36 @@ public class RESTImplementation {
 									.errorMessage(ex.toString()));
 					return response;
 				}
+			} else {
+				tryDefaultPos = true;
+			}
+		} else {
+			tryDefaultPos = true;
+		}
+		if (pos == null && tryDefaultPos) {
+			String strLat = System.getProperty("default.mux.latitude");
+			String strLng = System.getProperty("default.mux.longitude");
+			if (strLat != null && strLng != null) {
+				try {
+					double l = Double.parseDouble(strLat);
+					double g = Double.parseDouble(strLng);
+					pos = new GeoPoint(l, g);
+					System.out.println("getSunDataNow: Default position OK:" + pos.toString());
+				} catch (NumberFormatException nfe) {
+					System.err.println("Moving on...");
+					nfe.printStackTrace();
+				}
 			}
 		}
+		if (pos == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0006")
+							.errorMessage("getSunDataNow: No position provided, no default position found"));
+			return response;
+		}
+
 		BodyDataForPos sunData = getSunData(pos.getL(), pos.getG());
 		String content = new Gson().toJson(sunData);
 		RESTProcessorUtil.generateResponseHeaders(response, content.length());
@@ -293,6 +321,22 @@ public class RESTImplementation {
 				StringReader stringReader = new StringReader(payload);
 				try {
 					pas = gson.fromJson(stringReader, PosAndStep.class);
+					if (pas.position == null) {
+						String strLat = System.getProperty("default.mux.latitude");
+						String strLng = System.getProperty("default.mux.longitude");
+						if (strLat != null && strLng != null) {
+							try {
+								double l = Double.parseDouble(strLat);
+								double g = Double.parseDouble(strLng);
+								GeoPoint defaultGp = new GeoPoint(l, g);
+								pas.position = defaultGp;
+								System.out.println("getSunPathInTheSky: Default position OK:" + defaultGp.toString());
+							} catch (NumberFormatException nfe) {
+								System.err.println("Moving on...");
+								nfe.printStackTrace();
+							}
+						}
+					}
 				} catch (Exception ex) {
 					response = HTTPServer.buildErrorResponse(response,
 							Response.BAD_REQUEST,
@@ -302,6 +346,14 @@ public class RESTImplementation {
 					return response;
 				}
 			}
+		}
+		if (pas.position == null) {
+			response = HTTPServer.buildErrorResponse(response,
+					Response.BAD_REQUEST,
+					new HTTPServer.ErrorPayload()
+							.errorCode("ASTRO-0005")
+							.errorMessage("getSunPathInTheSky: No position provided, no default position found."));
+			return response;
 		}
 		List<BodyAt> sunPath = getSunDataForAllDay(pas.position.getL(), pas.position.getG(), pas.step);
 		String content = new Gson().toJson(sunPath);
