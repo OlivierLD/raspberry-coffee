@@ -25,7 +25,7 @@ public class Pwm01 {
 		GpioPinPwmOutput pin = gpio.provisionSoftPwmOutputPin(RaspiPin.GPIO_02); // , "Standard-Servo");
 //	GpioPinPwmOutput pin = gpio.provisionPwmOutputPin(RaspiPin.GPIO_01); // , "Standard-Servo");
 
-//		n.setMode(PinMode.PWM_OUTPUT);
+//	pin.setMode(PinMode.PWM_OUTPUT);
 		pin.setPwmRange(100);
 		System.out.println("Setting PWM to 100");
 		pin.setPwm(100);

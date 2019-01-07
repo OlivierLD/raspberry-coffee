@@ -85,26 +85,26 @@ public class RESTImplementation {
 					ASTRO_PREFIX + "/positions-in-the-sky",
 					this::getPositionsInTheSky,
 					"Get the Sun's and Moon's position (D & GHA) for an UTC date passed as QS prm named 'at', in DURATION Format. Optional: 'fromL' and 'fromG', 'wandering' (true|[false])."),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 }
 					"POST",
 					ASTRO_PREFIX + "/sun-now",
 					this::getSunDataNow,
 					"Create a request for Sun data now. Requires body payload (GeoPoint)"),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 }
+			new Operation( // Payload like { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 } . POST /astro/sun-path-today
 					"POST",
 					ASTRO_PREFIX + "/sun-path-today",
 					this::getSunPathInTheSky,
-					"Create a request for Sun path today. Requires body payload (GeoPoint)"),
-			new Operation( // Payload like { position: { latitude: 37.76661945, longitude: -122.5166988 }, step: 10 } . POST /astro/sun-path-today
+					"Create a request for Sun path today. Requires body payload (GeoPoint & step)"),
+			new Operation(  // Payload like { latitude: 37.76661945, longitude: -122.5166988 }. POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
 					"POST",
 					ASTRO_PREFIX + "/sun-between-dates",
 					this::getSunDataBetween,
 					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 3 queryString prm : from and to, in DURATION Format, and tz, the timezone name."),
-			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 } , Ocean Beach. POST /astro/sun-between-dates?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
+			new Operation( // Payload like { latitude: 37.76661945, longitude: -122.5166988 }. POST /astro/sun-moon-dec-alt?from=2017-09-01T00:00:00&to=2017-09-02T00:00:01&tz=Europe%2FParis
 					"POST",
 					ASTRO_PREFIX + "/sun-moon-dec-alt",
 					this::getSunMoonDecAlt,
-					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 2 queryString prm : from and to, in DURATION Format."),
+					"Create a request for Sun data between 2 dates. Requires body payload (GeoPoint), and 2 to 3 queryString prm : from and to, in DURATION Format, and optional tz, the timezone name."),
 			new Operation( // Example: GET /astro/utc?tz=America%2FNome,America%2FNew_York,Europe%2FParis,Pacific%2FMarquesas
 					"GET",
 					ASTRO_PREFIX + "/utc",
@@ -282,7 +282,9 @@ public class RESTImplementation {
 					double l = Double.parseDouble(strLat);
 					double g = Double.parseDouble(strLng);
 					pos = new GeoPoint(l, g);
-					System.out.println("getSunDataNow: Default position OK:" + pos.toString());
+					if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+						System.out.println("getSunDataNow: Default position OK:" + pos.toString());
+					}
 				} catch (NumberFormatException nfe) {
 					System.err.println("Moving on...");
 					nfe.printStackTrace();
@@ -330,7 +332,9 @@ public class RESTImplementation {
 								double g = Double.parseDouble(strLng);
 								GeoPoint defaultGp = new GeoPoint(l, g);
 								pas.position = defaultGp;
-								System.out.println("getSunPathInTheSky: Default position OK:" + defaultGp.toString());
+								if ("true".equals(System.getProperty("astro.verbose", "false"))) {
+									System.out.println("getSunPathInTheSky: Default position OK:" + defaultGp.toString());
+								}
 							} catch (NumberFormatException nfe) {
 								System.err.println("Moving on...");
 								nfe.printStackTrace();

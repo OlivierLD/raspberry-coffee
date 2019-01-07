@@ -554,7 +554,7 @@ public class LSM303 {
 
 				sensor.setCalibrationValue(LSM303.ACC_X_OFFSET, 0.05);
 
-				System.out.println(sensor.getCalibrationMap());
+				System.out.println("Calibration parameters:" + sensor.getCalibrationMap());
 			}
 
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> {

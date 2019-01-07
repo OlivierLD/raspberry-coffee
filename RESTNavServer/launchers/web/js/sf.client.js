@@ -128,6 +128,20 @@ var SunFlowerClient = function (dataManager, bp) {
 			}
 			console.log("Failed to get sunflower data..." + (error !== undefined ? error : ' - ') + ', ' + (message !== undefined ? message : ' - '));
 		});
+
+		if (pathAndDataOK === true) {
+
+				if (lat !== undefined && lng !== undefined) {
+					getSunData({latitude: lat, longitude: lng});
+			//	getSunPath({position: {latitude: lat, longitude: lng}}); // Default step: 10, sibling of position.
+					pathAndDataOK = true;
+				} else {
+					getSunData(null);
+			//	getSunPath({}); // Default position by system variables, step: 10, sibling of position.
+					pathAndDataOK = true;
+				}
+		}
+
 	};
 
 };
