@@ -1,5 +1,5 @@
 
-const TABS = ['one', 'two', 'three'];
+const TABS = ['one', 'two', 'three', 'four'];
 
 function openTab(evt, tabNum) {
 	let tablinks = document.getElementsByClassName("tablinks");
@@ -400,7 +400,7 @@ function astroCallback(data) {
 
 	sunAltitude = data.sunObs.alt; // For the doBefore method
 	// TODO if sunAltitude > 0, manage Sun-Path ?
-	
+
 	let dataTable =
 			'<table border="1" class="raw-table">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Alt</th><th>Z</th></tr>' +
 			'<tr><td align="left">' + bodyName("sun") + '</td><td>' + worldMap.decToSex(data.sun.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.sun.gha) + '</td><td align="right">' + worldMap.decToSex(sunLHA) + '</td><td align="right">' +	worldMap.decToSex(data.sunObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.sunObs.z) + '</td></tr>' +

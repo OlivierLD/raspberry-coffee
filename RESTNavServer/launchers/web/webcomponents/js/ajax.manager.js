@@ -8,6 +8,7 @@ const DEBUG = false;
 function initAjax() {
 	let interval = setInterval(function () {
 		fetch();
+		loadSunData();
 	}, 1000);
 }
 
@@ -86,6 +87,37 @@ function fetch() {
 		}
 	}, function (error) { // Reject
 		console.log("Failed to get NMEA data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+	});
+}
+
+function requestSunPath(pos) {
+	var url = "/astro/sun-path-today";
+	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
+}
+
+
+function requestSunData(pos) {
+	var url = "/astro/sun-now";
+	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
+}
+
+function loadSunData() {
+	let getData = requestSunData(null); // null will use the default position
+	getData.then(function (value) { // Resolve
+//  console.log("Done:", value);
+		try {
+			let json = JSON.parse(value);
+			// Specific
+			let sunPathElement = document.getElementById('sun-path-01');
+			if (sunPathElement !== null && sunPathElement !== undefined) {
+				sunPathElement.sunData = json;
+				sunPathElement.repaint();
+			}
+		} catch (err) {
+			console.log("Error:", err, ("\nfor value [" + value + "]"));
+		}
+	}, function (error) { // Reject
+		console.log("Failed to get Sun data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
 

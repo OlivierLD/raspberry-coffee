@@ -27,6 +27,7 @@
 	<script type="module" src="./WorldMap.js"></script>
 	<script type="module" src="./SkyMap.js"></script>
 	<script type="module" src="./SplitFlapDisplay.js"></script>
+	<script type="module" src="./SunPath.js"></script>
 
 	<!-- Scripts -->
 	<script type="text/javascript" src="js/date.proto.js"></script>
@@ -227,6 +228,45 @@
 			setData('compass-rose-01', val);
 			setData('compass-01', val);
 		});
+
+		function loadSunPath() {
+			let getData = requestSunPath({});
+			getData.then(function (value) { // Resolve
+//  		console.log("Done:", value);
+				try {
+					let json = JSON.parse(value);
+					// Specific
+					let sunPathElement = document.getElementById('sun-path-01');
+					if (sunPathElement !== null && sunPathElement !== undefined) {
+						sunPathElement.sunPath = json;
+						sunPathElement.repaint();
+					}
+				} catch (err) {
+					console.log("Error:", err, ("\nfor value [" + value + "]"));
+				}
+			}, function (error) { // Reject
+				console.log("Failed to get Sun Path..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
+			});
+
+		}
+
+		function setNewTilt(range, id) {
+			let elem = document.getElementById(id);
+			var val = range.value;
+			if (elem !== undefined) {
+				elem.tilt = val;
+				elem.repaint();
+			}
+		}
+
+		function setNewZOffset(range, id) {
+			let elem = document.getElementById(id);
+			var val = range.value;
+			if (elem !== undefined) {
+				elem.zOffset = val;
+				elem.repaint();
+			}
+		}
 
 	</script>
 
@@ -536,6 +576,7 @@
 		<button class="tablinks active" onclick="openTab(event, 0)">Overview</button>
 		<button class="tablinks" onclick="openTab(event, 1)">Raw Data</button>
 		<button class="tablinks" onclick="openTab(event, 2)">Visible Sky</button>
+		<button class="tablinks" onclick="openTab(event, 3)">Sun Path</button>
 	</div>
 
 	<!-- The NMEA widgets. The 50px columns are here for the perspective, they are pads on the left and right -->
@@ -796,6 +837,40 @@
 			</div>
 		</div>
 	</div> <!-- End of Tab 3 -->
+
+	<div id="four" style="display: none;">
+		<div id="sun-path-1" style="padding: 10px; text-align: left;">
+			<div style="padding: 10px;">
+				<div style="align: left;">
+					<button onclick="loadSunPath();">Load Sun Path</button>
+				</div>
+				<table>
+					<tr>
+						<td>
+							<!--
+							SUN PATH
+							+-->
+							<div class="black-frame centered">
+								<sun-path id="sun-path-01"
+													class="sun-path-01"
+													width="600"
+													height="600"
+													tilt="-10"/>
+							</div>
+						</td>
+						<td align="left">
+							<input type="range" style="-webkit-appearance: slider-vertical; width: 8px; height: 600px; margin-left: 0;" min="-90" max="90" value="-10" onchange="setNewTilt(this, 'sun-path-01');">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="range" style="width: 100%; height: 8px; margin-left: 0;" min="-90" max="90" value="0" onchange="setNewZOffset(this, 'sun-path-01');">
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div> <!-- End of Tab 4 -->
 
 </body>
 </html>
