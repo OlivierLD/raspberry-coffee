@@ -307,7 +307,7 @@ function callAfter(id) {
 // Example of callback on WorldMap
 function callFirst(id) {
 	document.getElementById(id).setDoFirst(function(worldMap, context) {
-//	console.log("Sun altitude:", sunAltitude);
+//	console.log("Sun elevation:", sunAltitude);
 		if (sunAltitude > -5 && sunAltitude < 5) { // Then change bg color
 			let gradientRadius = 120 + ((5 - Math.abs(sunAltitude)) / 5) * ((Math.min(worldMap.height, worldMap.width) / 2) - 120);
 //		console.log("Gradient Radius:", gradientRadius);
@@ -399,10 +399,9 @@ function astroCallback(data) {
 	let moonLHA = getLHA(data.moon.gha, data.from.longitude);
 
 	sunAltitude = data.sunObs.alt; // For the doBefore method
-	// TODO if sunAltitude > 0, manage Sun-Path ?
 
 	let dataTable =
-			'<table border="1" class="raw-table">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Alt</th><th>Z</th></tr>' +
+			'<table border="1" class="raw-table">' + '<tr><th>Body</th><th>D</th><th>GHA</th><th>LHA</th><th>Elev</th><th>Z</th></tr>' +
 			'<tr><td align="left">' + bodyName("sun") + '</td><td>' + worldMap.decToSex(data.sun.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.sun.gha) + '</td><td align="right">' + worldMap.decToSex(sunLHA) + '</td><td align="right">' +	worldMap.decToSex(data.sunObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.sunObs.z) + '</td></tr>' +
 			'<tr><td align="left">' + bodyName("moon") + '</td><td>' + worldMap.decToSex(data.moon.decl, "NS") + '</td><td align="right">' + worldMap.decToSex(data.moon.gha) + '</td><td align="right">' + worldMap.decToSex(moonLHA) + '</td><td align="right">' +	worldMap.decToSex(data.moonObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.moonObs.z) + '</td></tr>';
 

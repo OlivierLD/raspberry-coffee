@@ -147,8 +147,8 @@
 				fmtDisplay += (     "<td style='text-align: right;'>Refraction</td><td style='text-align: right;'>" + (- result['refraction-minutes']).toFixed(2) + "'</td></tr>");
 				// Line 3
 				fmtDisplay += ("<tr><td style='text-align: right;'>Semi-diameter</td><td style='text-align: right;'>" + result['semi-diameter-minutes'].toFixed(2) + "'</td>");
-				fmtDisplay += (     "<td style='text-align: right;'>Apparent Altitude</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees'] - (appToObsCorrection / 60)) + "</b></td>");
-				fmtDisplay += (     "<td style='text-align: right;'>Observed Altitude</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees']) + "</b></td></tr>");
+				fmtDisplay += (     "<td style='text-align: right;'>Apparent Elevation</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees'] - (appToObsCorrection / 60)) + "</b></td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Observed Elevation</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees']) + "</b></td></tr>");
 				// Line 4
 				fmtDisplay += ("<tr><td style='text-align: right;'>Horizontal Parallax</td><td style='text-align: right;'>" + (result['hp'] * 60).toFixed(2) + "'</td>");
 				fmtDisplay += (     "<td style='text-align: right;'>Apparent Correction</td><td style='text-align: right;'>" + appCorrection.toFixed(2) + "'</td>");
@@ -160,11 +160,11 @@
 				fmtDisplay += ("<tr><td style='text-align: center;' colspan='6'><hr/></td></tr>");
 				fmtDisplay += ("<tr><th style='text-align: left;' colspan='6'>Dead Reckoning:</th></tr>");
 				// Line 6
-				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Observed Altitude</td><td style='text-align: left;' colspan='3'>" + decToSex(result['observed-altitude-degrees']) + "</td></tr>");
+				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Observed Elevation</td><td style='text-align: left;' colspan='3'>" + decToSex(result['observed-altitude-degrees']) + "</td></tr>");
 				// Line 7
 				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Z</td><td style='text-align: left;' colspan='3'>" + decToSex(result['z']) + "</td></tr>");
 				// Line 8
-				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Estimated Altitude</td><td style='text-align: left;' colspan='3'>" + decToSex(result['estimated-altitude-degrees']) + "</td></tr>");
+				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Estimated Elevation</td><td style='text-align: left;' colspan='3'>" + decToSex(result['estimated-altitude-degrees']) + "</td></tr>");
 				// Line 9
 				fmtDisplay += ("<tr><td style='text-align: right;' colspan='3'>Intercept</td><td style='text-align: left;' colspan='3'>" + Math.abs(result['intercept-degrees'] * 60).toFixed(2) + "' " + (result['intercept-degrees']<0?"away from":"towards") + " " + body + "</td></tr>");
 
@@ -221,8 +221,8 @@
 				fmtDisplay += (     "<td style='text-align: right;'>Refraction</td><td style='text-align: right;'>" + (- result['refraction-minutes']).toFixed(2) + "'</td></tr>");
 				// Line 3
 				fmtDisplay += ("<tr><td style='text-align: right;'>Semi-diameter</td><td style='text-align: right;'>" + result['semi-diameter-minutes'].toFixed(2) + "'</td>");
-				fmtDisplay += (     "<td style='text-align: right;'>Apparent Altitude</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees'] - (appToObsCorrection / 60)) + "</b></td>");
-				fmtDisplay += (     "<td style='text-align: right;'>Observed Altitude</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees']) + "</b></td></tr>");
+				fmtDisplay += (     "<td style='text-align: right;'>Apparent Elevation</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees'] - (appToObsCorrection / 60)) + "</b></td>");
+				fmtDisplay += (     "<td style='text-align: right;'>Observed Elevation</td><td style='text-align: right;'><b>" + decToSex(result['observed-altitude-degrees']) + "</b></td></tr>");
 				// Line 4
 				fmtDisplay += ("<tr><td style='text-align: right;'>Horizontal Parallax</td><td style='text-align: right;'>" + (result['hp'] * 60).toFixed(2) + "'</td>");
 				fmtDisplay += (     "<td style='text-align: right;'>Apparent Correction</td><td style='text-align: right;'>" + appCorrection.toFixed(2) + "'</td>");
@@ -453,13 +453,13 @@
 					</td>
 				</tr>
 				<tr>
-					<!-- Instrumental altitude -->
-					<td>Sextant Altitude:</td>
+					<!-- Instrumental elevation -->
+					<td>Sextant Elevation:</td>
 					<td>
 						<input type="number"
 									 id="sextant-degrees"
 									 placeholder="Deg"
-									 title="Altitude degrees"
+									 title="Elevation degrees"
 									 style="width: 40px; text-align: center;"
 									 min="0"
 									 max="90"
@@ -469,7 +469,7 @@
 						<input type="number"
 									 id="sextant-minutes"
 									 placeholder="Minutes"
-									 title="Altitude minutes"
+									 title="Elevation minutes"
 									 style="width: 60px; text-align: center;"
 									 min="0"
 									 max="59.99"
@@ -496,7 +496,7 @@
 		</div>
 		<div>
 			<button onclick="calculateSR();" style="border-radius: 3px; box-shadow: 2px 2px silver;" title="Sight Reduction">Calculate</button>
-			<button onclick="calculateSR(true);" style="border-radius: 3px; box-shadow: 2px 2px silver;" title="Calculate the Sextant altitude for your time and position">Reverse</button>
+			<button onclick="calculateSR(true);" style="border-radius: 3px; box-shadow: 2px 2px silver;" title="Calculate the Sextant elevation for your time and position">Reverse</button>
 		</div>
 		<div id="result" style="margin: 10px;	"></div>
 	</div>

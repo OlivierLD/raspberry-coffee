@@ -2220,7 +2220,7 @@ public class StringParsers {
 		System.out.println("UTC:" + utc.toString());
 		System.out.println("Pos:" + pos.toString());
 		System.out.println(nbs.intValue() + " Satellite(s) in use");
-		System.out.println("Altitude:" + alt);
+		System.out.println("Elevation:" + alt);
 
 		str = "$GPGGA,183334.000,4047.7039,N,07247.9939,W,1,6,1.61,2.0,M,-34.5,M,,*6B";
 		al = parseGGA(str);
@@ -2231,7 +2231,7 @@ public class StringParsers {
 		System.out.println("UTC:" + utc.toString());
 		System.out.println("Pos:" + pos.toString());
 		System.out.println(nbs.intValue() + " Satellite(s) in use");
-		System.out.println("Altitude:" + alt);
+		System.out.println("Elevation:" + alt);
 
 		System.out.println("------- GSA -------");
 		str = "$GPGSA,A,3,19,28,14,18,27,22,31,39,,,,,1.7,1.0,1.3*35";

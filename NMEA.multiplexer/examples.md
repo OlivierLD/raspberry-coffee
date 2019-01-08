@@ -331,14 +331,14 @@ That one is a variation of the [`SunFlower`](https://github.com/OlivierLD/raspbe
 The `SunFlower` project is originally designed to orient a solar panel toward the Sun, to maximize its efficiency.
 The solar panel is driven by two servos or motors, one for the heading (vertical axis), and one for the tilt (horizontal axis).
 
-Based on the device geographical position and the system date, the soft calculates the `altitude` and `azimuth` of the sun,
+Based on the device geographical position and the system date, the soft calculates the `elevation` and `azimuth` of the sun,
 and drives the servos (or motors) accordingly.
 
 The idea here is to forget about the solar panel orientation, get the geographical position from a GPS connected on a serial port, do the astronomical calculations,
 and output several data, available through a REST and HTML interface:
 - Position
 - System and Solar Dates
-- Altitude and Azimuth of the Sun
+- Elevation and Azimuth of the Sun
 
 GPS is read from a `channel`, output produced as a `forwarder`:
 ```properties

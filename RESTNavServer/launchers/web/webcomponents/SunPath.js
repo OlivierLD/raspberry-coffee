@@ -522,8 +522,8 @@ class SunPath extends HTMLElement {
 			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
 			let strAlt = Utilities.decToSex(this.sunHe);
 			let strZ = Utilities.decToSex(this.sunZ);
-			context.fillText("Alt:" + strAlt, 10, 20);
-			context.fillText("Z  :" + strZ, 10, 40);
+			context.fillText("Elevation:" + strAlt, 10, 20);
+			context.fillText("Azimuth  :" + strZ, 10, 40);
 			context.restore();
 		}
 	}
