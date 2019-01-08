@@ -130,7 +130,7 @@ public class RESTImplementation {
 					"GET",
 					ASTRO_PREFIX + "/sight-reduction",
 					this::getSightReductionUserData,
-					"Sight reduction user data sample (for development)"),
+					"Sight reduction user data sample (for development, to get the shape of the returned object)"),
 			new Operation(
 					"POST",
 					ASTRO_PREFIX + "/sight-reduction",
@@ -244,7 +244,8 @@ public class RESTImplementation {
 
 	/**
 	 *
-	 * @param request MUST contain a GeoPoint payload (observer's position). If not present, will try default.mx.latitude & longitude
+	 * @param request MUST contain a GeoPoint payload (observer's position). If not present, will try default.mux.latitude & longitude,
+	 *                an error will be returned if the position is not there, and if no default position is available.
 	 * @return
 	 */
 	private Response getSunDataNow(Request request) {

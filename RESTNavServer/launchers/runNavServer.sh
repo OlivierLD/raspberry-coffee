@@ -103,6 +103,8 @@ JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-12
 #
 JAVA_OPTS="$JAVA_OPTS -Dpolar.file.location=./sample.data/polars/CheoyLee42.polar-coeff"
 #
+JAVA_OPTS="$JAVA_OPTS -Xms64M -Xmx1G"
+#
 echo -e "Using properties:$JAVA_OPTS"
 #
 java -cp $CP $JAVA_OPTS navrest.NavServer

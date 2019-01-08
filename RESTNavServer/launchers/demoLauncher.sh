@@ -12,7 +12,7 @@ fi
 function openBrowser() {
   if [[ `uname -a` == *Linux* ]]
   then
-    sensible-browser "$1"
+    sensible-browser "$1"thunder
   else
     open "$1"
   fi
@@ -30,6 +30,8 @@ do
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  P. Launch proxy CLI, to visualize HTTP & REST traffic 🔎                               |"
 	echo -e "| PG. Launch proxy GUI, to visualize HTTP & REST traffic 🕵️‍                                |"
+	echo -e "+-----------------------------------------------------------------------------------------+"
+	echo -e "|  J. JConsole (JVM Monitoring) 📡                                                        |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "| >> Hint: use 'killns.sh' to stop any running NavServer 🔫                               |"
 	echo -e "| >> Hint: use 'killproxy.sh' to stop any running Proxy Server 🔫                         |"
@@ -71,6 +73,9 @@ do
 	    echo -e "Make sure you use a proxy from your browser(s): Host: this machine, Port: $HTTP_PROXY_PORT"
 	    echo -en "Hit [Return]"
 	    read a
+	    ;;
+	  "J" | "j")
+	    jconsole &
 	    ;;
 	  "1")
 	    PROP_FILE=nmea.mux.no.gps.properties
