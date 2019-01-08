@@ -198,7 +198,7 @@
 				//	console.log("Result:", result);
 
 				let hi = result['instrumental-altitude'];
-				let degPart = hi.toFixed(0);
+				let degPart = Math.floor(hi);
 				let minPart = ((hi - degPart) * 60).toFixed(2);
 
 				document.getElementById("sextant-degrees").value = degPart;
