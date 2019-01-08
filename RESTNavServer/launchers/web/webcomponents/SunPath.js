@@ -9,6 +9,8 @@ if (Math.toRadians === undefined) {
 	};
 }
 
+import * as Utilities from "./utilities/Utilities.js";
+
 const sunPathDefaultColorConfig = {
 	bgColor: 'black', // Used if withGradient = false
 	withGradient: true,
@@ -145,7 +147,7 @@ class SunPath extends HTMLElement {
 		for (let idx=0; idx<json.length; idx++) {
 			if (json[idx].alt < lastAlt) { // Culmination reached
 				let zAtNoon = lastZ;
-	//		console.log("Z at noon:", zAtNoon);
+				//		console.log("Z at noon:", zAtNoon);
 				if (zAtNoon > 90 && zAtNoon < 270) {
 					this.invertX = 1;   // +1 when pointing south
 					if (sunPathVerbose) {
@@ -480,6 +482,7 @@ class SunPath extends HTMLElement {
 		}
 		// Current Sun Pos.
 		if (this.sunHe !== undefined && this.sunZ !== undefined) {
+			context.strokeStyle = this.sunPathColorConfig.sunColor;
 			panelPoint = this.rotateBothWays(this.rotation, this.sunZ, this.side, this._tilt * this.invertX, (this.addToZ + this._zOffset)); // Horizon under the Sun
 			// From center to horizon
 			context.beginPath();
@@ -517,8 +520,10 @@ class SunPath extends HTMLElement {
 			context.save();
 			fontSize = 14;
 			context.font = "" + Math.round(fontSize) + "px " + this.sunPathColorConfig.font;
-			context.fillText("Alt:" + this.sunHe.toFixed(2) + "°", 10, 20); // TODO In Deg min
-			context.fillText("Z  :" + this.sunZ.toFixed(2) + "°", 10, 40);  // TODO In Deg min
+			let strAlt = Utilities.decToSex(this.sunHe);
+			let strZ = Utilities.decToSex(this.sunZ);
+			context.fillText("Alt:" + strAlt, 10, 20);
+			context.fillText("Z  :" + strZ, 10, 40);
 			context.restore();
 		}
 	}

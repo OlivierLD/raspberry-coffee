@@ -240,6 +240,7 @@
 					if (sunPathElement !== null && sunPathElement !== undefined) {
 						sunPathElement.sunPath = json;
 						sunPathElement.repaint();
+						document.getElementById('sun-path-loaded').innerText = 'Sun path loaded ' + (new Date());
 					}
 				} catch (err) {
 					console.log("Error:", err, ("\nfor value [" + value + "]"));
@@ -842,7 +843,7 @@
 		<div id="sun-path-1" style="padding: 10px; text-align: left;">
 			<div style="padding: 10px;">
 				<div style="align: left;">
-					<button onclick="loadSunPath();">Load Sun Path</button>
+					<button onclick="loadSunPath();" style="border-radius: 3px; padding: 3px;">Load Sun Path</button><span id="sun-path-loaded" style="padding: 10px;">Sun path was not loaded.</span>
 				</div>
 				<table>
 					<tr>
