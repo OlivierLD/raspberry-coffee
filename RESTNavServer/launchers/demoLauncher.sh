@@ -24,7 +24,7 @@ while [ "$GO" == "true" ]
 do
 	clear
 	echo -e ">> Note 🛑 : pass 'Y' as parameter to this script to launch a browser after "
-	echo -e "             starting the server"
+	echo -e "             starting the server, like $0 Y"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
