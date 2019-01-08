@@ -40,7 +40,7 @@ do
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
 	echo -e "|  3. Home Weather Station data                                                           |"
 	echo -e "|  4. With GPS and NMEA data, waits for the RMC sentence to be active to begin logging    |"
-	echo -e "|  5. Like '1', with 'Sun Flower' option                                                  |"
+	echo -e "|  5. Like option '1', but with 'Sun Flower' option                                       |"
 	echo -e "|  ... TODO: more.                                                                        |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
