@@ -5,6 +5,7 @@ echo "Usage is $0 [debug|remote-debug|verbose|wait]"
 echo "   Use 'remote-debug' to remote-debug from another machine."
 echo "   Use 'verbose' for a regular look on what's going on."
 echo "   Use 'debug' for a close look on what's going on."
+echo "   Use 'wait' to wait 10 sec before actually starting."
 #
 VERBOSE=false
 DEBUG=false

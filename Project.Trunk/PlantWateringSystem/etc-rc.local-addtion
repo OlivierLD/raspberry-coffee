@@ -1,0 +1,12 @@
+#
+# Add this to /etc/rc.local
+# to start reading the probe
+# when the server starts
+#
+cd /home/pi/raspberry-coffee/Project.Trunk/PlantWateringSystem
+#
+echo -e "Running read.probe.sh..."
+nohup ./read.probe.sh wait > read.probe.log &
+#
+cd ..
+#

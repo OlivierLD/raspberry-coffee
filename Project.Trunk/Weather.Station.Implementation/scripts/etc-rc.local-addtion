@@ -1,5 +1,7 @@
 #
-# Start node server and weather station reader
+# Add this to /etc/rc.local
+# to start the node server and the weather station reader
+# when the server starts
 #
 cd /home/pi/raspberry-coffee/Project.Trunk/Weather.Station.Implementation
 #
@@ -19,4 +21,6 @@ fi
 # ./weather.station.reader > weather.station.log
 echo -e "Running weather.station.reader.sh..."
 nohup ./weather.station.reader.sh > weather.station.log &
+#
+cd ..
 #
