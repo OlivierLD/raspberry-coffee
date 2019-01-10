@@ -36,6 +36,7 @@ do
   elif nocase "$a" "W"
   then
     echo -e "Make sure you have started the WebSocket server (Option N)."
+    echo -e "Running from $PWD"
     if [ -f weather.station.log ]
     then
       rm weather.station.log

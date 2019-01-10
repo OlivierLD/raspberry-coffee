@@ -1,7 +1,7 @@
 #
 # Start node server and weather station reader
 #
-cd raspberry-coffee/Project.Trunk/Weather.Station.Implementation
+cd /home/pi/raspberry-coffee/Project.Trunk/Weather.Station.Implementation
 #
 cd ./node
 if [ -f node.log ]
