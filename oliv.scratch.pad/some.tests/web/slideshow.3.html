@@ -12,7 +12,7 @@
 			margin: 0
 		}
 
-		.theSlides {
+		.the-slides {
 			display: none
 		}
 
@@ -46,7 +46,7 @@
 
 		/* On hover, add a black background color with a little bit see-through */
 		.prev:hover, .next:hover {
-			background-color: rgba(0, 0, 0, 0.3);
+			background-color: rgba(0,0,0,0.8);
 		}
 
 		/* Caption text */
@@ -55,7 +55,7 @@
 			font-size: 15px;
 			padding: 8px 12px;
 			position: absolute;
-			bottom: 50px;
+			bottom: 26px;
 			width: 100%;
 			text-align: center;
 		}
@@ -71,7 +71,7 @@
 
 		/* The dots/bullets/indicators */
 		.dot {
-			cursor: pointer;
+			cursor:pointer;
 			height: 13px;
 			width: 13px;
 			margin: 0 2px;
@@ -81,14 +81,16 @@
 			transition: background-color 0.6s ease;
 		}
 
-		.active, .dot:hover {
-			background-color: #717171;
-		}
-
 		.dots {
 			position: relative;
 			text-align: center;
-			bottom: 30px;
+			bottom: 50px;
+			margin: auto;
+			grid-area: center;
+		}
+
+		.active, .dot:hover {
+			background-color: #717171;
 		}
 
 		/* Fading animation */
@@ -100,120 +102,91 @@
 		}
 
 		@-webkit-keyframes fade {
-			from {
-				opacity: .4
-			}
-			to {
-				opacity: 1
-			}
+			from {opacity: .4}
+			to {opacity: 1}
 		}
 
 		@keyframes fade {
-			from {
-				opacity: .4
-			}
-			to {
-				opacity: 1
-			}
+			from {opacity: .4}
+			to {opacity: 1}
 		}
 
 		/* On smaller screens, decrease text size */
 		@media only screen and (max-width: 300px) {
-			.prev, .next, .text {
-				font-size: 11px
-			}
+			.prev, .next,.text {font-size: 11px}
 		}
 	</style>
 </head>
 <body>
 
-<input type="checkbox" onchange="manageClick(this);" /> Auto
+<table width="98%">
+	<tr>
+		<td><h2>Sample Slide Show</h2></td>
+		<td align="right"><input type="checkbox" onchange="manageClick(this);" /> Auto</td>
+	</tr>
+</table>
+
 
 <div class="slideshow-container">
 
 	<div class="the-slides fade">
-		<div class="numbertext">1 / 9</div>
+		<div class="numbertext">1 / 7</div>
+		<img src="img/bora.JPG" style="width:100%">
+		<div class="text">Approaching Bora-Bora</div>
+	</div>
+
+	<div class="the-slides fade">
+		<div class="numbertext">2 / 7</div>
 		<img src="img/en.route.JPG" style="width:100%">
 		<div class="text">En route</div>
 	</div>
 
 	<div class="the-slides fade">
-		<div class="numbertext">2 / 9</div>
-		<img src="img/lambi.JPG" style="width:100%">
-		<div class="text">Lambi, Moorea</div>
-	</div>
-
-	<div class="the-slides fade">
-		<div class="numbertext">3 / 9</div>
+		<div class="numbertext">3 / 7</div>
 		<img src="img/huahine.JPG" style="width:100%">
-		<div class="text">Huahine</div>
+		<div class="text">Docked in Huahine</div>
 	</div>
 
 	<div class="the-slides fade">
-		<div class="numbertext">4 / 9</div>
-		<img src="img/tahaa.JPG" style="width:100%">
-		<div class="text">Taha'a</div>
+		<div class="numbertext">4 / 7</div>
+		<img src="img/lambi.JPG" style="width:100%">
+		<div class="text">Moorea, lambi</div>
 	</div>
 
 	<div class="the-slides fade">
-		<div class="numbertext">5 / 9</div>
-		<img src="img/tapuamu.JPG" style="width:100%">
-		<div class="text">Tapuamu, Taha'a</div>
-	</div>
-
-	<div class="the-slides fade">
-		<div class="numbertext">6 / 9</div>
+		<div class="numbertext">5 / 7</div>
 		<img src="img/raiatea.JPG" style="width:100%">
 		<div class="text">Raiatea</div>
 	</div>
 
 	<div class="the-slides fade">
-		<div class="numbertext">7 / 9</div>
-		<img src="img/bora.JPG" style="width:100%">
-		<div class="text">Bora-Bora</div>
+		<div class="numbertext">6 / 7</div>
+		<img src="img/tahaa.JPG" style="width:100%">
+		<div class="text">Tahaa</div>
 	</div>
 
 	<div class="the-slides fade">
-		<div class="numbertext">8 / 9</div>
-		<img src="img/bora.bora.JPG" style="width:100%">
-		<div class="text">Bora-Bora</div>
-	</div>
-
-	<div class="the-slides fade">
-		<div class="numbertext">9 / 9</div>
+		<div class="numbertext">7 / 7</div>
 		<img src="img/tongareva.JPG" style="width:100%">
 		<div class="text">Tongareva</div>
 	</div>
 
-	<a class="prev" onclick="plusSlides(-1);">&#10094;</a>
-	<a class="next" onclick="plusSlides(1);">&#10095;</a>
+	<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+	<a class="next" onclick="plusSlides(1)">&#10095;</a>
 
-	<div class="dots">
-		<span class="dot" onclick="currentSlide(1);"></span>
-		<span class="dot" onclick="currentSlide(2);"></span>
-		<span class="dot" onclick="currentSlide(3);"></span>
-		<span class="dot" onclick="currentSlide(4);"></span>
-		<span class="dot" onclick="currentSlide(5);"></span>
-		<span class="dot" onclick="currentSlide(6);"></span>
-		<span class="dot" onclick="currentSlide(7);"></span>
-		<span class="dot" onclick="currentSlide(8);"></span>
-		<span class="dot" onclick="currentSlide(9);"></span>
-	</div>
 </div>
 <br>
 
-<!-- dots below the image -->
-<!--div style="text-align:center">
-	<span class="dot" onclick="currentSlide(1);"></span>
-	<span class="dot" onclick="currentSlide(2);"></span>
-	<span class="dot" onclick="currentSlide(3);"></span>
-	<span class="dot" onclick="currentSlide(4);"></span>
-	<span class="dot" onclick="currentSlide(5);"></span>
-	<span class="dot" onclick="currentSlide(6);"></span>
-	<span class="dot" onclick="currentSlide(7);"></span>
-	<span class="dot" onclick="currentSlide(8);"></span>
-	<span class="dot" onclick="currentSlide(9);"></span>
-</div-->
+<!--div style="text-align:center"-->
+<div class="dots">
+	<span class="dot" onclick="currentSlide(1)"></span>
+	<span class="dot" onclick="currentSlide(2)"></span>
+	<span class="dot" onclick="currentSlide(3)"></span>
+	<span class="dot" onclick="currentSlide(4)"></span>
+	<span class="dot" onclick="currentSlide(5)"></span>
+	<span class="dot" onclick="currentSlide(6)"></span>
+	<span class="dot" onclick="currentSlide(7)"></span>
+</div>
 
 <script>
 	var auto = false;
@@ -238,7 +211,7 @@
 
 	function showSlides(n) {
 		var i;
-		var slides = document.getElementsByClassName("theSlides");
+		var slides = document.getElementsByClassName("the-slides");
 		var dots = document.getElementsByClassName("dot");
 		if (n > slides.length) {slideIndex = 1}
 		if (n < 1) {slideIndex = slides.length}
@@ -257,7 +230,7 @@
 				slideIndex = 1
 			}
 			slides[slideIndex - 1].style.display = "block";
-			setTimeout(showSlides, 5000); // Change image every 5 seconds
+			setTimeout(showSlides, 5000); // Change image every 2 seconds
 		}
 	}
 </script>
