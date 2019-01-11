@@ -147,7 +147,7 @@ class SunPath extends HTMLElement {
 		for (let idx=0; idx<json.length; idx++) {
 			if (json[idx].alt < lastAlt) { // Culmination reached
 				let zAtNoon = lastZ;
-				//		console.log("Z at noon:", zAtNoon);
+	//		console.log("Z at noon:", zAtNoon);
 				if (zAtNoon > 90 && zAtNoon < 270) {
 					this.invertX = 1;   // +1 when pointing south
 					if (sunPathVerbose) {
@@ -366,16 +366,35 @@ class SunPath extends HTMLElement {
 				maxZ = this._sunData !== undefined ? 10 * Math.ceil(this._sunData.setZ / 10) : 270;
 		if (this.invertX === -1) { // Pointing North
 			let tmp = maxZ - 360;
-			maxZ = minZ;
-			minZ = tmp;
+			maxZ = minZ + 10;
+			minZ = tmp - 10;
 		}
 
 		context.strokeStyle = this.sunPathColorConfig.gridColor;
-		context.lineWidth = 3;
-		let panelPoint = this.rotateBothWays(this.rotation, minZ, this.side, this._tilt * this.invertX, (this.addToZ + (this.invertX * this._zOffset)));
 		// Base
+		context.lineWidth = 1;
+		// Full circle, dotted
+		context.save();
+		context.setLineDash([2, 2]);
+		context.beginPath();
+		for (let alfa=0; alfa<=360; alfa += 1) {
+//		console.log("Base rotation", rotation);
+			let panelPoint = this.rotateBothWays(this.rotation, alfa, this.side, this._tilt * this.invertX, (this.addToZ + (this.invertX * this._zOffset)));
+			if (alfa === 0) {
+				context.moveTo(center.x + (panelPoint.x * radius), center.y - (panelPoint.y * radius));
+			} else {
+				context.lineTo(center.x + (panelPoint.x * radius), center.y - (panelPoint.y * radius));
+			}
+		}
+		context.closePath();
+		context.stroke();
+		context.restore();
+
+		context.lineWidth = 3;
+
 		context.beginPath();
 		context.moveTo(center.x, center.y); // Start from center
+		let panelPoint = this.rotateBothWays(this.rotation, minZ, this.side, this._tilt * this.invertX, (this.addToZ + (this.invertX * this._zOffset)));
 		context.lineTo(center.x + (panelPoint.x * radius), center.y - (panelPoint.y * radius));
 		for (let alfa=minZ; alfa<=maxZ; alfa += 1) {
 //		console.log("Base rotation", rotation);
