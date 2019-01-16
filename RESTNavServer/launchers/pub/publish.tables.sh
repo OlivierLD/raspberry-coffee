@@ -51,9 +51,6 @@ do
 			#
 			java -classpath $CP tables.Dieumegard > dieumegard.xml
 			#
-			COMMAND="java -Xms256m -Xmx1536m -classpath ${CP} oracle.apps.xdo.template.FOProcessor -h"
-			$COMMAND
-			#
 			COMMAND="java -Xms256m -Xmx1536m -classpath ${CP} oracle.apps.xdo.template.FOProcessor $PRM_OPTION -xml dieumegard.xml -xsl ./dieumegard-fo.xsl -pdf dieumegard.pdf"
 			echo Running from $PWD: $COMMAND
 			$COMMAND
