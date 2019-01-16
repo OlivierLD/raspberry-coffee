@@ -22,8 +22,9 @@ public class Dieumegard {
 				double ah = GeomUtil.sexToDec(fmt3.format(d), fmt2.format(m));
 				double value = calculateTable1(ah);
 				int neg = 0;
-				if (value < 0.0 && value > -0.00001)
+				if (value < 0.0 && value > -0.00001) {
 					value = 0.0;
+				}
 				while (value < 0.0) {
 					value += 1;
 					neg++;
