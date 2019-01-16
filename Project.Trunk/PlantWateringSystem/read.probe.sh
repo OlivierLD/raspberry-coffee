@@ -7,6 +7,8 @@ echo "   Use 'verbose' for a regular look on what's going on."
 echo "   Use 'debug' for a close look on what's going on."
 echo "   Use 'wait' to wait 10 sec before actually starting."
 #
+echo `date`
+#
 VERBOSE=false
 DEBUG=false
 REMOTE_DEBUG=false
