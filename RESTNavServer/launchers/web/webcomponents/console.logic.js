@@ -550,7 +550,7 @@ const DISPLAYS = [
 	'analog-watch-01',
 	'analog-watch-02'
 ];
-window.onload = function() {
+window.onload = () => {
 	/* global initAjax */
 	initAjax(); // Default. See later for a WebSocket option
 
@@ -604,6 +604,55 @@ window.onload = function() {
 		if (boatData === 'y' || boatData === 'n') {
 			expandCollapseBoatData();
 		}
+	}
+
+	let sunPath = document.getElementById('sun-path-01');
+	if (sunPath !== null && sunPath !== undefined) {
+		let tiltSlider = document.getElementById('sun-path-tilt-slide');
+		let zSlider = document.getElementById('sun-path-z-slide');
+
+		sunPath.addEventListener(
+				'keydown',
+				evt => { // ArrowRight, ArrowUp, ArrowLeft, ArrowDown
+					if (evt.key !== undefined) {
+//					console.log("1 Key:", evt.key, "Code:", evt.keyCode);
+						if (evt.key === 'ArrowUp') {
+//						console.log('ArrowUp!');
+							let val = parseInt(tiltSlider.value);
+//						console.log('Tilt is now ' + val);
+							if (val < 90) {
+								let newVal = val + 1;
+								tiltSlider.value = newVal.toString();
+								setNewTilt(tiltSlider, 'sun-path-01');
+							}
+						} else if (evt.key === 'ArrowDown') {
+//						console.log('ArrowDown!');
+							let val = parseInt(tiltSlider.value);
+//						console.log('Tilt is now ' + val);
+							if (val > -90) {
+								let newVal = val - 1;
+								tiltSlider.value = newVal.toString();
+								setNewTilt(tiltSlider, 'sun-path-01');
+							}
+						} else if (evt.key === 'ArrowRight') {
+							let val = parseInt(zSlider.value);
+							if (val < 90) {
+								let newVal = val + 1;
+								zSlider.value = newVal.toString();
+								setNewZOffset(zSlider, 'sun-path-01');
+							}
+						} else if (evt.key === 'ArrowLeft') {
+							let val = parseInt(zSlider.value);
+							if (val > -90) {
+								let newVal = val - 1;
+								zSlider.value = newVal.toString();
+								setNewZOffset(zSlider, 'sun-path-01');
+							}
+						}
+					} else {
+						console.log('... Bad.');
+					}
+				}, false);
 	}
 }
 
