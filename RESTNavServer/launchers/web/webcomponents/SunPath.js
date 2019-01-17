@@ -552,8 +552,12 @@ class SunPath extends HTMLElement {
 			if (this.userPosition !== undefined) {
 				let strLat = Utilities.decToSex(this.userPosition.latitude, 'NS');
 				let strLng = Utilities.decToSex(this.userPosition.longitude, 'EW');
-				context.fillText(strLat, 10, this._height - 30);
-				context.fillText(strLng, 10, this._height - 10);
+				let metrics = context.measureText(strLat);
+				let len = metrics.width;
+				context.fillText(strLat, this._width - 10 - len, 20);
+				metrics = context.measureText(strLng);
+				len = metrics.width;
+				context.fillText(strLng, this._width - 10 - len, 40);
 			}
 			context.restore();
 		}
