@@ -111,6 +111,7 @@ function loadSunData() {
 			let sunPathElement = document.getElementById('sun-path-01');
 			if (sunPathElement !== null && sunPathElement !== undefined) {
 				sunPathElement.sunData = json;
+				sunPathElement.userPos = { latitude: json.lat, longitude: json.lng };
 				sunPathElement.repaint();
 			}
 		} catch (err) {

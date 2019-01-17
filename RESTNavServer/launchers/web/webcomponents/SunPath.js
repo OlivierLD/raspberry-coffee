@@ -62,6 +62,8 @@ class SunPath extends HTMLElement {
 		this.sunHe = undefined;
 		this.sunZ = undefined;
 
+		this.userPosition = undefined;
+
 		this.side =   0; // Left and right
 		this.addToZ = 180;  // 180 when pointing South (Sun in the South at noon). Combined with left right rotation
 		this.invertX =  1;  // +1/-1 . +1 when pointing south
@@ -175,6 +177,10 @@ class SunPath extends HTMLElement {
 	set sunPos(sunPos) {
 		this.sunHe = sunPos.he;
 		this.sunZ = sunPos.z;
+	}
+
+	set userPos(position) { // { latitude: xxx, longitude: xxx }
+		this.userPosition = position;
 	}
 
 	set shadowRoot(val) {
@@ -543,6 +549,12 @@ class SunPath extends HTMLElement {
 			let strZ = Utilities.decToSex(this.sunZ);
 			context.fillText("Elevation:" + strAlt, 10, 20);
 			context.fillText("Azimuth  :" + strZ, 10, 40);
+			if (this.userPosition !== undefined) {
+				let strLat = Utilities.decToSex(this.userPosition.latitude, 'NS');
+				let strLng = Utilities.decToSex(this.userPosition.longitude, 'EW');
+				context.fillText(strLat, 10, this._height - 30);
+				context.fillText(strLng, 10, this._height - 10);
+			}
 			context.restore();
 		}
 	}
