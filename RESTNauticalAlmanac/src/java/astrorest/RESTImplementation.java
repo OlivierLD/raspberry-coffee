@@ -882,8 +882,8 @@ public class RESTImplementation {
 					try {
 						String tempPdfFileName = File.createTempFile("almanac", ".pdf").getAbsolutePath();
 						String almanacTxPrm = String.format("%s %s %s %s", options.language, options.withStars ? "true" : "false", tempFileName, tempPdfFileName);
-						// TODO Script name in a System variable
-						String cmd = "." + File.separator + "xsl" + File.separator + "publishalmanac " + almanacTxPrm;
+						// Script name in a System variable, must be in the xsl folder
+						String cmd = "." + File.separator + "xsl" + File.separator + String.format("%s ", System.getProperty("publishalmanac.script", "publishalmanac.sh")) + almanacTxPrm;
 						System.out.println("Tx Command:" + cmd);
 						Process p = Runtime.getRuntime().exec(cmd);
 						BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -956,8 +956,8 @@ public class RESTImplementation {
 					try {
 						String tempPdfFileName = File.createTempFile("lunar", ".pdf").getAbsolutePath();
 						String almanacTxPrm = String.format("%s %s %s", options.language, tempFileName, tempPdfFileName);
-						// TODO Script name in a System variable
-						String cmd = "." + File.separator + "xsl" + File.separator + "publishlunar " + almanacTxPrm;
+						// Script name in a System variable. Must be in the xsl folder
+						String cmd = "." + File.separator + "xsl" + File.separator + String.format("%s ", System.getProperty("publishlunar.script", "publishlunar.sh")) + almanacTxPrm;
 						System.out.println("Tx Command:" + cmd);
 						Process p = Runtime.getRuntime().exec(cmd);
 						BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -1072,8 +1072,8 @@ public class RESTImplementation {
 						try {
 							String tempPdfFileName = File.createTempFile("perpetual", ".pdf").getAbsolutePath();
 							String almanacTxPrm = String.format("%s %s", tempFileName, tempPdfFileName);
-							// TODO Script name in a System variable
-							String cmd = "." + File.separator + "xsl" + File.separator + "publishperpetual " + almanacTxPrm;
+							// Script name in a System variable, must be in the xsl folder
+							String cmd = "." + File.separator + "xsl" + File.separator + String.format("%s ", System.getProperty("publishperpetual.script", "publishperpetual.sh")) + almanacTxPrm;
 							System.out.println("Tx Command:" + cmd);
 							Process p = Runtime.getRuntime().exec(cmd);
 							BufferedReader stdout = new BufferedReader(new InputStreamReader(p.getInputStream()));

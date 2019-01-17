@@ -16,9 +16,9 @@ import java.util.Optional;
 
 public class TidePublisher {
 
-	// TODO Script names in a System variable
-	public final static String TIDE_TABLE = "publishtide";
-	public final static String MOON_CALENDAR = "publishlunarcalendar";
+	// Script names in a System variable. they must be in the xsl folder.
+	public final static String TIDE_TABLE = System.getProperty("publishtide.script", "publishtide.sh");
+	public final static String MOON_CALENDAR = System.getProperty("publishlunarcalendar.script", "publishlunarcalendar.sh");
 
 	/**
 	 * @param ts         TideStation
