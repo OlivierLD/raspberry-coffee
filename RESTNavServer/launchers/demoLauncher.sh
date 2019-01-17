@@ -23,8 +23,8 @@ GO=true
 while [ "$GO" == "true" ]
 do
 	clear
-	echo -e ">> Note 🛑 : pass 'Y' as parameter to this script to launch a browser after "
-	echo -e "             starting the server, like $0 Y"
+	echo -e ">> Note ⚠️ : pass 'Y' as parameter to this script to launch a browser after "
+	echo -e "            starting the server, like $0 Y"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|               N A V   S E R V E R   -   D E M O   L A U N C H E R  🚀                   |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
@@ -33,10 +33,10 @@ do
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -e "|  J. JConsole (JVM Monitoring) 📡                                                        |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "| >> Hint: use 'killns.sh' to stop any running NavServer 🔫                               |"
-	echo -e "| >> Hint: use 'killproxy.sh' to stop any running Proxy Server 🔫                         |"
+	echo -e "| >> Hint: use 'killns.sh' to stop any running NavServer 💣                               |"
+	echo -e "| >> Hint: use 'killproxy.sh' to stop any running Proxy Server 💣                         |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "|  1. Time simulated by a ZDA generator, HTTP Server, rich Web UI. Does not require a GPS |"
+	echo -e "|  1. Time simulated by a ZDA generator; HTTP Server, rich Web UI. Does not require a GPS |"
 	echo -e "|  2. Interactive Time (user-set), HTTP Server, rich Web UI. Does not require a GPS       |"
 	echo -e "|  3. Home Weather Station data                                                           |"
 	echo -e "|  4. With GPS and NMEA data, waits for the RMC sentence to be active to begin logging    |"
@@ -48,7 +48,7 @@ do
 	echo -e "|  S. Show NavServer process(es) ⚙️                                                        |"
 	echo -e "| SP. Show proxy process(es) ⚙️                                                            |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
-	echo -e "|  Q. Quit ✋                                                                             |"
+	echo -e "|  Q. Quit ❎                                                                             |"
 	echo -e "+-----------------------------------------------------------------------------------------+"
 	echo -en " ==> You choose: "
 	read option
@@ -186,5 +186,5 @@ do
 done
 #
 #
-echo -e "Bye now ✋"
+echo -e "Bye now. See you ✋"
 #
