@@ -499,6 +499,7 @@ function toggleHeadsUp() {
 	document.getElementById('nmea-widgets-1').classList.toggle('mirror-upside-down');
 	document.getElementById('nmea-widgets-2').classList.toggle('mirror-upside-down');
 	document.getElementById('sky-maps-1').classList.toggle('mirror-upside-down');
+	document.getElementById('sun-path-1').classList.toggle('mirror-upside-down');
 }
 
 function setPadding(range) {
@@ -506,6 +507,7 @@ function setPadding(range) {
 	document.getElementById('nmea-widgets-1').style.setProperty("--padding", v + "px");
 	document.getElementById('nmea-widgets-2').style.setProperty("--padding", v + "px");
 	document.getElementById('sky-maps-1').style.setProperty("--padding", v + "px");
+	document.getElementById('sun-path-1').style.setProperty("--padding", v + "px");
 }
 
 function setPerspective(range) {
@@ -513,6 +515,7 @@ function setPerspective(range) {
 	document.getElementById('nmea-widgets-1').style.setProperty("--perspective", v + "em");
 	document.getElementById('nmea-widgets-2').style.setProperty("--perspective", v + "em");
 	document.getElementById('sky-maps-1').style.setProperty("--perspective", v + "em");
+	document.getElementById('sun-path-1').style.setProperty("--perspective", v + "em");
 }
 
 function setRotateX(range) {
@@ -520,6 +523,7 @@ function setRotateX(range) {
 	document.getElementById('nmea-widgets-1').style.setProperty("--rotateX", v + "deg");
 	document.getElementById('nmea-widgets-2').style.setProperty("--rotateX", v + "deg");
 	document.getElementById('sky-maps-1').style.setProperty("--rotateX", v + "deg");
+	document.getElementById('sun-path-1').style.setProperty("--rotateX", v + "deg");
 }
 
 let aws = 0;
