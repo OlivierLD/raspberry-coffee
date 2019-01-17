@@ -30,6 +30,8 @@ do
 	echo -e "| 3. Tables de Dieumegard (rtf) |"
 	echo -e "| 4. Tables de Bataille (rtf)   |"
 	echo -e "+-------------------------------+"
+	echo -e "| 5. Dieumegard in HTML (demo)  |"
+	echo -e "+-------------------------------+"
 	echo -e "| Q. Quit                       |"
 	echo -e "+-------------------------------+"
 	echo -en "You choose > "
@@ -91,6 +93,16 @@ do
 			echo Running from $PWD: $COMMAND
 			$COMMAND
 			echo Done transforming, document is ready.
+			echo "Hit Return"
+			read a
+      ;;
+     "5")
+			java -classpath $CP tables.Dieumegard > dieumegard.xml
+			#
+      java -classpath $CP oracle.xml.parser.v2.oraxsl -s html.xsl -l dieumegard.xml -o . -r html
+      #
+      open dieumegard.xml.html
+      #
 			echo "Hit Return"
 			read a
       ;;
