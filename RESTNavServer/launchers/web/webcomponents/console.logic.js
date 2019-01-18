@@ -415,7 +415,7 @@ function astroCallback(data) {
 	}
 
 	dataTable +=
-			'<tr><td align="left">Aries &gamma;</td><td></td><td align="right">' + worldMap.decToSex(data.ghaAries) + '</td><td align="right">' + worldMap.decToSex(lhaAries) + '</td></tr>' + '</table>';
+			'<tr><td align="left">Aries &gamma;</td><td></td><td align="right">' + worldMap.decToSex(data.ghaAries) + '</td><td align="right">' + worldMap.decToSex(lhaAries) + '</td><td align="right">' + worldMap.decToSex(data.ariesObs.alt) + '</td><td align="right">' + worldMap.decToSex(data.ariesObs.z) + '</td></tr></table>';
 
 	document.getElementById("sun-moon-data").innerHTML = dataTable;
 

@@ -594,9 +594,14 @@ public class RESTImplementation {
 					data = data.moonObs(new OBS()
 							.alt(sru.getHe())
 							.z(sru.getZ()));
+
+					sru.calculate(lat, lng, AstroComputer.getAriesGHA(), 0d);
+					data = data.ariesObs(new OBS()
+							.alt(sru.getHe())
+							.z(sru.getZ()));
 				}
 				// Wandering bodies
-				if (wandering) { // TODO Add He and Z
+				if (wandering) {
 					List<GP> wanderingBodies = new ArrayList<>();
 					wanderingBodies.add(new GP()
 							.name("aries")
@@ -1654,6 +1659,7 @@ public class RESTImplementation {
 		Pos from;
 		OBS sunObs;
 		OBS moonObs;
+		OBS ariesObs;
 		FmtDate tPass;
 		FmtDate solarDate;
 
@@ -1691,6 +1697,11 @@ public class RESTImplementation {
 
 		public PositionsInTheSky moonObs(OBS moon) {
 			this.moonObs = moon;
+			return this;
+		}
+
+		public PositionsInTheSky ariesObs(OBS aries) {
+			this.ariesObs = aries;
 			return this;
 		}
 
