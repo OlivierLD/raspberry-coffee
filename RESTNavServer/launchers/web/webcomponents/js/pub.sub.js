@@ -10,14 +10,14 @@
 let events = {
 	listener: [],
 
-	subscribe: function (topic, action) {
+	subscribe: (topic, action) => {
 		this.listener.push({
 			'topic': topic,
 			'action': action
 		});
 	},
 
-	publish: function (topic, value) {
+	publish: (topic, value) => {
 		this.listener.forEach((lsnr, idx) => {
 			if (lsnr.topic === topic) {
 				try {

@@ -150,7 +150,7 @@
 				document.getElementById('calendar-increment-01').disabled = false;
 			} else {
 				let increment = parseInt(document.getElementById('calendar-increment-01').value);
-				vrooming = window.setInterval(function () {
+				vrooming = window.setInterval(() => {
 					document.getElementById('button-now').disabled = true;
 					document.getElementById('update-calendar').disabled = true;
 					document.getElementById('calendar-increment-01').disabled = true;
@@ -199,16 +199,16 @@
 		 * Event's definition (topic's name) is in ajax.manager.js, method onMessage
 		 */
 		/* global events gpsPosition setData gpsSatelliteData */
-		events.subscribe('pos', function(val) {
+		events.subscribe('pos', (val) => {
 			gpsPosition = val;
 			document.getElementById('world-map-01').setUserPosition({ latitude: val.lat, longitude: val.lng });
 			document.getElementById('world-map-01').positionLabel = "GPS";
 			document.getElementById('world-map-01').repaint();
 		});
-		events.subscribe('sog', function(val) {
+		events.subscribe('sog', (val) => {
 			setData('bsp-01', val);
 		});
-		events.subscribe('gps-time', function(val) {
+		events.subscribe('gps-time', (val) => {
 			// val.format("Y-M-d H:i:s")
 			let time = new Date(val).format("H:i:s");
 			setData('analog-watch-01', time);
@@ -220,18 +220,18 @@
 				getAstroData(gpsDate.format(DURATION_FMT), gpsPosition, withWanderingBodies, withStars, astroCallback);
 			}
 		});
-		events.subscribe('gps-sat', function(val) {
+		events.subscribe('gps-sat', (val) => {
 //		console.log("Satellite data:", val);
 			gpsSatelliteData = val;
 		});
-		events.subscribe('cog', function(val) {
+		events.subscribe('cog', (val) => {
 			setData('compass-rose-01', val);
 			setData('compass-01', val);
 		});
 
 		function loadSunPath() {
 			let getData = requestSunPath({});
-			getData.then(function (value) { // Resolve
+			getData.then((value) => { // Resolve
 //  		console.log("Done:", value);
 				try {
 					let json = JSON.parse(value);
@@ -245,7 +245,7 @@
 				} catch (err) {
 					console.log("Error:", err, ("\nfor value [" + value + "]"));
 				}
-			}, function (error) { // Reject
+			}, (error) => { // Reject
 				console.log("Failed to get Sun Path..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 			});
 
@@ -401,7 +401,7 @@
 		</tr>
 	</table>
 		<!-- Perspective sliders -->
-	<span id="head-up-command" onclick="collapseExpandHeadsup(); toggleHeadsUp();" style="cursor: pointer;">+ Head up</span>
+	<span id="head-up-command" onclick="collapseExpandHeadsup(); toggleHeadsUp();" style="cursor: pointer; margin-left: 10px;">+ Head up</span>
 	<div id="heads-up-sliders" style="display: none;">
 		<!--button onclick="toggleHeadsUp();" style="border-radius: 5px;">Head Up</button-->
 		<table width="100%">

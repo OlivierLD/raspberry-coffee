@@ -588,7 +588,7 @@ window.onload = () => {
 
 	if (border !== undefined) {
 		if (border === 'y' || border === 'n') {
-			DISPLAYS.forEach(function (id, idx) {
+			DISPLAYS.forEach((id, idx) => {
 				let element = document.getElementById(id);
 				if (element !== null) {
 					element.withBorder = (border === 'y');

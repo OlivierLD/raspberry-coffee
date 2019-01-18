@@ -879,7 +879,7 @@ class WorldMap extends HTMLElement {
 							//				console.log("  >>> Found it! [%s]", selector);
 							let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 							let cssTextElems = cssText.split(";");
-							cssTextElems.forEach(function (elem) {
+							cssTextElems.forEach((elem) => {
 								if (elem.trim().length > 0) {
 									let keyValPair = elem.split(":");
 									let key = keyValPair[0].trim();
@@ -1376,7 +1376,7 @@ class WorldMap extends HTMLElement {
 
 				if (this.astronomicalData.stars !== undefined && this.withStars) {
 					let instance = this;
-					this.astronomicalData.stars.forEach(function (star, idx) {
+					this.astronomicalData.stars.forEach((star, idx) => {
 						instance.positionBody(context, userPos, instance.worldmapColorConfig.starsColor, star.name, star.decl, star.gha, false, true);
 					});
 				}

@@ -5,7 +5,7 @@
 // Date formatting
 
 // Provide month names
-Date.prototype.getMonthName = function () {
+Date.prototype.getMonthName = () => {
 	const month_names = [
 		'January',
 		'February',
@@ -25,7 +25,7 @@ Date.prototype.getMonthName = function () {
 };
 
 // Provide month abbreviation
-Date.prototype.getMonthAbbr = function () {
+Date.prototype.getMonthAbbr = () => {
 	const month_abbrs = [
 		'Jan',
 		'Feb',
@@ -45,7 +45,7 @@ Date.prototype.getMonthAbbr = function () {
 };
 
 // Provide full day of week name
-Date.prototype.getDayFull = function () {
+Date.prototype.getDayFull = () => {
 	const days_full = [
 		'Sunday',
 		'Monday',
@@ -59,7 +59,7 @@ Date.prototype.getDayFull = function () {
 };
 
 // Provide full day of week name
-Date.prototype.getDayAbbr = function () {
+Date.prototype.getDayAbbr = () => {
 	const days_abbr = [
 		'Sun',
 		'Mon',
@@ -73,13 +73,13 @@ Date.prototype.getDayAbbr = function () {
 };
 
 // Provide the day of year 1-365
-Date.prototype.getDayOfYear = function () {
+Date.prototype.getDayOfYear = () => {
 	let janFirst = new Date(this.getFullYear(), 0, 1);
 	return Math.ceil((this - janFirst) / 86400000);
 };
 
 // Provide the day suffix (st,nd,rd,th)
-Date.prototype.getDaySuffix = function () {
+Date.prototype.getDaySuffix = () => {
 	let d = this.getDate();
 	let sfx = ["th", "st", "nd", "rd"];
 	let val = d % 100;
@@ -88,13 +88,13 @@ Date.prototype.getDaySuffix = function () {
 };
 
 // Provide Week of Year
-Date.prototype.getWeekOfYear = function () {
+Date.prototype.getWeekOfYear = () => {
 	let janFirst = new Date(this.getFullYear(), 0, 1);
 	return Math.ceil((((this - janFirst) / 86400000) + janFirst.getDay() + 1) / 7);
 };
 
 // Provide if it is a leap year or not
-Date.prototype.isLeapYear = function () {
+Date.prototype.isLeapYear = () => {
 	let yr = this.getFullYear();
 	if ((parseInt(yr, 10) % 4) === 0) {
 		if (parseInt(yr, 10) % 100 === 0) {
@@ -115,7 +115,7 @@ Date.prototype.isLeapYear = function () {
 };
 
 // Provide Number of Days in a given month
-Date.prototype.getMonthDayCount = function () {
+Date.prototype.getMonthDayCount = () => {
 	const month_day_counts = [
 		31,
 		this.isLeapYear() ? 29 : 28,
@@ -135,7 +135,7 @@ Date.prototype.getMonthDayCount = function () {
 };
 
 // format provided date into this.format format
-Date.prototype.format = function (dateFormat) {
+Date.prototype.format = (dateFormat) => {
 	// break apart format string into array of characters
 	dateFormat = dateFormat.split("");
 

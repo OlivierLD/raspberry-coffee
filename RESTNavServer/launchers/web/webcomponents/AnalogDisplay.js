@@ -320,7 +320,7 @@ class AnalogDisplay extends HTMLElement {
 		//				console.log("  >>> Found it! [%s]", selector);
 							let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 							let cssTextElems = cssText.split(";");
-							cssTextElems.forEach(function (elem) {
+							cssTextElems.forEach((elem) => {
 								if (elem.trim().length > 0) {
 									let keyValPair = elem.split(":");
 									let key = keyValPair[0].trim();

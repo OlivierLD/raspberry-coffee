@@ -6,7 +6,7 @@
 const DEBUG = false;
 
 function initAjax() {
-	let interval = setInterval(function () {
+	let interval = setInterval(() => {
 		fetch();
 		loadSunData();
 	}, 1000);
@@ -32,7 +32,7 @@ function getPromise(
 		console.log(">>> Promise", verb, url);
 	}
 
-	let promise = new Promise(function (resolve, reject) {
+	let promise = new Promise((resolve, reject) => {
 		let xhr = new XMLHttpRequest();
 		let TIMEOUT = timeout;
 
@@ -53,13 +53,13 @@ function getPromise(
 			console.log("Send Error ", err);
 		}
 
-		let requestTimer = setTimeout(function () {
+		let requestTimer = setTimeout(() => {
 			xhr.abort();
 			let mess = { code: 408, message: 'Timeout' };
 			reject(mess);
 		}, TIMEOUT);
 
-		xhr.onload = function () {
+		xhr.onload = () => {
 			clearTimeout(requestTimer);
 			if (xhr.status === happyCode) {
 				resolve(xhr.response);
@@ -77,7 +77,7 @@ function getNMEAData() {
 
 function fetch() {
 	let getData = getNMEAData();
-	getData.then(function (value) { // Resolve
+	getData.then((value) => { // Resolve
 //  console.log("Done:", value);
 		try {
 			let json = JSON.parse(value);
@@ -85,25 +85,25 @@ function fetch() {
 		} catch (err) {
 			console.log("Error:", err, ("\nfor value [" + value + "]"));
 		}
-	}, function (error) { // Reject
+	}, (error) => { // Reject
 		console.log("Failed to get NMEA data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
 
 function requestSunPath(pos) {
-	var url = "/astro/sun-path-today";
+	let url = "/astro/sun-path-today";
 	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 }
 
 
 function requestSunData(pos) {
-	var url = "/astro/sun-now";
+	let url = "/astro/sun-now";
 	return getPromise(url, DEFAULT_TIMEOUT, 'POST', 200, pos, false);
 }
 
 function loadSunData() {
 	let getData = requestSunData(null); // null will use the default position
-	getData.then(function (value) { // Resolve
+	getData.then((value) => { // Resolve
 //  console.log("Done:", value);
 		try {
 			let json = JSON.parse(value);
@@ -117,7 +117,7 @@ function loadSunData() {
 		} catch (err) {
 			console.log("Error:", err, ("\nfor value [" + value + "]"));
 		}
-	}, function (error) { // Reject
+	}, (error) => { // Reject
 		console.log("Failed to get Sun data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
@@ -157,14 +157,14 @@ function getSkyGP(when, position, wandering, stars) {
  */
 function getAstroData(when, position, wandering, stars, callback) {
 	let getData = getSkyGP(when, position, wandering, stars);
-	getData.then(function (value) { // resolve
+	getData.then((value) => { // resolve
 		let json = JSON.parse(value);
 		if (callback !== undefined) {
 			callback(json);
 		} else {
 			console.log(JSON.stringify(json, null, 2));
 		}
-	}, function (error) { // reject
+	}, (error) => { // reject
 		console.log("Failed to get the Astro Data..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
@@ -183,7 +183,7 @@ function setPosition(lat, lng) {
 
 function setUTCTime(epoch, callback) {
 	let setData = setUTC(epoch);
-	setData.then(function (value) { // resolve
+	setData.then((value) => { // resolve
 		if (value !== undefined && value !== null && value.length > 0) {
 			let json = JSON.parse(value);
 			if (callback !== undefined) {
@@ -192,14 +192,14 @@ function setUTCTime(epoch, callback) {
 				console.log(JSON.stringify(json, null, 2));
 			}
 		}
-	}, function (error) { // reject
+	}, (error) => { // reject
 		console.log("Failed to set the UTC date and time..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
 
 function setUserPos(lat, lng, callback) {
 	let setData = setPosition(lat, lng);
-	setData.then(function (value) { // resolve
+	setData.then((value) => { // resolve
 		if (value !== undefined && value !== null && value.length > 0) {
 			let json = JSON.parse(value);
 			if (callback !== undefined) {
@@ -208,7 +208,7 @@ function setUserPos(lat, lng, callback) {
 				console.log(JSON.stringify(json, null, 2));
 			}
 		}
-	}, function (error) { // reject
+	}, (error) => { // reject
 		console.log("Failed to set the UTC date and time..." + (error !== undefined && error.code !== undefined ? error.code : ' - ') + ', ' + (error !== undefined && error.message !== undefined ? error.message : ' - '));
 	});
 }
