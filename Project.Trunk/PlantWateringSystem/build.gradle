@@ -58,6 +58,7 @@ dependencies {
     compile project(':common-utils')
     compile 'org.scala-lang:scala-library:2.12.3'
     compile 'org.codehaus.groovy:groovy-all:2.4.6'
+    compile project(':ADC')
 }
 
 shadowJar {

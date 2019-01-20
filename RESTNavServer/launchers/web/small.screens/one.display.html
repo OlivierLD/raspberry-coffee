@@ -17,6 +17,7 @@
   window.onload = () => {
 	  displayBSP = new AnalogDisplay('bspCanvas', 123, 15, 1, 0.1, true, 40); // 123: ((250/2) - 2)
 	  displayBSP.setValue(bsp);
+	  displayBSP.setLabel('BSP');
 
 	  window.setInterval(() => { // Move the hand
 	  	if (inc > 0) {    // Asc
