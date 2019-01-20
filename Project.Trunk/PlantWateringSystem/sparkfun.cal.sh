@@ -9,6 +9,6 @@ CP=./build/libs/PlantWateringSystem-1.0-all.jar
 echo -e "Usage is $0 --miso:9 --mosi:10 --clk:11 --cs:8 --channel:0"
 echo -e " For miso, mosi, clk & cs, use BCM pin numbers"
 #
-sudo java -cp $CP $JAVA_OPTS sensors.sparkfunsoilhimuditysensor.MainMCP3008Sample33 $*
+sudo java -cp $CP $JAVA_OPTS sensors.sparkfunsoilhumiditysensor.MainMCP3008Sample33 $*
 #
 echo Done.
