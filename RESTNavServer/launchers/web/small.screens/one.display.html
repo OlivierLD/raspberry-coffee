@@ -20,15 +20,9 @@
 	  displayBSP.setLabel('BSP');
 
 	  window.setInterval(() => { // Move the hand
-	  	if (inc > 0) {    // Asc
-	  		if (bsp >= MAX_BSP) {
-	  			inc *= -1;
-				}
-			} else {          // Desc
-			  if (bsp <= MIN_BSP) {
-				  inc *= -1;
-			  }
-			}
+      if ((inc > 0 && bsp >= MAX_BSP) || (inc < 0 && (bsp <= MIN_BSP))) {
+        inc *= -1;
+      }
 		  bsp += inc;
 		  displayBSP.setValue(bsp);
 		}, 20);
