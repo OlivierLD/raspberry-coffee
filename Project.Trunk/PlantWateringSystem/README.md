@@ -306,14 +306,14 @@ Another possibility is to start it remotely from `ssh`:
 ### January 2019
 The `STH10` gives unexpected humidity values when in the soil... always close to 100%.
 
-I'm trying the [SparkFun Soil Moisture Sensor](https://www.sparkfun.com/products/13322) (also available from [WaveSHare](https://www.waveshare.com/moisture-sensor.htm))... As it is an analog device, it requires an `ADC`, I'll be using an `MCP3008`.
+I'm trying the [SparkFun Soil Moisture Sensor](https://www.sparkfun.com/products/13322) (also available from [WaveShare](https://www.waveshare.com/moisture-sensor.htm))... As it is an analog device, it requires an `ADC`, I'll be using an `MCP3008`.
 
 ![Spark Fun](./SparkFunSoilMoisture_bb.png)
 
 It does not return the temperature, but it's way less expensive than the `STH10`.
 
 #### The valve
-Can be replaced by a [peristaltic pump](https://www.adafruit.com/product/1150), that will not require a tank to be above the valve.
+Can be replaced by a [peristaltic pump](https://www.adafruit.com/product/1150), that will not require a tank to be _above_ the valve.
 Might be easier to use.
 
 More to come soon.

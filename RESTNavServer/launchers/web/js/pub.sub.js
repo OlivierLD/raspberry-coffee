@@ -6,6 +6,8 @@
 
  Publish like that:
  events.publish('topic', val);
+
+ Don't use arrow function in the members below (ok when subscribing though).
  */
 var events = {
     listener: [],

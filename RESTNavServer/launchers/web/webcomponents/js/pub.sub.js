@@ -1,6 +1,6 @@
 /**
  Subscribe like this:
- events.subscribe('topic', function(val) {
+ events.subscribe('topic', (val) => {
    doSomethingSmart(val);
  });
 
@@ -8,16 +8,17 @@
  events.publish('topic', val);
  */
 let events = {
+
 	listener: [],
 
-	subscribe: (topic, action) => {
+	subscribe: function(topic, action) {
 		this.listener.push({
 			'topic': topic,
 			'action': action
 		});
 	},
 
-	publish: (topic, value) => {
+	publish: function(topic, value) {
 		this.listener.forEach((lsnr, idx) => {
 			if (lsnr.topic === topic) {
 				try {
@@ -28,4 +29,5 @@ let events = {
 			}
 		});
 	}
+
 };

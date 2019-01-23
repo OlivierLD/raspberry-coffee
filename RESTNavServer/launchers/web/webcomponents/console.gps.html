@@ -24,6 +24,7 @@
 	<script type="module" src="./AnalogWatch.js"></script>
 	<script type="module" src="./CalendarDisplay.js"></script>
 	<script type="module" src="./CompassRose.js"></script>
+	<script type="module" src="./CompassDisplay.js"></script>
 	<script type="module" src="./WorldMap.js"></script>
 	<script type="module" src="./SkyMap.js"></script>
 	<script type="module" src="./SplitFlapDisplay.js"></script>
@@ -35,6 +36,8 @@
 	<script type="text/javascript" src="js/ajax.manager.js"></script>
 
 	<script type="text/javascript">
+
+		console.log('Start!');
 
 		// For this Console.
 
@@ -227,6 +230,7 @@
 		events.subscribe('cog', (val) => {
 			setData('compass-rose-01', val);
 			setData('compass-01', val);
+			setData('compass-display-01', val);
 		});
 
 		function loadSunPath() {
@@ -585,7 +589,28 @@
 		<span id="boat-data-switch" onclick="expandCollapseBoatData();" style="cursor: pointer; padding-left: 40px;">- Boat Data</span>
 		<div id="nmea-widgets-1" style="display: grid; grid-template-columns: var(--padding) auto var(--padding); padding: 0px 10px 10px 10px; text-align: center;">
 			<div id="boat-data" class="boat-data" style="height: auto; opacity: 1; visibility: visible; display: grid; grid-column-start: 2; grid-template-columns: auto;">
-				<div id="row-1" style="display: grid; grid-column-start: 1; grid-template-columns: auto auto; padding: 10px;">
+				<div id="row-1" style="display: grid; grid-column-start: 1; grid-template-columns: auto auto auto; padding: 10px;">
+					<!--
+					   BOUSSOLE...
+					 +-->
+					<div id="boussole">
+						<div class="black-frame centered">
+							<compass-display id="compass-display-01"
+															 class="green"
+															 title="Heading"
+															 value="0"
+															 width="200"
+															 height="200"
+															 major-ticks="45"
+															 minor-ticks="5"
+															 label="COG"></compass-display>
+						</div>
+						<div class="black-frame centered">
+							<input type="checkbox" class="border-cb" onchange="setBorder(this, 'compass-display-01');" checked>With
+							Border
+							<input type="checkbox" onchange="setRose(this, 'compass-display-01');" checked>With Rose
+						</div>
+					</div>
 					<!--
 							COG
 					+-->
