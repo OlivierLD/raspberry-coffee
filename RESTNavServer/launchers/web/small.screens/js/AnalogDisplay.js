@@ -26,6 +26,7 @@ function AnalogDisplay(cName,                     // Canvas Name
                        overlapOver180InDegree,    // default 0 (will display half circle), beyond horizontal, in degrees, before 0, after 180
                        startValue,                // default 0, In case it is not 0
                        nbDecimal) {               // default 1, nb decimals in the value display
+
 	if (maxValue === undefined) {
 		maxValue = 10;
 	}
@@ -44,36 +45,6 @@ function AnalogDisplay(cName,                     // Canvas Name
 	if (startValue === undefined) {
 		startValue = 0;
 	}
-	/*
-	 * See custom properties in CSS.
-	 * =============================
-	 * @see https://developer.mozilla.org/en-US/docs/Web/CSS/
-	 * Relies on a rule named .graphdisplay, like that:
-	 *
-	 .analogdisplay {
-			--bg-color: rgba(0, 0, 0, 0);
-			--digit-color: black;
-			--with-gradient: true;
-			--display-background-gradient-from: LightGrey;
-			--display-background-gradient-to: white;
-			--display-line-color: rgba(255, 255, 255, 0.5);
-			--label-fill-color: rgba(255, 255, 255, 0.5);
-			--with-display-shadow: false;
-			--shadow-color: rgba(0, 0, 0, 0.75);
-			--outline-color: DarkGrey;
-			--major-tick-color: black;
-			--minor-tick-color: black;
-			--value-color: grey;
-			--value-outline-color: black;
-			--value-nb-decimal: 1;
-			--hand-color: red;
-			--hand-outline-color: black;
-			--with-hand-shadow: true;
-			--knob-color: DarkGrey;
-			--knob-outline-color: black;
-			--font: Arial;
-		}
-	 */
 
 	/**
 	 * Recurse from the top down, on styleSheets and cssRules
@@ -211,11 +182,7 @@ function AnalogDisplay(cName,                     // Canvas Name
 	let canvasName = cName;
 	let displaySize = dSize; // Radius
 
-	let running = false;
 	let previousValue = startValue;
-	let intervalID;
-	let valueToDisplay = 0;
-	let incr = 1;
 	let nbDec = nbDecimal;
 	let withBorder = true;
 
@@ -228,9 +195,6 @@ function AnalogDisplay(cName,                     // Canvas Name
 	let digitValue;
 
 	let instance = this;
-
-//try { console.log('in the AnalogDisplay constructor for ' + cName + " (" + dSize + ")"); } catch (e) {}
-
 
 	(function () {
 		drawDisplay(canvasName, displaySize, previousValue);
@@ -267,70 +231,6 @@ function AnalogDisplay(cName,                     // Canvas Name
 		scale = ds / 100;
 		displaySize = ds;
 		drawDisplay(canvasName, displaySize, previousValue);
-	};
-
-	this.startStop = (buttonName) => {
-//  console.log('StartStop requested on ' + buttonName);
-		let button = document.getElementById(buttonName);
-		running = !running;
-		button.value = (running ? "Stop" : "Start");
-		if (running) {
-			this.animate();
-		} else {
-			window.clearInterval(intervalID);
-			previousValue = valueToDisplay;
-		}
-	};
-
-	this.animate = () => {
-		let value;
-		if (arguments.length === 1) {
-			value = arguments[0];
-		} else {
-//    console.log("Generating random value");
-			value = maxValue * Math.random();
-		}
-		value = Math.max(value, startValue);
-		value = Math.min(value, maxValue);
-
-		if (withMinMax) {
-			miniVal = Math.min(value, miniVal);
-			maxiVal = Math.max(value, maxiVal);
-		}
-
-		//console.log("Reaching Value :" + value + " from " + previousValue);
-		let diff = value - previousValue;
-		valueToDisplay = previousValue;
-
-//  console.log(canvasName + " going from " + previousValue + " to " + value);
-
-//    if (diff > 0)
-//      incr = 0.01 * maxValue;
-//    else
-//      incr = -0.01 * maxValue;
-		incr = diff / 10;
-		if (intervalID) {
-			window.clearInterval(intervalID);
-		}
-		intervalID = window.setInterval(function () {
-			displayAndIncrement(value);
-		}, 10);
-	};
-
-	let displayAndIncrement = (finalValue) => {
-		//console.log('Tic ' + inc + ', ' + finalValue);
-		drawDisplay(canvasName, displaySize, valueToDisplay);
-		valueToDisplay += incr;
-		if ((incr > 0 && valueToDisplay > finalValue) || (incr < 0 && valueToDisplay < finalValue)) {
-//    console.log('Stop, ' + finalValue + ' reached, steps were ' + incr);
-			window.clearInterval(intervalID);
-			previousValue = finalValue;
-			if (running) {
-				instance.animate();
-			} else {
-				drawDisplay(canvasName, displaySize, finalValue); // Final display
-			}
-		}
 	};
 
 	function drawDisplay(displayCanvasName, displayRadius, displayValue) {

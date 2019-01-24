@@ -86,18 +86,34 @@
 	</style>
 
 	<script type="text/javascript" src="./js/AnalogDisplay.js"></script>
+	<script type="text/javascript" src="./js/Direction.js"></script>
+	<script type="text/javascript" src="./js/CircularCompass.js"></script>
+
+	<script type="text/javascript" src="./js/pub.sub.js"></script>
+	<script type="text/javascript" src="./js/ajax.manager.js"></script>
+
 	<script type="text/javascript">
 
 		var displayBSP;
 		var displayTWS;
+
+		var displayTWD;
+		var displayHDG;
 
 		const MIN_BSP = 0, MAX_BSP = 15;
 		const MIN_TWS = 0, MAX_TWS = 65;
 
 		let bsp = 0;
 		let tws = 0;
+		let twd = 0;
+		let hdg = 0;
+
 		let incBsp = 0.1;
 		let incTws = 0.2;
+		let incTwd = 1.0;
+		let incHdg = 1.0;
+
+		let justDemo = false;
 
 		window.onload = () => {
 			displayBSP = new AnalogDisplay('bspCanvas', 123, 15, 1, 0.1, true, 40); // 123: ((250/2) - 2)
@@ -108,30 +124,75 @@
 			displayTWS.setValue(tws);
 			displayTWS.setLabel('TWS');
 
-			window.setInterval(() => { // Move the hand
-				if ((incBsp > 0 && bsp >= MAX_BSP) || (incBsp < 0 && (bsp <= MIN_BSP))) {
-					incBsp *= -1;
-				}
-				bsp += incBsp;
-				displayBSP.setValue(bsp);
-			}, 20);
+			displayTWD = new Direction('twdCanvas', 123, 45, 5, true, true); // 123: ((250/2) - 2)
+			displayTWD.setValue(twd);
+			displayTWD.setLabel('TWD');
 
-			window.setInterval(() => { // Move the hand
-				if ((incTws > 0 && tws >= MAX_TWS) || (incTws < 0 && (tws <= MIN_TWS))) {
-					incTws *= -1;
-				}
-				tws += incTws;
-				displayTWS.setValue(tws);
-			}, 50);
+			displayHDG = new CircularCompass('hdgCanvas', 123, 45, 1, true); // 123: ((250/2) - 2)
+			displayHDG.setValue(twd);
+			displayHDG.setLabel('HDG');
+
+			if (justDemo) {
+				window.setInterval(() => { // Move the hand
+					if ((incBsp > 0 && bsp >= MAX_BSP) || (incBsp < 0 && (bsp <= MIN_BSP))) {
+						incBsp *= -1;
+					}
+					bsp += incBsp;
+					displayBSP.setValue(bsp);
+				}, 20);
+
+				window.setInterval(() => { // Move the hand
+					if ((incTws > 0 && tws >= MAX_TWS) || (incTws < 0 && (tws <= MIN_TWS))) {
+						incTws *= -1;
+					}
+					tws += incTws;
+					displayTWS.setValue(tws);
+				}, 50);
+
+				window.setInterval(() => { // Move the hand
+					twd += incTwd;
+					twd %= 360;
+					displayTWD.setValue(twd);
+				}, 50);
+
+				window.setInterval(() => { // Move the hand
+					hdg += incHdg;
+					hdg %= 360;
+					displayHDG.setValue(hdg);
+				}, 50);
+			} else {
+				initAjax();
+
+				/**
+				 *  SUBSCRIBERS HERE.
+				 *
+				 * The following subscriptions make the distinction between Ajax & WebSockets
+				 * (See the initAjax & initWS methods)
+				 *
+				 * Note: Event's definition (topic's name) is in ajax.manager.js, method onMessage
+				 */
+				events.subscribe('bsp', (val) => {
+					displayBSP.setValue(val);
+				});
+				events.subscribe('tws', (val) => {
+					displayTWS.setValue(val);
+				});
+				events.subscribe('twd', (val) => {
+					displayTWD.setValue(val);
+				});
+				events.subscribe('hdg', (val) => {
+					displayHDG.setValue(val);
+				});
+			}
 		};
 
 	</script>
 </head>
 <body bgcolor="white">
-<div style="text-align: left; margin-left: 20px;">
+<!--div style="text-align: left; margin-left: 20px;">
 	<h2>An Example: Several displays...</h2>
 	<h3>with transitions</h3>
-</div>
+</div-->
 <div style="text-align: center; max-width: 300px; padding: 20px 10px 10px 10px; margin: 10px; border: 3px solid silver; border-radius: 50px;">
 	<div id="displays">
 		<div class="slideshow-container">
@@ -142,6 +203,14 @@
 
 			<div class="the-slides fade">
 				<canvas id="twsCanvas" width="250" height="250" title="Whatever value..."></canvas>
+			</div>
+
+			<div class="the-slides fade">
+				<canvas id="twdCanvas" width="250" height="250" title="Whatever value..."></canvas>
+			</div>
+
+			<div class="the-slides fade">
+				<canvas id="hdgCanvas" width="250" height="250" title="Whatever value..."></canvas>
 			</div>
 
 		</div>

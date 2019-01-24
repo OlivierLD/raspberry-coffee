@@ -1,13 +1,13 @@
 /**
  Subscribe like this:
- events.subscribe('topic', function(val) {
+ events.subscribe('topic', (val) => {
    doSomethingSmart(val);
  });
 
  Publish like that:
  events.publish('topic', val);
 
- Don't use arrow function in the members below (ok when subscribing though).
+ Don't use arrow functions in the members below (ok when subscribing though, see the comment above).
  */
 var events = {
     listener: [],
