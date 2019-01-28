@@ -1,6 +1,25 @@
 /*
  * @author Olivier Le Diouris
  */
+"use strict";
+
+if (Math.toDegrees === undefined) {
+	Math.toDegrees = (rad) => {
+		return rad * (180 / Math.PI);
+	};
+}
+
+if (Math.toRadians === undefined) {
+	Math.toRadians = (deg) => {
+		return deg * (Math.PI / 180);
+	};
+}
+
+if (Math.sign === undefined) {
+	Math.sign = (x) => {
+		return x > 0 ? 1 : x < 0 ? -1 : 0;
+	};
+}
 
 function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 	if (majorTicks === undefined) {
@@ -27,15 +46,15 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 	 */
 	function getColorConfig() {
 		let colorConfig = defaultAnalogColorConfig;
-		for (let s=0; s<document.styleSheets.length; s++) {
+		for (let s = 0; s < document.styleSheets.length; s++) {
 //		console.log("Walking though ", document.styleSheets[s]);
-			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+			for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 //			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
 				if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
 //				console.log("  >>> Found it!");
 					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					let cssTextElems = cssText.split(";");
-					cssTextElems.forEach(function(elem) {
+					cssTextElems.forEach(function (elem) {
 						if (elem.trim().length > 0) {
 							let keyValPair = elem.split(":");
 							let key = keyValPair[0].trim();
@@ -158,11 +177,20 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 	let label;
 	let instance = this;
 
+	let cbBefore, cbAfter;
+
 	this.setDisplaySize = function (ds) {
 		scale = ds / 100;
 		displaySize = ds;
 		this.drawDisplay(canvasName, displaySize, instance.previousValue);
 	};
+
+	this.setCbBefore = function(cb) {
+		cbBefore = cb;
+	}
+	this.setCbAfter = function(cb) {
+		cbAfter = cb;
+	}
 
 	this.repaint = function () {
 		this.drawDisplay(canvasName, displaySize, this.previousValue);
@@ -181,21 +209,10 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 		while (num < 0) {
 			num += 360;
 		}
-		while (num > 360){
+		while (num > 360) {
 			num -= 360;
 		}
 		return num;
-	};
-
-	let sign = function (x) {
-		return x > 0 ? 1 : x < 0 ? -1 : 0;
-	};
-	let toRadians = function (d) {
-		return Math.PI * d / 180;
-	};
-
-	let toDegrees = function (d) {
-		return d * 180 / Math.PI;
 	};
 
 	let reloadColor = false;
@@ -220,6 +237,10 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 		context.fillStyle = directionColorConfig.bgColor;
 		context.fillRect(0, 0, canvas.width, canvas.height);
 
+		if (cbBefore !== undefined) {
+			// TODO Implement
+		}
+
 		context.beginPath();
 		if (withBorder === true) {
 			//context.arc(x, y, radius, startAngle, startAngle + Math.PI, antiClockwise);
@@ -231,8 +252,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 			grd.addColorStop(0, directionColorConfig.displayBackgroundGradientFrom);// 0  Beginning
 			grd.addColorStop(1, directionColorConfig.displayBackgroundGradientTo);  // 1  End
 			context.fillStyle = grd;
-		}
-		else {
+		} else {
 			context.fillStyle = directionColorConfig.displayBackgroundGradientTo;
 		}
 
@@ -253,9 +273,10 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 		context.stroke();
 		context.closePath();
 
+		var xFrom, yFrom, xTo, yTo;
 		// Major Ticks
 		context.beginPath();
-		for (i = 0; i < 360; i += majorTicks) {
+		for (let i = 0; i < 360; i += majorTicks) {
 			xFrom = (canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (i / 360)));
 			yFrom = (canvas.height / 2) - ((radius * 0.95) * Math.sin(2 * Math.PI * (i / 360)));
 			xTo = (canvas.width / 2) - ((radius * 0.85) * Math.cos(2 * Math.PI * (i / 360)));
@@ -271,7 +292,7 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 		// Minor Ticks
 		if (minorTicks > 0) {
 			context.beginPath();
-			for (i = 0; i <= 360; i += minorTicks) {
+			for (let i = 0; i <= 360; i += minorTicks) {
 				xFrom = (canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (i / 360)));
 				yFrom = (canvas.height / 2) - ((radius * 0.95) * Math.sin(2 * Math.PI * (i / 360)));
 				xTo = (canvas.width / 2) - ((radius * 0.90) * Math.cos(2 * Math.PI * (i / 360)));
@@ -353,14 +374,14 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 
 		// Numbers
 		context.beginPath();
-		for (i = 0; i < 360; i += majorTicks) {
+		for (let i = 0; i < 360; i += majorTicks) {
 			context.save();
 			context.translate(canvas.width / 2, (canvas.height / 2)); // canvas.height);
 			context.rotate((2 * Math.PI * (i / 360)));
 			context.font = "bold " + Math.round(scale * 15) + "px Arial"; // Like "bold 15px Arial"
 			context.fillStyle = digitColor;
-			str = i.toString();
-			len = context.measureText(str).width;
+			let str = i.toString();
+			let len = context.measureText(str).width;
 			context.fillText(str, -len / 2, (-(radius * .8) + 10));
 			context.lineWidth = 1;
 			context.strokeStyle = directionColorConfig.valueOutlineColor;
@@ -372,12 +393,13 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 		let dv = parseFloat(displayValue);
 		while (dv > 360) dv -= 360;
 		while (dv < 0) dv += 360;
+		let text = '';
 		try {
 			text = dv.toFixed(directionColorConfig.valueNbDecimal);
 		} catch (err) {
 			console.log(err);
 		}
-		len = 0;
+		let len = 0;
 		context.font = "bold " + Math.round(scale * 40) + "px " + directionColorConfig.font; // "bold 40px Arial"
 		let metrics = context.measureText(text);
 		len = metrics.width;
@@ -419,8 +441,8 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 		// Center
 		context.moveTo(canvas.width / 2, (canvas.height / 2));
 		// Left
-		x = (canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (displayValue / 360)))); //  - (Math.PI / 2))));
-		y = (canvas.height / 2) - ((radius * 0.05) * Math.sin((2 * Math.PI * (displayValue / 360)))); // - (Math.PI / 2))));
+		let x = (canvas.width / 2) - ((radius * 0.05) * Math.cos((2 * Math.PI * (displayValue / 360)))); //  - (Math.PI / 2))));
+		let y = (canvas.height / 2) - ((radius * 0.05) * Math.sin((2 * Math.PI * (displayValue / 360)))); // - (Math.PI / 2))));
 		context.lineTo(x, y);
 		if (windArrow !== true) { // Regular needle
 			// Tip
@@ -441,16 +463,16 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 			 */
 
 			let arrowPoints = [
-				{ x: - radius * 0.04, y: - radius * 0.30 }, // Left pointy side of the arrow head
-				{ x: - radius * 0.20, y: - radius * 0.60 }, // Left back fat side of the arrow head
-				{ x: - radius * 0.04, y: - radius * 0.60 }, // Left back narrow side of the arrow head
-				{ x: - radius * 0.04, y: - radius * 0.90 }, // Left tip
-				{ x: + radius * 0.04, y: - radius * 0.90 }, // Right tip
-				{ x: + radius * 0.04, y: - radius * 0.60 }, // Right back narrow side of the arrow head
-				{ x: + radius * 0.20, y: - radius * 0.60 }, // Right back fat side of the arrow head
-				{ x: + radius * 0.04, y: - radius * 0.30 }  // Right pointy side of the arrow head
+				{x: -radius * 0.04, y: -radius * 0.30}, // Left pointy side of the arrow head
+				{x: -radius * 0.20, y: -radius * 0.60}, // Left back fat side of the arrow head
+				{x: -radius * 0.04, y: -radius * 0.60}, // Left back narrow side of the arrow head
+				{x: -radius * 0.04, y: -radius * 0.90}, // Left tip
+				{x: +radius * 0.04, y: -radius * 0.90}, // Right tip
+				{x: +radius * 0.04, y: -radius * 0.60}, // Right back narrow side of the arrow head
+				{x: +radius * 0.20, y: -radius * 0.60}, // Right back fat side of the arrow head
+				{x: +radius * 0.04, y: -radius * 0.30}  // Right pointy side of the arrow head
 			];
-			let radAngle = toRadians(dv); // + (Math.PI / 2);
+			let radAngle = Math.toRadians(dv); // + (Math.PI / 2);
 			// Apply rotation to the points of the needle
 			arrowPoints.forEach(pt => {
 				x = (canvas.width / 2) + ((pt.x * Math.cos(radAngle)) - (pt.y * Math.sin(radAngle)));
@@ -477,6 +499,13 @@ function Direction(cName, dSize, majorTicks, minorTicks, withRose, windArrow) {
 		context.fill();
 		context.strokeStyle = directionColorConfig.knobOutlineColor;
 		context.stroke();
+
+		if (cbAfter !== undefined) {
+			x = (canvas.width / 2) - ((radius * 0.90) * Math.cos(2 * Math.PI * (displayValue / 360) + (Math.PI / 2)));
+			y = (canvas.height / 2) - ((radius * 0.90) * Math.sin(2 * Math.PI * (displayValue / 360) + (Math.PI / 2)));
+			cbAfter(context, radius, displayValue, { x: x, y: y });
+		}
+
 	};
 
 	this.drawSpike = function (canvas, radius, outsideRadius, insideRadius, angle, context) {

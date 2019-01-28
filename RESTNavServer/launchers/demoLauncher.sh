@@ -41,6 +41,7 @@ do
 	echo -e "|  3. Home Weather Station data                                                           |"
 	echo -e "|  4. With GPS and NMEA data, waits for the RMC sentence to be active to begin logging    |"
 	echo -e "|  5. Like option '1', but with 'Sun Flower' option                                       |"
+	echo -e "|  6. Replay logged kayak data                                                            |"
 	echo -e "|  ... TODO: more.                                                                        |"
 	echo -e "| 10. Full Nav Server Home Page. NMEA, Tides, Weather Wizard, Almanacs, etc. Data replay. |"
 	echo -e "|     - See or modify nmea.mux.properties for details.                                    |"
@@ -131,6 +132,18 @@ do
 		    sleep 5 # Wait for the server to be operational
 		    # openBrowser "http://localhost:9999/web/webcomponents/console.gps.html?style=flat-gray&bg=black&border=y&boat-data=n"
 		    openBrowser "http://localhost:9999/web/sunflower/sun.data.html"
+	    fi
+	    GO=false
+	    ;;
+	  "6")
+	    PROP_FILE=nmea.mux.kayak.log.properties
+	    echo -e "Launching Nav Server with $PROP_FILE"
+	    ./runNavServer.sh --mux:$PROP_FILE --no-rmc-time --no-date &
+	    if [ "$LAUNCH_BROWSER" == "Y" ]
+	    then
+		    echo -e ">>> Waiting for the server to start..."
+		    sleep 5 # Wait for the server to be operational
+		    openBrowser "http://localhost:9999/web/index.html"
 	    fi
 	    GO=false
 	    ;;

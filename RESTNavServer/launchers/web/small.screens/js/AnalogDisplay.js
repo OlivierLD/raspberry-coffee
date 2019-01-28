@@ -5,6 +5,8 @@
  */
 "use strict";
 
+const ANALOG_DEBUG = false;
+
 if (Math.toDegrees === undefined) {
 	Math.toDegrees = (rad) => {
 		return rad * (180 / Math.PI);
@@ -14,6 +16,12 @@ if (Math.toDegrees === undefined) {
 if (Math.toRadians === undefined) {
 	Math.toRadians = (deg) => {
 		return deg * (Math.PI / 180);
+	};
+}
+
+if (Math.sign === undefined) {
+	Math.sign = (x) => {
+		return x > 0 ? 1 : x < 0 ? -1 : 0;
 	};
 }
 
@@ -57,15 +65,15 @@ function AnalogDisplay(cName,                     // Canvas Name
 	 */
 	function getColorConfig() {
 		let colorConfig = defaultAnalogColorConfig;
-		for (let s=0; s<document.styleSheets.length; s++) {
+		for (let s = 0; s < document.styleSheets.length; s++) {
 //		console.log("Walking though ", document.styleSheets[s]);
-			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+			for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 //			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
 				if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
 //				console.log("  >>> Found it!");
 					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					let cssTextElems = cssText.split(";");
-					cssTextElems.forEach(function(elem) {
+					cssTextElems.forEach(function (elem) {
 						if (elem.trim().length > 0) {
 							let keyValPair = elem.split(":");
 							let key = keyValPair[0].trim();
@@ -216,7 +224,7 @@ function AnalogDisplay(cName,                     // Canvas Name
 	this.setLabel = (lbl) => {
 		label = lbl;
 	};
-	this.setDigits= (d) => {
+	this.setDigits = (d) => {
 		digits = d;
 	};
 	this.setDigitValue = (val) => {
@@ -379,6 +387,9 @@ function AnalogDisplay(cName,                     // Canvas Name
 
 		// Label ?
 		if (label !== undefined) {
+			if (ANALOG_DEBUG) {
+				console.log('Label', label);
+			}
 			let fontSize = 20;
 			text = label;
 			context.font = "bold " + Math.round(scale * fontSize) + "px " + analogDisplayColorConfig.font; // "bold 40px Arial"
@@ -392,6 +403,10 @@ function AnalogDisplay(cName,                     // Canvas Name
 			context.strokeStyle = analogDisplayColorConfig.valueOutlineColor;
 			context.strokeText(text, (canvas.width / 2) - (len / 2), (2 * radius - (fontSize * scale * 2.1))); // Outlined
 			context.closePath();
+		} else {
+			if (ANALOG_DEBUG) {
+				console.log('No label');
+			}
 		}
 
 		// Digits? Note: not compatible with label (above), would hide it. Example: Log Value

@@ -7,6 +7,7 @@ echo -e "     -p or --proxy means with a proxy"
 echo -e "     -m or --mux points to the properties file to use for the Multiplexer, default is nmea.mux.properties"
 echo -e "     -sf or --sun-flower means with Sun Flower option (extra Request Manager)"
 echo -e "     --no-date does not put any GPS date or time (replayed or live) in the cache (allows you to use a ZDA generator)"
+echo -e "     --no-rmc-time will NOT set rmc time (only date & time). Usefull when replaying data"
 echo -e "----------------------------"
 #
 echo -e "⚓ Starting the Navigation Rest Server 🌴"
@@ -16,6 +17,7 @@ echo -e "----------------------------------------"
 #
 USE_PROXY=false
 NO_DATE=false
+RMC_TIME_OK=true
 SUN_FLOWER=false
 PROP_FILE=
 #
@@ -28,6 +30,9 @@ do
   elif [ "$ARG" == "--no-date" ]
   then
     NO_DATE=true
+  elif [ "$ARG" == "--no-rmc-time" ]
+  then
+    RMC_TIME_OK=false
   elif [ "$ARG" == "-sf" ] || [ "$ARG" == "--sun-flower" ]
   then
     SUN_FLOWER=true
@@ -73,7 +78,7 @@ then
 	echo -e "| Using nmea.mux.home.properties, TCP input from Weather station |"
 	echo -e "+----------------------------------------------------------------+"
 	JAVA_OPTS="$JAVA_OPTS -Dmux.properties=nmea.mux.home.properties"
-	JAVA_OPTS="$JAVA_OPTS -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # SF.
+	JAVA_OPTS="$JAVA_OPTS -Ddefault.sf.latitude=37.7489 -Ddefault.sf.longitude=-122.5070" # San Francisco.
 else
   JAVA_OPTS="$JAVA_OPTS -Dwith.sun.flower=$SUN_FLOWER"
   if [ "$PROP_FILE" != "" ]
@@ -95,6 +100,12 @@ then
 	# To use when re-playing GPS data. Those dates will not go in the cache.
 	JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GGA.date.time=true"
 	JAVA_OPTS="$JAVA_OPTS -Ddo.not.use.GLL.date.time=true"
+fi
+#
+if [ "$RMC_TIME_OK" == "false" ]
+then
+	# To use when re-playing GPS data. Those dates will not go in the cache.
+	JAVA_OPTS="$JAVA_OPTS -Drmc.time.ok=false"
 fi
 # Default position
 JAVA_OPTS="$JAVA_OPTS -Ddefault.mux.latitude=37.7489 -Ddefault.mux.longitude=-122.5070" # SF.

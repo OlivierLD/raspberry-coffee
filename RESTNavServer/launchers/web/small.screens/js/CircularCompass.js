@@ -1,6 +1,25 @@
 /*
  * @author Olivier Le Diouris
  */
+"use strict";
+
+if (Math.toDegrees === undefined) {
+	Math.toDegrees = (rad) => {
+		return rad * (180 / Math.PI);
+	};
+}
+
+if (Math.toRadians === undefined) {
+	Math.toRadians = (deg) => {
+		return deg * (Math.PI / 180);
+	};
+}
+
+if (Math.sign === undefined) {
+	Math.sign = (x) => {
+		return x > 0 ? 1 : x < 0 ? -1 : 0;
+	};
+}
 
 function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 
@@ -25,15 +44,15 @@ function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 	 */
 	function getColorConfig() {
 		let colorConfig = defaultCircularCompassColorConfig;
-		for (let s=0; s<document.styleSheets.length; s++) {
+		for (let s = 0; s < document.styleSheets.length; s++) {
 //		console.log("Walking though ", document.styleSheets[s]);
-			for (let r=0; document.styleSheets[s].cssRules !== null && r<document.styleSheets[s].cssRules.length; r++) {
+			for (let r = 0; document.styleSheets[s].cssRules !== null && r < document.styleSheets[s].cssRules.length; r++) {
 //			console.log(">>> ", document.styleSheets[s].cssRules[r].selectorText);
 				if (document.styleSheets[s].cssRules[r].selectorText === '.analogdisplay') {
 //				console.log("  >>> Found it!");
 					let cssText = document.styleSheets[s].cssRules[r].style.cssText;
 					let cssTextElems = cssText.split(";");
-					cssTextElems.forEach(function(elem) {
+					cssTextElems.forEach(function (elem) {
 						if (elem.trim().length > 0) {
 							let keyValPair = elem.split(":");
 							let key = keyValPair[0].trim();
@@ -179,19 +198,8 @@ function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 		return num;
 	};
 
-	let sign = function (x) {
-		return x > 0 ? 1 : x < 0 ? -1 : 0;
-	};
-	let toRadians = function (d) {
-		return Math.PI * d / 180;
-	};
-
-	let toDegrees = function (d) {
-		return d * 180 / Math.PI;
-	};
-
 	let reloadColor = false;
-	let reloadColorConfig = function() {
+	let reloadColorConfig = function () {
 //  console.log('Color scheme has changed');
 		reloadColor = true;
 	};
@@ -227,8 +235,7 @@ function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 			grd.addColorStop(0, circularCompassColorConfig.displayBackgroundGradientFrom);// 0  Beginning
 			grd.addColorStop(1, circularCompassColorConfig.displayBackgroundGradientTo);  // 1  End
 			context.fillStyle = grd;
-		}
-		else {
+		} else {
 			context.fillStyle = circularCompassColorConfig.displayBackgroundGradientTo;
 		}
 
@@ -249,9 +256,10 @@ function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 		context.stroke();
 		context.closePath();
 
+		var xFrom, yFrom, xTo, yTo;
 		// Major Ticks
 		context.beginPath();
-		for (i = 0; i < 360; i += majorTicks) {
+		for (let i = 0; i < 360; i += majorTicks) {
 			let heading = i - displayValue;
 			xFrom = (canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (heading / 360)));
 			yFrom = (canvas.height / 2) - ((radius * 0.95) * Math.sin(2 * Math.PI * (heading / 360)));
@@ -268,7 +276,7 @@ function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 		// Minor Ticks
 		if (minorTicks > 0) {
 			context.beginPath();
-			for (i = 0; i <= 360; i += minorTicks) {
+			for (let i = 0; i <= 360; i += minorTicks) {
 				let heading = i - displayValue;
 				xFrom = (canvas.width / 2) - ((radius * 0.95) * Math.cos(2 * Math.PI * (heading / 360)));
 				yFrom = (canvas.height / 2) - ((radius * 0.95) * Math.sin(2 * Math.PI * (heading / 360)));
@@ -354,13 +362,14 @@ function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 		let cardPoints = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 
 		context.beginPath();
-		for (i = 0; i < 360; i += majorTicks) {
+		for (let i = 0; i < 360; i += majorTicks) {
 			let heading = i - displayValue;
 			context.save();
 			context.translate(canvas.width / 2, (canvas.height / 2)); // canvas.height);
 			context.rotate((2 * Math.PI * (heading / 360)));
 			context.font = "bold " + Math.round(scale * 15) + "px Arial"; // Like "bold 15px Arial"
 			context.fillStyle = digitColor;
+			var str;
 			if (replaceWithCardPoints) {
 				if (i % 45 === 0) {
 					str = cardPoints[i / 45];
@@ -371,7 +380,7 @@ function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 				str = i.toString();
 			}
 
-			len = context.measureText(str).width;
+			let len = context.measureText(str).width;
 			context.fillText(str, -len / 2, (-(radius * .8) + 10));
 			context.lineWidth = 1;
 			context.strokeStyle = circularCompassColorConfig.valueOutlineColor;
@@ -383,12 +392,13 @@ function CircularCompass(cName, dSize, majorTicks, minorTicks, withRose) {
 		let dv = parseFloat(displayValue);
 		while (dv > 360) dv -= 360;
 		while (dv < 0) dv += 360;
+		var text = '';
 		try {
 			text = dv.toFixed(circularCompassColorConfig.valueNbDecimal);
 		} catch (err) {
 			console.log(err);
 		}
-		len = 0;
+		let len = 0;
 		context.font = "bold " + Math.round(scale * 40) + "px " + circularCompassColorConfig.font; // "bold 40px Arial"
 		let metrics = context.measureText(text);
 		len = metrics.width;

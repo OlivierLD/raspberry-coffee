@@ -102,7 +102,7 @@ public class ExtraDataComputer extends Computer {
 				switch (sentenceID) {
 					case "RMC":
 						RMC rmc = StringParsers.parseRMC(sentence);
-						if (rmc != null) {
+						if (rmc != null && rmc.isValid()) {
 							Map<String, Object> rmcMap = new HashMap<>(5);
 							rmcMap.put(NMEADataCache.SOG, new Speed(rmc.getSog()));
 							rmcMap.put(NMEADataCache.POSITION, rmc.getGp());
@@ -113,7 +113,8 @@ public class ExtraDataComputer extends Computer {
 								rmcMap.put(NMEADataCache.GPS_DATE_TIME, null);
 							}
 							Date time = rmc.getRmcTime();
-							if (time != null) {
+							// When re-playing, set -Drmc.time.ok=false
+							if (time != null && "true".equals(System.getProperty("rmc.time.ok", "true"))) {
 								rmcMap.put(NMEADataCache.GPS_TIME, new UTCTime(time));
 							}
 							rmcMap.put(NMEADataCache.COG, new Angle360(rmc.getCog()));
