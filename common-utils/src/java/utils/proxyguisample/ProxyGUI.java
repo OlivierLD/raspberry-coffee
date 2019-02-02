@@ -73,7 +73,7 @@ public class ProxyGUI extends JFrame {
 			});
 		}
 
-		String requestStr = String.format("%s %s %s", request.getVerb(), request.getPath(), request.getProtocol());
+		String requestStr = String.format("%s %s %s", request.getVerb(), request.getPath(true), request.getProtocol());
 		requestPanel.addData("------ R e q u e s t --------");
 		requestPanel.addData(requestStr);
 		requestPanel.addData("-----------------------------");
@@ -91,7 +91,7 @@ public class ProxyGUI extends JFrame {
 			response = HTTPClient.doRequest(request);
 		} catch (Exception ex) {
 //		throw new RuntimeException(ex);
-			System.err.println(String.format(">>> For request %s %s", request.getVerb(), request.getPath()));
+			System.err.println(String.format(">>> For request %s %s", request.getVerb(), request.getPath(true)));
 			ex.printStackTrace();
 		}
 //	String rCode = String.format("Response code: %d", response.getStatus());

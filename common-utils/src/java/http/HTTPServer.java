@@ -62,7 +62,8 @@ public class HTTPServer {
 				"POST",
 				"DELETE",
 				"PUT",
-				"PATCH"
+				"PATCH",
+				"OPTIONS"
 		);
 
 		private String verb;
@@ -74,8 +75,7 @@ public class HTTPServer {
 
 		private Map<String, String> queryStringParameters;
 
-		public Request() {
-		}
+		public Request() {}
 
 		public Request(String verb, String path, String protocol) {
 			this.verb = verb;
@@ -111,8 +111,12 @@ public class HTTPServer {
 		}
 
 		public String getPath() {
+			return getPath(false);
+		}
+
+		public String getPath(boolean full) {
 			String url = this.path;
-			if (queryStringParameters != null) {
+			if (queryStringParameters != null && full) {
 				url += "?" +
 						this.queryStringParameters.keySet()
 								.stream()

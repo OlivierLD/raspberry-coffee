@@ -79,7 +79,7 @@ public class HTTPClient {
 
 	public static HTTPServer.Response doRequest(HTTPServer.Request request) throws Exception {
 		HTTPServer.Response response = new HTTPServer.Response(request.getProtocol(), HTTPServer.Response.STATUS_OK);
-		URL url = new URL(request.getPath());
+		URL url = new URL(request.getPath(true));
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod(request.getVerb());
 		for (String h : request.getHeaders().keySet()) {
