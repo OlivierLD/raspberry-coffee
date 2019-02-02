@@ -1,5 +1,5 @@
 ## Project Trunk
-#### a.k.a. "la caisse &agrave; glingues".
+#### a.k.a. "la caisse &agrave; glingues" 🔧.
 ---
 This folder contains projects involving the components available in other modules of this project.
 > Note: Replaces the content of what was `RasPISamples`.

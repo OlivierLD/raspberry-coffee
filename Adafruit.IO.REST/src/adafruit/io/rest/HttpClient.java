@@ -37,7 +37,9 @@ public class HttpClient {
 			conn.setUseCaches(false);
 			responseCode = conn.getResponseCode();
 
-			if (DEBUG) System.out.println("Done. (" + responseCode + ")");
+			if (DEBUG) {
+				System.out.println("Done. (" + responseCode + ")");
+			}
 
 			InputStream is = conn.getInputStream();
 			byte aByte[] = new byte[2];
@@ -160,7 +162,7 @@ public class HttpClient {
 	 * @param args unused
 	 * @throws Exception
 	 */
-	public static void main(@SuppressWarnings("unused") String... args) throws Exception {
+	public static void main(String... args) throws Exception {
 		String key = System.getProperty("key");
 		if (key == null) {
 			HttpClient.help();

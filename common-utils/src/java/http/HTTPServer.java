@@ -111,7 +111,15 @@ public class HTTPServer {
 		}
 
 		public String getPath() {
-			return path;
+			String url = this.path;
+			if (queryStringParameters != null) {
+				url += "?" +
+						this.queryStringParameters.keySet()
+								.stream()
+								.map(k -> k + "=" + queryStringParameters.get(k))
+								.collect(Collectors.joining("&"));
+			}
+			return url;
 		}
 
 		public String getProtocol() {
