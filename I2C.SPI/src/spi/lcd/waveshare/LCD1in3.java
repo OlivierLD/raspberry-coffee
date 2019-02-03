@@ -64,28 +64,32 @@ public class LCD1in3 {
 	private final static int LCD_HEIGHT = 240;
 	private final static int LCD_WIDTH  = 240;
 
-	private final static int  HORIZONTAL = 0;
-	private final static int  VERTICAL   = 1;
+	public final static int  HORIZONTAL = 0;
+	public final static int  VERTICAL   = 1;
 
 	private int lcdWidth = 0;
 	private int lcdHeight = 0;
 
-	private final static int WHITE = 0xFFFF;
-	private final static int BLACK = 0x0000;
-	private final static int BLUE = 0x001F;
-	private final static int BRED = 0XF81F;
-	private final static int GRED = 0XFFE0;
-	private final static int GBLUE = 0X07FF;
-	private final static int RED = 0xF800;
-	private final static int MAGENTA = 0xF81F;
-	private final static int GREEN = 0x07E;
-	private final static int CYAN = 0x7FFF;
-	private final static int YELLOW = 0xFFE0;
-	private final static int BROWN = 0XBC40;
-	private final static int BRRED = 0XFC07;
-	private final static int GRAY = 0X8430;
+	public final static int WHITE = 0xFFFF;
+	public final static int BLACK = 0x0000;
+	public final static int BLUE = 0x001F;
+	public final static int BRED = 0XF81F;
+	public final static int GRED = 0XFFE0;
+	public final static int GBLUE = 0X07FF;
+	public final static int RED = 0xF800;
+	public final static int MAGENTA = 0xF81F;
+	public final static int GREEN = 0x07E;
+	public final static int CYAN = 0x7FFF;
+	public final static int YELLOW = 0xFFE0;
+	public final static int BROWN = 0XBC40;
+	public final static int BRRED = 0XFC07;
+	public final static int GRAY = 0X8430;
 
 	public LCD1in3() {
+		this(HORIZONTAL, WHITE);
+	}
+
+	public LCD1in3(int direction, int color) {
 
 		if (VERBOSE) {
 			String[] map = new String[14];
@@ -106,7 +110,7 @@ public class LCD1in3 {
 
 			PinUtil.print(map);
 		}
-		init();
+		init(direction, color);
 	}
 
 	private void init() {
@@ -345,6 +349,9 @@ public class LCD1in3 {
 	}
 
 	public void shutdown() {
+		if (VERBOSE) {
+			System.out.println("Shutting down");
+		}
 		gpio.shutdown();
 	}
 
