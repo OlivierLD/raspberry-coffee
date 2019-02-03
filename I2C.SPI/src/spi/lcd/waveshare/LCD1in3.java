@@ -151,7 +151,7 @@ public class LCD1in3 {
 		LCDInitReg();
 	}
 
-	private void LCDClear(int color) {
+	public void LCDClear(int color) {
 		LCDSetWindows(0, 0, LCD_WIDTH, LCD_HEIGHT);
 		for (int j = 0; j < LCD_HEIGHT; j++) {
 			for (int i = 0; i < LCD_WIDTH; i++) {
