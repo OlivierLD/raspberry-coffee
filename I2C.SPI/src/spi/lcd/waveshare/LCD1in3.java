@@ -12,6 +12,10 @@ import utils.TimeUtil;
 /**
  * Java interface for https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm
  * As the header is attached to the screen, there is no choice in the pins to use for the SPI interface.
+ *
+ * Color LCD Screen 240x240
+ * 3 Buttons
+ * Joystick
  */
 public class LCD1in3 {
 
