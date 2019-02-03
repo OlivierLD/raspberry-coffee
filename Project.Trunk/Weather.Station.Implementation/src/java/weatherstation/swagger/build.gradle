@@ -34,3 +34,30 @@ task swaggerClj(type: JavaExec, description: "Generate Clojure server code for t
             "-i", "weather.sensors.yaml",
             "-o", "./generated"
 }
+
+task swaggerJaxRS(type: JavaExec, description: "Generate JAX-RS server code for the weather station") {
+    classpath = configurations.runtime
+    main = 'io.swagger.codegen.SwaggerCodegen'
+    args "generate",
+            "-l", "jaxrs",
+            "-i", "weather.sensors.yaml",
+            "-o", "./generated"
+}
+
+task swaggerGO(type: JavaExec, description: "Generate GO server code for the weather station") {
+    classpath = configurations.runtime
+    main = 'io.swagger.codegen.SwaggerCodegen'
+    args "generate",
+            "-l", "go-server",
+            "-i", "weather.sensors.yaml",
+            "-o", "./generated"
+}
+
+task swaggerScala(type: JavaExec, description: "Generate GO server code for the weather station") {
+    classpath = configurations.runtime
+    main = 'io.swagger.codegen.SwaggerCodegen'
+    args "generate",
+            "-l", "scalatra",
+            "-i", "weather.sensors.yaml",
+            "-o", "./generated"
+}

@@ -1,6 +1,7 @@
 package http.client;
 
 import http.HTTPServer;
+import utils.StaticUtil;
 
 import java.io.BufferedReader;
 import java.io.EOFException;
@@ -43,16 +44,15 @@ public class HTTPClient {
 				System.out.println("Done. (" + responseCode + ")");
 			}
 
-			InputStream is = conn.getInputStream();
+			InputStream inputStream = conn.getInputStream();
 			byte aByte[] = new byte[2];
-			int nBytes;
 
 			byte content[] = null;
 			int nbLoop = 1;
 			long started = System.currentTimeMillis();
 
-			while ((nBytes = is.read(aByte, 0, 1)) != -1) {
-				content = appendByte(content, aByte[0]);
+			while (inputStream.read(aByte, 0, 1) != -1) {
+				content = StaticUtil.appendByte(content, aByte[0]);
 				if (content.length > (nbLoop * 1_000)) {
 					long now = System.currentTimeMillis();
 					long delta = now - started;
@@ -86,7 +86,7 @@ public class HTTPClient {
 			conn.setRequestProperty(h, request.getHeaders().get(h));
 		}
 		conn.setUseCaches(false);
-		if (!"GET".equals(request.getVerb())) { // TODO May need tweaks
+		if (!"GET".equals(request.getVerb())) { // TODO May need tweaks...
 			conn.setDoOutput(true);
 			OutputStream os = conn.getOutputStream();
 			os.write(request.getContent());
@@ -106,9 +106,13 @@ public class HTTPClient {
 		BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 		StringBuffer sb = new StringBuffer();
 		String output;
-//	System.out.println("Output from Server .... \n");
+	  if (DEBUG) {
+	  	System.out.println("Output from Server .... \n");
+	  }
 		while ((output = br.readLine()) != null) {
-//		System.out.println(output);
+			if (DEBUG) {
+				System.out.println(output);
+			}
 			sb.append(output);
 		}
 		response.setPayload(sb.toString().getBytes());
@@ -129,7 +133,7 @@ public class HTTPClient {
 			conn.setRequestProperty(h, headers.get(h));
 		}
 		conn.setRequestProperty("Content-Type", "application/json"); // Uhu ?
-		conn.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes().length));
+		conn.setRequestProperty("Content-Length", String.valueOf(payload.getBytes().length));
 		// conn.setRequestProperty("Content-Language", "en-US");
 		conn.setUseCaches(false);
 
@@ -144,15 +148,19 @@ public class HTTPClient {
 		HTTPResponse response = new HTTPResponse();
 		response.code = responseCode;
 
-		if (true) {
+		if (true) { // Ben oui tiens!
 			// Response payload
 			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
 			StringBuffer sb = new StringBuffer();
 			String output;
-//		System.out.println("Output from Server .... \n");
+			if (DEBUG) {
+				System.out.println("Output from Server .... \n");
+			}
 			while ((output = br.readLine()) != null) {
-//			System.out.println(output);
+				if (DEBUG) {
+					System.out.println(output);
+				}
 				sb.append(output);
 			}
 			response.response = sb.toString();
@@ -162,6 +170,7 @@ public class HTTPClient {
 		return response;
 	}
 
+	// This should NOT work.
 	public static int doCustomVerb(String verb, String urlStr, Map<String, String> headers, String payload) throws Exception {
 		int responseCode = 0;
 		URL url = new URL(urlStr);
@@ -175,7 +184,7 @@ public class HTTPClient {
 		}
 		if (payload != null) {
 			conn.setRequestProperty("Content-Type", "application/json");
-			conn.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes().length));
+			conn.setRequestProperty("Content-Length", String.valueOf(payload.getBytes().length));
 			// conn.setRequestProperty("Content-Language", "en-US");
 			conn.setUseCaches(false);
 
@@ -192,7 +201,7 @@ public class HTTPClient {
 	}
 
 	public static String getContent(String url) throws Exception {
-		String ret = null;
+		String ret;
 		try {
 			byte content[] = readURL(new URL(url));
 			ret = new String(content);
@@ -206,13 +215,12 @@ public class HTTPClient {
 		byte content[] = null;
 		try {
 			URLConnection newURLConn = url.openConnection();
-			InputStream is = newURLConn.getInputStream();
+			InputStream inputStream = newURLConn.getInputStream();
 			byte aByte[] = new byte[2];
-			int nBytes;
 			long started = System.currentTimeMillis();
 			int nbLoop = 1;
-			while ((nBytes = is.read(aByte, 0, 1)) != -1) {
-				content = appendByte(content, aByte[0]);
+			while (inputStream.read(aByte, 0, 1) != -1) {
+				content = StaticUtil.appendByte(content, aByte[0]);
 				if (content.length > (nbLoop * 1_000)) {
 					long now = System.currentTimeMillis();
 					long delta = now - started;
@@ -228,16 +236,6 @@ public class HTTPClient {
 			System.err.println("Exception for: " + url.toString());
 		}
 		return content;
-	}
-
-	public static byte[] appendByte(byte c[], byte b) {
-		int newLength = c != null ? c.length + 1 : 1;
-		byte newContent[] = new byte[newLength];
-		for (int i = 0; i < newLength - 1; i++)
-			newContent[i] = c[i];
-
-		newContent[newLength - 1] = b;
-		return newContent;
 	}
 
 	public static class HTTPResponse {

@@ -5,22 +5,31 @@ This is a WIP.
 Go in the `swagger` directory, we will process the file called `weather.sensors.yaml`
 
 ```
- $> ./gradle clean swagger
-```
-Then, as explained in the README.md generated in the `generated` directory:
-```
- $> cd generated
- $> npm install
- $> node index.js
+ $ ../../../../../../gradlew tasks --all
+ $ # For NodeJS
+ $ ../../../../../../gradlew clean swaggerNode
+ $ # For Clojure
+ $ ../../../../../../gradlew clean swaggerClj
+ $ # For Java
+ $ ../../../../../../gradlew clean swaggerJaxRS
+ $ # For GoLang
+ $ ../../../../../../gradlew clean swaggerGO
 ```
 
-#### If you are not 100% familiar with `Swagger`
+After running `swaggerNode`, as explained in the README.md generated in the `generated` directory:
+```
+ $ cd generated
+ $ npm install
+ $ node index.js
+```
+
+#### If you are not 100% familiar with `Swagger`...
 Go to the [Swagger](http://swagger.io/) web site.
 Swagger allows you to define the structure of your REST API (in `JSON`, or even better: in `yaml`).
 Then you can generate your code (client side, server side) in the language of your choice.
 
 #### After running the generation above
-The command `./gradlew swagger` generated the Node.js server side artifacts for you to implement your code.
+The command `[../../etc...]/gradlew swaggerNode` generated the Node.js server side artifacts for you to implement your code.
 To actually hook up the server-side code and the actually expected data, you just need to implement the required methods.
 
 Example:
@@ -29,8 +38,8 @@ In the generated code (that is in rthe `generated` directory), edit the file nam
 exports.readADC = function(args, res, next) {
   /**
    * parameters expected in the args:
-  **/
-    var examples = {};
+   */
+  var examples = {};
   examples['application/json'] = { };
   if(Object.keys(examples).length > 0) {
     res.setHeader('Content-Type', 'application/json');
@@ -47,7 +56,7 @@ To hook up the real ones:
 exports.readADC = function(args, res, next) {
   /**
    * parameters expected in the args:
-  **/
+   */
   var data = 786; // <= This is where you would read the real sensor
   res.end(data.toString());
 }
@@ -62,3 +71,5 @@ In `controllers.SensorsService.js`, add a line like this:
  var BME280 = require('../../../bme280.js').BME280;
 ```
 and you are pretty much done, all the rest is downhill.
+
+---
