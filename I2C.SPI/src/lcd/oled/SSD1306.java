@@ -249,9 +249,9 @@ public class  SSD1306 {
 	}
 
 	/**
-	 * Half-duplex SPI write.  If assert_ss is True, the SS line will be
+	 * Half-duplex SPI write.  If assertSs is True, the SS line will be
 	 * asserted low, the specified bytes will be clocked out the MOSI line, and
-	 * if deassert_ss is True the SS line be put back high.
+	 * if deassertSs is True the SS line be put back high.
 	 */
 	private void write(int[] data) {
 		if (bus == null) {

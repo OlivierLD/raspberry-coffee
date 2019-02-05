@@ -61,8 +61,8 @@ public class LCD1in3 {
 	private final static int SPI_DEVICE = Spi.CHANNEL_0;
 	private int clockHertz = 8_000_000; // 8 MHz TODO Check this
 
-	private final static int LCD_HEIGHT = 240;
-	private final static int LCD_WIDTH  = 240;
+	public final static int LCD_HEIGHT = 240;
+	public final static int LCD_WIDTH  = 240;
 
 	public final static int  HORIZONTAL = 0;
 	public final static int  VERTICAL   = 1;
@@ -70,20 +70,92 @@ public class LCD1in3 {
 	private int lcdWidth = 0;
 	private int lcdHeight = 0;
 
-	public final static int WHITE = 0xFFFF;
+	public final static int WHITE = 0xffff;
 	public final static int BLACK = 0x0000;
-	public final static int BLUE = 0x001F;
-	public final static int BRED = 0XF81F;
-	public final static int GRED = 0XFFE0;
-	public final static int GBLUE = 0X07FF;
-	public final static int RED = 0xF800;
-	public final static int MAGENTA = 0xF81F;
-	public final static int GREEN = 0x07E;
-	public final static int CYAN = 0x7FFF;
-	public final static int YELLOW = 0xFFE0;
-	public final static int BROWN = 0XBC40;
-	public final static int BRRED = 0XFC07;
-	public final static int GRAY = 0X8430;
+	public final static int BLUE = 0x001f;
+	public final static int BRED = 0xf81f;
+	public final static int GRED = 0xffe0;
+	public final static int GBLUE = 0x07ff;
+	public final static int RED = 0xf800;
+	public final static int MAGENTA = 0xf81f;
+	public final static int GREEN = 0x07e;
+	public final static int CYAN = 0x7fff;
+	public final static int YELLOW = 0xffe0;
+	public final static int BROWN = 0xbc40;
+	public final static int BRRED = 0xfc07;
+	public final static int GRAY = 0x8430;
+
+	public final static int IMAGE_ROTATE_0   = 0;
+	public final static int IMAGE_ROTATE_90  = 1;
+	public final static int IMAGE_ROTATE_180 = 2;
+	public final static int IMAGE_ROTATE_270 = 3;
+
+	/**
+	 * image color level
+	 */
+	public final static int IMAGE_COLOR_POSITIVE = 0x01;
+	public final static int IMAGE_COLOR_INVERTED = 0x02;
+
+	/**
+	 * image number
+	 */
+	public final static int IMAGE_RGB = 0;
+
+ private static class GUIImage {
+		int imageName; // max = 128K / (imageWidth/8 * imageHeight) TODO imageName? Name, really?
+		int imageOffset;
+		int imageWidth;
+		int imageHeight;
+		int imageRotate;
+		int imageColor;
+		int memoryWidth;
+		int memoryHeight;
+	}
+
+	private int[] imageBuff = new int[LCD_HEIGHT * LCD_WIDTH];
+
+	public enum DotPixel {
+
+		DOT_PIXEL_1X1(1),    // 1 x 1
+		DOT_PIXEL_2X2(2),    // 2 X 2
+		DOT_PIXEL_3X3(3),    // 3 X 3
+		DOT_PIXEL_4X4(4),    // 4 X 4
+		DOT_PIXEL_5X5(5),    // 5 X 5
+		DOT_PIXEL_6X6(6),    // 6 X 6
+		DOT_PIXEL_7X7(7),    // 7 X 7
+		DOT_PIXEL_8X8(8);    // 8 X 8
+
+		int size = 1;
+
+		DotPixel(int size) {
+			this.size = size;
+		}
+
+		public int size() {
+			return this.size;
+		}
+	}
+
+	public enum DotStyle {
+		DOT_FILL_AROUND,    // dot pixel 1 x 1
+		DOT_FILL_RIGHTUP    // dot pixel 2 X 2
+	}
+
+	public static DotStyle DOT_STYLE_DFT = DotStyle.DOT_FILL_AROUND; // Default dot pixel
+
+	public enum LineStyle {
+		LINE_STYLE_SOLID,
+		LINE_STYLE_DOTTED,
+	}
+
+	public enum DrawFill {
+		DRAW_FILL_EMPTY,
+		DRAW_FILL_FULL,
+	}
+
+	private DotPixel DOT_PIXEL_DFT  = DotPixel.DOT_PIXEL_1X1;  // Default dot pixel
+
+	private GUIImage guiImage = new GUIImage();
 
 	public LCD1in3() {
 		this(HORIZONTAL, WHITE);
@@ -202,9 +274,8 @@ public class LCD1in3 {
 		}
 
 		// Set the read / write scan direction of the frame memory
-		LCDSendCommand((byte)0x36); //MX, MY, RGB mode
-		LCDSendData8Bit(memoryAccessReg);	//0x08 set RGB
-
+		LCDSendCommand((byte)0x36); // MX, MY, RGB mode
+		LCDSendData8Bit(memoryAccessReg);	// 0x08 set RGB
 	}
 
 	private void LCDSendCommand(byte reg) {
@@ -221,8 +292,7 @@ public class LCD1in3 {
 		// LCD_CS_1;
 	}
 
-	private void LCDSendData16Bit(int data)
-	{
+	private void LCDSendData16Bit(int data) {
 		dcPin.high();
 		// LCD_CS_0;
 		this.write((data >> 8) & 0xFF);
@@ -241,30 +311,30 @@ public class LCD1in3 {
 		LCDSendData8Bit((byte)0x33);
 		LCDSendData8Bit((byte)0x33);
 
-		LCDSendCommand((byte)0xB7);  //Gate Control
+		LCDSendCommand((byte)0xB7);  // Gate Control
 		LCDSendData8Bit((byte)0x35);
 
-		LCDSendCommand((byte)0xBB);  //VCOM Setting
+		LCDSendCommand((byte)0xBB);  // VCOM Setting
 		LCDSendData8Bit((byte)0x19);
 
-		LCDSendCommand((byte)0xC0); //LCM Control
+		LCDSendCommand((byte)0xC0); // LCM Control
 		LCDSendData8Bit((byte)0x2C);
 
-		LCDSendCommand((byte)0xC2);  //VDV and VRH Command Enable
+		LCDSendCommand((byte)0xC2);  // VDV and VRH Command Enable
 		LCDSendData8Bit((byte)0x01);
-		LCDSendCommand((byte)0xC3);  //VRH Set
+		LCDSendCommand((byte)0xC3);  // VRH Set
 		LCDSendData8Bit((byte)0x12);
-		LCDSendCommand((byte)0xC4);  //VDV Set
+		LCDSendCommand((byte)0xC4);  // VDV Set
 		LCDSendData8Bit((byte)0x20);
 
-		LCDSendCommand((byte)0xC6);  //Frame Rate Control in Normal Mode
+		LCDSendCommand((byte)0xC6);  // Frame Rate Control in Normal Mode
 		LCDSendData8Bit((byte)0x0F);
 
 		LCDSendCommand((byte)0xD0);  // Power Control 1
 		LCDSendData8Bit((byte)0xA4);
 		LCDSendData8Bit((byte)0xA1);
 
-		LCDSendCommand((byte)0xE0);  //Positive Voltage Gamma Control
+		LCDSendCommand((byte)0xE0);  // Positive Voltage Gamma Control
 		LCDSendData8Bit((byte)0xD0);
 		LCDSendData8Bit((byte)0x04);
 		LCDSendData8Bit((byte)0x0D);
@@ -280,7 +350,7 @@ public class LCD1in3 {
 		LCDSendData8Bit((byte)0x1F);
 		LCDSendData8Bit((byte)0x23);
 
-		LCDSendCommand((byte)0xE1);  //Negative Voltage Gamma Control
+		LCDSendCommand((byte)0xE1);  // Negative Voltage Gamma Control
 		LCDSendData8Bit((byte)0xD0);
 		LCDSendData8Bit((byte)0x04);
 		LCDSendData8Bit((byte)0x0C);
@@ -296,15 +366,118 @@ public class LCD1in3 {
 		LCDSendData8Bit((byte)0x20);
 		LCDSendData8Bit((byte)0x23);
 
-		LCDSendCommand((byte)0x21);  //Display Inversion On
+		LCDSendCommand((byte)0x21);  // Display Inversion On
 
-		LCDSendCommand((byte)0x11);  //Sleep Out
+		LCDSendCommand((byte)0x11);  // Sleep Out
 
-		LCDSendCommand((byte)0x29);  //Display On
+		LCDSendCommand((byte)0x29);  // Display On
+	}
+
+	public void GUINewImage(int imageName, int width, int height, int rotate, int color) {
+		if (rotate == IMAGE_ROTATE_0 || rotate == IMAGE_ROTATE_180) {
+			guiImage.imageWidth = width;
+			guiImage.imageHeight = height;
+		} else {
+			guiImage.imageWidth = height;
+			guiImage.imageHeight = width;
+		}
+		guiImage.imageName = imageName;// At least one picture
+		guiImage.imageRotate = rotate;
+		guiImage.memoryWidth = width;
+		guiImage.memoryHeight = height;
+		guiImage.imageColor = color;
+
+		int byteHeight = guiImage.memoryHeight;
+		int byteWidth = guiImage.memoryWidth ;
+		guiImage.imageOffset =  guiImage.imageName * (byteHeight * byteWidth);
+	}
+
+	public void GUIClear(int color) {
+		int height = guiImage.memoryHeight;
+		int width = guiImage.memoryWidth;
+		int offset = guiImage.imageOffset;
+
+		if(guiImage.imageColor == IMAGE_COLOR_INVERTED) {
+			color = ~color;
+		}
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++ ) {
+				int addr = x + y * width + offset;
+				imageBuff[addr] = color;
+			}
+		}
+	}
+
+	public void GUIDrawPoint(int xPoint, int yPoint, int color, DotPixel dotPixel, DotStyle dotStyle) {
+		if (xPoint > guiImage.imageWidth || yPoint > guiImage.imageHeight) {
+			if (VERBOSE) {
+				System.out.println("GUIDrawPoint Input exceeds the normal display range");
+			}
+			return;
+		}
+
+		if (dotStyle == DOT_STYLE_DFT) {
+			for (int XDir_Num = 0; XDir_Num < 2 * dotPixel.size() - 1; XDir_Num++) {
+				for (int YDir_Num = 0; YDir_Num < 2 * dotPixel.size() - 1; YDir_Num++) {
+					if(xPoint + XDir_Num - dotPixel.size() == -1 || yPoint + XDir_Num - dotPixel.size() == -1){
+						if (VERBOSE) {
+							System.out.println("error");
+						}
+						break;
+					}
+					GUISetPixel(xPoint + XDir_Num - dotPixel.size(), yPoint + YDir_Num - dotPixel.size(), color);
+				}
+			}
+		} else {
+			for (int XDir_Num = 0; XDir_Num <  dotPixel.size(); XDir_Num++) {
+				for (int YDir_Num = 0; YDir_Num <  dotPixel.size(); YDir_Num++) {
+					GUISetPixel(xPoint + XDir_Num - 1, yPoint + YDir_Num - 1, color);
+				}
+			}
+		}
+	}
+
+	public void GUIDrawPixel(int xPoint, int yPoint, int color) {
+		int width = guiImage.memoryWidth;
+		int offset = guiImage.imageOffset;
+
+		int addr = xPoint + yPoint * width + offset;
+
+		if (guiImage.imageColor == IMAGE_COLOR_POSITIVE) {
+			imageBuff[addr] = color;
+		} else {
+			imageBuff[addr] = ~color;
+		}
+	}
+
+	public void GUISetPixel(int xPoint, int yPoint, int color) {
+		int x, y;
+		switch (guiImage.imageRotate) {
+			case IMAGE_ROTATE_0:
+				x = xPoint;
+				y = yPoint;
+				GUIDrawPixel(x, y, color);
+				break;
+			case IMAGE_ROTATE_90:
+				x = yPoint;
+				y = guiImage.imageWidth - xPoint - 1;
+				GUIDrawPixel(x, y, color);
+				break;
+			case IMAGE_ROTATE_180:
+				x = guiImage.imageWidth - xPoint - 1;
+				y = guiImage.imageHeight - yPoint - 1;
+				GUIDrawPixel(x, y, color);
+				break;
+			case IMAGE_ROTATE_270:
+				x = guiImage.imageHeight - yPoint - 1;
+				y = xPoint;
+				GUIDrawPixel(x, y, color);
+				break;
+		}
 	}
 
 	private final int MASK = 0x80; // MSBFIRST, 0x80 = 0&10000000
-	//private final int MASK = 0x01; // LSBFIRST
+	// private final int MASK = 0x01; // LSBFIRST
 
 	private void write(int data) {
 		this.write(new int[] { data });
