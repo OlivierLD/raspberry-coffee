@@ -70,20 +70,20 @@ public class LCD1in3 {
 	private int lcdWidth = 0;
 	private int lcdHeight = 0;
 
-	public final static int WHITE = 0xffff;
-	public final static int BLACK = 0x0000;
-	public final static int BLUE = 0x001f;
-	public final static int BRED = 0xf81f;
-	public final static int GRED = 0xffe0;
-	public final static int GBLUE = 0x07ff;
-	public final static int RED = 0xf800;
+	public final static int WHITE   = 0xffff;
+	public final static int BLACK   = 0x0000;
+	public final static int BLUE    = 0x001f;
+	public final static int BRED    = 0xf81f;
+	public final static int GRED    = 0xffe0;
+	public final static int GBLUE   = 0x07ff;
+	public final static int RED     = 0xf800;
 	public final static int MAGENTA = 0xf81f;
-	public final static int GREEN = 0x07e;
-	public final static int CYAN = 0x7fff;
-	public final static int YELLOW = 0xffe0;
-	public final static int BROWN = 0xbc40;
-	public final static int BRRED = 0xfc07;
-	public final static int GRAY = 0x8430;
+	public final static int GREEN   = 0x07e0;
+	public final static int CYAN    = 0x7fff;
+	public final static int YELLOW  = 0xffe0;
+	public final static int BROWN   = 0xbc40;
+	public final static int BRRED   = 0xfc07;
+	public final static int GRAY    = 0x8430;
 
 	public final static int IMAGE_ROTATE_0   = 0;
 	public final static int IMAGE_ROTATE_90  = 1;
