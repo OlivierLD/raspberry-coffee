@@ -23,4 +23,3 @@ else
 fi
 #
 sudo java $JAVA_OPTS -cp $CP sample.GPSReader
-
