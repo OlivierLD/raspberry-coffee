@@ -659,14 +659,14 @@ public class LCD1in3 {
 			return;
 		}
 
-		int Char_Offset = (asciiChar - ' ') * font.getHeight() * (font.getWidth() / 8 + (font.getWidth() % 8 != 0 ? 1 : 0));
-    char ptr = (char)font.getCharacters()[Char_Offset]; // TODO Check this one
+		int charOffset = (asciiChar - ' ') * font.getHeight() * (font.getWidth() / 8 + (font.getWidth() % 8 != 0 ? 1 : 0));
+    char ptr = (char)font.getCharacters()[charOffset]; // TODO Check this one
 
 		for (int Page = 0; Page < font.getHeight(); Page ++ ) {
 			for (int Column = 0; Column < font.getWidth(); Column ++ ) {
 
-				//To determine whether the font background color and screen background color is consistent
-				if (FONT_BACKGROUND == colorBackground) { //this process is to speed up the scan
+				// To determine whether the font background color and screen background color is consistent
+				if (FONT_BACKGROUND == colorBackground) { // this process is to speed up the scan
 					if ((ptr & (0x80 >> (Column % 8))) != 0) {
 						GUIDrawPoint(xPoint + Column, yPoint + Page, colorForeground, DOT_PIXEL_DFT, DOT_STYLE_DFT);
 					}
@@ -678,12 +678,16 @@ public class LCD1in3 {
 					}
 				}
 				// One pixel is 8 bits
-				if (Column % 8 == 7)
-					ptr++;
-			}// Write a line
-			if (font.getWidth() % 8 != 0)
-				ptr++;
-		}// Write all
+				if (Column % 8 == 7) {
+					charOffset += 1;
+					ptr = (char) font.getCharacters()[charOffset];
+				}
+			} // Write a line
+			if (font.getWidth() % 8 != 0) {
+				charOffset += 1;
+				ptr = (char) font.getCharacters()[charOffset];
+			}
+		} // Write all
 	}
 
 	public void GUIDrawString(int xFrom, int yFrom, String str, Font font, int colorBackground, int colorForeground) {
@@ -711,8 +715,7 @@ public class LCD1in3 {
 			}
 			GUIDrawChar(xPoint, yPoint, str.charAt(i), font, colorBackground, colorForeground);
 
-
-			//The next word of the abscissa increases the font of the broadband
+			// The next word of the abscissa increases the font of the broadband
 			xPoint += font.getWidth();
 		}
 	}
