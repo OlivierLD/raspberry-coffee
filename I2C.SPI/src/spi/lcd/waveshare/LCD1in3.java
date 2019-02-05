@@ -6,6 +6,7 @@ import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.wiringpi.Spi;
+import spi.lcd.waveshare.fonts.Font;
 import utils.PinUtil;
 import utils.TimeUtil;
 
@@ -86,6 +87,10 @@ public class LCD1in3 {
 	public final static int GRAY    = 0x8430;
 
 	public int IMAGE_BACKGROUND = WHITE;
+
+	public int FONT_FOREGROUND = BLACK;
+	public int FONT_BACKGROUND = WHITE;
+
 
 	public final static int IMAGE_ROTATE_0   = 0;
 	public final static int IMAGE_ROTATE_90  = 1;
@@ -556,6 +561,162 @@ public class LCD1in3 {
 		}
 	}
 
+	public void GUIDrawRectangle(int xFrom, int yFrom, int xTo, int yTo, int color, DrawFill filled, DotPixel dotPixel) {
+		if (xFrom > guiImage.imageWidth || yFrom > guiImage.imageHeight || xTo > guiImage.imageWidth || yTo > guiImage.imageHeight) {
+			if (VERBOSE) {
+				System.out.println("Input exceeds the normal display range");
+			}
+			return;
+		}
+
+		if (xFrom > xTo) { // Swap
+			int temp;
+			temp = xFrom;
+			xFrom = xTo;
+			xTo = temp;
+		}
+		if (yFrom > yTo) { // Swap
+			int temp;
+			temp = yFrom;
+			yFrom = yTo;
+			yTo = temp;
+		}
+
+		if (filled.equals(DrawFill.DRAW_FILL_FULL) ) {
+			for(int Ypoint = yFrom; Ypoint < yTo; Ypoint++) {
+				GUIDrawLine(xFrom, Ypoint, xTo, Ypoint, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
+			}
+		} else {
+			GUIDrawLine(xFrom, yFrom, xTo, yFrom, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
+			GUIDrawLine(xFrom, yFrom, xFrom, yTo, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
+			GUIDrawLine(xTo, yTo, xTo, yFrom, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
+			GUIDrawLine(xTo, yTo, xFrom, yTo, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
+		}
+	}
+
+	public void GUIDrawCircle(int xCenter, int yCenter, int radius, int color, DrawFill drawFill, DotPixel dotPixel) {
+		if (xCenter > guiImage.imageWidth || yCenter >= guiImage.imageHeight) {
+			if (VERBOSE) {
+				System.out.println("GUI_DrawCircle Input exceeds the normal display range");
+			}
+			return;
+		}
+
+		// Draw a circle from(0, R) as a starting point
+		int xCurrent = 0;
+		int yCurrent = radius;
+
+		// Cumulative error,judge the next point of the logo
+		int esp = 3 - (radius << 1);
+
+		if (drawFill == DrawFill.DRAW_FILL_FULL) {
+			while (xCurrent <= yCurrent) { //Realistic circles
+				for (int sCountY = xCurrent; sCountY <= yCurrent; sCountY++) {
+					GUIDrawPoint(xCenter + xCurrent, yCenter + sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 1
+					GUIDrawPoint(xCenter - xCurrent, yCenter + sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 2
+					GUIDrawPoint(xCenter - sCountY, yCenter + xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 3
+					GUIDrawPoint(xCenter - sCountY, yCenter - xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 4
+					GUIDrawPoint(xCenter - xCurrent, yCenter - sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 5
+					GUIDrawPoint(xCenter + xCurrent, yCenter - sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 6
+					GUIDrawPoint(xCenter + sCountY, yCenter - xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 7
+					GUIDrawPoint(xCenter + sCountY, yCenter + xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT );
+				}
+				if (esp < 0 ) {
+					esp += (4 * xCurrent + 6);
+				} else {
+					esp += (10 + 4 * (xCurrent - yCurrent));
+					yCurrent--;
+				}
+				xCurrent++;
+			}
+		} else { //Draw a hollow circle
+			while (xCurrent <= yCurrent) {
+				GUIDrawPoint(xCenter + xCurrent, yCenter + yCurrent, color, dotPixel, DOT_STYLE_DFT ); // 1
+				GUIDrawPoint(xCenter - xCurrent, yCenter + yCurrent, color, dotPixel, DOT_STYLE_DFT ); // 2
+				GUIDrawPoint(xCenter - yCurrent, yCenter + xCurrent, color, dotPixel, DOT_STYLE_DFT ); // 3
+				GUIDrawPoint(xCenter - yCurrent, yCenter - xCurrent, color, dotPixel, DOT_STYLE_DFT ); // 4
+				GUIDrawPoint(xCenter - xCurrent, yCenter - yCurrent, color, dotPixel, DOT_STYLE_DFT ); // 5
+				GUIDrawPoint(xCenter + xCurrent, yCenter - yCurrent, color, dotPixel, DOT_STYLE_DFT ); // 6
+				GUIDrawPoint(xCenter + yCurrent, yCenter - xCurrent, color, dotPixel, DOT_STYLE_DFT ); // 7
+				GUIDrawPoint(xCenter + yCurrent, yCenter + xCurrent, color, dotPixel, DOT_STYLE_DFT ); // 0
+
+				if (esp < 0 ) {
+					esp += (4 * xCurrent + 6);
+				} else {
+					esp += (10 + 4 * (xCurrent - yCurrent));
+					yCurrent--;
+				}
+				xCurrent++;
+			}
+		}
+	}
+
+	public void GUIDrawChar(int xPoint, int yPoint, char asciiChar, Font font, int colorBackground, int colorForeground) {
+		if (xPoint > guiImage.imageWidth || yPoint > guiImage.imageHeight) {
+			if (VERBOSE) {
+				System.out.println("GUIDrawChar Input exceeds the normal display range");
+			}
+			return;
+		}
+
+		int Char_Offset = (asciiChar - ' ') * font.getHeight() * (font.getWidth() / 8 + (font.getWidth() % 8 != 0 ? 1 : 0));
+    char ptr = (char)font.getCharacters()[Char_Offset]; // TODO Check this one
+
+		for (int Page = 0; Page < font.getHeight(); Page ++ ) {
+			for (int Column = 0; Column < font.getWidth(); Column ++ ) {
+
+				//To determine whether the font background color and screen background color is consistent
+				if (FONT_BACKGROUND == colorBackground) { //this process is to speed up the scan
+					if ((ptr & (0x80 >> (Column % 8))) != 0) {
+						GUIDrawPoint(xPoint + Column, yPoint + Page, colorForeground, DOT_PIXEL_DFT, DOT_STYLE_DFT);
+					}
+				} else {
+					if ((ptr & (0x80 >> (Column % 8))) != 0) {
+						GUIDrawPoint(xPoint + Column, yPoint + Page, colorForeground, DOT_PIXEL_DFT, DOT_STYLE_DFT);
+					} else {
+						GUIDrawPoint(xPoint + Column, yPoint + Page, colorBackground, DOT_PIXEL_DFT, DOT_STYLE_DFT);
+					}
+				}
+				// One pixel is 8 bits
+				if (Column % 8 == 7)
+					ptr++;
+			}// Write a line
+			if (font.getWidth() % 8 != 0)
+				ptr++;
+		}// Write all
+	}
+
+	public void GUIDrawString(int xFrom, int yFrom, String str, Font font, int colorBackground, int colorForeground) {
+		int xPoint = xFrom;
+		int yPoint = yFrom;
+
+		if (xFrom > guiImage.imageWidth || yFrom > guiImage.imageHeight) {
+			if (VERBOSE) {
+				System.out.println("GUIDrawString Input exceeds the normal display range");
+			}
+			return;
+		}
+
+		for (int i = 0; i < str.length(); i++) {
+			// if X direction filled , reposition to(xFrom,yPoint),yPoint is Y direction plus the Height of the character
+			if ((xPoint + font.getWidth()) > guiImage.imageWidth) {
+				xPoint = xFrom;
+				yPoint += font.getHeight();
+			}
+
+			// If the Y direction is full, reposition to(xFrom, yFrom)
+			if ((yPoint + font.getHeight()) > guiImage.imageHeight) {
+				xPoint = xFrom;
+				yPoint = yFrom;
+			}
+			GUIDrawChar(xPoint, yPoint, str.charAt(i), font, colorBackground, colorForeground);
+
+
+			//The next word of the abscissa increases the font of the broadband
+			xPoint += font.getWidth();
+		}
+	}
+
 	void LCDDisplayWindows(int xFrom, int yFrom, int xTo, int yTo) {
 		//Convert coordinates
 		int X0, Y0, X1, Y1;
@@ -625,6 +786,7 @@ public class LCD1in3 {
 		}
 	}
 
+	// TODO Remove or replace
 	private void command(int c) throws Exception {
 			dcPin.low();
 //    try { spiDevice.write((byte)c); }
