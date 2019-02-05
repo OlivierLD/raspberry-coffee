@@ -28,6 +28,7 @@ public class LCD1in3Sample {
 		lcd.GUIDrawPoint(5, 25, RED, LCD1in3.DotPixel.DOT_PIXEL_2X2, LCD1in3.DOT_STYLE_DFT);
 		lcd.GUIDrawPoint(5, 40, BLACK, LCD1in3.DotPixel.DOT_PIXEL_3X3, LCD1in3.DOT_STYLE_DFT);
 		lcd.GUIDrawPoint(5, 55, BLACK, LCD1in3.DotPixel.DOT_PIXEL_4X4, LCD1in3.DOT_STYLE_DFT);
+		lcd.LCDDisplay();
 
 		TimeUtil.delay(2_000L);
 		lcd.LCDClear(LCD1in3.BLACK);

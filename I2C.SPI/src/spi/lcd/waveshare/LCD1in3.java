@@ -480,6 +480,50 @@ public class LCD1in3 {
 		}
 	}
 
+	public void LCDDisplay() {
+		int addr = 0;
+		int offset = guiImage.imageOffset;
+
+		LCDSetWindows(0, 0, LCD_WIDTH, LCD_HEIGHT);
+		for (int j = 0; j < LCD_HEIGHT; j++) {
+			for (int i = 0; i < LCD_WIDTH; i++) {
+				addr = i + j * LCD_WIDTH + offset;
+				LCDSendData16Bit(imageBuff[addr]);
+			}
+		}
+	}
+
+	void LCDDisplayWindows(int xFrom, int yFrom, int xTo, int yTo) {
+		//Convert coordinates
+		int X0, Y0, X1, Y1;
+		switch (guiImage.imageRotate) {
+			case IMAGE_ROTATE_0:
+				X0 = xFrom;
+				Y0 = yFrom;
+				X1 = xTo;
+				Y1 = yTo;
+				break;
+			case IMAGE_ROTATE_90:
+				X0 = yFrom;
+				Y0 = guiImage.imageWidth - xTo;
+				X1 = yTo;
+				Y1 = guiImage.imageWidth - xFrom;
+				break;
+			case IMAGE_ROTATE_180:
+				X0 = guiImage.imageWidth - xTo;
+				Y0 = guiImage.imageHeight - yTo;
+				X1 = guiImage.imageWidth - xFrom;
+				Y1 = guiImage.imageHeight - yFrom;
+				break;
+			case IMAGE_ROTATE_270:
+				X0 = guiImage.imageWidth - xTo;
+				Y0 = xFrom;
+				X1 = guiImage.imageHeight - yFrom;
+				Y1 = guiImage.imageHeight - yTo;
+				break;
+		}
+	}
+
 	private final int MASK = 0x80; // MSBFIRST, 0x80 = 0&10000000
 	// private final int MASK = 0x01; // LSBFIRST
 
