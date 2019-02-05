@@ -85,6 +85,8 @@ public class LCD1in3 {
 	public final static int BRRED   = 0xfc07;
 	public final static int GRAY    = 0x8430;
 
+	public int IMAGE_BACKGROUND = WHITE;
+
 	public final static int IMAGE_ROTATE_0   = 0;
 	public final static int IMAGE_ROTATE_90  = 1;
 	public final static int IMAGE_ROTATE_180 = 2;
@@ -477,6 +479,67 @@ public class LCD1in3 {
 				y = xPoint;
 				GUIDrawPixel(x, y, color);
 				break;
+		}
+	}
+
+	public void GUIDrawLine(int xFrom, int yFrom, int xTo, int yTo, int color, LineStyle lineStyle, DotPixel dotPixel) {
+		if (xFrom > guiImage.imageWidth || yFrom > guiImage.imageHeight || xTo > guiImage.imageWidth || yTo > guiImage.imageHeight) {
+			if (VERBOSE) {
+				System.out.println("GUIDrawLine Input exceeds the normal display range");
+			}
+			return;
+		}
+
+		if (xFrom > xTo) { // Swap
+			int temp;
+			temp = xFrom;
+			xFrom = xTo;
+			xTo = temp;
+		}
+		if (yFrom > yTo) { // Swap
+			int temp;
+			temp = yFrom;
+			yFrom = yTo;
+			yTo = temp;
+		}
+
+		int xPoint = xFrom;
+		int yPoint = yFrom;
+		int dx = Math.abs(xTo - xFrom);
+		int dy = Math.abs(yTo - yFrom);
+
+		// Increment direction, 1 is positive, -1 is counter;
+		int xDir = (xFrom < xTo) ? 1 : -1;
+		int yDir = (yFrom < yTo) ? 1 : -1;
+
+		// Cumulative error
+		int esp = dx + dy;
+		byte dottedLen = 0;
+
+		while (true) {
+			dottedLen++;
+			// Painted dotted line, 2 point is really virtual
+			if (lineStyle == LineStyle.LINE_STYLE_DOTTED && dottedLen % 3 == 0) {
+				// DEBUG("LINE_DOTTED\r\n");
+				GUIDrawPoint(xPoint, yPoint, IMAGE_BACKGROUND, dotPixel, DOT_STYLE_DFT);
+				dottedLen = 0;
+			} else {
+				GUIDrawPoint(xPoint, yPoint, color, dotPixel, DOT_STYLE_DFT);
+			}
+			if (2 * esp >= dy) {
+				if (xPoint == xTo) {
+					break;
+				}
+				esp += dy;
+				xPoint += xDir;
+			}
+			if (2 * esp <= dx) {
+				if (yPoint == yTo) {
+					break;
+				}
+				esp += dx;
+				yPoint += yDir;
+			}
 		}
 	}
 
