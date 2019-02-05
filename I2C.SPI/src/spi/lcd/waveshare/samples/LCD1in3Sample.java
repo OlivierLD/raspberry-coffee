@@ -10,6 +10,7 @@ import static spi.lcd.waveshare.LCD1in3.LCD_HEIGHT;
 import static spi.lcd.waveshare.LCD1in3.LCD_WIDTH;
 import static spi.lcd.waveshare.LCD1in3.WHITE;
 import static spi.lcd.waveshare.LCD1in3.BLACK;
+import static spi.lcd.waveshare.LCD1in3.RED;
 
 public class LCD1in3Sample {
 
@@ -20,9 +21,11 @@ public class LCD1in3Sample {
 
 		TimeUtil.delay(500L);
 
+		System.out.println("...Dots");
+
 		/*2.Drawing on the image*/
-		lcd.GUIDrawPoint(5, 10, BLACK, LCD1in3.DotPixel.DOT_PIXEL_1X1, LCD1in3.DOT_STYLE_DFT);
-		lcd.GUIDrawPoint(5, 25, BLACK, LCD1in3.DotPixel.DOT_PIXEL_2X2, LCD1in3.DOT_STYLE_DFT);
+		lcd.GUIDrawPoint(5, 10, RED, LCD1in3.DotPixel.DOT_PIXEL_1X1, LCD1in3.DOT_STYLE_DFT);
+		lcd.GUIDrawPoint(5, 25, RED, LCD1in3.DotPixel.DOT_PIXEL_2X2, LCD1in3.DOT_STYLE_DFT);
 		lcd.GUIDrawPoint(5, 40, BLACK, LCD1in3.DotPixel.DOT_PIXEL_3X3, LCD1in3.DOT_STYLE_DFT);
 		lcd.GUIDrawPoint(5, 55, BLACK, LCD1in3.DotPixel.DOT_PIXEL_4X4, LCD1in3.DOT_STYLE_DFT);
 

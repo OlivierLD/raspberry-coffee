@@ -414,6 +414,10 @@ public class LCD1in3 {
 				System.out.println("GUIDrawPoint Input exceeds the normal display range");
 			}
 			return;
+		} else {
+			if (VERBOSE) {
+				System.out.println("GUIDrawPoint all good.");
+			}
 		}
 
 		if (dotStyle == DOT_STYLE_DFT) {
