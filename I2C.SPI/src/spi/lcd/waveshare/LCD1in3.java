@@ -196,7 +196,9 @@ public class LCD1in3 {
 		try {
 			init(direction, color);
 		} catch (UnsatisfiedLinkError usle) {
-			System.out.println("Simulating...");
+			if (VERBOSE) {
+				System.out.println("Simulating...");
+			}
 			simulate = true;
 		}
 	}
