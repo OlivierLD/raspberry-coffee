@@ -56,6 +56,15 @@ public class HTTPServer {
 
 	private Function<HTTPServer.Request, HTTPServer.Response> proxyFunction = null;
 
+	/*
+	  For CORS, to be returned in the Response:
+		cres.getHeaders().add("Access-Control-Allow-Origin", "*");
+		cres.getHeaders().add("Access-Control-Allow-Headers", "*");
+		cres.getHeaders().add("Access-Control-Allow-Credentials", "true");
+		cres.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+		// cres.getHeaders().add("Access-Control-Max-Age", "1209600");
+	 */
+
 	public static class Request {
 		public final static List<String> VERBS = Arrays.asList(
 				"GET",
@@ -63,7 +72,8 @@ public class HTTPServer {
 				"DELETE",
 				"PUT",
 				"PATCH",
-				"OPTIONS"
+				"OPTIONS",
+				"HEAD"
 		);
 
 		private String verb;
