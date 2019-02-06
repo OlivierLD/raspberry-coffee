@@ -46,8 +46,8 @@ public class LCD1in3Sample {
 		System.out.println("...Strings");
 
 		lcd.GUIDrawString(5, 70, "hello world", Font16.getInstance(), LCD1in3.WHITE, LCD1in3.BLACK);
-		lcd.GUIDrawString(5, 90, "WaveShare", Font20.getInstance(), LCD1in3.RED, lcd.IMAGE_BACKGROUND);
-		lcd.GUIDrawString(5, 120, "OlivSoft rocks!", Font24.getInstance(), LCD1in3.BLUE, lcd.IMAGE_BACKGROUND);
+		lcd.GUIDrawString(5, 90, "OlivSoft rocks!", Font20.getInstance(), LCD1in3.RED, lcd.IMAGE_BACKGROUND);
+		lcd.GUIDrawString(5, 120, "WaveShare", Font24.getInstance(), LCD1in3.BLUE, lcd.IMAGE_BACKGROUND);
 
 		System.out.println("Displaying...");
 		lcd.LCDDisplay();
