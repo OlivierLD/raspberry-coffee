@@ -160,7 +160,7 @@ public class LCD1in3 {
 		DRAW_FILL_FULL,
 	}
 
-	private DotPixel DOT_PIXEL_DFT  = DotPixel.DOT_PIXEL_1X1;  // Default dot pixel
+	public static DotPixel DOT_PIXEL_DFT  = DotPixel.DOT_PIXEL_1X1;  // Default dot pixel
 
 	private GUIImage guiImage = new GUIImage();
 
