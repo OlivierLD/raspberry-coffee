@@ -3,6 +3,8 @@ package spi.lcd.waveshare.samples;
 import spi.lcd.waveshare.LCD1in3;
 import spi.lcd.waveshare.fonts.Font16;
 import spi.lcd.waveshare.fonts.Font20;
+import spi.lcd.waveshare.fonts.Font24;
+import utils.StaticUtil;
 import utils.TimeUtil;
 
 public class LCD1in3Sample {
@@ -45,11 +47,14 @@ public class LCD1in3Sample {
 
 		lcd.GUIDrawString(5, 70, "hello world", Font16.getInstance(), LCD1in3.WHITE, LCD1in3.BLACK);
 		lcd.GUIDrawString(5, 90, "WaveShare", Font20.getInstance(), LCD1in3.RED, lcd.IMAGE_BACKGROUND);
+		lcd.GUIDrawString(5, 120, "WaveShare", Font24.getInstance(), LCD1in3.BLUE, lcd.IMAGE_BACKGROUND);
 
 		System.out.println("Displaying...");
 		lcd.LCDDisplay();
 
-		TimeUtil.delay(5_000L);
+		// Wait for CR
+		StaticUtil.userInput("Hit Return to finish");
+
 		lcd.LCDClear(LCD1in3.BLACK);
 		lcd.shutdown();
 	}
