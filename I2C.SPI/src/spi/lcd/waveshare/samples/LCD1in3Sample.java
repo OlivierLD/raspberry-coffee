@@ -46,7 +46,9 @@ public class LCD1in3Sample {
 		lcd.GUIDrawRectangle(185, 155, 235, 205, lcd.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(195, 172, "K3", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
-		lcd.LCDDisplay();
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
 	}
 
 	public static void main(String... args) {
@@ -86,14 +88,16 @@ public class LCD1in3Sample {
 		System.out.println("...Strings");
 
 		lcd.GUIDrawString(5, 70, "hello world", Font16.getInstance(), LCD1in3.WHITE, LCD1in3.BLACK);
-		lcd.GUIDrawString(5, 90, "OlivSoft rocks!", Font20.getInstance(), LCD1in3.RED, lcd.IMAGE_BACKGROUND);
+		lcd.GUIDrawString(5, 90, "OlivSoft rocks!", Font20.getInstance(), LCD1in3.RED, LCD1in3.CYAN);
 		lcd.GUIDrawString(5, 120, "WaveShare", Font24.getInstance(), LCD1in3.BLUE, lcd.IMAGE_BACKGROUND);
 
 		System.out.println("Displaying...");
-		lcd.LCDDisplay();
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
 
 		// Wait for CR
-		StaticUtil.userInput("Hit Return to move on");
+		StaticUtil.userInput("Hit Return to move on...");
 
 		drawKeyListenInit(lcd);
 
@@ -101,6 +105,8 @@ public class LCD1in3Sample {
 		StaticUtil.userInput("Hit Return to finish");
 
 		lcd.LCDClear(LCD1in3.BLACK);
-		lcd.shutdown();
+		if (!lcd.isSimulating()) {
+			lcd.shutdown();
+		}
 	}
 }

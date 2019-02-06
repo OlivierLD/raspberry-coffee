@@ -47,6 +47,7 @@ public class LCD1in3 {
 	 */
 
 	private final static boolean VERBOSE = "true".equals(System.getProperty("waveshare.1in3.verbose", "false"));
+	private boolean simulate = false;
 
 	private static GpioController gpio;
 
@@ -63,28 +64,28 @@ public class LCD1in3 {
 	private int clockHertz = 8_000_000; // 8 MHz TODO Check this
 
 	public final static int LCD_HEIGHT = 240;
-	public final static int LCD_WIDTH  = 240;
+	public final static int LCD_WIDTH = 240;
 
-	public final static int  HORIZONTAL = 0;
-	public final static int  VERTICAL   = 1;
+	public final static int HORIZONTAL = 0;
+	public final static int VERTICAL = 1;
 
 	private int lcdWidth = 0;
 	private int lcdHeight = 0;
 
-	public final static int WHITE   = 0xffff;
-	public final static int BLACK   = 0x0000;
-	public final static int BLUE    = 0x001f;
-	public final static int BRED    = 0xf81f;
-	public final static int GRED    = 0xffe0;
-	public final static int GBLUE   = 0x07ff;
-	public final static int RED     = 0xf800;
+	public final static int WHITE = 0xffff;
+	public final static int BLACK = 0x0000;
+	public final static int BLUE = 0x001f;
+	public final static int BRED = 0xf81f;
+	public final static int GRED = 0xffe0;
+	public final static int GBLUE = 0x07ff;
+	public final static int RED = 0xf800;
 	public final static int MAGENTA = 0xf81f;
-	public final static int GREEN   = 0x07e0;
-	public final static int CYAN    = 0x7fff;
-	public final static int YELLOW  = 0xffe0;
-	public final static int BROWN   = 0xbc40;
-	public final static int BRRED   = 0xfc07;
-	public final static int GRAY    = 0x8430;
+	public final static int GREEN = 0x07e0;
+	public final static int CYAN = 0x7fff;
+	public final static int YELLOW = 0xffe0;
+	public final static int BROWN = 0xbc40;
+	public final static int BRRED = 0xfc07;
+	public final static int GRAY = 0x8430;
 
 	public int IMAGE_BACKGROUND = WHITE;
 
@@ -92,8 +93,8 @@ public class LCD1in3 {
 	public int FONT_BACKGROUND = WHITE;
 
 
-	public final static int IMAGE_ROTATE_0   = 0;
-	public final static int IMAGE_ROTATE_90  = 1;
+	public final static int IMAGE_ROTATE_0 = 0;
+	public final static int IMAGE_ROTATE_90 = 1;
 	public final static int IMAGE_ROTATE_180 = 2;
 	public final static int IMAGE_ROTATE_270 = 3;
 
@@ -103,12 +104,15 @@ public class LCD1in3 {
 	public final static int IMAGE_COLOR_POSITIVE = 0x01;
 	public final static int IMAGE_COLOR_INVERTED = 0x02;
 
+	public boolean isSimulating() {
+		return simulate;
+	}
 	/**
 	 * image number
 	 */
 	public final static int IMAGE_RGB = 0;
 
- private static class GUIImage {
+  private static class GUIImage {
 		int imageName; // max = 128K / (imageWidth/8 * imageHeight) TODO imageName? Name, really?
 		int imageOffset;
 		int imageWidth;
@@ -189,7 +193,12 @@ public class LCD1in3 {
 
 			PinUtil.print(map);
 		}
-		init(direction, color);
+		try {
+			init(direction, color);
+		} catch (UnsatisfiedLinkError usle) {
+			System.out.println("Simulating...");
+			simulate = true;
+		}
 	}
 
 	private void init() {
@@ -408,7 +417,7 @@ public class LCD1in3 {
 			color = ~color;
 		}
 		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++ ) {
+			for (int x = 0; x < width; x++) {
 				int addr = x + y * width + offset;
 				imageBuff[addr] = color;
 			}
@@ -520,12 +529,10 @@ public class LCD1in3 {
 		// Cumulative error
 		int esp = dx + dy;
 		byte dottedLen = 0;
-
 		while (true) {
 			dottedLen++;
 			// Painted dotted line, 2 point is really virtual
 			if (lineStyle == LineStyle.LINE_STYLE_DOTTED && dottedLen % 3 == 0) {
-				// DEBUG("LINE_DOTTED\r\n");
 				GUIDrawPoint(xPoint, yPoint, IMAGE_BACKGROUND, dotPixel, DOT_STYLE_DFT);
 				dottedLen = 0;
 			} else {
@@ -533,6 +540,9 @@ public class LCD1in3 {
 			}
 			if (2 * esp >= dy) {
 				if (xPoint == xTo) {
+					if (VERBOSE) {
+						System.out.println(String.format("DrawLine, vertical, breaking. esp=%d, dy=%d", esp, dy));
+					}
 					break;
 				}
 				esp += dy;
@@ -540,6 +550,9 @@ public class LCD1in3 {
 			}
 			if (2 * esp <= dx) {
 				if (yPoint == yTo) {
+					if (VERBOSE) {
+						System.out.println(String.format("DrawLine, horizontal, breaking. esp=%d, dx=%d", esp, dx));
+					}
 					break;
 				}
 				esp += dx;
@@ -582,9 +595,9 @@ public class LCD1in3 {
 			yTo = temp;
 		}
 
-		if (filled.equals(DrawFill.DRAW_FILL_FULL) ) {
-			for(int Ypoint = yFrom; Ypoint < yTo; Ypoint++) {
-				GUIDrawLine(xFrom, Ypoint, xTo, Ypoint, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
+		if (filled.equals(DrawFill.DRAW_FILL_FULL)) {
+			for (int yPoint = yFrom; yPoint < yTo; yPoint++) {
+				GUIDrawLine(xFrom, yPoint, xTo, yPoint, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
 			}
 		} else {
 			GUIDrawLine(xFrom, yFrom, xTo, yFrom, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
@@ -610,18 +623,18 @@ public class LCD1in3 {
 		int esp = 3 - (radius << 1);
 
 		if (drawFill == DrawFill.DRAW_FILL_FULL) {
-			while (xCurrent <= yCurrent) { //Realistic circles
+			while (xCurrent <= yCurrent) { // Realistic circles
 				for (int sCountY = xCurrent; sCountY <= yCurrent; sCountY++) {
-					GUIDrawPoint(xCenter + xCurrent, yCenter + sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 1
-					GUIDrawPoint(xCenter - xCurrent, yCenter + sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 2
-					GUIDrawPoint(xCenter - sCountY, yCenter + xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 3
-					GUIDrawPoint(xCenter - sCountY, yCenter - xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 4
-					GUIDrawPoint(xCenter - xCurrent, yCenter - sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 5
-					GUIDrawPoint(xCenter + xCurrent, yCenter - sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 6
-					GUIDrawPoint(xCenter + sCountY, yCenter - xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT ); // 7
-					GUIDrawPoint(xCenter + sCountY, yCenter + xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT );
+					GUIDrawPoint(xCenter + xCurrent, yCenter + sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT); // 1
+					GUIDrawPoint(xCenter - xCurrent, yCenter + sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT); // 2
+					GUIDrawPoint(xCenter - sCountY, yCenter + xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT); // 3
+					GUIDrawPoint(xCenter - sCountY, yCenter - xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT); // 4
+					GUIDrawPoint(xCenter - xCurrent, yCenter - sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT); // 5
+					GUIDrawPoint(xCenter + xCurrent, yCenter - sCountY, color, DOT_PIXEL_DFT, DOT_STYLE_DFT); // 6
+					GUIDrawPoint(xCenter + sCountY, yCenter - xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT); // 7
+					GUIDrawPoint(xCenter + sCountY, yCenter + xCurrent, color, DOT_PIXEL_DFT, DOT_STYLE_DFT);
 				}
-				if (esp < 0 ) {
+				if (esp < 0) {
 					esp += (4 * xCurrent + 6);
 				} else {
 					esp += (10 + 4 * (xCurrent - yCurrent));
@@ -629,18 +642,18 @@ public class LCD1in3 {
 				}
 				xCurrent++;
 			}
-		} else { //Draw a hollow circle
+		} else { // Draw a hollow circle
 			while (xCurrent <= yCurrent) {
-				GUIDrawPoint(xCenter + xCurrent, yCenter + yCurrent, color, dotPixel, DOT_STYLE_DFT ); // 1
-				GUIDrawPoint(xCenter - xCurrent, yCenter + yCurrent, color, dotPixel, DOT_STYLE_DFT ); // 2
-				GUIDrawPoint(xCenter - yCurrent, yCenter + xCurrent, color, dotPixel, DOT_STYLE_DFT ); // 3
-				GUIDrawPoint(xCenter - yCurrent, yCenter - xCurrent, color, dotPixel, DOT_STYLE_DFT ); // 4
-				GUIDrawPoint(xCenter - xCurrent, yCenter - yCurrent, color, dotPixel, DOT_STYLE_DFT ); // 5
-				GUIDrawPoint(xCenter + xCurrent, yCenter - yCurrent, color, dotPixel, DOT_STYLE_DFT ); // 6
-				GUIDrawPoint(xCenter + yCurrent, yCenter - xCurrent, color, dotPixel, DOT_STYLE_DFT ); // 7
-				GUIDrawPoint(xCenter + yCurrent, yCenter + xCurrent, color, dotPixel, DOT_STYLE_DFT ); // 0
+				GUIDrawPoint(xCenter + xCurrent, yCenter + yCurrent, color, dotPixel, DOT_STYLE_DFT); // 1
+				GUIDrawPoint(xCenter - xCurrent, yCenter + yCurrent, color, dotPixel, DOT_STYLE_DFT); // 2
+				GUIDrawPoint(xCenter - yCurrent, yCenter + xCurrent, color, dotPixel, DOT_STYLE_DFT); // 3
+				GUIDrawPoint(xCenter - yCurrent, yCenter - xCurrent, color, dotPixel, DOT_STYLE_DFT); // 4
+				GUIDrawPoint(xCenter - xCurrent, yCenter - yCurrent, color, dotPixel, DOT_STYLE_DFT); // 5
+				GUIDrawPoint(xCenter + xCurrent, yCenter - yCurrent, color, dotPixel, DOT_STYLE_DFT); // 6
+				GUIDrawPoint(xCenter + yCurrent, yCenter - xCurrent, color, dotPixel, DOT_STYLE_DFT); // 7
+				GUIDrawPoint(xCenter + yCurrent, yCenter + xCurrent, color, dotPixel, DOT_STYLE_DFT); // 0
 
-				if (esp < 0 ) {
+				if (esp < 0) {
 					esp += (4 * xCurrent + 6);
 				} else {
 					esp += (10 + 4 * (xCurrent - yCurrent));
@@ -660,11 +673,10 @@ public class LCD1in3 {
 		}
 
 		int charOffset = (asciiChar - ' ') * font.getHeight() * (font.getWidth() / 8 + (font.getWidth() % 8 != 0 ? 1 : 0));
-    char ptr = (char)font.getCharacters()[charOffset]; // TODO Check this one
+    char ptr = (char)font.getCharacters()[charOffset];
 
-		for (int Page = 0; Page < font.getHeight(); Page ++ ) {
-			for (int Column = 0; Column < font.getWidth(); Column ++ ) {
-
+		for (int Page = 0; Page < font.getHeight(); Page ++) {
+			for (int Column = 0; Column < font.getWidth(); Column ++) {
 				// To determine whether the font background color and screen background color is consistent
 				if (FONT_BACKGROUND == colorBackground) { // this process is to speed up the scan
 					if ((ptr & (0x80 >> (Column % 8))) != 0) {
@@ -803,5 +815,4 @@ public class LCD1in3 {
 		}
 		gpio.shutdown();
 	}
-
 }
