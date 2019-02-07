@@ -432,10 +432,10 @@ public class LCD1in3 {
 				System.out.println("GUIDrawPoint Input exceeds the normal display range");
 			}
 			return;
-		} else {
-			if (VERBOSE) {
-				System.out.println("GUIDrawPoint all good.");
-			}
+//		} else {
+//			if (VERBOSE) {
+//				System.out.println("GUIDrawPoint all good.");
+//			}
 		}
 
 		if (dotStyle == DOT_STYLE_DFT) {
@@ -506,6 +506,10 @@ public class LCD1in3 {
 			return;
 		}
 
+		if (VERBOSE && xFrom == xTo) {
+			System.out.println("Vertical line!");
+		}
+
 		if (xFrom > xTo) { // Swap
 			int temp;
 			temp = xFrom;
@@ -533,6 +537,10 @@ public class LCD1in3 {
 		byte dottedLen = 0;
 		while (true) {
 			dottedLen++;
+			if (VERBOSE && xFrom == xTo) {
+				System.out.println(String.format("Vertical line x:%d y:%d (dottedLen %d)", xPoint, yPoint, dottedLen));
+			}
+
 			// Painted dotted line, 2 point is really virtual
 			if (lineStyle == LineStyle.LINE_STYLE_DOTTED && dottedLen % 3 == 0) {
 				GUIDrawPoint(xPoint, yPoint, IMAGE_BACKGROUND, dotPixel, DOT_STYLE_DFT);
