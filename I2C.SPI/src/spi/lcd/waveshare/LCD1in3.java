@@ -2,18 +2,25 @@ package spi.lcd.waveshare;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPin;
+import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import com.pi4j.wiringpi.Spi;
 import spi.lcd.waveshare.fonts.Font;
 import utils.PinUtil;
 import utils.TimeUtil;
 
+import java.util.function.Consumer;
+
 /**
  * Java interface for https://www.waveshare.com/product/modules/oleds-lcds/raspberry-pi-lcd/1.3inch-lcd-hat.htm
  * As the header is attached to the screen, there is no choice in the pins to use for the SPI interface.
- *
+ * <p>
  * Color LCD Screen 240x240
  * 3 Buttons
  * Joystick
@@ -22,28 +29,28 @@ public class LCD1in3 {
 
 	/**
 	 * Wiring:
-	 *
-	 *  function          | Wiring/PI4J | Physical | Name        | GPIO/BCM
-	 * -------------------+-------------+----------+-------------+----
-	 *  Power             |             |          | 3v3         |
-	 *  GND               |             |          | GND         |
-	 * -------------------+-------------+----------+-------------+----
-	 *  Clock Pin.        |          14 |     #23  | SPI0_SCLK   | 11    Clock
-	 *  MOSI / Data Pin.  |          12 |     #19  | SPI0_MOSI   | 10    Master Out Slave In
-	 *  CS Pin.           |          10 |     #24  | SPI0_CE0_N  |  8    Chip Select
-	 *  RST Pin.          |          02 |     #13  | GPIO_02     | 27    Reset
-	 *  DC Pin.           |          06 |     #22  | GPIO_06     | 25    Data Control (?)
-	 * -------------------+-------------+----------+-------------+----
-	 * Back Light         |          05 |     #18  | GPIO_5      | 24
-	 * Key 1              |          29 |     #40  | PCM_DOUT    | 21
-	 * Key 2              |          28 |     #38  | PCM_DIN     | 20
-	 * Key 3              |          36 |     #36  | GPIO_27     | 16
-	 * Joystick up        |          22 |     #31  | GPCLK2      |  6
-	 * Joystick down      |          24 |     #35  | PCM_FS/PWM1 | 19
-	 * Joystick left      |          21 |     #29  | GPCLK1      |  5
-	 * Joystick right     |          25 |     #37  | GPIO_25     | 26
-	 * Joystick pressed   |          23 |     #33  | PWM1        | 13
-	 * -------------------+-------------+----------+-------------+----
+	 * <p>
+	 * function          | Wiring/PI4J | Physical | Name        | GPIO/BCM
+	 * ------------------+-------------+----------+-------------+----
+	 * Power             |             |          | 3v3         |
+	 * GND               |             |          | GND         |
+	 * ------------------+-------------+----------+-------------+----
+	 * Clock Pin.        |          14 |     #23  | SPI0_SCLK   | 11    Clock
+	 * MOSI / Data Pin.  |          12 |     #19  | SPI0_MOSI   | 10    Master Out Slave In
+	 * CS Pin.           |          10 |     #24  | SPI0_CE0_N  |  8    Chip Select
+	 * RST Pin.          |          02 |     #13  | GPIO_02     | 27    Reset
+	 * DC Pin.           |          06 |     #22  | GPIO_06     | 25    Data Control (?)
+	 * ------------------+-------------+----------+-------------+----
+	 * Back Light        |          05 |     #18  | GPIO_5      | 24
+	 * Key 1             |          29 |     #40  | PCM_DOUT    | 21
+	 * Key 2             |          28 |     #38  | PCM_DIN     | 20
+	 * Key 3             |          36 |     #36  | GPIO_27     | 16
+	 * Joystick up       |          22 |     #31  | GPCLK2      |  6
+	 * Joystick down     |          24 |     #35  | PCM_FS/PWM1 | 19
+	 * Joystick left     |          21 |     #29  | GPCLK1      |  5
+	 * Joystick right    |          25 |     #37  | GPIO_25     | 26
+	 * Joystick pressed  |          23 |     #33  | PWM1        | 13
+	 * ------------------+-------------+----------+-------------+----
 	 */
 
 	private final static boolean VERBOSE = "true".equals(System.getProperty("waveshare.1in3.verbose", "false"));
@@ -51,17 +58,29 @@ public class LCD1in3 {
 
 	private static GpioController gpio;
 
+	// SPI pins, output (no MISO).
 	private static GpioPinDigitalOutput mosiPin = null;
 	private static GpioPinDigitalOutput clockPin = null;
 	private static GpioPinDigitalOutput chipSelectPin = null;
 	private static GpioPinDigitalOutput resetPin = null;
 	private static GpioPinDigitalOutput dcPin = null;
 
-	// TODO 9 Other pins
+	// 9 Other pins, input.
 	private static GpioPinDigitalOutput backLightPin = null;
 
+	private static GpioPinDigitalInput key1Pin = null;
+	private static GpioPinDigitalInput key2Pin = null;
+	private static GpioPinDigitalInput key3Pin = null;
+
+	private static GpioPinDigitalInput joystickUpPin = null;
+	private static GpioPinDigitalInput joystickDownPin = null;
+	private static GpioPinDigitalInput joystickLeftPin = null;
+	private static GpioPinDigitalInput joystickRightPin = null;
+	private static GpioPinDigitalInput joystickPressedPin = null;
+
+
 	private final static int SPI_DEVICE = Spi.CHANNEL_0;
-	private int clockHertz = 128_000_000; // 8 MHz TODO Check this
+	private int clockHertz = 8_000_000; // 8 MHz TODO Check this??
 
 	public final static int LCD_HEIGHT = 240;
 	public final static int LCD_WIDTH = 240;
@@ -107,12 +126,20 @@ public class LCD1in3 {
 	public boolean isSimulating() {
 		return simulate;
 	}
+
+	private Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> System.out.println(String.format("Key 1: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	public void setKey1Consumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
+		this.key1Consumer = consumer;
+	}
+	// TODO 7 others
+
+
 	/**
 	 * image number
 	 */
 	public final static int IMAGE_RGB = 0;
 
-  private static class GUIImage {
+	private static class GUIImage {
 		int imageName; // max = 128K / (imageWidth/8 * imageHeight) TODO imageName? Name, really?
 		int imageOffset;
 		int imageWidth;
@@ -164,7 +191,7 @@ public class LCD1in3 {
 		DRAW_FILL_FULL,
 	}
 
-	public static DotPixel DOT_PIXEL_DFT  = DotPixel.DOT_PIXEL_1X1;  // Default dot pixel
+	public static DotPixel DOT_PIXEL_DFT = DotPixel.DOT_PIXEL_1X1;  // Default dot pixel
 
 	private GUIImage guiImage = new GUIImage();
 
@@ -206,6 +233,7 @@ public class LCD1in3 {
 	private void init() {
 		init(HORIZONTAL, WHITE);
 	}
+
 	private void init(int direction, int color) {
 		int fd = Spi.wiringPiSPISetup(SPI_DEVICE, clockHertz);
 		if (fd < 0) {
@@ -215,13 +243,40 @@ public class LCD1in3 {
 
 		gpio = GpioFactory.getInstance();
 
+		// See pin names at http://pi4j.com/pins/model-3b-rev1.html
 		mosiPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_12, "MOSI", PinState.LOW);
 		clockPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_14, "CLK", PinState.LOW);
 		chipSelectPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_10, "CS", PinState.HIGH);
 		resetPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_02, "RST", PinState.LOW);
 		dcPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_06, "DC", PinState.LOW);
-		// TODO Other pins
+		// Other pins
 		backLightPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, "BL", PinState.LOW);
+
+		key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_DOWN);
+		key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_DOWN);
+		key3Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_27, "K-3", PinPullResistance.PULL_DOWN);
+
+		joystickUpPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_22, "J-UP", PinPullResistance.PULL_DOWN);
+		joystickDownPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_24, "J-DWN", PinPullResistance.PULL_DOWN);
+		joystickLeftPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_21, "J-LFT", PinPullResistance.PULL_DOWN);
+		joystickRightPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_25, "J-RGT", PinPullResistance.PULL_DOWN);
+		joystickPressedPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_23, "J-PR", PinPullResistance.PULL_DOWN);
+
+		// TODO Provide user's Consumers here, in the lambda
+		// See http://pi4j.com/example/listener.html
+		key1Pin.addListener((GpioPinListenerDigital) event -> {
+			if (key1Consumer != null) {
+				key1Consumer.accept(event);
+			}
+		});
+
+		key2Pin.addListener(new GpioPinListenerDigital() {
+			@Override
+			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+				// display pin state on console
+				System.out.println(" --> key2Pin: GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+			}
+		});
 
 		LCDInit(direction);
 		LCDClear(color);
@@ -252,20 +307,20 @@ public class LCD1in3 {
 
 	private void LCDSetWindows(int xFrom, int yFrom, int xTo, int yTo) {
 		// set the X coordinates
-		LCDSendCommand((byte)0x2A);
-		LCDSendData8Bit((byte)((xFrom >> 8) & 0xFF));
-		LCDSendData8Bit((byte)(xFrom & 0xFF));
-		LCDSendData8Bit((byte)(((xTo  - 1) >> 8) & 0xFF));
-		LCDSendData8Bit((byte)((xTo  - 1) & 0xFF));
+		LCDSendCommand((byte) 0x2A);
+		LCDSendData8Bit((byte) ((xFrom >> 8) & 0xFF));
+		LCDSendData8Bit((byte) (xFrom & 0xFF));
+		LCDSendData8Bit((byte) (((xTo - 1) >> 8) & 0xFF));
+		LCDSendData8Bit((byte) ((xTo - 1) & 0xFF));
 
 		// set the Y coordinates
-		LCDSendCommand((byte)0x2B);
-		LCDSendData8Bit((byte)((yFrom >> 8) & 0xFF));
-		LCDSendData8Bit((byte)(yFrom & 0xFF));
-		LCDSendData8Bit((byte)(((yTo  - 1) >> 8) & 0xFF));
-		LCDSendData8Bit((byte)((yTo  - 1) & 0xFF));
+		LCDSendCommand((byte) 0x2B);
+		LCDSendData8Bit((byte) ((yFrom >> 8) & 0xFF));
+		LCDSendData8Bit((byte) (yFrom & 0xFF));
+		LCDSendData8Bit((byte) (((yTo - 1) >> 8) & 0xFF));
+		LCDSendData8Bit((byte) ((yTo - 1) & 0xFF));
 
-		LCDSendCommand((byte)0X2C);
+		LCDSendCommand((byte) 0X2C);
 	}
 
 	private void LCDReset() {
@@ -282,18 +337,18 @@ public class LCD1in3 {
 
 		// Get GRAM and LCD width and height
 		if (scanDirection == HORIZONTAL) {
-			lcdHeight	= LCD_HEIGHT;
-			lcdWidth   = LCD_WIDTH;
+			lcdHeight = LCD_HEIGHT;
+			lcdWidth = LCD_WIDTH;
 			memoryAccessReg = 0X70;
 		} else {
-			lcdHeight	= LCD_WIDTH;
-			lcdWidth   = LCD_HEIGHT;
+			lcdHeight = LCD_WIDTH;
+			lcdWidth = LCD_HEIGHT;
 			memoryAccessReg = 0X00;
 		}
 
 		// Set the read / write scan direction of the frame memory
-		LCDSendCommand((byte)0x36); // MX, MY, RGB mode
-		LCDSendData8Bit(memoryAccessReg);	// 0x08 set RGB
+		LCDSendCommand((byte) 0x36); // MX, MY, RGB mode
+		LCDSendData8Bit(memoryAccessReg);  // 0x08 set RGB
 	}
 
 	private void LCDSendCommand(byte reg) {
@@ -319,76 +374,76 @@ public class LCD1in3 {
 	}
 
 	private void LCDInitReg() {
-		LCDSendCommand((byte)0x3A);
-		LCDSendData8Bit((byte)0x05);
+		LCDSendCommand((byte) 0x3A);
+		LCDSendData8Bit((byte) 0x05);
 
-		LCDSendCommand((byte)0xB2);
-		LCDSendData8Bit((byte)0x0C);
-		LCDSendData8Bit((byte)0x0C);
-		LCDSendData8Bit((byte)0x00);
-		LCDSendData8Bit((byte)0x33);
-		LCDSendData8Bit((byte)0x33);
+		LCDSendCommand((byte) 0xB2);
+		LCDSendData8Bit((byte) 0x0C);
+		LCDSendData8Bit((byte) 0x0C);
+		LCDSendData8Bit((byte) 0x00);
+		LCDSendData8Bit((byte) 0x33);
+		LCDSendData8Bit((byte) 0x33);
 
-		LCDSendCommand((byte)0xB7);  // Gate Control
-		LCDSendData8Bit((byte)0x35);
+		LCDSendCommand((byte) 0xB7);  // Gate Control
+		LCDSendData8Bit((byte) 0x35);
 
-		LCDSendCommand((byte)0xBB);  // VCOM Setting
-		LCDSendData8Bit((byte)0x19);
+		LCDSendCommand((byte) 0xBB);  // VCOM Setting
+		LCDSendData8Bit((byte) 0x19);
 
-		LCDSendCommand((byte)0xC0); // LCM Control
-		LCDSendData8Bit((byte)0x2C);
+		LCDSendCommand((byte) 0xC0); // LCM Control
+		LCDSendData8Bit((byte) 0x2C);
 
-		LCDSendCommand((byte)0xC2);  // VDV and VRH Command Enable
-		LCDSendData8Bit((byte)0x01);
-		LCDSendCommand((byte)0xC3);  // VRH Set
-		LCDSendData8Bit((byte)0x12);
-		LCDSendCommand((byte)0xC4);  // VDV Set
-		LCDSendData8Bit((byte)0x20);
+		LCDSendCommand((byte) 0xC2);  // VDV and VRH Command Enable
+		LCDSendData8Bit((byte) 0x01);
+		LCDSendCommand((byte) 0xC3);  // VRH Set
+		LCDSendData8Bit((byte) 0x12);
+		LCDSendCommand((byte) 0xC4);  // VDV Set
+		LCDSendData8Bit((byte) 0x20);
 
-		LCDSendCommand((byte)0xC6);  // Frame Rate Control in Normal Mode
-		LCDSendData8Bit((byte)0x0F);
+		LCDSendCommand((byte) 0xC6);  // Frame Rate Control in Normal Mode
+		LCDSendData8Bit((byte) 0x0F);
 
-		LCDSendCommand((byte)0xD0);  // Power Control 1
-		LCDSendData8Bit((byte)0xA4);
-		LCDSendData8Bit((byte)0xA1);
+		LCDSendCommand((byte) 0xD0);  // Power Control 1
+		LCDSendData8Bit((byte) 0xA4);
+		LCDSendData8Bit((byte) 0xA1);
 
-		LCDSendCommand((byte)0xE0);  // Positive Voltage Gamma Control
-		LCDSendData8Bit((byte)0xD0);
-		LCDSendData8Bit((byte)0x04);
-		LCDSendData8Bit((byte)0x0D);
-		LCDSendData8Bit((byte)0x11);
-		LCDSendData8Bit((byte)0x13);
-		LCDSendData8Bit((byte)0x2B);
-		LCDSendData8Bit((byte)0x3F);
-		LCDSendData8Bit((byte)0x54);
-		LCDSendData8Bit((byte)0x4C);
-		LCDSendData8Bit((byte)0x18);
-		LCDSendData8Bit((byte)0x0D);
-		LCDSendData8Bit((byte)0x0B);
-		LCDSendData8Bit((byte)0x1F);
-		LCDSendData8Bit((byte)0x23);
+		LCDSendCommand((byte) 0xE0);  // Positive Voltage Gamma Control
+		LCDSendData8Bit((byte) 0xD0);
+		LCDSendData8Bit((byte) 0x04);
+		LCDSendData8Bit((byte) 0x0D);
+		LCDSendData8Bit((byte) 0x11);
+		LCDSendData8Bit((byte) 0x13);
+		LCDSendData8Bit((byte) 0x2B);
+		LCDSendData8Bit((byte) 0x3F);
+		LCDSendData8Bit((byte) 0x54);
+		LCDSendData8Bit((byte) 0x4C);
+		LCDSendData8Bit((byte) 0x18);
+		LCDSendData8Bit((byte) 0x0D);
+		LCDSendData8Bit((byte) 0x0B);
+		LCDSendData8Bit((byte) 0x1F);
+		LCDSendData8Bit((byte) 0x23);
 
-		LCDSendCommand((byte)0xE1);  // Negative Voltage Gamma Control
-		LCDSendData8Bit((byte)0xD0);
-		LCDSendData8Bit((byte)0x04);
-		LCDSendData8Bit((byte)0x0C);
-		LCDSendData8Bit((byte)0x11);
-		LCDSendData8Bit((byte)0x13);
-		LCDSendData8Bit((byte)0x2C);
-		LCDSendData8Bit((byte)0x3F);
-		LCDSendData8Bit((byte)0x44);
-		LCDSendData8Bit((byte)0x51);
-		LCDSendData8Bit((byte)0x2F);
-		LCDSendData8Bit((byte)0x1F);
-		LCDSendData8Bit((byte)0x1F);
-		LCDSendData8Bit((byte)0x20);
-		LCDSendData8Bit((byte)0x23);
+		LCDSendCommand((byte) 0xE1);  // Negative Voltage Gamma Control
+		LCDSendData8Bit((byte) 0xD0);
+		LCDSendData8Bit((byte) 0x04);
+		LCDSendData8Bit((byte) 0x0C);
+		LCDSendData8Bit((byte) 0x11);
+		LCDSendData8Bit((byte) 0x13);
+		LCDSendData8Bit((byte) 0x2C);
+		LCDSendData8Bit((byte) 0x3F);
+		LCDSendData8Bit((byte) 0x44);
+		LCDSendData8Bit((byte) 0x51);
+		LCDSendData8Bit((byte) 0x2F);
+		LCDSendData8Bit((byte) 0x1F);
+		LCDSendData8Bit((byte) 0x1F);
+		LCDSendData8Bit((byte) 0x20);
+		LCDSendData8Bit((byte) 0x23);
 
-		LCDSendCommand((byte)0x21);  // Display Inversion On
+		LCDSendCommand((byte) 0x21);  // Display Inversion On
 
-		LCDSendCommand((byte)0x11);  // Sleep Out
+		LCDSendCommand((byte) 0x11);  // Sleep Out
 
-		LCDSendCommand((byte)0x29);  // Display On
+		LCDSendCommand((byte) 0x29);  // Display On
 	}
 
 	public void GUINewImage(int imageName, int width, int height, int rotate, int color) {
@@ -406,8 +461,8 @@ public class LCD1in3 {
 		guiImage.imageColor = color;
 
 		int byteHeight = guiImage.memoryHeight;
-		int byteWidth = guiImage.memoryWidth ;
-		guiImage.imageOffset =  guiImage.imageName * (byteHeight * byteWidth);
+		int byteWidth = guiImage.memoryWidth;
+		guiImage.imageOffset = guiImage.imageName * (byteHeight * byteWidth);
 	}
 
 	public void GUIClear(int color) {
@@ -415,7 +470,7 @@ public class LCD1in3 {
 		int width = guiImage.memoryWidth;
 		int offset = guiImage.imageOffset;
 
-		if(guiImage.imageColor == IMAGE_COLOR_INVERTED) {
+		if (guiImage.imageColor == IMAGE_COLOR_INVERTED) {
 			color = ~color;
 		}
 		for (int y = 0; y < height; y++) {
@@ -441,7 +496,7 @@ public class LCD1in3 {
 		if (dotStyle == DOT_STYLE_DFT) {
 			for (int XDir_Num = 0; XDir_Num < 2 * dotPixel.size() - 1; XDir_Num++) {
 				for (int YDir_Num = 0; YDir_Num < 2 * dotPixel.size() - 1; YDir_Num++) {
-					if(xPoint + XDir_Num - dotPixel.size() == -1 || yPoint + XDir_Num - dotPixel.size() == -1){
+					if (xPoint + XDir_Num - dotPixel.size() == -1 || yPoint + XDir_Num - dotPixel.size() == -1) {
 						if (VERBOSE) {
 							System.out.println("error");
 						}
@@ -451,8 +506,8 @@ public class LCD1in3 {
 				}
 			}
 		} else {
-			for (int XDir_Num = 0; XDir_Num <  dotPixel.size(); XDir_Num++) {
-				for (int YDir_Num = 0; YDir_Num <  dotPixel.size(); YDir_Num++) {
+			for (int XDir_Num = 0; XDir_Num < dotPixel.size(); XDir_Num++) {
+				for (int YDir_Num = 0; YDir_Num < dotPixel.size(); YDir_Num++) {
 					GUISetPixel(xPoint + XDir_Num - 1, yPoint + YDir_Num - 1, color);
 				}
 			}
@@ -526,7 +581,7 @@ public class LCD1in3 {
 		int xPoint = xFrom;
 		int yPoint = yFrom;
 		int dx = Math.abs(xTo - xFrom);
-		int dy = - Math.abs(yTo - yFrom);
+		int dy = -Math.abs(yTo - yFrom);
 
 		// Increment direction, 1 is positive, -1 is counter;
 		int xDir = (xFrom < xTo) ? 1 : -1;
@@ -610,13 +665,13 @@ public class LCD1in3 {
 
 		if (filled.equals(DrawFill.DRAW_FILL_FULL)) {
 			for (int yPoint = yFrom; yPoint < yTo; yPoint++) {
-				GUIDrawLine(xFrom, yPoint, xTo, yPoint, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
+				GUIDrawLine(xFrom, yPoint, xTo, yPoint, color, LineStyle.LINE_STYLE_SOLID, dotPixel);
 			}
 		} else {
-			GUIDrawLine(xFrom, yFrom, xTo, yFrom, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
-			GUIDrawLine(xFrom, yFrom, xFrom, yTo, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
-			GUIDrawLine(xTo, yTo, xTo, yFrom, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
-			GUIDrawLine(xTo, yTo, xFrom, yTo, color , LineStyle.LINE_STYLE_SOLID, dotPixel);
+			GUIDrawLine(xFrom, yFrom, xTo, yFrom, color, LineStyle.LINE_STYLE_SOLID, dotPixel);
+			GUIDrawLine(xFrom, yFrom, xFrom, yTo, color, LineStyle.LINE_STYLE_SOLID, dotPixel);
+			GUIDrawLine(xTo, yTo, xTo, yFrom, color, LineStyle.LINE_STYLE_SOLID, dotPixel);
+			GUIDrawLine(xTo, yTo, xFrom, yTo, color, LineStyle.LINE_STYLE_SOLID, dotPixel);
 		}
 	}
 
@@ -686,10 +741,10 @@ public class LCD1in3 {
 		}
 
 		int charOffset = (asciiChar - ' ') * font.getHeight() * (font.getWidth() / 8 + (font.getWidth() % 8 != 0 ? 1 : 0));
-    char ptr = (char)font.getCharacters()[charOffset];
+		char ptr = (char) font.getCharacters()[charOffset];
 
-		for (int Page = 0; Page < font.getHeight(); Page ++) {
-			for (int Column = 0; Column < font.getWidth(); Column ++) {
+		for (int Page = 0; Page < font.getHeight(); Page++) {
+			for (int Column = 0; Column < font.getWidth(); Column++) {
 				// To determine whether the font background color and screen background color is consistent
 				if (FONT_BACKGROUND == colorBackground) { // this process is to speed up the scan
 					if ((ptr & (0x80 >> (Column % 8))) != 0) {
@@ -780,11 +835,13 @@ public class LCD1in3 {
 	// private final int MASK = 0x01; // LSBFIRST
 
 	private void write(int data) {
-		this.write(new int[] { data });
+		this.write(new int[]{data});
 	}
+
 	private void write(int[] data) {
 		this.write(data, true, true);
 	}
+
 	private void write(int[] data, boolean assertSs, boolean deassertSs) {
 		// Fail if MOSI is not specified.
 		if (mosiPin == null) {
@@ -816,10 +873,10 @@ public class LCD1in3 {
 
 	// TODO Remove or replace
 	private void command(int c) throws Exception {
-			dcPin.low();
+		dcPin.low();
 //    try { spiDevice.write((byte)c); }
 //    catch (IOException ioe) { ioe.printStackTrace(); }
-			this.write(new int[]{c});
+		this.write(new int[]{c});
 	}
 
 	public void shutdown() {
