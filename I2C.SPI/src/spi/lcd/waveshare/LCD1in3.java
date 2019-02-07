@@ -525,8 +525,11 @@ public class LCD1in3 {
 
 		int xPoint = xFrom;
 		int yPoint = yFrom;
-		int dx = Math.abs(xTo - xFrom);
-		int dy = Math.abs(yTo - yFrom);
+//		int dx = Math.abs(xTo - xFrom);
+//		int dy = Math.abs(yTo - yFrom);
+
+		int dx = (xTo - xFrom >= 0) ? xTo - xFrom : xFrom - xTo;
+		int dy = (yTo - yFrom <= 0) ? yTo - yFrom : yFrom - yTo;
 
 		// Increment direction, 1 is positive, -1 is counter;
 		int xDir = (xFrom < xTo) ? 1 : -1;
