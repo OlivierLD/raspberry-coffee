@@ -61,7 +61,7 @@ public class LCD1in3 {
 	private static GpioPinDigitalOutput backLightPin = null;
 
 	private final static int SPI_DEVICE = Spi.CHANNEL_0;
-	private int clockHertz = 8_000_000; // 8 MHz TODO Check this
+	private int clockHertz = 16_000_000; // 8 MHz TODO Check this
 
 	public final static int LCD_HEIGHT = 240;
 	public final static int LCD_WIDTH = 240;
@@ -527,14 +527,6 @@ public class LCD1in3 {
 		int yPoint = yFrom;
 		int dx = Math.abs(xTo - xFrom);
 		int dy = - Math.abs(yTo - yFrom);
-
-//		int dx = (xTo - xFrom >= 0) ? xTo - xFrom : xFrom - xTo;
-//		int dy = (yTo - yFrom <= 0) ? yTo - yFrom : yFrom - yTo;
-
-//		if (VERBOSE) {
-//			System.out.println(String.format("dx: %d, abs: %d", dx, Math.abs(xTo - xFrom)));
-//			System.out.println(String.format("dy: %d, abs: %d", dx, Math.abs(yTo - yFrom)));
-//		}
 
 		// Increment direction, 1 is positive, -1 is counter;
 		int xDir = (xFrom < xTo) ? 1 : -1;
