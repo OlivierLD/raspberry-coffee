@@ -61,7 +61,7 @@ public class LCD1in3 {
 	private static GpioPinDigitalOutput backLightPin = null;
 
 	private final static int SPI_DEVICE = Spi.CHANNEL_0;
-	private int clockHertz = 16_000_000; // 8 MHz TODO Check this
+	private int clockHertz = 128_000_000; // 8 MHz TODO Check this
 
 	public final static int LCD_HEIGHT = 240;
 	public final static int LCD_WIDTH = 240;
