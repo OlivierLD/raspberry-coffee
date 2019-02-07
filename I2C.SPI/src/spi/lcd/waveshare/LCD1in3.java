@@ -507,7 +507,7 @@ public class LCD1in3 {
 		}
 
 		if (VERBOSE && xFrom == xTo) {
-			System.out.println("Vertical line!");
+			System.out.println("-- Vertical line! --");
 		}
 
 		if (xFrom > xTo) { // Swap
@@ -538,7 +538,7 @@ public class LCD1in3 {
 		while (true) {
 			dottedLen++;
 			if (VERBOSE && xFrom == xTo) {
-				System.out.println(String.format("Vertical line x:%d y:%d (dottedLen %d)", xPoint, yPoint, dottedLen));
+				System.out.println(String.format("(2) Vertical line (x:%d y:%d) to (x:%d y:%d) current (x:%d y:%d), (dottedLen %d)", xFrom, yFrom, xTo, yTo, xPoint, yPoint, dottedLen));
 			}
 
 			// Painted dotted line, 2 point is really virtual
@@ -551,7 +551,7 @@ public class LCD1in3 {
 			if (2 * esp >= dy) {
 				if (xPoint == xTo) {
 					if (VERBOSE) {
-						System.out.println(String.format("DrawLine, vertical, breaking. esp=%d, dy=%d", esp, dy));
+						System.out.println(String.format("(2) DrawLine, vertical, breaking. esp=%d, dy=%d", esp, dy));
 					}
 					break;
 				}
@@ -568,6 +568,9 @@ public class LCD1in3 {
 				esp += dx;
 				yPoint += yDir;
 			}
+		}
+		if (VERBOSE && xFrom == xTo) {
+			System.out.println("-- Vertical line (end) --");
 		}
 	}
 
