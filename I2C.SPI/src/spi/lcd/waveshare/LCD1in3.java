@@ -67,9 +67,9 @@ public class LCD1in3 {
 	// 9 Other pins, input.
 	private static GpioPinDigitalOutput backLightPin = null;
 
-	private static GpioPinDigitalInput key1Pin = null;
-	private static GpioPinDigitalInput key2Pin = null;
-	private static GpioPinDigitalInput key3Pin = null;
+	public GpioPinDigitalInput key1Pin = null;
+	public GpioPinDigitalInput key2Pin = null;
+	public GpioPinDigitalInput key3Pin = null;
 
 	private static GpioPinDigitalInput joystickUpPin = null;
 	private static GpioPinDigitalInput joystickDownPin = null;
@@ -252,14 +252,22 @@ public class LCD1in3 {
 		backLightPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, "BL", PinState.LOW);
 
 		key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_DOWN);
+		key1Pin.setShutdownOptions(true);
 		key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_DOWN);
+		key2Pin.setShutdownOptions(true);
 		key3Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_27, "K-3", PinPullResistance.PULL_DOWN);
+		key3Pin.setShutdownOptions(true);
 
 		joystickUpPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_22, "J-UP", PinPullResistance.PULL_DOWN);
+		joystickUpPin.setShutdownOptions(true);
 		joystickDownPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_24, "J-DWN", PinPullResistance.PULL_DOWN);
+		joystickDownPin.setShutdownOptions(true);
 		joystickLeftPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_21, "J-LFT", PinPullResistance.PULL_DOWN);
+		joystickLeftPin.setShutdownOptions(true);
 		joystickRightPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_25, "J-RGT", PinPullResistance.PULL_DOWN);
+		joystickRightPin.setShutdownOptions(true);
 		joystickPressedPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_23, "J-PR", PinPullResistance.PULL_DOWN);
+		joystickPressedPin.setShutdownOptions(true);
 
 		// TODO Provide user's Consumers here, in the lambda
 		// See http://pi4j.com/example/listener.html

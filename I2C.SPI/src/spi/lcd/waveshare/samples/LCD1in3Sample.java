@@ -117,7 +117,29 @@ public class LCD1in3Sample {
 
 		drawKeyListenInit(lcd);
 
+		System.out.println("Using buttons...");
 		// Wait for CR
+		StaticUtil.userInput("Hit Return to move on.");
+		if (!lcd.isSimulating()) {
+			lcd.LCDClear(LCD1in3.BLACK);
+//		lcd.shutdown();
+		}
+
+		Thread buttonObserver = new Thread() {
+			public void run() {
+				while (true) {
+					synchronized (this) {
+						try {
+							this.wait();
+						} catch (InterruptedException iex) {
+							iex.printStackTrace();
+						}
+					}
+				}
+			}
+		};
+		buttonObserver.start();
+
 		System.out.println("Hit Ctrl+C to finish...");
 
 		synchronized (me) {
@@ -126,7 +148,7 @@ public class LCD1in3Sample {
 				System.out.println("Main thread released.");
 				System.out.println("Closing nicely...");
 				if (!lcd.isSimulating()) {
-					lcd.LCDClear(LCD1in3.BLACK);
+//				lcd.LCDClear(LCD1in3.BLACK);
 					lcd.shutdown();
 				}
 				System.out.println("End of Sample");
