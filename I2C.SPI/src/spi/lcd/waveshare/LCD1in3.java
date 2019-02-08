@@ -126,7 +126,7 @@ public class LCD1in3 {
 		return simulate;
 	}
 
-	private Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> System.out.println(String.format("Key 1: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	private Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> System.out.println(String.format(">> FROM CONSUMER, Key 1: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
 	public void setKey1Consumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
 		this.key1Consumer = consumer;
 	}
@@ -258,15 +258,15 @@ public class LCD1in3 {
 		key3Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_27, "K-3", PinPullResistance.PULL_UP);
 //		key3Pin.setShutdownOptions(true);
 
-		joystickUpPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_22, "J-UP", PinPullResistance.PULL_DOWN);
+		joystickUpPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_22, "J-UP", PinPullResistance.PULL_UP);
 //		joystickUpPin.setShutdownOptions(true);
-		joystickDownPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_24, "J-DWN", PinPullResistance.PULL_DOWN);
+		joystickDownPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_24, "J-DWN", PinPullResistance.PULL_UP);
 //		joystickDownPin.setShutdownOptions(true);
-		joystickLeftPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_21, "J-LFT", PinPullResistance.PULL_DOWN);
+		joystickLeftPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_21, "J-LFT", PinPullResistance.PULL_UP);
 //		joystickLeftPin.setShutdownOptions(true);
-		joystickRightPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_25, "J-RGT", PinPullResistance.PULL_DOWN);
+		joystickRightPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_25, "J-RGT", PinPullResistance.PULL_UP);
 //		joystickRightPin.setShutdownOptions(true);
-		joystickPressedPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_23, "J-PR", PinPullResistance.PULL_DOWN);
+		joystickPressedPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_23, "J-PR", PinPullResistance.PULL_UP);
 //		joystickPressedPin.setShutdownOptions(true);
 
 		// TODO Provide user's Consumers here, in the lambda
