@@ -292,6 +292,9 @@ public class LCD1in3 {
 	public boolean keepWatching = false;
 
 	public void startWatchingPins() {
+		if (VERBOSE) {
+			System.out.println("Start observing pins");
+		}
 		this.keepWatching = true;
 		Thread pinWatcher = new Thread(() -> {
 			boolean k1High = false;
@@ -308,6 +311,9 @@ public class LCD1in3 {
 	}
 
 	public void stopWatchingPins() {
+		if (VERBOSE) {
+			System.out.println("Stop observing pins");
+		}
 		this.keepWatching = false;
 	}
 
