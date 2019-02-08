@@ -113,13 +113,15 @@ public class LCD1in3Sample {
 		StaticUtil.userInput("\tHit Return to move on.");
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
+			lcd.LCDDisplay();
 //		lcd.shutdown();
 		}
 
-		StaticUtil.userInput("Hit Return to finish.");
+		StaticUtil.userInput("Hit Return to finish.\n");
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
+			lcd.LCDDisplay();
 			lcd.GUIDrawString(30, 70, "Bye!", Font24.getInstance(), LCD1in3.BLACK, LCD1in3.WHITE);
 			lcd.LCDDisplay();
 			TimeUtil.delay(1_000);
