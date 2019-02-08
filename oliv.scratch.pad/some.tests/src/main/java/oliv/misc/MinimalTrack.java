@@ -1,7 +1,5 @@
 package oliv.misc;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,8 +55,7 @@ public class MinimalTrack {
 		}
 	}
 
-	@NotNull
-	private static Point[] generatePoints(@NotNull String propFile) throws Exception {
+	private static Point[] generatePoints(String propFile) throws Exception {
 		List<Point> list = new ArrayList<>();
 		Properties props = new Properties();
 		props.load(new FileReader(propFile));

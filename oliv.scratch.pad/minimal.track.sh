@@ -14,16 +14,20 @@ then
 	  mkdir classes
 	fi
 	#
+	echo -e "Compiling..."
 	javac -d classes --source-path some.tests/src/main/java some.tests/src/main/java/oliv/misc/MinimalTrack.java
 	#
 	# 2. Archive
 	#
 	cd classes
+	echo -e "Archiving..."
 	jar -cvf ../track.jar ./*
 	cd ..
 fi
 #
 # 3. Run
+#
+echo -e "Running..."
 #
 JAVA_OPTS=
 JAVA_OPTS="$JAVA_OPTS -Dverbose=false"
