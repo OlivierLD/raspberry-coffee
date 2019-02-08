@@ -147,6 +147,6 @@ public class MinimalTrack {
 		}
 		// Find shortest route
 		Route bestRoute = routeChoices.stream().min(Comparator.comparing(Route::getLen)).get();
-		System.out.println(String.format("Best route is %s, %f", bestRoute.name, bestRoute.len));
+		System.out.println(String.format(">> Best route is %s, %f", bestRoute.name, bestRoute.len));
 	}
 }

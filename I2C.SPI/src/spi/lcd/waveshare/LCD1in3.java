@@ -294,13 +294,13 @@ public class LCD1in3 {
 	public void startWatchingPins() {
 		this.keepWatching = true;
 		Thread pinWatcher = new Thread(() -> {
-			int k1 = 0;
+			boolean k1High = false;
 			while (keepWatching) {
-				PinState k1state = gpio.getState(key1Pin);
-				int k1now = k1state.getValue();
-				if (k1now != k1) {
-					System.out.println(String.format("Key 1 now %d", k1now));
-					k1 = k1now;
+
+				boolean k1now = key1Pin.isHigh();
+				if (k1now != k1High) {
+					System.out.println(String.format("Key 1 now %s", (k1now ? "high" : "low")));
+					k1High = k1now;
 				}
 			}
 			System.out.println("... Stop watching!");
