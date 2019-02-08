@@ -67,9 +67,9 @@ public class LCD1in3 {
 	// 9 Other pins, input.
 	private static GpioPinDigitalOutput backLightPin = null;
 
-	public GpioPinDigitalInput key1Pin = null;
-	public GpioPinDigitalInput key2Pin = null;
-	public GpioPinDigitalInput key3Pin = null;
+	private static GpioPinDigitalInput key1Pin = null;
+	private static GpioPinDigitalInput key2Pin = null;
+	private static GpioPinDigitalInput key3Pin = null;
 
 	private static GpioPinDigitalInput joystickUpPin = null;
 	private static GpioPinDigitalInput joystickDownPin = null;
@@ -287,6 +287,29 @@ public class LCD1in3 {
 
 		LCDInit(direction);
 		LCDClear(color);
+	}
+
+	public boolean keepWatching = false;
+
+	public void startWatchingPins() {
+		this.keepWatching = true;
+		Thread pinWatcher = new Thread(() -> {
+			int k1 = 0;
+			while (keepWatching) {
+				PinState k1state = gpio.getState(key1Pin);
+				int k1now = k1state.getValue();
+				if (k1now != k1) {
+					System.out.println(String.format("Key 1 now %d", k1now));
+					k1 = k1now;
+				}
+			}
+			System.out.println("... Stop watching!");
+		});
+		pinWatcher.start();
+	}
+
+	public void stopWatchingPins() {
+		this.keepWatching = false;
 	}
 
 	private void LCDInit(int scanDirection) {

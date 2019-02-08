@@ -125,20 +125,7 @@ public class LCD1in3Sample {
 //		lcd.shutdown();
 		}
 
-		Thread buttonObserver = new Thread() {
-			public void run() {
-				while (true) {
-					synchronized (this) {
-						try {
-							this.wait();
-						} catch (InterruptedException iex) {
-							iex.printStackTrace();
-						}
-					}
-				}
-			}
-		};
-		buttonObserver.start();
+		lcd.startWatchingPins();
 
 		System.out.println("Hit Ctrl+C to finish...");
 
@@ -147,6 +134,7 @@ public class LCD1in3Sample {
 				me.wait();
 				System.out.println("Main thread released.");
 				System.out.println("Closing nicely...");
+				lcd.stopWatchingPins();
 				if (!lcd.isSimulating()) {
 //				lcd.LCDClear(LCD1in3.BLACK);
 					lcd.shutdown();
