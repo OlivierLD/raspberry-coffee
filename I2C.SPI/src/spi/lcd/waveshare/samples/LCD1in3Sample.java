@@ -66,8 +66,8 @@ public class LCD1in3Sample {
 		lcd.GUINewImage(LCD1in3.IMAGE_RGB, LCD1in3.LCD_WIDTH, LCD1in3.LCD_HEIGHT, LCD1in3.IMAGE_ROTATE_0, LCD1in3.IMAGE_COLOR_POSITIVE);
 		lcd.GUIClear(LCD1in3.WHITE);
 
-		lcd.setKey1Consumer((event) -> System.out.println(String.format("Key 1 from main: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString())));
-		// TODO Others
+		lcd.setKey1Consumer((event) -> System.out.println(String.format(">> FROM CUSTOM CONSUMER, Key 1 from main: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString())));
+		// TODO Others?
 
 		TimeUtil.delay(500L);
 
@@ -125,7 +125,7 @@ public class LCD1in3Sample {
 //		lcd.shutdown();
 		}
 
-		lcd.startWatchingPins();
+//	lcd.startWatchingPins();
 
 		System.out.println("Hit Ctrl+C to finish...");
 
@@ -135,7 +135,7 @@ public class LCD1in3Sample {
 				System.out.println("Main thread released.");
 				System.out.println("Closing nicely...");
 				// Stop watching pins
-				lcd.stopWatchingPins();
+//			lcd.stopWatchingPins();
 
 				if (!lcd.isSimulating()) {
 //				lcd.LCDClear(LCD1in3.BLACK);

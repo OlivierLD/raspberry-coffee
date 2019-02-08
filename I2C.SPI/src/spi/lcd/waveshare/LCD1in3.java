@@ -126,12 +126,38 @@ public class LCD1in3 {
 		return simulate;
 	}
 
-	private Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> System.out.println(String.format(">> FROM CONSUMER, Key 1: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	private Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> System.out.println(String.format(">> Default event consumer, Key 1: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
 	public void setKey1Consumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
 		this.key1Consumer = consumer;
 	}
-	// TODO 7 others
-
+	private Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> System.out.println(String.format(">> Default event consumer, Key 2: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	public void setKey2Consumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
+		this.key2Consumer = consumer;
+	}
+	private Consumer<GpioPinDigitalStateChangeEvent> key3Consumer = (event) -> System.out.println(String.format(">> Default event consumer, Key 3: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	public void setKey3Consumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
+		this.key3Consumer = consumer;
+	}
+	private Consumer<GpioPinDigitalStateChangeEvent> jUpConsumer = (event) -> System.out.println(String.format(">> Default event consumer, J-Up: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	public void setJUpConsumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
+		this.jUpConsumer = consumer;
+	}
+	private Consumer<GpioPinDigitalStateChangeEvent> jDownConsumer = (event) -> System.out.println(String.format(">> Default event consumer, J-Down: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	public void setJDownConsumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
+		this.jDownConsumer = consumer;
+	}
+	private Consumer<GpioPinDigitalStateChangeEvent> jLeftConsumer = (event) -> System.out.println(String.format(">> Default event consumer, J-Left: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	public void setJLeftConsumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
+		this.jLeftConsumer = consumer;
+	}
+	private Consumer<GpioPinDigitalStateChangeEvent> jRightConsumer = (event) -> System.out.println(String.format(">> Default event consumer, J-Right: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	public void setJRightConsumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
+		this.jRightConsumer = consumer;
+	}
+	private Consumer<GpioPinDigitalStateChangeEvent> jPressedConsumer = (event) -> System.out.println(String.format(">> Default event consumer, J-Pressed: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString()));
+	public void setJPressedConsumer(Consumer<GpioPinDigitalStateChangeEvent> consumer) {
+		this.jPressedConsumer = consumer;
+	}
 
 	/**
 	 * image number
@@ -269,22 +295,47 @@ public class LCD1in3 {
 		joystickPressedPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_23, "J-PR", PinPullResistance.PULL_UP);
 //		joystickPressedPin.setShutdownOptions(true);
 
-		// TODO Provide user's Consumers here, in the lambda
 		// See http://pi4j.com/example/listener.html
 		key1Pin.addListener((GpioPinListenerDigital) event -> {
 			if (key1Consumer != null) {
 				key1Consumer.accept(event);
 			}
 		});
-
-		key2Pin.addListener(new GpioPinListenerDigital() {
-			@Override
-			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
-				// display pin state on console
-				System.out.println(" --> key2Pin: GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+		key2Pin.addListener((GpioPinListenerDigital) event -> {
+			if (key2Consumer != null) {
+				key2Consumer.accept(event);
 			}
 		});
-
+		key3Pin.addListener((GpioPinListenerDigital) event -> {
+			if (key3Consumer != null) {
+				key3Consumer.accept(event);
+			}
+		});
+		joystickUpPin.addListener((GpioPinListenerDigital) event -> {
+			if (jUpConsumer != null) {
+				jUpConsumer.accept(event);
+			}
+		});
+		joystickDownPin.addListener((GpioPinListenerDigital) event -> {
+			if (jDownConsumer != null) {
+				jDownConsumer.accept(event);
+			}
+		});
+		joystickRightPin.addListener((GpioPinListenerDigital) event -> {
+			if (jRightConsumer != null) {
+				jRightConsumer.accept(event);
+			}
+		});
+		joystickLeftPin.addListener((GpioPinListenerDigital) event -> {
+			if (jLeftConsumer != null) {
+				jLeftConsumer.accept(event);
+			}
+		});
+		joystickPressedPin.addListener((GpioPinListenerDigital) event -> {
+			if (jPressedConsumer != null) {
+				jPressedConsumer.accept(event);
+			}
+		});
 		LCDInit(direction);
 		LCDClear(color);
 	}
