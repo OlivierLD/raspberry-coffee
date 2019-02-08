@@ -108,12 +108,13 @@ public class LCD1in3Sample {
 		drawKeyListenInit(lcd);
 
 		// Wait for CR
-		StaticUtil.userInput("Hit Return to finish");
+		StaticUtil.userInput("Hit Ctrl+C to finish");
 
 		final Thread me = Thread.currentThread();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			synchronized (me) {
+				System.out.println("\nBye!");
 				me.notify();
 			}
 		}));
