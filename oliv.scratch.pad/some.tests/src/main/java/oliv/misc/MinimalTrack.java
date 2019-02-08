@@ -35,8 +35,7 @@ public class MinimalTrack {
 		}
 
 		public double dist(Point pt) {
-			double dist = Math.sqrt(Math.pow(pt.x - this.x, 2) + Math.pow(pt.y - this.y, 2));
-			return dist;
+			return Math.sqrt(Math.pow(pt.x - this.x, 2) + Math.pow(pt.y - this.y, 2));
 		}
 	}
 

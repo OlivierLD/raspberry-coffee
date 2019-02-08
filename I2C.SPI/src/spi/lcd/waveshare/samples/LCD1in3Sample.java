@@ -52,6 +52,15 @@ public class LCD1in3Sample {
 	}
 
 	public static void main(String... args) {
+		final Thread me = Thread.currentThread();
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			synchronized (me) {
+				me.notify();
+				System.out.println("\nBye!");
+			}
+		}));
+
 		LCD1in3 lcd = new LCD1in3(LCD1in3.HORIZONTAL, LCD1in3.BLUE);
 		lcd.GUINewImage(LCD1in3.IMAGE_RGB, LCD1in3.LCD_WIDTH, LCD1in3.LCD_HEIGHT, LCD1in3.IMAGE_ROTATE_0, LCD1in3.IMAGE_COLOR_POSITIVE);
 		lcd.GUIClear(LCD1in3.WHITE);
@@ -109,15 +118,6 @@ public class LCD1in3Sample {
 
 		// Wait for CR
 		StaticUtil.userInput("Hit Ctrl+C to finish");
-
-		final Thread me = Thread.currentThread();
-
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			synchronized (me) {
-				System.out.println("\nBye!");
-				me.notify();
-			}
-		}));
 
 		try {
 			synchronized(me) {
