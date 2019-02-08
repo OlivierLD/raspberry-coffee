@@ -53,15 +53,6 @@ public class LCD1in3Sample {
 
 	public static void main(String... args) {
 
-		final Thread me = Thread.currentThread();
-
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			synchronized (me) {
-				System.out.println("\nCtrl+C Trapped");
-				me.notify();
-			}
-		}));
-
 		LCD1in3 lcd = new LCD1in3(LCD1in3.HORIZONTAL, LCD1in3.BLUE);
 		lcd.GUINewImage(LCD1in3.IMAGE_RGB, LCD1in3.LCD_WIDTH, LCD1in3.LCD_HEIGHT, LCD1in3.IMAGE_ROTATE_0, LCD1in3.IMAGE_COLOR_POSITIVE);
 		lcd.GUIClear(LCD1in3.WHITE);
@@ -125,30 +116,20 @@ public class LCD1in3Sample {
 //		lcd.shutdown();
 		}
 
-		System.out.println("Hit Ctrl+C to finish...");
+		StaticUtil.userInput("Hit Return to finish.");
 
-		synchronized (me) {
-			try {
-				me.wait();
-				System.out.println("Main thread released.");
-				System.out.println("\tClosing nicely...");
+		if (!lcd.isSimulating()) {
+			lcd.LCDClear(LCD1in3.BLACK);
+			lcd.GUIDrawString(30, 70, "Bye!", Font24.getInstance(), LCD1in3.BLACK, LCD1in3.WHITE);
+			lcd.LCDDisplay();
+			TimeUtil.delay(1_000);
 
-				if (!lcd.isSimulating()) {
-					lcd.LCDClear(LCD1in3.BLACK);
-					lcd.GUIDrawString(30, 70, "Bye!", Font24.getInstance(), LCD1in3.BLACK, LCD1in3.WHITE);
-					lcd.LCDDisplay();
-					TimeUtil.delay(1_000);
+			lcd.LCDClear(LCD1in3.BLACK);
 
-					lcd.LCDClear(LCD1in3.BLACK);
-
-					TimeUtil.delay(1_000);
-					lcd.shutdown();
-				}
-				System.out.println("End of Sample");
-			} catch (InterruptedException iex) {
-				iex.printStackTrace();
-			}
+			TimeUtil.delay(1_000);
+			lcd.shutdown();
 		}
+		System.out.println("End of Sample");
 		System.out.println("Bye.");
 	}
 }
