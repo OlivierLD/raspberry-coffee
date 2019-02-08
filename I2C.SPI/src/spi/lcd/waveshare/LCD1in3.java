@@ -252,22 +252,22 @@ public class LCD1in3 {
 		backLightPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, "BL", PinState.LOW);
 
 		key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_DOWN);
-		key1Pin.setShutdownOptions(true);
+//		key1Pin.setShutdownOptions(true);
 		key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_DOWN);
-		key2Pin.setShutdownOptions(true);
+//		key2Pin.setShutdownOptions(true);
 		key3Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_27, "K-3", PinPullResistance.PULL_DOWN);
-		key3Pin.setShutdownOptions(true);
+//		key3Pin.setShutdownOptions(true);
 
 		joystickUpPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_22, "J-UP", PinPullResistance.PULL_DOWN);
-		joystickUpPin.setShutdownOptions(true);
+//		joystickUpPin.setShutdownOptions(true);
 		joystickDownPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_24, "J-DWN", PinPullResistance.PULL_DOWN);
-		joystickDownPin.setShutdownOptions(true);
+//		joystickDownPin.setShutdownOptions(true);
 		joystickLeftPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_21, "J-LFT", PinPullResistance.PULL_DOWN);
-		joystickLeftPin.setShutdownOptions(true);
+//		joystickLeftPin.setShutdownOptions(true);
 		joystickRightPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_25, "J-RGT", PinPullResistance.PULL_DOWN);
-		joystickRightPin.setShutdownOptions(true);
+//		joystickRightPin.setShutdownOptions(true);
 		joystickPressedPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_23, "J-PR", PinPullResistance.PULL_DOWN);
-		joystickPressedPin.setShutdownOptions(true);
+//		joystickPressedPin.setShutdownOptions(true);
 
 		// TODO Provide user's Consumers here, in the lambda
 		// See http://pi4j.com/example/listener.html
@@ -297,24 +297,51 @@ public class LCD1in3 {
 		}
 		this.keepWatching = true;
 		Thread pinWatcher = new Thread(() -> {
-			boolean k1High = false;
+			boolean k1 = false, k2 = false, k3 = false, jUp = false, jDown = false, jRight = false, jLeft = false, jPressed = false;
 			while (keepWatching) {
 				if (VERBOSE) {
 					System.out.println("\tWatching...");
 				}
 				boolean k1now = key1Pin.isHigh();
-				if (k1now != k1High) {
+				if (k1now != k1) {
 					System.out.println(String.format("Key 1 now %s", (k1now ? "high" : "low")));
-					k1High = k1now;
+					k1 = k1now;
 				}
-
-				System.out.println(String.format("Key 2 is now %s", (key2Pin.isHigh() ? "high" : "low")));
-				System.out.println(String.format("Key 3 is now %s", (key3Pin.isHigh() ? "high" : "low")));
-				System.out.println(String.format("J-Up is now %s", (joystickUpPin.isHigh() ? "high" : "low")));
-				System.out.println(String.format("J-Down is now %s", (joystickDownPin.isHigh() ? "high" : "low")));
-				System.out.println(String.format("J-Left is now %s", (joystickLeftPin.isHigh() ? "high" : "low")));
-				System.out.println(String.format("J-Right is now %s", (joystickRightPin.isHigh() ? "high" : "low")));
-				System.out.println(String.format("J-Pressed is now %s", (joystickPressedPin.isHigh() ? "high" : "low")));
+				boolean k2now = key2Pin.isHigh();
+				if (k2now != k2) {
+					System.out.println(String.format("Key 2 now %s", (k2now ? "high" : "low")));
+					k2 = k2now;
+				}
+				boolean k3now = key3Pin.isHigh();
+				if (k3now != k3) {
+					System.out.println(String.format("Key 3 now %s", (k3now ? "high" : "low")));
+					k3 = k3now;
+				}
+				boolean jUpNow = key3Pin.isHigh();
+				if (jUpNow != jUp) {
+					System.out.println(String.format("J Up now %s", (jUpNow ? "high" : "low")));
+					jUp = jUpNow;
+				}
+				boolean jDownNow = key3Pin.isHigh();
+				if (jDownNow != jDown) {
+					System.out.println(String.format("J Down now %s", (jDownNow ? "high" : "low")));
+					jDown = jDownNow;
+				}
+				boolean jLeftNow = key3Pin.isHigh();
+				if (jLeftNow != jLeft) {
+					System.out.println(String.format("J Left now %s", (jLeftNow ? "high" : "low")));
+					jLeft = jLeftNow;
+				}
+				boolean jRightNow = key3Pin.isHigh();
+				if (jRightNow != jRight) {
+					System.out.println(String.format("J Right now %s", (jRightNow ? "high" : "low")));
+					jRight = jRightNow;
+				}
+				boolean jPressedNow = key3Pin.isHigh();
+				if (jPressedNow != jPressed) {
+					System.out.println(String.format("J Pressed now %s", (jPressedNow ? "high" : "low")));
+					jPressed = jPressedNow;
+				}
 			}
 			System.out.println("... Stop watching!");
 		});
