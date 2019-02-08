@@ -317,27 +317,27 @@ public class LCD1in3 {
 					System.out.println(String.format("Key 3 now %s", (k3now ? "high" : "low")));
 					k3 = k3now;
 				}
-				boolean jUpNow = key3Pin.isHigh();
+				boolean jUpNow = joystickUpPin.isHigh();
 				if (jUpNow != jUp) {
 					System.out.println(String.format("J Up now %s", (jUpNow ? "high" : "low")));
 					jUp = jUpNow;
 				}
-				boolean jDownNow = key3Pin.isHigh();
+				boolean jDownNow = joystickDownPin.isHigh();
 				if (jDownNow != jDown) {
 					System.out.println(String.format("J Down now %s", (jDownNow ? "high" : "low")));
 					jDown = jDownNow;
 				}
-				boolean jLeftNow = key3Pin.isHigh();
+				boolean jLeftNow = joystickLeftPin.isHigh();
 				if (jLeftNow != jLeft) {
 					System.out.println(String.format("J Left now %s", (jLeftNow ? "high" : "low")));
 					jLeft = jLeftNow;
 				}
-				boolean jRightNow = key3Pin.isHigh();
+				boolean jRightNow = joystickRightPin.isHigh();
 				if (jRightNow != jRight) {
 					System.out.println(String.format("J Right now %s", (jRightNow ? "high" : "low")));
 					jRight = jRightNow;
 				}
-				boolean jPressedNow = key3Pin.isHigh();
+				boolean jPressedNow = joystickPressedPin.isHigh();
 				if (jPressedNow != jPressed) {
 					System.out.println(String.format("J Pressed now %s", (jPressedNow ? "high" : "low")));
 					jPressed = jPressedNow;
