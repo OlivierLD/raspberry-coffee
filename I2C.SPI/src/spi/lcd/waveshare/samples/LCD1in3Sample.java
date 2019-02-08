@@ -52,12 +52,13 @@ public class LCD1in3Sample {
 	}
 
 	public static void main(String... args) {
+
 		final Thread me = Thread.currentThread();
 
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			synchronized (me) {
+				System.out.println("\nCtrl+C Trapped");
 				me.notify();
-				System.out.println("\nBye!");
 			}
 		}));
 
@@ -117,19 +118,22 @@ public class LCD1in3Sample {
 		drawKeyListenInit(lcd);
 
 		// Wait for CR
-		StaticUtil.userInput("Hit Ctrl+C to finish");
+		System.out.println("Hit Ctrl+C to finish...");
 
-		try {
-			synchronized(me) {
+		synchronized (me) {
+			try {
 				me.wait();
+				System.out.println("Main thread released.");
+				System.out.println("Closing nicely...");
+				if (!lcd.isSimulating()) {
+					lcd.LCDClear(LCD1in3.BLACK);
+					lcd.shutdown();
+				}
+				System.out.println("End of Sample");
+			} catch (InterruptedException iex) {
+				iex.printStackTrace();
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
-
-		lcd.LCDClear(LCD1in3.BLACK);
-		if (!lcd.isSimulating()) {
-			lcd.shutdown();
-		}
+		System.out.println("Bye.");
 	}
 }
