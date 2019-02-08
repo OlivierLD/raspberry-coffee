@@ -110,6 +110,22 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to finish");
 
+		final Thread me = Thread.currentThread();
+
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			synchronized (me) {
+				me.notify();
+			}
+		}));
+
+		try {
+			synchronized(me) {
+				me.wait();
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
 		lcd.LCDClear(LCD1in3.BLACK);
 		if (!lcd.isSimulating()) {
 			lcd.shutdown();

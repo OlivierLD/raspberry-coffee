@@ -687,7 +687,7 @@ public class LCD1in3 {
 		int xCurrent = 0;
 		int yCurrent = radius;
 
-		// Cumulative error,judge the next point of the logo
+		// Cumulative error, judge the next point of the logo
 		int esp = 3 - (radius << 1);
 
 		if (drawFill == DrawFill.DRAW_FILL_FULL) {
