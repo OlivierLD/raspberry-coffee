@@ -130,9 +130,9 @@ public class MinimalTrack {
 					from = toEvaluate.get(closestPointIndex);
 				}
 			}
-			String pathStr = path. // This will be the route's name
-					stream().
-					map(pt -> pt.name)
+			String pathStr = path // This will be the route's name
+					.stream()
+					.map(pt -> pt.name)
 					.collect(Collectors.joining(", "));
 			Point lastPoint = null;
 			double routeLen = 0;
@@ -150,8 +150,8 @@ public class MinimalTrack {
 					.len(routeLen));
 		}
 		// Find shortest route
-		Route bestRoute = routeChoices.
-				stream()
+		Route bestRoute = routeChoices
+				.stream()
 				.min(Comparator.comparing(Route::getLen))
 				.get();
 		System.out.println(String.format(">> Shortest route is %s, %f", bestRoute.name, bestRoute.len));
