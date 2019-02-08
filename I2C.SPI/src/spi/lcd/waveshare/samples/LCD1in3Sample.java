@@ -131,15 +131,17 @@ public class LCD1in3Sample {
 			try {
 				me.wait();
 				System.out.println("Main thread released.");
-				System.out.println("Closing nicely...");
+				System.out.println("\tClosing nicely...");
 
 				if (!lcd.isSimulating()) {
-//				lcd.LCDClear(LCD1in3.BLACK);
-					lcd.GUIDrawString(5, 70, "Bye!", Font24.getInstance(), LCD1in3.BLACK, LCD1in3.WHITE);
+					lcd.LCDClear(LCD1in3.BLACK);
+					lcd.GUIDrawString(30, 70, "Bye!", Font24.getInstance(), LCD1in3.BLACK, LCD1in3.WHITE);
 					lcd.LCDDisplay();
 					TimeUtil.delay(1_000);
+
 					lcd.LCDClear(LCD1in3.BLACK);
 
+					TimeUtil.delay(1_000);
 					lcd.shutdown();
 				}
 				System.out.println("End of Sample");
