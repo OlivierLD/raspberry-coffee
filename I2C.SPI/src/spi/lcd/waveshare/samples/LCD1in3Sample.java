@@ -117,15 +117,13 @@ public class LCD1in3Sample {
 
 		drawKeyListenInit(lcd);
 
-		System.out.println("Using buttons...");
+		System.out.println("To start using buttons...");
 		// Wait for CR
-		StaticUtil.userInput("Hit Return to move on.");
+		StaticUtil.userInput("\tHit Return to move on.");
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
 //		lcd.shutdown();
 		}
-
-//	lcd.startWatchingPins();
 
 		System.out.println("Hit Ctrl+C to finish...");
 
@@ -134,11 +132,14 @@ public class LCD1in3Sample {
 				me.wait();
 				System.out.println("Main thread released.");
 				System.out.println("Closing nicely...");
-				// Stop watching pins
-//			lcd.stopWatchingPins();
 
 				if (!lcd.isSimulating()) {
 //				lcd.LCDClear(LCD1in3.BLACK);
+					lcd.GUIDrawString(5, 70, "Bye!", Font24.getInstance(), LCD1in3.BLACK, LCD1in3.WHITE);
+					lcd.LCDDisplay();
+					TimeUtil.delay(1_000);
+					lcd.LCDClear(LCD1in3.BLACK);
+
 					lcd.shutdown();
 				}
 				System.out.println("End of Sample");
