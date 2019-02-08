@@ -1,5 +1,7 @@
 package oliv.misc;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +57,8 @@ public class MinimalTrack {
 		}
 	}
 
-	private static Point[] generatePoints(String propFile) throws Exception {
+	@NotNull
+	private static Point[] generatePoints(@NotNull String propFile) throws Exception {
 		List<Point> list = new ArrayList<>();
 		Properties props = new Properties();
 		props.load(new FileReader(propFile));
@@ -82,7 +85,7 @@ public class MinimalTrack {
 
 		String propertyFile = System.getProperty("props");
 		if (propertyFile == null) {
-
+			// Hard coded default point list
 			Point A = new Point().x(0).y(0).name("A");
 			Point B = new Point().x(300).y(0).name("B");
 			Point C = new Point().x(300).y(500).name("C");
@@ -106,32 +109,34 @@ public class MinimalTrack {
 			List<Point> path = new ArrayList<>();
 			path.add(startPoint);
 
-			List<Point> toEvaluate = pointList.stream().filter(pt -> !pt.equals(startPoint)).collect(Collectors.toList());
-			Point[] arrayToEvaluate = toEvaluate.toArray(new Point[toEvaluate.size()]);
+			List<Point> toEvaluate = pointList
+					.stream()
+					.filter(pt -> !pt.equals(startPoint)) // All points except the one you start from
+					.collect(Collectors.toList());
 
 			Point from = startPoint;
-			for (int i=0; i<arrayToEvaluate.length; i++) {
+			for (int i=0; i<toEvaluate.size(); i++) {
 				int closestPointIndex = -1;
 				double smallestDist = Double.MAX_VALUE;
-				for (int prog=i; prog<arrayToEvaluate.length; prog++) {
-					double dist = from.dist(arrayToEvaluate[i]);
-					if (dist < smallestDist && !path.contains(arrayToEvaluate[i])) {
+				for (int prog=i; prog<toEvaluate.size(); prog++) {
+					double dist = from.dist(toEvaluate.get(i));
+					if (dist < smallestDist && !path.contains(toEvaluate.get(i))) {
 						closestPointIndex = i;
 						smallestDist = dist;
 					}
 				}
 				if (closestPointIndex != -1) {
 					if (verbose) {
-						System.out.println(String.format("Closest from %s is %s (%f)", from.name, arrayToEvaluate[closestPointIndex].name, smallestDist));
+						System.out.println(String.format("\tClosest from %s is %s (%f)", from.name, toEvaluate.get(closestPointIndex).name, smallestDist));
 					}
-					path.add(arrayToEvaluate[closestPointIndex]);
-					from = arrayToEvaluate[closestPointIndex];
+					path.add(toEvaluate.get(closestPointIndex));
+					from = toEvaluate.get(closestPointIndex);
 				}
 			}
-			if (verbose) {
-				System.out.println("Result:");
-			}
-			String pathStr = path.stream().map(pt -> pt.name).collect(Collectors.joining(", "));
+			String pathStr = path. // This will be the route's name
+					stream().
+					map(pt -> pt.name)
+					.collect(Collectors.joining(", "));
 			Point lastPoint = null;
 			double routeLen = 0;
 			for (Point pt : path) {
@@ -141,12 +146,17 @@ public class MinimalTrack {
 				lastPoint = pt;
 			}
 			if (verbose) {
-				System.out.println(String.format("For path %s, length is %f ", pathStr, routeLen));
+				System.out.println(String.format("Result: For path %s, length is %f ", pathStr, routeLen));
 			}
-			routeChoices.add(new Route().name(pathStr).len(routeLen));
+			routeChoices.add(new Route()
+					.name(pathStr)
+					.len(routeLen));
 		}
 		// Find shortest route
-		Route bestRoute = routeChoices.stream().min(Comparator.comparing(Route::getLen)).get();
-		System.out.println(String.format(">> Best route is %s, %f", bestRoute.name, bestRoute.len));
+		Route bestRoute = routeChoices.
+				stream()
+				.min(Comparator.comparing(Route::getLen))
+				.get();
+		System.out.println(String.format(">> Shortest route is %s, %f", bestRoute.name, bestRoute.len));
 	}
 }
