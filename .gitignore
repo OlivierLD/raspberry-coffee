@@ -52,6 +52,11 @@ C/fork
 C/tools
 snap.jpg
 NMEA.multiplexer/web/leaflet
+NMEA.multiplexer/sample.data/
+RESTTideEngine/*.xml
+RESTRouting/out
+RESTRouting/*.json
+RESTNauticalAlmanac/out
 Processing/**/*.jar
 .gitignore
 oliv-components/minified/

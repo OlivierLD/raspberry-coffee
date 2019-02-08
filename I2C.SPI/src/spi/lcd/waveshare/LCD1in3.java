@@ -296,7 +296,6 @@ public class LCD1in3 {
 		Thread pinWatcher = new Thread(() -> {
 			boolean k1High = false;
 			while (keepWatching) {
-
 				boolean k1now = key1Pin.isHigh();
 				if (k1now != k1High) {
 					System.out.println(String.format("Key 1 now %s", (k1now ? "high" : "low")));
