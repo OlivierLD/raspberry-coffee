@@ -251,11 +251,11 @@ public class LCD1in3 {
 		// Other pins
 		backLightPin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_05, "BL", PinState.LOW);
 
-		key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_DOWN);
+		key1Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_29, "K-1", PinPullResistance.PULL_UP);
 //		key1Pin.setShutdownOptions(true);
-		key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_DOWN);
+		key2Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_28, "K-2", PinPullResistance.PULL_UP);
 //		key2Pin.setShutdownOptions(true);
-		key3Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_27, "K-3", PinPullResistance.PULL_DOWN);
+		key3Pin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_27, "K-3", PinPullResistance.PULL_UP);
 //		key3Pin.setShutdownOptions(true);
 
 		joystickUpPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_22, "J-UP", PinPullResistance.PULL_DOWN);
