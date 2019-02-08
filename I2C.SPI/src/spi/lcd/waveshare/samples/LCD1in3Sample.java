@@ -12,38 +12,38 @@ import static spi.lcd.waveshare.LCD1in3.DrawFill.DRAW_FILL_EMPTY;
 public class LCD1in3Sample {
 
 	private static void drawKeyListenInit(LCD1in3 lcd) {
-		lcd.GUIClear(lcd.WHITE);
+		lcd.GUIClear(LCD1in3.WHITE);
 
 		/* Press */
-		lcd.GUIDrawCircle(90, 120, 25, lcd.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawCircle(90, 120, 25, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(82, 112, "P", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Left */
-		lcd.GUIDrawRectangle(15, 95, 65, 145, lcd.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(15, 95, 65, 145, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(32, 112, "L", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Down */
-		lcd.GUIDrawRectangle(65, 145, 115, 195, lcd.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(65, 145, 115, 195, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(82, 162, "D", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Right */
-		lcd.GUIDrawRectangle(115, 95, 165, 145, lcd.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(115, 95, 165, 145, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(132, 112, "R", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Up */
-		lcd.GUIDrawRectangle(65, 45, 115, 95, lcd.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(65, 45, 115, 95, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(82, 62, "U", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Key1 */
-		lcd.GUIDrawRectangle(185, 35, 235, 85, lcd.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(185, 35, 235, 85, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(195, 52, "K1", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Key2	*/
-		lcd.GUIDrawRectangle(185, 95, 235, 145, lcd.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(185, 95, 235, 145, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(195, 112, "K2", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Key3 */
-		lcd.GUIDrawRectangle(185, 155, 235, 205, lcd.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(185, 155, 235, 205, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(195, 172, "K3", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		if (!lcd.isSimulating()) {
@@ -134,7 +134,9 @@ public class LCD1in3Sample {
 				me.wait();
 				System.out.println("Main thread released.");
 				System.out.println("Closing nicely...");
+				// Stop watching pins
 				lcd.stopWatchingPins();
+
 				if (!lcd.isSimulating()) {
 //				lcd.LCDClear(LCD1in3.BLACK);
 					lcd.shutdown();
