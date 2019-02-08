@@ -299,11 +299,22 @@ public class LCD1in3 {
 		Thread pinWatcher = new Thread(() -> {
 			boolean k1High = false;
 			while (keepWatching) {
+				if (VERBOSE) {
+					System.out.println("\tWatching...");
+				}
 				boolean k1now = key1Pin.isHigh();
 				if (k1now != k1High) {
 					System.out.println(String.format("Key 1 now %s", (k1now ? "high" : "low")));
 					k1High = k1now;
 				}
+
+				System.out.println(String.format("Key 2 is now %s", (key2Pin.isHigh() ? "high" : "low")));
+				System.out.println(String.format("Key 3 is now %s", (key3Pin.isHigh() ? "high" : "low")));
+				System.out.println(String.format("J-Up is now %s", (joystickUpPin.isHigh() ? "high" : "low")));
+				System.out.println(String.format("J-Down is now %s", (joystickDownPin.isHigh() ? "high" : "low")));
+				System.out.println(String.format("J-Left is now %s", (joystickLeftPin.isHigh() ? "high" : "low")));
+				System.out.println(String.format("J-Right is now %s", (joystickRightPin.isHigh() ? "high" : "low")));
+				System.out.println(String.format("J-Pressed is now %s", (joystickPressedPin.isHigh() ? "high" : "low")));
 			}
 			System.out.println("... Stop watching!");
 		});

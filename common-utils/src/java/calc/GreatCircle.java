@@ -413,7 +413,7 @@ public final class GreatCircle {
 
 		System.out.println(String.format("Distance between %s and %s = %.04f nm, %.04f km", from, to, (p1.gcDistanceBetween(p2) * 60), (p1.gcDistanceBetween(p2) * 60 * 1.852)));
 
-		// Step: 0.010 km between N  37˚20.13' / W 121˚42.96' and N  37˚20.13' / W 121˚42.96' (17-Jun-2017 11:42:37)
+		// Step: 0.010 km between N  37 20.13' / W 121 42.96' and N  37 20.13' / W 121 42.96' (17-Jun-2017 11:42:37)
 		p1 = new GreatCirclePoint(Math.toRadians(GeomUtil.sexToDec("37", "20.13")), Math.toRadians(GeomUtil.sexToDec("-121", "42.96")));
 		p2 = new GreatCirclePoint(Math.toRadians(GeomUtil.sexToDec("37", "20.13")), Math.toRadians(GeomUtil.sexToDec("-121", "42.96")));
 
