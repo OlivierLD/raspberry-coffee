@@ -922,13 +922,16 @@ public class LCD1in3 {
 	}
 
 	public void GUIDisplayImage(String imgPath) {
+		GUIDisplayImage(imgPath, 0, 0);
+	}
+	public void GUIDisplayImage(String imgPath, int topLeftX, int topLeftY) {
 		try {
 			File imgFile = new File(imgPath);
 			BufferedImage image = ImageIO.read(imgFile);
 			if (VERBOSE) {
 				System.out.println(String.format("Image was read, w: %d, h: %d", image.getWidth(), image.getHeight()));
 			}
-			if (image.getWidth() > guiImage.imageWidth || image.getHeight() > guiImage.imageHeight) {
+			if ((image.getWidth() + topLeftX) > guiImage.imageWidth || (image.getHeight() + topLeftY) > guiImage.imageHeight) {
 				if (VERBOSE) {
 					System.out.println("GUIDrawString Input exceeds the normal display range");
 				}
@@ -942,7 +945,7 @@ public class LCD1in3 {
 					int rgb = (((pixel[0] >> 3) << 11) | ((pixel[1] >> 2) << 5) | (pixel[2] >> 3));
 //					System.out.println(String.format("x:%d y:%d, pix: %d %d %d %d => %06x", col, row, pixel[0], pixel[1], pixel[2], pixel[3], rgb));
 //					GUISetPixel(col, image.getHeight() - row - 1, rgb);
-					GUISetPixel(col, row, rgb);
+					GUISetPixel(col + topLeftX, row + topLeftY, rgb);
 				}
 				if (VERBOSE) {
 					System.out.println(String.format("Row %d, completed", row));

@@ -192,8 +192,8 @@ public class LCD1in3Sample {
 
 		System.out.println("...Lines");
 
-		lcd.GUIDrawLine(10, 10, 10, 200, LCD1in3.BROWN, LCD1in3.LineStyle.LINE_STYLE_SOLID, LCD1in3.DotPixel.DOT_PIXEL_2X2);
-		lcd.GUIDrawLine(10, 10, 230, 230, LCD1in3.BROWN, LCD1in3.LineStyle.LINE_STYLE_SOLID, LCD1in3.DotPixel.DOT_PIXEL_2X2);
+		lcd.GUIDrawLine(230,  10, 230, 230, LCD1in3.BROWN, LCD1in3.LineStyle.LINE_STYLE_SOLID, LCD1in3.DotPixel.DOT_PIXEL_2X2);
+		lcd.GUIDrawLine(230, 230,  10,  10, LCD1in3.BROWN, LCD1in3.LineStyle.LINE_STYLE_SOLID, LCD1in3.DotPixel.DOT_PIXEL_2X2);
 
 		lcd.GUIDrawLine(20, 10, 70, 60, LCD1in3.RED, LCD1in3.LineStyle.LINE_STYLE_SOLID, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 		lcd.GUIDrawLine(70, 10, 20, 60, LCD1in3.RED, LCD1in3.LineStyle.LINE_STYLE_SOLID, LCD1in3.DotPixel.DOT_PIXEL_1X1);
@@ -213,8 +213,9 @@ public class LCD1in3Sample {
 		System.out.println("...Strings");
 
 		lcd.GUIDrawString(5, 70, "hello world", Font16.getInstance(), LCD1in3.WHITE, LCD1in3.BLACK);
-		lcd.GUIDrawString(5, 90, "OlivSoft rocks!", Font20.getInstance(), LCD1in3.RED, LCD1in3.CYAN);
-		lcd.GUIDrawString(5, 120, "WaveShare", Font24.getInstance(), LCD1in3.BLUE, lcd.IMAGE_BACKGROUND);
+		lcd.GUIDrawString(5, 110, "OlivSoft rocks!", Font20.getInstance(), LCD1in3.RED, LCD1in3.CYAN);
+		lcd.GUIDrawString(5, 140, "WaveShare", Font24.getInstance(), LCD1in3.BLUE, lcd.IMAGE_BACKGROUND);
+		lcd.GUIDrawString(5, 160, "Numbers: 12345", Font20.getInstance(), LCD1in3.BRED, LCD1in3.GBLUE);
 
 		System.out.println("Displaying...");
 		if (!lcd.isSimulating()) {
