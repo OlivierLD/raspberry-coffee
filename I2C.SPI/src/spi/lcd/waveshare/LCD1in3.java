@@ -715,18 +715,18 @@ public class LCD1in3 {
 			return;
 		}
 
-		if (xFrom > xTo) { // Swap
-			int temp;
-			temp = xFrom;
-			xFrom = xTo;
-			xTo = temp;
-		}
-		if (yFrom > yTo) { // Swap
-			int temp;
-			temp = yFrom;
-			yFrom = yTo;
-			yTo = temp;
-		}
+//		if (xFrom > xTo) { // Swap
+//			int temp;
+//			temp = xFrom;
+//			xFrom = xTo;
+//			xTo = temp;
+//		}
+//		if (yFrom > yTo) { // Swap
+//			int temp;
+//			temp = yFrom;
+//			yFrom = yTo;
+//			yTo = temp;
+//		}
 
 		if (filled.equals(DrawFill.DRAW_FILL_FULL)) {
 			for (int yPoint = yFrom; yPoint < yTo; yPoint++) {
