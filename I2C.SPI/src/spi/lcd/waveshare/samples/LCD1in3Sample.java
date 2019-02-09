@@ -92,13 +92,13 @@ public class LCD1in3Sample {
 			}
 			if (jLeft) {
 				lcd.GUIDrawRectangle(15, 95, 65, 145, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
-				lcd.GUIDrawString(82, 112, "L", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.GUIDrawString(32, 112, "L", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 				lcd.LCDDisplayWindows(15, 95, 65, 145);
 			} else {
 				lcd.GUIClearWindows(15, 95, 65, 145, LCD1in3.WHITE);
 				lcd.GUIDrawRectangle(15, 95, 65, 145, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
 				lcd.GUIDrawRectangle(15, 95, 65, 145, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
-				lcd.GUIDrawString(82, 112, "L", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.GUIDrawString(32, 112, "L", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 				lcd.LCDDisplayWindows(15, 95, 65, 145);
 			}
 			if (jRight) {
@@ -125,35 +125,35 @@ public class LCD1in3Sample {
 			if (k1) {
 				lcd.GUIDrawRectangle(185, 35, 235, 85, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
 				lcd.GUIDrawString(195, 52, "K1", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
-				lcd.LCDDisplayWindows(185, 45, 235, 85);
+				lcd.LCDDisplayWindows(185, 35, 235, 85);
 			} else {
 				lcd.GUIClearWindows(185, 35, 235, 85, LCD1in3.WHITE);
-				lcd.GUIDrawRectangle(185, 45, 235, 85, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
-				lcd.GUIDrawRectangle(185, 45, 235, 85, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(185, 35, 235, 85, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(185, 35, 235, 85, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 				lcd.GUIDrawString(195, 52, "K1", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
-				lcd.LCDDisplayWindows(185, 45, 235, 85);
+				lcd.LCDDisplayWindows(185, 35, 235, 85);
 			}
 			if (k2) {
 				lcd.GUIDrawRectangle(185, 95, 235, 145, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
 				lcd.GUIDrawString(195, 112, "K2", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
-				lcd.LCDDisplayWindows(185, 45, 235, 145);
+				lcd.LCDDisplayWindows(185, 95, 235, 145);
 			} else {
 				lcd.GUIClearWindows(185, 95, 235, 145, LCD1in3.WHITE);
-				lcd.GUIDrawRectangle(185, 45, 235, 145, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
-				lcd.GUIDrawRectangle(185, 45, 235, 145, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(185, 95, 235, 145, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(185, 95, 235, 145, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 				lcd.GUIDrawString(195, 112, "K2", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
-				lcd.LCDDisplayWindows(185, 45, 235, 145);
+				lcd.LCDDisplayWindows(185, 95, 235, 145);
 			}
 			if (k3) {
 				lcd.GUIDrawRectangle(185, 155, 235, 205, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
 				lcd.GUIDrawString(195, 172, "K3", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
-				lcd.LCDDisplayWindows(185, 45, 235, 205);
+				lcd.LCDDisplayWindows(185, 155, 235, 205);
 			} else {
 				lcd.GUIClearWindows(185, 155, 235, 205, LCD1in3.WHITE);
-				lcd.GUIDrawRectangle(185, 45, 235, 205, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
-				lcd.GUIDrawRectangle(185, 45, 235, 205, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(185, 155, 235, 205, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(185, 155, 235, 205, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 				lcd.GUIDrawString(195, 172, "K3", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
-				lcd.LCDDisplayWindows(185, 45, 235, 205);
+				lcd.LCDDisplayWindows(185, 155, 235, 205);
 			}
 		}
 
