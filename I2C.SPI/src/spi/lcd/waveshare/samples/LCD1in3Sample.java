@@ -25,7 +25,7 @@ public class LCD1in3Sample {
 	private static Consumer<GpioPinDigitalStateChangeEvent> jRightConsumer = (event) -> jRight = event.getState().isLow();
 	private static Consumer<GpioPinDigitalStateChangeEvent> jPressedConsumer = (event) -> jPressed = event.getState().isLow();
 
-	private static void drawKeyListenInit(LCD1in3 lcd) {
+	private static void keyListenerScreen(LCD1in3 lcd) {
 		lcd.GUIClear(LCD1in3.WHITE);
 
 		/* Press */
@@ -63,7 +63,8 @@ public class LCD1in3Sample {
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
-		// Loop here
+		// Loop here. This loop allows several keys to be pressed together.
+		System.out.println("Use the buttons. Press K1 + K3 to exit the loop");
 		while (true) {
 			if (k1 && k3) {
 				break;
@@ -156,7 +157,7 @@ public class LCD1in3Sample {
 				lcd.LCDDisplayWindows(185, 155, 235, 205);
 			}
 		}
-
+		System.out.println("Out of the loop");
 	}
 
 	public static void main(String... args) {
@@ -221,19 +222,17 @@ public class LCD1in3Sample {
 		}
 
 		// Wait for CR
+		StaticUtil.userInput("Hit Return to display Image...");
+		String image = "img/pic.240x240.bmp";
+		lcd.GUIDisplayImage(image);
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+
+		// Wait for CR
 		StaticUtil.userInput("Hit Return to move on...");
 
-		System.out.println("Use the buttons. Press K1 + K3 to exit the loop");
-		drawKeyListenInit(lcd);
-
-//		while (true) {
-//			drawKeyListenInit(lcd);
-//			if (k1 && k3) {
-//				break;
-//			}
-//		}
-
-		System.out.println("Out of the loop");
+		keyListenerScreen(lcd);
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
@@ -241,7 +240,7 @@ public class LCD1in3Sample {
 //		lcd.shutdown();
 		}
 
-		StaticUtil.userInput("Hit Return to finish.\n");
+		StaticUtil.userInput("Hit Return to finish.");
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);

@@ -14,6 +14,10 @@ import spi.lcd.waveshare.fonts.Font;
 import utils.PinUtil;
 import utils.TimeUtil;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.function.Consumer;
 
 /**
@@ -23,6 +27,8 @@ import java.util.function.Consumer;
  * Color LCD Screen 240x240
  * 3 Buttons
  * Joystick
+ *
+ * TODO Display image
  */
 public class LCD1in3 {
 
@@ -913,6 +919,34 @@ public class LCD1in3 {
 //				System.out.println(String.format("xFrom %d yFrom %d xTo %d yTo %d X: %d, Y: %d", xFrom, yFrom, xTo, yTo, y, x));
 				GUISetPixel(x, y, color);
 			}
+		}
+	}
+
+	public void GUIDisplayImage(String imgPath) {
+		try {
+			File imgFile = new File(imgPath);
+			BufferedImage image = ImageIO.read(imgFile);
+			if (VERBOSE) {
+				System.out.println(String.format("Image was read, w: %d, h: %d", image.getWidth(), image.getHeight()));
+			}
+			if (image.getWidth() > guiImage.imageWidth || image.getHeight() > guiImage.imageHeight) {
+				if (VERBOSE) {
+					System.out.println("GUIDrawString Input exceeds the normal display range");
+				}
+				return;
+			}
+
+			int[] pixel = new int[4]; // RGBA
+			for (int row=0; row<image.getHeight(); row++) {
+				for (int col=0; col<image.getWidth(); col++) {
+					image.getData().getPixel(col, row, pixel);
+					int rgb = (((pixel[0]>>3)<<11)|((pixel[1]>>2)<<5)|(pixel[2]>>3));
+//					System.out.println(String.format("x:%d y:%d, pix: %d %d %d %d => %06x", col, row, pixel[0], pixel[1], pixel[2], pixel[3], rgb));
+					GUISetPixel(col, image.getHeight() - row - 1, rgb);
+				}
+			}
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
 	}
 
