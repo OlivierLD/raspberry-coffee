@@ -1,5 +1,6 @@
 package spi.lcd.waveshare.samples;
 
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import spi.lcd.waveshare.LCD1in3;
 import spi.lcd.waveshare.fonts.Font16;
 import spi.lcd.waveshare.fonts.Font20;
@@ -7,43 +8,56 @@ import spi.lcd.waveshare.fonts.Font24;
 import utils.StaticUtil;
 import utils.TimeUtil;
 
-import static spi.lcd.waveshare.LCD1in3.DrawFill.DRAW_FILL_EMPTY;
+import java.util.function.Consumer;
+
+import static spi.lcd.waveshare.LCD1in3.DrawFill;
 
 public class LCD1in3Sample {
+
+	private static boolean k1 = false, k2 = false, k3 = false, jUp = false, jDown = false, jRight = false, jLeft = false, jPressed = false;
+	private static Consumer<GpioPinDigitalStateChangeEvent> key1Consumer = (event) -> k1 = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> key2Consumer = (event) -> k2 = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> key3Consumer = (event) -> k3 = event.getState().isLow();
+
+	private static Consumer<GpioPinDigitalStateChangeEvent> jUpConsumer = (event) -> jUp = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jDownConsumer = (event) -> jDown = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jLeftConsumer = (event) -> jLeft = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jRightConsumer = (event) -> jRight = event.getState().isLow();
+	private static Consumer<GpioPinDigitalStateChangeEvent> jPressedConsumer = (event) -> jPressed = event.getState().isLow();
 
 	private static void drawKeyListenInit(LCD1in3 lcd) {
 		lcd.GUIClear(LCD1in3.WHITE);
 
 		/* Press */
-		lcd.GUIDrawCircle(90, 120, 25, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawCircle(90, 120, 25, LCD1in3.RED, (jPressed ? DrawFill.DRAW_FILL_FULL : DrawFill.DRAW_FILL_EMPTY), LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(82, 112, "P", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Left */
-		lcd.GUIDrawRectangle(15, 95, 65, 145, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(15, 95, 65, 145, LCD1in3.RED, (jLeft ? DrawFill.DRAW_FILL_FULL : DrawFill.DRAW_FILL_EMPTY), LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(32, 112, "L", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Down */
-		lcd.GUIDrawRectangle(65, 145, 115, 195, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(65, 145, 115, 195, LCD1in3.RED, (jDown ? DrawFill.DRAW_FILL_FULL : DrawFill.DRAW_FILL_EMPTY), LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(82, 162, "D", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Right */
-		lcd.GUIDrawRectangle(115, 95, 165, 145, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(115, 95, 165, 145, LCD1in3.RED, (jRight ? DrawFill.DRAW_FILL_FULL : DrawFill.DRAW_FILL_EMPTY), LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(132, 112, "R", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Up */
-		lcd.GUIDrawRectangle(65, 45, 115, 95, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(65, 45, 115, 95, LCD1in3.RED, (jUp ? DrawFill.DRAW_FILL_FULL : DrawFill.DRAW_FILL_EMPTY), LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(82, 62, "U", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Key1 */
-		lcd.GUIDrawRectangle(185, 35, 235, 85, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(185, 35, 235, 85, LCD1in3.RED, (k1 ? DrawFill.DRAW_FILL_FULL : DrawFill.DRAW_FILL_EMPTY), LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(195, 52, "K1", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Key2	*/
-		lcd.GUIDrawRectangle(185, 95, 235, 145, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(185, 95, 235, 145, LCD1in3.RED, (k2 ? DrawFill.DRAW_FILL_FULL : DrawFill.DRAW_FILL_EMPTY), LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(195, 112, "K2", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		/* Key3 */
-		lcd.GUIDrawRectangle(185, 155, 235, 205, LCD1in3.RED, DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+		lcd.GUIDrawRectangle(185, 155, 235, 205, LCD1in3.RED, (k3 ? DrawFill.DRAW_FILL_FULL : DrawFill.DRAW_FILL_EMPTY), LCD1in3.DOT_PIXEL_DFT);
 		lcd.GUIDrawString(195, 172, "K3", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 
 		if (!lcd.isSimulating()) {
@@ -54,11 +68,20 @@ public class LCD1in3Sample {
 	public static void main(String... args) {
 
 		LCD1in3 lcd = new LCD1in3(LCD1in3.HORIZONTAL, LCD1in3.BLUE);
+		// Key listeners
+		lcd.setKey1Consumer(key1Consumer);
+		lcd.setKey2Consumer(key2Consumer);
+		lcd.setKey3Consumer(key3Consumer);
+		lcd.setJUpConsumer(jUpConsumer);
+		lcd.setJDownConsumer(jDownConsumer);
+		lcd.setJLeftConsumer(jLeftConsumer);
+		lcd.setJRightConsumer(jRightConsumer);
+		lcd.setJPressedConsumer(jPressedConsumer);
+
 		lcd.GUINewImage(LCD1in3.IMAGE_RGB, LCD1in3.LCD_WIDTH, LCD1in3.LCD_HEIGHT, LCD1in3.IMAGE_ROTATE_0, LCD1in3.IMAGE_COLOR_POSITIVE);
 		lcd.GUIClear(LCD1in3.WHITE);
 
-		lcd.setKey1Consumer((event) -> System.out.println(String.format(">> FROM CUSTOM CONSUMER, Key 1 from main: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString())));
-		// TODO Others?
+//	lcd.setKey1Consumer((event) -> System.out.println(String.format(">> FROM CUSTOM CONSUMER, Key 1 from main: Pin: %s, State: %s", event.getPin().toString(), event.getState().toString())));
 
 		TimeUtil.delay(500L);
 
@@ -84,12 +107,12 @@ public class LCD1in3Sample {
 
 		System.out.println("...Rectangles");
 
-		lcd.GUIDrawRectangle(20, 10, 70, 60, LCD1in3.BLUE, DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+		lcd.GUIDrawRectangle(20, 10, 70, 60, LCD1in3.BLUE, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 		lcd.GUIDrawRectangle(85, 10, 130, 60, LCD1in3.BLUE, LCD1in3.DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
 		System.out.println("...Circles");
 
-		lcd.GUIDrawCircle(170, 35, 20, LCD1in3.GREEN, DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+		lcd.GUIDrawCircle(170, 35, 20, LCD1in3.GREEN, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 		lcd.GUIDrawCircle(170, 85, 20, LCD1in3.GREEN, LCD1in3.DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
 		System.out.println("...Strings");
@@ -106,11 +129,14 @@ public class LCD1in3Sample {
 		// Wait for CR
 		StaticUtil.userInput("Hit Return to move on...");
 
-		drawKeyListenInit(lcd);
+		System.out.println("Use the buttons. Press K1 + K2 to exit the loop");
+		while (true) {
+			drawKeyListenInit(lcd);
+			if (k1 && k2) {
+				break;
+			}
+		}
 
-		System.out.println("To start using buttons...");
-		// Wait for CR
-		StaticUtil.userInput("\thit Return to move on.");
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
 			lcd.LCDDisplay();
