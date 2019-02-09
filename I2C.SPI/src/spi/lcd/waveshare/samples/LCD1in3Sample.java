@@ -255,8 +255,20 @@ public class LCD1in3Sample {
 		lcd.GUIClear(LCD1in3.BLACK);
 		// Watch
 		lcd.GUIDrawCircle(120, 120, 110, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-		lcd.GUIDrawCircle(120, 120, 100, LCD1in3.CYAN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-		
+		lcd.GUIDrawCircle(120, 120, 100, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+
+		int angle = 45;
+		lcd.GUIDrawLine(
+				120,
+				120,
+				(int)(120 + Math.round(100 * Math.sin(Math.toRadians(angle)))),
+				(int)(120 - Math.round((100 * Math.cos(Math.toRadians(angle))))),
+				LCD1in3.RED,
+				LCD1in3.LineStyle.LINE_STYLE_SOLID,
+				LCD1in3.DotPixel.DOT_PIXEL_3X3);
+
+		// Knob
+		lcd.GUIDrawCircle(120, 120, 10, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
@@ -267,6 +279,7 @@ public class LCD1in3Sample {
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
+			lcd.GUIClear(LCD1in3.BLACK);
 			lcd.LCDDisplay();
 //		lcd.shutdown();
 		}
