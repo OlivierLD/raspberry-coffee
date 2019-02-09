@@ -263,7 +263,7 @@ public class LCD1in3Sample {
 				int centerY = 120;
 				int extRadius = 115;
 				int intRadius = 105;
-				int digitRadius = 90;
+				int digitRadius = 80;
 				int knobRadius = 10;
 				// Watch Border and background
 				lcd.GUIDrawCircle(centerX, centerY, extRadius, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
