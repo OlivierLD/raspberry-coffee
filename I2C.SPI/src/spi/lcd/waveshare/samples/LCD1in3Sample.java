@@ -215,7 +215,7 @@ public class LCD1in3Sample {
 		lcd.GUIDrawString(5, 70, "hello world", Font16.getInstance(), LCD1in3.WHITE, LCD1in3.BLACK);
 		lcd.GUIDrawString(5, 110, "OlivSoft rocks!", Font20.getInstance(), LCD1in3.RED, LCD1in3.CYAN);
 		lcd.GUIDrawString(5, 140, "WaveShare", Font24.getInstance(), LCD1in3.BLUE, lcd.IMAGE_BACKGROUND);
-		lcd.GUIDrawString(5, 160, "Numbers: 12345", Font20.getInstance(), LCD1in3.BRED, LCD1in3.GBLUE);
+		lcd.GUIDrawString(5, 170, "Numbers: 12345", Font20.getInstance(), LCD1in3.BRED, LCD1in3.GBLUE);
 
 		System.out.println("Displaying...");
 		if (!lcd.isSimulating()) {
