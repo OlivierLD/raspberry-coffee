@@ -251,59 +251,60 @@ public class LCD1in3Sample {
 
 		keyListenerScreen(lcd);
 
-		System.out.println("Drawing watch...");
-		// Draw watch
-		lcd.LCDClear(LCD1in3.BLACK);
-		lcd.GUIClear(LCD1in3.BLACK);
+		if ("true".equals(System.getProperty("with.watch", "true"))) {
+			System.out.println("Drawing watch...");
+			// Draw watch
+			lcd.LCDClear(LCD1in3.BLACK);
+			lcd.GUIClear(LCD1in3.BLACK);
 
-		for (int sec=0; sec<=60; sec++) {
-			// Watch
-			lcd.GUIDrawCircle(120, 120, 115, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-			lcd.GUIDrawCircle(120, 120, 105, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+			for (int sec = 0; sec <= 60; sec++) {
+				// Watch
+				lcd.GUIDrawCircle(120, 120, 115, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+				lcd.GUIDrawCircle(120, 120, 105, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
-			int angle = 0;
-			int len = 90;
-			lcd.GUIDrawLine(
-					120,
-					120,
-					(int) (120 + Math.round(len * Math.sin(Math.toRadians(angle)))),
-					(int) (120 - Math.round(len * Math.cos(Math.toRadians(angle)))),
-					LCD1in3.RED,
-					LCD1in3.LineStyle.LINE_STYLE_SOLID,
-					LCD1in3.DotPixel.DOT_PIXEL_3X3);
+				int angle = 0;
+				int len = 90;
+				lcd.GUIDrawLine(
+						120,
+						120,
+						(int) (120 + Math.round(len * Math.sin(Math.toRadians(angle)))),
+						(int) (120 - Math.round(len * Math.cos(Math.toRadians(angle)))),
+						LCD1in3.RED,
+						LCD1in3.LineStyle.LINE_STYLE_SOLID,
+						LCD1in3.DotPixel.DOT_PIXEL_3X3);
 
-			angle = 120;
-			len = 70;
-			lcd.GUIDrawLine(
-					120,
-					120,
-					(int) (120 + Math.round(len * Math.sin(Math.toRadians(angle)))),
-					(int) (120 - Math.round(len * Math.cos(Math.toRadians(angle)))),
-					LCD1in3.BLUE,
-					LCD1in3.LineStyle.LINE_STYLE_SOLID,
-					LCD1in3.DotPixel.DOT_PIXEL_5X5);
+				angle = 120;
+				len = 70;
+				lcd.GUIDrawLine(
+						120,
+						120,
+						(int) (120 + Math.round(len * Math.sin(Math.toRadians(angle)))),
+						(int) (120 - Math.round(len * Math.cos(Math.toRadians(angle)))),
+						LCD1in3.BLUE,
+						LCD1in3.LineStyle.LINE_STYLE_SOLID,
+						LCD1in3.DotPixel.DOT_PIXEL_5X5);
 
-			angle = 6 * sec;
-			len = 100;
-			lcd.GUIDrawLine(
-					120,
-					120,
-					(int) (120 + Math.round(len * Math.sin(Math.toRadians(angle)))),
-					(int) (120 - Math.round(len * Math.cos(Math.toRadians(angle)))),
-					LCD1in3.GREEN,
-					LCD1in3.LineStyle.LINE_STYLE_SOLID,
-					LCD1in3.DotPixel.DOT_PIXEL_1X1);
+				angle = 6 * sec;
+				len = 100;
+				lcd.GUIDrawLine(
+						120,
+						120,
+						(int) (120 + Math.round(len * Math.sin(Math.toRadians(angle)))),
+						(int) (120 - Math.round(len * Math.cos(Math.toRadians(angle)))),
+						LCD1in3.GREEN,
+						LCD1in3.LineStyle.LINE_STYLE_SOLID,
+						LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
-			// Knob
-			lcd.GUIDrawCircle(120, 120, 10, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+				// Knob
+				lcd.GUIDrawCircle(120, 120, 10, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
-			if (!lcd.isSimulating()) {
-				lcd.LCDDisplay();
+				if (!lcd.isSimulating()) {
+					lcd.LCDDisplay();
+				}
 			}
+			// Wait for CR
+			StaticUtil.userInput("Hit Return to move on...");
 		}
-
-		// Wait for CR
- 	  StaticUtil.userInput("Hit Return to move on...");
 
 		// Display data, character mode
 		if (!lcd.isSimulating()) {
