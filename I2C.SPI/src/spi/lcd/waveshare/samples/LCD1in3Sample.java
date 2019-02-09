@@ -127,6 +127,7 @@ public class LCD1in3Sample {
 			TimeUtil.delay(1_000);
 
 			lcd.LCDClear(LCD1in3.BLACK);
+			lcd.GUIClear(LCD1in3.BLACK);
 			lcd.LCDDisplay();
 
 			TimeUtil.delay(1_000);
