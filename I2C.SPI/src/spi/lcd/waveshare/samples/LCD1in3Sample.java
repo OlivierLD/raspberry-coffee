@@ -8,6 +8,7 @@ import spi.lcd.waveshare.fonts.Font24;
 import utils.StaticUtil;
 import utils.TimeUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
 
@@ -312,13 +313,17 @@ public class LCD1in3Sample {
 //		lcd.shutdown();
 		}
 
-		lcd.GUIDrawRectangle(2, 2, 138, 138, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-		lcd.GUIDrawRectangle(4, 4, 136, 136, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+		lcd.GUIDrawRectangle(2, 2, 238, 238, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+		lcd.GUIDrawRectangle(4, 4, 236, 236, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
-		lcd.GUIDrawString(6, 40, "N  37 44.93'", Font20.getInstance(), LCD1in3.YELLOW, LCD1in3.BLACK);
-		lcd.GUIDrawString(6, 60, "W 122 30.42'", Font20.getInstance(), LCD1in3.YELLOW, LCD1in3.BLACK);
+		lcd.GUIDrawString(6, 40, "N  37 44.93'", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(6, 60, "W 122 30.42'", Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
 
-		lcd.GUIDrawString(6, 80, new Date().toString(), Font20.getInstance(), LCD1in3.YELLOW, LCD1in3.BLACK);
+		Date date = new Date();
+		SimpleDateFormat sdf1 = new SimpleDateFormat("E dd MMM yyyy");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss Z");
+		lcd.GUIDrawString(6, 80, sdf1.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
+		lcd.GUIDrawString(6, 100, sdf2.format(date), Font20.getInstance(), LCD1in3.BLACK, LCD1in3.YELLOW);
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
