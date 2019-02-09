@@ -263,8 +263,8 @@ public class LCD1in3Sample {
 				lcd.GUIDrawCircle(120, 120, 105, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
 				// Ticks
-				for (int angle=0; angle<360; angle++) {
-					int len = (angle % 5 == 0 ? 30 : 20);
+				for (int angle=0; angle<360; angle+=6) {
+					int len = (angle % 30 == 0 ? 20 : 10);
 					int xExt = (int) (120 + Math.round(105 * Math.sin(Math.toRadians(angle))));
 					int yExt = (int) (120 - Math.round(105 * Math.cos(Math.toRadians(angle))));
 
