@@ -897,11 +897,9 @@ public class LCD1in3 {
 			}
 			return;
 		}
-
-		int X, Y;
-		for (Y = yFrom - 1; Y < yTo; Y++) {
-			for (X = xFrom - 1; X < xTo; X++) {
-				GUISetPixel(X, Y, color);
+		for (int y = yFrom - 1; y < yTo; y++) {
+			for (int x = xFrom - 1; x < xTo; x++) {
+				GUISetPixel(x, y, color);
 			}
 		}
 	}
