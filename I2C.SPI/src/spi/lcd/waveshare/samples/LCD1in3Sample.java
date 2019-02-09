@@ -84,7 +84,7 @@ public class LCD1in3Sample {
 				lcd.GUIDrawString(82, 162, "D", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
 				lcd.LCDDisplayWindows(65, 45, 115, 195);
 			} else {
-				lcd.GUIClearWindows(65, 145, 115, 1195, LCD1in3.WHITE);
+				lcd.GUIClearWindows(65, 145, 115, 195, LCD1in3.WHITE);
 				lcd.GUIDrawRectangle(65, 45, 115, 195, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
 				lcd.GUIDrawRectangle(65, 45, 115, 195, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
 				lcd.GUIDrawString(82, 162, "D", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);

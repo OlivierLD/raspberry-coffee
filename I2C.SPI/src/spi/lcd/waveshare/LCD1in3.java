@@ -910,7 +910,7 @@ public class LCD1in3 {
 		}
 		for (int y = yFrom - 1; y < yTo; y++) {
 			for (int x = xFrom - 1; x < xTo; x++) {
-				System.out.println(String.format("xFrom %d yFrom %d xTo %d yTo %dX: %d, Y: %d", xFrom, yFrom, xTo, yTo, y, x));
+//				System.out.println(String.format("xFrom %d yFrom %d xTo %d yTo %d X: %d, Y: %d", xFrom, yFrom, xTo, yTo, y, x));
 				GUISetPixel(x, y, color);
 			}
 		}
