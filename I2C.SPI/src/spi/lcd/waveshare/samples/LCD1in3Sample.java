@@ -258,10 +258,30 @@ public class LCD1in3Sample {
 			lcd.GUIClear(LCD1in3.BLACK);
 
 			for (int sec = 0; sec <= 60; sec++) {
-				// Watch
+				// Watch Border and background
 				lcd.GUIDrawCircle(120, 120, 115, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 				lcd.GUIDrawCircle(120, 120, 105, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
+				// Ticks
+				for (int angle=0; angle<360; angle++) {
+					int len = (angle % 5 == 0 ? 30 : 20);
+					int xExt = (int) (120 + Math.round(105 * Math.sin(Math.toRadians(angle))));
+					int yExt = (int) (120 - Math.round(105 * Math.cos(Math.toRadians(angle))));
+
+					int xInt = (int) (120 + Math.round((105 - len) * Math.sin(Math.toRadians(angle))));
+					int yInt = (int) (120 - Math.round((105 - len) * Math.cos(Math.toRadians(angle))));
+
+					lcd.GUIDrawLine(
+							xExt,
+							yExt,
+							xInt,
+							yInt,
+							LCD1in3.GREEN,
+							LCD1in3.LineStyle.LINE_STYLE_SOLID,
+							LCD1in3.DotPixel.DOT_PIXEL_1X1);
+				}
+
+				// Hands
 				int angle = 0;
 				int len = 90;
 				lcd.GUIDrawLine(
