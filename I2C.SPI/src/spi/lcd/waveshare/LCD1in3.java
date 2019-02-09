@@ -946,8 +946,11 @@ public class LCD1in3 {
 					data.getPixel(col, row, pixel);
 					int rgb = (((pixel[0] >> 3) << 11) | ((pixel[1] >> 2) << 5) | (pixel[2] >> 3));
 //					System.out.println(String.format("x:%d y:%d, pix: %d %d %d %d => %06x", col, row, pixel[0], pixel[1], pixel[2], pixel[3], rgb));
-//					GUISetPixel(col, image.getHeight() - row - 1, rgb);
-					GUISetPixel(col + topLeftX, row + topLeftY, rgb);
+					if (col + topLeftX < guiImage.imageWidth &&
+							row + topLeftY < guiImage.imageHeight &&
+							col + topLeftX >= 0 && row + topLeftY >= 0) {
+						GUISetPixel(col + topLeftX, row + topLeftY, rgb);
+					}
 				}
 				if (VERBOSE) {
 					System.out.println(String.format("Row %d, completed", row));

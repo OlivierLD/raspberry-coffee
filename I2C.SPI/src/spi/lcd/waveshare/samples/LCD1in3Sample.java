@@ -232,6 +232,14 @@ public class LCD1in3Sample {
 		}
 
 		// Wait for CR
+		StaticUtil.userInput("Hit Return to display Image, again...");
+		lcd.LCDClear(LCD1in3.BLACK);
+		lcd.GUIDisplayImage(image, 50, 50);
+		if (!lcd.isSimulating()) {
+			lcd.LCDDisplay();
+		}
+
+		// Wait for CR
 		StaticUtil.userInput("Hit Return to move on...");
 
 		keyListenerScreen(lcd);
