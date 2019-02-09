@@ -386,7 +386,14 @@ public class LCD1in3Sample {
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
 			lcd.GUIClear(LCD1in3.BLACK);
-			lcd.GUIDrawString(30, 70, "Bye!", Font24.getInstance(), LCD1in3.BLACK, LCD1in3.WHITE);
+			String bye = "Bye!";
+			Font f24 = Font24.getInstance();
+			int strlen = f24.getWidth() * bye.length();
+			int strX = 120 - (strlen / 2);
+			int strY = 120 - (f24.getHeight() / 2);
+
+			lcd.GUIDrawCircle(120, 120, (int)((strlen * 1.5) / 2), LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+			lcd.GUIDrawString(strX, strY, bye, f24, LCD1in3.WHITE, LCD1in3.GREEN);
 			lcd.LCDDisplay();
 			TimeUtil.delay(1_000);
 
