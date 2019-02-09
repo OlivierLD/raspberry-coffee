@@ -315,11 +315,11 @@ public class LCD1in3Sample {
 		lcd.GUIDrawRectangle(2, 2, 138, 138, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 		lcd.GUIDrawRectangle(4, 4, 136, 136, LCD1in3.YELLOW, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
-		lcd.GUIDrawString(6, 40, "N 37\27244.93'", Font20.getInstance(), LCD1in3.YELLOW, LCD1in3.BLACK);
-		lcd.GUIDrawString(6, 60, "W 122\27230.42'", Font20.getInstance(), LCD1in3.YELLOW, LCD1in3.BLACK);
+		lcd.GUIDrawString(6, 40, "N  37 44.93'", Font20.getInstance(), LCD1in3.YELLOW, LCD1in3.BLACK);
+		lcd.GUIDrawString(6, 60, "W 122 30.42'", Font20.getInstance(), LCD1in3.YELLOW, LCD1in3.BLACK);
 
 		lcd.GUIDrawString(6, 80, new Date().toString(), Font20.getInstance(), LCD1in3.YELLOW, LCD1in3.BLACK);
-		
+
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
