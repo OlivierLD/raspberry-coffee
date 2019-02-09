@@ -256,8 +256,8 @@ public class LCD1in3Sample {
 
 		for (int sec=0; sec<=60; sec++) {
 			// Watch
-			lcd.GUIDrawCircle(120, 120, 110, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
-			lcd.GUIDrawCircle(120, 120, 100, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+			lcd.GUIDrawCircle(120, 120, 115, LCD1in3.GREEN, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
+			lcd.GUIDrawCircle(120, 120, 105, LCD1in3.BLACK, DrawFill.DRAW_FILL_FULL, LCD1in3.DotPixel.DOT_PIXEL_1X1);
 
 			int angle = 0;
 			int len = 90;
@@ -301,7 +301,7 @@ public class LCD1in3Sample {
 		}
 
 		// Wait for CR
-		StaticUtil.userInput("Hit Return to move on...");
+//	StaticUtil.userInput("Hit Return to move on...");
 
 		if (!lcd.isSimulating()) {
 			lcd.LCDClear(LCD1in3.BLACK);
