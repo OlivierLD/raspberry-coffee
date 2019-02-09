@@ -63,6 +63,100 @@ public class LCD1in3Sample {
 		if (!lcd.isSimulating()) {
 			lcd.LCDDisplay();
 		}
+		// Loop here
+		while (true) {
+			if (k1 && k3) {
+				break;
+			}
+			if (jUp) {
+				lcd.GUIDrawRectangle(65, 45, 115, 95, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(82, 62, "U", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(65, 45, 115, 95);
+			} else {
+				lcd.GUIClearWindows(65, 145, 115, 195, LCD1in3.WHITE);
+				lcd.GUIDrawRectangle(65, 45, 115, 95, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(65, 45, 115, 95, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(82, 62, "U", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(65, 45, 115, 95);
+			}
+			if (jDown) {
+				lcd.GUIDrawRectangle(65, 145, 115, 195, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(82, 162, "D", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(65, 45, 115, 195);
+			} else {
+				lcd.GUIClearWindows(65, 145, 115, 1195, LCD1in3.WHITE);
+				lcd.GUIDrawRectangle(65, 45, 115, 195, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(65, 45, 115, 195, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(82, 162, "D", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(65, 45, 115, 195);
+			}
+			if (jLeft) {
+				lcd.GUIDrawRectangle(15, 95, 65, 145, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(82, 112, "L", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(15, 45, 65, 145);
+			} else {
+				lcd.GUIClearWindows(15, 95, 65, 145, LCD1in3.WHITE);
+				lcd.GUIDrawRectangle(15, 45, 65, 145, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(15, 45, 65, 145, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(82, 112, "L", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(15, 45, 65, 145);
+			}
+			if (jRight) {
+				lcd.GUIDrawRectangle(115, 95, 165, 145, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(132, 112, "R", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(115, 45, 165, 145);
+			} else {
+				lcd.GUIClearWindows(115, 95, 165, 145, LCD1in3.WHITE);
+				lcd.GUIDrawRectangle(115, 45, 165, 145, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(115, 45, 165, 145, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(132, 112, "R", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(115, 45, 165, 145);
+			}
+			if (jPressed) {
+				lcd.GUIDrawCircle(90, 120, 25, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(82, 112, "P", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(65, 95, 115, 145);
+			} else {
+				lcd.GUIDrawCircle(90, 120, 25, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawCircle(90, 120, 25, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(82, 112, "P", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(65, 95, 115, 145);
+			}
+			if (k1) {
+				lcd.GUIDrawRectangle(185, 35, 235, 85, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(195, 52, "K1", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(185, 45, 235, 85);
+			} else {
+				lcd.GUIClearWindows(185, 35, 235, 85, LCD1in3.WHITE);
+				lcd.GUIDrawRectangle(185, 45, 235, 85, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(185, 45, 235, 85, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(195, 52, "K1", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(185, 45, 235, 85);
+			}
+			if (k2) {
+				lcd.GUIDrawRectangle(185, 95, 235, 145, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(195, 112, "K2", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(185, 45, 235, 145);
+			} else {
+				lcd.GUIClearWindows(185, 95, 235, 145, LCD1in3.WHITE);
+				lcd.GUIDrawRectangle(185, 45, 235, 145, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(185, 45, 235, 145, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(195, 112, "K2", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(185, 45, 235, 145);
+			}
+			if (k3) {
+				lcd.GUIDrawRectangle(185, 155, 235, 205, LCD1in3.RED, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(195, 172, "K3", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(185, 45, 235, 205);
+			} else {
+				lcd.GUIClearWindows(185, 155, 235, 205, LCD1in3.WHITE);
+				lcd.GUIDrawRectangle(185, 45, 235, 205, LCD1in3.WHITE, DrawFill.DRAW_FILL_FULL, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawRectangle(185, 45, 235, 205, LCD1in3.RED, DrawFill.DRAW_FILL_EMPTY, LCD1in3.DOT_PIXEL_DFT);
+				lcd.GUIDrawString(195, 172, "K3", Font24.getInstance(), lcd.IMAGE_BACKGROUND, LCD1in3.BLUE);
+				lcd.LCDDisplayWindows(185, 45, 235, 205);
+			}
+		}
+
 	}
 
 	public static void main(String... args) {
@@ -130,12 +224,14 @@ public class LCD1in3Sample {
 		StaticUtil.userInput("Hit Return to move on...");
 
 		System.out.println("Use the buttons. Press K1 + K3 to exit the loop");
-		while (true) {
-			drawKeyListenInit(lcd);
-			if (k1 && k3) {
-				break;
-			}
-		}
+		drawKeyListenInit(lcd);
+
+//		while (true) {
+//			drawKeyListenInit(lcd);
+//			if (k1 && k3) {
+//				break;
+//			}
+//		}
 
 		System.out.println("Out of the loop");
 

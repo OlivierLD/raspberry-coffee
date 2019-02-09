@@ -859,7 +859,7 @@ public class LCD1in3 {
 		}
 	}
 
-	void LCDDisplayWindows(int xFrom, int yFrom, int xTo, int yTo) {
+	public void LCDDisplayWindows(int xFrom, int yFrom, int xTo, int yTo) {
 		//Convert coordinates
 		int X0, Y0, X1, Y1;
 		switch (guiImage.imageRotate) {
@@ -887,6 +887,22 @@ public class LCD1in3 {
 				X1 = guiImage.imageHeight - yFrom;
 				Y1 = guiImage.imageHeight - yTo;
 				break;
+		}
+	}
+
+	public void GUIClearWindows(int xFrom, int yFrom, int xTo, int yTo, int color) {
+		if (xFrom - 1 == -1 || yFrom - 1 == -1) {
+			if (VERBOSE) {
+				System.out.println("GUI_ClearWindows Input exceeds the normal display range");
+			}
+			return;
+		}
+
+		int X, Y;
+		for (Y = yFrom - 1; Y < yTo; Y++) {
+			for (X = xFrom - 1; X < xTo; X++) {
+				GUISetPixel(X, Y, color);
+			}
 		}
 	}
 
